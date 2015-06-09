@@ -1,78 +1,52 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 04/22] usb: gadget: composite: add USB_DT_OTG request
- handling
-Date: Tue, 9 Jun 2015 15:27:29 +0300
-Message-ID: <20150609152729.1daa7aa5@rockdesk>
-References: <1433775737-9816-1-git-send-email-jun.li@freescale.com>
-	<1433775737-9816-5-git-send-email-jun.li@freescale.com>
+From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [RESEND] ARM: dts: odroidxu3: Enable USB3 regulators
+Date: Tue, 09 Jun 2015 21:32:19 +0900
+Message-ID: <5576DCD3.2010709@samsung.com>
+References: <1433678028-8441-1-git-send-email-linux.amoon@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset=iso-8859-2
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1433775737-9816-5-git-send-email-jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1433678028-8441-1-git-send-email-linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Mon, 8 Jun 2015 23:01:59 +0800
-Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-
-> From: Macpaul Lin <macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+W dniu 07.06.2015 o 20:53, Anand Moon pisze:
+> Enable regulator for usbdrd3_0 and usbdrd3_1.
+> Looking at the schematic pin diagram for MAX77802
+> USB3_0 and USB3_1 is regulated by LDO9 and LD011.
 > 
-> Copy usb_otg_descriptor from config's descriptor if host requests
-> USB_DT_OTG.
+> Fix the boot message of failed.
+> [    3.503539] exynos-dwc3 usb@12000000: Looking up vdd33-supply from device tree
+> [    3.503556] exynos-dwc3 usb@12000000: Looking up vdd33-supply property in node /usb@12000000 failed
+> [    3.503568] usb@12000000 supply vdd33 not found, using dummy regulator
+> [    3.509154] exynos-dwc3 usb@12000000: Looking up vdd10-supply from device tree
+> [    3.509170] exynos-dwc3 usb@12000000: Looking up vdd10-supply property in node /usb@12000000 failed
+> [    3.509181] usb@12000000 supply vdd10 not found, using dummy regulator
+> [    3.917548] exynos-dwc3 usb@12400000: Looking up vdd33-supply from device tree
+> [    3.917565] exynos-dwc3 usb@12400000: Looking up vdd33-supply property in node /usb@12400000 failed
+> [    3.917578] usb@12400000 supply vdd33 not found, using dummy regulator
+> [    3.922731] exynos-dwc3 usb@12400000: Looking up vdd10-supply from device tree
+> [    3.922747] exynos-dwc3 usb@12400000: Looking up vdd10-supply property in node /usb@12400000 failed
 > 
-> Signed-off-by: Macpaul Lin <macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Signed-off-by: Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Tested-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Reviewed-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 > ---
->  drivers/usb/gadget/composite.c | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
-> 
-> diff --git a/drivers/usb/gadget/composite.c b/drivers/usb/gadget/composite.c
-> index 4e3447b..6b5a0c6 100644
-> --- a/drivers/usb/gadget/composite.c
-> +++ b/drivers/usb/gadget/composite.c
-> @@ -1534,6 +1534,27 @@ composite_setup(struct usb_gadget *gadget, const struct usb_ctrlrequest *ctrl)
->  				value = min(w_length, (u16) value);
->  			}
->  			break;
-> +		case USB_DT_OTG:
-> +			if (gadget_is_otg(gadget)) {
-> +				struct usb_configuration *config;
-> +				int otg_desc_len =
-> +					sizeof(struct usb_otg_descriptor);
+>  arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
 
-This evaluates to 5 which is wrong for otg v1.0
+Thanks, applied with minor adjustments in commit message (joined first
+three sentences into one paragraph, changed description of dmesg).
 
-> +
-> +				if (cdev->config)
-> +					config = cdev->config;
-> +				else
-> +					config = list_first_entry(
-> +							&cdev->configs,
-> +						struct usb_configuration, list);
-> +				if (!config)
-> +					goto done;
-> +
-> +				if (gadget->otg_rev >= 0x0200)
-> +					otg_desc_len += sizeof(struct bcdOTG);
+I'll send later to Kukjin for 4.3 (unless he picks it also).
 
-This will become 5 + 2 which is wrong for otg v2.0
+Best regards,
+Krzysztof
 
-> +				value = min_t(int, w_length, otg_desc_len);
-> +				memcpy(req->buf, config->descriptors[0], value);
-> +			}
-> +			break;
->  		}
->  		break;
->  
-
-cheers,
--roger
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
