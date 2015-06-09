@@ -1,121 +1,144 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 10/22] usb: gadget: configfs: init and add
- usb_otg_descriptor for usb configurations
-Date: Tue, 9 Jun 2015 16:33:11 +0300
-Message-ID: <20150609163311.2b364444@rockdesk>
-References: <1433775737-9816-1-git-send-email-jun.li@freescale.com>
-	<1433775737-9816-11-git-send-email-jun.li@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1433775737-9816-11-git-send-email-jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: [PATCH v2 1/3] ARM: STi: Add code to release secondary cores from holding pen.
+Date: Tue,  9 Jun 2015 14:33:42 +0100
+Message-ID: <1433856824-30689-2-git-send-email-peter.griffin@linaro.org>
+References: <1433856824-30689-1-git-send-email-peter.griffin@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1433856824-30689-1-git-send-email-peter.griffin@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, patrice.chotard@st.com, maxime.coquelin@st.com, khilman@kernel.org, arnd@arndb.de, olof@lixom.net
+Cc: peter.griffin@linaro.org, lee.jones@linaro.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Most upstream devs boot STi platform via JTAG which abuses the
+boot process by setting the PC of secondary cores directly. As
+a consquence, booting STi platforms via u-boot results in only
+the primary core being brought up as the code to manage the
+holding pen is not upstream.
 
-On Mon, 8 Jun 2015 23:02:05 +0800
-Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+This patch adds the necessary code to bring the secondary cores
+out of the holding pen. It uses the cpu-release-addr DT property
+to get the address of the holding pen from the bootloader.
 
-> Use usb_otg_descriptor_add to allocate and initialize usb_otg_descriptor,
-> add it for each usb configurations, free it while composite unbind.
-> 
-> Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
->  drivers/usb/gadget/configfs.c | 26 +++++++++++++++++---------
->  1 file changed, 17 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/usb/gadget/configfs.c b/drivers/usb/gadget/configfs.c
-> index 0495c94..bf3e625 100644
-> --- a/drivers/usb/gadget/configfs.c
-> +++ b/drivers/usb/gadget/configfs.c
-> @@ -41,6 +41,8 @@ int check_user_usb_string(const char *name,
->  #define MAX_NAME_LEN	40
->  #define MAX_USB_STRING_LANGS 2
->  
-> +static const struct usb_descriptor_header *otg_desc[2];
-> +
->  struct gadget_info {
->  	struct config_group group;
->  	struct config_group functions_group;
-> @@ -55,9 +57,6 @@ struct gadget_info {
->  	struct list_head available_func;
->  
->  	const char *udc_name;
-> -#ifdef CONFIG_USB_OTG
-> -	struct usb_otg_descriptor otg;
-> -#endif
->  	struct usb_composite_driver composite;
->  	struct usb_composite_dev cdev;
->  	bool use_os_desc;
-> @@ -1376,6 +1375,16 @@ static int configfs_composite_bind(struct usb_gadget *gadget,
->  		memcpy(cdev->qw_sign, gi->qw_sign, OS_STRING_QW_SIGN_LEN);
->  	}
->  
-> +	if (gadget_is_otg(gadget) && !otg_desc[0]) {
-> +		otg_desc[0] = (struct usb_descriptor_header *)
-> +				usb_otg_descriptor_add(gi->cdev.gadget);
-> +		if (!otg_desc[0]) {
-> +			ret = -ENOMEM;
-> +			goto err_comp_cleanup;
-> +		}
-> +		otg_desc[1] = NULL;
+With this patch booting upstream kernels via u-boot works
+correctly:
 
-If you use static allocation for otg_desc this code simplifies to
-		usb_otg_descriptor_add(gi->cdev.gadget, &otg_desc[0]);
+[    0.045456] CPU: Testing write buffer coherency: ok
+[    0.045597] CPU0: thread -1, cpu 0, socket 0, mpidr 80000000
+[    0.045734] Setting up static identity map for 0x40209000 - 0x40209098
+[    0.065047] CPU1: thread -1, cpu 1, socket 0, mpidr 80000001
+[    0.065081] Brought up 2 CPUs
+[    0.065089] SMP: Total of 2 processors activated (5983.43 BogoMIPS).
+[    0.065092] CPU: All CPU(s) started in SVC mode.
 
-assuming we have already allocated for otg_desc like so
+Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+Acked-by: Maxime Coquelin <maxime.coquelin@st.com>
+---
+ arch/arm/mach-sti/headsmp.S |  1 +
+ arch/arm/mach-sti/platsmp.c | 55 ++++++++++++++++++++++++++++++++++++++++++---
+ arch/arm/mach-sti/smp.h     |  2 ++
+ 3 files changed, 55 insertions(+), 3 deletions(-)
 
-static struct usb_otg_descriptor otg_descriptor;	/* configured at runtime */
-static const struct usb_descriptor_header *otg_desc[] = {
-        (struct usb_descriptor_header *) &otg_descriptor,
-        NULL,
-};
-
-
-> +	}
-> +
->  	/* Go through all configs, attach all functions */
->  	list_for_each_entry(c, &gi->cdev.configs, list) {
->  		struct config_usb_cfg *cfg;
-> @@ -1383,6 +1392,9 @@ static int configfs_composite_bind(struct usb_gadget *gadget,
->  		struct usb_function *tmp;
->  		struct gadget_config_name *cn;
->  
-> +		if (gadget_is_otg(gadget))
-> +			c->descriptors = otg_desc;
-> +
->  		cfg = container_of(c, struct config_usb_cfg, c);
->  		if (!list_empty(&cfg->string_list)) {
->  			i = 0;
-> @@ -1437,6 +1449,8 @@ static void configfs_composite_unbind(struct usb_gadget *gadget)
->  	cdev = get_gadget_data(gadget);
->  	gi = container_of(cdev, struct gadget_info, cdev);
->  
-> +	kfree(otg_desc[0]);
-> +	otg_desc[0] = NULL;
->  	purge_configs_funcs(gi);
->  	composite_dev_cleanup(cdev);
->  	usb_ep_autoconfig_reset(cdev->gadget);
-> @@ -1510,12 +1524,6 @@ static struct config_group *gadgets_make(
->  	if (!gi->composite.gadget_driver.function)
->  		goto err;
->  
-> -#ifdef CONFIG_USB_OTG
-> -	gi->otg.bLength = sizeof(struct usb_otg_descriptor);
-> -	gi->otg.bDescriptorType = USB_DT_OTG;
-> -	gi->otg.bmAttributes = USB_OTG_SRP | USB_OTG_HNP;
-> -#endif
-> -
->  	config_group_init_type_name(&gi->group, name,
->  				&gadget_root_type);
->  	return &gi->group;
-
-cheers,
--roger
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/mach-sti/headsmp.S b/arch/arm/mach-sti/headsmp.S
+index 4c09bae..e0ad4517 100644
+--- a/arch/arm/mach-sti/headsmp.S
++++ b/arch/arm/mach-sti/headsmp.S
+@@ -37,6 +37,7 @@ pen:	ldr	r7, [r6]
+ 	 * should now contain the SVC stack for this core
+ 	 */
+ 	b	secondary_startup
++ENDPROC(sti_secondary_startup)
+ 
+ 1:	.long	.
+ 	.long	pen_release
+diff --git a/arch/arm/mach-sti/platsmp.c b/arch/arm/mach-sti/platsmp.c
+index d4b624f..86bb48d8 100644
+--- a/arch/arm/mach-sti/platsmp.c
++++ b/arch/arm/mach-sti/platsmp.c
+@@ -20,6 +20,7 @@
+ #include <linux/io.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
++#include <linux/memblock.h>
+ 
+ #include <asm/cacheflush.h>
+ #include <asm/smp_plat.h>
+@@ -99,14 +100,62 @@ static int sti_boot_secondary(unsigned int cpu, struct task_struct *idle)
+ 
+ static void __init sti_smp_prepare_cpus(unsigned int max_cpus)
+ {
+-	void __iomem *scu_base = NULL;
+-	struct device_node *np = of_find_compatible_node(
+-					NULL, NULL, "arm,cortex-a9-scu");
++	struct device_node *np;
++	void __iomem *scu_base;
++	u32 __iomem *cpu_strt_ptr;
++	u32 release_phys;
++	int cpu;
++	unsigned long entry_pa = virt_to_phys(sti_secondary_startup);
++
++	np = of_find_compatible_node(NULL, NULL, "arm,cortex-a9-scu");
++
+ 	if (np) {
+ 		scu_base = of_iomap(np, 0);
+ 		scu_enable(scu_base);
+ 		of_node_put(np);
+ 	}
++
++	if (max_cpus <= 1)
++		return;
++
++	for_each_possible_cpu(cpu) {
++
++		np = of_get_cpu_node(cpu, NULL);
++
++		if (!np)
++			continue;
++
++		if (of_property_read_u32(np, "cpu-release-addr",
++						&release_phys)) {
++			pr_err("CPU %d: missing or invalid cpu-release-addr "
++				"property\n", cpu);
++			continue;
++		}
++
++		/*
++		 * holding pen is usually configured in SBC DMEM but can also be
++		 * in RAM.
++		 */
++
++		if (!memblock_is_memory(release_phys))
++			cpu_strt_ptr =
++				ioremap(release_phys, sizeof(release_phys));
++		else
++			cpu_strt_ptr =
++				(u32 __iomem *)phys_to_virt(release_phys);
++
++		__raw_writel(entry_pa, cpu_strt_ptr);
++
++		/*
++		 * wmb so that data is actually written
++		 * before cache flush is done
++		 */
++		smp_wmb();
++		sync_cache_w(cpu_strt_ptr);
++
++		if (!memblock_is_memory(release_phys))
++			iounmap(cpu_strt_ptr);
++	}
+ }
+ 
+ struct smp_operations __initdata sti_smp_ops = {
+diff --git a/arch/arm/mach-sti/smp.h b/arch/arm/mach-sti/smp.h
+index 1871b72..ae22707 100644
+--- a/arch/arm/mach-sti/smp.h
++++ b/arch/arm/mach-sti/smp.h
+@@ -14,4 +14,6 @@
+ 
+ extern struct smp_operations	sti_smp_ops;
+ 
++void sti_secondary_startup(void);
++
+ #endif
+-- 
+1.9.1
