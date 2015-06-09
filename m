@@ -1,53 +1,58 @@
-From: Eric Dumazet <eric.dumazet@gmail.com>
-Subject: Re: [PATCH v5 1/2] Renesas Ethernet AVB driver proper
-Date: Mon, 08 Jun 2015 17:12:46 -0700
-Message-ID: <1433808766.29864.70.camel@edumazet-glaptop2.roam.corp.google.com>
-References: <55760CB0.1020503@cogentembedded.com>
-	 <20150608.151954.191885697349673611.davem@davemloft.net>
-	 <55761A08.1050503@cogentembedded.com>
-	 <20150608.154326.2037112726253299896.davem@davemloft.net>
+From: Pi-Cheng Chen <pi-cheng.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/2] Add Mediatek MT8173 cpufreq driver
+Date: Tue, 9 Jun 2015 08:26:11 +0800
+Message-ID: <CALx668XYaKca3BeYQxgNa2z68x7w8iTg8hyeeYdLtpJYc30idw@mail.gmail.com>
+References: <1433766561-1330-1-git-send-email-pi-cheng.chen@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20150608.154326.2037112726253299896.davem@davemloft.net>
-Sender: linux-sh-owner@vger.kernel.org
-To: David Miller <davem@davemloft.net>
-Cc: sergei.shtylyov@cogentembedded.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, devicetree@vger.kernel.org, galak@codeaurora.org, netdev@vger.kernel.org, richardcochran@gmail.com, linux-sh@vger.kernel.org, mitsuhiro.kimura.kc@renesas.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1433766561-1330-1-git-send-email-pi-cheng.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "pi-cheng.chen" <pi-cheng.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Kernel Mailman List <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2015-06-08 at 15:43 -0700, David Miller wrote:
-> From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> Date: Tue, 09 Jun 2015 01:41:12 +0300
-> 
-> > On 06/09/2015 01:19 AM, David Miller wrote:
-> > 
-> >> It's completely implemented in software, you don't need to do anything
-> >> other than properly invoke napi_gro_receive().
-> > 
-> >    Not even set NETIF_F_GRO?
-> 
-> Yes, you have to set that by default for it to go.  Thankfully this is
-> also "in software" ;-)
+On Mon, Jun 8, 2015 at 8:29 PM, Pi-Cheng Chen <pi-cheng.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> MT8173 is a ARMv8 based SoC with 2 clusters. All CPUs in a single cluster
+> share the same power and clock domain. This series tries to add cpufreq support
+> for MT8173 SoC.
 
+I am sorry I forgot to add the version in the mail title.
+This is v4 of this series.
 
-More precisely, drivers do not have to care about this flag.
-
-They only have to call napi_gro_receive().
-
-core networking sets GRO flag by default in register_netdevice() for all
-network devices.
-
-
-#define NETIF_F_SOFT_FEATURES   (NETIF_F_GSO | NETIF_F_GRO)
-
-vi +6512 net/core/dev.c
-
-        /* Transfer changeable features to wanted_features and enable
-         * software offloads (GSO and GRO).
-         */
-        dev->hw_features |= NETIF_F_SOFT_FEATURES;
-        dev->features |= NETIF_F_SOFT_FEATURES;
-
-
-
+>
+> Changes in v4:
+> - Add bindings for MT8173 cpufreq driver
+> - Move OPP table back into device tree
+> - Address comments for last version
+>
+> Changes in v3:
+> - Implement MT8173 specific standalone cpufreq driver instead of using
+>   cpufreq-dt driver
+> - Define OPP table in the driver source code until new OPP binding is ready
+>
+> Changes in v2:
+> - Add intermediate frequency support in cpufreq-dt driver
+> - Use voltage scaling code of cpufreq-dt for little cluster instead of
+>   implementaion in notifier of mtk-cpufreq driver
+> - Code refinement for mtk-cpufreq driver
+>
+> Pi-Cheng Chen (2):
+>   dt-bindings: mediatek: Add MT8173 cpufreq driver binding
+>   cpufreq: mediatek: Add MT8173 cpufreq driver
+>
+>  .../devicetree/bindings/cpufreq/cpufreq-mt8173.txt | 127 +++++
+>  drivers/cpufreq/Kconfig.arm                        |   7 +
+>  drivers/cpufreq/Makefile                           |   1 +
+>  drivers/cpufreq/mt8173-cpufreq.c                   | 550 +++++++++++++++++++++
+>  4 files changed, 685 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-mt8173.txt
+>  create mode 100644 drivers/cpufreq/mt8173-cpufreq.c
+>
+> --
+> 1.9.1
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
