@@ -1,109 +1,59 @@
-From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: Re: [PATCH] ARM: at91/dt: sama5d4: fix dma conf for aes, sha and
- tdes nodes
-Date: Tue, 9 Jun 2015 12:12:13 +0200
-Message-ID: <5576BBFD.2060605@atmel.com>
-References: <1433771754-4999-1-git-send-email-ludovic.desroches@atmel.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: Master-aware devices and sideband ID data
+Date: Tue, 9 Jun 2015 11:17:54 +0100
+Message-ID: <20150609101515.GA28474@leverpostej>
+References: <20150324155007.GC23005@leverpostej>
+ <26BE36EF-2C5B-4DA6-8950-8FEBB031ED1B@caviumnetworks.com>
+ <20150527173953.GC23176@leverpostej>
+ <E342D737-5DD5-48C7-BB01-B83C29CB6E31@caviumnetworks.com>
+ <20150601102208.GD22406@leverpostej>
+ <158EFC9F-FCAF-44D3-AD40-804EDFE0CE25@caviumnetworks.com>
+ <20150605090534.GC1198@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1433771754-4999-1-git-send-email-ludovic.desroches@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ludovic Desroches <ludovic.desroches@atmel.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Kevin Hilman <khilman@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150605090534.GC1198-5wv7dgnIgG8@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: "Chalamarla, Tirumalesh" <Tirumalesh.Chalamarla-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, "joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org" <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org" <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org" <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Le 08/06/2015 15:55, Ludovic Desroches a =E9crit :
-> The xdmac channel configuration is done in one cell not two. This err=
-or
-> prevents from probing devices correctly.
->=20
-> Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
-> Fixes: 83906783b766 ("ARM: at91/dt: sama5d4: add aes, sha and tdes no=
-des")
-> Cc: stable@vger.kernel.org # 4.1
+On Fri, Jun 05, 2015 at 10:05:34AM +0100, Will Deacon wrote:
+> On Thu, Jun 04, 2015 at 11:19:30PM +0100, Chalamarla, Tirumalesh wrote:
+> > > On Jun 1, 2015, at 3:22 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> > > It's possible to specify that the paths exist. I expect that software
+> > > would select which to use at runtime.
+> > > 
+> > My worry is how to define any priorities/preferences between masters. 
+> > in general the proposal looks reasonable.
+> 
+> I agree that the proposal looks reasonable (in terms of the ability to
+> describe the sort of topologies that we will face) but I still don't
+> understand what I need to do in e.g. my IOMMU driver to support this
+> binding whilst continuing to support the existing iommus binding, which
+> is relied upon to configure dma-mapping.
+> 
+> Mark: how do you see this co-existing/merging with the current bindings?
 
-Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+As I mentioned in my initial mail, it's not clear to me how this can be
+reconciled with the current bindings. Everything I've been able to come
+up with so far at best ends up describing the same thing repeatedly.
 
-Arnd, Olof, Kevin,
+I'll see what I can come up with. Any sugestions are welcome!
 
-This patch is a fix concerning material that had been added to 4.1, so
-it's not exactly a regression.
+> I don't think it's practical to throw away what we have and move over to
+> something totally different all in one go, but there clearly *is* benefit
+> in your proposal over the existing scheme.
 
-So, as we missed the last train to 4.1, I'd like to queue it for 4.2 bu=
-t
-it's the only patch I have on top of my previous DT pull-request
-(at91-dt4, not taken by you, yet).
+I can see that's probably not practical. :(
 
-So, should I build another pull-request (at91-dt5) or can you take this
-single patch when you pull the at91-dt4 material?
+Do we know what we're going to do w.r.t. IORT? That's going to require
+the kernel to be able to handle a similar description to this proposal.
 
-BTW, here is the link to patchwork if it's easier:
-https://patchwork.kernel.org/patch/6565591/
-
-Thanks, bye,
-
-> ---
->  arch/arm/boot/dts/sama5d4.dtsi | 20 ++++++++++----------
->  1 file changed, 10 insertions(+), 10 deletions(-)
->=20
-> diff --git a/arch/arm/boot/dts/sama5d4.dtsi b/arch/arm/boot/dts/sama5=
-d4.dtsi
-> index 6b1bb58..51ddec4 100644
-> --- a/arch/arm/boot/dts/sama5d4.dtsi
-> +++ b/arch/arm/boot/dts/sama5d4.dtsi
-> @@ -1125,10 +1125,10 @@
->  				compatible =3D "atmel,at91sam9g46-aes";
->  				reg =3D <0xfc044000 0x100>;
->  				interrupts =3D <12 IRQ_TYPE_LEVEL_HIGH 0>;
-> -				dmas =3D <&dma0 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(=
-1))
-> -					AT91_XDMAC_DT_PERID(41)>,
-> -				       <&dma0 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)=
-)
-> -					AT91_XDMAC_DT_PERID(40)>;
-> +				dmas =3D <&dma0 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(=
-1)
-> +					| AT91_XDMAC_DT_PERID(41))>,
-> +				       <&dma0 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
-> +					| AT91_XDMAC_DT_PERID(40))>;
->  				dma-names =3D "tx", "rx";
->  				clocks =3D <&aes_clk>;
->  				clock-names =3D "aes_clk";
-> @@ -1139,10 +1139,10 @@
->  				compatible =3D "atmel,at91sam9g46-tdes";
->  				reg =3D <0xfc04c000 0x100>;
->  				interrupts =3D <14 IRQ_TYPE_LEVEL_HIGH 0>;
-> -				dmas =3D <&dma0 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(=
-1))
-> -					AT91_XDMAC_DT_PERID(42)>,
-> -				       <&dma0 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)=
-)
-> -					AT91_XDMAC_DT_PERID(43)>;
-> +				dmas =3D <&dma0 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(=
-1)
-> +					| AT91_XDMAC_DT_PERID(42))>,
-> +				       <&dma0 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
-> +					| AT91_XDMAC_DT_PERID(43))>;
->  				dma-names =3D "tx", "rx";
->  				clocks =3D <&tdes_clk>;
->  				clock-names =3D "tdes_clk";
-> @@ -1153,8 +1153,8 @@
->  				compatible =3D "atmel,at91sam9g46-sha";
->  				reg =3D <0xfc050000 0x100>;
->  				interrupts =3D <15 IRQ_TYPE_LEVEL_HIGH 0>;
-> -				dmas =3D <&dma0 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(=
-1))
-> -					AT91_XDMAC_DT_PERID(44)>;
-> +				dmas =3D <&dma0 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(=
-1)
-> +					| AT91_XDMAC_DT_PERID(44))>;
->  				dma-names =3D "tx";
->  				clocks =3D <&sha_clk>;
->  				clock-names =3D "sha_clk";
->=20
-
-
---=20
-Nicolas Ferre
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
