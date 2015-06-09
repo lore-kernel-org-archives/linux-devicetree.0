@@ -1,41 +1,128 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v4 5/7] Watchdog: introduce ARM SBSA watchdog driver
-Date: Tue, 09 Jun 2015 09:45:02 -0700
-Message-ID: <5577180E.4070804@roeck-us.net>
-References: <=fu.wei@linaro.org>	<1433217907-928-1-git-send-email-fu.wei@linaro.org>	<1433217907-928-6-git-send-email-fu.wei@linaro.org>	<556DCC95.806@codeaurora.org>	<CADyBb7sXiMNtrH+Eu1Qj00TPNLMMr5cCTPObzFmKnHLsbWH79Q@mail.gmail.com>	<556DE2D5.3090906@roeck-us.net>	<CADyBb7uT=gFJkK8s-QF1n4Z+Zov9Lurp1nvBO-C-qszTqbMYXQ@mail.gmail.com>	<5575DE48.8010308@roeck-us.net>	<CADyBb7sYPnvDVEJYVQm65B1JV=yvq10+ezs2x3f8F=TJCZ+OJA@mail.gmail.com>	<55766D74.2060401@roeck-us.net>	<CADyBb7vR-jP6ZjzMSnprrSXbNayk8umx+cXV3TsGypfhZcCwTw@mail.gmail.com>	<55769E0E.8060801@roeck-us.net> <CADyBb7skpSZ=3_ByW-RHM99=nbs7Z5xXFXtsKzkxOXAGjxF=3Q@mail.gmail.com> <557712CF.8010802@roeck-us.net> <5577147B.2030900@codeaurora.org>
+From: Tai Tri Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org>
+Subject: Re: [PATCH 2/2 RESEND] power: reset: Add syscon poweroff device node
+ for APM X-Gene platform
+Date: Tue, 9 Jun 2015 09:47:08 -0700
+Message-ID: <CACgAJHxZjBZMFjCRBT-Q-v5fPGboJQdqNE4qH99w2HvwQwez5Q@mail.gmail.com>
+References: <1433272747-27114-1-git-send-email-ttnguyen@apm.com>
+	<1433272747-27114-3-git-send-email-ttnguyen@apm.com>
+	<CALdTtnvQg2xmL5MqxUcvJmk_33XiEg9tnLzYvC++ZQL3j7J46g@mail.gmail.com>
+	<CACgAJHwtCuZgZySmcvMxZHVxy__eZP02-TDbEn3FEpMx5y_LDQ@mail.gmail.com>
+	<CALdTtnvwQ0W=3i-Yi73rQQ43uo1njwBoEuNQOpJ79Qoref9Yvw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <5577147B.2030900@codeaurora.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Timur Tabi <timur@codeaurora.org>, Fu Wei <fu.wei@linaro.org>
-Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Wei Fu <tekkamanninja@gmail.com>, G Gregory <graeme.gregory@linaro.org>, Al Stone <al.stone@linaro.org>, Hanjun Guo <hanjun.guo@linaro.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Arnd Bergmann <arnd@arndb.de>, vgandhi@codeaurora.org, wim@iguana.be, Jon Masters <jcm@redhat.com>, Leo Duran <leo.duran@amd.com>, Jon Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, rjw@rjwysocki.net
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CALdTtnvwQ0W=3i-Yi73rQQ43uo1njwBoEuNQOpJ79Qoref9Yvw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dann Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/09/2015 09:29 AM, Timur Tabi wrote:
-> On 06/09/2015 11:22 AM, Guenter Roeck wrote:
+Hi Dann,
+
+On Tue, Jun 9, 2015 at 8:31 AM, Dann Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org> wrote:
+> On Mon, Jun 8, 2015 at 10:34 PM, Tai Tri Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org> wrote:
+>> Hi Dann,
 >>
+>> On Mon, Jun 8, 2015 at 8:44 PM, Dann Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org> wrote:
+>>> On Tue, Jun 2, 2015 at 1:19 PM, Tai Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org> wrote:
+>>>> This patch adds syscon poweroff device node to support poweroff feature
+>>>> on APM X-Gene Mustang platform
+>>>
+>>> hey Tai,
+>>>  The reboot changes work just fine for me, but poweroff does not:
+>>>
+>>> [  OK  ] Reached target Final Step.
+>>>          Starting Power-Off...
+>>> reboot: Power down
+>>> Unable to poweroff system
+>>> Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000000
+>>>
+>>> CPU: 0 PID: 1 Comm: systemd-shutdow Tainted: G        W       4.1.0-rc7+ #1
+>>> Hardware name: APM X-Gene Mustang board (DT)
+>>> Call trace:
+>>> [<ffffffc00008990c>] dump_backtrace+0x0/0x11c
+>>> [<ffffffc000089a38>] show_stack+0x10/0x1c
+>>> [<ffffffc0005b447c>] dump_stack+0x88/0xc8
+>>> [<ffffffc0005b3374>] panic+0xe0/0x220
+>>> [<ffffffc0000b5f24>] do_exit+0x990/0x994
+>>> [<ffffffc0000d06bc>] SyS_reboot+0x14c/0x208
+>>> ---[ end Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000000
+>>>
+>>>   -dann
+>>>
 >>
->> but I see your point. Essentially, the specification is broken
->> for all practical purposes, since, as you point out, enabling
->> the watchdog overwrites and explicitly sets WCV. Effectively
->> this means that just using WCV to program the timeout period
->> is not really possible.
->>
->> I am not really sure how to address this. We can either only use WOR,
->> and forget about pretimeout, or we can enforce a minimum pretimeout.
->> In the latter case, we'll have to write WCV after writing WOR.
+>> Thanks for testing my patches.
+>> On APM X-Gene Mustang platform, power off circuit is controlled by firmware.
+>> It requires a firmware update to support power off feature.
+>> May I ask what firmware version you're running on?
 >
-> In talking with our hardware engineers, using WCV to program the timeout period is not a valid operation.  This is why I keep arguing against the pre-timeout feature, and I don't agree that servers should always use pre-timeout.
+> Sure, 1.15.12.
+>
+>   -dann
 >
 
-Not sure if "not valid" is correct - after all, it is mentioned in the
-specification. However, it is at the very least fragile.
+Just want to confirm you are booting in boot strap mode and had
+SLIMpro firmware updated to 1.15.12 as well.
+To check this, you should see this message in boot loader.
 
-I tend to agree that we should just forget about pretimeout and
-use your original approach, where the timeout value is used
-to program WOR. Everything else is really just asking for trouble.
+Slimpro FW:
+        Ver: 2.4 (build 01.15.12.00 2015/05/20)
 
-Guenter
+I tested on a Mustang A3, this works just fine.
 
+- Tai
+
+
+>> Tai
+>>
+>>
+>>>> Signed-off-by: Tai Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org>
+>>>> ---
+>>>>  arch/arm64/boot/dts/apm/apm-mustang.dts |   12 ++++++++++++
+>>>>  1 file changed, 12 insertions(+)
+>>>>
+>>>> diff --git a/arch/arm64/boot/dts/apm/apm-mustang.dts b/arch/arm64/boot/dts/apm/apm-mustang.dts
+>>>> index 83578e7..910d561 100644
+>>>> --- a/arch/arm64/boot/dts/apm/apm-mustang.dts
+>>>> +++ b/arch/arm64/boot/dts/apm/apm-mustang.dts
+>>>> @@ -23,6 +23,18 @@
+>>>>                 device_type = "memory";
+>>>>                 reg = < 0x1 0x00000000 0x0 0x80000000 >; /* Updated by bootloader */
+>>>>         };
+>>>> +
+>>>> +       poweroff_mbox: poweroff_mbox@10548000 {
+>>>> +               compatible = "syscon";
+>>>> +               reg = <0x0 0x10548000 0x0 0x30>;
+>>>> +       };
+>>>> +
+>>>> +       poweroff: poweroff@10548010 {
+>>>> +               compatible = "syscon-poweroff";
+>>>> +               regmap = <&poweroff_mbox>;
+>>>> +               offset = <0x10>;
+>>>> +               mask = <0x1>;
+>>>> +       };
+>>>>  };
+>>>>
+>>>>  &pcie0clk {
+>>>> --
+>>>> 1.7.9.5
+>>>>
+>>>>
+>>>> _______________________________________________
+>>>> linux-arm-kernel mailing list
+>>>> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>>>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>>
+>>
+>>
+>> --
+>> Tai
+
+
+
+-- 
+Tai
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
