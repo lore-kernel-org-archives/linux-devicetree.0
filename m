@@ -1,47 +1,41 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] of: add Okaya Electric America vendor prefix
-Date: Tue, 9 Jun 2015 11:34:19 -0500
-Message-ID: <CAL_JsqLv9f9SuYN=BO7rpbJpfovQxMp4jar_zp815DVnG3j6Ww@mail.gmail.com>
-References: <1432827466-8104-1-git-send-email-gary.bisson@boundarydevices.com>
- <1433865599-8167-1-git-send-email-gary.bisson@boundarydevices.com> <1433865599-8167-2-git-send-email-gary.bisson@boundarydevices.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v4 5/7] Watchdog: introduce ARM SBSA watchdog driver
+Date: Tue, 09 Jun 2015 09:45:02 -0700
+Message-ID: <5577180E.4070804@roeck-us.net>
+References: <=fu.wei@linaro.org>	<1433217907-928-1-git-send-email-fu.wei@linaro.org>	<1433217907-928-6-git-send-email-fu.wei@linaro.org>	<556DCC95.806@codeaurora.org>	<CADyBb7sXiMNtrH+Eu1Qj00TPNLMMr5cCTPObzFmKnHLsbWH79Q@mail.gmail.com>	<556DE2D5.3090906@roeck-us.net>	<CADyBb7uT=gFJkK8s-QF1n4Z+Zov9Lurp1nvBO-C-qszTqbMYXQ@mail.gmail.com>	<5575DE48.8010308@roeck-us.net>	<CADyBb7sYPnvDVEJYVQm65B1JV=yvq10+ezs2x3f8F=TJCZ+OJA@mail.gmail.com>	<55766D74.2060401@roeck-us.net>	<CADyBb7vR-jP6ZjzMSnprrSXbNayk8umx+cXV3TsGypfhZcCwTw@mail.gmail.com>	<55769E0E.8060801@roeck-us.net> <CADyBb7skpSZ=3_ByW-RHM99=nbs7Z5xXFXtsKzkxOXAGjxF=3Q@mail.gmail.com> <557712CF.8010802@roeck-us.net> <5577147B.2030900@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1433865599-8167-2-git-send-email-gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Cc: dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <5577147B.2030900@codeaurora.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Timur Tabi <timur@codeaurora.org>, Fu Wei <fu.wei@linaro.org>
+Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Wei Fu <tekkamanninja@gmail.com>, G Gregory <graeme.gregory@linaro.org>, Al Stone <al.stone@linaro.org>, Hanjun Guo <hanjun.guo@linaro.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Arnd Bergmann <arnd@arndb.de>, vgandhi@codeaurora.org, wim@iguana.be, Jon Masters <jcm@redhat.com>, Leo Duran <leo.duran@amd.com>, Jon Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, rjw@rjwysocki.net
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 9, 2015 at 10:59 AM, Gary Bisson
-<gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org> wrote:
-> This patch adds vendor prefix for Okaya Electronic America, a provider
-> of LCD modules and display technologies.
+On 06/09/2015 09:29 AM, Timur Tabi wrote:
+> On 06/09/2015 11:22 AM, Guenter Roeck wrote:
+>>
+>>
+>> but I see your point. Essentially, the specification is broken
+>> for all practical purposes, since, as you point out, enabling
+>> the watchdog overwrites and explicitly sets WCV. Effectively
+>> this means that just using WCV to program the timeout period
+>> is not really possible.
+>>
+>> I am not really sure how to address this. We can either only use WOR,
+>> and forget about pretimeout, or we can enforce a minimum pretimeout.
+>> In the latter case, we'll have to write WCV after writing WOR.
 >
-> Signed-off-by: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+> In talking with our hardware engineers, using WCV to program the timeout period is not a valid operation.  This is why I keep arguing against the pre-timeout feature, and I don't agree that servers should always use pre-timeout.
+>
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Not sure if "not valid" is correct - after all, it is mentioned in the
+specification. However, it is at the very least fragile.
 
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index ee2ce7b..37d2de79 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -148,6 +148,7 @@ nintendo    Nintendo
->  nokia  Nokia
->  nvidia NVIDIA
->  nxp    NXP Semiconductors
-> +okaya  Okaya Electric America, Inc.
->  onnn   ON Semiconductor Corp.
->  opencores      OpenCores.org
->  ortustech      Ortus Technology Co., Ltd.
-> --
-> 2.1.4
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I tend to agree that we should just forget about pretimeout and
+use your original approach, where the timeout value is used
+to program WOR. Everything else is really just asking for trouble.
+
+Guenter
+
