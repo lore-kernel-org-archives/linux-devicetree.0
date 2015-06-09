@@ -1,78 +1,51 @@
-From: Cyrille Pitchen <cyrille.pitchen@atmel.com>
-Subject: [PATCH v6 3/6] i2c: at91: update documentation for DT bindings
-Date: Tue, 9 Jun 2015 18:22:16 +0200
-Message-ID: <9f47a33d22873d75c67574736515bea46747d302.1433866582.git.cyrille.pitchen@atmel.com>
-References: <cover.1433866582.git.cyrille.pitchen@atmel.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v4 5/7] Watchdog: introduce ARM SBSA watchdog driver
+Date: Tue, 09 Jun 2015 09:22:39 -0700
+Message-ID: <557712CF.8010802@roeck-us.net>
+References: <=fu.wei@linaro.org>	<1433217907-928-1-git-send-email-fu.wei@linaro.org>	<1433217907-928-6-git-send-email-fu.wei@linaro.org>	<556DCC95.806@codeaurora.org>	<CADyBb7sXiMNtrH+Eu1Qj00TPNLMMr5cCTPObzFmKnHLsbWH79Q@mail.gmail.com>	<556DE2D5.3090906@roeck-us.net>	<CADyBb7uT=gFJkK8s-QF1n4Z+Zov9Lurp1nvBO-C-qszTqbMYXQ@mail.gmail.com>	<5575DE48.8010308@roeck-us.net>	<CADyBb7sYPnvDVEJYVQm65B1JV=yvq10+ezs2x3f8F=TJCZ+OJA@mail.gmail.com>	<55766D74.2060401@roeck-us.net>	<CADyBb7vR-jP6ZjzMSnprrSXbNayk8umx+cXV3TsGypfhZcCwTw@mail.gmail.com>	<55769E0E.8060801@roeck-us.net> <CADyBb7skpSZ=3_ByW-RHM99=nbs7Z5xXFXtsKzkxOXAGjxF=3Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1433866582.git.cyrille.pitchen@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: ludovic.desroches@atmel.com, nicolas.ferre@atmel.com, linux-i2c@vger.kernel.org, wsa@the-dreams.de
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, robh+dt@kernel.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CADyBb7skpSZ=3_ByW-RHM99=nbs7Z5xXFXtsKzkxOXAGjxF=3Q@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Fu Wei <fu.wei@linaro.org>
+Cc: Timur Tabi <timur@codeaurora.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Wei Fu <tekkamanninja@gmail.com>, G Gregory <graeme.gregory@linaro.org>, Al Stone <al.stone@linaro.org>, Hanjun Guo <hanjun.guo@linaro.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Arnd Bergmann <arnd@arndb.de>, vgandhi@codeaurora.org, wim@iguana.be, Jon Masters <jcm@redhat.com>, Leo Duran <leo.duran@amd.com>, Jon Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, rjw@rjwysocki.net
 List-Id: devicetree@vger.kernel.org
 
-add a new value "atmel,sama5d2-i2c" for the "compatible" property.
-add a new optional property "atmel,fifo-size" to enable FIFO support when
-available.
-add missing optional properties "dmas" and "dma-names".
+On 06/09/2015 03:46 AM, Fu Wei wrote:
 
-Signed-off-by: Cyrille Pitchen <cyrille.pitchen@atmel.com>
----
- Documentation/devicetree/bindings/i2c/i2c-at91.txt | 30 ++++++++++++++++++++--
- 1 file changed, 28 insertions(+), 2 deletions(-)
+> Yes, if WOR only affect in TimeoutRefresh, we cat always make WOR == pretimeout
+> But the problem is  if we enable watchdog (write 0x01 to WCS will
+> cause an explicit watchdog refresh), then
+> 1) if ExplicitRefresh = True:
+>           CompareValue := SystemCounter + WOR
+>           WS0 := True
+> 2) TimeoutRefresh is True again, WS0 == True:
+>           WS1 = True
+>
+> so once we enable watchdog, system reset, that is not what we want.
+> this behavior is following SBSA spec.
+>
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-at91.txt b/Documentation/devicetree/bindings/i2c/i2c-at91.txt
-index 388f0a2..6e81dc1 100644
---- a/Documentation/devicetree/bindings/i2c/i2c-at91.txt
-+++ b/Documentation/devicetree/bindings/i2c/i2c-at91.txt
-@@ -2,8 +2,8 @@ I2C for Atmel platforms
- 
- Required properties :
- - compatible : Must be "atmel,at91rm9200-i2c", "atmel,at91sam9261-i2c",
--     "atmel,at91sam9260-i2c", "atmel,at91sam9g20-i2c", "atmel,at91sam9g10-i2c"
--     or "atmel,at91sam9x5-i2c"
-+     "atmel,at91sam9260-i2c", "atmel,at91sam9g20-i2c", "atmel,at91sam9g10-i2c",
-+     "atmel,at91sam9x5-i2c" or "atmel,sama5d2-i2c"
- - reg: physical base address of the controller and length of memory mapped
-      region.
- - interrupts: interrupt number to the cpu.
-@@ -13,6 +13,10 @@ Required properties :
- 
- Optional properties:
- - clock-frequency: Desired I2C bus frequency in Hz, otherwise defaults to 100000
-+- dmas: A list of two dma specifiers, one for each entry in dma-names.
-+- dma-names: should contain "tx" and "rx".
-+- atmel,fifo-size: maximum number of data the RX and TX FIFOs can store for FIFO
-+  capable I2C controllers.
- - Child nodes conforming to i2c bus binding
- 
- Examples :
-@@ -32,3 +36,25 @@ i2c0: i2c@fff84000 {
- 		pagesize = <128>;
- 	}
- }
-+
-+i2c0: i2c@f8034600 {
-+	compatible = "atmel,sama5d2-i2c";
-+	reg = <0xf8034600 0x100>;
-+	interrupts = <19 IRQ_TYPE_LEVEL_HIGH 7>;
-+	dmas = <&dma0
-+		(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1))
-+		AT91_XDMAC_DT_PERID(11)>,
-+	       <&dma0
-+		(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1))
-+		AT91_XDMAC_DT_PERID(12)>;
-+	dma-names = "tx", "rx";
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	clocks = <&flx0>;
-+	atmel,fifo-size = <16>;
-+
-+	wm8731: wm8731@1a {
-+		compatible = "wm8731";
-+		reg = <0x1a>;
-+	};
-+};
--- 
-1.8.2.2
+Ok, I admit I am a bit slow ;-).
+
+WS0 := True would be set the next time around, since
+
+	if ExplicitRefresh == True
+		WS0 = False
+		WS1 = False
+
+but I see your point. Essentially, the specification is broken
+for all practical purposes, since, as you point out, enabling
+the watchdog overwrites and explicitly sets WCV. Effectively
+this means that just using WCV to program the timeout period
+is not really possible.
+
+I am not really sure how to address this. We can either only use WOR,
+and forget about pretimeout, or we can enforce a minimum pretimeout.
+In the latter case, we'll have to write WCV after writing WOR.
+
+Thanks,
+Guenter
+
