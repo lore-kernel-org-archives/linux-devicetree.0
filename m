@@ -1,111 +1,103 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 05/22] doc: dt-binding: usb: add otg related properties
-Date: Tue, 9 Jun 2015 08:26:20 -0500
-Message-ID: <CAL_JsqKg_NYtLGg9RUQOpKscwHEskHO4_Szo_nM3BnrDdhg3fg@mail.gmail.com>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 09/22] usb: gadget: add usb_otg_descriptor_add
+ interface to init usb_otg_descriptor
+Date: Tue, 9 Jun 2015 16:27:51 +0300
+Message-ID: <20150609162751.54223edc@rockdesk>
 References: <1433775737-9816-1-git-send-email-jun.li@freescale.com>
- <1433775737-9816-6-git-send-email-jun.li@freescale.com> <CAL_JsqJ3hHOGevwqcBNFN2LrTP7Bm_k9SDuTNKBbpq5W-eLmdw@mail.gmail.com>
- <20150609011806.GA7976@shlinux1.ap.freescale.net>
+	<1433775737-9816-10-git-send-email-jun.li@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150609011806.GA7976-KgLukfWpBlCctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+In-Reply-To: <1433775737-9816-10-git-send-email-jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+To: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 8, 2015 at 8:18 PM, Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> On Mon, Jun 08, 2015 at 11:06:49AM -0500, Rob Herring wrote:
->> On Mon, Jun 8, 2015 at 10:02 AM, Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
->> > Add otg version, srp, hnp and adp support for usb OTG port, then those OTG
->> > features don't have to be decided by usb gadget drivers.
->> >
->> > Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->> > ---
->> >  Documentation/devicetree/bindings/usb/generic.txt | 10 ++++++++++
->> >  1 file changed, 10 insertions(+)
->> >
->> > diff --git a/Documentation/devicetree/bindings/usb/generic.txt b/Documentation/devicetree/bindings/usb/generic.txt
->> > index 477d5bb..7386f4a 100644
->> > --- a/Documentation/devicetree/bindings/usb/generic.txt
->> > +++ b/Documentation/devicetree/bindings/usb/generic.txt
->> > @@ -11,6 +11,12 @@ Optional properties:
->> >                         "peripheral" and "otg". In case this attribute isn't
->> >                         passed via DT, USB DRD controllers should default to
->> >                         OTG.
->> > + - otg-rev: tells usb driver the release number of the OTG and EH supplement
->> > +                       with which the device and its descriptors are compliant,
->> > +                       in binary-coded decimal (i.e. 2.0 is 0200H).
->>
->> I would assume OTG 2.0 is somehow backwards compatible? Is this a h/w
->> dependency or a driver feature?
->>
-> Not fully compatible, OTG 2.0 extend the usb_otg_descriptor by adding a new
-> member bcdOTG to identify the OTG version, this descriptor needs to be sent
-> to OTG host with correct size and content, so we have to know which release
-> version the OTG device is compliant with, either by menuconfig config or pass
-> via DT.
+On Mon, 8 Jun 2015 23:02:04 +0800
+Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
 
-So you have to change the version depending on the host you are
-connected to? That really seems strange that plugging in a OTG 2.0
-device to an OTG 1.3 host would not work and doesn't make for a good
-user experience.
+> Allocate usb_otg_descriptor and initialize it according to gadget otg
+> options, if none of options is not set, keep bmAttributes setting as
+> current gadget drivers, with this new interface, usb_otg_descriptor can
+> include bcdOTG if OTG 2.0 or later, and otg features can be decided by
+> the combination of usb hardware property and driver config.
+> 
+> Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+>  drivers/usb/gadget/config.c | 37 +++++++++++++++++++++++++++++++++++++
+>  include/linux/usb/gadget.h  |  1 +
+>  2 files changed, 38 insertions(+)
+> 
+> diff --git a/drivers/usb/gadget/config.c b/drivers/usb/gadget/config.c
+> index 34e12fc..a86e079 100644
+> --- a/drivers/usb/gadget/config.c
+> +++ b/drivers/usb/gadget/config.c
+> @@ -195,3 +195,40 @@ void usb_free_all_descriptors(struct usb_function *f)
+>  	usb_free_descriptors(f->ss_descriptors);
+>  }
+>  EXPORT_SYMBOL_GPL(usb_free_all_descriptors);
+> +
+> +struct usb_otg_descriptor *usb_otg_descriptor_add(struct usb_gadget *gadget)
+> +{
+> +	struct usb_otg_descriptor *otg_desc;
+> +	unsigned otg_desc_length;
+> +
+> +	if (gadget->otg_rev >= 0x0200)
+> +		otg_desc_length = sizeof(*otg_desc) + sizeof(struct bcdOTG);
+> +	else
+> +		otg_desc_length = sizeof(*otg_desc);
+> +
+> +	otg_desc = (struct usb_otg_descriptor *)kzalloc(otg_desc_length,
+> +								GFP_KERNEL); 
 
->> > + - srp-support: tells OTG controllers we want to enable SRP.
->> > + - hnp-support: tells OTG controllers we want to enable HNP.
->> > + - adp-support: tells OTG controllers we want to enable ADP.
->>
->> I've recently run into a problem[1] and found that I have to disable
->> OTG in the kernel to get my device to work. Having to turn-off OTG
->> seems like the wrong solution, and shifting the problem to DT seems
->> wrong too. Why is this not a user configurable option (within whatever
->> h/w constraints there are)?
-> The problem of below link, seems your device is claiming it's a HNP capable
-> OTG device, but connecting to a non-OTG port of your Host, assume your Host
-> does have a OTG port, your Host issue a A_ALT_HNP_SUPPORT request to your
-> OTG device to remind it can use another port with HNP, but the request failed
-> (maybe STALL by your device, this request is defined in OTG 1.3 but obsolete
-> in OTG 2.0), so your Host just stopped enumeration of your device, this is not
-> reasonable because current OTG code is some out of data.
+You are allocating memory here and expecting users will free it.
+I suggest that you pass pointer to otg_desc as function argument and leave it upto
+the caller to allocate/deallocate memory for it.
 
-Do PCs have OTG ports typically? My expectation is that if I plug in
-an OTG device as a B device to any host port, that it will work as a
-device no matter what the host OTG capabilities are. If I have to
-change the kernel config or DT, that is a problem.
+Most likely users will be a static allocation like they do now and it is a
+lot simpler.
 
-> I am trying to make those OTG feaures to be configurable options, you mean
-> by sys?
+> +	if (!otg_desc)
+> +		return otg_desc;
+> +
+> +	otg_desc->bLength = otg_desc_length;
+> +	otg_desc->bDescriptorType = USB_DT_OTG;
+> +
+> +	if (gadget->adp_support || gadget->hnp_support ||
+> +					gadget->srp_support) {
+> +		if (gadget->adp_support)
+> +			otg_desc->bmAttributes |= USB_OTG_ADP;
+> +		if (gadget->hnp_support)
+> +			otg_desc->bmAttributes |= USB_OTG_HNP;
+> +		if (gadget->srp_support)
+> +			otg_desc->bmAttributes |= USB_OTG_SRP;
+> +	} else {
+> +		otg_desc->bmAttributes = USB_OTG_SRP | USB_OTG_HNP;
+> +	}
+> +
+> +	if (gadget->otg_rev >= 0x0200)
+> +		otg_desc->otg_rev[0].bcdOTG = cpu_to_le16(gadget->otg_rev);
+> +
+> +	return otg_desc;
+> +}
+> +EXPORT_SYMBOL_GPL(usb_otg_descriptor_add);
+> diff --git a/include/linux/usb/gadget.h b/include/linux/usb/gadget.h
+> index 2f4f39c..e210466 100644
+> --- a/include/linux/usb/gadget.h
+> +++ b/include/linux/usb/gadget.h
+> @@ -1013,6 +1013,7 @@ int usb_assign_descriptors(struct usb_function *f,
+>  		struct usb_descriptor_header **ss);
+>  void usb_free_all_descriptors(struct usb_function *f);
+>  
+> +struct usb_otg_descriptor *usb_otg_descriptor_add(struct usb_gadget *gadget);
+>  /*-------------------------------------------------------------------------*/
+>  
+>  /* utility to simplify map/unmap of usb_requests to/from DMA */
 
-Yes.
-
->> What are the valid combinations? When do we want these enabled or not?
->> Wouldn't default enabled be better?
->
-> We want to enable all those support in kernel driver, but some platform or
-> hardware may not want to enable any or some of them, so those hardware
-> can disable it by not pass the property in dt, the 3 sub features of OTG are
-> not mandatory for so called OTG device, normally we at least enable HNP, and
-> SRP and ADP are optional.
-
-Please answer my questions in the doc.
-
->>
->> We already have dr_mode property. How is it related to these?
->
-> dr_mode is to tell the device it will work at OTG mode(there is another simple
-> dual role mode which is commom used but not HNP), srp/hnp/adp can further specify
-> which protocol the OTG device will support.
-
-By simple DR, you mean ID pin detect, right. So please define how you
-support just ID pin detect vs. other levels of capability. Does only
-dr_mode = otg mean ID pin detect? That may be a problem for existing
-DTs if you disable other OTG functions because they have not been
-added to the DT, then that is a problem.
-
-I'm feeling less convinced that this belongs in DT at all. Please
-convince me otherwise.
-
-Rob
+cheers,
+-roger
 --
 To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
