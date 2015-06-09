@@ -1,240 +1,90 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 2/4] PCI: designware: Add ARM64 support
-Date: Tue, 9 Jun 2015 12:15:07 +0100
-Message-ID: <20150609111507.GB20182@red-moon>
-References: <1433320542-49576-1-git-send-email-wangzhou1@hisilicon.com>
- <1433320542-49576-3-git-send-email-wangzhou1@hisilicon.com>
- <5570507F.4030704@arm.com>
- <557159B2.9090103@hisilicon.com>
+From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Subject: [PATCH 26/28] ARC: [axs101] Prepare for AXS103
+Date: Tue, 9 Jun 2015 17:18:26 +0530
+Message-ID: <1433850508-26317-27-git-send-email-vgupta@synopsys.com>
+References: <1433850508-26317-1-git-send-email-vgupta@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <557159B2.9090103-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Cc: James Morse <James.Morse-5wv7dgnIgG8@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Pratyush Anand <pratyush.anand-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "fabrice.gasnier-qxv4g6HH51o@public.gmane.org" <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "yuanzhichang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <yuanzhichang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "zhudacai-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <zhudacai-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "zhangjukuo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <zhangjukuo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "qiuzhenfa-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <qiuzhenfa-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <1433850508-26317-1-git-send-email-vgupta@synopsys.com>
+Sender: linux-arch-owner@vger.kernel.org
+To: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: arnd@arndb.de, arc-linux-dev@synopsys.com, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Vineet Gupta <Vineet.Gupta1@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 05, 2015 at 09:11:30AM +0100, Zhou Wang wrote:
+From: Alexey Brodkin <abrodkin@synopsys.com>
 
-[...]
+To avoid duplicating the MB DTS file, move the MB intc entry into cpu
+card specific file
 
-> >> -int dw_pcie_host_init(struct pcie_port *pp)
-> >> +int __init dw_pcie_host_init(struct pcie_port *pp)
-> >>  {
-> >>  	struct device_node *np = pp->dev->of_node;
-> >>  	struct platform_device *pdev = to_platform_device(pp->dev);
-> >>  	struct of_pci_range range;
-> >>  	struct of_pci_range_parser parser;
-> >> +	struct pci_bus *bus;
-> >>  	struct resource *cfg_res;
-> >> +	LIST_HEAD(res);
-> >>  	u32 val, na, ns;
-> >>  	const __be32 *addrp;
-> >>  	int i, index, ret;
-> >> @@ -502,15 +498,49 @@ int dw_pcie_host_init(struct pcie_port *pp)
-> >>  	val |= PORT_LOGIC_SPEED_CHANGE;
-> >>  	dw_pcie_wr_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, val);
-> >>  
-> >> -#ifdef CONFIG_PCI_MSI
-> >> -	dw_pcie_msi_chip.dev = pp->dev;
-> >> -	dw_pci.msi_ctrl = &dw_pcie_msi_chip;
-> >> +#ifdef CONFIG_ARM
-> >> +	/*
-> >> +	 * FIXME: we should really be able to use
-> >> +	 * of_pci_get_host_bridge_resources on arm32 as well,
-> >> +	 * but the conversion needs some more testing
-> >> +	 */
-> >> +	if (global_io_offset < SZ_1M && pp->io_size > 0) {
-> >> +		pci_ioremap_io(global_io_offset, pp->io_base);
-> >> +		global_io_offset += SZ_64K;
-> >> +		pci_add_resource_offset(&res, &pp->io,
-> >> +					global_io_offset - pp->io_bus_addr);
-> >> +	}
-> >> +	pci_add_resource_offset(&res, &pp->mem,
-> >> +				pp->mem.start - pp->mem_bus_addr);
-> >> +	pci_add_resource(&res, &pp->busn);
-> > 
-> > I don't think this #ifdef is necessary. In the spirit of 'the conversion
-> > needs some more testing', I removed it leaving just the below arm64 code.
-> > 
-> > This worked on my Freescale i.MX6 Quad SABRE Lite Board, I went as far as
-> > scanning for wireless access points.
-> > 
-> 
-> I think it depends on which kind of PCIe device you use, if we use a PCIe device
-> with a I/O Bar, it may not work well without above code. But so far, I have not
-> met a PCIe device which must work with a I/O Bar.
+Cc: Grant Likely <grant.likely@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+---
+ arch/arc/boot/dts/axc001.dtsi    | 21 +++++++++++++++++++++
+ arch/arc/boot/dts/axs10x_mb.dtsi | 17 -----------------
+ 2 files changed, 21 insertions(+), 17 deletions(-)
 
-There are two problems here:
-
-1) the io_base address you get from of_pci_get_host_bridge_resources
-   must be mapped using pci_remap_iospace. You are not doing this, so
-   even if you had a PCIe card with I/O bar it would not work on arm64
-   as the code stands. Remember that I/O space on arm/arm64 works as a
-   memory access with offset from PCI_IOBASE and that's the value you get
-   in the I/O resource. See:
-
-   drivers/pci/host/pci-host-generic.c
-   drivers/pci/host/pci-versatile.c
-   drivers/pci/host/pci-xgene.c
-
-2) (1) above would sort out I/O space access for both arm and arm64 so,
-   as James said, the #ifdef is useless.
-
-I hope this makes things clearer.
-
-Thanks,
-Lorenzo
-
-> 
-> >> +#else
-> >> +	ret = of_pci_get_host_bridge_resources(np, 0, 0xff, &res, &pp->io_base);
-> > 
-> > of_pci_get_host_bridge_resources expects &pp->io_base to be a
-> > resource_size_t*, but &io_base is u64*. This generates a warning on arm
-> > with the above change. Changing the the type in
-> > drivers/pci/host/pcie-designware.h fixes this.
-> > 
-> > 
-> > Thanks,
-> > 
-> > James
-> > 
-> 
-> OK, will modify this in next version.
-> 
-> Best Regards and thanks again for your test,
-> Zhou
-> 
-> >> +	if (ret)
-> >> +		return ret;
-> >> +#endif
-> >> +
-> >> +	bus = pci_create_root_bus(pp->dev, pp->root_bus_nr, &dw_pcie_ops,
-> >> +			      pp, &res);
-> >> +	if (!bus)
-> >> +		return -ENOMEM;
-> >> +
-> >> +#ifdef CONFIG_GENERIC_MSI_IRQ_DOMAIN
-> >> +	bus->msi = container_of(&pp->irq_domain, struct msi_controller, domain);
-> >> +#else
-> >> +	bus->msi = &dw_pcie_msi_chip;
-> >>  #endif
-> >>  
-> >> -	dw_pci.nr_controllers = 1;
-> >> -	dw_pci.private_data = (void **)&pp;
-> >> +	pci_scan_child_bus(bus);
-> >> +	if (pp->ops->scan_bus)
-> >> +		pp->ops->scan_bus(pp);
-> >>  
-> >> -	pci_common_init_dev(pp->dev, &dw_pci);
-> >> +#ifdef CONFIG_ARM
-> >> +	/* support old dtbs that incorrectly describe IRQs */
-> >> +	pci_fixup_irqs(pci_common_swizzle, of_irq_parse_and_map_pci);
-> >> +#endif
-> >> +
-> >> +	pci_assign_unassigned_bus_resources(bus);
-> >> +	pci_bus_add_devices(bus);
-> >>  
-> >>  	return 0;
-> >>  }
-> >> @@ -653,7 +683,7 @@ static int dw_pcie_valid_config(struct pcie_port *pp,
-> >>  static int dw_pcie_rd_conf(struct pci_bus *bus, u32 devfn, int where,
-> >>  			int size, u32 *val)
-> >>  {
-> >> -	struct pcie_port *pp = sys_to_pcie(bus->sysdata);
-> >> +	struct pcie_port *pp = bus->sysdata;
-> >>  	int ret;
-> >>  
-> >>  	if (dw_pcie_valid_config(pp, bus, PCI_SLOT(devfn)) == 0) {
-> >> @@ -677,7 +707,7 @@ static int dw_pcie_rd_conf(struct pci_bus *bus, u32 devfn, int where,
-> >>  static int dw_pcie_wr_conf(struct pci_bus *bus, u32 devfn,
-> >>  			int where, int size, u32 val)
-> >>  {
-> >> -	struct pcie_port *pp = sys_to_pcie(bus->sysdata);
-> >> +	struct pcie_port *pp = bus->sysdata;
-> >>  	int ret;
-> >>  
-> >>  	if (dw_pcie_valid_config(pp, bus, PCI_SLOT(devfn)) == 0)
-> >> @@ -701,64 +731,6 @@ static struct pci_ops dw_pcie_ops = {
-> >>  	.write = dw_pcie_wr_conf,
-> >>  };
-> >>  
-> >> -static int dw_pcie_setup(int nr, struct pci_sys_data *sys)
-> >> -{
-> >> -	struct pcie_port *pp;
-> >> -
-> >> -	pp = sys_to_pcie(sys);
-> >> -
-> >> -	if (global_io_offset < SZ_1M && pp->io_size > 0) {
-> >> -		sys->io_offset = global_io_offset - pp->io_bus_addr;
-> >> -		pci_ioremap_io(global_io_offset, pp->io_base);
-> >> -		global_io_offset += SZ_64K;
-> >> -		pci_add_resource_offset(&sys->resources, &pp->io,
-> >> -					sys->io_offset);
-> >> -	}
-> >> -
-> >> -	sys->mem_offset = pp->mem.start - pp->mem_bus_addr;
-> >> -	pci_add_resource_offset(&sys->resources, &pp->mem, sys->mem_offset);
-> >> -	pci_add_resource(&sys->resources, &pp->busn);
-> >> -
-> >> -	return 1;
-> >> -}
-> >> -
-> >> -static struct pci_bus *dw_pcie_scan_bus(int nr, struct pci_sys_data *sys)
-> >> -{
-> >> -	struct pci_bus *bus;
-> >> -	struct pcie_port *pp = sys_to_pcie(sys);
-> >> -
-> >> -	pp->root_bus_nr = sys->busnr;
-> >> -	bus = pci_create_root_bus(pp->dev, sys->busnr,
-> >> -				  &dw_pcie_ops, sys, &sys->resources);
-> >> -	if (!bus)
-> >> -		return NULL;
-> >> -
-> >> -	pci_scan_child_bus(bus);
-> >> -
-> >> -	if (bus && pp->ops->scan_bus)
-> >> -		pp->ops->scan_bus(pp);
-> >> -
-> >> -	return bus;
-> >> -}
-> >> -
-> >> -static int dw_pcie_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
-> >> -{
-> >> -	struct pcie_port *pp = sys_to_pcie(dev->bus->sysdata);
-> >> -	int irq;
-> >> -
-> >> -	irq = of_irq_parse_and_map_pci(dev, slot, pin);
-> >> -	if (!irq)
-> >> -		irq = pp->irq;
-> >> -
-> >> -	return irq;
-> >> -}
-> >> -
-> >> -static struct hw_pci dw_pci = {
-> >> -	.setup		= dw_pcie_setup,
-> >> -	.scan		= dw_pcie_scan_bus,
-> >> -	.map_irq	= dw_pcie_map_irq,
-> >> -};
-> >> -
-> >>  void dw_pcie_setup_rc(struct pcie_port *pp)
-> >>  {
-> >>  	u32 val;
-> > 
-> > 
-> > .
-> > 
-> 
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arc/boot/dts/axc001.dtsi b/arch/arc/boot/dts/axc001.dtsi
+index 6990ca45fc7b..a5e2726a067e 100644
+--- a/arch/arc/boot/dts/axc001.dtsi
++++ b/arch/arc/boot/dts/axc001.dtsi
+@@ -69,6 +69,27 @@
+ 		};
+ 	};
+ 
++	/*
++	 * This INTC is actually connected to DW APB GPIO
++	 * which acts as a wire between MB INTC and CPU INTC.
++	 * GPIO INTC is configured in platform init code
++	 * and here we mimic direct connection from MB INTC to
++	 * CPU INTC, thus we set "interrupts = <7>" instead of
++	 * "interrupts = <12>"
++	 *
++	 * This intc actually resides on MB, but we move it here to
++	 * avoid duplicating the MB dtsi file given that IRQ from
++	 * this intc to cpu intc are different for axs101 and axs103
++	 */
++	mb_intc: dw-apb-ictl@0xe0012000 {
++		#interrupt-cells = <1>;
++		compatible = "snps,dw-apb-ictl";
++		reg = < 0xe0012000 0x200 >;
++		interrupt-controller;
++		interrupt-parent = <&cpu_intc>;
++		interrupts = < 7 >;
++	};
++
+ 	memory {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+diff --git a/arch/arc/boot/dts/axs10x_mb.dtsi b/arch/arc/boot/dts/axs10x_mb.dtsi
+index 5d06f1fb4266..f3db32154973 100644
+--- a/arch/arc/boot/dts/axs10x_mb.dtsi
++++ b/arch/arc/boot/dts/axs10x_mb.dtsi
+@@ -36,23 +36,6 @@
+ 			};
+ 		};
+ 
+-		/*
+-		 * This INTC is actually connected to DW APB GPIO
+-		 * which acts as a wire between MB INTC and CPU INTC.
+-		 * GPIO INTC is configured in platform init code
+-		 * and here we mimic direct connection from MB INTC to
+-		 * CPU INTC, thus we set "interrupts = <7>" instead of
+-		 * "interrupts = <12>"
+-		 */
+-		mb_intc: dw-apb-ictl@0x12000 {
+-			#interrupt-cells = <1>;
+-			compatible = "snps,dw-apb-ictl";
+-			reg = < 0x12000 0x200 >;
+-			interrupt-controller;
+-			interrupt-parent = <&cpu_intc>;
+-			interrupts = < 7 >;
+-		};
+-
+ 		ethernet@0x18000 {
+ 			#interrupt-cells = <1>;
+ 			compatible = "snps,dwmac";
+-- 
+1.9.1
