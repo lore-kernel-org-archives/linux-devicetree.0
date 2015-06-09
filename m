@@ -1,51 +1,113 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: Re: [PATCH v4 1/6] mtd: nand: vf610_nfc: Freescale NFC for VF610,
+From: Sebastian Andrzej Siewior <sebastian@breakpoint.cc>
+Subject: Re: [PATCH v5 1/6] mtd: nand: vf610_nfc: Freescale NFC for VF610,
  MPC5125 and others
-Date: Tue, 09 Jun 2015 22:31:07 +0200
-Message-ID: <16ebb290641f700f2262527f90ff1e46@agner.ch>
-References: <1427300909-20825-1-git-send-email-stefan@agner.ch>
- <1427300909-20825-2-git-send-email-stefan@agner.ch>
- <20150603130825.GA23991@breakpoint.cc>
- <b3b09b4b8c97cbfc88fa0d5fdc5e40cd@agner.ch>
- <20150609200751.GC5720@breakpoint.cc>
+Date: Tue, 9 Jun 2015 23:33:38 +0200
+Message-ID: <20150609213338.GD5720@breakpoint.cc>
+References: <1433584416-29607-1-git-send-email-stefan@agner.ch>
+ <1433584416-29607-2-git-send-email-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150609200751.GC5720-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Andrzej Siewior <sebastian-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org>
-Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, aaron-yuhzfaV+M/Wz3Dx2OeFgIA@public.gmane.org, marb-Z4QKGCRq86k@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bpringlemeir-ygJ1pmMJ17cAvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1433584416-29607-2-git-send-email-stefan@agner.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Agner <stefan@agner.ch>
+Cc: dwmw2@infradead.org, computersforpeace@gmail.com, sebastian@breakpoint.cc, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, shawn.guo@linaro.org, kernel@pengutronix.de, boris.brezillon@free-electrons.com, marb@ixxat.de, aaron@tastycactus.com, bpringlemeir@gmail.com, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Bill Pringlemeir <bpringlemeir@nbsps.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2015-06-09 22:07, Sebastian Andrzej Siewior wrote:
-> On 2015-06-03 17:05:16 [+0200], Stefan Agner wrote:
->> As Boris guessed correctly, the reason I used the raw variant was due to
->> performance improvements due to the barrier. However, I will use
-> 
-> yeah, do you have any numbers by chance?
+On 2015-06-06 11:53:31 [+0200], Stefan Agner wrote:
+> diff --git a/drivers/mtd/nand/vf610_nfc.c b/drivers/mtd/nand/vf610_nf=
+c.c
+> new file mode 100644
+> index 0000000..bb5ee11
+> --- /dev/null
+> +++ b/drivers/mtd/nand/vf610_nfc.c
+=E2=80=A6
+> +/* Clear flags for upcoming command */
+> +static inline void vf610_nfc_clear_status(struct vf610_nfc *nfc)
+> +{
+> +	void __iomem *reg =3D nfc->regs + NFC_IRQ_STATUS;
+> +	u32 tmp =3D readl_relaxed(reg);
+		  ^^^
+> +	tmp |=3D CMD_DONE_CLEAR_BIT | IDLE_CLEAR_BIT;
+> +	writel_relaxed(tmp, reg);
+	^^^
+> +}
+=E2=80=A6
+> +static inline void vf610_nfc_done(struct vf610_nfc *nfc)
+> +{
+> +	unsigned long timeout =3D msecs_to_jiffies(100);
+> +
+> +	/*
+> +	 * Barrier is needed after this write. This write need
+> +	 * to be done before reading the next register the first
+> +	 * time.
+> +	 * vf610_nfc_set implicates such a barrier by using writel
+> +	 * to write to the register.
+> +	 */
+> +	vf610_nfc_set(nfc, NFC_IRQ_STATUS, IDLE_EN_BIT);
+> +	vf610_nfc_set(nfc, NFC_FLASH_CMD2, START_BIT);
+> +
+> +	if (!(vf610_nfc_read(nfc, NFC_IRQ_STATUS) & IDLE_IRQ_BIT)) {
+> +		if (!wait_for_completion_timeout(&nfc->cmd_done, timeout))
+> +			dev_warn(nfc->dev, "Timeout while waiting for BUSY.\n");
 
-Not current ones for Linux. I added this in the U-Boot variant of the
-driver.
- 
->> {read|write}l_relaxed instead, which should offer endian abstraction
->> while not having the performance penalty due to extensive barriers...
-> 
-> well, even those
-> |$ git grep readl_relaxed arch/powerpc/
-> |arch/powerpc/include/asm/io.h:#define readl_relaxed(addr) readl(addr)
-> 
-> have the endian swap. So an abstraction like you provided earlier
-> would be nice :)
+Can you or did you test for this timeout to happen? Something like read=
+ing from
+a sector which is BAD for instance might trigger it. Printing a warning=
+ is
+certainly a good idea.
 
-What do you mean by that?
+> +	}
+> +	vf610_nfc_clear_status(nfc);
+> +}
 
-Btw, I sent v5 of the patchset which use the relaxed variants. As
-expected, performance did not suffer by that change on ARM.
+=E2=80=A6
+> +/*
+> + * This function supports Vybrid only (MPC5125 would have full RB an=
+d four CS)
+> + */
+> +static void vf610_nfc_select_chip(struct mtd_info *mtd, int chip)
+> +{
+> +#ifdef CONFIG_SOC_VF610
+> +	struct vf610_nfc *nfc =3D mtd_to_nfc(mtd);
+> +	u32 tmp =3D vf610_nfc_read(nfc, NFC_ROW_ADDR);
+> +
+> +	tmp &=3D ~(ROW_ADDR_CHIP_SEL_RB_MASK | ROW_ADDR_CHIP_SEL_MASK);
+> +	tmp |=3D 1 << ROW_ADDR_CHIP_SEL_RB_SHIFT;
+> +
+> +	if (chip =3D=3D 0)
+> +		tmp |=3D 1 << ROW_ADDR_CHIP_SEL_SHIFT;
+> +	else if (chip =3D=3D 1)
+> +		tmp |=3D 2 << ROW_ADDR_CHIP_SEL_SHIFT;
+> +
+> +	vf610_nfc_write(nfc, NFC_ROW_ADDR, tmp);
+> +#endif
+> +}
+> +
+> +static const struct of_device_id vf610_nfc_dt_ids[] =3D {
+> +	{ .compatible =3D "fsl,vf610-nfc" },
+> +	{ .compatible =3D "fsl,mpc5125-nfc" },
 
---
-Stefan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I advise against a "fsl,mpc5125-nfc" binding. First of all it is the
+same as the previous one. Second of all it was not tested at all on the
+SoC it suggests to work. Plus the chip select function has a comment ha=
+t
+it won't work on MPC5125. So it really makes no sense to add it here.
+
+I don't mind if you put the code behind CONFIG_SOC_VF610. Later (if
+someone adds additional support) it will be best to use the .data membe=
+r
+to select the proper SoC support.
+
+While you add a new compatible please make sure you describe the bindin=
+g
+in Documentation/devicetree/bindings (in case you did and I missed the
+patch, ignore this :))
+
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, vf610_nfc_dt_ids);
+
+Sebastian
