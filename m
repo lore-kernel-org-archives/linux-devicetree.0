@@ -1,174 +1,110 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] drivercore: Fix unregistration path of platform
- devices
-Date: Tue, 09 Jun 2015 12:00:44 +0100
-Message-ID: <20150609110044.61031C40580@trevor.secretlab.ca>
-References: <1433686811-12303-1-git-send-email-grant.likely@linaro.org>
-	<1433686811-12303-3-git-send-email-grant.likely@linaro.org>
-	<CAPybu_30jTDuwEW_WTGuu6pWwv86p6OqV0eRE1GbCwUVtBm7KA@mail.gmail.com>
-	<20150608184713.446B7C406AA@trevor.secretlab.ca>
-	<CAPybu_0FfD9dv55SLmy7905yMCV6Kqrr-v2aPUCx6sSikrF7gQ@mail.gmail.com>
+From: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Subject: [PATCH v7 0/8] mfd: cros_ec: Add multi EC and proto v3 support
+Date: Tue,  9 Jun 2015 13:04:41 +0200
+Message-ID: <1433847889-7220-1-git-send-email-javier.martinez@collabora.co.uk>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPybu_0FfD9dv55SLmy7905yMCV6Kqrr-v2aPUCx6sSikrF7gQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Bill Richardson <wfrichar-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Simon Glass <sjg-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Gwendal Grignou <gwendal-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Stephen Barber <smbarber-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Filipe Brandenburger <filbranden-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Todd Broch <tbroch-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Alexandru M Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 8 Jun 2015 22:09:13 +0200
-, Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
- wrote:
-> Hello Grant
-> 
-> 
-> On Mon, Jun 8, 2015 at 8:47 PM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> > Hi Ricardo,
-> >
-> > Comments below...
-> >
-> > On Sun, 7 Jun 2015 20:13:15 +0200
-> > , Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >  wrote:
-> >> Hello Grant
-> >>
-> >> I would ask you to go through all the discussion related to this bug.
-> >> Here is a summary (please anyone involved correct me if I am wrong)
-> >>
-> >> 1) I send a patch to fix the oops if release resource is executed with
-> >> a resource without parent
-> >> 2) Bjorn says that we should fix the issue of the problem, which he
-> >> pointed out being that we use platform_device_del() after using
-> >> of_device_add()
-> >
-> > Bjorn's comments on v3 of your patchset were correct. The proposed bug
-> > fix hacked the __release_resource function directly, when the bug is in
-> > the platform_bus_type code.
-> >
-> 
-> The bug is not in the platform subsystem but in the of subsystem. Your
-> patch fixes it in the platform subsystem, so it is as bad as fixing it
-> directly on the resource interface.
+Hello,
 
-Not exactly. There is a bug in the platform subsystem: Register and
-unregister are not symmetrical, which when combined with the defect in
-the OF code results in an oops. It is appropriate to fix the
-non-symmetrical code path.
+This is a v7 of a series that adds support for multiple EC in a system
+and also for the protocol version 3 that is used on newer ECs.
 
-> >> 3) I resend a patchset to use platform_devide_add()
-> >> 4) 3 series of cleanouts after the help from Rob and Bjorn
-> >> 5) Greg adds the series (v5) to his device core tree
-> >
-> > The series is still wrong.
-> >
-> > Greg, please drop Ricardo's series. It isn't correct and it will cause
-> > breakage.
-> 
-> The series can be kept, only
-> 
-> patch "of/platform: Use platform_device interface"
-> 
-> needs to be reverted.
+Most patches were taken from the downstream ChromiumOS v3.14 tree with
+fixes squashed, split to minimise the cross subsystem churn and changes
+for mainline inclusion but were not modified functionality wise.
 
-No, it's better to drop the whole series. There are still issues and it
-will conflict with merging the bugfix for v4.1.
+This version addresses issues pointed out by Lee Jones on the v6 posted
+before [0] and also adds the Acked-by tags of all the needed maintainers.
 
-> >
-> > There are two issues that need to be delt with:
-> >
-> > First, there is the immediate bug fix which should go to Linus before
-> > v4.1. I believe my patch handles it correctly. I've included a test
-> > case, but I would like to have acks from Rob and Pantelis before merging
-> > it. Ricardo's v5 patch 2/4 comes close to solving it, but it still
-> > doesn't make the unregister path symmetric with the register path.
-> 
-> Could you please be more specific. what is not symmetric after
-> applying the patchset?
+The patches are based on top of "[PATCH 0/2] mfd: cros_ec: Small cleanups"
+[1] that were posted before and already picked by Lee Jones.
 
-register path:
+Testing was done on some Chromebooks that have a single EC and support
+protocol v2 such as the Exynos5250 Snow, Exynos5420 Peach Pit and Exynos5800
+Peach Pi to be sure that no regressions were introduced for these machines.
 
-Insert all resources with a parent, if no parent and type == MEM or
-IO, then use iomem_resource/ioport_resource as the parent. At the end of
-registration, each resource with a parent assigned will be inserted.
+The series were tested using a modified ectool [2] that supports the new
+cros_ec IOCTL API. They were also tested on a x86 Pixel Chromebook 2 (Samus)
+that uses the new protocol v3 and has 2 EC (cros_ec and cros_pd). But for
+testing on Samus, also the posted "[PATCH 0/3] platform/chrome: Changes for
+cros_ec_lpc and cros_ec_dev" series [3] are needed.
 
-unregister path:
+The series is composed of the following patches:
 
-Without patch 2/3: Remove all resources with type == MEM or IO. If it
-hasn't been inserted then the kernel will oops. Neglects to remove
-non-MEM/IO resources.
+Alexandru M Stan (2):
+  mfd: cros_ec: spi: Add a DT property to delay asserting the CS
+  mfd: cros_ec: spi: Add delay for asserting CS
 
-With patch 2/3: Remove all resources that have a parent and type == MEM
-or IO.  Neglects to remove non-MEM/IO resources that were inserted in
-the register path.
+Gwendal Grignou (1):
+  mfd: cros_ec: Support multiple EC in a system
 
-In both the with and without cases the remove behaviour doesn't not
-strictly reverse the insert behaviour, which is not what we want.
+Javier Martinez Canillas (2):
+  mfd: cros_ec: Use a zero-length array for command data
+  mfd: cros_ec: Move protocol helpers out of the MFD driver
 
-I do realize that patch 1/3 of the series stops inserting non-MEM/IO
-resources in the register path, but do you know if it is safe to change
-that behaviour? There are users who use set parent explicitly, and don't
-depend on the default IO and MEM resource roots. For example, I was able
-to quickly find devices setting their own root with:
+Stephen Barber (3):
+  mfd: cros_ec: rev cros_ec_commands.h
+  mfd: cros_ec: add proto v3 skeleton
+  mfd: cros_ec: add bus-specific proto v3 code
 
-$ git grep '\.parent = .*res'
-arch/arm/mach-sa1100/neponset.c:        sa1111_resources[0].parent = sa1111_res;
-arch/arm/mach-sa1100/neponset.c:        smc91x_resources[0].parent = smc91x_res;
-arch/arm/mach-sa1100/neponset.c:        smc91x_resources[1].parent = smc91x_res;
-arch/ia64/sn/kernel/io_init.c:          res[0].parent = &ioport_resource;
-arch/ia64/sn/kernel/io_init.c:          res[1].parent = &iomem_resource;
-arch/mips/pci/pci-ar2315.c:     apc->mem_res.parent = res;
-arch/mips/pci/pci-ar71xx.c:     apc->io_res.parent = res;
-arch/mips/pci/pci-ar71xx.c:     apc->mem_res.parent = res;
-arch/mips/pci/pci-ar724x.c:     apc->io_res.parent = res;
-arch/mips/pci/pci-ar724x.c:     apc->mem_res.parent = res;
-arch/mips/pci/pci-rc32434.c:    .parent = &rc32434_res_pci_mem1,
-drivers/mfd/mfd-core.c:                 res[r].parent = cell->resources[r].parent;
-drivers/uwb/whci.c:     umc->resource.parent = &card->pci->resource[bar];
+ Documentation/devicetree/bindings/mfd/cros-ec.txt |   4 +
+ drivers/i2c/busses/Kconfig                        |   2 +-
+ drivers/i2c/busses/i2c-cros-ec-tunnel.c           |  45 ++-
+ drivers/input/keyboard/Kconfig                    |   2 +-
+ drivers/input/keyboard/cros_ec_keyb.c             |  31 +-
+ drivers/mfd/Kconfig                               |   6 +-
+ drivers/mfd/cros_ec.c                             | 151 +++-----
+ drivers/mfd/cros_ec_i2c.c                         | 169 ++++++++-
+ drivers/mfd/cros_ec_spi.c                         | 407 +++++++++++++++++++---
+ drivers/platform/chrome/Kconfig                   |   9 +-
+ drivers/platform/chrome/Makefile                  |   1 +
+ drivers/platform/chrome/cros_ec_dev.c             | 189 ++++++----
+ drivers/platform/chrome/cros_ec_dev.h             |   7 -
+ drivers/platform/chrome/cros_ec_lightbar.c        | 217 +++++++-----
+ drivers/platform/chrome/cros_ec_lpc.c             |  84 ++++-
+ drivers/platform/chrome/cros_ec_proto.c           | 382 ++++++++++++++++++++
+ drivers/platform/chrome/cros_ec_sysfs.c           | 178 ++++++----
+ include/linux/mfd/cros_ec.h                       |  84 ++++-
+ include/linux/mfd/cros_ec_commands.h              | 277 +++++++++++++--
+ 19 files changed, 1796 insertions(+), 449 deletions(-)
+ create mode 100644 drivers/platform/chrome/cros_ec_proto.c
 
-And that was just a quick search. All of those examples are still type
-MEM/IO, so it isn't a definitive answer. Due-diligence still needs to be
-done before patch 1/3 would be acceptable.
+Patch #1 modifies the struct cros_ec_command to use a zero-length array for
+the buffer used for EC input and output data.
 
-In the mean time, the simple bug fix is by far the least risky option.
+Patch #2 synchronises the cros_ec_commands.h with a newer version of the
+file in the EC firmware repository.
 
-> > Second, there is the issue of making devicetree platform_devices request
-> > resources.  That's harder, and we are *NOT* ready to merge anything. Nor
-> > is it a time critical issue.
-> >
-> >> 6) You complaint that that series can break miss behaved platforms
-> >
-> > Yes, because it will.
-> >
-> >> 7) I send a couple of patches that fix your problem and leaves the
-> >> window open to blacklist the platforms that miss behave.
-> >
-> > I've replied to that series. It isn't a good solution either.
-> 
-> I have also replied, please provide a testcase and we will figure it
-> if it is not handled properly. So far it works fine on my tests.
-> 
-> >>
-> >> now you send a patch that takes us to back to step 1), and adds some
-> >> code that is already merged into gregk's
-> >> https://git.kernel.org/cgit/linux/kernel/git/gregkh/driver-core.git/tree/drivers/base/platform.c?h=driver-core-testing#n314
-> >
-> > My patch is different. In v3 __release_resource was hacked directly. By
-> > v5 you were fixing platform_device_{add,del}, which is the right thing,
-> > but still isn't symmetric. My patch I think handles the bug fix
-> > correctly.
-> 
-> There is no need to apply your patch, that behaviour is already
-> impletented in my patchset. If we want to pospone the non registry of
-> resources on of devices we just need to revert
-> 
-> "of/platform: Use platform_device interface"
-> 
-> I believe reverting 1 patch is patch is better than reverting 4
-> reviewed patches and applying a new one.
+Patch #3 moves the EC communication protocol helper functions out of the MFD
+driver.
 
-That series is not in mainline. It is not applied yet. We don't merge
-things that aren't ready.
+Patch #4 adds the EC host command protocol v3 support to the cros_ec driver
+and patch #5 adds the bus specific proto v3 support for I2C, SPI and LPC.
 
-g.
+Patch #6 adds support to make multiple EC have a different device id and
+also exposing a per EC character device interface.
+
+Patch #7 adds a DT property to the cros_ec DT binding to specify a delay
+before receiving SPI transfers to make sure that the EC has already waked
+up and patch #8 implements it in the cros_ec_spi driver.
+
+Since the changes are quite intrusive and affects all ChromeOS EC related
+drivers, the patches should be merged through the MFD subsystem tree. The
+drivers/platform/chrome maintainer has already acked the patches so these
+can be merged now.
+
+Best regards,
+Javier
+
+[0]: https://lkml.org/lkml/2015/6/4/144
+[1]: https://lkml.org/lkml/2015/5/20/235
+[2]: http://cgit.collabora.com/git/user/javier/ec.git/log/?h=mainline-ioctl-zero-length
+[3]: https://lkml.org/lkml/2015/5/20/184
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
