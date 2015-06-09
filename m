@@ -1,40 +1,105 @@
-From: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Subject: [PATCH v2 1/2] of: add Okaya Electric America vendor prefix
-Date: Tue,  9 Jun 2015 17:59:58 +0200
-Message-ID: <1433865599-8167-2-git-send-email-gary.bisson@boundarydevices.com>
-References: <1432827466-8104-1-git-send-email-gary.bisson@boundarydevices.com>
- <1433865599-8167-1-git-send-email-gary.bisson@boundarydevices.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1433865599-8167-1-git-send-email-gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [PATCH v5 3/6] i2c: at91: update documentation for DT bindings
+Date: Tue, 9 Jun 2015 18:04:54 +0200
+Message-ID: <55770EA6.8020908@atmel.com>
+References: <cover.1433348016.git.cyrille.pitchen@atmel.com> <aa2a1ec2bd3da46c9a3bbbe0812d82de09d66095.1433348016.git.cyrille.pitchen@atmel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <aa2a1ec2bd3da46c9a3bbbe0812d82de09d66095.1433348016.git.cyrille.pitchen@atmel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Cyrille Pitchen <cyrille.pitchen@atmel.com>, ludovic.desroches@atmel.com, linux-i2c@vger.kernel.org, wsa@the-dreams.de
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds vendor prefix for Okaya Electronic America, a provider
-of LCD modules and display technologies.
+Le 03/06/2015 18:25, Cyrille Pitchen a =E9crit :
+> add a new value "atmel,at91sama5d2-i2c" for the "compatible" property=
+=2E
 
-Signed-off-by: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
----
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+Well, here I would like "atmel,sama5d2-i2c" like any other "SAMA5"
+product compatibility string out there...
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index ee2ce7b..37d2de79 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -148,6 +148,7 @@ nintendo	Nintendo
- nokia	Nokia
- nvidia	NVIDIA
- nxp	NXP Semiconductors
-+okaya	Okaya Electric America, Inc.
- onnn	ON Semiconductor Corp.
- opencores	OpenCores.org
- ortustech	Ortus Technology Co., Ltd.
--- 
-2.1.4
+Aka NAK for me ;-)
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+> add a new optional property "atmel,fifo-size" to enable FIFO support =
+when
+> available.
+> add missing optional properties "dmas" and "dma-names".
+>=20
+> Signed-off-by: Cyrille Pitchen <cyrille.pitchen@atmel.com>
+> ---
+>  Documentation/devicetree/bindings/i2c/i2c-at91.txt | 29 ++++++++++++=
+++++++++--
+>  1 file changed, 27 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-at91.txt b/Doc=
+umentation/devicetree/bindings/i2c/i2c-at91.txt
+> index 388f0a2..7c04fd9 100644
+> --- a/Documentation/devicetree/bindings/i2c/i2c-at91.txt
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-at91.txt
+> @@ -2,8 +2,8 @@ I2C for Atmel platforms
+> =20
+>  Required properties :
+>  - compatible : Must be "atmel,at91rm9200-i2c", "atmel,at91sam9261-i2=
+c",
+> -     "atmel,at91sam9260-i2c", "atmel,at91sam9g20-i2c", "atmel,at91sa=
+m9g10-i2c"
+> -     or "atmel,at91sam9x5-i2c"
+> +     "atmel,at91sam9260-i2c", "atmel,at91sam9g20-i2c", "atmel,at91sa=
+m9g10-i2c",
+> +     "atmel,at91sam9x5-i2c" or "atmel,at91sama5d2-i2c"
+
+Ditto
+
+>  - reg: physical base address of the controller and length of memory =
+mapped
+>       region.
+>  - interrupts: interrupt number to the cpu.
+> @@ -13,6 +13,9 @@ Required properties :
+> =20
+>  Optional properties:
+>  - clock-frequency: Desired I2C bus frequency in Hz, otherwise defaul=
+ts to 100000
+> +- dmas: A list of two dma specifiers, one for each entry in dma-name=
+s.
+> +- dma-names: should contain "tx" and "rx".
+> +- atmel,fifo-size: size of the RX and TX FIFOs, if available.
+>  - Child nodes conforming to i2c bus binding
+> =20
+>  Examples :
+> @@ -32,3 +35,25 @@ i2c0: i2c@fff84000 {
+>  		pagesize =3D <128>;
+>  	}
+>  }
+> +
+> +i2c0: i2c@f8034600 {
+> +	compatible =3D "atmel,at91sama5d2-i2c";
+
+Ditto
+
+> +	reg =3D <0xf8034600 0x100>;
+> +	interrupts =3D <19 IRQ_TYPE_LEVEL_HIGH 7>;
+> +	dmas =3D <&dma0
+> +		(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1))
+> +		AT91_XDMAC_DT_PERID(11)>,
+> +	       <&dma0
+> +		(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1))
+> +		AT91_XDMAC_DT_PERID(12)>;
+> +	dma-names =3D "tx", "rx";
+> +	#address-cells =3D <1>;
+> +	#size-cells =3D <0>;
+> +	clocks =3D <&flx0>;
+> +	atmel,fifo-size =3D <32>;
+> +
+> +	wm8731: wm8731@1a {
+> +		compatible =3D "wm8731";
+> +		reg =3D <0x1a>;
+> +	};
+> +};
+>=20
+
+
+--=20
+Nicolas Ferre
