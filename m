@@ -1,71 +1,54 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v2 0/8]  Goodix touchscreen enhancements
-Date: Tue, 9 Jun 2015 11:17:06 -0700
-Message-ID: <20150609181706.GL6338@dtor-ws>
-References: <1433774273-23103-1-git-send-email-irina.tirdea@intel.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v5 2/2] ASoC: qcom: add apq8016 sound card
+	support
+Date: Tue, 09 Jun 2015 19:22:08 +0100
+Message-ID: <55772ED0.2060405@linaro.org>
+References: <1433854702-23654-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1433854776-23852-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <20150609170738.GI14071@sirena.org.uk> <557727BF.8040807@linaro.org>
+ <20150609180435.GV14071@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1433774273-23103-1-git-send-email-irina.tirdea@intel.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Irina Tirdea <irina.tirdea@intel.com>
-Cc: Bastien Nocera <hadess@hadess.net>, Mark Rutland <mark.rutland@arm.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20150609180435.GV14071@sirena.org.uk>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Banajit Goswami <bgoswami@codeaurora.org>, Takashi Iwai <tiwai@suse.de>, linux-kernel@vger.kernel.org, Patrick Lai <plai@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org, kwestfie@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 08, 2015 at 05:37:45PM +0300, Irina Tirdea wrote:
-> Add several enhancements to the Goodix touchscreen driver:
->  - write configuration data to the device
->  - power management support
->  - cleanup and refactoring
-> 
-> I have kept the original patch for ESD ("input: goodix: add support
-> for ESD") since it is still under discussion. I have moved it to the
-> end of the patch set so it does not block the other changes. Once I have
-> an answer from DT folks on this I will make the necessary changes for it.
-> 
-> For testing the ACPI changes "ACPI: Translate Linux IRQ number directly
-> from GpioInt" patchset is needed [1]. This patchset has been merged in
-> the GPIO tree.
-> 
-> This patches are based on Goodix datasheets for GT911 and GT9271 and
-> on Goodix driver gt9xx.c for Android (publicly available in Android kernel
-> trees for various devices). Commit 771d8f1b178e ("Input: goodix - add
-> device tree support") references a set of public datasheets that can
-> be used for reference.
-> 
-> [1] https://lkml.org/lkml/2015/5/6/281
-> 
-> Changes in v2:
->  - use request_firmware instead of ACPI/DT property for config
->  - dropped "input: goodix: add ACPI IDs for GT911 and GT9271" patch
->  - add ACPI DSDT excerpt in commit message where necessary
->  - add comments for suspend/resume sleep values
->  - dropped the checkpatch fixes that did not make sense
->  - added Bastien's ack to the first patch
-> 
-> Irina Tirdea (8):
->   input: goodix: fix alignment issues
->   input: goodix: fix variable length array warning
->   input: goodix: export id and version read from device
 
-Applied first 3.
 
-Thanks.
+On 09/06/15 19:04, Mark Brown wrote:
+> On Tue, Jun 09, 2015 at 06:51:59PM +0100, Srinivas Kandagatla wrote:
+>> On 09/06/15 18:07, Mark Brown wrote:
+>
+>>> Why not just do these one time at probe, we don't undo them when we shut
+>>> the DAI down?
+>
+>> If I do that Am afraid that the driver would loose the flexibility of
+>> selecting different MI2S from DT level. Hardcoding which MI2S can got to
+>> external or internal codec is something that I wanted to avoid from the
+>> start.
+>
+> I don't understand why we'd loose anything - we get init() callbacks on
+> the DAIs when they're instantiated?
+>
+Yes, got it. At dai_link init() level we can do it without losing any 
+flexibility.
 
->   input: goodix: reset device at init
->   input: goodix: write configuration data to device
->   input: goodix: add power management support
->   input: goodix: use goodix_i2c_write_u8 instead of i2c_master_send
->   input: goodix: add support for ESD
-> 
->  .../bindings/input/touchscreen/goodix.txt          |  12 +
->  drivers/input/touchscreen/goodix.c                 | 467 +++++++++++++++++++--
->  2 files changed, 449 insertions(+), 30 deletions(-)
-> 
-> -- 
-> 1.9.1
-> 
+My bad, I thought you initially suggested me to add this to platform 
+probe() level.
 
--- 
-Dmitry
+>> I will add the shutdown code to reset the configuration.
+>
+> OK.
+>
