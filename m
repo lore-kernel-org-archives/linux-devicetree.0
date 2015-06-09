@@ -1,38 +1,99 @@
-From: Bhuvanchandra DV <bhuvanchandra.dv-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH V2 2/3] tty: serial: fsl_lpuart: remove RTS/CTS control
- from set/get_mctrl
-Date: Tue, 9 Jun 2015 09:42:28 +0530
-Message-ID: <557667AC.3030506@toradex.com>
-References: <1433136067-20644-1-git-send-email-bhuvanchandra.dv@toradex.com> <1433136067-20644-3-git-send-email-bhuvanchandra.dv@toradex.com> <20150608091244.GS7557@n2100.arm.linux.org.uk>
+From: Tai Tri Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org>
+Subject: Re: [PATCH 2/2 RESEND] power: reset: Add syscon poweroff device node
+ for APM X-Gene platform
+Date: Mon, 8 Jun 2015 21:34:03 -0700
+Message-ID: <CACgAJHwtCuZgZySmcvMxZHVxy__eZP02-TDbEn3FEpMx5y_LDQ@mail.gmail.com>
+References: <1433272747-27114-1-git-send-email-ttnguyen@apm.com>
+	<1433272747-27114-3-git-send-email-ttnguyen@apm.com>
+	<CALdTtnvQg2xmL5MqxUcvJmk_33XiEg9tnLzYvC++ZQL3j7J46g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150608091244.GS7557-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+In-Reply-To: <CALdTtnvQg2xmL5MqxUcvJmk_33XiEg9tnLzYvC++ZQL3j7J46g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, moorray3-5tc4TXWwyLM@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org, bhuvanchandra.dv-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Dann Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/08/2015 02:42 PM, Russell King - ARM Linux wrote:
-> On Mon, Jun 01, 2015 at 10:51:06AM +0530, Bhuvanchandra DV wrote:
->> +    /*
->> +     * CTS/RTS can _only_ be handled
->> +     * automatically by the hardware.
->> +     */
+Hi Dann,
+
+On Mon, Jun 8, 2015 at 8:44 PM, Dann Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org> wrote:
+> On Tue, Jun 2, 2015 at 1:19 PM, Tai Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org> wrote:
+>> This patch adds syscon poweroff device node to support poweroff feature
+>> on APM X-Gene Mustang platform
 >
-> That's really not acceptable.  You need to do something here so that you
-> can _force_ RTS to be deasserted when the kernel buffers fill up - be
-> that by stopping reading characters and letting the FIFO fill up or
-> something of that ilk.
-Agreed, will fix this.
+> hey Tai,
+>  The reboot changes work just fine for me, but poweroff does not:
 >
-> Ignoring the rest of the flow control system in the kernel is not really
-> acceptable.
+> [  OK  ] Reached target Final Step.
+>          Starting Power-Off...
+> reboot: Power down
+> Unable to poweroff system
+> Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000000
+>
+> CPU: 0 PID: 1 Comm: systemd-shutdow Tainted: G        W       4.1.0-rc7+ #1
+> Hardware name: APM X-Gene Mustang board (DT)
+> Call trace:
+> [<ffffffc00008990c>] dump_backtrace+0x0/0x11c
+> [<ffffffc000089a38>] show_stack+0x10/0x1c
+> [<ffffffc0005b447c>] dump_stack+0x88/0xc8
+> [<ffffffc0005b3374>] panic+0xe0/0x220
+> [<ffffffc0000b5f24>] do_exit+0x990/0x994
+> [<ffffffc0000d06bc>] SyS_reboot+0x14c/0x208
+> ---[ end Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000000
+>
+>   -dann
 >
 
-Best regards,
-Bhuvan
+Thanks for testing my patches.
+On APM X-Gene Mustang platform, power off circuit is controlled by firmware.
+It requires a firmware update to support power off feature.
+May I ask what firmware version you're running on?
+
+Tai
+
+
+>> Signed-off-by: Tai Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org>
+>> ---
+>>  arch/arm64/boot/dts/apm/apm-mustang.dts |   12 ++++++++++++
+>>  1 file changed, 12 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/apm/apm-mustang.dts b/arch/arm64/boot/dts/apm/apm-mustang.dts
+>> index 83578e7..910d561 100644
+>> --- a/arch/arm64/boot/dts/apm/apm-mustang.dts
+>> +++ b/arch/arm64/boot/dts/apm/apm-mustang.dts
+>> @@ -23,6 +23,18 @@
+>>                 device_type = "memory";
+>>                 reg = < 0x1 0x00000000 0x0 0x80000000 >; /* Updated by bootloader */
+>>         };
+>> +
+>> +       poweroff_mbox: poweroff_mbox@10548000 {
+>> +               compatible = "syscon";
+>> +               reg = <0x0 0x10548000 0x0 0x30>;
+>> +       };
+>> +
+>> +       poweroff: poweroff@10548010 {
+>> +               compatible = "syscon-poweroff";
+>> +               regmap = <&poweroff_mbox>;
+>> +               offset = <0x10>;
+>> +               mask = <0x1>;
+>> +       };
+>>  };
+>>
+>>  &pcie0clk {
+>> --
+>> 1.7.9.5
+>>
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+
+
+-- 
+Tai
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
