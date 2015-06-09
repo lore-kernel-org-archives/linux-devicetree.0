@@ -1,51 +1,40 @@
-From: Suneel Garapati <suneel.garapati@xilinx.com>
-Subject: [PATCH v3 1/2] devicetree:bindings: add devicetree bindings for ceva ahci
-Date: Tue, 9 Jun 2015 14:23:49 +0530
-Message-ID: <1433840030-31453-2-git-send-email-suneel.garapati@xilinx.com>
-References: <1433840030-31453-1-git-send-email-suneel.garapati@xilinx.com>
+From: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
+Subject: Re: [PATCH 2/2] cpufreq: mediatek: Add MT8173 cpufreq driver
+Date: Tue, 09 Jun 2015 11:17:29 +0200
+Message-ID: <1433841449.16887.58.camel@x220>
+References: <1433766561-1330-1-git-send-email-pi-cheng.chen@linaro.org>
+	 <1433766561-1330-3-git-send-email-pi-cheng.chen@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1433840030-31453-1-git-send-email-suneel.garapati@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: tj@kernel.org, michals@xilinx.com, sorenb@xilinx.com, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Suneel Garapati <suneel.garapati@xilinx.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1433766561-1330-3-git-send-email-pi-cheng.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pi-Cheng Chen <pi-cheng.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-adds bindings for CEVA AHCI SATA controller. optional property
-broken-gen2 is useful incase of hardware speed limitation.
+On Mon, 2015-06-08 at 20:29 +0800, Pi-Cheng Chen wrote:
+> --- /dev/null
+> +++ b/drivers/cpufreq/mt8173-cpufreq.c
 
-Signed-off-by: Suneel Garapati <suneel.garapati@xilinx.com>
----
- Documentation/devicetree/bindings/ata/ahci-ceva.txt | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/ata/ahci-ceva.txt
+> +#include <linux/module.h>
 
-diff --git a/Documentation/devicetree/bindings/ata/ahci-ceva.txt b/Documentation/devicetree/bindings/ata/ahci-ceva.txt
-new file mode 100644
-index 0000000..7ca8b97
---- /dev/null
-+++ b/Documentation/devicetree/bindings/ata/ahci-ceva.txt
-@@ -0,0 +1,20 @@
-+Binding for CEVA AHCI SATA Controller
-+
-+Required properties:
-+  - reg: Physical base address and size of the controller's register area.
-+  - compatible: Compatibility string. Must be 'ceva,ahci-1v84'.
-+  - clocks: Input clock specifier. Refer to common clock bindings.
-+  - interrupts: Interrupt specifier. Refer to interrupt binding.
-+
-+Optional properties:
-+  - ceva,broken-gen2: limit to gen1 speed instead of gen2.
-+
-+Examples:
-+	ahci@fd0c0000 {
-+		compatible = "ceva,ahci-1v84";
-+		reg = <0xfd0c0000 0x200>;
-+		interrupt-parent = <&gic>;
-+		interrupts = <0 133 4>;
-+		clocks = <&clkc SATA_CLK_ID>;
-+		ceva,broken-gen2;
-+	};
+Weren't you going to drop this include?
+
+> +module_init(mt8173_cpufreq_driver_init);
+
+For built-in code this is equivalent to, speaking from memory:
+    device_initcall(mt8173_cpufreq_driver_init);
+
+Why don't you just use that directly?
+
+Thanks,
+
+
+Paul Bolle
+
 --
-2.1.2
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
