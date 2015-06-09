@@ -1,43 +1,157 @@
-From: Federico Vaga <federico.vaga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: DeviceTree FPGA bitstream
-Date: Tue, 9 Jun 2015 16:49:14 +0200
-Message-ID: <20150609144901.GC12677@pcbe13110.cern.ch>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH v3] ASoC: davinci-mcasp: Choose PCM driver based on configured
+ DMA controller
+Date: Tue, 9 Jun 2015 17:52:26 +0300
+Message-ID: <5576FDAA.8030701@ti.com>
+References: <e5dbf0a5fbb101792fd106461929c4b814dffc06.1433275670.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <e5dbf0a5fbb101792fd106461929c4b814dffc06.1433275670.git.jsarha@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jyri Sarha <jsarha@ti.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+Cc: broonie@kernel.org, liam.r.girdwood@linux.intel.com, bcousson@baylibre.com, misael.lopez@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On 06/02/2015 11:09 PM, Jyri Sarha wrote:
+> Find the configured DMA controller by asking for a DMA channel in the
+> probe phase and releasing it right after. The controller device can b=
+e
+> found via the dma_chan struct and the controller is recognized from
+> the compatible property of its device node. The patch assumes EDMA if
+> there is no device node.
 
-I'm evaluating the DeviceTree to describe the content of an FPGA.
-I noticed that Xilinx is already doing it:
+Thanks Jyri,
 
-https://www.kernel.org/doc/Documentation/devicetree/bindings/xilinx.txt
+Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-I admit that I didn't read the code yet, but before doing it I want to
-ask you some simple questions that may save me a lot of time.
-My questions are:
+>=20
+> Signed-off-by: Jyri Sarha <jsarha@ti.com>
+> ---
+> Changes since v2:
+> - Print only one error message if DMA "probing" fails
+>   and none in case of -EPROBE_DEFER
+>=20
+> Changes since first patch version:
+> - Change enum names from MCASP_?DMA to PCM_?DMA
+> - Return PCM_EDMA if !mcasp->dev->of_node
+> - Do not ignore possible error code returned by
+>   davinci_mcasp_get_dma_type()
+>=20
+>  sound/soc/davinci/davinci-mcasp.c | 70 +++++++++++++++++++++++++++++=
+++++------
+>  1 file changed, 60 insertions(+), 10 deletions(-)
+>=20
+> diff --git a/sound/soc/davinci/davinci-mcasp.c b/sound/soc/davinci/da=
+vinci-mcasp.c
+> index d793494..a73cd57 100644
+> --- a/sound/soc/davinci/davinci-mcasp.c
+> +++ b/sound/soc/davinci/davinci-mcasp.c
+> @@ -1565,6 +1565,49 @@ static int davinci_mcasp_init_ch_constraints(s=
+truct davinci_mcasp *mcasp)
+>  	return ret;
+>  }
+> =20
+> +enum {
+> +	PCM_EDMA,
+> +	PCM_SDMA,
+> +};
+> +static const char *sdma_prefix =3D "ti,omap";
+> +
+> +static int davinci_mcasp_get_dma_type(struct davinci_mcasp *mcasp)
+> +{
+> +	struct dma_chan *chan;
+> +	const char *tmp;
+> +	int ret =3D PCM_EDMA;
+> +
+> +	if (!mcasp->dev->of_node)
+> +		return PCM_EDMA;
+> +
+> +	tmp =3D mcasp->dma_data[SNDRV_PCM_STREAM_PLAYBACK].filter_data;
+> +	chan =3D dma_request_slave_channel_reason(mcasp->dev, tmp);
+> +	if (IS_ERR(chan)) {
+> +		if (PTR_ERR(chan) !=3D -EPROBE_DEFER)
+> +			dev_err(mcasp->dev,
+> +				"Can't verify DMA configuration (%ld)\n",
+> +				PTR_ERR(chan));
+> +		return PTR_ERR(chan);
+> +	}
+> +	BUG_ON(!chan->device || !chan->device->dev);
+> +
+> +	if (chan->device->dev->of_node)
+> +		ret =3D of_property_read_string(chan->device->dev->of_node,
+> +					      "compatible", &tmp);
+> +	else
+> +		dev_dbg(mcasp->dev, "DMA controller has no of-node\n");
+> +
+> +	dma_release_channel(chan);
+> +	if (ret)
+> +		return ret;
+> +
+> +	dev_dbg(mcasp->dev, "DMA controller compatible =3D \"%s\"\n", tmp);
+> +	if (!strncmp(tmp, sdma_prefix, strlen(sdma_prefix)))
+> +		return PCM_SDMA;
+> +
+> +	return PCM_EDMA;
+> +}
+> +
+>  static int davinci_mcasp_probe(struct platform_device *pdev)
+>  {
+>  	struct snd_dmaengine_dai_dma_data *dma_data;
+> @@ -1763,27 +1806,34 @@ static int davinci_mcasp_probe(struct platfor=
+m_device *pdev)
+>  	if (ret !=3D 0)
+>  		goto err;
+> =20
+> -	switch (mcasp->version) {
+> +	ret =3D davinci_mcasp_get_dma_type(mcasp);
+> +	switch (ret) {
+> +	case PCM_EDMA:
+>  #if IS_BUILTIN(CONFIG_SND_EDMA_SOC) || \
+>  	(IS_MODULE(CONFIG_SND_DAVINCI_SOC_MCASP) && \
+>  	 IS_MODULE(CONFIG_SND_EDMA_SOC))
+> -	case MCASP_VERSION_1:
+> -	case MCASP_VERSION_2:
+> -	case MCASP_VERSION_3:
+>  		ret =3D edma_pcm_platform_register(&pdev->dev);
+> -		break;
+> +#else
+> +		dev_err(&pdev->dev, "Missing SND_EDMA_SOC\n");
+> +		ret =3D -EINVAL;
+> +		goto err;
+>  #endif
+> +		break;
+> +	case PCM_SDMA:
+>  #if IS_BUILTIN(CONFIG_SND_OMAP_SOC) || \
+>  	(IS_MODULE(CONFIG_SND_DAVINCI_SOC_MCASP) && \
+>  	 IS_MODULE(CONFIG_SND_OMAP_SOC))
+> -	case MCASP_VERSION_4:
+>  		ret =3D omap_pcm_platform_register(&pdev->dev);
+> -		break;
+> +#else
+> +		dev_err(&pdev->dev, "Missing SND_SDMA_SOC\n");
+> +		ret =3D -EINVAL;
+> +		goto err;
+>  #endif
+> +		break;
+>  	default:
+> -		dev_err(&pdev->dev, "Invalid McASP version: %d\n",
+> -			mcasp->version);
+> -		ret =3D -EINVAL;
+> +		dev_err(&pdev->dev, "No DMA controller found (%d)\n", ret);
+> +	case -EPROBE_DEFER:
+> +		goto err;
+>  		break;
+>  	}
+> =20
+>=20
 
-- is there any reccomandation about DeviceTree for FPGA content description?
-If yes, are they documented somewhere?
 
-- it looks like the DeviceTree is disable for x86 architecture except for
-some specific platform. Is it possible to enable it for the entire x86
-architecture? Are there any reason to disable it by default?
-
-- I read that since versione 3.17 it should be possible to dynamically add
-portion of DeviceTree from configfs. Is it possible on all architecture?
-
-- I'm working on x86_64 and my FPGA can be on a pluggable board (e.g. PCIe).
-Is there a way to describe this situation with DeviceTree? Is there any tool
-that dynamically computes the addresses (interrupts) translation to use
-(e.g. on PCIe) ?
-
-Thank you :)
+--=20
+P=E9ter
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
