@@ -1,87 +1,77 @@
-From: =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>
-Subject: [PATCH 2/3] watchdog: bcm2835: Add poweroff code for the Raspberry Pi
-Date: Tue,  9 Jun 2015 12:21:44 +0200
-Message-ID: <1433845305-17329-2-git-send-email-noralf@tronnes.org>
-References: <1433845305-17329-1-git-send-email-noralf@tronnes.org>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/3] spi: mediatek: Add spi bus for Mediatek MT8173
+Date: Tue, 9 Jun 2015 11:39:51 +0100
+Message-ID: <20150609103951.GA14071@sirena.org.uk>
+References: <1431075343-7887-1-git-send-email-leilk.liu@mediatek.com>
+ <1431075343-7887-3-git-send-email-leilk.liu@mediatek.com>
+ <20150508175306.GG2761@sirena.org.uk>
+ <1431434356.2128.9.camel@mhfsdcap03>
+ <20150512160540.GB3066@sirena.org.uk>
+ <1431675522.2128.13.camel@mhfsdcap03>
+ <20150515092543.GY2761@sirena.org.uk>
+ <1433758546.19786.16.camel@mtksdaap41>
+ <20150608175927.GO14071@sirena.org.uk>
+ <1433844321.16178.6.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1433845305-17329-1-git-send-email-noralf@tronnes.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>, linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="iQbDWBcONlRwAlo5"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1433844321.16178.6.camel@mtksdaap41>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Leilk Liu =?utf-8?B?KOWImOejiik=?= <Leilk.Liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, HongZhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBhZGRzIGEgbmV3IHBvd2Vyb2ZmIGZ1bmN0aW9uIHRvIHRoZSB3YXRjaGRvZyBkcml2ZXIg
-Zm9yIHRoZQpSYXNwYmVycnkgUGkuIEN1cnJlbnRseSBwb3dlcm9mZi9oYWx0IHJlc3VsdHMgaW4g
-YSByZWJvb3QuCgpUaGUgUmFzcGJlcnJ5IFBpIGZpcm13YXJlIHVzZXMgdGhlIFJTVFMgcmVnaXN0
-ZXIgdG8ga25vdyB3aGljaApwYXJ0aXRvbiB0byBib290IGZyb20uIFRoZSBwYXJ0aXRvbiB2YWx1
-ZSBpcyBzcHJlYWQgaW50byBiaXRzCjAsIDIsIDQsIDYsIDgsIDEwLiBQYXJ0aXRvbiA2MyBpcyBh
-IHNwZWNpYWwgcGFydGl0aW9uIHVzZWQgYnkKdGhlIGZpcm13YXJlIHRvIGluZGljYXRlIGhhbHQu
-CgpUaGUgZmlybXdhcmUgbWFkZSB0aGlzIGNoYW5nZSBpbiAxOSBBdWcgMjAxMyBhbmQgd2FzIG1h
-dGNoZWQKYnkgdGhlIGRvd25zdHJlYW0gY29tbWl0OgpDaGFuZ2VzIGZvciBuZXcgTk9PQlMgbXVs
-dGkgcGFydGl0aW9uIGJvb3RpbmcgZnJvbSBnc2gKClNpZ25lZC1vZmYtYnk6IE5vcmFsZiBUcsO4
-bm5lcyA8bm9yYWxmQHRyb25uZXMub3JnPgotLS0KIGRyaXZlcnMvd2F0Y2hkb2cvYmNtMjgzNV93
-ZHQuYyB8IDM4ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKystLS0tCiAxIGZpbGUg
-Y2hhbmdlZCwgMzQgaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9k
-cml2ZXJzL3dhdGNoZG9nL2JjbTI4MzVfd2R0LmMgYi9kcml2ZXJzL3dhdGNoZG9nL2JjbTI4MzVf
-d2R0LmMKaW5kZXggNzExNjk2OC4uZmRmMGQ3ZCAxMDA2NDQKLS0tIGEvZHJpdmVycy93YXRjaGRv
-Zy9iY20yODM1X3dkdC5jCisrKyBiL2RyaXZlcnMvd2F0Y2hkb2cvYmNtMjgzNV93ZHQuYwpAQCAt
-MzYsNiArMzYsMTMgQEAKICNkZWZpbmUgUE1fUlNUQ19XUkNGR19GVUxMX1JFU0VUCTB4MDAwMDAw
-MjAKICNkZWZpbmUgUE1fUlNUQ19SRVNFVAkJCTB4MDAwMDAxMDIKIAorLyoKKyAqIFRoZSBSYXNw
-YmVycnkgUGkgZmlybXdhcmUgdXNlcyB0aGUgUlNUUyByZWdpc3RlciB0byBrbm93IHdoaWNoIHBh
-cnRpdG9uCisgKiB0byBib290IGZyb20uIFRoZSBwYXJ0aXRvbiB2YWx1ZSBpcyBzcHJlYWQgaW50
-byBiaXRzIDAsIDIsIDQsIDYsIDgsIDEwLgorICogUGFydGl0b24gNjMgaXMgYSBzcGVjaWFsIHBh
-cnRpdGlvbiB1c2VkIGJ5IHRoZSBmaXJtd2FyZSB0byBpbmRpY2F0ZSBoYWx0LgorICovCisjZGVm
-aW5lIFBNX1JTVFNfUkFTUEJFUlJZUElfSEFMVAkweDU1NQorCiAjZGVmaW5lIFNFQ1NfVE9fV0RP
-R19USUNLUyh4KSAoKHgpIDw8IDE2KQogI2RlZmluZSBXRE9HX1RJQ0tTX1RPX1NFQ1MoeCkgKCh4
-KSA+PiAxNikKIApAQCAtMTU5LDYgKzE2NiwyNCBAQCBzdGF0aWMgdm9pZCBiY20yODM1X3Bvd2Vy
-X29mZih2b2lkKQogCWJjbTI4MzVfcmVzdGFydCgmd2R0LT5yZXN0YXJ0X2hhbmRsZXIsIFJFQk9P
-VF9IQVJELCBOVUxMKTsKIH0KIAorc3RhdGljIHZvaWQgcnBpX3Bvd2VyX29mZih2b2lkKQorewor
-CXN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAgPQorCQlvZl9maW5kX2NvbXBhdGlibGVfbm9kZShOVUxM
-LCBOVUxMLCAiYnJjbSxyYXNwYmVycnlwaS1wbS13ZHQiKTsKKwlzdHJ1Y3QgcGxhdGZvcm1fZGV2
-aWNlICpwZGV2ID0gb2ZfZmluZF9kZXZpY2VfYnlfbm9kZShucCk7CisJc3RydWN0IGJjbTI4MzVf
-d2R0ICp3ZHQgPSBwbGF0Zm9ybV9nZXRfZHJ2ZGF0YShwZGV2KTsKKwl1MzIgdmFsOworCisJdmFs
-ID0gcmVhZGxfcmVsYXhlZCh3ZHQtPmJhc2UgKyBQTV9SU1RTKTsKKwl2YWwgfD0gUE1fUEFTU1dP
-UkQgfCBQTV9SU1RTX1JBU1BCRVJSWVBJX0hBTFQ7CisJd3JpdGVsX3JlbGF4ZWQodmFsLCB3ZHQt
-PmJhc2UgKyBQTV9SU1RTKTsKKworCS8qIENvbnRpbnVlIHdpdGggbm9ybWFsIHJlc2V0IG1lY2hh
-bmlzbSAqLworCWJjbTI4MzVfcmVzdGFydCgmd2R0LT5yZXN0YXJ0X2hhbmRsZXIsIFJFQk9PVF9I
-QVJELCBOVUxMKTsKK30KKworc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgYmNtMjgz
-NV93ZHRfb2ZfbWF0Y2hbXTsKKwogc3RhdGljIGludCBiY20yODM1X3dkdF9wcm9iZShzdHJ1Y3Qg
-cGxhdGZvcm1fZGV2aWNlICpwZGV2KQogewogCXN0cnVjdCBkZXZpY2UgKmRldiA9ICZwZGV2LT5k
-ZXY7CkBAIC0xOTIsOCArMjE3LDEyIEBAIHN0YXRpYyBpbnQgYmNtMjgzNV93ZHRfcHJvYmUoc3Ry
-dWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKIAl3ZHQtPnJlc3RhcnRfaGFuZGxlci5ub3RpZmll
-cl9jYWxsID0gYmNtMjgzNV9yZXN0YXJ0OwogCXdkdC0+cmVzdGFydF9oYW5kbGVyLnByaW9yaXR5
-ID0gMTI4OwogCXJlZ2lzdGVyX3Jlc3RhcnRfaGFuZGxlcigmd2R0LT5yZXN0YXJ0X2hhbmRsZXIp
-OwotCWlmIChwbV9wb3dlcl9vZmYgPT0gTlVMTCkKLQkJcG1fcG93ZXJfb2ZmID0gYmNtMjgzNV9w
-b3dlcl9vZmY7CisJaWYgKCFwbV9wb3dlcl9vZmYpIHsKKwkJY29uc3Qgc3RydWN0IG9mX2Rldmlj
-ZV9pZCAqbWF0Y2g7CisKKwkJbWF0Y2ggPSBvZl9tYXRjaF9ub2RlKGJjbTI4MzVfd2R0X29mX21h
-dGNoLCBwZGV2LT5kZXYub2Zfbm9kZSk7CisJCXBtX3Bvd2VyX29mZiA9IG1hdGNoLT5kYXRhOwor
-CX0KIAogCWRldl9pbmZvKGRldiwgIkJyb2FkY29tIEJDTTI4MzUgd2F0Y2hkb2cgdGltZXIiKTsK
-IAlyZXR1cm4gMDsKQEAgLTIwNCw3ICsyMzMsNyBAQCBzdGF0aWMgaW50IGJjbTI4MzVfd2R0X3Jl
-bW92ZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQogCXN0cnVjdCBiY20yODM1X3dkdCAq
-d2R0ID0gcGxhdGZvcm1fZ2V0X2RydmRhdGEocGRldik7CiAKIAl1bnJlZ2lzdGVyX3Jlc3RhcnRf
-aGFuZGxlcigmd2R0LT5yZXN0YXJ0X2hhbmRsZXIpOwotCWlmIChwbV9wb3dlcl9vZmYgPT0gYmNt
-MjgzNV9wb3dlcl9vZmYpCisJaWYgKHBtX3Bvd2VyX29mZiA9PSBiY20yODM1X3Bvd2VyX29mZiB8
-fCBwbV9wb3dlcl9vZmYgPT0gcnBpX3Bvd2VyX29mZikKIAkJcG1fcG93ZXJfb2ZmID0gTlVMTDsK
-IAl3YXRjaGRvZ191bnJlZ2lzdGVyX2RldmljZSgmYmNtMjgzNV93ZHRfd2RkKTsKIAlpb3VubWFw
-KHdkdC0+YmFzZSk7CkBAIC0yMTgsNyArMjQ3LDggQEAgc3RhdGljIHZvaWQgYmNtMjgzNV93ZHRf
-c2h1dGRvd24oc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKIH0KIAogc3RhdGljIGNvbnN0
-IHN0cnVjdCBvZl9kZXZpY2VfaWQgYmNtMjgzNV93ZHRfb2ZfbWF0Y2hbXSA9IHsKLQl7IC5jb21w
-YXRpYmxlID0gImJyY20sYmNtMjgzNS1wbS13ZHQiLCB9LAorCXsgLmNvbXBhdGlibGUgPSAiYnJj
-bSxiY20yODM1LXBtLXdkdCIsIC5kYXRhID0gYmNtMjgzNV9wb3dlcl9vZmYgfSwKKwl7IC5jb21w
-YXRpYmxlID0gImJyY20scmFzcGJlcnJ5cGktcG0td2R0IiwgLmRhdGEgPSBycGlfcG93ZXJfb2Zm
-IH0sCiAJe30sCiB9OwogTU9EVUxFX0RFVklDRV9UQUJMRShvZiwgYmNtMjgzNV93ZHRfb2ZfbWF0
-Y2gpOwotLSAKMi4yLjIKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxp
-c3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9saW51eC1hcm0ta2VybmVsCg==
+
+--iQbDWBcONlRwAlo5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Tue, Jun 09, 2015 at 06:05:21PM +0800, Eddie Huang wrote:
+
+> --- a/drivers/spi/spi.c
+> +++ b/drivers/spi/spi.c
+> @@ -539,8 +539,8 @@ static int __spi_map_msg(struct spi_master *master,
+> struct spi_message *msg)
+>         if (!master->can_dma)
+>                 return 0;
+
+> -       tx_dev = master->dma_tx->device->dev;
+> -       rx_dev = master->dma_rx->device->dev;
+> +       tx_dev = master->dma_tx ? master->dma_tx->device->dev :
+> master->dev;
+> +       rx_dev = master->dma_rx ? master->dma_rx->device->dev : master-
+
+> Is this what you want ? Actually, I don't like first one at all.
+
+Not quite what I'd been thinking of - we can't just pick the device in
+the core safely, the device might be a MFD or have some other
+restriction that needs us to use a separate struct device.  However most
+of those cases are likely to point towards implementing a dmaengine
+device so probably the above will work for most cases and is fine.  Can
+you send a proper patch please?
+
+Please don't use the ternery operator, though.
+
+--iQbDWBcONlRwAlo5
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJVdsJ2AAoJECTWi3JdVIfQuvcH/2nAjxSuuvyXRnHpTly6A3ZK
+MnZMpBkuR2KTbdMCyvc/8D8P+DOxZI7Y26L5kBMbcatJxCvXm4Xrk5IXhBQrYlzj
+cLssiLm4HKiWApcKhXBPGXPqhgcAsh2ryxCu9qlnjau8KDga1UNbsksDh0INN/CN
+WuF6pUzZop07TLCBnT8/YfC7+MKUsjkrz4pmvhavvIO5Gn1f7UVICc9hGR5nCp3N
+x29u7GW54a4+oXYSn4mN3qxhhcCGNbwlz/m9xbUWYBRaVdfZ3Z7KMk/lDIhhd7pd
+aRW9Z5qx2jA/oURYJhRvUGQdF/d5BjXzf+waSGIKW5dJjjlDbArB+sXQrL5mknQ=
+=HgGY
+-----END PGP SIGNATURE-----
+
+--iQbDWBcONlRwAlo5--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
