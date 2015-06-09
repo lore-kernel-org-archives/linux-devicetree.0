@@ -1,63 +1,42 @@
-From: Ash Charles <ashcharles-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: dts: Fix frequency scaling on Gumstix Pepper.
-Date: Tue, 9 Jun 2015 08:45:04 -0700
-Message-ID: <CAK8F28kxuk0zPetCBPLmU5skQcOb2E47veZe5s7YaeE-ZJNMew@mail.gmail.com>
-References: <1433441299-18887-1-git-send-email-arun@gumstix.com> <1433441299-18887-4-git-send-email-arun@gumstix.com>
+From: Bastien Nocera <hadess@hadess.net>
+Subject: Re: [PATCH v2 4/8] input: goodix: reset device at init
+Date: Tue, 09 Jun 2015 17:53:02 +0200
+Message-ID: <1433865182.5707.7.camel@hadess.net>
+References: <1433774273-23103-1-git-send-email-irina.tirdea@intel.com>
+	 <1433774273-23103-5-git-send-email-irina.tirdea@intel.com>
+	 <1433864084.5707.4.camel@hadess.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1433441299-18887-4-git-send-email-arun-EiDWdcs9+yZBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arun Bharadwaj <arun-EiDWdcs9+yZBDgjK7y7TUQ@public.gmane.org>
-Cc: =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1433864084.5707.4.camel@hadess.net>
+Sender: linux-input-owner@vger.kernel.org
+To: Irina Tirdea <irina.tirdea@intel.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Octavian Purdila <octavian.purdila@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-This works well for me--cpufreq seems much happier.
+On Tue, 2015-06-09 at 17:34 +0200, Bastien Nocera wrote:
+> On Mon, 2015-06-08 at 17:37 +0300, Irina Tirdea wrote:
+> > After power on, it is recommended that the driver resets the 
+> > device.
+> > The reset procedure timing is described in the datasheet and is 
+> > used
+> > at device init (before writing device configuration) and
+> > for power management. It is a sequence of setting the interrupt
+> > and reset pins high/low at specific timing intervals. This 
+> > procedure
+> > also includes setting the slave address to the one specified in the
+> > ACPI/device tree.
+> 
+> This breaks the touchscreen on my Onda v975w:
+> [  239.732858] Goodix-TS i2c-GDIX1001:00: ID 9271, version: 1020
+> [  239.732977] Goodix-TS i2c-GDIX1001:00: Failed to get reset GPIO: 
+> -16
+> [  239.736071] Goodix-TS: probe of i2c-GDIX1001:00 failed with error 
+> -16
+> 
+> This is the DSDT for that device:
+> https://bugzilla.kernel.org/attachment.cgi?id=149331
 
-Tested-by: Ash Charles <ashcharles-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-
-On Thu, Jun 4, 2015 at 11:08 AM, Arun Bharadwaj <arun-EiDWdcs9+yZBDgjK7y7TUQ@public.gmane.org> wrote:
-> The device tree for Gumstix Pepper has DCDC2 and
-> DCDC3 correctly labelled but the upper limit values
-> are wrong. The confusion is due to the hardware
-> quirk where the DCDC2 and DCDC3 wires are flipped
-> in Pepper.
->
-> Signed-off-by: Arun Bharadwaj <arun-EiDWdcs9+yZBDgjK7y7TUQ@public.gmane.org>
-> ---
->  arch/arm/boot/dts/am335x-pepper.dts | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/am335x-pepper.dts b/arch/arm/boot/dts/am335x-pepper.dts
-> index 99f855d..37b95f6 100644
-> --- a/arch/arm/boot/dts/am335x-pepper.dts
-> +++ b/arch/arm/boot/dts/am335x-pepper.dts
-> @@ -448,7 +448,7 @@
->                         /* VDD_CORE voltage limits 0.95V - 1.26V with +/-4% tolerance */
->                         regulator-name = "vdd_core";
->                         regulator-min-microvolt = <925000>;
-> -                       regulator-max-microvolt = <1325000>;
-> +                       regulator-max-microvolt = <1150000>;
->                         regulator-boot-on;
->                         regulator-always-on;
->                 };
-> @@ -457,7 +457,7 @@
->                         /* VDD_MPU voltage limits 0.95V - 1.1V with +/-4% tolerance */
->                         regulator-name = "vdd_mpu";
->                         regulator-min-microvolt = <925000>;
-> -                       regulator-max-microvolt = <1150000>;
-> +                       regulator-max-microvolt = <1325000>;
->                         regulator-boot-on;
->                         regulator-always-on;
->                 };
-> --
-> 2.1.4
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+(Note that this means that I haven't been able to test any following
+patches in that series than 4/8).
