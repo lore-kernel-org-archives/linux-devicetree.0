@@ -1,45 +1,128 @@
-From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Subject: Re: [PATCH v2 01/22] usb: add OTG version number in usb_otg_descriptor
-Date: Tue, 9 Jun 2015 10:16:23 -0400 (EDT)
-Message-ID: <Pine.LNX.4.44L0.1506091013460.1324-100000@iolanthe.rowland.org>
-References: <20150609135130.GA20453@shlinux1.ap.freescale.net>
+From: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v2 06/22] usb: common: add API to get usb otg features
+ from device tree
+Date: Tue, 9 Jun 2015 22:15:53 +0800
+Message-ID: <20150609141552.GD20453@shlinux1.ap.freescale.net>
+References: <1433775737-9816-1-git-send-email-jun.li@freescale.com>
+ <1433775737-9816-7-git-send-email-jun.li@freescale.com>
+ <20150609155529.0a03de5f@rockdesk>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150609135130.GA20453-KgLukfWpBlCctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150609155529.0a03de5f@rockdesk>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 9 Jun 2015, Li Jun wrote:
-
-> > > -/* USB_DT_OTG (from OTG 1.0a supplement) */
-> > > +/* USB_DT_OTG */
-> > >  struct usb_otg_descriptor {
-> > >  	__u8  bLength;
-> > >  	__u8  bDescriptorType;
-> > >  
-> > >  	__u8  bmAttributes;	/* support for HNP, SRP, etc */
-> > > +	struct bcdOTG otg_rev[0];
-> > 
-> > why not just __le16 bcdOTG here ?
+On Tue, Jun 09, 2015 at 03:55:29PM +0300, Roger Quadros wrote:
+> Hi,
 > 
-> usb_otg_descriptor of OTG 1.0 and 2.0 have different size, if directly add
-> __le16 bcdOTG here, then it cannot used for OTG 1.0.
-> I use a zero length array as Peter suggested here for bcdOTG, then the size
-> of usb_otg_descriptor is still 3(not 5), which is compliant with OTG 1.x, if OTG
-> 2.0 or later, we can use member of otg_rev to add bcdOTG, then the size
-> of usb_otg_descriptor + bcdOTG will be 5, in one word, I want to use existing
-> usb_otg_descriptor struct to cover both OTG 1.x and 2.0
+> On Mon, 8 Jun 2015 23:02:01 +0800
+> Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> 
+> > Check property of usb hardware to get otg version and if SRP, HNP and ADP
+> > are supported.
+> > 
+> > Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > ---
+> >  drivers/usb/common/common.c | 64 +++++++++++++++++++++++++++++++++++++++++++++
+> >  include/linux/usb/of.h      | 20 ++++++++++++++
+> >  2 files changed, 84 insertions(+)
+> > 
+> > diff --git a/drivers/usb/common/common.c b/drivers/usb/common/common.c
+> > index b530fd4..7b0594b 100644
+> > --- a/drivers/usb/common/common.c
+> > +++ b/drivers/usb/common/common.c
+> > @@ -154,6 +154,70 @@ bool of_usb_host_tpl_support(struct device_node *np)
+> >  	return false;
+> >  }
+> >  EXPORT_SYMBOL_GPL(of_usb_host_tpl_support);
+> > +
+> > +/**
+> > + * of_usb_otg_srp_support -  to get if otg srp is supported by the otg controller
+> 
+> This is not really about otg controller supporting SRP but whether
+> the DT user wants it enabled or not.
+> 
+Sorry, correct my precious answer, this is about if otg controller can support
+SRP. Meanwhile DT user can disable it via this property even the HW has this
+capability.
 
-In the end, you may find it is simpler to use two different 
-structures: usb_otg_descriptor and usb_otg_20_descriptor.  
-Try it and see.
-
-Alan Stern
-
+Li Jun
+> IMO this function should be named of_usb_get_otg_srp_enable()
+> 
+> > + * @np: Pointer to the given device_node
+> > + *
+> > + * The function gets if the otg port supports SRP
+> > + */
+> > +bool of_usb_otg_srp_support(struct device_node *np)
+> > +{
+> > +	if (of_find_property(np, "srp-support", NULL))
+> > +		return true;
+> > +
+> > +	return false;
+> > +}
+> > +EXPORT_SYMBOL_GPL(of_usb_otg_srp_support);
+> > +
+> > +/**
+> > + * of_usb_otg_hnp_support -  to get if otg hnp is supported by the otg controller
+> > + * @np: Pointer to the given device_node
+> > + *
+> > + * The function gets if the otg port supports HNP
+> > + */
+> > +bool of_usb_otg_hnp_support(struct device_node *np)
+> > +{
+> > +	if (of_find_property(np, "hnp-support", NULL))
+> > +		return true;
+> > +
+> > +	return false;
+> > +}
+> > +EXPORT_SYMBOL_GPL(of_usb_otg_hnp_support);
+> > +
+> > +/**
+> > + * of_usb_otg_adp_support -  to get if otg adp is supported by the otg controller
+> > + * @np: Pointer to the given device_node
+> > + *
+> > + * The function gets if the otg port supports ADP
+> > + */
+> > +bool of_usb_otg_adp_support(struct device_node *np)
+> > +{
+> > +	if (of_find_property(np, "adp-support", NULL))
+> > +		return true;
+> > +
+> > +	return false;
+> > +}
+> > +EXPORT_SYMBOL_GPL(of_usb_otg_adp_support);
+> > +
+> > +/**
+> > + * of_usb_otg_rev_number -  to get the otg release number the device is
+> > + * compliant with.
+> > + * @np: Pointer to the given device_node
+> > + *
+> > + * The function gets OTG and EH supplement release number in binary-coded
+> > + * decimal (i.e. 2.0 is 0200H).
+> > + */
+> > +int of_usb_otg_rev_number(struct device_node *np)
+> 
+> how about of_usb_get_otg_rev()?
+> 
+> > +{
+> > +	u32 otg_rev;
+> > +
+> > +	if (!of_property_read_u32(np, "otg-rev", &otg_rev))
+> > +		return otg_rev;
+> > +
+> > +	return 0;
+> > +}
+> > +EXPORT_SYMBOL_GPL(of_usb_otg_rev_number);
+> >  #endif
+> >  
+> 
+> cheers,
+> -roger
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
