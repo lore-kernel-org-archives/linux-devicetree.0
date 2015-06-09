@@ -1,128 +1,124 @@
-From: Tai Tri Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH 2/2 RESEND] power: reset: Add syscon poweroff device node
- for APM X-Gene platform
-Date: Tue, 9 Jun 2015 09:47:08 -0700
-Message-ID: <CACgAJHxZjBZMFjCRBT-Q-v5fPGboJQdqNE4qH99w2HvwQwez5Q@mail.gmail.com>
-References: <1433272747-27114-1-git-send-email-ttnguyen@apm.com>
-	<1433272747-27114-3-git-send-email-ttnguyen@apm.com>
-	<CALdTtnvQg2xmL5MqxUcvJmk_33XiEg9tnLzYvC++ZQL3j7J46g@mail.gmail.com>
-	<CACgAJHwtCuZgZySmcvMxZHVxy__eZP02-TDbEn3FEpMx5y_LDQ@mail.gmail.com>
-	<CALdTtnvwQ0W=3i-Yi73rQQ43uo1njwBoEuNQOpJ79Qoref9Yvw@mail.gmail.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH] TESTCASE: of: OOPS when disabling node via OF_DYNAMIC
+Date: Tue, 09 Jun 2015 19:50:26 +0300
+Message-ID: <2309597.bA1dyPGh92@avalon>
+References: <1427814771-30335-1-git-send-email-wsa@the-dreams.de> <83B5C458-8D49-4EF6-9F4A-6C0E2579AB9F@konsulko.com> <20150607111632.CC7A4C410F0@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CALdTtnvwQ0W=3i-Yi73rQQ43uo1njwBoEuNQOpJ79Qoref9Yvw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dann Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150607111632.CC7A4C410F0@trevor.secretlab.ca>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Dann,
+Hi Grant,
 
-On Tue, Jun 9, 2015 at 8:31 AM, Dann Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org> wrote:
-> On Mon, Jun 8, 2015 at 10:34 PM, Tai Tri Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org> wrote:
->> Hi Dann,
->>
->> On Mon, Jun 8, 2015 at 8:44 PM, Dann Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org> wrote:
->>> On Tue, Jun 2, 2015 at 1:19 PM, Tai Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org> wrote:
->>>> This patch adds syscon poweroff device node to support poweroff feature
->>>> on APM X-Gene Mustang platform
->>>
->>> hey Tai,
->>>  The reboot changes work just fine for me, but poweroff does not:
->>>
->>> [  OK  ] Reached target Final Step.
->>>          Starting Power-Off...
->>> reboot: Power down
->>> Unable to poweroff system
->>> Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000000
->>>
->>> CPU: 0 PID: 1 Comm: systemd-shutdow Tainted: G        W       4.1.0-rc7+ #1
->>> Hardware name: APM X-Gene Mustang board (DT)
->>> Call trace:
->>> [<ffffffc00008990c>] dump_backtrace+0x0/0x11c
->>> [<ffffffc000089a38>] show_stack+0x10/0x1c
->>> [<ffffffc0005b447c>] dump_stack+0x88/0xc8
->>> [<ffffffc0005b3374>] panic+0xe0/0x220
->>> [<ffffffc0000b5f24>] do_exit+0x990/0x994
->>> [<ffffffc0000d06bc>] SyS_reboot+0x14c/0x208
->>> ---[ end Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000000
->>>
->>>   -dann
->>>
->>
->> Thanks for testing my patches.
->> On APM X-Gene Mustang platform, power off circuit is controlled by firmware.
->> It requires a firmware update to support power off feature.
->> May I ask what firmware version you're running on?
->
-> Sure, 1.15.12.
->
->   -dann
->
+On Sunday 07 June 2015 12:16:32 Grant Likely wrote:
+> On Wed, 22 Apr 2015 15:30:28 +0300, Pantelis Antoniou wrote:
+> > > On Apr 14, 2015, at 16:27 , Wolfram Sang <wsa@the-dreams.de> wrot=
+e:
+> > >=20
+> > > Hi Pantelis,
+> > >=20
+> > > thanks for your prompt reply. Unfortunately, I had to wait until =
+I could
+> > > access the test system again.
+> >=20
+> > [snip]
+> >=20
+> > Sorry for the non-prompt reply; but just for kicks, can you try the
+> > attached patch?
+> >=20
+> > I have a hunch this might be the problem.
+> >=20
+> > Regards
+> >=20
+> > =E2=80=94 Pantelis
+>=20
+> I played around with this some today. If I'm reading it correctly, th=
+e
+> following patch reproduces the same problem:
+>=20
+> (continued below patch)
+> ---
+> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+> index 18016341d5a9..0a27b38c3041 100644
+> --- a/drivers/of/unittest.c
+> +++ b/drivers/of/unittest.c
+> @@ -753,6 +753,11 @@ static void __init of_unittest_match_node(void)
+>  	}
+>  }
+>=20
+> +static struct resource test_bus_res =3D {
+> +	.start =3D 0xfffffff8,
+> +	.end =3D 0xfffffff9,
+> +	.flags =3D IORESOURCE_MEM,
+> +};
+>  static const struct platform_device_info test_bus_info =3D {
+>  	.name =3D "unittest-bus",
+>  };
+> @@ -795,6 +800,7 @@ static void __init of_unittest_platform_populate(=
+void)
+>  	if (rc)
+>  		return;
+>  	test_bus->dev.of_node =3D np;
+> +	platform_device_add_resources(test_bus, &test_bus_res, 1);
+>=20
+>  	of_platform_populate(np, match, NULL, &test_bus->dev);
+>  	for_each_child_of_node(np, child) {
+>=20
+> ---
+>=20
+> I think the fixup patch boils down to the following. It's hard to tel=
+l
+> because it combines refactoring with the bug fix. Do I have it correc=
+t?
+> If so, I'd rather commit the simple fix which can be committed now fo=
+r
+> v4.1, and the refactoring can be pushed for v4.2
 
-Just want to confirm you are booting in boot strap mode and had
-SLIMpro firmware updated to 1.15.12 as well.
-To check this, you should see this message in boot loader.
+The patch below looks equivalent to Pantelis' patch if we remove the=20
+refactoring, but I don't immediately see how r->parent can be NULL in=20
+platform_device_del() if type is equal to IORESOURCE_MEM or IORESOURCE_=
+IO, as=20
+platform_device_add() will have called insert_resource() in those cases=
+, which=20
+should set the resource parent pointer. I must be missing something as =
+the=20
+patch fixes Wolfram's issue, so an explanation in the commit message wo=
+uld be=20
+welcome.
 
-Slimpro FW:
-        Ver: 2.4 (build 01.15.12.00 2015/05/20)
+> ---
+>=20
+> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+> index ebf034b97278..b3042e6ee3ef 100644
+> --- a/drivers/base/platform.c
+> +++ b/drivers/base/platform.c
+> @@ -377,7 +377,7 @@ int platform_device_add(struct platform_device *p=
+dev)
+>  		struct resource *r =3D &pdev->resource[i];
+>  		unsigned long type =3D resource_type(r);
+>=20
+> -		if (type =3D=3D IORESOURCE_MEM || type =3D=3D IORESOURCE_IO)
+> +		if (r->parent)
+>  			release_resource(r);
+>  	}
+>=20
+> @@ -410,7 +410,7 @@ void platform_device_del(struct platform_device *=
+pdev)
+>  			struct resource *r =3D &pdev->resource[i];
+>  			unsigned long type =3D resource_type(r);
+>=20
+> -			if (type =3D=3D IORESOURCE_MEM || type =3D=3D IORESOURCE_IO)
+> +			if (r->parent)
+>  				release_resource(r);
+>  		}
+>  	}
 
-I tested on a Mustang A3, this works just fine.
+--=20
+Regards,
 
-- Tai
-
-
->> Tai
->>
->>
->>>> Signed-off-by: Tai Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org>
->>>> ---
->>>>  arch/arm64/boot/dts/apm/apm-mustang.dts |   12 ++++++++++++
->>>>  1 file changed, 12 insertions(+)
->>>>
->>>> diff --git a/arch/arm64/boot/dts/apm/apm-mustang.dts b/arch/arm64/boot/dts/apm/apm-mustang.dts
->>>> index 83578e7..910d561 100644
->>>> --- a/arch/arm64/boot/dts/apm/apm-mustang.dts
->>>> +++ b/arch/arm64/boot/dts/apm/apm-mustang.dts
->>>> @@ -23,6 +23,18 @@
->>>>                 device_type = "memory";
->>>>                 reg = < 0x1 0x00000000 0x0 0x80000000 >; /* Updated by bootloader */
->>>>         };
->>>> +
->>>> +       poweroff_mbox: poweroff_mbox@10548000 {
->>>> +               compatible = "syscon";
->>>> +               reg = <0x0 0x10548000 0x0 0x30>;
->>>> +       };
->>>> +
->>>> +       poweroff: poweroff@10548010 {
->>>> +               compatible = "syscon-poweroff";
->>>> +               regmap = <&poweroff_mbox>;
->>>> +               offset = <0x10>;
->>>> +               mask = <0x1>;
->>>> +       };
->>>>  };
->>>>
->>>>  &pcie0clk {
->>>> --
->>>> 1.7.9.5
->>>>
->>>>
->>>> _______________________________________________
->>>> linux-arm-kernel mailing list
->>>> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->>>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->>
->>
->>
->> --
->> Tai
-
-
-
--- 
-Tai
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Laurent Pinchart
