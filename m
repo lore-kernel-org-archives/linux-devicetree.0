@@ -1,71 +1,239 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] kernel/resource: Add new flag IORESOURCE_SHARED
-Date: Tue, 09 Jun 2015 12:13:20 +0100
-Message-ID: <20150609111320.F299FC40580@trevor.secretlab.ca>
-References: <1433501478-15164-1-git-send-email-ricardo.ribalda@gmail.com>
-	<20150608182310.1F13FC406AA@trevor.secretlab.ca>
-	<CAPybu_2-EZoMEkWR9BoRfzGBevxCp-sd+CiVK2DhRjLoy5Pfyg@mail.gmail.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] PCI: designware: Add ARM64 support
+Date: Tue, 9 Jun 2015 12:15:07 +0100
+Message-ID: <20150609111507.GB20182@red-moon>
+References: <1433320542-49576-1-git-send-email-wangzhou1@hisilicon.com>
+ <1433320542-49576-3-git-send-email-wangzhou1@hisilicon.com>
+ <5570507F.4030704@arm.com>
+ <557159B2.9090103@hisilicon.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPybu_2-EZoMEkWR9BoRfzGBevxCp-sd+CiVK2DhRjLoy5Pfyg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <557159B2.9090103-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Vivek Goyal <vgoyal-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Jakub Sitnicki <jsitnicki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Travis <travis-sJ/iWh9BUns@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Cliff Wickman <cpw-sJ/iWh9BUns@public.gmane.org>
+To: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Cc: James Morse <James.Morse-5wv7dgnIgG8@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Pratyush Anand <pratyush.anand-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "fabrice.gasnier-qxv4g6HH51o@public.gmane.org" <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "yuanzhichang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <yuanzhichang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "zhudacai-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <zhudacai-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "zhangjukuo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <zhangjukuo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "qiuzhenfa-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <qiuzhenfa-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 8 Jun 2015 22:02:06 +0200
-, Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
- wrote:
-> Hello Grant
+On Fri, Jun 05, 2015 at 09:11:30AM +0100, Zhou Wang wrote:
+
+[...]
+
+> >> -int dw_pcie_host_init(struct pcie_port *pp)
+> >> +int __init dw_pcie_host_init(struct pcie_port *pp)
+> >>  {
+> >>  	struct device_node *np = pp->dev->of_node;
+> >>  	struct platform_device *pdev = to_platform_device(pp->dev);
+> >>  	struct of_pci_range range;
+> >>  	struct of_pci_range_parser parser;
+> >> +	struct pci_bus *bus;
+> >>  	struct resource *cfg_res;
+> >> +	LIST_HEAD(res);
+> >>  	u32 val, na, ns;
+> >>  	const __be32 *addrp;
+> >>  	int i, index, ret;
+> >> @@ -502,15 +498,49 @@ int dw_pcie_host_init(struct pcie_port *pp)
+> >>  	val |= PORT_LOGIC_SPEED_CHANGE;
+> >>  	dw_pcie_wr_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, val);
+> >>  
+> >> -#ifdef CONFIG_PCI_MSI
+> >> -	dw_pcie_msi_chip.dev = pp->dev;
+> >> -	dw_pci.msi_ctrl = &dw_pcie_msi_chip;
+> >> +#ifdef CONFIG_ARM
+> >> +	/*
+> >> +	 * FIXME: we should really be able to use
+> >> +	 * of_pci_get_host_bridge_resources on arm32 as well,
+> >> +	 * but the conversion needs some more testing
+> >> +	 */
+> >> +	if (global_io_offset < SZ_1M && pp->io_size > 0) {
+> >> +		pci_ioremap_io(global_io_offset, pp->io_base);
+> >> +		global_io_offset += SZ_64K;
+> >> +		pci_add_resource_offset(&res, &pp->io,
+> >> +					global_io_offset - pp->io_bus_addr);
+> >> +	}
+> >> +	pci_add_resource_offset(&res, &pp->mem,
+> >> +				pp->mem.start - pp->mem_bus_addr);
+> >> +	pci_add_resource(&res, &pp->busn);
+> > 
+> > I don't think this #ifdef is necessary. In the spirit of 'the conversion
+> > needs some more testing', I removed it leaving just the below arm64 code.
+> > 
+> > This worked on my Freescale i.MX6 Quad SABRE Lite Board, I went as far as
+> > scanning for wireless access points.
+> > 
 > 
-> On Mon, Jun 8, 2015 at 8:23 PM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> > On Fri,  5 Jun 2015 12:51:17 +0200
-> > , Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >  wrote:
-> >> Some device tree platforms have not defined correctly their memory
-> >> resources (i.e. Overlapping or duplication of resources).
-> >> To avoid this issue we have historically avoided to add their resources to
-> >> the resource tree. This leads to code duplication and oops when trying to
-> >> unload dynamically a device tree (feature introduced recently).
-> >>
-> >> This new flag tells the resource system that a resource can be shared by
-> >> multiple owners, so we can support device trees with problems at the
-> >> same time that we do not duplicate code or crash when unloading the
-> >> device tree.
-> >>
-> >> Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >> ---
-> >
-> > I'm really not comfortable with this change. The resource tree code is
-> > complicated enough as is. Adding this exception case quite probably adds
-> > corner cases that aren't property dealt with. If two regions overlay,
-> > and then request_region is called? Which region does it become a child
-> > of? And that's just off the top of my head. I don't want to hack in
-> > changes to the resource code for what is a corner case.
+> I think it depends on which kind of PCIe device you use, if we use a PCIe device
+> with a I/O Bar, it may not work well without above code. But so far, I have not
+> met a PCIe device which must work with a I/O Bar.
+
+There are two problems here:
+
+1) the io_base address you get from of_pci_get_host_bridge_resources
+   must be mapped using pci_remap_iospace. You are not doing this, so
+   even if you had a PCIe card with I/O bar it would not work on arm64
+   as the code stands. Remember that I/O space on arm/arm64 works as a
+   memory access with offset from PCI_IOBASE and that's the value you get
+   in the I/O resource. See:
+
+   drivers/pci/host/pci-host-generic.c
+   drivers/pci/host/pci-versatile.c
+   drivers/pci/host/pci-xgene.c
+
+2) (1) above would sort out I/O space access for both arm and arm64 so,
+   as James said, the #ifdef is useless.
+
+I hope this makes things clearer.
+
+Thanks,
+Lorenzo
+
 > 
-> I see your concern, perhaps you could provide a testcase and we can
-> find out if it fails or not. So far I have tested a device tree with
-> two devices on the same memory region, each device managed by a
-> driver.
-
-Actually, you need to provide the test case. You need to show that
-you've thought through all the implications and corner cases on the
-resource code. This is a non-trivial change to the how the resource code
-works, and you need to demonstrate that your really understand the
-implications of what you are doing.
-
-Start with the example I pointed out. When a driver does a
-request_mem_region(), which resource does it end up being a parent of if
-the regions overlap? Can you write a unittest that demonstrates the code
-has the correct behaviour? Will a driver end up getting the wrong
-device's resource structure as the parent? (hint: yes it will)
-
-> I can load and unload the device tree perfectly.
-
-Merely making it work for your use-case isn't the issue. It's whether or
-not making this change will break the core behavour of the resource
-code. 
-
-g.
+> >> +#else
+> >> +	ret = of_pci_get_host_bridge_resources(np, 0, 0xff, &res, &pp->io_base);
+> > 
+> > of_pci_get_host_bridge_resources expects &pp->io_base to be a
+> > resource_size_t*, but &io_base is u64*. This generates a warning on arm
+> > with the above change. Changing the the type in
+> > drivers/pci/host/pcie-designware.h fixes this.
+> > 
+> > 
+> > Thanks,
+> > 
+> > James
+> > 
+> 
+> OK, will modify this in next version.
+> 
+> Best Regards and thanks again for your test,
+> Zhou
+> 
+> >> +	if (ret)
+> >> +		return ret;
+> >> +#endif
+> >> +
+> >> +	bus = pci_create_root_bus(pp->dev, pp->root_bus_nr, &dw_pcie_ops,
+> >> +			      pp, &res);
+> >> +	if (!bus)
+> >> +		return -ENOMEM;
+> >> +
+> >> +#ifdef CONFIG_GENERIC_MSI_IRQ_DOMAIN
+> >> +	bus->msi = container_of(&pp->irq_domain, struct msi_controller, domain);
+> >> +#else
+> >> +	bus->msi = &dw_pcie_msi_chip;
+> >>  #endif
+> >>  
+> >> -	dw_pci.nr_controllers = 1;
+> >> -	dw_pci.private_data = (void **)&pp;
+> >> +	pci_scan_child_bus(bus);
+> >> +	if (pp->ops->scan_bus)
+> >> +		pp->ops->scan_bus(pp);
+> >>  
+> >> -	pci_common_init_dev(pp->dev, &dw_pci);
+> >> +#ifdef CONFIG_ARM
+> >> +	/* support old dtbs that incorrectly describe IRQs */
+> >> +	pci_fixup_irqs(pci_common_swizzle, of_irq_parse_and_map_pci);
+> >> +#endif
+> >> +
+> >> +	pci_assign_unassigned_bus_resources(bus);
+> >> +	pci_bus_add_devices(bus);
+> >>  
+> >>  	return 0;
+> >>  }
+> >> @@ -653,7 +683,7 @@ static int dw_pcie_valid_config(struct pcie_port *pp,
+> >>  static int dw_pcie_rd_conf(struct pci_bus *bus, u32 devfn, int where,
+> >>  			int size, u32 *val)
+> >>  {
+> >> -	struct pcie_port *pp = sys_to_pcie(bus->sysdata);
+> >> +	struct pcie_port *pp = bus->sysdata;
+> >>  	int ret;
+> >>  
+> >>  	if (dw_pcie_valid_config(pp, bus, PCI_SLOT(devfn)) == 0) {
+> >> @@ -677,7 +707,7 @@ static int dw_pcie_rd_conf(struct pci_bus *bus, u32 devfn, int where,
+> >>  static int dw_pcie_wr_conf(struct pci_bus *bus, u32 devfn,
+> >>  			int where, int size, u32 val)
+> >>  {
+> >> -	struct pcie_port *pp = sys_to_pcie(bus->sysdata);
+> >> +	struct pcie_port *pp = bus->sysdata;
+> >>  	int ret;
+> >>  
+> >>  	if (dw_pcie_valid_config(pp, bus, PCI_SLOT(devfn)) == 0)
+> >> @@ -701,64 +731,6 @@ static struct pci_ops dw_pcie_ops = {
+> >>  	.write = dw_pcie_wr_conf,
+> >>  };
+> >>  
+> >> -static int dw_pcie_setup(int nr, struct pci_sys_data *sys)
+> >> -{
+> >> -	struct pcie_port *pp;
+> >> -
+> >> -	pp = sys_to_pcie(sys);
+> >> -
+> >> -	if (global_io_offset < SZ_1M && pp->io_size > 0) {
+> >> -		sys->io_offset = global_io_offset - pp->io_bus_addr;
+> >> -		pci_ioremap_io(global_io_offset, pp->io_base);
+> >> -		global_io_offset += SZ_64K;
+> >> -		pci_add_resource_offset(&sys->resources, &pp->io,
+> >> -					sys->io_offset);
+> >> -	}
+> >> -
+> >> -	sys->mem_offset = pp->mem.start - pp->mem_bus_addr;
+> >> -	pci_add_resource_offset(&sys->resources, &pp->mem, sys->mem_offset);
+> >> -	pci_add_resource(&sys->resources, &pp->busn);
+> >> -
+> >> -	return 1;
+> >> -}
+> >> -
+> >> -static struct pci_bus *dw_pcie_scan_bus(int nr, struct pci_sys_data *sys)
+> >> -{
+> >> -	struct pci_bus *bus;
+> >> -	struct pcie_port *pp = sys_to_pcie(sys);
+> >> -
+> >> -	pp->root_bus_nr = sys->busnr;
+> >> -	bus = pci_create_root_bus(pp->dev, sys->busnr,
+> >> -				  &dw_pcie_ops, sys, &sys->resources);
+> >> -	if (!bus)
+> >> -		return NULL;
+> >> -
+> >> -	pci_scan_child_bus(bus);
+> >> -
+> >> -	if (bus && pp->ops->scan_bus)
+> >> -		pp->ops->scan_bus(pp);
+> >> -
+> >> -	return bus;
+> >> -}
+> >> -
+> >> -static int dw_pcie_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
+> >> -{
+> >> -	struct pcie_port *pp = sys_to_pcie(dev->bus->sysdata);
+> >> -	int irq;
+> >> -
+> >> -	irq = of_irq_parse_and_map_pci(dev, slot, pin);
+> >> -	if (!irq)
+> >> -		irq = pp->irq;
+> >> -
+> >> -	return irq;
+> >> -}
+> >> -
+> >> -static struct hw_pci dw_pci = {
+> >> -	.setup		= dw_pcie_setup,
+> >> -	.scan		= dw_pcie_scan_bus,
+> >> -	.map_irq	= dw_pcie_map_irq,
+> >> -};
+> >> -
+> >>  void dw_pcie_setup_rc(struct pcie_port *pp)
+> >>  {
+> >>  	u32 val;
+> > 
+> > 
+> > .
+> > 
+> 
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
