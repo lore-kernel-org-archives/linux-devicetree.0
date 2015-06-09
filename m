@@ -1,67 +1,42 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 01/22] usb: add OTG version number in
- usb_otg_descriptor
-Date: Tue, 9 Jun 2015 15:56:44 +0300
-Message-ID: <20150609155644.4d102709@rockdesk>
-References: <1433775737-9816-1-git-send-email-jun.li@freescale.com>
-	<1433775737-9816-2-git-send-email-jun.li@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1433775737-9816-2-git-send-email-jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v5 0/2] ASoC: qcom: add support to apq8016 sbc machine driver
+Date: Tue,  9 Jun 2015 13:58:22 +0100
+Message-ID: <1433854702-23654-1-git-send-email-srinivas.kandagatla@linaro.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org
+Cc: Rob Herring <robh+dt@kernel.org>, Patrick Lai <plai@codeaurora.org>, Banajit Goswami <bgoswami@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kwestfie@codeaurora.org, linux-arm-msm@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+This patchset adds sound card support to APQ8016 SBC board aka DB410c.
+APQ8016 has 4 MI2S( Primary, Secondary, Tertiary, Quaternary) which can be routed
+to internal wcd codec or external codecs. This routing and various board specifics
+are controlled by 2 mux registers.
 
+All these patches are tested for HDMI audio via adv7533 bridge and Analog audio
+on APQ8016-SBC, msm8916-mtp boards.
 
-On Mon, 8 Jun 2015 23:01:56 +0800
-Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+Changes since v4 (https://lkml.org/lkml/2015/5/22/628)
+  - moved all the dt parsing to single function, spotted by Mark.
+  - removed unnecessary setting of card->dev = NULL spotted by Mark.
+  - renamed the dai links to the correct codec names.
+  - removed the special case for EPROBE_DEFER in probe, spotted by Mark.
+  - Dropped all the Changes since comments as most of the patches
+   in last series are merged to topic/qcom branch.
 
-> From: Macpaul Lin <macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 
-> OTG 2.0 introduces bcdOTG to identify the OTG and EH supplement release
-> number with which the OTG device is compliant, so adds it for
-> usb_otg_descriptor.
-> 
-> Signed-off-by: Macpaul Lin <macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
->  include/uapi/linux/usb/ch9.h | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/uapi/linux/usb/ch9.h b/include/uapi/linux/usb/ch9.h
-> index aa33fd1..ce405fb 100644
-> --- a/include/uapi/linux/usb/ch9.h
-> +++ b/include/uapi/linux/usb/ch9.h
-> @@ -665,13 +665,17 @@ struct usb_qualifier_descriptor {
->  
->  
->  /*-------------------------------------------------------------------------*/
-> +struct bcdOTG {
-> +	__le16 bcdOTG;
-> +};
->  
-> -/* USB_DT_OTG (from OTG 1.0a supplement) */
-> +/* USB_DT_OTG */
->  struct usb_otg_descriptor {
->  	__u8  bLength;
->  	__u8  bDescriptorType;
->  
->  	__u8  bmAttributes;	/* support for HNP, SRP, etc */
-> +	struct bcdOTG otg_rev[0];
+--srini
 
-why not just __le16 bcdOTG here ?
+Srinivas Kandagatla (2):
+  ASoC: qcom: document apq8016 sbc machine driver bindings
+  ASoC: qcom: add apq8016 sound card support
 
->  } __attribute__ ((packed));
->  
->  /* from usb_otg_descriptor.bmAttributes */
+ .../devicetree/bindings/sound/qcom,apq8016-sbc.txt |  61 ++++++
+ sound/soc/qcom/Kconfig                             |   9 +
+ sound/soc/qcom/Makefile                            |   2 +
+ sound/soc/qcom/apq8016_sbc.c                       | 208 +++++++++++++++++++++
+ 4 files changed, 280 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/qcom,apq8016-sbc.txt
+ create mode 100644 sound/soc/qcom/apq8016_sbc.c
 
-cheers,
--roger
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+1.9.1
