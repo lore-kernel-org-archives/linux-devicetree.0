@@ -1,74 +1,119 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH 1/2] of/unittest: Show broken behaviour in the platform
- bus
-Date: Tue, 09 Jun 2015 12:05:37 +0100
-Message-ID: <20150609110537.CC767C40580@trevor.secretlab.ca>
-References: <1433686811-12303-1-git-send-email-grant.likely@linaro.org>
-	<1433686811-12303-2-git-send-email-grant.likely@linaro.org>
-	<CAL_JsqK0rq6+WeK4hVMYQnKUd2K7co3vi=DpF8pjH6tbt0B5vQ@mail.gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqK0rq6+WeK4hVMYQnKUd2K7co3vi=DpF8pjH6tbt0B5vQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Wolfram Sang <wsa@the-dreams.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+From: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Subject: [PATCH v7 8/8] mfd: cros_ec: spi: Add delay for asserting CS
+Date: Tue,  9 Jun 2015 13:04:49 +0200
+Message-ID: <1433847889-7220-9-git-send-email-javier.martinez@collabora.co.uk>
+References: <1433847889-7220-1-git-send-email-javier.martinez@collabora.co.uk>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1433847889-7220-1-git-send-email-javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Bill Richardson <wfrichar-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Simon Glass <sjg-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Gwendal Grignou <gwendal-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Stephen Barber <smbarber-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Filipe Brandenburger <filbranden-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Todd Broch <tbroch-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Alexandru M Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 8 Jun 2015 15:16:39 -0500
-, Rob Herring <robh@kernel.org>
- wrote:
-> On Sun, Jun 7, 2015 at 9:20 AM, Grant Likely <grant.likely@linaro.org> wrote:
-> > Add a single resource to the test bus device to exercise the platform
-> > bus code a little more. This isn't strictly a devicetree test, but it is
-> > a corner case that the devicetree runs into. Until we've got platform
-> > device unittests, it can live here. It doesn't need to be an explicit
-> > text because the kernel will oops when it is wrong.
-> 
-> Isn't the unittest oops'ing a problem?
+From: Alexandru M Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 
-Yes, but an oops while running unittests automatically means unittests
-have failed. :-)
+Some ECs need a little time for waking up before they can accept
+SPI data at a high speed. This is configurable via a DT property
+"google,cros-ec-spi-pre-delay".
 
-> > Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-> > Cc: Wolfram Sang <wsa@the-dreams.de>
-> > Cc: Rob Herring <robh@kernel.org>
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Cc: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-> > Signed-off-by: Grant Likely <grant.likely@linaro.org>
-> > ---
-> >  drivers/of/unittest.c | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> >
-> > diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-> > index 18016341d5a9..0a27b38c3041 100644
-> > --- a/drivers/of/unittest.c
-> > +++ b/drivers/of/unittest.c
-> > @@ -753,6 +753,11 @@ static void __init of_unittest_match_node(void)
-> >         }
-> >  }
-> >
-> > +static struct resource test_bus_res = {
-> > +       .start = 0xfffffff8,
-> > +       .end = 0xfffffff9,
-> > +       .flags = IORESOURCE_MEM,
-> > +};
-> >  static const struct platform_device_info test_bus_info = {
-> >         .name = "unittest-bus",
-> >  };
-> > @@ -795,6 +800,7 @@ static void __init of_unittest_platform_populate(void)
-> >         if (rc)
-> >                 return;
-> >         test_bus->dev.of_node = np;
-> > +       platform_device_add_resources(test_bus, &test_bus_res, 1);
-> 
-> A comment here as to the purpose of this would be useful.
+This patch makes the cros_ec_spi driver to cause a delay before
+the beginning of a SPI transaction, to make sure that the EC has
+already woken up, if the property has been defined in the DTS.
 
-I'll add this:
-	/*
-	 * Add a dummy resource to the test bus node after it is
-	 * registered to catch problems with un-inserted resources. The
-	 * DT code doesn't insert the resources, and it has caused the
-	 * kernel to oops in the past. This makes sure the same bug
-	 * doesn't crop up again.
-	 */
+Signed-off-by: Alexandru M Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Reviewed-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Signed-off-by: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Tested-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Acked-by: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+---
 
-g.
+Changes since v6:
+ - Add Olof Johansson Acked-by tag
+
+Changes since v5: None.
+
+Changes since v4: None.
+
+Changes since v3:
+ - New patch, split DT binding and driver implementation as suggested
+   by Lee Jones.
+ - Add tested-by tag from Heiko Stuebner.
+ - Add acked-by tag from Lee Jones.
+---
+ drivers/mfd/cros_ec_spi.c | 21 +++++++++++++++++++--
+ 1 file changed, 19 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/mfd/cros_ec_spi.c b/drivers/mfd/cros_ec_spi.c
+index faba03e2f1ef..16f228dc243f 100644
+--- a/drivers/mfd/cros_ec_spi.c
++++ b/drivers/mfd/cros_ec_spi.c
+@@ -71,12 +71,15 @@
+  * @spi: SPI device we are connected to
+  * @last_transfer_ns: time that we last finished a transfer, or 0 if there
+  *	if no record
++ * @start_of_msg_delay: used to set the delay_usecs on the spi_transfer that
++ *      is sent when we want to turn on CS at the start of a transaction.
+  * @end_of_msg_delay: used to set the delay_usecs on the spi_transfer that
+  *      is sent when we want to turn off CS at the end of a transaction.
+  */
+ struct cros_ec_spi {
+ 	struct spi_device *spi;
+ 	s64 last_transfer_ns;
++	unsigned int start_of_msg_delay;
+ 	unsigned int end_of_msg_delay;
+ };
+ 
+@@ -366,7 +369,7 @@ static int cros_ec_pkt_xfer_spi(struct cros_ec_device *ec_dev,
+ 	struct ec_host_request *request;
+ 	struct ec_host_response *response;
+ 	struct cros_ec_spi *ec_spi = ec_dev->priv;
+-	struct spi_transfer trans;
++	struct spi_transfer trans, trans_delay;
+ 	struct spi_message msg;
+ 	int i, len;
+ 	u8 *ptr;
+@@ -393,13 +396,23 @@ static int cros_ec_pkt_xfer_spi(struct cros_ec_device *ec_dev,
+ 		goto exit;
+ 	}
+ 
++	/*
++	 * Leave a gap between CS assertion and clocking of data to allow the
++	 * EC time to wakeup.
++	 */
++	spi_message_init(&msg);
++	if (ec_spi->start_of_msg_delay) {
++		memset(&trans_delay, 0, sizeof(trans_delay));
++		trans_delay.delay_usecs = ec_spi->start_of_msg_delay;
++		spi_message_add_tail(&trans_delay, &msg);
++	}
++
+ 	/* Transmit phase - send our message */
+ 	memset(&trans, 0, sizeof(trans));
+ 	trans.tx_buf = ec_dev->dout;
+ 	trans.rx_buf = rx_buf;
+ 	trans.len = len;
+ 	trans.cs_change = 1;
+-	spi_message_init(&msg);
+ 	spi_message_add_tail(&trans, &msg);
+ 	ret = spi_sync(ec_spi->spi, &msg);
+ 
+@@ -602,6 +615,10 @@ static void cros_ec_spi_dt_probe(struct cros_ec_spi *ec_spi, struct device *dev)
+ 	u32 val;
+ 	int ret;
+ 
++	ret = of_property_read_u32(np, "google,cros-ec-spi-pre-delay", &val);
++	if (!ret)
++		ec_spi->start_of_msg_delay = val;
++
+ 	ret = of_property_read_u32(np, "google,cros-ec-spi-msg-delay", &val);
+ 	if (!ret)
+ 		ec_spi->end_of_msg_delay = val;
+-- 
+2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
