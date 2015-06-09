@@ -1,102 +1,34 @@
-From: Kedareswara rao Appana <appana.durga.rao@xilinx.com>
-Subject: [PATCH v5 1/2] dma: Add Xilinx Central DMA DT Binding Documentation
-Date: Tue, 9 Jun 2015 14:20:42 +0530
-Message-ID: <1433839842-5699-1-git-send-email-appanad@xilinx.com>
+From: Suneel Garapati <suneel.garapati@xilinx.com>
+Subject: [PATCH v3 0/2] Support for CEVA SATA Host controller
+Date: Tue, 9 Jun 2015 14:23:48 +0530
+Message-ID: <1433840030-31453-1-git-send-email-suneel.garapati@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: vinod.koul@intel.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, appanad@xilinx.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Srikanth Thokala <sthokal@xilinx.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: tj@kernel.org, michals@xilinx.com, sorenb@xilinx.com, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Suneel Garapati <suneel.garapati@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Device-tree binding documentation of Xilinx Central DMA Engine.
+Adds support for CEVA SATA Host controller found on Xilinx Zynq
+Ultrascale+ MPSoC.
 
-Signed-off-by: Srikanth Thokala <sthokal@xilinx.com>
-Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
----
-Changes in v5:
-- None.
-Changes in v4:
-- None.
-Changes in v3:
-- Used proper alignment for all the properties.
-Changes in v2:
-- Change property 'xlnx,data-width' to 'xlnx,datawidth' in the description
-  to match the implementation.
+Changes v3
+ - use ahci platform enable/disable resources api's
+Changes v2
+ - change module license to GPL v2
 
- .../devicetree/bindings/dma/xilinx/xilinx_cdma.txt | 54 ++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/xilinx/xilinx_cdma.txt
+Suneel Garapati (2):
+  devicetree:bindings: add devicetree bindings for ceva ahci
+  drivers: ata: add support for Ceva sata host controller
 
-diff --git a/Documentation/devicetree/bindings/dma/xilinx/xilinx_cdma.txt b/Documentation/devicetree/bindings/dma/xilinx/xilinx_cdma.txt
-new file mode 100644
-index 0000000..d1637de
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/xilinx/xilinx_cdma.txt
-@@ -0,0 +1,54 @@
-+Xilinx AXI CDMA engine, it does transfers between memory-mapped source
-+address and a memory-mapped destination address.
-+
-+Required properties:
-+- compatible		: Should be "xlnx,axi-cdma-1.00.a"
-+- #dma-cells		: Should be <1>, see "dmas" property below
-+- reg			: Should contain cdma registers location and length.
-+- dma-channel child node: Should have only one channel
-+
-+Optional properties:
-+- xlnx,include-sg	: Tells whether configured for Scatter-mode in
-+			  the hardware.
-+
-+Required child node properties:
-+- compatible		: It should be "xlnx,axi-cdma-channel".
-+- interrupts		: Should contain per channel CDMA interrupts.
-+- xlnx,datawidth	: Should contain the stream data width, take values
-+			  {32,64...1024}.
-+
-+Option child node properties:
-+- xlnx,include-dre	: Tells whether hardware is configured for Data
-+			  Realignment Engine.
-+
-+Example:
-+++++++++
-+
-+axi_cdma_0: axicdma@7e200000 {
-+       compatible = "xlnx,axi-cdma-1.00.a";
-+       #dma_cells = <1>;
-+       reg = < 0x7e200000 0x10000 >;
-+       dma-channel@7e200000 {
-+               compatible = "xlnx,axi-cdma-channel";
-+               interrupts = < 0 55 4 >;
-+               xlnx,datawidth = <0x40>;
-+       } ;
-+} ;
-+
-+
-+* DMA client
-+
-+Required properties:
-+- dmas		: a list of <[Central DMA device phandle] [Channel ID]> pairs,
-+		  where Channel ID is '0' for write/tx and '1' for read/rx
-+                  channel.
-+- dma-names	: a list of DMA channel names, one per "dmas" entry
-+
-+Example:
-+++++++++
-+
-+cdmatest_0: cdmatest@0 {
-+       compatible ="xlnx,axi-cdma-test-1.00.a";
-+       dmas = <&axi_cdma_0 0>;
-+       dma-names = "cdma";
-+} ;
--- 
+ .../devicetree/bindings/ata/ahci-ceva.txt          |  20 ++
+ drivers/ata/Kconfig                                |   9 +
+ drivers/ata/Makefile                               |   1 +
+ drivers/ata/ahci_ceva.c                            | 238 +++++++++++++++++++++
+ 4 files changed, 268 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/ata/ahci-ceva.txt
+ create mode 100644 drivers/ata/ahci_ceva.c
+
+--
 2.1.2
