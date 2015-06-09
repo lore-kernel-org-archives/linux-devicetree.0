@@ -1,57 +1,32 @@
-From: Dann Frazier <dann.frazier@canonical.com>
-Subject: Re: [PATCH 1/2 RESEND] power: reset: Add syscon reboot device node
- for APM X-Gene platform
-Date: Tue, 9 Jun 2015 09:32:45 -0600
-Message-ID: <CALdTtnuy91beqWQiAtr1HFt3o9=vK70zLig2=ckywD=cu8smwg@mail.gmail.com>
-References: <1433272747-27114-1-git-send-email-ttnguyen@apm.com>
-	<1433272747-27114-2-git-send-email-ttnguyen@apm.com>
+From: Bastien Nocera <hadess@hadess.net>
+Subject: Re: [PATCH v2 4/8] input: goodix: reset device at init
+Date: Tue, 09 Jun 2015 17:34:44 +0200
+Message-ID: <1433864084.5707.4.camel@hadess.net>
+References: <1433774273-23103-1-git-send-email-irina.tirdea@intel.com>
+	 <1433774273-23103-5-git-send-email-irina.tirdea@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1433272747-27114-2-git-send-email-ttnguyen@apm.com>
+In-Reply-To: <1433774273-23103-5-git-send-email-irina.tirdea@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tai Nguyen <ttnguyen@apm.com>
-Cc: arm@kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, patches <patches@apm.com>, Jon Masters <jcm@redhat.com>, Feng Kan <fkan@apm.com>
+To: Irina Tirdea <irina.tirdea@intel.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Octavian Purdila <octavian.purdila@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 2, 2015 at 1:19 PM, Tai Nguyen <ttnguyen@apm.com> wrote:
-> This patch adds syscon reboot device node to support reboot feature on APM X-Gene platform
+On Mon, 2015-06-08 at 17:37 +0300, Irina Tirdea wrote:
+> After power on, it is recommended that the driver resets the device.
+> The reset procedure timing is described in the datasheet and is used
+> at device init (before writing device configuration) and
+> for power management. It is a sequence of setting the interrupt
+> and reset pins high/low at specific timing intervals. This procedure
+> also includes setting the slave address to the one specified in the
+> ACPI/device tree.
 
-Tested-by: dann frazier <dann.frazier@canonical.com>
+This breaks the touchscreen on my Onda v975w:
+[  239.732858] Goodix-TS i2c-GDIX1001:00: ID 9271, version: 1020
+[  239.732977] Goodix-TS i2c-GDIX1001:00: Failed to get reset GPIO: -16
+[  239.736071] Goodix-TS: probe of i2c-GDIX1001:00 failed with error -16
 
-> Signed-off-by: Feng Kan  <fkan@apm.com>
-> Signed-off-by: Tai Nguyen <ttnguyen@apm.com>
-> ---
->  arch/arm64/boot/dts/apm/apm-storm.dtsi |   12 ++++++++++++
->  1 file changed, 12 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/apm/apm-storm.dtsi b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-> index c8d3e0e..16efcf7 100644
-> --- a/arch/arm64/boot/dts/apm/apm-storm.dtsi
-> +++ b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-> @@ -710,5 +710,17 @@
->                         dma-coherent;
->                         clocks = <&dmaclk 0>;
->                 };
-> +
-> +               scu: system-clk-controller@17000000 {
-> +                       compatible = "apm,xgene-scu","syscon";
-> +                       reg = <0x0 0x17000000 0x0 0x400>;
-> +               };
-> +
-> +               reboot: reboot@17000014 {
-> +                       compatible = "syscon-reboot";
-> +                       regmap = <&scu>;
-> +                       offset = <0x14>;
-> +                       mask = <0x1>;
-> +               };
->         };
->  };
-> --
-> 1.7.9.5
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+This is the DSDT for that device:
+https://bugzilla.kernel.org/attachment.cgi?id=149331
