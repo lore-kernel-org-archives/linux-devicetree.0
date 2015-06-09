@@ -1,129 +1,156 @@
-From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 1/2] clk: keystone: add support for post divider register
- for main pll
-Date: Tue, 9 Jun 2015 11:25:34 -0400
-Message-ID: <5577056E.5060009@ti.com>
-References: <1432915453-409-1-git-send-email-m-karicheri2@ti.com>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 05/22] doc: dt-binding: usb: add otg related
+ properties
+Date: Tue, 9 Jun 2015 18:29:31 +0300
+Message-ID: <20150609182931.1eda4111@rockdesk>
+References: <1433775737-9816-1-git-send-email-jun.li@freescale.com>
+	<1433775737-9816-6-git-send-email-jun.li@freescale.com>
+	<CAL_JsqJ3hHOGevwqcBNFN2LrTP7Bm_k9SDuTNKBbpq5W-eLmdw@mail.gmail.com>
+	<20150609011806.GA7976@shlinux1.ap.freescale.net>
+	<CAL_JsqKg_NYtLGg9RUQOpKscwHEskHO4_Szo_nM3BnrDdhg3fg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1432915453-409-1-git-send-email-m-karicheri2-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqKg_NYtLGg9RUQOpKscwHEskHO4_Szo_nM3BnrDdhg3fg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/29/2015 12:04 PM, Murali Karicheri wrote:
-> Main PLL controller has post divider bits in a separate register in
-> pll controller. Use the value from this register instead of fixed
-> divider when available.
->
-> Signed-off-by: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
-> ---
->   .../devicetree/bindings/clock/keystone-pll.txt       |  8 ++++----
->   drivers/clk/keystone/pll.c                           | 20 ++++++++++++++++++--
->   2 files changed, 22 insertions(+), 6 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/clock/keystone-pll.txt b/Documentation/devicetree/bindings/clock/keystone-pll.txt
-> index 225990f..47570d2 100644
-> --- a/Documentation/devicetree/bindings/clock/keystone-pll.txt
-> +++ b/Documentation/devicetree/bindings/clock/keystone-pll.txt
-> @@ -15,8 +15,8 @@ Required properties:
->   - compatible : shall be "ti,keystone,main-pll-clock" or "ti,keystone,pll-clock"
->   - clocks : parent clock phandle
->   - reg - pll control0 and pll multipler registers
-> -- reg-names : control and multiplier. The multiplier is applicable only for
-> -		main pll clock
-> +- reg-names : control, multiplier and post-divider. The multiplier and
-> +		post-divider registers are applicable only for main pll clock
->   - fixed-postdiv : fixed post divider value. If absent, use clkod register bits
->   		for postdiv
->
-> @@ -25,8 +25,8 @@ Example:
->   		#clock-cells = <0>;
->   		compatible = "ti,keystone,main-pll-clock";
->   		clocks = <&refclksys>;
-> -		reg = <0x02620350 4>, <0x02310110 4>;
-> -		reg-names = "control", "multiplier";
-> +		reg = <0x02620350 4>, <0x02310110 4>, <0x02310108 4>;
-> +		reg-names = "control", "multiplier", "post-divider";
->   		fixed-postdiv = <2>;
->   	};
->
-> diff --git a/drivers/clk/keystone/pll.c b/drivers/clk/keystone/pll.c
-> index 0dd8a4b..4a375ea 100644
-> --- a/drivers/clk/keystone/pll.c
-> +++ b/drivers/clk/keystone/pll.c
-> @@ -37,7 +37,8 @@
->    *	Main PLL or any other PLLs in the device such as ARM PLL, DDR PLL
->    *	or PA PLL available on keystone2. These PLLs are controlled by
->    *	this register. Main PLL is controlled by a PLL controller.
-> - * @pllm: PLL register map address
-> + * @pllm: PLL register map address for multiplier bits
-> + * @pllod: PLL register map address for post divider bits
->    * @pll_ctl0: PLL controller map address
->    * @pllm_lower_mask: multiplier lower mask
->    * @pllm_upper_mask: multiplier upper mask
-> @@ -53,6 +54,7 @@ struct clk_pll_data {
->   	u32 phy_pllm;
->   	u32 phy_pll_ctl0;
->   	void __iomem *pllm;
-> +	void __iomem *pllod;
->   	void __iomem *pll_ctl0;
->   	u32 pllm_lower_mask;
->   	u32 pllm_upper_mask;
-> @@ -102,7 +104,11 @@ static unsigned long clk_pllclk_recalc(struct clk_hw *hw,
->   		/* read post divider from od bits*/
->   		postdiv = ((val & pll_data->clkod_mask) >>
->   				 pll_data->clkod_shift) + 1;
-> -	else
-> +	else if (pll_data->pllod) {
-> +		postdiv = readl(pll_data->pllod);
-> +		postdiv = ((postdiv & pll_data->clkod_mask) >>
-> +				pll_data->clkod_shift) + 1;
-> +	} else
->   		postdiv = pll_data->postdiv;
->
->   	rate /= (prediv + 1);
-> @@ -172,12 +178,21 @@ static void __init _of_pll_clk_init(struct device_node *node, bool pllctrl)
->   		/* assume the PLL has output divider register bits */
->   		pll_data->clkod_mask = CLKOD_MASK;
->   		pll_data->clkod_shift = CLKOD_SHIFT;
-> +
-> +		/*
-> +		 * Check if there is an post-divider register. If not
-> +		 * assume od bits are part of control register.
-> +		 */
-> +		i = of_property_match_string(node, "reg-names",
-> +					     "post-divider");
-> +		pll_data->pllod = of_iomap(node, i);
->   	}
->
->   	i = of_property_match_string(node, "reg-names", "control");
->   	pll_data->pll_ctl0 = of_iomap(node, i);
->   	if (!pll_data->pll_ctl0) {
->   		pr_err("%s: ioremap failed\n", __func__);
-> +		iounmap(pll_data->pllod);
->   		goto out;
->   	}
->
-> @@ -193,6 +208,7 @@ static void __init _of_pll_clk_init(struct device_node *node, bool pllctrl)
->   		pll_data->pllm = of_iomap(node, i);
->   		if (!pll_data->pllm) {
->   			iounmap(pll_data->pll_ctl0);
-> +			iounmap(pll_data->pllod);
->   			goto out;
->   		}
->   	}
->
-Dear Maintainers?
+Rob,
 
-Any comments please? If not, can this be applied?
+On Tue, 9 Jun 2015 08:26:20 -0500
+Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
--- 
-Murali Karicheri
-Linux Kernel, Keystone
+> On Mon, Jun 8, 2015 at 8:18 PM, Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> > On Mon, Jun 08, 2015 at 11:06:49AM -0500, Rob Herring wrote:
+> >> On Mon, Jun 8, 2015 at 10:02 AM, Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> >> > Add otg version, srp, hnp and adp support for usb OTG port, then those OTG
+> >> > features don't have to be decided by usb gadget drivers.
+> >> >
+> >> > Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> >> > ---
+> >> >  Documentation/devicetree/bindings/usb/generic.txt | 10 ++++++++++
+> >> >  1 file changed, 10 insertions(+)
+> >> >
+> >> > diff --git a/Documentation/devicetree/bindings/usb/generic.txt b/Documentation/devicetree/bindings/usb/generic.txt
+> >> > index 477d5bb..7386f4a 100644
+> >> > --- a/Documentation/devicetree/bindings/usb/generic.txt
+> >> > +++ b/Documentation/devicetree/bindings/usb/generic.txt
+> >> > @@ -11,6 +11,12 @@ Optional properties:
+> >> >                         "peripheral" and "otg". In case this attribute isn't
+> >> >                         passed via DT, USB DRD controllers should default to
+> >> >                         OTG.
+> >> > + - otg-rev: tells usb driver the release number of the OTG and EH supplement
+> >> > +                       with which the device and its descriptors are compliant,
+> >> > +                       in binary-coded decimal (i.e. 2.0 is 0200H).
+> >>
+> >> I would assume OTG 2.0 is somehow backwards compatible? Is this a h/w
+> >> dependency or a driver feature?
+> >>
+> > Not fully compatible, OTG 2.0 extend the usb_otg_descriptor by adding a new
+> > member bcdOTG to identify the OTG version, this descriptor needs to be sent
+> > to OTG host with correct size and content, so we have to know which release
+> > version the OTG device is compliant with, either by menuconfig config or pass
+> > via DT.
+> 
+> So you have to change the version depending on the host you are
+> connected to? That really seems strange that plugging in a OTG 2.0
+> device to an OTG 1.3 host would not work and doesn't make for a good
+> user experience.
+
+No. The OTG version in the OTG descriptor for any device is usually fixed for the
+lifetime of the product.
+
+Let's assume it is 2.0.
+
+If you plug this to OTG 1.0 host, it won't be an issue as OTG 1.0 host doesn't
+read the BCD version.
+
+> 
+> >> > + - srp-support: tells OTG controllers we want to enable SRP.
+> >> > + - hnp-support: tells OTG controllers we want to enable HNP.
+> >> > + - adp-support: tells OTG controllers we want to enable ADP.
+> >>
+> >> I've recently run into a problem[1] and found that I have to disable
+> >> OTG in the kernel to get my device to work. Having to turn-off OTG
+> >> seems like the wrong solution, and shifting the problem to DT seems
+> >> wrong too. Why is this not a user configurable option (within whatever
+> >> h/w constraints there are)?
+> > The problem of below link, seems your device is claiming it's a HNP capable
+> > OTG device, but connecting to a non-OTG port of your Host, assume your Host
+> > does have a OTG port, your Host issue a A_ALT_HNP_SUPPORT request to your
+> > OTG device to remind it can use another port with HNP, but the request failed
+> > (maybe STALL by your device, this request is defined in OTG 1.3 but obsolete
+> > in OTG 2.0), so your Host just stopped enumeration of your device, this is not
+> > reasonable because current OTG code is some out of data.
+> 
+> Do PCs have OTG ports typically? My expectation is that if I plug in
+> an OTG device as a B device to any host port, that it will work as a
+> device no matter what the host OTG capabilities are. If I have to
+> change the kernel config or DT, that is a problem.
+
+AFAIK PCs don't have OTG ports.
+
+If you plug in OTG device to a non-otg host port it will work as normal B-device.
+The host doesn't request for OTG descriptors and doesn't care what OTG features it
+supports or not.
+
+> 
+> > I am trying to make those OTG feaures to be configurable options, you mean
+> > by sys?
+> 
+> Yes.
+
+why do you need OTG features to be sysfs configurable other than for debugging?
+
+> 
+> >> What are the valid combinations? When do we want these enabled or not?
+> >> Wouldn't default enabled be better?
+> >
+> > We want to enable all those support in kernel driver, but some platform or
+> > hardware may not want to enable any or some of them, so those hardware
+> > can disable it by not pass the property in dt, the 3 sub features of OTG are
+> > not mandatory for so called OTG device, normally we at least enable HNP, and
+> > SRP and ADP are optional.
+> 
+> Please answer my questions in the doc.
+> 
+> >>
+> >> We already have dr_mode property. How is it related to these?
+
+dr_mode states what mode the controller will operate in.
+
+for dr_mode == "host" we don't care about these otg flags.
+
+for dr_mode == "peripheral" or dr_mode == "otg"
+we care about these OTG flags to create our OTG descriptor on the fly.
+
+> >
+> > dr_mode is to tell the device it will work at OTG mode(there is another simple
+> > dual role mode which is commom used but not HNP), srp/hnp/adp can further specify
+> > which protocol the OTG device will support.
+> 
+> By simple DR, you mean ID pin detect, right. So please define how you
+> support just ID pin detect vs. other levels of capability. Does only
+> dr_mode = otg mean ID pin detect? That may be a problem for existing
+> DTs if you disable other OTG functions because they have not been
+> added to the DT, then that is a problem.
+> 
+> I'm feeling less convinced that this belongs in DT at all. Please
+> convince me otherwise.
+
+Yes not specifying anything in DT should work and default to the
+best OTG version and features supported by the OTG controller.
+
+But if the device manufacturer wants to restrict the OTG version
+to something less or disable some OTG features then the DT flags come
+into play.
+
+cheers,
+-roger
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
