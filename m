@@ -1,54 +1,62 @@
-From: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 0/3] Add code to release secondary cores from holding pen.
-Date: Tue, 09 Jun 2015 08:43:28 -0700
-Message-ID: <7hd214sx9b.fsf@deeprootsystems.com>
-References: <1433856824-30689-1-git-send-email-peter.griffin@linaro.org>
+From: Ash Charles <ashcharles-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: dts: Fix frequency scaling on Gumstix Pepper.
+Date: Tue, 9 Jun 2015 08:45:04 -0700
+Message-ID: <CAK8F28kxuk0zPetCBPLmU5skQcOb2E47veZe5s7YaeE-ZJNMew@mail.gmail.com>
+References: <1433441299-18887-1-git-send-email-arun@gumstix.com> <1433441299-18887-4-git-send-email-arun@gumstix.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1433856824-30689-1-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-	(Peter Griffin's message of "Tue, 9 Jun 2015 14:33:41 +0100")
+In-Reply-To: <1433441299-18887-4-git-send-email-arun-EiDWdcs9+yZBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arun Bharadwaj <arun-EiDWdcs9+yZBDgjK7y7TUQ@public.gmane.org>
+Cc: =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> writes:
+This works well for me--cpufreq seems much happier.
 
-> Hi Maxime, Patrice, Srini, Kevin, Olof & Arnd,
->
-> This patchset adds in the necessary code to manage the holding pen for STi
-> platforms.
->
-> Due to all the STi upstream devs using JTAG to boot the STi boards, there
-> is currently a SMP bug when booting upstream kernels via u-boot where
-> only the primary core is brought up.
->
-> This hasn't been noticed until now because when booting via JTAG the
-> stlinux_arm_boot script sets the PC of the secondary cores directly.
->
-> With these patches applied booting via u-boot now works correctly.
->
-> [    0.045456] CPU: Testing write buffer coherency: ok
-> [    0.045597] CPU0: thread -1, cpu 0, socket 0, mpidr 80000000
-> [    0.045734] Setting up static identity map for 0x40209000 - 0x40209098
-> [    0.065047] CPU1: thread -1, cpu 1, socket 0, mpidr 80000001
-> [    0.065081] Brought up 2 CPUs
-> [    0.065089] SMP: Total of 2 processors activated (5983.43 BogoMIPS).
-> [    0.065092] CPU: All CPU(s) started in SVC mode.
->
-> Kevin / Olof / Arnd - Can you put this fix into the next ARM SoC fixes pull
-> request (if there is one)?
+Tested-by: Ash Charles <ashcharles-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-At this stage of the cycle (we're already at -rc7) we limit things to
-strictly regression fixes, and seems this has been broken for some time,
-so I think this will have to wait for v4.2.
-
-After addresing the comments, Maxime should queue this up for arm-soc so
-we can get it in early in the v4.2-rc cycle.
-
-Kevin
-
+On Thu, Jun 4, 2015 at 11:08 AM, Arun Bharadwaj <arun-EiDWdcs9+yZBDgjK7y7TUQ@public.gmane.org> wrote:
+> The device tree for Gumstix Pepper has DCDC2 and
+> DCDC3 correctly labelled but the upper limit values
+> are wrong. The confusion is due to the hardware
+> quirk where the DCDC2 and DCDC3 wires are flipped
+> in Pepper.
+>
+> Signed-off-by: Arun Bharadwaj <arun-EiDWdcs9+yZBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/am335x-pepper.dts | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/am335x-pepper.dts b/arch/arm/boot/dts/am335x-pepper.dts
+> index 99f855d..37b95f6 100644
+> --- a/arch/arm/boot/dts/am335x-pepper.dts
+> +++ b/arch/arm/boot/dts/am335x-pepper.dts
+> @@ -448,7 +448,7 @@
+>                         /* VDD_CORE voltage limits 0.95V - 1.26V with +/-4% tolerance */
+>                         regulator-name = "vdd_core";
+>                         regulator-min-microvolt = <925000>;
+> -                       regulator-max-microvolt = <1325000>;
+> +                       regulator-max-microvolt = <1150000>;
+>                         regulator-boot-on;
+>                         regulator-always-on;
+>                 };
+> @@ -457,7 +457,7 @@
+>                         /* VDD_MPU voltage limits 0.95V - 1.1V with +/-4% tolerance */
+>                         regulator-name = "vdd_mpu";
+>                         regulator-min-microvolt = <925000>;
+> -                       regulator-max-microvolt = <1150000>;
+> +                       regulator-max-microvolt = <1325000>;
+>                         regulator-boot-on;
+>                         regulator-always-on;
+>                 };
+> --
+> 2.1.4
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
