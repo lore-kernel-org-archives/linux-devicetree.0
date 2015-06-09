@@ -1,128 +1,116 @@
-From: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v2 06/22] usb: common: add API to get usb otg features
- from device tree
-Date: Tue, 9 Jun 2015 22:15:53 +0800
-Message-ID: <20150609141552.GD20453@shlinux1.ap.freescale.net>
-References: <1433775737-9816-1-git-send-email-jun.li@freescale.com>
- <1433775737-9816-7-git-send-email-jun.li@freescale.com>
- <20150609155529.0a03de5f@rockdesk>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [RFC/PATCH] pinctrl: sh-pfc: Accept standard function, pins and
+ groups properties
+Date: Tue, 9 Jun 2015 16:35:07 +0200
+Message-ID: <CAMuHMdWp4iBGtR2EiYMa03hwJrSOpq9dB==yDgt+OwjCebuFMg@mail.gmail.com>
+References: <CACRpkda4SBof0EaZVWtEYaeb6j_BGAVj39kje+mBz90eB3qAwQ@mail.gmail.com>
+	<1422390694-12389-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+	<CACRpkda6H7hbgXhmSbgtwOC_8PbHnES5syp-YEp1+V6s5Ym6Cw@mail.gmail.com>
+	<12938873.nmb8Ng8mNb@avalon>
+	<CACRpkdbepTKxMFVpTo7ZmjYE1beF5XOMOQarszaDGojerNQqMg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150609155529.0a03de5f@rockdesk>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Cc: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACRpkdbepTKxMFVpTo7ZmjYE1beF5XOMOQarszaDGojerNQqMg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niso-UNjuZkX4dYU@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 09, 2015 at 03:55:29PM +0300, Roger Quadros wrote:
-> Hi,
-> 
-> On Mon, 8 Jun 2015 23:02:01 +0800
-> Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> 
-> > Check property of usb hardware to get otg version and if SRP, HNP and ADP
-> > are supported.
-> > 
-> > Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > ---
-> >  drivers/usb/common/common.c | 64 +++++++++++++++++++++++++++++++++++++++++++++
-> >  include/linux/usb/of.h      | 20 ++++++++++++++
-> >  2 files changed, 84 insertions(+)
-> > 
-> > diff --git a/drivers/usb/common/common.c b/drivers/usb/common/common.c
-> > index b530fd4..7b0594b 100644
-> > --- a/drivers/usb/common/common.c
-> > +++ b/drivers/usb/common/common.c
-> > @@ -154,6 +154,70 @@ bool of_usb_host_tpl_support(struct device_node *np)
-> >  	return false;
-> >  }
-> >  EXPORT_SYMBOL_GPL(of_usb_host_tpl_support);
-> > +
-> > +/**
-> > + * of_usb_otg_srp_support -  to get if otg srp is supported by the otg controller
-> 
-> This is not really about otg controller supporting SRP but whether
-> the DT user wants it enabled or not.
-> 
-Sorry, correct my precious answer, this is about if otg controller can support
-SRP. Meanwhile DT user can disable it via this property even the HW has this
-capability.
+Hi Laurent,
 
-Li Jun
-> IMO this function should be named of_usb_get_otg_srp_enable()
-> 
-> > + * @np: Pointer to the given device_node
-> > + *
-> > + * The function gets if the otg port supports SRP
-> > + */
-> > +bool of_usb_otg_srp_support(struct device_node *np)
-> > +{
-> > +	if (of_find_property(np, "srp-support", NULL))
-> > +		return true;
-> > +
-> > +	return false;
-> > +}
-> > +EXPORT_SYMBOL_GPL(of_usb_otg_srp_support);
-> > +
-> > +/**
-> > + * of_usb_otg_hnp_support -  to get if otg hnp is supported by the otg controller
-> > + * @np: Pointer to the given device_node
-> > + *
-> > + * The function gets if the otg port supports HNP
-> > + */
-> > +bool of_usb_otg_hnp_support(struct device_node *np)
-> > +{
-> > +	if (of_find_property(np, "hnp-support", NULL))
-> > +		return true;
-> > +
-> > +	return false;
-> > +}
-> > +EXPORT_SYMBOL_GPL(of_usb_otg_hnp_support);
-> > +
-> > +/**
-> > + * of_usb_otg_adp_support -  to get if otg adp is supported by the otg controller
-> > + * @np: Pointer to the given device_node
-> > + *
-> > + * The function gets if the otg port supports ADP
-> > + */
-> > +bool of_usb_otg_adp_support(struct device_node *np)
-> > +{
-> > +	if (of_find_property(np, "adp-support", NULL))
-> > +		return true;
-> > +
-> > +	return false;
-> > +}
-> > +EXPORT_SYMBOL_GPL(of_usb_otg_adp_support);
-> > +
-> > +/**
-> > + * of_usb_otg_rev_number -  to get the otg release number the device is
-> > + * compliant with.
-> > + * @np: Pointer to the given device_node
-> > + *
-> > + * The function gets OTG and EH supplement release number in binary-coded
-> > + * decimal (i.e. 2.0 is 0200H).
-> > + */
-> > +int of_usb_otg_rev_number(struct device_node *np)
-> 
-> how about of_usb_get_otg_rev()?
-> 
-> > +{
-> > +	u32 otg_rev;
-> > +
-> > +	if (!of_property_read_u32(np, "otg-rev", &otg_rev))
-> > +		return otg_rev;
-> > +
-> > +	return 0;
-> > +}
-> > +EXPORT_SYMBOL_GPL(of_usb_otg_rev_number);
-> >  #endif
-> >  
-> 
-> cheers,
-> -roger
+On Fri, Mar 6, 2015 at 11:39 AM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Wed, Feb 4, 2015 at 10:53 AM, Laurent Pinchart
+> <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> wrote:
+>> On Wednesday 04 February 2015 09:40:48 Linus Walleij wrote:
+>>> On Tue, Jan 27, 2015 at 9:31 PM, Laurent Pinchart wrote:
+>>> > The "function", "pins" and "groups" pinmux and pinctrl properties have
+>>> > been standardized. Support them in addition to the custom "renesas,*"
+>>> > properties. New-style and old-style properties can't be mixed in DT.
+>>> >
+>>> > Signed-off-by: Laurent Pinchart
+>>> > <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+>>>
+>>> (...)
+>>>
+>>> >> Would be nice if the PFC driver could be augmented to also accept the
+>>> >> now standard bindings "groups" and "function" simply :) we're adding
+>>> >> parse functions for those to the core.
+>>> >
+>>> > Something like this ?
+>>>
+>>> Yes :)
+>>>
+>>> > Please note two differences between the Renesas PFC bindings and the
+>>> > standard bindings:
+>>> >
+>>> > - The standard bindings state that a pinctrl node must contain either a
+>>> >   "pins" property or a "groups" property, while the Renesas bindings
+>>> >   allows for both to coexist in the same node.
+>>>
+>>> Sascha also says this makes sense for him so I guess I'm getting a bit
+>>> soft on the issue.
+>>>
+>>> > - The standard bindings don't allow a pinmux node to contain a "pins"
+>>> >   property, while the Renesas bindings do.
+>>>
+>>> Does that mean "pins" affect the muxing or that "pins" is about some per-pin
+>>> config shoveled into the same node?
+>>>
+>>> The former is not OK, the latter is.
+>>
+>> It means "pins" affect the muxing. The sh-pfc driver supports both muxing
+>> groups and muxing individual pins.
+>
+> OK.
+>
+>>> >                 mmcif_pins: mmcif {
+>>> >
+>>> >                         mux {
+>>> > -                               renesas,groups = "mmc0_data8_0",
+>>> > "mmc0_ctrl_0";
+>>> > -                               renesas,function = "mmc0";
+>>> > +                               groups = "mmc0_data8_0", "mmc0_ctrl_0";
+>>> > +                               function = "mmc0";
+>>> >                         };
+>>>
+>>> So that looks just very nice.
+>>>
+>>> >                         cfg {
+>>> > -                               renesas,groups = "mmc0_data8_0";
+>>> > -                               renesas,pins = "PORT279";
+>>> > +                               groups = "mmc0_data8_0";
+>>> > +                               pins = "PORT279";
+>>> >                                 bias-pull-up;
+>>>
+>>> And here I can't see the use of "groups" in this node since it
+>>> doesn't match a function. It's a bit ambiguous what "groups"
+>>> mean when you run into it like this.
+>>
+>> It means that the bias-pull-up configuration is applied to all pins of the
+>> "mmc0_data8_0" group, as well as to pin 279.
+>
+> OK.
+>
+> This looks good to me, is the patch applicable as it is, or will you rebase
+> it and send out a non-RFC version?
+
+This seems to have fallen through the (ELC?) cracks...
+What's the status?
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
