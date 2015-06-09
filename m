@@ -1,44 +1,81 @@
-From: Mark Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
-Subject: Re: [PATCH] NFC: trf7970a: Handle extra byte in response to Type 5
- RMB commands
-Date: Mon, 8 Jun 2015 20:32:13 -0700
-Message-ID: <20150609033213.GA16978@animalcreek.com>
-References: <1429897042-21430-1-git-send-email-mgreer@animalcreek.com>
- <20150608211821.GC5089@ribalta.mp.intel.com>
+From: Dann Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+Subject: Re: [PATCH 2/2 RESEND] power: reset: Add syscon poweroff device node
+ for APM X-Gene platform
+Date: Mon, 8 Jun 2015 21:44:21 -0600
+Message-ID: <CALdTtnvQg2xmL5MqxUcvJmk_33XiEg9tnLzYvC++ZQL3j7J46g@mail.gmail.com>
+References: <1433272747-27114-1-git-send-email-ttnguyen@apm.com>
+	<1433272747-27114-3-git-send-email-ttnguyen@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150608211821.GC5089-41CF7WKNp/HfYmLG0ciiYFaTQe2KTcn/@public.gmane.org>
+In-Reply-To: <1433272747-27114-3-git-send-email-ttnguyen-qTEPVZfXA3Y@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+To: Tai Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org>
+Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, patches-qTEPVZfXA3Y@public.gmane.org, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 08, 2015 at 11:18:21PM +0200, Samuel Ortiz wrote:
-> Hi Mark,
-> 
-> On Fri, Apr 24, 2015 at 10:37:22AM -0700, Mark A. Greer wrote:
-> > The current versions of the trf7970a has an erratum where it returns
-> > an extra byte in the response to 'Read Multiple Block' (RMB) commands.
-> > This command is issued to Type 5 tags (i.e., ISO/IEC 15693 tags) by
-> > the neard daemon.
-> > 
-> > To handle this, define a new Device Tree property,
-> > 't5t-rmb-extra-byte-quirk', which indicates that the associated
-> > trf7970a device has this erratum.  The trf7970a device driver
-> > will then ensure that the response length to RMB commands is
-> > reduced by one byte (for devices with the erratum).
-> > 
-> > Signed-off-by: Mark A. Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/net/nfc/trf7970a.txt       |  4 ++++
-> >  drivers/nfc/trf7970a.c                             | 23 ++++++++++++++++++----
-> >  2 files changed, 23 insertions(+), 4 deletions(-)
-> Applied to nfc-next, thanks.
+On Tue, Jun 2, 2015 at 1:19 PM, Tai Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org> wrote:
+> This patch adds syscon poweroff device node to support poweroff feature
+> on APM X-Gene Mustang platform
 
-Cool!  Thanks Samuel.
+hey Tai,
+ The reboot changes work just fine for me, but poweroff does not:
 
+[  OK  ] Reached target Final Step.
+         Starting Power-Off...
+reboot: Power down
+Unable to poweroff system
+Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000000
+
+CPU: 0 PID: 1 Comm: systemd-shutdow Tainted: G        W       4.1.0-rc7+ #1
+Hardware name: APM X-Gene Mustang board (DT)
+Call trace:
+[<ffffffc00008990c>] dump_backtrace+0x0/0x11c
+[<ffffffc000089a38>] show_stack+0x10/0x1c
+[<ffffffc0005b447c>] dump_stack+0x88/0xc8
+[<ffffffc0005b3374>] panic+0xe0/0x220
+[<ffffffc0000b5f24>] do_exit+0x990/0x994
+[<ffffffc0000d06bc>] SyS_reboot+0x14c/0x208
+---[ end Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000000
+
+  -dann
+
+> Signed-off-by: Tai Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/apm/apm-mustang.dts |   12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/apm/apm-mustang.dts b/arch/arm64/boot/dts/apm/apm-mustang.dts
+> index 83578e7..910d561 100644
+> --- a/arch/arm64/boot/dts/apm/apm-mustang.dts
+> +++ b/arch/arm64/boot/dts/apm/apm-mustang.dts
+> @@ -23,6 +23,18 @@
+>                 device_type = "memory";
+>                 reg = < 0x1 0x00000000 0x0 0x80000000 >; /* Updated by bootloader */
+>         };
+> +
+> +       poweroff_mbox: poweroff_mbox@10548000 {
+> +               compatible = "syscon";
+> +               reg = <0x0 0x10548000 0x0 0x30>;
+> +       };
+> +
+> +       poweroff: poweroff@10548010 {
+> +               compatible = "syscon-poweroff";
+> +               regmap = <&poweroff_mbox>;
+> +               offset = <0x10>;
+> +               mask = <0x1>;
+> +       };
+>  };
+>
+>  &pcie0clk {
+> --
+> 1.7.9.5
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
