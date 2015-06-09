@@ -1,50 +1,137 @@
-From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 2/2] ASoC: qcom: storm: remove special casing EPROBE_DEFER
-Date: Tue,  9 Jun 2015 14:35:22 +0100
-Message-ID: <1433856922-15541-1-git-send-email-srinivas.kandagatla@linaro.org>
-References: <1433856861-15433-1-git-send-email-srinivas.kandagatla@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1433856861-15433-1-git-send-email-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Patrick Lai <plai-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, kwestfie-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Banajit Goswami <bgoswami-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: [PATCH 1/2] regulator: max8973: configure ramp delay through callback
+Date: Tue, 9 Jun 2015 19:17:52 +0530
+Message-ID: <1433857673-28744-1-git-send-email-ldewangan@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: broonie@kernel.org, lgirdwood@gmail.com
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch removes special casing the EPROBE_DEFER error handling in the
-driver.
+Regulator core framework support the configuration of ramp
+delay reading from platform specific regulator data via the
+regulator callback ops.
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Instead of reading regulator init data on driver and setting
+ramp delay, use the callback to achieve this.
+
+Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
 ---
- sound/soc/qcom/storm.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ drivers/regulator/max8973-regulator.c | 73 +++++++++++++++++++++++++++--------
+ 1 file changed, 57 insertions(+), 16 deletions(-)
 
-diff --git a/sound/soc/qcom/storm.c b/sound/soc/qcom/storm.c
-index ee06613..2d833bf 100644
---- a/sound/soc/qcom/storm.c
-+++ b/sound/soc/qcom/storm.c
-@@ -122,15 +122,12 @@ static int storm_platform_probe(struct platform_device *pdev)
- 	}
+diff --git a/drivers/regulator/max8973-regulator.c b/drivers/regulator/max8973-regulator.c
+index 00cf91c..663e4df 100644
+--- a/drivers/regulator/max8973-regulator.c
++++ b/drivers/regulator/max8973-regulator.c
+@@ -67,6 +67,7 @@
+ #define MAX8973_RAMP_25mV_PER_US			0x1
+ #define MAX8973_RAMP_50mV_PER_US			0x2
+ #define MAX8973_RAMP_200mV_PER_US			0x3
++#define MAX8973_RAMP_MASK				0x3
  
- 	ret = devm_snd_soc_register_card(&pdev->dev, card);
--	if (ret == -EPROBE_DEFER) {
--		return ret;
--	} else if (ret) {
-+	if (ret)
- 		dev_err(&pdev->dev, "%s() error registering soundcard: %d\n",
- 				__func__, ret);
--		return ret;
--	}
- 
--	return 0;
-+	return ret;
-+
+ /* MAX8973_CONTROL2 */
+ #define MAX8973_WDTMR_ENABLE				BIT(6)
+@@ -243,12 +244,45 @@ static unsigned int max8973_dcdc_get_mode(struct regulator_dev *rdev)
+ 		REGULATOR_MODE_FAST : REGULATOR_MODE_NORMAL;
  }
  
- #ifdef CONFIG_OF
++static int max8973_set_ramp_delay(struct regulator_dev *rdev,
++		int ramp_delay)
++{
++	struct max8973_chip *max = rdev_get_drvdata(rdev);
++	unsigned int control;
++	int ret;
++	int ret_val;
++
++	/* Set ramp delay */
++	if (ramp_delay < 25000) {
++		control = MAX8973_RAMP_12mV_PER_US;
++		ret_val = 12000;
++	} else if (ramp_delay < 50000) {
++		control = MAX8973_RAMP_25mV_PER_US;
++		ret_val = 25000;
++	} else if (ramp_delay < 200000) {
++		control = MAX8973_RAMP_50mV_PER_US;
++		ret_val = 50000;
++	} else {
++		control = MAX8973_RAMP_200mV_PER_US;
++		ret_val = 200000;
++	}
++
++	ret = regmap_update_bits(max->regmap, MAX8973_CONTROL1,
++			MAX8973_RAMP_MASK, control);
++	if (ret < 0)
++		dev_err(max->dev, "register %d update failed, %d",
++				MAX8973_CONTROL1, ret);
++	return ret;
++}
++
+ static const struct regulator_ops max8973_dcdc_ops = {
+ 	.get_voltage_sel	= max8973_dcdc_get_voltage_sel,
+ 	.set_voltage_sel	= max8973_dcdc_set_voltage_sel,
+ 	.list_voltage		= regulator_list_voltage_linear,
+ 	.set_mode		= max8973_dcdc_set_mode,
+ 	.get_mode		= max8973_dcdc_get_mode,
++	.set_voltage_time_sel	= regulator_set_voltage_time_sel,
++	.set_ramp_delay		= max8973_set_ramp_delay,
+ };
+ 
+ static int max8973_init_dcdc(struct max8973_chip *max,
+@@ -257,6 +291,29 @@ static int max8973_init_dcdc(struct max8973_chip *max,
+ 	int ret;
+ 	uint8_t	control1 = 0;
+ 	uint8_t control2 = 0;
++	unsigned int data;
++
++	ret = regmap_read(max->regmap, MAX8973_CONTROL1, &data);
++	if (ret < 0) {
++		dev_err(max->dev, "register %d read failed, err = %d",
++				MAX8973_CONTROL1, ret);
++		return ret;
++	}
++	control1 = data & MAX8973_RAMP_MASK;
++	switch (control1) {
++	case MAX8973_RAMP_12mV_PER_US:
++		max->desc.ramp_delay = 12000;
++		break;
++	case MAX8973_RAMP_25mV_PER_US:
++		max->desc.ramp_delay = 252000;
++		break;
++	case MAX8973_RAMP_50mV_PER_US:
++		max->desc.ramp_delay = 50000;
++		break;
++	case MAX8973_RAMP_200mV_PER_US:
++		max->desc.ramp_delay = 200000;
++		break;
++	}
+ 
+ 	if (pdata->control_flags & MAX8973_CONTROL_REMOTE_SENSE_ENABLE)
+ 		control1 |= MAX8973_SNS_ENABLE;
+@@ -277,22 +334,6 @@ static int max8973_init_dcdc(struct max8973_chip *max,
+ 	if (pdata->control_flags & MAX8973_CONTROL_FREQ_SHIFT_9PER_ENABLE)
+ 		control1 |= MAX8973_FREQSHIFT_9PER;
+ 
+-	/* Set ramp delay */
+-	if (pdata->reg_init_data &&
+-			pdata->reg_init_data->constraints.ramp_delay) {
+-		if (pdata->reg_init_data->constraints.ramp_delay < 25000)
+-			control1 |= MAX8973_RAMP_12mV_PER_US;
+-		else if (pdata->reg_init_data->constraints.ramp_delay < 50000)
+-			control1 |= MAX8973_RAMP_25mV_PER_US;
+-		else if (pdata->reg_init_data->constraints.ramp_delay < 200000)
+-			control1 |= MAX8973_RAMP_50mV_PER_US;
+-		else
+-			control1 |= MAX8973_RAMP_200mV_PER_US;
+-	} else {
+-		control1 |= MAX8973_RAMP_12mV_PER_US;
+-		max->desc.ramp_delay = 12500;
+-	}
+-
+ 	if (!(pdata->control_flags & MAX8973_CONTROL_PULL_DOWN_ENABLE))
+ 		control2 |= MAX8973_DISCH_ENBABLE;
+ 
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.1.4
