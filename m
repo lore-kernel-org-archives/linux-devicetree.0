@@ -1,50 +1,61 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] regulator: max8973: configure ramp delay through
- callback
-Date: Tue, 9 Jun 2015 18:09:22 +0100
-Message-ID: <20150609170922.GJ14071@sirena.org.uk>
-References: <1433857673-28744-1-git-send-email-ldewangan@nvidia.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v5 1/2] ASoC: qcom: document apq8016 sbc machine driver
+ bindings
+Date: Tue, 9 Jun 2015 18:13:13 +0100
+Message-ID: <20150609171313.GK14071@sirena.org.uk>
+References: <1433854702-23654-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1433854769-23807-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <20150609165718.GH14071@sirena.org.uk>
+ <55771D88.4050603@linaro.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="9rFIWt66tTOC0xtM"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="K/BmBeHUK5PA/HQO"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1433857673-28744-1-git-send-email-ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <55771D88.4050603@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: alsa-devel@alsa-project.org, Rob Herring <robh+dt@kernel.org>, Patrick Lai <plai@codeaurora.org>, Banajit Goswami <bgoswami@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kwestfie@codeaurora.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---9rFIWt66tTOC0xtM
+--K/BmBeHUK5PA/HQO
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Tue, Jun 09, 2015 at 07:17:52PM +0530, Laxman Dewangan wrote:
-> Regulator core framework support the configuration of ramp
-> delay reading from platform specific regulator data via the
-> regulator callback ops.
+On Tue, Jun 09, 2015 at 06:08:24PM +0100, Srinivas Kandagatla wrote:
 
-Applied both, thanks.
+> >>>+- external	: flag to indicate if the I2S is connected to external codec
 
---9rFIWt66tTOC0xtM
+> >not sure I understand why we need a boolean property indicating if an
+> >external CODEC is in use - what is the consequence of setting this
+> >property?
+
+> As of today, the consequence of setting this flag is to setup correct
+> dai_link names.
+> Also there are some limitations on which MI2S can be configured to external
+> or internal codecs, this flag can be used in future to validate such
+> configurations, if required.
+
+That validation sounds like something that the SoC drivers should be
+doing if required rather than the machine driver - otherwise every
+machine driver using this SoC would have to implement the same
+validation.
+
+--K/BmBeHUK5PA/HQO
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBCAAGBQJVdx3BAAoJECTWi3JdVIfQstMH/ilZXogQIE3hNJegIIbYhJo+
-q3KvlgNGumUCK3UOHGPNXc9KuEyxKA83lIi6NE+BBfGIT3uJ7CWHhA0xIUf7ya9s
-3ra/gZDqLqZDckRhfU1WKUXnu3Ja9PPqEa3sn30YlmETU9n0fa3Ne28PW0gZmZwf
-Ero6LKAjmgPGbXo3c8eq4Ba5zsU50kAQviNe1gmP26m3nqvZ1NXc2iistNOARgk2
-18JkPatOA09BVOPrmuWfJq/FTcas6thNNt9r89iZ2FZS8Pz57wYo1yCsistxdMV4
-i2G6ejv/05IZP7UwFq40PAxIjkBs6MLImPDYIPKh+7CFIM35mNXNkJo00l9N8ik=
-=xWMy
+iQEcBAEBCAAGBQJVdx6oAAoJECTWi3JdVIfQX9QH/REvwmwJ/xcRXURnZjuTCoU8
+iNOyvtGwFTvAu51FGJPeAnysDRLrhjK0NSA0f0J4/k8t7vEF7TCHciG+JW79NZ1c
+ast5jArJ7H9uI7VnTvZ7BgPAQhIcSmEu91j5kSJjS6dmqo5XNUurL5fk+R4TV3n/
+bFpfJkquDldcpKeFmkF1ctqSjaNeAptIRZezfdWWdiG1rKhbRieqJh1c0AbjRqpH
+eDjNQn3lX6ONhK4wyH5cdvydw4nhOZg/Ubp/osfpmVsJkw6Ry+Qr8Sp8O3ydkGD2
+Z3CBycB88CzdYEn/WwtjSRNQlaRMfAhuaYfYWdaRyTshortNhULqQzjarZMe0V0=
+=Fxjs
 -----END PGP SIGNATURE-----
 
---9rFIWt66tTOC0xtM--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--K/BmBeHUK5PA/HQO--
