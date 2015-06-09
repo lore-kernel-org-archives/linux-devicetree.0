@@ -1,39 +1,49 @@
-From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 1/2] ASoC: qcom: document apq8016 sbc machine driver
- bindings
-Date: Tue, 09 Jun 2015 18:08:24 +0100
-Message-ID: <55771D88.4050603@linaro.org>
-References: <1433854702-23654-1-git-send-email-srinivas.kandagatla@linaro.org> <1433854769-23807-1-git-send-email-srinivas.kandagatla@linaro.org> <20150609165718.GH14071@sirena.org.uk>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] regulator: max8973: configure ramp delay through
+ callback
+Date: Tue, 9 Jun 2015 18:09:22 +0100
+Message-ID: <20150609170922.GJ14071@sirena.org.uk>
+References: <1433857673-28744-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="9rFIWt66tTOC0xtM"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150609165718.GH14071-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1433857673-28744-1-git-send-email-ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Patrick Lai <plai-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Banajit Goswami <bgoswami-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kwestfie-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
+--9rFIWt66tTOC0xtM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 09/06/15 17:57, Mark Brown wrote:
-> On Tue, Jun 09, 2015 at 01:59:29PM +0100, Srinivas Kandagatla wrote:
->
->> >+Optional CPU/CODEC subnodes properties:
->> >+- external	: flag to indicate if the I2S is connected to external codec
->> >+Example:
-> Missing blank line between the property and the "Example:".  I'm still
-I will fix it in next version.
-> not sure I understand why we need a boolean property indicating if an
-> external CODEC is in use - what is the consequence of setting this
-> property?
-As of today, the consequence of setting this flag is to setup correct 
-dai_link names.
-Also there are some limitations on which MI2S can be configured to 
-external or internal codecs, this flag can be used in future to validate 
-such configurations, if required.
+On Tue, Jun 09, 2015 at 07:17:52PM +0530, Laxman Dewangan wrote:
+> Regulator core framework support the configuration of ramp
+> delay reading from platform specific regulator data via the
+> regulator callback ops.
 
---srini
+Applied both, thanks.
+
+--9rFIWt66tTOC0xtM
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJVdx3BAAoJECTWi3JdVIfQstMH/ilZXogQIE3hNJegIIbYhJo+
+q3KvlgNGumUCK3UOHGPNXc9KuEyxKA83lIi6NE+BBfGIT3uJ7CWHhA0xIUf7ya9s
+3ra/gZDqLqZDckRhfU1WKUXnu3Ja9PPqEa3sn30YlmETU9n0fa3Ne28PW0gZmZwf
+Ero6LKAjmgPGbXo3c8eq4Ba5zsU50kAQviNe1gmP26m3nqvZ1NXc2iistNOARgk2
+18JkPatOA09BVOPrmuWfJq/FTcas6thNNt9r89iZ2FZS8Pz57wYo1yCsistxdMV4
+i2G6ejv/05IZP7UwFq40PAxIjkBs6MLImPDYIPKh+7CFIM35mNXNkJo00l9N8ik=
+=xWMy
+-----END PGP SIGNATURE-----
+
+--9rFIWt66tTOC0xtM--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
