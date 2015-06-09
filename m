@@ -1,75 +1,62 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v2 2/2] drm/panel: Add display timing for Okaya
- RS800480T-7X0GP
-Date: Tue, 09 Jun 2015 19:39:48 +0200
-Message-ID: <1433871588.5428.42.camel@pengutronix.de>
-References: <1432827466-8104-1-git-send-email-gary.bisson@boundarydevices.com>
- <1433865599-8167-1-git-send-email-gary.bisson@boundarydevices.com>
- <1433865599-8167-3-git-send-email-gary.bisson@boundarydevices.com>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH V2] QorIQ/TMU: add TMU node to device tree for QorIQ
+ T104x
+Date: Tue, 9 Jun 2015 12:47:29 -0500
+Message-ID: <1433872049.2477.80.camel@freescale.com>
+References: <1429085868-47577-1-git-send-email-hongtao.jia@freescale.com>
+	 <BLUPR03MB1498C018F80A754767DF48FE1CC0@BLUPR03MB149.namprd03.prod.outlook.com>
+	 <1432669078.7862.13.camel@freescale.com>
+	 <BLUPR03MB149DC0A753423EB27293931E1BE0@BLUPR03MB149.namprd03.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1433865599-8167-3-git-send-email-gary.bisson@boundarydevices.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Gary Bisson <gary.bisson@boundarydevices.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, galak@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <BLUPR03MB149DC0A753423EB27293931E1BE0-GeMU99Gfrrs/d2CkLcLUf+O6mTEJWrR4XA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jia Hongtao-B38951 <hongtao.jia-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2FyeSwKCkFtIERpZW5zdGFnLCBkZW4gMDkuMDYuMjAxNSwgMTc6NTkgKzAyMDAgc2Nocmll
-YiBHYXJ5IEJpc3NvbjoKPiBBZGQgc3VwcG9ydCBmb3IgdGhlIE9rYXlhIFJTODAwNDgwVC03WDBH
-UCB0byB0aGUgRFJNIHNpbXBsZSBwYW5lbAo+IGRyaXZlci4KPiAKPiBUaGUgUlM4MDA0ODBULTdY
-MEdQIGlzIGEgV1ZHQSAoODAweDQ4MCkgcGFuZWwgd2l0aCBhbiAxOC1iaXQgcGFyYWxsZWwKPiBM
-Q0QgaW50ZXJmYWNlLiBJdCBzdXBwb3J0cyBwaXhlbCBjbG9ja3MgaW4gdGhlIHJhbmdlIG9mIDMw
-LTQwIE1Iei4KPiAKPiBUaGlzIHBhbmVsIGRldGFpbHMgY2FuIGJlIGZvdW5kIGF0Ogo+IGh0dHA6
-Ly9ib3VuZGFyeWRldmljZXMuY29tL3Byb2R1Y3QvNy04MDB4NDgwLWRpc3BsYXkvCj4gCj4gU2ln
-bmVkLW9mZi1ieTogR2FyeSBCaXNzb24gPGdhcnkuYmlzc29uQGJvdW5kYXJ5ZGV2aWNlcy5jb20+
-Cj4gLS0tCj4gIC4uLi9iaW5kaW5ncy9wYW5lbC9va2F5YSxyczgwMDQ4MHRfN3gwZ3AudHh0ICAg
-ICAgIHwgIDcgKysrKysrCj4gIGRyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYyAg
-ICAgICAgICAgICAgIHwgMjcgKysrKysrKysrKysrKysrKysrKysrKwo+ICAyIGZpbGVzIGNoYW5n
-ZWQsIDM0IGluc2VydGlvbnMoKykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9wYW5lbC9va2F5YSxyczgwMDQ4MHRfN3gwZ3AudHh0Cj4gCj4g
-ZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wYW5lbC9va2F5
-YSxyczgwMDQ4MHRfN3gwZ3AudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L3BhbmVsL29rYXlhLHJzODAwNDgwdF83eDBncC50eHQKPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+
-IGluZGV4IDAwMDAwMDAuLmY3YzcyOWQKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BhbmVsL29rYXlhLHJzODAwNDgwdF83eDBncC50eHQK
-PiBAQCAtMCwwICsxLDcgQEAKPiArT0tBWUEgRWxlY3RyaWMgQW1lcmljYSwgSW5jLiBSUzgwMDQ4
-MFQtN1gwR1AgNyIgV1ZHQSBMQ0QgcGFuZWwKPiArCj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4g
-Ky0gY29tcGF0aWJsZTogc2hvdWxkIGJlICJva2F5YSxyczgwMDQ4MHRfN3gwZ3AiCj4gKwo+ICtU
-aGlzIGJpbmRpbmcgaXMgY29tcGF0aWJsZSB3aXRoIHRoZSBzaW1wbGUtcGFuZWwgYmluZGluZywg
-d2hpY2ggaXMgc3BlY2lmaWVkCj4gK2luIHNpbXBsZS1wYW5lbC50eHQgaW4gdGhpcyBkaXJlY3Rv
-cnkuCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYyBi
-L2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYwo+IGluZGV4IDk3YjY2YjguLmU1
-MTFhMjIgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5j
-Cj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jCj4gQEAgLTk0Miw2
-ICs5NDIsMzAgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBwYW5lbF9kZXNjIGxnX2xwMTI5cWUgPSB7
-Cj4gIAl9LAo+ICB9Owo+ICAKPiArc3RhdGljIGNvbnN0IHN0cnVjdCBkaXNwbGF5X3RpbWluZyBv
-a2F5YV9yczgwMDQ4MHRfN3gwZ3BfdGltaW5nID0gewo+ICsJLnBpeGVsY2xvY2sgPSB7IDMwMDAw
-MDAwLCAzMDAwMDAwMCwgNDAwMDAwMDAgfSwKPiArCS5oYWN0aXZlID0geyA4MDAsIDgwMCwgODAw
-IH0sCj4gKwkuaGZyb250X3BvcmNoID0geyA0MCwgNDAsIDQwIH0sCj4gKwkuaGJhY2tfcG9yY2gg
-PSB7IDQwLCA0MCwgNDAgfSwKPiArCS5oc3luY19sZW4gPSB7IDEsIDQ4LCA0OCB9LAo+ICsJLnZh
-Y3RpdmUgPSB7IDQ4MCwgNDgwLCA0ODAgfSwKPiArCS52ZnJvbnRfcG9yY2ggPSB7IDEzLCAxMywg
-MTMgfSwKPiArCS52YmFja19wb3JjaCA9IHsgMjksIDI5LCAyOSB9LAo+ICsJLnZzeW5jX2xlbiA9
-IHsgMywgMywgMyB9LAo+ICsJLmZsYWdzID0gRElTUExBWV9GTEFHU19ERV9ISUdILAo+ICt9Owo+
-ICsKPiArc3RhdGljIGNvbnN0IHN0cnVjdCBwYW5lbF9kZXNjIG9rYXlhX3JzODAwNDgwdF83eDBn
-cCA9IHsKPiArCS50aW1pbmdzID0gJm9rYXlhX3JzODAwNDgwdF83eDBncF90aW1pbmcsCj4gKwku
-bnVtX3RpbWluZ3MgPSAxLAo+ICsJLmJwYyA9IDYsCj4gKwkuc2l6ZSA9IHsKPiArCQkud2lkdGgg
-PSAxNTQsCj4gKwkJLmhlaWdodCA9IDg3LAo+ICsJfSwKCkFyZSB0aGVyZSBhbnkgcG93ZXJvbi9w
-b3dlcm9mZiBzZXF1ZW5jaW5nIGRlbGF5cyBpbiB0aGUgZGF0YXNoZWV0IHRoYXQKc2hvdWxkIGJl
-IG1ldD8gUGFyYWxsZWwgZGlzcGxheXMgb2Z0ZW4gc3BlY2lmeSBhIGZldyBtcyBkZWxheSBhZnRl
-ciB0aGUKdm9sdGFnZSBzdXBwbHkgaXMgc3RhYmxlIGFuZCBiZWZvcmUgcGl4ZWwgZGF0YSBzaG91
-bGQgYmUgZHJpdmVuIG9uIHRoZQpidXMgKC5kZWxheS5wcmVwYXJlKSwgYXMgd2VsbCBhcyBhZnRl
-cndhcmRzLCBiZWZvcmUgYWN0aXZhdGluZyB0aGUKYmFja2xpZ2h0ICguZGVsYXkuZW5hYmxlKS4K
-CnJlZ2FyZHMKUGhpbGlwcAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
-ZGV2ZWwK
+On Mon, 2015-06-08 at 21:19 -0500, Jia Hongtao-B38951 wrote:
+> > -----Original Message-----
+> > From: Wood Scott-B07421
+> > Sent: Wednesday, May 27, 2015 3:38 AM
+> > To: Jia Hongtao-B38951
+> > Cc: edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org; linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org;
+> > devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+> > Subject: Re: [PATCH V2] QorIQ/TMU: add TMU node to device tree for 
+> > QorIQ
+> > T104x
+> > 
+> > On Tue, 2015-05-26 at 01:33 -0500, Jia Hongtao-B38951 wrote:
+> > > diff --git a/arch/powerpc/boot/dts/fsl/t1040si-post.dtsi
+> > > > b/arch/powerpc/boot/dts/fsl/t1040si-post.dtsi
+> > > > index 15ae462..bb9f792 100644
+> > > > --- a/arch/powerpc/boot/dts/fsl/t1040si-post.dtsi
+> > > > +++ b/arch/powerpc/boot/dts/fsl/t1040si-post.dtsi
+> > > > @@ -345,6 +345,7 @@
+> > > >             reg        = <0xea000 0x4000>;
+> > > >     };
+> > > > 
+> > > > +/include/ "qoriq-tmu-t104xsi.dtsi"
+> > > >  /include/ "elo3-dma-0.dtsi"
+> > > >  /include/ "elo3-dma-1.dtsi"
+> > > >  /include/ "qoriq-espi-0.dtsi"
+> > 
+> > Why is this chip-specific enough to be called "t104xsi", but not 
+> > chip-
+> > specific enough to just go directly into t1040si-post?
+> 
+> T104x platform share the same calibration data.
+
+Which t104x are you referring to that doesn't use t1040si-post.dtsi?  
+Plus, given the numbering scheme it's always possible that a new t104x 
+comes out that has little to do with existing t104x.
+
+-Scott
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
