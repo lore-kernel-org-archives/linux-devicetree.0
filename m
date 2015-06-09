@@ -1,82 +1,112 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 03/22] usb: add OTG feature options to gadget
- structure.
-Date: Tue, 9 Jun 2015 16:23:55 +0300
-Message-ID: <20150609162355.18884fb8@rockdesk>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 05/22] doc: dt-binding: usb: add otg related properties
+Date: Tue, 9 Jun 2015 08:26:20 -0500
+Message-ID: <CAL_JsqKg_NYtLGg9RUQOpKscwHEskHO4_Szo_nM3BnrDdhg3fg@mail.gmail.com>
 References: <1433775737-9816-1-git-send-email-jun.li@freescale.com>
-	<1433775737-9816-4-git-send-email-jun.li@freescale.com>
+ <1433775737-9816-6-git-send-email-jun.li@freescale.com> <CAL_JsqJ3hHOGevwqcBNFN2LrTP7Bm_k9SDuTNKBbpq5W-eLmdw@mail.gmail.com>
+ <20150609011806.GA7976@shlinux1.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1433775737-9816-4-git-send-email-jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150609011806.GA7976-KgLukfWpBlCctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 8 Jun 2015 23:01:58 +0800
-Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+On Mon, Jun 8, 2015 at 8:18 PM, Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> On Mon, Jun 08, 2015 at 11:06:49AM -0500, Rob Herring wrote:
+>> On Mon, Jun 8, 2015 at 10:02 AM, Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+>> > Add otg version, srp, hnp and adp support for usb OTG port, then those OTG
+>> > features don't have to be decided by usb gadget drivers.
+>> >
+>> > Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+>> > ---
+>> >  Documentation/devicetree/bindings/usb/generic.txt | 10 ++++++++++
+>> >  1 file changed, 10 insertions(+)
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/usb/generic.txt b/Documentation/devicetree/bindings/usb/generic.txt
+>> > index 477d5bb..7386f4a 100644
+>> > --- a/Documentation/devicetree/bindings/usb/generic.txt
+>> > +++ b/Documentation/devicetree/bindings/usb/generic.txt
+>> > @@ -11,6 +11,12 @@ Optional properties:
+>> >                         "peripheral" and "otg". In case this attribute isn't
+>> >                         passed via DT, USB DRD controllers should default to
+>> >                         OTG.
+>> > + - otg-rev: tells usb driver the release number of the OTG and EH supplement
+>> > +                       with which the device and its descriptors are compliant,
+>> > +                       in binary-coded decimal (i.e. 2.0 is 0200H).
+>>
+>> I would assume OTG 2.0 is somehow backwards compatible? Is this a h/w
+>> dependency or a driver feature?
+>>
+> Not fully compatible, OTG 2.0 extend the usb_otg_descriptor by adding a new
+> member bcdOTG to identify the OTG version, this descriptor needs to be sent
+> to OTG host with correct size and content, so we have to know which release
+> version the OTG device is compliant with, either by menuconfig config or pass
+> via DT.
 
-> From: Macpaul Lin <macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 
-> Add ADP, HNP and SRP feature options and otg version to gadget structure.
-> 
-> Signed-off-by: Macpaul Lin <macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
->  include/linux/usb/gadget.h | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/include/linux/usb/gadget.h b/include/linux/usb/gadget.h
-> index 4f3dfb7..2f4f39c 100644
-> --- a/include/linux/usb/gadget.h
-> +++ b/include/linux/usb/gadget.h
-> @@ -514,6 +514,12 @@ struct usb_gadget_ops {
->   * @sg_supported: true if we can handle scatter-gather
->   * @is_otg: True if the USB device port uses a Mini-AB jack, so that the
->   *	gadget driver must provide a USB OTG descriptor.
-> + * @adp_support: OTG device feature flag, indicating that the device
-> +	supports ADP at this port.
-> + * @hnp_support: OTG device feature flag, indicating that the device
-> +	supports HNP at this port.
-> + * @srp_support: OTG device feature flag, indicating that the device
-> +	supports SRP at this port.
->   * @is_a_peripheral: False unless is_otg, the "A" end of a USB cable
->   *	is in the Mini-AB jack, and HNP has been used to switch roles
->   *	so that the "A" device currently acts as A-Peripheral, not A-Host.
-> @@ -526,6 +532,7 @@ struct usb_gadget_ops {
->   * @quirk_ep_out_aligned_size: epout requires buffer size to be aligned to
->   *	MaxPacketSize.
->   * @is_selfpowered: if the gadget is self-powered.
-> + * @otg_rev: The OTG reversion number the device is compliant to.
->   *
->   * Gadgets have a mostly-portable "gadget driver" implementing device
->   * functions, handling all usb configurations and interfaces.  Gadget
-> @@ -562,12 +569,16 @@ struct usb_gadget {
->  
->  	unsigned			sg_supported:1;
->  	unsigned			is_otg:1;
-> +	unsigned			adp_support:1;
-> +	unsigned			hnp_support:1;
-> +	unsigned			srp_support:1;
->  	unsigned			is_a_peripheral:1;
->  	unsigned			b_hnp_enable:1;
->  	unsigned			a_hnp_support:1;
->  	unsigned			a_alt_hnp_support:1;
->  	unsigned			quirk_ep_out_aligned_size:1;
->  	unsigned			is_selfpowered:1;
-> +	unsigned			otg_rev;
+So you have to change the version depending on the host you are
+connected to? That really seems strange that plugging in a OTG 2.0
+device to an OTG 1.3 host would not work and doesn't make for a good
+user experience.
 
-this could be a dedicated type rather than unsigned.
+>> > + - srp-support: tells OTG controllers we want to enable SRP.
+>> > + - hnp-support: tells OTG controllers we want to enable HNP.
+>> > + - adp-support: tells OTG controllers we want to enable ADP.
+>>
+>> I've recently run into a problem[1] and found that I have to disable
+>> OTG in the kernel to get my device to work. Having to turn-off OTG
+>> seems like the wrong solution, and shifting the problem to DT seems
+>> wrong too. Why is this not a user configurable option (within whatever
+>> h/w constraints there are)?
+> The problem of below link, seems your device is claiming it's a HNP capable
+> OTG device, but connecting to a non-OTG port of your Host, assume your Host
+> does have a OTG port, your Host issue a A_ALT_HNP_SUPPORT request to your
+> OTG device to remind it can use another port with HNP, but the request failed
+> (maybe STALL by your device, this request is defined in OTG 1.3 but obsolete
+> in OTG 2.0), so your Host just stopped enumeration of your device, this is not
+> reasonable because current OTG code is some out of data.
 
->  };
->  #define work_to_gadget(w)	(container_of((w), struct usb_gadget, work))
->  
+Do PCs have OTG ports typically? My expectation is that if I plug in
+an OTG device as a B device to any host port, that it will work as a
+device no matter what the host OTG capabilities are. If I have to
+change the kernel config or DT, that is a problem.
 
-cheers,
--roger
+> I am trying to make those OTG feaures to be configurable options, you mean
+> by sys?
+
+Yes.
+
+>> What are the valid combinations? When do we want these enabled or not?
+>> Wouldn't default enabled be better?
+>
+> We want to enable all those support in kernel driver, but some platform or
+> hardware may not want to enable any or some of them, so those hardware
+> can disable it by not pass the property in dt, the 3 sub features of OTG are
+> not mandatory for so called OTG device, normally we at least enable HNP, and
+> SRP and ADP are optional.
+
+Please answer my questions in the doc.
+
+>>
+>> We already have dr_mode property. How is it related to these?
+>
+> dr_mode is to tell the device it will work at OTG mode(there is another simple
+> dual role mode which is commom used but not HNP), srp/hnp/adp can further specify
+> which protocol the OTG device will support.
+
+By simple DR, you mean ID pin detect, right. So please define how you
+support just ID pin detect vs. other levels of capability. Does only
+dr_mode = otg mean ID pin detect? That may be a problem for existing
+DTs if you disable other OTG functions because they have not been
+added to the DT, then that is a problem.
+
+I'm feeling less convinced that this belongs in DT at all. Please
+convince me otherwise.
+
+Rob
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
