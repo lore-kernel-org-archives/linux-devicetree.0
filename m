@@ -1,143 +1,129 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 06/22] usb: common: add API to get usb otg features
- from device tree
-Date: Tue, 9 Jun 2015 18:20:21 +0300
-Message-ID: <20150609182021.14855bf9@rockdesk>
-References: <1433775737-9816-1-git-send-email-jun.li@freescale.com>
-	<1433775737-9816-7-git-send-email-jun.li@freescale.com>
-	<20150609155529.0a03de5f@rockdesk>
-	<20150609141552.GD20453@shlinux1.ap.freescale.net>
+From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/2] clk: keystone: add support for post divider register
+ for main pll
+Date: Tue, 9 Jun 2015 11:25:34 -0400
+Message-ID: <5577056E.5060009@ti.com>
+References: <1432915453-409-1-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150609141552.GD20453-KgLukfWpBlCctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1432915453-409-1-git-send-email-m-karicheri2-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 9 Jun 2015 22:15:53 +0800
-Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+On 05/29/2015 12:04 PM, Murali Karicheri wrote:
+> Main PLL controller has post divider bits in a separate register in
+> pll controller. Use the value from this register instead of fixed
+> divider when available.
+>
+> Signed-off-by: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+> ---
+>   .../devicetree/bindings/clock/keystone-pll.txt       |  8 ++++----
+>   drivers/clk/keystone/pll.c                           | 20 ++++++++++++++++++--
+>   2 files changed, 22 insertions(+), 6 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/clock/keystone-pll.txt b/Documentation/devicetree/bindings/clock/keystone-pll.txt
+> index 225990f..47570d2 100644
+> --- a/Documentation/devicetree/bindings/clock/keystone-pll.txt
+> +++ b/Documentation/devicetree/bindings/clock/keystone-pll.txt
+> @@ -15,8 +15,8 @@ Required properties:
+>   - compatible : shall be "ti,keystone,main-pll-clock" or "ti,keystone,pll-clock"
+>   - clocks : parent clock phandle
+>   - reg - pll control0 and pll multipler registers
+> -- reg-names : control and multiplier. The multiplier is applicable only for
+> -		main pll clock
+> +- reg-names : control, multiplier and post-divider. The multiplier and
+> +		post-divider registers are applicable only for main pll clock
+>   - fixed-postdiv : fixed post divider value. If absent, use clkod register bits
+>   		for postdiv
+>
+> @@ -25,8 +25,8 @@ Example:
+>   		#clock-cells = <0>;
+>   		compatible = "ti,keystone,main-pll-clock";
+>   		clocks = <&refclksys>;
+> -		reg = <0x02620350 4>, <0x02310110 4>;
+> -		reg-names = "control", "multiplier";
+> +		reg = <0x02620350 4>, <0x02310110 4>, <0x02310108 4>;
+> +		reg-names = "control", "multiplier", "post-divider";
+>   		fixed-postdiv = <2>;
+>   	};
+>
+> diff --git a/drivers/clk/keystone/pll.c b/drivers/clk/keystone/pll.c
+> index 0dd8a4b..4a375ea 100644
+> --- a/drivers/clk/keystone/pll.c
+> +++ b/drivers/clk/keystone/pll.c
+> @@ -37,7 +37,8 @@
+>    *	Main PLL or any other PLLs in the device such as ARM PLL, DDR PLL
+>    *	or PA PLL available on keystone2. These PLLs are controlled by
+>    *	this register. Main PLL is controlled by a PLL controller.
+> - * @pllm: PLL register map address
+> + * @pllm: PLL register map address for multiplier bits
+> + * @pllod: PLL register map address for post divider bits
+>    * @pll_ctl0: PLL controller map address
+>    * @pllm_lower_mask: multiplier lower mask
+>    * @pllm_upper_mask: multiplier upper mask
+> @@ -53,6 +54,7 @@ struct clk_pll_data {
+>   	u32 phy_pllm;
+>   	u32 phy_pll_ctl0;
+>   	void __iomem *pllm;
+> +	void __iomem *pllod;
+>   	void __iomem *pll_ctl0;
+>   	u32 pllm_lower_mask;
+>   	u32 pllm_upper_mask;
+> @@ -102,7 +104,11 @@ static unsigned long clk_pllclk_recalc(struct clk_hw *hw,
+>   		/* read post divider from od bits*/
+>   		postdiv = ((val & pll_data->clkod_mask) >>
+>   				 pll_data->clkod_shift) + 1;
+> -	else
+> +	else if (pll_data->pllod) {
+> +		postdiv = readl(pll_data->pllod);
+> +		postdiv = ((postdiv & pll_data->clkod_mask) >>
+> +				pll_data->clkod_shift) + 1;
+> +	} else
+>   		postdiv = pll_data->postdiv;
+>
+>   	rate /= (prediv + 1);
+> @@ -172,12 +178,21 @@ static void __init _of_pll_clk_init(struct device_node *node, bool pllctrl)
+>   		/* assume the PLL has output divider register bits */
+>   		pll_data->clkod_mask = CLKOD_MASK;
+>   		pll_data->clkod_shift = CLKOD_SHIFT;
+> +
+> +		/*
+> +		 * Check if there is an post-divider register. If not
+> +		 * assume od bits are part of control register.
+> +		 */
+> +		i = of_property_match_string(node, "reg-names",
+> +					     "post-divider");
+> +		pll_data->pllod = of_iomap(node, i);
+>   	}
+>
+>   	i = of_property_match_string(node, "reg-names", "control");
+>   	pll_data->pll_ctl0 = of_iomap(node, i);
+>   	if (!pll_data->pll_ctl0) {
+>   		pr_err("%s: ioremap failed\n", __func__);
+> +		iounmap(pll_data->pllod);
+>   		goto out;
+>   	}
+>
+> @@ -193,6 +208,7 @@ static void __init _of_pll_clk_init(struct device_node *node, bool pllctrl)
+>   		pll_data->pllm = of_iomap(node, i);
+>   		if (!pll_data->pllm) {
+>   			iounmap(pll_data->pll_ctl0);
+> +			iounmap(pll_data->pllod);
+>   			goto out;
+>   		}
+>   	}
+>
+Dear Maintainers?
 
-> On Tue, Jun 09, 2015 at 03:55:29PM +0300, Roger Quadros wrote:
-> > Hi,
-> > 
-> > On Mon, 8 Jun 2015 23:02:01 +0800
-> > Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> > 
-> > > Check property of usb hardware to get otg version and if SRP, HNP and ADP
-> > > are supported.
-> > > 
-> > > Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > > ---
-> > >  drivers/usb/common/common.c | 64 +++++++++++++++++++++++++++++++++++++++++++++
-> > >  include/linux/usb/of.h      | 20 ++++++++++++++
-> > >  2 files changed, 84 insertions(+)
-> > > 
-> > > diff --git a/drivers/usb/common/common.c b/drivers/usb/common/common.c
-> > > index b530fd4..7b0594b 100644
-> > > --- a/drivers/usb/common/common.c
-> > > +++ b/drivers/usb/common/common.c
-> > > @@ -154,6 +154,70 @@ bool of_usb_host_tpl_support(struct device_node *np)
-> > >  	return false;
-> > >  }
-> > >  EXPORT_SYMBOL_GPL(of_usb_host_tpl_support);
-> > > +
-> > > +/**
-> > > + * of_usb_otg_srp_support -  to get if otg srp is supported by the otg controller
-> > 
-> > This is not really about otg controller supporting SRP but whether
-> > the DT user wants it enabled or not.
-> > 
-> Sorry, correct my precious answer, this is about if otg controller can support
-> SRP. Meanwhile DT user can disable it via this property even the HW has this
-> capability.
+Any comments please? If not, can this be applied?
 
-Whether controller supports any capability shouldn't come from DT but from its
-hardware capability registers.
-
-If you want to disable any feature from DT the DT property will have to be called
-disable-<foo> rather than <foo>-support.
-
-cheers,
--roger
-
-> 
-> Li Jun
-> > IMO this function should be named of_usb_get_otg_srp_enable()
-> > 
-> > > + * @np: Pointer to the given device_node
-> > > + *
-> > > + * The function gets if the otg port supports SRP
-> > > + */
-> > > +bool of_usb_otg_srp_support(struct device_node *np)
-> > > +{
-> > > +	if (of_find_property(np, "srp-support", NULL))
-> > > +		return true;
-> > > +
-> > > +	return false;
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(of_usb_otg_srp_support);
-> > > +
-> > > +/**
-> > > + * of_usb_otg_hnp_support -  to get if otg hnp is supported by the otg controller
-> > > + * @np: Pointer to the given device_node
-> > > + *
-> > > + * The function gets if the otg port supports HNP
-> > > + */
-> > > +bool of_usb_otg_hnp_support(struct device_node *np)
-> > > +{
-> > > +	if (of_find_property(np, "hnp-support", NULL))
-> > > +		return true;
-> > > +
-> > > +	return false;
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(of_usb_otg_hnp_support);
-> > > +
-> > > +/**
-> > > + * of_usb_otg_adp_support -  to get if otg adp is supported by the otg controller
-> > > + * @np: Pointer to the given device_node
-> > > + *
-> > > + * The function gets if the otg port supports ADP
-> > > + */
-> > > +bool of_usb_otg_adp_support(struct device_node *np)
-> > > +{
-> > > +	if (of_find_property(np, "adp-support", NULL))
-> > > +		return true;
-> > > +
-> > > +	return false;
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(of_usb_otg_adp_support);
-> > > +
-> > > +/**
-> > > + * of_usb_otg_rev_number -  to get the otg release number the device is
-> > > + * compliant with.
-> > > + * @np: Pointer to the given device_node
-> > > + *
-> > > + * The function gets OTG and EH supplement release number in binary-coded
-> > > + * decimal (i.e. 2.0 is 0200H).
-> > > + */
-> > > +int of_usb_otg_rev_number(struct device_node *np)
-> > 
-> > how about of_usb_get_otg_rev()?
-> > 
-> > > +{
-> > > +	u32 otg_rev;
-> > > +
-> > > +	if (!of_property_read_u32(np, "otg-rev", &otg_rev))
-> > > +		return otg_rev;
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(of_usb_otg_rev_number);
-> > >  #endif
-> > >  
-> > 
-> > cheers,
-> > -roger
-
+-- 
+Murali Karicheri
+Linux Kernel, Keystone
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
