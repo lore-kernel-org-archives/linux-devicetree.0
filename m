@@ -1,64 +1,62 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH v6 0/6] i2c: at91: add support to FIFOs and alternative
- command
-Date: Wed, 10 Jun 2015 22:09:48 +0900
-Message-ID: <20150610130947.GG1592@katana>
-References: <cover.1433866582.git.cyrille.pitchen@atmel.com>
- <20150610125708.GE1592@katana>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 00/20] ARM: dts: Add USB and OTG related
+ nodes and enable on various boards
+Date: Wed, 10 Jun 2015 15:27:08 +0200
+Message-ID: <55783B2C.3080207@redhat.com>
+References: <1433530943-12599-1-git-send-email-hdegoede@redhat.com> <20150608100358.GW23777@lukather>
+Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="doKZ0ri6bHmN2Q5y"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150610125708.GE1592@katana>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBMHW4CVQKGQEWYJAEBY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20150608100358.GW23777@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---doKZ0ri6bHmN2Q5y
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 08-06-15 12:03, Maxime Ripard wrote:
+> Hi Hans,
+>
+> On Fri, Jun 05, 2015 at 09:02:03PM +0200, Hans de Goede wrote:
+>> Hi Maxime,
+>>
+>> Here is a patch-set with all the otg / sun8i-usb-host related dts patches
+>> I've accumulated.
+>>
+>> These are intended for 4.3, and go hand in hand with the outstanding
+>> musb-sunxi / phy-sun4i-usb patches, which I expect to be merged as is
+>> for 4.3 .
+>
+> I'm fine with these patches. Do you have a branch somewhere that I can
+> pull (without the one that you wanted me to drop, obviously)?
 
-> After fixing the version string in patch 5 as mentioned there, and added
-> the acks from Ludovic for the previous version.
->=20
-> Applied to for-next, thanks!
+I've just created a branch with just these patches directly on top
+of sunxi/for-next for you:
 
-And unrelated to your series, just in case you feel like it, my code checke=
-rs
-say:
+https://github.com/jwrdegoede/linux-sunxi/commits/otg-dts-for-maxime
 
-drivers/i2c/busses/i2c-at91.c:213: style: Checking if unsigned variable 'bu=
-f_len' is less than zero.
-drivers/i2c/busses/i2c-at91.c:254: style: Checking if unsigned variable 'bu=
-f_len' is less than zero.
-drivers/i2c/busses/i2c-at91.c:293: style: Checking if unsigned variable 'bu=
-f_len' is less than zero.
+While preparing this branch I noticed that the dts for
+the ippo q8h a33 tablets is not yet merged:
 
+http://www.spinics.net/lists/devicetree/msg82149.html
 
---doKZ0ri6bHmN2Q5y
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+You suggested to use the DT quirks interface instead of creating
+a separate dts for each board variant, and in the end I agreed,
+and asked you to merge it renamed to a more generic name
+without the lcd1024x600 bit in there.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+I can make it more generic and resend it myself. Do you want me
+to squash in the otg changes when I resend it, or shall I keep
+those separate ?
 
-iQIcBAEBAgAGBQJVeDcbAAoJEBQN5MwUoCm2AJYQAJQ9b4F/nfBCg7SXJQnt0bas
-ONgk0EkR4xXuuUhD2FkDFOPrU9xVCu4Kl5srqkJe6vUCFa4xNPOSyV+l9n3DuPq9
-CPEW0lU0NY2UoSUtoz91QxozIqAo/eGMen1w4BykXxpImF9DP9KBDh0Oy3H3K4Yi
-+FHad3fpBc1zyeWVc45BVE4BdcjiiARTV8sTTmeHT4FSH2aISOXaTDHYXuH3QTh5
-Xg5mcA4LkqKhQUyG6faoHf11xuYzsWLZOu99pE46YowWienCQk4Hiw6OB7dlgYWT
-64zWiE9AtuU2SgvUjtr8Jv0tHtKJRvKdB1SsiUA5NQOajr7kG2a9THUgPMcmX5Rv
-U7DJEwesXHdnOZoNrCWiqXRQTZqQM61NenMLJawb0nCGHE70UxMEjUemnzlQQYzn
-T2jUACR2FQ9ESKcFufjqoWdpRY8g2cbQL+IP6ZkmWlgjw6CSu63U5XnStoNScmBq
-bQWcwZ+XzUO4J41ubI/I1uti9Qg2Oa/VZkWpaQWKXSSHhPFVCOiVhZDooQx0PSzb
-gpoLfFCVO4SjCTFn1TrPUYIumAIV1VQEl8asPmHHan6aYt1x9gC41HU+Q8Cd3dAa
-voqgw+OnbF2MS66utcK/ZX9E2kJ/uwXRQMi75sMyzE01ipblqa2MTWBrkJumEL5L
-G5sl3bCslXVOweR+pf4G
-=TyGE
------END PGP SIGNATURE-----
+Regards,
 
---doKZ0ri6bHmN2Q5y--
+Hans
