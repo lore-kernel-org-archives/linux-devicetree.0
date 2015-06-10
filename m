@@ -1,48 +1,54 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] drm/bridge: dw-hdmi: support optional supply
- regulators
-Date: Wed, 10 Jun 2015 00:36:18 +0100
-Message-ID: <20150609233618.GK7557@n2100.arm.linux.org.uk>
-References: <4184159.j0iXe39dFB@phil>
- <20150608163420.GZ7557@n2100.arm.linux.org.uk>
- <20150609075331.GA28198@ulmo>
- <3551826.dyCjorKhLA@diego>
+From: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] drivercore: Fix unregistration path of platform devices
+Date: Tue, 9 Jun 2015 17:22:02 -0700
+Message-ID: <CAMAWPa_CURGm5YTc0OgBD_T3fwaBDskfUKEn+awxW8P6oQYceA@mail.gmail.com>
+References: <1433686811-12303-1-git-send-email-grant.likely@linaro.org>
+	<1433686811-12303-3-git-send-email-grant.likely@linaro.org>
+	<CAPybu_30jTDuwEW_WTGuu6pWwv86p6OqV0eRE1GbCwUVtBm7KA@mail.gmail.com>
+	<20150608184713.446B7C406AA@trevor.secretlab.ca>
+	<CAPybu_0FfD9dv55SLmy7905yMCV6Kqrr-v2aPUCx6sSikrF7gQ@mail.gmail.com>
+	<20150609110044.61031C40580@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <3551826.dyCjorKhLA@diego>
+In-Reply-To: <20150609110044.61031C40580-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko =?iso-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 10, 2015 at 01:29:43AM +0200, Heiko St=FCbner wrote:
-> Allthough from the discussion and explanations I've now also got the =
-"don't=20
-> make it worse" feeling, so am somehow reluctant to add supplies that =
-also=20
-> might describe this inadequately.
->=20
-> The Rockchip-specific documentation only lists the two supplies as AV=
-DD_1V0,=20
-> AVDD_1V8 with a description of "DC supply voltage for Analog part of =
-HDMI".
-> The supplies aren't mentioned otherwise at all, so I guess I'll ponde=
-r this a=20
-> bit more at first.
+On Tue, Jun 9, 2015 at 4:00 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Mon, 8 Jun 2015 22:09:13 +0200
+> , Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-Are they controllable from software at all?  If they aren't, then
-I'd suggest leaving them out until we have a distinction between
-the Tx and Phy - much as we do for iMX6.
+[...]
 
---=20
-=46TTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps u=
-p
-according to speedtest.net.
+>>
+>> > Greg, please drop Ricardo's series. It isn't correct and it will cause
+>> > breakage.
+>>
+>> The series can be kept, only
+>>
+>> patch "of/platform: Use platform_device interface"
+>>
+>> needs to be reverted.
+>
+> No, it's better to drop the whole series. There are still issues and it
+> will conflict with merging the bugfix for v4.1.
+>
+
+Multiple platforms stopped booting in next-20150609 as discovered by
+kernelci.org[1], and was bisected down to commit b6d2233f2916
+(of/platform: Use platform_device interface).
+
+I'll leave you guys to sort out whether that patch or the whole series
+should be reverted, but I can confirm that reverting that patch on top
+of next-20150609 gets things booting again.
+
+Kevin
+
+[1] http://kernelci.org/boot/all/job/next/kernel/next-20150609/
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
