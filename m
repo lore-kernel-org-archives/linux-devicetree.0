@@ -1,60 +1,81 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] i2c: Mark instantiated device nodes with OF_POPULATE
-Date: Wed, 10 Jun 2015 09:31:00 -0500
-Message-ID: <CAL_JsqJSGnNfxNcchbFE+LEbymgCiZd=HwY3r5h1bnqo9sG3LQ@mail.gmail.com>
-References: <1422083789-18905-1-git-send-email-pantelis.antoniou@konsulko.com>
- <20150422074019.GA1511@katana> <CAMAWPa-HMhJK9UzwfaMPe-MO=4mzjvC=nRwPX-pbab_fb3YZ9A@mail.gmail.com>
- <20150506183733.GA1513@katana> <A4E060DB-2799-4BF5-9CA6-DE53B7DF9A30@konsulko.com>
- <20150610054034.GB1573@katana> <CAL_Jsq+xTZy3QsdaXieR8LSVEJfSeehtcytZLOyt7ghTZ=Bcxw@mail.gmail.com>
- <20150610124949.GC1592@katana> <B9EA0BC3-56D8-4676-BEFC-734EC1FE6649@konsulko.com>
- <20150610140815.GA21540@katana> <041469A7-65F2-4C33-AD67-0B0CE4DEDD75@konsulko.com>
+From: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 5/7] Watchdog: introduce ARM SBSA watchdog driver
+Date: Wed, 10 Jun 2015 22:36:51 +0800
+Message-ID: <CADyBb7sT=NbtNVfR4wPYi2gbWq73CDY-fu+XAURS_yTY6sL_mQ@mail.gmail.com>
+References: <=fu.wei@linaro.org>
+	<1433217907-928-1-git-send-email-fu.wei@linaro.org>
+	<1433217907-928-6-git-send-email-fu.wei@linaro.org>
+	<556DCC95.806@codeaurora.org>
+	<CADyBb7sXiMNtrH+Eu1Qj00TPNLMMr5cCTPObzFmKnHLsbWH79Q@mail.gmail.com>
+	<556DE2D5.3090906@roeck-us.net>
+	<CADyBb7uT=gFJkK8s-QF1n4Z+Zov9Lurp1nvBO-C-qszTqbMYXQ@mail.gmail.com>
+	<5575DE48.8010308@roeck-us.net>
+	<CADyBb7sYPnvDVEJYVQm65B1JV=yvq10+ezs2x3f8F=TJCZ+OJA@mail.gmail.com>
+	<55766D74.2060401@roeck-us.net>
+	<CADyBb7vR-jP6ZjzMSnprrSXbNayk8umx+cXV3TsGypfhZcCwTw@mail.gmail.com>
+	<55769E0E.8060801@roeck-us.net>
+	<CADyBb7skpSZ=3_ByW-RHM99=nbs7Z5xXFXtsKzkxOXAGjxF=3Q@mail.gmail.com>
+	<557712CF.8010802@roeck-us.net>
+	<5577147B.2030900@codeaurora.org>
+	<5577180E.4070804@roeck-us.net>
+	<CADyBb7sVd5nLwb3eHRPiNt-WTynfaJonOyuE_bD694dayyvevA@mail.gmail.com>
+	<CADyBb7s7NpQJFiFFGbbjCTQ0+bNCZoVMC4KwaZbWwGs_Wa=mLg@mail.gmail.com>
+	<5578482E.70307@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <041469A7-65F2-4C33-AD67-0B0CE4DEDD75-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5578482E.70307-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Linaro ACPI Mailman List <linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Fu <tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, G Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Leo Duran <leo.duran-5C7GfCeVMHo@public.gmane.org>, Jon Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 10, 2015 at 9:10 AM, Pantelis Antoniou
-<pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
-> Hi Wolfram,
+On 10 June 2015 at 22:22, Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+> Fu Wei wrote:
+>>
+>> Another weakness of only using WOR is the timeout limited by this
+>> 32bit register.
+>> 10s @400MHz generic Timer
+>>
+>> I don't think this limit is good for a server, once the server is in a
+>> heavy load
 >
->> On Jun 10, 2015, at 17:08 , Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> wrote:
->>
->>>> IIRC it is the one which adds OF_POPULATED. If so, why is this not
->>>> scheduled for 4.1 as this bugfix depends on it?
->>>
->>> No idea. This is an obvious bugfix.
->>
->> Dunno if you did but mentioning after the commit message where you t=
-hink
->> it should be applied is very helpful for maintainers.
->>
->>> I would like to, yes. It=E2=80=99s just the nature of the process w=
-hen dealing with
->>> multiple kernel trees. I would be happy for someone to pick up and =
-queue it
->>> for 4.1.
->>
->> That might be too late now... You could also have sent the patch to =
-me
->> so that I could apply it via i2c with rob's ack. Next time...
->>
 >
-> No worries. I=E2=80=99ve waited a couple of years until these things =
-got in, I can wait
-> one more release cycle.
+> Perhaps, but if that's the limitation of the hardware, then so be it.
 
-You should know this already, but in the future for cross subsystem
-dependencies:
-- send the whole series together
-- Be clear if they are targeted for current rc and/or stable
-- suggest who you think should merge them:
-  - for fixes, whomever took the offending commit if it is the same
-kernel cycle.
-  - for dependencies, get ack's on the dependencies.
+it is not the real limitation, if we use WCV, SBSA spec has mentioned that.
 
-Rob
+------ SBSA 2.3-------Page 23 ----------
+Note: the watchdog offset register is 32 bits wide. This gives a
+maximum watch period of around 10s at a system
+counter frequency of 400MHz. If a larger watch period is required then
+the compare value can be programmed
+directly into the compare value register
+------ SBSA 2.3-------Page 23 ----------
+
+if some hardware doesn't support writing WCV,
+that means this hardware is non-standard SBSA watchdog.
+
+>
+> --
+> Sent by an employee of the Qualcomm Innovation Center, Inc.
+> The Qualcomm Innovation Center, Inc. is a member of the
+> Code Aurora Forum, hosted by The Linux Foundation.
+
+
+
+-- 
+Best regards,
+
+Fu Wei
+Software Engineer
+Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
+Ph: +86 21 61221326(direct)
+Ph: +86 186 2020 4684 (mobile)
+Room 1512, Regus One Corporate Avenue,Level 15,
+One Corporate Avenue,222 Hubin Road,Huangpu District,
+Shanghai,China 200021
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
