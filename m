@@ -1,60 +1,619 @@
-From: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] drivercore: Fix unregistration path of platform devices
-Date: Wed, 10 Jun 2015 16:46:33 +0200
-Message-ID: <CAPybu_2dpcpjPvn-kXaW-yC2OmkNPna+G8PLO-gP1cMBOcU_ew@mail.gmail.com>
-References: <1433686811-12303-1-git-send-email-grant.likely@linaro.org>
- <1433686811-12303-3-git-send-email-grant.likely@linaro.org>
- <CAPybu_30jTDuwEW_WTGuu6pWwv86p6OqV0eRE1GbCwUVtBm7KA@mail.gmail.com>
- <20150608184713.446B7C406AA@trevor.secretlab.ca> <CAPybu_0FfD9dv55SLmy7905yMCV6Kqrr-v2aPUCx6sSikrF7gQ@mail.gmail.com>
- <20150609110044.61031C40580@trevor.secretlab.ca> <CAMAWPa_CURGm5YTc0OgBD_T3fwaBDskfUKEn+awxW8P6oQYceA@mail.gmail.com>
- <CAPybu_24X0zZJv6D9i4YM_r7azdnjYrRH=V+p_ong2cFKNrF1w@mail.gmail.com> <CAMAWPa-bGwVCnmv=H=8Zo-NCw-nOFBj3-XcVvb-0m0sNYtPO7g@mail.gmail.com>
+From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/5] soc: Mediatek: Add SCPSYS power domain driver
+Date: Wed, 10 Jun 2015 16:47:01 +0200
+Message-ID: <CAPDyKFpY+agi_JyuP2iGB+7HPoTuwHi2iC1D2YCsGnNfZhevNw@mail.gmail.com>
+References: <1433839623-10804-1-git-send-email-s.hauer@pengutronix.de>
+	<1433839623-10804-4-git-send-email-s.hauer@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMAWPa-bGwVCnmv=H=8Zo-NCw-nOFBj3-XcVvb-0m0sNYtPO7g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1433839623-10804-4-git-send-email-s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Greg
-
-On Wed, Jun 10, 2015 at 4:38 PM, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Wed, Jun 10, 2015 at 12:11 AM, Ricardo Ribalda Delgado
-
-> At this stage of the cycle (merge window opening soon, maintainers
-> trying to stabilize their stuff for Linus) we want to see linux-next
-> approaching some level of stability.
-
-Please revert
-
-base/platform: Only insert MEM and IO resources
-https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/commit/?id=36d4b29260753ad78b1ce4363145332c02519adc
-base/platform: Continue on insert_resource() error
-https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/commit/?id=e50e69d1ac4232af0b6890f16929bf5ceee81538
-of/platform: Use platform_device interface
-https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/commit/?id=b6d2233f2916fa9338786aeab2e936c5a07e4d0c
-base/platform: Remove code duplication
-https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/commit/?id=6d9d4b1469b0d9748145e168fc9ec585e1f3f4b0
-
-
-This patch from Grant needs to be applied:
-
-[PATCH 2/2] drivercore: Fix unregistration path of platform devices
-
-I dont know if it should go throw your tree or Grants devicetree, but
-it needs to be backported to 4.0
-
-
-Thanks!
-
+On 9 June 2015 at 10:47, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> This adds a power domain driver for the Mediatek SCPSYS unit.
 >
-> Kevin
+> The System Control Processor System (SCPSYS) has several power
+> management related tasks in the system. The tasks include thermal
+> measurement, dynamic voltage frequency scaling (DVFS), interrupt
+> filter and lowlevel sleep control. The System Power Manager (SPM)
+> inside the SCPSYS is for the MTCMOS power domain control.
+>
+> For now this driver only adds power domain support, the more
+> advanced features are not yet supported. The driver implements
+> the generic PM domain device tree bindings, the first user will
+> most likely be the Mediatek AFE audio driver.
+>
+> Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> ---
+>  drivers/soc/mediatek/Kconfig             |   9 +
+>  drivers/soc/mediatek/Makefile            |   1 +
+>  drivers/soc/mediatek/mtk-scpsys.c        | 490 +++++++++++++++++++++++++++++++
+>  include/dt-bindings/power/mt8173-power.h |  15 +
+>  4 files changed, 515 insertions(+)
+>  create mode 100644 drivers/soc/mediatek/mtk-scpsys.c
+>  create mode 100644 include/dt-bindings/power/mt8173-power.h
+>
+> diff --git a/drivers/soc/mediatek/Kconfig b/drivers/soc/mediatek/Kconfig
+> index e4f37a3..9a61b54 100644
+> --- a/drivers/soc/mediatek/Kconfig
+> +++ b/drivers/soc/mediatek/Kconfig
+> @@ -18,3 +18,12 @@ config MTK_PMIC_WRAP
+>           Say yes here to add support for MediaTek PMIC Wrapper found
+>           on different MediaTek SoCs. The PMIC wrapper is a proprietary
+>           hardware to connect the PMIC.
+> +
+> +config MTK_SCPSYS
+> +       bool "MediaTek SCPSYS Support"
+> +       depends on ARCH_MEDIATEK || COMPILE_TEST
 
+How about also depending on "PM" and selecting PM_GENERIC_DOMAINS,
+would that work?
 
+> +       select REGMAP
+> +       select MTK_INFRACFG
+> +       help
+> +         Say yes here to add support for the MediaTek SCPSYS power domain
+> +         driver.
+> diff --git a/drivers/soc/mediatek/Makefile b/drivers/soc/mediatek/Makefile
+> index 3fa940f..12998b0 100644
+> --- a/drivers/soc/mediatek/Makefile
+> +++ b/drivers/soc/mediatek/Makefile
+> @@ -1,2 +1,3 @@
+>  obj-$(CONFIG_MTK_INFRACFG) += mtk-infracfg.o
+>  obj-$(CONFIG_MTK_PMIC_WRAP) += mtk-pmic-wrap.o
+> +obj-$(CONFIG_MTK_SCPSYS) += mtk-scpsys.o
+> diff --git a/drivers/soc/mediatek/mtk-scpsys.c b/drivers/soc/mediatek/mtk-scpsys.c
+> new file mode 100644
+> index 0000000..b9eed37
+> --- /dev/null
+> +++ b/drivers/soc/mediatek/mtk-scpsys.c
+> @@ -0,0 +1,490 @@
+> +/*
+> + * Copyright (c) 2015 Pengutronix, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_domain.h>
+> +#include <linux/regmap.h>
+> +#include <linux/soc/mediatek/infracfg.h>
+> +#include <dt-bindings/power/mt8173-power.h>
+> +
+> +#define SPM_VDE_PWR_CON                        0x0210
+> +#define SPM_MFG_PWR_CON                        0x0214
+> +#define SPM_VEN_PWR_CON                        0x0230
+> +#define SPM_ISP_PWR_CON                        0x0238
+> +#define SPM_DIS_PWR_CON                        0x023c
+> +#define SPM_VEN2_PWR_CON               0x0298
+> +#define SPM_AUDIO_PWR_CON              0x029c
+> +#define SPM_MFG_2D_PWR_CON             0x02c0
+> +#define SPM_MFG_ASYNC_PWR_CON          0x02c4
+> +#define SPM_USB_PWR_CON                        0x02cc
+> +#define SPM_PWR_STATUS                 0x060c
+> +#define SPM_PWR_STATUS_2ND             0x0610
+> +
+> +#define PWR_RST_B_BIT                  BIT(0)
+> +#define PWR_ISO_BIT                    BIT(1)
+> +#define PWR_ON_BIT                     BIT(2)
+> +#define PWR_ON_2ND_BIT                 BIT(3)
+> +#define PWR_CLK_DIS_BIT                        BIT(4)
+> +
+> +#define PWR_STATUS_DISP                        BIT(3)
+> +#define PWR_STATUS_MFG                 BIT(4)
+> +#define PWR_STATUS_ISP                 BIT(5)
+> +#define PWR_STATUS_VDEC                        BIT(7)
+> +#define PWR_STATUS_VENC_LT             BIT(20)
+> +#define PWR_STATUS_VENC                        BIT(21)
+> +#define PWR_STATUS_MFG_2D              BIT(22)
+> +#define PWR_STATUS_MFG_ASYNC           BIT(23)
+> +#define PWR_STATUS_AUDIO               BIT(24)
+> +#define PWR_STATUS_USB                 BIT(25)
+> +
+> +enum clk_id {
+> +       MT8173_CLK_NONE,
+> +       MT8173_CLK_MM,
+> +       MT8173_CLK_MFG,
+> +       MT8173_CLK_MAX = MT8173_CLK_MFG,
+> +};
+> +
+> +struct scp_domain_data {
+> +       const char *name;
+> +       u32 sta_mask;
+> +       int ctl_offs;
+> +       u32 sram_pdn_bits;
+> +       u32 sram_pdn_ack_bits;
+> +       u32 bus_prot_mask;
+> +       enum clk_id clk_id;
+> +};
+> +
+> +static const struct scp_domain_data scp_domain_data[] __initconst = {
+> +       [MT8173_POWER_DOMAIN_VDEC] = {
+> +               .name = "vdec",
+> +               .sta_mask = PWR_STATUS_VDEC,
+> +               .ctl_offs = SPM_VDE_PWR_CON,
+> +               .sram_pdn_bits = GENMASK(11, 8),
+> +               .sram_pdn_ack_bits = GENMASK(12, 12),
+> +               .clk_id = MT8173_CLK_MM,
+> +       },
+> +       [MT8173_POWER_DOMAIN_VENC] = {
+> +               .name = "venc",
+> +               .sta_mask = PWR_STATUS_VENC,
+> +               .ctl_offs = SPM_VEN_PWR_CON,
+> +               .sram_pdn_bits = GENMASK(11, 8),
+> +               .sram_pdn_ack_bits = GENMASK(15, 12),
+> +               .clk_id = MT8173_CLK_MM,
+> +       },
+> +       [MT8173_POWER_DOMAIN_ISP] = {
+> +               .name = "isp",
+> +               .sta_mask = PWR_STATUS_ISP,
+> +               .ctl_offs = SPM_ISP_PWR_CON,
+> +               .sram_pdn_bits = GENMASK(11, 8),
+> +               .sram_pdn_ack_bits = GENMASK(13, 12),
+> +               .clk_id = MT8173_CLK_MM,
+> +       },
+> +       [MT8173_POWER_DOMAIN_MM] = {
+> +               .name = "mm",
+> +               .sta_mask = PWR_STATUS_DISP,
+> +               .ctl_offs = SPM_DIS_PWR_CON,
+> +               .sram_pdn_bits = GENMASK(11, 8),
+> +               .sram_pdn_ack_bits = GENMASK(12, 12),
+> +               .clk_id = MT8173_CLK_MM,
+> +               .bus_prot_mask = MT8173_TOP_AXI_PROT_EN_MM_M0 |
+> +                       MT8173_TOP_AXI_PROT_EN_MM_M1,
+> +       },
+> +       [MT8173_POWER_DOMAIN_VENC_LT] = {
+> +               .name = "venc_lt",
+> +               .sta_mask = PWR_STATUS_VENC_LT,
+> +               .ctl_offs = SPM_VEN2_PWR_CON,
+> +               .sram_pdn_bits = GENMASK(11, 8),
+> +               .sram_pdn_ack_bits = GENMASK(15, 12),
+> +               .clk_id = MT8173_CLK_MM,
+> +       },
+> +       [MT8173_POWER_DOMAIN_AUDIO] = {
+> +               .name = "audio",
+> +               .sta_mask = PWR_STATUS_AUDIO,
+> +               .ctl_offs = SPM_AUDIO_PWR_CON,
+> +               .sram_pdn_bits = GENMASK(11, 8),
+> +               .sram_pdn_ack_bits = GENMASK(15, 12),
+> +               .clk_id = MT8173_CLK_NONE,
+> +       },
+> +       [MT8173_POWER_DOMAIN_USB] = {
+> +               .name = "usb",
+> +               .sta_mask = PWR_STATUS_USB,
+> +               .ctl_offs = SPM_USB_PWR_CON,
+> +               .sram_pdn_bits = GENMASK(11, 8),
+> +               .sram_pdn_ack_bits = GENMASK(15, 12),
+> +               .clk_id = MT8173_CLK_NONE,
+> +       },
+> +       [MT8173_POWER_DOMAIN_MFG_ASYNC] = {
+> +               .name = "mfg_async",
+> +               .sta_mask = PWR_STATUS_MFG_ASYNC,
+> +               .ctl_offs = SPM_MFG_ASYNC_PWR_CON,
+> +               .sram_pdn_bits = GENMASK(11, 8),
+> +               .sram_pdn_ack_bits = 0,
+> +               .clk_id = MT8173_CLK_MFG,
+> +       },
+> +       [MT8173_POWER_DOMAIN_MFG_2D] = {
+> +               .name = "mfg_2d",
+> +               .sta_mask = PWR_STATUS_MFG_2D,
+> +               .ctl_offs = SPM_MFG_2D_PWR_CON,
+> +               .sram_pdn_bits = GENMASK(11, 8),
+> +               .sram_pdn_ack_bits = GENMASK(13, 12),
+> +               .clk_id = MT8173_CLK_NONE,
+> +       },
+> +       [MT8173_POWER_DOMAIN_MFG] = {
+> +               .name = "mfg",
+> +               .sta_mask = PWR_STATUS_MFG,
+> +               .ctl_offs = SPM_MFG_PWR_CON,
+> +               .sram_pdn_bits = GENMASK(13, 8),
+> +               .sram_pdn_ack_bits = GENMASK(21, 16),
+> +               .clk_id = MT8173_CLK_NONE,
+> +               .bus_prot_mask = MT8173_TOP_AXI_PROT_EN_MFG_S |
+> +                       MT8173_TOP_AXI_PROT_EN_MFG_M0 |
+> +                       MT8173_TOP_AXI_PROT_EN_MFG_M1 |
+> +                       MT8173_TOP_AXI_PROT_EN_MFG_SNOOP_OUT,
+> +       },
+> +};
+> +
+> +#define NUM_DOMAINS    ARRAY_SIZE(scp_domain_data)
+> +
+> +struct scp;
+> +
+> +struct scp_domain {
+> +       struct generic_pm_domain genpd;
+> +       struct scp *scp;
+> +       struct clk *clk;
+> +       u32 sta_mask;
+> +       void __iomem *ctl_addr;
+> +       u32 sram_pdn_bits;
+> +       u32 sram_pdn_ack_bits;
+> +       u32 bus_prot_mask;
+> +};
+> +
+> +struct scp {
+> +       struct scp_domain domains[NUM_DOMAINS];
+> +       struct genpd_onecell_data pd_data;
+> +       struct device *dev;
+> +       void __iomem *base;
+> +       struct regmap *infracfg;
+> +       struct clk *clk[MT8173_CLK_MAX];
+> +};
+> +
+> +static int scpsys_domain_is_on(struct scp_domain *scpd)
+> +{
+> +       struct scp *scp = scpd->scp;
+> +
+> +       u32 status = readl(scp->base + SPM_PWR_STATUS) & scpd->sta_mask;
+> +       u32 status2 = readl(scp->base + SPM_PWR_STATUS_2ND) & scpd->sta_mask;
+> +
+> +       /*
+> +        * A domain is on when both status bits are set. If only one is set
+> +        * return an error. This happens while powering up a domain
+> +        */
+> +
+> +       if (status && status2)
+> +               return true;
+> +       if (!status && !status2)
+> +               return false;
+> +
+> +       return -EINVAL;
+> +}
+> +
+> +static int scpsys_power_on(struct generic_pm_domain *genpd)
+> +{
+> +       struct scp_domain *scpd = container_of(genpd, struct scp_domain, genpd);
+> +       struct scp *scp = scpd->scp;
+> +       unsigned long timeout;
+> +       bool expired;
+> +       void __iomem *ctl_addr = scpd->ctl_addr;
+> +       u32 sram_pdn_ack = scpd->sram_pdn_ack_bits;
+> +       u32 val;
+> +       int ret;
+> +
+> +       if (scpd->clk) {
 
--- 
-Ricardo Ribalda
+Shouldn't you check for !IS_ERR(scpd->clk) instead?
+
+> +               ret = clk_prepare_enable(scpd->clk);
+> +               if (ret)
+> +                       return ret;
+> +       }
+> +
+> +       val = readl(ctl_addr);
+> +       val |= PWR_ON_BIT;
+> +       writel(val, ctl_addr);
+> +       val |= PWR_ON_2ND_BIT;
+> +       writel(val, ctl_addr);
+> +
+> +       /* wait until PWR_ACK = 1 */
+> +       timeout = jiffies + HZ;
+> +       expired = false;
+> +       while (1) {
+> +               ret = scpsys_domain_is_on(scpd);
+> +               if (ret > 0)
+> +                       break;
+> +
+> +               if (expired) {
+> +                       ret = -ETIMEDOUT;
+> +                       goto out;
+> +               }
+> +
+> +               cpu_relax();
+> +
+> +               if (time_after(jiffies, timeout))
+> +                       expired = true;
+> +       }
+> +
+> +       val &= ~PWR_CLK_DIS_BIT;
+> +       writel(val, ctl_addr);
+> +
+> +       val &= ~PWR_ISO_BIT;
+> +       writel(val, ctl_addr);
+> +
+> +       val |= PWR_RST_B_BIT;
+> +       writel(val, ctl_addr);
+> +
+> +       val &= ~scpd->sram_pdn_bits;
+> +       writel(val, ctl_addr);
+> +
+> +       /* wait until SRAM_PDN_ACK all 0 */
+> +       timeout = jiffies + HZ;
+> +       expired = false;
+> +       while (sram_pdn_ack && (readl(ctl_addr) & sram_pdn_ack)) {
+> +
+> +               if (expired) {
+> +                       ret = -ETIMEDOUT;
+> +                       goto out;
+> +               }
+> +
+> +               cpu_relax();
+> +
+> +               if (time_after(jiffies, timeout))
+> +                       expired = true;
+> +       }
+> +
+> +       if (scpd->bus_prot_mask) {
+> +               ret = mtk_infracfg_clear_bus_protection(scp->infracfg,
+> +                               scpd->bus_prot_mask);
+> +               if (ret)
+> +                       return ret;
+> +       }
+> +
+> +       return 0;
+> +out:
+
+There are no error handling. Especially the clock should be gated.
+
+> +       dev_err(scp->dev, "Failed to power on domain %s\n", genpd->name);
+> +
+> +       return ret;
+> +}
+> +
+> +static int scpsys_power_off(struct generic_pm_domain *genpd)
+> +{
+> +       struct scp_domain *scpd = container_of(genpd, struct scp_domain, genpd);
+> +       struct scp *scp = scpd->scp;
+> +       unsigned long timeout;
+> +       bool expired;
+> +       void __iomem *ctl_addr = scpd->ctl_addr;
+> +       u32 pdn_ack = scpd->sram_pdn_ack_bits;
+> +       u32 val;
+> +       int ret;
+> +
+> +       if (scpd->bus_prot_mask) {
+> +               ret = mtk_infracfg_set_bus_protection(scp->infracfg,
+> +                               scpd->bus_prot_mask);
+> +               if (ret)
+> +                       return ret;
+> +       }
+> +
+> +       val = readl(ctl_addr);
+> +       val |= scpd->sram_pdn_bits;
+> +       writel(val, ctl_addr);
+> +
+> +       /* wait until SRAM_PDN_ACK all 1 */
+> +       timeout = jiffies + HZ;
+> +       expired = false;
+> +       while (pdn_ack && (readl(ctl_addr) & pdn_ack) != pdn_ack) {
+> +               if (expired) {
+> +                       ret = -ETIMEDOUT;
+> +                       goto out;
+> +               }
+> +
+> +               cpu_relax();
+> +
+> +               if (time_after(jiffies, timeout))
+> +                       expired = true;
+> +       }
+> +
+> +       val |= PWR_ISO_BIT;
+> +       writel(val, ctl_addr);
+> +
+> +       val &= ~PWR_RST_B_BIT;
+> +       writel(val, ctl_addr);
+> +
+> +       val |= PWR_CLK_DIS_BIT;
+> +       writel(val, ctl_addr);
+> +
+> +       val &= ~PWR_ON_BIT;
+> +       writel(val, ctl_addr);
+> +
+> +       val &= ~PWR_ON_2ND_BIT;
+> +       writel(val, ctl_addr);
+> +
+> +       /* wait until PWR_ACK = 0 */
+> +       timeout = jiffies + HZ;
+> +       expired = false;
+> +       while (1) {
+> +               ret = scpsys_domain_is_on(scpd);
+> +               if (ret == 0)
+> +                       break;
+> +
+> +               if (expired) {
+> +                       ret = -ETIMEDOUT;
+> +                       goto out;
+> +               }
+> +
+> +               cpu_relax();
+> +
+> +               if (time_after(jiffies, timeout))
+> +                       expired = true;
+> +       }
+> +
+> +       if (scpd->clk)
+
+Shouldn't you check for !IS_ERR(scpd->clk) instead?
+
+> +               clk_disable_unprepare(scpd->clk);
+> +
+> +       return 0;
+> +
+> +out:
+
+There are no error handling, isn't that needed?
+
+> +       dev_err(scp->dev, "Failed to power off domain %s\n", genpd->name);
+> +
+> +       return ret;
+> +}
+> +
+> +static int __init scpsys_probe(struct platform_device *pdev)
+> +{
+> +       struct genpd_onecell_data *pd_data;
+> +       struct resource *res;
+> +       int i, ret;
+> +       struct scp *scp;
+> +
+> +       scp = devm_kzalloc(&pdev->dev, sizeof(*scp), GFP_KERNEL);
+> +       if (!scp)
+> +               return -ENOMEM;
+> +
+> +       scp->dev = &pdev->dev;
+> +
+> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +       scp->base = devm_ioremap_resource(&pdev->dev, res);
+> +       if (IS_ERR(scp->base))
+> +               return PTR_ERR(scp->base);
+> +
+> +       pd_data = &scp->pd_data;
+> +
+> +       pd_data->domains = devm_kzalloc(&pdev->dev,
+> +                       sizeof(*pd_data->domains) * NUM_DOMAINS, GFP_KERNEL);
+> +       if (!pd_data->domains)
+> +               return -ENOMEM;
+> +
+> +       scp->clk[MT8173_CLK_MM] = devm_clk_get(&pdev->dev, "mm");
+> +       if (IS_ERR(scp->clk[MT8173_CLK_MM])) {
+> +               dev_err(&pdev->dev, "Failed to get mm clk: %ld\n",
+> +                               PTR_ERR(scp->clk[MT8173_CLK_MM]));
+
+I think a similar error message is already printed by the common clk framework!?
+
+> +               return PTR_ERR(scp->clk[MT8173_CLK_MM]);
+> +       }
+> +
+> +       scp->clk[MT8173_CLK_MFG] = devm_clk_get(&pdev->dev, "mfg");
+> +       if (IS_ERR(scp->clk[MT8173_CLK_MFG])) {
+> +               dev_err(&pdev->dev, "Failed to get mfg clk: %ld\n",
+> +                               PTR_ERR(scp->clk[MT8173_CLK_MFG]));
+
+I think a similar error message is already printed by the common clk framework!?
+
+> +               return PTR_ERR(scp->clk[MT8173_CLK_MFG]);
+> +       }
+> +
+> +       scp->infracfg = syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
+> +                       "infracfg");
+> +       if (IS_ERR(scp->infracfg)) {
+> +               dev_err(&pdev->dev, "Cannot find infracfg controller: %ld\n",
+> +                               PTR_ERR(scp->infracfg));
+> +               return PTR_ERR(scp->infracfg);
+> +       }
+> +
+> +       pd_data->num_domains = NUM_DOMAINS;
+> +
+> +       for (i = 0; i < NUM_DOMAINS; i++) {
+> +               struct scp_domain *scpd = &scp->domains[i];
+> +               struct generic_pm_domain *genpd = &scpd->genpd;
+> +               const struct scp_domain_data *data = &scp_domain_data[i];
+> +
+> +               pd_data->domains[i] = genpd;
+> +               scpd->scp = scp;
+> +
+> +               scpd->sta_mask = data->sta_mask;
+> +               scpd->ctl_addr = scp->base + data->ctl_offs;
+> +               scpd->sram_pdn_bits = data->sram_pdn_bits;
+> +               scpd->sram_pdn_ack_bits = data->sram_pdn_ack_bits;
+> +               scpd->bus_prot_mask = data->bus_prot_mask;
+> +               if (data->clk_id != MT8173_CLK_NONE)
+> +                       scpd->clk = scp->clk[data->clk_id];
+
+This seems odd. Why do you need to have an array of clocks to deal
+with this assignment?
+
+I don't find that the struct scp->clk pointer is used but from this
+place. Couldn't you just fetch a reference to the clock to a local
+struct *clk, without caching it in the struct scp->clk?
+
+> +
+> +               genpd->name = data->name;
+> +               genpd->power_off = scpsys_power_off;
+> +               genpd->power_on = scpsys_power_on;
+> +
+> +               /*
+> +                * Initially turn on all domains to make the domains usable
+> +                * with !CONFIG_PM and to get the hardware in sync with the
+> +                * software.  The unused domains will be switched off during
+> +                * late_init time.
+> +                */
+> +               genpd->power_on(genpd);
+> +
+> +               pm_genpd_init(genpd, NULL, false);
+> +       }
+> +
+> +       /*
+> +        * We are not allowed to fail here since there is no way to unregister
+> +        * a power domain. Once registered above we have to keep the domains
+> +        * valid.
+> +        */
+> +
+> +       ret = pm_genpd_add_subdomain(pd_data->domains[MT8173_POWER_DOMAIN_MFG_ASYNC],
+> +               pd_data->domains[MT8173_POWER_DOMAIN_MFG_2D]);
+> +       if (ret && IS_ENABLED(CONFIG_PM))
+> +               dev_err(&pdev->dev, "Failed to add subdomain: %d\n", ret);
+> +
+> +       ret = pm_genpd_add_subdomain(pd_data->domains[MT8173_POWER_DOMAIN_MFG_2D],
+> +               pd_data->domains[MT8173_POWER_DOMAIN_MFG]);
+> +       if (ret && IS_ENABLED(CONFIG_PM))
+> +               dev_err(&pdev->dev, "Failed to add subdomain: %d\n", ret);
+> +
+> +       ret = of_genpd_add_provider_onecell(pdev->dev.of_node, pd_data);
+> +       if (ret)
+> +               dev_err(&pdev->dev, "Failed to add OF provider: %d\n", ret);
+> +
+> +       return 0;
+> +}
+> +
+> +static const struct of_device_id of_scpsys_match_tbl[] = {
+> +       {
+> +               .compatible = "mediatek,mt8173-scpsys",
+> +       }, {
+> +               /* sentinel */
+> +       }
+> +};
+> +
+> +static struct platform_driver scpsys_drv = {
+> +       .driver = {
+> +               .name = "mtk-scpsys",
+> +               .owner = THIS_MODULE,
+> +               .of_match_table = of_match_ptr(of_scpsys_match_tbl),
+> +       },
+> +};
+> +
+> +module_platform_driver_probe(scpsys_drv, scpsys_probe);
+> diff --git a/include/dt-bindings/power/mt8173-power.h b/include/dt-bindings/power/mt8173-power.h
+> new file mode 100644
+> index 0000000..b34cee9
+> --- /dev/null
+> +++ b/include/dt-bindings/power/mt8173-power.h
+> @@ -0,0 +1,15 @@
+> +#ifndef _DT_BINDINGS_POWER_MT8183_POWER_H
+> +#define _DT_BINDINGS_POWER_MT8183_POWER_H
+> +
+> +#define MT8173_POWER_DOMAIN_VDEC       0
+> +#define MT8173_POWER_DOMAIN_VENC       1
+> +#define MT8173_POWER_DOMAIN_ISP                2
+> +#define MT8173_POWER_DOMAIN_MM         3
+> +#define MT8173_POWER_DOMAIN_VENC_LT    4
+> +#define MT8173_POWER_DOMAIN_AUDIO      5
+> +#define MT8173_POWER_DOMAIN_USB                6
+> +#define MT8173_POWER_DOMAIN_MFG_ASYNC  7
+> +#define MT8173_POWER_DOMAIN_MFG_2D     8
+> +#define MT8173_POWER_DOMAIN_MFG                9
+> +
+> +#endif /* _DT_BINDINGS_POWER_MT8183_POWER_H */
+> --
+> 2.1.4
+
+Kind regards
+Uffe
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
