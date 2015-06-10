@@ -1,26 +1,89 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 0/3] Pinctrl support for msm8660
-Date: Wed, 10 Jun 2015 10:22:28 +0200
-Message-ID: <CACRpkdaV_QFZXTBw79u6KxTyCxYXgMgssQAbcfqYtuNPNDCmqQ@mail.gmail.com>
-References: <1433544745-325-1-git-send-email-bjorn.andersson@sonymobile.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 1/6] ARM: kvm: psci: fix handling of unimplemented
+ functions
+Date: Wed, 10 Jun 2015 09:24:05 +0100
+Message-ID: <20150610082405.GD8591@red-moon>
+References: <1432901799-18359-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1432901799-18359-2-git-send-email-lorenzo.pieralisi@arm.com>
+ <55771FDC.3090800@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1433544745-325-1-git-send-email-bjorn.andersson@sonymobile.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: Andy Gross <agross@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <55771FDC.3090800-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Anup Patel <anup.patel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jun 6, 2015 at 12:52 AM, Bjorn Andersson
-<bjorn.andersson@sonymobile.com> wrote:
+Hi Marc,
 
-> Per your request Linus, happy birthday!
+On Tue, Jun 09, 2015 at 06:18:20PM +0100, Marc Zyngier wrote:
+> Hi Lorenzo,
+> 
+> On 29/05/15 13:16, Lorenzo Pieralisi wrote:
+> > According to the PSCI specification and the SMC/HVC calling
+> > convention, PSCI function_ids that are not implemented must
+> > return NOT_SUPPORTED as return value.
+> > 
+> > Current KVM implementation takes an unhandled PSCI function_id
+> > as an error and injects an undefined instruction into the guest
+> > if PSCI implementation is called with a function_id that is not
+> > handled by the resident PSCI version (ie it is not implemented),
+> > which is not the behaviour expected by a guest when calling a
+> > PSCI function_id that is not implemented.
+> > 
+> > This patch fixes this issue by returning NOT_SUPPORTED whenever
+> > the kvm PSCI call is executed for a function_id that is not
+> > implemented by the PSCI kvm layer.
+> > 
+> > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+> > Reported-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+> > Cc: Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > Cc: Anup Patel <anup.patel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+> > ---
+> >  arch/arm/kvm/psci.c | 6 +++---
+> >  1 file changed, 3 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/arch/arm/kvm/psci.c b/arch/arm/kvm/psci.c
+> > index 7e9398c..ec5943b 100644
+> > --- a/arch/arm/kvm/psci.c
+> > +++ b/arch/arm/kvm/psci.c
+> > @@ -273,7 +273,8 @@ static int kvm_psci_0_2_call(struct kvm_vcpu *vcpu)
+> >  		ret = 0;
+> >  		break;
+> >  	default:
+> > -		return -EINVAL;
+> > +		val = PSCI_RET_NOT_SUPPORTED;
+> > +		break;
+> >  	}
+> >  
+> >  	*vcpu_reg(vcpu, 0) = val;
+> > @@ -295,10 +296,9 @@ static int kvm_psci_0_1_call(struct kvm_vcpu *vcpu)
+> >  		break;
+> >  	case KVM_PSCI_FN_CPU_SUSPEND:
+> >  	case KVM_PSCI_FN_MIGRATE:
+> > +	default:
+> >  		val = PSCI_RET_NOT_SUPPORTED;
+> >  		break;
+> > -	default:
+> > -		return -EINVAL;
+> >  	}
+> >  
+> >  	*vcpu_reg(vcpu, 0) = val;
+> > 
+> 
+> Looks good to me. How do you want to proceed with this one? can I take
+> it independently from the rest of the series? Or would you prefer it
+> being kept as a whole?
 
-Awwww opening this present 4 days late it still makes my day like
-it was my birthday again!
+I will prepare a v2 to take into account a comment from Sudeep and I
+will add a stable tag too, yes it should be merged independently.
 
-Will boot my Dragon with these patches on, prompto!
-
-Yours,
-Linus Walleij
+Thanks,
+Lorenzo
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
