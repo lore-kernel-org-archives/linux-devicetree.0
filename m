@@ -1,8 +1,8 @@
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Subject: Re: [PATCH 2/2] drivercore: Fix unregistration path of platform
  devices
-Date: Wed, 10 Jun 2015 08:34:49 -0700
-Message-ID: <20150610153449.GA22214@kroah.com>
+Date: Wed, 10 Jun 2015 08:40:31 -0700
+Message-ID: <20150610154031.GB22214@kroah.com>
 References: <1433686811-12303-1-git-send-email-grant.likely@linaro.org>
  <1433686811-12303-3-git-send-email-grant.likely@linaro.org>
  <CAPybu_30jTDuwEW_WTGuu6pWwv86p6OqV0eRE1GbCwUVtBm7KA@mail.gmail.com>
@@ -44,13 +44,12 @@ On Wed, Jun 10, 2015 at 04:46:33PM +0200, Ricardo Ribalda Delgado wrote:
 > base/platform: Remove code duplication
 > https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/commit/?id=6d9d4b1469b0d9748145e168fc9ec585e1f3f4b0
 
-Revert these in the reverse order, right?
+Now reverted.
 
-And git commit ids would be all that I need, not a URL, can't do much
-with that :)
+> This patch from Grant needs to be applied:
+> 
+> [PATCH 2/2] drivercore: Fix unregistration path of platform devices
 
-I'll go do that now...
-
-thanks,
+I need some acks before I apply anything else as this is a total mess.
 
 greg k-h
