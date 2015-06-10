@@ -1,155 +1,150 @@
-From: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 5/7] Watchdog: introduce ARM SBSA watchdog driver
-Date: Thu, 11 Jun 2015 01:54:22 +0800
-Message-ID: <CADyBb7tMLjcco76GVu9O+GiDOrH4t2UirgxzAGb_jr253FV6RA@mail.gmail.com>
-References: <=fu.wei@linaro.org>
-	<1433217907-928-1-git-send-email-fu.wei@linaro.org>
-	<1433217907-928-6-git-send-email-fu.wei@linaro.org>
-	<556DCC95.806@codeaurora.org>
-	<CADyBb7sXiMNtrH+Eu1Qj00TPNLMMr5cCTPObzFmKnHLsbWH79Q@mail.gmail.com>
-	<556DE2D5.3090906@roeck-us.net>
-	<CADyBb7uT=gFJkK8s-QF1n4Z+Zov9Lurp1nvBO-C-qszTqbMYXQ@mail.gmail.com>
-	<5575DE48.8010308@roeck-us.net>
-	<CADyBb7sYPnvDVEJYVQm65B1JV=yvq10+ezs2x3f8F=TJCZ+OJA@mail.gmail.com>
-	<55766D74.2060401@roeck-us.net>
-	<CADyBb7vR-jP6ZjzMSnprrSXbNayk8umx+cXV3TsGypfhZcCwTw@mail.gmail.com>
-	<55769E0E.8060801@roeck-us.net>
-	<CADyBb7skpSZ=3_ByW-RHM99=nbs7Z5xXFXtsKzkxOXAGjxF=3Q@mail.gmail.com>
-	<557712CF.8010802@roeck-us.net>
-	<5577147B.2030900@codeaurora.org>
-	<5577180E.4070804@roeck-us.net>
-	<CADyBb7sVd5nLwb3eHRPiNt-WTynfaJonOyuE_bD694dayyvevA@mail.gmail.com>
-	<CADyBb7tSkdRc0GHbX_vAdDAeFGVS=CFCdC_jMCm5LYmg9m1Qow@mail.gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [alsa-devel][PATCH] ASoC: fsl: add imx-wm8960 machine driver
+Date: Wed, 10 Jun 2015 19:09:12 +0100
+Message-ID: <20150610180912.GQ14071@sirena.org.uk>
+References: <b2a3c323a0507f3706041e1da98da8375aa61576.1433923593.git.zidan.wang@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CADyBb7tSkdRc0GHbX_vAdDAeFGVS=CFCdC_jMCm5LYmg9m1Qow-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Linaro ACPI Mailman List <linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Fu <tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, G Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Vipul Gandhi <vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Leo Duran <leo.duran-5C7GfCeVMHo@public.gmane.org>, Jon Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="geeFENrZXK6HHgAa"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <b2a3c323a0507f3706041e1da98da8375aa61576.1433923593.git.zidan.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zidan Wang <zidan.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, timur-N01EOCouUvQ@public.gmane.org, Xiubo.Lee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Guenter,
 
-On 10 June 2015 at 23:38, Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> Hi Guenter,
->
->
-> On 10 June 2015 at 11:41, Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> Hi Guenter,
->>
->> On 10 June 2015 at 00:45, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
->>> On 06/09/2015 09:29 AM, Timur Tabi wrote:
->>>>
->>>> On 06/09/2015 11:22 AM, Guenter Roeck wrote:
->>>>>
->>>>>
->>>>>
->>>>> but I see your point. Essentially, the specification is broken
->>>>> for all practical purposes, since, as you point out, enabling
->>>>> the watchdog overwrites and explicitly sets WCV. Effectively
->>>>> this means that just using WCV to program the timeout period
->>>>> is not really possible.
->>>>>
->>>>> I am not really sure how to address this. We can either only use WOR,
->>>>> and forget about pretimeout, or we can enforce a minimum pretimeout.
->>>>> In the latter case, we'll have to write WCV after writing WOR.
->>>>
->>>>
->>>> In talking with our hardware engineers, using WCV to program the timeout
->>>> period is not a valid operation.  This is why I keep arguing against the
->>>> pre-timeout feature, and I don't agree that servers should always use
->>>> pre-timeout.
->>>>
->>>
->>> Not sure if "not valid" is correct - after all, it is mentioned in the
->>> specification. However, it is at the very least fragile.
->>
->> I think we should focus on SBSA spec, but not a specific chip design,
->> because this is SBSA watchdog, not a driver for an IP core from a
->> specific chip vendor.
->> this operation is mentioned in the spec,
->> and I have tested my driver on Foundation model(from ARM) and a real hardware.
->>
->>>
->>> I tend to agree that we should just forget about pretimeout and
->>> use your original approach, where the timeout value is used
->>> to program WOR. Everything else is really just asking for trouble.
->>
->> I don't mind if we give up pretimeout, The reason I use pretimeout is:
->> this concept matches the function of two stage timeouts.
->>
->> but, If we give up pretimeout, could you give me a suggestion:
->>
->> How to config the two stage timeouts
->> (1)from enabling watchdog to WS0
->> (2)the time from WS1 to WS0
->>
->> If we only have one timeout parameter,  How to config the two stage timeouts?
->> Any suggestion ?
->
-> I have another thought for this, please allow me to sent anther
-> patchset in a day. see if you like it.
+--geeFENrZXK6HHgAa
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I have sent a non-pretimeout version patchset, please let me know if
-you like the non-pretimeout version more.
+On Wed, Jun 10, 2015 at 04:26:27PM +0800, Zidan Wang wrote:
 
-Great thanks for your time. :-)
+> +  - hp-det		: ADCLRC/GPIO1, LINPUT3/JD2 and RINPUT3/JD3 pins can
+> +			  be selected as headphone jack detect inputs to
+> +			  automatically disable the speaker output and enable
+> +			  the headphone output.
+> +			  hp-det = <hp-det-pin hp-det-polarity>;
+> +			  hp-det-pin = 1: ADCLRC/GPIO1 used as detect pin
+> +			  hp-det-pin = 2: LINPUT3/JD2 used as detect pin
+> +			  hp-det-pin = 3: RINPUT3/JD3 used as detect pin
+> +			  hp-det-polarity = 0: hp detect high for headphone
+> +			  hp-det-polarity = 1: hp detect high for speaker
 
->
->>
->> If we make the first stage timeout is timeout/2,  this violates the
->> definition of timeout.
->> I don't think users expect interrupt, panic or reboot at timeout/2.
->>
->> And WS1  definitely isn't a backup of WS0.
->>
->>>
->>> Guenter
->>>
->>
->>
->>
->> --
->> Best regards,
->>
->> Fu Wei
->> Software Engineer
->> Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
->> Ph: +86 21 61221326(direct)
->> Ph: +86 186 2020 4684 (mobile)
->> Room 1512, Regus One Corporate Avenue,Level 15,
->> One Corporate Avenue,222 Hubin Road,Huangpu District,
->> Shanghai,China 200021
->
->
->
-> --
-> Best regards,
->
-> Fu Wei
-> Software Engineer
-> Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
-> Ph: +86 21 61221326(direct)
-> Ph: +86 186 2020 4684 (mobile)
-> Room 1512, Regus One Corporate Avenue,Level 15,
-> One Corporate Avenue,222 Hubin Road,Huangpu District,
-> Shanghai,China 200021
+This looks like something that should be in the DT binding for the
+CODEC, not the machine driver.
 
+> +static int hp_set_status_check(void *data)
+> +{
 
+Why is this in the driver?
 
--- 
-Best regards,
+> +	hp_status = gpio_get_value(priv->hp_set_gpio) ? 1 : 0;
 
-Fu Wei
-Software Engineer
-Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
-Ph: +86 21 61221326(direct)
-Ph: +86 186 2020 4684 (mobile)
-Room 1512, Regus One Corporate Avenue,Level 15,
-One Corporate Avenue,222 Hubin Road,Huangpu District,
-Shanghai,China 200021
+gpio_get_value() already returns a boolean.
+
+> +	if (hp_status != priv->hp_active_low) {
+> +		snprintf(buf, 32, "STATE=%d", 2);
+> +		snd_soc_dapm_disable_pin(&priv->codec->dapm, "Ext Spk");
+> +		snd_soc_dapm_disable_pin(&priv->codec->dapm, "Main MIC");
+> +		ret = imx_hp_set_gpio.report;
+
+The generic jack code already has support for disabling and enabling
+pins, though disabling the speaker looks like a policy decision which
+probably doesn't belong here.
+
+> +		/*
+> +		 *  As the hp MIC only connect the input for left channel, we
+> +		 *  need to route it for right channel.
+> +		 */
+> +		snd_soc_update_bits(priv->codec, WM8960_ADDCTL1, 3<<2, 1<<2);
+
+This looks like routing which we'd expect userspace to be doing.
+
+> +		snd_kctl_jack_report(priv->snd_card, priv->headset_kctl, 1);
+
+Use the ASoC level helpers.
+
+> +	envp[0] = "NAME=headset";
+> +	envp[1] = buf;
+> +	envp[2] = NULL;
+> +	kobject_uevent_env(&pdev->dev.kobj, KOBJ_CHANGE, envp);
+> +	kfree(buf);
+
+Let the core deal with notifying userspace - it looks like you want to
+implement extcon integration there.
+
+> +	/* set cpu DAI configuration */
+> +	ret = snd_soc_dai_set_fmt(cpu_dai, fmt);
+> +	if (ret) {
+> +		dev_err(dev, "failed to set cpu dai fmt: %d\n", ret);
+> +		return ret;
+> +	}
+> +	/* set codec DAI configuration */
+> +	ret = snd_soc_dai_set_fmt(codec_dai, fmt);
+> +	if (ret) {
+> +		dev_err(dev, "failed to set codec dai fmt: %d\n", ret);
+> +		return ret;
+> +	}
+
+Initialise these in the dai_link structure.
+
+> +	for (i = 0; i < ARRAY_SIZE(sysclk_divs); ++i) {
+> +		if (sysclk_divs[i] == -1)
+> +			continue;
+> +		sysclk /= sysclk_divs[i];
+> +		for (j = 0; j < ARRAY_SIZE(dac_divs); ++j) {
+> +			if (sysclk == sample_rate * dac_divs[j]) {
+> +				for (k = 0; k < ARRAY_SIZE(bclk_divs); ++k)
+> +					if (sysclk == bclk * bclk_divs[k] / 10)
+> +						break;
+> +				if (k != ARRAY_SIZE(bclk_divs))
+> +					break;
+> +			}
+> +		}
+> +		if (j != ARRAY_SIZE(dac_divs))
+> +			break;
+> +	}
+> +	if (i != ARRAY_SIZE(sysclk_divs)) {
+> +		/* Set codec sysclk */
+> +		snd_soc_dai_set_sysclk(codec_dai,
+> +				       WM8960_SYSCLK_MCLK, sysclk, 0);
+> +		snd_soc_dai_set_clkdiv(codec_dai, WM8960_SYSCLKDIV, i << 1);
+> +		return 0;
+> +	}
+
+Better, upgrade the CODEC driver to do this.
+
+> +	/* codec mclk should be enabled early to avoid jack detect error */
+> +	ret = clk_prepare_enable(data->codec_clk);
+> +	if (ret) {
+> +		dev_err(card->dev, "Failed to enable MCLK: %d\n", ret);
+> +		return ret;
+> +	}
+
+Similarly integrating clock API support into the CODEC is better - it
+makes all the DT stuff work a lot more smoothly and avoids things having
+to get duplicated.
+
+--geeFENrZXK6HHgAa
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJVeH1HAAoJECTWi3JdVIfQ5lwH/2utWkhCU4tFs2hA7lIqV0wl
+L5MieRLa3IF89cZtChKY8iskWpyYEUfH4/2GGqVK/bZN4Wzr/Xg818LDeBYPpm4s
+LKx+2+hSt0Iahugg4z5ULQ5Qeddc58GUaFkD1UOGhSXCJYE+0l8q7hT36/ZGrhG9
+ygAgBklPxmfpaEN2Vb01v/6MY8H8HYQbvPFdaG2m6fSmL7XQ0EeAIN147YaUI7fK
+8qN0vdAkzXwEcaFgemN2TZJ/iMkc0sVLjAmSjI+vNL5hYyogcb8LZPvsXqU3purj
+qdBU70gsyxIv5qxYga4eD5ywzFvwyFHm4zikbcSYzKhW0zv4OPMoPvX/dnYKUW4=
+=wo1m
+-----END PGP SIGNATURE-----
+
+--geeFENrZXK6HHgAa--
 --
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
