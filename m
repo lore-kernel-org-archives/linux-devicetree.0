@@ -1,240 +1,31 @@
-From: Daniel Thompson <daniel.thompson@linaro.org>
-Subject: [PATCH v3 3/3] ARM: dts: stm32f429: Adopt STM32F4 clock driver
-Date: Wed, 10 Jun 2015 21:09:38 +0100
-Message-ID: <1433966978-24422-4-git-send-email-daniel.thompson@linaro.org>
-References: <1432327273-6810-1-git-send-email-daniel.thompson@linaro.org>
- <1433966978-24422-1-git-send-email-daniel.thompson@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1433966978-24422-1-git-send-email-daniel.thompson@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: Daniel Thompson <daniel.thompson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Kamil Lulko <rev13@wp.pl>, Andreas Farber <afaerber@suse.de>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, patches@linaro.org, linaro-kernel@lists.linaro.org
+From: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH] nfc: st-nci: Rename st21nfcb to st-nci to support ST NCI
+ NFC controllers
+Date: Wed, 10 Jun 2015 23:48:07 +0200
+Message-ID: <20150610214807.GB9747@ribalta.mp.intel.com>
+References: <1433881565-20035-1-git-send-email-christophe-h.ricard@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1433881565-20035-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-New bindings and driver have been created for STM32F42xxx series parts.
-This patch integrates these changes.
+Hi Christophe,
 
-Note: Earlier device tree blobs (those without st,stm32f42xxx
-      compatibles for the rcc) could still be used to boot basic
-      systems. Such systems rely on the bootloader to configure the
-      clock gates for vital periperhals.
+On Tue, Jun 09, 2015 at 10:26:05PM +0200, Christophe Ricard wrote:
+> STMicroelectronics NFC NCI chips family is extending with the new ST21NFCC
+> using the AMS AS39230 RF booster.
+> The st21nfcb driver is relevant for this solution and might be with
+> future products.
+Applied to nfc-next, thanks.
 
-Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
-Reviewed-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
----
- arch/arm/boot/dts/stm32f429-disco.dts |  4 ++
- arch/arm/boot/dts/stm32f429.dtsi      | 79 +++++++++++------------------------
- 2 files changed, 28 insertions(+), 55 deletions(-)
-
-diff --git a/arch/arm/boot/dts/stm32f429-disco.dts b/arch/arm/boot/dts/stm32f429-disco.dts
-index 17cbb83..97028da 100644
---- a/arch/arm/boot/dts/stm32f429-disco.dts
-+++ b/arch/arm/boot/dts/stm32f429-disco.dts
-@@ -66,6 +66,10 @@
- 	};
- };
- 
-+&clk_hse {
-+	clock-frequency = <8000000>;
-+};
-+
- &usart1 {
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
-index ef6d382..748b886 100644
---- a/arch/arm/boot/dts/stm32f429.dtsi
-+++ b/arch/arm/boot/dts/stm32f429.dtsi
-@@ -49,48 +49,10 @@
- 
- / {
- 	clocks {
--		clk_sysclk: clk-sysclk {
-+		clk_hse: clk-hse {
- 			#clock-cells = <0>;
- 			compatible = "fixed-clock";
--			clock-frequency = <168000000>;
--		};
--
--		clk_hclk: clk-hclk {
--			#clock-cells = <0>;
--			compatible = "fixed-clock";
--			clock-frequency = <168000000>;
--		};
--
--		clk_pclk1: clk-pclk1 {
--			#clock-cells = <0>;
--			compatible = "fixed-clock";
--			clock-frequency = <42000000>;
--		};
--
--		clk_pclk2: clk-pclk2 {
--			#clock-cells = <0>;
--			compatible = "fixed-clock";
--			clock-frequency = <84000000>;
--		};
--
--		clk_pmtr1: clk-pmtr1 {
--			#clock-cells = <0>;
--			compatible = "fixed-clock";
--			clock-frequency = <84000000>;
--		};
--
--		clk_pmtr2: clk-pmtr2 {
--			#clock-cells = <0>;
--			compatible = "fixed-clock";
--			clock-frequency = <168000000>;
--		};
--
--		clk_systick: clk-systick {
--			compatible = "fixed-factor-clock";
--			clocks = <&clk_hclk>;
--			#clock-cells = <0>;
--			clock-div = <8>;
--			clock-mult = <1>;
-+			clock-frequency = <0>;
- 		};
- 	};
- 
-@@ -99,7 +61,7 @@
- 			compatible = "st,stm32-timer";
- 			reg = <0x40000000 0x400>;
- 			interrupts = <28>;
--			clocks = <&clk_pmtr1>;
-+			clocks = <&rcc 0 128>;
- 			status = "disabled";
- 		};
- 
-@@ -107,7 +69,7 @@
- 			compatible = "st,stm32-timer";
- 			reg = <0x40000400 0x400>;
- 			interrupts = <29>;
--			clocks = <&clk_pmtr1>;
-+			clocks = <&rcc 0 129>;
- 			status = "disabled";
- 		};
- 
-@@ -115,7 +77,7 @@
- 			compatible = "st,stm32-timer";
- 			reg = <0x40000800 0x400>;
- 			interrupts = <30>;
--			clocks = <&clk_pmtr1>;
-+			clocks = <&rcc 0 130>;
- 			status = "disabled";
- 		};
- 
-@@ -123,7 +85,7 @@
- 			compatible = "st,stm32-timer";
- 			reg = <0x40000c00 0x400>;
- 			interrupts = <50>;
--			clocks = <&clk_pmtr1>;
-+			clocks = <&rcc 0 131>;
- 			status = "disabled";
- 		};
- 
-@@ -131,7 +93,7 @@
- 			compatible = "st,stm32-timer";
- 			reg = <0x40001000 0x400>;
- 			interrupts = <54>;
--			clocks = <&clk_pmtr1>;
-+			clocks = <&rcc 0 132>;
- 			status = "disabled";
- 		};
- 
-@@ -139,7 +101,7 @@
- 			compatible = "st,stm32-timer";
- 			reg = <0x40001400 0x400>;
- 			interrupts = <55>;
--			clocks = <&clk_pmtr1>;
-+			clocks = <&rcc 0 133>;
- 			status = "disabled";
- 		};
- 
-@@ -147,7 +109,7 @@
- 			compatible = "st,stm32-usart", "st,stm32-uart";
- 			reg = <0x40004400 0x400>;
- 			interrupts = <38>;
--			clocks = <&clk_pclk1>;
-+			clocks = <&rcc 0 145>;
- 			status = "disabled";
- 		};
- 
-@@ -155,7 +117,7 @@
- 			compatible = "st,stm32-usart", "st,stm32-uart";
- 			reg = <0x40004800 0x400>;
- 			interrupts = <39>;
--			clocks = <&clk_pclk1>;
-+			clocks = <&rcc 0 146>;
- 			status = "disabled";
- 		};
- 
-@@ -163,7 +125,7 @@
- 			compatible = "st,stm32-uart";
- 			reg = <0x40004c00 0x400>;
- 			interrupts = <52>;
--			clocks = <&clk_pclk1>;
-+			clocks = <&rcc 0 147>;
- 			status = "disabled";
- 		};
- 
-@@ -171,7 +133,7 @@
- 			compatible = "st,stm32-uart";
- 			reg = <0x40005000 0x400>;
- 			interrupts = <53>;
--			clocks = <&clk_pclk1>;
-+			clocks = <&rcc 0 148>;
- 			status = "disabled";
- 		};
- 
-@@ -179,7 +141,7 @@
- 			compatible = "st,stm32-usart", "st,stm32-uart";
- 			reg = <0x40007800 0x400>;
- 			interrupts = <82>;
--			clocks = <&clk_pclk1>;
-+			clocks = <&rcc 0 158>;
- 			status = "disabled";
- 		};
- 
-@@ -187,7 +149,7 @@
- 			compatible = "st,stm32-usart", "st,stm32-uart";
- 			reg = <0x40007c00 0x400>;
- 			interrupts = <83>;
--			clocks = <&clk_pclk1>;
-+			clocks = <&rcc 0 159>;
- 			status = "disabled";
- 		};
- 
-@@ -195,7 +157,7 @@
- 			compatible = "st,stm32-usart", "st,stm32-uart";
- 			reg = <0x40011000 0x400>;
- 			interrupts = <37>;
--			clocks = <&clk_pclk2>;
-+			clocks = <&rcc 0 164>;
- 			status = "disabled";
- 		};
- 
-@@ -203,13 +165,20 @@
- 			compatible = "st,stm32-usart", "st,stm32-uart";
- 			reg = <0x40011400 0x400>;
- 			interrupts = <71>;
--			clocks = <&clk_pclk2>;
-+			clocks = <&rcc 0 165>;
- 			status = "disabled";
- 		};
-+
-+		rcc: rcc@40023810 {
-+			#clock-cells = <2>;
-+			compatible = "st,stm32f42xx-rcc", "st,stm32-rcc";
-+			reg = <0x40023800 0x400>;
-+			clocks = <&clk_hse>;
-+		};
- 	};
- };
- 
- &systick {
--	clocks = <&clk_systick>;
-+	clocks = <&rcc 1 0>;
- 	status = "okay";
- };
--- 
-2.4.2
+Cheers,
+Samuel.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
