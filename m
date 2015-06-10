@@ -1,113 +1,68 @@
-From: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v2 09/22] usb: gadget: add usb_otg_descriptor_add
- interface to init usb_otg_descriptor
-Date: Wed, 10 Jun 2015 22:02:06 +0800
-Message-ID: <20150610140205.GB9443@shlinux2>
-References: <1433775737-9816-1-git-send-email-jun.li@freescale.com>
- <1433775737-9816-10-git-send-email-jun.li@freescale.com>
- <20150609162751.54223edc@rockdesk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150609162751.54223edc@rockdesk>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Cc: Li Jun-B47624 <Jun.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, Chen Peter-B29397 <Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 1/9] ARM: STi: DT: Add STiH407 family tsin0 pinctrl configuration
+Date: Wed, 10 Jun 2015 15:03:58 +0100
+Message-ID: <1433945046-19855-2-git-send-email-peter.griffin@linaro.org>
+References: <1433945046-19855-1-git-send-email-peter.griffin@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1433945046-19855-1-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org
+Cc: peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hugues.fruchet-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 09, 2015 at 09:27:51PM +0800, Roger Quadros wrote:
-> On Mon, 8 Jun 2015 23:02:04 +0800
-> Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> 
-> > Allocate usb_otg_descriptor and initialize it according to gadget otg
-> > options, if none of options is not set, keep bmAttributes setting as
-> > current gadget drivers, with this new interface, usb_otg_descriptor can
-> > include bcdOTG if OTG 2.0 or later, and otg features can be decided by
-> > the combination of usb hardware property and driver config.
-> > 
-> > Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > ---
-> >  drivers/usb/gadget/config.c | 37 +++++++++++++++++++++++++++++++++++++
-> >  include/linux/usb/gadget.h  |  1 +
-> >  2 files changed, 38 insertions(+)
-> > 
-> > diff --git a/drivers/usb/gadget/config.c b/drivers/usb/gadget/config.c
-> > index 34e12fc..a86e079 100644
-> > --- a/drivers/usb/gadget/config.c
-> > +++ b/drivers/usb/gadget/config.c
-> > @@ -195,3 +195,40 @@ void usb_free_all_descriptors(struct usb_function *f)
-> >  	usb_free_descriptors(f->ss_descriptors);
-> >  }
-> >  EXPORT_SYMBOL_GPL(usb_free_all_descriptors);
-> > +
-> > +struct usb_otg_descriptor *usb_otg_descriptor_add(struct usb_gadget *gadget)
-> > +{
-> > +	struct usb_otg_descriptor *otg_desc;
-> > +	unsigned otg_desc_length;
-> > +
-> > +	if (gadget->otg_rev >= 0x0200)
-> > +		otg_desc_length = sizeof(*otg_desc) + sizeof(struct bcdOTG);
-> > +	else
-> > +		otg_desc_length = sizeof(*otg_desc);
-> > +
-> > +	otg_desc = (struct usb_otg_descriptor *)kzalloc(otg_desc_length,
-> > +								GFP_KERNEL); 
-> 
-> You are allocating memory here and expecting users will free it.
-> I suggest that you pass pointer to otg_desc as function argument and leave it upto
-> the caller to allocate/deallocate memory for it.
+tsin0 and be configured as either serial or parallel. This patch
+adds the pinctrl config for both possiblities. On B2120 reference
+design tsin0 is brought out as TSA on the NIMA slot of the B2004A
+daughter board.
 
-Agreed, I will update accordingly.
+Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ arch/arm/boot/dts/stih407-pinctrl.dtsi | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-> 
-> Most likely users will be a static allocation like they do now and it is a
-> lot simpler.
-> 
-I need allocate different size memory at runtime, that static
-allocation should be changed, I will try Alan's suggestion with
-2 different structures to make it simpler.
+diff --git a/arch/arm/boot/dts/stih407-pinctrl.dtsi b/arch/arm/boot/dts/stih407-pinctrl.dtsi
+index 402844c..c8c8e84 100644
+--- a/arch/arm/boot/dts/stih407-pinctrl.dtsi
++++ b/arch/arm/boot/dts/stih407-pinctrl.dtsi
+@@ -438,6 +438,34 @@
+ 					};
+ 				};
+ 			};
++
++			tsin0 {
++				pinctrl_tsin0_parallel: tsin0_parallel {
++					st,pins {
++						DATA7 = <&pio10 4 ALT1 IN SE_NICLK_IO 0 CLK_A>;
++						DATA6 = <&pio10 5 ALT1 IN SE_NICLK_IO 0 CLK_A>;
++						DATA5 = <&pio10 6 ALT1 IN SE_NICLK_IO 0 CLK_A>;
++						DATA4 = <&pio10 7 ALT1 IN SE_NICLK_IO 0 CLK_A>;
++						DATA3 = <&pio11 0 ALT1 IN SE_NICLK_IO 0 CLK_A>;
++						DATA2 = <&pio11 1 ALT1 IN SE_NICLK_IO 0 CLK_A>;
++						DATA1 = <&pio11 2 ALT1 IN SE_NICLK_IO 0 CLK_A>;
++						DATA0 = <&pio11 3 ALT1 IN SE_NICLK_IO 0 CLK_A>;
++						CLKIN = <&pio10 3 ALT1 IN CLKNOTDATA 0 CLK_A>;
++						VALID = <&pio10 1 ALT1 IN SE_NICLK_IO 0 CLK_A>;
++						ERROR = <&pio10 0 ALT1 IN SE_NICLK_IO 0 CLK_A>;
++						PKCLK = <&pio10 2 ALT1 IN SE_NICLK_IO 0 CLK_A>;
++					};
++				};
++				pinctrl_tsin0_serial: tsin0_serial {
++					st,pins {
++						DATA7 = <&pio10 4 ALT1 IN SE_NICLK_IO 0 CLK_A>;
++						CLKIN = <&pio10 3 ALT1 IN CLKNOTDATA 0 CLK_A>;
++						VALID = <&pio10 1 ALT1 IN SE_NICLK_IO 0 CLK_A>;
++						ERROR = <&pio10 0 ALT1 IN SE_NICLK_IO 0 CLK_A>;
++						PKCLK = <&pio10 2 ALT1 IN SE_NICLK_IO 0 CLK_A>;
++					};
++				};
++			};
+ 		};
+ 
+ 		pin-controller-front1 {
+-- 
+1.9.1
 
-> > +	if (!otg_desc)
-> > +		return otg_desc;
-> > +
-> > +	otg_desc->bLength = otg_desc_length;
-> > +	otg_desc->bDescriptorType = USB_DT_OTG;
-> > +
-> > +	if (gadget->adp_support || gadget->hnp_support ||
-> > +					gadget->srp_support) {
-> > +		if (gadget->adp_support)
-> > +			otg_desc->bmAttributes |= USB_OTG_ADP;
-> > +		if (gadget->hnp_support)
-> > +			otg_desc->bmAttributes |= USB_OTG_HNP;
-> > +		if (gadget->srp_support)
-> > +			otg_desc->bmAttributes |= USB_OTG_SRP;
-> > +	} else {
-> > +		otg_desc->bmAttributes = USB_OTG_SRP | USB_OTG_HNP;
-> > +	}
-> > +
-> > +	if (gadget->otg_rev >= 0x0200)
-> > +		otg_desc->otg_rev[0].bcdOTG = cpu_to_le16(gadget->otg_rev);
-> > +
-> > +	return otg_desc;
-> > +}
-> > +EXPORT_SYMBOL_GPL(usb_otg_descriptor_add);
-> > diff --git a/include/linux/usb/gadget.h b/include/linux/usb/gadget.h
-> > index 2f4f39c..e210466 100644
-> > --- a/include/linux/usb/gadget.h
-> > +++ b/include/linux/usb/gadget.h
-> > @@ -1013,6 +1013,7 @@ int usb_assign_descriptors(struct usb_function *f,
-> >  		struct usb_descriptor_header **ss);
-> >  void usb_free_all_descriptors(struct usb_function *f);
-> >  
-> > +struct usb_otg_descriptor *usb_otg_descriptor_add(struct usb_gadget *gadget);
-> >  /*-------------------------------------------------------------------------*/
-> >  
-> >  /* utility to simplify map/unmap of usb_requests to/from DMA */
-> 
-> cheers,
-> -roger
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
