@@ -1,94 +1,66 @@
-From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Subject: Re: [PATCH 00/21] On-demand device registration
-Date: Wed, 10 Jun 2015 12:19:49 +0200
-Message-ID: <CAAObsKD97nEARO5eZYA2g8+z_MrazBy-m8PV_kSyj19ya72mAw@mail.gmail.com>
-References: <1432565608-26036-1-git-send-email-tomeu.vizoso@collabora.com>
- <CACRpkdasLwMfEHGMRd1X3K_DU7NMPreE8TMwqqDTg8k9wj=wJQ@mail.gmail.com>
- <CAAObsKCP-C+TY8Wkk6bQzxZeGYL9X01trtjxfaYp--ZnH07C+w@mail.gmail.com> <CACRpkdZuSj+S2x1yz6n5PgcRK=3ZCcq_To124b2Y+Oj54aydpg@mail.gmail.com>
+From: Ranjit Waghmode <ranjit.waghmode-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [LINUX RFC v3 1/2] devicetree: Add DT bindings documentation for Zynq Ultrascale+ MPSoC GQSPI controller
+Date: Wed, 10 Jun 2015 16:08:20 +0530
+Message-ID: <1433932701-5834-1-git-send-email-ranjit.waghmode@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZuSj+S2x1yz6n5PgcRK=3ZCcq_To124b2Y+Oj54aydpg@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, dmaengine@vger.kernel.org, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, linux-clk@vger.kernel.org, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, Grant Likely <grant.likely@linaro.org>, Alexander Holler <holler@ahsoftware.de>, Dan Williams <dan.j.williams@intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.o>
+Content-Type: text/plain
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, ran27jit-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Ranjit Waghmode <ranjit.waghmode-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10 June 2015 at 09:30, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Tue, Jun 2, 2015 at 12:14 PM, Tomeu Vizoso
-> <tomeu.vizoso@collabora.com> wrote:
->> On 2 June 2015 at 10:48, Linus Walleij <linus.walleij@linaro.org> wrote:
->
->>> This is what systemd is doing in userspace for starting services:
->>> ask for your dependencies and wait for them if they are not
->>> there. So drivers ask for resources and wait for them. It also
->>> needs to be abstract, so for example we need to be able to
->>> hang on regulator_get() until the driver is up and providing that
->>> regulator, and as long as everything is in slowpath it should
->>> be OK. (And vice versa mutatis mutandis for clk, gpio, pin
->>> control, interrupts (!) and DMA channels for example.)
->>
->> I understood above that you propose probing devices in order, but now
->> you mention that resource getters would block until the dependency is
->> fulfilled which confuses me because if we are probing in order then
->> all dependencies would be fulfilled before the device in question gets
->> probed.
->
-> Sorry, the problem space is a bit convoluted so the answers
-> get a bit convoluted. Maybe I'm thinking aloud and altering the course
-> of my thoughts as I type...
->
-> I guess there can be explicit dependencies for resources like this
-> patch does, but another way would be for all resource fetch functions
-> to be instrumented, so that you do not block until you try to take
-> a resource that is not yet there, e.g.:
->
-> regulator_get(...) -> not available, so:
-> - identify target regulator provider - this will need instrumentation
-> - probe it
->
-> It then turns out the regulator driver is on the i2c bus, so we
-> need to probe the i2c driver:
-> - identify target i2c host for the regulator driver - this will need
->   instrumentation
-> - probe the i2c host driver
->
-> i2c host comes out, probes the regulator driver, regulator driver
-> probes and then the regulator_get() call returns.
+Add bindings documentation for GQSPI controller driver used by
+Zynq Ultrascale+ MPSoC
 
-Hmm, if I understand correctly what you say, this is exactly what this
-particular series does:
+Signed-off-by: Ranjit Waghmode <ranjit.waghmode-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+---
+Changes in v3:
+- Did split in register addressing as per Sorens request
 
-regulator_get -> of_platform_device_ensure -> probe() on the platform
-device that encloses the requested device node (i2c host) -> i2c slave
-gets probed and the regulator registered -> regulator_get returns the
-requested resource
+Changes in v2:
+No changes in v2
+---
+ .../devicetree/bindings/spi/spi-zynqmp-qspi.txt    | 26 ++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/spi-zynqmp-qspi.txt
 
-The downside I'm currently looking at is that an explicit dependency
-graph would be useful to have for other purposes. For example to print
-a neat warning when a dependency cannot be fulfilled. Or to refuse to
-unbind a device which other devices depend on, or to automatically
-unbind the devices that depend on it, or to print a warning if a
-device is hotplugged off and other devices depend on it.
+diff --git a/Documentation/devicetree/bindings/spi/spi-zynqmp-qspi.txt b/Documentation/devicetree/bindings/spi/spi-zynqmp-qspi.txt
+new file mode 100644
+index 0000000..c8f50e5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/spi-zynqmp-qspi.txt
+@@ -0,0 +1,26 @@
++Xilinx Zynq UltraScale+ MPSoC GQSPI controller Device Tree Bindings
++-------------------------------------------------------------------
++
++Required properties:
++- compatible		: Should be "xlnx,zynqmp-qspi-1.0".
++- reg			: Physical base address and size of GQSPI registers map.
++- interrupts		: Property with a value describing the interrupt
++			  number.
++- interrupt-parent	: Must be core interrupt controller.
++- clock-names		: List of input clock names - "ref_clk", "pclk"
++			  (See clock bindings for details).
++- clocks		: Clock phandles (see clock bindings for details).
++
++Optional properties:
++- num-cs		: Number of chip selects used.
++
++Example:
++	qspi: spi@ff0f0000 {
++		compatible = "xlnx,zynqmp-qspi-1.0";
++		clock-names = "ref_clk", "pclk";
++		clocks = <&misc_clk &misc_clk>;
++		interrupts = <0 15 4>;
++		interrupt-parent = <&gic>;
++		num-cs = <1>;
++		reg = <0x0 0xff0f0000 0x1000>,<0x0 0xc0000000 0x8000000>;
++	};
+--
+2.1.2
 
-> This requires instrumentation on anything providing a resource
-> to another driver like those I mentioned and a lot of overhead
-> infrastructure, but I think it's the right approach. However I don't
-> know if I would ever be able to pull that off myself, I know talk
-> is cheap and I should show the code instead.
-
-Yeah, if you can give it a second look and say if it matches what you
-wrote above, it would be very much appreciated.
-
-> Deepest respect for your efforts!
-
-Thanks!
-
-Tomeu
-
-> Yours,
-> Linus Walleij
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> http://lists.freedesktop.org/mailman/listinfo/dri-devel
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
