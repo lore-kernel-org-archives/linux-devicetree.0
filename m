@@ -1,61 +1,74 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v0] gpio_keys: fix gpio key driver to proper support GIC interrupt
-Date: Thu, 11 Jun 2015 01:08:09 +0200
-Message-ID: <1529330.QWrJO7eUSt@wuerfel>
-References: <1433402712-21399-1-git-send-email-yvo@apm.com> <2953428.ar7Re29b0L@wuerfel> <CAL4ahLeMm_Qvk0BWxOYTc973_4=TPjZStgTNe5uJL53FBhMRvg@mail.gmail.com>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH 2/2] drivercore: Fix unregistration path of platform
+ devices
+Date: Thu, 11 Jun 2015 08:38:33 +0900
+Message-ID: <20150610233832.GA1567@katana>
+References: <CAPybu_30jTDuwEW_WTGuu6pWwv86p6OqV0eRE1GbCwUVtBm7KA@mail.gmail.com>
+ <20150608184713.446B7C406AA@trevor.secretlab.ca>
+ <CAPybu_0FfD9dv55SLmy7905yMCV6Kqrr-v2aPUCx6sSikrF7gQ@mail.gmail.com>
+ <20150609110044.61031C40580@trevor.secretlab.ca>
+ <CAMAWPa_CURGm5YTc0OgBD_T3fwaBDskfUKEn+awxW8P6oQYceA@mail.gmail.com>
+ <CAPybu_24X0zZJv6D9i4YM_r7azdnjYrRH=V+p_ong2cFKNrF1w@mail.gmail.com>
+ <CAMAWPa-bGwVCnmv=H=8Zo-NCw-nOFBj3-XcVvb-0m0sNYtPO7g@mail.gmail.com>
+ <CAPybu_2dpcpjPvn-kXaW-yC2OmkNPna+G8PLO-gP1cMBOcU_ew@mail.gmail.com>
+ <20150610154031.GB22214@kroah.com>
+ <CACxGe6ti6Kpski-Q3nv8kAHB4mr=pkQwco4WPJeaUFD1HNjaeg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAL4ahLeMm_Qvk0BWxOYTc973_4=TPjZStgTNe5uJL53FBhMRvg@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Y Vo <yvo@apm.com>
-Cc: linux-input@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Phong Vo <pvo@apm.com>, Toan Le <toanle@apm.com>, Loc Ho <lho@apm.com>, Feng Kan <fkan@apm.com>, patches <patches@apm.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="x+6KMIRAuhnl3hBn"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CACxGe6ti6Kpski-Q3nv8kAHB4mr=pkQwco4WPJeaUFD1HNjaeg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 08 June 2015 09:48:29 Y Vo wrote:
-> On Fri, Jun 5, 2015 at 7:50 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Thursday 04 June 2015 14:25:12 Y Vo wrote:
-> >> GIC is designed to support two of trigger mechanisms - active level
-> >> high or edge rising. But in the gpio_keys driver, it tries to use both
-> >> edge rising and edge falling trigger. This patch fixes the gpio_keys
-> >> driver to request only the edge rising event when failed to configure the
-> >> interrupt.
+
+--x+6KMIRAuhnl3hBn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+> >> This patch from Grant needs to be applied:
 > >>
-> >> Signed-off-by: Y Vo <yvo@apm.com>
+> >> [PATCH 2/2] drivercore: Fix unregistration path of platform devices
 > >
-> > I think you want to use an 'interrupts' property instead of a 'gpios'
-> > property (or possibly both), so you can pass the right polarity.
-> 
->         gpio-keys {
->                 compatible = "gpio-keys";
->                 apm_ctrl_name = "Power Button";
->                 btn2 {
->                         label = "EXT_INT2";
->                         gpios = <&sbgpio 13 0x0>;
->                         linux,code = <116>;
->                         linux,input-type = <0x1>;     /* EV_KEY */
->                 };
->         };
-> 
->          sbgpio: sbgpio@17001000{
->                         compatible = "apm,xgene-gpio-sb";
->                         reg = <0x0 0x17001000 0x0 0x400>;
->                         #gpio-cells = <2>;
->                         gpio-controller;
->                         interrupts =    <0x0 0x28 0x1>,
->                                         <0x0 0x29 0x1>,
->                                         <0x0 0x2a 0x1>,
->                                         <0x0 0x2b 0x1>,
->                                         <0x0 0x2c 0x1>,
->                                         <0x0 0x2d 0x1>;
->                 };
-> I can change the polarity of interrupt in the sbgpio node, but the
-> issue here is the gpio_key driver always set interrupt type to
-> (irqflags = IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING). And the GIC
-> driver only support edge rising or level high. So that's our issue.
+> > I need some acks before I apply anything else as this is a total mess.
+>=20
+> Yes please. Rob, Pantelis, Wolfram. Can you test my patch and provides ac=
+ks?
 
-No, please do as I wrote, and use an interrupts property in the gpio-keys
-node.
+Ah, this is the mail I forgot to write yesterday, sorry. I am on travel
+and can not test before Monday, I am afraid. Will that do?
 
-	Arnd
+Thanks a lot for working on this, though! Much appreciated.
+
+
+--x+6KMIRAuhnl3hBn
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJVeMp4AAoJEBQN5MwUoCm2pDUP/ipfpuvRZDuXT/rBB2kbX4NV
+dzAWgHQL99lONAsAs0SySf76CW+qBJNpN+CqAbpG1c7aJVjiInZIXLLDzM/lfBe0
++1VP5si+7zC4pRdzYAoaaoXm4vwM0230PIlpuaH5vrG200GG0+SvgjEEoD5tQuaN
+O0tRIcHr0BSOjRzN6vv4UST8PSfzdPmc8KoFID09zGea3iFWtzCEyt2pVnDeNcdl
+/QzgOoc/oegNTXR+9rJ4owgdDaHIIrGAd79CNP36HhU7wqgMlbISMAqcNu27HWXR
+9bGHybPxO8eceWZAggcyt08b4WFz4PMhv0UAcmqOQg2nvW//XJB5goP3TgK1xoaj
+zTg4XRnRtNn5Fr3+AS91HA39/HRjW0LkuEKHeEZH0BYfkSVWPl+l7SzYRod5yidI
+7FNl6eqD+i4ho6gXRadvLrUfBpA686h0ztXL8jIxDIyWZ1Ouwqnfa+LmquMsh95c
+hJB3mOHCbuOJxD7Tb2ELqkDcpHGnktwWA15qBcLlAZUfNWjPI4AUZiagP12Xmg+4
+fZMTvX5wPBM54nJngYrfikZsrUIHZNfpEfwU7MMLMTe9b0G4UkfadJ0HGZ6TkljT
+j15wEFMHcRMgRIVuvw2bKnpzzRuwX6JT105cERM4O5XVEPPoOfEMo7reSX3HbldF
+xmVk+8BcmsJTiSXZj5RB
+=E1o+
+-----END PGP SIGNATURE-----
+
+--x+6KMIRAuhnl3hBn--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
