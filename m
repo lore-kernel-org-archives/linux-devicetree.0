@@ -1,50 +1,37 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] added device tree support to gpio-generic driver
-Date: Wed, 10 Jun 2015 10:42:42 +0200
-Message-ID: <CACRpkdbWhtkMgz2qTg1y7AguLQCJXnAoi7gVnFvPb1sR7eES_g@mail.gmail.com>
-References: <1433487062-10647-1-git-send-email-romain.baeriswyl@alitech.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC/PATCH] pinctrl: sh-pfc: Accept standard function, pins and
+ groups properties
+Date: Wed, 10 Jun 2015 10:46:56 +0200
+Message-ID: <CACRpkdZDH_RYsqniA0DOALtcacD4Hn=-5_4QnUCJ0sS6RGUKzA@mail.gmail.com>
+References: <CACRpkda4SBof0EaZVWtEYaeb6j_BGAVj39kje+mBz90eB3qAwQ@mail.gmail.com>
+	<1422390694-12389-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+	<CACRpkda6H7hbgXhmSbgtwOC_8PbHnES5syp-YEp1+V6s5Ym6Cw@mail.gmail.com>
+	<12938873.nmb8Ng8mNb@avalon>
+	<CACRpkdbepTKxMFVpTo7ZmjYE1beF5XOMOQarszaDGojerNQqMg@mail.gmail.com>
+	<CAMuHMdWp4iBGtR2EiYMa03hwJrSOpq9dB==yDgt+OwjCebuFMg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1433487062-10647-1-git-send-email-romain.baeriswyl@alitech.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Romain Baeriswyl <romain.baeriswyl@alitech.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Christian Ruppert <christian.ruppert@alitech.com>, Anton Vorontsov <cbouatmailru@gmail.com>, Rojhalat Ibrahim <imr@rtschenk.de>, abdoulaye berthe <berthe.ab@gmail.com>, Anthony Fee <anthony.fee@emutex.com>, Alexander Shiyan <shc_work@mail.ru>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdWp4iBGtR2EiYMa03hwJrSOpq9dB==yDgt+OwjCebuFMg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niso-UNjuZkX4dYU@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch needs to go to the devicetree list too, see To: on this
-mail.
+On Tue, Jun 9, 2015 at 4:35 PM, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
+> On Fri, Mar 6, 2015 at 11:39 AM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
 
-On Fri, Jun 5, 2015 at 8:51 AM, Romain Baeriswyl
-<romain.baeriswyl@alitech.com> wrote:
+>> This looks good to me, is the patch applicable as it is, or will you rebase
+>> it and send out a non-RFC version?
+>
+> This seems to have fallen through the (ELC?) cracks...
+> What's the status?
 
-> +Required properties:
-> +- compatible : "basic-mmio-gpio" for little endian register access or
-> +               "basic-mmio-gpio-be" for big endian register access
-
-Basic I don't know.
-
-"single-register-gpio" is more to the point, don't you think?
-
-> +- ngpios: Specifies the number of gpio mapped in the register. The value is
-> +          limited to the number of bits of the LONG type.
-
-So if it is 8 for a 32 bit register, does it mean bits 0..7 little endian or
-big endian, or does it depend on endianness? Clarify this
-in the binding.
-
-> +
-> +Optional properties:
-> +- base: Allows to forces the gpio number base offset used to index the gpio in
-> +        the device. If it is not see then the driver search autonoumously for
-> +        valid index range.
-> +
-> +Examples:
-> +
-> +       gpio_a {
-> +               compatible = "basic-mmio-gpio";
-> +               ngpios = <32>;
-> +       };
+Me too. I guess it needs to be rebased by now...
 
 Yours,
 Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
