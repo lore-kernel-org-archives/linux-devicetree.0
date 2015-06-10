@@ -1,53 +1,53 @@
-From: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v2 01/22] usb: add OTG version number in
- usb_otg_descriptor
-Date: Wed, 10 Jun 2015 21:53:37 +0800
-Message-ID: <20150610135336.GA9443@shlinux2>
-References: <20150609135130.GA20453@shlinux1.ap.freescale.net>
- <Pine.LNX.4.44L0.1506091013460.1324-100000@iolanthe.rowland.org>
+From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 3/5] clk: add lpc18xx ccu clk driver
+Date: Wed, 10 Jun 2015 16:02:59 +0200
+Message-ID: <CAGhQ9VwONWTULGUbGuf_2HbLpfU4pp8S49xdtoCcKcm1p=n7hg@mail.gmail.com>
+References: <1432845107-12458-1-git-send-email-manabian@gmail.com>
+	<1432845107-12458-4-git-send-email-manabian@gmail.com>
+	<20150610021315.6017.58085@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44L0.1506091013460.1324-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150610021315.6017.58085@quantum>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 09, 2015 at 10:16:23AM -0400, Alan Stern wrote:
-> On Tue, 9 Jun 2015, Li Jun wrote:
-> 
-> > > > -/* USB_DT_OTG (from OTG 1.0a supplement) */
-> > > > +/* USB_DT_OTG */
-> > > >  struct usb_otg_descriptor {
-> > > >  	__u8  bLength;
-> > > >  	__u8  bDescriptorType;
-> > > >  
-> > > >  	__u8  bmAttributes;	/* support for HNP, SRP, etc */
-> > > > +	struct bcdOTG otg_rev[0];
-> > > 
-> > > why not just __le16 bcdOTG here ?
-> > 
-> > usb_otg_descriptor of OTG 1.0 and 2.0 have different size, if directly add
-> > __le16 bcdOTG here, then it cannot used for OTG 1.0.
-> > I use a zero length array as Peter suggested here for bcdOTG, then the size
-> > of usb_otg_descriptor is still 3(not 5), which is compliant with OTG 1.x, if OTG
-> > 2.0 or later, we can use member of otg_rev to add bcdOTG, then the size
-> > of usb_otg_descriptor + bcdOTG will be 5, in one word, I want to use existing
-> > usb_otg_descriptor struct to cover both OTG 1.x and 2.0
-> 
-> In the end, you may find it is simpler to use two different 
-> structures: usb_otg_descriptor and usb_otg_20_descriptor.  
-> Try it and see.
+Hi Mike,
 
-That should be, I will try your suggested approach, thanks.
 
-Li Jun
-> 
-> Alan Stern
-> 
+> Hi Joachim,
+>
+> If it were me, I would have broken this up into two tables, one for each
+> CCU. In general I would structure the code to reflect the fact that two
+> different IP blocks are being accessed. This isn't a deal breaker but I
+> thought I would mention it in case you want to make the change.
+>
+> Otherwise this series looks good to me. Let me know if you plan a V5
+> submission.
+
+If there is still time for 4.2 and you don't have any more comments on
+how the driver uses the DT bindings I would rather send a follow up
+patch that splits the ccu table for 4.3.
+
+
+> I can take patches #1-4 into the clk tree. Please add my Acked-by to
+> patch #5. I will create an immutable branch to share with the arm-soc
+> tree so that they can take #5 and have access to the dt-bindings
+> headers.
+
+Sounds good. I'll talk to arm-soc team about it. But it isn't critical
+for me to get the DTS changes in for 4.2, but I would be very grateful
+for getting the drivers and headers in for 4.2 so that 4.3 is ready
+and doesn't have any header dependencies for all the driver DTS stuff.
+
+Thanks, Mike.
+
+
+regards,
+Joachim Eastwood
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
