@@ -1,67 +1,58 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 00/21] On-demand device registration
-Date: Wed, 10 Jun 2015 09:30:32 +0200
-Message-ID: <CACRpkdZuSj+S2x1yz6n5PgcRK=3ZCcq_To124b2Y+Oj54aydpg@mail.gmail.com>
-References: <1432565608-26036-1-git-send-email-tomeu.vizoso@collabora.com>
- <CACRpkdasLwMfEHGMRd1X3K_DU7NMPreE8TMwqqDTg8k9wj=wJQ@mail.gmail.com>
- <CAAObsKCP-C+TY8Wkk6bQzxZeGYL9X01trtjxfaYp--ZnH07C+w@mail.gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/2] get pinctrl more flexible for per pin muxing controllers
+Date: Wed, 10 Jun 2015 09:33:20 +0200
+Message-ID: <CACRpkdawFrfzHf+8vMLz07-r4J48bAVibV++K31dNQ+D-85ZMg@mail.gmail.com>
+References: <1430729776-27797-1-git-send-email-ludovic.desroches@atmel.com>
+	<556F01CC.8020305@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAAObsKCP-C+TY8Wkk6bQzxZeGYL9X01trtjxfaYp--ZnH07C+w@mail.gmail.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, dmaengine@vger.kernel.org, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, linux-clk@vger.kernel.org, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, Grant Likely <grant.likely@linaro.org>, Alexander Holler <holler@ahsoftware.de>, Dan Williams <dan.j.williams@intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.o>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <556F01CC.8020305-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBKdW4gMiwgMjAxNSBhdCAxMjoxNCBQTSwgVG9tZXUgVml6b3NvCjx0b21ldS52aXpv
-c29AY29sbGFib3JhLmNvbT4gd3JvdGU6Cj4gT24gMiBKdW5lIDIwMTUgYXQgMTA6NDgsIExpbnVz
-IFdhbGxlaWogPGxpbnVzLndhbGxlaWpAbGluYXJvLm9yZz4gd3JvdGU6Cgo+PiBUaGlzIGlzIHdo
-YXQgc3lzdGVtZCBpcyBkb2luZyBpbiB1c2Vyc3BhY2UgZm9yIHN0YXJ0aW5nIHNlcnZpY2VzOgo+
-PiBhc2sgZm9yIHlvdXIgZGVwZW5kZW5jaWVzIGFuZCB3YWl0IGZvciB0aGVtIGlmIHRoZXkgYXJl
-IG5vdAo+PiB0aGVyZS4gU28gZHJpdmVycyBhc2sgZm9yIHJlc291cmNlcyBhbmQgd2FpdCBmb3Ig
-dGhlbS4gSXQgYWxzbwo+PiBuZWVkcyB0byBiZSBhYnN0cmFjdCwgc28gZm9yIGV4YW1wbGUgd2Ug
-bmVlZCB0byBiZSBhYmxlIHRvCj4+IGhhbmcgb24gcmVndWxhdG9yX2dldCgpIHVudGlsIHRoZSBk
-cml2ZXIgaXMgdXAgYW5kIHByb3ZpZGluZyB0aGF0Cj4+IHJlZ3VsYXRvciwgYW5kIGFzIGxvbmcg
-YXMgZXZlcnl0aGluZyBpcyBpbiBzbG93cGF0aCBpdCBzaG91bGQKPj4gYmUgT0suIChBbmQgdmlj
-ZSB2ZXJzYSBtdXRhdGlzIG11dGFuZGlzIGZvciBjbGssIGdwaW8sIHBpbgo+PiBjb250cm9sLCBp
-bnRlcnJ1cHRzICghKSBhbmQgRE1BIGNoYW5uZWxzIGZvciBleGFtcGxlLikKPgo+IEkgdW5kZXJz
-dG9vZCBhYm92ZSB0aGF0IHlvdSBwcm9wb3NlIHByb2JpbmcgZGV2aWNlcyBpbiBvcmRlciwgYnV0
-IG5vdwo+IHlvdSBtZW50aW9uIHRoYXQgcmVzb3VyY2UgZ2V0dGVycyB3b3VsZCBibG9jayB1bnRp
-bCB0aGUgZGVwZW5kZW5jeSBpcwo+IGZ1bGZpbGxlZCB3aGljaCBjb25mdXNlcyBtZSBiZWNhdXNl
-IGlmIHdlIGFyZSBwcm9iaW5nIGluIG9yZGVyIHRoZW4KPiBhbGwgZGVwZW5kZW5jaWVzIHdvdWxk
-IGJlIGZ1bGZpbGxlZCBiZWZvcmUgdGhlIGRldmljZSBpbiBxdWVzdGlvbiBnZXRzCj4gcHJvYmVk
-LgoKU29ycnksIHRoZSBwcm9ibGVtIHNwYWNlIGlzIGEgYml0IGNvbnZvbHV0ZWQgc28gdGhlIGFu
-c3dlcnMKZ2V0IGEgYml0IGNvbnZvbHV0ZWQuIE1heWJlIEknbSB0aGlua2luZyBhbG91ZCBhbmQg
-YWx0ZXJpbmcgdGhlIGNvdXJzZQpvZiBteSB0aG91Z2h0cyBhcyBJIHR5cGUuLi4KCkkgZ3Vlc3Mg
-dGhlcmUgY2FuIGJlIGV4cGxpY2l0IGRlcGVuZGVuY2llcyBmb3IgcmVzb3VyY2VzIGxpa2UgdGhp
-cwpwYXRjaCBkb2VzLCBidXQgYW5vdGhlciB3YXkgd291bGQgYmUgZm9yIGFsbCByZXNvdXJjZSBm
-ZXRjaCBmdW5jdGlvbnMKdG8gYmUgaW5zdHJ1bWVudGVkLCBzbyB0aGF0IHlvdSBkbyBub3QgYmxv
-Y2sgdW50aWwgeW91IHRyeSB0byB0YWtlCmEgcmVzb3VyY2UgdGhhdCBpcyBub3QgeWV0IHRoZXJl
-LCBlLmcuOgoKcmVndWxhdG9yX2dldCguLi4pIC0+IG5vdCBhdmFpbGFibGUsIHNvOgotIGlkZW50
-aWZ5IHRhcmdldCByZWd1bGF0b3IgcHJvdmlkZXIgLSB0aGlzIHdpbGwgbmVlZCBpbnN0cnVtZW50
-YXRpb24KLSBwcm9iZSBpdAoKSXQgdGhlbiB0dXJucyBvdXQgdGhlIHJlZ3VsYXRvciBkcml2ZXIg
-aXMgb24gdGhlIGkyYyBidXMsIHNvIHdlCm5lZWQgdG8gcHJvYmUgdGhlIGkyYyBkcml2ZXI6Ci0g
-aWRlbnRpZnkgdGFyZ2V0IGkyYyBob3N0IGZvciB0aGUgcmVndWxhdG9yIGRyaXZlciAtIHRoaXMg
-d2lsbCBuZWVkCiAgaW5zdHJ1bWVudGF0aW9uCi0gcHJvYmUgdGhlIGkyYyBob3N0IGRyaXZlcgoK
-aTJjIGhvc3QgY29tZXMgb3V0LCBwcm9iZXMgdGhlIHJlZ3VsYXRvciBkcml2ZXIsIHJlZ3VsYXRv
-ciBkcml2ZXIKcHJvYmVzIGFuZCB0aGVuIHRoZSByZWd1bGF0b3JfZ2V0KCkgY2FsbCByZXR1cm5z
-LgoKVGhpcyByZXF1aXJlcyBpbnN0cnVtZW50YXRpb24gb24gYW55dGhpbmcgcHJvdmlkaW5nIGEg
-cmVzb3VyY2UKdG8gYW5vdGhlciBkcml2ZXIgbGlrZSB0aG9zZSBJIG1lbnRpb25lZCBhbmQgYSBs
-b3Qgb2Ygb3ZlcmhlYWQKaW5mcmFzdHJ1Y3R1cmUsIGJ1dCBJIHRoaW5rIGl0J3MgdGhlIHJpZ2h0
-IGFwcHJvYWNoLiBIb3dldmVyIEkgZG9uJ3QKa25vdyBpZiBJIHdvdWxkIGV2ZXIgYmUgYWJsZSB0
-byBwdWxsIHRoYXQgb2ZmIG15c2VsZiwgSSBrbm93IHRhbGsKaXMgY2hlYXAgYW5kIEkgc2hvdWxk
-IHNob3cgdGhlIGNvZGUgaW5zdGVhZC4KCkRlZXBlc3QgcmVzcGVjdCBmb3IgeW91ciBlZmZvcnRz
-IQoKWW91cnMsCkxpbnVzIFdhbGxlaWoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9kcmktZGV2ZWwK
+On Wed, Jun 3, 2015 at 3:31 PM, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>=
+ wrote:
+> Le 04/05/2015 10:56, Ludovic Desroches a =C3=A9crit :
+>>
+>> The way pins, groups and functions are tied is too constraining for =
+some
+>> controllers. It concerns mainly the ones we don't care about groups =
+and
+>> functions, each pin can be muxed to any functions.
+>> The goal of these two patches is too remove some of the constraints.
+>>
+>> I have added the prototype of a pin controller and device tree to sh=
+ow the
+>> way I want to use these changes. I couldn't test it on boards using =
+generic
+>> pinconf so I am not sure that I don't break something...
+>>
+>>
+>> Ludovic Desroches (4):
+>>   pinctrl: change function behavior for per pin muxing controllers
+>>   pinctrl: introduce complex pin description
+>
+> Linus,
+>
+> Ludovic sent this series nearly one month ago. It was posted after a =
+RFC
+> series on the same topic two months ago. As we don't see any comment =
+on
+> neither of them we assume that it's okay to include them.
+
+It's a quite big patch and I need help reviewing it and thinking of
+some possible consequences.
+
+Stephen, can you give me a hand with this?
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
