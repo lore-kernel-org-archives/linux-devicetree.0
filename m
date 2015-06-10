@@ -1,571 +1,170 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/5] soc: Mediatek: Add SCPSYS power domain driver
-Date: Wed, 10 Jun 2015 14:03:03 +0200
-Message-ID: <CABuKBeJsALg6+HOSyonu4qWpBw88T4uDGRxw9PiH8pVGHj=HFw@mail.gmail.com>
-References: <1433839623-10804-1-git-send-email-s.hauer@pengutronix.de>
-	<1433839623-10804-4-git-send-email-s.hauer@pengutronix.de>
+From: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v2 05/22] doc: dt-binding: usb: add otg related properties
+Date: Wed, 10 Jun 2015 20:06:25 +0800
+Message-ID: <20150610120623.GA7678@shlinux2>
+References: <1433775737-9816-1-git-send-email-jun.li@freescale.com>
+ <1433775737-9816-6-git-send-email-jun.li@freescale.com>
+ <CAL_JsqJ3hHOGevwqcBNFN2LrTP7Bm_k9SDuTNKBbpq5W-eLmdw@mail.gmail.com>
+ <20150609011806.GA7976@shlinux1.ap.freescale.net>
+ <CAL_JsqKg_NYtLGg9RUQOpKscwHEskHO4_Szo_nM3BnrDdhg3fg@mail.gmail.com>
+ <20150609182931.1eda4111@rockdesk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1433839623-10804-4-git-send-email-s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM/Mediatek SoC..." <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, =Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150609182931.1eda4111@rockdesk>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Li Jun-B47624 <Jun.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Chen Peter-B29397 <Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2015-06-09 10:47 GMT+02:00 Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>:
-> This adds a power domain driver for the Mediatek SCPSYS unit.
->
-> The System Control Processor System (SCPSYS) has several power
-> management related tasks in the system. The tasks include thermal
-> measurement, dynamic voltage frequency scaling (DVFS), interrupt
-> filter and lowlevel sleep control. The System Power Manager (SPM)
-> inside the SCPSYS is for the MTCMOS power domain control.
->
-> For now this driver only adds power domain support, the more
-> advanced features are not yet supported. The driver implements
-> the generic PM domain device tree bindings, the first user will
-> most likely be the Mediatek AFE audio driver.
->
-> Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
->  drivers/soc/mediatek/Kconfig             |   9 +
->  drivers/soc/mediatek/Makefile            |   1 +
->  drivers/soc/mediatek/mtk-scpsys.c        | 490 +++++++++++++++++++++++++++++++
->  include/dt-bindings/power/mt8173-power.h |  15 +
->  4 files changed, 515 insertions(+)
->  create mode 100644 drivers/soc/mediatek/mtk-scpsys.c
->  create mode 100644 include/dt-bindings/power/mt8173-power.h
->
-> diff --git a/drivers/soc/mediatek/Kconfig b/drivers/soc/mediatek/Kconfig
-> index e4f37a3..9a61b54 100644
-> --- a/drivers/soc/mediatek/Kconfig
-> +++ b/drivers/soc/mediatek/Kconfig
-> @@ -18,3 +18,12 @@ config MTK_PMIC_WRAP
->           Say yes here to add support for MediaTek PMIC Wrapper found
->           on different MediaTek SoCs. The PMIC wrapper is a proprietary
->           hardware to connect the PMIC.
-> +
-> +config MTK_SCPSYS
-> +       bool "MediaTek SCPSYS Support"
-> +       depends on ARCH_MEDIATEK || COMPILE_TEST
-> +       select REGMAP
-> +       select MTK_INFRACFG
-> +       help
-> +         Say yes here to add support for the MediaTek SCPSYS power domain
-> +         driver.
-> diff --git a/drivers/soc/mediatek/Makefile b/drivers/soc/mediatek/Makefile
-> index 3fa940f..12998b0 100644
-> --- a/drivers/soc/mediatek/Makefile
-> +++ b/drivers/soc/mediatek/Makefile
-> @@ -1,2 +1,3 @@
->  obj-$(CONFIG_MTK_INFRACFG) += mtk-infracfg.o
->  obj-$(CONFIG_MTK_PMIC_WRAP) += mtk-pmic-wrap.o
-> +obj-$(CONFIG_MTK_SCPSYS) += mtk-scpsys.o
-> diff --git a/drivers/soc/mediatek/mtk-scpsys.c b/drivers/soc/mediatek/mtk-scpsys.c
-> new file mode 100644
-> index 0000000..b9eed37
-> --- /dev/null
-> +++ b/drivers/soc/mediatek/mtk-scpsys.c
-> @@ -0,0 +1,490 @@
-> +/*
-> + * Copyright (c) 2015 Pengutronix, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +#include <linux/clk.h>
-> +#include <linux/delay.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_domain.h>
-> +#include <linux/regmap.h>
-> +#include <linux/soc/mediatek/infracfg.h>
-> +#include <dt-bindings/power/mt8173-power.h>
-> +
-> +#define SPM_VDE_PWR_CON                        0x0210
-> +#define SPM_MFG_PWR_CON                        0x0214
-> +#define SPM_VEN_PWR_CON                        0x0230
-> +#define SPM_ISP_PWR_CON                        0x0238
-> +#define SPM_DIS_PWR_CON                        0x023c
-> +#define SPM_VEN2_PWR_CON               0x0298
-> +#define SPM_AUDIO_PWR_CON              0x029c
-> +#define SPM_MFG_2D_PWR_CON             0x02c0
-> +#define SPM_MFG_ASYNC_PWR_CON          0x02c4
-> +#define SPM_USB_PWR_CON                        0x02cc
-> +#define SPM_PWR_STATUS                 0x060c
-> +#define SPM_PWR_STATUS_2ND             0x0610
-> +
-> +#define PWR_RST_B_BIT                  BIT(0)
-> +#define PWR_ISO_BIT                    BIT(1)
-> +#define PWR_ON_BIT                     BIT(2)
-> +#define PWR_ON_2ND_BIT                 BIT(3)
-> +#define PWR_CLK_DIS_BIT                        BIT(4)
-> +
-> +#define PWR_STATUS_DISP                        BIT(3)
-> +#define PWR_STATUS_MFG                 BIT(4)
-> +#define PWR_STATUS_ISP                 BIT(5)
-> +#define PWR_STATUS_VDEC                        BIT(7)
-> +#define PWR_STATUS_VENC_LT             BIT(20)
-> +#define PWR_STATUS_VENC                        BIT(21)
-> +#define PWR_STATUS_MFG_2D              BIT(22)
-> +#define PWR_STATUS_MFG_ASYNC           BIT(23)
-> +#define PWR_STATUS_AUDIO               BIT(24)
-> +#define PWR_STATUS_USB                 BIT(25)
-> +
-> +enum clk_id {
-> +       MT8173_CLK_NONE,
-> +       MT8173_CLK_MM,
-> +       MT8173_CLK_MFG,
-> +       MT8173_CLK_MAX = MT8173_CLK_MFG,
-> +};
-> +
-> +struct scp_domain_data {
-> +       const char *name;
-> +       u32 sta_mask;
-> +       int ctl_offs;
-> +       u32 sram_pdn_bits;
-> +       u32 sram_pdn_ack_bits;
-> +       u32 bus_prot_mask;
-> +       enum clk_id clk_id;
-> +};
-> +
-> +static const struct scp_domain_data scp_domain_data[] __initconst = {
-> +       [MT8173_POWER_DOMAIN_VDEC] = {
-> +               .name = "vdec",
-> +               .sta_mask = PWR_STATUS_VDEC,
-> +               .ctl_offs = SPM_VDE_PWR_CON,
-> +               .sram_pdn_bits = GENMASK(11, 8),
-> +               .sram_pdn_ack_bits = GENMASK(12, 12),
-> +               .clk_id = MT8173_CLK_MM,
-> +       },
-> +       [MT8173_POWER_DOMAIN_VENC] = {
-> +               .name = "venc",
-> +               .sta_mask = PWR_STATUS_VENC,
-> +               .ctl_offs = SPM_VEN_PWR_CON,
-> +               .sram_pdn_bits = GENMASK(11, 8),
-> +               .sram_pdn_ack_bits = GENMASK(15, 12),
-> +               .clk_id = MT8173_CLK_MM,
-> +       },
-> +       [MT8173_POWER_DOMAIN_ISP] = {
-> +               .name = "isp",
-> +               .sta_mask = PWR_STATUS_ISP,
-> +               .ctl_offs = SPM_ISP_PWR_CON,
-> +               .sram_pdn_bits = GENMASK(11, 8),
-> +               .sram_pdn_ack_bits = GENMASK(13, 12),
-> +               .clk_id = MT8173_CLK_MM,
-> +       },
-> +       [MT8173_POWER_DOMAIN_MM] = {
-> +               .name = "mm",
-> +               .sta_mask = PWR_STATUS_DISP,
-> +               .ctl_offs = SPM_DIS_PWR_CON,
-> +               .sram_pdn_bits = GENMASK(11, 8),
-> +               .sram_pdn_ack_bits = GENMASK(12, 12),
-> +               .clk_id = MT8173_CLK_MM,
-> +               .bus_prot_mask = MT8173_TOP_AXI_PROT_EN_MM_M0 |
-> +                       MT8173_TOP_AXI_PROT_EN_MM_M1,
-> +       },
-> +       [MT8173_POWER_DOMAIN_VENC_LT] = {
-> +               .name = "venc_lt",
-> +               .sta_mask = PWR_STATUS_VENC_LT,
-> +               .ctl_offs = SPM_VEN2_PWR_CON,
-> +               .sram_pdn_bits = GENMASK(11, 8),
-> +               .sram_pdn_ack_bits = GENMASK(15, 12),
-> +               .clk_id = MT8173_CLK_MM,
-> +       },
-> +       [MT8173_POWER_DOMAIN_AUDIO] = {
-> +               .name = "audio",
-> +               .sta_mask = PWR_STATUS_AUDIO,
-> +               .ctl_offs = SPM_AUDIO_PWR_CON,
-> +               .sram_pdn_bits = GENMASK(11, 8),
-> +               .sram_pdn_ack_bits = GENMASK(15, 12),
-> +               .clk_id = MT8173_CLK_NONE,
-> +       },
-> +       [MT8173_POWER_DOMAIN_USB] = {
-> +               .name = "usb",
-> +               .sta_mask = PWR_STATUS_USB,
-> +               .ctl_offs = SPM_USB_PWR_CON,
-> +               .sram_pdn_bits = GENMASK(11, 8),
-> +               .sram_pdn_ack_bits = GENMASK(15, 12),
-> +               .clk_id = MT8173_CLK_NONE,
-> +       },
-> +       [MT8173_POWER_DOMAIN_MFG_ASYNC] = {
-> +               .name = "mfg_async",
-> +               .sta_mask = PWR_STATUS_MFG_ASYNC,
-> +               .ctl_offs = SPM_MFG_ASYNC_PWR_CON,
-> +               .sram_pdn_bits = GENMASK(11, 8),
-> +               .sram_pdn_ack_bits = 0,
-> +               .clk_id = MT8173_CLK_MFG,
-> +       },
-> +       [MT8173_POWER_DOMAIN_MFG_2D] = {
-> +               .name = "mfg_2d",
-> +               .sta_mask = PWR_STATUS_MFG_2D,
-> +               .ctl_offs = SPM_MFG_2D_PWR_CON,
-> +               .sram_pdn_bits = GENMASK(11, 8),
-> +               .sram_pdn_ack_bits = GENMASK(13, 12),
-> +               .clk_id = MT8173_CLK_NONE,
-> +       },
-> +       [MT8173_POWER_DOMAIN_MFG] = {
-> +               .name = "mfg",
-> +               .sta_mask = PWR_STATUS_MFG,
-> +               .ctl_offs = SPM_MFG_PWR_CON,
-> +               .sram_pdn_bits = GENMASK(13, 8),
-> +               .sram_pdn_ack_bits = GENMASK(21, 16),
-> +               .clk_id = MT8173_CLK_NONE,
-> +               .bus_prot_mask = MT8173_TOP_AXI_PROT_EN_MFG_S |
-> +                       MT8173_TOP_AXI_PROT_EN_MFG_M0 |
-> +                       MT8173_TOP_AXI_PROT_EN_MFG_M1 |
-> +                       MT8173_TOP_AXI_PROT_EN_MFG_SNOOP_OUT,
-> +       },
-> +};
-> +
-> +#define NUM_DOMAINS    ARRAY_SIZE(scp_domain_data)
-> +
-> +struct scp;
-> +
-> +struct scp_domain {
-> +       struct generic_pm_domain genpd;
-> +       struct scp *scp;
-> +       struct clk *clk;
-> +       u32 sta_mask;
-> +       void __iomem *ctl_addr;
-> +       u32 sram_pdn_bits;
-> +       u32 sram_pdn_ack_bits;
-> +       u32 bus_prot_mask;
-> +};
-> +
-> +struct scp {
-> +       struct scp_domain domains[NUM_DOMAINS];
-> +       struct genpd_onecell_data pd_data;
-> +       struct device *dev;
-> +       void __iomem *base;
-> +       struct regmap *infracfg;
-> +       struct clk *clk[MT8173_CLK_MAX];
-> +};
-> +
-> +static int scpsys_domain_is_on(struct scp_domain *scpd)
-> +{
-> +       struct scp *scp = scpd->scp;
-> +
-> +       u32 status = readl(scp->base + SPM_PWR_STATUS) & scpd->sta_mask;
-> +       u32 status2 = readl(scp->base + SPM_PWR_STATUS_2ND) & scpd->sta_mask;
-> +
-> +       /*
-> +        * A domain is on when both status bits are set. If only one is set
-> +        * return an error. This happens while powering up a domain
-> +        */
-> +
-> +       if (status && status2)
-> +               return true;
-> +       if (!status && !status2)
-> +               return false;
-> +
-> +       return -EINVAL;
-> +}
-> +
-> +static int scpsys_power_on(struct generic_pm_domain *genpd)
-> +{
-> +       struct scp_domain *scpd = container_of(genpd, struct scp_domain, genpd);
-> +       struct scp *scp = scpd->scp;
-> +       unsigned long timeout;
-> +       bool expired;
-> +       void __iomem *ctl_addr = scpd->ctl_addr;
-> +       u32 sram_pdn_ack = scpd->sram_pdn_ack_bits;
-> +       u32 val;
-> +       int ret;
-> +
-> +       if (scpd->clk) {
-> +               ret = clk_prepare_enable(scpd->clk);
-> +               if (ret)
-> +                       return ret;
-> +       }
-> +
-> +       val = readl(ctl_addr);
-> +       val |= PWR_ON_BIT;
-> +       writel(val, ctl_addr);
-> +       val |= PWR_ON_2ND_BIT;
-> +       writel(val, ctl_addr);
-> +
-> +       /* wait until PWR_ACK = 1 */
-> +       timeout = jiffies + HZ;
-> +       expired = false;
-> +       while (1) {
-> +               ret = scpsys_domain_is_on(scpd);
-> +               if (ret > 0)
-> +                       break;
-> +
-> +               if (expired) {
-> +                       ret = -ETIMEDOUT;
-> +                       goto out;
-> +               }
-> +
-> +               cpu_relax();
-> +
-> +               if (time_after(jiffies, timeout))
-> +                       expired = true;
-> +       }
-> +
-> +       val &= ~PWR_CLK_DIS_BIT;
-> +       writel(val, ctl_addr);
-> +
-> +       val &= ~PWR_ISO_BIT;
-> +       writel(val, ctl_addr);
-> +
-> +       val |= PWR_RST_B_BIT;
-> +       writel(val, ctl_addr);
-> +
-> +       val &= ~scpd->sram_pdn_bits;
-> +       writel(val, ctl_addr);
-> +
-> +       /* wait until SRAM_PDN_ACK all 0 */
-> +       timeout = jiffies + HZ;
-> +       expired = false;
-> +       while (sram_pdn_ack && (readl(ctl_addr) & sram_pdn_ack)) {
-> +
-> +               if (expired) {
-> +                       ret = -ETIMEDOUT;
-> +                       goto out;
-> +               }
-> +
-> +               cpu_relax();
-> +
-> +               if (time_after(jiffies, timeout))
-> +                       expired = true;
-> +       }
-> +
-> +       if (scpd->bus_prot_mask) {
-> +               ret = mtk_infracfg_clear_bus_protection(scp->infracfg,
-> +                               scpd->bus_prot_mask);
-> +               if (ret)
-> +                       return ret;
-> +       }
-> +
-> +       return 0;
-> +out:
-> +       dev_err(scp->dev, "Failed to power on domain %s\n", genpd->name);
-> +
-> +       return ret;
-> +}
-> +
-> +static int scpsys_power_off(struct generic_pm_domain *genpd)
-> +{
-> +       struct scp_domain *scpd = container_of(genpd, struct scp_domain, genpd);
-> +       struct scp *scp = scpd->scp;
-> +       unsigned long timeout;
-> +       bool expired;
-> +       void __iomem *ctl_addr = scpd->ctl_addr;
-> +       u32 pdn_ack = scpd->sram_pdn_ack_bits;
-> +       u32 val;
-> +       int ret;
-> +
-> +       if (scpd->bus_prot_mask) {
-> +               ret = mtk_infracfg_set_bus_protection(scp->infracfg,
-> +                               scpd->bus_prot_mask);
-> +               if (ret)
-> +                       return ret;
-> +       }
-> +
-> +       val = readl(ctl_addr);
-> +       val |= scpd->sram_pdn_bits;
-> +       writel(val, ctl_addr);
-> +
-> +       /* wait until SRAM_PDN_ACK all 1 */
-> +       timeout = jiffies + HZ;
-> +       expired = false;
-> +       while (pdn_ack && (readl(ctl_addr) & pdn_ack) != pdn_ack) {
-> +               if (expired) {
-> +                       ret = -ETIMEDOUT;
-> +                       goto out;
-> +               }
-> +
-> +               cpu_relax();
-> +
-> +               if (time_after(jiffies, timeout))
-> +                       expired = true;
-> +       }
-> +
-> +       val |= PWR_ISO_BIT;
-> +       writel(val, ctl_addr);
-> +
-> +       val &= ~PWR_RST_B_BIT;
-> +       writel(val, ctl_addr);
-> +
-> +       val |= PWR_CLK_DIS_BIT;
-> +       writel(val, ctl_addr);
-> +
-> +       val &= ~PWR_ON_BIT;
-> +       writel(val, ctl_addr);
-> +
-> +       val &= ~PWR_ON_2ND_BIT;
-> +       writel(val, ctl_addr);
-> +
-> +       /* wait until PWR_ACK = 0 */
-> +       timeout = jiffies + HZ;
-> +       expired = false;
-> +       while (1) {
-> +               ret = scpsys_domain_is_on(scpd);
-> +               if (ret == 0)
-> +                       break;
-> +
-> +               if (expired) {
-> +                       ret = -ETIMEDOUT;
-> +                       goto out;
-> +               }
-> +
-> +               cpu_relax();
-> +
-> +               if (time_after(jiffies, timeout))
-> +                       expired = true;
-> +       }
-> +
-> +       if (scpd->clk)
-> +               clk_disable_unprepare(scpd->clk);
-> +
-> +       return 0;
-> +
-> +out:
-> +       dev_err(scp->dev, "Failed to power off domain %s\n", genpd->name);
-> +
-> +       return ret;
-> +}
-> +
-> +static int __init scpsys_probe(struct platform_device *pdev)
-> +{
-> +       struct genpd_onecell_data *pd_data;
-> +       struct resource *res;
-> +       int i, ret;
-> +       struct scp *scp;
-> +
-> +       scp = devm_kzalloc(&pdev->dev, sizeof(*scp), GFP_KERNEL);
-> +       if (!scp)
-> +               return -ENOMEM;
-> +
-> +       scp->dev = &pdev->dev;
-> +
-> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +       scp->base = devm_ioremap_resource(&pdev->dev, res);
-> +       if (IS_ERR(scp->base))
-> +               return PTR_ERR(scp->base);
-> +
-> +       pd_data = &scp->pd_data;
-> +
-> +       pd_data->domains = devm_kzalloc(&pdev->dev,
-> +                       sizeof(*pd_data->domains) * NUM_DOMAINS, GFP_KERNEL);
-> +       if (!pd_data->domains)
-> +               return -ENOMEM;
-> +
-> +       scp->clk[MT8173_CLK_MM] = devm_clk_get(&pdev->dev, "mm");
-> +       if (IS_ERR(scp->clk[MT8173_CLK_MM])) {
-> +               dev_err(&pdev->dev, "Failed to get mm clk: %ld\n",
-> +                               PTR_ERR(scp->clk[MT8173_CLK_MM]));
-> +               return PTR_ERR(scp->clk[MT8173_CLK_MM]);
-> +       }
-> +
-> +       scp->clk[MT8173_CLK_MFG] = devm_clk_get(&pdev->dev, "mfg");
-> +       if (IS_ERR(scp->clk[MT8173_CLK_MFG])) {
-> +               dev_err(&pdev->dev, "Failed to get mfg clk: %ld\n",
-> +                               PTR_ERR(scp->clk[MT8173_CLK_MFG]));
-> +               return PTR_ERR(scp->clk[MT8173_CLK_MFG]);
-> +       }
-> +
-> +       scp->infracfg = syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
-> +                       "infracfg");
-> +       if (IS_ERR(scp->infracfg)) {
-> +               dev_err(&pdev->dev, "Cannot find infracfg controller: %ld\n",
-> +                               PTR_ERR(scp->infracfg));
-> +               return PTR_ERR(scp->infracfg);
-> +       }
-> +
-> +       pd_data->num_domains = NUM_DOMAINS;
-> +
-> +       for (i = 0; i < NUM_DOMAINS; i++) {
-> +               struct scp_domain *scpd = &scp->domains[i];
-> +               struct generic_pm_domain *genpd = &scpd->genpd;
-> +               const struct scp_domain_data *data = &scp_domain_data[i];
-> +
-> +               pd_data->domains[i] = genpd;
-> +               scpd->scp = scp;
-> +
-> +               scpd->sta_mask = data->sta_mask;
-> +               scpd->ctl_addr = scp->base + data->ctl_offs;
-> +               scpd->sram_pdn_bits = data->sram_pdn_bits;
-> +               scpd->sram_pdn_ack_bits = data->sram_pdn_ack_bits;
-> +               scpd->bus_prot_mask = data->bus_prot_mask;
-> +               if (data->clk_id != MT8173_CLK_NONE)
-> +                       scpd->clk = scp->clk[data->clk_id];
-> +
-> +               genpd->name = data->name;
-> +               genpd->power_off = scpsys_power_off;
-> +               genpd->power_on = scpsys_power_on;
-> +
-> +               /*
-> +                * Initially turn on all domains to make the domains usable
-> +                * with !CONFIG_PM and to get the hardware in sync with the
-> +                * software.  The unused domains will be switched off during
-> +                * late_init time.
-> +                */
-> +               genpd->power_on(genpd);
-> +
-> +               pm_genpd_init(genpd, NULL, false);
-> +       }
-> +
-> +       /*
-> +        * We are not allowed to fail here since there is no way to unregister
-> +        * a power domain. Once registered above we have to keep the domains
-> +        * valid.
-> +        */
-> +
-> +       ret = pm_genpd_add_subdomain(pd_data->domains[MT8173_POWER_DOMAIN_MFG_ASYNC],
-> +               pd_data->domains[MT8173_POWER_DOMAIN_MFG_2D]);
-> +       if (ret && IS_ENABLED(CONFIG_PM))
-> +               dev_err(&pdev->dev, "Failed to add subdomain: %d\n", ret);
-> +
-> +       ret = pm_genpd_add_subdomain(pd_data->domains[MT8173_POWER_DOMAIN_MFG_2D],
-> +               pd_data->domains[MT8173_POWER_DOMAIN_MFG]);
-> +       if (ret && IS_ENABLED(CONFIG_PM))
-> +               dev_err(&pdev->dev, "Failed to add subdomain: %d\n", ret);
-> +
-> +       ret = of_genpd_add_provider_onecell(pdev->dev.of_node, pd_data);
-> +       if (ret)
-> +               dev_err(&pdev->dev, "Failed to add OF provider: %d\n", ret);
-> +
-> +       return 0;
-> +}
-> +
-> +static const struct of_device_id of_scpsys_match_tbl[] = {
-> +       {
-> +               .compatible = "mediatek,mt8173-scpsys",
-> +       }, {
-> +               /* sentinel */
-> +       }
-> +};
-> +
-> +static struct platform_driver scpsys_drv = {
-> +       .driver = {
-> +               .name = "mtk-scpsys",
-> +               .owner = THIS_MODULE,
-> +               .of_match_table = of_match_ptr(of_scpsys_match_tbl),
-> +       },
-> +};
-> +
-> +module_platform_driver_probe(scpsys_drv, scpsys_probe);
+On Tue, Jun 09, 2015 at 11:29:31PM +0800, Roger Quadros wrote:
+> Rob,
+> 
+> On Tue, 9 Jun 2015 08:26:20 -0500
+> Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> 
+> > On Mon, Jun 8, 2015 at 8:18 PM, Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> > > On Mon, Jun 08, 2015 at 11:06:49AM -0500, Rob Herring wrote:
+> > >> On Mon, Jun 8, 2015 at 10:02 AM, Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> > >> > Add otg version, srp, hnp and adp support for usb OTG port, then those OTG
+> > >> > features don't have to be decided by usb gadget drivers.
+> > >> >
+> > >> > Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > >> > ---
+> > >> >  Documentation/devicetree/bindings/usb/generic.txt | 10 ++++++++++
+> > >> >  1 file changed, 10 insertions(+)
+> > >> >
+> > >> > diff --git a/Documentation/devicetree/bindings/usb/generic.txt b/Documentation/devicetree/bindings/usb/generic.txt
+> > >> > index 477d5bb..7386f4a 100644
+> > >> > --- a/Documentation/devicetree/bindings/usb/generic.txt
+> > >> > +++ b/Documentation/devicetree/bindings/usb/generic.txt
+> > >> > @@ -11,6 +11,12 @@ Optional properties:
+> > >> >                         "peripheral" and "otg". In case this attribute isn't
+> > >> >                         passed via DT, USB DRD controllers should default to
+> > >> >                         OTG.
+> > >> > + - otg-rev: tells usb driver the release number of the OTG and EH supplement
+> > >> > +                       with which the device and its descriptors are compliant,
+> > >> > +                       in binary-coded decimal (i.e. 2.0 is 0200H).
+> > >>
+> > >> I would assume OTG 2.0 is somehow backwards compatible? Is this a h/w
+> > >> dependency or a driver feature?
+> > >>
+> > > Not fully compatible, OTG 2.0 extend the usb_otg_descriptor by adding a new
+> > > member bcdOTG to identify the OTG version, this descriptor needs to be sent
+> > > to OTG host with correct size and content, so we have to know which release
+> > > version the OTG device is compliant with, either by menuconfig config or pass
+> > > via DT.
+> > 
+> > So you have to change the version depending on the host you are
+> > connected to? That really seems strange that plugging in a OTG 2.0
+> > device to an OTG 1.3 host would not work and doesn't make for a good
+> > user experience.
+> 
+> No. The OTG version in the OTG descriptor for any device is usually fixed for the
+> lifetime of the product.
+> 
+> Let's assume it is 2.0.
+> 
+> If you plug this to OTG 1.0 host, it won't be an issue as OTG 1.0 host doesn't
+> read the BCD version.
+> 
+But OTG 1.0 host will send a 1.x specific OTG request for the 2.0 device.
 
-I saw builtin_platform_driver_probe() is in linux-next, so I suppose
-it is fine to change this.
-Apart from that the series look good to me.
+> > 
+> > >> > + - srp-support: tells OTG controllers we want to enable SRP.
+> > >> > + - hnp-support: tells OTG controllers we want to enable HNP.
+> > >> > + - adp-support: tells OTG controllers we want to enable ADP.
+> > >>
+> > >> I've recently run into a problem[1] and found that I have to disable
+> > >> OTG in the kernel to get my device to work. Having to turn-off OTG
+> > >> seems like the wrong solution, and shifting the problem to DT seems
+> > >> wrong too. Why is this not a user configurable option (within whatever
+> > >> h/w constraints there are)?
+> > > The problem of below link, seems your device is claiming it's a HNP capable
+> > > OTG device, but connecting to a non-OTG port of your Host, assume your Host
+> > > does have a OTG port, your Host issue a A_ALT_HNP_SUPPORT request to your
+> > > OTG device to remind it can use another port with HNP, but the request failed
+> > > (maybe STALL by your device, this request is defined in OTG 1.3 but obsolete
+> > > in OTG 2.0), so your Host just stopped enumeration of your device, this is not
+> > > reasonable because current OTG code is some out of data.
+> > 
+> > Do PCs have OTG ports typically? My expectation is that if I plug in
+> > an OTG device as a B device to any host port, that it will work as a
+> > device no matter what the host OTG capabilities are. If I have to
+> > change the kernel config or DT, that is a problem.
+> 
+> AFAIK PCs don't have OTG ports.
+> 
+> If you plug in OTG device to a non-otg host port it will work as normal B-device.
+> The host doesn't request for OTG descriptors and doesn't care what OTG features it
+> supports or not.
+> 
+This is not true in OTG 1.x and our current code, the host still request for
+OTG descriptor and check if HNP is supported by it if CONFIG_USB_OTG is enabled
+for the host.
 
-Thanks,
-Matthias
+> > 
+> > > I am trying to make those OTG feaures to be configurable options, you mean
+> > > by sys?
+> > 
+> > Yes.
+> 
+> why do you need OTG features to be sysfs configurable other than for debugging?
+> 
+> > 
+> > >> What are the valid combinations? When do we want these enabled or not?
+> > >> Wouldn't default enabled be better?
+> > >
+> > > We want to enable all those support in kernel driver, but some platform or
+> > > hardware may not want to enable any or some of them, so those hardware
+> > > can disable it by not pass the property in dt, the 3 sub features of OTG are
+> > > not mandatory for so called OTG device, normally we at least enable HNP, and
+> > > SRP and ADP are optional.
+> > 
+> > Please answer my questions in the doc.
+> > 
+> > >>
+> > >> We already have dr_mode property. How is it related to these?
+> 
+> dr_mode states what mode the controller will operate in.
+> 
+> for dr_mode == "host" we don't care about these otg flags.
+> 
+> for dr_mode == "peripheral" or dr_mode == "otg"
+> we care about these OTG flags to create our OTG descriptor on the fly.
+> 
+
+Yes.
+
+> > >
+> > > dr_mode is to tell the device it will work at OTG mode(there is another simple
+> > > dual role mode which is commom used but not HNP), srp/hnp/adp can further specify
+> > > which protocol the OTG device will support.
+> > 
+> > By simple DR, you mean ID pin detect, right. So please define how you
+> > support just ID pin detect vs. other levels of capability. Does only
+> > dr_mode = otg mean ID pin detect? That may be a problem for existing
+> > DTs if you disable other OTG functions because they have not been
+> > added to the DT, then that is a problem.
+> > 
+> > I'm feeling less convinced that this belongs in DT at all. Please
+> > convince me otherwise.
+> 
+> Yes not specifying anything in DT should work and default to the
+> best OTG version and features supported by the OTG controller.
+> 
+> But if the device manufacturer wants to restrict the OTG version
+> to something less or disable some OTG features then the DT flags come
+> into play.
+> 
+agree.
+
+> cheers,
+> -roger
+
+Li Jun
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
