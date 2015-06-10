@@ -1,110 +1,60 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: [REBASED 4/5] dt: regulator: pwm-regulator: Re-write bindings
-Date: Wed, 10 Jun 2015 08:57:52 +0100
-Message-ID: <1433923073-907-5-git-send-email-lee.jones@linaro.org>
-References: <1433923073-907-1-git-send-email-lee.jones@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1433923073-907-1-git-send-email-lee.jones@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: kernel@stlinux.com, broonie@kernel.org, lgirdwood@gmail.com, Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org
+From: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH v2 0/3] Add code to release secondary cores from holding
+ pen.
+Date: Wed, 10 Jun 2015 10:03:15 +0200
+Message-ID: <5577EF43.6020600@st.com>
+References: <1433856824-30689-1-git-send-email-peter.griffin@linaro.org> <7hd214sx9b.fsf@deeprootsystems.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <7hd214sx9b.fsf-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Add support for continuous-voltage mode
-* Put more meat on the bones with regards to voltage-table mode
-* Sort out formatting for ease of consumption
+Hi Kevin,
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- .../bindings/regulator/pwm-regulator.txt           | 66 ++++++++++++++++++----
- 1 file changed, 54 insertions(+), 12 deletions(-)
+On 06/09/2015 05:43 PM, Kevin Hilman wrote:
+> Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> writes:
+>
+>> Hi Maxime, Patrice, Srini, Kevin, Olof & Arnd,
+>>
+>> This patchset adds in the necessary code to manage the holding pen for STi
+>> platforms.
+>>
+>> Due to all the STi upstream devs using JTAG to boot the STi boards, there
+>> is currently a SMP bug when booting upstream kernels via u-boot where
+>> only the primary core is brought up.
+>>
+>> This hasn't been noticed until now because when booting via JTAG the
+>> stlinux_arm_boot script sets the PC of the secondary cores directly.
+>>
+>> With these patches applied booting via u-boot now works correctly.
+>>
+>> [    0.045456] CPU: Testing write buffer coherency: ok
+>> [    0.045597] CPU0: thread -1, cpu 0, socket 0, mpidr 80000000
+>> [    0.045734] Setting up static identity map for 0x40209000 - 0x40209098
+>> [    0.065047] CPU1: thread -1, cpu 1, socket 0, mpidr 80000001
+>> [    0.065081] Brought up 2 CPUs
+>> [    0.065089] SMP: Total of 2 processors activated (5983.43 BogoMIPS).
+>> [    0.065092] CPU: All CPU(s) started in SVC mode.
+>>
+>> Kevin / Olof / Arnd - Can you put this fix into the next ARM SoC fixes pull
+>> request (if there is one)?
+> At this stage of the cycle (we're already at -rc7) we limit things to
+> strictly regression fixes, and seems this has been broken for some time,
+> so I think this will have to wait for v4.2.
+>
+> After addresing the comments, Maxime should queue this up for arm-soc so
+> we can get it in early in the v4.2-rc cycle.
 
-diff --git a/Documentation/devicetree/bindings/regulator/pwm-regulator.txt b/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
-index ce91f61..0ae7895 100644
---- a/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
-@@ -1,27 +1,69 @@
--pwm regulator bindings
-+Bindings for the Generic PWM Regulator
-+======================================
-+
-+Currently supports 2 modes of operation:
-+
-+voltage-table:		When in this mode, a voltage table (See below) of predefined
-+			voltage <=> duty-cycle values must be provided via DT.
-+			Limitations are that the regulator can only operate at the
-+			voltages supplied in the table.  Intermediary duty-cycle
-+			values which would normally allow finer grained voltage
-+			selection are ignored and rendered useless.  Although more
-+			control is given to the user if the assumptions made in
-+			continuous-voltage mode do not reign true.
-+
-+continuous-voltage:	This mode uses the regulator's maximum and minimum supplied
-+			voltages specified in the regulator-{min,max}-microvolt
-+			properties to calculate appropriate duty-cycle values.  This
-+			allows for a much more fine grained solution when compared
-+			with voltage-table mode above.  This solution does make an
-+			assumption that a %50 duty-cycle value will cause the
-+			regulator voltage to run at half way between the supplied
-+			max_uV and min_uV values.
- 
- Required properties:
--- compatible: Should be "pwm-regulator"
--- pwms: OF device-tree PWM specification (see PWM binding pwm.txt)
--- voltage-table: voltage and duty table, include 2 members in each set of
--  brackets, first one is voltage(unit: uv), the next is duty(unit: percent)
-+--------------------
-+- compatible:		Should be "pwm-regulator"
-+
-+- pwms:			PWM specification (See: ../pwm/pwm.txt)
-+
-+One of these must be provided:
-+- voltage-table: 	Voltage and Duty-Cycle table consisting of 2 cells
-+			    First cell is voltage in microvolts (uV)
-+			    Second cell is duty-cycle in percent (%)
-+
-+- max-duty-cycle:	Maximum Duty-Cycle value -- this will normally be 255 (0xff)
-+			for an 8 bit PWM device
- 
--Any property defined as part of the core regulator binding defined in
--regulator.txt can also be used.
-+If both are provided, the current default is voltage-table mode.
- 
--Example:
-+Any property defined as part of the core regulator binding can also be used.
-+(See: ../regulator/regulator.txt)
-+
-+Continuous Voltage Example:
- 	pwm_regulator {
- 		compatible = "pwm-regulator;
- 		pwms = <&pwm1 0 8448 0>;
-+		regulator-min-microvolt = <1016000>;
-+		regulator-max-microvolt = <1114000>;
-+		regulator-name = "vdd_logic";
-+
-+		max-duty-cycle = <255>; /* 8bit PWM */
-+	};
- 
-+Voltage Table Example:
-+	pwm_regulator {
-+		compatible = "pwm-regulator;
-+		pwms = <&pwm1 0 8448 0>;
-+		regulator-min-microvolt = <1016000>;
-+		regulator-max-microvolt = <1114000>;
-+		regulator-name = "vdd_logic";
-+
-+			      /* Voltage Duty-Cycle */
- 		voltage-table = <1114000 0>,
- 				<1095000 10>,
- 				<1076000 20>,
- 				<1056000 30>,
- 				<1036000 40>,
- 				<1016000 50>;
--
--		regulator-min-microvolt = <1016000>;
--		regulator-max-microvolt = <1114000>;
--		regulator-name = "vdd_logic";
- 	};
--- 
-1.9.1
+Ok, I will take it for v4.2-rc cycle.
+
+Thanks,
+Maxime
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
