@@ -1,47 +1,56 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4] ARM: l2c: add options to overwrite prefetching
- behavior
-Date: Wed, 10 Jun 2015 17:21:00 +0200
-Message-ID: <20150610172100.230c0e71@free-electrons.com>
-References: <1432941541-18588-1-git-send-email-hauke@hauke-m.de>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 2/2] drivercore: Fix unregistration path of platform
+ devices
+Date: Wed, 10 Jun 2015 08:34:49 -0700
+Message-ID: <20150610153449.GA22214@kroah.com>
+References: <1433686811-12303-1-git-send-email-grant.likely@linaro.org>
+ <1433686811-12303-3-git-send-email-grant.likely@linaro.org>
+ <CAPybu_30jTDuwEW_WTGuu6pWwv86p6OqV0eRE1GbCwUVtBm7KA@mail.gmail.com>
+ <20150608184713.446B7C406AA@trevor.secretlab.ca>
+ <CAPybu_0FfD9dv55SLmy7905yMCV6Kqrr-v2aPUCx6sSikrF7gQ@mail.gmail.com>
+ <20150609110044.61031C40580@trevor.secretlab.ca>
+ <CAMAWPa_CURGm5YTc0OgBD_T3fwaBDskfUKEn+awxW8P6oQYceA@mail.gmail.com>
+ <CAPybu_24X0zZJv6D9i4YM_r7azdnjYrRH=V+p_ong2cFKNrF1w@mail.gmail.com>
+ <CAMAWPa-bGwVCnmv=H=8Zo-NCw-nOFBj3-XcVvb-0m0sNYtPO7g@mail.gmail.com>
+ <CAPybu_2dpcpjPvn-kXaW-yC2OmkNPna+G8PLO-gP1cMBOcU_ew@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1432941541-18588-1-git-send-email-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Gregory =?UTF-8?B?Q2zDqW1lbnQ=?= <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAPybu_2dpcpjPvn-kXaW-yC2OmkNPna+G8PLO-gP1cMBOcU_ew@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+Cc: Kevin Hilman <khilman@kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robherring2@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh@kernel.org>, Tyler Baker <tyler.baker@linaro.org>, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-Dear Hauke Mehrtens,
-
-On Sat, 30 May 2015 01:19:01 +0200, Hauke Mehrtens wrote:
-> These options make it possible to overwrites the data and instruction
-> prefetching behavior of the arm pl310 cache controller.
+On Wed, Jun 10, 2015 at 04:46:33PM +0200, Ricardo Ribalda Delgado wrote:
+> Hello Greg
 > 
-> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+> On Wed, Jun 10, 2015 at 4:38 PM, Kevin Hilman <khilman@kernel.org> wrote:
+> > On Wed, Jun 10, 2015 at 12:11 AM, Ricardo Ribalda Delgado
+> 
+> > At this stage of the cycle (merge window opening soon, maintainers
+> > trying to stabilize their stuff for Linus) we want to see linux-next
+> > approaching some level of stability.
+> 
+> Please revert
+> 
+> base/platform: Only insert MEM and IO resources
+> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/commit/?id=36d4b29260753ad78b1ce4363145332c02519adc
+> base/platform: Continue on insert_resource() error
+> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/commit/?id=e50e69d1ac4232af0b6890f16929bf5ceee81538
+> of/platform: Use platform_device interface
+> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/commit/?id=b6d2233f2916fa9338786aeab2e936c5a07e4d0c
+> base/platform: Remove code duplication
+> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/commit/?id=6d9d4b1469b0d9748145e168fc9ec585e1f3f4b0
 
-This patch would be useful to me. I'll test it tomorrow. Did you submit
-it into the Russell patch tracking system, as Russell suggested to do
-in his reply on your v3 ?
+Revert these in the reverse order, right?
 
-Russell said:
+And git commit ids would be all that I need, not a URL, can't do much
+with that :)
 
-"""
-I don't see anything wrong with it, but as ever, it needs to end up in
-the patch system if it's not going to get buried beneath a huge pile of
-email.
-"""
+I'll go do that now...
 
-Thanks,
+thanks,
 
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+greg k-h
