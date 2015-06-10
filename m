@@ -1,41 +1,154 @@
-From: fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Subject: [PATCH non-pretimeout 6/7] Watchdog: enable ACPI GTDT support for ARM SBSA watchdog driver
-Date: Thu, 11 Jun 2015 01:47:31 +0800
-Message-ID: <1433958452-23721-7-git-send-email-fu.wei@linaro.org>
+From: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 5/7] Watchdog: introduce ARM SBSA watchdog driver
+Date: Thu, 11 Jun 2015 01:54:22 +0800
+Message-ID: <CADyBb7tMLjcco76GVu9O+GiDOrH4t2UirgxzAGb_jr253FV6RA@mail.gmail.com>
 References: <=fu.wei@linaro.org>
- <1433958452-23721-1-git-send-email-fu.wei@linaro.org>
+	<1433217907-928-1-git-send-email-fu.wei@linaro.org>
+	<1433217907-928-6-git-send-email-fu.wei@linaro.org>
+	<556DCC95.806@codeaurora.org>
+	<CADyBb7sXiMNtrH+Eu1Qj00TPNLMMr5cCTPObzFmKnHLsbWH79Q@mail.gmail.com>
+	<556DE2D5.3090906@roeck-us.net>
+	<CADyBb7uT=gFJkK8s-QF1n4Z+Zov9Lurp1nvBO-C-qszTqbMYXQ@mail.gmail.com>
+	<5575DE48.8010308@roeck-us.net>
+	<CADyBb7sYPnvDVEJYVQm65B1JV=yvq10+ezs2x3f8F=TJCZ+OJA@mail.gmail.com>
+	<55766D74.2060401@roeck-us.net>
+	<CADyBb7vR-jP6ZjzMSnprrSXbNayk8umx+cXV3TsGypfhZcCwTw@mail.gmail.com>
+	<55769E0E.8060801@roeck-us.net>
+	<CADyBb7skpSZ=3_ByW-RHM99=nbs7Z5xXFXtsKzkxOXAGjxF=3Q@mail.gmail.com>
+	<557712CF.8010802@roeck-us.net>
+	<5577147B.2030900@codeaurora.org>
+	<5577180E.4070804@roeck-us.net>
+	<CADyBb7sVd5nLwb3eHRPiNt-WTynfaJonOyuE_bD694dayyvevA@mail.gmail.com>
+	<CADyBb7tSkdRc0GHbX_vAdDAeFGVS=CFCdC_jMCm5LYmg9m1Qow@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1433958452-23721-1-git-send-email-fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <CADyBb7tSkdRc0GHbX_vAdDAeFGVS=CFCdC_jMCm5LYmg9m1Qow-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org, linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, leo.duran-5C7GfCeVMHo@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Linaro ACPI Mailman List <linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Fu <tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, G Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Vipul Gandhi <vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Leo Duran <leo.duran-5C7GfCeVMHo@public.gmane.org>, Jon Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Hi Guenter,
 
-This patch enables ACPI GTDT support for ARM SBSA
-watchdog driver automatically, if ACPI support is enabled.
+On 10 June 2015 at 23:38, Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> Hi Guenter,
+>
+>
+> On 10 June 2015 at 11:41, Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> Hi Guenter,
+>>
+>> On 10 June 2015 at 00:45, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
+>>> On 06/09/2015 09:29 AM, Timur Tabi wrote:
+>>>>
+>>>> On 06/09/2015 11:22 AM, Guenter Roeck wrote:
+>>>>>
+>>>>>
+>>>>>
+>>>>> but I see your point. Essentially, the specification is broken
+>>>>> for all practical purposes, since, as you point out, enabling
+>>>>> the watchdog overwrites and explicitly sets WCV. Effectively
+>>>>> this means that just using WCV to program the timeout period
+>>>>> is not really possible.
+>>>>>
+>>>>> I am not really sure how to address this. We can either only use WOR,
+>>>>> and forget about pretimeout, or we can enforce a minimum pretimeout.
+>>>>> In the latter case, we'll have to write WCV after writing WOR.
+>>>>
+>>>>
+>>>> In talking with our hardware engineers, using WCV to program the timeout
+>>>> period is not a valid operation.  This is why I keep arguing against the
+>>>> pre-timeout feature, and I don't agree that servers should always use
+>>>> pre-timeout.
+>>>>
+>>>
+>>> Not sure if "not valid" is correct - after all, it is mentioned in the
+>>> specification. However, it is at the very least fragile.
+>>
+>> I think we should focus on SBSA spec, but not a specific chip design,
+>> because this is SBSA watchdog, not a driver for an IP core from a
+>> specific chip vendor.
+>> this operation is mentioned in the spec,
+>> and I have tested my driver on Foundation model(from ARM) and a real hardware.
+>>
+>>>
+>>> I tend to agree that we should just forget about pretimeout and
+>>> use your original approach, where the timeout value is used
+>>> to program WOR. Everything else is really just asking for trouble.
+>>
+>> I don't mind if we give up pretimeout, The reason I use pretimeout is:
+>> this concept matches the function of two stage timeouts.
+>>
+>> but, If we give up pretimeout, could you give me a suggestion:
+>>
+>> How to config the two stage timeouts
+>> (1)from enabling watchdog to WS0
+>> (2)the time from WS1 to WS0
+>>
+>> If we only have one timeout parameter,  How to config the two stage timeouts?
+>> Any suggestion ?
+>
+> I have another thought for this, please allow me to sent anther
+> patchset in a day. see if you like it.
 
-Signed-off-by: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- drivers/watchdog/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+I have sent a non-pretimeout version patchset, please let me know if
+you like the non-pretimeout version more.
 
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index 554f18a..20f9980 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -157,6 +157,7 @@ config ARM_SBSA_WATCHDOG
- 	depends on ARM64
- 	depends on ARM_ARCH_TIMER
- 	select WATCHDOG_CORE
-+	select ACPI_GTDT if ACPI
- 	help
- 	  ARM SBSA Generic Watchdog. This watchdog has two Watchdog timeouts.
- 	  The first timeout will trigger a panic; the second timeout will
+Great thanks for your time. :-)
+
+>
+>>
+>> If we make the first stage timeout is timeout/2,  this violates the
+>> definition of timeout.
+>> I don't think users expect interrupt, panic or reboot at timeout/2.
+>>
+>> And WS1  definitely isn't a backup of WS0.
+>>
+>>>
+>>> Guenter
+>>>
+>>
+>>
+>>
+>> --
+>> Best regards,
+>>
+>> Fu Wei
+>> Software Engineer
+>> Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
+>> Ph: +86 21 61221326(direct)
+>> Ph: +86 186 2020 4684 (mobile)
+>> Room 1512, Regus One Corporate Avenue,Level 15,
+>> One Corporate Avenue,222 Hubin Road,Huangpu District,
+>> Shanghai,China 200021
+>
+>
+>
+> --
+> Best regards,
+>
+> Fu Wei
+> Software Engineer
+> Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
+> Ph: +86 21 61221326(direct)
+> Ph: +86 186 2020 4684 (mobile)
+> Room 1512, Regus One Corporate Avenue,Level 15,
+> One Corporate Avenue,222 Hubin Road,Huangpu District,
+> Shanghai,China 200021
+
+
+
 -- 
-1.9.1
+Best regards,
 
+Fu Wei
+Software Engineer
+Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
+Ph: +86 21 61221326(direct)
+Ph: +86 186 2020 4684 (mobile)
+Room 1512, Regus One Corporate Avenue,Level 15,
+One Corporate Avenue,222 Hubin Road,Huangpu District,
+Shanghai,China 200021
 --
 To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
