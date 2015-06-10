@@ -1,46 +1,113 @@
-From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 0/2] USB OTG PHY driver for NXP LPC18xx family
-Date: Wed, 10 Jun 2015 21:09:49 +0200
-Message-ID: <CAGhQ9VzoZN0wow6csD7Mq58CFk31DGup676NoO=hyqnuAwNQwA@mail.gmail.com>
-References: <1432922617-11512-1-git-send-email-manabian@gmail.com>
+From: Dann Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+Subject: Re: [PATCH 2/2 RESEND] power: reset: Add syscon poweroff device node
+ for APM X-Gene platform
+Date: Wed, 10 Jun 2015 13:13:31 -0600
+Message-ID: <CALdTtnt+6RLD8VVx0UzQX0-5CQCL5cN1zo-USHHvqO5o25=w0A@mail.gmail.com>
+References: <1433272747-27114-1-git-send-email-ttnguyen@apm.com>
+	<1433272747-27114-3-git-send-email-ttnguyen@apm.com>
+	<CALdTtnvQg2xmL5MqxUcvJmk_33XiEg9tnLzYvC++ZQL3j7J46g@mail.gmail.com>
+	<CACgAJHwtCuZgZySmcvMxZHVxy__eZP02-TDbEn3FEpMx5y_LDQ@mail.gmail.com>
+	<CALdTtnvwQ0W=3i-Yi73rQQ43uo1njwBoEuNQOpJ79Qoref9Yvw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1432922617-11512-1-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <CALdTtnvwQ0W=3i-Yi73rQQ43uo1njwBoEuNQOpJ79Qoref9Yvw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Tai Tri Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org>
+Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kishon,
+On Tue, Jun 9, 2015 at 9:31 AM, Dann Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org> wrote:
+> On Mon, Jun 8, 2015 at 10:34 PM, Tai Tri Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org> wrote:
+>> Hi Dann,
+>>
+>> On Mon, Jun 8, 2015 at 8:44 PM, Dann Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org> wrote:
+>>> On Tue, Jun 2, 2015 at 1:19 PM, Tai Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org> wrote:
+>>>> This patch adds syscon poweroff device node to support poweroff feature
+>>>> on APM X-Gene Mustang platform
+>>>
+>>> hey Tai,
+>>>  The reboot changes work just fine for me, but poweroff does not:
+>>>
+>>> [  OK  ] Reached target Final Step.
+>>>          Starting Power-Off...
+>>> reboot: Power down
+>>> Unable to poweroff system
+>>> Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000000
+>>>
+>>> CPU: 0 PID: 1 Comm: systemd-shutdow Tainted: G        W       4.1.0-rc7+ #1
+>>> Hardware name: APM X-Gene Mustang board (DT)
+>>> Call trace:
+>>> [<ffffffc00008990c>] dump_backtrace+0x0/0x11c
+>>> [<ffffffc000089a38>] show_stack+0x10/0x1c
+>>> [<ffffffc0005b447c>] dump_stack+0x88/0xc8
+>>> [<ffffffc0005b3374>] panic+0xe0/0x220
+>>> [<ffffffc0000b5f24>] do_exit+0x990/0x994
+>>> [<ffffffc0000d06bc>] SyS_reboot+0x14c/0x208
+>>> ---[ end Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000000
+>>>
+>>>   -dann
+>>>
+>>
+>> Thanks for testing my patches.
+>> On APM X-Gene Mustang platform, power off circuit is controlled by firmware.
+>> It requires a firmware update to support power off feature.
+>> May I ask what firmware version you're running on?
+>
+> Sure, 1.15.12.
 
-On 29 May 2015 at 20:03, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> This patch set adds support for the internal USB OTG PHY found
-> on NXP LPC18xx and LPC43xx devices. Driver takes care of
-> enabling the PHY and setting the clock rate which is need for
-> USB0 support on this platform.
->
-> This version address the comments from Kishon Vijay Abraham I.
->
-> Changes in v3:
->  - depend on MFD_SYSCON
->
-> Changes in v2:
->  - use PTR_ERR_OR_ZERO in phy driver
->  - rename binding doc
->  - update doc commit message
->
-> Base support for this platform can now be found in arm-soc next.
->
-> Joachim Eastwood (2):
->   phy: add lpc18xx usb otg phy driver
->   phy: dt bindings: add XP LPC18xx/43xx USB OTG PHY bindings
+Tai worked with me offline. For reference, this requires an updated
+SlimPro firmware in addition to the u-boot update. Verified it works
+for me after the update, so:
 
-Do you have any more comments on the patches or are they okey now?
+Tested-by: dann frazier <dann.frazier-rWQIqKB3PjkS+FvcfC7Uqw@public.gmane.org>
 
-
-regards,
-Joachim Eastwood
+>   -dann
+>
+>> Tai
+>>
+>>
+>>>> Signed-off-by: Tai Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org>
+>>>> ---
+>>>>  arch/arm64/boot/dts/apm/apm-mustang.dts |   12 ++++++++++++
+>>>>  1 file changed, 12 insertions(+)
+>>>>
+>>>> diff --git a/arch/arm64/boot/dts/apm/apm-mustang.dts b/arch/arm64/boot/dts/apm/apm-mustang.dts
+>>>> index 83578e7..910d561 100644
+>>>> --- a/arch/arm64/boot/dts/apm/apm-mustang.dts
+>>>> +++ b/arch/arm64/boot/dts/apm/apm-mustang.dts
+>>>> @@ -23,6 +23,18 @@
+>>>>                 device_type = "memory";
+>>>>                 reg = < 0x1 0x00000000 0x0 0x80000000 >; /* Updated by bootloader */
+>>>>         };
+>>>> +
+>>>> +       poweroff_mbox: poweroff_mbox@10548000 {
+>>>> +               compatible = "syscon";
+>>>> +               reg = <0x0 0x10548000 0x0 0x30>;
+>>>> +       };
+>>>> +
+>>>> +       poweroff: poweroff@10548010 {
+>>>> +               compatible = "syscon-poweroff";
+>>>> +               regmap = <&poweroff_mbox>;
+>>>> +               offset = <0x10>;
+>>>> +               mask = <0x1>;
+>>>> +       };
+>>>>  };
+>>>>
+>>>>  &pcie0clk {
+>>>> --
+>>>> 1.7.9.5
+>>>>
+>>>>
+>>>> _______________________________________________
+>>>> linux-arm-kernel mailing list
+>>>> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>>>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>>
+>>
+>>
+>> --
+>> Tai
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
