@@ -1,90 +1,55 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4] ARM: l2c: add options to overwrite prefetching behavior
-Date: Wed, 10 Jun 2015 09:57:18 -0700
-Message-ID: <55786C6E.7070204@gmail.com>
-References: <1432941541-18588-1-git-send-email-hauke@hauke-m.de>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH 2/2] drivercore: Fix unregistration path of platform devices
+Date: Wed, 10 Jun 2015 18:11:10 +0100
+Message-ID: <CACxGe6ti6Kpski-Q3nv8kAHB4mr=pkQwco4WPJeaUFD1HNjaeg@mail.gmail.com>
+References: <1433686811-12303-1-git-send-email-grant.likely@linaro.org>
+ <1433686811-12303-3-git-send-email-grant.likely@linaro.org>
+ <CAPybu_30jTDuwEW_WTGuu6pWwv86p6OqV0eRE1GbCwUVtBm7KA@mail.gmail.com>
+ <20150608184713.446B7C406AA@trevor.secretlab.ca> <CAPybu_0FfD9dv55SLmy7905yMCV6Kqrr-v2aPUCx6sSikrF7gQ@mail.gmail.com>
+ <20150609110044.61031C40580@trevor.secretlab.ca> <CAMAWPa_CURGm5YTc0OgBD_T3fwaBDskfUKEn+awxW8P6oQYceA@mail.gmail.com>
+ <CAPybu_24X0zZJv6D9i4YM_r7azdnjYrRH=V+p_ong2cFKNrF1w@mail.gmail.com>
+ <CAMAWPa-bGwVCnmv=H=8Zo-NCw-nOFBj3-XcVvb-0m0sNYtPO7g@mail.gmail.com>
+ <CAPybu_2dpcpjPvn-kXaW-yC2OmkNPna+G8PLO-gP1cMBOcU_ew@mail.gmail.com> <20150610154031.GB22214@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1432941541-18588-1-git-send-email-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150610154031.GB22214@kroah.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robherring2@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh@kernel.org>, Tyler Baker <tyler.baker@linaro.org>, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-On 29/05/15 16:19, Hauke Mehrtens wrote:
-> These options make it possible to overwrites the data and instruction
-> prefetching behavior of the arm pl310 cache controller.
-> 
-> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+On Wed, Jun 10, 2015 at 4:40 PM, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+> On Wed, Jun 10, 2015 at 04:46:33PM +0200, Ricardo Ribalda Delgado wrote:
+>> Hello Greg
+>>
+>> On Wed, Jun 10, 2015 at 4:38 PM, Kevin Hilman <khilman@kernel.org> wrote:
+>> > On Wed, Jun 10, 2015 at 12:11 AM, Ricardo Ribalda Delgado
+>>
+>> > At this stage of the cycle (merge window opening soon, maintainers
+>> > trying to stabilize their stuff for Linus) we want to see linux-next
+>> > approaching some level of stability.
+>>
+>> Please revert
+>>
+>> base/platform: Only insert MEM and IO resources
+>> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/commit/?id=36d4b29260753ad78b1ce4363145332c02519adc
+>> base/platform: Continue on insert_resource() error
+>> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/commit/?id=e50e69d1ac4232af0b6890f16929bf5ceee81538
+>> of/platform: Use platform_device interface
+>> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/commit/?id=b6d2233f2916fa9338786aeab2e936c5a07e4d0c
+>> base/platform: Remove code duplication
+>> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/commit/?id=6d9d4b1469b0d9748145e168fc9ec585e1f3f4b0
+>
+> Now reverted.
+>
+>> This patch from Grant needs to be applied:
+>>
+>> [PATCH 2/2] drivercore: Fix unregistration path of platform devices
+>
+> I need some acks before I apply anything else as this is a total mess.
 
-Acked-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Yes please. Rob, Pantelis, Wolfram. Can you test my patch and provides acks?
 
-> ---
-> changes since
-> v3: 
->   * remove arm prefix
->   * improve documentation
-> v2: only set prefetch
-> v1: set prefetch and aux
->  Documentation/devicetree/bindings/arm/l2cc.txt |  5 +++++
->  arch/arm/mm/cache-l2x0.c                       | 20 ++++++++++++++++++++
->  2 files changed, 25 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
-> index 0dbabe9..2251dcc 100644
-> --- a/Documentation/devicetree/bindings/arm/l2cc.txt
-> +++ b/Documentation/devicetree/bindings/arm/l2cc.txt
-> @@ -67,6 +67,11 @@ Optional properties:
->    disable if zero.
->  - arm,prefetch-offset : Override prefetch offset value. Valid values are
->    0-7, 15, 23, and 31.
-> +- prefetch-data : Data prefetch. Value: <0> (forcibly disable), <1>
-> +  (forcibly enable), property absent (retain settings set by firmware)
-> +- prefetch-instr : Instruction prefetch. Value: <0> (forcibly disable),
-> +  <1> (forcibly enable), property absent (retain settings set by
-> +  firmware)
->  
->  Example:
->  
-> diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
-> index e309c8f..2570f83 100644
-> --- a/arch/arm/mm/cache-l2x0.c
-> +++ b/arch/arm/mm/cache-l2x0.c
-> @@ -1199,6 +1199,26 @@ static void __init l2c310_of_parse(const struct device_node *np,
->  		pr_err("L2C-310 OF arm,prefetch-offset property value is missing\n");
->  	}
->  
-> +	ret = of_property_read_u32(np, "prefetch-data", &val);
-> +	if (ret == 0) {
-> +		if (val)
-> +			prefetch |= L310_PREFETCH_CTRL_DATA_PREFETCH;
-> +		else
-> +			prefetch &= ~L310_PREFETCH_CTRL_DATA_PREFETCH;
-> +	} else if (ret != -EINVAL) {
-> +		pr_err("L2C-310 OF prefetch-data property value is missing\n");
-> +	}
-> +
-> +	ret = of_property_read_u32(np, "prefetch-instr", &val);
-> +	if (ret == 0) {
-> +		if (val)
-> +			prefetch |= L310_PREFETCH_CTRL_INSTR_PREFETCH;
-> +		else
-> +			prefetch &= ~L310_PREFETCH_CTRL_INSTR_PREFETCH;
-> +	} else if (ret != -EINVAL) {
-> +		pr_err("L2C-310 OF prefetch-instr property value is missing\n");
-> +	}
-> +
->  	l2x0_saved_regs.prefetch_ctrl = prefetch;
->  }
->  
-> 
-
-
--- 
-Florian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+g.
