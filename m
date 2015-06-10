@@ -1,36 +1,62 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC/PATCH] pinctrl: sh-pfc: Accept standard function, pins and
- groups properties
-Date: Wed, 10 Jun 2015 10:46:56 +0200
-Message-ID: <CACRpkdZDH_RYsqniA0DOALtcacD4Hn=-5_4QnUCJ0sS6RGUKzA@mail.gmail.com>
-References: <CACRpkda4SBof0EaZVWtEYaeb6j_BGAVj39kje+mBz90eB3qAwQ@mail.gmail.com>
-	<1422390694-12389-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-	<CACRpkda6H7hbgXhmSbgtwOC_8PbHnES5syp-YEp1+V6s5Ym6Cw@mail.gmail.com>
-	<12938873.nmb8Ng8mNb@avalon>
-	<CACRpkdbepTKxMFVpTo7ZmjYE1beF5XOMOQarszaDGojerNQqMg@mail.gmail.com>
-	<CAMuHMdWp4iBGtR2EiYMa03hwJrSOpq9dB==yDgt+OwjCebuFMg@mail.gmail.com>
+From: Hongtao Jia <hongtao.jia-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH V2] QorIQ/TMU: add TMU node to device tree for QorIQ T104x
+Date: Wed, 10 Jun 2015 08:56:55 +0000
+Message-ID: <BLUPR03MB1499AA1359894C6B1F801FCE1BD0@BLUPR03MB149.namprd03.prod.outlook.com>
+References: <1429085868-47577-1-git-send-email-hongtao.jia@freescale.com>
+	 <BLUPR03MB1498C018F80A754767DF48FE1CC0@BLUPR03MB149.namprd03.prod.outlook.com>
+	 <1432669078.7862.13.camel@freescale.com>
+	 <BLUPR03MB149DC0A753423EB27293931E1BE0@BLUPR03MB149.namprd03.prod.outlook.com>
+ <1433872049.2477.80.camel@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdWp4iBGtR2EiYMa03hwJrSOpq9dB==yDgt+OwjCebuFMg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1433872049.2477.80.camel-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niso-UNjuZkX4dYU@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 9, 2015 at 4:35 PM, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
-> On Fri, Mar 6, 2015 at 11:39 AM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-
->> This looks good to me, is the patch applicable as it is, or will you rebase
->> it and send out a non-RFC version?
->
-> This seems to have fallen through the (ELC?) cracks...
-> What's the status?
-
-Me too. I guess it needs to be rebased by now...
-
-Yours,
-Linus Walleij
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFdvb2QgU2NvdHQtQjA3NDIx
+DQo+IFNlbnQ6IFdlZG5lc2RheSwgSnVuZSAxMCwgMjAxNSAxOjQ3IEFNDQo+IFRvOiBKaWEgSG9u
+Z3Rhby1CMzg5NTENCj4gQ2M6IGVkdWJlenZhbEBnbWFpbC5jb207IGxpbnV4cHBjLWRldkBsaXN0
+cy5vemxhYnMub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgcm9iaCtkdEBrZXJu
+ZWwub3JnOyBydWkuemhhbmdAaW50ZWwuY29tDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggVjJdIFFv
+cklRL1RNVTogYWRkIFRNVSBub2RlIHRvIGRldmljZSB0cmVlIGZvciBRb3JJUQ0KPiBUMTA0eA0K
+PiANCj4gT24gTW9uLCAyMDE1LTA2LTA4IGF0IDIxOjE5IC0wNTAwLCBKaWEgSG9uZ3Rhby1CMzg5
+NTEgd3JvdGU6DQo+ID4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+ID4gRnJvbTog
+V29vZCBTY290dC1CMDc0MjENCj4gPiA+IFNlbnQ6IFdlZG5lc2RheSwgTWF5IDI3LCAyMDE1IDM6
+MzggQU0NCj4gPiA+IFRvOiBKaWEgSG9uZ3Rhby1CMzg5NTENCj4gPiA+IENjOiBlZHViZXp2YWxA
+Z21haWwuY29tOyBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZzsNCj4gPiA+IGRldmljZXRy
+ZWVAdmdlci5rZXJuZWwub3JnOyByb2JoK2R0QGtlcm5lbC5vcmc7IHJ1aS56aGFuZ0BpbnRlbC5j
+b20NCj4gPiA+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggVjJdIFFvcklRL1RNVTogYWRkIFRNVSBub2Rl
+IHRvIGRldmljZSB0cmVlIGZvcg0KPiA+ID4gUW9ySVEgVDEwNHgNCj4gPiA+DQo+ID4gPiBPbiBU
+dWUsIDIwMTUtMDUtMjYgYXQgMDE6MzMgLTA1MDAsIEppYSBIb25ndGFvLUIzODk1MSB3cm90ZToN
+Cj4gPiA+ID4gZGlmZiAtLWdpdCBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvdDEwNDBzaS1w
+b3N0LmR0c2kNCj4gPiA+ID4gPiBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvdDEwNDBzaS1w
+b3N0LmR0c2kNCj4gPiA+ID4gPiBpbmRleCAxNWFlNDYyLi5iYjlmNzkyIDEwMDY0NA0KPiA+ID4g
+PiA+IC0tLSBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvdDEwNDBzaS1wb3N0LmR0c2kNCj4g
+PiA+ID4gPiArKysgYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3QxMDQwc2ktcG9zdC5kdHNp
+DQo+ID4gPiA+ID4gQEAgLTM0NSw2ICszNDUsNyBAQA0KPiA+ID4gPiA+ICAgICAgICAgICAgIHJl
+ZyAgICAgICAgPSA8MHhlYTAwMCAweDQwMDA+Ow0KPiA+ID4gPiA+ICAgICB9Ow0KPiA+ID4gPiA+
+DQo+ID4gPiA+ID4gKy9pbmNsdWRlLyAicW9yaXEtdG11LXQxMDR4c2kuZHRzaSINCj4gPiA+ID4g
+PiAgL2luY2x1ZGUvICJlbG8zLWRtYS0wLmR0c2kiDQo+ID4gPiA+ID4gIC9pbmNsdWRlLyAiZWxv
+My1kbWEtMS5kdHNpIg0KPiA+ID4gPiA+ICAvaW5jbHVkZS8gInFvcmlxLWVzcGktMC5kdHNpIg0K
+PiA+ID4NCj4gPiA+IFdoeSBpcyB0aGlzIGNoaXAtc3BlY2lmaWMgZW5vdWdoIHRvIGJlIGNhbGxl
+ZCAidDEwNHhzaSIsIGJ1dCBub3QNCj4gPiA+IGNoaXAtDQo+ID4gPiBzcGVjaWZpYyBlbm91Z2gg
+dG8ganVzdCBnbyBkaXJlY3RseSBpbnRvIHQxMDQwc2ktcG9zdD8NCg0KVGhlIHRtdSBub2RlIGlu
+Y2x1ZGVzIGxvdHMgb2YgY29udGVudHMuDQpJcyBpdCBsb29rcyBtZXNzeSBpZiBqdXN0IGdvIGRp
+cmVjdGx5IGludG8gdDEwNDBzaS1wb3N0Pw0KDQo+ID4NCj4gPiBUMTA0eCBwbGF0Zm9ybSBzaGFy
+ZSB0aGUgc2FtZSBjYWxpYnJhdGlvbiBkYXRhLg0KPiANCj4gV2hpY2ggdDEwNHggYXJlIHlvdSBy
+ZWZlcnJpbmcgdG8gdGhhdCBkb2Vzbid0IHVzZSB0MTA0MHNpLXBvc3QuZHRzaT8NCj4gUGx1cywg
+Z2l2ZW4gdGhlIG51bWJlcmluZyBzY2hlbWUgaXQncyBhbHdheXMgcG9zc2libGUgdGhhdCBhIG5l
+dyB0MTA0eA0KPiBjb21lcyBvdXQgdGhhdCBoYXMgbGl0dGxlIHRvIGRvIHdpdGggZXhpc3Rpbmcg
+dDEwNHguDQoNClllcywgcmlnaHQuIFRoZSBuYW1lIGNvbnRhaW5zICJ0MTA0eCIga2V5d29yZCBz
+ZWVtcyBub3QgcGVyZmVjdC4NCkknZCBsaWtlIHRvIGNoYW5nZSAicW9yaXEtdG11LXQxMDR4c2ku
+ZHRzaSIgdG8gInFvcmlxLXRtdS10MTA0MHNpLmR0c2kiDQphbmQgaW5jbHVkZWQgaW4gdDEwNDBz
+aS1wb3N0LiBJcyB0aGlzIE9LIHdpdGggeW91Pw0KDQotSG9uZ3Rhby4NCg0KPiANCj4gLVNjb3R0
+DQo+IA0KDQo=
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
