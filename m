@@ -1,93 +1,212 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/8] mfd: axp20x: Add missing registers, and
- mark more registers volatile
-Date: Wed, 10 Jun 2015 08:36:52 +0100
-Message-ID: <20150610073652.GY2982@x1>
-References: <1433885881-19809-1-git-send-email-hdegoede@redhat.com>
- <1433885881-19809-2-git-send-email-hdegoede@redhat.com>
-Reply-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 05/22] doc: dt-binding: usb: add otg related
+ properties
+Date: Wed, 10 Jun 2015 10:37:37 +0300
+Message-ID: <20150610103737.3cc7c10d@rockdesk>
+References: <1433775737-9816-1-git-send-email-jun.li@freescale.com>
+	<1433775737-9816-6-git-send-email-jun.li@freescale.com>
+	<CAL_JsqJ3hHOGevwqcBNFN2LrTP7Bm_k9SDuTNKBbpq5W-eLmdw@mail.gmail.com>
+	<20150609011806.GA7976@shlinux1.ap.freescale.net>
+	<CAL_JsqKg_NYtLGg9RUQOpKscwHEskHO4_Szo_nM3BnrDdhg3fg@mail.gmail.com>
+	<20150609182931.1eda4111@rockdesk>
+	<CAL_JsqJ+q5hs26FaLXG1LVb0asE-UZ5hXar2FeVAJN=S8=CG3w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDA7X7F2WUEBBGOS36VQKGQE56SSU4A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1433885881-19809-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Bruno =?iso-8859-1?Q?Pr=E9mont?= <bonbons-ud5FBsm0p/xEiooADzr8i9i2O/JbrIOy@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqJ+q5hs26FaLXG1LVb0asE-UZ5hXar2FeVAJN=S8=CG3w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Macpaul Lin <macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 09 Jun 2015, Hans de Goede wrote:
+On Tue, 9 Jun 2015 11:33:11 -0500
+Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-> From: Bruno Pr=C3=A9mont <bonbons-ud5FBsm0p/xEiooADzr8i9i2O/JbrIOy@public.gmane.org>
->=20
-> Add an extra set of registers which is necessary tu support the PMICs
-> battery charger function, and mark registers which contain status bits,
-> gpio status, and adc readings as volatile.
->=20
-> Cc: Bruno Pr=C3=A9mont <bonbons-ud5FBsm0p/xEiooADzr8i9i2O/JbrIOy@public.gmane.org>
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> ---
->  drivers/mfd/axp20x.c       | 6 ++++++
->  include/linux/mfd/axp20x.h | 5 +++++
->  2 files changed, 11 insertions(+)
->=20
-> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
-> index 6df9155..6ffbc11 100644
-> --- a/drivers/mfd/axp20x.c
-> +++ b/drivers/mfd/axp20x.c
-> @@ -39,10 +39,16 @@ static const char * const axp20x_model_names[] =3D {
->  static const struct regmap_range axp20x_writeable_ranges[] =3D {
->  	regmap_reg_range(AXP20X_DATACACHE(0), AXP20X_IRQ5_STATE),
->  	regmap_reg_range(AXP20X_DCDC_MODE, AXP20X_FG_RES),
-> +	regmap_reg_range(AXP20X_RDC_H, AXP20X_OCV(15)),
+> On Tue, Jun 9, 2015 at 10:29 AM, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> wrote:
+> > Rob,
+> >
+> > On Tue, 9 Jun 2015 08:26:20 -0500
+> > Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> >
+> >> On Mon, Jun 8, 2015 at 8:18 PM, Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> >> > On Mon, Jun 08, 2015 at 11:06:49AM -0500, Rob Herring wrote:
+> >> >> On Mon, Jun 8, 2015 at 10:02 AM, Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> >> >> > Add otg version, srp, hnp and adp support for usb OTG port, then those OTG
+> >> >> > features don't have to be decided by usb gadget drivers.
+> >> >> >
+> >> >> > Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> >> >> > ---
+> >> >> >  Documentation/devicetree/bindings/usb/generic.txt | 10 ++++++++++
+> >> >> >  1 file changed, 10 insertions(+)
+> >> >> >
+> >> >> > diff --git a/Documentation/devicetree/bindings/usb/generic.txt b/Documentation/devicetree/bindings/usb/generic.txt
+> >> >> > index 477d5bb..7386f4a 100644
+> >> >> > --- a/Documentation/devicetree/bindings/usb/generic.txt
+> >> >> > +++ b/Documentation/devicetree/bindings/usb/generic.txt
+> >> >> > @@ -11,6 +11,12 @@ Optional properties:
+> >> >> >                         "peripheral" and "otg". In case this attribute isn't
+> >> >> >                         passed via DT, USB DRD controllers should default to
+> >> >> >                         OTG.
+> >> >> > + - otg-rev: tells usb driver the release number of the OTG and EH supplement
+> >> >> > +                       with which the device and its descriptors are compliant,
+> >> >> > +                       in binary-coded decimal (i.e. 2.0 is 0200H).
+> >> >>
+> >> >> I would assume OTG 2.0 is somehow backwards compatible? Is this a h/w
+> >> >> dependency or a driver feature?
+> >> >>
+> >> > Not fully compatible, OTG 2.0 extend the usb_otg_descriptor by adding a new
+> >> > member bcdOTG to identify the OTG version, this descriptor needs to be sent
+> >> > to OTG host with correct size and content, so we have to know which release
+> >> > version the OTG device is compliant with, either by menuconfig config or pass
+> >> > via DT.
+> >>
+> >> So you have to change the version depending on the host you are
+> >> connected to? That really seems strange that plugging in a OTG 2.0
+> >> device to an OTG 1.3 host would not work and doesn't make for a good
+> >> user experience.
+> >
+> > No. The OTG version in the OTG descriptor for any device is usually fixed for the
+> > lifetime of the product.
+> >
+> > Let's assume it is 2.0.
+> >
+> > If you plug this to OTG 1.0 host, it won't be an issue as OTG 1.0 host doesn't
+> > read the BCD version.
+> 
+> That makes sense, but there was some discussion about the size mattering.
+> 
+> So is there a reason not to always report 2.0 with any kernel that has
+> 2.0 support?
 
-Define 15 please.
+A 2.0 host would still need to know if the attached OTG device is 1.0 or 2.0
+so we don't want to force existing 1.0 devices to 2.0.
 
->  };
-> =20
->  static const struct regmap_range axp20x_volatile_ranges[] =3D {
-> +	regmap_reg_range(AXP20X_PWR_INPUT_STATUS, AXP20X_USB_OTG_STATUS),
-> +	regmap_reg_range(AXP20X_CHRG_CTRL1, AXP20X_CHRG_CTRL2),
->  	regmap_reg_range(AXP20X_IRQ1_EN, AXP20X_IRQ5_STATE),
-> +	regmap_reg_range(AXP20X_ACIN_V_ADC_H, AXP20X_IPSOUT_V_HIGH_L),
-> +	regmap_reg_range(AXP20X_GPIO20_SS, AXP20X_GPIO3_CTRL),
-> +	regmap_reg_range(AXP20X_FG_RES, AXP20X_RDC_L),
->  };
-> =20
->  static const struct regmap_access_table axp20x_writeable_table =3D {
-> diff --git a/include/linux/mfd/axp20x.h b/include/linux/mfd/axp20x.h
-> index 95568eb..f4290ae 100644
-> --- a/include/linux/mfd/axp20x.h
-> +++ b/include/linux/mfd/axp20x.h
-> @@ -151,6 +151,11 @@ enum {
->  #define AXP20X_CC_CTRL			0xb8
->  #define AXP20X_FG_RES			0xb9
-> =20
-> +/* OCV */
-> +#define AXP20X_RDC_H			0xba
-> +#define AXP20X_RDC_L			0xbb
-> +#define AXP20X_OCV(m)			(0xc0 + (m))
-> +
->  /* AXP22X specific registers */
->  #define AXP22X_BATLOW_THRES1		0xe6
-> =20
+> 
+> >>
+> >> >> > + - srp-support: tells OTG controllers we want to enable SRP.
+> >> >> > + - hnp-support: tells OTG controllers we want to enable HNP.
+> >> >> > + - adp-support: tells OTG controllers we want to enable ADP.
+> >> >>
+> >> >> I've recently run into a problem[1] and found that I have to disable
+> >> >> OTG in the kernel to get my device to work. Having to turn-off OTG
+> >> >> seems like the wrong solution, and shifting the problem to DT seems
+> >> >> wrong too. Why is this not a user configurable option (within whatever
+> >> >> h/w constraints there are)?
+> >> > The problem of below link, seems your device is claiming it's a HNP capable
+> >> > OTG device, but connecting to a non-OTG port of your Host, assume your Host
+> >> > does have a OTG port, your Host issue a A_ALT_HNP_SUPPORT request to your
+> >> > OTG device to remind it can use another port with HNP, but the request failed
+> >> > (maybe STALL by your device, this request is defined in OTG 1.3 but obsolete
+> >> > in OTG 2.0), so your Host just stopped enumeration of your device, this is not
+> >> > reasonable because current OTG code is some out of data.
+> >>
+> >> Do PCs have OTG ports typically? My expectation is that if I plug in
+> >> an OTG device as a B device to any host port, that it will work as a
+> >> device no matter what the host OTG capabilities are. If I have to
+> >> change the kernel config or DT, that is a problem.
+> >
+> > AFAIK PCs don't have OTG ports.
+> >
+> > If you plug in OTG device to a non-otg host port it will work as normal B-device.
+> > The host doesn't request for OTG descriptors and doesn't care what OTG features it
+> > supports or not.
+> 
+> That is what I would expect. My testing and the bug report show otherwise.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+what kernel and platform are you on?
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+> 
+> >> > I am trying to make those OTG feaures to be configurable options, you mean
+> >> > by sys?
+> >>
+> >> Yes.
+> >
+> > why do you need OTG features to be sysfs configurable other than for debugging?
+> 
+> I don't know. Buggy host perhaps? Why do you need them in DT?
+
+I'll explain why we need in DT below.
+
+> 
+> If they are truly debugging, then they would belong in debugfs rather
+> than sysfs.
+
+agreed.
+> 
+> >> >> What are the valid combinations? When do we want these enabled or not?
+> >> >> Wouldn't default enabled be better?
+> >> >
+> >> > We want to enable all those support in kernel driver, but some platform or
+> >> > hardware may not want to enable any or some of them, so those hardware
+> >> > can disable it by not pass the property in dt, the 3 sub features of OTG are
+> >> > not mandatory for so called OTG device, normally we at least enable HNP, and
+> >> > SRP and ADP are optional.
+> >>
+> >> Please answer my questions in the doc.
+> >>
+> >> >>
+> >> >> We already have dr_mode property. How is it related to these?
+> >
+> > dr_mode states what mode the controller will operate in.
+> >
+> > for dr_mode == "host" we don't care about these otg flags.
+> >
+> > for dr_mode == "peripheral" or dr_mode == "otg"
+> > we care about these OTG flags to create our OTG descriptor on the fly.
+> 
+> Then how do I specify my device is peripheral only even though I have
+> a DR controller?
+
+by specifying dr_mode = "peripheral" in the DT.
+
+> 
+> How is ID pin detect supposed to be supported? Do we need dr_mode = "idpin"?
+
+ID pin is not used in single role mode. It will be used only when dr_mode = "otg".
+
+> 
+> >> > dr_mode is to tell the device it will work at OTG mode(there is another simple
+> >> > dual role mode which is commom used but not HNP), srp/hnp/adp can further specify
+> >> > which protocol the OTG device will support.
+> >>
+> >> By simple DR, you mean ID pin detect, right. So please define how you
+> >> support just ID pin detect vs. other levels of capability. Does only
+> >> dr_mode = otg mean ID pin detect? That may be a problem for existing
+> >> DTs if you disable other OTG functions because they have not been
+> >> added to the DT, then that is a problem.
+> >>
+> >> I'm feeling less convinced that this belongs in DT at all. Please
+> >> convince me otherwise.
+> >
+> > Yes not specifying anything in DT should work and default to the
+> > best OTG version and features supported by the OTG controller.
+> 
+> Right, hence why I suggested disable flags, not enable flags.
+
+I second that. They must be disable flags.
+
+> 
+> > But if the device manufacturer wants to restrict the OTG version
+> > to something less or disable some OTG features then the DT flags come
+> > into play.
+> 
+> Why would they?
+
+Maybe they just don't want some of the features.
+one example is DRD mode. In DRD mode the controller works as host or
+peripheral but doesn't support dynamic role switching or host negotiation.
+
+For that they can set
+
+	dr_mode = "otg"
+	disable-adp;
+	disable-hnp;
+	disable-srp;
+
+cheers,
+-roger
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
