@@ -1,25 +1,71 @@
-From: Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH v3 0/2] Support for CEVA SATA Host controller
-Date: Wed, 10 Jun 2015 11:19:30 +0900
-Message-ID: <20150610021930.GC11955@mtj.duckdns.org>
-References: <1433840030-31453-1-git-send-email-suneel.garapati@xilinx.com>
+From: Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v5 1/7] mmc: dt-bindings: add Mediatek MMC bindings
+Date: Wed, 10 Jun 2015 10:24:42 +0800
+Message-ID: <1433903088-14407-2-git-send-email-chaotian.jing@mediatek.com>
+References: <1433903088-14407-1-git-send-email-chaotian.jing@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-ide-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1433840030-31453-1-git-send-email-suneel.garapati@xilinx.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Suneel Garapati <suneel.garapati@xilinx.com>
-Cc: linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, michals@xilinx.com, sorenb@xilinx.com, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1433903088-14407-1-git-send-email-chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, bin.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "Joe.C" <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 09, 2015 at 02:23:48PM +0530, Suneel Garapati wrote:
-> Adds support for CEVA SATA Host controller found on Xilinx Zynq
-> Ultrascale+ MPSoC.
+Document the device-tree binding of Mediatek MMC host
 
-Applied to libata/for-4.2.
+Signed-off-by: Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+---
+ Documentation/devicetree/bindings/mmc/mtk-sd.txt | 32 ++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mmc/mtk-sd.txt
 
-Thanks!
-
+diff --git a/Documentation/devicetree/bindings/mmc/mtk-sd.txt b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
+new file mode 100644
+index 0000000..a1adfa4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
+@@ -0,0 +1,32 @@
++* MTK MMC controller
++
++The MTK  MSDC can act as a MMC controller
++to support MMC, SD, and SDIO types of memory cards.
++
++This file documents differences between the core properties in mmc.txt
++and the properties used by the msdc driver.
++
++Required properties:
++- compatible: Should be "mediatek,mt8173-mmc","mediatek,mt8135-mmc"
++- interrupts: Should contain MSDC interrupt number
++- clocks: MSDC source clock, HCLK
++- clock-names: "source", "hclk"
++- pinctrl-names: should be "default", "state_uhs"
++- pinctrl-0: should contain default/high speed pin ctrl
++- pinctrl-1: should contain uhs mode pin ctrl
++- vmmc-supply: power to the Core
++- vqmmc-supply: power to the IO
++
++Examples:
++mmc0: mmc@11230000 {
++	compatible = "mediatek,mt8173-mmc", "mediatek,mt8135-mmc";
++	reg = <0 0x11230000 0 0x108>;
++	interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_LOW>;
++	vmmc-supply = <&mt6397_vemc_3v3_reg>;
++	vqmmc-supply = <&mt6397_vio18_reg>;
++	clocks = <&pericfg CLK_PERI_MSDC30_0>, <&topckgen CLK_TOP_MSDC50_0_H_SEL>;
++	clock-names = "source", "hclk";
++	pinctrl-names = "default", "state_uhs";
++	pinctrl-0 = <&mmc0_pins_default>;
++	pinctrl-1 = <&mmc0_pins_uhs>;
++};
 -- 
-tejun
+1.8.1.1.dirty
