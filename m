@@ -1,54 +1,134 @@
-From: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] drivercore: Fix unregistration path of platform devices
-Date: Tue, 9 Jun 2015 17:22:02 -0700
-Message-ID: <CAMAWPa_CURGm5YTc0OgBD_T3fwaBDskfUKEn+awxW8P6oQYceA@mail.gmail.com>
-References: <1433686811-12303-1-git-send-email-grant.likely@linaro.org>
-	<1433686811-12303-3-git-send-email-grant.likely@linaro.org>
-	<CAPybu_30jTDuwEW_WTGuu6pWwv86p6OqV0eRE1GbCwUVtBm7KA@mail.gmail.com>
-	<20150608184713.446B7C406AA@trevor.secretlab.ca>
-	<CAPybu_0FfD9dv55SLmy7905yMCV6Kqrr-v2aPUCx6sSikrF7gQ@mail.gmail.com>
-	<20150609110044.61031C40580@trevor.secretlab.ca>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH 2/8] mfd: axp20x: Add a cell for the usb
+ power_supply part of the axp20x PMICs
+Date: Wed, 10 Jun 2015 09:19:34 +0800
+Message-ID: <CAGb2v652W+i6L1k5-CnHtXZXdJjFswkcyFGromhWSYaXtitW_w@mail.gmail.com>
+References: <1433885881-19809-1-git-send-email-hdegoede@redhat.com> <1433885881-19809-3-git-send-email-hdegoede@redhat.com>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150609110044.61031C40580-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBQFB32VQKGQEXL37GUY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1433885881-19809-3-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans De Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?UTF-8?Q?Bruno_Pr=C3=A9mont?= <bonbons-ud5FBsm0p/xEiooADzr8i9i2O/JbrIOy@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 9, 2015 at 4:00 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Mon, 8 Jun 2015 22:09:13 +0200
-> , Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-
-[...]
-
->>
->> > Greg, please drop Ricardo's series. It isn't correct and it will cause
->> > breakage.
->>
->> The series can be kept, only
->>
->> patch "of/platform: Use platform_device interface"
->>
->> needs to be reverted.
+On Wed, Jun 10, 2015 at 5:37 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> Add a cell for the usb power_supply part of the axp20x PMICs.
 >
-> No, it's better to drop the whole series. There are still issues and it
-> will conflict with merging the bugfix for v4.1.
+> Note that this cell is only for the usb power_supply part and not the
+> ac-power / battery-charger / rtc-backup-bat-charger bits.
 >
+> Depending on the board each of those must be enabled / disabled separatel=
+y
+> in devicetree as most boards do not use all 4. So in dt each one needs it=
+s
+> own child-node of the axp20x node. Another reason for using separate chil=
+d
+> nodes for each is so that other devicetree nodes can have a power-supply
+> property with a phandle referencing a node representing a single
+> power-supply.
+>
+> The decision to use a separate devicetree node for each is reflected on
+> the kernel side by each getting its own mfd-cell / platform_device and
+> platform-driver.
+>
+> Cc: Bruno Pr=C3=A9mont <bonbons-ud5FBsm0p/xEiooADzr8i9i2O/JbrIOy@public.gmane.org>
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> ---
+>  drivers/mfd/axp20x.c | 32 +++++++++++++++++++++++++++++++-
+>  1 file changed, 31 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
+> index 6ffbc11..47ce233 100644
+> --- a/drivers/mfd/axp20x.c
+> +++ b/drivers/mfd/axp20x.c
+> @@ -113,6 +113,30 @@ static struct resource axp20x_pek_resources[] =3D {
+>         },
+>  };
+>
+> +static struct resource axp20x_usb_power_supply_resources[] =3D {
+> +       {
+> +               .name   =3D "VBUS_PLUGIN",
+> +               .start  =3D AXP20X_IRQ_VBUS_PLUGIN,
+> +               .end    =3D AXP20X_IRQ_VBUS_PLUGIN,
+> +               .flags  =3D IORESOURCE_IRQ,
+> +       }, {
+> +               .name   =3D "VBUS_REMOVAL",
+> +               .start  =3D AXP20X_IRQ_VBUS_REMOVAL,
+> +               .end    =3D AXP20X_IRQ_VBUS_REMOVAL,
+> +               .flags  =3D IORESOURCE_IRQ,
+> +       }, {
+> +               .name   =3D "VBUS_VALID",
+> +               .start  =3D AXP20X_IRQ_VBUS_VALID,
+> +               .end    =3D AXP20X_IRQ_VBUS_VALID,
+> +               .flags  =3D IORESOURCE_IRQ,
+> +       }, {
+> +               .name   =3D "VBUS_NOT_VALID",
+> +               .start  =3D AXP20X_IRQ_VBUS_NOT_VALID,
+> +               .end    =3D AXP20X_IRQ_VBUS_NOT_VALID,
+> +               .flags  =3D IORESOURCE_IRQ,
+> +       },
+> +};
+> +
+>  static struct resource axp22x_pek_resources[] =3D {
+>         {
+>                 .name   =3D "PEK_DBR",
+> @@ -165,7 +189,7 @@ static const struct regmap_config axp20x_regmap_confi=
+g =3D {
+>         .val_bits       =3D 8,
+>         .wr_table       =3D &axp20x_writeable_table,
+>         .volatile_table =3D &axp20x_volatile_table,
+> -       .max_register   =3D AXP20X_FG_RES,
+> +       .max_register   =3D AXP20X_OCV(15),
+>         .cache_type     =3D REGCACHE_RBTREE,
+>  };
+>
+> @@ -368,6 +392,12 @@ static struct mfd_cell axp20x_cells[] =3D {
+>                 .resources              =3D axp20x_pek_resources,
+>         }, {
+>                 .name                   =3D "axp20x-regulator",
+> +       }, {
+> +               .name                   =3D "axp20x-usb-power-supply",
 
-Multiple platforms stopped booting in next-20150609 as discovered by
-kernelci.org[1], and was bisected down to commit b6d2233f2916
-(of/platform: Use platform_device interface).
+Could we use either "vbus-power-supply" to match the AXP datasheets,
+or "otg-power-supply" which is slightly more obvious to board owners?
 
-I'll leave you guys to sort out whether that patch or the whole series
-should be reverted, but I can confirm that reverting that patch on top
-of next-20150609 gets things booting again.
+Thanks
 
-Kevin
+ChenYu
 
-[1] http://kernelci.org/boot/all/job/next/kernel/next-20150609/
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +               .of_compatible          =3D "x-powers,axp202-usb-power-su=
+pply",
+> +               .num_resources          =3D
+> +                               ARRAY_SIZE(axp20x_usb_power_supply_resour=
+ces),
+> +               .resources              =3D axp20x_usb_power_supply_resou=
+rces,
+>         },
+>  };
+>
+> --
+> 2.3.6
+>
+> --
+> You received this message because you are subscribed to the Google Groups=
+ "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an=
+ email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+> For more options, visit https://groups.google.com/d/optout.
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
