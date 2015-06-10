@@ -1,216 +1,59 @@
-From: fu.wei@linaro.org
-Subject: [PATCH non-pretimeout 5/7] ACPI: add GTDT table parse driver into ACPI driver
-Date: Thu, 11 Jun 2015 01:47:30 +0800
-Message-ID: <1433958452-23721-6-git-send-email-fu.wei@linaro.org>
-References: <=fu.wei@linaro.org>
- <1433958452-23721-1-git-send-email-fu.wei@linaro.org>
+From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v9 4/5] serial: stm32-usart: Add STM32 USART Driver
+Date: Wed, 10 Jun 2015 10:49:55 -0700
+Message-ID: <20150610174955.GA6527@kroah.com>
+References: <1432328616-16964-1-git-send-email-mcoquelin.stm32@gmail.com>
+ <1432328616-16964-5-git-send-email-mcoquelin.stm32@gmail.com>
+ <20150531215246.GA24174@kroah.com>
+ <CALszF6B7_xOMvO9pRJJPNeR4JnOgAQAohSARDivzt2d1DQWP_Q@mail.gmail.com>
+ <20150610154240.GC22214@kroah.com>
+ <CALszF6AaS-i2MBF64mJKtY2h5Sb710Z50Mf8wHotUBysukfZbw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1433958452-23721-1-git-send-email-fu.wei@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Suravee.Suthikulpanit@amd.com, linaro-acpi@lists.linaro.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Cc: tekkamanninja@gmail.com, graeme.gregory@linaro.org, al.stone@linaro.org, hanjun.guo@linaro.org, timur@codeaurora.org, ashwin.chaugule@linaro.org, arnd@arndb.de, linux@roeck-us.net, vgandhi@codeaurora.org, wim@iguana.be, jcm@redhat.com, leo.duran@amd.com, corbet@lwn.net, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, rjw@rjwysocki.net, Fu Wei <fu.wei@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CALszF6AaS-i2MBF64mJKtY2h5Sb710Z50Mf8wHotUBysukfZbw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kamil Lulko <rev13-5tc4TXWwyLM@public.gmane.org>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial@vg>
 List-Id: devicetree@vger.kernel.org
 
-=46rom: Fu Wei <fu.wei@linaro.org>
+On Wed, Jun 10, 2015 at 06:18:37PM +0200, Maxime Coquelin wrote:
+> 2015-06-10 17:42 GMT+02:00 Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>:
+> > On Wed, Jun 10, 2015 at 01:33:22PM +0200, Maxime Coquelin wrote:
+> >> 2015-05-31 23:52 GMT+02:00 Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>:
+> >> > On Fri, May 22, 2015 at 11:03:35PM +0200, Maxime Coquelin wrote:
+> >> >> This drivers adds support to the STM32 USART controller, which is a
+> >> >> standard serial driver.
+> >> >>
+> >> >> Tested-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> >> >> Reviewed-by: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+> >> >> Reviewed-by: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+> >> >> Reviewed-by: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >> >> Signed-off-by: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >> >
+> >> > Acked-by: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+> >>
+> >> Thanks Greg.
+> >>
+> >> Will you apply it to your tty tree for v4.2? Or it should go in
+> >> someone else tree?
+> >
+> > It's not in my queue, I'm guessing it goes in through some other tree as
+> > there are build dependancies here preventing me from taking it.
+> 
+> There should not be any build dependencies.
+> I just tested it on my x86 machine with COMPILE_TEST on both v4.1-rc1
+> and tty-next branch.
+> In both case it compiles without warnings.
 
-This driver adds support for parsing SBSA Generic Watchdog
-Structure in GTDT, and creating a platform device with that
-information. This allows the operating system to obtain device
-data from the resource of platform device.
+Ok, then feel free to resend it as a stand-alone patch please and I will
+queue it up.
 
-The platform device named "sbsa-gwdt" can be used by the
-ARM SBSA Generic Watchdog driver.
+thanks,
 
-Signed-off-by: Fu Wei <fu.wei@linaro.org>
-Signed-off-by: Hanjun Guo <hanjun.guo@linaro.org>
----
- drivers/acpi/Kconfig  |   9 ++++
- drivers/acpi/Makefile |   1 +
- drivers/acpi/gtdt.c   | 137 ++++++++++++++++++++++++++++++++++++++++++=
-++++++++
- 3 files changed, 147 insertions(+)
- create mode 100644 drivers/acpi/gtdt.c
-
-diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
-index 1bbaa3d..e125698 100644
---- a/drivers/acpi/Kconfig
-+++ b/drivers/acpi/Kconfig
-@@ -433,4 +433,13 @@ config XPOWER_PMIC_OPREGION
-=20
- endif
-=20
-+config ACPI_GTDT
-+	bool "ACPI GTDT Support"
-+	depends on ARM64
-+	help
-+	  GTDT (Generic Timer Description Table) provides information
-+	  for per-processor timers and Platform (memory-mapped) timers
-+	  for ARM platforms. Select this option to provide information
-+	  needed for the timers init.
-+
- endif	# ACPI
-diff --git a/drivers/acpi/Makefile b/drivers/acpi/Makefile
-index 431e587..2c5a194 100644
---- a/drivers/acpi/Makefile
-+++ b/drivers/acpi/Makefile
-@@ -96,3 +96,4 @@ obj-$(CONFIG_ACPI_EXTLOG)	+=3D acpi_extlog.o
- obj-$(CONFIG_PMIC_OPREGION)	+=3D pmic/intel_pmic.o
- obj-$(CONFIG_CRC_PMIC_OPREGION) +=3D pmic/intel_pmic_crc.o
- obj-$(CONFIG_XPOWER_PMIC_OPREGION) +=3D pmic/intel_pmic_xpower.o
-+obj-$(CONFIG_ACPI_GTDT)		+=3D gtdt.o
-diff --git a/drivers/acpi/gtdt.c b/drivers/acpi/gtdt.c
-new file mode 100644
-index 0000000..a92abf2
---- /dev/null
-+++ b/drivers/acpi/gtdt.c
-@@ -0,0 +1,137 @@
-+/*
-+ * ARM Specific GTDT table Support
-+ *
-+ * Copyright (C) 2015, Linaro Ltd.
-+ * Author: Fu Wei <fu.wei@linaro.org>
-+ *         Hanjun Guo <hanjun.guo@linaro.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modif=
-y
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/device.h>
-+#include <linux/init.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+
-+static int __init map_generic_timer_interrupt(u32 interrupt, u32 flags=
-)
-+{
-+	int trigger, polarity;
-+
-+	if (!interrupt)
-+		return 0;
-+
-+	trigger =3D (flags & ACPI_GTDT_INTERRUPT_MODE) ? ACPI_EDGE_SENSITIVE
-+			: ACPI_LEVEL_SENSITIVE;
-+
-+	polarity =3D (flags & ACPI_GTDT_INTERRUPT_POLARITY) ? ACPI_ACTIVE_LOW
-+			: ACPI_ACTIVE_HIGH;
-+
-+	return acpi_register_gsi(NULL, interrupt, trigger, polarity);
-+}
-+
-+/*
-+ * Initialize a SBSA generic Watchdog platform device info from GTDT
-+ * According to SBSA specification the size of refresh and control
-+ * frames of SBSA Generic Watchdog is SZ_4K(Offset 0x000 =E2=80=93 0xF=
-=46F).
-+ */
-+static int __init gtdt_import_sbsa_gwdt(struct acpi_gtdt_watchdog *wd,
-+					int index)
-+{
-+	struct platform_device *pdev;
-+	int irq =3D map_generic_timer_interrupt(wd->timer_interrupt,
-+					      wd->timer_flags);
-+	struct resource res[] =3D {
-+		DEFINE_RES_IRQ_NAMED(irq, "ws0"),
-+		DEFINE_RES_MEM_NAMED(wd->refresh_frame_address, SZ_4K,
-+				     "refresh"),
-+		DEFINE_RES_MEM_NAMED(wd->control_frame_address, SZ_4K,
-+				     "control"),
-+	};
-+
-+	pr_debug("GTDT: a Watchdog GT(0x%llx/0x%llx gsi:%u flags:0x%x)\n",
-+		 wd->refresh_frame_address, wd->control_frame_address,
-+		 wd->timer_interrupt, wd->timer_flags);
-+
-+	if (!(wd->refresh_frame_address &&
-+	      wd->control_frame_address &&
-+	      wd->timer_interrupt)) {
-+		pr_err("GTDT: failed geting the device info.\n");
-+		return -EINVAL;
-+	}
-+
-+	if (irq < 0) {
-+		pr_err("GTDT: failed to register GSI of the Watchdog GT.\n");
-+		return -EINVAL;
-+	}
-+
-+	/*
-+	 * Add a platform device named "sbsa-gwdt" to match the platform driv=
-er.
-+	 * "sbsa-gwdt": SBSA(Server Base System Architecture) Generic Watchdo=
-g
-+	 * The platform driver (like drivers/watchdog/sbsa_gwdt.c)can get dev=
-ice
-+	 * info below by matching this name.
-+	 */
-+	pdev =3D platform_device_register_simple("sbsa-gwdt", index, res,
-+					       ARRAY_SIZE(res));
-+	if (IS_ERR(pdev)) {
-+		acpi_unregister_gsi(wd->timer_interrupt);
-+		return PTR_ERR(pdev);
-+	}
-+
-+	return 0;
-+}
-+
-+static int __init gtdt_platform_timer_parse(struct acpi_table_header *=
-table)
-+{
-+	struct acpi_gtdt_header *header;
-+	struct acpi_table_gtdt *gtdt;
-+	void *gtdt_subtable;
-+	int i, gwdt_index;
-+	int ret =3D 0;
-+
-+	if (table->revision < 2) {
-+		pr_warn("GTDT: Revision:%d doesn't support Platform Timers.\n",
-+			table->revision);
-+		return 0;
-+	}
-+
-+	gtdt =3D container_of(table, struct acpi_table_gtdt, header);
-+	if (!gtdt->platform_timer_count) {
-+		pr_info("GTDT: No Platform Timer structures.\n");
-+		return 0;
-+	}
-+
-+	gtdt_subtable =3D (void *)gtdt + gtdt->platform_timer_offset;
-+
-+	for (i =3D 0, gwdt_index =3D 0; i < gtdt->platform_timer_count; i++) =
-{
-+		if (gtdt_subtable > (void *)table + table->length) {
-+			pr_err("GTDT: subtable pointer overflows, bad table\n");
-+			return -EINVAL;
-+		}
-+		header =3D (struct acpi_gtdt_header *)gtdt_subtable;
-+		if (header->type =3D=3D ACPI_GTDT_TYPE_WATCHDOG) {
-+			ret =3D gtdt_import_sbsa_gwdt(gtdt_subtable, gwdt_index);
-+			if (ret)
-+				pr_err("GTDT: failed to import subtable %d\n",
-+				       i);
-+			else
-+				gwdt_index++;
-+		}
-+		gtdt_subtable +=3D header->length;
-+	}
-+
-+	return ret;
-+}
-+
-+static int __init gtdt_platform_timer_init(void)
-+{
-+	if (acpi_disabled)
-+		return 0;
-+
-+	return acpi_table_parse(ACPI_SIG_GTDT, gtdt_platform_timer_parse);
-+}
-+
-+device_initcall(gtdt_platform_timer_init);
---=20
-1.9.1
+greg k-h
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
