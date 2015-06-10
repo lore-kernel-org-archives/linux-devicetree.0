@@ -1,65 +1,72 @@
-From: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 2/3] spi: mediatek: Add spi bus for Mediatek MT8173
-Date: Wed, 10 Jun 2015 16:06:09 +0800
-Message-ID: <1433923569.22080.1.camel@mtksdaap41>
-References: <1431075343-7887-1-git-send-email-leilk.liu@mediatek.com>
-	 <1431075343-7887-3-git-send-email-leilk.liu@mediatek.com>
-	 <20150508175306.GG2761@sirena.org.uk> <1431434356.2128.9.camel@mhfsdcap03>
-	 <20150512160540.GB3066@sirena.org.uk> <1431675522.2128.13.camel@mhfsdcap03>
-	 <20150515092543.GY2761@sirena.org.uk>
-	 <1433758546.19786.16.camel@mtksdaap41>
-	 <20150608175927.GO14071@sirena.org.uk>
-	 <1433844321.16178.6.camel@mtksdaap41>
-	 <20150609103951.GA14071@sirena.org.uk>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: Master-aware devices and sideband ID data
+Date: Wed, 10 Jun 2015 09:11:21 +0100
+Message-ID: <20150610081120.GA22973@arm.com>
+References: <20150324155007.GC23005@leverpostej>
+	<26BE36EF-2C5B-4DA6-8950-8FEBB031ED1B@caviumnetworks.com>
+	<20150527173953.GC23176@leverpostej>
+	<E342D737-5DD5-48C7-BB01-B83C29CB6E31@caviumnetworks.com>
+	<20150601102208.GD22406@leverpostej>
+	<158EFC9F-FCAF-44D3-AD40-804EDFE0CE25@caviumnetworks.com>
+	<20150605090534.GC1198@arm.com>
+	<20150609101515.GA28474@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150609103951.GA14071-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Leilk Liu =?UTF-8?Q?=28=E5=88=98=E7=A3=8A=29?= <Leilk.Liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, HongZhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <kernel@pengutroni>
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150609101515.GA28474@leverpostej>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "Chalamarla, Tirumalesh" <Tirumalesh.Chalamarla-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org" <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
-
-On Tue, 2015-06-09 at 11:39 +0100, Mark Brown wrote:
-> On Tue, Jun 09, 2015 at 06:05:21PM +0800, Eddie Huang wrote:
+On Tue, Jun 09, 2015 at 11:17:54AM +0100, Mark Rutland wrote:
+> On Fri, Jun 05, 2015 at 10:05:34AM +0100, Will Deacon wrote:
+> > On Thu, Jun 04, 2015 at 11:19:30PM +0100, Chalamarla, Tirumalesh wrote:
+> > > > On Jun 1, 2015, at 3:22 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> > > > It's possible to specify that the paths exist. I expect that software
+> > > > would select which to use at runtime.
+> > > > 
+> > > My worry is how to define any priorities/preferences between masters. 
+> > > in general the proposal looks reasonable.
+> > 
+> > I agree that the proposal looks reasonable (in terms of the ability to
+> > describe the sort of topologies that we will face) but I still don't
+> > understand what I need to do in e.g. my IOMMU driver to support this
+> > binding whilst continuing to support the existing iommus binding, which
+> > is relied upon to configure dma-mapping.
+> > 
+> > Mark: how do you see this co-existing/merging with the current bindings?
 > 
-> > --- a/drivers/spi/spi.c
-> > +++ b/drivers/spi/spi.c
-> > @@ -539,8 +539,8 @@ static int __spi_map_msg(struct spi_master *master,
-> > struct spi_message *msg)
-> >         if (!master->can_dma)
-> >                 return 0;
+> As I mentioned in my initial mail, it's not clear to me how this can be
+> reconciled with the current bindings. Everything I've been able to come
+> up with so far at best ends up describing the same thing repeatedly.
 > 
-> > -       tx_dev = master->dma_tx->device->dev;
-> > -       rx_dev = master->dma_rx->device->dev;
-> > +       tx_dev = master->dma_tx ? master->dma_tx->device->dev :
-> > master->dev;
-> > +       rx_dev = master->dma_rx ? master->dma_rx->device->dev : master-
+> I'll see what I can come up with. Any sugestions are welcome!
+
+Well, I'd start with the current iommu binding and see if you can figure
+out which properties need adding to it in order to describe the sort of
+topologies you can describe with your original proposal.
+
+> > I don't think it's practical to throw away what we have and move over to
+> > something totally different all in one go, but there clearly *is* benefit
+> > in your proposal over the existing scheme.
 > 
-> > Is this what you want ? Actually, I don't like first one at all.
+> I can see that's probably not practical. :(
 > 
-> Not quite what I'd been thinking of - we can't just pick the device in
-> the core safely, the device might be a MFD or have some other
-> restriction that needs us to use a separate struct device.  However most
-> of those cases are likely to point towards implementing a dmaengine
-> device so probably the above will work for most cases and is fine.  Can
-> you send a proper patch please?
+> Do we know what we're going to do w.r.t. IORT? That's going to require
+> the kernel to be able to handle a similar description to this proposal.
 
-Sure, we will send this with new MTK SPI driver, such that can verify
-it.
+IORT is part of ACPI, so it doesn't care about the existing DT binding
+and doesn't need to co-exist at runtime.
 
-> 
-> Please don't use the ternery operator, though.
-OK, will fix it
-
-Eddie
-Thanks
-
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Will
