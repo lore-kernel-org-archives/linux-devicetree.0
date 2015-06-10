@@ -1,222 +1,238 @@
-From: fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Subject: [PATCH v5 6/8] ACPI: add GTDT table parse driver into ACPI driver
-Date: Wed, 10 Jun 2015 21:41:51 +0800
-Message-ID: <1433943713-32466-7-git-send-email-fu.wei@linaro.org>
-References: <=fu.wei@linaro.org>
- <1433943713-32466-1-git-send-email-fu.wei@linaro.org>
+From: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v2 05/22] doc: dt-binding: usb: add otg related properties
+Date: Wed, 10 Jun 2015 21:47:51 +0800
+Message-ID: <20150610134735.GB7678@shlinux2>
+References: <1433775737-9816-1-git-send-email-jun.li@freescale.com>
+ <1433775737-9816-6-git-send-email-jun.li@freescale.com>
+ <CAL_JsqJ3hHOGevwqcBNFN2LrTP7Bm_k9SDuTNKBbpq5W-eLmdw@mail.gmail.com>
+ <20150609011806.GA7976@shlinux1.ap.freescale.net>
+ <CAL_JsqKg_NYtLGg9RUQOpKscwHEskHO4_Szo_nM3BnrDdhg3fg@mail.gmail.com>
+ <20150609182931.1eda4111@rockdesk>
+ <CAL_JsqJ+q5hs26FaLXG1LVb0asE-UZ5hXar2FeVAJN=S8=CG3w@mail.gmail.com>
+ <20150610103737.3cc7c10d@rockdesk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1433943713-32466-1-git-send-email-fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org, linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, leo.duran-5C7GfCeVMHo@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150610103737.3cc7c10d@rockdesk>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Li Jun-B47624 <Jun.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Chen Peter-B29397 <Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Macpaul Lin <macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-=46rom: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On Wed, Jun 10, 2015 at 03:37:37PM +0800, Roger Quadros wrote:
+> On Tue, 9 Jun 2015 11:33:11 -0500
+> Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> 
+> > On Tue, Jun 9, 2015 at 10:29 AM, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> wrote:
+> > > Rob,
+> > >
+> > > On Tue, 9 Jun 2015 08:26:20 -0500
+> > > Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > >
+> > >> On Mon, Jun 8, 2015 at 8:18 PM, Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> > >> > On Mon, Jun 08, 2015 at 11:06:49AM -0500, Rob Herring wrote:
+> > >> >> On Mon, Jun 8, 2015 at 10:02 AM, Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> > >> >> > Add otg version, srp, hnp and adp support for usb OTG port, then those OTG
+> > >> >> > features don't have to be decided by usb gadget drivers.
+> > >> >> >
+> > >> >> > Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > >> >> > ---
+> > >> >> >  Documentation/devicetree/bindings/usb/generic.txt | 10 ++++++++++
+> > >> >> >  1 file changed, 10 insertions(+)
+> > >> >> >
+> > >> >> > diff --git a/Documentation/devicetree/bindings/usb/generic.txt b/Documentation/devicetree/bindings/usb/generic.txt
+> > >> >> > index 477d5bb..7386f4a 100644
+> > >> >> > --- a/Documentation/devicetree/bindings/usb/generic.txt
+> > >> >> > +++ b/Documentation/devicetree/bindings/usb/generic.txt
+> > >> >> > @@ -11,6 +11,12 @@ Optional properties:
+> > >> >> >                         "peripheral" and "otg". In case this attribute isn't
+> > >> >> >                         passed via DT, USB DRD controllers should default to
+> > >> >> >                         OTG.
+> > >> >> > + - otg-rev: tells usb driver the release number of the OTG and EH supplement
+> > >> >> > +                       with which the device and its descriptors are compliant,
+> > >> >> > +                       in binary-coded decimal (i.e. 2.0 is 0200H).
+> > >> >>
+> > >> >> I would assume OTG 2.0 is somehow backwards compatible? Is this a h/w
+> > >> >> dependency or a driver feature?
+> > >> >>
+> > >> > Not fully compatible, OTG 2.0 extend the usb_otg_descriptor by adding a new
+> > >> > member bcdOTG to identify the OTG version, this descriptor needs to be sent
+> > >> > to OTG host with correct size and content, so we have to know which release
+> > >> > version the OTG device is compliant with, either by menuconfig config or pass
+> > >> > via DT.
+> > >>
+> > >> So you have to change the version depending on the host you are
+> > >> connected to? That really seems strange that plugging in a OTG 2.0
+> > >> device to an OTG 1.3 host would not work and doesn't make for a good
+> > >> user experience.
+> > >
+> > > No. The OTG version in the OTG descriptor for any device is usually fixed for the
+> > > lifetime of the product.
+> > >
+> > > Let's assume it is 2.0.
+> > >
+> > > If you plug this to OTG 1.0 host, it won't be an issue as OTG 1.0 host doesn't
+> > > read the BCD version.
+> > 
+> > That makes sense, but there was some discussion about the size mattering.
+> > 
+> > So is there a reason not to always report 2.0 with any kernel that has
+> > 2.0 support?
+> 
+> A 2.0 host would still need to know if the attached OTG device is 1.0 or 2.0
+> so we don't want to force existing 1.0 devices to 2.0.
+> 
+> > 
+> > >>
+> > >> >> > + - srp-support: tells OTG controllers we want to enable SRP.
+> > >> >> > + - hnp-support: tells OTG controllers we want to enable HNP.
+> > >> >> > + - adp-support: tells OTG controllers we want to enable ADP.
+> > >> >>
+> > >> >> I've recently run into a problem[1] and found that I have to disable
+> > >> >> OTG in the kernel to get my device to work. Having to turn-off OTG
+> > >> >> seems like the wrong solution, and shifting the problem to DT seems
+> > >> >> wrong too. Why is this not a user configurable option (within whatever
+> > >> >> h/w constraints there are)?
+> > >> > The problem of below link, seems your device is claiming it's a HNP capable
+> > >> > OTG device, but connecting to a non-OTG port of your Host, assume your Host
+> > >> > does have a OTG port, your Host issue a A_ALT_HNP_SUPPORT request to your
+> > >> > OTG device to remind it can use another port with HNP, but the request failed
+> > >> > (maybe STALL by your device, this request is defined in OTG 1.3 but obsolete
+> > >> > in OTG 2.0), so your Host just stopped enumeration of your device, this is not
+> > >> > reasonable because current OTG code is some out of data.
+> > >>
+> > >> Do PCs have OTG ports typically? My expectation is that if I plug in
+> > >> an OTG device as a B device to any host port, that it will work as a
+> > >> device no matter what the host OTG capabilities are. If I have to
+> > >> change the kernel config or DT, that is a problem.
+> > >
+> > > AFAIK PCs don't have OTG ports.
+> > >
+> > > If you plug in OTG device to a non-otg host port it will work as normal B-device.
+> > > The host doesn't request for OTG descriptors and doesn't care what OTG features it
+> > > supports or not.
+> > 
+> > That is what I would expect. My testing and the bug report show otherwise.
+> 
+> what kernel and platform are you on?
+> 
+> > 
+> > >> > I am trying to make those OTG feaures to be configurable options, you mean
+> > >> > by sys?
+> > >>
+> > >> Yes.
+> > >
+> > > why do you need OTG features to be sysfs configurable other than for debugging?
+> > 
+> > I don't know. Buggy host perhaps? Why do you need them in DT?
+> 
+> I'll explain why we need in DT below.
+> 
+> > 
+> > If they are truly debugging, then they would belong in debugfs rather
+> > than sysfs.
+> 
+> agreed.
+> > 
+> > >> >> What are the valid combinations? When do we want these enabled or not?
+> > >> >> Wouldn't default enabled be better?
+> > >> >
+> > >> > We want to enable all those support in kernel driver, but some platform or
+> > >> > hardware may not want to enable any or some of them, so those hardware
+> > >> > can disable it by not pass the property in dt, the 3 sub features of OTG are
+> > >> > not mandatory for so called OTG device, normally we at least enable HNP, and
+> > >> > SRP and ADP are optional.
+> > >>
+> > >> Please answer my questions in the doc.
+> > >>
+> > >> >>
+> > >> >> We already have dr_mode property. How is it related to these?
+> > >
+> > > dr_mode states what mode the controller will operate in.
+> > >
+> > > for dr_mode == "host" we don't care about these otg flags.
+> > >
+> > > for dr_mode == "peripheral" or dr_mode == "otg"
+> > > we care about these OTG flags to create our OTG descriptor on the fly.
+> > 
+> > Then how do I specify my device is peripheral only even though I have
+> > a DR controller?
+> 
+> by specifying dr_mode = "peripheral" in the DT.
+> 
+> > 
+> > How is ID pin detect supposed to be supported? Do we need dr_mode = "idpin"?
+> 
+> ID pin is not used in single role mode. It will be used only when dr_mode = "otg".
+> 
+> > 
+> > >> > dr_mode is to tell the device it will work at OTG mode(there is another simple
+> > >> > dual role mode which is commom used but not HNP), srp/hnp/adp can further specify
+> > >> > which protocol the OTG device will support.
+> > >>
+> > >> By simple DR, you mean ID pin detect, right. So please define how you
+> > >> support just ID pin detect vs. other levels of capability. Does only
+> > >> dr_mode = otg mean ID pin detect? That may be a problem for existing
+> > >> DTs if you disable other OTG functions because they have not been
+> > >> added to the DT, then that is a problem.
+> > >>
+> > >> I'm feeling less convinced that this belongs in DT at all. Please
+> > >> convince me otherwise.
+> > >
+> > > Yes not specifying anything in DT should work and default to the
+> > > best OTG version and features supported by the OTG controller.
+> > 
+> > Right, hence why I suggested disable flags, not enable flags.
+> 
+> I second that. They must be disable flags.
+> 
 
-This driver adds support for parsing SBSA Generic Watchdog
-Structure in GTDT, and creating a platform device with that
-information. This allows the operating system to obtain device
-data from the resource of platform device.
+Disable flags may not work with current situation of gadget driver:
+Currently each gadget class driver hard coded the OTG attributes
+to be HNP | SRP, independent of controller driver.
 
-The platform device named "sbsa-gwdt" can be used by the
-ARM SBSA Generic Watchdog driver.
+E.g. some platform with OTG enabled: gadget->is_otg = 1
+HNP and SRP are enabled by gadget driver, ADP = 0, this OTG port
+can really support HNP and SRP, but not ADP. 
+if use disable flag, this platform has to add adp-disable property
+otherwise it will report ADP support to the host.
 
-Signed-off-by: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- drivers/acpi/Kconfig  |   9 ++++
- drivers/acpi/Makefile |   1 +
- drivers/acpi/gtdt.c   | 137 ++++++++++++++++++++++++++++++++++++++++++=
-++++++++
- 3 files changed, 147 insertions(+)
- create mode 100644 drivers/acpi/gtdt.c
+But with enable flags, I can check all those 3 properties,
+1)If none of them are passed, but gadget->is_otg == 1, I suppose it's
+legacy platform, still set HNP and SRP as current gadget driver does,
+works as before;
+2)If any one of them appear, I will set all those features by dt property.
+3)If some platform already based on those properties, wants to disable
+all 3 OTG features, also not pass any one of them like 1), it will not
+be a OTG device at all, set gadget->is_otg = 0 in its controller driver,
+then no need set and report any OTG features, this can meet ID pin detect
+case.
+ 
+> > 
+> > > But if the device manufacturer wants to restrict the OTG version
+> > > to something less or disable some OTG features then the DT flags come
+> > > into play.
+> > 
+> > Why would they?
+> 
+> Maybe they just don't want some of the features.
+> one example is DRD mode. In DRD mode the controller works as host or
+> peripheral but doesn't support dynamic role switching or host negotiation.
+> 
+> For that they can set
+> 
+> 	dr_mode = "otg"
+> 	disable-adp;
+> 	disable-hnp;
+> 	disable-srp;
 
-diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
-index 1bbaa3d..e125698 100644
---- a/drivers/acpi/Kconfig
-+++ b/drivers/acpi/Kconfig
-@@ -433,4 +433,13 @@ config XPOWER_PMIC_OPREGION
-=20
- endif
-=20
-+config ACPI_GTDT
-+	bool "ACPI GTDT Support"
-+	depends on ARM64
-+	help
-+	  GTDT (Generic Timer Description Table) provides information
-+	  for per-processor timers and Platform (memory-mapped) timers
-+	  for ARM platforms. Select this option to provide information
-+	  needed for the timers init.
-+
- endif	# ACPI
-diff --git a/drivers/acpi/Makefile b/drivers/acpi/Makefile
-index 431e587..2c5a194 100644
---- a/drivers/acpi/Makefile
-+++ b/drivers/acpi/Makefile
-@@ -96,3 +96,4 @@ obj-$(CONFIG_ACPI_EXTLOG)	+=3D acpi_extlog.o
- obj-$(CONFIG_PMIC_OPREGION)	+=3D pmic/intel_pmic.o
- obj-$(CONFIG_CRC_PMIC_OPREGION) +=3D pmic/intel_pmic_crc.o
- obj-$(CONFIG_XPOWER_PMIC_OPREGION) +=3D pmic/intel_pmic_xpower.o
-+obj-$(CONFIG_ACPI_GTDT)		+=3D gtdt.o
-diff --git a/drivers/acpi/gtdt.c b/drivers/acpi/gtdt.c
-new file mode 100644
-index 0000000..a92abf2
---- /dev/null
-+++ b/drivers/acpi/gtdt.c
-@@ -0,0 +1,137 @@
-+/*
-+ * ARM Specific GTDT table Support
-+ *
-+ * Copyright (C) 2015, Linaro Ltd.
-+ * Author: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-+ *         Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modif=
-y
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/device.h>
-+#include <linux/init.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+
-+static int __init map_generic_timer_interrupt(u32 interrupt, u32 flags=
-)
-+{
-+	int trigger, polarity;
-+
-+	if (!interrupt)
-+		return 0;
-+
-+	trigger =3D (flags & ACPI_GTDT_INTERRUPT_MODE) ? ACPI_EDGE_SENSITIVE
-+			: ACPI_LEVEL_SENSITIVE;
-+
-+	polarity =3D (flags & ACPI_GTDT_INTERRUPT_POLARITY) ? ACPI_ACTIVE_LOW
-+			: ACPI_ACTIVE_HIGH;
-+
-+	return acpi_register_gsi(NULL, interrupt, trigger, polarity);
-+}
-+
-+/*
-+ * Initialize a SBSA generic Watchdog platform device info from GTDT
-+ * According to SBSA specification the size of refresh and control
-+ * frames of SBSA Generic Watchdog is SZ_4K(Offset 0x000 =E2=80=93 0xF=
-=46F).
-+ */
-+static int __init gtdt_import_sbsa_gwdt(struct acpi_gtdt_watchdog *wd,
-+					int index)
-+{
-+	struct platform_device *pdev;
-+	int irq =3D map_generic_timer_interrupt(wd->timer_interrupt,
-+					      wd->timer_flags);
-+	struct resource res[] =3D {
-+		DEFINE_RES_IRQ_NAMED(irq, "ws0"),
-+		DEFINE_RES_MEM_NAMED(wd->refresh_frame_address, SZ_4K,
-+				     "refresh"),
-+		DEFINE_RES_MEM_NAMED(wd->control_frame_address, SZ_4K,
-+				     "control"),
-+	};
-+
-+	pr_debug("GTDT: a Watchdog GT(0x%llx/0x%llx gsi:%u flags:0x%x)\n",
-+		 wd->refresh_frame_address, wd->control_frame_address,
-+		 wd->timer_interrupt, wd->timer_flags);
-+
-+	if (!(wd->refresh_frame_address &&
-+	      wd->control_frame_address &&
-+	      wd->timer_interrupt)) {
-+		pr_err("GTDT: failed geting the device info.\n");
-+		return -EINVAL;
-+	}
-+
-+	if (irq < 0) {
-+		pr_err("GTDT: failed to register GSI of the Watchdog GT.\n");
-+		return -EINVAL;
-+	}
-+
-+	/*
-+	 * Add a platform device named "sbsa-gwdt" to match the platform driv=
-er.
-+	 * "sbsa-gwdt": SBSA(Server Base System Architecture) Generic Watchdo=
-g
-+	 * The platform driver (like drivers/watchdog/sbsa_gwdt.c)can get dev=
-ice
-+	 * info below by matching this name.
-+	 */
-+	pdev =3D platform_device_register_simple("sbsa-gwdt", index, res,
-+					       ARRAY_SIZE(res));
-+	if (IS_ERR(pdev)) {
-+		acpi_unregister_gsi(wd->timer_interrupt);
-+		return PTR_ERR(pdev);
-+	}
-+
-+	return 0;
-+}
-+
-+static int __init gtdt_platform_timer_parse(struct acpi_table_header *=
-table)
-+{
-+	struct acpi_gtdt_header *header;
-+	struct acpi_table_gtdt *gtdt;
-+	void *gtdt_subtable;
-+	int i, gwdt_index;
-+	int ret =3D 0;
-+
-+	if (table->revision < 2) {
-+		pr_warn("GTDT: Revision:%d doesn't support Platform Timers.\n",
-+			table->revision);
-+		return 0;
-+	}
-+
-+	gtdt =3D container_of(table, struct acpi_table_gtdt, header);
-+	if (!gtdt->platform_timer_count) {
-+		pr_info("GTDT: No Platform Timer structures.\n");
-+		return 0;
-+	}
-+
-+	gtdt_subtable =3D (void *)gtdt + gtdt->platform_timer_offset;
-+
-+	for (i =3D 0, gwdt_index =3D 0; i < gtdt->platform_timer_count; i++) =
-{
-+		if (gtdt_subtable > (void *)table + table->length) {
-+			pr_err("GTDT: subtable pointer overflows, bad table\n");
-+			return -EINVAL;
-+		}
-+		header =3D (struct acpi_gtdt_header *)gtdt_subtable;
-+		if (header->type =3D=3D ACPI_GTDT_TYPE_WATCHDOG) {
-+			ret =3D gtdt_import_sbsa_gwdt(gtdt_subtable, gwdt_index);
-+			if (ret)
-+				pr_err("GTDT: failed to import subtable %d\n",
-+				       i);
-+			else
-+				gwdt_index++;
-+		}
-+		gtdt_subtable +=3D header->length;
-+	}
-+
-+	return ret;
-+}
-+
-+static int __init gtdt_platform_timer_init(void)
-+{
-+	if (acpi_disabled)
-+		return 0;
-+
-+	return acpi_table_parse(ACPI_SIG_GTDT, gtdt_platform_timer_parse);
-+}
-+
-+device_initcall(gtdt_platform_timer_init);
---=20
-1.9.1
-
+Other possible reasons maybe power saving, ADP need constantly do vbus
+probe if there is no usb device connected, this will consume power.
+ 
+> cheers,
+> -roger
 --
-To unsubscribe from this list: send the line "unsubscribe linux-watchdo=
-g" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
