@@ -1,66 +1,70 @@
 From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: Re: [PATCH v5 12/42] powerpc/pci: Cleanup on pci_controller_ops
-Date: Wed, 10 Jun 2015 16:20:08 +1000
-Message-ID: <20150610062008.GA9875@gwshan>
-References: <1433400131-18429-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1433400131-18429-13-git-send-email-gwshan@linux.vnet.ibm.com>
- <5577C08D.1050900@ozlabs.ru>
+Subject: Re: [PATCH v4 19/21] drivers/of: Support adding sub-tree
+Date: Wed, 10 Jun 2015 16:55:51 +1000
+Message-ID: <20150610065551.GE10935@gwshan>
+References: <CAL_JsqLrBSB4y_0j+i=kXbDA08HO23JuYjJGHR9nhsPnMC_Zyg@mail.gmail.com>
+ <1430521038.7979.70.camel@kernel.crashing.org>
+ <A6DF99C6-7059-4670-86D0-6926861F0164@antoniou-consulting.com>
+ <1430774063.7979.139.camel@kernel.crashing.org>
+ <1431560124.20218.91.camel@kernel.crashing.org>
+ <CAL_JsqKqTa5eg3eOqx3bkeNdO_920WwDiRbQaxwWLEWpCypFmA@mail.gmail.com>
+ <1431564871.4160.8.camel@kernel.crashing.org>
+ <20150607075422.6ECE9C40A12@trevor.secretlab.ca>
+ <1433797073.4526.163.camel@kernel.crashing.org>
+ <CACxGe6uMijVvU_yK_Yk3GSABHjqxYAwY76WcOJcxAhoPcW02sQ@mail.gmail.com>
 Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <5577C08D.1050900@ozlabs.ru>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Alexey Kardashevskiy <aik@ozlabs.ru>
-Cc: devicetree@vger.kernel.org, linux-pci@vger.kernel.org, panto@antoniou-consulting.com, Gavin Shan <gwshan@linux.vnet.ibm.com>, grant.likely@linaro.org, robherring2@gmail.com, bhelgaas@google.com, linuxppc-dev@lists.ozlabs.org, Daniel Axtens <dja@axtens.net>
+In-Reply-To: <CACxGe6uMijVvU_yK_Yk3GSABHjqxYAwY76WcOJcxAhoPcW02sQ@mail.gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Rob Herring <robherring2@gmail.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBKdW4gMTAsIDIwMTUgYXQgMDI6NDM6NTdQTSArMTAwMCwgQWxleGV5IEthcmRhc2hl
-dnNraXkgd3JvdGU6Cj5PbiAwNi8wNC8yMDE1IDA0OjQxIFBNLCBHYXZpbiBTaGFuIHdyb3RlOgo+
-PkVhY2ggUEhCIG1haW50YWlucyBvbmUgaW5zdGFuY2Ugb2YgInN0cnVjdCBwY2lfY29udHJvbGxl
-cl9vcHMiLAo+PndoaWNoIGluY2x1ZGVzIHZhcmlvdXMgY2FsbGJhY2tzIGNhbGxlZCBieSBQQ0kg
-c3Vic3lzdGVtLiBJbiB0aGUKPj5kZWZpbml0aW9uIG9mIHRoaXMgc3RydWN0LCBzb21lIGNhbGxi
-YWNrcyBoYXZlIGV4cGxpY2l0IG5hbWVzIGZvcgo+Pml0cyBhcmd1bWVudHMsIGJ1dCB0aGUgbGVm
-dCBkb24ndCBoYXZlLgo+Pgo+PlRoZSBwYXRjaCByZW1vdmVzIGFsbCBleHBsaWNpdCBuYW1lcyBv
-ZiB0aGUgYXJndW1lbnRzIHRvIHRoZQo+PmNhbGxiYWNrcyBpbiAic3RydWN0IHBjaV9jb250cm9s
-bGVyX29wcyIgdG8ga2VlcCB0aGUgY29kZSBsb29rCj4+Y29uc2lzdGVudC4KPgo+aW1obyBpdCBp
-cyBhIGJhZCBpZGVhLiBTZWxmLWRvY3VtZXRlZCBjb2RlIGdldHMgbGVzcyBzZWxmLWRvY3VtZW50
-ZWQgLSBob3cgZG8KPkkga25vdyB3aGF0ICJ1bnNpZ25lZCBsb25nIiBwYXJhbWV0ZXJzIGFyZSBm
-b3Igd2l0aG91dCBncmVwcGluZz8KPgoKT2suIEknbGwgY2hhbmdlIHRoZSBmdW5jdGlvbiBkZWZp
-bmF0aW9ucyB0byBhbHdheXMgaGF2ZSBleHBsaWNpdAphcmd1bWVudCBuYW1lcy4KCj4+Cj4+Q2M6
-IERhbmllbCBBeHRlbnMgPGRqYUBheHRlbnMubmV0Pgo+PlNpZ25lZC1vZmYtYnk6IEdhdmluIFNo
-YW4gPGd3c2hhbkBsaW51eC52bmV0LmlibS5jb20+Cj4+LS0tCj4+djU6Cj4+ICAgKiBOZXdseSBp
-bnRyb2R1Y2VkCj4+LS0tCj4+ICBhcmNoL3Bvd2VycGMvaW5jbHVkZS9hc20vcGNpLWJyaWRnZS5o
-IHwgOCArKysrLS0tLQo+PiAgMSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygrKSwgNCBkZWxl
-dGlvbnMoLSkKPj4KPj5kaWZmIC0tZ2l0IGEvYXJjaC9wb3dlcnBjL2luY2x1ZGUvYXNtL3BjaS1i
-cmlkZ2UuaCBiL2FyY2gvcG93ZXJwYy9pbmNsdWRlL2FzbS9wY2ktYnJpZGdlLmgKPj5pbmRleCA3
-NDQ4ODRiLi4xMjUyY2Q1IDEwMDY0NAo+Pi0tLSBhL2FyY2gvcG93ZXJwYy9pbmNsdWRlL2FzbS9w
-Y2ktYnJpZGdlLmgKPj4rKysgYi9hcmNoL3Bvd2VycGMvaW5jbHVkZS9hc20vcGNpLWJyaWRnZS5o
-Cj4+QEAgLTE4LDggKzE4LDggQEAgc3RydWN0IGRldmljZV9ub2RlOwo+PiAgICogUENJIGNvbnRy
-b2xsZXIgb3BlcmF0aW9ucwo+PiAgICovCj4+ICBzdHJ1Y3QgcGNpX2NvbnRyb2xsZXJfb3BzIHsK
-Pj4tCXZvaWQJCSgqZG1hX2Rldl9zZXR1cCkoc3RydWN0IHBjaV9kZXYgKmRldik7Cj4+LQl2b2lk
-CQkoKmRtYV9idXNfc2V0dXApKHN0cnVjdCBwY2lfYnVzICpidXMpOwo+PisJdm9pZAkJKCpkbWFf
-ZGV2X3NldHVwKShzdHJ1Y3QgcGNpX2RldiAqKTsKPj4rCXZvaWQJCSgqZG1hX2J1c19zZXR1cCko
-c3RydWN0IHBjaV9idXMgKik7Cj4+Cj4+ICAJaW50CQkoKnByb2JlX21vZGUpKHN0cnVjdCBwY2lf
-YnVzICopOwo+Pgo+PkBAIC0yOCw4ICsyOCw4IEBAIHN0cnVjdCBwY2lfY29udHJvbGxlcl9vcHMg
-ewo+PiAgCWJvb2wJCSgqZW5hYmxlX2RldmljZV9ob29rKShzdHJ1Y3QgcGNpX2RldiAqKTsKPj4K
-Pj4gIAkvKiBDYWxsZWQgZHVyaW5nIFBDSSByZXNvdXJjZSByZWFzc2lnbm1lbnQgKi8KPj4tCXJl
-c291cmNlX3NpemVfdCAoKndpbmRvd19hbGlnbm1lbnQpKHN0cnVjdCBwY2lfYnVzICosIHVuc2ln
-bmVkIGxvbmcgdHlwZSk7Cj4+LQl2b2lkCQkoKnJlc2V0X3NlY29uZGFyeV9idXMpKHN0cnVjdCBw
-Y2lfZGV2ICpkZXYpOwo+PisJcmVzb3VyY2Vfc2l6ZV90ICgqd2luZG93X2FsaWdubWVudCkoc3Ry
-dWN0IHBjaV9idXMgKiwgdW5zaWduZWQgbG9uZyk7Cj4+Kwl2b2lkCQkoKnJlc2V0X3NlY29uZGFy
-eV9idXMpKHN0cnVjdCBwY2lfZGV2ICopOwo+PiAgfTsKPj4KPj4gIC8qCj4+CgpUaGFua3MsCkdh
-dmluCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51
-eHBwYy1kZXYgbWFpbGluZyBsaXN0CkxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnCmh0dHBz
-Oi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9saW51eHBwYy1kZXY=
+On Mon, Jun 08, 2015 at 10:34:13PM +0100, Grant Likely wrote:
+>On Mon, Jun 8, 2015 at 9:57 PM, Benjamin Herrenschmidt
+><benh@kernel.crashing.org> wrote:
+>> On Sun, 2015-06-07 at 08:54 +0100, Grant Likely wrote:
+>>> > IE. conceptually, what overlays do today is quite rooted around the idea
+>>> > of having a fixed "base" DT and some pre-compiled DTB overlays that
+>>> > get added/removed. The design completely ignore the idea of a FW that
+>>> > maintains a "live" tree which we want to keep in sync, which is what we
+>>> > want to do here, or what we could do with a "live" open firmware
+>>> > implementation.
+>>>
+>>> Right, which is exactly the reason for the changeset/overlay split.
+>>> Overlays assume a fixed base, and that overlays are kind of like plug-in
+>>> modules. changeset makes no such assumption.
+>>
+>> So you suggest we create a function that takes an fdt and an "anchor" as input,
+>> and expands that FDT below that anchor, but does so by using the changeset API
+>> under the hood ?
+>>
+>> Even that looks somewhat tricky (turn that bit of FDT into a pile of changeset
+>> actions), however, I can see how we could create a new function inside changeset
+>> to attach a subtree.
+>>
+>> Ie. of_attach_subtree() (which could have it's own reconfig action but we
+>> don't care that much yet), which takes an expanded subtree and an anchor, and
+>> calls of_attach_node() in effect for all nodes in there.
+>>
+>> We could then have a two pass mechanism in our hotplug code:
+>>
+>>  - Expand the bit of fdt into a separate tree
+>>  - Use of_attach_subtree to "add" that subtree to the main tree
+>>
+>> What do you think ?
+>
+>I like that.
+>
+
+Thanks, Grant and Ben. Currently, I'm collecting more feedbacks for v5. So
+it's something I will address in v6.
+
+Thanks,
+Gavin
+
+>g.
+>
