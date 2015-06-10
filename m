@@ -1,26 +1,30 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v0] arm64: dts: Add APM X-Gene standby GPIO controller DTS entries
-Date: Wed, 10 Jun 2015 09:40:11 +0200
-Message-ID: <CACRpkdatOOT87T++pqfiR_R7ULL1SHmS-mrjA5HWiWiciD8ETA@mail.gmail.com>
-References: <1433402344-20836-1-git-send-email-yvo@apm.com>
+Subject: Re: [PATCH v2] gpio: Added GPIO support to Zynq Ultrascale+ MPSoC
+Date: Wed, 10 Jun 2015 09:45:23 +0200
+Message-ID: <CACRpkdbz8XgSEKHvjysJ3ORTwsjiAaaVnfSLBCbX=Nrgh4Pbww@mail.gmail.com>
+References: <1433419832-40678-1-git-send-email-anuragku@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1433402344-20836-1-git-send-email-yvo@apm.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Y Vo <yvo@apm.com>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "arm@kernel.org" <arm@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Phong Vo <pvo@apm.com>, Toan Le <toanle@apm.com>, patches <patches@apm.com>, Loc Ho <lho@apm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1433419832-40678-1-git-send-email-anuragku@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+Cc: Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, "<mark.rutland"@arm.com, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alexandre Courbot <gnurou@gmail.com>, Michal Simek <michal.simek@xilinx.com>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Harini Katakam <harini.katakam@xilinx.com>, punnaia@xilinx.com, svemula@xilinx.com, anirudh@xilinx.com, Anurag Kumar Vulisha <anuragku@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 4, 2015 at 9:19 AM, Y Vo <yvo@apm.com> wrote:
+On Thu, Jun 4, 2015 at 2:10 PM, Anurag Kumar Vulisha
+<anurag.kumar.vulisha@xilinx.com> wrote:
 
-> Add standby domain gpio controller for APM X-Gene SoC platform.
+> Added support to Zynq Ultrascale+ MPSoC on the existing zynq gpio driver.
 >
-> Signed-off-by: Y Vo <yvo@apm.com>
+> Signed-off-by: Anurag Kumar Vulisha <anuragku@xilinx.com>
+> ---
+>  Chnages in v2:
+>         1.Added device tree bingings for Zynq Ultrascale+ MPSoC
+>         2.Changed the commit message and subject from ZynqMP to
+>           Zynq Ultrascale+ MPSoC
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-
-Please funnel this through the ARM SoC tree.
+Patch applied with Michal's ACK.
 
 Yours,
 Linus Walleij
