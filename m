@@ -1,116 +1,64 @@
-From: Wolfram Sang <wsa@the-dreams.de>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
 Subject: Re: [PATCH v6 0/6] i2c: at91: add support to FIFOs and alternative
  command
-Date: Wed, 10 Jun 2015 21:57:09 +0900
-Message-ID: <20150610125708.GE1592@katana>
+Date: Wed, 10 Jun 2015 22:09:48 +0900
+Message-ID: <20150610130947.GG1592@katana>
 References: <cover.1433866582.git.cyrille.pitchen@atmel.com>
+ <20150610125708.GE1592@katana>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ZInfyf7laFu/Kiw7"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="doKZ0ri6bHmN2Q5y"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <cover.1433866582.git.cyrille.pitchen@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Cyrille Pitchen <cyrille.pitchen@atmel.com>
-Cc: ludovic.desroches@atmel.com, nicolas.ferre@atmel.com, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, robh+dt@kernel.org
+In-Reply-To: <20150610125708.GE1592@katana>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---ZInfyf7laFu/Kiw7
+--doKZ0ri6bHmN2Q5y
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 09, 2015 at 06:22:13PM +0200, Cyrille Pitchen wrote:
-> ChangeLog
+> After fixing the version string in patch 5 as mentioned there, and added
+> the acks from Ludovic for the previous version.
 >=20
-> v6:
-> - replace "at91sama5d2" by "sama5d2".
->=20
-> v5:
-> - print I2C controller version in an already existing dev_info() instead =
-of
->   adding a new one.
->=20
-> v4:
-> - replace 0x%x by %#x when printing I2C controller version
-> - change the order of patches: the race condition bug fix becomes the fir=
-st
->   patch so it be can more easily applied to older kernels.
->=20
-> v3:
-> - fix braces {} coding style issue
-> - split the alternative command patch into 2 patches: the first one fixes
->   a race condition whereas the second one is the actual alternative comma=
-nd
->   patch
->=20
-> v2:
-> - fix typo in comment for AT91_TWI_SVEN.
-> - document new device tree bindings like "atmel,fifo-size".
-> - explicitly set the has_alt_cmd boolean to false to already existing chip
->   configs.
-> - use the BIT() macro to define the register bits and do a little cleanup=
- in a
->   dedicated patch.
-> - reword some comments to better explain why the TXCOMP interrupt is no l=
-onger
->   enabled in at91_do_twi_transfer() but later in
->   at91_twi_write_data_dma_callback() to avoid a race condition when DMA i=
-s used.
-> - remove useless TXCOMP interrupt enable line in at91_twi_write_next_byte=
-()
->   since this interrupt is also enabled by at91_do_twi_transfer() for PIO
->   transfers.
->=20
-> v1:
-> This series of patches adds support of two new features which will be
-> introduced with Atmel sama5d2x SoC.
->=20
-> First, the alternative command mode eases the sending of STOP conditions.
-> Before starting an I2C transaction, the size data to be transfered is
-> written into the new Alternative Command Register. For each byte transfer=
-red,
-> the I2C controller decreases this counter and automatically sends a STOP
-> condition when the counter value reaches 0, that is to say when the last =
-byte
-> of the transaction has been sent/received. So there is no longer need to =
-set
-> the STOP bit into the Control Register.
->=20
-> Then the use of FIFOs allows to reduce number I/O accesses: for instance,
-> the TX FIFO allows to write up to 4 data in a single access to the Transm=
-it
-> Holding Register. Also the RX FIFO allows to read up to 4 data in a single
-> access to the Receive Holding Register. Currently only DMA transfers take
-> advantage of FIFOs.
+> Applied to for-next, thanks!
 
-After fixing the version string in patch 5 as mentioned there, and added
-the acks from Ludovic for the previous version.
+And unrelated to your series, just in case you feel like it, my code checke=
+rs
+say:
 
-Applied to for-next, thanks!
+drivers/i2c/busses/i2c-at91.c:213: style: Checking if unsigned variable 'bu=
+f_len' is less than zero.
+drivers/i2c/busses/i2c-at91.c:254: style: Checking if unsigned variable 'bu=
+f_len' is less than zero.
+drivers/i2c/busses/i2c-at91.c:293: style: Checking if unsigned variable 'bu=
+f_len' is less than zero.
 
 
---ZInfyf7laFu/Kiw7
+--doKZ0ri6bHmN2Q5y
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJVeDQkAAoJEBQN5MwUoCm2obQQAKb3ymsnDSeJRsH03HQLsUsl
-DqqfEQThlQWH+1gCIKK8leA/R1bExOoyTSfE7yn59c0P3/UQMGt+nHPyvkAxgrfi
-u6a1lvYbNgTonrbyv1c35LZKM4VlO6GTkuWyZNxQs0NpjUN3kkkmQH8qWfx0FZn3
-fL0HFGZuEYWT65/1t98sUdm/N9cZcUPaEXprLpdxX1EUTQhY3GBoLusVYvXizOQ0
-hoCiP9vYNZ91P9zxXa07QBNgyGoUzUg/V+xfqU55p3BNw892IR2cIGmAH0fJxvy6
-cNal9jBZe/lL8TjFkv9gpXKPBNbNV1L6fTqk+/bw8fc3GRikhGFZbVrQGkIO36Md
-0P7zHjcwmlbR/zLiINWhJmxMjyVyomB3UpsC8KdhYzq7ezmpWB0kSVocp1Z197X2
-pncS9ADPP/gTjYZlTYBCRAP1rNKpIzudi0zSfJnKSlR8Tu2zFYs0AByawmK5Nyku
-OwZzyCo1AS2trpxDAHkIA5KiV9C6XJfNv/frbmYeW/xKSuJPtsqHqwpvp90/313v
-nhL+CRDbznx9pauc8ayIiPOUwz3kkpVrGcSjU4v2dkj9zyti0r4hCw02e96nVIBH
-F6CbBA8aKDZmO7Jdbh1rjguQdMMojY2a/N3VOLSpNKEEFvooMZbRGTHtwK0Pm84E
-qhsBmOvujuZ6Qrz/uUbW
-=/6Se
+iQIcBAEBAgAGBQJVeDcbAAoJEBQN5MwUoCm2AJYQAJQ9b4F/nfBCg7SXJQnt0bas
+ONgk0EkR4xXuuUhD2FkDFOPrU9xVCu4Kl5srqkJe6vUCFa4xNPOSyV+l9n3DuPq9
+CPEW0lU0NY2UoSUtoz91QxozIqAo/eGMen1w4BykXxpImF9DP9KBDh0Oy3H3K4Yi
++FHad3fpBc1zyeWVc45BVE4BdcjiiARTV8sTTmeHT4FSH2aISOXaTDHYXuH3QTh5
+Xg5mcA4LkqKhQUyG6faoHf11xuYzsWLZOu99pE46YowWienCQk4Hiw6OB7dlgYWT
+64zWiE9AtuU2SgvUjtr8Jv0tHtKJRvKdB1SsiUA5NQOajr7kG2a9THUgPMcmX5Rv
+U7DJEwesXHdnOZoNrCWiqXRQTZqQM61NenMLJawb0nCGHE70UxMEjUemnzlQQYzn
+T2jUACR2FQ9ESKcFufjqoWdpRY8g2cbQL+IP6ZkmWlgjw6CSu63U5XnStoNScmBq
+bQWcwZ+XzUO4J41ubI/I1uti9Qg2Oa/VZkWpaQWKXSSHhPFVCOiVhZDooQx0PSzb
+gpoLfFCVO4SjCTFn1TrPUYIumAIV1VQEl8asPmHHan6aYt1x9gC41HU+Q8Cd3dAa
+voqgw+OnbF2MS66utcK/ZX9E2kJ/uwXRQMi75sMyzE01ipblqa2MTWBrkJumEL5L
+G5sl3bCslXVOweR+pf4G
+=TyGE
 -----END PGP SIGNATURE-----
 
---ZInfyf7laFu/Kiw7--
+--doKZ0ri6bHmN2Q5y--
