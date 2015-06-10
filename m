@@ -1,102 +1,66 @@
 From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: Re: [PATCH v5 11/42] powerpc/powernv: Increase PE# capacity
-Date: Wed, 10 Jun 2015 16:18:25 +1000
-Message-ID: <20150610061825.GF5664@gwshan>
+Subject: Re: [PATCH v5 12/42] powerpc/pci: Cleanup on pci_controller_ops
+Date: Wed, 10 Jun 2015 16:20:08 +1000
+Message-ID: <20150610062008.GA9875@gwshan>
 References: <1433400131-18429-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1433400131-18429-12-git-send-email-gwshan@linux.vnet.ibm.com>
- <5577BFE9.2040601@ozlabs.ru>
+ <1433400131-18429-13-git-send-email-gwshan@linux.vnet.ibm.com>
+ <5577C08D.1050900@ozlabs.ru>
 Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
 Content-Disposition: inline
-In-Reply-To: <5577BFE9.2040601@ozlabs.ru>
-Sender: linux-pci-owner@vger.kernel.org
+In-Reply-To: <5577C08D.1050900@ozlabs.ru>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
 To: Alexey Kardashevskiy <aik@ozlabs.ru>
-Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, bhelgaas@google.com, panto@antoniou-consulting.com, robherring2@gmail.com, grant.likely@linaro.org
+Cc: devicetree@vger.kernel.org, linux-pci@vger.kernel.org, panto@antoniou-consulting.com, Gavin Shan <gwshan@linux.vnet.ibm.com>, grant.likely@linaro.org, robherring2@gmail.com, bhelgaas@google.com, linuxppc-dev@lists.ozlabs.org, Daniel Axtens <dja@axtens.net>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 10, 2015 at 02:41:13PM +1000, Alexey Kardashevskiy wrote:
->On 06/04/2015 04:41 PM, Gavin Shan wrote:
->>Each PHB maintains an array helping to translate RID (Request
->>ID) to PE# with the assumption that PE# takes 8 bits, indicating
->>that we can't have more than 256 PEs. However, pci_dn->pe_number
->>already had 4-bytes for the PE#.
->>
->>The patch extends the PE# capacity so that each of them will be
->>4-bytes long. Then we can use IODA_INVALID_PE to check one entry
->>in phb->pe_rmap[] is valid or not.
->>
->>Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
->>---
->>v5:
->>   * Split from [PATCH v5 v4 06/21]
->>---
->>  arch/powerpc/platforms/powernv/pci-ioda.c | 5 ++++-
->>  arch/powerpc/platforms/powernv/pci.h      | 5 ++---
->>  2 files changed, 6 insertions(+), 4 deletions(-)
->>
->>diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
->>index 2087c5c..d8b0ef5 100644
->>--- a/arch/powerpc/platforms/powernv/pci-ioda.c
->>+++ b/arch/powerpc/platforms/powernv/pci-ioda.c
->>@@ -840,7 +840,7 @@ static int pnv_ioda_deconfigure_pe(struct pnv_phb *phb, struct pnv_ioda_pe *pe)
->>
->>  	/* Clear the reverse map */
->>  	for (rid = pe->rid; rid < rid_end; rid++)
->>-		phb->ioda.pe_rmap[rid] = 0;
->>+		phb->ioda.pe_rmap[rid] = IODA_INVALID_PE;
->>
->>  	/* Release from all parents PELT-V */
->>  	while (parent) {
->>@@ -3303,6 +3303,9 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
->>  	if (prop32)
->>  		phb->ioda.reserved_pe = be32_to_cpup(prop32);
->>
->>+	/* Invalidate RID to PE# mapping */
->>+	memset(phb->ioda.pe_rmap, 0xff, sizeof(phb->ioda.pe_rmap));
->
->
->Above you assign IODA_INVALID_PE in a loop and here you just do 0xff for the
->entire array. Have a loop here too and assign IODA_INVALID_PE to every entry:
->for (i = 0; i < ARRAY_SIZE(phb->ioda.pe_rmap); ++i)
->	phb->ioda.pe_rmap[i] = IODA_INVALID_PE;
->
-
-Yeah, will change accordingly.
-
->>+
->>  	/* Parse 64-bit MMIO range */
->>  	pnv_ioda_parse_m64_window(phb);
->>
->>diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
->>index 94ef1df..590f778 100644
->>--- a/arch/powerpc/platforms/powernv/pci.h
->>+++ b/arch/powerpc/platforms/powernv/pci.h
->>@@ -175,11 +175,10 @@ struct pnv_phb {
->>  			struct list_head	pe_list;
->>  			struct mutex            pe_list_mutex;
->>
->>-			/* Reverse map of PEs, will have to extend if
->>-			 * we are to support more than 256 PEs, indexed
->>+			/* Reverse map of PEs, indexed by
->>  			 * bus { bus, devfn }
->>  			 */
->>-			unsigned char		pe_rmap[0x10000];
->>+			int			pe_rmap[0x10000];
->
->
->Most time most of the array will be empty and it is 256K per PHB... I
->understand we have quite a lot of RAM but still.
->
-
-Indeed, I'll think about how to save memory here, but not in this
-patchset.
-
->>
->>  			/* Number of 32-bit DMA segments */
->>  			unsigned long		dma32_segcount;
->>
-
-Thanks,
-Gavin
+T24gV2VkLCBKdW4gMTAsIDIwMTUgYXQgMDI6NDM6NTdQTSArMTAwMCwgQWxleGV5IEthcmRhc2hl
+dnNraXkgd3JvdGU6Cj5PbiAwNi8wNC8yMDE1IDA0OjQxIFBNLCBHYXZpbiBTaGFuIHdyb3RlOgo+
+PkVhY2ggUEhCIG1haW50YWlucyBvbmUgaW5zdGFuY2Ugb2YgInN0cnVjdCBwY2lfY29udHJvbGxl
+cl9vcHMiLAo+PndoaWNoIGluY2x1ZGVzIHZhcmlvdXMgY2FsbGJhY2tzIGNhbGxlZCBieSBQQ0kg
+c3Vic3lzdGVtLiBJbiB0aGUKPj5kZWZpbml0aW9uIG9mIHRoaXMgc3RydWN0LCBzb21lIGNhbGxi
+YWNrcyBoYXZlIGV4cGxpY2l0IG5hbWVzIGZvcgo+Pml0cyBhcmd1bWVudHMsIGJ1dCB0aGUgbGVm
+dCBkb24ndCBoYXZlLgo+Pgo+PlRoZSBwYXRjaCByZW1vdmVzIGFsbCBleHBsaWNpdCBuYW1lcyBv
+ZiB0aGUgYXJndW1lbnRzIHRvIHRoZQo+PmNhbGxiYWNrcyBpbiAic3RydWN0IHBjaV9jb250cm9s
+bGVyX29wcyIgdG8ga2VlcCB0aGUgY29kZSBsb29rCj4+Y29uc2lzdGVudC4KPgo+aW1obyBpdCBp
+cyBhIGJhZCBpZGVhLiBTZWxmLWRvY3VtZXRlZCBjb2RlIGdldHMgbGVzcyBzZWxmLWRvY3VtZW50
+ZWQgLSBob3cgZG8KPkkga25vdyB3aGF0ICJ1bnNpZ25lZCBsb25nIiBwYXJhbWV0ZXJzIGFyZSBm
+b3Igd2l0aG91dCBncmVwcGluZz8KPgoKT2suIEknbGwgY2hhbmdlIHRoZSBmdW5jdGlvbiBkZWZp
+bmF0aW9ucyB0byBhbHdheXMgaGF2ZSBleHBsaWNpdAphcmd1bWVudCBuYW1lcy4KCj4+Cj4+Q2M6
+IERhbmllbCBBeHRlbnMgPGRqYUBheHRlbnMubmV0Pgo+PlNpZ25lZC1vZmYtYnk6IEdhdmluIFNo
+YW4gPGd3c2hhbkBsaW51eC52bmV0LmlibS5jb20+Cj4+LS0tCj4+djU6Cj4+ICAgKiBOZXdseSBp
+bnRyb2R1Y2VkCj4+LS0tCj4+ICBhcmNoL3Bvd2VycGMvaW5jbHVkZS9hc20vcGNpLWJyaWRnZS5o
+IHwgOCArKysrLS0tLQo+PiAgMSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygrKSwgNCBkZWxl
+dGlvbnMoLSkKPj4KPj5kaWZmIC0tZ2l0IGEvYXJjaC9wb3dlcnBjL2luY2x1ZGUvYXNtL3BjaS1i
+cmlkZ2UuaCBiL2FyY2gvcG93ZXJwYy9pbmNsdWRlL2FzbS9wY2ktYnJpZGdlLmgKPj5pbmRleCA3
+NDQ4ODRiLi4xMjUyY2Q1IDEwMDY0NAo+Pi0tLSBhL2FyY2gvcG93ZXJwYy9pbmNsdWRlL2FzbS9w
+Y2ktYnJpZGdlLmgKPj4rKysgYi9hcmNoL3Bvd2VycGMvaW5jbHVkZS9hc20vcGNpLWJyaWRnZS5o
+Cj4+QEAgLTE4LDggKzE4LDggQEAgc3RydWN0IGRldmljZV9ub2RlOwo+PiAgICogUENJIGNvbnRy
+b2xsZXIgb3BlcmF0aW9ucwo+PiAgICovCj4+ICBzdHJ1Y3QgcGNpX2NvbnRyb2xsZXJfb3BzIHsK
+Pj4tCXZvaWQJCSgqZG1hX2Rldl9zZXR1cCkoc3RydWN0IHBjaV9kZXYgKmRldik7Cj4+LQl2b2lk
+CQkoKmRtYV9idXNfc2V0dXApKHN0cnVjdCBwY2lfYnVzICpidXMpOwo+PisJdm9pZAkJKCpkbWFf
+ZGV2X3NldHVwKShzdHJ1Y3QgcGNpX2RldiAqKTsKPj4rCXZvaWQJCSgqZG1hX2J1c19zZXR1cCko
+c3RydWN0IHBjaV9idXMgKik7Cj4+Cj4+ICAJaW50CQkoKnByb2JlX21vZGUpKHN0cnVjdCBwY2lf
+YnVzICopOwo+Pgo+PkBAIC0yOCw4ICsyOCw4IEBAIHN0cnVjdCBwY2lfY29udHJvbGxlcl9vcHMg
+ewo+PiAgCWJvb2wJCSgqZW5hYmxlX2RldmljZV9ob29rKShzdHJ1Y3QgcGNpX2RldiAqKTsKPj4K
+Pj4gIAkvKiBDYWxsZWQgZHVyaW5nIFBDSSByZXNvdXJjZSByZWFzc2lnbm1lbnQgKi8KPj4tCXJl
+c291cmNlX3NpemVfdCAoKndpbmRvd19hbGlnbm1lbnQpKHN0cnVjdCBwY2lfYnVzICosIHVuc2ln
+bmVkIGxvbmcgdHlwZSk7Cj4+LQl2b2lkCQkoKnJlc2V0X3NlY29uZGFyeV9idXMpKHN0cnVjdCBw
+Y2lfZGV2ICpkZXYpOwo+PisJcmVzb3VyY2Vfc2l6ZV90ICgqd2luZG93X2FsaWdubWVudCkoc3Ry
+dWN0IHBjaV9idXMgKiwgdW5zaWduZWQgbG9uZyk7Cj4+Kwl2b2lkCQkoKnJlc2V0X3NlY29uZGFy
+eV9idXMpKHN0cnVjdCBwY2lfZGV2ICopOwo+PiAgfTsKPj4KPj4gIC8qCj4+CgpUaGFua3MsCkdh
+dmluCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51
+eHBwYy1kZXYgbWFpbGluZyBsaXN0CkxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnCmh0dHBz
+Oi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9saW51eHBwYy1kZXY=
