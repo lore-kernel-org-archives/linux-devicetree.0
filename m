@@ -1,68 +1,39 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH 2/9] ARM: STi: DT: Add STiH407 family tsin1 pinctrl
- configuration
-Date: Wed, 10 Jun 2015 15:03:59 +0100
-Message-ID: <1433945046-19855-3-git-send-email-peter.griffin@linaro.org>
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 8/9] ARM: STi: DT: Add STiH407 family tsout1 pinctrl configuration
+Date: Wed, 10 Jun 2015 15:04:05 +0100
+Message-ID: <1433945046-19855-9-git-send-email-peter.griffin@linaro.org>
 References: <1433945046-19855-1-git-send-email-peter.griffin@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1433945046-19855-1-git-send-email-peter.griffin@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com
-Cc: peter.griffin@linaro.org, devicetree@vger.kernel.org, lee.jones@linaro.org, hugues.fruchet@st.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1433945046-19855-1-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org
+Cc: peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hugues.fruchet-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-tsin1 channel can be configured for either serial or parallel data
-transfer. This patch adds the pinctrl config for both possibilities.
+tsout1 channel can only be configured for serial data tranfer.
 
-Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/boot/dts/stih407-pinctrl.dtsi | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ arch/arm/boot/dts/stih407-pinctrl.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
 diff --git a/arch/arm/boot/dts/stih407-pinctrl.dtsi b/arch/arm/boot/dts/stih407-pinctrl.dtsi
-index c8c8e84..7b1b652 100644
+index 85cd9fc..af7f5f7 100644
 --- a/arch/arm/boot/dts/stih407-pinctrl.dtsi
 +++ b/arch/arm/boot/dts/stih407-pinctrl.dtsi
-@@ -466,6 +466,34 @@
+@@ -595,6 +595,18 @@
  					};
  				};
  			};
 +
-+			tsin1 {
-+				pinctrl_tsin1_parallel: tsin1_parallel {
++			tsout1 {
++				pinctrl_tsout1_serial: tsout1_serial {
 +					st,pins {
-+						DATA7 = <&pio12 0 ALT1 IN SE_NICLK_IO 0 CLK_A>;
-+						DATA6 = <&pio12 1 ALT1 IN SE_NICLK_IO 0 CLK_A>;
-+						DATA5 = <&pio12 2 ALT1 IN SE_NICLK_IO 0 CLK_A>;
-+						DATA4 = <&pio12 3 ALT1 IN SE_NICLK_IO 0 CLK_A>;
-+						DATA3 = <&pio12 4 ALT1 IN SE_NICLK_IO 0 CLK_A>;
-+						DATA2 = <&pio12 5 ALT1 IN SE_NICLK_IO 0 CLK_A>;
-+						DATA1 = <&pio12 6 ALT1 IN SE_NICLK_IO 0 CLK_A>;
-+						DATA0 = <&pio12 7 ALT1 IN SE_NICLK_IO 0 CLK_A>;
-+						CLKIN = <&pio11 7 ALT1 IN CLKNOTDATA 0 CLK_A>;
-+						VALID = <&pio11 5 ALT1 IN SE_NICLK_IO 0 CLK_A>;
-+						ERROR = <&pio11 4 ALT1 IN SE_NICLK_IO 0 CLK_A>;
-+						PKCLK = <&pio11 6 ALT1 IN SE_NICLK_IO 0 CLK_A>;
-+					};
-+				};
-+				pinctrl_tsin1_serial: tsin1_serial {
-+					st,pins {
-+						DATA7 = <&pio12 0 ALT1 IN SE_NICLK_IO 0 CLK_A>;
-+						CLKIN = <&pio11 7 ALT1 IN CLKNOTDATA 0 CLK_A>;
-+						VALID = <&pio11 5 ALT1 IN SE_NICLK_IO 0 CLK_A>;
-+						ERROR = <&pio11 4 ALT1 IN SE_NICLK_IO 0 CLK_A>;
-+						PKCLK = <&pio11 6 ALT1 IN SE_NICLK_IO 0 CLK_A>;
++						DATA7 = <&pio19 4 ALT1 OUT SE_NICLK_IO 0 CLK_A>;
++						CLKIN = <&pio19 3 ALT1 OUT NICLK 0 CLK_A>;
++						VALID = <&pio19 1 ALT1 OUT SE_NICLK_IO 0 CLK_A>;
++						ERROR = <&pio19 0 ALT1 OUT SE_NICLK_IO 0 CLK_A>;
++						PKCLK = <&pio19 2 ALT1 OUT SE_NICLK_IO 0 CLK_A>;
 +					};
 +				};
 +			};
@@ -71,3 +42,8 @@ index c8c8e84..7b1b652 100644
  		pin-controller-front1 {
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
