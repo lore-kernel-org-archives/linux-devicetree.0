@@ -1,55 +1,131 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 2/2] drivercore: Fix unregistration path of platform
- devices
-Date: Wed, 10 Jun 2015 08:40:31 -0700
-Message-ID: <20150610154031.GB22214@kroah.com>
-References: <1433686811-12303-1-git-send-email-grant.likely@linaro.org>
- <1433686811-12303-3-git-send-email-grant.likely@linaro.org>
- <CAPybu_30jTDuwEW_WTGuu6pWwv86p6OqV0eRE1GbCwUVtBm7KA@mail.gmail.com>
- <20150608184713.446B7C406AA@trevor.secretlab.ca>
- <CAPybu_0FfD9dv55SLmy7905yMCV6Kqrr-v2aPUCx6sSikrF7gQ@mail.gmail.com>
- <20150609110044.61031C40580@trevor.secretlab.ca>
- <CAMAWPa_CURGm5YTc0OgBD_T3fwaBDskfUKEn+awxW8P6oQYceA@mail.gmail.com>
- <CAPybu_24X0zZJv6D9i4YM_r7azdnjYrRH=V+p_ong2cFKNrF1w@mail.gmail.com>
- <CAMAWPa-bGwVCnmv=H=8Zo-NCw-nOFBj3-XcVvb-0m0sNYtPO7g@mail.gmail.com>
- <CAPybu_2dpcpjPvn-kXaW-yC2OmkNPna+G8PLO-gP1cMBOcU_ew@mail.gmail.com>
+From: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 5/7] Watchdog: introduce ARM SBSA watchdog driver
+Date: Wed, 10 Jun 2015 23:38:30 +0800
+Message-ID: <CADyBb7tSkdRc0GHbX_vAdDAeFGVS=CFCdC_jMCm5LYmg9m1Qow@mail.gmail.com>
+References: <=fu.wei@linaro.org>
+	<1433217907-928-1-git-send-email-fu.wei@linaro.org>
+	<1433217907-928-6-git-send-email-fu.wei@linaro.org>
+	<556DCC95.806@codeaurora.org>
+	<CADyBb7sXiMNtrH+Eu1Qj00TPNLMMr5cCTPObzFmKnHLsbWH79Q@mail.gmail.com>
+	<556DE2D5.3090906@roeck-us.net>
+	<CADyBb7uT=gFJkK8s-QF1n4Z+Zov9Lurp1nvBO-C-qszTqbMYXQ@mail.gmail.com>
+	<5575DE48.8010308@roeck-us.net>
+	<CADyBb7sYPnvDVEJYVQm65B1JV=yvq10+ezs2x3f8F=TJCZ+OJA@mail.gmail.com>
+	<55766D74.2060401@roeck-us.net>
+	<CADyBb7vR-jP6ZjzMSnprrSXbNayk8umx+cXV3TsGypfhZcCwTw@mail.gmail.com>
+	<55769E0E.8060801@roeck-us.net>
+	<CADyBb7skpSZ=3_ByW-RHM99=nbs7Z5xXFXtsKzkxOXAGjxF=3Q@mail.gmail.com>
+	<557712CF.8010802@roeck-us.net>
+	<5577147B.2030900@codeaurora.org>
+	<5577180E.4070804@roeck-us.net>
+	<CADyBb7sVd5nLwb3eHRPiNt-WTynfaJonOyuE_bD694dayyvevA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAPybu_2dpcpjPvn-kXaW-yC2OmkNPna+G8PLO-gP1cMBOcU_ew@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-Cc: Kevin Hilman <khilman@kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robherring2@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh@kernel.org>, Tyler Baker <tyler.baker@linaro.org>, Olof Johansson <olof@lixom.net>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CADyBb7sVd5nLwb3eHRPiNt-WTynfaJonOyuE_bD694dayyvevA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Linaro ACPI Mailman List <linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Fu <tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, G Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Vipul Gandhi <vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Leo Duran <leo.duran-5C7GfCeVMHo@public.gmane.org>, Jon Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 10, 2015 at 04:46:33PM +0200, Ricardo Ribalda Delgado wrote:
-> Hello Greg
-> 
-> On Wed, Jun 10, 2015 at 4:38 PM, Kevin Hilman <khilman@kernel.org> wrote:
-> > On Wed, Jun 10, 2015 at 12:11 AM, Ricardo Ribalda Delgado
-> 
-> > At this stage of the cycle (merge window opening soon, maintainers
-> > trying to stabilize their stuff for Linus) we want to see linux-next
-> > approaching some level of stability.
-> 
-> Please revert
-> 
-> base/platform: Only insert MEM and IO resources
-> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/commit/?id=36d4b29260753ad78b1ce4363145332c02519adc
-> base/platform: Continue on insert_resource() error
-> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/commit/?id=e50e69d1ac4232af0b6890f16929bf5ceee81538
-> of/platform: Use platform_device interface
-> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/commit/?id=b6d2233f2916fa9338786aeab2e936c5a07e4d0c
-> base/platform: Remove code duplication
-> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/commit/?id=6d9d4b1469b0d9748145e168fc9ec585e1f3f4b0
+Hi Guenter,
 
-Now reverted.
 
-> This patch from Grant needs to be applied:
-> 
-> [PATCH 2/2] drivercore: Fix unregistration path of platform devices
+On 10 June 2015 at 11:41, Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> Hi Guenter,
+>
+> On 10 June 2015 at 00:45, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
+>> On 06/09/2015 09:29 AM, Timur Tabi wrote:
+>>>
+>>> On 06/09/2015 11:22 AM, Guenter Roeck wrote:
+>>>>
+>>>>
+>>>>
+>>>> but I see your point. Essentially, the specification is broken
+>>>> for all practical purposes, since, as you point out, enabling
+>>>> the watchdog overwrites and explicitly sets WCV. Effectively
+>>>> this means that just using WCV to program the timeout period
+>>>> is not really possible.
+>>>>
+>>>> I am not really sure how to address this. We can either only use WOR,
+>>>> and forget about pretimeout, or we can enforce a minimum pretimeout.
+>>>> In the latter case, we'll have to write WCV after writing WOR.
+>>>
+>>>
+>>> In talking with our hardware engineers, using WCV to program the timeout
+>>> period is not a valid operation.  This is why I keep arguing against the
+>>> pre-timeout feature, and I don't agree that servers should always use
+>>> pre-timeout.
+>>>
+>>
+>> Not sure if "not valid" is correct - after all, it is mentioned in the
+>> specification. However, it is at the very least fragile.
+>
+> I think we should focus on SBSA spec, but not a specific chip design,
+> because this is SBSA watchdog, not a driver for an IP core from a
+> specific chip vendor.
+> this operation is mentioned in the spec,
+> and I have tested my driver on Foundation model(from ARM) and a real hardware.
+>
+>>
+>> I tend to agree that we should just forget about pretimeout and
+>> use your original approach, where the timeout value is used
+>> to program WOR. Everything else is really just asking for trouble.
+>
+> I don't mind if we give up pretimeout, The reason I use pretimeout is:
+> this concept matches the function of two stage timeouts.
+>
+> but, If we give up pretimeout, could you give me a suggestion:
+>
+> How to config the two stage timeouts
+> (1)from enabling watchdog to WS0
+> (2)the time from WS1 to WS0
+>
+> If we only have one timeout parameter,  How to config the two stage timeouts?
+> Any suggestion ?
 
-I need some acks before I apply anything else as this is a total mess.
+I have another thought for this, please allow me to sent anther
+patchset in a day. see if you like it.
 
-greg k-h
+>
+> If we make the first stage timeout is timeout/2,  this violates the
+> definition of timeout.
+> I don't think users expect interrupt, panic or reboot at timeout/2.
+>
+> And WS1  definitely isn't a backup of WS0.
+>
+>>
+>> Guenter
+>>
+>
+>
+>
+> --
+> Best regards,
+>
+> Fu Wei
+> Software Engineer
+> Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
+> Ph: +86 21 61221326(direct)
+> Ph: +86 186 2020 4684 (mobile)
+> Room 1512, Regus One Corporate Avenue,Level 15,
+> One Corporate Avenue,222 Hubin Road,Huangpu District,
+> Shanghai,China 200021
+
+
+
+-- 
+Best regards,
+
+Fu Wei
+Software Engineer
+Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
+Ph: +86 21 61221326(direct)
+Ph: +86 186 2020 4684 (mobile)
+Room 1512, Regus One Corporate Avenue,Level 15,
+One Corporate Avenue,222 Hubin Road,Huangpu District,
+Shanghai,China 200021
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
