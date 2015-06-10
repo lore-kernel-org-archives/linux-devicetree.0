@@ -1,114 +1,66 @@
-From: Dann Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-Subject: Re: [PATCH 2/2 RESEND] power: reset: Add syscon poweroff device node
- for APM X-Gene platform
-Date: Wed, 10 Jun 2015 13:13:31 -0600
-Message-ID: <CALdTtnt+6RLD8VVx0UzQX0-5CQCL5cN1zo-USHHvqO5o25=w0A@mail.gmail.com>
-References: <1433272747-27114-1-git-send-email-ttnguyen@apm.com>
-	<1433272747-27114-3-git-send-email-ttnguyen@apm.com>
-	<CALdTtnvQg2xmL5MqxUcvJmk_33XiEg9tnLzYvC++ZQL3j7J46g@mail.gmail.com>
-	<CACgAJHwtCuZgZySmcvMxZHVxy__eZP02-TDbEn3FEpMx5y_LDQ@mail.gmail.com>
-	<CALdTtnvwQ0W=3i-Yi73rQQ43uo1njwBoEuNQOpJ79Qoref9Yvw@mail.gmail.com>
+From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Subject: Re: [PATCH v9 4/5] serial: stm32-usart: Add STM32 USART Driver
+Date: Wed, 10 Jun 2015 21:22:59 +0200
+Message-ID: <CALszF6BhyKqKUkWpEr_Fcc_jVrhEy7cZTY3oHKyo3sZK1exUtw@mail.gmail.com>
+References: <1432328616-16964-1-git-send-email-mcoquelin.stm32@gmail.com>
+ <1432328616-16964-5-git-send-email-mcoquelin.stm32@gmail.com>
+ <20150531215246.GA24174@kroah.com>
+ <CALszF6B7_xOMvO9pRJJPNeR4JnOgAQAohSARDivzt2d1DQWP_Q@mail.gmail.com>
+ <20150610154240.GC22214@kroah.com>
+ <CALszF6AaS-i2MBF64mJKtY2h5Sb710Z50Mf8wHotUBysukfZbw@mail.gmail.com>
+ <20150610174955.GA6527@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CALdTtnvwQ0W=3i-Yi73rQQ43uo1njwBoEuNQOpJ79Qoref9Yvw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tai Tri Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org>
-Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20150610174955.GA6527@kroah.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, khilman@kernel.org, "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kamil Lulko <rev13@wp.pl>, Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jiri Slaby <jslaby@suse.cz>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, linux-arm-kern
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 9, 2015 at 9:31 AM, Dann Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org> wrote:
-> On Mon, Jun 8, 2015 at 10:34 PM, Tai Tri Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org> wrote:
->> Hi Dann,
+2015-06-10 19:49 GMT+02:00 Greg Kroah-Hartman <gregkh@linuxfoundation.org>:
+> On Wed, Jun 10, 2015 at 06:18:37PM +0200, Maxime Coquelin wrote:
+>> 2015-06-10 17:42 GMT+02:00 Greg Kroah-Hartman <gregkh@linuxfoundation.org>:
+>> > On Wed, Jun 10, 2015 at 01:33:22PM +0200, Maxime Coquelin wrote:
+>> >> 2015-05-31 23:52 GMT+02:00 Greg Kroah-Hartman <gregkh@linuxfoundation.org>:
+>> >> > On Fri, May 22, 2015 at 11:03:35PM +0200, Maxime Coquelin wrote:
+>> >> >> This drivers adds support to the STM32 USART controller, which is a
+>> >> >> standard serial driver.
+>> >> >>
+>> >> >> Tested-by: Chanwoo Choi <cw00.choi@samsung.com>
+>> >> >> Reviewed-by: Peter Hurley <peter@hurleysoftware.com>
+>> >> >> Reviewed-by: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+>> >> >> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+>> >> >> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+>> >> >
+>> >> > Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> >>
+>> >> Thanks Greg.
+>> >>
+>> >> Will you apply it to your tty tree for v4.2? Or it should go in
+>> >> someone else tree?
+>> >
+>> > It's not in my queue, I'm guessing it goes in through some other tree as
+>> > there are build dependancies here preventing me from taking it.
 >>
->> On Mon, Jun 8, 2015 at 8:44 PM, Dann Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org> wrote:
->>> On Tue, Jun 2, 2015 at 1:19 PM, Tai Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org> wrote:
->>>> This patch adds syscon poweroff device node to support poweroff feature
->>>> on APM X-Gene Mustang platform
->>>
->>> hey Tai,
->>>  The reboot changes work just fine for me, but poweroff does not:
->>>
->>> [  OK  ] Reached target Final Step.
->>>          Starting Power-Off...
->>> reboot: Power down
->>> Unable to poweroff system
->>> Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000000
->>>
->>> CPU: 0 PID: 1 Comm: systemd-shutdow Tainted: G        W       4.1.0-rc7+ #1
->>> Hardware name: APM X-Gene Mustang board (DT)
->>> Call trace:
->>> [<ffffffc00008990c>] dump_backtrace+0x0/0x11c
->>> [<ffffffc000089a38>] show_stack+0x10/0x1c
->>> [<ffffffc0005b447c>] dump_stack+0x88/0xc8
->>> [<ffffffc0005b3374>] panic+0xe0/0x220
->>> [<ffffffc0000b5f24>] do_exit+0x990/0x994
->>> [<ffffffc0000d06bc>] SyS_reboot+0x14c/0x208
->>> ---[ end Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000000
->>>
->>>   -dann
->>>
->>
->> Thanks for testing my patches.
->> On APM X-Gene Mustang platform, power off circuit is controlled by firmware.
->> It requires a firmware update to support power off feature.
->> May I ask what firmware version you're running on?
+>> There should not be any build dependencies.
+>> I just tested it on my x86 machine with COMPILE_TEST on both v4.1-rc1
+>> and tty-next branch.
+>> In both case it compiles without warnings.
 >
-> Sure, 1.15.12.
+> Ok, then feel free to resend it as a stand-alone patch please and I will
+> queue it up.
 
-Tai worked with me offline. For reference, this requires an updated
-SlimPro firmware in addition to the u-boot update. Verified it works
-for me after the update, so:
+Patch resent as a standalone patch.
 
-Tested-by: dann frazier <dann.frazier-rWQIqKB3PjkS+FvcfC7Uqw@public.gmane.org>
-
->   -dann
->
->> Tai
->>
->>
->>>> Signed-off-by: Tai Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org>
->>>> ---
->>>>  arch/arm64/boot/dts/apm/apm-mustang.dts |   12 ++++++++++++
->>>>  1 file changed, 12 insertions(+)
->>>>
->>>> diff --git a/arch/arm64/boot/dts/apm/apm-mustang.dts b/arch/arm64/boot/dts/apm/apm-mustang.dts
->>>> index 83578e7..910d561 100644
->>>> --- a/arch/arm64/boot/dts/apm/apm-mustang.dts
->>>> +++ b/arch/arm64/boot/dts/apm/apm-mustang.dts
->>>> @@ -23,6 +23,18 @@
->>>>                 device_type = "memory";
->>>>                 reg = < 0x1 0x00000000 0x0 0x80000000 >; /* Updated by bootloader */
->>>>         };
->>>> +
->>>> +       poweroff_mbox: poweroff_mbox@10548000 {
->>>> +               compatible = "syscon";
->>>> +               reg = <0x0 0x10548000 0x0 0x30>;
->>>> +       };
->>>> +
->>>> +       poweroff: poweroff@10548010 {
->>>> +               compatible = "syscon-poweroff";
->>>> +               regmap = <&poweroff_mbox>;
->>>> +               offset = <0x10>;
->>>> +               mask = <0x1>;
->>>> +       };
->>>>  };
->>>>
->>>>  &pcie0clk {
->>>> --
->>>> 1.7.9.5
->>>>
->>>>
->>>> _______________________________________________
->>>> linux-arm-kernel mailing list
->>>> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->>>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->>
->>
->>
->> --
->> Tai
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks!
+Maxime
