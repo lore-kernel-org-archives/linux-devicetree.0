@@ -1,112 +1,90 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] TESTCASE: of: OOPS when disabling node via OF_DYNAMIC
-Date: Wed, 10 Jun 2015 17:53:22 +0100
-Message-ID: <20150610165322.576FDC408EA@trevor.secretlab.ca>
-References: <1427814771-30335-1-git-send-email-wsa@the-dreams.de>
-	<83B5C458-8D49-4EF6-9F4A-6C0E2579AB9F@konsulko.com>
-	<20150607111632.CC7A4C410F0@trevor.secretlab.ca>
-	<2309597.bA1dyPGh92@avalon>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4] ARM: l2c: add options to overwrite prefetching behavior
+Date: Wed, 10 Jun 2015 09:57:18 -0700
+Message-ID: <55786C6E.7070204@gmail.com>
+References: <1432941541-18588-1-git-send-email-hauke@hauke-m.de>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2309597.bA1dyPGh92@avalon>
+In-Reply-To: <1432941541-18588-1-git-send-email-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 09 Jun 2015 19:50:26 +0300
-, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
- wrote:
-> Hi Grant,
->=20
-> On Sunday 07 June 2015 12:16:32 Grant Likely wrote:
-> > On Wed, 22 Apr 2015 15:30:28 +0300, Pantelis Antoniou wrote:
-> > > > On Apr 14, 2015, at 16:27 , Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> wr=
-ote:
-> > > >=20
-> > > > Hi Pantelis,
-> > > >=20
-> > > > thanks for your prompt reply. Unfortunately, I had to wait unti=
-l I could
-> > > > access the test system again.
-> > >=20
-> > > [snip]
-> > >=20
-> > > Sorry for the non-prompt reply; but just for kicks, can you try t=
-he
-> > > attached patch?
-> > >=20
-> > > I have a hunch this might be the problem.
-> > >=20
-> > > Regards
-> > >=20
-> > > =C3=A2=C2=80=C2=94 Pantelis
-> >=20
-> > I played around with this some today. If I'm reading it correctly, =
-the
-> > following patch reproduces the same problem:
-> >=20
-> > (continued below patch)
-> > ---
-> > diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-> > index 18016341d5a9..0a27b38c3041 100644
-> > --- a/drivers/of/unittest.c
-> > +++ b/drivers/of/unittest.c
-> > @@ -753,6 +753,11 @@ static void __init of_unittest_match_node(void=
-)
-> >  	}
-> >  }
-> >=20
-> > +static struct resource test_bus_res =3D {
-> > +	.start =3D 0xfffffff8,
-> > +	.end =3D 0xfffffff9,
-> > +	.flags =3D IORESOURCE_MEM,
-> > +};
-> >  static const struct platform_device_info test_bus_info =3D {
-> >  	.name =3D "unittest-bus",
-> >  };
-> > @@ -795,6 +800,7 @@ static void __init of_unittest_platform_populat=
-e(void)
-> >  	if (rc)
-> >  		return;
-> >  	test_bus->dev.of_node =3D np;
-> > +	platform_device_add_resources(test_bus, &test_bus_res, 1);
-> >=20
-> >  	of_platform_populate(np, match, NULL, &test_bus->dev);
-> >  	for_each_child_of_node(np, child) {
-> >=20
-> > ---
-> >=20
-> > I think the fixup patch boils down to the following. It's hard to t=
-ell
-> > because it combines refactoring with the bug fix. Do I have it corr=
-ect?
-> > If so, I'd rather commit the simple fix which can be committed now =
-for
-> > v4.1, and the refactoring can be pushed for v4.2
->=20
-> The patch below looks equivalent to Pantelis' patch if we remove the=20
-> refactoring, but I don't immediately see how r->parent can be NULL in=
-=20
-> platform_device_del() if type is equal to IORESOURCE_MEM or IORESOURC=
-E_IO, as=20
-> platform_device_add() will have called insert_resource() in those cas=
-es, which=20
-> should set the resource parent pointer. I must be missing something a=
-s the=20
-> patch fixes Wolfram's issue, so an explanation in the commit message =
-would be=20
-> welcome.
+On 29/05/15 16:19, Hauke Mehrtens wrote:
+> These options make it possible to overwrites the data and instruction
+> prefetching behavior of the arm pl310 cache controller.
+> 
+> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
 
-of_platform_populate() adds platform devices via of_device_add().
-of_device_add() doesn't add the resources because there are platforms
-that break due to nodes with overlapping resources.
+Acked-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-g.
+> ---
+> changes since
+> v3: 
+>   * remove arm prefix
+>   * improve documentation
+> v2: only set prefetch
+> v1: set prefetch and aux
+>  Documentation/devicetree/bindings/arm/l2cc.txt |  5 +++++
+>  arch/arm/mm/cache-l2x0.c                       | 20 ++++++++++++++++++++
+>  2 files changed, 25 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
+> index 0dbabe9..2251dcc 100644
+> --- a/Documentation/devicetree/bindings/arm/l2cc.txt
+> +++ b/Documentation/devicetree/bindings/arm/l2cc.txt
+> @@ -67,6 +67,11 @@ Optional properties:
+>    disable if zero.
+>  - arm,prefetch-offset : Override prefetch offset value. Valid values are
+>    0-7, 15, 23, and 31.
+> +- prefetch-data : Data prefetch. Value: <0> (forcibly disable), <1>
+> +  (forcibly enable), property absent (retain settings set by firmware)
+> +- prefetch-instr : Instruction prefetch. Value: <0> (forcibly disable),
+> +  <1> (forcibly enable), property absent (retain settings set by
+> +  firmware)
+>  
+>  Example:
+>  
+> diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
+> index e309c8f..2570f83 100644
+> --- a/arch/arm/mm/cache-l2x0.c
+> +++ b/arch/arm/mm/cache-l2x0.c
+> @@ -1199,6 +1199,26 @@ static void __init l2c310_of_parse(const struct device_node *np,
+>  		pr_err("L2C-310 OF arm,prefetch-offset property value is missing\n");
+>  	}
+>  
+> +	ret = of_property_read_u32(np, "prefetch-data", &val);
+> +	if (ret == 0) {
+> +		if (val)
+> +			prefetch |= L310_PREFETCH_CTRL_DATA_PREFETCH;
+> +		else
+> +			prefetch &= ~L310_PREFETCH_CTRL_DATA_PREFETCH;
+> +	} else if (ret != -EINVAL) {
+> +		pr_err("L2C-310 OF prefetch-data property value is missing\n");
+> +	}
+> +
+> +	ret = of_property_read_u32(np, "prefetch-instr", &val);
+> +	if (ret == 0) {
+> +		if (val)
+> +			prefetch |= L310_PREFETCH_CTRL_INSTR_PREFETCH;
+> +		else
+> +			prefetch &= ~L310_PREFETCH_CTRL_INSTR_PREFETCH;
+> +	} else if (ret != -EINVAL) {
+> +		pr_err("L2C-310 OF prefetch-instr property value is missing\n");
+> +	}
+> +
+>  	l2x0_saved_regs.prefetch_ctrl = prefetch;
+>  }
+>  
+> 
+
+
+-- 
+Florian
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
