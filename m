@@ -1,126 +1,61 @@
-From: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2 RESEND] power: reset: Add syscon poweroff device node
- for APM X-Gene platform
-Date: Wed, 10 Jun 2015 16:00:45 -0700
-Message-ID: <CAAtXAHf28He+R6m6RZyVv3AdC4jSX9byxyB37h7tSPYdSGs+Fw@mail.gmail.com>
-References: <1433272747-27114-1-git-send-email-ttnguyen@apm.com>
-	<1433272747-27114-3-git-send-email-ttnguyen@apm.com>
-	<CALdTtnvQg2xmL5MqxUcvJmk_33XiEg9tnLzYvC++ZQL3j7J46g@mail.gmail.com>
-	<CACgAJHwtCuZgZySmcvMxZHVxy__eZP02-TDbEn3FEpMx5y_LDQ@mail.gmail.com>
-	<CALdTtnvwQ0W=3i-Yi73rQQ43uo1njwBoEuNQOpJ79Qoref9Yvw@mail.gmail.com>
-	<CALdTtnt+6RLD8VVx0UzQX0-5CQCL5cN1zo-USHHvqO5o25=w0A@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v0] gpio_keys: fix gpio key driver to proper support GIC interrupt
+Date: Thu, 11 Jun 2015 01:08:09 +0200
+Message-ID: <1529330.QWrJO7eUSt@wuerfel>
+References: <1433402712-21399-1-git-send-email-yvo@apm.com> <2953428.ar7Re29b0L@wuerfel> <CAL4ahLeMm_Qvk0BWxOYTc973_4=TPjZStgTNe5uJL53FBhMRvg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CALdTtnt+6RLD8VVx0UzQX0-5CQCL5cN1zo-USHHvqO5o25=w0A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dann Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-Cc: Tai Tri Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CAL4ahLeMm_Qvk0BWxOYTc973_4=TPjZStgTNe5uJL53FBhMRvg@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Y Vo <yvo@apm.com>
+Cc: linux-input@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Phong Vo <pvo@apm.com>, Toan Le <toanle@apm.com>, Loc Ho <lho@apm.com>, Feng Kan <fkan@apm.com>, patches <patches@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 10, 2015 at 12:13 PM, Dann Frazier
-<dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org> wrote:
-> On Tue, Jun 9, 2015 at 9:31 AM, Dann Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org> wrote:
->> On Mon, Jun 8, 2015 at 10:34 PM, Tai Tri Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org> wrote:
->>> Hi Dann,
->>>
->>> On Mon, Jun 8, 2015 at 8:44 PM, Dann Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org> wrote:
->>>> On Tue, Jun 2, 2015 at 1:19 PM, Tai Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org> wrote:
->>>>> This patch adds syscon poweroff device node to support poweroff feature
->>>>> on APM X-Gene Mustang platform
->>>>
->>>> hey Tai,
->>>>  The reboot changes work just fine for me, but poweroff does not:
->>>>
->>>> [  OK  ] Reached target Final Step.
->>>>          Starting Power-Off...
->>>> reboot: Power down
->>>> Unable to poweroff system
->>>> Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000000
->>>>
->>>> CPU: 0 PID: 1 Comm: systemd-shutdow Tainted: G        W       4.1.0-rc7+ #1
->>>> Hardware name: APM X-Gene Mustang board (DT)
->>>> Call trace:
->>>> [<ffffffc00008990c>] dump_backtrace+0x0/0x11c
->>>> [<ffffffc000089a38>] show_stack+0x10/0x1c
->>>> [<ffffffc0005b447c>] dump_stack+0x88/0xc8
->>>> [<ffffffc0005b3374>] panic+0xe0/0x220
->>>> [<ffffffc0000b5f24>] do_exit+0x990/0x994
->>>> [<ffffffc0000d06bc>] SyS_reboot+0x14c/0x208
->>>> ---[ end Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000000
->>>>
->>>>   -dann
->>>>
->>>
->>> Thanks for testing my patches.
->>> On APM X-Gene Mustang platform, power off circuit is controlled by firmware.
->>> It requires a firmware update to support power off feature.
->>> May I ask what firmware version you're running on?
->>
->> Sure, 1.15.12.
->
-> Tai worked with me offline. For reference, this requires an updated
-> SlimPro firmware in addition to the u-boot update. Verified it works
-> for me after the update, so:
->
-> Tested-by: dann frazier <dann.frazier-rWQIqKB3PjkS+FvcfC7Uqw@public.gmane.org>
+On Monday 08 June 2015 09:48:29 Y Vo wrote:
+> On Fri, Jun 5, 2015 at 7:50 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> > On Thursday 04 June 2015 14:25:12 Y Vo wrote:
+> >> GIC is designed to support two of trigger mechanisms - active level
+> >> high or edge rising. But in the gpio_keys driver, it tries to use both
+> >> edge rising and edge falling trigger. This patch fixes the gpio_keys
+> >> driver to request only the edge rising event when failed to configure the
+> >> interrupt.
+> >>
+> >> Signed-off-by: Y Vo <yvo@apm.com>
+> >
+> > I think you want to use an 'interrupts' property instead of a 'gpios'
+> > property (or possibly both), so you can pass the right polarity.
+> 
+>         gpio-keys {
+>                 compatible = "gpio-keys";
+>                 apm_ctrl_name = "Power Button";
+>                 btn2 {
+>                         label = "EXT_INT2";
+>                         gpios = <&sbgpio 13 0x0>;
+>                         linux,code = <116>;
+>                         linux,input-type = <0x1>;     /* EV_KEY */
+>                 };
+>         };
+> 
+>          sbgpio: sbgpio@17001000{
+>                         compatible = "apm,xgene-gpio-sb";
+>                         reg = <0x0 0x17001000 0x0 0x400>;
+>                         #gpio-cells = <2>;
+>                         gpio-controller;
+>                         interrupts =    <0x0 0x28 0x1>,
+>                                         <0x0 0x29 0x1>,
+>                                         <0x0 0x2a 0x1>,
+>                                         <0x0 0x2b 0x1>,
+>                                         <0x0 0x2c 0x1>,
+>                                         <0x0 0x2d 0x1>;
+>                 };
+> I can change the polarity of interrupt in the sbgpio node, but the
+> issue here is the gpio_key driver always set interrupt type to
+> (irqflags = IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING). And the GIC
+> driver only support edge rising or level high. So that's our issue.
 
-Looks good.
+No, please do as I wrote, and use an interrupts property in the gpio-keys
+node.
 
-Acked-by: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
->
->>   -dann
->>
->>> Tai
->>>
->>>
->>>>> Signed-off-by: Tai Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org>
->>>>> ---
->>>>>  arch/arm64/boot/dts/apm/apm-mustang.dts |   12 ++++++++++++
->>>>>  1 file changed, 12 insertions(+)
->>>>>
->>>>> diff --git a/arch/arm64/boot/dts/apm/apm-mustang.dts b/arch/arm64/boot/dts/apm/apm-mustang.dts
->>>>> index 83578e7..910d561 100644
->>>>> --- a/arch/arm64/boot/dts/apm/apm-mustang.dts
->>>>> +++ b/arch/arm64/boot/dts/apm/apm-mustang.dts
->>>>> @@ -23,6 +23,18 @@
->>>>>                 device_type = "memory";
->>>>>                 reg = < 0x1 0x00000000 0x0 0x80000000 >; /* Updated by bootloader */
->>>>>         };
->>>>> +
->>>>> +       poweroff_mbox: poweroff_mbox@10548000 {
->>>>> +               compatible = "syscon";
->>>>> +               reg = <0x0 0x10548000 0x0 0x30>;
->>>>> +       };
->>>>> +
->>>>> +       poweroff: poweroff@10548010 {
->>>>> +               compatible = "syscon-poweroff";
->>>>> +               regmap = <&poweroff_mbox>;
->>>>> +               offset = <0x10>;
->>>>> +               mask = <0x1>;
->>>>> +       };
->>>>>  };
->>>>>
->>>>>  &pcie0clk {
->>>>> --
->>>>> 1.7.9.5
->>>>>
->>>>>
->>>>> _______________________________________________
->>>>> linux-arm-kernel mailing list
->>>>> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->>>>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->>>
->>>
->>>
->>> --
->>> Tai
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
