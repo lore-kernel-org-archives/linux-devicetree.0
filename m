@@ -1,130 +1,96 @@
-From: Fu Wei <fu.wei@linaro.org>
-Subject: Re: [PATCH v4 5/7] Watchdog: introduce ARM SBSA watchdog driver
-Date: Wed, 10 Jun 2015 12:20:20 +0800
-Message-ID: <CADyBb7s7NpQJFiFFGbbjCTQ0+bNCZoVMC4KwaZbWwGs_Wa=mLg@mail.gmail.com>
-References: <=fu.wei@linaro.org>
-	<1433217907-928-1-git-send-email-fu.wei@linaro.org>
-	<1433217907-928-6-git-send-email-fu.wei@linaro.org>
-	<556DCC95.806@codeaurora.org>
-	<CADyBb7sXiMNtrH+Eu1Qj00TPNLMMr5cCTPObzFmKnHLsbWH79Q@mail.gmail.com>
-	<556DE2D5.3090906@roeck-us.net>
-	<CADyBb7uT=gFJkK8s-QF1n4Z+Zov9Lurp1nvBO-C-qszTqbMYXQ@mail.gmail.com>
-	<5575DE48.8010308@roeck-us.net>
-	<CADyBb7sYPnvDVEJYVQm65B1JV=yvq10+ezs2x3f8F=TJCZ+OJA@mail.gmail.com>
-	<55766D74.2060401@roeck-us.net>
-	<CADyBb7vR-jP6ZjzMSnprrSXbNayk8umx+cXV3TsGypfhZcCwTw@mail.gmail.com>
-	<55769E0E.8060801@roeck-us.net>
-	<CADyBb7skpSZ=3_ByW-RHM99=nbs7Z5xXFXtsKzkxOXAGjxF=3Q@mail.gmail.com>
-	<557712CF.8010802@roeck-us.net>
-	<5577147B.2030900@codeaurora.org>
-	<5577180E.4070804@roeck-us.net>
-	<CADyBb7sVd5nLwb3eHRPiNt-WTynfaJonOyuE_bD694dayyvevA@mail.gmail.com>
+From: Alexey Kardashevskiy <aik@ozlabs.ru>
+Subject: Re: [PATCH v5 11/42] powerpc/powernv: Increase PE# capacity
+Date: Wed, 10 Jun 2015 14:41:13 +1000
+Message-ID: <5577BFE9.2040601@ozlabs.ru>
+References: <1433400131-18429-1-git-send-email-gwshan@linux.vnet.ibm.com> <1433400131-18429-12-git-send-email-gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CADyBb7sVd5nLwb3eHRPiNt-WTynfaJonOyuE_bD694dayyvevA@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Timur Tabi <timur@codeaurora.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Wei Fu <tekkamanninja@gmail.com>, G Gregory <graeme.gregory@linaro.org>, Al Stone <al.stone@linaro.org>, Hanjun Guo <hanjun.guo@linaro.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Arnd Bergmann <arnd@arndb.de>, vgandhi@codeaurora.org, wim@iguana.be, Jon Masters <jcm@redhat.com>, Leo Duran <leo.duran@amd.com>, Jon Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, rjw@rjwysocki.net
+Content-Type: text/plain; charset=koi8-r; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1433400131-18429-12-git-send-email-gwshan@linux.vnet.ibm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, bhelgaas@google.com, panto@antoniou-consulting.com, robherring2@gmail.com, grant.likely@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Guenter,
+On 06/04/2015 04:41 PM, Gavin Shan wrote:
+> Each PHB maintains an array helping to translate RID (Request
+> ID) to PE# with the assumption that PE# takes 8 bits, indicating
+> that we can't have more than 256 PEs. However, pci_dn->pe_number
+> already had 4-bytes for the PE#.
+>
+> The patch extends the PE# capacity so that each of them will be
+> 4-bytes long. Then we can use IODA_INVALID_PE to check one entry
+> in phb->pe_rmap[] is valid or not.
+>
+> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+> ---
+> v5:
+>    * Split from [PATCH v5 v4 06/21]
+> ---
+>   arch/powerpc/platforms/powernv/pci-ioda.c | 5 ++++-
+>   arch/powerpc/platforms/powernv/pci.h      | 5 ++---
+>   2 files changed, 6 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+> index 2087c5c..d8b0ef5 100644
+> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
+> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+> @@ -840,7 +840,7 @@ static int pnv_ioda_deconfigure_pe(struct pnv_phb *phb, struct pnv_ioda_pe *pe)
+>
+>   	/* Clear the reverse map */
+>   	for (rid = pe->rid; rid < rid_end; rid++)
+> -		phb->ioda.pe_rmap[rid] = 0;
+> +		phb->ioda.pe_rmap[rid] = IODA_INVALID_PE;
+>
+>   	/* Release from all parents PELT-V */
+>   	while (parent) {
+> @@ -3303,6 +3303,9 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
+>   	if (prop32)
+>   		phb->ioda.reserved_pe = be32_to_cpup(prop32);
+>
+> +	/* Invalidate RID to PE# mapping */
+> +	memset(phb->ioda.pe_rmap, 0xff, sizeof(phb->ioda.pe_rmap));
 
-On 10 June 2015 at 11:41, Fu Wei <fu.wei@linaro.org> wrote:
-> Hi Guenter,
->
-> On 10 June 2015 at 00:45, Guenter Roeck <linux@roeck-us.net> wrote:
->> On 06/09/2015 09:29 AM, Timur Tabi wrote:
->>>
->>> On 06/09/2015 11:22 AM, Guenter Roeck wrote:
->>>>
->>>>
->>>>
->>>> but I see your point. Essentially, the specification is broken
->>>> for all practical purposes, since, as you point out, enabling
->>>> the watchdog overwrites and explicitly sets WCV. Effectively
->>>> this means that just using WCV to program the timeout period
->>>> is not really possible.
->>>>
->>>> I am not really sure how to address this. We can either only use WOR,
->>>> and forget about pretimeout, or we can enforce a minimum pretimeout.
->>>> In the latter case, we'll have to write WCV after writing WOR.
->>>
->>>
->>> In talking with our hardware engineers, using WCV to program the timeout
->>> period is not a valid operation.  This is why I keep arguing against the
->>> pre-timeout feature, and I don't agree that servers should always use
->>> pre-timeout.
->>>
->>
->> Not sure if "not valid" is correct - after all, it is mentioned in the
->> specification. However, it is at the very least fragile.
->
-> I think we should focus on SBSA spec, but not a specific chip design,
-> because this is SBSA watchdog, not a driver for an IP core from a
-> specific chip vendor.
-> this operation is mentioned in the spec,
-> and I have tested my driver on Foundation model(from ARM) and a real hardware.
->
->>
->> I tend to agree that we should just forget about pretimeout and
->> use your original approach, where the timeout value is used
->> to program WOR. Everything else is really just asking for trouble.
 
-Another weakness of only using WOR is the timeout limited by this
-32bit register.
-10s @400MHz generic Timer
+Above you assign IODA_INVALID_PE in a loop and here you just do 0xff for 
+the entire array. Have a loop here too and assign IODA_INVALID_PE to every 
+entry:
+for (i = 0; i < ARRAY_SIZE(phb->ioda.pe_rmap); ++i)
+	phb->ioda.pe_rmap[i] = IODA_INVALID_PE;
 
-I don't think this limit is good for a server, once the server is in a
-heavy load
+
+
+> +
+>   	/* Parse 64-bit MMIO range */
+>   	pnv_ioda_parse_m64_window(phb);
+>
+> diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
+> index 94ef1df..590f778 100644
+> --- a/arch/powerpc/platforms/powernv/pci.h
+> +++ b/arch/powerpc/platforms/powernv/pci.h
+> @@ -175,11 +175,10 @@ struct pnv_phb {
+>   			struct list_head	pe_list;
+>   			struct mutex            pe_list_mutex;
+>
+> -			/* Reverse map of PEs, will have to extend if
+> -			 * we are to support more than 256 PEs, indexed
+> +			/* Reverse map of PEs, indexed by
+>   			 * bus { bus, devfn }
+>   			 */
+> -			unsigned char		pe_rmap[0x10000];
+> +			int			pe_rmap[0x10000];
+
+
+Most time most of the array will be empty and it is 256K per PHB... I 
+understand we have quite a lot of RAM but still.
+
 
 >
-> I don't mind if we give up pretimeout, The reason I use pretimeout is:
-> this concept matches the function of two stage timeouts.
+>   			/* Number of 32-bit DMA segments */
+>   			unsigned long		dma32_segcount;
 >
-> but, If we give up pretimeout, could you give me a suggestion:
->
-> How to config the two stage timeouts
-> (1)from enabling watchdog to WS0
-> (2)the time from WS1 to WS0
->
-> If we only have one timeout parameter,  How to config the two stage timeouts?
-> Any suggestion ?
->
-> If we make the first stage timeout is timeout/2,  this violates the
-> definition of timeout.
-> I don't think users expect interrupt, panic or reboot at timeout/2.
->
-> And WS1  definitely isn't a backup of WS0.
->
->>
->> Guenter
->>
->
->
->
-> --
-> Best regards,
->
-> Fu Wei
-> Software Engineer
-> Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
-> Ph: +86 21 61221326(direct)
-> Ph: +86 186 2020 4684 (mobile)
-> Room 1512, Regus One Corporate Avenue,Level 15,
-> One Corporate Avenue,222 Hubin Road,Huangpu District,
-> Shanghai,China 200021
-
 
 
 -- 
-Best regards,
-
-Fu Wei
-Software Engineer
-Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
-Ph: +86 21 61221326(direct)
-Ph: +86 186 2020 4684 (mobile)
-Room 1512, Regus One Corporate Avenue,Level 15,
-One Corporate Avenue,222 Hubin Road,Huangpu District,
-Shanghai,China 200021
+Alexey
