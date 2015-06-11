@@ -1,229 +1,75 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] phy-sun4i-usb: Add full support for usb0 phy /
- OTG
-Date: Thu, 11 Jun 2015 11:53:28 +0200
-Message-ID: <55795A98.8090303@redhat.com>
-References: <1433088626-8858-1-git-send-email-hdegoede@redhat.com> <1433088626-8858-2-git-send-email-hdegoede@redhat.com> <55795800.4070405@ti.com>
+From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Subject: Re: [PATCH 00/21] On-demand device registration
+Date: Thu, 11 Jun 2015 11:56:26 +0200
+Message-ID: <55795B4A.6030008@collabora.com>
+References: <1432565608-26036-1-git-send-email-tomeu.vizoso@collabora.com>	<CACRpkdasLwMfEHGMRd1X3K_DU7NMPreE8TMwqqDTg8k9wj=wJQ@mail.gmail.com>	<CAAObsKCP-C+TY8Wkk6bQzxZeGYL9X01trtjxfaYp--ZnH07C+w@mail.gmail.com>	<CACRpkdZuSj+S2x1yz6n5PgcRK=3ZCcq_To124b2Y+Oj54aydpg@mail.gmail.com>	<CAAObsKD97nEARO5eZYA2g8+z_MrazBy-m8PV_kSyj19ya72mAw@mail.gmail.com>
+ <CACRpkdYyvXVm=UBVH9Lwp8nQbuxQL07MLspNfQSHtc-yT2C_0g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55795800.4070405-l0cyMroinI0@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CACRpkdYyvXVm=UBVH9Lwp8nQbuxQL07MLspNfQSHtc-yT2C_0g@mail.gmail.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, DRM PANEL DRIVERS <dri-devel@lists.freedesktop.org>, dmaengine@vger.kernel.org, Alexander Holler <holler@ahsoftware.de>, Dan Williams <dan.j.williams@intel.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, linux-clk@vger.ker
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 11-06-15 11:42, Kishon Vijay Abraham I wrote:
-> Hi,
->
-> On Sunday 31 May 2015 09:40 PM, Hans de Goede wrote:
->> The usb0 phy is connected to an OTG controller, and as such needs some special
->> handling:
->>
->> 1) It allows explicit control over the pullups, enable these on phy_init and
->> disable them on phy_exit.
->>
->> 2) It has bits to signal id and vbus detect to the musb-core, add support for
->> for monitoring id and vbus detect gpio-s for use in dual role mode, and set
->> these bits to the correct values for operating in host only mode when no
->> gpios are specified in the devicetree.
->>
->> 3) When in dual role mode the musb sunxi glue needs to know if the a host or
->> device cable is plugged in, so when in dual role mode register an extcon.
->>
->> While updating the devicetree binding documentation also add documentation
->> for the sofar undocumented usage of regulators for vbus for all 3 phys.
->>
->> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> ---
->> Changes in v2:
->> -Removed the sunxi specific phy functions, instead the id / vbus gpio polling
->>   has been moved to the phy-sun4i-usb driver and their status is exported
->>   through extcon for the sunxi-musb glue
->> Changes in v3:
->> -No changes
->> Changes in v4:
->> -Do not call regulator_disable in an unbalanced manner when an external vbus
->>   is present
->> ---
->>   .../devicetree/bindings/phy/sun4i-usb-phy.txt      |  18 +-
->>   drivers/phy/Kconfig                                |   1 +
->>   drivers/phy/phy-sun4i-usb.c                        | 273 ++++++++++++++++++++-
->>   3 files changed, 281 insertions(+), 11 deletions(-)
->>
-> .
-> .
-> <snip>
-> .
-> .
->> diff --git a/drivers/phy/phy-sun4i-usb.c b/drivers/phy/phy-sun4i-usb.c
->> index 91c5be4..b45d707 100644
->> --- a/drivers/phy/phy-sun4i-usb.c
->> +++ b/drivers/phy/phy-sun4i-usb.c
->> @@ -1,7 +1,7 @@
->
-> .
-> .
-> <snip>
-> .
-> .
->>   static struct phy *sun4i_usb_phy_xlate(struct device *dev,
->>                       struct of_phandle_args *args)
->>   {
->> @@ -240,13 +417,20 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
->>       struct phy_provider *phy_provider;
->>       bool dedicated_clocks;
->>       struct resource *res;
->> -    int i;
->> +    int i, ret;
->>
->>       data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
->>       if (!data)
->>           return -ENOMEM;
->>
->>       mutex_init(&data->mutex);
->> +    INIT_DELAYED_WORK(&data->detect, sun4i_usb_phy0_id_vbus_det_scan);
->> +    data->extcon_cable_names[0] = extcon_cable_name[EXTCON_USB_HOST];
->> +    data->extcon_cable_names[1] = extcon_cable_name[EXTCON_USB];
->> +    data->extcon_cable_names[2] = NULL;
->> +    data->extcon.name = DRIVER_NAME;
->> +    data->extcon.supported_cable = data->extcon_cable_names;
->> +    data->extcon.dev.parent = dev;
->>
->>       if (of_device_is_compatible(np, "allwinner,sun5i-a13-usb-phy"))
->>           data->num_phys = 2;
->> @@ -269,6 +453,34 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
->>       if (IS_ERR(data->base))
->>           return PTR_ERR(data->base);
->>
->> +    data->id_det_gpio = devm_gpiod_get(dev, "usb0_id_det", GPIOD_IN);
->> +    if (IS_ERR(data->id_det_gpio)) {
->> +        if (PTR_ERR(data->id_det_gpio) == -EPROBE_DEFER)
->> +            return -EPROBE_DEFER;
->> +        data->id_det_gpio = NULL;
->> +    }
->> +
->> +    data->vbus_det_gpio = devm_gpiod_get(dev, "usb0_vbus_det", GPIOD_IN);
->> +    if (IS_ERR(data->vbus_det_gpio)) {
->> +        if (PTR_ERR(data->vbus_det_gpio) == -EPROBE_DEFER)
->> +            return -EPROBE_DEFER;
->> +        data->vbus_det_gpio = NULL;
->> +    }
->> +
->> +    /* We either want both gpio pins or neither (when in host mode) */
->> +    if (!data->id_det_gpio != !data->vbus_det_gpio) {
->> +        dev_err(dev, "failed to get id or vbus detect pin\n");
->> +        return -ENODEV;
->> +    }
->> +
->> +    if (data->id_det_gpio) {
->> +        ret = devm_extcon_dev_register(dev, &data->extcon);
->> +        if (ret) {
->> +            dev_err(dev, "failed to register extcon: %d\n", ret);
->> +            return ret;
->> +        }
->> +    }
->> +
->>       for (i = 0; i < data->num_phys; i++) {
->>           struct sun4i_usb_phy *phy = data->phys + i;
->>           char name[16];
->> @@ -318,12 +530,54 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
->>           phy_set_drvdata(phy->phy, &data->phys[i]);
->>       }
->>
->> +    data->id_det_irq = gpiod_to_irq(data->id_det_gpio);
->> +    data->vbus_det_irq = gpiod_to_irq(data->vbus_det_gpio);
->> +    if (data->id_det_irq  < 0 || data->vbus_det_irq < 0)
->> +        data->phy0_poll = true;
->
-> if polling is enabled, we shouldn't enable irq at all?
-
-Thanks for the review.
-
-One some boards one of the gpio-s is irq capable and the other
-is not, in which case the current code indeed enables both
-irq handling for the one gpio which is irq capable and enables
-polling. This is done this way deliberately as the irq path
-has much better latency then polling and the 2 can co-exist.
-
->> +
->> +    if (data->id_det_irq >= 0) {
->> +        ret = devm_request_irq(dev, data->id_det_irq,
->> +                sun4i_usb_phy0_id_vbus_det_irq,
->> +                IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
->> +                "usb0-id-det", data);
->> +        if (ret) {
->> +            dev_err(dev, "Err requesting id-det-irq: %d\n", ret);
->> +            return ret;
->> +        }
->> +    }
->> +
->> +    if (data->vbus_det_irq >= 0) {
->> +        ret = devm_request_irq(dev, data->vbus_det_irq,
->> +                sun4i_usb_phy0_id_vbus_det_irq,
->> +                IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
->> +                "usb0-vbus-det", data);
->> +        if (ret) {
->> +            dev_err(dev, "Err requesting vbus-det-irq: %d\n", ret);
->> +            return ret;
->> +        }
->> +    }
->> +
->>       dev_set_drvdata(dev, data);
->>       phy_provider = devm_of_phy_provider_register(dev, sun4i_usb_phy_xlate);
->>
->>       return PTR_ERR_OR_ZERO(phy_provider);
->>   }
->>
->> +static int sun4i_usb_phy_remove(struct platform_device *pdev)
->> +{
->> +    struct device *dev = &pdev->dev;
->> +    struct sun4i_usb_phy_data *data = dev_get_drvdata(dev);
->> +
->> +    if (data->id_det_irq >= 0)
->> +        devm_free_irq(dev, data->id_det_irq, data);
->> +    if (data->vbus_det_irq >= 0)
->> +        devm_free_irq(dev, data->vbus_det_irq, data);
->
-> This shouldn't be needed since you already use devm_* in probe.
-
-The use of devm_* in probe helps to keep the error handling in
-probe sane, but we must explicitly free the irqs here, otherwise
-they may trigger after this:
-
->> +    cancel_delayed_work_sync(&data->detect);
-
-call causing the workqueue to get run after (parts of) the
-phy resources have been freed and then bad things will happen.
-
->> +
->> +    return 0;
->> +}
->> +
->>   static const struct of_device_id sun4i_usb_phy_of_match[] = {
->>       { .compatible = "allwinner,sun4i-a10-usb-phy" },
->>       { .compatible = "allwinner,sun5i-a13-usb-phy" },
->> @@ -335,9 +589,10 @@ MODULE_DEVICE_TABLE(of, sun4i_usb_phy_of_match);
->>
->>   static struct platform_driver sun4i_usb_phy_driver = {
->>       .probe    = sun4i_usb_phy_probe,
->> +    .remove    = sun4i_usb_phy_remove,
->>       .driver = {
->>           .of_match_table    = sun4i_usb_phy_of_match,
->> -        .name  = "sun4i-usb-phy",
->> +        .name  = DRIVER_NAME,
->>       }
->>   };
->>   module_platform_driver(sun4i_usb_phy_driver);
->>
-
-Regards,
-
-Hans
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gMDYvMTEvMjAxNSAxMDoxNSBBTSwgTGludXMgV2FsbGVpaiB3cm90ZToKPiBPbiBXZWQsIEp1
+biAxMCwgMjAxNSBhdCAxMjoxOSBQTSwgVG9tZXUgVml6b3NvCj4gPHRvbWV1LnZpem9zb0Bjb2xs
+YWJvcmEuY29tPiB3cm90ZToKPj4gT24gMTAgSnVuZSAyMDE1IGF0IDA5OjMwLCBMaW51cyBXYWxs
+ZWlqIDxsaW51cy53YWxsZWlqQGxpbmFyby5vcmc+IHdyb3RlOgo+IAo+Pj4gcmVndWxhdG9yX2dl
+dCguLi4pIC0+IG5vdCBhdmFpbGFibGUsIHNvOgo+Pj4gLSBpZGVudGlmeSB0YXJnZXQgcmVndWxh
+dG9yIHByb3ZpZGVyIC0gdGhpcyB3aWxsIG5lZWQgaW5zdHJ1bWVudGF0aW9uCj4+PiAtIHByb2Jl
+IGl0Cj4+Pgo+Pj4gSXQgdGhlbiB0dXJucyBvdXQgdGhlIHJlZ3VsYXRvciBkcml2ZXIgaXMgb24g
+dGhlIGkyYyBidXMsIHNvIHdlCj4+PiBuZWVkIHRvIHByb2JlIHRoZSBpMmMgZHJpdmVyOgo+Pj4g
+LSBpZGVudGlmeSB0YXJnZXQgaTJjIGhvc3QgZm9yIHRoZSByZWd1bGF0b3IgZHJpdmVyIC0gdGhp
+cyB3aWxsIG5lZWQKPj4+ICAgaW5zdHJ1bWVudGF0aW9uCj4+PiAtIHByb2JlIHRoZSBpMmMgaG9z
+dCBkcml2ZXIKPj4+Cj4+PiBpMmMgaG9zdCBjb21lcyBvdXQsIHByb2JlcyB0aGUgcmVndWxhdG9y
+IGRyaXZlciwgcmVndWxhdG9yIGRyaXZlcgo+Pj4gcHJvYmVzIGFuZCB0aGVuIHRoZSByZWd1bGF0
+b3JfZ2V0KCkgY2FsbCByZXR1cm5zLgo+Pgo+PiBIbW0sIGlmIEkgdW5kZXJzdGFuZCBjb3JyZWN0
+bHkgd2hhdCB5b3Ugc2F5LCB0aGlzIGlzIGV4YWN0bHkgd2hhdCB0aGlzCj4+IHBhcnRpY3VsYXIg
+c2VyaWVzIGRvZXM6Cj4+Cj4+IHJlZ3VsYXRvcl9nZXQgLT4gb2ZfcGxhdGZvcm1fZGV2aWNlX2Vu
+c3VyZSAtPiBwcm9iZSgpIG9uIHRoZSBwbGF0Zm9ybQo+PiBkZXZpY2UgdGhhdCBlbmNsb3NlcyB0
+aGUgcmVxdWVzdGVkIGRldmljZSBub2RlIChpMmMgaG9zdCkgLT4gaTJjIHNsYXZlCj4+IGdldHMg
+cHJvYmVkIGFuZCB0aGUgcmVndWxhdG9yIHJlZ2lzdGVyZWQgLT4gcmVndWxhdG9yX2dldCByZXR1
+cm5zIHRoZQo+PiByZXF1ZXN0ZWQgcmVzb3VyY2UKPiAKPiBZZXMuIEJ1dCBvbmx5IGZvciBkZXZp
+Y2UgdHJlZS4KPiAKPj4gVGhlIGRvd25zaWRlIEknbSBjdXJyZW50bHkgbG9va2luZyBhdCBpcyB0
+aGF0IGFuIGV4cGxpY2l0IGRlcGVuZGVuY3kKPj4gZ3JhcGggd291bGQgYmUgdXNlZnVsIHRvIGhh
+dmUgZm9yIG90aGVyIHB1cnBvc2VzLiBGb3IgZXhhbXBsZSB0byBwcmludAo+PiBhIG5lYXQgd2Fy
+bmluZyB3aGVuIGEgZGVwZW5kZW5jeSBjYW5ub3QgYmUgZnVsZmlsbGVkLiBPciB0byByZWZ1c2Ug
+dG8KPj4gdW5iaW5kIGEgZGV2aWNlIHdoaWNoIG90aGVyIGRldmljZXMgZGVwZW5kIG9uLCBvciB0
+byBhdXRvbWF0aWNhbGx5Cj4+IHVuYmluZCB0aGUgZGV2aWNlcyB0aGF0IGRlcGVuZCBvbiBpdCwg
+b3IgdG8gcHJpbnQgYSB3YXJuaW5nIGlmIGEKPj4gZGV2aWNlIGlzIGhvdHBsdWdnZWQgb2ZmIGFu
+ZCBvdGhlciBkZXZpY2VzIGRlcGVuZCBvbiBpdC4KPiAKPiBVbmJpbmQvcmVtb3ZlKCkgY2FsbHMg
+YXJlIHRoZSBpbnZlcnNlIHVzdWFsbHkgeWVzLgo+IAo+IEJ1dCBhbHNvIHRoZSBbcnVudGltZV0g
+cG93ZXIgdXAvZG93biBzZXF1ZW5jZXMgZm9yIHRoZQo+IGRldmljZXMgdGVuZCB0byBkZXBlbmQg
+b24gYSBzaW1pbGFyIG9yZGVyaW5nIG9yIG1vc3RseQo+IHRoZSBzYW1lLiAoTWVudGlvbmVkIHRo
+aXMgYmVmb3JlIEkgdGhpbmsuKQo+IAo+Pj4gVGhpcyByZXF1aXJlcyBpbnN0cnVtZW50YXRpb24g
+b24gYW55dGhpbmcgcHJvdmlkaW5nIGEgcmVzb3VyY2UKPj4+IHRvIGFub3RoZXIgZHJpdmVyIGxp
+a2UgdGhvc2UgSSBtZW50aW9uZWQgYW5kIGEgbG90IG9mIG92ZXJoZWFkCj4+PiBpbmZyYXN0cnVj
+dHVyZSwgYnV0IEkgdGhpbmsgaXQncyB0aGUgcmlnaHQgYXBwcm9hY2guIEhvd2V2ZXIgSSBkb24n
+dAo+Pj4ga25vdyBpZiBJIHdvdWxkIGV2ZXIgYmUgYWJsZSB0byBwdWxsIHRoYXQgb2ZmIG15c2Vs
+ZiwgSSBrbm93IHRhbGsKPj4+IGlzIGNoZWFwIGFuZCBJIHNob3VsZCBzaG93IHRoZSBjb2RlIGlu
+c3RlYWQuCj4+Cj4+IFllYWgsIGlmIHlvdSBjYW4gZ2l2ZSBpdCBhIHNlY29uZCBsb29rIGFuZCBz
+YXkgaWYgaXQgbWF0Y2hlcyB3aGF0IHlvdQo+PiB3cm90ZSBhYm92ZSwgaXQgd291bGQgYmUgdmVy
+eSBtdWNoIGFwcHJlY2lhdGVkLgo+IAo+IFllcyB5b3UgYXJlIHJpZ2h0LiBCdXQgd2hhdCBhYm91
+dCBBQ1BJLCBib2FyZCBmaWxlcywKPiBTaW1wbGUgRmlybXdhcmUgYW5kIGZ1dHVyZSBoYXJkd2Fy
+ZSBkZXNjcmlwdGlvbiBsYW5ndWFnZXMuLi4KCkFoIG9rLCBnb3QgaXQgbm93LiBXaXRoIGZ3bm9k
+ZSBhbmQgYnkgbW92aW5nIGEgYml0IG9mIGNvZGUgYXJvdW5kIHRoYXQKc2hvdWxkbid0IGJlIGEg
+cHJvYmxlbS4KCkknbSBhY3R1YWxseSBub3cgaW1wbGVtZW50aW5nIHRoZSBhbHRlcm5hdGl2ZSBh
+cHByb2FjaCBpbiB3aGljaApkZXBlbmRlbmNpZXMgYXJlIGRpc2NvdmVyZWQgYmVmb3JlIHRoZSBk
+ZXZpY2UgaXMgcHJvYmVkLCB0aGVuIHByb2JlZCBpbgp0dXJuIHVudGlsIGFsbCBhcmUgYXZhaWxh
+YmxlLiBTbyBmdW5jdGlvbmFsbHkgaXMgdmVyeSBzaW1pbGFyIGJ1dCBJCmV4cGVjdCB0byBmaW5k
+IGJpZyBkaWZmZXJlbmNlcyBpbiBob3cgdGhlIGNvZGViYXNlIGlzIGltcGFjdGVkLgoKUmVnYXJk
+cywKClRvbWV1Cgo+IFlvdXJzLAo+IExpbnVzIFdhbGxlaWoKPiAKCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
+LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
