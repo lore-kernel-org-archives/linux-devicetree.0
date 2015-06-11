@@ -1,7 +1,7 @@
 From: Vincent Cuissard <cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v3 1/2] NFC: nfcmrvl: add platform_data and DT configuration
-Date: Thu, 11 Jun 2015 14:00:19 +0200
-Message-ID: <1434024020-17048-2-git-send-email-cuissard@marvell.com>
+Subject: [PATCH v3 2/2] NFC: nfcmrvl: add UART driver
+Date: Thu, 11 Jun 2015 14:00:20 +0200
+Message-ID: <1434024020-17048-3-git-send-email-cuissard@marvell.com>
 References: <1434024020-17048-1-git-send-email-cuissard@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,247 +12,120 @@ To: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vincent Cuissard <cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Declare nfcmrvl platform_data structure and few DT parameters
-for nfcmrvl driver.
+Add support of Marvell NFC chip controlled over UART
 
 Signed-off-by: Vincent Cuissard <cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 ---
- drivers/nfc/nfcmrvl/main.c            | 67 +++++++++++++++++++++++++++--------
- drivers/nfc/nfcmrvl/nfcmrvl.h         | 36 +++++++++++++------
- drivers/nfc/nfcmrvl/usb.c             |  6 +++-
- include/linux/platform_data/nfcmrvl.h | 31 ++++++++++++++++
- 4 files changed, 114 insertions(+), 26 deletions(-)
- create mode 100644 include/linux/platform_data/nfcmrvl.h
+ .../devicetree/bindings/net/nfc/nfcmrvl.txt        |  29 +++
+ drivers/nfc/nfcmrvl/Kconfig                        |  11 +
+ drivers/nfc/nfcmrvl/Makefile                       |   3 +
+ drivers/nfc/nfcmrvl/nfcmrvl.h                      |   7 +
+ drivers/nfc/nfcmrvl/uart.c                         | 225 +++++++++++++++++++++
+ include/linux/platform_data/nfcmrvl.h              |   9 +
+ net/nfc/nci/uart.c                                 |   1 -
+ 7 files changed, 284 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/net/nfc/nfcmrvl.txt
+ create mode 100644 drivers/nfc/nfcmrvl/uart.c
 
-diff --git a/drivers/nfc/nfcmrvl/main.c b/drivers/nfc/nfcmrvl/main.c
-index 708aad2..9b53706 100644
---- a/drivers/nfc/nfcmrvl/main.c
-+++ b/drivers/nfc/nfcmrvl/main.c
-@@ -19,6 +19,7 @@
- #include <linux/module.h>
- #include <linux/gpio.h>
- #include <linux/delay.h>
-+#include <linux/of_gpio.h>
- #include <linux/nfc.h>
- #include <net/nfc/nci.h>
- #include <net/nfc/nci_core.h>
-@@ -65,7 +66,7 @@ static int nfcmrvl_nci_send(struct nci_dev *ndev, struct sk_buff *skb)
- 	if (!test_bit(NFCMRVL_NCI_RUNNING, &priv->flags))
- 		return -EBUSY;
+diff --git a/Documentation/devicetree/bindings/net/nfc/nfcmrvl.txt b/Documentation/devicetree/bindings/net/nfc/nfcmrvl.txt
+new file mode 100644
+index 0000000..7c4a0cc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/nfc/nfcmrvl.txt
+@@ -0,0 +1,29 @@
++* Marvell International Ltd. NCI NFC Controller
++
++Required properties:
++- compatible: Should be "mrvl,nfc-uart".
++
++Optional SoC specific properties:
++- pinctrl-names: Contains only one value - "default".
++- pintctrl-0: Specifies the pin control groups used for this controller.
++- reset-n-io: Output GPIO pin used to reset the chip (active low).
++- hci-muxed: Specifies that the chip is muxing NCI over HCI frames.
++
++Optional UART-based chip specific properties:
++- flow-control: Specifies that the chip is using RTS/CTS.
++- break-control: Specifies that the chip needs specific break management.
++
++Example (for ARM-based BeagleBoard Black with 88W8887 on UART5):
++
++&uart5 {
++	status = "okay";
++
++	nfcmrvluart: nfcmrvluart@5 {
++		compatible = "mrvl,nfc-uart";
++
++		reset-n-io = <&gpio3 16 0>;
++
++		hci-muxed;
++		flow-control;
++        }
++};
+diff --git a/drivers/nfc/nfcmrvl/Kconfig b/drivers/nfc/nfcmrvl/Kconfig
+index 5e18afd..796be24 100644
+--- a/drivers/nfc/nfcmrvl/Kconfig
++++ b/drivers/nfc/nfcmrvl/Kconfig
+@@ -21,3 +21,14 @@ config NFC_MRVL_USB
  
--	if (priv->hci_muxed) {
-+	if (priv->config.hci_muxed) {
- 		unsigned char *hdr;
- 		unsigned char len = skb->len;
+ 	  Say Y here to compile support for Marvell NFC-over-USB driver
+ 	  into the kernel or say M to compile it as module.
++
++config NFC_MRVL_UART
++	tristate "Marvell NFC-over-UART driver"
++	depends on NFC_MRVL && NFC_NCI_UART
++	help
++	  Marvell NFC-over-UART driver.
++
++	  This driver provides support for Marvell NFC-over-UART devices
++
++	  Say Y here to compile support for Marvell NFC-over-UART driver
++	  into the kernel or say M to compile it as module.
+diff --git a/drivers/nfc/nfcmrvl/Makefile b/drivers/nfc/nfcmrvl/Makefile
+index 97a0de7..7751962 100644
+--- a/drivers/nfc/nfcmrvl/Makefile
++++ b/drivers/nfc/nfcmrvl/Makefile
+@@ -7,3 +7,6 @@ obj-$(CONFIG_NFC_MRVL) += nfcmrvl.o
  
-@@ -92,9 +93,9 @@ static struct nci_ops nfcmrvl_nci_ops = {
- };
- 
- struct nfcmrvl_private *nfcmrvl_nci_register_dev(void *drv_data,
--						 struct nfcmrvl_if_ops *ops,
--						 struct device *dev,
--						 unsigned int flags)
-+				struct nfcmrvl_if_ops *ops,
-+				struct device *dev,
-+				struct nfcmrvl_platform_data *pdata)
- {
- 	struct nfcmrvl_private *priv;
- 	int rc;
-@@ -108,23 +109,24 @@ struct nfcmrvl_private *nfcmrvl_nci_register_dev(void *drv_data,
- 	priv->drv_data = drv_data;
- 	priv->if_ops = ops;
- 	priv->dev = dev;
--	priv->hci_muxed = (flags & NFCMRVL_DEV_FLAG_HCI_MUXED) ? 1 : 0;
--	priv->reset_n_io = NFCMRVL_DEV_FLAG_GET_RESET_N_IO(flags);
- 
--	if (priv->reset_n_io) {
-+	memcpy(&priv->config, pdata, sizeof(*pdata));
+ nfcmrvl_usb-y += usb.o
+ obj-$(CONFIG_NFC_MRVL_USB) += nfcmrvl_usb.o
 +
-+	if (priv->config.reset_n_io) {
- 		rc = devm_gpio_request_one(dev,
--					   priv->reset_n_io,
-+					   priv->config.reset_n_io,
- 					   GPIOF_OUT_INIT_LOW,
- 					   "nfcmrvl_reset_n");
- 		if (rc < 0)
- 			nfc_err(dev, "failed to request reset_n io\n");
- 	}
- 
--	if (priv->hci_muxed)
-+	if (priv->config.hci_muxed)
- 		headroom = NFCMRVL_HCI_EVENT_HEADER_SIZE;
- 
- 	protocols = NFC_PROTO_JEWEL_MASK
--		| NFC_PROTO_MIFARE_MASK | NFC_PROTO_FELICA_MASK
-+		| NFC_PROTO_MIFARE_MASK
-+		| NFC_PROTO_FELICA_MASK
- 		| NFC_PROTO_ISO14443_MASK
- 		| NFC_PROTO_ISO14443_B_MASK
- 		| NFC_PROTO_NFC_DEP_MASK;
-@@ -169,7 +171,7 @@ EXPORT_SYMBOL_GPL(nfcmrvl_nci_unregister_dev);
- 
- int nfcmrvl_nci_recv_frame(struct nfcmrvl_private *priv, struct sk_buff *skb)
- {
--	if (priv->hci_muxed) {
-+	if (priv->config.hci_muxed) {
- 		if (skb->data[0] == NFCMRVL_HCI_EVENT_CODE &&
- 		    skb->data[1] == NFCMRVL_HCI_NFC_EVENT_CODE) {
- 			/* Data packet, let's extract NCI payload */
-@@ -200,15 +202,52 @@ void nfcmrvl_chip_reset(struct nfcmrvl_private *priv)
- 	 * To be improved.
- 	 */
- 
--	if (priv->reset_n_io) {
-+	if (priv->config.reset_n_io) {
- 		nfc_info(priv->dev, "reset the chip\n");
--		gpio_set_value(priv->reset_n_io, 0);
-+		gpio_set_value(priv->config.reset_n_io, 0);
- 		usleep_range(5000, 10000);
--		gpio_set_value(priv->reset_n_io, 1);
-+		gpio_set_value(priv->config.reset_n_io, 1);
- 	} else
- 		nfc_info(priv->dev, "no reset available on this interface\n");
- }
- 
-+#ifdef CONFIG_OF
-+
-+int nfcmrvl_parse_dt(struct device_node *node,
-+		     struct nfcmrvl_platform_data *pdata)
-+{
-+	int reset_n_io;
-+
-+	reset_n_io = of_get_named_gpio(node, "reset-n-io", 0);
-+	if (reset_n_io < 0) {
-+		pr_info("no reset-n-io config\n");
-+		reset_n_io = 0;
-+	} else if (!gpio_is_valid(reset_n_io)) {
-+		pr_err("invalid reset-n-io GPIO\n");
-+		return reset_n_io;
-+	}
-+	pdata->reset_n_io = reset_n_io;
-+
-+	if (of_find_property(node, "hci-muxed", NULL))
-+		pdata->hci_muxed = 1;
-+	else
-+		pdata->hci_muxed = 0;
-+
-+	return 0;
-+}
-+
-+#else
-+
-+int nfcmrvl_parse_dt(struct device_node *node,
-+		     struct nfcmrvl_platform_data *pdata)
-+{
-+	return -ENODEV;
-+}
-+
-+#endif
-+
-+EXPORT_SYMBOL_GPL(nfcmrvl_parse_dt);
-+
- MODULE_AUTHOR("Marvell International Ltd.");
- MODULE_DESCRIPTION("Marvell NFC driver ver " VERSION);
- MODULE_VERSION(VERSION);
++nfcmrvl_uart-y += uart.o
++obj-$(CONFIG_NFC_MRVL_UART) += nfcmrvl_uart.o
 diff --git a/drivers/nfc/nfcmrvl/nfcmrvl.h b/drivers/nfc/nfcmrvl/nfcmrvl.h
-index 2edae9a..214412b 100644
+index 214412b..09780d5 100644
 --- a/drivers/nfc/nfcmrvl/nfcmrvl.h
 +++ b/drivers/nfc/nfcmrvl/nfcmrvl.h
-@@ -16,6 +16,11 @@
-  * this warranty disclaimer.
-  **/
- 
-+#ifndef _NFCMRVL_H_
-+#define _NFCMRVL_H_
-+
-+#include <linux/platform_data/nfcmrvl.h>
-+
- /* Define private flags: */
- #define NFCMRVL_NCI_RUNNING			1
- 
-@@ -38,22 +43,25 @@
+@@ -43,6 +43,11 @@
  #define NFCMRVL_HCI_OGF				0x81
  #define NFCMRVL_HCI_OCF				0xFE
  
--#define NFCMRVL_DEV_FLAG_HCI_MUXED		(1 << 0)
--#define NFCMRVL_DEV_FLAG_SET_RESET_N_IO(X)	((X) << 16)
--#define NFCMRVL_DEV_FLAG_GET_RESET_N_IO(X)	((X) >> 16)
++enum nfcmrvl_phy {
++	NFCMRVL_PHY_USB		= 0,
++	NFCMRVL_PHY_UART	= 1,
++};
++
  
  struct nfcmrvl_private {
  
--	/* Tell if NCI packets are encapsulated in HCI ones */
--	int hci_muxed;
-+	unsigned long flags;
-+
-+	/* Platform configuration */
-+	struct nfcmrvl_platform_data config;
-+
- 	struct nci_dev *ndev;
- 
--	/* Reset IO (0 if not available) */
--	int reset_n_io;
-+	/*
-+	** PHY related information
-+	*/
- 
--	unsigned long flags;
-+	/* PHY driver context */
+@@ -61,6 +66,8 @@ struct nfcmrvl_private {
  	void *drv_data;
-+	/* PHY device */
+ 	/* PHY device */
  	struct device *dev;
-+	/* Low level driver ops */
++	/* PHY type */
++	enum nfcmrvl_phy phy;
+ 	/* Low level driver ops */
  	struct nfcmrvl_if_ops *if_ops;
  };
- 
-@@ -66,8 +74,14 @@ struct nfcmrvl_if_ops {
- void nfcmrvl_nci_unregister_dev(struct nfcmrvl_private *priv);
- int nfcmrvl_nci_recv_frame(struct nfcmrvl_private *priv, struct sk_buff *skb);
- struct nfcmrvl_private *nfcmrvl_nci_register_dev(void *drv_data,
--						 struct nfcmrvl_if_ops *ops,
--						 struct device *dev,
--						 unsigned int flags);
-+				struct nfcmrvl_if_ops *ops,
-+				struct device *dev,
-+				struct nfcmrvl_platform_data *pdata);
-+
- 
- void nfcmrvl_chip_reset(struct nfcmrvl_private *priv);
-+
-+int nfcmrvl_parse_dt(struct device_node *node,
-+		     struct nfcmrvl_platform_data *pdata);
-+
-+#endif
-diff --git a/drivers/nfc/nfcmrvl/usb.c b/drivers/nfc/nfcmrvl/usb.c
-index c4046b6..aa3f3c1 100644
---- a/drivers/nfc/nfcmrvl/usb.c
-+++ b/drivers/nfc/nfcmrvl/usb.c
-@@ -302,6 +302,10 @@ static int nfcmrvl_probe(struct usb_interface *intf,
- 	struct nfcmrvl_private *priv;
- 	int i;
- 	struct usb_device *udev = interface_to_usbdev(intf);
-+	struct nfcmrvl_platform_data config;
-+
-+	/* No configuration for USB */
-+	memset(&config, 0, sizeof(config));
- 
- 	nfc_info(&udev->dev, "intf %p id %p\n", intf, id);
- 
-@@ -339,7 +343,7 @@ static int nfcmrvl_probe(struct usb_interface *intf,
- 	init_usb_anchor(&drv_data->deferred);
- 
- 	priv = nfcmrvl_nci_register_dev(drv_data, &usb_ops,
--					&drv_data->udev->dev, 0);
-+					&drv_data->udev->dev, &config);
- 	if (IS_ERR(priv))
- 		return PTR_ERR(priv);
- 
-diff --git a/include/linux/platform_data/nfcmrvl.h b/include/linux/platform_data/nfcmrvl.h
+diff --git a/drivers/nfc/nfcmrvl/uart.c b/drivers/nfc/nfcmrvl/uart.c
 new file mode 100644
-index 0000000..106cfe5
+index 0000000..61442d6
 --- /dev/null
-+++ b/include/linux/platform_data/nfcmrvl.h
-@@ -0,0 +1,31 @@
-+/*
++++ b/drivers/nfc/nfcmrvl/uart.c
+@@ -0,0 +1,225 @@
++/**
++ * Marvell NFC-over-UART driver
++ *
 + * Copyright (C) 2015, Marvell International Ltd.
 + *
 + * This software file (the "File") is distributed by Marvell International
@@ -268,21 +141,245 @@ index 0000000..106cfe5
 + * this warranty disclaimer.
 + */
 +
-+#ifndef _NFCMRVL_PTF_H_
-+#define _NFCMRVL_PTF_H_
++#include <linux/module.h>
++#include <linux/delay.h>
++#include <linux/of_gpio.h>
++#include <net/nfc/nci.h>
++#include <net/nfc/nci_core.h>
++#include "nfcmrvl.h"
 +
-+struct nfcmrvl_platform_data {
-+	/*
-+	 * Generic
-+	 */
++static unsigned int hci_muxed;
++static unsigned int flow_control;
++static unsigned int break_control;
++static unsigned int reset_n_io;
 +
-+	/* GPIO that is wired to RESET_N signal */
-+	unsigned int reset_n_io;
-+	/* Tell if transport is muxed in HCI one */
-+	unsigned int hci_muxed;
++/*
++** NFCMRVL NCI OPS
++*/
++
++static int nfcmrvl_uart_nci_open(struct nfcmrvl_private *priv)
++{
++	return 0;
++}
++
++static int nfcmrvl_uart_nci_close(struct nfcmrvl_private *priv)
++{
++	return 0;
++}
++
++static int nfcmrvl_uart_nci_send(struct nfcmrvl_private *priv,
++				 struct sk_buff *skb)
++{
++	struct nci_uart *nu = priv->drv_data;
++
++	return nu->ops.send(nu, skb);
++}
++
++static struct nfcmrvl_if_ops uart_ops = {
++	.nci_open = nfcmrvl_uart_nci_open,
++	.nci_close = nfcmrvl_uart_nci_close,
++	.nci_send = nfcmrvl_uart_nci_send,
 +};
 +
-+#endif /* _NFCMRVL_PTF_H_ */
++#ifdef CONFIG_OF
++
++static int nfcmrvl_uart_parse_dt(struct device_node *node,
++				 struct nfcmrvl_platform_data *pdata)
++{
++	struct device_node *matched_node;
++	int ret;
++
++	matched_node = of_find_compatible_node(node, NULL, "mrvl,nfc-uart");
++	if (!matched_node)
++		return -ENODEV;
++
++	ret = nfcmrvl_parse_dt(matched_node, pdata);
++	if (ret < 0) {
++		pr_err("Failed to get generic entries\n");
++		return ret;
++	}
++
++	if (of_find_property(matched_node, "flow-control", NULL))
++		pdata->flow_control = 1;
++	else
++		pdata->flow_control = 0;
++
++	if (of_find_property(matched_node, "break-control", NULL))
++		pdata->break_control = 1;
++	else
++		pdata->break_control = 0;
++
++	return 0;
++}
++
++#else
++
++static int nfcmrvl_uart_parse_dt(struct device_node *node,
++				 struct nfcmrvl_platform_data *pdata)
++{
++	return -ENODEV;
++}
++
++#endif
++
++/*
++** NCI UART OPS
++*/
++
++static int nfcmrvl_nci_uart_open(struct nci_uart *nu)
++{
++	struct nfcmrvl_private *priv;
++	struct nfcmrvl_platform_data *pdata = NULL;
++	struct nfcmrvl_platform_data config;
++
++	/*
++	 * Platform data cannot be used here since usually it is already used
++	 * by low level serial driver. We can try to retrieve serial device
++	 * and check if DT entries were added.
++	 */
++
++	if (nu->tty->dev->parent && nu->tty->dev->parent->of_node)
++		if (nfcmrvl_uart_parse_dt(nu->tty->dev->parent->of_node,
++					  &config) == 0)
++			pdata = &config;
++
++	if (!pdata) {
++		pr_info("No platform data / DT -> fallback to module params\n");
++		config.hci_muxed = hci_muxed;
++		config.reset_n_io = reset_n_io;
++		config.flow_control = flow_control;
++		config.break_control = break_control;
++		pdata = &config;
++	}
++
++	priv = nfcmrvl_nci_register_dev(nu, &uart_ops, nu->tty->dev, pdata);
++	if (IS_ERR(priv))
++		return PTR_ERR(priv);
++
++	priv->phy = NFCMRVL_PHY_UART;
++
++	nu->drv_data = priv;
++	nu->ndev = priv->ndev;
++
++	/* Set BREAK */
++	if (priv->config.break_control && nu->tty->ops->break_ctl)
++		nu->tty->ops->break_ctl(nu->tty, -1);
++
++	return 0;
++}
++
++static void nfcmrvl_nci_uart_close(struct nci_uart *nu)
++{
++	nfcmrvl_nci_unregister_dev((struct nfcmrvl_private *)nu->drv_data);
++}
++
++static int nfcmrvl_nci_uart_recv(struct nci_uart *nu, struct sk_buff *skb)
++{
++	return nfcmrvl_nci_recv_frame((struct nfcmrvl_private *)nu->drv_data,
++				      skb);
++}
++
++static void nfcmrvl_nci_uart_tx_start(struct nci_uart *nu)
++{
++	struct nfcmrvl_private *priv = (struct nfcmrvl_private *)nu->drv_data;
++
++	/* Remove BREAK to wake up the NFCC */
++	if (priv->config.break_control && nu->tty->ops->break_ctl) {
++		nu->tty->ops->break_ctl(nu->tty, 0);
++		usleep_range(3000, 5000);
++	}
++}
++
++static void nfcmrvl_nci_uart_tx_done(struct nci_uart *nu)
++{
++	struct nfcmrvl_private *priv = (struct nfcmrvl_private *)nu->drv_data;
++
++	/*
++	** To ensure that if the NFCC goes in DEEP SLEEP sate we can wake him
++	** up. we set BREAK. Once we will be ready to send again we will remove
++	** it.
++	*/
++	if (priv->config.break_control && nu->tty->ops->break_ctl)
++		nu->tty->ops->break_ctl(nu->tty, -1);
++}
++
++static struct nci_uart nfcmrvl_nci_uart = {
++	.owner  = THIS_MODULE,
++	.name   = "nfcmrvl_uart",
++	.driver = NCI_UART_DRIVER_MARVELL,
++	.ops	= {
++		.open		= nfcmrvl_nci_uart_open,
++		.close		= nfcmrvl_nci_uart_close,
++		.recv		= nfcmrvl_nci_uart_recv,
++		.tx_start	= nfcmrvl_nci_uart_tx_start,
++		.tx_done	= nfcmrvl_nci_uart_tx_done,
++	}
++};
++
++/*
++** Module init
++*/
++
++static int nfcmrvl_uart_init_module(void)
++{
++	return nci_uart_register(&nfcmrvl_nci_uart);
++}
++
++static void nfcmrvl_uart_exit_module(void)
++{
++	nci_uart_unregister(&nfcmrvl_nci_uart);
++}
++
++module_init(nfcmrvl_uart_init_module);
++module_exit(nfcmrvl_uart_exit_module);
++
++MODULE_AUTHOR("Marvell International Ltd.");
++MODULE_DESCRIPTION("Marvell NFC-over-UART");
++MODULE_LICENSE("GPL v2");
++
++module_param(flow_control, uint, 0);
++MODULE_PARM_DESC(flow_control, "Tell if UART needs flow control at init.");
++
++module_param(break_control, uint, 0);
++MODULE_PARM_DESC(break_control, "Tell if UART driver must drive break signal.");
++
++module_param(hci_muxed, uint, 0);
++MODULE_PARM_DESC(hci_muxed, "Tell if transport is muxed in HCI one.");
++
++module_param(reset_n_io, uint, 0);
++MODULE_PARM_DESC(reset_n_io, "GPIO that is wired to RESET_N signal.");
+diff --git a/include/linux/platform_data/nfcmrvl.h b/include/linux/platform_data/nfcmrvl.h
+index 106cfe5..ac91707 100644
+--- a/include/linux/platform_data/nfcmrvl.h
++++ b/include/linux/platform_data/nfcmrvl.h
+@@ -26,6 +26,15 @@ struct nfcmrvl_platform_data {
+ 	unsigned int reset_n_io;
+ 	/* Tell if transport is muxed in HCI one */
+ 	unsigned int hci_muxed;
++
++	/*
++	 * UART specific
++	 */
++
++	/* Tell if UART needs flow control at init */
++	unsigned int flow_control;
++	/* Tell if firmware supports break control for power management */
++	unsigned int break_control;
+ };
+ 
+ #endif /* _NFCMRVL_PTF_H_ */
+diff --git a/net/nfc/nci/uart.c b/net/nfc/nci/uart.c
+index bd96f97..3592b3d 100644
+--- a/net/nfc/nci/uart.c
++++ b/net/nfc/nci/uart.c
+@@ -12,7 +12,6 @@
+  * IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE
+  * ARE EXPRESSLY DISCLAIMED.  The License provides additional details about
+  * this warranty disclaimer.
+-
+  */
+ 
+ /*
 -- 
 2.2.0.33.gc18b867
 
