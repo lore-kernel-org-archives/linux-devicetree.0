@@ -1,86 +1,76 @@
-From: Walter Goossens <waltergoossens-CmkmPbn3yAE@public.gmane.org>
-Subject: Re: DeviceTree FPGA bitstream
-Date: Thu, 11 Jun 2015 12:17:05 +0200
-Message-ID: <55796021.7010402@home.nl>
-References: <20150609144901.GC12677@pcbe13110.cern.ch>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH 1/2] clk: exynos4: Add PCLK_ADC gate clock on Exynos4x12
+Date: Thu, 11 Jun 2015 19:43:44 +0900
+Message-ID: <55796660.1070702@samsung.com>
+References: <1434011190-24563-1-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=iso-8859-2
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150609144901.GC12677-cpfkIQmgKd5FPxEMnUtzR+1GAupnlqi7@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Federico Vaga <federico.vaga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1434011190-24563-1-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kukjin Kim <kgene@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Marek Szyprowski <m.szyprowski@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Federico,
+W dniu 11.06.2015 o 17:26, Krzysztof Kozlowski pisze:
+> Add proper gate clock for the Analog to Digital Converter (ADC) on
+> Exynos4x12.
+> 
+> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> ---
+>  drivers/clk/samsung/clk-exynos4.c   | 3 +++
+>  include/dt-bindings/clock/exynos4.h | 5 ++++-
+>  2 files changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/clk/samsung/clk-exynos4.c b/drivers/clk/samsung/clk-exynos4.c
+> index 714d6ba782c8..5f32410a01f8 100644
+> --- a/drivers/clk/samsung/clk-exynos4.c
+> +++ b/drivers/clk/samsung/clk-exynos4.c
+> @@ -85,6 +85,7 @@
+>  #define DIV_PERIL4		0xc560
+>  #define DIV_PERIL5		0xc564
+>  #define E4X12_DIV_CAM1		0xc568
+> +#define E4X12_GATE_BUS_FSYS1	0xc744
+>  #define GATE_SCLK_CAM		0xc820
+>  #define GATE_IP_CAM		0xc920
+>  #define GATE_IP_TV		0xc924
+> @@ -1095,6 +1096,8 @@ static struct samsung_gate_clock exynos4x12_gate_clks[] __initdata = {
+>  		0),
+>  	GATE(CLK_PPMUIMAGE, "ppmuimage", "aclk200", E4X12_GATE_IP_IMAGE, 9, 0,
+>  		0),
+> +	GATE(CLK_PCLK_ADC, "pclk_adc", "aclk133", E4X12_GATE_BUS_FSYS1, 16, 0,
+> +		0),
 
-On 06/09/2015 04:49 PM, Federico Vaga wrote:
-> Hello,
->
-> I'm evaluating the DeviceTree to describe the content of an FPGA.
-> I noticed that Xilinx is already doing it:
->
-> https://www.kernel.org/doc/Documentation/devicetree/bindings/xilinx.txt
->
+Now I have even simpler idea. Don't add new clock id but just define
+here the CLK_TSADC as:
+GATE(CLK_TSADC, "tsadc", "aclk133", E4X12_GATE_BUS_FSYS1, 16, 0, 0);
 
-So is Altera, both for the Nios2 and arm-soc architectures.
-They're using this tool: https://github.com/wgoossens/sopc2dts to go
-from their design software (qsys) to a dts file.
-> I admit that I didn't read the code yet, but before doing it I want to
-> ask you some simple questions that may save me a lot of time.
-> My questions are:
->
-> - is there any reccomandation about DeviceTree for FPGA content
-> description?
-> If yes, are they documented somewhere?
->
+With this change the second patch wouldn't be needed however this does
+not reflect the Exynos 4x12 datasheet.
 
-FPGA's are just like other "hardware" from the device-tree point of
-view. If there's a UART in your FPGA, then you describe a UART in the
-devicetree :)
+Any comments?
 
-For Altera FPGA's some info is described here:
-http://rocketboards.org/foswiki/Documentation/DeviceTreeGenerator141 and
-I think the xilinx flow is similar.
+Best regards,
+Krzysztof
 
-> - it looks like the DeviceTree is disable for x86 architecture except for
-> some specific platform. Is it possible to enable it for the entire x86
-> architecture? Are there any reason to disable it by default?
->
-> - I read that since versione 3.17 it should be possible to dynamically
-> add
-> portion of DeviceTree from configfs. Is it possible on all architecture?
->
-> - I'm working on x86_64 and my FPGA can be on a pluggable board (e.g.
-> PCIe).
-> Is there a way to describe this situation with DeviceTree? Is there
-> any tool
-> that dynamically computes the addresses (interrupts) translation to use
-> (e.g. on PCIe) ?
->
 
-I've been using this scheme on PPC for quite some time (before
-devicetree overlays) by creating a custom pcie driver (that knows the
-bar addresses and irqs) which then instantiates a "virtual platformbus"
-at the pcie bar the fpga is located in.
-You can adopt this scheme for x86 by creating a bus and using the
-devicetree code to probe the inside of your FPGA but this is all a bit
-hackish.
-The correct approach (in my opinion) would be to use an overlay
-describing the contents of the FPGA and loading that when probing the
-pcie-device. This would however require a base devicetree to apply the
-overlay to, and I'm not sure how much effort this is going to be on x86_64
-
-Walter
-
-> Thank you :)
-> -- 
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  	GATE(CLK_MIPI_HSI, "mipi_hsi", "aclk133", GATE_IP_FSYS, 10, 0, 0),
+>  	GATE(CLK_CHIPID, "chipid", "aclk100", E4X12_GATE_IP_PERIR, 0, 0, 0),
+>  	GATE(CLK_SYSREG, "sysreg", "aclk100", E4X12_GATE_IP_PERIR, 1,
+> diff --git a/include/dt-bindings/clock/exynos4.h b/include/dt-bindings/clock/exynos4.h
+> index c4b1676ea674..4548531736c1 100644
+> --- a/include/dt-bindings/clock/exynos4.h
+> +++ b/include/dt-bindings/clock/exynos4.h
+> @@ -268,7 +268,10 @@
+>  #define CLK_DIV_GDL		459
+>  #define CLK_DIV_GDR		460
+>  
+> +/* Exynos4x12 only */
+> +#define CLK_PCLK_ADC		461
+> +
+>  /* must be greater than maximal clock id */
+> -#define CLK_NR_CLKS		461
+> +#define CLK_NR_CLKS		462
+>  
+>  #endif /* _DT_BINDINGS_CLOCK_EXYNOS_4_H */
+> 
