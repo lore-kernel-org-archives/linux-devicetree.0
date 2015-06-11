@@ -1,121 +1,228 @@
-From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: Re: [PATCH] TESTCASE: of: OOPS when disabling node via OF_DYNAMIC
-Date: Thu, 11 Jun 2015 14:14:41 +0300
-Message-ID: <C431674C-891F-44AE-AC9E-63E910D5378A@konsulko.com>
-References: <1427814771-30335-1-git-send-email-wsa@the-dreams.de> <AEA6F5CA-D520-4F34-BE6B-EF2839501089@konsulko.com> <20150414132709.GA1375@katana> <83B5C458-8D49-4EF6-9F4A-6C0E2579AB9F@konsulko.com> <20150607111632.CC7A4C410F0@trevor.secretlab.ca>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2098\))
-Content-Type: text/plain; charset=utf-8
+From: Hanjun Guo <hanjun.guo@linaro.org>
+Subject: Re: [PATCH non-pretimeout 5/7] ACPI: add GTDT table parse driver
+ into ACPI driver
+Date: Thu, 11 Jun 2015 19:14:50 +0800
+Message-ID: <55796DAA.5000903@linaro.org>
+References: <=fu.wei@linaro.org> <1433958452-23721-1-git-send-email-fu.wei@linaro.org> <1433958452-23721-6-git-send-email-fu.wei@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20150607111632.CC7A4C410F0@trevor.secretlab.ca>
-Sender: linux-sh-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1433958452-23721-6-git-send-email-fu.wei@linaro.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: rjw@rjwysocki.net
+Cc: fu.wei@linaro.org, Suravee.Suthikulpanit@amd.com, linaro-acpi@lists.linaro.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, tekkamanninja@gmail.com, graeme.gregory@linaro.org, al.stone@linaro.org, timur@codeaurora.org, ashwin.chaugule@linaro.org, arnd@arndb.de, linux@roeck-us.net, vgandhi@codeaurora.org, wim@iguana.be, jcm@redhat.com, leo.duran@amd.com, corbet@lwn.net, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
+Hi Rafael,
 
-> On Jun 7, 2015, at 14:16 , Grant Likely <grant.likely@secretlab.ca> w=
-rote:
->=20
-> On Wed, 22 Apr 2015 15:30:28 +0300
-> , Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-> wrote:
->> Hi Wolfram,
->>=20
->>> On Apr 14, 2015, at 16:27 , Wolfram Sang <wsa@the-dreams.de> wrote:
->>>=20
->>> Hi Pantelis,
->>>=20
->>> thanks for your prompt reply. Unfortunately, I had to wait until I =
-could
->>> access the test system again.
->>>=20
->>=20
->> [snip]
->>=20
->> Sorry for the non-prompt reply; but just for kicks, can you try the =
-attached patch?
->>=20
->> I have a hunch this might be the problem.
->>=20
->> Regards
->>=20
->> =E2=80=94 Pantelis
->>=20
->>=20
->=20
-> I played around with this some today. If I'm reading it correctly, th=
-e
-> following patch reproduces the same problem:
->=20
-> (continued below patch)
+Any comments on patch 5,6,7/7 of this patch set?
+
+Thanks
+Hanjun
+
+
+On 06/11/2015 01:47 AM, fu.wei@linaro.org wrote:
+> From: Fu Wei <fu.wei@linaro.org>
+>
+> This driver adds support for parsing SBSA Generic Watchdog
+> Structure in GTDT, and creating a platform device with that
+> information. This allows the operating system to obtain device
+> data from the resource of platform device.
+>
+> The platform device named "sbsa-gwdt" can be used by the
+> ARM SBSA Generic Watchdog driver.
+>
+> Signed-off-by: Fu Wei <fu.wei@linaro.org>
+> Signed-off-by: Hanjun Guo <hanjun.guo@linaro.org>
 > ---
-> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-> index 18016341d5a9..0a27b38c3041 100644
-> --- a/drivers/of/unittest.c
-> +++ b/drivers/of/unittest.c
-> @@ -753,6 +753,11 @@ static void __init of_unittest_match_node(void)
-> 	}
-> }
->=20
-> +static struct resource test_bus_res =3D {
-> +	.start =3D 0xfffffff8,
-> +	.end =3D 0xfffffff9,
-> +	.flags =3D IORESOURCE_MEM,
-> +};
-> static const struct platform_device_info test_bus_info =3D {
-> 	.name =3D "unittest-bus",
-> };
-> @@ -795,6 +800,7 @@ static void __init of_unittest_platform_populate(=
-void)
-> 	if (rc)
-> 		return;
-> 	test_bus->dev.of_node =3D np;
-> +	platform_device_add_resources(test_bus, &test_bus_res, 1);
->=20
-> 	of_platform_populate(np, match, NULL, &test_bus->dev);
-> 	for_each_child_of_node(np, child) {
->=20
-> ---
->=20
-> I think the fixup patch boils down to the following. It's hard to tel=
-l
-> because it combines refactoring with the bug fix. Do I have it correc=
-t?
-> If so, I'd rather commit the simple fix which can be committed now fo=
-r
-> v4.1, and the refactoring can be pushed for v4.2
->=20
-> ---
->=20
-> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-> index ebf034b97278..b3042e6ee3ef 100644
-> --- a/drivers/base/platform.c
-> +++ b/drivers/base/platform.c
-> @@ -377,7 +377,7 @@ int platform_device_add(struct platform_device *p=
-dev)
-> 		struct resource *r =3D &pdev->resource[i];
-> 		unsigned long type =3D resource_type(r);
->=20
-> -		if (type =3D=3D IORESOURCE_MEM || type =3D=3D IORESOURCE_IO)
-> +		if (r->parent)
-> 			release_resource(r);
-> 	}
->=20
-> @@ -410,7 +410,7 @@ void platform_device_del(struct platform_device *=
-pdev)
-> 			struct resource *r =3D &pdev->resource[i];
-> 			unsigned long type =3D resource_type(r);
->=20
-> -			if (type =3D=3D IORESOURCE_MEM || type =3D=3D IORESOURCE_IO)
-> +			if (r->parent)
-> 				release_resource(r);
-> 		}
-> 	}
->=20
-
-Verified. No crashes.
-
-Acked-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-
+>   drivers/acpi/Kconfig  |   9 ++++
+>   drivers/acpi/Makefile |   1 +
+>   drivers/acpi/gtdt.c   | 137 +++++++++++++++++++++++++++++++++++++++=
++++++++++++
+>   3 files changed, 147 insertions(+)
+>   create mode 100644 drivers/acpi/gtdt.c
+>
+> diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
+> index 1bbaa3d..e125698 100644
+> --- a/drivers/acpi/Kconfig
+> +++ b/drivers/acpi/Kconfig
+> @@ -433,4 +433,13 @@ config XPOWER_PMIC_OPREGION
+>
+>   endif
+>
+> +config ACPI_GTDT
+> +	bool "ACPI GTDT Support"
+> +	depends on ARM64
+> +	help
+> +	  GTDT (Generic Timer Description Table) provides information
+> +	  for per-processor timers and Platform (memory-mapped) timers
+> +	  for ARM platforms. Select this option to provide information
+> +	  needed for the timers init.
+> +
+>   endif	# ACPI
+> diff --git a/drivers/acpi/Makefile b/drivers/acpi/Makefile
+> index 431e587..2c5a194 100644
+> --- a/drivers/acpi/Makefile
+> +++ b/drivers/acpi/Makefile
+> @@ -96,3 +96,4 @@ obj-$(CONFIG_ACPI_EXTLOG)	+=3D acpi_extlog.o
+>   obj-$(CONFIG_PMIC_OPREGION)	+=3D pmic/intel_pmic.o
+>   obj-$(CONFIG_CRC_PMIC_OPREGION) +=3D pmic/intel_pmic_crc.o
+>   obj-$(CONFIG_XPOWER_PMIC_OPREGION) +=3D pmic/intel_pmic_xpower.o
+> +obj-$(CONFIG_ACPI_GTDT)		+=3D gtdt.o
+> diff --git a/drivers/acpi/gtdt.c b/drivers/acpi/gtdt.c
+> new file mode 100644
+> index 0000000..a92abf2
+> --- /dev/null
+> +++ b/drivers/acpi/gtdt.c
+> @@ -0,0 +1,137 @@
+> +/*
+> + * ARM Specific GTDT table Support
+> + *
+> + * Copyright (C) 2015, Linaro Ltd.
+> + * Author: Fu Wei <fu.wei@linaro.org>
+> + *         Hanjun Guo <hanjun.guo@linaro.org>
+> + *
+> + * This program is free software; you can redistribute it and/or mod=
+ify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/device.h>
+> +#include <linux/init.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +
+> +static int __init map_generic_timer_interrupt(u32 interrupt, u32 fla=
+gs)
+> +{
+> +	int trigger, polarity;
+> +
+> +	if (!interrupt)
+> +		return 0;
+> +
+> +	trigger =3D (flags & ACPI_GTDT_INTERRUPT_MODE) ? ACPI_EDGE_SENSITIV=
+E
+> +			: ACPI_LEVEL_SENSITIVE;
+> +
+> +	polarity =3D (flags & ACPI_GTDT_INTERRUPT_POLARITY) ? ACPI_ACTIVE_L=
+OW
+> +			: ACPI_ACTIVE_HIGH;
+> +
+> +	return acpi_register_gsi(NULL, interrupt, trigger, polarity);
+> +}
+> +
+> +/*
+> + * Initialize a SBSA generic Watchdog platform device info from GTDT
+> + * According to SBSA specification the size of refresh and control
+> + * frames of SBSA Generic Watchdog is SZ_4K(Offset 0x000 =E2=80=93 0=
+xFFF).
+> + */
+> +static int __init gtdt_import_sbsa_gwdt(struct acpi_gtdt_watchdog *w=
+d,
+> +					int index)
+> +{
+> +	struct platform_device *pdev;
+> +	int irq =3D map_generic_timer_interrupt(wd->timer_interrupt,
+> +					      wd->timer_flags);
+> +	struct resource res[] =3D {
+> +		DEFINE_RES_IRQ_NAMED(irq, "ws0"),
+> +		DEFINE_RES_MEM_NAMED(wd->refresh_frame_address, SZ_4K,
+> +				     "refresh"),
+> +		DEFINE_RES_MEM_NAMED(wd->control_frame_address, SZ_4K,
+> +				     "control"),
+> +	};
+> +
+> +	pr_debug("GTDT: a Watchdog GT(0x%llx/0x%llx gsi:%u flags:0x%x)\n",
+> +		 wd->refresh_frame_address, wd->control_frame_address,
+> +		 wd->timer_interrupt, wd->timer_flags);
+> +
+> +	if (!(wd->refresh_frame_address &&
+> +	      wd->control_frame_address &&
+> +	      wd->timer_interrupt)) {
+> +		pr_err("GTDT: failed geting the device info.\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (irq < 0) {
+> +		pr_err("GTDT: failed to register GSI of the Watchdog GT.\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	/*
+> +	 * Add a platform device named "sbsa-gwdt" to match the platform dr=
+iver.
+> +	 * "sbsa-gwdt": SBSA(Server Base System Architecture) Generic Watch=
+dog
+> +	 * The platform driver (like drivers/watchdog/sbsa_gwdt.c)can get d=
+evice
+> +	 * info below by matching this name.
+> +	 */
+> +	pdev =3D platform_device_register_simple("sbsa-gwdt", index, res,
+> +					       ARRAY_SIZE(res));
+> +	if (IS_ERR(pdev)) {
+> +		acpi_unregister_gsi(wd->timer_interrupt);
+> +		return PTR_ERR(pdev);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int __init gtdt_platform_timer_parse(struct acpi_table_header=
+ *table)
+> +{
+> +	struct acpi_gtdt_header *header;
+> +	struct acpi_table_gtdt *gtdt;
+> +	void *gtdt_subtable;
+> +	int i, gwdt_index;
+> +	int ret =3D 0;
+> +
+> +	if (table->revision < 2) {
+> +		pr_warn("GTDT: Revision:%d doesn't support Platform Timers.\n",
+> +			table->revision);
+> +		return 0;
+> +	}
+> +
+> +	gtdt =3D container_of(table, struct acpi_table_gtdt, header);
+> +	if (!gtdt->platform_timer_count) {
+> +		pr_info("GTDT: No Platform Timer structures.\n");
+> +		return 0;
+> +	}
+> +
+> +	gtdt_subtable =3D (void *)gtdt + gtdt->platform_timer_offset;
+> +
+> +	for (i =3D 0, gwdt_index =3D 0; i < gtdt->platform_timer_count; i++=
+) {
+> +		if (gtdt_subtable > (void *)table + table->length) {
+> +			pr_err("GTDT: subtable pointer overflows, bad table\n");
+> +			return -EINVAL;
+> +		}
+> +		header =3D (struct acpi_gtdt_header *)gtdt_subtable;
+> +		if (header->type =3D=3D ACPI_GTDT_TYPE_WATCHDOG) {
+> +			ret =3D gtdt_import_sbsa_gwdt(gtdt_subtable, gwdt_index);
+> +			if (ret)
+> +				pr_err("GTDT: failed to import subtable %d\n",
+> +				       i);
+> +			else
+> +				gwdt_index++;
+> +		}
+> +		gtdt_subtable +=3D header->length;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int __init gtdt_platform_timer_init(void)
+> +{
+> +	if (acpi_disabled)
+> +		return 0;
+> +
+> +	return acpi_table_parse(ACPI_SIG_GTDT, gtdt_platform_timer_parse);
+> +}
+> +
+> +device_initcall(gtdt_platform_timer_init);
+>
