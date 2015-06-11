@@ -1,60 +1,223 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 00/21] On-demand device registration
-Date: Thu, 11 Jun 2015 14:30:05 +0200
-Message-ID: <CACRpkdaZgBR5rHwrEYqcm5K4w3y8MXG8a0k=Y+oQY+jukHfuyw@mail.gmail.com>
-References: <1432565608-26036-1-git-send-email-tomeu.vizoso@collabora.com>
- <CACRpkdasLwMfEHGMRd1X3K_DU7NMPreE8TMwqqDTg8k9wj=wJQ@mail.gmail.com>
- <CAAObsKCP-C+TY8Wkk6bQzxZeGYL9X01trtjxfaYp--ZnH07C+w@mail.gmail.com>
- <CACRpkdZuSj+S2x1yz6n5PgcRK=3ZCcq_To124b2Y+Oj54aydpg@mail.gmail.com>
- <5577F533.1060007@ahsoftware.de>
- <CACRpkdYF5K7ckGbgvZc6qRzGFJTQ4WqXdu_7Tcqczn2LkFbn3A@mail.gmail.com>
- <5579602F.1070801@ahsoftware.de>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [linux-sunxi] Re: [PATCH v4 1/2] phy-sun4i-usb: Add full support
+ for usb0 phy / OTG
+Date: Thu, 11 Jun 2015 14:35:24 +0200
+Message-ID: <5579808C.2080208@redhat.com>
+References: <1433088626-8858-1-git-send-email-hdegoede@redhat.com> <1433088626-8858-2-git-send-email-hdegoede@redhat.com> <55795800.4070405@ti.com> <55795A98.8090303@redhat.com> <55796E23.90509@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <5579602F.1070801@ahsoftware.de>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Alexander Holler <holler@ahsoftware.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, open@wandq.ahsoftware, dmaengine@vger.kernel.org, Tomeu Vizoso <tomeu.vizoso@collabora.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "list@wandq.ahsoftware:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, Grant Likely <grant.likely@linaro.org>, Dan Williams <dan.j.williams@intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "linux-usb@vger.kernel.org" <linux-i2c@vger.>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55796E23.90509-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: kishon-l0cyMroinI0@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBKdW4gMTEsIDIwMTUgYXQgMTI6MTcgUE0sIEFsZXhhbmRlciBIb2xsZXIgPGhvbGxl
-ckBhaHNvZnR3YXJlLmRlPiB3cm90ZToKPiBBbSAxMS4wNi4yMDE1IHVtIDEwOjEyIHNjaHJpZWIg
-TGludXMgV2FsbGVpajoKPj4gT24gV2VkLCBKdW4gMTAsIDIwMTUgYXQgMTA6MjggQU0sIEFsZXhh
-bmRlciBIb2xsZXIgPGhvbGxlckBhaHNvZnR3YXJlLmRlPgo+PiB3cm90ZToKCj4+PiBZb3Ugd291
-bGQgZW5kIHVwIHdpdGggdGhlIHNhbWUgcHJvYmxlbSBvZiBkZWFkbG9ja3MgYXMgY3VycmVudGx5
-LCBhbmQgeW91Cj4+PiB3b3VsZCBzdGlsbCBuZWVkIHNvbWV0aGluZyB1Z2x5IGxpa2UgdGhlIGRl
-ZmVyZWQgcHJvYmUgYnJ1dGZvcmNlIHRvIGF2b2lkCj4+PiB0aGVtLgo+Pgo+Pgo+PiBTb3JyeSBJ
-IGRvbid0IGdldCB0aGF0LiBDYXJlIHRvIGVsYWJvcmF0ZSBvbiB3aHk/Cj4KPgo+IEJlY2F1c2Ug
-bG9hZGluZy9pbml0aWFsaXppbmcgb24gZGVtYW5kIGRvZXNuJ3QgZ2l2ZSB5b3UgYW55IHNvbHZl
-ZCBvcmRlciBvZgo+IGRyaXZlcnMgdG8gaW5pdGlhbGl6ZS4gQW5kIGl0IGNhbid0IGJlY2F1c2Ug
-aXQgaGFzIG5vIGlkZWEgYWJvdXQgdGhlCj4gcmVxdWlyZW1lbnRzIG9mIG90aGVyIGRyaXZlcnMu
-IFRoZSByZWFzb24gd2h5IGl0IG1pZ2h0IHdvcmsgYmV0dGVyIGluIHRoZQo+IGNhc2Ugb2YgdGhl
-IHRlZ3JhIGlzIHRoYXQgaXQgbWlnaHQgZ2l2ZSB5b3UgYW5vdGhlciBpbml0aWFsaXphdGlvbiBv
-cmRlcgo+IHRoYW4gdGhlIG9uZSB3aGljaCBpcyBjdXJyZW50bHkgY2hvb3Nlbiwgd2hpY2gsIGJ5
-IGx1Y2ssIG1pZ2h0IGJlIGEgYmV0dGVyCj4gb25lLgo+Cj4gQnV0IG1heWJlIEkgbWlzc2VkIHNv
-bWV0aGluZywgSSBoYXZlbid0IGxvb2tlZCBhdCB0aGUgcGF0Y2hlcyBhdCBhbGwuIEJ1dAo+IGp1
-c3QgbG9hZGluZyBvbiBkZW1hbmQsIGNhbid0IG1hZ2ljYWxseSBnaXZlIHlvdSBhIHdvcmtpbmcg
-b3JkZXIgb2YgZHJpdmVycwo+IHRvIGluaXRpYWxpemUuIEUuZy4gaG93IGRvIHlvdSBjaG9vc2Ug
-dGhlIGZpcnN0IGRyaXZlciB0byBpbml0aWFsaXplPwoKU28gdGhlIGN1cnJlbnQgcGF0Y2ggc2V0
-IGludHJvZHVjZXMgZGVwZW5kZW5jaWVzIChqdXN0IGZvciBkZXZpY2UgdHJlZSkKYW5kIFRvbWV1
-IGlzIHdvcmtpbmcgb24gYSBtb3JlIGdlbmVyaWMgZGVwZW5kZW5jeSBhcHByb2FjaCBmb3IKYW55
-IEhXIGRlc2NyaXB0aW9uLgoKVGhlIGZpcnN0IGRyaXZlciB0byBpbml0aWFsaXplIHdpbGwgYmUg
-YXMgdXN1YWwgdGhlIGZpcnN0IG9uZSBpbiB0aGUgbGlzdCBmb3IKdGhhdCBpbml0bGV2ZWwsIHRo
-ZW4gd2Fsa2luZyB1cCB0aGUgaW5pdGlsZXZlbHMuCgpIb3dldmVyIGlmIGFueSBkcml2ZXIgcnVu
-cyBpbnRvIGEgcmVzb3VyY2Ugcm9hZGJsb2NrIGl0IHdpbGwgcG9zdHBvbmUKYW5kIHdhaXQgZm9y
-IGRlcGVuZGVuY2llcyB0byBwcm9iZSBmaXJzdC4KCkNlcnRhaW5seSBpdCBpcyBwb3NzaWJsZSB0
-byBjcmVhdGUgZGVhZGxvY2tzIGluIHRoaXMgc2NlbmFyaW8sIGJ1dCB0aGUKc2NvcGUgaXMgbm90
-IHRvIGNyZWF0ZSBhbiB1YnJlYWthYmxlIHN5c3RlbS4KCllvdXJzLApMaW51cyBXYWxsZWlqCl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
-YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Hi,
+
+On 11-06-15 13:16, Kishon Vijay Abraham I wrote:
+> Hi,
+>
+> On Thursday 11 June 2015 03:23 PM, Hans de Goede wrote:
+>> Hi,
+>>
+>> On 11-06-15 11:42, Kishon Vijay Abraham I wrote:
+>>> Hi,
+>>>
+>>> On Sunday 31 May 2015 09:40 PM, Hans de Goede wrote:
+>>>> The usb0 phy is connected to an OTG controller, and as such needs some special
+>>>> handling:
+>>>>
+>>>> 1) It allows explicit control over the pullups, enable these on phy_init and
+>>>> disable them on phy_exit.
+>>>>
+>>>> 2) It has bits to signal id and vbus detect to the musb-core, add support for
+>>>> for monitoring id and vbus detect gpio-s for use in dual role mode, and set
+>>>> these bits to the correct values for operating in host only mode when no
+>>>> gpios are specified in the devicetree.
+>>>>
+>>>> 3) When in dual role mode the musb sunxi glue needs to know if the a host or
+>>>> device cable is plugged in, so when in dual role mode register an extcon.
+>>>>
+>>>> While updating the devicetree binding documentation also add documentation
+>>>> for the sofar undocumented usage of regulators for vbus for all 3 phys.
+>>>>
+>>>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>>>> ---
+>>>> Changes in v2:
+>>>> -Removed the sunxi specific phy functions, instead the id / vbus gpio polling
+>>>>    has been moved to the phy-sun4i-usb driver and their status is exported
+>>>>    through extcon for the sunxi-musb glue
+>>>> Changes in v3:
+>>>> -No changes
+>>>> Changes in v4:
+>>>> -Do not call regulator_disable in an unbalanced manner when an external vbus
+>>>>    is present
+>>>> ---
+>>>>    .../devicetree/bindings/phy/sun4i-usb-phy.txt      |  18 +-
+>>>>    drivers/phy/Kconfig                                |   1 +
+>>>>    drivers/phy/phy-sun4i-usb.c                        | 273 ++++++++++++++++++++-
+>>>>    3 files changed, 281 insertions(+), 11 deletions(-)
+>>>>
+>>> .
+>>> .
+>>> <snip>
+>>> .
+>>> .
+>>>> diff --git a/drivers/phy/phy-sun4i-usb.c b/drivers/phy/phy-sun4i-usb.c
+>>>> index 91c5be4..b45d707 100644
+>>>> --- a/drivers/phy/phy-sun4i-usb.c
+>>>> +++ b/drivers/phy/phy-sun4i-usb.c
+>>>> @@ -1,7 +1,7 @@
+>>>
+>>> .
+>>> .
+>>> <snip>
+>>> .
+>>> .
+>>>>    static struct phy *sun4i_usb_phy_xlate(struct device *dev,
+>>>>                        struct of_phandle_args *args)
+>>>>    {
+>>>> @@ -240,13 +417,20 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
+>>>>        struct phy_provider *phy_provider;
+>>>>        bool dedicated_clocks;
+>>>>        struct resource *res;
+>>>> -    int i;
+>>>> +    int i, ret;
+>>>>
+>>>>        data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
+>>>>        if (!data)
+>>>>            return -ENOMEM;
+>>>>
+>>>>        mutex_init(&data->mutex);
+>>>> +    INIT_DELAYED_WORK(&data->detect, sun4i_usb_phy0_id_vbus_det_scan);
+>>>> +    data->extcon_cable_names[0] = extcon_cable_name[EXTCON_USB_HOST];
+>>>> +    data->extcon_cable_names[1] = extcon_cable_name[EXTCON_USB];
+>>>> +    data->extcon_cable_names[2] = NULL;
+>>>> +    data->extcon.name = DRIVER_NAME;
+>>>> +    data->extcon.supported_cable = data->extcon_cable_names;
+>>>> +    data->extcon.dev.parent = dev;
+>>>>
+>>>>        if (of_device_is_compatible(np, "allwinner,sun5i-a13-usb-phy"))
+>>>>            data->num_phys = 2;
+>>>> @@ -269,6 +453,34 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
+>>>>        if (IS_ERR(data->base))
+>>>>            return PTR_ERR(data->base);
+>>>>
+>>>> +    data->id_det_gpio = devm_gpiod_get(dev, "usb0_id_det", GPIOD_IN);
+>>>> +    if (IS_ERR(data->id_det_gpio)) {
+>>>> +        if (PTR_ERR(data->id_det_gpio) == -EPROBE_DEFER)
+>>>> +            return -EPROBE_DEFER;
+>>>> +        data->id_det_gpio = NULL;
+>>>> +    }
+>>>> +
+>>>> +    data->vbus_det_gpio = devm_gpiod_get(dev, "usb0_vbus_det", GPIOD_IN);
+>>>> +    if (IS_ERR(data->vbus_det_gpio)) {
+>>>> +        if (PTR_ERR(data->vbus_det_gpio) == -EPROBE_DEFER)
+>>>> +            return -EPROBE_DEFER;
+>>>> +        data->vbus_det_gpio = NULL;
+>>>> +    }
+>>>> +
+>>>> +    /* We either want both gpio pins or neither (when in host mode) */
+>>>> +    if (!data->id_det_gpio != !data->vbus_det_gpio) {
+>>>> +        dev_err(dev, "failed to get id or vbus detect pin\n");
+>>>> +        return -ENODEV;
+>>>> +    }
+>>>> +
+>>>> +    if (data->id_det_gpio) {
+>>>> +        ret = devm_extcon_dev_register(dev, &data->extcon);
+>>>> +        if (ret) {
+>>>> +            dev_err(dev, "failed to register extcon: %d\n", ret);
+>>>> +            return ret;
+>>>> +        }
+>>>> +    }
+>>>> +
+>>>>        for (i = 0; i < data->num_phys; i++) {
+>>>>            struct sun4i_usb_phy *phy = data->phys + i;
+>>>>            char name[16];
+>>>> @@ -318,12 +530,54 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
+>>>>            phy_set_drvdata(phy->phy, &data->phys[i]);
+>>>>        }
+>>>>
+>>>> +    data->id_det_irq = gpiod_to_irq(data->id_det_gpio);
+>>>> +    data->vbus_det_irq = gpiod_to_irq(data->vbus_det_gpio);
+>>>> +    if (data->id_det_irq  < 0 || data->vbus_det_irq < 0)
+>>>> +        data->phy0_poll = true;
+>>>
+>>> if polling is enabled, we shouldn't enable irq at all?
+>>
+>> Thanks for the review.
+>>
+>> One some boards one of the gpio-s is irq capable and the other
+>> is not, in which case the current code indeed enables both
+>> irq handling for the one gpio which is irq capable and enables
+>> polling. This is done this way deliberately as the irq path
+>> has much better latency then polling and the 2 can co-exist.
+>
+> okay. Would be good to have this as a comment.
+>>
+>>>> +
+>>>> +    if (data->id_det_irq >= 0) {
+>>>> +        ret = devm_request_irq(dev, data->id_det_irq,
+>>>> +                sun4i_usb_phy0_id_vbus_det_irq,
+>>>> +                IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
+>>>> +                "usb0-id-det", data);
+>>>> +        if (ret) {
+>>>> +            dev_err(dev, "Err requesting id-det-irq: %d\n", ret);
+>>>> +            return ret;
+>>>> +        }
+>>>> +    }
+>>>> +
+>>>> +    if (data->vbus_det_irq >= 0) {
+>>>> +        ret = devm_request_irq(dev, data->vbus_det_irq,
+>>>> +                sun4i_usb_phy0_id_vbus_det_irq,
+>>>> +                IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
+>>>> +                "usb0-vbus-det", data);
+>>>> +        if (ret) {
+>>>> +            dev_err(dev, "Err requesting vbus-det-irq: %d\n", ret);
+>>>> +            return ret;
+>>>> +        }
+>>>> +    }
+>>>> +
+>>>>        dev_set_drvdata(dev, data);
+>>>>        phy_provider = devm_of_phy_provider_register(dev, sun4i_usb_phy_xlate);
+>>>>
+>>>>        return PTR_ERR_OR_ZERO(phy_provider);
+>>>>    }
+>>>>
+>>>> +static int sun4i_usb_phy_remove(struct platform_device *pdev)
+>>>> +{
+>>>> +    struct device *dev = &pdev->dev;
+>>>> +    struct sun4i_usb_phy_data *data = dev_get_drvdata(dev);
+>>>> +
+>>>> +    if (data->id_det_irq >= 0)
+>>>> +        devm_free_irq(dev, data->id_det_irq, data);
+>>>> +    if (data->vbus_det_irq >= 0)
+>>>> +        devm_free_irq(dev, data->vbus_det_irq, data);
+>>>
+>>> This shouldn't be needed since you already use devm_* in probe.
+>>
+>> The use of devm_* in probe helps to keep the error handling in
+>> probe sane, but we must explicitly free the irqs here, otherwise
+>> they may trigger after this:
+>
+>  From whatever I know free irq will be invoked in remove if devm_request_irq is used in probe. I have to check though.
+
+Yes it will be invoked, but after we've stopped our workqueue function,
+and in the mean time the irq handler can trigger re-scheduling the
+workqueue function.
+
+All drivers using a workqueue explicitly free irqs on remove before
+stopping the workqueue because of this reason. The auto freeing
+of the irq happens after the remove function has been called, and
+thus after the workqueue has been stopped/cancelled which is too
+late.
+
+Regards,
+
+Hans
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
