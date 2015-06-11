@@ -1,65 +1,106 @@
-From: "Opensource [Steve Twiss]" <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH V3 1/4] mfd: da9062: DA9062 MFD core driver
-Date: Thu, 11 Jun 2015 09:27:45 +0000
-Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7014B22F4DC@SW-EX-MBX02.diasemi.com>
-References: <cover.1432041031.git.stwiss.opensource@diasemi.com>
- <ecf72b79429e6758111a908fd1ded29c0b96da15.1432041031.git.stwiss.opensource@diasemi.com>
- <20150526161024.GQ11677@x1>
- <6ED8E3B22081A4459DAC7699F3695FB7014B22F4C4@SW-EX-MBX02.diasemi.com>
- <20150611085653.GG2982@x1>
+From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: Re: [PATCH v4 1/2] phy-sun4i-usb: Add full support
+ for usb0 phy / OTG
+Date: Thu, 11 Jun 2015 18:33:08 +0900
+Message-ID: <557955D4.4030908@samsung.com>
+References: <1433088626-8858-1-git-send-email-hdegoede@redhat.com>
+ <1433088626-8858-2-git-send-email-hdegoede@redhat.com> <55792122.20607@ti.com>
+ <557941A6.5000306@samsung.com> <557944EE.1020303@redhat.com>
+ <557946EC.3060607@samsung.com> <55794DEA.1050604@redhat.com>
+Reply-To: cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150611085653.GG2982@x1>
-Content-Language: en-US
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: LINUXKERNEL <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, DEVICETREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Dajun Chen <david.chen-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, LINUXINPUT <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUXWATCHDOG <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, RTCLINUX <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDL3F4G2ZAIBBVVL4WVQKGQE7UHGGRQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-reply-to: <55794DEA.1050604-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMTEgSnVuZSAyMDE1IDA5OjU3IExlZSBKb25lcyB3cm90ZToNCg0KPiBUbzogT3BlbnNvdXJj
-ZSBbU3RldmUgVHdpc3NdDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggVjMgMS80XSBtZmQ6IGRhOTA2
-MjogREE5MDYyIE1GRCBjb3JlIGRyaXZlcg0KPiANCj4gPiA+ID4gPiBkaWZmIC0tZ2l0IGEvaW5j
-bHVkZS9saW51eC9tZmQvZGE5MDYyL3JlZ2lzdGVycy5oDQoNClsuLi5dDQoNCj4gPiA+ID4gPiAr
-I2RlZmluZSBEQTkwNjJBQV9XUklURV9NT0RFX1NISUZUCTYNCj4gPiA+ID4gPiArI2RlZmluZSBE
-QTkwNjJBQV9XUklURV9NT0RFX01BU0sJKDB4MDEgPDwgNikNCj4gPiA+ID4NCj4gPiA+ID4gRm9y
-IDEgPDwgWCwgeW91IHNob3VsZCB1c2UgQklUKFgpLg0KPiA+ID4gPg0KPiA+ID4NCj4gPiA+IEZv
-ciB0aGUgdHdvIGNvbW1lbnRzIGFib3ZlICJSZWdpc3RlcnMiIGFuZCAiQml0IGZpZWxkcyIgYW5k
-IHRoZSAoMTw8eCkNCj4gPiA+IGRlZmluaXRpb25zIC4uLg0KPiA+ID4NCj4gPiA+IFRoZSB3aG9s
-ZSBvZiB0aGlzIGZpbGUgaXMgYXV0b21hdGljYWxseSBnZW5lcmF0ZWQgYnkgb3VyIGhhcmR3YXJl
-IGRlc2lnbmVycw0KPiA+ID4gSSB3b3VsZCBwcmVmZXIgaXQgaWYgdGhlIHJlZ2lzdGVyIGRlZmlu
-aXRpb25zIGFuZCBiaXQgZmllbGRzIGFyZSBub3QgYWx0ZXJlZCB1c2luZw0KPiA+ID4gdGhlICNk
-ZWZpbmUgQklUKG5yKSAoMVVMPDwobnIpKSBtYWNybyBhbmQgdGhlIGNvbW1lbnRzIHJlbW92ZWQg
-YmVjYXVzZQ0KPiA+ID4gd2UgaGF2ZSBzY3JpcHRzIHRoYXQgY2FuIGJlIHVzZWQgdG8gY2hlY2sg
-dGhpcyBmaWxlIGF1dG9tYXRpY2FsbHkuDQo+ID4gPg0KPiA+ID4gQWxzbyBpZiB0aGUgcmVnaXN0
-ZXIgbWFwIGlzIGV2ZXIgdXBkYXRlZCwgdGhlbiBpdCB3aWxsIGJlIGVhc2llciBmb3IgbWUgdG8g
-ZGlmZg0KPiA+ID4gdGhlIG5ldyBkZWxpdmVyZWQgcmVnaXN0ZXIgYW5kIGJpdCBmaWVsZCBkZWZp
-bml0aW9ucyB3aXRoIHRoZSBvbGQgb25lLg0KPiA+ID4NCj4gPiA+IE15IHByZWZlcmVuY2Ugd291
-bGQgYmUgbm90IHRvIGNoYW5nZSB0aGlzIGhlYWRlciBmaWxlLg0KPiA+ID4NCj4gPiA+IFsuLi5d
-DQo+ID4NCj4gPiBJZiB0aGVzZSBsYXN0IHR3byB0aGluZ3MgYXJlIGEgcHJvYmxlbSBjYW4geW91
-IHBsZWFzZSBsZXQgbWUga25vdy4NCg0KSEkgTGVlLA0KDQpUaGFua3MgZm9yIHJlcGx5aW5nIHNv
-IHF1aWNrbHkuDQoNCj4gSSdtIHN0aWxsIG5vdCBwYXJ0aWN1bGFybHkgaGFwcHkgd2l0aCB0aGlz
-LiAgQ2FuIHlvIHNwZWFrIHRvIHlvdXIgSC9XDQo+IGd1eXMgYW5kIGdldCB0aGVtIHRvIGNoYW5n
-ZSB0aGVpciBzY3JpcHRzIHRvIG91dHB1dCBzZW5zaWJsZSBoZWFkZXINCj4gZmlsZXM/DQoNCkFo
-LiBPay4gDQoNCkZvciBvdXIgc2lkZSwgdGhlIGdlbmVyYXRlZCBoZWFkZXJzIG1pZ2h0IG5vdCBq
-dXN0IGJlIHVzZWQgZm9yIExpbnV4LiBJJ3ZlDQpqdXN0IGRpc2N1c3NlZCB0aGlzIHdpdGggbXkg
-Y29sbGVhZ3VlcyBhbmQgdGhleSB3aWxsIG5lZWQgaXQgdG8gcmVtYWluLg0KU28gSSBndWVzcyBp
-bnRlcm5hbGx5IHdlIHdpbGwga2VlcCB0aGUgaGVhZGVycyBsaWtlIHRoaXMsIGJ1dCBhcyBpdCBl
-bnRlcnMNCm15IHN1Ym1pc3Npb24gcHJvY2VzcyBJIGNhbiBjaGFuZ2UgaXQgZm9yIHRoZSBMaW51
-eCBjb21tdW5pdHkuDQogDQo+IFRvIGJlIGhvbmVzdCwgaXQncyBwcm9iYWJseSBub3QgYSBibG9j
-a2VyIGZvciBhY2NlcHRhbmNlLCBidXQgaWYgc29tZW9uZQ0KPiB3cml0ZXMgYSBwYXRjaCBuZXh0
-IHdlZWsgdG8gY2hhbmdlIGFsbCBvZiB0aGUgKDB4MDEgPDwgWCkgbGluZXMgdG8NCj4gc3RhcnQg
-dXNpbmcgdGhlIEJJVCgpIG1hY3JvLCBJIHdpbGwgYWNjZXB0IGl0LiAgQmV0dGVyIHRvIGluZmx1
-ZW5jZWQNCj4geW91ciBndXlzIHNvIHlvdSBhcmUgbm90IG92ZXJseSBpbmNvbnZlbmllbmNlZC4N
-Cg0KWWVwOiBJIHdpbGwgY2hhbmdlIHRoaXMgQklUKCkgbWFjcm8gZm9yIHRoZSBzdWJtaXNzaW9u
-cyBpbiBmdXR1cmUuDQpEZXBlbmRpbmcgb24gdGhlIG5leHQgc3RlcCwgSSB3aWxsIHNlbmQgYSBw
-YXRjaCB0byB0aGlzIG9yIHVwZGF0ZSB0aGUgc3VibWlzc2lvbg0KaWYgdGhlcmUgYXJlIGZ1cnRo
-ZXIgY29tbWVudHMgb24gdGhpcyBwYXRjaCBzZXQuDQoNCj4gRldJVywgd2hlbiB1cHN0cmVhbWlu
-ZyBjb2RlLCB0aGUgZXhjdXNlICJzb21lb25lIGVsc2Ugd3JvdGUgaXQiLCBoYXMNCj4gbmV2ZXIg
-YmVlbiBhIGdvb2Qgb25lIHRvIHVzZSBvbiB0aGUgbGlzdHMuICAgQmVsaWV2ZSBtZSwgSSd2ZQ0K
-PiB0cmllZC4gOykNCg0KaGVoIG9rYXkgOikNCg0KUmVnYXJkcywNClN0ZXZlDQoNCg==
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi,
+
+On 06/11/2015 05:59 PM, Hans de Goede wrote:
+> Hi,
+> 
+> On 11-06-15 10:29, Chanwoo Choi wrote:
+>> Hi Hans,
+>>
+>> On 06/11/2015 05:21 PM, Hans de Goede wrote:
+>>> Hi Chanwoo,
+>>>
+>>> Thanks for the quick review.
+>>>
+>>> On 11-06-15 10:07, Chanwoo Choi wrote:
+>>>> Hi Hans,
+>>>>
+>>>> I add the comment about extcon-related code.
+>>>>
+>>>> Firstly,
+>>>> I'd like you to implment the extcon driver for phy-sun4i-usb device
+>>>> in drivers/extcon/ directoryby using MFD
+>>>
+>>> No, just no, this is not what the MFD framework is for, the usb-phy
+>>> in question here is not a multifunction device. The MFD framework
+>>> is intended for true multi-function devices like i2c attached
+>>> PMICs which have regulators, gpios, pwm, input (power button),
+>>> chargers, power-supply, etc. That is NOT the case here.
+>>>
+>>> Also moving this to the MFD framework would very likely requiring
+>>> the devicetree binding for the usb-phy to change which we cannot
+>>> do as that would break the devicetree ABI.
+>>>
+>>>> because there are both extcon
+>>>> provider driver and extcon client driver. I think that all extcon
+>>>> provider driver better to be included in drivers/extcon/ directory.
+>>>> extcon_set_cable_state() function should be handled in extcon provider
+>>>> driver which is incluced in drivers/extcon/ directory.
+>>>
+>>> I do not find this a compelling reason, there are plenty of subsystems
+>>> where not all implementations of the subsystem class live in the subsystem
+>>> directory, e.g. input and hwmon devices are often also found outside of
+>>> the input and hwmon driver directories.
+>>
+>> There are difference on between input/hwmon and extcon.
+>>
+>> Because input and hwmon driver implement the only one type driver as provider driver.
+>> But, extcon implement the two type driver of both extcon provider and extcon client driver.
+>> The extcon is similiar with regulator and clock framework as resource.
+>>
+>> extcon provider driver to provider the event when the state of external connector is changed.
+>> - devm_extcon_dev_register()
+>> - e.g., almost extcon provider driver are included in 'drivers/extcon/' directory.
+> 
+> I understand, but that does not change my first argument, that the usb-phy is not
+> a MFD device. And although it may be desirable to keep extcon provider drivers
+> in the drivers/extcon, there are no technical reasons to do so.
+> 
+> The whole reason why Kishon asked me to start using the extcon framework is to avoid
+> adding a private API to the phy-sun4i-usb code for notifying the musb-sunxi code
+> about otg-id-pin status changes. Adding a separate driver for just the extcon bits
+> means re-adding a private api to the phy-sun4i-usb code but this time for the
+> extcon code, at which point we might just as well skip extcon and have the
+> musb-sunxi glue code call directly into the phy-sun4i-usb code...
+> 
+> Needing a private API for a separate extcn driver actually is a good argument to
+> NOT have a separate extcon driver and keep the extcon code in the phy-sun4i-usb code,
+> where as I see no technical arguments in favor of a separate extcon driver.
+
+There is one technical issue.
+
+The extcon_set_cable_state() should be handled by extcon provider driver.
+because extcon_set_cable_state() inform the extcon client driver of the event
+when detecting the change of h/w line (gpio line) or register of peripheral device.
+
+But, extcon client driver can now get the instance of extcon_dev structure
+by extcon_get_edev_by_phandle() and then can change the cable state by using the extcon_set_cable_state().
+
+I think that these issue have to be protected by framework level.
+
+Thanks,
+Chanwoo Choi
