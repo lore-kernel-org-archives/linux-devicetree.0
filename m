@@ -1,41 +1,121 @@
-From: Zidan Wang <zidan.wang@freescale.com>
-Subject: Re: [alsa-devel][PATCH] ASoC: fsl: add imx-wm8960 machine driver
-Date: Thu, 11 Jun 2015 19:10:00 +0800
-Message-ID: <20150611110958.GA23742@shlinux2>
-References: <b2a3c323a0507f3706041e1da98da8375aa61576.1433923593.git.zidan.wang@freescale.com>
- <20150610183619.GA3103@Asurada-CZ80>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150610183619.GA3103@Asurada-CZ80>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolin Chen <nicoleotsuka@gmail.com>
-Cc: broonie@kernel.org, perex@perex.cz, tiwai@suse.de, timur@tabi.org, Xiubo.Lee@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org
+From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Subject: Re: [PATCH] TESTCASE: of: OOPS when disabling node via OF_DYNAMIC
+Date: Thu, 11 Jun 2015 14:14:41 +0300
+Message-ID: <C431674C-891F-44AE-AC9E-63E910D5378A@konsulko.com>
+References: <1427814771-30335-1-git-send-email-wsa@the-dreams.de> <AEA6F5CA-D520-4F34-BE6B-EF2839501089@konsulko.com> <20150414132709.GA1375@katana> <83B5C458-8D49-4EF6-9F4A-6C0E2579AB9F@konsulko.com> <20150607111632.CC7A4C410F0@trevor.secretlab.ca>
+Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2098\))
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20150607111632.CC7A4C410F0@trevor.secretlab.ca>
+Sender: linux-sh-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 10, 2015 at 11:36:21AM -0700, Nicolin Chen wrote:
-> On Wed, Jun 10, 2015 at 04:26:27PM +0800, Zidan Wang wrote:
-> > This imx-wm8960 device-tree-only machine driver works with sai driver
-> > and have below feature.
-> > * support codec master and slave mode
-> > * support headphone jack detect
-> > * support headphone and micphone jack event
-> > * support asrc<->sai<->wm8960 mode
-> > 
-> > Signed-off-by: Zidan Wang <zidan.wang@freescale.com>
-> 
-> Above all, could you merge this into fsl-asoc-card?
-> 
-> It'd be nicer to have jack detection over there. And we can
-> put PLL settings to the codec driver as Mark suggested.
-> 
-Hi Nicolin,
+Hi Grant,
 
-I want to modify imx-wm8960 and upstream it because our release is using it now. After
-upstreaming imx-wm8960, i will try to merge it to fsl-asoc-card.
+> On Jun 7, 2015, at 14:16 , Grant Likely <grant.likely@secretlab.ca> w=
+rote:
+>=20
+> On Wed, 22 Apr 2015 15:30:28 +0300
+> , Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+> wrote:
+>> Hi Wolfram,
+>>=20
+>>> On Apr 14, 2015, at 16:27 , Wolfram Sang <wsa@the-dreams.de> wrote:
+>>>=20
+>>> Hi Pantelis,
+>>>=20
+>>> thanks for your prompt reply. Unfortunately, I had to wait until I =
+could
+>>> access the test system again.
+>>>=20
+>>=20
+>> [snip]
+>>=20
+>> Sorry for the non-prompt reply; but just for kicks, can you try the =
+attached patch?
+>>=20
+>> I have a hunch this might be the problem.
+>>=20
+>> Regards
+>>=20
+>> =E2=80=94 Pantelis
+>>=20
+>>=20
+>=20
+> I played around with this some today. If I'm reading it correctly, th=
+e
+> following patch reproduces the same problem:
+>=20
+> (continued below patch)
+> ---
+> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+> index 18016341d5a9..0a27b38c3041 100644
+> --- a/drivers/of/unittest.c
+> +++ b/drivers/of/unittest.c
+> @@ -753,6 +753,11 @@ static void __init of_unittest_match_node(void)
+> 	}
+> }
+>=20
+> +static struct resource test_bus_res =3D {
+> +	.start =3D 0xfffffff8,
+> +	.end =3D 0xfffffff9,
+> +	.flags =3D IORESOURCE_MEM,
+> +};
+> static const struct platform_device_info test_bus_info =3D {
+> 	.name =3D "unittest-bus",
+> };
+> @@ -795,6 +800,7 @@ static void __init of_unittest_platform_populate(=
+void)
+> 	if (rc)
+> 		return;
+> 	test_bus->dev.of_node =3D np;
+> +	platform_device_add_resources(test_bus, &test_bus_res, 1);
+>=20
+> 	of_platform_populate(np, match, NULL, &test_bus->dev);
+> 	for_each_child_of_node(np, child) {
+>=20
+> ---
+>=20
+> I think the fixup patch boils down to the following. It's hard to tel=
+l
+> because it combines refactoring with the bug fix. Do I have it correc=
+t?
+> If so, I'd rather commit the simple fix which can be committed now fo=
+r
+> v4.1, and the refactoring can be pushed for v4.2
+>=20
+> ---
+>=20
+> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+> index ebf034b97278..b3042e6ee3ef 100644
+> --- a/drivers/base/platform.c
+> +++ b/drivers/base/platform.c
+> @@ -377,7 +377,7 @@ int platform_device_add(struct platform_device *p=
+dev)
+> 		struct resource *r =3D &pdev->resource[i];
+> 		unsigned long type =3D resource_type(r);
+>=20
+> -		if (type =3D=3D IORESOURCE_MEM || type =3D=3D IORESOURCE_IO)
+> +		if (r->parent)
+> 			release_resource(r);
+> 	}
+>=20
+> @@ -410,7 +410,7 @@ void platform_device_del(struct platform_device *=
+pdev)
+> 			struct resource *r =3D &pdev->resource[i];
+> 			unsigned long type =3D resource_type(r);
+>=20
+> -			if (type =3D=3D IORESOURCE_MEM || type =3D=3D IORESOURCE_IO)
+> +			if (r->parent)
+> 				release_resource(r);
+> 		}
+> 	}
+>=20
 
-Best Regards,
-Zidan Wang
-> Thanks
-> Nicolin
+Verified. No crashes.
+
+Acked-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+
