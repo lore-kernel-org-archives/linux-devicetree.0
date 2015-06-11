@@ -1,54 +1,211 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH v4] ARM: l2c: add options to overwrite prefetching
- behavior
-Date: Thu, 11 Jun 2015 10:39:07 +0100
-Message-ID: <20150611093907.GW7557@n2100.arm.linux.org.uk>
-References: <1432941541-18588-1-git-send-email-hauke@hauke-m.de>
- <20150610172100.230c0e71@free-electrons.com>
- <55788F6B.7060406@hauke-m.de>
- <20150611112459.6590ab05@free-electrons.com>
- <20150611093417.GV7557@n2100.arm.linux.org.uk>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] phy-sun4i-usb: Add full support for
+ usb0 phy / OTG
+Date: Thu, 11 Jun 2015 15:12:24 +0530
+Message-ID: <55795800.4070405@ti.com>
+References: <1433088626-8858-1-git-send-email-hdegoede@redhat.com> <1433088626-8858-2-git-send-email-hdegoede@redhat.com>
+Reply-To: kishon-l0cyMroinI0@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150611093417.GV7557-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, catalin.marinas-5wv7dgnIgG8@public.gmane.org, Gregory =?iso-8859-1?Q?Cl=E9ment?= <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <linux-sunxi+bncBCOOP4VF5IDRBEFQ4WVQKGQEH3TL4YI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1433088626-8858-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 11, 2015 at 10:34:17AM +0100, Russell King - ARM Linux wrote:
-> On Thu, Jun 11, 2015 at 11:24:59AM +0200, Thomas Petazzoni wrote:
-> > Dear Hauke Mehrtens,
-> > 
-> > On Wed, 10 Jun 2015 21:26:35 +0200, Hauke Mehrtens wrote:
-> > 
-> > > Thanks for asking, I did not know Russell's patch process, but Florian
-> > > guided me and now it is submitted, see
-> > > http://www.arm.linux.org.uk/developer/patches/viewpatch.php?id=8391/1
-> > 
-> > I tested your patch, and I'm not sure how it can work for you, because
-> > the changes made to the PREFETCH_CTRL register on the data/instruction
-> > prefetch bits are later overridden by changes made to the AUX_CTRL
-> > register.
-> 
-> There's also a patch I sent on May 14th which needs to be applied for this
-> to work, and fixes the above.
-> 
-> > How does your patch handles the fact that the prefetch data and
-> > prefetch instr are cloned between PREFETCH_CTRL and AUX_CTRL ?
-> 
-> It needs my patch.
+Hi,
 
-... in fact, please see all the other L2C patches queued in my tree.
-Hauke's patch is designed to be applied on top of these patches, not
-to 4.1-rc directly.
+On Sunday 31 May 2015 09:40 PM, Hans de Goede wrote:
+> The usb0 phy is connected to an OTG controller, and as such needs some special
+> handling:
+>
+> 1) It allows explicit control over the pullups, enable these on phy_init and
+> disable them on phy_exit.
+>
+> 2) It has bits to signal id and vbus detect to the musb-core, add support for
+> for monitoring id and vbus detect gpio-s for use in dual role mode, and set
+> these bits to the correct values for operating in host only mode when no
+> gpios are specified in the devicetree.
+>
+> 3) When in dual role mode the musb sunxi glue needs to know if the a host or
+> device cable is plugged in, so when in dual role mode register an extcon.
+>
+> While updating the devicetree binding documentation also add documentation
+> for the sofar undocumented usage of regulators for vbus for all 3 phys.
+>
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> ---
+> Changes in v2:
+> -Removed the sunxi specific phy functions, instead the id / vbus gpio polling
+>   has been moved to the phy-sun4i-usb driver and their status is exported
+>   through extcon for the sunxi-musb glue
+> Changes in v3:
+> -No changes
+> Changes in v4:
+> -Do not call regulator_disable in an unbalanced manner when an external vbus
+>   is present
+> ---
+>   .../devicetree/bindings/phy/sun4i-usb-phy.txt      |  18 +-
+>   drivers/phy/Kconfig                                |   1 +
+>   drivers/phy/phy-sun4i-usb.c                        | 273 ++++++++++++++++++++-
+>   3 files changed, 281 insertions(+), 11 deletions(-)
+>
+.
+.
+<snip>
+.
+.
+> diff --git a/drivers/phy/phy-sun4i-usb.c b/drivers/phy/phy-sun4i-usb.c
+> index 91c5be4..b45d707 100644
+> --- a/drivers/phy/phy-sun4i-usb.c
+> +++ b/drivers/phy/phy-sun4i-usb.c
+> @@ -1,7 +1,7 @@
 
--- 
-FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
-according to speedtest.net.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+.
+.
+<snip>
+.
+.
+>   static struct phy *sun4i_usb_phy_xlate(struct device *dev,
+>   					struct of_phandle_args *args)
+>   {
+> @@ -240,13 +417,20 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
+>   	struct phy_provider *phy_provider;
+>   	bool dedicated_clocks;
+>   	struct resource *res;
+> -	int i;
+> +	int i, ret;
+>
+>   	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
+>   	if (!data)
+>   		return -ENOMEM;
+>
+>   	mutex_init(&data->mutex);
+> +	INIT_DELAYED_WORK(&data->detect, sun4i_usb_phy0_id_vbus_det_scan);
+> +	data->extcon_cable_names[0] = extcon_cable_name[EXTCON_USB_HOST];
+> +	data->extcon_cable_names[1] = extcon_cable_name[EXTCON_USB];
+> +	data->extcon_cable_names[2] = NULL;
+> +	data->extcon.name = DRIVER_NAME;
+> +	data->extcon.supported_cable = data->extcon_cable_names;
+> +	data->extcon.dev.parent = dev;
+>
+>   	if (of_device_is_compatible(np, "allwinner,sun5i-a13-usb-phy"))
+>   		data->num_phys = 2;
+> @@ -269,6 +453,34 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
+>   	if (IS_ERR(data->base))
+>   		return PTR_ERR(data->base);
+>
+> +	data->id_det_gpio = devm_gpiod_get(dev, "usb0_id_det", GPIOD_IN);
+> +	if (IS_ERR(data->id_det_gpio)) {
+> +		if (PTR_ERR(data->id_det_gpio) == -EPROBE_DEFER)
+> +			return -EPROBE_DEFER;
+> +		data->id_det_gpio = NULL;
+> +	}
+> +
+> +	data->vbus_det_gpio = devm_gpiod_get(dev, "usb0_vbus_det", GPIOD_IN);
+> +	if (IS_ERR(data->vbus_det_gpio)) {
+> +		if (PTR_ERR(data->vbus_det_gpio) == -EPROBE_DEFER)
+> +			return -EPROBE_DEFER;
+> +		data->vbus_det_gpio = NULL;
+> +	}
+> +
+> +	/* We either want both gpio pins or neither (when in host mode) */
+> +	if (!data->id_det_gpio != !data->vbus_det_gpio) {
+> +		dev_err(dev, "failed to get id or vbus detect pin\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	if (data->id_det_gpio) {
+> +		ret = devm_extcon_dev_register(dev, &data->extcon);
+> +		if (ret) {
+> +			dev_err(dev, "failed to register extcon: %d\n", ret);
+> +			return ret;
+> +		}
+> +	}
+> +
+>   	for (i = 0; i < data->num_phys; i++) {
+>   		struct sun4i_usb_phy *phy = data->phys + i;
+>   		char name[16];
+> @@ -318,12 +530,54 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
+>   		phy_set_drvdata(phy->phy, &data->phys[i]);
+>   	}
+>
+> +	data->id_det_irq = gpiod_to_irq(data->id_det_gpio);
+> +	data->vbus_det_irq = gpiod_to_irq(data->vbus_det_gpio);
+> +	if (data->id_det_irq  < 0 || data->vbus_det_irq < 0)
+> +		data->phy0_poll = true;
+
+if polling is enabled, we shouldn't enable irq at all?
+> +
+> +	if (data->id_det_irq >= 0) {
+> +		ret = devm_request_irq(dev, data->id_det_irq,
+> +				sun4i_usb_phy0_id_vbus_det_irq,
+> +				IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
+> +				"usb0-id-det", data);
+> +		if (ret) {
+> +			dev_err(dev, "Err requesting id-det-irq: %d\n", ret);
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	if (data->vbus_det_irq >= 0) {
+> +		ret = devm_request_irq(dev, data->vbus_det_irq,
+> +				sun4i_usb_phy0_id_vbus_det_irq,
+> +				IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
+> +				"usb0-vbus-det", data);
+> +		if (ret) {
+> +			dev_err(dev, "Err requesting vbus-det-irq: %d\n", ret);
+> +			return ret;
+> +		}
+> +	}
+> +
+>   	dev_set_drvdata(dev, data);
+>   	phy_provider = devm_of_phy_provider_register(dev, sun4i_usb_phy_xlate);
+>
+>   	return PTR_ERR_OR_ZERO(phy_provider);
+>   }
+>
+> +static int sun4i_usb_phy_remove(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct sun4i_usb_phy_data *data = dev_get_drvdata(dev);
+> +
+> +	if (data->id_det_irq >= 0)
+> +		devm_free_irq(dev, data->id_det_irq, data);
+> +	if (data->vbus_det_irq >= 0)
+> +		devm_free_irq(dev, data->vbus_det_irq, data);
+
+This shouldn't be needed since you already use devm_* in probe.
+
+Thanks
+Kishon
+
+> +
+> +	cancel_delayed_work_sync(&data->detect);
+> +
+> +	return 0;
+> +}
+> +
+>   static const struct of_device_id sun4i_usb_phy_of_match[] = {
+>   	{ .compatible = "allwinner,sun4i-a10-usb-phy" },
+>   	{ .compatible = "allwinner,sun5i-a13-usb-phy" },
+> @@ -335,9 +589,10 @@ MODULE_DEVICE_TABLE(of, sun4i_usb_phy_of_match);
+>
+>   static struct platform_driver sun4i_usb_phy_driver = {
+>   	.probe	= sun4i_usb_phy_probe,
+> +	.remove	= sun4i_usb_phy_remove,
+>   	.driver = {
+>   		.of_match_table	= sun4i_usb_phy_of_match,
+> -		.name  = "sun4i-usb-phy",
+> +		.name  = DRIVER_NAME,
+>   	}
+>   };
+>   module_platform_driver(sun4i_usb_phy_driver);
+>
