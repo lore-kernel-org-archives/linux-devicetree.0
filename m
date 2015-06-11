@@ -1,87 +1,65 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4] ARM: l2c: add options to overwrite prefetching
- behavior
-Date: Thu, 11 Jun 2015 11:24:59 +0200
-Message-ID: <20150611112459.6590ab05@free-electrons.com>
-References: <1432941541-18588-1-git-send-email-hauke@hauke-m.de>
-	<20150610172100.230c0e71@free-electrons.com>
-	<55788F6B.7060406@hauke-m.de>
+From: "Opensource [Steve Twiss]" <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH V3 1/4] mfd: da9062: DA9062 MFD core driver
+Date: Thu, 11 Jun 2015 09:27:45 +0000
+Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7014B22F4DC@SW-EX-MBX02.diasemi.com>
+References: <cover.1432041031.git.stwiss.opensource@diasemi.com>
+ <ecf72b79429e6758111a908fd1ded29c0b96da15.1432041031.git.stwiss.opensource@diasemi.com>
+ <20150526161024.GQ11677@x1>
+ <6ED8E3B22081A4459DAC7699F3695FB7014B22F4C4@SW-EX-MBX02.diasemi.com>
+ <20150611085653.GG2982@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55788F6B.7060406-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Gregory =?UTF-8?B?Q2zDqW1lbnQ=?= <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150611085653.GG2982@x1>
+Content-Language: en-US
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: LINUXKERNEL <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, DEVICETREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Dajun Chen <david.chen-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, LINUXINPUT <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUXWATCHDOG <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, RTCLINUX <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Hauke Mehrtens,
-
-On Wed, 10 Jun 2015 21:26:35 +0200, Hauke Mehrtens wrote:
-
-> Thanks for asking, I did not know Russell's patch process, but Florian
-> guided me and now it is submitted, see
-> http://www.arm.linux.org.uk/developer/patches/viewpatch.php?id=8391/1
-
-I tested your patch, and I'm not sure how it can work for you, because
-the changes made to the PREFETCH_CTRL register on the data/instruction
-prefetch bits are later overridden by changes made to the AUX_CTRL
-register.
-
-Here is what I've found so far:
-
-static void l2c_configure(void __iomem *base)
-{
-	if (outer_cache.configure) {
-		outer_cache.configure(&l2x0_saved_regs);
-		return;
-	}
-
-	if (l2x0_data->configure)
-		l2x0_data->configure(base);
-
-	l2c_write_sec(l2x0_saved_regs.aux_ctrl, base, L2X0_AUX_CTRL);
-}
-
-l2x0_data->configure() is what writes the PREFETCH_CTRL register with
-the value determined in l2c310_of_parse() :
-
-	if (revision >= L310_CACHE_ID_RTL_R2P0) {
-		l2c_write_sec(l2x0_saved_regs.prefetch_ctrl, base,
-			      L310_PREFETCH_CTRL);
-	}
-
-The value written in the L310_PREFETCH_CTRL register is correct: it
-properly has bits 28/29 sets depending on prefetch-data/prefetch-instr.
-
-However, when l2c_configure() does:
-
-	l2c_write_sec(l2x0_saved_regs.aux_ctrl, base, L2X0_AUX_CTRL);
-
-It writes l2x0_saved_regs.aux_ctrl to the AUX_CTRL register, which has
-a "clone" of the prefetch data and prefetch instruction bits. And it
-resets them to zero. I've added debug messages before/after this line,
-and here is what I see:
-
-[    0.000000]  ==> (1) prefetch is now 0x58800000
-[    0.000000]  ==> (2) prefetch is now 0x48800000
-
-I had enabled only the prefetch-data, so in step (1) (before aux_ctrl
-is written to AUX_CTRL), bit 28 is correctly set to 1. However, after
-AUX_CTRL is written, it's restored to 0.
-
-How does your patch handles the fact that the prefetch data and
-prefetch instr are cloned between PREFETCH_CTRL and AUX_CTRL ?
-
-Thanks,
-
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+T24gMTEgSnVuZSAyMDE1IDA5OjU3IExlZSBKb25lcyB3cm90ZToNCg0KPiBUbzogT3BlbnNvdXJj
+ZSBbU3RldmUgVHdpc3NdDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggVjMgMS80XSBtZmQ6IGRhOTA2
+MjogREE5MDYyIE1GRCBjb3JlIGRyaXZlcg0KPiANCj4gPiA+ID4gPiBkaWZmIC0tZ2l0IGEvaW5j
+bHVkZS9saW51eC9tZmQvZGE5MDYyL3JlZ2lzdGVycy5oDQoNClsuLi5dDQoNCj4gPiA+ID4gPiAr
+I2RlZmluZSBEQTkwNjJBQV9XUklURV9NT0RFX1NISUZUCTYNCj4gPiA+ID4gPiArI2RlZmluZSBE
+QTkwNjJBQV9XUklURV9NT0RFX01BU0sJKDB4MDEgPDwgNikNCj4gPiA+ID4NCj4gPiA+ID4gRm9y
+IDEgPDwgWCwgeW91IHNob3VsZCB1c2UgQklUKFgpLg0KPiA+ID4gPg0KPiA+ID4NCj4gPiA+IEZv
+ciB0aGUgdHdvIGNvbW1lbnRzIGFib3ZlICJSZWdpc3RlcnMiIGFuZCAiQml0IGZpZWxkcyIgYW5k
+IHRoZSAoMTw8eCkNCj4gPiA+IGRlZmluaXRpb25zIC4uLg0KPiA+ID4NCj4gPiA+IFRoZSB3aG9s
+ZSBvZiB0aGlzIGZpbGUgaXMgYXV0b21hdGljYWxseSBnZW5lcmF0ZWQgYnkgb3VyIGhhcmR3YXJl
+IGRlc2lnbmVycw0KPiA+ID4gSSB3b3VsZCBwcmVmZXIgaXQgaWYgdGhlIHJlZ2lzdGVyIGRlZmlu
+aXRpb25zIGFuZCBiaXQgZmllbGRzIGFyZSBub3QgYWx0ZXJlZCB1c2luZw0KPiA+ID4gdGhlICNk
+ZWZpbmUgQklUKG5yKSAoMVVMPDwobnIpKSBtYWNybyBhbmQgdGhlIGNvbW1lbnRzIHJlbW92ZWQg
+YmVjYXVzZQ0KPiA+ID4gd2UgaGF2ZSBzY3JpcHRzIHRoYXQgY2FuIGJlIHVzZWQgdG8gY2hlY2sg
+dGhpcyBmaWxlIGF1dG9tYXRpY2FsbHkuDQo+ID4gPg0KPiA+ID4gQWxzbyBpZiB0aGUgcmVnaXN0
+ZXIgbWFwIGlzIGV2ZXIgdXBkYXRlZCwgdGhlbiBpdCB3aWxsIGJlIGVhc2llciBmb3IgbWUgdG8g
+ZGlmZg0KPiA+ID4gdGhlIG5ldyBkZWxpdmVyZWQgcmVnaXN0ZXIgYW5kIGJpdCBmaWVsZCBkZWZp
+bml0aW9ucyB3aXRoIHRoZSBvbGQgb25lLg0KPiA+ID4NCj4gPiA+IE15IHByZWZlcmVuY2Ugd291
+bGQgYmUgbm90IHRvIGNoYW5nZSB0aGlzIGhlYWRlciBmaWxlLg0KPiA+ID4NCj4gPiA+IFsuLi5d
+DQo+ID4NCj4gPiBJZiB0aGVzZSBsYXN0IHR3byB0aGluZ3MgYXJlIGEgcHJvYmxlbSBjYW4geW91
+IHBsZWFzZSBsZXQgbWUga25vdy4NCg0KSEkgTGVlLA0KDQpUaGFua3MgZm9yIHJlcGx5aW5nIHNv
+IHF1aWNrbHkuDQoNCj4gSSdtIHN0aWxsIG5vdCBwYXJ0aWN1bGFybHkgaGFwcHkgd2l0aCB0aGlz
+LiAgQ2FuIHlvIHNwZWFrIHRvIHlvdXIgSC9XDQo+IGd1eXMgYW5kIGdldCB0aGVtIHRvIGNoYW5n
+ZSB0aGVpciBzY3JpcHRzIHRvIG91dHB1dCBzZW5zaWJsZSBoZWFkZXINCj4gZmlsZXM/DQoNCkFo
+LiBPay4gDQoNCkZvciBvdXIgc2lkZSwgdGhlIGdlbmVyYXRlZCBoZWFkZXJzIG1pZ2h0IG5vdCBq
+dXN0IGJlIHVzZWQgZm9yIExpbnV4LiBJJ3ZlDQpqdXN0IGRpc2N1c3NlZCB0aGlzIHdpdGggbXkg
+Y29sbGVhZ3VlcyBhbmQgdGhleSB3aWxsIG5lZWQgaXQgdG8gcmVtYWluLg0KU28gSSBndWVzcyBp
+bnRlcm5hbGx5IHdlIHdpbGwga2VlcCB0aGUgaGVhZGVycyBsaWtlIHRoaXMsIGJ1dCBhcyBpdCBl
+bnRlcnMNCm15IHN1Ym1pc3Npb24gcHJvY2VzcyBJIGNhbiBjaGFuZ2UgaXQgZm9yIHRoZSBMaW51
+eCBjb21tdW5pdHkuDQogDQo+IFRvIGJlIGhvbmVzdCwgaXQncyBwcm9iYWJseSBub3QgYSBibG9j
+a2VyIGZvciBhY2NlcHRhbmNlLCBidXQgaWYgc29tZW9uZQ0KPiB3cml0ZXMgYSBwYXRjaCBuZXh0
+IHdlZWsgdG8gY2hhbmdlIGFsbCBvZiB0aGUgKDB4MDEgPDwgWCkgbGluZXMgdG8NCj4gc3RhcnQg
+dXNpbmcgdGhlIEJJVCgpIG1hY3JvLCBJIHdpbGwgYWNjZXB0IGl0LiAgQmV0dGVyIHRvIGluZmx1
+ZW5jZWQNCj4geW91ciBndXlzIHNvIHlvdSBhcmUgbm90IG92ZXJseSBpbmNvbnZlbmllbmNlZC4N
+Cg0KWWVwOiBJIHdpbGwgY2hhbmdlIHRoaXMgQklUKCkgbWFjcm8gZm9yIHRoZSBzdWJtaXNzaW9u
+cyBpbiBmdXR1cmUuDQpEZXBlbmRpbmcgb24gdGhlIG5leHQgc3RlcCwgSSB3aWxsIHNlbmQgYSBw
+YXRjaCB0byB0aGlzIG9yIHVwZGF0ZSB0aGUgc3VibWlzc2lvbg0KaWYgdGhlcmUgYXJlIGZ1cnRo
+ZXIgY29tbWVudHMgb24gdGhpcyBwYXRjaCBzZXQuDQoNCj4gRldJVywgd2hlbiB1cHN0cmVhbWlu
+ZyBjb2RlLCB0aGUgZXhjdXNlICJzb21lb25lIGVsc2Ugd3JvdGUgaXQiLCBoYXMNCj4gbmV2ZXIg
+YmVlbiBhIGdvb2Qgb25lIHRvIHVzZSBvbiB0aGUgbGlzdHMuICAgQmVsaWV2ZSBtZSwgSSd2ZQ0K
+PiB0cmllZC4gOykNCg0KaGVoIG9rYXkgOikNCg0KUmVnYXJkcywNClN0ZXZlDQoNCg==
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
