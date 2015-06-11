@@ -1,7 +1,7 @@
 From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v4 10/13] crypto: marvell/CESA: add allhwsupport module parameter
-Date: Thu, 11 Jun 2015 19:36:38 +0200
-Message-ID: <1434044206-10459-20-git-send-email-boris.brezillon@free-electrons.com>
+Subject: [PATCH v4 09/13] crypto: marvell/CESA: add support for all armada SoCs
+Date: Thu, 11 Jun 2015 19:36:37 +0200
+Message-ID: <1434044206-10459-19-git-send-email-boris.brezillon@free-electrons.com>
 References: <1434044206-10459-1-git-send-email-boris.brezillon@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1434044206-10459-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
@@ -10,33 +10,38 @@ To: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, "Dav
 Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The old and new marvell CESA drivers both support Orion and Kirkwood SoCs.
-Add a module parameter to choose whether these SoCs should be attached to
-the new or the old driver.
-
-The default policy is to keep attaching those IPs to the old driver if it
-is enabled, until we decide the new CESA driver is stable/secure enough.
+Add CESA IP description for all the missing armada SoCs (XP, 375 and 38x).
 
 Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- drivers/crypto/marvell/cesa.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/crypto/marvell/cesa.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
 diff --git a/drivers/crypto/marvell/cesa.c b/drivers/crypto/marvell/cesa.c
-index 087370e..c7e25a0 100644
+index e4dfee0..087370e 100644
 --- a/drivers/crypto/marvell/cesa.c
 +++ b/drivers/crypto/marvell/cesa.c
-@@ -31,6 +31,10 @@
+@@ -191,8 +191,20 @@ static const struct mv_cesa_caps armada_370_caps = {
+ 	.has_tdma = true,
+ };
  
- #include "cesa.h"
- 
-+static int allhwsupport = !IS_ENABLED(CONFIG_CRYPTO_DEV_MV_CESA);
-+module_param_named(allhwsupport, allhwsupport, int, 0444);
-+MODULE_PARM_DESC(allhwsupport, "Enable support for all hardware (even it if overlaps with the mv_cesa driver)");
++static const struct mv_cesa_caps armada_xp_caps = {
++	.nengines = 2,
++	.cipher_algs = armada_370_cipher_algs,
++	.ncipher_algs = ARRAY_SIZE(armada_370_cipher_algs),
++	.ahash_algs = armada_370_ahash_algs,
++	.nahash_algs = ARRAY_SIZE(armada_370_ahash_algs),
++	.has_tdma = true,
++};
 +
- struct mv_cesa_dev *cesa_dev;
- 
- static void mv_cesa_dequeue_req_unlocked(struct mv_cesa_engine *engine)
+ static const struct of_device_id mv_cesa_of_match_table[] = {
+ 	{ .compatible = "marvell,armada-370-crypto", .data = &armada_370_caps },
++	{ .compatible = "marvell,armada-xp-crypto", .data = &armada_xp_caps },
++	{ .compatible = "marvell,armada-375-crypto", .data = &armada_xp_caps },
++	{ .compatible = "marvell,armada-38x-crypto", .data = &armada_xp_caps },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, mv_cesa_of_match_table);
 -- 
 1.9.1
 
