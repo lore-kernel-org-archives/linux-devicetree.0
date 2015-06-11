@@ -1,92 +1,642 @@
-From: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
-Subject: RE: [PATCH V3 1/4] mfd: da9062: DA9062 MFD core driver
-Date: Thu, 11 Jun 2015 08:27:57 +0000
-Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7014B22F4C4@SW-EX-MBX02.diasemi.com>
-References: <cover.1432041031.git.stwiss.opensource@diasemi.com>
- <ecf72b79429e6758111a908fd1ded29c0b96da15.1432041031.git.stwiss.opensource@diasemi.com>
- <20150526161024.GQ11677@x1>
+From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: Re: [PATCH v4 1/2] phy-sun4i-usb: Add full support
+ for usb0 phy / OTG
+Date: Thu, 11 Jun 2015 17:29:32 +0900
+Message-ID: <557946EC.3060607@samsung.com>
+References: <1433088626-8858-1-git-send-email-hdegoede@redhat.com>
+ <1433088626-8858-2-git-send-email-hdegoede@redhat.com> <55792122.20607@ti.com>
+ <557941A6.5000306@samsung.com> <557944EE.1020303@redhat.com>
+Reply-To: cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-input-owner@vger.kernel.org
-To: 'Lee Jones' <lee.jones@linaro.org>
-Cc: LINUXKERNEL <linux-kernel@vger.kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Alessandro Zummo <a.zummo@towertech.it>, DEVICETREE <devicetree@vger.kernel.org>, David Dajun Chen <david.chen@diasemi.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, LINUXINPUT <linux-input@vger.kernel.org>, LINUXWATCHDOG <linux-watchdog@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, RTCLINUX <rtc-linux@googlegroups.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <Support.Opensource@diasemi.com>, Wim Van Sebroeck <wim@iguana.be>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDL3F4G2ZAIBB3UN4WVQKGQELHONJ3A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-reply-to: <557944EE.1020303-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMjggTWF5IDIwMTUgMTM6NTMsIFN0ZXZlIFR3aXNzIHdyb3RlOg0KDQo+IFRvOiAnTGVlIEpv
-bmVzJw0KPiBTdWJqZWN0OiBSRTogW1BBVENIIFYzIDEvNF0gbWZkOiBkYTkwNjI6IERBOTA2MiBN
-RkQgY29yZSBkcml2ZXINCj4gDQo+IEhpIExlZSwNCj4gDQo+IEkgd2lsbCByZWZhY3RvciBhIGxv
-dCBvZiB0aGUgZHJpdmVyIGFuZCBpbXBsZW1lbnQgeW91ciBjaGFuZ2VzIGFzIHJlcXVlc3RlZC4N
-Cg0KSGkgTGVlLA0KDQpJIHJlYWxpc2UgdGhpcyBpcyBhIGJ1c3kga2VybmVsIHRpbWUgZm9yIHlv
-dSwgYXMgZXZlciwgc28gdGhpcyBpcyBqdXN0IHRvIHNlZSBpZiBJIGFtDQptaXNzaW5nIGFueXRo
-aW5nIHdpdGggdGhlIHJlcGx5IEkgc2VudCBhYm91dCB0aGUgcmVxdWVzdGVkIGFsdGVyYXRpb25z
-IGEgY291cGxlDQpvZiB3ZWVrcyBhZ28uIA0KDQpJdCByZWxhdGVzIHRvIHRoZSBhZGRpdGlvbiBv
-ZiBzdXBwb3J0IGZvciB0aGUgRGlhbG9nIERBOTA2MiBQb3dlciBNYW5hZ2VtZW50IElDDQogLSBo
-dHRwczovL2xrbWwub3JnL2xrbWwvMjAxNS81LzI4LzM1OA0KDQpUaGUgbWFpbiBjaGFuZ2VzIHJl
-cXVlc3RlZCAoZm9yIHRoZSBjb3JlIE1GRCkgY2FuIGJlIGZvdW5kIGluIGhlcmU6DQogLSBodHRw
-czovL2xrbWwub3JnL2xrbWwvMjAxNS81LzI4LzM1OQ0KDQpJIGJlbGlldmUgdGhhdCB0aGUgb25s
-eSB0d28gbWFqb3IgZGlmZmVyZW5jZXMgd2l0aCB5b3VyIHByZXZpb3VzIGNvbW1lbnRzIHdlcmUg
-DQp0aG9zZSByZWxhdGluZyB0byB0aGUgaW50ZXJydXB0IGhhbmRsZXIgZGE5MDYyX3ZkZF93YXJu
-X2V2ZW50KCkgLS0gd2hpY2ggDQpoYXMgYmVlbiBlcmFzZWQsICBhbmQgdGhlIGhlYWRlciBmaWxl
-IC0tIHdoaWNoIEkgd291bGQgcHJlZmVyIHRoZSB0byByZW1haW4NClttb3N0bHldIHVudG91Y2hl
-ZCBpZiBwb3NzaWJsZS4NCg0KVGhlIHJlYXNvbnMgZm9yIHRoZXNlIHR3byBkaWZmZXJlbmNlcyBh
-cmUgZGVzY3JpYmVkIGJlbG93Og0KDQo+ID4gPiArCS8qIFZERCBXQVJOIGV2ZW50IHN1cHBvcnQg
-Ki8NCj4gPiA+ICsJaXJxX3ZkZF93YXJuID0gcmVnbWFwX2lycV9nZXRfdmlycShjaGlwLT5yZWdt
-YXBfaXJxLA0KPiA+ID4gKwkJCQkJICAgREE5MDYyX0lSUV9WRERfV0FSTik7DQo+ID4gPiArCWlm
-IChpcnFfdmRkX3dhcm4gPCAwKSB7DQo+ID4gPiArCQlkZXZfZXJyKGNoaXAtPmRldiwgIkZhaWxl
-ZCB0byBnZXQgSVJRLlxuIik7DQo+ID4gPiArCQlyZXR1cm4gaXJxX3ZkZF93YXJuOw0KPiA+ID4g
-Kwl9DQo+ID4gPiArCWNoaXAtPmlycV92ZGRfd2FybiA9IGlycV92ZGRfd2FybjsNCj4gPiA+ICsN
-Cj4gPiA+ICsJcmV0ID0gZGV2bV9yZXF1ZXN0X3RocmVhZGVkX2lycShjaGlwLT5kZXYsIGlycV92
-ZGRfd2FybiwNCj4gPiA+ICsJCQkJCU5VTEwsIGRhOTA2Ml92ZGRfd2Fybl9ldmVudCwNCj4gPiA+
-ICsJCQkJCUlSUUZfVFJJR0dFUl9MT1cgfCBJUlFGX09ORVNIT1QsDQo+ID4gPiArCQkJCQkiVkRE
-X1dBUk4iLCBjaGlwKTsNCj4gPiA+ICsJaWYgKHJldCkgew0KPiA+ID4gKwkJZGV2X3dhcm4oY2hp
-cC0+ZGV2LA0KPiA+ID4gKwkJCSAiRmFpbGVkIHRvIHJlcXVlc3QgVkREX1dBUk4gSVJRLlxuIik7
-DQo+ID4gPiArCQljaGlwLT5pcnFfdmRkX3dhcm4gPSAtRU5YSU87DQo+ID4gPiArCX0NCj4gPg0K
-PiA+IFRoaXMgbG9va3MgbGlrZSBhIGxvdCBvZiBjb2RlLCB3aGljaCBkb2Vzbid0IHJlYWxseSBk
-byBhbnl0aGluZy4gIFdoYXQNCj4gPiBpcyBhIFZERCB3YXJuaW5nIGluZGljYXRvciBhbnl3YXk/
-DQo+ID4NCj4gDQo+IEkgd2lsbCByZW1vdmUgdGhpcy4NCj4gDQo+IFRoZSBJUlEgaGFuZGxlciBk
-YTkwNjJfdmRkX3dhcm5fZXZlbnQoKSAtLSBzZWUgZWFybGllciBhYm92ZSAtLSBkb2VzDQo+IG5v
-dCBjdXJyZW50bHkgZG8gYW55dGhpbmcgYXBhcnQgZnJvbSBoYW5kbGUgdGhlIElSUSB0aGF0IHdh
-cyByZXF1ZXN0ZWQNCj4gaGVyZS4gSXQgcHJpbnRzIGEgc3RhdGVtZW50IHRvIHNheSB0aGUgbWFp
-biBQTUlDIHZvbHRhZ2Ugc3VwcGx5IGRyb3BwZWQNCj4gYmVsb3cgYSBkZWZpbmVkIHRyaWdnZXIg
-cG9pbnQsIGJ1dCBkb2Vzbid0IGFjdHVhbGx5IGRvIGFueXRoaW5nIHRvIG1pdGlnYXRlDQo+IHRo
-aXMgcHJvYmxlbS4NCj4gDQo+IFByZXZpb3VzbHkgdGhpcyBWRERfV0FSTiB3YXMgaW4gdGhlIHJl
-Z3VsYXRvciBkcml2ZXIsIGhvd2V2ZXIgaXQgc2hvdWxkDQo+IGJlIG1hZGUgYXZhaWxhYmxlIGV2
-ZW4gaWYgdGhlIHJlZ3VsYXRvciBkcml2ZXIgaXMgbm90IGluc3RhbGxlZCAtLSBzbyBJIGFkZGVk
-IGl0DQo+IHRvIHRoZSBjb3JlIGluc3RlYWQuDQo+IA0KPiBJbiBhIHByZXZpb3VzIGRyaXZlciBz
-dWJtaXNzaW9uIEkgaGFkIGEgc2ltaWxhciBwcm9ibGVtLCBhIHdhcm5pbmcgSVJRIHdhcw0KPiBq
-dXN0IHByaW50aW5nIHRvIHRoZSBjb25zb2xlIHRvIHNheSB0aGVyZSB3YXMgYW4gZXJyb3IgLS0g
-dGhlIGhhbmRsZXIgYW5kDQo+IElSUSBjb2RlIHdhcyBwdXQgaW4gYnkgbWUgc28gaXQgY291bGQg
-YmUgdXNlZCBpZiB0aGUgZHJpdmVyIHdhcyB0YWtlbiBhbmQNCj4gaW50ZWdyYXRlZCBpbnRvIGEg
-ZnVsbHkgd29ya2luZyBzeXN0ZW0uDQo+IA0KPiBJIHdhcyBhc2tlZCB0byByZW1vdmUgaXQgaW4g
-dGhlIG90aGVyIGRyaXZlciAtLSBhbmQgSSBoYXZlIGRvbmUgdGhlIHNhbWUNCj4gaGVyZSBmb3Ig
-bm93LiBJIGNhbiBhbHdheXMgYWRkIGl0IGJhY2sgbGF0ZXIuDQo+IA0KDQpBbmQNCg0KPiA+ID4g
-ZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvbWZkL2RhOTA2Mi9yZWdpc3RlcnMuaA0KPiA+IGIv
-aW5jbHVkZS9saW51eC9tZmQvZGE5MDYyL3JlZ2lzdGVycy5oDQo+ID4gPiBuZXcgZmlsZSBtb2Rl
-IDEwMDY0NA0KPiA+ID4gaW5kZXggMDAwMDAwMC4uZDA3YzJiYw0KPiA+ID4gLS0tIC9kZXYvbnVs
-bA0KPiA+ID4gKysrIGIvaW5jbHVkZS9saW51eC9tZmQvZGE5MDYyL3JlZ2lzdGVycy5oDQo+IA0K
-PiBbLi4uXQ0KPiANCj4gPiA+ICsvKg0KPiA+ID4gKyAqIFJlZ2lzdGVycw0KPiA+ID4gKyAqLw0K
-PiA+DQo+ID4gUmVhbGx5PyA7KQ0KPiA+DQo+ID4gPiArI2RlZmluZSBEQTkwNjJBQV9QQUdFX0NP
-TgkJMHgwMDANCj4gPiA+ICsjZGVmaW5lIERBOTA2MkFBX1NUQVRVU19BCQkweDAwMQ0KPiA+ID4g
-KyNkZWZpbmUgREE5MDYyQUFfU1RBVFVTX0IJCTB4MDAyDQo+IA0KPiBbLi4uXQ0KPiANCj4gPiA+
-ICsNCj4gPiA+ICsvKg0KPiA+ID4gKyAqIEJpdCBmaWVsZHMNCj4gPiA+ICsgKi8NCj4gPiA+ICsN
-Cj4gPiA+ICsvKiBEQTkwNjJBQV9QQUdFX0NPTiA9IDB4MDAwICovDQo+ID4gPiArI2RlZmluZSBE
-QTkwNjJBQV9QQUdFX1NISUZUCQkwDQo+ID4gPiArI2RlZmluZSBEQTkwNjJBQV9QQUdFX01BU0sJ
-CSgweDNmIDw8IDApDQo+ID4gPiArI2RlZmluZSBEQTkwNjJBQV9XUklURV9NT0RFX1NISUZUCTYN
-Cj4gPiA+ICsjZGVmaW5lIERBOTA2MkFBX1dSSVRFX01PREVfTUFTSwkoMHgwMSA8PCA2KQ0KPiA+
-DQo+ID4gRm9yIDEgPDwgWCwgeW91IHNob3VsZCB1c2UgQklUKFgpLg0KPiA+DQo+IA0KPiBGb3Ig
-dGhlIHR3byBjb21tZW50cyBhYm92ZSAiUmVnaXN0ZXJzIiBhbmQgIkJpdCBmaWVsZHMiIGFuZCB0
-aGUgKDE8PHgpDQo+IGRlZmluaXRpb25zIC4uLg0KPiANCj4gVGhlIHdob2xlIG9mIHRoaXMgZmls
-ZSBpcyBhdXRvbWF0aWNhbGx5IGdlbmVyYXRlZCBieSBvdXIgaGFyZHdhcmUgZGVzaWduZXJzDQo+
-IEkgd291bGQgcHJlZmVyIGl0IGlmIHRoZSByZWdpc3RlciBkZWZpbml0aW9ucyBhbmQgYml0IGZp
-ZWxkcyBhcmUgbm90IGFsdGVyZWQgdXNpbmcNCj4gdGhlICNkZWZpbmUgQklUKG5yKSAoMVVMPDwo
-bnIpKSBtYWNybyBhbmQgdGhlIGNvbW1lbnRzIHJlbW92ZWQgYmVjYXVzZQ0KPiB3ZSBoYXZlIHNj
-cmlwdHMgdGhhdCBjYW4gYmUgdXNlZCB0byBjaGVjayB0aGlzIGZpbGUgYXV0b21hdGljYWxseS4N
-Cj4gDQo+IEFsc28gaWYgdGhlIHJlZ2lzdGVyIG1hcCBpcyBldmVyIHVwZGF0ZWQsIHRoZW4gaXQg
-d2lsbCBiZSBlYXNpZXIgZm9yIG1lIHRvIGRpZmYNCj4gdGhlIG5ldyBkZWxpdmVyZWQgcmVnaXN0
-ZXIgYW5kIGJpdCBmaWVsZCBkZWZpbml0aW9ucyB3aXRoIHRoZSBvbGQgb25lLg0KPiANCj4gTXkg
-cHJlZmVyZW5jZSB3b3VsZCBiZSBub3QgdG8gY2hhbmdlIHRoaXMgaGVhZGVyIGZpbGUuDQo+IA0K
-PiBbLi4uXQ0KIA0KSWYgdGhlc2UgbGFzdCB0d28gdGhpbmdzIGFyZSBhIHByb2JsZW0gY2FuIHlv
-dSBwbGVhc2UgbGV0IG1lIGtub3cuDQoNCnJlZ2FyZHMsDQpTdGV2ZQ0K
+Hi Hans,
+
+On 06/11/2015 05:21 PM, Hans de Goede wrote:
+> Hi Chanwoo,
+> 
+> Thanks for the quick review.
+> 
+> On 11-06-15 10:07, Chanwoo Choi wrote:
+>> Hi Hans,
+>>
+>> I add the comment about extcon-related code.
+>>
+>> Firstly,
+>> I'd like you to implment the extcon driver for phy-sun4i-usb device
+>> in drivers/extcon/ directoryby using MFD
+> 
+> No, just no, this is not what the MFD framework is for, the usb-phy
+> in question here is not a multifunction device. The MFD framework
+> is intended for true multi-function devices like i2c attached
+> PMICs which have regulators, gpios, pwm, input (power button),
+> chargers, power-supply, etc. That is NOT the case here.
+> 
+> Also moving this to the MFD framework would very likely requiring
+> the devicetree binding for the usb-phy to change which we cannot
+> do as that would break the devicetree ABI.
+> 
+>> because there are both extcon
+>> provider driver and extcon client driver. I think that all extcon
+>> provider driver better to be included in drivers/extcon/ directory.
+>> extcon_set_cable_state() function should be handled in extcon provider
+>> driver which is incluced in drivers/extcon/ directory.
+> 
+> I do not find this a compelling reason, there are plenty of subsystems
+> where not all implementations of the subsystem class live in the subsystem
+> directory, e.g. input and hwmon devices are often also found outside of
+> the input and hwmon driver directories.
+
+There are difference on between input/hwmon and extcon.
+
+Because input and hwmon driver implement the only one type driver as provider driver.
+But, extcon implement the two type driver of both extcon provider and extcon client driver.
+The extcon is similiar with regulator and clock framework as resource.
+
+extcon provider driver to provider the event when the state of external connector is changed.
+- devm_extcon_dev_register()
+- e.g., almost extcon provider driver are included in 'drivers/extcon/' directory.
+
+extcon client driver to receive the event when the state of external connector is changed.
+- extcon_register_notifier() or extcon_register_interest()(deprecated API)
+- e.g., drivers/power/charger-manager.c, drivers/usb/dwc3/dwc3-omap.c etc.
+
+Thanks,
+Chanwoo Choi
+
+> 
+>>
+>> On 06/11/2015 02:48 PM, Kishon Vijay Abraham I wrote:
+>>> +Chanwoo
+>>>
+>>> Hi,
+>>>
+>>> On Sunday 31 May 2015 09:40 PM, Hans de Goede wrote:
+>>>> The usb0 phy is connected to an OTG controller, and as such needs some special
+>>>> handling:
+>>>>
+>>>> 1) It allows explicit control over the pullups, enable these on phy_init and
+>>>> disable them on phy_exit.
+>>>>
+>>>> 2) It has bits to signal id and vbus detect to the musb-core, add support for
+>>>> for monitoring id and vbus detect gpio-s for use in dual role mode, and set
+>>>> these bits to the correct values for operating in host only mode when no
+>>>> gpios are specified in the devicetree.
+>>>>
+>>>> 3) When in dual role mode the musb sunxi glue needs to know if the a host or
+>>>> device cable is plugged in, so when in dual role mode register an extcon.
+>>>>
+>>>> While updating the devicetree binding documentation also add documentation
+>>>> for the sofar undocumented usage of regulators for vbus for all 3 phys.
+>>>>
+>>>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>>>> ---
+>>>> Changes in v2:
+>>>> -Removed the sunxi specific phy functions, instead the id / vbus gpio polling
+>>>>    has been moved to the phy-sun4i-usb driver and their status is exported
+>>>>    through extcon for the sunxi-musb glue
+>>>> Changes in v3:
+>>>> -No changes
+>>>> Changes in v4:
+>>>> -Do not call regulator_disable in an unbalanced manner when an external vbus
+>>>>    is present
+>>>> ---
+>>>>    .../devicetree/bindings/phy/sun4i-usb-phy.txt      |  18 +-
+>>>>    drivers/phy/Kconfig                                |   1 +
+>>>>    drivers/phy/phy-sun4i-usb.c                        | 273 ++++++++++++++++++++-
+>>>>    3 files changed, 281 insertions(+), 11 deletions(-)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt b/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
+>>>> index 16528b9..557fa99 100644
+>>>> --- a/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
+>>>> +++ b/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
+>>>> @@ -23,6 +23,13 @@ Required properties:
+>>>>      * "usb1_reset"
+>>>>      * "usb2_reset" for sun4i, sun6i or sun7i
+>>>>
+>>>> +Optional properties:
+>>>> +- usb0_id_det-gpios : gpio phandle for reading the otg id pin value
+>>>> +- usb0_vbus_det-gpios : gpio phandle for detecting the presence of usb0 vbus
+>>>> +- usb0_vbus-supply : regulator phandle for controller usb0 vbus
+>>>> +- usb1_vbus-supply : regulator phandle for controller usb1 vbus
+>>>> +- usb2_vbus-supply : regulator phandle for controller usb2 vbus
+>>>> +
+>>>>    Example:
+>>>>        usbphy: phy@0x01c13400 {
+>>>>            #phy-cells = <1>;
+>>>> @@ -32,6 +39,13 @@ Example:
+>>>>            reg-names = "phy_ctrl", "pmu1", "pmu2";
+>>>>            clocks = <&usb_clk 8>;
+>>>>            clock-names = "usb_phy";
+>>>> -        resets = <&usb_clk 1>, <&usb_clk 2>;
+>>>> -        reset-names = "usb1_reset", "usb2_reset";
+>>>> +        resets = <&usb_clk 0>, <&usb_clk 1>, <&usb_clk 2>;
+>>>> +        reset-names = "usb0_reset", "usb1_reset", "usb2_reset";
+>>>> +        pinctrl-names = "default";
+>>>> +        pinctrl-0 = <&usb0_id_detect_pin>, <&usb0_vbus_detect_pin>;
+>>>> +        usb0_id_det-gpios = <&pio 7 19 GPIO_ACTIVE_HIGH>; /* PH19 */
+>>>> +        usb0_vbus_det-gpios = <&pio 7 22 GPIO_ACTIVE_HIGH>; /* PH22 */
+>>>> +        usb0_vbus-supply = <&reg_usb0_vbus>;
+>>>> +        usb1_vbus-supply = <&reg_usb1_vbus>;
+>>>> +        usb2_vbus-supply = <&reg_usb2_vbus>;
+>>>>        };
+>>>> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+>>>> index a53bd5b..4614fba 100644
+>>>> --- a/drivers/phy/Kconfig
+>>>> +++ b/drivers/phy/Kconfig
+>>>> @@ -173,6 +173,7 @@ config PHY_SUN4I_USB
+>>>>        tristate "Allwinner sunxi SoC USB PHY driver"
+>>>>        depends on ARCH_SUNXI && HAS_IOMEM && OF
+>>>>        depends on RESET_CONTROLLER
+>>>> +    select EXTCON
+>>>
+>>> Avoid using 'select' on visible Kconfig symbols.
+>>>
+>>> Also please split the patch to make the reviewing a bit easier.
+>>>
+>>> Thanks
+>>> Kishon
+>>>>        select GENERIC_PHY
+>>>>        help
+>>>>          Enable this to support the transceiver that is part of Allwinner
+>>>> diff --git a/drivers/phy/phy-sun4i-usb.c b/drivers/phy/phy-sun4i-usb.c
+>>>> index 91c5be4..b45d707 100644
+>>>> --- a/drivers/phy/phy-sun4i-usb.c
+>>>> +++ b/drivers/phy/phy-sun4i-usb.c
+>>>> @@ -1,7 +1,7 @@
+>>>>    /*
+>>>>     * Allwinner sun4i USB phy driver
+>>>>     *
+>>>> - * Copyright (C) 2014 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>>>> + * Copyright (C) 2014-2015 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>>>>     *
+>>>>     * Based on code from
+>>>>     * Allwinner Technology Co., Ltd. <www.allwinnertech.com>
+>>>> @@ -23,17 +23,23 @@
+>>>>
+>>>>    #include <linux/clk.h>
+>>>>    #include <linux/err.h>
+>>>> +#include <linux/extcon.h>
+>>>>    #include <linux/io.h>
+>>>> +#include <linux/interrupt.h>
+>>>>    #include <linux/kernel.h>
+>>>>    #include <linux/module.h>
+>>>>    #include <linux/mutex.h>
+>>>>    #include <linux/of.h>
+>>>>    #include <linux/of_address.h>
+>>>> +#include <linux/of_gpio.h>
+>>>>    #include <linux/phy/phy.h>
+>>>>    #include <linux/phy/phy-sun4i-usb.h>
+>>>>    #include <linux/platform_device.h>
+>>>>    #include <linux/regulator/consumer.h>
+>>>>    #include <linux/reset.h>
+>>>> +#include <linux/workqueue.h>
+>>>> +
+>>>> +#define DRIVER_NAME "sun4i-usb-phy"
+>>>>
+>>>>    #define REG_ISCR            0x00
+>>>>    #define REG_PHYCTL            0x04
+>>>> @@ -47,6 +53,17 @@
+>>>>    #define SUNXI_AHB_INCRX_ALIGN_EN    BIT(8)
+>>>>    #define SUNXI_ULPI_BYPASS_EN        BIT(0)
+>>>>
+>>>> +/* ISCR, Interface Status and Control bits */
+>>>> +#define ISCR_ID_PULLUP_EN        (1 << 17)
+>>>> +#define ISCR_DPDM_PULLUP_EN    (1 << 16)
+>>>> +/* sunxi has the phy id/vbus pins not connected, so we use the force bits */
+>>>> +#define ISCR_FORCE_ID_MASK    (3 << 14)
+>>>> +#define ISCR_FORCE_ID_LOW        (2 << 14)
+>>>> +#define ISCR_FORCE_ID_HIGH    (3 << 14)
+>>>> +#define ISCR_FORCE_VBUS_MASK    (3 << 12)
+>>>> +#define ISCR_FORCE_VBUS_LOW    (2 << 12)
+>>>> +#define ISCR_FORCE_VBUS_HIGH    (3 << 12)
+>>>> +
+>>>>    /* Common Control Bits for Both PHYs */
+>>>>    #define PHY_PLL_BW            0x03
+>>>>    #define PHY_RES45_CAL_EN        0x0c
+>>>> @@ -63,6 +80,13 @@
+>>>>
+>>>>    #define MAX_PHYS            3
+>>>>
+>>>> +/*
+>>>> + * Note do not raise the debounce time, we must report Vusb high within 100ms
+>>>> + * otherwise we get Vbus errors
+>>>> + */
+>>>> +#define DEBOUNCE_TIME            msecs_to_jiffies(50)
+>>>> +#define POLL_TIME            msecs_to_jiffies(250)
+>>>> +
+>>>>    struct sun4i_usb_phy_data {
+>>>>        void __iomem *base;
+>>>>        struct mutex mutex;
+>>>> @@ -74,13 +98,58 @@ struct sun4i_usb_phy_data {
+>>>>            struct regulator *vbus;
+>>>>            struct reset_control *reset;
+>>>>            struct clk *clk;
+>>>> +        bool regulator_on;
+>>>>            int index;
+>>>>        } phys[MAX_PHYS];
+>>>> +    /* phy0 / otg related variables */
+>>>> +    struct extcon_dev extcon;
+>>>> +    const char *extcon_cable_names[3];
+>>
+>> The latest extcon use the unique id to indicate the each external connector
+>> instead of legacy string. The related patch[1] and patch[2] will be merged on v4.2-rc1.
+>>
+>> [1] extcon: Use the unique id for external connector instead of string
+>> - http://git.kernel.org/cgit/linux/kernel/git/gregkh/char-misc.git/commit/?h=char-misc-next&id=2a9de9c0f08d61fbe3764a21d22d0b72df97d6ae
+>> [2] extcon: Redefine the unique id of supported external connectors without 'enum extcon' type
+>> - http://git.kernel.org/cgit/linux/kernel/git/chanwoo/extcon.git/commit/?h=extcon-next-v4.3&id=bbd8d8b4244bb2799143c959fde57b1f034ec838
+>>
+>> For exmaple in drivers/extcon/extcon-usb-gpio.c:
+>> Maybe you can add the similiar array which include the supported external connector.
+>>
+>> static const unsigned int usb_extcon_cable[] = {
+>>     EXTCON_USB,
+>>     EXTCON_USB_HOST,
+>>     EXTCON_NONE,
+>> };
+> 
+> 
+> Ah, that is good to know, I'll port the extcon code in phy-sun4i-usb.c to
+> this new API for the next version of the patch.
+> 
+> Thanks & Regards,
+> 
+> Hans
+> 
+> 
+>>
+>>>> +    bool phy0_init;
+>>>> +    bool phy0_poll;
+>>>> +    struct gpio_desc *id_det_gpio;
+>>>> +    struct gpio_desc *vbus_det_gpio;
+>>>> +    int id_det_irq;
+>>>> +    int vbus_det_irq;
+>>>> +    int id_det;
+>>>> +    int vbus_det;
+>>>> +    struct delayed_work detect;
+>>>>    };
+>>>>
+>>>>    #define to_sun4i_usb_phy_data(phy) \
+>>>>        container_of((phy), struct sun4i_usb_phy_data, phys[(phy)->index])
+>>>>
+>>>> +static void sun4i_usb_phy0_update_iscr(struct phy *_phy, u32 clr, u32 set)
+>>>> +{
+>>>> +    struct sun4i_usb_phy *phy = phy_get_drvdata(_phy);
+>>>> +    struct sun4i_usb_phy_data *data = to_sun4i_usb_phy_data(phy);
+>>>> +    u32 iscr;
+>>>> +
+>>>> +    iscr = readl(data->base + REG_ISCR);
+>>>> +    iscr &= ~clr;
+>>>> +    iscr |= set;
+>>>> +    writel(iscr, data->base + REG_ISCR);
+>>>> +}
+>>>> +
+>>>> +static void sun4i_usb_phy0_set_id_detect(struct phy *phy, u32 val)
+>>>> +{
+>>>> +    if (val)
+>>>> +        val = ISCR_FORCE_ID_HIGH;
+>>>> +    else
+>>>> +        val = ISCR_FORCE_ID_LOW;
+>>>> +
+>>>> +    sun4i_usb_phy0_update_iscr(phy, ISCR_FORCE_ID_MASK, val);
+>>>> +}
+>>>> +
+>>>> +static void sun4i_usb_phy0_set_vbus_detect(struct phy *phy, u32 val)
+>>>> +{
+>>>> +    if (val)
+>>>> +        val = ISCR_FORCE_VBUS_HIGH;
+>>>> +    else
+>>>> +        val = ISCR_FORCE_VBUS_LOW;
+>>>> +
+>>>> +    sun4i_usb_phy0_update_iscr(phy, ISCR_FORCE_VBUS_MASK, val);
+>>>> +}
+>>>> +
+>>>>    static void sun4i_usb_phy_write(struct sun4i_usb_phy *phy, u32 addr, u32 data,
+>>>>                    int len)
+>>>>    {
+>>>> @@ -171,12 +240,39 @@ static int sun4i_usb_phy_init(struct phy *_phy)
+>>>>
+>>>>        sun4i_usb_phy_passby(phy, 1);
+>>>>
+>>>> +    if (phy->index == 0) {
+>>>> +        data->phy0_init = true;
+>>>> +
+>>>> +        /* Enable pull-ups */
+>>>> +        sun4i_usb_phy0_update_iscr(_phy, 0, ISCR_DPDM_PULLUP_EN);
+>>>> +        sun4i_usb_phy0_update_iscr(_phy, 0, ISCR_ID_PULLUP_EN);
+>>>> +
+>>>> +        if (data->id_det_gpio) {
+>>>> +            /* OTG mode, force ISCR and cable state updates */
+>>>> +            data->id_det = -1;
+>>>> +            data->vbus_det = -1;
+>>>> +            queue_delayed_work(system_wq, &data->detect, 0);
+>>>> +        } else {
+>>>> +            /* Host only mode */
+>>>> +            sun4i_usb_phy0_set_id_detect(_phy, 0);
+>>>> +            sun4i_usb_phy0_set_vbus_detect(_phy, 1);
+>>>> +        }
+>>>> +    }
+>>>> +
+>>>>        return 0;
+>>>>    }
+>>>>
+>>>>    static int sun4i_usb_phy_exit(struct phy *_phy)
+>>>>    {
+>>>>        struct sun4i_usb_phy *phy = phy_get_drvdata(_phy);
+>>>> +    struct sun4i_usb_phy_data *data = to_sun4i_usb_phy_data(phy);
+>>>> +
+>>>> +    if (phy->index == 0) {
+>>>> +        /* Disable pull-ups */
+>>>> +        sun4i_usb_phy0_update_iscr(_phy, ISCR_DPDM_PULLUP_EN, 0);
+>>>> +        sun4i_usb_phy0_update_iscr(_phy, ISCR_ID_PULLUP_EN, 0);
+>>>> +        data->phy0_init = false;
+>>>> +    }
+>>>>
+>>>>        sun4i_usb_phy_passby(phy, 0);
+>>>>        reset_control_assert(phy->reset);
+>>>> @@ -188,20 +284,46 @@ static int sun4i_usb_phy_exit(struct phy *_phy)
+>>>>    static int sun4i_usb_phy_power_on(struct phy *_phy)
+>>>>    {
+>>>>        struct sun4i_usb_phy *phy = phy_get_drvdata(_phy);
+>>>> -    int ret = 0;
+>>>> +    struct sun4i_usb_phy_data *data = to_sun4i_usb_phy_data(phy);
+>>>> +    int ret;
+>>>> +
+>>>> +    if (!phy->vbus || phy->regulator_on)
+>>>> +        return 0;
+>>>> +
+>>>> +    /* For phy0 only turn on Vbus if we don't have an ext. Vbus */
+>>>> +    if (phy->index == 0 && data->vbus_det)
+>>>> +        return 0;
+>>>>
+>>>> -    if (phy->vbus)
+>>>> -        ret = regulator_enable(phy->vbus);
+>>>> +    ret = regulator_enable(phy->vbus);
+>>>> +    if (ret)
+>>>> +        return ret;
+>>>>
+>>>> -    return ret;
+>>>> +    phy->regulator_on = true;
+>>>> +
+>>>> +    /* We must report Vbus high within OTG_TIME_A_WAIT_VRISE msec. */
+>>>> +    if (phy->index == 0 && data->phy0_poll)
+>>>> +        mod_delayed_work(system_wq, &data->detect, DEBOUNCE_TIME);
+>>>> +
+>>>> +    return 0;
+>>>>    }
+>>>>
+>>>>    static int sun4i_usb_phy_power_off(struct phy *_phy)
+>>>>    {
+>>>>        struct sun4i_usb_phy *phy = phy_get_drvdata(_phy);
+>>>> +    struct sun4i_usb_phy_data *data = to_sun4i_usb_phy_data(phy);
+>>>> +
+>>>> +    if (!phy->vbus || !phy->regulator_on)
+>>>> +        return 0;
+>>>>
+>>>> -    if (phy->vbus)
+>>>> -        regulator_disable(phy->vbus);
+>>>> +    regulator_disable(phy->vbus);
+>>>> +    phy->regulator_on = false;
+>>>> +
+>>>> +    /*
+>>>> +     * phy0 vbus typically slowly discharges, sometimes this causes the
+>>>> +     * Vbus gpio to not trigger an edge irq on Vbus off, so force a rescan.
+>>>> +     */
+>>>> +    if (phy->index == 0 && !data->phy0_poll)
+>>>> +        mod_delayed_work(system_wq, &data->detect, POLL_TIME);
+>>>>
+>>>>        return 0;
+>>>>    }
+>>>> @@ -221,6 +343,61 @@ static struct phy_ops sun4i_usb_phy_ops = {
+>>>>        .owner        = THIS_MODULE,
+>>>>    };
+>>>>
+>>>> +static void sun4i_usb_phy0_id_vbus_det_scan(struct work_struct *work)
+>>>> +{
+>>>> +    struct sun4i_usb_phy_data *data =
+>>>> +        container_of(work, struct sun4i_usb_phy_data, detect.work);
+>>>> +    struct phy *phy0 = data->phys[0].phy;
+>>>> +    int id_det, vbus_det, id_notify = 0, vbus_notify = 0;
+>>>> +
+>>>> +    id_det = gpiod_get_value_cansleep(data->id_det_gpio);
+>>>> +    vbus_det = gpiod_get_value_cansleep(data->vbus_det_gpio);
+>>>> +
+>>>> +    mutex_lock(&phy0->mutex);
+>>>> +
+>>>> +    if (!data->phy0_init) {
+>>>> +        mutex_unlock(&phy0->mutex);
+>>>> +        return;
+>>>> +    }
+>>>> +
+>>>> +    if (id_det != data->id_det) {
+>>>> +        sun4i_usb_phy0_set_id_detect(phy0, id_det);
+>>>> +        data->id_det = id_det;
+>>>> +        id_notify = 1;
+>>>> +    }
+>>>> +
+>>>> +    if (vbus_det != data->vbus_det) {
+>>>> +        sun4i_usb_phy0_set_vbus_detect(phy0, vbus_det);
+>>>> +        data->vbus_det = vbus_det;
+>>>> +        vbus_notify = 1;
+>>>> +    }
+>>>> +
+>>>> +    mutex_unlock(&phy0->mutex);
+>>>> +
+>>>> +    if (id_notify)
+>>>> +        extcon_set_cable_state(&data->extcon,
+>>>> +                       extcon_cable_name[EXTCON_USB_HOST],
+>>>> +                       !id_det);
+>>>> +
+>>>> +    if (vbus_notify)
+>>>> +        extcon_set_cable_state(&data->extcon,
+>>>> +                       extcon_cable_name[EXTCON_USB],
+>>>> +                       vbus_det);
+>>
+>> I don't want to use the legacy extcon API with string name.
+>> Instead, you can use the recommeded extcon_set_cable_state_() API as following:
+>>
+>> - Legacy extcon API
+>> : extern int extcon_set_cable_state(struct extcon_dev *edev,
+>>                   const char *cable_name, bool cable_state);
+>> - Recommended extcon API
+>> : extern int extcon_set_cable_state_(struct extcon_dev *edev, unsigned int id,
+>>                    bool cable_state);
+>>
+>> [1] extcon: Use the unique id for external connector instead of string
+>> - http://git.kernel.org/cgit/linux/kernel/git/gregkh/char-misc.git/commit/?h=char-misc-next&id=2a9de9c0f08d61fbe3764a21d22d0b72df97d6ae
+>>
+>>>> +
+>>>> +    if (data->phy0_poll)
+>>>> +        queue_delayed_work(system_wq, &data->detect, POLL_TIME);
+>>>> +}
+>>>> +
+>>>> +static irqreturn_t sun4i_usb_phy0_id_vbus_det_irq(int irq, void *dev_id)
+>>>> +{
+>>>> +    struct sun4i_usb_phy_data *data = dev_id;
+>>>> +
+>>>> +    /* vbus or id changed, let the pins settle and then scan them */
+>>>> +    mod_delayed_work(system_wq, &data->detect, DEBOUNCE_TIME);
+>>>> +
+>>>> +    return IRQ_HANDLED;
+>>>> +}
+>>>> +
+>>>>    static struct phy *sun4i_usb_phy_xlate(struct device *dev,
+>>>>                        struct of_phandle_args *args)
+>>>>    {
+>>>> @@ -240,13 +417,20 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
+>>>>        struct phy_provider *phy_provider;
+>>>>        bool dedicated_clocks;
+>>>>        struct resource *res;
+>>>> -    int i;
+>>>> +    int i, ret;
+>>>>
+>>>>        data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
+>>>>        if (!data)
+>>>>            return -ENOMEM;
+>>>>
+>>>>        mutex_init(&data->mutex);
+>>>> +    INIT_DELAYED_WORK(&data->detect, sun4i_usb_phy0_id_vbus_det_scan);
+>>>> +    data->extcon_cable_names[0] = extcon_cable_name[EXTCON_USB_HOST];
+>>>> +    data->extcon_cable_names[1] = extcon_cable_name[EXTCON_USB];
+>>>> +    data->extcon_cable_names[2] = NULL;
+>>>> +    data->extcon.name = DRIVER_NAME;
+>>
+>> Don't need it because extcon_dev_register() set the device name automatically.
+>> You can check it on patch[3].
+>> [3] http://git.kernel.org/cgit/linux/kernel/git/gregkh/char-misc.git/commit/?h=char-misc-next&id=71c3ffa5d23af0554c27010cf12710da9bf85950
+>>
+>>>> +    data->extcon.supported_cable = data->extcon_cable_names;
+>>
+>> You can use the devm_extcon_dev_allocate() to set the supported external connectors.
+>>
+>>>> +    data->extcon.dev.parent = dev;
+>>
+>> Don't need it because extcon_dev_register() set the parent device automatically.
+>>
+>> The field of 'struct extcon_dev' shold be filled with extcon API without direct allocation.
+>>
+>>>>
+>>>>        if (of_device_is_compatible(np, "allwinner,sun5i-a13-usb-phy"))
+>>>>            data->num_phys = 2;
+>>>> @@ -269,6 +453,34 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
+>>>>        if (IS_ERR(data->base))
+>>>>            return PTR_ERR(data->base);
+>>>>
+>>>> +    data->id_det_gpio = devm_gpiod_get(dev, "usb0_id_det", GPIOD_IN);
+>>>> +    if (IS_ERR(data->id_det_gpio)) {
+>>>> +        if (PTR_ERR(data->id_det_gpio) == -EPROBE_DEFER)
+>>>> +            return -EPROBE_DEFER;
+>>>> +        data->id_det_gpio = NULL;
+>>>> +    }
+>>>> +
+>>>> +    data->vbus_det_gpio = devm_gpiod_get(dev, "usb0_vbus_det", GPIOD_IN);
+>>>> +    if (IS_ERR(data->vbus_det_gpio)) {
+>>>> +        if (PTR_ERR(data->vbus_det_gpio) == -EPROBE_DEFER)
+>>>> +            return -EPROBE_DEFER;
+>>>> +        data->vbus_det_gpio = NULL;
+>>>> +    }
+>>>> +
+>>>> +    /* We either want both gpio pins or neither (when in host mode) */
+>>>> +    if (!data->id_det_gpio != !data->vbus_det_gpio) {
+>>>> +        dev_err(dev, "failed to get id or vbus detect pin\n");
+>>>> +        return -ENODEV;
+>>>> +    }
+>>>> +
+>>>> +    if (data->id_det_gpio) {
+>>>> +        ret = devm_extcon_dev_register(dev, &data->extcon);
+>>>> +        if (ret) {
+>>>> +            dev_err(dev, "failed to register extcon: %d\n", ret);
+>>>> +            return ret;
+>>>> +        }
+>>>> +    }
+>>>> +
+>>>>        for (i = 0; i < data->num_phys; i++) {
+>>>>            struct sun4i_usb_phy *phy = data->phys + i;
+>>>>            char name[16];
+>>>> @@ -318,12 +530,54 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
+>>>>            phy_set_drvdata(phy->phy, &data->phys[i]);
+>>>>        }
+>>>>
+>>>> +    data->id_det_irq = gpiod_to_irq(data->id_det_gpio);
+>>>> +    data->vbus_det_irq = gpiod_to_irq(data->vbus_det_gpio);
+>>>> +    if (data->id_det_irq  < 0 || data->vbus_det_irq < 0)
+>>>> +        data->phy0_poll = true;
+>>>> +
+>>>> +    if (data->id_det_irq >= 0) {
+>>>> +        ret = devm_request_irq(dev, data->id_det_irq,
+>>>> +                sun4i_usb_phy0_id_vbus_det_irq,
+>>>> +                IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
+>>>> +                "usb0-id-det", data);
+>>>> +        if (ret) {
+>>>> +            dev_err(dev, "Err requesting id-det-irq: %d\n", ret);
+>>>> +            return ret;
+>>>> +        }
+>>>> +    }
+>>>> +
+>>>> +    if (data->vbus_det_irq >= 0) {
+>>>> +        ret = devm_request_irq(dev, data->vbus_det_irq,
+>>>> +                sun4i_usb_phy0_id_vbus_det_irq,
+>>>> +                IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
+>>>> +                "usb0-vbus-det", data);
+>>>> +        if (ret) {
+>>>> +            dev_err(dev, "Err requesting vbus-det-irq: %d\n", ret);
+>>>> +            return ret;
+>>>> +        }
+>>>> +    }
+>>>> +
+>>>>        dev_set_drvdata(dev, data);
+>>>>        phy_provider = devm_of_phy_provider_register(dev, sun4i_usb_phy_xlate);
+>>>>
+>>>>        return PTR_ERR_OR_ZERO(phy_provider);
+>>>>    }
+>>>>
+>>>> +static int sun4i_usb_phy_remove(struct platform_device *pdev)
+>>>> +{
+>>>> +    struct device *dev = &pdev->dev;
+>>>> +    struct sun4i_usb_phy_data *data = dev_get_drvdata(dev);
+>>>> +
+>>>> +    if (data->id_det_irq >= 0)
+>>>> +        devm_free_irq(dev, data->id_det_irq, data);
+>>>> +    if (data->vbus_det_irq >= 0)
+>>>> +        devm_free_irq(dev, data->vbus_det_irq, data);
+>>>> +
+>>>> +    cancel_delayed_work_sync(&data->detect);
+>>>> +
+>>>> +    return 0;
+>>>> +}
+>>>> +
+>>>>    static const struct of_device_id sun4i_usb_phy_of_match[] = {
+>>>>        { .compatible = "allwinner,sun4i-a10-usb-phy" },
+>>>>        { .compatible = "allwinner,sun5i-a13-usb-phy" },
+>>>> @@ -335,9 +589,10 @@ MODULE_DEVICE_TABLE(of, sun4i_usb_phy_of_match);
+>>>>
+>>>>    static struct platform_driver sun4i_usb_phy_driver = {
+>>>>        .probe    = sun4i_usb_phy_probe,
+>>>> +    .remove    = sun4i_usb_phy_remove,
+>>>>        .driver = {
+>>>>            .of_match_table    = sun4i_usb_phy_of_match,
+>>>> -        .name  = "sun4i-usb-phy",
+>>>> +        .name  = DRIVER_NAME,
+>>>>        }
+>>>>    };
+>>>>    module_platform_driver(sun4i_usb_phy_driver);
+>>>>
+>>>
+>>
+>> Thanks,
+>> Chanwoo Choi
+>>
+> 
