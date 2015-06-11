@@ -1,1193 +1,415 @@
-From: Gabriele Paoloni <gabriele.paoloni@huawei.com>
-Subject: RE: [PATCH v2 2/4] PCI: designware: Add ARM64 support
-Date: Thu, 11 Jun 2015 14:32:42 +0000
-Message-ID: <EE11001F9E5DDD47B7634E2F8A612F2E013A4D61@lhreml505-mbx.china.huawei.com>
-References: <1433320542-49576-1-git-send-email-wangzhou1@hisilicon.com>
- <1433320542-49576-3-git-send-email-wangzhou1@hisilicon.com>
- <5570507F.4030704@arm.com> <557159B2.9090103@hisilicon.com>
- <20150609111507.GB20182@red-moon>
- <EE11001F9E5DDD47B7634E2F8A612F2E013A4278@lhreml505-mbx.china.huawei.com>
- <55792032.2080903@hisilicon.com>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 05/22] doc: dt-binding: usb: add otg related
+ properties
+Date: Thu, 11 Jun 2015 17:52:15 +0300
+Message-ID: <20150611175215.6e04d92e@rockdesk>
+References: <CAL_JsqJ3hHOGevwqcBNFN2LrTP7Bm_k9SDuTNKBbpq5W-eLmdw@mail.gmail.com>
+	<20150609011806.GA7976@shlinux1.ap.freescale.net>
+	<CAL_JsqKg_NYtLGg9RUQOpKscwHEskHO4_Szo_nM3BnrDdhg3fg@mail.gmail.com>
+	<20150609182931.1eda4111@rockdesk>
+	<CAL_JsqJ+q5hs26FaLXG1LVb0asE-UZ5hXar2FeVAJN=S8=CG3w@mail.gmail.com>
+	<20150610103737.3cc7c10d@rockdesk>
+	<20150610134735.GB7678@shlinux2>
+	<20150611101853.643a9334@rockdesk>
+	<20150611082010.GA16101@shlinux2>
+	<20150611153703.55dff608@rockdesk>
+	<20150611141121.GC16101@shlinux2>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <55792032.2080903@hisilicon.com>
-Content-Language: en-US
-Sender: linux-pci-owner@vger.kernel.org
-To: "Wangzhou (B)" <wangzhou1@hisilicon.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, James Morse <James.Morse@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jg1.han@samsung.com>, Pratyush Anand <pratyush.anand@gmail.com>, Arnd Bergmann <arnd@arndb.de>, "fabrice.gasnier@st.com" <fabrice.gasnier@st.com>, Liviu Dudau <Liviu.Dudau@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Yuanzhichang <yuanzhichang@hisilicon.com>, Zhudacai <zhudacai@hisilicon.com>, zhangjukuo <zhangjukuo@huawei.com>, qiuzhenfa <qiuzhenfa@hisilicon.com>, "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150611141121.GC16101@shlinux2>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Li Jun-B47624 <Jun.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Chen Peter-B29397 <Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Macpaul Lin <macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Zhou Wang
 
-I apologize, I made a mistake as I didn't rebase the patch on the latest Kernel (where I was convinced I did), my bad.
+On Thu, 11 Jun 2015 22:11:22 +0800
+Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
 
-The patch below is based on v4.1-rc7
-
-It passes checkpatch and compiles OK
-
-Cheers
-
-Gab
-
--------------------------------------------
--------------------------------------------
-This patch is a rework of
-"[PATCH v2 2/4] PCI: designware: Add ARM64 support" from Zhou Wang.
-
-The intention is to complete the unification between ARM and
-ARM64 now that the dependency on arch/arm/kernel/bios32.c is gone.
-
-I have also included the rework asked by James Morse:
-io_base declared as resource_size_t
-
-It compiles fine on ARCH arm and arm64 on Linux 4.1-rc7. 
-
-It needs to be tested.
-
-Signed-off-by: Gabriele Paoloni <gabriele.paoloni@huawei.com>
-
----
- drivers/pci/host/pci-dra7xx.c      |   1 +
- drivers/pci/host/pci-exynos.c      |   2 +-
- drivers/pci/host/pci-imx6.c        |   2 +-
- drivers/pci/host/pci-keystone.c    |   2 +-
- drivers/pci/host/pci-layerscape.c  |   2 +-
- drivers/pci/host/pcie-designware.c | 242 +++++++++++++++----------------------
- drivers/pci/host/pcie-designware.h |  10 +-
- drivers/pci/host/pcie-spear13xx.c  |   2 +-
- 8 files changed, 109 insertions(+), 154 deletions(-)
-
-diff --git a/drivers/pci/host/pci-dra7xx.c b/drivers/pci/host/pci-dra7xx.c
-index 2d57e19..5c8b6ab 100644
---- a/drivers/pci/host/pci-dra7xx.c
-+++ b/drivers/pci/host/pci-dra7xx.c
-@@ -280,6 +280,7 @@ static int __init dra7xx_add_pcie_port(struct dra7xx_pcie *dra7xx,
- 
- 	pp = &dra7xx->pp;
- 	pp->dev = dev;
-+	pp->root_bus_nr = 0;
- 	pp->ops = &dra7xx_pcie_host_ops;
- 
- 	pp->irq = platform_get_irq(pdev, 1);
-diff --git a/drivers/pci/host/pci-exynos.c b/drivers/pci/host/pci-exynos.c
-index c139237..4b6db6c 100644
---- a/drivers/pci/host/pci-exynos.c
-+++ b/drivers/pci/host/pci-exynos.c
-@@ -534,7 +534,7 @@ static int __init exynos_add_pcie_port(struct pcie_port *pp,
- 		}
- 	}
- 
--	pp->root_bus_nr = -1;
-+	pp->root_bus_nr = 0;
- 	pp->ops = &exynos_pcie_host_ops;
- 
- 	ret = dw_pcie_host_init(pp);
-diff --git a/drivers/pci/host/pci-imx6.c b/drivers/pci/host/pci-imx6.c
-index fdb9536..c4a80c5 100644
---- a/drivers/pci/host/pci-imx6.c
-+++ b/drivers/pci/host/pci-imx6.c
-@@ -541,7 +541,7 @@ static int __init imx6_add_pcie_port(struct pcie_port *pp,
- 		}
- 	}
- 
--	pp->root_bus_nr = -1;
-+	pp->root_bus_nr = 0;
- 	pp->ops = &imx6_pcie_host_ops;
- 
- 	ret = dw_pcie_host_init(pp);
-diff --git a/drivers/pci/host/pci-keystone.c b/drivers/pci/host/pci-keystone.c
-index 75333b0..df91f5e 100644
---- a/drivers/pci/host/pci-keystone.c
-+++ b/drivers/pci/host/pci-keystone.c
-@@ -312,7 +312,7 @@ static int __init ks_add_pcie_port(struct keystone_pcie *ks_pcie,
- 			return ret;
- 	}
- 
--	pp->root_bus_nr = -1;
-+	pp->root_bus_nr = 0;
- 	pp->ops = &keystone_pcie_host_ops;
- 	ret = ks_dw_pcie_host_init(ks_pcie, ks_pcie->msi_intc_np);
- 	if (ret) {
-diff --git a/drivers/pci/host/pci-layerscape.c b/drivers/pci/host/pci-layerscape.c
-index 4a6e62f..5c7a9c4 100644
---- a/drivers/pci/host/pci-layerscape.c
-+++ b/drivers/pci/host/pci-layerscape.c
-@@ -101,7 +101,7 @@ static int ls_add_pcie_port(struct ls_pcie *pcie)
- 	pp = &pcie->pp;
- 	pp->dev = pcie->dev;
- 	pp->dbi_base = pcie->dbi;
--	pp->root_bus_nr = -1;
-+	pp->root_bus_nr = 0;
- 	pp->ops = &ls_pcie_host_ops;
- 
- 	ret = dw_pcie_host_init(pp);
-diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-designware.c
-index 2e9f84f..844febee 100644
---- a/drivers/pci/host/pcie-designware.c
-+++ b/drivers/pci/host/pcie-designware.c
-@@ -11,6 +11,7 @@
-  * published by the Free Software Foundation.
-  */
- 
-+#include <linux/hardirq.h>
- #include <linux/irq.h>
- #include <linux/irqdomain.h>
- #include <linux/kernel.h>
-@@ -67,16 +68,7 @@
- #define PCIE_ATU_FUNC(x)		(((x) & 0x7) << 16)
- #define PCIE_ATU_UPPER_TARGET		0x91C
- 
--static struct hw_pci dw_pci;
--
--static unsigned long global_io_offset;
--
--static inline struct pcie_port *sys_to_pcie(struct pci_sys_data *sys)
--{
--	BUG_ON(!sys->private_data);
--
--	return sys->private_data;
--}
-+static struct pci_ops dw_pcie_ops;
- 
- int dw_pcie_cfg_read(void __iomem *addr, int where, int size, u32 *val)
- {
-@@ -238,7 +230,7 @@ static void dw_pcie_msi_set_irq(struct pcie_port *pp, int irq)
- static int assign_irq(int no_irqs, struct msi_desc *desc, int *pos)
- {
- 	int irq, pos0, i;
--	struct pcie_port *pp = sys_to_pcie(desc->dev->bus->sysdata);
-+	struct pcie_port *pp = desc->dev->bus->sysdata;
- 
- 	pos0 = bitmap_find_free_region(pp->msi_irq_in_use, MAX_MSI_IRQS,
- 				       order_base_2(no_irqs));
-@@ -281,7 +273,7 @@ static int dw_msi_setup_irq(struct msi_controller *chip, struct pci_dev *pdev,
- {
- 	int irq, pos;
- 	struct msi_msg msg;
--	struct pcie_port *pp = sys_to_pcie(pdev->bus->sysdata);
-+	struct pcie_port *pp = pdev->bus->sysdata;
- 
- 	if (desc->msi_attrib.is_msix)
- 		return -EINVAL;
-@@ -310,7 +302,7 @@ static void dw_msi_teardown_irq(struct msi_controller *chip, unsigned int irq)
- {
- 	struct irq_data *data = irq_get_irq_data(irq);
- 	struct msi_desc *msi = irq_data_get_msi(data);
--	struct pcie_port *pp = sys_to_pcie(msi->dev->bus->sysdata);
-+	struct pcie_port *pp = msi->dev->bus->sysdata;
- 
- 	clear_irq_range(pp, irq, 1, data->hwirq);
- }
-@@ -342,16 +334,24 @@ static const struct irq_domain_ops msi_domain_ops = {
- 	.map = dw_pcie_msi_map,
- };
- 
--int dw_pcie_host_init(struct pcie_port *pp)
-+int __init dw_pcie_host_init(struct pcie_port *pp)
- {
- 	struct device_node *np = pp->dev->of_node;
- 	struct platform_device *pdev = to_platform_device(pp->dev);
--	struct of_pci_range range;
--	struct of_pci_range_parser parser;
-+	struct pci_bus *bus;
- 	struct resource *cfg_res;
-+	LIST_HEAD(res);
- 	u32 val, na, ns;
- 	const __be32 *addrp;
- 	int i, index, ret;
-+	int rlen;
-+	struct resource_entry *win;
-+	const __be32 *parser_range_end = of_get_property(np, "ranges", &rlen);
-+
-+	if (parser_range_end == NULL)
-+			return -ENOENT;
-+	parser_range_end += rlen/sizeof(__be32);
-+
- 
- 	/* Find the address cell size and the number of cells in order to get
- 	 * the untranslated address.
-@@ -375,78 +375,67 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 		dev_err(pp->dev, "missing *config* reg space\n");
- 	}
- 
--	if (of_pci_range_parser_init(&parser, np)) {
--		dev_err(pp->dev, "missing ranges property\n");
--		return -EINVAL;
--	}
-+	ret = of_pci_get_host_bridge_resources(np, 0, 0xff, &res, &pp->io_base);
-+	if (ret)
-+		return ret;
- 
- 	/* Get the I/O and memory ranges from DT */
--	for_each_of_pci_range(&parser, &range) {
--		unsigned long restype = range.flags & IORESOURCE_TYPE_BITS;
--
--		if (restype == IORESOURCE_IO) {
--			of_pci_range_to_resource(&range, np, &pp->io);
--			pp->io.name = "I/O";
--			pp->io.start = max_t(resource_size_t,
--					     PCIBIOS_MIN_IO,
--					     range.pci_addr + global_io_offset);
--			pp->io.end = min_t(resource_size_t,
--					   IO_SPACE_LIMIT,
--					   range.pci_addr + range.size
--					   + global_io_offset - 1);
--			pp->io_size = resource_size(&pp->io);
--			pp->io_bus_addr = range.pci_addr;
--			pp->io_base = range.cpu_addr;
--
--			/* Find the untranslated IO space address */
--			pp->io_mod_base = of_read_number(parser.range -
--							 parser.np + na, ns);
--		}
--		if (restype == IORESOURCE_MEM) {
--			of_pci_range_to_resource(&range, np, &pp->mem);
--			pp->mem.name = "MEM";
--			pp->mem_size = resource_size(&pp->mem);
--			pp->mem_bus_addr = range.pci_addr;
--
--			/* Find the untranslated MEM space address */
--			pp->mem_mod_base = of_read_number(parser.range -
--							  parser.np + na, ns);
--		}
--		if (restype == 0) {
--			of_pci_range_to_resource(&range, np, &pp->cfg);
--			pp->cfg0_size = resource_size(&pp->cfg)/2;
--			pp->cfg1_size = resource_size(&pp->cfg)/2;
--			pp->cfg0_base = pp->cfg.start;
--			pp->cfg1_base = pp->cfg.start + pp->cfg0_size;
-+	resource_list_for_each_entry(win, &res) {
-+		switch (resource_type(win->res)) {
-+		case IORESOURCE_IO:
-+			pp->io = win->res;
-+			pp->io->name = "I/O";
-+			pp->io_size = resource_size(pp->io);
-+			pp->io_bus_addr = pp->io->start - win->offset;
-+			/* magic 5 below comes from magic na and ns in
-+			 * of_pci_range_parser_init()                 */
-+			pp->io_mod_base = of_read_number(parser_range_end -
-+					of_n_addr_cells(np) - 5 + na, ns);
-+			ret = pci_remap_iospace(pp->io, pp->io_base);
-+			if (ret) {
-+				dev_warn(pp->dev, "error %d: failed to map resource %pR\n",
-+				ret, pp->io);
-+			continue;
-+			}
-+			break;
-+		case IORESOURCE_MEM:
-+			pp->mem = win->res;
-+			pp->mem->name = "MEM";
-+			pp->mem_size = resource_size(pp->mem);
-+			pp->mem_bus_addr = pp->mem->start - win->offset;
-+			pp->mem_mod_base = of_read_number(parser_range_end -
-+					of_n_addr_cells(np) - 5 + na, ns);
-+			break;
-+		case 0:
-+			pp->cfg = win->res;
-+			pp->cfg0_size = resource_size(pp->cfg)/2;
-+			pp->cfg1_size = resource_size(pp->cfg)/2;
-+			pp->cfg0_base = pp->cfg->start;
-+			pp->cfg1_base = pp->cfg->start + pp->cfg0_size;
- 
- 			/* Find the untranslated configuration space address */
--			pp->cfg0_mod_base = of_read_number(parser.range -
--							   parser.np + na, ns);
--			pp->cfg1_mod_base = pp->cfg0_mod_base +
--					    pp->cfg0_size;
-+			pp->cfg0_mod_base = of_read_number(parser_range_end -
-+					of_n_addr_cells(np) - 5 + na, ns);
-+			pp->cfg1_mod_base = pp->cfg0_mod_base + pp->cfg0_size;
-+			break;
-+		case IORESOURCE_BUS:
-+			pp->busn = win->res;
-+			break;
-+		default:
-+			continue;
- 		}
- 	}
- 
--	ret = of_pci_parse_bus_range(np, &pp->busn);
--	if (ret < 0) {
--		pp->busn.name = np->name;
--		pp->busn.start = 0;
--		pp->busn.end = 0xff;
--		pp->busn.flags = IORESOURCE_BUS;
--		dev_dbg(pp->dev, "failed to parse bus-range property: %d, using default %pR\n",
--			ret, &pp->busn);
--	}
--
- 	if (!pp->dbi_base) {
--		pp->dbi_base = devm_ioremap(pp->dev, pp->cfg.start,
--					resource_size(&pp->cfg));
-+		pp->dbi_base = devm_ioremap(pp->dev, pp->cfg->start,
-+					resource_size(pp->cfg));
- 		if (!pp->dbi_base) {
- 			dev_err(pp->dev, "error with ioremap\n");
- 			return -ENOMEM;
- 		}
- 	}
- 
--	pp->mem_base = pp->mem.start;
-+	pp->mem_base = pp->mem->start;
- 
- 	if (!pp->va_cfg0_base) {
- 		pp->va_cfg0_base = devm_ioremap(pp->dev, pp->cfg0_base,
-@@ -493,24 +482,47 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 	if (pp->ops->host_init)
- 		pp->ops->host_init(pp);
- 
--	dw_pcie_wr_own_conf(pp, PCI_BASE_ADDRESS_0, 4, 0);
-+	if (dw_pcie_wr_own_conf(pp, PCI_BASE_ADDRESS_0, 4, 0)
-+			!= PCIBIOS_SUCCESSFUL)
-+		return -EINVAL;
- 
- 	/* program correct class for RC */
--	dw_pcie_wr_own_conf(pp, PCI_CLASS_DEVICE, 2, PCI_CLASS_BRIDGE_PCI);
-+	if (dw_pcie_wr_own_conf(pp, PCI_CLASS_DEVICE, 2, PCI_CLASS_BRIDGE_PCI)
-+			!= PCIBIOS_SUCCESSFUL)
-+		return -EINVAL;
-+
-+	if (dw_pcie_rd_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, &val)
-+			!= PCIBIOS_SUCCESSFUL)
-+		return -EINVAL;
- 
--	dw_pcie_rd_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, &val);
- 	val |= PORT_LOGIC_SPEED_CHANGE;
--	dw_pcie_wr_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, val);
- 
--#ifdef CONFIG_PCI_MSI
--	dw_pcie_msi_chip.dev = pp->dev;
--	dw_pci.msi_ctrl = &dw_pcie_msi_chip;
-+	if (dw_pcie_wr_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, val)
-+			!= PCIBIOS_SUCCESSFUL)
-+		return -EINVAL;
-+
-+	bus = pci_create_root_bus(pp->dev, pp->root_bus_nr, &dw_pcie_ops,
-+			      pp, &res);
-+	if (!bus)
-+		return -ENOMEM;
-+
-+#ifdef CONFIG_GENERIC_MSI_IRQ_DOMAIN
-+	bus->msi = container_of(&pp->irq_domain, struct msi_controller, domain);
-+#else
-+	bus->msi = &dw_pcie_msi_chip;
- #endif
- 
--	dw_pci.nr_controllers = 1;
--	dw_pci.private_data = (void **)&pp;
-+	pci_scan_child_bus(bus);
-+	if (pp->ops->scan_bus)
-+		pp->ops->scan_bus(pp);
- 
--	pci_common_init_dev(pp->dev, &dw_pci);
-+#ifdef CONFIG_ARM
-+	/* support old dtbs that incorrectly describe IRQs */
-+	pci_fixup_irqs(pci_common_swizzle, of_irq_parse_and_map_pci);
-+#endif
-+
-+	pci_assign_unassigned_bus_resources(bus);
-+	pci_bus_add_devices(bus);
- 
- 	return 0;
- }
-@@ -653,7 +665,7 @@ static int dw_pcie_valid_config(struct pcie_port *pp,
- static int dw_pcie_rd_conf(struct pci_bus *bus, u32 devfn, int where,
- 			int size, u32 *val)
- {
--	struct pcie_port *pp = sys_to_pcie(bus->sysdata);
-+	struct pcie_port *pp = bus->sysdata;
- 	int ret;
- 
- 	if (dw_pcie_valid_config(pp, bus, PCI_SLOT(devfn)) == 0) {
-@@ -677,7 +689,7 @@ static int dw_pcie_rd_conf(struct pci_bus *bus, u32 devfn, int where,
- static int dw_pcie_wr_conf(struct pci_bus *bus, u32 devfn,
- 			int where, int size, u32 val)
- {
--	struct pcie_port *pp = sys_to_pcie(bus->sysdata);
-+	struct pcie_port *pp = bus->sysdata;
- 	int ret;
- 
- 	if (dw_pcie_valid_config(pp, bus, PCI_SLOT(devfn)) == 0)
-@@ -701,64 +713,6 @@ static struct pci_ops dw_pcie_ops = {
- 	.write = dw_pcie_wr_conf,
- };
- 
--static int dw_pcie_setup(int nr, struct pci_sys_data *sys)
--{
--	struct pcie_port *pp;
--
--	pp = sys_to_pcie(sys);
--
--	if (global_io_offset < SZ_1M && pp->io_size > 0) {
--		sys->io_offset = global_io_offset - pp->io_bus_addr;
--		pci_ioremap_io(global_io_offset, pp->io_base);
--		global_io_offset += SZ_64K;
--		pci_add_resource_offset(&sys->resources, &pp->io,
--					sys->io_offset);
--	}
--
--	sys->mem_offset = pp->mem.start - pp->mem_bus_addr;
--	pci_add_resource_offset(&sys->resources, &pp->mem, sys->mem_offset);
--	pci_add_resource(&sys->resources, &pp->busn);
--
--	return 1;
--}
--
--static struct pci_bus *dw_pcie_scan_bus(int nr, struct pci_sys_data *sys)
--{
--	struct pci_bus *bus;
--	struct pcie_port *pp = sys_to_pcie(sys);
--
--	pp->root_bus_nr = sys->busnr;
--	bus = pci_create_root_bus(pp->dev, sys->busnr,
--				  &dw_pcie_ops, sys, &sys->resources);
--	if (!bus)
--		return NULL;
--
--	pci_scan_child_bus(bus);
--
--	if (bus && pp->ops->scan_bus)
--		pp->ops->scan_bus(pp);
--
--	return bus;
--}
--
--static int dw_pcie_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
--{
--	struct pcie_port *pp = sys_to_pcie(dev->bus->sysdata);
--	int irq;
--
--	irq = of_irq_parse_and_map_pci(dev, slot, pin);
--	if (!irq)
--		irq = pp->irq;
--
--	return irq;
--}
--
--static struct hw_pci dw_pci = {
--	.setup		= dw_pcie_setup,
--	.scan		= dw_pcie_scan_bus,
--	.map_irq	= dw_pcie_map_irq,
--};
--
- void dw_pcie_setup_rc(struct pcie_port *pp)
- {
- 	u32 val;
-diff --git a/drivers/pci/host/pcie-designware.h b/drivers/pci/host/pcie-designware.h
-index d0bbd27..ab78710 100644
---- a/drivers/pci/host/pcie-designware.h
-+++ b/drivers/pci/host/pcie-designware.h
-@@ -34,7 +34,7 @@ struct pcie_port {
- 	u64			cfg1_mod_base;
- 	void __iomem		*va_cfg1_base;
- 	u32			cfg1_size;
--	u64			io_base;
-+	resource_size_t			io_base;
- 	u64			io_mod_base;
- 	phys_addr_t		io_bus_addr;
- 	u32			io_size;
-@@ -42,10 +42,10 @@ struct pcie_port {
- 	u64			mem_mod_base;
- 	phys_addr_t		mem_bus_addr;
- 	u32			mem_size;
--	struct resource		cfg;
--	struct resource		io;
--	struct resource		mem;
--	struct resource		busn;
-+	struct resource		*cfg;
-+	struct resource		*io;
-+	struct resource		*mem;
-+	struct resource		*busn;
- 	int			irq;
- 	u32			lanes;
- 	struct pcie_host_ops	*ops;
-diff --git a/drivers/pci/host/pcie-spear13xx.c b/drivers/pci/host/pcie-spear13xx.c
-index 020d788..e78ddf8 100644
---- a/drivers/pci/host/pcie-spear13xx.c
-+++ b/drivers/pci/host/pcie-spear13xx.c
-@@ -287,7 +287,7 @@ static int spear13xx_add_pcie_port(struct pcie_port *pp,
- 		return ret;
- 	}
- 
--	pp->root_bus_nr = -1;
-+	pp->root_bus_nr = 0;
- 	pp->ops = &spear13xx_pcie_host_ops;
- 
- 	ret = dw_pcie_host_init(pp);
-
---------------------------------------------------
---------------------------------------------------
-
-> -----Original Message-----
-> From: Wangzhou (B)
-> Sent: Thursday, June 11, 2015 6:44 AM
-> To: Gabriele Paoloni
-> Cc: Lorenzo Pieralisi; James Morse; Bjorn Helgaas; Jingoo Han; Pratyush
-> Anand; Arnd Bergmann; fabrice.gasnier@st.com; Liviu Dudau; linux-
-> pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-> devicetree@vger.kernel.org; Yuanzhichang; Zhudacai; zhangjukuo;
-> qiuzhenfa; Liguozhu (Kenneth)
-> Subject: Re: [PATCH v2 2/4] PCI: designware: Add ARM64 support
+> On Thu, Jun 11, 2015 at 03:37:03PM +0300, Roger Quadros wrote:
+> > 
+> > On Thu, 11 Jun 2015 16:20:13 +0800
+> > Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> > 
+> > > On Thu, Jun 11, 2015 at 10:18:53AM +0300, Roger Quadros wrote:
+> > > > 
+> > > > On Wed, 10 Jun 2015 21:47:51 +0800
+> > > > Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> > > > 
+> > > > > On Wed, Jun 10, 2015 at 03:37:37PM +0800, Roger Quadros wrote:
+> > > > > > On Tue, 9 Jun 2015 11:33:11 -0500
+> > > > > > Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > > > > > 
+> > > > > > > On Tue, Jun 9, 2015 at 10:29 AM, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> wrote:
+> > > > > > > > Rob,
+> > > > > > > >
+> > > > > > > > On Tue, 9 Jun 2015 08:26:20 -0500
+> > > > > > > > Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > > > > > > >
+> > > > > > > >> On Mon, Jun 8, 2015 at 8:18 PM, Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> > > > > > > >> > On Mon, Jun 08, 2015 at 11:06:49AM -0500, Rob Herring wrote:
+> > > > > > > >> >> On Mon, Jun 8, 2015 at 10:02 AM, Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> > > > > > > >> >> > Add otg version, srp, hnp and adp support for usb OTG port, then those OTG
+> > > > > > > >> >> > features don't have to be decided by usb gadget drivers.
+> > > > > > > >> >> >
+> > > > > > > >> >> > Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > > > > > > >> >> > ---
+> > > > > > > >> >> >  Documentation/devicetree/bindings/usb/generic.txt | 10 ++++++++++
+> > > > > > > >> >> >  1 file changed, 10 insertions(+)
+> > > > > > > >> >> >
+> > > > > > > >> >> > diff --git a/Documentation/devicetree/bindings/usb/generic.txt b/Documentation/devicetree/bindings/usb/generic.txt
+> > > > > > > >> >> > index 477d5bb..7386f4a 100644
+> > > > > > > >> >> > --- a/Documentation/devicetree/bindings/usb/generic.txt
+> > > > > > > >> >> > +++ b/Documentation/devicetree/bindings/usb/generic.txt
+> > > > > > > >> >> > @@ -11,6 +11,12 @@ Optional properties:
+> > > > > > > >> >> >                         "peripheral" and "otg". In case this attribute isn't
+> > > > > > > >> >> >                         passed via DT, USB DRD controllers should default to
+> > > > > > > >> >> >                         OTG.
+> > > > > > > >> >> > + - otg-rev: tells usb driver the release number of the OTG and EH supplement
+> > > > > > > >> >> > +                       with which the device and its descriptors are compliant,
+> > > > > > > >> >> > +                       in binary-coded decimal (i.e. 2.0 is 0200H).
+> > > > > > > >> >>
+> > > > > > > >> >> I would assume OTG 2.0 is somehow backwards compatible? Is this a h/w
+> > > > > > > >> >> dependency or a driver feature?
+> > > > > > > >> >>
+> > > > > > > >> > Not fully compatible, OTG 2.0 extend the usb_otg_descriptor by adding a new
+> > > > > > > >> > member bcdOTG to identify the OTG version, this descriptor needs to be sent
+> > > > > > > >> > to OTG host with correct size and content, so we have to know which release
+> > > > > > > >> > version the OTG device is compliant with, either by menuconfig config or pass
+> > > > > > > >> > via DT.
+> > > > > > > >>
+> > > > > > > >> So you have to change the version depending on the host you are
+> > > > > > > >> connected to? That really seems strange that plugging in a OTG 2.0
+> > > > > > > >> device to an OTG 1.3 host would not work and doesn't make for a good
+> > > > > > > >> user experience.
+> > > > > > > >
+> > > > > > > > No. The OTG version in the OTG descriptor for any device is usually fixed for the
+> > > > > > > > lifetime of the product.
+> > > > > > > >
+> > > > > > > > Let's assume it is 2.0.
+> > > > > > > >
+> > > > > > > > If you plug this to OTG 1.0 host, it won't be an issue as OTG 1.0 host doesn't
+> > > > > > > > read the BCD version.
+> > > > > > > 
+> > > > > > > That makes sense, but there was some discussion about the size mattering.
+> > > > > > > 
+> > > > > > > So is there a reason not to always report 2.0 with any kernel that has
+> > > > > > > 2.0 support?
+> > > > > > 
+> > > > > > A 2.0 host would still need to know if the attached OTG device is 1.0 or 2.0
+> > > > > > so we don't want to force existing 1.0 devices to 2.0.
+> > > > > > 
+> > > > > > > 
+> > > > > > > >>
+> > > > > > > >> >> > + - srp-support: tells OTG controllers we want to enable SRP.
+> > > > > > > >> >> > + - hnp-support: tells OTG controllers we want to enable HNP.
+> > > > > > > >> >> > + - adp-support: tells OTG controllers we want to enable ADP.
+> > > > > > > >> >>
+> > > > > > > >> >> I've recently run into a problem[1] and found that I have to disable
+> > > > > > > >> >> OTG in the kernel to get my device to work. Having to turn-off OTG
+> > > > > > > >> >> seems like the wrong solution, and shifting the problem to DT seems
+> > > > > > > >> >> wrong too. Why is this not a user configurable option (within whatever
+> > > > > > > >> >> h/w constraints there are)?
+> > > > > > > >> > The problem of below link, seems your device is claiming it's a HNP capable
+> > > > > > > >> > OTG device, but connecting to a non-OTG port of your Host, assume your Host
+> > > > > > > >> > does have a OTG port, your Host issue a A_ALT_HNP_SUPPORT request to your
+> > > > > > > >> > OTG device to remind it can use another port with HNP, but the request failed
+> > > > > > > >> > (maybe STALL by your device, this request is defined in OTG 1.3 but obsolete
+> > > > > > > >> > in OTG 2.0), so your Host just stopped enumeration of your device, this is not
+> > > > > > > >> > reasonable because current OTG code is some out of data.
+> > > > > > > >>
+> > > > > > > >> Do PCs have OTG ports typically? My expectation is that if I plug in
+> > > > > > > >> an OTG device as a B device to any host port, that it will work as a
+> > > > > > > >> device no matter what the host OTG capabilities are. If I have to
+> > > > > > > >> change the kernel config or DT, that is a problem.
+> > > > > > > >
+> > > > > > > > AFAIK PCs don't have OTG ports.
+> > > > > > > >
+> > > > > > > > If you plug in OTG device to a non-otg host port it will work as normal B-device.
+> > > > > > > > The host doesn't request for OTG descriptors and doesn't care what OTG features it
+> > > > > > > > supports or not.
+> > > > > > > 
+> > > > > > > That is what I would expect. My testing and the bug report show otherwise.
+> > > > > > 
+> > > > > > what kernel and platform are you on?
+> > > > > > 
+> > > > > > > 
+> > > > > > > >> > I am trying to make those OTG feaures to be configurable options, you mean
+> > > > > > > >> > by sys?
+> > > > > > > >>
+> > > > > > > >> Yes.
+> > > > > > > >
+> > > > > > > > why do you need OTG features to be sysfs configurable other than for debugging?
+> > > > > > > 
+> > > > > > > I don't know. Buggy host perhaps? Why do you need them in DT?
+> > > > > > 
+> > > > > > I'll explain why we need in DT below.
+> > > > > > 
+> > > > > > > 
+> > > > > > > If they are truly debugging, then they would belong in debugfs rather
+> > > > > > > than sysfs.
+> > > > > > 
+> > > > > > agreed.
+> > > > > > > 
+> > > > > > > >> >> What are the valid combinations? When do we want these enabled or not?
+> > > > > > > >> >> Wouldn't default enabled be better?
+> > > > > > > >> >
+> > > > > > > >> > We want to enable all those support in kernel driver, but some platform or
+> > > > > > > >> > hardware may not want to enable any or some of them, so those hardware
+> > > > > > > >> > can disable it by not pass the property in dt, the 3 sub features of OTG are
+> > > > > > > >> > not mandatory for so called OTG device, normally we at least enable HNP, and
+> > > > > > > >> > SRP and ADP are optional.
+> > > > > > > >>
+> > > > > > > >> Please answer my questions in the doc.
+> > > > > > > >>
+> > > > > > > >> >>
+> > > > > > > >> >> We already have dr_mode property. How is it related to these?
+> > > > > > > >
+> > > > > > > > dr_mode states what mode the controller will operate in.
+> > > > > > > >
+> > > > > > > > for dr_mode == "host" we don't care about these otg flags.
+> > > > > > > >
+> > > > > > > > for dr_mode == "peripheral" or dr_mode == "otg"
+> > > > > > > > we care about these OTG flags to create our OTG descriptor on the fly.
+> > > > > > > 
+> > > > > > > Then how do I specify my device is peripheral only even though I have
+> > > > > > > a DR controller?
+> > > > > > 
+> > > > > > by specifying dr_mode = "peripheral" in the DT.
+> > > > > > 
+> > > > > > > 
+> > > > > > > How is ID pin detect supposed to be supported? Do we need dr_mode = "idpin"?
+> > > > > > 
+> > > > > > ID pin is not used in single role mode. It will be used only when dr_mode = "otg".
+> > > > > > 
+> > > > > > > 
+> > > > > > > >> > dr_mode is to tell the device it will work at OTG mode(there is another simple
+> > > > > > > >> > dual role mode which is commom used but not HNP), srp/hnp/adp can further specify
+> > > > > > > >> > which protocol the OTG device will support.
+> > > > > > > >>
+> > > > > > > >> By simple DR, you mean ID pin detect, right. So please define how you
+> > > > > > > >> support just ID pin detect vs. other levels of capability. Does only
+> > > > > > > >> dr_mode = otg mean ID pin detect? That may be a problem for existing
+> > > > > > > >> DTs if you disable other OTG functions because they have not been
+> > > > > > > >> added to the DT, then that is a problem.
+> > > > > > > >>
+> > > > > > > >> I'm feeling less convinced that this belongs in DT at all. Please
+> > > > > > > >> convince me otherwise.
+> > > > > > > >
+> > > > > > > > Yes not specifying anything in DT should work and default to the
+> > > > > > > > best OTG version and features supported by the OTG controller.
+> > > > > > > 
+> > > > > > > Right, hence why I suggested disable flags, not enable flags.
+> > > > > > 
+> > > > > > I second that. They must be disable flags.
+> > > > > > 
+> > > > > 
+> > > > > Disable flags may not work with current situation of gadget driver:
+> > > > > Currently each gadget class driver hard coded the OTG attributes
+> > > > > to be HNP | SRP, independent of controller driver.
+> > > > 
+> > > > That is wrong in the first place. Gadget drivers shouldn't decide
+> > > > the OTG attributes. Platform code/DT should.
+> > > > 
+> > > 
+> > > I totally agree the current code is wrong.
+> > > 
+> > > > If gadget drivers define OTG flags then they cannot be used on
+> > > > different platforms with different OTG needs.
+> > > > 
+> > > Agree too.
+> > > 
+> > > But some platforms may already work with current "wrong" way, I do not want
+> > > to break them.
+> > > 
+> > > > > 
+> > > > > E.g. some platform with OTG enabled: gadget->is_otg = 1
+> > > > > HNP and SRP are enabled by gadget driver, ADP = 0, this OTG port
+> > > > > can really support HNP and SRP, but not ADP. 
+> > > > 
+> > > > What if the platform on which the gadget driver is used doesn't want
+> > > > SRP enabled?
+> > > 
+> > > As far as I know, there is no controller driver to override this setting,
+> > > maybe it still keeps SRP enabled even it does not support it in fact. 
+> > > 
+> > > > 
+> > > > > if use disable flag, this platform has to add adp-disable property
+> > > > > otherwise it will report ADP support to the host.
+> > > > 
+> > > > This issue won't happen if gadget driver doesn't define any OTG attributes.
+> > > > 
+> > > But some existing platform already rely on gadget driver to define OTG
+> > > attributes, Can I break those already working platforms? I think it's hard
+> > > to figure out all this kind of platforms and then correct every one with
+> > > new approach.
+> > > 
+> > > Who define this attributes doesn't matter, key is this attributes should
+> > > base on correct input.
+> > > 
+> > > So my principle is to not break any existing platforms, and introduce new
+> > > approach, old platforms can work without any change.
+> > 
+> > But we don't know which platforms use what so we need to define a sane
+> > default configuration for all gadgets. I don't think we can have a gadget
+> > specific configuration.
+> > 
+> Yes, we don't know, what I can do is to keep all unchanged for those platforms
+> if those new properties doesn't appear at all. (i.e. SRP and HNP still enabled
+> in its otg descriptor anyway like current gadget driver does)
 > 
-> On 2015/6/10 21:35, Gabriele Paoloni wrote:
-> > Hi Zhou Wang and all
-> >
-> > I have worked on a patch that unify ARM and ARM64. As you can see I
-> have removed the parser and now I use
-> "of_pci_get_host_bridge_resources" in order to retrieve the resources
-> associated to each pci host bridge window.
-> > The resources now are not copied to the designware pcie_port pp,
-> instead they are passed by pointer.
-> >
-> > This patch is intended to replace entirely "[PATCH v2 2/4]"; so I
-> have also included all the changes about the other drivers
-> >
-> > Please find the patch inline below.
-> >
-> > Let me know if you think it is ok.
-> >
-> > Regards
-> >
-> > Gab
-> >
-> > ------------------------------------
-> > ------------------------------------
-> >
-> > This patch is a rework of
-> > "[PATCH v2 2/4] PCI: designware: Add ARM64 support" from Zhou Wang.
-> >
-> > The intention is to complete the unification between ARM and
-> > ARM64 now that the dependency on arch/arm/kernel/bios32.c is gone.
-> >
-> > I have also included the rework asked by James Morse:
-> > io_base declared as resource_size_t
-> >
-> > It compiles fine on ARCH arm and arm64.
+> > If anyone complains we need to ask them to set the right DT flags for their
+> > platform. I don't see any other way.
+> > 
 > 
-> Hi Gabriele,
+> My current way is to achieve this goal.
 > 
-> I manually apply this patch on my series, as there are some format
-> errors
-> about this patch. And I think this patch is a experimental one, it
-> could not
-> be compiled successfully.
+> > > 
+> > > > > 
+> > > > > But with enable flags, I can check all those 3 properties,
+> > > > 
+> > > > I don't see why you can't do that with disable flags. Note that there are 2 things.
+> > > > 1) disable flags from DT
+> > > > 2) support flags from controller. This information is already known to the
+> > > > controller.
+> > > > 
+> > > > Based on these 2 you can decide what OTG features you want to set/clear.
+> > > > And you can't combine the 2 by just defining enable flags in DT.
+> > > > 
+> > > 
+> > > Yes, I have the same understanding. So:
+> > > 1) In controller driver:
+> > > if (controller_can_support_srp(controller)) {
 > 
-> >
-> > It needs to be tested.
-> >
-> > Signed-off-by: Gabriele Paoloni <gabriele.paoloni@huawei.com>
-> >
-> > [...]
-> >
-> > -int dw_pcie_host_init(struct pcie_port *pp)
-> > +int __init dw_pcie_host_init(struct pcie_port *pp)
-> >  {
-> >  	struct device_node *np = pp->dev->of_node;
-> >  	struct platform_device *pdev = to_platform_device(pp->dev);
-> > -	struct of_pci_range range;
-> > -	struct of_pci_range_parser parser;
-> > +	struct pci_bus *bus;
-> >  	struct resource *cfg_res;
-> > +	LIST_HEAD(res);
-> >  	u32 val, na, ns;
-> >  	const __be32 *addrp;
-> >  	int i, index, ret;
-> > +	int rlen;
-> > +	struct pci_host_bridge_window *win;
+> This check only can be done in each controller driver.
 > 
-> This struct is not in latest kernel, I think you should use struct
-> resource_entry.
+> > > 	if (srp_enabled_in_dt(of))
+> > > 		gadget->srp_support = 1;
+> > 
+> > Existing platforms don't have feature_enabled_in_dt so this will fail for all.
 > 
-> Thanks,
-> Zhou
+> Above code is for how "new" platform set new flags if it want to utilize those new
+> properties, existing platform doesn't need any code change. This is not common code
+> shared by all controller drivers, like gadget->is_otg, it should be set by specific
+> controller driver.
 > 
-> > +	const __be32 *parser_range_end = of_get_property(np, "ranges",
-> &rlen);
-> > +
-> > +	if (parser_range_end == NULL)
-> > +			return -ENOENT;
-> > +	parser_range_end += rlen/sizeof(__be32);
-> > +
-> >
-> >  	/* Find the address cell size and the number of cells in order to
-> get
-> >  	 * the untranslated address.
-> > @@ -375,78 +375,67 @@ int dw_pcie_host_init(struct pcie_port *pp)
-> >  		dev_err(pp->dev, "missing *config* reg space\n");
-> >  	}
-> >
-> > -	if (of_pci_range_parser_init(&parser, np)) {
-> > -		dev_err(pp->dev, "missing ranges property\n");
-> > -		return -EINVAL;
-> > -	}
-> > +	ret = of_pci_get_host_bridge_resources(np, 0, 0xff, &res, &pp-
-> >io_base);
-> > +	if (ret)
-> > +		return ret;
-> >
-> >  	/* Get the I/O and memory ranges from DT */
-> > -	for_each_of_pci_range(&parser, &range) {
-> > -		unsigned long restype = range.flags & IORESOURCE_TYPE_BITS;
-> > -
-> > -		if (restype == IORESOURCE_IO) {
-> > -			of_pci_range_to_resource(&range, np, &pp->io);
-> > -			pp->io.name = "I/O";
-> > -			pp->io.start = max_t(resource_size_t,
-> > -					     PCIBIOS_MIN_IO,
-> > -					     range.pci_addr + global_io_offset);
-> > -			pp->io.end = min_t(resource_size_t,
-> > -					   IO_SPACE_LIMIT,
-> > -					   range.pci_addr + range.size
-> > -					   + global_io_offset - 1);
-> > -			pp->io_size = resource_size(&pp->io);
-> > -			pp->io_bus_addr = range.pci_addr;
-> > -			pp->io_base = range.cpu_addr;
-> > -
-> > -			/* Find the untranslated IO space address */
-> > -			pp->io_mod_base = of_read_number(parser.range -
-> > -							 parser.np + na, ns);
-> > -		}
-> > -		if (restype == IORESOURCE_MEM) {
-> > -			of_pci_range_to_resource(&range, np, &pp->mem);
-> > -			pp->mem.name = "MEM";
-> > -			pp->mem_size = resource_size(&pp->mem);
-> > -			pp->mem_bus_addr = range.pci_addr;
-> > -
-> > -			/* Find the untranslated MEM space address */
-> > -			pp->mem_mod_base = of_read_number(parser.range -
-> > -							  parser.np + na, ns);
-> > -		}
-> > -		if (restype == 0) {
-> > -			of_pci_range_to_resource(&range, np, &pp->cfg);
-> > -			pp->cfg0_size = resource_size(&pp->cfg)/2;
-> > -			pp->cfg1_size = resource_size(&pp->cfg)/2;
-> > -			pp->cfg0_base = pp->cfg.start;
-> > -			pp->cfg1_base = pp->cfg.start + pp->cfg0_size;
-> > +	list_for_each_entry(win, &res, list) {
-> > +		switch (resource_type(win->res)) {
-> > +		case IORESOURCE_IO:
-> > +			pp->io = win->res;
-> > +			pp->io->name = "I/O";
-> > +			pp->io_size = resource_size(pp->io);
-> > +			pp->io_bus_addr = pp->io->start - win->offset;
-> > +			/* magic 5 below comes from magic na and ns in
-> > +			 * of_pci_range_parser_init()                 */
-> > +			pp->io_mod_base = of_read_number(parser_range_end -
-> > +					of_n_addr_cells(np) - 5 + na, ns);
-> > +			ret = pci_remap_iospace(pp->io, pp->io_base);
-> > +			if (ret) {
-> > +				dev_warn(pp->dev, "error %d: failed to map
-> resource %pR\n",
-> > +				ret, pp->io);
-> > +			continue;
-> > +			}
-> > +			break;
-> > +		case IORESOURCE_MEM:
-> > +			pp->mem = win->res;
-> > +			pp->mem->name = "MEM";
-> > +			pp->mem_size = resource_size(pp->mem);
-> > +			pp->mem_bus_addr = pp->mem->start - win->offset;
-> > +			pp->mem_mod_base = of_read_number(parser_range_end -
-> > +					of_n_addr_cells(np) - 5 + na, ns);
-> > +			break;
-> > +		case 0:
-> > +			pp->cfg = win->res;
-> > +			pp->cfg0_size = resource_size(pp->cfg)/2;
-> > +			pp->cfg1_size = resource_size(pp->cfg)/2;
-> > +			pp->cfg0_base = pp->cfg->start;
-> > +			pp->cfg1_base = pp->cfg->start + pp->cfg0_size;
-> >
-> >  			/* Find the untranslated configuration space address
-> */
-> > -			pp->cfg0_mod_base = of_read_number(parser.range -
-> > -							   parser.np + na, ns);
-> > -			pp->cfg1_mod_base = pp->cfg0_mod_base +
-> > -					    pp->cfg0_size;
-> > +			pp->cfg0_mod_base = of_read_number(parser_range_end -
-> > +					of_n_addr_cells(np) - 5 + na, ns);
-> > +			pp->cfg1_mod_base = pp->cfg0_mod_base + pp->cfg0_size;
-> > +			break;
-> > +		case IORESOURCE_BUS:
-> > +			pp->busn = win->res;
-> > +			break;
-> > +		default:
-> > +			continue;
-> >  		}
-> >  	}
-> >
-> > -	ret = of_pci_parse_bus_range(np, &pp->busn);
-> > -	if (ret < 0) {
-> > -		pp->busn.name = np->name;
-> > -		pp->busn.start = 0;
-> > -		pp->busn.end = 0xff;
-> > -		pp->busn.flags = IORESOURCE_BUS;
-> > -		dev_dbg(pp->dev, "failed to parse bus-range property: %d,
-> using default %pR\n",
-> > -			ret, &pp->busn);
-> > -	}
-> > -
-> >  	if (!pp->dbi_base) {
-> > -		pp->dbi_base = devm_ioremap(pp->dev, pp->cfg.start,
-> > -					resource_size(&pp->cfg));
-> > +		pp->dbi_base = devm_ioremap(pp->dev, pp->cfg->start,
-> > +					resource_size(pp->cfg));
-> >  		if (!pp->dbi_base) {
-> >  			dev_err(pp->dev, "error with ioremap\n");
-> >  			return -ENOMEM;
-> >  		}
-> >  	}
-> >
-> > -	pp->mem_base = pp->mem.start;
-> > +	pp->mem_base = pp->mem->start;
-> >
-> >  	if (!pp->va_cfg0_base) {
-> >  		pp->va_cfg0_base = devm_ioremap(pp->dev, pp->cfg0_base, @@
-> -493,24 +482,47 @@ int dw_pcie_host_init(struct pcie_port *pp)
-> >  	if (pp->ops->host_init)
-> >  		pp->ops->host_init(pp);
-> >
-> > -	dw_pcie_wr_own_conf(pp, PCI_BASE_ADDRESS_0, 4, 0);
-> > +	if (dw_pcie_wr_own_conf(pp, PCI_BASE_ADDRESS_0, 4, 0)
-> > +			!= PCIBIOS_SUCCESSFUL)
-> > +		return -EINVAL;
-> >
-> >  	/* program correct class for RC */
-> > -	dw_pcie_wr_own_conf(pp, PCI_CLASS_DEVICE, 2,
-> PCI_CLASS_BRIDGE_PCI);
-> > +	if (dw_pcie_wr_own_conf(pp, PCI_CLASS_DEVICE, 2,
-> PCI_CLASS_BRIDGE_PCI)
-> > +			!= PCIBIOS_SUCCESSFUL)
-> > +		return -EINVAL;
-> > +
-> > +	if (dw_pcie_rd_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4,
-> &val)
-> > +			!= PCIBIOS_SUCCESSFUL)
-> > +		return -EINVAL;
-> >
-> > -	dw_pcie_rd_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, &val);
-> >  	val |= PORT_LOGIC_SPEED_CHANGE;
-> > -	dw_pcie_wr_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, val);
-> >
-> > -#ifdef CONFIG_PCI_MSI
-> > -	dw_pcie_msi_chip.dev = pp->dev;
-> > -	dw_pci.msi_ctrl = &dw_pcie_msi_chip;
-> > +	if (dw_pcie_wr_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, val)
-> > +			!= PCIBIOS_SUCCESSFUL)
-> > +		return -EINVAL;
-> > +
-> > +	bus = pci_create_root_bus(pp->dev, pp->root_bus_nr, &dw_pcie_ops,
-> > +			      pp, &res);
-> > +	if (!bus)
-> > +		return -ENOMEM;
-> > +
-> > +#ifdef CONFIG_GENERIC_MSI_IRQ_DOMAIN
-> > +	bus->msi = container_of(&pp->irq_domain, struct msi_controller,
-> > +domain); #else
-> > +	bus->msi = &dw_pcie_msi_chip;
-> >  #endif
-> >
-> > -	dw_pci.nr_controllers = 1;
-> > -	dw_pci.private_data = (void **)&pp;
-> > +	pci_scan_child_bus(bus);
-> > +	if (pp->ops->scan_bus)
-> > +		pp->ops->scan_bus(pp);
-> >
-> > -	pci_common_init_dev(pp->dev, &dw_pci);
-> > +#ifdef CONFIG_ARM
-> > +	/* support old dtbs that incorrectly describe IRQs */
-> > +	pci_fixup_irqs(pci_common_swizzle, of_irq_parse_and_map_pci);
-> #endif
-> > +
-> > +	pci_assign_unassigned_bus_resources(bus);
-> > +	pci_bus_add_devices(bus);
-> >
-> >  	return 0;
-> >  }
-> > @@ -653,7 +665,7 @@ static int dw_pcie_valid_config(struct pcie_port
-> *pp,  static int dw_pcie_rd_conf(struct pci_bus *bus, u32 devfn, int
-> where,
-> >  			int size, u32 *val)
-> >  {
-> > -	struct pcie_port *pp = sys_to_pcie(bus->sysdata);
-> > +	struct pcie_port *pp = bus->sysdata;
-> >  	int ret;
-> >
-> >  	if (dw_pcie_valid_config(pp, bus, PCI_SLOT(devfn)) == 0) { @@ -
-> 677,7 +689,7 @@ static int dw_pcie_rd_conf(struct pci_bus *bus, u32
-> devfn, int where,  static int dw_pcie_wr_conf(struct pci_bus *bus, u32
-> devfn,
-> >  			int where, int size, u32 val)
-> >  {
-> > -	struct pcie_port *pp = sys_to_pcie(bus->sysdata);
-> > +	struct pcie_port *pp = bus->sysdata;
-> >  	int ret;
-> >
-> >  	if (dw_pcie_valid_config(pp, bus, PCI_SLOT(devfn)) == 0) @@ -
-> 701,64 +713,6 @@ static struct pci_ops dw_pcie_ops = {
-> >  	.write = dw_pcie_wr_conf,
-> >  };
-> >
-> > -static int dw_pcie_setup(int nr, struct pci_sys_data *sys) -{
-> > -	struct pcie_port *pp;
-> > -
-> > -	pp = sys_to_pcie(sys);
-> > -
-> > -	if (global_io_offset < SZ_1M && pp->io_size > 0) {
-> > -		sys->io_offset = global_io_offset - pp->io_bus_addr;
-> > -		pci_ioremap_io(global_io_offset, pp->io_base);
-> > -		global_io_offset += SZ_64K;
-> > -		pci_add_resource_offset(&sys->resources, &pp->io,
-> > -					sys->io_offset);
-> > -	}
-> > -
-> > -	sys->mem_offset = pp->mem.start - pp->mem_bus_addr;
-> > -	pci_add_resource_offset(&sys->resources, &pp->mem, sys-
-> >mem_offset);
-> > -	pci_add_resource(&sys->resources, &pp->busn);
-> > -
-> > -	return 1;
-> > -}
-> > -
-> > -static struct pci_bus *dw_pcie_scan_bus(int nr, struct pci_sys_data
-> *sys) -{
-> > -	struct pci_bus *bus;
-> > -	struct pcie_port *pp = sys_to_pcie(sys);
-> > -
-> > -	pp->root_bus_nr = sys->busnr;
-> > -	bus = pci_create_root_bus(pp->dev, sys->busnr,
-> > -				  &dw_pcie_ops, sys, &sys->resources);
-> > -	if (!bus)
-> > -		return NULL;
-> > -
-> > -	pci_scan_child_bus(bus);
-> > -
-> > -	if (bus && pp->ops->scan_bus)
-> > -		pp->ops->scan_bus(pp);
-> > -
-> > -	return bus;
-> > -}
-> > -
-> > -static int dw_pcie_map_irq(const struct pci_dev *dev, u8 slot, u8
-> pin) -{
-> > -	struct pcie_port *pp = sys_to_pcie(dev->bus->sysdata);
-> > -	int irq;
-> > -
-> > -	irq = of_irq_parse_and_map_pci(dev, slot, pin);
-> > -	if (!irq)
-> > -		irq = pp->irq;
-> > -
-> > -	return irq;
-> > -}
-> > -
-> > -static struct hw_pci dw_pci = {
-> > -	.setup		= dw_pcie_setup,
-> > -	.scan		= dw_pcie_scan_bus,
-> > -	.map_irq	= dw_pcie_map_irq,
-> > -};
-> > -
-> >  void dw_pcie_setup_rc(struct pcie_port *pp)  {
-> >  	u32 val;
-> > diff --git a/drivers/pci/host/pcie-designware.h
-> b/drivers/pci/host/pcie-designware.h
-> > index d0bbd27..ab78710 100644
-> > --- a/drivers/pci/host/pcie-designware.h
-> > +++ b/drivers/pci/host/pcie-designware.h
-> > @@ -34,7 +34,7 @@ struct pcie_port {
-> >  	u64			cfg1_mod_base;
-> >  	void __iomem		*va_cfg1_base;
-> >  	u32			cfg1_size;
-> > -	u64			io_base;
-> > +	resource_size_t			io_base;
-> >  	u64			io_mod_base;
-> >  	phys_addr_t		io_bus_addr;
-> >  	u32			io_size;
-> > @@ -42,10 +42,10 @@ struct pcie_port {
-> >  	u64			mem_mod_base;
-> >  	phys_addr_t		mem_bus_addr;
-> >  	u32			mem_size;
-> > -	struct resource		cfg;
-> > -	struct resource		io;
-> > -	struct resource		mem;
-> > -	struct resource		busn;
-> > +	struct resource		*cfg;
-> > +	struct resource		*io;
-> > +	struct resource		*mem;
-> > +	struct resource		*busn;
-> >  	int			irq;
-> >  	u32			lanes;
-> >  	struct pcie_host_ops	*ops;
-> > diff --git a/drivers/pci/host/pcie-spear13xx.c
-> b/drivers/pci/host/pcie-spear13xx.c
-> > index 020d788..e78ddf8 100644
-> > --- a/drivers/pci/host/pcie-spear13xx.c
-> > +++ b/drivers/pci/host/pcie-spear13xx.c
-> > @@ -287,7 +287,7 @@ static int spear13xx_add_pcie_port(struct
-> pcie_port *pp,
-> >  		return ret;
-> >  	}
-> >
-> > -	pp->root_bus_nr = -1;
-> > +	pp->root_bus_nr = 0;
-> >  	pp->ops = &spear13xx_pcie_host_ops;
-> >
-> >  	ret = dw_pcie_host_init(pp);
-> > ------------------------------------
-> > ------------------------------------
-> >
-> >
-> >
-> >
-> >> -----Original Message-----
-> >> From: Lorenzo Pieralisi [mailto:lorenzo.pieralisi@arm.com]
-> >> Sent: Tuesday, June 09, 2015 12:15 PM
-> >> To: Wangzhou (B)
-> >> Cc: James Morse; Bjorn Helgaas; Jingoo Han; Pratyush Anand; Arnd
-> >> Bergmann; fabrice.gasnier@st.com; Liviu Dudau; linux-
-> >> pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-> >> devicetree@vger.kernel.org; Gabriele Paoloni; Yuanzhichang; Zhudacai;
-> >> zhangjukuo; qiuzhenfa; Liguozhu (Kenneth)
-> >> Subject: Re: [PATCH v2 2/4] PCI: designware: Add ARM64 support
-> >>
-> >> On Fri, Jun 05, 2015 at 09:11:30AM +0100, Zhou Wang wrote:
-> >>
-> >> [...]
-> >>
-> >>>>> -int dw_pcie_host_init(struct pcie_port *pp)
-> >>>>> +int __init dw_pcie_host_init(struct pcie_port *pp)
-> >>>>>  {
-> >>>>>  	struct device_node *np = pp->dev->of_node;
-> >>>>>  	struct platform_device *pdev = to_platform_device(pp->dev);
-> >>>>>  	struct of_pci_range range;
-> >>>>>  	struct of_pci_range_parser parser;
-> >>>>> +	struct pci_bus *bus;
-> >>>>>  	struct resource *cfg_res;
-> >>>>> +	LIST_HEAD(res);
-> >>>>>  	u32 val, na, ns;
-> >>>>>  	const __be32 *addrp;
-> >>>>>  	int i, index, ret;
-> >>>>> @@ -502,15 +498,49 @@ int dw_pcie_host_init(struct pcie_port *pp)
-> >>>>>  	val |= PORT_LOGIC_SPEED_CHANGE;
-> >>>>>  	dw_pcie_wr_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4,
-> >> val);
-> >>>>>
-> >>>>> -#ifdef CONFIG_PCI_MSI
-> >>>>> -	dw_pcie_msi_chip.dev = pp->dev;
-> >>>>> -	dw_pci.msi_ctrl = &dw_pcie_msi_chip;
-> >>>>> +#ifdef CONFIG_ARM
-> >>>>> +	/*
-> >>>>> +	 * FIXME: we should really be able to use
-> >>>>> +	 * of_pci_get_host_bridge_resources on arm32 as well,
-> >>>>> +	 * but the conversion needs some more testing
-> >>>>> +	 */
-> >>>>> +	if (global_io_offset < SZ_1M && pp->io_size > 0) {
-> >>>>> +		pci_ioremap_io(global_io_offset, pp->io_base);
-> >>>>> +		global_io_offset += SZ_64K;
-> >>>>> +		pci_add_resource_offset(&res, &pp->io,
-> >>>>> +					global_io_offset - pp->io_bus_addr);
-> >>>>> +	}
-> >>>>> +	pci_add_resource_offset(&res, &pp->mem,
-> >>>>> +				pp->mem.start - pp->mem_bus_addr);
-> >>>>> +	pci_add_resource(&res, &pp->busn);
-> >>>>
-> >>>> I don't think this #ifdef is necessary. In the spirit of 'the
-> >>>> conversion needs some more testing', I removed it leaving just the
-> >> below arm64 code.
-> >>>>
-> >>>> This worked on my Freescale i.MX6 Quad SABRE Lite Board, I went as
-> >>>> far as scanning for wireless access points.
-> >>>>
-> >>>
-> >>> I think it depends on which kind of PCIe device you use, if we use
-> a
-> >>> PCIe device with a I/O Bar, it may not work well without above code.
-> >>> But so far, I have not met a PCIe device which must work with a I/O
-> >> Bar.
-> >>
-> >> There are two problems here:
-> >>
-> >> 1) the io_base address you get from of_pci_get_host_bridge_resources
-> >>    must be mapped using pci_remap_iospace. You are not doing this,
-> so
-> >>    even if you had a PCIe card with I/O bar it would not work on
-> arm64
-> >>    as the code stands. Remember that I/O space on arm/arm64 works as
-> a
-> >>    memory access with offset from PCI_IOBASE and that's the value
-> you
-> >> get
-> >>    in the I/O resource. See:
-> >>
-> >>    drivers/pci/host/pci-host-generic.c
-> >>    drivers/pci/host/pci-versatile.c
-> >>    drivers/pci/host/pci-xgene.c
-> >>
-> >> 2) (1) above would sort out I/O space access for both arm and arm64
-> so,
-> >>    as James said, the #ifdef is useless.
-> >>
-> >> I hope this makes things clearer.
-> >>
-> >> Thanks,
-> >> Lorenzo
-> >>
-> >>>
-> >>>>> +#else
-> >>>>> +	ret = of_pci_get_host_bridge_resources(np, 0, 0xff, &res,
-> >>>>> +&pp->io_base);
-> >>>>
-> >>>> of_pci_get_host_bridge_resources expects &pp->io_base to be a
-> >>>> resource_size_t*, but &io_base is u64*. This generates a warning
-> on
-> >>>> arm with the above change. Changing the the type in
-> >>>> drivers/pci/host/pcie-designware.h fixes this.
-> >>>>
-> >>>>
-> >>>> Thanks,
-> >>>>
-> >>>> James
-> >>>>
-> >>>
-> >>> OK, will modify this in next version.
-> >>>
-> >>> Best Regards and thanks again for your test, Zhou
-> >>>
-> >>>>> +	if (ret)
-> >>>>> +		return ret;
-> >>>>> +#endif
-> >>>>> +
-> >>>>> +	bus = pci_create_root_bus(pp->dev, pp->root_bus_nr,
-> >> &dw_pcie_ops,
-> >>>>> +			      pp, &res);
-> >>>>> +	if (!bus)
-> >>>>> +		return -ENOMEM;
-> >>>>> +
-> >>>>> +#ifdef CONFIG_GENERIC_MSI_IRQ_DOMAIN
-> >>>>> +	bus->msi = container_of(&pp->irq_domain, struct
-> >> msi_controller,
-> >>>>> +domain); #else
-> >>>>> +	bus->msi = &dw_pcie_msi_chip;
-> >>>>>  #endif
-> >>>>>
-> >>>>> -	dw_pci.nr_controllers = 1;
-> >>>>> -	dw_pci.private_data = (void **)&pp;
-> >>>>> +	pci_scan_child_bus(bus);
-> >>>>> +	if (pp->ops->scan_bus)
-> >>>>> +		pp->ops->scan_bus(pp);
-> >>>>>
-> >>>>> -	pci_common_init_dev(pp->dev, &dw_pci);
-> >>>>> +#ifdef CONFIG_ARM
-> >>>>> +	/* support old dtbs that incorrectly describe IRQs */
-> >>>>> +	pci_fixup_irqs(pci_common_swizzle,
-> >> of_irq_parse_and_map_pci);
-> >>>>> +#endif
-> >>>>> +
-> >>>>> +	pci_assign_unassigned_bus_resources(bus);
-> >>>>> +	pci_bus_add_devices(bus);
-> >>>>>
-> >>>>>  	return 0;
-> >>>>>  }
-> >>>>> @@ -653,7 +683,7 @@ static int dw_pcie_valid_config(struct
-> >>>>> pcie_port *pp,  static int dw_pcie_rd_conf(struct pci_bus *bus,
-> >> u32 devfn, int where,
-> >>>>>  			int size, u32 *val)
-> >>>>>  {
-> >>>>> -	struct pcie_port *pp = sys_to_pcie(bus->sysdata);
-> >>>>> +	struct pcie_port *pp = bus->sysdata;
-> >>>>>  	int ret;
-> >>>>>
-> >>>>>  	if (dw_pcie_valid_config(pp, bus, PCI_SLOT(devfn)) == 0)
-> >> { @@
-> >>>>> -677,7 +707,7 @@ static int dw_pcie_rd_conf(struct pci_bus *bus,
-> >>>>> u32 devfn, int where,  static int dw_pcie_wr_conf(struct pci_bus
-> >> *bus, u32 devfn,
-> >>>>>  			int where, int size, u32 val)
-> >>>>>  {
-> >>>>> -	struct pcie_port *pp = sys_to_pcie(bus->sysdata);
-> >>>>> +	struct pcie_port *pp = bus->sysdata;
-> >>>>>  	int ret;
-> >>>>>
-> >>>>>  	if (dw_pcie_valid_config(pp, bus, PCI_SLOT(devfn)) == 0) @@
-> >>>>> -701,64 +731,6 @@ static struct pci_ops dw_pcie_ops = {
-> >>>>>  	.write = dw_pcie_wr_conf,
-> >>>>>  };
-> >>>>>
-> >>>>> -static int dw_pcie_setup(int nr, struct pci_sys_data *sys) -{
-> >>>>> -	struct pcie_port *pp;
-> >>>>> -
-> >>>>> -	pp = sys_to_pcie(sys);
-> >>>>> -
-> >>>>> -	if (global_io_offset < SZ_1M && pp->io_size > 0) {
-> >>>>> -		sys->io_offset = global_io_offset - pp->io_bus_addr;
-> >>>>> -		pci_ioremap_io(global_io_offset, pp->io_base);
-> >>>>> -		global_io_offset += SZ_64K;
-> >>>>> -		pci_add_resource_offset(&sys->resources, &pp->io,
-> >>>>> -					sys->io_offset);
-> >>>>> -	}
-> >>>>> -
-> >>>>> -	sys->mem_offset = pp->mem.start - pp->mem_bus_addr;
-> >>>>> -	pci_add_resource_offset(&sys->resources, &pp->mem, sys-
-> >>> mem_offset);
-> >>>>> -	pci_add_resource(&sys->resources, &pp->busn);
-> >>>>> -
-> >>>>> -	return 1;
-> >>>>> -}
-> >>>>> -
-> >>>>> -static struct pci_bus *dw_pcie_scan_bus(int nr, struct
-> >>>>> pci_sys_data *sys) -{
-> >>>>> -	struct pci_bus *bus;
-> >>>>> -	struct pcie_port *pp = sys_to_pcie(sys);
-> >>>>> -
-> >>>>> -	pp->root_bus_nr = sys->busnr;
-> >>>>> -	bus = pci_create_root_bus(pp->dev, sys->busnr,
-> >>>>> -				  &dw_pcie_ops, sys, &sys->resources);
-> >>>>> -	if (!bus)
-> >>>>> -		return NULL;
-> >>>>> -
-> >>>>> -	pci_scan_child_bus(bus);
-> >>>>> -
-> >>>>> -	if (bus && pp->ops->scan_bus)
-> >>>>> -		pp->ops->scan_bus(pp);
-> >>>>> -
-> >>>>> -	return bus;
-> >>>>> -}
-> >>>>> -
-> >>>>> -static int dw_pcie_map_irq(const struct pci_dev *dev, u8 slot,
-> u8
-> >>>>> pin) -{
-> >>>>> -	struct pcie_port *pp = sys_to_pcie(dev->bus->sysdata);
-> >>>>> -	int irq;
-> >>>>> -
-> >>>>> -	irq = of_irq_parse_and_map_pci(dev, slot, pin);
-> >>>>> -	if (!irq)
-> >>>>> -		irq = pp->irq;
-> >>>>> -
-> >>>>> -	return irq;
-> >>>>> -}
-> >>>>> -
-> >>>>> -static struct hw_pci dw_pci = {
-> >>>>> -	.setup		= dw_pcie_setup,
-> >>>>> -	.scan		= dw_pcie_scan_bus,
-> >>>>> -	.map_irq	= dw_pcie_map_irq,
-> >>>>> -};
-> >>>>> -
-> >>>>>  void dw_pcie_setup_rc(struct pcie_port *pp)  {
-> >>>>>  	u32 val;
-> >>>>
-> >>>>
-> >>>> .
-> >>>>
-> >>>
-> >>>
-> >>> --
-> >>> To unsubscribe from this list: send the line "unsubscribe linux-
-> pci"
-> >>> in the body of a message to majordomo@vger.kernel.org More
-> majordomo
-> >>> info at  http://vger.kernel.org/majordomo-info.html
-> >>>
-> >
-> > .
-> >
+> > So need to have
+> > 	if (srp_not_disabled_in_dt(of))
+> >  		gadget->srp_support = 1;
 > 
+> Maybe you think it's common code called by every platform.
+> I am putting it in my chipidea driver.
+> 
+> > 
+> > > }
+> > > 2) In gadget driver:
+> > > if (gadget->srp_support)
+> > > 	attribute |= SRP;
+> > 
+> > Agreed.
+> > 
+> 
+> You may take a look my 9/22 patch to see how existing platform is handled:
+> 
+> 	if (gadget->adp_support || gadget->hnp_support ||
+> 					gadget->srp_support) {
+> 		/* means th
+> 		if (gadget->adp_support)
+> 			otg_desc->bmAttributes |= USB_OTG_ADP;
+> 		if (gadget->hnp_support)
+> 		otg_desc->bmAttributes |= USB_OTG_HNP;
+> 		if (gadget->srp_support)
+> 			otg_desc->bmAttributes |= USB_OTG_SRP;
+> 	} else {
+> 		otg_desc->bmAttributes = USB_OTG_SRP | USB_OTG_HNP;
+> 	}
+> 
+> This is common code will be called by every platform.
+
+So you are using  gadget->xyz_support flags to determine if it is a legacy
+platform and that's why we have a problem with having disable flags in DT.
+
+This also has a side effect of SRP and HNP being enabled for any platform
+even if enable-srp/enable-hnp is not set in DT.
+This will be more of a bug than supporting legacy users.
+
+Instead we could have ADP disabled by default for all cases
+and expect enable-adp in DT to get it enabled. SRP/HNP could still
+be disable flags.
+
+Then your above code reduces to
+
+		if (gadget->adp_support)
+ 			otg_desc->bmAttributes |= USB_OTG_ADP;
+ 		if (gadget->hnp_support)
+ 			otg_desc->bmAttributes |= USB_OTG_HNP;
+ 		if (gadget->srp_support)
+ 			otg_desc->bmAttributes |= USB_OTG_SRP;
+
+cheers,
+-roger
+
+> 
+> Those existing platforms do not use those new flags of gadget, so all are 0,
+> then otg_desc->bmAttributes = USB_OTG_SRP | USB_OTG_HNP. This is current
+> "wrong" way.
+> 
+> If any platform want to use any new flags, then He must fully understand
+> those flags and change accordingly, set gadget->xxx_support in its controller
+> driver either by dt, or by other way(hard code...what ever).
+> 
+> 
+> > > 
+> > > > > 1)If none of them are passed, but gadget->is_otg == 1, I suppose it's
+> > > > > legacy platform, still set HNP and SRP as current gadget driver does,
+> > > > > works as before;
+> > > > > 2)If any one of them appear, I will set all those features by dt property.
+> > > > > 3)If some platform already based on those properties, wants to disable
+> > > > > all 3 OTG features, also not pass any one of them like 1), it will not
+> > > > > be a OTG device at all, set gadget->is_otg = 0 in its controller driver,
+> > > > > then no need set and report any OTG features, this can meet ID pin detect
+> > > > > case.
+> > > > 
+> > > > With enable flags you don't get what you set.
+> > > > e.g. in DT, we might set enable-adp.
+> > > > but if controller doesn't support adp, you don't have ADP working.
+> > > > So this is misleading.
+> > > > 
+> > > 
+> > > Why someone might do that? If someone adds some property which is not supported
+> > > by its controller, of cos this feature cannot work.
+> > 
+> > OK.
+> > 
+> > > 
+> > > If some platform utilize those new properties, both enable and disable flags
+> > > can work, but for those existing platforms with HNP/SRP support, they have
+> > > no any new flags in its DT, I need make it work as before.
+> > 
+> > Right, existing platforms need to work as is without DT changes. So features
+> > have to be enabled by default. That's another reason why we need disable-flags
+> > and not enable-flags in DT.
+> 
+> You are right if current code enables all 3 features by default,
+> Unfortunately only SRP and HNP are enabled, ADP is disabled,  
+> 
+> The key point here is, if none of new properties is added, are there 2 cases
+> which we cannot differentiate one from the other? 
+> 
+> By disable flags, if none passed in dt, there are 2 cases:
+> 1) Legacy platforms(some may only support HNP and SRP, but no ADP).
+> 2) New platform, it can really support all 3 features. 
+> I cannot differentiate 1) from 2), to correct set 1), I have to add
+> "adp-disable" for a legacy platform.
+> 
+> By enable flags, if none passed in dt, there are 2 cases:
+> 1) Legacy platforms
+> 2) New platform, it cannot support any features, so it's not a OTG device
+>    at all. Then the gadget->is_otg is 0, no any OTG related report needed.
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
