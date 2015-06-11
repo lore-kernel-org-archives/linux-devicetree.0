@@ -1,66 +1,52 @@
-From: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
-Subject: Re: [PATCH 00/21] On-demand device registration
-Date: Thu, 11 Jun 2015 13:24:14 +0200
-Message-ID: <55796FDE.7080701@ahsoftware.de>
-References: <1432565608-26036-1-git-send-email-tomeu.vizoso@collabora.com>	<CACRpkdasLwMfEHGMRd1X3K_DU7NMPreE8TMwqqDTg8k9wj=wJQ@mail.gmail.com>	<CAAObsKCP-C+TY8Wkk6bQzxZeGYL9X01trtjxfaYp--ZnH07C+w@mail.gmail.com>	<CACRpkdZuSj+S2x1yz6n5PgcRK=3ZCcq_To124b2Y+Oj54aydpg@mail.gmail.com>	<5577F533.1060007@ahsoftware.de> <CACRpkdYF5K7ckGbgvZc6qRzGFJTQ4WqXdu_7Tcqczn2LkFbn3A@mail.gmail.com> <5579602F.1070801@ahsoftware.de>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH V2] added device tree support to gpio-generic driver
+Date: Thu, 11 Jun 2015 13:40:05 +0200
+Message-ID: <20150611114005.GF6325@pengutronix.de>
+References: <CACRpkdbWhtkMgz2qTg1y7AguLQCJXnAoi7gVnFvPb1sR7eES_g@mail.gmail.com>
+ <1434018735-10176-1-git-send-email-romain.baeriswyl@alitech.com>
+ <1434019336.14615543@f356.i.mail.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5579602F.1070801-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open-7NY9aMYB+ISttCpgsWEBFg@public.gmane.org, "list-7NY9aMYB+ISttCpgsWEBFg@public.gmane.org:DRM PANEL DRIVERS" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c@vg>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1434019336.14615543@f356.i.mail.ru>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Alexander Shiyan <shc_work@mail.ru>
+Cc: Romain Baeriswyl <romain.baeriswyl@alitech.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Christian Ruppert <christian.ruppert@alitech.com>, Anton Vorontsov <cbouatmailru@gmail.com>, Rojhalat Ibrahim <imr@rtschenk.de>, abdoulaye berthe <berthe.ab@gmail.com>, Anthony Fee <anthony.fee@emutex.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am 11.06.2015 um 12:17 schrieb Alexander Holler:
-> Am 11.06.2015 um 10:12 schrieb Linus Walleij:
->> On Wed, Jun 10, 2015 at 10:28 AM, Alexander Holler
->> <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org> wrote:
->>> Am 10.06.2015 um 09:30 schrieb Linus Walleij:
->>
->>>> i2c host comes out, probes the regulator driver, regulator driver
->>>> probes and then the regulator_get() call returns.
->>>>
->>>> This requires instrumentation on anything providing a resource
->>>> to another driver like those I mentioned and a lot of overhead
->>>> infrastructure, but I think it's the right approach. However I don't
->>>> know if I would ever be able to pull that off myself, I know talk
->>>> is cheap and I should show the code instead.
->>>
->>> You would end up with the same problem of deadlocks as currently, and
->>> you
->>> would still need something ugly like the defered probe brutforce to
->>> avoid
->>> them.
->>
->> Sorry I don't get that. Care to elaborate on why?
->
-> Because loading/initializing on demand doesn't give you any solved order
-> of drivers to initialize. And it can't because it has no idea about the
-> requirements of other drivers. The reason why it might work better in
-> the case of the tegra is that it might give you another initialization
-> order than the one which is currently choosen, which, by luck, might be
-> a better one.
->
-> But maybe I missed something, I haven't looked at the patches at all.
-> But just loading on demand, can't magically give you a working order of
-> drivers to initialize. E.g. how do you choose the first driver to
-> initialize?
+On Thu, Jun 11, 2015 at 01:42:16PM +0300, Alexander Shiyan wrote:
+> Hello.
+>=20
+> =D0=A7=D0=B5=D1=82=D0=B2=D0=B5=D1=80=D0=B3, 11 =D0=B8=D1=8E=D0=BD=D1=8F=
+ 2015, 12:32 +02:00 =D0=BE=D1=82 Romain Baeriswyl <romain.baeriswyl@ali=
+tech.com>:
+> > This patch adds support of device tree to the gpio-generic driver.
+> >=20
+> > Signed-off-by: Romain Baeriswyl <romain.baeriswyl@alitech.com>=20
+> > ---
+>=20
+> The only issue how the direction will be handled in this case?
 
-Other problems you will run into are time constraints and multithreaded 
-drivers.
+The bgpio driver uses named resources for the different registers, like
+"dat", "set", "clr", "dirout". That of course should be described in th=
+e
+binding.
 
-E.g. we all should know how tricky it sometimes is to avoid deadlocks. 
-And with loading on demand, you are extending this problem over the 
-initialization of maybe a whole bunch of other drivers which might be 
-started by calling one function of another driver. And a function call 
-might need a very long time to finish during which an unpredictable 
-amount of things may happen.
+Sascha
 
-It would make me wonder if that will end up with a good, usable and as 
-simple as possible solution.
-
-Regards,
-
-Alexander Holler
+--=20
+Pengutronix e.K.                           |                           =
+  |
+Industrial Linux Solutions                 | http://www.pengutronix.de/=
+  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0  =
+  |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-555=
+5 |
+--
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
