@@ -1,26 +1,24 @@
-From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Subject: Re: [linux-sunxi] Re: [PATCH v4 1/2] phy-sun4i-usb: Add full support
  for usb0 phy / OTG
-Date: Thu, 11 Jun 2015 18:37:24 +0900
-Message-ID: <557956D4.1090703@samsung.com>
-References: <1433088626-8858-1-git-send-email-hdegoede@redhat.com>
- <1433088626-8858-2-git-send-email-hdegoede@redhat.com> <55792122.20607@ti.com>
- <557941A6.5000306@samsung.com> <557944EE.1020303@redhat.com>
- <557946EC.3060607@samsung.com> <55794DEA.1050604@redhat.com>
- <557955D4.4030908@samsung.com>
+Date: Thu, 11 Jun 2015 11:38:53 +0200
+Message-ID: <5579572D.4070006@redhat.com>
+References: <1433088626-8858-1-git-send-email-hdegoede@redhat.com> <1433088626-8858-2-git-send-email-hdegoede@redhat.com> <55792122.20607@ti.com> <557941A6.5000306@samsung.com> <557944EE.1020303@redhat.com> <557946EC.3060607@samsung.com> <55794DEA.1050604@redhat.com> <557955D4.4030908@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <557955D4.4030908-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <557955D4.4030908-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/11/2015 06:33 PM, Chanwoo Choi wrote:
+Hi,
+
+On 11-06-15 11:33, Chanwoo Choi wrote:
 > Hi,
-> 
+>
 > On 06/11/2015 05:59 PM, Hans de Goede wrote:
 >> Hi,
 >>
@@ -86,23 +84,36 @@ On 06/11/2015 06:33 PM, Chanwoo Choi wrote:
 >> Needing a private API for a separate extcn driver actually is a good argument to
 >> NOT have a separate extcon driver and keep the extcon code in the phy-sun4i-usb code,
 >> where as I see no technical arguments in favor of a separate extcon driver.
-> 
+>
 > There is one technical issue.
-> 
+>
 > The extcon_set_cable_state() should be handled by extcon provider driver.
+
+That is something which can be done regardless of where the extcon provider
+driver code is located in the kernel tree...
+
 > because extcon_set_cable_state() inform the extcon client driver of the event
 > when detecting the change of h/w line (gpio line) or register of peripheral device.
-> 
+>
 > But, extcon client driver can now get the instance of extcon_dev structure
 > by extcon_get_edev_by_phandle() and then can change the cable state by using the extcon_set_cable_state().
-> 
+>
 > I think that these issue have to be protected by framework level.
 
-I fix wrong word. (protected -> prevented)
-- I think that these issue have to be prevented by framework level.
+Protecting this at the framework level would mean protecting it with code
+in drivers/extcon/extcon.c, that code will be used (and thus can protect
+things) regardless of where the extcon provider code lives.
 
-Thanks,
-Chanwoo Choi
+I really still see no technical reasons why all extcon provider code
+MUST be under drivers/extcon.
+
+As for the whole provider <-> client relation as argument, the same goes
+for irq-chips and any code with irq handlers, yet we have irc-chip drivers
+(irq providers) all over the place.
+
+Regards,
+
+Hans
 --
 To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
