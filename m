@@ -1,148 +1,92 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] phy-sun4i-usb: Add full support for
- usb0 phy / OTG
-Date: Thu, 11 Jun 2015 10:28:32 +0200
-Message-ID: <557946B0.4060308@redhat.com>
-References: <1433088626-8858-1-git-send-email-hdegoede@redhat.com> <1433088626-8858-2-git-send-email-hdegoede@redhat.com> <55792122.20607@ti.com> <55793F41.7000304@redhat.com>
-Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+From: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
+Subject: RE: [PATCH V3 1/4] mfd: da9062: DA9062 MFD core driver
+Date: Thu, 11 Jun 2015 08:27:57 +0000
+Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7014B22F4C4@SW-EX-MBX02.diasemi.com>
+References: <cover.1432041031.git.stwiss.opensource@diasemi.com>
+ <ecf72b79429e6758111a908fd1ded29c0b96da15.1432041031.git.stwiss.opensource@diasemi.com>
+ <20150526161024.GQ11677@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBNMN4WVQKGQEJJXUQVY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <55793F41.7000304-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: kishon-l0cyMroinI0@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-input-owner@vger.kernel.org
+To: 'Lee Jones' <lee.jones@linaro.org>
+Cc: LINUXKERNEL <linux-kernel@vger.kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Alessandro Zummo <a.zummo@towertech.it>, DEVICETREE <devicetree@vger.kernel.org>, David Dajun Chen <david.chen@diasemi.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, LINUXINPUT <linux-input@vger.kernel.org>, LINUXWATCHDOG <linux-watchdog@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, RTCLINUX <rtc-linux@googlegroups.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <Support.Opensource@diasemi.com>, Wim Van Sebroeck <wim@iguana.be>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 11-06-15 09:56, Hans de Goede wrote:
-> Hi,
->
-> On 11-06-15 07:48, Kishon Vijay Abraham I wrote:
->> +Chanwoo
->>
->> Hi,
->>
->> On Sunday 31 May 2015 09:40 PM, Hans de Goede wrote:
->>> The usb0 phy is connected to an OTG controller, and as such needs some special
->>> handling:
->>>
->>> 1) It allows explicit control over the pullups, enable these on phy_init and
->>> disable them on phy_exit.
->>>
->>> 2) It has bits to signal id and vbus detect to the musb-core, add support for
->>> for monitoring id and vbus detect gpio-s for use in dual role mode, and set
->>> these bits to the correct values for operating in host only mode when no
->>> gpios are specified in the devicetree.
->>>
->>> 3) When in dual role mode the musb sunxi glue needs to know if the a host or
->>> device cable is plugged in, so when in dual role mode register an extcon.
->>>
->>> While updating the devicetree binding documentation also add documentation
->>> for the sofar undocumented usage of regulators for vbus for all 3 phys.
->>>
->>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->>> ---
->>> Changes in v2:
->>> -Removed the sunxi specific phy functions, instead the id / vbus gpio polling
->>>   has been moved to the phy-sun4i-usb driver and their status is exported
->>>   through extcon for the sunxi-musb glue
->>> Changes in v3:
->>> -No changes
->>> Changes in v4:
->>> -Do not call regulator_disable in an unbalanced manner when an external vbus
->>>   is present
->>> ---
->>>   .../devicetree/bindings/phy/sun4i-usb-phy.txt      |  18 +-
->>>   drivers/phy/Kconfig                                |   1 +
->>>   drivers/phy/phy-sun4i-usb.c                        | 273 ++++++++++++++++++++-
->>>   3 files changed, 281 insertions(+), 11 deletions(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt b/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
->>> index 16528b9..557fa99 100644
->>> --- a/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
->>> +++ b/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
->>> @@ -23,6 +23,13 @@ Required properties:
->>>     * "usb1_reset"
->>>     * "usb2_reset" for sun4i, sun6i or sun7i
->>>
->>> +Optional properties:
->>> +- usb0_id_det-gpios : gpio phandle for reading the otg id pin value
->>> +- usb0_vbus_det-gpios : gpio phandle for detecting the presence of usb0 vbus
->>> +- usb0_vbus-supply : regulator phandle for controller usb0 vbus
->>> +- usb1_vbus-supply : regulator phandle for controller usb1 vbus
->>> +- usb2_vbus-supply : regulator phandle for controller usb2 vbus
->>> +
->>>   Example:
->>>       usbphy: phy@0x01c13400 {
->>>           #phy-cells = <1>;
->>> @@ -32,6 +39,13 @@ Example:
->>>           reg-names = "phy_ctrl", "pmu1", "pmu2";
->>>           clocks = <&usb_clk 8>;
->>>           clock-names = "usb_phy";
->>> -        resets = <&usb_clk 1>, <&usb_clk 2>;
->>> -        reset-names = "usb1_reset", "usb2_reset";
->>> +        resets = <&usb_clk 0>, <&usb_clk 1>, <&usb_clk 2>;
->>> +        reset-names = "usb0_reset", "usb1_reset", "usb2_reset";
->>> +        pinctrl-names = "default";
->>> +        pinctrl-0 = <&usb0_id_detect_pin>, <&usb0_vbus_detect_pin>;
->>> +        usb0_id_det-gpios = <&pio 7 19 GPIO_ACTIVE_HIGH>; /* PH19 */
->>> +        usb0_vbus_det-gpios = <&pio 7 22 GPIO_ACTIVE_HIGH>; /* PH22 */
->>> +        usb0_vbus-supply = <&reg_usb0_vbus>;
->>> +        usb1_vbus-supply = <&reg_usb1_vbus>;
->>> +        usb2_vbus-supply = <&reg_usb2_vbus>;
->>>       };
->>> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
->>> index a53bd5b..4614fba 100644
->>> --- a/drivers/phy/Kconfig
->>> +++ b/drivers/phy/Kconfig
->>> @@ -173,6 +173,7 @@ config PHY_SUN4I_USB
->>>       tristate "Allwinner sunxi SoC USB PHY driver"
->>>       depends on ARCH_SUNXI && HAS_IOMEM && OF
->>>       depends on RESET_CONTROLLER
->>> +    select EXTCON
->>
->> Avoid using 'select' on visible Kconfig symbols.
->
-> Ok, I'll do a v5 changing this to a depends on.
->
->> Also please split the patch to make the reviewing a bit easier.
->
-> There really is not much which can be split out, the iscr register
-> updating is only done from the id / vbus det scanning, so the 2 are
-> intertwined with each other.
->
-> Also I must say I'm unhappy with the fact that you request this now,
-> after this patch has been posted in its current form a long time
-> ago already. The changes in v3 and v4 were very minimal, the
-> patch has existed in this for since v2, so you've had a long long
-> time to request changes like this already.
->
-> In the mean time I've build a whole set of related changes (enabling
-> the use of otg on newer versions of the sunxi soc), so sorry I'm
-> not going to split this up now as that is going to be a big pain
-> with all the extra patches which are sitting on top, and as said
-> there really is not that much to split in the first place.
->
-> I'll send out a v5 of this patch together with a resend of all the
-> patches adding support for new models which sit on top of this one
-> (and which I've already send before).
-
-Correction: Since I need to rework the extcon bits for the new extcon
-API in 4.2 anyways, I will split out the extcon bits, so you will
-get 2 patches in v5, one adding the id / vbus det gpio scanning +
-iscr register updating to reflect the detected status and one on
-top adding extcon support so that the musb glue can respond
-to id-pin changes.
-
-
-Regards,
-
-Hans
+T24gMjggTWF5IDIwMTUgMTM6NTMsIFN0ZXZlIFR3aXNzIHdyb3RlOg0KDQo+IFRvOiAnTGVlIEpv
+bmVzJw0KPiBTdWJqZWN0OiBSRTogW1BBVENIIFYzIDEvNF0gbWZkOiBkYTkwNjI6IERBOTA2MiBN
+RkQgY29yZSBkcml2ZXINCj4gDQo+IEhpIExlZSwNCj4gDQo+IEkgd2lsbCByZWZhY3RvciBhIGxv
+dCBvZiB0aGUgZHJpdmVyIGFuZCBpbXBsZW1lbnQgeW91ciBjaGFuZ2VzIGFzIHJlcXVlc3RlZC4N
+Cg0KSGkgTGVlLA0KDQpJIHJlYWxpc2UgdGhpcyBpcyBhIGJ1c3kga2VybmVsIHRpbWUgZm9yIHlv
+dSwgYXMgZXZlciwgc28gdGhpcyBpcyBqdXN0IHRvIHNlZSBpZiBJIGFtDQptaXNzaW5nIGFueXRo
+aW5nIHdpdGggdGhlIHJlcGx5IEkgc2VudCBhYm91dCB0aGUgcmVxdWVzdGVkIGFsdGVyYXRpb25z
+IGEgY291cGxlDQpvZiB3ZWVrcyBhZ28uIA0KDQpJdCByZWxhdGVzIHRvIHRoZSBhZGRpdGlvbiBv
+ZiBzdXBwb3J0IGZvciB0aGUgRGlhbG9nIERBOTA2MiBQb3dlciBNYW5hZ2VtZW50IElDDQogLSBo
+dHRwczovL2xrbWwub3JnL2xrbWwvMjAxNS81LzI4LzM1OA0KDQpUaGUgbWFpbiBjaGFuZ2VzIHJl
+cXVlc3RlZCAoZm9yIHRoZSBjb3JlIE1GRCkgY2FuIGJlIGZvdW5kIGluIGhlcmU6DQogLSBodHRw
+czovL2xrbWwub3JnL2xrbWwvMjAxNS81LzI4LzM1OQ0KDQpJIGJlbGlldmUgdGhhdCB0aGUgb25s
+eSB0d28gbWFqb3IgZGlmZmVyZW5jZXMgd2l0aCB5b3VyIHByZXZpb3VzIGNvbW1lbnRzIHdlcmUg
+DQp0aG9zZSByZWxhdGluZyB0byB0aGUgaW50ZXJydXB0IGhhbmRsZXIgZGE5MDYyX3ZkZF93YXJu
+X2V2ZW50KCkgLS0gd2hpY2ggDQpoYXMgYmVlbiBlcmFzZWQsICBhbmQgdGhlIGhlYWRlciBmaWxl
+IC0tIHdoaWNoIEkgd291bGQgcHJlZmVyIHRoZSB0byByZW1haW4NClttb3N0bHldIHVudG91Y2hl
+ZCBpZiBwb3NzaWJsZS4NCg0KVGhlIHJlYXNvbnMgZm9yIHRoZXNlIHR3byBkaWZmZXJlbmNlcyBh
+cmUgZGVzY3JpYmVkIGJlbG93Og0KDQo+ID4gPiArCS8qIFZERCBXQVJOIGV2ZW50IHN1cHBvcnQg
+Ki8NCj4gPiA+ICsJaXJxX3ZkZF93YXJuID0gcmVnbWFwX2lycV9nZXRfdmlycShjaGlwLT5yZWdt
+YXBfaXJxLA0KPiA+ID4gKwkJCQkJICAgREE5MDYyX0lSUV9WRERfV0FSTik7DQo+ID4gPiArCWlm
+IChpcnFfdmRkX3dhcm4gPCAwKSB7DQo+ID4gPiArCQlkZXZfZXJyKGNoaXAtPmRldiwgIkZhaWxl
+ZCB0byBnZXQgSVJRLlxuIik7DQo+ID4gPiArCQlyZXR1cm4gaXJxX3ZkZF93YXJuOw0KPiA+ID4g
+Kwl9DQo+ID4gPiArCWNoaXAtPmlycV92ZGRfd2FybiA9IGlycV92ZGRfd2FybjsNCj4gPiA+ICsN
+Cj4gPiA+ICsJcmV0ID0gZGV2bV9yZXF1ZXN0X3RocmVhZGVkX2lycShjaGlwLT5kZXYsIGlycV92
+ZGRfd2FybiwNCj4gPiA+ICsJCQkJCU5VTEwsIGRhOTA2Ml92ZGRfd2Fybl9ldmVudCwNCj4gPiA+
+ICsJCQkJCUlSUUZfVFJJR0dFUl9MT1cgfCBJUlFGX09ORVNIT1QsDQo+ID4gPiArCQkJCQkiVkRE
+X1dBUk4iLCBjaGlwKTsNCj4gPiA+ICsJaWYgKHJldCkgew0KPiA+ID4gKwkJZGV2X3dhcm4oY2hp
+cC0+ZGV2LA0KPiA+ID4gKwkJCSAiRmFpbGVkIHRvIHJlcXVlc3QgVkREX1dBUk4gSVJRLlxuIik7
+DQo+ID4gPiArCQljaGlwLT5pcnFfdmRkX3dhcm4gPSAtRU5YSU87DQo+ID4gPiArCX0NCj4gPg0K
+PiA+IFRoaXMgbG9va3MgbGlrZSBhIGxvdCBvZiBjb2RlLCB3aGljaCBkb2Vzbid0IHJlYWxseSBk
+byBhbnl0aGluZy4gIFdoYXQNCj4gPiBpcyBhIFZERCB3YXJuaW5nIGluZGljYXRvciBhbnl3YXk/
+DQo+ID4NCj4gDQo+IEkgd2lsbCByZW1vdmUgdGhpcy4NCj4gDQo+IFRoZSBJUlEgaGFuZGxlciBk
+YTkwNjJfdmRkX3dhcm5fZXZlbnQoKSAtLSBzZWUgZWFybGllciBhYm92ZSAtLSBkb2VzDQo+IG5v
+dCBjdXJyZW50bHkgZG8gYW55dGhpbmcgYXBhcnQgZnJvbSBoYW5kbGUgdGhlIElSUSB0aGF0IHdh
+cyByZXF1ZXN0ZWQNCj4gaGVyZS4gSXQgcHJpbnRzIGEgc3RhdGVtZW50IHRvIHNheSB0aGUgbWFp
+biBQTUlDIHZvbHRhZ2Ugc3VwcGx5IGRyb3BwZWQNCj4gYmVsb3cgYSBkZWZpbmVkIHRyaWdnZXIg
+cG9pbnQsIGJ1dCBkb2Vzbid0IGFjdHVhbGx5IGRvIGFueXRoaW5nIHRvIG1pdGlnYXRlDQo+IHRo
+aXMgcHJvYmxlbS4NCj4gDQo+IFByZXZpb3VzbHkgdGhpcyBWRERfV0FSTiB3YXMgaW4gdGhlIHJl
+Z3VsYXRvciBkcml2ZXIsIGhvd2V2ZXIgaXQgc2hvdWxkDQo+IGJlIG1hZGUgYXZhaWxhYmxlIGV2
+ZW4gaWYgdGhlIHJlZ3VsYXRvciBkcml2ZXIgaXMgbm90IGluc3RhbGxlZCAtLSBzbyBJIGFkZGVk
+IGl0DQo+IHRvIHRoZSBjb3JlIGluc3RlYWQuDQo+IA0KPiBJbiBhIHByZXZpb3VzIGRyaXZlciBz
+dWJtaXNzaW9uIEkgaGFkIGEgc2ltaWxhciBwcm9ibGVtLCBhIHdhcm5pbmcgSVJRIHdhcw0KPiBq
+dXN0IHByaW50aW5nIHRvIHRoZSBjb25zb2xlIHRvIHNheSB0aGVyZSB3YXMgYW4gZXJyb3IgLS0g
+dGhlIGhhbmRsZXIgYW5kDQo+IElSUSBjb2RlIHdhcyBwdXQgaW4gYnkgbWUgc28gaXQgY291bGQg
+YmUgdXNlZCBpZiB0aGUgZHJpdmVyIHdhcyB0YWtlbiBhbmQNCj4gaW50ZWdyYXRlZCBpbnRvIGEg
+ZnVsbHkgd29ya2luZyBzeXN0ZW0uDQo+IA0KPiBJIHdhcyBhc2tlZCB0byByZW1vdmUgaXQgaW4g
+dGhlIG90aGVyIGRyaXZlciAtLSBhbmQgSSBoYXZlIGRvbmUgdGhlIHNhbWUNCj4gaGVyZSBmb3Ig
+bm93LiBJIGNhbiBhbHdheXMgYWRkIGl0IGJhY2sgbGF0ZXIuDQo+IA0KDQpBbmQNCg0KPiA+ID4g
+ZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvbWZkL2RhOTA2Mi9yZWdpc3RlcnMuaA0KPiA+IGIv
+aW5jbHVkZS9saW51eC9tZmQvZGE5MDYyL3JlZ2lzdGVycy5oDQo+ID4gPiBuZXcgZmlsZSBtb2Rl
+IDEwMDY0NA0KPiA+ID4gaW5kZXggMDAwMDAwMC4uZDA3YzJiYw0KPiA+ID4gLS0tIC9kZXYvbnVs
+bA0KPiA+ID4gKysrIGIvaW5jbHVkZS9saW51eC9tZmQvZGE5MDYyL3JlZ2lzdGVycy5oDQo+IA0K
+PiBbLi4uXQ0KPiANCj4gPiA+ICsvKg0KPiA+ID4gKyAqIFJlZ2lzdGVycw0KPiA+ID4gKyAqLw0K
+PiA+DQo+ID4gUmVhbGx5PyA7KQ0KPiA+DQo+ID4gPiArI2RlZmluZSBEQTkwNjJBQV9QQUdFX0NP
+TgkJMHgwMDANCj4gPiA+ICsjZGVmaW5lIERBOTA2MkFBX1NUQVRVU19BCQkweDAwMQ0KPiA+ID4g
+KyNkZWZpbmUgREE5MDYyQUFfU1RBVFVTX0IJCTB4MDAyDQo+IA0KPiBbLi4uXQ0KPiANCj4gPiA+
+ICsNCj4gPiA+ICsvKg0KPiA+ID4gKyAqIEJpdCBmaWVsZHMNCj4gPiA+ICsgKi8NCj4gPiA+ICsN
+Cj4gPiA+ICsvKiBEQTkwNjJBQV9QQUdFX0NPTiA9IDB4MDAwICovDQo+ID4gPiArI2RlZmluZSBE
+QTkwNjJBQV9QQUdFX1NISUZUCQkwDQo+ID4gPiArI2RlZmluZSBEQTkwNjJBQV9QQUdFX01BU0sJ
+CSgweDNmIDw8IDApDQo+ID4gPiArI2RlZmluZSBEQTkwNjJBQV9XUklURV9NT0RFX1NISUZUCTYN
+Cj4gPiA+ICsjZGVmaW5lIERBOTA2MkFBX1dSSVRFX01PREVfTUFTSwkoMHgwMSA8PCA2KQ0KPiA+
+DQo+ID4gRm9yIDEgPDwgWCwgeW91IHNob3VsZCB1c2UgQklUKFgpLg0KPiA+DQo+IA0KPiBGb3Ig
+dGhlIHR3byBjb21tZW50cyBhYm92ZSAiUmVnaXN0ZXJzIiBhbmQgIkJpdCBmaWVsZHMiIGFuZCB0
+aGUgKDE8PHgpDQo+IGRlZmluaXRpb25zIC4uLg0KPiANCj4gVGhlIHdob2xlIG9mIHRoaXMgZmls
+ZSBpcyBhdXRvbWF0aWNhbGx5IGdlbmVyYXRlZCBieSBvdXIgaGFyZHdhcmUgZGVzaWduZXJzDQo+
+IEkgd291bGQgcHJlZmVyIGl0IGlmIHRoZSByZWdpc3RlciBkZWZpbml0aW9ucyBhbmQgYml0IGZp
+ZWxkcyBhcmUgbm90IGFsdGVyZWQgdXNpbmcNCj4gdGhlICNkZWZpbmUgQklUKG5yKSAoMVVMPDwo
+bnIpKSBtYWNybyBhbmQgdGhlIGNvbW1lbnRzIHJlbW92ZWQgYmVjYXVzZQ0KPiB3ZSBoYXZlIHNj
+cmlwdHMgdGhhdCBjYW4gYmUgdXNlZCB0byBjaGVjayB0aGlzIGZpbGUgYXV0b21hdGljYWxseS4N
+Cj4gDQo+IEFsc28gaWYgdGhlIHJlZ2lzdGVyIG1hcCBpcyBldmVyIHVwZGF0ZWQsIHRoZW4gaXQg
+d2lsbCBiZSBlYXNpZXIgZm9yIG1lIHRvIGRpZmYNCj4gdGhlIG5ldyBkZWxpdmVyZWQgcmVnaXN0
+ZXIgYW5kIGJpdCBmaWVsZCBkZWZpbml0aW9ucyB3aXRoIHRoZSBvbGQgb25lLg0KPiANCj4gTXkg
+cHJlZmVyZW5jZSB3b3VsZCBiZSBub3QgdG8gY2hhbmdlIHRoaXMgaGVhZGVyIGZpbGUuDQo+IA0K
+PiBbLi4uXQ0KIA0KSWYgdGhlc2UgbGFzdCB0d28gdGhpbmdzIGFyZSBhIHByb2JsZW0gY2FuIHlv
+dSBwbGVhc2UgbGV0IG1lIGtub3cuDQoNCnJlZ2FyZHMsDQpTdGV2ZQ0K
