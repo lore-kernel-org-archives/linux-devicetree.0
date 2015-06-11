@@ -1,127 +1,179 @@
-From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: Re: [PATCH v4 1/2] phy-sun4i-usb: Add full support
- for usb0 phy / OTG
-Date: Thu, 11 Jun 2015 19:30:38 +0900
-Message-ID: <5579634E.9080004@samsung.com>
-References: <1433088626-8858-1-git-send-email-hdegoede@redhat.com>
- <1433088626-8858-2-git-send-email-hdegoede@redhat.com> <55792122.20607@ti.com>
- <557941A6.5000306@samsung.com> <557944EE.1020303@redhat.com>
- <557946EC.3060607@samsung.com> <55794DEA.1050604@redhat.com>
- <557955D4.4030908@samsung.com> <5579572D.4070006@redhat.com>
-Reply-To: cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDL3F4G2ZAIBBUGG4WVQKGQEYPSVTDA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-reply-to: <5579572D.4070006-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Romain Baeriswyl <romain.baeriswyl@alitech.com>
+Subject: [PATCH V2] added device tree support to gpio-generic driver
+Date: Thu, 11 Jun 2015 12:32:15 +0200
+Message-ID: <1434018735-10176-1-git-send-email-romain.baeriswyl@alitech.com>
+References: <CACRpkdbWhtkMgz2qTg1y7AguLQCJXnAoi7gVnFvPb1sR7eES_g@mail.gmail.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdbWhtkMgz2qTg1y7AguLQCJXnAoi7gVnFvPb1sR7eES_g@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Christian Ruppert <christian.ruppert@alitech.com>, Anton Vorontsov <cbouatmailru@gmail.com>, Rojhalat Ibrahim <imr@rtschenk.de>, abdoulaye berthe <berthe.ab@gmail.com>, Anthony Fee <anthony.fee@emutex.com>, Alexander Shiyan <shc_work@mail.ru>, devicetree@vger.kernel.org
+Cc: Romain Baeriswyl <romain.baeriswyl@alitech.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This patch adds support of device tree to the gpio-generic driver.
 
-On 06/11/2015 06:38 PM, Hans de Goede wrote:
-> Hi,
-> 
-> On 11-06-15 11:33, Chanwoo Choi wrote:
->> Hi,
->>
->> On 06/11/2015 05:59 PM, Hans de Goede wrote:
->>> Hi,
->>>
->>> On 11-06-15 10:29, Chanwoo Choi wrote:
->>>> Hi Hans,
->>>>
->>>> On 06/11/2015 05:21 PM, Hans de Goede wrote:
->>>>> Hi Chanwoo,
->>>>>
->>>>> Thanks for the quick review.
->>>>>
->>>>> On 11-06-15 10:07, Chanwoo Choi wrote:
->>>>>> Hi Hans,
->>>>>>
->>>>>> I add the comment about extcon-related code.
->>>>>>
->>>>>> Firstly,
->>>>>> I'd like you to implment the extcon driver for phy-sun4i-usb device
->>>>>> in drivers/extcon/ directoryby using MFD
->>>>>
->>>>> No, just no, this is not what the MFD framework is for, the usb-phy
->>>>> in question here is not a multifunction device. The MFD framework
->>>>> is intended for true multi-function devices like i2c attached
->>>>> PMICs which have regulators, gpios, pwm, input (power button),
->>>>> chargers, power-supply, etc. That is NOT the case here.
->>>>>
->>>>> Also moving this to the MFD framework would very likely requiring
->>>>> the devicetree binding for the usb-phy to change which we cannot
->>>>> do as that would break the devicetree ABI.
->>>>>
->>>>>> because there are both extcon
->>>>>> provider driver and extcon client driver. I think that all extcon
->>>>>> provider driver better to be included in drivers/extcon/ directory.
->>>>>> extcon_set_cable_state() function should be handled in extcon provider
->>>>>> driver which is incluced in drivers/extcon/ directory.
->>>>>
->>>>> I do not find this a compelling reason, there are plenty of subsystems
->>>>> where not all implementations of the subsystem class live in the subsystem
->>>>> directory, e.g. input and hwmon devices are often also found outside of
->>>>> the input and hwmon driver directories.
->>>>
->>>> There are difference on between input/hwmon and extcon.
->>>>
->>>> Because input and hwmon driver implement the only one type driver as provider driver.
->>>> But, extcon implement the two type driver of both extcon provider and extcon client driver.
->>>> The extcon is similiar with regulator and clock framework as resource.
->>>>
->>>> extcon provider driver to provider the event when the state of external connector is changed.
->>>> - devm_extcon_dev_register()
->>>> - e.g., almost extcon provider driver are included in 'drivers/extcon/' directory.
->>>
->>> I understand, but that does not change my first argument, that the usb-phy is not
->>> a MFD device. And although it may be desirable to keep extcon provider drivers
->>> in the drivers/extcon, there are no technical reasons to do so.
->>>
->>> The whole reason why Kishon asked me to start using the extcon framework is to avoid
->>> adding a private API to the phy-sun4i-usb code for notifying the musb-sunxi code
->>> about otg-id-pin status changes. Adding a separate driver for just the extcon bits
->>> means re-adding a private api to the phy-sun4i-usb code but this time for the
->>> extcon code, at which point we might just as well skip extcon and have the
->>> musb-sunxi glue code call directly into the phy-sun4i-usb code...
->>>
->>> Needing a private API for a separate extcn driver actually is a good argument to
->>> NOT have a separate extcon driver and keep the extcon code in the phy-sun4i-usb code,
->>> where as I see no technical arguments in favor of a separate extcon driver.
->>
->> There is one technical issue.
->>
->> The extcon_set_cable_state() should be handled by extcon provider driver.
-> 
-> That is something which can be done regardless of where the extcon provider
-> driver code is located in the kernel tree...
-> 
->> because extcon_set_cable_state() inform the extcon client driver of the event
->> when detecting the change of h/w line (gpio line) or register of peripheral device.
->>
->> But, extcon client driver can now get the instance of extcon_dev structure
->> by extcon_get_edev_by_phandle() and then can change the cable state by using the extcon_set_cable_state().
->>
->> I think that these issue have to be protected by framework level.
-> 
-> Protecting this at the framework level would mean protecting it with code
-> in drivers/extcon/extcon.c, that code will be used (and thus can protect
-> things) regardless of where the extcon provider code lives.
-> 
-> I really still see no technical reasons why all extcon provider code
-> MUST be under drivers/extcon.
+Signed-off-by: Romain Baeriswyl <romain.baeriswyl@alitech.com> 
+---
+ .../devicetree/bindings/gpio/gpio-generic.txt      |   17 +++++
+ drivers/gpio/gpio-generic.c                        |   72 +++++++++++++++----
+ include/linux/basic_mmio_gpio.h                    |    1 +
+ 3 files changed, 75 insertions(+), 15 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-generic.txt
 
-OK. As you said, this issue shold be prevented on framework.
-I'm considering what is appropriate method to resolve this issue.
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-generic.txt b/Documentation/devicetree/bindings/gpio/gpio-generic.txt
+new file mode 100644
+index 0000000..20e3727
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio-generic.txt
+@@ -0,0 +1,17 @@
++Bindings for gpio-generic
++
++Required properties:
++- compatible : should be "single-register-gpio"
++- ngpios: specifies the number of gpio mapped in the register from bit 0 to
++          bit ngpios-1. The value is limited to the number of bits of the
++	  LONG type.
++
++Optional property:
++- big-endian: tells that register is big endian.
++
++Examples:
++
++	gpio_a {
++		compatible = "single-register-gpio";
++		ngpios = <32>;
++	};
+diff --git a/drivers/gpio/gpio-generic.c b/drivers/gpio/gpio-generic.c
+index b92a690..8143c10 100644
+--- a/drivers/gpio/gpio-generic.c
++++ b/drivers/gpio/gpio-generic.c
+@@ -61,6 +61,8 @@ o        `                     ~~~~\___/~~~~    ` controller in FPGA is ,.`
+ #include <linux/platform_device.h>
+ #include <linux/mod_devicetable.h>
+ #include <linux/basic_mmio_gpio.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
+ 
+ static void bgpio_write8(void __iomem *reg, unsigned long data)
+ {
+@@ -564,6 +566,46 @@ static void __iomem *bgpio_map(struct platform_device *pdev,
+ 	return ret;
+ }
+ 
++static const struct platform_device_id bgpio_id_table[] = {
++	{
++		"basic-mmio-gpio",
++		.driver_data	= 0,
++	}, {
++		"basic-mmio-gpio-be",
++		.driver_data	= BGPIOF_BIG_ENDIAN
++	},
++	{ },
++};
++MODULE_DEVICE_TABLE(platform, bgpio_id_table);
++
++static const struct of_device_id  bgpio_dt_ids[] = {
++	{ .compatible = "single-register-gpio" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, bgpio_dt_ids);
++
++static int bgpio_parse_dt(struct device *dev)
++{
++	struct bgpio_pdata *pdata;
++
++	pdata = devm_kzalloc(dev, sizeof(struct bgpio_pdata),
++			     GFP_KERNEL);
++	if (!pdata)
++		return -ENOMEM;
++
++	if (of_property_read_u32(dev->of_node, "ngpio", &pdata->ngpio)) {
++		dev_err(dev, "Failed to get field ngpio");
++		return -EINVAL;
++	}
++	pdata->base = -1;
++
++	if (of_device_is_big_endian(dev->of_node))
++		pdata->flags = BGPIOF_BIG_ENDIAN;
++
++	dev->platform_data = pdata;
++	return 0;
++}
++
+ static int bgpio_pdev_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+@@ -574,10 +616,21 @@ static int bgpio_pdev_probe(struct platform_device *pdev)
+ 	void __iomem *dirout;
+ 	void __iomem *dirin;
+ 	unsigned long sz;
+-	unsigned long flags = pdev->id_entry->driver_data;
+ 	int err;
+ 	struct bgpio_chip *bgc;
+-	struct bgpio_pdata *pdata = dev_get_platdata(dev);
++	struct bgpio_pdata *pdata;
++
++	if (of_have_populated_dt()) {
++		err = bgpio_parse_dt(dev);
++		if (err < 0) {
++			dev_err(dev, "Failed to get DT data\n");
++			return err;
++		}
++	}
++	pdata = dev_get_platdata(dev);
++
++	if (!of_have_populated_dt())
++		pdata->flags = pdev->id_entry->driver_data;
+ 
+ 	r = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dat");
+ 	if (!r)
+@@ -609,7 +662,8 @@ static int bgpio_pdev_probe(struct platform_device *pdev)
+ 	if (!bgc)
+ 		return -ENOMEM;
+ 
+-	err = bgpio_init(bgc, dev, sz, dat, set, clr, dirout, dirin, flags);
++	err = bgpio_init(bgc, dev, sz, dat, set, clr, dirout, dirin,
++			 pdata->flags);
+ 	if (err)
+ 		return err;
+ 
+@@ -633,18 +687,6 @@ static int bgpio_pdev_remove(struct platform_device *pdev)
+ 	return bgpio_remove(bgc);
+ }
+ 
+-static const struct platform_device_id bgpio_id_table[] = {
+-	{
+-		.name		= "basic-mmio-gpio",
+-		.driver_data	= 0,
+-	}, {
+-		.name		= "basic-mmio-gpio-be",
+-		.driver_data	= BGPIOF_BIG_ENDIAN,
+-	},
+-	{ }
+-};
+-MODULE_DEVICE_TABLE(platform, bgpio_id_table);
+-
+ static struct platform_driver bgpio_driver = {
+ 	.driver = {
+ 		.name = "basic-mmio-gpio",
+diff --git a/include/linux/basic_mmio_gpio.h b/include/linux/basic_mmio_gpio.h
+index 0e97856..d85d9ca 100644
+--- a/include/linux/basic_mmio_gpio.h
++++ b/include/linux/basic_mmio_gpio.h
+@@ -22,6 +22,7 @@ struct bgpio_pdata {
+ 	const char *label;
+ 	int base;
+ 	int ngpio;
++	int flags;
+ };
+ 
+ struct device;
+-- 
+1.7.1
 
-Thanks,
-Chanwoo Choi
+*********************************************************
+This message contains information that may be confidential and/or privileged and is intended only for the individual or entity named in the body of email above. If this message has been received in error, your receipt of this message is not intended to waive any applicable privilege. No one else may disclose, copy, distribute or use the contents of this message. Unauthorized use, dissemination and duplication is strictly prohibited, and may be unlawful.
+
+
+
+
