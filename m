@@ -1,45 +1,37 @@
-From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Subject: [PATCH v2] ARM: BCM5301X: activate some additional options in pl310 cache controller
-Date: Thu, 11 Jun 2015 23:03:55 +0200
-Message-ID: <1434056635-6880-1-git-send-email-hauke@hauke-m.de>
+From: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [linux-nfc] [PATCH v3 0/2] Marvell NFC NCI UART driver and DT
+ configuration
+Date: Thu, 11 Jun 2015 23:44:00 +0200
+Message-ID: <20150611214400.GD10011@ribalta.mp.intel.com>
+References: <1434024020-17048-1-git-send-email-cuissard@marvell.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1434024020-17048-1-git-send-email-cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, fainelli-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nbd-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+To: Vincent Cuissard <cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-In the default Broadcom SDK the shared override is activated for this
-cache controller, do the same in the upstream code. Data and
-instruction prefetching is not activated by default for this cache
-controller on the bcm53xx SoC, do it manually like it is done in the
-vendor SDK.
+Hi Vincent,
 
-Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
----
+On Thu, Jun 11, 2015 at 02:00:18PM +0200, Vincent Cuissard wrote:
+> Hi,
+> 
+> Please find patches that add platform data configuration, DT bindings,
+> and UART driver for nfcmrvl NFC NCI driver.
+> 
+> Br,
+> Vincent
+> 
+> Vincent Cuissard (2):
+>   NFC: nfcmrvl: add platform_data and DT configuration
+>   NFC: nfcmrvl: add UART driver
+Both patches applied to nfc-next, thanks a lot.
 
-changes since v1:
- * remove the arm prefix in prefetch-data and prefetch-instr.
-
- arch/arm/boot/dts/bcm5301x.dtsi | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/arch/arm/boot/dts/bcm5301x.dtsi b/arch/arm/boot/dts/bcm5301x.dtsi
-index 78aec62..589b285 100644
---- a/arch/arm/boot/dts/bcm5301x.dtsi
-+++ b/arch/arm/boot/dts/bcm5301x.dtsi
-@@ -78,6 +78,9 @@
- 			compatible = "arm,pl310-cache";
- 			reg = <0x2000 0x1000>;
- 			cache-unified;
-+			arm,shared-override;
-+			prefetch-data = <1>;
-+			prefetch-instr = <1>;
- 			cache-level = <2>;
- 		};
- 	};
--- 
-2.1.4
-
+Cheers,
+Samuel.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
