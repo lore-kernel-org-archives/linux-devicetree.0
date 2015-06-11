@@ -1,69 +1,48 @@
-From: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-Subject: [PATCH] video: sm501fb: fixing static checker warning
-Date: Thu, 11 Jun 2015 15:13:13 +0200
-Message-ID: <1434028393-32224-1-git-send-email-hs@denx.de>
+From: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: add vendor prefix for Netxeon Technology
+Date: Thu, 11 Jun 2015 15:43:52 +0200
+Message-ID: <CABgxDoJWJAguvoPLr1dwBZj4TaJFZFXmyL56f5jNPCwc7d4Qqw@mail.gmail.com>
+References: <19362183.0Io0nOHtsp@phil>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <19362183.0Io0nOHtsp@phil>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rasmus Villemoes <linux-qQsb+v5E8BnlAoU/VqSP6n9LOBIZ5rWg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "pawel.moll" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, ijc+devicetree <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Dan Carpenter reported the static checker warning:
+Signed-off-by: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-drivers/video/fbdev/sm501fb.c:1958 sm501fb_probe()
-warn: strcpy() 'cp' of unknown size might be too large for 'fb_mode'
+for the whole serie
 
-Fix it, as the SM501 datasheet says the SM501 can "200 MHz
-DAC support 1280x1024 resolution", which would result in a
-too long mode string for current fb_mode var.
-
-Reported-by: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
----
-
- drivers/video/fbdev/sm501fb.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/video/fbdev/sm501fb.c b/drivers/video/fbdev/sm501fb.c
-index 9e74e8f..ea50df3 100644
---- a/drivers/video/fbdev/sm501fb.c
-+++ b/drivers/video/fbdev/sm501fb.c
-@@ -43,7 +43,9 @@
- 
- #include "edid.h"
- 
--static char *fb_mode = "640x480-16@60";
-+static char *fb_default_mode = "640x480-16@60";
-+static char fb_mode[20];
-+static char *fb_mode_cmdline;
- static unsigned long default_bpp = 16;
- 
- static struct fb_videomode sm501_default_mode = {
-@@ -1963,6 +1965,12 @@ static int sm501fb_probe(struct platform_device *pdev)
- 				if (info->edid_data)
- 					found = 1;
- 			}
-+		} else {
-+			if (fb_mode_cmdline)
-+				strncpy(fb_mode, fb_mode_cmdline,
-+					sizeof(fb_mode) - 1);
-+			else
-+				strcpy(fb_mode, fb_default_mode);
- 		}
- #endif
- 		if (!found) {
-@@ -2230,7 +2238,7 @@ static struct platform_driver sm501fb_driver = {
- 
- module_platform_driver(sm501fb_driver);
- 
--module_param_named(mode, fb_mode, charp, 0);
-+module_param_named(mode, fb_mode_cmdline, charp, 0);
- MODULE_PARM_DESC(mode,
- 	"Specify resolution as \"<xres>x<yres>[-<bpp>][@<refresh>]\" ");
- module_param_named(bpp, default_bpp, ulong, 0);
--- 
-2.1.0
-
+2015-05-26 21:49 GMT+02:00 Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>:
+> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 8033919..1de2dfd 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -134,6 +134,7 @@ national    National Semiconductor
+>  neonode                Neonode Inc.
+>  netgear        NETGEAR
+>  netlogic       Broadcom Corporation (formerly NetLogic Microsystems)
+> +netxeon                Shenzhen Netxeon Technology CO., LTD
+>  newhaven       Newhaven Display International
+>  nintendo       Nintendo
+>  nokia  Nokia
+> --
+> 2.1.4
+>
+>
+>
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
