@@ -1,179 +1,86 @@
-From: Romain Baeriswyl <romain.baeriswyl@alitech.com>
-Subject: [PATCH V2] added device tree support to gpio-generic driver
-Date: Thu, 11 Jun 2015 12:32:15 +0200
-Message-ID: <1434018735-10176-1-git-send-email-romain.baeriswyl@alitech.com>
-References: <CACRpkdbWhtkMgz2qTg1y7AguLQCJXnAoi7gVnFvPb1sR7eES_g@mail.gmail.com>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdbWhtkMgz2qTg1y7AguLQCJXnAoi7gVnFvPb1sR7eES_g@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Christian Ruppert <christian.ruppert@alitech.com>, Anton Vorontsov <cbouatmailru@gmail.com>, Rojhalat Ibrahim <imr@rtschenk.de>, abdoulaye berthe <berthe.ab@gmail.com>, Anthony Fee <anthony.fee@emutex.com>, Alexander Shiyan <shc_work@mail.ru>, devicetree@vger.kernel.org
-Cc: Romain Baeriswyl <romain.baeriswyl@alitech.com>
+From: Walter Goossens <waltergoossens-CmkmPbn3yAE@public.gmane.org>
+Subject: Re: DeviceTree FPGA bitstream
+Date: Thu, 11 Jun 2015 12:17:05 +0200
+Message-ID: <55796021.7010402@home.nl>
+References: <20150609144901.GC12677@pcbe13110.cern.ch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150609144901.GC12677-cpfkIQmgKd5FPxEMnUtzR+1GAupnlqi7@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Federico Vaga <federico.vaga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support of device tree to the gpio-generic driver.
+Hi Federico,
 
-Signed-off-by: Romain Baeriswyl <romain.baeriswyl@alitech.com> 
----
- .../devicetree/bindings/gpio/gpio-generic.txt      |   17 +++++
- drivers/gpio/gpio-generic.c                        |   72 +++++++++++++++----
- include/linux/basic_mmio_gpio.h                    |    1 +
- 3 files changed, 75 insertions(+), 15 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-generic.txt
+On 06/09/2015 04:49 PM, Federico Vaga wrote:
+> Hello,
+>
+> I'm evaluating the DeviceTree to describe the content of an FPGA.
+> I noticed that Xilinx is already doing it:
+>
+> https://www.kernel.org/doc/Documentation/devicetree/bindings/xilinx.txt
+>
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-generic.txt b/Documentation/devicetree/bindings/gpio/gpio-generic.txt
-new file mode 100644
-index 0000000..20e3727
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-generic.txt
-@@ -0,0 +1,17 @@
-+Bindings for gpio-generic
-+
-+Required properties:
-+- compatible : should be "single-register-gpio"
-+- ngpios: specifies the number of gpio mapped in the register from bit 0 to
-+          bit ngpios-1. The value is limited to the number of bits of the
-+	  LONG type.
-+
-+Optional property:
-+- big-endian: tells that register is big endian.
-+
-+Examples:
-+
-+	gpio_a {
-+		compatible = "single-register-gpio";
-+		ngpios = <32>;
-+	};
-diff --git a/drivers/gpio/gpio-generic.c b/drivers/gpio/gpio-generic.c
-index b92a690..8143c10 100644
---- a/drivers/gpio/gpio-generic.c
-+++ b/drivers/gpio/gpio-generic.c
-@@ -61,6 +61,8 @@ o        `                     ~~~~\___/~~~~    ` controller in FPGA is ,.`
- #include <linux/platform_device.h>
- #include <linux/mod_devicetable.h>
- #include <linux/basic_mmio_gpio.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
- 
- static void bgpio_write8(void __iomem *reg, unsigned long data)
- {
-@@ -564,6 +566,46 @@ static void __iomem *bgpio_map(struct platform_device *pdev,
- 	return ret;
- }
- 
-+static const struct platform_device_id bgpio_id_table[] = {
-+	{
-+		"basic-mmio-gpio",
-+		.driver_data	= 0,
-+	}, {
-+		"basic-mmio-gpio-be",
-+		.driver_data	= BGPIOF_BIG_ENDIAN
-+	},
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(platform, bgpio_id_table);
-+
-+static const struct of_device_id  bgpio_dt_ids[] = {
-+	{ .compatible = "single-register-gpio" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, bgpio_dt_ids);
-+
-+static int bgpio_parse_dt(struct device *dev)
-+{
-+	struct bgpio_pdata *pdata;
-+
-+	pdata = devm_kzalloc(dev, sizeof(struct bgpio_pdata),
-+			     GFP_KERNEL);
-+	if (!pdata)
-+		return -ENOMEM;
-+
-+	if (of_property_read_u32(dev->of_node, "ngpio", &pdata->ngpio)) {
-+		dev_err(dev, "Failed to get field ngpio");
-+		return -EINVAL;
-+	}
-+	pdata->base = -1;
-+
-+	if (of_device_is_big_endian(dev->of_node))
-+		pdata->flags = BGPIOF_BIG_ENDIAN;
-+
-+	dev->platform_data = pdata;
-+	return 0;
-+}
-+
- static int bgpio_pdev_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -574,10 +616,21 @@ static int bgpio_pdev_probe(struct platform_device *pdev)
- 	void __iomem *dirout;
- 	void __iomem *dirin;
- 	unsigned long sz;
--	unsigned long flags = pdev->id_entry->driver_data;
- 	int err;
- 	struct bgpio_chip *bgc;
--	struct bgpio_pdata *pdata = dev_get_platdata(dev);
-+	struct bgpio_pdata *pdata;
-+
-+	if (of_have_populated_dt()) {
-+		err = bgpio_parse_dt(dev);
-+		if (err < 0) {
-+			dev_err(dev, "Failed to get DT data\n");
-+			return err;
-+		}
-+	}
-+	pdata = dev_get_platdata(dev);
-+
-+	if (!of_have_populated_dt())
-+		pdata->flags = pdev->id_entry->driver_data;
- 
- 	r = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dat");
- 	if (!r)
-@@ -609,7 +662,8 @@ static int bgpio_pdev_probe(struct platform_device *pdev)
- 	if (!bgc)
- 		return -ENOMEM;
- 
--	err = bgpio_init(bgc, dev, sz, dat, set, clr, dirout, dirin, flags);
-+	err = bgpio_init(bgc, dev, sz, dat, set, clr, dirout, dirin,
-+			 pdata->flags);
- 	if (err)
- 		return err;
- 
-@@ -633,18 +687,6 @@ static int bgpio_pdev_remove(struct platform_device *pdev)
- 	return bgpio_remove(bgc);
- }
- 
--static const struct platform_device_id bgpio_id_table[] = {
--	{
--		.name		= "basic-mmio-gpio",
--		.driver_data	= 0,
--	}, {
--		.name		= "basic-mmio-gpio-be",
--		.driver_data	= BGPIOF_BIG_ENDIAN,
--	},
--	{ }
--};
--MODULE_DEVICE_TABLE(platform, bgpio_id_table);
--
- static struct platform_driver bgpio_driver = {
- 	.driver = {
- 		.name = "basic-mmio-gpio",
-diff --git a/include/linux/basic_mmio_gpio.h b/include/linux/basic_mmio_gpio.h
-index 0e97856..d85d9ca 100644
---- a/include/linux/basic_mmio_gpio.h
-+++ b/include/linux/basic_mmio_gpio.h
-@@ -22,6 +22,7 @@ struct bgpio_pdata {
- 	const char *label;
- 	int base;
- 	int ngpio;
-+	int flags;
- };
- 
- struct device;
--- 
-1.7.1
+So is Altera, both for the Nios2 and arm-soc architectures.
+They're using this tool: https://github.com/wgoossens/sopc2dts to go
+from their design software (qsys) to a dts file.
+> I admit that I didn't read the code yet, but before doing it I want to
+> ask you some simple questions that may save me a lot of time.
+> My questions are:
+>
+> - is there any reccomandation about DeviceTree for FPGA content
+> description?
+> If yes, are they documented somewhere?
+>
 
-*********************************************************
-This message contains information that may be confidential and/or privileged and is intended only for the individual or entity named in the body of email above. If this message has been received in error, your receipt of this message is not intended to waive any applicable privilege. No one else may disclose, copy, distribute or use the contents of this message. Unauthorized use, dissemination and duplication is strictly prohibited, and may be unlawful.
+FPGA's are just like other "hardware" from the device-tree point of
+view. If there's a UART in your FPGA, then you describe a UART in the
+devicetree :)
 
+For Altera FPGA's some info is described here:
+http://rocketboards.org/foswiki/Documentation/DeviceTreeGenerator141 and
+I think the xilinx flow is similar.
 
+> - it looks like the DeviceTree is disable for x86 architecture except for
+> some specific platform. Is it possible to enable it for the entire x86
+> architecture? Are there any reason to disable it by default?
+>
+> - I read that since versione 3.17 it should be possible to dynamically
+> add
+> portion of DeviceTree from configfs. Is it possible on all architecture?
+>
+> - I'm working on x86_64 and my FPGA can be on a pluggable board (e.g.
+> PCIe).
+> Is there a way to describe this situation with DeviceTree? Is there
+> any tool
+> that dynamically computes the addresses (interrupts) translation to use
+> (e.g. on PCIe) ?
+>
 
+I've been using this scheme on PPC for quite some time (before
+devicetree overlays) by creating a custom pcie driver (that knows the
+bar addresses and irqs) which then instantiates a "virtual platformbus"
+at the pcie bar the fpga is located in.
+You can adopt this scheme for x86 by creating a bus and using the
+devicetree code to probe the inside of your FPGA but this is all a bit
+hackish.
+The correct approach (in my opinion) would be to use an overlay
+describing the contents of the FPGA and loading that when probing the
+pcie-device. This would however require a base devicetree to apply the
+overlay to, and I'm not sure how much effort this is going to be on x86_64
 
+Walter
+
+> Thank you :)
+> -- 
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
