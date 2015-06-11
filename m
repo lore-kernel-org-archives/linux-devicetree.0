@@ -1,50 +1,29 @@
-From: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [GIT PULL] Broadcom Device Tree changes for 4.2 (part 3)
-Date: Wed, 10 Jun 2015 17:11:36 -0700
-Message-ID: <7hioavgl3b.fsf@deeprootsystems.com>
-References: <1433640869-12746-1-git-send-email-f.fainelli@gmail.com>
+From: Timur Tabi <timur@codeaurora.org>
+Subject: Re: [PATCH v4 5/7] Watchdog: introduce ARM SBSA watchdog driver
+Date: Wed, 10 Jun 2015 19:22:45 -0500
+Message-ID: <5578D4D5.3070109@codeaurora.org>
+References: <=fu.wei@linaro.org>	<1433217907-928-1-git-send-email-fu.wei@linaro.org>	<1433217907-928-6-git-send-email-fu.wei@linaro.org>	<556DCC95.806@codeaurora.org>	<CADyBb7sXiMNtrH+Eu1Qj00TPNLMMr5cCTPObzFmKnHLsbWH79Q@mail.gmail.com>	<556DE2D5.3090906@roeck-us.net>	<CADyBb7uT=gFJkK8s-QF1n4Z+Zov9Lurp1nvBO-C-qszTqbMYXQ@mail.gmail.com>	<5575DE48.8010308@roeck-us.net>	<CADyBb7sYPnvDVEJYVQm65B1JV=yvq10+ezs2x3f8F=TJCZ+OJA@mail.gmail.com>	<55766D74.2060401@roeck-us.net>	<CADyBb7vR-jP6ZjzMSnprrSXbNayk8umx+cXV3TsGypfhZcCwTw@mail.gmail.com>	<55769E0E.8060801@roeck-us.net>	<CADyBb7skpSZ=3_ByW-RHM99=nbs7Z5xXFXtsKzkxOXAGjxF=3Q@mail.gmail.com>	<557712CF.8010802@roeck-us.net>	<5577147B.2030900@codeaurora.org>	<5577180E.4070804@roeck-us.net> <CADyBb7sVd5nLwb3eHRPiNt-WTynfaJonOyuE_bD694dayyvevA@mail.gmai
+ l.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1433640869-12746-1-git-send-email-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> (Florian
-	Fainelli's message of "Sat, 6 Jun 2015 18:34:28 -0700")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org, gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CADyBb7sVd5nLwb3eHRPiNt-WTynfaJonOyuE_bD694dayyvevA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Fu Wei <fu.wei@linaro.org>, Guenter Roeck <linux@roeck-us.net>
+Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Wei Fu <tekkamanninja@gmail.com>, G Gregory <graeme.gregory@linaro.org>, Al Stone <al.stone@linaro.org>, Hanjun Guo <hanjun.guo@linaro.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Arnd Bergmann <arnd@arndb.de>, vgandhi@codeaurora.org, wim@iguana.be, Jon Masters <jcm@redhat.com>, Leo Duran <leo.duran@amd.com>, Jon Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, rjw@rjwysocki.net
 List-Id: devicetree@vger.kernel.org
 
-Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
+Fu Wei wrote:
+> If we make the first stage timeout is timeout/2,  this violates the
+> definition of timeout.
 
-> The following changes since commit 9d7ef1b76c131f9b5e0a31fd1444d4fa6b8a841c:
->
->   ARM: dts: BCM63xx: re-parent NAND controller node (2015-05-27 09:57:34 -0700)
->
-> are available in the git repository at:
->
->   https://github.com/Broadcom/stblinux tags/arm-soc/for-4.2/dts-part3
->
-> for you to fetch changes up to 26343bdacfcdbf6ee3303d6078a015b908f90193:
->
->   ARM: BCM5301X: Add DT for Asus RT-AC87U (2015-06-06 16:13:16 -0700)
->
-> ----------------------------------------------------------------
-> This pull request contains Broadcom BCM5301x related changes:
->
-> - Hauke adds the interrupt mapping for the BCM5301x PCIe controller
->
-> - Haule adds support for NAND flash using the standard Broadcom NAND controller
->   iProc specific binding on BCM4708/5301x
->
-> - Rafal adds support for the Asus RT-AC87U router
->
-> ----------------------------------------------------------------
+The documentation says that the hardware needs to reset after the 
+timeout expires.  If you program the hardware to timeout/2, the driver 
+can ignore WS0 and allow WS1 to reset the hardware.  That conforms to 
+the documentation.
 
-Pulled into next/dt,
-
-Thanks,
-
-Kevin
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Sent by an employee of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the
+Code Aurora Forum, hosted by The Linux Foundation.
