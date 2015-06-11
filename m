@@ -1,48 +1,109 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH v4] ARM: l2c: add options to overwrite prefetching
- behavior
-Date: Thu, 11 Jun 2015 10:34:17 +0100
-Message-ID: <20150611093417.GV7557@n2100.arm.linux.org.uk>
-References: <1432941541-18588-1-git-send-email-hauke@hauke-m.de>
- <20150610172100.230c0e71@free-electrons.com>
- <55788F6B.7060406@hauke-m.de>
- <20150611112459.6590ab05@free-electrons.com>
+From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [linux-sunxi] Re: [PATCH v4 1/2] phy-sun4i-usb: Add full support
+ for usb0 phy / OTG
+Date: Thu, 11 Jun 2015 18:37:24 +0900
+Message-ID: <557956D4.1090703@samsung.com>
+References: <1433088626-8858-1-git-send-email-hdegoede@redhat.com>
+ <1433088626-8858-2-git-send-email-hdegoede@redhat.com> <55792122.20607@ti.com>
+ <557941A6.5000306@samsung.com> <557944EE.1020303@redhat.com>
+ <557946EC.3060607@samsung.com> <55794DEA.1050604@redhat.com>
+ <557955D4.4030908@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150611112459.6590ab05-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Gregory =?iso-8859-1?Q?Cl=E9ment?= <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <557955D4.4030908-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 11, 2015 at 11:24:59AM +0200, Thomas Petazzoni wrote:
-> Dear Hauke Mehrtens,
+On 06/11/2015 06:33 PM, Chanwoo Choi wrote:
+> Hi,
 > 
-> On Wed, 10 Jun 2015 21:26:35 +0200, Hauke Mehrtens wrote:
+> On 06/11/2015 05:59 PM, Hans de Goede wrote:
+>> Hi,
+>>
+>> On 11-06-15 10:29, Chanwoo Choi wrote:
+>>> Hi Hans,
+>>>
+>>> On 06/11/2015 05:21 PM, Hans de Goede wrote:
+>>>> Hi Chanwoo,
+>>>>
+>>>> Thanks for the quick review.
+>>>>
+>>>> On 11-06-15 10:07, Chanwoo Choi wrote:
+>>>>> Hi Hans,
+>>>>>
+>>>>> I add the comment about extcon-related code.
+>>>>>
+>>>>> Firstly,
+>>>>> I'd like you to implment the extcon driver for phy-sun4i-usb device
+>>>>> in drivers/extcon/ directoryby using MFD
+>>>>
+>>>> No, just no, this is not what the MFD framework is for, the usb-phy
+>>>> in question here is not a multifunction device. The MFD framework
+>>>> is intended for true multi-function devices like i2c attached
+>>>> PMICs which have regulators, gpios, pwm, input (power button),
+>>>> chargers, power-supply, etc. That is NOT the case here.
+>>>>
+>>>> Also moving this to the MFD framework would very likely requiring
+>>>> the devicetree binding for the usb-phy to change which we cannot
+>>>> do as that would break the devicetree ABI.
+>>>>
+>>>>> because there are both extcon
+>>>>> provider driver and extcon client driver. I think that all extcon
+>>>>> provider driver better to be included in drivers/extcon/ directory.
+>>>>> extcon_set_cable_state() function should be handled in extcon provider
+>>>>> driver which is incluced in drivers/extcon/ directory.
+>>>>
+>>>> I do not find this a compelling reason, there are plenty of subsystems
+>>>> where not all implementations of the subsystem class live in the subsystem
+>>>> directory, e.g. input and hwmon devices are often also found outside of
+>>>> the input and hwmon driver directories.
+>>>
+>>> There are difference on between input/hwmon and extcon.
+>>>
+>>> Because input and hwmon driver implement the only one type driver as provider driver.
+>>> But, extcon implement the two type driver of both extcon provider and extcon client driver.
+>>> The extcon is similiar with regulator and clock framework as resource.
+>>>
+>>> extcon provider driver to provider the event when the state of external connector is changed.
+>>> - devm_extcon_dev_register()
+>>> - e.g., almost extcon provider driver are included in 'drivers/extcon/' directory.
+>>
+>> I understand, but that does not change my first argument, that the usb-phy is not
+>> a MFD device. And although it may be desirable to keep extcon provider drivers
+>> in the drivers/extcon, there are no technical reasons to do so.
+>>
+>> The whole reason why Kishon asked me to start using the extcon framework is to avoid
+>> adding a private API to the phy-sun4i-usb code for notifying the musb-sunxi code
+>> about otg-id-pin status changes. Adding a separate driver for just the extcon bits
+>> means re-adding a private api to the phy-sun4i-usb code but this time for the
+>> extcon code, at which point we might just as well skip extcon and have the
+>> musb-sunxi glue code call directly into the phy-sun4i-usb code...
+>>
+>> Needing a private API for a separate extcn driver actually is a good argument to
+>> NOT have a separate extcon driver and keep the extcon code in the phy-sun4i-usb code,
+>> where as I see no technical arguments in favor of a separate extcon driver.
 > 
-> > Thanks for asking, I did not know Russell's patch process, but Florian
-> > guided me and now it is submitted, see
-> > http://www.arm.linux.org.uk/developer/patches/viewpatch.php?id=8391/1
+> There is one technical issue.
 > 
-> I tested your patch, and I'm not sure how it can work for you, because
-> the changes made to the PREFETCH_CTRL register on the data/instruction
-> prefetch bits are later overridden by changes made to the AUX_CTRL
-> register.
+> The extcon_set_cable_state() should be handled by extcon provider driver.
+> because extcon_set_cable_state() inform the extcon client driver of the event
+> when detecting the change of h/w line (gpio line) or register of peripheral device.
+> 
+> But, extcon client driver can now get the instance of extcon_dev structure
+> by extcon_get_edev_by_phandle() and then can change the cable state by using the extcon_set_cable_state().
+> 
+> I think that these issue have to be protected by framework level.
 
-There's also a patch I sent on May 14th which needs to be applied for this
-to work, and fixes the above.
+I fix wrong word. (protected -> prevented)
+- I think that these issue have to be prevented by framework level.
 
-> How does your patch handles the fact that the prefetch data and
-> prefetch instr are cloned between PREFETCH_CTRL and AUX_CTRL ?
-
-It needs my patch.
-
--- 
-FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
-according to speedtest.net.
+Thanks,
+Chanwoo Choi
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
