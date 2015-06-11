@@ -1,83 +1,277 @@
-From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] clk: exynos4: Add PCLK_ADC gate clock on Exynos4x12
-Date: Thu, 11 Jun 2015 21:40:23 +0900
-Message-ID: <557981B7.3000303@samsung.com>
-References: <1434011190-24563-1-git-send-email-k.kozlowski@samsung.com> <55796660.1070702@samsung.com> <CABxcv=kNb2ERqLL2gG73nkU+kpPsYAWKSyu=bkjfxZBMKOwyPQ@mail.gmail.com>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 05/22] doc: dt-binding: usb: add otg related
+ properties
+Date: Thu, 11 Jun 2015 15:51:02 +0300
+Message-ID: <20150611155102.15b881fd@rockdesk>
+References: <1433775737-9816-1-git-send-email-jun.li@freescale.com>
+	<1433775737-9816-6-git-send-email-jun.li@freescale.com>
+	<CAL_JsqJ3hHOGevwqcBNFN2LrTP7Bm_k9SDuTNKBbpq5W-eLmdw@mail.gmail.com>
+	<20150609011806.GA7976@shlinux1.ap.freescale.net>
+	<CAL_JsqKg_NYtLGg9RUQOpKscwHEskHO4_Szo_nM3BnrDdhg3fg@mail.gmail.com>
+	<20150609182931.1eda4111@rockdesk>
+	<20150610120623.GA7678@shlinux2>
+	<20150611103035.08967a37@rockdesk>
+	<20150611083851.GB16101@shlinux2>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CABxcv=kNb2ERqLL2gG73nkU+kpPsYAWKSyu=bkjfxZBMKOwyPQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150611083851.GB16101@shlinux2>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Li Jun-B47624 <Jun.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Chen Peter-B29397 <Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-W dniu 11.06.2015 o 21:15, Javier Martinez Canillas pisze:
-> Hello Krzysztof,
+
+On Thu, 11 Jun 2015 16:38:52 +0800
+Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+
+> On Thu, Jun 11, 2015 at 10:30:35AM +0300, Roger Quadros wrote:
+> > 
+> > On Wed, 10 Jun 2015 20:06:25 +0800
+> > Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> > 
+> > > On Tue, Jun 09, 2015 at 11:29:31PM +0800, Roger Quadros wrote:
+> > > > Rob,
+> > > > 
+> > > > On Tue, 9 Jun 2015 08:26:20 -0500
+> > > > Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > > > 
+> > > > > On Mon, Jun 8, 2015 at 8:18 PM, Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> > > > > > On Mon, Jun 08, 2015 at 11:06:49AM -0500, Rob Herring wrote:
+> > > > > >> On Mon, Jun 8, 2015 at 10:02 AM, Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> > > > > >> > Add otg version, srp, hnp and adp support for usb OTG port, then those OTG
+> > > > > >> > features don't have to be decided by usb gadget drivers.
+> > > > > >> >
+> > > > > >> > Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > > > > >> > ---
+> > > > > >> >  Documentation/devicetree/bindings/usb/generic.txt | 10 ++++++++++
+> > > > > >> >  1 file changed, 10 insertions(+)
+> > > > > >> >
+> > > > > >> > diff --git a/Documentation/devicetree/bindings/usb/generic.txt b/Documentation/devicetree/bindings/usb/generic.txt
+> > > > > >> > index 477d5bb..7386f4a 100644
+> > > > > >> > --- a/Documentation/devicetree/bindings/usb/generic.txt
+> > > > > >> > +++ b/Documentation/devicetree/bindings/usb/generic.txt
+> > > > > >> > @@ -11,6 +11,12 @@ Optional properties:
+> > > > > >> >                         "peripheral" and "otg". In case this attribute isn't
+> > > > > >> >                         passed via DT, USB DRD controllers should default to
+> > > > > >> >                         OTG.
+> > > > > >> > + - otg-rev: tells usb driver the release number of the OTG and EH supplement
+> > > > > >> > +                       with which the device and its descriptors are compliant,
+> > > > > >> > +                       in binary-coded decimal (i.e. 2.0 is 0200H).
+> > > > > >>
+> > > > > >> I would assume OTG 2.0 is somehow backwards compatible? Is this a h/w
+> > > > > >> dependency or a driver feature?
+> > > > > >>
+> > > > > > Not fully compatible, OTG 2.0 extend the usb_otg_descriptor by adding a new
+> > > > > > member bcdOTG to identify the OTG version, this descriptor needs to be sent
+> > > > > > to OTG host with correct size and content, so we have to know which release
+> > > > > > version the OTG device is compliant with, either by menuconfig config or pass
+> > > > > > via DT.
+> > > > > 
+> > > > > So you have to change the version depending on the host you are
+> > > > > connected to? That really seems strange that plugging in a OTG 2.0
+> > > > > device to an OTG 1.3 host would not work and doesn't make for a good
+> > > > > user experience.
+> > > > 
+> > > > No. The OTG version in the OTG descriptor for any device is usually fixed for the
+> > > > lifetime of the product.
+> > > > 
+> > > > Let's assume it is 2.0.
+> > > > 
+> > > > If you plug this to OTG 1.0 host, it won't be an issue as OTG 1.0 host doesn't
+> > > > read the BCD version.
+> > > > 
+> > > But OTG 1.0 host will send a 1.x specific OTG request for the 2.0 device.
+> > > 
+> > > > > 
+> > > > > >> > + - srp-support: tells OTG controllers we want to enable SRP.
+> > > > > >> > + - hnp-support: tells OTG controllers we want to enable HNP.
+> > > > > >> > + - adp-support: tells OTG controllers we want to enable ADP.
+> > > > > >>
+> > > > > >> I've recently run into a problem[1] and found that I have to disable
+> > > > > >> OTG in the kernel to get my device to work. Having to turn-off OTG
+> > > > > >> seems like the wrong solution, and shifting the problem to DT seems
+> > > > > >> wrong too. Why is this not a user configurable option (within whatever
+> > > > > >> h/w constraints there are)?
+> > > > > > The problem of below link, seems your device is claiming it's a HNP capable
+> > > > > > OTG device, but connecting to a non-OTG port of your Host, assume your Host
+> > > > > > does have a OTG port, your Host issue a A_ALT_HNP_SUPPORT request to your
+> > > > > > OTG device to remind it can use another port with HNP, but the request failed
+> > > > > > (maybe STALL by your device, this request is defined in OTG 1.3 but obsolete
+> > > > > > in OTG 2.0), so your Host just stopped enumeration of your device, this is not
+> > > > > > reasonable because current OTG code is some out of data.
+> > > > > 
+> > > > > Do PCs have OTG ports typically? My expectation is that if I plug in
+> > > > > an OTG device as a B device to any host port, that it will work as a
+> > > > > device no matter what the host OTG capabilities are. If I have to
+> > > > > change the kernel config or DT, that is a problem.
+> > > > 
+> > > > AFAIK PCs don't have OTG ports.
+> > > > 
+> > > > If you plug in OTG device to a non-otg host port it will work as normal B-device.
+> > > > The host doesn't request for OTG descriptors and doesn't care what OTG features it
+> > > > supports or not.
+> > > > 
+> > > This is not true in OTG 1.x and our current code, the host still request for
+> > > OTG descriptor and check if HNP is supported by it if CONFIG_USB_OTG is enabled
+> > > for the host.
+> > 
+> > Looks like the current USB host/hub code assumes that if CONFIG_USB_OTG is set
+> > it is an OTG port even if it really isn't. This is wrong and the root of the problem.
+> > 
 > 
-> On Thu, Jun 11, 2015 at 12:43 PM, Krzysztof Kozlowski
-> <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
->> W dniu 11.06.2015 o 17:26, Krzysztof Kozlowski pisze:
->>> Add proper gate clock for the Analog to Digital Converter (ADC) on
->>> Exynos4x12.
->>>
->>> Signed-off-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>> ---
->>>  drivers/clk/samsung/clk-exynos4.c   | 3 +++
->>>  include/dt-bindings/clock/exynos4.h | 5 ++++-
->>>  2 files changed, 7 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/clk/samsung/clk-exynos4.c b/drivers/clk/samsung/clk-exynos4.c
->>> index 714d6ba782c8..5f32410a01f8 100644
->>> --- a/drivers/clk/samsung/clk-exynos4.c
->>> +++ b/drivers/clk/samsung/clk-exynos4.c
->>> @@ -85,6 +85,7 @@
->>>  #define DIV_PERIL4           0xc560
->>>  #define DIV_PERIL5           0xc564
->>>  #define E4X12_DIV_CAM1               0xc568
->>> +#define E4X12_GATE_BUS_FSYS1 0xc744
->>>  #define GATE_SCLK_CAM                0xc820
->>>  #define GATE_IP_CAM          0xc920
->>>  #define GATE_IP_TV           0xc924
->>> @@ -1095,6 +1096,8 @@ static struct samsung_gate_clock exynos4x12_gate_clks[] __initdata = {
->>>               0),
->>>       GATE(CLK_PPMUIMAGE, "ppmuimage", "aclk200", E4X12_GATE_IP_IMAGE, 9, 0,
->>>               0),
->>> +     GATE(CLK_PCLK_ADC, "pclk_adc", "aclk133", E4X12_GATE_BUS_FSYS1, 16, 0,
->>> +             0),
->>
->> Now I have even simpler idea. Don't add new clock id but just define
->> here the CLK_TSADC as:
->> GATE(CLK_TSADC, "tsadc", "aclk133", E4X12_GATE_BUS_FSYS1, 16, 0, 0);
->>
->> With this change the second patch wouldn't be needed however this does
->> not reflect the Exynos 4x12 datasheet.
->>
->> Any comments?
->>
+> There is another condition to judge if it's a OTG port: the current port
+> number is equal to the otg port number(bus->otg_port), if not, it will
+> assume there is another port with OTG, and send a OTG 1.x request to the
+> connected OTG device.
+> After OTG 2.0 otg descriptor introduced, I can fix it in host/hub by checking
+> the OTG version before sending 1.x specific request.
+
+That is not the issue.
+
+This is the existing code I'm talking about
+
+drivers/usb/core/hub.c
+
+static int usb_enumerate_device_otg(struct usb_device *udev)
+{
+	int err = 0;
+
+#ifdef	CONFIG_USB_OTG
+	/*
+	 * OTG-aware devices on OTG-capable root hubs may be able to use SRP,
+	 * to wake us after we've powered off VBUS; and HNP, switching roles
+	 * "host" to "peripheral".  The OTG descriptor helps figure this out.
+	 */
+	if (!udev->bus->is_b_host
+			&& udev->config
+			&& udev->parent == udev->bus->root_hub) {
+		struct usb_otg_descriptor	*desc = NULL;
+		struct usb_bus			*bus = udev->bus;
+
+		/* descriptor may appear anywhere in config */
+		if (__usb_get_extra_descriptor (udev->rawdescriptors[0],
+					le16_to_cpu(udev->config[0].desc.wTotalLength),
+					USB_DT_OTG, (void **) &desc) == 0) {
+			if (desc->bmAttributes & USB_OTG_HNP) {
+				unsigned		port1 = udev->portnum;
+
+				dev_info(&udev->dev,
+					"Dual-Role OTG device on %sHNP port\n",
+					(port1 == bus->otg_port)
+						? "" : "non-");
+
+				/* enable HNP before suspend, it's simpler */
+				if (port1 == bus->otg_port)
+					bus->b_hnp_enable = 1;
+				err = usb_control_msg(udev,
+					usb_sndctrlpipe(udev, 0),
+					USB_REQ_SET_FEATURE, 0,
+					bus->b_hnp_enable
+						? USB_DEVICE_B_HNP_ENABLE
+						: USB_DEVICE_A_ALT_HNP_SUPPORT,
+					0, NULL, 0, USB_CTRL_SET_TIMEOUT);
+
+We're sending out this control request even if this host port is not OTG.
+Isn't that wrong?
+
+				if (err < 0) {
+					/* OTG MESSAGE: report errors here,
+					 * customize to match your product.
+					 */
+					dev_info(&udev->dev,
+						"can't set HNP mode: %d\n",
+						err);
+					bus->b_hnp_enable = 0;
+				}
+
+Instead it should be moved inside the if (port1 == bus->otg_port) condition.
+
+			}
+		}
+	}
+#endif
+	return err;
+}
+
+cheers,
+-roger
+
 > 
-> I think it's better to reflect the datasheet so I prefer your original
-> patch.
-
-Yeah, I also like sticking to datasheet but maybe it is not always worth
-to reproduce the datasheet in 100%. It is just thinking out loud.
-
-> Also, wouldn't changing the CLK_TSADC gate definition cause a
-> regression on an Exynos4210 board that is using the tsadc clock? or
-> maybe I misunderstood the explanation of your Patch 2/2?
-
-No, no. The Exynos4210 would be unchanged. It has the CLK_TSADC - both
-in hardware and in kernel driver. The Exynos4x12 SoCs don't have so we can:
-1. Add new CLK_PCLK_ADC (id and clock) reflecting datasheet.
-2. Add only CLK_TSADC clock  on Exynos4x12 which will be using the
-register of PCLK_ADC. The id would stay the same as on Exynos4210.
-
-Best regards,
-Krzysztof
-
+> > We need to have is_otg flag + attributes for host port case as well
+> > just like we have for device case.
+> > 
+> We can use bus->otg_port, if there is no otg port, don't make it match any
+> port number of your available host ports.
+>  
+> > cheers,
+> > -roger
+> > 
+> > > 
+> > > > > 
+> > > > > > I am trying to make those OTG feaures to be configurable options, you mean
+> > > > > > by sys?
+> > > > > 
+> > > > > Yes.
+> > > > 
+> > > > why do you need OTG features to be sysfs configurable other than for debugging?
+> > > > 
+> > > > > 
+> > > > > >> What are the valid combinations? When do we want these enabled or not?
+> > > > > >> Wouldn't default enabled be better?
+> > > > > >
+> > > > > > We want to enable all those support in kernel driver, but some platform or
+> > > > > > hardware may not want to enable any or some of them, so those hardware
+> > > > > > can disable it by not pass the property in dt, the 3 sub features of OTG are
+> > > > > > not mandatory for so called OTG device, normally we at least enable HNP, and
+> > > > > > SRP and ADP are optional.
+> > > > > 
+> > > > > Please answer my questions in the doc.
+> > > > > 
+> > > > > >>
+> > > > > >> We already have dr_mode property. How is it related to these?
+> > > > 
+> > > > dr_mode states what mode the controller will operate in.
+> > > > 
+> > > > for dr_mode == "host" we don't care about these otg flags.
+> > > > 
+> > > > for dr_mode == "peripheral" or dr_mode == "otg"
+> > > > we care about these OTG flags to create our OTG descriptor on the fly.
+> > > > 
+> > > 
+> > > Yes.
+> > > 
+> > > > > >
+> > > > > > dr_mode is to tell the device it will work at OTG mode(there is another simple
+> > > > > > dual role mode which is commom used but not HNP), srp/hnp/adp can further specify
+> > > > > > which protocol the OTG device will support.
+> > > > > 
+> > > > > By simple DR, you mean ID pin detect, right. So please define how you
+> > > > > support just ID pin detect vs. other levels of capability. Does only
+> > > > > dr_mode = otg mean ID pin detect? That may be a problem for existing
+> > > > > DTs if you disable other OTG functions because they have not been
+> > > > > added to the DT, then that is a problem.
+> > > > > 
+> > > > > I'm feeling less convinced that this belongs in DT at all. Please
+> > > > > convince me otherwise.
+> > > > 
+> > > > Yes not specifying anything in DT should work and default to the
+> > > > best OTG version and features supported by the OTG controller.
+> > > > 
+> > > > But if the device manufacturer wants to restrict the OTG version
+> > > > to something less or disable some OTG features then the DT flags come
+> > > > into play.
+> > > > 
+> > > agree.
+> > > 
+> > > > cheers,
+> > > > -roger
+> > > 
+> > > Li Jun
+> > 
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
