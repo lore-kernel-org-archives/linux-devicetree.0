@@ -1,88 +1,87 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [linux-sunxi] Re: [PATCH v4 1/2] phy-sun4i-usb: Add full support
- for usb0 phy / OTG
-Date: Thu, 11 Jun 2015 10:59:22 +0200
-Message-ID: <55794DEA.1050604@redhat.com>
-References: <1433088626-8858-1-git-send-email-hdegoede@redhat.com> <1433088626-8858-2-git-send-email-hdegoede@redhat.com> <55792122.20607@ti.com> <557941A6.5000306@samsung.com> <557944EE.1020303@redhat.com> <557946EC.3060607@samsung.com>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v4] ARM: l2c: add options to overwrite prefetching
+ behavior
+Date: Thu, 11 Jun 2015 11:24:59 +0200
+Message-ID: <20150611112459.6590ab05@free-electrons.com>
+References: <1432941541-18588-1-git-send-email-hauke@hauke-m.de>
+	<20150610172100.230c0e71@free-electrons.com>
+	<55788F6B.7060406@hauke-m.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <557946EC.3060607-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55788F6B.7060406-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Gregory =?UTF-8?B?Q2zDqW1lbnQ=?= <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Dear Hauke Mehrtens,
 
-On 11-06-15 10:29, Chanwoo Choi wrote:
-> Hi Hans,
->
-> On 06/11/2015 05:21 PM, Hans de Goede wrote:
->> Hi Chanwoo,
->>
->> Thanks for the quick review.
->>
->> On 11-06-15 10:07, Chanwoo Choi wrote:
->>> Hi Hans,
->>>
->>> I add the comment about extcon-related code.
->>>
->>> Firstly,
->>> I'd like you to implment the extcon driver for phy-sun4i-usb device
->>> in drivers/extcon/ directoryby using MFD
->>
->> No, just no, this is not what the MFD framework is for, the usb-phy
->> in question here is not a multifunction device. The MFD framework
->> is intended for true multi-function devices like i2c attached
->> PMICs which have regulators, gpios, pwm, input (power button),
->> chargers, power-supply, etc. That is NOT the case here.
->>
->> Also moving this to the MFD framework would very likely requiring
->> the devicetree binding for the usb-phy to change which we cannot
->> do as that would break the devicetree ABI.
->>
->>> because there are both extcon
->>> provider driver and extcon client driver. I think that all extcon
->>> provider driver better to be included in drivers/extcon/ directory.
->>> extcon_set_cable_state() function should be handled in extcon provider
->>> driver which is incluced in drivers/extcon/ directory.
->>
->> I do not find this a compelling reason, there are plenty of subsystems
->> where not all implementations of the subsystem class live in the subsystem
->> directory, e.g. input and hwmon devices are often also found outside of
->> the input and hwmon driver directories.
->
-> There are difference on between input/hwmon and extcon.
->
-> Because input and hwmon driver implement the only one type driver as provider driver.
-> But, extcon implement the two type driver of both extcon provider and extcon client driver.
-> The extcon is similiar with regulator and clock framework as resource.
->
-> extcon provider driver to provider the event when the state of external connector is changed.
-> - devm_extcon_dev_register()
-> - e.g., almost extcon provider driver are included in 'drivers/extcon/' directory.
+On Wed, 10 Jun 2015 21:26:35 +0200, Hauke Mehrtens wrote:
 
-I understand, but that does not change my first argument, that the usb-phy is not
-a MFD device. And although it may be desirable to keep extcon provider drivers
-in the drivers/extcon, there are no technical reasons to do so.
+> Thanks for asking, I did not know Russell's patch process, but Florian
+> guided me and now it is submitted, see
+> http://www.arm.linux.org.uk/developer/patches/viewpatch.php?id=8391/1
 
-The whole reason why Kishon asked me to start using the extcon framework is to avoid
-adding a private API to the phy-sun4i-usb code for notifying the musb-sunxi code
-about otg-id-pin status changes. Adding a separate driver for just the extcon bits
-means re-adding a private api to the phy-sun4i-usb code but this time for the
-extcon code, at which point we might just as well skip extcon and have the
-musb-sunxi glue code call directly into the phy-sun4i-usb code...
+I tested your patch, and I'm not sure how it can work for you, because
+the changes made to the PREFETCH_CTRL register on the data/instruction
+prefetch bits are later overridden by changes made to the AUX_CTRL
+register.
 
-Needing a private API for a separate extcn driver actually is a good argument to
-NOT have a separate extcon driver and keep the extcon code in the phy-sun4i-usb code,
-where as I see no technical arguments in favor of a separate extcon driver.
+Here is what I've found so far:
 
-Regards,
+static void l2c_configure(void __iomem *base)
+{
+	if (outer_cache.configure) {
+		outer_cache.configure(&l2x0_saved_regs);
+		return;
+	}
 
-Hans
+	if (l2x0_data->configure)
+		l2x0_data->configure(base);
+
+	l2c_write_sec(l2x0_saved_regs.aux_ctrl, base, L2X0_AUX_CTRL);
+}
+
+l2x0_data->configure() is what writes the PREFETCH_CTRL register with
+the value determined in l2c310_of_parse() :
+
+	if (revision >= L310_CACHE_ID_RTL_R2P0) {
+		l2c_write_sec(l2x0_saved_regs.prefetch_ctrl, base,
+			      L310_PREFETCH_CTRL);
+	}
+
+The value written in the L310_PREFETCH_CTRL register is correct: it
+properly has bits 28/29 sets depending on prefetch-data/prefetch-instr.
+
+However, when l2c_configure() does:
+
+	l2c_write_sec(l2x0_saved_regs.aux_ctrl, base, L2X0_AUX_CTRL);
+
+It writes l2x0_saved_regs.aux_ctrl to the AUX_CTRL register, which has
+a "clone" of the prefetch data and prefetch instruction bits. And it
+resets them to zero. I've added debug messages before/after this line,
+and here is what I see:
+
+[    0.000000]  ==> (1) prefetch is now 0x58800000
+[    0.000000]  ==> (2) prefetch is now 0x48800000
+
+I had enabled only the prefetch-data, so in step (1) (before aux_ctrl
+is written to AUX_CTRL), bit 28 is correctly set to 1. However, after
+AUX_CTRL is written, it's restored to 0.
+
+How does your patch handles the fact that the prefetch data and
+prefetch instr are cloned between PREFETCH_CTRL and AUX_CTRL ?
+
+Thanks,
+
+Thomas
+-- 
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
