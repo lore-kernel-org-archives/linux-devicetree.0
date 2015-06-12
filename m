@@ -1,50 +1,84 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 6/8] doc: dt: Document the target root overlay method
-Date: Fri, 12 Jun 2015 22:55:03 +0300
-Message-ID: <1434138905-15886-7-git-send-email-pantelis.antoniou@konsulko.com>
+From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Subject: [PATCH 7/8] of: dynamic: Add __of_node_dupv()
+Date: Fri, 12 Jun 2015 22:55:04 +0300
+Message-ID: <1434138905-15886-8-git-send-email-pantelis.antoniou@konsulko.com>
 References: <1434138905-15886-1-git-send-email-pantelis.antoniou@konsulko.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1434138905-15886-1-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1434138905-15886-1-git-send-email-pantelis.antoniou@konsulko.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Matt Porter <mporter@konsulko.com>, Koen Kooi <koen@dominion.thruhere.net>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>
 List-Id: devicetree@vger.kernel.org
 
-Add a description of the target root overlay method to the overlay
-documention file.
+Add an __of_node_dupv() private method and make __of_node_dup() use it.
+This is required for the subsequent changeset accessors which will
+make use of it.
 
-Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
 ---
- Documentation/devicetree/overlay-notes.txt | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/of/dynamic.c | 29 +++++++++++++++++++++++------
+ 1 file changed, 23 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/overlay-notes.txt b/Documentation/devicetree/overlay-notes.txt
-index dd595e6..00ede57 100644
---- a/Documentation/devicetree/overlay-notes.txt
-+++ b/Documentation/devicetree/overlay-notes.txt
-@@ -104,6 +104,10 @@ If your board has multiple slots/places where a single overlay can work
- and each slot is defined by a node, you can use the of_overlay_create_indirect()
- method to select the target.
+diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+index 53826b8..e452171 100644
+--- a/drivers/of/dynamic.c
++++ b/drivers/of/dynamic.c
+@@ -394,8 +394,9 @@ struct property *__of_prop_dup(const struct property *prop, gfp_t allocflags)
+ }
  
-+For overlays on probeable busses, use the of_overlay_create_target_root() method
-+in which you supply a device node as a target root, and which all target
-+references in the overlay are performed relative to that node.
-+
- Overlay DTS Format
- ------------------
+ /**
+- * __of_node_dup() - Duplicate or create an empty device node dynamically.
+- * @fmt: Format string (plus vargs) for new full name of the device node
++ * __of_node_dupv() - Duplicate or create an empty device node dynamically.
++ * @fmt: Format string for new full name of the device node
++ * @vargs: va_list containing the arugments for the node full name
+  *
+  * Create an device tree node, either by duplicating an empty node or by allocating
+  * an empty one suitable for further modification.  The node data are
+@@ -403,17 +404,15 @@ struct property *__of_prop_dup(const struct property *prop, gfp_t allocflags)
+  * OF_DETACHED bits set. Returns the newly allocated node or NULL on out of
+  * memory error.
+  */
+-struct device_node *__of_node_dup(const struct device_node *np, const char *fmt, ...)
++struct device_node *__of_node_dupv(const struct device_node *np,
++		const char *fmt, va_list vargs)
+ {
+-	va_list vargs;
+ 	struct device_node *node;
  
-@@ -144,3 +148,7 @@ contains the information required to map from a phandle to a tree location.
- The indirect target requires the use of a selector target on the call to
- of_overlay_create_indirect(). I.e. passing the "foo" id will select the target
- in the foo node, "bar" in bar node, etc.
+ 	node = kzalloc(sizeof(*node), GFP_KERNEL);
+ 	if (!node)
+ 		return NULL;
+-	va_start(vargs, fmt);
+ 	node->full_name = kvasprintf(GFP_KERNEL, fmt, vargs);
+-	va_end(vargs);
+ 	if (!node->full_name) {
+ 		kfree(node);
+ 		return NULL;
+@@ -445,6 +444,24 @@ struct device_node *__of_node_dup(const struct device_node *np, const char *fmt,
+ 	return NULL;
+ }
+ 
++/**
++ * __of_node_dup() - Duplicate or create an empty device node dynamically.
++ * @fmt: Format string (plus vargs) for new full name of the device node
++ *
++ * See: __of_node_dupv()
++ */
++struct device_node *__of_node_dup(const struct device_node *np,
++		const char *fmt, ...)
++{
++	va_list vargs;
++	struct device_node *node;
 +
-+Note that when using the target root create method all target references must
-+lie under the target root node. I.e. the overlay is not allowed to 'break' out
-+of the root.
++	va_start(vargs, fmt);
++	node = __of_node_dupv(np, fmt, vargs);
++	va_end(vargs);
++	return node;
++}
++
+ static void __of_changeset_entry_destroy(struct of_changeset_entry *ce)
+ {
+ 	of_node_put(ce->np);
 -- 
 1.7.12
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
