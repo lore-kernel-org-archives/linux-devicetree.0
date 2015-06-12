@@ -1,7 +1,7 @@
 From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: [PATCH 7/8] of: dynamic: Add __of_node_dupv()
-Date: Fri, 12 Jun 2015 22:55:04 +0300
-Message-ID: <1434138905-15886-8-git-send-email-pantelis.antoniou@konsulko.com>
+Subject: [PATCH 1/8] of: overlay: Implement indirect target support
+Date: Fri, 12 Jun 2015 22:54:58 +0300
+Message-ID: <1434138905-15886-2-git-send-email-pantelis.antoniou@konsulko.com>
 References: <1434138905-15886-1-git-send-email-pantelis.antoniou@konsulko.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1434138905-15886-1-git-send-email-pantelis.antoniou@konsulko.com>
@@ -10,75 +10,256 @@ To: Rob Herring <robherring2@gmail.com>
 Cc: Grant Likely <grant.likely@secretlab.ca>, Matt Porter <mporter@konsulko.com>, Koen Kooi <koen@dominion.thruhere.net>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>
 List-Id: devicetree@vger.kernel.org
 
-Add an __of_node_dupv() private method and make __of_node_dup() use it.
-This is required for the subsequent changeset accessors which will
-make use of it.
+Some applications require applying the same overlay to a different
+target according to some external condition (for instance depending
+on the slot a card has been inserted, the overlay target is different).
+
+The indirect target use requires using the new
+of_overlay_create_indirect() API which uses a text selector.
+
+The format requires the use of a target-indirect node as follows:
+
+	fragment@0 {
+		target-indirect {
+			foo { target = <&foo_target>; };
+			bar { target = <&bar_target>; };
+		};
+	};
+
+Calling of_overlay_create_indirect() with a "foo" argument selects
+the foo_target and so on.
 
 Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
 ---
- drivers/of/dynamic.c | 29 +++++++++++++++++++++++------
- 1 file changed, 23 insertions(+), 6 deletions(-)
+ drivers/of/overlay.c | 126 +++++++++++++++++++++++++++++++++++++++++----------
+ include/linux/of.h   |   8 ++++
+ 2 files changed, 110 insertions(+), 24 deletions(-)
 
-diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
-index 53826b8..e452171 100644
---- a/drivers/of/dynamic.c
-+++ b/drivers/of/dynamic.c
-@@ -394,8 +394,9 @@ struct property *__of_prop_dup(const struct property *prop, gfp_t allocflags)
+diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+index 747568f..80aab6f 100644
+--- a/drivers/of/overlay.c
++++ b/drivers/of/overlay.c
+@@ -54,6 +54,7 @@ struct of_overlay {
+ 	struct of_overlay_info *ovinfo_tab;
+ 	struct of_changeset cset;
+ 	struct kobject kobj;
++	char *indirect_id;
+ };
+ 
+ /* master enable switch; once set to 0 can't be re-enabled */
+@@ -191,14 +192,8 @@ static int of_overlay_apply(struct of_overlay *ov)
+ 	return 0;
  }
  
- /**
-- * __of_node_dup() - Duplicate or create an empty device node dynamically.
-- * @fmt: Format string (plus vargs) for new full name of the device node
-+ * __of_node_dupv() - Duplicate or create an empty device node dynamically.
-+ * @fmt: Format string for new full name of the device node
-+ * @vargs: va_list containing the arugments for the node full name
-  *
-  * Create an device tree node, either by duplicating an empty node or by allocating
-  * an empty one suitable for further modification.  The node data are
-@@ -403,17 +404,15 @@ struct property *__of_prop_dup(const struct property *prop, gfp_t allocflags)
-  * OF_DETACHED bits set. Returns the newly allocated node or NULL on out of
-  * memory error.
-  */
--struct device_node *__of_node_dup(const struct device_node *np, const char *fmt, ...)
-+struct device_node *__of_node_dupv(const struct device_node *np,
-+		const char *fmt, va_list vargs)
+-/*
+- * Find the target node using a number of different strategies
+- * in order of preference
+- *
+- * "target" property containing the phandle of the target
+- * "target-path" property containing the path of the target
+- */
+-static struct device_node *find_target_node(struct device_node *info_node)
++static struct device_node *find_target_node_direct(struct of_overlay *ov,
++		struct device_node *info_node)
  {
--	va_list vargs;
- 	struct device_node *node;
+ 	const char *path;
+ 	u32 val;
+@@ -209,17 +204,66 @@ static struct device_node *find_target_node(struct device_node *info_node)
+ 	if (ret == 0)
+ 		return of_find_node_by_phandle(val);
  
- 	node = kzalloc(sizeof(*node), GFP_KERNEL);
- 	if (!node)
- 		return NULL;
--	va_start(vargs, fmt);
- 	node->full_name = kvasprintf(GFP_KERNEL, fmt, vargs);
--	va_end(vargs);
- 	if (!node->full_name) {
- 		kfree(node);
- 		return NULL;
-@@ -445,6 +444,24 @@ struct device_node *__of_node_dup(const struct device_node *np, const char *fmt,
+-	/* now try to locate by path */
++	/* failed, try to locate by path */
+ 	ret = of_property_read_string(info_node, "target-path", &path);
+ 	if (ret == 0)
+ 		return of_find_node_by_path(path);
+ 
+-	pr_err("%s: Failed to find target for node %p (%s)\n", __func__,
+-		info_node, info_node->name);
+-
  	return NULL;
  }
  
-+/**
-+ * __of_node_dup() - Duplicate or create an empty device node dynamically.
-+ * @fmt: Format string (plus vargs) for new full name of the device node
++/*
++ * Find the target node using a number of different strategies
++ * in order of preference. Respects the indirect id if available.
 + *
-+ * See: __of_node_dupv()
++ * "target" property containing the phandle of the target
++ * "target-path" property containing the path of the target
 + */
-+struct device_node *__of_node_dup(const struct device_node *np,
-+		const char *fmt, ...)
++static struct device_node *find_target_node(struct of_overlay *ov,
++		struct device_node *info_node)
 +{
-+	va_list vargs;
-+	struct device_node *node;
++	struct device_node *target;
++	struct device_node *target_indirect;
++	struct device_node *indirect;
 +
-+	va_start(vargs, fmt);
-+	node = __of_node_dupv(np, fmt, vargs);
-+	va_end(vargs);
-+	return node;
++	/* try direct target */
++	target = find_target_node_direct(ov, info_node);
++	if (target)
++		return target;
++
++	/* try indirect if there */
++	if (!ov->indirect_id)
++		return NULL;
++
++	target_indirect = of_get_child_by_name(info_node, "target-indirect");
++	if (!target_indirect) {
++		pr_err("%s: Failed to find target-indirect node at %s\n",
++				__func__,
++				of_node_full_name(info_node));
++		return NULL;
++	}
++
++	indirect = of_get_child_by_name(target_indirect, ov->indirect_id);
++	of_node_put(target_indirect);
++	if (!indirect) {
++		pr_err("%s: Failed to find indirect child node \"%s\" at %s\n",
++				__func__, ov->indirect_id,
++				of_node_full_name(info_node));
++		return NULL;
++	}
++
++	target = find_target_node_direct(ov, indirect);
++
++	if (!target) {
++		pr_err("%s: Failed to find target for \"%s\" at %s\n",
++				__func__, ov->indirect_id,
++				of_node_full_name(indirect));
++	}
++	of_node_put(indirect);
++
++	return target;
 +}
 +
- static void __of_changeset_entry_destroy(struct of_changeset_entry *ce)
+ /**
+  * of_fill_overlay_info() - Fill an overlay info structure
+  * @ov		Overlay to fill
+@@ -241,7 +285,7 @@ static int of_fill_overlay_info(struct of_overlay *ov,
+ 	if (ovinfo->overlay == NULL)
+ 		goto err_fail;
+ 
+-	ovinfo->target = find_target_node(info_node);
++	ovinfo->target = find_target_node(ov, info_node);
+ 	if (ovinfo->target == NULL)
+ 		goto err_fail;
+ 
+@@ -341,6 +385,7 @@ void of_overlay_release(struct kobject *kobj)
  {
- 	of_node_put(ce->np);
+ 	struct of_overlay *ov = kobj_to_overlay(kobj);
+ 
++	kfree(ov->indirect_id);
+ 	kfree(ov);
+ }
+ 
+@@ -432,17 +477,8 @@ static struct kobj_type of_overlay_ktype = {
+ 
+ static struct kset *ov_kset;
+ 
+-/**
+- * of_overlay_create() - Create and apply an overlay
+- * @tree:	Device node containing all the overlays
+- *
+- * Creates and applies an overlay while also keeping track
+- * of the overlay in a list. This list can be used to prevent
+- * illegal overlay removals.
+- *
+- * Returns the id of the created overlay, or an negative error number
+- */
+-int of_overlay_create(struct device_node *tree)
++static int __of_overlay_create(struct device_node *tree,
++		const char *indirect_id)
+ {
+ 	struct of_overlay *ov;
+ 	int err, id;
+@@ -457,6 +493,14 @@ int of_overlay_create(struct device_node *tree)
+ 		return -ENOMEM;
+ 	ov->id = -1;
+ 
++	if (indirect_id) {
++		ov->indirect_id = kstrdup(indirect_id, GFP_KERNEL);
++		if (!ov->indirect_id) {
++			err = -ENOMEM;
++			goto err_no_mem;
++		}
++	}
++
+ 	INIT_LIST_HEAD(&ov->node);
+ 
+ 	of_changeset_init(&ov->cset);
+@@ -523,13 +567,47 @@ err_free_idr:
+ 	idr_remove(&ov_idr, ov->id);
+ err_destroy_trans:
+ 	of_changeset_destroy(&ov->cset);
++err_no_mem:
++	kfree(ov->indirect_id);
+ 	kfree(ov);
+ 	mutex_unlock(&of_mutex);
+ 
+ 	return err;
+ }
++
++/**
++ * of_overlay_create() - Create and apply an overlay
++ * @tree:	Device node containing all the overlays
++ *
++ * Creates and applies an overlay while also keeping track
++ * of the overlay in a list. This list can be used to prevent
++ * illegal overlay removals.
++ *
++ * Returns the id of the created overlay, or an negative error number
++ */
++int of_overlay_create(struct device_node *tree)
++{
++	return __of_overlay_create(tree, NULL);
++}
+ EXPORT_SYMBOL_GPL(of_overlay_create);
+ 
++/**
++ * of_overlay_create_indirect() - Create and apply an overlay
++ * @tree:	Device node containing all the overlays
++ * @id:		Indirect property phandle
++ *
++ * Creates and applies an overlay while also keeping track
++ * of the overlay in a list. This list can be used to prevent
++ * illegal overlay removals.
++ *
++ * Returns the id of the created overlay, or an negative error number
++ */
++int of_overlay_create_indirect(struct device_node *tree, const char *id)
++{
++	return __of_overlay_create(tree, id);
++}
++EXPORT_SYMBOL_GPL(of_overlay_create_indirect);
++
+ /* check whether the given node, lies under the given tree */
+ static int overlay_subtree_check(struct device_node *tree,
+ 		struct device_node *dn)
+diff --git a/include/linux/of.h b/include/linux/of.h
+index b87838e..98c9244 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -1074,6 +1074,8 @@ int of_overlay_create(struct device_node *tree);
+ int of_overlay_destroy(int id);
+ int of_overlay_destroy_all(void);
+ 
++int of_overlay_create_indirect(struct device_node *tree, const char *id);
++
+ #else
+ 
+ static inline int of_overlay_create(struct device_node *tree)
+@@ -1091,6 +1093,12 @@ static inline int of_overlay_destroy_all(void)
+ 	return -ENOTSUPP;
+ }
+ 
++static inline int of_overlay_create_indirect(struct device_node *tree,
++		const char *id)
++{
++	return -ENOTSUPP;
++}
++
+ #endif
+ 
+ #endif /* _LINUX_OF_H */
 -- 
 1.7.12
