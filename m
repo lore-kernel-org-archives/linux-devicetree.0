@@ -1,38 +1,39 @@
-From: Anda-Maria Nicolae <anda-maria.nicolae-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] power_supply: rt9455_charger: Fix error reported by static analysis tool
-Date: Fri, 12 Jun 2015 15:25:51 +0300
-Message-ID: <1434111951-9378-1-git-send-email-anda-maria.nicolae@intel.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 2/3] watchdog: bcm2835: Add poweroff code for the Raspberry
+ Pi
+Date: Fri, 12 Jun 2015 05:23:21 -0700
+Message-ID: <557ACF39.2060108@roeck-us.net>
+References: <1433845305-17329-1-git-send-email-noralf@tronnes.org> <1433845305-17329-2-git-send-email-noralf@tronnes.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1433845305-17329-2-git-send-email-noralf@tronnes.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?B?Tm9yYWxmIFRyw7hubmVz?= <noralf@tronnes.org>, linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The result of container_of macro cannot be NULL, so there is no need to
-check whether info is NULL.
+On 06/09/2015 03:21 AM, Noralf Tr=C3=B8nnes wrote:
+> This adds a new poweroff function to the watchdog driver for the
+> Raspberry Pi. Currently poweroff/halt results in a reboot.
+>
+> The Raspberry Pi firmware uses the RSTS register to know which
+> partiton to boot from. The partiton value is spread into bits
+> 0, 2, 4, 6, 8, 10. Partiton 63 is a special partition used by
+> the firmware to indicate halt.
+>
+> The firmware made this change in 19 Aug 2013 and was matched
+> by the downstream commit:
+> Changes for new NOOBS multi partition booting from gsh
+>
+> Signed-off-by: Noralf Tr=C3=B8nnes <noralf@tronnes.org>
 
-Signed-off-by: Anda-Maria Nicolae <anda-maria.nicolae-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
----
- drivers/power/rt9455_charger.c |    3 ---
- 1 file changed, 3 deletions(-)
+This poweroff handler stuff is getting really messy :-(.
 
-diff --git a/drivers/power/rt9455_charger.c b/drivers/power/rt9455_charger.c
-index de86913..08baac6 100644
---- a/drivers/power/rt9455_charger.c
-+++ b/drivers/power/rt9455_charger.c
-@@ -1412,9 +1412,6 @@ static int rt9455_usb_event(struct notifier_block *nb,
- 	unsigned int opa_mode, iaicr;
- 	int ret;
- 
--	if (!info)
--		return NOTIFY_DONE;
--
- 	/*
- 	 * Determine whether the charger is in charge mode
- 	 * or in boost mode.
--- 
-1.7.9.5
+Nothing we can do about that here, so
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Guenter Roeck <linux@roeck-us.net>
+
+Guenter
