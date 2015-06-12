@@ -1,154 +1,116 @@
-From: Hyungwon Hwang <human.hwang@samsung.com>
-Subject: [PATCH v6 03/15] drm/exynos: add drm_iommu_attach_device_if_possible()
-Date: Fri, 12 Jun 2015 21:58:58 +0900
-Message-ID: <1434113958-15877-4-git-send-email-human.hwang@samsung.com>
-References: <1434113958-15877-1-git-send-email-human.hwang@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <1434113958-15877-1-git-send-email-human.hwang@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: sw0312.kim@samsung.com
+From: Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v6 00/15] Add drivers for Exynos5433 display
+Date: Fri, 12 Jun 2015 21:58:55 +0900
+Message-ID: <1434113958-15877-1-git-send-email-human.hwang@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, daniel-rLtY4a/8tF1rovVCs/uTlw@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-RXZlcnkgQ1JUQyBkcml2ZXJzIGluIEV4eW5vcyBEUk0gaW1wbGVtZW50cyB0aGUgY29kZSB3aGlj
-aCBjaGVja3MKd2hldGhlciBJT01NVSBpcyBzdXBwb3J0ZWQgb3Igbm90LCBhbmQgaWYgc3VwcG9y
-dGVkIGVuYWJsZSBpdC4KTWFraW5nIG5ldyBoZWxwZXIgZm9yIGl0IGdlbmVyYWxpemUgZWFjaCBD
-UlRDIGRyaXZlcnMuCgpTaWduZWQtb2ZmLWJ5OiBIeXVuZ3dvbiBId2FuZyA8aHVtYW4uaHdhbmdA
-c2Ftc3VuZy5jb20+Ci0tLQpDaGFuZ2VzIGZvciB2NjoKLSBOZXcKIGRyaXZlcnMvZ3B1L2RybS9l
-eHlub3MvZXh5bm9zN19kcm1fZGVjb24uYyB8IDI1ICsrKysrKystLS0tLS0tLS0tLS0tLS0KIGRy
-aXZlcnMvZ3B1L2RybS9leHlub3MvZXh5bm9zX2RybV9kcnYuaCAgICB8ICAxICsKIGRyaXZlcnMv
-Z3B1L2RybS9leHlub3MvZXh5bm9zX2RybV9maW1kLmMgICB8IDM0ICsrKysrKystLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLQogZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3NfZHJtX2lvbW11LmMg
-IHwgMTQgKysrKysrKysrKysrCiBkcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19kcm1faW9t
-bXUuaCAgfCAxMSArKysrKysrKysrCiBkcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19taXhl
-ci5jICAgICAgfCAgOCArKysrLS0tCiA2IGZpbGVzIGNoYW5nZWQsIDQ3IGluc2VydGlvbnMoKyks
-IDQ2IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9leHlub3MvZXh5
-bm9zN19kcm1fZGVjb24uYyBiL2RyaXZlcnMvZ3B1L2RybS9leHlub3MvZXh5bm9zN19kcm1fZGVj
-b24uYwppbmRleCA3ZDA5NTVkLi5iMDI2MWRkIDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0v
-ZXh5bm9zL2V4eW5vczdfZHJtX2RlY29uLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9l
-eHlub3M3X2RybV9kZWNvbi5jCkBAIC04OSw4ICs4OSw5IEBAIHN0YXRpYyB2b2lkIGRlY29uX3dh
-aXRfZm9yX3ZibGFuayhzdHJ1Y3QgZXh5bm9zX2RybV9jcnRjICpjcnRjKQogCQlEUk1fREVCVUdf
-S01TKCJ2Ymxhbmsgd2FpdCB0aW1lZCBvdXQuXG4iKTsKIH0KCi1zdGF0aWMgdm9pZCBkZWNvbl9j
-bGVhcl9jaGFubmVsKHN0cnVjdCBkZWNvbl9jb250ZXh0ICpjdHgpCitzdGF0aWMgdm9pZCBkZWNv
-bl9jbGVhcl9jaGFubmVscyhzdHJ1Y3QgZXh5bm9zX2RybV9jcnRjICpjcnRjKQogeworCXN0cnVj
-dCBkZWNvbl9jb250ZXh0ICpjdHggPSBjcnRjLT5jdHg7CiAJdW5zaWduZWQgaW50IHdpbiwgY2hf
-ZW5hYmxlZCA9IDA7CgogCURSTV9ERUJVR19LTVMoIiVzXG4iLCBfX0ZJTEVfXyk7CkBAIC0xMjAs
-MjcgKzEyMSwxNiBAQCBzdGF0aWMgaW50IGRlY29uX2N0eF9pbml0aWFsaXplKHN0cnVjdCBkZWNv
-bl9jb250ZXh0ICpjdHgsCiAJCQlzdHJ1Y3QgZHJtX2RldmljZSAqZHJtX2RldikKIHsKIAlzdHJ1
-Y3QgZXh5bm9zX2RybV9wcml2YXRlICpwcml2ID0gZHJtX2Rldi0+ZGV2X3ByaXZhdGU7CisJaW50
-IHJldDsKCiAJY3R4LT5kcm1fZGV2ID0gZHJtX2RldjsKIAljdHgtPnBpcGUgPSBwcml2LT5waXBl
-Kys7CgotCS8qIGF0dGFjaCB0aGlzIHN1YiBkcml2ZXIgdG8gaW9tbXUgbWFwcGluZyBpZiBzdXBw
-b3J0ZWQuICovCi0JaWYgKGlzX2RybV9pb21tdV9zdXBwb3J0ZWQoY3R4LT5kcm1fZGV2KSkgewot
-CQlpbnQgcmV0OwotCi0JCS8qCi0JCSAqIElmIGFueSBjaGFubmVsIGlzIGFscmVhZHkgYWN0aXZl
-LCBpb21tdSB3aWxsIHRocm93Ci0JCSAqIGEgUEFHRSBGQVVMVCB3aGVuIGVuYWJsZWQuIFNvIGNs
-ZWFyIGFueSBjaGFubmVsIGlmIGVuYWJsZWQuCi0JCSAqLwotCQlkZWNvbl9jbGVhcl9jaGFubmVs
-KGN0eCk7Ci0JCXJldCA9IGRybV9pb21tdV9hdHRhY2hfZGV2aWNlKGN0eC0+ZHJtX2RldiwgY3R4
-LT5kZXYpOwotCQlpZiAocmV0KSB7Ci0JCQlEUk1fRVJST1IoImRybV9pb21tdV9hdHRhY2ggZmFp
-bGVkLlxuIik7Ci0JCQlyZXR1cm4gcmV0OwotCQl9Ci0JfQorCXJldCA9IGRybV9pb21tdV9hdHRh
-Y2hfZGV2aWNlX2lmX3Bvc3NpYmxlKGN0eC0+Y3J0YywgZHJtX2RldiwgY3R4LT5kZXYpOworCWlm
-IChyZXQpCisJCXByaXYtPnBpcGUtLTsKCi0JcmV0dXJuIDA7CisJcmV0dXJuIHJldDsKIH0KCiBz
-dGF0aWMgdm9pZCBkZWNvbl9jdHhfcmVtb3ZlKHN0cnVjdCBkZWNvbl9jb250ZXh0ICpjdHgpCkBA
-IC02ODQsNiArNjc0LDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBleHlub3NfZHJtX2NydGNfb3Bz
-IGRlY29uX2NydGNfb3BzID0gewogCS53YWl0X2Zvcl92YmxhbmsgPSBkZWNvbl93YWl0X2Zvcl92
-YmxhbmssCiAJLndpbl9jb21taXQgPSBkZWNvbl93aW5fY29tbWl0LAogCS53aW5fZGlzYWJsZSA9
-IGRlY29uX3dpbl9kaXNhYmxlLAorCS5jbGVhcl9jaGFubmVscyA9IGRlY29uX2NsZWFyX2NoYW5u
-ZWxzLAogfTsKCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3NfZHJt
-X2Rydi5oIGIvZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3NfZHJtX2Rydi5oCmluZGV4IDZi
-NDk1OGIuLjFiYTM0ZjEgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9leHlub3MvZXh5bm9z
-X2RybV9kcnYuaAorKysgYi9kcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19kcm1fZHJ2LmgK
-QEAgLTE4Miw2ICsxODIsNyBAQCBzdHJ1Y3QgZXh5bm9zX2RybV9jcnRjX29wcyB7CiAJdm9pZCAo
-Kndpbl9kaXNhYmxlKShzdHJ1Y3QgZXh5bm9zX2RybV9jcnRjICpjcnRjLCB1bnNpZ25lZCBpbnQg
-enBvcyk7CiAJdm9pZCAoKnRlX2hhbmRsZXIpKHN0cnVjdCBleHlub3NfZHJtX2NydGMgKmNydGMp
-OwogCXZvaWQgKCpjbG9ja19lbmFibGUpKHN0cnVjdCBleHlub3NfZHJtX2NydGMgKmNydGMsIGJv
-b2wgZW5hYmxlKTsKKwl2b2lkICgqY2xlYXJfY2hhbm5lbHMpKHN0cnVjdCBleHlub3NfZHJtX2Ny
-dGMgKmNydGMpOwogfTsKCiAvKgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9l
-eHlub3NfZHJtX2ZpbWQuYyBiL2RyaXZlcnMvZ3B1L2RybS9leHlub3MvZXh5bm9zX2RybV9maW1k
-LmMKaW5kZXggOWNjZTJiYy4uZGRmNGM4NCAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL2V4
-eW5vcy9leHlub3NfZHJtX2ZpbWQuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5v
-c19kcm1fZmltZC5jCkBAIC0yNDIsOCArMjQyLDkgQEAgc3RhdGljIHZvaWQgZmltZF9lbmFibGVf
-c2hhZG93X2NoYW5uZWxfcGF0aChzdHJ1Y3QgZmltZF9jb250ZXh0ICpjdHgsCiAJd3JpdGVsKHZh
-bCwgY3R4LT5yZWdzICsgU0hBRE9XQ09OKTsKIH0KCi1zdGF0aWMgdm9pZCBmaW1kX2NsZWFyX2No
-YW5uZWwoc3RydWN0IGZpbWRfY29udGV4dCAqY3R4KQorc3RhdGljIHZvaWQgZmltZF9jbGVhcl9j
-aGFubmVscyhzdHJ1Y3QgZXh5bm9zX2RybV9jcnRjICpjcnRjKQogeworCXN0cnVjdCBmaW1kX2Nv
-bnRleHQgKmN0eCA9IGNydGMtPmN0eDsKIAl1bnNpZ25lZCBpbnQgd2luLCBjaF9lbmFibGVkID0g
-MDsKCiAJRFJNX0RFQlVHX0tNUygiJXNcbiIsIF9fRklMRV9fKTsKQEAgLTI3MywzMCArMjc0LDYg
-QEAgc3RhdGljIHZvaWQgZmltZF9jbGVhcl9jaGFubmVsKHN0cnVjdCBmaW1kX2NvbnRleHQgKmN0
-eCkKIAl9CiB9Cgotc3RhdGljIGludCBmaW1kX2lvbW11X2F0dGFjaF9kZXZpY2VzKHN0cnVjdCBm
-aW1kX2NvbnRleHQgKmN0eCwKLQkJCXN0cnVjdCBkcm1fZGV2aWNlICpkcm1fZGV2KQotewotCi0J
-LyogYXR0YWNoIHRoaXMgc3ViIGRyaXZlciB0byBpb21tdSBtYXBwaW5nIGlmIHN1cHBvcnRlZC4g
-Ki8KLQlpZiAoaXNfZHJtX2lvbW11X3N1cHBvcnRlZChjdHgtPmRybV9kZXYpKSB7Ci0JCWludCBy
-ZXQ7Ci0KLQkJLyoKLQkJICogSWYgYW55IGNoYW5uZWwgaXMgYWxyZWFkeSBhY3RpdmUsIGlvbW11
-IHdpbGwgdGhyb3cKLQkJICogYSBQQUdFIEZBVUxUIHdoZW4gZW5hYmxlZC4gU28gY2xlYXIgYW55
-IGNoYW5uZWwgaWYgZW5hYmxlZC4KLQkJICovCi0JCWZpbWRfY2xlYXJfY2hhbm5lbChjdHgpOwot
-CQlyZXQgPSBkcm1faW9tbXVfYXR0YWNoX2RldmljZShjdHgtPmRybV9kZXYsIGN0eC0+ZGV2KTsK
-LQkJaWYgKHJldCkgewotCQkJRFJNX0VSUk9SKCJkcm1faW9tbXVfYXR0YWNoIGZhaWxlZC5cbiIp
-OwotCQkJcmV0dXJuIHJldDsKLQkJfQotCi0JfQotCi0JcmV0dXJuIDA7Ci19Ci0KIHN0YXRpYyB2
-b2lkIGZpbWRfaW9tbXVfZGV0YWNoX2RldmljZXMoc3RydWN0IGZpbWRfY29udGV4dCAqY3R4KQog
-ewogCS8qIGRldGFjaCB0aGlzIHN1YiBkcml2ZXIgZnJvbSBpb21tdSBtYXBwaW5nIGlmIHN1cHBv
-cnRlZC4gKi8KQEAgLTk0Myw2ICs5MjAsNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGV4eW5vc19k
-cm1fY3J0Y19vcHMgZmltZF9jcnRjX29wcyA9IHsKIAkud2luX2Rpc2FibGUgPSBmaW1kX3dpbl9k
-aXNhYmxlLAogCS50ZV9oYW5kbGVyID0gZmltZF90ZV9oYW5kbGVyLAogCS5jbG9ja19lbmFibGUg
-PSBmaW1kX2RwX2Nsb2NrX2VuYWJsZSwKKwkuY2xlYXJfY2hhbm5lbHMgPSBmaW1kX2NsZWFyX2No
-YW5uZWxzLAogfTsKCiBzdGF0aWMgaXJxcmV0dXJuX3QgZmltZF9pcnFfaGFuZGxlcihpbnQgaXJx
-LCB2b2lkICpkZXZfaWQpCkBAIC0xMDEyLDcgKzk5MCwxMSBAQCBzdGF0aWMgaW50IGZpbWRfYmlu
-ZChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBkZXZpY2UgKm1hc3Rlciwgdm9pZCAqZGF0YSkK
-IAlpZiAoY3R4LT5kaXNwbGF5KQogCQlleHlub3NfZHJtX2NyZWF0ZV9lbmNfY29ubihkcm1fZGV2
-LCBjdHgtPmRpc3BsYXkpOwoKLQlyZXR1cm4gZmltZF9pb21tdV9hdHRhY2hfZGV2aWNlcyhjdHgs
-IGRybV9kZXYpOworCXJldCA9IGRybV9pb21tdV9hdHRhY2hfZGV2aWNlX2lmX3Bvc3NpYmxlKGN0
-eC0+Y3J0YywgZHJtX2RldiwgZGV2KTsKKwlpZiAocmV0KQorCQlwcml2LT5waXBlLS07CisKKwly
-ZXR1cm4gcmV0OwogfQoKIHN0YXRpYyB2b2lkIGZpbWRfdW5iaW5kKHN0cnVjdCBkZXZpY2UgKmRl
-diwgc3RydWN0IGRldmljZSAqbWFzdGVyLApkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2V4
-eW5vcy9leHlub3NfZHJtX2lvbW11LmMgYi9kcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19k
-cm1faW9tbXUuYwppbmRleCBiMzJiMjkxLi42ZjA3NDc5IDEwMDY0NAotLS0gYS9kcml2ZXJzL2dw
-dS9kcm0vZXh5bm9zL2V4eW5vc19kcm1faW9tbXUuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vZXh5
-bm9zL2V4eW5vc19kcm1faW9tbXUuYwpAQCAtMTQxLDMgKzE0MSwxNyBAQCB2b2lkIGRybV9pb21t
-dV9kZXRhY2hfZGV2aWNlKHN0cnVjdCBkcm1fZGV2aWNlICpkcm1fZGV2LAogCWlvbW11X2RldGFj
-aF9kZXZpY2UobWFwcGluZy0+ZG9tYWluLCBzdWJkcnZfZGV2KTsKIAlkcm1fcmVsZWFzZV9pb21t
-dV9tYXBwaW5nKGRybV9kZXYpOwogfQorCitpbnQgZHJtX2lvbW11X2F0dGFjaF9kZXZpY2VfaWZf
-cG9zc2libGUoc3RydWN0IGV4eW5vc19kcm1fY3J0YyAqZXh5bm9zX2NydGMsCisJCQlzdHJ1Y3Qg
-ZHJtX2RldmljZSAqZHJtX2Rldiwgc3RydWN0IGRldmljZSAqc3ViZHJ2X2RldikKK3sKKwlpbnQg
-cmV0ID0gMDsKKworCWlmIChpc19kcm1faW9tbXVfc3VwcG9ydGVkKGRybV9kZXYpKSB7CisJCWlm
-IChleHlub3NfY3J0Yy0+b3BzLT5jbGVhcl9jaGFubmVscykKKwkJCWV4eW5vc19jcnRjLT5vcHMt
-PmNsZWFyX2NoYW5uZWxzKGV4eW5vc19jcnRjKTsKKwkJcmV0dXJuIGRybV9pb21tdV9hdHRhY2hf
-ZGV2aWNlKGRybV9kZXYsIHN1YmRydl9kZXYpOworCX0KKworCXJldHVybiByZXQ7Cit9CmRpZmYg
-LS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19kcm1faW9tbXUuaCBiL2RyaXZl
-cnMvZ3B1L2RybS9leHlub3MvZXh5bm9zX2RybV9pb21tdS5oCmluZGV4IDM1ZDI1ODguLjgzNDFj
-N2EgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9leHlub3MvZXh5bm9zX2RybV9pb21tdS5o
-CisrKyBiL2RyaXZlcnMvZ3B1L2RybS9leHlub3MvZXh5bm9zX2RybV9pb21tdS5oCkBAIC0zOCw2
-ICszOCwxMCBAQCBzdGF0aWMgaW5saW5lIGJvb2wgaXNfZHJtX2lvbW11X3N1cHBvcnRlZChzdHJ1
-Y3QgZHJtX2RldmljZSAqZHJtX2RldikKICNlbmRpZgogfQoKK2ludCBkcm1faW9tbXVfYXR0YWNo
-X2RldmljZV9pZl9wb3NzaWJsZSgKKwkJc3RydWN0IGV4eW5vc19kcm1fY3J0YyAqZXh5bm9zX2Ny
-dGMsIHN0cnVjdCBkcm1fZGV2aWNlICpkcm1fZGV2LAorCQlzdHJ1Y3QgZGV2aWNlICpzdWJkcnZf
-ZGV2KTsKKwogI2Vsc2UKCiBzdGF0aWMgaW5saW5lIGludCBkcm1fY3JlYXRlX2lvbW11X21hcHBp
-bmcoc3RydWN0IGRybV9kZXZpY2UgKmRybV9kZXYpCkBAIC02NSw1ICs2OSwxMiBAQCBzdGF0aWMg
-aW5saW5lIGJvb2wgaXNfZHJtX2lvbW11X3N1cHBvcnRlZChzdHJ1Y3QgZHJtX2RldmljZSAqZHJt
-X2RldikKIAlyZXR1cm4gZmFsc2U7CiB9Cgorc3RhdGljIGlubGluZSBpbnQgZHJtX2lvbW11X2F0
-dGFjaF9kZXZpY2VfaWZfcG9zc2libGUoCisJCXN0cnVjdCBleHlub3NfZHJtX2NydGMgKmV4eW5v
-c19jcnRjLCBzdHJ1Y3QgZHJtX2RldmljZSAqZHJtX2RldiwKKwkJc3RydWN0IGRldmljZSAqc3Vi
-ZHJ2X2RldikKK3sKKwlyZXR1cm4gMDsKK30KKwogI2VuZGlmCiAjZW5kaWYKZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvZ3B1L2RybS9leHlub3MvZXh5bm9zX21peGVyLmMgYi9kcml2ZXJzL2dwdS9kcm0v
-ZXh5bm9zL2V4eW5vc19taXhlci5jCmluZGV4IDg1NGI2ZDguLjZhMmVkZTQgMTAwNjQ0Ci0tLSBh
-L2RyaXZlcnMvZ3B1L2RybS9leHlub3MvZXh5bm9zX21peGVyLmMKKysrIGIvZHJpdmVycy9ncHUv
-ZHJtL2V4eW5vcy9leHlub3NfbWl4ZXIuYwpAQCAtODgyLDEwICs4ODIsMTIgQEAgc3RhdGljIGlu
-dCBtaXhlcl9pbml0aWFsaXplKHN0cnVjdCBtaXhlcl9jb250ZXh0ICptaXhlcl9jdHgsCiAJCX0K
-IAl9CgotCWlmICghaXNfZHJtX2lvbW11X3N1cHBvcnRlZChtaXhlcl9jdHgtPmRybV9kZXYpKQot
-CQlyZXR1cm4gMDsKKwlyZXQgPSBkcm1faW9tbXVfYXR0YWNoX2RldmljZV9pZl9wb3NzaWJsZSht
-aXhlcl9jdHgtPmNydGMsIGRybV9kZXYsCisJCQkJCQkJCW1peGVyX2N0eC0+ZGV2KTsKKwlpZiAo
-cmV0KQorCQlwcml2LT5waXBlLS07CgotCXJldHVybiBkcm1faW9tbXVfYXR0YWNoX2RldmljZSht
-aXhlcl9jdHgtPmRybV9kZXYsIG1peGVyX2N0eC0+ZGV2KTsKKwlyZXR1cm4gcmV0OwogfQoKIHN0
-YXRpYyB2b2lkIG1peGVyX2N0eF9yZW1vdmUoc3RydWN0IG1peGVyX2NvbnRleHQgKm1peGVyX2N0
-eCkKLS0KMS45LjEKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
-ZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
-Cg==
+This patchset is based on the git(branch name: exynos-drm-next) which is
+maintained by Inki Dae.
+https://kernel.googlesource.com/pub/scm/linux/kernel/git/...
+
+This patchset adds 2 new device drivers, Exynos54333 decon and mic, and adds
+support for Exynos5433 mipi dsi. To enable display in a Exynos5433 board,
+decon(display controller), MIC(Mobile image compressor), mipi dsi, and panel
+have to be turned on. This patchset contains support for 3 drivers for SoC
+level devices.
+
+Changes for v2:
+- change config, file, and variable names of decon to represnt exynos5433
+instead of exynos to distinguish them from exynos7 decon
+- change the initialization order of decon to make it initialized in order like
+FIMD or exynos7 decon
+- make mic driver to be registered by exynos drm driver instead as a module
+driver
+- change the description of mic driver in documentation
+- add module author at the top of the source file removing MODULE_OWNER,
+MODULE_DESCRIPTION, MODULE_LICENSE
+- change the author of "drm/exynos: dsi: add support for Exynos5433 SoC" to
+Hyungwon Hwang by the previous author's will
+
+Changes for v3:
+< Decon >
+- fail fast when the proper image format is not set
+- remove unnecessary checking code
+- add and modify the function to make DPMS work well
+< MIC >
+- move if statement out of function, so that the function is not called
+unnecessarily
+- Make it use syscon framework for controlling system register
+< DSI >
+- separate the previous one patch to three
+- renaming patch: rename pll clock to sclk clock
+- generalizing patch: generalize the way to getting address and values
+- Exynos5433 patch: adds support for Exynos5433 dsi
+- use defines for more readable code
+- fix typos
+
+Changes for v4:
+- rebased to exynos-drm-next with the clean-up patchset by Gustavo Padovan.
+
+Changes for v5:
+- separated the refactoring patch of MIPI DSI driver into 3 patches
+- added the patch to make DSI driver compatiable with the old clock name
+- added the patch to rename the DSI driver's clock
+- rename the newly added dsi variables for clarity
+
+Changes for v6:
+- Clean up the build dependencies of Exynos DRM devices as preparation
+- Introduce new common function drm_iommu_attach_device_if_possible()
+- Add support for atomic modeset in Exynos5433 decon driver
+
+Hyungwon Hwang (14):
+  drm/exynos: remove the dependency of DP driver for ARCH_EXYNOS
+  drm/exynos: Add the dependency for DRM_EXYNOS to DPI/DSI/DP
+  drm/exynos: add drm_iommu_attach_device_if_possible()
+  drm/exynos: fix the input prompt of Exynos7 DECON
+  of: add helper for getting endpoint node of specific identifiers
+  drm/exynos: mic: add MIC driver
+  drm/exynos: dsi: rename pll_clk to sclk_clk
+  drm/exynos: dsi: add macros for register access
+  drm/exynos: dsi: make use of driver data for static values
+  drm/exynos: dsi: make use of array for clock access
+  drm/exynos: dsi: add support for Exynos5433
+  drm/exynos: dsi: add support for MIC driver as a bridge
+  drm/exynos: dsi: do not set TE GPIO direction by input
+  ARM: dts: rename the clock of MIPI DSI 'pll_clk' to 'sclk_mipi'
+
+Joonyoung Shim (1):
+  drm/exynos: add Exynos5433 decon driver
+
+ .../devicetree/bindings/video/exynos-mic.txt       |  51 ++
+ .../devicetree/bindings/video/exynos5433-decon.txt |  65 ++
+ .../devicetree/bindings/video/exynos_dsim.txt      |  31 +-
+ arch/arm/boot/dts/exynos4.dtsi                     |   2 +-
+ drivers/gpu/drm/exynos/Kconfig                     |  20 +-
+ drivers/gpu/drm/exynos/Makefile                    |   2 +
+ drivers/gpu/drm/exynos/exynos5433_drm_decon.c      | 694 +++++++++++++++++++++
+ drivers/gpu/drm/exynos/exynos7_drm_decon.c         |  25 +-
+ drivers/gpu/drm/exynos/exynos_drm_drv.c            |   3 +
+ drivers/gpu/drm/exynos/exynos_drm_drv.h            |   3 +
+ drivers/gpu/drm/exynos/exynos_drm_dsi.c            | 484 +++++++++-----
+ drivers/gpu/drm/exynos/exynos_drm_fimd.c           |  34 +-
+ drivers/gpu/drm/exynos/exynos_drm_iommu.c          |  14 +
+ drivers/gpu/drm/exynos/exynos_drm_iommu.h          |  11 +
+ drivers/gpu/drm/exynos/exynos_drm_mic.c            | 490 +++++++++++++++
+ drivers/gpu/drm/exynos/exynos_mixer.c              |   8 +-
+ drivers/of/base.c                                  |  33 +
+ include/linux/of_graph.h                           |   8 +
+ include/video/exynos5433_decon.h                   | 165 +++++
+ 19 files changed, 1937 insertions(+), 206 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/video/exynos-mic.txt
+ create mode 100644 Documentation/devicetree/bindings/video/exynos5433-decon.txt
+ create mode 100644 drivers/gpu/drm/exynos/exynos5433_drm_decon.c
+ create mode 100644 drivers/gpu/drm/exynos/exynos_drm_mic.c
+ create mode 100644 include/video/exynos5433_decon.h
+
+--
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
