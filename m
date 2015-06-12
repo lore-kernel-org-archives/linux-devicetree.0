@@ -1,47 +1,45 @@
-From: Sebastian Andrzej Siewior <sebastian@breakpoint.cc>
-Subject: Re: [PATCH v4 1/6] mtd: nand: vf610_nfc: Freescale NFC for VF610,
- MPC5125 and others
-Date: Fri, 12 Jun 2015 21:44:39 +0200
-Message-ID: <20150612194439.GA15327@breakpoint.cc>
-References: <1427300909-20825-1-git-send-email-stefan@agner.ch>
- <1427300909-20825-2-git-send-email-stefan@agner.ch>
- <20150603130825.GA23991@breakpoint.cc>
- <b3b09b4b8c97cbfc88fa0d5fdc5e40cd@agner.ch>
- <20150609200751.GC5720@breakpoint.cc>
- <16ebb290641f700f2262527f90ff1e46@agner.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Subject: [PATCH 0/8] of: Dynamic DT updates
+Date: Fri, 12 Jun 2015 22:54:57 +0300
+Message-ID: <1434138905-15886-1-git-send-email-pantelis.antoniou@konsulko.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <16ebb290641f700f2262527f90ff1e46@agner.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Agner <stefan@agner.ch>
-Cc: Sebastian Andrzej Siewior <sebastian@breakpoint.cc>, dwmw2@infradead.org, computersforpeace@gmail.com, mark.rutland@arm.com, boris.brezillon@free-electrons.com, aaron@tastycactus.com, marb@ixxat.de, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-mtd@lists.infradead.org, kernel@pengutronix.de, galak@codeaurora.org, shawn.guo@linaro.org, linux-arm-kernel@lists.infradead.org, bpringlemeir@nbsps.com
+To: Rob Herring <robherring2@gmail.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Matt Porter <mporter@konsulko.com>, Koen Kooi <koen@dominion.thruhere.net>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2015-06-09 22:31:07 [+0200], Stefan Agner wrote:
-> > have the endian swap. So an abstraction like you provided earlier
-> > would be nice :)
-> 
-> What do you mean by that?
+This patchset introduces several concepts that make
+working with dynamic DT and overlays considerably easier.
 
-Something like you did for the reader where you have:
+The first 6 patches introduce two new overlay target methods
+addressing various user complaints and use cases. For both
+documentation entries and unittests are provided.
 
-|static inline u32 vf610_nfc_read(struct vf610_nfc *nfc, uint reg)
-|{
-|	return readl(nfc->regs + reg);
-|}
+The final two patches add a new API for using changeset which
+makes things considerably easier.
 
-instead using readl() directly. So you could also have
+This patchset applies against Linus's tree as of today and
+is dependent on the previous patchset I've send out earlier.
+"of: overlay: kobject & sysfs'ation"
 
-|static inline u32 vf610_nfc_read_relaxed(struct vf610_nfc *nfc, uint reg)
-|{
-|	return readl_relaxed(nfc->regs + reg);
-|}
+Pantelis Antoniou (8):
+  of: overlay: Implement indirect target support
+  of: unittest: Add indirect overlay target test
+  doc: dt: Document the indirect overlay method.
+  of: overlay: Introduce target root capability.
+  of: unittest: Unit-tests for target root overlays.
+  doc: dt: Document the target root overlay method
+  of: dynamic: Add __of_node_dupv()
+  of: changesets: Introduce changeset helper methods
 
-Instead of using readl_relaxed(). Unless I'm mistaken, that function was
-used more than once. If someone plugs in PPC support he does not need to
-add this function anymore but but simply add an ifdef in vf610_nfc_read()
-and vf610_nfc_read_relaxed() and replace it whatever works for him.
+ Documentation/devicetree/overlay-notes.txt  |  21 +++
+ drivers/of/dynamic.c                        | 280 +++++++++++++++++++++++++++-
+ drivers/of/overlay.c                        | 219 +++++++++++++++++++---
+ drivers/of/unittest-data/testcases.dts      |  14 ++
+ drivers/of/unittest-data/tests-overlay.dtsi |  67 +++++++
+ drivers/of/unittest.c                       | 272 +++++++++++++++++++++++++++
+ include/linux/of.h                          |  89 +++++++++
+ 7 files changed, 929 insertions(+), 33 deletions(-)
 
-Sebastian
+-- 
+1.7.12
