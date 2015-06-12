@@ -1,53 +1,131 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: [RESEND PATCH v4 11/14] crypto: marvell/CESA: add allhwsupport module
- parameter
-Date: Fri, 12 Jun 2015 09:16:03 +0200
-Message-ID: <1434093366-14681-12-git-send-email-boris.brezillon@free-electrons.com>
-References: <1434093366-14681-1-git-send-email-boris.brezillon@free-electrons.com>
+From: Dudley Du <dudl@cypress.com>
+Subject: [PATCH 6/7] input: cyapa: add of match device support and description document
+Date: Fri, 12 Jun 2015 14:56:37 +0800
+Message-ID: <1434092198-13018-7-git-send-email-dudl@cypress.com>
+References: <1434092198-13018-1-git-send-email-dudl@cypress.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1434093366-14681-1-git-send-email-boris.brezillon@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, linux-crypto@vger.kernel.org
-Cc: Lior Amsalem <alior@marvell.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jason Cooper <jason@lakedaemon.net>, Tawfik Bayouk <tawfik@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Arnaud Ebalard <arno@natisbad.org>, linux-kernel@vger.kernel.org, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Eran Ben-Avi <benavi@marvell.com>, Nadav Haklai <nadavh@marvell.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Kumar Gala <galak@codeaurora.org>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>, Imre Kaloz <kaloz@openwrt.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1434092198-13018-1-git-send-email-dudl@cypress.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dmitry.torokhov@gmail.com, mark.rutland@arm.com, robh+dt@kernel.org, rydberg@euromail.se
+Cc: Dudley Du <dudl@cypress.com>, bleung@google.com, jmmahler@gmail.com, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The old and new marvell CESA drivers both support Orion and Kirkwood SoCs.
-Add a module parameter to choose whether these SoCs should be attached to
-the new or the old driver.
+Add of_match_device machanism support for Cypress trackpad device, and
+add the sample description document of adding the trackpad device node in DT.
+TEST=test on Chromebook.
 
-The default policy is to keep attaching those IPs to the old driver if it
-is enabled, until we decide the new CESA driver is stable/secure enough.
-
-Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+Signed-off-by: Dudley Du <dudl@cypress.com>
 ---
- drivers/crypto/marvell/cesa.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ .../devicetree/bindings/input/cypress,cyapa.txt    | 44 ++++++++++++++++++++++
+ .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+ drivers/input/mouse/cyapa.c                        | 10 +++++
+ 3 files changed, 55 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/cypress,cyapa.txt
 
-diff --git a/drivers/crypto/marvell/cesa.c b/drivers/crypto/marvell/cesa.c
-index 087370e..c7e25a0 100644
---- a/drivers/crypto/marvell/cesa.c
-+++ b/drivers/crypto/marvell/cesa.c
-@@ -31,6 +31,10 @@
- 
- #include "cesa.h"
- 
-+static int allhwsupport = !IS_ENABLED(CONFIG_CRYPTO_DEV_MV_CESA);
-+module_param_named(allhwsupport, allhwsupport, int, 0444);
-+MODULE_PARM_DESC(allhwsupport, "Enable support for all hardware (even it if overlaps with the mv_cesa driver)");
+diff --git a/Documentation/devicetree/bindings/input/cypress,cyapa.txt b/Documentation/devicetree/bindings/input/cypress,cyapa.txt
+new file mode 100644
+index 0000000..9be2b44
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/cypress,cyapa.txt
+@@ -0,0 +1,44 @@
++Cypress I2C Touchpad
 +
- struct mv_cesa_dev *cesa_dev;
++Required properties:
++- compatible: must be "cypress,cyapa".
++- reg: I2C address of the chip.
++- interrupt-parent: a phandle for the interrupt controller (see interrupt
++  binding[0]).
++- interrupts: interrupt to which the chip is connected (see interrupt
++  binding[0]).
++
++Optional properties:
++- wakeup-source: touchpad can be used as a wakeup source.
++- pinctrl-names: should be "default" (see pinctrl binding [1]).
++- pinctrl-0: a phandle pointing to the pin settings for the device (see
++  pinctrl binding [1]).
++- vcc-supply: a phandle for the regulator supplying 3.3V power.
++
++[0]: Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
++[1]: Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
++
++Example:
++	&i2c0 {
++		/* ... */
++
++		/* Cypress Gen3 touchpad */
++		touchpad@67 {
++			compatible = "cypress,cyapa";
++			reg = <0x24>;
++			interrupt-parent = <&gpio>;
++			interrupts = <2 IRQ_TYPE_EDGE_FALLING>;	/* GPIO 2 */
++			wakeup-source;
++		};
++
++		/* Cypress Gen5 and later touchpad */
++		touchpad@24 {
++			compatible = "cypress,cyapa";
++			reg = <0x24>;
++			interrupt-parent = <&gpio>;
++			interrupts = <2 IRQ_TYPE_EDGE_FALLING>;	/* GPIO 2 */
++			wakeup-source;
++		};
++
++		/* ... */
++	};
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 728cd0e..4813437 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -48,6 +48,7 @@ cnxt	Conexant Systems, Inc.
+ cortina	Cortina Systems, Inc.
+ cosmic	Cosmic Circuits
+ crystalfontz	Crystalfontz America, Inc.
++cypress	Cypress Semiconductor Corporation
+ dallas	Maxim Integrated Products (formerly Dallas Semiconductor)
+ davicom	DAVICOM Semiconductor, Inc.
+ denx	Denx Software Engineering
+diff --git a/drivers/input/mouse/cyapa.c b/drivers/input/mouse/cyapa.c
+index 86f2263..7e7613f 100644
+--- a/drivers/input/mouse/cyapa.c
++++ b/drivers/input/mouse/cyapa.c
+@@ -25,6 +25,7 @@
+ #include <linux/uaccess.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/acpi.h>
++#include <linux/of.h>
+ #include "cyapa.h"
  
- static void mv_cesa_dequeue_req_unlocked(struct mv_cesa_engine *engine)
+ 
+@@ -1562,12 +1563,21 @@ static const struct acpi_device_id cyapa_acpi_id[] = {
+ MODULE_DEVICE_TABLE(acpi, cyapa_acpi_id);
+ #endif
+ 
++#ifdef CONFIG_OF
++static const struct of_device_id cyapa_of_match[] = {
++	{ .compatible = "cypress,cyapa" },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, cyapa_of_match);
++#endif
++
+ static struct i2c_driver cyapa_driver = {
+ 	.driver = {
+ 		.name = "cyapa",
+ 		.owner = THIS_MODULE,
+ 		.pm = &cyapa_pm_ops,
+ 		.acpi_match_table = ACPI_PTR(cyapa_acpi_id),
++		.of_match_table = of_match_ptr(cyapa_of_match),
+ 	},
+ 
+ 	.probe = cyapa_probe,
 -- 
 1.9.1
+
+
+---------------------------------------------------------------
+This message and any attachments may contain Cypress (or its
+subsidiaries) confidential information. If it has been received
+in error, please advise the sender and immediately delete this
+message.
+---------------------------------------------------------------
