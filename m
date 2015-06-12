@@ -1,116 +1,117 @@
 From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: [PATCH v2 3/6] regulator: Add pull down support
-Date: Thu, 11 Jun 2015 17:37:04 -0700
-Message-ID: <1434069427-3642-4-git-send-email-sboyd@codeaurora.org>
+Subject: [PATCH v2 5/6] regulator: Add input current limit support
+Date: Thu, 11 Jun 2015 17:37:06 -0700
+Message-ID: <1434069427-3642-6-git-send-email-sboyd@codeaurora.org>
 References: <1434069427-3642-1-git-send-email-sboyd@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 In-Reply-To: <1434069427-3642-1-git-send-email-sboyd@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-arm-msm-owner@vger.kernel.org
 To: Mark Brown <broonie@kernel.org>
 Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, David Collins <collinsd@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Some regulators need to be configured to pull down a resistor
-when the regulator is disabled. Add an op (set_pull_down) and a
-DT property + constraint to support this.
+Some regulators can limit their input current (typically annotated
+as ilim). Add an op (set_input_current_limit) and a DT property +
+constraint to support this.
 
 Cc: <devicetree@vger.kernel.org>
 Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
 ---
  Documentation/devicetree/bindings/regulator/regulator.txt | 1 +
- drivers/regulator/core.c                                  | 8 ++++++++
- drivers/regulator/of_regulator.c                          | 2 ++
- include/linux/regulator/driver.h                          | 5 +++++
+ drivers/regulator/core.c                                  | 9 +++++++++
+ drivers/regulator/of_regulator.c                          | 4 ++++
+ include/linux/regulator/driver.h                          | 3 +++
  include/linux/regulator/machine.h                         | 2 ++
- 5 files changed, 18 insertions(+)
+ 5 files changed, 19 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/regulator/regulator.txt b/Documentation/devicetree/bindings/regulator/regulator.txt
-index 553d2d0fe6d9..6c79fd70ab5a 100644
+index 4b1df61ccbd7..e29db73e55f4 100644
 --- a/Documentation/devicetree/bindings/regulator/regulator.txt
 +++ b/Documentation/devicetree/bindings/regulator/regulator.txt
-@@ -39,6 +39,7 @@ Optional properties:
-   documentation explains which values the regulator supports.
- - regulator-system-load: Load in uA present on regulator that is not captured by
-   any consumer request.
-+- regulator-pull-down: Enable pull down resistor when the regulator is disabled.
- 
- Deprecated properties:
- - regulator-compatible: If a regulator chip contains multiple
+@@ -7,6 +7,7 @@ Optional properties:
+ - regulator-microvolt-offset: Offset applied to voltages to compensate for voltage drops
+ - regulator-min-microamp: smallest current consumers may set
+ - regulator-max-microamp: largest current consumers may set
++- regulator-input-current-limit-microamp: maximum input current regulator allows
+ - regulator-always-on: boolean, regulator should never be disabled
+ - regulator-boot-on: bootloader/firmware enabled regulator
+ - regulator-allow-bypass: allow the regulator to go into bypass mode
 diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index ab383dfe5386..1d6172a9f65c 100644
+index 88622fc76b81..46c253e85c9e 100644
 --- a/drivers/regulator/core.c
 +++ b/drivers/regulator/core.c
-@@ -1051,6 +1051,14 @@ static int set_machine_constraints(struct regulator_dev *rdev,
- 		}
- 	}
+@@ -1008,6 +1008,15 @@ static int set_machine_constraints(struct regulator_dev *rdev,
+ 	if (ret != 0)
+ 		goto out;
  
-+	if (rdev->constraints->pull_down && ops->set_pull_down) {
-+		ret = ops->set_pull_down(rdev);
++	if (rdev->constraints->ilim_uA && ops->set_input_current_limit) {
++		ret = ops->set_input_current_limit(rdev,
++						   rdev->constraints->ilim_uA);
 +		if (ret < 0) {
-+			rdev_err(rdev, "failed to set pull down\n");
++			rdev_err(rdev, "failed to set input limit\n");
 +			goto out;
 +		}
 +	}
 +
- 	print_constraints(rdev);
- 	return 0;
- out:
+ 	/* do we need to setup our suspend state */
+ 	if (rdev->constraints->initial_state) {
+ 		ret = suspend_prepare(rdev, rdev->constraints->initial_state);
 diff --git a/drivers/regulator/of_regulator.c b/drivers/regulator/of_regulator.c
-index b44da860ac22..237b014666fa 100644
+index 72576dd9bf7b..b41d80acbc4a 100644
 --- a/drivers/regulator/of_regulator.c
 +++ b/drivers/regulator/of_regulator.c
-@@ -67,6 +67,8 @@ static void of_get_regulation_constraints(struct device_node *np,
- 	if (!constraints->always_on) /* status change should be possible. */
- 		constraints->valid_ops_mask |= REGULATOR_CHANGE_STATUS;
+@@ -58,6 +58,10 @@ static void of_get_regulation_constraints(struct device_node *np,
+ 	if (!of_property_read_u32(np, "regulator-max-microamp", &pval))
+ 		constraints->max_uA = pval;
  
-+	constraints->pull_down = of_property_read_bool(np, "regulator-pull-down");
++	if (!of_property_read_u32(np, "regulator-input-current-limit-microamp",
++				  &pval))
++		constraints->ilim_uA = pval;
 +
- 	if (of_property_read_bool(np, "regulator-allow-bypass"))
- 		constraints->valid_ops_mask |= REGULATOR_CHANGE_BYPASS;
- 
+ 	/* Current change possible? */
+ 	if (constraints->min_uA != constraints->max_uA)
+ 		constraints->valid_ops_mask |= REGULATOR_CHANGE_CURRENT;
 diff --git a/include/linux/regulator/driver.h b/include/linux/regulator/driver.h
-index fffa688ac3a7..5eb85e152eb7 100644
+index 02e1e8d4b1bb..1de82b081f5a 100644
 --- a/include/linux/regulator/driver.h
 +++ b/include/linux/regulator/driver.h
-@@ -121,6 +121,9 @@ struct regulator_linear_range {
-  * @set_suspend_mode: Set the operating mode for the regulator when the
-  *                    system is suspended.
+@@ -91,6 +91,7 @@ struct regulator_linear_range {
+  * @set_current_limit: Configure a limit for a current-limited regulator.
+  *                     The driver should select the current closest to max_uA.
+  * @get_current_limit: Get the configured limit for a current-limited regulator.
++ * @set_input_current_limit: Configure an input limit.
   *
-+ * @set_pull_down: Configure the regulator to pull down when the regulator
-+ *		   is disabled.
-+ *
-  * This struct describes regulator operations which can be implemented by
-  * regulator chip drivers.
-  */
-@@ -187,6 +190,8 @@ struct regulator_ops {
+  * @set_mode: Set the configured operating mode for the regulator.
+  * @get_mode: Get the configured operating mode for the regulator.
+@@ -145,6 +146,8 @@ struct regulator_ops {
+ 				 int min_uA, int max_uA);
+ 	int (*get_current_limit) (struct regulator_dev *);
  
- 	/* set regulator suspend operating mode (defined in consumer.h) */
- 	int (*set_suspend_mode) (struct regulator_dev *, unsigned int mode);
++	int (*set_input_current_limit) (struct regulator_dev *, int lim_uA);
 +
-+	int (*set_pull_down) (struct regulator_dev *);
- };
- 
- /*
+ 	/* enable/disable regulator */
+ 	int (*enable) (struct regulator_dev *);
+ 	int (*disable) (struct regulator_dev *);
 diff --git a/include/linux/regulator/machine.h b/include/linux/regulator/machine.h
-index 01526559c8c3..8ffb0619a03c 100644
+index 7f7d0a3fe1e1..85a3b457de51 100644
 --- a/include/linux/regulator/machine.h
 +++ b/include/linux/regulator/machine.h
-@@ -87,6 +87,7 @@ struct regulator_state {
-  *           applied.
-  * @apply_uV: Apply the voltage constraint when initialising.
-  * @ramp_disable: Disable ramp delay when initialising or when setting voltage.
-+ * @pull_down: Enable pull down when regulator is disabled.
+@@ -75,6 +75,7 @@ struct regulator_state {
   *
-  * @input_uV: Input voltage for regulator when supplied by another regulator.
+  * @min_uA: Smallest current consumers may set.
+  * @max_uA: Largest current consumers may set.
++ * @ilim_uA: Maximum input current.
+  * @system_load: Load that isn't captured by any consumer requests.
   *
-@@ -141,6 +142,7 @@ struct regulation_constraints {
- 	unsigned boot_on:1;	/* bootloader/firmware enabled regulator */
- 	unsigned apply_uV:1;	/* apply uV constraint if min == max */
- 	unsigned ramp_disable:1; /* disable ramp delay */
-+	unsigned pull_down:1;	/* pull down resistor when regulator off */
- };
+  * @valid_modes_mask: Mask of modes which may be configured by consumers.
+@@ -113,6 +114,7 @@ struct regulation_constraints {
+ 	/* current output range (inclusive) - for current control */
+ 	int min_uA;
+ 	int max_uA;
++	int ilim_uA;
  
- /**
+ 	int system_load;
+ 
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
