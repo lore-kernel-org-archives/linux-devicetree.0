@@ -1,387 +1,322 @@
-From: Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v6 09/15] drm/exynos: dsi: add macros for register access
-Date: Fri, 12 Jun 2015 21:59:04 +0900
-Message-ID: <1434113958-15877-10-git-send-email-human.hwang@samsung.com>
+From: Hyungwon Hwang <human.hwang@samsung.com>
+Subject: [PATCH v6 07/15] drm/exynos: mic: add MIC driver
+Date: Fri, 12 Jun 2015 21:59:02 +0900
+Message-ID: <1434113958-15877-8-git-send-email-human.hwang@samsung.com>
 References: <1434113958-15877-1-git-send-email-human.hwang@samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1434113958-15877-1-git-send-email-human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, daniel-rLtY4a/8tF1rovVCs/uTlw@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <1434113958-15877-1-git-send-email-human.hwang@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc: sw0312.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-This patch adds macros for register writing/reading. This is needed for
-adding support Exynos5433 MIPI DSI driver, not by using if statement, but
-by using driver data.
-
-Signed-off-by: Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
-Changes before:
-- Refer https://patchwork.kernel.org/patch/6191761
-Changes for v6:
-- None
-
- drivers/gpu/drm/exynos/exynos_drm_dsi.c | 98 +++++++++++++++++----------------
- 1 file changed, 51 insertions(+), 47 deletions(-)
-
-diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-index a3bfac2..70367d0 100644
---- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-+++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-@@ -237,6 +237,9 @@
-
- #define OLD_SCLK_MIPI_CLK_NAME "pll_clk"
-
-+#define DSI_WRITE(dsi, reg, val)	writel((val), (dsi)->reg_base + (reg))
-+#define DSI_READ(dsi, reg)		readl((dsi)->reg_base + (reg))
-+
- enum exynos_dsi_transfer_type {
- 	EXYNOS_DSI_TX,
- 	EXYNOS_DSI_RX,
-@@ -365,8 +368,10 @@ static void exynos_dsi_wait_for_reset(struct exynos_dsi *dsi)
-
- static void exynos_dsi_reset(struct exynos_dsi *dsi)
- {
-+	struct exynos_dsi_driver_data *driver_data = dsi->driver_data;
-+
- 	reinit_completion(&dsi->completed);
--	writel(DSIM_SWRST, dsi->reg_base + DSIM_SWRST_REG);
-+	DSI_WRITE(dsi, DSIM_SWRST_REG, DSIM_SWRST);
- }
-
- #ifndef MHZ
-@@ -376,6 +381,7 @@ static void exynos_dsi_reset(struct exynos_dsi *dsi)
- static unsigned long exynos_dsi_pll_find_pms(struct exynos_dsi *dsi,
- 		unsigned long fin, unsigned long fout, u8 *p, u16 *m, u8 *s)
- {
-+	struct exynos_dsi_driver_data *driver_data = dsi->driver_data;
- 	unsigned long best_freq = 0;
- 	u32 min_delta = 0xffffffff;
- 	u8 p_min, p_max;
-@@ -466,7 +472,7 @@ static unsigned long exynos_dsi_set_pll(struct exynos_dsi *dsi,
- 		reg |= DSIM_FREQ_BAND(band);
- 	}
-
--	writel(reg, dsi->reg_base + DSIM_PLLCTRL_REG);
-+	DSI_WRITE(dsi, DSIM_PLLCTRL_REG, reg);
-
- 	timeout = 1000;
- 	do {
-@@ -474,7 +480,7 @@ static unsigned long exynos_dsi_set_pll(struct exynos_dsi *dsi,
- 			dev_err(dsi->dev, "PLL failed to stabilize\n");
- 			return 0;
- 		}
--		reg = readl(dsi->reg_base + DSIM_STATUS_REG);
-+		reg = DSI_READ(dsi, DSIM_STATUS_REG);
- 	} while ((reg & DSIM_PLL_STABLE) == 0);
-
- 	return fout;
-@@ -504,7 +510,7 @@ static int exynos_dsi_enable_clock(struct exynos_dsi *dsi)
- 	dev_dbg(dsi->dev, "hs_clk = %lu, byte_clk = %lu, esc_clk = %lu\n",
- 		hs_clk, byte_clk, esc_clk);
-
--	reg = readl(dsi->reg_base + DSIM_CLKCTRL_REG);
-+	reg = DSI_READ(dsi, DSIM_CLKCTRL_REG);
- 	reg &= ~(DSIM_ESC_PRESCALER_MASK | DSIM_LANE_ESC_CLK_EN_CLK
- 			| DSIM_LANE_ESC_CLK_EN_DATA_MASK | DSIM_PLL_BYPASS
- 			| DSIM_BYTE_CLK_SRC_MASK);
-@@ -514,7 +520,7 @@ static int exynos_dsi_enable_clock(struct exynos_dsi *dsi)
- 			| DSIM_LANE_ESC_CLK_EN_DATA(BIT(dsi->lanes) - 1)
- 			| DSIM_BYTE_CLK_SRC(0)
- 			| DSIM_TX_REQUEST_HSCLK;
--	writel(reg, dsi->reg_base + DSIM_CLKCTRL_REG);
-+	DSI_WRITE(dsi, DSIM_CLKCTRL_REG, reg);
-
- 	return 0;
- }
-@@ -529,7 +535,7 @@ static void exynos_dsi_set_phy_ctrl(struct exynos_dsi *dsi)
-
- 	/* B D-PHY: D-PHY Master & Slave Analog Block control */
- 	reg = DSIM_PHYCTRL_ULPS_EXIT(0x0af);
--	writel(reg, dsi->reg_base + DSIM_PHYCTRL_REG);
-+	DSI_WRITE(dsi, DSIM_PHYCTRL_REG, reg);
-
- 	/*
- 	 * T LPX: Transmitted length of any Low-Power state period
-@@ -537,7 +543,7 @@ static void exynos_dsi_set_phy_ctrl(struct exynos_dsi *dsi)
- 	 *	burst
- 	 */
- 	reg = DSIM_PHYTIMING_LPX(0x06) | DSIM_PHYTIMING_HS_EXIT(0x0b);
--	writel(reg, dsi->reg_base + DSIM_PHYTIMING_REG);
-+	DSI_WRITE(dsi, DSIM_PHYTIMING_REG, reg);
-
- 	/*
- 	 * T CLK-PREPARE: Time that the transmitter drives the Clock Lane LP-00
-@@ -556,7 +562,7 @@ static void exynos_dsi_set_phy_ctrl(struct exynos_dsi *dsi)
- 			DSIM_PHYTIMING1_CLK_ZERO(0x27) |
- 			DSIM_PHYTIMING1_CLK_POST(0x0d) |
- 			DSIM_PHYTIMING1_CLK_TRAIL(0x08);
--	writel(reg, dsi->reg_base + DSIM_PHYTIMING1_REG);
-+	DSI_WRITE(dsi, DSIM_PHYTIMING1_REG, reg);
-
- 	/*
- 	 * T HS-PREPARE: Time that the transmitter drives the Data Lane LP-00
-@@ -569,21 +575,21 @@ static void exynos_dsi_set_phy_ctrl(struct exynos_dsi *dsi)
- 	 */
- 	reg = DSIM_PHYTIMING2_HS_PREPARE(0x09) | DSIM_PHYTIMING2_HS_ZERO(0x0d) |
- 			DSIM_PHYTIMING2_HS_TRAIL(0x0b);
--	writel(reg, dsi->reg_base + DSIM_PHYTIMING2_REG);
-+	DSI_WRITE(dsi, DSIM_PHYTIMING2_REG, reg);
- }
-
- static void exynos_dsi_disable_clock(struct exynos_dsi *dsi)
- {
- 	u32 reg;
-
--	reg = readl(dsi->reg_base + DSIM_CLKCTRL_REG);
-+	reg = DSI_READ(dsi, DSIM_CLKCTRL_REG);
- 	reg &= ~(DSIM_LANE_ESC_CLK_EN_CLK | DSIM_LANE_ESC_CLK_EN_DATA_MASK
- 			| DSIM_ESC_CLKEN | DSIM_BYTE_CLKEN);
--	writel(reg, dsi->reg_base + DSIM_CLKCTRL_REG);
-+	DSI_WRITE(dsi, DSIM_CLKCTRL_REG, reg);
-
--	reg = readl(dsi->reg_base + DSIM_PLLCTRL_REG);
-+	reg = DSI_READ(dsi, DSIM_PLLCTRL_REG);
- 	reg &= ~DSIM_PLL_EN;
--	writel(reg, dsi->reg_base + DSIM_PLLCTRL_REG);
-+	DSI_WRITE(dsi, DSIM_PLLCTRL_REG, reg);
- }
-
- static int exynos_dsi_init_link(struct exynos_dsi *dsi)
-@@ -594,15 +600,14 @@ static int exynos_dsi_init_link(struct exynos_dsi *dsi)
- 	u32 lanes_mask;
-
- 	/* Initialize FIFO pointers */
--	reg = readl(dsi->reg_base + DSIM_FIFOCTRL_REG);
-+	reg = DSI_READ(dsi, DSIM_FIFOCTRL_REG);
- 	reg &= ~0x1f;
--	writel(reg, dsi->reg_base + DSIM_FIFOCTRL_REG);
-+	DSI_WRITE(dsi, DSIM_FIFOCTRL_REG, reg);
-
- 	usleep_range(9000, 11000);
-
- 	reg |= 0x1f;
--	writel(reg, dsi->reg_base + DSIM_FIFOCTRL_REG);
--
-+	DSI_WRITE(dsi, DSIM_FIFOCTRL_REG, reg);
- 	usleep_range(9000, 11000);
-
- 	/* DSI configuration */
-@@ -661,14 +666,14 @@ static int exynos_dsi_init_link(struct exynos_dsi *dsi)
-
- 	reg |= DSIM_NUM_OF_DATA_LANE(dsi->lanes - 1);
-
--	writel(reg, dsi->reg_base + DSIM_CONFIG_REG);
-+	DSI_WRITE(dsi, DSIM_CONFIG_REG, reg);
-
- 	reg |= DSIM_LANE_EN_CLK;
--	writel(reg, dsi->reg_base + DSIM_CONFIG_REG);
-+	DSI_WRITE(dsi, DSIM_CONFIG_REG, reg);
-
- 	lanes_mask = BIT(dsi->lanes) - 1;
- 	reg |= DSIM_LANE_EN(lanes_mask);
--	writel(reg, dsi->reg_base + DSIM_CONFIG_REG);
-+	DSI_WRITE(dsi, DSIM_CONFIG_REG, reg);
-
- 	/*
- 	 * Use non-continuous clock mode if the periparal wants and
-@@ -681,7 +686,7 @@ static int exynos_dsi_init_link(struct exynos_dsi *dsi)
- 	if (driver_data->has_clklane_stop &&
- 			dsi->mode_flags & MIPI_DSI_CLOCK_NON_CONTINUOUS) {
- 		reg |= DSIM_CLKLANE_STOP;
--		writel(reg, dsi->reg_base + DSIM_CONFIG_REG);
-+		DSI_WRITE(dsi, DSIM_CONFIG_REG, reg);
- 	}
-
- 	/* Check clock and data lane state are stop state */
-@@ -692,19 +697,19 @@ static int exynos_dsi_init_link(struct exynos_dsi *dsi)
- 			return -EFAULT;
- 		}
-
--		reg = readl(dsi->reg_base + DSIM_STATUS_REG);
-+		reg = DSI_READ(dsi, DSIM_STATUS_REG);
- 		if ((reg & DSIM_STOP_STATE_DAT(lanes_mask))
- 		    != DSIM_STOP_STATE_DAT(lanes_mask))
- 			continue;
- 	} while (!(reg & (DSIM_STOP_STATE_CLK | DSIM_TX_READY_HS_CLK)));
-
--	reg = readl(dsi->reg_base + DSIM_ESCMODE_REG);
-+	reg = DSI_READ(dsi, DSIM_ESCMODE_REG);
- 	reg &= ~DSIM_STOP_STATE_CNT_MASK;
- 	reg |= DSIM_STOP_STATE_CNT(0xf);
--	writel(reg, dsi->reg_base + DSIM_ESCMODE_REG);
-+	DSI_WRITE(dsi, DSIM_ESCMODE_REG, reg);
-
- 	reg = DSIM_BTA_TIMEOUT(0xff) | DSIM_LPDR_TIMEOUT(0xffff);
--	writel(reg, dsi->reg_base + DSIM_TIMEOUT_REG);
-+	DSI_WRITE(dsi, DSIM_TIMEOUT_REG, reg);
-
- 	return 0;
- }
-@@ -718,19 +723,19 @@ static void exynos_dsi_set_display_mode(struct exynos_dsi *dsi)
- 		reg = DSIM_CMD_ALLOW(0xf)
- 			| DSIM_STABLE_VFP(vm->vfront_porch)
- 			| DSIM_MAIN_VBP(vm->vback_porch);
--		writel(reg, dsi->reg_base + DSIM_MVPORCH_REG);
-+		DSI_WRITE(dsi, DSIM_MVPORCH_REG, reg);
-
- 		reg = DSIM_MAIN_HFP(vm->hfront_porch)
- 			| DSIM_MAIN_HBP(vm->hback_porch);
--		writel(reg, dsi->reg_base + DSIM_MHPORCH_REG);
-+		DSI_WRITE(dsi, DSIM_MHPORCH_REG, reg);
-
- 		reg = DSIM_MAIN_VSA(vm->vsync_len)
- 			| DSIM_MAIN_HSA(vm->hsync_len);
--		writel(reg, dsi->reg_base + DSIM_MSYNC_REG);
-+		DSI_WRITE(dsi, DSIM_MSYNC_REG, reg);
- 	}
-
- 	reg = DSIM_MAIN_HRESOL(vm->hactive) | DSIM_MAIN_VRESOL(vm->vactive);
--	writel(reg, dsi->reg_base + DSIM_MDRESOL_REG);
-+	DSI_WRITE(dsi, DSIM_MDRESOL_REG, reg);
-
- 	dev_dbg(dsi->dev, "LCD size = %dx%d\n", vm->hactive, vm->vactive);
- }
-@@ -739,12 +744,12 @@ static void exynos_dsi_set_display_enable(struct exynos_dsi *dsi, bool enable)
- {
- 	u32 reg;
-
--	reg = readl(dsi->reg_base + DSIM_MDRESOL_REG);
-+	reg = DSI_READ(dsi, DSIM_MDRESOL_REG);
- 	if (enable)
- 		reg |= DSIM_MAIN_STAND_BY;
- 	else
- 		reg &= ~DSIM_MAIN_STAND_BY;
--	writel(reg, dsi->reg_base + DSIM_MDRESOL_REG);
-+	DSI_WRITE(dsi, DSIM_MDRESOL_REG, reg);
- }
-
- static int exynos_dsi_wait_for_hdr_fifo(struct exynos_dsi *dsi)
-@@ -752,7 +757,7 @@ static int exynos_dsi_wait_for_hdr_fifo(struct exynos_dsi *dsi)
- 	int timeout = 2000;
-
- 	do {
--		u32 reg = readl(dsi->reg_base + DSIM_FIFOCTRL_REG);
-+		u32 reg = DSI_READ(dsi, DSIM_FIFOCTRL_REG);
-
- 		if (!(reg & DSIM_SFR_HEADER_FULL))
- 			return 0;
-@@ -766,22 +771,21 @@ static int exynos_dsi_wait_for_hdr_fifo(struct exynos_dsi *dsi)
-
- static void exynos_dsi_set_cmd_lpm(struct exynos_dsi *dsi, bool lpm)
- {
--	u32 v = readl(dsi->reg_base + DSIM_ESCMODE_REG);
-+	u32 v = DSI_READ(dsi, DSIM_ESCMODE_REG);
-
- 	if (lpm)
- 		v |= DSIM_CMD_LPDT_LP;
- 	else
- 		v &= ~DSIM_CMD_LPDT_LP;
-
--	writel(v, dsi->reg_base + DSIM_ESCMODE_REG);
-+	DSI_WRITE(dsi, DSIM_ESCMODE_REG, v);
- }
-
- static void exynos_dsi_force_bta(struct exynos_dsi *dsi)
- {
--	u32 v = readl(dsi->reg_base + DSIM_ESCMODE_REG);
--
-+	u32 v = DSI_READ(dsi, DSIM_ESCMODE_REG);
- 	v |= DSIM_FORCE_BTA;
--	writel(v, dsi->reg_base + DSIM_ESCMODE_REG);
-+	DSI_WRITE(dsi, DSIM_ESCMODE_REG, v);
- }
-
- static void exynos_dsi_send_to_fifo(struct exynos_dsi *dsi,
-@@ -805,7 +809,7 @@ static void exynos_dsi_send_to_fifo(struct exynos_dsi *dsi,
- 	while (length >= 4) {
- 		reg = (payload[3] << 24) | (payload[2] << 16)
- 					| (payload[1] << 8) | payload[0];
--		writel(reg, dsi->reg_base + DSIM_PAYLOAD_REG);
-+		DSI_WRITE(dsi, DSIM_PAYLOAD_REG, reg);
- 		payload += 4;
- 		length -= 4;
- 	}
-@@ -820,7 +824,7 @@ static void exynos_dsi_send_to_fifo(struct exynos_dsi *dsi,
- 		/* Fall through */
- 	case 1:
- 		reg |= payload[0];
--		writel(reg, dsi->reg_base + DSIM_PAYLOAD_REG);
-+		DSI_WRITE(dsi, DSIM_PAYLOAD_REG, reg);
- 		break;
- 	case 0:
- 		/* Do nothing */
-@@ -843,7 +847,7 @@ static void exynos_dsi_send_to_fifo(struct exynos_dsi *dsi,
- 		dsi->state ^= DSIM_STATE_CMD_LPM;
- 	}
-
--	writel(reg, dsi->reg_base + DSIM_PKTHDR_REG);
-+	DSI_WRITE(dsi, DSIM_PKTHDR_REG, reg);
-
- 	if (xfer->flags & MIPI_DSI_MSG_REQ_ACK)
- 		exynos_dsi_force_bta(dsi);
-@@ -859,7 +863,7 @@ static void exynos_dsi_read_from_fifo(struct exynos_dsi *dsi,
- 	u32 reg;
-
- 	if (first) {
--		reg = readl(dsi->reg_base + DSIM_RXFIFO_REG);
-+		reg = DSI_READ(dsi, DSIM_RXFIFO_REG);
-
- 		switch (reg & 0x3f) {
- 		case MIPI_DSI_RX_GENERIC_SHORT_READ_RESPONSE_2BYTE:
-@@ -898,7 +902,7 @@ static void exynos_dsi_read_from_fifo(struct exynos_dsi *dsi,
-
- 	/* Receive payload */
- 	while (length >= 4) {
--		reg = readl(dsi->reg_base + DSIM_RXFIFO_REG);
-+		reg = DSI_READ(dsi, DSIM_RXFIFO_REG);
- 		payload[0] = (reg >>  0) & 0xff;
- 		payload[1] = (reg >>  8) & 0xff;
- 		payload[2] = (reg >> 16) & 0xff;
-@@ -908,7 +912,7 @@ static void exynos_dsi_read_from_fifo(struct exynos_dsi *dsi,
- 	}
-
- 	if (length) {
--		reg = readl(dsi->reg_base + DSIM_RXFIFO_REG);
-+		reg = DSI_READ(dsi, DSIM_RXFIFO_REG);
- 		switch (length) {
- 		case 3:
- 			payload[2] = (reg >> 16) & 0xff;
-@@ -927,7 +931,7 @@ static void exynos_dsi_read_from_fifo(struct exynos_dsi *dsi,
- clear_fifo:
- 	length = DSI_RX_FIFO_SIZE / 4;
- 	do {
--		reg = readl(dsi->reg_base + DSIM_RXFIFO_REG);
-+		reg = DSI_READ(dsi, DSIM_RXFIFO_REG);
- 		if (reg == DSI_RX_FIFO_EMPTY)
- 			break;
- 	} while (--length);
-@@ -1083,18 +1087,18 @@ static irqreturn_t exynos_dsi_irq(int irq, void *dev_id)
- 	struct exynos_dsi *dsi = dev_id;
- 	u32 status;
-
--	status = readl(dsi->reg_base + DSIM_INTSRC_REG);
-+	status = DSI_READ(dsi, DSIM_INTSRC_REG);
- 	if (!status) {
- 		static unsigned long int j;
- 		if (printk_timed_ratelimit(&j, 500))
- 			dev_warn(dsi->dev, "spurious interrupt\n");
- 		return IRQ_HANDLED;
- 	}
--	writel(status, dsi->reg_base + DSIM_INTSRC_REG);
-+	DSI_WRITE(dsi, DSIM_INTSRC_REG, status);
-
- 	if (status & DSIM_INT_SW_RST_RELEASE) {
- 		u32 mask = ~(DSIM_INT_RX_DONE | DSIM_INT_SFR_FIFO_EMPTY);
--		writel(mask, dsi->reg_base + DSIM_INTMSK_REG);
-+		DSI_WRITE(dsi, DSIM_INTMSK_REG, mask);
- 		complete(&dsi->completed);
- 		return IRQ_HANDLED;
- 	}
---
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+TUlDKE1vYmlsZSBpbWFnZSBjb21wcmVzc29yKSBpcyBuZXdseSBhZGRlZCBJUCBpbiBFeHlub3M1
+NDMzLiBNSUMKcmVzaWRlcyBiZXR3ZWVuIGRlY29uIGFuZCBtaXBpIGRzaW0sIGFuZCBjb21wcmVz
+c2VzIGZyYW1lIGRhdGEgYnkgNTAlLgpXaXRoIGRzaSwgbm90IGRpc3BsYXkgcG9ydCwgdG8gc2Vu
+ZCBmcmFtZSBkYXRhIHRvIHRoZSBwYW5lbCwgdGhlCmJhbmR3aWR0aCBpcyBub3QgZW5vdWdoLiBU
+aGF0IGlzIHdoeSB0aGlzIGNvbXByZXNzb3IgaXMgaW50cm9kdWNlZC4KClNpZ25lZC1vZmYtYnk6
+IEh5dW5nd29uIEh3YW5nIDxodW1hbi5od2FuZ0BzYW1zdW5nLmNvbT4KLS0tCkNoYW5nZXMgYmVm
+b3JlOgotIFJlZmVyIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvNjE5MTcxMS8K
+Q2hhbmdlcyBmb3IgdjY6Ci0gTm9uZQogLi4uL2RldmljZXRyZWUvYmluZGluZ3MvdmlkZW8vZXh5
+bm9zLW1pYy50eHQgICAgICAgfCAgNTEgKysrCiBkcml2ZXJzL2dwdS9kcm0vZXh5bm9zL0tjb25m
+aWcgICAgICAgICAgICAgICAgICAgICB8ICAgNiArCiBkcml2ZXJzL2dwdS9kcm0vZXh5bm9zL01h
+a2VmaWxlICAgICAgICAgICAgICAgICAgICB8ICAgMSArCiBkcml2ZXJzL2dwdS9kcm0vZXh5bm9z
+L2V4eW5vc19kcm1fZHJ2LmMgICAgICAgICAgICB8ICAgMyArCiBkcml2ZXJzL2dwdS9kcm0vZXh5
+bm9zL2V4eW5vc19kcm1fZHJ2LmggICAgICAgICAgICB8ICAgMSArCiBkcml2ZXJzL2dwdS9kcm0v
+ZXh5bm9zL2V4eW5vc19kcm1fbWljLmMgICAgICAgICAgICB8IDQ5MCArKysrKysrKysrKysrKysr
+KysrKysKIDYgZmlsZXMgY2hhbmdlZCwgNTUyIGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEw
+MDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmlkZW8vZXh5bm9zLW1pYy50
+eHQKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19kcm1f
+bWljLmMKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvdmlk
+ZW8vZXh5bm9zLW1pYy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvdmlk
+ZW8vZXh5bm9zLW1pYy50eHQKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMC4uMGZi
+YTJlZQotLS0gL2Rldi9udWxsCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy92aWRlby9leHlub3MtbWljLnR4dApAQCAtMCwwICsxLDUxIEBACitEZXZpY2UtVHJlZSBiaW5k
+aW5ncyBmb3IgU2Ftc3VuZyBFeHlub3MgU29DIG1vYmlsZSBpbWFnZSBjb21wcmVzc29yIChNSUMp
+CisKK01JQyAobW9iaWxlIGltYWdlIGNvbXByZXNzb3IpIHJlc2lkZXMgYmV0d2VlbiBkZWNvbiBh
+bmQgbWlwaSBkc2kuIE1pcGkgZHNpIGlzCitub3QgY2FwYWJsZSB0byB0cmFuc2ZlciBoaWdoIHJl
+c29sdHVpb24gZnJhbWUgZGF0YSBhcyBkZWNvbiBjYW4gc2VuZC4gTUlDCitzb2x2ZXMgdGhpcyBw
+cm9ibGVtIGJ5IGNvbXByZXNzaW5nIHRoZSBmcmFtZSBkYXRhIGJ5IDEvMiBiZWZvcmUgaXQgaXMK
+K3RyYW5zZmVycmVkIHRocm91Z2ggbWlwaSBkc2kuIFRoZSBjb21wcmVzc2VkIGZyYW1lIGRhdGEg
+bXVzdCBiZSB1bmNvbXByZXNzZWQgaW4KK3RoZSBwYW5lbCBQQ0IuCisKK1JlcXVpcmVkIHByb3Bl
+cnRpZXM6CistIGNvbXBhdGlibGU6IHZhbHVlIHNob3VsZCBiZSAic2Ftc3VuZyxleHlub3M1NDMz
+LW1pYyIuCistIHJlZzogcGh5c2ljYWwgYmFzZSBhZGRyZXNzIGFuZCBsZW5ndGggb2YgdGhlIE1J
+QyByZWdpc3RlcnMgc2V0IGFuZCBzeXN0ZW0KKyAgICAgICByZWdpc3RlciBvZiBtaWMuCistIGNs
+b2NrczogbXVzdCBpbmNsdWRlIGNsb2NrIHNwZWNpZmllcnMgY29ycmVzcG9uZGluZyB0byBlbnRy
+aWVzIGluIHRoZQorCSAgY2xvY2stbmFtZXMgcHJvcGVydHkuCistIGNsb2NrLW5hbWVzOiBsaXN0
+IG9mIGNsb2NrIG5hbWVzIHNvcnRlZCBpbiB0aGUgc2FtZSBvcmRlciBhcyB0aGUgY2xvY2tzCisJ
+ICAgICAgIHByb3BlcnR5LiBNdXN0IGNvbnRhaW4gInBjbGtfbWljMCIsICJzY2xrX3JnYl92Y2xr
+X3RvX21pYzAiLgorLSBzYW1zdW5nLGRpc3Atc3lzY29uOiB0aGUgcmVmZXJlbmNlIG5vZGUgZm9y
+IHN5c2NvbiBmb3IgRElTUCBibG9jay4KKy0gcG9ydHM6IGNvbnRhaW5zIGEgcG9ydCB3aGljaCBp
+cyBjb25uZWN0ZWQgdG8gZGVjb24gbm9kZSBhbmQgZHNpIG5vZGUuCisJIGFkZHJlc3MtY2VsbHMg
+YW5kIHNpemUtY2VsbHMgbXVzdCAxIGFuZCAwLCByZXNwZWN0aXZlbHkuCistIHBvcnQ6IGNvbnRh
+aW5zIGFuIGVuZHBvaW50IG5vZGUgd2hpY2ggaXMgY29ubmVjdGVkIHRvIHRoZSBlbmRwb2ludCBp
+biB0aGUKKwlkZWNvbiBub2RlIG9yIGRzaSBub2RlLiBUaGUgcmVnIHZhbHVlIG11c3QgYmUgMCBh
+bmQgMSByZXNwZWN0aXZlbHkuCisKK0V4YW1wbGU6CitTb0Mgc3BlY2lmaWMgRFQgZW50cnk6Citt
+aWM6IG1pY0AxMzkzMDAwMCB7CisJY29tcGF0aWJsZSA9ICJzYW1zdW5nLGV4eW5vczU0MzMtbWlj
+IjsKKwlyZWcgPSA8MHgxMzkzMDAwMCAweDQ4PjsKKwljbG9ja3MgPSA8JmNtdV9kaXNwIENMS19Q
+Q0xLX01JQzA+LAorCSAgICAgICA8JmNtdV9kaXNwIENMS19TQ0xLX1JHQl9WQ0xLX1RPX01JQzA+
+OworCWNsb2NrLW5hbWVzID0gInBjbGtfbWljMCIsICJzY2xrX3JnYl92Y2xrX3RvX21pYzAiOwor
+CXNhbXN1bmcsZGlzcC1zeXNjb24gPSA8JnN5c2Nvbl9kaXNwPjsKKworCXBvcnRzIHsKKwkJI2Fk
+ZHJlc3MtY2VsbHMgPSA8MT47CisJCSNzaXplLWNlbGxzID0gPDA+OworCisJCXBvcnRAMCB7CisJ
+CQlyZWcgPSA8MD47CisJCQltaWNfdG9fZGVjb246IGVuZHBvaW50IHsKKwkJCQlyZW1vdGUtZW5k
+cG9pbnQgPSA8JmRlY29uX3RvX21pYz47CisJCQl9OworCQl9OworCisJCXBvcnRAMSB7CisJCQly
+ZWcgPSA8MT47CisJCQltaWNfdG9fZHNpOiBlbmRwb2ludCB7CisJCQkJcmVtb3RlLWVuZHBvaW50
+ID0gPCZkc2lfdG9fbWljPjsKKwkJCX07CisJCX07CisJfTsKK307CmRpZmYgLS1naXQgYS9kcml2
+ZXJzL2dwdS9kcm0vZXh5bm9zL0tjb25maWcgYi9kcml2ZXJzL2dwdS9kcm0vZXh5bm9zL0tjb25m
+aWcKaW5kZXggNTFhNGViNS4uMTJlNGU2MiAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL2V4
+eW5vcy9LY29uZmlnCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9leHlub3MvS2NvbmZpZwpAQCAtMTAz
+LDMgKzEwMyw5IEBAIGNvbmZpZyBEUk1fRVhZTk9TX0dTQwogCWRlcGVuZHMgb24gRFJNX0VYWU5P
+U19JUFAgJiYgQVJDSF9FWFlOT1M1ICYmICFBUkNIX01VTFRJUExBVEZPUk0KIAloZWxwCiAJICBD
+aG9vc2UgdGhpcyBvcHRpb24gaWYgeW91IHdhbnQgdG8gdXNlIEV4eW5vcyBHU0MgZm9yIERSTS4K
+KworY29uZmlnIERSTV9FWFlOT1NfTUlDCisJYm9vbCAiRXh5bm9zIERSTSBNSUMiCisJZGVwZW5k
+cyBvbiAoRFJNX0VYWU5PUyAmJiBEUk1fRVhZTk9TNTQzM19ERUNPTikKKwloZWxwCisJICBDaG9v
+c2UgdGhpcyBvcHRpb24gaWYgeW91IHdhbnQgdG8gdXNlIEV4eW5vcyBNSUMgZm9yIERSTS4KZGlm
+ZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9leHlub3MvTWFrZWZpbGUgYi9kcml2ZXJzL2dwdS9k
+cm0vZXh5bm9zL01ha2VmaWxlCmluZGV4IGZiZDA4NGQuLjdkZTBiMTAgMTAwNjQ0Ci0tLSBhL2Ry
+aXZlcnMvZ3B1L2RybS9leHlub3MvTWFrZWZpbGUKKysrIGIvZHJpdmVycy9ncHUvZHJtL2V4eW5v
+cy9NYWtlZmlsZQpAQCAtMjIsNSArMjIsNiBAQCBleHlub3Nkcm0tJChDT05GSUdfRFJNX0VYWU5P
+U19JUFApCSs9IGV4eW5vc19kcm1faXBwLm8KIGV4eW5vc2RybS0kKENPTkZJR19EUk1fRVhZTk9T
+X0ZJTUMpCSs9IGV4eW5vc19kcm1fZmltYy5vCiBleHlub3Nkcm0tJChDT05GSUdfRFJNX0VYWU5P
+U19ST1RBVE9SKQkrPSBleHlub3NfZHJtX3JvdGF0b3IubwogZXh5bm9zZHJtLSQoQ09ORklHX0RS
+TV9FWFlOT1NfR1NDKQkrPSBleHlub3NfZHJtX2dzYy5vCitleHlub3Nkcm0tJChDT05GSUdfRFJN
+X0VYWU5PU19NSUMpICAgICArPSBleHlub3NfZHJtX21pYy5vCgogb2JqLSQoQ09ORklHX0RSTV9F
+WFlOT1MpCQkrPSBleHlub3Nkcm0ubwpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2V4eW5v
+cy9leHlub3NfZHJtX2Rydi5jIGIvZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3NfZHJtX2Ry
+di5jCmluZGV4IDU5MWJkZWMuLmMxNGI0NGEgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9l
+eHlub3MvZXh5bm9zX2RybV9kcnYuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5v
+c19kcm1fZHJ2LmMKQEAgLTM1Nyw2ICszNTcsOSBAQCBzdGF0aWMgc3RydWN0IHBsYXRmb3JtX2Ry
+aXZlciAqY29uc3QgZXh5bm9zX2RybV9rbXNfZHJpdmVyc1tdID0gewogI2lmZGVmIENPTkZJR19E
+Uk1fRVhZTk9TN19ERUNPTgogCSZkZWNvbl9kcml2ZXIsCiAjZW5kaWYKKyNpZmRlZiBDT05GSUdf
+RFJNX0VYWU5PU19NSUMKKwkmbWljX2RyaXZlciwKKyNlbmRpZgogI2lmZGVmIENPTkZJR19EUk1f
+RVhZTk9TX0RQCiAJJmRwX2RyaXZlciwKICNlbmRpZgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUv
+ZHJtL2V4eW5vcy9leHlub3NfZHJtX2Rydi5oIGIvZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlu
+b3NfZHJtX2Rydi5oCmluZGV4IDc2OWVkZmQuLmIzZGJkZDQgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMv
+Z3B1L2RybS9leHlub3MvZXh5bm9zX2RybV9kcnYuaAorKysgYi9kcml2ZXJzL2dwdS9kcm0vZXh5
+bm9zL2V4eW5vc19kcm1fZHJ2LmgKQEAgLTMxOSw0ICszMTksNSBAQCBleHRlcm4gc3RydWN0IHBs
+YXRmb3JtX2RyaXZlciBmaW1jX2RyaXZlcjsKIGV4dGVybiBzdHJ1Y3QgcGxhdGZvcm1fZHJpdmVy
+IHJvdGF0b3JfZHJpdmVyOwogZXh0ZXJuIHN0cnVjdCBwbGF0Zm9ybV9kcml2ZXIgZ3NjX2RyaXZl
+cjsKIGV4dGVybiBzdHJ1Y3QgcGxhdGZvcm1fZHJpdmVyIGlwcF9kcml2ZXI7CitleHRlcm4gc3Ry
+dWN0IHBsYXRmb3JtX2RyaXZlciBtaWNfZHJpdmVyOwogI2VuZGlmCmRpZmYgLS1naXQgYS9kcml2
+ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19kcm1fbWljLmMgYi9kcml2ZXJzL2dwdS9kcm0vZXh5
+bm9zL2V4eW5vc19kcm1fbWljLmMKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMC4u
+ODk5NGVhYgotLS0gL2Rldi9udWxsCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9leHlub3MvZXh5bm9z
+X2RybV9taWMuYwpAQCAtMCwwICsxLDQ5MCBAQAorLyoKKyAqIENvcHlyaWdodCAoQykgMjAxNSBT
+YW1zdW5nIEVsZWN0cm9uaWNzIENvLkx0ZAorICogQXV0aG9yczoKKyAqCUh5dW5nd29uIEh3YW5n
+IDxodW1hbi5od2FuZ0BzYW1zdW5nLmNvbT4KKyAqCisgKiBUaGlzIHByb2dyYW0gaXMgZnJlZSBz
+b2Z0d2FyZTsgeW91IGNhbiByZWRpc3RyaWJ1dGUgaXQgYW5kL29yIG1vZGlmeQorICogaXQgdW5k
+ZXIgdGhlIHRlcm1zIG9mIHRoZSBHTlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZSB2ZXJzaW9uIDIg
+YXMKKyAqIHB1Ymxpc2hlZCBieSB0aGUgRnJlZSBTb2Z0d2FyZSBGb3VuZGF0aW9ucgorICovCisK
+KyNpbmNsdWRlIDxsaW51eC9wbGF0Zm9ybV9kZXZpY2UuaD4KKyNpbmNsdWRlIDx2aWRlby9vZl92
+aWRlb21vZGUuaD4KKyNpbmNsdWRlIDxsaW51eC9vZl9hZGRyZXNzLmg+CisjaW5jbHVkZSA8dmlk
+ZW8vdmlkZW9tb2RlLmg+CisjaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+CisjaW5jbHVkZSA8bGlu
+dXgvZGVsYXkuaD4KKyNpbmNsdWRlIDxsaW51eC9tdXRleC5oPgorI2luY2x1ZGUgPGxpbnV4L29m
+Lmg+CisjaW5jbHVkZSA8bGludXgvb2ZfZ3JhcGguaD4KKyNpbmNsdWRlIDxsaW51eC9jbGsuaD4K
+KyNpbmNsdWRlIDxkcm0vZHJtUC5oPgorI2luY2x1ZGUgPGxpbnV4L21mZC9zeXNjb24uaD4KKyNp
+bmNsdWRlIDxsaW51eC9yZWdtYXAuaD4KKworLyogU3lzcmVnIHJlZ2lzdGVycyBmb3IgTUlDICov
+CisjZGVmaW5lIERTRF9DRkdfTVVYCTB4MTAwNAorI2RlZmluZSBNSUMwX1JHQl9NVVgJKDEgPDwg
+MCkKKyNkZWZpbmUgTUlDMF9JODBfTVVYCSgxIDw8IDEpCisjZGVmaW5lIE1JQzBfT05fTVVYCSgx
+IDw8IDUpCisKKy8qIE1JQyByZWdpc3RlcnMgKi8KKyNkZWZpbmUgTUlDX09QCQkJCTB4MAorI2Rl
+ZmluZSBNSUNfSVBfVkVSCQkJMHgwMDA0CisjZGVmaW5lIE1JQ19WX1RJTUlOR18wCQkJMHgwMDA4
+CisjZGVmaW5lIE1JQ19WX1RJTUlOR18xCQkJMHgwMDBDCisjZGVmaW5lIE1JQ19JTUdfU0laRQkJ
+CTB4MDAxMAorI2RlZmluZSBNSUNfSU5QVVRfVElNSU5HXzAJCTB4MDAxNAorI2RlZmluZSBNSUNf
+SU5QVVRfVElNSU5HXzEJCTB4MDAxOAorI2RlZmluZSBNSUNfMkRfT1VUUFVUX1RJTUlOR18wCQkw
+eDAwMUMKKyNkZWZpbmUgTUlDXzJEX09VVFBVVF9USU1JTkdfMQkJMHgwMDIwCisjZGVmaW5lIE1J
+Q18yRF9PVVRQVVRfVElNSU5HXzIJCTB4MDAyNAorI2RlZmluZSBNSUNfM0RfT1VUUFVUX1RJTUlO
+R18wCQkweDAwMjgKKyNkZWZpbmUgTUlDXzNEX09VVFBVVF9USU1JTkdfMQkJMHgwMDJDCisjZGVm
+aW5lIE1JQ18zRF9PVVRQVVRfVElNSU5HXzIJCTB4MDAzMAorI2RlZmluZSBNSUNfQ09SRV9QQVJB
+XzAJCQkweDAwMzQKKyNkZWZpbmUgTUlDX0NPUkVfUEFSQV8xCQkJMHgwMDM4CisjZGVmaW5lIE1J
+Q19DVENfQ1RSTAkJCTB4MDA0MAorI2RlZmluZSBNSUNfUkRfREFUQQkJCTB4MDA0NAorCisjZGVm
+aW5lIE1JQ19VUERfUkVHCQkJKDEgPDwgMzEpCisjZGVmaW5lIE1JQ19PTl9SRUcJCQkoMSA8PCAz
+MCkKKyNkZWZpbmUgTUlDX1REX09OX1JFRwkJCSgxIDw8IDI5KQorI2RlZmluZSBNSUNfQlNfQ0hH
+X09VVAkJCSgxIDw8IDE2KQorI2RlZmluZSBNSUNfVklERU9fVFlQRSh4KQkJKCgoeCkgJiAweGYp
+IDw8IDEyKQorI2RlZmluZSBNSUNfUFNSX0VOCQkJKDEgPDwgNSkKKyNkZWZpbmUgTUlDX1NXX1JT
+VAkJCSgxIDw8IDQpCisjZGVmaW5lIE1JQ19BTExfUlNUCQkJKDEgPDwgMykKKyNkZWZpbmUgTUlD
+X0NPUkVfVkVSX0NPTlRST0wJCSgxIDw8IDIpCisjZGVmaW5lIE1JQ19NT0RFX1NFTF9DT01NQU5E
+X01PREUJKDEgPDwgMSkKKyNkZWZpbmUgTUlDX01PREVfU0VMX01BU0sJCSgxIDw8IDEpCisjZGVm
+aW5lIE1JQ19DT1JFX0VOCQkJKDEgPDwgMCkKKworI2RlZmluZSBNSUNfVl9QVUxTRV9XSURUSCh4
+KQkJKCgoeCkgJiAweDNmZmYpIDw8IDE2KQorI2RlZmluZSBNSUNfVl9QRVJJT0RfTElORSh4KQkJ
+KCh4KSAmIDB4M2ZmZikKKworI2RlZmluZSBNSUNfVkJQX1NJWkUoeCkJCQkoKCh4KSAmIDB4M2Zm
+ZikgPDwgMTYpCisjZGVmaW5lIE1JQ19WRlBfU0laRSh4KQkJCSgoeCkgJiAweDNmZmYpCisKKyNk
+ZWZpbmUgTUlDX0lNR19WX1NJWkUoeCkJCSgoKHgpICYgMHgzZmZmKSA8PCAxNikKKyNkZWZpbmUg
+TUlDX0lNR19IX1NJWkUoeCkJCSgoeCkgJiAweDNmZmYpCisKKyNkZWZpbmUgTUlDX0hfUFVMU0Vf
+V0lEVEhfSU4oeCkJCSgoKHgpICYgMHgzZmZmKSA8PCAxNikKKyNkZWZpbmUgTUlDX0hfUEVSSU9E
+X1BJWEVMX0lOKHgpCSgoeCkgJiAweDNmZmYpCisKKyNkZWZpbmUgTUlDX0hCUF9TSVpFX0lOKHgp
+CQkoKCh4KSAmIDB4M2ZmZikgPDwgMTYpCisjZGVmaW5lIE1JQ19IRlBfU0laRV9JTih4KQkJKCh4
+KSAmIDB4M2ZmZikKKworI2RlZmluZSBNSUNfSF9QVUxTRV9XSURUSF8yRCh4KQkJKCgoeCkgJiAw
+eDNmZmYpIDw8IDE2KQorI2RlZmluZSBNSUNfSF9QRVJJT0RfUElYRUxfMkQoeCkJKCh4KSAmIDB4
+M2ZmZikKKworI2RlZmluZSBNSUNfSEJQX1NJWkVfMkQoeCkJCSgoKHgpICYgMHgzZmZmKSA8PCAx
+NikKKyNkZWZpbmUgTUlDX0hGUF9TSVpFXzJEKHgpCQkoKHgpICYgMHgzZmZmKQorCisjZGVmaW5l
+IE1JQ19CU19TSVpFXzJEKHgpCSgoeCkgJiAweDNmZmYpCisKK2VudW0geworCUVORFBPSU5UX0RF
+Q09OX05PREUsCisJRU5EUE9JTlRfRFNJX05PREUsCisJTlVNX0VORFBPSU5UUworfTsKKworc3Rh
+dGljIGNoYXIgKmNsa19uYW1lc1tdID0geyAicGNsa19taWMwIiwgInNjbGtfcmdiX3ZjbGtfdG9f
+bWljMCIgfTsKKyNkZWZpbmUgTlVNX0NMS1MJCUFSUkFZX1NJWkUoY2xrX25hbWVzKQorc3RhdGlj
+IERFRklORV9NVVRFWChtaWNfbXV0ZXgpOworCitzdHJ1Y3QgZXh5bm9zX21pYyB7CisJc3RydWN0
+IGRldmljZSAqZGV2OworCXZvaWQgX19pb21lbSAqcmVnOworCXN0cnVjdCByZWdtYXAgKnN5c3Jl
+ZzsKKwlzdHJ1Y3QgY2xrICpjbGtzW05VTV9DTEtTXTsKKworCWJvb2wgaTgwX21vZGU7CisJc3Ry
+dWN0IHZpZGVvbW9kZSB2bTsKKwlzdHJ1Y3QgZHJtX2VuY29kZXIgKmVuY29kZXI7CisJc3RydWN0
+IGRybV9icmlkZ2UgYnJpZGdlOworCisJYm9vbCBlbmFibGVkOworfTsKKworc3RhdGljIHZvaWQg
+bWljX3NldF9wYXRoKHN0cnVjdCBleHlub3NfbWljICptaWMsIGJvb2wgZW5hYmxlKQoreworCWlu
+dCByZXQ7CisJdW5zaWduZWQgaW50IHZhbDsKKworCXJldCA9IHJlZ21hcF9yZWFkKG1pYy0+c3lz
+cmVnLCBEU0RfQ0ZHX01VWCwgJnZhbCk7CisJaWYgKHJldCkgeworCQlEUk1fRVJST1IoIm1pYzog
+RmFpbGVkIHRvIHJlYWQgc3lzdGVtIHJlZ2lzdGVyXG4iKTsKKwkJcmV0dXJuOworCX0KKworCWlm
+IChlbmFibGUpIHsKKwkJaWYgKG1pYy0+aTgwX21vZGUpCisJCQl2YWwgfD0gTUlDMF9JODBfTVVY
+OworCQllbHNlCisJCQl2YWwgfD0gTUlDMF9SR0JfTVVYOworCisJCXZhbCB8PSAgTUlDMF9PTl9N
+VVg7CisJfSBlbHNlCisJCXZhbCAmPSB+KE1JQzBfUkdCX01VWCB8IE1JQzBfSTgwX01VWCB8IE1J
+QzBfT05fTVVYKTsKKworCXJlZ21hcF93cml0ZShtaWMtPnN5c3JlZywgRFNEX0NGR19NVVgsIHZh
+bCk7CisJaWYgKHJldCkKKwkJRFJNX0VSUk9SKCJtaWM6IEZhaWxlZCB0byByZWFkIHN5c3RlbSBy
+ZWdpc3RlclxuIik7Cit9CisKK3N0YXRpYyBpbnQgbWljX3N3X3Jlc2V0KHN0cnVjdCBleHlub3Nf
+bWljICptaWMpCit7CisJdW5zaWduZWQgaW50IHJldHJ5ID0gMTAwOworCWludCByZXQ7CisKKwl3
+cml0ZWwoTUlDX1NXX1JTVCwgbWljLT5yZWcgKyBNSUNfT1ApOworCisJd2hpbGUgKHJldHJ5LS0g
+PiAwKSB7CisJCXJldCA9IHJlYWRsKG1pYy0+cmVnICsgTUlDX09QKTsKKwkJaWYgKCEocmV0ICYg
+TUlDX1NXX1JTVCkpCisJCQlyZXR1cm4gMDsKKworCQl1ZGVsYXkoMTApOworCX0KKworCXJldHVy
+biAtRVRJTUVET1VUOworfQorCitzdGF0aWMgdm9pZCBtaWNfc2V0X3BvcmNoX3RpbWluZyhzdHJ1
+Y3QgZXh5bm9zX21pYyAqbWljKQoreworCXN0cnVjdCB2aWRlb21vZGUgdm0gPSBtaWMtPnZtOwor
+CXUzMiByZWc7CisKKwlyZWcgPSBNSUNfVl9QVUxTRV9XSURUSCh2bS52c3luY19sZW4pICsKKwkJ
+TUlDX1ZfUEVSSU9EX0xJTkUodm0udnN5bmNfbGVuICsgdm0udmFjdGl2ZSArCisJCQkJdm0udmJh
+Y2tfcG9yY2ggKyB2bS52ZnJvbnRfcG9yY2gpOworCXdyaXRlbChyZWcsIG1pYy0+cmVnICsgTUlD
+X1ZfVElNSU5HXzApOworCisJcmVnID0gTUlDX1ZCUF9TSVpFKHZtLnZiYWNrX3BvcmNoKSArCisJ
+CU1JQ19WRlBfU0laRSh2bS52ZnJvbnRfcG9yY2gpOworCXdyaXRlbChyZWcsIG1pYy0+cmVnICsg
+TUlDX1ZfVElNSU5HXzEpOworCisJcmVnID0gTUlDX1ZfUFVMU0VfV0lEVEgodm0uaHN5bmNfbGVu
+KSArCisJCU1JQ19WX1BFUklPRF9MSU5FKHZtLmhzeW5jX2xlbiArIHZtLmhhY3RpdmUgKworCQkJ
+CXZtLmhiYWNrX3BvcmNoICsgdm0uaGZyb250X3BvcmNoKTsKKwl3cml0ZWwocmVnLCBtaWMtPnJl
+ZyArIE1JQ19JTlBVVF9USU1JTkdfMCk7CisKKwlyZWcgPSBNSUNfVkJQX1NJWkUodm0uaGJhY2tf
+cG9yY2gpICsKKwkJTUlDX1ZGUF9TSVpFKHZtLmhmcm9udF9wb3JjaCk7CisJd3JpdGVsKHJlZywg
+bWljLT5yZWcgKyBNSUNfSU5QVVRfVElNSU5HXzEpOworfQorCitzdGF0aWMgdm9pZCBtaWNfc2V0
+X2ltZ19zaXplKHN0cnVjdCBleHlub3NfbWljICptaWMpCit7CisJc3RydWN0IHZpZGVvbW9kZSAq
+dm0gPSAmbWljLT52bTsKKwl1MzIgcmVnOworCisJcmVnID0gTUlDX0lNR19IX1NJWkUodm0tPmhh
+Y3RpdmUpICsKKwkJTUlDX0lNR19WX1NJWkUodm0tPnZhY3RpdmUpOworCisJd3JpdGVsKHJlZywg
+bWljLT5yZWcgKyBNSUNfSU1HX1NJWkUpOworfQorCitzdGF0aWMgdm9pZCBtaWNfc2V0X291dHB1
+dF90aW1pbmcoc3RydWN0IGV4eW5vc19taWMgKm1pYykKK3sKKwlzdHJ1Y3QgdmlkZW9tb2RlIHZt
+ID0gbWljLT52bTsKKwl1MzIgcmVnLCBic19zaXplXzJkOworCisJRFJNX0RFQlVHKCJ3OiAldSwg
+aDogJXVcbiIsIHZtLmhhY3RpdmUsIHZtLnZhY3RpdmUpOworCWJzX3NpemVfMmQgPSAoKHZtLmhh
+Y3RpdmUgPj4gMikgPDwgMSkgKyAodm0udmFjdGl2ZSAlIDQpOworCXJlZyA9IE1JQ19CU19TSVpF
+XzJEKGJzX3NpemVfMmQpOworCXdyaXRlbChyZWcsIG1pYy0+cmVnICsgTUlDXzJEX09VVFBVVF9U
+SU1JTkdfMik7CisKKwlpZiAoIW1pYy0+aTgwX21vZGUpIHsKKwkJcmVnID0gTUlDX0hfUFVMU0Vf
+V0lEVEhfMkQodm0uaHN5bmNfbGVuKSArCisJCQlNSUNfSF9QRVJJT0RfUElYRUxfMkQodm0uaHN5
+bmNfbGVuICsgYnNfc2l6ZV8yZCArCisJCQkJCXZtLmhiYWNrX3BvcmNoICsgdm0uaGZyb250X3Bv
+cmNoKTsKKwkJd3JpdGVsKHJlZywgbWljLT5yZWcgKyBNSUNfMkRfT1VUUFVUX1RJTUlOR18wKTsK
+KworCQlyZWcgPSBNSUNfSEJQX1NJWkVfMkQodm0uaGJhY2tfcG9yY2gpICsKKwkJCU1JQ19IX1BF
+UklPRF9QSVhFTF8yRCh2bS5oZnJvbnRfcG9yY2gpOworCQl3cml0ZWwocmVnLCBtaWMtPnJlZyAr
+IE1JQ18yRF9PVVRQVVRfVElNSU5HXzEpOworCX0KK30KKworc3RhdGljIHZvaWQgbWljX3NldF9y
+ZWdfb24oc3RydWN0IGV4eW5vc19taWMgKm1pYywgYm9vbCBlbmFibGUpCit7CisJdTMyIHJlZyA9
+IHJlYWRsKG1pYy0+cmVnICsgTUlDX09QKTsKKworCWlmIChlbmFibGUpIHsKKwkJcmVnICY9IH4o
+TUlDX01PREVfU0VMX01BU0sgfCBNSUNfQ09SRV9WRVJfQ09OVFJPTCB8IE1JQ19QU1JfRU4pOwor
+CQlyZWcgfD0gKE1JQ19DT1JFX0VOIHwgTUlDX0JTX0NIR19PVVQgfCBNSUNfT05fUkVHKTsKKwor
+CQlyZWcgICY9IH5NSUNfTU9ERV9TRUxfQ09NTUFORF9NT0RFOworCQlpZiAobWljLT5pODBfbW9k
+ZSkKKwkJCXJlZyB8PSBNSUNfTU9ERV9TRUxfQ09NTUFORF9NT0RFOworCX0gZWxzZSB7CisJCXJl
+ZyAmPSB+TUlDX0NPUkVfRU47CisJfQorCisJcmVnIHw9IE1JQ19VUERfUkVHOworCXdyaXRlbChy
+ZWcsIG1pYy0+cmVnICsgTUlDX09QKTsKK30KKworc3RhdGljIHN0cnVjdCBkZXZpY2Vfbm9kZSAq
+Z2V0X3JlbW90ZV9ub2RlKHN0cnVjdCBkZXZpY2Vfbm9kZSAqZnJvbSwgaW50IHJlZykKK3sKKwlz
+dHJ1Y3QgZGV2aWNlX25vZGUgKmVuZHBvaW50ID0gTlVMTCwgKnJlbW90ZV9ub2RlID0gTlVMTDsK
+KworCWVuZHBvaW50ID0gb2ZfZ3JhcGhfZ2V0X2VuZHBvaW50X2J5X3JlZ3MoZnJvbSwgcmVnLCAt
+MSk7CisJaWYgKCFlbmRwb2ludCkgeworCQlEUk1fRVJST1IoIm1pYzogRmFpbGVkIHRvIGZpbmQg
+cmVtb3RlIHBvcnQgZnJvbSAlcyIsCisJCQkJZnJvbS0+ZnVsbF9uYW1lKTsKKwkJZ290byBleGl0
+OworCX0KKworCXJlbW90ZV9ub2RlID0gb2ZfZ3JhcGhfZ2V0X3JlbW90ZV9wb3J0X3BhcmVudChl
+bmRwb2ludCk7CisJaWYgKCFyZW1vdGVfbm9kZSkgeworCQlEUk1fRVJST1IoIm1pYzogRmFpbGVk
+IHRvIGZpbmQgcmVtb3RlIHBvcnQgcGFyZW50IGZyb20gJXMiLAorCQkJCQkJCWZyb20tPmZ1bGxf
+bmFtZSk7CisJCWdvdG8gZXhpdDsKKwl9CisKK2V4aXQ6CisJb2Zfbm9kZV9wdXQoZW5kcG9pbnQp
+OworCXJldHVybiByZW1vdGVfbm9kZTsKK30KKworc3RhdGljIGludCBwYXJzZV9kdChzdHJ1Y3Qg
+ZXh5bm9zX21pYyAqbWljKQoreworCWludCByZXQgPSAwLCBpLCBqOworCXN0cnVjdCBkZXZpY2Vf
+bm9kZSAqcmVtb3RlX25vZGU7CisJc3RydWN0IGRldmljZV9ub2RlICpub2Rlc1szXTsKKworCS8q
+CisJICogVGhlIG9yZGVyIG9mIGVuZHBvaW50cyBkb2VzIG1hdHRlci4KKwkgKiBUaGUgZmlyc3Qg
+bm9kZSBtdXN0IGJlIGZvciBkZWNvbiBhbmQgdGhlIHNlY29uZCBvbmUgbXVzdCBiZSBmb3IgZHNp
+LgorCSAqLworCWZvciAoaSA9IDAsIGogPSAwOyBpIDwgTlVNX0VORFBPSU5UUzsgaSsrKSB7CisJ
+CXJlbW90ZV9ub2RlID0gZ2V0X3JlbW90ZV9ub2RlKG1pYy0+ZGV2LT5vZl9ub2RlLCBpKTsKKwkJ
+aWYgKCFyZW1vdGVfbm9kZSkgeworCQkJcmV0ID0gLUVQSVBFOworCQkJZ290byBleGl0OworCQl9
+CisJCW5vZGVzW2orK10gPSByZW1vdGVfbm9kZTsKKworCQlzd2l0Y2ggKGkpIHsKKwkJY2FzZSBF
+TkRQT0lOVF9ERUNPTl9OT0RFOgorCQkJLyogZGVjb24gbm9kZSAqLworCQkJaWYgKG9mX2dldF9j
+aGlsZF9ieV9uYW1lKHJlbW90ZV9ub2RlLAorCQkJCQkJImk4MC1pZi10aW1pbmdzIikpCisJCQkJ
+bWljLT5pODBfbW9kZSA9IDE7CisKKwkJCWJyZWFrOworCQljYXNlIEVORFBPSU5UX0RTSV9OT0RF
+OgorCQkJLyogcGFuZWwgbm9kZSAqLworCQkJcmVtb3RlX25vZGUgPSBnZXRfcmVtb3RlX25vZGUo
+cmVtb3RlX25vZGUsIDEpOworCQkJaWYgKCFyZW1vdGVfbm9kZSkgeworCQkJCXJldCA9IC1FUElQ
+RTsKKwkJCQlnb3RvIGV4aXQ7CisJCQl9CisJCQlub2Rlc1tqKytdID0gcmVtb3RlX25vZGU7CisK
+KwkJCXJldCA9IG9mX2dldF92aWRlb21vZGUocmVtb3RlX25vZGUsCisJCQkJCQkJJm1pYy0+dm0s
+IDApOworCQkJaWYgKHJldCkgeworCQkJCURSTV9FUlJPUigibWljOiBmYWlsZWQgdG8gZ2V0IHZp
+ZGVvbW9kZSIpOworCQkJCWdvdG8gZXhpdDsKKwkJCX0KKworCQkJYnJlYWs7CisJCWRlZmF1bHQ6
+CisJCQlEUk1fRVJST1IoIm1pYzogVW5rbm93biBlbmRwb2ludCBmcm9tIE1JQyIpOworCQkJYnJl
+YWs7CisJCX0KKwl9CisKK2V4aXQ6CisJd2hpbGUgKC0taiA+IC0xKQorCQlvZl9ub2RlX3B1dChu
+b2Rlc1tqXSk7CisKKwlyZXR1cm4gcmV0OworfQorCit2b2lkIG1pY19kaXNhYmxlKHN0cnVjdCBk
+cm1fYnJpZGdlICpicmlkZ2UpIHsgfQorCit2b2lkIG1pY19wb3N0X2Rpc2FibGUoc3RydWN0IGRy
+bV9icmlkZ2UgKmJyaWRnZSkKK3sKKwlzdHJ1Y3QgZXh5bm9zX21pYyAqbWljID0gYnJpZGdlLT5k
+cml2ZXJfcHJpdmF0ZTsKKwlpbnQgaTsKKworCW11dGV4X2xvY2soJm1pY19tdXRleCk7CisJaWYg
+KCFtaWMtPmVuYWJsZWQpCisJCWdvdG8gYWxyZWFkeV9kaXNhYmxlZDsKKworCW1pY19zZXRfcGF0
+aChtaWMsIDApOworCisJZm9yIChpID0gTlVNX0NMS1MgLSAxOyBpID4gLTE7IGktLSkKKwkJY2xr
+X2Rpc2FibGVfdW5wcmVwYXJlKG1pYy0+Y2xrc1tpXSk7CisKKwltaWMtPmVuYWJsZWQgPSAwOwor
+CithbHJlYWR5X2Rpc2FibGVkOgorCW11dGV4X3VubG9jaygmbWljX211dGV4KTsKK30KKwordm9p
+ZCBtaWNfcHJlX2VuYWJsZShzdHJ1Y3QgZHJtX2JyaWRnZSAqYnJpZGdlKQoreworCXN0cnVjdCBl
+eHlub3NfbWljICptaWMgPSBicmlkZ2UtPmRyaXZlcl9wcml2YXRlOworCWludCByZXQsIGk7CisK
+KwltdXRleF9sb2NrKCZtaWNfbXV0ZXgpOworCWlmIChtaWMtPmVuYWJsZWQpCisJCWdvdG8gYWxy
+ZWFkeV9lbmFibGVkOworCisJZm9yIChpID0gMDsgaSA8IE5VTV9DTEtTOyBpKyspIHsKKwkJcmV0
+ID0gY2xrX3ByZXBhcmVfZW5hYmxlKG1pYy0+Y2xrc1tpXSk7CisJCWlmIChyZXQgPCAwKSB7CisJ
+CQlEUk1fRVJST1IoIkZhaWxlZCB0byBlbmFibGUgY2xvY2sgKCVzKVxuIiwKKwkJCQkJCQljbGtf
+bmFtZXNbaV0pOworCQkJZ290byB0dXJuX29mZl9jbGtzOworCQl9CisJfQorCisJbWljX3NldF9w
+YXRoKG1pYywgMSk7CisKKwlyZXQgPSBtaWNfc3dfcmVzZXQobWljKTsKKwlpZiAocmV0KSB7CisJ
+CURSTV9FUlJPUigiRmFpbGVkIHRvIHJlc2V0XG4iKTsKKwkJZ290byB0dXJuX29mZl9jbGtzOwor
+CX0KKworCWlmICghbWljLT5pODBfbW9kZSkKKwkJbWljX3NldF9wb3JjaF90aW1pbmcobWljKTsK
+KwltaWNfc2V0X2ltZ19zaXplKG1pYyk7CisJbWljX3NldF9vdXRwdXRfdGltaW5nKG1pYyk7CisJ
+bWljX3NldF9yZWdfb24obWljLCAxKTsKKwltaWMtPmVuYWJsZWQgPSAxOworCW11dGV4X3VubG9j
+aygmbWljX211dGV4KTsKKworCXJldHVybjsKKwordHVybl9vZmZfY2xrczoKKwl3aGlsZSAoLS1p
+ID4gLTEpCisJCWNsa19kaXNhYmxlX3VucHJlcGFyZShtaWMtPmNsa3NbaV0pOworYWxyZWFkeV9l
+bmFibGVkOgorCW11dGV4X3VubG9jaygmbWljX211dGV4KTsKK30KKwordm9pZCBtaWNfZW5hYmxl
+KHN0cnVjdCBkcm1fYnJpZGdlICpicmlkZ2UpIHsgfQorCit2b2lkIG1pY19kZXN0cm95KHN0cnVj
+dCBkcm1fYnJpZGdlICpicmlkZ2UpCit7CisJc3RydWN0IGV4eW5vc19taWMgKm1pYyA9IGJyaWRn
+ZS0+ZHJpdmVyX3ByaXZhdGU7CisJaW50IGk7CisKKwltdXRleF9sb2NrKCZtaWNfbXV0ZXgpOwor
+CWlmICghbWljLT5lbmFibGVkKQorCQlnb3RvIGFscmVhZHlfZGlzYWJsZWQ7CisKKwlmb3IgKGkg
+PSBOVU1fQ0xLUyAtIDE7IGkgPiAtMTsgaS0tKQorCQljbGtfZGlzYWJsZV91bnByZXBhcmUobWlj
+LT5jbGtzW2ldKTsKKworYWxyZWFkeV9kaXNhYmxlZDoKKwltdXRleF91bmxvY2soJm1pY19tdXRl
+eCk7Cit9CisKK3N0cnVjdCBkcm1fYnJpZGdlX2Z1bmNzIG1pY19icmlkZ2VfZnVuY3MgPSB7CisJ
+LmRpc2FibGUgPSBtaWNfZGlzYWJsZSwKKwkucG9zdF9kaXNhYmxlID0gbWljX3Bvc3RfZGlzYWJs
+ZSwKKwkucHJlX2VuYWJsZSA9IG1pY19wcmVfZW5hYmxlLAorCS5lbmFibGUgPSBtaWNfZW5hYmxl
+LAorfTsKKworaW50IGV4eW5vc19taWNfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRl
+dikKK3sKKwlzdHJ1Y3QgZGV2aWNlICpkZXYgPSAmcGRldi0+ZGV2OworCXN0cnVjdCBleHlub3Nf
+bWljICptaWM7CisJc3RydWN0IHJlc291cmNlIHJlczsKKwlpbnQgcmV0LCBpOworCisJbWljID0g
+ZGV2bV9remFsbG9jKGRldiwgc2l6ZW9mKCptaWMpLCBHRlBfS0VSTkVMKTsKKwlpZiAoIW1pYykg
+eworCQlEUk1fRVJST1IoIm1pYzogRmFpbGVkIHRvIGFsbG9jYXRlIG1lbW9yeSBmb3IgTUlDIG9i
+amVjdFxuIik7CisJCXJldCA9IC1FTk9NRU07CisJCWdvdG8gZXJyOworCX0KKworCW1pYy0+ZGV2
+ID0gZGV2OworCisJcmV0ID0gcGFyc2VfZHQobWljKTsKKwlpZiAocmV0KQorCQlnb3RvIGVycjsK
+KworCXJldCA9IG9mX2FkZHJlc3NfdG9fcmVzb3VyY2UoZGV2LT5vZl9ub2RlLCAwLCAmcmVzKTsK
+KwlpZiAocmV0KSB7CisJCURSTV9FUlJPUigibWljOiBGYWlsZWQgdG8gZ2V0IG1lbSByZWdpb24g
+Zm9yIE1JQ1xuIik7CisJCWdvdG8gZXJyOworCX0KKwltaWMtPnJlZyA9IGRldm1faW9yZW1hcChk
+ZXYsIHJlcy5zdGFydCwgcmVzb3VyY2Vfc2l6ZSgmcmVzKSk7CisJaWYgKCFtaWMtPnJlZykgewor
+CQlEUk1fRVJST1IoIm1pYzogRmFpbGVkIHRvIHJlbWFwIGZvciBNSUNcbiIpOworCQlyZXQgPSAt
+RU5PTUVNOworCQlnb3RvIGVycjsKKwl9CisKKwltaWMtPnN5c3JlZyA9IHN5c2Nvbl9yZWdtYXBf
+bG9va3VwX2J5X3BoYW5kbGUoZGV2LT5vZl9ub2RlLAorCQkJCQkJCSJzYW1zdW5nLGRpc3Atc3lz
+Y29uIik7CisJaWYgKElTX0VSUihtaWMtPnN5c3JlZykpIHsKKwkJRFJNX0VSUk9SKCJtaWM6IEZh
+aWxlZCB0byBnZXQgc3lzdGVtIHJlZ2lzdGVyLlxuIik7CisJCWdvdG8gZXJyOworCX0KKworCW1p
+Yy0+YnJpZGdlLmZ1bmNzID0gJm1pY19icmlkZ2VfZnVuY3M7CisJbWljLT5icmlkZ2Uub2Zfbm9k
+ZSA9IGRldi0+b2Zfbm9kZTsKKwltaWMtPmJyaWRnZS5kcml2ZXJfcHJpdmF0ZSA9IG1pYzsKKwly
+ZXQgPSBkcm1fYnJpZGdlX2FkZCgmbWljLT5icmlkZ2UpOworCWlmIChyZXQpIHsKKwkJRFJNX0VS
+Uk9SKCJtaWM6IEZhaWxlZCB0byBhZGQgTUlDIHRvIHRoZSBnbG9iYWwgYnJpZGdlIGxpc3RcbiIp
+OworCQlnb3RvIGVycjsKKwl9CisKKwlmb3IgKGkgPSAwOyBpIDwgTlVNX0NMS1M7IGkrKykgewor
+CQltaWMtPmNsa3NbaV0gPSBvZl9jbGtfZ2V0X2J5X25hbWUoZGV2LT5vZl9ub2RlLCBjbGtfbmFt
+ZXNbaV0pOworCQlpZiAoSVNfRVJSKG1pYy0+Y2xrc1tpXSkpIHsKKwkJCURSTV9FUlJPUigibWlj
+OiBGYWlsZWQgdG8gZ2V0IGNsb2NrICglcylcbiIsCisJCQkJCQkJCWNsa19uYW1lc1tpXSk7CisJ
+CQlyZXQgPSBQVFJfRVJSKG1pYy0+Y2xrc1tpXSk7CisJCQlnb3RvIGVycjsKKwkJfQorCX0KKwor
+CURSTV9ERUJVR19LTVMoIk1JQyBoYXMgYmVlbiBwcm9iZWRcbiIpOworCitlcnI6CisJcmV0dXJu
+IHJldDsKK30KKworc3RhdGljIGludCBleHlub3NfbWljX3JlbW92ZShzdHJ1Y3QgcGxhdGZvcm1f
+ZGV2aWNlICpwZGV2KQoreworCXN0cnVjdCBleHlub3NfbWljICptaWMgPSBwbGF0Zm9ybV9nZXRf
+ZHJ2ZGF0YShwZGV2KTsKKwlpbnQgaTsKKworCWRybV9icmlkZ2VfcmVtb3ZlKCZtaWMtPmJyaWRn
+ZSk7CisKKwlmb3IgKGkgPSBOVU1fQ0xLUyAtIDE7IGkgPiAtMTsgaS0tKQorCQljbGtfcHV0KG1p
+Yy0+Y2xrc1tpXSk7CisKKwlyZXR1cm4gMDsKK30KKworc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9k
+ZXZpY2VfaWQgZXh5bm9zX21pY19vZl9tYXRjaFtdID0geworCXsgLmNvbXBhdGlibGUgPSAic2Ft
+c3VuZyxleHlub3M1NDMzLW1pYyIgfSwKKwl7IH0KK307CitNT0RVTEVfREVWSUNFX1RBQkxFKG9m
+LCBleHlub3NfbWljX29mX21hdGNoKTsKKworc3RydWN0IHBsYXRmb3JtX2RyaXZlciBtaWNfZHJp
+dmVyID0geworCS5wcm9iZQkJPSBleHlub3NfbWljX3Byb2JlLAorCS5yZW1vdmUJCT0gZXh5bm9z
+X21pY19yZW1vdmUsCisJLmRyaXZlcgkJPSB7CisJCS5uYW1lCT0gImV4eW5vcy1taWMiLAorCQku
+b3duZXIJPSBUSElTX01PRFVMRSwKKwkJLm9mX21hdGNoX3RhYmxlID0gZXh5bm9zX21pY19vZl9t
+YXRjaCwKKwl9LAorfTsKLS0KMS45LjEKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
+ZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
+Zm8vZHJpLWRldmVsCg==
