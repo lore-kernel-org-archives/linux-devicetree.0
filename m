@@ -1,322 +1,1025 @@
-From: Hyungwon Hwang <human.hwang@samsung.com>
-Subject: [PATCH v6 07/15] drm/exynos: mic: add MIC driver
-Date: Fri, 12 Jun 2015 21:59:02 +0900
-Message-ID: <1434113958-15877-8-git-send-email-human.hwang@samsung.com>
+From: Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v6 05/15] drm/exynos: add Exynos5433 decon driver
+Date: Fri, 12 Jun 2015 21:59:00 +0900
+Message-ID: <1434113958-15877-6-git-send-email-human.hwang@samsung.com>
 References: <1434113958-15877-1-git-send-email-human.hwang@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <1434113958-15877-1-git-send-email-human.hwang@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: sw0312.kim@samsung.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1434113958-15877-1-git-send-email-human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, daniel-rLtY4a/8tF1rovVCs/uTlw@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-TUlDKE1vYmlsZSBpbWFnZSBjb21wcmVzc29yKSBpcyBuZXdseSBhZGRlZCBJUCBpbiBFeHlub3M1
-NDMzLiBNSUMKcmVzaWRlcyBiZXR3ZWVuIGRlY29uIGFuZCBtaXBpIGRzaW0sIGFuZCBjb21wcmVz
-c2VzIGZyYW1lIGRhdGEgYnkgNTAlLgpXaXRoIGRzaSwgbm90IGRpc3BsYXkgcG9ydCwgdG8gc2Vu
-ZCBmcmFtZSBkYXRhIHRvIHRoZSBwYW5lbCwgdGhlCmJhbmR3aWR0aCBpcyBub3QgZW5vdWdoLiBU
-aGF0IGlzIHdoeSB0aGlzIGNvbXByZXNzb3IgaXMgaW50cm9kdWNlZC4KClNpZ25lZC1vZmYtYnk6
-IEh5dW5nd29uIEh3YW5nIDxodW1hbi5od2FuZ0BzYW1zdW5nLmNvbT4KLS0tCkNoYW5nZXMgYmVm
-b3JlOgotIFJlZmVyIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvNjE5MTcxMS8K
-Q2hhbmdlcyBmb3IgdjY6Ci0gTm9uZQogLi4uL2RldmljZXRyZWUvYmluZGluZ3MvdmlkZW8vZXh5
-bm9zLW1pYy50eHQgICAgICAgfCAgNTEgKysrCiBkcml2ZXJzL2dwdS9kcm0vZXh5bm9zL0tjb25m
-aWcgICAgICAgICAgICAgICAgICAgICB8ICAgNiArCiBkcml2ZXJzL2dwdS9kcm0vZXh5bm9zL01h
-a2VmaWxlICAgICAgICAgICAgICAgICAgICB8ICAgMSArCiBkcml2ZXJzL2dwdS9kcm0vZXh5bm9z
-L2V4eW5vc19kcm1fZHJ2LmMgICAgICAgICAgICB8ICAgMyArCiBkcml2ZXJzL2dwdS9kcm0vZXh5
-bm9zL2V4eW5vc19kcm1fZHJ2LmggICAgICAgICAgICB8ICAgMSArCiBkcml2ZXJzL2dwdS9kcm0v
-ZXh5bm9zL2V4eW5vc19kcm1fbWljLmMgICAgICAgICAgICB8IDQ5MCArKysrKysrKysrKysrKysr
-KysrKysKIDYgZmlsZXMgY2hhbmdlZCwgNTUyIGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEw
-MDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmlkZW8vZXh5bm9zLW1pYy50
-eHQKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19kcm1f
-bWljLmMKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvdmlk
-ZW8vZXh5bm9zLW1pYy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvdmlk
-ZW8vZXh5bm9zLW1pYy50eHQKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMC4uMGZi
-YTJlZQotLS0gL2Rldi9udWxsCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy92aWRlby9leHlub3MtbWljLnR4dApAQCAtMCwwICsxLDUxIEBACitEZXZpY2UtVHJlZSBiaW5k
-aW5ncyBmb3IgU2Ftc3VuZyBFeHlub3MgU29DIG1vYmlsZSBpbWFnZSBjb21wcmVzc29yIChNSUMp
-CisKK01JQyAobW9iaWxlIGltYWdlIGNvbXByZXNzb3IpIHJlc2lkZXMgYmV0d2VlbiBkZWNvbiBh
-bmQgbWlwaSBkc2kuIE1pcGkgZHNpIGlzCitub3QgY2FwYWJsZSB0byB0cmFuc2ZlciBoaWdoIHJl
-c29sdHVpb24gZnJhbWUgZGF0YSBhcyBkZWNvbiBjYW4gc2VuZC4gTUlDCitzb2x2ZXMgdGhpcyBw
-cm9ibGVtIGJ5IGNvbXByZXNzaW5nIHRoZSBmcmFtZSBkYXRhIGJ5IDEvMiBiZWZvcmUgaXQgaXMK
-K3RyYW5zZmVycmVkIHRocm91Z2ggbWlwaSBkc2kuIFRoZSBjb21wcmVzc2VkIGZyYW1lIGRhdGEg
-bXVzdCBiZSB1bmNvbXByZXNzZWQgaW4KK3RoZSBwYW5lbCBQQ0IuCisKK1JlcXVpcmVkIHByb3Bl
-cnRpZXM6CistIGNvbXBhdGlibGU6IHZhbHVlIHNob3VsZCBiZSAic2Ftc3VuZyxleHlub3M1NDMz
-LW1pYyIuCistIHJlZzogcGh5c2ljYWwgYmFzZSBhZGRyZXNzIGFuZCBsZW5ndGggb2YgdGhlIE1J
-QyByZWdpc3RlcnMgc2V0IGFuZCBzeXN0ZW0KKyAgICAgICByZWdpc3RlciBvZiBtaWMuCistIGNs
-b2NrczogbXVzdCBpbmNsdWRlIGNsb2NrIHNwZWNpZmllcnMgY29ycmVzcG9uZGluZyB0byBlbnRy
-aWVzIGluIHRoZQorCSAgY2xvY2stbmFtZXMgcHJvcGVydHkuCistIGNsb2NrLW5hbWVzOiBsaXN0
-IG9mIGNsb2NrIG5hbWVzIHNvcnRlZCBpbiB0aGUgc2FtZSBvcmRlciBhcyB0aGUgY2xvY2tzCisJ
-ICAgICAgIHByb3BlcnR5LiBNdXN0IGNvbnRhaW4gInBjbGtfbWljMCIsICJzY2xrX3JnYl92Y2xr
-X3RvX21pYzAiLgorLSBzYW1zdW5nLGRpc3Atc3lzY29uOiB0aGUgcmVmZXJlbmNlIG5vZGUgZm9y
-IHN5c2NvbiBmb3IgRElTUCBibG9jay4KKy0gcG9ydHM6IGNvbnRhaW5zIGEgcG9ydCB3aGljaCBp
-cyBjb25uZWN0ZWQgdG8gZGVjb24gbm9kZSBhbmQgZHNpIG5vZGUuCisJIGFkZHJlc3MtY2VsbHMg
-YW5kIHNpemUtY2VsbHMgbXVzdCAxIGFuZCAwLCByZXNwZWN0aXZlbHkuCistIHBvcnQ6IGNvbnRh
-aW5zIGFuIGVuZHBvaW50IG5vZGUgd2hpY2ggaXMgY29ubmVjdGVkIHRvIHRoZSBlbmRwb2ludCBp
-biB0aGUKKwlkZWNvbiBub2RlIG9yIGRzaSBub2RlLiBUaGUgcmVnIHZhbHVlIG11c3QgYmUgMCBh
-bmQgMSByZXNwZWN0aXZlbHkuCisKK0V4YW1wbGU6CitTb0Mgc3BlY2lmaWMgRFQgZW50cnk6Citt
-aWM6IG1pY0AxMzkzMDAwMCB7CisJY29tcGF0aWJsZSA9ICJzYW1zdW5nLGV4eW5vczU0MzMtbWlj
-IjsKKwlyZWcgPSA8MHgxMzkzMDAwMCAweDQ4PjsKKwljbG9ja3MgPSA8JmNtdV9kaXNwIENMS19Q
-Q0xLX01JQzA+LAorCSAgICAgICA8JmNtdV9kaXNwIENMS19TQ0xLX1JHQl9WQ0xLX1RPX01JQzA+
-OworCWNsb2NrLW5hbWVzID0gInBjbGtfbWljMCIsICJzY2xrX3JnYl92Y2xrX3RvX21pYzAiOwor
-CXNhbXN1bmcsZGlzcC1zeXNjb24gPSA8JnN5c2Nvbl9kaXNwPjsKKworCXBvcnRzIHsKKwkJI2Fk
-ZHJlc3MtY2VsbHMgPSA8MT47CisJCSNzaXplLWNlbGxzID0gPDA+OworCisJCXBvcnRAMCB7CisJ
-CQlyZWcgPSA8MD47CisJCQltaWNfdG9fZGVjb246IGVuZHBvaW50IHsKKwkJCQlyZW1vdGUtZW5k
-cG9pbnQgPSA8JmRlY29uX3RvX21pYz47CisJCQl9OworCQl9OworCisJCXBvcnRAMSB7CisJCQly
-ZWcgPSA8MT47CisJCQltaWNfdG9fZHNpOiBlbmRwb2ludCB7CisJCQkJcmVtb3RlLWVuZHBvaW50
-ID0gPCZkc2lfdG9fbWljPjsKKwkJCX07CisJCX07CisJfTsKK307CmRpZmYgLS1naXQgYS9kcml2
-ZXJzL2dwdS9kcm0vZXh5bm9zL0tjb25maWcgYi9kcml2ZXJzL2dwdS9kcm0vZXh5bm9zL0tjb25m
-aWcKaW5kZXggNTFhNGViNS4uMTJlNGU2MiAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL2V4
-eW5vcy9LY29uZmlnCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9leHlub3MvS2NvbmZpZwpAQCAtMTAz
-LDMgKzEwMyw5IEBAIGNvbmZpZyBEUk1fRVhZTk9TX0dTQwogCWRlcGVuZHMgb24gRFJNX0VYWU5P
-U19JUFAgJiYgQVJDSF9FWFlOT1M1ICYmICFBUkNIX01VTFRJUExBVEZPUk0KIAloZWxwCiAJICBD
-aG9vc2UgdGhpcyBvcHRpb24gaWYgeW91IHdhbnQgdG8gdXNlIEV4eW5vcyBHU0MgZm9yIERSTS4K
-KworY29uZmlnIERSTV9FWFlOT1NfTUlDCisJYm9vbCAiRXh5bm9zIERSTSBNSUMiCisJZGVwZW5k
-cyBvbiAoRFJNX0VYWU5PUyAmJiBEUk1fRVhZTk9TNTQzM19ERUNPTikKKwloZWxwCisJICBDaG9v
-c2UgdGhpcyBvcHRpb24gaWYgeW91IHdhbnQgdG8gdXNlIEV4eW5vcyBNSUMgZm9yIERSTS4KZGlm
-ZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9leHlub3MvTWFrZWZpbGUgYi9kcml2ZXJzL2dwdS9k
-cm0vZXh5bm9zL01ha2VmaWxlCmluZGV4IGZiZDA4NGQuLjdkZTBiMTAgMTAwNjQ0Ci0tLSBhL2Ry
-aXZlcnMvZ3B1L2RybS9leHlub3MvTWFrZWZpbGUKKysrIGIvZHJpdmVycy9ncHUvZHJtL2V4eW5v
-cy9NYWtlZmlsZQpAQCAtMjIsNSArMjIsNiBAQCBleHlub3Nkcm0tJChDT05GSUdfRFJNX0VYWU5P
-U19JUFApCSs9IGV4eW5vc19kcm1faXBwLm8KIGV4eW5vc2RybS0kKENPTkZJR19EUk1fRVhZTk9T
-X0ZJTUMpCSs9IGV4eW5vc19kcm1fZmltYy5vCiBleHlub3Nkcm0tJChDT05GSUdfRFJNX0VYWU5P
-U19ST1RBVE9SKQkrPSBleHlub3NfZHJtX3JvdGF0b3IubwogZXh5bm9zZHJtLSQoQ09ORklHX0RS
-TV9FWFlOT1NfR1NDKQkrPSBleHlub3NfZHJtX2dzYy5vCitleHlub3Nkcm0tJChDT05GSUdfRFJN
-X0VYWU5PU19NSUMpICAgICArPSBleHlub3NfZHJtX21pYy5vCgogb2JqLSQoQ09ORklHX0RSTV9F
-WFlOT1MpCQkrPSBleHlub3Nkcm0ubwpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2V4eW5v
-cy9leHlub3NfZHJtX2Rydi5jIGIvZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3NfZHJtX2Ry
-di5jCmluZGV4IDU5MWJkZWMuLmMxNGI0NGEgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9l
-eHlub3MvZXh5bm9zX2RybV9kcnYuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5v
-c19kcm1fZHJ2LmMKQEAgLTM1Nyw2ICszNTcsOSBAQCBzdGF0aWMgc3RydWN0IHBsYXRmb3JtX2Ry
-aXZlciAqY29uc3QgZXh5bm9zX2RybV9rbXNfZHJpdmVyc1tdID0gewogI2lmZGVmIENPTkZJR19E
-Uk1fRVhZTk9TN19ERUNPTgogCSZkZWNvbl9kcml2ZXIsCiAjZW5kaWYKKyNpZmRlZiBDT05GSUdf
-RFJNX0VYWU5PU19NSUMKKwkmbWljX2RyaXZlciwKKyNlbmRpZgogI2lmZGVmIENPTkZJR19EUk1f
-RVhZTk9TX0RQCiAJJmRwX2RyaXZlciwKICNlbmRpZgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUv
-ZHJtL2V4eW5vcy9leHlub3NfZHJtX2Rydi5oIGIvZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlu
-b3NfZHJtX2Rydi5oCmluZGV4IDc2OWVkZmQuLmIzZGJkZDQgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMv
-Z3B1L2RybS9leHlub3MvZXh5bm9zX2RybV9kcnYuaAorKysgYi9kcml2ZXJzL2dwdS9kcm0vZXh5
-bm9zL2V4eW5vc19kcm1fZHJ2LmgKQEAgLTMxOSw0ICszMTksNSBAQCBleHRlcm4gc3RydWN0IHBs
-YXRmb3JtX2RyaXZlciBmaW1jX2RyaXZlcjsKIGV4dGVybiBzdHJ1Y3QgcGxhdGZvcm1fZHJpdmVy
-IHJvdGF0b3JfZHJpdmVyOwogZXh0ZXJuIHN0cnVjdCBwbGF0Zm9ybV9kcml2ZXIgZ3NjX2RyaXZl
-cjsKIGV4dGVybiBzdHJ1Y3QgcGxhdGZvcm1fZHJpdmVyIGlwcF9kcml2ZXI7CitleHRlcm4gc3Ry
-dWN0IHBsYXRmb3JtX2RyaXZlciBtaWNfZHJpdmVyOwogI2VuZGlmCmRpZmYgLS1naXQgYS9kcml2
-ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19kcm1fbWljLmMgYi9kcml2ZXJzL2dwdS9kcm0vZXh5
-bm9zL2V4eW5vc19kcm1fbWljLmMKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMC4u
-ODk5NGVhYgotLS0gL2Rldi9udWxsCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9leHlub3MvZXh5bm9z
-X2RybV9taWMuYwpAQCAtMCwwICsxLDQ5MCBAQAorLyoKKyAqIENvcHlyaWdodCAoQykgMjAxNSBT
-YW1zdW5nIEVsZWN0cm9uaWNzIENvLkx0ZAorICogQXV0aG9yczoKKyAqCUh5dW5nd29uIEh3YW5n
-IDxodW1hbi5od2FuZ0BzYW1zdW5nLmNvbT4KKyAqCisgKiBUaGlzIHByb2dyYW0gaXMgZnJlZSBz
-b2Z0d2FyZTsgeW91IGNhbiByZWRpc3RyaWJ1dGUgaXQgYW5kL29yIG1vZGlmeQorICogaXQgdW5k
-ZXIgdGhlIHRlcm1zIG9mIHRoZSBHTlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZSB2ZXJzaW9uIDIg
-YXMKKyAqIHB1Ymxpc2hlZCBieSB0aGUgRnJlZSBTb2Z0d2FyZSBGb3VuZGF0aW9ucgorICovCisK
-KyNpbmNsdWRlIDxsaW51eC9wbGF0Zm9ybV9kZXZpY2UuaD4KKyNpbmNsdWRlIDx2aWRlby9vZl92
-aWRlb21vZGUuaD4KKyNpbmNsdWRlIDxsaW51eC9vZl9hZGRyZXNzLmg+CisjaW5jbHVkZSA8dmlk
-ZW8vdmlkZW9tb2RlLmg+CisjaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+CisjaW5jbHVkZSA8bGlu
-dXgvZGVsYXkuaD4KKyNpbmNsdWRlIDxsaW51eC9tdXRleC5oPgorI2luY2x1ZGUgPGxpbnV4L29m
-Lmg+CisjaW5jbHVkZSA8bGludXgvb2ZfZ3JhcGguaD4KKyNpbmNsdWRlIDxsaW51eC9jbGsuaD4K
-KyNpbmNsdWRlIDxkcm0vZHJtUC5oPgorI2luY2x1ZGUgPGxpbnV4L21mZC9zeXNjb24uaD4KKyNp
-bmNsdWRlIDxsaW51eC9yZWdtYXAuaD4KKworLyogU3lzcmVnIHJlZ2lzdGVycyBmb3IgTUlDICov
-CisjZGVmaW5lIERTRF9DRkdfTVVYCTB4MTAwNAorI2RlZmluZSBNSUMwX1JHQl9NVVgJKDEgPDwg
-MCkKKyNkZWZpbmUgTUlDMF9JODBfTVVYCSgxIDw8IDEpCisjZGVmaW5lIE1JQzBfT05fTVVYCSgx
-IDw8IDUpCisKKy8qIE1JQyByZWdpc3RlcnMgKi8KKyNkZWZpbmUgTUlDX09QCQkJCTB4MAorI2Rl
-ZmluZSBNSUNfSVBfVkVSCQkJMHgwMDA0CisjZGVmaW5lIE1JQ19WX1RJTUlOR18wCQkJMHgwMDA4
-CisjZGVmaW5lIE1JQ19WX1RJTUlOR18xCQkJMHgwMDBDCisjZGVmaW5lIE1JQ19JTUdfU0laRQkJ
-CTB4MDAxMAorI2RlZmluZSBNSUNfSU5QVVRfVElNSU5HXzAJCTB4MDAxNAorI2RlZmluZSBNSUNf
-SU5QVVRfVElNSU5HXzEJCTB4MDAxOAorI2RlZmluZSBNSUNfMkRfT1VUUFVUX1RJTUlOR18wCQkw
-eDAwMUMKKyNkZWZpbmUgTUlDXzJEX09VVFBVVF9USU1JTkdfMQkJMHgwMDIwCisjZGVmaW5lIE1J
-Q18yRF9PVVRQVVRfVElNSU5HXzIJCTB4MDAyNAorI2RlZmluZSBNSUNfM0RfT1VUUFVUX1RJTUlO
-R18wCQkweDAwMjgKKyNkZWZpbmUgTUlDXzNEX09VVFBVVF9USU1JTkdfMQkJMHgwMDJDCisjZGVm
-aW5lIE1JQ18zRF9PVVRQVVRfVElNSU5HXzIJCTB4MDAzMAorI2RlZmluZSBNSUNfQ09SRV9QQVJB
-XzAJCQkweDAwMzQKKyNkZWZpbmUgTUlDX0NPUkVfUEFSQV8xCQkJMHgwMDM4CisjZGVmaW5lIE1J
-Q19DVENfQ1RSTAkJCTB4MDA0MAorI2RlZmluZSBNSUNfUkRfREFUQQkJCTB4MDA0NAorCisjZGVm
-aW5lIE1JQ19VUERfUkVHCQkJKDEgPDwgMzEpCisjZGVmaW5lIE1JQ19PTl9SRUcJCQkoMSA8PCAz
-MCkKKyNkZWZpbmUgTUlDX1REX09OX1JFRwkJCSgxIDw8IDI5KQorI2RlZmluZSBNSUNfQlNfQ0hH
-X09VVAkJCSgxIDw8IDE2KQorI2RlZmluZSBNSUNfVklERU9fVFlQRSh4KQkJKCgoeCkgJiAweGYp
-IDw8IDEyKQorI2RlZmluZSBNSUNfUFNSX0VOCQkJKDEgPDwgNSkKKyNkZWZpbmUgTUlDX1NXX1JT
-VAkJCSgxIDw8IDQpCisjZGVmaW5lIE1JQ19BTExfUlNUCQkJKDEgPDwgMykKKyNkZWZpbmUgTUlD
-X0NPUkVfVkVSX0NPTlRST0wJCSgxIDw8IDIpCisjZGVmaW5lIE1JQ19NT0RFX1NFTF9DT01NQU5E
-X01PREUJKDEgPDwgMSkKKyNkZWZpbmUgTUlDX01PREVfU0VMX01BU0sJCSgxIDw8IDEpCisjZGVm
-aW5lIE1JQ19DT1JFX0VOCQkJKDEgPDwgMCkKKworI2RlZmluZSBNSUNfVl9QVUxTRV9XSURUSCh4
-KQkJKCgoeCkgJiAweDNmZmYpIDw8IDE2KQorI2RlZmluZSBNSUNfVl9QRVJJT0RfTElORSh4KQkJ
-KCh4KSAmIDB4M2ZmZikKKworI2RlZmluZSBNSUNfVkJQX1NJWkUoeCkJCQkoKCh4KSAmIDB4M2Zm
-ZikgPDwgMTYpCisjZGVmaW5lIE1JQ19WRlBfU0laRSh4KQkJCSgoeCkgJiAweDNmZmYpCisKKyNk
-ZWZpbmUgTUlDX0lNR19WX1NJWkUoeCkJCSgoKHgpICYgMHgzZmZmKSA8PCAxNikKKyNkZWZpbmUg
-TUlDX0lNR19IX1NJWkUoeCkJCSgoeCkgJiAweDNmZmYpCisKKyNkZWZpbmUgTUlDX0hfUFVMU0Vf
-V0lEVEhfSU4oeCkJCSgoKHgpICYgMHgzZmZmKSA8PCAxNikKKyNkZWZpbmUgTUlDX0hfUEVSSU9E
-X1BJWEVMX0lOKHgpCSgoeCkgJiAweDNmZmYpCisKKyNkZWZpbmUgTUlDX0hCUF9TSVpFX0lOKHgp
-CQkoKCh4KSAmIDB4M2ZmZikgPDwgMTYpCisjZGVmaW5lIE1JQ19IRlBfU0laRV9JTih4KQkJKCh4
-KSAmIDB4M2ZmZikKKworI2RlZmluZSBNSUNfSF9QVUxTRV9XSURUSF8yRCh4KQkJKCgoeCkgJiAw
-eDNmZmYpIDw8IDE2KQorI2RlZmluZSBNSUNfSF9QRVJJT0RfUElYRUxfMkQoeCkJKCh4KSAmIDB4
-M2ZmZikKKworI2RlZmluZSBNSUNfSEJQX1NJWkVfMkQoeCkJCSgoKHgpICYgMHgzZmZmKSA8PCAx
-NikKKyNkZWZpbmUgTUlDX0hGUF9TSVpFXzJEKHgpCQkoKHgpICYgMHgzZmZmKQorCisjZGVmaW5l
-IE1JQ19CU19TSVpFXzJEKHgpCSgoeCkgJiAweDNmZmYpCisKK2VudW0geworCUVORFBPSU5UX0RF
-Q09OX05PREUsCisJRU5EUE9JTlRfRFNJX05PREUsCisJTlVNX0VORFBPSU5UUworfTsKKworc3Rh
-dGljIGNoYXIgKmNsa19uYW1lc1tdID0geyAicGNsa19taWMwIiwgInNjbGtfcmdiX3ZjbGtfdG9f
-bWljMCIgfTsKKyNkZWZpbmUgTlVNX0NMS1MJCUFSUkFZX1NJWkUoY2xrX25hbWVzKQorc3RhdGlj
-IERFRklORV9NVVRFWChtaWNfbXV0ZXgpOworCitzdHJ1Y3QgZXh5bm9zX21pYyB7CisJc3RydWN0
-IGRldmljZSAqZGV2OworCXZvaWQgX19pb21lbSAqcmVnOworCXN0cnVjdCByZWdtYXAgKnN5c3Jl
-ZzsKKwlzdHJ1Y3QgY2xrICpjbGtzW05VTV9DTEtTXTsKKworCWJvb2wgaTgwX21vZGU7CisJc3Ry
-dWN0IHZpZGVvbW9kZSB2bTsKKwlzdHJ1Y3QgZHJtX2VuY29kZXIgKmVuY29kZXI7CisJc3RydWN0
-IGRybV9icmlkZ2UgYnJpZGdlOworCisJYm9vbCBlbmFibGVkOworfTsKKworc3RhdGljIHZvaWQg
-bWljX3NldF9wYXRoKHN0cnVjdCBleHlub3NfbWljICptaWMsIGJvb2wgZW5hYmxlKQoreworCWlu
-dCByZXQ7CisJdW5zaWduZWQgaW50IHZhbDsKKworCXJldCA9IHJlZ21hcF9yZWFkKG1pYy0+c3lz
-cmVnLCBEU0RfQ0ZHX01VWCwgJnZhbCk7CisJaWYgKHJldCkgeworCQlEUk1fRVJST1IoIm1pYzog
-RmFpbGVkIHRvIHJlYWQgc3lzdGVtIHJlZ2lzdGVyXG4iKTsKKwkJcmV0dXJuOworCX0KKworCWlm
-IChlbmFibGUpIHsKKwkJaWYgKG1pYy0+aTgwX21vZGUpCisJCQl2YWwgfD0gTUlDMF9JODBfTVVY
-OworCQllbHNlCisJCQl2YWwgfD0gTUlDMF9SR0JfTVVYOworCisJCXZhbCB8PSAgTUlDMF9PTl9N
-VVg7CisJfSBlbHNlCisJCXZhbCAmPSB+KE1JQzBfUkdCX01VWCB8IE1JQzBfSTgwX01VWCB8IE1J
-QzBfT05fTVVYKTsKKworCXJlZ21hcF93cml0ZShtaWMtPnN5c3JlZywgRFNEX0NGR19NVVgsIHZh
-bCk7CisJaWYgKHJldCkKKwkJRFJNX0VSUk9SKCJtaWM6IEZhaWxlZCB0byByZWFkIHN5c3RlbSBy
-ZWdpc3RlclxuIik7Cit9CisKK3N0YXRpYyBpbnQgbWljX3N3X3Jlc2V0KHN0cnVjdCBleHlub3Nf
-bWljICptaWMpCit7CisJdW5zaWduZWQgaW50IHJldHJ5ID0gMTAwOworCWludCByZXQ7CisKKwl3
-cml0ZWwoTUlDX1NXX1JTVCwgbWljLT5yZWcgKyBNSUNfT1ApOworCisJd2hpbGUgKHJldHJ5LS0g
-PiAwKSB7CisJCXJldCA9IHJlYWRsKG1pYy0+cmVnICsgTUlDX09QKTsKKwkJaWYgKCEocmV0ICYg
-TUlDX1NXX1JTVCkpCisJCQlyZXR1cm4gMDsKKworCQl1ZGVsYXkoMTApOworCX0KKworCXJldHVy
-biAtRVRJTUVET1VUOworfQorCitzdGF0aWMgdm9pZCBtaWNfc2V0X3BvcmNoX3RpbWluZyhzdHJ1
-Y3QgZXh5bm9zX21pYyAqbWljKQoreworCXN0cnVjdCB2aWRlb21vZGUgdm0gPSBtaWMtPnZtOwor
-CXUzMiByZWc7CisKKwlyZWcgPSBNSUNfVl9QVUxTRV9XSURUSCh2bS52c3luY19sZW4pICsKKwkJ
-TUlDX1ZfUEVSSU9EX0xJTkUodm0udnN5bmNfbGVuICsgdm0udmFjdGl2ZSArCisJCQkJdm0udmJh
-Y2tfcG9yY2ggKyB2bS52ZnJvbnRfcG9yY2gpOworCXdyaXRlbChyZWcsIG1pYy0+cmVnICsgTUlD
-X1ZfVElNSU5HXzApOworCisJcmVnID0gTUlDX1ZCUF9TSVpFKHZtLnZiYWNrX3BvcmNoKSArCisJ
-CU1JQ19WRlBfU0laRSh2bS52ZnJvbnRfcG9yY2gpOworCXdyaXRlbChyZWcsIG1pYy0+cmVnICsg
-TUlDX1ZfVElNSU5HXzEpOworCisJcmVnID0gTUlDX1ZfUFVMU0VfV0lEVEgodm0uaHN5bmNfbGVu
-KSArCisJCU1JQ19WX1BFUklPRF9MSU5FKHZtLmhzeW5jX2xlbiArIHZtLmhhY3RpdmUgKworCQkJ
-CXZtLmhiYWNrX3BvcmNoICsgdm0uaGZyb250X3BvcmNoKTsKKwl3cml0ZWwocmVnLCBtaWMtPnJl
-ZyArIE1JQ19JTlBVVF9USU1JTkdfMCk7CisKKwlyZWcgPSBNSUNfVkJQX1NJWkUodm0uaGJhY2tf
-cG9yY2gpICsKKwkJTUlDX1ZGUF9TSVpFKHZtLmhmcm9udF9wb3JjaCk7CisJd3JpdGVsKHJlZywg
-bWljLT5yZWcgKyBNSUNfSU5QVVRfVElNSU5HXzEpOworfQorCitzdGF0aWMgdm9pZCBtaWNfc2V0
-X2ltZ19zaXplKHN0cnVjdCBleHlub3NfbWljICptaWMpCit7CisJc3RydWN0IHZpZGVvbW9kZSAq
-dm0gPSAmbWljLT52bTsKKwl1MzIgcmVnOworCisJcmVnID0gTUlDX0lNR19IX1NJWkUodm0tPmhh
-Y3RpdmUpICsKKwkJTUlDX0lNR19WX1NJWkUodm0tPnZhY3RpdmUpOworCisJd3JpdGVsKHJlZywg
-bWljLT5yZWcgKyBNSUNfSU1HX1NJWkUpOworfQorCitzdGF0aWMgdm9pZCBtaWNfc2V0X291dHB1
-dF90aW1pbmcoc3RydWN0IGV4eW5vc19taWMgKm1pYykKK3sKKwlzdHJ1Y3QgdmlkZW9tb2RlIHZt
-ID0gbWljLT52bTsKKwl1MzIgcmVnLCBic19zaXplXzJkOworCisJRFJNX0RFQlVHKCJ3OiAldSwg
-aDogJXVcbiIsIHZtLmhhY3RpdmUsIHZtLnZhY3RpdmUpOworCWJzX3NpemVfMmQgPSAoKHZtLmhh
-Y3RpdmUgPj4gMikgPDwgMSkgKyAodm0udmFjdGl2ZSAlIDQpOworCXJlZyA9IE1JQ19CU19TSVpF
-XzJEKGJzX3NpemVfMmQpOworCXdyaXRlbChyZWcsIG1pYy0+cmVnICsgTUlDXzJEX09VVFBVVF9U
-SU1JTkdfMik7CisKKwlpZiAoIW1pYy0+aTgwX21vZGUpIHsKKwkJcmVnID0gTUlDX0hfUFVMU0Vf
-V0lEVEhfMkQodm0uaHN5bmNfbGVuKSArCisJCQlNSUNfSF9QRVJJT0RfUElYRUxfMkQodm0uaHN5
-bmNfbGVuICsgYnNfc2l6ZV8yZCArCisJCQkJCXZtLmhiYWNrX3BvcmNoICsgdm0uaGZyb250X3Bv
-cmNoKTsKKwkJd3JpdGVsKHJlZywgbWljLT5yZWcgKyBNSUNfMkRfT1VUUFVUX1RJTUlOR18wKTsK
-KworCQlyZWcgPSBNSUNfSEJQX1NJWkVfMkQodm0uaGJhY2tfcG9yY2gpICsKKwkJCU1JQ19IX1BF
-UklPRF9QSVhFTF8yRCh2bS5oZnJvbnRfcG9yY2gpOworCQl3cml0ZWwocmVnLCBtaWMtPnJlZyAr
-IE1JQ18yRF9PVVRQVVRfVElNSU5HXzEpOworCX0KK30KKworc3RhdGljIHZvaWQgbWljX3NldF9y
-ZWdfb24oc3RydWN0IGV4eW5vc19taWMgKm1pYywgYm9vbCBlbmFibGUpCit7CisJdTMyIHJlZyA9
-IHJlYWRsKG1pYy0+cmVnICsgTUlDX09QKTsKKworCWlmIChlbmFibGUpIHsKKwkJcmVnICY9IH4o
-TUlDX01PREVfU0VMX01BU0sgfCBNSUNfQ09SRV9WRVJfQ09OVFJPTCB8IE1JQ19QU1JfRU4pOwor
-CQlyZWcgfD0gKE1JQ19DT1JFX0VOIHwgTUlDX0JTX0NIR19PVVQgfCBNSUNfT05fUkVHKTsKKwor
-CQlyZWcgICY9IH5NSUNfTU9ERV9TRUxfQ09NTUFORF9NT0RFOworCQlpZiAobWljLT5pODBfbW9k
-ZSkKKwkJCXJlZyB8PSBNSUNfTU9ERV9TRUxfQ09NTUFORF9NT0RFOworCX0gZWxzZSB7CisJCXJl
-ZyAmPSB+TUlDX0NPUkVfRU47CisJfQorCisJcmVnIHw9IE1JQ19VUERfUkVHOworCXdyaXRlbChy
-ZWcsIG1pYy0+cmVnICsgTUlDX09QKTsKK30KKworc3RhdGljIHN0cnVjdCBkZXZpY2Vfbm9kZSAq
-Z2V0X3JlbW90ZV9ub2RlKHN0cnVjdCBkZXZpY2Vfbm9kZSAqZnJvbSwgaW50IHJlZykKK3sKKwlz
-dHJ1Y3QgZGV2aWNlX25vZGUgKmVuZHBvaW50ID0gTlVMTCwgKnJlbW90ZV9ub2RlID0gTlVMTDsK
-KworCWVuZHBvaW50ID0gb2ZfZ3JhcGhfZ2V0X2VuZHBvaW50X2J5X3JlZ3MoZnJvbSwgcmVnLCAt
-MSk7CisJaWYgKCFlbmRwb2ludCkgeworCQlEUk1fRVJST1IoIm1pYzogRmFpbGVkIHRvIGZpbmQg
-cmVtb3RlIHBvcnQgZnJvbSAlcyIsCisJCQkJZnJvbS0+ZnVsbF9uYW1lKTsKKwkJZ290byBleGl0
-OworCX0KKworCXJlbW90ZV9ub2RlID0gb2ZfZ3JhcGhfZ2V0X3JlbW90ZV9wb3J0X3BhcmVudChl
-bmRwb2ludCk7CisJaWYgKCFyZW1vdGVfbm9kZSkgeworCQlEUk1fRVJST1IoIm1pYzogRmFpbGVk
-IHRvIGZpbmQgcmVtb3RlIHBvcnQgcGFyZW50IGZyb20gJXMiLAorCQkJCQkJCWZyb20tPmZ1bGxf
-bmFtZSk7CisJCWdvdG8gZXhpdDsKKwl9CisKK2V4aXQ6CisJb2Zfbm9kZV9wdXQoZW5kcG9pbnQp
-OworCXJldHVybiByZW1vdGVfbm9kZTsKK30KKworc3RhdGljIGludCBwYXJzZV9kdChzdHJ1Y3Qg
-ZXh5bm9zX21pYyAqbWljKQoreworCWludCByZXQgPSAwLCBpLCBqOworCXN0cnVjdCBkZXZpY2Vf
-bm9kZSAqcmVtb3RlX25vZGU7CisJc3RydWN0IGRldmljZV9ub2RlICpub2Rlc1szXTsKKworCS8q
-CisJICogVGhlIG9yZGVyIG9mIGVuZHBvaW50cyBkb2VzIG1hdHRlci4KKwkgKiBUaGUgZmlyc3Qg
-bm9kZSBtdXN0IGJlIGZvciBkZWNvbiBhbmQgdGhlIHNlY29uZCBvbmUgbXVzdCBiZSBmb3IgZHNp
-LgorCSAqLworCWZvciAoaSA9IDAsIGogPSAwOyBpIDwgTlVNX0VORFBPSU5UUzsgaSsrKSB7CisJ
-CXJlbW90ZV9ub2RlID0gZ2V0X3JlbW90ZV9ub2RlKG1pYy0+ZGV2LT5vZl9ub2RlLCBpKTsKKwkJ
-aWYgKCFyZW1vdGVfbm9kZSkgeworCQkJcmV0ID0gLUVQSVBFOworCQkJZ290byBleGl0OworCQl9
-CisJCW5vZGVzW2orK10gPSByZW1vdGVfbm9kZTsKKworCQlzd2l0Y2ggKGkpIHsKKwkJY2FzZSBF
-TkRQT0lOVF9ERUNPTl9OT0RFOgorCQkJLyogZGVjb24gbm9kZSAqLworCQkJaWYgKG9mX2dldF9j
-aGlsZF9ieV9uYW1lKHJlbW90ZV9ub2RlLAorCQkJCQkJImk4MC1pZi10aW1pbmdzIikpCisJCQkJ
-bWljLT5pODBfbW9kZSA9IDE7CisKKwkJCWJyZWFrOworCQljYXNlIEVORFBPSU5UX0RTSV9OT0RF
-OgorCQkJLyogcGFuZWwgbm9kZSAqLworCQkJcmVtb3RlX25vZGUgPSBnZXRfcmVtb3RlX25vZGUo
-cmVtb3RlX25vZGUsIDEpOworCQkJaWYgKCFyZW1vdGVfbm9kZSkgeworCQkJCXJldCA9IC1FUElQ
-RTsKKwkJCQlnb3RvIGV4aXQ7CisJCQl9CisJCQlub2Rlc1tqKytdID0gcmVtb3RlX25vZGU7CisK
-KwkJCXJldCA9IG9mX2dldF92aWRlb21vZGUocmVtb3RlX25vZGUsCisJCQkJCQkJJm1pYy0+dm0s
-IDApOworCQkJaWYgKHJldCkgeworCQkJCURSTV9FUlJPUigibWljOiBmYWlsZWQgdG8gZ2V0IHZp
-ZGVvbW9kZSIpOworCQkJCWdvdG8gZXhpdDsKKwkJCX0KKworCQkJYnJlYWs7CisJCWRlZmF1bHQ6
-CisJCQlEUk1fRVJST1IoIm1pYzogVW5rbm93biBlbmRwb2ludCBmcm9tIE1JQyIpOworCQkJYnJl
-YWs7CisJCX0KKwl9CisKK2V4aXQ6CisJd2hpbGUgKC0taiA+IC0xKQorCQlvZl9ub2RlX3B1dChu
-b2Rlc1tqXSk7CisKKwlyZXR1cm4gcmV0OworfQorCit2b2lkIG1pY19kaXNhYmxlKHN0cnVjdCBk
-cm1fYnJpZGdlICpicmlkZ2UpIHsgfQorCit2b2lkIG1pY19wb3N0X2Rpc2FibGUoc3RydWN0IGRy
-bV9icmlkZ2UgKmJyaWRnZSkKK3sKKwlzdHJ1Y3QgZXh5bm9zX21pYyAqbWljID0gYnJpZGdlLT5k
-cml2ZXJfcHJpdmF0ZTsKKwlpbnQgaTsKKworCW11dGV4X2xvY2soJm1pY19tdXRleCk7CisJaWYg
-KCFtaWMtPmVuYWJsZWQpCisJCWdvdG8gYWxyZWFkeV9kaXNhYmxlZDsKKworCW1pY19zZXRfcGF0
-aChtaWMsIDApOworCisJZm9yIChpID0gTlVNX0NMS1MgLSAxOyBpID4gLTE7IGktLSkKKwkJY2xr
-X2Rpc2FibGVfdW5wcmVwYXJlKG1pYy0+Y2xrc1tpXSk7CisKKwltaWMtPmVuYWJsZWQgPSAwOwor
-CithbHJlYWR5X2Rpc2FibGVkOgorCW11dGV4X3VubG9jaygmbWljX211dGV4KTsKK30KKwordm9p
-ZCBtaWNfcHJlX2VuYWJsZShzdHJ1Y3QgZHJtX2JyaWRnZSAqYnJpZGdlKQoreworCXN0cnVjdCBl
-eHlub3NfbWljICptaWMgPSBicmlkZ2UtPmRyaXZlcl9wcml2YXRlOworCWludCByZXQsIGk7CisK
-KwltdXRleF9sb2NrKCZtaWNfbXV0ZXgpOworCWlmIChtaWMtPmVuYWJsZWQpCisJCWdvdG8gYWxy
-ZWFkeV9lbmFibGVkOworCisJZm9yIChpID0gMDsgaSA8IE5VTV9DTEtTOyBpKyspIHsKKwkJcmV0
-ID0gY2xrX3ByZXBhcmVfZW5hYmxlKG1pYy0+Y2xrc1tpXSk7CisJCWlmIChyZXQgPCAwKSB7CisJ
-CQlEUk1fRVJST1IoIkZhaWxlZCB0byBlbmFibGUgY2xvY2sgKCVzKVxuIiwKKwkJCQkJCQljbGtf
-bmFtZXNbaV0pOworCQkJZ290byB0dXJuX29mZl9jbGtzOworCQl9CisJfQorCisJbWljX3NldF9w
-YXRoKG1pYywgMSk7CisKKwlyZXQgPSBtaWNfc3dfcmVzZXQobWljKTsKKwlpZiAocmV0KSB7CisJ
-CURSTV9FUlJPUigiRmFpbGVkIHRvIHJlc2V0XG4iKTsKKwkJZ290byB0dXJuX29mZl9jbGtzOwor
-CX0KKworCWlmICghbWljLT5pODBfbW9kZSkKKwkJbWljX3NldF9wb3JjaF90aW1pbmcobWljKTsK
-KwltaWNfc2V0X2ltZ19zaXplKG1pYyk7CisJbWljX3NldF9vdXRwdXRfdGltaW5nKG1pYyk7CisJ
-bWljX3NldF9yZWdfb24obWljLCAxKTsKKwltaWMtPmVuYWJsZWQgPSAxOworCW11dGV4X3VubG9j
-aygmbWljX211dGV4KTsKKworCXJldHVybjsKKwordHVybl9vZmZfY2xrczoKKwl3aGlsZSAoLS1p
-ID4gLTEpCisJCWNsa19kaXNhYmxlX3VucHJlcGFyZShtaWMtPmNsa3NbaV0pOworYWxyZWFkeV9l
-bmFibGVkOgorCW11dGV4X3VubG9jaygmbWljX211dGV4KTsKK30KKwordm9pZCBtaWNfZW5hYmxl
-KHN0cnVjdCBkcm1fYnJpZGdlICpicmlkZ2UpIHsgfQorCit2b2lkIG1pY19kZXN0cm95KHN0cnVj
-dCBkcm1fYnJpZGdlICpicmlkZ2UpCit7CisJc3RydWN0IGV4eW5vc19taWMgKm1pYyA9IGJyaWRn
-ZS0+ZHJpdmVyX3ByaXZhdGU7CisJaW50IGk7CisKKwltdXRleF9sb2NrKCZtaWNfbXV0ZXgpOwor
-CWlmICghbWljLT5lbmFibGVkKQorCQlnb3RvIGFscmVhZHlfZGlzYWJsZWQ7CisKKwlmb3IgKGkg
-PSBOVU1fQ0xLUyAtIDE7IGkgPiAtMTsgaS0tKQorCQljbGtfZGlzYWJsZV91bnByZXBhcmUobWlj
-LT5jbGtzW2ldKTsKKworYWxyZWFkeV9kaXNhYmxlZDoKKwltdXRleF91bmxvY2soJm1pY19tdXRl
-eCk7Cit9CisKK3N0cnVjdCBkcm1fYnJpZGdlX2Z1bmNzIG1pY19icmlkZ2VfZnVuY3MgPSB7CisJ
-LmRpc2FibGUgPSBtaWNfZGlzYWJsZSwKKwkucG9zdF9kaXNhYmxlID0gbWljX3Bvc3RfZGlzYWJs
-ZSwKKwkucHJlX2VuYWJsZSA9IG1pY19wcmVfZW5hYmxlLAorCS5lbmFibGUgPSBtaWNfZW5hYmxl
-LAorfTsKKworaW50IGV4eW5vc19taWNfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRl
-dikKK3sKKwlzdHJ1Y3QgZGV2aWNlICpkZXYgPSAmcGRldi0+ZGV2OworCXN0cnVjdCBleHlub3Nf
-bWljICptaWM7CisJc3RydWN0IHJlc291cmNlIHJlczsKKwlpbnQgcmV0LCBpOworCisJbWljID0g
-ZGV2bV9remFsbG9jKGRldiwgc2l6ZW9mKCptaWMpLCBHRlBfS0VSTkVMKTsKKwlpZiAoIW1pYykg
-eworCQlEUk1fRVJST1IoIm1pYzogRmFpbGVkIHRvIGFsbG9jYXRlIG1lbW9yeSBmb3IgTUlDIG9i
-amVjdFxuIik7CisJCXJldCA9IC1FTk9NRU07CisJCWdvdG8gZXJyOworCX0KKworCW1pYy0+ZGV2
-ID0gZGV2OworCisJcmV0ID0gcGFyc2VfZHQobWljKTsKKwlpZiAocmV0KQorCQlnb3RvIGVycjsK
-KworCXJldCA9IG9mX2FkZHJlc3NfdG9fcmVzb3VyY2UoZGV2LT5vZl9ub2RlLCAwLCAmcmVzKTsK
-KwlpZiAocmV0KSB7CisJCURSTV9FUlJPUigibWljOiBGYWlsZWQgdG8gZ2V0IG1lbSByZWdpb24g
-Zm9yIE1JQ1xuIik7CisJCWdvdG8gZXJyOworCX0KKwltaWMtPnJlZyA9IGRldm1faW9yZW1hcChk
-ZXYsIHJlcy5zdGFydCwgcmVzb3VyY2Vfc2l6ZSgmcmVzKSk7CisJaWYgKCFtaWMtPnJlZykgewor
-CQlEUk1fRVJST1IoIm1pYzogRmFpbGVkIHRvIHJlbWFwIGZvciBNSUNcbiIpOworCQlyZXQgPSAt
-RU5PTUVNOworCQlnb3RvIGVycjsKKwl9CisKKwltaWMtPnN5c3JlZyA9IHN5c2Nvbl9yZWdtYXBf
-bG9va3VwX2J5X3BoYW5kbGUoZGV2LT5vZl9ub2RlLAorCQkJCQkJCSJzYW1zdW5nLGRpc3Atc3lz
-Y29uIik7CisJaWYgKElTX0VSUihtaWMtPnN5c3JlZykpIHsKKwkJRFJNX0VSUk9SKCJtaWM6IEZh
-aWxlZCB0byBnZXQgc3lzdGVtIHJlZ2lzdGVyLlxuIik7CisJCWdvdG8gZXJyOworCX0KKworCW1p
-Yy0+YnJpZGdlLmZ1bmNzID0gJm1pY19icmlkZ2VfZnVuY3M7CisJbWljLT5icmlkZ2Uub2Zfbm9k
-ZSA9IGRldi0+b2Zfbm9kZTsKKwltaWMtPmJyaWRnZS5kcml2ZXJfcHJpdmF0ZSA9IG1pYzsKKwly
-ZXQgPSBkcm1fYnJpZGdlX2FkZCgmbWljLT5icmlkZ2UpOworCWlmIChyZXQpIHsKKwkJRFJNX0VS
-Uk9SKCJtaWM6IEZhaWxlZCB0byBhZGQgTUlDIHRvIHRoZSBnbG9iYWwgYnJpZGdlIGxpc3RcbiIp
-OworCQlnb3RvIGVycjsKKwl9CisKKwlmb3IgKGkgPSAwOyBpIDwgTlVNX0NMS1M7IGkrKykgewor
-CQltaWMtPmNsa3NbaV0gPSBvZl9jbGtfZ2V0X2J5X25hbWUoZGV2LT5vZl9ub2RlLCBjbGtfbmFt
-ZXNbaV0pOworCQlpZiAoSVNfRVJSKG1pYy0+Y2xrc1tpXSkpIHsKKwkJCURSTV9FUlJPUigibWlj
-OiBGYWlsZWQgdG8gZ2V0IGNsb2NrICglcylcbiIsCisJCQkJCQkJCWNsa19uYW1lc1tpXSk7CisJ
-CQlyZXQgPSBQVFJfRVJSKG1pYy0+Y2xrc1tpXSk7CisJCQlnb3RvIGVycjsKKwkJfQorCX0KKwor
-CURSTV9ERUJVR19LTVMoIk1JQyBoYXMgYmVlbiBwcm9iZWRcbiIpOworCitlcnI6CisJcmV0dXJu
-IHJldDsKK30KKworc3RhdGljIGludCBleHlub3NfbWljX3JlbW92ZShzdHJ1Y3QgcGxhdGZvcm1f
-ZGV2aWNlICpwZGV2KQoreworCXN0cnVjdCBleHlub3NfbWljICptaWMgPSBwbGF0Zm9ybV9nZXRf
-ZHJ2ZGF0YShwZGV2KTsKKwlpbnQgaTsKKworCWRybV9icmlkZ2VfcmVtb3ZlKCZtaWMtPmJyaWRn
-ZSk7CisKKwlmb3IgKGkgPSBOVU1fQ0xLUyAtIDE7IGkgPiAtMTsgaS0tKQorCQljbGtfcHV0KG1p
-Yy0+Y2xrc1tpXSk7CisKKwlyZXR1cm4gMDsKK30KKworc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9k
-ZXZpY2VfaWQgZXh5bm9zX21pY19vZl9tYXRjaFtdID0geworCXsgLmNvbXBhdGlibGUgPSAic2Ft
-c3VuZyxleHlub3M1NDMzLW1pYyIgfSwKKwl7IH0KK307CitNT0RVTEVfREVWSUNFX1RBQkxFKG9m
-LCBleHlub3NfbWljX29mX21hdGNoKTsKKworc3RydWN0IHBsYXRmb3JtX2RyaXZlciBtaWNfZHJp
-dmVyID0geworCS5wcm9iZQkJPSBleHlub3NfbWljX3Byb2JlLAorCS5yZW1vdmUJCT0gZXh5bm9z
-X21pY19yZW1vdmUsCisJLmRyaXZlcgkJPSB7CisJCS5uYW1lCT0gImV4eW5vcy1taWMiLAorCQku
-b3duZXIJPSBUSElTX01PRFVMRSwKKwkJLm9mX21hdGNoX3RhYmxlID0gZXh5bm9zX21pY19vZl9t
-YXRjaCwKKwl9LAorfTsKLS0KMS45LjEKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
-ZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
-Zm8vZHJpLWRldmVsCg==
+From: Joonyoung Shim <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+
+DECON(Display and Enhancement Controller) is new IP replacing FIMD in
+Exynos5433. This patch adds Exynos5433 decon driver.
+
+Signed-off-by: Joonyoung Shim <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+---
+Changes before:
+- Refer https://patchwork.kernel.org/patch/6192071/
+Changes for v6:
+- Add support for atomic modeset
+ .../devicetree/bindings/video/exynos5433-decon.txt |  65 ++
+ drivers/gpu/drm/exynos/Kconfig                     |   6 +
+ drivers/gpu/drm/exynos/Makefile                    |   1 +
+ drivers/gpu/drm/exynos/exynos5433_drm_decon.c      | 694 +++++++++++++++++++++
+ drivers/gpu/drm/exynos/exynos_drm_drv.h            |   1 +
+ include/video/exynos5433_decon.h                   | 165 +++++
+ 6 files changed, 932 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/video/exynos5433-decon.txt
+ create mode 100644 drivers/gpu/drm/exynos/exynos5433_drm_decon.c
+ create mode 100644 include/video/exynos5433_decon.h
+
+diff --git a/Documentation/devicetree/bindings/video/exynos5433-decon.txt b/Documentation/devicetree/bindings/video/exynos5433-decon.txt
+new file mode 100644
+index 0000000..377afbf
+--- /dev/null
++++ b/Documentation/devicetree/bindings/video/exynos5433-decon.txt
+@@ -0,0 +1,65 @@
++Device-Tree bindings for Samsung Exynos SoC display controller (DECON)
++
++DECON (Display and Enhancement Controller) is the Display Controller for the
++Exynos series of SoCs which transfers the image data from a video memory
++buffer to an external LCD interface.
++
++Required properties:
++- compatible: value should be "samsung,exynos5433-decon";
++- reg: physical base address and length of the DECON registers set.
++- interrupts: should contain a list of all DECON IP block interrupts in the
++	      order: VSYNC, LCD_SYSTEM. The interrupt specifier format
++	      depends on the interrupt controller used.
++- interrupt-names: should contain the interrupt names: "vsync", "lcd_sys"
++		   in the same order as they were listed in the interrupts
++		   property.
++- clocks: must include clock specifiers corresponding to entries in the
++	  clock-names property.
++- clock-names: list of clock names sorted in the same order as the clocks
++	       property. Must contain "aclk_decon", "aclk_smmu_decon0x",
++	       "aclk_xiu_decon0x", "pclk_smmu_decon0x", clk_decon_vclk",
++	       "sclk_decon_eclk"
++- ports: contains a port which is connected to mic node. address-cells and
++	 size-cells must 1 and 0, respectively.
++- port: contains an endpoint node which is connected to the endpoint in the mic
++	node. The reg value muset be 0.
++- i80-if-timings: specify whether the panel which is connected to decon uses
++		  i80 lcd interface or mipi video interface. This node contains
++		  no timing information as that of fimd does. Because there is
++		  no register in decon to specify i80 interface timing value,
++		  it is not needed, but make it remain to use same kind of node
++		  in fimd and exynos7 decon.
++
++Example:
++SoC specific DT entry:
++decon: decon@13800000 {
++	compatible = "samsung,exynos5433-decon";
++	reg = <0x13800000 0x2104>;
++	clocks = <&cmu_disp CLK_ACLK_DECON>, <&cmu_disp CLK_ACLK_SMMU_DECON0X>,
++		<&cmu_disp CLK_ACLK_XIU_DECON0X>,
++		<&cmu_disp CLK_PCLK_SMMU_DECON0X>,
++		<&cmu_disp CLK_SCLK_DECON_VCLK>,
++		<&cmu_disp CLK_SCLK_DECON_ECLK>;
++	clock-names = "aclk_decon", "aclk_smmu_decon0x", "aclk_xiu_decon0x",
++		"pclk_smmu_decon0x", "sclk_decon_vclk", "sclk_decon_eclk";
++	interrupt-names = "vsync", "lcd_sys";
++	interrupts = <0 202 0>, <0 203 0>;
++
++	ports {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		port@0 {
++			reg = <0>;
++			decon_to_mic: endpoint {
++				remote-endpoint = <&mic_to_decon>;
++			};
++		};
++	};
++};
++
++Board specific DT entry:
++&decon {
++	i80-if-timings {
++	};
++};
+diff --git a/drivers/gpu/drm/exynos/Kconfig b/drivers/gpu/drm/exynos/Kconfig
+index ddb7c8a..51a4eb5 100644
+--- a/drivers/gpu/drm/exynos/Kconfig
++++ b/drivers/gpu/drm/exynos/Kconfig
+@@ -24,6 +24,12 @@ config DRM_EXYNOS_FIMD
+ 	help
+ 	  Choose this option if you want to use Exynos FIMD for DRM.
+
++config DRM_EXYNOS5433_DECON
++	bool "Exynos5433 DRM DECON"
++	depends on DRM_EXYNOS
++	help
++	  Choose this option if you want to use Exynos5433 DECON for DRM.
++
+ config DRM_EXYNOS7_DECON
+ 	bool "Exynos7 DRM DECON"
+ 	depends on DRM_EXYNOS && !FB_S3C
+diff --git a/drivers/gpu/drm/exynos/Makefile b/drivers/gpu/drm/exynos/Makefile
+index cc90679..fbd084d 100644
+--- a/drivers/gpu/drm/exynos/Makefile
++++ b/drivers/gpu/drm/exynos/Makefile
+@@ -10,6 +10,7 @@ exynosdrm-y := exynos_drm_drv.o exynos_drm_encoder.o \
+
+ exynosdrm-$(CONFIG_DRM_EXYNOS_IOMMU) += exynos_drm_iommu.o
+ exynosdrm-$(CONFIG_DRM_EXYNOS_FIMD)	+= exynos_drm_fimd.o
++exynosdrm-$(CONFIG_DRM_EXYNOS5433_DECON)	+= exynos5433_drm_decon.o
+ exynosdrm-$(CONFIG_DRM_EXYNOS7_DECON)	+= exynos7_drm_decon.o
+ exynosdrm-$(CONFIG_DRM_EXYNOS_DPI)	+= exynos_drm_dpi.o
+ exynosdrm-$(CONFIG_DRM_EXYNOS_DSI)	+= exynos_drm_dsi.o
+diff --git a/drivers/gpu/drm/exynos/exynos5433_drm_decon.c b/drivers/gpu/drm/exynos/exynos5433_drm_decon.c
+new file mode 100644
+index 0000000..a33c0b7
+--- /dev/null
++++ b/drivers/gpu/drm/exynos/exynos5433_drm_decon.c
+@@ -0,0 +1,694 @@
++/* drivers/gpu/drm/exynos5433_drm_decon.c
++ *
++ * Copyright (C) 2015 Samsung Electronics Co.Ltd
++ * Authors:
++ *	Joonyoung Shim <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
++ *	Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundationr
++ */
++
++#include <linux/platform_device.h>
++#include <linux/clk.h>
++#include <linux/component.h>
++#include <linux/of_gpio.h>
++
++#include <video/exynos5433_decon.h>
++
++#include "exynos_drm_drv.h"
++#include "exynos_drm_crtc.h"
++#include "exynos_drm_plane.h"
++#include "exynos_drm_iommu.h"
++
++#define WINDOWS_NR	3
++#define MIN_FB_WIDTH_FOR_16WORD_BURST	128
++
++struct decon_context {
++	struct device			*dev;
++	struct drm_device		*drm_dev;
++	struct exynos_drm_crtc		*crtc;
++	struct exynos_drm_plane		planes[WINDOWS_NR];
++	void __iomem			*addr;
++	struct clk			*clks[6];
++	unsigned int			default_win;
++	int				pipe;
++	bool				suspended;
++
++#define BIT_CLKS_ENABLED		0
++#define BIT_IRQS_ENABLED		1
++	unsigned long			enabled;
++	bool				i80_if;
++	atomic_t			win_updated;
++};
++
++static const char * const decon_clks_name[] = {
++	"aclk_decon",
++	"aclk_smmu_decon0x",
++	"aclk_xiu_decon0x",
++	"pclk_smmu_decon0x",
++	"sclk_decon_vclk",
++	"sclk_decon_eclk",
++};
++
++static int decon_enable_vblank(struct exynos_drm_crtc *crtc)
++{
++	struct decon_context *ctx = crtc->ctx;
++	u32 val;
++
++	if (ctx->suspended)
++		return -EPERM;
++
++	if (!test_and_set_bit(BIT_IRQS_ENABLED, &ctx->enabled)) {
++		val = VIDINTCON0_INTEN;
++		if (ctx->i80_if)
++			val |= VIDINTCON0_FRAMEDONE;
++		else
++			val |= VIDINTCON0_INTFRMEN;
++
++		writel(val, ctx->addr + DECON_VIDINTCON0);
++	}
++
++	return 0;
++}
++
++static void decon_disable_vblank(struct exynos_drm_crtc *crtc)
++{
++	struct decon_context *ctx = crtc->ctx;
++
++	if (ctx->suspended)
++		return;
++
++	if (test_and_clear_bit(BIT_IRQS_ENABLED, &ctx->enabled))
++		writel(0, ctx->addr + DECON_VIDINTCON0);
++}
++
++static void decon_setup_trigger(struct decon_context *ctx)
++{
++	u32 val = TRIGCON_TRIGEN_PER_F | TRIGCON_TRIGEN_F |
++			TRIGCON_TE_AUTO_MASK | TRIGCON_SWTRIGEN;
++	writel(val, ctx->addr + DECON_TRIGCON);
++}
++
++static void decon_commit(struct exynos_drm_crtc *crtc)
++{
++	struct decon_context *ctx = crtc->ctx;
++	struct drm_display_mode *mode = &crtc->base.mode;
++	u32 val;
++
++	if (ctx->suspended)
++		return;
++
++	/* enable clock gate */
++	val = CMU_CLKGAGE_MODE_SFR_F | CMU_CLKGAGE_MODE_MEM_F;
++	writel(val, ctx->addr + DECON_CMU);
++
++	/* lcd on and use command if */
++	val = VIDOUT_LCD_ON;
++	if (ctx->i80_if)
++		val |= VIDOUT_COMMAND_IF;
++	else
++		val |= VIDOUT_RGB_IF;
++	writel(val, ctx->addr + DECON_VIDOUTCON0);
++
++	val = VIDTCON2_LINEVAL(mode->vdisplay - 1) |
++		VIDTCON2_HOZVAL(mode->hdisplay - 1);
++	writel(val, ctx->addr + DECON_VIDTCON2);
++
++	if (!ctx->i80_if) {
++		val = VIDTCON00_VBPD_F(
++				mode->crtc_vtotal - mode->crtc_vsync_end) |
++			VIDTCON00_VFPD_F(
++				mode->crtc_vsync_start - mode->crtc_vdisplay);
++		writel(val, ctx->addr + DECON_VIDTCON00);
++
++		val = VIDTCON01_VSPW_F(
++				mode->crtc_vsync_end - mode->crtc_vsync_start);
++		writel(val, ctx->addr + DECON_VIDTCON01);
++
++		val = VIDTCON10_HBPD_F(
++				mode->crtc_htotal - mode->crtc_hsync_end) |
++			VIDTCON10_HFPD_F(
++				mode->crtc_hsync_start - mode->crtc_hdisplay);
++		writel(val, ctx->addr + DECON_VIDTCON10);
++
++		val = VIDTCON11_HSPW_F(
++				mode->crtc_hsync_end - mode->crtc_hsync_start);
++		writel(val, ctx->addr + DECON_VIDTCON11);
++	}
++
++	decon_setup_trigger(ctx);
++
++	/* enable output and display signal */
++	val = VIDCON0_ENVID | VIDCON0_ENVID_F;
++	writel(val, ctx->addr + DECON_VIDCON0);
++}
++
++#define COORDINATE_X(x)		(((x) & 0xfff) << 12)
++#define COORDINATE_Y(x)		((x) & 0xfff)
++#define OFFSIZE(x)		(((x) & 0x3fff) << 14)
++#define PAGEWIDTH(x)		((x) & 0x3fff)
++
++static void decon_win_set_pixfmt(struct decon_context *ctx, unsigned int win)
++{
++	struct exynos_drm_plane *plane = &ctx->planes[win];
++	unsigned long val;
++
++	val = readl(ctx->addr + DECON_WINCONx(win));
++	val &= ~WINCONx_BPPMODE_MASK;
++
++	switch (plane->pixel_format) {
++	case DRM_FORMAT_XRGB1555:
++		val |= WINCONx_BPPMODE_16BPP_I1555;
++		val |= WINCONx_HAWSWP_F;
++		val |= WINCONx_BURSTLEN_16WORD;
++		break;
++	case DRM_FORMAT_RGB565:
++		val |= WINCONx_BPPMODE_16BPP_565;
++		val |= WINCONx_HAWSWP_F;
++		val |= WINCONx_BURSTLEN_16WORD;
++		break;
++	case DRM_FORMAT_XRGB8888:
++		val |= WINCONx_BPPMODE_24BPP_888;
++		val |= WINCONx_WSWP_F;
++		val |= WINCONx_BURSTLEN_16WORD;
++		break;
++	case DRM_FORMAT_ARGB8888:
++		val |= WINCONx_BPPMODE_32BPP_A8888;
++		val |= WINCONx_WSWP_F | WINCONx_BLD_PIX_F | WINCONx_ALPHA_SEL_F;
++		val |= WINCONx_BURSTLEN_16WORD;
++		break;
++	default:
++		DRM_ERROR("Proper pixel format is not set\n");
++		return;
++	}
++
++	DRM_DEBUG_KMS("bpp = %u\n", plane->bpp);
++
++	/*
++	 * In case of exynos, setting dma-burst to 16Word causes permanent
++	 * tearing for very small buffers, e.g. cursor buffer. Burst Mode
++	 * switching which is based on plane size is not recommended as
++	 * plane size varies a lot towards the end of the screen and rapid
++	 * movement causes unstable DMA which results into iommu crash/tear.
++	 */
++
++	if (plane->fb_width < MIN_FB_WIDTH_FOR_16WORD_BURST) {
++		val &= ~WINCONx_BURSTLEN_MASK;
++		val |= WINCONx_BURSTLEN_8WORD;
++	}
++
++	writel(val, ctx->addr + DECON_WINCONx(win));
++}
++
++static void decon_shadow_protect_win(struct decon_context *ctx, int win,
++					bool protect)
++{
++	u32 val;
++
++	val = readl(ctx->addr + DECON_SHADOWCON);
++
++	if (protect)
++		val |= SHADOWCON_Wx_PROTECT(win);
++	else
++		val &= ~SHADOWCON_Wx_PROTECT(win);
++
++	writel(val, ctx->addr + DECON_SHADOWCON);
++}
++
++static void decon_win_commit(struct exynos_drm_crtc *crtc, unsigned int win)
++{
++	struct decon_context *ctx = crtc->ctx;
++	struct exynos_drm_plane *plane;
++	u32 val;
++
++	if (win < 0 || win >= WINDOWS_NR)
++		return;
++
++	plane = &ctx->planes[win];
++
++	/* If suspended, enable this on resume */
++	if (ctx->suspended) {
++		plane->resume = true;
++		return;
++	}
++
++	decon_shadow_protect_win(ctx, win, true);
++
++	val = COORDINATE_X(plane->crtc_x) | COORDINATE_Y(plane->crtc_y);
++	writel(val, ctx->addr + DECON_VIDOSDxA(win));
++
++	val = COORDINATE_X(plane->crtc_x + plane->crtc_width - 1) |
++		COORDINATE_Y(plane->crtc_y + plane->crtc_height - 1);
++	writel(val, ctx->addr + DECON_VIDOSDxB(win));
++
++	val = VIDOSD_Wx_ALPHA_R_F(0x0) | VIDOSD_Wx_ALPHA_G_F(0x0) |
++		VIDOSD_Wx_ALPHA_B_F(0x0);
++	writel(val, ctx->addr + DECON_VIDOSDxC(win));
++
++	val = VIDOSD_Wx_ALPHA_R_F(0x0) | VIDOSD_Wx_ALPHA_G_F(0x0) |
++		VIDOSD_Wx_ALPHA_B_F(0x0);
++	writel(val, ctx->addr + DECON_VIDOSDxD(win));
++
++	writel(plane->dma_addr[0], ctx->addr + DECON_VIDW0xADD0B0(win));
++
++	val = plane->dma_addr[0] + plane->pitch * plane->crtc_height;
++	writel(val, ctx->addr + DECON_VIDW0xADD1B0(win));
++
++	val = OFFSIZE(plane->pitch - plane->crtc_width * (plane->bpp >> 3))
++		| PAGEWIDTH(plane->crtc_width * (plane->bpp >> 3));
++	writel(val, ctx->addr + DECON_VIDW0xADD2(win));
++
++	decon_win_set_pixfmt(ctx, win);
++
++	/* window enable */
++	val = readl(ctx->addr + DECON_WINCONx(win));
++	val |= WINCONx_ENWIN_F;
++	writel(val, ctx->addr + DECON_WINCONx(win));
++
++	decon_shadow_protect_win(ctx, win, false);
++
++	/* standalone update */
++	val = readl(ctx->addr + DECON_UPDATE);
++	val |= STANDALONE_UPDATE_F;
++	writel(val, ctx->addr + DECON_UPDATE);
++
++	if (ctx->i80_if)
++		atomic_set(&ctx->win_updated, 1);
++
++	plane->enabled = true;
++}
++
++static void decon_win_disable(struct exynos_drm_crtc *crtc, unsigned int win)
++{
++	struct decon_context *ctx = crtc->ctx;
++	struct exynos_drm_plane *plane;
++	u32 val;
++
++	if (win < 0 || win >= WINDOWS_NR)
++		return;
++
++	plane = &ctx->planes[win];
++
++	if (ctx->suspended) {
++		plane->resume = false;
++		return;
++	}
++
++	decon_shadow_protect_win(ctx, win, true);
++
++	/* window disable */
++	val = readl(ctx->addr + DECON_WINCONx(win));
++	val &= ~WINCONx_ENWIN_F;
++	writel(val, ctx->addr + DECON_WINCONx(win));
++
++	decon_shadow_protect_win(ctx, win, false);
++
++	/* standalone update */
++	val = readl(ctx->addr + DECON_UPDATE);
++	val |= STANDALONE_UPDATE_F;
++	writel(val, ctx->addr + DECON_UPDATE);
++
++	plane->enabled = false;
++}
++
++static void decon_window_suspend(struct decon_context *ctx)
++{
++	struct exynos_drm_plane *plane;
++	int i;
++
++	for (i = 0; i < WINDOWS_NR; i++) {
++		plane = &ctx->planes[i];
++		plane->resume = plane->enabled;
++		if (plane->enabled)
++			decon_win_disable(ctx->crtc, i);
++	}
++}
++
++static void decon_window_resume(struct decon_context *ctx)
++{
++	struct exynos_drm_plane *plane;
++	int i;
++
++	for (i = 0; i < WINDOWS_NR; i++) {
++		plane = &ctx->planes[i];
++		plane->enabled = plane->resume;
++		plane->resume = false;
++	}
++}
++
++static void decon_apply(struct decon_context *ctx)
++{
++	struct exynos_drm_plane *plane;
++	int i;
++
++	decon_setup_trigger(ctx);
++
++	for (i = 0; i < WINDOWS_NR; i++) {
++		plane = &ctx->planes[i];
++		if (plane->enabled)
++			decon_win_commit(ctx->crtc, i);
++		else
++			decon_win_disable(ctx->crtc, i);
++	}
++
++	decon_commit(ctx->crtc);
++}
++
++static void decon_enable(struct exynos_drm_crtc *crtc)
++{
++	struct decon_context *ctx = crtc->ctx;
++	int ret;
++	int i;
++
++	if (!ctx->suspended)
++		return;
++
++	ctx->suspended = false;
++
++	for (i = 0; i < ARRAY_SIZE(decon_clks_name); i++) {
++		ret = clk_prepare_enable(ctx->clks[i]);
++		if (ret < 0)
++			goto err;
++	}
++
++	set_bit(BIT_CLKS_ENABLED, &ctx->enabled);
++
++	decon_window_resume(ctx);
++	decon_apply(ctx);
++
++	return;
++err:
++	while (--i >= 0)
++		clk_disable_unprepare(ctx->clks[i]);
++
++	ctx->suspended = true;
++}
++
++static void decon_swreset(struct decon_context *ctx)
++{
++	unsigned int tries;
++
++	writel(0, ctx->addr + DECON_VIDCON0);
++	for (tries = 2000; tries; --tries) {
++		if (~readl(ctx->addr + DECON_VIDCON0) & VIDCON0_STOP_STATUS)
++			break;
++		udelay(10);
++	}
++
++	WARN(tries == 0, "failed to disable DECON\n");
++
++	writel(VIDCON0_SWRESET, ctx->addr + DECON_VIDCON0);
++	for (tries = 2000; tries; --tries) {
++		if (~readl(ctx->addr + DECON_VIDCON0) & VIDCON0_SWRESET)
++			break;
++		udelay(10);
++	}
++
++	WARN(tries == 0, "failed to software reset DECON\n");
++}
++
++static void decon_disable(struct exynos_drm_crtc *crtc)
++{
++	struct decon_context *ctx = crtc->ctx;
++	int i;
++
++	if (ctx->suspended)
++		return;
++
++	clear_bit(BIT_CLKS_ENABLED, &ctx->enabled);
++	decon_window_suspend(ctx);
++	decon_swreset(ctx);
++
++	for (i = ARRAY_SIZE(decon_clks_name) - 1; i >= 0; i--)
++		clk_disable_unprepare(ctx->clks[i]);
++
++	ctx->suspended = true;
++}
++
++void decon_te_irq_handler(struct exynos_drm_crtc *crtc)
++{
++	struct decon_context *ctx = crtc->ctx;
++	u32 val;
++
++	if (!test_bit(BIT_CLKS_ENABLED, &ctx->enabled))
++		return;
++
++	if (atomic_add_unless(&ctx->win_updated, -1, 0)) {
++		/* trigger */
++		val = readl(ctx->addr + DECON_TRIGCON);
++		val |= TRIGCON_SWTRIGCMD;
++		writel(val, ctx->addr + DECON_TRIGCON);
++	}
++
++	drm_handle_vblank(ctx->drm_dev, ctx->pipe);
++}
++
++static void decon_clear_channels(struct exynos_drm_crtc *crtc)
++{
++	struct decon_context *ctx = crtc->ctx;
++	int win, i, ret;
++	u32 val;
++
++	DRM_DEBUG_KMS("%s\n", __FILE__);
++
++	for (i = 0; i < ARRAY_SIZE(decon_clks_name); i++) {
++		ret = clk_prepare_enable(ctx->clks[i]);
++		if (ret < 0)
++			goto err;
++	}
++
++	for (win = 0; win < WINDOWS_NR; win++) {
++		/* shadow update disable */
++		val = readl(ctx->addr + DECON_SHADOWCON);
++		val |= SHADOWCON_Wx_PROTECT(win);
++		writel(val, ctx->addr + DECON_SHADOWCON);
++
++		/* window disable */
++		val = readl(ctx->addr + DECON_WINCONx(win));
++		val &= ~WINCONx_ENWIN_F;
++		writel(val, ctx->addr + DECON_WINCONx(win));
++
++		/* shadow update enable */
++		val = readl(ctx->addr + DECON_SHADOWCON);
++		val &= ~SHADOWCON_Wx_PROTECT(win);
++		writel(val, ctx->addr + DECON_SHADOWCON);
++
++		/* standalone update */
++		val = readl(ctx->addr + DECON_UPDATE);
++		val |= STANDALONE_UPDATE_F;
++		writel(val, ctx->addr + DECON_UPDATE);
++	}
++	/* TODO: wait for possible vsync */
++	msleep(50);
++
++err:
++	while (--i >= 0)
++		clk_disable_unprepare(ctx->clks[i]);
++}
++
++static struct exynos_drm_crtc_ops decon_crtc_ops = {
++	.enable			= decon_enable,
++	.disable		= decon_disable,
++	.commit			= decon_commit,
++	.enable_vblank		= decon_enable_vblank,
++	.disable_vblank		= decon_disable_vblank,
++	.commit			= decon_commit,
++	.win_commit		= decon_win_commit,
++	.win_disable		= decon_win_disable,
++	.te_handler		= decon_te_irq_handler,
++	.clear_channels		= decon_clear_channels,
++};
++
++static int decon_bind(struct device *dev, struct device *master, void *data)
++{
++	struct decon_context *ctx = dev_get_drvdata(dev);
++	struct drm_device *drm_dev = data;
++	struct exynos_drm_private *priv = drm_dev->dev_private;
++	struct exynos_drm_plane *exynos_plane;
++	enum drm_plane_type type;
++	unsigned int zpos;
++	int ret;
++
++	ctx->drm_dev = drm_dev;
++	ctx->pipe = priv->pipe++;
++
++	for (zpos = 0; zpos < WINDOWS_NR; zpos++) {
++		type = (zpos == ctx->default_win) ? DRM_PLANE_TYPE_PRIMARY :
++							DRM_PLANE_TYPE_OVERLAY;
++		ret = exynos_plane_init(drm_dev, &ctx->planes[zpos],
++				1 << ctx->pipe, type, zpos);
++		if (ret)
++			return ret;
++	}
++
++	exynos_plane = &ctx->planes[ctx->default_win];
++	ctx->crtc = exynos_drm_crtc_create(drm_dev, &exynos_plane->base,
++					ctx->pipe, EXYNOS_DISPLAY_TYPE_LCD,
++					&decon_crtc_ops, ctx);
++	if (IS_ERR(ctx->crtc)) {
++		ret = PTR_ERR(ctx->crtc);
++		goto err;
++	}
++
++	ret = drm_iommu_attach_device_if_possible(ctx->crtc, drm_dev, dev);
++	if (ret)
++		goto err;
++
++	return ret;
++err:
++	priv->pipe--;
++	return ret;
++}
++
++static void decon_unbind(struct device *dev, struct device *master, void *data)
++{
++	struct decon_context *ctx = dev_get_drvdata(dev);
++
++	decon_disable(ctx->crtc);
++
++	/* detach this sub driver from iommu mapping if supported. */
++	if (is_drm_iommu_supported(ctx->drm_dev))
++		drm_iommu_detach_device(ctx->drm_dev, ctx->dev);
++}
++
++static const struct component_ops decon_component_ops = {
++	.bind	= decon_bind,
++	.unbind = decon_unbind,
++};
++
++static irqreturn_t decon_vsync_irq_handler(int irq, void *dev_id)
++{
++	struct decon_context *ctx = dev_id;
++	u32 val;
++
++	if (!test_bit(BIT_CLKS_ENABLED, &ctx->enabled))
++		goto out;
++
++	val = readl(ctx->addr + DECON_VIDINTCON1);
++	if (val & VIDINTCON1_INTFRMPEND) {
++		drm_handle_vblank(ctx->drm_dev, ctx->pipe);
++
++		/* clear */
++		writel(VIDINTCON1_INTFRMPEND, ctx->addr + DECON_VIDINTCON1);
++	}
++
++out:
++	return IRQ_HANDLED;
++}
++
++static irqreturn_t decon_lcd_sys_irq_handler(int irq, void *dev_id)
++{
++	struct decon_context *ctx = dev_id;
++	u32 val;
++
++	if (!test_bit(BIT_CLKS_ENABLED, &ctx->enabled))
++		goto out;
++
++	val = readl(ctx->addr + DECON_VIDINTCON1);
++	if (val & VIDINTCON1_INTFRMDONEPEND) {
++		exynos_drm_crtc_finish_pageflip(ctx->drm_dev, ctx->pipe);
++
++		/* clear */
++		writel(VIDINTCON1_INTFRMDONEPEND,
++				ctx->addr + DECON_VIDINTCON1);
++	}
++
++out:
++	return IRQ_HANDLED;
++}
++
++static int exynos5433_decon_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct decon_context *ctx;
++	struct resource *res;
++	int ret;
++	int i;
++
++	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
++	if (!ctx)
++		return -ENOMEM;
++
++	ctx->default_win = 0;
++	ctx->suspended = true;
++	ctx->dev = dev;
++	if (of_get_child_by_name(dev->of_node, "i80-if-timings"))
++		ctx->i80_if = true;
++
++	for (i = 0; i < ARRAY_SIZE(decon_clks_name); i++) {
++		struct clk *clk;
++
++		clk = devm_clk_get(ctx->dev, decon_clks_name[i]);
++		if (IS_ERR(clk))
++			return PTR_ERR(clk);
++
++		ctx->clks[i] = clk;
++	}
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (!res) {
++		dev_err(dev, "cannot find IO resource\n");
++		return -ENXIO;
++	}
++
++	ctx->addr = devm_ioremap_resource(dev, res);
++	if (IS_ERR(ctx->addr)) {
++		dev_err(dev, "ioremap failed\n");
++		return PTR_ERR(ctx->addr);
++	}
++
++	res = platform_get_resource_byname(pdev, IORESOURCE_IRQ,
++			ctx->i80_if ? "lcd_sys" : "vsync");
++	if (!res) {
++		dev_err(dev, "cannot find IRQ resource\n");
++		return -ENXIO;
++	}
++
++	ret = devm_request_irq(dev, res->start, ctx->i80_if ?
++			decon_lcd_sys_irq_handler : decon_vsync_irq_handler, 0,
++			"drm_decon", ctx);
++	if (ret < 0) {
++		dev_err(dev, "lcd_sys irq request failed\n");
++		return ret;
++	}
++
++	ret = exynos_drm_component_add(dev, EXYNOS_DEVICE_TYPE_CRTC,
++				       EXYNOS_DISPLAY_TYPE_LCD);
++	if (ret < 0)
++		return ret;
++
++	platform_set_drvdata(pdev, ctx);
++
++	ret = component_add(dev, &decon_component_ops);
++	if (ret < 0) {
++		exynos_drm_component_del(dev, EXYNOS_DEVICE_TYPE_CRTC);
++		return ret;
++	}
++
++	return 0;
++}
++
++static int exynos5433_decon_remove(struct platform_device *pdev)
++{
++	component_del(&pdev->dev, &decon_component_ops);
++	exynos_drm_component_del(&pdev->dev, EXYNOS_DEVICE_TYPE_CRTC);
++
++	return 0;
++}
++
++static const struct of_device_id exynos5433_decon_driver_dt_match[] = {
++	{ .compatible = "samsung,exynos5433-decon" },
++	{},
++};
++MODULE_DEVICE_TABLE(of, exynos5433_decon_driver_dt_match);
++
++struct platform_driver exynos5433_decon_driver = {
++	.probe		= exynos5433_decon_probe,
++	.remove		= exynos5433_decon_remove,
++	.driver		= {
++		.name	= "exynos5433-decon",
++		.of_match_table = exynos5433_decon_driver_dt_match,
++	},
++};
+diff --git a/drivers/gpu/drm/exynos/exynos_drm_drv.h b/drivers/gpu/drm/exynos/exynos_drm_drv.h
+index 1ba34f1..769edfd 100644
+--- a/drivers/gpu/drm/exynos/exynos_drm_drv.h
++++ b/drivers/gpu/drm/exynos/exynos_drm_drv.h
+@@ -306,6 +306,7 @@ int exynos_drm_create_enc_conn(struct drm_device *dev,
+ 				struct exynos_drm_display *display);
+
+ extern struct platform_driver fimd_driver;
++extern struct platform_driver exynos5433_decon_driver;
+ extern struct platform_driver decon_driver;
+ extern struct platform_driver dp_driver;
+ extern struct platform_driver dsi_driver;
+diff --git a/include/video/exynos5433_decon.h b/include/video/exynos5433_decon.h
+new file mode 100644
+index 0000000..3696575
+--- /dev/null
++++ b/include/video/exynos5433_decon.h
+@@ -0,0 +1,165 @@
++/*
++ * Copyright (C) 2014 Samsung Electronics Co.Ltd
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundationr
++ */
++
++#ifndef EXYNOS_REGS_DECON_H
++#define EXYNOS_REGS_DECON_H
++
++/* Exynos543X DECON */
++#define DECON_VIDCON0			0x0000
++#define DECON_VIDOUTCON0		0x0010
++#define DECON_WINCONx(n)		(0x0020 + ((n) * 4))
++#define DECON_VIDOSDxH(n)		(0x0080 + ((n) * 4))
++#define DECON_SHADOWCON			0x00A0
++#define DECON_VIDOSDxA(n)		(0x00B0 + ((n) * 0x20))
++#define DECON_VIDOSDxB(n)		(0x00B4 + ((n) * 0x20))
++#define DECON_VIDOSDxC(n)		(0x00B8 + ((n) * 0x20))
++#define DECON_VIDOSDxD(n)		(0x00BC + ((n) * 0x20))
++#define DECON_VIDOSDxE(n)		(0x00C0 + ((n) * 0x20))
++#define DECON_VIDW0xADD0B0(n)		(0x0150 + ((n) * 0x10))
++#define DECON_VIDW0xADD0B1(n)		(0x0154 + ((n) * 0x10))
++#define DECON_VIDW0xADD0B2(n)		(0x0158 + ((n) * 0x10))
++#define DECON_VIDW0xADD1B0(n)		(0x01A0 + ((n) * 0x10))
++#define DECON_VIDW0xADD1B1(n)		(0x01A4 + ((n) * 0x10))
++#define DECON_VIDW0xADD1B2(n)		(0x01A8 + ((n) * 0x10))
++#define DECON_VIDW0xADD2(n)		(0x0200 + ((n) * 4))
++#define DECON_LOCALxSIZE(n)		(0x0214 + ((n) * 4))
++#define DECON_VIDINTCON0		0x0220
++#define DECON_VIDINTCON1		0x0224
++#define DECON_WxKEYCON0(n)		(0x0230 + ((n - 1) * 8))
++#define DECON_WxKEYCON1(n)		(0x0234 + ((n - 1) * 8))
++#define DECON_WxKEYALPHA(n)		(0x0250 + ((n - 1) * 4))
++#define DECON_WINxMAP(n)		(0x0270 + ((n) * 4))
++#define DECON_QOSLUT07_00		0x02C0
++#define DECON_QOSLUT15_08		0x02C4
++#define DECON_QOSCTRL			0x02C8
++#define DECON_BLENDERQx(n)		(0x0300 + ((n - 1) * 4))
++#define DECON_BLENDCON			0x0310
++#define DECON_OPE_VIDW0xADD0(n)		(0x0400 + ((n) * 4))
++#define DECON_OPE_VIDW0xADD1(n)		(0x0414 + ((n) * 4))
++#define DECON_FRAMEFIFO_REG7		0x051C
++#define DECON_FRAMEFIFO_REG8		0x0520
++#define DECON_FRAMEFIFO_STATUS		0x0524
++#define DECON_CMU			0x1404
++#define DECON_UPDATE			0x1410
++#define DECON_UPDATE_SCHEME		0x1438
++#define DECON_VIDCON1			0x2000
++#define DECON_VIDCON2			0x2004
++#define DECON_VIDCON3			0x2008
++#define DECON_VIDCON4			0x200C
++#define DECON_VIDTCON2			0x2028
++#define DECON_FRAME_SIZE		0x2038
++#define DECON_LINECNT_OP_THRESHOLD	0x203C
++#define DECON_TRIGCON			0x2040
++#define DECON_TRIGSKIP			0x2050
++#define DECON_CRCRDATA			0x20B0
++#define DECON_CRCCTRL			0x20B4
++
++/* Exynos5430 DECON */
++#define DECON_VIDTCON0			0x2020
++#define DECON_VIDTCON1			0x2024
++
++/* Exynos5433 DECON */
++#define DECON_VIDTCON00			0x2010
++#define DECON_VIDTCON01			0x2014
++#define DECON_VIDTCON10			0x2018
++#define DECON_VIDTCON11			0x201C
++
++/* Exynos543X DECON Internal */
++#define DECON_W013DSTREOCON		0x0320
++#define DECON_W233DSTREOCON		0x0324
++#define DECON_FRAMEFIFO_REG0		0x0500
++#define DECON_ENHANCER_CTRL		0x2100
++
++/* Exynos543X DECON TV */
++#define DECON_VCLKCON0			0x0014
++#define DECON_VIDINTCON2		0x0228
++#define DECON_VIDINTCON3		0x022C
++
++/* VIDCON0 */
++#define VIDCON0_SWRESET			(1 << 28)
++#define VIDCON0_STOP_STATUS		(1 << 2)
++#define VIDCON0_ENVID			(1 << 1)
++#define VIDCON0_ENVID_F			(1 << 0)
++
++/* VIDOUTCON0 */
++#define VIDOUT_LCD_ON			(1 << 24)
++#define VIDOUT_IF_F_MASK		(0x3 << 20)
++#define VIDOUT_RGB_IF			(0x0 << 20)
++#define VIDOUT_COMMAND_IF		(0x2 << 20)
++
++/* WINCONx */
++#define WINCONx_HAWSWP_F		(1 << 16)
++#define WINCONx_WSWP_F			(1 << 15)
++#define WINCONx_BURSTLEN_MASK		(0x3 << 10)
++#define WINCONx_BURSTLEN_16WORD		(0x0 << 10)
++#define WINCONx_BURSTLEN_8WORD		(0x1 << 10)
++#define WINCONx_BURSTLEN_4WORD		(0x2 << 10)
++#define WINCONx_BLD_PIX_F		(1 << 6)
++#define WINCONx_BPPMODE_MASK		(0xf << 2)
++#define WINCONx_BPPMODE_16BPP_565	(0x5 << 2)
++#define WINCONx_BPPMODE_16BPP_A1555	(0x6 << 2)
++#define WINCONx_BPPMODE_16BPP_I1555	(0x7 << 2)
++#define WINCONx_BPPMODE_24BPP_888	(0xb << 2)
++#define WINCONx_BPPMODE_24BPP_A1887	(0xc << 2)
++#define WINCONx_BPPMODE_25BPP_A1888	(0xd << 2)
++#define WINCONx_BPPMODE_32BPP_A8888	(0xd << 2)
++#define WINCONx_BPPMODE_16BPP_A4444	(0xe << 2)
++#define WINCONx_ALPHA_SEL_F		(1 << 1)
++#define WINCONx_ENWIN_F			(1 << 0)
++
++/* SHADOWCON */
++#define SHADOWCON_Wx_PROTECT(n)		(1 << (10 + (n)))
++
++/* VIDOSDxD */
++#define VIDOSD_Wx_ALPHA_R_F(n)		(((n) & 0xff) << 16)
++#define VIDOSD_Wx_ALPHA_G_F(n)		(((n) & 0xff) << 8)
++#define VIDOSD_Wx_ALPHA_B_F(n)		(((n) & 0xff) << 0)
++
++/* VIDINTCON0 */
++#define VIDINTCON0_FRAMEDONE		(1 << 17)
++#define VIDINTCON0_INTFRMEN		(1 << 12)
++#define VIDINTCON0_INTEN		(1 << 0)
++
++/* VIDINTCON1 */
++#define VIDINTCON1_INTFRMDONEPEND	(1 << 2)
++#define VIDINTCON1_INTFRMPEND		(1 << 1)
++#define VIDINTCON1_INTFIFOPEND		(1 << 0)
++
++/* DECON_CMU */
++#define CMU_CLKGAGE_MODE_SFR_F		(1 << 1)
++#define CMU_CLKGAGE_MODE_MEM_F		(1 << 0)
++
++/* DECON_UPDATE */
++#define STANDALONE_UPDATE_F		(1 << 0)
++
++/* DECON_VIDTCON00 */
++#define VIDTCON00_VBPD_F(x)		(((x) & 0xfff) << 16)
++#define VIDTCON00_VFPD_F(x)		((x) & 0xfff)
++
++/* DECON_VIDTCON01 */
++#define VIDTCON01_VSPW_F(x)		(((x) & 0xfff) << 16)
++
++/* DECON_VIDTCON10 */
++#define VIDTCON10_HBPD_F(x)		(((x) & 0xfff) << 16)
++#define VIDTCON10_HFPD_F(x)		((x) & 0xfff)
++
++/* DECON_VIDTCON11 */
++#define VIDTCON11_HSPW_F(x)		(((x) & 0xfff) << 16)
++
++/* DECON_VIDTCON2 */
++#define VIDTCON2_LINEVAL(x)		(((x) & 0xfff) << 16)
++#define VIDTCON2_HOZVAL(x)		((x) & 0xfff)
++
++/* TRIGCON */
++#define TRIGCON_TRIGEN_PER_F		(1 << 31)
++#define TRIGCON_TRIGEN_F		(1 << 30)
++#define TRIGCON_TE_AUTO_MASK		(1 << 29)
++#define TRIGCON_SWTRIGCMD		(1 << 1)
++#define TRIGCON_SWTRIGEN		(1 << 0)
++
++#endif /* EXYNOS_REGS_DECON_H */
+--
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
