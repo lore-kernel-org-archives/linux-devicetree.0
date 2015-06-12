@@ -1,115 +1,121 @@
-From: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v2 05/22] doc: dt-binding: usb: add otg related properties
-Date: Fri, 12 Jun 2015 09:42:04 +0800
-Message-ID: <20150612014203.GE16101@shlinux2>
-References: <CAL_JsqJ3hHOGevwqcBNFN2LrTP7Bm_k9SDuTNKBbpq5W-eLmdw@mail.gmail.com>
- <20150609011806.GA7976@shlinux1.ap.freescale.net>
- <CAL_JsqKg_NYtLGg9RUQOpKscwHEskHO4_Szo_nM3BnrDdhg3fg@mail.gmail.com>
- <20150609182931.1eda4111@rockdesk> <20150610120623.GA7678@shlinux2>
- <20150611103035.08967a37@rockdesk> <20150611083851.GB16101@shlinux2>
- <20150611155102.15b881fd@rockdesk> <20150611142208.GD16101@shlinux2>
- <20150611175557.724a14e5@rockdesk>
+From: Koro Chen <koro.chen@mediatek.com>
+Subject: Re: [alsa-devel] [PATCH 1/3] ASoC: mediatek: Add AFE platform driver
+Date: Fri, 12 Jun 2015 09:55:58 +0800
+Message-ID: <1434074158.10969.5.camel@mtksdaap41>
+References: <1433946276-25969-1-git-send-email-koro.chen@mediatek.com>
+	 <1433946276-25969-2-git-send-email-koro.chen@mediatek.com>
+	 <1434006187.24094.40.camel@x220>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150611175557.724a14e5@rockdesk>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Li Jun-B47624 <Jun.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Chen Peter-B29397 <Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1434006187.24094.40.camel@x220>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Bolle <pebolle@tiscali.nl>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, srv_heupstream@mediatek.com, tiwai@suse.de, linux-kernel@vger.kernel.org, s.hauer@pengutronix.de, lgirdwood@gmail.com, robh+dt@kernel.org, broonie@kernel.org, linux-mediatek@lists.infradead.org, galak@codeaurora.org, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 11, 2015 at 05:55:57PM +0300, Roger Quadros wrote:
-> > > drivers/usb/core/hub.c
-> > > 
-> > > static int usb_enumerate_device_otg(struct usb_device *udev)
-> > > {
-> > > 	int err = 0;
-> > > 
-> > > #ifdef	CONFIG_USB_OTG
-> > > 	/*
-> > > 	 * OTG-aware devices on OTG-capable root hubs may be able to use SRP,
-> > > 	 * to wake us after we've powered off VBUS; and HNP, switching roles
-> > > 	 * "host" to "peripheral".  The OTG descriptor helps figure this out.
-> > > 	 */
-> > > 	if (!udev->bus->is_b_host
-> > > 			&& udev->config
-> > > 			&& udev->parent == udev->bus->root_hub) {
-> > > 		struct usb_otg_descriptor	*desc = NULL;
-> > > 		struct usb_bus			*bus = udev->bus;
-> > > 
-> > > 		/* descriptor may appear anywhere in config */
-> > > 		if (__usb_get_extra_descriptor (udev->rawdescriptors[0],
-> > > 					le16_to_cpu(udev->config[0].desc.wTotalLength),
-> > > 					USB_DT_OTG, (void **) &desc) == 0) {
-> > > 			if (desc->bmAttributes & USB_OTG_HNP) {
-> > > 				unsigned		port1 = udev->portnum;
-> > > 
-> > > 				dev_info(&udev->dev,
-> > > 					"Dual-Role OTG device on %sHNP port\n",
-> > > 					(port1 == bus->otg_port)
-> > > 						? "" : "non-");
-> > > 
-> > > 				/* enable HNP before suspend, it's simpler */
-> > > 				if (port1 == bus->otg_port)
-> > > 					bus->b_hnp_enable = 1;
-> > > 				err = usb_control_msg(udev,
-> > > 					usb_sndctrlpipe(udev, 0),
-> > > 					USB_REQ_SET_FEATURE, 0,
-> > > 					bus->b_hnp_enable
-> > > 						? USB_DEVICE_B_HNP_ENABLE
-> > > 						: USB_DEVICE_A_ALT_HNP_SUPPORT,
-> > > 					0, NULL, 0, USB_CTRL_SET_TIMEOUT);
-> > > 
-> > > We're sending out this control request even if this host port is not OTG.
-> > > Isn't that wrong?
-> > 
-> > So send USB_DEVICE_A_ALT_HNP_SUPPORT request.
-> > This is correct in OTG 1.x, its intention is to remind the user who is
-> > connecting the HNP capable OTG device to a non-OTG port, He can change
-> > to another port of this machine which is a OTG port(with HNP).
+On Thu, 2015-06-11 at 09:03 +0200, Paul Bolle wrote:
+> On Wed, 2015-06-10 at 22:24 +0800, Koro Chen wrote:
+> > --- /dev/null
+> > +++ b/sound/soc/mediatek/Kconfig
 > 
-> I didn't understand.
-> If CONFIG_USB_OTG is enabled doesn't mean that this USB host port is OTG host.
-Yes, only CONFIG_USB_OTG enabled doesn't mean that this USB host port
-is a OTG port, there are might multiple usb host ports, but only one
-is a OTG port.
-> So it should not send any OTG specific request to device. Right?
-Non-otg port(in OTG 1.x protocol) + OTG 1.x device, should send,
-otherwise, should not send.
+> > +config SND_SOC_MEDIATEK
+> > +	bool "ASoC support for Mediatek chip"
+> > +	depends on ARCH_MEDIATEK
+> > +	help
+> > +	  This adds ASoC platform driver support for Mediatek chip
+> > +	  that can be used with other codecs.
+> > +	  Select Y if you have such device.
+> > +	  Ex: MT8173
+> 
+> > --- /dev/null
+> > +++ b/sound/soc/mediatek/Makefile
+> 
+> > +obj-$(CONFIG_SND_SOC_MEDIATEK) += mtk-afe-pcm.o
+> 
+> > --- /dev/null
+> > +++ b/sound/soc/mediatek/mtk-afe-pcm.c
+> 
+> > +#include <linux/module.h>
+> 
+> > +static void mtk_afe_set_i2s_enable(struct mtk_afe *afe, bool enable)
+> > +{
+> > +	unsigned int val;
+> > +
+> > +	regmap_read(afe->regmap, AFE_I2S_CON2, &val);
+> > +	if (!!(val & AFE_I2S_CON2_EN) == !!enable)
+> 
+> (What does negating a bool twice do?)
+> 
+Because bool actually can be unsigned char, although actually in this
+driver, the caller always passes "true" or "false" to this function.
+Do you think if this is the case, should I still need to do !!?
 
-So the code you pasted here was right only for OTG 1.x, I assume
-OTG 2.0 has not been released when it was designed. But now it's
-out of date, it's wrong if you connect a OTG 2.0 device. 
-
+> > +		return; /* must skip soft reset */
+> > +
+> > +	/* I2S soft reset begin */
+> > +	regmap_update_bits(afe->regmap, AUDIO_TOP_CON1, 0x4, 0x4);
+> > +
+> > +	/* input */
+> > +	regmap_update_bits(afe->regmap, AFE_I2S_CON2, 0x1, !!enable);
 > 
-> > 
-> > > 
-> > > 				if (err < 0) {
-> > > 					/* OTG MESSAGE: report errors here,
-> > > 					 * customize to match your product.
-> > > 					 */
-> > > 					dev_info(&udev->dev,
-> > > 						"can't set HNP mode: %d\n",
-> > > 						err);
-> > > 					bus->b_hnp_enable = 0;
-> > > 				}
-> > > 
-> > > Instead it should be moved inside the if (port1 == bus->otg_port) condition.
-> > 
-> > Nope, as I explained above, this is really too detailed OTG protocol:)
-> > > 
-> > > 			}
-> > > 		}
-> > > 	}
-> > > #endif
-> > > 	return err;
-> > > }
-> > > 
+> Ditto.
 > 
-> cheers,
-> -roger
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > +
+> > +	/* output */
+> > +	regmap_update_bits(afe->regmap, AFE_I2S_CON1, 0x1, !!enable);
+> 
+> Ditto.
+> 
+> > +
+> > +	/* I2S soft reset end */
+> > +	udelay(1);
+> > +	regmap_update_bits(afe->regmap, AUDIO_TOP_CON1, 0x4, 0);
+> > +}
+> 
+> > +static const struct of_device_id mtk_afe_pcm_dt_match[] = {
+> > +	{ .compatible = "mediatek,mt8173-afe-pcm", },
+> > +	{ }
+> > +}; 
+> 
+> > +static struct platform_driver mtk_afe_pcm_driver = {
+> > +	.driver = {
+> > +		   .name = "mtk-afe-pcm",
+> > +		   .owner = THIS_MODULE,
+> > +		   .of_match_table = mtk_afe_pcm_dt_match,
+> > +		   .pm = &mtk_afe_pm_ops,
+> > +	},
+> > +	.probe = mtk_afe_pcm_dev_probe,
+> > +	.remove = mtk_afe_pcm_dev_remove,
+> > +};
+> 
+> > +MODULE_DESCRIPTION("Mediatek ALSA SoC AFE platform driver");
+> > +MODULE_AUTHOR("Koro Chen <koro.chen@mediatek.com>");
+> > +MODULE_LICENSE("GPL v2");
+> > +MODULE_DEVICE_TABLE(of, mtk_afe_pcm_dt_match);
+> 
+> (The common pattern is to have MODULE_DEVICE_TABLE() directly follow
+> that table.)
+> 
+Thank you for mentioning this, I will fix it.
+> SND_SOC_MEDIATEK is a bool symbol and mtk-afe-pcm.o is built-in only.
+> But the code uses a few module specific constructs. I spotted
+> THIS_MODULE, MODULE_DESCRIPTION, MODULE_AUTHOR, MODULE_LICENSE, and
+> MODULE_DEVICE_TABLE.
+> 
+> Is SND_SOC_MEDIATEK perhaps meant to be bool?
+> 
+> Likewise for SND_SOC_MT8173_MAX98090 (in 2/3) and
+> SND_SOC_MT8173_RT5650_RT5676 (in 3/3).
+> 
+OK, yes, I think I should replace it by tristate, thank you!
+> Thanks,
+> 
+> 
+> Paul Bolle
+> 
+> _______________________________________________
+> Alsa-devel mailing list
+> Alsa-devel@alsa-project.org
+> http://mailman.alsa-project.org/mailman/listinfo/alsa-devel
