@@ -1,47 +1,40 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v3 1/2] drm/bridge: dw-hdmi: support optional supply
- regulators
-Date: Fri, 12 Jun 2015 09:27:07 +0200
-Message-ID: <4099644.agHN3RgGum@diego>
-References: <4184159.j0iXe39dFB@phil> <3551826.dyCjorKhLA@diego>
- <20150609233618.GK7557@n2100.arm.linux.org.uk>
+From: Paul Bolle <pebolle@tiscali.nl>
+Subject: Re: [alsa-devel] [PATCH 1/3] ASoC: mediatek: Add AFE platform driver
+Date: Fri, 12 Jun 2015 09:37:57 +0200
+Message-ID: <1434094677.2271.125.camel@x220>
+References: <1433946276-25969-1-git-send-email-koro.chen@mediatek.com>
+	 <1433946276-25969-2-git-send-email-koro.chen@mediatek.com>
+	 <1434006187.24094.40.camel@x220> <1434074158.10969.5.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20150609233618.GK7557@n2100.arm.linux.org.uk>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, dianders@chromium.org, linux-rockchip@lists.infradead.org, dri-devel@lists.freedesktop.org, Yakir Yang <ykk@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1434074158.10969.5.camel@mtksdaap41>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Koro Chen <koro.chen@mediatek.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, srv_heupstream@mediatek.com, tiwai@suse.de, linux-kernel@vger.kernel.org, s.hauer@pengutronix.de, lgirdwood@gmail.com, robh+dt@kernel.org, broonie@kernel.org, linux-mediatek@lists.infradead.org, galak@codeaurora.org, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-QW0gTWl0dHdvY2gsIDEwLiBKdW5pIDIwMTUsIDAwOjM2OjE4IHNjaHJpZWIgUnVzc2VsbCBLaW5n
-IC0gQVJNIExpbnV4Ogo+IE9uIFdlZCwgSnVuIDEwLCAyMDE1IGF0IDAxOjI5OjQzQU0gKzAyMDAs
-IEhlaWtvIFN0w7xibmVyIHdyb3RlOgo+ID4gQWxsdGhvdWdoIGZyb20gdGhlIGRpc2N1c3Npb24g
-YW5kIGV4cGxhbmF0aW9ucyBJJ3ZlIG5vdyBhbHNvIGdvdCB0aGUKPiA+ICJkb24ndAo+ID4gbWFr
-ZSBpdCB3b3JzZSIgZmVlbGluZywgc28gYW0gc29tZWhvdyByZWx1Y3RhbnQgdG8gYWRkIHN1cHBs
-aWVzIHRoYXQgYWxzbwo+ID4gbWlnaHQgZGVzY3JpYmUgdGhpcyBpbmFkZXF1YXRlbHkuCj4gPiAK
-PiA+IFRoZSBSb2NrY2hpcC1zcGVjaWZpYyBkb2N1bWVudGF0aW9uIG9ubHkgbGlzdHMgdGhlIHR3
-byBzdXBwbGllcyBhcwo+ID4gQVZERF8xVjAsIEFWRERfMVY4IHdpdGggYSBkZXNjcmlwdGlvbiBv
-ZiAiREMgc3VwcGx5IHZvbHRhZ2UgZm9yIEFuYWxvZwo+ID4gcGFydCBvZiBIRE1JIi4gVGhlIHN1
-cHBsaWVzIGFyZW4ndCBtZW50aW9uZWQgb3RoZXJ3aXNlIGF0IGFsbCwgc28gSSBndWVzcwo+ID4g
-SSdsbCBwb25kZXIgdGhpcyBhIGJpdCBtb3JlIGF0IGZpcnN0Lgo+IAo+IEFyZSB0aGV5IGNvbnRy
-b2xsYWJsZSBmcm9tIHNvZnR3YXJlIGF0IGFsbD8gIElmIHRoZXkgYXJlbid0LCB0aGVuCj4gSSdk
-IHN1Z2dlc3QgbGVhdmluZyB0aGVtIG91dCB1bnRpbCB3ZSBoYXZlIGEgZGlzdGluY3Rpb24gYmV0
-d2Vlbgo+IHRoZSBUeCBhbmQgUGh5IC0gbXVjaCBhcyB3ZSBkbyBmb3IgaU1YNi4KCnRoZXkgYXJl
-IHN1cHBsaWVkIGJ5IHRoZSBwbWljIHRoZSBzeXN0ZW0gdXNlcyAobmFtZWQgdmRkMTBfbGNkIGFu
-ZCB2ZGQxOF9sY2QgCmluIHRoZSBzb2MgbWFudWFscy9zY2hlbWF0aWNzKSAgYW5kIHN1cHBseSB0
-aGUgaW5kaXZpZHVhbCBvdXRwdXQgZW5jb2RlciAKYW5hbG9nIHBhcnRzIChoZG1pLCBlZHAsIGx2
-ZHMsIGV0YykuICBTbyBpZiB0aGVyZSBpcyBubyBvdXRwdXQgYXQgYWxsLCB0aGV5IApzaG91bGQg
-YmUgYWJsZSB0byBiZSB0dXJuZWQgb2ZmLgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5m
-cmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2RyaS1kZXZlbAo=
+On Fri, 2015-06-12 at 09:55 +0800, Koro Chen wrote:
+> On Thu, 2015-06-11 at 09:03 +0200, Paul Bolle wrote:
+> > (What does negating a bool twice do?)
+> > 
+> Because bool actually can be unsigned char, although actually in this
+> driver, the caller always passes "true" or "false" to this function.
+
+bool is _Bool in the kernel (see include/linux/types.h). So whenever you
+see a bool in the kernel you can assume it's either 0 or 1. Are there
+any cases where this conveniently simple rule doesn't hold?
+
+But here the discussion is moot, because as you say, the function will
+only be passed false or true so we know "enable" is either 0 or 1 and
+double negating will do nothing.
+
+> Do you think if this is the case, should I still need to do !!?
+
+So you should not, as it's confusing at best.
+
+Thanks,
+
+
+Paul Bolle
