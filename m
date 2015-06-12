@@ -1,8 +1,8 @@
 From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
 Subject: Re: [PATCH v2 05/22] doc: dt-binding: usb: add otg related
  properties
-Date: Fri, 12 Jun 2015 11:41:40 +0300
-Message-ID: <20150612114140.52f87bc8@rockdesk>
+Date: Fri, 12 Jun 2015 11:42:13 +0300
+Message-ID: <20150612114213.486c9408@rockdesk>
 References: <CAL_JsqKg_NYtLGg9RUQOpKscwHEskHO4_Szo_nM3BnrDdhg3fg@mail.gmail.com>
 	<20150609182931.1eda4111@rockdesk>
 	<20150610120623.GA7678@shlinux2>
@@ -17,9 +17,9 @@ References: <CAL_JsqKg_NYtLGg9RUQOpKscwHEskHO4_Szo_nM3BnrDdhg3fg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20150612082358.GG16101@shlinux2>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Chen Peter-B29397 <Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Li Jun-B47624 <Jun.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
@@ -110,14 +110,6 @@ hich
 > have OTG port. If you think we need not cover the support for OTG 1.x=
  host,
 > we can simply remove it.
-
-We should not remove it but need to add the following check.
-
-Send that request only if the system has at least one OTG (v1.x) port t=
-hat is
-capable of HNP _and_ this port is not that HNP capable port _and_
-the connected device is OTG (v1.x)
-
 >=20
 > > > > So it should not send any OTG specific request to device. Right=
 ?
@@ -149,12 +141,6 @@ itions:
 pport HNP
 > =E2=80=A2 the A-device has another port that does support HNP
 > ... ...
-
-Thanks for this info. I can't seem to find the OTG v1.3 spec.
-
-cheers,
--roger
-
 >=20
 > > >=20
 > > > So the code you pasted here was right only for OTG 1.x, I assume
@@ -198,6 +184,7 @@ rotocol:)
 > >=20
 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
