@@ -1,106 +1,125 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] NFC: nfcmrvl: add UART driver
-Date: Thu, 11 Jun 2015 23:06:54 -0500
-Message-ID: <CAL_JsqKtCT9wLS5xqHoJ9K_2Y+Tw8g7mP=MSkDBXO9TexHd9pg@mail.gmail.com>
-References: <1434024020-17048-1-git-send-email-cuissard@marvell.com> <1434024020-17048-3-git-send-email-cuissard@marvell.com>
+From: Caesar Wang <caesar.upstream@gmail.com>
+Subject: Re: [PATCH v14 0/3] ARM: rk3288: Add PM Domain support
+Date: Fri, 12 Jun 2015 13:11:01 +0800
+Message-ID: <557A69E5.5080701@gmail.com>
+References: <1429862868-14218-1-git-send-email-wxt@rock-chips.com>	<3550912.kR0pejLP0h@diego> <7h383lzaqt.fsf@deeprootsystems.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1434024020-17048-3-git-send-email-cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vincent Cuissard <cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neil Brown <neil-+NVA1uvv1dVBDLzU/O5InQ@public.gmane.org>
-Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <7h383lzaqt.fsf@deeprootsystems.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Kevin Hilman <khilman@kernel.org>, =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>
+Cc: Caesar Wang <wxt@rock-chips.com>, tomasz.figa@gmail.com, linux-arm-kernel@lists.infradead.org, linus.walleij@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, galak@codeaurora.org, grant.likely@linaro.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, rdunlap@infradead.org, linux-doc@vger.kernel.org, dianders@chromium.org, linux-rockchip@lists.infradead.org, ulf.hansson@linaro.org, dmitry.torokhov@gmail.com, broonie@kernel.org, ijc+devicetree@hellion.org.uk, linux@arm.linux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-Adding Neil Brown who has been doing a UART slave binding[1].
+Hi Kevin, Heiko
 
-On Thu, Jun 11, 2015 at 7:00 AM, Vincent Cuissard <cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org> wrote:
-> Add support of Marvell NFC chip controlled over UART
+Thanks for your comments.
+Sorry for delay reply.
+
+=E5=9C=A8 2015=E5=B9=B404=E6=9C=8828=E6=97=A5 02:28, Kevin Hilman =E5=86=
+=99=E9=81=93:
+> Heiko St=C3=BCbner <heiko@sntech.de> writes:
 >
-> Signed-off-by: Vincent Cuissard <cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-> ---
->  .../devicetree/bindings/net/nfc/nfcmrvl.txt        |  29 +++
->  drivers/nfc/nfcmrvl/Kconfig                        |  11 +
->  drivers/nfc/nfcmrvl/Makefile                       |   3 +
->  drivers/nfc/nfcmrvl/nfcmrvl.h                      |   7 +
->  drivers/nfc/nfcmrvl/uart.c                         | 225 +++++++++++++++++++++
->  include/linux/platform_data/nfcmrvl.h              |   9 +
->  net/nfc/nci/uart.c                                 |   1 -
->  7 files changed, 284 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/net/nfc/nfcmrvl.txt
->  create mode 100644 drivers/nfc/nfcmrvl/uart.c
+>> Am Freitag, 24. April 2015, 16:07:45 schrieb Caesar Wang:
+>>>      Add power domain drivers based on generic power domain for
+>>> Rockchip platform, and support RK3288.
+>>>
+>>>      Verified on url =3D
+>>>      https://chromium.googlesource.com/chromiumos/third_party/kerne=
+l.
+>>>
+>>>      At the moment,there are mass of products are using the driver.
+>>> I believe the driver can happy work for next kernel.
+>> I've taken a look at the driver and here are some global remarks:
+>>
+>> (1) You provide dt-bindings/power-domain/rk3288.h in patch 3. This b=
+reaks
+>> bisectability, as the driver itself in patch 2 also includes the hea=
+der and
+>> would thus fail to compile if the later patch 3 is missing.
+>> Ideally I think the header addition should be a separate patch itsel=
+f, so that
+>> we can possibly share it between driver and dts branches.
+>> So 1: binding doc, 2: binding-header, 3: driver, 4: dts-changes.
+OK, done.
+
+>>
+>> (2) The dts-changes in patch 3 should also add any necessary power-d=
+omain
+>> assignment on devices if they're still missing, so that we don't int=
+roduce
+>> regressions. In my case my work-in-progress edp died because the pow=
+erdomain
+>> was turned off automatically it seems.
+OK, I will list that devices.
+At the moment, I don't find the EDP driver for rockchip. (I think the=20
+EDP driver hasn't a upstream).
+
+Anyway, I will test it on=20
+https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chrom=
+eos-3.14,
+Meanwhile work on next-kernel.
+
+
+>>
+>> (3) more like wondering @Kevin or so, is there some more generic pla=
+ce for a
+>> power-domain driver nowadays?
+> I think the preference has been to put these under drivers/soc/<vendo=
+r> for now,
+> so they can shared across arm32 and arm64.
 >
-> diff --git a/Documentation/devicetree/bindings/net/nfc/nfcmrvl.txt b/Documentation/devicetree/bindings/net/nfc/nfcmrvl.txt
-> new file mode 100644
-> index 0000000..7c4a0cc
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/nfc/nfcmrvl.txt
-> @@ -0,0 +1,29 @@
-> +* Marvell International Ltd. NCI NFC Controller
-> +
-> +Required properties:
-> +- compatible: Should be "mrvl,nfc-uart".
 
-This should describe the chip, not the connection.
+Interesting. Do you want to put the domain driver into /driver/soc/rock=
+chip?
+I guess the efuse driver ...is also do that.
 
-marvell is the preferred vendor prefix. mrvl is deprecated.
+Perhaps, it's a good select in the future.
 
 
-> +Optional SoC specific properties:
-> +- pinctrl-names: Contains only one value - "default".
-> +- pintctrl-0: Specifies the pin control groups used for this controller.
+>> (4) As Tomasz remarked previously the dts should represent the hardw=
+are and
+>> the power-domains are part of the pmu. There is a recent addition fr=
+om Linus
+>> Walleij, called simple-mfd [a] that is supposed to get added real ea=
+rly for
+>> kernel 4.2. So I'd think the power-domains should use that and the p=
+atchset
+>> modified to include the changes shown below [b]?
+>>
+>> (5) Keven Hilman and Tomasz had reservations about all the device cl=
+ocks
+>> being listed in the power-domains itself in the previous versions. I=
+ don't see
+>> a comment from them yet changing that view.
+> Correct.
 
-What pins are you controlling exactly? The UART signals on the host?
+How about this patch?
 
-> +- reset-n-io: Output GPIO pin used to reset the chip (active low).
+https://patchwork.kernel.org/patch/5145241/
 
-Should be suffixed with "-gpio". Is this reset for the chip or only NFC?
+I will do that.
 
-> +- hci-muxed: Specifies that the chip is muxing NCI over HCI frames.
-> +
-> +Optional UART-based chip specific properties:
-> +- flow-control: Specifies that the chip is using RTS/CTS.
+Maybe, do you have more suggestions?
 
-Is this a setting in the NFC chip or just how the UART is configured.
-If the latter, we already have standard UART property to enable
-flow-control on a UART.
 
-> +- break-control: Specifies that the chip needs specific break management.
+>> Their wish was to get the clocks by reading the clocks from the devi=
+ce nodes,
+>> though I see a problem on how to handle devices that do not have any=
+ bindings
+>> at all yet.
+>>
+>> Kevin, Tomasz any new thoughts?
+> I don't see any issues with devices that don't have bindings, as all
+> that would be needed would be to simple device nodes with a clock
+> property.  I wouldn't even matter if those devices had device drivers=
+=2E
+>
+> Kevin
+>
+>
+>
 
-Can you be more specific?
-
-> +
-> +Example (for ARM-based BeagleBoard Black with 88W8887 on UART5):
-> +
-> +&uart5 {
-> +       status = "okay";
-> +
-> +       nfcmrvluart: nfcmrvluart@5 {
-
-Unit addresses should have a corresponding reg property. You don't
-need a reg property here, so drop the unit address. Names should allow
-be generic, so just "nfc" is probably sufficient here. Or maybe
-"uart-slave".
-
-How are you doing the binding for the rest of the 8887 chip which has
-also has BT and WiFi. We need to figure out how to do the whole chip
-which is a bit more complicated, but quite common. We could split up
-each function, but then I worry that there may be some
-interdependencies between functions on the chip.
-
-> +               compatible = "mrvl,nfc-uart";
-> +
-> +               reset-n-io = <&gpio3 16 0>;
-> +
-> +               hci-muxed;
-> +               flow-control;
-> +        }
-> +};
-
-Rob
-
-[1] https://lwn.net/Articles/643878/
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
