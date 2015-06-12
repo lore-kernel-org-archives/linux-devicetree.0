@@ -1,33 +1,30 @@
-From: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v4 1/3] drivers: hwspinlock: add CSR atlas7 implementation
-Date: Fri, 12 Jun 2015 18:20:59 +0300
-Message-ID: <CAK=WgbYHMiLZjMxui9N+hA-ZJ3K=QQ=E8ndAqxfAWFZwa4VGCA@mail.gmail.com>
-References: <1432628911-18555-1-git-send-email-21cnbao@gmail.com> <CAJAp7Og0GDmh7EcsDedNkRi0StoQZOE+ShP_m2GXAhq9M4UG+Q@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: [PATCH] of: Add vendor prefix for Zodiac Inflight Innovations
+Date: Fri, 12 Jun 2015 17:44:07 +0200
+Message-ID: <1434123847-13713-1-git-send-email-andrew@lunn.ch>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAJAp7Og0GDmh7EcsDedNkRi0StoQZOE+ShP_m2GXAhq9M4UG+Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>
-Cc: Barry Song <21cnbao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DL-SHA-WorkGroupLinux <workgroup.linux-kQvG35nSl+M@public.gmane.org>, Wei Chen <wei.chen-kQvG35nSl+M@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Barry Song <Baohua.Song-kQvG35nSl+M@public.gmane.org>
+To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> On Tue, May 26, 2015 at 1:28 AM, Barry Song <21cnbao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > From: Wei Chen <wei.chen-kQvG35nSl+M@public.gmane.org>
-> >
-> > Add hwspinlock support for the CSR atlas7 SoC.
-> >
-> > The Hardware Spinlock device on atlas7 provides hardware assistance
-> > for synchronization between the multiple processors in the system
-> > (dual Cortex-A7, CAN bus Cortex-M3 and audio DSP).
-> >
-> > Cc: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-> > Cc: Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>
->
-> Reviewed-by: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-Applied first two patches. Thanks Suman and Bjorn for making the time
-to review them!
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 80339192c93e..c400c95abc67 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -211,3 +211,4 @@ xillybus	Xillybus Ltd.
+ xlnx	Xilinx
+ zyxel	ZyXEL Communications Corp.
+ zarlink	Zarlink Semiconductor
++zii	Zodiac Inflight Innovations
+-- 
+2.1.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
