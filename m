@@ -1,42 +1,96 @@
-From: Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 1/2] drm/exynos: ipp: fix wrong index referencing a config
- element
-Date: Fri, 12 Jun 2015 21:59:11 +0900
-Message-ID: <1434113958-15877-17-git-send-email-human.hwang@samsung.com>
+From: Hyungwon Hwang <human.hwang@samsung.com>
+Subject: [PATCH 1/3] drm/panel: add s6e63j0x03 LCD panel driver
+Date: Fri, 12 Jun 2015 21:59:14 +0900
+Message-ID: <1434113958-15877-20-git-send-email-human.hwang@samsung.com>
 References: <1434113958-15877-1-git-send-email-human.hwang@samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1434113958-15877-1-git-send-email-human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, daniel-rLtY4a/8tF1rovVCs/uTlw@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <1434113958-15877-1-git-send-email-human.hwang@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc: sw0312.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Config depends on the opreation. So it must be referenced by an
-operation id, not a property id.
-
-Signed-off-by: Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- drivers/gpu/drm/exynos/exynos_drm_ipp.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/exynos/exynos_drm_ipp.c b/drivers/gpu/drm/exynos/exynos_drm_ipp.c
-index b7f1cbc..54c5cf4 100644
---- a/drivers/gpu/drm/exynos/exynos_drm_ipp.c
-+++ b/drivers/gpu/drm/exynos/exynos_drm_ipp.c
-@@ -486,8 +486,7 @@ static int ipp_validate_mem_node(struct drm_device *drm_dev,
- 	unsigned int bpp;
- 	int i;
- 
--	/* The property id should already be varified */
--	ipp_cfg = &c_node->property.config[m_node->prop_id];
-+	ipp_cfg = &c_node->property.config[m_node->ops_id];
- 	num_plane = drm_format_num_planes(ipp_cfg->fmt);
- 
- 	/**
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+RnJvbTogSW5raSBEYWUgPGlua2kuZGFlQHNhbXN1bmcuY29tPgoKVGhpcyBwYXRjaCBhZGRzIE1J
+UEktRFNJIGJhc2VkIFM2RTYzSjBYMDMgQU1PTEVEIExDRCBwYW5lbCBkcml2ZXIKd2hpY2ggdXNl
+cyBtaXBpX2RzaSBidXMgdG8gY29tbXVuaWNhdGUgd2l0aCBwYW5lbC4gVGhlIHBhbmVsIGhhcwoz
+MjDDlzMyMCByZXNvbHV0aW9uIGluIDEuNjMtaW5jaCBwaHlzaWNhbCBwYW5lbC4gVGhpcyBwYW5l
+bCBpcyB1c2VkIGluClNhbXN1bmcgR2FsYXh5IEdlYXIgMi4KClNpZ25lZC1vZmYtYnk6IElua2kg
+RGFlIDxpbmtpLmRhZUBzYW1zdW5nLmNvbT4KU2lnbmVkLW9mZi1ieTogSHl1bmd3b24gSHdhbmcg
+PGh1bWFuLmh3YW5nQHNhbXN1bmcuY29tPgpBY2tlZC1ieTogS3l1bmdtaW4gUGFyayA8a3l1bmdt
+aW4ucGFya0BzYW1zdW5nLmNvbT4KLS0tCiBkcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19k
+cm1fZHNpLmMgfCAzMSArKysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0tCiBkcml2ZXJzL2dw
+dS9kcm0vcGFuZWwvS2NvbmZpZyAgICAgICAgICAgfCAgNiArKysrKysKIGRyaXZlcnMvZ3B1L2Ry
+bS9wYW5lbC9NYWtlZmlsZSAgICAgICAgICB8ICAxICsKIDMgZmlsZXMgY2hhbmdlZCwgMjYgaW5z
+ZXJ0aW9ucygrKSwgMTIgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJt
+L2V4eW5vcy9leHlub3NfZHJtX2RzaS5jIGIvZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3Nf
+ZHJtX2RzaS5jCmluZGV4IDU1NzZjYzMuLjZjYjQ4ODcgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1
+L2RybS9leHlub3MvZXh5bm9zX2RybV9kc2kuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vZXh5bm9z
+L2V4eW5vc19kcm1fZHNpLmMKQEAgLTc0Myw2ICs3NDMsMTQgQEAgc3RhdGljIHZvaWQgZXh5bm9z
+X2RzaV9kaXNhYmxlX2Nsb2NrKHN0cnVjdCBleHlub3NfZHNpICpkc2kpCiAJRFNJX1dSSVRFKGRz
+aSwgRFNJTV9QTExDVFJMX1JFRywgcmVnKTsKIH0KIAorc3RhdGljIHZvaWQgZXh5bm9zX2RzaV9l
+bmFibGVfbGFuZShzdHJ1Y3QgZXh5bm9zX2RzaSAqZHNpLCB1MzIgbGFuZSkKK3sKKwl1MzIgcmVn
+ID0gRFNJX1JFQUQoZHNpLCBEU0lNX0NPTkZJR19SRUcpOworCXJlZyB8PSAoRFNJTV9OVU1fT0Zf
+REFUQV9MQU5FKGRzaS0+bGFuZXMgLSAxKSB8IERTSU1fTEFORV9FTl9DTEsgfAorCQkJRFNJTV9M
+QU5FX0VOKGxhbmUpKTsKKwlEU0lfV1JJVEUoZHNpLCBEU0lNX0NPTkZJR19SRUcsIHJlZyk7Cit9
+CisKIHN0YXRpYyBpbnQgZXh5bm9zX2RzaV9pbml0X2xpbmsoc3RydWN0IGV4eW5vc19kc2kgKmRz
+aSkKIHsKIAlzdHJ1Y3QgZXh5bm9zX2RzaV9kcml2ZXJfZGF0YSAqZHJpdmVyX2RhdGEgPSBkc2kt
+PmRyaXZlcl9kYXRhOwpAQCAtODE1LDE3ICs4MjMsNiBAQCBzdGF0aWMgaW50IGV4eW5vc19kc2lf
+aW5pdF9saW5rKHN0cnVjdCBleHlub3NfZHNpICpkc2kpCiAJCXJldHVybiAtRUlOVkFMOwogCX0K
+IAotCXJlZyB8PSBEU0lNX05VTV9PRl9EQVRBX0xBTkUoZHNpLT5sYW5lcyAtIDEpOwotCi0JRFNJ
+X1dSSVRFKGRzaSwgRFNJTV9DT05GSUdfUkVHLCByZWcpOwotCi0JcmVnIHw9IERTSU1fTEFORV9F
+Tl9DTEs7Ci0JRFNJX1dSSVRFKGRzaSwgRFNJTV9DT05GSUdfUkVHLCByZWcpOwotCi0JbGFuZXNf
+bWFzayA9IEJJVChkc2ktPmxhbmVzKSAtIDE7Ci0JcmVnIHw9IERTSU1fTEFORV9FTihsYW5lc19t
+YXNrKTsKLQlEU0lfV1JJVEUoZHNpLCBEU0lNX0NPTkZJR19SRUcsIHJlZyk7Ci0KIAkvKgogCSAq
+IFVzZSBub24tY29udGludW91cyBjbG9jayBtb2RlIGlmIHRoZSBwZXJpcGFyYWwgd2FudHMgYW5k
+CiAJICogaG9zdCBjb250cm9sbGVyIHN1cHBvcnRzCkBAIC04MzcsOCArODM0LDExIEBAIHN0YXRp
+YyBpbnQgZXh5bm9zX2RzaV9pbml0X2xpbmsoc3RydWN0IGV4eW5vc19kc2kgKmRzaSkKIAlpZiAo
+ZHJpdmVyX2RhdGEtPmhhc19jbGtsYW5lX3N0b3AgJiYKIAkJCWRzaS0+bW9kZV9mbGFncyAmIE1J
+UElfRFNJX0NMT0NLX05PTl9DT05USU5VT1VTKSB7CiAJCXJlZyB8PSBEU0lNX0NMS0xBTkVfU1RP
+UDsKLQkJRFNJX1dSSVRFKGRzaSwgRFNJTV9DT05GSUdfUkVHLCByZWcpOwogCX0KKwlEU0lfV1JJ
+VEUoZHNpLCBEU0lNX0NPTkZJR19SRUcsIHJlZyk7CisKKwlsYW5lc19tYXNrID0gQklUKGRzaS0+
+bGFuZXMpIC0gMTsKKwlleHlub3NfZHNpX2VuYWJsZV9sYW5lKGRzaSwgbGFuZXNfbWFzayk7CiAK
+IAkvKiBDaGVjayBjbG9jayBhbmQgZGF0YSBsYW5lIHN0YXRlIGFyZSBzdG9wIHN0YXRlICovCiAJ
+dGltZW91dCA9IDEwMDsKQEAgLTEzMDEsNiArMTMwMSwxMCBAQCBzdGF0aWMgaW50IGV4eW5vc19k
+c2lfaW5pdChzdHJ1Y3QgZXh5bm9zX2RzaSAqZHNpKQogCiAJZXh5bm9zX2RzaV9yZXNldChkc2kp
+OwogCWV4eW5vc19kc2lfZW5hYmxlX2lycShkc2kpOworCisJaWYgKGRyaXZlcl9kYXRhLT52YWx1
+ZXNbUkVTRVRfVFlQRV0gPT0gRFNJTV9GVU5DUlNUKQorCQlleHlub3NfZHNpX2VuYWJsZV9sYW5l
+KGRzaSwgQklUKGRzaS0+bGFuZXMpIC0gMSk7CisKIAlleHlub3NfZHNpX2VuYWJsZV9jbG9jayhk
+c2kpOwogCWlmIChkcml2ZXJfZGF0YS0+d2FpdF9mb3JfcmVzZXQpCiAJCWV4eW5vc19kc2lfd2Fp
+dF9mb3JfcmVzZXQoZHNpKTsKQEAgLTE4OTMsNiArMTg5Nyw5IEBAIHN0YXRpYyBpbnQgZXh5bm9z
+X2RzaV9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQogCWRzaS0+Y2xrcyA9IGRl
+dm1fa3phbGxvYyhkZXYsCiAJCQlzaXplb2YoKmRzaS0+Y2xrcykgKiBkc2ktPmRyaXZlcl9kYXRh
+LT5udW1fY2xrcywKIAkJCUdGUF9LRVJORUwpOworCWlmICghZHNpLT5jbGtzKQorCQlnb3RvIGVy
+cl9kZWxfY29tcG9uZW50OworCiAJZm9yIChpID0gMDsgaSA8IGRzaS0+ZHJpdmVyX2RhdGEtPm51
+bV9jbGtzOyBpKyspIHsKIAkJZHNpLT5jbGtzW2ldID0gZGV2bV9jbGtfZ2V0KGRldiwgY2xrX25h
+bWVzW2ldKTsKIAkJaWYgKElTX0VSUihkc2ktPmNsa3NbaV0pKSB7CmRpZmYgLS1naXQgYS9kcml2
+ZXJzL2dwdS9kcm0vcGFuZWwvS2NvbmZpZyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9LY29uZmln
+CmluZGV4IDZkNjRjN2IuLmNiMDdiYzYgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9wYW5l
+bC9LY29uZmlnCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9LY29uZmlnCkBAIC00Myw0ICs0
+MywxMCBAQCBjb25maWcgRFJNX1BBTkVMX1NIQVJQX0xRMTAxUjFTWDAxCiAJICBUbyBjb21waWxl
+IHRoaXMgZHJpdmVyIGFzIGEgbW9kdWxlLCBjaG9vc2UgTSBoZXJlOiB0aGUgbW9kdWxlCiAJICB3
+aWxsIGJlIGNhbGxlZCBwYW5lbC1zaGFycC1scTEwMXIxc3gwMS4KIAorY29uZmlnIERSTV9QQU5F
+TF9TNkU2M0owWDAzCisJdHJpc3RhdGUgIlM2RTYzSjBYMDMgRFNJIHZpZGVvIG1vZGUgcGFuZWwi
+CisJZGVwZW5kcyBvbiBPRgorCXNlbGVjdCBEUk1fTUlQSV9EU0kKKwlzZWxlY3QgVklERU9NT0RF
+X0hFTFBFUlMKKwogZW5kbWVudQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL01h
+a2VmaWxlIGIvZHJpdmVycy9ncHUvZHJtL3BhbmVsL01ha2VmaWxlCmluZGV4IDRiMmEwNDMuLjI3
+YjBhOTAgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9NYWtlZmlsZQorKysgYi9k
+cml2ZXJzL2dwdS9kcm0vcGFuZWwvTWFrZWZpbGUKQEAgLTIsMyArMiw0IEBAIG9iai0kKENPTkZJ
+R19EUk1fUEFORUxfU0lNUExFKSArPSBwYW5lbC1zaW1wbGUubwogb2JqLSQoQ09ORklHX0RSTV9Q
+QU5FTF9MRDkwNDApICs9IHBhbmVsLWxkOTA0MC5vCiBvYmotJChDT05GSUdfRFJNX1BBTkVMX1M2
+RThBQTApICs9IHBhbmVsLXM2ZThhYTAubwogb2JqLSQoQ09ORklHX0RSTV9QQU5FTF9TSEFSUF9M
+UTEwMVIxU1gwMSkgKz0gcGFuZWwtc2hhcnAtbHExMDFyMXN4MDEubworb2JqLSQoQ09ORklHX0RS
+TV9QQU5FTF9TNkU2M0owWDAzKSArPSBwYW5lbC1zNmU2M2oweDAzLm8KLS0gCjEuOS4xCgpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
+bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZy
+ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
