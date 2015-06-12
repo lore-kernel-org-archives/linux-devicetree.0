@@ -1,141 +1,102 @@
-From: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Duplicated device tree and Dynamic symbols
-Date: Fri, 12 Jun 2015 23:53:58 +0200
-Message-ID: <CAPybu_1LX6swWfd4cgfRxeS00uOEvoZWV3cb1Ppz=XQs69JbUw@mail.gmail.com>
-References: <CAPybu_3CQ0vD=uj_gKwdcsQ_W7u-SRKzKDWOYaXvU83V8iYOqw@mail.gmail.com>
- <9E8352D3-3925-4362-95D0-F2284993FB0F@konsulko.com> <CAPybu_23vDtL5xxnUCUoNxwGTwVFGsNcGiS5Mg2M+u4jaQF1Sg@mail.gmail.com>
- <F843F38C-8990-40DD-AF7B-879213FA865C@konsulko.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v2 6/6] regulator: qcom-spmi: Add vendor specific
+ configuration
+Date: Fri, 12 Jun 2015 15:10:30 -0700
+Message-ID: <20150612221030.GA7854@codeaurora.org>
+References: <1434069427-3642-1-git-send-email-sboyd@codeaurora.org>
+ <1434069427-3642-7-git-send-email-sboyd@codeaurora.org>
+ <CAL_JsqL6R5jz1Xhgav0a0SeWqcRT200sofP-G_zQLfDVeqwarA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <F843F38C-8990-40DD-AF7B-879213FA865C-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqL6R5jz1Xhgav0a0SeWqcRT200sofP-G_zQLfDVeqwarA@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, David Collins <collinsd@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Pantelis
+On 06/11, Rob Herring wrote:
+> On Thu, Jun 11, 2015 at 7:37 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+> > Add support for over current protection (OCP), pin control
+> > selection, soft start and soft start strength, auto-mode, input
+> > current limiting, and pull down.
+> >
+> > Cc: <devicetree@vger.kernel.org>
+> > Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+> > ---
+> >
+> > Changes from v1:
+> > * New patch split from original SPMI regulator driver
+> >
+> >  .../bindings/regulator/qcom,spmi-regulator.txt     |  62 +++++
+> >  drivers/regulator/qcom_spmi-regulator.c            | 298 ++++++++++++++++++++-
+> >  2 files changed, 358 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/regulator/qcom,spmi-regulator.txt b/Documentation/devicetree/bindings/regulator/qcom,spmi-regulator.txt
+> > index 75b4604bad07..ab01a152e930 100644
+> > --- a/Documentation/devicetree/bindings/regulator/qcom,spmi-regulator.txt
+> > +++ b/Documentation/devicetree/bindings/regulator/qcom,spmi-regulator.txt
+> > @@ -99,6 +99,68 @@ see regulator.txt - with additional custom properties described below:
+> >                     soft start are active all the time. 0 = Set initial mode to
+> >                     low power mode (LPM).
+> >
+> > +- qcom,auto-mode-enable:
+> 
+> Auto regulator modes are fairly common. Can't we have a common property here?
+> 
+> > +       Usage: optional
+> > +       Value type: <u32>
+> 
+> This can be bool. Unless we want to have a mode property with "auto"
+> being one possible value.
 
-Thanks for your patches, I will try to test it during the next week.
-Just one question.
+>From what I can tell we use this property as qcom,auto-mode-enable = <0>.
+Put another way, that's qcom,auto-mode-disable. Should we have two
+properties? Or is it better to mark all regulators explicitly with
+either auto-mode-enable or the absence of such a property? The bindings
+take an approach of giving all these "boolean" properties a 0 or 1 value
+so that the absence of the property indicates that we should use the
+default value in the hardware.
 
-Where can I find the dtc with support for __fixup__ and __local_fixups_=
-_ ?
+> 
+> > +       Description: 1 = Enable automatic hardware selection of regulator
+> > +                        mode (HPM vs LPM); not available on boost type
+> > +                        regulators. 0 = Disable auto mode selection.
+> > +
+> > +- qcom,ocp-enable:
+> > +       Usage: optional
+> > +       Value type: <u32>
+> > +       Description: 1 = Allow over current protection (OCP) to be enabled for
+> > +                    voltage switch type regulators so that they latch off
+> > +                    automatically when over current is detected. OCP is
+> > +                    enabled when in HPM or auto mode.  0 = Disable OCP.
+> 
+> This seems common too.
 
-Seems that is its not part of /scripts/dtc or
-https://git.kernel.org/cgit/utils/dtc/dtc.git/log/
+Ok. I'll make up another patch for this one. Perhaps call it
+regulator-over-current-protection?
 
-Thanks!
+> 
+> > +
+> > +- qcom,ocp-max-retries:
+> > +       Usage: optional
+> > +       Value type: <u32>
+> > +       Description: Maximum number of times to try toggling a voltage switch
+> > +                    off and back on as a result of consecutive over current
+> > +                    events.
+> > +
+> > +- qcom,ocp-retry-delay:
+> > +       Usage: optional
+> > +       Value type: <u32>
+> > +       Description: Time to delay in milliseconds between each voltage switch
+> > +                    toggle after an over current event takes place.
+> 
+> These 2 are perhaps less common. I hope I don't have a device that does this. :)
+> 
 
-On Fri, Jun 12, 2015 at 10:06 PM, Pantelis Antoniou
-<pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
-> Hi Ricardo,
->
->> On Jun 8, 2015, at 23:14 , Ricardo Ribalda Delgado <ricardo.ribalda@=
-gmail.com> wrote:
->>
->> Hello Pantelis
->>
->> Any progress here?
->>
->
-> I just posted a bunch of patches that make possible using PCI with de=
-vice tree.
-> Perhaps you=E2=80=99d like to take a look.
->
->> Thanks
->>
->
-> Regards
->
-> =E2=80=94 Pantelis
->
->> On Tue, Apr 28, 2015 at 10:36 AM, Pantelis Antoniou
->> <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
->>> Hi Ricardo,
->>>
->>>> On Apr 28, 2015, at 11:16 , Ricardo Ribalda Delgado <ricardo.ribal=
-da-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>>
->>>> Hello
->>>>
->>>> I have an X86 platform with device tree support. It has multiple p=
-ci
->>>> slots with a custom board that is described with a device tree.
->>>>
->>>> When the pci device is probed, the driver fetches a device tree fr=
-om
->>>> the firmware infrastructure, patches the range property based on t=
-he
->>>> bar address and adds the device to the main device tree.
->>>>
->>>> This works perfectly fine with only one card, but when the second =
-card
->>>> is connected: Here be dragons :)
->>>>
->>>> The main issue is that of_find_node_by_phandle always resolves to =
-the
->>>> first connected card. I fixed this by creating a new function.
->>>> of_find_node_by_phandle_family() that chooses the closest phandle =
-on
->>>> the tree, not just the first one.
->>>>
->>>> By reading the "Dynamic Symbols support and fixup support"
->>>> here:
->>>> http://events.linuxfoundation.org/sites/events/files/slides/dynami=
-c-dt-elce14.pdf
->>>> and here
->>>> https://lwn.net/Articles/616859/
->>>>
->>>> It seemed that the patch would fix my issue and it would be alread=
-y
->>>> merged, but I cannot find the patch here
->>>> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git
->>>> or here
->>>> https://git.kernel.org/cgit/linux/kernel/git/jdl/dtc.git
->>>>
->>>> So I am wondering some stuff:
->>>>
->>>> Would a patch adding my of_find_node_by_phandle_family() would be =
-accepted.?
->>>>
->>>> Will Dynamic symbols fix my issue?
->>>>
->>>> What is the status of Dynamic symbol support?
->>>>
->>>> Thanks!
->>>>
->>>>
->>>
->>> You=E2=80=99ll find it hard to believe but there=E2=80=99s someone =
-using something similar.
->>>
->>> I=E2=80=99m trying to figure out how to make it work; hang on to yo=
-ur horses. I=E2=80=99ll CC you
->>> when I post the patches.
->>>
->>>
->>>> --
->>>> Ricardo Ribalda
->>>
->>> Regards
->>>
->>> =E2=80=94 Pantelis
->>>
->>
->>
->>
->> --
->> Ricardo Ribalda
->
+:)
 
-
-
---=20
-Ricardo Ribalda
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
