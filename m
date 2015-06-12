@@ -1,34 +1,47 @@
-From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Subject: Re: [PATCH v3 1/3] dt-bindings: Document the STM32F4 clock bindings
-Date: Fri, 12 Jun 2015 09:25:58 +0200
-Message-ID: <CALszF6BBVW5yYNT1tNXtiGBFgOHvGRGG+W6N0NVgX6fT22T3_w@mail.gmail.com>
-References: <1432327273-6810-1-git-send-email-daniel.thompson@linaro.org>
-	<1433966978-24422-1-git-send-email-daniel.thompson@linaro.org>
-	<1433966978-24422-2-git-send-email-daniel.thompson@linaro.org>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v3 1/2] drm/bridge: dw-hdmi: support optional supply
+ regulators
+Date: Fri, 12 Jun 2015 09:27:07 +0200
+Message-ID: <4099644.agHN3RgGum@diego>
+References: <4184159.j0iXe39dFB@phil> <3551826.dyCjorKhLA@diego>
+ <20150609233618.GK7557@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1433966978-24422-2-git-send-email-daniel.thompson@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Thompson <daniel.thompson@linaro.org>
-Cc: Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kamil Lulko <rev13@wp.pl>, Andreas Farber <afaerber@suse.de>, linux-clk@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, patches@linaro.org, linaro-kernel@lists.linaro.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20150609233618.GK7557@n2100.arm.linux.org.uk>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, dianders@chromium.org, linux-rockchip@lists.infradead.org, dri-devel@lists.freedesktop.org, Yakir Yang <ykk@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Daniel,
-
-2015-06-10 22:09 GMT+02:00 Daniel Thompson <daniel.thompson@linaro.org>:
-> This adds documentation of device tree bindings for the clock related
-> portions of the STM32 RCC block.
->
-> Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
-> ---
->  .../devicetree/bindings/clock/st,stm32-rcc.txt     | 65 ++++++++++++++++++++++
->  1 file changed, 65 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/st,stm32-rcc.txt
->
-
-You can add:
-Acked-by: Maxime Coquelin <maxime.coquelin@st.com>
-
-Thanks!
-Maxime
+QW0gTWl0dHdvY2gsIDEwLiBKdW5pIDIwMTUsIDAwOjM2OjE4IHNjaHJpZWIgUnVzc2VsbCBLaW5n
+IC0gQVJNIExpbnV4Ogo+IE9uIFdlZCwgSnVuIDEwLCAyMDE1IGF0IDAxOjI5OjQzQU0gKzAyMDAs
+IEhlaWtvIFN0w7xibmVyIHdyb3RlOgo+ID4gQWxsdGhvdWdoIGZyb20gdGhlIGRpc2N1c3Npb24g
+YW5kIGV4cGxhbmF0aW9ucyBJJ3ZlIG5vdyBhbHNvIGdvdCB0aGUKPiA+ICJkb24ndAo+ID4gbWFr
+ZSBpdCB3b3JzZSIgZmVlbGluZywgc28gYW0gc29tZWhvdyByZWx1Y3RhbnQgdG8gYWRkIHN1cHBs
+aWVzIHRoYXQgYWxzbwo+ID4gbWlnaHQgZGVzY3JpYmUgdGhpcyBpbmFkZXF1YXRlbHkuCj4gPiAK
+PiA+IFRoZSBSb2NrY2hpcC1zcGVjaWZpYyBkb2N1bWVudGF0aW9uIG9ubHkgbGlzdHMgdGhlIHR3
+byBzdXBwbGllcyBhcwo+ID4gQVZERF8xVjAsIEFWRERfMVY4IHdpdGggYSBkZXNjcmlwdGlvbiBv
+ZiAiREMgc3VwcGx5IHZvbHRhZ2UgZm9yIEFuYWxvZwo+ID4gcGFydCBvZiBIRE1JIi4gVGhlIHN1
+cHBsaWVzIGFyZW4ndCBtZW50aW9uZWQgb3RoZXJ3aXNlIGF0IGFsbCwgc28gSSBndWVzcwo+ID4g
+SSdsbCBwb25kZXIgdGhpcyBhIGJpdCBtb3JlIGF0IGZpcnN0Lgo+IAo+IEFyZSB0aGV5IGNvbnRy
+b2xsYWJsZSBmcm9tIHNvZnR3YXJlIGF0IGFsbD8gIElmIHRoZXkgYXJlbid0LCB0aGVuCj4gSSdk
+IHN1Z2dlc3QgbGVhdmluZyB0aGVtIG91dCB1bnRpbCB3ZSBoYXZlIGEgZGlzdGluY3Rpb24gYmV0
+d2Vlbgo+IHRoZSBUeCBhbmQgUGh5IC0gbXVjaCBhcyB3ZSBkbyBmb3IgaU1YNi4KCnRoZXkgYXJl
+IHN1cHBsaWVkIGJ5IHRoZSBwbWljIHRoZSBzeXN0ZW0gdXNlcyAobmFtZWQgdmRkMTBfbGNkIGFu
+ZCB2ZGQxOF9sY2QgCmluIHRoZSBzb2MgbWFudWFscy9zY2hlbWF0aWNzKSAgYW5kIHN1cHBseSB0
+aGUgaW5kaXZpZHVhbCBvdXRwdXQgZW5jb2RlciAKYW5hbG9nIHBhcnRzIChoZG1pLCBlZHAsIGx2
+ZHMsIGV0YykuICBTbyBpZiB0aGVyZSBpcyBubyBvdXRwdXQgYXQgYWxsLCB0aGV5IApzaG91bGQg
+YmUgYWJsZSB0byBiZSB0dXJuZWQgb2ZmLgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5m
+cmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2RyaS1kZXZlbAo=
