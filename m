@@ -1,131 +1,115 @@
-From: Dudley Du <dudl@cypress.com>
-Subject: [PATCH 6/7] input: cyapa: add of match device support and description document
-Date: Fri, 12 Jun 2015 14:56:37 +0800
-Message-ID: <1434092198-13018-7-git-send-email-dudl@cypress.com>
-References: <1434092198-13018-1-git-send-email-dudl@cypress.com>
-Mime-Version: 1.0
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1434092198-13018-1-git-send-email-dudl@cypress.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dmitry.torokhov@gmail.com, mark.rutland@arm.com, robh+dt@kernel.org, rydberg@euromail.se
-Cc: Dudley Du <dudl@cypress.com>, bleung@google.com, jmmahler@gmail.com, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [RESEND PATCH v4 12/14] crypto: marvell/CESA: add support for Orion SoCs
+Date: Fri, 12 Jun 2015 09:16:04 +0200
+Message-ID: <1434093366-14681-13-git-send-email-boris.brezillon@free-electrons.com>
+References: <1434093366-14681-1-git-send-email-boris.brezillon@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1434093366-14681-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add of_match_device machanism support for Cypress trackpad device, and
-add the sample description document of adding the trackpad device node in DT.
-TEST=test on Chromebook.
+Add the Orion SoC description, and select this implementation by default
+to support non-DT probing: Orion is the only platform where non-DT boards
+are declaring the CESA block.
 
-Signed-off-by: Dudley Du <dudl@cypress.com>
+Control the allhwsupport module parameter to avoid probing the CESA IP when
+the old CESA driver is enabled (unless it is explicitly requested to do
+so).
+
+Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- .../devicetree/bindings/input/cypress,cyapa.txt    | 44 ++++++++++++++++++++++
- .../devicetree/bindings/vendor-prefixes.txt        |  1 +
- drivers/input/mouse/cyapa.c                        | 10 +++++
- 3 files changed, 55 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/cypress,cyapa.txt
+ drivers/crypto/marvell/cesa.c | 42 +++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 35 insertions(+), 7 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/input/cypress,cyapa.txt b/Documentation/devicetree/bindings/input/cypress,cyapa.txt
-new file mode 100644
-index 0000000..9be2b44
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/cypress,cyapa.txt
-@@ -0,0 +1,44 @@
-+Cypress I2C Touchpad
-+
-+Required properties:
-+- compatible: must be "cypress,cyapa".
-+- reg: I2C address of the chip.
-+- interrupt-parent: a phandle for the interrupt controller (see interrupt
-+  binding[0]).
-+- interrupts: interrupt to which the chip is connected (see interrupt
-+  binding[0]).
-+
-+Optional properties:
-+- wakeup-source: touchpad can be used as a wakeup source.
-+- pinctrl-names: should be "default" (see pinctrl binding [1]).
-+- pinctrl-0: a phandle pointing to the pin settings for the device (see
-+  pinctrl binding [1]).
-+- vcc-supply: a phandle for the regulator supplying 3.3V power.
-+
-+[0]: Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-+[1]: Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-+
-+Example:
-+	&i2c0 {
-+		/* ... */
-+
-+		/* Cypress Gen3 touchpad */
-+		touchpad@67 {
-+			compatible = "cypress,cyapa";
-+			reg = <0x24>;
-+			interrupt-parent = <&gpio>;
-+			interrupts = <2 IRQ_TYPE_EDGE_FALLING>;	/* GPIO 2 */
-+			wakeup-source;
-+		};
-+
-+		/* Cypress Gen5 and later touchpad */
-+		touchpad@24 {
-+			compatible = "cypress,cyapa";
-+			reg = <0x24>;
-+			interrupt-parent = <&gpio>;
-+			interrupts = <2 IRQ_TYPE_EDGE_FALLING>;	/* GPIO 2 */
-+			wakeup-source;
-+		};
-+
-+		/* ... */
-+	};
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 728cd0e..4813437 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -48,6 +48,7 @@ cnxt	Conexant Systems, Inc.
- cortina	Cortina Systems, Inc.
- cosmic	Cosmic Circuits
- crystalfontz	Crystalfontz America, Inc.
-+cypress	Cypress Semiconductor Corporation
- dallas	Maxim Integrated Products (formerly Dallas Semiconductor)
- davicom	DAVICOM Semiconductor, Inc.
- denx	Denx Software Engineering
-diff --git a/drivers/input/mouse/cyapa.c b/drivers/input/mouse/cyapa.c
-index 86f2263..7e7613f 100644
---- a/drivers/input/mouse/cyapa.c
-+++ b/drivers/input/mouse/cyapa.c
-@@ -25,6 +25,7 @@
- #include <linux/uaccess.h>
- #include <linux/pm_runtime.h>
- #include <linux/acpi.h>
-+#include <linux/of.h>
- #include "cyapa.h"
+diff --git a/drivers/crypto/marvell/cesa.c b/drivers/crypto/marvell/cesa.c
+index c7e25a0..bd54973 100644
+--- a/drivers/crypto/marvell/cesa.c
++++ b/drivers/crypto/marvell/cesa.c
+@@ -168,6 +168,22 @@ static void mv_cesa_remove_algs(struct mv_cesa_dev *cesa)
+ 		crypto_unregister_alg(cesa->caps->cipher_algs[i]);
+ }
  
- 
-@@ -1562,12 +1563,21 @@ static const struct acpi_device_id cyapa_acpi_id[] = {
- MODULE_DEVICE_TABLE(acpi, cyapa_acpi_id);
- #endif
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id cyapa_of_match[] = {
-+	{ .compatible = "cypress,cyapa" },
-+	{ /* sentinel */ }
++static struct crypto_alg *orion_cipher_algs[] = {
++	&mv_cesa_ecb_des_alg,
++	&mv_cesa_cbc_des_alg,
++	&mv_cesa_ecb_des3_ede_alg,
++	&mv_cesa_cbc_des3_ede_alg,
++	&mv_cesa_ecb_aes_alg,
++	&mv_cesa_cbc_aes_alg,
 +};
-+MODULE_DEVICE_TABLE(of, cyapa_of_match);
-+#endif
 +
- static struct i2c_driver cyapa_driver = {
- 	.driver = {
- 		.name = "cyapa",
- 		.owner = THIS_MODULE,
- 		.pm = &cyapa_pm_ops,
- 		.acpi_match_table = ACPI_PTR(cyapa_acpi_id),
-+		.of_match_table = of_match_ptr(cyapa_of_match),
- 	},
++static struct ahash_alg *orion_ahash_algs[] = {
++	&mv_md5_alg,
++	&mv_sha1_alg,
++	&mv_ahmac_md5_alg,
++	&mv_ahmac_sha1_alg,
++};
++
+ static struct crypto_alg *armada_370_cipher_algs[] = {
+ 	&mv_cesa_ecb_des_alg,
+ 	&mv_cesa_cbc_des_alg,
+@@ -186,6 +202,15 @@ static struct ahash_alg *armada_370_ahash_algs[] = {
+ 	&mv_ahmac_sha256_alg,
+ };
  
- 	.probe = cyapa_probe,
++static const struct mv_cesa_caps orion_caps = {
++	.nengines = 1,
++	.cipher_algs = orion_cipher_algs,
++	.ncipher_algs = ARRAY_SIZE(orion_cipher_algs),
++	.ahash_algs = orion_ahash_algs,
++	.nahash_algs = ARRAY_SIZE(orion_ahash_algs),
++	.has_tdma = false,
++};
++
+ static const struct mv_cesa_caps armada_370_caps = {
+ 	.nengines = 1,
+ 	.cipher_algs = armada_370_cipher_algs,
+@@ -205,6 +230,7 @@ static const struct mv_cesa_caps armada_xp_caps = {
+ };
+ 
+ static const struct of_device_id mv_cesa_of_match_table[] = {
++	{ .compatible = "marvell,orion-crypto", .data = &orion_caps },
+ 	{ .compatible = "marvell,armada-370-crypto", .data = &armada_370_caps },
+ 	{ .compatible = "marvell,armada-xp-crypto", .data = &armada_xp_caps },
+ 	{ .compatible = "marvell,armada-375-crypto", .data = &armada_xp_caps },
+@@ -330,7 +356,7 @@ static void mv_cesa_put_sram(struct platform_device *pdev, int idx)
+ 
+ static int mv_cesa_probe(struct platform_device *pdev)
+ {
+-	const struct mv_cesa_caps *caps = NULL;
++	const struct mv_cesa_caps *caps = &orion_caps;
+ 	const struct mbus_dram_target_info *dram;
+ 	const struct of_device_id *match;
+ 	struct device *dev = &pdev->dev;
+@@ -345,14 +371,16 @@ static int mv_cesa_probe(struct platform_device *pdev)
+ 		return -EEXIST;
+ 	}
+ 
+-	if (!dev->of_node)
+-		return -ENOTSUPP;
++	if (dev->of_node) {
++		match = of_match_node(mv_cesa_of_match_table, dev->of_node);
++		if (!match || !match->data)
++			return -ENOTSUPP;
+ 
+-	match = of_match_node(mv_cesa_of_match_table, dev->of_node);
+-	if (!match || !match->data)
+-		return -ENOTSUPP;
++		caps = match->data;
++	}
+ 
+-	caps = match->data;
++	if (caps == &orion_caps && !allhwsupport)
++		return -ENOTSUPP;
+ 
+ 	cesa = devm_kzalloc(dev, sizeof(*cesa), GFP_KERNEL);
+ 	if (!cesa)
 -- 
 1.9.1
 
-
----------------------------------------------------------------
-This message and any attachments may contain Cypress (or its
-subsidiaries) confidential information. If it has been received
-in error, please advise the sender and immediately delete this
-message.
----------------------------------------------------------------
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
