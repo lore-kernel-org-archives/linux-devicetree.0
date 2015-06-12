@@ -1,124 +1,117 @@
-Return-Path: <sfr@canb.auug.org.au>
-Date: Thu, 25 Jun 2015 10:33:59 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [PATCH v7 00/14] crypto: add a new driver for Marvell's CESA
-Message-ID: <20150625103359.34d26955@canb.auug.org.au>
-In-Reply-To: <20150625000037.GK31584@windriver.com>
-References: <1434635190-27733-1-git-send-email-boris.brezillon@free-electrons.com>
-	<20150619142444.GA15234@gondor.apana.org.au>
-	<CAP=VYLqQynCNRTpm4JnOxeO6DH_739fO2QNcDMxaXqCKCHiTtQ@mail.gmail.com>
-	<CAP=VYLpSrTvXRovWo4G7AXWv1OKFQRpQR255hS5z+=h4+XOLhg@mail.gmail.com>
-	<20150621102418.2ea74910@bbrezillon>
-	<20150621082717.GA29128@gondor.apana.org.au>
-	<20150622092336.5949e258@bbrezillon>
-	<20150622075910.GA7659@gondor.apana.org.au>
-	<20150625000037.GK31584@windriver.com>
+Return-Path: <romain.perier@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/M8UwRpFYe0+s/MxyWtgfE5q"; protocol="application/pgp-signature"
-To: Paul Gortmaker <paul.gortmaker@windriver.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, Boris Brezillon <boris.brezillon@free-electrons.com>, "David S. Miller" <davem@davemloft.net>, linux-crypto@vger.kernel.org, Arnaud Ebalard <arno@natisbad.org>, Tawfik Bayouk <tawfik@marvell.com>, Lior Amsalem <alior@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Eran Ben-Avi <benavi@marvell.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, "linux-arm-kernel@lists.infradead.org\" " <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Imre Kaloz <kaloz@openwrt.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Andrew Morton <akpm@linux-foundation.org>
+In-Reply-To: <CAL_Jsq+ewJt0Qkqosioqp-KgPwku_h-9poOVjF8N6d7YJscpjA@mail.gmail.com>
+References: <19362183.0Io0nOHtsp@phil>
+	<CAL_Jsq+ewJt0Qkqosioqp-KgPwku_h-9poOVjF8N6d7YJscpjA@mail.gmail.com>
+Date: Fri, 12 Jun 2015 09:12:02 +0200
+Message-ID: <CABgxDo+SBh5MFzzJFpE4cBeHLF=9kEC=wwevuSbSffpor6tA6g@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: add vendor prefix for Netxeon Technology
+From: Romain Perier <romain.perier@gmail.com>
+Content-Type: multipart/alternative; boundary=001a11470832265dc105184cd30c
+To: Rob Herring <robherring2@gmail.com>
+Cc: Heiko Stuebner <heiko@sntech.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-rockchip@lists.infradead.org" <linux-rockchip@lists.infradead.org>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
 List-ID: <devicetree@vger.kernel.org>
 
---Sig_/M8UwRpFYe0+s/MxyWtgfE5q
-Content-Type: text/plain; charset=US-ASCII
+--001a11470832265dc105184cd30c
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paul,
+Reviewed-by: Romain Perier <romain.perier@gmail.com>
 
-On Wed, 24 Jun 2015 20:00:38 -0400 Paul Gortmaker <paul.gortmaker@windriver=
-.com> wrote:
+For the whole serie
+
+Le vendredi 12 juin 2015, Rob Herring <robherring2@gmail.com> a =C3=A9crit =
+:
+
+> On Tue, May 26, 2015 at 2:49 PM, Heiko Stuebner <heiko@sntech.de
+> <javascript:;>> wrote:
+> > Signed-off-by: Heiko Stuebner <heiko@sntech.de <javascript:;>>
+> > ---
+> >  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
 >
-> [Re: [PATCH v7 00/14] crypto: add a new driver for Marvell's CESA] On 22/=
-06/2015 (Mon 15:59) Herbert Xu wrote:
->=20
-> > On Mon, Jun 22, 2015 at 09:23:36AM +0200, Boris Brezillon wrote:
-> > > Hi Herbert,
-> > >=20
-> > > On Sun, 21 Jun 2015 16:27:17 +0800
-> > > Herbert Xu <herbert@gondor.apana.org.au> wrote:
-> > >=20
-> > > > On Sun, Jun 21, 2015 at 10:24:18AM +0200, Boris Brezillon wrote:
-> > > > >=20
-> > > > > Indeed. Here is a patch fixing that.
-> > > >=20
-> > > > I think you should just kill COMPILE_TEST instead of adding ARM.
-> > >=20
-> > > The following patch is killing the COMPILE_TEST dependency.
-> >=20
-> > Patch applied.
->=20
-> Just a heads up, this driver is still killing a couple of linux-next
-> builds today and for the past few days.
->=20
-> drivers/crypto/mv_cesa.c:1037:2: error: implicit declaration of function
-> 'of_get_named_gen_pool' [-Werror=3Dimplicit-function-declaration]
->=20
-> http://kisskb.ellerman.id.au/kisskb/buildresult/12448851/
-> http://kisskb.ellerman.id.au/kisskb/buildresult/12448776/
->=20
-> Missing dependency on CONFIG_OF_<blah> presumably.
+> Acked-by: Rob Herring <robh@kernel.org <javascript:;>>
+>
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> > index 8033919..1de2dfd 100644
+> > --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> > +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> > @@ -134,6 +134,7 @@ national    National Semiconductor
+> >  neonode                Neonode Inc.
+> >  netgear        NETGEAR
+> >  netlogic       Broadcom Corporation (formerly NetLogic Microsystems)
+> > +netxeon                Shenzhen Netxeon Technology CO., LTD
+> >  newhaven       Newhaven Display International
+> >  nintendo       Nintendo
+> >  nokia  Nokia
+> > --
+> > 2.1.4
+> >
+> >
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org <javascript:;>
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
 
-Actually this is caused by patch "genalloc: rename
-of_get_named_gen_pool() to of_gen_pool_get()" from Andrew's series.  I
-fixed one of the breakages, but clearly not all.
+--001a11470832265dc105184cd30c
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-I will add this patch to today's linux-next (Andrew, you will need
-this, obviously):
+<font size=3D"2"><span style=3D"background-color:rgba(255,255,255,0)">Revie=
+wed-by: Romain Perier=C2=A0&lt;<a href=3D"mailto:romain.perier@gmail.com">r=
+omain.perier@gmail.com</a>&gt;</span></font><div><font size=3D"2"><span sty=
+le><br></span></font></div><div><font size=3D"2"><span style>For the whole =
+serie<span></span><br></span></font><div><br>Le=C2=A0vendredi 12 juin 2015,=
+ Rob Herring &lt;<a href=3D"mailto:robherring2@gmail.com">robherring2@gmail=
+.com</a>&gt; a =C3=A9crit=C2=A0:<br><blockquote class=3D"gmail_quote" style=
+=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">On Tue, =
+May 26, 2015 at 2:49 PM, Heiko Stuebner &lt;<a href=3D"javascript:;" onclic=
+k=3D"_e(event, &#39;cvml&#39;, &#39;heiko@sntech.de&#39;)">heiko@sntech.de<=
+/a>&gt; wrote:<br>
+&gt; Signed-off-by: Heiko Stuebner &lt;<a href=3D"javascript:;" onclick=3D"=
+_e(event, &#39;cvml&#39;, &#39;heiko@sntech.de&#39;)">heiko@sntech.de</a>&g=
+t;<br>
+&gt; ---<br>
+&gt;=C2=A0 Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +<br>
+<br>
+Acked-by: Rob Herring &lt;<a href=3D"javascript:;" onclick=3D"_e(event, &#3=
+9;cvml&#39;, &#39;robh@kernel.org&#39;)">robh@kernel.org</a>&gt;<br>
+<br>
+&gt;=C2=A0 1 file changed, 1 insertion(+)<br>
+&gt;<br>
+&gt; diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/D=
+ocumentation/devicetree/bindings/vendor-prefixes.txt<br>
+&gt; index 8033919..1de2dfd 100644<br>
+&gt; --- a/Documentation/devicetree/bindings/vendor-prefixes.txt<br>
+&gt; +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt<br>
+&gt; @@ -134,6 +134,7 @@ national=C2=A0 =C2=A0 National Semiconductor<br>
+&gt;=C2=A0 neonode=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 N=
+eonode Inc.<br>
+&gt;=C2=A0 netgear=C2=A0 =C2=A0 =C2=A0 =C2=A0 NETGEAR<br>
+&gt;=C2=A0 netlogic=C2=A0 =C2=A0 =C2=A0 =C2=A0Broadcom Corporation (formerl=
+y NetLogic Microsystems)<br>
+&gt; +netxeon=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 Shenzh=
+en Netxeon Technology CO., LTD<br>
+&gt;=C2=A0 newhaven=C2=A0 =C2=A0 =C2=A0 =C2=A0Newhaven Display Internationa=
+l<br>
+&gt;=C2=A0 nintendo=C2=A0 =C2=A0 =C2=A0 =C2=A0Nintendo<br>
+&gt;=C2=A0 nokia=C2=A0 Nokia<br>
+&gt; --<br>
+&gt; 2.1.4<br>
+&gt;<br>
+&gt;<br>
+--<br>
+To unsubscribe from this list: send the line &quot;unsubscribe devicetree&q=
+uot; in<br>
+the body of a message to <a href=3D"javascript:;" onclick=3D"_e(event, &#39=
+;cvml&#39;, &#39;majordomo@vger.kernel.org&#39;)">majordomo@vger.kernel.org=
+</a><br>
+More majordomo info at=C2=A0 <a href=3D"http://vger.kernel.org/majordomo-in=
+fo.html" target=3D"_blank">http://vger.kernel.org/majordomo-info.html</a><b=
+r>
+</blockquote></div></div>
 
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Thu, 25 Jun 2015 10:31:33 +1000
-Subject: [PATCH] crypto: marvell/cesa - another fix up for of_get_named_gen=
-_pool() rename
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- drivers/crypto/mv_cesa.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/crypto/mv_cesa.c b/drivers/crypto/mv_cesa.c
-index 5bcd575fa96f..e6b658faef63 100644
---- a/drivers/crypto/mv_cesa.c
-+++ b/drivers/crypto/mv_cesa.c
-@@ -1034,8 +1034,8 @@ static int mv_cesa_get_sram(struct platform_device *p=
-dev,
- 			     &sram_size);
-=20
- 	cp->sram_size =3D sram_size;
--	cp->sram_pool =3D of_get_named_gen_pool(pdev->dev.of_node,
--					      "marvell,crypto-srams", 0);
-+	cp->sram_pool =3D of_gen_pool_get(pdev->dev.of_node,
-+					"marvell,crypto-srams", 0);
- 	if (cp->sram_pool) {
- 		cp->sram =3D gen_pool_dma_alloc(cp->sram_pool, sram_size,
- 					      &cp->sram_dma);
---=20
-2.1.4
-
---=20
-Cheers,
-Stephen Rothwell                    sfr@canb.auug.org.au
-
---Sig_/M8UwRpFYe0+s/MxyWtgfE5q
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJVi0x9AAoJEMDTa8Ir7ZwVgFYP+gPIFn4D7LlLG9SChItaAmek
-0He6RtWATowgK7/h/utmYiiGvw1mFz7GzINH4a/UG1/lx+lkcd5ARS4CbpzAUh2h
-YMzVAcVRKBBLMDeNZF4aj2MZ8x/h3M2iWTdieOlivjfwGUXMztMNq85CbGMT3dkX
-7t1s8BYsjmbCvMBegQ3miDPNSfASKZinqWaEOtpLw979zfGHiWuiRsuk2tQ+w0SC
-BOVg7Qpbwp7UBnR1pAzkTMdv+o0VnkwRs0D93lmj/Fv1PDP16lTbl5bJ7Mx4X948
-FhOXZn0B3uim71FjPswwgxFy8ZRSAoDnopDRVY5gntR9Hl8s+6owRoiJ36ZphahN
-cwCREcouXl2ivnl1IknMmPI/QPFJkBXDsoy8tY3Tqo4hlrN4Sc7vGDk6E8W3Hr1Q
-iwtAZ5MLXc18KejpQQGvKWYRpmrwGsc+0U/DPA+Xk4i7v4I5U1Mrsatb5yngkeTM
-NVJkH4DRHqSxpliLei1qqs/wRAAgjFgKZa+GEAEC2nz/z8D8WkzZrtPYdlQcItRp
-9vyUZrSkFWZoHfcWEm7/UmLpqJNxP0IPgQa6WpupFkE3k7eetBIA8RPtadDzO+Ii
-nsitikVotx+KrKz0o2TR+6iCfzO/wycPLCDGFP+fiS3m5vVyIrJC1x4cB5E/tJk6
-cBkf68H03ff5yFwLL1Pd
-=HaAb
------END PGP SIGNATURE-----
-
---Sig_/M8UwRpFYe0+s/MxyWtgfE5q--
+--001a11470832265dc105184cd30c--
