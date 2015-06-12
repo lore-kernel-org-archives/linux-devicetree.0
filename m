@@ -1,53 +1,46 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH 2/3] watchdog: bcm2835: Add poweroff code for the Raspberry
- Pi
-Date: Fri, 12 Jun 2015 05:18:15 -0700
-Message-ID: <557ACE07.3040104@roeck-us.net>
-References: <1433845305-17329-1-git-send-email-noralf@tronnes.org> <1433845305-17329-2-git-send-email-noralf@tronnes.org> <557AC203.6060600@lategoodbye.de>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 5/6] regulator: Add input current limit support
+Date: Fri, 12 Jun 2015 13:18:20 +0100
+Message-ID: <20150612121820.GW1921@sirena.org.uk>
+References: <1434069427-3642-1-git-send-email-sboyd@codeaurora.org>
+ <1434069427-3642-6-git-send-email-sboyd@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <557AC203.6060600-saaNCTdWVBT7BZbvpMY5sg@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <info-saaNCTdWVBT7BZbvpMY5sg@public.gmane.org>, =?UTF-8?B?Tm9yYWxmIFRyw7hubmVz?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="5UQzRzi9WojKXOfC"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1434069427-3642-6-git-send-email-sboyd@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, David Collins <collinsd@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/12/2015 04:26 AM, Stefan Wahren wrote:
-> Hi Noralf,
->
-> Am 09.06.2015 um 12:21 schrieb Noralf Tr=C3=B8nnes:
->> This adds a new poweroff function to the watchdog driver for the
->> Raspberry Pi. Currently poweroff/halt results in a reboot.
->>
->> [...]
->>
->> +static void rpi_power_off(void)
->> +{
->> +    struct device_node *np =3D
->> +        of_find_compatible_node(NULL, NULL, "brcm,raspberrypi-pm-wd=
-t");
->> +    struct platform_device *pdev =3D of_find_device_by_node(np);
->> +    struct bcm2835_wdt *wdt =3D platform_get_drvdata(pdev);
->> +    u32 val;
->> +
->> +    val =3D readl_relaxed(wdt->base + PM_RSTS);
->
-> do you think it's safe here to assume wdt could never be NULL?
->
 
-If the call is made, the driver must be instantiated. We can therefore =
-assume
-that neither np, pdev, nor wdt is NULL. If one of those is NULL, it wou=
-ld be
-a bug, which should not be ignored.
+--5UQzRzi9WojKXOfC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Guenter
+On Thu, Jun 11, 2015 at 05:37:06PM -0700, Stephen Boyd wrote:
+> Some regulators can limit their input current (typically annotated
+> as ilim). Add an op (set_input_current_limit) and a DT property +
+> constraint to support this.
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdo=
-g" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Applied, thanks.
+
+--5UQzRzi9WojKXOfC
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJVes4LAAoJECTWi3JdVIfQbHMH/1+MjbAO6MlG3yIvuS0qdn9b
+LvVyHkvxsBJWYLR7EzO3aul+My/6if/lwCphrIVfOXXvv/TTNWoZaiPjlH6Ldb24
+nTxxgbN2NYTNRsMcLPf5FvPgGsHH7zGOlcDAGoJqYsnkXypdwZhV/UuSRdHre+ZQ
+rOf6Dl1r+LiDXu4cQHP4lhc9ztJenez2u5a4kRIurWWTYC4B22A06w6yHdXUYzs5
+fTBuOy0YBGIIM+iirlDRwiPNdSFyv2jTKLJbwuvLmW3hgoFFl3Iwy+9hNJrh9JXO
+FbsgdvVpTfB4jflcPRrPyQyXuCMDxdWXZTRBM7mAlYLd2yPuvrTtIRQ64RhRTSI=
+=QOZc
+-----END PGP SIGNATURE-----
+
+--5UQzRzi9WojKXOfC--
