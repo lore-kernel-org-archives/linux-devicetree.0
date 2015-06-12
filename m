@@ -1,46 +1,38 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 5/6] regulator: Add input current limit support
-Date: Fri, 12 Jun 2015 13:18:20 +0100
-Message-ID: <20150612121820.GW1921@sirena.org.uk>
-References: <1434069427-3642-1-git-send-email-sboyd@codeaurora.org>
- <1434069427-3642-6-git-send-email-sboyd@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="5UQzRzi9WojKXOfC"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1434069427-3642-6-git-send-email-sboyd@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, David Collins <collinsd@codeaurora.org>, devicetree@vger.kernel.org
+From: Anda-Maria Nicolae <anda-maria.nicolae-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] power_supply: rt9455_charger: Fix error reported by static analysis tool
+Date: Fri, 12 Jun 2015 15:25:51 +0300
+Message-ID: <1434111951-9378-1-git-send-email-anda-maria.nicolae@intel.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+The result of container_of macro cannot be NULL, so there is no need to
+check whether info is NULL.
 
---5UQzRzi9WojKXOfC
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Anda-Maria Nicolae <anda-maria.nicolae-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+---
+ drivers/power/rt9455_charger.c |    3 ---
+ 1 file changed, 3 deletions(-)
 
-On Thu, Jun 11, 2015 at 05:37:06PM -0700, Stephen Boyd wrote:
-> Some regulators can limit their input current (typically annotated
-> as ilim). Add an op (set_input_current_limit) and a DT property +
-> constraint to support this.
+diff --git a/drivers/power/rt9455_charger.c b/drivers/power/rt9455_charger.c
+index de86913..08baac6 100644
+--- a/drivers/power/rt9455_charger.c
++++ b/drivers/power/rt9455_charger.c
+@@ -1412,9 +1412,6 @@ static int rt9455_usb_event(struct notifier_block *nb,
+ 	unsigned int opa_mode, iaicr;
+ 	int ret;
+ 
+-	if (!info)
+-		return NOTIFY_DONE;
+-
+ 	/*
+ 	 * Determine whether the charger is in charge mode
+ 	 * or in boost mode.
+-- 
+1.7.9.5
 
-Applied, thanks.
-
---5UQzRzi9WojKXOfC
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVes4LAAoJECTWi3JdVIfQbHMH/1+MjbAO6MlG3yIvuS0qdn9b
-LvVyHkvxsBJWYLR7EzO3aul+My/6if/lwCphrIVfOXXvv/TTNWoZaiPjlH6Ldb24
-nTxxgbN2NYTNRsMcLPf5FvPgGsHH7zGOlcDAGoJqYsnkXypdwZhV/UuSRdHre+ZQ
-rOf6Dl1r+LiDXu4cQHP4lhc9ztJenez2u5a4kRIurWWTYC4B22A06w6yHdXUYzs5
-fTBuOy0YBGIIM+iirlDRwiPNdSFyv2jTKLJbwuvLmW3hgoFFl3Iwy+9hNJrh9JXO
-FbsgdvVpTfB4jflcPRrPyQyXuCMDxdWXZTRBM7mAlYLd2yPuvrTtIRQ64RhRTSI=
-=QOZc
------END PGP SIGNATURE-----
-
---5UQzRzi9WojKXOfC--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
