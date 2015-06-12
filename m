@@ -1,83 +1,46 @@
-From: Hyungwon Hwang <human.hwang@samsung.com>
-Subject: [PATCH v6 06/15] of: add helper for getting endpoint node of specific
- identifiers
-Date: Fri, 12 Jun 2015 21:59:01 +0900
-Message-ID: <1434113958-15877-7-git-send-email-human.hwang@samsung.com>
+From: Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v6 15/15] ARM: dts: rename the clock of MIPI DSI 'pll_clk' to
+ 'sclk_mipi'
+Date: Fri, 12 Jun 2015 21:59:10 +0900
+Message-ID: <1434113958-15877-16-git-send-email-human.hwang@samsung.com>
 References: <1434113958-15877-1-git-send-email-human.hwang@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <1434113958-15877-1-git-send-email-human.hwang@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: sw0312.kim@samsung.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1434113958-15877-1-git-send-email-human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, daniel-rLtY4a/8tF1rovVCs/uTlw@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-V2hlbiB0aGVyZSBhcmUgbXVsdGlwbGUgcG9ydHMgb3IgbXVsdGlwbGUgZW5kcG9pbnRzIGluIGEg
-cG9ydCwgdGhleSBoYXZlIHRvIGJlCmRpc3Rpbmd1aXNoZWQgYnkgdGhlIHZhbHVlIG9mIHJlZyBw
-cm9wZXJ0eS4gSXQgaXMgY29tbW9uLiBUaGUgZHJpdmVycyBjYW4gZ2V0CnRoZSBzcGVjaWZpYyBl
-bmRwb2ludCBpbiB0aGUgc3BlY2lmaWMgcG9ydCB2aWEgdGhpcyBmdW5jdGlvbi4gTm93IHRoZSBk
-cml2ZXJzCmhhdmUgdG8gaW1wbGVtZW50IHRoaXMgY29kZSBpbiB0aGVtc2VsdmVzIG9yIGhhdmUg
-dG8gZm9yY2UgdGhlIG9yZGVyIG9mIGR0IG5vZGVzCnRvIGdldCB0aGUgcmlnaHQgbm9kZS4KClNp
-Z25lZC1vZmYtYnk6IEh5dW5nd29uIEh3YW5nIDxodW1hbi5od2FuZ0BzYW1zdW5nLmNvbT4KQWNr
-ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+Ci0tLQpDaGFuZ2VzIGJlZm9y
-ZToKLSBSZWZlciBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzYxOTE3NTEvCkNo
-YW5nZXMgZm9yIHY2OgotIE5vbmUKIGRyaXZlcnMvb2YvYmFzZS5jICAgICAgICB8IDMzICsrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKwogaW5jbHVkZS9saW51eC9vZl9ncmFwaC5oIHwg
-IDggKysrKysrKysKIDIgZmlsZXMgY2hhbmdlZCwgNDEgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdp
-dCBhL2RyaXZlcnMvb2YvYmFzZS5jIGIvZHJpdmVycy9vZi9iYXNlLmMKaW5kZXggOTk3NjRkYi4u
-ZjNiNTgzYiAxMDA2NDQKLS0tIGEvZHJpdmVycy9vZi9iYXNlLmMKKysrIGIvZHJpdmVycy9vZi9i
-YXNlLmMKQEAgLTIyMzMsNiArMjIzMywzOSBAQCBzdHJ1Y3QgZGV2aWNlX25vZGUgKm9mX2dyYXBo
-X2dldF9uZXh0X2VuZHBvaW50KGNvbnN0IHN0cnVjdCBkZXZpY2Vfbm9kZSAqcGFyZW50LAogRVhQ
-T1JUX1NZTUJPTChvZl9ncmFwaF9nZXRfbmV4dF9lbmRwb2ludCk7CgogLyoqCisgKiBvZl9ncmFw
-aF9nZXRfZW5kcG9pbnRfYnlfcmVncygpIC0gZ2V0IGVuZHBvaW50IG5vZGUgb2Ygc3BlY2lmaWMg
-aWRlbnRpZmllcnMKKyAqIEBwYXJlbnQ6IHBvaW50ZXIgdG8gdGhlIHBhcmVudCBkZXZpY2Ugbm9k
-ZQorICogQHBvcnRfcmVnOiBpZGVudGlmaWVyICh2YWx1ZSBvZiByZWcgcHJvcGVydHkpIG9mIHRo
-ZSBwYXJlbnQgcG9ydCBub2RlCisgKiBAcmVnOiBpZGVudGlmaWVyICh2YWx1ZSBvZiByZWcgcHJv
-cGVydHkpIG9mIHRoZSBlbmRwb2ludCBub2RlCisgKgorICogUmV0dXJuOiBBbiAnZW5kcG9pbnQn
-IG5vZGUgcG9pbnRlciB3aGljaCBpcyBpZGVudGlmaWVkIGJ5IHJlZyBhbmQgYXQgdGhlIHNhbWUK
-KyAqIGlzIHRoZSBjaGlsZCBvZiBhIHBvcnQgbm9kZSBpZGVudGlmaWVkIGJ5IHBvcnRfcmVnLiBy
-ZWcgYW5kIHBvcnRfcmVnIGFyZQorICogaWdub3JlZCB3aGVuIHRoZXkgYXJlIC0xLgorICovCitz
-dHJ1Y3QgZGV2aWNlX25vZGUgKm9mX2dyYXBoX2dldF9lbmRwb2ludF9ieV9yZWdzKAorCWNvbnN0
-IHN0cnVjdCBkZXZpY2Vfbm9kZSAqcGFyZW50LCBpbnQgcG9ydF9yZWcsIGludCByZWcpCit7CisJ
-c3RydWN0IG9mX2VuZHBvaW50IGVuZHBvaW50OworCXN0cnVjdCBkZXZpY2Vfbm9kZSAqbm9kZSwg
-KnByZXZfbm9kZSA9IE5VTEw7CisKKwl3aGlsZSAoMSkgeworCQlub2RlID0gb2ZfZ3JhcGhfZ2V0
-X25leHRfZW5kcG9pbnQocGFyZW50LCBwcmV2X25vZGUpOworCQlvZl9ub2RlX3B1dChwcmV2X25v
-ZGUpOworCQlpZiAoIW5vZGUpCisJCQlicmVhazsKKworCQlvZl9ncmFwaF9wYXJzZV9lbmRwb2lu
-dChub2RlLCAmZW5kcG9pbnQpOworCQlpZiAoKChwb3J0X3JlZyA9PSAtMSkgfHwgKGVuZHBvaW50
-LnBvcnQgPT0gcG9ydF9yZWcpKSAmJgorCQkJKChyZWcgPT0gLTEpIHx8IChlbmRwb2ludC5pZCA9
-PSByZWcpKSkKKwkJCXJldHVybiBub2RlOworCisJCXByZXZfbm9kZSA9IG5vZGU7CisJfQorCisJ
-cmV0dXJuIE5VTEw7Cit9CisKKy8qKgogICogb2ZfZ3JhcGhfZ2V0X3JlbW90ZV9wb3J0X3BhcmVu
-dCgpIC0gZ2V0IHJlbW90ZSBwb3J0J3MgcGFyZW50IG5vZGUKICAqIEBub2RlOiBwb2ludGVyIHRv
-IGEgbG9jYWwgZW5kcG9pbnQgZGV2aWNlX25vZGUKICAqCmRpZmYgLS1naXQgYS9pbmNsdWRlL2xp
-bnV4L29mX2dyYXBoLmggYi9pbmNsdWRlL2xpbnV4L29mX2dyYXBoLmgKaW5kZXggN2JjOTJlMC4u
-MWMxZDViOSAxMDA2NDQKLS0tIGEvaW5jbHVkZS9saW51eC9vZl9ncmFwaC5oCisrKyBiL2luY2x1
-ZGUvbGludXgvb2ZfZ3JhcGguaApAQCAtNDUsNiArNDUsOCBAQCBpbnQgb2ZfZ3JhcGhfcGFyc2Vf
-ZW5kcG9pbnQoY29uc3Qgc3RydWN0IGRldmljZV9ub2RlICpub2RlLAogc3RydWN0IGRldmljZV9u
-b2RlICpvZl9ncmFwaF9nZXRfcG9ydF9ieV9pZChzdHJ1Y3QgZGV2aWNlX25vZGUgKm5vZGUsIHUz
-MiBpZCk7CiBzdHJ1Y3QgZGV2aWNlX25vZGUgKm9mX2dyYXBoX2dldF9uZXh0X2VuZHBvaW50KGNv
-bnN0IHN0cnVjdCBkZXZpY2Vfbm9kZSAqcGFyZW50LAogCQkJCQlzdHJ1Y3QgZGV2aWNlX25vZGUg
-KnByZXZpb3VzKTsKK3N0cnVjdCBkZXZpY2Vfbm9kZSAqb2ZfZ3JhcGhfZ2V0X2VuZHBvaW50X2J5
-X3JlZ3MoCisJCWNvbnN0IHN0cnVjdCBkZXZpY2Vfbm9kZSAqcGFyZW50LCBpbnQgcG9ydF9yZWcs
-IGludCByZWcpOwogc3RydWN0IGRldmljZV9ub2RlICpvZl9ncmFwaF9nZXRfcmVtb3RlX3BvcnRf
-cGFyZW50KAogCQkJCQljb25zdCBzdHJ1Y3QgZGV2aWNlX25vZGUgKm5vZGUpOwogc3RydWN0IGRl
-dmljZV9ub2RlICpvZl9ncmFwaF9nZXRfcmVtb3RlX3BvcnQoY29uc3Qgc3RydWN0IGRldmljZV9u
-b2RlICpub2RlKTsKQEAgLTY5LDYgKzcxLDEyIEBAIHN0YXRpYyBpbmxpbmUgc3RydWN0IGRldmlj
-ZV9ub2RlICpvZl9ncmFwaF9nZXRfbmV4dF9lbmRwb2ludCgKIAlyZXR1cm4gTlVMTDsKIH0KCitz
-dHJ1Y3QgZGV2aWNlX25vZGUgKm9mX2dyYXBoX2dldF9lbmRwb2ludF9ieV9yZWdzKAorCQljb25z
-dCBzdHJ1Y3QgZGV2aWNlX25vZGUgKnBhcmVudCwgaW50IHBvcnRfcmVnLCBpbnQgcmVnKQorewor
-CXJldHVybiBOVUxMOworfQorCiBzdGF0aWMgaW5saW5lIHN0cnVjdCBkZXZpY2Vfbm9kZSAqb2Zf
-Z3JhcGhfZ2V0X3JlbW90ZV9wb3J0X3BhcmVudCgKIAkJCQkJY29uc3Qgc3RydWN0IGRldmljZV9u
-b2RlICpub2RlKQogewotLQoxLjkuMQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9kcmktZGV2ZWwK
+The clock which was named as 'pll_clk' is actually not the clock source
+of PLL in MIPI DSI. This patch fixes this disagreement.
+
+Signed-off-by: Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+---
+Changes before:
+- Refer https://patchwork.kernel.org/patch/6191811
+Changes for v6:
+- None
+
+ arch/arm/boot/dts/exynos4.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
+index e20cdc2..1538d7a 100644
+--- a/arch/arm/boot/dts/exynos4.dtsi
++++ b/arch/arm/boot/dts/exynos4.dtsi
+@@ -167,7 +167,7 @@
+ 		phys = <&mipi_phy 1>;
+ 		phy-names = "dsim";
+ 		clocks = <&clock CLK_DSIM0>, <&clock CLK_SCLK_MIPI0>;
+-		clock-names = "bus_clk", "pll_clk";
++		clock-names = "bus_clk", "sclk_mipi";
+ 		status = "disabled";
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+--
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
