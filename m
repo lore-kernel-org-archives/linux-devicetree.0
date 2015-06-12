@@ -1,7 +1,7 @@
 From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: [PATCH 4/8] of: overlay: Introduce target root capability.
-Date: Fri, 12 Jun 2015 22:55:01 +0300
-Message-ID: <1434138905-15886-5-git-send-email-pantelis.antoniou@konsulko.com>
+Subject: [PATCH 2/8] of: unittest: Add indirect overlay target test
+Date: Fri, 12 Jun 2015 22:54:59 +0300
+Message-ID: <1434138905-15886-3-git-send-email-pantelis.antoniou@konsulko.com>
 References: <1434138905-15886-1-git-send-email-pantelis.antoniou@konsulko.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1434138905-15886-1-git-send-email-pantelis.antoniou@konsulko.com>
@@ -10,224 +10,146 @@ To: Rob Herring <robherring2@gmail.com>
 Cc: Grant Likely <grant.likely@secretlab.ca>, Matt Porter <mporter@konsulko.com>, Koen Kooi <koen@dominion.thruhere.net>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>
 List-Id: devicetree@vger.kernel.org
 
-The target facility of an overlay allows the target to be any point
-in the live kernel tree, since it usually that's required when
-creating overlays for internal SoC devices. The target ends up
-to be a single node in the tree.
-
-However when we're dealing with probeable busses this is a problem
-since the target node differs according to the bus the plugged
-device lies.
-
-Using an overlay creating method using a target root node allows
-us to use a single overlay for those cases.
+Add a unittest for the indirect overlay target case.
 
 Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
 ---
- drivers/of/overlay.c | 101 +++++++++++++++++++++++++++++++++++++++++++++++----
- include/linux/of.h   |   8 ++++
- 2 files changed, 102 insertions(+), 7 deletions(-)
+ drivers/of/unittest-data/testcases.dts      |  9 +++++
+ drivers/of/unittest-data/tests-overlay.dtsi | 19 ++++++++++
+ drivers/of/unittest.c                       | 59 +++++++++++++++++++++++++++++
+ 3 files changed, 87 insertions(+)
 
-diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-index 80aab6f..f9b55d1 100644
---- a/drivers/of/overlay.c
-+++ b/drivers/of/overlay.c
-@@ -55,6 +55,7 @@ struct of_overlay {
- 	struct of_changeset cset;
- 	struct kobject kobj;
- 	char *indirect_id;
-+	struct device_node *target_root;
+diff --git a/drivers/of/unittest-data/testcases.dts b/drivers/of/unittest-data/testcases.dts
+index 12f7c3d..ec17ab7 100644
+--- a/drivers/of/unittest-data/testcases.dts
++++ b/drivers/of/unittest-data/testcases.dts
+@@ -75,5 +75,14 @@
+ 				target = <0x00000000>;
+ 			};
+ 		};
++		overlay16 {
++			fragment@0 {
++				target-indirect {
++					unittest16 {
++						target = <0x00000000>;
++					};
++				};
++			};
++		};
+ 	};
+ }; };
+diff --git a/drivers/of/unittest-data/tests-overlay.dtsi b/drivers/of/unittest-data/tests-overlay.dtsi
+index 02ba56c..881d863 100644
+--- a/drivers/of/unittest-data/tests-overlay.dtsi
++++ b/drivers/of/unittest-data/tests-overlay.dtsi
+@@ -110,6 +110,12 @@
+ 						};
+ 					};
+ 				};
++
++				unittest16: test-unittest16 {
++					compatible = "unittest";
++					status = "disabled";
++					reg = <16>;
++				};
+ 			};
+ 		};
+ 
+@@ -325,5 +331,18 @@
+ 			};
+ 		};
+ 
++		/* test enable using indirect functionality */
++		overlay16 {
++			fragment@0 {
++				target-indirect {
++					unittest16 {
++						target = <&unittest16>;
++					};
++				};
++				__overlay__ {
++					status = "okay";
++				};
++			};
++		};
+ 	};
  };
+diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+index 0a27b38..ee1a3bb 100644
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -1858,6 +1858,63 @@ static inline void of_unittest_overlay_i2c_15(void) { }
  
- /* master enable switch; once set to 0 can't be re-enabled */
-@@ -195,21 +196,84 @@ static int of_overlay_apply(struct of_overlay *ov)
- static struct device_node *find_target_node_direct(struct of_overlay *ov,
- 		struct device_node *info_node)
- {
-+	struct device_node *target = NULL, *np;
- 	const char *path;
-+	char *newpath;
- 	u32 val;
- 	int ret;
- 
- 	/* first try to go by using the target as a phandle */
- 	ret = of_property_read_u32(info_node, "target", &val);
--	if (ret == 0)
--		return of_find_node_by_phandle(val);
-+	if (ret == 0) {
-+		target = of_find_node_by_phandle(val);
-+		if (!target) {
-+			pr_err("%s: Could not find target phandle 0x%x\n",
-+					__func__, val);
-+			return NULL;
-+		}
-+		goto check_root;
-+	}
- 
- 	/* failed, try to locate by path */
- 	ret = of_property_read_string(info_node, "target-path", &path);
--	if (ret == 0)
--		return of_find_node_by_path(path);
-+	if (ret == 0) {
-+
-+		if (!ov->target_root) {
-+			target = of_find_node_by_path(path);
-+			if (!target)
-+				pr_err("%s: Could not find target path \"%s\"\n",
-+						__func__, path);
-+			return target;
-+		}
-+
-+		/* remove preceding '/' from path; relative path */
-+		if (*path == '/') {
-+			while (*path == '/')
-+				path++;
-+
-+			newpath = kasprintf(GFP_KERNEL, "%s%s%s",
-+					of_node_full_name(ov->target_root),
-+					*path ? "/" : "", path);
-+			if (!newpath) {
-+				pr_err("%s: Could not allocate \"%s%s%s\"\n",
-+					__func__,
-+					of_node_full_name(ov->target_root),
-+					*path ? "/" : "", path);
-+				return NULL;
-+			}
-+			target = of_find_node_by_path(newpath);
-+			kfree(newpath);
-+
-+			return target;
-+
-+		}
-+		/* target is an alias, need to check */
-+		target = of_find_node_by_path(path);
-+		if (!target) {
-+			pr_err("%s: Could not find alias \"%s\"\n",
-+					__func__, path);
-+			return NULL;
-+		}
-+		goto check_root;
-+	}
- 
- 	return NULL;
-+
-+check_root:
-+	if (!ov->target_root)
-+		return target;
-+
-+	/* got a target, but we have to check it's under target root */
-+	for (np = target; np; np = np->parent) {
-+		if (np == ov->target_root)
-+			return target;
-+	}
-+	pr_err("%s: target \"%s\" not under target_root \"%s\"\n",
-+			__func__, of_node_full_name(target),
-+			of_node_full_name(ov->target_root));
-+	/* target is not under target_root */
-+	of_node_put(target);
-+	return NULL;
- }
- 
- /*
-@@ -385,6 +449,7 @@ void of_overlay_release(struct kobject *kobj)
- {
- 	struct of_overlay *ov = kobj_to_overlay(kobj);
- 
-+	of_node_put(ov->target_root);
- 	kfree(ov->indirect_id);
- 	kfree(ov);
- }
-@@ -478,7 +543,7 @@ static struct kobj_type of_overlay_ktype = {
- static struct kset *ov_kset;
- 
- static int __of_overlay_create(struct device_node *tree,
--		const char *indirect_id)
-+		const char *indirect_id, struct device_node *target_root)
- {
- 	struct of_overlay *ov;
- 	int err, id;
-@@ -500,6 +565,7 @@ static int __of_overlay_create(struct device_node *tree,
- 			goto err_no_mem;
- 		}
- 	}
-+	ov->target_root = of_node_get(target_root);
- 
- 	INIT_LIST_HEAD(&ov->node);
- 
-@@ -568,6 +634,7 @@ err_free_idr:
- err_destroy_trans:
- 	of_changeset_destroy(&ov->cset);
- err_no_mem:
-+	of_node_put(ov->target_root);
- 	kfree(ov->indirect_id);
- 	kfree(ov);
- 	mutex_unlock(&of_mutex);
-@@ -587,7 +654,7 @@ err_no_mem:
-  */
- int of_overlay_create(struct device_node *tree)
- {
--	return __of_overlay_create(tree, NULL);
-+	return __of_overlay_create(tree, NULL, NULL);
- }
- EXPORT_SYMBOL_GPL(of_overlay_create);
- 
-@@ -604,10 +671,30 @@ EXPORT_SYMBOL_GPL(of_overlay_create);
-  */
- int of_overlay_create_indirect(struct device_node *tree, const char *id)
- {
--	return __of_overlay_create(tree, id);
-+	return __of_overlay_create(tree, id, NULL);
- }
- EXPORT_SYMBOL_GPL(of_overlay_create_indirect);
- 
-+/**
-+ * of_overlay_create_target_root() - Create and apply an overlay
-+ *			under which will be limited to target_root
-+ * @tree:		Device node containing all the overlays
-+ * @target_root:	Target root for the overlay.
-+ *
-+ * Creates and applies an overlay while also keeping track
-+ * of the overlay in a list. This list can be used to prevent
-+ * illegal overlay removals. The overlay is only allowed to
-+ * target nodes under the target_root node.
-+ *
-+ * Returns the id of the created overlay, or an negative error number
-+ */
-+int of_overlay_create_target_root(struct device_node *tree,
-+		struct device_node *target_root)
-+{
-+	return __of_overlay_create(tree, NULL, target_root);
-+}
-+EXPORT_SYMBOL_GPL(of_overlay_create_target_root);
-+
- /* check whether the given node, lies under the given tree */
- static int overlay_subtree_check(struct device_node *tree,
- 		struct device_node *dn)
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 98c9244..dd84bf1 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -1075,6 +1075,8 @@ int of_overlay_destroy(int id);
- int of_overlay_destroy_all(void);
- 
- int of_overlay_create_indirect(struct device_node *tree, const char *id);
-+int of_overlay_create_target_root(struct device_node *tree,
-+		struct device_node *target_root);
- 
- #else
- 
-@@ -1099,6 +1101,12 @@ static inline int of_overlay_create_indirect(struct device_node *tree,
- 	return -ENOTSUPP;
- }
- 
-+static inline int of_overlay_create_target_root(struct device_node *tree,
-+		struct device_node *target_root)
-+{
-+	return -ENOTSUPP;
-+}
-+
  #endif
  
- #endif /* _LINUX_OF_H */
++static void of_unittest_overlay_16(void)
++{
++	int ret;
++	int overlay_nr = 16;
++	int unittest_nr = 16;
++	enum overlay_type ovtype = PDEV_OVERLAY;
++	int before = 0;
++	int after = 1;
++	struct device_node *np = NULL;
++	int id = -1;
++
++	/* unittest device must not be in before state */
++	if (of_unittest_device_exists(unittest_nr, ovtype) != before) {
++		unittest(0, "overlay @\"%s\" with device @\"%s\" %s\n",
++				overlay_path(overlay_nr),
++				unittest_path(unittest_nr, ovtype),
++				!before ? "enabled" : "disabled");
++		return;
++	}
++
++	np = of_find_node_by_path(overlay_path(overlay_nr));
++	if (np == NULL) {
++		unittest(0, "could not find overlay node @\"%s\"\n",
++				overlay_path(overlay_nr));
++		ret = -EINVAL;
++		goto out;
++	}
++
++	ret = of_overlay_create_indirect(np, "unittest16");
++	if (ret < 0) {
++		unittest(0, "could not create overlay from \"%s\"\n",
++				overlay_path(overlay_nr));
++		goto out;
++	}
++	id = ret;
++	of_unittest_track_overlay(id);
++
++	ret = 0;
++
++out:
++	of_node_put(np);
++
++	if (ret)
++		return;
++
++	/* unittest device must be to set to after state */
++	if (of_unittest_device_exists(unittest_nr, ovtype) != after) {
++		unittest(0, "overlay @\"%s\" failed to create @\"%s\" %s\n",
++				overlay_path(overlay_nr),
++				unittest_path(unittest_nr, ovtype),
++				!after ? "enabled" : "disabled");
++		return;
++	}
++
++	unittest(1, "overlay test %d passed\n", 16);
++}
++
+ static void __init of_unittest_overlay(void)
+ {
+ 	struct device_node *bus_np = NULL;
+@@ -1909,6 +1966,8 @@ static void __init of_unittest_overlay(void)
+ 	of_unittest_overlay_10();
+ 	of_unittest_overlay_11();
+ 
++	of_unittest_overlay_16();
++
+ #if IS_BUILTIN(CONFIG_I2C)
+ 	if (unittest(of_unittest_overlay_i2c_init() == 0, "i2c init failed\n"))
+ 		goto out;
 -- 
 1.7.12
