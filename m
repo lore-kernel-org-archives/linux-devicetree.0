@@ -1,55 +1,120 @@
 From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 0/5] Add Mediatek MT8173 subsystem clocks support
-Date: Thu, 11 Jun 2015 16:52:12 -0700
-Message-ID: <20150611235212.GI29640@codeaurora.org>
-References: <1432192376-6712-1-git-send-email-jamesjj.liao@mediatek.com>
- <20150528132452.GI26575@pengutronix.de>
- <1432867649.15597.46.camel@mtksdaap41>
- <20150529062345.GY6325@pengutronix.de>
- <20150604210212.GM676@codeaurora.org>
- <1433468737.14416.7.camel@mtksdaap41>
- <20150606005912.GC29237@codeaurora.org>
- <20150608074858.GK6325@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Subject: [PATCH v2 3/6] regulator: Add pull down support
+Date: Thu, 11 Jun 2015 17:31:04 -0700
+Message-ID: <1434069067-1371-4-git-send-email-sboyd@codeaurora.org>
+References: <1434069067-1371-1-git-send-email-sboyd@codeaurora.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150608074858.GK6325-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <1434069067-1371-1-git-send-email-sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Henry Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Mark Brown <brooni-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Collins <collinsd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/08, Sascha Hauer wrote:
-> On Fri, Jun 05, 2015 at 05:59:12PM -0700, Stephen Boyd wrote:
-> > 
-> > And similar things could be done for the reset driver.
-> 
-> The problem I see with this approach is that we scatter the code for a
-> otherwise simple driver over a bunch of directories. We would have
-> 
-> drivers/clk/mediatek/vencsys.c
-> drivers/reset/mediatek/vencsys.c
-> drivers/soc/mediatek/vencsys.c
-> 
-> The same must be added for vdecsys, imgsys and vencltsys. That will make
-> 12 drivers and three maintainers for 12 registers.  I think this will be
-> a pain to maintain, hence my suggestion to put the vencsys code into a
-> single file and not split this up into more subsystem specific files.
-> 
+Some regulators need to be configured to pull down a resistor
+when the regulator is disabled. Add an op (set_pull_down) and a
+DT property + constraint to support this.
 
-I probably don't have enough information here, but why is it a
-pain to maintain? It seems more like a pain to setup the first
-time and then little to no pain to maintain because we clearly
-split functionality based on subsystem. No merge conflicts, clear
-division of functionality, etc. But again, I don't think it
-matters much either way given that reset and clk drivers are
-combined sometimes and don't always reside in drivers/clk or
-drivers/reset either.
+Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Signed-off-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+---
+ Documentation/devicetree/bindings/regulator/regulator.txt | 1 +
+ drivers/regulator/core.c                                  | 8 ++++++++
+ drivers/regulator/of_regulator.c                          | 2 ++
+ include/linux/regulator/driver.h                          | 5 +++++
+ include/linux/regulator/machine.h                         | 2 ++
+ 5 files changed, 18 insertions(+)
 
+diff --git a/Documentation/devicetree/bindings/regulator/regulator.txt b/Documentation/devicetree/bindings/regulator/regulator.txt
+index 553d2d0fe6d9..6c79fd70ab5a 100644
+--- a/Documentation/devicetree/bindings/regulator/regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/regulator.txt
+@@ -39,6 +39,7 @@ Optional properties:
+   documentation explains which values the regulator supports.
+ - regulator-system-load: Load in uA present on regulator that is not captured by
+   any consumer request.
++- regulator-pull-down: Enable pull down resistor when the regulator is disabled.
+ 
+ Deprecated properties:
+ - regulator-compatible: If a regulator chip contains multiple
+diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+index ab383dfe5386..1d6172a9f65c 100644
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -1051,6 +1051,14 @@ static int set_machine_constraints(struct regulator_dev *rdev,
+ 		}
+ 	}
+ 
++	if (rdev->constraints->pull_down && ops->set_pull_down) {
++		ret = ops->set_pull_down(rdev);
++		if (ret < 0) {
++			rdev_err(rdev, "failed to set pull down\n");
++			goto out;
++		}
++	}
++
+ 	print_constraints(rdev);
+ 	return 0;
+ out:
+diff --git a/drivers/regulator/of_regulator.c b/drivers/regulator/of_regulator.c
+index b44da860ac22..237b014666fa 100644
+--- a/drivers/regulator/of_regulator.c
++++ b/drivers/regulator/of_regulator.c
+@@ -67,6 +67,8 @@ static void of_get_regulation_constraints(struct device_node *np,
+ 	if (!constraints->always_on) /* status change should be possible. */
+ 		constraints->valid_ops_mask |= REGULATOR_CHANGE_STATUS;
+ 
++	constraints->pull_down = of_property_read_bool(np, "regulator-pull-down");
++
+ 	if (of_property_read_bool(np, "regulator-allow-bypass"))
+ 		constraints->valid_ops_mask |= REGULATOR_CHANGE_BYPASS;
+ 
+diff --git a/include/linux/regulator/driver.h b/include/linux/regulator/driver.h
+index fffa688ac3a7..5eb85e152eb7 100644
+--- a/include/linux/regulator/driver.h
++++ b/include/linux/regulator/driver.h
+@@ -121,6 +121,9 @@ struct regulator_linear_range {
+  * @set_suspend_mode: Set the operating mode for the regulator when the
+  *                    system is suspended.
+  *
++ * @set_pull_down: Configure the regulator to pull down when the regulator
++ *		   is disabled.
++ *
+  * This struct describes regulator operations which can be implemented by
+  * regulator chip drivers.
+  */
+@@ -187,6 +190,8 @@ struct regulator_ops {
+ 
+ 	/* set regulator suspend operating mode (defined in consumer.h) */
+ 	int (*set_suspend_mode) (struct regulator_dev *, unsigned int mode);
++
++	int (*set_pull_down) (struct regulator_dev *);
+ };
+ 
+ /*
+diff --git a/include/linux/regulator/machine.h b/include/linux/regulator/machine.h
+index 01526559c8c3..8ffb0619a03c 100644
+--- a/include/linux/regulator/machine.h
++++ b/include/linux/regulator/machine.h
+@@ -87,6 +87,7 @@ struct regulator_state {
+  *           applied.
+  * @apply_uV: Apply the voltage constraint when initialising.
+  * @ramp_disable: Disable ramp delay when initialising or when setting voltage.
++ * @pull_down: Enable pull down when regulator is disabled.
+  *
+  * @input_uV: Input voltage for regulator when supplied by another regulator.
+  *
+@@ -141,6 +142,7 @@ struct regulation_constraints {
+ 	unsigned boot_on:1;	/* bootloader/firmware enabled regulator */
+ 	unsigned apply_uV:1;	/* apply uV constraint if min == max */
+ 	unsigned ramp_disable:1; /* disable ramp delay */
++	unsigned pull_down:1;	/* pull down resistor when regulator off */
+ };
+ 
+ /**
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
