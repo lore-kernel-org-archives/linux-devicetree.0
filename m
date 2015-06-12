@@ -1,255 +1,232 @@
-From: Dudley Du <dudl@cypress.com>
-Subject: [PATCH 5/7] input: cyapa: add proximity and interrupt sysfs interfaces support
-Date: Fri, 12 Jun 2015 14:56:36 +0800
-Message-ID: <1434092198-13018-6-git-send-email-dudl@cypress.com>
-References: <1434092198-13018-1-git-send-email-dudl@cypress.com>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: [RESEND PATCH v4 02/14] crypto: mv_cesa: use gen_pool to reserve the
+ SRAM memory region
+Date: Fri, 12 Jun 2015 09:15:54 +0200
+Message-ID: <1434093366-14681-3-git-send-email-boris.brezillon@free-electrons.com>
+References: <1434093366-14681-1-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1434092198-13018-1-git-send-email-dudl@cypress.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dmitry.torokhov@gmail.com, mark.rutland@arm.com, robh+dt@kernel.org, rydberg@euromail.se
-Cc: Dudley Du <dudl@cypress.com>, bleung@google.com, jmmahler@gmail.com, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1434093366-14681-1-git-send-email-boris.brezillon@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, linux-crypto@vger.kernel.org
+Cc: Lior Amsalem <alior@marvell.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jason Cooper <jason@lakedaemon.net>, Tawfik Bayouk <tawfik@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Arnaud Ebalard <arno@natisbad.org>, linux-kernel@vger.kernel.org, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Eran Ben-Avi <benavi@marvell.com>, Nadav Haklai <nadavh@marvell.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Kumar Gala <galak@codeaurora.org>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>, Imre Kaloz <kaloz@openwrt.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Add proximity and interrupt control interfaces in sysfs device node.
-The proximity interface is used to disable/enable proximity function in device.
-The interrupt interface is used to disbale/enable interrupt from device.
-TEST=test on Chromebook.
+The mv_cesa driver currently expects the SRAM memory region to be passed
+as a platform device resource.
 
-Signed-off-by: Dudley Du <dudl@cypress.com>
+This approach implies two drawbacks:
+- the DT representation is wrong
+- the only one that can access the SRAM is the crypto engine
+
+The last point is particularly annoying in some cases: for example on
+armada 370, a small region of the crypto SRAM is used to implement the
+cpuidle, which means you would not be able to enable both cpuidle and the
+CESA driver.
+
+To address that problem, we explicitly define the SRAM device in the DT
+and then reference the sram node from the crypto engine node.
+
+Also note that the old way of retrieving the SRAM memory region is still
+supported, or in other words, backward compatibility is preserved.
+
+Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
 ---
- drivers/input/mouse/cyapa.c      | 101 +++++++++++++++++++++++++++++++++++++++
- drivers/input/mouse/cyapa.h      |   4 ++
- drivers/input/mouse/cyapa_gen3.c |   1 +
- drivers/input/mouse/cyapa_gen5.c |   2 +
- drivers/input/mouse/cyapa_gen6.c |  14 ++++++
- 5 files changed, 122 insertions(+)
+ .../devicetree/bindings/crypto/mv_cesa.txt         | 24 ++++++---
+ drivers/crypto/Kconfig                             |  1 +
+ drivers/crypto/mv_cesa.c                           | 58 ++++++++++++++++------
+ 3 files changed, 60 insertions(+), 23 deletions(-)
 
-diff --git a/drivers/input/mouse/cyapa.c b/drivers/input/mouse/cyapa.c
-index faead4d..86f2263 100644
---- a/drivers/input/mouse/cyapa.c
-+++ b/drivers/input/mouse/cyapa.c
-@@ -594,6 +594,7 @@ static int cyapa_initialize(struct cyapa *cyapa)
+diff --git a/Documentation/devicetree/bindings/crypto/mv_cesa.txt b/Documentation/devicetree/bindings/crypto/mv_cesa.txt
+index eaa2873..13b8fc5 100644
+--- a/Documentation/devicetree/bindings/crypto/mv_cesa.txt
++++ b/Documentation/devicetree/bindings/crypto/mv_cesa.txt
+@@ -2,21 +2,29 @@ Marvell Cryptographic Engines And Security Accelerator
  
- 	cyapa->state = CYAPA_STATE_NO_DEVICE;
- 	cyapa->gen = CYAPA_GEN_UNKNOWN;
-+	cyapa->interrupt = true;
- 	mutex_init(&cyapa->state_sync_lock);
+ Required properties:
+ - compatible : should be "marvell,orion-crypto"
+-- reg : base physical address of the engine and length of memory mapped
+-        region, followed by base physical address of sram and its memory
+-        length
+-- reg-names : "regs" , "sram";
+-- interrupts : interrupt number
++- reg: base physical address of the engine and length of memory mapped
++       region. Can also contain an entry for the SRAM attached to the CESA,
++       but this representation is deprecated and marvell,crypto-srams should
++       be used instead
++- reg-names: "regs". Can contain an "sram" entry, but this representation
++	     is deprecated and marvell,crypto-srams should be used instead
++- interrupts: interrupt number
+ - clocks: reference to the crypto engines clocks. This property is only
+ 	  required for Dove platforms
++- marvell,crypto-srams: phandle to crypto SRAM definitions
++
++Optional properties:
++- marvell,crypto-sram-size: SRAM size reserved for crypto operations, if not
++			    specified the whole SRAM is used (2KB)
  
- 	/*
-@@ -1217,12 +1218,110 @@ static ssize_t cyapa_show_mode(struct device *dev,
- 	return size;
- }
+ Examples:
  
-+static ssize_t cyapa_show_interrupt(struct device *dev,
-+				   struct device_attribute *attr, char *buf)
+ 	crypto@30000 {
+ 		compatible = "marvell,orion-crypto";
+-		reg = <0x30000 0x10000>,
+-		      <0x4000000 0x800>;
+-		reg-names = "regs" , "sram";
++		reg = <0x30000 0x10000>;
++		reg-names = "regs";
+ 		interrupts = <22>;
++		marvell,crypto-srams = <&crypto_sram>;
++		marvell,crypto-sram-size = <0x600>;
+ 		status = "okay";
+ 	};
+diff --git a/drivers/crypto/Kconfig b/drivers/crypto/Kconfig
+index 033c0c8..a6bbea8 100644
+--- a/drivers/crypto/Kconfig
++++ b/drivers/crypto/Kconfig
+@@ -166,6 +166,7 @@ config CRYPTO_DEV_MV_CESA
+ 	select CRYPTO_AES
+ 	select CRYPTO_BLKCIPHER2
+ 	select CRYPTO_HASH
++	select SRAM
+ 	help
+ 	  This driver allows you to utilize the Cryptographic Engines and
+ 	  Security Accelerator (CESA) which can be found on the Marvell Orion
+diff --git a/drivers/crypto/mv_cesa.c b/drivers/crypto/mv_cesa.c
+index 27b2373..a4c8637 100644
+--- a/drivers/crypto/mv_cesa.c
++++ b/drivers/crypto/mv_cesa.c
+@@ -9,6 +9,7 @@
+ #include <crypto/aes.h>
+ #include <crypto/algapi.h>
+ #include <linux/crypto.h>
++#include <linux/genalloc.h>
+ #include <linux/interrupt.h>
+ #include <linux/io.h>
+ #include <linux/kthread.h>
+@@ -29,6 +30,8 @@
+ #define MAX_HW_HASH_SIZE	0xFFFF
+ #define MV_CESA_EXPIRE		500 /* msec */
+ 
++#define MV_CESA_DEFAULT_SRAM_SIZE	2048
++
+ /*
+  * STM:
+  *   /---------------------------------------\
+@@ -83,6 +86,8 @@ struct req_progress {
+ struct crypto_priv {
+ 	void __iomem *reg;
+ 	void __iomem *sram;
++	struct gen_pool *sram_pool;
++	dma_addr_t sram_dma;
+ 	int irq;
+ 	struct clk *clk;
+ 	struct task_struct *queue_th;
+@@ -1019,6 +1024,39 @@ static struct ahash_alg mv_hmac_sha1_alg = {
+ 		 }
+ };
+ 
++static int mv_cesa_get_sram(struct platform_device *pdev,
++			    struct crypto_priv *cp)
 +{
-+	struct cyapa *cyapa = dev_get_drvdata(dev);
-+	int size;
-+	int error;
++	struct resource *res;
++	u32 sram_size = MV_CESA_DEFAULT_SRAM_SIZE;
 +
-+	error = mutex_lock_interruptible(&cyapa->state_sync_lock);
-+	if (error)
-+		return error;
++	of_property_read_u32(pdev->dev.of_node, "marvell,crypto-sram-size",
++			     &sram_size);
 +
-+	size = scnprintf(buf, PAGE_SIZE, "%d\n", cyapa->interrupt ? 1 : 0);
++	cp->sram_size = sram_size;
++	cp->sram_pool = of_get_named_gen_pool(&pdev->dev.of_node,
++					      "marvell,crypto-srams", 0);
++	if (cp->sram_pool) {
++		cp->sram = gen_pool_dma_alloc(cp->sram_pool, sram_size,
++					      &cp->sram_dma);
++		if (cp->sram)
++			return 0;
 +
-+	mutex_unlock(&cyapa->state_sync_lock);
-+	return size;
-+}
-+
-+static ssize_t cyapa_interrupt_store(struct device *dev,
-+				     struct device_attribute *attr,
-+				     const char *buf, size_t count)
-+{
-+	struct cyapa *cyapa = dev_get_drvdata(dev);
-+	u16 value;
-+	int error;
-+
-+	if (cyapa->gen < CYAPA_GEN6)
-+		return -EOPNOTSUPP;
-+
-+	if (kstrtou16(buf, 10, &value)) {
-+		dev_err(dev, "invalid interrupt set parameter\n");
-+		return -EINVAL;
++		return -ENOMEM;
 +	}
 +
-+	error = mutex_lock_interruptible(&cyapa->state_sync_lock);
-+	if (error)
-+		return error;
-+
-+	if (cyapa->operational)
-+		error = cyapa->ops->set_interrupt(cyapa,
-+						  value ? true : false);
-+	else
-+		error = -EBUSY;  /* Still running in bootloader mode. */
-+
-+	mutex_unlock(&cyapa->state_sync_lock);
-+	return error < 0 ? error : count;
-+}
-+
-+static ssize_t cyapa_show_proximity(struct device *dev,
-+				   struct device_attribute *attr, char *buf)
-+{
-+	struct cyapa *cyapa = dev_get_drvdata(dev);
-+	int size;
-+	int error;
-+
-+	error = mutex_lock_interruptible(&cyapa->state_sync_lock);
-+	if (error)
-+		return error;
-+
-+	size = scnprintf(buf, PAGE_SIZE, "%d\n", cyapa->proximity ? 1 : 0);
-+
-+	mutex_unlock(&cyapa->state_sync_lock);
-+	return size;
-+}
-+
-+static ssize_t cyapa_proximity_store(struct device *dev,
-+				     struct device_attribute *attr,
-+				     const char *buf, size_t count)
-+{
-+	struct cyapa *cyapa = dev_get_drvdata(dev);
-+	u16 value;
-+	int error;
-+
-+	if (cyapa->gen < CYAPA_GEN5)
-+		return -EOPNOTSUPP;
-+
-+	if (kstrtou16(buf, 10, &value)) {
-+		dev_err(dev, "invalid set value of proximity\n");
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
++					   "sram");
++	if (!res || resource_size(res) < cp->sram_size)
 +		return -EINVAL;
-+	}
 +
-+	error = mutex_lock_interruptible(&cyapa->state_sync_lock);
-+	if (error)
-+		return error;
++	cp->sram = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(cp->sram))
++		return PTR_ERR(cp->sram);
 +
-+	if (cyapa->operational)
-+		error = cyapa->ops->set_proximity(cyapa,
-+						  value ? true : false);
-+	else
-+		error = -EBUSY;  /* Still running in bootloader mode. */
-+
-+	mutex_unlock(&cyapa->state_sync_lock);
-+	return error < 0 ? error : count;
++	return 0;
 +}
 +
- static DEVICE_ATTR(firmware_version, S_IRUGO, cyapa_show_fm_ver, NULL);
- static DEVICE_ATTR(product_id, S_IRUGO, cyapa_show_product_id, NULL);
- static DEVICE_ATTR(update_fw, S_IWUSR, NULL, cyapa_update_fw_store);
- static DEVICE_ATTR(baseline, S_IRUGO, cyapa_show_baseline, NULL);
- static DEVICE_ATTR(calibrate, S_IWUSR, NULL, cyapa_calibrate_store);
- static DEVICE_ATTR(mode, S_IRUGO, cyapa_show_mode, NULL);
-+static DEVICE_ATTR(interrupt, S_IRUGO | S_IWUSR,
-+		   cyapa_show_interrupt, cyapa_interrupt_store);
-+static DEVICE_ATTR(proximity, S_IRUGO | S_IWUSR,
-+		   cyapa_show_proximity, cyapa_proximity_store);
- 
- static struct attribute *cyapa_sysfs_entries[] = {
- 	&dev_attr_firmware_version.attr,
-@@ -1231,6 +1330,8 @@ static struct attribute *cyapa_sysfs_entries[] = {
- 	&dev_attr_baseline.attr,
- 	&dev_attr_calibrate.attr,
- 	&dev_attr_mode.attr,
-+	&dev_attr_interrupt.attr,
-+	&dev_attr_proximity.attr,
- 	NULL,
- };
- 
-diff --git a/drivers/input/mouse/cyapa.h b/drivers/input/mouse/cyapa.h
-index cc30367..0ce66c5 100644
---- a/drivers/input/mouse/cyapa.h
-+++ b/drivers/input/mouse/cyapa.h
-@@ -275,6 +275,7 @@ struct cyapa_dev_ops {
- 
- 	int (*set_power_mode)(struct cyapa *, u8, u16, bool);
- 
-+	int (*set_interrupt)(struct cyapa *, bool);
- 	int (*set_proximity)(struct cyapa *, bool);
- };
- 
-@@ -365,6 +366,9 @@ struct cyapa {
- 	 */
- 	struct mutex state_sync_lock;
- 
-+	bool interrupt;
-+	bool proximity;
-+
- 	const struct cyapa_dev_ops *ops;
- 
- 	union cyapa_cmd_states cmd_states;
-diff --git a/drivers/input/mouse/cyapa_gen3.c b/drivers/input/mouse/cyapa_gen3.c
-index 2d077e5..41c40b5 100644
---- a/drivers/input/mouse/cyapa_gen3.c
-+++ b/drivers/input/mouse/cyapa_gen3.c
-@@ -1244,5 +1244,6 @@ const struct cyapa_dev_ops cyapa_gen3_ops = {
- 	.sort_empty_output_data = cyapa_gen3_empty_output_data,
- 	.set_power_mode = cyapa_gen3_set_power_mode,
- 
-+	.set_interrupt = cyapa_set_not_supported,
- 	.set_proximity = cyapa_set_not_supported,
- };
-diff --git a/drivers/input/mouse/cyapa_gen5.c b/drivers/input/mouse/cyapa_gen5.c
-index 5ab0cd2..c388540 100644
---- a/drivers/input/mouse/cyapa_gen5.c
-+++ b/drivers/input/mouse/cyapa_gen5.c
-@@ -1544,6 +1544,7 @@ int cyapa_pip_set_proximity(struct cyapa *cyapa, bool enable)
- 		return error < 0 ? error : -EINVAL;
+ static int mv_probe(struct platform_device *pdev)
+ {
+ 	struct crypto_priv *cp;
+@@ -1047,18 +1085,11 @@ static int mv_probe(struct platform_device *pdev)
+ 		goto err;
  	}
  
-+	cyapa->proximity = enable;
- 	return 0;
- }
- 
-@@ -2835,5 +2836,6 @@ const struct cyapa_dev_ops cyapa_gen5_ops = {
- 	.sort_empty_output_data = cyapa_empty_pip_output_data,
- 	.set_power_mode = cyapa_gen5_set_power_mode,
- 
-+	.set_interrupt = cyapa_set_not_supported,
- 	.set_proximity = cyapa_pip_set_proximity,
- };
-diff --git a/drivers/input/mouse/cyapa_gen6.c b/drivers/input/mouse/cyapa_gen6.c
-index 9d76715..6e18c5c 100644
---- a/drivers/input/mouse/cyapa_gen6.c
-+++ b/drivers/input/mouse/cyapa_gen6.c
-@@ -309,9 +309,22 @@ static int cyapa_gen6_config_dev_irq(struct cyapa *cyapa, u8 cmd_code)
- 			)
- 		return error < 0 ? error : -EINVAL;
- 
-+	if (cmd_code == GEN6_ENABLE_DEV_IRQ)
-+		cyapa->interrupt = true;
-+	else if (cmd_code == GEN6_DISABLE_DEV_IRQ)
-+		cyapa->interrupt = false;
+-	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "sram");
+-	if (!res) {
+-		ret = -ENXIO;
++	ret = mv_cesa_get_sram(pdev, cp);
++	if (ret)
+ 		goto err;
+-	}
+-	cp->sram_size = resource_size(res);
 +
- 	return 0;
- }
+ 	cp->max_req_size = cp->sram_size - SRAM_CFG_SPACE;
+-	cp->sram = ioremap(res->start, cp->sram_size);
+-	if (!cp->sram) {
+-		ret = -ENOMEM;
+-		goto err;
+-	}
  
-+static int cyapa_gen6_set_interrupt(struct cyapa *cyapa, bool enable)
-+{
-+	if (enable)
-+		return cyapa_gen6_config_dev_irq(cyapa, GEN6_ENABLE_DEV_IRQ);
-+	else
-+		return cyapa_gen6_config_dev_irq(cyapa, GEN6_DISABLE_DEV_IRQ);
-+}
-+
- static int cyapa_gen6_set_proximity(struct cyapa *cyapa, bool enable)
- {
- 	int error;
-@@ -744,5 +757,6 @@ const struct cyapa_dev_ops cyapa_gen6_ops = {
- 	.sort_empty_output_data = cyapa_empty_pip_output_data,
- 	.set_power_mode = cyapa_gen6_set_power_mode,
+ 	if (pdev->dev.of_node)
+ 		irq = irq_of_parse_and_map(pdev->dev.of_node, 0);
+@@ -1066,7 +1097,7 @@ static int mv_probe(struct platform_device *pdev)
+ 		irq = platform_get_irq(pdev, 0);
+ 	if (irq < 0 || irq == NO_IRQ) {
+ 		ret = irq;
+-		goto err_unmap_sram;
++		goto err;
+ 	}
+ 	cp->irq = irq;
  
-+	.set_interrupt = cyapa_gen6_set_interrupt,
- 	.set_proximity = cyapa_gen6_set_proximity,
- };
+@@ -1076,7 +1107,7 @@ static int mv_probe(struct platform_device *pdev)
+ 	cp->queue_th = kthread_run(queue_manag, cp, "mv_crypto");
+ 	if (IS_ERR(cp->queue_th)) {
+ 		ret = PTR_ERR(cp->queue_th);
+-		goto err_unmap_sram;
++		goto err;
+ 	}
+ 
+ 	ret = request_irq(irq, crypto_int, 0, dev_name(&pdev->dev),
+@@ -1134,8 +1165,6 @@ err_irq:
+ 	}
+ err_thread:
+ 	kthread_stop(cp->queue_th);
+-err_unmap_sram:
+-	iounmap(cp->sram);
+ err:
+ 	kfree(cp);
+ 	cpg = NULL;
+@@ -1155,7 +1184,6 @@ static int mv_remove(struct platform_device *pdev)
+ 	kthread_stop(cp->queue_th);
+ 	free_irq(cp->irq, cp);
+ 	memset(cp->sram, 0, cp->sram_size);
+-	iounmap(cp->sram);
+ 
+ 	if (!IS_ERR(cp->clk)) {
+ 		clk_disable_unprepare(cp->clk);
 -- 
 1.9.1
-
-
----------------------------------------------------------------
-This message and any attachments may contain Cypress (or its
-subsidiaries) confidential information. If it has been received
-in error, please advise the sender and immediately delete this
-message.
----------------------------------------------------------------
