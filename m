@@ -1,40 +1,139 @@
-From: Paul Bolle <pebolle@tiscali.nl>
-Subject: Re: [alsa-devel] [PATCH 1/3] ASoC: mediatek: Add AFE platform driver
-Date: Fri, 12 Jun 2015 09:37:57 +0200
-Message-ID: <1434094677.2271.125.camel@x220>
-References: <1433946276-25969-1-git-send-email-koro.chen@mediatek.com>
-	 <1433946276-25969-2-git-send-email-koro.chen@mediatek.com>
-	 <1434006187.24094.40.camel@x220> <1434074158.10969.5.camel@mtksdaap41>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 05/22] doc: dt-binding: usb: add otg related
+ properties
+Date: Fri, 12 Jun 2015 11:02:13 +0300
+Message-ID: <20150612110213.59286f9f@rockdesk>
+References: <CAL_JsqJ3hHOGevwqcBNFN2LrTP7Bm_k9SDuTNKBbpq5W-eLmdw@mail.gmail.com>
+	<20150609011806.GA7976@shlinux1.ap.freescale.net>
+	<CAL_JsqKg_NYtLGg9RUQOpKscwHEskHO4_Szo_nM3BnrDdhg3fg@mail.gmail.com>
+	<20150609182931.1eda4111@rockdesk>
+	<20150610120623.GA7678@shlinux2>
+	<20150611103035.08967a37@rockdesk>
+	<20150611083851.GB16101@shlinux2>
+	<20150611155102.15b881fd@rockdesk>
+	<20150611142208.GD16101@shlinux2>
+	<20150611175557.724a14e5@rockdesk>
+	<20150612014203.GE16101@shlinux2>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1434074158.10969.5.camel@mtksdaap41>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Koro Chen <koro.chen@mediatek.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, srv_heupstream@mediatek.com, tiwai@suse.de, linux-kernel@vger.kernel.org, s.hauer@pengutronix.de, lgirdwood@gmail.com, robh+dt@kernel.org, broonie@kernel.org, linux-mediatek@lists.infradead.org, galak@codeaurora.org, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150612014203.GE16101@shlinux2>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Chen Peter-B29397 <Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Li Jun-B47624 <Jun.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2015-06-12 at 09:55 +0800, Koro Chen wrote:
-> On Thu, 2015-06-11 at 09:03 +0200, Paul Bolle wrote:
-> > (What does negating a bool twice do?)
+
+On Fri, 12 Jun 2015 09:42:04 +0800
+Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+
+> On Thu, Jun 11, 2015 at 05:55:57PM +0300, Roger Quadros wrote:
+> > > > drivers/usb/core/hub.c
+> > > > 
+> > > > static int usb_enumerate_device_otg(struct usb_device *udev)
+> > > > {
+> > > > 	int err = 0;
+> > > > 
+> > > > #ifdef	CONFIG_USB_OTG
+> > > > 	/*
+> > > > 	 * OTG-aware devices on OTG-capable root hubs may be able to use SRP,
+> > > > 	 * to wake us after we've powered off VBUS; and HNP, switching roles
+> > > > 	 * "host" to "peripheral".  The OTG descriptor helps figure this out.
+> > > > 	 */
+> > > > 	if (!udev->bus->is_b_host
+> > > > 			&& udev->config
+> > > > 			&& udev->parent == udev->bus->root_hub) {
+> > > > 		struct usb_otg_descriptor	*desc = NULL;
+> > > > 		struct usb_bus			*bus = udev->bus;
+> > > > 
+> > > > 		/* descriptor may appear anywhere in config */
+> > > > 		if (__usb_get_extra_descriptor (udev->rawdescriptors[0],
+> > > > 					le16_to_cpu(udev->config[0].desc.wTotalLength),
+> > > > 					USB_DT_OTG, (void **) &desc) == 0) {
+> > > > 			if (desc->bmAttributes & USB_OTG_HNP) {
+> > > > 				unsigned		port1 = udev->portnum;
+> > > > 
+> > > > 				dev_info(&udev->dev,
+> > > > 					"Dual-Role OTG device on %sHNP port\n",
+> > > > 					(port1 == bus->otg_port)
+> > > > 						? "" : "non-");
+> > > > 
+> > > > 				/* enable HNP before suspend, it's simpler */
+> > > > 				if (port1 == bus->otg_port)
+> > > > 					bus->b_hnp_enable = 1;
+> > > > 				err = usb_control_msg(udev,
+> > > > 					usb_sndctrlpipe(udev, 0),
+> > > > 					USB_REQ_SET_FEATURE, 0,
+> > > > 					bus->b_hnp_enable
+> > > > 						? USB_DEVICE_B_HNP_ENABLE
+> > > > 						: USB_DEVICE_A_ALT_HNP_SUPPORT,
+> > > > 					0, NULL, 0, USB_CTRL_SET_TIMEOUT);
+> > > > 
+> > > > We're sending out this control request even if this host port is not OTG.
+> > > > Isn't that wrong?
+> > > 
+> > > So send USB_DEVICE_A_ALT_HNP_SUPPORT request.
+> > > This is correct in OTG 1.x, its intention is to remind the user who is
+> > > connecting the HNP capable OTG device to a non-OTG port, He can change
+> > > to another port of this machine which is a OTG port(with HNP).
 > > 
-> Because bool actually can be unsigned char, although actually in this
-> driver, the caller always passes "true" or "false" to this function.
+> > I didn't understand.
+> > If CONFIG_USB_OTG is enabled doesn't mean that this USB host port is OTG host.
+> Yes, only CONFIG_USB_OTG enabled doesn't mean that this USB host port
+> is a OTG port, there are might multiple usb host ports, but only one
+> is a OTG port.
 
-bool is _Bool in the kernel (see include/linux/types.h). So whenever you
-see a bool in the kernel you can assume it's either 0 or 1. Are there
-any cases where this conveniently simple rule doesn't hold?
+Not necessarily. Many systems don't have any OTG port so that request cannot
+be sent even if CONFIG_USB_OTG is enabled.
 
-But here the discussion is moot, because as you say, the function will
-only be passed false or true so we know "enable" is either 0 or 1 and
-double negating will do nothing.
+> > So it should not send any OTG specific request to device. Right?
+> Non-otg port(in OTG 1.x protocol) + OTG 1.x device, should send,
+> otherwise, should not send.
 
-> Do you think if this is the case, should I still need to do !!?
+What did you mean by Non-OTG port (in OTG 1.x protocol)?
+If it is Non-OTG port it doesn't understand any OTG protocol.
+So Non-OTG port should not send any OTG request.
 
-So you should not, as it's confusing at best.
+> 
+> So the code you pasted here was right only for OTG 1.x, I assume
+> OTG 2.0 has not been released when it was designed. But now it's
+> out of date, it's wrong if you connect a OTG 2.0 device. 
+> 
 
-Thanks,
+The code is wrong for non-OTG ports when CONFIG_USB_OTG is set.
 
+Peter/Felipe, any comments on this?
 
-Paul Bolle
+cheers,
+-roger
+
+> > 
+> > > 
+> > > > 
+> > > > 				if (err < 0) {
+> > > > 					/* OTG MESSAGE: report errors here,
+> > > > 					 * customize to match your product.
+> > > > 					 */
+> > > > 					dev_info(&udev->dev,
+> > > > 						"can't set HNP mode: %d\n",
+> > > > 						err);
+> > > > 					bus->b_hnp_enable = 0;
+> > > > 				}
+> > > > 
+> > > > Instead it should be moved inside the if (port1 == bus->otg_port) condition.
+> > > 
+> > > Nope, as I explained above, this is really too detailed OTG protocol:)
+> > > > 
+> > > > 			}
+> > > > 		}
+> > > > 	}
+> > > > #endif
+> > > > 	return err;
+> > > > }
+> > > > 
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
