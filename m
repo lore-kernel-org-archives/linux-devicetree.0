@@ -1,7 +1,7 @@
 From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: [PATCH 2/8] of: unittest: Add indirect overlay target test
-Date: Fri, 12 Jun 2015 22:54:59 +0300
-Message-ID: <1434138905-15886-3-git-send-email-pantelis.antoniou@konsulko.com>
+Subject: [PATCH 8/8] of: changesets: Introduce changeset helper methods
+Date: Fri, 12 Jun 2015 22:55:05 +0300
+Message-ID: <1434138905-15886-9-git-send-email-pantelis.antoniou@konsulko.com>
 References: <1434138905-15886-1-git-send-email-pantelis.antoniou@konsulko.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1434138905-15886-1-git-send-email-pantelis.antoniou@konsulko.com>
@@ -10,146 +10,379 @@ To: Rob Herring <robherring2@gmail.com>
 Cc: Grant Likely <grant.likely@secretlab.ca>, Matt Porter <mporter@konsulko.com>, Koen Kooi <koen@dominion.thruhere.net>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>
 List-Id: devicetree@vger.kernel.org
 
-Add a unittest for the indirect overlay target case.
+Changesets are very powerful, but the lack of a helper API
+makes using them cumbersome. Introduce a simple copy based
+API that makes things considerably easier.
+
+To wit, adding a property using the raw API.
+
+	struct property *prop;
+	prop = kzalloc(sizeof(*prop)), GFP_KERNEL);
+	prop->name = kstrdup("compatible");
+	prop->value = kstrdup("foo,bar");
+	prop->length = strlen(prop->value) + 1;
+	of_changeset_add_property(ocs, np, prop);
+
+while using the helper API
+
+	of_changeset_add_property_string(ocs, np, "compatible",
+			"foo,bar");
 
 Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
 ---
- drivers/of/unittest-data/testcases.dts      |  9 +++++
- drivers/of/unittest-data/tests-overlay.dtsi | 19 ++++++++++
- drivers/of/unittest.c                       | 59 +++++++++++++++++++++++++++++
- 3 files changed, 87 insertions(+)
+ drivers/of/dynamic.c | 251 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/of.h   |  73 +++++++++++++++
+ 2 files changed, 324 insertions(+)
 
-diff --git a/drivers/of/unittest-data/testcases.dts b/drivers/of/unittest-data/testcases.dts
-index 12f7c3d..ec17ab7 100644
---- a/drivers/of/unittest-data/testcases.dts
-+++ b/drivers/of/unittest-data/testcases.dts
-@@ -75,5 +75,14 @@
- 				target = <0x00000000>;
- 			};
- 		};
-+		overlay16 {
-+			fragment@0 {
-+				target-indirect {
-+					unittest16 {
-+						target = <0x00000000>;
-+					};
-+				};
-+			};
-+		};
- 	};
- }; };
-diff --git a/drivers/of/unittest-data/tests-overlay.dtsi b/drivers/of/unittest-data/tests-overlay.dtsi
-index 02ba56c..881d863 100644
---- a/drivers/of/unittest-data/tests-overlay.dtsi
-+++ b/drivers/of/unittest-data/tests-overlay.dtsi
-@@ -110,6 +110,12 @@
- 						};
- 					};
- 				};
+diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+index e452171..afa8e31 100644
+--- a/drivers/of/dynamic.c
++++ b/drivers/of/dynamic.c
+@@ -796,3 +796,254 @@ int of_changeset_action(struct of_changeset *ocs, unsigned long action,
+ 	list_add_tail(&ce->node, &ocs->entries);
+ 	return 0;
+ }
 +
-+				unittest16: test-unittest16 {
-+					compatible = "unittest";
-+					status = "disabled";
-+					reg = <16>;
-+				};
- 			};
- 		};
- 
-@@ -325,5 +331,18 @@
- 			};
- 		};
- 
-+		/* test enable using indirect functionality */
-+		overlay16 {
-+			fragment@0 {
-+				target-indirect {
-+					unittest16 {
-+						target = <&unittest16>;
-+					};
-+				};
-+				__overlay__ {
-+					status = "okay";
-+				};
-+			};
-+		};
- 	};
- };
-diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index 0a27b38..ee1a3bb 100644
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -1858,6 +1858,63 @@ static inline void of_unittest_overlay_i2c_15(void) { }
- 
- #endif
- 
-+static void of_unittest_overlay_16(void)
++/* changeset helpers */
++
++/**
++ * of_changeset_create_device_node - Create an empty device node
++ *
++ * @ocs:	changeset pointer
++ * @parent:	parent device node
++ * @fmt:	format string for the node's full_name
++ * @args:	argument list for the format string
++ *
++ * Create an empty device node, marking it as detached and allocated.
++ *
++ * Returns a device node on success, an error encoded pointer otherwise
++ */
++struct device_node *of_changeset_create_device_nodev(
++	struct of_changeset *ocs, struct device_node *parent,
++	const char *fmt, va_list vargs)
 +{
-+	int ret;
-+	int overlay_nr = 16;
-+	int unittest_nr = 16;
-+	enum overlay_type ovtype = PDEV_OVERLAY;
-+	int before = 0;
-+	int after = 1;
-+	struct device_node *np = NULL;
-+	int id = -1;
++	struct device_node *node;
 +
-+	/* unittest device must not be in before state */
-+	if (of_unittest_device_exists(unittest_nr, ovtype) != before) {
-+		unittest(0, "overlay @\"%s\" with device @\"%s\" %s\n",
-+				overlay_path(overlay_nr),
-+				unittest_path(unittest_nr, ovtype),
-+				!before ? "enabled" : "disabled");
-+		return;
-+	}
++	node = __of_node_dupv(NULL, fmt, vargs);
++	if (!node)
++		return ERR_PTR(-ENOMEM);
 +
-+	np = of_find_node_by_path(overlay_path(overlay_nr));
-+	if (np == NULL) {
-+		unittest(0, "could not find overlay node @\"%s\"\n",
-+				overlay_path(overlay_nr));
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	ret = of_overlay_create_indirect(np, "unittest16");
-+	if (ret < 0) {
-+		unittest(0, "could not create overlay from \"%s\"\n",
-+				overlay_path(overlay_nr));
-+		goto out;
-+	}
-+	id = ret;
-+	of_unittest_track_overlay(id);
-+
-+	ret = 0;
-+
-+out:
-+	of_node_put(np);
-+
-+	if (ret)
-+		return;
-+
-+	/* unittest device must be to set to after state */
-+	if (of_unittest_device_exists(unittest_nr, ovtype) != after) {
-+		unittest(0, "overlay @\"%s\" failed to create @\"%s\" %s\n",
-+				overlay_path(overlay_nr),
-+				unittest_path(unittest_nr, ovtype),
-+				!after ? "enabled" : "disabled");
-+		return;
-+	}
-+
-+	unittest(1, "overlay test %d passed\n", 16);
++	node->parent = parent;
++	return node;
 +}
 +
- static void __init of_unittest_overlay(void)
- {
- 	struct device_node *bus_np = NULL;
-@@ -1909,6 +1966,8 @@ static void __init of_unittest_overlay(void)
- 	of_unittest_overlay_10();
- 	of_unittest_overlay_11();
- 
-+	of_unittest_overlay_16();
++/**
++ * of_changeset_create_device_node - Create an empty device node
++ *
++ * @ocs:	changeset pointer
++ * @parent:	parent device node
++ * @fmt:	Format string for the node's full_name
++ * ...		Arguments
++ *
++ * Create an empty device node, marking it as detached and allocated.
++ *
++ * Returns a device node on success, an error encoded pointer otherwise
++ */
++struct device_node *of_changeset_create_device_node(
++	struct of_changeset *ocs, struct device_node *parent,
++	const char *fmt, ...)
++{
++	va_list vargs;
++	struct device_node *node;
 +
- #if IS_BUILTIN(CONFIG_I2C)
- 	if (unittest(of_unittest_overlay_i2c_init() == 0, "i2c init failed\n"))
- 		goto out;
++	va_start(vargs, fmt);
++	node = of_changeset_create_device_nodev(ocs, parent, fmt, vargs);
++	va_end(vargs);
++	return node;
++}
++
++/**
++ * of_changeset_add_property_copy - Create a new property copying name & value
++ *
++ * @ocs:	changeset pointer
++ * @np:		device node pointer
++ * @name:	name of the property
++ * @value:	pointer to the value data
++ * @length:	length of the value in bytes
++ *
++ * Adds a property to the changeset by making copies of the name & value
++ * entries.
++ *
++ * Returns zero on success, a negative error value otherwise.
++ */
++int of_changeset_add_property_copy(struct of_changeset *ocs,
++		struct device_node *np, const char *name, const void *value,
++		int length)
++{
++	struct property *prop;
++	char *new_name;
++	void *new_value;
++	int ret;
++
++	ret = -ENOMEM;
++
++	prop = kzalloc(sizeof(*prop), GFP_KERNEL);
++	if (!prop)
++		goto out_no_prop;
++
++	new_name = kstrdup(name, GFP_KERNEL);
++	if (!new_name)
++		goto out_no_name;
++
++	/*
++	 * NOTE: There is no check for zero length value.
++	 * In case of a boolean property, this will allocate a value
++	 * of zero bytes. We do this to work around the use
++	 * of of_get_property() calls on boolean values.
++	 */
++	new_value = kmemdup(value, length, GFP_KERNEL);
++	if (!new_value)
++		goto out_no_value;
++
++	of_property_set_flag(prop, OF_DYNAMIC);
++
++	prop->name = new_name;
++	prop->value = new_value;
++	prop->length = length;
++
++	ret = of_changeset_add_property(ocs, np, prop);
++	if (ret != 0)
++		goto out_no_add;
++
++	return 0;
++
++out_no_add:
++	kfree(prop->value);
++out_no_value:
++	kfree(prop->name);
++out_no_name:
++	kfree(prop);
++out_no_prop:
++	return ret;
++}
++
++/**
++ * of_changeset_add_property_string - Create a new string property
++ *
++ * @ocs:	changeset pointer
++ * @np:		device node pointer
++ * @name:	name of the property
++ * @str:	string property
++ *
++ * Adds a string property to the changeset by making copies of the name
++ * and the string value.
++ *
++ * Returns zero on success, a negative error value otherwise.
++ */
++int of_changeset_add_property_string(struct of_changeset *ocs,
++		struct device_node *np, const char *name, const char *str)
++{
++	return of_changeset_add_property_copy(ocs, np, name, str,
++			strlen(str) + 1);
++}
++
++/**
++ * of_changeset_add_property_stringf - Create a new formatted string property
++ *
++ * @ocs:	changeset pointer
++ * @np:		device node pointer
++ * @name:	name of the property
++ * @fmt:	format of string property
++ * ...		arguments of the format string
++ *
++ * Adds a string property to the changeset by making copies of the name
++ * and the formatted value.
++ *
++ * Returns zero on success, a negative error value otherwise.
++ */
++int of_changeset_add_property_stringf(struct of_changeset *ocs,
++		struct device_node *np, const char *name, const char *fmt, ...)
++{
++	va_list vargs;
++	char *str;
++	int ret;
++
++	va_start(vargs, fmt);
++	str = kvasprintf(GFP_KERNEL, fmt, vargs);
++	va_end(vargs);
++
++	ret = of_changeset_add_property_string(ocs, np, name, str);
++
++	kfree(str);
++	return ret;
++}
++
++/**
++ * of_changeset_add_property_string_list - Create a new string list property
++ *
++ * @ocs:	changeset pointer
++ * @np:		device node pointer
++ * @name:	name of the property
++ * @strs:	pointer to the string list
++ * @count:	string count
++ *
++ * Adds a string list property to the changeset.
++ *
++ * Returns zero on success, a negative error value otherwise.
++ */
++int of_changeset_add_property_string_list(struct of_changeset *ocs,
++		struct device_node *np, const char *name, const char **strs,
++		int count)
++{
++	int total, length, i, ret;
++	char *value, *s;
++
++	total = 0;
++	for (i = 0; i < count; i++) {
++		length = strlen(strs[i]);
++		total += length + 1;
++	}
++
++	value = kmalloc(total, GFP_KERNEL);
++	if (!value)
++		return -ENOMEM;
++
++	for (i = 0, s = value; i < count; i++) {
++		length = strlen(strs[i]);
++		memcpy(s, strs[i], length + 1);
++		s += length + 1;
++	}
++
++	ret = of_changeset_add_property_copy(ocs, np, name, value, total);
++
++	kfree(value);
++
++	return ret;
++}
++
++/**
++ * of_changeset_add_property_u32 - Create a new u32 property
++ *
++ * @ocs:	changeset pointer
++ * @np:		device node pointer
++ * @name:	name of the property
++ * @val:	value in host endian format
++ *
++ * Adds a u32 property to the changeset.
++ *
++ * Returns zero on success, a negative error value otherwise.
++ */
++int of_changeset_add_property_u32(struct of_changeset *ocs,
++		struct device_node *np, const char *name, u32 val)
++{
++	/* in place */
++	val = cpu_to_be32(val);
++	return of_changeset_add_property_copy(ocs, np, name, &val, sizeof(val));
++}
++
++/**
++ * of_changeset_add_property_bool - Create a new u32 property
++ *
++ * @ocs:	changeset pointer
++ * @np:		device node pointer
++ * @name:	name of the property
++ *
++ * Adds a bool property to the changeset. Note that there is
++ * no option to set the value to false, since the property
++ * existing sets it to true.
++ *
++ * Returns zero on success, a negative error value otherwise.
++ */
++int of_changeset_add_property_bool(struct of_changeset *ocs,
++		struct device_node *np, const char *name)
++{
++	return of_changeset_add_property_copy(ocs, np, name, "", 0);
++}
+diff --git a/include/linux/of.h b/include/linux/of.h
+index dd84bf1..419e288 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -1028,6 +1028,27 @@ static inline int of_changeset_update_property(struct of_changeset *ocs,
+ {
+ 	return of_changeset_action(ocs, OF_RECONFIG_UPDATE_PROPERTY, np, prop);
+ }
++
++struct device_node *of_changeset_create_device_nodev(
++	struct of_changeset *ocs, struct device_node *parent,
++	const char *fmt, va_list vargs);
++__printf(3, 4) struct device_node *of_changeset_create_device_node(
++	struct of_changeset *ocs, struct device_node *parent,
++	const char *fmt, ...);
++int of_changeset_add_property_copy(struct of_changeset *ocs,
++	struct device_node *np, const char *name,
++	const void *value, int length);
++int of_changeset_add_property_string(struct of_changeset *ocs,
++	struct device_node *np, const char *name, const char *str);
++__printf(4, 5) int of_changeset_add_property_stringf(struct of_changeset *ocs,
++		struct device_node *np, const char *name, const char *fmt, ...);
++int of_changeset_add_property_string_list(struct of_changeset *ocs,
++	struct device_node *np, const char *name, const char **strs, int count);
++int of_changeset_add_property_u32(struct of_changeset *ocs,
++	struct device_node *np, const char *name, u32 val);
++int of_changeset_add_property_bool(struct of_changeset *ocs,
++	struct device_node *np, const char *name);
++
+ #else /* CONFIG_OF_DYNAMIC */
+ static inline int of_reconfig_notifier_register(struct notifier_block *nb)
+ {
+@@ -1047,6 +1068,58 @@ static inline int of_reconfig_get_state_change(unsigned long action,
+ {
+ 	return -EINVAL;
+ }
++
++static inline int of_changeset_create_device_node(struct of_changeset *ocs,
++	struct device_node *parent, const char *fmt, ...)
++{
++	return -EINVAL;
++}
++
++int of_changeset_add_property_copy(struct of_changeset *ocs,
++	struct device_node *np, const char *name,
++	const void *value, int length)
++{
++	return -EINVAL;
++}
++
++int of_changeset_add_property_string(struct of_changeset *ocs,
++	struct device_node *np, const char *name, const char *str)
++{
++	return -EINVAL;
++}
++
++static inline struct device_node *of_changeset_create_device_nodev(
++	struct of_changeset *ocs, struct device_node *parent,
++	const char *fmt, va_list vargs)
++{
++	return ERR_PTR(-EINVAL);
++}
++
++static inline __printf(4, 5) struct device_node *
++	of_changeset_add_property_stringf(
++		struct of_changeset *ocs, struct device_node *np,
++		const char *name, const char *fmt, ...)
++{
++	return ERR_PTR(-EINVAL);
++}
++
++int of_changeset_add_property_string_list(struct of_changeset *ocs,
++	struct device_node *np, const char *name, const char **strs, int count)
++{
++	return -EINVAL;
++}
++
++int of_changeset_add_property_u32(struct of_changeset *ocs,
++	struct device_node *np, const char *name, u32 val)
++{
++	return -EINVAL;
++}
++
++int of_changeset_add_property_bool(struct of_changeset *ocs,
++	struct device_node *np, const char *name)
++{
++	return -EINVAL;
++}
+ #endif /* CONFIG_OF_DYNAMIC */
+ 
+ /* CONFIG_OF_RESOLVE api */
 -- 
 1.7.12
