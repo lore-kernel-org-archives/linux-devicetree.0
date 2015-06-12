@@ -1,118 +1,45 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: Re: Duplicated device tree and Dynamic symbols
-Date: Fri, 12 Jun 2015 23:06:29 +0300
-Message-ID: <F843F38C-8990-40DD-AF7B-879213FA865C@konsulko.com>
-References: <CAPybu_3CQ0vD=uj_gKwdcsQ_W7u-SRKzKDWOYaXvU83V8iYOqw@mail.gmail.com> <9E8352D3-3925-4362-95D0-F2284993FB0F@konsulko.com> <CAPybu_23vDtL5xxnUCUoNxwGTwVFGsNcGiS5Mg2M+u4jaQF1Sg@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2098\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPybu_23vDtL5xxnUCUoNxwGTwVFGsNcGiS5Mg2M+u4jaQF1Sg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+From: Ash Charles <ashcharles@gmail.com>
+Subject: [PATCH 0/5] Device Tree Fixes for Overo
+Date: Fri, 12 Jun 2015 13:37:21 -0700
+Message-ID: <1434141446-11568-1-git-send-email-ashcharles@gmail.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+Cc: tony@atomide.com, bcousson@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Ricardo,
+This series updates the device trees for Gumstix Overo COMs with some
+minor fixes and support for NAND, the TobiDuo expansion baords, and the
+Palo35 board.
 
-> On Jun 8, 2015, at 23:14 , Ricardo Ribalda Delgado <ricardo.ribalda@g=
-mail.com> wrote:
->=20
-> Hello Pantelis
->=20
-> Any progress here?
->=20
+Adam YH Lee (3):
+  omap3: overo: Update LCD panel names
+  omap3: overo: Enable McBSP2 for all Overo COMs
+  omap3: overo: Add device tree for Palo35 board
 
-I just posted a bunch of patches that make possible using PCI with devi=
-ce tree.
-Perhaps you=E2=80=99d like to take a look.
+Ash Charles (2):
+  omap3: dts: Add DTS for Gumstix TobiDuo expansion board
+  omap3: overo: Support PoP NAND
 
-> Thanks
->=20
+ arch/arm/boot/dts/Makefile                        |  4 ++
+ arch/arm/boot/dts/omap3-overo-base.dtsi           | 55 +++++++++++++++++++
+ arch/arm/boot/dts/omap3-overo-common-lcd35.dtsi   |  5 +-
+ arch/arm/boot/dts/omap3-overo-common-lcd43.dtsi   |  2 +-
+ arch/arm/boot/dts/omap3-overo-palo35-common.dtsi  | 54 +++++++++++++++++++
+ arch/arm/boot/dts/omap3-overo-palo35.dts          | 38 +++++++++++++
+ arch/arm/boot/dts/omap3-overo-storm-palo35.dts    | 38 +++++++++++++
+ arch/arm/boot/dts/omap3-overo-storm-tobiduo.dts   | 22 ++++++++
+ arch/arm/boot/dts/omap3-overo-tobiduo-common.dtsi | 66 +++++++++++++++++++++++
+ arch/arm/boot/dts/omap3-overo-tobiduo.dts         | 22 ++++++++
+ arch/arm/boot/dts/omap3-overo.dtsi                |  4 --
+ 11 files changed, 303 insertions(+), 7 deletions(-)
+ create mode 100644 arch/arm/boot/dts/omap3-overo-palo35-common.dtsi
+ create mode 100644 arch/arm/boot/dts/omap3-overo-palo35.dts
+ create mode 100644 arch/arm/boot/dts/omap3-overo-storm-palo35.dts
+ create mode 100644 arch/arm/boot/dts/omap3-overo-storm-tobiduo.dts
+ create mode 100644 arch/arm/boot/dts/omap3-overo-tobiduo-common.dtsi
+ create mode 100644 arch/arm/boot/dts/omap3-overo-tobiduo.dts
 
-Regards
+-- 
+2.1.4
 
-=E2=80=94 Pantelis
-
-> On Tue, Apr 28, 2015 at 10:36 AM, Pantelis Antoniou
-> <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
->> Hi Ricardo,
->>=20
->>> On Apr 28, 2015, at 11:16 , Ricardo Ribalda Delgado <ricardo.ribald=
-a@gmail.com> wrote:
->>>=20
->>> Hello
->>>=20
->>> I have an X86 platform with device tree support. It has multiple pc=
-i
->>> slots with a custom board that is described with a device tree.
->>>=20
->>> When the pci device is probed, the driver fetches a device tree fro=
-m
->>> the firmware infrastructure, patches the range property based on th=
-e
->>> bar address and adds the device to the main device tree.
->>>=20
->>> This works perfectly fine with only one card, but when the second c=
-ard
->>> is connected: Here be dragons :)
->>>=20
->>> The main issue is that of_find_node_by_phandle always resolves to t=
-he
->>> first connected card. I fixed this by creating a new function.
->>> of_find_node_by_phandle_family() that chooses the closest phandle o=
-n
->>> the tree, not just the first one.
->>>=20
->>> By reading the "Dynamic Symbols support and fixup support"
->>> here:
->>> http://events.linuxfoundation.org/sites/events/files/slides/dynamic=
--dt-elce14.pdf
->>> and here
->>> https://lwn.net/Articles/616859/
->>>=20
->>> It seemed that the patch would fix my issue and it would be already
->>> merged, but I cannot find the patch here
->>> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git
->>> or here
->>> https://git.kernel.org/cgit/linux/kernel/git/jdl/dtc.git
->>>=20
->>> So I am wondering some stuff:
->>>=20
->>> Would a patch adding my of_find_node_by_phandle_family() would be a=
-ccepted.?
->>>=20
->>> Will Dynamic symbols fix my issue?
->>>=20
->>> What is the status of Dynamic symbol support?
->>>=20
->>> Thanks!
->>>=20
->>>=20
->>=20
->> You=E2=80=99ll find it hard to believe but there=E2=80=99s someone u=
-sing something similar.
->>=20
->> I=E2=80=99m trying to figure out how to make it work; hang on to you=
-r horses. I=E2=80=99ll CC you
->> when I post the patches.
->>=20
->>=20
->>> --
->>> Ricardo Ribalda
->>=20
->> Regards
->>=20
->> =E2=80=94 Pantelis
->>=20
->=20
->=20
->=20
-> --=20
-> Ricardo Ribalda
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
