@@ -1,104 +1,103 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 00/20] ARM: dts: Add USB and OTG related
- nodes and enable on various boards
-Date: Fri, 12 Jun 2015 15:27:28 +0200
-Message-ID: <557ADE40.70200@redhat.com>
-References: <1433530943-12599-1-git-send-email-hdegoede@redhat.com> <20150608100358.GW23777@lukather> <55783B2C.3080207@redhat.com>
-Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+From: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/2] drivercore: Fix unregistration path of platform devices
+Date: Fri, 12 Jun 2015 16:00:53 +0200
+Message-ID: <CAPybu_2cugVWwPwEHJktBzY8-a2PPEAVrWe5-A3sdN-zRkK1rA@mail.gmail.com>
+References: <1433686811-12303-1-git-send-email-grant.likely@linaro.org> <1433686811-12303-3-git-send-email-grant.likely@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBRF45OVQKGQEW3ZVTVY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <55783B2C.3080207-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1433686811-12303-3-git-send-email-grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hello
 
-On 10-06-15 15:27, Hans de Goede wrote:
-> Hi,
+Tested-by: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+
+
+Some runtime warnings, but no oops
+
+[   46.348911] Trying to free nonexistent resource
+<00000000b0050000-00000000b005ffff>
+[   46.351979] Trying to free nonexistent resource
+<00000000b9000000-00000000b900ffff>
+[   46.351993] Trying to free nonexistent resource
+<00000000b0000000-00000000b000ffff>
+[   46.352003] Trying to free nonexistent resource
+<00000000b9000000-00000000b900ffff>
+[   46.352009] Trying to free nonexistent resource
+<00000000b0000000-00000000b000ffff>
+
+
+Thanks!
+
+On Sun, Jun 7, 2015 at 4:20 PM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> The unregister path of platform_device is broken. On registration, it
+> will register all resources with either a parent already set, or
+> type==IORESOURCE_{IO,MEM}. However, on unregister it will release
+> everything with type==IORESOURCE_{IO,MEM}, but ignore the others. There
+> are also cases where resources don't get registered in the first place,
+> like with devices created by of_platform_populate()*.
 >
-> On 08-06-15 12:03, Maxime Ripard wrote:
->> Hi Hans,
->>
->> On Fri, Jun 05, 2015 at 09:02:03PM +0200, Hans de Goede wrote:
->>> Hi Maxime,
->>>
->>> Here is a patch-set with all the otg / sun8i-usb-host related dts patches
->>> I've accumulated.
->>>
->>> These are intended for 4.3, and go hand in hand with the outstanding
->>> musb-sunxi / phy-sun4i-usb patches, which I expect to be merged as is
->>> for 4.3 .
->>
->> I'm fine with these patches. Do you have a branch somewhere that I can
->> pull (without the one that you wanted me to drop, obviously)?
+> Fix the unregister path to be symmetrical with the register path by
+> checking the parent pointer instead of the type field to decide which
+> resources to unregister. This is safe because the upshot of the
+> registration path algorithm is that registered resources have a parent
+> pointer, and non-registered resources do not.
 >
-> I've just created a branch with just these patches directly on top
-> of sunxi/for-next for you:
+> * It can be argued that of_platform_populate() should be registering
+>   it's resources, and they argument has some merit. However, there are
+>   quite a few platforms that end up broken if we try to do that due to
+>   overlapping resources in the device tree. Until that is fixed, we need
+>   to solve the immediate problem.
 >
-> https://github.com/jwrdegoede/linux-sunxi/commits/otg-dts-for-maxime
-
-Please ignore this for now. There have been some changes to the extcon
-framework, making it more integrated with devicetree, this means I need
-to add an extcon property to the musb nodes in devicetree:
-
---- a/Documentation/devicetree/bindings/usb/allwinner,sun4i-a10-musb.txt
-+++ b/Documentation/devicetree/bindings/usb/allwinner,sun4i-a10-musb.txt
-@@ -12,6 +12,7 @@ Required properties:
-   - phys            : phy specifier for the otg phy
-   - phy-names       : must be "usb"
-   - dr_mode         : Dual-Role mode must be "host" or "otg"
-+ - extcon          : extcon specifier for the otg phy
-
-  Example:
-
-@@ -23,5 +24,6 @@ Example:
-                 interrupt-names = "mc";
-                 phys = <&usbphy 0>;
-                 phy-names = "usb";
-+         extcon = <&usbphy 0>;
-                 status = "disabled";
-         };
-
---- a/arch/arm/boot/dts/sun7i-a20.dtsi
-+++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-@@ -773,6 +773,7 @@
-                         interrupt-names = "mc";
-                         phys = <&usbphy 0>;
-                         phy-names = "usb";
-+                 extcon = <&usbphy 0>;
-                         allwinner,sram = <&otg_sram 1>;
-                         status = "disabled";
-                 };
-
-I'll push a new version of the patches to otg-dts-for-maxime
-with the extcon property added for you and ping you when it is
-ready.
-
-> While preparing this branch I noticed that the dts for
-> the ippo q8h a33 tablets is not yet merged:
+> Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+> Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+> Cc: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  drivers/base/platform.c | 8 ++------
+>  1 file changed, 2 insertions(+), 6 deletions(-)
 >
-> http://www.spinics.net/lists/devicetree/msg82149.html
+> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+> index ebf034b97278..7403de94832c 100644
+> --- a/drivers/base/platform.c
+> +++ b/drivers/base/platform.c
+> @@ -375,9 +375,7 @@ int platform_device_add(struct platform_device *pdev)
 >
-> You suggested to use the DT quirks interface instead of creating
-> a separate dts for each board variant, and in the end I agreed,
-> and asked you to merge it renamed to a more generic name
-> without the lcd1024x600 bit in there.
+>         while (--i >= 0) {
+>                 struct resource *r = &pdev->resource[i];
+> -               unsigned long type = resource_type(r);
+> -
+> -               if (type == IORESOURCE_MEM || type == IORESOURCE_IO)
+> +               if (r->parent)
+>                         release_resource(r);
+>         }
 >
-> I can make it more generic and resend it myself. Do you want me
-> to squash in the otg changes when I resend it, or shall I keep
-> those separate ?
+> @@ -408,9 +406,7 @@ void platform_device_del(struct platform_device *pdev)
+>
+>                 for (i = 0; i < pdev->num_resources; i++) {
+>                         struct resource *r = &pdev->resource[i];
+> -                       unsigned long type = resource_type(r);
+> -
+> -                       if (type == IORESOURCE_MEM || type == IORESOURCE_IO)
+> +                       if (r->parent)
+>                                 release_resource(r);
+>                 }
+>         }
+> --
+> 2.1.4
+>
 
-And about this one: ping ?
 
-Thanks & Regards,
 
-Hans
+-- 
+Ricardo Ribalda
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
