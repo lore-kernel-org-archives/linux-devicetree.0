@@ -1,151 +1,38 @@
-From: Neil Brown <neilb-l3A5Bk7waGM@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] NFC: nfcmrvl: add UART driver
-Date: Fri, 12 Jun 2015 17:24:11 +1000
-Message-ID: <20150612172411.68e08669@home.neil.brown.name>
-References: <1434024020-17048-1-git-send-email-cuissard@marvell.com>
-	<1434024020-17048-3-git-send-email-cuissard@marvell.com>
-	<CAL_JsqKtCT9wLS5xqHoJ9K_2Y+Tw8g7mP=MSkDBXO9TexHd9pg@mail.gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 00/21] On-demand device registration
+Date: Fri, 12 Jun 2015 09:25:53 +0200
+Message-ID: <CACRpkdbDSS0yw=q_cR17Bvg+kgTfU3Vcd2gSjx1p4V-CzOZ_SA@mail.gmail.com>
+References: <1432565608-26036-1-git-send-email-tomeu.vizoso@collabora.com>
+	<CACRpkdasLwMfEHGMRd1X3K_DU7NMPreE8TMwqqDTg8k9wj=wJQ@mail.gmail.com>
+	<CAAObsKCP-C+TY8Wkk6bQzxZeGYL9X01trtjxfaYp--ZnH07C+w@mail.gmail.com>
+	<CACRpkdZuSj+S2x1yz6n5PgcRK=3ZCcq_To124b2Y+Oj54aydpg@mail.gmail.com>
+	<5577F533.1060007@ahsoftware.de>
+	<CACRpkdYF5K7ckGbgvZc6qRzGFJTQ4WqXdu_7Tcqczn2LkFbn3A@mail.gmail.com>
+	<5579602F.1070801@ahsoftware.de>
+	<CACRpkdaZgBR5rHwrEYqcm5K4w3y8MXG8a0k=Y+oQY+jukHfuyw@mail.gmail.com>
+	<5579B9E8.9040609@ahsoftware.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqKtCT9wLS5xqHoJ9K_2Y+Tw8g7mP=MSkDBXO9TexHd9pg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Vincent Cuissard <cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5579B9E8.9040609-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
+Cc: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "list-7NY9aMYB+ISttCpgsWEBFg@public.gmane.org:DRM PANEL DRIVERS" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 11 Jun 2015 23:06:54 -0500
-Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+On Thu, Jun 11, 2015 at 6:40 PM, Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org> wrote:
+> Am 11.06.2015 um 14:30 schrieb Linus Walleij:
 
-> Adding Neil Brown who has been doing a UART slave binding[1].
+>> Certainly it is possible to create deadlocks in this scenario, but the
+>> scope is not to create an ubreakable system.
+>
+> IAnd what happens if you run into a deadlock? Do you print "you've lost, try
+> changing your kernel config" in some output hidden by a splash-screen? ;)
 
-Thanks for the heads-up.
+Sorry it sounds like a blanket argument, the fact that there are
+mutexes in the kernel makes it possible to deadlock, it doesn't
+mean we don't use mutexes. Some programming problems are
+just like such.
 
-This is quite a different approach to configuring a device that is attached to
-a UART, but then I think it is trying to handle different issues than my
-approach and the two can easily co-exist.
-
-My need was for a driver to be activated when the tty device was opened.
-So the uart needs to examine the child in devicetree, find the "compatible"
-driver, probe it, and allow it to intercept "open" requests.
-
-This need is to be able to configure a particular driver that is attached to a
-particular line discipline.
-So (if I understand correctly), the /dev/ttyXX would be opened, an line
-discipline would be selected, and ioctl to that line discipline would select
-the driver and then that drive goes and looks in devicetree, find the
-configuration, and makes use of it.
-
-It may be a pipe dream, but it might be nice if these could be combined.  When
-the uart looks in device tree, if it finds a child which specifies a
-line-discipline, it could activate that line discipline directly which could
-then extract other information  and activate the relevant drive, which could
-then gather the relevant configuration information.
-
-I do think my current code would get confused if it found this device tree node
-under a uart.
-It currently thinks any device tree node with a "compatible" attribute implies
-a device that will have a driver.  So it won't register the tty device until
-that driver appears.  That would be a problem for this NFC driver.
-
-It probably makes sense to change my approach so that the tty still gets
-registered immediately, but when the driver appears it gets connected in to the
-tty somehow.   I'll have to give that some thought.
-
-Thanks,
-NeilBrown
-
-
-> 
-> On Thu, Jun 11, 2015 at 7:00 AM, Vincent Cuissard <cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org> wrote:
-> > Add support of Marvell NFC chip controlled over UART
-> >
-> > Signed-off-by: Vincent Cuissard <cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/net/nfc/nfcmrvl.txt        |  29 +++
-> >  drivers/nfc/nfcmrvl/Kconfig                        |  11 +
-> >  drivers/nfc/nfcmrvl/Makefile                       |   3 +
-> >  drivers/nfc/nfcmrvl/nfcmrvl.h                      |   7 +
-> >  drivers/nfc/nfcmrvl/uart.c                         | 225 +++++++++++++++++++++
-> >  include/linux/platform_data/nfcmrvl.h              |   9 +
-> >  net/nfc/nci/uart.c                                 |   1 -
-> >  7 files changed, 284 insertions(+), 1 deletion(-)
-> >  create mode 100644 Documentation/devicetree/bindings/net/nfc/nfcmrvl.txt
-> >  create mode 100644 drivers/nfc/nfcmrvl/uart.c
-> >
-> > diff --git a/Documentation/devicetree/bindings/net/nfc/nfcmrvl.txt b/Documentation/devicetree/bindings/net/nfc/nfcmrvl.txt
-> > new file mode 100644
-> > index 0000000..7c4a0cc
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/net/nfc/nfcmrvl.txt
-> > @@ -0,0 +1,29 @@
-> > +* Marvell International Ltd. NCI NFC Controller
-> > +
-> > +Required properties:
-> > +- compatible: Should be "mrvl,nfc-uart".
-> 
-> This should describe the chip, not the connection.
-> 
-> marvell is the preferred vendor prefix. mrvl is deprecated.
-> 
-> 
-> > +Optional SoC specific properties:
-> > +- pinctrl-names: Contains only one value - "default".
-> > +- pintctrl-0: Specifies the pin control groups used for this controller.
-> 
-> What pins are you controlling exactly? The UART signals on the host?
-> 
-> > +- reset-n-io: Output GPIO pin used to reset the chip (active low).
-> 
-> Should be suffixed with "-gpio". Is this reset for the chip or only NFC?
-> 
-> > +- hci-muxed: Specifies that the chip is muxing NCI over HCI frames.
-> > +
-> > +Optional UART-based chip specific properties:
-> > +- flow-control: Specifies that the chip is using RTS/CTS.
-> 
-> Is this a setting in the NFC chip or just how the UART is configured.
-> If the latter, we already have standard UART property to enable
-> flow-control on a UART.
-> 
-> > +- break-control: Specifies that the chip needs specific break management.
-> 
-> Can you be more specific?
-> 
-> > +
-> > +Example (for ARM-based BeagleBoard Black with 88W8887 on UART5):
-> > +
-> > +&uart5 {
-> > +       status = "okay";
-> > +
-> > +       nfcmrvluart: nfcmrvluart@5 {
-> 
-> Unit addresses should have a corresponding reg property. You don't
-> need a reg property here, so drop the unit address. Names should allow
-> be generic, so just "nfc" is probably sufficient here. Or maybe
-> "uart-slave".
-> 
-> How are you doing the binding for the rest of the 8887 chip which has
-> also has BT and WiFi. We need to figure out how to do the whole chip
-> which is a bit more complicated, but quite common. We could split up
-> each function, but then I worry that there may be some
-> interdependencies between functions on the chip.
-> 
-> > +               compatible = "mrvl,nfc-uart";
-> > +
-> > +               reset-n-io = <&gpio3 16 0>;
-> > +
-> > +               hci-muxed;
-> > +               flow-control;
-> > +        }
-> > +};
-> 
-> Rob
-> 
-> [1] https://lwn.net/Articles/643878/
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yours,
+Linus Walleij
