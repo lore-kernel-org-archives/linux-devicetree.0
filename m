@@ -1,178 +1,30 @@
-From: Ash Charles <ashcharles@gmail.com>
-Subject: [PATCH 2/5] omap3: dts: Add DTS for Gumstix TobiDuo expansion board
-Date: Fri, 12 Jun 2015 13:37:23 -0700
-Message-ID: <1434141446-11568-3-git-send-email-ashcharles@gmail.com>
-References: <1434141446-11568-1-git-send-email-ashcharles@gmail.com>
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1434141446-11568-1-git-send-email-ashcharles@gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org, devicetree@vger.kernel.org
-Cc: tony@atomide.com, bcousson@baylibre.com
+From: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH non-pretimeout 3/7] ARM64: add SBSA Generic Watchdog device
+ node in amd-seattle-soc.dtsi
+Date: Fri, 12 Jun 2015 15:54:35 -0500
+Message-ID: <557B470B.9030908@codeaurora.org>
+References: <=fu.wei@linaro.org> <1433958452-23721-1-git-send-email-fu.wei@linaro.org> <1433958452-23721-4-git-send-email-fu.wei@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1433958452-23721-4-git-send-email-fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org, linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, leo.duran-5C7GfCeVMHo@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The Gumstix "Tobi-Duo" expansion board [1] can be used with either
-OMAP3 Overo or Overo Storm COMs.  It provides two NICs using LAN9221
-chips.
-It is necessary to duplicate the interface information for the
-second SMSC9221 chip as discussed [2].
+On 06/10/2015 12:47 PM, fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
+> +			reg = <0x0 0xe0bb0000 0 0x10000>,
+> +				<0x0 0xe0bc0000 0 0x10000>;
 
-[1] https://store.gumstix.com/index.php/products/241/
-[2] http://www.spinics.net/lists/linux-omap/msg115282.html
+I think the sizes are wrong.  They should be 0x1000 instead of 0x10000.
 
-Signed-off-by: Ash Charles <ashcharles@gmail.com>
----
- arch/arm/boot/dts/Makefile                        |  2 +
- arch/arm/boot/dts/omap3-overo-storm-tobiduo.dts   | 22 ++++++++
- arch/arm/boot/dts/omap3-overo-tobiduo-common.dtsi | 66 +++++++++++++++++++++++
- arch/arm/boot/dts/omap3-overo-tobiduo.dts         | 22 ++++++++
- 4 files changed, 112 insertions(+)
- create mode 100644 arch/arm/boot/dts/omap3-overo-storm-tobiduo.dts
- create mode 100644 arch/arm/boot/dts/omap3-overo-tobiduo-common.dtsi
- create mode 100644 arch/arm/boot/dts/omap3-overo-tobiduo.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 992736b5229b..ac7c6f6bd719 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -394,8 +394,10 @@ dtb-$(CONFIG_ARCH_OMAP3) += \
- 	omap3-overo-storm-palo43.dtb \
- 	omap3-overo-storm-summit.dtb \
- 	omap3-overo-storm-tobi.dtb \
-+	omap3-overo-storm-tobiduo.dtb \
- 	omap3-overo-summit.dtb \
- 	omap3-overo-tobi.dtb \
-+	omap3-overo-tobiduo.dtb \
- 	omap3-pandora-600mhz.dtb \
- 	omap3-pandora-1ghz.dtb \
- 	omap3-sbc-t3517.dtb \
-diff --git a/arch/arm/boot/dts/omap3-overo-storm-tobiduo.dts b/arch/arm/boot/dts/omap3-overo-storm-tobiduo.dts
-new file mode 100644
-index 000000000000..0c7d5a70e5e5
---- /dev/null
-+++ b/arch/arm/boot/dts/omap3-overo-storm-tobiduo.dts
-@@ -0,0 +1,22 @@
-+/*
-+ * Copyright (C) 2015 Ash Charles, Gumstix, Inc.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+/*
-+ * TobiDuo expansion board is manufactured by Gumstix Inc.
-+ */
-+
-+/dts-v1/;
-+
-+#include "omap3-overo-storm.dtsi"
-+#include "omap3-overo-tobiduo-common.dtsi"
-+
-+/ {
-+	model = "OMAP36xx/AM37xx/DM37xx Gumstix Overo on TobiDuo";
-+	compatible = "gumstix,omap3-overo-tobiduo", "gumstix,omap3-overo", "ti,omap36xx", "ti,omap3";
-+};
-+
-diff --git a/arch/arm/boot/dts/omap3-overo-tobiduo-common.dtsi b/arch/arm/boot/dts/omap3-overo-tobiduo-common.dtsi
-new file mode 100644
-index 000000000000..05788aab3cd3
---- /dev/null
-+++ b/arch/arm/boot/dts/omap3-overo-tobiduo-common.dtsi
-@@ -0,0 +1,66 @@
-+/*
-+ * Copyright (C) 2015 Ash Charles, Gumstix, Inc.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+/*
-+ * TobiDuo expansion board is manufactured by Gumstix Inc.
-+ */
-+
-+#include "omap3-overo-common-peripherals.dtsi"
-+
-+#include "omap-gpmc-smsc9221.dtsi"
-+
-+&gpmc {
-+	ranges = <4 0 0x2b000000 0x1000000>,	/* CS4 */
-+		 <5 0 0x2c000000 0x1000000>;	/* CS5 */
-+
-+	smsc1: ethernet@gpmc {
-+		reg = <5 0 0xff>;
-+		interrupt-parent = <&gpio6>;
-+		interrupts = <16 IRQ_TYPE_LEVEL_LOW>;	/* GPIO 176 */
-+	};
-+
-+	smsc2: ethernet@4,0 {
-+		compatible = "smsc,lan9221","smsc,lan9115";
-+		bank-width = <2>;
-+
-+		gpmc,mux-add-data;
-+		gpmc,cs-on-ns = <0>;
-+		gpmc,cs-rd-off-ns = <42>;
-+		gpmc,cs-wr-off-ns = <36>;
-+		gpmc,adv-on-ns = <6>;
-+		gpmc,adv-rd-off-ns = <12>;
-+		gpmc,adv-wr-off-ns = <12>;
-+		gpmc,oe-on-ns = <0>;
-+		gpmc,oe-off-ns = <42>;
-+		gpmc,we-on-ns = <0>;
-+		gpmc,we-off-ns = <36>;
-+		gpmc,rd-cycle-ns = <60>;
-+		gpmc,wr-cycle-ns = <54>;
-+		gpmc,access-ns = <36>;
-+		gpmc,page-burst-access-ns = <0>;
-+		gpmc,bus-turnaround-ns = <0>;
-+		gpmc,cycle2cycle-delay-ns = <0>;
-+		gpmc,wr-data-mux-bus-ns = <18>;
-+		gpmc,wr-access-ns = <42>;
-+		gpmc,cycle2cycle-samecsen;
-+		gpmc,cycle2cycle-diffcsen;
-+		vddvario-supply = <&vddvario>;
-+		vdd33a-supply = <&vdd33a>;
-+		reg-io-width = <4>;
-+		smsc,save-mac-address;
-+
-+		reg = <4 0 0xff>;
-+		interrupt-parent = <&gpio3>;
-+		interrupts = <1 IRQ_TYPE_LEVEL_LOW>;	/* GPIO 65 */
-+	};
-+};
-+
-+&lis33de {
-+	status = "disabled";
-+};
-+
-diff --git a/arch/arm/boot/dts/omap3-overo-tobiduo.dts b/arch/arm/boot/dts/omap3-overo-tobiduo.dts
-new file mode 100644
-index 000000000000..bebc4b1e0bf7
---- /dev/null
-+++ b/arch/arm/boot/dts/omap3-overo-tobiduo.dts
-@@ -0,0 +1,22 @@
-+/*
-+ * Copyright (C) 2015 Ash Charles, Gumstix, Inc.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+/*
-+ * TobiDuo expansion board is manufactured by Gumstix Inc.
-+ */
-+
-+/dts-v1/;
-+
-+#include "omap3-overo.dtsi"
-+#include "omap3-overo-tobiduo-common.dtsi"
-+
-+/ {
-+	model = "OMAP35xx Gumstix Overo on TobiDuo";
-+	compatible = "gumstix,omap3-overo-tobiduo", "gumstix,omap3-overo", "ti,omap3430", "ti,omap3";
-+};
-+
 -- 
-2.1.4
-
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
