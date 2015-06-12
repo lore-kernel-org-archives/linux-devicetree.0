@@ -1,63 +1,50 @@
-From: Zidan Wang <zidan.wang@freescale.com>
-Subject: Re: [PATCH] ASoC: fsl: add imx-wm8960 machine driver
-Date: Fri, 12 Jun 2015 16:09:32 +0800
-Message-ID: <20150612080930.GB23608@shlinux2>
-References: <b2a3c323a0507f3706041e1da98da8375aa61576.1433923593.git.zidan.wang@freescale.com>
- <20150610183619.GA3103@Asurada-CZ80> <20150611110958.GA23742@shlinux2>
- <20150611155106.GA3036@Asurada>
+From: Koro Chen <koro.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH 1/3] ASoC: mediatek: Add AFE platform driver
+Date: Fri, 12 Jun 2015 16:24:48 +0800
+Message-ID: <1434097488.29733.0.camel@mtksdaap41>
+References: <1433946276-25969-1-git-send-email-koro.chen@mediatek.com>
+	 <1433946276-25969-2-git-send-email-koro.chen@mediatek.com>
+	 <1434006187.24094.40.camel@x220> <1434074158.10969.5.camel@mtksdaap41>
+	 <1434094677.2271.125.camel@x220>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <20150611155106.GA3036@Asurada>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Nicolin Chen <nicoleotsuka@gmail.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Xiubo.Lee@gmail.com, tiwai@suse.de, linux-kernel@vger.kernel.org, timur@tabi.org, broonie@kernel.org, linuxppc-dev@lists.ozlabs.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1434094677.2271.125.camel@x220>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 11, 2015 at 08:51:07AM -0700, Nicolin Chen wrote:
-> On Thu, Jun 11, 2015 at 07:10:00PM +0800, Zidan Wang wrote:
-> 
-> > > > This imx-wm8960 device-tree-only machine driver works with sai driver
-> > > > and have below feature.
-> > > > * support codec master and slave mode
-> > > > * support headphone jack detect
-> > > > * support headphone and micphone jack event
-> > > > * support asrc<->sai<->wm8960 mode
-> > > > 
-> > > > Signed-off-by: Zidan Wang <zidan.wang@freescale.com>
+On Fri, 2015-06-12 at 09:37 +0200, Paul Bolle wrote:
+> On Fri, 2015-06-12 at 09:55 +0800, Koro Chen wrote:
+> > On Thu, 2015-06-11 at 09:03 +0200, Paul Bolle wrote:
+> > > (What does negating a bool twice do?)
 > > > 
-> > > Above all, could you merge this into fsl-asoc-card?
-> > > 
-> > > It'd be nicer to have jack detection over there. And we can
-> > > put PLL settings to the codec driver as Mark suggested.
+> > Because bool actually can be unsigned char, although actually in this
+> > driver, the caller always passes "true" or "false" to this function.
 > 
-> > I want to modify imx-wm8960 and upstream it because our release is using it now. After
-> > upstreaming imx-wm8960, i will try to merge it to fsl-asoc-card.
+> bool is _Bool in the kernel (see include/linux/types.h). So whenever you
+> see a bool in the kernel you can assume it's either 0 or 1. Are there
+> any cases where this conveniently simple rule doesn't hold?
 > 
-> I knew your intention. That's why I suggested you to merge it directly
-> to fsl-asoc-card instead of making a duplicated copy of that. Remember
-> that getting code upstream should be a chance for us to improve thing.
+> But here the discussion is moot, because as you say, the function will
+> only be passed false or true so we know "enable" is either 0 or 1 and
+> double negating will do nothing.
 > 
-> If you find painstaking to handle it in parallel, you can focus on the
-> improvements of the WM8960 driver while I would help you on the dai-
-> link part. How about this?
+> > Do you think if this is the case, should I still need to do !!?
 > 
-> Nicolin
+> So you should not, as it's confusing at best.
+> 
+OK, thank you. I will drop it in the next version of patch.
+> Thanks,
+> 
+> 
+> Paul Bolle
+> 
 
-The new imx7 release have two new codec wm8958 and wm8960. So we have two machine driver
-imx-wm8960 and imx-wm8958 which should be upstreamed. I am appreciate that you can help me
-merge the imx-wm8960 to fsl-asoc-card. And i will focus on wm8960 and wm8958 driver. And i
-will try to merge imx-wm8958 to fsl-asoc-card.
 
-Best Regards,
-Zidan Wang 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
