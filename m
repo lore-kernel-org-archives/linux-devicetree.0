@@ -1,259 +1,76 @@
-From: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] arm64: dts: mt8173: Add I2C device node
-Date: Fri, 12 Jun 2015 20:28:51 +0800
-Message-ID: <CAGS+omB1UadXeKZLmMdhSamsPpipQLmoH_PhbUPvszrYTq68fA@mail.gmail.com>
-References: <1434101229-32695-1-git-send-email-eddie.huang@mediatek.com> <1434101229-32695-3-git-send-email-eddie.huang@mediatek.com>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH 02/13] dmaengine: Introduce
+ dma_request_slave_channel_compat_reason()
+Date: Fri, 12 Jun 2015 18:28:37 +0530
+Message-ID: <20150612125837.GJ28601@localhost>
+References: <1432646768-12532-1-git-send-email-peter.ujfalusi@ti.com>
+ <1432646768-12532-3-git-send-email-peter.ujfalusi@ti.com>
+ <20150529093317.GF3140@localhost>
+ <CAMuHMdVJ0h9qXxBWH9L2y4O2KLkEq12KW_6k8rTgi+Lux=C0gw@mail.gmail.com>
+ <20150529101846.GG3140@localhost>
+ <55687892.7050606@ti.com>
+ <20150602125535.GS3140@localhost>
+ <5570758E.6030302@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1434101229-32695-3-git-send-email-eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-crypto-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5570758E.6030302@ti.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Tony Lindgren <tony@atomide.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Linux MMC List <linux-mmc@vger.kernel.org>, linux-crypto@vger.kernel.org, linux-spi <linux-spi@vger.kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, ALSA Development Mailing List <alsa-devel@alsa-project.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Eddie,
+On Thu, Jun 04, 2015 at 06:58:06PM +0300, Peter Ujfalusi wrote:
+> Vinod,
+> 
+> On 06/02/2015 03:55 PM, Vinod Koul wrote:
+> > On Fri, May 29, 2015 at 05:32:50PM +0300, Peter Ujfalusi wrote:
+> >> On 05/29/2015 01:18 PM, Vinod Koul wrote:
+> >>> On Fri, May 29, 2015 at 11:42:27AM +0200, Geert Uytterhoeven wrote:
+> >>>> On Fri, May 29, 2015 at 11:33 AM, Vinod Koul <vinod.koul@intel.com> wrote:
+> >>>>> On Tue, May 26, 2015 at 04:25:57PM +0300, Peter Ujfalusi wrote:
+> >>>>>> dma_request_slave_channel_compat() 'eats' up the returned error codes which
+> >>>>>> prevents drivers using the compat call to be able to do deferred probing.
+> >>>>>>
+> >>>>>> The new wrapper is identical in functionality but it will return with error
+> >>>>>> code in case of failure and will pass the -EPROBE_DEFER to the caller in
+> >>>>>> case dma_request_slave_channel_reason() returned with it.
+> >>>>> This is okay but am worried about one more warpper, how about fixing
+> >>>>> dma_request_slave_channel_compat()
+> >>>>
+> >>>> Then all callers of dma_request_slave_channel_compat() have to be
+> >>>> modified to handle ERR_PTR first.
+> >>>>
+> >>>> The same is true for (the existing) dma_request_slave_channel_reason()
+> >>>> vs. dma_request_slave_channel().
+> >>> Good point, looking again, I think we should rather fix
+> >>> dma_request_slave_channel_reason() as it was expected to return err code and
+> >>> add new users. Anyway users of this API do expect the reason...
+> >>
+> >> Hrm, they are for different use.dma_request_slave_channel()/_reason() is for
+> >> drivers only working via DT or ACPI while
+> >> dma_request_slave_channel_compat()/_reason() is for drivers expected to run in
+> >> DT/ACPI or legacy mode as well.
+> >>
+> >> I added the dma_request_slave_channel_compat_reason() because OMAP/daVinci
+> >> drivers are using this to request channels - they need to support DT and
+> >> legacy mode.
+> > I think we should hide these things behind the API and do this behind the
+> > hood for ACPI/DT systems.
+> > 
+> > Also it makes sense to use right API and mark rest as depricated
+> 
+> So to convert the dma_request_slave_channel_compat() and not to create _reason
+> variant?
+> 
+> Or to have single API to request channel? The problem with that is that we
+> need different parameters for legacy and DT for example.
+Sorry this slipped thru
 
-On Fri, Jun 12, 2015 at 5:27 PM, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
->
-> Add MT8173 I2C device nodes, include I2C controllers and pins.
-> MT8173 has six I2C controllers, from i2c0 to i2c6, exclude i2c5.
-> The 6th I2C controller register base doesn't next to 5th I2C,
-> and there is a hardware between 5th and 6th I2C controller. So
-> SoC designer name 6th controller as "i2c6", not "i2c5".
-
-
-This is slightly misleading.  There are in fact 7 I2C controllers, but
-"i2c5" is dedicated for use by HDMI for ddc & hdcp.
-Is there a reason why the HDMI I2C port cannot be controlled by the
-generic i2c driver?
-
-Of course the hdmiddc / i2c5 node can always be added in a later
-patch, so this is no reason to hold up this patch.
-
-> Signed-off-by: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/mediatek/mt8173-evb.dts | 50 ++++++++++++++++++++
->  arch/arm64/boot/dts/mediatek/mt8173.dtsi    | 72 +++++++++++++++++++++++++++++
->  2 files changed, 122 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-> index 43d5401..2e01988 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-> +++ b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-> @@ -33,6 +33,56 @@
->         chosen { };
->  };
->
-> +&pio {
-
-I don't think we needed to move these i2c pinmux descriptions from
-mt8173.dtsi to the board .dts file.
-
-AFAICT, the "i2cN_pins_a" nodes defined here are the pinctl
-configuration that the corresponding enabled i2c nodes would choose.
-Thus, they are generic to the MT8173 SoC, not specific to any board.
-By themselves, these nodes do not actually select a pin configuration.
-
-It is the nodes that *enable* the individual i2c nodes, and hence
-activate those pin settings, which is board specific.
-
-Hence, if your intent is to have the evb enable all i2c nodes, it
-would have a set of nodes like this:
-
-
-&i2c0 {
-  pinctrl-names = "default";
-  pinctrl-0 = <&i2c0_pins_a>;
-  status = "okay";
-};
-
-&i2c1 {
- pinctrl-names = "default";
- pinctrl-0 = <&i2c1_pins_a>;
- status = "okay";
-};
-
-...
+Thinking about it again, I think we should coverge to two APIs and mark the
+legacy depracuated and look to convert folks and phase that out
 
 
-> +       i2c0_pins_a: i2c0@0 {
-
-Do these nodes need the "@0"?
-
->
-> +               pins1 {
-> +                       pinmux = <MT8173_PIN_45_SDA0__FUNC_SDA0>,
-> +                                <MT8173_PIN_46_SCL0__FUNC_SCL0>;
-> +                       bias-disable;
-> +               };
-> +       };
-> +
-> +       i2c1_pins_a: i2c1@0 {
-> +               pins1 {
-> +                       pinmux = <MT8173_PIN_125_SDA1__FUNC_SDA1>,
-> +                                <MT8173_PIN_126_SCL1__FUNC_SCL1>;
-> +                       bias-disable;
-> +               };
-> +       };
-> +
-> +       i2c2_pins_a: i2c2@0 {
-> +               pins1 {
-> +                       pinmux = <MT8173_PIN_43_SDA2__FUNC_SDA2>,
-> +                                <MT8173_PIN_44_SCL2__FUNC_SCL2>;
-> +                       bias-disable;
-> +               };
-> +       };
-> +
-> +       i2c3_pins_a: i2c3@0 {
-> +               pins1 {
-> +                       pinmux = <MT8173_PIN_106_SDA3__FUNC_SDA3>,
-> +                                <MT8173_PIN_107_SCL3__FUNC_SCL3>;
-> +                       bias-disable;
-> +               };
-> +       };
-> +
-> +       i2c4_pins_a: i2c4@0 {
-> +               pins1 {
-> +                       pinmux = <MT8173_PIN_133_SDA4__FUNC_SDA4>,
-> +                                <MT8173_PIN_134_SCL4__FUNC_SCL4>;
-> +                       bias-disable;
-> +               };
-> +       };
-> +
-> +       i2c6_pins_a: i2c6@0 {
-> +               pins1 {
-> +                       pinmux = <MT8173_PIN_100_MSDC2_DAT0__FUNC_SDA5>,
-> +                                <MT8173_PIN_101_MSDC2_DAT1__FUNC_SCL5>;
-
-These are the SDA/SCL pins for i2c port 6, so they should really be
-_SDA6 / _SCL6.
-However... I checked, and these settings are labeled "SDA5 & SCL5" in
-the datasheet.
-I recommend marking them correctly as 6 here and fixing the datasheet :-).
-
->
-> +                       bias-disable;
-> +               };
-> +       };
-> +};
-> +
->  &uart0 {
->         status = "okay";
->  };
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> index b52ec43..6d3dbbdd 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> @@ -229,6 +229,78 @@
->                         clocks = <&uart_clk>;
->                         status = "disabled";
->                 };
-> +
-> +               i2c0: i2c@11007000 {
-> +                       compatible = "mediatek,mt8173-i2c";
-> +                       reg = <0 0x11007000 0 0x70>,
-> +                             <0 0x11000100 0 0x80>;
-> +                       interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_LOW>;
-> +                       clock-div = <16>;
-> +                       clocks = <&pericfg CLK_PERI_I2C0>,
-> +                                <&pericfg CLK_PERI_AP_DMA>;
-> +                       clock-names = "main", "dma";
-
-The following fields must also be selected by the i2c nodes when they
-are enabled:
-
-clock-frequency = <100000>;
-pinctrl-names = "default";
-pinctrl-0 = <&i2c0_pins_a>;
-#address-cells = <1>;
-#size-cells = <0>;
-
-So, is there any reason not to also include them here in mt8173.dtsi
-so we can use them as defaults?
-This would simplify the i2c nodes in the board specific .dts files.
-The only field that might be board specific would be clock-frequency,
-but that is trivial to override on a port-by-port basis in board files
-as necessary.
-
-Thanks,
--Dan
-
->
-> +                       status = "disabled";
-> +               };
-> +
-> +               i2c1: i2c@11008000 {
-> +                       compatible = "mediatek,mt8173-i2c";
-> +                       reg = <0 0x11008000 0 0x70>,
-> +                             <0 0x11000180 0 0x80>;
-> +                       interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_LOW>;
-> +                       clock-div = <16>;
-> +                       clocks = <&pericfg CLK_PERI_I2C1>,
-> +                                <&pericfg CLK_PERI_AP_DMA>;
-> +                       clock-names = "main", "dma";
-> +                       status = "disabled";
-> +               };
-> +
-> +               i2c2: i2c@11009000 {
-> +                       compatible = "mediatek,mt8173-i2c";
-> +                       reg = <0 0x11009000 0 0x70>,
-> +                             <0 0x11000200 0 0x80>;
-> +                       interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_LOW>;
-> +                       clock-div = <16>;
-> +                       clocks = <&pericfg CLK_PERI_I2C2>,
-> +                                <&pericfg CLK_PERI_AP_DMA>;
-> +                       clock-names = "main", "dma";
-> +                       status = "disabled";
-> +               };
-> +
-> +               i2c3: i2c3@11010000 {
-> +                       compatible = "mediatek,mt8173-i2c";
-> +                       reg = <0 0x11010000 0 0x70>,
-> +                             <0 0x11000280 0 0x80>;
-> +                       interrupts = <GIC_SPI 79 IRQ_TYPE_LEVEL_LOW>;
-> +                       clock-div = <16>;
-> +                       clocks = <&pericfg CLK_PERI_I2C3>,
-> +                                <&pericfg CLK_PERI_AP_DMA>;
-> +                       clock-names = "main", "dma";
-> +                       status = "disabled";
-> +               };
-> +
-> +               i2c4: i2c4@11011000 {
-> +                       compatible = "mediatek,mt8173-i2c";
-> +                       reg = <0 0x11011000 0 0x70>,
-> +                             <0 0x11000300 0 0x80>;
-> +                       interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_LOW>;
-> +                       clock-div = <16>;
-> +                       clocks = <&pericfg CLK_PERI_I2C4>,
-> +                                <&pericfg CLK_PERI_AP_DMA>;
-> +                       clock-names = "main", "dma";
-> +                       status = "disabled";
-> +               };
-> +
-> +               i2c6: i2c6@11013000 {
-> +                       compatible = "mediatek,mt8173-i2c";
-> +                       reg = <0 0x11013000 0 0x70>,
-> +                             <0 0x11000080 0 0x80>;
-> +                       interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_LOW>;
-> +                       clock-div = <16>;
-> +                       clocks = <&pericfg CLK_PERI_I2C6>,
-> +                                <&pericfg CLK_PERI_AP_DMA>;
-> +                       clock-names = "main", "dma";
-> +                       status = "disabled";
-> +               };
->         };
->
->  };
-> --
-> 1.8.1.1.dirty
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+~Vinod
