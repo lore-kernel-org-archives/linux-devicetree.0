@@ -1,77 +1,129 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH] rtc: hym8563: make the irq optional
-Date: Sat, 13 Jun 2015 12:34:04 +0200
-Message-ID: <2559079.JyXCpe7EYV@diego>
+From: =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
+Subject: [PATCH v2 2/3] watchdog: bcm2835: Add poweroff code for the Raspberry Pi
+Date: Sat, 13 Jun 2015 13:39:00 +0200
+Message-ID: <1434195541-28368-2-git-send-email-noralf@tronnes.org>
+References: <1434195541-28368-1-git-send-email-noralf@tronnes.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1434195541-28368-1-git-send-email-noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Sometimes the irq line is not connected to any soc-pin. This does
-not hinder basic timekeeping functionality of the rtc, so probe
-should not fail in this case.
+This adds a new poweroff function to the watchdog driver for the
+Raspberry Pi. Currently poweroff/halt results in a reboot.
 
-Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+The Raspberry Pi firmware uses the RSTS register to know which
+partiton to boot from. The partiton value is spread into bits
+0, 2, 4, 6, 8, 10. Partiton 63 is a special partition used by
+the firmware to indicate halt.
+
+The firmware made this change in 19 Aug 2013 and was matched
+by the downstream commit:
+Changes for new NOOBS multi partition booting from gsh
+
+Signed-off-by: Noralf Tr=C3=B8nnes <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
+Acked-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 ---
- .../devicetree/bindings/rtc/haoyu,hym8563.txt          |  2 +-
- drivers/rtc/rtc-hym8563.c                              | 18 ++++++++++--------
- 2 files changed, 11 insertions(+), 9 deletions(-)
+ drivers/watchdog/bcm2835_wdt.c | 38 ++++++++++++++++++++++++++++++++++=
+----
+ 1 file changed, 34 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/rtc/haoyu,hym8563.txt b/Documentation/devicetree/bindings/rtc/haoyu,hym8563.txt
-index 5c199ee..a8934fe 100644
---- a/Documentation/devicetree/bindings/rtc/haoyu,hym8563.txt
-+++ b/Documentation/devicetree/bindings/rtc/haoyu,hym8563.txt
-@@ -6,11 +6,11 @@ as well as a clock output of up to 32kHz.
- Required properties:
- - compatible: should be: "haoyu,hym8563"
- - reg: i2c address
--- interrupts: rtc alarm/event interrupt
- - #clock-cells: the value should be 0
- 
- Optional properties:
- - clock-output-names: From common clock binding
-+- interrupts: rtc alarm/event interrupt
- 
- Example:
- 
-diff --git a/drivers/rtc/rtc-hym8563.c b/drivers/rtc/rtc-hym8563.c
-index 0f710e9..e9da795 100644
---- a/drivers/rtc/rtc-hym8563.c
-+++ b/drivers/rtc/rtc-hym8563.c
-@@ -548,14 +548,16 @@ static int hym8563_probe(struct i2c_client *client,
- 		return ret;
- 	}
- 
--	ret = devm_request_threaded_irq(&client->dev, client->irq,
--					NULL, hym8563_irq,
--					IRQF_TRIGGER_LOW | IRQF_ONESHOT,
--					client->name, hym8563);
--	if (ret < 0) {
--		dev_err(&client->dev, "irq %d request failed, %d\n",
--			client->irq, ret);
--		return ret;
-+	if (client->irq > 0) {
-+		ret = devm_request_threaded_irq(&client->dev, client->irq,
-+						NULL, hym8563_irq,
-+						IRQF_TRIGGER_LOW | IRQF_ONESHOT,
-+						client->name, hym8563);
-+		if (ret < 0) {
-+			dev_err(&client->dev, "irq %d request failed, %d\n",
-+				client->irq, ret);
-+			return ret;
-+		}
- 	}
- 
- 	/* check state of calendar information */
--- 
-2.1.4
-
+diff --git a/drivers/watchdog/bcm2835_wdt.c b/drivers/watchdog/bcm2835_=
+wdt.c
+index 7116968..fdf0d7d 100644
+--- a/drivers/watchdog/bcm2835_wdt.c
++++ b/drivers/watchdog/bcm2835_wdt.c
+@@ -36,6 +36,13 @@
+ #define PM_RSTC_WRCFG_FULL_RESET	0x00000020
+ #define PM_RSTC_RESET			0x00000102
+=20
++/*
++ * The Raspberry Pi firmware uses the RSTS register to know which part=
+iton
++ * to boot from. The partiton value is spread into bits 0, 2, 4, 6, 8,=
+ 10.
++ * Partiton 63 is a special partition used by the firmware to indicate=
+ halt.
++ */
++#define PM_RSTS_RASPBERRYPI_HALT	0x555
++
+ #define SECS_TO_WDOG_TICKS(x) ((x) << 16)
+ #define WDOG_TICKS_TO_SECS(x) ((x) >> 16)
+=20
+@@ -159,6 +166,24 @@ static void bcm2835_power_off(void)
+ 	bcm2835_restart(&wdt->restart_handler, REBOOT_HARD, NULL);
+ }
+=20
++static void rpi_power_off(void)
++{
++	struct device_node *np =3D
++		of_find_compatible_node(NULL, NULL, "brcm,raspberrypi-pm-wdt");
++	struct platform_device *pdev =3D of_find_device_by_node(np);
++	struct bcm2835_wdt *wdt =3D platform_get_drvdata(pdev);
++	u32 val;
++
++	val =3D readl_relaxed(wdt->base + PM_RSTS);
++	val |=3D PM_PASSWORD | PM_RSTS_RASPBERRYPI_HALT;
++	writel_relaxed(val, wdt->base + PM_RSTS);
++
++	/* Continue with normal reset mechanism */
++	bcm2835_restart(&wdt->restart_handler, REBOOT_HARD, NULL);
++}
++
++static const struct of_device_id bcm2835_wdt_of_match[];
++
+ static int bcm2835_wdt_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev =3D &pdev->dev;
+@@ -192,8 +217,12 @@ static int bcm2835_wdt_probe(struct platform_devic=
+e *pdev)
+ 	wdt->restart_handler.notifier_call =3D bcm2835_restart;
+ 	wdt->restart_handler.priority =3D 128;
+ 	register_restart_handler(&wdt->restart_handler);
+-	if (pm_power_off =3D=3D NULL)
+-		pm_power_off =3D bcm2835_power_off;
++	if (!pm_power_off) {
++		const struct of_device_id *match;
++
++		match =3D of_match_node(bcm2835_wdt_of_match, pdev->dev.of_node);
++		pm_power_off =3D match->data;
++	}
+=20
+ 	dev_info(dev, "Broadcom BCM2835 watchdog timer");
+ 	return 0;
+@@ -204,7 +233,7 @@ static int bcm2835_wdt_remove(struct platform_devic=
+e *pdev)
+ 	struct bcm2835_wdt *wdt =3D platform_get_drvdata(pdev);
+=20
+ 	unregister_restart_handler(&wdt->restart_handler);
+-	if (pm_power_off =3D=3D bcm2835_power_off)
++	if (pm_power_off =3D=3D bcm2835_power_off || pm_power_off =3D=3D rpi_=
+power_off)
+ 		pm_power_off =3D NULL;
+ 	watchdog_unregister_device(&bcm2835_wdt_wdd);
+ 	iounmap(wdt->base);
+@@ -218,7 +247,8 @@ static void bcm2835_wdt_shutdown(struct platform_de=
+vice *pdev)
+ }
+=20
+ static const struct of_device_id bcm2835_wdt_of_match[] =3D {
+-	{ .compatible =3D "brcm,bcm2835-pm-wdt", },
++	{ .compatible =3D "brcm,bcm2835-pm-wdt", .data =3D bcm2835_power_off =
+},
++	{ .compatible =3D "brcm,raspberrypi-pm-wdt", .data =3D rpi_power_off =
+},
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, bcm2835_wdt_of_match);
+--=20
+2.2.2
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdo=
+g" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
