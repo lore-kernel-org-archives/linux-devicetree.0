@@ -1,55 +1,96 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH] power_supply: rt9455_charger: Fix error reported by
- static analysis tool
-Date: Sat, 13 Jun 2015 04:40:32 +0200
-Message-ID: <20150613024032.GD17513@earth>
-References: <1434111951-9378-1-git-send-email-anda-maria.nicolae@intel.com>
+From: Jeremiah Mahler <jmmahler@gmail.com>
+Subject: Re: [PATCH 6/7] input: cyapa: add of match device support and
+ description document
+Date: Fri, 12 Jun 2015 20:53:58 -0700
+Message-ID: <20150613035358.GA18645@hudson.localdomain>
+References: <1434092198-13018-1-git-send-email-dudl@cypress.com>
+ <1434092198-13018-7-git-send-email-dudl@cypress.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="OROCMA9jn6tkzFBc"
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1434111951-9378-1-git-send-email-anda-maria.nicolae@intel.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Anda-Maria Nicolae <anda-maria.nicolae@intel.com>
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <1434092198-13018-7-git-send-email-dudl@cypress.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Dudley Du <dudl@cypress.com>
+Cc: dmitry.torokhov@gmail.com, mark.rutland@arm.com, robh+dt@kernel.org, rydberg@euromail.se, bleung@google.com, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Dudley,
 
---OROCMA9jn6tkzFBc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Fri, Jun 12, 2015 at 02:56:37PM +0800, Dudley Du wrote:
+> Add of_match_device machanism support for Cypress trackpad device, and
+> add the sample description document of adding the trackpad device node in DT.
+> TEST=test on Chromebook.
+> 
+> Signed-off-by: Dudley Du <dudl@cypress.com>
+> ---
+>  .../devicetree/bindings/input/cypress,cyapa.txt    | 44 ++++++++++++++++++++++
+>  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+>  drivers/input/mouse/cyapa.c                        | 10 +++++
+>  3 files changed, 55 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/cypress,cyapa.txt
+> 
+[...]
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 728cd0e..4813437 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -48,6 +48,7 @@ cnxt	Conexant Systems, Inc.
+>  cortina	Cortina Systems, Inc.
+>  cosmic	Cosmic Circuits
+>  crystalfontz	Crystalfontz America, Inc.
+> +cypress	Cypress Semiconductor Corporation
+>  dallas	Maxim Integrated Products (formerly Dallas Semiconductor)
+>  davicom	DAVICOM Semiconductor, Inc.
+>  denx	Denx Software Engineering
+> diff --git a/drivers/input/mouse/cyapa.c b/drivers/input/mouse/cyapa.c
+> index 86f2263..7e7613f 100644
+> --- a/drivers/input/mouse/cyapa.c
+> +++ b/drivers/input/mouse/cyapa.c
+> @@ -25,6 +25,7 @@
+>  #include <linux/uaccess.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/acpi.h>
+> +#include <linux/of.h>
+>  #include "cyapa.h"
+>  
+>  
+> @@ -1562,12 +1563,21 @@ static const struct acpi_device_id cyapa_acpi_id[] = {
+>  MODULE_DEVICE_TABLE(acpi, cyapa_acpi_id);
+>  #endif
+>  
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id cyapa_of_match[] = {
+> +	{ .compatible = "cypress,cyapa" },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, cyapa_of_match);
+> +#endif
+> +
+>  static struct i2c_driver cyapa_driver = {
+>  	.driver = {
+>  		.name = "cyapa",
+>  		.owner = THIS_MODULE,
+>  		.pm = &cyapa_pm_ops,
+>  		.acpi_match_table = ACPI_PTR(cyapa_acpi_id),
+> +		.of_match_table = of_match_ptr(cyapa_of_match),
+>  	},
+>  
+>  	.probe = cyapa_probe,
+> -- 
+> 1.9.1
 
-Hi,
+This patch fails to apply on linux-next 20150611 because of difference
+in vendor-prefixes.txt.  Probably just needs to be updated.
 
-On Fri, Jun 12, 2015 at 03:25:51PM +0300, Anda-Maria Nicolae wrote:
-> The result of container_of macro cannot be NULL, so there is no need to
-> check whether info is NULL.
+  Applying: input: cyapa: add of match device support and description
+  document
+  error: patch failed:
+  Documentation/devicetree/bindings/vendor-prefixes.txt:48
+  error: Documentation/devicetree/bindings/vendor-prefixes.txt: patch does
+  not apply
+  Patch failed at 0001 input: cyapa: add of match device support and
+  description document
 
-Thanks, queued for 4.2.
-
--- Sebastian
-
---OROCMA9jn6tkzFBc
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJVe5ggAAoJENju1/PIO/qaEKoP/32p3nujIy1UKhB0aYaqmRnw
-i3UP40Yo8F8kDtxWfHtcSWxZVaK5TtR3c0kwWsKkt/bjryilpiCjMmu3VQn74SlX
-CrwgZr1cZalnkhxROaJrbJD99Q0UBabJWUgCvC9Ves0U+J7A+Prah03HU6zCeCWo
-nl4ZenSY52Hdi4iM7GW75vlKAM4Budopx7c/3wR0JwU492hcMzzcXEWCSEVTUAuH
-Z0UglsxNItyKsSxvxTuIdjeSlrZ1xbIhv11glaCoDrdURuInjK46cEbqGdDbzhol
-oyPu83tNYMP4q/BWG5j1iWvhxfn+7PJjqiXT/qjIB7+TW4azMAXnmNzfO3UB40o3
-yx2sAahC2KMKnqKpUULF2ZvxO9sTB8BgzaO3X60nXe54VkFpZbFa/X3q4BpkI46m
-daEAoMK4CUMEzHxHNRXLR0kEdfrnF4qTDnQPczcrX8o8V45xTLh9HoVFs6DkRRlQ
-yF2XgZjkV1V0ivWWAVgOkyegHhcr6TmoCZ+k4DxSnfcLhLTjKWx2N1wsWdXGV6s5
-3SeUgztfwAxrEf2IlTh4OTPcI9z1jPRq6/b0oC41UJWDLuRQHMgVEne1Dz1Wh82P
-MkvAMZbt+DZXkyMocjg6Nz3zmXgRpHCiokFuXk4n8UwxmC+C+LkkkonXwNqhv7KV
-yjWR+o7nKUxeiKNFNjAb
-=vNjQ
------END PGP SIGNATURE-----
-
---OROCMA9jn6tkzFBc--
+-- 
+- Jeremiah Mahler
