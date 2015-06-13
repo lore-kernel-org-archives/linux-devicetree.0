@@ -1,43 +1,102 @@
-From: Kyle Huey <me-OhBmq/TcCDJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH] ARM: tegra124: pmu support
-Date: Fri, 12 Jun 2015 21:21:23 -0700
-Message-ID: <1434169283-19512-1-git-send-email-khuey@kylehuey.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Kyle Huey <khuey-OhBmq/TcCDJWk0Htik3J/w@public.gmane.org>
+From: Jeremiah Mahler <jmmahler@gmail.com>
+Subject: Re: [PATCH 1/7] input: cyapa: change strings of gen5 to pip in the
+ name when they are shared
+Date: Fri, 12 Jun 2015 23:34:35 -0700
+Message-ID: <20150613063435.GA5808@hudson.localdomain>
+References: <1434092198-13018-1-git-send-email-dudl@cypress.com>
+ <1434092198-13018-2-git-send-email-dudl@cypress.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1434092198-13018-2-git-send-email-dudl@cypress.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Dudley Du <dudl@cypress.com>
+Cc: dmitry.torokhov@gmail.com, mark.rutland@arm.com, robh+dt@kernel.org, rydberg@euromail.se, bleung@google.com, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch modifies the device tree for tegra124 based devices to enable the Cortex A15 PMU.  The interrupt numbers are taken from NVIDIA TRM DP-06905-001_v03p.  This patch was tested on a Jetson TK1.
+Dudley,
 
-Signed-off-by: Kyle Huey <khuey-OhBmq/TcCDJWk0Htik3J/w@public.gmane.org>
----
- arch/arm/boot/dts/tegra124.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Just noticed a few spelling errors...
 
-diff --git a/arch/arm/boot/dts/tegra124.dtsi b/arch/arm/boot/dts/tegra124.dtsi
-index 4be06c6..9032ccb 100644
---- a/arch/arm/boot/dts/tegra124.dtsi
-+++ b/arch/arm/boot/dts/tegra124.dtsi
-@@ -190,6 +190,14 @@
- 		status = "disabled";
- 	};
- 
-+	pmu {
-+		compatible = "arm,cortex-a15-pmu";
-+		interrupts = <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
- 	timer@0,60005000 {
- 		compatible = "nvidia,tegra124-timer", "nvidia,tegra20-timer";
- 		reg = <0x0 0x60005000 0x0 0x400>;
+On Fri, Jun 12, 2015 at 02:56:32PM +0800, Dudley Du wrote:
+> Change strings 'gen5' to 'pip' for all macros, varibales and functions when
+                                             sp: ^^^^^^^^^
+
+> they are shared to be used in for gen5 and gen6 modules. The change of these
+> strings is aimed to keep name definition much more clear and readable.
+> TEST=test on Chromebook.
+> 
+> Signed-off-by: Dudley Du <dudl@cypress.com>
+> ---
+>  drivers/input/mouse/cyapa.c      |   22 +-
+>  drivers/input/mouse/cyapa.h      |  133 ++++-
+>  drivers/input/mouse/cyapa_gen3.c |    2 +-
+>  drivers/input/mouse/cyapa_gen5.c | 1092 ++++++++++++++++++--------------------
+>  4 files changed, 661 insertions(+), 588 deletions(-)
+> 
+> diff --git a/drivers/input/mouse/cyapa.c b/drivers/input/mouse/cyapa.c
+> index efe1484..e7d4226 100644
+> --- a/drivers/input/mouse/cyapa.c
+> +++ b/drivers/input/mouse/cyapa.c
+> @@ -6,7 +6,7 @@
+>   *   Daniel Kurtz <djkurtz@chromium.org>
+>   *   Benson Leung <bleung@chromium.org>
+>   *
+[...]
+>  	/* Size of packet not including output report register address */
+>  	__le16 length;
+> @@ -352,7 +298,7 @@ struct gen5_app_cmd_head {
+>  	u8 parameter_data[0];  /* Parameter data variable based on cmd_code */
+>  } __packed;
+>  
+> -/* Application get/set parameter command data structure */
+> +/* Applicaton get/set parameter command data structure */
+sp:   ^^^^^^^^^^
+
+>  struct gen5_app_set_parameter_data {
+>  	u8 parameter_id;
+>  	u8 parameter_size;
+> @@ -369,30 +315,26 @@ struct gen5_retrieve_panel_scan_data {
+>  	u8 data_id;
+>  } __packed;
+[...]
+> +				pip->irq_cmd_buf, length))) {
+>  			/*
+> -			 * Work around the Gen5 V1 firmware
+> -			 * that does not assert interrupt signalling
+> -			 * that command response is ready if user
+> -			 * keeps touching the trackpad while command
+> -			 * is sent to the device.
+> +			 * Cover the Gen5 V1 firmware issue.
+> +			 * The issue is there is no interrut will be
+                                    sp: ^^^^^^^^
+
+> +			 * asserted to notityf host to read a command
+                       sp: ^^^^^^^
+
+> +			 * data out when always has finger touch on
+> +			 * trackpad during the command is issued to
+> +			 * trackad device.
+           sp: ^^^^^^^
+
+> +			 * This issue has the scenario is that,
+> +			 * user always has his fingers touched on
+> +			 * trackpad device when booting/rebooting
+> +			 * their chrome book.
+>  			 */
+
+The wording in the above section could be improved as well.
+
+
+>  			length = 0;
+> -			if (gen5_pip->resp_len)
+> -				length = *gen5_pip->resp_len;
+> +			if (pip->resp_len)
+> +				length = *pip->resp_len;
+>  			cyapa_empty_pip_output_data(cyapa,
+> -					gen5_pip->resp_data,
+[...]
+
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+- Jeremiah Mahler
