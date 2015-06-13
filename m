@@ -1,29 +1,55 @@
-From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH V2 0/3] Add RS-485 support and fix RTS/CTS implementation
-Date: Fri, 12 Jun 2015 17:35:29 -0700
-Message-ID: <20150613003529.GA10653@kroah.com>
-References: <1433136067-20644-1-git-send-email-bhuvanchandra.dv@toradex.com>
- <55752EF5.1040103@toradex.com>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH] power_supply: rt9455_charger: Fix error reported by
+ static analysis tool
+Date: Sat, 13 Jun 2015 04:40:32 +0200
+Message-ID: <20150613024032.GD17513@earth>
+References: <1434111951-9378-1-git-send-email-anda-maria.nicolae@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="OROCMA9jn6tkzFBc"
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <55752EF5.1040103-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bhuvanchandra DV <bhuvanchandra.dv-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, moorray3-5tc4TXWwyLM@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bhuvanchandra.dv-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+In-Reply-To: <1434111951-9378-1-git-send-email-anda-maria.nicolae@intel.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Anda-Maria Nicolae <anda-maria.nicolae@intel.com>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 08, 2015 at 11:28:13AM +0530, Bhuvanchandra DV wrote:
-> Hello,
-> 
-> Ping!
-> 
-> On 06/01/2015 10:51 AM, Bhuvanchandra DV wrote:
 
-7 days later?  Please be patient...
+--OROCMA9jn6tkzFBc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi,
+
+On Fri, Jun 12, 2015 at 03:25:51PM +0300, Anda-Maria Nicolae wrote:
+> The result of container_of macro cannot be NULL, so there is no need to
+> check whether info is NULL.
+
+Thanks, queued for 4.2.
+
+-- Sebastian
+
+--OROCMA9jn6tkzFBc
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJVe5ggAAoJENju1/PIO/qaEKoP/32p3nujIy1UKhB0aYaqmRnw
+i3UP40Yo8F8kDtxWfHtcSWxZVaK5TtR3c0kwWsKkt/bjryilpiCjMmu3VQn74SlX
+CrwgZr1cZalnkhxROaJrbJD99Q0UBabJWUgCvC9Ves0U+J7A+Prah03HU6zCeCWo
+nl4ZenSY52Hdi4iM7GW75vlKAM4Budopx7c/3wR0JwU492hcMzzcXEWCSEVTUAuH
+Z0UglsxNItyKsSxvxTuIdjeSlrZ1xbIhv11glaCoDrdURuInjK46cEbqGdDbzhol
+oyPu83tNYMP4q/BWG5j1iWvhxfn+7PJjqiXT/qjIB7+TW4azMAXnmNzfO3UB40o3
+yx2sAahC2KMKnqKpUULF2ZvxO9sTB8BgzaO3X60nXe54VkFpZbFa/X3q4BpkI46m
+daEAoMK4CUMEzHxHNRXLR0kEdfrnF4qTDnQPczcrX8o8V45xTLh9HoVFs6DkRRlQ
+yF2XgZjkV1V0ivWWAVgOkyegHhcr6TmoCZ+k4DxSnfcLhLTjKWx2N1wsWdXGV6s5
+3SeUgztfwAxrEf2IlTh4OTPcI9z1jPRq6/b0oC41UJWDLuRQHMgVEne1Dz1Wh82P
+MkvAMZbt+DZXkyMocjg6Nz3zmXgRpHCiokFuXk4n8UwxmC+C+LkkkonXwNqhv7KV
+yjWR+o7nKUxeiKNFNjAb
+=vNjQ
+-----END PGP SIGNATURE-----
+
+--OROCMA9jn6tkzFBc--
