@@ -1,107 +1,77 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH V7 3/3] OPP: Add binding for 'opp-suspend'
-Date: Sat, 13 Jun 2015 14:10:23 +0530
-Message-ID: <20150613084023.GA4203@linux>
-References: <cover.1433434659.git.viresh.kumar@linaro.org>
- <dedf8c02fdd9dbf169f43de74ead4c1434d89b45.1433434659.git.viresh.kumar@linaro.org>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH] rtc: hym8563: make the irq optional
+Date: Sat, 13 Jun 2015 12:34:04 +0200
+Message-ID: <2559079.JyXCpe7EYV@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <dedf8c02fdd9dbf169f43de74ead4c1434d89b45.1433434659.git.viresh.kumar@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Rafael Wysocki <rjw@rjwysocki.net>, rob.herring@linaro.org
-Cc: linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, arnd.bergmann@linaro.org, nm@ti.com, broonie@kernel.org, mike.turquette@linaro.org, sboyd@codeaurora.org, grant.likely@linaro.org, olof@lixom.net, Sudeep.Holla@arm.com, devicetree@vger.kernel.org, viswanath.puttagunta@linaro.org, l.stach@pengutronix.de, thomas.petazzoni@free-electrons.com, linux-arm-kernel@lists.infradead.org, ta.omasab@gmail.com, kesavan.abhilash@gmail.com, khilman@linaro.org, santosh.shilimkar@oracle.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04-06-15, 21:50, Viresh Kumar wrote:
-> +		opp-suspend = <&suspend_opp>;
+Sometimes the irq line is not connected to any soc-pin. This does
+not hinder basic timekeeping functionality of the rtc, so probe
+should not fail in this case.
 
-> -		opp00 {
-> +		suspend-opp: opp00 {
-
-Minor nit, s/suspend-opp/suspend_opp
-
-and here is updated patch
-
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Date: Wed, 20 May 2015 08:27:49 +0530
-Subject: [PATCH V8] OPP: Add binding for 'opp-suspend'
-
-On few platforms, for power efficiency, we want the device to be
-configured for a specific OPP while we put the device in suspend state.
-
-Add an optional property in operating-points-v2 bindings for that.
-
-Acked-by: Nishanth Menon <nm@ti.com>
-Suggested-by: Nishanth Menon <nm@ti.com>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 ---
- Documentation/devicetree/bindings/power/opp.txt | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ .../devicetree/bindings/rtc/haoyu,hym8563.txt          |  2 +-
+ drivers/rtc/rtc-hym8563.c                              | 18 ++++++++++--------
+ 2 files changed, 11 insertions(+), 9 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/power/opp.txt b/Documentation/devicetree/bindings/power/opp.txt
-index 2938c52dbf84..29f115d26f7d 100644
---- a/Documentation/devicetree/bindings/power/opp.txt
-+++ b/Documentation/devicetree/bindings/power/opp.txt
-@@ -74,6 +74,8 @@ This describes the OPPs belonging to a device. This node can have following
-   Missing property means devices have independent clock/voltage/current lines,
-   but they share OPP tables.
+diff --git a/Documentation/devicetree/bindings/rtc/haoyu,hym8563.txt b/Documentation/devicetree/bindings/rtc/haoyu,hym8563.txt
+index 5c199ee..a8934fe 100644
+--- a/Documentation/devicetree/bindings/rtc/haoyu,hym8563.txt
++++ b/Documentation/devicetree/bindings/rtc/haoyu,hym8563.txt
+@@ -6,11 +6,11 @@ as well as a clock output of up to 32kHz.
+ Required properties:
+ - compatible: should be: "haoyu,hym8563"
+ - reg: i2c address
+-- interrupts: rtc alarm/event interrupt
+ - #clock-cells: the value should be 0
  
-+- opp-suspend: Phandle of the OPP to set while device is suspended.
-+
+ Optional properties:
+ - clock-output-names: From common clock binding
++- interrupts: rtc alarm/event interrupt
  
- * OPP Node
+ Example:
  
-@@ -145,9 +147,10 @@ Example 1: Single cluster Dual-core ARM cortex A9, switch DVFS states together.
+diff --git a/drivers/rtc/rtc-hym8563.c b/drivers/rtc/rtc-hym8563.c
+index 0f710e9..e9da795 100644
+--- a/drivers/rtc/rtc-hym8563.c
++++ b/drivers/rtc/rtc-hym8563.c
+@@ -548,14 +548,16 @@ static int hym8563_probe(struct i2c_client *client,
+ 		return ret;
+ 	}
  
- 	cpu0_opp_table: opp_table0 {
- 		compatible = "operating-points-v2";
-+		opp-suspend = <&suspend_opp>;
- 		opp-shared;
+-	ret = devm_request_threaded_irq(&client->dev, client->irq,
+-					NULL, hym8563_irq,
+-					IRQF_TRIGGER_LOW | IRQF_ONESHOT,
+-					client->name, hym8563);
+-	if (ret < 0) {
+-		dev_err(&client->dev, "irq %d request failed, %d\n",
+-			client->irq, ret);
+-		return ret;
++	if (client->irq > 0) {
++		ret = devm_request_threaded_irq(&client->dev, client->irq,
++						NULL, hym8563_irq,
++						IRQF_TRIGGER_LOW | IRQF_ONESHOT,
++						client->name, hym8563);
++		if (ret < 0) {
++			dev_err(&client->dev, "irq %d request failed, %d\n",
++				client->irq, ret);
++			return ret;
++		}
+ 	}
  
--		opp00 {
-+		suspend_opp: opp00 {
- 			opp-hz = <1000000000>;
- 			opp-microvolt = <970000 975000 985000>;
- 			opp-microamp = <70000>;
-@@ -219,13 +222,14 @@ independently.
- 
- 	cpu_opp_table: opp_table {
- 		compatible = "operating-points-v2";
-+		opp-suspend = <&suspend_opp>;
- 
- 		/*
- 		 * Missing opp-shared property means CPUs switch DVFS states
- 		 * independently.
- 		 */
- 
--		opp00 {
-+		suspend_opp: opp00 {
- 			opp-hz = <1000000000>;
- 			opp-microvolt = <970000 975000 985000>;
- 			opp-microamp = <70000>;
-@@ -298,9 +302,10 @@ DVFS state together.
- 
- 	cluster0_opp: opp_table0 {
- 		compatible = "operating-points-v2";
-+		opp-suspend = <&suspend_opp0>;
- 		opp-shared;
- 
--		opp00 {
-+		suspend_opp: opp00 {
- 			opp-hz = <1000000000>;
- 			opp-microvolt = <970000 975000 985000>;
- 			opp-microamp = <70000>;
-@@ -323,9 +328,10 @@ DVFS state together.
- 
- 	cluster1_opp: opp_table1 {
- 		compatible = "operating-points-v2";
-+		opp-suspend = <&suspend_opp1>;
- 		opp-shared;
- 
--		opp10 {
-+		suspend_opp: opp10 {
- 			opp-hz = <1300000000>;
- 			opp-microvolt = <1045000 1050000 1055000>;
- 			opp-microamp = <95000>;
+ 	/* check state of calendar information */
+-- 
+2.1.4
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
