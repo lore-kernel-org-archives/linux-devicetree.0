@@ -1,104 +1,113 @@
-From: Roman Volkov <rvolkov@v1ros.org>
-Subject: Re: [PATCH v3 5/5] i8042: Add i8042_dt.h glue for DT support
-Date: Sat, 13 Jun 2015 20:57:35 +0300
-Message-ID: <20150613205735.0df89c32@v1ron-s7>
-References: <1423857173-16432-6-git-send-email-v1ron@v1ros.org>
-	<1424034707-15723-1-git-send-email-v1ron@v1ros.org>
-	<1424034707-15723-6-git-send-email-v1ron@v1ros.org>
+From: Alexander Holler <holler@ahsoftware.de>
+Subject: Re: [PATCH 00/21] On-demand device registration
+Date: Sat, 13 Jun 2015 20:27:21 +0200
+Message-ID: <557C7609.30400@ahsoftware.de>
+References: <1432565608-26036-1-git-send-email-tomeu.vizoso@collabora.com>	<CACRpkdasLwMfEHGMRd1X3K_DU7NMPreE8TMwqqDTg8k9wj=wJQ@mail.gmail.com>	<CAAObsKCP-C+TY8Wkk6bQzxZeGYL9X01trtjxfaYp--ZnH07C+w@mail.gmail.com>	<CACRpkdZuSj+S2x1yz6n5PgcRK=3ZCcq_To124b2Y+Oj54aydpg@mail.gmail.com>	<5577F533.1060007@ahsoftware.de>	<CACRpkdYF5K7ckGbgvZc6qRzGFJTQ4WqXdu_7Tcqczn2LkFbn3A@mail.gmail.com>	<5579602F.1070801@ahsoftware.de>	<CACRpkdaZgBR5rHwrEYqcm5K4w3y8MXG8a0k=Y+oQY+jukHfuyw@mail.gmail.com>	<5579B9E8.9040609@ahsoftware.de>
+ <CACRpkdbDSS0yw=q_cR17Bvg+kgTfU3Vcd2gSjx1p4V-CzOZ_SA@mail.gmail.com>
+ <557AC040.40803@ahsoftware.de> <557AC437.9000607@ahsoftware.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1424034707-15723-6-git-send-email-v1ron@v1ros.org>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Hans de Goede <hdegoede@redhat.com>, Jiri Kosina <jkosina@suse.cz>, Wolfram Sang <wsa@the-dreams.de>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Tony Prisk <linux@prisktech.co.nz>, rvolkov@v1ros.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <557AC437.9000607@ahsoftware.de>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, dmaengine@vger.kernel.org, Tomeu Vizoso <tomeu.vizoso@collabora.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, DRM PANEL DRIVERS <dri-devel@lists.freedesktop.org>, Grant Likely <grant.likely@linaro.org>, Dan Williams <dan.j.williams@intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-usb@vger.kernel.org, linux-i2c@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Something prevents me from following the thread, replying to myself.
-
-> =D0=92 Sat, 14 Mar 2015 20:20:38 -0700
-> Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:
->  =20
-> >=20
-> > Hi Roman,
-> >=20
-> > On Mon, Feb 16, 2015 at 12:11:43AM +0300, Roman Volkov wrote:   =20
-> > > Documentation for 'intel,8042' DT compatible node.
-> > >=20
-> > > Signed-off-by: Tony Prisk <linux@prisktech.co.nz>
-> > > Signed-off-by: Roman Volkov <v1ron@v1ros.org>
-> > > ---
-> > >  .../devicetree/bindings/input/intel-8042.txt       | 26
-> > > ++++++++++++++++++++++ 1 file changed, 26 insertions(+)
-> > >  create mode 100644
-> > > Documentation/devicetree/bindings/input/intel-8042.txt
-> > >=20
-> > > diff --git
-> > > a/Documentation/devicetree/bindings/input/intel-8042.txt
-> > > b/Documentation/devicetree/bindings/input/intel-8042.txt new file
-> > > mode 100644 index 0000000..ab8a3e0 --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/input/intel-8042.txt
-> > > @@ -0,0 +1,26 @@
-> > > +Intel 8042 Keyboard Controller
-> > > +
-> > > +Required properties:
-> > > +- compatible: should be "intel,8042"
-> > > +- regs: memory for keyboard controller
-> > > +- interrupts: usually, two interrupts should be specified
-> > > (keyboard and aux).
-> > > +	However, only one interrupt is also allowed in case of
-> > > absence of the
-> > > +	physical port in the controller. The i8042 driver must be
-> > > loaded with
-> > > +	nokbd/noaux option in this case.
-> > > +- interrupt-names: interrupt names corresponding to numbers in
-> > > the list.
-> > > +	"kbd" is the keyboard interrupt and "aux" is the
-> > > auxiliary (mouse)
-> > > +	interrupt.
-> > > +- command-reg: offset in memory for command register
-> > > +- status-reg: offset in memory for status register
-> > > +- data-reg: offset in memory for data register
-> > > +
-> > > +Example:
-> > > +	i8042@d8008800 {
-> > > +		compatible =3D "intel,8042";
-> > > +		regs =3D <0xd8008800 0x100>;
-> > > +		interrupts =3D <23>, <4>;
-> > > +		interrupt-names =3D "kbd", "aux";
-> > > +		command-reg =3D <0x04>;
-> > > +		status-reg =3D <0x04>;
-> > > +		data-reg =3D <0x00>;
-> > > +	};   =20
-> >=20
-> > No, we already have existing OF bindings for i8042 on sparc and
-> > powerpc, I do not think we need to invent a brand new one.
-> >=20
-> > Thanks.
-> >=20
-
-I have looked more into that header (i8042-sparcio.h). Probably 8042 is
-broken for SPARCs, because there is the platform_driver registered twic=
-e
-with the same name "i8042". One driver is registered by
-platform_create_bundle() from i8042.c and another from
-platform_driver_register() from the i8042_sparcio.h. Kernel prints a
-message "Error: Driver 'i8042' is already registered, aborting...".
-
-I have not tested SPARC version of the kernel, just used the same code
-for ARM, to rewrite my patch set.
-
-There is no bindings at all for i8042, because a binding requires
-the 'compatible' property to be defined, according to ePAPR. In the
-SPARC header there is an ancient surrogate with searching by name
-instead of the 'compatible' property (I understand, no standards were
-defined for that hardware those days).
-
-Regards,
-Roman
---
-To unsubscribe from this list: send the line "unsubscribe linux-input" =
-in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+QW0gMTIuMDYuMjAxNSB1bSAxMzozNiBzY2hyaWViIEFsZXhhbmRlciBIb2xsZXI6Cj4gQW0gMTIu
+MDYuMjAxNSB1bSAxMzoxOSBzY2hyaWViIEFsZXhhbmRlciBIb2xsZXI6Cj4+IEFtIDEyLjA2LjIw
+MTUgdW0gMDk6MjUgc2NocmllYiBMaW51cyBXYWxsZWlqOgo+Pj4gT24gVGh1LCBKdW4gMTEsIDIw
+MTUgYXQgNjo0MCBQTSwgQWxleGFuZGVyIEhvbGxlcgo+Pj4gPGhvbGxlckBhaHNvZnR3YXJlLmRl
+PiB3cm90ZToKPj4+PiBBbSAxMS4wNi4yMDE1IHVtIDE0OjMwIHNjaHJpZWIgTGludXMgV2FsbGVp
+ajoKPj4+Cj4+Pj4+IENlcnRhaW5seSBpdCBpcyBwb3NzaWJsZSB0byBjcmVhdGUgZGVhZGxvY2tz
+IGluIHRoaXMgc2NlbmFyaW8sIGJ1dCB0aGUKPj4+Pj4gc2NvcGUgaXMgbm90IHRvIGNyZWF0ZSBh
+biB1YnJlYWthYmxlIHN5c3RlbS4KPj4+Pgo+Pj4+IElBbmQgd2hhdCBoYXBwZW5zIGlmIHlvdSBy
+dW4gaW50byBhIGRlYWRsb2NrPyBEbyB5b3UgcHJpbnQgInlvdSd2ZQo+Pj4+IGxvc3QsIHRyeQo+
+Pj4+IGNoYW5naW5nIHlvdXIga2VybmVsIGNvbmZpZyIgaW4gc29tZSBvdXRwdXQgaGlkZGVuIGJ5
+IGEKPj4+PiBzcGxhc2gtc2NyZWVuPyA7KQo+Pj4KPj4+IFNvcnJ5IGl0IHNvdW5kcyBsaWtlIGEg
+YmxhbmtldCBhcmd1bWVudCwgdGhlIGZhY3QgdGhhdCB0aGVyZSBhcmUKPj4+IG11dGV4ZXMgaW4g
+dGhlIGtlcm5lbCBtYWtlcyBpdCBwb3NzaWJsZSB0byBkZWFkbG9jaywgaXQgZG9lc24ndAo+Pj4g
+bWVhbiB3ZSBkb24ndCB1c2UgbXV0ZXhlcy4gU29tZSBwcm9ncmFtbWluZyBwcm9ibGVtcyBhcmUK
+Pj4+IGp1c3QgbGlrZSBzdWNoLgo+Pgo+PiBJJ20gbm90IHRhbGtpbmcgYWJvdXQgc3BlY2lmaWMg
+ZGVhZGxvY2tzIHRocm91Z2ggbXV0ZXhlcy4gSSdtIHRhbGtpbmcKPj4gYWJvdXQgd2hhdCBoYXBw
+ZW5zIHdoZW4gZHJpdmVyIEEgbmVlZHMgZHJpdmVyIEIgd2hpY2ggbmVlZHMgZHJpdmVyIEEuCj4+
+IEhvdyBkbyB5b3UgcmVjb2duaXNlIGFuZCBoYW5kbGUgdGhhdCB3aXRoIHlvdXIgaW5zdHJ1bWVu
+dGVkIG9uLWRlbWFuZAo+PiBkZXZpY2UgaW5pdGlhbGl6YXRpb24/IFN1Y2ggYSBjaXJjdWxhciBk
+ZXBlbmRlbmN5IG1pZ2h0IGhhcHBlbiBieSBqdXN0Cj4+IGFkZGluZyBhIG5ldyBmdWNudGlvbiBj
+YWxsIG9yIGJ5IGNoYW5naW5nIHRoZSBrZXJuZWwgY29uZmlndXJhdGlvbi4gQW5kCj4+IHdpdGgg
+dGhlIG9uLWRlbWFuZCBzdHVmZiwgdGhlIHBvc3NpYmlsaXR5IHRoYXQgdGhlIGRldmVsb3BlciBp
+bnRyb2R1Y2luZwo+PiB0aGlzIG5ldyAobWF5YmUgb3B0aW9uYWwpIGNhbGwgd2lsbCBuZXZlciBo
+aXQgc3VjaCBhIGNpcmN1bGFyIGRlcGVuZGVuY3kKPj4gaXMgaGlnaC4gU28geW91IHdpbGwgZW5k
+IHVwIHdpdGggYSBuZXZlciBlbmRpbmcgc3RyZWFtIG9mIHByb2JsZW0KPj4gcmVwb3J0cyB3aGVu
+ZXZlciBzb21lb25lIGludHJvZHVjZWQgc3VjaCBhIGNpcmN1bGFyIGRlcGVuZGVjeSB3aXRob3V0
+Cj4+IGhhdmluZyBub3RpY2VkIGl0Lgo+Pgo+PiBBbmQgdG8gY29tZSBiYWNrIHRvIHNwZWNpZmlj
+IGRlYWRsb2NrcywgaWYgeW91IGFyZSBleHRlbmRpbmcgZnVuY3Rpb24KPj4gY2FsbHMgZnJvbSBz
+b21ldGhpbmcgZm9ybWVyIHNpbXBsZSB0byBzb21ldGhpbmcgd2hpY2ggbWlnaHQgaW5pdGlhbGl6
+ZSBhCj4+IHdob2xlIGJ1bmNoIG9mIGRyaXZlcnMsIG5lZWRpbmcgbWF5YmUgc2Vjb25kcywgSSB3
+b3VsZG4ndCBzYXkgdGhpcyBpcyBhCj4+IGJsYW5rZXQgYXJndW1lbnQsIGJ1dCBhIHJlYWwgdGhy
+ZWFkLgo+Cj4gS2VlcCBpbiBtaW5kLCB0aGF0IHRoZSBwb3NzaWJpbGl0eSB0aGF0IGEgZnVuY3Rp
+b24gY2FsbCBlbmRzIHVwIHdpdGgKPiBpbml0aWFsaXppbmcgYSB3aG9sZSBidW5jaCBvZiBvdGhl
+ciBkcml2ZXJzLCBpcyBub3QgZGV0ZXJtaW5lZAo+IHN0YXRpY2FsbHksIGJ1dCBkZXBlbmRzIG9u
+IHRoZSBjb25maWd1cmF0aW9uIGFuZCBydW50aW1lIGJlaGF2aW91ciBvZgo+IHRoZSBhY3R1YWwg
+c3lzdGVtIHRoZSBvbi1kZW1hbmQgc3R1ZmYgYWN0dWFsbHkgaGFwcGVucy4KPgo+IEUuZy4gaWYg
+ZHJpdmVyIEEgaXMgZmFzdGVyIG9uZSBzeXN0ZW0gdGhhdCBkcml2ZXIgQiwgdGhlIHdob2xlIGJ1
+bmNoIG9mCj4gZHJpdmVycyBtaWdodCBiZWNvbWUgaW5pdGlhbGl6ZWQgYnkgYSBjYWxsIGluIGRy
+aXZlciBBLiBCdXQgaWYgZHJpdmVyIEIKPiB3YXMgZmFzdGVyIG9uIHRoZSBkZXZlbG9wZXJzIHN5
+c3RlbSAob3IgdGhlIHN5c3RlbSBpcyBjb25maWd1cmVkIHRvCj4gZmlyc3QgaW5pdCBkcml2ZXIg
+QiksIHRoYW4gdGhlIHdob2xlIGJ1bmNoIG9mIGRyaXZlcnMgbWlnaHQgaGF2ZSBiZWNvbWUKPiBp
+bml0aWFsaXplZCBieSBkcml2ZXIgQiBvbiB0aGUgZGV2ZWxvcGVycyBzeXN0ZW0uIFRodXMgaGUg
+bmV2ZXIgbWlnaHQKPiBoYXZlIGhpdCBhIHBvc3NpYmxlIHByb2JsZW0gd2hlbiB0aGUgd2hvbGUg
+YnVuY2ggb2YgZHJpdmVycyBnb3QKPiBpbml0aWFsaXplZCBpbiBkcml2ZXIgQS4KPgo+IFRoYXQg
+bWVhbnMgaXQgaXNuJ3QgYWx3YXlzIGEgZ29vZCBpZGVhIHRvIGNyZWF0ZSBkeW5hbWljIHN5c3Rl
+bXMgKGxpa2UKPiBvbi1kZW1hbmQgZGV2aWNlIGluaXRpYWxpemF0aW9uKSwgYmVjYXVzZSBpdCdz
+IHZlcnkgaGFyZCB0byBmb3Jlc2VlIGFuZAo+IGNvcnJlY3RseSBoYW5kbGUgdGhlaXIgcnVudGlt
+ZSBiZWhhdmlvdXIuCgpBbmQgYmVjYXVzZSB5b3UndmUgc2FpZCB0aGF0ICJwcm9ibGVtIHNwYWNl
+IGlzIGEgYml0IGNvbnZvbHV0ZWQiIGFuZCBJIApkaXNhZ3JlZSwgaGVyZSdzIGEgc3VtbWFyeSBm
+cm9tIG15IHBvaW50IG9mIHZpZXc6CgoxLiBBbGwgdGhlIG5lY2Vzc2FyeSBpbmZvcm1hdGlvbiAo
+ZGVwZW5kZW5jaWVzIGJldHdlZW4gZHJpdmVycykgYWxyZWFkeSAKZXhpc3RzIGF0IGNvbXBpbGUg
+dGltZS4gVGhlIHNldCBvZiBkZXBlbmRlbmNpZXMgYmV0d2VlbiBkcml2ZXJzIG1pZ2h0IApiZWNv
+bWUgc21hbGxlciBieSBjb25maWd1cmF0aW9uLCBidXQgd2lsbCBub3QgYmVjb21lIGxhcmdlci4g
+U28gdGhlcmUgCnNob3VsZCBiZSBOTyBuZWVkIHRvIGNvbGxlY3QgdGhlbSBhdCBydW50aW1lLCBl
+LmcuIGJ5IGluc3RydW1lbnRpbmcgCmZ1bmN0aW9uIGNhbGxzLiBJJ3ZlIGRlc2NyaWJlZCB0aGUg
+cHJvYmxlbXMgSSBzZWUgd2l0aCB0aGF0IGFib3ZlLiBJJ3ZlIApjaG9vc2VuIERUIGFzIHNvdXJj
+ZSBvZiBkZXBlbmRlbmNpZXMgYmVjYXVzZSBpdCBvZmZlcnMgYW4gZWFzeSAKYWNjZXNzaWJsZSBh
+bmQgYWxtb3N0IGNvbXBsZXRlIHNldCBvZiBkZXBlbmRlbmNpZXMuIEkganVzdCBoYWQgdG8gYWRk
+IApzb21lIHR5cGUgaW5mb3JtYXRpb24gdG8gdGhlIGR0YiBpbiBvcmRlciB0byBpZGVudGlmeSB0
+aGUgZGVwZW5kZW5jaWVzIAoocGhhbmRsZXMpLiBCdXQgb3RoZXIgd2F5cyB0byBjb2xsZWN0IHRo
+ZSBkZXBlbmRlbmNpZXMgd291bGQgd29yayB0b28uIApFdmVuIHRoZSBtb3N0IHNpbXBsZSB3YXkg
+dG8gYWRkIGEgc3RhdGljIGxpc3Qgb2YgZGVwZW5kZW5jaWVzIHRvIGVhY2ggCmRyaXZlciAod2hp
+Y2ggbGF0ZXIgb24gbWlnaHQgYmUgYXV0b21hdGVkIGJ5IHNvbWUgbW9yZSBjbGV2ZXIgc3R1ZmYg
+dGhhbiAKYWRkaW5nIHRoZW0gbWFudWFsbHkpIHdvdWxkIGRvIHRoZSB0cmljay4KCjIuIFRoZSBw
+cm9ibGVtIHRvIHNvcnQgYSBzZXQgb2Ygbm9kZXMgKGRyaXZlcnMpIHdpdGggZGVwZW5kZW5jaWVz
+IGlzIApzb2x2ZWQgc2luY2UgYSBsb25nIHRpbWUgYW5kIGFsbW9zdCBhbnkgZGV2ZWxvcGVycyB1
+c2VzIGl0IHJlZ3VsYXJseSBpbiAKZm9ybSBvZiBtYWtlLiBBbmQgZXZlcnlvbmUgd2hvIHVzZWQg
+bWFrZSAtak4ga25vd3MgdGhhdCB0aGUgcG9zc2libGUgCnBhcmFsbGVsIGluaXRpYWxpemF0aW9u
+IG9mIGRyaXZlcnMgSSd2ZSB0YWxrZWQgYWJvdXQsIGlzIGFscmVhZHkgc29sdmVkIHRvby4KCjMu
+IEluIG9yZGVyIHRvIGluaXRpYWxpemUgdGhlIGRyaXZlcnMgaW4gc29tZSBzcGVjaWZpYyBvcmRl
+ciwgdGhlaXIgCmluaXRjYWxscyBtdXN0IGJlIGlkZW50aWZpZWQuIEkndmUgb2ZmZXJlZCBhIHBv
+c3NpYmxlIHNvbHV0aW9uIHRvIHRoYXQgCndpdGhvdXQgbXVjaCBjaGFuZ2VzLCBidXQgbWFueSBv
+dGhlciwgZXZlbiBiZXR0ZXIgd2F5cywgYXJlIHBvc3NpYmxlIAp0b28uIEl0IGp1c3QgZGVwZW5k
+cyBvbiBob3cgbXVjaCB5b3Ugd2FudCB0byBjaGFuZ2UgYW5kIG9uIGhvdyBtdWNoIG9mIAp0aGVz
+ZSBjaGFuZ2VzIHlvdSB3aWxsIGJlIGFibGUgdG8gZmVlZCBpbnRvIG1haW5saW5lIGtlcm5lbCAo
+d2hpY2ggCmRlcGVuZHMgb24geW91ciBjb25uZWN0aW9ucy9yZWxhdGlvbnMgaW5zaWRlIHRoZSBj
+b3JlIGtlcm5lbCBjcmV3KS4gRS5nLiAKaW5zdGVhZCBvZiBzdGlsbCBqdXN0IHJlbHlpbmcgb24g
+b25lLWRpbWVuc2lvbmFsIGFycmF5cyB3aXRoIChhbm9ueW1vdXMpIApwb2ludGVycyB0byBpbml0
+Y2FsbHMsIGEgbXVsdGlkaW1lbnNpb25hbCBhcnJheSBvZiBpbml0Y2FsbHMgYW5kIApkcml2ZXJu
+YW1lIChhbmQgbWF5YmUgbW9yZSBpbmZvcm1hdGlvbikgbWlnaHQgYmUgdGhpbmthYmxlLgoKNC4g
+eDg2L2FtZDY0L0FDUEktcGVvcGxlLCBzbyBtb3N0IGxvbmd0aW1lIGFuZCBjb3JlIGtlcm5lbCBt
+YWludGFpbmVycyAKb2J2aW91c2x5IGRvbid0IGhhdmUgbXVjaCBpbnRlcmVzdCB1bnRpbCB5b3Un
+dmUgc29sdmVkIDEuIGluIGEgd2F5IHRoZXkgCmNhbiB1c2UgdG9vLiBTbyB0aGUgbmVjZXNzYXJ5
+IGNoYW5nZXMgZm9yIDIuIG9yIDMuIHdpbGwgaGF2ZSBhIGJpZyAKaHVyZGxlIHRvIHRha2UgaWYg
+MS4gaXNuJ3Qgc29sdmVkIHVzYWJsZSBmb3IgdGhlbSB0b28uCgo+PiBBbGV4YW5kZXIgSG9sbGVy
+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2
+ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xp
+c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
