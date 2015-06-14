@@ -1,248 +1,60 @@
 From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH RFC 1/4] dmaengine: pl08x: support dt channel assignment
-Date: Sun, 14 Jun 2015 13:22:14 +0200
-Message-ID: <1434280937-8369-2-git-send-email-manabian@gmail.com>
-References: <1434280937-8369-1-git-send-email-manabian@gmail.com>
+Subject: [PATCH RFC 0/4] PL08x DT bindings and LPC18xx DMA support
+Date: Sun, 14 Jun 2015 13:22:13 +0200
+Message-ID: <1434280937-8369-1-git-send-email-manabian@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1434280937-8369-1-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
-Cc: rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+This patch set aims to add support for DMA on the NXP LPC18xx/43xx
+(Cortex-M3/M4) platform. The platform has a PL080 controller with a
+mux in front of the DMA request lines. This setup is quite common
+and can be found on most other, if not all, NXP LPC devices.
 
-Add support for assigning DMA channels from a device tree.
+Patch set adds DT support for the PL08x dmaengine driver and a DMA
+router driver for the LPC18xx/43xx DMA multiplexer.
 
-[je: remove channel sub-node parsing, dynamic channel creation on xlate]
+DT support for the PL08x was originally written by Linus Walleij and
+can be found on the link below.
+http://lists.infradead.org/pipermail/linux-arm-kernel/2014-September/286866.html
 
-Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- drivers/dma/amba-pl08x.c | 192 ++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 189 insertions(+), 3 deletions(-)
+The following changes has since been made to the pl08x dt patch by
+Linus:
+ - move AHB master setting into dma specifier as
+   suggested by Arnd [1].
+ - remove channel sub-nodes from driver and dt doc.
+ - dynamically allocate dma channels in xlate
+   function as outlined by Arnd [2].
+ - address some minor comments from Arnd in [1].
+ - minor misc clean ups (white space + include order).
 
-diff --git a/drivers/dma/amba-pl08x.c b/drivers/dma/amba-pl08x.c
-index 83aa55d6fa5d..4ec975e8d437 100644
---- a/drivers/dma/amba-pl08x.c
-+++ b/drivers/dma/amba-pl08x.c
-@@ -87,6 +87,8 @@
- #include <linux/init.h>
- #include <linux/interrupt.h>
- #include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_dma.h>
- #include <linux/pm_runtime.h>
- #include <linux/seq_file.h>
- #include <linux/slab.h>
-@@ -2039,10 +2041,188 @@ static inline void init_pl08x_debugfs(struct pl08x_driver_data *pl08x)
- }
- #endif
- 
-+#ifdef CONFIG_OF
-+static struct dma_chan *pl08x_find_chan_id(struct pl08x_driver_data *pl08x,
-+					 u32 id)
-+{
-+	struct pl08x_dma_chan *chan;
-+
-+	list_for_each_entry(chan, &pl08x->slave.channels, vc.chan.device_node) {
-+		if (chan->signal == id)
-+			return &chan->vc.chan;
-+	}
-+
-+	return NULL;
-+}
-+
-+static struct dma_chan *pl08x_of_xlate(struct of_phandle_args *dma_spec,
-+				       struct of_dma *ofdma)
-+{
-+	struct pl08x_driver_data *pl08x = ofdma->of_dma_data;
-+	struct pl08x_channel_data *data;
-+	struct pl08x_dma_chan *chan;
-+	struct dma_chan *dma_chan;
-+
-+	if (!pl08x)
-+		return NULL;
-+
-+	if (dma_spec->args_count != 2)
-+		return NULL;
-+
-+	dma_chan = pl08x_find_chan_id(pl08x, dma_spec->args[0]);
-+	if (dma_chan)
-+		return dma_get_slave_channel(dma_chan);
-+
-+	chan = devm_kzalloc(pl08x->slave.dev, sizeof(*chan) + sizeof(*data),
-+			    GFP_KERNEL);
-+	if (!chan)
-+		return NULL;
-+
-+	data = (void *)&chan[1];
-+	data->bus_id = "(none)";
-+	data->periph_buses = dma_spec->args[1];
-+
-+	chan->cd = data;
-+	chan->host = pl08x;
-+	chan->slave = true;
-+	chan->name = data->bus_id;
-+	chan->state = PL08X_CHAN_IDLE;
-+	chan->signal = dma_spec->args[0];
-+	chan->vc.desc_free = pl08x_desc_free;
-+
-+	vchan_init(&chan->vc, &pl08x->slave);
-+
-+	return dma_get_slave_channel(&chan->vc.chan);
-+}
-+
-+static int pl08x_of_probe(struct amba_device *adev,
-+			  struct pl08x_driver_data *pl08x,
-+			  struct device_node *np)
-+{
-+	struct pl08x_platform_data *pd;
-+	u32 cctl_memcpy = 0;
-+	u32 val;
-+	int ret;
-+
-+	pd = devm_kzalloc(&adev->dev, sizeof(*pd), GFP_KERNEL);
-+	if (!pd)
-+		return -ENOMEM;
-+
-+	/* Eligible bus masters for fetching LLIs */
-+	if (of_property_read_bool(np, "lli-bus-interface-ahb1"))
-+		pd->lli_buses |= PL08X_AHB1;
-+	if (of_property_read_bool(np, "lli-bus-interface-ahb2"))
-+		pd->lli_buses |= PL08X_AHB2;
-+	if (!pd->lli_buses) {
-+		dev_info(&adev->dev, "no bus masters for LLIs stated, assume all\n");
-+		pd->lli_buses |= PL08X_AHB1 | PL08X_AHB2;
-+	}
-+
-+	/* Eligible bus masters for memory access */
-+	if (of_property_read_bool(np, "mem-bus-interface-ahb1"))
-+		pd->mem_buses |= PL08X_AHB1;
-+	if (of_property_read_bool(np, "mem-bus-interface-ahb2"))
-+		pd->mem_buses |= PL08X_AHB2;
-+	if (!pd->mem_buses) {
-+		dev_info(&adev->dev, "no bus masters for memory stated, assume all\n");
-+		pd->mem_buses |= PL08X_AHB1 | PL08X_AHB2;
-+	}
-+
-+	/* Parse the memcpy channel properties */
-+	ret = of_property_read_u32(np, "memcpy-burst-size", &val);
-+	if (ret) {
-+		dev_info(&adev->dev, "no memcpy burst size specified, using 1 byte\n");
-+		val = 1;
-+	}
-+	switch (val) {
-+	default:
-+		dev_err(&adev->dev, "illegal burst size for memcpy, set to 1\n");
-+		/* Fall through */
-+	case 1:
-+		cctl_memcpy |= PL080_BSIZE_1 << PL080_CONTROL_SB_SIZE_SHIFT |
-+			       PL080_BSIZE_1 << PL080_CONTROL_DB_SIZE_SHIFT;
-+		break;
-+	case 4:
-+		cctl_memcpy |= PL080_BSIZE_4 << PL080_CONTROL_SB_SIZE_SHIFT |
-+			       PL080_BSIZE_4 << PL080_CONTROL_DB_SIZE_SHIFT;
-+		break;
-+	case 8:
-+		cctl_memcpy |= PL080_BSIZE_8 << PL080_CONTROL_SB_SIZE_SHIFT |
-+			       PL080_BSIZE_8 << PL080_CONTROL_DB_SIZE_SHIFT;
-+		break;
-+	case 16:
-+		cctl_memcpy |= PL080_BSIZE_16 << PL080_CONTROL_SB_SIZE_SHIFT |
-+			       PL080_BSIZE_16 << PL080_CONTROL_DB_SIZE_SHIFT;
-+		break;
-+	case 32:
-+		cctl_memcpy |= PL080_BSIZE_32 << PL080_CONTROL_SB_SIZE_SHIFT |
-+			       PL080_BSIZE_32 << PL080_CONTROL_DB_SIZE_SHIFT;
-+		break;
-+	case 64:
-+		cctl_memcpy |= PL080_BSIZE_64 << PL080_CONTROL_SB_SIZE_SHIFT |
-+			       PL080_BSIZE_64 << PL080_CONTROL_DB_SIZE_SHIFT;
-+		break;
-+	case 128:
-+		cctl_memcpy |= PL080_BSIZE_128 << PL080_CONTROL_SB_SIZE_SHIFT |
-+			       PL080_BSIZE_128 << PL080_CONTROL_DB_SIZE_SHIFT;
-+		break;
-+	case 256:
-+		cctl_memcpy |= PL080_BSIZE_256 << PL080_CONTROL_SB_SIZE_SHIFT |
-+			       PL080_BSIZE_256 << PL080_CONTROL_DB_SIZE_SHIFT;
-+		break;
-+	}
-+
-+	ret = of_property_read_u32(np, "memcpy-bus-width", &val);
-+	if (ret) {
-+		dev_info(&adev->dev, "no memcpy bus width specified, using 8 bits\n");
-+		val = 8;
-+	}
-+	switch (val) {
-+	default:
-+		dev_err(&adev->dev, "illegal bus width for memcpy, set to 8 bits\n");
-+		/* Fall through */
-+	case 8:
-+		cctl_memcpy |= PL080_WIDTH_8BIT << PL080_CONTROL_SWIDTH_SHIFT |
-+			       PL080_WIDTH_8BIT << PL080_CONTROL_DWIDTH_SHIFT;
-+		break;
-+	case 16:
-+		cctl_memcpy |= PL080_WIDTH_16BIT << PL080_CONTROL_SWIDTH_SHIFT |
-+			       PL080_WIDTH_16BIT << PL080_CONTROL_DWIDTH_SHIFT;
-+		break;
-+	case 32:
-+		cctl_memcpy |= PL080_WIDTH_32BIT << PL080_CONTROL_SWIDTH_SHIFT |
-+			       PL080_WIDTH_32BIT << PL080_CONTROL_DWIDTH_SHIFT;
-+		break;
-+	}
-+
-+	/* This is currently the only thing making sense */
-+	cctl_memcpy |= PL080_CONTROL_PROT_SYS;
-+
-+	/* Set up memcpy channel */
-+	pd->memcpy_channel.bus_id = "memcpy";
-+	pd->memcpy_channel.cctl_memcpy = cctl_memcpy;
-+	/* Use the buses that can access memory, obviously */
-+	pd->memcpy_channel.periph_buses = pd->mem_buses;
-+
-+	pl08x->pd = pd;
-+
-+	return of_dma_controller_register(adev->dev.of_node, pl08x_of_xlate,
-+					  pl08x);
-+}
-+#else
-+static inline int pl08x_of_probe(struct amba_device *adev,
-+				 struct pl08x_driver_data *pl08x,
-+				 struct device_node *np)
-+{
-+	return -EINVAL;
-+}
-+#endif
-+
- static int pl08x_probe(struct amba_device *adev, const struct amba_id *id)
- {
- 	struct pl08x_driver_data *pl08x;
- 	const struct vendor_data *vd = id->data;
-+	struct device_node *np = adev->dev.of_node;
- 	u32 tsfr_size;
- 	int ret = 0;
- 	int i;
-@@ -2104,9 +2284,15 @@ static int pl08x_probe(struct amba_device *adev, const struct amba_id *id)
- 	/* Get the platform data */
- 	pl08x->pd = dev_get_platdata(&adev->dev);
- 	if (!pl08x->pd) {
--		dev_err(&adev->dev, "no platform data supplied\n");
--		ret = -EINVAL;
--		goto out_no_platdata;
-+		if (np) {
-+			ret = pl08x_of_probe(adev, pl08x, np);
-+			if (ret)
-+				goto out_no_platdata;
-+		} else {
-+			dev_err(&adev->dev, "no platform data supplied\n");
-+			ret = -EINVAL;
-+			goto out_no_platdata;
-+		}
- 	}
- 
- 	/* Assign useful pointers to the driver state */
+Patch set successfully tested on 8250 UART (TX) with DMA support on
+Embedded Artists' LPC4357 Developer's Kit.
+
+[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-September/287834.html
+[2] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-September/286150.html
+
+Joachim Eastwood (2):
+  dmaengine: add driver for lpc18xx dmamux
+  doc: dt: dma: add bindings for lpc1850-dmamux
+
+Linus Walleij (2):
+  dmaengine: pl08x: support dt channel assignment
+  doc: dt: dma: add binding doc for pl08x
+
+ .../devicetree/bindings/dma/arm-pl08x.txt          |  54 ++++++
+ .../devicetree/bindings/dma/lpc1850-dmamux.txt     |  54 ++++++
+ drivers/dma/Kconfig                                |   9 +
+ drivers/dma/Makefile                               |   1 +
+ drivers/dma/amba-pl08x.c                           | 192 ++++++++++++++++++++-
+ drivers/dma/lpc18xx-dmamux.c                       | 184 ++++++++++++++++++++
+ 6 files changed, 491 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/arm-pl08x.txt
+ create mode 100644 Documentation/devicetree/bindings/dma/lpc1850-dmamux.txt
+ create mode 100644 drivers/dma/lpc18xx-dmamux.c
+
 -- 
 1.8.0
 
