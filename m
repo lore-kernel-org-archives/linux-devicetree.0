@@ -1,255 +1,33 @@
-From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH RFC 3/4] dmaengine: add driver for lpc18xx dmamux
-Date: Sun, 14 Jun 2015 13:22:16 +0200
-Message-ID: <1434280937-8369-4-git-send-email-manabian@gmail.com>
-References: <1434280937-8369-1-git-send-email-manabian@gmail.com>
+From: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH non-pretimeout 3/7] ARM64: add SBSA Generic
+ Watchdog device node in amd-seattle-soc.dtsi
+Date: Sun, 14 Jun 2015 08:17:35 -0500
+Message-ID: <557D7EEF.7010501@codeaurora.org>
+References: <=fu.wei@linaro.org>	<1433958452-23721-1-git-send-email-fu.wei@linaro.org>	<1433958452-23721-4-git-send-email-fu.wei@linaro.org>	<557B470B.9030908@codeaurora.org> <CADyBb7seDgmQYxjsxCo_thPr_w847oy7d0AEiL8w9T_ZCF9+BQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1434280937-8369-1-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <CADyBb7seDgmQYxjsxCo_thPr_w847oy7d0AEiL8w9T_ZCF9+BQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
-Cc: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Linaro ACPI Mailman List <linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Fu <tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, G Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Vipul Gandhi <vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Leo Duran <leo.duran-5C7GfCeVMHo@public.gmane.org>, Jon Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for DMA on NXP LPC18xx/43xx platforms which has
-a multiplexer in front of the PL080 dma request lines.
+Fu Wei wrote:
+>> >I think the sizes are wrong.  They should be 0x1000 instead of 0x10000.
+> This has been proved by test, it works well on Seattle
+> Foundation model has same value. So I don't think it is wrong
+>
+> otherwise someone has the data sheet of Seattle B0, and it shows that is wrong.
 
-The mux is a single register in the LPC18xx/43xx CREG block
-and can multiplex up to 4 request lines to each of the 16
-lines on the PL080.
+The registers block is only 0x1000 bytes long.  So you're wasting 63KB 
+of virtual address space for each block.
 
-Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- drivers/dma/Kconfig          |   9 +++
- drivers/dma/Makefile         |   1 +
- drivers/dma/lpc18xx-dmamux.c | 184 +++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 194 insertions(+)
- create mode 100644 drivers/dma/lpc18xx-dmamux.c
-
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index dfe72a0f46dc..e119dd19e9b4 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -76,6 +76,15 @@ config AMBA_PL08X
- 	  Platform has a PL08x DMAC device
- 	  which can provide DMA engine support
- 
-+config LPC18XX_DMAMUX
-+	bool "NXP LPC18xx/43xx DMA MUX for PL080"
-+	depends on ARCH_LPC18XX || COMPILE_TEST
-+	depends on OF && AMBA_PL08X
-+	select MFD_SYSCON
-+	help
-+	  Enable support for DMA on NXP LPC18xx/43xx platforms
-+	  with PL080 and multiplexed DMA request lines.
-+
- config INTEL_IOATDMA
- 	tristate "Intel I/OAT DMA support"
- 	depends on PCI && X86
-diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
-index bc12f9a4e62b..44ef3ef29ebe 100644
---- a/drivers/dma/Makefile
-+++ b/drivers/dma/Makefile
-@@ -31,6 +31,7 @@ obj-$(CONFIG_TI_EDMA) += edma.o
- obj-$(CONFIG_STE_DMA40) += ste_dma40.o ste_dma40_ll.o
- obj-$(CONFIG_TEGRA20_APB_DMA) += tegra20-apb-dma.o
- obj-$(CONFIG_S3C24XX_DMAC) += s3c24xx-dma.o
-+obj-$(CONFIG_LPC18XX_DMAMUX) += lpc18xx-dmamux.o
- obj-$(CONFIG_PL330_DMA) += pl330.o
- obj-$(CONFIG_PCH_DMA) += pch_dma.o
- obj-$(CONFIG_AMBA_PL08X) += amba-pl08x.o
-diff --git a/drivers/dma/lpc18xx-dmamux.c b/drivers/dma/lpc18xx-dmamux.c
-new file mode 100644
-index 000000000000..26ba76c13be2
---- /dev/null
-+++ b/drivers/dma/lpc18xx-dmamux.c
-@@ -0,0 +1,184 @@
-+/*
-+ * DMA Router driver for LPC18xx/43xx DMA MUX
-+ *
-+ * Copyright (C) 2015 Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+ *
-+ * Based on TI DMA Crossbar driver by:
-+ *   Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com
-+ *   Author: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ */
-+#include <linux/err.h>
-+#include <linux/init.h>
-+#include <linux/io.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/of_address.h>
-+#include <linux/of_device.h>
-+#include <linux/of_dma.h>
-+#include <linux/regmap.h>
-+#include <linux/spinlock.h>
-+
-+/* CREG register offset and macros for mux manipulation */
-+#define LPC18XX_CREG_DMAMUX		0x11c
-+#define LPC18XX_DMAMUX_VAL(v, n)	((v) << (n * 2))
-+#define LPC18XX_DMAMUX_MASK(n)		(0x3 << (n * 2))
-+#define LPC18XX_DMAMUX_MAX_VAL		0x3
-+
-+struct lpc18xx_dmamux {
-+	u32 value;
-+	bool busy;
-+};
-+
-+struct lpc18xx_dmamux_data {
-+	struct dma_router dmarouter;
-+	struct lpc18xx_dmamux *muxes;
-+	u32 dma_master_requests;
-+	u32 dma_mux_requests;
-+	struct regmap *reg;
-+	spinlock_t lock;
-+};
-+
-+static void lpc18xx_dmamux_free(struct device *dev, void *route_data)
-+{
-+	struct lpc18xx_dmamux_data *dmamux = dev_get_drvdata(dev);
-+	struct lpc18xx_dmamux *mux = route_data;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&dmamux->lock, flags);
-+	mux->busy = false;
-+	spin_unlock_irqrestore(&dmamux->lock, flags);
-+}
-+
-+static void *lpc18xx_dmamux_reserve(struct of_phandle_args *dma_spec,
-+				    struct of_dma *ofdma)
-+{
-+	struct platform_device *pdev = of_find_device_by_node(ofdma->of_node);
-+	struct lpc18xx_dmamux_data *dmamux = platform_get_drvdata(pdev);
-+	unsigned long flags;
-+	unsigned mux;
-+
-+	if (dma_spec->args_count != 3) {
-+		dev_err(&pdev->dev, "invalid number of dma mux args\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	mux = dma_spec->args[0];
-+	if (mux >= dmamux->dma_master_requests) {
-+		dev_err(&pdev->dev, "invalid mux number: %d\n",
-+			dma_spec->args[0]);
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	if (dma_spec->args[1] > LPC18XX_DMAMUX_MAX_VAL) {
-+		dev_err(&pdev->dev, "invalid dma mux value: %d\n",
-+			dma_spec->args[1]);
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	/* The of_node_put() will be done in the core for the node */
-+	dma_spec->np = of_parse_phandle(ofdma->of_node, "dma-masters", 0);
-+	if (!dma_spec->np) {
-+		dev_err(&pdev->dev, "can't get dma master\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	spin_lock_irqsave(&dmamux->lock, flags);
-+	if (dmamux->muxes[mux].busy) {
-+		spin_unlock_irqrestore(&dmamux->lock, flags);
-+		dev_err(&pdev->dev, "dma request %u busy with %u.%u\n",
-+			mux, mux, dmamux->muxes[mux].value);
-+		of_node_put(dma_spec->np);
-+		return ERR_PTR(-EBUSY);
-+	}
-+
-+	dmamux->muxes[mux].busy = true;
-+	dmamux->muxes[mux].value = dma_spec->args[1];
-+
-+	regmap_update_bits(dmamux->reg, LPC18XX_CREG_DMAMUX,
-+			   LPC18XX_DMAMUX_MASK(mux),
-+			   LPC18XX_DMAMUX_VAL(dmamux->muxes[mux].value, mux));
-+	spin_unlock_irqrestore(&dmamux->lock, flags);
-+
-+	dma_spec->args[1] = dma_spec->args[2];
-+	dma_spec->args_count = 2;
-+
-+	dev_info(&pdev->dev, "mapping dmamux %u.%u to dma request %u\n", mux,
-+		 dmamux->muxes[mux].value, mux);
-+
-+	return &dmamux->muxes[mux];
-+}
-+
-+static int lpc18xx_dmamux_probe(struct platform_device *pdev)
-+{
-+	struct device_node *dma_np, *np = pdev->dev.of_node;
-+	struct lpc18xx_dmamux_data *dmamux;
-+	int ret;
-+
-+	dmamux = devm_kzalloc(&pdev->dev, sizeof(*dmamux), GFP_KERNEL);
-+	if (!dmamux)
-+		return -ENOMEM;
-+
-+	dmamux->reg = syscon_regmap_lookup_by_compatible("nxp,lpc1850-creg");
-+	if (IS_ERR(dmamux->reg)) {
-+		dev_err(&pdev->dev, "syscon lookup failed\n");
-+		return PTR_ERR(dmamux->reg);
-+	}
-+
-+	ret = of_property_read_u32(np, "dma-requests",
-+				   &dmamux->dma_mux_requests);
-+	if (ret) {
-+		dev_err(&pdev->dev, "missing dma-requests property\n");
-+		return ret;
-+	}
-+
-+	dma_np = of_parse_phandle(np, "dma-masters", 0);
-+	if (!dma_np) {
-+		dev_err(&pdev->dev, "can't get dma master\n");
-+		return -ENODEV;
-+	}
-+
-+	ret = of_property_read_u32(dma_np, "dma-requests",
-+				   &dmamux->dma_master_requests);
-+	of_node_put(dma_np);
-+	if (ret) {
-+		dev_err(&pdev->dev, "missing master dma-requests property\n");
-+		return ret;
-+	}
-+
-+	dmamux->muxes = devm_kcalloc(&pdev->dev, dmamux->dma_master_requests,
-+				     sizeof(struct lpc18xx_dmamux),
-+				     GFP_KERNEL);
-+	if (!dmamux->muxes)
-+		return -ENOMEM;
-+
-+	spin_lock_init(&dmamux->lock);
-+	platform_set_drvdata(pdev, dmamux);
-+	dmamux->dmarouter.dev = &pdev->dev;
-+	dmamux->dmarouter.route_free = lpc18xx_dmamux_free;
-+
-+	return of_dma_router_register(np, lpc18xx_dmamux_reserve,
-+				      &dmamux->dmarouter);
-+}
-+
-+static const struct of_device_id lpc18xx_dmamux_match[] = {
-+	{ .compatible = "nxp,lpc1850-dmamux" },
-+	{},
-+};
-+
-+static struct platform_driver lpc18xx_dmamux_driver = {
-+	.probe	= lpc18xx_dmamux_probe,
-+	.driver = {
-+		.name = "lpc18xx-dmamux",
-+		.of_match_table = lpc18xx_dmamux_match,
-+	},
-+};
-+
-+static int __init lpc18xx_dmamux_init(void)
-+{
-+	return platform_driver_register(&lpc18xx_dmamux_driver);
-+}
-+arch_initcall(lpc18xx_dmamux_init);
 -- 
-1.8.0
-
+Sent by an employee of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the
+Code Aurora Forum, hosted by The Linux Foundation.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
