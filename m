@@ -1,196 +1,89 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 6/6] ARM: sun8i: dts: Add Ippo-q8h v1.2 with A33 and 1024x600 lcd support
-Date: Sun, 14 Jun 2015 21:16:21 +0300
-Message-ID: <85E62D2D-5387-433B-A944-7F2145459F08@konsulko.com>
-References: <1432997706-20172-1-git-send-email-hdegoede@redhat.com> <1432997706-20172-7-git-send-email-hdegoede@redhat.com> <20150602081459.GO23777@lukather> <556D6955.8030708@redhat.com> <20150603094535.GI23777@lukather> <556EE104.3090803@redhat.com> <20150613135002.GP19653@lukather>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2098\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150613135002.GP19653@lukather>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH V2] ARM: dts: sun6i: Add dts file for MSI
+ Primo81 tablet
+Date: Sun, 14 Jun 2015 20:55:05 +0200
+Message-ID: <1434308106-27704-1-git-send-email-merker@debian.org>
+References: <20150108095213.GR7853@lukather>
+Reply-To: merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDP2XNNJ7IFBBL4466VQKGQEWO4Y2YI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20150108095213.GR7853@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Siarhei Siamashka <siarhei.siamashka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime,
+Maxime Ripard wrote:
+> On Sat, Dec 27, 2014 at 09:37:20AM +0200, Siarhei Siamashka wrote:
+> > The MSI Primo81 is an A31s based tablet, with 1G RAM, 16G NAND,
+> > 1024x768 IPS LCD display, mono speaker, 0.3 MP front camera, 2.0 MP
+> > rear camera, 3500 mAh battery, gt911 touchscreen, mma8452 accelerometer
+> > and rtl8188etv usb wifi. Has "power", "volume+" and "volume-" buttons
+> > (both volume buttons are also connected to the UBOOT_SEL pin). The
+> > external connectors are represented by MicroSD slot, MiniHDMI, MicroUSB
+> > OTG and 3.5mm headphone jack. More details are available at
+> >     http://linux-sunxi.org/MSI_Primo81
+> >
+> > This initial dts file only provides support for mmc, wifi and uart
+> > (there is no external connector for uart though). Graphics can be used
+> > via simplefb. However, without usb otg, there are no reasonable means
+> > to handle user input yet.
+[...]
+> These two patches look very good overall.
+>=20
+> There's two things about the two of them though:
+>   - We just switched to using the DT includes, please use them for
+>     your GPIO flags and pinctrl drive strength and pull
+>     configurations.
+>   - We will switch soon to using the kind of syntax used for example
+>     by TI in their DTSes (you can look at the beaglebone black for an
+>     good example.), it would be great if you could use that in your
+>     two DTSes, in order to avoid changing everything again in a near
+>     future.
 
-> On Jun 13, 2015, at 16:50 , Maxime Ripard <maxime.ripard@free-electro=
-ns.com> wrote:
->=20
-> Hi,
->=20
-> Sorry for the late reply.
->=20
-> On Wed, Jun 03, 2015 at 01:12:04PM +0200, Hans de Goede wrote:
->> Hi,
->>=20
->> On 03-06-15 11:45, Maxime Ripard wrote:
->>> On Tue, Jun 02, 2015 at 10:29:09AM +0200, Hans de Goede wrote:
->>>> Hi,
->>>>=20
->>>> On 02-06-15 10:14, Maxime Ripard wrote:
->>>>> On Sat, May 30, 2015 at 04:55:06PM +0200, Hans de Goede wrote:
->>>>>> The Ippo-q8h is a tablet circuit board commonly found in cheap A=
-ndroid
->>>>>> tablets. The v1.2 version can be used with either an A23 or A33 =
-SoC.
->>>>>>=20
->>>>>> This adds a dts file for the v1.2 board with an A33 SoC and a 10=
-24x600
->>>>>> LCD screen (most of these tablets have a 800x480 screen).
->>>>>=20
->>>>> I think the difference between the resolution here is more of a c=
-ase
->>>>> for the DT quirks interface:
->>>>> https://lkml.org/lkml/2015/2/18/258
->>>>=20
->>>> I would expect the only difference between the 2 dts files to be t=
-he
->>>> node describing the lcd panel, so yes that makes somewhat sense.
->>>>=20
->>>>> Do you know if there's some way to autodetect the two board versi=
-ons
->>>>> (like a board id somewhere in an EEPROM)?
->>>>=20
->>>> No, AFAIK there is no way to tell the difference. There is no eepr=
-om no
->>>> the board, and we really cannot rely on the nand contents.
->>>=20
->>> Ok.
->>>=20
->>>>> If not, then maybe u-boot can simply add that board compatible to=
- the
->>>>> list, and we'll base our logic on that when we'll need it.
->>>>=20
->>>> That means extra logic in u-boot, and on the kernel side, for what
->>>> benefit exactly? Such logic would make sense if there was one u-bo=
-ot
->>>> image which runtime adjusted itself, but that is not an option.
->>>=20
->>> For what benefit? One kernel image which runtime adjusts itself.
->>=20
->> You mean one dtb right, because the kernel itself already runtime
->> adjusts itself.
->=20
-> Well, the kernel will runtime adjust the DT, so, both, I'd say?
->=20
->>> It's especially possible if u-boot's image is not, which seems to b=
-e what
->>> you're saying.
->>=20
->> But we will still need different configs in u-boot, and we need
->> to add code + config to u-boot to plug in the extra compatibles
->> to automatically select the right built-in overlays.
->=20
-> You're going to have a different config anyway, but yeah, that's true=
-=2E
->=20
->>>> And we can avoid copy and paste on the dts side by putting all
->>>> the common stuff in a common file and including that, I believe
->>>> that that is better (KISS =3D better) since we've no way to runtim=
-e
->>>> do the right thing AFAICT.
->>>=20
->>> My concern is about the ever-growing number of DTS that just are sm=
-all
->>> variations of one or the other. What about the time when we'll
->>> discover that this board has a variant that has an emmc, and some t=
-hat
->>> don't have any button, or the i2c bus 2 not wired, and one other th=
-at
->>> doesn't have any HDMI?
->>>=20
->>> Do we really want to have a dts called
->>> sun8i-a33-q8h-emmc-lcd800x600-nohdmi-noi2c2-nobuttons.dts?
->>>=20
->>> Especially when we will have the one that we include here that will
->>> not have followed this convention because it was introduced before
->>> that, and that we have a way to deal with this nicely?
->>>=20
->>> You chose to consider the DTS names an ABI, the best way to handle
->>> this is to have a DTS as generic as possible, and leave all these
->>> small variations outside of the name.
->>=20
->> Ok, so for now this is not really an issue at all since the dts
->> does not yet decribe the lcd at all. So can you merge this one
->> renamed to a more generic name for 4.2?
->>=20
->> That will work fine for now.
->>=20
->> Then we can use the DT quirks interface to add different lcd
->> nodes for different variants once we get lcd support in the kernel,
->> and teach u-boot to add the extra board compatible to select
->> the right lcd node at that time.
->=20
-> I think we need to discuss this with Pantelis and what is his feeling
-> about this.
->=20
-> Pantelis, to sum things up, we have a case of a tablet that comes wit=
-h
-> the exact same board, but coming in two flavours with two differents
-> screen resolutions. It looks like a great case for your DT quirks
-> work, but we have no way of runtime detecting the difference between
-> the two variants. What do you think about this? Should we go with
-> using the DT quirks or is this simply out of scope?
->=20
-> There's not so much example of similar cases in the kernel, and none
-> of them use quirks so far (obviously) but they all boil down to eithe=
-r
-> the solution you were suggesting in that patch or adding the alternat=
-e
-> configuration as a comment.
->=20
-> I don't think the latter would work for you, and I agree with that, s=
-o
-> I guess that depending on what Pantelis says, either we go with a
-> better solution using the quirks, or we end up using what you
-> suggested (with a nitpick though, I'd prefer if you used the display
-> standard instead of the resolution, which would make it xga I guess?)
->=20
+As far as I can see nobody has taken this up until now, so I have
+slightly reworked Siarhei's original patch:
 
-=46irst of all, the quirks interface is at an RFC stage (new name sugge=
-sted is
-=E2=80=98variants=E2=80=99); getting that out of the way this seems lik=
-e what it is designed
-to do.
+- changed the numeric pinctrl and gpio values to their symbolic
+  equivalents
 
-The idea of the DT quirks is to drastically cut down on the number of d=
-ifferent
-DTs required, each different for each board with minute differences fro=
-m one another.
+- changed the include syntax from /include/ to #include to make
+  the dts build with current kernels.
 
-In your case you have boards that have no way to be probed about what t=
-hey =E2=80=98are=E2=80=99,
-but that=E2=80=99s no big problem. You can easily pass the board varian=
-t in the kernel command
-line and use that to select the quirk to apply.
+I have current u-boot master working on the tablet (booted from
+SD card), with console on the LCD, USB-OTG-support and a USB
+keyboard.  A defconfig patch for OTG+keyboard support has been
+submitted to the u-boot list.
 
-In fact the original patchset does contain a command line quirk for ena=
-bling and disabling
-the onboard emmc & hdmi of the beaglebone black for capes that need to =
-use those signals.
+Unfortunately I have not yet had much luck with the kernel.
+I try to get Hans de Goede's sunxi-wip branch
+(https://github.com/jwrdegoede/linux-sunxi/tree/sunxi-wip) to
+work on the Primo81, but I have not yet been able to get any
+kernel output on the LCD.  Debugging this is slightly difficult
+as I currently lack an SD breakout board, so I have no way to
+get a serial console for now.
 
-Saying that, if you=E2=80=99re in a hurry I=E2=80=99d say go with a dif=
-ferent DTSs for now, since that=E2=80=99s
-going to go in a near kernel cycle; DT quirks will be discussed at plum=
-ber=E2=80=99s in a couple
-of months, and then we=E2=80=99ll if it will go in and in what form.
+Siarhei, could you perhaps give Hans' sunxi-wip branch a try on
+your Primo81? AFAIK you have a breakout board for it.
 
-Maxime
->=20
->=20
-> --=20
-> Maxime Ripard, Free Electrons
-> Embedded Linux, Kernel and Android engineering
-> http://free-electrons.com
+Regards,
+Karsten
+--=20
+Gem. Par. 28 Abs. 4 Bundesdatenschutzgesetz widerspreche ich der Nutzung
+sowie der Weitergabe meiner personenbezogenen Daten f=C3=BCr Zwecke der
+Werbung sowie der Markt- oder Meinungsforschung.
 
-Regards
-
-=E2=80=94 Pantelis
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
