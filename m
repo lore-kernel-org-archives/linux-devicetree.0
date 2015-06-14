@@ -1,37 +1,52 @@
-From: Anand Moon <linux.amoon@gmail.com>
-Subject: Re: [PATCHv5 1/5] ARM: dts: exynos5422-odroidxu3 Add pwm-fan node to
- the Odroid-XU3 board
-Date: Sun, 14 Jun 2015 11:05:32 +0530
-Message-ID: <CANAwSgRYp+qWip-bS3z45NiAMKsixeThenQ9wZ9dQE03OoGtfg@mail.gmail.com>
-References: <1431499020-3912-1-git-send-email-linux.amoon@gmail.com>
- <1431499020-3912-2-git-send-email-linux.amoon@gmail.com> <CAJKOXPefJwqvfZPDovQ6EjEOBfuJkidgeYDF_=KC9O+=2=_KoQ@mail.gmail.com>
- <CANAwSgTCaBgmBQ9HNb_2O+eUeZK2XngMkGon7x8Q4h86xP5hKA@mail.gmail.com> <CAJKOXPetTDedD4GK1GsLJ6EYetELP0MTVoviQQ4RDE35W_oJZQ@mail.gmail.com>
+From: Fu Wei <fu.wei@linaro.org>
+Subject: Re: [PATCH non-pretimeout 3/7] ARM64: add SBSA Generic Watchdog
+ device node in amd-seattle-soc.dtsi
+Date: Sun, 14 Jun 2015 18:05:05 +0800
+Message-ID: <CADyBb7seDgmQYxjsxCo_thPr_w847oy7d0AEiL8w9T_ZCF9+BQ@mail.gmail.com>
+References: <=fu.wei@linaro.org>
+	<1433958452-23721-1-git-send-email-fu.wei@linaro.org>
+	<1433958452-23721-4-git-send-email-fu.wei@linaro.org>
+	<557B470B.9030908@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAJKOXPetTDedD4GK1GsLJ6EYetELP0MTVoviQQ4RDE35W_oJZQ@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Eduardo Valentin <edubezval@gmail.com>, Lukasz Majewski <l.majewski@samsung.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Markus Reichl <m.reichl@fivetechno.de>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Kukjin Kim <kgene@kernel.org>, linux-arm-kernel@lists.infradead.org, Guenter Roeck <linux@roeck-us.net>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <557B470B.9030908@codeaurora.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Timur Tabi <timur@codeaurora.org>
+Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Wei Fu <tekkamanninja@gmail.com>, G Gregory <graeme.gregory@linaro.org>, Al Stone <al.stone@linaro.org>, Hanjun Guo <hanjun.guo@linaro.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Guenter Roeck <linux@roeck-us.net>, Vipul Gandhi <vgandhi@codeaurora.org>, Wim Van Sebroeck <wim@iguana.be>, Jon Masters <jcm@redhat.com>, Leo Duran <leo.duran@amd.com>, Jon Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, rjw@rjwysocki.net
 List-Id: devicetree@vger.kernel.org
 
-hi Krzysztof,
-
-I will send an update version soon.
-
--Anand Moon
-
-On 14 June 2015 at 11:01, Krzysztof Kozlowski <k.kozlowski@samsung.com> wrote:
-> 2015-05-13 16:46 GMT+09:00 Anand Moon <linux.amoon@gmail.com>:
->> Hi Krzysztof,
+On 13 June 2015 at 04:54, Timur Tabi <timur@codeaurora.org> wrote:
+> On 06/10/2015 12:47 PM, fu.wei@linaro.org wrote:
 >>
->> Will make the changes.
->>
->> Thanks for the review.
+>> +                       reg = <0x0 0xe0bb0000 0 0x10000>,
+>> +                               <0x0 0xe0bc0000 0 0x10000>;
 >
-> Hi Anand,
 >
-> Do you plan to continue working on this patchset?
+> I think the sizes are wrong.  They should be 0x1000 instead of 0x10000.
+
+This has been proved by test, it works well on Seattle
+Foundation model has same value. So I don't think it is wrong
+
+otherwise someone has the data sheet of Seattle B0, and it shows that is wrong.
+
+
 >
-> Best regards,
-> Krzysztof
+> --
+> Qualcomm Innovation Center, Inc.
+> The Qualcomm Innovation Center, Inc. is a member of the
+> Code Aurora Forum, a Linux Foundation Collaborative Project.
+
+
+
+-- 
+Best regards,
+
+Fu Wei
+Software Engineer
+Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
+Ph: +86 21 61221326(direct)
+Ph: +86 186 2020 4684 (mobile)
+Room 1512, Regus One Corporate Avenue,Level 15,
+One Corporate Avenue,222 Hubin Road,Huangpu District,
+Shanghai,China 200021
