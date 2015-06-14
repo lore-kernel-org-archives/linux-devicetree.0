@@ -1,171 +1,156 @@
-From: Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH V2] ARM: dts: sun6i: Add dts file for MSI
- Primo81 tablet
-Date: Sun, 14 Jun 2015 20:55:06 +0200
-Message-ID: <1434308106-27704-2-git-send-email-merker@debian.org>
-References: <20150108095213.GR7853@lukather>
- <1434308106-27704-1-git-send-email-merker@debian.org>
-Reply-To: merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org
+From: Pratyush Anand <pratyush.anand@gmail.com>
+Subject: Re: [PATCH v2 2/4] PCI: designware: Add ARM64 support
+Date: Mon, 15 Jun 2015 00:48:23 +0530
+Message-ID: <CAHM4w1nfaUMgY4PfhG4Aar962=m8XndHeHJG1yP04KjL=67xaQ@mail.gmail.com>
+References: <1433320542-49576-1-git-send-email-wangzhou1@hisilicon.com>
+	<1433320542-49576-3-git-send-email-wangzhou1@hisilicon.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDP2XNNJ7IFBBMM466VQKGQEXJXWC6Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1434308106-27704-1-git-send-email-merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Siarhei Siamashka <siarhei.siamashka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1433320542-49576-3-git-send-email-wangzhou1@hisilicon.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Zhou Wang <wangzhou1@hisilicon.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jg1.han@samsung.com>, Arnd Bergmann <arnd@arndb.de>, fabrice.gasnier@st.com, Liviu Dudau <Liviu.Dudau@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Gabriele Paoloni <gabriele.paoloni@huawei.com>, Zhichang Yuan <yuanzhichang@hisilicon.com>, zhudacai@hisilicon.com, Zhang Jukuo <zhangjukuo@huawei.com>, qiuzhenfa@hisilicon.com, Liguozhu <liguozhu@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
-The MSI Primo81 is an A31s based tablet, with 1G RAM, 16G NAND,
-1024x768 IPS LCD display, mono speaker, 0.3 MP front camera, 2.0 MP
-rear camera, 3500 mAh battery, gt911 touchscreen, mma8452 accelerometer
-and rtl8188etv usb wifi. Has "power", "volume+" and "volume-" buttons
-(both volume buttons are also connected to the UBOOT_SEL pin). The
-external connectors are represented by MicroSD slot, MiniHDMI, MicroUSB
-OTG and 3.5mm headphone jack. More details are available at
-    http://linux-sunxi.org/MSI_Primo81
+Hi Zhou Wang,
 
-This initial dts file only provides support for mmc, wifi and uart
-(there is no external connector for uart though). Graphics can be used
-via simplefb. However, without usb otg, there are no reasonable means
-to handle user input yet.
+Thanks for unifying arm and arm64 code.
 
-Signed-off-by: Siarhei Siamashka <siarhei.siamashka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Signed-off-by: Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
----
+On Wed, Jun 3, 2015 at 2:05 PM, Zhou Wang <wangzhou1@hisilicon.com> wrote:
+>
+> This patch tries to unify ARM32 and ARM64 PCIe in designware driver. Delete
+> function dw_pcie_setup, dw_pcie_scan_bus, dw_pcie_map_irq and struct hw_pci,
+> move related operations to dw_pcie_host_init. Also set pp->root_bus_nr = 0 in
+> each PCIe host driver which is based on pcie-designware.
+>
+> I am not very clear about I/O resource management:
 
-Changes since V1:
+Following discussion may help to understand it, specially in the
+context of designware.
 
-  - Use symbolic instead of numeric pinctrl values as requested
-    by Maxime Ripard.
-  - Change the include syntax from /include/ to #include to make
-    the dts build with current kernels.
+http://marc.info/?l=linux-pci&m=138621989417562&w=2
 
- arch/arm/boot/dts/Makefile               |  3 +-
- arch/arm/boot/dts/sun6i-a31s-primo81.dts | 96 ++++++++++++++++++++++++++++++++
- 2 files changed, 98 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/sun6i-a31s-primo81.dts
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 867e6e3..31686c7 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -552,7 +552,8 @@ dtb-$(CONFIG_MACH_SUN6I) += \
- 	sun6i-a31-i7.dtb \
- 	sun6i-a31-m9.dtb \
- 	sun6i-a31-mele-a1000g-quad.dtb \
--	sun6i-a31s-cs908.dtb
-+	sun6i-a31s-cs908.dtb \
-+	sun6i-a31s-primo81.dtb
- dtb-$(CONFIG_MACH_SUN7I) += \
- 	sun7i-a20-bananapi.dtb \
- 	sun7i-a20-bananapro.dtb \
-diff --git a/arch/arm/boot/dts/sun6i-a31s-primo81.dts b/arch/arm/boot/dts/sun6i-a31s-primo81.dts
-new file mode 100644
-index 0000000..8ac0bdd
---- /dev/null
-+++ b/arch/arm/boot/dts/sun6i-a31s-primo81.dts
-@@ -0,0 +1,96 @@
-+/*
-+ * Copyright 2014 Siarhei Siamashka <siarhei.siamashka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+ * Copyright 2015 Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This library is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This library is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ *     You should have received a copy of the GNU General Public
-+ *     License along with this library; if not, write to the Free
-+ *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
-+ *     MA 02110-1301 USA
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include "sun6i-a31s.dtsi"
-+#include "sunxi-common-regulators.dtsi"
-+
-+/ {
-+	model = "MSI Primo81 tablet";
-+	compatible = "msi,primo81", "allwinner,sun6i-a31s";
-+
-+	chosen {
-+		bootargs = "earlyprintk console=ttyS0,115200";
-+	};
-+
-+	soc@01c00000 {
-+		mmc0: mmc@01c0f000 {
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_primo81>;
-+			vmmc-supply = <&reg_vcc3v0>;
-+			bus-width = <4>;
-+			cd-gpios = <&pio 0 8 GPIO_ACTIVE_HIGH>; /* PA8 */
-+			cd-inverted;
-+			status = "okay";
-+		};
-+
-+		usbphy: phy@01c19400 {
-+			status = "okay";
-+		};
-+
-+		ehci0: usb@01c1a000 {
-+			/* rtl8188etv wifi is connected here */
-+			status = "okay";
-+		};
-+
-+		pio: pinctrl@01c20800 {
-+			mmc0_cd_pin_primo81: mmc0_cd_pin@0 {
-+				allwinner,pins = "PA8";
-+				allwinner,function = "gpio_in";
-+				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+				allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
-+			};
-+		};
-+
-+		uart0: serial@01c28000 {
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&uart0_pins_a>;
-+			status = "okay";
-+		};
-+	};
-+};
--- 
-2.1.4
+> >       if (global_io_offset < SZ_1M && pp->io_size > 0) {
+> >               pci_ioremap_io(global_io_offset, pp->io_base);
+> >               global_io_offset += SZ_64K;
+> >               pci_add_resource_offset(&res, &pp->io,
+> >                                       global_io_offset - pp->io_bus_addr);
+> >       }
+> so just move steps in dw_pcie_setup to dw_pcie_host_init.
+>
+> I have compiled the driver with multi_v7_defconfig. However, I don't have
+> ARM32 PCIe related board to do test. It will be appreciated if someone could
+> help to test it.
+>
+> Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
+> Tested-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> ---
+>  drivers/pci/host/pci-dra7xx.c      |   1 +
+>  drivers/pci/host/pci-exynos.c      |   2 +-
+>  drivers/pci/host/pci-imx6.c        |   2 +-
+>  drivers/pci/host/pci-keystone.c    |   2 +-
+>  drivers/pci/host/pci-layerscape.c  |   2 +-
+>  drivers/pci/host/pcie-designware.c | 128 +++++++++++++++----------------------
+>  drivers/pci/host/pcie-spear13xx.c  |   2 +-
+>  7 files changed, 56 insertions(+), 83 deletions(-)
+>
+
+[...]
+
+> diff --git a/drivers/pci/host/pci-layerscape.c b/drivers/pci/host/pci-layerscape.c
+> index 4a6e62f..5c7a9c4 100644
+> --- a/drivers/pci/host/pci-layerscape.c
+> +++ b/drivers/pci/host/pci-layerscape.c
+> @@ -101,7 +101,7 @@ static int ls_add_pcie_port(struct ls_pcie *pcie)
+>         pp = &pcie->pp;
+>         pp->dev = pcie->dev;
+>         pp->dbi_base = pcie->dbi;
+> -       pp->root_bus_nr = -1;
+> +       pp->root_bus_nr = 0;
+
+similar change for pcie-spear13xx.c should be needed as well.
+
+>         pp->ops = &ls_pcie_host_ops;
+>
+>         ret = dw_pcie_host_init(pp);
+> diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-designware.c
+> index 2e9f84f..b3f0ac7 100644
+> --- a/drivers/pci/host/pcie-designware.c
+> +++ b/drivers/pci/host/pcie-designware.c
+
+[...]
+
+> -#ifdef CONFIG_PCI_MSI
+> -       dw_pcie_msi_chip.dev = pp->dev;
+> -       dw_pci.msi_ctrl = &dw_pcie_msi_chip;
+> +#ifdef CONFIG_ARM
+> +       /*
+> +        * FIXME: we should really be able to use
+> +        * of_pci_get_host_bridge_resources on arm32 as well,
+> +        * but the conversion needs some more testing
+> +        */
+> +       if (global_io_offset < SZ_1M && pp->io_size > 0) {
+> +               pci_ioremap_io(global_io_offset, pp->io_base);
+> +               global_io_offset += SZ_64K;
+> +               pci_add_resource_offset(&res, &pp->io,
+> +                                       global_io_offset - pp->io_bus_addr);
+> +       }
+> +       pci_add_resource_offset(&res, &pp->mem,
+> +                               pp->mem.start - pp->mem_bus_addr);
+> +       pci_add_resource(&res, &pp->busn);
+> +#else
+> +       ret = of_pci_get_host_bridge_resources(np, 0, 0xff, &res, &pp->io_base);
+> +       if (ret)
+> +               return ret;
+> +#endif
+> +
+> +       bus = pci_create_root_bus(pp->dev, pp->root_bus_nr, &dw_pcie_ops,
+> +                             pp, &res);
+> +       if (!bus)
+> +               return -ENOMEM;
+> +
+> +#ifdef CONFIG_GENERIC_MSI_IRQ_DOMAIN
+> +       bus->msi = container_of(&pp->irq_domain, struct msi_controller, domain);
+> +#else
+> +       bus->msi = &dw_pcie_msi_chip;
+>  #endif
+>
+> -       dw_pci.nr_controllers = 1;
+> -       dw_pci.private_data = (void **)&pp;
+> +       pci_scan_child_bus(bus);
+> +       if (pp->ops->scan_bus)
+> +               pp->ops->scan_bus(pp);
+>
+> -       pci_common_init_dev(pp->dev, &dw_pci);
+> +#ifdef CONFIG_ARM
+> +       /* support old dtbs that incorrectly describe IRQs */
+> +       pci_fixup_irqs(pci_common_swizzle, of_irq_parse_and_map_pci);
+> +#endif
+> +
+> +       pci_assign_unassigned_bus_resources(bus);
+> +       pci_bus_add_devices(bus);
+
+As James and Lorenzo has suggested, of_pci_get_host_bridge_resources should
+work for ARM as well. I would suggest to move that just after cfg
+resource parsing and
+then to remove following piece of code.
+for_each_of_pci_range(&parser, &range) {
+...
+}
+ret = of_pci_parse_bus_range(np, &pp->busn);
+
+Then you can have a loop like
+
+         list_for_each_entry(entry, &res, node) {
+                 struct resource *res_temp = entry->res;
+                 if (resource_type(res_temp) == IORESOURCE_IO) {
+                 } else if (resource_type(res_temp) == IORESOURCE_MEM) {
+                }
+         }
+
+where you can fill, xx_size, xx_bus_addr, xx_mod_base etc.
+You can also remove global_io_offset variable.
+
+~Pratyush
