@@ -1,31 +1,21 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCHv5 1/5] ARM: dts: exynos5422-odroidxu3 Add pwm-fan node to
- the Odroid-XU3 board
-Date: Sun, 14 Jun 2015 14:31:01 +0900
-Message-ID: <CAJKOXPetTDedD4GK1GsLJ6EYetELP0MTVoviQQ4RDE35W_oJZQ@mail.gmail.com>
-References: <1431499020-3912-1-git-send-email-linux.amoon@gmail.com>
-	<1431499020-3912-2-git-send-email-linux.amoon@gmail.com>
-	<CAJKOXPefJwqvfZPDovQ6EjEOBfuJkidgeYDF_=KC9O+=2=_KoQ@mail.gmail.com>
-	<CANAwSgTCaBgmBQ9HNb_2O+eUeZK2XngMkGon7x8Q4h86xP5hKA@mail.gmail.com>
+From: Finance Department <rianatuty-IaNojYJ5/0ZvqeczSxQ3UQ@public.gmane.org>
+Subject: Payment
+Date: Sun, 14 Jun 2015 09:52:58 +0800 (MYT)
+Message-ID: <242543984.256434.1434246778529.JavaMail.zimbra@mdkl.gov.my>
+Reply-To: Finance Department <fd12001-9uewiaClKEY@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CANAwSgTCaBgmBQ9HNb_2O+eUeZK2XngMkGon7x8Q4h86xP5hKA@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Anand Moon <linux.amoon@gmail.com>
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Eduardo Valentin <edubezval@gmail.com>, Lukasz Majewski <l.majewski@samsung.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Markus Reichl <m.reichl@fivetechno.de>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Kukjin Kim <kgene@kernel.org>, linux-arm-kernel@lists.infradead.org, Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2015-05-13 16:46 GMT+09:00 Anand Moon <linux.amoon@gmail.com>:
-> Hi Krzysztof,
->
-> Will make the changes.
->
-> Thanks for the review.
+Dear Winner,
 
-Hi Anand,
+You have been awarded the sum of  8,000,000.00 (Eight Million Pounds sterling) with reference number 77100146. This compensation funds from the United Nation.Send us your personal details to deliver your funds.
 
-Do you plan to continue working on this patchset?
-
-Best regards,
-Krzysztof
+Gloria Peter
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
