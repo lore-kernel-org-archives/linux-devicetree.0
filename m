@@ -1,39 +1,46 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] rtc: hym8563: make the irq optional
-Date: Sun, 14 Jun 2015 21:42:24 +0200
-Message-ID: <20150614194224.GA17679@piout.net>
-References: <2559079.JyXCpe7EYV@diego>
+From: BOVINA FINANCIAL SERVICES <welman-oddTSyGn4aM@public.gmane.org>
+Subject: Loan of any Amount
+Date: Sun, 14 Jun 2015 21:19:39 +0100
+Message-ID: <20150614202003.610343D6DE2@smtp.ut.ac.id>
+Reply-To: financiersworldwid-9uewiaClKEY@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <2559079.JyXCpe7EYV@diego>
+Content-Description: Mail message body
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko =?iso-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Recipients <welman-oddTSyGn4aM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 13/06/2015 at 12:34:04 +0200, Heiko St=FCbner wrote :
-> Sometimes the irq line is not connected to any soc-pin. This does
-> not hinder basic timekeeping functionality of the rtc, so probe
-> should not fail in this case.
->=20
-> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-> ---
->  .../devicetree/bindings/rtc/haoyu,hym8563.txt          |  2 +-
->  drivers/rtc/rtc-hym8563.c                              | 18 ++++++++=
-++--------
->  2 files changed, 11 insertions(+), 9 deletions(-)
->=20
-Applied, thanks.
+Dear Sir/Madam
+               we are offering loans to the public with a very low rate of 0.2%... Apply now because We offer personal loan and business loans Do you need a Loan of any Amount for funding such as:
 
---=20
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+a) Personal Loan,Business Expansion,
+b) Business Start-up ,Education,
+c) Debt Consolidation , Home Improvement Loans
+d) Hard Money Loans, Investment Loans,
+
+Fill out the below information for procedure.
+
+Full Name:
+Address:
+Country:
+City:
+Occupation:
+Loan Amount Needed:
+Loan Duration:
+Purpose For Loan:
+Phone Number:
+
+Thanks for your time,
+Kinds Regards,
+C.E.O
+
+---
+This email has been checked for viruses by Avast antivirus software.
+https://www.avast.com/antivirus
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
