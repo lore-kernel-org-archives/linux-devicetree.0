@@ -1,47 +1,76 @@
-From: Beata Michalska <b.michalska@samsung.com>
-Subject: [PATCH v2] ARM: dts: Update video-phy node with syscon phandle for
- Exynos3250
-Date: Mon, 15 Jun 2015 10:12:46 +0200
-Message-ID: <1434355966-4566-1-git-send-email-b.michalska@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: kgene@kernel.org, k.kozlowski@samsung.com, kishon@ti.com, javier.martinez@collabora.co.uk, s.nawrocki@samsung.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, human.hwang@samsung.com
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH v3 1/2] dt: add cap11xx LED documentation
+Date: Mon, 15 Jun 2015 10:15:12 +0200
+Message-ID: <557E8990.5060702@samsung.com>
+References: <1434169054-11035-1-git-send-email-mranostay@gmail.com>
+ <1434169054-11035-2-git-send-email-mranostay@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <1434169054-11035-2-git-send-email-mranostay@gmail.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Matt Ranostay <mranostay@gmail.com>
+Cc: zonque@gmail.com, dmitry.torokhov@gmail.com, linux-input@vger.kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-As a follow-up to recent changes to Exynos mipi video phy
-driver, introducing support for PMU regmap in commit
-e4b3d38088df6f3acd40 ("phy: exynos-video-mipi: Fix regression
-by adding support for PMU regmap") add a syscon phandle to
-video-phy node to bring back to life both MIPI DSI display
-and MIPI CSIS-2 camera sensor on Exynos3250.
+Hi Matt,
 
-Signed-off-by: Beata Michalska <b.michalska@samsung.com>
-Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Tested-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Reviewed-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
----
-v2:
-	- removed 'reg' property as this is no longer needed
-	- added signatures as stated in the original thread
+On 06/13/2015 06:17 AM, Matt Ranostay wrote:
+> Some cap11xx devices have LEDs that can be controlled from userpace
+> and via triggers. Document their use and functionality here.
+>
+> Signed-off-by: Matt Ranostay <mranostay@gmail.com>
+> ---
+>   .../devicetree/bindings/input/cap11xx.txt          | 23 ++++++++++++++++++++++
+>   1 file changed, 23 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/input/cap11xx.txt b/Documentation/devicetree/bindings/input/cap11xx.txt
+> index 7d0a300..ef89c27 100644
+> --- a/Documentation/devicetree/bindings/input/cap11xx.txt
+> +++ b/Documentation/devicetree/bindings/input/cap11xx.txt
+> @@ -38,6 +38,11 @@ Optional properties:
+>   				defaults. The array must have exactly six
+>   				entries.
+>
+> +	linux,led-brightness:	Defines the ON brightness when the optional LED
+> +				functionality is used. Valid values are 0-15.
+> +				By default a value of 15 is set.
 
----
- arch/arm/boot/dts/exynos3250.dtsi |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The ON brightness is controlled with the 'brightness' sysfs property.
+The levels start from 1 and 0 turns the LED off. I think that this
+property is useless then.
 
-diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
-index e3bfb11..f514ead 100644
---- a/arch/arm/boot/dts/exynos3250.dtsi
-+++ b/arch/arm/boot/dts/exynos3250.dtsi
-@@ -138,8 +138,8 @@
- 
- 		mipi_phy: video-phy@10020710 {
- 			compatible = "samsung,s5pv210-mipi-video-phy";
--			reg = <0x10020710 8>;
- 			#phy-cells = <1>;
-+			syscon = <&pmu_system_controller>;
- 		};
- 
- 		pd_cam: cam-power-domain@10023C00 {
+> +
+>   Example:
+>
+>   i2c_controller {
+> @@ -55,5 +60,23 @@ i2c_controller {
+>   				 <105>,		/* KEY_LEFT */
+>   				 <109>,		/* KEY_PAGEDOWN */
+>   				 <104>;		/* KEY_PAGEUP */
+> +
+> +		linux,led-brightness = <15>;
+> +
+> +		usr@0 {
+> +			label = "cap11xx:green:usr0";
+> +			reg = <0>;
+> +		};
+> +
+> +		usr@1 {
+> +			label = "cap11xx:green:usr1";
+> +			reg = <1>;
+> +		};
+> +
+> +		alive@2 {
+> +			label = "cap11xx:green:alive";
+> +			reg = <2>;
+> +			linux,default_trigger = "heartbeat";
+> +		};
+>   	};
+>   }
+>
+
 -- 
-1.7.9.5
+Best Regards,
+Jacek Anaszewski
