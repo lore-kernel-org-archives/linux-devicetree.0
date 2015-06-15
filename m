@@ -1,86 +1,47 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 05/22] doc: dt-binding: usb: add otg related
- properties
-Date: Mon, 15 Jun 2015 10:56:00 +0300
-Message-ID: <20150615105600.6c958cfe@rockdesk>
-References: <CAL_JsqJ+q5hs26FaLXG1LVb0asE-UZ5hXar2FeVAJN=S8=CG3w@mail.gmail.com>
-	<20150610103737.3cc7c10d@rockdesk>
-	<20150610134735.GB7678@shlinux2>
-	<20150611101853.643a9334@rockdesk>
-	<20150611082010.GA16101@shlinux2>
-	<20150611153703.55dff608@rockdesk>
-	<20150611141121.GC16101@shlinux2>
-	<20150611175215.6e04d92e@rockdesk>
-	<20150612030916.GF16101@shlinux2>
-	<20150612113102.6aa67d5d@rockdesk>
-	<20150615074100.GA29918@shlinux2>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150615074100.GA29918@shlinux2>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Li Jun-B47624 <Jun.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Chen Peter-B29397 <Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Macpaul Lin <macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Beata Michalska <b.michalska@samsung.com>
+Subject: [PATCH v2] ARM: dts: Update video-phy node with syscon phandle for
+ Exynos3250
+Date: Mon, 15 Jun 2015 10:12:46 +0200
+Message-ID: <1434355966-4566-1-git-send-email-b.michalska@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: kgene@kernel.org, k.kozlowski@samsung.com, kishon@ti.com, javier.martinez@collabora.co.uk, s.nawrocki@samsung.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, human.hwang@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 15 Jun 2015 15:41:02 +0800
-Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+As a follow-up to recent changes to Exynos mipi video phy
+driver, introducing support for PMU regmap in commit
+e4b3d38088df6f3acd40 ("phy: exynos-video-mipi: Fix regression
+by adding support for PMU regmap") add a syscon phandle to
+video-phy node to bring back to life both MIPI DSI display
+and MIPI CSIS-2 camera sensor on Exynos3250.
 
-> On Fri, Jun 12, 2015 at 11:31:02AM +0300, Roger Quadros wrote:
-> > 
-> > 
-> > 
-> > Agreed. We still need to determine legacy platform if
-> > none of the features are set.
-> > 
-> > How about defining the followong enum for gadget->xyz_support
-> > 
-> > enum otg_feature {
-> > 	OTG_FEATURE_UNDEFINED = 0,
-> > 	OTG_FEATURE_ENABLED,
-> > 	OTG_FEATURE_DISABLED,
-> > };
-> > 
-> > for legacy platforms this will be UNDEFINED for all so you can detect it
-> > and continue legacy behaviour i.e. enable HNP/SRP, disable ADP.
-> > 
-> > For new platforms at least one of them won't be UNDEFINED so you can
-> > enable the feature if ENABLED and disable if UNDEFINED/DISABLED.
-> > 
-> > We can still keep disable flags so that users can disable all 3 OTG features
-> > while in OTG mode.
-> > 
-> > cheers,
-> > -roger
-> 
-> Regarding use of "xyz-disable" flags:
-> After more thinking this, I just realize that we can use "otg-rev" property
-> to handle the case of none of xyz-disable properties passed, for legacy
-> platforms, the new "otg-rev" not passed either, so it's a legacy platform,
-> if new platform does support all 3 features(SRP/HNP/ADP), the otg-rev
-> should be passed and also should be 2.0 or above, because ADP is
-> introduced in OTG 2.0(maybe that's why in current gadget driver, only
-> enable SRP/HNP).
-> 
-> So:
-> 1) new platform with full otg feature support:
-> dr_mode = "otg";
-> otg-rev = "0x0200";
-> 
-> 2) legacy platform
-> dr_mode = "otg"
-> 
-> Then I think we are okay to use disable flags.
+Signed-off-by: Beata Michalska <b.michalska@samsung.com>
+Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Tested-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Reviewed-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+---
+v2:
+	- removed 'reg' property as this is no longer needed
+	- added signatures as stated in the original thread
 
-I just agreed that it is ok to use enable flags and then read this mail :)
+---
+ arch/arm/boot/dts/exynos3250.dtsi |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I like this approach of using otg-rev to decide if OTG capabilities will be
-read from DT or not.
-
-cheers,
--roger
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
+index e3bfb11..f514ead 100644
+--- a/arch/arm/boot/dts/exynos3250.dtsi
++++ b/arch/arm/boot/dts/exynos3250.dtsi
+@@ -138,8 +138,8 @@
+ 
+ 		mipi_phy: video-phy@10020710 {
+ 			compatible = "samsung,s5pv210-mipi-video-phy";
+-			reg = <0x10020710 8>;
+ 			#phy-cells = <1>;
++			syscon = <&pmu_system_controller>;
+ 		};
+ 
+ 		pd_cam: cam-power-domain@10023C00 {
+-- 
+1.7.9.5
