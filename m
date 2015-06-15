@@ -1,33 +1,39 @@
-From: Koro Chen <koro.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 1/3] ASoC: mediatek: Add AFE platform driver
-Date: Mon, 15 Jun 2015 10:06:41 +0800
-Message-ID: <1434334001.14980.3.camel@mtksdaap41>
-References: <1433946276-25969-1-git-send-email-koro.chen@mediatek.com>
-	 <1433946276-25969-2-git-send-email-koro.chen@mediatek.com>
-	 <20150612130638.GZ1921@sirena.org.uk>
+From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 4/5] clk: mediatek: Add subsystem clocks of MT8173
+Date: Mon, 15 Jun 2015 10:10:24 +0800
+Message-ID: <1434334224.18080.1.camel@mtksdaap41>
+References: <1432192376-6712-1-git-send-email-jamesjj.liao@mediatek.com>
+	 <1432192376-6712-5-git-send-email-jamesjj.liao@mediatek.com>
+	 <5809360.66NP4oPW1R@ubix>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150612130638.GZ1921-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+In-Reply-To: <5809360.66NP4oPW1R@ubix>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Henry Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2015-06-12 at 14:06 +0100, Mark Brown wrote:
-> On Wed, Jun 10, 2015 at 10:24:34PM +0800, Koro Chen wrote:
-> > This is the DPCM based platform driver of AFE (Audio Front End) unit.
-> > 
-> > Signed-off-by: Koro Chen <koro.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+On Fri, 2015-06-12 at 19:09 +0200, Matthias Brugger wrote:
+> On Thursday, May 21, 2015 03:12:55 PM James Liao wrote:
+> > +
+> > +static struct mtk_gate_regs venclt_cg_regs = {
+> > +	.set_ofs = 0x0004,
+> > +	.clr_ofs = 0x0008,
+> > +	.sta_ofs = 0x0000,
+> > +};
 > 
-> Your signoff should be last if you're the one sending the patch.
-> Otherwise this seems basically fine, but you said you were going to send
-> a new version so not applying.
-Thank you, I will fix this in the next version of patch along with
-fixups of Paul's comments.
+> 
+> The register for imagesys, vencsys and vencltsys have all the same offset.
+> We could use just one struct for all of them. 
 
+OK. I'll merge them in next patch.
+
+
+Best regards,
+
+James
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
