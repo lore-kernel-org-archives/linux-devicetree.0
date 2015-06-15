@@ -1,43 +1,113 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH] ARM: tegra124: pmu support
-Date: Mon, 15 Jun 2015 10:59:39 -0600
-Message-ID: <557F047B.6090801@wwwdotorg.org>
-References: <1434169283-19512-1-git-send-email-khuey@kylehuey.com> <557F012D.5040509@nvidia.com>
+From: Matt Ranostay <mranostay@gmail.com>
+Subject: Re: [PATCH v3 1/2] dt: add cap11xx LED documentation
+Date: Mon, 15 Jun 2015 10:00:49 -0700
+Message-ID: <CAKzfze84_PaPVcfFbbwMqK3pV+qm7vyiO4RM4Bff=z_0rwh+fw@mail.gmail.com>
+References: <1434169054-11035-1-git-send-email-mranostay@gmail.com>
+	<1434169054-11035-2-git-send-email-mranostay@gmail.com>
+	<557E8990.5060702@samsung.com>
+	<CAKzfze9Ji73youadk9zzqahN6E4VCJUXOgzmP4wnoynrQSwRMQ@mail.gmail.com>
+	<557EA499.2020701@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <557F012D.5040509-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kyle Huey <me-OhBmq/TcCDJWk0Htik3J/w@public.gmane.org>
-Cc: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kyle Huey <khuey-OhBmq/TcCDJWk0Htik3J/w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <557EA499.2020701@samsung.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: Daniel Mack <zonque@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, linux-leds@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/15/2015 10:45 AM, Jon Hunter wrote:
-> Adding linux-tegra ML ...
-
-Oh, still none of the Tegra maintainers are CC'd. scripts/get_maintainer.pl.
-
-> On 13/06/15 05:21, Kyle Huey wrote:
->> This patch modifies the device tree for tegra124 based devices to enable the Cortex A15 PMU.  The interrupt numbers are taken from NVIDIA TRM DP-06905-001_v03p.  This patch was tested on a Jetson TK1.
+On Mon, Jun 15, 2015 at 3:10 AM, Jacek Anaszewski
+<j.anaszewski@samsung.com> wrote:
+> On 06/15/2015 10:48 AM, Matt Ranostay wrote:
 >>
->> Signed-off-by: Kyle Huey <khuey-OhBmq/TcCDJWk0Htik3J/w@public.gmane.org>
->> ---
->>   arch/arm/boot/dts/tegra124.dtsi | 8 ++++++++
->>   1 file changed, 8 insertions(+)
+>> On Mon, Jun 15, 2015 at 1:15 AM, Jacek Anaszewski
+>> <j.anaszewski@samsung.com> wrote:
+>>>
+>>> Hi Matt,
+>>>
+>>> On 06/13/2015 06:17 AM, Matt Ranostay wrote:
+>>>>
+>>>>
+>>>> Some cap11xx devices have LEDs that can be controlled from userpace
+>>>> and via triggers. Document their use and functionality here.
+>>>>
+>>>> Signed-off-by: Matt Ranostay <mranostay@gmail.com>
+>>>> ---
+>>>>    .../devicetree/bindings/input/cap11xx.txt          | 23
+>>>> ++++++++++++++++++++++
+>>>>    1 file changed, 23 insertions(+)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/input/cap11xx.txt
+>>>> b/Documentation/devicetree/bindings/input/cap11xx.txt
+>>>> index 7d0a300..ef89c27 100644
+>>>> --- a/Documentation/devicetree/bindings/input/cap11xx.txt
+>>>> +++ b/Documentation/devicetree/bindings/input/cap11xx.txt
+>>>> @@ -38,6 +38,11 @@ Optional properties:
+>>>>                                  defaults. The array must have exactly
+>>>> six
+>>>>                                  entries.
+>>>>
+>>>> +       linux,led-brightness:   Defines the ON brightness when the
+>>>> optional LED
+>>>> +                               functionality is used. Valid values are
+>>>> 0-15.
+>>>> +                               By default a value of 15 is set.
+>>>
+>>>
+>>>
+>>> The ON brightness is controlled with the 'brightness' sysfs property.
+>>> The levels start from 1 and 0 turns the LED off. I think that this
+>>> property is useless then.
+>>>
 >>
->> diff --git a/arch/arm/boot/dts/tegra124.dtsi b/arch/arm/boot/dts/tegra124.dtsi
+>> Yes but this defines the brightness for the ON state.. since it can be
+>> from 0-100% duty cycle.
+>
+>
+> Doesn't 0 mean that LED is off? If so, then valid values should start
+> from 1.
+>
+Ok makes sense since a 0% duty cycle is useless :)
 
->> +	pmu {
->> +		compatible = "arm,cortex-a15-pmu";
->> +		interrupts = <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>,
->> +			     <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>,
->> +			     <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>,
->> +			     <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
->> +	};
->> +
->>   	timer@0,60005000 {
-
-This looks like it's sorted in the wrong location. Nodes are currently 
-grouped by those with reg property (sorted by reg) and those without a 
-reg property (sorted alphabetically).
+>
+>>>
+>>>> +
+>>>>    Example:
+>>>>
+>>>>    i2c_controller {
+>>>> @@ -55,5 +60,23 @@ i2c_controller {
+>>>>                                   <105>,         /* KEY_LEFT */
+>>>>                                   <109>,         /* KEY_PAGEDOWN */
+>>>>                                   <104>;         /* KEY_PAGEUP */
+>>>> +
+>>>> +               linux,led-brightness = <15>;
+>>>> +
+>>>> +               usr@0 {
+>>>> +                       label = "cap11xx:green:usr0";
+>>>> +                       reg = <0>;
+>>>> +               };
+>>>> +
+>>>> +               usr@1 {
+>>>> +                       label = "cap11xx:green:usr1";
+>>>> +                       reg = <1>;
+>>>> +               };
+>>>> +
+>>>> +               alive@2 {
+>>>> +                       label = "cap11xx:green:alive";
+>>>> +                       reg = <2>;
+>>>> +                       linux,default_trigger = "heartbeat";
+>>>> +               };
+>>>>          };
+>>>>    }
+>>>>
+>>>
+>>> --
+>>> Best Regards,
+>>> Jacek Anaszewski
+>>
+>>
+>
+>
+> --
+> Best Regards,
+> Jacek Anaszewski
