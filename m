@@ -1,41 +1,107 @@
-From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 4/5] clk: mediatek: Add subsystem clocks of MT8173
-Date: Mon, 15 Jun 2015 10:10:24 +0800
-Message-ID: <1434334224.18080.1.camel@mtksdaap41>
-References: <1432192376-6712-1-git-send-email-jamesjj.liao@mediatek.com>
-	 <1432192376-6712-5-git-send-email-jamesjj.liao@mediatek.com>
-	 <5809360.66NP4oPW1R@ubix>
+From: Anand Moon <linux.amoon@gmail.com>
+Subject: Re: [PATCHv6 2/4] ARM: dts: exynos5422-odroidxu3: Enable TMU at
+ Exynos5422 base
+Date: Mon, 15 Jun 2015 07:43:38 +0530
+Message-ID: <CANAwSgT+-KYDsYM6ZvcMabeW+JvYvEaGAht8Pfn64=kafBho=Q@mail.gmail.com>
+References: <1434277445-5243-1-git-send-email-linux.amoon@gmail.com>
+ <1434277445-5243-2-git-send-email-linux.amoon@gmail.com> <557E136E.7090409@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5809360.66NP4oPW1R@ubix>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Henry Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <557E136E.7090409@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2015-06-12 at 19:09 +0200, Matthias Brugger wrote:
-> On Thursday, May 21, 2015 03:12:55 PM James Liao wrote:
-> > +
-> > +static struct mtk_gate_regs venclt_cg_regs = {
-> > +	.set_ofs = 0x0004,
-> > +	.clr_ofs = 0x0008,
-> > +	.sta_ofs = 0x0000,
-> > +};
-> 
-> 
-> The register for imagesys, vencsys and vencltsys have all the same offset.
-> We could use just one struct for all of them. 
+hi Krzysztof
 
-OK. I'll merge them in next patch.
+On 15 June 2015 at 05:21, Krzysztof Kozlowski <k.kozlowski@samsung.com> wrote:
+> On 14.06.2015 19:24, Anand Moon wrote:
+>> This changes enables TMU IP block on the Exynos5422 Odroid-XU3
+>> device.
+>>
+>> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+>> Tested-by: Markus Reichl <m.reichl@fivetechno.de>
+>> Acked-by: Lukasz Majewski <l.majewski@samsung.com>
+>> ---
+>> Changes rebase on git://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung branch for-next
+>> Changes from v5: Use LDO7 regulator instead of LD010.
+>>
+>> The output of LDO18 goes to VDD_EMMC_1V8. This is not regulator for TMU.
+>>
+>> I think the schematics are missing some of details but it can be deducted that:
+>> 1. TEMP SE is supplied by VDD18_TS power domain. It consists of 5
+>> pairs of pins (XTSTEST_OUT[0-4], XTSEXT_RES[0-4]).
+>> 2. The VDD18_TS01, VDD18_TS23 and VDD18_TS4 are wired to the LDO7 of
+>> S2MPS11 PMIC.
+>> 3. I confirmed with the Exynos5422 datasheet that these
+>> VDD18_TS{01,23,4} supply the XTSTEST pins (OUT and RES).
+>>
+>> So the LDO7 it is... but before using it there is a caveat. The LDO7
+>> is also connected to VDD of MIPI, HDMI and few more. So when you use
+>> this regulator in TMU it may be turned off by TMU driver (e.g. during
+>> unbind). In such case these other blocks also should be tested and
+>> checked whether they take this regulator and enable it.
+>
+> Why did you took my email and pasted it here?
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-May/343702.html
+>
+> It is written now in first person so it pretends that you wrote this.
+> You are actually doing this for second time - taking my
+> reply and putting into commit message or changelog. Why?
+>
+> And where is proper changelog?
+>
 
+Sorry: My intention was never to take credit on what your guidance and
+your pointers.
+I value ever input of your and try not to repeat the mistakes I am repeating.
+I will send updated version soon.
 
-Best regards,
+-Anand Moon
 
-James
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Krzysztof
+>
+>> ---
+>>  arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi | 25 ++++++++++++++++++++++
+>>  1 file changed, 25 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
+>> index a2f9941..b6570fc 100644
+>> --- a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
+>> +++ b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
+>> @@ -474,6 +474,31 @@
+>>       status = "okay";
+>>  };
+>>
+>> +&tmu_cpu0 {
+>> +     vtmu-supply = <&ldo7_reg>;
+>> +     status = "okay";
+>> +};
+>> +
+>> +&tmu_cpu1 {
+>> +     vtmu-supply = <&ldo7_reg>;
+>> +     status = "okay";
+>> +};
+>> +
+>> +&tmu_cpu2 {
+>> +     vtmu-supply = <&ldo7_reg>;
+>> +     status = "okay";
+>> +};
+>> +
+>> +&tmu_cpu3 {
+>> +     vtmu-supply = <&ldo7_reg>;
+>> +     status = "okay";
+>> +};
+>> +
+>> +&tmu_gpu {
+>> +     vtmu-supply = <&ldo7_reg>;
+>> +     status = "okay";
+>> +};
+>> +
+>>  &rtc {
+>>       status = "okay";
+>>       clocks = <&clock CLK_RTC>, <&s2mps11_osc S2MPS11_CLK_AP>;
+>>
+>
