@@ -1,62 +1,277 @@
-From: Federico Vaga <federico.vaga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: DeviceTree FPGA bitstream
-Date: Mon, 15 Jun 2015 10:55:46 +0200
-Message-ID: <20150615085546.GA19162@pcbe13110.cern.ch>
-References: <20150609144901.GC12677@pcbe13110.cern.ch>
- <55796021.7010402@home.nl>
+From: Matt Ranostay <mranostay@gmail.com>
+Subject: Re: [PATCH v3 2/2] cap11xx: add LED support
+Date: Mon, 15 Jun 2015 01:56:08 -0700
+Message-ID: <CAKzfze8E-22XxzGuMUJWhcpmdoA=63XWR-v+bpf+Cdn70VoJqA@mail.gmail.com>
+References: <1434169054-11035-1-git-send-email-mranostay@gmail.com>
+	<1434169054-11035-3-git-send-email-mranostay@gmail.com>
+	<557E8997.7070100@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <55796021.7010402-CmkmPbn3yAE@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Walter Goossens <waltergoossens-CmkmPbn3yAE@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <557E8997.7070100@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: Daniel Mack <zonque@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, linux-leds@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Walter,
+On Mon, Jun 15, 2015 at 1:15 AM, Jacek Anaszewski
+<j.anaszewski@samsung.com> wrote:
+> Hi Matt,
+>
+>
+> On 06/13/2015 06:17 AM, Matt Ranostay wrote:
+>>
+>> Several cap11xx variants have LEDs that be can be controlled, this
+>> patchset implements this functionality.
+>>
+>> Signed-off-by: Matt Ranostay <mranostay@gmail.com>
+>> ---
+>>   drivers/input/keyboard/cap11xx.c | 121
+>> ++++++++++++++++++++++++++++++++++++++-
+>>   1 file changed, 118 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/input/keyboard/cap11xx.c
+>> b/drivers/input/keyboard/cap11xx.c
+>> index f07461a..994154c 100644
+>> --- a/drivers/input/keyboard/cap11xx.c
+>> +++ b/drivers/input/keyboard/cap11xx.c
+>> @@ -12,6 +12,7 @@
+>>   #include <linux/module.h>
+>>   #include <linux/interrupt.h>
+>>   #include <linux/input.h>
+>> +#include <linux/leds.h>
+>>   #include <linux/of_irq.h>
+>>   #include <linux/regmap.h>
+>>   #include <linux/i2c.h>
+>> @@ -47,6 +48,20 @@
+>>   #define CAP11XX_REG_CONFIG2           0x44
+>>   #define CAP11XX_REG_CONFIG2_ALT_POL   BIT(6)
+>>   #define CAP11XX_REG_SENSOR_BASE_CNT(X)        (0x50 + (X))
+>> +#define CAP11XX_REG_LED_POLARITY       0x73
+>> +#define CAP11XX_REG_LED_OUTPUT_CONTROL 0x74
+>> +
+>> +#define CAP11XX_REG_LED_DUTY_CYCLE_1   0x90
+>> +#define CAP11XX_REG_LED_DUTY_CYCLE_2   0x91
+>> +#define CAP11XX_REG_LED_DUTY_CYCLE_3   0x92
+>> +#define CAP11XX_REG_LED_DUTY_CYCLE_4   0x93
+>> +
+>> +#define CAP11XX_REG_LED_DUTY_MIN_MASK  (0x0f)
+>> +#define CAP11XX_REG_LED_DUTY_MIN_MASK_SHIFT    (0)
+>> +#define CAP11XX_REG_LED_DUTY_MAX_MASK  (0xf0)
+>> +#define CAP11XX_REG_LED_DUTY_MAX_MASK_SHIFT    (4)
+>> +#define CAP11XX_REG_LED_DUTY_MAX_VALUE (15)
+>> +
+>>   #define CAP11XX_REG_SENSOR_CALIB      (0xb1 + (X))
+>>   #define CAP11XX_REG_SENSOR_CALIB_LSB1 0xb9
+>>   #define CAP11XX_REG_SENSOR_CALIB_LSB2 0xba
+>> @@ -56,10 +71,24 @@
+>>
+>>   #define CAP11XX_MANUFACTURER_ID       0x5d
+>>
+>> +#ifdef CONFIG_LEDS_CLASS
+>> +struct cap11xx_led {
+>> +       struct cap11xx_priv *priv;
+>> +       struct led_classdev cdev;
+>> +       struct work_struct work;
+>> +       u32 reg;
+>> +       enum led_brightness new_brightness;
+>> +};
+>> +#endif
+>> +
+>>   struct cap11xx_priv {
+>>         struct regmap *regmap;
+>>         struct input_dev *idev;
+>>
+>> +#ifdef CONFIG_LEDS_CLASS
+>> +       struct cap11xx_led *leds;
+>> +       int num_leds;
+>> +#endif
+>>         /* config */
+>>         u32 keycodes[];
+>>   };
+>> @@ -67,6 +96,7 @@ struct cap11xx_priv {
+>>   struct cap11xx_hw_model {
+>>         u8 product_id;
+>>         unsigned int num_channels;
+>> +       unsigned int num_leds;
+>>   };
+>>
+>>   enum {
+>> @@ -76,9 +106,9 @@ enum {
+>>   };
+>>
+>>   static const struct cap11xx_hw_model cap11xx_devices[] = {
+>> -       [CAP1106] = { .product_id = 0x55, .num_channels = 6 },
+>> -       [CAP1126] = { .product_id = 0x53, .num_channels = 6 },
+>> -       [CAP1188] = { .product_id = 0x50, .num_channels = 8 },
+>> +       [CAP1106] = { .product_id = 0x55, .num_channels = 6, .num_leds = 0
+>> },
+>> +       [CAP1126] = { .product_id = 0x53, .num_channels = 6, .num_leds = 2
+>> },
+>> +       [CAP1188] = { .product_id = 0x50, .num_channels = 8, .num_leds = 8
+>> },
+>>   };
+>>
+>>   static const struct reg_default cap11xx_reg_defaults[] = {
+>> @@ -111,6 +141,7 @@ static const struct reg_default cap11xx_reg_defaults[]
+>> = {
+>>         { CAP11XX_REG_STANDBY_SENSITIVITY,      0x02 },
+>>         { CAP11XX_REG_STANDBY_THRESH,           0x40 },
+>>         { CAP11XX_REG_CONFIG2,                  0x40 },
+>> +       { CAP11XX_REG_LED_POLARITY,             0x00 },
+>>         { CAP11XX_REG_SENSOR_CALIB_LSB1,        0x00 },
+>>         { CAP11XX_REG_SENSOR_CALIB_LSB2,        0x00 },
+>>   };
+>> @@ -196,6 +227,84 @@ static void cap11xx_input_close(struct input_dev
+>> *idev)
+>>         cap11xx_set_sleep(priv, true);
+>>   }
+>>
+>> +#ifdef CONFIG_LEDS_CLASS
+>> +static void cap11xx_led_work(struct work_struct *work)
+>> +{
+>> +       struct cap11xx_led *led = container_of(work, struct cap11xx_led,
+>> work);
+>> +       struct cap11xx_priv *priv = led->priv;
+>> +       int value = led->new_brightness;
+>> +
+>> +       regmap_update_bits(priv->regmap, CAP11XX_REG_LED_OUTPUT_CONTROL,
+>> +                               BIT(led->reg), !!value ? BIT(led->reg) :
+>> 0);
+>
+>
+> You should set here the brightness value, not only turn the led on/off.
+>
 
-On Thu, Jun 11, 2015 at 12:17:05PM +0200, Walter Goossens wrote:
-> On 06/09/2015 04:49 PM, Federico Vaga wrote:
->> - it looks like the DeviceTree is disable for x86 architecture except for
->> some specific platform. Is it possible to enable it for the entire x86
->> architecture? Are there any reason to disable it by default?
+The issue is that the setting is across _ALL_ leds for brightness. But
+on/off state can clearly vary
+
+>
+>> +}
+>> +
+>> +static void cap11xx_led_set(struct led_classdev *cdev,
+>> +                          enum led_brightness value)
+>> +{
+>> +       struct cap11xx_led *led = container_of(cdev, struct cap11xx_led,
+>> cdev);
+>> +
+>> +       led->new_brightness = value;
+>> +       schedule_work(&led->work);
+>> +}
+>> +
+>> +static int cap11xx_init_leds(struct device *dev, struct cap11xx_priv
+>> *priv)
+>> +{
+>> +       struct device_node *node = dev->of_node, *child;
+>> +       struct cap11xx_led *led;
+>> +       int cnt = of_get_child_count(node);
+>> +       u32 reg = 0;
+>> +       int error;
+>> +
+>> +       if (!priv->num_leds || !cnt)
+>> +               return 0;
+>> +       if (cnt > priv->num_leds)
+>> +               return -EINVAL;
+>> +
+>> +       led = devm_kcalloc(dev, cnt,
+>> +               sizeof(struct cap11xx_led), GFP_KERNEL);
+>> +       if (!led)
+>> +               return -ENOMEM;
+>> +
+>> +       priv->leds = led;
+>> +       error = of_property_read_u32(node, "linux,led-brightness", &reg);
+>> +       if (error || reg > CAP11XX_REG_LED_DUTY_MAX_VALUE)
+>> +               reg = CAP11XX_REG_LED_DUTY_MAX_VALUE;
+>
+>
+> This property seems to be redundant, as brightness is controlled with
+> 'brightness' sysfs property.
+
+See above comment.
+>
+>> +       error = regmap_update_bits(priv->regmap,
+>> CAP11XX_REG_LED_DUTY_CYCLE_4,
+>> +                               CAP11XX_REG_LED_DUTY_MAX_MASK,
+>> +                               reg <<
+>> CAP11XX_REG_LED_DUTY_MAX_MASK_SHIFT);
+>
+>
+> This probably should be called from brightness_set op.
+
+Above :)
+>
+>> +       if (error)
+>> +               return error;
+>> +
+>> +       for_each_child_of_node(node, child) {
+>> +               led->cdev.name =
+>> +                       of_get_property(child, "label", NULL) ? :
+>> child->name;
+>> +               led->cdev.default_trigger =
+>> +                       of_get_property(child, "linux,default-trigger",
+>> NULL);
+>> +               led->cdev.flags = 0;
+>
+>
+> You don't need to clear flags, as the memory is zeroed by kcalloc.
+>
+>> +               led->cdev.brightness_set = cap11xx_led_set;
+>> +               led->cdev.max_brightness = 1;
+>
+>
+> You introduced linux,led-brightness DT property and defined its range
+> to 0-15 (it should be 1-15 btw), but here you allow for brightness to
+> be max 1.
+>
+>> +               led->cdev.brightness = LED_OFF;
+>
+>> +
 >>
->> - I read that since versione 3.17 it should be possible to dynamically
->> add
->> portion of DeviceTree from configfs. Is it possible on all architecture?
+>> +               error = of_property_read_u32(child, "reg", &reg);
+>> +               if (error != 0 || reg >= priv->num_leds)
+>> +                       continue;
+>> +               led->reg = reg;
+>> +               led->priv = priv;
+>> +
+>> +               error = devm_led_classdev_register(dev, &led->cdev);
+>> +               if (error < 0)
+>> +                       return -EINVAL;
+>> +               INIT_WORK(&led->work, cap11xx_led_work);
+>> +               schedule_work(&led->work);
+>
+>
+> Work queue should be initialized before registration of the LED class
+> device.
+What is the reason for this? Just curious
+
+>
+>> +               led++;
+>> +       };
+>> +
+>> +       return 0;
+>> +}
+>> +#endif
+>> +
+>>   static int cap11xx_i2c_probe(struct i2c_client *i2c_client,
+>>                              const struct i2c_device_id *id)
+>>   {
+>> @@ -316,6 +425,12 @@ static int cap11xx_i2c_probe(struct i2c_client
+>> *i2c_client,
+>>         priv->idev->open = cap11xx_input_open;
+>>         priv->idev->close = cap11xx_input_close;
 >>
->> - I'm working on x86_64 and my FPGA can be on a pluggable board (e.g.
->> PCIe).
->> Is there a way to describe this situation with DeviceTree? Is there
->> any tool
->> that dynamically computes the addresses (interrupts) translation to use
->> (e.g. on PCIe) ?
+>> +#ifdef CONFIG_LEDS_CLASS
+>> +       priv->num_leds = cap->num_leds;
+>> +       error = cap11xx_init_leds(dev, priv);
+>> +       if (error)
+>> +               return error;
+>> +#endif
+>>         input_set_drvdata(priv->idev, priv);
+>>
+>>         /*
 >>
 >
-> I've been using this scheme on PPC for quite some time (before
-> devicetree overlays) by creating a custom pcie driver (that knows the
-> bar addresses and irqs) which then instantiates a "virtual platformbus"
-> at the pcie bar the fpga is located in.
-> You can adopt this scheme for x86 by creating a bus and using the
-> devicetree code to probe the inside of your FPGA but this is all a bit
-> hackish.
-> The correct approach (in my opinion) would be to use an overlay
-> describing the contents of the FPGA and loading that when probing the
-> pcie-device.
-
-This is more or less what I thought
-
-> This would however require a base devicetree to apply the
-> overlay to, and I'm not sure how much effort this is going to be on x86_64
-
-Not sure but I fear that is not enough to make it stable. The compilation of
-the DeviceTree is allowed only on x86 and on some specific platform.
-
-Of course, I can modify the Kconfig to allow the compilation of the
-DeviceTree but then I don't know if it will work and how it will work.
-I mean are there particular reasons to keep the DeviceTree away from x86 ?
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> --
+> Best Regards,
+> Jacek Anaszewski
