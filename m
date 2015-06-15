@@ -1,37 +1,50 @@
-From: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] ARM: dts: rockchip: Add dmac_bus rx and tx for uart2
-Date: Mon, 15 Jun 2015 17:47:48 +0000
-Message-ID: <1434390468-27296-1-git-send-email-romain.perier@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH linux-next 2/2] mfd: flexcom: add a driver for Atmel
+ Flexible Serial Communication Unit
+Date: Mon, 15 Jun 2015 19:50:59 +0200
+Message-ID: <20150615175059.GE17679@piout.net>
+References: <cover.1434386119.git.cyrille.pitchen@atmel.com>
+ <e85ceae28a0b382b12b809ac7cca891fcb7ac846.1434386119.git.cyrille.pitchen@atmel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <e85ceae28a0b382b12b809ac7cca891fcb7ac846.1434386119.git.cyrille.pitchen@atmel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Cyrille Pitchen <cyrille.pitchen@atmel.com>
+Cc: nicolas.ferre@atmel.com, boris.brezillon@free-electrons.com, sameo@linux.intel.com, lee.jones@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This removes warning "ttyS2 - Failed to request dma" from kernel logs
+Hi,
 
-Signed-off-by: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/rk3288.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+On 15/06/2015 at 18:38:05 +0200, Cyrille Pitchen wrote :
+> +	err = of_property_read_string(pdev->dev.of_node,
+> +				      "atmel,flexcom-mode", &mode);
+> +	if (err)
+> +		return err;
+> +
+> +	if (!strcmp(mode, "usart"))
+> +		mr = FX_MR_USART;
+> +	else if (!strcmp(mode, "spi"))
+> +		mr = FX_MR_SPI;
+> +	else if (!strcmp(mode, "twi") || !strcmp(mode, "i2c"))
+> +		mr = FX_MR_TWI;
+> +	else
+> +		return -EINVAL;
+> +
+> +	clk_prepare_enable(clk);
+> +	version = __raw_readl(map + FX_VERSION);
+> +	__raw_writel(mr, map + FX_MR);
+> +	clk_disable_unprepare(clk);
+> +
+> +	dev_info(&pdev->dev, "version: %#x\n", version);
+> +
 
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 22316d0..816f40a 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -385,6 +385,8 @@
- 		clock-names = "baudclk", "apb_pclk";
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&uart2_xfer>;
-+		dmas = <&dmac_bus_s 4>, <&dmac_bus_s 5>;
-+		dma-names = "tx", "rx";
- 		status = "disabled";
- 	};
- 
+I would also print the selected mode for debugging convenience,
+especially if this is used with device tree overlays.
+
+
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
