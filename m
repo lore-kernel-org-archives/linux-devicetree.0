@@ -1,167 +1,39 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH linux-next 2/2] mfd: flexcom: add a driver for Atmel
- Flexible Serial Communication Unit
-Date: Mon, 15 Jun 2015 19:32:57 +0200
-Message-ID: <20150615193257.42c9df3d@bbrezillon>
-References: <cover.1434386119.git.cyrille.pitchen@atmel.com>
-	<e85ceae28a0b382b12b809ac7cca891fcb7ac846.1434386119.git.cyrille.pitchen@atmel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e85ceae28a0b382b12b809ac7cca891fcb7ac846.1434386119.git.cyrille.pitchen@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Cyrille Pitchen <cyrille.pitchen@atmel.com>
-Cc: nicolas.ferre@atmel.com, alexandre.belloni@free-electrons.com, sameo@linux.intel.com, lee.jones@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+From: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] ARM: dts: rockchip: Add ramp delay for vdd_cpu in firefly board dts
+Date: Mon, 15 Jun 2015 17:41:41 +0000
+Message-ID: <1434390101-27000-1-git-send-email-romain.perier@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 15 Jun 2015 18:38:05 +0200
-Cyrille Pitchen <cyrille.pitchen@atmel.com> wrote:
+Adds ramp delay for the vdd_cpu output. It removes warning "ramp_delay not set"
+emitted by the function regulator_set_voltage_time_sel() by the same time,
+which floods kernel logs.
 
-> This driver supports the new Atmel Flexcom. The Flexcom is a wrapper which
-> integrates one SPI controller, one I2C controller and one USART. Only one
-> function can be enabled at a time. This driver selects the function once
-> for all, when the Flexcom is probed, according to the value of the new
-> "atmel,flexcom-mode" device tree property.
-> 
-> This driver has chosen to present the Flexcom to the system as a MFD so
-> the implementation is seamless for the existing Atmel SPI, I2C and USART
-> drivers.
-> 
-> Also the Flexcom embeds FIFOs: the latest patches of the SPI, I2C and
-> USART drivers take advantage of this new feature.
-> 
-> Signed-off-by: Cyrille Pitchen <cyrille.pitchen@atmel.com>
-> ---
->  drivers/mfd/Kconfig         | 11 +++++
->  drivers/mfd/Makefile        |  1 +
->  drivers/mfd/atmel-flexcom.c | 97 +++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 109 insertions(+)
->  create mode 100644 drivers/mfd/atmel-flexcom.c
-> 
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index aefbbbf..4aebf08 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -60,6 +60,17 @@ config MFD_AAT2870_CORE
->  	  additional drivers must be enabled in order to use the
->  	  functionality of the device.
->  
-> +config MFD_ATMEL_FLEXCOM
-> +	tristate "Atmel Flexcom (Flexible Serial Communication Unit)"
-> +	select MFD_CORE
-> +	depends on OF
-> +	help
-> +	  Select this to get support for Atmel Flexcom. This is a wrapper
-> +	  which embeds a SPI controller, a I2C controller and a USART. Only
-> +	  one function can be used at a time. The choice is done at boot time
-> +	  by the probe function of this MFD driver according to a device tree
-> +	  property.
-> +
->  config MFD_ATMEL_HLCDC
->  	tristate "Atmel HLCDC (High-end LCD Controller)"
->  	select MFD_CORE
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index ea40e07..0705eb2 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -160,6 +160,7 @@ obj-$(CONFIG_MFD_SPMI_PMIC)	+= qcom-spmi-pmic.o
->  obj-$(CONFIG_TPS65911_COMPARATOR)	+= tps65911-comparator.o
->  obj-$(CONFIG_MFD_TPS65090)	+= tps65090.o
->  obj-$(CONFIG_MFD_AAT2870_CORE)	+= aat2870-core.o
-> +obj-$(CONFIG_MFD_ATMEL_FLEXCOM)	+= atmel-flexcom.o
->  obj-$(CONFIG_MFD_ATMEL_HLCDC)	+= atmel-hlcdc.o
->  obj-$(CONFIG_MFD_INTEL_MSIC)	+= intel_msic.o
->  obj-$(CONFIG_MFD_PALMAS)	+= palmas.o
-> diff --git a/drivers/mfd/atmel-flexcom.c b/drivers/mfd/atmel-flexcom.c
-> new file mode 100644
-> index 0000000..14c35e6
-> --- /dev/null
-> +++ b/drivers/mfd/atmel-flexcom.c
-> @@ -0,0 +1,97 @@
-> +/*
-> + * Driver for Atmel Flexcom
-> + *
-> + * Copyright (C) 2015 Atmel Corporation
-> + *
-> + * Author: Cyrille Pitchen <cyrille.pitchen@atmel.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + *
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/types.h>
-> +#include <linux/kernel.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/of.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-> +#include <linux/clk.h>
-> +
-> +#define FX_MR		0x0
-> +#define FX_RHR		0x10
-> +#define FX_THR		0x20
-> +#define FX_VERSION	0xfc
-> +
-> +#define FX_MR_NO_COM	0
-> +#define FX_MR_USART	1
-> +#define FX_MR_SPI	2
-> +#define FX_MR_TWI	3
-> +
-> +
-> +static int atmel_flexcom_probe(struct platform_device *pdev)
-> +{
-> +	struct clk *clk;
-> +	struct resource *res;
-> +	unsigned char __iomem *map;
-> +	unsigned int version, mr;
-> +	const char *mode;
-> +	int err;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	map = devm_ioremap_resource(&pdev->dev, res);
+Signed-off-by: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/rk3288-firefly.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-If you take the approach I suggested in the DT binding review,
-you shouldn't reserve the whole memory region, just the flexcom
-part(0x0 to 0x200). 
-
-> +	if (IS_ERR(map))
-> +		return PTR_ERR(map);
-> +
-> +	clk = devm_clk_get(&pdev->dev, NULL);
-> +	if (IS_ERR(clk))
-> +		return PTR_ERR(clk);
-> +
-> +	err = of_property_read_string(pdev->dev.of_node,
-> +				      "atmel,flexcom-mode", &mode);
-> +	if (err)
-> +		return err;
-> +
-> +	if (!strcmp(mode, "usart"))
-> +		mr = FX_MR_USART;
-> +	else if (!strcmp(mode, "spi"))
-> +		mr = FX_MR_SPI;
-> +	else if (!strcmp(mode, "twi") || !strcmp(mode, "i2c"))
-> +		mr = FX_MR_TWI;
-> +	else
-> +		return -EINVAL;
-> +
-> +	clk_prepare_enable(clk);
-> +	version = __raw_readl(map + FX_VERSION);
-> +	__raw_writel(mr, map + FX_MR);
-> +	clk_disable_unprepare(clk);
-
-Is there a good reason to use the __raw versions of the writel/readl
-functions ?
-
-
-
+diff --git a/arch/arm/boot/dts/rk3288-firefly.dtsi b/arch/arm/boot/dts/rk3288-firefly.dtsi
+index 0b42372..0c66e92 100644
+--- a/arch/arm/boot/dts/rk3288-firefly.dtsi
++++ b/arch/arm/boot/dts/rk3288-firefly.dtsi
+@@ -213,6 +213,8 @@
+ 		regulator-max-microvolt = <1350000>;
+ 		regulator-always-on;
+ 		regulator-boot-on;
++		regulator-enable-ramp-delay = <300>;
++		regulator-ramp-delay = <8000>;
+ 		vin-supply = <&vcc_sys>;
+ 	};
+ 
 -- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
