@@ -1,139 +1,208 @@
-From: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v2 05/22] doc: dt-binding: usb: add otg related properties
-Date: Mon, 15 Jun 2015 14:32:46 +0800
-Message-ID: <20150615063244.GA20680@shlinux2>
-References: <CAL_JsqJ+q5hs26FaLXG1LVb0asE-UZ5hXar2FeVAJN=S8=CG3w@mail.gmail.com>
- <20150610103737.3cc7c10d@rockdesk> <20150610134735.GB7678@shlinux2>
- <20150611101853.643a9334@rockdesk> <20150611082010.GA16101@shlinux2>
- <20150611153703.55dff608@rockdesk> <20150611141121.GC16101@shlinux2>
- <20150611175215.6e04d92e@rockdesk> <20150612030916.GF16101@shlinux2>
- <20150612113102.6aa67d5d@rockdesk>
+From: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] arm64: dts: mt8173: Add I2C device node
+Date: Mon, 15 Jun 2015 15:35:25 +0800
+Message-ID: <1434353725.15875.26.camel@mtksdaap41>
+References: <1434101229-32695-1-git-send-email-eddie.huang@mediatek.com>
+	 <1434101229-32695-3-git-send-email-eddie.huang@mediatek.com>
+	 <CAGS+omB1UadXeKZLmMdhSamsPpipQLmoH_PhbUPvszrYTq68fA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150612113102.6aa67d5d@rockdesk>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Li Jun-B47624 <Jun.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Chen Peter-B29397 <Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Macpaul Lin <macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAGS+omB1UadXeKZLmMdhSamsPpipQLmoH_PhbUPvszrYTq68fA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 12, 2015 at 11:31:02AM +0300, Roger Quadros wrote:
-> 
-> 
-> On Fri, 12 Jun 2015 11:09:17 +0800
-> Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> 
-[...]
+Hi Dan,
 
-> > Other than those new flags, I have not found other good way to judge
-> > whether some platform is a legacy one.
-> > Directly use dt property? Then above code has to be moved to controller
-> > driver, consequently the usb_otg_descriptor has to be allocated by
-> > controller driver at runtime, and I have to create some new way to pass it
-> > to gadget driver, for those legacy platform, I still need gadget driver to
-> > allocate it...too complicated.
+On Fri, 2015-06-12 at 20:28 +0800, Daniel Kurtz wrote:
+> On Fri, Jun 12, 2015 at 5:27 PM, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> >
+> > Add MT8173 I2C device nodes, include I2C controllers and pins.
+> > MT8173 has six I2C controllers, from i2c0 to i2c6, exclude i2c5.
+> > The 6th I2C controller register base doesn't next to 5th I2C,
+> > and there is a hardware between 5th and 6th I2C controller. So
+> > SoC designer name 6th controller as "i2c6", not "i2c5".
 > 
-> Right. let's not do that.
 > 
-> > 
-> > (You know, there are 2 different otg_desc structures: otg_desc and
-> > otg_20_desc, I need select one and allocate it at runtime)
-> > 
-> > > This also has a side effect of SRP and HNP being enabled for any platform
-> > > even if enable-srp/enable-hnp is not set in DT.
-> > That's the current situation before my patch, not the side effect
-> > brought by me.
+> This is slightly misleading.  There are in fact 7 I2C controllers, but
+> "i2c5" is dedicated for use by HDMI for ddc & hdcp.
+> Is there a reason why the HDMI I2C port cannot be controlled by the
+> generic i2c driver?
 > 
-> Agreed. I was thinking of fixing that side effect but if you want
-> legacy behaviour as well then it looks like it can't be done.
+We add some extra HW function to HDMI I2C port, we have special driver
+to control this HW, not generic I2C driver. This is why I don't count
+this hardware to generic I2C controllers. 
+
+> Of course the hdmiddc / i2c5 node can always be added in a later
+> patch, so this is no reason to hold up this patch.
 > 
-> > 
-> > > This will be more of a bug than supporting legacy users.
-> > I have to leave the _existing_ bug there, because I can't know
-> > which platform can really support HNP/SRP, which one cannot.
-> > So I do not fix the _existing_ bug, meanwhile I also do not introduce
-> > a new bug either. If some legacy platform with this bug, want to fix it,
-> > fine, use dt or other way to set gadget->xyz_support correctly
-> > in its controller driver, no more change needed.
-> > 
-> > Any other reason you think enable flags are still not reasonable?
+> > Signed-off-by: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > ---
+> >  arch/arm64/boot/dts/mediatek/mt8173-evb.dts | 50 ++++++++++++++++++++
+> >  arch/arm64/boot/dts/mediatek/mt8173.dtsi    | 72 +++++++++++++++++++++++++++++
+> >  2 files changed, 122 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
+> > index 43d5401..2e01988 100644
+> > --- a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
+> > +++ b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
+> > @@ -33,6 +33,56 @@
+> >         chosen { };
+> >  };
+> >
+> > +&pio {
 > 
-> Yes. We can't specify that we don't want all 3 features from DT.
-> It will treat it as legacy and enable HNP/SRP. ;)
+> I don't think we needed to move these i2c pinmux descriptions from
+> mt8173.dtsi to the board .dts file.
 > 
-> This is true for dual-role devices. We set dr_mode = "otg"
-> but disable all 3 features.
+> AFAICT, the "i2cN_pins_a" nodes defined here are the pinctl
+> configuration that the corresponding enabled i2c nodes would choose.
+> Thus, they are generic to the MT8173 SoC, not specific to any board.
+> By themselves, these nodes do not actually select a pin configuration.
 > 
-> > 
-> > > 
-> > > Instead we could have ADP disabled by default for all cases
-> > > and expect enable-adp in DT to get it enabled. SRP/HNP could still
-> > > be disable flags.
-> > > 
-> > Yes, this can work, but seems they look some odd:), some are xxx_disable,
-> > some are xxx_enable.
-> >  
-> > > Then your above code reduces to
-> > > 
-> > > 		if (gadget->adp_support)
-> > >  			otg_desc->bmAttributes |= USB_OTG_ADP;
-> > >  		if (gadget->hnp_support)
-> > >  			otg_desc->bmAttributes |= USB_OTG_HNP;
-> > >  		if (gadget->srp_support)
-> > >  			otg_desc->bmAttributes |= USB_OTG_SRP;
-> > >
-> > Yes if those code is put in controller driver of new platforms.
-> > No if we put it in common routine and called by both new and
-> > legacy platforms.
+> It is the nodes that *enable* the individual i2c nodes, and hence
+> activate those pin settings, which is board specific.
 > 
-> Agreed. We still need to determine legacy platform if
-> none of the features are set.
+> Hence, if your intent is to have the evb enable all i2c nodes, it
+> would have a set of nodes like this:
 > 
-> How about defining the followong enum for gadget->xyz_support
 > 
-> enum otg_feature {
-> 	OTG_FEATURE_UNDEFINED = 0,
-> 	OTG_FEATURE_ENABLED,
-> 	OTG_FEATURE_DISABLED,
+> &i2c0 {
+>   pinctrl-names = "default";
+>   pinctrl-0 = <&i2c0_pins_a>;
+>   status = "okay";
 > };
 > 
-> for legacy platforms this will be UNDEFINED for all so you can detect it
-> and continue legacy behaviour i.e. enable HNP/SRP, disable ADP.
+> &i2c1 {
+>  pinctrl-names = "default";
+>  pinctrl-0 = <&i2c1_pins_a>;
+>  status = "okay";
+> };
 > 
-> For new platforms at least one of them won't be UNDEFINED so you can
-> enable the feature if ENABLED and disable if UNDEFINED/DISABLED.
+> ...
 > 
+I personally think put I2C pins in SoC dtsi is ok because it is basic
+and fixed. Almost every platform need these pins, so not necessary to
+care about dtb size. And these pins are fixed. We put pins that may
+change by platforms to board dts, like mmc.
 
-Then some legacy platform will have problem if it wants to use those
-new properties and flags, the existing DTs cannot work as before, E.g. for
-some controller driver, before my patch, the HNP/SRP are enabled,
-ADP is disabled, after utilize those new properties and flags in its
-controller driver, it becomes a new platform, but the existing DTs
-using this controller driver did not pass any xyz_disable, so
-gadget->xyz_support will be updated to be OTG_FEATURE_ENABLED, and
-the result will be HNP/SRP/ADP all are enabled.
+> 
+> > +       i2c0_pins_a: i2c0@0 {
+> 
+> Do these nodes need the "@0"?
+> 
+Will remove.
 
-In some controller driver:
-if (xyz_disable_property_appear_in_dt())
-	gadget->xyz_support = OTG_FEATURE_DISABLED;
-else
-	gadget->xyz_support = OTG_FEATURE_ENABLED;
-The existing/old DT with this controller driver will enable all
-OTG features no matter it support it or not, but it does not want
-ADP.
- 
-Li Jun
-> We can still keep disable flags so that users can disable all 3 OTG features
-> while in OTG mode.
+> >
+> > +               pins1 {
+> > +                       pinmux = <MT8173_PIN_45_SDA0__FUNC_SDA0>,
+> > +                                <MT8173_PIN_46_SCL0__FUNC_SCL0>;
+> > +                       bias-disable;
+> > +               };
+> > +       };
+> > +
+> > +       i2c1_pins_a: i2c1@0 {
+> > +               pins1 {
+> > +                       pinmux = <MT8173_PIN_125_SDA1__FUNC_SDA1>,
+> > +                                <MT8173_PIN_126_SCL1__FUNC_SCL1>;
+> > +                       bias-disable;
+> > +               };
+> > +       };
+> > +
+> > +       i2c2_pins_a: i2c2@0 {
+> > +               pins1 {
+> > +                       pinmux = <MT8173_PIN_43_SDA2__FUNC_SDA2>,
+> > +                                <MT8173_PIN_44_SCL2__FUNC_SCL2>;
+> > +                       bias-disable;
+> > +               };
+> > +       };
+> > +
+> > +       i2c3_pins_a: i2c3@0 {
+> > +               pins1 {
+> > +                       pinmux = <MT8173_PIN_106_SDA3__FUNC_SDA3>,
+> > +                                <MT8173_PIN_107_SCL3__FUNC_SCL3>;
+> > +                       bias-disable;
+> > +               };
+> > +       };
+> > +
+> > +       i2c4_pins_a: i2c4@0 {
+> > +               pins1 {
+> > +                       pinmux = <MT8173_PIN_133_SDA4__FUNC_SDA4>,
+> > +                                <MT8173_PIN_134_SCL4__FUNC_SCL4>;
+> > +                       bias-disable;
+> > +               };
+> > +       };
+> > +
+> > +       i2c6_pins_a: i2c6@0 {
+> > +               pins1 {
+> > +                       pinmux = <MT8173_PIN_100_MSDC2_DAT0__FUNC_SDA5>,
+> > +                                <MT8173_PIN_101_MSDC2_DAT1__FUNC_SCL5>;
 > 
-> cheers,
-> -roger
+> These are the SDA/SCL pins for i2c port 6, so they should really be
+> _SDA6 / _SCL6.
+> However... I checked, and these settings are labeled "SDA5 & SCL5" in
+> the datasheet.
+> I recommend marking them correctly as 6 here and fixing the datasheet :-).
 > 
-> > > 
-> > > > 
+We make mistake at the beginning not give these pins suitable name, if
+we change now, it may affect already shipped products. So I tend to keep
+it.
+
+> >
+> > +                       bias-disable;
+> > +               };
+> > +       };
+> > +};
+> > +
+> >  &uart0 {
+> >         status = "okay";
+> >  };
+> > diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> > index b52ec43..6d3dbbdd 100644
+> > --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> > +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> > @@ -229,6 +229,78 @@
+> >                         clocks = <&uart_clk>;
+> >                         status = "disabled";
+> >                 };
+> > +
+> > +               i2c0: i2c@11007000 {
+> > +                       compatible = "mediatek,mt8173-i2c";
+> > +                       reg = <0 0x11007000 0 0x70>,
+> > +                             <0 0x11000100 0 0x80>;
+> > +                       interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_LOW>;
+> > +                       clock-div = <16>;
+> > +                       clocks = <&pericfg CLK_PERI_I2C0>,
+> > +                                <&pericfg CLK_PERI_AP_DMA>;
+> > +                       clock-names = "main", "dma";
 > 
+> The following fields must also be selected by the i2c nodes when they
+> are enabled:
+> 
+> clock-frequency = <100000>;
+> pinctrl-names = "default";
+> pinctrl-0 = <&i2c0_pins_a>;
+> #address-cells = <1>;
+> #size-cells = <0>;
+> 
+> So, is there any reason not to also include them here in mt8173.dtsi
+> so we can use them as defaults?
+> This would simplify the i2c nodes in the board specific .dts files.
+> The only field that might be board specific would be clock-frequency,
+> but that is trivial to override on a port-by-port basis in board files
+> as necessary.
+> 
+Since I tend to put I2C pins in SoC dtsi, I think I will put all you
+mention above in SoC dtsi.
+
+Eddie
+Thanks
+
+
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
