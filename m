@@ -1,68 +1,314 @@
-From: Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCHv6 2/4] ARM: dts: exynos5422-odroidxu3: Enable TMU at
- Exynos5422 base
-Date: Mon, 15 Jun 2015 07:53:26 +0530
-Message-ID: <CANAwSgTOY3MECYLTjgmfSo5WrRuNycSSet2ZDhNTb-=gy8DGYQ@mail.gmail.com>
-References: <1434277445-5243-1-git-send-email-linux.amoon@gmail.com>
- <1434277445-5243-2-git-send-email-linux.amoon@gmail.com> <557E181C.7070209@samsung.com>
+From: Dudley Du <dudl@cypress.com>
+Subject: RE: [PATCH 5/7] input: cyapa: add proximity and interrupt sysfs
+ interfaces support
+Date: Mon, 15 Jun 2015 02:25:10 +0000
+Message-ID: <CY1PR06MB1817F88893E852D3DBB16838D1B80@CY1PR06MB1817.namprd06.prod.outlook.com>
+References: <1434092198-13018-1-git-send-email-dudl@cypress.com>
+ <1434092198-13018-6-git-send-email-dudl@cypress.com>
+ <20150612111021.GA24274@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <557E181C.7070209-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Markus Reichl <m.reichl-SRyzfwRm/0rPTwkrwQOX7A@public.gmane.org>
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20150612111021.GA24274@localhost>
+Content-Language: en-US
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "bleung@google.com" <bleung@google.com>, "jmmahler@gmail.com" <jmmahler@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-hi Krzysztof
+Dmitry,
 
-On 15 June 2015 at 05:41, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> On 14.06.2015 19:24, Anand Moon wrote:
->> This changes enables TMU IP block on the Exynos5422 Odroid-XU3
->> device.
->>
->> Signed-off-by: Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> Tested-by: Markus Reichl <m.reichl-SRyzfwRm/0rPTwkrwQOX7A@public.gmane.org>
->
-> This does not look right.
-> You put this "Tested-by" since beginning of this patchset (v1) but first
-> it was LDO10. Then you proposed LDO18 and now you use LDO7 from my
-> suggestion. Which of this was tested by Markus because I cannot find his
-> emails with it on LKML?
+Thanks for the review.
 
-Markus Reichl tested the earlier version with LDO10.
-Commit logs got carry forward by mistake.
+The purpose of adding the proximity interface is:
+1. User can apply the use of the proximity function as they want.
+  Some productions may need the proximity function, but some may not.
+  And for product, the requirements may be also different in the different usage time.
+  so through this interface, user can apply their specific strategy to use the proximity function as required instead of the default behaver.
 
--Anand Moon
+The purpose of adding the interrupt interface is:
+1. For temporary disable the trackpad device, user can disable the trackpad device to report data through the interrupt interface.
+  And keep the trackpad device scanning when the data report is disabled, so when re-enable the report data of the device,
+  the trackpad device can be re-enabled immediately without the disturb re-initialize processing.
+  It may helpful in firmware debugging.
 
+Thanks,
+Dudley
+
+> -----Original Message-----
+> From: Dmitry Torokhov [mailto:dmitry.torokhov@gmail.com]
+> Sent: 2015?6?12? 19:10
+> To: Dudley Du
+> Cc: mark.rutland@arm.com; robh+dt@kernel.org; rydberg@euromail.se;
+> bleung@google.com; jmmahler@gmail.com; devicetree@vger.kernel.org;
+> linux-input@vger.kernel.org; linux-kernel@vger.kernel.org
+> Subject: Re: [PATCH 5/7] input: cyapa: add proximity and interrupt sysfs interfaces
+> support
 >
-> Krzysztof
+> Hi Dudley,
 >
->> Acked-by: Lukasz Majewski <l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> ---
->> Changes rebase on git://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung branch for-next
->> Changes from v5: Use LDO7 regulator instead of LD010.
->>
->> The output of LDO18 goes to VDD_EMMC_1V8. This is not regulator for TMU.
->>
->> I think the schematics are missing some of details but it can be deducted that:
->> 1. TEMP SE is supplied by VDD18_TS power domain. It consists of 5
->> pairs of pins (XTSTEST_OUT[0-4], XTSEXT_RES[0-4]).
->> 2. The VDD18_TS01, VDD18_TS23 and VDD18_TS4 are wired to the LDO7 of
->> S2MPS11 PMIC.
->> 3. I confirmed with the Exynos5422 datasheet that these
->> VDD18_TS{01,23,4} supply the XTSTEST pins (OUT and RES).
->>
->> So the LDO7 it is... but before using it there is a caveat. The LDO7
->> is also connected to VDD of MIPI, HDMI and few more. So when you use
->> this regulator in TMU it may be turned off by TMU driver (e.g. during
->> unbind). In such case these other blocks also should be tested and
->> checked whether they take this regulator and enable it.
->> ---
->>  arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi | 25 ++++++++++++++++++++++
->>  1 file changed, 25 insertions(+)
+> On Fri, Jun 12, 2015 at 02:56:36PM +0800, Dudley Du wrote:
+> > Add proximity and interrupt control interfaces in sysfs device node.
+> > The proximity interface is used to disable/enable proximity function in device.
+> > The interrupt interface is used to disbale/enable interrupt from device.
 >
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please explain why you feel that these sysfs interfaces are needed. Why
+> would one want to disable interrupt for Gen6 devices? And why do we
+> need to enable/disable proximity function? I'd expect kernel provide the
+> data and clients to decide if they want to use it or not...
+>
+> Thanks.
+>
+> > TEST=test on Chromebook.
+> >
+> > Signed-off-by: Dudley Du <dudl@cypress.com>
+> > ---
+> >  drivers/input/mouse/cyapa.c      | 101
+> +++++++++++++++++++++++++++++++++++++++
+> >  drivers/input/mouse/cyapa.h      |   4 ++
+> >  drivers/input/mouse/cyapa_gen3.c |   1 +
+> >  drivers/input/mouse/cyapa_gen5.c |   2 +
+> >  drivers/input/mouse/cyapa_gen6.c |  14 ++++++
+> >  5 files changed, 122 insertions(+)
+> >
+> > diff --git a/drivers/input/mouse/cyapa.c b/drivers/input/mouse/cyapa.c
+> > index faead4d..86f2263 100644
+> > --- a/drivers/input/mouse/cyapa.c
+> > +++ b/drivers/input/mouse/cyapa.c
+> > @@ -594,6 +594,7 @@ static int cyapa_initialize(struct cyapa *cyapa)
+> >
+> >  cyapa->state = CYAPA_STATE_NO_DEVICE;
+> >  cyapa->gen = CYAPA_GEN_UNKNOWN;
+> > +cyapa->interrupt = true;
+> >  mutex_init(&cyapa->state_sync_lock);
+> >
+> >  /*
+> > @@ -1217,12 +1218,110 @@ static ssize_t cyapa_show_mode(struct device
+> *dev,
+> >  return size;
+> >  }
+> >
+> > +static ssize_t cyapa_show_interrupt(struct device *dev,
+> > +   struct device_attribute *attr, char *buf)
+> > +{
+> > +struct cyapa *cyapa = dev_get_drvdata(dev);
+> > +int size;
+> > +int error;
+> > +
+> > +error = mutex_lock_interruptible(&cyapa->state_sync_lock);
+> > +if (error)
+> > +return error;
+> > +
+> > +size = scnprintf(buf, PAGE_SIZE, "%d\n", cyapa->interrupt ? 1 : 0);
+> > +
+> > +mutex_unlock(&cyapa->state_sync_lock);
+> > +return size;
+> > +}
+> > +
+> > +static ssize_t cyapa_interrupt_store(struct device *dev,
+> > +     struct device_attribute *attr,
+> > +     const char *buf, size_t count)
+> > +{
+> > +struct cyapa *cyapa = dev_get_drvdata(dev);
+> > +u16 value;
+> > +int error;
+> > +
+> > +if (cyapa->gen < CYAPA_GEN6)
+> > +return -EOPNOTSUPP;
+> > +
+> > +if (kstrtou16(buf, 10, &value)) {
+> > +dev_err(dev, "invalid interrupt set parameter\n");
+> > +return -EINVAL;
+> > +}
+> > +
+> > +error = mutex_lock_interruptible(&cyapa->state_sync_lock);
+> > +if (error)
+> > +return error;
+> > +
+> > +if (cyapa->operational)
+> > +error = cyapa->ops->set_interrupt(cyapa,
+> > +  value ? true : false);
+> > +else
+> > +error = -EBUSY;  /* Still running in bootloader mode. */
+> > +
+> > +mutex_unlock(&cyapa->state_sync_lock);
+> > +return error < 0 ? error : count;
+> > +}
+> > +
+> > +static ssize_t cyapa_show_proximity(struct device *dev,
+> > +   struct device_attribute *attr, char *buf)
+> > +{
+> > +struct cyapa *cyapa = dev_get_drvdata(dev);
+> > +int size;
+> > +int error;
+> > +
+> > +error = mutex_lock_interruptible(&cyapa->state_sync_lock);
+> > +if (error)
+> > +return error;
+> > +
+> > +size = scnprintf(buf, PAGE_SIZE, "%d\n", cyapa->proximity ? 1 : 0);
+> > +
+> > +mutex_unlock(&cyapa->state_sync_lock);
+> > +return size;
+> > +}
+> > +
+> > +static ssize_t cyapa_proximity_store(struct device *dev,
+> > +     struct device_attribute *attr,
+> > +     const char *buf, size_t count)
+> > +{
+> > +struct cyapa *cyapa = dev_get_drvdata(dev);
+> > +u16 value;
+> > +int error;
+> > +
+> > +if (cyapa->gen < CYAPA_GEN5)
+> > +return -EOPNOTSUPP;
+> > +
+> > +if (kstrtou16(buf, 10, &value)) {
+> > +dev_err(dev, "invalid set value of proximity\n");
+> > +return -EINVAL;
+> > +}
+> > +
+> > +error = mutex_lock_interruptible(&cyapa->state_sync_lock);
+> > +if (error)
+> > +return error;
+> > +
+> > +if (cyapa->operational)
+> > +error = cyapa->ops->set_proximity(cyapa,
+> > +  value ? true : false);
+> > +else
+> > +error = -EBUSY;  /* Still running in bootloader mode. */
+> > +
+> > +mutex_unlock(&cyapa->state_sync_lock);
+> > +return error < 0 ? error : count;
+> > +}
+> > +
+> >  static DEVICE_ATTR(firmware_version, S_IRUGO, cyapa_show_fm_ver, NULL);
+> >  static DEVICE_ATTR(product_id, S_IRUGO, cyapa_show_product_id, NULL);
+> >  static DEVICE_ATTR(update_fw, S_IWUSR, NULL, cyapa_update_fw_store);
+> >  static DEVICE_ATTR(baseline, S_IRUGO, cyapa_show_baseline, NULL);
+> >  static DEVICE_ATTR(calibrate, S_IWUSR, NULL, cyapa_calibrate_store);
+> >  static DEVICE_ATTR(mode, S_IRUGO, cyapa_show_mode, NULL);
+> > +static DEVICE_ATTR(interrupt, S_IRUGO | S_IWUSR,
+> > +   cyapa_show_interrupt, cyapa_interrupt_store);
+> > +static DEVICE_ATTR(proximity, S_IRUGO | S_IWUSR,
+> > +   cyapa_show_proximity, cyapa_proximity_store);
+> >
+> >  static struct attribute *cyapa_sysfs_entries[] = {
+> >  &dev_attr_firmware_version.attr,
+> > @@ -1231,6 +1330,8 @@ static struct attribute *cyapa_sysfs_entries[] = {
+> >  &dev_attr_baseline.attr,
+> >  &dev_attr_calibrate.attr,
+> >  &dev_attr_mode.attr,
+> > +&dev_attr_interrupt.attr,
+> > +&dev_attr_proximity.attr,
+> >  NULL,
+> >  };
+> >
+> > diff --git a/drivers/input/mouse/cyapa.h b/drivers/input/mouse/cyapa.h
+> > index cc30367..0ce66c5 100644
+> > --- a/drivers/input/mouse/cyapa.h
+> > +++ b/drivers/input/mouse/cyapa.h
+> > @@ -275,6 +275,7 @@ struct cyapa_dev_ops {
+> >
+> >  int (*set_power_mode)(struct cyapa *, u8, u16, bool);
+> >
+> > +int (*set_interrupt)(struct cyapa *, bool);
+> >  int (*set_proximity)(struct cyapa *, bool);
+> >  };
+> >
+> > @@ -365,6 +366,9 @@ struct cyapa {
+> >   */
+> >  struct mutex state_sync_lock;
+> >
+> > +bool interrupt;
+> > +bool proximity;
+> > +
+> >  const struct cyapa_dev_ops *ops;
+> >
+> >  union cyapa_cmd_states cmd_states;
+> > diff --git a/drivers/input/mouse/cyapa_gen3.c
+> b/drivers/input/mouse/cyapa_gen3.c
+> > index 2d077e5..41c40b5 100644
+> > --- a/drivers/input/mouse/cyapa_gen3.c
+> > +++ b/drivers/input/mouse/cyapa_gen3.c
+> > @@ -1244,5 +1244,6 @@ const struct cyapa_dev_ops cyapa_gen3_ops = {
+> >  .sort_empty_output_data = cyapa_gen3_empty_output_data,
+> >  .set_power_mode = cyapa_gen3_set_power_mode,
+> >
+> > +.set_interrupt = cyapa_set_not_supported,
+> >  .set_proximity = cyapa_set_not_supported,
+> >  };
+> > diff --git a/drivers/input/mouse/cyapa_gen5.c
+> b/drivers/input/mouse/cyapa_gen5.c
+> > index 5ab0cd2..c388540 100644
+> > --- a/drivers/input/mouse/cyapa_gen5.c
+> > +++ b/drivers/input/mouse/cyapa_gen5.c
+> > @@ -1544,6 +1544,7 @@ int cyapa_pip_set_proximity(struct cyapa *cyapa, bool
+> enable)
+> >  return error < 0 ? error : -EINVAL;
+> >  }
+> >
+> > +cyapa->proximity = enable;
+> >  return 0;
+> >  }
+> >
+> > @@ -2835,5 +2836,6 @@ const struct cyapa_dev_ops cyapa_gen5_ops = {
+> >  .sort_empty_output_data = cyapa_empty_pip_output_data,
+> >  .set_power_mode = cyapa_gen5_set_power_mode,
+> >
+> > +.set_interrupt = cyapa_set_not_supported,
+> >  .set_proximity = cyapa_pip_set_proximity,
+> >  };
+> > diff --git a/drivers/input/mouse/cyapa_gen6.c
+> b/drivers/input/mouse/cyapa_gen6.c
+> > index 9d76715..6e18c5c 100644
+> > --- a/drivers/input/mouse/cyapa_gen6.c
+> > +++ b/drivers/input/mouse/cyapa_gen6.c
+> > @@ -309,9 +309,22 @@ static int cyapa_gen6_config_dev_irq(struct cyapa
+> *cyapa, u8 cmd_code)
+> >  )
+> >  return error < 0 ? error : -EINVAL;
+> >
+> > +if (cmd_code == GEN6_ENABLE_DEV_IRQ)
+> > +cyapa->interrupt = true;
+> > +else if (cmd_code == GEN6_DISABLE_DEV_IRQ)
+> > +cyapa->interrupt = false;
+> > +
+> >  return 0;
+> >  }
+> >
+> > +static int cyapa_gen6_set_interrupt(struct cyapa *cyapa, bool enable)
+> > +{
+> > +if (enable)
+> > +return cyapa_gen6_config_dev_irq(cyapa, GEN6_ENABLE_DEV_IRQ);
+> > +else
+> > +return cyapa_gen6_config_dev_irq(cyapa, GEN6_DISABLE_DEV_IRQ);
+> > +}
+> > +
+> >  static int cyapa_gen6_set_proximity(struct cyapa *cyapa, bool enable)
+> >  {
+> >  int error;
+> > @@ -744,5 +757,6 @@ const struct cyapa_dev_ops cyapa_gen6_ops = {
+> >  .sort_empty_output_data = cyapa_empty_pip_output_data,
+> >  .set_power_mode = cyapa_gen6_set_power_mode,
+> >
+> > +.set_interrupt = cyapa_gen6_set_interrupt,
+> >  .set_proximity = cyapa_gen6_set_proximity,
+> >  };
+> > --
+> > 1.9.1
+> >
+> >
+> > ---------------------------------------------------------------
+> > This message and any attachments may contain Cypress (or its
+> > subsidiaries) confidential information. If it has been received
+> > in error, please advise the sender and immediately delete this
+> > message.
+> > ---------------------------------------------------------------
+> >
+>
+> --
+> Dmitry
+
+This message and any attachments may contain Cypress (or its subsidiaries) confidential information. If it has been received in error, please advise the sender and immediately delete this message.
