@@ -1,329 +1,369 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v5 2/2] pwm: Add support for R-Car PWM Timer
-Date: Mon, 15 Jun 2015 18:08:44 +0900
-Message-ID: <1434359324-2964-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1434359324-2964-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Dudley Du <dudl-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v1 4/7] input: cyapa: fully support runtime suspend power management
+Date: Mon, 15 Jun 2015 17:01:34 +0800
+Message-ID: <1434358897-24668-5-git-send-email-dudl@cypress.com>
+References: <1434358897-24668-1-git-send-email-dudl@cypress.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <1434359324-2964-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: thierry.reding@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: linux-pwm@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1434358897-24668-1-git-send-email-dudl-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rydberg-Hk7bIW8heu4wFerOooGFRg@public.gmane.org
+Cc: Dudley Du <dudl-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, bleung-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, jmmahler-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for R-Car SoCs PWM Timer.
+Fix the the runtime suspend power management not working issue when system
+starts up and before user touches the trackpad device.
+TEST=test on Chromebook.
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Signed-off-by: Dudley Du <dudl-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>
 ---
- drivers/pwm/Kconfig    |  11 +++
- drivers/pwm/Makefile   |   1 +
- drivers/pwm/pwm-rcar.c | 263 +++++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 275 insertions(+)
- create mode 100644 drivers/pwm/pwm-rcar.c
+ drivers/input/mouse/cyapa.c      | 79 +++++++++++++++++++++++++++-------------
+ drivers/input/mouse/cyapa.h      |  2 +-
+ drivers/input/mouse/cyapa_gen3.c |  4 +-
+ drivers/input/mouse/cyapa_gen5.c | 21 +++++++----
+ drivers/input/mouse/cyapa_gen6.c |  4 +-
+ 5 files changed, 72 insertions(+), 38 deletions(-)
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index b1541f4..3e58a68 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -249,6 +249,17 @@ config PWM_PXA
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-pxa.
+diff --git a/drivers/input/mouse/cyapa.c b/drivers/input/mouse/cyapa.c
+index d2a24fc..9288948 100644
+--- a/drivers/input/mouse/cyapa.c
++++ b/drivers/input/mouse/cyapa.c
+@@ -371,7 +371,7 @@ static int cyapa_detect(struct cyapa *cyapa)
+ static int cyapa_open(struct input_dev *input)
+ {
+ 	struct cyapa *cyapa = input_get_drvdata(input);
+-	struct i2c_client *client = cyapa->client;
++	struct device *dev = &cyapa->client->dev;
+ 	int error;
  
-+config PWM_RCAR
-+	tristate "Renesas R-Car PWM support"
-+	depends on ARCH_RCAR_GEN1 || ARCH_RCAR_GEN2 || COMPILE_TEST
-+	depends on HAS_IOMEM
-+	help
-+	  This driver exposes the PWM Timer controller found in Renesas
-+	  R-Car chips through the PWM API.
+ 	error = mutex_lock_interruptible(&cyapa->state_sync_lock);
+@@ -385,10 +385,9 @@ static int cyapa_open(struct input_dev *input)
+ 		 * when in operational mode.
+ 		 */
+ 		error = cyapa->ops->set_power_mode(cyapa,
+-				PWR_MODE_FULL_ACTIVE, 0);
++				PWR_MODE_FULL_ACTIVE, 0, false);
+ 		if (error) {
+-			dev_warn(&client->dev,
+-				"set active power failed: %d\n", error);
++			dev_warn(dev, "set active power failed: %d\n", error);
+ 			goto out;
+ 		}
+ 	} else {
+@@ -399,11 +398,15 @@ static int cyapa_open(struct input_dev *input)
+ 		}
+ 	}
+ 
+-	enable_irq(client->irq);
+-	if (!pm_runtime_enabled(&client->dev)) {
+-		pm_runtime_set_active(&client->dev);
+-		pm_runtime_enable(&client->dev);
++	enable_irq(cyapa->client->irq);
++	if (!pm_runtime_enabled(dev)) {
++		pm_runtime_set_active(dev);
++		pm_runtime_enable(dev);
+ 	}
 +
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called pwm-rcar.
++	pm_runtime_get_sync(dev);
++	pm_runtime_mark_last_busy(dev);
++	pm_runtime_put_sync_autosuspend(dev);
+ out:
+ 	mutex_unlock(&cyapa->state_sync_lock);
+ 	return error;
+@@ -412,17 +415,17 @@ out:
+ static void cyapa_close(struct input_dev *input)
+ {
+ 	struct cyapa *cyapa = input_get_drvdata(input);
+-	struct i2c_client *client = cyapa->client;
++	struct device *dev = &cyapa->client->dev;
+ 
+ 	mutex_lock(&cyapa->state_sync_lock);
+ 
+-	disable_irq(client->irq);
+-	if (pm_runtime_enabled(&client->dev))
+-		pm_runtime_disable(&client->dev);
+-	pm_runtime_set_suspended(&client->dev);
++	disable_irq(cyapa->client->irq);
++	if (pm_runtime_enabled(dev))
++		pm_runtime_disable(dev);
++	pm_runtime_set_suspended(dev);
+ 
+ 	if (cyapa->operational)
+-		cyapa->ops->set_power_mode(cyapa, PWR_MODE_OFF, 0);
++		cyapa->ops->set_power_mode(cyapa, PWR_MODE_OFF, 0, false);
+ 
+ 	mutex_unlock(&cyapa->state_sync_lock);
+ }
+@@ -533,7 +536,7 @@ static void cyapa_enable_irq_for_cmd(struct cyapa *cyapa)
+ 		 */
+ 		if (!input || cyapa->operational)
+ 			cyapa->ops->set_power_mode(cyapa,
+-				PWR_MODE_FULL_ACTIVE, 0);
++				PWR_MODE_FULL_ACTIVE, 0, false);
+ 		/* Gen3 always using polling mode for command. */
+ 		if (cyapa->gen >= CYAPA_GEN5)
+ 			enable_irq(cyapa->client->irq);
+@@ -548,7 +551,8 @@ static void cyapa_disable_irq_for_cmd(struct cyapa *cyapa)
+ 		if (cyapa->gen >= CYAPA_GEN5)
+ 			disable_irq(cyapa->client->irq);
+ 		if (!input || cyapa->operational)
+-			cyapa->ops->set_power_mode(cyapa, PWR_MODE_OFF, 0);
++			cyapa->ops->set_power_mode(cyapa,
++						   PWR_MODE_OFF, 0, false);
+ 	}
+ }
+ 
+@@ -615,7 +619,7 @@ static int cyapa_initialize(struct cyapa *cyapa)
+ 
+ 	/* Power down the device until we need it. */
+ 	if (cyapa->operational)
+-		cyapa->ops->set_power_mode(cyapa, PWR_MODE_OFF, 0);
++		cyapa->ops->set_power_mode(cyapa, PWR_MODE_OFF, 0, false);
+ 
+ 	return 0;
+ }
+@@ -631,7 +635,8 @@ static int cyapa_reinitialize(struct cyapa *cyapa)
+ 
+ 	/* Avoid command failures when TP was in OFF state. */
+ 	if (cyapa->operational)
+-		cyapa->ops->set_power_mode(cyapa, PWR_MODE_FULL_ACTIVE, 0);
++		cyapa->ops->set_power_mode(cyapa,
++					   PWR_MODE_FULL_ACTIVE, 0, false);
+ 
+ 	error = cyapa_detect(cyapa);
+ 	if (error)
+@@ -650,7 +655,8 @@ out:
+ 	if (!input || !input->users) {
+ 		/* Reset to power OFF state to save power when no user open. */
+ 		if (cyapa->operational)
+-			cyapa->ops->set_power_mode(cyapa, PWR_MODE_OFF, 0);
++			cyapa->ops->set_power_mode(cyapa,
++						   PWR_MODE_OFF, 0, false);
+ 	} else if (!error && cyapa->operational) {
+ 		/*
+ 		 * Make sure only enable runtime PM when device is
+@@ -658,6 +664,10 @@ out:
+ 		 */
+ 		pm_runtime_set_active(dev);
+ 		pm_runtime_enable(dev);
 +
- config PWM_RENESAS_TPU
- 	tristate "Renesas TPU PWM support"
- 	depends on ARCH_SHMOBILE || COMPILE_TEST
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index ec50eb5..79d3dc3 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -22,6 +22,7 @@ obj-$(CONFIG_PWM_MXS)		+= pwm-mxs.o
- obj-$(CONFIG_PWM_PCA9685)	+= pwm-pca9685.o
- obj-$(CONFIG_PWM_PUV3)		+= pwm-puv3.o
- obj-$(CONFIG_PWM_PXA)		+= pwm-pxa.o
-+obj-$(CONFIG_PWM_RCAR)		+= pwm-rcar.o
- obj-$(CONFIG_PWM_RENESAS_TPU)	+= pwm-renesas-tpu.o
- obj-$(CONFIG_PWM_ROCKCHIP)	+= pwm-rockchip.o
- obj-$(CONFIG_PWM_SAMSUNG)	+= pwm-samsung.o
-diff --git a/drivers/pwm/pwm-rcar.c b/drivers/pwm/pwm-rcar.c
-new file mode 100644
-index 0000000..ab6609a
---- /dev/null
-+++ b/drivers/pwm/pwm-rcar.c
-@@ -0,0 +1,263 @@
-+/*
-+ * R-Car PWM Timer driver
-+ *
-+ * Copyright (C) 2015 Renesas Electronics Corporation
-+ *
-+ * This is free software; you can redistribute it and/or modify
-+ * it under the terms of version 2 of the GNU General Public License as
-+ * published by the Free Software Foundation.
-+ */
++		pm_runtime_get_sync(dev);
++		pm_runtime_mark_last_busy(dev);
++		pm_runtime_put_sync_autosuspend(dev);
+ 	}
+ 
+ 	return error;
+@@ -667,8 +677,8 @@ static irqreturn_t cyapa_irq(int irq, void *dev_id)
+ {
+ 	struct cyapa *cyapa = dev_id;
+ 	struct device *dev = &cyapa->client->dev;
++	int error;
+ 
+-	pm_runtime_get_sync(dev);
+ 	if (device_may_wakeup(dev))
+ 		pm_wakeup_event(dev, 0);
+ 
+@@ -687,7 +697,24 @@ static irqreturn_t cyapa_irq(int irq, void *dev_id)
+ 			goto out;
+ 		}
+ 
+-		if (!cyapa->operational || cyapa->ops->irq_handler(cyapa)) {
++		if (cyapa->operational) {
++			error = cyapa->ops->irq_handler(cyapa);
 +
-+#include <linux/clk.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
++			/*
++			 * Apply runtime power management to touch report event
++			 * except the events caused by the command responses.
++			 * Note:
++			 * It will introduce about 20~40 ms additional delay
++			 * time in receiving for first valid touch report data.
++			 * The time is used to execute device runtime resume
++			 * process.
++			 */
++			pm_runtime_get_sync(dev);
++			pm_runtime_mark_last_busy(dev);
++			pm_runtime_put_sync_autosuspend(dev);
++		}
++
++		if (!cyapa->operational || error) {
+ 			if (!mutex_trylock(&cyapa->state_sync_lock)) {
+ 				cyapa->ops->sort_empty_output_data(cyapa,
+ 					NULL, NULL, NULL);
+@@ -699,8 +726,6 @@ static irqreturn_t cyapa_irq(int irq, void *dev_id)
+ 	}
+ 
+ out:
+-	pm_runtime_mark_last_busy(dev);
+-	pm_runtime_put_sync_autosuspend(dev);
+ 	return IRQ_HANDLED;
+ }
+ 
+@@ -1341,7 +1366,7 @@ static int __maybe_unused cyapa_suspend(struct device *dev)
+ 		power_mode = device_may_wakeup(dev) ? cyapa->suspend_power_mode
+ 						    : PWR_MODE_OFF;
+ 		error = cyapa->ops->set_power_mode(cyapa, power_mode,
+-				cyapa->suspend_sleep_time);
++				cyapa->suspend_sleep_time, true);
+ 		if (error)
+ 			dev_err(dev, "suspend set power mode failed: %d\n",
+ 					error);
+@@ -1395,7 +1420,8 @@ static int __maybe_unused cyapa_runtime_suspend(struct device *dev)
+ 
+ 	error = cyapa->ops->set_power_mode(cyapa,
+ 			cyapa->runtime_suspend_power_mode,
+-			cyapa->runtime_suspend_sleep_time);
++			cyapa->runtime_suspend_sleep_time,
++			false);
+ 	if (error)
+ 		dev_warn(dev, "runtime suspend failed: %d\n", error);
+ 
+@@ -1407,7 +1433,8 @@ static int __maybe_unused cyapa_runtime_resume(struct device *dev)
+ 	struct cyapa *cyapa = dev_get_drvdata(dev);
+ 	int error;
+ 
+-	error = cyapa->ops->set_power_mode(cyapa, PWR_MODE_FULL_ACTIVE, 0);
++	error = cyapa->ops->set_power_mode(cyapa,
++					   PWR_MODE_FULL_ACTIVE, 0, false);
+ 	if (error)
+ 		dev_warn(dev, "runtime resume failed: %d\n", error);
+ 
+diff --git a/drivers/input/mouse/cyapa.h b/drivers/input/mouse/cyapa.h
+index 203d7a2..a734ab8 100644
+--- a/drivers/input/mouse/cyapa.h
++++ b/drivers/input/mouse/cyapa.h
+@@ -273,7 +273,7 @@ struct cyapa_dev_ops {
+ 	int (*sort_empty_output_data)(struct cyapa *,
+ 			u8 *, int *, cb_sort);
+ 
+-	int (*set_power_mode)(struct cyapa *, u8, u16);
++	int (*set_power_mode)(struct cyapa *, u8, u16, bool);
+ 
+ 	int (*set_proximity)(struct cyapa *, bool);
+ };
+diff --git a/drivers/input/mouse/cyapa_gen3.c b/drivers/input/mouse/cyapa_gen3.c
+index 6460beb..1274b3f 100644
+--- a/drivers/input/mouse/cyapa_gen3.c
++++ b/drivers/input/mouse/cyapa_gen3.c
+@@ -950,7 +950,7 @@ static u16 cyapa_get_wait_time_for_pwr_cmd(u8 pwr_mode)
+  * Device power mode can only be set when device is in operational mode.
+  */
+ static int cyapa_gen3_set_power_mode(struct cyapa *cyapa, u8 power_mode,
+-				     u16 always_unused)
++		u16 always_unused, bool is_suspend_unused)
+ {
+ 	int ret;
+ 	u8 power;
+@@ -1107,7 +1107,7 @@ static int cyapa_gen3_do_operational_check(struct cyapa *cyapa)
+ 		 * may cause problems, so we set the power mode first here.
+ 		 */
+ 		error = cyapa_gen3_set_power_mode(cyapa,
+-				PWR_MODE_FULL_ACTIVE, 0);
++				PWR_MODE_FULL_ACTIVE, 0, false);
+ 		if (error)
+ 			dev_err(dev, "%s: set full power mode failed: %d\n",
+ 				__func__, error);
+diff --git a/drivers/input/mouse/cyapa_gen5.c b/drivers/input/mouse/cyapa_gen5.c
+index 519d437..e311b1b 100644
+--- a/drivers/input/mouse/cyapa_gen5.c
++++ b/drivers/input/mouse/cyapa_gen5.c
+@@ -19,6 +19,7 @@
+ #include <linux/slab.h>
+ #include <asm/unaligned.h>
+ #include <linux/crc-itu-t.h>
 +#include <linux/pm_runtime.h>
-+#include <linux/pwm.h>
-+#include <linux/slab.h>
-+
-+#define RCAR_PWM_MAX_DIVISION	24
-+#define RCAR_PWM_MAX_CYCLE	1023
-+
-+#define RCAR_PWMCR		0x00
-+#define RCAR_PWMCNT		0x04
-+
-+#define RCAR_PWMCR_CC0_MASK	0x000f0000
-+#define RCAR_PWMCR_CC0_SHIFT	16
-+#define RCAR_PWMCR_CCMD		BIT(15)
-+#define RCAR_PWMCR_SYNC		BIT(11)
-+#define RCAR_PWMCR_SS0		BIT(4)
-+#define RCAR_PWMCR_EN0		BIT(0)
-+
-+#define RCAR_PWMCNT_CYC0_MASK	0x03ff0000
-+#define RCAR_PWMCNT_CYC0_SHIFT	16
-+#define RCAR_PWMCNT_PH0_MASK	0x000003ff
-+#define RCAR_PWMCNT_PH0_SHIFT	0
-+
-+struct rcar_pwm_chip {
-+	struct pwm_chip chip;
-+	void __iomem *base;
-+	struct clk *clk;
-+};
-+
-+static inline struct rcar_pwm_chip *to_rcar_pwm_chip(struct pwm_chip *chip)
-+{
-+	return container_of(chip, struct rcar_pwm_chip, chip);
-+}
-+
-+static void rcar_pwm_write(struct rcar_pwm_chip *rp, u32 data, u32 reg)
-+{
-+	writel(data, rp->base + reg);
-+}
-+
-+static u32 rcar_pwm_read(struct rcar_pwm_chip *rp, u32 reg)
-+{
-+	return readl(rp->base + reg);
-+}
-+
-+static void rcar_pwm_bit_modify(struct rcar_pwm_chip *rp, u32 mask, u32 data,
-+				u32 reg)
-+{
-+	u32 val = rcar_pwm_read(rp, reg);
-+
-+	val &= ~mask;
-+	val |= data & mask;
-+	rcar_pwm_write(rp, val, reg);
-+}
-+
-+static int rcar_pwm_get_clock_division(struct rcar_pwm_chip *rp, int period_ns)
-+{
-+	int div;
-+	unsigned long clk_rate = clk_get_rate(rp->clk);
-+	unsigned long long max;	/* max cycle / nanoseconds */
-+
-+	if (!clk_rate)
-+		return -EINVAL;
-+
-+	for (div = 0; div <= RCAR_PWM_MAX_DIVISION; div++) {
-+		max = (unsigned long long)NSEC_PER_SEC * RCAR_PWM_MAX_CYCLE *
-+			(1 << div);
-+		do_div(max, clk_rate);
-+		if (period_ns < max)
-+			break;
-+	}
-+
-+	return (div <= RCAR_PWM_MAX_DIVISION) ? div : -ERANGE;
-+}
-+
-+static void rcar_pwm_set_clock_control(struct rcar_pwm_chip *rp, int div)
-+{
-+	u32 val = rcar_pwm_read(rp, RCAR_PWMCR);
-+
-+	val &= ~(RCAR_PWMCR_CCMD | RCAR_PWMCR_CC0_MASK);
-+	if (div & 1)
-+		val |= RCAR_PWMCR_CCMD;
-+	div >>= 1;
-+	val |= div << RCAR_PWMCR_CC0_SHIFT;
-+	rcar_pwm_write(rp, val, RCAR_PWMCR);
-+}
-+
-+static int rcar_pwm_set_counter(struct rcar_pwm_chip *rp, int div, int duty_ns,
-+				int period_ns)
-+{
-+	unsigned long long one_cycle, tmp;	/* 0.01 nanoseconds */
-+	unsigned long clk_rate = clk_get_rate(rp->clk);
-+	u32 cyc, ph;
-+
-+	one_cycle = (unsigned long long)NSEC_PER_SEC * 100ULL * (1 << div);
-+	do_div(one_cycle, clk_rate);
-+
-+	tmp = period_ns * 100ULL;
-+	do_div(tmp, one_cycle);
-+	cyc = (tmp << RCAR_PWMCNT_CYC0_SHIFT) & RCAR_PWMCNT_CYC0_MASK;
-+
-+	tmp = duty_ns * 100ULL;
-+	do_div(tmp, one_cycle);
-+	ph = tmp & RCAR_PWMCNT_PH0_MASK;
-+
-+	/* Avoid prohibited setting */
-+	if (cyc && ph)
-+		rcar_pwm_write(rp, cyc | ph, RCAR_PWMCNT);
-+
-+	return (cyc && ph) ? 0 : -EINVAL;
-+}
-+
-+static int rcar_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	struct rcar_pwm_chip *rp = to_rcar_pwm_chip(chip);
-+
-+	return clk_prepare_enable(rp->clk);
-+}
-+
-+static void rcar_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	struct rcar_pwm_chip *rp = to_rcar_pwm_chip(chip);
-+
-+	clk_disable_unprepare(rp->clk);
-+}
-+
-+static int rcar_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
-+			   int duty_ns, int period_ns)
-+{
-+	struct rcar_pwm_chip *rp = to_rcar_pwm_chip(chip);
-+	int div = rcar_pwm_get_clock_division(rp, period_ns);
-+	int ret;
-+
-+	if (div < 0)
-+		return div;
-+
-+	/* Let the core driver set pwm->period if disabled and duty_ns == 0 */
-+	if (!test_bit(PWMF_ENABLED, &pwm->flags) && !duty_ns)
-+		return 0;
-+
-+	rcar_pwm_bit_modify(rp, RCAR_PWMCR_SYNC, RCAR_PWMCR_SYNC, RCAR_PWMCR);
-+	ret = rcar_pwm_set_counter(rp, div, duty_ns, period_ns);
-+	rcar_pwm_set_clock_control(rp, div);
-+	rcar_pwm_bit_modify(rp, RCAR_PWMCR_SYNC, 0, RCAR_PWMCR);
-+
-+	return ret;
-+}
-+
-+static int rcar_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	struct rcar_pwm_chip *rp = to_rcar_pwm_chip(chip);
-+	u32 pwmcnt;
-+
-+	/* Don't enable the PWM device if CYC0 or PH0 is 0 */
-+	pwmcnt = rcar_pwm_read(rp, RCAR_PWMCNT);
-+	if (!(pwmcnt & RCAR_PWMCNT_CYC0_MASK) ||
-+	    !(pwmcnt & RCAR_PWMCNT_PH0_MASK))
-+		return -EINVAL;
-+
-+	rcar_pwm_bit_modify(rp, RCAR_PWMCR_EN0, RCAR_PWMCR_EN0, RCAR_PWMCR);
-+
-+	return 0;
-+}
-+
-+static void rcar_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	struct rcar_pwm_chip *rp = to_rcar_pwm_chip(chip);
-+
-+	rcar_pwm_bit_modify(rp, RCAR_PWMCR_EN0, 0, RCAR_PWMCR);
-+}
-+
-+static const struct pwm_ops rcar_pwm_ops = {
-+	.request = rcar_pwm_request,
-+	.free = rcar_pwm_free,
-+	.config = rcar_pwm_config,
-+	.enable = rcar_pwm_enable,
-+	.disable = rcar_pwm_disable,
-+	.owner = THIS_MODULE,
-+};
-+
-+static int rcar_pwm_probe(struct platform_device *pdev)
-+{
-+	struct rcar_pwm_chip *rcar_pwm;
-+	struct resource *res;
-+	int ret;
-+
-+	rcar_pwm = devm_kzalloc(&pdev->dev, sizeof(*rcar_pwm), GFP_KERNEL);
-+	if (rcar_pwm == NULL)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	rcar_pwm->base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(rcar_pwm->base))
-+		return PTR_ERR(rcar_pwm->base);
-+
-+	rcar_pwm->clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(rcar_pwm->clk)) {
-+		dev_err(&pdev->dev, "cannot get clock\n");
-+		return PTR_ERR(rcar_pwm->clk);
-+	}
-+
-+	platform_set_drvdata(pdev, rcar_pwm);
-+
-+	rcar_pwm->chip.dev = &pdev->dev;
-+	rcar_pwm->chip.ops = &rcar_pwm_ops;
-+	rcar_pwm->chip.of_xlate = of_pwm_xlate_with_flags;
-+	rcar_pwm->chip.base = -1;
-+	rcar_pwm->chip.npwm = 1;
-+
-+	ret = pwmchip_add(&rcar_pwm->chip);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "failed to register PWM chip\n");
-+		return ret;
-+	}
-+
-+	pm_runtime_enable(&pdev->dev);
-+
-+	return 0;
-+}
-+
-+static int rcar_pwm_remove(struct platform_device *pdev)
-+{
-+	struct rcar_pwm_chip *rcar_pwm = platform_get_drvdata(pdev);
-+
-+	pm_runtime_disable(&pdev->dev);
-+
-+	return pwmchip_remove(&rcar_pwm->chip);
-+}
-+
-+static const struct of_device_id rcar_pwm_of_table[] = {
-+	{ .compatible = "renesas,pwm-rcar", },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, rcar_pwm_of_table);
-+
-+static struct platform_driver rcar_pwm_driver = {
-+	.probe		= rcar_pwm_probe,
-+	.remove		= rcar_pwm_remove,
-+	.driver		= {
-+		.name	= "pwm-rcar",
-+		.of_match_table = of_match_ptr(rcar_pwm_of_table),
-+	}
-+};
-+module_platform_driver(rcar_pwm_driver);
-+
-+MODULE_AUTHOR("Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>");
-+MODULE_DESCRIPTION("Renesas PWM Timer Driver");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:pwm-rcar");
+ #include "cyapa.h"
+ 
+ 
+@@ -1565,7 +1566,7 @@ int cyapa_pip_deep_sleep(struct cyapa *cyapa, u8 state)
+ }
+ 
+ static int cyapa_gen5_set_power_mode(struct cyapa *cyapa,
+-		u8 power_mode, u16 sleep_time)
++		u8 power_mode, u16 sleep_time, bool is_suspend)
+ {
+ 	struct device *dev = &cyapa->client->dev;
+ 	u8 power_state;
+@@ -1574,9 +1575,6 @@ static int cyapa_gen5_set_power_mode(struct cyapa *cyapa,
+ 	if (cyapa->state != CYAPA_STATE_GEN5_APP)
+ 		return 0;
+ 
+-	/* Dump all the report data before do power mode commmands. */
+-	cyapa_empty_pip_output_data(cyapa, NULL, NULL, NULL);
+-
+ 	if (PIP_DEV_GET_PWR_STATE(cyapa) == UNINIT_PWR_MODE) {
+ 		/*
+ 		 * Assume TP in deep sleep mode when driver is loaded,
+@@ -1679,8 +1677,8 @@ static int cyapa_gen5_set_power_mode(struct cyapa *cyapa,
+ 		 * is suspending which may cause interrupt line unable to be
+ 		 * asserted again.
+ 		 */
+-		cyapa_empty_pip_output_data(cyapa, NULL, NULL, NULL);
+-		cyapa_gen5_disable_pip_report(cyapa);
++		if (is_suspend)
++			cyapa_gen5_disable_pip_report(cyapa);
+ 
+ 		PIP_DEV_SET_PWR_STATE(cyapa,
+ 			cyapa_sleep_time_to_pwr_cmd(sleep_time));
+@@ -2515,7 +2513,7 @@ static int cyapa_gen5_do_operational_check(struct cyapa *cyapa)
+ 		 * the device state is required.
+ 		 */
+ 		error = cyapa_gen5_set_power_mode(cyapa,
+-				PWR_MODE_FULL_ACTIVE, 0);
++				PWR_MODE_FULL_ACTIVE, 0, false);
+ 		if (error)
+ 			dev_warn(dev, "%s: failed to set power active mode.\n",
+ 				__func__);
+@@ -2757,7 +2755,16 @@ int cyapa_pip_irq_handler(struct cyapa *cyapa)
+ 		/*
+ 		 * Device wake event from deep sleep mode for touch.
+ 		 * This interrupt event is used to wake system up.
++		 *
++		 * Note:
++		 * It will introduce about 20~40 ms additional delay
++		 * time in receiving for first valid touch report data.
++		 * The time is used to execute device runtime resume
++		 * process.
+ 		 */
++		pm_runtime_get_sync(dev);
++		pm_runtime_mark_last_busy(dev);
++		pm_runtime_put_sync_autosuspend(dev);
+ 		return 0;
+ 	} else if (report_id != PIP_TOUCH_REPORT_ID &&
+ 			report_id != PIP_BTN_REPORT_ID &&
+diff --git a/drivers/input/mouse/cyapa_gen6.c b/drivers/input/mouse/cyapa_gen6.c
+index e97c1b5..f2287ed 100644
+--- a/drivers/input/mouse/cyapa_gen6.c
++++ b/drivers/input/mouse/cyapa_gen6.c
+@@ -429,7 +429,7 @@ static int cyapa_gen6_deep_sleep(struct cyapa *cyapa, u8 state)
+ }
+ 
+ static int cyapa_gen6_set_power_mode(struct cyapa *cyapa,
+-		u8 power_mode, u16 sleep_time)
++		u8 power_mode, u16 sleep_time, bool is_suspend)
+ {
+ 	struct device *dev = &cyapa->client->dev;
+ 	struct gen6_interval_setting *interval_setting =
+@@ -690,7 +690,7 @@ static int cyapa_gen6_operational_check(struct cyapa *cyapa)
+ 		 * the device state is required.
+ 		 */
+ 		error = cyapa_gen6_set_power_mode(cyapa,
+-				PWR_MODE_FULL_ACTIVE, 0);
++				PWR_MODE_FULL_ACTIVE, 0, false);
+ 		if (error)
+ 			dev_warn(dev, "%s: failed to set power active mode.\n",
+ 				__func__);
 -- 
 1.9.1
+
+
+---------------------------------------------------------------
+This message and any attachments may contain Cypress (or its
+subsidiaries) confidential information. If it has been received
+in error, please advise the sender and immediately delete this
+message.
+---------------------------------------------------------------
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
