@@ -1,50 +1,70 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] ARM: tegra124: pmu support
-Date: Mon, 15 Jun 2015 17:45:33 +0100
-Message-ID: <557F012D.5040509@nvidia.com>
-References: <1434169283-19512-1-git-send-email-khuey@kylehuey.com>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH 1/2] of/unittest: Show broken behaviour in the platform
+ bus
+Date: Mon, 15 Jun 2015 18:45:50 +0200
+Message-ID: <20150615164550.GB1583@katana>
+References: <1433686811-12303-1-git-send-email-grant.likely@linaro.org>
+ <1433686811-12303-2-git-send-email-grant.likely@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1434169283-19512-1-git-send-email-khuey-OhBmq/TcCDJWk0Htik3J/w@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kyle Huey <me-OhBmq/TcCDJWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Kyle Huey <khuey-OhBmq/TcCDJWk0Htik3J/w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="6sX45UoQRIJXqkqR"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1433686811-12303-2-git-send-email-grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Adding linux-tegra ML ...
 
-On 13/06/15 05:21, Kyle Huey wrote:
-> This patch modifies the device tree for tegra124 based devices to enable the Cortex A15 PMU.  The interrupt numbers are taken from NVIDIA TRM DP-06905-001_v03p.  This patch was tested on a Jetson TK1.
-> 
-> Signed-off-by: Kyle Huey <khuey-OhBmq/TcCDJWk0Htik3J/w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/tegra124.dtsi | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/tegra124.dtsi b/arch/arm/boot/dts/tegra124.dtsi
-> index 4be06c6..9032ccb 100644
-> --- a/arch/arm/boot/dts/tegra124.dtsi
-> +++ b/arch/arm/boot/dts/tegra124.dtsi
-> @@ -190,6 +190,14 @@
->  		status = "disabled";
->  	};
->  
-> +	pmu {
-> +		compatible = "arm,cortex-a15-pmu";
-> +		interrupts = <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
-> +	};
-> +
->  	timer@0,60005000 {
->  		compatible = "nvidia,tegra124-timer", "nvidia,tegra20-timer";
->  		reg = <0x0 0x60005000 0x0 0x400>;
-> 
+--6sX45UoQRIJXqkqR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Acked-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+On Sun, Jun 07, 2015 at 03:20:10PM +0100, Grant Likely wrote:
+> Add a single resource to the test bus device to exercise the platform
+> bus code a little more. This isn't strictly a devicetree test, but it is
+> a corner case that the devicetree runs into. Until we've got platform
+> device unittests, it can live here. It doesn't need to be an explicit
+> text because the kernel will oops when it is wrong.
+>=20
+> Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+> Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+> Cc: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Cheers
-Jon
+Thanks for doing this!
+
+Tested-by: Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
+
+
+--6sX45UoQRIJXqkqR
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJVfwE+AAoJEBQN5MwUoCm2fDgP/ReQjAcLdu0t1EEBn9srem+J
+CcHwGISzfY7yhSbkN86aFkCxdpfWx8md6pFKlzEyXUPcoHShluXql+CapgNEbcK2
+neLCfjKgEoag7TKJsmlF2+ghvIdZ8wzhog9qxBZP5BZDvqkfU/Qg+JVk0UY733Fk
+aO0EbfUeslfoc01c1SXXOjh5pR3m9DOT5Cf3hfN/F4/0vRMnLoAu4R/cnJ6NDpKc
+Rn4phZdcXBzHeM9Y1palwuan1z44PWl6xTSVxuNPM6xspX62y7ZMgHEceaYdKlLh
+395rS0MOBAAS7dcxCjtulEb0QqhHdv+WQrc04+PgMTbV+taT6s2NSgNiQoG7HQng
+hTlRiD1DVTPC2E0uVItbc0n9uhU83HpT4DweMvdgkIouKRlgI+gvTycln0rXA7X/
+8yx1jBMMeFqRmD49/xgY47ypfsDRSeJ3ZVuF9c+GbQhSF5XISyRku7+N8IUzjXKA
+ETL/MNbvCQ6kYoY92ZYbE6QhRYNQT+SzmW6gngAdoU1zjPQtJk4E6PTHQlXmZ/8f
+n0x5tswclC6Zmp+hmtCFKckAS8Da23z7sfFoGn1F6NKfAKEwYV3T+LMHoM7kEWxk
+y79JRRuL+9f2hN+0y49NyqmlgNcBovlnhphRE5UvZywXrAnBI4UgRTFYwIfSp7/Z
+LU+Ye38d6Iz1Rjtbnill
+=dPZY
+-----END PGP SIGNATURE-----
+
+--6sX45UoQRIJXqkqR--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
