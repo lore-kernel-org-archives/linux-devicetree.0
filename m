@@ -1,51 +1,58 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v2 2/2] ARM: shmobile: r8a7790: add EtherAVB DT support
-Date: Tue, 16 Jun 2015 02:43:51 +0300
-Message-ID: <5039206.91vH9hDYGY@wasted.cogentembedded.com>
-References: <2857896.YA1bBSQVkA@wasted.cogentembedded.com>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH v2] ARM: tegra124: pmu support
+Date: Tue, 16 Jun 2015 00:45:08 +0100
+Message-ID: <557F6384.5030207@nvidia.com>
+References: <1434393968-1105-1-git-send-email-khuey@kylehuey.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <2857896.YA1bBSQVkA@wasted.cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1434393968-1105-1-git-send-email-khuey@kylehuey.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kyle Huey <me@kylehuey.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Kyle Huey <khuey@kylehuey.com>
 List-Id: devicetree@vger.kernel.org
 
-Define the generic R8A7790 part of the EtherAVB device node. 
 
-Based on original patch by Mitsuhiro Kimura <mitsuhiro.kimura.kc@renesas.com>.
+On 15/06/15 19:46, Kyle Huey wrote:
+> This patch modifies the device tree for tegra124 based devices to enable the Cortex A15 PMU.  The interrupt numbers are taken from NVIDIA TRM DP-06905-001_v03p.  This patch was tested on a Jetson TK1.
+> 
+> Signed-off-by: Kyle Huey <khuey@kylehuey.com>
+> ---
+>  arch/arm/boot/dts/tegra124.dtsi | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/tegra124.dtsi b/arch/arm/boot/dts/tegra124.dtsi
+> index 4be06c6..d966d4e 100644
+> --- a/arch/arm/boot/dts/tegra124.dtsi
+> +++ b/arch/arm/boot/dts/tegra124.dtsi
+> @@ -906,16 +906,24 @@
+>  
+>  		cpu@3 {
+>  			device_type = "cpu";
+>  			compatible = "arm,cortex-a15";
+>  			reg = <3>;
+>  		};
+>  	};
+>  
+> +	pmu {
+> +		compatible = "arm,cortex-a15-pmu";
+> +		interrupts = <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
+> +	};
+> +
+>  	thermal-zones {
+>  		cpu {
+>  			polling-delay-passive = <1000>;
+>  			polling-delay = <1000>;
+>  
+>  			thermal-sensors =
+>  				<&soctherm TEGRA124_SOCTHERM_SENSOR_CPU>;
+>  		};
+> 
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
 
----
-Changes in version 2:
-- changed the "compatible" property to match the driver;
-- refreshed the patch.
-
- arch/arm/boot/dts/r8a7790.dtsi |   10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-Index: renesas/arch/arm/boot/dts/r8a7790.dtsi
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7790.dtsi
-+++ renesas/arch/arm/boot/dts/r8a7790.dtsi
-@@ -671,6 +671,16 @@
- 		status = "disabled";
- 	};
- 
-+	avb: ethernet@e6800000 {
-+		compatible = "renesas,etheravb-r8a7790";
-+		reg = <0 0xe6800000 0 0x800>, <0 0xee0e8000 0 0x4000>;
-+		interrupts = <0 163 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp8_clks R8A7790_CLK_ETHERAVB>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "disabled";
-+	};
-+
- 	sata0: sata@ee300000 {
- 		compatible = "renesas,sata-r8a7790";
- 		reg = <0 0xee300000 0 0x2000>;
-
+Jon
