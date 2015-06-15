@@ -1,54 +1,75 @@
-From: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v2 05/22] doc: dt-binding: usb: add otg related properties
-Date: Mon, 15 Jun 2015 21:10:35 +0800
-Message-ID: <20150615131034.GB29918@shlinux2>
-References: <20150610134735.GB7678@shlinux2>
- <20150611101853.643a9334@rockdesk> <20150611082010.GA16101@shlinux2>
- <20150611153703.55dff608@rockdesk> <20150611141121.GC16101@shlinux2>
- <20150611175215.6e04d92e@rockdesk> <20150612030916.GF16101@shlinux2>
- <20150612113102.6aa67d5d@rockdesk> <20150615074100.GA29918@shlinux2>
- <557EC44C.4050306@cogentembedded.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 4/4] Documentation: ABI: /sys/firmware/devicetree/overlays
+Date: Mon, 15 Jun 2015 08:24:04 -0500
+Message-ID: <CAL_JsqKm9PtDKaabx22Y8WQRJ+RCxWE9Fj+kO2dCJ7_UzriyzA@mail.gmail.com>
+References: <1434137896-13806-1-git-send-email-pantelis.antoniou@konsulko.com> <1434137896-13806-5-git-send-email-pantelis.antoniou@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <557EC44C.4050306-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Li Jun-B47624 <Jun.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Chen Peter-B29397 <Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Macpaul Lin <macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1434137896-13806-5-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 15, 2015 at 03:25:48PM +0300, Sergei Shtylyov wrote:
-> Hello.
-> 
-> On 6/15/2015 10:41 AM, Li Jun wrote:
-> 
-> [...]
-> 
-> >Regarding use of "xyz-disable" flags:
-> >After more thinking this, I just realize that we can use "otg-rev" property
-> >to handle the case of none of xyz-disable properties passed, for legacy
-> >platforms, the new "otg-rev" not passed either, so it's a legacy platform,
-> >if new platform does support all 3 features(SRP/HNP/ADP), the otg-rev
-> >should be passed and also should be 2.0 or above, because ADP is
-> >introduced in OTG 2.0(maybe that's why in current gadget driver, only
-> >enable SRP/HNP).
-> >
-> >So:
-> >1) new platform with full otg feature support:
-> >dr_mode = "otg";
-> >otg-rev = "0x0200";
-> 
->    If you're going to use a string value for this prop, why not let
-> it have a natural form, "2.0"?
-> 
-> WBR, Sergei
-> 
-Sorry, I gave a wrong format in my example, it's not a string, but a bcd vaule.
-otg-rev = <0x0200>;
+On Fri, Jun 12, 2015 at 2:38 PM, Pantelis Antoniou
+<pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+> Documentation ABI entry for overlays sysfs entries.
+>
+> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+> ---
+>  .../ABI/testing/sysfs-firmware-devicetree-overlays | 35 ++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>  create mode 100644 Documentation/ABI/testing/sysfs-firmware-devicetree-overlays
+>
+> diff --git a/Documentation/ABI/testing/sysfs-firmware-devicetree-overlays b/Documentation/ABI/testing/sysfs-firmware-devicetree-overlays
+> new file mode 100644
+> index 0000000..be2d28b
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-firmware-devicetree-overlays
+> @@ -0,0 +1,35 @@
+> +What:          /sys/firmware/devicetree/overlays/
+> +Date:          March 2015
+> +Contact:       Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+> +Description:
+> +               This directory contains the applied device tree overlays of
+> +               the running system, as directories of the overlay id.
+> +
+> +               enable: The master enable switch, by default is 1, and when
+> +                       set to 0 it cannot be re-enabled for security reasons.
+> +
+> +What:          /sys/firmware/devicetree/overlays/<id>
+> +Date:          March 2015
+> +Contact:       Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+> +Description:
+> +               Each directory represents an applied overlay, containing
+> +               the following attribute files.
+> +
+> +               The discussion about this switch takes place in:
+> +               http://comments.gmane.org/gmane.linux.drivers.devicetree/101871
+> +
+> +               Kees Cook:
+> +               "Coming from the perspective of drawing a bright line between
+> +               kernel and the root user (which tends to start with disabling
+> +               kernel module loading), I would say that there at least needs
+> +               to be a high-level one-way "off" switch for the interface so
+> +               that systems that have this interface can choose to turn it off
+> +               during initial boot, etc."
 
-Li Jun
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Doesn't this below up above with "enable"?
+
+> +
+> +               targets: A file containing the list of targets of each overlay
+> +                        with each line containing a target.
+
+We have OF nodes in sysfs now. Would it be more useful if we created
+links to the target nodes instead of having a list of names?
+
+> +
+> +               can_remove: The attribute set to 1 means that the overlay can
+> +                           be removed, while 0 means that the overlay is being
+> +                           overlapped therefore removal is prohibited.
+> +
+> --
+> 1.7.12
+>
