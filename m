@@ -1,92 +1,61 @@
-From: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] dt: add cap11xx LED documentation
-Date: Mon, 15 Jun 2015 01:48:04 -0700
-Message-ID: <CAKzfze9Ji73youadk9zzqahN6E4VCJUXOgzmP4wnoynrQSwRMQ@mail.gmail.com>
-References: <1434169054-11035-1-git-send-email-mranostay@gmail.com>
-	<1434169054-11035-2-git-send-email-mranostay@gmail.com>
-	<557E8990.5060702@samsung.com>
+From: Federico Vaga <federico.vaga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: DeviceTree FPGA bitstream
+Date: Mon, 15 Jun 2015 10:55:46 +0200
+Message-ID: <20150615085546.GA19162@pcbe13110.cern.ch>
+References: <20150609144901.GC12677@pcbe13110.cern.ch>
+ <55796021.7010402@home.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <557E8990.5060702-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <55796021.7010402-CmkmPbn3yAE@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Walter Goossens <waltergoossens-CmkmPbn3yAE@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 15, 2015 at 1:15 AM, Jacek Anaszewski
-<j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> Hi Matt,
->
-> On 06/13/2015 06:17 AM, Matt Ranostay wrote:
->>
->> Some cap11xx devices have LEDs that can be controlled from userpace
->> and via triggers. Document their use and functionality here.
->>
->> Signed-off-by: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>   .../devicetree/bindings/input/cap11xx.txt          | 23
->> ++++++++++++++++++++++
->>   1 file changed, 23 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/input/cap11xx.txt
->> b/Documentation/devicetree/bindings/input/cap11xx.txt
->> index 7d0a300..ef89c27 100644
->> --- a/Documentation/devicetree/bindings/input/cap11xx.txt
->> +++ b/Documentation/devicetree/bindings/input/cap11xx.txt
->> @@ -38,6 +38,11 @@ Optional properties:
->>                                 defaults. The array must have exactly six
->>                                 entries.
->>
->> +       linux,led-brightness:   Defines the ON brightness when the
->> optional LED
->> +                               functionality is used. Valid values are
->> 0-15.
->> +                               By default a value of 15 is set.
->
->
-> The ON brightness is controlled with the 'brightness' sysfs property.
-> The levels start from 1 and 0 turns the LED off. I think that this
-> property is useless then.
->
+Hi Walter,
 
-Yes but this defines the brightness for the ON state.. since it can be
-from 0-100% duty cycle.
+On Thu, Jun 11, 2015 at 12:17:05PM +0200, Walter Goossens wrote:
+> On 06/09/2015 04:49 PM, Federico Vaga wrote:
+>> - it looks like the DeviceTree is disable for x86 architecture except for
+>> some specific platform. Is it possible to enable it for the entire x86
+>> architecture? Are there any reason to disable it by default?
+>>
+>> - I read that since versione 3.17 it should be possible to dynamically
+>> add
+>> portion of DeviceTree from configfs. Is it possible on all architecture?
+>>
+>> - I'm working on x86_64 and my FPGA can be on a pluggable board (e.g.
+>> PCIe).
+>> Is there a way to describe this situation with DeviceTree? Is there
+>> any tool
+>> that dynamically computes the addresses (interrupts) translation to use
+>> (e.g. on PCIe) ?
+>>
+>
+> I've been using this scheme on PPC for quite some time (before
+> devicetree overlays) by creating a custom pcie driver (that knows the
+> bar addresses and irqs) which then instantiates a "virtual platformbus"
+> at the pcie bar the fpga is located in.
+> You can adopt this scheme for x86 by creating a bus and using the
+> devicetree code to probe the inside of your FPGA but this is all a bit
+> hackish.
+> The correct approach (in my opinion) would be to use an overlay
+> describing the contents of the FPGA and loading that when probing the
+> pcie-device.
 
->
->> +
->>   Example:
->>
->>   i2c_controller {
->> @@ -55,5 +60,23 @@ i2c_controller {
->>                                  <105>,         /* KEY_LEFT */
->>                                  <109>,         /* KEY_PAGEDOWN */
->>                                  <104>;         /* KEY_PAGEUP */
->> +
->> +               linux,led-brightness = <15>;
->> +
->> +               usr@0 {
->> +                       label = "cap11xx:green:usr0";
->> +                       reg = <0>;
->> +               };
->> +
->> +               usr@1 {
->> +                       label = "cap11xx:green:usr1";
->> +                       reg = <1>;
->> +               };
->> +
->> +               alive@2 {
->> +                       label = "cap11xx:green:alive";
->> +                       reg = <2>;
->> +                       linux,default_trigger = "heartbeat";
->> +               };
->>         };
->>   }
->>
->
-> --
-> Best Regards,
-> Jacek Anaszewski
+This is more or less what I thought
+
+> This would however require a base devicetree to apply the
+> overlay to, and I'm not sure how much effort this is going to be on x86_64
+
+Not sure but I fear that is not enough to make it stable. The compilation of
+the DeviceTree is allowed only on x86 and on some specific platform.
+
+Of course, I can modify the Kconfig to allow the compilation of the
+DeviceTree but then I don't know if it will work and how it will work.
+I mean are there particular reasons to keep the DeviceTree away from x86 ?
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
