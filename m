@@ -1,90 +1,44 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v7 7/8] mfd: cros_ec: spi: Add a DT property to delay
- asserting the CS
-Date: Mon, 15 Jun 2015 13:25:05 +0100
-Message-ID: <20150615122505.GG3266@x1>
-References: <1433847889-7220-1-git-send-email-javier.martinez@collabora.co.uk>
- <1433847889-7220-8-git-send-email-javier.martinez@collabora.co.uk>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 05/22] doc: dt-binding: usb: add otg related properties
+Date: Mon, 15 Jun 2015 15:25:48 +0300
+Message-ID: <557EC44C.4050306@cogentembedded.com>
+References: <CAL_JsqJ+q5hs26FaLXG1LVb0asE-UZ5hXar2FeVAJN=S8=CG3w@mail.gmail.com> <20150610103737.3cc7c10d@rockdesk> <20150610134735.GB7678@shlinux2> <20150611101853.643a9334@rockdesk> <20150611082010.GA16101@shlinux2> <20150611153703.55dff608@rockdesk> <20150611141121.GC16101@shlinux2> <20150611175215.6e04d92e@rockdesk> <20150612030916.GF16101@shlinux2> <20150612113102.6aa67d5d@rockdesk> <20150615074100.GA29918@shlinux2>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1433847889-7220-8-git-send-email-javier.martinez@collabora.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Olof Johansson <olof@lixom.net>, Doug Anderson <dianders@chromium.org>, Bill Richardson <wfrichar@chromium.org>, Simon Glass <sjg@google.com>, Gwendal Grignou <gwendal@google.com>, Stephen Barber <smbarber@chromium.org>, Filipe Brandenburger <filbranden@google.com>, Todd Broch <tbroch@chromium.org>, Alexandru M Stan <amstan@chromium.org>, Heiko Stuebner <heiko@sntech.de>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Chris Zhong <zyw@rock-chips.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150615074100.GA29918@shlinux2>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Li Jun-B47624 <Jun.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Chen Peter-B29397 <Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Macpaul Lin <macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 09 Jun 2015, Javier Martinez Canillas wrote:
+Hello.
 
-> From: Alexandru M Stan <amstan@chromium.org>
->=20
-> Some ECs need a little time for waking up before they can accept
-> SPI data at a high speed. Add a "google,cros-ec-spi-pre-delay"
-> property to the DT binding to configure this.
->=20
-> If this property isn't set, then no delay will be added. However,
-> if set it will cause a delay equal to the value passed to it to
-> be inserted at the beginning of a transaction.
->=20
-> Signed-off-by: Alexandru M Stan <amstan@chromium.org>
-> Reviewed-by: Doug Anderson <dianders@chromium.org>
-> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
-> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co=
-=2Euk>
-> Tested-by: Heiko Stuebner <heiko@sntech.de>
-> Acked-by: Lee Jones <lee.jones@linaro.org>
-> Acked-by: Olof Johansson <olof@lixom.net>
+On 6/15/2015 10:41 AM, Li Jun wrote:
 
-Applied, thanks.
+[...]
 
-> ---
->=20
-> Changes since v6:
->  - Add Olof Johansson Acked-by tag
->=20
-> Changes since v5: None.
->=20
-> Changes since v4: None.
->=20
-> Changes since v3:
->  - Split DT binding and driver change as suggested by Lee Jones.
->  - Add tested-by tag from Heiko Stuebner
->  - Add acked-by tag from Lee Jones.
->=20
-> Changes since v2: None
->=20
-> Changes since v1: None, new patch
-> ---
->  Documentation/devicetree/bindings/mfd/cros-ec.txt | 4 ++++
->  1 file changed, 4 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/mfd/cros-ec.txt b/Docu=
-mentation/devicetree/bindings/mfd/cros-ec.txt
-> index 8009c3d87f33..1777916e9e28 100644
-> --- a/Documentation/devicetree/bindings/mfd/cros-ec.txt
-> +++ b/Documentation/devicetree/bindings/mfd/cros-ec.txt
-> @@ -18,6 +18,10 @@ Required properties (SPI):
->  - reg: SPI chip select
-> =20
->  Optional properties (SPI):
-> +- google,cros-ec-spi-pre-delay: Some implementations of the EC need =
-a little
-> +  time to wake up from sleep before they can receive SPI transfers a=
-t a high
-> +  clock rate. This property specifies the delay, in usecs, between t=
-he
-> +  assertion of the CS to the start of the first clock pulse.
->  - google,cros-ec-spi-msg-delay: Some implementations of the EC requi=
-re some
->    additional processing time in order to accept new transactions. If=
- the delay
->    between transactions is not long enough the EC may not be able to =
-respond
+> Regarding use of "xyz-disable" flags:
+> After more thinking this, I just realize that we can use "otg-rev" property
+> to handle the case of none of xyz-disable properties passed, for legacy
+> platforms, the new "otg-rev" not passed either, so it's a legacy platform,
+> if new platform does support all 3 features(SRP/HNP/ADP), the otg-rev
+> should be passed and also should be 2.0 or above, because ADP is
+> introduced in OTG 2.0(maybe that's why in current gadget driver, only
+> enable SRP/HNP).
+>
+> So:
+> 1) new platform with full otg feature support:
+> dr_mode = "otg";
+> otg-rev = "0x0200";
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+    If you're going to use a string value for this prop, why not let it have a 
+natural form, "2.0"?
+
+WBR, Sergei
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
