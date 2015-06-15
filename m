@@ -1,38 +1,59 @@
-From: Daniel Mack <daniel@zonque.org>
-Subject: Re: [PATCH v3 2/2] cap11xx: add LED support
-Date: Mon, 15 Jun 2015 11:03:09 +0200
-Message-ID: <557E94CD.30705@zonque.org>
-References: <1434169054-11035-1-git-send-email-mranostay@gmail.com>	<1434169054-11035-3-git-send-email-mranostay@gmail.com>	<557E8997.7070100@samsung.com> <CAKzfze8E-22XxzGuMUJWhcpmdoA=63XWR-v+bpf+Cdn70VoJqA@mail.gmail.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v5 0/2] pwm: Add support for R-Car PWM Timer
+Date: Mon, 15 Jun 2015 18:08:42 +0900
+Message-ID: <1434359324-2964-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <CAKzfze8E-22XxzGuMUJWhcpmdoA=63XWR-v+bpf+Cdn70VoJqA@mail.gmail.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Matt Ranostay <mranostay@gmail.com>, Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: Daniel Mack <zonque@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, linux-leds@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: thierry.reding@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: linux-pwm@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On 06/15/2015 10:56 AM, Matt Ranostay wrote:
-> On Mon, Jun 15, 2015 at 1:15 AM, Jacek Anaszewski
-> <j.anaszewski@samsung.com> wrote:
+This patch set is based on the linux-pwm.git / for-next branch.
+(commit id = 361c1066c939a88e3bb59364f47055b2a5fb3fd4)
 
->>> +               error = devm_led_classdev_register(dev, &led->cdev);
->>> +               if (error < 0)
->>> +                       return -EINVAL;
->>> +               INIT_WORK(&led->work, cap11xx_led_work);
->>> +               schedule_work(&led->work);
->>
->>
->> Work queue should be initialized before registration of the LED class
->> device.
-> What is the reason for this? Just curious
+Changes from v4:
+ - Clean up coding style and typo in patch 2.
+ - Change to_rcar_pwm_chip() macro to static inline function in patch 2.
+ - Use writel()/readl() instead of iowrite32()/ioread32() in patch 2.
+ - Add an error handling in rcar_pwm_config() to avoid silent in patch 2.
+ - Remove success message in rcar_pwm_probe() in patch 2.
+ - Change rcar_pwm_remove() to always call pm_runtime_disable() in patch 2.
 
-It's a race condition. The LED device is accessible once
-devm_led_classdev_register() returns. So a user could be calling into
-cap11xx_led_set() before the work queue is initialized, which would
-hence access a NULL pointer.
+Changes from v3:
+ - Fix register size in patch 1.
+ - Add "Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>" in patch 1
+ - Remove an unnecessary definition in patch 2.
+ - Use "ULL" to avoid overflow in patch 2.
+ - Remove unnecessary casts in patch 2.
 
+Changes from v2:
+ - Add compatible string "renesas,pwm-rcar".
+ - Remove compatible strings "renesas,pwm-r8a77xx" in rcar_pwm_of_table.
+ - Fix build error.
 
-Daniel
+Changes from v1:
+ - Change compatible string to SoC-specific compatible values.
+ - Fix #pwm-call value to 2 in the device tree document.
+ - Fix "depends on" value in Kconfig.
+ - Fix help explanation in Kconfig.
+ - Remove an unnecessary member in rcar_pwm_chip.
+ - Remove hardcoded number of channels and change chip.npwm value to 1.
+ - Fix formulas for clock calculation to improve accuracy.
+
+Yoshihiro Shimoda (2):
+  pwm: Add device tree binding document for R-Car PWM Timer
+  pwm: Add support for R-Car PWM Timer
+
+ .../devicetree/bindings/pwm/renesas,pwm-rcar.txt   |  27 +++
+ drivers/pwm/Kconfig                                |  11 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-rcar.c                             | 263 +++++++++++++++++++++
+ 4 files changed, 302 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt
+ create mode 100644 drivers/pwm/pwm-rcar.c
+
+-- 
+1.9.1
 
