@@ -1,87 +1,48 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v7 0/8] mfd: cros_ec: Add multi EC and proto v3 support
-Date: Mon, 15 Jun 2015 13:29:30 +0100
-Message-ID: <20150615122930.GA32321@x1>
-References: <1433847889-7220-1-git-send-email-javier.martinez@collabora.co.uk>
+From: Herbert Xu <herbert@gondor.apana.org.au>
+Subject: Re: [RESEND PATCH v4 04/14] crypto: add a new driver for Marvell's
+ CESA
+Date: Mon, 15 Jun 2015 20:38:39 +0800
+Message-ID: <20150615123839.GA1646@gondor.apana.org.au>
+References: <1434093366-14681-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1434093366-14681-5-git-send-email-boris.brezillon@free-electrons.com>
+ <20150615095421.GA32158@gondor.apana.org.au>
+ <20150615133135.47ffd3e3@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-crypto-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1433847889-7220-1-git-send-email-javier.martinez@collabora.co.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Olof Johansson <olof@lixom.net>, Doug Anderson <dianders@chromium.org>, Bill Richardson <wfrichar@chromium.org>, Simon Glass <sjg@google.com>, Gwendal Grignou <gwendal@google.com>, Stephen Barber <smbarber@chromium.org>, Filipe Brandenburger <filbranden@google.com>, Todd Broch <tbroch@chromium.org>, Alexandru M Stan <amstan@chromium.org>, Heiko Stuebner <heiko@sntech.de>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20150615133135.47ffd3e3@bbrezillon>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: "David S. Miller" <davem@davemloft.net>, linux-crypto@vger.kernel.org, Arnaud Ebalard <arno@natisbad.org>, Tawfik Bayouk <tawfik@marvell.com>, Lior Amsalem <alior@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Eran Ben-Avi <benavi@marvell.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Imre Kaloz <kaloz@openwrt.org>
 List-Id: devicetree@vger.kernel.org
 
-Wolfram, Dmitry, Olof,
+On Mon, Jun 15, 2015 at 01:31:35PM +0200, Boris Brezillon wrote:
+>
+> I haven't found any driver updating the req->info field with the new
+> IV. Could you point me to one of them.
 
-Enjoy!
+This is an integral part of the API so if any driver isn't doing
+this then they should be fixed.
 
-The following changes since commit 5ebe6afaf0057ac3eaeb98defd5456894b44=
-6d22:
+Ironically the original mv_cesa driver gets this right :)
+ 
+> Yes, that makes sense, but since a lot a drivers (if not all of them)
+> are not updating this field we'll break them when adding this test
+> unless we make it optional (with a new flag ?).
 
-  Linux 4.1-rc2 (2015-05-03 19:22:23 -0700)
+No this has been part of the API since day one so it's definitely
+not optional.
 
-are available in the git repository at:
+> Do you have any suggestion to address this problem ?
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-i2c-=
-input-chrome-4.2
+Adding a self-test would be a good start.  That should automatically
+disable any broken drivers and then we can fix them one by one.  Many
+drivers implement an AEAD interface and that can still be used even
+if we add the self-test.
 
-for you to fetch changes up to ff4378f4b813d5aa26bbf814a9060638dab1fbbf=
-:
-
-  mfd: cros_ec: spi: Add delay for asserting CS (2015-06-15 13:18:24 +0=
-100)
-
-----------------------------------------------------------------
-Alexandru M Stan (2):
-      mfd: cros_ec: spi: Add a DT property to delay asserting the CS
-      mfd: cros_ec: spi: Add delay for asserting CS
-
-Gwendal Grignou (2):
-      mfd: cros_ec: Remove parent field
-      mfd: cros_ec: Support multiple EC in a system
-
-Javier Martinez Canillas (2):
-      mfd: cros_ec: Use a zero-length array for command data
-      mfd: cros_ec: Move protocol helpers out of the MFD driver
-
-Stephen Barber (3):
-      mfd: cros_ec: rev cros_ec_commands.h
-      mfd: cros_ec: add proto v3 skeleton
-      mfd: cros_ec: add bus-specific proto v3 code
-
-Todd Broch (1):
-      mfd: cros_ec: Instantiate sub-devices from device tree
-
- Documentation/devicetree/bindings/mfd/cros-ec.txt |   4 +
- drivers/i2c/busses/Kconfig                        |   2 +-
- drivers/i2c/busses/i2c-cros-ec-tunnel.c           |  45 ++-
- drivers/input/keyboard/Kconfig                    |   2 +-
- drivers/input/keyboard/cros_ec_keyb.c             |  31 +-
- drivers/mfd/Kconfig                               |   6 +-
- drivers/mfd/cros_ec.c                             | 173 ++++-----
- drivers/mfd/cros_ec_i2c.c                         | 170 ++++++++-
- drivers/mfd/cros_ec_spi.c                         | 408 ++++++++++++++=
-+++++---
- drivers/platform/chrome/Kconfig                   |   9 +-
- drivers/platform/chrome/Makefile                  |   1 +
- drivers/platform/chrome/cros_ec_dev.c             | 189 ++++++----
- drivers/platform/chrome/cros_ec_dev.h             |   7 -
- drivers/platform/chrome/cros_ec_lightbar.c        | 217 +++++++-----
- drivers/platform/chrome/cros_ec_lpc.c             |  85 ++++-
- drivers/platform/chrome/cros_ec_proto.c           | 382 ++++++++++++++=
-++++++
- drivers/platform/chrome/cros_ec_sysfs.c           | 178 ++++++----
- include/linux/mfd/cros_ec.h                       |  86 ++++-
- include/linux/mfd/cros_ec_commands.h              | 277 +++++++++++++-=
--
- 19 files changed, 1808 insertions(+), 464 deletions(-)
- create mode 100644 drivers/platform/chrome/cros_ec_proto.c
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
