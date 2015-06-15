@@ -1,37 +1,54 @@
-From: Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [RESEND PATCH v4 04/14] crypto: add a new driver for Marvell's
- CESA
-Date: Mon, 15 Jun 2015 20:40:00 +0800
-Message-ID: <20150615124000.GB1646@gondor.apana.org.au>
-References: <1434093366-14681-1-git-send-email-boris.brezillon@free-electrons.com>
- <1434093366-14681-5-git-send-email-boris.brezillon@free-electrons.com>
- <20150615094827.GA32073@gondor.apana.org.au>
- <20150615133853.57687ecf@bbrezillon>
+From: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v2 05/22] doc: dt-binding: usb: add otg related properties
+Date: Mon, 15 Jun 2015 21:10:35 +0800
+Message-ID: <20150615131034.GB29918@shlinux2>
+References: <20150610134735.GB7678@shlinux2>
+ <20150611101853.643a9334@rockdesk> <20150611082010.GA16101@shlinux2>
+ <20150611153703.55dff608@rockdesk> <20150611141121.GC16101@shlinux2>
+ <20150611175215.6e04d92e@rockdesk> <20150612030916.GF16101@shlinux2>
+ <20150612113102.6aa67d5d@rockdesk> <20150615074100.GA29918@shlinux2>
+ <557EC44C.4050306@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-crypto-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20150615133853.57687ecf@bbrezillon>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: "David S. Miller" <davem@davemloft.net>, linux-crypto@vger.kernel.org, Arnaud Ebalard <arno@natisbad.org>, Tawfik Bayouk <tawfik@marvell.com>, Lior Amsalem <alior@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Eran Ben-Avi <benavi@marvell.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Imre Kaloz <kaloz@openwrt.org>
+In-Reply-To: <557EC44C.4050306-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Li Jun-B47624 <Jun.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Chen Peter-B29397 <Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Macpaul Lin <macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 15, 2015 at 01:38:53PM +0200, Boris Brezillon wrote:
-> Oh right.
-> I still have trouble understanding the need for the backlog concept
-> (maybe you can give some insight): the backlog is just another list
-> where we put all the requests when the queue has exceeded the limit
-> fixed in crypto_queue_init, but the result is pretty much the same, the
-> request stored in the backlog will be handled at some point, so what's
-> the real point of this backlog.
+On Mon, Jun 15, 2015 at 03:25:48PM +0300, Sergei Shtylyov wrote:
+> Hello.
+> 
+> On 6/15/2015 10:41 AM, Li Jun wrote:
+> 
+> [...]
+> 
+> >Regarding use of "xyz-disable" flags:
+> >After more thinking this, I just realize that we can use "otg-rev" property
+> >to handle the case of none of xyz-disable properties passed, for legacy
+> >platforms, the new "otg-rev" not passed either, so it's a legacy platform,
+> >if new platform does support all 3 features(SRP/HNP/ADP), the otg-rev
+> >should be passed and also should be 2.0 or above, because ADP is
+> >introduced in OTG 2.0(maybe that's why in current gadget driver, only
+> >enable SRP/HNP).
+> >
+> >So:
+> >1) new platform with full otg feature support:
+> >dr_mode = "otg";
+> >otg-rev = "0x0200";
+> 
+>    If you're going to use a string value for this prop, why not let
+> it have a natural form, "2.0"?
+> 
+> WBR, Sergei
+> 
+Sorry, I gave a wrong format in my example, it's not a string, but a bcd vaule.
+otg-rev = <0x0200>;
 
-The point is to tell the user to stop sending requests by returning
-EBUSY.  When the queue clears up again we then invoke the callback
-and tell the user that they can send requests again.
-
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Li Jun
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
