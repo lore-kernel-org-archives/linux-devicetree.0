@@ -1,238 +1,76 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH v3 2/2] cap11xx: add LED support
-Date: Mon, 15 Jun 2015 10:15:19 +0200
-Message-ID: <557E8997.7070100@samsung.com>
-References: <1434169054-11035-1-git-send-email-mranostay@gmail.com>
- <1434169054-11035-3-git-send-email-mranostay@gmail.com>
+From: Markus Reichl <m.reichl@fivetechno.de>
+Subject: Re: [PATCHv6 2/4] ARM: dts: exynos5422-odroidxu3: Enable TMU at Exynos5422
+ base
+Date: Mon, 15 Jun 2015 10:41:11 +0200
+Message-ID: <557E8FA7.1090200@fivetechno.de>
+References: <1434277445-5243-1-git-send-email-linux.amoon@gmail.com> <1434277445-5243-2-git-send-email-linux.amoon@gmail.com> <557E181C.7070209@samsung.com> <CANAwSgTOY3MECYLTjgmfSo5WrRuNycSSet2ZDhNTb-=gy8DGYQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <1434169054-11035-3-git-send-email-mranostay@gmail.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Matt Ranostay <mranostay@gmail.com>
-Cc: zonque@gmail.com, dmitry.torokhov@gmail.com, linux-input@vger.kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CANAwSgTOY3MECYLTjgmfSo5WrRuNycSSet2ZDhNTb-=gy8DGYQ@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Anand Moon <linux.amoon@gmail.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Matt,
+Hi Anand, Krzysztof
 
-On 06/13/2015 06:17 AM, Matt Ranostay wrote:
-> Several cap11xx variants have LEDs that be can be controlled, this
-> patchset implements this functionality.
->
-> Signed-off-by: Matt Ranostay <mranostay@gmail.com>
-> ---
->   drivers/input/keyboard/cap11xx.c | 121 ++++++++++++++++++++++++++++++++++++++-
->   1 file changed, 118 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/input/keyboard/cap11xx.c b/drivers/input/keyboard/cap11xx.c
-> index f07461a..994154c 100644
-> --- a/drivers/input/keyboard/cap11xx.c
-> +++ b/drivers/input/keyboard/cap11xx.c
-> @@ -12,6 +12,7 @@
->   #include <linux/module.h>
->   #include <linux/interrupt.h>
->   #include <linux/input.h>
-> +#include <linux/leds.h>
->   #include <linux/of_irq.h>
->   #include <linux/regmap.h>
->   #include <linux/i2c.h>
-> @@ -47,6 +48,20 @@
->   #define CAP11XX_REG_CONFIG2		0x44
->   #define CAP11XX_REG_CONFIG2_ALT_POL	BIT(6)
->   #define CAP11XX_REG_SENSOR_BASE_CNT(X)	(0x50 + (X))
-> +#define CAP11XX_REG_LED_POLARITY	0x73
-> +#define CAP11XX_REG_LED_OUTPUT_CONTROL	0x74
-> +
-> +#define CAP11XX_REG_LED_DUTY_CYCLE_1	0x90
-> +#define CAP11XX_REG_LED_DUTY_CYCLE_2	0x91
-> +#define CAP11XX_REG_LED_DUTY_CYCLE_3	0x92
-> +#define CAP11XX_REG_LED_DUTY_CYCLE_4	0x93
-> +
-> +#define CAP11XX_REG_LED_DUTY_MIN_MASK	(0x0f)
-> +#define CAP11XX_REG_LED_DUTY_MIN_MASK_SHIFT	(0)
-> +#define CAP11XX_REG_LED_DUTY_MAX_MASK	(0xf0)
-> +#define CAP11XX_REG_LED_DUTY_MAX_MASK_SHIFT	(4)
-> +#define CAP11XX_REG_LED_DUTY_MAX_VALUE	(15)
-> +
->   #define CAP11XX_REG_SENSOR_CALIB	(0xb1 + (X))
->   #define CAP11XX_REG_SENSOR_CALIB_LSB1	0xb9
->   #define CAP11XX_REG_SENSOR_CALIB_LSB2	0xba
-> @@ -56,10 +71,24 @@
->
->   #define CAP11XX_MANUFACTURER_ID	0x5d
->
-> +#ifdef CONFIG_LEDS_CLASS
-> +struct cap11xx_led {
-> +	struct cap11xx_priv *priv;
-> +	struct led_classdev cdev;
-> +	struct work_struct work;
-> +	u32 reg;
-> +	enum led_brightness new_brightness;
-> +};
-> +#endif
-> +
->   struct cap11xx_priv {
->   	struct regmap *regmap;
->   	struct input_dev *idev;
->
-> +#ifdef CONFIG_LEDS_CLASS
-> +	struct cap11xx_led *leds;
-> +	int num_leds;
-> +#endif
->   	/* config */
->   	u32 keycodes[];
->   };
-> @@ -67,6 +96,7 @@ struct cap11xx_priv {
->   struct cap11xx_hw_model {
->   	u8 product_id;
->   	unsigned int num_channels;
-> +	unsigned int num_leds;
->   };
->
->   enum {
-> @@ -76,9 +106,9 @@ enum {
->   };
->
->   static const struct cap11xx_hw_model cap11xx_devices[] = {
-> -	[CAP1106] = { .product_id = 0x55, .num_channels = 6 },
-> -	[CAP1126] = { .product_id = 0x53, .num_channels = 6 },
-> -	[CAP1188] = { .product_id = 0x50, .num_channels = 8 },
-> +	[CAP1106] = { .product_id = 0x55, .num_channels = 6, .num_leds = 0 },
-> +	[CAP1126] = { .product_id = 0x53, .num_channels = 6, .num_leds = 2 },
-> +	[CAP1188] = { .product_id = 0x50, .num_channels = 8, .num_leds = 8 },
->   };
->
->   static const struct reg_default cap11xx_reg_defaults[] = {
-> @@ -111,6 +141,7 @@ static const struct reg_default cap11xx_reg_defaults[] = {
->   	{ CAP11XX_REG_STANDBY_SENSITIVITY,	0x02 },
->   	{ CAP11XX_REG_STANDBY_THRESH,		0x40 },
->   	{ CAP11XX_REG_CONFIG2,			0x40 },
-> +	{ CAP11XX_REG_LED_POLARITY,		0x00 },
->   	{ CAP11XX_REG_SENSOR_CALIB_LSB1,	0x00 },
->   	{ CAP11XX_REG_SENSOR_CALIB_LSB2,	0x00 },
->   };
-> @@ -196,6 +227,84 @@ static void cap11xx_input_close(struct input_dev *idev)
->   	cap11xx_set_sleep(priv, true);
->   }
->
-> +#ifdef CONFIG_LEDS_CLASS
-> +static void cap11xx_led_work(struct work_struct *work)
-> +{
-> +	struct cap11xx_led *led = container_of(work, struct cap11xx_led, work);
-> +	struct cap11xx_priv *priv = led->priv;
-> +	int value = led->new_brightness;
-> +
-> +	regmap_update_bits(priv->regmap, CAP11XX_REG_LED_OUTPUT_CONTROL,
-> +				BIT(led->reg), !!value ? BIT(led->reg) : 0);
+Am 15.06.2015 um 04:23 schrieb Anand Moon:
+> hi Krzysztof
+> 
+> On 15 June 2015 at 05:41, Krzysztof Kozlowski <k.kozlowski@samsung.com> wrote:
+>> On 14.06.2015 19:24, Anand Moon wrote:
+>>> This changes enables TMU IP block on the Exynos5422 Odroid-XU3
+>>> device.
+>>>
+>>> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+>>> Tested-by: Markus Reichl <m.reichl@fivetechno.de>
+>>
+>> This does not look right.
+>> You put this "Tested-by" since beginning of this patchset (v1) but first
+>> it was LDO10. Then you proposed LDO18 and now you use LDO7 from my
+>> suggestion. Which of this was tested by Markus because I cannot find his
+>> emails with it on LKML?
+> 
+> Markus Reichl tested the earlier version with LDO10.
 
-You should set here the brightness value, not only turn the led on/off.
+This is right.
 
-> +}
-> +
-> +static void cap11xx_led_set(struct led_classdev *cdev,
-> +			   enum led_brightness value)
-> +{
-> +	struct cap11xx_led *led = container_of(cdev, struct cap11xx_led, cdev);
-> +
-> +	led->new_brightness = value;
-> +	schedule_work(&led->work);
-> +}
-> +
-> +static int cap11xx_init_leds(struct device *dev, struct cap11xx_priv *priv)
-> +{
-> +	struct device_node *node = dev->of_node, *child;
-> +	struct cap11xx_led *led;
-> +	int cnt = of_get_child_count(node);
-> +	u32 reg = 0;
-> +	int error;
-> +
-> +	if (!priv->num_leds || !cnt)
-> +		return 0;
-> +	if (cnt > priv->num_leds)
-> +		return -EINVAL;
-> +
-> +	led = devm_kcalloc(dev, cnt,
-> +		sizeof(struct cap11xx_led), GFP_KERNEL);
-> +	if (!led)
-> +		return -ENOMEM;
-> +
-> +	priv->leds = led;
-> +	error = of_property_read_u32(node, "linux,led-brightness", &reg);
-> +	if (error || reg > CAP11XX_REG_LED_DUTY_MAX_VALUE)
-> +		reg = CAP11XX_REG_LED_DUTY_MAX_VALUE;
-
-This property seems to be redundant, as brightness is controlled with
-'brightness' sysfs property.
-
-> +	error = regmap_update_bits(priv->regmap, CAP11XX_REG_LED_DUTY_CYCLE_4,
-> +				CAP11XX_REG_LED_DUTY_MAX_MASK,
-> +				reg << CAP11XX_REG_LED_DUTY_MAX_MASK_SHIFT);
-
-This probably should be called from brightness_set op.
-
-> +	if (error)
-> +		return error;
-> +
-> +	for_each_child_of_node(node, child) {
-> +		led->cdev.name =
-> +			of_get_property(child, "label", NULL) ? : child->name;
-> +		led->cdev.default_trigger =
-> +			of_get_property(child, "linux,default-trigger", NULL);
-> +		led->cdev.flags = 0;
-
-You don't need to clear flags, as the memory is zeroed by kcalloc.
-
-> +		led->cdev.brightness_set = cap11xx_led_set;
-> +		led->cdev.max_brightness = 1;
-
-You introduced linux,led-brightness DT property and defined its range
-to 0-15 (it should be 1-15 btw), but here you allow for brightness to
-be max 1.
-
-> +		led->cdev.brightness = LED_OFF;
- > +
-> +		error = of_property_read_u32(child, "reg", &reg);
-> +		if (error != 0 || reg >= priv->num_leds)
-> +			continue;
-> +		led->reg = reg;
-> +		led->priv = priv;
-> +
-> +		error = devm_led_classdev_register(dev, &led->cdev);
-> +		if (error < 0)
-> +			return -EINVAL;
-> +		INIT_WORK(&led->work, cap11xx_led_work);
-> +		schedule_work(&led->work);
-
-Work queue should be initialized before registration of the LED class
-device.
-
-> +		led++;
-> +	};
-> +
-> +	return 0;
-> +}
-> +#endif
-> +
->   static int cap11xx_i2c_probe(struct i2c_client *i2c_client,
->   			     const struct i2c_device_id *id)
->   {
-> @@ -316,6 +425,12 @@ static int cap11xx_i2c_probe(struct i2c_client *i2c_client,
->   	priv->idev->open = cap11xx_input_open;
->   	priv->idev->close = cap11xx_input_close;
->
-> +#ifdef CONFIG_LEDS_CLASS
-> +	priv->num_leds = cap->num_leds;
-> +	error = cap11xx_init_leds(dev, priv);
-> +	if (error)
-> +		return error;
-> +#endif
->   	input_set_drvdata(priv->idev, priv);
->
->   	/*
->
+> Commit logs got carry forward by mistake.
+> 
+> -Anand Moon
+> 
+>>
+>> Krzysztof
+>>
+>>> Acked-by: Lukasz Majewski <l.majewski@samsung.com>
+>>> ---
+>>> Changes rebase on git://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung branch for-next
+>>> Changes from v5: Use LDO7 regulator instead of LD010.
+>>>
+>>> The output of LDO18 goes to VDD_EMMC_1V8. This is not regulator for TMU.
+>>>
+>>> I think the schematics are missing some of details but it can be deducted that:
+>>> 1. TEMP SE is supplied by VDD18_TS power domain. It consists of 5
+>>> pairs of pins (XTSTEST_OUT[0-4], XTSEXT_RES[0-4]).
+>>> 2. The VDD18_TS01, VDD18_TS23 and VDD18_TS4 are wired to the LDO7 of
+>>> S2MPS11 PMIC.
+>>> 3. I confirmed with the Exynos5422 datasheet that these
+>>> VDD18_TS{01,23,4} supply the XTSTEST pins (OUT and RES).
+>>>
+>>> So the LDO7 it is... but before using it there is a caveat. The LDO7
+>>> is also connected to VDD of MIPI, HDMI and few more. So when you use
+>>> this regulator in TMU it may be turned off by TMU driver (e.g. during
+>>> unbind). In such case these other blocks also should be tested and
+>>> checked whether they take this regulator and enable it.
+>>> ---
+>>>  arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi | 25 ++++++++++++++++++++++
+>>>  1 file changed, 25 insertions(+)
+>>
+> 
+> 
 
 
 -- 
-Best Regards,
-Jacek Anaszewski
+Markus Reichl
