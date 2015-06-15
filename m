@@ -1,208 +1,89 @@
-From: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] arm64: dts: mt8173: Add I2C device node
-Date: Mon, 15 Jun 2015 15:35:25 +0800
-Message-ID: <1434353725.15875.26.camel@mtksdaap41>
-References: <1434101229-32695-1-git-send-email-eddie.huang@mediatek.com>
-	 <1434101229-32695-3-git-send-email-eddie.huang@mediatek.com>
-	 <CAGS+omB1UadXeKZLmMdhSamsPpipQLmoH_PhbUPvszrYTq68fA@mail.gmail.com>
+From: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 12/12] MIPS: Add basic support for the TL-WR1043ND
+ version 1
+Date: Mon, 15 Jun 2015 10:42:13 +0300
+Message-ID: <20150615104213.92258d2d0616c12e4aa7bf1a@gmail.com>
+References: <1433029955-7346-1-git-send-email-albeu@free.fr>
+	<1433031506-7984-5-git-send-email-albeu@free.fr>
+	<20150608131758.9d76be074998ea3de0e976a4@gmail.com>
+	<20150610235811.0b18af9b@tock>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGS+omB1UadXeKZLmMdhSamsPpipQLmoH_PhbUPvszrYTq68fA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20150610235811.0b18af9b@tock>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Alban <albeu-GANU6spQydw@public.gmane.org>
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Gabor Juhos <juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Dan,
+On Wed, 10 Jun 2015 23:58:11 +0200
+Alban <albeu-GANU6spQydw@public.gmane.org> wrote:
 
-On Fri, 2015-06-12 at 20:28 +0800, Daniel Kurtz wrote:
-> On Fri, Jun 12, 2015 at 5:27 PM, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> >
-> > Add MT8173 I2C device nodes, include I2C controllers and pins.
-> > MT8173 has six I2C controllers, from i2c0 to i2c6, exclude i2c5.
-> > The 6th I2C controller register base doesn't next to 5th I2C,
-> > and there is a hardware between 5th and 6th I2C controller. So
-> > SoC designer name 6th controller as "i2c6", not "i2c5".
-> 
-> 
-> This is slightly misleading.  There are in fact 7 I2C controllers, but
-> "i2c5" is dedicated for use by HDMI for ddc & hdcp.
-> Is there a reason why the HDMI I2C port cannot be controlled by the
-> generic i2c driver?
-> 
-We add some extra HW function to HDMI I2C port, we have special driver
-to control this HW, not generic I2C driver. This is why I don't count
-this hardware to generic I2C controllers. 
+> On Mon, 8 Jun 2015 13:17:58 +0300
+> Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>=20
+> > IMHO AR9132 SoC can't work without external oscilator.
+> >=20
+> > Can we just move basic extosc declaration to SoC dt file
+> > (ar9132.dtsi)? So board dt file ar9132_tl_wr1043nd_v1.dts will
+> > contain only oscilator clock frequency value.
+>=20
+> I would prefer to keep the split between the files in sync with the
+> hardware. I understand that most simple board designs use a fixed
+> oscillator, but that might not always be the case.
+>=20
 
-> Of course the hdmiddc / i2c5 node can always be added in a later
-> patch, so this is no reason to hold up this patch.
-> 
-> > Signed-off-by: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > ---
-> >  arch/arm64/boot/dts/mediatek/mt8173-evb.dts | 50 ++++++++++++++++++++
-> >  arch/arm64/boot/dts/mediatek/mt8173.dtsi    | 72 +++++++++++++++++++++++++++++
-> >  2 files changed, 122 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-> > index 43d5401..2e01988 100644
-> > --- a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-> > +++ b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-> > @@ -33,6 +33,56 @@
-> >         chosen { };
-> >  };
-> >
-> > +&pio {
-> 
-> I don't think we needed to move these i2c pinmux descriptions from
-> mt8173.dtsi to the board .dts file.
-> 
-> AFAICT, the "i2cN_pins_a" nodes defined here are the pinctl
-> configuration that the corresponding enabled i2c nodes would choose.
-> Thus, they are generic to the MT8173 SoC, not specific to any board.
-> By themselves, these nodes do not actually select a pin configuration.
-> 
-> It is the nodes that *enable* the individual i2c nodes, and hence
-> activate those pin settings, which is board specific.
-> 
-> Hence, if your intent is to have the evb enable all i2c nodes, it
-> would have a set of nodes like this:
-> 
-> 
-> &i2c0 {
->   pinctrl-names = "default";
->   pinctrl-0 = <&i2c0_pins_a>;
->   status = "okay";
-> };
-> 
-> &i2c1 {
->  pinctrl-names = "default";
->  pinctrl-0 = <&i2c1_pins_a>;
->  status = "okay";
-> };
-> 
-> ...
-> 
-I personally think put I2C pins in SoC dtsi is ok because it is basic
-and fixed. Almost every platform need these pins, so not necessary to
-care about dtb size. And these pins are fixed. We put pins that may
-change by platforms to board dts, like mmc.
+The AR9132 SoC __always__ use one external oscilator. So it's reasonabl=
+e
+to have the first mention of extosc in ar9132.dtsi not in a board file.
+This description style is always sync with hardware.
+On the other hand pll-controller is always part of the SoC
+not a part of a board. So pll-controller on extosc dependency
+have to go to SoC dts file not to a board file. In your dts description
+pll-controller is a part of a dts board file.
 
-> 
-> > +       i2c0_pins_a: i2c0@0 {
-> 
-> Do these nodes need the "@0"?
-> 
-Will remove.
+It looks like my previous device tree structure proposal contains a sma=
+ll error
+(extra clock-frequency field in ar9132.dtsi). I have fixed it. Please c=
+omment it.
 
-> >
-> > +               pins1 {
-> > +                       pinmux = <MT8173_PIN_45_SDA0__FUNC_SDA0>,
-> > +                                <MT8173_PIN_46_SCL0__FUNC_SCL0>;
-> > +                       bias-disable;
-> > +               };
-> > +       };
-> > +
-> > +       i2c1_pins_a: i2c1@0 {
-> > +               pins1 {
-> > +                       pinmux = <MT8173_PIN_125_SDA1__FUNC_SDA1>,
-> > +                                <MT8173_PIN_126_SCL1__FUNC_SCL1>;
-> > +                       bias-disable;
-> > +               };
-> > +       };
-> > +
-> > +       i2c2_pins_a: i2c2@0 {
-> > +               pins1 {
-> > +                       pinmux = <MT8173_PIN_43_SDA2__FUNC_SDA2>,
-> > +                                <MT8173_PIN_44_SCL2__FUNC_SCL2>;
-> > +                       bias-disable;
-> > +               };
-> > +       };
-> > +
-> > +       i2c3_pins_a: i2c3@0 {
-> > +               pins1 {
-> > +                       pinmux = <MT8173_PIN_106_SDA3__FUNC_SDA3>,
-> > +                                <MT8173_PIN_107_SCL3__FUNC_SCL3>;
-> > +                       bias-disable;
-> > +               };
-> > +       };
-> > +
-> > +       i2c4_pins_a: i2c4@0 {
-> > +               pins1 {
-> > +                       pinmux = <MT8173_PIN_133_SDA4__FUNC_SDA4>,
-> > +                                <MT8173_PIN_134_SCL4__FUNC_SCL4>;
-> > +                       bias-disable;
-> > +               };
-> > +       };
-> > +
-> > +       i2c6_pins_a: i2c6@0 {
-> > +               pins1 {
-> > +                       pinmux = <MT8173_PIN_100_MSDC2_DAT0__FUNC_SDA5>,
-> > +                                <MT8173_PIN_101_MSDC2_DAT1__FUNC_SCL5>;
-> 
-> These are the SDA/SCL pins for i2c port 6, so they should really be
-> _SDA6 / _SCL6.
-> However... I checked, and these settings are labeled "SDA5 & SCL5" in
-> the datasheet.
-> I recommend marking them correctly as 6 here and fixing the datasheet :-).
-> 
-We make mistake at the beginning not give these pins suitable name, if
-we change now, it may affect already shipped products. So I tend to keep
-it.
+ar9132.dtsi:
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 
-> >
-> > +                       bias-disable;
-> > +               };
-> > +       };
-> > +};
-> > +
-> >  &uart0 {
-> >         status = "okay";
-> >  };
-> > diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> > index b52ec43..6d3dbbdd 100644
-> > --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> > +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> > @@ -229,6 +229,78 @@
-> >                         clocks = <&uart_clk>;
-> >                         status = "disabled";
-> >                 };
-> > +
-> > +               i2c0: i2c@11007000 {
-> > +                       compatible = "mediatek,mt8173-i2c";
-> > +                       reg = <0 0x11007000 0 0x70>,
-> > +                             <0 0x11000100 0 0x80>;
-> > +                       interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_LOW>;
-> > +                       clock-div = <16>;
-> > +                       clocks = <&pericfg CLK_PERI_I2C0>,
-> > +                                <&pericfg CLK_PERI_AP_DMA>;
-> > +                       clock-names = "main", "dma";
-> 
-> The following fields must also be selected by the i2c nodes when they
-> are enabled:
-> 
-> clock-frequency = <100000>;
-> pinctrl-names = "default";
-> pinctrl-0 = <&i2c0_pins_a>;
-> #address-cells = <1>;
-> #size-cells = <0>;
-> 
-> So, is there any reason not to also include them here in mt8173.dtsi
-> so we can use them as defaults?
-> This would simplify the i2c nodes in the board specific .dts files.
-> The only field that might be board specific would be clock-frequency,
-> but that is trivial to override on a port-by-port basis in board files
-> as necessary.
-> 
-Since I tend to put I2C pins in SoC dtsi, I think I will put all you
-mention above in SoC dtsi.
+	extosc: oscillator {
+		compatible =3D "fixed-clock";
+		#clock-cells =3D <0>;
+	};
+=2E..
+	ahb {
+		apb {
 
-Eddie
-Thanks
+=2E..
+
+			pll-controller@18050000 {
+=2E..
+				clocks =3D <&extosc>;
+=2E..
 
 
+
+ar9132_tl_wr1043nd_v1.dts:
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D
+
+=2E..
+	&extosc {
+		clock-frequency =3D <40000000>;
+	};
+
+
+--=20
+--=A0
+Best regards,
+=A0 Antony Pavlov
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
