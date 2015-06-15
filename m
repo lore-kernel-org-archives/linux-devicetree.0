@@ -1,324 +1,103 @@
-From: Matt Ranostay <mranostay@gmail.com>
-Subject: Re: [PATCH v3 2/2] cap11xx: add LED support
-Date: Mon, 15 Jun 2015 10:02:13 -0700
-Message-ID: <CAKzfze9MSdbSoN3ieZF3GOt+vVd+9vjjc9vRHyOUYTgCcOy+YQ@mail.gmail.com>
-References: <1434169054-11035-1-git-send-email-mranostay@gmail.com>
-	<1434169054-11035-3-git-send-email-mranostay@gmail.com>
-	<557E8997.7070100@samsung.com>
-	<CAKzfze8E-22XxzGuMUJWhcpmdoA=63XWR-v+bpf+Cdn70VoJqA@mail.gmail.com>
-	<557EA4D7.2060409@samsung.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH linux-next 1/2] mfd: devicetree: add bindings for Atmel
+ Flexcom
+Date: Mon, 15 Jun 2015 19:27:15 +0200
+Message-ID: <20150615192715.31a387c8@bbrezillon>
+References: <cover.1434386119.git.cyrille.pitchen@atmel.com>
+	<9cb26f42aaba9629e48d3def610ce90aa8574e06.1434386119.git.cyrille.pitchen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <557EA4D7.2060409@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: Daniel Mack <zonque@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, linux-leds@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <9cb26f42aaba9629e48d3def610ce90aa8574e06.1434386119.git.cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 15, 2015 at 3:11 AM, Jacek Anaszewski
-<j.anaszewski@samsung.com> wrote:
-> On 06/15/2015 10:56 AM, Matt Ranostay wrote:
->>
->> On Mon, Jun 15, 2015 at 1:15 AM, Jacek Anaszewski
->> <j.anaszewski@samsung.com> wrote:
->>>
->>> Hi Matt,
->>>
->>>
->>> On 06/13/2015 06:17 AM, Matt Ranostay wrote:
->>>>
->>>>
->>>> Several cap11xx variants have LEDs that be can be controlled, this
->>>> patchset implements this functionality.
->>>>
->>>> Signed-off-by: Matt Ranostay <mranostay@gmail.com>
->>>> ---
->>>>    drivers/input/keyboard/cap11xx.c | 121
->>>> ++++++++++++++++++++++++++++++++++++++-
->>>>    1 file changed, 118 insertions(+), 3 deletions(-)
->>>>
->>>> diff --git a/drivers/input/keyboard/cap11xx.c
->>>> b/drivers/input/keyboard/cap11xx.c
->>>> index f07461a..994154c 100644
->>>> --- a/drivers/input/keyboard/cap11xx.c
->>>> +++ b/drivers/input/keyboard/cap11xx.c
->>>> @@ -12,6 +12,7 @@
->>>>    #include <linux/module.h>
->>>>    #include <linux/interrupt.h>
->>>>    #include <linux/input.h>
->>>> +#include <linux/leds.h>
->>>>    #include <linux/of_irq.h>
->>>>    #include <linux/regmap.h>
->>>>    #include <linux/i2c.h>
->>>> @@ -47,6 +48,20 @@
->>>>    #define CAP11XX_REG_CONFIG2           0x44
->>>>    #define CAP11XX_REG_CONFIG2_ALT_POL   BIT(6)
->>>>    #define CAP11XX_REG_SENSOR_BASE_CNT(X)        (0x50 + (X))
->>>> +#define CAP11XX_REG_LED_POLARITY       0x73
->>>> +#define CAP11XX_REG_LED_OUTPUT_CONTROL 0x74
->>>> +
->>>> +#define CAP11XX_REG_LED_DUTY_CYCLE_1   0x90
->>>> +#define CAP11XX_REG_LED_DUTY_CYCLE_2   0x91
->>>> +#define CAP11XX_REG_LED_DUTY_CYCLE_3   0x92
->>>> +#define CAP11XX_REG_LED_DUTY_CYCLE_4   0x93
->>>> +
->>>> +#define CAP11XX_REG_LED_DUTY_MIN_MASK  (0x0f)
->>>> +#define CAP11XX_REG_LED_DUTY_MIN_MASK_SHIFT    (0)
->>>> +#define CAP11XX_REG_LED_DUTY_MAX_MASK  (0xf0)
->>>> +#define CAP11XX_REG_LED_DUTY_MAX_MASK_SHIFT    (4)
->>>> +#define CAP11XX_REG_LED_DUTY_MAX_VALUE (15)
->>>> +
->>>>    #define CAP11XX_REG_SENSOR_CALIB      (0xb1 + (X))
->>>>    #define CAP11XX_REG_SENSOR_CALIB_LSB1 0xb9
->>>>    #define CAP11XX_REG_SENSOR_CALIB_LSB2 0xba
->>>> @@ -56,10 +71,24 @@
->>>>
->>>>    #define CAP11XX_MANUFACTURER_ID       0x5d
->>>>
->>>> +#ifdef CONFIG_LEDS_CLASS
->>>> +struct cap11xx_led {
->>>> +       struct cap11xx_priv *priv;
->>>> +       struct led_classdev cdev;
->>>> +       struct work_struct work;
->>>> +       u32 reg;
->>>> +       enum led_brightness new_brightness;
->>>> +};
->>>> +#endif
->>>> +
->>>>    struct cap11xx_priv {
->>>>          struct regmap *regmap;
->>>>          struct input_dev *idev;
->>>>
->>>> +#ifdef CONFIG_LEDS_CLASS
->>>> +       struct cap11xx_led *leds;
->>>> +       int num_leds;
->>>> +#endif
->>>>          /* config */
->>>>          u32 keycodes[];
->>>>    };
->>>> @@ -67,6 +96,7 @@ struct cap11xx_priv {
->>>>    struct cap11xx_hw_model {
->>>>          u8 product_id;
->>>>          unsigned int num_channels;
->>>> +       unsigned int num_leds;
->>>>    };
->>>>
->>>>    enum {
->>>> @@ -76,9 +106,9 @@ enum {
->>>>    };
->>>>
->>>>    static const struct cap11xx_hw_model cap11xx_devices[] = {
->>>> -       [CAP1106] = { .product_id = 0x55, .num_channels = 6 },
->>>> -       [CAP1126] = { .product_id = 0x53, .num_channels = 6 },
->>>> -       [CAP1188] = { .product_id = 0x50, .num_channels = 8 },
->>>> +       [CAP1106] = { .product_id = 0x55, .num_channels = 6, .num_leds =
->>>> 0
->>>> },
->>>> +       [CAP1126] = { .product_id = 0x53, .num_channels = 6, .num_leds =
->>>> 2
->>>> },
->>>> +       [CAP1188] = { .product_id = 0x50, .num_channels = 8, .num_leds =
->>>> 8
->>>> },
->>>>    };
->>>>
->>>>    static const struct reg_default cap11xx_reg_defaults[] = {
->>>> @@ -111,6 +141,7 @@ static const struct reg_default
->>>> cap11xx_reg_defaults[]
->>>> = {
->>>>          { CAP11XX_REG_STANDBY_SENSITIVITY,      0x02 },
->>>>          { CAP11XX_REG_STANDBY_THRESH,           0x40 },
->>>>          { CAP11XX_REG_CONFIG2,                  0x40 },
->>>> +       { CAP11XX_REG_LED_POLARITY,             0x00 },
->>>>          { CAP11XX_REG_SENSOR_CALIB_LSB1,        0x00 },
->>>>          { CAP11XX_REG_SENSOR_CALIB_LSB2,        0x00 },
->>>>    };
->>>> @@ -196,6 +227,84 @@ static void cap11xx_input_close(struct input_dev
->>>> *idev)
->>>>          cap11xx_set_sleep(priv, true);
->>>>    }
->>>>
->>>> +#ifdef CONFIG_LEDS_CLASS
->>>> +static void cap11xx_led_work(struct work_struct *work)
->>>> +{
->>>> +       struct cap11xx_led *led = container_of(work, struct cap11xx_led,
->>>> work);
->>>> +       struct cap11xx_priv *priv = led->priv;
->>>> +       int value = led->new_brightness;
->>>> +
->>>> +       regmap_update_bits(priv->regmap, CAP11XX_REG_LED_OUTPUT_CONTROL,
->>>> +                               BIT(led->reg), !!value ? BIT(led->reg) :
->>>> 0);
->>>
->>>
->>>
->>> You should set here the brightness value, not only turn the led on/off.
->>>
->>
->> The issue is that the setting is across _ALL_ leds for brightness. But
->> on/off state can clearly vary
->
->
-> OK. The comment describing this would be nice here.
+Hi Cyrille,
 
-Ok will make this more clear in v4.
+On Mon, 15 Jun 2015 18:38:04 +0200
+Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
 
-Thanks,
+> Signed-off-by: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/mfd/atmel-flexcom.txt      | 28 ++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/atmel-flexcom.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/atmel-flexcom.txt b/Documentation/devicetree/bindings/mfd/atmel-flexcom.txt
+> new file mode 100644
+> index 0000000..6b1a32e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/atmel-flexcom.txt
+> @@ -0,0 +1,28 @@
+> +* Device tree bindings for Atmel Flexcom (Flexible Serial Communication Unit)
+> +
+> +The Atmel Flexcom is just a wrapper which embeds a SPI controller, an I2C
+> +controller and an USART. Only one function can be used at a time and is chosen
+> +at boot time according to the device tree.
+> +
+> +Required properties:
+> +- compatible: "atmel,sama5d2-flexcom"
+> +- reg: shall be the offset/length value for Flexcom dedicated I/O registers
+> +  (without USART, TWI or SPI registers).
+> +- clocks: shall be the Flexcom peripheral clock from PMC.
+> +- #address-cells: should be <1>
+> +- #size-cells: should be <1>
+> +- ranges: must be present
+> +- atmel,flexcom-mode: shall be a string among { "spi", "usart", "i2c", "twi" }.
+> +  "i2c" and "twi" are synonymous.
+> +
+> +Example:
+> +
+> +flx0: flexcom@f8034000 {
+> +	compatible = "atmel,sama5d2-flexcom";
+> +	reg = <0xf8034000 0x200>;
+> +	clocks = <&flx0_clk>;
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +	ranges;
+> +	atmel,flexcom-mode = "spi";
+> +};
 
-Matt
+Since the subdevices are using a set of registers contained by the
+flexcom device I would define it like this:
 
->
->
->>>
->>>> +}
->>>> +
->>>> +static void cap11xx_led_set(struct led_classdev *cdev,
->>>> +                          enum led_brightness value)
->>>> +{
->>>> +       struct cap11xx_led *led = container_of(cdev, struct cap11xx_led,
->>>> cdev);
->>>> +
->>>> +       led->new_brightness = value;
->>>> +       schedule_work(&led->work);
->>>> +}
->>>> +
->>>> +static int cap11xx_init_leds(struct device *dev, struct cap11xx_priv
->>>> *priv)
->>>> +{
->>>> +       struct device_node *node = dev->of_node, *child;
->>>> +       struct cap11xx_led *led;
->>>> +       int cnt = of_get_child_count(node);
->>>> +       u32 reg = 0;
->>>> +       int error;
->>>> +
->>>> +       if (!priv->num_leds || !cnt)
->>>> +               return 0;
->>>> +       if (cnt > priv->num_leds)
->>>> +               return -EINVAL;
->>>> +
->>>> +       led = devm_kcalloc(dev, cnt,
->>>> +               sizeof(struct cap11xx_led), GFP_KERNEL);
->>>> +       if (!led)
->>>> +               return -ENOMEM;
->>>> +
->>>> +       priv->leds = led;
->>>> +       error = of_property_read_u32(node, "linux,led-brightness",
->>>> &reg);
->>>> +       if (error || reg > CAP11XX_REG_LED_DUTY_MAX_VALUE)
->>>> +               reg = CAP11XX_REG_LED_DUTY_MAX_VALUE;
->>>
->>>
->>>
->>> This property seems to be redundant, as brightness is controlled with
->>> 'brightness' sysfs property.
->>
->>
->> See above comment.
->>>
->>>
->>>> +       error = regmap_update_bits(priv->regmap,
->>>> CAP11XX_REG_LED_DUTY_CYCLE_4,
->>>> +                               CAP11XX_REG_LED_DUTY_MAX_MASK,
->>>> +                               reg <<
->>>> CAP11XX_REG_LED_DUTY_MAX_MASK_SHIFT);
->>>
->>>
->>>
->>> This probably should be called from brightness_set op.
->>
->>
->> Above :)
->>>
->>>
->>>> +       if (error)
->>>> +               return error;
->>>> +
->>>> +       for_each_child_of_node(node, child) {
->>>> +               led->cdev.name =
->>>> +                       of_get_property(child, "label", NULL) ? :
->>>> child->name;
->>>> +               led->cdev.default_trigger =
->>>> +                       of_get_property(child, "linux,default-trigger",
->>>> NULL);
->>>> +               led->cdev.flags = 0;
->>>
->>>
->>>
->>> You don't need to clear flags, as the memory is zeroed by kcalloc.
->>>
->>>> +               led->cdev.brightness_set = cap11xx_led_set;
->>>> +               led->cdev.max_brightness = 1;
->>>
->>>
->>>
->>> You introduced linux,led-brightness DT property and defined its range
->>> to 0-15 (it should be 1-15 btw), but here you allow for brightness to
->>> be max 1.
->>>
->>>> +               led->cdev.brightness = LED_OFF;
->>>
->>>
->>>> +
->>>>
->>>> +               error = of_property_read_u32(child, "reg", &reg);
->>>> +               if (error != 0 || reg >= priv->num_leds)
->>>> +                       continue;
->>>> +               led->reg = reg;
->>>> +               led->priv = priv;
->>>> +
->>>> +               error = devm_led_classdev_register(dev, &led->cdev);
->>>> +               if (error < 0)
->>>> +                       return -EINVAL;
->>>> +               INIT_WORK(&led->work, cap11xx_led_work);
->>>> +               schedule_work(&led->work);
->>>
->>>
->>>
->>> Work queue should be initialized before registration of the LED class
->>> device.
->>
->> What is the reason for this? Just curious
->
->
-> See Daniel's explanation.
->
->
->>>
->>>> +               led++;
->>>> +       };
->>>> +
->>>> +       return 0;
->>>> +}
->>>> +#endif
->>>> +
->>>>    static int cap11xx_i2c_probe(struct i2c_client *i2c_client,
->>>>                               const struct i2c_device_id *id)
->>>>    {
->>>> @@ -316,6 +425,12 @@ static int cap11xx_i2c_probe(struct i2c_client
->>>> *i2c_client,
->>>>          priv->idev->open = cap11xx_input_open;
->>>>          priv->idev->close = cap11xx_input_close;
->>>>
->>>> +#ifdef CONFIG_LEDS_CLASS
->>>> +       priv->num_leds = cap->num_leds;
->>>> +       error = cap11xx_init_leds(dev, priv);
->>>> +       if (error)
->>>> +               return error;
->>>> +#endif
->>>>          input_set_drvdata(priv->idev, priv);
->>>>
->>>>          /*
->>>>
->>>
->>>
->>> --
->>> Best Regards,
->>> Jacek Anaszewski
->>
->>
->
->
-> --
-> Best Regards,
-> Jacek Anaszewski
+flx0: flexcom@f8034000 {
+	compatible = "atmel,sama5d2-flexcom";
+	reg = <0xf8034000 0x800>;
+	clocks = <&flx0_clk>;
+	#address-cells = <1>;
+	#size-cells = <1>;
+	ranges = <0x0 0xf8034000 0x800>;
+	atmel,flexcom-mode = "spi";
+
+	usart@200 {
+		reg = <0x200 0x100>;
+		/* ... */
+	};
+
+	spi@400 {
+		reg = <0x400 0x100>;
+		/* ... */
+	};
+
+	i2c@600 {
+		reg = <0x600 0x100>;
+		/* ... */
+	};
+};
+
+Best Regards,
+
+Boris
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
