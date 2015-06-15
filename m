@@ -1,113 +1,83 @@
-From: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 1/2] ARM: at91: dts: add isi & ov2640 dt nodes for at91sam9m10g45ek board
-Date: Mon, 15 Jun 2015 18:27:17 +0800
-Message-ID: <1434364038-8117-1-git-send-email-josh.wu@atmel.com>
+From: Fu Wei <fu.wei@linaro.org>
+Subject: Re: [PATCH non-pretimeout 3/7] ARM64: add SBSA Generic Watchdog
+ device node in amd-seattle-soc.dtsi
+Date: Mon, 15 Jun 2015 19:00:24 +0800
+Message-ID: <CADyBb7veJWc84hK1=fwhvDec0dv-QPMh0rEHyk49AHSRe3Uawg@mail.gmail.com>
+References: <=fu.wei@linaro.org>
+	<1433958452-23721-1-git-send-email-fu.wei@linaro.org>
+	<1433958452-23721-4-git-send-email-fu.wei@linaro.org>
+	<557B470B.9030908@codeaurora.org>
+	<CADyBb7seDgmQYxjsxCo_thPr_w847oy7d0AEiL8w9T_ZCF9+BQ@mail.gmail.com>
+	<557D8862.8020805@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <557D8862.8020805@roeck-us.net>
+Sender: linux-doc-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Timur Tabi <timur@codeaurora.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Wei Fu <tekkamanninja@gmail.com>, G Gregory <graeme.gregory@linaro.org>, Al Stone <al.stone@linaro.org>, Hanjun Guo <hanjun.guo@linaro.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Vipul Gandhi <vgandhi@codeaurora.org>, Wim Van Sebroeck <wim@iguana.be>, Jon Masters <jcm@redhat.com>, Leo Duran <leo.duran@amd.com>, Jon Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, rjw@rjwysocki.net
 List-Id: devicetree@vger.kernel.org
 
-Add the link for atmel-isi and ov2640 sensor node.
+Hi Guenter,
 
-Signed-off-by: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
----
+On 14 June 2015 at 21:57, Guenter Roeck <linux@roeck-us.net> wrote:
+> On 06/14/2015 03:05 AM, Fu Wei wrote:
+>>
+>> On 13 June 2015 at 04:54, Timur Tabi <timur@codeaurora.org> wrote:
+>>>
+>>> On 06/10/2015 12:47 PM, fu.wei@linaro.org wrote:
+>>>>
+>>>>
+>>>> +                       reg = <0x0 0xe0bb0000 0 0x10000>,
+>>>> +                               <0x0 0xe0bc0000 0 0x10000>;
+>>>
+>>>
+>>>
+>>> I think the sizes are wrong.  They should be 0x1000 instead of 0x10000.
+>>
+>>
+>> This has been proved by test, it works well on Seattle
+>> Foundation model has same value. So I don't think it is wrong
+>>
+>> otherwise someone has the data sheet of Seattle B0, and it shows that is
+>> wrong.
+>>
+>
+> If only 0x1000 is used, why would you have to reserve 0x10000 ?
+> You never access any higher addresses, so no matter what the datasheet
+> says, 0x1000 should be sufficient. What matters is what the driver uses.
 
- arch/arm/boot/dts/at91sam9g45.dtsi     |  4 +++
- arch/arm/boot/dts/at91sam9m10g45ek.dts | 45 ++++++++++++++++++++++++++++++++++
- 2 files changed, 49 insertions(+)
+the reason for using 0x10000 before is :
+(1)in <ARM v8-A Foundation Platform User Guide(Version: 9.1)> page 20
+0x00_2A44_0000 0x00_2A44_FFFF - EL2 Generic Watchdog Control 64KB S/NS
+0x00_2A45_0000 0x00_2A45_FFFF - EL2 Generic Watchdog Refresh 64KB S/NS
+(2)It is also confirmed by Suravee, in Seattle,  the size is 64KB also.
+(3) these configuration has passed the test in Foundation model and Seattle B0.
 
-diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
-index d260ba7..e707613 100644
---- a/arch/arm/boot/dts/at91sam9g45.dtsi
-+++ b/arch/arm/boot/dts/at91sam9g45.dtsi
-@@ -1070,6 +1070,10 @@
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&pinctrl_isi>;
- 				status = "disabled";
-+				port {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+				};
- 			};
- 
- 			pwm0: pwm@fffb8000 {
-diff --git a/arch/arm/boot/dts/at91sam9m10g45ek.dts b/arch/arm/boot/dts/at91sam9m10g45ek.dts
-index 1375d33..5062e18 100644
---- a/arch/arm/boot/dts/at91sam9m10g45ek.dts
-+++ b/arch/arm/boot/dts/at91sam9m10g45ek.dts
-@@ -63,6 +63,25 @@
- 
- 			i2c0: i2c@fff84000 {
- 				status = "okay";
-+				ov2640: camera@30 {
-+					compatible = "ovti,ov2640";
-+					reg = <0x30>;
-+					pinctrl-names = "default";
-+					pinctrl-0 = <&pinctrl_pck1_as_isi_mck &pinctrl_sensor_power &pinctrl_sensor_reset>;
-+					resetb-gpios = <&pioD 12 GPIO_ACTIVE_LOW>;
-+					pwdn-gpios = <&pioD 13 GPIO_ACTIVE_HIGH>;
-+					clocks = <&pck1>;
-+					clock-names = "xvclk";
-+					assigned-clocks = <&pck1>;
-+					assigned-clock-rates = <25000000>;
-+
-+					port {
-+						ov2640_0: endpoint {
-+							remote-endpoint = <&isi_0>;
-+							bus-width = <8>;
-+						};
-+					};
-+				};
- 			};
- 
- 			i2c1: i2c@fff88000 {
-@@ -101,6 +120,22 @@
- 			};
- 
- 			pinctrl@fffff200 {
-+				camera_sensor {
-+					pinctrl_pck1_as_isi_mck: pck1_as_isi_mck-0 {
-+						atmel,pins =
-+							<AT91_PIOB 31 AT91_PERIPH_B AT91_PINCTRL_NONE>;
-+					};
-+
-+					pinctrl_sensor_reset: sensor_reset-0 {
-+						atmel,pins =
-+							<AT91_PIOD 12 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>;
-+					};
-+
-+					pinctrl_sensor_power: sensor_power-0 {
-+						atmel,pins =
-+							<AT91_PIOD 13 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>;
-+					};
-+				};
- 				mmc0 {
- 					pinctrl_board_mmc0: mmc0-board {
- 						atmel,pins =
-@@ -155,6 +190,16 @@
- 				status = "okay";
- 			};
- 
-+			isi@fffb4000 {
-+				status = "okay";
-+				port {
-+					isi_0: endpoint {
-+						remote-endpoint = <&ov2640_0>;
-+						bus-width = <8>;
-+					};
-+				};
-+			};
-+
- 			pwm0: pwm@fffb8000 {
- 				status = "okay";
- 
+Not sure the reason, maybe because of the 64KB page size.
+
+But, yes, in SBSA, the device only has 4KB register area, and the
+driver only need to use 4KB.
+
+So you are right,  "What matters is what the driver uses." , so will use 0x1000.
+I think there is not problem, because ACPI uses this size.
+
+
+>
+> Guenter
+>
+>
+
+
+
 -- 
-1.9.1
+Best regards,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Fu Wei
+Software Engineer
+Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
+Ph: +86 21 61221326(direct)
+Ph: +86 186 2020 4684 (mobile)
+Room 1512, Regus One Corporate Avenue,Level 15,
+One Corporate Avenue,222 Hubin Road,Huangpu District,
+Shanghai,China 200021
