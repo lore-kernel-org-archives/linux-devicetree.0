@@ -1,72 +1,41 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] spi: atmel: update DT bindings documentation
-Date: Mon, 15 Jun 2015 16:49:35 +0100
-Message-ID: <20150615154935.GT18309@sirena.org.uk>
-References: <cover.1433850255.git.cyrille.pitchen@atmel.com>
- <ce7c16faafaa24f5bb711115c0eea1f8992d08c3.1433850255.git.cyrille.pitchen@atmel.com>
- <20150609172531.GM14071@sirena.org.uk>
- <5579B95F.9060307@atmel.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [RESEND PATCH 1/2] pinctrl: change function behavior for per
+ pin muxing controllers
+Date: Mon, 15 Jun 2015 09:58:05 -0600
+Message-ID: <557EF60D.8020007@wwwdotorg.org>
+References: <1433948699-19800-1-git-send-email-ludovic.desroches@atmel.com> <1433948699-19800-2-git-send-email-ludovic.desroches@atmel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="6axCafNXXMM8qu6Q"
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5579B95F.9060307-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1433948699-19800-2-git-send-email-ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+To: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 06/10/2015 09:04 AM, Ludovic Desroches wrote:
+> When having a controller which allows per pin muxing, declaring with
+> which groups a function can be used is a useless constraint since groups
+> are something virtual.
 
---6axCafNXXMM8qu6Q
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This isn't true.
 
-On Thu, Jun 11, 2015 at 06:37:51PM +0200, Cyrille Pitchen wrote:
-> Le 09/06/2015 19:25, Mark Brown a =E9crit :
-> > On Tue, Jun 09, 2015 at 01:53:53PM +0200, Cyrille Pitchen wrote:
-> >> - add new property "atmel,fifo-size"
+Irrespective of whether a particular piece of pinmux HW can control the 
+mux function for each pin individually, or only in groups, it's quite 
+likely that each function can only be selected onto a subset of those 
+pins or groups. Requiring the pinctrl driver to inform the core which 
+set of pins/groups particular functions can be selected onto seems quite 
+reasonable.
 
-> > Why is this a property and not something we know from the IP version?
-
-> Please be aware that the VERSION register can not be used to guess the
-> size of FIFOs. Indeed, for a given hardware version, the SPI controller
-> can be integrated on Atmel SoCs with different FIFO sizes. Also the
-> "atmel,fifo-size" property is optional as older SPI controllers don't
-> embed FIFO at all.
-
-=2E..
-
-> Finally, on a given SoC, there can be several instances of the SPI
-> controller with different FIFO sizes. This explain why we'd rather use a
-> dedicated DT property than use the "compatible" property.
-
-> I hope these pieces of information will help to clarify this point.
-> Of course, we are open to other suggestions.
-
-Ugh, what a wonderfully consistent hardware design :(  Please make it
-clear in the documentation what is going on here, this looks like an
-obvious bug in the DT binding - a very common pattern for bugs is to do
-version quirks like this as properties.
-
---6axCafNXXMM8qu6Q
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVfvQPAAoJECTWi3JdVIfQDywH/RbQKXr2U2+f72kbeIxz56M1
-3mboyhxyFzn7whzNbyAefS1lWdIQvVCv841JHRuAgBJj8PSTwkLYFC5cOuQTe7Nh
-qEm9PnEA5gk0/W5WbxixprOR9llRw538bX4ad6XmKNORnSF7q9Ch+lx0bNV50v7+
-4mSu03rj7VmMgLwP6SpAA6BT9Eu707bSWMpUgavpgGWGfI7nXXlpdolYQ5PVfr04
-qM3Opabni7yTUi+YSMiR4J7mSzZnUbCroqtEkg4j/c7R2oTCHYrNF2N9mj8i8vRj
-q5W1yfc1cCIFFR/Yx2Twy4inrY5+ffKLR9YD3HcLGBIf68awPHGHMlVQXJBOFRE=
-=aZfm
------END PGP SIGNATURE-----
-
---6axCafNXXMM8qu6Q--
+In my opinion at least, for HW that can select the mux function at the 
+per-pin level, the only sensible set of groups is one group per pin with 
+each group containing a single pin. Any other use of groups is a 
+SW/user-level construct, and is something unrelated to why the pinctrl 
+subsystem supports groups. If we want to represent those groups in 
+pinctrl, there should be two separate sets of groups; one to represent 
+the actual HW capabilities, and one to represent the SW/user-level 
+convenience abstractions.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
