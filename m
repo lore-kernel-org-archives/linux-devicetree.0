@@ -1,299 +1,329 @@
-From: Dudley Du <dudl-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v1 3/7] input: cyapa: add proximity function support for gen5 and gen6 modules
-Date: Mon, 15 Jun 2015 17:01:33 +0800
-Message-ID: <1434358897-24668-4-git-send-email-dudl@cypress.com>
-References: <1434358897-24668-1-git-send-email-dudl@cypress.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v5 2/2] pwm: Add support for R-Car PWM Timer
+Date: Mon, 15 Jun 2015 18:08:44 +0900
+Message-ID: <1434359324-2964-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+References: <1434359324-2964-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1434358897-24668-1-git-send-email-dudl-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rydberg-Hk7bIW8heu4wFerOooGFRg@public.gmane.org
-Cc: Dudley Du <dudl-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, bleung-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, jmmahler-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <1434359324-2964-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: thierry.reding@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: linux-pwm@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Gen5 and Gen6 trackpad devices are able to detect and report object
-proximity data/events, add this function support in the cyapa driver
-through the MTB protocol ABS_MT_DISTANCE event.
-TEST=test on Chromebook.
+This patch adds support for R-Car SoCs PWM Timer.
 
-Signed-off-by: Dudley Du <dudl-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 ---
- drivers/input/mouse/cyapa.c      | 19 ++++++++++++-
- drivers/input/mouse/cyapa.h      |  4 +++
- drivers/input/mouse/cyapa_gen3.c |  2 ++
- drivers/input/mouse/cyapa_gen5.c | 61 +++++++++++++++++++++++++++++++++++++++-
- drivers/input/mouse/cyapa_gen6.c | 19 +++++++++++++
- 5 files changed, 103 insertions(+), 2 deletions(-)
+ drivers/pwm/Kconfig    |  11 +++
+ drivers/pwm/Makefile   |   1 +
+ drivers/pwm/pwm-rcar.c | 263 +++++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 275 insertions(+)
+ create mode 100644 drivers/pwm/pwm-rcar.c
 
-diff --git a/drivers/input/mouse/cyapa.c b/drivers/input/mouse/cyapa.c
-index dbb53eb..d2a24fc 100644
---- a/drivers/input/mouse/cyapa.c
-+++ b/drivers/input/mouse/cyapa.c
-@@ -39,6 +39,11 @@ const char product_id[] = "CYTRA";
+diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+index b1541f4..3e58a68 100644
+--- a/drivers/pwm/Kconfig
++++ b/drivers/pwm/Kconfig
+@@ -249,6 +249,17 @@ config PWM_PXA
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called pwm-pxa.
  
- static int cyapa_reinitialize(struct cyapa *cyapa);
- 
-+int cyapa_set_not_supported(struct cyapa *cyapa, bool enable)
++config PWM_RCAR
++	tristate "Renesas R-Car PWM support"
++	depends on ARCH_RCAR_GEN1 || ARCH_RCAR_GEN2 || COMPILE_TEST
++	depends on HAS_IOMEM
++	help
++	  This driver exposes the PWM Timer controller found in Renesas
++	  R-Car chips through the PWM API.
++
++	  To compile this driver as a module, choose M here: the module
++	  will be called pwm-rcar.
++
+ config PWM_RENESAS_TPU
+ 	tristate "Renesas TPU PWM support"
+ 	depends on ARCH_SHMOBILE || COMPILE_TEST
+diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+index ec50eb5..79d3dc3 100644
+--- a/drivers/pwm/Makefile
++++ b/drivers/pwm/Makefile
+@@ -22,6 +22,7 @@ obj-$(CONFIG_PWM_MXS)		+= pwm-mxs.o
+ obj-$(CONFIG_PWM_PCA9685)	+= pwm-pca9685.o
+ obj-$(CONFIG_PWM_PUV3)		+= pwm-puv3.o
+ obj-$(CONFIG_PWM_PXA)		+= pwm-pxa.o
++obj-$(CONFIG_PWM_RCAR)		+= pwm-rcar.o
+ obj-$(CONFIG_PWM_RENESAS_TPU)	+= pwm-renesas-tpu.o
+ obj-$(CONFIG_PWM_ROCKCHIP)	+= pwm-rockchip.o
+ obj-$(CONFIG_PWM_SAMSUNG)	+= pwm-samsung.o
+diff --git a/drivers/pwm/pwm-rcar.c b/drivers/pwm/pwm-rcar.c
+new file mode 100644
+index 0000000..ab6609a
+--- /dev/null
++++ b/drivers/pwm/pwm-rcar.c
+@@ -0,0 +1,263 @@
++/*
++ * R-Car PWM Timer driver
++ *
++ * Copyright (C) 2015 Renesas Electronics Corporation
++ *
++ * This is free software; you can redistribute it and/or modify
++ * it under the terms of version 2 of the GNU General Public License as
++ * published by the Free Software Foundation.
++ */
++
++#include <linux/clk.h>
++#include <linux/err.h>
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/pm_runtime.h>
++#include <linux/pwm.h>
++#include <linux/slab.h>
++
++#define RCAR_PWM_MAX_DIVISION	24
++#define RCAR_PWM_MAX_CYCLE	1023
++
++#define RCAR_PWMCR		0x00
++#define RCAR_PWMCNT		0x04
++
++#define RCAR_PWMCR_CC0_MASK	0x000f0000
++#define RCAR_PWMCR_CC0_SHIFT	16
++#define RCAR_PWMCR_CCMD		BIT(15)
++#define RCAR_PWMCR_SYNC		BIT(11)
++#define RCAR_PWMCR_SS0		BIT(4)
++#define RCAR_PWMCR_EN0		BIT(0)
++
++#define RCAR_PWMCNT_CYC0_MASK	0x03ff0000
++#define RCAR_PWMCNT_CYC0_SHIFT	16
++#define RCAR_PWMCNT_PH0_MASK	0x000003ff
++#define RCAR_PWMCNT_PH0_SHIFT	0
++
++struct rcar_pwm_chip {
++	struct pwm_chip chip;
++	void __iomem *base;
++	struct clk *clk;
++};
++
++static inline struct rcar_pwm_chip *to_rcar_pwm_chip(struct pwm_chip *chip)
 +{
-+	return -EOPNOTSUPP;
++	return container_of(chip, struct rcar_pwm_chip, chip);
 +}
 +
- bool cyapa_is_pip_bl_mode(struct cyapa *cyapa)
- {
- 	if (cyapa->gen == CYAPA_GEN6 && cyapa->state == CYAPA_STATE_GEN6_BL)
-@@ -477,6 +482,8 @@ static int cyapa_create_input_dev(struct cyapa *cyapa)
- 	if (cyapa->gen >= CYAPA_GEN5) {
- 		input_set_abs_params(input, ABS_MT_WIDTH_MAJOR, 0, 255, 0, 0);
- 		input_set_abs_params(input, ABS_MT_WIDTH_MINOR, 0, 255, 0, 0);
-+
-+		input_set_abs_params(input, ABS_MT_DISTANCE, 0, 1, 0, 0);
- 	}
- 
- 	input_abs_set_res(input, ABS_MT_POSITION_X,
-@@ -1340,6 +1347,13 @@ static int __maybe_unused cyapa_suspend(struct device *dev)
- 					error);
- 	}
- 
-+	/*
-+	 * Disable proximity interrupt when system idle, want true touch to
-+	 * wake the system.
-+	 */
-+	if (cyapa->dev_pwr_mode != PWR_MODE_OFF)
-+		cyapa->ops->set_proximity(cyapa, false);
-+
- 	if (device_may_wakeup(dev))
- 		cyapa->irq_wake = (enable_irq_wake(client->irq) == 0);
- 
-@@ -1360,7 +1374,10 @@ static int __maybe_unused cyapa_resume(struct device *dev)
- 		cyapa->irq_wake = false;
- 	}
- 
--	/* Update device states and runtime PM states. */
-+	/*
-+	 * Update device states and runtime PM states.
-+	 * Re-Enable proximity interrupt after enter operational mode.
-+	 */
- 	error = cyapa_reinitialize(cyapa);
- 	if (error)
- 		dev_warn(dev, "failed to reinitialize TP device: %d\n", error);
-diff --git a/drivers/input/mouse/cyapa.h b/drivers/input/mouse/cyapa.h
-index 3a211c0..203d7a2 100644
---- a/drivers/input/mouse/cyapa.h
-+++ b/drivers/input/mouse/cyapa.h
-@@ -274,6 +274,8 @@ struct cyapa_dev_ops {
- 			u8 *, int *, cb_sort);
- 
- 	int (*set_power_mode)(struct cyapa *, u8, u16);
-+
-+	int (*set_proximity)(struct cyapa *, bool);
- };
- 
- struct cyapa_pip_cmd_states {
-@@ -415,9 +417,11 @@ int cyapa_pip_bl_deactivate(struct cyapa *cyapa);
- ssize_t cyapa_pip_do_calibrate(struct device *dev,
- 			       struct device_attribute *attr,
- 			       const char *buf, size_t count);
-+int cyapa_pip_set_proximity(struct cyapa *cyapa, bool enable);
- 
- bool cyapa_pip_irq_cmd_handler(struct cyapa *cyapa);
- int cyapa_pip_irq_handler(struct cyapa *cyapa);
-+int cyapa_set_not_supported(struct cyapa *cyapa, bool enable);
- 
- 
- extern u8 pip_read_sys_info[];
-diff --git a/drivers/input/mouse/cyapa_gen3.c b/drivers/input/mouse/cyapa_gen3.c
-index 3884311..6460beb 100644
---- a/drivers/input/mouse/cyapa_gen3.c
-+++ b/drivers/input/mouse/cyapa_gen3.c
-@@ -1243,4 +1243,6 @@ const struct cyapa_dev_ops cyapa_gen3_ops = {
- 	.irq_cmd_handler = cyapa_gen3_irq_cmd_handler,
- 	.sort_empty_output_data = cyapa_gen3_empty_output_data,
- 	.set_power_mode = cyapa_gen3_set_power_mode,
-+
-+	.set_proximity = cyapa_set_not_supported,
- };
-diff --git a/drivers/input/mouse/cyapa_gen5.c b/drivers/input/mouse/cyapa_gen5.c
-index 4e19dce..519d437 100644
---- a/drivers/input/mouse/cyapa_gen5.c
-+++ b/drivers/input/mouse/cyapa_gen5.c
-@@ -52,6 +52,11 @@
- #define PIP_WAKEUP_EVENT_REPORT_ID  0x04
- #define PIP_PUSH_BTN_REPORT_ID      0x06
- #define GEN5_OLD_PUSH_BTN_REPORT_ID 0x05  /* Special for old Gen5 TP. */
-+#define PIP_PROXIMITY_REPORT_ID     0x07
-+
-+#define PIP_PROXIMITY_REPORT_SIZE	6
-+#define PIP_PROXIMITY_DISTANCE_OFFSET	0x05
-+#define PIP_PROXIMITY_DISTANCE_MASK	0x01
- 
- #define PIP_TOUCH_REPORT_HEAD_SIZE     7
- #define PIP_TOUCH_REPORT_MAX_SIZE      127
-@@ -78,6 +83,8 @@
- #define PIP_SENSING_MODE_MUTUAL_CAP_FINE   0x00
- #define PIP_SENSING_MODE_SELF_CAP          0x02
- 
-+#define PIP_SET_PROXIMITY	0x49
-+
- /* Macro of Gen5 */
- #define GEN5_BL_MAX_OUTPUT_LENGTH     0x0100
- #define GEN5_APP_MAX_OUTPUT_LENGTH    0x00fe
-@@ -1517,6 +1524,28 @@ static int cyapa_gen5_disable_pip_report(struct cyapa *cyapa)
- 	return 0;
- }
- 
-+int cyapa_pip_set_proximity(struct cyapa *cyapa, bool enable)
++static void rcar_pwm_write(struct rcar_pwm_chip *rp, u32 data, u32 reg)
 +{
-+	u8 cmd[] = { 0x04, 0x00, 0x06, 0x00, 0x2f, 0x00, PIP_SET_PROXIMITY,
-+		     (u8)!!enable
-+	};
-+	u8 resp_data[6];
-+	int resp_len;
-+	int error;
++	writel(data, rp->base + reg);
++}
 +
-+	resp_len = sizeof(resp_data);
-+	error = cyapa_i2c_pip_cmd_irq_sync(cyapa, cmd, sizeof(cmd),
-+			resp_data, &resp_len,
-+			500, cyapa_sort_tsg_pip_app_resp_data, false);
-+	if (error || !VALID_CMD_RESP_HEADER(resp_data, PIP_SET_PROXIMITY) ||
-+			!PIP_CMD_COMPLETE_SUCCESS(resp_data)) {
-+		error = (error == -ETIMEDOUT) ? -EOPNOTSUPP : error;
-+		return error < 0 ? error : -EINVAL;
++static u32 rcar_pwm_read(struct rcar_pwm_chip *rp, u32 reg)
++{
++	return readl(rp->base + reg);
++}
++
++static void rcar_pwm_bit_modify(struct rcar_pwm_chip *rp, u32 mask, u32 data,
++				u32 reg)
++{
++	u32 val = rcar_pwm_read(rp, reg);
++
++	val &= ~mask;
++	val |= data & mask;
++	rcar_pwm_write(rp, val, reg);
++}
++
++static int rcar_pwm_get_clock_division(struct rcar_pwm_chip *rp, int period_ns)
++{
++	int div;
++	unsigned long clk_rate = clk_get_rate(rp->clk);
++	unsigned long long max;	/* max cycle / nanoseconds */
++
++	if (!clk_rate)
++		return -EINVAL;
++
++	for (div = 0; div <= RCAR_PWM_MAX_DIVISION; div++) {
++		max = (unsigned long long)NSEC_PER_SEC * RCAR_PWM_MAX_CYCLE *
++			(1 << div);
++		do_div(max, clk_rate);
++		if (period_ns < max)
++			break;
 +	}
++
++	return (div <= RCAR_PWM_MAX_DIVISION) ? div : -ERANGE;
++}
++
++static void rcar_pwm_set_clock_control(struct rcar_pwm_chip *rp, int div)
++{
++	u32 val = rcar_pwm_read(rp, RCAR_PWMCR);
++
++	val &= ~(RCAR_PWMCR_CCMD | RCAR_PWMCR_CC0_MASK);
++	if (div & 1)
++		val |= RCAR_PWMCR_CCMD;
++	div >>= 1;
++	val |= div << RCAR_PWMCR_CC0_SHIFT;
++	rcar_pwm_write(rp, val, RCAR_PWMCR);
++}
++
++static int rcar_pwm_set_counter(struct rcar_pwm_chip *rp, int div, int duty_ns,
++				int period_ns)
++{
++	unsigned long long one_cycle, tmp;	/* 0.01 nanoseconds */
++	unsigned long clk_rate = clk_get_rate(rp->clk);
++	u32 cyc, ph;
++
++	one_cycle = (unsigned long long)NSEC_PER_SEC * 100ULL * (1 << div);
++	do_div(one_cycle, clk_rate);
++
++	tmp = period_ns * 100ULL;
++	do_div(tmp, one_cycle);
++	cyc = (tmp << RCAR_PWMCNT_CYC0_SHIFT) & RCAR_PWMCNT_CYC0_MASK;
++
++	tmp = duty_ns * 100ULL;
++	do_div(tmp, one_cycle);
++	ph = tmp & RCAR_PWMCNT_PH0_MASK;
++
++	/* Avoid prohibited setting */
++	if (cyc && ph)
++		rcar_pwm_write(rp, cyc | ph, RCAR_PWMCNT);
++
++	return (cyc && ph) ? 0 : -EINVAL;
++}
++
++static int rcar_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
++{
++	struct rcar_pwm_chip *rp = to_rcar_pwm_chip(chip);
++
++	return clk_prepare_enable(rp->clk);
++}
++
++static void rcar_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
++{
++	struct rcar_pwm_chip *rp = to_rcar_pwm_chip(chip);
++
++	clk_disable_unprepare(rp->clk);
++}
++
++static int rcar_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
++			   int duty_ns, int period_ns)
++{
++	struct rcar_pwm_chip *rp = to_rcar_pwm_chip(chip);
++	int div = rcar_pwm_get_clock_division(rp, period_ns);
++	int ret;
++
++	if (div < 0)
++		return div;
++
++	/* Let the core driver set pwm->period if disabled and duty_ns == 0 */
++	if (!test_bit(PWMF_ENABLED, &pwm->flags) && !duty_ns)
++		return 0;
++
++	rcar_pwm_bit_modify(rp, RCAR_PWMCR_SYNC, RCAR_PWMCR_SYNC, RCAR_PWMCR);
++	ret = rcar_pwm_set_counter(rp, div, duty_ns, period_ns);
++	rcar_pwm_set_clock_control(rp, div);
++	rcar_pwm_bit_modify(rp, RCAR_PWMCR_SYNC, 0, RCAR_PWMCR);
++
++	return ret;
++}
++
++static int rcar_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
++{
++	struct rcar_pwm_chip *rp = to_rcar_pwm_chip(chip);
++	u32 pwmcnt;
++
++	/* Don't enable the PWM device if CYC0 or PH0 is 0 */
++	pwmcnt = rcar_pwm_read(rp, RCAR_PWMCNT);
++	if (!(pwmcnt & RCAR_PWMCNT_CYC0_MASK) ||
++	    !(pwmcnt & RCAR_PWMCNT_PH0_MASK))
++		return -EINVAL;
++
++	rcar_pwm_bit_modify(rp, RCAR_PWMCR_EN0, RCAR_PWMCR_EN0, RCAR_PWMCR);
 +
 +	return 0;
 +}
 +
- int cyapa_pip_deep_sleep(struct cyapa *cyapa, u8 state)
- {
- 	u8 cmd[] = { 0x05, 0x00, 0x00, 0x08};
-@@ -2491,6 +2520,12 @@ static int cyapa_gen5_do_operational_check(struct cyapa *cyapa)
- 			dev_warn(dev, "%s: failed to set power active mode.\n",
- 				__func__);
- 
-+		/* By default, the trackpad proximity function is enabled. */
-+		error = cyapa_pip_set_proximity(cyapa, true);
-+		if (error)
-+			dev_warn(dev, "%s: failed to enable proximity.\n",
-+				__func__);
-+
- 		/* Get trackpad product information. */
- 		error = cyapa_gen5_get_query_data(cyapa);
- 		if (error)
-@@ -2607,6 +2642,17 @@ static void cyapa_pip_report_buttons(struct cyapa *cyapa,
- 	input_sync(input);
- }
- 
-+static void cyapa_pip_report_proximity(struct cyapa *cyapa,
-+		const struct cyapa_pip_report_data *report_data)
++static void rcar_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
 +{
-+	struct input_dev *input = cyapa->input;
-+	u8 distance = report_data->report_head[PIP_PROXIMITY_DISTANCE_OFFSET] &
-+			PIP_PROXIMITY_DISTANCE_MASK;
++	struct rcar_pwm_chip *rp = to_rcar_pwm_chip(chip);
 +
-+	input_report_abs(input, ABS_MT_DISTANCE, distance);
-+	input_sync(input);
++	rcar_pwm_bit_modify(rp, RCAR_PWMCR_EN0, 0, RCAR_PWMCR);
 +}
 +
- static void cyapa_pip_report_slot_data(struct cyapa *cyapa,
- 		const struct cyapa_pip_touch_record *touch)
- {
-@@ -2628,6 +2674,7 @@ static void cyapa_pip_report_slot_data(struct cyapa *cyapa,
- 		y = cyapa->max_abs_y - y;
- 	input_report_abs(input, ABS_MT_POSITION_X, x);
- 	input_report_abs(input, ABS_MT_POSITION_Y, y);
-+	input_report_abs(input, ABS_MT_DISTANCE, 0);
- 	input_report_abs(input, ABS_MT_PRESSURE,
- 		touch->z);
- 	input_report_abs(input, ABS_MT_TOUCH_MAJOR,
-@@ -2715,7 +2762,8 @@ int cyapa_pip_irq_handler(struct cyapa *cyapa)
- 	} else if (report_id != PIP_TOUCH_REPORT_ID &&
- 			report_id != PIP_BTN_REPORT_ID &&
- 			report_id != GEN5_OLD_PUSH_BTN_REPORT_ID &&
--			report_id != PIP_PUSH_BTN_REPORT_ID) {
-+			report_id != PIP_PUSH_BTN_REPORT_ID &&
-+			report_id != PIP_PROXIMITY_REPORT_ID) {
- 		/* Running in BL mode or unknown response data read. */
- 		dev_err(dev, "invalid report_id=0x%02x\n", report_id);
- 		return -EINVAL;
-@@ -2739,8 +2787,17 @@ int cyapa_pip_irq_handler(struct cyapa *cyapa)
- 		return 0;
- 	}
- 
-+	if (report_id == PIP_PROXIMITY_REPORT_ID &&
-+			report_len != PIP_PROXIMITY_REPORT_SIZE) {
-+		/* Invalid report data length of proximity packet. */
-+		dev_err(dev, "invalid proximity data, length=%d\n", report_len);
-+		return 0;
++static const struct pwm_ops rcar_pwm_ops = {
++	.request = rcar_pwm_request,
++	.free = rcar_pwm_free,
++	.config = rcar_pwm_config,
++	.enable = rcar_pwm_enable,
++	.disable = rcar_pwm_disable,
++	.owner = THIS_MODULE,
++};
++
++static int rcar_pwm_probe(struct platform_device *pdev)
++{
++	struct rcar_pwm_chip *rcar_pwm;
++	struct resource *res;
++	int ret;
++
++	rcar_pwm = devm_kzalloc(&pdev->dev, sizeof(*rcar_pwm), GFP_KERNEL);
++	if (rcar_pwm == NULL)
++		return -ENOMEM;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	rcar_pwm->base = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(rcar_pwm->base))
++		return PTR_ERR(rcar_pwm->base);
++
++	rcar_pwm->clk = devm_clk_get(&pdev->dev, NULL);
++	if (IS_ERR(rcar_pwm->clk)) {
++		dev_err(&pdev->dev, "cannot get clock\n");
++		return PTR_ERR(rcar_pwm->clk);
 +	}
 +
- 	if (report_id == PIP_TOUCH_REPORT_ID)
- 		cyapa_pip_report_touches(cyapa, &report_data);
-+	else if (report_id == PIP_PROXIMITY_REPORT_ID)
-+		cyapa_pip_report_proximity(cyapa, &report_data);
- 	else
- 		cyapa_pip_report_buttons(cyapa, &report_data);
- 
-@@ -2771,4 +2828,6 @@ const struct cyapa_dev_ops cyapa_gen5_ops = {
- 	.irq_cmd_handler = cyapa_pip_irq_cmd_handler,
- 	.sort_empty_output_data = cyapa_empty_pip_output_data,
- 	.set_power_mode = cyapa_gen5_set_power_mode,
++	platform_set_drvdata(pdev, rcar_pwm);
 +
-+	.set_proximity = cyapa_pip_set_proximity,
- };
-diff --git a/drivers/input/mouse/cyapa_gen6.c b/drivers/input/mouse/cyapa_gen6.c
-index 2c5776e..e97c1b5 100644
---- a/drivers/input/mouse/cyapa_gen6.c
-+++ b/drivers/input/mouse/cyapa_gen6.c
-@@ -310,6 +310,17 @@ static int cyapa_gen6_config_dev_irq(struct cyapa *cyapa, u8 cmd_code)
- 	return 0;
- }
- 
-+static int cyapa_gen6_set_proximity(struct cyapa *cyapa, bool enable)
-+{
-+	int error;
++	rcar_pwm->chip.dev = &pdev->dev;
++	rcar_pwm->chip.ops = &rcar_pwm_ops;
++	rcar_pwm->chip.of_xlate = of_pwm_xlate_with_flags;
++	rcar_pwm->chip.base = -1;
++	rcar_pwm->chip.npwm = 1;
 +
-+	cyapa_gen6_config_dev_irq(cyapa, GEN6_DISABLE_CMD_IRQ);
-+	error = cyapa_pip_set_proximity(cyapa, enable);
-+	cyapa_gen6_config_dev_irq(cyapa, GEN6_ENABLE_CMD_IRQ);
++	ret = pwmchip_add(&rcar_pwm->chip);
++	if (ret < 0) {
++		dev_err(&pdev->dev, "failed to register PWM chip\n");
++		return ret;
++	}
 +
-+	return error;
++	pm_runtime_enable(&pdev->dev);
++
++	return 0;
 +}
 +
- static int cyapa_gen6_change_power_state(struct cyapa *cyapa, u8 power_mode)
- {
- 	u8 cmd[] = { 0x04, 0x00, 0x06, 0x00, 0x2f, 0x00, 0x46, power_mode };
-@@ -684,6 +695,12 @@ static int cyapa_gen6_operational_check(struct cyapa *cyapa)
- 			dev_warn(dev, "%s: failed to set power active mode.\n",
- 				__func__);
- 
-+		/* By default, the trackpad proximity function is enabled. */
-+		error = cyapa_pip_set_proximity(cyapa, true);
-+		if (error)
-+			dev_warn(dev, "%s: failed to enable proximity.\n",
-+				__func__);
++static int rcar_pwm_remove(struct platform_device *pdev)
++{
++	struct rcar_pwm_chip *rcar_pwm = platform_get_drvdata(pdev);
 +
- 		/* Get trackpad product information. */
- 		error = cyapa_gen6_read_sys_info(cyapa);
- 		if (error)
-@@ -724,4 +741,6 @@ const struct cyapa_dev_ops cyapa_gen6_ops = {
- 	.irq_cmd_handler = cyapa_pip_irq_cmd_handler,
- 	.sort_empty_output_data = cyapa_empty_pip_output_data,
- 	.set_power_mode = cyapa_gen6_set_power_mode,
++	pm_runtime_disable(&pdev->dev);
 +
-+	.set_proximity = cyapa_gen6_set_proximity,
- };
++	return pwmchip_remove(&rcar_pwm->chip);
++}
++
++static const struct of_device_id rcar_pwm_of_table[] = {
++	{ .compatible = "renesas,pwm-rcar", },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, rcar_pwm_of_table);
++
++static struct platform_driver rcar_pwm_driver = {
++	.probe		= rcar_pwm_probe,
++	.remove		= rcar_pwm_remove,
++	.driver		= {
++		.name	= "pwm-rcar",
++		.of_match_table = of_match_ptr(rcar_pwm_of_table),
++	}
++};
++module_platform_driver(rcar_pwm_driver);
++
++MODULE_AUTHOR("Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>");
++MODULE_DESCRIPTION("Renesas PWM Timer Driver");
++MODULE_LICENSE("GPL v2");
++MODULE_ALIAS("platform:pwm-rcar");
 -- 
 1.9.1
-
-
----------------------------------------------------------------
-This message and any attachments may contain Cypress (or its
-subsidiaries) confidential information. If it has been received
-in error, please advise the sender and immediately delete this
-message.
----------------------------------------------------------------
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
