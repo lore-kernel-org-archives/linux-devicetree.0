@@ -1,54 +1,98 @@
-From: Bill Pringlemeir <bpringle@sympatico.ca>
-Subject: Re: [PATCH v5 1/6] mtd: nand: vf610_nfc: Freescale NFC for VF610,
- MPC5125 and others
-Date: Mon, 15 Jun 2015 10:29:17 -0400
-Message-ID: <BLU436-SMTP1380BAD5F776944D62A9148B8B80@phx.gbl>
-References: <1433584416-29607-1-git-send-email-stefan@agner.ch>
- <1433584416-29607-2-git-send-email-stefan@agner.ch>
- <20150609213338.GD5720@breakpoint.cc>
+From: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2 1/2] Documentation: dt: Add Xilinx zynqmp dma device tree binding documentation
+Date: Mon, 15 Jun 2015 20:06:21 +0530
+Message-ID: <1434378982-30184-1-git-send-email-punnaia@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20150609213338.GD5720@breakpoint.cc> (Sebastian Andrzej
- Siewior's message of "Tue, 9 Jun 2015 23:33:38 +0200")
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sebastian Andrzej Siewior <sebastian@breakpoint.cc>
-Cc: mark.rutland@arm.com, boris.brezillon@free-electrons.com, shawn.guo@linaro.org, marb@ixxat.de, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, bpringlemeir@gmail.com, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de, galak@codeaurora.org, computersforpeace@gmail.com, dwmw2@infradead.org, aaron@tastycactus.com, Bill Pringlemeir <bpringlemeir@nbsps.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kalluripunnaiahchoudary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kpc528-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On  9 Jun 2015, sebastian@breakpoint.cc wrote:
+Device-tree binding documentation for Xilinx zynqmp dma engine used in
+Zynq UltraScale+ MPSoC.
 
-> On 2015-06-06 11:53:31 [+0200], Stefan Agner wrote:
+Signed-off-by: Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+---
+Changes in v2:
+- None
+---
+ .../devicetree/bindings/dma/xilinx/zynqmp_dma.txt  |   61 ++++++++++++++++++++
+ 1 files changed, 61 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt
 
->> +static const struct of_device_id vf610_nfc_dt_ids[] = {
->> +	{ .compatible = "fsl,vf610-nfc" },
->> +	{ .compatible = "fsl,mpc5125-nfc" },
+diff --git a/Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt b/Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt
+new file mode 100644
+index 0000000..e4f92b9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt
+@@ -0,0 +1,61 @@
++Xilinx ZynqMP DMA engine, it does support memory to memory transfers,
++memory to device and device to memory transfers. It also has flow
++control and rate control support for slave/peripheral dma access.
++
++Required properties:
++- compatible: Should be "xlnx,zynqmp-dma-1.0"
++- #dma-cells: Should be <1>, a single cell holding a line request number
++- reg: Memory map for module access
++- interrupt-parent: Interrupt controller the interrupt is routed through
++- interrupts: Should contain DMA channel interrupt
++- xlnx,bus-width: AXI buswidth in bits. Should contain 128 or 64
++
++Optional properties:
++- xlnx,include-sg: Indicates the controller to operate in simple or scatter
++		   gather dma mode
++- xlnx,ratectrl: Scheduling interval in terms of clock cycles for
++		 source AXI transaction
++- xlnx,overfetch: Tells whether the channel is allowed to over fetch the data
++- xlnx,src-issue: Number of AXI outstanding transactions on source side
++- xlnx,desc-axi-cohrnt: Tells whether the AXI transactions generated for the
++			descriptor read are marked Non-coherent
++- xlnx,src-axi-cohrnt: Tells whether the AXI transactions generated for the
++			source descriptor payload are marked Non-coherent
++- xlnx,dst-axi-cohrnt: Tells whether the AXI transactions generated for the
++			dst descriptor payload are marked Non-coherent
++- xlnx,desc-axi-qos: AXI QOS bits to be used for descriptor fetch
++- xlnx,src-axi-qos: AXI QOS bits to be used for data read
++- xlnx,dst-axi-qos: AXI QOS bits to be used for data write
++- xlnx,desc-axi-cache: AXI cache bits to be used for descriptor fetch.
++- xlnx,desc-axi-cache: AXI cache bits to be used for data read
++- xlnx,desc-axi-cache: AXI cache bits to be used for data write
++- xlnx,src-burst-len: AXI length for data read. Support only power of 2 values
++		      i.e 1,2,4,8 and 16
++- xlnx,dst-burst-len: AXI length for data write. Support only power of 2 values
++		      i.e 1,2,4,8 and 16
++
++Example:
++++++++++
++fpd_dma_chan1: dma@FD500000 {
++	compatible = "xlnx,zynqmp-dma-1.0";
++	reg = <0x0 0xFD500000 0x1000>;
++	#dma_cells = <1>;
++	interrupt-parent = <&gic>;
++	interrupts = <0 117 4>;
++	xlnx,bus-width = <128>;
++	xlnx,include-sg;
++	xlnx,overfetch;
++	xlnx,ratectrl = <0>;
++	xlnx,src-issue = <16>;
++	xlnx,desc-axi-cohrnt;
++	xlnx,src-axi-cohrnt;
++	xlnx,dst-axi-cohrnt;
++	xlnx,desc-axi-qos = <0>;
++	xlnx,desc-axi-cache = <0>;
++	xlnx,src-axi-qos = <0>;
++	xlnx,src-axi-cache = <2>;
++	xlnx,dst-axi-qos = <0>;
++	xlnx,dst-axi-cache = <2>;
++	xlnx,src-burst-len = <4>;
++	xlnx,dst-burst-len = <4>;
++};
+-- 
+1.7.4
 
-> I advise against a "fsl,mpc5125-nfc" binding. First of all it is the
-> same as the previous one. Second of all it was not tested at all on
-> the SoC it suggests to work. Plus the chip select function has a
-> comment hat it won't work on MPC5125. So it really makes no sense to
-> add it here.
-
-Someone has used a version of the driver on the PowerPC.  I don't have
-access to his email address now.  Anyways, the chipselect code is
-different on the PowerPC versions of the controller afair.  So if some
-external code sets up the chipselect for a single chip, then things are
-fine.
-
-Both the PowerPC and ARM support DT/OF, but you can never actually run
-either version as the code must be compiled for either assembler.  So I
-am not quite sure that this was the correct way to go anyways...  So I
-agree with your conclusion we can remove that binding.
-
-Regards,
-Bill.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
