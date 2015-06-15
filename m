@@ -1,179 +1,50 @@
-From: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH linux-next 2/2] mfd: flexcom: add a driver for Atmel Flexible Serial Communication Unit
-Date: Mon, 15 Jun 2015 18:38:05 +0200
-Message-ID: <e85ceae28a0b382b12b809ac7cca891fcb7ac846.1434386119.git.cyrille.pitchen@atmel.com>
-References: <cover.1434386119.git.cyrille.pitchen@atmel.com>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] ARM: tegra124: pmu support
+Date: Mon, 15 Jun 2015 17:45:33 +0100
+Message-ID: <557F012D.5040509@nvidia.com>
+References: <1434169283-19512-1-git-send-email-khuey@kylehuey.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1434386119.git.cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1434169283-19512-1-git-send-email-khuey-OhBmq/TcCDJWk0Htik3J/w@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kyle Huey <me-OhBmq/TcCDJWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Kyle Huey <khuey-OhBmq/TcCDJWk0Htik3J/w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This driver supports the new Atmel Flexcom. The Flexcom is a wrapper which
-integrates one SPI controller, one I2C controller and one USART. Only one
-function can be enabled at a time. This driver selects the function once
-for all, when the Flexcom is probed, according to the value of the new
-"atmel,flexcom-mode" device tree property.
+Adding linux-tegra ML ...
 
-This driver has chosen to present the Flexcom to the system as a MFD so
-the implementation is seamless for the existing Atmel SPI, I2C and USART
-drivers.
+On 13/06/15 05:21, Kyle Huey wrote:
+> This patch modifies the device tree for tegra124 based devices to enable the Cortex A15 PMU.  The interrupt numbers are taken from NVIDIA TRM DP-06905-001_v03p.  This patch was tested on a Jetson TK1.
+> 
+> Signed-off-by: Kyle Huey <khuey-OhBmq/TcCDJWk0Htik3J/w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/tegra124.dtsi | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/tegra124.dtsi b/arch/arm/boot/dts/tegra124.dtsi
+> index 4be06c6..9032ccb 100644
+> --- a/arch/arm/boot/dts/tegra124.dtsi
+> +++ b/arch/arm/boot/dts/tegra124.dtsi
+> @@ -190,6 +190,14 @@
+>  		status = "disabled";
+>  	};
+>  
+> +	pmu {
+> +		compatible = "arm,cortex-a15-pmu";
+> +		interrupts = <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
+> +	};
+> +
+>  	timer@0,60005000 {
+>  		compatible = "nvidia,tegra124-timer", "nvidia,tegra20-timer";
+>  		reg = <0x0 0x60005000 0x0 0x400>;
+> 
 
-Also the Flexcom embeds FIFOs: the latest patches of the SPI, I2C and
-USART drivers take advantage of this new feature.
+Acked-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-Signed-off-by: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
----
- drivers/mfd/Kconfig         | 11 +++++
- drivers/mfd/Makefile        |  1 +
- drivers/mfd/atmel-flexcom.c | 97 +++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 109 insertions(+)
- create mode 100644 drivers/mfd/atmel-flexcom.c
-
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index aefbbbf..4aebf08 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -60,6 +60,17 @@ config MFD_AAT2870_CORE
- 	  additional drivers must be enabled in order to use the
- 	  functionality of the device.
- 
-+config MFD_ATMEL_FLEXCOM
-+	tristate "Atmel Flexcom (Flexible Serial Communication Unit)"
-+	select MFD_CORE
-+	depends on OF
-+	help
-+	  Select this to get support for Atmel Flexcom. This is a wrapper
-+	  which embeds a SPI controller, a I2C controller and a USART. Only
-+	  one function can be used at a time. The choice is done at boot time
-+	  by the probe function of this MFD driver according to a device tree
-+	  property.
-+
- config MFD_ATMEL_HLCDC
- 	tristate "Atmel HLCDC (High-end LCD Controller)"
- 	select MFD_CORE
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index ea40e07..0705eb2 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -160,6 +160,7 @@ obj-$(CONFIG_MFD_SPMI_PMIC)	+= qcom-spmi-pmic.o
- obj-$(CONFIG_TPS65911_COMPARATOR)	+= tps65911-comparator.o
- obj-$(CONFIG_MFD_TPS65090)	+= tps65090.o
- obj-$(CONFIG_MFD_AAT2870_CORE)	+= aat2870-core.o
-+obj-$(CONFIG_MFD_ATMEL_FLEXCOM)	+= atmel-flexcom.o
- obj-$(CONFIG_MFD_ATMEL_HLCDC)	+= atmel-hlcdc.o
- obj-$(CONFIG_MFD_INTEL_MSIC)	+= intel_msic.o
- obj-$(CONFIG_MFD_PALMAS)	+= palmas.o
-diff --git a/drivers/mfd/atmel-flexcom.c b/drivers/mfd/atmel-flexcom.c
-new file mode 100644
-index 0000000..14c35e6
---- /dev/null
-+++ b/drivers/mfd/atmel-flexcom.c
-@@ -0,0 +1,97 @@
-+/*
-+ * Driver for Atmel Flexcom
-+ *
-+ * Copyright (C) 2015 Atmel Corporation
-+ *
-+ * Author: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/types.h>
-+#include <linux/kernel.h>
-+#include <linux/platform_device.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/clk.h>
-+
-+#define FX_MR		0x0
-+#define FX_RHR		0x10
-+#define FX_THR		0x20
-+#define FX_VERSION	0xfc
-+
-+#define FX_MR_NO_COM	0
-+#define FX_MR_USART	1
-+#define FX_MR_SPI	2
-+#define FX_MR_TWI	3
-+
-+
-+static int atmel_flexcom_probe(struct platform_device *pdev)
-+{
-+	struct clk *clk;
-+	struct resource *res;
-+	unsigned char __iomem *map;
-+	unsigned int version, mr;
-+	const char *mode;
-+	int err;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	map = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(map))
-+		return PTR_ERR(map);
-+
-+	clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(clk))
-+		return PTR_ERR(clk);
-+
-+	err = of_property_read_string(pdev->dev.of_node,
-+				      "atmel,flexcom-mode", &mode);
-+	if (err)
-+		return err;
-+
-+	if (!strcmp(mode, "usart"))
-+		mr = FX_MR_USART;
-+	else if (!strcmp(mode, "spi"))
-+		mr = FX_MR_SPI;
-+	else if (!strcmp(mode, "twi") || !strcmp(mode, "i2c"))
-+		mr = FX_MR_TWI;
-+	else
-+		return -EINVAL;
-+
-+	clk_prepare_enable(clk);
-+	version = __raw_readl(map + FX_VERSION);
-+	__raw_writel(mr, map + FX_MR);
-+	clk_disable_unprepare(clk);
-+
-+	dev_info(&pdev->dev, "version: %#x\n", version);
-+
-+	return of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
-+}
-+
-+static const struct of_device_id atmel_flexcom_of_match[] = {
-+	{ .compatible = "atmel,sama5d2-flexcom" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, atmel_flexcom_of_match);
-+
-+static struct platform_driver atmel_flexcom_driver = {
-+	.driver		= {
-+		.name	= "atmel_flexcom",
-+		.of_match_table = atmel_flexcom_of_match,
-+	},
-+	.probe		= atmel_flexcom_probe,
-+};
-+
-+module_platform_driver(atmel_flexcom_driver);
-+
-+MODULE_AUTHOR("Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>");
-+MODULE_DESCRIPTION("Atmel Flexcom MFD driver");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:atmel_flexcom");
--- 
-1.8.2.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Cheers
+Jon
