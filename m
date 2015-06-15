@@ -1,277 +1,111 @@
-From: Matt Ranostay <mranostay@gmail.com>
-Subject: Re: [PATCH v3 2/2] cap11xx: add LED support
-Date: Mon, 15 Jun 2015 01:56:08 -0700
-Message-ID: <CAKzfze8E-22XxzGuMUJWhcpmdoA=63XWR-v+bpf+Cdn70VoJqA@mail.gmail.com>
-References: <1434169054-11035-1-git-send-email-mranostay@gmail.com>
-	<1434169054-11035-3-git-send-email-mranostay@gmail.com>
-	<557E8997.7070100@samsung.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 00/21] On-demand device registration
+Date: Mon, 15 Jun 2015 10:58:05 +0200
+Message-ID: <CACRpkdaVZmq_w_qgEgTP5oqfH3K1+80O7z7o7CJx-dhivUGhDQ@mail.gmail.com>
+References: <1432565608-26036-1-git-send-email-tomeu.vizoso@collabora.com>
+	<CACRpkdasLwMfEHGMRd1X3K_DU7NMPreE8TMwqqDTg8k9wj=wJQ@mail.gmail.com>
+	<CAAObsKCP-C+TY8Wkk6bQzxZeGYL9X01trtjxfaYp--ZnH07C+w@mail.gmail.com>
+	<CACRpkdZuSj+S2x1yz6n5PgcRK=3ZCcq_To124b2Y+Oj54aydpg@mail.gmail.com>
+	<5577F533.1060007@ahsoftware.de>
+	<CACRpkdYF5K7ckGbgvZc6qRzGFJTQ4WqXdu_7Tcqczn2LkFbn3A@mail.gmail.com>
+	<5579602F.1070801@ahsoftware.de>
+	<CACRpkdaZgBR5rHwrEYqcm5K4w3y8MXG8a0k=Y+oQY+jukHfuyw@mail.gmail.com>
+	<5579B9E8.9040609@ahsoftware.de>
+	<CACRpkdbDSS0yw=q_cR17Bvg+kgTfU3Vcd2gSjx1p4V-CzOZ_SA@mail.gmail.com>
+	<557AC040.40803@ahsoftware.de>
+	<557AC437.9000607@ahsoftware.de>
+	<557C7609.30400@ahsoftware.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <557E8997.7070100@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: Daniel Mack <zonque@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, linux-leds@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <557C7609.30400-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
+Cc: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DRM PANEL DRIVERS <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>"linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linu>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 15, 2015 at 1:15 AM, Jacek Anaszewski
-<j.anaszewski@samsung.com> wrote:
-> Hi Matt,
->
->
-> On 06/13/2015 06:17 AM, Matt Ranostay wrote:
->>
->> Several cap11xx variants have LEDs that be can be controlled, this
->> patchset implements this functionality.
->>
->> Signed-off-by: Matt Ranostay <mranostay@gmail.com>
->> ---
->>   drivers/input/keyboard/cap11xx.c | 121
->> ++++++++++++++++++++++++++++++++++++++-
->>   1 file changed, 118 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/input/keyboard/cap11xx.c
->> b/drivers/input/keyboard/cap11xx.c
->> index f07461a..994154c 100644
->> --- a/drivers/input/keyboard/cap11xx.c
->> +++ b/drivers/input/keyboard/cap11xx.c
->> @@ -12,6 +12,7 @@
->>   #include <linux/module.h>
->>   #include <linux/interrupt.h>
->>   #include <linux/input.h>
->> +#include <linux/leds.h>
->>   #include <linux/of_irq.h>
->>   #include <linux/regmap.h>
->>   #include <linux/i2c.h>
->> @@ -47,6 +48,20 @@
->>   #define CAP11XX_REG_CONFIG2           0x44
->>   #define CAP11XX_REG_CONFIG2_ALT_POL   BIT(6)
->>   #define CAP11XX_REG_SENSOR_BASE_CNT(X)        (0x50 + (X))
->> +#define CAP11XX_REG_LED_POLARITY       0x73
->> +#define CAP11XX_REG_LED_OUTPUT_CONTROL 0x74
->> +
->> +#define CAP11XX_REG_LED_DUTY_CYCLE_1   0x90
->> +#define CAP11XX_REG_LED_DUTY_CYCLE_2   0x91
->> +#define CAP11XX_REG_LED_DUTY_CYCLE_3   0x92
->> +#define CAP11XX_REG_LED_DUTY_CYCLE_4   0x93
->> +
->> +#define CAP11XX_REG_LED_DUTY_MIN_MASK  (0x0f)
->> +#define CAP11XX_REG_LED_DUTY_MIN_MASK_SHIFT    (0)
->> +#define CAP11XX_REG_LED_DUTY_MAX_MASK  (0xf0)
->> +#define CAP11XX_REG_LED_DUTY_MAX_MASK_SHIFT    (4)
->> +#define CAP11XX_REG_LED_DUTY_MAX_VALUE (15)
->> +
->>   #define CAP11XX_REG_SENSOR_CALIB      (0xb1 + (X))
->>   #define CAP11XX_REG_SENSOR_CALIB_LSB1 0xb9
->>   #define CAP11XX_REG_SENSOR_CALIB_LSB2 0xba
->> @@ -56,10 +71,24 @@
->>
->>   #define CAP11XX_MANUFACTURER_ID       0x5d
->>
->> +#ifdef CONFIG_LEDS_CLASS
->> +struct cap11xx_led {
->> +       struct cap11xx_priv *priv;
->> +       struct led_classdev cdev;
->> +       struct work_struct work;
->> +       u32 reg;
->> +       enum led_brightness new_brightness;
->> +};
->> +#endif
->> +
->>   struct cap11xx_priv {
->>         struct regmap *regmap;
->>         struct input_dev *idev;
->>
->> +#ifdef CONFIG_LEDS_CLASS
->> +       struct cap11xx_led *leds;
->> +       int num_leds;
->> +#endif
->>         /* config */
->>         u32 keycodes[];
->>   };
->> @@ -67,6 +96,7 @@ struct cap11xx_priv {
->>   struct cap11xx_hw_model {
->>         u8 product_id;
->>         unsigned int num_channels;
->> +       unsigned int num_leds;
->>   };
->>
->>   enum {
->> @@ -76,9 +106,9 @@ enum {
->>   };
->>
->>   static const struct cap11xx_hw_model cap11xx_devices[] = {
->> -       [CAP1106] = { .product_id = 0x55, .num_channels = 6 },
->> -       [CAP1126] = { .product_id = 0x53, .num_channels = 6 },
->> -       [CAP1188] = { .product_id = 0x50, .num_channels = 8 },
->> +       [CAP1106] = { .product_id = 0x55, .num_channels = 6, .num_leds = 0
->> },
->> +       [CAP1126] = { .product_id = 0x53, .num_channels = 6, .num_leds = 2
->> },
->> +       [CAP1188] = { .product_id = 0x50, .num_channels = 8, .num_leds = 8
->> },
->>   };
->>
->>   static const struct reg_default cap11xx_reg_defaults[] = {
->> @@ -111,6 +141,7 @@ static const struct reg_default cap11xx_reg_defaults[]
->> = {
->>         { CAP11XX_REG_STANDBY_SENSITIVITY,      0x02 },
->>         { CAP11XX_REG_STANDBY_THRESH,           0x40 },
->>         { CAP11XX_REG_CONFIG2,                  0x40 },
->> +       { CAP11XX_REG_LED_POLARITY,             0x00 },
->>         { CAP11XX_REG_SENSOR_CALIB_LSB1,        0x00 },
->>         { CAP11XX_REG_SENSOR_CALIB_LSB2,        0x00 },
->>   };
->> @@ -196,6 +227,84 @@ static void cap11xx_input_close(struct input_dev
->> *idev)
->>         cap11xx_set_sleep(priv, true);
->>   }
->>
->> +#ifdef CONFIG_LEDS_CLASS
->> +static void cap11xx_led_work(struct work_struct *work)
->> +{
->> +       struct cap11xx_led *led = container_of(work, struct cap11xx_led,
->> work);
->> +       struct cap11xx_priv *priv = led->priv;
->> +       int value = led->new_brightness;
->> +
->> +       regmap_update_bits(priv->regmap, CAP11XX_REG_LED_OUTPUT_CONTROL,
->> +                               BIT(led->reg), !!value ? BIT(led->reg) :
->> 0);
->
->
-> You should set here the brightness value, not only turn the led on/off.
->
+On Sat, Jun 13, 2015 at 8:27 PM, Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org> wrote:
 
-The issue is that the setting is across _ALL_ leds for brightness. But
-on/off state can clearly vary
+> And because you've said that "problem space is a bit convoluted" and I
+> disagree, here's a summary from my point of view:
+>
+> 1. All the necessary information (dependencies between drivers) already
+> exists at compile time. The set of dependencies between drivers might become
+> smaller by configuration, but will not become larger. So there should be NO
+> need to collect them at runtime, e.g. by instrumenting function calls.
 
->
->> +}
->> +
->> +static void cap11xx_led_set(struct led_classdev *cdev,
->> +                          enum led_brightness value)
->> +{
->> +       struct cap11xx_led *led = container_of(cdev, struct cap11xx_led,
->> cdev);
->> +
->> +       led->new_brightness = value;
->> +       schedule_work(&led->work);
->> +}
->> +
->> +static int cap11xx_init_leds(struct device *dev, struct cap11xx_priv
->> *priv)
->> +{
->> +       struct device_node *node = dev->of_node, *child;
->> +       struct cap11xx_led *led;
->> +       int cnt = of_get_child_count(node);
->> +       u32 reg = 0;
->> +       int error;
->> +
->> +       if (!priv->num_leds || !cnt)
->> +               return 0;
->> +       if (cnt > priv->num_leds)
->> +               return -EINVAL;
->> +
->> +       led = devm_kcalloc(dev, cnt,
->> +               sizeof(struct cap11xx_led), GFP_KERNEL);
->> +       if (!led)
->> +               return -ENOMEM;
->> +
->> +       priv->leds = led;
->> +       error = of_property_read_u32(node, "linux,led-brightness", &reg);
->> +       if (error || reg > CAP11XX_REG_LED_DUTY_MAX_VALUE)
->> +               reg = CAP11XX_REG_LED_DUTY_MAX_VALUE;
->
->
-> This property seems to be redundant, as brightness is controlled with
-> 'brightness' sysfs property.
+I think you arrived at the core of the crux here.
 
-See above comment.
->
->> +       error = regmap_update_bits(priv->regmap,
->> CAP11XX_REG_LED_DUTY_CYCLE_4,
->> +                               CAP11XX_REG_LED_DUTY_MAX_MASK,
->> +                               reg <<
->> CAP11XX_REG_LED_DUTY_MAX_MASK_SHIFT);
->
->
-> This probably should be called from brightness_set op.
+When we look up a resource provided from another driver, e.g. from
+regulator_get(), clk_get(), pinctrl_get(), gpiod_get() etc - the dependency
+is resolved by looking in a cross-reference table for either a struct device*
+pointer or a string, an index, or both or all three. Examples:
 
-Above :)
->
->> +       if (error)
->> +               return error;
->> +
->> +       for_each_child_of_node(node, child) {
->> +               led->cdev.name =
->> +                       of_get_property(child, "label", NULL) ? :
->> child->name;
->> +               led->cdev.default_trigger =
->> +                       of_get_property(child, "linux,default-trigger",
->> NULL);
->> +               led->cdev.flags = 0;
->
->
-> You don't need to clear flags, as the memory is zeroed by kcalloc.
->
->> +               led->cdev.brightness_set = cap11xx_led_set;
->> +               led->cdev.max_brightness = 1;
->
->
-> You introduced linux,led-brightness DT property and defined its range
-> to 0-15 (it should be 1-15 btw), but here you allow for brightness to
-> be max 1.
->
->> +               led->cdev.brightness = LED_OFF;
->
->> +
->>
->> +               error = of_property_read_u32(child, "reg", &reg);
->> +               if (error != 0 || reg >= priv->num_leds)
->> +                       continue;
->> +               led->reg = reg;
->> +               led->priv = priv;
->> +
->> +               error = devm_led_classdev_register(dev, &led->cdev);
->> +               if (error < 0)
->> +                       return -EINVAL;
->> +               INIT_WORK(&led->work, cap11xx_led_work);
->> +               schedule_work(&led->work);
->
->
-> Work queue should be initialized before registration of the LED class
-> device.
-What is the reason for this? Just curious
+struct regulator *regulator_get(struct device *dev, const char *id);
+struct clk *clk_get(struct device *dev, const char *id);
+struct gpio_desc *__must_check __gpiod_get(struct device *dev,
+                                         const char *con_id,
+                                         enum gpiod_flags flags);
+(...)
 
->
->> +               led++;
->> +       };
->> +
->> +       return 0;
->> +}
->> +#endif
->> +
->>   static int cap11xx_i2c_probe(struct i2c_client *i2c_client,
->>                              const struct i2c_device_id *id)
->>   {
->> @@ -316,6 +425,12 @@ static int cap11xx_i2c_probe(struct i2c_client
->> *i2c_client,
->>         priv->idev->open = cap11xx_input_open;
->>         priv->idev->close = cap11xx_input_close;
->>
->> +#ifdef CONFIG_LEDS_CLASS
->> +       priv->num_leds = cap->num_leds;
->> +       error = cap11xx_init_leds(dev, priv);
->> +       if (error)
->> +               return error;
->> +#endif
->>         input_set_drvdata(priv->idev, priv);
->>
->>         /*
->>
->
->
-> --
-> Best Regards,
-> Jacek Anaszewski
+(*_index() variants exist on some of the resource retrieveal
+functions.)
+
+struct device * is the device requesting the resource, con_id
+is the string name of the resource on the provider side. This is all
+solved by looking in cross reference tables. ONE way of resolving
+that cross reference is to look into the device tree or the ACPI table.
+But for the board file case, this is resolved at runtime by the cross
+reference table, registered with calls such as gpiod_add_lookup_table().
+
+It is true that in the theoretical sense, all of this exist at compile time
+especially if you can parse something like a device tree and
+figure out what struct device * nodes will correspond to the struct
+device_node:s in it. For ACPI I guess a similar procedure is viable.
+
+Problem: this requires the kernel compile to know exactly *which* device tree
+or ACPI table it is going to boot on. The expressed goal of device tree
+and ACPI is to have *ONE* kernel booting several device trees.
+Here your approach stops short: you are suggesting instrumenting
+the kernel at compile time to one single device tree or ACPI table.
+But we never know really what device tree or ACPI table will be used.
+This just cannot be done at compile time for that reason alone.
+
+Example: in boot case (A) the regulator may be provided by regulator
+"foo" driver on an i2c bus. But in boot case (B) the very same regulator
+may be provided by regulator "bar" on an SPI bus. These are very
+real usecases, for example for drivers/net/ethernet/smsc/smsc911x.c,
+will get regulators from the most diverse places depending on what
+device tree is used.
+
+For board files, it is neither possible in theory: you need to compile the
+code to figure out the struct device * provider, and/or the string name
+of the providing device (.name field in struct device for the provider)
+to resolve dependencies at compile time.
+
+For the board file case, resolving dependencies at compile time will
+require a quite complex two-stage rocket: compile the code to
+get resources out, then recompile with known resources.
+
+I guess your suggested approach then need to introduce a special
+build tool to order the initcalls accordingly.
+
+Again this will fall short if you don't know at compile time exactly
+*which* board file will be executed.
+
+So the only practical way to solve this at compile time is to predict
+an initcall ordering sequence for all possible boot paths, compile in
+all of them, and choose the right one at boot. But the number of boot
+paths is equal to the number of device trees / ACPI tables or
+board files supported, and that space is uncontrolled and ordered
+infinite.
+
+Basically I think the root problem with your approach is that you
+assume we know what hardware we will boot on at compile time. We
+discarded that development path years ago. We have no clue, this
+is resolved at runtime. Alas, people still create super-optimized
+systems using exactly this knowledge, but it is not our main target
+here, it is a special optimization case.
+
+Yours,
+Linus Walleij
