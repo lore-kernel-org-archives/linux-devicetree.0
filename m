@@ -1,170 +1,130 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v2 00/14] ARM: shmobile: Add CPG Clock Domains
-Date: Mon, 15 Jun 2015 18:15:04 +0200
-Message-ID: <CAMuHMdXntR6c4-uUNGVGx7D7941e8hvnmtVBvDu2+iUsNHQ=Qw@mail.gmail.com>
-References: <1432839219-475-1-git-send-email-geert+renesas@glider.be>
+From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/2] clk: keystone: add support for post divider register
+ for main pll
+Date: Mon, 15 Jun 2015 12:26:53 -0400
+Message-ID: <557EFCCD.5000501@ti.com>
+References: <1432915453-409-1-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1432839219-475-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+In-Reply-To: <1432915453-409-1-git-send-email-m-karicheri2-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Laurent Pinchart <Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux PM list <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 28, 2015 at 8:53 PM, Geert Uytterhoeven
-<geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org> wrote:
->         Hi all,
+On 05/29/2015 12:04 PM, Murali Karicheri wrote:
+> Main PLL controller has post divider bits in a separate register in
+> pll controller. Use the value from this register instead of fixed
+> divider when available.
 >
-> This patch series adds Clock Domain support to the Clock Pulse Generator
-> (CPG) Module Stop (MSTP) Clocks driver using the generic PM Domain, to
-> be used on shmobile SoCs without device power domains (R-Car Gen1 and
-> Gen2, RZ).  This allows to power-manage the module clocks of SoC devices
-> that are part of the CPG Clock Domain using Runtime PM, or for system
-> suspend/resume, similar to SoCs with device power domains (SH-Mobile and
-> R-Mobile).
+> Signed-off-by: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+> ---
+>   .../devicetree/bindings/clock/keystone-pll.txt       |  8 ++++----
+>   drivers/clk/keystone/pll.c                           | 20 ++++++++++++++++++--
+>   2 files changed, 22 insertions(+), 6 deletions(-)
 >
-> SoC devices that are part of the CPG Clock Domain and can be
-> power-managed through an MSTP clock are tagged in DT with a proper
-> "power-domains" property. This applies to most on-SoC devices, which
-> have a one-to-one mapping from SoC device to DT device node.
-> Notable exceptions are "display" and "sound" device nodes, which
-> represent multiple SoC devices, each having their own MSTP clocks. Hence
-> drivers for such devices still have to manage their (multiple module)
-> clocks themselves.
+> diff --git a/Documentation/devicetree/bindings/clock/keystone-pll.txt b/Documentation/devicetree/bindings/clock/keystone-pll.txt
+> index 225990f..47570d2 100644
+> --- a/Documentation/devicetree/bindings/clock/keystone-pll.txt
+> +++ b/Documentation/devicetree/bindings/clock/keystone-pll.txt
+> @@ -15,8 +15,8 @@ Required properties:
+>   - compatible : shall be "ti,keystone,main-pll-clock" or "ti,keystone,pll-clock"
+>   - clocks : parent clock phandle
+>   - reg - pll control0 and pll multipler registers
+> -- reg-names : control and multiplier. The multiplier is applicable only for
+> -		main pll clock
+> +- reg-names : control, multiplier and post-divider. The multiplier and
+> +		post-divider registers are applicable only for main pll clock
+>   - fixed-postdiv : fixed post divider value. If absent, use clkod register bits
+>   		for postdiv
 >
-> The (MSTP) clock to use for power-management is found by scanning for
-> clocks that are compatible with "renesas,cpg-mstp-clocks".
-> Before, the "first" clock tied to each device (con_id NULL) was used,
-> being a bit ad-hoc. It was suggested to use the "fck" clock instead,
-> but this may conflict with DT bindings for devices we don't control
-> (e.g. GIC-400 plans to mandate "clk" for the clk-name of its single
-> clock). Looking for real MSTP clocks avoids this problem.
+> @@ -25,8 +25,8 @@ Example:
+>   		#clock-cells = <0>;
+>   		compatible = "ti,keystone,main-pll-clock";
+>   		clocks = <&refclksys>;
+> -		reg = <0x02620350 4>, <0x02310110 4>;
+> -		reg-names = "control", "multiplier";
+> +		reg = <0x02620350 4>, <0x02310110 4>, <0x02310108 4>;
+> +		reg-names = "control", "multiplier", "post-divider";
+>   		fixed-postdiv = <2>;
+>   	};
 >
-> Logically, the CPG Clock Domain operates on the SoC CPG/MSTP block.
-> As there's no single device node in DT representing this block (there
-> are separate device nodes for the CPG and for the individual MSTP
-> clocks), I bound the logic to the CPG device node.
-> Perhaps this is something we should change for future SoCs?
+> diff --git a/drivers/clk/keystone/pll.c b/drivers/clk/keystone/pll.c
+> index 0dd8a4b..4a375ea 100644
+> --- a/drivers/clk/keystone/pll.c
+> +++ b/drivers/clk/keystone/pll.c
+> @@ -37,7 +37,8 @@
+>    *	Main PLL or any other PLLs in the device such as ARM PLL, DDR PLL
+>    *	or PA PLL available on keystone2. These PLLs are controlled by
+>    *	this register. Main PLL is controlled by a PLL controller.
+> - * @pllm: PLL register map address
+> + * @pllm: PLL register map address for multiplier bits
+> + * @pllod: PLL register map address for post divider bits
+>    * @pll_ctl0: PLL controller map address
+>    * @pllm_lower_mask: multiplier lower mask
+>    * @pllm_upper_mask: multiplier upper mask
+> @@ -53,6 +54,7 @@ struct clk_pll_data {
+>   	u32 phy_pllm;
+>   	u32 phy_pll_ctl0;
+>   	void __iomem *pllm;
+> +	void __iomem *pllod;
+>   	void __iomem *pll_ctl0;
+>   	u32 pllm_lower_mask;
+>   	u32 pllm_upper_mask;
+> @@ -102,7 +104,11 @@ static unsigned long clk_pllclk_recalc(struct clk_hw *hw,
+>   		/* read post divider from od bits*/
+>   		postdiv = ((val & pll_data->clkod_mask) >>
+>   				 pll_data->clkod_shift) + 1;
+> -	else
+> +	else if (pll_data->pllod) {
+> +		postdiv = readl(pll_data->pllod);
+> +		postdiv = ((postdiv & pll_data->clkod_mask) >>
+> +				pll_data->clkod_shift) + 1;
+> +	} else
+>   		postdiv = pll_data->postdiv;
+>
+>   	rate /= (prediv + 1);
+> @@ -172,12 +178,21 @@ static void __init _of_pll_clk_init(struct device_node *node, bool pllctrl)
+>   		/* assume the PLL has output divider register bits */
+>   		pll_data->clkod_mask = CLKOD_MASK;
+>   		pll_data->clkod_shift = CLKOD_SHIFT;
+> +
+> +		/*
+> +		 * Check if there is an post-divider register. If not
+> +		 * assume od bits are part of control register.
+> +		 */
+> +		i = of_property_match_string(node, "reg-names",
+> +					     "post-divider");
+> +		pll_data->pllod = of_iomap(node, i);
+>   	}
+>
+>   	i = of_property_match_string(node, "reg-names", "control");
+>   	pll_data->pll_ctl0 = of_iomap(node, i);
+>   	if (!pll_data->pll_ctl0) {
+>   		pr_err("%s: ioremap failed\n", __func__);
+> +		iounmap(pll_data->pllod);
+>   		goto out;
+>   	}
+>
+> @@ -193,6 +208,7 @@ static void __init _of_pll_clk_init(struct device_node *node, bool pllctrl)
+>   		pll_data->pllm = of_iomap(node, i);
+>   		if (!pll_data->pllm) {
+>   			iounmap(pll_data->pll_ctl0);
+> +			iounmap(pll_data->pllod);
+>   			goto out;
+>   		}
+>   	}
+>
+DT and CLK maintainers,
 
-Inside Renesas, we've been discussing this face-to-face, but haven't
-reached a conclusion yet.
+A gentle reminder to review and provide your comments or acks.
 
-In Linux terminology, "PM domain" is a higher-level abstraction than
-just (hardware) "power domain" (sometimes called "power area").
-A "PM domain" is any collection of devices that are power-managed
-similarly. As such it covers not only hardware power domains, but also
-clock domains, and even firmware controlled devices (e.g. as used by the
-Linux ACPI subsystem).
+Thanks and regards,
 
-I find it a bit unfortunate this was not reflected in the DT bindings
-for Generic PM domains, which use "power-domains" properties, making
-believe people this is about hardware power domains only.
-
-One other point of confusion is that there are multiple kernel
-subsystems that can (or seem to be able to) be used for the same
-purpose. Both regulators and power domains are used to "control power".
-The same is true for clocks vs. clock domains.
-My point of view is that the regulator and clock subsystems are more
-about the properties of regulators (voltage, current) resp. clocks
-(frequencies), while power/clock domains are about being active or
-inactive.
-
-On Renesas SoCs (SH/R-Mobile, R-Car, RZ), the MSTP (Module Standby and
-Software Reset) block is very intimately tied to the CPG (Clock Pulse
-Generator) block.
-
-The MSTP block provides two functions:
-  1. Module Standby: "Clock supply to specified modules is stopped by
-     setting the module stop control register bits."
-     However, the clock supply to a module is not stopped until all CPUs
-     in the SoC agree.  Indeed, there are separate MSTP registers for
-     application (Cortex-A) and real-time (SH and/or Cortex-R) cores.
-  2. Reset control. to perform a software reset of a specific module.
-
-Given the second function, perhaps the MSTP bits shouldn't have been
-moduled as clocks, but it made sense at the time of introduction, and
-IMHO it still does.
-
-However, due to the module standby function, all connected devices are
-grouped into a collection of devices that are power-managed similarly,
-by controlling the clock supply to the individual modules. So this
-warrants the use of a PM domain.
-
-Alternative solutions that have been proposed are:
-
-  1. | Explicit opt-in in drivers (from Laurent)
-     | As the driver knows best which clock it wants to manage, the
-     | driver could tell runtime PM if/when which clock to use.
-
-     My rebuttal here is twofold:
-       - Does the driver know best? It may know it may need to enable a
-         clock. But the clock may be optional: on some SoCs, the same IP
-         core may be present without the Module Standby feature (e.g.
-         the GPIO blocks on R-Car Gen1 are not documented to have MSTP
-         bits, while they do on R-Car Gen2). Why would the driver have
-         to care?
-
-         The hardware documentation clearly states the purpose of the
-         MSTP clocks: when a module is not in use, its module clock can
-         be stopped to reduce power consumption.  All of this should be
-         described in DT. We already have the clocks in DT. If a module
-         has an MSTP clock, it means the module can be put in standby
-         mode. This is the same for all modules, hence for all drivers.
-
-       - The idea is to reduce the amount of boilerplate code, not to
-         increase it. The more code we can move into platform code, the
-         less drivers have to care.
-
-         This is the real power behind the abstraction of runtime PM.
-         The driver only has to tell runtime PM when it wants to "use"
-         the hardware module, using pm_runtime_{get_sync,put}().
-         It doesn't have to know this involves enabling clocks and/or
-         power domains, or parent devices. All of this is taken care of
-         by a small piece of platform code, and the generic code.
-         As not all drivers are runtime PM-aware yet, calls to
-         pm_runtime_*() functions may have to be added, though. But
-         that's it.
-
-     Side note: Laurent has been mostly involved with multimedia devices.
-     And let display and sound be the two exceptions where there's no
-     one-to-one mapping from SoC devices to DT device nodes...
-     Hence the multimedia drivers would have to manage the (multiple)
-     module clocks anyway.
-
-     Perhaps the display and sound bindings can be reworked, to better
-     describe the hardware structure, and expose a one-to-one mapping
-     between MSTP clocks and hardware modules, too?
-
-  2. | Handling MSTP clocks automatically in a similar way that the current
-     | code handles the first clock, without requiring usage of a
-     | power-domain property in DT (from Magnus)
-     | As there are already "clocks = <...>" links from device nodes to MSTP
-     | clocks in DT, we can just scan for those, without requiring
-     | (superfluous) "power-domains = <...>" properties in DT.
-
-     Indeed, given the presence of a link to an MSTP clock in a device
-     node, we know the module can be put in standby mode.
-     But without the standard "power-domains" property, we would need
-     our own specialized code to scan all nodes for MSTP clocks (through
-     a platform_bus notifier again?), and add the corresponding devices
-     to the clock domain.  Hence the "power-domains" properties allow to
-     use the generic code, and thus share more code with other SoCs.
-     In addition, a "power-domains" property gives a strong clue to
-     people not familiar with Renesas SoCs and their MSTP clocks.
-
-Thanks for your comments/suggestions/supports/flames/...!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-- 
+Murali Karicheri
+Linux Kernel, Keystone
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
