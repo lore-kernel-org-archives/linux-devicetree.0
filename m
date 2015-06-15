@@ -1,47 +1,43 @@
-From: Chaotian Jing <chaotian.jing@mediatek.com>
-Subject: [PATCH v6 6/7] arm64: mediatek: Add Mediatek MMC support in defconfig
-Date: Mon, 15 Jun 2015 19:20:52 +0800
-Message-ID: <1434367253-26577-7-git-send-email-chaotian.jing@mediatek.com>
-References: <1434367253-26577-1-git-send-email-chaotian.jing@mediatek.com>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [RESEND PATCH v4 05/14] crypto: marvell/CESA: add TDMA support
+Date: Mon, 15 Jun 2015 13:25:03 +0200
+Message-ID: <20150615132503.69ec2cbb@bbrezillon>
+References: <1434093366-14681-1-git-send-email-boris.brezillon@free-electrons.com>
+	<1434093366-14681-6-git-send-email-boris.brezillon@free-electrons.com>
+	<20150615100920.GB32199@gondor.apana.org.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1434367253-26577-1-git-send-email-chaotian.jing@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, James Liao <jamesjj.liao@mediatek.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, Hongzhou Yang <hongzhou.yang@mediatek.com>, Catalin Marinas <catalin.marinas@arm.com>, bin.zhang@mediatek.com, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Will Deacon <will.deacon@arm.com>, linux-gpio@vger.kernel.org, linux-mediatek@lists.infradead.org, Chaotian Jing <chaotian.jing@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, "Joe.C" <yingjoe.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <20150615100920.GB32199@gondor.apana.org.au>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: "David S. Miller" <davem@davemloft.net>, linux-crypto@vger.kernel.org, Arnaud Ebalard <arno@natisbad.org>, Tawfik Bayouk <tawfik@marvell.com>, Lior Amsalem <alior@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Eran Ben-Avi <benavi@marvell.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Imre Kaloz <kaloz@openwrt.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Eddie Huang <eddie.huang@mediatek.com>
+Hi Herbert,
 
-Add CONFIG_MMC_MTK=y in defconfig
+On Mon, 15 Jun 2015 18:09:20 +0800
+Herbert Xu <herbert@gondor.apana.org.au> wrote:
 
-Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
-Signed-off-by: Eddie Huang <eddie.huang@mediatek.com>
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+> On Fri, Jun 12, 2015 at 09:15:57AM +0200, Boris Brezillon wrote:
+> >
+> > +	ret = dma_map_sg(cesa_dev->dev, req->src, creq->src_nents,
+> > +			 DMA_TO_DEVICE);
+> > +	if (ret < 0)
+> 
+> This function returns zero on error, not negative.  See
+> Documentation/DMA-API-HOWTO.txt for details.
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index d3cedb5..78e3234 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -140,6 +140,7 @@ CONFIG_MMC_ARMMMCI=y
- CONFIG_MMC_SDHCI=y
- CONFIG_MMC_SDHCI_PLTFM=y
- CONFIG_MMC_SPI=y
-+CONFIG_MMC_MTK=y
- CONFIG_RTC_CLASS=y
- CONFIG_RTC_DRV_EFI=y
- CONFIG_RTC_DRV_XGENE=y
+Yep, I'll fix that.
+
+Thanks for pointing this out.
+
+Best Regards,
+
+Boris
+
 -- 
-1.8.1.1.dirty
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
