@@ -1,214 +1,100 @@
-From: Matt Ranostay <mranostay@gmail.com>
-Subject: [PATCH v4 2/2] cap11xx: add LED support
-Date: Mon, 15 Jun 2015 19:46:10 -0700
-Message-ID: <1434422770-26896-3-git-send-email-mranostay@gmail.com>
-References: <1434422770-26896-1-git-send-email-mranostay@gmail.com>
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <1434422770-26896-1-git-send-email-mranostay@gmail.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: zonque@gmail.com, dmitry.torokhov@gmail.com
-Cc: linux-input@vger.kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Matt Ranostay <mranostay@gmail.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH V7 3/3] OPP: Add binding for 'opp-suspend'
+Date: Tue, 16 Jun 2015 08:24:25 +0530
+Message-ID: <20150616025425.GB26592@linux>
+References: <cover.1433434659.git.viresh.kumar@linaro.org>
+ <dedf8c02fdd9dbf169f43de74ead4c1434d89b45.1433434659.git.viresh.kumar@linaro.org>
+ <CAL_JsqJb4P2Z2esgm5ffjWV37MU2KUF4gBdUpwSV8+21iTD1Bg@mail.gmail.com>
+ <CAKohpomTT6i0dbboK901eguCbQiBdCT6gvLvTY24ajDdY__2fg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAKohpomTT6i0dbboK901eguCbQiBdCT6gvLvTY24ajDdY__2fg@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Rafael Wysocki <rjw@rjwysocki.net>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Nishanth Menon <nm@ti.com>, Mark Brown <broonie@kernel.org>, Mike Turquette <mike.turquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Olof Johansson <olof@lixom.net>, Sudeep Holla <Sudeep.Holla@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Viswanath Puttagunta <viswanath.puttagunta@linaro.org>, Lucas Stach <l.stach@pengutronix.de>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Abraham <ta.omasab@gmail.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Kevin Hilman <khilman@linaro.org>, Santosh
 List-Id: devicetree@vger.kernel.org
 
-Several cap11xx variants have LEDs that be can be controlled, this
-patchset implements this functionality.
+On 16-06-15, 06:01, Viresh Kumar wrote:
+> On 16 June 2015 at 05:05, Rob Herring <robherring2@gmail.com> wrote:
+> >> +- opp-suspend: Phandle of the OPP to set while device is suspended.
+> >> +
+> >
+> > I would just do a bool property in the OPP you want.
+> 
+> I will do that if you want, no big deal.
 
-Signed-off-by: Matt Ranostay <mranostay@gmail.com>
+In order to not waste any time, here is the change you suggested. Ack
+the one (original change or this one) you like :)
+
+------------------8<----------------------
+
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Date: Wed, 20 May 2015 08:27:49 +0530
+Subject: [PATCH V8] OPP: Add binding for 'opp-suspend'
+
+On few platforms, for power efficiency, we want the device to be
+configured for a specific OPP while we put the device in suspend state.
+
+Add an optional property in operating-points-v2 bindings for that.
+
+Acked-by: Nishanth Menon <nm@ti.com>
+Suggested-by: Nishanth Menon <nm@ti.com>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 ---
- drivers/input/keyboard/cap11xx.c | 128 ++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 125 insertions(+), 3 deletions(-)
+V7->V8:
+- opp-suspend is moved to OPPs instead of the table, and is bool now.
 
-diff --git a/drivers/input/keyboard/cap11xx.c b/drivers/input/keyboard/cap11xx.c
-index f07461a..fc8d365 100644
---- a/drivers/input/keyboard/cap11xx.c
-+++ b/drivers/input/keyboard/cap11xx.c
-@@ -12,6 +12,7 @@
- #include <linux/module.h>
- #include <linux/interrupt.h>
- #include <linux/input.h>
-+#include <linux/leds.h>
- #include <linux/of_irq.h>
- #include <linux/regmap.h>
- #include <linux/i2c.h>
-@@ -47,6 +48,20 @@
- #define CAP11XX_REG_CONFIG2		0x44
- #define CAP11XX_REG_CONFIG2_ALT_POL	BIT(6)
- #define CAP11XX_REG_SENSOR_BASE_CNT(X)	(0x50 + (X))
-+#define CAP11XX_REG_LED_POLARITY	0x73
-+#define CAP11XX_REG_LED_OUTPUT_CONTROL	0x74
-+
-+#define CAP11XX_REG_LED_DUTY_CYCLE_1	0x90
-+#define CAP11XX_REG_LED_DUTY_CYCLE_2	0x91
-+#define CAP11XX_REG_LED_DUTY_CYCLE_3	0x92
-+#define CAP11XX_REG_LED_DUTY_CYCLE_4	0x93
-+
-+#define CAP11XX_REG_LED_DUTY_MIN_MASK	(0x0f)
-+#define CAP11XX_REG_LED_DUTY_MIN_MASK_SHIFT	(0)
-+#define CAP11XX_REG_LED_DUTY_MAX_MASK	(0xf0)
-+#define CAP11XX_REG_LED_DUTY_MAX_MASK_SHIFT	(4)
-+#define CAP11XX_REG_LED_DUTY_MAX_VALUE	(15)
-+
- #define CAP11XX_REG_SENSOR_CALIB	(0xb1 + (X))
- #define CAP11XX_REG_SENSOR_CALIB_LSB1	0xb9
- #define CAP11XX_REG_SENSOR_CALIB_LSB2	0xba
-@@ -56,10 +71,24 @@
+ Documentation/devicetree/bindings/power/opp.txt | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/power/opp.txt b/Documentation/devicetree/bindings/power/opp.txt
+index 2938c52dbf84..2d4291127003 100644
+--- a/Documentation/devicetree/bindings/power/opp.txt
++++ b/Documentation/devicetree/bindings/power/opp.txt
+@@ -113,6 +113,9 @@ properties.
+   frequency for a short duration of time limited by the device's power, current
+   and thermal limits.
  
- #define CAP11XX_MANUFACTURER_ID	0x5d
++- opp-suspend: Marks the OPP to be used during device suspend. Only one OPP in
++  the table should have this.
++
+ - status: Marks the node enabled/disabled.
  
-+#ifdef CONFIG_LEDS_CLASS
-+struct cap11xx_led {
-+	struct cap11xx_priv *priv;
-+	struct led_classdev cdev;
-+	struct work_struct work;
-+	u32 reg;
-+	enum led_brightness new_brightness;
-+};
-+#endif
-+
- struct cap11xx_priv {
- 	struct regmap *regmap;
- 	struct input_dev *idev;
- 
-+#ifdef CONFIG_LEDS_CLASS
-+	struct cap11xx_led *leds;
-+	int num_leds;
-+#endif
- 	/* config */
- 	u32 keycodes[];
- };
-@@ -67,6 +96,7 @@ struct cap11xx_priv {
- struct cap11xx_hw_model {
- 	u8 product_id;
- 	unsigned int num_channels;
-+	unsigned int num_leds;
- };
- 
- enum {
-@@ -76,9 +106,9 @@ enum {
- };
- 
- static const struct cap11xx_hw_model cap11xx_devices[] = {
--	[CAP1106] = { .product_id = 0x55, .num_channels = 6 },
--	[CAP1126] = { .product_id = 0x53, .num_channels = 6 },
--	[CAP1188] = { .product_id = 0x50, .num_channels = 8 },
-+	[CAP1106] = { .product_id = 0x55, .num_channels = 6, .num_leds = 0 },
-+	[CAP1126] = { .product_id = 0x53, .num_channels = 6, .num_leds = 2 },
-+	[CAP1188] = { .product_id = 0x50, .num_channels = 8, .num_leds = 8 },
- };
- 
- static const struct reg_default cap11xx_reg_defaults[] = {
-@@ -111,6 +141,7 @@ static const struct reg_default cap11xx_reg_defaults[] = {
- 	{ CAP11XX_REG_STANDBY_SENSITIVITY,	0x02 },
- 	{ CAP11XX_REG_STANDBY_THRESH,		0x40 },
- 	{ CAP11XX_REG_CONFIG2,			0x40 },
-+	{ CAP11XX_REG_LED_POLARITY,		0x00 },
- 	{ CAP11XX_REG_SENSOR_CALIB_LSB1,	0x00 },
- 	{ CAP11XX_REG_SENSOR_CALIB_LSB2,	0x00 },
- };
-@@ -196,6 +227,91 @@ static void cap11xx_input_close(struct input_dev *idev)
- 	cap11xx_set_sleep(priv, true);
- }
- 
-+#ifdef CONFIG_LEDS_CLASS
-+static void cap11xx_led_work(struct work_struct *work)
-+{
-+	struct cap11xx_led *led = container_of(work, struct cap11xx_led, work);
-+	struct cap11xx_priv *priv = led->priv;
-+	int value = led->new_brightness;
-+
-+	/*
-+	 * All LEDs share the same duty cycle as this is a HW limitation.
-+	 * Brightness levels per LED are either 0 (OFF) and 1 (ON).
-+	 *
-+	 * Actual brightness level for the ON state for all LEDS is set via the
-+	 * "linux,led-brightness" DT property.
-+	 */
-+	regmap_update_bits(priv->regmap, CAP11XX_REG_LED_OUTPUT_CONTROL,
-+				BIT(led->reg), !!value ? BIT(led->reg) : 0);
-+}
-+
-+static void cap11xx_led_set(struct led_classdev *cdev,
-+			   enum led_brightness value)
-+{
-+	struct cap11xx_led *led = container_of(cdev, struct cap11xx_led, cdev);
-+
-+	led->new_brightness = value;
-+	schedule_work(&led->work);
-+}
-+
-+static int cap11xx_init_leds(struct device *dev, struct cap11xx_priv *priv)
-+{
-+	struct device_node *node = dev->of_node, *child;
-+	struct cap11xx_led *led;
-+	int cnt = of_get_child_count(node);
-+	u32 reg = 0;
-+	int error;
-+
-+	if (!priv->num_leds || !cnt)
-+		return 0;
-+	if (cnt > priv->num_leds)
-+		return -EINVAL;
-+
-+	led = devm_kcalloc(dev, cnt,
-+		sizeof(struct cap11xx_led), GFP_KERNEL);
-+	if (!led)
-+		return -ENOMEM;
-+
-+	priv->leds = led;
-+	error = of_property_read_u32(node, "linux,led-brightness", &reg);
-+	if (error || reg == 0 || reg > CAP11XX_REG_LED_DUTY_MAX_VALUE)
-+		reg = CAP11XX_REG_LED_DUTY_MAX_VALUE;
-+
-+	error = regmap_update_bits(priv->regmap, CAP11XX_REG_LED_DUTY_CYCLE_4,
-+				CAP11XX_REG_LED_DUTY_MAX_MASK,
-+				reg << CAP11XX_REG_LED_DUTY_MAX_MASK_SHIFT);
-+	if (error)
-+		return error;
-+
-+	for_each_child_of_node(node, child) {
-+		led->cdev.name =
-+			of_get_property(child, "label", NULL) ? : child->name;
-+		led->cdev.default_trigger =
-+			of_get_property(child, "linux,default-trigger", NULL);
-+		led->cdev.flags = 0;
-+		led->cdev.brightness_set = cap11xx_led_set;
-+		led->cdev.max_brightness = 1;
-+		led->cdev.brightness = LED_OFF;
-+
-+		error = of_property_read_u32(child, "reg", &reg);
-+		if (error != 0 || reg >= priv->num_leds)
-+			continue;
-+		led->reg = reg;
-+		led->priv = priv;
-+
-+		INIT_WORK(&led->work, cap11xx_led_work);
-+		error = devm_led_classdev_register(dev, &led->cdev);
-+		if (error < 0)
-+			return -EINVAL;
-+
-+		schedule_work(&led->work);
-+		led++;
-+	};
-+
-+	return 0;
-+}
-+#endif
-+
- static int cap11xx_i2c_probe(struct i2c_client *i2c_client,
- 			     const struct i2c_device_id *id)
- {
-@@ -316,6 +432,12 @@ static int cap11xx_i2c_probe(struct i2c_client *i2c_client,
- 	priv->idev->open = cap11xx_input_open;
- 	priv->idev->close = cap11xx_input_close;
- 
-+#ifdef CONFIG_LEDS_CLASS
-+	priv->num_leds = cap->num_leds;
-+	error = cap11xx_init_leds(dev, priv);
-+	if (error)
-+		return error;
-+#endif
- 	input_set_drvdata(priv->idev, priv);
- 
- 	/*
+ Example 1: Single cluster Dual-core ARM cortex A9, switch DVFS states together.
+@@ -152,6 +155,7 @@ Example 1: Single cluster Dual-core ARM cortex A9, switch DVFS states together.
+ 			opp-microvolt = <970000 975000 985000>;
+ 			opp-microamp = <70000>;
+ 			clock-latency-ns = <300000>;
++			opp-suspend;
+ 		};
+ 		opp01 {
+ 			opp-hz = <1100000000>;
+@@ -230,6 +234,7 @@ independently.
+ 			opp-microvolt = <970000 975000 985000>;
+ 			opp-microamp = <70000>;
+ 			clock-latency-ns = <300000>;
++			opp-suspend;
+ 		};
+ 		opp01 {
+ 			opp-hz = <1100000000>;
+@@ -305,6 +310,7 @@ DVFS state together.
+ 			opp-microvolt = <970000 975000 985000>;
+ 			opp-microamp = <70000>;
+ 			clock-latency-ns = <300000>;
++			opp-suspend;
+ 		};
+ 		opp01 {
+ 			opp-hz = <1100000000>;
+@@ -330,6 +336,7 @@ DVFS state together.
+ 			opp-microvolt = <1045000 1050000 1055000>;
+ 			opp-microamp = <95000>;
+ 			clock-latency-ns = <400000>;
++			opp-suspend;
+ 		};
+ 		opp11 {
+ 			opp-hz = <1400000000>;
 -- 
-1.9.1
+2.4.0
+
