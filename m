@@ -1,176 +1,106 @@
-From: Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Subject: [RFC PATCH V3] ARM: dts: sun6i: Add dts file for MSI
- Primo81 tablet
-Date: Tue, 16 Jun 2015 21:11:09 +0200
-Message-ID: <1434481869-9432-2-git-send-email-merker@debian.org>
-References: <20150616094026.GG11732@lukather>
- <1434481869-9432-1-git-send-email-merker@debian.org>
-Reply-To: merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V7 3/3] OPP: Add binding for 'opp-suspend'
+Date: Tue, 16 Jun 2015 14:23:23 -0500
+Message-ID: <CAL_JsqJ2gCJvtrZqDWWoY6Gv4Ag7xLV93wLbT5b37jO=oWo+MQ@mail.gmail.com>
+References: <cover.1433434659.git.viresh.kumar@linaro.org> <dedf8c02fdd9dbf169f43de74ead4c1434d89b45.1433434659.git.viresh.kumar@linaro.org>
+ <CAL_JsqJb4P2Z2esgm5ffjWV37MU2KUF4gBdUpwSV8+21iTD1Bg@mail.gmail.com>
+ <CAKohpomTT6i0dbboK901eguCbQiBdCT6gvLvTY24ajDdY__2fg@mail.gmail.com> <20150616025425.GB26592@linux>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDP2XNNJ7IFBBE7KQGWAKGQEQSJUMMI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1434481869-9432-1-git-send-email-merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-In-Reply-To: <20150616094026.GG11732@lukather>
-References: <20150616094026.GG11732@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Siarhei Siamashka <siarhei.siamashka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150616025425.GB26592@linux>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, "linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org" <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mike Turquette <mike.turquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Viswanath Puttagunta <viswanath.puttagunta-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Thomas Abraham <ta.omasab-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Abhilash Kesavan <kesavan.abhilash-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Santosh
 List-Id: devicetree@vger.kernel.org
 
-The MSI Primo81 is an A31s based tablet, with 1G RAM, 16G NAND,
-1024x768 IPS LCD display, mono speaker, 0.3 MP front camera, 2.0 MP
-rear camera, 3500 mAh battery, gt911 touchscreen, mma8452 accelerometer
-and rtl8188etv usb wifi. Has "power", "volume+" and "volume-" buttons
-(both volume buttons are also connected to the UBOOT_SEL pin). The
-external connectors are represented by MicroSD slot, MiniHDMI, MicroUSB
-OTG and 3.5mm headphone jack. More details are available at
-    http://linux-sunxi.org/MSI_Primo81
+On Mon, Jun 15, 2015 at 9:54 PM, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On 16-06-15, 06:01, Viresh Kumar wrote:
+>> On 16 June 2015 at 05:05, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> >> +- opp-suspend: Phandle of the OPP to set while device is suspended.
+>> >> +
+>> >
+>> > I would just do a bool property in the OPP you want.
+>>
+>> I will do that if you want, no big deal.
+>
+> In order to not waste any time, here is the change you suggested. Ack
+> the one (original change or this one) you like :)
+>
+> ------------------8<----------------------
+>
+> From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Date: Wed, 20 May 2015 08:27:49 +0530
+> Subject: [PATCH V8] OPP: Add binding for 'opp-suspend'
+>
+> On few platforms, for power efficiency, we want the device to be
+> configured for a specific OPP while we put the device in suspend state.
+>
+> Add an optional property in operating-points-v2 bindings for that.
+>
+> Acked-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+> Suggested-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+> V7->V8:
+> - opp-suspend is moved to OPPs instead of the table, and is bool now.
 
-This initial dts file only provides support for mmc, wifi and uart
-(there is no external connector for uart though). Graphics can be used
-via simplefb. However, without usb otg, there are no reasonable means
-to handle user input yet.
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Signed-off-by: Siarhei Siamashka <siarhei.siamashka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Signed-off-by: Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
----
- .../devicetree/bindings/vendor-prefixes.txt        |  1 +
- arch/arm/boot/dts/Makefile                         |  3 +-
- arch/arm/boot/dts/sun6i-a31s-primo81.dts           | 94 ++++++++++++++++++++++
- 3 files changed, 97 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/sun6i-a31s-primo81.dts
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 6a99dda..c415c2b 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -127,6 +127,7 @@ mitsubishi	Mitsubishi Electric Corporation
- mosaixtech	Mosaix Technologies, Inc.
- moxa	Moxa
- mpl	MPL AG
-+msi	Micro-Star International Co. Ltd.
- mti	Imagination Technologies Ltd. (formerly MIPS Technologies Inc.)
- mundoreader	Mundo Reader S.L.
- murata	Murata Manufacturing Co., Ltd.
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 867e6e3..31686c7 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -552,7 +552,8 @@ dtb-$(CONFIG_MACH_SUN6I) += \
- 	sun6i-a31-i7.dtb \
- 	sun6i-a31-m9.dtb \
- 	sun6i-a31-mele-a1000g-quad.dtb \
--	sun6i-a31s-cs908.dtb
-+	sun6i-a31s-cs908.dtb \
-+	sun6i-a31s-primo81.dtb
- dtb-$(CONFIG_MACH_SUN7I) += \
- 	sun7i-a20-bananapi.dtb \
- 	sun7i-a20-bananapro.dtb \
-diff --git a/arch/arm/boot/dts/sun6i-a31s-primo81.dts b/arch/arm/boot/dts/sun6i-a31s-primo81.dts
-new file mode 100644
-index 0000000..9c9b4bf
---- /dev/null
-+++ b/arch/arm/boot/dts/sun6i-a31s-primo81.dts
-@@ -0,0 +1,94 @@
-+/*
-+ * Copyright 2014 Siarhei Siamashka <siarhei.siamashka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+ * Copyright 2015 Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This library is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This library is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include "sun6i-a31s.dtsi"
-+#include "sunxi-common-regulators.dtsi"
-+
-+/ {
-+	model = "MSI Primo81 tablet";
-+	compatible = "msi,primo81", "allwinner,sun6i-a31s";
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+};
-+
-+&ehci0 {
-+	/* rtl8188etv wifi is connected here */
-+	status = "okay";
-+};
-+
-+&mmc0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_primo81>;
-+	vmmc-supply = <&reg_vcc3v0>;
-+	bus-width = <4>;
-+	cd-gpios = <&pio 0 8 GPIO_ACTIVE_HIGH>; /* PA8 */
-+	cd-inverted;
-+	status = "okay";
-+};
-+
-+&pio {
-+	mmc0_cd_pin_primo81: mmc0_cd_pin@0 {
-+		allwinner,pins = "PA8";
-+		allwinner,function = "gpio_in";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
-+	};
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pins_a>;
-+	status = "okay";
-+};
-+
-+&usbphy {
-+	status = "okay";
-+};
--- 
-2.1.4
+>  Documentation/devicetree/bindings/power/opp.txt | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/power/opp.txt b/Documentation/devicetree/bindings/power/opp.txt
+> index 2938c52dbf84..2d4291127003 100644
+> --- a/Documentation/devicetree/bindings/power/opp.txt
+> +++ b/Documentation/devicetree/bindings/power/opp.txt
+> @@ -113,6 +113,9 @@ properties.
+>    frequency for a short duration of time limited by the device's power, current
+>    and thermal limits.
+>
+> +- opp-suspend: Marks the OPP to be used during device suspend. Only one OPP in
+> +  the table should have this.
+> +
+>  - status: Marks the node enabled/disabled.
+>
+>  Example 1: Single cluster Dual-core ARM cortex A9, switch DVFS states together.
+> @@ -152,6 +155,7 @@ Example 1: Single cluster Dual-core ARM cortex A9, switch DVFS states together.
+>                         opp-microvolt = <970000 975000 985000>;
+>                         opp-microamp = <70000>;
+>                         clock-latency-ns = <300000>;
+> +                       opp-suspend;
+>                 };
+>                 opp01 {
+>                         opp-hz = <1100000000>;
+> @@ -230,6 +234,7 @@ independently.
+>                         opp-microvolt = <970000 975000 985000>;
+>                         opp-microamp = <70000>;
+>                         clock-latency-ns = <300000>;
+> +                       opp-suspend;
+>                 };
+>                 opp01 {
+>                         opp-hz = <1100000000>;
+> @@ -305,6 +310,7 @@ DVFS state together.
+>                         opp-microvolt = <970000 975000 985000>;
+>                         opp-microamp = <70000>;
+>                         clock-latency-ns = <300000>;
+> +                       opp-suspend;
+>                 };
+>                 opp01 {
+>                         opp-hz = <1100000000>;
+> @@ -330,6 +336,7 @@ DVFS state together.
+>                         opp-microvolt = <1045000 1050000 1055000>;
+>                         opp-microamp = <95000>;
+>                         clock-latency-ns = <400000>;
+> +                       opp-suspend;
+>                 };
+>                 opp11 {
+>                         opp-hz = <1400000000>;
+> --
+> 2.4.0
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
