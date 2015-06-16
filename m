@@ -1,42 +1,170 @@
-From: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH] arm64: dts: symlink cros-ec-keyboard from arm to arm64
-Date: Tue, 16 Jun 2015 22:35:41 +0800
-Message-ID: <1434465343-29124-1-git-send-email-djkurtz@chromium.org>
+From: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/4] mfd: 88pm800: add device tree support
+Date: Tue, 16 Jun 2015 20:06:10 +0530
+Message-ID: <5580345A.8080202@linaro.org>
+References: <1432937962-4537-1-git-send-email-vaibhav.hiremath@linaro.org> <1432937962-4537-2-git-send-email-vaibhav.hiremath@linaro.org> <20150601083835.GE3329@x1> <557FD5AD.5020405@linaro.org> <CAL_Jsq+6yk59Z4swi2xq4=_=m89pBUt-fNXJF8smjw7qS8xazA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Olof Johansson <olofj-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_Jsq+6yk59Z4swi2xq4=_=m89pBUt-fNXJF8smjw7qS8xazA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The cros-ec-keyboard.dtsi snippet is useful for both arm and arm64 boards.
-Create a link between the two.
 
-This may not be the most scalable solution, so consider it temporary until
-we find a more central repository for such shared .dtsi snippets.
 
-Signed-off-by: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
----
- arch/arm64/boot/dts/cros-ec-keyboard.dtsi | 1 +
- 1 file changed, 1 insertion(+)
- create mode 120000 arch/arm64/boot/dts/cros-ec-keyboard.dtsi
+On Tuesday 16 June 2015 06:32 PM, Rob Herring wrote:
+> On Tue, Jun 16, 2015 at 2:52 AM, Vaibhav Hiremath
+> <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>>
+>>
+>> On Monday 01 June 2015 02:08 PM, Lee Jones wrote:
+>>>
+>>> On Sat, 30 May 2015, Vaibhav Hiremath wrote:
+>>>
+>>
+>> Thanks for your review. and sorry for delayed response.
+>>
+>>>> Add DT support to the 88pm800 driver along with below properties
+>>>>          - marvell,88pm800-irq-write-clear :
+>>>>            Idicates whether interrupt status is cleared by write
+>>>>
+>>>> Also, creates the DT binding text file,
+>>>> Documentation/devicetree/bindings/mfd/88pm800.txt
+>>>>
+>>>> Signed-off-by: Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+>>>> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>> ---
+>>>>    Documentation/devicetree/bindings/mfd/88pm800.txt | 57
+>>>> +++++++++++++++++++++++
+>>>>    drivers/mfd/88pm800.c                             | 39 ++++++++++++++++
+>>>
+>>>
+>>> These should be submitted separately.
+>>>
+>>
+>>
+>> Ok, will separate it in next version.
+>>
+>>
+>>>>    2 files changed, 96 insertions(+)
+>>>>    create mode 100644 Documentation/devicetree/bindings/mfd/88pm800.txt
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/mfd/88pm800.txt
+>>>> b/Documentation/devicetree/bindings/mfd/88pm800.txt
+>>>> new file mode 100644
+>>>> index 0000000..094951b
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/mfd/88pm800.txt
+>>>> @@ -0,0 +1,57 @@
+>>>> +* Marvell 88PM800 Power Management IC
+>
+> Might as well name this 88PM8xx from the start.
+>
 
-diff --git a/arch/arm64/boot/dts/cros-ec-keyboard.dtsi b/arch/arm64/boot/dts/cros-ec-keyboard.dtsi
-new file mode 120000
-index 0000000..42220ac
---- /dev/null
-+++ b/arch/arm64/boot/dts/cros-ec-keyboard.dtsi
-@@ -0,0 +1 @@
-+../../../arm/boot/dts/cros-ec-keyboard.dtsi
-\ No newline at end of file
--- 
-2.2.0.rc0.207.ga3a616c
+Good point.
+Will include it in next version.
+
+I am ready with V2, but luckily I did not sent next version, as I
+wanted to wait for Lee's response. :)
+
+>>>> +
+>>>> +Required parent device properties:
+>>>> +- compatible : "marvell,88pm800"
+>
+> You might as well include 88pm805 and 88pm860 here since 805 support
+> is in the kernel and you will be submitting 860 support. They don't
+> have to be added with driver support.
+>
+
+Ok.
+
+>>>> +- reg : the I2C slave address for the 88pm800 chip
+>>>> +- interrupts : IRQ line for the 88pm800 chip
+>>>> +- interrupt-controller: describes the 88pm800 as an interrupt controller
+>>>> +- #interrupt-cells : should be 1.
+>>>> +               - The cell is the 88pm800 local IRQ number
+>>>> +
+>>>> +Optional parent device properties:
+>>>> +- marvell,88pm800-irq-write-clr: indicates whether interrupt status is
+>>>> cleared by write
+>>>
+>>>
+>>> Drop the device name.  These bindings should be as generic as possible.
+>>>
+>>
+>> OK, how about simply
+>>
+>> "mfd-irq_clr_on_write"
+>
+> No, mfd is a Linux name which doesn't belong in bindings, and
+> underscores are generally not used.
+>
+
+Oops.
+
+underscore is just typo. did not meant it.
+
+> I think Lee meant marvell,irq-write-clr or irq-write-clr.
+>
+
+will pick "marvell,irq-write-clr"
+
+
+> This could also just be dropped altogether and set based on the
+> compatible strings with match data.
+>
+
+It is configurable option, can be changed. so we still need get an
+input.
+
+>>> Also describe what the absence of the property means.
+>>>
+>>
+>> Ok.
+>>
+>>>> +88pm800 consists of a large and varied group of sub-devices:
+>>>
+>>>
+>>> 3?
+>>>
+>>
+>> I have explicitly mentioned in note that more device list will follow.
+>> I just wanted to add entries as and when we add/enable driver support.
+>>
+>>>> +Device                  Supply Names    Description
+>>>> +------                  ------------    -----------
+>>>> +88pm80x-onkey          :               : On key
+>>>> +88pm80x-rtc            :               : RTC
+>>>> +88pm80x                        :               : Regulators
+>>>
+>>>
+>>> Surely regulators is 88pm80x-regulator, no?
+>>>
+>>
+>> did not understand what change is expected here.
+>
+> The node name for regulators node should be 88pm80x-regulator? But
+> these don't correspond to node names based on the example and the
+> example is correct IMO. So these are Linux driver names? If so, they
+> don't belong in the binding doc. What you need is to document the
+> sub-node compatible strings
+
+Hmmm,
+Got it.
+
+rtc and onkey are compatible strings only, I made mistake on regulator.
+I will change to "88pm80x-regulator".
+
+
+Thanks,
+Vaibhav
+
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
