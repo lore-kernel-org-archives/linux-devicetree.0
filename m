@@ -1,7 +1,7 @@
 From: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v3 18/22] usb: gadget: multi: init usb_otg_descriptor via usb_otg_descriptor_add
-Date: Tue, 16 Jun 2015 14:52:08 +0800
-Message-ID: <1434437532-23678-19-git-send-email-jun.li@freescale.com>
+Subject: [PATCH v3 19/22] usb: gadget: ncm: init usb_otg_descriptor via usb_otg_descriptor_add
+Date: Tue, 16 Jun 2015 14:52:09 +0800
+Message-ID: <1434437532-23678-20-git-send-email-jun.li@freescale.com>
 References: <1434437532-23678-1-git-send-email-jun.li@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -17,38 +17,37 @@ free it while composite unbind.
 
 Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- drivers/usb/gadget/legacy/multi.c | 49 +++++++++++++++++++++++++++------------
- 1 file changed, 34 insertions(+), 15 deletions(-)
+ drivers/usb/gadget/legacy/ncm.c | 33 +++++++++++++++++++--------------
+ 1 file changed, 19 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/usb/gadget/legacy/multi.c b/drivers/usb/gadget/legacy/multi.c
-index b21b51f..2e8fbae 100644
---- a/drivers/usb/gadget/legacy/multi.c
-+++ b/drivers/usb/gadget/legacy/multi.c
-@@ -78,21 +78,7 @@ static struct usb_device_descriptor device_desc = {
- 	.idProduct =		cpu_to_le16(MULTI_PRODUCT_NUM),
+diff --git a/drivers/usb/gadget/legacy/ncm.c b/drivers/usb/gadget/legacy/ncm.c
+index 6ce7421..5f9e2f3 100644
+--- a/drivers/usb/gadget/legacy/ncm.c
++++ b/drivers/usb/gadget/legacy/ncm.c
+@@ -69,20 +69,7 @@ static struct usb_device_descriptor device_desc = {
+ 	.bNumConfigurations =	1,
  };
  
+-static struct usb_otg_descriptor otg_descriptor = {
+-	.bLength =		sizeof otg_descriptor,
+-	.bDescriptorType =	USB_DT_OTG,
 -
--static const struct usb_descriptor_header *otg_desc[] = {
--	(struct usb_descriptor_header *) &(struct usb_otg_descriptor){
--		.bLength =		sizeof(struct usb_otg_descriptor),
--		.bDescriptorType =	USB_DT_OTG,
--
--		/*
--		 * REVISIT SRP-only hardware is possible, although
--		 * it would not be called "OTG" ...
--		 */
--		.bmAttributes =		USB_OTG_SRP | USB_OTG_HNP,
--	},
--	NULL,
+-	/* REVISIT SRP-only hardware is possible, although
+-	 * it would not be called "OTG" ...
+-	 */
+-	.bmAttributes =		USB_OTG_SRP | USB_OTG_HNP,
 -};
 -
+-static const struct usb_descriptor_header *otg_desc[] = {
+-	(struct usb_descriptor_header *) &otg_descriptor,
+-	NULL,
+-};
 +static const struct usb_descriptor_header *otg_desc[2];
  
- enum {
- 	MULTI_STRING_RNDIS_CONFIG_IDX = USB_GADGET_FIRST_AVAIL_IDX,
-@@ -155,6 +141,21 @@ static int rndis_do_config(struct usb_configuration *c)
- 	int ret;
+ /* string IDs are assigned dynamically */
+ static struct usb_string strings_dev[] = {
+@@ -114,6 +101,21 @@ static int ncm_do_config(struct usb_configuration *c)
+ 	/* FIXME alloc iConfiguration string, set it in c->strings */
  
  	if (gadget_is_otg(c->cdev->gadget)) {
 +		if (!otg_desc[0]) {
@@ -69,32 +68,10 @@ index b21b51f..2e8fbae 100644
  		c->descriptors = otg_desc;
  		c->bmAttributes |= USB_CONFIG_ATT_WAKEUP;
  	}
-@@ -243,6 +244,21 @@ static int cdc_do_config(struct usb_configuration *c)
- 	int ret;
- 
- 	if (gadget_is_otg(c->cdev->gadget)) {
-+		if (!otg_desc[0]) {
-+			struct usb_descriptor_header *usb_desc;
-+			unsigned length;
-+
-+			if (c->cdev->gadget->otg_rev >= 0x0200)
-+				length = sizeof(struct usb_otg20_descriptor);
-+			else
-+				length = sizeof(struct usb_otg_descriptor);
-+			usb_desc = kzalloc(length, GFP_KERNEL);
-+			if (!usb_desc)
-+				return -ENOMEM;
-+			usb_otg_descriptor_init(c->cdev->gadget, usb_desc);
-+			otg_desc[0] = usb_desc;
-+			otg_desc[1] = NULL;
-+		}
- 		c->descriptors = otg_desc;
- 		c->bmAttributes |= USB_CONFIG_ATT_WAKEUP;
- 	}
-@@ -490,6 +506,9 @@ static int multi_unbind(struct usb_composite_dev *cdev)
- 	usb_put_function(f_ecm);
- 	usb_put_function_instance(fi_ecm);
- #endif
+@@ -192,6 +194,9 @@ static int gncm_unbind(struct usb_composite_dev *cdev)
+ 		usb_put_function(f_ncm);
+ 	if (!IS_ERR_OR_NULL(f_ncm_inst))
+ 		usb_put_function_instance(f_ncm_inst);
 +	kfree(otg_desc[0]);
 +	otg_desc[0] = NULL;
 +
