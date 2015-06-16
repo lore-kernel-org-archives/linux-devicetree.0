@@ -1,43 +1,49 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCHv7 2/4] ARM: dts: exynos5422-odroidxu3: Enable TMU at Exynos5422
- base
-Date: Tue, 16 Jun 2015 20:05:58 +0900
-Message-ID: <55800316.9050406@samsung.com>
-References: <1434336803-4132-1-git-send-email-linux.amoon@gmail.com> <1434336803-4132-2-git-send-email-linux.amoon@gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3] regulator: Add QCOM SPMI regulator driver
+Date: Tue, 16 Jun 2015 12:15:37 +0100
+Message-ID: <20150616111537.GJ18309@sirena.org.uk>
+References: <1434149230-11785-1-git-send-email-sboyd@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1434336803-4132-2-git-send-email-linux.amoon@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Anand Moon <linux.amoon@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, Markus Reichl <m.reichl@fivetechno.de>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="hCH6UO/yhd9rsH1L"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1434149230-11785-1-git-send-email-sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Collins <collinsd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-W dniu 15.06.2015 o 11:53, Anand Moon pisze:
-> This changes enables TMU IP block on the Exynos5422 Odroid-XU3
-> device.
-> 
-> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> Acked-by: Lukasz Majewski <l.majewski@samsung.com>
-> ---
-> Changes rebase on git://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung branch for-next
-> Changes from v5 and v6: Use LDO7 regulator instead of LDO10 regulator to control TMU.
-> 	Fixed the commit log.
-> ---
->  arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi | 25 ++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
 
-Thanks Anand for working on this!
+--hCH6UO/yhd9rsH1L
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Whole patchset tested on Odroid XU3-Lite board:
-Tested-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+On Fri, Jun 12, 2015 at 03:47:10PM -0700, Stephen Boyd wrote:
+> Add an SPMI regulator driver for Qualcomm's PM8841, PM8941, and
+> PM8916 PMICs. This driver is based largely on code from
+> codeaurora.org[1].
 
-I already acked other patches, except this one:
-Acked-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Applied, thanks.
 
-I'll apply this to my tree and send for v4.3 to Kukjin (unless he picks
-it also).
+--hCH6UO/yhd9rsH1L
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Best regards,
-Krzysztof
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJVgAVVAAoJECTWi3JdVIfQpZsH/ip7fxEF6phbYR/Au+GeqPAx
+tVD4wg5XMnC9mrpJ6lklJDpQX2OIrjMbkmV8SBShXVR6Wks6bXV3umBqgsB7NMin
+5p3fbTrjcWQXMEMhBiWVh76k532g8bERzGz7LBWRUFkkepQ+NDAtCWPaxteK/0ZQ
+iCrIt5oaoTiEoKpbnJOect4FGPSj3G988JtIHTwEf1TRLwR5IXKo26O3KN5FULoO
+gugIkxS7O8evKEeJIummONtBKNlX3MgH0cYg5kOey5mJEq8TDWfeq8xGn2mThbQb
+g5AWvCWC+A1fkarBYjsThT809FTiUL5EYVJxycBXhP1CQyjS/4QKDrNnHNYVmx0=
+=jLRQ
+-----END PGP SIGNATURE-----
+
+--hCH6UO/yhd9rsH1L--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
