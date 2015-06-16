@@ -1,7 +1,7 @@
 From: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v3 02/22] usb: add USB_OTG_ADP definition
-Date: Tue, 16 Jun 2015 14:51:52 +0800
-Message-ID: <1434437532-23678-3-git-send-email-jun.li@freescale.com>
+Subject: [PATCH v3 05/22] doc: dt-binding: usb: add otg related properties
+Date: Tue, 16 Jun 2015 14:51:55 +0800
+Message-ID: <1434437532-23678-6-git-send-email-jun.li@freescale.com>
 References: <1434437532-23678-1-git-send-email-jun.li@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,29 +12,48 @@ To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@
 Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org, Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Macpaul Lin <macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Add otg version, srp, hnp and adp support for usb OTG port, then those OTG
+features don't have to be decided by usb gadget drivers.
 
-Add USB_OTG_ADP definition for usb_otg_descriptor.bmAttributes.
-
-Signed-off-by: Macpaul Lin <macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Acked-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- include/uapi/linux/usb/ch9.h | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/usb/generic.txt | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/include/uapi/linux/usb/ch9.h b/include/uapi/linux/usb/ch9.h
-index aec6899..f7adc6e 100644
---- a/include/uapi/linux/usb/ch9.h
-+++ b/include/uapi/linux/usb/ch9.h
-@@ -688,6 +688,7 @@ struct usb_otg20_descriptor {
- /* from usb_otg_descriptor.bmAttributes */
- #define USB_OTG_SRP		(1 << 0)
- #define USB_OTG_HNP		(1 << 1)	/* swap host/device roles */
-+#define USB_OTG_ADP		(1 << 2)	/* support ADP */
+diff --git a/Documentation/devicetree/bindings/usb/generic.txt b/Documentation/devicetree/bindings/usb/generic.txt
+index 477d5bb..eb7308e 100644
+--- a/Documentation/devicetree/bindings/usb/generic.txt
++++ b/Documentation/devicetree/bindings/usb/generic.txt
+@@ -11,6 +11,20 @@ Optional properties:
+ 			"peripheral" and "otg". In case this attribute isn't
+ 			passed via DT, USB DRD controllers should default to
+ 			OTG.
++ - otg-rev: tells usb driver the release number of the OTG and EH supplement
++			with which the device and its descriptors are compliant,
++			in binary-coded decimal (i.e. 2.0 is 0200H). This
++			property is used if any real OTG features(HNP/SRP/ADP)
++			is enabled, also if ADP is enabled, otg-rev should be
++			0x0200 or above.
++ - hnp-disable: tells OTG controllers we want to disable OTG HNP, normally HNP
++			is the basic function of real OTG except you want it
++			to be a srp-capable only B device.
++ - srp-disable: tells OTG controllers we want to disable OTG SRP, SRP is
++			optional for OTG device.
++ - adp-disable: tells OTG controllers we want to disable OTG ADP, ADP is
++			optional for OTG device, if not passed, otg-rev should
++			be set to be 0x0200 or above.
  
- /*-------------------------------------------------------------------------*/
+ This is an attribute to a USB controller such as:
  
+@@ -21,4 +35,8 @@ dwc3@4a030000 {
+ 	usb-phy = <&usb2_phy>, <&usb3,phy>;
+ 	maximum-speed = "super-speed";
+ 	dr_mode = "otg";
++	otg-rev = <0x0200>;
++	hnp-disable;
++	srp-disable;
++	adp-disable;
+ };
 -- 
 1.9.1
 
