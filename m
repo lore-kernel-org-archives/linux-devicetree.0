@@ -1,95 +1,99 @@
-From: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v3 05/22] doc: dt-binding: usb: add otg related properties
-Date: Tue, 16 Jun 2015 16:32:27 +0800
-Message-ID: <20150616083225.GD10574@shlinux2>
-References: <1434437532-23678-1-git-send-email-jun.li@freescale.com>
- <1434437532-23678-6-git-send-email-jun.li@freescale.com>
- <20150616112115.7a85966d@rockdesk>
+From: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: Re: [PATCH 02/21] ARM: tegra: Add gpio-ranges property
+Date: Tue, 16 Jun 2015 10:42:52 +0200
+Message-ID: <CAAObsKBtmJnBZXcv0UE6xGvphSCShFNWehOG8a-PJg-VqPznRw@mail.gmail.com>
+References: <1432565608-26036-1-git-send-email-tomeu.vizoso@collabora.com>
+ <1432565608-26036-3-git-send-email-tomeu.vizoso@collabora.com>
+ <5564CC84.1030700@wwwdotorg.org> <CACRpkdbtCDQLaPhWFT0a7NdJmxYzRvhU_efgUh2ZXhbc+FHg3g@mail.gmail.com>
+ <556DCE71.7050108@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150616112115.7a85966d@rockdesk>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Cc: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <556DCE71.7050108-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, =?UTF-8?Q?St=C3=A9phane_Marchesin?= <stephane.marchesin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 16, 2015 at 11:21:15AM +0300, Roger Quadros wrote:
-> 
-> On Tue, 16 Jun 2015 14:51:55 +0800
-> Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> 
-> > Add otg version, srp, hnp and adp support for usb OTG port, then those OTG
-> > features don't have to be decided by usb gadget drivers.
-> > 
-> > Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > ---
-> >  Documentation/devicetree/bindings/usb/generic.txt | 18 ++++++++++++++++++
-> >  1 file changed, 18 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/usb/generic.txt b/Documentation/devicetree/bindings/usb/generic.txt
-> > index 477d5bb..eb7308e 100644
-> > --- a/Documentation/devicetree/bindings/usb/generic.txt
-> > +++ b/Documentation/devicetree/bindings/usb/generic.txt
-> > @@ -11,6 +11,20 @@ Optional properties:
-> >  			"peripheral" and "otg". In case this attribute isn't
-> >  			passed via DT, USB DRD controllers should default to
-> >  			OTG.
-> > + - otg-rev: tells usb driver the release number of the OTG and EH supplement
-> > +			with which the device and its descriptors are compliant,
-> > +			in binary-coded decimal (i.e. 2.0 is 0200H). This
-> > +			property is used if any real OTG features(HNP/SRP/ADP)
-> > +			is enabled, also if ADP is enabled, otg-rev should be
-> > +			0x0200 or above.
-> 
-> How about saying "if ADP is required, otg-rev should be 0x0200 or above"
-> 
-okay.
+On 2 June 2015 at 17:40, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+> On 06/02/2015 05:28 AM, Linus Walleij wrote:
+>>
+>> On Tue, May 26, 2015 at 9:41 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+>> wrote:
+>>>
+>>> On 05/25/2015 08:53 AM, Tomeu Vizoso wrote:
+>>>>
+>>>>
+>>>> Specify how the GPIOs map to the pins in T124, so the dependency is
+>>>> explicit.
+>>>>
+>>>> Signed-off-by: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+>>>> ---
+>>>>    arch/arm/boot/dts/tegra124.dtsi | 1 +
+>>>>    1 file changed, 1 insertion(+)
+>>>>
+>>>> diff --git a/arch/arm/boot/dts/tegra124.dtsi
+>>>> b/arch/arm/boot/dts/tegra124.dtsi
+>>>> index 13cc7ca..5d1d35f 100644
+>>>> --- a/arch/arm/boot/dts/tegra124.dtsi
+>>>> +++ b/arch/arm/boot/dts/tegra124.dtsi
+>>>> @@ -254,6 +254,7 @@
+>>>>                  gpio-controller;
+>>>>                  #interrupt-cells = <2>;
+>>>>                  interrupt-controller;
+>>>> +               gpio-ranges = <&pinmux 0 0 250>;
+>>>
+>>>
+>>>
+>>> We should be consistent between SoCs. Why not make the same change for
+>>> all
+>>> Tegra SoCs?
+>>
+>>
+>> Agreed.
+>>
+>>> I think this change will cause the GPIO subsystem to call into the
+>>> pinctrl
+>>> subsystem and create/add/register a new GPIO<->pinctrl range structure.
+>>> The
+>>> pinctrl driver already does this, so I think we'll end up with two
+>>> duplicate
+>>> entries in the pinctrl device's gpio_ranges list. This probably won't
+>>> cause
+>>> a problem, but I wanted to make sure you'd thought about it to make sure.
+>>
+>>
+>> That sounds like duplication indeed, I would expect that first a patch
+>> adds the ranges to the dts[i] files and then a second patch delete the
+>> same ranges from the pinctrl driver then, if these shall come in from
+>> the device tree.
+>
+>
+> We can't delete the gpio-range-registration code from the Tegra pinmux
+> driver, or old DTs won't work correctly. We could make it conditional based
+> upon whether the DT contains the property or not.
 
-> > + - hnp-disable: tells OTG controllers we want to disable OTG HNP, normally HNP
-> > +			is the basic function of real OTG except you want it
-> > +			to be a srp-capable only B device.
-> > + - srp-disable: tells OTG controllers we want to disable OTG SRP, SRP is
-> > +			optional for OTG device.
-> > + - adp-disable: tells OTG controllers we want to disable OTG ADP, ADP is
-> > +			optional for OTG device, if not passed, otg-rev should
-> > +			be set to be 0x0200 or above.
-> 
-> Why should we place this constraint on DT? Isn't is better
-> to handle it automatically in the USB code?
-> 
-You are right, this can be done in USB code, I will remove this constraint
-from it.
+I've been looking at this and haven't found a good solution. From what
+I see, the pinctrl driver doesn't have a reference to the gpio device
+node so cannot tell if it needs to add the range or not.
 
-> Not specifying the disable flag doesn't mean that it has to be enabled.
-> It means that enable it if it can be. i.e. supported by OTG rev and controller.
-> 
-Exactly.
+The gpio driver can tell whether it should add the range or not, but
+if it has to because the gpio-ranges property isn't there, then it
+doesn't have the reference to the pinctrl device to set the range to.
 
-> >  
-> >  This is an attribute to a USB controller such as:
-> >  
-> > @@ -21,4 +35,8 @@ dwc3@4a030000 {
-> >  	usb-phy = <&usb2_phy>, <&usb3,phy>;
-> >  	maximum-speed = "super-speed";
-> >  	dr_mode = "otg";
-> > +	otg-rev = <0x0200>;
-> > +	hnp-disable;
-> > +	srp-disable;
-> > +	adp-disable;
-> >  };
-> 
-> How about a more real world example? We don't want hnp/srp disabled.
-> 
-My fault, actually it's a wrong example, I will update with a typical
-setting as you pointed.
+So, given that pinctrl_add_gpio_range is deprecated already, wonder if
+the lesser evil isn't leaving the duplicated entries for now. On newer
+SoC revisions such as T210 we can stop calling pinctrl_add_gpio_range
+at all.
 
-Li Jun
-> cheers,
-> -roger
-> 
+Or, we can accept that nobody is going to boot a newer kernel with an
+older DT on the affected boards and just rely on the presence of the
+gpio-ranges property :)
+
+Regards,
+
+Tomeu
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
