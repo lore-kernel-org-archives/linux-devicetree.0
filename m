@@ -1,57 +1,62 @@
-From: Fabien Dessenne <fabien.dessenne-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH] ARM: DT: STiH410: Add bdisp dt nodes
-Date: Tue, 16 Jun 2015 15:30:40 +0200
-Message-ID: <1434461440-3965-1-git-send-email-fabien.dessenne@st.com>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH V7 1/3] OPP: Add new bindings to address shortcomings
+ of existing bindings
+Date: Tue, 16 Jun 2015 08:34:02 -0500
+Message-ID: <558025CA.8050008@ti.com>
+References: <cover.1433434659.git.viresh.kumar@linaro.org> <d83c0b6b1768c7229384216329b607d13886aa02.1433434659.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <d83c0b6b1768c7229384216329b607d13886aa02.1433434659.git.viresh.kumar@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>, Rafael Wysocki <rjw@rjwysocki.net>, rob.herring@linaro.org
+Cc: linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, arnd.bergmann@linaro.org, broonie@kernel.org, mike.turquette@linaro.org, sboyd@codeaurora.org, grant.likely@linaro.org, olof@lixom.net, Sudeep.Holla@arm.com, devicetree@vger.kernel.org, viswanath.puttagunta@linaro.org, l.stach@pengutronix.de, thomas.petazzoni@free-electrons.com, linux-arm-kernel@lists.infradead.org, ta.omasab@gmail.com, kesavan.abhilash@gmail.com, khilman@linaro.org, santosh.shilimkar@oracle.com
 List-Id: devicetree@vger.kernel.org
 
-Add the bdisp (2D blitter for STMicroelectronics SoC) dt nodes for the
-first of the two bdisp devices, defining register address, interrupt and
-clock.
+On 06/04/2015 11:20 AM, Viresh Kumar wrote:
+> Current OPP (Operating performance point) device tree bindings have been
+> insufficient due to the inflexible nature of the original bindings. Over
+> time, we have realized that Operating Performance Point definitions and
+> usage is varied depending on the SoC and a "single size (just frequency,
+> voltage) fits all" model which the original bindings attempted and
+> failed.
+> 
+> The proposed next generation of the bindings addresses by providing a
+> expandable binding for OPPs and introduces the following common
+> shortcomings seen with the original bindings:
+> 
+> - Getting clock/voltage/current rails sharing information between CPUs.
+>   Shared by all cores vs independent clock per core vs shared clock per
+>   cluster.
+> 
+> - Support for specifying current levels along with voltages.
+> 
+> - Support for multiple regulators.
+> 
+> - Support for turbo modes.
+> 
+> - Other per OPP settings: transition latencies, disabled status, etc.?
+> 
+> - Expandability of OPPs in future.
+> 
+> This patch introduces new bindings "operating-points-v2" to get these problems
+> solved. Refer to the bindings for more details.
+> 
+> We now have multiple versions of OPP binding and only one of them should
+> be used per device.
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-Signed-off-by: Fabien Dessenne <fabien.dessenne-qxv4g6HH51o@public.gmane.org>
----
- arch/arm/boot/dts/stih410.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+I thought I had acked the patch 1 of the series as well in the list,
+but looks like I have'nt.. So, for the record..
 
-diff --git a/arch/arm/boot/dts/stih410.dtsi b/arch/arm/boot/dts/stih410.dtsi
-index 208b5e8..6f40bc9 100644
---- a/arch/arm/boot/dts/stih410.dtsi
-+++ b/arch/arm/boot/dts/stih410.dtsi
-@@ -10,6 +10,10 @@
- #include "stih407-family.dtsi"
- #include "stih410-pinctrl.dtsi"
- / {
-+	aliases {
-+		bdisp0 = &bdisp0;
-+	};
-+
- 	soc {
- 		usb2_picophy1: phy2 {
- 			compatible = "st,stih407-usb2-phy";
-@@ -218,5 +222,13 @@
- 				};
- 			};
- 		};
-+
-+		bdisp0:bdisp@9f10000 {
-+			compatible = "st,stih407-bdisp";
-+			reg = <0x9f10000 0x1000>;
-+			interrupts = <GIC_SPI 38 IRQ_TYPE_NONE>;
-+			clock-names = "bdisp";
-+			clocks = <&clk_s_c0_flexgen CLK_IC_BDISP_0>;
-+		};
- 	};
- };
+Acked-by: Nishanth Menon <nm@ti.com>
+
+
+Thanks for doing this.
+
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Nishanth Menon
