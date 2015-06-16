@@ -1,7 +1,7 @@
 From: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v3 05/22] doc: dt-binding: usb: add otg related properties
-Date: Tue, 16 Jun 2015 14:51:55 +0800
-Message-ID: <1434437532-23678-6-git-send-email-jun.li@freescale.com>
+Subject: [PATCH v3 04/22] usb: gadget: composite: add USB_DT_OTG request handling
+Date: Tue, 16 Jun 2015 14:51:54 +0800
+Message-ID: <1434437532-23678-5-git-send-email-jun.li@freescale.com>
 References: <1434437532-23678-1-git-send-email-jun.li@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,48 +12,53 @@ To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@
 Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org, Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add otg version, srp, hnp and adp support for usb OTG port, then those OTG
-features don't have to be decided by usb gadget drivers.
+From: Macpaul Lin <macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
+Copy usb_otg_descriptor from config's descriptor if host requests
+USB_DT_OTG.
+
+Signed-off-by: Macpaul Lin <macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- Documentation/devicetree/bindings/usb/generic.txt | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ drivers/usb/gadget/composite.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/generic.txt b/Documentation/devicetree/bindings/usb/generic.txt
-index 477d5bb..eb7308e 100644
---- a/Documentation/devicetree/bindings/usb/generic.txt
-+++ b/Documentation/devicetree/bindings/usb/generic.txt
-@@ -11,6 +11,20 @@ Optional properties:
- 			"peripheral" and "otg". In case this attribute isn't
- 			passed via DT, USB DRD controllers should default to
- 			OTG.
-+ - otg-rev: tells usb driver the release number of the OTG and EH supplement
-+			with which the device and its descriptors are compliant,
-+			in binary-coded decimal (i.e. 2.0 is 0200H). This
-+			property is used if any real OTG features(HNP/SRP/ADP)
-+			is enabled, also if ADP is enabled, otg-rev should be
-+			0x0200 or above.
-+ - hnp-disable: tells OTG controllers we want to disable OTG HNP, normally HNP
-+			is the basic function of real OTG except you want it
-+			to be a srp-capable only B device.
-+ - srp-disable: tells OTG controllers we want to disable OTG SRP, SRP is
-+			optional for OTG device.
-+ - adp-disable: tells OTG controllers we want to disable OTG ADP, ADP is
-+			optional for OTG device, if not passed, otg-rev should
-+			be set to be 0x0200 or above.
+diff --git a/drivers/usb/gadget/composite.c b/drivers/usb/gadget/composite.c
+index 4e3447b..8322e80 100644
+--- a/drivers/usb/gadget/composite.c
++++ b/drivers/usb/gadget/composite.c
+@@ -1534,6 +1534,31 @@ composite_setup(struct usb_gadget *gadget, const struct usb_ctrlrequest *ctrl)
+ 				value = min(w_length, (u16) value);
+ 			}
+ 			break;
++		case USB_DT_OTG:
++			if (gadget_is_otg(gadget)) {
++				struct usb_configuration *config;
++				int otg_desc_len = 0;
++
++				if (cdev->config)
++					config = cdev->config;
++				else
++					config = list_first_entry(
++							&cdev->configs,
++						struct usb_configuration, list);
++				if (!config)
++					goto done;
++
++				if (gadget->otg_rev >= 0x0200)
++					otg_desc_len += sizeof(
++						struct usb_otg20_descriptor);
++				else
++					otg_desc_len += sizeof(
++						struct usb_otg_descriptor);
++
++				value = min_t(int, w_length, otg_desc_len);
++				memcpy(req->buf, config->descriptors[0], value);
++			}
++			break;
+ 		}
+ 		break;
  
- This is an attribute to a USB controller such as:
- 
-@@ -21,4 +35,8 @@ dwc3@4a030000 {
- 	usb-phy = <&usb2_phy>, <&usb3,phy>;
- 	maximum-speed = "super-speed";
- 	dr_mode = "otg";
-+	otg-rev = <0x0200>;
-+	hnp-disable;
-+	srp-disable;
-+	adp-disable;
- };
 -- 
 1.9.1
 
