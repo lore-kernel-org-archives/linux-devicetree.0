@@ -1,100 +1,55 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 02/21] ARM: tegra: Add gpio-ranges property
-Date: Tue, 16 Jun 2015 14:32:14 -0600
-Message-ID: <558087CE.5070903@wwwdotorg.org>
-References: <1432565608-26036-1-git-send-email-tomeu.vizoso@collabora.com> <1432565608-26036-3-git-send-email-tomeu.vizoso@collabora.com> <5564CC84.1030700@wwwdotorg.org> <CACRpkdbtCDQLaPhWFT0a7NdJmxYzRvhU_efgUh2ZXhbc+FHg3g@mail.gmail.com> <556DCE71.7050108@wwwdotorg.org> <CAAObsKBtmJnBZXcv0UE6xGvphSCShFNWehOG8a-PJg-VqPznRw@mail.gmail.com>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH V7 3/3] OPP: Add binding for 'opp-suspend'
+Date: Tue, 16 Jun 2015 23:21:39 +0200
+Message-ID: <4228747.vs1U0RqIQB@vostro.rjw.lan>
+References: <cover.1433434659.git.viresh.kumar@linaro.org> <20150616025425.GB26592@linux> <CAL_JsqJ2gCJvtrZqDWWoY6Gv4Ag7xLV93wLbT5b37jO=oWo+MQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAAObsKBtmJnBZXcv0UE6xGvphSCShFNWehOG8a-PJg-VqPznRw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, =?UTF-8?B?U3TDqXBoYW5lIE1hcmNoZXNpbg==?= <stephane.marchesin@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Alexander Holler <holler@ahsoftware.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Alexandre Courbot <gnurou@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqJ2gCJvtrZqDWWoY6Gv4Ag7xLV93wLbT5b37jO=oWo+MQ@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Nishanth Menon <nm@ti.com>, Mark Brown <broonie@kernel.org>, Mike Turquette <mike.turquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Olof Johansson <olof@lixom.net>, Sudeep Holla <Sudeep.Holla@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Viswanath Puttagunta <viswanath.puttagunta@linaro.org>, Lucas Stach <l.stach@pengutronix.de>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Abraham <ta.omasab@gmail.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Kevin Hilman <khilman@linaro.org>, Santosh
 List-Id: devicetree@vger.kernel.org
 
-On 06/16/2015 02:42 AM, Tomeu Vizoso wrote:
-> On 2 June 2015 at 17:40, Stephen Warren <swarren@wwwdotorg.org> wrote:
->> On 06/02/2015 05:28 AM, Linus Walleij wrote:
->>>
->>> On Tue, May 26, 2015 at 9:41 PM, Stephen Warren <swarren@wwwdotorg.org>
->>> wrote:
->>>>
->>>> On 05/25/2015 08:53 AM, Tomeu Vizoso wrote:
->>>>>
->>>>>
->>>>> Specify how the GPIOs map to the pins in T124, so the dependency is
->>>>> explicit.
->>>>>
->>>>> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
->>>>> ---
->>>>>     arch/arm/boot/dts/tegra124.dtsi | 1 +
->>>>>     1 file changed, 1 insertion(+)
->>>>>
->>>>> diff --git a/arch/arm/boot/dts/tegra124.dtsi
->>>>> b/arch/arm/boot/dts/tegra124.dtsi
->>>>> index 13cc7ca..5d1d35f 100644
->>>>> --- a/arch/arm/boot/dts/tegra124.dtsi
->>>>> +++ b/arch/arm/boot/dts/tegra124.dtsi
->>>>> @@ -254,6 +254,7 @@
->>>>>                   gpio-controller;
->>>>>                   #interrupt-cells = <2>;
->>>>>                   interrupt-controller;
->>>>> +               gpio-ranges = <&pinmux 0 0 250>;
->>>>
->>>>
->>>>
->>>> We should be consistent between SoCs. Why not make the same change for
->>>> all
->>>> Tegra SoCs?
->>>
->>>
->>> Agreed.
->>>
->>>> I think this change will cause the GPIO subsystem to call into the
->>>> pinctrl
->>>> subsystem and create/add/register a new GPIO<->pinctrl range structure.
->>>> The
->>>> pinctrl driver already does this, so I think we'll end up with two
->>>> duplicate
->>>> entries in the pinctrl device's gpio_ranges list. This probably won't
->>>> cause
->>>> a problem, but I wanted to make sure you'd thought about it to make sure.
->>>
->>>
->>> That sounds like duplication indeed, I would expect that first a patch
->>> adds the ranges to the dts[i] files and then a second patch delete the
->>> same ranges from the pinctrl driver then, if these shall come in from
->>> the device tree.
->>
->>
->> We can't delete the gpio-range-registration code from the Tegra pinmux
->> driver, or old DTs won't work correctly. We could make it conditional based
->> upon whether the DT contains the property or not.
->
-> I've been looking at this and haven't found a good solution. From what
-> I see, the pinctrl driver doesn't have a reference to the gpio device
-> node so cannot tell if it needs to add the range or not.
+On Tuesday, June 16, 2015 02:23:23 PM Rob Herring wrote:
+> On Mon, Jun 15, 2015 at 9:54 PM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > On 16-06-15, 06:01, Viresh Kumar wrote:
+> >> On 16 June 2015 at 05:05, Rob Herring <robherring2@gmail.com> wrote:
+> >> >> +- opp-suspend: Phandle of the OPP to set while device is suspended.
+> >> >> +
+> >> >
+> >> > I would just do a bool property in the OPP you want.
+> >>
+> >> I will do that if you want, no big deal.
+> >
+> > In order to not waste any time, here is the change you suggested. Ack
+> > the one (original change or this one) you like :)
+> >
+> > ------------------8<----------------------
+> >
+> > From: Viresh Kumar <viresh.kumar@linaro.org>
+> > Date: Wed, 20 May 2015 08:27:49 +0530
+> > Subject: [PATCH V8] OPP: Add binding for 'opp-suspend'
+> >
+> > On few platforms, for power efficiency, we want the device to be
+> > configured for a specific OPP while we put the device in suspend state.
+> >
+> > Add an optional property in operating-points-v2 bindings for that.
+> >
+> > Acked-by: Nishanth Menon <nm@ti.com>
+> > Suggested-by: Nishanth Menon <nm@ti.com>
+> > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> > ---
+> > V7->V8:
+> > - opp-suspend is moved to OPPs instead of the table, and is bool now.
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
 
-Well, we know what the node must be called, so the pinctrl driver could 
-search for it by name.
+Thanks!
 
-> The gpio driver can tell whether it should add the range or not, but
-> if it has to because the gpio-ranges property isn't there, then it
-> doesn't have the reference to the pinctrl device to set the range to.
->
-> So, given that pinctrl_add_gpio_range is deprecated already, wonder if
-> the lesser evil isn't leaving the duplicated entries for now. On newer
-> SoC revisions such as T210 we can stop calling pinctrl_add_gpio_range
-> at all.
->
-> Or, we can accept that nobody is going to boot a newer kernel with an
-> older DT on the affected boards and just rely on the presence of the
-> gpio-ranges property :)
+Does your ACK also apply to patches [1-2/3] in this series?
 
-Isn't the simplest solution to just leave it as it is? Nothing's broken 
-is it?
+Rafael
 
-For any new SoCs we add, we can certainly switch to a new scheme if we 
-want, but we need to catch/implement that early before the base .dtsi 
-file is included in its first kernel release.
