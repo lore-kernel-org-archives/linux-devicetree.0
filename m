@@ -1,134 +1,110 @@
 From: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v3 10/22] usb: gadget: configfs: init and add
- usb_otg_descriptor for usb configurations
-Date: Tue, 16 Jun 2015 16:08:25 +0800
-Message-ID: <20150616080824.GB10574@shlinux2>
+Subject: Re: [PATCH v3 09/22] usb: gadget: add usb_otg_descriptor_add
+ interface to init usb_otg_descriptor
+Date: Tue, 16 Jun 2015 16:13:45 +0800
+Message-ID: <20150616081344.GC10574@shlinux2>
 References: <1434437532-23678-1-git-send-email-jun.li@freescale.com>
- <1434437532-23678-11-git-send-email-jun.li@freescale.com>
- <20150616105827.10961583@rockdesk>
+ <1434437532-23678-10-git-send-email-jun.li@freescale.com>
+ <20150616110158.2bfd1354@rockdesk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20150616105827.10961583@rockdesk>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20150616110158.2bfd1354@rockdesk>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
 Cc: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 16, 2015 at 10:58:27AM +0300, Roger Quadros wrote:
+On Tue, Jun 16, 2015 at 11:01:58AM +0300, Roger Quadros wrote:
 > 
-> On Tue, 16 Jun 2015 14:52:00 +0800
+> On Tue, 16 Jun 2015 14:51:59 +0800
 > Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
 > 
-> > Use usb_otg_descriptor_add to allocate and initialize usb_otg_descriptor,
-> > add it for each usb configurations, free it while composite unbind.
+> > Allocate usb_otg_descriptor and initialize it according to gadget otg
+> > options, if none of options is not set, keep bmAttributes setting as
+> > current gadget drivers, with this new interface, usb_otg_descriptor can
+> > include bcdOTG if OTG 2.0 or later, and otg features can be decided by
+> > the combination of usb hardware property and driver config.
 > > 
 > > Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 > > ---
-> >  drivers/usb/gadget/configfs.c | 34 +++++++++++++++++++++++++---------
-> >  1 file changed, 25 insertions(+), 9 deletions(-)
+> >  drivers/usb/gadget/config.c | 39 +++++++++++++++++++++++++++++++++++++++
+> >  include/linux/usb/gadget.h  |  2 ++
+> >  2 files changed, 41 insertions(+)
 > > 
-> > diff --git a/drivers/usb/gadget/configfs.c b/drivers/usb/gadget/configfs.c
-> > index 0495c94..773b746 100644
-> > --- a/drivers/usb/gadget/configfs.c
-> > +++ b/drivers/usb/gadget/configfs.c
-> > @@ -41,6 +41,8 @@ int check_user_usb_string(const char *name,
-> >  #define MAX_NAME_LEN	40
-> >  #define MAX_USB_STRING_LANGS 2
-> >  
-> > +static const struct usb_descriptor_header *otg_desc[2];
+> > diff --git a/drivers/usb/gadget/config.c b/drivers/usb/gadget/config.c
+> > index 34e12fc..9ebc052 100644
+> > --- a/drivers/usb/gadget/config.c
+> > +++ b/drivers/usb/gadget/config.c
+> > @@ -195,3 +195,42 @@ void usb_free_all_descriptors(struct usb_function *f)
+> >  	usb_free_descriptors(f->ss_descriptors);
+> >  }
+> >  EXPORT_SYMBOL_GPL(usb_free_all_descriptors);
 > > +
-> >  struct gadget_info {
-> >  	struct config_group group;
-> >  	struct config_group functions_group;
-> > @@ -55,9 +57,6 @@ struct gadget_info {
-> >  	struct list_head available_func;
-> >  
-> >  	const char *udc_name;
-> > -#ifdef CONFIG_USB_OTG
-> > -	struct usb_otg_descriptor otg;
-> > -#endif
-> >  	struct usb_composite_driver composite;
-> >  	struct usb_composite_dev cdev;
-> >  	bool use_os_desc;
-> > @@ -1376,6 +1375,24 @@ static int configfs_composite_bind(struct usb_gadget *gadget,
-> >  		memcpy(cdev->qw_sign, gi->qw_sign, OS_STRING_QW_SIGN_LEN);
-> >  	}
-> >  
-> > +	if (gadget_is_otg(gadget) && !otg_desc[0]) {
-> > +		struct usb_descriptor_header *usb_desc;
-> > +		unsigned length;
+> > +int usb_otg_descriptor_init(struct usb_gadget *gadget,
+> > +		struct usb_descriptor_header *otg_desc)
+> > +{
+> > +	struct usb_otg_descriptor *otg1x_desc;
+> > +	struct usb_otg20_descriptor *otg20_desc;
+> > +	u8 otg_attributes = 0;
 > > +
-> > +		if (gadget->otg_rev >= 0x0200)
-> > +			length = sizeof(struct usb_otg20_descriptor);
-> > +		else
-> > +			length = sizeof(struct usb_otg_descriptor);
-> > +		usb_desc = kzalloc(length, GFP_KERNEL);
-> > +		if (!usb_desc) {
-> > +			ret = -ENOMEM;
-> > +			goto err_comp_cleanup;
-> > +		}
+> > +	if (!otg_desc)
+> > +		return -EINVAL;
+> > +
+> > +	if (gadget->adp_support || gadget->hnp_support ||
+> > +					gadget->srp_support) {
+> > +		if (gadget->adp_support)
+> > +			otg_attributes |= USB_OTG_ADP;
+> > +		if (gadget->hnp_support)
+> > +			otg_attributes |= USB_OTG_HNP;
+> > +		if (gadget->srp_support)
+> > +			otg_attributes |= USB_OTG_SRP;
+> > +	} else {
+> > +		otg_attributes = USB_OTG_SRP | USB_OTG_HNP;
+> > +	}
 > 
-> This code seems to be common across all gadgets.
-> Can we have usb_otg_descriptor_alloc() that takes care of allocating the
-> right size based on descriptor version?
+> Didn't we agree that if otg_rev is not set then only we will use the legacy
+> method?
 > 
-> Then we can have
-> 		usb_desc = usb_otg_descriptor_alloc(gadget);
-> 		if (IS_ERR(usb_desc)) {
-> 			ret = PTR_ERR(usb_desc);
-> 			goto err_comp_cleanup;
-> 		}
-> 
-
-That's better, I will update in next version.
+oh, yes, we had agreed that approach, seems I missed the update here,
+it's easier to use otg_rev to judge legacy platform, I will update.
 
 Li Jun
-> > +		usb_otg_descriptor_init(gadget, usb_desc);
-> > +		otg_desc[0] = usb_desc;
-> > +		otg_desc[1] = NULL;
+> > +
+> > +	if (gadget->otg_rev >= 0x0200) {
+> > +		otg20_desc = (struct usb_otg20_descriptor *)otg_desc;
+> > +		otg20_desc->bLength = sizeof(struct usb_otg20_descriptor);
+> > +		otg20_desc->bDescriptorType = USB_DT_OTG;
+> > +		otg20_desc->bmAttributes = otg_attributes;
+> > +		otg20_desc->bcdOTG = cpu_to_le16(gadget->otg_rev);
+> > +	} else {
+> > +		otg1x_desc = (struct usb_otg_descriptor *)otg_desc;
+> > +		otg1x_desc->bLength = sizeof(struct usb_otg_descriptor);
+> > +		otg1x_desc->bDescriptorType = USB_DT_OTG;
+> > +		otg1x_desc->bmAttributes = otg_attributes;
 > > +	}
 > > +
-> >  	/* Go through all configs, attach all functions */
-> >  	list_for_each_entry(c, &gi->cdev.configs, list) {
-> >  		struct config_usb_cfg *cfg;
-> > @@ -1383,6 +1400,9 @@ static int configfs_composite_bind(struct usb_gadget *gadget,
-> >  		struct usb_function *tmp;
-> >  		struct gadget_config_name *cn;
+> > +	return 0;
+> > +}
+> > +EXPORT_SYMBOL_GPL(usb_otg_descriptor_init);
+> > diff --git a/include/linux/usb/gadget.h b/include/linux/usb/gadget.h
+> > index 814cb70..b77730e 100644
+> > --- a/include/linux/usb/gadget.h
+> > +++ b/include/linux/usb/gadget.h
+> > @@ -1013,6 +1013,8 @@ int usb_assign_descriptors(struct usb_function *f,
+> >  		struct usb_descriptor_header **ss);
+> >  void usb_free_all_descriptors(struct usb_function *f);
 > >  
-> > +		if (gadget_is_otg(gadget))
-> > +			c->descriptors = otg_desc;
-> > +
-> >  		cfg = container_of(c, struct config_usb_cfg, c);
-> >  		if (!list_empty(&cfg->string_list)) {
-> >  			i = 0;
-> > @@ -1437,6 +1457,8 @@ static void configfs_composite_unbind(struct usb_gadget *gadget)
-> >  	cdev = get_gadget_data(gadget);
-> >  	gi = container_of(cdev, struct gadget_info, cdev);
+> > +int usb_otg_descriptor_init(struct usb_gadget *gadget,
+> > +		struct usb_descriptor_header *otg_desc);
+> >  /*-------------------------------------------------------------------------*/
 > >  
-> > +	kfree(otg_desc[0]);
-> > +	otg_desc[0] = NULL;
-> >  	purge_configs_funcs(gi);
-> >  	composite_dev_cleanup(cdev);
-> >  	usb_ep_autoconfig_reset(cdev->gadget);
-> > @@ -1510,12 +1532,6 @@ static struct config_group *gadgets_make(
-> >  	if (!gi->composite.gadget_driver.function)
-> >  		goto err;
-> >  
-> > -#ifdef CONFIG_USB_OTG
-> > -	gi->otg.bLength = sizeof(struct usb_otg_descriptor);
-> > -	gi->otg.bDescriptorType = USB_DT_OTG;
-> > -	gi->otg.bmAttributes = USB_OTG_SRP | USB_OTG_HNP;
-> > -#endif
-> > -
-> >  	config_group_init_type_name(&gi->group, name,
-> >  				&gadget_root_type);
-> >  	return &gi->group;
+> >  /* utility to simplify map/unmap of usb_requests to/from DMA */
 > 
 > cheers,
 > -roger
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
