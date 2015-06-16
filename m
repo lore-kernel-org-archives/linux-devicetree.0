@@ -1,7 +1,7 @@
 From: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v3 12/22] usb: gadget: acm_ms: init usb_otg_descriptor via usb_otg_descriptor_add
-Date: Tue, 16 Jun 2015 14:52:02 +0800
-Message-ID: <1434437532-23678-13-git-send-email-jun.li@freescale.com>
+Subject: [PATCH v3 14/22] usb: gadget: cdc2: init usb_otg_descriptor via usb_otg_descriptor_add
+Date: Tue, 16 Jun 2015 14:52:04 +0800
+Message-ID: <1434437532-23678-15-git-send-email-jun.li@freescale.com>
 References: <1434437532-23678-1-git-send-email-jun.li@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -17,23 +17,22 @@ free it while composite unbind.
 
 Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- drivers/usb/gadget/legacy/acm_ms.c | 34 +++++++++++++++++++---------------
+ drivers/usb/gadget/legacy/cdc2.c | 34 +++++++++++++++++++---------------
  1 file changed, 19 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/usb/gadget/legacy/acm_ms.c b/drivers/usb/gadget/legacy/acm_ms.c
-index 1194b09..e10e19e 100644
---- a/drivers/usb/gadget/legacy/acm_ms.c
-+++ b/drivers/usb/gadget/legacy/acm_ms.c
-@@ -58,21 +58,7 @@ static struct usb_device_descriptor device_desc = {
- 	/*.bNumConfigurations =	DYNAMIC*/
+diff --git a/drivers/usb/gadget/legacy/cdc2.c b/drivers/usb/gadget/legacy/cdc2.c
+index afd3e37..fc0d504 100644
+--- a/drivers/usb/gadget/legacy/cdc2.c
++++ b/drivers/usb/gadget/legacy/cdc2.c
+@@ -60,21 +60,7 @@ static struct usb_device_descriptor device_desc = {
+ 	.bNumConfigurations =	1,
  };
  
 -static struct usb_otg_descriptor otg_descriptor = {
 -	.bLength =		sizeof otg_descriptor,
 -	.bDescriptorType =	USB_DT_OTG,
 -
--	/*
--	 * REVISIT SRP-only hardware is possible, although
+-	/* REVISIT SRP-only hardware is possible, although
 -	 * it would not be called "OTG" ...
 -	 */
 -	.bmAttributes =		USB_OTG_SRP | USB_OTG_HNP,
@@ -43,11 +42,12 @@ index 1194b09..e10e19e 100644
 -	(struct usb_descriptor_header *) &otg_descriptor,
 -	NULL,
 -};
+-
 +static const struct usb_descriptor_header *otg_desc[2];
  
  /* string IDs are assigned dynamically */
  static struct usb_string strings_dev[] = {
-@@ -127,6 +113,21 @@ static int acm_ms_do_config(struct usb_configuration *c)
+@@ -109,6 +95,21 @@ static int cdc_do_config(struct usb_configuration *c)
  	int	status;
  
  	if (gadget_is_otg(c->cdev->gadget)) {
@@ -69,10 +69,10 @@ index 1194b09..e10e19e 100644
  		c->descriptors = otg_desc;
  		c->bmAttributes |= USB_CONFIG_ATT_WAKEUP;
  	}
-@@ -255,6 +256,9 @@ static int acm_ms_unbind(struct usb_composite_dev *cdev)
- 	usb_put_function_instance(fi_msg);
- 	usb_put_function(f_acm);
- 	usb_put_function_instance(f_acm_inst);
+@@ -219,6 +220,9 @@ static int cdc_unbind(struct usb_composite_dev *cdev)
+ 		usb_put_function(f_ecm);
+ 	if (!IS_ERR_OR_NULL(fi_ecm))
+ 		usb_put_function_instance(fi_ecm);
 +	kfree(otg_desc[0]);
 +	otg_desc[0] = NULL;
 +
