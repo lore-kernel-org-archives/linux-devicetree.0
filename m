@@ -1,36 +1,130 @@
-Return-Path: <moorray3@wp.pl>
-Date: Wed, 17 Jun 2015 18:10:13 +0200
-From: Jakub =?UTF-8?B?S2ljacWEc2tp?= <moorray3@wp.pl>
-Subject: Re: [PATCH 2/3] spi: mediatek: Add spi bus for Mediatek MT8173
-Message-ID: <20150617181013.2688d08f@north>
-In-Reply-To: <1434550251.23617.38.camel@mtksdaap41>
-References: <1431434356.2128.9.camel@mhfsdcap03>
-	<20150512160540.GB3066@sirena.org.uk>
-	<1431675522.2128.13.camel@mhfsdcap03>
-	<20150515092543.GY2761@sirena.org.uk>
-	<1433758546.19786.16.camel@mtksdaap41>
-	<20150608175927.GO14071@sirena.org.uk>
-	<1433844321.16178.6.camel@mtksdaap41>
-	<20150609103951.GA14071@sirena.org.uk>
-	<1433923569.22080.1.camel@mtksdaap41>
-	<1434532083.19346.27.camel@mtksdaap41>
-	<20150617124758.GE3214@sirena.org.uk>
-	<1434550251.23617.38.camel@mtksdaap41>
+Return-Path: <me@kylehuey.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-To: Eddie Huang <eddie.huang@mediatek.com>
-Cc: Mark Brown <broonie@kernel.org>, "Leilk Liu (=?UTF-8?B?5YiY56OK?=) " <Leilk.Liu@mediatek.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, HongZhou Yang <hongzhou.yang@mediatek.com>, Sascha Hauer <s.hauer@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org\" " <linux-arm-kernel@lists.infradead.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "linux-mediatek@lists.infradead.org\" " <linux-mediatek@lists.infradead.org>, srv_heupstream <srv_heupstream@mediatek.com>
+In-Reply-To: <20150616091619.GA17817@leverpostej>
+References: <1434393968-1105-1-git-send-email-khuey@kylehuey.com>
+	<20150616091619.GA17817@leverpostej>
+Date: Tue, 16 Jun 2015 14:29:51 -0700
+Message-ID: <CAP045ArZzj3Bda7J97VgZ10Xo79MwYGUs3=L5Qb9e-pRWiusSw@mail.gmail.com>
+Subject: Re: [PATCH v2] ARM: tegra124: pmu support
+From: Kyle Huey <me@kylehuey.com>
+Content-Type: multipart/alternative; boundary=047d7bd75ba24663900518a94610
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jon Hunter <jonathanh@nvidia.com>, Kyle Huey <khuey@kylehuey.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, 17 Jun 2015 22:10:51 +0800, Eddie Huang wrote:
-> If tx scatterlist per list data size are 128, 4096, 256. rx scatterlist
-> per list data size are 128, 4096, 256. So we need to go through above
-> steps three times. If tx scatterlists per list data size are 128, 4096,
-> 256. rx scatterlists per list data size are 256, 4096, 128. If we start
-> sending first entry, tx size is 128, rx size is 256, this will cause
-> hardware malfunction because tx, rx data length are not the same.
+--047d7bd75ba24663900518a94610
+Content-Type: text/plain; charset=UTF-8
 
-You can just use min(next_rx_len, next_tx_len) as transfer size. 
-Am I missing something?  For your 128, 4096, 256 vs 256, 4096, 128
-example you could do: 128, 128, 3968, 128, 128.
+On Tue, Jun 16, 2015 at 2:16 AM, Mark Rutland <mark.rutland@arm.com> wrote:
+
+> On Mon, Jun 15, 2015 at 07:46:08PM +0100, Kyle Huey wrote:
+> > This patch modifies the device tree for tegra124 based devices to enable
+> the Cortex A15 PMU.  The interrupt numbers are taken from NVIDIA TRM
+> DP-06905-001_v03p.  This patch was tested on a Jetson TK1.
+> >
+> > Signed-off-by: Kyle Huey <khuey@kylehuey.com>
+> > ---
+> >  arch/arm/boot/dts/tegra124.dtsi | 8 ++++++++
+> >  1 file changed, 8 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/tegra124.dtsi
+> b/arch/arm/boot/dts/tegra124.dtsi
+> > index 4be06c6..d966d4e 100644
+> > --- a/arch/arm/boot/dts/tegra124.dtsi
+> > +++ b/arch/arm/boot/dts/tegra124.dtsi
+> > @@ -906,16 +906,24 @@
+> >
+> >               cpu@3 {
+> >                       device_type = "cpu";
+> >                       compatible = "arm,cortex-a15";
+> >                       reg = <3>;
+> >               };
+> >       };
+> >
+> > +     pmu {
+> > +             compatible = "arm,cortex-a15-pmu";
+> > +             interrupts = <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
+> > +     };
+>
+> As these are SPIs, you should fill in the interrupt-affinity property
+> (see Documentation/devicetree/bindings/arm/pmu.txt). That'll avoid
+> potential problems with CPU renumbering, and prevent the kernel from
+> complaining at boot time.
+>
+> Otherwise, this looks fine.
+>
+> Thanks,
+> Mark.
+>
+
+Thanks for the review.  I just sent a v3 with this addressed.
+
+- Kyle
+
+--047d7bd75ba24663900518a94610
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div class=3D"gmail_extra"><div class=3D"gmail_quote">On T=
+ue, Jun 16, 2015 at 2:16 AM, Mark Rutland <span dir=3D"ltr">&lt;<a href=3D"=
+mailto:mark.rutland@arm.com" target=3D"_blank">mark.rutland@arm.com</a>&gt;=
+</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .=
+8ex;border-left:1px #ccc solid;padding-left:1ex"><span class=3D"">On Mon, J=
+un 15, 2015 at 07:46:08PM +0100, Kyle Huey wrote:<br>
+&gt; This patch modifies the device tree for tegra124 based devices to enab=
+le the Cortex A15 PMU.=C2=A0 The interrupt numbers are taken from NVIDIA TR=
+M DP-06905-001_v03p.=C2=A0 This patch was tested on a Jetson TK1.<br>
+&gt;<br>
+&gt; Signed-off-by: Kyle Huey &lt;<a href=3D"mailto:khuey@kylehuey.com">khu=
+ey@kylehuey.com</a>&gt;<br>
+&gt; ---<br>
+&gt;=C2=A0 arch/arm/boot/dts/tegra124.dtsi | 8 ++++++++<br>
+&gt;=C2=A0 1 file changed, 8 insertions(+)<br>
+&gt;<br>
+&gt; diff --git a/arch/arm/boot/dts/tegra124.dtsi b/arch/arm/boot/dts/tegra=
+124.dtsi<br>
+&gt; index 4be06c6..d966d4e 100644<br>
+&gt; --- a/arch/arm/boot/dts/tegra124.dtsi<br>
+&gt; +++ b/arch/arm/boot/dts/tegra124.dtsi<br>
+&gt; @@ -906,16 +906,24 @@<br>
+&gt;<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0cpu@3 {<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0device_type =3D &quot;cpu&quot;;<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0compatible =3D &quot;arm,cortex-a15&quot;;<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0reg =3D &lt;3&gt;;<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0};<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0};<br>
+&gt;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0pmu {<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0compatible =3D &quot;=
+arm,cortex-a15-pmu&quot;;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0interrupts =3D &lt;GI=
+C_SPI 144 IRQ_TYPE_LEVEL_HIGH&gt;,<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 &lt;GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH&gt;,<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 &lt;GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH&gt;,<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 &lt;GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH&gt;;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0};<br>
+<br>
+</span>As these are SPIs, you should fill in the interrupt-affinity propert=
+y<br>
+(see Documentation/devicetree/bindings/arm/pmu.txt). That&#39;ll avoid<br>
+potential problems with CPU renumbering, and prevent the kernel from<br>
+complaining at boot time.<br>
+<br>
+Otherwise, this looks fine.<br>
+<br>
+Thanks,<br>
+Mark.<br></blockquote><div><br></div><div>Thanks for the review.=C2=A0 I ju=
+st sent a v3 with this addressed.<br><br></div><div>- Kyle <br></div></div>=
+<br></div></div>
+
+--047d7bd75ba24663900518a94610--
