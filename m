@@ -1,172 +1,120 @@
-From: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 1/2] ARM: at91: dts: add isi & ov2640 dt nodes for at91sam9m10g45ek board
-Date: Tue, 16 Jun 2015 18:08:34 +0800
-Message-ID: <1434449315-9243-1-git-send-email-josh.wu@atmel.com>
+From: Caesar Wang <wxt@rock-chips.com>
+Subject: Re: [PATCH v2 0/3] Add the efuse driver on rockchip platform
+Date: Tue, 16 Jun 2015 18:06:04 +0800
+Message-ID: <557FF50C.10809@rock-chips.com>
+References: <1434439665-27781-1-git-send-email-wxt@rock-chips.com> <557FE3EA.4000306@i2se.com> <557FEAB2.1040101@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <557FEAB2.1040101@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Stefan Wahren <stefan.wahren@i2se.com>
+Cc: heiko@sntech.de, mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linus.walleij@linaro.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, galak@codeaurora.org, matthias.bgg@gmail.com, jay.xu@rock-chips.com, linux-arm-kernel@lists.infradead.org, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-First we group the isi data pins, and for now we only use 0~7 data pins
-with HSYNC and VSYNC.
-Also add the link for atmel-isi and ov2640 sensor node.
+Hi Srinivas,
 
-Signed-off-by: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
----
+=E5=9C=A8 2015=E5=B9=B406=E6=9C=8816=E6=97=A5 17:21, Srinivas Kandagatl=
+a =E5=86=99=E9=81=93:
+> Hi Stefan,
+>
+>
+> On 16/06/15 09:52, Stefan Wahren wrote:
+>> Hi Caesar,
+>>
+>> [add Maxime and Srinivas]
+>>
+>> Am 16.06.2015 um 09:27 schrieb Caesar Wang:
+>>> The original driver is uploaded by Jianqun.
+>>> Here is his patchs:
+>>>      https://patchwork.kernel.org/patch/5410341/
+>>>      https://patchwork.kernel.org/patch/5410351/
+>>>
+>>> Jianqun, nevermind!
+>>> I check-pick it and re-upload the driver for the upstream.
+>>> e.g.:
+>>>      Tested by on minnie board.(kernel-4.1-rc8)
+>>>      cd /sys/devices/platform/ffb40000.efuse
+>>>      localhost ffb40000.efuse # cat cpu_leakage_show
+>>>      cpu_version_show
+>>>      The results:
+>>>              19
+>>>              2
+>>>
+>>> Changes in v2:
+>>> - Change the document decription.
+>>> - Move the efuse driver into driver/soc/vendor.
+>>> - update the efuse driver.
+>>> - Add the dts node on RK3288.
+>>>
+>>>
+>>
+>> i want to mention that there is a upcoming new framework suitable fo=
+r
+>> efuse drivers:
+>>
+>> https://lkml.org/lkml/2015/5/21/643
+>>
+>> Unfortunately i don't know the current development state.
+>>
+>
+> Currently this framework is used by atleast 3 drivers(qcom-tsens,=20
+> qcom-cpr, begel-bone-cape manager) which are still floating in the=20
+> mailing list.
+>
+> I was hoping that these 3 users would getback with tested-by.. which=20
+> did not happen for last 3-4 weeks.
+>
+> I would appreciate, If you could try framework too, and let me know.
 
-Changes in v2:
-- group the isi data pin.
-- remove the isi_mck pin from pinctrl-isi as it will used by camera
-  sensor.
+Okay,
+I will do that...
 
- arch/arm/boot/dts/at91sam9g45.dtsi     | 48 +++++++++++++++++++++-------------
- arch/arm/boot/dts/at91sam9m10g45ek.dts | 45 +++++++++++++++++++++++++++++++
- 2 files changed, 75 insertions(+), 18 deletions(-)
+Doing.....
+203d56b WIP: nvmem: add device tree helper functions
+7d822d7 nvmem: sunxi: Move the SID driver to the nvmem framework
+f54130d nvmem: qfprom: Add bindings for qfprom
+6e078d2 nvmem: qfprom: Add Qualcomm QFPROM support.
+750d32b nvmem: Add simple nvmem-mmio consumer helper functions.
+6390111 nvmem: Add bindings for simple nvmem framework
+1c02217 nvmem: Add nvmem_device based consumer apis.
+61ce74f nvmem: Add a simple NVMEM framework for consumers
+0f82237 nvmem: Add a simple NVMEM framework for nvmem providers
+7547598 regmap: Introduce regmap_get_reg_stride.
+f3bc1c0 regmap: Introduce regmap_get_max_register.
+f0b3b70 ARM: rockchip: fix the SMP code style
+8a28ee6 ARM: rockchip: ensure CPU to enter WFI/WFE state
+609deeb ARM: rockchip: fix the CPU soft reset
+2a876e4 ARM: rockchip: restore dapswjdp after suspend
+e260818 Linux 4.1-rc4
+ab992dc watchdog: Fix merge 'conflict'
+=2E...
 
-diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
-index d260ba7..f6220d6 100644
---- a/arch/arm/boot/dts/at91sam9g45.dtsi
-+++ b/arch/arm/boot/dts/at91sam9g45.dtsi
-@@ -498,23 +498,31 @@
- 				};
- 
- 				isi {
--					pinctrl_isi: isi-0 {
--						atmel,pins = <AT91_PIOB 8 AT91_PERIPH_B AT91_PINCTRL_NONE /* D8 */
--							      AT91_PIOB 9 AT91_PERIPH_B AT91_PINCTRL_NONE /* D9 */
--							      AT91_PIOB 10 AT91_PERIPH_B AT91_PINCTRL_NONE /* D10 */
--							      AT91_PIOB 11 AT91_PERIPH_B AT91_PINCTRL_NONE /* D11 */
--							      AT91_PIOB 20 AT91_PERIPH_A AT91_PINCTRL_NONE /* D0 */
--							      AT91_PIOB 21 AT91_PERIPH_A AT91_PINCTRL_NONE /* D1 */
--							      AT91_PIOB 22 AT91_PERIPH_A AT91_PINCTRL_NONE /* D2 */
--							      AT91_PIOB 23 AT91_PERIPH_A AT91_PINCTRL_NONE /* D3 */
--							      AT91_PIOB 24 AT91_PERIPH_A AT91_PINCTRL_NONE /* D4 */
--							      AT91_PIOB 25 AT91_PERIPH_A AT91_PINCTRL_NONE /* D5 */
--							      AT91_PIOB 26 AT91_PERIPH_A AT91_PINCTRL_NONE /* D6 */
--							      AT91_PIOB 27 AT91_PERIPH_A AT91_PINCTRL_NONE /* D7 */
--							      AT91_PIOB 28 AT91_PERIPH_A AT91_PINCTRL_NONE /* PCK */
--							      AT91_PIOB 29 AT91_PERIPH_A AT91_PINCTRL_NONE /* VSYNC */
--							      AT91_PIOB 30 AT91_PERIPH_A AT91_PINCTRL_NONE /* HSYNC */
--							      AT91_PIOB 31 AT91_PERIPH_A AT91_PINCTRL_NONE /* MCK */>;
-+					pinctrl_isi_data_0_7: isi-0-data-0-7 {
-+						atmel,pins =
-+							<AT91_PIOB 20 AT91_PERIPH_A AT91_PINCTRL_NONE /* D0 */
-+							AT91_PIOB 21 AT91_PERIPH_A AT91_PINCTRL_NONE /* D1 */
-+							AT91_PIOB 22 AT91_PERIPH_A AT91_PINCTRL_NONE /* D2 */
-+							AT91_PIOB 23 AT91_PERIPH_A AT91_PINCTRL_NONE /* D3 */
-+							AT91_PIOB 24 AT91_PERIPH_A AT91_PINCTRL_NONE /* D4 */
-+							AT91_PIOB 25 AT91_PERIPH_A AT91_PINCTRL_NONE /* D5 */
-+							AT91_PIOB 26 AT91_PERIPH_A AT91_PINCTRL_NONE /* D6 */
-+							AT91_PIOB 27 AT91_PERIPH_A AT91_PINCTRL_NONE /* D7 */
-+							AT91_PIOB 28 AT91_PERIPH_A AT91_PINCTRL_NONE /* PCK */
-+							AT91_PIOB 29 AT91_PERIPH_A AT91_PINCTRL_NONE /* VSYNC */
-+							AT91_PIOB 30 AT91_PERIPH_A AT91_PINCTRL_NONE>; /* HSYNC */
-+					};
-+
-+					pinctrl_isi_data_8_9: isi-0-data-8-9 {
-+						atmel,pins =
-+							<AT91_PIOB 8 AT91_PERIPH_B AT91_PINCTRL_NONE /* D8 */
-+							AT91_PIOB 9 AT91_PERIPH_B AT91_PINCTRL_NONE>; /* D9 */
-+					};
-+
-+					pinctrl_isi_data_10_11: isi-0-data-10-11 {
-+						atmel,pins =
-+							<AT91_PIOB 10 AT91_PERIPH_B AT91_PINCTRL_NONE /* D10 */
-+							AT91_PIOB 11 AT91_PERIPH_B AT91_PINCTRL_NONE>; /* D11 */
- 					};
- 				};
- 
-@@ -1068,8 +1076,12 @@
- 				clocks = <&isi_clk>;
- 				clock-names = "isi_clk";
- 				pinctrl-names = "default";
--				pinctrl-0 = <&pinctrl_isi>;
-+				pinctrl-0 = <&pinctrl_isi_data_0_7>;
- 				status = "disabled";
-+				port {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+				};
- 			};
- 
- 			pwm0: pwm@fffb8000 {
-diff --git a/arch/arm/boot/dts/at91sam9m10g45ek.dts b/arch/arm/boot/dts/at91sam9m10g45ek.dts
-index 1375d33..5062e18 100644
---- a/arch/arm/boot/dts/at91sam9m10g45ek.dts
-+++ b/arch/arm/boot/dts/at91sam9m10g45ek.dts
-@@ -63,6 +63,25 @@
- 
- 			i2c0: i2c@fff84000 {
- 				status = "okay";
-+				ov2640: camera@30 {
-+					compatible = "ovti,ov2640";
-+					reg = <0x30>;
-+					pinctrl-names = "default";
-+					pinctrl-0 = <&pinctrl_pck1_as_isi_mck &pinctrl_sensor_power &pinctrl_sensor_reset>;
-+					resetb-gpios = <&pioD 12 GPIO_ACTIVE_LOW>;
-+					pwdn-gpios = <&pioD 13 GPIO_ACTIVE_HIGH>;
-+					clocks = <&pck1>;
-+					clock-names = "xvclk";
-+					assigned-clocks = <&pck1>;
-+					assigned-clock-rates = <25000000>;
-+
-+					port {
-+						ov2640_0: endpoint {
-+							remote-endpoint = <&isi_0>;
-+							bus-width = <8>;
-+						};
-+					};
-+				};
- 			};
- 
- 			i2c1: i2c@fff88000 {
-@@ -101,6 +120,22 @@
- 			};
- 
- 			pinctrl@fffff200 {
-+				camera_sensor {
-+					pinctrl_pck1_as_isi_mck: pck1_as_isi_mck-0 {
-+						atmel,pins =
-+							<AT91_PIOB 31 AT91_PERIPH_B AT91_PINCTRL_NONE>;
-+					};
-+
-+					pinctrl_sensor_reset: sensor_reset-0 {
-+						atmel,pins =
-+							<AT91_PIOD 12 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>;
-+					};
-+
-+					pinctrl_sensor_power: sensor_power-0 {
-+						atmel,pins =
-+							<AT91_PIOD 13 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>;
-+					};
-+				};
- 				mmc0 {
- 					pinctrl_board_mmc0: mmc0-board {
- 						atmel,pins =
-@@ -155,6 +190,16 @@
- 				status = "okay";
- 			};
- 
-+			isi@fffb4000 {
-+				status = "okay";
-+				port {
-+					isi_0: endpoint {
-+						remote-endpoint = <&ov2640_0>;
-+						bus-width = <8>;
-+					};
-+				};
-+			};
-+
- 			pwm0: pwm@fffb8000 {
- 				status = "okay";
- 
--- 
-1.9.1
+At the moment, I don't know how to use this framework.
+I need some time to dig it, I'm happy if you some reference(driver or=20
+document).
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> I added two of wrappers on top of v5 at:=20
+> https://git.linaro.org/people/srinivas.kandagatla/linux.git/shortlog/=
+refs/heads/nvmem-dev-v5
+>
+>
+> I think I should request Mark to take the framework.
+>
+>
+>
+> --srini
+>> Regards
+>> Stefan
+>>
+>>
+>
+>
+>
+
+--=20
+Thanks,
+- Caesar
