@@ -1,44 +1,261 @@
-From: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
-Subject: Re: [PATCH linux-next 2/2] mfd: flexcom: add a driver for Atmel
- Flexible Serial Communication Unit
-Date: Tue, 16 Jun 2015 09:34:40 +0200
-Message-ID: <1434440080.2069.49.camel@x220>
-References: <cover.1434386119.git.cyrille.pitchen@atmel.com>
-	 <e85ceae28a0b382b12b809ac7cca891fcb7ac846.1434386119.git.cyrille.pitchen@atmel.com>
+From: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/4] mfd: 88pm800: add device tree support
+Date: Tue, 16 Jun 2015 13:22:13 +0530
+Message-ID: <557FD5AD.5020405@linaro.org>
+References: <1432937962-4537-1-git-send-email-vaibhav.hiremath@linaro.org> <1432937962-4537-2-git-send-email-vaibhav.hiremath@linaro.org> <20150601083835.GE3329@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <e85ceae28a0b382b12b809ac7cca891fcb7ac846.1434386119.git.cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20150601083835.GE3329@x1>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Just a nit: a license mismatch.
 
-On Mon, 2015-06-15 at 18:38 +0200, Cyrille Pitchen wrote:
-> --- /dev/null
-> +++ b/drivers/mfd/atmel-flexcom.c
 
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
+On Monday 01 June 2015 02:08 PM, Lee Jones wrote:
+> On Sat, 30 May 2015, Vaibhav Hiremath wrote:
+>
 
-This states the license is GPL v2 (or later)
+Thanks for your review. and sorry for delayed response.
 
-> +MODULE_LICENSE("GPL v2");
+>> Add DT support to the 88pm800 driver along with below properties
+>> 	- marvell,88pm800-irq-write-clear :
+>> 	  Idicates whether interrupt status is cleared by write
+>>
+>> Also, creates the DT binding text file,
+>> Documentation/devicetree/bindings/mfd/88pm800.txt
+>>
+>> Signed-off-by: Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+>> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>>   Documentation/devicetree/bindings/mfd/88pm800.txt | 57 +++++++++++++++++++++++
+>>   drivers/mfd/88pm800.c                             | 39 ++++++++++++++++
+>
+> These should be submitted separately.
+>
 
-According to include/linux/module.h this states the license is (just)
-GPL v2. So I think that either the comment at the top of this file or
-the ident used in the MODULE_LICENSE() macro needs to change.
+
+Ok, will separate it in next version.
+
+
+>>   2 files changed, 96 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/mfd/88pm800.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/mfd/88pm800.txt b/Documentation/devicetree/bindings/mfd/88pm800.txt
+>> new file mode 100644
+>> index 0000000..094951b
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mfd/88pm800.txt
+>> @@ -0,0 +1,57 @@
+>> +* Marvell 88PM800 Power Management IC
+>> +
+>> +Required parent device properties:
+>> +- compatible : "marvell,88pm800"
+>> +- reg : the I2C slave address for the 88pm800 chip
+>> +- interrupts : IRQ line for the 88pm800 chip
+>> +- interrupt-controller: describes the 88pm800 as an interrupt controller
+>> +- #interrupt-cells : should be 1.
+>> +		- The cell is the 88pm800 local IRQ number
+>> +
+>> +Optional parent device properties:
+>> +- marvell,88pm800-irq-write-clr: indicates whether interrupt status is cleared by write
+>
+> Drop the device name.  These bindings should be as generic as possible.
+>
+
+OK, how about simply
+
+"mfd-irq_clr_on_write"
+
+> Also describe what the absence of the property means.
+>
+
+Ok.
+
+>> +88pm800 consists of a large and varied group of sub-devices:
+>
+> 3?
+>
+
+I have explicitly mentioned in note that more device list will follow.
+I just wanted to add entries as and when we add/enable driver support.
+
+>> +Device			 Supply Names	 Description
+>> +------			 ------------	 -----------
+>> +88pm80x-onkey		:		: On key
+>> +88pm80x-rtc		:		: RTC
+>> +88pm80x			:		: Regulators
+>
+> Surely regulators is 88pm80x-regulator, no?
+>
+
+did not understand what change is expected here.
+
+>> +Note: More device list will follow
+>> +
+>> +Example:
+>> +
+>> +	pmic: 88pm800@30 {
+>> +		compatible = "marvell,88pm800";
+>> +		reg = <0x30>;
+>> +		interrupts = <0 77 0x4>;
+>
+> Please use the #defines in include/dt-bindings/
+>
+
+Ok.
+
+>> +		interrupt-parent = <&gic>;
+>> +		interrupt-controller;
+>> +		#interrupt-cells = <1>;
+>> +
+>> +		marvell,88pm800-irq-write-clr;
+>> +
+>> +		regulators {
+>> +			compatible = "marvell,88pm80x-regulator";
+>> +
+>> +			buck1a: BUCK1A {
+>> +				regulator-compatible = "88PM800-BUCK1A";
+>> +				regulator-min-microvolt = <600000>;
+>> +				regulator-max-microvolt = <1800000>;
+>> +				regulator-boot-on;
+>> +				regulator-always-on;
+>> +			};
+>> +			ldo1: LDO1 {
+>> +				regulator-compatible = "88PM800-LDO1";
+>> +				regulator-min-microvolt = <1700000>;
+>> +				regulator-max-microvolt = <3300000>;
+>> +				regulator-boot-on;
+>> +				regulator-always-on;
+>> +			};
+>> +		};
+>
+> '\n' here.
+>
+>> +		rtc {
+>> +			compatible = "marvell,88pm80x-rtc";
+>> +		};
+>> +	};
+>> diff --git a/drivers/mfd/88pm800.c b/drivers/mfd/88pm800.c
+>> index 841717a..06ee058 100644
+>> --- a/drivers/mfd/88pm800.c
+>> +++ b/drivers/mfd/88pm800.c
+>> @@ -27,6 +27,7 @@
+>>   #include <linux/mfd/core.h>
+>>   #include <linux/mfd/88pm80x.h>
+>>   #include <linux/slab.h>
+>> +#include <linux/of_device.h>
+>>
+>>   /* Interrupt Registers */
+>>   #define PM800_INT_STATUS1		(0x05)
+>> @@ -121,6 +122,11 @@ static const struct i2c_device_id pm80x_id_table[] = {
+>>   };
+>>   MODULE_DEVICE_TABLE(i2c, pm80x_id_table);
+>>
+>> +static const struct of_device_id pm80x_of_match_table[] = {
+>> +	{ .compatible = "marvell,88pm800", },
+>> +	{},
+>> +};
+>> +
+>>   static struct resource rtc_resources[] = {
+>>   	{
+>>   	 .name = "88pm80x-rtc",
+>> @@ -133,6 +139,7 @@ static struct resource rtc_resources[] = {
+>>   static struct mfd_cell rtc_devs[] = {
+>>   	{
+>>   	 .name = "88pm80x-rtc",
+>> +	 .of_compatible = "marvell,88pm80x-rtc",
+>>   	 .num_resources = ARRAY_SIZE(rtc_resources),
+>>   	 .resources = &rtc_resources[0],
+>>   	 .id = -1,
+>> @@ -151,6 +158,7 @@ static struct resource onkey_resources[] = {
+>>   static const struct mfd_cell onkey_devs[] = {
+>>   	{
+>>   	 .name = "88pm80x-onkey",
+>> +	 .of_compatible = "marvell,88pm80x-onkey",
+>>   	 .num_resources = 1,
+>>   	 .resources = &onkey_resources[0],
+>>   	 .id = -1,
+>> @@ -160,6 +168,7 @@ static const struct mfd_cell onkey_devs[] = {
+>>   static const struct mfd_cell regulator_devs[] = {
+>>   	{
+>>   	 .name = "88pm80x-regulator",
+>> +	 .of_compatible = "marvell,88pm80x-regulator",
+>>   	 .id = -1,
+>>   	},
+>>   };
+>> @@ -538,14 +547,43 @@ out:
+>>   	return ret;
+>>   }
+>>
+>> +static int pm800_probe_dt(struct device_node *np,
+>> +			 struct device *dev,
+>
+> Do you even use dev?
+>
+
+Yeah, not used. Will remove it.
+
+>> +			 struct pm80x_platform_data *pdata)
+>> +{
+>> +	pdata->irq_mode =
+>> +		of_property_read_bool(np, "marvell,88pm800-irq-write-clear");
+>
+> You write a new function for this?
+>
+
+Just felt clean this way.
+I am ok to merge it in parent function.
+
+>> +	return 0;
+>> +}
+>> +
+>> +
+>
+> Superfluous '\n'.
+>
+>>   static int pm800_probe(struct i2c_client *client,
+>>   				 const struct i2c_device_id *id)
+>>   {
+>>   	int ret = 0;
+>>   	struct pm80x_chip *chip;
+>>   	struct pm80x_platform_data *pdata = dev_get_platdata(&client->dev);
+>> +	struct device_node *node = client->dev.of_node;
+>
+> It's more common to use 'np'.
+>
+
+ok.
+
+>>   	struct pm80x_subchip *subchip;
+>>
+>> +	if (!pdata && !node) {
+>> +		dev_err(&client->dev,
+>> +			"pm80x requires platform data or of_node\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	if (!pdata) {
+>> +		pdata = devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL);
+>> +		if (!pdata) {
+>> +			dev_err(&client->dev, "failed to allocaate memory\n");
+>> +			return -ENOMEM;
+>> +		}
+>> +		ret = pm800_probe_dt(node, &client->dev, pdata);
+>> +		if (ret)
+>> +			return ret;
+>> +	}
+>
+> All this for a single attribute?  Please simplify.
+>
+
+Ok, let me kill probe_dt function here.
 
 Thanks,
-
-
-Paul Bolle 
-
+Vaibhav
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
