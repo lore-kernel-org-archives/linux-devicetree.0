@@ -1,255 +1,133 @@
-From: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v6 4/7] arm64: dts: mediatek: Add MT8173 MMC dts
-Date: Tue, 16 Jun 2015 20:20:14 +0800
-Message-ID: <CAGS+omDMprTvjwpXfdh7mg9i=WXdzO_Fv-oEop3z6AEVCG=DFQ@mail.gmail.com>
-References: <1434367253-26577-1-git-send-email-chaotian.jing@mediatek.com>
- <1434367253-26577-5-git-send-email-chaotian.jing@mediatek.com> <CAGS+omCwxH5vTTKNOEcN9C9s=1yBpYEqbMz1NygYoLY9OFKchg@mail.gmail.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/4] mfd: 88pm800: add device tree support
+Date: Tue, 16 Jun 2015 08:02:33 -0500
+Message-ID: <CAL_Jsq+6yk59Z4swi2xq4=_=m89pBUt-fNXJF8smjw7qS8xazA@mail.gmail.com>
+References: <1432937962-4537-1-git-send-email-vaibhav.hiremath@linaro.org>
+ <1432937962-4537-2-git-send-email-vaibhav.hiremath@linaro.org>
+ <20150601083835.GE3329@x1> <557FD5AD.5020405@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGS+omCwxH5vTTKNOEcN9C9s=1yBpYEqbMz1NygYoLY9OFKchg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <557FD5AD.5020405-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, bin.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "Joe.C" <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>"linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux->
+To: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 16, 2015 at 7:39 PM, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
-> Hi Chaotian,
+On Tue, Jun 16, 2015 at 2:52 AM, Vaibhav Hiremath
+<vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
 >
-> On Mon, Jun 15, 2015 at 7:20 PM, Chaotian Jing
-> <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
->> From: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->>
->> Add node mmc0 ~ mmc3 for mt8173.dtsi
->> Add node mmc0, mmc1 for mt8173-evb.dts
->>
->> Signed-off-by: Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->> Signed-off-by: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->> ---
->>  arch/arm64/boot/dts/mediatek/mt8173-evb.dts | 126 ++++++++++++++++++++++++++++
->>  arch/arm64/boot/dts/mediatek/mt8173.dtsi    |  45 +++++++++-
->>  2 files changed, 170 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
->> index b1560c9..762ec61 100644
->> --- a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
->> +++ b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
->> @@ -33,6 +33,132 @@
->>         chosen { };
->>  };
->>
->> +&mmc0 {
->> +       pinctrl-names = "default", "state_uhs";
->> +       pinctrl-0 = <&mmc0_pins_default>;
->> +       pinctrl-1 = <&mmc0_pins_uhs>;
->> +       status = "okay";
->> +       bus-width = <8>;
->> +       max-frequency = <50000000>;
->> +       cap-mmc-highspeed;
->> +       vmmc-supply = <&mt6397_vemc_3v3_reg>;
->> +       vqmmc-supply = <&mt6397_vio18_reg>;
-
-I also can't find phandles for these regulators.
-
->> +       non-removable;
->> +};
->> +
->> +&mmc1 {
->> +       pinctrl-names = "default", "state_uhs";
->> +       pinctrl-0 = <&mmc1_pins_default>;
->> +       pinctrl-1 = <&mmc1_pins_uhs>;
->> +       status = "okay";
->> +       bus-width = <4>;
->> +       max-frequency = <50000000>;
->> +       cap-sd-highspeed;
->> +       sd-uhs-sdr25;
->> +       cd-gpios = <&pio 132 0>;
->> +       vmmc-supply = <&mt6397_vmch_reg>;
->> +       vqmmc-supply = <&mt6397_vmc_reg>;
-
-nor these regulators.
-
-Which kernel branch are you basing your patch set on?
-
-Thanks,
--Dan
-
-
->> +};
->> +
->> +&pio {
->> +       mmc0_pins_default: mmc0default {
->> +               pins_cmd_dat {
->> +                       pinmux = <MT8173_PIN_57_MSDC0_DAT0__FUNC_MSDC0_DAT0>,
->> +                               <MT8173_PIN_58_MSDC0_DAT1__FUNC_MSDC0_DAT1>,
->> +                               <MT8173_PIN_59_MSDC0_DAT2__FUNC_MSDC0_DAT2>,
->> +                               <MT8173_PIN_60_MSDC0_DAT3__FUNC_MSDC0_DAT3>,
->> +                               <MT8173_PIN_61_MSDC0_DAT4__FUNC_MSDC0_DAT4>,
->> +                               <MT8173_PIN_62_MSDC0_DAT5__FUNC_MSDC0_DAT5>,
->> +                               <MT8173_PIN_63_MSDC0_DAT6__FUNC_MSDC0_DAT6>,
->> +                               <MT8173_PIN_64_MSDC0_DAT7__FUNC_MSDC0_DAT7>,
->> +                               <MT8173_PIN_66_MSDC0_CMD__FUNC_MSDC0_CMD>;
->> +                       input-enable;
->> +                       bias-pull-up;
->> +               };
->> +
->> +               pins_clk {
->> +                       pinmux = <MT8173_PIN_65_MSDC0_CLK__FUNC_MSDC0_CLK>;
->> +                       bias-pull-down;
->> +               };
->> +
->> +               pins_rst {
->> +                       pinmux = <MT8173_PIN_68_MSDC0_RST___FUNC_MSDC0_RSTB>;
->> +                       bias-pull-up;
->> +               };
->> +       };
->> +
->> +       mmc1_pins_default: mmc1default {
->> +               pins_cmd_dat {
->> +                       pinmux = <MT8173_PIN_73_MSDC1_DAT0__FUNC_MSDC1_DAT0>,
->> +                            <MT8173_PIN_74_MSDC1_DAT1__FUNC_MSDC1_DAT1>,
->> +                            <MT8173_PIN_75_MSDC1_DAT2__FUNC_MSDC1_DAT2>,
->> +                            <MT8173_PIN_76_MSDC1_DAT3__FUNC_MSDC1_DAT3>,
->> +                            <MT8173_PIN_78_MSDC1_CMD__FUNC_MSDC1_CMD>;
->> +                       input-enable;
->> +                       drive-strength = <MTK_DRIVE_4mA>;
->> +                       bias-pull-up = <MTK_PUPD_SET_R1R0_10>;
->> +               };
->> +
->> +               pins_clk {
->> +                       pinmux = <MT8173_PIN_77_MSDC1_CLK__FUNC_MSDC1_CLK>;
->> +                       bias-pull-down;
->> +                       drive-strength = <MTK_DRIVE_4mA>;
->> +               };
->> +
->> +               pins_insert {
->> +                       pinmux = <MT8173_PIN_132_I2S0_DATA1__FUNC_GPIO132>;
->> +                       bias-pull-up;
->> +               };
->> +       };
->> +
->> +       mmc0_pins_uhs: mmc0@0{
->> +               pins_cmd_dat {
->> +                       pinmux = <MT8173_PIN_57_MSDC0_DAT0__FUNC_MSDC0_DAT0>,
->> +                               <MT8173_PIN_58_MSDC0_DAT1__FUNC_MSDC0_DAT1>,
->> +                               <MT8173_PIN_59_MSDC0_DAT2__FUNC_MSDC0_DAT2>,
->> +                               <MT8173_PIN_60_MSDC0_DAT3__FUNC_MSDC0_DAT3>,
->> +                               <MT8173_PIN_61_MSDC0_DAT4__FUNC_MSDC0_DAT4>,
->> +                               <MT8173_PIN_62_MSDC0_DAT5__FUNC_MSDC0_DAT5>,
->> +                               <MT8173_PIN_63_MSDC0_DAT6__FUNC_MSDC0_DAT6>,
->> +                               <MT8173_PIN_64_MSDC0_DAT7__FUNC_MSDC0_DAT7>,
->> +                               <MT8173_PIN_66_MSDC0_CMD__FUNC_MSDC0_CMD>;
->> +                       input-enable;
->> +                       drive-strength = <MTK_DRIVE_2mA>;
->> +                       bias-pull-up = <MTK_PUPD_SET_R1R0_01>;
->> +               };
->> +
->> +               pins_clk {
->> +                       pinmux = <MT8173_PIN_65_MSDC0_CLK__FUNC_MSDC0_CLK>;
->> +                       drive-strength = <MTK_DRIVE_2mA>;
->> +                       bias-pull-down = <MTK_PUPD_SET_R1R0_01>;
->> +               };
->> +
->> +               pins_rst {
->> +                       pinmux = <MT8173_PIN_68_MSDC0_RST___FUNC_MSDC0_RSTB>;
->> +                       bias-pull-up;
->> +               };
->> +       };
->> +
->> +       mmc1_pins_uhs: mmc1@0 {
->> +               pins_cmd_dat {
->> +                       pinmux = <MT8173_PIN_73_MSDC1_DAT0__FUNC_MSDC1_DAT0>,
->> +                            <MT8173_PIN_74_MSDC1_DAT1__FUNC_MSDC1_DAT1>,
->> +                            <MT8173_PIN_75_MSDC1_DAT2__FUNC_MSDC1_DAT2>,
->> +                            <MT8173_PIN_76_MSDC1_DAT3__FUNC_MSDC1_DAT3>,
->> +                            <MT8173_PIN_78_MSDC1_CMD__FUNC_MSDC1_CMD>;
->> +                       input-enable;
->> +                       drive-strength = <MTK_DRIVE_4mA>;
->> +                       bias-pull-up = <MTK_PUPD_SET_R1R0_10>;
->> +               };
->> +
->> +               pins_clk {
->> +                       pinmux = <MT8173_PIN_77_MSDC1_CLK__FUNC_MSDC1_CLK>;
->> +                       drive-strength = <MTK_DRIVE_4mA>;
->> +                       bias-pull-down = <MTK_PUPD_SET_R1R0_10>;
->> +               };
->> +       };
->> +};
->> +
->>  &pwrap {
->>         pmic: mt6397 {
->>                 compatible = "mediatek,mt6397";
->> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
->> index 512e4eb..56ea429 100644
->> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
->> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
->> @@ -288,7 +288,50 @@
->>                         reg = <0 0x19000000 0 0x1000>;
->>                         #clock-cells = <1>;
->>                 };
->> -       };
->>
->> +               mmc0: mmc@11230000 {
->> +                       compatible = "mediatek,mt8173-mmc",
->> +                                    "mediatek,mt8135-mmc";
->> +                       reg = <0 0x11230000 0 0x1000>;
->> +                       interrupts = <GIC_SPI 71 IRQ_TYPE_LEVEL_LOW>;
->> +                       clocks = <&pericfg CLK_PERI_MSDC30_0>,
->> +                                <&topckgen CLK_TOP_MSDC50_0_H_SEL>;
->> +                       clock-names = "source", "hclk";
->> +                       status = "disabled";
->> +               };
->> +
->> +               mmc1: mmc@11240000 {
->> +                       compatible = "mediatek,mt8173-mmc",
->> +                                    "mediatek,mt8135-mmc";
->> +                       reg = <0 0x11240000 0 0x1000>;
->> +                       interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_LOW>;
->> +                       clocks = <&pericfg CLK_PERI_MSDC30_1>,
->> +                                <&clk_null>;
 >
-> This requires a "clk_null" phandle, but I have not seen a patch adding
-> that on the public list.
-> Did I miss a patch?
+> On Monday 01 June 2015 02:08 PM, Lee Jones wrote:
+>>
+>> On Sat, 30 May 2015, Vaibhav Hiremath wrote:
+>>
 >
-> -Dan
+> Thanks for your review. and sorry for delayed response.
 >
->> +                       clock-names = "source", "hclk";
->> +                       status = "disabled";
->> +               };
->> +
->> +               mmc2: mmc@11250000 {
->> +                       compatible = "mediatek,mt8173-mmc",
->> +                                    "mediatek,mt8135-mmc";
->> +                       reg = <0 0x11250000 0 0x1000>;
->> +                       interrupts = <GIC_SPI 73 IRQ_TYPE_LEVEL_LOW>;
->> +                       clocks = <&pericfg CLK_PERI_MSDC30_2>,
->> +                                <&clk_null>;
->> +                       clock-names = "source", "hclk";
->> +                       status = "disabled";
->> +               };
->> +
->> +               mmc3: mmc@11260000 {
->> +                       compatible = "mediatek,mt8173-mmc",
->> +                                    "mediatek,mt8135-mmc";
->> +                       reg = <0 0x11260000 0 0x1000>;
->> +                       interrupts = <GIC_SPI 74 IRQ_TYPE_LEVEL_LOW>;
->> +                       clocks = <&pericfg CLK_PERI_MSDC30_3>,
->> +                                <&topckgen CLK_TOP_MSDC50_2_H_SEL>;
->> +                       clock-names = "source", "hclk";
->> +                       status = "disabled";
->> +               };
->> +       };
->>  };
->>
->> --
->> 1.8.1.1.dirty
+>>> Add DT support to the 88pm800 driver along with below properties
+>>>         - marvell,88pm800-irq-write-clear :
+>>>           Idicates whether interrupt status is cleared by write
+>>>
+>>> Also, creates the DT binding text file,
+>>> Documentation/devicetree/bindings/mfd/88pm800.txt
+>>>
+>>> Signed-off-by: Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+>>> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>> ---
+>>>   Documentation/devicetree/bindings/mfd/88pm800.txt | 57
+>>> +++++++++++++++++++++++
+>>>   drivers/mfd/88pm800.c                             | 39 ++++++++++++++++
 >>
 >>
->> _______________________________________________
->> Linux-mediatek mailing list
->> Linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+>> These should be submitted separately.
+>>
+>
+>
+> Ok, will separate it in next version.
+>
+>
+>>>   2 files changed, 96 insertions(+)
+>>>   create mode 100644 Documentation/devicetree/bindings/mfd/88pm800.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/mfd/88pm800.txt
+>>> b/Documentation/devicetree/bindings/mfd/88pm800.txt
+>>> new file mode 100644
+>>> index 0000000..094951b
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/mfd/88pm800.txt
+>>> @@ -0,0 +1,57 @@
+>>> +* Marvell 88PM800 Power Management IC
+
+Might as well name this 88PM8xx from the start.
+
+>>> +
+>>> +Required parent device properties:
+>>> +- compatible : "marvell,88pm800"
+
+You might as well include 88pm805 and 88pm860 here since 805 support
+is in the kernel and you will be submitting 860 support. They don't
+have to be added with driver support.
+
+>>> +- reg : the I2C slave address for the 88pm800 chip
+>>> +- interrupts : IRQ line for the 88pm800 chip
+>>> +- interrupt-controller: describes the 88pm800 as an interrupt controller
+>>> +- #interrupt-cells : should be 1.
+>>> +               - The cell is the 88pm800 local IRQ number
+>>> +
+>>> +Optional parent device properties:
+>>> +- marvell,88pm800-irq-write-clr: indicates whether interrupt status is
+>>> cleared by write
+>>
+>>
+>> Drop the device name.  These bindings should be as generic as possible.
+>>
+>
+> OK, how about simply
+>
+> "mfd-irq_clr_on_write"
+
+No, mfd is a Linux name which doesn't belong in bindings, and
+underscores are generally not used.
+
+I think Lee meant marvell,irq-write-clr or irq-write-clr.
+
+This could also just be dropped altogether and set based on the
+compatible strings with match data.
+
+>> Also describe what the absence of the property means.
+>>
+>
+> Ok.
+>
+>>> +88pm800 consists of a large and varied group of sub-devices:
+>>
+>>
+>> 3?
+>>
+>
+> I have explicitly mentioned in note that more device list will follow.
+> I just wanted to add entries as and when we add/enable driver support.
+>
+>>> +Device                  Supply Names    Description
+>>> +------                  ------------    -----------
+>>> +88pm80x-onkey          :               : On key
+>>> +88pm80x-rtc            :               : RTC
+>>> +88pm80x                        :               : Regulators
+>>
+>>
+>> Surely regulators is 88pm80x-regulator, no?
+>>
+>
+> did not understand what change is expected here.
+
+The node name for regulators node should be 88pm80x-regulator? But
+these don't correspond to node names based on the example and the
+example is correct IMO. So these are Linux driver names? If so, they
+don't belong in the binding doc. What you need is to document the
+sub-node compatible strings
+
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
