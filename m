@@ -1,57 +1,48 @@
-From: Daniel Kurtz <djkurtz@chromium.org>
-Subject: Re: [PATCH v3 1/2] arm64: dts: mt8173: Add watchdog device node
-Date: Tue, 16 Jun 2015 19:42:04 +0800
-Message-ID: <CAGS+omAi-5mikJfsBhFW1xuqU6r2jNpKWjB9a1DLifptb8q93w@mail.gmail.com>
-References: <1434101229-32695-1-git-send-email-eddie.huang@mediatek.com> <1434101229-32695-2-git-send-email-eddie.huang@mediatek.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] ASoC: mediatek: Add AFE platform driver
+Date: Tue, 16 Jun 2015 12:51:30 +0100
+Message-ID: <20150616115130.GM18309@sirena.org.uk>
+References: <1434379084-26026-1-git-send-email-koro.chen@mediatek.com>
+ <1434379084-26026-2-git-send-email-koro.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1434101229-32695-2-git-send-email-eddie.huang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eddie Huang <eddie.huang@mediatek.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mediatek@lists.infradead.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="oWg8wBefE/MWazfQ"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1434379084-26026-2-git-send-email-koro.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Koro Chen <koro.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 12, 2015 at 5:27 PM, Eddie Huang <eddie.huang@mediatek.com> wrote:
-> Add MT8173 watchdog device node.
->
-> Signed-off-by: Eddie Huang <eddie.huang@mediatek.com>
 
-This one is:
-Reviewed-by: Daniel Kurtz <djkurtz@chromium.org>
+--oWg8wBefE/MWazfQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-It is also independent of the i2c nodes, and as far as I can tell can
-go in already.
+On Mon, Jun 15, 2015 at 10:38:02PM +0800, Koro Chen wrote:
+> This is the DPCM based platform driver of AFE (Audio Front End) unit.
 
-Thanks!
--Dan
+Applied, thanks.
 
-> ---
->  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> index 30ac8dd..b52ec43 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> @@ -160,6 +160,12 @@
->                                                 <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
->                 };
->
-> +               watchdog: watchdog@10007000 {
-> +                       compatible = "mediatek,mt8173-wdt",
-> +                                    "mediatek,mt6589-wdt";
-> +                       reg = <0 0x10007000 0 0x100>;
-> +               };
-> +
->                 sysirq: intpol-controller@10200620 {
->                         compatible = "mediatek,mt8173-sysirq",
->                                         "mediatek,mt6577-sysirq";
-> --
-> 1.8.1.1.dirty
->
->
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+--oWg8wBefE/MWazfQ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJVgA3CAAoJECTWi3JdVIfQyq8H/RCXr329SuJ5pKqvwgPWpXd2
+1wavTaQ4g5aLeloC6emAmgWTApr/7wa6MlbiRVgh9FJn32EuD8cFELrcaBiiDmsL
+Nwiy02BEXAt2ALsFYHCQtyA/AJnRIM0BslRN6HhTWXRIEzOamuRIz0i9onkGyhRT
+HeKvl+6O5akw0ngVzEJuhjOm/2wv2MYJ6sX+qDZePKYYha27FHFuk8xaAgc7N/G+
+UVxizwihcqItcC03SxtFkIYU59dkAkEYcCr8gqMdt1/ECiZOY6mX4dl/dQKNwTM+
+OJ3sefpQ0YREnGnzQ2RPbh6IkTxlRGES/gKOLs0T2GszSQUPXPk705o8igRx5q0=
+=rjiO
+-----END PGP SIGNATURE-----
+
+--oWg8wBefE/MWazfQ--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
