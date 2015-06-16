@@ -1,99 +1,171 @@
-From: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: Re: [PATCH 02/21] ARM: tegra: Add gpio-ranges property
-Date: Tue, 16 Jun 2015 10:42:52 +0200
-Message-ID: <CAAObsKBtmJnBZXcv0UE6xGvphSCShFNWehOG8a-PJg-VqPznRw@mail.gmail.com>
-References: <1432565608-26036-1-git-send-email-tomeu.vizoso@collabora.com>
- <1432565608-26036-3-git-send-email-tomeu.vizoso@collabora.com>
- <5564CC84.1030700@wwwdotorg.org> <CACRpkdbtCDQLaPhWFT0a7NdJmxYzRvhU_efgUh2ZXhbc+FHg3g@mail.gmail.com>
- <556DCE71.7050108@wwwdotorg.org>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 07/22] usb: chipidea: set usb gadeget's otg config
+Date: Tue, 16 Jun 2015 11:44:52 +0300
+Message-ID: <20150616114452.4c15b8e1@rockdesk>
+References: <1434437532-23678-1-git-send-email-jun.li@freescale.com>
+	<1434437532-23678-8-git-send-email-jun.li@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <556DCE71.7050108-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, =?UTF-8?Q?St=C3=A9phane_Marchesin?= <stephane.marchesin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1434437532-23678-8-git-send-email-jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2 June 2015 at 17:40, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> On 06/02/2015 05:28 AM, Linus Walleij wrote:
->>
->> On Tue, May 26, 2015 at 9:41 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
->> wrote:
->>>
->>> On 05/25/2015 08:53 AM, Tomeu Vizoso wrote:
->>>>
->>>>
->>>> Specify how the GPIOs map to the pins in T124, so the dependency is
->>>> explicit.
->>>>
->>>> Signed-off-by: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
->>>> ---
->>>>    arch/arm/boot/dts/tegra124.dtsi | 1 +
->>>>    1 file changed, 1 insertion(+)
->>>>
->>>> diff --git a/arch/arm/boot/dts/tegra124.dtsi
->>>> b/arch/arm/boot/dts/tegra124.dtsi
->>>> index 13cc7ca..5d1d35f 100644
->>>> --- a/arch/arm/boot/dts/tegra124.dtsi
->>>> +++ b/arch/arm/boot/dts/tegra124.dtsi
->>>> @@ -254,6 +254,7 @@
->>>>                  gpio-controller;
->>>>                  #interrupt-cells = <2>;
->>>>                  interrupt-controller;
->>>> +               gpio-ranges = <&pinmux 0 0 250>;
->>>
->>>
->>>
->>> We should be consistent between SoCs. Why not make the same change for
->>> all
->>> Tegra SoCs?
->>
->>
->> Agreed.
->>
->>> I think this change will cause the GPIO subsystem to call into the
->>> pinctrl
->>> subsystem and create/add/register a new GPIO<->pinctrl range structure.
->>> The
->>> pinctrl driver already does this, so I think we'll end up with two
->>> duplicate
->>> entries in the pinctrl device's gpio_ranges list. This probably won't
->>> cause
->>> a problem, but I wanted to make sure you'd thought about it to make sure.
->>
->>
->> That sounds like duplication indeed, I would expect that first a patch
->> adds the ranges to the dts[i] files and then a second patch delete the
->> same ranges from the pinctrl driver then, if these shall come in from
->> the device tree.
->
->
-> We can't delete the gpio-range-registration code from the Tegra pinmux
-> driver, or old DTs won't work correctly. We could make it conditional based
-> upon whether the DT contains the property or not.
 
-I've been looking at this and haven't found a good solution. From what
-I see, the pinctrl driver doesn't have a reference to the gpio device
-node so cannot tell if it needs to add the range or not.
+On Tue, 16 Jun 2015 14:51:57 +0800
+Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
 
-The gpio driver can tell whether it should add the range or not, but
-if it has to because the gpio-ranges property isn't there, then it
-doesn't have the reference to the pinctrl device to set the range to.
+> Set gadget's otg features according to controller's capability and usb
+> property in device tree.
+> 
+> Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+>  drivers/usb/chipidea/core.c  | 18 ++++++++++++++++++
+>  drivers/usb/chipidea/udc.c   | 20 +++++++++++++++++++-
+>  include/linux/usb/chipidea.h |  4 ++++
+>  3 files changed, 41 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
+> index 74fea4f..45bd44e 100644
+> --- a/drivers/usb/chipidea/core.c
+> +++ b/drivers/usb/chipidea/core.c
+> @@ -588,6 +588,24 @@ static int ci_get_platdata(struct device *dev,
+>  				of_usb_host_tpl_support(dev->of_node);
+>  	}
+>  
+> +	if (platdata->dr_mode == USB_DR_MODE_OTG) {
+> +		if (!platdata->otg_rev) {
+> +			platdata->otg_rev =
+> +				of_usb_get_otg_rev(dev->of_node);
+> +		}
+> +		if (platdata->otg_rev) {
+> +			if (!platdata->srp_support)
+> +				platdata->srp_support =
+> +					!of_usb_otg_srp_disabled(dev->of_node);
+> +			if (!platdata->hnp_support)
+> +				platdata->hnp_support =
+> +					!of_usb_otg_hnp_disabled(dev->of_node);
+> +			if (!platdata->adp_support)
+> +				platdata->adp_support =
+> +					!of_usb_otg_adp_disabled(dev->of_node);
+> +		}
+> +	}
+> +
 
-So, given that pinctrl_add_gpio_range is deprecated already, wonder if
-the lesser evil isn't leaving the duplicated entries for now. On newer
-SoC revisions such as T210 we can stop calling pinctrl_add_gpio_range
-at all.
+Looks like there is some scope of sharing this code among controller drivers
+and also adding sanity check.
 
-Or, we can accept that nobody is going to boot a newer kernel with an
-older DT on the affected boards and just rely on the presence of the
-gpio-ranges property :)
+How about adding
+ 
+struct usb_otg_caps {
+	u16 otg_rev;
+	bool srp_support;
+	bool hnp_support;
+	bool adp_support;
+};
 
-Regards,
+And below API
 
-Tomeu
+/* sets device otg capabilities based on controller capabilities and device tree flags */
+void of_usb_otg_set_capabilities(sturct device_node *node, struct usb_otg_caps *cntrl_caps, struct usb_otg_caps *device_caps)
+{
+	u16 otg_rev = of_usb_get_otg_rev(dev->of_node);
+
+	*device_caps = *cntrl_caps;
+	if (!otg_rev) {	/* legacy platform */
+		device_caps->adp_support = false;
+		/* For SRP/HNP respect what controller supports */
+		return;
+	}
+
+	if (otg_rev < cntrl_caps->otg_rev)
+		device_caps->otg_rev = cntrl_caps->otg_rev;
+	if (of_usb_otg_srp_disabled(dev->of_node))
+		device_caps->srp_support = false;
+	if (of_usb_otg_hnp_disabled(dev->of_node))
+		device_caps->hnp_support = false;
+	if (of_usb_otg_adp_disabled(dev->of_node))
+		device_caps->adp_support = false;
+
+	/* sanity check */
+	if ((otg_rev < 0x0200) && device_caps->adp_support) {
+		/* pre otg 2.0 doesn't support ADP */
+		device_caps->adp_support = false;
+	}
+
+	return;
+}
+
+>  	if (of_usb_get_maximum_speed(dev->of_node) == USB_SPEED_FULL)
+>  		platdata->flags |= CI_HDRC_FORCE_FULLSPEED;
+>  
+> diff --git a/drivers/usb/chipidea/udc.c b/drivers/usb/chipidea/udc.c
+> index 764f668..5d2c6e8 100644
+> --- a/drivers/usb/chipidea/udc.c
+> +++ b/drivers/usb/chipidea/udc.c
+> @@ -1821,6 +1821,24 @@ static irqreturn_t udc_irq(struct ci_hdrc *ci)
+>  }
+>  
+>  /**
+> + * udc_update_otg_config: update gadget otg config
+> + * * @ci: chipidea controller
+> + */
+> +static void udc_update_otg_config(struct ci_hdrc *ci)
+> +{
+> +	if (!ci->is_otg)
+> +		return;
+> +
+> +	ci->gadget.otg_rev = ci->platdata->otg_rev;
+> +	ci->gadget.srp_support = ci->platdata->srp_support;
+> +	ci->gadget.hnp_support = ci->platdata->hnp_support;
+> +	ci->gadget.adp_support = ci->platdata->adp_support;
+> +	if (ci->gadget.srp_support || ci->gadget.hnp_support ||
+> +					ci->gadget.adp_support)
+> +		ci->gadget.is_otg = 1;
+> +}
+> +
+> +/**
+>   * udc_start: initialize gadget role
+>   * @ci: chipidea controller
+>   */
+> @@ -1834,9 +1852,9 @@ static int udc_start(struct ci_hdrc *ci)
+>  	ci->gadget.ops          = &usb_gadget_ops;
+>  	ci->gadget.speed        = USB_SPEED_UNKNOWN;
+>  	ci->gadget.max_speed    = USB_SPEED_HIGH;
+> -	ci->gadget.is_otg       = ci->is_otg ? 1 : 0;
+>  	ci->gadget.name         = ci->platdata->name;
+>  
+> +	udc_update_otg_config(ci);
+>  	INIT_LIST_HEAD(&ci->gadget.ep_list);
+>  
+>  	/* alloc resources */
+> diff --git a/include/linux/usb/chipidea.h b/include/linux/usb/chipidea.h
+> index ab94f78..6765b28 100644
+> --- a/include/linux/usb/chipidea.h
+> +++ b/include/linux/usb/chipidea.h
+> @@ -34,7 +34,11 @@ struct ci_hdrc_platform_data {
+>  #define CI_HDRC_CONTROLLER_STOPPED_EVENT	1
+>  	void	(*notify_event) (struct ci_hdrc *ci, unsigned event);
+>  	struct regulator	*reg_vbus;
+> +	u16			otg_rev;
+>  	bool			tpl_support;
+> +	bool			srp_support;
+> +	bool			hnp_support;
+> +	bool			adp_support;
+
+this then changes to
+	struct usb_otg_caps	otg_caps;
+>  };
+>  
+>  /* Default offset of capability registers */
+
+cheers,
+-roger
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
