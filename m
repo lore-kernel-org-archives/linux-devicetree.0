@@ -1,55 +1,61 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH V7 3/3] OPP: Add binding for 'opp-suspend'
-Date: Tue, 16 Jun 2015 23:21:39 +0200
-Message-ID: <4228747.vs1U0RqIQB@vostro.rjw.lan>
-References: <cover.1433434659.git.viresh.kumar@linaro.org> <20150616025425.GB26592@linux> <CAL_JsqJ2gCJvtrZqDWWoY6Gv4Ag7xLV93wLbT5b37jO=oWo+MQ@mail.gmail.com>
+From: Daniel Mack <daniel@zonque.org>
+Subject: Re: [PATCH v4 2/2] cap11xx: add LED support
+Date: Tue, 16 Jun 2015 23:26:14 +0200
+Message-ID: <55809476.90407@zonque.org>
+References: <1434422770-26896-1-git-send-email-mranostay@gmail.com>	<1434422770-26896-3-git-send-email-mranostay@gmail.com>	<557FD625.1080806@samsung.com> <CAKzfze9gneY_LmWaWGNKxLXBsw_k2d596CkGNat5RoTbn3cYEg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJ2gCJvtrZqDWWoY6Gv4Ag7xLV93wLbT5b37jO=oWo+MQ@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Nishanth Menon <nm@ti.com>, Mark Brown <broonie@kernel.org>, Mike Turquette <mike.turquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Olof Johansson <olof@lixom.net>, Sudeep Holla <Sudeep.Holla@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Viswanath Puttagunta <viswanath.puttagunta@linaro.org>, Lucas Stach <l.stach@pengutronix.de>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Abraham <ta.omasab@gmail.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Kevin Hilman <khilman@linaro.org>, Santosh
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <CAKzfze9gneY_LmWaWGNKxLXBsw_k2d596CkGNat5RoTbn3cYEg@mail.gmail.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Matt Ranostay <mranostay@gmail.com>, Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, linux-leds@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, June 16, 2015 02:23:23 PM Rob Herring wrote:
-> On Mon, Jun 15, 2015 at 9:54 PM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> > On 16-06-15, 06:01, Viresh Kumar wrote:
-> >> On 16 June 2015 at 05:05, Rob Herring <robherring2@gmail.com> wrote:
-> >> >> +- opp-suspend: Phandle of the OPP to set while device is suspended.
-> >> >> +
-> >> >
-> >> > I would just do a bool property in the OPP you want.
-> >>
-> >> I will do that if you want, no big deal.
-> >
-> > In order to not waste any time, here is the change you suggested. Ack
-> > the one (original change or this one) you like :)
-> >
-> > ------------------8<----------------------
-> >
-> > From: Viresh Kumar <viresh.kumar@linaro.org>
-> > Date: Wed, 20 May 2015 08:27:49 +0530
-> > Subject: [PATCH V8] OPP: Add binding for 'opp-suspend'
-> >
-> > On few platforms, for power efficiency, we want the device to be
-> > configured for a specific OPP while we put the device in suspend state.
-> >
-> > Add an optional property in operating-points-v2 bindings for that.
-> >
-> > Acked-by: Nishanth Menon <nm@ti.com>
-> > Suggested-by: Nishanth Menon <nm@ti.com>
-> > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> > ---
-> > V7->V8:
-> > - opp-suspend is moved to OPPs instead of the table, and is bool now.
-> 
-> Acked-by: Rob Herring <robh@kernel.org>
+On 06/16/2015 04:39 PM, Matt Ranostay wrote:
+> On Tue, Jun 16, 2015 at 12:54 AM, Jacek Anaszewski
+> <j.anaszewski@samsung.com> wrote:
+>> On 06/16/2015 04:46 AM, Matt Ranostay wrote:
 
-Thanks!
+>>> +       for_each_child_of_node(node, child) {
+>>> +               led->cdev.name =
+>>> +                       of_get_property(child, "label", NULL) ? :
+>>> child->name;
+>>> +               led->cdev.default_trigger =
+>>> +                       of_get_property(child, "linux,default-trigger",
+>>> NULL);
+>>> +               led->cdev.flags = 0;
+>>> +               led->cdev.brightness_set = cap11xx_led_set;
+>>> +               led->cdev.max_brightness = 1;
+>>> +               led->cdev.brightness = LED_OFF;
+>>> +
+>>> +               error = of_property_read_u32(child, "reg", &reg);
+>>> +               if (error != 0 || reg >= priv->num_leds)
+>>> +                       continue;
+>>> +               led->reg = reg;
+>>> +               led->priv = priv;
+>>> +
+>>> +               INIT_WORK(&led->work, cap11xx_led_work);
+>>> +               error = devm_led_classdev_register(dev, &led->cdev);
+>>> +               if (error < 0)
+>>> +                       return -EINVAL;
+>>> +
+>>> +               schedule_work(&led->work);
+>>
+>>
+>> Why do you schedule work here? It should be done only in brightness_set op.
+>>
+> The LED needs to be set to initial turned off state, since there is no
+> Power ON/OFF register for the cap11xx devices.. So LEDs state would be
+> persistent across warm reboots.
+> Thoughts on how to do this better?
 
-Does your ACK also apply to patches [1-2/3] in this series?
+What's wrong with this?
 
-Rafael
+  regmap_write(priv->regmap, CAP11XX_REG_LED_OUTPUT_CONTROL, 0);
 
+Outside the loop, of course ...
+
+
+Daniel
