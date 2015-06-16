@@ -1,100 +1,25 @@
-From: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v3 1/2] Documentation: dt: Add Xilinx zynqmp dma device tree binding documentation
-Date: Tue, 16 Jun 2015 08:04:42 +0530
-Message-ID: <1434422083-8653-1-git-send-email-punnaia@xilinx.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kalluripunnaiahchoudary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kpc528-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+From: Matt Ranostay <mranostay@gmail.com>
+Subject: [PATCH v4 0/2] cap118x: add LED support
+Date: Mon, 15 Jun 2015 19:46:08 -0700
+Message-ID: <1434422770-26896-1-git-send-email-mranostay@gmail.com>
+Return-path: <linux-leds-owner@vger.kernel.org>
+Sender: linux-leds-owner@vger.kernel.org
+To: zonque@gmail.com, dmitry.torokhov@gmail.com
+Cc: linux-input@vger.kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Matt Ranostay <mranostay@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Device-tree binding documentation for Xilinx zynqmp dma engine used in
-Zynq UltraScale+ MPSoC.
+Changes from v3:
+ * Fix race condition in work_queue
+ * Make 0 value (0% duty cycle) an invalid brightness option
+ * Document why LED brightness is only set global but ON/OFF state isn't
 
-Signed-off-by: Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
----
-Changes in v3:
-- None
-Changes in v2:
-- None
----
- .../devicetree/bindings/dma/xilinx/zynqmp_dma.txt  |   61 ++++++++++++++++++++
- 1 files changed, 61 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt
+Matt Ranostay (2):
+  dt: add cap11xx LED documentation
+  cap11xx: add LED support
 
-diff --git a/Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt b/Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt
-new file mode 100644
-index 0000000..e4f92b9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt
-@@ -0,0 +1,61 @@
-+Xilinx ZynqMP DMA engine, it does support memory to memory transfers,
-+memory to device and device to memory transfers. It also has flow
-+control and rate control support for slave/peripheral dma access.
-+
-+Required properties:
-+- compatible: Should be "xlnx,zynqmp-dma-1.0"
-+- #dma-cells: Should be <1>, a single cell holding a line request number
-+- reg: Memory map for module access
-+- interrupt-parent: Interrupt controller the interrupt is routed through
-+- interrupts: Should contain DMA channel interrupt
-+- xlnx,bus-width: AXI buswidth in bits. Should contain 128 or 64
-+
-+Optional properties:
-+- xlnx,include-sg: Indicates the controller to operate in simple or scatter
-+		   gather dma mode
-+- xlnx,ratectrl: Scheduling interval in terms of clock cycles for
-+		 source AXI transaction
-+- xlnx,overfetch: Tells whether the channel is allowed to over fetch the data
-+- xlnx,src-issue: Number of AXI outstanding transactions on source side
-+- xlnx,desc-axi-cohrnt: Tells whether the AXI transactions generated for the
-+			descriptor read are marked Non-coherent
-+- xlnx,src-axi-cohrnt: Tells whether the AXI transactions generated for the
-+			source descriptor payload are marked Non-coherent
-+- xlnx,dst-axi-cohrnt: Tells whether the AXI transactions generated for the
-+			dst descriptor payload are marked Non-coherent
-+- xlnx,desc-axi-qos: AXI QOS bits to be used for descriptor fetch
-+- xlnx,src-axi-qos: AXI QOS bits to be used for data read
-+- xlnx,dst-axi-qos: AXI QOS bits to be used for data write
-+- xlnx,desc-axi-cache: AXI cache bits to be used for descriptor fetch.
-+- xlnx,desc-axi-cache: AXI cache bits to be used for data read
-+- xlnx,desc-axi-cache: AXI cache bits to be used for data write
-+- xlnx,src-burst-len: AXI length for data read. Support only power of 2 values
-+		      i.e 1,2,4,8 and 16
-+- xlnx,dst-burst-len: AXI length for data write. Support only power of 2 values
-+		      i.e 1,2,4,8 and 16
-+
-+Example:
-+++++++++
-+fpd_dma_chan1: dma@FD500000 {
-+	compatible = "xlnx,zynqmp-dma-1.0";
-+	reg = <0x0 0xFD500000 0x1000>;
-+	#dma_cells = <1>;
-+	interrupt-parent = <&gic>;
-+	interrupts = <0 117 4>;
-+	xlnx,bus-width = <128>;
-+	xlnx,include-sg;
-+	xlnx,overfetch;
-+	xlnx,ratectrl = <0>;
-+	xlnx,src-issue = <16>;
-+	xlnx,desc-axi-cohrnt;
-+	xlnx,src-axi-cohrnt;
-+	xlnx,dst-axi-cohrnt;
-+	xlnx,desc-axi-qos = <0>;
-+	xlnx,desc-axi-cache = <0>;
-+	xlnx,src-axi-qos = <0>;
-+	xlnx,src-axi-cache = <2>;
-+	xlnx,dst-axi-qos = <0>;
-+	xlnx,dst-axi-cache = <2>;
-+	xlnx,src-burst-len = <4>;
-+	xlnx,dst-burst-len = <4>;
-+};
+ .../devicetree/bindings/input/cap11xx.txt          |  23 ++++
+ drivers/input/keyboard/cap11xx.c                   | 128 ++++++++++++++++++++-
+ 2 files changed, 148 insertions(+), 3 deletions(-)
+
 -- 
-1.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
