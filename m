@@ -1,104 +1,63 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 09/22] usb: gadget: add usb_otg_descriptor_add
- interface to init usb_otg_descriptor
-Date: Tue, 16 Jun 2015 11:01:58 +0300
-Message-ID: <20150616110158.2bfd1354@rockdesk>
-References: <1434437532-23678-1-git-send-email-jun.li@freescale.com>
-	<1434437532-23678-10-git-send-email-jun.li@freescale.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v6 0/7] Add Mediatek MMC driver
+Date: Tue, 16 Jun 2015 10:03:06 +0200
+Message-ID: <CAPDyKFrAbAFR7_p5O4bPh6FZEBVhGZ2rq3htCKcF2QgQuCEf2g@mail.gmail.com>
+References: <1434367253-26577-1-git-send-email-chaotian.jing@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1434437532-23678-10-git-send-email-jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1434367253-26577-1-git-send-email-chaotian.jing@mediatek.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Chaotian Jing <chaotian.jing@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Chris Ball <chris@printf.net>, Mark Rutland <mark.rutland@arm.com>, James Liao <jamesjj.liao@mediatek.com>, srv_heupstream <srv_heupstream@mediatek.com>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Hongzhou Yang <hongzhou.yang@mediatek.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-mmc <linux-mmc@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, "Joe.C" <yingjoe.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, =?UTF-8?B?QmluIFpoYW5nICjnq6Dmlowp?= <bin.zhang@mediatek.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mediatek
 List-Id: devicetree@vger.kernel.org
 
+On 15 June 2015 at 13:20, Chaotian Jing <chaotian.jing@mediatek.com> wrote:
+> This series enables MMC support on the MT8135/MT8173 platform.
+> MT8135 has 5 MMC controllers and MT8173 has 4 MMC controllers.
+>
+> Changes base on Ulf's comments
+> Make hclk mandatory in the driver code
+> Change host->hclk to host->src_clk_freq
+> Add linux/pm.h
+>
+> Chaotian Jing (3):
+>   mmc: dt-bindings: add Mediatek MMC bindings
+>   mmc: mediatek: Add Mediatek MMC driver
+>   mmc: mediatek: Add PM support for MMC driver
+>
+> Eddie Huang (2):
+>   arm64: dts: mediatek: Add MT8173 MMC dts
+>   arm64: mediatek: Add Mediatek MMC support in defconfig
+>
+> Yingjoe Chen (2):
+>   ARM: mediatek: dts: Add emmc support to mt8135
+>   ARM: multi_v7_defconfig: Enable Mediatek MMC support multi-v7
+>
+>  Documentation/devicetree/bindings/mmc/mtk-sd.txt |   32 +
+>  arch/arm/boot/dts/mt8135-evbp1.dts               |  158 +++
+>  arch/arm/boot/dts/mt8135.dtsi                    |   55 +
+>  arch/arm/configs/multi_v7_defconfig              |    1 +
+>  arch/arm64/boot/dts/mediatek/mt8173-evb.dts      |  126 ++
+>  arch/arm64/boot/dts/mediatek/mt8173.dtsi         |   45 +-
+>  arch/arm64/configs/defconfig                     |    1 +
+>  drivers/mmc/host/Kconfig                         |    8 +
+>  drivers/mmc/host/Makefile                        |    1 +
+>  drivers/mmc/host/mtk-sd.c                        | 1461 ++++++++++++++++++++++
+>  include/linux/mmc/core.h                         |    1 +
+>  11 files changed, 1888 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/mtk-sd.txt
+>  create mode 100644 drivers/mmc/host/mtk-sd.c
+>
+> --
+> 1.8.1.1.dirty
+>
 
-On Tue, 16 Jun 2015 14:51:59 +0800
-Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+Hi Chaotian,
 
-> Allocate usb_otg_descriptor and initialize it according to gadget otg
-> options, if none of options is not set, keep bmAttributes setting as
-> current gadget drivers, with this new interface, usb_otg_descriptor can
-> include bcdOTG if OTG 2.0 or later, and otg features can be decided by
-> the combination of usb hardware property and driver config.
-> 
-> Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
->  drivers/usb/gadget/config.c | 39 +++++++++++++++++++++++++++++++++++++++
->  include/linux/usb/gadget.h  |  2 ++
->  2 files changed, 41 insertions(+)
-> 
-> diff --git a/drivers/usb/gadget/config.c b/drivers/usb/gadget/config.c
-> index 34e12fc..9ebc052 100644
-> --- a/drivers/usb/gadget/config.c
-> +++ b/drivers/usb/gadget/config.c
-> @@ -195,3 +195,42 @@ void usb_free_all_descriptors(struct usb_function *f)
->  	usb_free_descriptors(f->ss_descriptors);
->  }
->  EXPORT_SYMBOL_GPL(usb_free_all_descriptors);
-> +
-> +int usb_otg_descriptor_init(struct usb_gadget *gadget,
-> +		struct usb_descriptor_header *otg_desc)
-> +{
-> +	struct usb_otg_descriptor *otg1x_desc;
-> +	struct usb_otg20_descriptor *otg20_desc;
-> +	u8 otg_attributes = 0;
-> +
-> +	if (!otg_desc)
-> +		return -EINVAL;
-> +
-> +	if (gadget->adp_support || gadget->hnp_support ||
-> +					gadget->srp_support) {
-> +		if (gadget->adp_support)
-> +			otg_attributes |= USB_OTG_ADP;
-> +		if (gadget->hnp_support)
-> +			otg_attributes |= USB_OTG_HNP;
-> +		if (gadget->srp_support)
-> +			otg_attributes |= USB_OTG_SRP;
-> +	} else {
-> +		otg_attributes = USB_OTG_SRP | USB_OTG_HNP;
-> +	}
+I have applied patch 1->3 for my next branch, which thus includes the
+mmc driver parts. I could potentially also pick the ARM patches, but
+then those needs to be acked from the ARM SoC folks.
 
-Didn't we agree that if otg_rev is not set then only we will use the legacy
-method?
-
-> +
-> +	if (gadget->otg_rev >= 0x0200) {
-> +		otg20_desc = (struct usb_otg20_descriptor *)otg_desc;
-> +		otg20_desc->bLength = sizeof(struct usb_otg20_descriptor);
-> +		otg20_desc->bDescriptorType = USB_DT_OTG;
-> +		otg20_desc->bmAttributes = otg_attributes;
-> +		otg20_desc->bcdOTG = cpu_to_le16(gadget->otg_rev);
-> +	} else {
-> +		otg1x_desc = (struct usb_otg_descriptor *)otg_desc;
-> +		otg1x_desc->bLength = sizeof(struct usb_otg_descriptor);
-> +		otg1x_desc->bDescriptorType = USB_DT_OTG;
-> +		otg1x_desc->bmAttributes = otg_attributes;
-> +	}
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(usb_otg_descriptor_init);
-> diff --git a/include/linux/usb/gadget.h b/include/linux/usb/gadget.h
-> index 814cb70..b77730e 100644
-> --- a/include/linux/usb/gadget.h
-> +++ b/include/linux/usb/gadget.h
-> @@ -1013,6 +1013,8 @@ int usb_assign_descriptors(struct usb_function *f,
->  		struct usb_descriptor_header **ss);
->  void usb_free_all_descriptors(struct usb_function *f);
->  
-> +int usb_otg_descriptor_init(struct usb_gadget *gadget,
-> +		struct usb_descriptor_header *otg_desc);
->  /*-------------------------------------------------------------------------*/
->  
->  /* utility to simplify map/unmap of usb_requests to/from DMA */
-
-cheers,
--roger
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Kind regards
+Uffe
