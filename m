@@ -1,53 +1,78 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: symlink cros-ec-keyboard from arm to arm64
-Date: Tue, 16 Jun 2015 15:55:53 +0100
-Message-ID: <20150616145552.GH30522@arm.com>
-References: <1434465343-29124-1-git-send-email-djkurtz@chromium.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] ARM: dts: rockchip: Add DMA tx and rx channels in UART interfaces for RK3288 SoCs
+Date: Tue, 16 Jun 2015 17:19:26 +0000
+Message-ID: <1434475166-30338-1-git-send-email-romain.perier@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1434465343-29124-1-git-send-email-djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Olof Johansson <olofj-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 16, 2015 at 03:35:41PM +0100, Daniel Kurtz wrote:
-> The cros-ec-keyboard.dtsi snippet is useful for both arm and arm64 boards.
-> Create a link between the two.
-> 
-> This may not be the most scalable solution, so consider it temporary until
-> we find a more central repository for such shared .dtsi snippets.
+This enable DMA capability for the corresponding UART interfaces, also it removes
+warning "ttyS%d - Failed to request dma" from kernel logs.
 
-I don't have strong opinions either way, but we should be consistent as
-to whether we use relative paths:
+Signed-off-by: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
 
-  http://lists.infradead.org/pipermail/linux-arm-kernel/2015-June/350267.html
+Changes since v1 ("[PATCH] ARM: dts: rockchip: Add dmac_bus rx and tx for uart2"):
+	- Add DMA tx and rx channels for all UART interfaces
+	- Rename commit summary
 
-or symlinks, like below.
+ arch/arm/boot/dts/rk3288.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-Does anybody have some technical arguments one way or the other?
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index 22316d0..1996452 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -359,6 +359,8 @@
+ 		clock-names = "baudclk", "apb_pclk";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&uart0_xfer>;
++		dmas = <&dmac_peri 1>, <&dmac_peri 2>;
++		dma-names = "tx", "rx";
+ 		status = "disabled";
+ 	};
+ 
+@@ -372,6 +374,8 @@
+ 		clock-names = "baudclk", "apb_pclk";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&uart1_xfer>;
++		dmas = <&dmac_peri 3>, <&dmac_peri 4>;
++		dma-names = "tx", "rx";
+ 		status = "disabled";
+ 	};
+ 
+@@ -385,6 +389,8 @@
+ 		clock-names = "baudclk", "apb_pclk";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&uart2_xfer>;
++		dmas = <&dmac_bus_s 4>, <&dmac_bus_s 5>;
++		dma-names = "tx", "rx";
+ 		status = "disabled";
+ 	};
+ 
+@@ -398,6 +404,8 @@
+ 		clock-names = "baudclk", "apb_pclk";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&uart3_xfer>;
++		dmas = <&dmac_peri 7>, <&dmac_peri 8>;
++		dma-names = "tx", "rx";
+ 		status = "disabled";
+ 	};
+ 
+@@ -411,6 +419,8 @@
+ 		clock-names = "baudclk", "apb_pclk";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&uart4_xfer>;
++		dmas = <&dmac_peri 9>, <&dmac_peri 10>;
++		dma-names = "tx", "rx";
+ 		status = "disabled";
+ 	};
+ 
+-- 
+1.9.1
 
-Will
-
-> Signed-off-by: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/cros-ec-keyboard.dtsi | 1 +
->  1 file changed, 1 insertion(+)
->  create mode 120000 arch/arm64/boot/dts/cros-ec-keyboard.dtsi
-> 
-> diff --git a/arch/arm64/boot/dts/cros-ec-keyboard.dtsi b/arch/arm64/boot/dts/cros-ec-keyboard.dtsi
-> new file mode 120000
-> index 0000000..42220ac
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/cros-ec-keyboard.dtsi
-> @@ -0,0 +1 @@
-> +../../../arm/boot/dts/cros-ec-keyboard.dtsi
-> \ No newline at end of file
-> -- 
-> 2.2.0.rc0.207.ga3a616c
-> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
