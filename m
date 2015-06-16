@@ -1,224 +1,172 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: [PATCH v5 07/14] crypto: marvell/CESA: add Triple-DES support
-Date: Tue, 16 Jun 2015 11:59:01 +0200
-Message-ID: <1434448748-10828-8-git-send-email-boris.brezillon@free-electrons.com>
-References: <1434448748-10828-1-git-send-email-boris.brezillon@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1434448748-10828-1-git-send-email-boris.brezillon@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, linux-crypto@vger.kernel.org
-Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Arnaud Ebalard <arno@natisbad.org>, Tawfik Bayouk <tawfik@marvell.com>, Lior Amsalem <alior@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Eran Ben-Avi <benavi@marvell.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Imre Kaloz <kaloz@openwrt.org>
+From: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 1/2] ARM: at91: dts: add isi & ov2640 dt nodes for at91sam9m10g45ek board
+Date: Tue, 16 Jun 2015 18:08:34 +0800
+Message-ID: <1434449315-9243-1-git-send-email-josh.wu@atmel.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Arnaud Ebalard <arno@natisbad.org>
+First we group the isi data pins, and for now we only use 0~7 data pins
+with HSYNC and VSYNC.
+Also add the link for atmel-isi and ov2640 sensor node.
 
-Add support for Triple-DES operations.
-
-Signed-off-by: Arnaud Ebalard <arno@natisbad.org>
-Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+Signed-off-by: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 ---
- drivers/crypto/marvell/cesa.c   |   2 +
- drivers/crypto/marvell/cesa.h   |   2 +
- drivers/crypto/marvell/cipher.c | 147 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 151 insertions(+)
 
-diff --git a/drivers/crypto/marvell/cesa.c b/drivers/crypto/marvell/cesa.c
-index 212840e..c0b1b49 100644
---- a/drivers/crypto/marvell/cesa.c
-+++ b/drivers/crypto/marvell/cesa.c
-@@ -171,6 +171,8 @@ static void mv_cesa_remove_algs(struct mv_cesa_dev *cesa)
- static struct crypto_alg *armada_370_cipher_algs[] = {
- 	&mv_cesa_ecb_des_alg,
- 	&mv_cesa_cbc_des_alg,
-+	&mv_cesa_ecb_des3_ede_alg,
-+	&mv_cesa_cbc_des3_ede_alg,
- 	&mv_cesa_ecb_aes_alg,
- 	&mv_cesa_cbc_aes_alg,
- };
-diff --git a/drivers/crypto/marvell/cesa.h b/drivers/crypto/marvell/cesa.h
-index 2ee48fe..2e8b7fc 100644
---- a/drivers/crypto/marvell/cesa.h
-+++ b/drivers/crypto/marvell/cesa.h
-@@ -779,6 +779,8 @@ extern struct ahash_alg mv_ahmac_sha1_alg;
+Changes in v2:
+- group the isi data pin.
+- remove the isi_mck pin from pinctrl-isi as it will used by camera
+  sensor.
+
+ arch/arm/boot/dts/at91sam9g45.dtsi     | 48 +++++++++++++++++++++-------------
+ arch/arm/boot/dts/at91sam9m10g45ek.dts | 45 +++++++++++++++++++++++++++++++
+ 2 files changed, 75 insertions(+), 18 deletions(-)
+
+diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
+index d260ba7..f6220d6 100644
+--- a/arch/arm/boot/dts/at91sam9g45.dtsi
++++ b/arch/arm/boot/dts/at91sam9g45.dtsi
+@@ -498,23 +498,31 @@
+ 				};
  
- extern struct crypto_alg mv_cesa_ecb_des_alg;
- extern struct crypto_alg mv_cesa_cbc_des_alg;
-+extern struct crypto_alg mv_cesa_ecb_des3_ede_alg;
-+extern struct crypto_alg mv_cesa_cbc_des3_ede_alg;
- extern struct crypto_alg mv_cesa_ecb_aes_alg;
- extern struct crypto_alg mv_cesa_cbc_aes_alg;
+ 				isi {
+-					pinctrl_isi: isi-0 {
+-						atmel,pins = <AT91_PIOB 8 AT91_PERIPH_B AT91_PINCTRL_NONE /* D8 */
+-							      AT91_PIOB 9 AT91_PERIPH_B AT91_PINCTRL_NONE /* D9 */
+-							      AT91_PIOB 10 AT91_PERIPH_B AT91_PINCTRL_NONE /* D10 */
+-							      AT91_PIOB 11 AT91_PERIPH_B AT91_PINCTRL_NONE /* D11 */
+-							      AT91_PIOB 20 AT91_PERIPH_A AT91_PINCTRL_NONE /* D0 */
+-							      AT91_PIOB 21 AT91_PERIPH_A AT91_PINCTRL_NONE /* D1 */
+-							      AT91_PIOB 22 AT91_PERIPH_A AT91_PINCTRL_NONE /* D2 */
+-							      AT91_PIOB 23 AT91_PERIPH_A AT91_PINCTRL_NONE /* D3 */
+-							      AT91_PIOB 24 AT91_PERIPH_A AT91_PINCTRL_NONE /* D4 */
+-							      AT91_PIOB 25 AT91_PERIPH_A AT91_PINCTRL_NONE /* D5 */
+-							      AT91_PIOB 26 AT91_PERIPH_A AT91_PINCTRL_NONE /* D6 */
+-							      AT91_PIOB 27 AT91_PERIPH_A AT91_PINCTRL_NONE /* D7 */
+-							      AT91_PIOB 28 AT91_PERIPH_A AT91_PINCTRL_NONE /* PCK */
+-							      AT91_PIOB 29 AT91_PERIPH_A AT91_PINCTRL_NONE /* VSYNC */
+-							      AT91_PIOB 30 AT91_PERIPH_A AT91_PINCTRL_NONE /* HSYNC */
+-							      AT91_PIOB 31 AT91_PERIPH_A AT91_PINCTRL_NONE /* MCK */>;
++					pinctrl_isi_data_0_7: isi-0-data-0-7 {
++						atmel,pins =
++							<AT91_PIOB 20 AT91_PERIPH_A AT91_PINCTRL_NONE /* D0 */
++							AT91_PIOB 21 AT91_PERIPH_A AT91_PINCTRL_NONE /* D1 */
++							AT91_PIOB 22 AT91_PERIPH_A AT91_PINCTRL_NONE /* D2 */
++							AT91_PIOB 23 AT91_PERIPH_A AT91_PINCTRL_NONE /* D3 */
++							AT91_PIOB 24 AT91_PERIPH_A AT91_PINCTRL_NONE /* D4 */
++							AT91_PIOB 25 AT91_PERIPH_A AT91_PINCTRL_NONE /* D5 */
++							AT91_PIOB 26 AT91_PERIPH_A AT91_PINCTRL_NONE /* D6 */
++							AT91_PIOB 27 AT91_PERIPH_A AT91_PINCTRL_NONE /* D7 */
++							AT91_PIOB 28 AT91_PERIPH_A AT91_PINCTRL_NONE /* PCK */
++							AT91_PIOB 29 AT91_PERIPH_A AT91_PINCTRL_NONE /* VSYNC */
++							AT91_PIOB 30 AT91_PERIPH_A AT91_PINCTRL_NONE>; /* HSYNC */
++					};
++
++					pinctrl_isi_data_8_9: isi-0-data-8-9 {
++						atmel,pins =
++							<AT91_PIOB 8 AT91_PERIPH_B AT91_PINCTRL_NONE /* D8 */
++							AT91_PIOB 9 AT91_PERIPH_B AT91_PINCTRL_NONE>; /* D9 */
++					};
++
++					pinctrl_isi_data_10_11: isi-0-data-10-11 {
++						atmel,pins =
++							<AT91_PIOB 10 AT91_PERIPH_B AT91_PINCTRL_NONE /* D10 */
++							AT91_PIOB 11 AT91_PERIPH_B AT91_PINCTRL_NONE>; /* D11 */
+ 					};
+ 				};
  
-diff --git a/drivers/crypto/marvell/cipher.c b/drivers/crypto/marvell/cipher.c
-index 31b9311..e65592c 100644
---- a/drivers/crypto/marvell/cipher.c
-+++ b/drivers/crypto/marvell/cipher.c
-@@ -22,6 +22,11 @@ struct mv_cesa_des_ctx {
- 	u8 key[DES_KEY_SIZE];
- };
+@@ -1068,8 +1076,12 @@
+ 				clocks = <&isi_clk>;
+ 				clock-names = "isi_clk";
+ 				pinctrl-names = "default";
+-				pinctrl-0 = <&pinctrl_isi>;
++				pinctrl-0 = <&pinctrl_isi_data_0_7>;
+ 				status = "disabled";
++				port {
++					#address-cells = <1>;
++					#size-cells = <0>;
++				};
+ 			};
  
-+struct mv_cesa_des3_ctx {
-+	struct mv_cesa_ctx base;
-+	u8 key[DES3_EDE_KEY_SIZE];
-+};
-+
- struct mv_cesa_aes_ctx {
- 	struct mv_cesa_ctx base;
- 	struct crypto_aes_ctx aes;
-@@ -261,6 +266,22 @@ static int mv_cesa_des_setkey(struct crypto_ablkcipher *cipher, const u8 *key,
- 	return 0;
- }
+ 			pwm0: pwm@fffb8000 {
+diff --git a/arch/arm/boot/dts/at91sam9m10g45ek.dts b/arch/arm/boot/dts/at91sam9m10g45ek.dts
+index 1375d33..5062e18 100644
+--- a/arch/arm/boot/dts/at91sam9m10g45ek.dts
++++ b/arch/arm/boot/dts/at91sam9m10g45ek.dts
+@@ -63,6 +63,25 @@
  
-+static int mv_cesa_des3_ede_setkey(struct crypto_ablkcipher *cipher,
-+				   const u8 *key, unsigned int len)
-+{
-+	struct crypto_tfm *tfm = crypto_ablkcipher_tfm(cipher);
-+	struct mv_cesa_des_ctx *ctx = crypto_tfm_ctx(tfm);
+ 			i2c0: i2c@fff84000 {
+ 				status = "okay";
++				ov2640: camera@30 {
++					compatible = "ovti,ov2640";
++					reg = <0x30>;
++					pinctrl-names = "default";
++					pinctrl-0 = <&pinctrl_pck1_as_isi_mck &pinctrl_sensor_power &pinctrl_sensor_reset>;
++					resetb-gpios = <&pioD 12 GPIO_ACTIVE_LOW>;
++					pwdn-gpios = <&pioD 13 GPIO_ACTIVE_HIGH>;
++					clocks = <&pck1>;
++					clock-names = "xvclk";
++					assigned-clocks = <&pck1>;
++					assigned-clock-rates = <25000000>;
 +
-+	if (len != DES3_EDE_KEY_SIZE) {
-+		crypto_ablkcipher_set_flags(cipher, CRYPTO_TFM_RES_BAD_KEY_LEN);
-+		return -EINVAL;
-+	}
-+
-+	memcpy(ctx->key, key, DES3_EDE_KEY_SIZE);
-+
-+	return 0;
-+}
-+
- static int mv_cesa_ablkcipher_dma_req_init(struct ablkcipher_request *req,
- 				const struct mv_cesa_op_ctx *op_templ)
- {
-@@ -501,6 +522,132 @@ struct crypto_alg mv_cesa_cbc_des_alg = {
- 	},
- };
++					port {
++						ov2640_0: endpoint {
++							remote-endpoint = <&isi_0>;
++							bus-width = <8>;
++						};
++					};
++				};
+ 			};
  
-+static int mv_cesa_des3_op(struct ablkcipher_request *req,
-+			   struct mv_cesa_op_ctx *tmpl)
-+{
-+	struct mv_cesa_des3_ctx *ctx = crypto_tfm_ctx(req->base.tfm);
-+	int ret;
+ 			i2c1: i2c@fff88000 {
+@@ -101,6 +120,22 @@
+ 			};
+ 
+ 			pinctrl@fffff200 {
++				camera_sensor {
++					pinctrl_pck1_as_isi_mck: pck1_as_isi_mck-0 {
++						atmel,pins =
++							<AT91_PIOB 31 AT91_PERIPH_B AT91_PINCTRL_NONE>;
++					};
 +
-+	mv_cesa_update_op_cfg(tmpl, CESA_SA_DESC_CFG_CRYPTM_3DES,
-+			      CESA_SA_DESC_CFG_CRYPTM_MSK);
++					pinctrl_sensor_reset: sensor_reset-0 {
++						atmel,pins =
++							<AT91_PIOD 12 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>;
++					};
 +
-+	memcpy(tmpl->ctx.blkcipher.key, ctx->key, DES3_EDE_KEY_SIZE);
++					pinctrl_sensor_power: sensor_power-0 {
++						atmel,pins =
++							<AT91_PIOD 13 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>;
++					};
++				};
+ 				mmc0 {
+ 					pinctrl_board_mmc0: mmc0-board {
+ 						atmel,pins =
+@@ -155,6 +190,16 @@
+ 				status = "okay";
+ 			};
+ 
++			isi@fffb4000 {
++				status = "okay";
++				port {
++					isi_0: endpoint {
++						remote-endpoint = <&ov2640_0>;
++						bus-width = <8>;
++					};
++				};
++			};
 +
-+	ret = mv_cesa_ablkcipher_req_init(req, tmpl);
-+	if (ret)
-+		return ret;
-+
-+	ret = mv_cesa_queue_req(&req->base);
-+	if (ret && ret != -EINPROGRESS)
-+		mv_cesa_ablkcipher_cleanup(req);
-+
-+	return ret;
-+}
-+
-+static int mv_cesa_ecb_des3_ede_encrypt(struct ablkcipher_request *req)
-+{
-+	struct mv_cesa_op_ctx tmpl;
-+
-+	mv_cesa_set_op_cfg(&tmpl,
-+			   CESA_SA_DESC_CFG_CRYPTCM_ECB |
-+			   CESA_SA_DESC_CFG_3DES_EDE |
-+			   CESA_SA_DESC_CFG_DIR_ENC);
-+
-+	return mv_cesa_des3_op(req, &tmpl);
-+}
-+
-+static int mv_cesa_ecb_des3_ede_decrypt(struct ablkcipher_request *req)
-+{
-+	struct mv_cesa_op_ctx tmpl;
-+
-+	mv_cesa_set_op_cfg(&tmpl,
-+			   CESA_SA_DESC_CFG_CRYPTCM_ECB |
-+			   CESA_SA_DESC_CFG_3DES_EDE |
-+			   CESA_SA_DESC_CFG_DIR_DEC);
-+
-+	return mv_cesa_des3_op(req, &tmpl);
-+}
-+
-+struct crypto_alg mv_cesa_ecb_des3_ede_alg = {
-+	.cra_name = "ecb(des3_ede)",
-+	.cra_driver_name = "mv-ecb-des3-ede",
-+	.cra_priority = 300,
-+	.cra_flags = CRYPTO_ALG_TYPE_ABLKCIPHER |
-+		     CRYPTO_ALG_KERN_DRIVER_ONLY | CRYPTO_ALG_ASYNC,
-+	.cra_blocksize = DES3_EDE_BLOCK_SIZE,
-+	.cra_ctxsize = sizeof(struct mv_cesa_des3_ctx),
-+	.cra_alignmask = 0,
-+	.cra_type = &crypto_ablkcipher_type,
-+	.cra_module = THIS_MODULE,
-+	.cra_init = mv_cesa_ablkcipher_cra_init,
-+	.cra_u = {
-+		.ablkcipher = {
-+			.min_keysize = DES3_EDE_KEY_SIZE,
-+			.max_keysize = DES3_EDE_KEY_SIZE,
-+			.ivsize	     = DES3_EDE_BLOCK_SIZE,
-+			.setkey = mv_cesa_des3_ede_setkey,
-+			.encrypt = mv_cesa_ecb_des3_ede_encrypt,
-+			.decrypt = mv_cesa_ecb_des3_ede_decrypt,
-+		},
-+	},
-+};
-+
-+static int mv_cesa_cbc_des3_op(struct ablkcipher_request *req,
-+			       struct mv_cesa_op_ctx *tmpl)
-+{
-+	memcpy(tmpl->ctx.blkcipher.iv, req->info, DES3_EDE_BLOCK_SIZE);
-+
-+	return mv_cesa_des3_op(req, tmpl);
-+}
-+
-+static int mv_cesa_cbc_des3_ede_encrypt(struct ablkcipher_request *req)
-+{
-+	struct mv_cesa_op_ctx tmpl;
-+
-+	mv_cesa_set_op_cfg(&tmpl,
-+			   CESA_SA_DESC_CFG_CRYPTCM_CBC |
-+			   CESA_SA_DESC_CFG_3DES_EDE |
-+			   CESA_SA_DESC_CFG_DIR_ENC);
-+
-+	return mv_cesa_cbc_des3_op(req, &tmpl);
-+}
-+
-+static int mv_cesa_cbc_des3_ede_decrypt(struct ablkcipher_request *req)
-+{
-+	struct mv_cesa_op_ctx tmpl;
-+
-+	mv_cesa_set_op_cfg(&tmpl,
-+			   CESA_SA_DESC_CFG_CRYPTCM_CBC |
-+			   CESA_SA_DESC_CFG_3DES_EDE |
-+			   CESA_SA_DESC_CFG_DIR_DEC);
-+
-+	return mv_cesa_cbc_des3_op(req, &tmpl);
-+}
-+
-+struct crypto_alg mv_cesa_cbc_des3_ede_alg = {
-+	.cra_name = "cbc(des3_ede)",
-+	.cra_driver_name = "mv-cbc-des3-ede",
-+	.cra_priority = 300,
-+	.cra_flags = CRYPTO_ALG_TYPE_ABLKCIPHER |
-+		     CRYPTO_ALG_KERN_DRIVER_ONLY | CRYPTO_ALG_ASYNC,
-+	.cra_blocksize = DES3_EDE_BLOCK_SIZE,
-+	.cra_ctxsize = sizeof(struct mv_cesa_des3_ctx),
-+	.cra_alignmask = 0,
-+	.cra_type = &crypto_ablkcipher_type,
-+	.cra_module = THIS_MODULE,
-+	.cra_init = mv_cesa_ablkcipher_cra_init,
-+	.cra_u = {
-+		.ablkcipher = {
-+			.min_keysize = DES3_EDE_KEY_SIZE,
-+			.max_keysize = DES3_EDE_KEY_SIZE,
-+			.ivsize	     = DES3_EDE_BLOCK_SIZE,
-+			.setkey = mv_cesa_des3_ede_setkey,
-+			.encrypt = mv_cesa_cbc_des3_ede_encrypt,
-+			.decrypt = mv_cesa_cbc_des3_ede_decrypt,
-+		},
-+	},
-+};
-+
- static int mv_cesa_aes_op(struct ablkcipher_request *req,
- 			  struct mv_cesa_op_ctx *tmpl)
- {
+ 			pwm0: pwm@fffb8000 {
+ 				status = "okay";
+ 
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
