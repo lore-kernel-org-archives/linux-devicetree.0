@@ -1,57 +1,50 @@
-From: =?UTF-8?B?Tm9yYWxmIFRyw7hubmVz?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] watchdog: bcm2835: Add poweroff code for the Raspberry
- Pi
-Date: Tue, 16 Jun 2015 11:39:26 +0200
-Message-ID: <557FEECE.9060909@tronnes.org>
-References: <1434195541-28368-1-git-send-email-noralf@tronnes.org> <1434195541-28368-2-git-send-email-noralf@tronnes.org> <557F930E.8010002@wwwdotorg.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 00/20] ARM: dts: Add USB and OTG related
+ nodes and enable on various boards
+Date: Tue, 16 Jun 2015 11:36:54 +0200
+Message-ID: <20150616093654.GF11732@lukather>
+References: <1433530943-12599-1-git-send-email-hdegoede@redhat.com>
+ <20150608100358.GW23777@lukather>
+ <55783B2C.3080207@redhat.com>
+ <557ADE40.70200@redhat.com>
+ <557C308A.4010104@redhat.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <557F930E.8010002-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="K1n7F7fSdjvFAEnM"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB5G576VQKGQE6MQTAJY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <557C308A.4010104-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+--K1n7F7fSdjvFAEnM
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Den 16.06.2015 05:07, skrev Stephen Warren:
-> On 06/13/2015 05:39 AM, Noralf Tr=C3=B8nnes wrote:
->> This adds a new poweroff function to the watchdog driver for the
->> Raspberry Pi. Currently poweroff/halt results in a reboot.
->>
->> The Raspberry Pi firmware uses the RSTS register to know which
->> partiton to boot from. The partiton value is spread into bits
->> 0, 2, 4, 6, 8, 10. Partiton 63 is a special partition used by
->> the firmware to indicate halt.
->>
->> The firmware made this change in 19 Aug 2013 and was matched
->> by the downstream commit:
->> Changes for new NOOBS multi partition booting from gsh
-> I don't understand why we need a new compatible value here; why not
-> simply modify the existing bcm2835_power_off() function. That is writ=
-ten
-> to do something that's interpreted by the RPi firmware, not something
-> that the bcm2835 HW does.
->
-> Admittedly the current name is a bit misleading, but fixing that shou=
-ld
-> be a separate change to fixing the implementation to do what the curr=
-ent
-> firmware expects.
+On Sat, Jun 13, 2015 at 03:30:50PM +0200, Hans de Goede wrote:
+> >I'll push a new version of the patches to otg-dts-for-maxime
+> >with the extcon property added for you and ping you when it is
+> >ready.
+> 
+> Done, https://github.com/jwrdegoede/linux-sunxi/commits/otg-dts-for-maxime
+> now contains the necessary changes and is ready for merging for 4.3.
 
-There are other boards that use the BCM2835 and I didn't want to break =
-the
-behaviour for those that use the reference firmware. Roku 2 device uses
-this soc, and changing bcm2835_power_off() would break support for it.
-ODROID-W also use BCM2835, but this is a Pi clone so I don't know if th=
-ey
-have matched their firmware behaviour to that of the Pi (admittedly not
-many boards were made, their source of chips went dry).
+Just to make things clear, it's the updated version with extcon that I
+merged.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--K1n7F7fSdjvFAEnM--
