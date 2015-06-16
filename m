@@ -1,133 +1,56 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/4] mfd: 88pm800: add device tree support
-Date: Tue, 16 Jun 2015 08:02:33 -0500
-Message-ID: <CAL_Jsq+6yk59Z4swi2xq4=_=m89pBUt-fNXJF8smjw7qS8xazA@mail.gmail.com>
-References: <1432937962-4537-1-git-send-email-vaibhav.hiremath@linaro.org>
- <1432937962-4537-2-git-send-email-vaibhav.hiremath@linaro.org>
- <20150601083835.GE3329@x1> <557FD5AD.5020405@linaro.org>
+From: Fabien Dessenne <fabien.dessenne-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH] ARM: DT: STiH410: Add bdisp dt nodes
+Date: Tue, 16 Jun 2015 15:30:40 +0200
+Message-ID: <1434461440-3965-1-git-send-email-fabien.dessenne@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <557FD5AD.5020405-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+To: Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 16, 2015 at 2:52 AM, Vaibhav Hiremath
-<vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->
->
-> On Monday 01 June 2015 02:08 PM, Lee Jones wrote:
->>
->> On Sat, 30 May 2015, Vaibhav Hiremath wrote:
->>
->
-> Thanks for your review. and sorry for delayed response.
->
->>> Add DT support to the 88pm800 driver along with below properties
->>>         - marvell,88pm800-irq-write-clear :
->>>           Idicates whether interrupt status is cleared by write
->>>
->>> Also, creates the DT binding text file,
->>> Documentation/devicetree/bindings/mfd/88pm800.txt
->>>
->>> Signed-off-by: Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
->>> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>> ---
->>>   Documentation/devicetree/bindings/mfd/88pm800.txt | 57
->>> +++++++++++++++++++++++
->>>   drivers/mfd/88pm800.c                             | 39 ++++++++++++++++
->>
->>
->> These should be submitted separately.
->>
->
->
-> Ok, will separate it in next version.
->
->
->>>   2 files changed, 96 insertions(+)
->>>   create mode 100644 Documentation/devicetree/bindings/mfd/88pm800.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/mfd/88pm800.txt
->>> b/Documentation/devicetree/bindings/mfd/88pm800.txt
->>> new file mode 100644
->>> index 0000000..094951b
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/mfd/88pm800.txt
->>> @@ -0,0 +1,57 @@
->>> +* Marvell 88PM800 Power Management IC
+Add the bdisp (2D blitter for STMicroelectronics SoC) dt nodes for the
+first of the two bdisp devices, defining register address, interrupt and
+clock.
 
-Might as well name this 88PM8xx from the start.
+Signed-off-by: Fabien Dessenne <fabien.dessenne-qxv4g6HH51o@public.gmane.org>
+---
+ arch/arm/boot/dts/stih410.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
->>> +
->>> +Required parent device properties:
->>> +- compatible : "marvell,88pm800"
+diff --git a/arch/arm/boot/dts/stih410.dtsi b/arch/arm/boot/dts/stih410.dtsi
+index 208b5e8..6f40bc9 100644
+--- a/arch/arm/boot/dts/stih410.dtsi
++++ b/arch/arm/boot/dts/stih410.dtsi
+@@ -10,6 +10,10 @@
+ #include "stih407-family.dtsi"
+ #include "stih410-pinctrl.dtsi"
+ / {
++	aliases {
++		bdisp0 = &bdisp0;
++	};
++
+ 	soc {
+ 		usb2_picophy1: phy2 {
+ 			compatible = "st,stih407-usb2-phy";
+@@ -218,5 +222,13 @@
+ 				};
+ 			};
+ 		};
++
++		bdisp0:bdisp@9f10000 {
++			compatible = "st,stih407-bdisp";
++			reg = <0x9f10000 0x1000>;
++			interrupts = <GIC_SPI 38 IRQ_TYPE_NONE>;
++			clock-names = "bdisp";
++			clocks = <&clk_s_c0_flexgen CLK_IC_BDISP_0>;
++		};
+ 	};
+ };
+-- 
+1.9.1
 
-You might as well include 88pm805 and 88pm860 here since 805 support
-is in the kernel and you will be submitting 860 support. They don't
-have to be added with driver support.
-
->>> +- reg : the I2C slave address for the 88pm800 chip
->>> +- interrupts : IRQ line for the 88pm800 chip
->>> +- interrupt-controller: describes the 88pm800 as an interrupt controller
->>> +- #interrupt-cells : should be 1.
->>> +               - The cell is the 88pm800 local IRQ number
->>> +
->>> +Optional parent device properties:
->>> +- marvell,88pm800-irq-write-clr: indicates whether interrupt status is
->>> cleared by write
->>
->>
->> Drop the device name.  These bindings should be as generic as possible.
->>
->
-> OK, how about simply
->
-> "mfd-irq_clr_on_write"
-
-No, mfd is a Linux name which doesn't belong in bindings, and
-underscores are generally not used.
-
-I think Lee meant marvell,irq-write-clr or irq-write-clr.
-
-This could also just be dropped altogether and set based on the
-compatible strings with match data.
-
->> Also describe what the absence of the property means.
->>
->
-> Ok.
->
->>> +88pm800 consists of a large and varied group of sub-devices:
->>
->>
->> 3?
->>
->
-> I have explicitly mentioned in note that more device list will follow.
-> I just wanted to add entries as and when we add/enable driver support.
->
->>> +Device                  Supply Names    Description
->>> +------                  ------------    -----------
->>> +88pm80x-onkey          :               : On key
->>> +88pm80x-rtc            :               : RTC
->>> +88pm80x                        :               : Regulators
->>
->>
->> Surely regulators is 88pm80x-regulator, no?
->>
->
-> did not understand what change is expected here.
-
-The node name for regulators node should be 88pm80x-regulator? But
-these don't correspond to node names based on the example and the
-example is correct IMO. So these are Linux driver names? If so, they
-don't belong in the binding doc. What you need is to document the
-sub-node compatible strings
-
-Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
