@@ -1,63 +1,94 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v6 0/7] Add Mediatek MMC driver
-Date: Tue, 16 Jun 2015 10:03:06 +0200
-Message-ID: <CAPDyKFrAbAFR7_p5O4bPh6FZEBVhGZ2rq3htCKcF2QgQuCEf2g@mail.gmail.com>
-References: <1434367253-26577-1-git-send-email-chaotian.jing@mediatek.com>
+From: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v3 03/22] usb: add OTG feature options to gadget
+ structure.
+Date: Tue, 16 Jun 2015 16:06:06 +0800
+Message-ID: <20150616080604.GA10574@shlinux2>
+References: <1434437532-23678-1-git-send-email-jun.li@freescale.com>
+ <1434437532-23678-4-git-send-email-jun.li@freescale.com>
+ <20150616102857.6245f8bb@rockdesk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1434367253-26577-1-git-send-email-chaotian.jing@mediatek.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Chaotian Jing <chaotian.jing@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Chris Ball <chris@printf.net>, Mark Rutland <mark.rutland@arm.com>, James Liao <jamesjj.liao@mediatek.com>, srv_heupstream <srv_heupstream@mediatek.com>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Hongzhou Yang <hongzhou.yang@mediatek.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-mmc <linux-mmc@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, "Joe.C" <yingjoe.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, =?UTF-8?B?QmluIFpoYW5nICjnq6Dmlowp?= <bin.zhang@mediatek.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mediatek
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150616102857.6245f8bb@rockdesk>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 15 June 2015 at 13:20, Chaotian Jing <chaotian.jing@mediatek.com> wrote:
-> This series enables MMC support on the MT8135/MT8173 platform.
-> MT8135 has 5 MMC controllers and MT8173 has 4 MMC controllers.
->
-> Changes base on Ulf's comments
-> Make hclk mandatory in the driver code
-> Change host->hclk to host->src_clk_freq
-> Add linux/pm.h
->
-> Chaotian Jing (3):
->   mmc: dt-bindings: add Mediatek MMC bindings
->   mmc: mediatek: Add Mediatek MMC driver
->   mmc: mediatek: Add PM support for MMC driver
->
-> Eddie Huang (2):
->   arm64: dts: mediatek: Add MT8173 MMC dts
->   arm64: mediatek: Add Mediatek MMC support in defconfig
->
-> Yingjoe Chen (2):
->   ARM: mediatek: dts: Add emmc support to mt8135
->   ARM: multi_v7_defconfig: Enable Mediatek MMC support multi-v7
->
->  Documentation/devicetree/bindings/mmc/mtk-sd.txt |   32 +
->  arch/arm/boot/dts/mt8135-evbp1.dts               |  158 +++
->  arch/arm/boot/dts/mt8135.dtsi                    |   55 +
->  arch/arm/configs/multi_v7_defconfig              |    1 +
->  arch/arm64/boot/dts/mediatek/mt8173-evb.dts      |  126 ++
->  arch/arm64/boot/dts/mediatek/mt8173.dtsi         |   45 +-
->  arch/arm64/configs/defconfig                     |    1 +
->  drivers/mmc/host/Kconfig                         |    8 +
->  drivers/mmc/host/Makefile                        |    1 +
->  drivers/mmc/host/mtk-sd.c                        | 1461 ++++++++++++++++++++++
->  include/linux/mmc/core.h                         |    1 +
->  11 files changed, 1888 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/mmc/mtk-sd.txt
->  create mode 100644 drivers/mmc/host/mtk-sd.c
->
-> --
-> 1.8.1.1.dirty
->
+On Tue, Jun 16, 2015 at 10:28:57AM +0300, Roger Quadros wrote:
+> 
+> On Tue, 16 Jun 2015 14:51:53 +0800
+> Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> 
+> > From: Macpaul Lin <macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > 
+> > Add ADP, HNP and SRP feature options and otg version to gadget structure.
+> > 
+> > Signed-off-by: Macpaul Lin <macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > ---
+> >  include/linux/usb/gadget.h | 11 +++++++++++
+> >  1 file changed, 11 insertions(+)
+> > 
+> > diff --git a/include/linux/usb/gadget.h b/include/linux/usb/gadget.h
+> > index 4f3dfb7..814cb70 100644
+> > --- a/include/linux/usb/gadget.h
+> > +++ b/include/linux/usb/gadget.h
+> > @@ -514,6 +514,12 @@ struct usb_gadget_ops {
+> >   * @sg_supported: true if we can handle scatter-gather
+> >   * @is_otg: True if the USB device port uses a Mini-AB jack, so that the
+> >   *	gadget driver must provide a USB OTG descriptor.
+> > + * @adp_support: OTG device feature flag, indicating that the device
+> > +	supports ADP at this port.
+> > + * @hnp_support: OTG device feature flag, indicating that the device
+> > +	supports HNP at this port.
+> > + * @srp_support: OTG device feature flag, indicating that the device
+> > +	supports SRP at this port.
+> >   * @is_a_peripheral: False unless is_otg, the "A" end of a USB cable
+> >   *	is in the Mini-AB jack, and HNP has been used to switch roles
+> >   *	so that the "A" device currently acts as A-Peripheral, not A-Host.
+> > @@ -526,6 +532,7 @@ struct usb_gadget_ops {
+> >   * @quirk_ep_out_aligned_size: epout requires buffer size to be aligned to
+> >   *	MaxPacketSize.
+> >   * @is_selfpowered: if the gadget is self-powered.
+> > + * @otg_rev: The OTG reversion number the device is compliant to.
+> 
+> reversion -> revision
+> Also you might want to say that it is BCD encoded with an example
+> e.g. 2.0 -> 0x0200
+> 
+Yes, I will add that.
 
-Hi Chaotian,
-
-I have applied patch 1->3 for my next branch, which thus includes the
-mmc driver parts. I could potentially also pick the ARM patches, but
-then those needs to be acked from the ARM SoC folks.
-
-Kind regards
-Uffe
+Li Jun
+> >   *
+> >   * Gadgets have a mostly-portable "gadget driver" implementing device
+> >   * functions, handling all usb configurations and interfaces.  Gadget
+> > @@ -562,12 +569,16 @@ struct usb_gadget {
+> >  
+> >  	unsigned			sg_supported:1;
+> >  	unsigned			is_otg:1;
+> > +	unsigned			adp_support:1;
+> > +	unsigned			hnp_support:1;
+> > +	unsigned			srp_support:1;
+> >  	unsigned			is_a_peripheral:1;
+> >  	unsigned			b_hnp_enable:1;
+> >  	unsigned			a_hnp_support:1;
+> >  	unsigned			a_alt_hnp_support:1;
+> >  	unsigned			quirk_ep_out_aligned_size:1;
+> >  	unsigned			is_selfpowered:1;
+> > +	u16				otg_rev;
+> >  };
+> >  #define work_to_gadget(w)	(container_of((w), struct usb_gadget, work))
+> >  
+> 
+> with that change you can add my
+> 
+> Reviewed-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+> 
+> cheers,
+> -roger
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
