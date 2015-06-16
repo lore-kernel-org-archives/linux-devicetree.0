@@ -1,110 +1,83 @@
-From: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v3 09/22] usb: gadget: add usb_otg_descriptor_add
- interface to init usb_otg_descriptor
-Date: Tue, 16 Jun 2015 16:13:45 +0800
-Message-ID: <20150616081344.GC10574@shlinux2>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 05/22] doc: dt-binding: usb: add otg related
+ properties
+Date: Tue, 16 Jun 2015 11:21:15 +0300
+Message-ID: <20150616112115.7a85966d@rockdesk>
 References: <1434437532-23678-1-git-send-email-jun.li@freescale.com>
- <1434437532-23678-10-git-send-email-jun.li@freescale.com>
- <20150616110158.2bfd1354@rockdesk>
+	<1434437532-23678-6-git-send-email-jun.li@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150616110158.2bfd1354@rockdesk>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Cc: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1434437532-23678-6-git-send-email-jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 16, 2015 at 11:01:58AM +0300, Roger Quadros wrote:
-> 
-> On Tue, 16 Jun 2015 14:51:59 +0800
-> Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> 
-> > Allocate usb_otg_descriptor and initialize it according to gadget otg
-> > options, if none of options is not set, keep bmAttributes setting as
-> > current gadget drivers, with this new interface, usb_otg_descriptor can
-> > include bcdOTG if OTG 2.0 or later, and otg features can be decided by
-> > the combination of usb hardware property and driver config.
-> > 
-> > Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > ---
-> >  drivers/usb/gadget/config.c | 39 +++++++++++++++++++++++++++++++++++++++
-> >  include/linux/usb/gadget.h  |  2 ++
-> >  2 files changed, 41 insertions(+)
-> > 
-> > diff --git a/drivers/usb/gadget/config.c b/drivers/usb/gadget/config.c
-> > index 34e12fc..9ebc052 100644
-> > --- a/drivers/usb/gadget/config.c
-> > +++ b/drivers/usb/gadget/config.c
-> > @@ -195,3 +195,42 @@ void usb_free_all_descriptors(struct usb_function *f)
-> >  	usb_free_descriptors(f->ss_descriptors);
-> >  }
-> >  EXPORT_SYMBOL_GPL(usb_free_all_descriptors);
-> > +
-> > +int usb_otg_descriptor_init(struct usb_gadget *gadget,
-> > +		struct usb_descriptor_header *otg_desc)
-> > +{
-> > +	struct usb_otg_descriptor *otg1x_desc;
-> > +	struct usb_otg20_descriptor *otg20_desc;
-> > +	u8 otg_attributes = 0;
-> > +
-> > +	if (!otg_desc)
-> > +		return -EINVAL;
-> > +
-> > +	if (gadget->adp_support || gadget->hnp_support ||
-> > +					gadget->srp_support) {
-> > +		if (gadget->adp_support)
-> > +			otg_attributes |= USB_OTG_ADP;
-> > +		if (gadget->hnp_support)
-> > +			otg_attributes |= USB_OTG_HNP;
-> > +		if (gadget->srp_support)
-> > +			otg_attributes |= USB_OTG_SRP;
-> > +	} else {
-> > +		otg_attributes = USB_OTG_SRP | USB_OTG_HNP;
-> > +	}
-> 
-> Didn't we agree that if otg_rev is not set then only we will use the legacy
-> method?
-> 
-oh, yes, we had agreed that approach, seems I missed the update here,
-it's easier to use otg_rev to judge legacy platform, I will update.
 
-Li Jun
-> > +
-> > +	if (gadget->otg_rev >= 0x0200) {
-> > +		otg20_desc = (struct usb_otg20_descriptor *)otg_desc;
-> > +		otg20_desc->bLength = sizeof(struct usb_otg20_descriptor);
-> > +		otg20_desc->bDescriptorType = USB_DT_OTG;
-> > +		otg20_desc->bmAttributes = otg_attributes;
-> > +		otg20_desc->bcdOTG = cpu_to_le16(gadget->otg_rev);
-> > +	} else {
-> > +		otg1x_desc = (struct usb_otg_descriptor *)otg_desc;
-> > +		otg1x_desc->bLength = sizeof(struct usb_otg_descriptor);
-> > +		otg1x_desc->bDescriptorType = USB_DT_OTG;
-> > +		otg1x_desc->bmAttributes = otg_attributes;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +EXPORT_SYMBOL_GPL(usb_otg_descriptor_init);
-> > diff --git a/include/linux/usb/gadget.h b/include/linux/usb/gadget.h
-> > index 814cb70..b77730e 100644
-> > --- a/include/linux/usb/gadget.h
-> > +++ b/include/linux/usb/gadget.h
-> > @@ -1013,6 +1013,8 @@ int usb_assign_descriptors(struct usb_function *f,
-> >  		struct usb_descriptor_header **ss);
-> >  void usb_free_all_descriptors(struct usb_function *f);
-> >  
-> > +int usb_otg_descriptor_init(struct usb_gadget *gadget,
-> > +		struct usb_descriptor_header *otg_desc);
-> >  /*-------------------------------------------------------------------------*/
-> >  
-> >  /* utility to simplify map/unmap of usb_requests to/from DMA */
+On Tue, 16 Jun 2015 14:51:55 +0800
+Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+
+> Add otg version, srp, hnp and adp support for usb OTG port, then those OTG
+> features don't have to be decided by usb gadget drivers.
 > 
-> cheers,
-> -roger
+> Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/usb/generic.txt | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/generic.txt b/Documentation/devicetree/bindings/usb/generic.txt
+> index 477d5bb..eb7308e 100644
+> --- a/Documentation/devicetree/bindings/usb/generic.txt
+> +++ b/Documentation/devicetree/bindings/usb/generic.txt
+> @@ -11,6 +11,20 @@ Optional properties:
+>  			"peripheral" and "otg". In case this attribute isn't
+>  			passed via DT, USB DRD controllers should default to
+>  			OTG.
+> + - otg-rev: tells usb driver the release number of the OTG and EH supplement
+> +			with which the device and its descriptors are compliant,
+> +			in binary-coded decimal (i.e. 2.0 is 0200H). This
+> +			property is used if any real OTG features(HNP/SRP/ADP)
+> +			is enabled, also if ADP is enabled, otg-rev should be
+> +			0x0200 or above.
+
+How about saying "if ADP is required, otg-rev should be 0x0200 or above"
+
+> + - hnp-disable: tells OTG controllers we want to disable OTG HNP, normally HNP
+> +			is the basic function of real OTG except you want it
+> +			to be a srp-capable only B device.
+> + - srp-disable: tells OTG controllers we want to disable OTG SRP, SRP is
+> +			optional for OTG device.
+> + - adp-disable: tells OTG controllers we want to disable OTG ADP, ADP is
+> +			optional for OTG device, if not passed, otg-rev should
+> +			be set to be 0x0200 or above.
+
+Why should we place this constraint on DT? Isn't is better
+to handle it automatically in the USB code?
+
+Not specifying the disable flag doesn't mean that it has to be enabled.
+It means that enable it if it can be. i.e. supported by OTG rev and controller.
+
+>  
+>  This is an attribute to a USB controller such as:
+>  
+> @@ -21,4 +35,8 @@ dwc3@4a030000 {
+>  	usb-phy = <&usb2_phy>, <&usb3,phy>;
+>  	maximum-speed = "super-speed";
+>  	dr_mode = "otg";
+> +	otg-rev = <0x0200>;
+> +	hnp-disable;
+> +	srp-disable;
+> +	adp-disable;
+>  };
+
+How about a more real world example? We don't want hnp/srp disabled.
+
+cheers,
+-roger
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
