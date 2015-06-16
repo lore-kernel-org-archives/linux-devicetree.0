@@ -1,84 +1,104 @@
-From: Josh Cartwright <joshc@ni.com>
-Subject: Re: [PATCHv4 1/2] dts: Adding docs for Xilinx LogiCORE IP mailbox
- driver.
-Date: Tue, 16 Jun 2015 13:45:22 -0500
-Message-ID: <20150616184522.GU633@jcartwri.amer.corp.natinst.com>
-References: <1433175507-3833-1-git-send-email-moritz.fischer@ettus.com>
- <1433175507-3833-2-git-send-email-moritz.fischer@ettus.com>
+From: Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Subject: [RFC PATCH V3] ARM: dts: sun6i: Add dts file for MSI
+ Primo81 tablet
+Date: Tue, 16 Jun 2015 21:11:08 +0200
+Message-ID: <1434481869-9432-1-git-send-email-merker@debian.org>
+References: <20150616094026.GG11732@lukather>
+Reply-To: merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="kjpMrWxdCilgNbo1"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1433175507-3833-2-git-send-email-moritz.fischer@ettus.com>
-Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: Moritz Fischer <moritz.fischer@ettus.com>
-Cc: jassisinghbrar@gmail.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, akpm@linux-foundation.org, gregkh@linuxfoundation.org, mchehab@osg.samsung.com, arnd@arndb.de, joe@perches.com, jingoohan1@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDP2XNNJ7IFBBCHKQGWAKGQEBD6GSKA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20150616094026.GG11732@lukather>
+In-Reply-To: <20150616094026.GG11732@lukather>
+References: <20150616094026.GG11732@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Siarhei Siamashka <siarhei.siamashka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Jun 16, 2015 at 11:40:27AM +0200, Maxime Ripard wrote:
 
---kjpMrWxdCilgNbo1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Jun 01, 2015 at 09:18:26AM -0700, Moritz Fischer wrote:
-> Changes from v3:
-> - Changed reg size to 0x100
+> What I meant in my previous review was to use the syntax
 >=20
-> Changes from v2:
-> - Addressed Michal's stylistic comments
-> - Fixed typo in compatible string
->=20
-> Changes from v1:
-> - Added common clock framework support
->=20
-> Changes from v0:
-> - Fixed example bindings
->=20
-> Signed-off-by: Moritz Fischer <moritz.fischer@ettus.com>
-> Acked-by: Michal Simek <michal.simek@xilinx.com>
-> ---
->  .../bindings/mailbox/xilinx-mailbox.txt         | 44 ++++++++++++++++++++
->  1 file changed, 44 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/mailbox/xilinx-mailbox.txt=
- b/Documentation/devicetree/bindings/mailbox/xilinx-mailbox.txt
-> new file mode 100644
-> index 0000000..f9ec46d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mailbox/xilinx-mailbox.txt
-> @@ -0,0 +1,44 @@
-> +Xilinx Mailbox Driver
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +Required properties:
-> +- compatible       : "xlnx,mailbox-2.1".
-> +- reg              :  physical base address of the mailbox and length of
-> +                      memory mapped region.
-> +- #mbox-cells      :  common mailbox binding property to identify the nu=
-mber
-> +                      of cells required for the mailbox specifier, shoul=
-d be 1
+> &uart0 {
+>        some-property;
+> };
+>  =20
+> Instead of duplicating the tree structure like you're doing
+> here. We've converted all the DT to that, so you can look around and
+> see how it's done in other boards (note that the nodes should be
+> sorted by alphabetical order).
 
-It seems strange to me to require #mbox-cells =3D <1>, when this hardware
-only supports a single channel.  Why not #mbox-cells =3D <0>; ?
+Ah, sorry, I had misunderstood your original email in this regard.
+Following is a reworked version of the patch.
 
-  Josh
+Changelog:
 
---kjpMrWxdCilgNbo1
-Content-Type: application/pgp-signature
+Version 1
+=3D=3D=3D=3D=3D=3D=3D=3D=3D
+- Original patch by Siarhei Siamashka
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Version 2
+=3D=3D=3D=3D=3D=3D=3D=3D=3D
+- Use symbolic instead of numeric pinctrl values.
 
-iQEcBAABCAAGBQJVgG7CAAoJEKp7ZBKwQFAr/MgH/1iYEHdVAN6IFr9IQYVywOXH
-JDI89vLBAEKfEZNby4k1JjBKevTj3r2pfDsTklulXBRL1jyT4vH1sN1/LmLL8RXZ
-avT9VYrEZOOcnUWQDFaOplsQJwNZdrjelLi4FY20MeMAWE6DNcU6hHuo7RisNUf6
-N3TtRCnKRBLKDOgXFB1NDGdOiaCP+nOWu6PelxEqovVRPlczPUmIVf+4eIvU3+co
-hmrbzyCJlsBOCVuTAFo/0/ceCaVOINbn+Wgn/zKuzmI1ek76YSKv2UPAtlXqnBd2
-jfZVJEaPso0ulOXML/+PFDP0L9ujGW4GPTp4+AitUS8MC7pw21BCtewaBvJcVUY=
-=JUxc
------END PGP SIGNATURE-----
+- Change the include syntax from /include/ to #include to make
+  the dts build with current kernels.
 
---kjpMrWxdCilgNbo1--
+Version 3
+=3D=3D=3D=3D=3D=3D=3D=3D=3D
+- Use labels for nodes with modifications in relation to the dtsi
+  instead of replicating the tree structure.
+
+- Remove the FSF address from the license header as done in
+  http://lists.infradead.org/pipermail/linux-arm-kernel/2015-May/340437.htm=
+l
+  for the other dts files to remove a checkpatch warning.
+
+- Add msi to the vendor prefix list.
+
+- Remove earlyprintk from the default kernel commandline.
+
+- Replace the console kernel commandline parameter by a
+  /chosen/stdout-path node and add an alias serial0 -> uart0.
+
+I have tagged this patch RFC as I am unsure what to do with the
+/chosen/stdout-path node. For now, I have set Siarhei's original
+choice (first serial port), but I am unsure whether this is the
+right thing to do as the Primo81 does by default not have a
+user-accessible serial port.  The only way to get a serial
+console is to either break the case open and find some test
+points that carry the RX/TX lines (which with the Primo81 case
+poses a high risk of breaking the display glass), or to use an SD
+card breakout board and change the pinmuxing for the SD card pins
+to the "serial" function.  The latter would not work without
+modifying the dts, so the SD-breakout case doesn't really count
+for setting the default stdout-path in the general use case.
+
+On the other hand, setting stdout-path to the serial port does
+not seem to influence getting a a boot console on the LCD when
+booting from a simplefb-capable u-boot, so there is probably no
+harm in doing it.
+
+Comments welcome :-).
+
+Regards,
+Karsten
+--=20
+Gem. Par. 28 Abs. 4 Bundesdatenschutzgesetz widerspreche ich der Nutzung
+sowie der Weitergabe meiner personenbezogenen Daten f=C3=BCr Zwecke der
+Werbung sowie der Markt- oder Meinungsforschung.
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
