@@ -1,49 +1,49 @@
-From: Sylvain Rochet <sylvain.rochet@finsecur.com>
-Subject: Re: [PATCH v3 1/2] DT: Documentation: input: rotary encoder: Add
- wakeup-source property
-Date: Tue, 16 Jun 2015 19:28:32 +0200
-Message-ID: <20150616172832.GA15598@gradator.net>
-References: <1423755638-9294-1-git-send-email-sylvain.rochet@finsecur.com>
- <1423755638-9294-2-git-send-email-sylvain.rochet@finsecur.com>
+From: Kevin Hilman <khilman@kernel.org>
+Subject: Re: [PATCH 5/5] ARM64: MediaTek MT8173: Add SCPSYS device node
+Date: Tue, 16 Jun 2015 11:17:53 -0700
+Message-ID: <7hlhfjy0tq.fsf@deeprootsystems.com>
+References: <1433839623-10804-1-git-send-email-s.hauer@pengutronix.de>
+	<1433839623-10804-6-git-send-email-s.hauer@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1423755638-9294-2-git-send-email-sylvain.rochet@finsecur.com>
-Sender: linux-input-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: linux-input@vger.kernel.org, Daniel Mack <daniel@caiaq.de>, Johan Hovold <jhovold@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1433839623-10804-6-git-send-email-s.hauer@pengutronix.de>
+	(Sascha Hauer's message of "Tue, 9 Jun 2015 10:47:03 +0200")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, kernel@pengutronix.de, Matthias Brugger <matthias.bgg@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Sascha Hauer <s.hauer@pengutronix.de> writes:
 
-On Thu, Feb 12, 2015 at 04:40:37PM +0100, Sylvain Rochet wrote:
-> This patch adds property wakeup-source to GPIO rotary encoders.
-> 
-> Signed-off-by: Sylvain Rochet <sylvain.rochet@finsecur.com>
-> Reviewed-by: Johan Hovold <johan@kernel.org>
-> Cc: <devicetree@vger.kernel.org>
+> This adds the SCPSYS device node to the MT8173 dtsi file.
+>
+> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
 > ---
->  Documentation/devicetree/bindings/input/rotary-encoder.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/input/rotary-encoder.txt b/Documentation/devicetree/bindings/input/rotary-encoder.txt
-> index 3315495..2c643a3 100644
-> --- a/Documentation/devicetree/bindings/input/rotary-encoder.txt
-> +++ b/Documentation/devicetree/bindings/input/rotary-encoder.txt
-> @@ -15,6 +15,7 @@ Optional properties:
->  - rotary-encoder,rollover: Automatic rollove when the rotary value becomes
->    greater than the specified steps or smaller than 0. For absolute axis only.
->  - rotary-encoder,half-period: Makes the driver work on half-period mode.
-> +- wakeup-source: Boolean, rotary encoder can wake-up the system.
+>  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> index 924fdb6..12430f0 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> @@ -125,6 +125,16 @@
+>  						<GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
+>  		};
 >  
->  See Documentation/input/rotary-encoder.txt for more information.
+> +		scpsys: scpsys@10006000 {
+> +			compatible = "mediatek,mt8173-scpsys";
+> +			#power-domain-cells = <1>;
+> +			reg = <0 0x10006000 0 0x1000>;
+> +			clocks = <&clk26m>,
+> +				 <&topckgen CLK_TOP_MM_SEL>;
 
-Hello DT guys, it's been a while, may I ping you about this property ?
+Neither your binding doc (nor the generic one) mentions these clock
+properties or what they are used for.  They appear to define a clock
+that must be enabled in order to for the power domain to be on.
 
-We wonder if this should be "rotary-encoder,wakeup", "linux,wakeup" or 
-"wakeup-source".
+Also the order here seems rather important and probably needs
+documenting in the binding (e.g. the clk_id order is hard-coded in the
+driver.)
 
-Thank you :)
-
-Sylvain
+Kevin
