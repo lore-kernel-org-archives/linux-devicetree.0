@@ -1,53 +1,78 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2] ARM: tegra124: pmu support
-Date: Tue, 16 Jun 2015 10:16:19 +0100
-Message-ID: <20150616091619.GA17817@leverpostej>
-References: <1434393968-1105-1-git-send-email-khuey@kylehuey.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v2 0/3] Add the efuse driver on rockchip platform
+Date: Tue, 16 Jun 2015 10:21:54 +0100
+Message-ID: <557FEAB2.1040101@linaro.org>
+References: <1434439665-27781-1-git-send-email-wxt@rock-chips.com> <557FE3EA.4000306@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1434393968-1105-1-git-send-email-khuey@kylehuey.com>
+In-Reply-To: <557FE3EA.4000306@i2se.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kyle Huey <me@kylehuey.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jon Hunter <jonathanh@nvidia.com>, Kyle Huey <khuey@kylehuey.com>
+To: Stefan Wahren <stefan.wahren@i2se.com>, Caesar Wang <wxt@rock-chips.com>
+Cc: heiko@sntech.de, mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linus.walleij@linaro.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, galak@codeaurora.org, matthias.bgg@gmail.com, jay.xu@rock-chips.com, linux-arm-kernel@lists.infradead.org, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 15, 2015 at 07:46:08PM +0100, Kyle Huey wrote:
-> This patch modifies the device tree for tegra124 based devices to enable the Cortex A15 PMU.  The interrupt numbers are taken from NVIDIA TRM DP-06905-001_v03p.  This patch was tested on a Jetson TK1.
-> 
-> Signed-off-by: Kyle Huey <khuey@kylehuey.com>
-> ---
->  arch/arm/boot/dts/tegra124.dtsi | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/tegra124.dtsi b/arch/arm/boot/dts/tegra124.dtsi
-> index 4be06c6..d966d4e 100644
-> --- a/arch/arm/boot/dts/tegra124.dtsi
-> +++ b/arch/arm/boot/dts/tegra124.dtsi
-> @@ -906,16 +906,24 @@
->  
->  		cpu@3 {
->  			device_type = "cpu";
->  			compatible = "arm,cortex-a15";
->  			reg = <3>;
->  		};
->  	};
->  
-> +	pmu {
-> +		compatible = "arm,cortex-a15-pmu";
-> +		interrupts = <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
-> +	};
+Hi Stefan,
 
-As these are SPIs, you should fill in the interrupt-affinity property
-(see Documentation/devicetree/bindings/arm/pmu.txt). That'll avoid
-potential problems with CPU renumbering, and prevent the kernel from
-complaining at boot time.
 
-Otherwise, this looks fine.
+On 16/06/15 09:52, Stefan Wahren wrote:
+> Hi Caesar,
+>
+> [add Maxime and Srinivas]
+>
+> Am 16.06.2015 um 09:27 schrieb Caesar Wang:
+>> The original driver is uploaded by Jianqun.
+>> Here is his patchs:
+>>      https://patchwork.kernel.org/patch/5410341/
+>>      https://patchwork.kernel.org/patch/5410351/
+>>
+>> Jianqun, nevermind!
+>> I check-pick it and re-upload the driver for the upstream.
+>> e.g.:
+>>      Tested by on minnie board.(kernel-4.1-rc8)
+>>      cd /sys/devices/platform/ffb40000.efuse
+>>      localhost ffb40000.efuse # cat cpu_leakage_show
+>>      cpu_version_show
+>>      The results:
+>>              19
+>>              2
+>>
+>> Changes in v2:
+>> - Change the document decription.
+>> - Move the efuse driver into driver/soc/vendor.
+>> - update the efuse driver.
+>> - Add the dts node on RK3288.
+>>
+>>
+>
+> i want to mention that there is a upcoming new framework suitable for
+> efuse drivers:
+>
+> https://lkml.org/lkml/2015/5/21/643
+>
+> Unfortunately i don't know the current development state.
+>
 
-Thanks,
-Mark.
+Currently this framework is used by atleast 3 drivers(qcom-tsens, 
+qcom-cpr, begel-bone-cape manager) which are still floating in the 
+mailing list.
+
+I was hoping that these 3 users would getback with tested-by.. which did 
+not happen for last 3-4 weeks.
+
+I would appreciate, If you could try framework too, and let me know.
+
+I added two of wrappers on top of v5 at: 
+https://git.linaro.org/people/srinivas.kandagatla/linux.git/shortlog/refs/heads/nvmem-dev-v5
+
+
+I think I should request Mark to take the framework.
+
+
+
+--srini
+> Regards
+> Stefan
+>
+>
