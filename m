@@ -1,85 +1,128 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 2/2] drivercore: Fix unregistration path of platform
- devices
-Date: Tue, 16 Jun 2015 00:58:10 -0700
-Message-ID: <20150616075809.GD2740@atomide.com>
-References: <1433686811-12303-1-git-send-email-grant.likely@linaro.org>
- <1433686811-12303-3-git-send-email-grant.likely@linaro.org>
- <CAPybu_30jTDuwEW_WTGuu6pWwv86p6OqV0eRE1GbCwUVtBm7KA@mail.gmail.com>
- <20150608184713.446B7C406AA@trevor.secretlab.ca>
- <CAPybu_0FfD9dv55SLmy7905yMCV6Kqrr-v2aPUCx6sSikrF7gQ@mail.gmail.com>
- <20150609110044.61031C40580@trevor.secretlab.ca>
- <CAMAWPa_CURGm5YTc0OgBD_T3fwaBDskfUKEn+awxW8P6oQYceA@mail.gmail.com>
- <CAPybu_24X0zZJv6D9i4YM_r7azdnjYrRH=V+p_ong2cFKNrF1w@mail.gmail.com>
- <CAL_Jsq+RyuiYszWSGF-XSL_fqKNWpR0VjFkJMdnW2QuaKNT-AA@mail.gmail.com>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 10/22] usb: gadget: configfs: init and add
+ usb_otg_descriptor for usb configurations
+Date: Tue, 16 Jun 2015 10:58:27 +0300
+Message-ID: <20150616105827.10961583@rockdesk>
+References: <1434437532-23678-1-git-send-email-jun.li@freescale.com>
+	<1434437532-23678-11-git-send-email-jun.li@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+RyuiYszWSGF-XSL_fqKNWpR0VjFkJMdnW2QuaKNT-AA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1434437532-23678-11-git-send-email-jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [150610 07:06]:
-> 
-> I've looked at some of the failures. Armada 370 looks normal AFAICT,
-> but the network device evidently does not probe. i.MX6 has no log, but
-> IIRC it is what failed previously on Grant's last attempt. For OMAP4,
-> I found the overlapping region here:
-> 
->                         omap4_padconf_core: scm@100000 {
->                                 compatible = "ti,omap4-scm-padconf-core",
->                                              "simple-bus";
->                                 #address-cells = <1>;
->                                 #size-cells = <1>;
->                                 ranges = <0 0x100000 0x1000>;
-> 
->                                 omap4_pmx_core: pinmux@40 {
->                                         compatible = "ti,omap4-padconf",
->                                                      "pinctrl-single";
->                                         reg = <0x40 0x0196>;
->                                         #address-cells = <1>;
->                                         #size-cells = <0>;
->                                         #interrupt-cells = <1>;
->                                         interrupt-controller;
->                                         pinctrl-single,register-width = <16>;
->                                         pinctrl-single,function-mask = <0x7fff>;
->                                 };
-> 
->                                 omap4_padconf_global: omap4_padconf_global@5a0 {
->                                         compatible = "syscon";
->                                         reg = <0x5a0 0x170>;
->                                         #address-cells = <1>;
->                                         #size-cells = <1>;
-> 
->                                         pbias_regulator: pbias_regulator {
->                                                 compatible = "ti,pbias-omap";
->                                                 reg = <0x60 0x4>;
-> 
-> 0x60 is within the pinmux range of 0x40-0x1d6.
-> 
-> But why is the regulator a sub node here instead of omap4_pmx_core?
 
-I don't think the reg entry is in use here as the pbias_regulator uses
-syscon_regmap_lookup_by_phandle via syscon.
- 
->                                                 syscon =
-> <&omap4_padconf_global>;
+On Tue, 16 Jun 2015 14:52:00 +0800
+Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+
+> Use usb_otg_descriptor_add to allocate and initialize usb_otg_descriptor,
+> add it for each usb configurations, free it while composite unbind.
 > 
-> This seems to indicate that 0x60 is supposed to be an offset from
-> 0x5a0. That would require a ranges property in the parent. Is this an
-> error?
+> Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+>  drivers/usb/gadget/configfs.c | 34 +++++++++++++++++++++++++---------
+>  1 file changed, 25 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/usb/gadget/configfs.c b/drivers/usb/gadget/configfs.c
+> index 0495c94..773b746 100644
+> --- a/drivers/usb/gadget/configfs.c
+> +++ b/drivers/usb/gadget/configfs.c
+> @@ -41,6 +41,8 @@ int check_user_usb_string(const char *name,
+>  #define MAX_NAME_LEN	40
+>  #define MAX_USB_STRING_LANGS 2
+>  
+> +static const struct usb_descriptor_header *otg_desc[2];
+> +
+>  struct gadget_info {
+>  	struct config_group group;
+>  	struct config_group functions_group;
+> @@ -55,9 +57,6 @@ struct gadget_info {
+>  	struct list_head available_func;
+>  
+>  	const char *udc_name;
+> -#ifdef CONFIG_USB_OTG
+> -	struct usb_otg_descriptor otg;
+> -#endif
+>  	struct usb_composite_driver composite;
+>  	struct usb_composite_dev cdev;
+>  	bool use_os_desc;
+> @@ -1376,6 +1375,24 @@ static int configfs_composite_bind(struct usb_gadget *gadget,
+>  		memcpy(cdev->qw_sign, gi->qw_sign, OS_STRING_QW_SIGN_LEN);
+>  	}
+>  
+> +	if (gadget_is_otg(gadget) && !otg_desc[0]) {
+> +		struct usb_descriptor_header *usb_desc;
+> +		unsigned length;
+> +
+> +		if (gadget->otg_rev >= 0x0200)
+> +			length = sizeof(struct usb_otg20_descriptor);
+> +		else
+> +			length = sizeof(struct usb_otg_descriptor);
+> +		usb_desc = kzalloc(length, GFP_KERNEL);
+> +		if (!usb_desc) {
+> +			ret = -ENOMEM;
+> +			goto err_comp_cleanup;
+> +		}
 
-Yeah we should add ranges to padconf_global so drivers not using syscon
-can just do of_ioremap for a dedicated range of registers within the
-padconf_global. That area has things like PHYs, regulators and clocks.
+This code seems to be common across all gadgets.
+Can we have usb_otg_descriptor_alloc() that takes care of allocating the
+right size based on descriptor version?
 
-Regards,
+Then we can have
+		usb_desc = usb_otg_descriptor_alloc(gadget);
+		if (IS_ERR(usb_desc)) {
+			ret = PTR_ERR(usb_desc);
+			goto err_comp_cleanup;
+		}
 
-Tony
+> +		usb_otg_descriptor_init(gadget, usb_desc);
+> +		otg_desc[0] = usb_desc;
+> +		otg_desc[1] = NULL;
+> +	}
+> +
+>  	/* Go through all configs, attach all functions */
+>  	list_for_each_entry(c, &gi->cdev.configs, list) {
+>  		struct config_usb_cfg *cfg;
+> @@ -1383,6 +1400,9 @@ static int configfs_composite_bind(struct usb_gadget *gadget,
+>  		struct usb_function *tmp;
+>  		struct gadget_config_name *cn;
+>  
+> +		if (gadget_is_otg(gadget))
+> +			c->descriptors = otg_desc;
+> +
+>  		cfg = container_of(c, struct config_usb_cfg, c);
+>  		if (!list_empty(&cfg->string_list)) {
+>  			i = 0;
+> @@ -1437,6 +1457,8 @@ static void configfs_composite_unbind(struct usb_gadget *gadget)
+>  	cdev = get_gadget_data(gadget);
+>  	gi = container_of(cdev, struct gadget_info, cdev);
+>  
+> +	kfree(otg_desc[0]);
+> +	otg_desc[0] = NULL;
+>  	purge_configs_funcs(gi);
+>  	composite_dev_cleanup(cdev);
+>  	usb_ep_autoconfig_reset(cdev->gadget);
+> @@ -1510,12 +1532,6 @@ static struct config_group *gadgets_make(
+>  	if (!gi->composite.gadget_driver.function)
+>  		goto err;
+>  
+> -#ifdef CONFIG_USB_OTG
+> -	gi->otg.bLength = sizeof(struct usb_otg_descriptor);
+> -	gi->otg.bDescriptorType = USB_DT_OTG;
+> -	gi->otg.bmAttributes = USB_OTG_SRP | USB_OTG_HNP;
+> -#endif
+> -
+>  	config_group_init_type_name(&gi->group, name,
+>  				&gadget_root_type);
+>  	return &gi->group;
+
+cheers,
+-roger
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
