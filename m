@@ -1,46 +1,148 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH V7 2/3] OPP: Allow multiple OPP tables to be passed via DT
-Date: Wed, 17 Jun 2015 19:03:14 +0530
-Message-ID: <20150617133314.GB15153@linux>
-References: <cover.1433434659.git.viresh.kumar@linaro.org>
- <263c128844f5a3c9280c8be71f6c9eb1869a5188.1433434659.git.viresh.kumar@linaro.org>
- <CAL_Jsq+EOOeQw42wZi+H82ovLn8LcQUuK9HGT+FvewdhTf7Q1w@mail.gmail.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v2 4/4] scsi: ufs: probe and init of variant driver from
+ the platform device
+Date: Wed, 17 Jun 2015 08:37:29 -0500
+Message-ID: <CAL_JsqLbGpZk5ZqfgZznj7JA2n-FCCTSjo+2zxG1QRup_zGUbQ@mail.gmail.com>
+References: <1433324255-27510-1-git-send-email-ygardi@codeaurora.org>
+ <1433324255-27510-5-git-send-email-ygardi@codeaurora.org> <CAC5umyis6HU06KU-aSGoy6mCt-u+5Pz16nDk1qHrcsTnFo_2hA@mail.gmail.com>
+ <763dbc7b708b5d5b18ce0b5adcc41016.squirrel@www.codeaurora.org>
+ <CAC5umyhWTLe_K+q9U=4M4N4Yu4Hp7hUxy4QiL=ch=JmYEiMBnQ@mail.gmail.com>
+ <68c91f08f2be6c84055a303ca8aa3fe0.squirrel@www.codeaurora.org>
+ <CAL_JsqKYqZyayzN3imi55EFP=ao4NTSgfXjP5J5rSxMAg4ZSMA@mail.gmail.com>
+ <bfade46f9d953e10240acb835105b81d.squirrel@www.codeaurora.org>
+ <CAL_Jsq+SWq9=xTjVvQH2tMoq=g_rjk44A7T4TMFKvDiUp_ahCg@mail.gmail.com>
+ <6934f39953e011404dd5d39073e6ebba.squirrel@www.codeaurora.org>
+ <CAL_Jsq+xQqAopQ8mYXbnED=3ioH+8Km9jtDZDeP_18U6Edfo5Q@mail.gmail.com> <c650d1bd7228cb0ebb31da7d67baaeaa.squirrel@www.codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+EOOeQw42wZi+H82ovLn8LcQUuK9HGT+FvewdhTf7Q1w@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Rafael Wysocki <rjw@rjwysocki.net>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Nishanth Menon <nm@ti.com>, Mark Brown <broonie@kernel.org>, Mike Turquette <mike.turquette@linaro.org>, Grant Likely <grant.likely@linaro.org>, Olof Johansson <olof@lixom.net>, Sudeep Holla <Sudeep.Holla@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Viswanath Puttagunta <viswanath.puttagunta@linaro.org>, Lucas Stach <l.stach@pengutronix.de>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Abraham <ta.omasab@gmail.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Kevin Hilman <khilman@linaro.org>, Santosh
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-scsi-owner@vger.kernel.org>
+In-Reply-To: <c650d1bd7228cb0ebb31da7d67baaeaa.squirrel@www.codeaurora.org>
+Sender: linux-scsi-owner@vger.kernel.org
+To: Dov Levenglick <dovl@codeaurora.org>
+Cc: Yaniv Gardi <ygardi@codeaurora.org>, Akinobu Mita <akinobu.mita@gmail.com>, Jej B <james.bottomley@hansenpartnership.com>, LKML <linux-kernel@vger.kernel.org>, linux-scsi@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Santosh Y <santoshsy@gmail.com>, linux-scsi-owner@vger.kernel.org, Subhash Jadavani <subhashj@codeaurora.org>, Paul Bolle <pebolle@tiscali.nl>, Gilad Broner <gbroner@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinayak Holikatti <vinholikatti@gmail.com>, "James E.J. Bottomley" <jbottomley@odin.com>, Dolev Raviv <draviv@codeaurora.org>, Christoph Hellwig <hch@lst.de>, Sujit Reddy Thumma <sthumma@codeaurora.org>, Raviv Shvili <rshvili@codeaurora.org>, Sahitya Tummala <stummala@cod>
 List-Id: devicetree@vger.kernel.org
 
-On 17-06-15, 08:23, Rob Herring wrote:
-> > +                       operating-points-v2 = <&cpu0_opp_table_slow>, <&cpu0_opp_table_fast>;
-> 
-> You've made a fundamental change here in that this can now be a list
-> of phandles. There should be some description on what a list means
-> (merge the tables?, select one?).
+On Wed, Jun 17, 2015 at 8:17 AM, Dov Levenglick <dovl@codeaurora.org> wrote:
+>> On Wed, Jun 17, 2015 at 2:42 AM, Dov Levenglick <dovl@codeaurora.org>
+>> wrote:
+>>>> On Tue, Jun 9, 2015 at 12:53 AM, Dov Levenglick <dovl@codeaurora.org>
+>>>> wrote:
+>>>>>> On Sun, Jun 7, 2015 at 10:32 AM,  <ygardi@codeaurora.org> wrote:
+>>>>>>>> 2015-06-05 5:53 GMT+09:00  <ygardi@codeaurora.org>:
+>>>>
+>>>> [...]
+>>>>
+>>>>>>> If ufshcd-pltfrm driver is loaded before ufs-qcom, (what actually
+>>>>>>> happens
+>>>>>>> always), then the calling to of_platform_populate() which is added,
+>>>>>>> guarantees that ufs-qcom probe will be called and finish, before
+>>>>>>> ufshcd_pltfrm probe continues.
+>>>>>>> so ufs_variant device is always there, and ready.
+>>>>>>> I think it means we are safe - since either way, we make sure
+>>>>>>> ufs-qcom
+>>>>>>> probe will be called and finish before dealing with ufs_variant
+>>>>>>> device
+>>>>>>> in
+>>>>>>> ufshcd_pltfrm probe.
+>>>>>>
+>>>>>> This is due to the fact that you have 2 platform drivers. You should
+>>>>>> only have 1 (and 1 node). If you really think you need 2, then you
+>>>>>> should do like many other common *HCIs do and make the base UFS
+>>>>>> driver
+>>>>>> a set of library functions that drivers can use or call. Look at
+>>>>>> EHCI,
+>>>>>> AHCI, SDHCI, etc. for inspiration.
+>>>>>
+>>>>> Hi Rob,
+>>>>> We did look at SDHCI and decided to go with this design due to its
+>>>>> simplicity and lack of library functions. Yaniv described the proper
+>>>>> flow
+>>>>> of probing and, as we understand things, it is guaranteed to work as
+>>>>> designed.
+>>>>>
+>>>>> Furthermore, the design of having a subcore in the dts is used in the
+>>>>> Linux kernel. Please have a look at drivers/usb/dwc3 where - as an
+>>>>> example
+>>>>> - both dwc3-msm and dwc3-exynox invoke the probing function in core.c
+>>>>> (i.e. the shared underlying Synopsys USB dwc3 core) by calling
+>>>>> of_platform_populate().
+>>>>
+>>>> That binding has the same problem. Please don't propagate that. There
+>>>> is no point in a sub-node in this case.
+>>>>
+>>>>> Do you see a benefit in the SDHCi implementation?
+>>>>
+>>>> Yes, it does not let the kernel driver design dictate the hardware
+>>>> description.
+>>>>
+>>>> Rob
+>>>>
+>>>
+>>> Hi Rob,
+>>> We appear to be having a philosophical disagreement on the practicality
+>>> of
+>>> designing the ufshcd variant's implementation - in other words, we
+>>> disagree on the proper design pattern to follow here.
+>>> If I understand correctly, you are concerned with a design pattern
+>>> wherein
+>>> a generic implementation is wrapped - at the device-tree level - in a
+>>> variant implementation. The main reason for your concern is that you
+>>> don't
+>>> want the "kernel driver design dictate the hardware description".
+>>>
+>>> We considered this point when we suggested our implementation (both
+>>> before
+>>> and after you raised it) and reached the conclusion that - while an
+>>> important consideration - it should not be the prevailing one. I believe
+>>> that you will agree once you read the reasoning. What guided us was the
+>>> following:
+>>> 1. Keep our change minimal.
+>>> 2. Keep our patch in line with known design patterns in the kernel.
+>>> 3. Have our patch extend the existing solution rather than reinvent it.
+>>>
+>>> It is the 3rd point that is most important to this discussion, since UFS
+>>> has already been deployed by various vendors and is used by OEM.
+>>> Changing
+>>> ufshcd to a set of library functions that would be called by variants
+>>> would necessarily introduce a significant change to the code flow in
+>>> many
+>>> places and would pose a backward compatibility issue. By using the tried
+>>> and tested pattern of subnodes in the dts we were able to keep the
+>>> change
+>>> simple, succinct, understandable, maintainable and backward compatible.
+>>> In
+>>> fact, the entire logic tying of the generic implementation to the
+>>> variant
+>>> takes ~20 lines of code - both short and elegant.
+>>
+>> The DWC3 binding does this and nothing else that I'm aware of. This
+>> hardly makes for a common pattern. If you really want to split this to
+>> 2 devices, you can create platform devices without having a DT node.
+>>
+>> If you want to convince me this is the right approach for the binding
+>> then you need to convince me the h/w is actually split this way and
+>> there is functionality separate from the licensed IP.
+>>
+>> Rob
+>>
+>
+> I don't understand the challenge that you just posed. It is clear from our
+> implementation that there is the standard and variants thereof. I know
+> this to be a fact on the processors that we are working on.
+>
+> Furthermore, although I didn't check each and every result in the search,
+> of_platform_populate is used in more locations than dwc3 and at least a
+> few of them seem have be using the same paradigm as ours
+> (http://lxr.free-electrons.com/ident?i=of_platform_populate).
 
-Did you miss the description I wrote few lines earlier or are you
-asking for something else? This is what I wrote earlier:
+You can ignore everything under arch/ as those are root level calls.
+Most of the rest of the list are devices which have multiple unrelated
+functions such as PMICs or system controllers which are perfectly
+valid uses of of_platform_populate. That leaves at most 10 examples
+that may or may not have good bindings. 10 out of hundreds of drivers
+in the kernel hardly makes for a pattern to follow.
 
-> > +Devices may want to choose OPP tables at runtime and so can provide a list of
-> > +phandles here. But only *one* of them should be chosen at runtime.
+Let me be perfectly clear on the binding as is: NAK. I'm done replying
+until you propose something different.
 
-So, clearly only ONE of the tables should be used.
-
-> I think this needs to have a defined order and the platform should
-> know what that is. For example, if you read the efuses and decide you
-> need the "slow" table, you know to pick the first entry. Then you
-> don't need opp-name. Does that work for QCom?
-
-Why forcing on the order here? For example, consider a case where the
-platform can have four tables, A B C D. Now DT is free to pass all
-four or just a subset of those. Like, for some boards table B doesn't
-stand valid. And so it may wanna pass just A C D. And so keeping these
-tables in order is going to break for sure. Flexibility is probably
-better in this case.
-
--- 
-viresh
+Rob
