@@ -1,51 +1,77 @@
 From: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
-Subject: [PATCH-v2 0/3] mfd: 88pm800: Add Device tree support
-Date: Thu, 18 Jun 2015 00:28:04 +0530
-Message-ID: <1434567488-6477-1-git-send-email-vaibhav.hiremath@linaro.org>
+Subject: [PATCH-v2] rtc: 88pm80x: add device tree support
+Date: Thu, 18 Jun 2015 00:28:06 +0530
+Message-ID: <1434567488-6477-3-git-send-email-vaibhav.hiremath@linaro.org>
 References: <vaibhav.hiremath@linaro.org>
+ <1434567488-6477-1-git-send-email-vaibhav.hiremath@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <vaibhav.hiremath@linaro.org>
+In-Reply-To: <1434567488-6477-1-git-send-email-vaibhav.hiremath@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org
-Cc: robh+dt@kernel.org, lee.jones@linaro.org, devicetree@vger.kernel.org, rtc-linux@googlegroups.com, linux-kernel@vger.kernel.org, Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
+Cc: robh+dt@kernel.org, lee.jones@linaro.org, devicetree@vger.kernel.org, rtc-linux@googlegroups.com, linux-kernel@vger.kernel.org, Vaibhav Hiremath <vaibhav.hiremath@linaro.org>, Chao Xie <chao.xie@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch-series adds support for Device tree to 88PM800 mfd driver.
-It also enabled configuration of irq clear method through DT.
+Along with DT support, this patch also cleans up the unnecessary
+code around 'rtc_wakeup' initialization.
 
-Testing::
- - Boot tested on PXA1928 based platform.
- - probe of mfd, rtc and regulator function passing successfully.
- - Basic read operations on registers
+Signed-off-by: Chao Xie <chao.xie@marvell.com>
+Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
+---
+Link to V1: https://lkml.org/lkml/2015/5/29/757
 
+ drivers/rtc/rtc-88pm80x.c | 28 +++++++++++++++++-----------
+ 1 file changed, 17 insertions(+), 11 deletions(-)
 
-V1 => V1
-=======
-Link to V1: http://lkml.iu.edu/hypermail/linux/kernel/1505.3/04386.html
-
-  - Split binding changes from original commit
-  - Updated binding info as per Rob's suggestion
-  - Dropped PATCH 4/4, as discussed during review
-  - Dropped PATCH 3/4, as it is independent RTC code change,
-    so will submit it separately to ease merging.
-  - Fixed all other minor comments
-
-Attempt has been made to push some of the patches to the list sometime
-back in 2013.
-
-Link to previous patch submission:
-        https://lkml.org/lkml/2013/8/14/86
-
-Vaibhav Hiremath (3):
-  mfd: 88pm800: Add device tree support
-  mfd: 88pm800: Allow configuration of interrupt clear method
-  mfd: devicetree: bindings: Add new 88pm800 mfd binding
-
- Documentation/devicetree/bindings/mfd/88pm800.txt | 60 +++++++++++++++++++++++
- drivers/mfd/88pm800.c                             | 40 +++++++++++++--
- include/linux/mfd/88pm80x.h                       |  6 ++-
- 3 files changed, 99 insertions(+), 7 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/88pm800.txt
-
+diff --git a/drivers/rtc/rtc-88pm80x.c b/drivers/rtc/rtc-88pm80x.c
+index 7df0579..8f66519 100644
+--- a/drivers/rtc/rtc-88pm80x.c
++++ b/drivers/rtc/rtc-88pm80x.c
+@@ -251,17 +251,26 @@ static SIMPLE_DEV_PM_OPS(pm80x_rtc_pm_ops, pm80x_rtc_suspend, pm80x_rtc_resume);
+ static int pm80x_rtc_probe(struct platform_device *pdev)
+ {
+ 	struct pm80x_chip *chip = dev_get_drvdata(pdev->dev.parent);
+-	struct pm80x_platform_data *pm80x_pdata =
+-				dev_get_platdata(pdev->dev.parent);
+-	struct pm80x_rtc_pdata *pdata = NULL;
++	struct pm80x_rtc_pdata *pdata = dev_get_platdata(&pdev->dev);
+ 	struct pm80x_rtc_info *info;
++	struct device_node *node = pdev->dev.of_node;
+ 	struct rtc_time tm;
+ 	unsigned long ticks = 0;
+ 	int ret;
+ 
+-	pdata = dev_get_platdata(&pdev->dev);
+-	if (pdata == NULL)
+-		dev_warn(&pdev->dev, "No platform data!\n");
++	if (!pdata && !node) {
++		dev_err(&pdev->dev,
++			"pm80x-rtc requires platform data or of_node\n");
++		return -EINVAL;
++	}
++
++	if (!pdata) {
++		pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
++		if (!pdata) {
++			dev_err(&pdev->dev, "failed to allocate memory\n");
++			return -ENOMEM;
++		}
++	}
+ 
+ 	info =
+ 	    devm_kzalloc(&pdev->dev, sizeof(struct pm80x_rtc_info), GFP_KERNEL);
+@@ -327,11 +336,8 @@ static int pm80x_rtc_probe(struct platform_device *pdev)
+ 	regmap_update_bits(info->map, PM800_RTC_CONTROL, PM800_RTC1_USE_XO,
+ 			   PM800_RTC1_USE_XO);
+ 
+-	if (pm80x_pdata) {
+-		pdata = pm80x_pdata->rtc;
+-		if (pdata)
+-			info->rtc_dev->dev.platform_data = &pdata->rtc_wakeup;
+-	}
++	/* remeber whether this power up is caused by PMIC RTC or not */
++	info->rtc_dev->dev.platform_data = &pdata->rtc_wakeup;
+ 
+ 	device_init_wakeup(&pdev->dev, 1);
+ 
 -- 
 1.9.1
