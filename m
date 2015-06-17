@@ -1,62 +1,37 @@
-From: Daniel Kurtz <djkurtz@chromium.org>
-Subject: Re: [PATCH] arm64: dts: symlink cros-ec-keyboard from arm to arm64
-Date: Wed, 17 Jun 2015 12:13:41 +0800
-Message-ID: <CAGS+omD=gJ_pezJbfZN6Yi+X07r+yv-uUAohigPRKUPBRkR-nA@mail.gmail.com>
-References: <1434465343-29124-1-git-send-email-djkurtz@chromium.org> <20150616145552.GH30522@arm.com>
+From: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
+Subject: Re: [PATCH v5 05/14] crypto: marvell/CESA: add TDMA support
+Date: Wed, 17 Jun 2015 13:05:27 +0800
+Message-ID: <20150617050527.GA8807@gondor.apana.org.au>
+References: <1434448748-10828-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1434448748-10828-6-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150616145552.GH30522@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Will Deacon <will.deacon@arm.com>
-Cc: "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, Nicolas Boichat <drinkcat@chromium.org>, Olof Johansson <olofj@chromium.org>, Eddie Huang <eddie.huang@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <Catalin.Marinas@arm.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1434448748-10828-6-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 16, 2015 at 10:55 PM, Will Deacon <will.deacon@arm.com> wrote:
-> On Tue, Jun 16, 2015 at 03:35:41PM +0100, Daniel Kurtz wrote:
->> The cros-ec-keyboard.dtsi snippet is useful for both arm and arm64 boards.
->> Create a link between the two.
->>
->> This may not be the most scalable solution, so consider it temporary until
->> we find a more central repository for such shared .dtsi snippets.
+On Tue, Jun 16, 2015 at 11:58:59AM +0200, Boris Brezillon wrote:
 >
-> I don't have strong opinions either way, but we should be consistent as
-> to whether we use relative paths:
->
->   http://lists.infradead.org/pipermail/linux-arm-kernel/2015-June/350267.html
->
-> or symlinks, like below.
->
-> Does anybody have some technical arguments one way or the other?
+> +	ret = dma_map_sg(cesa_dev->dev, req->src, creq->src_nents,
+> +			 DMA_TO_DEVICE);
+> +	if (ret != creq->src_nents)
+> +		return -ENOMEM;
 
- /include/ "../../../../arm/boot/dts/cros-ec-keyboard.dtsi"
+Hmm it doesn't quite work like that.  It returns zero on error,
+otherwise it returns the number (n) of mapped entries which may be
+less than what you gave it due to merging.  You're then supposed
+to use only the first n entries which should contain everything.
 
-Directly embedding the relative path to .dtsi in /arm/ from .dts in
-/arm64/ is more straightforward and does not require maintaining extra
-symlink .dtsi files.
-
-I actually like it better than the symlink that I proposed :-).
-Consider my patch abandoned, unless someone else feels strongly.
-
--Dan
-
->
-> Will
->
->> Signed-off-by: Daniel Kurtz <djkurtz@chromium.org>
->> ---
->>  arch/arm64/boot/dts/cros-ec-keyboard.dtsi | 1 +
->>  1 file changed, 1 insertion(+)
->>  create mode 120000 arch/arm64/boot/dts/cros-ec-keyboard.dtsi
->>
->> diff --git a/arch/arm64/boot/dts/cros-ec-keyboard.dtsi b/arch/arm64/boot/dts/cros-ec-keyboard.dtsi
->> new file mode 120000
->> index 0000000..42220ac
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/cros-ec-keyboard.dtsi
->> @@ -0,0 +1 @@
->> +../../../arm/boot/dts/cros-ec-keyboard.dtsi
->> \ No newline at end of file
->> --
->> 2.2.0.rc0.207.ga3a616c
->>
+Cheers,
+-- 
+Email: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
