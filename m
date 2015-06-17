@@ -1,7 +1,7 @@
 From: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v4 03/23] usb: otg: add usb_otg_caps structure for otg capabilities
-Date: Wed, 17 Jun 2015 13:43:35 +0800
-Message-ID: <1434519835-27745-4-git-send-email-jun.li@freescale.com>
+Subject: [PATCH v4 06/23] doc: dt-binding: usb: add otg related properties
+Date: Wed, 17 Jun 2015 13:43:38 +0800
+Message-ID: <1434519835-27745-7-git-send-email-jun.li@freescale.com>
 References: <1434519835-27745-1-git-send-email-jun.li@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,41 +12,45 @@ To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@
 Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org, Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a structure usb_otg_caps to cover all otg related
-capabilities of the device, including otg revision, and if hnp/srp/adp
-is supported.
+Add otg version, srp, hnp and adp support for usb OTG port, then those OTG
+features don't have to be decided by usb gadget drivers.
 
 Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- include/linux/usb/otg.h | 15 +++++++++++++++
+ Documentation/devicetree/bindings/usb/generic.txt | 15 +++++++++++++++
  1 file changed, 15 insertions(+)
 
-diff --git a/include/linux/usb/otg.h b/include/linux/usb/otg.h
-index 52661c5..bd1dcf8 100644
---- a/include/linux/usb/otg.h
-+++ b/include/linux/usb/otg.h
-@@ -41,6 +41,21 @@ struct usb_otg {
+diff --git a/Documentation/devicetree/bindings/usb/generic.txt b/Documentation/devicetree/bindings/usb/generic.txt
+index 477d5bb..bba8257 100644
+--- a/Documentation/devicetree/bindings/usb/generic.txt
++++ b/Documentation/devicetree/bindings/usb/generic.txt
+@@ -11,6 +11,19 @@ Optional properties:
+ 			"peripheral" and "otg". In case this attribute isn't
+ 			passed via DT, USB DRD controllers should default to
+ 			OTG.
++ - otg-rev: tells usb driver the release number of the OTG and EH supplement
++			with which the device and its descriptors are compliant,
++			in binary-coded decimal (i.e. 2.0 is 0200H). This
++			property is used if any real OTG features(HNP/SRP/ADP)
++			is enabled, if ADP is required, otg-rev should be
++			0x0200 or above.
++ - hnp-disable: tells OTG controllers we want to disable OTG HNP, normally HNP
++			is the basic function of real OTG except you want it
++			to be a srp-capable only B device.
++ - srp-disable: tells OTG controllers we want to disable OTG SRP, SRP is
++			optional for OTG device.
++ - adp-disable: tells OTG controllers we want to disable OTG ADP, ADP is
++			optional for OTG device.
  
+ This is an attribute to a USB controller such as:
+ 
+@@ -21,4 +34,6 @@ dwc3@4a030000 {
+ 	usb-phy = <&usb2_phy>, <&usb3,phy>;
+ 	maximum-speed = "super-speed";
+ 	dr_mode = "otg";
++	otg-rev = <0x0200>;
++	adp-disable;
  };
- 
-+/**
-+ * struct usb_otg_caps - describes the otg capabilities of the device
-+ * @otg_rev: The OTG revision number the device is compliant with, it's
-+ *		in binary-coded decimal (i.e. 2.0 is 0200H).
-+ * @hnp_support: Indicates if the device supports HNP.
-+ * @srp_support: Indicates if the device supports SRP.
-+ * @adp_support: Indicates if the device supports ADP.
-+ */
-+struct usb_otg_caps {
-+	u16 otg_rev;
-+	bool hnp_support;
-+	bool srp_support;
-+	bool adp_support;
-+};
-+
- extern const char *usb_otg_state_string(enum usb_otg_state state);
- 
- /* Context: can sleep */
 -- 
 1.9.1
 
