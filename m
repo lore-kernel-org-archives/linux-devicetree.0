@@ -1,13 +1,13 @@
 From: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v5 21/23] usb: gadget: printer: allocate and init otg descriptor by otg capabilities
-Date: Wed, 17 Jun 2015 19:40:28 +0800
-Message-ID: <1434541230-15090-22-git-send-email-jun.li@freescale.com>
+Subject: [PATCH v5 22/23] usb: gadget: serial: allocate and init otg descriptor by otg capabilities
+Date: Wed, 17 Jun 2015 19:40:29 +0800
+Message-ID: <1434541230-15090-23-git-send-email-jun.li@freescale.com>
 References: <1434541230-15090-1-git-send-email-jun.li@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1434541230-15090-1-git-send-email-jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org, Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
@@ -18,21 +18,25 @@ is not defined, keep its original otg descriptor unchanged.
 
 Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- drivers/usb/gadget/legacy/printer.c | 35 +++++++++++++++++++----------------
- 1 file changed, 19 insertions(+), 16 deletions(-)
+ drivers/usb/gadget/legacy/serial.c | 29 +++++++++++++++--------------
+ 1 file changed, 15 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/usb/gadget/legacy/printer.c b/drivers/usb/gadget/legacy/printer.c
-index 1ce7df1..1e557c5 100644
---- a/drivers/usb/gadget/legacy/printer.c
-+++ b/drivers/usb/gadget/legacy/printer.c
-@@ -82,16 +82,7 @@ static struct usb_device_descriptor device_desc = {
- 	.bNumConfigurations =	1
+diff --git a/drivers/usb/gadget/legacy/serial.c b/drivers/usb/gadget/legacy/serial.c
+index 8b7528f..d1cd025 100644
+--- a/drivers/usb/gadget/legacy/serial.c
++++ b/drivers/usb/gadget/legacy/serial.c
+@@ -79,20 +79,7 @@ static struct usb_device_descriptor device_desc = {
+ 	.bNumConfigurations =	1,
  };
  
 -static struct usb_otg_descriptor otg_descriptor = {
--	.bLength =              sizeof otg_descriptor,
--	.bDescriptorType =      USB_DT_OTG,
--	.bmAttributes =         USB_OTG_SRP,
+-	.bLength =		sizeof otg_descriptor,
+-	.bDescriptorType =	USB_DT_OTG,
+-
+-	/* REVISIT SRP-only hardware is possible, although
+-	 * it would not be called "OTG" ...
+-	 */
+-	.bmAttributes =		USB_OTG_SRP | USB_OTG_HNP,
 -};
 -
 -static const struct usb_descriptor_header *otg_desc[] = {
@@ -43,24 +47,10 @@ index 1ce7df1..1e557c5 100644
  
  /*-------------------------------------------------------------------------*/
  
-@@ -135,12 +126,6 @@ static int printer_do_config(struct usb_configuration *c)
+@@ -191,6 +178,16 @@ static int gs_bind(struct usb_composite_dev *cdev)
+ 	serial_config_driver.iConfiguration = status;
  
- 	usb_gadget_set_selfpowered(gadget);
- 
--	if (gadget_is_otg(gadget)) {
--		otg_descriptor.bmAttributes |= USB_OTG_HNP;
--		printer_cfg_driver.descriptors = otg_desc;
--		printer_cfg_driver.bmAttributes |= USB_CONFIG_ATT_WAKEUP;
--	}
--
- 	f_printer = usb_get_function(fi_printer);
- 	if (IS_ERR(f_printer))
- 		return PTR_ERR(f_printer);
-@@ -182,6 +167,21 @@ static int printer_bind(struct usb_composite_dev *cdev)
- 	device_desc.iProduct = strings[USB_GADGET_PRODUCT_IDX].id;
- 	device_desc.iSerialNumber = strings[USB_GADGET_SERIAL_IDX].id;
- 
-+	if (gadget_is_otg(cdev->gadget)) {
+ 	if (gadget_is_otg(cdev->gadget)) {
 +		if (!otg_desc[0]) {
 +			struct usb_descriptor_header *usb_desc;
 +
@@ -71,17 +61,14 @@ index 1ce7df1..1e557c5 100644
 +			otg_desc[0] = usb_desc;
 +			otg_desc[1] = NULL;
 +		}
-+		printer_cfg_driver.descriptors = otg_desc;
-+		printer_cfg_driver.bmAttributes |= USB_CONFIG_ATT_WAKEUP;
-+	}
+ 		serial_config_driver.descriptors = otg_desc;
+ 		serial_config_driver.bmAttributes |= USB_CONFIG_ATT_WAKEUP;
+ 	}
+@@ -227,6 +224,10 @@ static int gs_unbind(struct usb_composite_dev *cdev)
+ 		usb_put_function(f_serial[i]);
+ 		usb_put_function_instance(fi_serial[i]);
+ 	}
 +
- 	ret = usb_add_config(cdev, &printer_cfg_driver, printer_do_config);
- 	if (ret) {
- 		usb_put_function_instance(fi_printer);
-@@ -196,6 +196,9 @@ static int printer_unbind(struct usb_composite_dev *cdev)
- 	usb_put_function(f_printer);
- 	usb_put_function_instance(fi_printer);
- 
 +	kfree(otg_desc[0]);
 +	otg_desc[0] = NULL;
 +
@@ -92,6 +79,6 @@ index 1ce7df1..1e557c5 100644
 1.9.1
 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
