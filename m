@@ -1,84 +1,38 @@
-From: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v4 20/23] usb: gadget: ncm: allocate and init otg descriptor by otg capabilities
-Date: Wed, 17 Jun 2015 13:43:52 +0800
-Message-ID: <1434519835-27745-21-git-send-email-jun.li@freescale.com>
-References: <1434519835-27745-1-git-send-email-jun.li@freescale.com>
+From: Herbert Xu <herbert@gondor.apana.org.au>
+Subject: Re: [PATCH v5 05/14] crypto: marvell/CESA: add TDMA support
+Date: Wed, 17 Jun 2015 13:56:33 +0800
+Message-ID: <20150617055633.GA9123@gondor.apana.org.au>
+References: <1434448748-10828-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1434448748-10828-6-git-send-email-boris.brezillon@free-electrons.com>
+ <20150617050527.GA8807@gondor.apana.org.au>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1434519835-27745-1-git-send-email-jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org, Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-crypto-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150617050527.GA8807@gondor.apana.org.au>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: "David S. Miller" <davem@davemloft.net>, linux-crypto@vger.kernel.org, Arnaud Ebalard <arno@natisbad.org>, Tawfik Bayouk <tawfik@marvell.com>, Lior Amsalem <alior@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Eran Ben-Avi <benavi@marvell.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Imre Kaloz <kaloz@openwrt.org>
 List-Id: devicetree@vger.kernel.org
 
-Allocate and initialize usb otg descriptor according to gadget otg
-capabilities, add it for each usb configurations, free it while
-composite unbind. If otg capability is not defined, keep its otg
-descriptor unchanged.
+On Wed, Jun 17, 2015 at 01:05:27PM +0800, Herbert Xu wrote:
+> On Tue, Jun 16, 2015 at 11:58:59AM +0200, Boris Brezillon wrote:
+> >
+> > +	ret = dma_map_sg(cesa_dev->dev, req->src, creq->src_nents,
+> > +			 DMA_TO_DEVICE);
+> > +	if (ret != creq->src_nents)
+> > +		return -ENOMEM;
+> 
+> Hmm it doesn't quite work like that.  It returns zero on error,
+> otherwise it returns the number (n) of mapped entries which may be
+> less than what you gave it due to merging.  You're then supposed
+> to use only the first n entries which should contain everything.
 
-Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- drivers/usb/gadget/legacy/ncm.c | 28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+Please take a look at Documentation/DMA-API-HOWTO.txt, it has
+everything you need to know about the dma_map_sg interface.
 
-diff --git a/drivers/usb/gadget/legacy/ncm.c b/drivers/usb/gadget/legacy/ncm.c
-index 6ce7421..6a11a4f 100644
---- a/drivers/usb/gadget/legacy/ncm.c
-+++ b/drivers/usb/gadget/legacy/ncm.c
-@@ -69,20 +69,7 @@ static struct usb_device_descriptor device_desc = {
- 	.bNumConfigurations =	1,
- };
- 
--static struct usb_otg_descriptor otg_descriptor = {
--	.bLength =		sizeof otg_descriptor,
--	.bDescriptorType =	USB_DT_OTG,
--
--	/* REVISIT SRP-only hardware is possible, although
--	 * it would not be called "OTG" ...
--	 */
--	.bmAttributes =		USB_OTG_SRP | USB_OTG_HNP,
--};
--
--static const struct usb_descriptor_header *otg_desc[] = {
--	(struct usb_descriptor_header *) &otg_descriptor,
--	NULL,
--};
-+static const struct usb_descriptor_header *otg_desc[2];
- 
- /* string IDs are assigned dynamically */
- static struct usb_string strings_dev[] = {
-@@ -114,6 +101,16 @@ static int ncm_do_config(struct usb_configuration *c)
- 	/* FIXME alloc iConfiguration string, set it in c->strings */
- 
- 	if (gadget_is_otg(c->cdev->gadget)) {
-+		if (!otg_desc[0]) {
-+			struct usb_descriptor_header *usb_desc;
-+
-+			usb_desc = usb_otg_descriptor_alloc(c->cdev->gadget);
-+			if (!usb_desc)
-+				return -ENOMEM;
-+			usb_otg_descriptor_init(c->cdev->gadget, usb_desc);
-+			otg_desc[0] = usb_desc;
-+			otg_desc[1] = NULL;
-+		}
- 		c->descriptors = otg_desc;
- 		c->bmAttributes |= USB_CONFIG_ATT_WAKEUP;
- 	}
-@@ -192,6 +189,9 @@ static int gncm_unbind(struct usb_composite_dev *cdev)
- 		usb_put_function(f_ncm);
- 	if (!IS_ERR_OR_NULL(f_ncm_inst))
- 		usb_put_function_instance(f_ncm_inst);
-+	kfree(otg_desc[0]);
-+	otg_desc[0] = NULL;
-+
- 	return 0;
- }
- 
+Cheers,
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
