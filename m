@@ -1,7 +1,7 @@
 From: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v5 04/23] usb: add usb_otg_caps to usb_gadget structure.
-Date: Wed, 17 Jun 2015 19:40:11 +0800
-Message-ID: <1434541230-15090-5-git-send-email-jun.li@freescale.com>
+Subject: [PATCH v5 05/23] usb: gadget: composite: add USB_DT_OTG request handling
+Date: Wed, 17 Jun 2015 19:40:12 +0800
+Message-ID: <1434541230-15090-6-git-send-email-jun.li@freescale.com>
 References: <1434541230-15090-1-git-send-email-jun.li@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,36 +14,61 @@ List-Id: devicetree@vger.kernel.org
 
 From: Macpaul Lin <macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Add usb_otg_caps pointer to usb_gadget structure to indicate its
-otg capabilities.
+Copy usb_otg_descriptor from config's descriptor if host requests
+USB_DT_OTG.
 
 Signed-off-by: Macpaul Lin <macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Reviewed-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
 ---
- include/linux/usb/gadget.h | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/usb/gadget/composite.c | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-diff --git a/include/linux/usb/gadget.h b/include/linux/usb/gadget.h
-index 4f3dfb7..6b39087 100644
---- a/include/linux/usb/gadget.h
-+++ b/include/linux/usb/gadget.h
-@@ -511,6 +511,7 @@ struct usb_gadget_ops {
-  * @dev: Driver model state for this abstract device.
-  * @out_epnum: last used out ep number
-  * @in_epnum: last used in ep number
-+ * @otg_caps: OTG capabilities of this gadget.
-  * @sg_supported: true if we can handle scatter-gather
-  * @is_otg: True if the USB device port uses a Mini-AB jack, so that the
-  *	gadget driver must provide a USB OTG descriptor.
-@@ -559,6 +560,7 @@ struct usb_gadget {
- 	struct device			dev;
- 	unsigned			out_epnum;
- 	unsigned			in_epnum;
-+	struct usb_otg_caps		*otg_caps;
+diff --git a/drivers/usb/gadget/composite.c b/drivers/usb/gadget/composite.c
+index 4e3447b..2c1c6eb 100644
+--- a/drivers/usb/gadget/composite.c
++++ b/drivers/usb/gadget/composite.c
+@@ -19,6 +19,7 @@
+ #include <linux/utsname.h>
  
- 	unsigned			sg_supported:1;
- 	unsigned			is_otg:1;
+ #include <linux/usb/composite.h>
++#include <linux/usb/otg.h>
+ #include <asm/unaligned.h>
+ 
+ #include "u_os_desc.h"
+@@ -1534,6 +1535,32 @@ composite_setup(struct usb_gadget *gadget, const struct usb_ctrlrequest *ctrl)
+ 				value = min(w_length, (u16) value);
+ 			}
+ 			break;
++		case USB_DT_OTG:
++			if (gadget_is_otg(gadget)) {
++				struct usb_configuration *config;
++				int otg_desc_len = 0;
++
++				if (cdev->config)
++					config = cdev->config;
++				else
++					config = list_first_entry(
++							&cdev->configs,
++						struct usb_configuration, list);
++				if (!config)
++					goto done;
++
++				if (gadget->otg_caps &&
++					(gadget->otg_caps->otg_rev >= 0x0200))
++					otg_desc_len += sizeof(
++						struct usb_otg20_descriptor);
++				else
++					otg_desc_len += sizeof(
++						struct usb_otg_descriptor);
++
++				value = min_t(int, w_length, otg_desc_len);
++				memcpy(req->buf, config->descriptors[0], value);
++			}
++			break;
+ 		}
+ 		break;
+ 
 -- 
 1.9.1
 
