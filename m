@@ -1,168 +1,87 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 3/7] staging: board: Add support for translating hwirq to
- virq numbers
-Date: Wed, 17 Jun 2015 10:38:52 +0200
-Message-ID: <1434530336-15073-4-git-send-email-geert+renesas@glider.be>
-References: <1434530336-15073-1-git-send-email-geert+renesas@glider.be>
+From: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 2/3] spi: mediatek: Add spi bus for Mediatek MT8173
+Date: Wed, 17 Jun 2015 17:08:03 +0800
+Message-ID: <1434532083.19346.27.camel@mtksdaap41>
+References: <1431075343-7887-1-git-send-email-leilk.liu@mediatek.com>
+	 <1431075343-7887-3-git-send-email-leilk.liu@mediatek.com>
+	 <20150508175306.GG2761@sirena.org.uk> <1431434356.2128.9.camel@mhfsdcap03>
+	 <20150512160540.GB3066@sirena.org.uk> <1431675522.2128.13.camel@mhfsdcap03>
+	 <20150515092543.GY2761@sirena.org.uk>
+	 <1433758546.19786.16.camel@mtksdaap41>
+	 <20150608175927.GO14071@sirena.org.uk>
+	 <1433844321.16178.6.camel@mtksdaap41>
+	 <20150609103951.GA14071@sirena.org.uk>
+	 <1433923569.22080.1.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1434530336-15073-1-git-send-email-geert+renesas@glider.be>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <damm+renesas@opensource.se>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, linux-sh@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1433923569.22080.1.camel@mtksdaap41>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Leilk Liu =?UTF-8?Q?=28=E5=88=98=E7=A3=8A=29?= <Leilk.Liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, HongZhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <s.hauer@pengutron>
 List-Id: devicetree@vger.kernel.org
 
-As of commit 9a1091ef0017c40a ("irqchip: gic: Support hierarchy irq
-domain."), GIC IRQ numbers are virtual, breaking hardcoded hardware IRQ
-numbers in platform device resources.
+Hi Mark,
 
-Add support for translating hardware IRQ numbers to virtual IRQ numbers,
-and fixing up platform device resources with hardcoded IRQ numbers.
+On Wed, 2015-06-10 at 16:06 +0800, Eddie Huang wrote:
+> On Tue, 2015-06-09 at 11:39 +0100, Mark Brown wrote:
+> > On Tue, Jun 09, 2015 at 06:05:21PM +0800, Eddie Huang wrote:
+> > 
+> > > --- a/drivers/spi/spi.c
+> > > +++ b/drivers/spi/spi.c
+> > > @@ -539,8 +539,8 @@ static int __spi_map_msg(struct spi_master *master,
+> > > struct spi_message *msg)
+> > >         if (!master->can_dma)
+> > >                 return 0;
+> > 
+> > > -       tx_dev = master->dma_tx->device->dev;
+> > > -       rx_dev = master->dma_rx->device->dev;
+> > > +       tx_dev = master->dma_tx ? master->dma_tx->device->dev :
+> > > master->dev;
+> > > +       rx_dev = master->dma_rx ? master->dma_rx->device->dev : master-
+> > 
+> > > Is this what you want ? Actually, I don't like first one at all.
+> > 
+> > Not quite what I'd been thinking of - we can't just pick the device in
+> > the core safely, the device might be a MFD or have some other
+> > restriction that needs us to use a separate struct device.  However most
+> > of those cases are likely to point towards implementing a dmaengine
+> > device so probably the above will work for most cases and is fine.  Can
+> > you send a proper patch please?
+> 
 
-Add a copyright header, including the original author.
+After further investigate, we found problem when use can_dma() to
+implement spi driver.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-v2:
-  - Change the function names to include "gic", as the 3-parameter
-    interrupt specifiers are GIC-specific,
-  - Warn if board_staging_gic_setup_xlate() is called twice,
-  - Add support for low/high edge/level interrupts (the default is still
-    high level),
-  - Drop RFC status.
----
- drivers/staging/board/board.c | 80 +++++++++++++++++++++++++++++++++++++++++++
- drivers/staging/board/board.h |  5 +++
- 2 files changed, 85 insertions(+)
+If can_dma() return true in __spi_map_msg() function, it will map data
+buffer to sg_table, then pass this sg_table to transfer function. In
+transfer function, spi hardware can do tx and rx at the same time (full
+duplex), and the data size must be the same.
 
-diff --git a/drivers/staging/board/board.c b/drivers/staging/board/board.c
-index d5a6abc845191c93..8712f566b31196e0 100644
---- a/drivers/staging/board/board.c
-+++ b/drivers/staging/board/board.c
-@@ -1,10 +1,27 @@
-+/*
-+ * Copyright (C) 2014 Magnus Damm
-+ * Copyright (C) 2015 Glider bvba
-+ *
-+ * This file is subject to the terms and conditions of the GNU General Public
-+ * License.  See the file "COPYING" in the main directory of this archive
-+ * for more details.
-+ */
-+
-+#define pr_fmt(fmt)	"board_staging: "  fmt
-+
- #include <linux/init.h>
-+#include <linux/irq.h>
- #include <linux/device.h>
- #include <linux/kernel.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+
- #include "board.h"
- 
-+static struct device_node *irqc_node __initdata;
-+static unsigned int irqc_base __initdata;
-+
- static bool find_by_address(u64 base_address)
- {
- 	struct device_node *dn = of_find_all_nodes(NULL);
-@@ -38,3 +55,66 @@ bool __init board_staging_dt_node_available(const struct resource *resource,
- 
- 	return false; /* Nothing found */
- }
-+
-+int __init board_staging_gic_setup_xlate(const char *gic_match,
-+					 unsigned int base)
-+{
-+	WARN_ON(irqc_node);
-+
-+	irqc_node = of_find_compatible_node(NULL, NULL, gic_match);
-+
-+	WARN_ON(!irqc_node);
-+	if (!irqc_node)
-+		return -ENOENT;
-+
-+	irqc_base = base;
-+	return 0;
-+}
-+
-+static void __init gic_fixup_resource(struct resource *res)
-+{
-+	struct of_phandle_args irq_data;
-+	unsigned int hwirq = res->start;
-+	unsigned int virq;
-+
-+	if (resource_type(res) != IORESOURCE_IRQ || !irqc_node)
-+		return;
-+
-+	irq_data.np = irqc_node;
-+	irq_data.args_count = 3;
-+	irq_data.args[0] = 0;
-+	irq_data.args[1] = hwirq - irqc_base;
-+	switch (res->flags &
-+		(IORESOURCE_IRQ_LOWEDGE | IORESOURCE_IRQ_HIGHEDGE |
-+		 IORESOURCE_IRQ_LOWLEVEL | IORESOURCE_IRQ_HIGHLEVEL)) {
-+	case IORESOURCE_IRQ_LOWEDGE:
-+		irq_data.args[2] = IRQ_TYPE_EDGE_FALLING;
-+		break;
-+	case IORESOURCE_IRQ_HIGHEDGE:
-+		irq_data.args[2] = IRQ_TYPE_EDGE_RISING;
-+		break;
-+	case IORESOURCE_IRQ_LOWLEVEL:
-+		irq_data.args[2] = IRQ_TYPE_LEVEL_LOW;
-+		break;
-+	case IORESOURCE_IRQ_HIGHLEVEL:
-+	default:
-+		irq_data.args[2] = IRQ_TYPE_LEVEL_HIGH;
-+		break;
-+	}
-+
-+	virq = irq_create_of_mapping(&irq_data);
-+	if (WARN_ON(!virq))
-+		return;
-+
-+	pr_debug("hwirq %u -> virq %u\n", hwirq, virq);
-+	res->start = virq;
-+}
-+
-+void __init board_staging_gic_fixup_resources(struct resource *res,
-+					      unsigned int nres)
-+{
-+	unsigned int i;
-+
-+	for (i = 0; i < nres; i++)
-+		gic_fixup_resource(&res[i]);
-+}
-diff --git a/drivers/staging/board/board.h b/drivers/staging/board/board.h
-index e9c914985d4acb36..3af6dbe22f91ebdc 100644
---- a/drivers/staging/board/board.h
-+++ b/drivers/staging/board/board.h
-@@ -1,10 +1,15 @@
- #ifndef __BOARD_H__
- #define __BOARD_H__
-+
- #include <linux/init.h>
- #include <linux/of.h>
- 
-+struct resource;
-+
- bool board_staging_dt_node_available(const struct resource *resource,
- 				     unsigned int num_resources);
-+int board_staging_gic_setup_xlate(const char *gic_match, unsigned int base);
-+void board_staging_gic_fixup_resources(struct resource *res, unsigned int nres);
- 
- #define board_staging(str, fn)			\
- static int __init runtime_board_check(void)	\
--- 
-1.9.1
+Here comes the problem, although total length of tx, rx is the same,
+each entry in rx and tx scatterlist may not be the same (in the case
+data buffer allocate from vmalloc). Other vendor have dmaengine driver
+to send entry-by-entry automatically, so it is ok due to total length is
+the same.But mediatek hw can only send tx and rx scatterlist entry one
+by on, which means in full duplex, mediatek SPI hardware need send each
+entry separately, will cause full duplex fail because tx/rx entry size
+or entry number may not be the same.
+
+The problem is not dma map discuss earlier, it is mediatek spi hardware
+limitation that can't support scatterlist dma transfer in full-duplex
+mode. We can only support both tx and rx has the same size continuous
+memory data in full-duplex mode. I don't know whether should modify
+spi.c to support mediatek spi, or we just return can_dma() false and do
+transfer one continuous data in transfer function.
+
+By the way, I think maybe it is better to change can_dma() to
+can_dma_sg().
+
+Eddie
+Thanks
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
