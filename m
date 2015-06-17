@@ -1,43 +1,27 @@
-From: Y Vo <yvo@apm.com>
-Subject: [PATCH v0] arm64: dts: Add poweroff button device node for APM X-Gene platform
-Date: Wed, 17 Jun 2015 08:41:52 +0700
-Message-ID: <1434505312-27977-1-git-send-email-yvo@apm.com>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: linus.walleij@linaro.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, arm@kernel.org, linux-kernel@vger.kernel.org
-Cc: Y Vo <yvo@apm.com>, Phong Vo <pvo@apm.com>, Toan Le <toanle@apm.com>, patches@apm.com, Loc Ho <lho@apm.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH V7 3/3] OPP: Add binding for 'opp-suspend'
+Date: Wed, 17 Jun 2015 08:08:28 +0530
+Message-ID: <20150617023828.GB13553@linux>
+References: <cover.1433434659.git.viresh.kumar@linaro.org>
+ <20150616025425.GB26592@linux>
+ <CAL_JsqJ2gCJvtrZqDWWoY6Gv4Ag7xLV93wLbT5b37jO=oWo+MQ@mail.gmail.com>
+ <4228747.vs1U0RqIQB@vostro.rjw.lan>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4228747.vs1U0RqIQB@vostro.rjw.lan>
+Sender: linux-pm-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Rob Herring <robherring2@gmail.com>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Nishanth Menon <nm@ti.com>, Mark Brown <broonie@kernel.org>, Mike Turquette <mike.turquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Olof Johansson <olof@lixom.net>, Sudeep Holla <Sudeep.Holla@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Viswanath Puttagunta <viswanath.puttagunta@linaro.org>, Lucas Stach <l.stach@pengutronix.de>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Abraham <ta.omasab@gmail.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Kevin Hilman <khilman@linaro.org>, Santosh
 List-Id: devicetree@vger.kernel.org
 
-This patch adds poweroff button device node to support poweroff feature
-on APM X-Gene Mustang platform.
+On 16-06-15, 23:21, Rafael J. Wysocki wrote:
+> Does your ACK also apply to patches [1-2/3] in this series?
 
-Signed-off-by: Y Vo <yvo@apm.com>
----
- arch/arm64/boot/dts/apm/apm-mustang.dts |   11 +++++++++++
- 1 files changed, 11 insertions(+), 0 deletions(-)
+His RBY tag is already present for 1/3 :)
 
-diff --git a/arch/arm64/boot/dts/apm/apm-mustang.dts b/arch/arm64/boot/dts/apm/apm-mustang.dts
-index 83578e7..67979c8 100644
---- a/arch/arm64/boot/dts/apm/apm-mustang.dts
-+++ b/arch/arm64/boot/dts/apm/apm-mustang.dts
-@@ -23,6 +23,17 @@
- 		device_type = "memory";
- 		reg = < 0x1 0x00000000 0x0 0x80000000 >; /* Updated by bootloader */
- 	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+		apm_ctrl_name = "Power Button";
-+		btn3 {
-+			label = "EXT_PWR";
-+			linux,code = <116>;
-+			linux,input-type = <0x1>;     /* EV_KEY */
-+			interrupts = <0x0 0x2d 0x1>;
-+		};
-+	};
- };
- 
- &pcie0clk {
+@Rob: Please Ack 2/3 as well :)
+
 -- 
-1.7.1
-
+viresh
