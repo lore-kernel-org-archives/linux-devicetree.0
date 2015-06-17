@@ -1,91 +1,105 @@
 From: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH-v2 3/3] mfd: devicetree: bindings: Add new 88pm800 mfd binding
-Date: Thu, 18 Jun 2015 00:28:08 +0530
-Message-ID: <1434567488-6477-5-git-send-email-vaibhav.hiremath@linaro.org>
+Subject: [PATCH-v2 1/3] mfd: 88pm800: Add device tree support
+Date: Thu, 18 Jun 2015 00:28:05 +0530
+Message-ID: <1434567488-6477-2-git-send-email-vaibhav.hiremath@linaro.org>
 References: <vaibhav.hiremath@linaro.org>
  <1434567488-6477-1-git-send-email-vaibhav.hiremath@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1434567488-6477-1-git-send-email-vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-With addition of DT support to 88pm800 mfd driver, this patch
-adds new DT binding documentation along with respective properties.
+Add DT support to the 88pm800 driver, along with compatible
+field for it's sub-devices (rtc, onkey and regulator)
 
+Signed-off-by: Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- Documentation/devicetree/bindings/mfd/88pm800.txt | 60 +++++++++++++++++++++++
- 1 file changed, 60 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/88pm800.txt
+ drivers/mfd/88pm800.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mfd/88pm800.txt b/Documentation/devicetree/bindings/mfd/88pm800.txt
-new file mode 100644
-index 0000000..b8e72df
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/88pm800.txt
-@@ -0,0 +1,60 @@
-+* Marvell 88PM8xx Power Management IC
+diff --git a/drivers/mfd/88pm800.c b/drivers/mfd/88pm800.c
+index 841717a..059f01a 100644
+--- a/drivers/mfd/88pm800.c
++++ b/drivers/mfd/88pm800.c
+@@ -27,6 +27,7 @@
+ #include <linux/mfd/core.h>
+ #include <linux/mfd/88pm80x.h>
+ #include <linux/slab.h>
++#include <linux/of_device.h>
+ 
+ /* Interrupt Registers */
+ #define PM800_INT_STATUS1		(0x05)
+@@ -121,6 +122,11 @@ static const struct i2c_device_id pm80x_id_table[] = {
+ };
+ MODULE_DEVICE_TABLE(i2c, pm80x_id_table);
+ 
++static const struct of_device_id pm80x_of_match_table[] = {
++	{ .compatible = "marvell,88pm800", },
++	{},
++};
 +
-+Required parent device properties:
-+- compatible : "marvell,88pm800", "marvell,88pm805", "marvell,88pm860"
-+- reg : the I2C slave address for the 88pm8xx chip
-+- interrupts : IRQ line for the 88pm8xx chip
-+- interrupt-controller: describes the 88pm8xx as an interrupt controller
-+- #interrupt-cells : should be 1.
-+		- The cell is the 88pm8xx local IRQ number
+ static struct resource rtc_resources[] = {
+ 	{
+ 	 .name = "88pm80x-rtc",
+@@ -133,6 +139,7 @@ static struct resource rtc_resources[] = {
+ static struct mfd_cell rtc_devs[] = {
+ 	{
+ 	 .name = "88pm80x-rtc",
++	 .of_compatible = "marvell,88pm80x-rtc",
+ 	 .num_resources = ARRAY_SIZE(rtc_resources),
+ 	 .resources = &rtc_resources[0],
+ 	 .id = -1,
+@@ -151,6 +158,7 @@ static struct resource onkey_resources[] = {
+ static const struct mfd_cell onkey_devs[] = {
+ 	{
+ 	 .name = "88pm80x-onkey",
++	 .of_compatible = "marvell,88pm80x-onkey",
+ 	 .num_resources = 1,
+ 	 .resources = &onkey_resources[0],
+ 	 .id = -1,
+@@ -160,6 +168,7 @@ static const struct mfd_cell onkey_devs[] = {
+ static const struct mfd_cell regulator_devs[] = {
+ 	{
+ 	 .name = "88pm80x-regulator",
++	 .of_compatible = "marvell,88pm80x-regulator",
+ 	 .id = -1,
+ 	},
+ };
+@@ -544,8 +553,23 @@ static int pm800_probe(struct i2c_client *client,
+ 	int ret = 0;
+ 	struct pm80x_chip *chip;
+ 	struct pm80x_platform_data *pdata = dev_get_platdata(&client->dev);
++	struct device_node *np = client->dev.of_node;
+ 	struct pm80x_subchip *subchip;
+ 
++	if (!pdata && !np) {
++		dev_err(&client->dev,
++			"pm80x requires platform data or of_node\n");
++		return -EINVAL;
++	}
 +
-+Optional parent device properties:
-+- marvell,irq-clr-on-write: indicates whether interrupt status is cleared
-+  by write or read.
-+  If enabled, interrupt is cleared by write else just read would do.
++	if (!pdata) {
++		pdata = devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL);
++		if (!pdata) {
++			dev_err(&client->dev, "failed to allocaate memory\n");
++			return -ENOMEM;
++		}
++	}
 +
-+88pm8xx family of devices consists of varied group of sub-devices:
-+
-+Device		 	Supply Names	 Description
-+------		 	------------	 -----------
-+88pm80x-onkey		:		: On key
-+88pm80x-rtc		:		: RTC
-+88pm80x-regulator	:		: Regulators
-+
-+Note: More device list will follow
-+
-+Example:
-+
-+	pmic: 88pm800@30 {
-+		compatible = "marvell,88pm800";
-+		reg = <0x30>;
-+		interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-parent = <&gic>;
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+
-+		marvell,irq-clr-on-write;
-+
-+		regulators {
-+			compatible = "marvell,88pm80x-regulator";
-+
-+			buck1a: BUCK1A {
-+				regulator-compatible = "88PM800-BUCK1A";
-+				regulator-min-microvolt = <600000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+			ldo1: LDO1 {
-+				regulator-compatible = "88PM800-LDO1";
-+				regulator-min-microvolt = <1700000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+		};
-+
-+		rtc {
-+			compatible = "marvell,88pm80x-rtc";
-+		};
-+	};
+ 	ret = pm80x_init(client);
+ 	if (ret) {
+ 		dev_err(&client->dev, "pm800_init fail\n");
+@@ -611,6 +635,7 @@ static struct i2c_driver pm800_driver = {
+ 		.name = "88PM800",
+ 		.owner = THIS_MODULE,
+ 		.pm = &pm80x_pm_ops,
++		.of_match_table	= pm80x_of_match_table,
+ 		},
+ 	.probe = pm800_probe,
+ 	.remove = pm800_remove,
 -- 
 1.9.1
 
