@@ -1,7 +1,7 @@
 From: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v5 11/23] usb: gadget: configfs: allocate and init otg descriptor by otg capabilities
-Date: Wed, 17 Jun 2015 19:40:18 +0800
-Message-ID: <1434541230-15090-12-git-send-email-jun.li@freescale.com>
+Subject: [PATCH v5 20/23] usb: gadget: ncm: allocate and init otg descriptor by otg capabilities
+Date: Wed, 17 Jun 2015 19:40:27 +0800
+Message-ID: <1434541230-15090-21-git-send-email-jun.li@freescale.com>
 References: <1434541230-15090-1-git-send-email-jun.li@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -13,84 +13,102 @@ Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z
 List-Id: devicetree@vger.kernel.org
 
 Allocate and initialize usb otg descriptor according to gadget otg
-capabilities, add it for each usb configurations, free it while
-composite unbind. If otg capability is not defined, keep its otg
-descriptor unchanged.
+capabilities, add it for each usb configurations. If otg capability
+is not defined, keep its original otg descriptor unchanged.
 
 Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Reviewed-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
 ---
- drivers/usb/gadget/configfs.c | 29 ++++++++++++++++++++---------
- 1 file changed, 20 insertions(+), 9 deletions(-)
+ drivers/usb/gadget/legacy/ncm.c | 43 ++++++++++++++++++++++-------------------
+ 1 file changed, 23 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/usb/gadget/configfs.c b/drivers/usb/gadget/configfs.c
-index 0495c94..c7b62ef 100644
---- a/drivers/usb/gadget/configfs.c
-+++ b/drivers/usb/gadget/configfs.c
-@@ -41,6 +41,8 @@ int check_user_usb_string(const char *name,
- #define MAX_NAME_LEN	40
- #define MAX_USB_STRING_LANGS 2
+diff --git a/drivers/usb/gadget/legacy/ncm.c b/drivers/usb/gadget/legacy/ncm.c
+index 6ce7421..f65ada8 100644
+--- a/drivers/usb/gadget/legacy/ncm.c
++++ b/drivers/usb/gadget/legacy/ncm.c
+@@ -69,20 +69,7 @@ static struct usb_device_descriptor device_desc = {
+ 	.bNumConfigurations =	1,
+ };
  
+-static struct usb_otg_descriptor otg_descriptor = {
+-	.bLength =		sizeof otg_descriptor,
+-	.bDescriptorType =	USB_DT_OTG,
+-
+-	/* REVISIT SRP-only hardware is possible, although
+-	 * it would not be called "OTG" ...
+-	 */
+-	.bmAttributes =		USB_OTG_SRP | USB_OTG_HNP,
+-};
+-
+-static const struct usb_descriptor_header *otg_desc[] = {
+-	(struct usb_descriptor_header *) &otg_descriptor,
+-	NULL,
+-};
 +static const struct usb_descriptor_header *otg_desc[2];
-+
- struct gadget_info {
- 	struct config_group group;
- 	struct config_group functions_group;
-@@ -55,9 +57,6 @@ struct gadget_info {
- 	struct list_head available_func;
  
- 	const char *udc_name;
--#ifdef CONFIG_USB_OTG
--	struct usb_otg_descriptor otg;
--#endif
- 	struct usb_composite_driver composite;
- 	struct usb_composite_dev cdev;
- 	bool use_os_desc;
-@@ -1376,6 +1375,19 @@ static int configfs_composite_bind(struct usb_gadget *gadget,
- 		memcpy(cdev->qw_sign, gi->qw_sign, OS_STRING_QW_SIGN_LEN);
- 	}
+ /* string IDs are assigned dynamically */
+ static struct usb_string strings_dev[] = {
+@@ -113,11 +100,6 @@ static int ncm_do_config(struct usb_configuration *c)
  
-+	if (gadget_is_otg(gadget) && !otg_desc[0]) {
-+		struct usb_descriptor_header *usb_desc;
+ 	/* FIXME alloc iConfiguration string, set it in c->strings */
+ 
+-	if (gadget_is_otg(c->cdev->gadget)) {
+-		c->descriptors = otg_desc;
+-		c->bmAttributes |= USB_CONFIG_ATT_WAKEUP;
+-	}
+-
+ 	f_ncm = usb_get_function(f_ncm_inst);
+ 	if (IS_ERR(f_ncm)) {
+ 		status = PTR_ERR(f_ncm);
+@@ -171,16 +153,34 @@ static int gncm_bind(struct usb_composite_dev *cdev)
+ 	device_desc.iManufacturer = strings_dev[USB_GADGET_MANUFACTURER_IDX].id;
+ 	device_desc.iProduct = strings_dev[USB_GADGET_PRODUCT_IDX].id;
+ 
++	if (gadget_is_otg(gadget)) {
++		if (!otg_desc[0]) {
++			struct usb_descriptor_header *usb_desc;
 +
-+		usb_desc = usb_otg_descriptor_alloc(gadget);
-+		if (!usb_desc) {
-+			ret = -ENOMEM;
-+			goto err_comp_cleanup;
++			usb_desc = usb_otg_descriptor_alloc(gadget);
++			if (!usb_desc)
++				goto fail;
++			usb_otg_descriptor_init(gadget, usb_desc);
++			otg_desc[0] = usb_desc;
++			otg_desc[1] = NULL;
 +		}
-+		usb_otg_descriptor_init(gadget, usb_desc);
-+		otg_desc[0] = usb_desc;
-+		otg_desc[1] = NULL;
++		ncm_config_driver.descriptors = otg_desc;
++		ncm_config_driver.bmAttributes |= USB_CONFIG_ATT_WAKEUP;
 +	}
 +
- 	/* Go through all configs, attach all functions */
- 	list_for_each_entry(c, &gi->cdev.configs, list) {
- 		struct config_usb_cfg *cfg;
-@@ -1383,6 +1395,9 @@ static int configfs_composite_bind(struct usb_gadget *gadget,
- 		struct usb_function *tmp;
- 		struct gadget_config_name *cn;
+ 	status = usb_add_config(cdev, &ncm_config_driver,
+ 				ncm_do_config);
+ 	if (status < 0)
+-		goto fail;
++		goto fail1;
  
-+		if (gadget_is_otg(gadget))
-+			c->descriptors = otg_desc;
-+
- 		cfg = container_of(c, struct config_usb_cfg, c);
- 		if (!list_empty(&cfg->string_list)) {
- 			i = 0;
-@@ -1437,6 +1452,8 @@ static void configfs_composite_unbind(struct usb_gadget *gadget)
- 	cdev = get_gadget_data(gadget);
- 	gi = container_of(cdev, struct gadget_info, cdev);
+ 	usb_composite_overwrite_options(cdev, &coverwrite);
+ 	dev_info(&gadget->dev, "%s\n", DRIVER_DESC);
  
+ 	return 0;
+ 
++fail1:
 +	kfree(otg_desc[0]);
 +	otg_desc[0] = NULL;
- 	purge_configs_funcs(gi);
- 	composite_dev_cleanup(cdev);
- 	usb_ep_autoconfig_reset(cdev->gadget);
-@@ -1510,12 +1527,6 @@ static struct config_group *gadgets_make(
- 	if (!gi->composite.gadget_driver.function)
- 		goto err;
+ fail:
+ 	usb_put_function_instance(f_ncm_inst);
+ 	return status;
+@@ -192,6 +192,9 @@ static int gncm_unbind(struct usb_composite_dev *cdev)
+ 		usb_put_function(f_ncm);
+ 	if (!IS_ERR_OR_NULL(f_ncm_inst))
+ 		usb_put_function_instance(f_ncm_inst);
++	kfree(otg_desc[0]);
++	otg_desc[0] = NULL;
++
+ 	return 0;
+ }
  
--#ifdef CONFIG_USB_OTG
--	gi->otg.bLength = sizeof(struct usb_otg_descriptor);
--	gi->otg.bDescriptorType = USB_DT_OTG;
--	gi->otg.bmAttributes = USB_OTG_SRP | USB_OTG_HNP;
--#endif
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
