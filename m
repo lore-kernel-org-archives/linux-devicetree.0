@@ -1,51 +1,132 @@
-From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] cap11xx: add LED support
-Date: Wed, 17 Jun 2015 15:38:52 -0700
-Message-ID: <20150617223852.GA11341@dtor-ws>
-References: <1434422770-26896-1-git-send-email-mranostay@gmail.com>
- <1434422770-26896-3-git-send-email-mranostay@gmail.com>
- <557FD625.1080806@samsung.com>
- <CAKzfze9gneY_LmWaWGNKxLXBsw_k2d596CkGNat5RoTbn3cYEg@mail.gmail.com>
- <55809476.90407@zonque.org>
- <CAKzfze_TXP=qpyXJcktALW4V9b2SxH3qQSs=u3a8Xc=0diZ0Ng@mail.gmail.com>
- <CAKzfze8629xyiz1wufjoGbOu+npDRXyCgyGEhxY_1h7XHKeTQg@mail.gmail.com>
- <CAKzfze-M2aDY8p7FeazC7vBrigBGa-a6k43+=FZ9DEBOD0hHpw@mail.gmail.com>
- <558136FE.7060308@zonque.org>
- <CAKzfze-H=m55j-1ty4xOkrVzMswU7FpXe=6pHq4ws=P+3vcZNQ@mail.gmail.com>
+From: Ilya Faenson <ifaenson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: FW: [PATCH v4 1/4] Broadcom Bluetooth UART Device Tree bindings
+Date: Wed, 17 Jun 2015 23:11:07 +0000
+Message-ID: <E0D3336E15B58B4294723AC879BA5E942634F2@IRVEXCHMB15.corp.ad.broadcom.com>
+References: <1434576658-20730-1-git-send-email-ifaenson@broadcom.com>
+ <1434576658-20730-2-git-send-email-ifaenson@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAKzfze-H=m55j-1ty4xOkrVzMswU7FpXe=6pHq4ws=P+3vcZNQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1434576658-20730-2-git-send-email-ifaenson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>, Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: "marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org" <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, Arend Van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: "linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 17, 2015 at 02:53:26PM -0700, Matt Ranostay wrote:
-> On Wed, Jun 17, 2015 at 1:59 AM, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org> wrote:
-> > On 06/17/2015 08:49 AM, Matt Ranostay wrote:
-> >> Actually after further reading of the datasheet and testing with
-> >> i2ctools it seems cap11xx_input_close() isn't putting the device in
-> >> DEEP SLEEP mode.
-> >>
-> >> Any thoughts why?
-> >
-> > No, sorry. IIRC, the board I wrote the driver for didn't give me the
-> > ability to measure power consumption.
-> >
-> 
-> I can confirm it never goes to deep sleep or cap11xx_input_close()
-> gets called. Does evdev kernel module increment/input_open_device even
-> if nothing in userspace is accessing the /dev/event/inputX nodes?
++ devicetree lists
 
-No it does not. On the other hand there is VT that does keep all
-keyboard-like devices open.
+-----Original Message-----
+From: Ilya Faenson [mailto:ifaenson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org] 
+Sent: Wednesday, June 17, 2015 5:31 PM
+To: Marcel Holtmann
+Cc: linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Arend Van Spriel; Ilya Faenson
+Subject: [PATCH v4 1/4] Broadcom Bluetooth UART Device Tree bindings
 
-Thanks.
+Device Tree bindings to configure the Broadcom Bluetooth UART device.
 
+Signed-off-by: Ilya Faenson <ifaenson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+---
+ .../devicetree/bindings/net/bluetooth/btbcm.txt    | 86 ++++++++++++++++++++++
+ 1 file changed, 86 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/bluetooth/btbcm.txt
+
+diff --git a/Documentation/devicetree/bindings/net/bluetooth/btbcm.txt b/Documentation/devicetree/bindings/net/bluetooth/btbcm.txt
+new file mode 100644
+index 0000000..5dbcd57
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/bluetooth/btbcm.txt
+@@ -0,0 +1,86 @@
++btbcm
++------
++
++Required properties:
++
++	- compatible : must be "brcm,brcm-bt-uart".
++	- tty : tty device connected to this Bluetooth device.
++
++Optional properties:
++
++  - bt-host-wake-gpios : bt-host-wake input GPIO to be used as an interrupt.
++
++  - bt-wake-gpios : bt-wake output GPIO to be used to suspend / resume device.
++
++  - bt-reg-on-gpios : reg-on output GPIO to be used to power device on/off.
++
++  - oper-speed : Bluetooth device operational baud rate.
++    Default: 3000000.
++
++  - manual-fc : flow control UART in suspend / resume scenarios.
++    Default: 0.
++
++  - configure-sleep : configure suspend / resume flag.
++    Default: false.
++
++  - idle-timeout : Number of seconds of inactivity before suspending.
++    Default: 5.
++
++  - configure-audio : configure platform PCM SCO flag.
++    Default: false.
++
++  - pcm-clockmode : PCM clock mode. 0-slave, 1-master.
++    Default: 0.
++
++  - pcm-fillmethod : PCM fill method. 0 to 3.
++    Default: 2.
++
++  - pcm-fillnum : PCM number of fill bits. 0 to 3.
++    Default: 0.
++
++  - pcm-fillvalue : PCM fill value. 0 to 7.
++    Default: 3.
++
++  - pcm-incallbitclock : PCM interface rate. 0-128Kbps, 1-256Kbps, 2-512Kbps,
++    3-1024Kbps, 4-2048Kbps.
++    Default: 0.
++
++  - pcm-lsbfirst : PCM LSB first. 0 or 1.
++    Default: 0.
++
++  - pcm-rightjustify : PCM Justify. 0-left, 1-right.
++    Default: 0.
++
++  - pcm-routing : PCM routing. 0-PCM, 1-SCO over HCI.
++    Default: 0.
++
++  - pcm-shortframesync : PCM sync. 0-short, 1-long.
++    Default: 0.
++
++  - pcm-syncmode : PCM sync mode. 0-slave, 1-master.
++    Default: 0.
++
++
++Example:
++
++	bcm4354_bt_uart: bcm4354-bt-uart {
++		compatible = "brcm,brcm-bt-uart";
++		bt-wake-gpios = <&gpio4 30 GPIO_ACTIVE_HIGH>;
++		bt-host-wake-gpios = <&gpio4 31 GPIO_ACTIVE_HIGH>;
++		tty = "ttyS0";
++		oper-speed = <3000000>;
++		configure-sleep;
++		idle-timeout = <5>;
++		configure-audio;
++		pcm-clockmode = <0>;
++		pcm-fillmethod = <2>;
++		pcm-fillnum = <0>;
++		pcm-fillvalue = <3>;
++		pcm-incallbitclock = <0>;
++		pcm-lsbfirst = <0>;
++		pcm-rightjustify = <0>;
++		pcm-routing = <0>;
++		pcm-shortframesync = <0>;
++		pcm-syncmode = <0>;
++	};
++
 -- 
-Dmitry
+1.9.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
