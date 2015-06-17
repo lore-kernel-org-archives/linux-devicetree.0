@@ -1,7 +1,7 @@
 From: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v4 16/23] usb: gadget: g_ffs: allocate and init otg descriptor by otg capabilities
-Date: Wed, 17 Jun 2015 13:43:48 +0800
-Message-ID: <1434519835-27745-17-git-send-email-jun.li@freescale.com>
+Subject: [PATCH v4 17/23] usb: gadget: hid: allocate and init otg descriptor by otg capabilities
+Date: Wed, 17 Jun 2015 13:43:49 +0800
+Message-ID: <1434519835-27745-18-git-send-email-jun.li@freescale.com>
 References: <1434519835-27745-1-git-send-email-jun.li@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -19,63 +19,64 @@ descriptor unchanged.
 
 Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- drivers/usb/gadget/legacy/g_ffs.c | 29 ++++++++++++++---------------
- 1 file changed, 14 insertions(+), 15 deletions(-)
+ drivers/usb/gadget/legacy/hid.c | 30 +++++++++++++++---------------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/usb/gadget/legacy/g_ffs.c b/drivers/usb/gadget/legacy/g_ffs.c
-index 7b9ef7e..828a99c 100644
---- a/drivers/usb/gadget/legacy/g_ffs.c
-+++ b/drivers/usb/gadget/legacy/g_ffs.c
-@@ -88,21 +88,7 @@ MODULE_PARM_DESC(bDeviceProtocol, "USB Device protocol");
- module_param_array_named(functions, func_names, charp, &func_num, 0);
- MODULE_PARM_DESC(functions, "USB Functions list");
+diff --git a/drivers/usb/gadget/legacy/hid.c b/drivers/usb/gadget/legacy/hid.c
+index 2baa572..09889bc 100644
+--- a/drivers/usb/gadget/legacy/hid.c
++++ b/drivers/usb/gadget/legacy/hid.c
+@@ -68,21 +68,7 @@ static struct usb_device_descriptor device_desc = {
+ 	.bNumConfigurations =	1,
+ };
  
--static const struct usb_descriptor_header *gfs_otg_desc[] = {
--	(const struct usb_descriptor_header *)
--	&(const struct usb_otg_descriptor) {
--		.bLength		= sizeof(struct usb_otg_descriptor),
--		.bDescriptorType	= USB_DT_OTG,
+-static struct usb_otg_descriptor otg_descriptor = {
+-	.bLength =		sizeof otg_descriptor,
+-	.bDescriptorType =	USB_DT_OTG,
 -
--		/*
--		 * REVISIT SRP-only hardware is possible, although
--		 * it would not be called "OTG" ...
--		 */
--		.bmAttributes		= USB_OTG_SRP | USB_OTG_HNP,
--	},
--
--	NULL
+-	/* REVISIT SRP-only hardware is possible, although
+-	 * it would not be called "OTG" ...
+-	 */
+-	.bmAttributes =		USB_OTG_SRP | USB_OTG_HNP,
 -};
-+static const struct usb_descriptor_header *gfs_otg_desc[2];
+-
+-static const struct usb_descriptor_header *otg_desc[] = {
+-	(struct usb_descriptor_header *) &otg_descriptor,
+-	NULL,
+-};
+-
++static const struct usb_descriptor_header *otg_desc[2];
  
- /* String IDs are assigned dynamically */
- static struct usb_string gfs_strings[] = {
-@@ -471,6 +457,9 @@ static int gfs_unbind(struct usb_composite_dev *cdev)
- 	for (i = 0; i < N_CONF * func_num; ++i)
- 		usb_put_function(*(f_ffs[0] + i));
- 
-+	kfree(gfs_otg_desc[0]);
-+	gfs_otg_desc[0] = NULL;
-+
- 	return 0;
- }
- 
-@@ -489,6 +478,16 @@ static int gfs_do_config(struct usb_configuration *c)
- 		return -ENODEV;
+ /* string IDs are assigned dynamically */
+ static struct usb_string strings_dev[] = {
+@@ -112,6 +98,16 @@ static int do_config(struct usb_configuration *c)
+ 	int status = 0;
  
  	if (gadget_is_otg(c->cdev->gadget)) {
-+		if (!gfs_otg_desc[0]) {
++		if (!otg_desc[0]) {
 +			struct usb_descriptor_header *usb_desc;
 +
 +			usb_desc = usb_otg_descriptor_alloc(c->cdev->gadget);
 +			if (!usb_desc)
 +				return -ENOMEM;
 +			usb_otg_descriptor_init(c->cdev->gadget, usb_desc);
-+			gfs_otg_desc[0] = usb_desc;
-+			gfs_otg_desc[1] = NULL;
++			otg_desc[0] = usb_desc;
++			otg_desc[1] = NULL;
 +		}
- 		c->descriptors = gfs_otg_desc;
+ 		c->descriptors = otg_desc;
  		c->bmAttributes |= USB_CONFIG_ATT_WAKEUP;
  	}
+@@ -213,6 +209,10 @@ static int hid_unbind(struct usb_composite_dev *cdev)
+ 		usb_put_function(n->f);
+ 		usb_put_function_instance(n->fi);
+ 	}
++
++	kfree(otg_desc[0]);
++	otg_desc[0] = NULL;
++
+ 	return 0;
+ }
+ 
 -- 
 1.9.1
 
