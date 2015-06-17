@@ -1,77 +1,122 @@
-From: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
-Subject: [PATCH-v2] rtc: 88pm80x: add device tree support
-Date: Thu, 18 Jun 2015 00:28:06 +0530
-Message-ID: <1434567488-6477-3-git-send-email-vaibhav.hiremath@linaro.org>
+From: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH-v2 2/3] mfd: 88pm800: Allow configuration of interrupt clear method
+Date: Thu, 18 Jun 2015 00:28:07 +0530
+Message-ID: <1434567488-6477-4-git-send-email-vaibhav.hiremath@linaro.org>
 References: <vaibhav.hiremath@linaro.org>
  <1434567488-6477-1-git-send-email-vaibhav.hiremath@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1434567488-6477-1-git-send-email-vaibhav.hiremath@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: robh+dt@kernel.org, lee.jones@linaro.org, devicetree@vger.kernel.org, rtc-linux@googlegroups.com, linux-kernel@vger.kernel.org, Vaibhav Hiremath <vaibhav.hiremath@linaro.org>, Chao Xie <chao.xie@marvell.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1434567488-6477-1-git-send-email-vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Zhao Ye <zhaoy-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Along with DT support, this patch also cleans up the unnecessary
-code around 'rtc_wakeup' initialization.
+As per the spec, bit 1 (INT_CLEAR_MODE) of reg addr 0xe
+(page 0) controls the method of clearing interrupt
+status of 88pm800 family of devices;
 
-Signed-off-by: Chao Xie <chao.xie@marvell.com>
-Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
+  0: clear on read
+  1: clear on write
+
+This patch allows to configure this field, through DT.
+
+Also, as suggested by "Lee Jones" renaming DT property and variable
+field to appropriate name.
+
+Signed-off-by: Zhao Ye <zhaoy-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
-Link to V1: https://lkml.org/lkml/2015/5/29/757
+ drivers/mfd/88pm800.c       | 15 ++++++++++-----
+ include/linux/mfd/88pm80x.h |  6 ++++--
+ 2 files changed, 14 insertions(+), 7 deletions(-)
 
- drivers/rtc/rtc-88pm80x.c | 28 +++++++++++++++++-----------
- 1 file changed, 17 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/rtc/rtc-88pm80x.c b/drivers/rtc/rtc-88pm80x.c
-index 7df0579..8f66519 100644
---- a/drivers/rtc/rtc-88pm80x.c
-+++ b/drivers/rtc/rtc-88pm80x.c
-@@ -251,17 +251,26 @@ static SIMPLE_DEV_PM_OPS(pm80x_rtc_pm_ops, pm80x_rtc_suspend, pm80x_rtc_resume);
- static int pm80x_rtc_probe(struct platform_device *pdev)
+diff --git a/drivers/mfd/88pm800.c b/drivers/mfd/88pm800.c
+index 059f01a..c1a6306 100644
+--- a/drivers/mfd/88pm800.c
++++ b/drivers/mfd/88pm800.c
+@@ -376,7 +376,7 @@ static int device_irq_init_800(struct pm80x_chip *chip)
  {
- 	struct pm80x_chip *chip = dev_get_drvdata(pdev->dev.parent);
--	struct pm80x_platform_data *pm80x_pdata =
--				dev_get_platdata(pdev->dev.parent);
--	struct pm80x_rtc_pdata *pdata = NULL;
-+	struct pm80x_rtc_pdata *pdata = dev_get_platdata(&pdev->dev);
- 	struct pm80x_rtc_info *info;
-+	struct device_node *node = pdev->dev.of_node;
- 	struct rtc_time tm;
- 	unsigned long ticks = 0;
- 	int ret;
+ 	struct regmap *map = chip->regmap;
+ 	unsigned long flags = IRQF_ONESHOT;
+-	int data, mask, ret = -EINVAL;
++	int irq_clr_mode, mask, ret = -EINVAL;
  
--	pdata = dev_get_platdata(&pdev->dev);
--	if (pdata == NULL)
--		dev_warn(&pdev->dev, "No platform data!\n");
-+	if (!pdata && !node) {
-+		dev_err(&pdev->dev,
-+			"pm80x-rtc requires platform data or of_node\n");
-+		return -EINVAL;
-+	}
+ 	if (!map || !chip->irq) {
+ 		dev_err(chip->dev, "incorrect parameters\n");
+@@ -384,15 +384,16 @@ static int device_irq_init_800(struct pm80x_chip *chip)
+ 	}
+ 
+ 	/*
+-	 * irq_mode defines the way of clearing interrupt. it's read-clear by
+-	 * default.
++	 * irq_clr_on_wr defines the way of clearing interrupt by
++	 * read/write(0/1).  It's read-clear by default.
+ 	 */
+ 	mask =
+ 	    PM800_WAKEUP2_INV_INT | PM800_WAKEUP2_INT_CLEAR |
+ 	    PM800_WAKEUP2_INT_MASK;
+ 
+-	data = PM800_WAKEUP2_INT_CLEAR;
+-	ret = regmap_update_bits(map, PM800_WAKEUP2, mask, data);
++	irq_clr_mode = (chip->irq_clr_on_wr) ?
++		PM800_WAKEUP2_INT_WRITE_CLEAR : PM800_WAKEUP2_INT_READ_CLEAR;
++	ret = regmap_update_bits(map, PM800_WAKEUP2, mask, irq_clr_mode);
+ 
+ 	if (ret < 0)
+ 		goto out;
+@@ -514,6 +515,7 @@ static int device_800_init(struct pm80x_chip *chip,
+ 	}
+ 
+ 	chip->regmap_irq_chip = &pm800_irq_chip;
++	chip->irq_clr_on_wr = pdata->irq_clr_on_wr;
+ 
+ 	ret = device_irq_init_800(chip);
+ 	if (ret < 0) {
+@@ -568,6 +570,9 @@ static int pm800_probe(struct i2c_client *client,
+ 			dev_err(&client->dev, "failed to allocaate memory\n");
+ 			return -ENOMEM;
+ 		}
 +
-+	if (!pdata) {
-+		pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
-+		if (!pdata) {
-+			dev_err(&pdev->dev, "failed to allocate memory\n");
-+			return -ENOMEM;
-+		}
-+	}
++		pdata->irq_clr_on_wr = of_property_read_bool(np,
++					"marvell,irq-clr-on-write");
+ 	}
  
- 	info =
- 	    devm_kzalloc(&pdev->dev, sizeof(struct pm80x_rtc_info), GFP_KERNEL);
-@@ -327,11 +336,8 @@ static int pm80x_rtc_probe(struct platform_device *pdev)
- 	regmap_update_bits(info->map, PM800_RTC_CONTROL, PM800_RTC1_USE_XO,
- 			   PM800_RTC1_USE_XO);
+ 	ret = pm80x_init(client);
+diff --git a/include/linux/mfd/88pm80x.h b/include/linux/mfd/88pm80x.h
+index 97cb283..94b3dcd 100644
+--- a/include/linux/mfd/88pm80x.h
++++ b/include/linux/mfd/88pm80x.h
+@@ -77,6 +77,8 @@ enum {
+ #define PM800_WAKEUP2		(0x0E)
+ #define PM800_WAKEUP2_INV_INT		(1 << 0)
+ #define PM800_WAKEUP2_INT_CLEAR		(1 << 1)
++#define PM800_WAKEUP2_INT_READ_CLEAR		(0 << 1)
++#define PM800_WAKEUP2_INT_WRITE_CLEAR		(1 << 1)
+ #define PM800_WAKEUP2_INT_MASK		(1 << 2)
  
--	if (pm80x_pdata) {
--		pdata = pm80x_pdata->rtc;
--		if (pdata)
--			info->rtc_dev->dev.platform_data = &pdata->rtc_wakeup;
--	}
-+	/* remeber whether this power up is caused by PMIC RTC or not */
-+	info->rtc_dev->dev.platform_data = &pdata->rtc_wakeup;
- 
- 	device_init_wakeup(&pdev->dev, 1);
- 
+ #define PM800_POWER_UP_LOG	(0x10)
+@@ -300,7 +302,7 @@ struct pm80x_chip {
+ 	struct regmap_irq_chip_data *irq_data;
+ 	int type;
+ 	int irq;
+-	int irq_mode;
++	int irq_clr_on_wr;	/* '1': Clear on write, '0': Clear on read*/
+ 	unsigned long wu_flag;
+ 	spinlock_t lock;
+ };
+@@ -315,7 +317,7 @@ struct pm80x_platform_data {
+ 	 */
+ 	struct regulator_init_data *regulators[PM800_ID_RG_MAX];
+ 	unsigned int num_regulators;
+-	int irq_mode;		/* Clear interrupt by read/write(0/1) */
++	int irq_clr_on_wr;		/* Clear interrupt by read/write(0/1) */
+ 	int batt_det;		/* enable/disable */
+ 	int (*plat_config)(struct pm80x_chip *chip,
+ 				struct pm80x_platform_data *pdata);
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
