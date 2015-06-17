@@ -1,62 +1,80 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v7 05/14] crypto: marvell/CESA: add TDMA support
-Date: Wed, 17 Jun 2015 17:58:28 +0200
-Message-ID: <20150617175828.2a83cda6@bbrezillon>
-References: <20150617122533.GA13185@gondor.apana.org.au>
-	<1434547922-10363-1-git-send-email-boris.brezillon@free-electrons.com>
-	<20150617150808.GA14915@gondor.apana.org.au>
-	<20150617173402.7946bbb0@bbrezillon>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <20150617173402.7946bbb0@bbrezillon>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, linux-crypto@vger.kernel.org, Arnaud Ebalard <arno@natisbad.org>, Tawfik Bayouk <tawfik@marvell.com>, Lior Amsalem <alior@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Eran Ben-Avi <benavi@marvell.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Imre Kaloz <kaloz@openw>
+From: Anda-Maria Nicolae <anda-maria.nicolae@intel.com>
+Subject: [PATCH] power_supply: rt9455_charger: Properly notify userspace about charging events
+Date: Wed, 17 Jun 2015 19:28:59 +0300
+Message-ID: <1434558539-30591-1-git-send-email-anda-maria.nicolae@intel.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: sre@kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 17 Jun 2015 17:34:02 +0200
-Boris Brezillon <boris.brezillon@free-electrons.com> wrote:
+Do not call power_supply_changed() when CHRVPI interrupt has occurred.
+CHRVPI interrupt occurs when the charger is connected to or disconnected
+from the power source. Call power_supply_changed() after PWR_RDY bit is
+read, to distinguish between connection to or disconnection from the power
+source.
+Also, call power_supply_changed() after the battery is reconnected to the
+charger, to notify userspace that the battery is no longer absent.
 
-> On Wed, 17 Jun 2015 23:08:08 +0800
-> Herbert Xu <herbert@gondor.apana.org.au> wrote:
-> 
-> > On Wed, Jun 17, 2015 at 03:32:02PM +0200, Boris Brezillon wrote:
-> > >
-> > > Hi Herbert,
-> > > 
-> > > I send you this patch alone so that you can verify I'm now properly
-> > > manipulating the SG list. Once I have your confirmation I'll send
-> > > the whole series again and annoy all the people in Cc one more time
-> > > ;-).
-> > 
-> > Thanks.  The only problem that I can see is the fact you're not
-> > checking for req->src == req->dst.  If they're equal then you must
-> > not map it twice.  Instead it should be mapped as DMA_BIDIRECTIONAL.
-> 
-> I can check for that too, but note that it doesn't prevent one from
-> providing different scatterlist structures pointing to the same memory
-> region.
+Signed-off-by: Anda-Maria Nicolae <anda-maria.nicolae@intel.com>
+---
+ drivers/power/rt9455_charger.c |   16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
-Actually, I don't know if it's a problem or not, so if it's not, please
-ignore my comment.
-
-> This being said, checking for req->src == req->dst should fix the case
-> where dst and src are pointing to the same scatterlist, which is a good
-> start.
-
-Here is an incremental patch [1], please let me know if something else
-is missing.
-
-Thanks,
-
-Boris
-
-[1]http://code.bulix.org/x8mz8x-88568
-
-
+diff --git a/drivers/power/rt9455_charger.c b/drivers/power/rt9455_charger.c
+index 08baac6..a49a9d4 100644
+--- a/drivers/power/rt9455_charger.c
++++ b/drivers/power/rt9455_charger.c
+@@ -973,7 +973,6 @@ static int rt9455_irq_handler_check_irq2_register(struct rt9455_info *info,
+ 
+ 	if (irq2 & GET_MASK(F_CHRVPI)) {
+ 		dev_dbg(dev, "Charger fault occurred\n");
+-		alert_userspace = true;
+ 		/*
+ 		 * CHRVPI bit is set in 2 cases:
+ 		 * 1. when the power source is connected to the charger.
+@@ -981,6 +980,9 @@ static int rt9455_irq_handler_check_irq2_register(struct rt9455_info *info,
+ 		 * To identify the case, PWR_RDY bit is checked. Because
+ 		 * PWR_RDY bit is set / cleared after CHRVPI interrupt is
+ 		 * triggered, it is used delayed_work to later read PWR_RDY bit.
++		 * Also, do not set to true alert_userspace, because there is no
++		 * need to notify userspace when CHRVPI interrupt has occurred.
++		 * Userspace will be notified after PWR_RDY bit is read.
+ 		 */
+ 		queue_delayed_work(system_power_efficient_wq,
+ 				   &info->pwr_rdy_work,
+@@ -1178,7 +1180,7 @@ static irqreturn_t rt9455_irq_handler_thread(int irq, void *data)
+ 		/*
+ 		 * Sometimes, an interrupt occurs while rt9455_probe() function
+ 		 * is executing and power_supply_register() is not yet called.
+-		 * Do not call power_supply_charged() in this case.
++		 * Do not call power_supply_changed() in this case.
+ 		 */
+ 		if (info->charger)
+ 			power_supply_changed(info->charger);
+@@ -1478,6 +1480,11 @@ static void rt9455_pwr_rdy_work_callback(struct work_struct *work)
+ 				   RT9455_MAX_CHARGING_TIME * HZ);
+ 		break;
+ 	}
++	/*
++	 * Notify userspace that the charger has been either connected to or
++	 * disconnected from the power source.
++	 */
++	power_supply_changed(info->charger);
+ }
+ 
+ static void rt9455_max_charging_time_work_callback(struct work_struct *work)
+@@ -1533,6 +1540,11 @@ static void rt9455_batt_presence_work_callback(struct work_struct *work)
+ 			if (ret)
+ 				dev_err(dev, "Failed to unmask BATAB interrupt\n");
+ 		}
++		/*
++		 * Notify userspace that the battery is now connected to the
++		 * charger.
++		 */
++		power_supply_changed(info->charger);
+ 	}
+ }
+ 
 -- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+1.7.9.5
+
