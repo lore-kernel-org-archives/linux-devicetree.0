@@ -1,27 +1,117 @@
-From: Daniel Mack <daniel@zonque.org>
-Subject: Re: [PATCH v4 2/2] cap11xx: add LED support
-Date: Wed, 17 Jun 2015 10:59:42 +0200
-Message-ID: <558136FE.7060308@zonque.org>
-References: <1434422770-26896-1-git-send-email-mranostay@gmail.com>	<1434422770-26896-3-git-send-email-mranostay@gmail.com>	<557FD625.1080806@samsung.com>	<CAKzfze9gneY_LmWaWGNKxLXBsw_k2d596CkGNat5RoTbn3cYEg@mail.gmail.com>	<55809476.90407@zonque.org>	<CAKzfze_TXP=qpyXJcktALW4V9b2SxH3qQSs=u3a8Xc=0diZ0Ng@mail.gmail.com>	<CAKzfze8629xyiz1wufjoGbOu+npDRXyCgyGEhxY_1h7XHKeTQg@mail.gmail.com> <CAKzfze-M2aDY8p7FeazC7vBrigBGa-a6k43+=FZ9DEBOD0hHpw@mail.gmail.com>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v4 11/23] usb: gadget: configfs: allocate and init otg
+ descriptor by otg capabilities
+Date: Wed, 17 Jun 2015 12:01:42 +0300
+Message-ID: <20150617120142.740b4501@rockdesk>
+References: <1434519835-27745-1-git-send-email-jun.li@freescale.com>
+	<1434519835-27745-12-git-send-email-jun.li@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <CAKzfze-M2aDY8p7FeazC7vBrigBGa-a6k43+=FZ9DEBOD0hHpw@mail.gmail.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Matt Ranostay <mranostay@gmail.com>
-Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, linux-leds@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1434519835-27745-12-git-send-email-jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/17/2015 08:49 AM, Matt Ranostay wrote:
-> Actually after further reading of the datasheet and testing with
-> i2ctools it seems cap11xx_input_close() isn't putting the device in
-> DEEP SLEEP mode.
+
+On Wed, 17 Jun 2015 13:43:43 +0800
+Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+
+> Allocate and initialize usb otg descriptor according to gadget otg
+> capabilities, add it for each usb configurations, free it while
+> composite unbind. If otg capability is not defined, keep its otg
+> descriptor unchanged.
 > 
-> Any thoughts why?
+> Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-No, sorry. IIRC, the board I wrote the driver for didn't give me the
-ability to measure power consumption.
+Reviewed-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
 
+cheers,
+-roger
 
-Daniel
+> ---
+>  drivers/usb/gadget/configfs.c | 29 ++++++++++++++++++++---------
+>  1 file changed, 20 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/usb/gadget/configfs.c b/drivers/usb/gadget/configfs.c
+> index 0495c94..c7b62ef 100644
+> --- a/drivers/usb/gadget/configfs.c
+> +++ b/drivers/usb/gadget/configfs.c
+> @@ -41,6 +41,8 @@ int check_user_usb_string(const char *name,
+>  #define MAX_NAME_LEN	40
+>  #define MAX_USB_STRING_LANGS 2
+>  
+> +static const struct usb_descriptor_header *otg_desc[2];
+> +
+>  struct gadget_info {
+>  	struct config_group group;
+>  	struct config_group functions_group;
+> @@ -55,9 +57,6 @@ struct gadget_info {
+>  	struct list_head available_func;
+>  
+>  	const char *udc_name;
+> -#ifdef CONFIG_USB_OTG
+> -	struct usb_otg_descriptor otg;
+> -#endif
+>  	struct usb_composite_driver composite;
+>  	struct usb_composite_dev cdev;
+>  	bool use_os_desc;
+> @@ -1376,6 +1375,19 @@ static int configfs_composite_bind(struct usb_gadget *gadget,
+>  		memcpy(cdev->qw_sign, gi->qw_sign, OS_STRING_QW_SIGN_LEN);
+>  	}
+>  
+> +	if (gadget_is_otg(gadget) && !otg_desc[0]) {
+> +		struct usb_descriptor_header *usb_desc;
+> +
+> +		usb_desc = usb_otg_descriptor_alloc(gadget);
+> +		if (!usb_desc) {
+> +			ret = -ENOMEM;
+> +			goto err_comp_cleanup;
+> +		}
+> +		usb_otg_descriptor_init(gadget, usb_desc);
+> +		otg_desc[0] = usb_desc;
+> +		otg_desc[1] = NULL;
+> +	}
+> +
+>  	/* Go through all configs, attach all functions */
+>  	list_for_each_entry(c, &gi->cdev.configs, list) {
+>  		struct config_usb_cfg *cfg;
+> @@ -1383,6 +1395,9 @@ static int configfs_composite_bind(struct usb_gadget *gadget,
+>  		struct usb_function *tmp;
+>  		struct gadget_config_name *cn;
+>  
+> +		if (gadget_is_otg(gadget))
+> +			c->descriptors = otg_desc;
+> +
+>  		cfg = container_of(c, struct config_usb_cfg, c);
+>  		if (!list_empty(&cfg->string_list)) {
+>  			i = 0;
+> @@ -1437,6 +1452,8 @@ static void configfs_composite_unbind(struct usb_gadget *gadget)
+>  	cdev = get_gadget_data(gadget);
+>  	gi = container_of(cdev, struct gadget_info, cdev);
+>  
+> +	kfree(otg_desc[0]);
+> +	otg_desc[0] = NULL;
+>  	purge_configs_funcs(gi);
+>  	composite_dev_cleanup(cdev);
+>  	usb_ep_autoconfig_reset(cdev->gadget);
+> @@ -1510,12 +1527,6 @@ static struct config_group *gadgets_make(
+>  	if (!gi->composite.gadget_driver.function)
+>  		goto err;
+>  
+> -#ifdef CONFIG_USB_OTG
+> -	gi->otg.bLength = sizeof(struct usb_otg_descriptor);
+> -	gi->otg.bDescriptorType = USB_DT_OTG;
+> -	gi->otg.bmAttributes = USB_OTG_SRP | USB_OTG_HNP;
+> -#endif
+> -
+>  	config_group_init_type_name(&gi->group, name,
+>  				&gadget_root_type);
+>  	return &gi->group;
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
