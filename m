@@ -1,122 +1,95 @@
-From: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH-v2 2/3] mfd: 88pm800: Allow configuration of interrupt clear method
-Date: Thu, 18 Jun 2015 00:28:07 +0530
-Message-ID: <1434567488-6477-4-git-send-email-vaibhav.hiremath@linaro.org>
-References: <vaibhav.hiremath@linaro.org>
- <1434567488-6477-1-git-send-email-vaibhav.hiremath@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1434567488-6477-1-git-send-email-vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Zhao Ye <zhaoy-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+From: Paul Gortmaker <paul.gortmaker@windriver.com>
+Subject: Re: [PATCH v6 0/7] Add Mediatek MMC driver
+Date: Wed, 17 Jun 2015 17:01:33 -0400
+Message-ID: <CAP=VYLpBymmAVY7LoFJR5+QTxL4CN7t+PrLFCxaoAN_a9S4Jbw@mail.gmail.com>
+References: <1434367253-26577-1-git-send-email-chaotian.jing@mediatek.com> <CAPDyKFrAbAFR7_p5O4bPh6FZEBVhGZ2rq3htCKcF2QgQuCEf2g@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFrAbAFR7_p5O4bPh6FZEBVhGZ2rq3htCKcF2QgQuCEf2g@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Chaotian Jing <chaotian.jing@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Chris Ball <chris@printf.net>, Mark Rutland <mark.rutland@arm.com>, James Liao <jamesjj.liao@mediatek.com>, srv_heupstream <srv_heupstream@mediatek.com>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Hongzhou Yang <hongzhou.yang@mediatek.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-mmc <linux-mmc@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, "Joe.C" <yingjoe.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, =?UTF-8?B?QmluIFpoYW5nICjnq6Dmlowp?= <bin.zhang@mediatek.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm>
 List-Id: devicetree@vger.kernel.org
 
-As per the spec, bit 1 (INT_CLEAR_MODE) of reg addr 0xe
-(page 0) controls the method of clearing interrupt
-status of 88pm800 family of devices;
+On Tue, Jun 16, 2015 at 4:03 AM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+> On 15 June 2015 at 13:20, Chaotian Jing <chaotian.jing@mediatek.com> wrote:
+>> This series enables MMC support on the MT8135/MT8173 platform.
+>> MT8135 has 5 MMC controllers and MT8173 has 4 MMC controllers.
+>>
+>> Changes base on Ulf's comments
+>> Make hclk mandatory in the driver code
+>> Change host->hclk to host->src_clk_freq
+>> Add linux/pm.h
+>>
+>> Chaotian Jing (3):
+>>   mmc: dt-bindings: add Mediatek MMC bindings
+>>   mmc: mediatek: Add Mediatek MMC driver.
 
-  0: clear on read
-  1: clear on write
+This commit breaks when merged to linux-next since it gets
+exposed as an implicit module.h user that does not include
+that header:
 
-This patch allows to configure this field, through DT.
+   drivers/mmc/host/mtk-sd.c:1459:1: note: in expansion of macro
+'module_platform_driver'
+    module_platform_driver(mt_msdc_driver);
+    ^
+   include/linux/device.h:1296:1: error: type defaults to 'int' in
+declaration of 'module_init' [-Werror=implicit-int]
+    module_init(__driver##_init); \
+    ^
 
-Also, as suggested by "Lee Jones" renaming DT property and variable
-field to appropriate name.
+Since the code doesn't exist in mainline, I can't fix it from
+within my header cleanup series, so can you please add
+an appropriate include of module.h to the above?
 
-Signed-off-by: Zhao Ye <zhaoy-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- drivers/mfd/88pm800.c       | 15 ++++++++++-----
- include/linux/mfd/88pm80x.h |  6 ++++--
- 2 files changed, 14 insertions(+), 7 deletions(-)
+Also, I noticed the Makefile addition from this commit
+is whitespace mangled; might as well fix that too if
+rebasing to fix the include problem.
 
-diff --git a/drivers/mfd/88pm800.c b/drivers/mfd/88pm800.c
-index 059f01a..c1a6306 100644
---- a/drivers/mfd/88pm800.c
-+++ b/drivers/mfd/88pm800.c
-@@ -376,7 +376,7 @@ static int device_irq_init_800(struct pm80x_chip *chip)
- {
- 	struct regmap *map = chip->regmap;
- 	unsigned long flags = IRQF_ONESHOT;
--	int data, mask, ret = -EINVAL;
-+	int irq_clr_mode, mask, ret = -EINVAL;
- 
- 	if (!map || !chip->irq) {
- 		dev_err(chip->dev, "incorrect parameters\n");
-@@ -384,15 +384,16 @@ static int device_irq_init_800(struct pm80x_chip *chip)
- 	}
- 
- 	/*
--	 * irq_mode defines the way of clearing interrupt. it's read-clear by
--	 * default.
-+	 * irq_clr_on_wr defines the way of clearing interrupt by
-+	 * read/write(0/1).  It's read-clear by default.
- 	 */
- 	mask =
- 	    PM800_WAKEUP2_INV_INT | PM800_WAKEUP2_INT_CLEAR |
- 	    PM800_WAKEUP2_INT_MASK;
- 
--	data = PM800_WAKEUP2_INT_CLEAR;
--	ret = regmap_update_bits(map, PM800_WAKEUP2, mask, data);
-+	irq_clr_mode = (chip->irq_clr_on_wr) ?
-+		PM800_WAKEUP2_INT_WRITE_CLEAR : PM800_WAKEUP2_INT_READ_CLEAR;
-+	ret = regmap_update_bits(map, PM800_WAKEUP2, mask, irq_clr_mode);
- 
- 	if (ret < 0)
- 		goto out;
-@@ -514,6 +515,7 @@ static int device_800_init(struct pm80x_chip *chip,
- 	}
- 
- 	chip->regmap_irq_chip = &pm800_irq_chip;
-+	chip->irq_clr_on_wr = pdata->irq_clr_on_wr;
- 
- 	ret = device_irq_init_800(chip);
- 	if (ret < 0) {
-@@ -568,6 +570,9 @@ static int pm800_probe(struct i2c_client *client,
- 			dev_err(&client->dev, "failed to allocaate memory\n");
- 			return -ENOMEM;
- 		}
-+
-+		pdata->irq_clr_on_wr = of_property_read_bool(np,
-+					"marvell,irq-clr-on-write");
- 	}
- 
- 	ret = pm80x_init(client);
-diff --git a/include/linux/mfd/88pm80x.h b/include/linux/mfd/88pm80x.h
-index 97cb283..94b3dcd 100644
---- a/include/linux/mfd/88pm80x.h
-+++ b/include/linux/mfd/88pm80x.h
-@@ -77,6 +77,8 @@ enum {
- #define PM800_WAKEUP2		(0x0E)
- #define PM800_WAKEUP2_INV_INT		(1 << 0)
- #define PM800_WAKEUP2_INT_CLEAR		(1 << 1)
-+#define PM800_WAKEUP2_INT_READ_CLEAR		(0 << 1)
-+#define PM800_WAKEUP2_INT_WRITE_CLEAR		(1 << 1)
- #define PM800_WAKEUP2_INT_MASK		(1 << 2)
- 
- #define PM800_POWER_UP_LOG	(0x10)
-@@ -300,7 +302,7 @@ struct pm80x_chip {
- 	struct regmap_irq_chip_data *irq_data;
- 	int type;
- 	int irq;
--	int irq_mode;
-+	int irq_clr_on_wr;	/* '1': Clear on write, '0': Clear on read*/
- 	unsigned long wu_flag;
- 	spinlock_t lock;
- };
-@@ -315,7 +317,7 @@ struct pm80x_platform_data {
- 	 */
- 	struct regulator_init_data *regulators[PM800_ID_RG_MAX];
- 	unsigned int num_regulators;
--	int irq_mode;		/* Clear interrupt by read/write(0/1) */
-+	int irq_clr_on_wr;		/* Clear interrupt by read/write(0/1) */
- 	int batt_det;		/* enable/disable */
- 	int (*plat_config)(struct pm80x_chip *chip,
- 				struct pm80x_platform_data *pdata);
--- 
-1.9.1
-
+Thanks,
+Paul.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+>>   mmc: mediatek: Add PM support for MMC driver
+>>
+>> Eddie Huang (2):
+>>   arm64: dts: mediatek: Add MT8173 MMC dts
+>>   arm64: mediatek: Add Mediatek MMC support in defconfig
+>>
+>> Yingjoe Chen (2):
+>>   ARM: mediatek: dts: Add emmc support to mt8135
+>>   ARM: multi_v7_defconfig: Enable Mediatek MMC support multi-v7
+>>
+>>  Documentation/devicetree/bindings/mmc/mtk-sd.txt |   32 +
+>>  arch/arm/boot/dts/mt8135-evbp1.dts               |  158 +++
+>>  arch/arm/boot/dts/mt8135.dtsi                    |   55 +
+>>  arch/arm/configs/multi_v7_defconfig              |    1 +
+>>  arch/arm64/boot/dts/mediatek/mt8173-evb.dts      |  126 ++
+>>  arch/arm64/boot/dts/mediatek/mt8173.dtsi         |   45 +-
+>>  arch/arm64/configs/defconfig                     |    1 +
+>>  drivers/mmc/host/Kconfig                         |    8 +
+>>  drivers/mmc/host/Makefile                        |    1 +
+>>  drivers/mmc/host/mtk-sd.c                        | 1461 ++++++++++++++++++++++
+>>  include/linux/mmc/core.h                         |    1 +
+>>  11 files changed, 1888 insertions(+), 1 deletion(-)
+>>  create mode 100644 Documentation/devicetree/bindings/mmc/mtk-sd.txt
+>>  create mode 100644 drivers/mmc/host/mtk-sd.c
+>>
+>> --
+>> 1.8.1.1.dirty
+>>
+>
+> Hi Chaotian,
+>
+> I have applied patch 1->3 for my next branch, which thus includes the
+> mmc driver parts. I could potentially also pick the ARM patches, but
+> then those needs to be acked from the ARM SoC folks.
+>
+> Kind regards
+> Uffe
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
