@@ -1,214 +1,141 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH v4 1/6] mtd: nand: vf610_nfc: Freescale NFC for VF610,
- MPC5125 and others
-Date: Wed, 17 Jun 2015 15:02:03 +0200
-Message-ID: <32a7fe8d8df87dfe35ea50c582077c78@agner.ch>
-References: <1427300909-20825-1-git-send-email-stefan@agner.ch>
- <1427300909-20825-2-git-send-email-stefan@agner.ch>
- <20150603130825.GA23991@breakpoint.cc>
- <b3b09b4b8c97cbfc88fa0d5fdc5e40cd@agner.ch>
- <20150609200751.GC5720@breakpoint.cc>
+From: "Dov Levenglick" <dovl@codeaurora.org>
+Subject: Re: [PATCH v2 4/4] scsi: ufs: probe and init of variant driver from
+ the platform device
+Date: Wed, 17 Jun 2015 13:17:20 -0000
+Message-ID: <c650d1bd7228cb0ebb31da7d67baaeaa.squirrel@www.codeaurora.org>
+References: <1433324255-27510-1-git-send-email-ygardi@codeaurora.org>
+    <1433324255-27510-5-git-send-email-ygardi@codeaurora.org>
+    <CAC5umyis6HU06KU-aSGoy6mCt-u+5Pz16nDk1qHrcsTnFo_2hA@mail.gmail.com>
+    <763dbc7b708b5d5b18ce0b5adcc41016.squirrel@www.codeaurora.org>
+    <CAC5umyhWTLe_K+q9U=4M4N4Yu4Hp7hUxy4QiL=ch=JmYEiMBnQ@mail.gmail.com>
+    <68c91f08f2be6c84055a303ca8aa3fe0.squirrel@www.codeaurora.org>
+    <CAL_JsqKYqZyayzN3imi55EFP=ao4NTSgfXjP5J5rSxMAg4ZSMA@mail.gmail.com>
+    <bfade46f9d953e10240acb835105b81d.squirrel@www.codeaurora.org>
+    <CAL_Jsq+SWq9=xTjVvQH2tMoq=g_rjk44A7T4TMFKvDiUp_ahCg@mail.gmail.com>
+    <6934f39953e011404dd5d39073e6ebba.squirrel@www.codeaurora.org>
+    <CAL_Jsq+xQqAopQ8mYXbnED=3ioH+8Km9jtDZDeP_18U6Edfo5Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150609200751.GC5720@breakpoint.cc>
+In-Reply-To: <CAL_Jsq+xQqAopQ8mYXbnED=3ioH+8Km9jtDZDeP_18U6Edfo5Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Andrzej Siewior <sebastian@breakpoint.cc>
-Cc: dwmw2@infradead.org, computersforpeace@gmail.com, mark.rutland@arm.com, boris.brezillon@free-electrons.com, aaron@tastycactus.com, marb@ixxat.de, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-mtd@lists.infradead.org, kernel@pengutronix.de, galak@codeaurora.org, shawn.guo@linaro.org, linux-arm-kernel@lists.infradead.org, bpringlemeir@nbsps.com
+To: Rob Herring <robherring2@gmail.com>
+Cc: Dov Levenglick <dovl@codeaurora.org>, Yaniv Gardi <ygardi@codeaurora.org>, Akinobu Mita <akinobu.mita@gmail.com>, Jej B <james.bottomley@hansenpartnership.com>, LKML <linux-kernel@vger.kernel.org>, linux-scsi@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Santosh Y <santoshsy@gmail.com>, linux-scsi-owner@vger.kernel.org, Subhash Jadavani <subhashj@codeaurora.org>, Paul Bolle <pebolle@tiscali.nl>, Gilad Broner <gbroner@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinayak Holikatti <vinholikatti@gmail.com>, "James E.J. Bottomley" <jbottomley@odin.com>, Dolev Raviv <draviv@codeaurora.org>, Christoph Hellwig <hch@lst.de>, Sujit Reddy Thumma <sthumma@codeaurora>
 List-Id: devicetree@vger.kernel.org
 
-On 2015-06-09 22:07, Sebastian Andrzej Siewior wrote:
-> On 2015-06-03 17:05:16 [+0200], Stefan Agner wrote:
->> As Boris guessed correctly, the reason I used the raw variant was due to
->> performance improvements due to the barrier. However, I will use
-> 
-> yeah, do you have any numbers by chance?
-> 
+> On Wed, Jun 17, 2015 at 2:42 AM, Dov Levenglick <dovl@codeaurora.org>
+> wrote:
+>>> On Tue, Jun 9, 2015 at 12:53 AM, Dov Levenglick <dovl@codeaurora.org>
+>>> wrote:
+>>>>> On Sun, Jun 7, 2015 at 10:32 AM,  <ygardi@codeaurora.org> wrote:
+>>>>>>> 2015-06-05 5:53 GMT+09:00  <ygardi@codeaurora.org>:
+>>>
+>>> [...]
+>>>
+>>>>>> If ufshcd-pltfrm driver is loaded before ufs-qcom, (what actually
+>>>>>> happens
+>>>>>> always), then the calling to of_platform_populate() which is added,
+>>>>>> guarantees that ufs-qcom probe will be called and finish, before
+>>>>>> ufshcd_pltfrm probe continues.
+>>>>>> so ufs_variant device is always there, and ready.
+>>>>>> I think it means we are safe - since either way, we make sure
+>>>>>> ufs-qcom
+>>>>>> probe will be called and finish before dealing with ufs_variant
+>>>>>> device
+>>>>>> in
+>>>>>> ufshcd_pltfrm probe.
+>>>>>
+>>>>> This is due to the fact that you have 2 platform drivers. You should
+>>>>> only have 1 (and 1 node). If you really think you need 2, then you
+>>>>> should do like many other common *HCIs do and make the base UFS
+>>>>> driver
+>>>>> a set of library functions that drivers can use or call. Look at
+>>>>> EHCI,
+>>>>> AHCI, SDHCI, etc. for inspiration.
+>>>>
+>>>> Hi Rob,
+>>>> We did look at SDHCI and decided to go with this design due to its
+>>>> simplicity and lack of library functions. Yaniv described the proper
+>>>> flow
+>>>> of probing and, as we understand things, it is guaranteed to work as
+>>>> designed.
+>>>>
+>>>> Furthermore, the design of having a subcore in the dts is used in the
+>>>> Linux kernel. Please have a look at drivers/usb/dwc3 where - as an
+>>>> example
+>>>> - both dwc3-msm and dwc3-exynox invoke the probing function in core.c
+>>>> (i.e. the shared underlying Synopsys USB dwc3 core) by calling
+>>>> of_platform_populate().
+>>>
+>>> That binding has the same problem. Please don't propagate that. There
+>>> is no point in a sub-node in this case.
+>>>
+>>>> Do you see a benefit in the SDHCi implementation?
+>>>
+>>> Yes, it does not let the kernel driver design dictate the hardware
+>>> description.
+>>>
+>>> Rob
+>>>
+>>
+>> Hi Rob,
+>> We appear to be having a philosophical disagreement on the practicality
+>> of
+>> designing the ufshcd variant's implementation - in other words, we
+>> disagree on the proper design pattern to follow here.
+>> If I understand correctly, you are concerned with a design pattern
+>> wherein
+>> a generic implementation is wrapped - at the device-tree level - in a
+>> variant implementation. The main reason for your concern is that you
+>> don't
+>> want the "kernel driver design dictate the hardware description".
+>>
+>> We considered this point when we suggested our implementation (both
+>> before
+>> and after you raised it) and reached the conclusion that - while an
+>> important consideration - it should not be the prevailing one. I believe
+>> that you will agree once you read the reasoning. What guided us was the
+>> following:
+>> 1. Keep our change minimal.
+>> 2. Keep our patch in line with known design patterns in the kernel.
+>> 3. Have our patch extend the existing solution rather than reinvent it.
+>>
+>> It is the 3rd point that is most important to this discussion, since UFS
+>> has already been deployed by various vendors and is used by OEM.
+>> Changing
+>> ufshcd to a set of library functions that would be called by variants
+>> would necessarily introduce a significant change to the code flow in
+>> many
+>> places and would pose a backward compatibility issue. By using the tried
+>> and tested pattern of subnodes in the dts we were able to keep the
+>> change
+>> simple, succinct, understandable, maintainable and backward compatible.
+>> In
+>> fact, the entire logic tying of the generic implementation to the
+>> variant
+>> takes ~20 lines of code - both short and elegant.
+>
+> The DWC3 binding does this and nothing else that I'm aware of. This
+> hardly makes for a common pattern. If you really want to split this to
+> 2 devices, you can create platform devices without having a DT node.
+>
+> If you want to convince me this is the right approach for the binding
+> then you need to convince me the h/w is actually split this way and
+> there is functionality separate from the licensed IP.
+>
+> Rob
+>
 
-Just reevaluated the "performance optimizations". On a VF610 SoC (with
-L2 cache) the improvements increase performance by 2.5% and below. On a
-VF500 SoC (without L2 cache) it seems to have slightly more impact, up
-to 4%. Overall, it seems to influence write more than read.
+I don't understand the challenge that you just posed. It is clear from our
+implementation that there is the standard and variants thereof. I know
+this to be a fact on the processors that we are working on.
 
-Back then, when I implemented the improvements it certainly had a bigger
-impact. I don't have strong opinion on that...
+Furthermore, although I didn't check each and every result in the search,
+of_platform_populate is used in more locations than dwc3 and at least a
+few of them seem have be using the same paradigm as ours
+(http://lxr.free-electrons.com/ident?i=of_platform_populate).
 
-
-=> VF610, with relaxed, optimized
-[   45.554246] 
-[   45.555934] =================================================
-[   45.561762] mtd_speedtest: MTD device: 3
-[   45.576627] mtd_speedtest: MTD device size 104857600, eraseblock size
-131072, page size 2048, count of eraseblocks 800, pages per eraseblock
-64, OOB size 64
-[   45.595350] mtd_test: scanning for bad eraseblocks
-[   45.602177] mtd_test: scanned 800 eraseblocks, 0 are bad
-[   46.404682] mtd_speedtest: testing eraseblock write speed
-[   65.650704] mtd_speedtest: eraseblock write speed is 5344 KiB/s
-[   65.656738] mtd_speedtest: testing eraseblock read speed
-[   73.480687] mtd_speedtest: eraseblock read speed is 13118 KiB/s
-[   74.264593] mtd_speedtest: testing page write speed
-[   94.444190] mtd_speedtest: page write speed is 5087 KiB/s
-[   94.449674] mtd_speedtest: testing page read speed
-[  102.760387] mtd_speedtest: page read speed is 12343 KiB/s
-[  103.544838] mtd_speedtest: testing 2 page write speed
-[  123.257753] mtd_speedtest: 2 page write speed is 5199 KiB/s
-[  123.263440] mtd_speedtest: testing 2 page read speed
-[  131.171313] mtd_speedtest: 2 page read speed is 12963 KiB/s
-[  131.176981] mtd_speedtest: Testing erase speed
-[  131.968196] mtd_speedtest: erase speed is 130279 KiB/s
-[  131.973442] mtd_speedtest: Testing 2x multi-block erase speed
-[  132.153410] mtd_speedtest: 2x multi-block erase speed is 585142 KiB/s
-[  132.159924] mtd_speedtest: Testing 4x multi-block erase speed
-[  132.334864] mtd_speedtest: 4x multi-block erase speed is 609523 KiB/s
-[  132.341369] mtd_speedtest: Testing 8x multi-block erase speed
-[  132.516091] mtd_speedtest: 8x multi-block erase speed is 609523 KiB/s
-[  132.522602] mtd_speedtest: Testing 16x multi-block erase speed
-[  132.695800] mtd_speedtest: 16x multi-block erase speed is 613173
-KiB/s
-[  132.702389] mtd_speedtest: Testing 32x multi-block erase speed
-[  132.874831] mtd_speedtest: 32x multi-block erase speed is 616867
-KiB/s
-[  132.881445] mtd_speedtest: Testing 64x multi-block erase speed
-[  133.053647] mtd_speedtest: 64x multi-block erase speed is 616867
-KiB/s
-[  133.060267] mtd_speedtest: finished
-[  133.063812] =================================================
-
-=> VF610, without relaxed and using accessors
-vf610_nfc_set/vf610_nfc_set_field and friends:
-[   60.015797] 
-[   60.017481] =================================================
-[   60.023320] mtd_speedtest: MTD device: 3
-[   60.037232] mtd_speedtest: MTD device size 104857600, eraseblock size
-131072, page size 2048, count of eraseblocks 800, pages per eraseblock
-64, OOB size 64
-[   60.066359] mtd_test: scanning for bad eraseblocks
-[   60.074016] mtd_test: scanned 800 eraseblocks, 0 are bad
-[   60.286730] mtd_speedtest: testing eraseblock write speed
-[   79.679892] mtd_speedtest: eraseblock write speed is 5281 KiB/s
-[   79.685930] mtd_speedtest: testing eraseblock read speed
-[   87.563845] mtd_speedtest: eraseblock read speed is 13008 KiB/s
-[   88.353390] mtd_speedtest: testing page write speed
-[  108.984528] mtd_speedtest: page write speed is 4965 KiB/s
-[  108.990041] mtd_speedtest: testing page read speed
-[  117.012486] mtd_speedtest: page read speed is 12774 KiB/s
-[  117.801663] mtd_speedtest: testing 2 page write speed
-[  137.674009] mtd_speedtest: 2 page write speed is 5154 KiB/s
-[  137.679696] mtd_speedtest: testing 2 page read speed
-[  145.643303] mtd_speedtest: 2 page read speed is 12865 KiB/s
-[  145.648982] mtd_speedtest: Testing erase speed
-[  146.444423] mtd_speedtest: erase speed is 129456 KiB/s
-[  146.449669] mtd_speedtest: Testing 2x multi-block erase speed
-[  146.629634] mtd_speedtest: 2x multi-block erase speed is 588505 KiB/s
-[  146.636142] mtd_speedtest: Testing 4x multi-block erase speed
-[  146.813027] mtd_speedtest: 4x multi-block erase speed is 598830 KiB/s
-[  146.819577] mtd_speedtest: Testing 8x multi-block erase speed
-[  146.996654] mtd_speedtest: 8x multi-block erase speed is 595348 KiB/s
-[  147.003192] mtd_speedtest: Testing 16x multi-block erase speed
-[  147.178085] mtd_speedtest: 16x multi-block erase speed is 609523
-KiB/s
-[  147.184703] mtd_speedtest: Testing 32x multi-block erase speed
-[  147.358306] mtd_speedtest: 32x multi-block erase speed is 613173
-KiB/s
-[  147.364929] mtd_speedtest: Testing 64x multi-block erase speed
-[  147.540505] mtd_speedtest: 64x multi-block erase speed is 605917
-KiB/s
-[  147.547106] mtd_speedtest: finished
-[  147.558336] =================================================
-
-=> VF500, with relaxed, optimized
-[   42.878713] 
-[   42.880775] =================================================
-[   42.886589] mtd_speedtest: MTD device: 3
-[   42.933491] mtd_speedtest: MTD device size 132120576, eraseblock size
-131072, page size 2048, count of eraseblocks 1008, pages per eraseblock
-64, OOB size 64
-[   42.981413] mtd_test: scanning for bad eraseblocks
-[   42.987505] mtd_test: block 142 is bad
-[   43.001342] mtd_test: block 1004 is bad
-[   43.024184] mtd_test: block 1005 is bad
-[   43.029184] mtd_test: block 1006 is bad
-[   43.045070] mtd_test: block 1007 is bad
-[   43.048975] mtd_test: scanned 1008 eraseblocks, 5 are bad
-[   43.854654] mtd_speedtest: testing eraseblock write speed
-[   68.873797] mtd_speedtest: eraseblock write speed is 5150 KiB/s
-[   68.879915] mtd_speedtest: testing eraseblock read speed
-[   80.409787] mtd_speedtest: eraseblock read speed is 11171 KiB/s
-[   81.053244] mtd_speedtest: testing page write speed
-[  109.851897] mtd_speedtest: page write speed is 4462 KiB/s
-[  109.857496] mtd_speedtest: testing page read speed
-[  121.964415] mtd_speedtest: page read speed is 10616 KiB/s
-[  122.603068] mtd_speedtest: testing 2 page write speed
-[  148.929905] mtd_speedtest: 2 page write speed is 4880 KiB/s
-[  148.935696] mtd_speedtest: testing 2 page read speed
-[  160.908554] mtd_speedtest: 2 page read speed is 10731 KiB/s
-[  160.914236] mtd_speedtest: Testing erase speed
-[  161.579429] mtd_speedtest: erase speed is 194226 KiB/s
-[  161.584680] mtd_speedtest: Testing 2x multi-block erase speed
-[  162.226599] mtd_speedtest: 2x multi-block erase speed is 201861 KiB/s
-[  162.233153] mtd_speedtest: Testing 4x multi-block erase speed
-[  162.870923] mtd_speedtest: 4x multi-block erase speed is 202818 KiB/s
-[  162.877591] mtd_speedtest: Testing 8x multi-block erase speed
-[  163.503176] mtd_speedtest: 8x multi-block erase speed is 207070 KiB/s
-[  163.509826] mtd_speedtest: Testing 16x multi-block erase speed
-[  164.138392] mtd_speedtest: 16x multi-block erase speed is 206405
-KiB/s
-[  164.145128] mtd_speedtest: Testing 32x multi-block erase speed
-[  164.768705] mtd_speedtest: 32x multi-block erase speed is 207741
-KiB/s
-[  164.775475] mtd_speedtest: Testing 64x multi-block erase speed
-[  165.394716] mtd_speedtest: 64x multi-block erase speed is 209094
-KiB/s
-[  165.401347] mtd_speedtest: finished
-[  165.415581] =================================================
-
-=> VF500, without relaxed and using accessors
-[   93.466642] 
-[   93.468578] =================================================
-[   93.474563] mtd_speedtest: MTD device: 3
-[   93.510699] mtd_speedtest: MTD device size 132120576, eraseblock size
-131072, page size 2048, count of eraseblocks 1008, pages per eraseblock
-64, OOB size 64
-[   93.534490] mtd_test: scanning for bad eraseblocks
-[   93.553066] mtd_test: block 142 is bad
-[   93.586518] mtd_test: block 1004 is bad
-[   93.590559] mtd_test: block 1005 is bad
-[   93.595654] mtd_test: block 1006 is bad
-[   93.607090] mtd_test: block 1007 is bad
-[   93.630667] mtd_test: scanned 1008 eraseblocks, 5 are bad
-[   94.457510] mtd_speedtest: testing eraseblock write speed
-[  120.495695] mtd_speedtest: eraseblock write speed is 4932 KiB/s
-[  120.501726] mtd_speedtest: testing eraseblock read speed
-[  131.937006] mtd_speedtest: eraseblock read speed is 11233 KiB/s
-[  132.576468] mtd_speedtest: testing page write speed
-[  160.663012] mtd_speedtest: page write speed is 4572 KiB/s
-[  160.668608] mtd_speedtest: testing page read speed
-[  172.624020] mtd_speedtest: page read speed is 10743 KiB/s
-[  173.263221] mtd_speedtest: testing 2 page write speed
-[  199.811255] mtd_speedtest: 2 page write speed is 4837 KiB/s
-[  199.816933] mtd_speedtest: testing 2 page read speed
-[  211.558975] mtd_speedtest: 2 page read speed is 10939 KiB/s
-[  211.564657] mtd_speedtest: Testing erase speed
-[  212.227608] mtd_speedtest: erase speed is 194816 KiB/s
-[  212.232951] mtd_speedtest: Testing 2x multi-block erase speed
-[  212.875607] mtd_speedtest: 2x multi-block erase speed is 201544 KiB/s
-[  212.882254] mtd_speedtest: Testing 4x multi-block erase speed
-[  213.521870] mtd_speedtest: 4x multi-block erase speed is 202818 KiB/s
-[  213.528471] mtd_speedtest: Testing 8x multi-block erase speed
-[  214.154043] mtd_speedtest: 8x multi-block erase speed is 207070 KiB/s
-[  214.160690] mtd_speedtest: Testing 16x multi-block erase speed
-[  214.785910] mtd_speedtest: 16x multi-block erase speed is 207405
-KiB/s
-[  214.792652] mtd_speedtest: Testing 32x multi-block erase speed
-[  215.418150] mtd_speedtest: 32x multi-block erase speed is 207405
-KiB/s
-[  215.424883] mtd_speedtest: Testing 64x multi-block erase speed
-[  216.051367] mtd_speedtest: 64x multi-block erase speed is 206737
-KiB/s
-[  216.058056] mtd_speedtest: finished
-[  216.069363] =================================================
-
---
-Stefan
+QUALCOMM ISRAEL, on behalf of Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
