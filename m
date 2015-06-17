@@ -1,120 +1,128 @@
 From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v4 07/23] usb: common: add API to get usb otg features
- from device tree
-Date: Wed, 17 Jun 2015 11:45:45 +0300
-Message-ID: <20150617114545.1bd8b8bd@rockdesk>
+Subject: Re: [PATCH v4 10/23] usb: gadget: add usb otg descriptor allocate
+ and init interface
+Date: Wed, 17 Jun 2015 11:51:36 +0300
+Message-ID: <20150617115136.61c567ea@rockdesk>
 References: <1434519835-27745-1-git-send-email-jun.li@freescale.com>
-	<1434519835-27745-8-git-send-email-jun.li@freescale.com>
+	<1434519835-27745-11-git-send-email-jun.li@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1434519835-27745-8-git-send-email-jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+In-Reply-To: <1434519835-27745-11-git-send-email-jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
-On Wed, 17 Jun 2015 13:43:39 +0800
+On Wed, 17 Jun 2015 13:43:42 +0800
 Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
 
-> Check property of usb hardware to get otg version and if SRP, HNP and ADP
-> are supported.
+> Allocate usb otg descriptor and initialize it according to gadget's otg
+> capabilities, if usb_otg_caps is not set, keep settings as current gadget
+> drivers. With this 2 new interfaces, gadget can use usb_otg_descriptor
+> for OTG 1.x, and usb_otg20_descriptor for OTG 2.0 or above, and otg
+> features can be decided by the combination of usb hardware property
+> and driver config.
 > 
 > Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 > ---
->  drivers/usb/common/common.c | 29 +++++++++++++++++++++++++++++
->  include/linux/usb/of.h      |  7 +++++++
->  2 files changed, 36 insertions(+)
+>  drivers/usb/gadget/config.c | 56 +++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/usb/gadget.h  |  4 ++++
+>  2 files changed, 60 insertions(+)
 > 
-> diff --git a/drivers/usb/common/common.c b/drivers/usb/common/common.c
-> index b530fd4..b846172 100644
-> --- a/drivers/usb/common/common.c
-> +++ b/drivers/usb/common/common.c
-> @@ -154,6 +154,35 @@ bool of_usb_host_tpl_support(struct device_node *np)
->  	return false;
+> diff --git a/drivers/usb/gadget/config.c b/drivers/usb/gadget/config.c
+> index 34e12fc..0fafa7a 100644
+> --- a/drivers/usb/gadget/config.c
+> +++ b/drivers/usb/gadget/config.c
+> @@ -20,6 +20,7 @@
+>  #include <linux/usb/ch9.h>
+>  #include <linux/usb/gadget.h>
+>  #include <linux/usb/composite.h>
+> +#include <linux/usb/otg.h>
+>  
+>  /**
+>   * usb_descriptor_fillbuf - fill buffer with descriptors
+> @@ -195,3 +196,58 @@ void usb_free_all_descriptors(struct usb_function *f)
+>  	usb_free_descriptors(f->ss_descriptors);
 >  }
->  EXPORT_SYMBOL_GPL(of_usb_host_tpl_support);
+>  EXPORT_SYMBOL_GPL(usb_free_all_descriptors);
 > +
-> +/**
-> + * of_usb_get_otg_caps - to get usb otg capabilities according to
-> + * the passed properties in DT.
-> + * @np: Pointer to the given device_node
-> + * @otg_caps: Pointer to the target usb_otg_caps to be set
-> + *
-> + * The function gets and sets the otg capabilities
-> + */
-> +void of_usb_get_otg_caps(struct device_node *np, struct usb_otg_caps *otg_caps)
+> +struct usb_descriptor_header *usb_otg_descriptor_alloc(
+> +				struct usb_gadget *gadget)
 > +{
-> +	u32 otg_rev;
+> +	struct usb_descriptor_header *otg_desc;
+> +	unsigned length = 0;
 > +
-> +	if (!otg_caps)
-> +		return;
+> +	if (gadget->otg_caps && (gadget->otg_caps->otg_rev >= 0x0200))
+> +		length = sizeof(struct usb_otg20_descriptor);
+> +	else
+> +		length = sizeof(struct usb_otg_descriptor);
 > +
-> +	if (!of_property_read_u32(np, "otg-rev", &otg_rev)) {
-> +		otg_caps->otg_rev = otg_rev;
-> +		if (!of_find_property(np, "hnp-disable", NULL))
-> +			otg_caps->hnp_support = true;
-> +		if (!of_find_property(np, "srp-disable", NULL))
-> +			otg_caps->hnp_support = true;
+> +	otg_desc = kzalloc(length, GFP_KERNEL);
+> +	return otg_desc;
+> +}
+> +EXPORT_SYMBOL_GPL(usb_otg_descriptor_alloc);
+> +
+> +int usb_otg_descriptor_init(struct usb_gadget *gadget,
+> +		struct usb_descriptor_header *otg_desc)
+> +{
+> +	struct usb_otg_descriptor *otg1x_desc;
+> +	struct usb_otg20_descriptor *otg20_desc;
+> +	struct usb_otg_caps *otg_caps = gadget->otg_caps;
+> +	u8 otg_attributes = 0;
+> +
+> +	if (!otg_desc)
+> +		return -EINVAL;
+> +
+> +	if (otg_caps && otg_caps->otg_rev) {
 
-srp_support = true;
+OK now I see why usb_gadget->otg_caps needs to be a pointer. :)
 
-> +		if (!of_find_property(np, "adp-disable", NULL) &&
-> +					(otg_caps->otg_rev >= 0x0200))
-> +			otg_caps->hnp_support = true;
-
-adp_support = true;
-
+> +		if (otg_caps->hnp_support)
+> +			otg_attributes |= USB_OTG_HNP;
+> +		if (otg_caps->srp_support)
+> +			otg_attributes |= USB_OTG_SRP;
+> +		if (otg_caps->adp_support && (otg_caps->otg_rev >= 0x0200))
+> +			otg_attributes |= USB_OTG_ADP;
+> +	} else {
+> +		otg_attributes = USB_OTG_SRP | USB_OTG_HNP;
 > +	}
-
-I think we are loosing information here.
-The DT disable flags get changed to enable flags (xyz_support)
-and after this we can't really tell if the device tree really
-wanted us to disable the feature or enable it based on
-otg_rev/controller capabilities.
-
-Why not pass controller caps in otg_caps and then disable the
-flags if requested from DT?
-	if (of_find_property(np, "foo-disbale", NULL))
-		otg_caps->foo_support = false;
-
-The controller can still override anything afterwards
-if it things something is wrong.
-My guess is most controllers won't have to.
-
-> +}
-> +EXPORT_SYMBOL_GPL(of_usb_get_otg_caps);
 > +
->  #endif
->  
->  MODULE_LICENSE("GPL");
-> diff --git a/include/linux/usb/of.h b/include/linux/usb/of.h
-> index cfe0528..bbf302b9 100644
-> --- a/include/linux/usb/of.h
-> +++ b/include/linux/usb/of.h
-> @@ -15,6 +15,8 @@
->  enum usb_dr_mode of_usb_get_dr_mode(struct device_node *np);
->  enum usb_device_speed of_usb_get_maximum_speed(struct device_node *np);
->  bool of_usb_host_tpl_support(struct device_node *np);
-> +void of_usb_get_otg_caps(struct device_node *np,
-> +			struct usb_otg_caps *otg_caps);
->  #else
->  static inline enum usb_dr_mode of_usb_get_dr_mode(struct device_node *np)
->  {
-> @@ -30,6 +32,11 @@ static inline bool of_usb_host_tpl_support(struct device_node *np)
->  {
->  	return false;
->  }
-> +static inline void of_usb_get_otg_caps(struct device_node *np,
-> +				struct usb_otg_caps *otg_caps)
-> +{
+> +	if (otg_caps && (otg_caps->otg_rev >= 0x0200)) {
+> +		otg20_desc = (struct usb_otg20_descriptor *)otg_desc;
+> +		otg20_desc->bLength = sizeof(struct usb_otg20_descriptor);
+> +		otg20_desc->bDescriptorType = USB_DT_OTG;
+> +		otg20_desc->bmAttributes = otg_attributes;
+> +		otg20_desc->bcdOTG = cpu_to_le16(otg_caps->otg_rev);
+> +	} else {
+> +		otg1x_desc = (struct usb_otg_descriptor *)otg_desc;
+> +		otg1x_desc->bLength = sizeof(struct usb_otg_descriptor);
+> +		otg1x_desc->bDescriptorType = USB_DT_OTG;
+> +		otg1x_desc->bmAttributes = otg_attributes;
+> +	}
 > +
+> +	return 0;
 > +}
->  #endif
+> +EXPORT_SYMBOL_GPL(usb_otg_descriptor_init);
+> diff --git a/include/linux/usb/gadget.h b/include/linux/usb/gadget.h
+> index 6b39087..5f65bd2 100644
+> --- a/include/linux/usb/gadget.h
+> +++ b/include/linux/usb/gadget.h
+> @@ -1004,6 +1004,10 @@ int usb_assign_descriptors(struct usb_function *f,
+>  		struct usb_descriptor_header **ss);
+>  void usb_free_all_descriptors(struct usb_function *f);
 >  
->  #if IS_ENABLED(CONFIG_OF) && IS_ENABLED(CONFIG_USB_SUPPORT)
+> +struct usb_descriptor_header *usb_otg_descriptor_alloc(
+> +				struct usb_gadget *gadget);
+> +int usb_otg_descriptor_init(struct usb_gadget *gadget,
+> +		struct usb_descriptor_header *otg_desc);
+>  /*-------------------------------------------------------------------------*/
+>  
+>  /* utility to simplify map/unmap of usb_requests to/from DMA */
+
+Reviewed-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
 
 cheers,
 -roger
