@@ -1,87 +1,101 @@
-From: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 2/3] spi: mediatek: Add spi bus for Mediatek MT8173
-Date: Wed, 17 Jun 2015 17:08:03 +0800
-Message-ID: <1434532083.19346.27.camel@mtksdaap41>
-References: <1431075343-7887-1-git-send-email-leilk.liu@mediatek.com>
-	 <1431075343-7887-3-git-send-email-leilk.liu@mediatek.com>
-	 <20150508175306.GG2761@sirena.org.uk> <1431434356.2128.9.camel@mhfsdcap03>
-	 <20150512160540.GB3066@sirena.org.uk> <1431675522.2128.13.camel@mhfsdcap03>
-	 <20150515092543.GY2761@sirena.org.uk>
-	 <1433758546.19786.16.camel@mtksdaap41>
-	 <20150608175927.GO14071@sirena.org.uk>
-	 <1433844321.16178.6.camel@mtksdaap41>
-	 <20150609103951.GA14071@sirena.org.uk>
-	 <1433923569.22080.1.camel@mtksdaap41>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v4 13/23] usb: gadget: acm_ms: allocate and init otg
+ descriptor by otg capabilities
+Date: Wed, 17 Jun 2015 12:11:01 +0300
+Message-ID: <20150617121101.2cd431c5@rockdesk>
+References: <1434519835-27745-1-git-send-email-jun.li@freescale.com>
+	<1434519835-27745-14-git-send-email-jun.li@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1433923569.22080.1.camel@mtksdaap41>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Leilk Liu =?UTF-8?Q?=28=E5=88=98=E7=A3=8A=29?= <Leilk.Liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, HongZhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <s.hauer@pengutron>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1434519835-27745-14-git-send-email-jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
 
-On Wed, 2015-06-10 at 16:06 +0800, Eddie Huang wrote:
-> On Tue, 2015-06-09 at 11:39 +0100, Mark Brown wrote:
-> > On Tue, Jun 09, 2015 at 06:05:21PM +0800, Eddie Huang wrote:
-> > 
-> > > --- a/drivers/spi/spi.c
-> > > +++ b/drivers/spi/spi.c
-> > > @@ -539,8 +539,8 @@ static int __spi_map_msg(struct spi_master *master,
-> > > struct spi_message *msg)
-> > >         if (!master->can_dma)
-> > >                 return 0;
-> > 
-> > > -       tx_dev = master->dma_tx->device->dev;
-> > > -       rx_dev = master->dma_rx->device->dev;
-> > > +       tx_dev = master->dma_tx ? master->dma_tx->device->dev :
-> > > master->dev;
-> > > +       rx_dev = master->dma_rx ? master->dma_rx->device->dev : master-
-> > 
-> > > Is this what you want ? Actually, I don't like first one at all.
-> > 
-> > Not quite what I'd been thinking of - we can't just pick the device in
-> > the core safely, the device might be a MFD or have some other
-> > restriction that needs us to use a separate struct device.  However most
-> > of those cases are likely to point towards implementing a dmaengine
-> > device so probably the above will work for most cases and is fine.  Can
-> > you send a proper patch please?
+On Wed, 17 Jun 2015 13:43:45 +0800
+Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+
+> Allocate and initialize usb otg descriptor according to gadget otg
+> capabilities, add it for each usb configurations, free it while
+> composite unbind. If otg capability is not defined, keep its otg
+
+there is no composite unbind in acm_ms.c.
+
+> descriptor unchanged.
 > 
+> Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+>  drivers/usb/gadget/legacy/acm_ms.c | 29 ++++++++++++++---------------
+>  1 file changed, 14 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/usb/gadget/legacy/acm_ms.c b/drivers/usb/gadget/legacy/acm_ms.c
+> index 1194b09..f9b7b31 100644
+> --- a/drivers/usb/gadget/legacy/acm_ms.c
+> +++ b/drivers/usb/gadget/legacy/acm_ms.c
+> @@ -58,21 +58,7 @@ static struct usb_device_descriptor device_desc = {
+>  	/*.bNumConfigurations =	DYNAMIC*/
+>  };
+>  
+> -static struct usb_otg_descriptor otg_descriptor = {
+> -	.bLength =		sizeof otg_descriptor,
+> -	.bDescriptorType =	USB_DT_OTG,
+> -
+> -	/*
+> -	 * REVISIT SRP-only hardware is possible, although
+> -	 * it would not be called "OTG" ...
+> -	 */
+> -	.bmAttributes =		USB_OTG_SRP | USB_OTG_HNP,
+> -};
+> -
+> -static const struct usb_descriptor_header *otg_desc[] = {
+> -	(struct usb_descriptor_header *) &otg_descriptor,
+> -	NULL,
+> -};
+> +static const struct usb_descriptor_header *otg_desc[2];
+>  
+>  /* string IDs are assigned dynamically */
+>  static struct usb_string strings_dev[] = {
+> @@ -127,6 +113,16 @@ static int acm_ms_do_config(struct usb_configuration *c)
+>  	int	status;
+>  
+>  	if (gadget_is_otg(c->cdev->gadget)) {
+> +		if (!otg_desc[0]) {
+> +			struct usb_descriptor_header *usb_desc;
+> +
+> +			usb_desc = usb_otg_descriptor_alloc(c->cdev->gadget);
+> +			if (!usb_desc)
+> +				return -ENOMEM;
+> +			usb_otg_descriptor_init(c->cdev->gadget, usb_desc);
+> +			otg_desc[0] = usb_desc;
+> +			otg_desc[1] = NULL;
 
-After further investigate, we found problem when use can_dma() to
-implement spi driver.
+I think it is symmetric to put this code in acm_ms_bind()
+as you are freeing the descriptor in acm_ms_unbind().
 
-If can_dma() return true in __spi_map_msg() function, it will map data
-buffer to sg_table, then pass this sg_table to transfer function. In
-transfer function, spi hardware can do tx and rx at the same time (full
-duplex), and the data size must be the same.
+Same applies for all other gadgets as well.
 
-Here comes the problem, although total length of tx, rx is the same,
-each entry in rx and tx scatterlist may not be the same (in the case
-data buffer allocate from vmalloc). Other vendor have dmaengine driver
-to send entry-by-entry automatically, so it is ok due to total length is
-the same.But mediatek hw can only send tx and rx scatterlist entry one
-by on, which means in full duplex, mediatek SPI hardware need send each
-entry separately, will cause full duplex fail because tx/rx entry size
-or entry number may not be the same.
+> +		}
+>  		c->descriptors = otg_desc;
+>  		c->bmAttributes |= USB_CONFIG_ATT_WAKEUP;
+>  	}
+> @@ -255,6 +251,9 @@ static int acm_ms_unbind(struct usb_composite_dev *cdev)
+>  	usb_put_function_instance(fi_msg);
+>  	usb_put_function(f_acm);
+>  	usb_put_function_instance(f_acm_inst);
+> +	kfree(otg_desc[0]);
+> +	otg_desc[0] = NULL;
+> +
+>  	return 0;
+>  }
+>  
 
-The problem is not dma map discuss earlier, it is mediatek spi hardware
-limitation that can't support scatterlist dma transfer in full-duplex
-mode. We can only support both tx and rx has the same size continuous
-memory data in full-duplex mode. I don't know whether should modify
-spi.c to support mediatek spi, or we just return can_dma() false and do
-transfer one continuous data in transfer function.
-
-By the way, I think maybe it is better to change can_dma() to
-can_dma_sg().
-
-Eddie
-Thanks
-
+cheers,
+-roger
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
