@@ -1,21 +1,24 @@
-From: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
 Subject: Re: [PATCH v4 04/23] usb: add usb_otg_caps to usb_gadget structure.
-Date: Wed, 17 Jun 2015 16:50:28 +0800
-Message-ID: <20150617085026.GA9856@shlinux2>
+Date: Wed, 17 Jun 2015 11:53:10 +0300
+Message-ID: <20150617115310.39d2b5b4@rockdesk>
 References: <1434519835-27745-1-git-send-email-jun.li@freescale.com>
- <1434519835-27745-5-git-send-email-jun.li@freescale.com>
- <20150617112936.6fa8105a@rockdesk>
+	<1434519835-27745-5-git-send-email-jun.li@freescale.com>
+	<20150617112936.6fa8105a@rockdesk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
 In-Reply-To: <20150617112936.6fa8105a@rockdesk>
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Cc: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 17, 2015 at 11:29:36AM +0300, Roger Quadros wrote:
+
+On Wed, 17 Jun 2015 11:29:36 +0300
+Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> wrote:
+
 > 
 > On Wed, 17 Jun 2015 13:43:36 +0800
 > Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
@@ -50,21 +53,19 @@ On Wed, Jun 17, 2015 at 11:29:36AM +0300, Roger Quadros wrote:
 > > +	struct usb_otg_caps		*otg_caps;
 > 
 > Why does this need to be a pointer?
-> 
-we need create the same struct in controller driver anyway;
-usb_otg_caps is not only used for gadget, can be used for whole OTG,
-it's not proper we judge host's otg capability by gadget's setting;
-with a pointer, we need not create another one and no need data copy,
-instead, we have only one this struct in whole OTG device.
 
-Li Jun
+I got it. So that we can check if it is a legacy controller driver.
+> 
 > >  
 > >  	unsigned			sg_supported:1;
 > >  	unsigned			is_otg:1;
-> 
-> 
-> cheers,
-> -roger
+
+So,
+
+Reviewed-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+
+cheers,
+-roger
 --
 To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
