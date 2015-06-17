@@ -1,40 +1,41 @@
 From: Eddie Huang <eddie.huang@mediatek.com>
-Subject: [PATCH v4 0/2] arm64: dts: Mediatek: MT8173 updtes
-Date: Wed, 17 Jun 2015 23:08:01 +0800
-Message-ID: <1434553683-11651-1-git-send-email-eddie.huang@mediatek.com>
+Subject: [PATCH v4 1/2] arm64: dts: mt8173: Add watchdog device node
+Date: Wed, 17 Jun 2015 23:08:02 +0800
+Message-ID: <1434553683-11651-2-git-send-email-eddie.huang@mediatek.com>
+References: <1434553683-11651-1-git-send-email-eddie.huang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1434553683-11651-1-git-send-email-eddie.huang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Daniel Kurtz <djkurtz@chromium.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Eddie Huang <eddie.huang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-This series add MT8173 watchdog and I2C device nodes. Both device nodes 
-are based on 4.1-rc1, but I2C need two extra CCF patches from Sascha [1][2].
+Add MT8173 watchdog device node.
 
-[1] clk: Add common clock support for Mediatek MT8135 and MT8173
-    http://lists.infradead.org/pipermail/linux-arm-kernel/2015-April/338763.html
-[2] ARM64: dts: mt8173: Add clock controller device nodes
-    http://lists.infradead.org/pipermail/linux-arm-kernel/2015-May/344753.html
+Signed-off-by: Eddie Huang <eddie.huang@mediatek.com>
+Reviewed-by: Daniel Kurtz <djkurtz@chromium.org>
+---
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Change in v4:
-Move I2C pin from board dts file back to SoC dtsi file after discussion.
-Add I2C default pin, address, size cell number in I2C controller node. 
-But not clock-frequency because it is optional. (default value is 1000000)
-
-Change in v3:
-Move I2C pin from SoC dtsi to board dts file.
-
-Change in v2:
-Modify I2C device node accroding register address order.
-
-Eddie Huang (2):
-  arm64: dts: mt8173: Add watchdog device node
-  arm64: dts: mt8173: Add I2C device node
-
- arch/arm64/boot/dts/mediatek/mt8173.dtsi | 150 +++++++++++++++++++++++++++++++
- 1 file changed, 150 insertions(+)
-
+diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+index 30ac8dd..b52ec43 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+@@ -160,6 +160,12 @@
+ 						<GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
+ 
++		watchdog: watchdog@10007000 {
++			compatible = "mediatek,mt8173-wdt",
++				     "mediatek,mt6589-wdt";
++			reg = <0 0x10007000 0 0x100>;
++		};
++
+ 		sysirq: intpol-controller@10200620 {
+ 			compatible = "mediatek,mt8173-sysirq",
+ 					"mediatek,mt6577-sysirq";
 -- 
 1.8.1.1.dirty
