@@ -1,138 +1,107 @@
 From: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v5 12/23] usb: gadget: ether: allocate and init otg descriptor by otg capabilities
-Date: Wed, 17 Jun 2015 19:40:19 +0800
-Message-ID: <1434541230-15090-13-git-send-email-jun.li@freescale.com>
+Subject: [PATCH v5 16/23] usb: gadget: g_ffs: allocate and init otg descriptor by otg capabilities
+Date: Wed, 17 Jun 2015 19:40:23 +0800
+Message-ID: <1434541230-15090-17-git-send-email-jun.li@freescale.com>
 References: <1434541230-15090-1-git-send-email-jun.li@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1434541230-15090-1-git-send-email-jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org, Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Allocate and initialize usb otg descriptor according to gadget otg
-capabilities, add it for each usb configurations, free it while
-ether unbind. If otg capability is not defined, keep its otg
-descriptor unchanged.
+capabilities, add it for each usb configurations. If otg capability
+is not defined, keep its original otg descriptor unchanged.
 
 Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- drivers/usb/gadget/legacy/ether.c | 52 +++++++++++++++++++--------------------
- 1 file changed, 26 insertions(+), 26 deletions(-)
+ drivers/usb/gadget/legacy/g_ffs.c | 42 ++++++++++++++++++++-------------------
+ 1 file changed, 22 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/usb/gadget/legacy/ether.c b/drivers/usb/gadget/legacy/ether.c
-index a3323dc..2595288 100644
---- a/drivers/usb/gadget/legacy/ether.c
-+++ b/drivers/usb/gadget/legacy/ether.c
-@@ -171,20 +171,7 @@ static struct usb_device_descriptor device_desc = {
- 	.bNumConfigurations =	1,
- };
+diff --git a/drivers/usb/gadget/legacy/g_ffs.c b/drivers/usb/gadget/legacy/g_ffs.c
+index 7b9ef7e..a52d5b5 100644
+--- a/drivers/usb/gadget/legacy/g_ffs.c
++++ b/drivers/usb/gadget/legacy/g_ffs.c
+@@ -88,21 +88,7 @@ MODULE_PARM_DESC(bDeviceProtocol, "USB Device protocol");
+ module_param_array_named(functions, func_names, charp, &func_num, 0);
+ MODULE_PARM_DESC(functions, "USB Functions list");
  
--static struct usb_otg_descriptor otg_descriptor = {
--	.bLength =		sizeof otg_descriptor,
--	.bDescriptorType =	USB_DT_OTG,
+-static const struct usb_descriptor_header *gfs_otg_desc[] = {
+-	(const struct usb_descriptor_header *)
+-	&(const struct usb_otg_descriptor) {
+-		.bLength		= sizeof(struct usb_otg_descriptor),
+-		.bDescriptorType	= USB_DT_OTG,
 -
--	/* REVISIT SRP-only hardware is possible, although
--	 * it would not be called "OTG" ...
--	 */
--	.bmAttributes =		USB_OTG_SRP | USB_OTG_HNP,
+-		/*
+-		 * REVISIT SRP-only hardware is possible, although
+-		 * it would not be called "OTG" ...
+-		 */
+-		.bmAttributes		= USB_OTG_SRP | USB_OTG_HNP,
+-	},
+-
+-	NULL
 -};
--
--static const struct usb_descriptor_header *otg_desc[] = {
--	(struct usb_descriptor_header *) &otg_descriptor,
--	NULL,
--};
-+static const struct usb_descriptor_header *otg_desc[2];
++static const struct usb_descriptor_header *gfs_otg_desc[2];
  
- static struct usb_string strings_dev[] = {
- 	[USB_GADGET_MANUFACTURER_IDX].s = "",
-@@ -228,11 +215,6 @@ static int rndis_do_config(struct usb_configuration *c)
+ /* String IDs are assigned dynamically */
+ static struct usb_string gfs_strings[] = {
+@@ -410,6 +396,17 @@ static int gfs_bind(struct usb_composite_dev *cdev)
+ 		goto error_rndis;
+ 	gfs_dev_desc.iProduct = gfs_strings[USB_GADGET_PRODUCT_IDX].id;
  
- 	/* FIXME alloc iConfiguration string, set it in c->strings */
- 
--	if (gadget_is_otg(c->cdev->gadget)) {
--		c->descriptors = otg_desc;
--		c->bmAttributes |= USB_CONFIG_ATT_WAKEUP;
--	}
--
- 	f_rndis = usb_get_function(fi_rndis);
- 	if (IS_ERR(f_rndis))
- 		return PTR_ERR(f_rndis);
-@@ -270,11 +252,6 @@ static int eth_do_config(struct usb_configuration *c)
- 
- 	/* FIXME alloc iConfiguration string, set it in c->strings */
- 
--	if (gadget_is_otg(c->cdev->gadget)) {
--		c->descriptors = otg_desc;
--		c->bmAttributes |= USB_CONFIG_ATT_WAKEUP;
--	}
--
- 	if (use_eem) {
- 		f_eem = usb_get_function(fi_eem);
- 		if (IS_ERR(f_eem))
-@@ -416,17 +393,34 @@ static int eth_bind(struct usb_composite_dev *cdev)
- 	device_desc.iManufacturer = strings_dev[USB_GADGET_MANUFACTURER_IDX].id;
- 	device_desc.iProduct = strings_dev[USB_GADGET_PRODUCT_IDX].id;
- 
-+	if (gadget_is_otg(gadget)) {
-+		if (!otg_desc[0]) {
-+			struct usb_descriptor_header *usb_desc;
++	if (gadget_is_otg(cdev->gadget) && !gfs_otg_desc[0]) {
++		struct usb_descriptor_header *usb_desc;
 +
-+			usb_desc = usb_otg_descriptor_alloc(gadget);
-+			if (!usb_desc)
-+				goto fail1;
-+			usb_otg_descriptor_init(gadget, usb_desc);
-+			otg_desc[0] = usb_desc;
-+			otg_desc[1] = NULL;
-+		}
-+		rndis_config_driver.descriptors = otg_desc;
-+		rndis_config_driver.bmAttributes |= USB_CONFIG_ATT_WAKEUP;
-+		eth_config_driver.descriptors = otg_desc;
-+		eth_config_driver.bmAttributes |= USB_CONFIG_ATT_WAKEUP;
++		usb_desc = usb_otg_descriptor_alloc(cdev->gadget);
++		if (!usb_desc)
++			goto error_rndis;
++		usb_otg_descriptor_init(cdev->gadget, usb_desc);
++		gfs_otg_desc[0] = usb_desc;
++		gfs_otg_desc[1] = NULL;
 +	}
 +
- 	/* register our configuration(s); RNDIS first, if it's used */
- 	if (has_rndis()) {
- 		status = usb_add_config(cdev, &rndis_config_driver,
- 				rndis_do_config);
- 		if (status < 0)
--			goto fail1;
-+			goto fail2;
- 	}
+ 	for (i = 0; i < ARRAY_SIZE(gfs_configurations); ++i) {
+ 		struct gfs_configuration *c = gfs_configurations + i;
+ 		int sid = USB_GADGET_FIRST_AVAIL_IDX + i;
+@@ -419,6 +416,11 @@ static int gfs_bind(struct usb_composite_dev *cdev)
+ 		c->c.bConfigurationValue	= 1 + i;
+ 		c->c.bmAttributes		= USB_CONFIG_ATT_SELFPOWER;
  
- 	status = usb_add_config(cdev, &eth_config_driver, eth_do_config);
- 	if (status < 0)
--		goto fail1;
-+		goto fail2;
++		if (gadget_is_otg(cdev->gadget)) {
++			c->c.descriptors = gfs_otg_desc;
++			c->c.bmAttributes |= USB_CONFIG_ATT_WAKEUP;
++		}
++
+ 		c->num = i;
  
- 	usb_composite_overwrite_options(cdev, &coverwrite);
- 	dev_info(&gadget->dev, "%s, version: " DRIVER_VERSION "\n",
-@@ -434,6 +428,9 @@ static int eth_bind(struct usb_composite_dev *cdev)
+ 		ret = usb_add_config(cdev, &c->c, gfs_do_config);
+@@ -430,6 +432,8 @@ static int gfs_bind(struct usb_composite_dev *cdev)
  
- 	return 0;
+ /* TODO */
+ error_unbind:
++	kfree(gfs_otg_desc[0]);
++	gfs_otg_desc[0] = NULL;
+ error_rndis:
+ #ifdef CONFIG_USB_FUNCTIONFS_RNDIS
+ 	usb_put_function_instance(fi_rndis);
+@@ -471,6 +475,9 @@ static int gfs_unbind(struct usb_composite_dev *cdev)
+ 	for (i = 0; i < N_CONF * func_num; ++i)
+ 		usb_put_function(*(f_ffs[0] + i));
  
-+fail2:
-+	kfree(otg_desc[0]);
-+	otg_desc[0] = NULL;
- fail1:
- 	if (has_rndis())
- 		usb_put_function_instance(fi_rndis);
-@@ -463,6 +460,9 @@ static int eth_unbind(struct usb_composite_dev *cdev)
- 		usb_put_function(f_geth);
- 		usb_put_function_instance(fi_geth);
- 	}
-+	kfree(otg_desc[0]);
-+	otg_desc[0] = NULL;
++	kfree(gfs_otg_desc[0]);
++	gfs_otg_desc[0] = NULL;
 +
  	return 0;
  }
  
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+@@ -488,11 +495,6 @@ static int gfs_do_config(struct usb_configuration *c)
+ 	if (missing_funcs)
+ 		return -ENODEV;
+ 
+-	if (gadget_is_otg(c->cdev->gadget)) {
+-		c->descriptors = gfs_otg_desc;
+-		c->bmAttributes |= USB_CONFIG_ATT_WAKEUP;
+-	}
