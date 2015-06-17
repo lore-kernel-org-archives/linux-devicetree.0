@@ -1,7 +1,7 @@
 From: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v4 01/23] usb: add usb_otg20_descriptor for OTG 2.0 and above
-Date: Wed, 17 Jun 2015 13:43:33 +0800
-Message-ID: <1434519835-27745-2-git-send-email-jun.li@freescale.com>
+Subject: [PATCH v4 02/23] usb: add USB_OTG_ADP definition
+Date: Wed, 17 Jun 2015 13:43:34 +0800
+Message-ID: <1434519835-27745-3-git-send-email-jun.li@freescale.com>
 References: <1434519835-27745-1-git-send-email-jun.li@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,39 +14,27 @@ List-Id: devicetree@vger.kernel.org
 
 From: Macpaul Lin <macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-OTG 2.0 introduces bcdOTG in otg descriptor to identify the OTG and EH
-supplement release number with which the OTG device is compliant, this
-patch adds structure usb_otg20_descriptor for OTG 2.0 and above.
+Add USB_OTG_ADP definition for usb_otg_descriptor.bmAttributes.
 
 Signed-off-by: Macpaul Lin <macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Reviewed-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Acked-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- include/uapi/linux/usb/ch9.h | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ include/uapi/linux/usb/ch9.h | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/include/uapi/linux/usb/ch9.h b/include/uapi/linux/usb/ch9.h
-index aa33fd1..aec6899 100644
+index aec6899..f7adc6e 100644
 --- a/include/uapi/linux/usb/ch9.h
 +++ b/include/uapi/linux/usb/ch9.h
-@@ -674,6 +674,17 @@ struct usb_otg_descriptor {
- 	__u8  bmAttributes;	/* support for HNP, SRP, etc */
- } __attribute__ ((packed));
- 
-+/* USB_DT_OTG (from OTG 2.0 supplement) */
-+struct usb_otg20_descriptor {
-+	__u8  bLength;
-+	__u8  bDescriptorType;
-+
-+	__u8  bmAttributes;	/* support for HNP, SRP and ADP, etc */
-+	__le16 bcdOTG;		/* OTG and EH supplement release number
-+				 * in binary-coded decimal(i.e. 2.0 is 0200H)
-+				 */
-+} __attribute__ ((packed));
-+
+@@ -688,6 +688,7 @@ struct usb_otg20_descriptor {
  /* from usb_otg_descriptor.bmAttributes */
  #define USB_OTG_SRP		(1 << 0)
  #define USB_OTG_HNP		(1 << 1)	/* swap host/device roles */
++#define USB_OTG_ADP		(1 << 2)	/* support ADP */
+ 
+ /*-------------------------------------------------------------------------*/
+ 
 -- 
 1.9.1
 
