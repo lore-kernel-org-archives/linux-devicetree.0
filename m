@@ -1,57 +1,35 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: rockchip: Add dmac_bus rx and tx for uart2
-Date: Wed, 17 Jun 2015 10:01:48 -0700
-Message-ID: <CAD=FV=UdrE1PCnfHiYKDm985joX4OLLYemhqm+niPUgYQO4s3Q@mail.gmail.com>
-References: <1434390468-27296-1-git-send-email-romain.perier@gmail.com>
-	<34159914.9nlETdacuk@phil>
+From: Sandy Harris <sandyinchina@gmail.com>
+Subject: Re: [PATCH v5 06/14] crypto: marvell/CESA: add DES support
+Date: Wed, 17 Jun 2015 14:07:48 -0400
+Message-ID: <CACXcFmmBoePgVRWkrvc_JcMDOcq8ecqUuUntkBH6BWKYe0R3Bg@mail.gmail.com>
+References: <1434448748-10828-1-git-send-email-boris.brezillon@free-electrons.com>
+	<1434448748-10828-7-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <34159914.9nlETdacuk@phil>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Alexandru Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <1434448748-10828-7-git-send-email-boris.brezillon@free-electrons.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, linux-crypto@vger.kernel.org, Arnaud Ebalard <arno@natisbad.org>, Tawfik Bayouk <tawfik@marvell.com>, Lior Amsalem <alior@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Eran Ben-Avi <benavi@marvell.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Imre Kaloz <kal>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tue, Jun 16, 2015 at 5:59 AM, Boris Brezillon
+<boris.brezillon@free-electrons.com> wrote:
 
-On Tue, Jun 16, 2015 at 4:37 AM, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> wrote:
-> Just for the record and if anybody is interested to work in this, we have an
-> issue with the dma implementation [0] that is not yet solved upstream. From
-> what I've remember, that mostly got triggered on higher speeds, like higher
-> spi-speeds or i2s audio stuff (poping).
->
->
-> Heiko
->
-> [0]
-> https://chromium.googlesource.com/chromiumos/third_party/kernel/+/93c3b192dca7e8c773c4d28873114c325382b63e%5E%21/#F0
+> Add support for DES operations.
 
-Right.  In the ChromeOS tree (used for rk3288-based Chromebooks) we
-think we solved the DMA issues for the most part by using burst mode.
-...but we weren't brave enough to enable DMA for SPI and UART because
-we didn't want to track down any additional weird issues and PIO mode
-was working well enough.
+Why on Earth should we do that? DES is demonstrably insecure. The only
+possible excuse for allowing it anywhere in a modern code base is that
+you need it to implement triple DES, and even that should by now be
+deprecated in favour of more modern ciphers which are much faster and
+thought to be  more secure.
 
+Here's documentation from around the turn of the century
+http://www.freeswan.org/freeswan_trees/freeswan-1.5/doc/DES.html
 
-The full list of things I see in the PL330 driver in ChromeOS:
-
-3e12510 CHROMIUM: dmaengine: pl330: add quirk for broken no flushp
-ded3780 CHROMIUM: dmaengine: pl330: support quirks for some broken
-7af450f FROMLIST: DMA: pl330: support burst mode for dev-to-mem and
-mem-to-dev transmit
-
-Skimming through the i2s driver (which we definitely use with DMA):
-
-21fee4b CHROMIUM: ASoC: rockchip_i2s: modify DMA max burst to 1
-4001251 UPSTREAM: ASoC: rockchip: i2s: fix maxburst of dma data to 4
-
-...I was only peripherally involved here, but as you can see it looks
-like there were not only changes needed to the PL330 driver but also
-changes needed to the DMA client.
-
-You can find links to patches from the same git tree that Heiko pointed at.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Moore's Law applies, so the $200,000 FPGA machine that broke DES in
+days in 1998 might be dirt cheap today. Certainly breaking DES on one
+of today's clusters would be fast and cheap as well, given that it
+took only a few months in 1998 using the Internet as the Conectio
+fabric.
+http://www.interhack.net/pubs/des-key-crack/
