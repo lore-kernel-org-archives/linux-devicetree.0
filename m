@@ -1,64 +1,95 @@
 From: <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH 0/8] add basic support for i.mx6 ul chip
-Date: Wed, 17 Jun 2015 23:39:21 +0800
-Message-ID: <1434555569-8237-1-git-send-email-Frank.Li@freescale.com>
+Subject: [PATCH 8/8] ARM: imx: add low-level debug support for i.mx6ul
+Date: Wed, 17 Jun 2015 23:39:29 +0800
+Message-ID: <1434555569-8237-9-git-send-email-Frank.Li@freescale.com>
+References: <1434555569-8237-1-git-send-email-Frank.Li@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1434555569-8237-1-git-send-email-Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lznuaa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+From: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-Add basic function support i.mx6ul.
-add simple dts.
-add full pin function define
-add clock support.
-add low level debug
+Enable low-level debug support for i.MX6UL by adding the
+debug port definitions for the SoC.
 
-Anson Huang (1):
-  ARM: imx: add low-level debug support for i.mx6ul
+Singed-off-by: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+ arch/arm/Kconfig.debug            |  9 +++++++++
+ arch/arm/include/debug/imx-uart.h | 13 +++++++++++++
+ 2 files changed, 22 insertions(+)
 
-Frank Li (7):
-  ARM: imx: add i.mx6ul msl support
-  ARM: imx: add imx6ul clk tree support
-  Document: dt: binding: imx: update document for imx6ul support
-  ARM: pinctrl: imx: add i.mx6ul pinctrl driver
-  ARM: dts: add i.mx6ul pin function include file
-  ARM: dts: imx: add imx6ul and imx6ul evk board support
-  ARM: imx: imx_v6_v7_defconfig enable imx6ul support
-
- .../devicetree/bindings/clock/imx6ul-clock.txt     |  13 +
- .../bindings/pinctrl/fsl,imx6ul-pinctrl.txt        |  36 +
- arch/arm/Kconfig.debug                             |   9 +
- arch/arm/boot/dts/Makefile                         |   2 +
- arch/arm/boot/dts/imx6ul-14x14-evk.dts             | 337 ++++++++
- arch/arm/boot/dts/imx6ul-pinfunc.h                 | 938 +++++++++++++++++++++
- arch/arm/boot/dts/imx6ul.dtsi                      | 645 ++++++++++++++
- arch/arm/configs/imx_v6_v7_defconfig               |   1 +
- arch/arm/include/debug/imx-uart.h                  |  13 +
- arch/arm/mach-imx/Kconfig                          |   8 +
- arch/arm/mach-imx/Makefile                         |   1 +
- arch/arm/mach-imx/mach-imx6ul.c                    |  43 +
- drivers/clk/imx/Makefile                           |   1 +
- drivers/clk/imx/clk-imx6ul.c                       | 436 ++++++++++
- drivers/pinctrl/freescale/Kconfig                  |   7 +
- drivers/pinctrl/freescale/Makefile                 |   1 +
- drivers/pinctrl/freescale/pinctrl-imx6ul.c         | 323 +++++++
- include/dt-bindings/clock/imx6ul-clock.h           | 240 ++++++
- 18 files changed, 3054 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/imx6ul-clock.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx6ul-pinctrl.txt
- create mode 100644 arch/arm/boot/dts/imx6ul-14x14-evk.dts
- create mode 100644 arch/arm/boot/dts/imx6ul-pinfunc.h
- create mode 100644 arch/arm/boot/dts/imx6ul.dtsi
- create mode 100644 arch/arm/mach-imx/mach-imx6ul.c
- create mode 100644 drivers/clk/imx/clk-imx6ul.c
- create mode 100644 drivers/pinctrl/freescale/pinctrl-imx6ul.c
- create mode 100644 include/dt-bindings/clock/imx6ul-clock.h
-
+diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
+index f1b1579..f21daa8 100644
+--- a/arch/arm/Kconfig.debug
++++ b/arch/arm/Kconfig.debug
+@@ -411,6 +411,13 @@ choice
+ 		  Say Y here if you want kernel low-level debugging support
+ 		  on i.MX6SX.
+ 
++	config DEBUG_IMX6UL_UART
++		bool "i.MX6UL Debug UART"
++		depends on SOC_IMX6UL
++		help
++		  Say Y here if you want kernel low-level debugging support
++		  on i.MX6UL.
++
+ 	config DEBUG_IMX7D_UART
+ 		bool "i.MX7D Debug UART"
+ 		depends on SOC_IMX7D
+@@ -1269,6 +1276,7 @@ config DEBUG_IMX_UART_PORT
+ 						DEBUG_IMX6Q_UART || \
+ 						DEBUG_IMX6SL_UART || \
+ 						DEBUG_IMX6SX_UART || \
++						DEBUG_IMX6UL_UART || \
+ 						DEBUG_IMX7D_UART
+ 	default 1
+ 	depends on ARCH_MXC
+@@ -1320,6 +1328,7 @@ config DEBUG_LL_INCLUDE
+ 				 DEBUG_IMX6Q_UART || \
+ 				 DEBUG_IMX6SL_UART || \
+ 				 DEBUG_IMX6SX_UART || \
++				 DEBUG_IMX6UL_UART || \
+ 				 DEBUG_IMX7D_UART
+ 	default "debug/ks8695.S" if DEBUG_KS8695_UART
+ 	default "debug/msm.S" if DEBUG_QCOM_UARTDM
+diff --git a/arch/arm/include/debug/imx-uart.h b/arch/arm/include/debug/imx-uart.h
+index 66f736f..bce58e9 100644
+--- a/arch/arm/include/debug/imx-uart.h
++++ b/arch/arm/include/debug/imx-uart.h
+@@ -90,6 +90,17 @@
+ #define IMX6SX_UART_BASE_ADDR(n) IMX6SX_UART##n##_BASE_ADDR
+ #define IMX6SX_UART_BASE(n)	IMX6SX_UART_BASE_ADDR(n)
+ 
++#define IMX6UL_UART1_BASE_ADDR	0x02020000
++#define IMX6UL_UART2_BASE_ADDR	0x021e8000
++#define IMX6UL_UART3_BASE_ADDR	0x021ec000
++#define IMX6UL_UART4_BASE_ADDR	0x021f0000
++#define IMX6UL_UART5_BASE_ADDR	0x021f4000
++#define IMX6UL_UART6_BASE_ADDR	0x021fc000
++#define IMX6UL_UART7_BASE_ADDR	0x02018000
++#define IMX6UL_UART8_BASE_ADDR	0x02024000
++#define IMX6UL_UART_BASE_ADDR(n) IMX6UL_UART##n##_BASE_ADDR
++#define IMX6UL_UART_BASE(n)	IMX6UL_UART_BASE_ADDR(n)
++
+ #define IMX7D_UART1_BASE_ADDR	0x30860000
+ #define IMX7D_UART2_BASE_ADDR	0x30890000
+ #define IMX7D_UART3_BASE_ADDR	0x30880000
+@@ -124,6 +135,8 @@
+ #define UART_PADDR	IMX_DEBUG_UART_BASE(IMX6SL)
+ #elif defined(CONFIG_DEBUG_IMX6SX_UART)
+ #define UART_PADDR	IMX_DEBUG_UART_BASE(IMX6SX)
++#elif defined(CONFIG_DEBUG_IMX6UL_UART)
++#define UART_PADDR	IMX_DEBUG_UART_BASE(IMX6UL)
+ #elif defined(CONFIG_DEBUG_IMX7D_UART)
+ #define UART_PADDR	IMX_DEBUG_UART_BASE(IMX7D)
+ 
 -- 
 1.9.1
 
