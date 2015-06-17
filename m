@@ -1,52 +1,109 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v7 05/14] crypto: marvell/CESA: add TDMA support
-Date: Wed, 17 Jun 2015 17:34:02 +0200
-Message-ID: <20150617173402.7946bbb0@bbrezillon>
-References: <20150617122533.GA13185@gondor.apana.org.au>
-	<1434547922-10363-1-git-send-email-boris.brezillon@free-electrons.com>
-	<20150617150808.GA14915@gondor.apana.org.au>
+From: <Frank.Li@freescale.com>
+Subject: [PATCH 1/8] ARM: imx: add i.mx6ul msl support
+Date: Wed, 17 Jun 2015 23:39:22 +0800
+Message-ID: <1434555569-8237-2-git-send-email-Frank.Li@freescale.com>
+References: <1434555569-8237-1-git-send-email-Frank.Li@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150617150808.GA14915-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
-Cc: "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1434555569-8237-1-git-send-email-Frank.Li@freescale.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, shawn.guo@linaro.org, shawnguo@kernel.org, linus.walleij@linaro.org, lznuaa@gmail.com
+Cc: linux-gpio@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, Frank Li <Frank.Li@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 17 Jun 2015 23:08:08 +0800
-Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org> wrote:
+From: Frank Li <Frank.Li@freescale.com>
 
-> On Wed, Jun 17, 2015 at 03:32:02PM +0200, Boris Brezillon wrote:
-> >
-> > Hi Herbert,
-> > 
-> > I send you this patch alone so that you can verify I'm now properly
-> > manipulating the SG list. Once I have your confirmation I'll send
-> > the whole series again and annoy all the people in Cc one more time
-> > ;-).
-> 
-> Thanks.  The only problem that I can see is the fact you're not
-> checking for req->src == req->dst.  If they're equal then you must
-> not map it twice.  Instead it should be mapped as DMA_BIDIRECTIONAL.
+i.MX6UL is a new SOC, add MSL support
 
-I can check for that too, but note that it doesn't prevent one from
-providing different scatterlist structures pointing to the same memory
-region.
-This being said, checking for req->src == req->dst should fix the case
-where dst and src are pointing to the same scatterlist, which is a good
-start.
+Signed-off-by: Frank Li <Frank.Li@freescale.com>
+---
+ arch/arm/mach-imx/Kconfig       |  8 ++++++++
+ arch/arm/mach-imx/Makefile      |  1 +
+ arch/arm/mach-imx/mach-imx6ul.c | 43 +++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 52 insertions(+)
+ create mode 100644 arch/arm/mach-imx/mach-imx6ul.c
 
-Thanks,
-
-Boris
-
+diff --git a/arch/arm/mach-imx/Kconfig b/arch/arm/mach-imx/Kconfig
+index 573536f..8ceda28 100644
+--- a/arch/arm/mach-imx/Kconfig
++++ b/arch/arm/mach-imx/Kconfig
+@@ -548,6 +548,14 @@ config SOC_IMX6SX
+ 	help
+ 	  This enables support for Freescale i.MX6 SoloX processor.
+ 
++config SOC_IMX6UL
++	bool "i.MX6 UltraLite support"
++	select PINCTRL_IMX6UL
++	select SOC_IMX6
++
++	help
++	  This enables support for Freescale i.MX6 UltraLite processor.
++
+ config SOC_IMX7D
+ 	bool "i.MX7 Dual support"
+ 	select PINCTRL_IMX7D
+diff --git a/arch/arm/mach-imx/Makefile b/arch/arm/mach-imx/Makefile
+index 37c502a..fb689d8 100644
+--- a/arch/arm/mach-imx/Makefile
++++ b/arch/arm/mach-imx/Makefile
+@@ -83,6 +83,7 @@ endif
+ obj-$(CONFIG_SOC_IMX6Q) += mach-imx6q.o
+ obj-$(CONFIG_SOC_IMX6SL) += mach-imx6sl.o
+ obj-$(CONFIG_SOC_IMX6SX) += mach-imx6sx.o
++obj-$(CONFIG_SOC_IMX6UL) += mach-imx6ul.o
+ obj-$(CONFIG_SOC_IMX7D) += mach-imx7d.o
+ 
+ ifeq ($(CONFIG_SUSPEND),y)
+diff --git a/arch/arm/mach-imx/mach-imx6ul.c b/arch/arm/mach-imx/mach-imx6ul.c
+new file mode 100644
+index 0000000..706d5f6
+--- /dev/null
++++ b/arch/arm/mach-imx/mach-imx6ul.c
+@@ -0,0 +1,43 @@
++/*
++ * Copyright (C) 2015 Freescale Semiconductor, Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++#include <linux/irqchip.h>
++#include <linux/of_platform.h>
++#include <asm/mach/arch.h>
++#include <asm/mach/map.h>
++
++#include "common.h"
++
++static void __init imx6ul_init_machine(void)
++{
++	struct device *parent;
++
++	parent = imx_soc_device_init();
++	if (parent == NULL)
++		pr_warn("failed to initialize soc device\n");
++
++	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
++	imx_anatop_init();
++}
++
++static void __init imx6ul_init_irq(void)
++{
++	imx_init_revision_from_anatop();
++	imx_src_init();
++	irqchip_init();
++}
++
++static const char *imx6ul_dt_compat[] __initconst = {
++	"fsl,imx6ul",
++	NULL,
++};
++
++DT_MACHINE_START(IMX7D, "Freescale i.MX6 Ultralite (Device Tree)")
++	.init_irq	= imx6ul_init_irq,
++	.init_machine	= imx6ul_init_machine,
++	.dt_compat	= imx6ul_dt_compat,
++MACHINE_END
 -- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
+
