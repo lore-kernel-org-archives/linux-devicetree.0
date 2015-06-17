@@ -1,47 +1,44 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v6 05/14] crypto: marvell/CESA: add TDMA support
-Date: Wed, 17 Jun 2015 13:33:24 +0200
-Message-ID: <20150617133324.1ee6ad55@bbrezillon>
-References: <1434527142-3609-1-git-send-email-boris.brezillon@free-electrons.com>
-	<1434527142-3609-6-git-send-email-boris.brezillon@free-electrons.com>
-	<20150617095001.GA11538@gondor.apana.org.au>
+From: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH v5 02/23] usb: add USB_OTG_ADP definition
+Date: Wed, 17 Jun 2015 19:40:09 +0800
+Message-ID: <1434541230-15090-3-git-send-email-jun.li@freescale.com>
+References: <1434541230-15090-1-git-send-email-jun.li@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <20150617095001.GA11538@gondor.apana.org.au>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: "David S. Miller" <davem@davemloft.net>, linux-crypto@vger.kernel.org, Arnaud Ebalard <arno@natisbad.org>, Tawfik Bayouk <tawfik@marvell.com>, Lior Amsalem <alior@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Eran Ben-Avi <benavi@marvell.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Imre Kaloz <kaloz@openwrt.org>
+Content-Type: text/plain
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1434541230-15090-1-git-send-email-jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org, Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 17 Jun 2015 17:50:01 +0800
-Herbert Xu <herbert@gondor.apana.org.au> wrote:
+From: Macpaul Lin <macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-> On Wed, Jun 17, 2015 at 09:45:33AM +0200, Boris Brezillon wrote:
-> >
-> > +	ret = dma_map_sg(cesa_dev->dev, req->src, creq->src_nents,
-> > +			 DMA_TO_DEVICE);
-> > +	if (!ret)
-> > +		return -ENOMEM;
-> > +
-> > +	creq->src_nents = ret;
-> 
-> DMA-API-HOWTO says that you must retain the original nents and
-> use it when you call dma_unmap_sg.  So I'm afraid one more repost
-> is needed :)
+Add USB_OTG_ADP definition for usb_otg_descriptor.bmAttributes.
 
-My bad (again :-/).
-Actually, I think I don't need to save the dma_map_sg return val, since
-I'm using the sg_next function to iterate over the scatterlist. Am I
-right ?
-IOW, is the ->map_sg() function (in dma_map_ops) supposed to merge the
-contiguous entries and then flag the unused entries with the is_chain
-flag ?
-If that's not the case, and the ->map_sg() just marks the merged entries
-as empty (length = 0), then I'll have to rework my iterator algorithm.
+Signed-off-by: Macpaul Lin <macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Acked-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+ include/uapi/linux/usb/ch9.h | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/include/uapi/linux/usb/ch9.h b/include/uapi/linux/usb/ch9.h
+index aec6899..f7adc6e 100644
+--- a/include/uapi/linux/usb/ch9.h
++++ b/include/uapi/linux/usb/ch9.h
+@@ -688,6 +688,7 @@ struct usb_otg20_descriptor {
+ /* from usb_otg_descriptor.bmAttributes */
+ #define USB_OTG_SRP		(1 << 0)
+ #define USB_OTG_HNP		(1 << 1)	/* swap host/device roles */
++#define USB_OTG_ADP		(1 << 2)	/* support ADP */
+ 
+ /*-------------------------------------------------------------------------*/
+ 
 -- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
