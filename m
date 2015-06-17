@@ -1,13 +1,13 @@
 From: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v4 17/23] usb: gadget: hid: allocate and init otg descriptor by otg capabilities
-Date: Wed, 17 Jun 2015 13:43:49 +0800
-Message-ID: <1434519835-27745-18-git-send-email-jun.li@freescale.com>
+Subject: [PATCH v4 14/23] usb: gadget: audio: allocate and init otg descriptor by otg capabilities
+Date: Wed, 17 Jun 2015 13:43:46 +0800
+Message-ID: <1434519835-27745-15-git-send-email-jun.li@freescale.com>
 References: <1434519835-27745-1-git-send-email-jun.li@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1434519835-27745-1-git-send-email-jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org, Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
@@ -19,14 +19,14 @@ descriptor unchanged.
 
 Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- drivers/usb/gadget/legacy/hid.c | 30 +++++++++++++++---------------
- 1 file changed, 15 insertions(+), 15 deletions(-)
+ drivers/usb/gadget/legacy/audio.c | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/usb/gadget/legacy/hid.c b/drivers/usb/gadget/legacy/hid.c
-index 2baa572..09889bc 100644
---- a/drivers/usb/gadget/legacy/hid.c
-+++ b/drivers/usb/gadget/legacy/hid.c
-@@ -68,21 +68,7 @@ static struct usb_device_descriptor device_desc = {
+diff --git a/drivers/usb/gadget/legacy/audio.c b/drivers/usb/gadget/legacy/audio.c
+index f289caf..a30b23b 100644
+--- a/drivers/usb/gadget/legacy/audio.c
++++ b/drivers/usb/gadget/legacy/audio.c
+@@ -150,20 +150,7 @@ static struct usb_device_descriptor device_desc = {
  	.bNumConfigurations =	1,
  };
  
@@ -44,13 +44,12 @@ index 2baa572..09889bc 100644
 -	(struct usb_descriptor_header *) &otg_descriptor,
 -	NULL,
 -};
--
 +static const struct usb_descriptor_header *otg_desc[2];
  
- /* string IDs are assigned dynamically */
- static struct usb_string strings_dev[] = {
-@@ -112,6 +98,16 @@ static int do_config(struct usb_configuration *c)
- 	int status = 0;
+ /*-------------------------------------------------------------------------*/
+ 
+@@ -174,6 +161,16 @@ static int audio_do_config(struct usb_configuration *c)
+ 	/* FIXME alloc iConfiguration string, set it in c->strings */
  
  	if (gadget_is_otg(c->cdev->gadget)) {
 +		if (!otg_desc[0]) {
@@ -66,11 +65,10 @@ index 2baa572..09889bc 100644
  		c->descriptors = otg_desc;
  		c->bmAttributes |= USB_CONFIG_ATT_WAKEUP;
  	}
-@@ -213,6 +209,10 @@ static int hid_unbind(struct usb_composite_dev *cdev)
- 		usb_put_function(n->f);
- 		usb_put_function_instance(n->fi);
- 	}
-+
+@@ -289,6 +286,9 @@ static int audio_unbind(struct usb_composite_dev *cdev)
+ 	if (!IS_ERR_OR_NULL(fi_uac2))
+ 		usb_put_function_instance(fi_uac2);
+ #endif
 +	kfree(otg_desc[0]);
 +	otg_desc[0] = NULL;
 +
@@ -81,6 +79,6 @@ index 2baa572..09889bc 100644
 1.9.1
 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
