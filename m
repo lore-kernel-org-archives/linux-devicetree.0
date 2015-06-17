@@ -1,100 +1,136 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v4 13/23] usb: gadget: acm_ms: allocate and init otg
- descriptor by otg capabilities
-Date: Wed, 17 Jun 2015 12:11:01 +0300
-Message-ID: <20150617121101.2cd431c5@rockdesk>
+From: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v4 07/23] usb: common: add API to get usb otg features
+ from device tree
+Date: Wed, 17 Jun 2015 17:19:08 +0800
+Message-ID: <20150617091906.GB9856@shlinux2>
 References: <1434519835-27745-1-git-send-email-jun.li@freescale.com>
-	<1434519835-27745-14-git-send-email-jun.li@freescale.com>
+ <1434519835-27745-8-git-send-email-jun.li@freescale.com>
+ <20150617114545.1bd8b8bd@rockdesk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1434519835-27745-14-git-send-email-jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150617114545.1bd8b8bd@rockdesk>
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-On Wed, 17 Jun 2015 13:43:45 +0800
-Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-
-> Allocate and initialize usb otg descriptor according to gadget otg
-> capabilities, add it for each usb configurations, free it while
-> composite unbind. If otg capability is not defined, keep its otg
-
-there is no composite unbind in acm_ms.c.
-
-> descriptor unchanged.
+On Wed, Jun 17, 2015 at 11:45:45AM +0300, Roger Quadros wrote:
 > 
-> Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
->  drivers/usb/gadget/legacy/acm_ms.c | 29 ++++++++++++++---------------
->  1 file changed, 14 insertions(+), 15 deletions(-)
+> On Wed, 17 Jun 2015 13:43:39 +0800
+> Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
 > 
-> diff --git a/drivers/usb/gadget/legacy/acm_ms.c b/drivers/usb/gadget/legacy/acm_ms.c
-> index 1194b09..f9b7b31 100644
-> --- a/drivers/usb/gadget/legacy/acm_ms.c
-> +++ b/drivers/usb/gadget/legacy/acm_ms.c
-> @@ -58,21 +58,7 @@ static struct usb_device_descriptor device_desc = {
->  	/*.bNumConfigurations =	DYNAMIC*/
->  };
->  
-> -static struct usb_otg_descriptor otg_descriptor = {
-> -	.bLength =		sizeof otg_descriptor,
-> -	.bDescriptorType =	USB_DT_OTG,
-> -
-> -	/*
-> -	 * REVISIT SRP-only hardware is possible, although
-> -	 * it would not be called "OTG" ...
-> -	 */
-> -	.bmAttributes =		USB_OTG_SRP | USB_OTG_HNP,
-> -};
-> -
-> -static const struct usb_descriptor_header *otg_desc[] = {
-> -	(struct usb_descriptor_header *) &otg_descriptor,
-> -	NULL,
-> -};
-> +static const struct usb_descriptor_header *otg_desc[2];
->  
->  /* string IDs are assigned dynamically */
->  static struct usb_string strings_dev[] = {
-> @@ -127,6 +113,16 @@ static int acm_ms_do_config(struct usb_configuration *c)
->  	int	status;
->  
->  	if (gadget_is_otg(c->cdev->gadget)) {
-> +		if (!otg_desc[0]) {
-> +			struct usb_descriptor_header *usb_desc;
-> +
-> +			usb_desc = usb_otg_descriptor_alloc(c->cdev->gadget);
-> +			if (!usb_desc)
-> +				return -ENOMEM;
-> +			usb_otg_descriptor_init(c->cdev->gadget, usb_desc);
-> +			otg_desc[0] = usb_desc;
-> +			otg_desc[1] = NULL;
+> > Check property of usb hardware to get otg version and if SRP, HNP and ADP
+> > are supported.
+> > 
+> > Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > ---
+> >  drivers/usb/common/common.c | 29 +++++++++++++++++++++++++++++
+> >  include/linux/usb/of.h      |  7 +++++++
+> >  2 files changed, 36 insertions(+)
+> > 
+> > diff --git a/drivers/usb/common/common.c b/drivers/usb/common/common.c
+> > index b530fd4..b846172 100644
+> > --- a/drivers/usb/common/common.c
+> > +++ b/drivers/usb/common/common.c
+> > @@ -154,6 +154,35 @@ bool of_usb_host_tpl_support(struct device_node *np)
+> >  	return false;
+> >  }
+> >  EXPORT_SYMBOL_GPL(of_usb_host_tpl_support);
+> > +
+> > +/**
+> > + * of_usb_get_otg_caps - to get usb otg capabilities according to
+> > + * the passed properties in DT.
+> > + * @np: Pointer to the given device_node
+> > + * @otg_caps: Pointer to the target usb_otg_caps to be set
+> > + *
+> > + * The function gets and sets the otg capabilities
+> > + */
+> > +void of_usb_get_otg_caps(struct device_node *np, struct usb_otg_caps *otg_caps)
+> > +{
+> > +	u32 otg_rev;
+> > +
+> > +	if (!otg_caps)
+> > +		return;
+> > +
+> > +	if (!of_property_read_u32(np, "otg-rev", &otg_rev)) {
+> > +		otg_caps->otg_rev = otg_rev;
+> > +		if (!of_find_property(np, "hnp-disable", NULL))
+> > +			otg_caps->hnp_support = true;
+> > +		if (!of_find_property(np, "srp-disable", NULL))
+> > +			otg_caps->hnp_support = true;
+> 
+> srp_support = true;
+> 
 
-I think it is symmetric to put this code in acm_ms_bind()
-as you are freeing the descriptor in acm_ms_unbind().
+My fault.
 
-Same applies for all other gadgets as well.
+> > +		if (!of_find_property(np, "adp-disable", NULL) &&
+> > +					(otg_caps->otg_rev >= 0x0200))
+> > +			otg_caps->hnp_support = true;
+> 
+> adp_support = true;
+> 
 
-> +		}
->  		c->descriptors = otg_desc;
->  		c->bmAttributes |= USB_CONFIG_ATT_WAKEUP;
->  	}
-> @@ -255,6 +251,9 @@ static int acm_ms_unbind(struct usb_composite_dev *cdev)
->  	usb_put_function_instance(fi_msg);
->  	usb_put_function(f_acm);
->  	usb_put_function_instance(f_acm_inst);
-> +	kfree(otg_desc[0]);
-> +	otg_desc[0] = NULL;
-> +
->  	return 0;
->  }
->  
+My fault.
 
-cheers,
--roger
+> > +	}
+> 
+> I think we are loosing information here.
+> The DT disable flags get changed to enable flags (xyz_support)
+> and after this we can't really tell if the device tree really
+> wanted us to disable the feature or enable it based on
+> otg_rev/controller capabilities.
+> 
+> Why not pass controller caps in otg_caps and then disable the
+> flags if requested from DT?
+> 	if (of_find_property(np, "foo-disbale", NULL))
+> 		otg_caps->foo_support = false;
+> 
+> The controller can still override anything afterwards
+> if it things something is wrong.
+> My guess is most controllers won't have to.
+> 
+
+After more thinking, I think I can use the normal usage of disable flags
+to handle this, I will update, thanks.
+
+Li Jun
+> > +}
+> > +EXPORT_SYMBOL_GPL(of_usb_get_otg_caps);
+> > +
+> >  #endif
+> >  
+> >  MODULE_LICENSE("GPL");
+> > diff --git a/include/linux/usb/of.h b/include/linux/usb/of.h
+> > index cfe0528..bbf302b9 100644
+> > --- a/include/linux/usb/of.h
+> > +++ b/include/linux/usb/of.h
+> > @@ -15,6 +15,8 @@
+> >  enum usb_dr_mode of_usb_get_dr_mode(struct device_node *np);
+> >  enum usb_device_speed of_usb_get_maximum_speed(struct device_node *np);
+> >  bool of_usb_host_tpl_support(struct device_node *np);
+> > +void of_usb_get_otg_caps(struct device_node *np,
+> > +			struct usb_otg_caps *otg_caps);
+> >  #else
+> >  static inline enum usb_dr_mode of_usb_get_dr_mode(struct device_node *np)
+> >  {
+> > @@ -30,6 +32,11 @@ static inline bool of_usb_host_tpl_support(struct device_node *np)
+> >  {
+> >  	return false;
+> >  }
+> > +static inline void of_usb_get_otg_caps(struct device_node *np,
+> > +				struct usb_otg_caps *otg_caps)
+> > +{
+> > +
+> > +}
+> >  #endif
+> >  
+> >  #if IS_ENABLED(CONFIG_OF) && IS_ENABLED(CONFIG_USB_SUPPORT)
+> 
+> cheers,
+> -roger
 --
 To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
