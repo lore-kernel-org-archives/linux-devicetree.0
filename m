@@ -1,7 +1,7 @@
 From: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v4 22/23] usb: gadget: serial: allocate and init otg descriptor by otg capabilities
-Date: Wed, 17 Jun 2015 13:43:54 +0800
-Message-ID: <1434519835-27745-23-git-send-email-jun.li@freescale.com>
+Subject: [PATCH v4 20/23] usb: gadget: ncm: allocate and init otg descriptor by otg capabilities
+Date: Wed, 17 Jun 2015 13:43:52 +0800
+Message-ID: <1434519835-27745-21-git-send-email-jun.li@freescale.com>
 References: <1434519835-27745-1-git-send-email-jun.li@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -19,14 +19,14 @@ descriptor unchanged.
 
 Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- drivers/usb/gadget/legacy/serial.c | 29 +++++++++++++++--------------
- 1 file changed, 15 insertions(+), 14 deletions(-)
+ drivers/usb/gadget/legacy/ncm.c | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/usb/gadget/legacy/serial.c b/drivers/usb/gadget/legacy/serial.c
-index 8b7528f..d1cd025 100644
---- a/drivers/usb/gadget/legacy/serial.c
-+++ b/drivers/usb/gadget/legacy/serial.c
-@@ -79,20 +79,7 @@ static struct usb_device_descriptor device_desc = {
+diff --git a/drivers/usb/gadget/legacy/ncm.c b/drivers/usb/gadget/legacy/ncm.c
+index 6ce7421..6a11a4f 100644
+--- a/drivers/usb/gadget/legacy/ncm.c
++++ b/drivers/usb/gadget/legacy/ncm.c
+@@ -69,20 +69,7 @@ static struct usb_device_descriptor device_desc = {
  	.bNumConfigurations =	1,
  };
  
@@ -46,30 +46,29 @@ index 8b7528f..d1cd025 100644
 -};
 +static const struct usb_descriptor_header *otg_desc[2];
  
- /*-------------------------------------------------------------------------*/
+ /* string IDs are assigned dynamically */
+ static struct usb_string strings_dev[] = {
+@@ -114,6 +101,16 @@ static int ncm_do_config(struct usb_configuration *c)
+ 	/* FIXME alloc iConfiguration string, set it in c->strings */
  
-@@ -191,6 +178,16 @@ static int gs_bind(struct usb_composite_dev *cdev)
- 	serial_config_driver.iConfiguration = status;
- 
- 	if (gadget_is_otg(cdev->gadget)) {
+ 	if (gadget_is_otg(c->cdev->gadget)) {
 +		if (!otg_desc[0]) {
 +			struct usb_descriptor_header *usb_desc;
 +
-+			usb_desc = usb_otg_descriptor_alloc(cdev->gadget);
++			usb_desc = usb_otg_descriptor_alloc(c->cdev->gadget);
 +			if (!usb_desc)
 +				return -ENOMEM;
-+			usb_otg_descriptor_init(cdev->gadget, usb_desc);
++			usb_otg_descriptor_init(c->cdev->gadget, usb_desc);
 +			otg_desc[0] = usb_desc;
 +			otg_desc[1] = NULL;
 +		}
- 		serial_config_driver.descriptors = otg_desc;
- 		serial_config_driver.bmAttributes |= USB_CONFIG_ATT_WAKEUP;
+ 		c->descriptors = otg_desc;
+ 		c->bmAttributes |= USB_CONFIG_ATT_WAKEUP;
  	}
-@@ -227,6 +224,10 @@ static int gs_unbind(struct usb_composite_dev *cdev)
- 		usb_put_function(f_serial[i]);
- 		usb_put_function_instance(fi_serial[i]);
- 	}
-+
+@@ -192,6 +189,9 @@ static int gncm_unbind(struct usb_composite_dev *cdev)
+ 		usb_put_function(f_ncm);
+ 	if (!IS_ERR_OR_NULL(f_ncm_inst))
+ 		usb_put_function_instance(f_ncm_inst);
 +	kfree(otg_desc[0]);
 +	otg_desc[0] = NULL;
 +
