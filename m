@@ -1,78 +1,95 @@
 From: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v4 05/23] usb: gadget: composite: add USB_DT_OTG request handling
-Date: Wed, 17 Jun 2015 13:43:37 +0800
-Message-ID: <1434519835-27745-6-git-send-email-jun.li@freescale.com>
+Subject: [PATCH v4 07/23] usb: common: add API to get usb otg features from device tree
+Date: Wed, 17 Jun 2015 13:43:39 +0800
+Message-ID: <1434519835-27745-8-git-send-email-jun.li@freescale.com>
 References: <1434519835-27745-1-git-send-email-jun.li@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1434519835-27745-1-git-send-email-jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org, Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Macpaul Lin <macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Check property of usb hardware to get otg version and if SRP, HNP and ADP
+are supported.
 
-Copy usb_otg_descriptor from config's descriptor if host requests
-USB_DT_OTG.
-
-Signed-off-by: Macpaul Lin <macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Reviewed-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
 ---
- drivers/usb/gadget/composite.c | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ drivers/usb/common/common.c | 29 +++++++++++++++++++++++++++++
+ include/linux/usb/of.h      |  7 +++++++
+ 2 files changed, 36 insertions(+)
 
-diff --git a/drivers/usb/gadget/composite.c b/drivers/usb/gadget/composite.c
-index 4e3447b..2c1c6eb 100644
---- a/drivers/usb/gadget/composite.c
-+++ b/drivers/usb/gadget/composite.c
-@@ -19,6 +19,7 @@
- #include <linux/utsname.h>
- 
- #include <linux/usb/composite.h>
-+#include <linux/usb/otg.h>
- #include <asm/unaligned.h>
- 
- #include "u_os_desc.h"
-@@ -1534,6 +1535,32 @@ composite_setup(struct usb_gadget *gadget, const struct usb_ctrlrequest *ctrl)
- 				value = min(w_length, (u16) value);
- 			}
- 			break;
-+		case USB_DT_OTG:
-+			if (gadget_is_otg(gadget)) {
-+				struct usb_configuration *config;
-+				int otg_desc_len = 0;
+diff --git a/drivers/usb/common/common.c b/drivers/usb/common/common.c
+index b530fd4..b846172 100644
+--- a/drivers/usb/common/common.c
++++ b/drivers/usb/common/common.c
+@@ -154,6 +154,35 @@ bool of_usb_host_tpl_support(struct device_node *np)
+ 	return false;
+ }
+ EXPORT_SYMBOL_GPL(of_usb_host_tpl_support);
 +
-+				if (cdev->config)
-+					config = cdev->config;
-+				else
-+					config = list_first_entry(
-+							&cdev->configs,
-+						struct usb_configuration, list);
-+				if (!config)
-+					goto done;
++/**
++ * of_usb_get_otg_caps - to get usb otg capabilities according to
++ * the passed properties in DT.
++ * @np: Pointer to the given device_node
++ * @otg_caps: Pointer to the target usb_otg_caps to be set
++ *
++ * The function gets and sets the otg capabilities
++ */
++void of_usb_get_otg_caps(struct device_node *np, struct usb_otg_caps *otg_caps)
++{
++	u32 otg_rev;
 +
-+				if (gadget->otg_caps &&
-+					(gadget->otg_caps->otg_rev >= 0x0200))
-+					otg_desc_len += sizeof(
-+						struct usb_otg20_descriptor);
-+				else
-+					otg_desc_len += sizeof(
-+						struct usb_otg_descriptor);
++	if (!otg_caps)
++		return;
 +
-+				value = min_t(int, w_length, otg_desc_len);
-+				memcpy(req->buf, config->descriptors[0], value);
-+			}
-+			break;
- 		}
- 		break;
++	if (!of_property_read_u32(np, "otg-rev", &otg_rev)) {
++		otg_caps->otg_rev = otg_rev;
++		if (!of_find_property(np, "hnp-disable", NULL))
++			otg_caps->hnp_support = true;
++		if (!of_find_property(np, "srp-disable", NULL))
++			otg_caps->hnp_support = true;
++		if (!of_find_property(np, "adp-disable", NULL) &&
++					(otg_caps->otg_rev >= 0x0200))
++			otg_caps->hnp_support = true;
++	}
++}
++EXPORT_SYMBOL_GPL(of_usb_get_otg_caps);
++
+ #endif
  
+ MODULE_LICENSE("GPL");
+diff --git a/include/linux/usb/of.h b/include/linux/usb/of.h
+index cfe0528..bbf302b9 100644
+--- a/include/linux/usb/of.h
++++ b/include/linux/usb/of.h
+@@ -15,6 +15,8 @@
+ enum usb_dr_mode of_usb_get_dr_mode(struct device_node *np);
+ enum usb_device_speed of_usb_get_maximum_speed(struct device_node *np);
+ bool of_usb_host_tpl_support(struct device_node *np);
++void of_usb_get_otg_caps(struct device_node *np,
++			struct usb_otg_caps *otg_caps);
+ #else
+ static inline enum usb_dr_mode of_usb_get_dr_mode(struct device_node *np)
+ {
+@@ -30,6 +32,11 @@ static inline bool of_usb_host_tpl_support(struct device_node *np)
+ {
+ 	return false;
+ }
++static inline void of_usb_get_otg_caps(struct device_node *np,
++				struct usb_otg_caps *otg_caps)
++{
++
++}
+ #endif
+ 
+ #if IS_ENABLED(CONFIG_OF) && IS_ENABLED(CONFIG_USB_SUPPORT)
 -- 
 1.9.1
 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
