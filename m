@@ -1,60 +1,82 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH V7 2/3] OPP: Allow multiple OPP tables to be passed via DT
-Date: Wed, 17 Jun 2015 08:47:35 -0500
-Message-ID: <CAL_Jsq+SdgAf7=Yq7Jk_1d9jTpAOLCEuEDCZvD=-h=2MWsNfFw@mail.gmail.com>
-References: <cover.1433434659.git.viresh.kumar@linaro.org> <263c128844f5a3c9280c8be71f6c9eb1869a5188.1433434659.git.viresh.kumar@linaro.org>
- <CAL_Jsq+EOOeQw42wZi+H82ovLn8LcQUuK9HGT+FvewdhTf7Q1w@mail.gmail.com> <20150617133314.GB15153@linux>
+From: Fabien DESSENNE <fabien.dessenne-qxv4g6HH51o@public.gmane.org>
+Subject: RE: [PATCH] ARM: DT: STiH410: Add bdisp dt nodes
+Date: Wed, 17 Jun 2015 15:52:47 +0200
+Message-ID: <15ED7CB7B68B4D4C96C7D27A1A23941201BA003733@SAFEX1MAIL2.st.com>
+References: <1434461440-3965-1-git-send-email-fabien.dessenne@st.com>
+ <55816455.1030503@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20150617133314.GB15153@linux>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: Rafael Wysocki <rjw@rjwysocki.net>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Nishanth Menon <nm@ti.com>, Mark Brown <broonie@kernel.org>, Mike Turquette <mike.turquette@linaro.org>, Grant Likely <grant.likely@linaro.org>, Olof Johansson <olof@lixom.net>, Sudeep Holla <Sudeep.Holla@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Viswanath Puttagunta <viswanath.puttagunta@linaro.org>, Lucas Stach <l.stach@pengutronix.de>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Abraham <ta.omasab@gmail.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Kevin Hilman <khilman@linaro.org>, Santosh Shilimkar <santosh.shilimkar@oracle.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55816455.1030503-qxv4g6HH51o@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime COQUELIN <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Patrice CHOTARD <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org" <kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 17, 2015 at 8:33 AM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> On 17-06-15, 08:23, Rob Herring wrote:
->> > +                       operating-points-v2 = <&cpu0_opp_table_slow>, <&cpu0_opp_table_fast>;
->>
->> You've made a fundamental change here in that this can now be a list
->> of phandles. There should be some description on what a list means
->> (merge the tables?, select one?).
->
-> Did you miss the description I wrote few lines earlier or are you
-> asking for something else? This is what I wrote earlier:
->
->> > +Devices may want to choose OPP tables at runtime and so can provide a list of
->> > +phandles here. But only *one* of them should be chosen at runtime.
->
-> So, clearly only ONE of the tables should be used.
+Hi Maxime,
 
-Yes, never mind.
+> -----Original Message-----
+> From: Maxime COQUELIN
+> Sent: mercredi 17 juin 2015 14:13
+> To: Fabien DESSENNE; Srinivas Kandagatla; Patrice CHOTARD; Rob Herring;
+> Pawel Moll; Mark Rutland; Ian Campbell; Kumar Gala; Russell King; linux-arm-
+> kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org;
+> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: Benjamin Gaignard
+> Subject: Re: [PATCH] ARM: DT: STiH410: Add bdisp dt nodes
+> 
+> Hi Fabien,
+> 
+> On 06/16/2015 03:30 PM, Fabien Dessenne wrote:
+> > Add the bdisp (2D blitter for STMicroelectronics SoC) dt nodes for the
+> > first of the two bdisp devices, defining register address, interrupt
+> > and clock.
+> >
+> > Signed-off-by: Fabien Dessenne <fabien.dessenne-qxv4g6HH51o@public.gmane.org>
+> > ---
+> >   arch/arm/boot/dts/stih410.dtsi | 12 ++++++++++++
+> >   1 file changed, 12 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/stih410.dtsi
+> > b/arch/arm/boot/dts/stih410.dtsi index 208b5e8..6f40bc9 100644
+> > --- a/arch/arm/boot/dts/stih410.dtsi
+> > +++ b/arch/arm/boot/dts/stih410.dtsi
+> > @@ -10,6 +10,10 @@
+> >   #include "stih407-family.dtsi"
+> >   #include "stih410-pinctrl.dtsi"
+> >   / {
+> > +	aliases {
+> > +		bdisp0 = &bdisp0;
+> > +	};
+> > +
+> >   	soc {
+> >   		usb2_picophy1: phy2 {
+> >   			compatible = "st,stih407-usb2-phy"; @@ -218,5
+> +222,13 @@
+> >   				};
+> >   			};
+> >   		};
+> > +
+> > +		bdisp0:bdisp@9f10000 {
+> > +			compatible = "st,stih407-bdisp";
+> > +			reg = <0x9f10000 0x1000>;
+> > +			interrupts = <GIC_SPI 38 IRQ_TYPE_NONE>;
+> > +			clock-names = "bdisp";
+> > +			clocks = <&clk_s_c0_flexgen CLK_IC_BDISP_0>;
+> > +		};
+> 
+> Isn't the bdisp also present on STiH407 SoC?
+> If so, could you please move this node to stih407-family file?
+> 
+> Thanks,
+> Maxime
 
->
->> I think this needs to have a defined order and the platform should
->> know what that is. For example, if you read the efuses and decide you
->> need the "slow" table, you know to pick the first entry. Then you
->> don't need opp-name. Does that work for QCom?
->
-> Why forcing on the order here? For example, consider a case where the
-> platform can have four tables, A B C D. Now DT is free to pass all
-> four or just a subset of those. Like, for some boards table B doesn't
-> stand valid. And so it may wanna pass just A C D. And so keeping these
-> tables in order is going to break for sure. Flexibility is probably
-> better in this case.
+For the time being, it is not planned to be supported on STiH407. Maybe one day...
 
-Defined order is a key part of DT bindings. We solve the variable
-length problem with name lists associated with variable length
-property like:
-
-operating-point-names = "slow", "fast";
-
-I'm not a fan of doing this if we can avoid it, but we should at least
-follow the same pattern. Don't send me a patch with that yet, I want
-to hear from Stephen.
-
-You can also use "status" to disable specific tables rather than
-removing from the list.
-
-Rob
+Fabien
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
