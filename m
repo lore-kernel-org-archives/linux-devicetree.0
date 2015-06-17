@@ -1,389 +1,68 @@
-From: <Frank.Li@freescale.com>
-Subject: [PATCH 4/8] ARM: pinctrl: imx: add i.mx6ul pinctrl driver
-Date: Wed, 17 Jun 2015 23:39:25 +0800
-Message-ID: <1434555569-8237-5-git-send-email-Frank.Li@freescale.com>
-References: <1434555569-8237-1-git-send-email-Frank.Li@freescale.com>
+From: <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH 0/8] add basic support for i.mx6 ul chip
+Date: Wed, 17 Jun 2015 23:39:21 +0800
+Message-ID: <1434555569-8237-1-git-send-email-Frank.Li@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1434555569-8237-1-git-send-email-Frank.Li@freescale.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, shawn.guo@linaro.org, shawnguo@kernel.org, linus.walleij@linaro.org, lznuaa@gmail.com
-Cc: linux-gpio@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, Frank Li <Frank.Li@freescale.com>, Anson Huang <b20788@freescale.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lznuaa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Frank Li <Frank.Li@freescale.com>
+From: Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-Add i.MX6UL pinctrl driver support.
+Add basic function support i.mx6ul.
+add simple dts.
+add full pin function define
+add clock support.
+add low level debug
 
-Signed-off-by: Anson Huang <b20788@freescale.com>
-Signed-off-by: Frank Li <Frank.Li@freescale.com>
----
- drivers/pinctrl/freescale/Kconfig          |   7 +
- drivers/pinctrl/freescale/Makefile         |   1 +
- drivers/pinctrl/freescale/pinctrl-imx6ul.c | 323 +++++++++++++++++++++++++++++
- 3 files changed, 331 insertions(+)
+Anson Huang (1):
+  ARM: imx: add low-level debug support for i.mx6ul
+
+Frank Li (7):
+  ARM: imx: add i.mx6ul msl support
+  ARM: imx: add imx6ul clk tree support
+  Document: dt: binding: imx: update document for imx6ul support
+  ARM: pinctrl: imx: add i.mx6ul pinctrl driver
+  ARM: dts: add i.mx6ul pin function include file
+  ARM: dts: imx: add imx6ul and imx6ul evk board support
+  ARM: imx: imx_v6_v7_defconfig enable imx6ul support
+
+ .../devicetree/bindings/clock/imx6ul-clock.txt     |  13 +
+ .../bindings/pinctrl/fsl,imx6ul-pinctrl.txt        |  36 +
+ arch/arm/Kconfig.debug                             |   9 +
+ arch/arm/boot/dts/Makefile                         |   2 +
+ arch/arm/boot/dts/imx6ul-14x14-evk.dts             | 337 ++++++++
+ arch/arm/boot/dts/imx6ul-pinfunc.h                 | 938 +++++++++++++++++++++
+ arch/arm/boot/dts/imx6ul.dtsi                      | 645 ++++++++++++++
+ arch/arm/configs/imx_v6_v7_defconfig               |   1 +
+ arch/arm/include/debug/imx-uart.h                  |  13 +
+ arch/arm/mach-imx/Kconfig                          |   8 +
+ arch/arm/mach-imx/Makefile                         |   1 +
+ arch/arm/mach-imx/mach-imx6ul.c                    |  43 +
+ drivers/clk/imx/Makefile                           |   1 +
+ drivers/clk/imx/clk-imx6ul.c                       | 436 ++++++++++
+ drivers/pinctrl/freescale/Kconfig                  |   7 +
+ drivers/pinctrl/freescale/Makefile                 |   1 +
+ drivers/pinctrl/freescale/pinctrl-imx6ul.c         | 323 +++++++
+ include/dt-bindings/clock/imx6ul-clock.h           | 240 ++++++
+ 18 files changed, 3054 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/imx6ul-clock.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx6ul-pinctrl.txt
+ create mode 100644 arch/arm/boot/dts/imx6ul-14x14-evk.dts
+ create mode 100644 arch/arm/boot/dts/imx6ul-pinfunc.h
+ create mode 100644 arch/arm/boot/dts/imx6ul.dtsi
+ create mode 100644 arch/arm/mach-imx/mach-imx6ul.c
+ create mode 100644 drivers/clk/imx/clk-imx6ul.c
  create mode 100644 drivers/pinctrl/freescale/pinctrl-imx6ul.c
+ create mode 100644 include/dt-bindings/clock/imx6ul-clock.h
 
-diff --git a/drivers/pinctrl/freescale/Kconfig b/drivers/pinctrl/freescale/Kconfig
-index 12ef544..debe121 100644
---- a/drivers/pinctrl/freescale/Kconfig
-+++ b/drivers/pinctrl/freescale/Kconfig
-@@ -87,6 +87,13 @@ config PINCTRL_IMX6SX
- 	help
- 	  Say Y here to enable the imx6sx pinctrl driver
- 
-+config PINCTRL_IMX6UL
-+	bool "IMX6UL pinctrl driver"
-+	depends on SOC_IMX6UL
-+	select PINCTRL_IMX
-+	help
-+	  Say Y here to enable the imx6ul pinctrl driver
-+
- config PINCTRL_IMX7D
- 	bool "IMX7D pinctrl driver"
- 	depends on SOC_IMX7D
-diff --git a/drivers/pinctrl/freescale/Makefile b/drivers/pinctrl/freescale/Makefile
-index 343cb43..d44c9e2 100644
---- a/drivers/pinctrl/freescale/Makefile
-+++ b/drivers/pinctrl/freescale/Makefile
-@@ -12,6 +12,7 @@ obj-$(CONFIG_PINCTRL_IMX6Q)	+= pinctrl-imx6q.o
- obj-$(CONFIG_PINCTRL_IMX6Q)	+= pinctrl-imx6dl.o
- obj-$(CONFIG_PINCTRL_IMX6SL)	+= pinctrl-imx6sl.o
- obj-$(CONFIG_PINCTRL_IMX6SX)	+= pinctrl-imx6sx.o
-+obj-$(CONFIG_PINCTRL_IMX6UL)	+= pinctrl-imx6ul.o
- obj-$(CONFIG_PINCTRL_IMX7D)	+= pinctrl-imx7d.o
- obj-$(CONFIG_PINCTRL_VF610)	+= pinctrl-vf610.o
- obj-$(CONFIG_PINCTRL_MXS)	+= pinctrl-mxs.o
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx6ul.c b/drivers/pinctrl/freescale/pinctrl-imx6ul.c
-new file mode 100644
-index 0000000..b182be7
---- /dev/null
-+++ b/drivers/pinctrl/freescale/pinctrl-imx6ul.c
-@@ -0,0 +1,323 @@
-+/*
-+ * Copyright (C) 2015 Freescale Semiconductor, Inc.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/init.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/pinctrl/pinctrl.h>
-+
-+#include "pinctrl-imx.h"
-+
-+enum imx6ul_pads {
-+	MX6UL_PAD_RESERVE0 = 0,
-+	MX6UL_PAD_RESERVE1 = 1,
-+	MX6UL_PAD_RESERVE2 = 2,
-+	MX6UL_PAD_RESERVE3 = 3,
-+	MX6UL_PAD_RESERVE4 = 4,
-+	MX6UL_PAD_RESERVE5 = 5,
-+	MX6UL_PAD_RESERVE6 = 6,
-+	MX6UL_PAD_RESERVE7 = 7,
-+	MX6UL_PAD_RESERVE8 = 8,
-+	MX6UL_PAD_RESERVE9 = 9,
-+	MX6UL_PAD_RESERVE10 = 10,
-+	MX6UL_PAD_SNVS_TAMPER4 = 11,
-+	MX6UL_PAD_RESERVE12 = 12,
-+	MX6UL_PAD_RESERVE13 = 13,
-+	MX6UL_PAD_RESERVE14 = 14,
-+	MX6UL_PAD_RESERVE15 = 15,
-+	MX6UL_PAD_RESERVE16 = 16,
-+	MX6UL_PAD_JTAG_MOD = 17,
-+	MX6UL_PAD_JTAG_TMS = 18,
-+	MX6UL_PAD_JTAG_TDO = 19,
-+	MX6UL_PAD_JTAG_TDI = 20,
-+	MX6UL_PAD_JTAG_TCK = 21,
-+	MX6UL_PAD_JTAG_TRST_B = 22,
-+	MX6UL_PAD_GPIO1_IO00 = 23,
-+	MX6UL_PAD_GPIO1_IO01 = 24,
-+	MX6UL_PAD_GPIO1_IO02 = 25,
-+	MX6UL_PAD_GPIO1_IO03 = 26,
-+	MX6UL_PAD_GPIO1_IO04 = 27,
-+	MX6UL_PAD_GPIO1_IO05 = 28,
-+	MX6UL_PAD_GPIO1_IO06 = 29,
-+	MX6UL_PAD_GPIO1_IO07 = 30,
-+	MX6UL_PAD_GPIO1_IO08 = 31,
-+	MX6UL_PAD_GPIO1_IO09 = 32,
-+	MX6UL_PAD_UART1_TX_DATA = 33,
-+	MX6UL_PAD_UART1_RX_DATA = 34,
-+	MX6UL_PAD_UART1_CTS_B = 35,
-+	MX6UL_PAD_UART1_RTS_B = 36,
-+	MX6UL_PAD_UART2_TX_DATA = 37,
-+	MX6UL_PAD_UART2_RX_DATA = 38,
-+	MX6UL_PAD_UART2_CTS_B = 39,
-+	MX6UL_PAD_UART2_RTS_B = 40,
-+	MX6UL_PAD_UART3_TX_DATA = 41,
-+	MX6UL_PAD_UART3_RX_DATA = 42,
-+	MX6UL_PAD_UART3_CTS_B = 43,
-+	MX6UL_PAD_UART3_RTS_B = 44,
-+	MX6UL_PAD_UART4_TX_DATA = 45,
-+	MX6UL_PAD_UART4_RX_DATA = 46,
-+	MX6UL_PAD_UART5_TX_DATA = 47,
-+	MX6UL_PAD_UART5_RX_DATA = 48,
-+	MX6UL_PAD_ENET1_RX_DATA0 = 49,
-+	MX6UL_PAD_ENET1_RX_DATA1 = 50,
-+	MX6UL_PAD_ENET1_RX_EN = 51,
-+	MX6UL_PAD_ENET1_TX_DATA0 = 52,
-+	MX6UL_PAD_ENET1_TX_DATA1 = 53,
-+	MX6UL_PAD_ENET1_TX_EN = 54,
-+	MX6UL_PAD_ENET1_TX_CLK = 55,
-+	MX6UL_PAD_ENET1_RX_ER = 56,
-+	MX6UL_PAD_ENET2_RX_DATA0 = 57,
-+	MX6UL_PAD_ENET2_RX_DATA1 = 58,
-+	MX6UL_PAD_ENET2_RX_EN = 59,
-+	MX6UL_PAD_ENET2_TX_DATA0 = 60,
-+	MX6UL_PAD_ENET2_TX_DATA1 = 61,
-+	MX6UL_PAD_ENET2_TX_EN = 62,
-+	MX6UL_PAD_ENET2_TX_CLK = 63,
-+	MX6UL_PAD_ENET2_RX_ER = 64,
-+	MX6UL_PAD_LCD_CLK = 65,
-+	MX6UL_PAD_LCD_ENABLE = 66,
-+	MX6UL_PAD_LCD_HSYNC = 67,
-+	MX6UL_PAD_LCD_VSYNC = 68,
-+	MX6UL_PAD_LCD_RESET = 69,
-+	MX6UL_PAD_LCD_DATA00 = 70,
-+	MX6UL_PAD_LCD_DATA01 = 71,
-+	MX6UL_PAD_LCD_DATA02 = 72,
-+	MX6UL_PAD_LCD_DATA03 = 73,
-+	MX6UL_PAD_LCD_DATA04 = 74,
-+	MX6UL_PAD_LCD_DATA05 = 75,
-+	MX6UL_PAD_LCD_DATA06 = 76,
-+	MX6UL_PAD_LCD_DATA07 = 77,
-+	MX6UL_PAD_LCD_DATA08 = 78,
-+	MX6UL_PAD_LCD_DATA09 = 79,
-+	MX6UL_PAD_LCD_DATA10 = 80,
-+	MX6UL_PAD_LCD_DATA11 = 81,
-+	MX6UL_PAD_LCD_DATA12 = 82,
-+	MX6UL_PAD_LCD_DATA13 = 83,
-+	MX6UL_PAD_LCD_DATA14 = 84,
-+	MX6UL_PAD_LCD_DATA15 = 85,
-+	MX6UL_PAD_LCD_DATA16 = 86,
-+	MX6UL_PAD_LCD_DATA17 = 87,
-+	MX6UL_PAD_LCD_DATA18 = 88,
-+	MX6UL_PAD_LCD_DATA19 = 89,
-+	MX6UL_PAD_LCD_DATA20 = 90,
-+	MX6UL_PAD_LCD_DATA21 = 91,
-+	MX6UL_PAD_LCD_DATA22 = 92,
-+	MX6UL_PAD_LCD_DATA23 = 93,
-+	MX6UL_PAD_NAND_RE_B = 94,
-+	MX6UL_PAD_NAND_WE_B = 95,
-+	MX6UL_PAD_NAND_DATA00 = 96,
-+	MX6UL_PAD_NAND_DATA01 = 97,
-+	MX6UL_PAD_NAND_DATA02 = 98,
-+	MX6UL_PAD_NAND_DATA03 = 99,
-+	MX6UL_PAD_NAND_DATA04 = 100,
-+	MX6UL_PAD_NAND_DATA05 = 101,
-+	MX6UL_PAD_NAND_DATA06 = 102,
-+	MX6UL_PAD_NAND_DATA07 = 103,
-+	MX6UL_PAD_NAND_ALE = 104,
-+	MX6UL_PAD_NAND_WP_B = 105,
-+	MX6UL_PAD_NAND_READY_B = 106,
-+	MX6UL_PAD_NAND_CE0_B = 107,
-+	MX6UL_PAD_NAND_CE1_B = 108,
-+	MX6UL_PAD_NAND_CLE = 109,
-+	MX6UL_PAD_NAND_DQS = 110,
-+	MX6UL_PAD_SD1_CMD = 111,
-+	MX6UL_PAD_SD1_CLK = 112,
-+	MX6UL_PAD_SD1_DATA0 = 113,
-+	MX6UL_PAD_SD1_DATA1 = 114,
-+	MX6UL_PAD_SD1_DATA2 = 115,
-+	MX6UL_PAD_SD1_DATA3 = 116,
-+	MX6UL_PAD_CSI_MCLK = 117,
-+	MX6UL_PAD_CSI_PIXCLK = 118,
-+	MX6UL_PAD_CSI_VSYNC = 119,
-+	MX6UL_PAD_CSI_HSYNC = 120,
-+	MX6UL_PAD_CSI_DATA00 = 121,
-+	MX6UL_PAD_CSI_DATA01 = 122,
-+	MX6UL_PAD_CSI_DATA02 = 123,
-+	MX6UL_PAD_CSI_DATA03 = 124,
-+	MX6UL_PAD_CSI_DATA04 = 125,
-+	MX6UL_PAD_CSI_DATA05 = 126,
-+	MX6UL_PAD_CSI_DATA06 = 127,
-+	MX6UL_PAD_CSI_DATA07 = 128,
-+};
-+
-+/* Pad names for the pinmux subsystem */
-+static const struct pinctrl_pin_desc imx6ul_pinctrl_pads[] = {
-+	IMX_PINCTRL_PIN(MX6UL_PAD_RESERVE0),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_RESERVE1),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_RESERVE2),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_RESERVE3),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_RESERVE4),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_RESERVE5),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_RESERVE6),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_RESERVE7),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_RESERVE8),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_RESERVE9),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_RESERVE10),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_SNVS_TAMPER4),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_RESERVE12),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_RESERVE13),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_RESERVE14),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_RESERVE15),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_RESERVE16),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_JTAG_MOD),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_JTAG_TMS),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_JTAG_TDO),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_JTAG_TDI),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_JTAG_TCK),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_JTAG_TRST_B),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_GPIO1_IO00),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_GPIO1_IO01),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_GPIO1_IO02),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_GPIO1_IO03),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_GPIO1_IO04),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_GPIO1_IO05),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_GPIO1_IO06),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_GPIO1_IO07),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_GPIO1_IO08),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_GPIO1_IO09),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_UART1_TX_DATA),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_UART1_RX_DATA),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_UART1_CTS_B),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_UART1_RTS_B),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_UART2_TX_DATA),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_UART2_RX_DATA),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_UART2_CTS_B),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_UART2_RTS_B),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_UART3_TX_DATA),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_UART3_RX_DATA),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_UART3_CTS_B),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_UART3_RTS_B),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_UART4_TX_DATA),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_UART4_RX_DATA),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_UART5_TX_DATA),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_UART5_RX_DATA),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_ENET1_RX_DATA0),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_ENET1_RX_DATA1),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_ENET1_RX_EN),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_ENET1_TX_DATA0),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_ENET1_TX_DATA1),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_ENET1_TX_EN),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_ENET1_TX_CLK),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_ENET1_RX_ER),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_ENET2_RX_DATA0),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_ENET2_RX_DATA1),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_ENET2_RX_EN),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_ENET2_TX_DATA0),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_ENET2_TX_DATA1),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_ENET2_TX_EN),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_ENET2_TX_CLK),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_ENET2_RX_ER),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_LCD_CLK),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_LCD_ENABLE),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_LCD_HSYNC),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_LCD_VSYNC),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_LCD_RESET),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_LCD_DATA00),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_LCD_DATA01),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_LCD_DATA02),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_LCD_DATA03),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_LCD_DATA04),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_LCD_DATA05),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_LCD_DATA06),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_LCD_DATA07),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_LCD_DATA08),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_LCD_DATA09),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_LCD_DATA10),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_LCD_DATA11),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_LCD_DATA12),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_LCD_DATA13),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_LCD_DATA14),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_LCD_DATA15),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_LCD_DATA16),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_LCD_DATA17),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_LCD_DATA18),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_LCD_DATA19),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_LCD_DATA20),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_LCD_DATA21),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_LCD_DATA22),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_LCD_DATA23),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_NAND_RE_B),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_NAND_WE_B),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_NAND_DATA00),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_NAND_DATA01),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_NAND_DATA02),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_NAND_DATA03),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_NAND_DATA04),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_NAND_DATA05),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_NAND_DATA06),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_NAND_DATA07),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_NAND_ALE),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_NAND_WP_B),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_NAND_READY_B),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_NAND_CE0_B),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_NAND_CE1_B),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_NAND_CLE),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_NAND_DQS),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_SD1_CMD),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_SD1_CLK),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_SD1_DATA0),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_SD1_DATA1),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_SD1_DATA2),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_SD1_DATA3),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_CSI_MCLK),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_CSI_PIXCLK),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_CSI_VSYNC),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_CSI_HSYNC),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_CSI_DATA00),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_CSI_DATA01),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_CSI_DATA02),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_CSI_DATA03),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_CSI_DATA04),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_CSI_DATA05),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_CSI_DATA06),
-+	IMX_PINCTRL_PIN(MX6UL_PAD_CSI_DATA07),
-+};
-+
-+static struct imx_pinctrl_soc_info imx6ul_pinctrl_info = {
-+	.pins = imx6ul_pinctrl_pads,
-+	.npins = ARRAY_SIZE(imx6ul_pinctrl_pads),
-+};
-+
-+static struct of_device_id imx6ul_pinctrl_of_match[] = {
-+	{ .compatible = "fsl,imx6ul-iomuxc", },
-+	{ /* sentinel */ }
-+};
-+
-+static int imx6ul_pinctrl_probe(struct platform_device *pdev)
-+{
-+	return imx_pinctrl_probe(pdev, &imx6ul_pinctrl_info);
-+}
-+
-+static struct platform_driver imx6ul_pinctrl_driver = {
-+	.driver = {
-+		.name = "imx6ul-pinctrl",
-+		.owner = THIS_MODULE,
-+		.of_match_table = of_match_ptr(imx6ul_pinctrl_of_match),
-+	},
-+	.probe = imx6ul_pinctrl_probe,
-+	.remove = imx_pinctrl_remove,
-+};
-+
-+static int __init imx6ul_pinctrl_init(void)
-+{
-+	return platform_driver_register(&imx6ul_pinctrl_driver);
-+}
-+arch_initcall(imx6ul_pinctrl_init);
-+
-+static void __exit imx6ul_pinctrl_exit(void)
-+{
-+	platform_driver_unregister(&imx6ul_pinctrl_driver);
-+}
-+module_exit(imx6ul_pinctrl_exit);
-+
-+MODULE_AUTHOR("Anson Huang <Anson.Huang@freescale.com>");
-+MODULE_DESCRIPTION("Freescale imx6ul pinctrl driver");
-+MODULE_LICENSE("GPL v2");
 -- 
 1.9.1
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
