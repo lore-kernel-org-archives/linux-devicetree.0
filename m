@@ -1,61 +1,47 @@
-From: =?UTF-8?B?Tm9yYWxmIFRyw7hubmVz?= <noralf@tronnes.org>
-Subject: Re: [PATCH v2 2/3] watchdog: bcm2835: Add poweroff code for the Raspberry
- Pi
-Date: Wed, 17 Jun 2015 12:58:47 +0200
-Message-ID: <558152E7.9020606@tronnes.org>
-References: <1434195541-28368-1-git-send-email-noralf@tronnes.org> <1434195541-28368-2-git-send-email-noralf@tronnes.org> <557F930E.8010002@wwwdotorg.org> <557FEECE.9060909@tronnes.org> <5580CD4B.70003@wwwdotorg.org>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v6 05/14] crypto: marvell/CESA: add TDMA support
+Date: Wed, 17 Jun 2015 13:33:24 +0200
+Message-ID: <20150617133324.1ee6ad55@bbrezillon>
+References: <1434527142-3609-1-git-send-email-boris.brezillon@free-electrons.com>
+	<1434527142-3609-6-git-send-email-boris.brezillon@free-electrons.com>
+	<20150617095001.GA11538@gondor.apana.org.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5580CD4B.70003@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <20150617095001.GA11538@gondor.apana.org.au>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: "David S. Miller" <davem@davemloft.net>, linux-crypto@vger.kernel.org, Arnaud Ebalard <arno@natisbad.org>, Tawfik Bayouk <tawfik@marvell.com>, Lior Amsalem <alior@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Eran Ben-Avi <benavi@marvell.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Imre Kaloz <kaloz@openwrt.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, 17 Jun 2015 17:50:01 +0800
+Herbert Xu <herbert@gondor.apana.org.au> wrote:
 
-Den 17.06.2015 03:28, skrev Stephen Warren:
-> On 06/16/2015 03:39 AM, Noralf Tr=C3=B8nnes wrote:
->> Den 16.06.2015 05:07, skrev Stephen Warren:
->>> On 06/13/2015 05:39 AM, Noralf Tr=C3=B8nnes wrote:
->>>> This adds a new poweroff function to the watchdog driver for the
->>>> Raspberry Pi. Currently poweroff/halt results in a reboot.
->>>>
->>>> The Raspberry Pi firmware uses the RSTS register to know which
->>>> partiton to boot from. The partiton value is spread into bits
->>>> 0, 2, 4, 6, 8, 10. Partiton 63 is a special partition used by
->>>> the firmware to indicate halt.
->>>>
->>>> The firmware made this change in 19 Aug 2013 and was matched
->>>> by the downstream commit:
->>>> Changes for new NOOBS multi partition booting from gsh
->>> I don't understand why we need a new compatible value here; why not
->>> simply modify the existing bcm2835_power_off() function. That is wr=
-itten
->>> to do something that's interpreted by the RPi firmware, not somethi=
-ng
->>> that the bcm2835 HW does.
->>>
->>> Admittedly the current name is a bit misleading, but fixing that sh=
-ould
->>> be a separate change to fixing the implementation to do what the cu=
-rrent
->>> firmware expects.
->> There are other boards that use the BCM2835 and I didn't want to bre=
-ak the
->> behaviour for those that use the reference firmware.
-> We don't support those other board in mainline Linux AFAIK. In other
-> discussions, Eric Anholt stated that the Roku 2 for example doesn't u=
-se
-> the same firmware (albeit they were derived from the same base a long
-> way back apparently) so I have no good reason to believe this logic i=
-s a
-> standard across difference bcm2835 devices. Do you know more specific
-> details?
+> On Wed, Jun 17, 2015 at 09:45:33AM +0200, Boris Brezillon wrote:
+> >
+> > +	ret = dma_map_sg(cesa_dev->dev, req->src, creq->src_nents,
+> > +			 DMA_TO_DEVICE);
+> > +	if (!ret)
+> > +		return -ENOMEM;
+> > +
+> > +	creq->src_nents = ret;
+> 
+> DMA-API-HOWTO says that you must retain the original nents and
+> use it when you call dma_unmap_sg.  So I'm afraid one more repost
+> is needed :)
 
-I didn't know that only Raspberry Pi was supported and I have no detail=
-s=20
-about
-the other boards. I'll send a new patch. Thanks.
+My bad (again :-/).
+Actually, I think I don't need to save the dma_map_sg return val, since
+I'm using the sg_next function to iterate over the scatterlist. Am I
+right ?
+IOW, is the ->map_sg() function (in dma_map_ops) supposed to merge the
+contiguous entries and then flag the unused entries with the is_chain
+flag ?
+If that's not the case, and the ->map_sg() just marks the merged entries
+as empty (length = 0), then I'll have to rework my iterator algorithm.
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
