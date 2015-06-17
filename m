@@ -1,110 +1,124 @@
-From: "Dov Levenglick" <dovl@codeaurora.org>
-Subject: Re: [PATCH v2 4/4] scsi: ufs: probe and init of variant driver from
- the platform device
-Date: Wed, 17 Jun 2015 07:42:12 -0000
-Message-ID: <6934f39953e011404dd5d39073e6ebba.squirrel@www.codeaurora.org>
-References: <1433324255-27510-1-git-send-email-ygardi@codeaurora.org>
-    <1433324255-27510-5-git-send-email-ygardi@codeaurora.org>
-    <CAC5umyis6HU06KU-aSGoy6mCt-u+5Pz16nDk1qHrcsTnFo_2hA@mail.gmail.com>
-    <763dbc7b708b5d5b18ce0b5adcc41016.squirrel@www.codeaurora.org>
-    <CAC5umyhWTLe_K+q9U=4M4N4Yu4Hp7hUxy4QiL=ch=JmYEiMBnQ@mail.gmail.com>
-    <68c91f08f2be6c84055a303ca8aa3fe0.squirrel@www.codeaurora.org>
-    <CAL_JsqKYqZyayzN3imi55EFP=ao4NTSgfXjP5J5rSxMAg4ZSMA@mail.gmail.com>
-    <bfade46f9d953e10240acb835105b81d.squirrel@www.codeaurora.org>
-    <CAL_Jsq+SWq9=xTjVvQH2tMoq=g_rjk44A7T4TMFKvDiUp_ahCg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+SWq9=xTjVvQH2tMoq=g_rjk44A7T4TMFKvDiUp_ahCg@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Dov Levenglick <dovl@codeaurora.org>, Yaniv Gardi <ygardi@codeaurora.org>, Akinobu Mita <akinobu.mita@gmail.com>, merez@qti.qualcomm.com, dovl@qti.qualcomm.com, Jej B <james.bottomley@hansenpartnership.com>, LKML <linux-kernel@vger.kernel.org>, linux-scsi@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Santosh Y <santoshsy@gmail.com>, linux-scsi-owner@vger.kernel.org, Subhash Jadavani <subhashj@codeaurora.org>, Paul Bolle <pebolle@tiscali.nl>, Gilad Broner <gbroner@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinayak Holikatti <vinholikatti@gmail.com>, "James E.J. Bottomley" <jbottomley@odin.com>, Dolev Raviv <draviv@codeaurora.org>, Christoph Hellwig <hch@ls>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v6 00/14] crypto: add a new driver for Marvell's CESA
+Date: Wed, 17 Jun 2015 09:45:28 +0200
+Message-ID: <1434527142-3609-1-git-send-email-boris.brezillon@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> On Tue, Jun 9, 2015 at 12:53 AM, Dov Levenglick <dovl@codeaurora.org>
-> wrote:
->>> On Sun, Jun 7, 2015 at 10:32 AM,  <ygardi@codeaurora.org> wrote:
->>>>> 2015-06-05 5:53 GMT+09:00  <ygardi@codeaurora.org>:
->
-> [...]
->
->>>> If ufshcd-pltfrm driver is loaded before ufs-qcom, (what actually
->>>> happens
->>>> always), then the calling to of_platform_populate() which is added,
->>>> guarantees that ufs-qcom probe will be called and finish, before
->>>> ufshcd_pltfrm probe continues.
->>>> so ufs_variant device is always there, and ready.
->>>> I think it means we are safe - since either way, we make sure ufs-qcom
->>>> probe will be called and finish before dealing with ufs_variant device
->>>> in
->>>> ufshcd_pltfrm probe.
->>>
->>> This is due to the fact that you have 2 platform drivers. You should
->>> only have 1 (and 1 node). If you really think you need 2, then you
->>> should do like many other common *HCIs do and make the base UFS driver
->>> a set of library functions that drivers can use or call. Look at EHCI,
->>> AHCI, SDHCI, etc. for inspiration.
->>
->> Hi Rob,
->> We did look at SDHCI and decided to go with this design due to its
->> simplicity and lack of library functions. Yaniv described the proper
->> flow
->> of probing and, as we understand things, it is guaranteed to work as
->> designed.
->>
->> Furthermore, the design of having a subcore in the dts is used in the
->> Linux kernel. Please have a look at drivers/usb/dwc3 where - as an
->> example
->> - both dwc3-msm and dwc3-exynox invoke the probing function in core.c
->> (i.e. the shared underlying Synopsys USB dwc3 core) by calling
->> of_platform_populate().
->
-> That binding has the same problem. Please don't propagate that. There
-> is no point in a sub-node in this case.
->
->> Do you see a benefit in the SDHCi implementation?
->
-> Yes, it does not let the kernel driver design dictate the hardware
-> description.
->
-> Rob
->
+Hello,
 
-Hi Rob,
-We appear to be having a philosophical disagreement on the practicality of
-designing the ufshcd variant's implementation - in other words, we
-disagree on the proper design pattern to follow here.
-If I understand correctly, you are concerned with a design pattern wherein
-a generic implementation is wrapped - at the device-tree level - in a
-variant implementation. The main reason for your concern is that you don't
-want the "kernel driver design dictate the hardware description".
+This patch series adds a new driver supporting Marvell's CESA IP.
+This driver addresses some limitations of the existing one.
+>From a performance and CPU load point of view the most important
+limitation in the existing driver is the lack of DMA support, thus
+preventing us from chaining crypto operations.
 
-We considered this point when we suggested our implementation (both before
-and after you raised it) and reached the conclusion that - while an
-important consideration - it should not be the prevailing one. I believe
-that you will agree once you read the reasoning. What guided us was the
-following:
-1. Keep our change minimal.
-2. Keep our patch in line with known design patterns in the kernel.
-3. Have our patch extend the existing solution rather than reinvent it.
+I know we usually try to adapt existing drivers instead of replacing them
+by new ones, but after trying to refactor the mv_cesa driver I realized it
+would take longer than writing an new one from scratch.
 
-It is the 3rd point that is most important to this discussion, since UFS
-has already been deployed by various vendors and is used by OEM. Changing
-ufshcd to a set of library functions that would be called by variants
-would necessarily introduce a significant change to the code flow in many
-places and would pose a backward compatibility issue. By using the tried
-and tested pattern of subnodes in the dts we were able to keep the change
-simple, succinct, understandable, maintainable and backward compatible. In
-fact, the entire logic tying of the generic implementation to the variant
-takes ~20 lines of code - both short and elegant.
+Here are the main features brought by this new driver:
+- support for armada SoCs (up to 38x) while keeping support for older ones
+  (Orion and Kirkwood). Note that old DT bindings (those used on Orion and
+  Kirkwood platforms) are supported, or IOTW, old DTs are compatible with
+  this new driver.
+- DMA mode to offload the CPU in case of intensive crypto usage
+- new algorithms: SHA256, DES and 3DES
 
-As to your concern, while I understand it and understand the underlying
-logic, I don't think that it should outweigh the other considerations that
-I outlined here.
+I'd like to thank Arnaud, who has carefully reviewed several iterations of
+this driver, helped me improved my implementation, provided support for
+several crypto algorithms, provided support for armada-370 and tested
+the driver on different platforms, hence the SoB and dual MODULE_AUTHOR
+in the driver code.
 
-Dov
+In this version I dropped the DT changes, but you'll find them in my
+cesa-v6 branch [1]. In this branch you'll find everything you need to
+test on all Marvell platforms (including the old ones).
+I'll post a series updating all the DTs once this driver has been merged.
 
-QUALCOMM ISRAEL, on behalf of Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Best Regards,
+
+Boris
+
+[1]https://github.com/bbrezillon/linux-marvell/tree/cesa-v6
+
+Changes since v5:
+- fix the dma_map_sg return code check (again)
+- fix select entries in the Kconfig option
+
+Changes since v4:
+- fix the dma_map_sg return code check
+- add import/export functions to all HMAC algos
+- update the passed IV when handling cipher requests
+- properly handle requests in the crypto queue backlog
+- use sg_nents_for_len
+
+Changes since v3:
+- add import functions for hash algorithms
+- patch mv_cesa driver to support the new DT bindings
+- few fixes in the documentation
+- replace mv_mbus_dram_info() call by mv_mbus_dram_info_nooverlap()
+- remove DT updates from the series
+
+Changes since v2:
+- fixes in the cipher code (->dst_nents was assigned the ->src_nents
+  value and CBC state was overwritten by the IV after each chunk
+  operation)
+- spit the code as suggested by Sebastian
+
+Changes since v1:
+- (suggested by Jason) kept the existing CESA driver and added a mechanism
+  to prevent the new driver from probing devices handled my the existing
+  one (Orion and Kirkwood platforms)
+- (reported by Paul) addressed a few Kconfig and module definition issues
+- (suggested by Andrew) added DT changes to the series
+
+Arnaud Ebalard (4):
+  crypto: marvell/CESA: add Triple-DES support
+  crypto: marvell/CESA: add MD5 support
+  crypto: marvell/CESA: add SHA256 support
+  crypto: marvell/CESA: add support for Kirkwood and Dove SoCs
+
+Boris Brezillon (10):
+  crypto: mv_cesa: document the clocks property
+  crypto: mv_cesa: use gen_pool to reserve the SRAM memory region
+  crypto: mv_cesa: explicitly define kirkwood and dove compatible
+    strings
+  crypto: add a new driver for Marvell's CESA
+  crypto: marvell/CESA: add TDMA support
+  crypto: marvell/CESA: add DES support
+  crypto: marvell/CESA: add support for all armada SoCs
+  crypto: marvell/CESA: add allhwsupport module parameter
+  crypto: marvell/CESA: add support for Orion SoCs
+  crypto: marvell/CESA: add DT bindings documentation
+
+ .../devicetree/bindings/crypto/marvell-cesa.txt    |   45 +
+ .../devicetree/bindings/crypto/mv_cesa.txt         |   31 +-
+ drivers/crypto/Kconfig                             |   17 +
+ drivers/crypto/Makefile                            |    1 +
+ drivers/crypto/marvell/Makefile                    |    2 +
+ drivers/crypto/marvell/cesa.c                      |  548 ++++++++
+ drivers/crypto/marvell/cesa.h                      |  791 +++++++++++
+ drivers/crypto/marvell/cipher.c                    |  784 +++++++++++
+ drivers/crypto/marvell/hash.c                      | 1443 ++++++++++++++++++++
+ drivers/crypto/marvell/tdma.c                      |  224 +++
+ drivers/crypto/mv_cesa.c                           |   60 +-
+ 11 files changed, 3922 insertions(+), 24 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/crypto/marvell-cesa.txt
+ create mode 100644 drivers/crypto/marvell/Makefile
+ create mode 100644 drivers/crypto/marvell/cesa.c
+ create mode 100644 drivers/crypto/marvell/cesa.h
+ create mode 100644 drivers/crypto/marvell/cipher.c
+ create mode 100644 drivers/crypto/marvell/hash.c
+ create mode 100644 drivers/crypto/marvell/tdma.c
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
