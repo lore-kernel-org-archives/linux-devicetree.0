@@ -1,7 +1,7 @@
 From: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v5 05/23] usb: gadget: composite: add USB_DT_OTG request handling
-Date: Wed, 17 Jun 2015 19:40:12 +0800
-Message-ID: <1434541230-15090-6-git-send-email-jun.li@freescale.com>
+Subject: [PATCH v5 10/23] usb: gadget: add usb otg descriptor allocate and init interface
+Date: Wed, 17 Jun 2015 19:40:17 +0800
+Message-ID: <1434541230-15090-11-git-send-email-jun.li@freescale.com>
 References: <1434541230-15090-1-git-send-email-jun.li@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,63 +12,106 @@ To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@
 Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org, Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Macpaul Lin <macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Allocate usb otg descriptor and initialize it according to gadget's otg
+capabilities, if usb_otg_caps is not set, keep settings as current gadget
+drivers. With this 2 new interfaces, gadget can use usb_otg_descriptor
+for OTG 1.x, and usb_otg20_descriptor for OTG 2.0 or above, and otg
+features can be decided by the combination of usb hardware property
+and driver config.
 
-Copy usb_otg_descriptor from config's descriptor if host requests
-USB_DT_OTG.
-
-Signed-off-by: Macpaul Lin <macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Reviewed-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
 ---
- drivers/usb/gadget/composite.c | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ drivers/usb/gadget/config.c | 56 +++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/usb/gadget.h  |  4 ++++
+ 2 files changed, 60 insertions(+)
 
-diff --git a/drivers/usb/gadget/composite.c b/drivers/usb/gadget/composite.c
-index 4e3447b..2c1c6eb 100644
---- a/drivers/usb/gadget/composite.c
-+++ b/drivers/usb/gadget/composite.c
-@@ -19,6 +19,7 @@
- #include <linux/utsname.h>
- 
+diff --git a/drivers/usb/gadget/config.c b/drivers/usb/gadget/config.c
+index 34e12fc..0fafa7a 100644
+--- a/drivers/usb/gadget/config.c
++++ b/drivers/usb/gadget/config.c
+@@ -20,6 +20,7 @@
+ #include <linux/usb/ch9.h>
+ #include <linux/usb/gadget.h>
  #include <linux/usb/composite.h>
 +#include <linux/usb/otg.h>
- #include <asm/unaligned.h>
  
- #include "u_os_desc.h"
-@@ -1534,6 +1535,32 @@ composite_setup(struct usb_gadget *gadget, const struct usb_ctrlrequest *ctrl)
- 				value = min(w_length, (u16) value);
- 			}
- 			break;
-+		case USB_DT_OTG:
-+			if (gadget_is_otg(gadget)) {
-+				struct usb_configuration *config;
-+				int otg_desc_len = 0;
+ /**
+  * usb_descriptor_fillbuf - fill buffer with descriptors
+@@ -195,3 +196,58 @@ void usb_free_all_descriptors(struct usb_function *f)
+ 	usb_free_descriptors(f->ss_descriptors);
+ }
+ EXPORT_SYMBOL_GPL(usb_free_all_descriptors);
 +
-+				if (cdev->config)
-+					config = cdev->config;
-+				else
-+					config = list_first_entry(
-+							&cdev->configs,
-+						struct usb_configuration, list);
-+				if (!config)
-+					goto done;
++struct usb_descriptor_header *usb_otg_descriptor_alloc(
++				struct usb_gadget *gadget)
++{
++	struct usb_descriptor_header *otg_desc;
++	unsigned length = 0;
 +
-+				if (gadget->otg_caps &&
-+					(gadget->otg_caps->otg_rev >= 0x0200))
-+					otg_desc_len += sizeof(
-+						struct usb_otg20_descriptor);
-+				else
-+					otg_desc_len += sizeof(
-+						struct usb_otg_descriptor);
++	if (gadget->otg_caps && (gadget->otg_caps->otg_rev >= 0x0200))
++		length = sizeof(struct usb_otg20_descriptor);
++	else
++		length = sizeof(struct usb_otg_descriptor);
 +
-+				value = min_t(int, w_length, otg_desc_len);
-+				memcpy(req->buf, config->descriptors[0], value);
-+			}
-+			break;
- 		}
- 		break;
++	otg_desc = kzalloc(length, GFP_KERNEL);
++	return otg_desc;
++}
++EXPORT_SYMBOL_GPL(usb_otg_descriptor_alloc);
++
++int usb_otg_descriptor_init(struct usb_gadget *gadget,
++		struct usb_descriptor_header *otg_desc)
++{
++	struct usb_otg_descriptor *otg1x_desc;
++	struct usb_otg20_descriptor *otg20_desc;
++	struct usb_otg_caps *otg_caps = gadget->otg_caps;
++	u8 otg_attributes = 0;
++
++	if (!otg_desc)
++		return -EINVAL;
++
++	if (otg_caps && otg_caps->otg_rev) {
++		if (otg_caps->hnp_support)
++			otg_attributes |= USB_OTG_HNP;
++		if (otg_caps->srp_support)
++			otg_attributes |= USB_OTG_SRP;
++		if (otg_caps->adp_support && (otg_caps->otg_rev >= 0x0200))
++			otg_attributes |= USB_OTG_ADP;
++	} else {
++		otg_attributes = USB_OTG_SRP | USB_OTG_HNP;
++	}
++
++	if (otg_caps && (otg_caps->otg_rev >= 0x0200)) {
++		otg20_desc = (struct usb_otg20_descriptor *)otg_desc;
++		otg20_desc->bLength = sizeof(struct usb_otg20_descriptor);
++		otg20_desc->bDescriptorType = USB_DT_OTG;
++		otg20_desc->bmAttributes = otg_attributes;
++		otg20_desc->bcdOTG = cpu_to_le16(otg_caps->otg_rev);
++	} else {
++		otg1x_desc = (struct usb_otg_descriptor *)otg_desc;
++		otg1x_desc->bLength = sizeof(struct usb_otg_descriptor);
++		otg1x_desc->bDescriptorType = USB_DT_OTG;
++		otg1x_desc->bmAttributes = otg_attributes;
++	}
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(usb_otg_descriptor_init);
+diff --git a/include/linux/usb/gadget.h b/include/linux/usb/gadget.h
+index 6b39087..5f65bd2 100644
+--- a/include/linux/usb/gadget.h
++++ b/include/linux/usb/gadget.h
+@@ -1004,6 +1004,10 @@ int usb_assign_descriptors(struct usb_function *f,
+ 		struct usb_descriptor_header **ss);
+ void usb_free_all_descriptors(struct usb_function *f);
  
++struct usb_descriptor_header *usb_otg_descriptor_alloc(
++				struct usb_gadget *gadget);
++int usb_otg_descriptor_init(struct usb_gadget *gadget,
++		struct usb_descriptor_header *otg_desc);
+ /*-------------------------------------------------------------------------*/
+ 
+ /* utility to simplify map/unmap of usb_requests to/from DMA */
 -- 
 1.9.1
 
