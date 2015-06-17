@@ -1,131 +1,70 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v4 10/23] usb: gadget: add usb otg descriptor allocate
- and init interface
-Date: Wed, 17 Jun 2015 11:51:36 +0300
-Message-ID: <20150617115136.61c567ea@rockdesk>
+From: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v4 04/23] usb: add usb_otg_caps to usb_gadget structure.
+Date: Wed, 17 Jun 2015 16:50:28 +0800
+Message-ID: <20150617085026.GA9856@shlinux2>
 References: <1434519835-27745-1-git-send-email-jun.li@freescale.com>
-	<1434519835-27745-11-git-send-email-jun.li@freescale.com>
+ <1434519835-27745-5-git-send-email-jun.li@freescale.com>
+ <20150617112936.6fa8105a@rockdesk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1434519835-27745-11-git-send-email-jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150617112936.6fa8105a@rockdesk>
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-On Wed, 17 Jun 2015 13:43:42 +0800
-Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-
-> Allocate usb otg descriptor and initialize it according to gadget's otg
-> capabilities, if usb_otg_caps is not set, keep settings as current gadget
-> drivers. With this 2 new interfaces, gadget can use usb_otg_descriptor
-> for OTG 1.x, and usb_otg20_descriptor for OTG 2.0 or above, and otg
-> features can be decided by the combination of usb hardware property
-> and driver config.
+On Wed, Jun 17, 2015 at 11:29:36AM +0300, Roger Quadros wrote:
 > 
-> Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
->  drivers/usb/gadget/config.c | 56 +++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/usb/gadget.h  |  4 ++++
->  2 files changed, 60 insertions(+)
+> On Wed, 17 Jun 2015 13:43:36 +0800
+> Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
 > 
-> diff --git a/drivers/usb/gadget/config.c b/drivers/usb/gadget/config.c
-> index 34e12fc..0fafa7a 100644
-> --- a/drivers/usb/gadget/config.c
-> +++ b/drivers/usb/gadget/config.c
-> @@ -20,6 +20,7 @@
->  #include <linux/usb/ch9.h>
->  #include <linux/usb/gadget.h>
->  #include <linux/usb/composite.h>
-> +#include <linux/usb/otg.h>
->  
->  /**
->   * usb_descriptor_fillbuf - fill buffer with descriptors
-> @@ -195,3 +196,58 @@ void usb_free_all_descriptors(struct usb_function *f)
->  	usb_free_descriptors(f->ss_descriptors);
->  }
->  EXPORT_SYMBOL_GPL(usb_free_all_descriptors);
-> +
-> +struct usb_descriptor_header *usb_otg_descriptor_alloc(
-> +				struct usb_gadget *gadget)
-> +{
-> +	struct usb_descriptor_header *otg_desc;
-> +	unsigned length = 0;
-> +
-> +	if (gadget->otg_caps && (gadget->otg_caps->otg_rev >= 0x0200))
-> +		length = sizeof(struct usb_otg20_descriptor);
-> +	else
-> +		length = sizeof(struct usb_otg_descriptor);
-> +
-> +	otg_desc = kzalloc(length, GFP_KERNEL);
-> +	return otg_desc;
-> +}
-> +EXPORT_SYMBOL_GPL(usb_otg_descriptor_alloc);
-> +
-> +int usb_otg_descriptor_init(struct usb_gadget *gadget,
-> +		struct usb_descriptor_header *otg_desc)
-> +{
-> +	struct usb_otg_descriptor *otg1x_desc;
-> +	struct usb_otg20_descriptor *otg20_desc;
-> +	struct usb_otg_caps *otg_caps = gadget->otg_caps;
-> +	u8 otg_attributes = 0;
-> +
-> +	if (!otg_desc)
-> +		return -EINVAL;
-> +
-> +	if (otg_caps && otg_caps->otg_rev) {
+> > From: Macpaul Lin <macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > 
+> > Add usb_otg_caps pointer to usb_gadget structure to indicate its
+> > otg capabilities.
+> > 
+> > Signed-off-by: Macpaul Lin <macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > ---
+> >  include/linux/usb/gadget.h | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/include/linux/usb/gadget.h b/include/linux/usb/gadget.h
+> > index 4f3dfb7..6b39087 100644
+> > --- a/include/linux/usb/gadget.h
+> > +++ b/include/linux/usb/gadget.h
+> > @@ -511,6 +511,7 @@ struct usb_gadget_ops {
+> >   * @dev: Driver model state for this abstract device.
+> >   * @out_epnum: last used out ep number
+> >   * @in_epnum: last used in ep number
+> > + * @otg_caps: OTG capabilities of this gadget.
+> >   * @sg_supported: true if we can handle scatter-gather
+> >   * @is_otg: True if the USB device port uses a Mini-AB jack, so that the
+> >   *	gadget driver must provide a USB OTG descriptor.
+> > @@ -559,6 +560,7 @@ struct usb_gadget {
+> >  	struct device			dev;
+> >  	unsigned			out_epnum;
+> >  	unsigned			in_epnum;
+> > +	struct usb_otg_caps		*otg_caps;
+> 
+> Why does this need to be a pointer?
+> 
+we need create the same struct in controller driver anyway;
+usb_otg_caps is not only used for gadget, can be used for whole OTG,
+it's not proper we judge host's otg capability by gadget's setting;
+with a pointer, we need not create another one and no need data copy,
+instead, we have only one this struct in whole OTG device.
 
-OK now I see why usb_gadget->otg_caps needs to be a pointer. :)
-
-> +		if (otg_caps->hnp_support)
-> +			otg_attributes |= USB_OTG_HNP;
-> +		if (otg_caps->srp_support)
-> +			otg_attributes |= USB_OTG_SRP;
-> +		if (otg_caps->adp_support && (otg_caps->otg_rev >= 0x0200))
-> +			otg_attributes |= USB_OTG_ADP;
-> +	} else {
-> +		otg_attributes = USB_OTG_SRP | USB_OTG_HNP;
-> +	}
-> +
-> +	if (otg_caps && (otg_caps->otg_rev >= 0x0200)) {
-> +		otg20_desc = (struct usb_otg20_descriptor *)otg_desc;
-> +		otg20_desc->bLength = sizeof(struct usb_otg20_descriptor);
-> +		otg20_desc->bDescriptorType = USB_DT_OTG;
-> +		otg20_desc->bmAttributes = otg_attributes;
-> +		otg20_desc->bcdOTG = cpu_to_le16(otg_caps->otg_rev);
-> +	} else {
-> +		otg1x_desc = (struct usb_otg_descriptor *)otg_desc;
-> +		otg1x_desc->bLength = sizeof(struct usb_otg_descriptor);
-> +		otg1x_desc->bDescriptorType = USB_DT_OTG;
-> +		otg1x_desc->bmAttributes = otg_attributes;
-> +	}
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(usb_otg_descriptor_init);
-> diff --git a/include/linux/usb/gadget.h b/include/linux/usb/gadget.h
-> index 6b39087..5f65bd2 100644
-> --- a/include/linux/usb/gadget.h
-> +++ b/include/linux/usb/gadget.h
-> @@ -1004,6 +1004,10 @@ int usb_assign_descriptors(struct usb_function *f,
->  		struct usb_descriptor_header **ss);
->  void usb_free_all_descriptors(struct usb_function *f);
->  
-> +struct usb_descriptor_header *usb_otg_descriptor_alloc(
-> +				struct usb_gadget *gadget);
-> +int usb_otg_descriptor_init(struct usb_gadget *gadget,
-> +		struct usb_descriptor_header *otg_desc);
->  /*-------------------------------------------------------------------------*/
->  
->  /* utility to simplify map/unmap of usb_requests to/from DMA */
-
-Reviewed-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-
-cheers,
--roger
+Li Jun
+> >  
+> >  	unsigned			sg_supported:1;
+> >  	unsigned			is_otg:1;
+> 
+> 
+> cheers,
+> -roger
 --
 To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
