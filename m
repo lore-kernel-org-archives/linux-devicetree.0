@@ -1,133 +1,48 @@
-From: Ilya Faenson <ifaenson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: FW: [PATCH v4 1/4] Broadcom Bluetooth UART Device Tree bindings
-Date: Wed, 17 Jun 2015 23:11:07 +0000
-Message-ID: <E0D3336E15B58B4294723AC879BA5E942634F2@IRVEXCHMB15.corp.ad.broadcom.com>
-References: <1434576658-20730-1-git-send-email-ifaenson@broadcom.com>
- <1434576658-20730-2-git-send-email-ifaenson@broadcom.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] of: define of_find_node_by_phandle for !CONFIG_OF
+Date: Wed, 17 Jun 2015 18:33:29 -0500
+Message-ID: <CAL_JsqKHFwhsdYmhq2_DJS+mf1jPcfCuSQgwCusTriv-NPLEdg@mail.gmail.com>
+References: <1434560033-26681-1-git-send-email-s-anna@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1434576658-20730-2-git-send-email-ifaenson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org" <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, Arend Van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: "linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1434560033-26681-1-git-send-email-s-anna@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Suman Anna <s-anna@ti.com>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>
 List-Id: devicetree@vger.kernel.org
 
-+ devicetree lists
+On Wed, Jun 17, 2015 at 11:53 AM, Suman Anna <s-anna@ti.com> wrote:
+> Define stub implementation for of_find_node_by_phandle() API
+> so that users of this API can build properly even when CONFIG_OF
+> is not defined.
+>
+> Signed-off-by: Suman Anna <s-anna@ti.com>
 
------Original Message-----
-From: Ilya Faenson [mailto:ifaenson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org] 
-Sent: Wednesday, June 17, 2015 5:31 PM
-To: Marcel Holtmann
-Cc: linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Arend Van Spriel; Ilya Faenson
-Subject: [PATCH v4 1/4] Broadcom Bluetooth UART Device Tree bindings
+Do you have a user for this? If not, apply it when you do.
 
-Device Tree bindings to configure the Broadcom Bluetooth UART device.
+Acked-by: Rob Herring <robh@kernel.org>
 
-Signed-off-by: Ilya Faenson <ifaenson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
----
- .../devicetree/bindings/net/bluetooth/btbcm.txt    | 86 ++++++++++++++++++++++
- 1 file changed, 86 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/bluetooth/btbcm.txt
-
-diff --git a/Documentation/devicetree/bindings/net/bluetooth/btbcm.txt b/Documentation/devicetree/bindings/net/bluetooth/btbcm.txt
-new file mode 100644
-index 0000000..5dbcd57
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/bluetooth/btbcm.txt
-@@ -0,0 +1,86 @@
-+btbcm
-+------
-+
-+Required properties:
-+
-+	- compatible : must be "brcm,brcm-bt-uart".
-+	- tty : tty device connected to this Bluetooth device.
-+
-+Optional properties:
-+
-+  - bt-host-wake-gpios : bt-host-wake input GPIO to be used as an interrupt.
-+
-+  - bt-wake-gpios : bt-wake output GPIO to be used to suspend / resume device.
-+
-+  - bt-reg-on-gpios : reg-on output GPIO to be used to power device on/off.
-+
-+  - oper-speed : Bluetooth device operational baud rate.
-+    Default: 3000000.
-+
-+  - manual-fc : flow control UART in suspend / resume scenarios.
-+    Default: 0.
-+
-+  - configure-sleep : configure suspend / resume flag.
-+    Default: false.
-+
-+  - idle-timeout : Number of seconds of inactivity before suspending.
-+    Default: 5.
-+
-+  - configure-audio : configure platform PCM SCO flag.
-+    Default: false.
-+
-+  - pcm-clockmode : PCM clock mode. 0-slave, 1-master.
-+    Default: 0.
-+
-+  - pcm-fillmethod : PCM fill method. 0 to 3.
-+    Default: 2.
-+
-+  - pcm-fillnum : PCM number of fill bits. 0 to 3.
-+    Default: 0.
-+
-+  - pcm-fillvalue : PCM fill value. 0 to 7.
-+    Default: 3.
-+
-+  - pcm-incallbitclock : PCM interface rate. 0-128Kbps, 1-256Kbps, 2-512Kbps,
-+    3-1024Kbps, 4-2048Kbps.
-+    Default: 0.
-+
-+  - pcm-lsbfirst : PCM LSB first. 0 or 1.
-+    Default: 0.
-+
-+  - pcm-rightjustify : PCM Justify. 0-left, 1-right.
-+    Default: 0.
-+
-+  - pcm-routing : PCM routing. 0-PCM, 1-SCO over HCI.
-+    Default: 0.
-+
-+  - pcm-shortframesync : PCM sync. 0-short, 1-long.
-+    Default: 0.
-+
-+  - pcm-syncmode : PCM sync mode. 0-slave, 1-master.
-+    Default: 0.
-+
-+
-+Example:
-+
-+	bcm4354_bt_uart: bcm4354-bt-uart {
-+		compatible = "brcm,brcm-bt-uart";
-+		bt-wake-gpios = <&gpio4 30 GPIO_ACTIVE_HIGH>;
-+		bt-host-wake-gpios = <&gpio4 31 GPIO_ACTIVE_HIGH>;
-+		tty = "ttyS0";
-+		oper-speed = <3000000>;
-+		configure-sleep;
-+		idle-timeout = <5>;
-+		configure-audio;
-+		pcm-clockmode = <0>;
-+		pcm-fillmethod = <2>;
-+		pcm-fillnum = <0>;
-+		pcm-fillvalue = <3>;
-+		pcm-incallbitclock = <0>;
-+		pcm-lsbfirst = <0>;
-+		pcm-rightjustify = <0>;
-+		pcm-routing = <0>;
-+		pcm-shortframesync = <0>;
-+		pcm-syncmode = <0>;
-+	};
-+
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ---
+>  include/linux/of.h | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index ddeaae6d2083..90dfdc47ae26 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -422,6 +422,11 @@ static inline struct device_node *of_find_node_opts_by_path(const char *path,
+>         return NULL;
+>  }
+>
+> +static inline struct device_node *of_find_node_by_phandle(phandle handle)
+> +{
+> +       return NULL;
+> +}
+> +
+>  static inline struct device_node *of_get_parent(const struct device_node *node)
+>  {
+>         return NULL;
+> --
+> 2.4.1
+>
