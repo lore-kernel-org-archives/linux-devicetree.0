@@ -1,80 +1,85 @@
-From: Anda-Maria Nicolae <anda-maria.nicolae@intel.com>
-Subject: [PATCH] power_supply: rt9455_charger: Properly notify userspace about charging events
-Date: Wed, 17 Jun 2015 19:28:59 +0300
-Message-ID: <1434558539-30591-1-git-send-email-anda-maria.nicolae@intel.com>
-Return-path: <linux-pm-owner@vger.kernel.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: sre@kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 2/3] spi: mediatek: Add spi bus for Mediatek MT8173
+Date: Wed, 17 Jun 2015 17:35:31 +0100
+Message-ID: <20150617163531.GU14071@sirena.org.uk>
+References: <1431675522.2128.13.camel@mhfsdcap03>
+ <20150515092543.GY2761@sirena.org.uk>
+ <1433758546.19786.16.camel@mtksdaap41>
+ <20150608175927.GO14071@sirena.org.uk>
+ <1433844321.16178.6.camel@mtksdaap41>
+ <20150609103951.GA14071@sirena.org.uk>
+ <1433923569.22080.1.camel@mtksdaap41>
+ <1434532083.19346.27.camel@mtksdaap41>
+ <20150617124758.GE3214@sirena.org.uk>
+ <1434550251.23617.38.camel@mtksdaap41>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="TMj/TYF/hpk1GcbO"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1434550251.23617.38.camel@mtksdaap41>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eddie Huang <eddie.huang@mediatek.com>
+Cc: Leilk Liu =?utf-8?B?KOWImOejiik=?= <Leilk.Liu@mediatek.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, HongZhou Yang <hongzhou.yang@mediatek.com>, Sascha Hauer <s.hauer@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, srv_heupstream <srv_heupstream@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Do not call power_supply_changed() when CHRVPI interrupt has occurred.
-CHRVPI interrupt occurs when the charger is connected to or disconnected
-from the power source. Call power_supply_changed() after PWR_RDY bit is
-read, to distinguish between connection to or disconnection from the power
-source.
-Also, call power_supply_changed() after the battery is reconnected to the
-charger, to notify userspace that the battery is no longer absent.
 
-Signed-off-by: Anda-Maria Nicolae <anda-maria.nicolae@intel.com>
----
- drivers/power/rt9455_charger.c |   16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+--TMj/TYF/hpk1GcbO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/drivers/power/rt9455_charger.c b/drivers/power/rt9455_charger.c
-index 08baac6..a49a9d4 100644
---- a/drivers/power/rt9455_charger.c
-+++ b/drivers/power/rt9455_charger.c
-@@ -973,7 +973,6 @@ static int rt9455_irq_handler_check_irq2_register(struct rt9455_info *info,
- 
- 	if (irq2 & GET_MASK(F_CHRVPI)) {
- 		dev_dbg(dev, "Charger fault occurred\n");
--		alert_userspace = true;
- 		/*
- 		 * CHRVPI bit is set in 2 cases:
- 		 * 1. when the power source is connected to the charger.
-@@ -981,6 +980,9 @@ static int rt9455_irq_handler_check_irq2_register(struct rt9455_info *info,
- 		 * To identify the case, PWR_RDY bit is checked. Because
- 		 * PWR_RDY bit is set / cleared after CHRVPI interrupt is
- 		 * triggered, it is used delayed_work to later read PWR_RDY bit.
-+		 * Also, do not set to true alert_userspace, because there is no
-+		 * need to notify userspace when CHRVPI interrupt has occurred.
-+		 * Userspace will be notified after PWR_RDY bit is read.
- 		 */
- 		queue_delayed_work(system_power_efficient_wq,
- 				   &info->pwr_rdy_work,
-@@ -1178,7 +1180,7 @@ static irqreturn_t rt9455_irq_handler_thread(int irq, void *data)
- 		/*
- 		 * Sometimes, an interrupt occurs while rt9455_probe() function
- 		 * is executing and power_supply_register() is not yet called.
--		 * Do not call power_supply_charged() in this case.
-+		 * Do not call power_supply_changed() in this case.
- 		 */
- 		if (info->charger)
- 			power_supply_changed(info->charger);
-@@ -1478,6 +1480,11 @@ static void rt9455_pwr_rdy_work_callback(struct work_struct *work)
- 				   RT9455_MAX_CHARGING_TIME * HZ);
- 		break;
- 	}
-+	/*
-+	 * Notify userspace that the charger has been either connected to or
-+	 * disconnected from the power source.
-+	 */
-+	power_supply_changed(info->charger);
- }
- 
- static void rt9455_max_charging_time_work_callback(struct work_struct *work)
-@@ -1533,6 +1540,11 @@ static void rt9455_batt_presence_work_callback(struct work_struct *work)
- 			if (ret)
- 				dev_err(dev, "Failed to unmask BATAB interrupt\n");
- 		}
-+		/*
-+		 * Notify userspace that the battery is now connected to the
-+		 * charger.
-+		 */
-+		power_supply_changed(info->charger);
- 	}
- }
- 
--- 
-1.7.9.5
+On Wed, Jun 17, 2015 at 10:10:51PM +0800, Eddie Huang wrote:
 
+> Our hardware limitation is: we don't have separate dma tx, rx channel
+> with transfer finish interrupt, only have spi trigger operation.So the
+> mediatek SPI dma full duplex operation steps are:
+> 1. Set TX DMA address.
+> 2. Set RX DMA address.
+> 3. Set length (this step assume TX, RX are the same size).
+> 4. Set TX DMA enable, RX DMA enable bit in spi config register. (not
+> trigger DMA, just told spi use dma)
+> 5. Trigger spi operations.
+> 6. Wait spi operations finish interrupt.
+
+Sure, that's what I understood.
+
+> If tx scatterlist per list data size are 128, 4096, 256. rx scatterlist
+> per list data size are 128, 4096, 256. So we need to go through above
+> steps three times. If tx scatterlists per list data size are 128, 4096,
+> 256. rx scatterlists per list data size are 256, 4096, 128. If we start
+> sending first entry, tx size is 128, rx size is 256, this will cause
+> hardware malfunction because tx, rx data length are not the same.
+
+> The solution I think is copy scatterlist data into one single buffer in
+> mediatek spi transfer function, but I think this is odd because
+> __spi_map_msg() map single buffer into scatterlist, then our driver map
+> scatterlist into single buffer again. I hope this explaination is more
+> clear than before.
+
+To repeat what I said in my last mail: there's no need to use the
+scatterlists as-is, your driver can do whatever set of DMA transfers it
+likes to keep the lengths of each transfer the same.  Attempting to
+linearise the transfers in memory isn't going to work unless you
+allocate physically contiguous memory (which could get painful) and will
+add substantial overhead.
+
+For example with your above example you could split the transfers up to
+be 128, 128, 3968, 128, 128.
+
+--TMj/TYF/hpk1GcbO
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJVgaHQAAoJECTWi3JdVIfQAksH/jIeZwEfqVtwT6EEhUEl2nAf
+2mB4U8etaTNL8MrkztPeU3zQFQKlCJkoF+YGK4IypF1kToaUgLkDDpFf04aEEAdK
+E+jMMLgkCY2Ba1DJtxZ4FCnnSqLIcFIHmcnLPjtd2sU3UjAnPnFDctuzjCtlJy4V
+Oovc3xO9fEPznpo28DR2UFf/SZMjQntjS9Rj4aOn8EpPvA/A92r6TKiTY14JE0bn
+3RHpsQ17x9LReKEuv/rcnVZsB6ONqolEPMTmOxtRTEAJQvEQsj2F6+11d80kdj9g
+6icITaTDIF6yBwyzDQ5xiY6F23RW4w/aLBSFyslLZK3rQnYyJcyA0ecJbh3/C28=
+=vCVN
+-----END PGP SIGNATURE-----
+
+--TMj/TYF/hpk1GcbO--
