@@ -1,7 +1,7 @@
 From: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v4 12/23] usb: gadget: ether: allocate and init otg descriptor by otg capabilities
-Date: Wed, 17 Jun 2015 13:43:44 +0800
-Message-ID: <1434519835-27745-13-git-send-email-jun.li@freescale.com>
+Subject: [PATCH v4 15/23] usb: gadget: cdc2: allocate and init otg descriptor by otg capabilities
+Date: Wed, 17 Jun 2015 13:43:47 +0800
+Message-ID: <1434519835-27745-16-git-send-email-jun.li@freescale.com>
 References: <1434519835-27745-1-git-send-email-jun.li@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -19,14 +19,14 @@ descriptor unchanged.
 
 Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- drivers/usb/gadget/legacy/ether.c | 38 ++++++++++++++++++++++++--------------
- 1 file changed, 24 insertions(+), 14 deletions(-)
+ drivers/usb/gadget/legacy/cdc2.c | 29 ++++++++++++++---------------
+ 1 file changed, 14 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/usb/gadget/legacy/ether.c b/drivers/usb/gadget/legacy/ether.c
-index a3323dc..06f4a30 100644
---- a/drivers/usb/gadget/legacy/ether.c
-+++ b/drivers/usb/gadget/legacy/ether.c
-@@ -171,20 +171,7 @@ static struct usb_device_descriptor device_desc = {
+diff --git a/drivers/usb/gadget/legacy/cdc2.c b/drivers/usb/gadget/legacy/cdc2.c
+index afd3e37..bb85b7a 100644
+--- a/drivers/usb/gadget/legacy/cdc2.c
++++ b/drivers/usb/gadget/legacy/cdc2.c
+@@ -60,21 +60,7 @@ static struct usb_device_descriptor device_desc = {
  	.bNumConfigurations =	1,
  };
  
@@ -44,12 +44,13 @@ index a3323dc..06f4a30 100644
 -	(struct usb_descriptor_header *) &otg_descriptor,
 -	NULL,
 -};
+-
 +static const struct usb_descriptor_header *otg_desc[2];
  
+ /* string IDs are assigned dynamically */
  static struct usb_string strings_dev[] = {
- 	[USB_GADGET_MANUFACTURER_IDX].s = "",
-@@ -229,6 +216,16 @@ static int rndis_do_config(struct usb_configuration *c)
- 	/* FIXME alloc iConfiguration string, set it in c->strings */
+@@ -109,6 +95,16 @@ static int cdc_do_config(struct usb_configuration *c)
+ 	int	status;
  
  	if (gadget_is_otg(c->cdev->gadget)) {
 +		if (!otg_desc[0]) {
@@ -65,27 +66,10 @@ index a3323dc..06f4a30 100644
  		c->descriptors = otg_desc;
  		c->bmAttributes |= USB_CONFIG_ATT_WAKEUP;
  	}
-@@ -271,6 +268,16 @@ static int eth_do_config(struct usb_configuration *c)
- 	/* FIXME alloc iConfiguration string, set it in c->strings */
- 
- 	if (gadget_is_otg(c->cdev->gadget)) {
-+		if (!otg_desc[0]) {
-+			struct usb_descriptor_header *usb_desc;
-+
-+			usb_desc = usb_otg_descriptor_alloc(c->cdev->gadget);
-+			if (!usb_desc)
-+				return -ENOMEM;
-+			usb_otg_descriptor_init(c->cdev->gadget, usb_desc);
-+			otg_desc[0] = usb_desc;
-+			otg_desc[1] = NULL;
-+		}
- 		c->descriptors = otg_desc;
- 		c->bmAttributes |= USB_CONFIG_ATT_WAKEUP;
- 	}
-@@ -463,6 +470,9 @@ static int eth_unbind(struct usb_composite_dev *cdev)
- 		usb_put_function(f_geth);
- 		usb_put_function_instance(fi_geth);
- 	}
+@@ -219,6 +215,9 @@ static int cdc_unbind(struct usb_composite_dev *cdev)
+ 		usb_put_function(f_ecm);
+ 	if (!IS_ERR_OR_NULL(fi_ecm))
+ 		usb_put_function_instance(fi_ecm);
 +	kfree(otg_desc[0]);
 +	otg_desc[0] = NULL;
 +
