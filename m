@@ -1,7 +1,7 @@
 From: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v5 03/23] usb: otg: add usb_otg_caps structure for otg capabilities
-Date: Wed, 17 Jun 2015 19:40:10 +0800
-Message-ID: <1434541230-15090-4-git-send-email-jun.li@freescale.com>
+Subject: [PATCH v5 14/23] usb: gadget: audio: allocate and init otg descriptor by otg capabilities
+Date: Wed, 17 Jun 2015 19:40:21 +0800
+Message-ID: <1434541230-15090-15-git-send-email-jun.li@freescale.com>
 References: <1434541230-15090-1-git-send-email-jun.li@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,42 +12,97 @@ To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@
 Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org, Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a structure usb_otg_caps to cover all otg related
-capabilities of the device, including otg revision, and if hnp/srp/adp
-is supported.
+Allocate and initialize usb otg descriptor according to gadget otg
+capabilities, add it for each usb configurations. If otg capability
+is not defined, keep its original otg descriptor unchanged.
 
 Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Reviewed-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
 ---
- include/linux/usb/otg.h | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ drivers/usb/gadget/legacy/audio.c | 43 +++++++++++++++++++++------------------
+ 1 file changed, 23 insertions(+), 20 deletions(-)
 
-diff --git a/include/linux/usb/otg.h b/include/linux/usb/otg.h
-index 52661c5..bd1dcf8 100644
---- a/include/linux/usb/otg.h
-+++ b/include/linux/usb/otg.h
-@@ -41,6 +41,21 @@ struct usb_otg {
- 
+diff --git a/drivers/usb/gadget/legacy/audio.c b/drivers/usb/gadget/legacy/audio.c
+index f289caf..cf2bdaf 100644
+--- a/drivers/usb/gadget/legacy/audio.c
++++ b/drivers/usb/gadget/legacy/audio.c
+@@ -150,20 +150,7 @@ static struct usb_device_descriptor device_desc = {
+ 	.bNumConfigurations =	1,
  };
  
-+/**
-+ * struct usb_otg_caps - describes the otg capabilities of the device
-+ * @otg_rev: The OTG revision number the device is compliant with, it's
-+ *		in binary-coded decimal (i.e. 2.0 is 0200H).
-+ * @hnp_support: Indicates if the device supports HNP.
-+ * @srp_support: Indicates if the device supports SRP.
-+ * @adp_support: Indicates if the device supports ADP.
-+ */
-+struct usb_otg_caps {
-+	u16 otg_rev;
-+	bool hnp_support;
-+	bool srp_support;
-+	bool adp_support;
-+};
-+
- extern const char *usb_otg_state_string(enum usb_otg_state state);
+-static struct usb_otg_descriptor otg_descriptor = {
+-	.bLength =		sizeof otg_descriptor,
+-	.bDescriptorType =	USB_DT_OTG,
+-
+-	/* REVISIT SRP-only hardware is possible, although
+-	 * it would not be called "OTG" ...
+-	 */
+-	.bmAttributes =		USB_OTG_SRP | USB_OTG_HNP,
+-};
+-
+-static const struct usb_descriptor_header *otg_desc[] = {
+-	(struct usb_descriptor_header *) &otg_descriptor,
+-	NULL,
+-};
++static const struct usb_descriptor_header *otg_desc[2];
  
- /* Context: can sleep */
+ /*-------------------------------------------------------------------------*/
+ 
+@@ -173,11 +160,6 @@ static int audio_do_config(struct usb_configuration *c)
+ 
+ 	/* FIXME alloc iConfiguration string, set it in c->strings */
+ 
+-	if (gadget_is_otg(c->cdev->gadget)) {
+-		c->descriptors = otg_desc;
+-		c->bmAttributes |= USB_CONFIG_ATT_WAKEUP;
+-	}
+-
+ #ifdef CONFIG_GADGET_UAC1
+ 	f_uac1 = usb_get_function(fi_uac1);
+ 	if (IS_ERR(f_uac1)) {
+@@ -259,14 +241,32 @@ static int audio_bind(struct usb_composite_dev *cdev)
+ 	device_desc.iManufacturer = strings_dev[USB_GADGET_MANUFACTURER_IDX].id;
+ 	device_desc.iProduct = strings_dev[USB_GADGET_PRODUCT_IDX].id;
+ 
++	if (gadget_is_otg(cdev->gadget)) {
++		if (!otg_desc[0]) {
++			struct usb_descriptor_header *usb_desc;
++
++			usb_desc = usb_otg_descriptor_alloc(cdev->gadget);
++			if (!usb_desc)
++				goto fail;
++			usb_otg_descriptor_init(cdev->gadget, usb_desc);
++			otg_desc[0] = usb_desc;
++			otg_desc[1] = NULL;
++		}
++		audio_config_driver.descriptors = otg_desc;
++		audio_config_driver.bmAttributes |= USB_CONFIG_ATT_WAKEUP;
++	}
++
+ 	status = usb_add_config(cdev, &audio_config_driver, audio_do_config);
+ 	if (status < 0)
+-		goto fail;
++		goto fail_otg_desc;
+ 	usb_composite_overwrite_options(cdev, &coverwrite);
+ 
+ 	INFO(cdev, "%s, version: %s\n", DRIVER_DESC, DRIVER_VERSION);
+ 	return 0;
+ 
++fail_otg_desc:
++	kfree(otg_desc[0]);
++	otg_desc[0] = NULL;
+ fail:
+ #ifndef CONFIG_GADGET_UAC1
+ 	usb_put_function_instance(fi_uac2);
+@@ -289,6 +289,9 @@ static int audio_unbind(struct usb_composite_dev *cdev)
+ 	if (!IS_ERR_OR_NULL(fi_uac2))
+ 		usb_put_function_instance(fi_uac2);
+ #endif
++	kfree(otg_desc[0]);
++	otg_desc[0] = NULL;
++
+ 	return 0;
+ }
+ 
 -- 
 1.9.1
 
