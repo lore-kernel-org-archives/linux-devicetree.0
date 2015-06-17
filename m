@@ -1,59 +1,72 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v5 05/14] crypto: marvell/CESA: add TDMA support
-Date: Wed, 17 Jun 2015 09:15:03 +0200
-Message-ID: <20150617091503.5f74b6e5@bbrezillon>
-References: <1434448748-10828-1-git-send-email-boris.brezillon@free-electrons.com>
-	<1434448748-10828-6-git-send-email-boris.brezillon@free-electrons.com>
-	<20150617050527.GA8807@gondor.apana.org.au>
-	<20150617055633.GA9123@gondor.apana.org.au>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 6/6] ARM: sun8i: dts: Add Ippo-q8h v1.2
+ with A33 and 1024x600 lcd support
+Date: Wed, 17 Jun 2015 09:16:02 +0200
+Message-ID: <55811EB2.4060302@redhat.com>
+References: <1432997706-20172-1-git-send-email-hdegoede@redhat.com> <1432997706-20172-7-git-send-email-hdegoede@redhat.com> <20150602081459.GO23777@lukather> <556D6955.8030708@redhat.com> <20150603094535.GI23777@lukather> <556EE104.3090803@redhat.com> <20150613135002.GP19653@lukather> <557C3BD3.6030105@redhat.com> <20150616174114.GI11732@lukather>
+Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <20150617055633.GA9123@gondor.apana.org.au>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: "David S. Miller" <davem@davemloft.net>, linux-crypto@vger.kernel.org, Arnaud Ebalard <arno@natisbad.org>, Tawfik Bayouk <tawfik@marvell.com>, Lior Amsalem <alior@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Eran Ben-Avi <benavi@marvell.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Imre Kaloz <kaloz@openwrt.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBOF5QSWAKGQENTBY6WQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20150616174114.GI11732@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 17 Jun 2015 13:56:33 +0800
-Herbert Xu <herbert@gondor.apana.org.au> wrote:
+Hi,
 
-> On Wed, Jun 17, 2015 at 01:05:27PM +0800, Herbert Xu wrote:
-> > On Tue, Jun 16, 2015 at 11:58:59AM +0200, Boris Brezillon wrote:
-> > >
-> > > +	ret = dma_map_sg(cesa_dev->dev, req->src, creq->src_nents,
-> > > +			 DMA_TO_DEVICE);
-> > > +	if (ret != creq->src_nents)
-> > > +		return -ENOMEM;
-> > 
-> > Hmm it doesn't quite work like that.  It returns zero on error,
-> > otherwise it returns the number (n) of mapped entries which may be
-> > less than what you gave it due to merging.  You're then supposed
-> > to use only the first n entries which should contain everything.
-> 
-> Please take a look at Documentation/DMA-API-HOWTO.txt, it has
-> everything you need to know about the dma_map_sg interface.
+On 16-06-15 19:41, Maxime Ripard wrote:
+> Hi,
+>
+> On Sat, Jun 13, 2015 at 04:18:59PM +0200, Hans de Goede wrote:
+>>> Pantelis, to sum things up, we have a case of a tablet that comes with
+>>> the exact same board, but coming in two flavours with two differents
+>>> screen resolutions. It looks like a great case for your DT quirks
+>>> work, but we have no way of runtime detecting the difference between
+>>> the two variants. What do you think about this? Should we go with
+>>> using the DT quirks or is this simply out of scope?
+>>>
+>>> There's not so much example of similar cases in the kernel, and none
+>>> of them use quirks so far (obviously) but they all boil down to either
+>>> the solution you were suggesting in that patch or adding the alternate
+>>> configuration as a comment.
+>>>
+>>> I don't think the latter would work for you, and I agree with that, so
+>>> I guess that depending on what Pantelis says, either we go with a
+>>> better solution using the quirks, or we end up using what you
+>>> suggested (with a nitpick though, I'd prefer if you used the display
+>>> standard instead of the resolution, which would make it xga I guess?)
+>>
+>> If we go with a separate dts file for each of the 800x480 and 1024x600
+>> screens, I would greatly prefer to stick with the lcd1024x600 in the dts
+>> filename instead of using something like xga, the fact that you say:
+>> "I guess" that my answer to that is: I dunno I would need to look this
+>> up in wikipedia or some such makes me think that using a qualifier like
+>> xga is not going the help end users decide which dts file to pick, it
+>> will just lead to them needing to go to wikipedia too. Also note that
+>> the advertising of these tablets on ebay / aliexpress almost always
+>> uses the resolution and not something like "xga".
+>>
+>> So all in all if we do not decide to use quirks for this I would like
+>> to keep the filename as is.
+>
+> Yeah, except that the display standard is also encoding the refresh
+> rate and color depth
 
-Yep, I read it, but apparently not carefully enough ;-).
-I'll fix that.
+Huh? No it does not, see e.g.:
 
-Note that I did not ignore your previous comment on purpose (checking
-for !ret to verify if the sg entries were successfully mapped), but I
-have a specific case in the hash code where the requested len is 0
-(final request) and thus the src_nents is 0 too. Which means I'm
-expecting the dma_sg_map to return 0.
+https://en.wikipedia.org/wiki/Graphics_display_resolution
 
-Anyway, now I'm doing the following test:
+Note nothing about depth and refresh-rate there, and I've really never
+heard anyone use things like xga to refer to colordepth and/or refreshrate
 
-if (creq->src_nents && !ret)
-	return -ENOMEM;
+Regards,
 
-Best Regards,
-
-Boris
-
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Hans
