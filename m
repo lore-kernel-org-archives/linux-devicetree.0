@@ -1,27 +1,62 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH V7 3/3] OPP: Add binding for 'opp-suspend'
-Date: Wed, 17 Jun 2015 08:08:28 +0530
-Message-ID: <20150617023828.GB13553@linux>
-References: <cover.1433434659.git.viresh.kumar@linaro.org>
- <20150616025425.GB26592@linux>
- <CAL_JsqJ2gCJvtrZqDWWoY6Gv4Ag7xLV93wLbT5b37jO=oWo+MQ@mail.gmail.com>
- <4228747.vs1U0RqIQB@vostro.rjw.lan>
+From: Daniel Kurtz <djkurtz@chromium.org>
+Subject: Re: [PATCH] arm64: dts: symlink cros-ec-keyboard from arm to arm64
+Date: Wed, 17 Jun 2015 12:13:41 +0800
+Message-ID: <CAGS+omD=gJ_pezJbfZN6Yi+X07r+yv-uUAohigPRKUPBRkR-nA@mail.gmail.com>
+References: <1434465343-29124-1-git-send-email-djkurtz@chromium.org> <20150616145552.GH30522@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4228747.vs1U0RqIQB@vostro.rjw.lan>
-Sender: linux-pm-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Rob Herring <robherring2@gmail.com>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Nishanth Menon <nm@ti.com>, Mark Brown <broonie@kernel.org>, Mike Turquette <mike.turquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Olof Johansson <olof@lixom.net>, Sudeep Holla <Sudeep.Holla@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Viswanath Puttagunta <viswanath.puttagunta@linaro.org>, Lucas Stach <l.stach@pengutronix.de>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Abraham <ta.omasab@gmail.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Kevin Hilman <khilman@linaro.org>, Santosh
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150616145552.GH30522@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Will Deacon <will.deacon@arm.com>
+Cc: "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, Nicolas Boichat <drinkcat@chromium.org>, Olof Johansson <olofj@chromium.org>, Eddie Huang <eddie.huang@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <Catalin.Marinas@arm.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 16-06-15, 23:21, Rafael J. Wysocki wrote:
-> Does your ACK also apply to patches [1-2/3] in this series?
+On Tue, Jun 16, 2015 at 10:55 PM, Will Deacon <will.deacon@arm.com> wrote:
+> On Tue, Jun 16, 2015 at 03:35:41PM +0100, Daniel Kurtz wrote:
+>> The cros-ec-keyboard.dtsi snippet is useful for both arm and arm64 boards.
+>> Create a link between the two.
+>>
+>> This may not be the most scalable solution, so consider it temporary until
+>> we find a more central repository for such shared .dtsi snippets.
+>
+> I don't have strong opinions either way, but we should be consistent as
+> to whether we use relative paths:
+>
+>   http://lists.infradead.org/pipermail/linux-arm-kernel/2015-June/350267.html
+>
+> or symlinks, like below.
+>
+> Does anybody have some technical arguments one way or the other?
 
-His RBY tag is already present for 1/3 :)
+ /include/ "../../../../arm/boot/dts/cros-ec-keyboard.dtsi"
 
-@Rob: Please Ack 2/3 as well :)
+Directly embedding the relative path to .dtsi in /arm/ from .dts in
+/arm64/ is more straightforward and does not require maintaining extra
+symlink .dtsi files.
 
--- 
-viresh
+I actually like it better than the symlink that I proposed :-).
+Consider my patch abandoned, unless someone else feels strongly.
+
+-Dan
+
+>
+> Will
+>
+>> Signed-off-by: Daniel Kurtz <djkurtz@chromium.org>
+>> ---
+>>  arch/arm64/boot/dts/cros-ec-keyboard.dtsi | 1 +
+>>  1 file changed, 1 insertion(+)
+>>  create mode 120000 arch/arm64/boot/dts/cros-ec-keyboard.dtsi
+>>
+>> diff --git a/arch/arm64/boot/dts/cros-ec-keyboard.dtsi b/arch/arm64/boot/dts/cros-ec-keyboard.dtsi
+>> new file mode 120000
+>> index 0000000..42220ac
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/cros-ec-keyboard.dtsi
+>> @@ -0,0 +1 @@
+>> +../../../arm/boot/dts/cros-ec-keyboard.dtsi
+>> \ No newline at end of file
+>> --
+>> 2.2.0.rc0.207.ga3a616c
+>>
