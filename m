@@ -1,189 +1,34 @@
-From: Eddie Huang <eddie.huang@mediatek.com>
-Subject: [PATCH v4 2/2] arm64: dts: mt8173: Add I2C device node
-Date: Wed, 17 Jun 2015 23:08:03 +0800
-Message-ID: <1434553683-11651-3-git-send-email-eddie.huang@mediatek.com>
-References: <1434553683-11651-1-git-send-email-eddie.huang@mediatek.com>
+From: Herbert Xu <herbert@gondor.apana.org.au>
+Subject: Re: [PATCH v7 05/14] crypto: marvell/CESA: add TDMA support
+Date: Wed, 17 Jun 2015 23:08:08 +0800
+Message-ID: <20150617150808.GA14915@gondor.apana.org.au>
+References: <20150617122533.GA13185@gondor.apana.org.au>
+ <1434547922-10363-1-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1434553683-11651-1-git-send-email-eddie.huang@mediatek.com>
+Content-Disposition: inline
+In-Reply-To: <1434547922-10363-1-git-send-email-boris.brezillon@free-electrons.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Daniel Kurtz <djkurtz@chromium.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Eddie Huang <eddie.huang@mediatek.com>
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: "David S. Miller" <davem@davemloft.net>, linux-crypto@vger.kernel.org, Arnaud Ebalard <arno@natisbad.org>, Tawfik Bayouk <tawfik@marvell.com>, Lior Amsalem <alior@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Eran Ben-Avi <benavi@marvell.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Imre Kaloz <kaloz@openwrt.org>
 List-Id: devicetree@vger.kernel.org
 
-Add MT8173 I2C device nodes, include I2C controllers and pins.
-MT8173 has six I2C controllers, from i2c0 to i2c6, exclude i2c5.
-The 6th I2C controller register base doesn't next to 5th I2C,
-and there is a hardware between 5th and 6th I2C controller. So
-SoC designer name 6th controller as "i2c6", not "i2c5".
+On Wed, Jun 17, 2015 at 03:32:02PM +0200, Boris Brezillon wrote:
+>
+> Hi Herbert,
+> 
+> I send you this patch alone so that you can verify I'm now properly
+> manipulating the SG list. Once I have your confirmation I'll send
+> the whole series again and annoy all the people in Cc one more time
+> ;-).
 
-Signed-off-by: Eddie Huang <eddie.huang@mediatek.com>
----
- arch/arm64/boot/dts/mediatek/mt8173.dtsi | 144 +++++++++++++++++++++++++++++++
- 1 file changed, 144 insertions(+)
+Thanks.  The only problem that I can see is the fact you're not
+checking for req->src == req->dst.  If they're equal then you must
+not map it twice.  Instead it should be mapped as DMA_BIDIRECTIONAL.
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index b52ec43..1816c8f 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -158,6 +158,54 @@
- 			interrupts = <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>,
- 						<GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>,
- 						<GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
-+
-+			i2c0_pins_a: i2c0 {
-+				pins1 {
-+					pinmux = <MT8173_PIN_45_SDA0__FUNC_SDA0>,
-+						 <MT8173_PIN_46_SCL0__FUNC_SCL0>;
-+					bias-disable;
-+				};
-+			};
-+
-+			i2c1_pins_a: i2c1 {
-+				pins1 {
-+					pinmux = <MT8173_PIN_125_SDA1__FUNC_SDA1>,
-+						 <MT8173_PIN_126_SCL1__FUNC_SCL1>;
-+					bias-disable;
-+				};
-+			};
-+
-+			i2c2_pins_a: i2c2 {
-+				pins1 {
-+					pinmux = <MT8173_PIN_43_SDA2__FUNC_SDA2>,
-+						 <MT8173_PIN_44_SCL2__FUNC_SCL2>;
-+					bias-disable;
-+				};
-+			};
-+
-+			i2c3_pins_a: i2c3 {
-+				pins1 {
-+					pinmux = <MT8173_PIN_106_SDA3__FUNC_SDA3>,
-+						 <MT8173_PIN_107_SCL3__FUNC_SCL3>;
-+					bias-disable;
-+				};
-+			};
-+
-+			i2c4_pins_a: i2c4 {
-+				pins1 {
-+					pinmux = <MT8173_PIN_133_SDA4__FUNC_SDA4>,
-+						 <MT8173_PIN_134_SCL4__FUNC_SCL4>;
-+					bias-disable;
-+				};
-+			};
-+
-+			i2c6_pins_a: i2c6 {
-+				pins1 {
-+					pinmux = <MT8173_PIN_100_MSDC2_DAT0__FUNC_SDA5>,
-+						 <MT8173_PIN_101_MSDC2_DAT1__FUNC_SCL5>;
-+					bias-disable;
-+				};
-+			};
- 		};
- 
- 		watchdog: watchdog@10007000 {
-@@ -229,6 +277,102 @@
- 			clocks = <&uart_clk>;
- 			status = "disabled";
- 		};
-+
-+		i2c0: i2c@11007000 {
-+			compatible = "mediatek,mt8173-i2c";
-+			reg = <0 0x11007000 0 0x70>,
-+			      <0 0x11000100 0 0x80>;
-+			interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_LOW>;
-+			clock-div = <16>;
-+			clocks = <&pericfg CLK_PERI_I2C0>,
-+				 <&pericfg CLK_PERI_AP_DMA>;
-+			clock-names = "main", "dma";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&i2c0_pins_a>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		i2c1: i2c@11008000 {
-+			compatible = "mediatek,mt8173-i2c";
-+			reg = <0 0x11008000 0 0x70>,
-+			      <0 0x11000180 0 0x80>;
-+			interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_LOW>;
-+			clock-div = <16>;
-+			clocks = <&pericfg CLK_PERI_I2C1>,
-+				 <&pericfg CLK_PERI_AP_DMA>;
-+			clock-names = "main", "dma";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&i2c1_pins_a>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		i2c2: i2c@11009000 {
-+			compatible = "mediatek,mt8173-i2c";
-+			reg = <0 0x11009000 0 0x70>,
-+			      <0 0x11000200 0 0x80>;
-+			interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_LOW>;
-+			clock-div = <16>;
-+			clocks = <&pericfg CLK_PERI_I2C2>,
-+				 <&pericfg CLK_PERI_AP_DMA>;
-+			clock-names = "main", "dma";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&i2c2_pins_a>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		i2c3: i2c3@11010000 {
-+			compatible = "mediatek,mt8173-i2c";
-+			reg = <0 0x11010000 0 0x70>,
-+			      <0 0x11000280 0 0x80>;
-+			interrupts = <GIC_SPI 79 IRQ_TYPE_LEVEL_LOW>;
-+			clock-div = <16>;
-+			clocks = <&pericfg CLK_PERI_I2C3>,
-+				 <&pericfg CLK_PERI_AP_DMA>;
-+			clock-names = "main", "dma";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&i2c3_pins_a>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		i2c4: i2c4@11011000 {
-+			compatible = "mediatek,mt8173-i2c";
-+			reg = <0 0x11011000 0 0x70>,
-+			      <0 0x11000300 0 0x80>;
-+			interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_LOW>;
-+			clock-div = <16>;
-+			clocks = <&pericfg CLK_PERI_I2C4>,
-+				 <&pericfg CLK_PERI_AP_DMA>;
-+			clock-names = "main", "dma";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&i2c4_pins_a>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		i2c6: i2c6@11013000 {
-+			compatible = "mediatek,mt8173-i2c";
-+			reg = <0 0x11013000 0 0x70>,
-+			      <0 0x11000080 0 0x80>;
-+			interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_LOW>;
-+			clock-div = <16>;
-+			clocks = <&pericfg CLK_PERI_I2C6>,
-+				 <&pericfg CLK_PERI_AP_DMA>;
-+			clock-names = "main", "dma";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&i2c6_pins_a>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
- 	};
- 
- };
+Cheers,
 -- 
-1.8.1.1.dirty
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
