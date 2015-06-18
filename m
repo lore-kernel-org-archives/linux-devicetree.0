@@ -1,99 +1,143 @@
-From: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v6 4/7] arm64: dts: mediatek: Add MT8173 MMC dts
-Date: Thu, 18 Jun 2015 10:28:33 +0800
-Message-ID: <1434594513.26032.6.camel@mtksdaap41>
-References: <1434367253-26577-1-git-send-email-chaotian.jing@mediatek.com>
- <1434367253-26577-5-git-send-email-chaotian.jing@mediatek.com>
- <CAGS+omCwxH5vTTKNOEcN9C9s=1yBpYEqbMz1NygYoLY9OFKchg@mail.gmail.com>
- <CAGS+omDMprTvjwpXfdh7mg9i=WXdzO_Fv-oEop3z6AEVCG=DFQ@mail.gmail.com>
- <1434593063.23303.3.camel@mtksdaap41>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH V7 2/3] OPP: Allow multiple OPP tables to be passed via DT
+Date: Thu, 18 Jun 2015 08:20:34 +0530
+Message-ID: <20150618025034.GB28820@linux>
+References: <cover.1433434659.git.viresh.kumar@linaro.org>
+ <263c128844f5a3c9280c8be71f6c9eb1869a5188.1433434659.git.viresh.kumar@linaro.org>
+ <CAL_Jsq+EOOeQw42wZi+H82ovLn8LcQUuK9HGT+FvewdhTf7Q1w@mail.gmail.com>
+ <20150617133314.GB15153@linux>
+ <CAL_Jsq+SdgAf7=Yq7Jk_1d9jTpAOLCEuEDCZvD=-h=2MWsNfFw@mail.gmail.com>
+ <55821F30.2090802@codeaurora.org>
+ <20150618022543.GA28820@linux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1434593063.23303.3.camel@mtksdaap41>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "Joe.C" <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "open
- list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, bin.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Henry Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150618022543.GA28820@linux>
+Sender: linux-pm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Rob Herring <robherring2@gmail.com>, Rafael Wysocki <rjw@rjwysocki.net>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Nishanth Menon <nm@ti.com>, Mark Brown <broonie@kernel.org>, Mike Turquette <mike.turquette@linaro.org>, Grant Likely <grant.likely@linaro.org>, Olof Johansson <olof@lixom.net>, Sudeep Holla <Sudeep.Holla@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Viswanath Puttagunta <viswanath.puttagunta@linaro.org>, Lucas Stach <l.stach@pengutronix.de>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Abraham <ta.omasab@gmail.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Kevin Hilman <khilman@linaro.org>, Santosh
 List-Id: devicetree@vger.kernel.org
 
-Hi Dan,
+On 18-06-15, 07:55, Viresh Kumar wrote:
+> Why do you think so? For me the operating-points-v2-names property
+> will be present in CPU node (as there is no OPP node which can have
+> it) and so every CPU is free to choose what it wants to.
 
-On Thu, 2015-06-18 at 10:04 +0800, Eddie Huang wrote:
-> Hi Dan,
-> 
-> On Tue, 2015-06-16 at 20:20 +0800, Daniel Kurtz wrote:
-> > On Tue, Jun 16, 2015 at 7:39 PM, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
-> > > On Mon, Jun 15, 2015 at 7:20 PM, Chaotian Jing
-> > > <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> > >> From: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > >>
-> > >> Add node mmc0 ~ mmc3 for mt8173.dtsi
-> > >> Add node mmc0, mmc1 for mt8173-evb.dts
-> > >>
-> > >> Signed-off-by: Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > >> Signed-off-by: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > >> ---
-> > >>  arch/arm64/boot/dts/mediatek/mt8173-evb.dts | 126 ++++++++++++++++++++++++++++
-> > >>  arch/arm64/boot/dts/mediatek/mt8173.dtsi    |  45 +++++++++-
-> > >>  2 files changed, 170 insertions(+), 1 deletion(-)
-> > >>
-> > >> diff --git a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-> > >> index b1560c9..762ec61 100644
-> > >> --- a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-> > >> +++ b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-> > >> @@ -33,6 +33,132 @@
-> > >>         chosen { };
-> > >>  };
-> > >>
-> > >> +&mmc0 {
-> > >> +       pinctrl-names = "default", "state_uhs";
-> > >> +       pinctrl-0 = <&mmc0_pins_default>;
-> > >> +       pinctrl-1 = <&mmc0_pins_uhs>;
-> > >> +       status = "okay";
-> > >> +       bus-width = <8>;
-> > >> +       max-frequency = <50000000>;
-> > >> +       cap-mmc-highspeed;
-> > >> +       vmmc-supply = <&mt6397_vemc_3v3_reg>;
-> > >> +       vqmmc-supply = <&mt6397_vio18_reg>;
-> > 
-> > I also can't find phandles for these regulators.
-> > 
-> > >> +       non-removable;
-> > >> +};
-> > >> +
-> > >> +&mmc1 {
-> > >> +       pinctrl-names = "default", "state_uhs";
-> > >> +       pinctrl-0 = <&mmc1_pins_default>;
-> > >> +       pinctrl-1 = <&mmc1_pins_uhs>;
-> > >> +       status = "okay";
-> > >> +       bus-width = <4>;
-> > >> +       max-frequency = <50000000>;
-> > >> +       cap-sd-highspeed;
-> > >> +       sd-uhs-sdr25;
-> > >> +       cd-gpios = <&pio 132 0>;
-> > >> +       vmmc-supply = <&mt6397_vmch_reg>;
-> > >> +       vqmmc-supply = <&mt6397_vmc_reg>;
-> > 
-> > nor these regulators.
-> > 
-> > Which kernel branch are you basing your patch set on?
-> > 
-> It is based on 4.1-rc1, and Sascha's regulator dts patch.
-> [3/4] ARM: dts: mt8135-evbp1: Add PMIC support:
-> https://patchwork.kernel.org/patch/6261161/
-> 
-My mistake, we only sent mt8135-evbp1.dts, but this patch need
-mt8173-evb.dts, we will send this.
+So, I had something like this in mind:
 
-Eddie
-Thanks
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Date: Thu, 30 Apr 2015 17:38:00 +0530
+Subject: [PATCH] OPP: Allow multiple OPP tables to be passed via DT
+
+On some platforms (Like Qualcomm's SoCs), it is not decided until
+runtime on what OPPs to use. The OPP tables can be fixed at compile
+time, but which table to use is found out only after reading some efuses
+(sort of an prom) and knowing characteristics of the SoC.
+
+To support such platform we need to pass multiple OPP tables per device
+and hardware should be able to choose one and only one table out of
+those.
+
+Update operating-points-v2 bindings to support that.
+
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+ Documentation/devicetree/bindings/power/opp.txt | 63 +++++++++++++++++++++++++
+ 1 file changed, 63 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/power/opp.txt b/Documentation/devicetree/bindings/power/opp.txt
+index 259bf00edf7d..72ccacaac9c9 100644
+--- a/Documentation/devicetree/bindings/power/opp.txt
++++ b/Documentation/devicetree/bindings/power/opp.txt
+@@ -45,10 +45,21 @@ Devices supporting OPPs must set their "operating-points-v2" property with
+ phandle to a OPP table in their DT node. The OPP core will use this phandle to
+ find the operating points for the device.
+ 
++Devices may want to choose OPP tables at runtime and so can provide a list of
++phandles here. But only *one* of them should be chosen at runtime. This must be
++accompanied by a corresponding "operating-points-v2-names" property, to uniquely
++identify the OPP tables.
++
+ If required, this can be extended for SoC vendor specfic bindings. Such bindings
+ should be documented as Documentation/devicetree/bindings/power/<vendor>-opp.txt
+ and should have a compatible description like: "operating-points-v2-<vendor>".
+ 
++Optional properties:
++- operating-points-v2-names: Names of OPP tables (required if multiple OPP
++  tables are present), to uniquely identify them. The same list must be present
++  for all the CPUs which are sharing clock/voltage rails and hence the OPP
++  tables.
++
+ * OPP Table Node
+ 
+ This describes the OPPs belonging to a device. This node can have following
+@@ -63,11 +74,16 @@ This describes the OPPs belonging to a device. This node can have following
+   reference an OPP.
+ 
+ Optional properties:
++- opp-name: Name of the OPP table, to uniquely identify it if more than one OPP
++  table is supplied in "operating-points-v2" property of device.
++
+ - opp-shared: Indicates that device nodes using this OPP Table Node's phandle
+   switch their DVFS state together, i.e. they share clock/voltage/current lines.
+   Missing property means devices have independent clock/voltage/current lines,
+   but they share OPP tables.
+ 
++- status: Marks the OPP table enabled/disabled.
++
+ 
+ * OPP Node
+ 
+@@ -396,3 +412,50 @@ Example 4: Handling multiple regulators
+ 		};
+ 	};
+ };
++
++Example 5: Multiple OPP tables
++
++/ {
++	cpus {
++		cpu@0 {
++			compatible = "arm,cortex-a7";
++			...
++
++			cpu-supply = <&cpu_supply>
++			operating-points-v2 = <&cpu0_opp_table_slow>, <&cpu0_opp_table_fast>;
++			operating-points-v2-names = "slow", "fast";
++		};
++	};
++
++	cpu0_opp_table_slow: opp_table_slow {
++		compatible = "operating-points-v2";
++		status = "okay";
++		opp-shared;
++
++		opp00 {
++			opp-hz = <600000000>;
++			...
++		};
++
++		opp01 {
++			opp-hz = <800000000>;
++			...
++		};
++	};
++
++	cpu0_opp_table_fast: opp_table_fast {
++		compatible = "operating-points-v2";
++		status = "okay";
++		opp-shared;
++
++		opp10 {
++			opp-hz = <1000000000>;
++			...
++		};
++
++		opp11 {
++			opp-hz = <1100000000>;
++			...
++		};
++	};
++};
+
