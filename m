@@ -1,7 +1,7 @@
 From: Gregory Fong <gregory.0xf0@gmail.com>
-Subject: [PATCH v3 2/4] dt-bindings: brcmstb-gpio: document properties for wakeup
-Date: Wed, 17 Jun 2015 18:00:41 -0700
-Message-ID: <1434589243-502-3-git-send-email-gregory.0xf0@gmail.com>
+Subject: [PATCH v3 4/4] gpio: brcmstb: support wakeup from S5 cold boot
+Date: Wed, 17 Jun 2015 18:00:43 -0700
+Message-ID: <1434589243-502-5-git-send-email-gregory.0xf0@gmail.com>
 References: <1434589243-502-1-git-send-email-gregory.0xf0@gmail.com>
 Return-path: <linux-gpio-owner@vger.kernel.org>
 In-Reply-To: <1434589243-502-1-git-send-email-gregory.0xf0@gmail.com>
@@ -10,89 +10,155 @@ To: linux-gpio@vger.kernel.org
 Cc: Gregory Fong <gregory.0xf0@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Brian Norris <computersforpeace@gmail.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-Some brcmstb GPIO controllers can be used to wake from suspend, so use
-the de facto standard property 'wakeup-source' to mark the nodes of
-controllers with that capability.
+For wake from S5, we need to:
+- register a reboot handler
+- set wakeup capability before requesting IRQ so wakeup count is
+  incremented
+- mask all GPIO IRQs and clear any pending interrupts during driver
+  probe to since no driver will yet be registered to handle any IRQs
+  carried over from boot at that time, and it's possible that the
+  booted kernel does not request the same IRQ anyway.
 
-Also document interrupts-extended, which will be used for wakeup
-handling because the interrupt parent for the wake IRQ is different
-from the regular IRQ.
+This means that /sys/.../power/wakeup_count is valid at boot time, and
+we can properly account for S5 wakeup stats. e.g.:
 
-While we're at it, a few more fixes: We don't actually use the
-"interrupt-names" property, so remove it from the listed optional
-properties and from the examples.  And since we're modifying the
-examples, also follow Brian's suggestions to:
-- change #gpio-cells, #interrupt-cells, and brcm,gpio-bank-widths from
-  hex to dec
-- use phandles
+  ### After waking from S5 from a GPIO key
+  # cat /sys/bus/platform/drivers/brcmstb-gpio/f04172c0.gpio/power/wakeup
+  enabled
+  # cat /sys/bus/platform/drivers/brcmstb-gpio/f04172c0.gpio/power/wakeup_count
+  1
 
-Reviewed-by: Brian Norris <computersforpeace@gmail.com>
 Signed-off-by: Gregory Fong <gregory.0xf0@gmail.com>
 ---
-v3: Update per Brian's suggestions described in above message.
+New in v3.
 
- .../devicetree/bindings/gpio/brcm,brcmstb-gpio.txt | 35 +++++++++++++++++-----
- 1 file changed, 28 insertions(+), 7 deletions(-)
+ drivers/gpio/gpio-brcmstb.c | 56 ++++++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 50 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/gpio/brcm,brcmstb-gpio.txt b/Documentation/devicetree/bindings/gpio/brcm,brcmstb-gpio.txt
-index 435f1bc..b405b44 100644
---- a/Documentation/devicetree/bindings/gpio/brcm,brcmstb-gpio.txt
-+++ b/Documentation/devicetree/bindings/gpio/brcm,brcmstb-gpio.txt
-@@ -33,6 +33,13 @@ Optional properties:
- - interrupt-parent:
-     phandle of the parent interrupt controller
+diff --git a/drivers/gpio/gpio-brcmstb.c b/drivers/gpio/gpio-brcmstb.c
+index 141509b..dedb35c 100644
+--- a/drivers/gpio/gpio-brcmstb.c
++++ b/drivers/gpio/gpio-brcmstb.c
+@@ -20,6 +20,7 @@
+ #include <linux/irqdomain.h>
+ #include <linux/irqchip/chained_irq.h>
+ #include <linux/interrupt.h>
++#include <linux/reboot.h>
  
-+- interrupts-extended:
-+    Alternate form of specifying interrupts and parents that allows for
-+    multiple parents.  This takes precedence over 'interrupts' and
-+    'interrupt-parent'.  Wakeup-capable GPIO controllers often route their
-+    wakeup interrupt lines through a different interrupt controller than the
-+    primary interrupt line, making this property necessary.
+ #define GIO_BANK_SIZE           0x20
+ #define GIO_ODEN(bank)          (((bank) * GIO_BANK_SIZE) + 0x00)
+@@ -48,6 +49,7 @@ struct brcmstb_gpio_priv {
+ 	int gpio_base;
+ 	bool can_wake;
+ 	int parent_wake_irq;
++	struct notifier_block reboot_notifier;
+ };
+ 
+ #define MAX_GPIO_PER_BANK           32
+@@ -167,10 +169,9 @@ static int brcmstb_gpio_irq_set_type(struct irq_data *d, unsigned int type)
+ 	return 0;
+ }
+ 
+-static int brcmstb_gpio_irq_set_wake(struct irq_data *d, unsigned int enable)
++static int __brcmstb_gpio_irq_set_wake(struct brcmstb_gpio_priv *priv,
++		unsigned int enable)
+ {
+-	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+-	struct brcmstb_gpio_priv *priv = brcmstb_gpio_gc_to_priv(gc);
+ 	int ret = 0;
+ 
+ 	/*
+@@ -188,6 +189,14 @@ static int brcmstb_gpio_irq_set_wake(struct irq_data *d, unsigned int enable)
+ 	return ret;
+ }
+ 
++static int brcmstb_gpio_irq_set_wake(struct irq_data *d, unsigned int enable)
++{
++	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
++	struct brcmstb_gpio_priv *priv = brcmstb_gpio_gc_to_priv(gc);
 +
- - #interrupt-cells:
-     Should be <2>.  The first cell is the GPIO number, the second should specify
-     flags.  The following subset of flags is supported:
-@@ -47,19 +54,33 @@ Optional properties:
- - interrupt-controller:
-     Marks the device node as an interrupt controller
- 
--- interrupt-names:
--    The name of the IRQ resource used by this controller
-+- wakeup-source:
-+    GPIOs for this controller can be used as a wakeup source
- 
- Example:
- 	upg_gio: gpio@f040a700 {
--		#gpio-cells = <0x2>;
--		#interrupt-cells = <0x2>;
-+		#gpio-cells = <2>;
-+		#interrupt-cells = <2>;
- 		compatible = "brcm,bcm7445-gpio", "brcm,brcmstb-gpio";
- 		gpio-controller;
- 		interrupt-controller;
- 		reg = <0xf040a700 0x80>;
--		interrupt-parent = <0xf>;
-+		interrupt-parent = <&irq0_intc>;
-+		interrupts = <0x6>;
-+		brcm,gpio-bank-widths = <32 32 32 24>;
-+	};
++	return __brcmstb_gpio_irq_set_wake(priv, enable);
++}
 +
-+	upg_gio_aon: gpio@f04172c0 {
-+		#gpio-cells = <2>;
-+		#interrupt-cells = <2>;
-+		compatible = "brcm,bcm7445-gpio", "brcm,brcmstb-gpio";
-+		gpio-controller;
-+		interrupt-controller;
-+		reg = <0xf04172c0 0x40>;
-+		interrupt-parent = <&irq0_aon_intc>;
- 		interrupts = <0x6>;
--		interrupt-names = "upg_gio";
--		brcm,gpio-bank-widths = <0x20 0x20 0x20 0x18>;
-+		interrupts-extended = <&irq0_aon_intc 0x6>,
-+			<&aon_pm_l2_intc 0x5>;
-+		wakeup-source;
-+		brcm,gpio-bank-widths = <18 4>;
- 	};
+ static irqreturn_t brcmstb_gpio_wake_irq_handler(int irq, void *data)
+ {
+ 	struct brcmstb_gpio_priv *priv = data;
+@@ -247,6 +256,19 @@ static void brcmstb_gpio_irq_handler(unsigned int irq, struct irq_desc *desc)
+ 	chained_irq_exit(chip, desc);
+ }
+ 
++static int brcmstb_gpio_reboot(struct notifier_block *nb,
++		unsigned long action, void *data)
++{
++	struct brcmstb_gpio_priv *priv =
++		container_of(nb, struct brcmstb_gpio_priv, reboot_notifier);
++
++	/* Enable GPIO for S5 cold boot */
++	if (action == SYS_POWER_OFF)
++		__brcmstb_gpio_irq_set_wake(priv, 1);
++
++	return NOTIFY_DONE;
++}
++
+ /* Make sure that the number of banks matches up between properties */
+ static int brcmstb_gpio_sanity_check_banks(struct device *dev,
+ 		struct device_node *np, struct resource *res)
+@@ -286,6 +308,12 @@ static int brcmstb_gpio_remove(struct platform_device *pdev)
+ 		if (ret)
+ 			dev_err(&pdev->dev, "gpiochip_remove fail in cleanup\n");
+ 	}
++	if (priv->reboot_notifier.notifier_call) {
++		ret = unregister_reboot_notifier(&priv->reboot_notifier);
++		if (ret)
++			dev_err(&pdev->dev,
++				"failed to unregister reboot notifier\n");
++	}
+ 	return ret;
+ }
+ 
+@@ -343,7 +371,16 @@ static int brcmstb_gpio_irq_setup(struct platform_device *pdev,
+ 			dev_warn(dev,
+ 				"Couldn't get wake IRQ - GPIOs will not be able to wake from sleep");
+ 		} else {
+-			int err = devm_request_irq(dev, priv->parent_wake_irq,
++			int err;
++
++			/*
++			 * Set wakeup capability before requesting wakeup
++			 * interrupt, so we can process boot-time "wakeups"
++			 * (e.g., from S5 cold boot)
++			 */
++			device_set_wakeup_capable(dev, true);
++			device_wakeup_enable(dev);
++			err = devm_request_irq(dev, priv->parent_wake_irq,
+ 					brcmstb_gpio_wake_irq_handler, 0,
+ 					"brcmstb-gpio-wake", priv);
+ 
+@@ -352,8 +389,9 @@ static int brcmstb_gpio_irq_setup(struct platform_device *pdev,
+ 				return err;
+ 			}
+ 
+-			device_set_wakeup_capable(dev, true);
+-			device_wakeup_enable(dev);
++			priv->reboot_notifier.notifier_call =
++				brcmstb_gpio_reboot;
++			register_reboot_notifier(&priv->reboot_notifier);
+ 			priv->can_wake = true;
+ 		}
+ 	}
+@@ -456,6 +494,12 @@ static int brcmstb_gpio_probe(struct platform_device *pdev)
+ 		/* not all ngpio lines are valid, will use bank width later */
+ 		gc->ngpio = MAX_GPIO_PER_BANK;
+ 
++		/*
++		 * Mask all interrupts by default, since wakeup interrupts may
++		 * be retained from S5 cold boot
++		 */
++		bank->bgc.write_reg(reg_base + GIO_MASK(bank->id), 0);
++
+ 		err = gpiochip_add(gc);
+ 		if (err) {
+ 			dev_err(dev, "Could not add gpiochip for bank %d\n",
 -- 
 1.9.1
 
