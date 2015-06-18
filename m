@@ -1,295 +1,255 @@
-From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RESEND PATCH 1/2] pinctrl: change function behavior for per pin
- muxing controllers
-Date: Thu, 18 Jun 2015 14:33:48 +0200
-Message-ID: <20150618123348.GB20227@odux.rfo.atmel.com>
-References: <1433948699-19800-1-git-send-email-ludovic.desroches@atmel.com>
- <1433948699-19800-2-git-send-email-ludovic.desroches@atmel.com>
- <557EF60D.8020007@wwwdotorg.org>
- <20150617123816.GB12295@odux.rfo.atmel.com>
- <5581988C.50000@wwwdotorg.org>
+From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 03/11] nvmem: Add a simple NVMEM framework for nvmem
+ providers
+Date: Thu, 18 Jun 2015 13:46:38 +0100
+Message-ID: <5582BDAE.5040008@linaro.org>
+References: <1432226535-8640-1-git-send-email-srinivas.kandagatla@linaro.org> <1432226583-8775-1-git-send-email-srinivas.kandagatla@linaro.org> <5580A678.4080304@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5581988C.50000-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+In-Reply-To: <5580A678.4080304-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 17, 2015 at 09:55:56AM -0600, Stephen Warren wrote:
-> On 06/17/2015 06:38 AM, Ludovic Desroches wrote:
-> >Hi Stephen,
-> >
-> >On Mon, Jun 15, 2015 at 09:58:05AM -0600, Stephen Warren wrote:
-> >>On 06/10/2015 09:04 AM, Ludovic Desroches wrote:
-> >>>When having a controller which allows per pin muxing, declaring with
-> >>>which groups a function can be used is a useless constraint since groups
-> >>>are something virtual.
-> >>
-> >>This isn't true.
-> >>
-> >>Irrespective of whether a particular piece of pinmux HW can control the mux
-> >>function for each pin individually, or only in groups, it's quite likely
-> >>that each function can only be selected onto a subset of those pins or
-> >>groups. Requiring the pinctrl driver to inform the core which set of
-> >>pins/groups particular functions can be selected onto seems quite
-> >>reasonable.
-> >>
-> >>In my opinion at least, for HW that can select the mux function at the
-> >>per-pin level, the only sensible set of groups is one group per pin with
-> >>each group containing a single pin. Any other use of groups is a
-> >>SW/user-level construct, and is something unrelated to why the pinctrl
-> >>subsystem supports groups. If we want to represent those groups in pinctrl,
-> >>there should be two separate sets of groups; one to represent the actual HW
-> >>capabilities, and one to represent the SW/user-level convenience
-> >>abstractions.
-> >
-> >Groups that I would like to use are not something related to the user or
-> >software. It's an hardware reality but they would be more flexibles.
-> >
-> >Usually the muxing is done by selecting a function (which seems to be
-> >device related: usart, spi, etc.), then you select on which pins you
-> >want this function.
-> >
-> >In my case, I can't select a function only by choosing a mux. It is a
-> >combination of the mux and the pin on which it is applied. So my
-> >functions will be GPIO, A, B, C, etc. If I use function A on pin 12, I
-> >will have my i2c clock signal but I can have this signal on pin 58 if I
-> >use function C. Do you understand what I mean? It's not very easy to
-> >explain... So here is a real example:
-> >
-> >  --------------------------------------------------
-> >|              | pio peripheral                    |
-> >  --------------------------------------------------
-> >| signal | dir | func | signal       | dir | ioset |
-> >  --------------------------------------------------
-> >| PA8    | I/O | A    | SDMMC0_DAT6  | I/O | 1     |
-> >|        |     | B    | QSPI1_IO1    | I/O | 1     |
-> >|        |     | D    | TCLK5        | I   | 1     |
-> >|        |     | E    | FLEXCOM2_IO2 | I/O | 1     |
-> >|        |     | F    | NWE/NANDWE   | O   | 2     |
-> >  --------------------------------------------------
-> >| PD28   | I/O | A    | SPI1_NPCS0   | I/O | 3     |
-> >|        |     | B    | TDI          | I/O | 3     |
-> >|        |     | C    | FLEXCOM2_IO2 | I   | 2     |
-> >  --------------------------------------------------
-> >
-> >
-> >You are right that having a group per pin is a solution.
-> >
-> >If I follow your proposal (tell me if I'm wrong):
-> >- I will have 128 groups since I have 128 pins.
-> 
-> Yes.
-> 
-> >- I will have functions GPIO, A, B, C, D, E, F.
-> 
-> You could have functions A..F, and require the user to determine what option
-> they want for each pin, find the pin-specific mux function value for each
-> pin, and put that into the DT (or other pinmux data source). For example,
-> the bcm2835 pinctrl driver works this way.
-> 
-> In that case, each of the functions A..F could be selected on each pin, so
-> you'd have a very simple "get pins for function" implementation.
-> 
-> Alternatively, you could define a logic function per IO controller or signal
-> that gets pinmuxed. In the example above, FLEXCOM2_IO2 is one such example.
-> Given that set of functions, you'd need a mapping table to convert from the
-> logical functions seen by the pinctrl subsystem to the HW values that need
-> to be written into registers. For example, the Tegra pinctrl drivers work
-> this way.
-> 
-> In that case, each (pinctrl) function could only be selected on a specific
-> subset of all pins/groups, and so you'd probably need a table-based
-> implementation of "get pins for function".
+Many thanks for review.
 
-Thanks for giving me some examples. Let's take a look at these drivers.
-My concern is that I didnn't want to have many and/or big tables in my
-driver. I will have to update it for a new SoC even if the pin
-controller is the same. I prefer to have it in the device as we did
-before and as some drivers continue to do.
+On 16/06/15 23:43, Stephen Boyd wrote:
+> On 05/21/2015 09:43 AM, Srinivas Kandagatla wrote:
+>>
+>> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+>> new file mode 100644
+>> index 0000000..6c2f0b1
+>> --- /dev/null
+>> +++ b/drivers/nvmem/core.c
+>> @@ -0,0 +1,398 @@
+>> +/*
+>> + * nvmem framework core.
+>> + *
+>> + * Copyright (C) 2015 Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> + * Copyright (C) 2013 Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 and
+>> + * only version 2 as published by the Free Software Foundation.
+>> + *
+>> + * This program is distributed in the hope that it will be useful,
+>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + */
+>> +
+>> +#include <linux/device.h>
+>> +#include <linux/nvmem-provider.h>
+>> +#include <linux/export.h>
+>> +#include <linux/fs.h>
+>> +#include <linux/idr.h>
+>> +#include <linux/init.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of.h>
+>> +#include <linux/slab.h>
+>> +#include <linux/uaccess.h>
+>
+> Is this include used?
+>
+Yep, not required.
+>> +
+>> +static int of_nvmem_match(struct device *dev, const void *nvmem_np)
+>> +{
+>> +	return dev->of_node == nvmem_np;
+>> +}
+>> +
+>> +static struct nvmem_device *of_nvmem_find(struct device_node *nvmem_np)
+>
+> const?
+Sure,
+>
+>> +{
+>> +	struct device *d;
+>> +
+>> +	if (!nvmem_np)
+>> +		return NULL;
+>> +
+>> +	d = class_find_device(&nvmem_class, NULL, nvmem_np, of_nvmem_match);
+>> +
+>> +	return d ? to_nvmem_device(d) : NULL;
+>> +}
+>> +
+>> +static struct nvmem_cell *nvmem_find_cell(const char *cell_id)
+>> +{
+>> +	struct nvmem_cell *p;
+>> +
+>> +	list_for_each_entry(p, &nvmem_cells, node) {
+>
+> Unnecessary braces.
+Yep, Will remove it.
+>
+>> +		if (p && !strcmp(p->name, cell_id))
+>> +			return p;
+>> +	}
+>> +
+>> +	return NULL;
+>> +}
+>> +
+>> +static void nvmem_cell_drop(struct nvmem_cell *cell)
+>> +{
+>> +	mutex_lock(&nvmem_cells_mutex);
+>> +	list_del(&cell->node);
+>> +	mutex_unlock(&nvmem_cells_mutex);
+>> +	kfree(cell);
+>> +}
+>> +
+>> +static void nvmem_device_remove_all_cells(struct nvmem_device *nvmem)
+>> +{
+>> +	struct nvmem_cell *cell = NULL;
+>
+> Unnecessary initialization
+Yes.
+>
+>> +	struct list_head *p, *n;
+>> +
+>> +	list_for_each_safe(p, n, &nvmem_cells) {
+>> +		cell = list_entry(p, struct nvmem_cell, node);
+>> +		if (cell->nvmem == nvmem)
+>> +			nvmem_cell_drop(cell);
+>> +	}
+> [..]
+>> +
+>> +static int nvmem_add_cells(struct nvmem_device *nvmem,
+>> +			   struct nvmem_config *cfg)
+>> +{
+>> +	struct nvmem_cell **cells;
+>> +	struct nvmem_cell_info *info = cfg->cells;
+>> +	int i, rval;
+>> +
+>> +	cells = kzalloc(sizeof(*cells) * cfg->ncells, GFP_KERNEL);
+>
+> kcalloc
+This is temporary array, I did this on intention, to make it easy to 
+kfree cells which are found invalid at runtime.
+>
+>> +	if (!cells)
+>> +		return -ENOMEM;
+>> +
+>> +	for (i = 0; i < cfg->ncells; i++) {
+>> +		cells[i] = kzalloc(sizeof(struct nvmem_cell), GFP_KERNEL);
+>
+> sizeof(**cells) ?
+Yep.
 
-> 
-> >- I have to give the groups which can achieve a function so I will have
-> >128 groups for each function. It means 128 x 7 = 896 groups.
-> 
-> I don't think so no. I'm not sure why you'd consider multiplying 128 and 7
-> here. I'd expect 128 groups since you have 128 pins[1].
-> 
+>
+>> +
+>> +/**
+>> + * nvmem_register(): Register a nvmem device for given nvmem.
+>> + * Also creates an binary entry in /sys/class/nvmem/dev-name/nvmem
+>> + *
+>> + * @nvmem: nvmem device that needs to be created
+>
+> You mean @config?
+>
+Yes, I will fix it.
 
-Sorry my mistake, I mean 896 possibilites since I have 128 groups for a
-function.
-
-> Well, it's possible to have slightly more groups if, say, mux function is
-> selectable per pin, whereas something else like drive strength is configured
-> by a register that affects multiple pins at once. You'd need separate sets
-> of groups for muxing and for drive strength configuration. Some Tegra SoCs
-> are like this. Still, we just add the different sets of groups together
-> here, not multiply. The overall set of groups is not that much larger than
-> the set of pins.
-> 
-> >Does it seems to be something reasonable and intelligible? From my point
-> >of view no. And what about the sysfs readability?
-> >
-> >With my current implementation, I have something quite understandable
-> >for the user if he needs to check the pinmuxing:
-> >
-> >   # cat /sys/kernel/debug/pinctrl/ahb\:apb\:pinctrl@fc038000/pinmux-pins
-> >   pin 17 (PA17): (MUX UNCLAIMED) (GPIO UNCLAIMED)
-> >   pin 18 (PA18): b0000000.sdio-host (GPIO UNCLAIMED) function E group sdmmc1_0
-> >   pin 19 (PA19): b0000000.sdio-host (GPIO UNCLAIMED) function E group sdmmc1_0
-> >
-> >   # cat /sys/kernel/debug/pinctrl/pinctrl-maps
-> >   Pinctrl maps:
-> >
-> >   device b0000000.sdio-host
-> >   state default
-> >   type MUX_GROUP (2)
-> >   controlling device ahb:apb:pinctrl@fc038000
-> >   group sdmmc1_0
-> >   function E
-> >
-> >   device b0000000.sdio-host
-> >   state default
-> >   type CONFIGS_PIN (3)
-> >   controlling device ahb:apb:pinctrl@fc038000
-> >   pin PA28
-> >   config 00010003
-> >
-> >   device b0000000.sdio-host
-> >   state default
-> >   type CONFIGS_PIN (3)
-> >   controlling device ahb:apb:pinctrl@fc038000
-> >   pin PA18
-> >   config 00010003
-> >
-> >
-> >Doing as you propose, I assume the result should be:
-> >
-> >   # cat /sys/kernel/debug/pinctrl/ahb\:apb\:pinctrl@fc038000/pinmux-pins
-> >   pin 17 (PA17): (MUX UNCLAIMED) (GPIO UNCLAIMED)
-> >   pin 18 (PA18): b0000000.sdio-host (GPIO UNCLAIMED) function E group PA18
-> >   pin 19 (PA19): b0000000.sdio-host (GPIO UNCLAIMED) function E group PA19
-> >
-> >   # cat /sys/kernel/debug/pinctrl/pinctrl-maps
-> >   Pinctrl maps:
-> >
-> >   device b0000000.sdio-host
-> >   state default
-> >   type MUX_GROUP (2)
-> >   controlling device ahb:apb:pinctrl@fc038000
-> >   group PA28
-> >   function E
-> >
-> >   device b0000000.sdio-host
-> >   state default
-> >   type CONFIGS_PIN (3)
-> >   controlling device ahb:apb:pinctrl@fc038000
-> >   pin PA28
-> >   config 00010003
-> >
-> >   device b0000000.sdio-host
-> >   state default
-> >   type MUX_GROUP (2)
-> >   controlling device ahb:apb:pinctrl@fc038000
-> >   group PA18
-> >   function E
-> >
-> >   device b0000000.sdio-host
-> >   state default
-> >   type CONFIGS_PIN (3)
-> >   controlling device ahb:apb:pinctrl@fc038000
-> >   pin PA18
-> >   config 00010003
-> >
-> >I think it is more difficult to understand what is done here.
-> 
-> I don't think I agree. The HW level groups are the individual pins, so I
-> think the second option is clearer and more correct. What is the "sdmmc1_0"
-> group in the first example? Does any such thing even exist in HW?
-
-If a user see this, I will have to take the datasheet to undersand what
-using function E on this pin really means.
-
-sdmmc1_0 group doesn't really exists as a group but a collection of
-pins. The minimum requirement is to have CK, CMD and DAT0 signals. The
-user can choose if he wants to use DAT1,2,3,4,5,6,7 and CD. Maybe he
-would like to keep this pins available for another function.
-
-This is what I have in my device tree.
-
-pinctrl@fc038000 {
-	group_defs {
-		sdmmc1_0 {
-			pins = <PIN_PA22__SDMMC1_CK>,
-			       <PIN_PA28__SDMMC1_CMD>,
-			       <PIN_PA18__SDMMC1_DAT0>,
-			       <PIN_PA19__SDMMC1_DAT1>,
-			       <PIN_PA20__SDMMC1_DAT2>,
-			       <PIN_PA21__SDMMC1_DAT3>,
-			       <PIN_PA30__SDMMC1_CD>;
-		};
-	};
-
-	pinctrl_sdmmc1_default: sdmmc1_default {
-		mux {
-			function = "E";
-			groups = "sdmmc1_0";
-		};
-
-		conf-cmd_data {
-			pins = <PIN_PA28__SDMMC1_CMD>,
-			       <PIN_PA18__SDMMC1_DAT0>,
-			       <PIN_PA19__SDMMC1_DAT1>,
-			       <PIN_PA20__SDMMC1_DAT2>,
-			       <PIN_PA21__SDMMC1_DAT3>;
-			bias-pull-up;
-		};
-
-		conf-ck_cd {
-			pins = <PIN_PA22__SDMMC1_CK>,
-			       <PIN_PA30__SDMMC1_CD>;
-			bias-disable;
-		};
-	};
-}
-
->From my point of view, it is not so far from what generic pinconf does.
-The only addition is the group_defs node because I don't want SoC
-dependant tables in my driver.
-
-> 
-> >I have sent patches months ago trying to improve things by having
-> >something more flexible. I don't think I introduce too big changes.
-> >The only answers I got were from people thinking that pinctrl framework
-> >conception is not good to fit all kind of controllers. I re-sent the
-> >patch series to gain more expose and have no  answer...
-> 
-> I don't see anything in your description which implies pinctrl isn't
-> perfectly suitable for your HW.
-> 
-
-It could but it doesn't fit all my requirements:
-- no SoC dependant tables in the driver
-- comprehensive sysfs
-
-I agree that these two requirements could be controversial, particulary
-driver tables vs DT. At the moment, I feel there are pros and cons which are
-all admissible so in my opinion both approach should be acceptable.
-
-> Note that I'm on vacation for a couple weeks soon, and I don't expect to
-> follow this conversation during that time. Ultimately, LinusW owns the
-> pinctrl subsystem, and you need to convince him of any changes.
-
-Ok, I'll think about this discussion and try to see what in involves for
-my case.
+>> + *
+>> + * The return value will be an ERR_PTR() on error or a valid pointer
+>> +	nvmem->dev.of_node = config->dev->of_node;
+>> +	dev_set_name(&nvmem->dev, "%s%d",
+>> +		     config->name ? : "nvmem", config->id);
+>
+> It may be better to always name it nvmem%d so that we don't allow the
+> possibility of conflicts.
+We can do that, but I wanted to make the sysfs and dev entries more 
+readable than just nvmem0, nvmem1...
+>
+>> +
+>> +	nvmem->read_only = of_property_read_bool(nvmem->dev.of_node,
+>> +						 "read-only");
+>
+> What if we're not using DT? How would we specify read_only?
+>
+Thanks for spotting, you are correct, I need to add read_only flag to 
+nvmem_config too.
 
 
-Regards
+>> +
+>> +	device_initialize(&nvmem->dev);
+>> +
+>> +	dev_dbg(&nvmem->dev, "Registering nvmem device %s\n",
+>> +		dev_name(&nvmem->dev));
+>> +
+>> +	rval = device_add(&nvmem->dev);
+>> +	if (rval) {
+>> +		ida_simple_remove(&nvmem_ida, nvmem->id);
+>> +		kfree(nvmem);
+>> +		return ERR_PTR(rval);
+>> +	}
+>> +
+>> +	/* update sysfs attributes */
+>> +	if (nvmem->read_only)
+>> +		sysfs_update_group(&nvmem->dev.kobj, &nvmem_bin_ro_group);
+>
+> It would be nice if this could be done before the device was registered.
+> Perhaps have two device_types, one for read-only and one for read/write?
 
-Ludovic
+The attributes are actually coming from the class object, so we have no 
+choice to update the attributes before the device is registered.
+
+May it would be more safe to have default as read-only and modify it to 
+read/write based on read-only flag?
+
+
+>
+>> +
+>> + */
+>> +int nvmem_unregister(struct nvmem_device *nvmem)
+>> +{
+>> +	mutex_lock(&nvmem_mutex);
+>> +	if (nvmem->users) {
+>> +		mutex_unlock(&nvmem_mutex);
+>> +		return -EBUSY;
+>
+> Hmm... that doesn't seem nice. Typically when something is unregistered
+> we have to pull the rug out from underneath the users and start
+> returning errors to them. The provider needs to be free to unregister
+> because it's been forcibly removed. So really this function should
+> return void.
+>
+The consumer api is get/put style, so consumers who already have 
+references to the provider, removing provider forcefully might lead to 
+dangling pointer. Having said that I can give a try and see how it looks.
+
+>> +	}
+>> +	mutex_unlock(&nvmem_mutex);
+>> +
+>> +	nvmem_device_remove_all_cells(nvmem);
+>> +	device_del(&nvmem->dev);
+>> +
+>> +	return 0;
+>> +}
+>> +EXPORT_SYMBOL_GPL(nvmem_unregister);
+>> +
+>> +static int nvmem_init(void)
+>
+> __init? And __exit on nvmem_exit?
+yep, will do that.
+>
+>> +{
+>> +	return class_register(&nvmem_class);
+>
+> I thought class was on the way out? Aren't we supposed to use bus types
+> for new stuff?
+Do you remember any conversation on the list about this? I could not 
+find it on web.
+
+on the other hand, nvmem is not really a bus, making it a bus type 
+sounds incorrect to me.
+
+
+--srini
+
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
