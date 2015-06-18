@@ -1,70 +1,97 @@
-From: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v6] usb: common: add API to set usb otg capabilities by
- device tree
-Date: Thu, 18 Jun 2015 16:47:48 +0800
-Message-ID: <20150618084747.GD15280@shlinux2>
-References: <1434590302-18066-1-git-send-email-jun.li@freescale.com>
- <20150618103650.7c3d1b8ceb134388b0d8b093@ti.com>
+From: YH Huang <yh.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: pwm: add MediaTek display PWM
+ bindings
+Date: Thu, 18 Jun 2015 17:00:26 +0800
+Message-ID: <1434618026.18278.5.camel@mtksdaap41>
+References: <1432214964-40644-1-git-send-email-yh.huang@mediatek.com>
+	 <1432214964-40644-2-git-send-email-yh.huang@mediatek.com>
+	 <20150612102344.GG19400@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150618103650.7c3d1b8ceb134388b0d8b093-l0cyMroinI0@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Cc: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150612102344.GG19400-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 18, 2015 at 10:36:50AM +0300, Roger Quadros wrote:
-> Lin,
+On Fri, 2015-06-12 at 12:23 +0200, Thierry Reding wrote:
+> On Thu, May 21, 2015 at 09:29:23PM +0800, YH Huang wrote:
+> > Document the device-tree binding of MediatTek display PWM.
 > 
-> You can use --in-reply-to "message id of v5 of this path" so that it appears together
-> with the other patches in peoples mailboxes.
+> s/MediatTek/MediaTek/
 > 
-> > + * the passed properties in DT.
-> > + * @np: Pointer to the given device_node
-> > + * @otg_caps: Pointer to the target usb_otg_caps to be set
-> > + *
-> > + * The function gets and sets the otg capabilities
-> > + */
-> > +void of_usb_set_otg_caps(struct device_node *np, struct usb_otg_caps *otg_caps)
-> > +{
-> > +	u32 otg_rev;
-> > +
-> > +	if (!otg_caps)
-> > +		return;
-> > +
-> > +	if (!of_property_read_u32(np, "otg-rev", &otg_rev))
-> > +		otg_caps->otg_rev = otg_rev;
-> 
-> should we check if otg_rev is in correct format?
-> anything non BCD and greater than 0x9999 is invalid.
-> 
-> Also if otg-rev is not passed then we need to treat it as legacy
-> platform right? How is this taken care of?
-> 
-Missed this comment
-This handling rely on controller driver, cannot decided here.
-There are several cases we need take care:
-1) otg-rev is not passed, but all 3 disable flags passed, this is
-  valid, means user want to disable whole OTG, so only "otg-rev"
-  not passed, cannot treat as legacy platform.
-2) Legacy platform means: none of 4 properties is present.
-3) Some controller drivers already support OTG HNP/SRP, then change
-  to utilize those new flags, still should support OTG HNP/SRP w/o
-  any dt change, so OTG caps should be enabled for legacy platforms.
-4) Some controller drivers does not support any OTG, after add OTG
-  functions and utilize those new flags, should keep OTG disabled
-  for legacy platforms.
-
-Li Jun 
-> > -- 
-> > 1.9.1
 > > 
+> > Signed-off-by: YH Huang <yh.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 > 
-> cheers,
-> -roger
+> This could use a more verbose commit message. You could mention what the
+> PWM is typically used for (display I presume). Perhaps mention how many
+> channels it exposes and so on.
+
+I will add more information in the commit message.
+
+> 
+> > ---
+> >  .../devicetree/bindings/pwm/pwm-mtk-disp.txt       | 25 ++++++++++++++++++++++
+> >  1 file changed, 25 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt b/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
+> > new file mode 100644
+> > index 0000000..f55bf92
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
+> > @@ -0,0 +1,25 @@
+> > +MediaTek display PWM controller
+> > +
+> > +Required properties:
+> > + - compatible: should be "mediatek,<name>-disp-pwm"
+> > +   - "mediatek,mt8173-disp-pwm": found on mt8173 SoC
+> > +   - "mediatek,mt6595-disp-pwm": found on mt6595 SoC
+> > + - reg: physical base address and length of the controller's registers
+> > + - #pwm-cells: must be 2. See pwm.txt in this directory
+> > +   for a description of the cell format
+> 
+> You can use the full line width of 78/80 characters, no need to wrap
+> this prematurely.
+
+OK.
+
+> 
+> > + - clocks: phandle and clock specifier of the PWM reference clock
+> > + - clock-names: must contain the following
+> > +   - "main": clock used to generate PWM signals
+> > +   - "mm": sync signals from the modules of mmsys
+> > +
+> > +Example:
+> > +	pwm0: pwm@1401e000 {
+> > +		compatible = "mediatek,mt8173-disp-pwm",
+> > +			     "mediatek,mt6595-disp-pwm";
+> > +		reg = <0 0x1401e000 0 0x1000>;
+> > +		#pwm-cells = <2>;
+> > +		clocks = <&mmsys MM_DISP_PWM026M>,
+> > +			 <&mmsys MM_DISP_PWM0MM>;
+> > +		clock-names = "main",
+> > +			      "mm";
+> 
+> No need to waste a line,
+> 
+> 		clock-names = "main", "mm";
+> 
+> fits on a single line just fine.
+
+OK.
+
+> 
+> Thierry
+
+Thank for your suggestion.
+
+Regards,
+YH Huang
+
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
