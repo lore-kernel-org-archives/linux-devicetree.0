@@ -1,452 +1,71 @@
-From: YH Huang <yh.huang@mediatek.com>
-Subject: Re: [PATCH v2 2/2] pwm: add MediaTek display PWM driver support
-Date: Thu, 18 Jun 2015 18:19:44 +0800
-Message-ID: <1434622784.18278.39.camel@mtksdaap41>
-References: <1432214964-40644-1-git-send-email-yh.huang@mediatek.com>
-	 <1432214964-40644-3-git-send-email-yh.huang@mediatek.com>
-	 <20150612102046.GF19400@ulmo.nvidia.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH 01/44] kernel: Add support for poweroff handler call chain
+Date: Thu, 18 Jun 2015 04:54:03 -0700
+Message-ID: <5582B15B.4010205@roeck-us.net>
+References: <1412659726-29957-1-git-send-email-linux@roeck-us.net>	<1412659726-29957-2-git-send-email-linux@roeck-us.net>	<55821936.4040704@codeaurora.org> <CAH6sp9P7rq2y_hiQPHKUP85CwnEmp87yC7Psh4=29h-pYnb_yw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <20150612102046.GF19400@ulmo.nvidia.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, yh.huang@mediatek.com, yingjoe.chen@mediatek.com
+Return-path: <linux-metag-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAH6sp9P7rq2y_hiQPHKUP85CwnEmp87yC7Psh4=29h-pYnb_yw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-metag-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Frans Klaver <fransklaver-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-m32r-ja-rQhvJZKUsGBRYuoOT4C5/9i2O/JbrIOy@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-ia64-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, linux-s390-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lguest-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-c6x-dev-jPsnJVOj+W6hPH1hqNUYSQ@public.gmane.org, linux-hexagon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>, linux-acpi <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, xen-devel-GuqFBffKawtpuQazS67q72D2FQJk+8+b@public.gmane.org, Len Brown <len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, user-mode-linux-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-xtensa-PjhNF2WwrV/0Sa2dR60CXw@public.gmane.org, adi-buildroot-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-m68k-cunTk1MwBs8S/qaLPR03pWD2FQJk+8+b@public.gmane.org, linux-am33-list-H+wXaHxf7aJhl2p70BpVqQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2015-06-12 at 12:20 +0200, Thierry Reding wrote:
-> On Thu, May 21, 2015 at 09:29:24PM +0800, YH Huang wrote:
-> > Add display PWM driver support to modify backlight for MT8173.
-> > 
-> > Signed-off-by: YH Huang <yh.huang@mediatek.com>
-> > ---
-> >  drivers/pwm/Kconfig        |  10 ++
-> >  drivers/pwm/Makefile       |   1 +
-> >  drivers/pwm/pwm-mtk-disp.c | 228 +++++++++++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 239 insertions(+)
-> >  create mode 100644 drivers/pwm/pwm-mtk-disp.c
-> > 
-> > diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> > index b1541f4..90e3c079 100644
-> > --- a/drivers/pwm/Kconfig
-> > +++ b/drivers/pwm/Kconfig
-> > @@ -211,6 +211,16 @@ config PWM_LPSS_PLATFORM
-> >  	  To compile this driver as a module, choose M here: the module
-> >  	  will be called pwm-lpss-platform.
-> >  
-> > +config PWM_MTK_DISP
-> > +	tristate "MediaTek display PWM driver"
-> > +	depends on HAS_IOMEM
-> > +	help
-> > +	  Generic PWM framework driver for MediaTek disp-pwm device.
-> > +	  The PWM is used to control the backlight brightness for display.
-> > +
-> > +	  To compile this driver as a module, choose M here: the module
-> > +	  will be called pwm-mtk-disp.
-> > +
-> >  config PWM_MXS
-> >  	tristate "Freescale MXS PWM support"
-> >  	depends on ARCH_MXS && OF
-> > diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-> > index ec50eb5..99c9e75 100644
-> > --- a/drivers/pwm/Makefile
-> > +++ b/drivers/pwm/Makefile
-> > @@ -18,6 +18,7 @@ obj-$(CONFIG_PWM_LPC32XX)	+= pwm-lpc32xx.o
-> >  obj-$(CONFIG_PWM_LPSS)		+= pwm-lpss.o
-> >  obj-$(CONFIG_PWM_LPSS_PCI)	+= pwm-lpss-pci.o
-> >  obj-$(CONFIG_PWM_LPSS_PLATFORM)	+= pwm-lpss-platform.o
-> > +obj-$(CONFIG_PWM_MTK_DISP)	+= pwm-mtk-disp.o
-> >  obj-$(CONFIG_PWM_MXS)		+= pwm-mxs.o
-> >  obj-$(CONFIG_PWM_PCA9685)	+= pwm-pca9685.o
-> >  obj-$(CONFIG_PWM_PUV3)		+= pwm-puv3.o
-> > diff --git a/drivers/pwm/pwm-mtk-disp.c b/drivers/pwm/pwm-mtk-disp.c
-> > new file mode 100644
-> > index 0000000..d4e4cb6
-> > --- /dev/null
-> > +++ b/drivers/pwm/pwm-mtk-disp.c
-> > @@ -0,0 +1,228 @@
-> > +/*
-> > + * MediaTek display pulse-width-modulation controller driver.
-> > + * Copyright (c) 2015 MediaTek Inc.
-> > + * Author: YH Huang <yh.huang@mediatek.com>
-> > + *
-> > + * This program is free software; you can redistribute it and/or modify
-> > + * it under the terms of the GNU General Public License version 2 as
-> > + * published by the Free Software Foundation.
-> > + *
-> > + * This program is distributed in the hope that it will be useful,
-> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> > + * GNU General Public License for more details.
-> > + */
-> > +
-> > +#include <linux/clk.h>
-> > +#include <linux/err.h>
-> > +#include <linux/io.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of.h>
-> > +#include <linux/pwm.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/slab.h>
-> > +
-> > +#define DISP_PWM_EN		0x0
-> > +#define PWM_ENABLE_MASK		0x1
-> > +
-> > +#define DISP_PWM_COMMIT		0x08
-> > +#define PWM_COMMIT_MASK		0x1
-> > +
-> > +#define DISP_PWM_CON_0		0x10
-> > +#define PWM_CLKDIV_SHIFT	16
-> > +#define PWM_CLKDIV_MASK		(0x3ff << PWM_CLKDIV_SHIFT)
-> > +#define PWM_CLKDIV_MAX		0x000003ff
-> 
-> I think you should make this:
-> 
-> 	#define PWM_CLKDIV_MAX 0x3ff
-> 	#define PWM_CLKDIV_MASK (PWM_CLKDIV_MAX << PWM_CLKDIV_SHIFT)
-> 
-> Just to show that these belong together.
-> 
+On 06/17/2015 11:53 PM, Frans Klaver wrote:
+> On Thu, Jun 18, 2015 at 3:04 AM, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+>> On 10/06/2014 10:28 PM, Guenter Roeck wrote:
+>>> Various drivers implement architecture and/or device specific means to
+>>> remove power from the system.  For the most part, those drivers set the
+>>> global variable pm_power_off to point to a function within the driver.
+>>>
+>>> This mechanism has a number of drawbacks.  Typically only one scheme
+>>> to remove power is supported (at least if pm_power_off is used).
+>>> At least in theory there can be multiple means remove power, some of
+>>> which may be less desirable. For example, some mechanisms may only
+>>> power off the CPU or the CPU card, while another may power off the
+>>> entire system.  Others may really just execute a restart sequence
+>>> or drop into the ROM monitor. Using pm_power_off can also be racy
+>>> if the function pointer is set from a driver built as module, as the
+>>> driver may be in the process of being unloaded when pm_power_off is
+>>> called. If there are multiple poweroff handlers in the system, removing
+>>> a module with such a handler may inadvertently reset the pointer to
+>>> pm_power_off to NULL, leaving the system with no means to remove power.
+>>>
+>>> Introduce a system poweroff handler call chain to solve the described
+>>> problems.  This call chain is expected to be executed from the
+>>> architecture specific machine_power_off() function.  Drivers providing
+>>> system poweroff functionality are expected to register with this call chain.
+>>> By using the priority field in the notifier block, callers can control
+>>> poweroff handler execution sequence and thus ensure that the poweroff
+>>> handler with the optimal capabilities to remove power for a given system
+>>> is called first.
+>>
+>> What happened to this series? I want to add shutdown support to my
+>> platform and I need to write a register on the PMIC in one driver to
+>> configure it for shutdown instead of restart and then write an MMIO
+>> register to tell the PMIC to actually do the shutdown in another driver.
+>> It seems that the notifier solves this case for me, albeit with the
+>> slight complication that I need to order the two with some priority.
+>
+> I was wondering the same thing. I did find out that things kind of
+> stalled after Linus cast doubt on the chosen path [1]. I'm not sure
+> there's any consensus on what would be best to do instead.
+>
 
-It is much clear.
+Linus cast doubt on it, then the maintainers started picking it apart.
+At the end, trying not to use notifier callbacks made the code so
+complicated that even I didn't understand it anymore. With no consensus
+in sight, I abandoned it.
 
-> > +
-> > +#define DISP_PWM_CON_1		0x14
-> > +#define PWM_PERIOD_MASK		0xfff
-> > +#define PWM_PERIOD_MAX		0x00000fff
-> 
-> Same here. PWM_PERIOD_MAX isn't actually used anywhere, so perhaps just
-> drop it altogether. But see also below...
-> 
-> > +/* Shift log2(PWM_PERIOD_MAX + 1) as divisor */
-> > +#define PWM_PERIOD_BIT_SHIFT	12
-> 
-> I wasn't very clear about this in my earlier review, so let me try to
-> explain why I think this is confusing. You use this as a divisor, but
-> you encode it as a shift. It's also PWM_PERIOD_MAX + 1, so I think it
-> would make more sense to drop this, keep PWM_PERIOD_MAX as above and
-> then replace the
-> 
-> 	>> PWM_PERIOD_BIT_SHIFT
-> 	
-> below by
-> 
-> 	/ (PWM_PERIOD_MAX + 1)
-> 
+Problem is really that the notifier call chain would be perfect to solve
+the problem, yet Linus didn't like priorities (which are essential),
+and the power maintainers didn't like that a call chain is supposed
+to execute _all_ callbacks, which would not be the case here. If I were
+to start again, I would insist to use notifiers. However, I don't see
+a chance to get that accepted, so I won't. Feel free to pick it up and
+give it a try yourself.
 
-Maybe I can change in this way:
-Remove this: #define PWM_PERIOD_MAX		0x00000fff
-Using ">> PWM_PERIOD_BIT_SHIFT" is faster than "/ (PWM_PERIOD_MAX + 1)"
-Is this right?
-
-> > +#define PWM_HIGH_WIDTH_SHIFT	16
-> > +#define PWM_HIGH_WIDTH_MASK	(0x1fff << PWM_HIGH_WIDTH_SHIFT)
-> 
-> Why is the mask wider than for the period? That would imply that the
-> duty cycle can be longer than a period, which doesn't make any sense.
-> Can you clarify?
-> 
-
-After discussing with the hardware designer, the duty cycle is
-calculated by "high_width / (period + 1)". If period is the "magic
-number 0xfff", high_width needs 13 bits to show the situation that duty
-cycle is 100%. I should fix the formula for high_width below.
-
-
-> > +struct mtk_disp_pwm {
-> > +	struct pwm_chip chip;
-> > +	struct device *dev;
-> > +	struct clk *clk_main;
-> > +	struct clk *clk_mm;
-> > +	void __iomem *mmio_base;
-> 
-> I think "base" will do just fine.
-> 
-
-OK.
-
-> > +};
-> > +
-> > +static inline struct mtk_disp_pwm *to_mtk_disp_pwm(struct pwm_chip *chip)
-> > +{
-> > +	return container_of(chip, struct mtk_disp_pwm, chip);
-> > +}
-> > +
-> > +static void mtk_disp_pwm_update_bits(void __iomem *address, u32 mask, u32 value)
-> > +{
-> > +	u32 val;
-> > +
-> > +	val = readl(address);
-> > +	val &= ~mask;
-> > +	val |= value;
-> > +	writel(val, address);
-> > +}
-> > +
-> > +static int mtk_disp_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
-> > +			       int duty_ns, int period_ns)
-> > +{
-> > +	struct mtk_disp_pwm *mdp;
-> > +	u64 div, rate;
-> > +	u32 clk_div, period, high_width, value;
-> > +
-> > +	/*
-> > +	 * Find period, high_width and clk_div to suit duty_ns and period_ns.
-> > +	 * Calculate proper div value to keep period value in the bound.
-> > +	 *
-> > +	 * period_ns = 10^9 * (clk_div + 1) * (period +1) / PWM_CLK_RATE
-> 
-> Nit: should have a space between '+' and '1'.
-> 
-
-OK.
-
-> > +	 * duty_ns = 10^9 * (clk_div + 1) * (high_width + 1) / PWM_CLK_RATE
-
-Here should be
-duty_ns = 10^9 * (clk_div + 1) * high_width / PWM_CLK_RATE
-
-> > +	 *
-> > +	 * period = (PWM_CLK_RATE * period_ns) / (10^9 * (clk_div + 1)) - 1
-> > +	 * high_width = (PWM_CLK_RATE * duty_ns) / (10^9 * (clk_div + 1)) - 1
-
-And here
-high_width = (PWM_CLK_RATE * duty_ns) / (10^9 * (clk_div + 1))
-
-> > +	 */
-> > +	mdp = to_mtk_disp_pwm(chip);
-> 
-> Please put this on the same line as the variable declaration:
-> 
-> 	struct mtk_disp_pwm *mdp = to_mtk_disp_pwm(chip);
-> 
-
-OK.
-
-> > +	rate = clk_get_rate(mdp->clk_main);
-> > +	clk_div = div_u64(rate * period_ns, NSEC_PER_SEC) >>
-> > +			  PWM_PERIOD_BIT_SHIFT;
-> > +	if (clk_div > PWM_CLKDIV_MAX)
-> > +		return -EINVAL;
-> > +
-> > +	div = clk_div + 1;
-> 
-> Perhaps make this:
-> 
-> 	div = NSEC_PER_SEC * (clk_div + 1);
-> 
-> to avoid the two multiplication below.
-> 
-
-You are right.
-
-> > +	period = div64_u64(rate * period_ns, NSEC_PER_SEC * div);
-> 
-> So this would become:
-> 
-> 	period = div64_u64(rate * period_ns, div);
-> 
-
-Got it.
-
-> > +	if (period > 0)
-> > +		period--;
-> > +
-> > +	high_width = div64_u64(rate * duty_ns, NSEC_PER_SEC * div);
-> 
-> And this:
-> 
-> 	high_width = div64_u64(rate * duty_ns, div);
-> 
-
-OK.
-
-> > +	if (high_width > 0)
-> > +		high_width--;
-
-I should remove this two lines above for the new formula.
-
-> > +
-> > +	mtk_disp_pwm_update_bits(mdp->mmio_base + DISP_PWM_CON_0,
-> > +				 PWM_CLKDIV_MASK, clk_div << PWM_CLKDIV_SHIFT);
-> > +
-> > +	value = period | (high_width << PWM_HIGH_WIDTH_SHIFT);
-> > +	mtk_disp_pwm_update_bits(mdp->mmio_base + DISP_PWM_CON_1,
-> > +				 PWM_PERIOD_MASK | PWM_HIGH_WIDTH_MASK, value);
-> > +
-> > +	mtk_disp_pwm_update_bits(mdp->mmio_base + DISP_PWM_COMMIT,
-> > +				 PWM_COMMIT_MASK, 1);
-> > +	mtk_disp_pwm_update_bits(mdp->mmio_base + DISP_PWM_COMMIT,
-> > +				 PWM_COMMIT_MASK, 0);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int mtk_disp_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
-> > +{
-> > +	struct mtk_disp_pwm *mdp;
-> > +
-> > +	mdp = to_mtk_disp_pwm(chip);
-> 
-> The above three lines should be collapsed.
-> 
-
-OK.
-
-> > +	mtk_disp_pwm_update_bits(mdp->mmio_base + DISP_PWM_EN,
-> > +				 PWM_ENABLE_MASK, 1);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static void mtk_disp_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
-> > +{
-> > +	struct mtk_disp_pwm *mdp;
-> > +
-> > +	mdp = to_mtk_disp_pwm(chip);
-> 
-> Same here.
-> 
-
-OK.
-
-> > +	mtk_disp_pwm_update_bits(mdp->mmio_base + DISP_PWM_EN,
-> > +				 PWM_ENABLE_MASK, 0);
-> > +}
-> > +
-> > +static const struct pwm_ops mtk_disp_pwm_ops = {
-> > +	.config = mtk_disp_pwm_config,
-> > +	.enable = mtk_disp_pwm_enable,
-> > +	.disable = mtk_disp_pwm_disable,
-> > +	.owner = THIS_MODULE,
-> > +};
-> > +
-> > +static int mtk_disp_pwm_probe(struct platform_device *pdev)
-> > +{
-> > +	struct mtk_disp_pwm *mdp;
-> > +	struct resource *r;
-> > +	int ret;
-> > +
-> > +	mdp = devm_kzalloc(&pdev->dev, sizeof(*mdp), GFP_KERNEL);
-> > +	if (!mdp)
-> > +		return -ENOMEM;
-> > +
-> > +	mdp->dev = &pdev->dev;
-> > +
-> > +	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +	mdp->mmio_base = devm_ioremap_resource(&pdev->dev, r);
-> > +	if (IS_ERR(mdp->mmio_base))
-> > +		return PTR_ERR(mdp->mmio_base);
-> > +
-> > +	mdp->clk_main = devm_clk_get(&pdev->dev, "main");
-> > +	if (IS_ERR(mdp->clk_main))
-> > +		return PTR_ERR(mdp->clk_main);
-> > +
-> > +	mdp->clk_mm = devm_clk_get(&pdev->dev, "mm");
-> > +	if (IS_ERR(mdp->clk_mm))
-> > +		return PTR_ERR(mdp->clk_mm);
-> > +
-> > +	ret = clk_prepare_enable(mdp->clk_main);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	ret = clk_prepare_enable(mdp->clk_mm);
-> > +	if (ret < 0) {
-> > +		clk_disable_unprepare(mdp->clk_main);
-> > +		return ret;
-> > +	}
-> > +
-> > +	platform_set_drvdata(pdev, mdp);
-> > +
-> > +	mdp->chip.dev = &pdev->dev;
-> > +	mdp->chip.ops = &mtk_disp_pwm_ops;
-> > +	mdp->chip.base = -1;
-> > +	mdp->chip.npwm = 1;
-> > +
-> > +	ret = pwmchip_add(&mdp->chip);
-> > +	if (ret < 0) {
-> > +		dev_err(&pdev->dev, "pwmchip_add() failed: %d\n", ret);
-> > +		clk_disable_unprepare(mdp->clk_main);
-> > +		clk_disable_unprepare(mdp->clk_mm);
-> > +		return ret;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> 
-> It's customary to collect the error cleanup code in an unwinding section
-> at the bottom of the function, like so:
-> 
-> 	ret = clk_prepare_enable(mdp->clk_mm);
-> 	if (ret < 0)
-> 		goto disable_clk_main;
-> 
-> 	...
-> 
-> 	ret = pwmchip_add(&mdp->chip);
-> 	if (ret < 0) {
-> 		dev_err(&pdev->dev, ...);
-> 		goto disable_clk_mm;
-> 	}
-> 
-> 	return 0;
-> 
-> disable_clk_mm:
-> 	clk_disable_unprepare(mdp->clk_mm);
-> disable_clk_main:
-> 	clk_disable_unprepare(mdp->clk_main);
-> 	return ret;
-> 
-> This makes sure that you undo things in the proper order and eliminates
-> the need to duplicate cleanup code in all failure paths.
-> 
-
-I will rewrite this part.
-
-> > +
-> > +static int mtk_disp_pwm_remove(struct platform_device *pdev)
-> > +{
-> > +	struct mtk_disp_pwm *mdp;
-> > +	int ret;
-> > +
-> > +	mdp = platform_get_drvdata(pdev);
-> 
-> Should be on the same line as the variable declaration.
-> 
-
-OK.
-
-> > +	ret = pwmchip_remove(&mdp->chip);
-> > +	clk_disable_unprepare(mdp->clk_main);
-> > +	clk_disable_unprepare(mdp->clk_mm);
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static const struct of_device_id mtk_disp_pwm_of_match[] = {
-> > +	{ .compatible = "mediatek,mt8173-disp-pwm" },
-> > +	{ .compatible = "mediatek,mt6595-disp-pwm" },
-> > +	{ }
-> > +};
-> > +MODULE_DEVICE_TABLE(of, mtk_disp_pwm_of_match);
-> > +
-> > +static struct platform_driver mtk_disp_pwm_driver = {
-> > +	.driver = {
-> > +		.name = "mediatek-disp-pwm",
-> > +		.of_match_table = mtk_disp_pwm_of_match,
-> > +	},
-> > +	.probe = mtk_disp_pwm_probe,
-> > +	.remove = mtk_disp_pwm_remove,
-> > +};
-> > +module_platform_driver(mtk_disp_pwm_driver);
-> > +
-> > +MODULE_AUTHOR("YH Huang <yh.huang@mediatek.com>");
-> > +MODULE_DESCRIPTION("MediaTek SoC display PWM driver");
-> > +MODULE_LICENSE("GPL v2");
-> 
-> Thierry
-
-Thank for your suggestion.
-
-Regards,
-YH Huang
+Thanks,
+Guenter
