@@ -1,114 +1,138 @@
-From: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v5 08/23] usb: chipidea: set usb gadeget's otg
- capabilities
-Date: Thu, 18 Jun 2015 16:20:30 +0800
-Message-ID: <20150618082029.GB15280@shlinux2>
-References: <1434541230-15090-1-git-send-email-jun.li@freescale.com>
- <1434541230-15090-9-git-send-email-jun.li@freescale.com>
- <20150618103935.cfbd94c8c37c5c3298c55272@ti.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v2 0/3] Add the efuse driver on rockchip platform
+Date: Thu, 18 Jun 2015 09:29:31 +0100
+Message-ID: <5582816B.5020208@linaro.org>
+References: <1434439665-27781-1-git-send-email-wxt@rock-chips.com> <557FE3EA.4000306@i2se.com> <557FEAB2.1040101@linaro.org> <557FF50C.10809@rock-chips.com> <55800070.5030509@linaro.org> <55826D9D.2060106@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150618103935.cfbd94c8c37c5c3298c55272-l0cyMroinI0@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Cc: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <55826D9D.2060106@i2se.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Caesar Wang <wxt@rock-chips.com>, heiko@sntech.de, mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linus.walleij@linaro.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, galak@codeaurora.org, matthias.bgg@gmail.com, jay.xu@rock-chips.com, linux-arm-kernel@lists.infradead.org, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 18, 2015 at 10:39:35AM +0300, Roger Quadros wrote:
-> Typo in subject
-> gadeget's -> gadget's
-> 
-> On Wed, 17 Jun 2015 19:40:15 +0800
-> Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> 
-> > Set gadget's otg capabilities according to controller's capability and otg
-> > properties in device tree.
-> > 
-> > Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > ---
-> >  drivers/usb/chipidea/core.c  | 8 ++++++++
-> >  drivers/usb/chipidea/udc.c   | 7 ++++++-
-> >  include/linux/usb/chipidea.h | 1 +
-> >  3 files changed, 15 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
-> > index 74fea4f..2abecbc 100644
-> > --- a/drivers/usb/chipidea/core.c
-> > +++ b/drivers/usb/chipidea/core.c
-> > @@ -588,6 +588,14 @@ static int ci_get_platdata(struct device *dev,
-> >  				of_usb_host_tpl_support(dev->of_node);
-> >  	}
-> >  
-> > +	if (platdata->dr_mode == USB_DR_MODE_OTG) {
-> > +		/* We can support HNP and SRP */
-> > +		platdata->ci_otg_caps.hnp_support = true;
-> > +		platdata->ci_otg_caps.srp_support = true;
-> > +		/* Update otg capabilities by DT properties */
-> > +		of_usb_set_otg_caps(dev->of_node, &platdata->ci_otg_caps);
-> 
-> we're not tackling the legacy platform case.
-> i.e. when otg-rev is not present in DT.
-> 
-Legacy platforms with chipidea controller can use otg HNP and SRP
-without any otg properties passed, so I keep hnp and srp to be true.
 
-> one way could be that of_usb_set_otg_caps sets otg-rev to 0 if
-> it is not present in DT.
-> 
-otg-rev should be 0 as initial value if it's not present in DT, isn't it?
 
-> > +	}
-> > +
-> >  	if (of_usb_get_maximum_speed(dev->of_node) == USB_SPEED_FULL)
-> >  		platdata->flags |= CI_HDRC_FORCE_FULLSPEED;
-> >  
-> > diff --git a/drivers/usb/chipidea/udc.c b/drivers/usb/chipidea/udc.c
-> > index 764f668..858bd21 100644
-> > --- a/drivers/usb/chipidea/udc.c
-> > +++ b/drivers/usb/chipidea/udc.c
-> > @@ -1827,6 +1827,7 @@ static irqreturn_t udc_irq(struct ci_hdrc *ci)
-> >  static int udc_start(struct ci_hdrc *ci)
-> >  {
-> >  	struct device *dev = ci->dev;
-> > +	struct usb_otg_caps *otg_caps = &ci->platdata->ci_otg_caps;
-> >  	int retval = 0;
-> >  
-> >  	spin_lock_init(&ci->lock);
-> > @@ -1834,8 +1835,12 @@ static int udc_start(struct ci_hdrc *ci)
-> >  	ci->gadget.ops          = &usb_gadget_ops;
-> >  	ci->gadget.speed        = USB_SPEED_UNKNOWN;
-> >  	ci->gadget.max_speed    = USB_SPEED_HIGH;
-> > -	ci->gadget.is_otg       = ci->is_otg ? 1 : 0;
-> >  	ci->gadget.name         = ci->platdata->name;
-> > +	ci->gadget.otg_caps	= otg_caps;
-> > +
-> > +	if (otg_caps->otg_rev && (otg_caps->hnp_support ||
-> > +		otg_caps->srp_support || otg_caps->adp_support))
-> > +		ci->gadget.is_otg = 1;
-> >  
-> >  	INIT_LIST_HEAD(&ci->gadget.ep_list);
-> >  
-> > diff --git a/include/linux/usb/chipidea.h b/include/linux/usb/chipidea.h
-> > index ab94f78..e10cefc 100644
-> > --- a/include/linux/usb/chipidea.h
-> > +++ b/include/linux/usb/chipidea.h
-> > @@ -34,6 +34,7 @@ struct ci_hdrc_platform_data {
-> >  #define CI_HDRC_CONTROLLER_STOPPED_EVENT	1
-> >  	void	(*notify_event) (struct ci_hdrc *ci, unsigned event);
-> >  	struct regulator	*reg_vbus;
-> > +	struct usb_otg_caps	ci_otg_caps;
-> >  	bool			tpl_support;
-> >  };
-> >  
-> > -- 
-> > 1.9.1
-> > 
-> 
-> cheers,
-> -roger
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 18/06/15 08:05, Stefan Wahren wrote:
+> Hi Srinivas,
+>
+> Am 16.06.2015 um 12:54 schrieb Srinivas Kandagatla:
+>>
+>>
+>> On 16/06/15 11:06, Caesar Wang wrote:
+>>> Hi Srinivas,
+>>>
+>>> =E5=9C=A8 2015=E5=B9=B406=E6=9C=8816=E6=97=A5 17:21, Srinivas Kanda=
+gatla =E5=86=99=E9=81=93:
+>>>> Hi Stefan,
+>>>>
+>>>>
+>>>> On 16/06/15 09:52, Stefan Wahren wrote:
+>>>>> Hi Caesar,
+>>>>>
+>>>>> [add Maxime and Srinivas]
+>>>>>
+>>>>> Am 16.06.2015 um 09:27 schrieb Caesar Wang:
+>>>>>> The original driver is uploaded by Jianqun.
+>>>>>> Here is his patchs:
+>>>>>>       https://patchwork.kernel.org/patch/5410341/
+>>>>>>       https://patchwork.kernel.org/patch/5410351/
+>>>>>>
+>>>>>> Jianqun, nevermind!
+>>>>>> I check-pick it and re-upload the driver for the upstream.
+>>>>>> e.g.:
+>>>>>>       Tested by on minnie board.(kernel-4.1-rc8)
+>>>>>>       cd /sys/devices/platform/ffb40000.efuse
+>>>>>>       localhost ffb40000.efuse # cat cpu_leakage_show
+>>>>>>       cpu_version_show
+>>>>>>       The results:
+>>>>>>               19
+>>>>>>               2
+>>>>>>
+>>>>>> Changes in v2:
+>>>>>> - Change the document decription.
+>>>>>> - Move the efuse driver into driver/soc/vendor.
+>>>>>> - update the efuse driver.
+>>>>>> - Add the dts node on RK3288.
+>>>>>>
+>>>>>>
+>>>>>
+>>>>> i want to mention that there is a upcoming new framework suitable=
+ for
+>>>>> efuse drivers:
+>>>>>
+>>>>> https://lkml.org/lkml/2015/5/21/643
+>>>>>
+>>>>> Unfortunately i don't know the current development state.
+>>>>>
+>>>>
+>>>> Currently this framework is used by atleast 3 drivers(qcom-tsens,
+>>>> qcom-cpr, begel-bone-cape manager) which are still floating in the
+>>>> mailing list.
+>>>>
+>>>> I was hoping that these 3 users would getback with tested-by.. whi=
+ch
+>>>> did not happen for last 3-4 weeks.
+>>>>
+>>>> I would appreciate, If you could try framework too, and let me kno=
+w.
+>>>
+>
+> yes i work on OCOTP driver for MXS platform and i will try ...
+>
+>>
+>> int rockchip_efuse_reg_read(void *context, unsigned int reg, unsigne=
+d
+>> int *val)
+>> {
+>>      /* efuse specific read sequence */
+>>      ...
+>> }
+>
+> I will need a specific read sequence too.
+
+You can have a look at=20
+https://git.linaro.org/people/srinivas.kandagatla/linux.git/blob/b4c3ad=
+253747767511233687436f20144e850d67:/drivers/nvmem/rockchip-efuse.c
+
+I did modify the rockchip driver, which I guess should be very much=20
+similar to what OCOTP driver would need.
+
+
+>
+> Sorry for these newbie questions:
+>
+> What data structure does context points to for this reg_read opterati=
+on?
+>
+> Do we need range checking of reg or is it handled by the framework?
+>
+We already have that in place.
+
+> Are there any limitation for reg_read regarding sleeping or locking
+> operations?
+There are no limitaions as such from nvmem framework, regmap might have=
+=20
+limitations w.r.t to sleeping and fast_io, as fast_io would take=20
+spinlocks, AFAIK the providers would not have fast_io, as they not IO=20
+devices.
+>
+> In case of a read only driver, is everything handle by devicetree or =
+do
+> we need an empty write operation?
+Yes, if you pass read-only flag in the provider, the framework would no=
+t=20
+attempt to even write.
+
+You will find answers to most of your question in the rochip-efuse.c fi=
+le.
+
+
+--srini
+>
+> Best regards
+> Stefan
+>
