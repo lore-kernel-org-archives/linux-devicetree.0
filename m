@@ -1,46 +1,98 @@
-From: <thomas.langer-th3ZBGNqt+7QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH] Documentation: DT: Fix a typo in the filename
- "lantiq,<chip>-pinumx.txt"
-Date: Thu, 18 Jun 2015 18:19:02 +0000
-Message-ID: <593AEF6C47F46446852B067021A273D6FBC08AD6@MUCSE037.lantiq.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 6/6] ARM: sun8i: dts: Add Ippo-q8h v1.2
+ with A33 and 1024x600 lcd support
+Date: Thu, 18 Jun 2015 20:37:36 +0200
+Message-ID: <20150618183736.GT11732@lukather>
+References: <1432997706-20172-1-git-send-email-hdegoede@redhat.com>
+ <1432997706-20172-7-git-send-email-hdegoede@redhat.com>
+ <20150602081459.GO23777@lukather>
+ <556D6955.8030708@redhat.com>
+ <20150603094535.GI23777@lukather>
+ <556EE104.3090803@redhat.com>
+ <20150613135002.GP19653@lukather>
+ <557C3BD3.6030105@redhat.com>
+ <20150616174114.GI11732@lukather>
+ <55811EB2.4060302@redhat.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="fCmRXBY78W5odcVA"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBA5BRSWAKGQEC4HCFOA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <55811EB2.4060302-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Thomas Langer <thomas.langer-th3ZBGNqt+7QT0dZR+AlfA@public.gmane.org>
+--fCmRXBY78W5odcVA
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-To fix it, use the chance to rename according the compatible string,
-which is "lantiq,pinctrl-falcon" and  "lantiq,pinctrl-xway"
+On Wed, Jun 17, 2015 at 09:16:02AM +0200, Hans de Goede wrote:
+> Hi,
+> 
+> On 16-06-15 19:41, Maxime Ripard wrote:
+> >Hi,
+> >
+> >On Sat, Jun 13, 2015 at 04:18:59PM +0200, Hans de Goede wrote:
+> >>>Pantelis, to sum things up, we have a case of a tablet that comes with
+> >>>the exact same board, but coming in two flavours with two differents
+> >>>screen resolutions. It looks like a great case for your DT quirks
+> >>>work, but we have no way of runtime detecting the difference between
+> >>>the two variants. What do you think about this? Should we go with
+> >>>using the DT quirks or is this simply out of scope?
+> >>>
+> >>>There's not so much example of similar cases in the kernel, and none
+> >>>of them use quirks so far (obviously) but they all boil down to either
+> >>>the solution you were suggesting in that patch or adding the alternate
+> >>>configuration as a comment.
+> >>>
+> >>>I don't think the latter would work for you, and I agree with that, so
+> >>>I guess that depending on what Pantelis says, either we go with a
+> >>>better solution using the quirks, or we end up using what you
+> >>>suggested (with a nitpick though, I'd prefer if you used the display
+> >>>standard instead of the resolution, which would make it xga I guess?)
+> >>
+> >>If we go with a separate dts file for each of the 800x480 and 1024x600
+> >>screens, I would greatly prefer to stick with the lcd1024x600 in the dts
+> >>filename instead of using something like xga, the fact that you say:
+> >>"I guess" that my answer to that is: I dunno I would need to look this
+> >>up in wikipedia or some such makes me think that using a qualifier like
+> >>xga is not going the help end users decide which dts file to pick, it
+> >>will just lead to them needing to go to wikipedia too. Also note that
+> >>the advertising of these tablets on ebay / aliexpress almost always
+> >>uses the resolution and not something like "xga".
+<> >>
+> >>So all in all if we do not decide to use quirks for this I would like
+> >>to keep the filename as is.
+> >
+> >Yeah, except that the display standard is also encoding the refresh
+> >rate and color depth
+> 
+> Huh? No it does not, see e.g.:
+> 
+> https://en.wikipedia.org/wiki/Graphics_display_resolution
+> 
+> Note nothing about depth and refresh-rate there, and I've really never
+> heard anyone use things like xga to refer to colordepth and/or refreshrate
 
-Signed-off-by: Thomas Langer <thomas.langer-th3ZBGNqt+7QT0dZR+AlfA@public.gmane.org>
-Cc: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
----
-I am not sure who else should be added to Cc: as this is no new binding, only fixing a typo.
+I was somehow convinced it did, and
 
- .../pinctrl/{lantiq,falcon-pinumx.txt => lantiq,pinctrl-falcon.txt}    |    0
- .../pinctrl/{lantiq,xway-pinumx.txt => lantiq,pinctrl-xway.txt}        |    0
- 2 files changed, 0 insertions(+), 0 deletions(-)
- rename Documentation/devicetree/bindings/pinctrl/{lantiq,falcon-pinumx.txt => lantiq,pinctrl-falcon.txt} (100%)
- rename Documentation/devicetree/bindings/pinctrl/{lantiq,xway-pinumx.txt => lantiq,pinctrl-xway.txt} (100%)
+https://en.wikipedia.org/wiki/Computer_display_standard
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/lantiq,falcon-pinumx.txt b/Documentation/devicetree/bindings/pinctrl/lantiq,pinctrl-falcon.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/pinctrl/lantiq,falcon-pinumx.txt
-rename to Documentation/devicetree/bindings/pinctrl/lantiq,pinctrl-falcon.txt
-diff --git a/Documentation/devicetree/bindings/pinctrl/lantiq,xway-pinumx.txt b/Documentation/devicetree/bindings/pinctrl/lantiq,pinctrl-xway.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/pinctrl/lantiq,xway-pinumx.txt
-rename to Documentation/devicetree/bindings/pinctrl/lantiq,pinctrl-xway.txt
+seems to say that as well... Maybe not then, my bad.
+
+Maxime
+
 -- 
-1.7.10.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--fCmRXBY78W5odcVA--
