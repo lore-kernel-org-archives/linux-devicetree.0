@@ -1,169 +1,104 @@
-From: Jens Wiklander <jens.wiklander@linaro.org>
-Subject: Re: [PATCH V3 2/2] tee: add OP-TEE driver
-Date: Thu, 18 Jun 2015 15:34:11 +0200
-Message-ID: <20150618133410.GA11996@ermac>
-References: <1431671667-11219-1-git-send-email-jens.wiklander@linaro.org>
- <1431671667-11219-3-git-send-email-jens.wiklander@linaro.org>
- <20150518131850.GA7064@leverpostej>
- <20150520121648.GA9819@ermac>
- <20150522162758.GC7481@leverpostej>
- <20150525115331.GA9297@ermac>
- <20150605104814.GE599@leverpostej>
+From: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v6] usb: common: add API to set usb otg capabilities by
+ device tree
+Date: Thu, 18 Jun 2015 21:37:04 +0800
+Message-ID: <20150618133703.GF15280@shlinux2>
+References: <1434590302-18066-1-git-send-email-jun.li@freescale.com>
+ <20150618103650.7c3d1b8ceb134388b0d8b093@ti.com>
+ <20150618084747.GD15280@shlinux2>
+ <20150618150748.db2217278ae71f01df625ff2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20150605104814.GE599@leverpostej>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "javier@javigon.com" <javier@javigon.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Rob Herring <robh+dt@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, "tpmdd-devel@lists.sourceforge.net" <tpmdd-devel@lists.sourceforge.net>, "valentin.manea@huawei.com" <valentin.manea@huawei.com>, "jean-michel.delorme@st.com" <jean-michel.delorme@st.com>, "emmanuel.michel@st.com" <emmanuel.michel@st.com>, Catalin Marinas <catalin.marinas@arm.com>
+In-Reply-To: <20150618150748.db2217278ae71f01df625ff2-l0cyMroinI0@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 05, 2015 at 11:48:14AM +0100, Mark Rutland wrote:
-[...]
-> > The OP-TEE message protocol is primarily for the OP-TEE driver. Other
-> > TEE drivers plugging into this framwork may use this protocol too, but I
-> > guess that most will use their own message protocol.
-> > 
-> > Provided that each TEE driver rolls their own protocol I'm expecting one
-> > counter part in user space for each TEE driver. The user space client
-> > will know which kind of TEE it's talking to through TEE_IOC_VERSION.
+On Thu, Jun 18, 2015 at 03:07:48PM +0300, Roger Quadros wrote:
+> On Thu, 18 Jun 2015 16:47:48 +0800
+> Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
 > 
-> Surely that means you need to have every possible user-space client
-> present in a given filesystem, and you need to have all of them try to
-> probe the FW to figure out whether appropriate FW is present? That
-> sounds somewhat heavyweight.
+> > On Thu, Jun 18, 2015 at 10:36:50AM +0300, Roger Quadros wrote:
+> > > Lin,
+> > > 
+> > > You can use --in-reply-to "message id of v5 of this path" so that it appears together
+> > > with the other patches in peoples mailboxes.
+> > > 
+> > > > + * the passed properties in DT.
+> > > > + * @np: Pointer to the given device_node
+> > > > + * @otg_caps: Pointer to the target usb_otg_caps to be set
+> > > > + *
+> > > > + * The function gets and sets the otg capabilities
+> > > > + */
+> > > > +void of_usb_set_otg_caps(struct device_node *np, struct usb_otg_caps *otg_caps)
+> > > > +{
+> > > > +	u32 otg_rev;
+> > > > +
+> > > > +	if (!otg_caps)
+> > > > +		return;
+> > > > +
+> > > > +	if (!of_property_read_u32(np, "otg-rev", &otg_rev))
+> > > > +		otg_caps->otg_rev = otg_rev;
+> > > 
+> > > should we check if otg_rev is in correct format?
+> > > anything non BCD and greater than 0x9999 is invalid.
+> > > 
+> > > Also if otg-rev is not passed then we need to treat it as legacy
+> > > platform right? How is this taken care of?
+> > > 
+> > Missed this comment
+> > This handling rely on controller driver, cannot decided here.
+> > There are several cases we need take care:
+> > 1) otg-rev is not passed, but all 3 disable flags passed, this is
+> >   valid, means user want to disable whole OTG, so only "otg-rev"
+> >   not passed, cannot treat as legacy platform.
+> > 2) Legacy platform means: none of 4 properties is present.
 > 
-> To me it would seem a lot better to have the minimal drivers in the
-> kernel that get probed based on information from the FW. The main TEE
-> driver would query the generic APIs to discover which features are
-> exposed, then instantiate the relevant set of TEE-specific drivers based
-> on TEE_IOC_VERSION and friends. To handle a need for userspace
-> components you could emit uevents as necessary, though I'm still unclear
-> on what the userspace components would do.
+> Right. Plus controller drivers that are not updated to use these otg_caps
+> are also legacy.
+>
+Did not understand the "Plus" case.
+Some of 4 properties is present, but its driver dose not use otg_caps?
 
-I'm not 100% sure what you mean. Given this and other comments on
-TEE_IOC_CMD, I give up on TEE_IOC_CMD. I'll replace it with several more
-specific TEE_IOC_* that will give a less complex and unified interface
-to user space.
-
-[...]
-> > > I'm not sure that your proposed kernel/user split is ideal. How does
-> > > userspace determine the appropriate TEE client to use? What's required
-> > > in the way of arbitration between clients?
-> > 
-> > Each client loops through /dev/tee[0-9]* until it finds a TEE it can
-> > communicate with, or if the client is looking for a specific TEE until
-> > it's found.
-> > 
-> > TEE_IOC_VERSION is used to tell which kind of TEE the client is talking
-> > to. For a library that implements Global Platforms TEE Client API I
-> > imagine that in TEEC_InitializeContext() the lib will detect which TEE
-> > it's talking to and initialize the TEEC_Context appropriately.
-> > 
-> > For clients that doesn't care about Global Platform APIs I guess that
-> > they will search for a specific TEE and give up if it's not found.
+> > 3) Some controller drivers already support OTG HNP/SRP, then change
+> >   to utilize those new flags, still should support OTG HNP/SRP w/o
+> >   any dt change, so OTG caps should be enabled for legacy platforms.
 > 
-> That covers detection, but what about arbitrartion?
+> I didn't understand this point. If a controller driver is not updated
+> to use otg_caps it is legacy and gadget->otg_caps will be NULL.
 > 
-> What happens when I have multiple clients which want to communicate with
-> the same TEE simultaneously?
+Some of existing chipdea platforms work fine on HNP and SRP , which did
+not use any new flags and properties, after my patch, those platform should
+still enable HNP and SRP without any DT change.
 
-Each client opens a the same /dev/teeX and communicates over their own file
-descriptor.
-
+> > 4) Some controller drivers does not support any OTG, after add OTG
+> >   functions and utilize those new flags, should keep OTG disabled
+> >   for legacy platforms.
 > 
-> > tee-supplicant is a special case since it's a helper process for the
-> > TEE. The will likely be one tee-supplicant implementation
-> > (tee-supplicant-optee, tee-supplicant-xyz, etc) for each TEE that user
-> > space can support. tee-supplicant is looking for a TEE to connect to
-> > through /dev/teepriv[0-9]*.
-> >
-> > The reason for having /dev/teeX for normal clients and /dev/teeprivX for
-> > tee-supplicants we'd like to have any easy way to set different permission
-> > on the devices.
+> If controller drivers don't support OTG. gadget->is_otg and
+> gadget->otg_caps will not be set by them and they don't have to use
+> of_usb_set_otg_caps().
 > 
-> What do TEE supplicants do?
-
-For OP-TEE (and I guess most other TEEs) it handles file system access.
-Having a separate user for tee-supplicant makes it easier to have strict
-permissions for created files etc.
-
-[...]
-> > > > > > +/*
-> > > > > > + * Cache settings for shared memory
-> > > > > > + */
-> > > > > > +#define OPTEE_SMC_SHM_NONCACHED                0ULL
-> > > > > > +#define OPTEE_SMC_SHM_CACHED           1ULL
-> > > > >
-> > > > > What precise set of memory attributes do these imply?
-> > > > OPTEE_SMC_SHM_NONCACHED is generally not used, but supposed to match how
-> > > > the kernel maps noncached memory. OP-TEE maps this as Device-nGnRE
-> > > > Outer sharable memory (MAIR ATTR = 0x04)
-> > > >
-> > > > OPTEE_SMC_SHM_CACHED is cached memory with settings matching how the
-> > > > kernel maps cached memory. OP-TEE maps this as as Normal Memory,
-> > > > Outer Write-back non-transient Outer Read Allocate Outer Write Allocate
-> > > > Inner Write-back non-transient Inner Read Allocate Inner Write Allocate
-> > > > Inner sharable (MAIR ATTR = 0xff).
-> > > >
-> > > > OP-TEE is more or less always compiled for a specific platform so if the
-> > > > kernel uses some other mapping for a particular platform we'll change the
-> > > > OP-TEE settings to be compatible with the kernel on that platform.
-> > >
-> > > That assumes that the TEE has to know about any kernel that might run.
-> > > It also implies that a kernel needs to know what each TEE thinks the
-> > > kernel will be mapping memory as, so it can work around whatever
-> > > decision has been made by the TEE.
-> > >
-> > > So as it stands I think that's a broken design. The attributes you need
-> > > should be strictly specified. It's perfectly valid for that strict
-> > > specification to be the same attributes the kernel uses now, but the
-> > > spec can't change later.
-> > >
-> > > Otherwise mismatched attributes will get in the way on some platform,
-> > > and it's going to be close to impossible to fix things up.
-> > 
-> > OK, I see the problem. Is it OK only specify the attributes that need to
-> > be compatible like:
-> > #define OPTEE_SMC_SHM_ICACHED           (1 << 0)
-> > #define OPTEE_SMC_SHM_IWRITE_THROUGH    (1 << 1)
-> > #define OPTEE_SMC_SHM_IWRITE_BACK       (1 << 2)
-> > #define OPTEE_SMC_SHM_ISHARABLE         (1 << 3)
-> > #define OPTEE_SMC_SHM_OCACHED           (1 << 4)
-> > #define OPTEE_SMC_SHM_OWRITE_THROUGH    (1 << 5)
-> > #define OPTEE_SMC_SHM_OWRITE_BACK       (1 << 6)
-> > #define OPTEE_SMC_SHM_OSHARABLE         (1 << 7)
-> > 
-> > #define OPTEE_SMC_SHM_CACHED \
-> >         (OPTEE_SMC_SHM_ICACHED | OPTEE_SMC_SHM_IWRITE_BACK | \
-> >          OPTEE_SMC_SHM_ISHARABLE | OPTEE_SMC_SHM_OCACHED | \
-> >          OPTEE_SMC_SHM_OWRITE_BACK)
+But after my patch, some time later, this driver adds OTG functions on
+it new platform, it should disable any OTG feature for its legacy
+platforms (none of properties is passed).
+ 
+> So I didn't understand why the decision can't be taken here
+> for non-legacy controller drivers with legacy DT.
+> They will set gadget->otg_caps and gadget->is_otg.
 > 
-> I'm not sure I follow the question. Will these specific attributes be
-> mandated by the OP-TEE spec? The set of attributes above are certainly
-> better specified than simply "CACHED", though it would be nice to have
-> an architectural definition rather than just a bag of bits.
+> If none of the 4 DT flags are passed then we know it is legacy DT
+> and we can limit to legacy behaviour.
 > 
-> The architecture maintainers will need to look at the memory attributes
-> too. I don't think that current APIs offer fine-grained control over
-> attributes and a UP kernel may not map memory as shareable, for example.
+legacy behaviour number is 2, not only one legacy behaviour.
+That's why I leave the otg caps decided by controller drivers.
 
-Defining all those bits for OPTEE_SMC_SHM_CACHED didn't help much. I
-took the liberty to contact Catalin directly on this and my
-interpretation of his advice is:
-
-/*
- * Normal cached memory (write-back), shareable for SMP systems and not
- * shareable for UP systems.
- */
-#define OPTEE_SMC_SHM_CACHED            1
-
-This is closer to my original proposal, but with the crucial difference
-that OP-TEE doesn't need to know how the kernel maps other memory.
-OP-TEE requires the kernel to map memory shared with secure world with
-the attributes specified in the comment.
-
+> cheers,
+> -roger
 --
-Thanks,
-Jens
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
