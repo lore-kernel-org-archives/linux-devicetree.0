@@ -1,169 +1,38 @@
-From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Subject: [PATCH 2/4] dt-binding: power: Add Qualcomm SMBB binding
-Date: Thu, 18 Jun 2015 14:13:43 -0700
-Message-ID: <1434662025-9485-3-git-send-email-bjorn.andersson@sonymobile.com>
-References: <1434662025-9485-1-git-send-email-bjorn.andersson@sonymobile.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH 01/44] kernel: Add support for poweroff handler call chain
+Date: Thu, 18 Jun 2015 14:40:18 -0700
+Message-ID: <55833AC2.5080700@codeaurora.org>
+References: <1412659726-29957-1-git-send-email-linux@roeck-us.net> <1412659726-29957-2-git-send-email-linux@roeck-us.net> <55821936.4040704@codeaurora.org> <20150618153003.GA19224@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1434662025-9485-1-git-send-email-bjorn.andersson@sonymobile.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Courtney Cavin <courtney.cavin@sonymobile.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-m68k-owner@vger.kernel.org>
+In-Reply-To: <20150618153003.GA19224@roeck-us.net>
+Sender: linux-m68k-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: linux-kernel@vger.kernel.org, linux-m32r-ja@ml.linux-m32r.org, linux-mips@linux-mips.org, linux-efi@vger.kernel.org, linux-ia64@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, Len Brown <len.brown@intel.com>, linux-xtensa@linux-xtensa.org, Pavel Machek <pavel@ucw.cz>, devel@driverdev.osuosl.org, linux-s390@vger.kernel.org, lguest@lists.ozlabs.org, linux-c6x-dev@linux-c6x.org, linux-hexagon@vger.kernel.org, linux-sh@vger.kernel.org, Alexander Graf <agraf@suse.de>, linux-acpi@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>, xen-devel@lists.xenproject.org, devicetree@vger.kernel.org, user-mode-linux-devel@lists.sourceforge.net, linux-pm@vger.kernel.org, adi-buildroot-devel@lists.sourceforge.net, linux-m68k@lists.linux-m68k.org, linux-am33-list@redhat.com, linux-tegra@vger.kernel.org, openipmi-developer@lists.sourceforge.net, linux-metag@vger.kernel.orgli
 List-Id: devicetree@vger.kernel.org
 
-Add the Qualcomm Switch-Mode Battery Charger and Boost device tree
-binding.
+On 06/18/2015 08:30 AM, Guenter Roeck wrote:
+> On Wed, Jun 17, 2015 at 06:04:54PM -0700, Stephen Boyd wrote:
+> [ ... ]
+>> What happened to this series? I want to add shutdown support to my
+>> platform and I need to write a register on the PMIC in one driver to
+>> configure it for shutdown instead of restart and then write an MMIO
+>> register to tell the PMIC to actually do the shutdown in another driver.
+>> It seems that the notifier solves this case for me, albeit with the
+>> slight complication that I need to order the two with some priority.
+>>
+> Can you use the .shutdown driver callback instead ?
+>
+> I see other drivers use that, and check for system_state == SYSTEM_POWER_OFF
+> to power off the hardware.
+>
 
-Signed-off-by: Courtney Cavin <courtney.cavin@sonymobile.com>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
----
- .../devicetree/bindings/power_supply/qcom_smbb.txt | 137 +++++++++++++++++++++
- 1 file changed, 137 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power_supply/qcom_smbb.txt
+Yes I think that will work. I'll still have to hook pm_power_off() for
+the mmio register, but I guess that's ok and I don't need to worry about
+this series then.
 
-diff --git a/Documentation/devicetree/bindings/power_supply/qcom_smbb.txt b/Documentation/devicetree/bindings/power_supply/qcom_smbb.txt
-new file mode 100644
-index 000000000000..8a1d75978664
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power_supply/qcom_smbb.txt
-@@ -0,0 +1,137 @@
-+Qualcomm Switch-Mode Battery Charger and Boost
-+
-+PROPERTIES
-+- compatible:
-+  Usage: required
-+  Value type: <stringlist>
-+  Description: Must be one of:
-+               - "qcom,pm8941-charger"
-+
-+- reg:
-+  Usage: required
-+  Value type: <prop-encoded-array>
-+  Description: Base address of registers for SMBB block
-+
-+- interrupts:
-+  Usage: required
-+  Value type: <prop-encoded-array>
-+  Description: The format of the specifier is defined by the binding document
-+               describing the node's interrupt parent.  Must contain one
-+               specifier for each of the following interrupts, in order:
-+               - charge done
-+               - charge fast mode
-+               - charge trickle mode
-+               - battery temperature ok
-+               - battery present
-+               - charger disconnected
-+               - USB-in valid
-+               - DC-in valid
-+
-+- interrupt-names:
-+  Usage: required
-+  Value type: <stringlist>
-+  Description: Must contain the following list, strictly ordered:
-+               "chg-done",
-+               "chg-fast",
-+               "chg-trkl",
-+               "bat-temp-ok",
-+               "bat-present",
-+               "chg-gone",
-+               "usb-valid",
-+               "dc-valid"
-+
-+- battery-charge-control-limit:
-+  Usage: optional (default: 1A, or pre-configured value)
-+  Value type: <u32>; uA; range [100mA : 3A]
-+  Description: Maximum charge current; May be clamped to safety limits.
-+
-+- fast-charge-low-watermark:
-+  Usage: optional (default: 3.2V, or pre-configured value)
-+  Value type: <u32>; uV; range [2.1V : 3.6V]
-+  Description: Battery voltage limit above which fast charging may operate;
-+               Below this value linear or switch-mode auto-trickle-charging
-+               will operate.
-+
-+- fast-charge-high-watermark:
-+  Usage: optional (default: 4.2V, or pre-configured value)
-+  Value type: <u32>; uV; range [3.24V : 5V]
-+  Description: Battery voltage limit below which fast charging may operate;
-+               The fast charger will attempt to charge the battery to this
-+               voltage.  May be clamped to safety limits.
-+
-+- fast-charge-safe-voltage:
-+  Usage: optional (default: 4.2V, or pre-configured value)
-+  Value type: <u32>; uV; range [3.24V : 5V]
-+  Description: Maximum safe battery voltage; May be pre-set by bootloader, in
-+               which case, setting this will harmlessly fail. The property
-+               'fast-charge-high-watermark' will be clamped by this value.
-+
-+- fast-charge-safe-current:
-+  Usage: optional (default: 1A, or pre-configured value)
-+  Value type: <u32>; uA; range [100mA : 3A]
-+  Description: Maximum safe battery charge current; May pre-set by bootloader,
-+               in which case, setting this will harmlessly fail. The property
-+               'battery-charge-control-limit' will be clamped by this value.
-+
-+- auto-recharge-low-watermark:
-+  Usage: optional (default: 4.1V, or pre-configured value)
-+  Value type: <u32>; uV; range [3.24V : 5V]
-+  Description: Battery voltage limit below which auto-recharge functionality
-+               will restart charging after end-of-charge;  The high cutoff
-+               limit for auto-recharge is 5% above this value.
-+
-+- minimum-input-voltage:
-+  Usage: optional (default: 4.3V, or pre-configured value)
-+  Value type: <u32>; uV; range [4.2V : 9.6V]
-+  Description: Input voltage level above which charging may operate
-+
-+- usb-charge-control-limit:
-+  Usage: optional (default: 100mA, or pre-configured value)
-+  Value type: <u32>; uA; range [100mA : 2.5A]
-+  Description: Default USB charge current
-+
-+- dc-charge-control-limit:
-+  Usage: optional (default: 100mA, or pre-configured value)
-+  Value type: <u32>; uA; range [100mA : 2.5A]
-+  Description: Default DC charge current
-+
-+- disable-dc:
-+  Usage: optional (default: false)
-+  Value type: boolean: <u32> or <empty>
-+  Description: Disable DC charger
-+
-+- jeita-extended-temp-range:
-+  Usage: optional (default: false)
-+  Value type: boolean: <u32> or <empty>
-+  Description: Enable JEITA extended temperature range;  This does *not*
-+               adjust the maximum charge voltage or current in the extended
-+               temperature range.  It only allows charging when the battery
-+               is in the extended temperature range.  Voltage/current
-+               regulation must be done externally to fully comply with
-+               the JEITA safety guidelines if this flag is set.
-+
-+EXAMPLE
-+charger@1000 {
-+       compatible = "qcom,pm8941-charger";
-+       reg = <0x1000 0x700>;
-+       interrupts = <0x0 0x10 7 IRQ_TYPE_EDGE_BOTH>,
-+                       <0x0 0x10 5 IRQ_TYPE_EDGE_BOTH>,
-+                       <0x0 0x10 4 IRQ_TYPE_EDGE_BOTH>,
-+                       <0x0 0x12 1 IRQ_TYPE_EDGE_BOTH>,
-+                       <0x0 0x12 0 IRQ_TYPE_EDGE_BOTH>,
-+                       <0x0 0x13 2 IRQ_TYPE_EDGE_BOTH>,
-+                       <0x0 0x13 1 IRQ_TYPE_EDGE_BOTH>,
-+                       <0x0 0x14 1 IRQ_TYPE_EDGE_BOTH>;
-+       interrupt-names = "chg-done",
-+                       "chg-fast",
-+                       "chg-trkl",
-+                       "bat-temp-ok",
-+                       "bat-present",
-+                       "chg-gone",
-+                       "usb-valid",
-+                       "dc-valid";
-+
-+       battery-charge-control-limit = <1000000>;
-+       usb-charge-control-limit = <500000>;
-+       dc-charge-control-limit = <1000000>;
-+};
 -- 
-1.8.2.2
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
