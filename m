@@ -1,57 +1,63 @@
-From: Matt Ranostay <mranostay@gmail.com>
-Subject: Re: [PATCH v4 2/2] cap11xx: add LED support
-Date: Wed, 17 Jun 2015 16:36:48 -0700
-Message-ID: <CAKzfze_A_2AwHQcFW2W9nzvhK5PpPLQ+vGUSsuewpgVTmotBHA@mail.gmail.com>
-References: <1434422770-26896-1-git-send-email-mranostay@gmail.com>
-	<1434422770-26896-3-git-send-email-mranostay@gmail.com>
-	<557FD625.1080806@samsung.com>
-	<CAKzfze9gneY_LmWaWGNKxLXBsw_k2d596CkGNat5RoTbn3cYEg@mail.gmail.com>
-	<55809476.90407@zonque.org>
-	<CAKzfze_TXP=qpyXJcktALW4V9b2SxH3qQSs=u3a8Xc=0diZ0Ng@mail.gmail.com>
-	<CAKzfze8629xyiz1wufjoGbOu+npDRXyCgyGEhxY_1h7XHKeTQg@mail.gmail.com>
-	<CAKzfze-M2aDY8p7FeazC7vBrigBGa-a6k43+=FZ9DEBOD0hHpw@mail.gmail.com>
-	<558136FE.7060308@zonque.org>
-	<CAKzfze-H=m55j-1ty4xOkrVzMswU7FpXe=6pHq4ws=P+3vcZNQ@mail.gmail.com>
-	<20150617223852.GA11341@dtor-ws>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/8] of: overlay: Implement indirect target support
+Date: Wed, 17 Jun 2015 19:10:13 -0500
+Message-ID: <CAL_JsqJgd6=xH_M7+KHc9kPqoJgg_XMi2BWw4MkO1Exma5kqiA@mail.gmail.com>
+References: <1434138905-15886-1-git-send-email-pantelis.antoniou@konsulko.com> <1434138905-15886-2-git-send-email-pantelis.antoniou@konsulko.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20150617223852.GA11341@dtor-ws>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Daniel Mack <daniel@zonque.org>, Jacek Anaszewski <j.anaszewski@samsung.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, linux-leds@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1434138905-15886-2-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 17, 2015 at 3:38 PM, Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
-> On Wed, Jun 17, 2015 at 02:53:26PM -0700, Matt Ranostay wrote:
->> On Wed, Jun 17, 2015 at 1:59 AM, Daniel Mack <daniel@zonque.org> wrote:
->> > On 06/17/2015 08:49 AM, Matt Ranostay wrote:
->> >> Actually after further reading of the datasheet and testing with
->> >> i2ctools it seems cap11xx_input_close() isn't putting the device in
->> >> DEEP SLEEP mode.
->> >>
->> >> Any thoughts why?
->> >
->> > No, sorry. IIRC, the board I wrote the driver for didn't give me the
->> > ability to measure power consumption.
->> >
->>
->> I can confirm it never goes to deep sleep or cap11xx_input_close()
->> gets called. Does evdev kernel module increment/input_open_device even
->> if nothing in userspace is accessing the /dev/event/inputX nodes?
+On Fri, Jun 12, 2015 at 2:54 PM, Pantelis Antoniou
+<pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+> Some applications require applying the same overlay to a different
+> target according to some external condition (for instance depending
+> on the slot a card has been inserted, the overlay target is different).
 >
-> No it does not. On the other hand there is VT that does keep all
-> keyboard-like devices open.
-
-Ah yes is that is likely the issue. I'll disable CONFIG_VT, and update
-in v5 to handle to keep the device from going to deep sleep when one
-or more LEDS is on.
-
-- Matt
-
+> The indirect target use requires using the new
+> of_overlay_create_indirect() API which uses a text selector.
 >
-> Thanks.
+> The format requires the use of a target-indirect node as follows:
 >
-> --
-> Dmitry
+>         fragment@0 {
+>                 target-indirect {
+>                         foo { target = <&foo_target>; };
+>                         bar { target = <&bar_target>; };
+>                 };
+>         };
+
+The problem with this is it does not scale. The overlay has to be
+changed for every new target. If you had an add-on board (possibly
+providing an overlay from an EEPROM), you would not want to have to
+rebuild overlays with every new host board. It also only handles
+translations of where to apply the overlay, but doesn't provide
+translations of phandles within the overlay. Say a node that is a
+clock or regulator consumer for example. Or am I missing something.
+
+Grant and I discussed this briefly. I think we need a connector
+definition in the base dtb which can provide the target for an
+overlay. The connector should provide the translation between
+connector local signals/buses and host signals/buses. We need to
+define what this translation would look like for each binding.
+
+At least for GPIO, we could have something similar to interrupt-map
+properties. For example, to map connector gpio 0 to host gpio 66 and
+connector gpio 1 to host gpio 44:
+
+gpio-map = <0 &host-gpio 66>, <1 &host-gpio 44>;
+
+We'd need to define how to handle I2C, SPI, regulators, and clocks
+minimally. Perhaps rather than trying to apply nodes into the base
+dtb, they should be under the connector and the kernel has to learn to
+not just look for child nodes for various bindings. Just thinking
+aloud...
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
