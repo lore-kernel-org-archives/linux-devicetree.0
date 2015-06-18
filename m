@@ -1,60 +1,96 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 01/44] kernel: Add support for poweroff handler call chain
-Date: Wed, 17 Jun 2015 18:04:54 -0700
-Message-ID: <55821936.4040704@codeaurora.org>
-References: <1412659726-29957-1-git-send-email-linux@roeck-us.net> <1412659726-29957-2-git-send-email-linux@roeck-us.net>
+From: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH v6] usb: common: add API to set usb otg capabilities by device tree
+Date: Thu, 18 Jun 2015 09:18:22 +0800
+Message-ID: <1434590302-18066-1-git-send-email-jun.li@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-hexagon-owner@vger.kernel.org>
-In-Reply-To: <1412659726-29957-2-git-send-email-linux@roeck-us.net>
-Sender: linux-hexagon-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org
-Cc: linux-m32r-ja@ml.linux-m32r.org, linux-mips@linux-mips.org, linux-efi@vger.kernel.org, linux-ia64@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, Len Brown <len.brown@intel.com>, linux-xtensa@linux-xtensa.org, Pavel Machek <pavel@ucw.cz>, devel@driverdev.osuosl.org, linux-s390@vger.kernel.org, lguest@lists.ozlabs.org, linux-c6x-dev@linux-c6x.org, linux-hexagon@vger.kernel.org, linux-sh@vger.kernel.org, Alexander Graf <agraf@suse.de>, linux-acpi@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>, xen-devel@lists.xenproject.org, devicetree@vger.kernel.org, user-mode-linux-devel@lists.sourceforge.net, linux-pm@vger.kernel.org, adi-buildroot-devel@lists.sourceforge.net, linux-m68k@lists.linux-m68k.org, linux-am33-list@redhat.com, linux-tegra@vger.kernel.org, openipmi-developer@lists.sourceforge.net, linux-metag@vger.kernel.org, linux-arm-kernel@lists.infradead
+Content-Type: text/plain
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org, Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/06/2014 10:28 PM, Guenter Roeck wrote:
-> Various drivers implement architecture and/or device specific means to
-> remove power from the system.  For the most part, those drivers set the
-> global variable pm_power_off to point to a function within the driver.
->
-> This mechanism has a number of drawbacks.  Typically only one scheme
-> to remove power is supported (at least if pm_power_off is used).
-> At least in theory there can be multiple means remove power, some of
-> which may be less desirable. For example, some mechanisms may only
-> power off the CPU or the CPU card, while another may power off the
-> entire system.  Others may really just execute a restart sequence
-> or drop into the ROM monitor. Using pm_power_off can also be racy
-> if the function pointer is set from a driver built as module, as the
-> driver may be in the process of being unloaded when pm_power_off is
-> called. If there are multiple poweroff handlers in the system, removing
-> a module with such a handler may inadvertently reset the pointer to
-> pm_power_off to NULL, leaving the system with no means to remove power.
->
-> Introduce a system poweroff handler call chain to solve the described
-> problems.  This call chain is expected to be executed from the
-> architecture specific machine_power_off() function.  Drivers providing
-> system poweroff functionality are expected to register with this call chain.
-> By using the priority field in the notifier block, callers can control
-> poweroff handler execution sequence and thus ensure that the poweroff
-> handler with the optimal capabilities to remove power for a given system
-> is called first.
+Change for v6:
+UPdate otg caps by disable flags even if otg_rev is not passed, this is
+needed in case user wants to disable whole OTG(or just want to ID pin
+detect).
 
-What happened to this series? I want to add shutdown support to my
-platform and I need to write a register on the PMIC in one driver to
-configure it for shutdown instead of restart and then write an MMIO
-register to tell the PMIC to actually do the shutdown in another driver.
-It seems that the notifier solves this case for me, albeit with the
-slight complication that I need to order the two with some priority.
+Check property of usb hardware to get otg version and if SRP, HNP and ADP
+are disabled.
 
-I'm also considering putting the PMIC configuration part into the reboot
-notifier chain, because it only does things to change the configuration
-and not actually any shutdown/restart itself. That removes any
-requirement to get the priority of notifiers right. This series will
-still be useful for the MMIO register that needs to be toggled though.
-Right now I have to assign pm_power_off or hook the reboot notifier with
-a different priority to make this work.
+Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+ drivers/usb/common/common.c | 27 +++++++++++++++++++++++++++
+ include/linux/usb/of.h      |  7 +++++++
+ 2 files changed, 34 insertions(+)
 
+diff --git a/drivers/usb/common/common.c b/drivers/usb/common/common.c
+index b530fd4..12f5d28 100644
+--- a/drivers/usb/common/common.c
++++ b/drivers/usb/common/common.c
+@@ -154,6 +154,33 @@ bool of_usb_host_tpl_support(struct device_node *np)
+ 	return false;
+ }
+ EXPORT_SYMBOL_GPL(of_usb_host_tpl_support);
++
++/**
++ * of_usb_get_set_caps - to set usb otg capabilities according to
++ * the passed properties in DT.
++ * @np: Pointer to the given device_node
++ * @otg_caps: Pointer to the target usb_otg_caps to be set
++ *
++ * The function gets and sets the otg capabilities
++ */
++void of_usb_set_otg_caps(struct device_node *np, struct usb_otg_caps *otg_caps)
++{
++	u32 otg_rev;
++
++	if (!otg_caps)
++		return;
++
++	if (!of_property_read_u32(np, "otg-rev", &otg_rev))
++		otg_caps->otg_rev = otg_rev;
++	if (of_find_property(np, "hnp-disable", NULL))
++		otg_caps->hnp_support = false;
++	if (of_find_property(np, "srp-disable", NULL))
++		otg_caps->srp_support = false;
++	if (of_find_property(np, "adp-disable", NULL))
++		otg_caps->adp_support = false;
++}
++EXPORT_SYMBOL_GPL(of_usb_set_otg_caps);
++
+ #endif
+ 
+ MODULE_LICENSE("GPL");
+diff --git a/include/linux/usb/of.h b/include/linux/usb/of.h
+index cfe0528..6339799 100644
+--- a/include/linux/usb/of.h
++++ b/include/linux/usb/of.h
+@@ -15,6 +15,8 @@
+ enum usb_dr_mode of_usb_get_dr_mode(struct device_node *np);
+ enum usb_device_speed of_usb_get_maximum_speed(struct device_node *np);
+ bool of_usb_host_tpl_support(struct device_node *np);
++void of_usb_set_otg_caps(struct device_node *np,
++			struct usb_otg_caps *otg_caps);
+ #else
+ static inline enum usb_dr_mode of_usb_get_dr_mode(struct device_node *np)
+ {
+@@ -30,6 +32,11 @@ static inline bool of_usb_host_tpl_support(struct device_node *np)
+ {
+ 	return false;
+ }
++static inline void of_usb_set_otg_caps(struct device_node *np,
++				struct usb_otg_caps *otg_caps)
++{
++
++}
+ #endif
+ 
+ #if IS_ENABLED(CONFIG_OF) && IS_ENABLED(CONFIG_USB_SUPPORT)
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
