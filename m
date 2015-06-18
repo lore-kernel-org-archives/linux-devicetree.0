@@ -1,33 +1,45 @@
-From: YH Huang <yh.huang@mediatek.com>
-Subject: Re: [PATCH v2 2/2] pwm: add MediaTek display PWM driver support
-Date: Thu, 18 Jun 2015 17:02:43 +0800
-Message-ID: <1434618163.18278.7.camel@mtksdaap41>
-References: <1432214964-40644-1-git-send-email-yh.huang@mediatek.com>
-	 <1432214964-40644-3-git-send-email-yh.huang@mediatek.com>
-	 <20150612102529.GH19400@ulmo.nvidia.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v6 05/14] crypto: marvell/CESA: add TDMA support
+Date: Thu, 18 Jun 2015 10:04:00 +0100
+Message-ID: <20150618090400.GG7557@n2100.arm.linux.org.uk>
+References: <1434527142-3609-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1434527142-3609-6-git-send-email-boris.brezillon@free-electrons.com>
+ <20150617095001.GA11538@gondor.apana.org.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <20150612102529.GH19400@ulmo.nvidia.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, yh.huang@mediatek.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-crypto-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150617095001.GA11538@gondor.apana.org.au>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Nadav Haklai <nadavh@marvell.com>, Mark Rutland <mark.rutland@arm.com>, Tawfik Bayouk <tawfik@marvell.com>, Eran Ben-Avi <benavi@marvell.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Arnaud Ebalard <arno@natisbad.org>, Rob Herring <robh+dt@kernel.org>, Gregory CLEMENT <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Imre Kaloz <kaloz@openwrt.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2015-06-12 at 12:25 +0200, Thierry Reding wrote:
-> On Thu, May 21, 2015 at 09:29:24PM +0800, YH Huang wrote:
-> > Add display PWM driver support to modify backlight for MT8173.
+On Wed, Jun 17, 2015 at 05:50:01PM +0800, Herbert Xu wrote:
+> On Wed, Jun 17, 2015 at 09:45:33AM +0200, Boris Brezillon wrote:
+> >
+> > +	ret = dma_map_sg(cesa_dev->dev, req->src, creq->src_nents,
+> > +			 DMA_TO_DEVICE);
+> > +	if (!ret)
+> > +		return -ENOMEM;
+> > +
+> > +	creq->src_nents = ret;
 > 
-> The driver also claims compatibility with MT6595, so you should mention
-> that here as well. Also please be more verbose in the commit message.
-> You should mention things like how many channels the PWM has or typical
-> use-cases.
-> 
-> Thierry
+> DMA-API-HOWTO says that you must retain the original nents and
+> use it when you call dma_unmap_sg.  So I'm afraid one more repost
+> is needed :)
 
-I will do it.
-Thank for your suggestion.
+It's worse than that...  You're right on that point, but there's an
+additional point.
 
-Regards,
-YH Huang
+If dma_map_sg() coalesces scatterlist entries, then ret will be smaller
+than src_nents, and ret indicates how many scatterlist entries to be
+walked during DMA - you should not use src_nents for that.  I couldn't
+see where the driver used that information.  In fact, the driver seems
+to be capable of walking more than src_nents/ret numbers of scatterlist
+entries: it just keeps going with sg_next() until it hits the end of
+the allocated scatterlist.
+
+-- 
+FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+according to speedtest.net.
