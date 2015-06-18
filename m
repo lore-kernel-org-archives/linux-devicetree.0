@@ -1,171 +1,82 @@
-From: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v7 5/6] ARM: dts: enable clock support for Broadcom Cygnus
-Date: Thu, 18 Jun 2015 12:51:55 -0700
-Message-ID: <20150618195155.9112.72056@quantum>
-References: <1430849603-15849-1-git-send-email-rjui@broadcom.com>
- <1430849603-15849-6-git-send-email-rjui@broadcom.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 6/6] ARM: sun8i: dts: Add Ippo-q8h v1.2 with A33 and
+ 1024x600 lcd support
+Date: Thu, 18 Jun 2015 22:16:25 +0200
+Message-ID: <55832719.10006@redhat.com>
+References: <1432997706-20172-1-git-send-email-hdegoede@redhat.com> <1432997706-20172-7-git-send-email-hdegoede@redhat.com> <20150602081459.GO23777@lukather> <556D6955.8030708@redhat.com> <20150603094535.GI23777@lukather> <556EE104.3090803@redhat.com> <20150613135002.GP19653@lukather> <557C3BD3.6030105@redhat.com> <20150616174114.GI11732@lukather> <55811EB2.4060302@redhat.com> <20150618183736.GT11732@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1430849603-15849-6-git-send-email-rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <20150618183736.GT11732@lukather>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Dmitry Torokhov
-	<dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>,
-	linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Ray
-	Jui" <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Ray Jui (2015-05-05 11:13:22)
-> Replace current device tree dummy clocks with real clock support for
-> Broadcom Cygnus SoC
-> 
-> Signed-off-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Reviewed-by: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Hi,
 
-Patches 1-4 & 6 are applied to clk-next. You can add my Ack to this
-patch:
+On 18-06-15 20:37, Maxime Ripard wrote:
+> On Wed, Jun 17, 2015 at 09:16:02AM +0200, Hans de Goede wrote:
+>> Hi,
+>>
+>> On 16-06-15 19:41, Maxime Ripard wrote:
+>>> Hi,
+>>>
+>>> On Sat, Jun 13, 2015 at 04:18:59PM +0200, Hans de Goede wrote:
+>>>>> Pantelis, to sum things up, we have a case of a tablet that comes with
+>>>>> the exact same board, but coming in two flavours with two differents
+>>>>> screen resolutions. It looks like a great case for your DT quirks
+>>>>> work, but we have no way of runtime detecting the difference between
+>>>>> the two variants. What do you think about this? Should we go with
+>>>>> using the DT quirks or is this simply out of scope?
+>>>>>
+>>>>> There's not so much example of similar cases in the kernel, and none
+>>>>> of them use quirks so far (obviously) but they all boil down to either
+>>>>> the solution you were suggesting in that patch or adding the alternate
+>>>>> configuration as a comment.
+>>>>>
+>>>>> I don't think the latter would work for you, and I agree with that, so
+>>>>> I guess that depending on what Pantelis says, either we go with a
+>>>>> better solution using the quirks, or we end up using what you
+>>>>> suggested (with a nitpick though, I'd prefer if you used the display
+>>>>> standard instead of the resolution, which would make it xga I guess?)
+>>>>
+>>>> If we go with a separate dts file for each of the 800x480 and 1024x600
+>>>> screens, I would greatly prefer to stick with the lcd1024x600 in the dts
+>>>> filename instead of using something like xga, the fact that you say:
+>>>> "I guess" that my answer to that is: I dunno I would need to look this
+>>>> up in wikipedia or some such makes me think that using a qualifier like
+>>>> xga is not going the help end users decide which dts file to pick, it
+>>>> will just lead to them needing to go to wikipedia too. Also note that
+>>>> the advertising of these tablets on ebay / aliexpress almost always
+>>>> uses the resolution and not something like "xga".
+> <> >>
+>>>> So all in all if we do not decide to use quirks for this I would like
+>>>> to keep the filename as is.
+>>>
+>>> Yeah, except that the display standard is also encoding the refresh
+>>> rate and color depth
+>>
+>> Huh? No it does not, see e.g.:
+>>
+>> https://en.wikipedia.org/wiki/Graphics_display_resolution
+>>
+>> Note nothing about depth and refresh-rate there, and I've really never
+>> heard anyone use things like xga to refer to colordepth and/or refreshrate
+>
+> I was somehow convinced it did, and
+>
+> https://en.wikipedia.org/wiki/Computer_display_standard
 
-Acked-by: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-
-arm-soc guys,
-
-Any chance you can pick this up? Alternatively I can take it through the
-clk tree with an Ack.
+Hmm, that is a weird page it seems to be a rather low quality page for
+wikipedia standards, for some reason it throws Atari ST models in there
+as being display standards, and the bpp column makes sense for hercules,
+cga and ega but not much which comes after that.
 
 Regards,
-Mike
 
-> ---
->  arch/arm/boot/dts/bcm-cygnus-clock.dtsi |   89 +++++++++++++++++++++----------
->  1 file changed, 61 insertions(+), 28 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/bcm-cygnus-clock.dtsi b/arch/arm/boot/dts/bcm-cygnus-clock.dtsi
-> index 60d8389..32bcd45 100644
-> --- a/arch/arm/boot/dts/bcm-cygnus-clock.dtsi
-> +++ b/arch/arm/boot/dts/bcm-cygnus-clock.dtsi
-> @@ -36,56 +36,89 @@ clocks {
->         ranges;
->  
->         osc: oscillator {
-> +               #clock-cells = <0>;
->                 compatible = "fixed-clock";
-> -               #clock-cells = <1>;
->                 clock-frequency = <25000000>;
->         };
->  
-> -       apb_clk: apb_clk {
-> -               compatible = "fixed-clock";
-> +       /* Cygnus ARM PLL */
-> +       armpll: armpll {
->                 #clock-cells = <0>;
-> -               clock-frequency = <1000000000>;
-> +               compatible = "brcm,cygnus-armpll";
-> +               clocks = <&osc>;
-> +               reg = <0x19000000 0x1000>;
->         };
->  
-> -       periph_clk: periph_clk {
-> -               compatible = "fixed-clock";
-> +       /* peripheral clock for system timer */
-> +       periph_clk: arm_periph_clk {
->                 #clock-cells = <0>;
-> -               clock-frequency = <500000000>;
-> +               compatible = "fixed-factor-clock";
-> +               clocks = <&armpll>;
-> +               clock-div = <2>;
-> +               clock-mult = <1>;
->         };
->  
-> -       sdio_clk: lcpll_ch2 {
-> -               compatible = "fixed-clock";
-> +       /* APB bus clock */
-> +       apb_clk: apb_clk {
->                 #clock-cells = <0>;
-> -               clock-frequency = <200000000>;
-> +               compatible = "fixed-factor-clock";
-> +               clocks = <&armpll>;
-> +               clock-div = <4>;
-> +               clock-mult = <1>;
->         };
->  
-> -       axi81_clk: axi81_clk {
-> -               compatible = "fixed-clock";
-> -               #clock-cells = <0>;
-> -               clock-frequency = <100000000>;
-> +       genpll: genpll {
-> +               #clock-cells = <1>;
-> +               compatible = "brcm,cygnus-genpll";
-> +               reg = <0x0301d000 0x2c>, <0x0301c020 0x4>;
-> +               clocks = <&osc>;
-> +               clock-output-names = "genpll", "axi21", "250mhz", "ihost_sys",
-> +                                    "enet_sw", "audio_125", "can";
->         };
->  
-> -       keypad_clk: keypad_clk {
-> -               compatible = "fixed-clock";
-> +       /* always 1/2 of the axi21 clock */
-> +       axi41_clk: axi41_clk {
->                 #clock-cells = <0>;
-> -               clock-frequency = <31806>;
-> +               compatible = "fixed-factor-clock";
-> +               clocks = <&genpll 1>;
-> +               clock-div = <2>;
-> +               clock-mult = <1>;
->         };
->  
-> -       adc_clk: adc_clk {
-> -               compatible = "fixed-clock";
-> +       /* always 1/4 of the axi21 clock */
-> +       axi81_clk: axi81_clk {
->                 #clock-cells = <0>;
-> -               clock-frequency = <1562500>;
-> +               compatible = "fixed-factor-clock";
-> +               clocks = <&genpll 1>;
-> +               clock-div = <4>;
-> +               clock-mult = <1>;
->         };
->  
-> -       pwm_clk: pwm_clk {
-> -               compatible = "fixed-clock";
-> -               #clock-cells = <0>;
-> -               clock-frequency = <1000000>;
-> +       lcpll0: lcpll0 {
-> +               #clock-cells = <1>;
-> +               compatible = "brcm,cygnus-lcpll0";
-> +               reg = <0x0301d02c 0x1c>, <0x0301c020 0x4>;
-> +               clocks = <&osc>;
-> +               clock-output-names = "lcpll0", "pcie_phy", "ddr_phy", "sdio",
-> +                                    "usb_phy", "smart_card", "ch5";
->         };
->  
-> -       lcd_clk: mipipll_ch1 {
-> -               compatible = "fixed-clock";
-> -               #clock-cells = <0>;
-> -               clock-frequency = <100000000>;
-> +       mipipll: mipipll {
-> +               #clock-cells = <1>;
-> +               compatible = "brcm,cygnus-mipipll";
-> +               reg = <0x180a9800 0x2c>, <0x0301c020 0x4>, <0x180aa024 0x4>;
-> +               clocks = <&osc>;
-> +               clock-output-names = "mipipll", "ch0_unused", "ch1_lcd",
-> +                                    "ch2_v3d", "ch3_unused", "ch4_unused",
-> +                                    "ch5_unused";
-> +       };
-> +
-> +       asiu_clks: asiu_clks {
-> +               #clock-cells = <1>;
-> +               compatible = "brcm,cygnus-asiu-clk";
-> +               reg = <0x0301d048 0xc>, <0x180aa024 0x4>;
-> +
-> +               clocks = <&osc>;
-> +               clock-output-names = "keypad", "adc/touch", "pwm";
->         };
->  };
-> -- 
-> 1.7.9.5
-> 
+Hans
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
