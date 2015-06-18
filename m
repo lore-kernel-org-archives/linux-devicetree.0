@@ -1,79 +1,33 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH V7 2/3] OPP: Allow multiple OPP tables to be passed via
- DT
-Date: Wed, 17 Jun 2015 18:30:24 -0700
-Message-ID: <55821F30.2090802@codeaurora.org>
-References: <cover.1433434659.git.viresh.kumar@linaro.org> <263c128844f5a3c9280c8be71f6c9eb1869a5188.1433434659.git.viresh.kumar@linaro.org> <CAL_Jsq+EOOeQw42wZi+H82ovLn8LcQUuK9HGT+FvewdhTf7Q1w@mail.gmail.com> <20150617133314.GB15153@linux> <CAL_Jsq+SdgAf7=Yq7Jk_1d9jTpAOLCEuEDCZvD=-h=2MWsNfFw@mail.gmail.com>
+From: Herbert Xu <herbert@gondor.apana.org.au>
+Subject: Re: [PATCH v7 05/14] crypto: marvell/CESA: add TDMA support
+Date: Thu, 18 Jun 2015 09:41:32 +0800
+Message-ID: <20150618014132.GA26238@gondor.apana.org.au>
+References: <20150617122533.GA13185@gondor.apana.org.au>
+ <1434547922-10363-1-git-send-email-boris.brezillon@free-electrons.com>
+ <20150617150808.GA14915@gondor.apana.org.au>
+ <20150617173402.7946bbb0@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+SdgAf7=Yq7Jk_1d9jTpAOLCEuEDCZvD=-h=2MWsNfFw@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>, Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Rafael Wysocki <rjw@rjwysocki.net>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Nishanth Menon <nm@ti.com>, Mark Brown <broonie@kernel.org>, Mike Turquette <mike.turquette@linaro.org>, Grant Likely <grant.likely@linaro.org>, Olof Johansson <olof@lixom.net>, Sudeep Holla <Sudeep.Holla@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Viswanath Puttagunta <viswanath.puttagunta@linaro.org>, Lucas Stach <l.stach@pengutronix.de>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Abraham <ta.omasab@gmail.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Kevin Hilman <khilman@linaro.org>, Santosh Shilimkar <santosh.shilimkar@oracle.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150617173402.7946bbb0@bbrezillon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: "David S. Miller" <davem@davemloft.net>, linux-crypto@vger.kernel.org, Arnaud Ebalard <arno@natisbad.org>, Tawfik Bayouk <tawfik@marvell.com>, Lior Amsalem <alior@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Eran Ben-Avi <benavi@marvell.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Imre Kaloz <kaloz@openwrt.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/17/2015 06:47 AM, Rob Herring wrote:
-> On Wed, Jun 17, 2015 at 8:33 AM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
->> On 17-06-15, 08:23, Rob Herring wrote:
->>>> +                       operating-points-v2 = <&cpu0_opp_table_slow>, <&cpu0_opp_table_fast>;
->>> You've made a fundamental change here in that this can now be a list
->>> of phandles. There should be some description on what a list means
->>> (merge the tables?, select one?).
->> Did you miss the description I wrote few lines earlier or are you
->> asking for something else? This is what I wrote earlier:
->>
->>>> +Devices may want to choose OPP tables at runtime and so can provide a list of
->>>> +phandles here. But only *one* of them should be chosen at runtime.
->> So, clearly only ONE of the tables should be used.
-> Yes, never mind.
+On Wed, Jun 17, 2015 at 05:34:02PM +0200, Boris Brezillon wrote:
 >
->>> I think this needs to have a defined order and the platform should
->>> know what that is. For example, if you read the efuses and decide you
->>> need the "slow" table, you know to pick the first entry. Then you
->>> don't need opp-name. Does that work for QCom?
->> Why forcing on the order here? For example, consider a case where the
->> platform can have four tables, A B C D. Now DT is free to pass all
->> four or just a subset of those. Like, for some boards table B doesn't
->> stand valid. And so it may wanna pass just A C D. And so keeping these
->> tables in order is going to break for sure. Flexibility is probably
->> better in this case.
-> Defined order is a key part of DT bindings. We solve the variable
-> length problem with name lists associated with variable length
-> property like:
->
-> operating-point-names = "slow", "fast";
->
-> I'm not a fan of doing this if we can avoid it, but we should at least
-> follow the same pattern. Don't send me a patch with that yet, I want
-> to hear from Stephen.
->
-> You can also use "status" to disable specific tables rather than
-> removing from the list.
->
+> I can check for that too, but note that it doesn't prevent one from
+> providing different scatterlist structures pointing to the same memory
+> region.
 
-An operating-point(s?)-names property seems ok... but doesn't that mean
-that every CPU that uses the OPP has to have the same list of
-operating-point-names? It would make sense to me if the operating points
-were called something different depending on *which* CPU is using them,
-but in this case the only name for the operating point is "slow" or
-"fast", etc.
+Pointing to the same memory should be fine, it's the act of passing
+the same SG list to dma_map_sg twice that's wrong because dma_map_sg
+will modify the SG list.
 
-In reality we've assigned them names like speedX-binY-vZ so that we know
-which speed bin, voltage bin, and version they're part of. Maybe OPP
-node properties like qcom,speed-bin = <u32>, qcom,pvs-bin = <u32>, etc.
-would be better? It would make the parsing code slightly more
-complicated because it needs to look for 2 or 3 properties instead of a
-name property though. Or would having different node names be
-acceptable? That would avoid this list of strings.
-
-At the least, operating-points-names will be required on qcom platforms.
-A fixed ordering known to the platform would mean that we know exactly
-how many voltage bins and speed bins and how many voltage bins per speed
-bin are used for a particular SoC, which we've avoided knowing so far.
-
+Cheers,
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
