@@ -1,61 +1,126 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v6 0/7] Add Mediatek MMC driver
-Date: Thu, 18 Jun 2015 09:26:44 +0200
-Message-ID: <CAPDyKFrG6iNQs6be3sWtVX8+UYs2du5=YUGHvyRsxnFH+8cA0A@mail.gmail.com>
-References: <1434367253-26577-1-git-send-email-chaotian.jing@mediatek.com>
-	<CAPDyKFrAbAFR7_p5O4bPh6FZEBVhGZ2rq3htCKcF2QgQuCEf2g@mail.gmail.com>
-	<CAP=VYLpBymmAVY7LoFJR5+QTxL4CN7t+PrLFCxaoAN_a9S4Jbw@mail.gmail.com>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v6] usb: common: add API to set usb otg capabilities by
+ device tree
+Date: Thu, 18 Jun 2015 10:36:50 +0300
+Message-ID: <20150618103650.7c3d1b8ceb134388b0d8b093@ti.com>
+References: <1434590302-18066-1-git-send-email-jun.li@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CAP=VYLpBymmAVY7LoFJR5+QTxL4CN7t+PrLFCxaoAN_a9S4Jbw@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Paul Gortmaker <paul.gortmaker@windriver.com>
-Cc: Chaotian Jing <chaotian.jing@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Chris Ball <chris@printf.net>, Mark Rutland <mark.rutland@arm.com>, James Liao <jamesjj.liao@mediatek.com>, srv_heupstream <srv_heupstream@mediatek.com>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Hongzhou Yang <hongzhou.yang@mediatek.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-mmc <linux-mmc@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, "Joe.C" <yingjoe.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, =?UTF-8?B?QmluIFpoYW5nICjnq6Dmlowp?= <bin.zhang@mediatek.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1434590302-18066-1-git-send-email-jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 17 June 2015 at 23:01, Paul Gortmaker <paul.gortmaker@windriver.com> wrote:
-> On Tue, Jun 16, 2015 at 4:03 AM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
->> On 15 June 2015 at 13:20, Chaotian Jing <chaotian.jing@mediatek.com> wrote:
->>> This series enables MMC support on the MT8135/MT8173 platform.
->>> MT8135 has 5 MMC controllers and MT8173 has 4 MMC controllers.
->>>
->>> Changes base on Ulf's comments
->>> Make hclk mandatory in the driver code
->>> Change host->hclk to host->src_clk_freq
->>> Add linux/pm.h
->>>
->>> Chaotian Jing (3):
->>>   mmc: dt-bindings: add Mediatek MMC bindings
->>>   mmc: mediatek: Add Mediatek MMC driver.
->
-> This commit breaks when merged to linux-next since it gets
-> exposed as an implicit module.h user that does not include
-> that header:
->
->    drivers/mmc/host/mtk-sd.c:1459:1: note: in expansion of macro
-> 'module_platform_driver'
->     module_platform_driver(mt_msdc_driver);
->     ^
->    include/linux/device.h:1296:1: error: type defaults to 'int' in
-> declaration of 'module_init' [-Werror=implicit-int]
->     module_init(__driver##_init); \
->     ^
->
-> Since the code doesn't exist in mainline, I can't fix it from
-> within my header cleanup series, so can you please add
-> an appropriate include of module.h to the above?
->
-> Also, I noticed the Makefile addition from this commit
-> is whitespace mangled; might as well fix that too if
-> rebasing to fix the include problem.
->
-> Thanks,
-> Paul.
+Lin,
 
-Paul, appreciate your feedback!
-I have re-based my next branch and updated the commit according to
-your suggestions.
+You can use --in-reply-to "message id of v5 of this path" so that it appears together
+with the other patches in peoples mailboxes.
 
-Kind regards
-Uffe
+On Thu, 18 Jun 2015 09:18:22 +0800
+Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+
+> Change for v6:
+> UPdate otg caps by disable flags even if otg_rev is not passed, this is
+> needed in case user wants to disable whole OTG(or just want to ID pin
+> detect).
+> 
+> Check property of usb hardware to get otg version and if SRP, HNP and ADP
+> are disabled.
+> 
+> Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+>  drivers/usb/common/common.c | 27 +++++++++++++++++++++++++++
+>  include/linux/usb/of.h      |  7 +++++++
+>  2 files changed, 34 insertions(+)
+> 
+> diff --git a/drivers/usb/common/common.c b/drivers/usb/common/common.c
+> index b530fd4..12f5d28 100644
+> --- a/drivers/usb/common/common.c
+> +++ b/drivers/usb/common/common.c
+> @@ -154,6 +154,33 @@ bool of_usb_host_tpl_support(struct device_node *np)
+>  	return false;
+>  }
+>  EXPORT_SYMBOL_GPL(of_usb_host_tpl_support);
+> +
+> +/**
+> + * of_usb_get_set_caps - to set usb otg capabilities according to
+
+get or set?
+how about update instead?
+
+> + * the passed properties in DT.
+> + * @np: Pointer to the given device_node
+> + * @otg_caps: Pointer to the target usb_otg_caps to be set
+> + *
+> + * The function gets and sets the otg capabilities
+> + */
+> +void of_usb_set_otg_caps(struct device_node *np, struct usb_otg_caps *otg_caps)
+> +{
+> +	u32 otg_rev;
+> +
+> +	if (!otg_caps)
+> +		return;
+> +
+> +	if (!of_property_read_u32(np, "otg-rev", &otg_rev))
+> +		otg_caps->otg_rev = otg_rev;
+
+should we check if otg_rev is in correct format?
+anything non BCD and greater than 0x9999 is invalid.
+
+Also if otg-rev is not passed then we need to treat it as legacy
+platform right? How is this taken care of?
+
+> +	if (of_find_property(np, "hnp-disable", NULL))
+> +		otg_caps->hnp_support = false;
+> +	if (of_find_property(np, "srp-disable", NULL))
+> +		otg_caps->srp_support = false;
+> +	if (of_find_property(np, "adp-disable", NULL))
+> +		otg_caps->adp_support = false;
+
+Don't we expect it to do basic sanity checks?
+e.g. if otg_rev < 0x200 then adp_support can't be true?
+
+> +}
+> +EXPORT_SYMBOL_GPL(of_usb_set_otg_caps);
+> +
+>  #endif
+>  
+>  MODULE_LICENSE("GPL");
+> diff --git a/include/linux/usb/of.h b/include/linux/usb/of.h
+> index cfe0528..6339799 100644
+> --- a/include/linux/usb/of.h
+> +++ b/include/linux/usb/of.h
+> @@ -15,6 +15,8 @@
+>  enum usb_dr_mode of_usb_get_dr_mode(struct device_node *np);
+>  enum usb_device_speed of_usb_get_maximum_speed(struct device_node *np);
+>  bool of_usb_host_tpl_support(struct device_node *np);
+> +void of_usb_set_otg_caps(struct device_node *np,
+> +			struct usb_otg_caps *otg_caps);
+>  #else
+>  static inline enum usb_dr_mode of_usb_get_dr_mode(struct device_node *np)
+>  {
+> @@ -30,6 +32,11 @@ static inline bool of_usb_host_tpl_support(struct device_node *np)
+>  {
+>  	return false;
+>  }
+> +static inline void of_usb_set_otg_caps(struct device_node *np,
+> +				struct usb_otg_caps *otg_caps)
+> +{
+> +
+> +}
+>  #endif
+>  
+>  #if IS_ENABLED(CONFIG_OF) && IS_ENABLED(CONFIG_USB_SUPPORT)
+> -- 
+> 1.9.1
+> 
+
+cheers,
+-roger
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
