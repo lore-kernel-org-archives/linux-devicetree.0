@@ -1,132 +1,63 @@
-From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Subject: [PATCH v2 3/5] extcon: arizona: Convert to gpiod
-Date: Thu, 18 Jun 2015 15:43:49 +0100
-Message-ID: <1434638631-16451-4-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: [PATCH v2 1/5] extcon: arizona: Update to use the new device properties API
+Date: Thu, 18 Jun 2015 15:43:47 +0100
+Message-ID: <1434638631-16451-2-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 References: <1434638631-16451-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1434638631-16451-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org, cw00.choi@samsung.com
-Cc: myungjoo.ham@samsung.com, sameo@linux.intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1434638631-16451-1-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Cc: myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Convert to using the newer gpiod interface for the micd_pol_gpio.
-Although we still carry support for the old gpio interface from pdata.
+The device properties API will load data from both device tree and ACPI,
+update the binding to use this API instead of the OF API.
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 ---
- drivers/extcon/extcon-arizona.c |   36 +++++++++++++++++++++++++++++++-----
- 1 files changed, 31 insertions(+), 5 deletions(-)
+ drivers/extcon/extcon-arizona.c |    7 ++++---
+ 1 files changed, 4 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/extcon/extcon-arizona.c b/drivers/extcon/extcon-arizona.c
-index 5bf1b19..71d60ba 100644
+index 9262b45..1153929 100644
 --- a/drivers/extcon/extcon-arizona.c
 +++ b/drivers/extcon/extcon-arizona.c
-@@ -20,6 +20,7 @@
- #include <linux/slab.h>
- #include <linux/interrupt.h>
- #include <linux/err.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/gpio.h>
+@@ -24,6 +24,7 @@
  #include <linux/input.h>
  #include <linux/platform_device.h>
-@@ -95,6 +96,8 @@ struct arizona_extcon_info {
- 	int hpdet_ip_version;
+ #include <linux/pm_runtime.h>
++#include <linux/property.h>
+ #include <linux/regulator/consumer.h>
+ #include <linux/extcon.h>
  
- 	struct extcon_dev *edev;
-+
-+	struct gpio_desc *micd_pol_gpio;
- };
+@@ -1110,12 +1111,12 @@ static void arizona_micd_set_level(struct arizona *arizona, int index,
+ 	regmap_update_bits(arizona->regmap, reg, mask, level);
+ }
  
- static const struct arizona_micd_config micd_default_modes[] = {
-@@ -205,6 +208,10 @@ static void arizona_extcon_set_mode(struct arizona_extcon_info *info, int mode)
- 	if (arizona->pdata.micd_pol_gpio > 0)
- 		gpio_set_value_cansleep(arizona->pdata.micd_pol_gpio,
- 					info->micd_modes[mode].gpio);
-+	else if (info->micd_pol_gpio)
-+		gpiod_set_value_cansleep(info->micd_pol_gpio,
-+					 info->micd_modes[mode].gpio);
-+
- 	regmap_update_bits(arizona->regmap, ARIZONA_MIC_DETECT_1,
- 			   ARIZONA_MICD_BIAS_SRC_MASK,
- 			   info->micd_modes[mode].bias <<
-@@ -1271,6 +1278,22 @@ static int arizona_extcon_probe(struct platform_device *pdev)
- 				arizona->pdata.micd_pol_gpio, ret);
- 			goto err_register;
- 		}
-+	} else {
-+		if (info->micd_modes[0].gpio)
-+			mode = GPIOD_OUT_HIGH;
-+		else
-+			mode = GPIOD_OUT_LOW;
-+
-+		info->micd_pol_gpio = gpiod_get_optional(arizona->dev,
-+							 "wlf,micd-pol",
-+							 GPIOD_OUT_LOW);
-+		if (IS_ERR(info->micd_pol_gpio)) {
-+			ret = PTR_ERR(info->micd_pol_gpio);
-+			dev_err(arizona->dev,
-+				"Failed to get microphone polarity GPIO: %d\n",
-+				ret);
-+			goto err_register;
-+		}
+-static int arizona_extcon_of_get_pdata(struct arizona *arizona)
++static int arizona_extcon_device_get_pdata(struct arizona *arizona)
+ {
+ 	struct arizona_pdata *pdata = &arizona->pdata;
+ 	unsigned int val = ARIZONA_ACCDET_MODE_HPL;
+ 
+-	of_property_read_u32(arizona->dev->of_node, "wlf,hpdet-channel", &val);
++	device_property_read_u32(arizona->dev, "wlf,hpdet-channel", &val);
+ 	switch (val) {
+ 	case ARIZONA_ACCDET_MODE_HPL:
+ 	case ARIZONA_ACCDET_MODE_HPR:
+@@ -1149,7 +1150,7 @@ static int arizona_extcon_probe(struct platform_device *pdev)
+ 
+ 	if (IS_ENABLED(CONFIG_OF)) {
+ 		if (!dev_get_platdata(arizona->dev))
+-			arizona_extcon_of_get_pdata(arizona);
++			arizona_extcon_device_get_pdata(arizona);
  	}
  
- 	if (arizona->pdata.hpdet_id_gpio > 0) {
-@@ -1281,7 +1304,7 @@ static int arizona_extcon_probe(struct platform_device *pdev)
- 		if (ret != 0) {
- 			dev_err(arizona->dev, "Failed to request GPIO%d: %d\n",
- 				arizona->pdata.hpdet_id_gpio, ret);
--			goto err_register;
-+			goto err_gpio;
- 		}
- 	}
- 
-@@ -1325,7 +1348,7 @@ static int arizona_extcon_probe(struct platform_device *pdev)
- 				dev_err(arizona->dev,
- 					"MICD ranges must be sorted\n");
- 				ret = -EINVAL;
--				goto err_input;
-+				goto err_gpio;
- 			}
- 		}
- 	}
-@@ -1344,7 +1367,7 @@ static int arizona_extcon_probe(struct platform_device *pdev)
- 			dev_err(arizona->dev, "Unsupported MICD level %d\n",
- 				info->micd_ranges[i].max);
- 			ret = -EINVAL;
--			goto err_input;
-+			goto err_gpio;
- 		}
- 
- 		dev_dbg(arizona->dev, "%d ohms for MICD threshold %d\n",
-@@ -1417,7 +1440,7 @@ static int arizona_extcon_probe(struct platform_device *pdev)
- 	if (ret != 0) {
- 		dev_err(&pdev->dev, "Failed to get JACKDET rise IRQ: %d\n",
- 			ret);
--		goto err_input;
-+		goto err_gpio;
- 	}
- 
- 	ret = arizona_set_irq_wake(arizona, jack_irq_rise, 1);
-@@ -1488,7 +1511,8 @@ err_rise_wake:
- 	arizona_set_irq_wake(arizona, jack_irq_rise, 0);
- err_rise:
- 	arizona_free_irq(arizona, jack_irq_rise, info);
--err_input:
-+err_gpio:
-+	gpiod_put(info->micd_pol_gpio);
- err_register:
- 	pm_runtime_disable(&pdev->dev);
- 	return ret;
-@@ -1500,6 +1524,8 @@ static int arizona_extcon_remove(struct platform_device *pdev)
- 	struct arizona *arizona = info->arizona;
- 	int jack_irq_rise, jack_irq_fall;
- 
-+	gpiod_put(info->micd_pol_gpio);
-+
- 	pm_runtime_disable(&pdev->dev);
- 
- 	regmap_update_bits(arizona->regmap,
+ 	info->micvdd = devm_regulator_get(&pdev->dev, "MICVDD");
 -- 
 1.7.2.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
