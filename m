@@ -1,120 +1,111 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 0/7] staging: board: armadillo800eva: Board staging
- for sh_mobile_lcdc_fb
-Date: Thu, 18 Jun 2015 13:08:34 +0900
-Message-ID: <20150618040834.GB23629@verge.net.au>
-References: <1434530336-15073-1-git-send-email-geert+renesas@glider.be>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 1/8] of: overlay: Implement indirect target support
+Date: Wed, 17 Jun 2015 21:21:42 -0700
+Message-ID: <55824756.7030009@roeck-us.net>
+References: <1434138905-15886-1-git-send-email-pantelis.antoniou@konsulko.com> <1434138905-15886-2-git-send-email-pantelis.antoniou@konsulko.com> <CAL_JsqJgd6=xH_M7+KHc9kPqoJgg_XMi2BWw4MkO1Exma5kqiA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1434530336-15073-1-git-send-email-geert+renesas@glider.be>
+In-Reply-To: <CAL_JsqJgd6=xH_M7+KHc9kPqoJgg_XMi2BWw4MkO1Exma5kqiA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Magnus Damm <damm+renesas@opensource.se>, Arnd Bergmann <arnd@arndb.de>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Marc Zyngier <marc.zyngier@arm.com>, devel@driverdev.osuosl.org, linux-sh@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Matt Porter <mporter@konsulko.com>, Koen Kooi <koen@dominion.thruhere.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pantelis Antoniou <panto@antoniou-consulting.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 17, 2015 at 10:38:49AM +0200, Geert Uytterhoeven wrote:
-> 	Hi Greg, Simon, Magnus,
-> 
-> This patch series adds board staging support for the Renesas R-Mobile A1
-> (r8a7740) based Armadillo-800 EVA board. It allows to support the frame
-> buffer device for the on-board LCD (which isn't supported by a DT-aware
-> driver yet) in modern DT-based multi-platform kernels.
-> 
-> The board staging area was introduced last year to allow continuous
-> upstream in-tree development and integration of platform devices. It
-> helps developers integrate devices as platform devices for device
-> drivers that only provide platform device bindings.  This in turn allows
-> for incremental development of both hardware feature support and DT
-> binding work in parallel.
-> 
-> The goal is to complete the move to ARM multi-platform kernels for all
-> shmobile platforms, and drop the existing board files
-> (arch/arm/mach-shmobile/board-*). Once this series is accepted, more
-> than 3000 lines of legacy armadillo board code and r8a7740 SoC code can
-> be removed.
-> 
-> This series consists of 5 parts:
->   - Patch 1 re-enables compilation of the board staging area, which was
->     disabled after a compile breakage, but has been fixed in the mean
->     time,
->   - Path 2 moves initialization of staging board code to an earlier
->     moment, as currently it happens after unused PM domains are powered
->     down,
->   - Patches 3 and 4 (hopefully) fix the existing kzm9d board staging
->     code, which was presumably "broken" by commit 9a1091ef0017c40a
->     ("irqchip: gic: Support hierarchy irq domain."),
->   - Patches 5 and 6 add support for registering platform devices with
->     complex dependencies (clocks and PM domains), and add armadillo
->     board staging code for enabling a frame buffer on the on-board LCD,
->   - Patch 7 (new) adds pinctrl and gpio-hog configuration to enable the
->     LCD.
-> 
-> The first 6 patches should go in through the staging tree, the last one
-> through the shmobile tree.
-> 
-> Major changes since v1 (more detailed changelogs in the individual
-> patches):
->   - Add support for low/high edge/level interrupts in hwirq translation,
->   - Move pinctrl and GPIO configuration from board staging code to DT,
->   - Use clk_add_alias() instead of open coding.
-> 
-> Dependencies:
->   - This is against next-20150617,
->   - The gpio-hog in patch 7 depends on a bug fix like "[PATCH] [RFC]
->     gpio: Retry deferred GPIO hogging on pin range change"
->     (https://lkml.org/lkml/2015/6/16/455). It can be applied as-is
->     though.
-> 
-> This was tested on r8a7740/armadillo.
-> This was not tested on emev2/kzm9d, due to lack of hardware.
+On 06/17/2015 05:10 PM, Rob Herring wrote:
+> On Fri, Jun 12, 2015 at 2:54 PM, Pantelis Antoniou
+> <pantelis.antoniou@konsulko.com> wrote:
+>> Some applications require applying the same overlay to a different
+>> target according to some external condition (for instance depending
+>> on the slot a card has been inserted, the overlay target is different).
+>>
+>> The indirect target use requires using the new
+>> of_overlay_create_indirect() API which uses a text selector.
+>>
+>> The format requires the use of a target-indirect node as follows:
+>>
+>>          fragment@0 {
+>>                  target-indirect {
+>>                          foo { target = <&foo_target>; };
+>>                          bar { target = <&bar_target>; };
+>>                  };
+>>          };
+>
+> The problem with this is it does not scale. The overlay has to be
+> changed for every new target. If you had an add-on board (possibly
 
-I have verified that kzm9d still boots with your patches applied on top
-of renesas-devel-20150617-v4.1-rc8. I used shmobile_defconfig and
-then enabled CONFIG_STAGING and in turn CONFIG_STAGING_BOARD.
+Not really. For our use case, at least, each target is a slot in the
+chassis, so we end up with something like
 
-Let me know if you think further testing is appropriate.
+		target-indirect {
+			slot0 { target = <&sib0i2c>; };
+			slot1 { target = <&sib1i2c>; };
+			slot2 { target = <&sib2i2c>; };
+			slot3 { target = <&sib3i2c>; };
+			slot4 { target = <&sib4i2c>; };
+			slot5 { target = <&sib5i2c>; };
+			slot6 { target = <&sib6i2c>; };
+			slot7 { target = <&sib7i2c>; };
+			slot8 { target = <&sib8i2c>; };
+		};
 
-> Thanks for applying!
-> 
-> Geert Uytterhoeven (7):
->   Revert "staging: board: disable as it breaks the build"
->   staging: board: Initialize staging board code earlier
->   staging: board: Add support for translating hwirq to virq numbers
->   staging: board: kzm9d: Translate hwirq numbers to virq numbers
->   staging: board: Add support for devices with complex dependencies
->   staging: board: armadillo800eva: Board staging for sh_mobile_lcdc_fb
+where sib[0-8]i2c is defined in the master dts file.
 
-Feel free to add:
+Since the number of slots is well defined, the overlay will
+always work. Sure, it may have to be updated if it is used in
+a chassis with 20 slots, but that doesn't happen that often.
 
-Acked-by: Simon Horman <horms+renesas@verge.net.au>
+> providing an overlay from an EEPROM), you would not want to have to
+> rebuild overlays with every new host board. It also only handles
+> translations of where to apply the overlay, but doesn't provide
+> translations of phandles within the overlay. Say a node that is a
+> clock or regulator consumer for example. Or am I missing something.
+>
+> Grant and I discussed this briefly. I think we need a connector
+> definition in the base dtb which can provide the target for an
+> overlay. The connector should provide the translation between
+> connector local signals/buses and host signals/buses. We need to
+> define what this translation would look like for each binding.
+>
+> At least for GPIO, we could have something similar to interrupt-map
+> properties. For example, to map connector gpio 0 to host gpio 66 and
+> connector gpio 1 to host gpio 44:
+>
+> gpio-map = <0 &host-gpio 66>, <1 &host-gpio 44>;
+>
+> We'd need to define how to handle I2C, SPI, regulators, and clocks
+> minimally. Perhaps rather than trying to apply nodes into the base
+> dtb, they should be under the connector and the kernel has to learn to
+> not just look for child nodes for various bindings. Just thinking
+> aloud...
+>
+Anything is fine with me, as long as it is usable (and does not require
+us to create 9 overlay files for sib[0-8] from the example above).
 
-to the above.
+The real tricky part is pci, where it is not just about simple target
+redirection but irq numbers, memory address ranges, and bus number ranges.
+It would be quite useful to have a workable solution for that as well,
+but at least I don't have an idea how it could be done.
 
->   ARM: shmobile: armadillo800eva dts: Add pinctrl and gpio-hog for lcdc0
-> 
->  arch/arm/boot/dts/r8a7740-armadillo800eva.dts |  13 +++
->  drivers/staging/board/Kconfig                 |   1 -
->  drivers/staging/board/Makefile                |   3 +-
->  drivers/staging/board/armadillo800eva.c       | 105 ++++++++++++++++++++
->  drivers/staging/board/board.c                 | 136 ++++++++++++++++++++++++++
->  drivers/staging/board/board.h                 |  27 ++++-
->  drivers/staging/board/kzm9d.c                 |  10 +-
->  7 files changed, 290 insertions(+), 5 deletions(-)
->  create mode 100644 drivers/staging/board/armadillo800eva.c
-> 
-> -- 
-> 1.9.1
-> 
-> Gr{oetje,eeting}s,
-> 
-> 						Geert
-> 
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
-> 							    -- Linus Torvalds
-> 
+Talking about connector ...
+
+Right now we have something like
+
+	sib0 {
+             compatible = "jnx,sib-connector", "simple-bus";
+	    ... (various properties)
+	};
+
+Maybe we could use something like the following ?
+
+	sib0 {
+             compatible = "jnx,sib-connector", "simple-bus";
+	    ... (various attributes)
+	    ref0 = <&sib0i2c>;
+	    ref1 = <&sib0spi>;
+	};
+
+and then just reference ref0 and ref1 as targets in the overlay itself ?
+
+Guenter
