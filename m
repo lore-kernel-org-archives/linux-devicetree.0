@@ -1,167 +1,144 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v5 12/23] usb: gadget: ether: allocate and init otg
- descriptor by otg capabilities
-Date: Thu, 18 Jun 2015 10:51:48 +0300
-Message-ID: <20150618105148.cbf486831982d0244d499461@ti.com>
-References: <1434541230-15090-1-git-send-email-jun.li@freescale.com>
-	<1434541230-15090-13-git-send-email-jun.li@freescale.com>
-	<20150618104302.3da49bc854834b0257e3f703@ti.com>
+From: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v6] usb: common: add API to set usb otg capabilities by
+ device tree
+Date: Thu, 18 Jun 2015 15:55:28 +0800
+Message-ID: <20150618075527.GA15280@shlinux2>
+References: <1434590302-18066-1-git-send-email-jun.li@freescale.com>
+ <20150618103650.7c3d1b8ceb134388b0d8b093@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150618104302.3da49bc854834b0257e3f703-l0cyMroinI0@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150618103650.7c3d1b8ceb134388b0d8b093-l0cyMroinI0@public.gmane.org>
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
 Cc: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 18 Jun 2015 10:43:02 +0300
-Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> wrote:
+On Thu, Jun 18, 2015 at 10:36:50AM +0300, Roger Quadros wrote:
+> Lin,
+> 
+> You can use --in-reply-to "message id of v5 of this path" so that it appears together
+> with the other patches in peoples mailboxes.
+> 
+okay, I will try that next time, thanks.
 
-> On Wed, 17 Jun 2015 19:40:19 +0800
+Li Jun
+> On Thu, 18 Jun 2015 09:18:22 +0800
 > Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
 > 
-> > Allocate and initialize usb otg descriptor according to gadget otg
-> > capabilities, add it for each usb configurations, free it while
-> > ether unbind. If otg capability is not defined, keep its otg
-> > descriptor unchanged.
+> > Change for v6:
+> > UPdate otg caps by disable flags even if otg_rev is not passed, this is
+> > needed in case user wants to disable whole OTG(or just want to ID pin
+> > detect).
+> > 
+> > Check property of usb hardware to get otg version and if SRP, HNP and ADP
+> > are disabled.
 > > 
 > > Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 > > ---
-> >  drivers/usb/gadget/legacy/ether.c | 52 +++++++++++++++++++--------------------
-> >  1 file changed, 26 insertions(+), 26 deletions(-)
+> >  drivers/usb/common/common.c | 27 +++++++++++++++++++++++++++
+> >  include/linux/usb/of.h      |  7 +++++++
+> >  2 files changed, 34 insertions(+)
 > > 
-> > diff --git a/drivers/usb/gadget/legacy/ether.c b/drivers/usb/gadget/legacy/ether.c
-> > index a3323dc..2595288 100644
-> > --- a/drivers/usb/gadget/legacy/ether.c
-> > +++ b/drivers/usb/gadget/legacy/ether.c
-> > @@ -171,20 +171,7 @@ static struct usb_device_descriptor device_desc = {
-> >  	.bNumConfigurations =	1,
-> >  };
-> >  
-> > -static struct usb_otg_descriptor otg_descriptor = {
-> > -	.bLength =		sizeof otg_descriptor,
-> > -	.bDescriptorType =	USB_DT_OTG,
-> > -
-> > -	/* REVISIT SRP-only hardware is possible, although
-> > -	 * it would not be called "OTG" ...
-> > -	 */
-> > -	.bmAttributes =		USB_OTG_SRP | USB_OTG_HNP,
-> > -};
-> > -
-> > -static const struct usb_descriptor_header *otg_desc[] = {
-> > -	(struct usb_descriptor_header *) &otg_descriptor,
-> > -	NULL,
-> > -};
-> > +static const struct usb_descriptor_header *otg_desc[2];
-> >  
-> >  static struct usb_string strings_dev[] = {
-> >  	[USB_GADGET_MANUFACTURER_IDX].s = "",
-> > @@ -228,11 +215,6 @@ static int rndis_do_config(struct usb_configuration *c)
-> >  
-> >  	/* FIXME alloc iConfiguration string, set it in c->strings */
-> >  
-> > -	if (gadget_is_otg(c->cdev->gadget)) {
-> > -		c->descriptors = otg_desc;
-> 
-> If you remove this who is setting c->descriptors to otg_desc?
-> 
-> > -		c->bmAttributes |= USB_CONFIG_ATT_WAKEUP;
-> 
-> Why are you removing this? won't it change gadget behaviour?
-
-OK. I see that you moved this bit to eth_bind. So it should be fine
-I guess. But this change was not necessary.
-
-cheers,
--roger
-
-> 
-> > -	}
-> > -
-> >  	f_rndis = usb_get_function(fi_rndis);
-> >  	if (IS_ERR(f_rndis))
-> >  		return PTR_ERR(f_rndis);
-> > @@ -270,11 +252,6 @@ static int eth_do_config(struct usb_configuration *c)
-> >  
-> >  	/* FIXME alloc iConfiguration string, set it in c->strings */
-> >  
-> > -	if (gadget_is_otg(c->cdev->gadget)) {
-> > -		c->descriptors = otg_desc;
-> > -		c->bmAttributes |= USB_CONFIG_ATT_WAKEUP;
-> 
-> same here
-> 
-> > -	}
-> > -
-> >  	if (use_eem) {
-> >  		f_eem = usb_get_function(fi_eem);
-> >  		if (IS_ERR(f_eem))
-> > @@ -416,17 +393,34 @@ static int eth_bind(struct usb_composite_dev *cdev)
-> >  	device_desc.iManufacturer = strings_dev[USB_GADGET_MANUFACTURER_IDX].id;
-> >  	device_desc.iProduct = strings_dev[USB_GADGET_PRODUCT_IDX].id;
-> >  
-> > +	if (gadget_is_otg(gadget)) {
-> > +		if (!otg_desc[0]) {
-> > +			struct usb_descriptor_header *usb_desc;
-> > +
-> > +			usb_desc = usb_otg_descriptor_alloc(gadget);
-> > +			if (!usb_desc)
-> > +				goto fail1;
-> > +			usb_otg_descriptor_init(gadget, usb_desc);
-> > +			otg_desc[0] = usb_desc;
-> > +			otg_desc[1] = NULL;
-> > +		}
-> > +		rndis_config_driver.descriptors = otg_desc;
-> > +		rndis_config_driver.bmAttributes |= USB_CONFIG_ATT_WAKEUP;
-> > +		eth_config_driver.descriptors = otg_desc;
-> > +		eth_config_driver.bmAttributes |= USB_CONFIG_ATT_WAKEUP;
-> > +	}
-> > +
-> >  	/* register our configuration(s); RNDIS first, if it's used */
-> >  	if (has_rndis()) {
-> >  		status = usb_add_config(cdev, &rndis_config_driver,
-> >  				rndis_do_config);
-> >  		if (status < 0)
-> > -			goto fail1;
-> > +			goto fail2;
-> >  	}
-> >  
-> >  	status = usb_add_config(cdev, &eth_config_driver, eth_do_config);
-> >  	if (status < 0)
-> > -		goto fail1;
-> > +		goto fail2;
-> >  
-> >  	usb_composite_overwrite_options(cdev, &coverwrite);
-> >  	dev_info(&gadget->dev, "%s, version: " DRIVER_VERSION "\n",
-> > @@ -434,6 +428,9 @@ static int eth_bind(struct usb_composite_dev *cdev)
-> >  
-> >  	return 0;
-> >  
-> > +fail2:
-> > +	kfree(otg_desc[0]);
-> > +	otg_desc[0] = NULL;
-> >  fail1:
-> >  	if (has_rndis())
-> >  		usb_put_function_instance(fi_rndis);
-> > @@ -463,6 +460,9 @@ static int eth_unbind(struct usb_composite_dev *cdev)
-> >  		usb_put_function(f_geth);
-> >  		usb_put_function_instance(fi_geth);
-> >  	}
-> > +	kfree(otg_desc[0]);
-> > +	otg_desc[0] = NULL;
-> > +
-> >  	return 0;
+> > diff --git a/drivers/usb/common/common.c b/drivers/usb/common/common.c
+> > index b530fd4..12f5d28 100644
+> > --- a/drivers/usb/common/common.c
+> > +++ b/drivers/usb/common/common.c
+> > @@ -154,6 +154,33 @@ bool of_usb_host_tpl_support(struct device_node *np)
+> >  	return false;
 > >  }
+> >  EXPORT_SYMBOL_GPL(of_usb_host_tpl_support);
+> > +
+> > +/**
+> > + * of_usb_get_set_caps - to set usb otg capabilities according to
+> 
+> get or set?
+> how about update instead?
+> 
+Should be set, update? okay.
+
+Li Jun
+> > + * the passed properties in DT.
+> > + * @np: Pointer to the given device_node
+> > + * @otg_caps: Pointer to the target usb_otg_caps to be set
+> > + *
+> > + * The function gets and sets the otg capabilities
+> > + */
+> > +void of_usb_set_otg_caps(struct device_node *np, struct usb_otg_caps *otg_caps)
+> > +{
+> > +	u32 otg_rev;
+> > +
+> > +	if (!otg_caps)
+> > +		return;
+> > +
+> > +	if (!of_property_read_u32(np, "otg-rev", &otg_rev))
+> > +		otg_caps->otg_rev = otg_rev;
+> 
+> should we check if otg_rev is in correct format?
+> anything non BCD and greater than 0x9999 is invalid.
+> 
+Then that's not so simple, every number should be checked,
+if ((otg_caps->otg_rev % 10) > 9) ||
+	((otg_caps->otg_rev >> 4) % 10) > 9) ||
+	((otg_caps->otg_rev >> 8) % 10) > 9) ||
+	((otg_caps->otg_rev >> 12) % 10) > 9))
+	return error;
+We really need this kind of format check? seems no this check
+for bcdUSB.
+	
+> Also if otg-rev is not passed then we need to treat it as legacy
+> platform right? How is this taken care of?
+> 
+> > +	if (of_find_property(np, "hnp-disable", NULL))
+> > +		otg_caps->hnp_support = false;
+> > +	if (of_find_property(np, "srp-disable", NULL))
+> > +		otg_caps->srp_support = false;
+> > +	if (of_find_property(np, "adp-disable", NULL))
+> > +		otg_caps->adp_support = false;
+> 
+> Don't we expect it to do basic sanity checks?
+> e.g. if otg_rev < 0x200 then adp_support can't be true?
+> 
+Okay, it's better we add a sanity check here.
+
+> > +}
+> > +EXPORT_SYMBOL_GPL(of_usb_set_otg_caps);
+> > +
+> >  #endif
 > >  
+> >  MODULE_LICENSE("GPL");
+> > diff --git a/include/linux/usb/of.h b/include/linux/usb/of.h
+> > index cfe0528..6339799 100644
+> > --- a/include/linux/usb/of.h
+> > +++ b/include/linux/usb/of.h
+> > @@ -15,6 +15,8 @@
+> >  enum usb_dr_mode of_usb_get_dr_mode(struct device_node *np);
+> >  enum usb_device_speed of_usb_get_maximum_speed(struct device_node *np);
+> >  bool of_usb_host_tpl_support(struct device_node *np);
+> > +void of_usb_set_otg_caps(struct device_node *np,
+> > +			struct usb_otg_caps *otg_caps);
+> >  #else
+> >  static inline enum usb_dr_mode of_usb_get_dr_mode(struct device_node *np)
+> >  {
+> > @@ -30,6 +32,11 @@ static inline bool of_usb_host_tpl_support(struct device_node *np)
+> >  {
+> >  	return false;
+> >  }
+> > +static inline void of_usb_set_otg_caps(struct device_node *np,
+> > +				struct usb_otg_caps *otg_caps)
+> > +{
+> > +
+> > +}
+> >  #endif
+> >  
+> >  #if IS_ENABLED(CONFIG_OF) && IS_ENABLED(CONFIG_USB_SUPPORT)
 > > -- 
 > > 1.9.1
 > > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> cheers,
+> -roger
 --
 To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
