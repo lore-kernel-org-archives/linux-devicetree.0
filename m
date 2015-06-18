@@ -1,50 +1,58 @@
-From: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH] arm64: dts: mt8173: add clock_null
-Date: Thu, 18 Jun 2015 13:29:11 +0800
-Message-ID: <1434605351-64592-1-git-send-email-eddie.huang@mediatek.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH 2/8] ARM: imx: add imx6ul clk tree support
+Date: Thu, 18 Jun 2015 07:40:00 +0200
+Message-ID: <20150618054000.GQ6325@pengutronix.de>
+References: <1434555569-8237-1-git-send-email-Frank.Li@freescale.com>
+ <1434555569-8237-3-git-send-email-Frank.Li@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1434555569-8237-3-git-send-email-Frank.Li@freescale.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Frank.Li@freescale.com
+Cc: linux-arm-kernel@lists.infradead.org, shawn.guo@linaro.org, shawnguo@kernel.org, linus.walleij@linaro.org, lznuaa@gmail.com, linux-gpio@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, Anson Huang <b20788@freescale.com>, Bai Ping <b51503@freescale.com>, Fugang Duan <B38611@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-Add clk_null, which represents clocks that can not / need not
-controlled by software.
-There are many clocks' parent set to clk_null.
+On Wed, Jun 17, 2015 at 11:39:23PM +0800, Frank.Li@freescale.com wrote:
+> From: Frank Li <Frank.Li@freescale.com>
+> 
+> Add imx6ul support
+> 
+> Signed-off-by: Anson Huang <b20788@freescale.com>
+> Signed-off-by: Bai Ping <b51503@freescale.com>
+> Signed-off-by: Fugang Duan <B38611@freescale.com>
+> Signed-off-by: Frank Li <Frank.Li@freescale.com>
+> ---
+>  drivers/clk/imx/Makefile                 |   1 +
+>  drivers/clk/imx/clk-imx6ul.c             | 436 +++++++++++++++++++++++++++++++
+>  include/dt-bindings/clock/imx6ul-clock.h | 240 +++++++++++++++++
+>  3 files changed, 677 insertions(+)
+>  create mode 100644 drivers/clk/imx/clk-imx6ul.c
+>  create mode 100644 include/dt-bindings/clock/imx6ul-clock.h
+> 
+> diff --git a/drivers/clk/imx/Makefile b/drivers/clk/imx/Makefile
+> index 75fae16..1ada68a 100644
+> --- a/drivers/clk/imx/Makefile
+> +++ b/drivers/clk/imx/Makefile
+> @@ -22,5 +22,6 @@ obj-$(CONFIG_SOC_IMX5)   += clk-imx51-imx53.o
+>  obj-$(CONFIG_SOC_IMX6Q)  += clk-imx6q.o
+>  obj-$(CONFIG_SOC_IMX6SL) += clk-imx6sl.o
+>  obj-$(CONFIG_SOC_IMX6SX) += clk-imx6sx.o
+> +obj-$(CONFIG_SOC_IMX6UL) += clk-imx6ul.o
+>  obj-$(CONFIG_SOC_IMX7D)  += clk-imx7d.o
+>  obj-$(CONFIG_SOC_VF610)  += clk-vf610.o
+> +
+> +	clk_register_clkdev(clks[IMX6UL_CLK_GPT1_BUS], "ipg",	"imx-gpt.0");
+> +	clk_register_clkdev(clks[IMX6UL_CLK_GPT1_SERIAL], "per", "imx-gpt.0");
+> +	clk_register_clkdev(clks[IMX6UL_CLK_GPT_3M], "gpt_3m", "imx-gpt.0");
 
-Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
-Base on 4.1-rc1
+These are not needed.
 
-Change-Id: I4db9b40d07e28f54f7bae9b676316cbd6a962124
----
- arch/arm64/boot/dts/mediatek/mt8173.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+Sascha
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index 924fdb6..4798f44 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -81,6 +81,12 @@
- 		cpu_on	      = <0x84000003>;
- 	};
- 
-+	clk_null: clk_null {
-+		compatible = "fixed-clock";
-+		clock-frequency = <0>;
-+		#clock-cells = <0>;
-+	};
-+
- 	uart_clk: dummy26m {
- 		compatible = "fixed-clock";
- 		clock-frequency = <26000000>;
 -- 
-1.8.1.1.dirty
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
