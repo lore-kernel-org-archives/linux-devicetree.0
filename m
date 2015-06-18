@@ -1,96 +1,79 @@
-From: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v6] usb: common: add API to set usb otg capabilities by device tree
-Date: Thu, 18 Jun 2015 09:18:22 +0800
-Message-ID: <1434590302-18066-1-git-send-email-jun.li@freescale.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH V7 2/3] OPP: Allow multiple OPP tables to be passed via
+ DT
+Date: Wed, 17 Jun 2015 18:30:24 -0700
+Message-ID: <55821F30.2090802@codeaurora.org>
+References: <cover.1433434659.git.viresh.kumar@linaro.org> <263c128844f5a3c9280c8be71f6c9eb1869a5188.1433434659.git.viresh.kumar@linaro.org> <CAL_Jsq+EOOeQw42wZi+H82ovLn8LcQUuK9HGT+FvewdhTf7Q1w@mail.gmail.com> <20150617133314.GB15153@linux> <CAL_Jsq+SdgAf7=Yq7Jk_1d9jTpAOLCEuEDCZvD=-h=2MWsNfFw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org, Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+SdgAf7=Yq7Jk_1d9jTpAOLCEuEDCZvD=-h=2MWsNfFw@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>, Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Rafael Wysocki <rjw@rjwysocki.net>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Nishanth Menon <nm@ti.com>, Mark Brown <broonie@kernel.org>, Mike Turquette <mike.turquette@linaro.org>, Grant Likely <grant.likely@linaro.org>, Olof Johansson <olof@lixom.net>, Sudeep Holla <Sudeep.Holla@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Viswanath Puttagunta <viswanath.puttagunta@linaro.org>, Lucas Stach <l.stach@pengutronix.de>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Abraham <ta.omasab@gmail.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Kevin Hilman <khilman@linaro.org>, Santosh Shilimkar <santosh.shilimkar@oracle.com>
 List-Id: devicetree@vger.kernel.org
 
-Change for v6:
-UPdate otg caps by disable flags even if otg_rev is not passed, this is
-needed in case user wants to disable whole OTG(or just want to ID pin
-detect).
+On 06/17/2015 06:47 AM, Rob Herring wrote:
+> On Wed, Jun 17, 2015 at 8:33 AM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>> On 17-06-15, 08:23, Rob Herring wrote:
+>>>> +                       operating-points-v2 = <&cpu0_opp_table_slow>, <&cpu0_opp_table_fast>;
+>>> You've made a fundamental change here in that this can now be a list
+>>> of phandles. There should be some description on what a list means
+>>> (merge the tables?, select one?).
+>> Did you miss the description I wrote few lines earlier or are you
+>> asking for something else? This is what I wrote earlier:
+>>
+>>>> +Devices may want to choose OPP tables at runtime and so can provide a list of
+>>>> +phandles here. But only *one* of them should be chosen at runtime.
+>> So, clearly only ONE of the tables should be used.
+> Yes, never mind.
+>
+>>> I think this needs to have a defined order and the platform should
+>>> know what that is. For example, if you read the efuses and decide you
+>>> need the "slow" table, you know to pick the first entry. Then you
+>>> don't need opp-name. Does that work for QCom?
+>> Why forcing on the order here? For example, consider a case where the
+>> platform can have four tables, A B C D. Now DT is free to pass all
+>> four or just a subset of those. Like, for some boards table B doesn't
+>> stand valid. And so it may wanna pass just A C D. And so keeping these
+>> tables in order is going to break for sure. Flexibility is probably
+>> better in this case.
+> Defined order is a key part of DT bindings. We solve the variable
+> length problem with name lists associated with variable length
+> property like:
+>
+> operating-point-names = "slow", "fast";
+>
+> I'm not a fan of doing this if we can avoid it, but we should at least
+> follow the same pattern. Don't send me a patch with that yet, I want
+> to hear from Stephen.
+>
+> You can also use "status" to disable specific tables rather than
+> removing from the list.
+>
 
-Check property of usb hardware to get otg version and if SRP, HNP and ADP
-are disabled.
+An operating-point(s?)-names property seems ok... but doesn't that mean
+that every CPU that uses the OPP has to have the same list of
+operating-point-names? It would make sense to me if the operating points
+were called something different depending on *which* CPU is using them,
+but in this case the only name for the operating point is "slow" or
+"fast", etc.
 
-Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- drivers/usb/common/common.c | 27 +++++++++++++++++++++++++++
- include/linux/usb/of.h      |  7 +++++++
- 2 files changed, 34 insertions(+)
+In reality we've assigned them names like speedX-binY-vZ so that we know
+which speed bin, voltage bin, and version they're part of. Maybe OPP
+node properties like qcom,speed-bin = <u32>, qcom,pvs-bin = <u32>, etc.
+would be better? It would make the parsing code slightly more
+complicated because it needs to look for 2 or 3 properties instead of a
+name property though. Or would having different node names be
+acceptable? That would avoid this list of strings.
 
-diff --git a/drivers/usb/common/common.c b/drivers/usb/common/common.c
-index b530fd4..12f5d28 100644
---- a/drivers/usb/common/common.c
-+++ b/drivers/usb/common/common.c
-@@ -154,6 +154,33 @@ bool of_usb_host_tpl_support(struct device_node *np)
- 	return false;
- }
- EXPORT_SYMBOL_GPL(of_usb_host_tpl_support);
-+
-+/**
-+ * of_usb_get_set_caps - to set usb otg capabilities according to
-+ * the passed properties in DT.
-+ * @np: Pointer to the given device_node
-+ * @otg_caps: Pointer to the target usb_otg_caps to be set
-+ *
-+ * The function gets and sets the otg capabilities
-+ */
-+void of_usb_set_otg_caps(struct device_node *np, struct usb_otg_caps *otg_caps)
-+{
-+	u32 otg_rev;
-+
-+	if (!otg_caps)
-+		return;
-+
-+	if (!of_property_read_u32(np, "otg-rev", &otg_rev))
-+		otg_caps->otg_rev = otg_rev;
-+	if (of_find_property(np, "hnp-disable", NULL))
-+		otg_caps->hnp_support = false;
-+	if (of_find_property(np, "srp-disable", NULL))
-+		otg_caps->srp_support = false;
-+	if (of_find_property(np, "adp-disable", NULL))
-+		otg_caps->adp_support = false;
-+}
-+EXPORT_SYMBOL_GPL(of_usb_set_otg_caps);
-+
- #endif
- 
- MODULE_LICENSE("GPL");
-diff --git a/include/linux/usb/of.h b/include/linux/usb/of.h
-index cfe0528..6339799 100644
---- a/include/linux/usb/of.h
-+++ b/include/linux/usb/of.h
-@@ -15,6 +15,8 @@
- enum usb_dr_mode of_usb_get_dr_mode(struct device_node *np);
- enum usb_device_speed of_usb_get_maximum_speed(struct device_node *np);
- bool of_usb_host_tpl_support(struct device_node *np);
-+void of_usb_set_otg_caps(struct device_node *np,
-+			struct usb_otg_caps *otg_caps);
- #else
- static inline enum usb_dr_mode of_usb_get_dr_mode(struct device_node *np)
- {
-@@ -30,6 +32,11 @@ static inline bool of_usb_host_tpl_support(struct device_node *np)
- {
- 	return false;
- }
-+static inline void of_usb_set_otg_caps(struct device_node *np,
-+				struct usb_otg_caps *otg_caps)
-+{
-+
-+}
- #endif
- 
- #if IS_ENABLED(CONFIG_OF) && IS_ENABLED(CONFIG_USB_SUPPORT)
+At the least, operating-points-names will be required on qcom platforms.
+A fixed ordering known to the platform would mean that we know exactly
+how many voltage bins and speed bins and how many voltage bins per speed
+bin are used for a particular SoC, which we've avoided knowing so far.
+
 -- 
-1.9.1
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
