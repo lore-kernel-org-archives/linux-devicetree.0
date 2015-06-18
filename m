@@ -1,106 +1,141 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [RFC PATCH V3] ARM: dts: sun6i: Add dts file for
- MSI Primo81 tablet
-Date: Thu, 18 Jun 2015 13:58:38 +0200
-Message-ID: <20150618115838.GL11732@lukather>
-References: <20150616094026.GG11732@lukather>
- <1434481869-9432-1-git-send-email-merker@debian.org>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v5 08/23] usb: chipidea: set usb gadeget's otg
+ capabilities
+Date: Thu, 18 Jun 2015 15:06:27 +0300
+Message-ID: <20150618150627.d7e81ca1d6bdf7dba94c4eff@ti.com>
+References: <1434541230-15090-1-git-send-email-jun.li@freescale.com>
+	<1434541230-15090-9-git-send-email-jun.li@freescale.com>
+	<20150618103935.cfbd94c8c37c5c3298c55272@ti.com>
+	<20150618082029.GB15280@shlinux2>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="yK/6QRnH3Zanb0EF"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBQXFRKWAKGQE6MF7ZVA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1434481869-9432-1-git-send-email-merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Cc: Siarhei Siamashka <siarhei.siamashka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150618082029.GB15280@shlinux2>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---yK/6QRnH3Zanb0EF
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+On Thu, 18 Jun 2015 16:20:30 +0800
+Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
 
-Hi,
-
-On Tue, Jun 16, 2015 at 09:11:08PM +0200, Karsten Merker wrote:
-> On Tue, Jun 16, 2015 at 11:40:27AM +0200, Maxime Ripard wrote:
-> 
-> > What I meant in my previous review was to use the syntax
+> On Thu, Jun 18, 2015 at 10:39:35AM +0300, Roger Quadros wrote:
+> > Typo in subject
+> > gadeget's -> gadget's
 > > 
-> > &uart0 {
-> >        some-property;
-> > };
-> >   
-> > Instead of duplicating the tree structure like you're doing
-> > here. We've converted all the DT to that, so you can look around and
-> > see how it's done in other boards (note that the nodes should be
-> > sorted by alphabetical order).
-> 
-> Ah, sorry, I had misunderstood your original email in this regard.
-> Following is a reworked version of the patch.
-> 
-> Changelog:
-> 
-> Version 1
-> =========
-> - Original patch by Siarhei Siamashka
-> 
-> Version 2
-> =========
-> - Use symbolic instead of numeric pinctrl values.
-> 
-> - Change the include syntax from /include/ to #include to make
->   the dts build with current kernels.
-> 
-> Version 3
-> =========
-> - Use labels for nodes with modifications in relation to the dtsi
->   instead of replicating the tree structure.
-> 
-> - Remove the FSF address from the license header as done in
->   http://lists.infradead.org/pipermail/linux-arm-kernel/2015-May/340437.html
->   for the other dts files to remove a checkpatch warning.
-> 
-> - Add msi to the vendor prefix list.
-> 
-> - Remove earlyprintk from the default kernel commandline.
-> 
-> - Replace the console kernel commandline parameter by a
->   /chosen/stdout-path node and add an alias serial0 -> uart0.
+> > On Wed, 17 Jun 2015 19:40:15 +0800
+> > Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> > 
+> > > Set gadget's otg capabilities according to controller's capability and otg
+> > > properties in device tree.
+> > > 
+> > > Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > > ---
+> > >  drivers/usb/chipidea/core.c  | 8 ++++++++
+> > >  drivers/usb/chipidea/udc.c   | 7 ++++++-
+> > >  include/linux/usb/chipidea.h | 1 +
+> > >  3 files changed, 15 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
+> > > index 74fea4f..2abecbc 100644
+> > > --- a/drivers/usb/chipidea/core.c
+> > > +++ b/drivers/usb/chipidea/core.c
+> > > @@ -588,6 +588,14 @@ static int ci_get_platdata(struct device *dev,
+> > >  				of_usb_host_tpl_support(dev->of_node);
+> > >  	}
+> > >  
+> > > +	if (platdata->dr_mode == USB_DR_MODE_OTG) {
+> > > +		/* We can support HNP and SRP */
+> > > +		platdata->ci_otg_caps.hnp_support = true;
+> > > +		platdata->ci_otg_caps.srp_support = true;
+> > > +		/* Update otg capabilities by DT properties */
+> > > +		of_usb_set_otg_caps(dev->of_node, &platdata->ci_otg_caps);
+> > 
+> > we're not tackling the legacy platform case.
+> > i.e. when otg-rev is not present in DT.
+> > 
+> Legacy platforms with chipidea controller can use otg HNP and SRP
+> without any otg properties passed, so I keep hnp and srp to be true.
 
-Next time, pleas try to keep the changelog with your patch, it's much
-easier to read.
+I was thinking that controller should set whatever it supports regardless of
+legacy platforms.
+e.g. if chipidea controller supports ADP then it should set it to true here
+before calling of_usb_update_otg_caps().
 
-And please make the vendor prefix change a different patch.
+And it should also set the best OTG version it supports and not leave it to 0.
 
-> I have tagged this patch RFC as I am unsure what to do with the
-> /chosen/stdout-path node. For now, I have set Siarhei's original
-> choice (first serial port), but I am unsure whether this is the
-> right thing to do as the Primo81 does by default not have a
-> user-accessible serial port.  The only way to get a serial
-> console is to either break the case open and find some test
-> points that carry the RX/TX lines (which with the Primo81 case
-> poses a high risk of breaking the display glass), or to use an SD
-> card breakout board and change the pinmuxing for the SD card pins
-> to the "serial" function.  The latter would not work without
-> modifying the dts, so the SD-breakout case doesn't really count
-> for setting the default stdout-path in the general use case.
+of_usb_update_otg_caps() should then take the decision based on
+controller otg_caps and DT otg flags as to what must be done.
 
-Having that as a comment on top of whatever uart you've been using
-would be great, so that people know where to look at on their device
-to find it.
+> 
+> > one way could be that of_usb_set_otg_caps sets otg-rev to 0 if
+> > it is not present in DT.
+> > 
+> otg-rev should be 0 as initial value if it's not present in DT, isn't it?
 
-Maxime
+That's because you didn't set the otg-rev that chipidea controller supports.
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---yK/6QRnH3Zanb0EF--
+This will break for example if DT passes otg-rev 3.0 and controller supports
+only otg-rev 2.0 but we didn't bother to check :)
+
+Let's do whatever common functionality we can in of_usb_update_otg_caps()
+rather than depending on controller drivers and inviting more errors.
+
+cheers,
+-roger
+
+> 
+> > > +	}
+> > > +
+> > >  	if (of_usb_get_maximum_speed(dev->of_node) == USB_SPEED_FULL)
+> > >  		platdata->flags |= CI_HDRC_FORCE_FULLSPEED;
+> > >  
+> > > diff --git a/drivers/usb/chipidea/udc.c b/drivers/usb/chipidea/udc.c
+> > > index 764f668..858bd21 100644
+> > > --- a/drivers/usb/chipidea/udc.c
+> > > +++ b/drivers/usb/chipidea/udc.c
+> > > @@ -1827,6 +1827,7 @@ static irqreturn_t udc_irq(struct ci_hdrc *ci)
+> > >  static int udc_start(struct ci_hdrc *ci)
+> > >  {
+> > >  	struct device *dev = ci->dev;
+> > > +	struct usb_otg_caps *otg_caps = &ci->platdata->ci_otg_caps;
+> > >  	int retval = 0;
+> > >  
+> > >  	spin_lock_init(&ci->lock);
+> > > @@ -1834,8 +1835,12 @@ static int udc_start(struct ci_hdrc *ci)
+> > >  	ci->gadget.ops          = &usb_gadget_ops;
+> > >  	ci->gadget.speed        = USB_SPEED_UNKNOWN;
+> > >  	ci->gadget.max_speed    = USB_SPEED_HIGH;
+> > > -	ci->gadget.is_otg       = ci->is_otg ? 1 : 0;
+> > >  	ci->gadget.name         = ci->platdata->name;
+> > > +	ci->gadget.otg_caps	= otg_caps;
+> > > +
+> > > +	if (otg_caps->otg_rev && (otg_caps->hnp_support ||
+> > > +		otg_caps->srp_support || otg_caps->adp_support))
+> > > +		ci->gadget.is_otg = 1;
+> > >  
+> > >  	INIT_LIST_HEAD(&ci->gadget.ep_list);
+> > >  
+> > > diff --git a/include/linux/usb/chipidea.h b/include/linux/usb/chipidea.h
+> > > index ab94f78..e10cefc 100644
+> > > --- a/include/linux/usb/chipidea.h
+> > > +++ b/include/linux/usb/chipidea.h
+> > > @@ -34,6 +34,7 @@ struct ci_hdrc_platform_data {
+> > >  #define CI_HDRC_CONTROLLER_STOPPED_EVENT	1
+> > >  	void	(*notify_event) (struct ci_hdrc *ci, unsigned event);
+> > >  	struct regulator	*reg_vbus;
+> > > +	struct usb_otg_caps	ci_otg_caps;
+> > >  	bool			tpl_support;
+> > >  };
+> > >  
+> > > -- 
+> > > 1.9.1
+> > > 
+> > 
+> > cheers,
+> > -roger
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
