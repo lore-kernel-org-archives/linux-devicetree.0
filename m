@@ -1,181 +1,209 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: FW: [PATCH v4 1/4] Broadcom Bluetooth UART Device Tree bindings
-Date: Thu, 18 Jun 2015 10:02:58 -0500
-Message-ID: <CAL_JsqK9kup3sm3qgDLqtT8ajrN1ee6zfXwOoZqoq9cXQNwE_w@mail.gmail.com>
-References: <1434576658-20730-1-git-send-email-ifaenson@broadcom.com>
- <1434576658-20730-2-git-send-email-ifaenson@broadcom.com> <E0D3336E15B58B4294723AC879BA5E942634F2@IRVEXCHMB15.corp.ad.broadcom.com>
+From: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] arm64: dts: mt8173: Add I2C device node
+Date: Thu, 18 Jun 2015 23:16:32 +0800
+Message-ID: <CAGS+omCVFwHndKSN0A7PrYUArfPLfCoL6iiSJYEik1PVkMBrKA@mail.gmail.com>
+References: <1434553683-11651-1-git-send-email-eddie.huang@mediatek.com> <1434553683-11651-3-git-send-email-eddie.huang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <E0D3336E15B58B4294723AC879BA5E942634F2-Wwdb2uEOBX8N93KskqRXH71+IgudQmzARxWJa1zDYLQ@public.gmane.org>
-Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ilya Faenson <ifaenson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: "marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org" <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, Arend Van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1434553683-11651-3-git-send-email-eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 17, 2015 at 6:11 PM, Ilya Faenson <ifaenson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
-> + devicetree lists
-
-Please use get_maintainers.pl.
-
-> -----Original Message-----
-> From: Ilya Faenson [mailto:ifaenson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org]
-> Sent: Wednesday, June 17, 2015 5:31 PM
-> To: Marcel Holtmann
-> Cc: linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Arend Van Spriel; Ilya Faenson
-> Subject: [PATCH v4 1/4] Broadcom Bluetooth UART Device Tree bindings
+On Wed, Jun 17, 2015 at 11:08 PM, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> Add MT8173 I2C device nodes, include I2C controllers and pins.
+> MT8173 has six I2C controllers, from i2c0 to i2c6, exclude i2c5.
+> The 6th I2C controller register base doesn't next to 5th I2C,
+> and there is a hardware between 5th and 6th I2C controller. So
+> SoC designer name 6th controller as "i2c6", not "i2c5".
 >
-> Device Tree bindings to configure the Broadcom Bluetooth UART device.
->
-> Signed-off-by: Ilya Faenson <ifaenson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 > ---
-
-Change history from the last v4 version?
-
->  .../devicetree/bindings/net/bluetooth/btbcm.txt    | 86 ++++++++++++++++++++++
->  1 file changed, 86 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/bluetooth/btbcm.txt
+>  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 144 +++++++++++++++++++++++++++++++
+>  1 file changed, 144 insertions(+)
 >
-> diff --git a/Documentation/devicetree/bindings/net/bluetooth/btbcm.txt b/Documentation/devicetree/bindings/net/bluetooth/btbcm.txt
-> new file mode 100644
-> index 0000000..5dbcd57
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/bluetooth/btbcm.txt
-> @@ -0,0 +1,86 @@
-> +btbcm
-> +------
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> index b52ec43..1816c8f 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> @@ -158,6 +158,54 @@
+>                         interrupts = <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>,
+>                                                 <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>,
+>                                                 <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
 > +
-> +Required properties:
+> +                       i2c0_pins_a: i2c0 {
+> +                               pins1 {
+> +                                       pinmux = <MT8173_PIN_45_SDA0__FUNC_SDA0>,
+> +                                                <MT8173_PIN_46_SCL0__FUNC_SCL0>;
+> +                                       bias-disable;
+> +                               };
+> +                       };
 > +
-> +       - compatible : must be "brcm,brcm-bt-uart".
-
-You need to describe the chip, not the interface.
-
-> +       - tty : tty device connected to this Bluetooth device.
-
-"tty" is a bit of a Linuxism and "ttyS0" certainly is. Further, there
-is no guarantee which uart is assigned ttyS0.
-
-This should be a phandle to the connected uart if not a sub node of
-the uart. This is complicated since these chips have multiple host
-connections. It needs to go under either uart or SDIO host and have a
-reference back to the one it is not under. Given the SDIO interface is
-discoverable (although sideband gpios and regulators are not), I would
-put this under the uart node as that is never discoverable.
-
-As I've mentioned previously, there's several cases of bindings for
-UART slave devices being posted. This all needs to be coordinated to
-use a common structure.
-
+> +                       i2c1_pins_a: i2c1 {
+> +                               pins1 {
+> +                                       pinmux = <MT8173_PIN_125_SDA1__FUNC_SDA1>,
+> +                                                <MT8173_PIN_126_SCL1__FUNC_SCL1>;
+> +                                       bias-disable;
+> +                               };
+> +                       };
 > +
-> +Optional properties:
+> +                       i2c2_pins_a: i2c2 {
+> +                               pins1 {
+> +                                       pinmux = <MT8173_PIN_43_SDA2__FUNC_SDA2>,
+> +                                                <MT8173_PIN_44_SCL2__FUNC_SCL2>;
+> +                                       bias-disable;
+> +                               };
+> +                       };
 > +
-> +  - bt-host-wake-gpios : bt-host-wake input GPIO to be used as an interrupt.
+> +                       i2c3_pins_a: i2c3 {
+> +                               pins1 {
+> +                                       pinmux = <MT8173_PIN_106_SDA3__FUNC_SDA3>,
+> +                                                <MT8173_PIN_107_SCL3__FUNC_SCL3>;
+> +                                       bias-disable;
+> +                               };
+> +                       };
 > +
-> +  - bt-wake-gpios : bt-wake output GPIO to be used to suspend / resume device.
+> +                       i2c4_pins_a: i2c4 {
+> +                               pins1 {
+> +                                       pinmux = <MT8173_PIN_133_SDA4__FUNC_SDA4>,
+> +                                                <MT8173_PIN_134_SCL4__FUNC_SCL4>;
+> +                                       bias-disable;
+> +                               };
+> +                       };
 > +
-> +  - bt-reg-on-gpios : reg-on output GPIO to be used to power device on/off.
+> +                       i2c6_pins_a: i2c6 {
+> +                               pins1 {
+> +                                       pinmux = <MT8173_PIN_100_MSDC2_DAT0__FUNC_SDA5>,
+> +                                                <MT8173_PIN_101_MSDC2_DAT1__FUNC_SCL5>;
+> +                                       bias-disable;
+> +                               };
+> +                       };
+>                 };
+>
+>                 watchdog: watchdog@10007000 {
+> @@ -229,6 +277,102 @@
+>                         clocks = <&uart_clk>;
+>                         status = "disabled";
+>                 };
 > +
-> +  - oper-speed : Bluetooth device operational baud rate.
-> +    Default: 3000000.
+> +               i2c0: i2c@11007000 {
+> +                       compatible = "mediatek,mt8173-i2c";
+> +                       reg = <0 0x11007000 0 0x70>,
+> +                             <0 0x11000100 0 0x80>;
+> +                       interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_LOW>;
+> +                       clock-div = <16>;
+
+According to the i2c-mt6577 dt binding:
+   - clock-div: the fixed value for frequency divider of clock source in i2c
+     module. Each IC may be different.
+
+For other drivers I've seen this kind of hardware-specific value
+implemented as a table in the driver that is indexed based on the
+compatible.
+
+Any particular reason to specify it here in every device tree node instead?
+
+-Dan
+
+
+> +                       clocks = <&pericfg CLK_PERI_I2C0>,
+> +                                <&pericfg CLK_PERI_AP_DMA>;
+> +                       clock-names = "main", "dma";
+> +                       pinctrl-names = "default";
+> +                       pinctrl-0 = <&i2c0_pins_a>;
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       status = "disabled";
+> +               };
 > +
-> +  - manual-fc : flow control UART in suspend / resume scenarios.
-> +    Default: 0.
-
-Can be boolean?
-
-I don't really follow the description.
-
+> +               i2c1: i2c@11008000 {
+> +                       compatible = "mediatek,mt8173-i2c";
+> +                       reg = <0 0x11008000 0 0x70>,
+> +                             <0 0x11000180 0 0x80>;
+> +                       interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_LOW>;
+> +                       clock-div = <16>;
+> +                       clocks = <&pericfg CLK_PERI_I2C1>,
+> +                                <&pericfg CLK_PERI_AP_DMA>;
+> +                       clock-names = "main", "dma";
+> +                       pinctrl-names = "default";
+> +                       pinctrl-0 = <&i2c1_pins_a>;
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       status = "disabled";
+> +               };
 > +
-> +  - configure-sleep : configure suspend / resume flag.
-> +    Default: false.
-
-Please describe better what this does. Perhaps "idle-sleep-en" would be better.
-
+> +               i2c2: i2c@11009000 {
+> +                       compatible = "mediatek,mt8173-i2c";
+> +                       reg = <0 0x11009000 0 0x70>,
+> +                             <0 0x11000200 0 0x80>;
+> +                       interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_LOW>;
+> +                       clock-div = <16>;
+> +                       clocks = <&pericfg CLK_PERI_I2C2>,
+> +                                <&pericfg CLK_PERI_AP_DMA>;
+> +                       clock-names = "main", "dma";
+> +                       pinctrl-names = "default";
+> +                       pinctrl-0 = <&i2c2_pins_a>;
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       status = "disabled";
+> +               };
 > +
-> +  - idle-timeout : Number of seconds of inactivity before suspending.
-
-idle-timeout-sec
-
-Is this only applicable when configure-sleep is set?
-
-You mix the terms sleep and suspend a lot. Can you be more consistent.
-
-> +    Default: 5.
+> +               i2c3: i2c3@11010000 {
+> +                       compatible = "mediatek,mt8173-i2c";
+> +                       reg = <0 0x11010000 0 0x70>,
+> +                             <0 0x11000280 0 0x80>;
+> +                       interrupts = <GIC_SPI 79 IRQ_TYPE_LEVEL_LOW>;
+> +                       clock-div = <16>;
+> +                       clocks = <&pericfg CLK_PERI_I2C3>,
+> +                                <&pericfg CLK_PERI_AP_DMA>;
+> +                       clock-names = "main", "dma";
+> +                       pinctrl-names = "default";
+> +                       pinctrl-0 = <&i2c3_pins_a>;
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       status = "disabled";
+> +               };
 > +
-> +  - configure-audio : configure platform PCM SCO flag.
-> +    Default: false.
-
-So ignore the rest of the settings if not set? Perhaps combine with pcm-routing:
-
-<blank> - no audio
-audio-mode = "pcm";
-audio-mode = "hci"; (or "sco-hci"?)
-
+> +               i2c4: i2c4@11011000 {
+> +                       compatible = "mediatek,mt8173-i2c";
+> +                       reg = <0 0x11011000 0 0x70>,
+> +                             <0 0x11000300 0 0x80>;
+> +                       interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_LOW>;
+> +                       clock-div = <16>;
+> +                       clocks = <&pericfg CLK_PERI_I2C4>,
+> +                                <&pericfg CLK_PERI_AP_DMA>;
+> +                       clock-names = "main", "dma";
+> +                       pinctrl-names = "default";
+> +                       pinctrl-0 = <&i2c4_pins_a>;
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       status = "disabled";
+> +               };
 > +
-> +  - pcm-clockmode : PCM clock mode. 0-slave, 1-master.
-> +    Default: 0.
-
-Can be boolean (property present or not): pcm-clock-mode-master
-
-> +
-> +  - pcm-fillmethod : PCM fill method. 0 to 3.
-
-pcm-fill-method
-
-> +    Default: 2.
-> +
-> +  - pcm-fillnum : PCM number of fill bits. 0 to 3.
-> +    Default: 0.
-
-pcm-fill-bits
-
-> +
-> +  - pcm-fillvalue : PCM fill value. 0 to 7.
-> +    Default: 3.
-
-pcm-fill-value
-
-> +
-> +  - pcm-incallbitclock : PCM interface rate. 0-128Kbps, 1-256Kbps, 2-512Kbps,
-> +    3-1024Kbps, 4-2048Kbps.
-
-pcm-incall-bitclock-hz
-
-Use the actual rate rather than an enumeration. It is a simple div by
-128k and log2 to convert in the driver. This makes the property more
-compatible with other chips.
-
-What does incall mean? What is the bit rate when not in a call?
-
-> +    Default: 0.
-> +
-> +  - pcm-lsbfirst : PCM LSB first. 0 or 1.
-> +    Default: 0.
-
-Can be boolean
-
-> +
-> +  - pcm-rightjustify : PCM Justify. 0-left, 1-right.
-> +    Default: 0.
-
-Can be boolean
-
-> +  - pcm-routing : PCM routing. 0-PCM, 1-SCO over HCI.
-> +    Default: 0.
-
-Can be boolean: pcm-routing-hci
-
-> +
-> +  - pcm-shortframesync : PCM sync. 0-short, 1-long.
-> +    Default: 0.
-
-Can be boolean
-
-> +
-> +  - pcm-syncmode : PCM sync mode. 0-slave, 1-master.
-> +    Default: 0.
-
-Can be boolean: pcm-sync-mode-master
-
-Rob
+> +               i2c6: i2c6@11013000 {
+> +                       compatible = "mediatek,mt8173-i2c";
+> +                       reg = <0 0x11013000 0 0x70>,
+> +                             <0 0x11000080 0 0x80>;
+> +                       interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_LOW>;
+> +                       clock-div = <16>;
+> +                       clocks = <&pericfg CLK_PERI_I2C6>,
+> +                                <&pericfg CLK_PERI_AP_DMA>;
+> +                       clock-names = "main", "dma";
+> +                       pinctrl-names = "default";
+> +                       pinctrl-0 = <&i2c6_pins_a>;
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       status = "disabled";
+> +               };
+>         };
+>
+>  };
+> --
+> 1.8.1.1.dirty
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
