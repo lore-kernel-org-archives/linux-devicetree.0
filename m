@@ -1,37 +1,67 @@
 From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: [PATCH 0/5] Add basic microphone detection bindings
-Date: Thu, 18 Jun 2015 13:52:24 +0100
-Message-ID: <1434631949-28594-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+Subject: [PATCH 5/5] mfd: arizona: Update several pdata members to unsigned
+Date: Thu, 18 Jun 2015 13:52:29 +0100
+Message-ID: <1434631949-28594-6-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+References: <1434631949-28594-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1434631949-28594-1-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 Cc: myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This series adds basic microphone detection DT/ACPI bindings
-using the device properties API.
+Device tree and ACPI primarily deal with unsigned ints, many of the
+pdata members in the Arizona driver are signed ints but are only ever
+assigned positive values. Changing these pdata fields to unsigned ints
+avoids us having to choose between overly verbose code and Sparse
+warnings.
 
-The MFD parts and the extcon parts can go seperately through
-there respective trees, but I sent them together so everyone
-can see what is going on. There is no build dependency
-although the MFD patch will fix a couple of Sparse warnings
-that you get if using -Wsparse-all.
+Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+---
+ include/linux/mfd/arizona/pdata.h |   12 ++++++------
+ 1 files changed, 6 insertions(+), 6 deletions(-)
 
-Thanks,
-Charles
-
-Charles Keepax (5):
-  extcon: arizona: Update to use the new device properties API
-  extcon: arizona: Add basic microphone detection DT/ACPI bindings
-  extcon: arizona: Convert to gpiod
-  mfd: arizona: Update DT doc for new mic detection bindings
-  mfd: arizona: Update several pdata members to unsigned
-
- Documentation/devicetree/bindings/mfd/arizona.txt |   16 +++++
- drivers/extcon/extcon-arizona.c                   |   73 ++++++++++++++++++--
- include/linux/mfd/arizona/pdata.h                 |   12 ++--
- 3 files changed, 87 insertions(+), 14 deletions(-)
-
+diff --git a/include/linux/mfd/arizona/pdata.h b/include/linux/mfd/arizona/pdata.h
+index aa5c48b..77f91a7 100644
+--- a/include/linux/mfd/arizona/pdata.h
++++ b/include/linux/mfd/arizona/pdata.h
+@@ -101,7 +101,7 @@ struct arizona_pdata {
+ 	 * useful for systems where and I2S bus with multiple data
+ 	 * lines is mastered.
+ 	 */
+-	int max_channels_clocked[ARIZONA_MAX_AIF];
++	unsigned int max_channels_clocked[ARIZONA_MAX_AIF];
+ 
+ 	/** GPIO5 is used for jack detection */
+ 	bool jd_gpio5;
+@@ -125,22 +125,22 @@ struct arizona_pdata {
+ 	unsigned int hpdet_channel;
+ 
+ 	/** Extra debounce timeout used during initial mic detection (ms) */
+-	int micd_detect_debounce;
++	unsigned int micd_detect_debounce;
+ 
+ 	/** GPIO for mic detection polarity */
+ 	int micd_pol_gpio;
+ 
+ 	/** Mic detect ramp rate */
+-	int micd_bias_start_time;
++	unsigned int micd_bias_start_time;
+ 
+ 	/** Mic detect sample rate */
+-	int micd_rate;
++	unsigned int micd_rate;
+ 
+ 	/** Mic detect debounce level */
+-	int micd_dbtime;
++	unsigned int micd_dbtime;
+ 
+ 	/** Mic detect timeout (ms) */
+-	int micd_timeout;
++	unsigned int micd_timeout;
+ 
+ 	/** Force MICBIAS on for mic detect */
+ 	bool micd_force_micbias;
 -- 
 1.7.2.5
 
