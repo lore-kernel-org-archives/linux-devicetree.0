@@ -1,92 +1,60 @@
-From: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v6 4/7] arm64: dts: mediatek: Add MT8173 MMC dts
-Date: Thu, 18 Jun 2015 10:04:23 +0800
-Message-ID: <1434593063.23303.3.camel@mtksdaap41>
-References: <1434367253-26577-1-git-send-email-chaotian.jing@mediatek.com>
- <1434367253-26577-5-git-send-email-chaotian.jing@mediatek.com>
- <CAGS+omCwxH5vTTKNOEcN9C9s=1yBpYEqbMz1NygYoLY9OFKchg@mail.gmail.com>
- <CAGS+omDMprTvjwpXfdh7mg9i=WXdzO_Fv-oEop3z6AEVCG=DFQ@mail.gmail.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH V7 2/3] OPP: Allow multiple OPP tables to be passed via DT
+Date: Thu, 18 Jun 2015 07:55:43 +0530
+Message-ID: <20150618022543.GA28820@linux>
+References: <cover.1433434659.git.viresh.kumar@linaro.org>
+ <263c128844f5a3c9280c8be71f6c9eb1869a5188.1433434659.git.viresh.kumar@linaro.org>
+ <CAL_Jsq+EOOeQw42wZi+H82ovLn8LcQUuK9HGT+FvewdhTf7Q1w@mail.gmail.com>
+ <20150617133314.GB15153@linux>
+ <CAL_Jsq+SdgAf7=Yq7Jk_1d9jTpAOLCEuEDCZvD=-h=2MWsNfFw@mail.gmail.com>
+ <55821F30.2090802@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <CAGS+omDMprTvjwpXfdh7mg9i=WXdzO_Fv-oEop3z6AEVCG=DFQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "Joe.C" <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "open
- list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, bin.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Henry Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <55821F30.2090802@codeaurora.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Rob Herring <robherring2@gmail.com>, Rafael Wysocki <rjw@rjwysocki.net>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Nishanth Menon <nm@ti.com>, Mark Brown <broonie@kernel.org>, Mike Turquette <mike.turquette@linaro.org>, Grant Likely <grant.likely@linaro.org>, Olof Johansson <olof@lixom.net>, Sudeep Holla <Sudeep.Holla@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Viswanath Puttagunta <viswanath.puttagunta@linaro.org>, Lucas Stach <l.stach@pengutronix.de>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Abraham <ta.omasab@gmail.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Kevin Hilman <khilman@linaro.org>, Santosh
 List-Id: devicetree@vger.kernel.org
 
-Hi Dan,
+On 17-06-15, 18:30, Stephen Boyd wrote:
+> An operating-point(s?)-names property seems ok... but doesn't that mean
+> that every CPU that uses the OPP has to have the same list of
+> operating-point-names?
 
-On Tue, 2015-06-16 at 20:20 +0800, Daniel Kurtz wrote:
-> On Tue, Jun 16, 2015 at 7:39 PM, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
-> > On Mon, Jun 15, 2015 at 7:20 PM, Chaotian Jing
-> > <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> >> From: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> >>
-> >> Add node mmc0 ~ mmc3 for mt8173.dtsi
-> >> Add node mmc0, mmc1 for mt8173-evb.dts
-> >>
-> >> Signed-off-by: Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> >> Signed-off-by: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> >> ---
-> >>  arch/arm64/boot/dts/mediatek/mt8173-evb.dts | 126 ++++++++++++++++++++++++++++
-> >>  arch/arm64/boot/dts/mediatek/mt8173.dtsi    |  45 +++++++++-
-> >>  2 files changed, 170 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-> >> index b1560c9..762ec61 100644
-> >> --- a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-> >> +++ b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-> >> @@ -33,6 +33,132 @@
-> >>         chosen { };
-> >>  };
-> >>
-> >> +&mmc0 {
-> >> +       pinctrl-names = "default", "state_uhs";
-> >> +       pinctrl-0 = <&mmc0_pins_default>;
-> >> +       pinctrl-1 = <&mmc0_pins_uhs>;
-> >> +       status = "okay";
-> >> +       bus-width = <8>;
-> >> +       max-frequency = <50000000>;
-> >> +       cap-mmc-highspeed;
-> >> +       vmmc-supply = <&mt6397_vemc_3v3_reg>;
-> >> +       vqmmc-supply = <&mt6397_vio18_reg>;
-> 
-> I also can't find phandles for these regulators.
-> 
-> >> +       non-removable;
-> >> +};
-> >> +
-> >> +&mmc1 {
-> >> +       pinctrl-names = "default", "state_uhs";
-> >> +       pinctrl-0 = <&mmc1_pins_default>;
-> >> +       pinctrl-1 = <&mmc1_pins_uhs>;
-> >> +       status = "okay";
-> >> +       bus-width = <4>;
-> >> +       max-frequency = <50000000>;
-> >> +       cap-sd-highspeed;
-> >> +       sd-uhs-sdr25;
-> >> +       cd-gpios = <&pio 132 0>;
-> >> +       vmmc-supply = <&mt6397_vmch_reg>;
-> >> +       vqmmc-supply = <&mt6397_vmc_reg>;
-> 
-> nor these regulators.
-> 
-> Which kernel branch are you basing your patch set on?
-> 
-It is based on 4.1-rc1, and Sascha's regulator dts patch.
-[3/4] ARM: dts: mt8135-evbp1: Add PMIC support:
-https://patchwork.kernel.org/patch/6261161/
+Why do you think so? For me the operating-points-v2-names property
+will be present in CPU node (as there is no OPP node which can have
+it) and so every CPU is free to choose what it wants to.
 
-Eddie
-Thanks
+> It would make sense to me if the operating points
+> were called something different depending on *which* CPU is using them,
+> but in this case the only name for the operating point is "slow" or
+> "fast", etc.
+
+I am completely confused now. :)
+
+The problem you stated now was there with the current state of
+bindings. The name is embedded into the OPP table node and so is fixed
+for all the CPUs. Moving it to the CPU node will give all CPUs a
+chance to name it whatever they want to. And the same list has to be
+replicated to all CPUs sharing the clock rails.
+
+> In reality we've assigned them names like speedX-binY-vZ so that we know
+> which speed bin, voltage bin, and version they're part of. Maybe OPP
+> node properties like qcom,speed-bin = <u32>, qcom,pvs-bin = <u32>, etc.
+> would be better?
+
+Lets see, only if we can't get the generic stuff for this.
+
+> At the least, operating-points-names will be required on qcom platforms.
+> A fixed ordering known to the platform would mean that we know exactly
+> how many voltage bins and speed bins and how many voltage bins per speed
+> bin are used for a particular SoC, which we've avoided knowing so far.
+
+What are we referring to fixed ordering? If we have both a list of
+phandles to OPP tables and a list of names, they can be rearranged in
+whatever fashion we want. Isn't it?
+
+-- 
+viresh
