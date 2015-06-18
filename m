@@ -1,88 +1,96 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v6] usb: common: add API to set usb otg capabilities by
- device tree
-Date: Thu, 18 Jun 2015 15:07:48 +0300
-Message-ID: <20150618150748.db2217278ae71f01df625ff2@ti.com>
-References: <1434590302-18066-1-git-send-email-jun.li@freescale.com>
-	<20150618103650.7c3d1b8ceb134388b0d8b093@ti.com>
-	<20150618084747.GD15280@shlinux2>
+From: Frans Klaver <fransklaver@gmail.com>
+Subject: Re: [PATCH 01/44] kernel: Add support for poweroff handler call chain
+Date: Thu, 18 Jun 2015 14:14:07 +0200
+Message-ID: <CAH6sp9O0B_BWS8cLSq=MoFbe3nB_45+K64gh7QMHO3meT-b14w@mail.gmail.com>
+References: <1412659726-29957-1-git-send-email-linux@roeck-us.net>
+	<1412659726-29957-2-git-send-email-linux@roeck-us.net>
+	<55821936.4040704@codeaurora.org>
+	<CAH6sp9P7rq2y_hiQPHKUP85CwnEmp87yC7Psh4=29h-pYnb_yw@mail.gmail.com>
+	<5582B15B.4010205@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150618084747.GD15280@shlinux2>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-m68k-owner@vger.kernel.org>
+In-Reply-To: <5582B15B.4010205@roeck-us.net>
+Sender: linux-m68k-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-m32r-ja@ml.linux-m32r.org, linux-mips@linux-mips.org, linux-efi@vger.kernel.org, linux-ia64@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, linux-sh@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pavel Machek <pavel@ucw.cz>, devel@driverdev.osuosl.org, linux-s390@vger.kernel.org, lguest@lists.ozlabs.org, linux-c6x-dev@linux-c6x.org, linux-hexagon@vger.kernel.org, Alexander Graf <agraf@suse.de>, linux-acpi <linux-acpi@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, xen-devel@lists.xenproject.org, Len Brown <len.brown@intel.com>, user-mode-linux-devel@lists.sourceforge.net, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, linux-xtensa@linux-xtensa.org, adi-buildroot-devel@lists.sourceforge.net, linux-m68k@lists.lin
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 18 Jun 2015 16:47:48 +0800
-Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+On Thu, Jun 18, 2015 at 1:54 PM, Guenter Roeck <linux@roeck-us.net> wrote:
+> On 06/17/2015 11:53 PM, Frans Klaver wrote:
+>>
+>> On Thu, Jun 18, 2015 at 3:04 AM, Stephen Boyd <sboyd@codeaurora.org>
+>> wrote:
+>>>
+>>> On 10/06/2014 10:28 PM, Guenter Roeck wrote:
+>>>>
+>>>> Various drivers implement architecture and/or device specific means to
+>>>> remove power from the system.  For the most part, those drivers set the
+>>>> global variable pm_power_off to point to a function within the driver.
+>>>>
+>>>> This mechanism has a number of drawbacks.  Typically only one scheme
+>>>> to remove power is supported (at least if pm_power_off is used).
+>>>> At least in theory there can be multiple means remove power, some of
+>>>> which may be less desirable. For example, some mechanisms may only
+>>>> power off the CPU or the CPU card, while another may power off the
+>>>> entire system.  Others may really just execute a restart sequence
+>>>> or drop into the ROM monitor. Using pm_power_off can also be racy
+>>>> if the function pointer is set from a driver built as module, as the
+>>>> driver may be in the process of being unloaded when pm_power_off is
+>>>> called. If there are multiple poweroff handlers in the system, removing
+>>>> a module with such a handler may inadvertently reset the pointer to
+>>>> pm_power_off to NULL, leaving the system with no means to remove power.
+>>>>
+>>>> Introduce a system poweroff handler call chain to solve the described
+>>>> problems.  This call chain is expected to be executed from the
+>>>> architecture specific machine_power_off() function.  Drivers providing
+>>>> system poweroff functionality are expected to register with this call
+>>>> chain.
+>>>> By using the priority field in the notifier block, callers can control
+>>>> poweroff handler execution sequence and thus ensure that the poweroff
+>>>> handler with the optimal capabilities to remove power for a given system
+>>>> is called first.
+>>>
+>>>
+>>> What happened to this series? I want to add shutdown support to my
+>>> platform and I need to write a register on the PMIC in one driver to
+>>> configure it for shutdown instead of restart and then write an MMIO
+>>> register to tell the PMIC to actually do the shutdown in another driver.
+>>> It seems that the notifier solves this case for me, albeit with the
+>>> slight complication that I need to order the two with some priority.
+>>
+>>
+>> I was wondering the same thing. I did find out that things kind of
+>> stalled after Linus cast doubt on the chosen path [1]. I'm not sure
+>> there's any consensus on what would be best to do instead.
+>>
+>
+> Linus cast doubt on it, then the maintainers started picking it apart.
+> At the end, trying not to use notifier callbacks made the code so
+> complicated that even I didn't understand it anymore. With no consensus
+> in sight, I abandoned it.
+>
+> Problem is really that the notifier call chain would be perfect to solve
+> the problem, yet Linus didn't like priorities (which are essential),
+> and the power maintainers didn't like that a call chain is supposed
+> to execute _all_ callbacks, which would not be the case here. If I were
+> to start again, I would insist to use notifiers. However, I don't see
+> a chance to get that accepted, so I won't. Feel free to pick it up and
+> give it a try yourself.
 
-> On Thu, Jun 18, 2015 at 10:36:50AM +0300, Roger Quadros wrote:
-> > Lin,
-> > 
-> > You can use --in-reply-to "message id of v5 of this path" so that it appears together
-> > with the other patches in peoples mailboxes.
-> > 
-> > > + * the passed properties in DT.
-> > > + * @np: Pointer to the given device_node
-> > > + * @otg_caps: Pointer to the target usb_otg_caps to be set
-> > > + *
-> > > + * The function gets and sets the otg capabilities
-> > > + */
-> > > +void of_usb_set_otg_caps(struct device_node *np, struct usb_otg_caps *otg_caps)
-> > > +{
-> > > +	u32 otg_rev;
-> > > +
-> > > +	if (!otg_caps)
-> > > +		return;
-> > > +
-> > > +	if (!of_property_read_u32(np, "otg-rev", &otg_rev))
-> > > +		otg_caps->otg_rev = otg_rev;
-> > 
-> > should we check if otg_rev is in correct format?
-> > anything non BCD and greater than 0x9999 is invalid.
-> > 
-> > Also if otg-rev is not passed then we need to treat it as legacy
-> > platform right? How is this taken care of?
-> > 
-> Missed this comment
-> This handling rely on controller driver, cannot decided here.
-> There are several cases we need take care:
-> 1) otg-rev is not passed, but all 3 disable flags passed, this is
->   valid, means user want to disable whole OTG, so only "otg-rev"
->   not passed, cannot treat as legacy platform.
-> 2) Legacy platform means: none of 4 properties is present.
+How about having two phases? One where all interested parts of the
+system get notified, one that does the final shutdown. It's a slightly
+different approach than you took, but does use the notifier chains as
+expected, and can be used to prepare peripherals for shutdown, if
+there's a use case for it.
 
-Right. Plus controller drivers that are not updated to use these otg_caps
-are also legacy.
+The two-stage approach does keep the single place to power down. I
+expect it would become more obvious that it would be silly to have
+more than one actual system power down sequence and hiding
+pm_power_off and unifying setting of it should become more straight
+forward as well.
 
-> 3) Some controller drivers already support OTG HNP/SRP, then change
->   to utilize those new flags, still should support OTG HNP/SRP w/o
->   any dt change, so OTG caps should be enabled for legacy platforms.
+Thoughts?
 
-I didn't understand this point. If a controller driver is not updated
-to use otg_caps it is legacy and gadget->otg_caps will be NULL.
-
-> 4) Some controller drivers does not support any OTG, after add OTG
->   functions and utilize those new flags, should keep OTG disabled
->   for legacy platforms.
-
-If controller drivers don't support OTG. gadget->is_otg and
-gadget->otg_caps will not be set by them and they don't have to use
-of_usb_set_otg_caps().
-
-So I didn't understand why the decision can't be taken here
-for non-legacy controller drivers with legacy DT.
-They will set gadget->otg_caps and gadget->is_otg.
-
-If none of the 4 DT flags are passed then we know it is legacy DT
-and we can limit to legacy behaviour.
-
-cheers,
--roger
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Frans
