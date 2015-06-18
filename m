@@ -1,98 +1,149 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 6/6] ARM: sun8i: dts: Add Ippo-q8h v1.2
- with A33 and 1024x600 lcd support
-Date: Thu, 18 Jun 2015 20:37:36 +0200
-Message-ID: <20150618183736.GT11732@lukather>
-References: <1432997706-20172-1-git-send-email-hdegoede@redhat.com>
- <1432997706-20172-7-git-send-email-hdegoede@redhat.com>
- <20150602081459.GO23777@lukather>
- <556D6955.8030708@redhat.com>
- <20150603094535.GI23777@lukather>
- <556EE104.3090803@redhat.com>
- <20150613135002.GP19653@lukather>
- <557C3BD3.6030105@redhat.com>
- <20150616174114.GI11732@lukather>
- <55811EB2.4060302@redhat.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Ilya Faenson <ifaenson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: RE: FW: [PATCH v4 1/4] Broadcom Bluetooth UART Device Tree bindings
+Date: Thu, 18 Jun 2015 18:54:34 +0000
+Message-ID: <E0D3336E15B58B4294723AC879BA5E94263E58@IRVEXCHMB15.corp.ad.broadcom.com>
+References: <1434576658-20730-1-git-send-email-ifaenson@broadcom.com>
+ <1434576658-20730-2-git-send-email-ifaenson@broadcom.com>
+ <E0D3336E15B58B4294723AC879BA5E942634F2@IRVEXCHMB15.corp.ad.broadcom.com>
+ <CAL_JsqK9kup3sm3qgDLqtT8ajrN1ee6zfXwOoZqoq9cXQNwE_w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="fCmRXBY78W5odcVA"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBA5BRSWAKGQEC4HCFOA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <55811EB2.4060302-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqK9kup3sm3qgDLqtT8ajrN1ee6zfXwOoZqoq9cXQNwE_w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org" <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, Arend Van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---fCmRXBY78W5odcVA
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
-
-On Wed, Jun 17, 2015 at 09:16:02AM +0200, Hans de Goede wrote:
-> Hi,
-> 
-> On 16-06-15 19:41, Maxime Ripard wrote:
-> >Hi,
-> >
-> >On Sat, Jun 13, 2015 at 04:18:59PM +0200, Hans de Goede wrote:
-> >>>Pantelis, to sum things up, we have a case of a tablet that comes with
-> >>>the exact same board, but coming in two flavours with two differents
-> >>>screen resolutions. It looks like a great case for your DT quirks
-> >>>work, but we have no way of runtime detecting the difference between
-> >>>the two variants. What do you think about this? Should we go with
-> >>>using the DT quirks or is this simply out of scope?
-> >>>
-> >>>There's not so much example of similar cases in the kernel, and none
-> >>>of them use quirks so far (obviously) but they all boil down to either
-> >>>the solution you were suggesting in that patch or adding the alternate
-> >>>configuration as a comment.
-> >>>
-> >>>I don't think the latter would work for you, and I agree with that, so
-> >>>I guess that depending on what Pantelis says, either we go with a
-> >>>better solution using the quirks, or we end up using what you
-> >>>suggested (with a nitpick though, I'd prefer if you used the display
-> >>>standard instead of the resolution, which would make it xga I guess?)
-> >>
-> >>If we go with a separate dts file for each of the 800x480 and 1024x600
-> >>screens, I would greatly prefer to stick with the lcd1024x600 in the dts
-> >>filename instead of using something like xga, the fact that you say:
-> >>"I guess" that my answer to that is: I dunno I would need to look this
-> >>up in wikipedia or some such makes me think that using a qualifier like
-> >>xga is not going the help end users decide which dts file to pick, it
-> >>will just lead to them needing to go to wikipedia too. Also note that
-> >>the advertising of these tablets on ebay / aliexpress almost always
-> >>uses the resolution and not something like "xga".
-<> >>
-> >>So all in all if we do not decide to use quirks for this I would like
-> >>to keep the filename as is.
-> >
-> >Yeah, except that the display standard is also encoding the refresh
-> >rate and color depth
-> 
-> Huh? No it does not, see e.g.:
-> 
-> https://en.wikipedia.org/wiki/Graphics_display_resolution
-> 
-> Note nothing about depth and refresh-rate there, and I've really never
-> heard anyone use things like xga to refer to colordepth and/or refreshrate
-
-I was somehow convinced it did, and
-
-https://en.wikipedia.org/wiki/Computer_display_standard
-
-seems to say that as well... Maybe not then, my bad.
-
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---fCmRXBY78W5odcVA--
+SGkgUm9iLA0KDQotLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KRnJvbTogUm9iIEhlcnJpbmcg
+W21haWx0bzpyb2JoZXJyaW5nMkBnbWFpbC5jb21dIA0KU2VudDogVGh1cnNkYXksIEp1bmUgMTgs
+IDIwMTUgMTE6MDMgQU0NClRvOiBJbHlhIEZhZW5zb24NCkNjOiBtYXJjZWxAaG9sdG1hbm4ub3Jn
+OyBBcmVuZCBWYW4gU3ByaWVsOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgtYmx1
+ZXRvb3RoQHZnZXIua2VybmVsLm9yZw0KU3ViamVjdDogUmU6IEZXOiBbUEFUQ0ggdjQgMS80XSBC
+cm9hZGNvbSBCbHVldG9vdGggVUFSVCBEZXZpY2UgVHJlZSBiaW5kaW5ncw0KDQpPbiBXZWQsIEp1
+biAxNywgMjAxNSBhdCA2OjExIFBNLCBJbHlhIEZhZW5zb24gPGlmYWVuc29uQGJyb2FkY29tLmNv
+bT4gd3JvdGU6DQo+ICsgZGV2aWNldHJlZSBsaXN0cw0KDQpQbGVhc2UgdXNlIGdldF9tYWludGFp
+bmVycy5wbC4NCg0KSUY6IFdpbGwgdHJ5LCB0aGFua3MuDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNz
+YWdlLS0tLS0NCj4gRnJvbTogSWx5YSBGYWVuc29uIFttYWlsdG86aWZhZW5zb25AYnJvYWRjb20u
+Y29tXQ0KPiBTZW50OiBXZWRuZXNkYXksIEp1bmUgMTcsIDIwMTUgNTozMSBQTQ0KPiBUbzogTWFy
+Y2VsIEhvbHRtYW5uDQo+IENjOiBsaW51eC1ibHVldG9vdGhAdmdlci5rZXJuZWwub3JnOyBBcmVu
+ZCBWYW4gU3ByaWVsOyBJbHlhIEZhZW5zb24NCj4gU3ViamVjdDogW1BBVENIIHY0IDEvNF0gQnJv
+YWRjb20gQmx1ZXRvb3RoIFVBUlQgRGV2aWNlIFRyZWUgYmluZGluZ3MNCj4NCj4gRGV2aWNlIFRy
+ZWUgYmluZGluZ3MgdG8gY29uZmlndXJlIHRoZSBCcm9hZGNvbSBCbHVldG9vdGggVUFSVCBkZXZp
+Y2UuDQo+DQo+IFNpZ25lZC1vZmYtYnk6IElseWEgRmFlbnNvbiA8aWZhZW5zb25AYnJvYWRjb20u
+Y29tPg0KPiAtLS0NCg0KQ2hhbmdlIGhpc3RvcnkgZnJvbSB0aGUgbGFzdCB2NCB2ZXJzaW9uPw0K
+DQpJRjogVGhlIGhpc3Rvcnkgd2FzIGJhc2ljYWxseSByZWxldmFudCBmb3IgdGhlIGJsdWV0b290
+aCBzcGVjaWZpYyBjb2RlIGNoYW5nZXMgb25seS4gU29tZSBvZiB0aGVtIGhhdmUgYmVlbiBhcHBs
+aWVkIGJ5IG5vdyBzbyB0aGUgcmVzdCBvZiB0aGUgY29kZSBpcyBhIGxvdCBtb3JlIGRldmljZSB0
+cmVlIG9yaWVudGVkLiBJIHdpbGwgc2VuZCB0aGUgbmV4dCBzZXQgb2YgcGF0Y2hlcyB0byBib3Ro
+IGRldmljZSB0cmVlIGFuZCBibHVldG9vdGggbGlzdHMgd2l0aCBhIGNvbXBsZXRlIHJldmlzaW9u
+IGhpc3RvcnkuDQoNCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL25ldC9ibHVldG9vdGgvYnRi
+Y20udHh0ICAgIHwgODYgKysrKysrKysrKysrKysrKysrKysrKw0KPiAgMSBmaWxlIGNoYW5nZWQs
+IDg2IGluc2VydGlvbnMoKykNCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvbmV0L2JsdWV0b290aC9idGJjbS50eHQNCj4NCj4gZGlmZiAtLWdp
+dCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9uZXQvYmx1ZXRvb3RoL2J0YmNt
+LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9uZXQvYmx1ZXRvb3RoL2J0
+YmNtLnR4dA0KPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiBpbmRleCAwMDAwMDAwLi41ZGJjZDU3
+DQo+IC0tLSAvZGV2L251bGwNCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL25ldC9ibHVldG9vdGgvYnRiY20udHh0DQo+IEBAIC0wLDAgKzEsODYgQEANCj4gK2J0YmNt
+DQo+ICstLS0tLS0NCj4gKw0KPiArUmVxdWlyZWQgcHJvcGVydGllczoNCj4gKw0KPiArICAgICAg
+IC0gY29tcGF0aWJsZSA6IG11c3QgYmUgImJyY20sYnJjbS1idC11YXJ0Ii4NCg0KWW91IG5lZWQg
+dG8gZGVzY3JpYmUgdGhlIGNoaXAsIG5vdCB0aGUgaW50ZXJmYWNlLg0KDQpJRjogVGhpcyBkcml2
+ZXIgaXMgZm9yIGFsbCBCcm9hZGNvbSBCbHVldG9vdGggVUFSVCBiYXNlZCBjaGlwcy4NCg0KPiAr
+ICAgICAgIC0gdHR5IDogdHR5IGRldmljZSBjb25uZWN0ZWQgdG8gdGhpcyBCbHVldG9vdGggZGV2
+aWNlLg0KDQoidHR5IiBpcyBhIGJpdCBvZiBhIExpbnV4aXNtIGFuZCAidHR5UzAiIGNlcnRhaW5s
+eSBpcy4gRnVydGhlciwgdGhlcmUNCmlzIG5vIGd1YXJhbnRlZSB3aGljaCB1YXJ0IGlzIGFzc2ln
+bmVkIHR0eVMwLg0KDQpUaGlzIHNob3VsZCBiZSBhIHBoYW5kbGUgdG8gdGhlIGNvbm5lY3RlZCB1
+YXJ0IGlmIG5vdCBhIHN1YiBub2RlIG9mDQp0aGUgdWFydC4gVGhpcyBpcyBjb21wbGljYXRlZCBz
+aW5jZSB0aGVzZSBjaGlwcyBoYXZlIG11bHRpcGxlIGhvc3QNCmNvbm5lY3Rpb25zLiBJdCBuZWVk
+cyB0byBnbyB1bmRlciBlaXRoZXIgdWFydCBvciBTRElPIGhvc3QgYW5kIGhhdmUgYQ0KcmVmZXJl
+bmNlIGJhY2sgdG8gdGhlIG9uZSBpdCBpcyBub3QgdW5kZXIuIEdpdmVuIHRoZSBTRElPIGludGVy
+ZmFjZSBpcw0KZGlzY292ZXJhYmxlIChhbHRob3VnaCBzaWRlYmFuZCBncGlvcyBhbmQgcmVndWxh
+dG9ycyBhcmUgbm90KSwgSSB3b3VsZA0KcHV0IHRoaXMgdW5kZXIgdGhlIHVhcnQgbm9kZSBhcyB0
+aGF0IGlzIG5ldmVyIGRpc2NvdmVyYWJsZS4NCg0KQXMgSSd2ZSBtZW50aW9uZWQgcHJldmlvdXNs
+eSwgdGhlcmUncyBzZXZlcmFsIGNhc2VzIG9mIGJpbmRpbmdzIGZvcg0KVUFSVCBzbGF2ZSBkZXZp
+Y2VzIGJlaW5nIHBvc3RlZC4gVGhpcyBhbGwgbmVlZHMgdG8gYmUgY29vcmRpbmF0ZWQgdG8NCnVz
+ZSBhIGNvbW1vbiBzdHJ1Y3R1cmUuDQoNCklGOiBUaGlzIGRyaXZlciBkb2VzIG5vdCByZWFsbHkg
+YWNjZXNzIHRoZSBVQVJULiBJZiBqdXN0IG5lZWRzIHRvIGhhdmUgYSBzdHJpbmcgb2Ygc29tZSBz
+b3J0IHRvIG1hcCBpbnN0YW5jZXMgb2YgdGhlIEJsdWVaIHByb3RvY29sIGludG8gcGxhdGZvcm0g
+ZGV2aWNlcyB0byBlbXBsb3kgdGhlIHJpZ2h0IEdQSU9zIGFuZCBpbnRlcnJ1cHRzLiBJIGNvdWxk
+IHVzZSBhbnl0aGluZyB5b3UgcmVjb21tZW5kIGF2YWlsYWJsZSB0aHJvdWdoIHRoZSB0dHlfc3Ry
+dWN0IGNvbWluZyB0byB0aGUgcHJvdG9jb2wgZnJvbSB0aGUgQmx1ZVogbGluZSBkaXNjaXBsaW5l
+LiBNb3Jlb3ZlciwgZXZlcnkgZW5kIHVzZXIgcGxhdGZvcm0gSSd2ZSBldmVyIGRlYWx0IHdpdGgg
+aW4gMTYgeWVhcnMgb2Ygd29ya2luZyB3aXRoIEJsdWV0b290aCBoYWQgYSBzaW5nbGUgQlQgVUFS
+VCBkZXZpY2UuIFNvIHRoZXNlIGFyZSByZWFsbHkgcmFyZSAodHlwaWNhbGx5IHRlc3QgcGxhdGZv
+cm1zKSBjYXNlcyBvbmx5LiBUaGUgbWFwcGluZyBpcyBub3QgbmVlZGVkIGZvciBtb3N0IHBsYXRm
+b3JtcyBhdCBhbGwuIEkgc3VzcGVjdCB0aGUgcmlnaHQgdGhpbmcgdG8gZG8gd291bGQgYmUgdG8g
+bWFrZSB0aGlzIHBhcmFtZXRlciBvcHRpb25hbC4gVGhlIG1hcHBpbmcgd291bGQgYmUgZG9uZSBv
+bmx5IGlmIHRoZSBwYXJhbWV0ZXIgaXMgcHJlc2VudC4gSSB3aWxsIHVzZSBhbnl0aGluZyB0dHlf
+c3RydWN0IGRlcml2ZWQgeW91IHNwZWNpZnkuIE1ha2VzIHNlbnNlPw0KDQo+ICsNCj4gK09wdGlv
+bmFsIHByb3BlcnRpZXM6DQo+ICsNCj4gKyAgLSBidC1ob3N0LXdha2UtZ3Bpb3MgOiBidC1ob3N0
+LXdha2UgaW5wdXQgR1BJTyB0byBiZSB1c2VkIGFzIGFuIGludGVycnVwdC4NCj4gKw0KPiArICAt
+IGJ0LXdha2UtZ3Bpb3MgOiBidC13YWtlIG91dHB1dCBHUElPIHRvIGJlIHVzZWQgdG8gc3VzcGVu
+ZCAvIHJlc3VtZSBkZXZpY2UuDQo+ICsNCj4gKyAgLSBidC1yZWctb24tZ3Bpb3MgOiByZWctb24g
+b3V0cHV0IEdQSU8gdG8gYmUgdXNlZCB0byBwb3dlciBkZXZpY2Ugb24vb2ZmLg0KPiArDQo+ICsg
+IC0gb3Blci1zcGVlZCA6IEJsdWV0b290aCBkZXZpY2Ugb3BlcmF0aW9uYWwgYmF1ZCByYXRlLg0K
+PiArICAgIERlZmF1bHQ6IDMwMDAwMDAuDQo+ICsNCj4gKyAgLSBtYW51YWwtZmMgOiBmbG93IGNv
+bnRyb2wgVUFSVCBpbiBzdXNwZW5kIC8gcmVzdW1lIHNjZW5hcmlvcy4NCj4gKyAgICBEZWZhdWx0
+OiAwLg0KDQpDYW4gYmUgYm9vbGVhbj8NCg0KSSBkb24ndCByZWFsbHkgZm9sbG93IHRoZSBkZXNj
+cmlwdGlvbi4NCg0KSUY6IE9rYXksIEkgd2lsbCBtYWtlIGl0IGJvb2xlYW4uIFRvIGNsYXJpZnkg
+dGhlIGRlc2NyaXB0aW9uLCBpdCBjb250cm9scyB3aGV0aGVyIHRoZSBCbHVlWiBwcm90b2NvbCBu
+ZWVkcyB0byBmbG93IGNvbnRyb2wgdGhlIFVBUlQgd2hlbiB0aGUgQlQgZGV2aWNlIGlzIHN1c3Bl
+bmRlZCBhbmQgdW4tZmxvdyBjb250cm9sIGl0IHdoZW4gdGhlIGRldmljZSBpcyByZXN1bWVkLg0K
+DQo+ICsNCj4gKyAgLSBjb25maWd1cmUtc2xlZXAgOiBjb25maWd1cmUgc3VzcGVuZCAvIHJlc3Vt
+ZSBmbGFnLg0KPiArICAgIERlZmF1bHQ6IGZhbHNlLg0KDQpQbGVhc2UgZGVzY3JpYmUgYmV0dGVy
+IHdoYXQgdGhpcyBkb2VzLiBQZXJoYXBzICJpZGxlLXNsZWVwLWVuIiB3b3VsZCBiZSBiZXR0ZXIu
+DQoNCklGOiBPa2F5LCBJIHdpbGwgcmVuYW1lIGl0IGFzIHlvdSBzcGVjaWZ5IGFuZCB3aWxsIGRl
+c2NyaWJlIGl0IGJldHRlci4NCg0KPiArDQo+ICsgIC0gaWRsZS10aW1lb3V0IDogTnVtYmVyIG9m
+IHNlY29uZHMgb2YgaW5hY3Rpdml0eSBiZWZvcmUgc3VzcGVuZGluZy4NCg0KaWRsZS10aW1lb3V0
+LXNlYw0KDQpJRjogT2theSwgSSB3aWxsIHJlbmFtZSBpdC4NCg0KSXMgdGhpcyBvbmx5IGFwcGxp
+Y2FibGUgd2hlbiBjb25maWd1cmUtc2xlZXAgaXMgc2V0Pw0KDQpJRjogWWVzLg0KDQpZb3UgbWl4
+IHRoZSB0ZXJtcyBzbGVlcCBhbmQgc3VzcGVuZCBhIGxvdC4gQ2FuIHlvdSBiZSBtb3JlIGNvbnNp
+c3RlbnQuDQoNCklGOiBCcm9hZGNvbSBCVCBkZXZpY2UgZm9sa3MgdXNlICJzbGVlcCIgd2hpbGUg
+TGludXggZW1wbG95cyAic3VzcGVuZCIuIE9rYXksIEkgd2lsbCB0cnkgdXNpbmcgc3VzcGVuZCBl
+dmVyeXdoZXJlLg0KDQo+ICsgICAgRGVmYXVsdDogNS4NCj4gKw0KPiArICAtIGNvbmZpZ3VyZS1h
+dWRpbyA6IGNvbmZpZ3VyZSBwbGF0Zm9ybSBQQ00gU0NPIGZsYWcuDQo+ICsgICAgRGVmYXVsdDog
+ZmFsc2UuDQoNClNvIGlnbm9yZSB0aGUgcmVzdCBvZiB0aGUgc2V0dGluZ3MgaWYgbm90IHNldD8g
+UGVyaGFwcyBjb21iaW5lIHdpdGggcGNtLXJvdXRpbmc6DQoNCjxibGFuaz4gLSBubyBhdWRpbw0K
+YXVkaW8tbW9kZSA9ICJwY20iOw0KYXVkaW8tbW9kZSA9ICJoY2kiOyAob3IgInNjby1oY2kiPykN
+Cg0KSUY6IFRoYXQncyByaWdodDogdGhlIHJlc3Qgb2YgdGhlIHBhcmFtZXRlcnMgYXJlIG5vdCBu
+ZWVkZWQgaWYgY29uZmlndXJlLWF1ZGlvIGlzIGZhbHNlLiBUYWxraW5nIGFib3V0IHlvdXIgc3Vn
+Z2VzdGlvbnMsIHRoaXMgZHJpdmVyIGRvZXMgbm90aGluZyBpZiB0aGUgYXVkaW8gaXMgZWl0aGVy
+IHNlbnQgaW5ib3VuZCBvciBub3QgdXNlZCBhdCBhbGwuIFdvdWxkIHlvdSBhZ3JlZSB0byBzb21l
+dGhpbmcgbGlrZSB0aGUgY29uZmlndXJlLXBjbS1hdWRpbyBmbGFnPw0KDQo+ICsNCj4gKyAgLSBw
+Y20tY2xvY2ttb2RlIDogUENNIGNsb2NrIG1vZGUuIDAtc2xhdmUsIDEtbWFzdGVyLg0KPiArICAg
+IERlZmF1bHQ6IDAuDQoNCkNhbiBiZSBib29sZWFuIChwcm9wZXJ0eSBwcmVzZW50IG9yIG5vdCk6
+IHBjbS1jbG9jay1tb2RlLW1hc3Rlcg0KDQpJRjogT2theS4NCg0KPiArDQo+ICsgIC0gcGNtLWZp
+bGxtZXRob2QgOiBQQ00gZmlsbCBtZXRob2QuIDAgdG8gMy4NCg0KcGNtLWZpbGwtbWV0aG9kDQoN
+CklGOiBPa2F5LCB3aWxsIGNoYW5nZS4NCg0KPiArICAgIERlZmF1bHQ6IDIuDQo+ICsNCj4gKyAg
+LSBwY20tZmlsbG51bSA6IFBDTSBudW1iZXIgb2YgZmlsbCBiaXRzLiAwIHRvIDMuDQo+ICsgICAg
+RGVmYXVsdDogMC4NCg0KcGNtLWZpbGwtYml0cw0KDQpJRjogT2theSwgd2lsbCBjaGFuZ2UuDQoN
+Cj4gKw0KPiArICAtIHBjbS1maWxsdmFsdWUgOiBQQ00gZmlsbCB2YWx1ZS4gMCB0byA3Lg0KPiAr
+ICAgIERlZmF1bHQ6IDMuDQoNCnBjbS1maWxsLXZhbHVlDQoNCklGOiBPa2F5LCB3aWxsIGNoYW5n
+ZS4NCg0KPiArDQo+ICsgIC0gcGNtLWluY2FsbGJpdGNsb2NrIDogUENNIGludGVyZmFjZSByYXRl
+LiAwLTEyOEticHMsIDEtMjU2S2JwcywgMi01MTJLYnBzLA0KPiArICAgIDMtMTAyNEticHMsIDQt
+MjA0OEticHMuDQoNCnBjbS1pbmNhbGwtYml0Y2xvY2staHoNCg0KSUY6IE9rYXksIHdpbGwgY2hh
+bmdlLg0KDQpVc2UgdGhlIGFjdHVhbCByYXRlIHJhdGhlciB0aGFuIGFuIGVudW1lcmF0aW9uLiBJ
+dCBpcyBhIHNpbXBsZSBkaXYgYnkNCjEyOGsgYW5kIGxvZzIgdG8gY29udmVydCBpbiB0aGUgZHJp
+dmVyLiBUaGlzIG1ha2VzIHRoZSBwcm9wZXJ0eSBtb3JlDQpjb21wYXRpYmxlIHdpdGggb3RoZXIg
+Y2hpcHMuDQoNCklGOiBUaGVzZSByYXRlcyBhcmUgc3ViamVjdCB0byBjaGFuZ2UgaW4gZnV0dXJl
+IGNoaXBzIHdpdGggbm8gZ3VhcmFudGVlcyBvZiB0aGUgcGF0dGVybiBob2xkaW5nLiBJIHdvdWxk
+IHByZWZlciB0byB1c2UgdGhlIGFjdHVhbCB2YWx1ZSBleHBlY3RlZCBieSB0aGUgZmlybXdhcmUg
+aWYgeW91IGRvbid0IG1pbmQgdG8gYXZvaWQgbWFpbnRhaW5pbmcgdGhlIGV4dHJhIGRyaXZlciBj
+b2RlLg0KDQpXaGF0IGRvZXMgaW5jYWxsIG1lYW4/IFdoYXQgaXMgdGhlIGJpdCByYXRlIHdoZW4g
+bm90IGluIGEgY2FsbD8NCg0KSUY6IFRoYXQncyB0aGUgbmFtZSBnaXZlbiB0byBtZSBieSB0aGUg
+aGFyZHdhcmUgZ3V5cy4gV2hhdCBkbyB5b3UgdGhpbmsgYWJvdXQgdGhlICJwY20taW50ZXJmYWNl
+LXJhdGUiIGluc3RlYWQ/DQoNCj4gKyAgICBEZWZhdWx0OiAwLg0KPiArDQo+ICsgIC0gcGNtLWxz
+YmZpcnN0IDogUENNIExTQiBmaXJzdC4gMCBvciAxLg0KPiArICAgIERlZmF1bHQ6IDAuDQoNCkNh
+biBiZSBib29sZWFuDQoNCklGOiBPa2F5Lg0KDQo+ICsNCj4gKyAgLSBwY20tcmlnaHRqdXN0aWZ5
+IDogUENNIEp1c3RpZnkuIDAtbGVmdCwgMS1yaWdodC4NCj4gKyAgICBEZWZhdWx0OiAwLg0KDQpD
+YW4gYmUgYm9vbGVhbg0KDQpJRjogT2theS4NCg0KPiArICAtIHBjbS1yb3V0aW5nIDogUENNIHJv
+dXRpbmcuIDAtUENNLCAxLVNDTyBvdmVyIEhDSS4NCj4gKyAgICBEZWZhdWx0OiAwLg0KDQpDYW4g
+YmUgYm9vbGVhbjogcGNtLXJvdXRpbmctaGNpDQoNCklGOiBPa2F5Lg0KDQo+ICsNCj4gKyAgLSBw
+Y20tc2hvcnRmcmFtZXN5bmMgOiBQQ00gc3luYy4gMC1zaG9ydCwgMS1sb25nLg0KPiArICAgIERl
+ZmF1bHQ6IDAuDQoNCkNhbiBiZSBib29sZWFuDQoNCklGOiBPa2F5Lg0KDQo+ICsNCj4gKyAgLSBw
+Y20tc3luY21vZGUgOiBQQ00gc3luYyBtb2RlLiAwLXNsYXZlLCAxLW1hc3Rlci4NCj4gKyAgICBE
+ZWZhdWx0OiAwLg0KDQpDYW4gYmUgYm9vbGVhbjogcGNtLXN5bmMtbW9kZS1tYXN0ZXINCg0KSUY6
+IE9rYXkuDQoNClJvYg0K
