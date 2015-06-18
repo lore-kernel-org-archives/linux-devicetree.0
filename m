@@ -1,166 +1,296 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v6] usb: common: add API to set usb otg capabilities by
- device tree
-Date: Thu, 18 Jun 2015 15:18:24 +0300
-Message-ID: <20150618151824.64f6932cebd9e518f4b87e43@ti.com>
-References: <1434590302-18066-1-git-send-email-jun.li@freescale.com>
-	<20150618103650.7c3d1b8ceb134388b0d8b093@ti.com>
-	<20150618075527.GA15280@shlinux2>
+From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RESEND PATCH 1/2] pinctrl: change function behavior for per pin
+ muxing controllers
+Date: Thu, 18 Jun 2015 14:33:48 +0200
+Message-ID: <20150618123348.GB20227@odux.rfo.atmel.com>
+References: <1433948699-19800-1-git-send-email-ludovic.desroches@atmel.com>
+ <1433948699-19800-2-git-send-email-ludovic.desroches@atmel.com>
+ <557EF60D.8020007@wwwdotorg.org>
+ <20150617123816.GB12295@odux.rfo.atmel.com>
+ <5581988C.50000@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150618075527.GA15280@shlinux2>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5581988C.50000-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 18 Jun 2015 15:55:28 +0800
-Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-
-> On Thu, Jun 18, 2015 at 10:36:50AM +0300, Roger Quadros wrote:
-> > Lin,
-> > 
-> > You can use --in-reply-to "message id of v5 of this path" so that it appears together
-> > with the other patches in peoples mailboxes.
-> > 
-> okay, I will try that next time, thanks.
+On Wed, Jun 17, 2015 at 09:55:56AM -0600, Stephen Warren wrote:
+> On 06/17/2015 06:38 AM, Ludovic Desroches wrote:
+> >Hi Stephen,
+> >
+> >On Mon, Jun 15, 2015 at 09:58:05AM -0600, Stephen Warren wrote:
+> >>On 06/10/2015 09:04 AM, Ludovic Desroches wrote:
+> >>>When having a controller which allows per pin muxing, declaring with
+> >>>which groups a function can be used is a useless constraint since groups
+> >>>are something virtual.
+> >>
+> >>This isn't true.
+> >>
+> >>Irrespective of whether a particular piece of pinmux HW can control the mux
+> >>function for each pin individually, or only in groups, it's quite likely
+> >>that each function can only be selected onto a subset of those pins or
+> >>groups. Requiring the pinctrl driver to inform the core which set of
+> >>pins/groups particular functions can be selected onto seems quite
+> >>reasonable.
+> >>
+> >>In my opinion at least, for HW that can select the mux function at the
+> >>per-pin level, the only sensible set of groups is one group per pin with
+> >>each group containing a single pin. Any other use of groups is a
+> >>SW/user-level construct, and is something unrelated to why the pinctrl
+> >>subsystem supports groups. If we want to represent those groups in pinctrl,
+> >>there should be two separate sets of groups; one to represent the actual HW
+> >>capabilities, and one to represent the SW/user-level convenience
+> >>abstractions.
+> >
+> >Groups that I would like to use are not something related to the user or
+> >software. It's an hardware reality but they would be more flexibles.
+> >
+> >Usually the muxing is done by selecting a function (which seems to be
+> >device related: usart, spi, etc.), then you select on which pins you
+> >want this function.
+> >
+> >In my case, I can't select a function only by choosing a mux. It is a
+> >combination of the mux and the pin on which it is applied. So my
+> >functions will be GPIO, A, B, C, etc. If I use function A on pin 12, I
+> >will have my i2c clock signal but I can have this signal on pin 58 if I
+> >use function C. Do you understand what I mean? It's not very easy to
+> >explain... So here is a real example:
+> >
+> >  --------------------------------------------------
+> >|              | pio peripheral                    |
+> >  --------------------------------------------------
+> >| signal | dir | func | signal       | dir | ioset |
+> >  --------------------------------------------------
+> >| PA8    | I/O | A    | SDMMC0_DAT6  | I/O | 1     |
+> >|        |     | B    | QSPI1_IO1    | I/O | 1     |
+> >|        |     | D    | TCLK5        | I   | 1     |
+> >|        |     | E    | FLEXCOM2_IO2 | I/O | 1     |
+> >|        |     | F    | NWE/NANDWE   | O   | 2     |
+> >  --------------------------------------------------
+> >| PD28   | I/O | A    | SPI1_NPCS0   | I/O | 3     |
+> >|        |     | B    | TDI          | I/O | 3     |
+> >|        |     | C    | FLEXCOM2_IO2 | I   | 2     |
+> >  --------------------------------------------------
+> >
+> >
+> >You are right that having a group per pin is a solution.
+> >
+> >If I follow your proposal (tell me if I'm wrong):
+> >- I will have 128 groups since I have 128 pins.
 > 
-> Li Jun
-> > On Thu, 18 Jun 2015 09:18:22 +0800
-> > Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> > 
-> > > Change for v6:
-> > > UPdate otg caps by disable flags even if otg_rev is not passed, this is
-> > > needed in case user wants to disable whole OTG(or just want to ID pin
-> > > detect).
-> > > 
-> > > Check property of usb hardware to get otg version and if SRP, HNP and ADP
-> > > are disabled.
-> > > 
-> > > Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > > ---
-> > >  drivers/usb/common/common.c | 27 +++++++++++++++++++++++++++
-> > >  include/linux/usb/of.h      |  7 +++++++
-> > >  2 files changed, 34 insertions(+)
-> > > 
-> > > diff --git a/drivers/usb/common/common.c b/drivers/usb/common/common.c
-> > > index b530fd4..12f5d28 100644
-> > > --- a/drivers/usb/common/common.c
-> > > +++ b/drivers/usb/common/common.c
-> > > @@ -154,6 +154,33 @@ bool of_usb_host_tpl_support(struct device_node *np)
-> > >  	return false;
-> > >  }
-> > >  EXPORT_SYMBOL_GPL(of_usb_host_tpl_support);
-> > > +
-> > > +/**
-> > > + * of_usb_get_set_caps - to set usb otg capabilities according to
-> > 
-> > get or set?
-> > how about update instead?
-> > 
-> Should be set, update? okay.
+> Yes.
 > 
-> Li Jun
-> > > + * the passed properties in DT.
-> > > + * @np: Pointer to the given device_node
-> > > + * @otg_caps: Pointer to the target usb_otg_caps to be set
-> > > + *
-> > > + * The function gets and sets the otg capabilities
-> > > + */
-> > > +void of_usb_set_otg_caps(struct device_node *np, struct usb_otg_caps *otg_caps)
-> > > +{
-> > > +	u32 otg_rev;
-> > > +
-> > > +	if (!otg_caps)
-> > > +		return;
-> > > +
-> > > +	if (!of_property_read_u32(np, "otg-rev", &otg_rev))
-> > > +		otg_caps->otg_rev = otg_rev;
-> > 
-> > should we check if otg_rev is in correct format?
-> > anything non BCD and greater than 0x9999 is invalid.
-> > 
-> Then that's not so simple, every number should be checked,
-> if ((otg_caps->otg_rev % 10) > 9) ||
-> 	((otg_caps->otg_rev >> 4) % 10) > 9) ||
-> 	((otg_caps->otg_rev >> 8) % 10) > 9) ||
-> 	((otg_caps->otg_rev >> 12) % 10) > 9))
-> 	return error;
-> We really need this kind of format check? seems no this check
-> for bcdUSB.
-
-How about checking for released spec versions instead?
-
-	switch (otg_rev) {
-	case 0x0100:
-	case 0x0110:
-	case 0x0200:
-	case 0x0300:
-		break;
-	default:
-		dev_err(dev, "unsupported otg-rev: 0x%x\n", otg_rev);
-		return error;
-	}
-
-cheers,
--roger
-
-> 	
-> > Also if otg-rev is not passed then we need to treat it as legacy
-> > platform right? How is this taken care of?
-> > 
-> > > +	if (of_find_property(np, "hnp-disable", NULL))
-> > > +		otg_caps->hnp_support = false;
-> > > +	if (of_find_property(np, "srp-disable", NULL))
-> > > +		otg_caps->srp_support = false;
-> > > +	if (of_find_property(np, "adp-disable", NULL))
-> > > +		otg_caps->adp_support = false;
-> > 
-> > Don't we expect it to do basic sanity checks?
-> > e.g. if otg_rev < 0x200 then adp_support can't be true?
-> > 
-> Okay, it's better we add a sanity check here.
+> >- I will have functions GPIO, A, B, C, D, E, F.
 > 
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(of_usb_set_otg_caps);
-> > > +
-> > >  #endif
-> > >  
-> > >  MODULE_LICENSE("GPL");
-> > > diff --git a/include/linux/usb/of.h b/include/linux/usb/of.h
-> > > index cfe0528..6339799 100644
-> > > --- a/include/linux/usb/of.h
-> > > +++ b/include/linux/usb/of.h
-> > > @@ -15,6 +15,8 @@
-> > >  enum usb_dr_mode of_usb_get_dr_mode(struct device_node *np);
-> > >  enum usb_device_speed of_usb_get_maximum_speed(struct device_node *np);
-> > >  bool of_usb_host_tpl_support(struct device_node *np);
-> > > +void of_usb_set_otg_caps(struct device_node *np,
-> > > +			struct usb_otg_caps *otg_caps);
-> > >  #else
-> > >  static inline enum usb_dr_mode of_usb_get_dr_mode(struct device_node *np)
-> > >  {
-> > > @@ -30,6 +32,11 @@ static inline bool of_usb_host_tpl_support(struct device_node *np)
-> > >  {
-> > >  	return false;
-> > >  }
-> > > +static inline void of_usb_set_otg_caps(struct device_node *np,
-> > > +				struct usb_otg_caps *otg_caps)
-> > > +{
-> > > +
-> > > +}
-> > >  #endif
-> > >  
-> > >  #if IS_ENABLED(CONFIG_OF) && IS_ENABLED(CONFIG_USB_SUPPORT)
-> > > -- 
-> > > 1.9.1
-> > > 
-> > 
-> > cheers,
-> > -roger
+> You could have functions A..F, and require the user to determine what option
+> they want for each pin, find the pin-specific mux function value for each
+> pin, and put that into the DT (or other pinmux data source). For example,
+> the bcm2835 pinctrl driver works this way.
+> 
+> In that case, each of the functions A..F could be selected on each pin, so
+> you'd have a very simple "get pins for function" implementation.
+> 
+> Alternatively, you could define a logic function per IO controller or signal
+> that gets pinmuxed. In the example above, FLEXCOM2_IO2 is one such example.
+> Given that set of functions, you'd need a mapping table to convert from the
+> logical functions seen by the pinctrl subsystem to the HW values that need
+> to be written into registers. For example, the Tegra pinctrl drivers work
+> this way.
+> 
+> In that case, each (pinctrl) function could only be selected on a specific
+> subset of all pins/groups, and so you'd probably need a table-based
+> implementation of "get pins for function".
+
+Thanks for giving me some examples. Let's take a look at these drivers.
+My concern is that I didnn't want to have many and/or big tables in my
+driver. I will have to update it for a new SoC even if the pin
+controller is the same. I prefer to have it in the device as we did
+before and as some drivers continue to do.
+
+> 
+> >- I have to give the groups which can achieve a function so I will have
+> >128 groups for each function. It means 128 x 7 = 896 groups.
+> 
+> I don't think so no. I'm not sure why you'd consider multiplying 128 and 7
+> here. I'd expect 128 groups since you have 128 pins[1].
+> 
+
+Sorry my mistake, I mean 896 possibilites since I have 128 groups for a
+function.
+
+> Well, it's possible to have slightly more groups if, say, mux function is
+> selectable per pin, whereas something else like drive strength is configured
+> by a register that affects multiple pins at once. You'd need separate sets
+> of groups for muxing and for drive strength configuration. Some Tegra SoCs
+> are like this. Still, we just add the different sets of groups together
+> here, not multiply. The overall set of groups is not that much larger than
+> the set of pins.
+> 
+> >Does it seems to be something reasonable and intelligible? From my point
+> >of view no. And what about the sysfs readability?
+> >
+> >With my current implementation, I have something quite understandable
+> >for the user if he needs to check the pinmuxing:
+> >
+> >   # cat /sys/kernel/debug/pinctrl/ahb\:apb\:pinctrl@fc038000/pinmux-pins
+> >   pin 17 (PA17): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+> >   pin 18 (PA18): b0000000.sdio-host (GPIO UNCLAIMED) function E group sdmmc1_0
+> >   pin 19 (PA19): b0000000.sdio-host (GPIO UNCLAIMED) function E group sdmmc1_0
+> >
+> >   # cat /sys/kernel/debug/pinctrl/pinctrl-maps
+> >   Pinctrl maps:
+> >
+> >   device b0000000.sdio-host
+> >   state default
+> >   type MUX_GROUP (2)
+> >   controlling device ahb:apb:pinctrl@fc038000
+> >   group sdmmc1_0
+> >   function E
+> >
+> >   device b0000000.sdio-host
+> >   state default
+> >   type CONFIGS_PIN (3)
+> >   controlling device ahb:apb:pinctrl@fc038000
+> >   pin PA28
+> >   config 00010003
+> >
+> >   device b0000000.sdio-host
+> >   state default
+> >   type CONFIGS_PIN (3)
+> >   controlling device ahb:apb:pinctrl@fc038000
+> >   pin PA18
+> >   config 00010003
+> >
+> >
+> >Doing as you propose, I assume the result should be:
+> >
+> >   # cat /sys/kernel/debug/pinctrl/ahb\:apb\:pinctrl@fc038000/pinmux-pins
+> >   pin 17 (PA17): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+> >   pin 18 (PA18): b0000000.sdio-host (GPIO UNCLAIMED) function E group PA18
+> >   pin 19 (PA19): b0000000.sdio-host (GPIO UNCLAIMED) function E group PA19
+> >
+> >   # cat /sys/kernel/debug/pinctrl/pinctrl-maps
+> >   Pinctrl maps:
+> >
+> >   device b0000000.sdio-host
+> >   state default
+> >   type MUX_GROUP (2)
+> >   controlling device ahb:apb:pinctrl@fc038000
+> >   group PA28
+> >   function E
+> >
+> >   device b0000000.sdio-host
+> >   state default
+> >   type CONFIGS_PIN (3)
+> >   controlling device ahb:apb:pinctrl@fc038000
+> >   pin PA28
+> >   config 00010003
+> >
+> >   device b0000000.sdio-host
+> >   state default
+> >   type MUX_GROUP (2)
+> >   controlling device ahb:apb:pinctrl@fc038000
+> >   group PA18
+> >   function E
+> >
+> >   device b0000000.sdio-host
+> >   state default
+> >   type CONFIGS_PIN (3)
+> >   controlling device ahb:apb:pinctrl@fc038000
+> >   pin PA18
+> >   config 00010003
+> >
+> >I think it is more difficult to understand what is done here.
+> 
+> I don't think I agree. The HW level groups are the individual pins, so I
+> think the second option is clearer and more correct. What is the "sdmmc1_0"
+> group in the first example? Does any such thing even exist in HW?
+
+If a user see this, I will have to take the datasheet to undersand what
+using function E on this pin really means.
+
+sdmmc1_0 group doesn't really exists as a group but a collection of
+pins. The minimum requirement is to have CK, CMD and DAT0 signals. The
+user can choose if he wants to use DAT1,2,3,4,5,6,7 and CD. Maybe he
+would like to keep this pins available for another function.
+
+This is what I have in my device tree.
+
+pinctrl@fc038000 {
+	group_defs {
+		sdmmc1_0 {
+			pins = <PIN_PA22__SDMMC1_CK>,
+			       <PIN_PA28__SDMMC1_CMD>,
+			       <PIN_PA18__SDMMC1_DAT0>,
+			       <PIN_PA19__SDMMC1_DAT1>,
+			       <PIN_PA20__SDMMC1_DAT2>,
+			       <PIN_PA21__SDMMC1_DAT3>,
+			       <PIN_PA30__SDMMC1_CD>;
+		};
+	};
+
+	pinctrl_sdmmc1_default: sdmmc1_default {
+		mux {
+			function = "E";
+			groups = "sdmmc1_0";
+		};
+
+		conf-cmd_data {
+			pins = <PIN_PA28__SDMMC1_CMD>,
+			       <PIN_PA18__SDMMC1_DAT0>,
+			       <PIN_PA19__SDMMC1_DAT1>,
+			       <PIN_PA20__SDMMC1_DAT2>,
+			       <PIN_PA21__SDMMC1_DAT3>;
+			bias-pull-up;
+		};
+
+		conf-ck_cd {
+			pins = <PIN_PA22__SDMMC1_CK>,
+			       <PIN_PA30__SDMMC1_CD>;
+			bias-disable;
+		};
+	};
+}
+
+>From my point of view, it is not so far from what generic pinconf does.
+The only addition is the group_defs node because I don't want SoC
+dependant tables in my driver.
+
+> 
+> >I have sent patches months ago trying to improve things by having
+> >something more flexible. I don't think I introduce too big changes.
+> >The only answers I got were from people thinking that pinctrl framework
+> >conception is not good to fit all kind of controllers. I re-sent the
+> >patch series to gain more expose and have no  answer...
+> 
+> I don't see anything in your description which implies pinctrl isn't
+> perfectly suitable for your HW.
+> 
+
+It could but it doesn't fit all my requirements:
+- no SoC dependant tables in the driver
+- comprehensive sysfs
+
+I agree that these two requirements could be controversial, particulary
+driver tables vs DT. At the moment, I feel there are pros and cons which are
+all admissible so in my opinion both approach should be acceptable.
+
+> Note that I'm on vacation for a couple weeks soon, and I don't expect to
+> follow this conversation during that time. Ultimately, LinusW owns the
+> pinctrl subsystem, and you need to convince him of any changes.
+
+Ok, I'll think about this discussion and try to see what in involves for
+my case.
+
+
+Regards
+
+Ludovic
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
