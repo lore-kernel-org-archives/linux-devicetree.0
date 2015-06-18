@@ -1,43 +1,43 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 0/2] mfd: flexcom: add a driver for Flexcom
-Date: Thu, 18 Jun 2015 16:52:23 +0200
-Message-ID: <20150618145223.GJ27492@piout.net>
-References: <cover.1434632230.git.cyrille.pitchen@atmel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: [PATCH v2 0/5] Add basic microphone detection bindings
+Date: Thu, 18 Jun 2015 15:43:46 +0100
+Message-ID: <1434638631-16451-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <cover.1434632230.git.cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Cc: myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 18/06/2015 at 15:05:08 +0200, Cyrille Pitchen wrote :
-> ChangeLog
-> 
-> v2:
-> - enhance the documentation of DT bindings and change the way the "ranges"
->   property is used.
-> - replace __raw_readl() and __raw_writel() by readl() and writel().
-> - change the module license to "GPL" for v2 or later
-> - print the selected flexcom mode after the hardware version
-> 
-> v1:
-> This series of patches a support to the Atmel Flexcom, a wrapper which
-> integrates an USART, a SPI controller and a TWI controller. Only one
-> peripheral can be used at a time. The active function is selected though
-> the Flexcom Mode Register.
-> 
+This series adds basic microphone detection DT/ACPI bindings
+using the device properties API.
 
-For the whole set:
-Acked-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+The MFD parts and the extcon parts can go seperately through
+there respective trees, but I sent them together so everyone
+can see what is going on. There is no build dependency
+although the MFD patch will fix a couple of Sparse warnings
+that you get if using -Wsparse-all.
 
+Changes since v1:
+ - Removed double include of property.h
+
+Thanks,
+Charles
+
+Charles Keepax (5):
+  extcon: arizona: Update to use the new device properties API
+  extcon: arizona: Add basic microphone detection DT/ACPI bindings
+  extcon: arizona: Convert to gpiod
+  mfd: arizona: Update DT doc for new mic detection bindings
+  mfd: arizona: Update several pdata members to unsigned
+
+ Documentation/devicetree/bindings/mfd/arizona.txt |   16 +++++
+ drivers/extcon/extcon-arizona.c                   |   73 ++++++++++++++++++--
+ include/linux/mfd/arizona/pdata.h                 |   12 ++--
+ 3 files changed, 87 insertions(+), 14 deletions(-)
 
 -- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+1.7.2.5
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
