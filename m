@@ -1,228 +1,50 @@
-From: Anurag Kumar Vulisha <anurag.kumar.vulisha-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH] i2c: removed work arounds in i2c driver for Zynq Ultrascale+ MPSoC
-Date: Thu, 18 Jun 2015 21:49:42 +0530
-Message-ID: <1434644382-11905-1-git-send-email-anuragku@xilinx.com>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH linux-next v2 3/4] tty/serial: at91: add support to FIFOs
+Date: Thu, 18 Jun 2015 18:36:36 +0200
+Message-ID: <20150618163636.GP27492@piout.net>
+References: <cover.1434038494.git.cyrille.pitchen@atmel.com>
+ <e9b7445f103969a286d586054d79461a6efacd65.1434038494.git.cyrille.pitchen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <e9b7445f103969a286d586054d79461a6efacd65.1434038494.git.cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
-Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, svemula-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, Anurag Kumar Vulisha <anuragku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+To: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, leilei.zhao-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Removed the workarounds present in the cadence i2c driver for
-Zynq Ultrascale+ MPSoC
+Hi,
 
-Signed-off-by: Anurag Kumar Vulisha <anuragku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
----
- .../devicetree/bindings/i2c/i2c-cadence.txt        |    2 +-
- drivers/i2c/busses/i2c-cadence.c                   |   67 ++++++++++++++++---
- 2 files changed, 57 insertions(+), 12 deletions(-)
+On 11/06/2015 at 18:20:16 +0200, Cyrille Pitchen wrote :
+> 
+> Signed-off-by: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-cadence.txt b/Documentation/devicetree/bindings/i2c/i2c-cadence.txt
-index 7cb0b56..11ef7f2 100644
---- a/Documentation/devicetree/bindings/i2c/i2c-cadence.txt
-+++ b/Documentation/devicetree/bindings/i2c/i2c-cadence.txt
-@@ -2,7 +2,7 @@ Binding for the Cadence I2C controller
- 
- Required properties:
-   - reg: Physical base address and size of the controller's register area.
--  - compatible: Compatibility string. Must be 'cdns,i2c-r1p10'.
-+  - compatible: Compatibility string.Use 'cdns,i2c-r1p10' or 'cdns,i2c-r1p14'
-   - clocks: Input clock specifier. Refer to common clock bindings.
-   - interrupts: Interrupt specifier. Refer to interrupt bindings.
-   - #address-cells: Should be 1.
-diff --git a/drivers/i2c/busses/i2c-cadence.c b/drivers/i2c/busses/i2c-cadence.c
-index 2ee78e0..6ad1571 100644
---- a/drivers/i2c/busses/i2c-cadence.c
-+++ b/drivers/i2c/busses/i2c-cadence.c
-@@ -17,6 +17,7 @@
- #include <linux/io.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
-+#include <linux/of.h>
- 
- /* Register offsets for the I2C device. */
- #define CDNS_I2C_CR_OFFSET		0x00 /* Control Register, RW */
-@@ -113,6 +114,8 @@
- 
- #define CDNS_I2C_TIMEOUT_MAX	0xFF
- 
-+#define CDNS_I2C_BROKEN_HOLD_BIT	0x00000001
-+
- #define cdns_i2c_readreg(offset)       readl_relaxed(id->membase + offset)
- #define cdns_i2c_writereg(val, offset) writel_relaxed(val, id->membase + offset)
- 
-@@ -135,6 +138,7 @@
-  * @bus_hold_flag:	Flag used in repeated start for clearing HOLD bit
-  * @clk:		Pointer to struct clk
-  * @clk_rate_change_nb:	Notifier block for clock rate changes
-+ * @quirks:		flag for broken hold bit usage in r1p10
-  */
- struct cdns_i2c {
- 	void __iomem *membase;
-@@ -154,6 +158,11 @@ struct cdns_i2c {
- 	unsigned int bus_hold_flag;
- 	struct clk *clk;
- 	struct notifier_block clk_rate_change_nb;
-+	u32 quirks;
-+};
-+
-+struct cdns_platform_data {
-+	u32 quirks;
- };
- 
- #define to_cdns_i2c(_nb)	container_of(_nb, struct cdns_i2c, \
-@@ -172,6 +181,12 @@ static void cdns_i2c_clear_bus_hold(struct cdns_i2c *id)
- 		cdns_i2c_writereg(reg & ~CDNS_I2C_CR_HOLD, CDNS_I2C_CR_OFFSET);
- }
- 
-+static inline bool cdns_is_holdquirk(struct cdns_i2c *id, bool hold_wrkaround)
-+{
-+	return (hold_wrkaround &&
-+		(id->curr_recv_count == CDNS_I2C_FIFO_DEPTH + 1));
-+}
-+
- /**
-  * cdns_i2c_isr - Interrupt handler for the I2C device
-  * @irq:	irq number for the I2C device
-@@ -186,6 +201,7 @@ static irqreturn_t cdns_i2c_isr(int irq, void *ptr)
- {
- 	unsigned int isr_status, avail_bytes, updatetx;
- 	unsigned int bytes_to_send;
-+	bool hold_quirk;
- 	struct cdns_i2c *id = ptr;
- 	/* Signal completion only after everything is updated */
- 	int done_flag = 0;
-@@ -208,6 +224,8 @@ static irqreturn_t cdns_i2c_isr(int irq, void *ptr)
- 	if (id->recv_count > id->curr_recv_count)
- 		updatetx = 1;
- 
-+	hold_quirk = (id->quirks & CDNS_I2C_BROKEN_HOLD_BIT) && updatetx;
-+
- 	/* When receiving, handle data interrupt and completion interrupt */
- 	if (id->p_recv_buf &&
- 	    ((isr_status & CDNS_I2C_IXR_COMP) ||
-@@ -229,8 +247,7 @@ static irqreturn_t cdns_i2c_isr(int irq, void *ptr)
- 			id->recv_count--;
- 			id->curr_recv_count--;
- 
--			if (updatetx &&
--			    (id->curr_recv_count == CDNS_I2C_FIFO_DEPTH + 1))
-+			if (cdns_is_holdquirk(id, hold_quirk))
- 				break;
- 		}
- 
-@@ -241,8 +258,7 @@ static irqreturn_t cdns_i2c_isr(int irq, void *ptr)
- 		 * maintain transfer size non-zero while performing a large
- 		 * receive operation.
- 		 */
--		if (updatetx &&
--		    (id->curr_recv_count == CDNS_I2C_FIFO_DEPTH + 1)) {
-+		if (cdns_is_holdquirk(id, hold_quirk)) {
- 			/* wait while fifo is full */
- 			while (cdns_i2c_readreg(CDNS_I2C_XFER_SIZE_OFFSET) !=
- 			       (id->curr_recv_count - CDNS_I2C_FIFO_DEPTH))
-@@ -264,6 +280,22 @@ static irqreturn_t cdns_i2c_isr(int irq, void *ptr)
- 						  CDNS_I2C_XFER_SIZE_OFFSET);
- 				id->curr_recv_count = id->recv_count;
- 			}
-+		} else if (id->recv_count && !hold_quirk &&
-+						!id->curr_recv_count) {
-+
-+			/* Set the slave address in address register*/
-+			cdns_i2c_writereg(id->p_msg->addr & CDNS_I2C_ADDR_MASK,
-+						CDNS_I2C_ADDR_OFFSET);
-+
-+			if (id->recv_count > CDNS_I2C_TRANSFER_SIZE) {
-+				cdns_i2c_writereg(CDNS_I2C_TRANSFER_SIZE,
-+						CDNS_I2C_XFER_SIZE_OFFSET);
-+				id->curr_recv_count = CDNS_I2C_TRANSFER_SIZE;
-+			} else {
-+				cdns_i2c_writereg(id->recv_count,
-+						CDNS_I2C_XFER_SIZE_OFFSET);
-+				id->curr_recv_count = id->recv_count;
-+			}
- 		}
- 
- 		/* Clear hold (if not repeated start) and signal completion */
-@@ -535,11 +567,13 @@ static int cdns_i2c_master_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
- 	int ret, count;
- 	u32 reg;
- 	struct cdns_i2c *id = adap->algo_data;
-+	bool hold_quirk;
- 
- 	/* Check if the bus is free */
- 	if (cdns_i2c_readreg(CDNS_I2C_SR_OFFSET) & CDNS_I2C_SR_BA)
- 		return -EAGAIN;
- 
-+	hold_quirk = !!(id->quirks & CDNS_I2C_BROKEN_HOLD_BIT);
- 	/*
- 	 * Set the flag to one when multiple messages are to be
- 	 * processed with a repeated start.
-@@ -552,7 +586,7 @@ static int cdns_i2c_master_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
- 		 * followed by any other message, an error is returned
- 		 * indicating that this sequence is not supported.
- 		 */
--		for (count = 0; count < num - 1; count++) {
-+		for (count = 0; (count < num - 1 && hold_quirk); count++) {
- 			if (msgs[count].flags & I2C_M_RD) {
- 				dev_warn(adap->dev.parent,
- 					 "Can't do repeated start after a receive message\n");
-@@ -815,6 +849,16 @@ static int __maybe_unused cdns_i2c_resume(struct device *_dev)
- static SIMPLE_DEV_PM_OPS(cdns_i2c_dev_pm_ops, cdns_i2c_suspend,
- 			 cdns_i2c_resume);
- 
-+static const struct cdns_platform_data r1p10_i2c_def = {
-+				.quirks = CDNS_I2C_BROKEN_HOLD_BIT, };
-+
-+static const struct of_device_id cdns_i2c_of_match[] = {
-+	{ .compatible = "cdns,i2c-r1p10", .data = &r1p10_i2c_def },
-+	{ .compatible = "cdns,i2c-r1p14",},
-+	{ /* end of table */ }
-+};
-+MODULE_DEVICE_TABLE(of, cdns_i2c_of_match);
-+
- /**
-  * cdns_i2c_probe - Platform registration call
-  * @pdev:	Handle to the platform device structure
-@@ -830,6 +874,7 @@ static int cdns_i2c_probe(struct platform_device *pdev)
- 	struct resource *r_mem;
- 	struct cdns_i2c *id;
- 	int ret;
-+	const struct of_device_id *match;
- 
- 	id = devm_kzalloc(&pdev->dev, sizeof(*id), GFP_KERNEL);
- 	if (!id)
-@@ -837,6 +882,12 @@ static int cdns_i2c_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, id);
- 
-+	match = of_match_node(cdns_i2c_of_match, pdev->dev.of_node);
-+	if (match && match->data) {
-+		const struct cdns_platform_data *data = match->data;
-+		id->quirks = data->quirks;
-+	}
-+
- 	r_mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	id->membase = devm_ioremap_resource(&pdev->dev, r_mem);
- 	if (IS_ERR(id->membase))
-@@ -935,12 +986,6 @@ static int cdns_i2c_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
--static const struct of_device_id cdns_i2c_of_match[] = {
--	{ .compatible = "cdns,i2c-r1p10", },
--	{ /* end of table */ }
--};
--MODULE_DEVICE_TABLE(of, cdns_i2c_of_match);
--
- static struct platform_driver cdns_i2c_drv = {
- 	.driver = {
- 		.name  = DRIVER_NAME,
+Seems good to me, a few comments:
+
+> +	if (port->fifo_size < 8 || port->fifo_size > 32) {
+
+I'm not sure why you limit the size to 32. At some point, a new SoC may
+be release with a bigger FIFO then we'll have to change the code instead
+of just putting the appropriate value in the device tree.
+
+> +		port->fifo_size = 0;
+> +		dev_err(&pdev->dev, "Invalid FIFO size\n");
+> +		return;
+> +	}
+> +
+> +	/*
+> +	 * 0 <= rts_low <= rts_high <= fifo_size
+> +	 * Once their CTS line asserted by the remote peer, some x86 UARTs tend
+> +	 * to flush their internal TX FIFO, commonly up to 8 data, before
+> +	 * actually stopping to send new data. So we try to set the RTS High
+> +	 * Threshold to a raisonable high value respecting this 8 data empirical
+              reasonably --^
+
 -- 
-1.7.4
-
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
