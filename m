@@ -1,39 +1,101 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] ARM: at91: dts: add isi & ov2640 dt nodes for
- at91sam9m10g45ek board
-Date: Thu, 18 Jun 2015 17:45:37 +0200
-Message-ID: <20150618154537.GM27492@piout.net>
-References: <1434449315-9243-1-git-send-email-josh.wu@atmel.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 09/20] ARM: dts: sun4i: Enable USB DRC on
+ the Cubieboard
+Date: Thu, 18 Jun 2015 17:59:35 +0200
+Message-ID: <20150618155935.GR11732@lukather>
+References: <1433530943-12599-1-git-send-email-hdegoede@redhat.com>
+ <1433530943-12599-10-git-send-email-hdegoede@redhat.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="iBHcHRCIarfY7C0j"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB4WVROWAKGQEJ5OSPYA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1434449315-9243-1-git-send-email-josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>
+In-Reply-To: <1433530943-12599-10-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+--iBHcHRCIarfY7C0j
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Seems good to me, a small comment below:
+Hi Hans,
 
-On 16/06/2015 at 18:08:34 +0800, Josh Wu wrote :
-> @@ -1068,8 +1076,12 @@
->  				clocks = <&isi_clk>;
->  				clock-names = "isi_clk";
->  				pinctrl-names = "default";
-> -				pinctrl-0 = <&pinctrl_isi>;
-> +				pinctrl-0 = <&pinctrl_isi_data_0_7>;
+On Fri, Jun 05, 2015 at 09:02:12PM +0200, Hans de Goede wrote:
+> Enable the otg/drc usb controller on the Cubieboard. Note that the
+> 5V of the otg is directly connected to the general 5V, so we only use
+> the id pin.
+> 
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/sun4i-a10-cubieboard.dts | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/sun4i-a10-cubieboard.dts b/arch/arm/boot/dts/sun4i-a10-cubieboard.dts
+> index 9afb4e0..046a84d 100644
+> --- a/arch/arm/boot/dts/sun4i-a10-cubieboard.dts
+> +++ b/arch/arm/boot/dts/sun4i-a10-cubieboard.dts
+> @@ -155,6 +155,10 @@
+>  	status = "okay";
+>  };
+>  
+> +&otg_sram {
+> +	status = "okay";
+> +};
+> +
+>  &pio {
+>  	led_pins_cubieboard: led_pins@0 {
+>  		allwinner,pins = "PH20", "PH21";
+> @@ -162,6 +166,13 @@
+>  		allwinner,drive = <SUN4I_PINCTRL_20_MA>;
+>  		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+>  	};
+> +
+> +	usb0_id_detect_pin: usb0_id_detect_pin@0 {
+> +		allwinner,pins = "PH4";
+> +		allwinner,function = "gpio_in";
+> +		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+> +		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
+> +	};
+>  };
+>  
+>  &reg_ahci_5v {
+> @@ -216,7 +227,15 @@
+>  	status = "okay";
+>  };
+>  
+> +&usb_otg {
+> +	dr_mode = "otg";
+> +	status = "okay";
+> +};
+> +
+>  &usbphy {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&usb0_id_detect_pin>;
+> +	usb0_id_det-gpio = <&pio 7 4 GPIO_ACTIVE_HIGH>; /* PH4 */
 
-I would say that the pinctrl is board specific so both pinctrl-names and
-pinctrl-0 should go to at91sam9m10g45ek.dts
+Does that work? 
+
+Your phy driver seem to actively check at probe time for both the ID
+detect and VBUS detect pins to be set in the DT, which is not the case
+here.
+
+I don't really get either why VBUS detect has to be set. Can't it work
+just fine if you have a regulator that you can control and the ID pin
+alone ?
+
+Maxime
 
 -- 
-Alexandre Belloni, Free Electrons
+Maxime Ripard, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--iBHcHRCIarfY7C0j--
