@@ -1,119 +1,153 @@
-From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Subject: Re: [PATCH 1/3] iio: adc: hi-843x: Holt HI-8435/8436/8437 descrete
- ADC
-Date: Thu, 18 Jun 2015 21:33:07 +0200
-Message-ID: <55831CF3.3070906@metafoo.de>
-References: <1433161073-21967-1-git-send-email-vladimir.barinov@cogentembedded.com> <1433161211-22034-1-git-send-email-vladimir.barinov@cogentembedded.com> <55746D35.1030409@kernel.org>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: FW: [PATCH v4 1/4] Broadcom Bluetooth UART Device Tree bindings
+Date: Thu, 18 Jun 2015 14:41:10 -0500
+Message-ID: <CAL_JsqJAUTjNehtr_Af93k71mdSREb9pLMoSyDTm1S42VkA2sQ@mail.gmail.com>
+References: <1434576658-20730-1-git-send-email-ifaenson@broadcom.com>
+ <1434576658-20730-2-git-send-email-ifaenson@broadcom.com> <E0D3336E15B58B4294723AC879BA5E942634F2@IRVEXCHMB15.corp.ad.broadcom.com>
+ <CAL_JsqK9kup3sm3qgDLqtT8ajrN1ee6zfXwOoZqoq9cXQNwE_w@mail.gmail.com> <E0D3336E15B58B4294723AC879BA5E94263E58@IRVEXCHMB15.corp.ad.broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55746D35.1030409-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <E0D3336E15B58B4294723AC879BA5E94263E58-Wwdb2uEOBX8N93KskqRXH71+IgudQmzARxWJa1zDYLQ@public.gmane.org>
+Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ilya Faenson <ifaenson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: "marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org" <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, Arend Van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/07/2015 06:11 PM, Jonathan Cameron wrote:
-> On 01/06/15 13:20, Vladimir Barinov wrote:
->> Add Holt descrete ADC driver for HI-8435/8436/8437 chips
->>
->> Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-> Hmm. The main issue here is one man's discrete ADC is another man's
-> configurable general purpose input device.
+On Thu, Jun 18, 2015 at 1:54 PM, Ilya Faenson <ifaenson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+> Hi Rob,
 
-The term discrete ADC is a bit ambiguous and I'm not even sure if this is 
-the right term for this kind of device.
+Your emails are base64 encoded. They should be plain text for the list.
 
-I'd call this a threshold detector. The device seems to have two comparators 
-for each channel, one for the lower threshold, one for the upper threshold. 
-If the voltage level goes above the upper threshold a FF is set, if it goes 
-below the lower threshold the FF is cleared. Both transitions happen 
-asynchronously as soon has the signal is below/above the threshold. And 
-while converts a analog signal to digital one this is not what you typically 
-call a ADC.
-
+> -----Original Message-----
+> From: Rob Herring [mailto:robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org]
+> Sent: Thursday, June 18, 2015 11:03 AM
+> To: Ilya Faenson
+> Cc: marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org; Arend Van Spriel; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Subject: Re: FW: [PATCH v4 1/4] Broadcom Bluetooth UART Device Tree bindings
 >
-> Anyhow, from an IIO point of view what we care about is consistent
-> userspace interface. A discrete ADC to userspace is definitely a generic
-> input, be it one with a configurable threshold level and other bells
-> and whistles.
->
-> Right now IIO does not have explicit support for digital I/O channels,
-> but it's been discussed many times before.  We do want some buy in from
-> the GPIO infrastructure guys though to avoid stepping on peoples toes!
-> Also I suspect we'd need an IIO to gpio bridge pretty soon as well
-> as the likelihood of someone using the gpios in an IIO device to save
-> themselves some pins on their soc is very high.
->
-> There are generic gpios on some of the IMUs and similar, but they have
-> always been ignored in drivers, or just handled by registering them as
-> a GPIO rather than through the buffered interfaces etc.  I suspect if
-> the core support was in place, there would be interesting in this
-> functionality.
->
-> Lars, you've looked at the demux stuff a lot more recently than I have.
-> One issue this driver raises is single bit channels. For those I think
-> we need to support 1 bit packing throughout.  How hard do you think it
-> would be?
-> (1 bit, 8 bit, 16 bit, 32 bit, 64 bit etc) rather than any more complex
-> packing.
-
-Yea, good question. Would definitely need some changes to the core. But it 
-is also definitely something we should do. The current approach taken by 
-this driver is rather hackish and works around the limitations of the 
-framework. This is something that more often than not leads to long term issues.
-
-We'd kind of need a mechanism to say that multiple channels are contained 
-within the same word. Maybe something like setting the same scan_index for 
-those channels but with different shift offsets could work?
-
-So say storagebits is 8, realbits is 1 and shift is depending on the 
-position of the bit in the byte. All channels in the same byte would get the 
-same scan index.
-
-This could also be used to handle some of the devices which have additional 
-metadata status information in the otherwise unused bits in the result word.
+> On Wed, Jun 17, 2015 at 6:11 PM, Ilya Faenson <ifaenson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+>> + devicetree lists
 
 [...]
->> +#define HI843X_VOLTAGE_CHANNEL(num)				\
->> +	{							\
->> +		.type = IIO_VOLTAGE,				\
->> +		.indexed = 1,					\
->> +		.channel = num,					\
->> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),	\
->> +		.scan_index = num,				\
->> +		.scan_type = {					\
->> +			.sign = 'u',				\
->> +			.realbits = 1,				\
->> +			.storagebits = 8,			\
->> +		},						\
->> +	}
-> As commented at the start of this review. These are not voltage channels
-> as userspace understands them (I understand from a hardware point of
-> view where you are coming from but we have to care about what the software
-> using them cares about!)
+
+>> diff --git a/Documentation/devicetree/bindings/net/bluetooth/btbcm.txt b/Documentation/devicetree/bindings/net/bluetooth/btbcm.txt
+>> new file mode 100644
+>> index 0000000..5dbcd57
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/net/bluetooth/btbcm.txt
+>> @@ -0,0 +1,86 @@
+>> +btbcm
+>> +------
+>> +
+>> +Required properties:
+>> +
+>> +       - compatible : must be "brcm,brcm-bt-uart".
 >
-> These are digital signals and need to be treated as such.
+> You need to describe the chip, not the interface.
+>
+> IF: This driver is for all Broadcom Bluetooth UART based chips.
 
-Exactly my thoughts as well.
+BT only chips? Most/many Broadcom chips are combo chips. I understand
+the driver for BT is *mostly* separate from other chip functions like
+WiFi, GPS and NFC, but the h/w is a single chip. I say most because
+likely there are some parts shared: a voltage rail, reset line, or
+power down line. I think some can do BT over the SDIO interface too,
+so the interface may be shared. The DT is a description of the h/w
+(i.e. what part # for a chip) and not a driver data structure. You
+need to describe the whole chip in the binding. It is a Linux problem
+if there needs to be multiple separate drivers.
 
 >
-> I wonder if we want to take this oportunity to add 1 bit packing to the
-> demux etc in the IIO core so we can have tighter packing on these
-> values.  Shouldn't be too hard to do and we probably do want it if we are
-> going to support these sorts of devices.
+>> +       - tty : tty device connected to this Bluetooth device.
 >
-> Will take a bit of shuffling to pack the relevant channels together if only
-> a subset are enabled and to notice when no repacking at all is needed.
-> This will probably first one implementing in the core and pushing out into
-> the dummy driver to allow for testing of corner cases.
+> "tty" is a bit of a Linuxism and "ttyS0" certainly is. Further, there
+> is no guarantee which uart is assigned ttyS0.
+>
+> This should be a phandle to the connected uart if not a sub node of
+> the uart. This is complicated since these chips have multiple host
+> connections. It needs to go under either uart or SDIO host and have a
+> reference back to the one it is not under. Given the SDIO interface is
+> discoverable (although sideband gpios and regulators are not), I would
+> put this under the uart node as that is never discoverable.
+>
+> As I've mentioned previously, there's several cases of bindings for
+> UART slave devices being posted. This all needs to be coordinated to
+> use a common structure.
+>
+> IF: This driver does not really access the UART. If just needs to have a string of some sort to map instances of the BlueZ protocol into platform devices to employ the right GPIOs and interrupts. I could use anything you recommend available through the tty_struct coming to the protocol from the BlueZ line discipline. Moreover, every end user platform I've ever dealt with in 16 years of working with Bluetooth had a single BT UART device. So these are really rare (typically test platforms) cases only. The mapping is not needed for most platforms at all. I suspect the right thing to do would be to make this parameter optional. The mapping would be done only if the parameter is present. I will use anything tty_struct derived you specify. Makes sense?
 
-Yeah, the bit shuffling gets quite cumbersome and potentially expensive. I 
-think we should try to avoid it if at least one of the channels in the same 
-bank is enabled all of them are read. And then let userspace figure out 
-which bits it wants to use.
 
-But how exactly is the typical expect usage of this device. Like how would a 
-userspace application use it? Is buffered mode where samples are taken in a 
-continuous mode something that is really needed?
+You've missed my point. I'm not talking about connecting multiple
+devices to a UART at once. There are several instances of people
+trying to add UART connected devices into DT[1][2]. My point is these
+devices all need to have the DT binding done in a common way across
+different platforms. Otherwise, we can not have common code to parse
+the DT and find devices attached to a UART.
+
+
+>
+>> +
+>> +Optional properties:
+>> +
+>> +  - bt-host-wake-gpios : bt-host-wake input GPIO to be used as an interrupt.
+>> +
+>> +  - bt-wake-gpios : bt-wake output GPIO to be used to suspend / resume device.
+>> +
+>> +  - bt-reg-on-gpios : reg-on output GPIO to be used to power device on/off.
+>> +
+>> +  - oper-speed : Bluetooth device operational baud rate.
+>> +    Default: 3000000.
+>> +
+>> +  - manual-fc : flow control UART in suspend / resume scenarios.
+>> +    Default: 0.
+>
+> Can be boolean?
+>
+> I don't really follow the description.
+>
+> IF: Okay, I will make it boolean. To clarify the description, it controls whether the BlueZ protocol needs to flow control the UART when the BT device is suspended and un-flow control it when the device is resumed.
+
+Okay. Discussion of BlueZ is not relevant to bindings. I would say
+something like "The hardware requires the host UART flow-control to be
+de-asserted during suspend."
+
+[...]
+
+>> +  - configure-audio : configure platform PCM SCO flag.
+>> +    Default: false.
+>
+> So ignore the rest of the settings if not set? Perhaps combine with pcm-routing:
+>
+> <blank> - no audio
+> audio-mode = "pcm";
+> audio-mode = "hci"; (or "sco-hci"?)
+>
+> IF: That's right: the rest of the parameters are not needed if configure-audio is false. Talking about your suggestions, this driver does nothing if the audio is either sent inbound or not used at all. Would you agree to something like the configure-pcm-audio flag?
+
+So why not combine with pcm-routing?
+
+[...]
+
+> Use the actual rate rather than an enumeration. It is a simple div by
+> 128k and log2 to convert in the driver. This makes the property more
+> compatible with other chips.
+>
+> IF: These rates are subject to change in future chips with no guarantees of the pattern holding. I would prefer to use the actual value expected by the firmware if you don't mind to avoid maintaining the extra driver code.
+
+Exactly my point. If the next chip has 0-64k, 1-256k, 2-2048k, your
+binding is broken. Just put the bit rate in the binding and do the
+mapping to register value in the driver.
+
+> What does incall mean? What is the bit rate when not in a call?
+>
+> IF: That's the name given to me by the hardware guys. What do you think about the "pcm-interface-rate" instead?
+
+That's somewhat ambiguous. Is that the clock, sample rate, or bit rate
+(sample rate * sample size * channels).
+
+Rob
+
+[1] https://lwn.net/Articles/643878/
+[2] http://www.spinics.net/lists/devicetree/msg83596.html
