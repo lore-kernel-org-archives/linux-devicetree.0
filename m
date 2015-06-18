@@ -1,71 +1,77 @@
-From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: [PATCH 5/5] mfd: arizona: Update several pdata members to unsigned
-Date: Thu, 18 Jun 2015 13:52:29 +0100
-Message-ID: <1434631949-28594-6-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Subject: [PATCH 2/5] extcon: arizona: Add basic microphone detection DT/ACPI bindings
+Date: Thu, 18 Jun 2015 13:52:26 +0100
+Message-ID: <1434631949-28594-3-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 References: <1434631949-28594-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1434631949-28594-1-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
-Cc: myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1434631949-28594-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: lee.jones@linaro.org, cw00.choi@samsung.com
+Cc: myungjoo.ham@samsung.com, sameo@linux.intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-Device tree and ACPI primarily deal with unsigned ints, many of the
-pdata members in the Arizona driver are signed ints but are only ever
-assigned positive values. Changing these pdata fields to unsigned ints
-avoids us having to choose between overly verbose code and Sparse
-warnings.
+This patch adds bindings for the basic microphone detection platform
+data.
 
-Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
 ---
- include/linux/mfd/arizona/pdata.h |   12 ++++++------
- 1 files changed, 6 insertions(+), 6 deletions(-)
+ drivers/extcon/extcon-arizona.c |   30 ++++++++++++++++++++++++++++++
+ 1 files changed, 30 insertions(+), 0 deletions(-)
 
-diff --git a/include/linux/mfd/arizona/pdata.h b/include/linux/mfd/arizona/pdata.h
-index aa5c48b..77f91a7 100644
---- a/include/linux/mfd/arizona/pdata.h
-+++ b/include/linux/mfd/arizona/pdata.h
-@@ -101,7 +101,7 @@ struct arizona_pdata {
- 	 * useful for systems where and I2S bus with multiple data
- 	 * lines is mastered.
- 	 */
--	int max_channels_clocked[ARIZONA_MAX_AIF];
-+	unsigned int max_channels_clocked[ARIZONA_MAX_AIF];
+diff --git a/drivers/extcon/extcon-arizona.c b/drivers/extcon/extcon-arizona.c
+index 3b41905..c1197df 100644
+--- a/drivers/extcon/extcon-arizona.c
++++ b/drivers/extcon/extcon-arizona.c
+@@ -25,6 +25,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/property.h>
+ #include <linux/pm_runtime.h>
++#include <linux/property.h>
+ #include <linux/regulator/consumer.h>
+ #include <linux/extcon.h>
  
- 	/** GPIO5 is used for jack detection */
- 	bool jd_gpio5;
-@@ -125,22 +125,22 @@ struct arizona_pdata {
- 	unsigned int hpdet_channel;
+@@ -1115,6 +1116,7 @@ static int arizona_extcon_device_get_pdata(struct arizona *arizona)
+ {
+ 	struct arizona_pdata *pdata = &arizona->pdata;
+ 	unsigned int val = ARIZONA_ACCDET_MODE_HPL;
++	unsigned int dbtime;
  
- 	/** Extra debounce timeout used during initial mic detection (ms) */
--	int micd_detect_debounce;
-+	unsigned int micd_detect_debounce;
+ 	device_property_read_u32(arizona->dev, "wlf,hpdet-channel", &val);
+ 	switch (val) {
+@@ -1128,6 +1130,34 @@ static int arizona_extcon_device_get_pdata(struct arizona *arizona)
+ 		pdata->hpdet_channel = ARIZONA_ACCDET_MODE_HPL;
+ 	}
  
- 	/** GPIO for mic detection polarity */
- 	int micd_pol_gpio;
++	device_property_read_u32(arizona->dev, "wlf,micd-detect-debounce",
++				 &pdata->micd_detect_debounce);
++
++	device_property_read_u32(arizona->dev, "wlf,micd-bias-start-time",
++				 &pdata->micd_bias_start_time);
++
++	device_property_read_u32(arizona->dev, "wlf,micd-rate",
++				 &pdata->micd_rate);
++
++	dbtime = 0;
++	device_property_read_u32(arizona->dev, "wlf,micd-dbtime", &dbtime);
++	switch (dbtime) {
++	case 2:
++		pdata->micd_dbtime = 0x10000;
++		break;
++	case 4:
++		pdata->micd_dbtime = 0x0001;
++		break;
++	default:
++		break;
++	}
++
++	device_property_read_u32(arizona->dev, "wlf,micd-timeout",
++				 &pdata->micd_timeout);
++
++	pdata->micd_force_micbias = device_property_read_bool(arizona->dev,
++						"wlf,micd-force-micbias");
++
+ 	return 0;
+ }
  
- 	/** Mic detect ramp rate */
--	int micd_bias_start_time;
-+	unsigned int micd_bias_start_time;
- 
- 	/** Mic detect sample rate */
--	int micd_rate;
-+	unsigned int micd_rate;
- 
- 	/** Mic detect debounce level */
--	int micd_dbtime;
-+	unsigned int micd_dbtime;
- 
- 	/** Mic detect timeout (ms) */
--	int micd_timeout;
-+	unsigned int micd_timeout;
- 
- 	/** Force MICBIAS on for mic detect */
- 	bool micd_force_micbias;
 -- 
 1.7.2.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
