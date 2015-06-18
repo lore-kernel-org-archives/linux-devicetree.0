@@ -1,98 +1,58 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v5 10/11] nvmem: sunxi: Move the SID driver to the nvmem
- framework
-Date: Thu, 18 Jun 2015 14:09:52 +0100
-Message-ID: <5582C320.40605@linaro.org>
-References: <1432226535-8640-1-git-send-email-srinivas.kandagatla@linaro.org> <1432226733-9243-1-git-send-email-srinivas.kandagatla@linaro.org> <5580AB72.6010909@codeaurora.org>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v2 0/2] mfd: flexcom: add a driver for Flexcom
+Date: Thu, 18 Jun 2015 15:09:45 +0200
+Message-ID: <20150618150945.5cc698be@bbrezillon>
+References: <cover.1434632230.git.cyrille.pitchen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5580AB72.6010909@codeaurora.org>
+In-Reply-To: <cover.1434632230.git.cyrille.pitchen@atmel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>, linux-arm-kernel@lists.infradead.org
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Brown <broonie@kernel.org>, s.hauer@pengutronix.de, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, arnd@arndb.de, pantelis.antoniou@konsulko.com, mporter@konsulko.com
+To: Cyrille Pitchen <cyrille.pitchen@atmel.com>
+Cc: nicolas.ferre@atmel.com, alexandre.belloni@free-electrons.com, sameo@linux.intel.com, lee.jones@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, 18 Jun 2015 15:05:08 +0200
+Cyrille Pitchen <cyrille.pitchen@atmel.com> wrote:
+
+> ChangeLog
+> 
+> v2:
+> - enhance the documentation of DT bindings and change the way the "ranges"
+>   property is used.
+> - replace __raw_readl() and __raw_writel() by readl() and writel().
+> - change the module license to "GPL" for v2 or later
+> - print the selected flexcom mode after the hardware version
+> 
+> v1:
+> This series of patches a support to the Atmel Flexcom, a wrapper which
+> integrates an USART, a SPI controller and a TWI controller. Only one
+> peripheral can be used at a time. The active function is selected though
+> the Flexcom Mode Register.
+
+For the whole series,
+
+Acked-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+
+> 
+> Cyrille Pitchen (2):
+>   mfd: devicetree: add bindings for Atmel Flexcom
+>   mfd: flexcom: add a driver for Atmel Flexible Serial Communication
+>     Unit
+> 
+>  .../devicetree/bindings/mfd/atmel-flexcom.txt      | 58 +++++++++++++
+>  drivers/mfd/Kconfig                                | 11 +++
+>  drivers/mfd/Makefile                               |  1 +
+>  drivers/mfd/atmel-flexcom.c                        | 97 ++++++++++++++++++++++
+>  4 files changed, 167 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/atmel-flexcom.txt
+>  create mode 100644 drivers/mfd/atmel-flexcom.c
+> 
 
 
-On 17/06/15 00:04, Stephen Boyd wrote:
-> On 05/21/2015 09:45 AM, Srinivas Kandagatla wrote:
->> diff --git a/drivers/nvmem/Makefile b/drivers/nvmem/Makefile
->> index caea611..cc46791 100644
->> --- a/drivers/nvmem/Makefile
->> +++ b/drivers/nvmem/Makefile
->> @@ -9,3 +9,5 @@ nvmem_core-y			+= nvmem-mmio.o
->>   # Devices
->>   obj-$(CONFIG_QCOM_QFPROM)	+= nvmem_qfprom.o
->>   nvmem_qfprom-y			:= qfprom.o
->> +obj-$(CONFIG_NVMEM_SUNXI_SID)	+= nvmem-sunxi-sid.o
->> +nvmem-sunxi-sid-y		:= sunxi-sid.o
->
-> Oh I see, so the module has nvmem- in the name. Isn't there some way to
-> add a rule to do that for all provider drivers?
->
-I will give it a try, and also fix the other comments on this patch.
 
-
->> diff --git a/drivers/nvmem/sunxi-sid.c b/drivers/nvmem/sunxi-sid.c
->> new file mode 100644
->> index 0000000..5bfce35
->> --- /dev/null
->> +++ b/drivers/nvmem/sunxi-sid.c
->> @@ -0,0 +1,64 @@
->> +/*
->> + * Allwinner sunXi SoCs Security ID support.
->> + *
->> + * Copyright (c) 2013 Oliver Schinagl <oliver@schinagl.nl>
->> + * Copyright (C) 2014 Maxime Ripard <maxime.ripard@free-electrons.com>
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License as published by
->> + * the Free Software Foundation; either version 2 of the License, or
->> + * (at your option) any later version.
->> + *
->> + * This program is distributed in the hope that it will be useful,
->> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + * GNU General Public License for more details.
->> + *
->> + */
->> +
->> +#include <linux/module.h>
->> +#include <linux/of.h>
->> +#include "nvmem-mmio.h"
->> +
->> +static bool sunxi_sid_writeable_reg(struct device *dev, unsigned int reg)
->> +{
->> +	return false;
->> +}
->> +
->> +static struct nvmem_config econfig = {
->
-> const?
->
->> +	.name = "sunix-sid",
->> +	.owner = THIS_MODULE,
->> +};
->> +
->> +static struct regmap_config sunxi_sid_regmap_config = {
->
-> const?
->
->> +	.reg_bits = 32,
->> +	.val_bits = 32,
->> +	.reg_stride = 4,
->> +	.writeable_reg = sunxi_sid_writeable_reg,
->> +};
->> +
->> +static struct nvmem_mmio_data sunxi_data = {
->
-> const?
->
->> +	.nvmem_config = &econfig,
->> +	.regmap_config = &sunxi_sid_regmap_config,
->> +};
->> +
->
->
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
