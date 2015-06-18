@@ -1,50 +1,51 @@
-From: Dave Gerlach <d-gerlach@ti.com>
-Subject: Re: [PATCH v5 1/4] remoteproc: introduce rproc_get_by_phandle API
-Date: Thu, 18 Jun 2015 11:01:21 -0500
-Message-ID: <5582EB51.8010406@ti.com>
-References: <1432327530-48032-2-git-send-email-d-gerlach@ti.com> <1434566762-40702-1-git-send-email-d-gerlach@ti.com> <CAK=Wgbb1e6O574Bpicy4Y623vtiigauT22H-zk+JXGCz070i5g@mail.gmail.com>
+From: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Subject: [PATCH 2/4] mfd: da9150: Update DT bindings for Fuel-Gauge support
+Date: Thu, 18 Jun 2015 17:06:36 +0100
+Message-ID: <c2059088c648e3356a0c6f35db8f3f1116a68ffd.1434643491.git.Adam.Thomson.Opensource@diasemi.com>
+References: <cover.1434643491.git.Adam.Thomson.Opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK=Wgbb1e6O574Bpicy4Y623vtiigauT22H-zk+JXGCz070i5g@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ohad Ben-Cohen <ohad@wizery.com>
-Cc: linux-arm <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Suman Anna <s-anna@ti.com>, Tony Lindgren <tony@atomide.com>
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <cover.1434643491.git.Adam.Thomson.Opensource@diasemi.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Support Opensource <support.opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
-Ohad,
-On 06/18/2015 04:04 AM, Ohad Ben-Cohen wrote:
-> Hi Dave,
-> 
-> On Wed, Jun 17, 2015 at 9:46 PM, Dave Gerlach <d-gerlach@ti.com> wrote:
->> Allow users of remoteproc the ability to get a handle to an rproc by
->> passing a phandle supplied in the user's device tree node. This is
->> useful in situations that require manual booting of the rproc.
->>
->> This patch uses the code removed by commit 40e575b1d0b3 ("remoteproc:
->> remove the get_by_name/put API") for the ref counting but is modified
->> to use a simple list and locking mechanism and has rproc_get_by_name
->> replaced with an rproc_get_by_phandle API.
->>
->> Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
->> Signed-off-by: Suman Anna <s-anna@ti.com>
->> ---
->> v4->v5: Fixed build error from of_find_node_by_phandle when !CONFIG_OF
->>         based on offline discussion.
-> 
-> We can't rebase our for-next branch, so I've applied a
-> similar fix in a separate patch.
-> 
-> Please check our for-next branch to make sure things still work for you.
-> 
+Signed-off-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+---
+ Documentation/devicetree/bindings/mfd/da9150.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Oh sorry about. Pulled your for-next, tried it out, everything looks good to me,
-thanks!
+diff --git a/Documentation/devicetree/bindings/mfd/da9150.txt b/Documentation/devicetree/bindings/mfd/da9150.txt
+index d0588ea..8bf1a20 100644
+--- a/Documentation/devicetree/bindings/mfd/da9150.txt
++++ b/Documentation/devicetree/bindings/mfd/da9150.txt
+@@ -6,6 +6,7 @@ Device			 Description
+ ------			 -----------
+ da9150-gpadc		: General Purpose ADC
+ da9150-charger		: Battery Charger
++da9150-fg		: Battery Fuel-Gauge
+ 
+ ======
+ 
+@@ -22,6 +23,7 @@ Required properties:
+ Sub-devices:
+ - da9150-gpadc: See Documentation/devicetree/bindings/iio/adc/da9150-gpadc.txt
+ - da9150-charger: See Documentation/devicetree/bindings/power/da9150-charger.txt
++- da9150-fg: See Documentation/devicetree/bindings/power/da9150-fg.txt
+ 
+ 
+ Example:
+@@ -40,4 +42,8 @@ Example:
+ 		da9150-charger {
+ 			...
+ 		};
++
++		da9150-fg {
++			...
++		};
+ 	};
+-- 
+1.9.3
 
-Regards,
-Dave
-
-> Thanks,
-> Ohad.
-> 
