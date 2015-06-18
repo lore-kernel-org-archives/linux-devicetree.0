@@ -1,145 +1,75 @@
-From: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v6] usb: common: add API to set usb otg capabilities by
- device tree
-Date: Thu, 18 Jun 2015 15:55:28 +0800
-Message-ID: <20150618075527.GA15280@shlinux2>
-References: <1434590302-18066-1-git-send-email-jun.li@freescale.com>
- <20150618103650.7c3d1b8ceb134388b0d8b093@ti.com>
+From: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 2/3] spi: mediatek: Add spi bus for Mediatek MT8173
+Date: Thu, 18 Jun 2015 16:11:47 +0800
+Message-ID: <1434615107.22739.1.camel@mtksdaap41>
+References: <1431675522.2128.13.camel@mhfsdcap03>
+	 <20150515092543.GY2761@sirena.org.uk>
+	 <1433758546.19786.16.camel@mtksdaap41>
+	 <20150608175927.GO14071@sirena.org.uk>
+	 <1433844321.16178.6.camel@mtksdaap41>
+	 <20150609103951.GA14071@sirena.org.uk>
+	 <1433923569.22080.1.camel@mtksdaap41>
+	 <1434532083.19346.27.camel@mtksdaap41>
+	 <20150617124758.GE3214@sirena.org.uk>
+	 <1434550251.23617.38.camel@mtksdaap41>
+	 <20150617163531.GU14071@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150618103650.7c3d1b8ceb134388b0d8b093-l0cyMroinI0@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Cc: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150617163531.GU14071-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Leilk Liu =?UTF-8?Q?=28=E5=88=98=E7=A3=8A=29?= <Leilk.Liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, HongZhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 18, 2015 at 10:36:50AM +0300, Roger Quadros wrote:
-> Lin,
+On Wed, 2015-06-17 at 17:35 +0100, Mark Brown wrote:
+> On Wed, Jun 17, 2015 at 10:10:51PM +0800, Eddie Huang wrote:
 > 
-> You can use --in-reply-to "message id of v5 of this path" so that it appears together
-> with the other patches in peoples mailboxes.
+> > Our hardware limitation is: we don't have separate dma tx, rx channel
+> > with transfer finish interrupt, only have spi trigger operation.So the
+> > mediatek SPI dma full duplex operation steps are:
+> > 1. Set TX DMA address.
+> > 2. Set RX DMA address.
+> > 3. Set length (this step assume TX, RX are the same size).
+> > 4. Set TX DMA enable, RX DMA enable bit in spi config register. (not
+> > trigger DMA, just told spi use dma)
+> > 5. Trigger spi operations.
+> > 6. Wait spi operations finish interrupt.
 > 
-okay, I will try that next time, thanks.
+> Sure, that's what I understood.
+> 
+> > If tx scatterlist per list data size are 128, 4096, 256. rx scatterlist
+> > per list data size are 128, 4096, 256. So we need to go through above
+> > steps three times. If tx scatterlists per list data size are 128, 4096,
+> > 256. rx scatterlists per list data size are 256, 4096, 128. If we start
+> > sending first entry, tx size is 128, rx size is 256, this will cause
+> > hardware malfunction because tx, rx data length are not the same.
+> 
+> > The solution I think is copy scatterlist data into one single buffer in
+> > mediatek spi transfer function, but I think this is odd because
+> > __spi_map_msg() map single buffer into scatterlist, then our driver map
+> > scatterlist into single buffer again. I hope this explaination is more
+> > clear than before.
+> 
+> To repeat what I said in my last mail: there's no need to use the
+> scatterlists as-is, your driver can do whatever set of DMA transfers it
+> likes to keep the lengths of each transfer the same.  Attempting to
+> linearise the transfers in memory isn't going to work unless you
+> allocate physically contiguous memory (which could get painful) and will
+> add substantial overhead.
+> 
+> For example with your above example you could split the transfers up to
+> be 128, 128, 3968, 128, 128.
 
-Li Jun
-> On Thu, 18 Jun 2015 09:18:22 +0800
-> Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> 
-> > Change for v6:
-> > UPdate otg caps by disable flags even if otg_rev is not passed, this is
-> > needed in case user wants to disable whole OTG(or just want to ID pin
-> > detect).
-> > 
-> > Check property of usb hardware to get otg version and if SRP, HNP and ADP
-> > are disabled.
-> > 
-> > Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > ---
-> >  drivers/usb/common/common.c | 27 +++++++++++++++++++++++++++
-> >  include/linux/usb/of.h      |  7 +++++++
-> >  2 files changed, 34 insertions(+)
-> > 
-> > diff --git a/drivers/usb/common/common.c b/drivers/usb/common/common.c
-> > index b530fd4..12f5d28 100644
-> > --- a/drivers/usb/common/common.c
-> > +++ b/drivers/usb/common/common.c
-> > @@ -154,6 +154,33 @@ bool of_usb_host_tpl_support(struct device_node *np)
-> >  	return false;
-> >  }
-> >  EXPORT_SYMBOL_GPL(of_usb_host_tpl_support);
-> > +
-> > +/**
-> > + * of_usb_get_set_caps - to set usb otg capabilities according to
-> 
-> get or set?
-> how about update instead?
-> 
-Should be set, update? okay.
+This is a workable way.
+Thanks your suggestion.We will try to implement this,
 
-Li Jun
-> > + * the passed properties in DT.
-> > + * @np: Pointer to the given device_node
-> > + * @otg_caps: Pointer to the target usb_otg_caps to be set
-> > + *
-> > + * The function gets and sets the otg capabilities
-> > + */
-> > +void of_usb_set_otg_caps(struct device_node *np, struct usb_otg_caps *otg_caps)
-> > +{
-> > +	u32 otg_rev;
-> > +
-> > +	if (!otg_caps)
-> > +		return;
-> > +
-> > +	if (!of_property_read_u32(np, "otg-rev", &otg_rev))
-> > +		otg_caps->otg_rev = otg_rev;
-> 
-> should we check if otg_rev is in correct format?
-> anything non BCD and greater than 0x9999 is invalid.
-> 
-Then that's not so simple, every number should be checked,
-if ((otg_caps->otg_rev % 10) > 9) ||
-	((otg_caps->otg_rev >> 4) % 10) > 9) ||
-	((otg_caps->otg_rev >> 8) % 10) > 9) ||
-	((otg_caps->otg_rev >> 12) % 10) > 9))
-	return error;
-We really need this kind of format check? seems no this check
-for bcdUSB.
-	
-> Also if otg-rev is not passed then we need to treat it as legacy
-> platform right? How is this taken care of?
-> 
-> > +	if (of_find_property(np, "hnp-disable", NULL))
-> > +		otg_caps->hnp_support = false;
-> > +	if (of_find_property(np, "srp-disable", NULL))
-> > +		otg_caps->srp_support = false;
-> > +	if (of_find_property(np, "adp-disable", NULL))
-> > +		otg_caps->adp_support = false;
-> 
-> Don't we expect it to do basic sanity checks?
-> e.g. if otg_rev < 0x200 then adp_support can't be true?
-> 
-Okay, it's better we add a sanity check here.
+Eddie
+Thanks
 
-> > +}
-> > +EXPORT_SYMBOL_GPL(of_usb_set_otg_caps);
-> > +
-> >  #endif
-> >  
-> >  MODULE_LICENSE("GPL");
-> > diff --git a/include/linux/usb/of.h b/include/linux/usb/of.h
-> > index cfe0528..6339799 100644
-> > --- a/include/linux/usb/of.h
-> > +++ b/include/linux/usb/of.h
-> > @@ -15,6 +15,8 @@
-> >  enum usb_dr_mode of_usb_get_dr_mode(struct device_node *np);
-> >  enum usb_device_speed of_usb_get_maximum_speed(struct device_node *np);
-> >  bool of_usb_host_tpl_support(struct device_node *np);
-> > +void of_usb_set_otg_caps(struct device_node *np,
-> > +			struct usb_otg_caps *otg_caps);
-> >  #else
-> >  static inline enum usb_dr_mode of_usb_get_dr_mode(struct device_node *np)
-> >  {
-> > @@ -30,6 +32,11 @@ static inline bool of_usb_host_tpl_support(struct device_node *np)
-> >  {
-> >  	return false;
-> >  }
-> > +static inline void of_usb_set_otg_caps(struct device_node *np,
-> > +				struct usb_otg_caps *otg_caps)
-> > +{
-> > +
-> > +}
-> >  #endif
-> >  
-> >  #if IS_ENABLED(CONFIG_OF) && IS_ENABLED(CONFIG_USB_SUPPORT)
-> > -- 
-> > 1.9.1
-> > 
-> 
-> cheers,
-> -roger
+
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
