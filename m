@@ -1,117 +1,60 @@
-From: Chanwoo Choi <cwchoi00@gmail.com>
-Subject: Re: [PATCH v2 2/5] extcon: arizona: Add basic microphone detection
- DT/ACPI bindings
-Date: Fri, 19 Jun 2015 20:03:37 +0900
-Message-ID: <CAGTfZH2OpzWR_VQrkCVPD+NKf4+D8e4TytsSeek+kDk2BQH_yQ@mail.gmail.com>
-References: <1434638631-16451-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-	<1434638631-16451-3-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-	<CAGTfZH0uds0swf-x0naTJeMRvOB6DkekdmSSGWA5KpNCWVOWZw@mail.gmail.com>
-	<20150619081737.GS32730@opensource.wolfsonmicro.com>
-	<CAGTfZH1a6H4Virm-mZDeOD9Pt5M-Q13xo7v+bQwBguJuy1AJXg@mail.gmail.com>
-	<20150619090839.GT32730@opensource.wolfsonmicro.com>
-	<CAGTfZH19cvcb2PXn69pZY-JpkaOYsCsJC1rrQWy06eNav=+VuA@mail.gmail.com>
-	<20150619104453.GX32730@opensource.wolfsonmicro.com>
-Reply-To: cw00.choi@samsung.com
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: mt8173: add clock_null
+Date: Fri, 19 Jun 2015 13:36:40 +0200
+Message-ID: <8371528.SNAmOgosfF@phil>
+References: <1434605351-64592-1-git-send-email-eddie.huang@mediatek.com> <2333431.ttvjElY3ps@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150619104453.GX32730@opensource.wolfsonmicro.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Cc: Lee Jones <lee.jones@linaro.org>, "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>, Samuel Ortiz <sameo@linux.intel.com>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, patches@opensource.wolfsonmicro.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2333431.ttvjElY3ps@phil>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 19, 2015 at 7:44 PM, Charles Keepax
-<ckeepax@opensource.wolfsonmicro.com> wrote:
-> On Fri, Jun 19, 2015 at 07:31:49PM +0900, Chanwoo Choi wrote:
->> On Fri, Jun 19, 2015 at 6:08 PM, Charles Keepax
->> <ckeepax@opensource.wolfsonmicro.com> wrote:
->> > On Fri, Jun 19, 2015 at 05:28:11PM +0900, Chanwoo Choi wrote:
->> >> On Fri, Jun 19, 2015 at 5:17 PM, Charles Keepax
->> >> <ckeepax@opensource.wolfsonmicro.com> wrote:
->> >> > On Fri, Jun 19, 2015 at 11:25:57AM +0900, Chanwoo Choi wrote:
->> >> >> Hi Charles,
->> >> >>
->> >> >> On Thu, Jun 18, 2015 at 11:43 PM, Charles Keepax
->> >> >> <ckeepax@opensource.wolfsonmicro.com> wrote:
->> >> >> > This patch adds bindings for the basic microphone detection platform
->> >> >> > data.
->> >> >> >
->> >> >> > Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
->> >> >> > ---
->> >> >> > +       dbtime = 0;
->> >> >> > +       device_property_read_u32(arizona->dev, "wlf,micd-dbtime", &dbtime);
->> >> >> > +       switch (dbtime) {
->> >> >> > +       case 2:
->> >> >>
->> >> >> I'd like you to define the constant variable for specific integer
->> >> >> value to improve the readability.
->> >> >> e.g.,
->> >> >>
->> >> >> #define MICD_DBTIME_XXX 2
->> >> >> #define MICD_DBTIME_XXX 4
->> >> >>
->> >> >> > +               pdata->micd_dbtime = 0x10000;
->> >> >>
->> >> >> Also, you better to define the constant variable for "0x10000" to
->> >> >> improbe readability in the include/linux/mfd/arizona.h. If you just
->> >> >> use the hex value, the other developer cannot analyze the meaning of
->> >> >> "0x10000".
->> >> >>
->> >> >> > +               break;
->> >> >> > +       case 4:
->> >> >>
->> >> >> ditto.
->> >> >>
->> >> >
->> >> > I am not sure these two really warrant a define the number in DT
->> >> > indicates the number of debounces to perform.
->> >> >
->> >> > #define MICD_DBTIME_TWO 2
->> >>
->> >> No. I mean that you should define the appropriate name of definition
->> >> to indicate the meaning of 2 or 4. Just not 2 -> TWO.
->> >>
->> >> 2 is 2 second? or 2 is milli-second? or Is there any other meaning?
->> >> I can never know the meaning of '2' without any description and any
->> >> proper name of definition.
->> >
->> > It is literally two, two debounces, I really can't see what I
->> > could call the define. What do you think to the idea I suggested
->> > to rename the variable dbtime -> num_debounces?
->>
->> Is it either "debounce time" or "the number of debounce"?
->>
->> Also,
->>
->> When extcon-arizona driver update the bit for micd_dbtime, use the
->> ARIZONA_MICD_DBTIME_MASK (0x0002).
->>
->> In following case, 0x10000 is larger than ARIZONA_MICD_DBTIME_MASK(0x0002).
->>
->>           case 2:
->>                 pdata->micd_dbtime = 0x10000;
->>
->> Is it correct?
->>
->> I thinkt that "arizona->pdata.micd_dbtime <<
->> ARIZONA_MICD_DBTIME_SHIFT" value should be included in the range of
->> ARIZONA_MICD_DBTIME_MASK(0x0002).
->
-> Basically this boils down to setting a single bit which chooses
-> between 2 and 4 debounces. The tricky thing is that the default
-> value for the pdata will be 0, and the value of the bit for 2
-> debounces will be 0. So inorder to show we have intentionally set
-> the pdata we set a value that is non-zero but won't get written
-> into the register. It is a little awkward but I don't want to
-> change how the pdata works as there are probably systems out of
-> tree that use it.
+Am Donnerstag, 18. Juni 2015, 18:15:03 schrieb Heiko Stuebner:
+> Am Donnerstag, 18. Juni 2015, 13:29:11 schrieb Eddie Huang:
+> > Add clk_null, which represents clocks that can not / need not
+> > controlled by software.
+> > There are many clocks' parent set to clk_null.
+> 
+> Devicetree is supposed to describe hardware, and ideally not what software
+> does with it. If the clock simply cannot be controlled by software, it will
+> still have a rate and I think it should probably be modelled - similarly we
+> sometimes have fixed regulators that also are not software controllable.
+> 
+> 
+> While it might be ok to define dummy clocks as a temporary stopgap, these
+> should definitly be marked as such. This clk_null at least sounds like there
+> is no plan to replace this with a real solution at some point.
+> 
+> And of course a bit of context would be cool, to know which type of clocks
+> this actually replaces.
 
-This method cause the poor readabilidy of extcon-arizona.c.
-If you don't explain this complicated reason of this code, me and
-other developer will never understand the meaning of this code.
+After looking a bit more into this, I'm feel that the clk_null approach is 
+wrong.
 
-I don't agree your suggestion. you need other way.
+For one, even if the clk_null stuff would be ok, the binding doc of the clock 
+controller does not describe the need of this specific clock at all.
 
-Thanks,
-Chanwoo Choi
+
+The other more important point, looking at clk-mt8173 I see at least these 
+clocks being set as children of "clk_null":
+
+static const struct mtk_fixed_factor root_clk_alias[] __initconst = {
+	FACTOR(CLK_TOP_CLKPH_MCK_O, "clkph_mck_o", "clk_null", 1, 1),
+	FACTOR(CLK_TOP_DPI, "dpi_ck", "clk_null", 1, 1),
+	FACTOR(CLK_TOP_USB_SYSPLL_125M, "usb_syspll_125m", "clk_null", 1, 1),
+	FACTOR(CLK_TOP_HDMITX_DIG_CTS, "hdmitx_dig_cts", "clk_null", 1, 1),
+};
+
+
+These look more like they are fed from some external source to the clock 
+controller? I did ask Matthias but he also couldn't find anything describing 
+where these clocks actually come from.
+
+
+Heiko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
