@@ -1,7 +1,7 @@
 From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Subject: [PATCH v5 7/7] mfd: arizona: Update several pdata members to unsigned
-Date: Fri, 19 Jun 2015 17:23:34 +0100
-Message-ID: <1434731014-19980-8-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+Subject: [PATCH v5 5/7] extcon: arizona: Ensure variables are set for headphone detection
+Date: Fri, 19 Jun 2015 17:23:32 +0100
+Message-ID: <1434731014-19980-6-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 References: <1434731014-19980-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1434731014-19980-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
@@ -10,57 +10,64 @@ To: lee.jones@linaro.org, cw00.choi@samsung.com
 Cc: myungjoo.ham@samsung.com, sameo@linux.intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-Device tree and ACPI primarily deal with unsigned ints, many of the
-pdata members in the Arizona driver are signed ints but are only ever
-assigned positive values. Changing these pdata fields to unsigned ints
-avoids us having to choose between overly verbose code and Sparse
-warnings.
+The detecting flag really refers to the microphone detection stage and
+as such should be cleared before arizona_identify_headphones is called.
+Also the mic flag should be set before identify headphones is called as
+well.
 
 Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
 ---
- include/linux/mfd/arizona/pdata.h |   12 ++++++------
- 1 files changed, 6 insertions(+), 6 deletions(-)
+ drivers/extcon/extcon-arizona.c |   11 +++++++----
+ 1 files changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/mfd/arizona/pdata.h b/include/linux/mfd/arizona/pdata.h
-index bd68355..85b132c 100644
---- a/include/linux/mfd/arizona/pdata.h
-+++ b/include/linux/mfd/arizona/pdata.h
-@@ -104,7 +104,7 @@ struct arizona_pdata {
- 	 * useful for systems where and I2S bus with multiple data
- 	 * lines is mastered.
- 	 */
--	int max_channels_clocked[ARIZONA_MAX_AIF];
-+	unsigned int max_channels_clocked[ARIZONA_MAX_AIF];
+diff --git a/drivers/extcon/extcon-arizona.c b/drivers/extcon/extcon-arizona.c
+index 8f0ef72..4c47eb2 100644
+--- a/drivers/extcon/extcon-arizona.c
++++ b/drivers/extcon/extcon-arizona.c
+@@ -765,10 +765,11 @@ static void arizona_micd_timeout_work(struct work_struct *work)
+ 	mutex_lock(&info->lock);
  
- 	/** GPIO5 is used for jack detection */
- 	bool jd_gpio5;
-@@ -128,22 +128,22 @@ struct arizona_pdata {
- 	unsigned int hpdet_channel;
+ 	dev_dbg(info->arizona->dev, "MICD timed out, reporting HP\n");
+-	arizona_identify_headphone(info);
  
- 	/** Extra debounce timeout used during initial mic detection (ms) */
--	int micd_detect_debounce;
-+	unsigned int micd_detect_debounce;
+ 	info->detecting = false;
  
- 	/** GPIO for mic detection polarity */
- 	int micd_pol_gpio;
++	arizona_identify_headphone(info);
++
+ 	arizona_stop_mic(info);
  
- 	/** Mic detect ramp rate */
--	int micd_bias_start_time;
-+	unsigned int micd_bias_start_time;
+ 	mutex_unlock(&info->lock);
+@@ -834,6 +835,9 @@ static void arizona_micd_detect(struct work_struct *work)
  
- 	/** Mic detect sample rate */
--	int micd_rate;
-+	unsigned int micd_rate;
+ 	/* If we got a high impedence we should have a headset, report it. */
+ 	if (info->detecting && (val & ARIZONA_MICD_LVL_8)) {
++		info->mic = true;
++		info->detecting = false;
++
+ 		arizona_identify_headphone(info);
  
- 	/** Mic detect debounce level */
--	int micd_dbtime;
-+	unsigned int micd_dbtime;
+ 		ret = extcon_set_cable_state_(info->edev,
+@@ -849,8 +853,6 @@ static void arizona_micd_detect(struct work_struct *work)
+ 				ret);
+ 		}
  
- 	/** Mic detect timeout (ms) */
--	int micd_timeout;
-+	unsigned int micd_timeout;
+-		info->mic = true;
+-		info->detecting = false;
+ 		goto handled;
+ 	}
  
- 	/** Force MICBIAS on for mic detect */
- 	bool micd_force_micbias;
+@@ -863,10 +865,11 @@ static void arizona_micd_detect(struct work_struct *work)
+ 	if (info->detecting && (val & MICD_LVL_1_TO_7)) {
+ 		if (info->jack_flips >= info->micd_num_modes * 10) {
+ 			dev_dbg(arizona->dev, "Detected HP/line\n");
+-			arizona_identify_headphone(info);
+ 
+ 			info->detecting = false;
+ 
++			arizona_identify_headphone(info);
++
+ 			arizona_stop_mic(info);
+ 		} else {
+ 			info->micd_mode++;
 -- 
 1.7.2.5
