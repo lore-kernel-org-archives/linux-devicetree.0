@@ -1,74 +1,68 @@
-From: Chanwoo Choi <cwchoi00-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/5] extcon: arizona: Add basic microphone detection
- DT/ACPI bindings
-Date: Fri, 19 Jun 2015 17:28:11 +0900
-Message-ID: <CAGTfZH1a6H4Virm-mZDeOD9Pt5M-Q13xo7v+bQwBguJuy1AJXg@mail.gmail.com>
-References: <1434638631-16451-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-	<1434638631-16451-3-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-	<CAGTfZH0uds0swf-x0naTJeMRvOB6DkekdmSSGWA5KpNCWVOWZw@mail.gmail.com>
-	<20150619081737.GS32730@opensource.wolfsonmicro.com>
-Reply-To: cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+From: Yi Zhang <yizhang@marvell.com>
+Subject: Re: [PATCH V2 0/2] add basic support to Marvell 88pm880/88pm886 PMIC
+ chip
+Date: Fri, 19 Jun 2015 16:33:57 +0800
+Message-ID: <20150619083357.GA4502@yizhang>
+References: <1434098601-3498-1-git-send-email-yizhang@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150619081737.GS32730-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1434098601-3498-1-git-send-email-yizhang@marvell.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sameo@linux.intel.com, lee.jones@linaro.org, pebolle@tiscali.nl
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, zhouqiao@marvell.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 19, 2015 at 5:17 PM, Charles Keepax
-<ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrote:
-> On Fri, Jun 19, 2015 at 11:25:57AM +0900, Chanwoo Choi wrote:
->> Hi Charles,
->>
->> On Thu, Jun 18, 2015 at 11:43 PM, Charles Keepax
->> <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrote:
->> > This patch adds bindings for the basic microphone detection platform
->> > data.
->> >
->> > Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
->> > ---
->> > +       dbtime = 0;
->> > +       device_property_read_u32(arizona->dev, "wlf,micd-dbtime", &dbtime);
->> > +       switch (dbtime) {
->> > +       case 2:
->>
->> I'd like you to define the constant variable for specific integer
->> value to improve the readability.
->> e.g.,
->>
->> #define MICD_DBTIME_XXX 2
->> #define MICD_DBTIME_XXX 4
->>
->> > +               pdata->micd_dbtime = 0x10000;
->>
->> Also, you better to define the constant variable for "0x10000" to
->> improbe readability in the include/linux/mfd/arizona.h. If you just
->> use the hex value, the other developer cannot analyze the meaning of
->> "0x10000".
->>
->> > +               break;
->> > +       case 4:
->>
->> ditto.
->>
->
-> I am not sure these two really warrant a define the number in DT
-> indicates the number of debounces to perform.
->
-> #define MICD_DBTIME_TWO 2
+On Fri, Jun 12, 2015 at 04:43:19PM +0800, Yi Zhang wrote:
 
-No. I mean that you should define the appropriate name of definition
-to indicate the meaning of 2 or 4. Just not 2 -> TWO.
+Hi, Samuel and Lee:
 
-2 is 2 second? or 2 is milli-second? or Is there any other meaning?
-I can never know the meaning of '2' without any description and any
-proper name of definition.
+Could you please share your comments on this patch? 
+then I can modify accordingly;
 
-Thanks,
-Chanwoo CHOi
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+thanks very much;
+>   - 88pm880 and 88pm886 are PMIC chips which integrates regulator,
+>     gpadc, charger, fuelgauge, etc;
+> 	they share most of the functions and register mapping
+>   - this version removes the redundant EXPORT_SYMBOL_GPL, compared with the
+>     first version
+> 
+> 
+> Yi Zhang (2):
+>   mfd: add Marvell 88pm88x description
+>   mfd: 88pm88x: initialize 88pm886/88pm880 base support
+> 
+>  Documentation/devicetree/bindings/mfd/88pm88x.txt |  33 ++
+>  drivers/mfd/88pm880-table.c                       | 173 +++++++
+>  drivers/mfd/88pm886-table.c                       | 173 +++++++
+>  drivers/mfd/88pm88x-core.c                        | 584 ++++++++++++++++++++++
+>  drivers/mfd/88pm88x-i2c.c                         | 167 +++++++
+>  drivers/mfd/88pm88x-irq.c                         | 171 +++++++
+>  drivers/mfd/88pm88x.h                             |  51 ++
+>  drivers/mfd/Kconfig                               |  12 +
+>  drivers/mfd/Makefile                              |   3 +
+>  include/linux/mfd/88pm880-reg.h                   |  98 ++++
+>  include/linux/mfd/88pm880.h                       |  59 +++
+>  include/linux/mfd/88pm886-reg.h                   |  59 +++
+>  include/linux/mfd/88pm886.h                       |  55 ++
+>  include/linux/mfd/88pm88x-reg.h                   | 118 +++++
+>  include/linux/mfd/88pm88x.h                       | 202 ++++++++
+>  15 files changed, 1958 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/88pm88x.txt
+>  create mode 100644 drivers/mfd/88pm880-table.c
+>  create mode 100644 drivers/mfd/88pm886-table.c
+>  create mode 100644 drivers/mfd/88pm88x-core.c
+>  create mode 100644 drivers/mfd/88pm88x-i2c.c
+>  create mode 100644 drivers/mfd/88pm88x-irq.c
+>  create mode 100644 drivers/mfd/88pm88x.h
+>  create mode 100644 include/linux/mfd/88pm880-reg.h
+>  create mode 100644 include/linux/mfd/88pm880.h
+>  create mode 100644 include/linux/mfd/88pm886-reg.h
+>  create mode 100644 include/linux/mfd/88pm886.h
+>  create mode 100644 include/linux/mfd/88pm88x-reg.h
+>  create mode 100644 include/linux/mfd/88pm88x.h
+> 
+> -- 
+> 1.9.1
+> 
