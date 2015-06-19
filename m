@@ -1,70 +1,32 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH v9 2/8] media: Add registration helpers for V4L2 flash
- sub-devices
-Date: Fri, 19 Jun 2015 08:27:17 +0200
-Message-ID: <5583B645.601@samsung.com>
-References: <1432566843-6391-1-git-send-email-j.anaszewski@samsung.com>
- <1432566843-6391-3-git-send-email-j.anaszewski@samsung.com>
- <CALW4P+JBbBZa4rQcMtxhWGD+cEa7yHE_pWazxpDaK25xf08N4Q@mail.gmail.com>
+From: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
+Subject: Re: [PATCH v7 04/14] crypto: add a new driver for Marvell's CESA
+Date: Fri, 19 Jun 2015 14:42:56 +0800
+Message-ID: <20150619064256.GA10246@gondor.apana.org.au>
+References: <1434635190-27733-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1434635190-27733-5-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <CALW4P+JBbBZa4rQcMtxhWGD+cEa7yHE_pWazxpDaK25xf08N4Q@mail.gmail.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Alexey Klimov <klimov.linux@gmail.com>
-Cc: linux-leds@vger.kernel.org, Linux Media <linux-media@vger.kernel.org>, devicetree@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, Sylwester Nawrocki <s.nawrocki@samsung.com>, Hans Verkuil <hans.verkuil@cisco.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1434635190-27733-5-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Russell King - ARM Linux <linux@a>
 List-Id: devicetree@vger.kernel.org
 
-Hi Alexey,
-
-On 06/18/2015 07:45 PM, Alexey Klimov wrote:
-> Hi Jacek,
+On Thu, Jun 18, 2015 at 03:46:20PM +0200, Boris Brezillon wrote:
 >
-> On Mon, May 25, 2015 at 6:13 PM, Jacek Anaszewski
-> <j.anaszewski@samsung.com> wrote:
->> This patch adds helper functions for registering/unregistering
->> LED Flash class devices as V4L2 sub-devices. The functions should
->> be called from the LED subsystem device driver. In case the
->> support for V4L2 Flash sub-devices is disabled in the kernel
->> config the functions' empty versions will be used.
->>
->> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
->> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
->> Cc: Sakari Ailus <sakari.ailus@iki.fi>
->> Cc: Hans Verkuil <hans.verkuil@cisco.com>
->> ---
->>   drivers/media/v4l2-core/Kconfig                |   11 +
->>   drivers/media/v4l2-core/Makefile               |    2 +
->>   drivers/media/v4l2-core/v4l2-flash-led-class.c |  671 ++++++++++++++++++++++++
->>   include/media/v4l2-flash-led-class.h           |  148 ++++++
->>   4 files changed, 832 insertions(+)
->>   create mode 100644 drivers/media/v4l2-core/v4l2-flash-led-class.c
->>   create mode 100644 include/media/v4l2-flash-led-class.h
-[...]
->> +struct v4l2_flash *v4l2_flash_init(
->> +       struct device *dev, struct device_node *of_node,
->> +       struct led_classdev_flash *fled_cdev,
->> +       struct led_classdev_flash *iled_cdev,
->> +       const struct v4l2_flash_ops *ops,
->> +       struct v4l2_flash_config *config)
->> +{
->> +       struct v4l2_flash *v4l2_flash;
->
->> +       struct led_classdev *led_cdev = &fled_cdev->led_cdev;
->> +       struct v4l2_subdev *sd;
->> +       int ret;
->> +
->> +       if (!fled_cdev || !ops || !config)
->> +               return ERR_PTR(-EINVAL);
->
-> Could you please if it is correct? You're checking fled_cdev but four
-> lines above you're using fled_cdev and taking led_cdev pointer from
-> there. Maybe it's better to move calculation of led_cdev down and
-> place after if-check?
+> +	dram = mv_mbus_dram_info_nooverlap();
 
-Thanks for spotting this. I'll submit fixed version soon.
+This doesn't compile because it hasn't made it into mainline yet.
+I'm afraid this patch-set will have to wait until that happens.
 
+Cheers,
 -- 
-Best Regards,
-Jacek Anaszewski
+Email: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
