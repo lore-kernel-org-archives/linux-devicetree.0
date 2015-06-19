@@ -1,26 +1,23 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 7/7] ARM: shmobile: armadillo800eva dts: Add pinctrl
- and gpio-hog for lcdc0
-Date: Fri, 19 Jun 2015 09:27:04 +0900
-Message-ID: <20150619002703.GC32130@verge.net.au>
-References: <1434530336-15073-1-git-send-email-geert+renesas@glider.be>
- <1434530336-15073-8-git-send-email-geert+renesas@glider.be>
+From: Gregory Fong <gregory.0xf0@gmail.com>
+Subject: Re: [PATCH 6/7] ARM: brcmstb: mask GIC IRQs on suspend
+Date: Thu, 18 Jun 2015 18:48:35 -0700
+Message-ID: <CADtm3G5arLABYkdKrgcKAagZRfSm_XwQO6UYfJH+ceijYuP39w@mail.gmail.com>
+References: <1434672696-13632-1-git-send-email-computersforpeace@gmail.com> <1434672696-13632-7-git-send-email-computersforpeace@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1434530336-15073-8-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Magnus Damm <damm+renesas@opensource.se>, Arnd Bergmann <arnd@arndb.de>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Marc Zyngier <marc.zyngier@arm.com>, devel@driverdev.osuosl.org, linux-sh@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1434672696-13632-7-git-send-email-computersforpeace@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brian Norris <computersforpeace@gmail.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 17, 2015 at 10:38:56AM +0200, Geert Uytterhoeven wrote:
-> Configure pinctrl and a GPIO-controller board mux for LCD use.
-> This allows the armadillo800eva board staging code to enable lcdc0.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On Thu, Jun 18, 2015 at 5:11 PM, Brian Norris
+<computersforpeace@gmail.com> wrote:
+> Lazily-masked IRQs can cause system suspend problems (e.g., spurious
+> wakeups from WFI), so we need to be sure non-wakeup GIC interrupts get
+> masked, not just disabled, during system suspend.
+>
+> Signed-off-by: Brian Norris <computersforpeace@gmail.com>
 
-Thanks Geert,
-
-As Greg has now taken patches 1 - 6 I have queued this up.
+Acked-by: Gregory Fong <gregory.0xf0@gmail.com>
