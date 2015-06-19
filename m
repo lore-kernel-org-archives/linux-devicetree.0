@@ -1,60 +1,59 @@
-From: Suman Tripathi <stripathi@apm.com>
-Subject: Re: [PATCH v8 2/2] mmc: host: sdhci: Disable 1.8V signaling for
- arasan 4.9a version of SDHCI controller.
-Date: Fri, 19 Jun 2015 17:58:02 +0530
-Message-ID: <CAOHikRBkDinUfcOR3Dg12e2Xy_P5TABOpHSnkSpZhRyhLRWGFA@mail.gmail.com>
-References: <1434715227-27399-1-git-send-email-stripathi@apm.com>
-	<1434715227-27399-3-git-send-email-stripathi@apm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1434715227-27399-3-git-send-email-stripathi@apm.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Chris Ball <chris@printf.net>, Anton Vorontsov <anton@enomsg.org>, Arnd Bergmann <arnd@arndb.de>, Michal Simek <michal.simek@xilinx.com>, Ulf Hansson <ulf.hansson@linaro.org>, khilman@deeprootsystems.com, Olof Johansson <olof@lixom.net>
-Cc: linux-mmc <linux-mmc@vger.kernel.org>, arm@kernel.org, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Don Dutile <ddutile@redhat.com>, Jon Masters <jcm@redhat.com>, Mark Langsdorf <mlangsdo@redhat.com>, patches <patches@apm.com>, Suman Tripathi <stripathi@apm.com>
+From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: [PATCH v4 0/8] Add basic microphone detection bindings
+Date: Fri, 19 Jun 2015 13:37:28 +0100
+Message-ID: <1434717456-31995-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Cc: myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi ,
+This series adds basic microphone detection DT/ACPI bindings
+using the device properties API.
 
-On Fri, Jun 19, 2015 at 5:30 PM, Suman Tripathi <stripathi@apm.com> wrote:
-> This patch disables the 1.8V signaling for arasan 4.9a version
-> of SDHCI controller with the help SDHCI_QUIRK2_NO_1_8_V quirk.
->
-> Signed-off-by: Suman Tripathi <stripathi@apm.com>
-> ---
-> ---
->  drivers/mmc/host/sdhci-of-arasan.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
-> index 21c0c08..4c99ea4 100644
-> --- a/drivers/mmc/host/sdhci-of-arasan.c
-> +++ b/drivers/mmc/host/sdhci-of-arasan.c
-> @@ -171,7 +171,8 @@ static int sdhci_arasan_probe(struct platform_device *pdev)
->
->         if (of_device_is_compatible(pdev->dev.of_node, "arasan,sdhci-4.9a")) {
->                 host->quirks |= SDHCI_QUIRK_NO_HISPD_BIT;
-> -               host->quirks2 |= SDHCI_QUIRK2_HOST_NO_CMD23;
-> +               host->quirks2 |= SDHCI_QUIRK2_HOST_NO_CMD23 |
-> +                                SDHCI_QUIRK2_NO_1_8_V;
->         }
+The MFD parts and the extcon parts can go seperately through
+there respective trees, but I sent them together so everyone
+can see what is going on. There is no build dependency
+although the MFD patch will fix a couple of Sparse warnings
+that you get if using -Wsparse-all.
 
+Changes since v1:
+ - Removed double include of property.h
 
-I think I am  wrong here. No-1.8v is something related to board
-regulator circuitry not related to IP version. So it should be dts
-driven.
+Changes since v2:
+ - Removed check for CONFIG_OF to call
+   arizona_extcon_device_get_pdata.
+ - Add some defines for the pdata values of micd-dbtime.
+ - Factor out the initial gpio level for the micd-pol-gpio.
+ - Don't check if null before calling gpiod_set_value_cansleep.
+ - Added a comment to explain why we can't use devm for gpiod.
+ - Added patch to make some small corrections to the jack
+   detection into this series to keep them all together for
+   easy of applying.
 
->
->         sdhci_get_of_property(pdev);
-> --
-> 1.8.2.1
->
+Changes since v3:
+ - Simplify the symantics of the pdata for micd_dbtime
 
+Thanks,
+Charles
 
+Charles Keepax (8):
+  extcon: arizona: Simplify pdata symantics for micd_dbtime
+  extcon: arizona: Factor out initial GPIO state
+  extcon: arizona: Update to use the new device properties API
+  extcon: arizona: Add basic microphone detection DT/ACPI bindings
+  extcon: arizona: Convert to gpiod
+  extcon: arizona: Ensure variables are set for headphone detection
+  mfd: arizona: Update DT doc for new mic detection bindings
+  mfd: arizona: Update several pdata members to unsigned
+
+ Documentation/devicetree/bindings/mfd/arizona.txt |   16 ++++
+ drivers/extcon/extcon-arizona.c                   |   99 +++++++++++++++++----
+ include/linux/mfd/arizona/pdata.h                 |   15 ++--
+ 3 files changed, 105 insertions(+), 25 deletions(-)
 
 -- 
-Thanks,
-with regards,
-Suman Tripathi
+1.7.2.5
+
 --
-To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
