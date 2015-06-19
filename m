@@ -1,91 +1,40 @@
-From: Zhi Li <lznuaa@gmail.com>
-Subject: Re: [PATCH v2 0/8] add basic support for i.mx6 ul chip
-Date: Fri, 19 Jun 2015 11:50:28 -0500
-Message-ID: <CAHrpEqTyRYkHMrOYuO0-23-p=rjOx25NEB02yxhnZD+RjWbLnw@mail.gmail.com>
-References: <1434727951-4852-1-git-send-email-Frank.Li@freescale.com>
-	<CAH=tA9FyfB4PR+YXnHBssnSirvQfSw6AAY1gJz3=L=a9UL0Z6g@mail.gmail.com>
+From: Paul Bolle <pebolle@tiscali.nl>
+Subject: Re: [PATCH 3/4] power: Add support for DA9150 Fuel-Gauge
+Date: Fri, 19 Jun 2015 18:51:56 +0200
+Message-ID: <1434732716.2385.166.camel@x220>
+References: <cover.1434643491.git.Adam.Thomson.Opensource@diasemi.com>
+	 <b1f1574e717d393b036bd7d01933d4d0b0ade408.1434643491.git.Adam.Thomson.Opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAH=tA9FyfB4PR+YXnHBssnSirvQfSw6AAY1gJz3=L=a9UL0Z6g@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Nicolae Rosia <nicolae.rosia@gmail.com>
-Cc: Frank Li <Frank.Li@freescale.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Shawn Guo <shawn.guo@linaro.org>, Shawn Guo <shawnguo@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <b1f1574e717d393b036bd7d01933d4d0b0ade408.1434643491.git.Adam.Thomson.Opensource@diasemi.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Support Opensource <support.opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 19, 2015 at 11:43 AM, Nicolae Rosia <nicolae.rosia@gmail.com> wrote:
-> Hi,
->
-> I can't seem to find a datasheet for this series.
+On Thu, 2015-06-18 at 17:06 +0100, Adam Thomson wrote:
+> --- /dev/null
+> +++ b/drivers/power/da9150-fg.c
 
-Have not public yet.
+> +/* Register external function to give battery temperature */
+> +void da9150_fg_register_temp_cb(struct power_supply *psy, da9150_read_temp_t cb,
+> +				void *cb_context)
+> +{
+> +	struct da9150_fg *fg = dev_get_drvdata(psy->dev.parent);
+> +
+> +	fg->read_bat_temp = cb;
+> +	fg->bat_temp_context = cb_context;
+> +}
+> +EXPORT_SYMBOL_GPL(da9150_fg_register_temp_cb);
 
-best regards
-Frank Li
+This series doesn't add a user of this export. Actually, it doesn't even
+add a local caller of this function. Is a patch that adds a user of this
+function queued somewhere?
 
->
-> Best regards,
-> Nicolae Rosia
->
-> On Fri, Jun 19, 2015 at 6:32 PM,  <Frank.Li@freescale.com> wrote:
->> From: Frank Li <Frank.Li@freescale.com>
->>
->> Add basic function support i.mx6ul.
->> add simple dts.
->> add full pin function define
->> add clock support.
->> add low level debug
->>
->> Change from v1 to v2:
->>  - Remove unnecessary clk_register_clkdev for gpt
->>  - use fat iomux in dts
->>  - use macro GPIO_ACTIVE_LOW
->>
->> Anson Huang (1):
->>   ARM: imx: add low-level debug support for i.mx6ul
->>
->> Frank Li (7):
->>   ARM: imx: add i.mx6ul msl support
->>   ARM: imx: add imx6ul clk tree support
->>   Document: dt: binding: imx: update document for imx6ul support
->>   ARM: pinctrl: imx: add i.mx6ul pinctrl driver
->>   ARM: dts: add i.mx6ul pin function include file
->>   ARM: dts: imx: add imx6ul and imx6ul evk board support
->>   ARM: imx: imx_v6_v7_defconfig enable imx6ul support
->>
->>  .../devicetree/bindings/clock/imx6ul-clock.txt     |  13 +
->>  .../bindings/pinctrl/fsl,imx6ul-pinctrl.txt        |  36 +
->>  arch/arm/Kconfig.debug                             |   9 +
->>  arch/arm/boot/dts/Makefile                         |   2 +
->>  arch/arm/boot/dts/imx6ul-14x14-evk.dts             | 335 ++++++++
->>  arch/arm/boot/dts/imx6ul-pinfunc.h                 | 938 +++++++++++++++++++++
->>  arch/arm/boot/dts/imx6ul.dtsi                      | 645 ++++++++++++++
->>  arch/arm/configs/imx_v6_v7_defconfig               |   1 +
->>  arch/arm/include/debug/imx-uart.h                  |  13 +
->>  arch/arm/mach-imx/Kconfig                          |   8 +
->>  arch/arm/mach-imx/Makefile                         |   1 +
->>  arch/arm/mach-imx/mach-imx6ul.c                    |  43 +
->>  drivers/clk/imx/Makefile                           |   1 +
->>  drivers/clk/imx/clk-imx6ul.c                       | 432 ++++++++++
->>  drivers/pinctrl/freescale/Kconfig                  |   7 +
->>  drivers/pinctrl/freescale/Makefile                 |   1 +
->>  drivers/pinctrl/freescale/pinctrl-imx6ul.c         | 323 +++++++
->>  include/dt-bindings/clock/imx6ul-clock.h           | 240 ++++++
->>  18 files changed, 3048 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/clock/imx6ul-clock.txt
->>  create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx6ul-pinctrl.txt
->>  create mode 100644 arch/arm/boot/dts/imx6ul-14x14-evk.dts
->>  create mode 100644 arch/arm/boot/dts/imx6ul-pinfunc.h
->>  create mode 100644 arch/arm/boot/dts/imx6ul.dtsi
->>  create mode 100644 arch/arm/mach-imx/mach-imx6ul.c
->>  create mode 100644 drivers/clk/imx/clk-imx6ul.c
->>  create mode 100644 drivers/pinctrl/freescale/pinctrl-imx6ul.c
->>  create mode 100644 include/dt-bindings/clock/imx6ul-clock.h
->>
->> --
->> 1.9.1
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+
+Paul Bolle
+
 --
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" in
+To unsubscribe from this list: send the line "unsubscribe linux-pm" in
