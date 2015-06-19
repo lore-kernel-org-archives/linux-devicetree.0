@@ -1,7 +1,7 @@
 From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Subject: [PATCH v5 1/7] extcon: arizona: Simplify pdata symantics for micd_dbtime
-Date: Fri, 19 Jun 2015 17:23:28 +0100
-Message-ID: <1434731014-19980-2-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+Subject: [PATCH v5 2/7] extcon: arizona: Update to use the new device properties API
+Date: Fri, 19 Jun 2015 17:23:29 +0100
+Message-ID: <1434731014-19980-3-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 References: <1434731014-19980-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1434731014-19980-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
@@ -10,61 +10,53 @@ To: lee.jones@linaro.org, cw00.choi@samsung.com
 Cc: myungjoo.ham@samsung.com, sameo@linux.intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-Currently micd_dbtime can be set to 0 for default, 1 for 4 measurements,
-or a greater than 16-bit value for 2 measurements. This patch simplifies
-the symantics to 2 for 2 measurements, 4 for 4 measurements and any
-other value for the default.
-
-I am not super keen on changing the symantics of the pdata at this stage
-in the drivers life, but acceptance of the DT binding for this field has
-been made conditional on this happening.
+The device properties API will load data from both device tree and ACPI,
+update the binding to use this API instead of the OF API.
 
 Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
 ---
- drivers/extcon/extcon-arizona.c   |   14 +++++++++++---
- include/linux/mfd/arizona/pdata.h |    3 +++
- 2 files changed, 14 insertions(+), 3 deletions(-)
+ drivers/extcon/extcon-arizona.c |   11 +++++------
+ 1 files changed, 5 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/extcon/extcon-arizona.c b/drivers/extcon/extcon-arizona.c
-index 9262b45..1fbe3b4 100644
+index 1fbe3b4..57755e8 100644
 --- a/drivers/extcon/extcon-arizona.c
 +++ b/drivers/extcon/extcon-arizona.c
-@@ -1267,11 +1267,19 @@ static int arizona_extcon_probe(struct platform_device *pdev)
- 				   arizona->pdata.micd_rate
- 				   << ARIZONA_MICD_RATE_SHIFT);
+@@ -24,6 +24,7 @@
+ #include <linux/input.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_runtime.h>
++#include <linux/property.h>
+ #include <linux/regulator/consumer.h>
+ #include <linux/extcon.h>
  
--	if (arizona->pdata.micd_dbtime)
-+	switch (arizona->pdata.micd_dbtime) {
-+	case ARIZONA_MICD_DBTIME_FOUR_READINGS:
- 		regmap_update_bits(arizona->regmap, ARIZONA_MIC_DETECT_1,
- 				   ARIZONA_MICD_DBTIME_MASK,
--				   arizona->pdata.micd_dbtime
--				   << ARIZONA_MICD_DBTIME_SHIFT);
-+				   ARIZONA_MICD_DBTIME);
-+		break;
-+	case ARIZONA_MICD_DBTIME_TWO_READINGS:
-+		regmap_update_bits(arizona->regmap, ARIZONA_MIC_DETECT_1,
-+				   ARIZONA_MICD_DBTIME_MASK, 0);
-+		break;
-+	default:
-+		break;
-+	}
+@@ -1110,12 +1111,12 @@ static void arizona_micd_set_level(struct arizona *arizona, int index,
+ 	regmap_update_bits(arizona->regmap, reg, mask, level);
+ }
  
- 	BUILD_BUG_ON(ARRAY_SIZE(arizona_micd_levels) != 0x40);
+-static int arizona_extcon_of_get_pdata(struct arizona *arizona)
++static int arizona_extcon_device_get_pdata(struct arizona *arizona)
+ {
+ 	struct arizona_pdata *pdata = &arizona->pdata;
+ 	unsigned int val = ARIZONA_ACCDET_MODE_HPL;
  
-diff --git a/include/linux/mfd/arizona/pdata.h b/include/linux/mfd/arizona/pdata.h
-index aa5c48b..bd68355 100644
---- a/include/linux/mfd/arizona/pdata.h
-+++ b/include/linux/mfd/arizona/pdata.h
-@@ -53,6 +53,9 @@
+-	of_property_read_u32(arizona->dev->of_node, "wlf,hpdet-channel", &val);
++	device_property_read_u32(arizona->dev, "wlf,hpdet-channel", &val);
+ 	switch (val) {
+ 	case ARIZONA_ACCDET_MODE_HPL:
+ 	case ARIZONA_ACCDET_MODE_HPR:
+@@ -1147,10 +1148,8 @@ static int arizona_extcon_probe(struct platform_device *pdev)
+ 	if (!info)
+ 		return -ENOMEM;
  
- #define ARIZONA_MAX_PDM_SPK 2
+-	if (IS_ENABLED(CONFIG_OF)) {
+-		if (!dev_get_platdata(arizona->dev))
+-			arizona_extcon_of_get_pdata(arizona);
+-	}
++	if (!dev_get_platdata(arizona->dev))
++		arizona_extcon_device_get_pdata(arizona);
  
-+#define ARIZONA_MICD_DBTIME_TWO_READINGS 2
-+#define ARIZONA_MICD_DBTIME_FOUR_READINGS 4
-+
- struct regulator_init_data;
- 
- struct arizona_micbias {
+ 	info->micvdd = devm_regulator_get(&pdev->dev, "MICVDD");
+ 	if (IS_ERR(info->micvdd)) {
 -- 
 1.7.2.5
