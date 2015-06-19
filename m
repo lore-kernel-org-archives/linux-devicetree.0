@@ -1,29 +1,111 @@
-From: Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [PATCH v7 00/14] crypto: add a new driver for Marvell's CESA
-Date: Fri, 19 Jun 2015 22:24:44 +0800
-Message-ID: <20150619142444.GA15234@gondor.apana.org.au>
-References: <1434635190-27733-1-git-send-email-boris.brezillon@free-electrons.com>
+From: <Frank.Li@freescale.com>
+Subject: [PATCH v2 1/8] ARM: imx: add i.mx6ul msl support
+Date: Fri, 19 Jun 2015 23:32:24 +0800
+Message-ID: <1434727951-4852-2-git-send-email-Frank.Li@freescale.com>
+References: <1434727951-4852-1-git-send-email-Frank.Li@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-crypto-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1434635190-27733-1-git-send-email-boris.brezillon@free-electrons.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: "David S. Miller" <davem@davemloft.net>, linux-crypto@vger.kernel.org, Arnaud Ebalard <arno@natisbad.org>, Tawfik Bayouk <tawfik@marvell.com>, Lior Amsalem <alior@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Eran Ben-Avi <benavi@marvell.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Imre Kaloz <kaloz@openwrt.org>, Russell King - ARM Linux <linux@a>
+Content-Type: text/plain
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1434727951-4852-1-git-send-email-Frank.Li@freescale.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, shawn.guo@linaro.org, shawnguo@kernel.org, linus.walleij@linaro.org, lznuaa@gmail.com
+Cc: linux-gpio@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, Frank Li <Frank.Li@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 18, 2015 at 03:46:16PM +0200, Boris Brezillon wrote:
-> Hello,
-> 
-> This patch series adds a new driver supporting Marvell's CESA IP.
-> This driver addresses some limitations of the existing one.
-> >From a performance and CPU load point of view the most important
-> limitation in the existing driver is the lack of DMA support, thus
-> preventing us from chaining crypto operations.
+From: Frank Li <Frank.Li@freescale.com>
 
-All applied to cryptodev.  Thanks a lot!
+i.MX6UL is a new SOC, add MSL support
+
+Signed-off-by: Frank Li <Frank.Li@freescale.com>
+---
+ arch/arm/mach-imx/Kconfig       |  8 ++++++++
+ arch/arm/mach-imx/Makefile      |  1 +
+ arch/arm/mach-imx/mach-imx6ul.c | 43 +++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 52 insertions(+)
+ create mode 100644 arch/arm/mach-imx/mach-imx6ul.c
+
+diff --git a/arch/arm/mach-imx/Kconfig b/arch/arm/mach-imx/Kconfig
+index 573536f..8ceda28 100644
+--- a/arch/arm/mach-imx/Kconfig
++++ b/arch/arm/mach-imx/Kconfig
+@@ -548,6 +548,14 @@ config SOC_IMX6SX
+ 	help
+ 	  This enables support for Freescale i.MX6 SoloX processor.
+ 
++config SOC_IMX6UL
++	bool "i.MX6 UltraLite support"
++	select PINCTRL_IMX6UL
++	select SOC_IMX6
++
++	help
++	  This enables support for Freescale i.MX6 UltraLite processor.
++
+ config SOC_IMX7D
+ 	bool "i.MX7 Dual support"
+ 	select PINCTRL_IMX7D
+diff --git a/arch/arm/mach-imx/Makefile b/arch/arm/mach-imx/Makefile
+index 37c502a..fb689d8 100644
+--- a/arch/arm/mach-imx/Makefile
++++ b/arch/arm/mach-imx/Makefile
+@@ -83,6 +83,7 @@ endif
+ obj-$(CONFIG_SOC_IMX6Q) += mach-imx6q.o
+ obj-$(CONFIG_SOC_IMX6SL) += mach-imx6sl.o
+ obj-$(CONFIG_SOC_IMX6SX) += mach-imx6sx.o
++obj-$(CONFIG_SOC_IMX6UL) += mach-imx6ul.o
+ obj-$(CONFIG_SOC_IMX7D) += mach-imx7d.o
+ 
+ ifeq ($(CONFIG_SUSPEND),y)
+diff --git a/arch/arm/mach-imx/mach-imx6ul.c b/arch/arm/mach-imx/mach-imx6ul.c
+new file mode 100644
+index 0000000..706d5f6
+--- /dev/null
++++ b/arch/arm/mach-imx/mach-imx6ul.c
+@@ -0,0 +1,43 @@
++/*
++ * Copyright (C) 2015 Freescale Semiconductor, Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++#include <linux/irqchip.h>
++#include <linux/of_platform.h>
++#include <asm/mach/arch.h>
++#include <asm/mach/map.h>
++
++#include "common.h"
++
++static void __init imx6ul_init_machine(void)
++{
++	struct device *parent;
++
++	parent = imx_soc_device_init();
++	if (parent == NULL)
++		pr_warn("failed to initialize soc device\n");
++
++	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
++	imx_anatop_init();
++}
++
++static void __init imx6ul_init_irq(void)
++{
++	imx_init_revision_from_anatop();
++	imx_src_init();
++	irqchip_init();
++}
++
++static const char *imx6ul_dt_compat[] __initconst = {
++	"fsl,imx6ul",
++	NULL,
++};
++
++DT_MACHINE_START(IMX7D, "Freescale i.MX6 Ultralite (Device Tree)")
++	.init_irq	= imx6ul_init_irq,
++	.init_machine	= imx6ul_init_machine,
++	.dt_compat	= imx6ul_dt_compat,
++MACHINE_END
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" in
