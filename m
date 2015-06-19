@@ -1,62 +1,37 @@
-From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Subject: [PATCH v4 3/8] extcon: arizona: Update to use the new device properties API
-Date: Fri, 19 Jun 2015 13:37:31 +0100
-Message-ID: <1434717456-31995-4-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-References: <1434717456-31995-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1434717456-31995-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org, cw00.choi@samsung.com
-Cc: myungjoo.ham@samsung.com, sameo@linux.intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
+From: Herbert Xu <herbert@gondor.apana.org.au>
+Subject: Re: [PATCH v7 04/14] crypto: add a new driver for Marvell's CESA
+Date: Fri, 19 Jun 2015 22:03:15 +0800
+Message-ID: <20150619140315.GA14692@gondor.apana.org.au>
+References: <1434635190-27733-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1434635190-27733-5-git-send-email-boris.brezillon@free-electrons.com>
+ <20150619064256.GA10246@gondor.apana.org.au>
+ <20150619102407.01187ff0@free-electrons.com>
+ <5583D56F.7020808@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-crypto-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5583D56F.7020808@free-electrons.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, "David S. Miller" <davem@davemloft.net>, linux-crypto@vger.kernel.org, Arnaud Ebalard <arno@natisbad.org>, Tawfik Bayouk <tawfik@marvell.com>, Lior Amsalem <alior@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Eran Ben-Avi <benavi@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Imre Kaloz <kaloz@openwrt.org>, Russell King - ARM Linux <linux@a>
 List-Id: devicetree@vger.kernel.org
 
-The device properties API will load data from both device tree and ACPI,
-update the binding to use this API instead of the OF API.
+On Fri, Jun 19, 2015 at 10:40:15AM +0200, Gregory CLEMENT wrote:
+> 
+> For this option you can use the branch mvebu/drivers located at
+>  git://git.infradead.org/linux-mvebu.git.
+> 
+> In this branch there is the commit "bus: mvebu-mbus: add mv_mbus_dram_info_nooverlap()"
+> but not only this one because it depends also on fixes which have been
+> merged in this same branch.
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
----
- drivers/extcon/extcon-arizona.c |   11 +++++------
- 1 files changed, 5 insertions(+), 6 deletions(-)
+It looks like the parent of this changeset is already in the mainline
+so it's literally just a single patch.  I'll try to pull it into
+cryptodev.
 
-diff --git a/drivers/extcon/extcon-arizona.c b/drivers/extcon/extcon-arizona.c
-index c4d179b..57f5553 100644
---- a/drivers/extcon/extcon-arizona.c
-+++ b/drivers/extcon/extcon-arizona.c
-@@ -24,6 +24,7 @@
- #include <linux/input.h>
- #include <linux/platform_device.h>
- #include <linux/pm_runtime.h>
-+#include <linux/property.h>
- #include <linux/regulator/consumer.h>
- #include <linux/extcon.h>
- 
-@@ -1110,12 +1111,12 @@ static void arizona_micd_set_level(struct arizona *arizona, int index,
- 	regmap_update_bits(arizona->regmap, reg, mask, level);
- }
- 
--static int arizona_extcon_of_get_pdata(struct arizona *arizona)
-+static int arizona_extcon_device_get_pdata(struct arizona *arizona)
- {
- 	struct arizona_pdata *pdata = &arizona->pdata;
- 	unsigned int val = ARIZONA_ACCDET_MODE_HPL;
- 
--	of_property_read_u32(arizona->dev->of_node, "wlf,hpdet-channel", &val);
-+	device_property_read_u32(arizona->dev, "wlf,hpdet-channel", &val);
- 	switch (val) {
- 	case ARIZONA_ACCDET_MODE_HPL:
- 	case ARIZONA_ACCDET_MODE_HPR:
-@@ -1148,10 +1149,8 @@ static int arizona_extcon_probe(struct platform_device *pdev)
- 	if (!info)
- 		return -ENOMEM;
- 
--	if (IS_ENABLED(CONFIG_OF)) {
--		if (!dev_get_platdata(arizona->dev))
--			arizona_extcon_of_get_pdata(arizona);
--	}
-+	if (!dev_get_platdata(arizona->dev))
-+		arizona_extcon_device_get_pdata(arizona);
- 
- 	info->micvdd = devm_regulator_get(&pdev->dev, "MICVDD");
- 	if (IS_ERR(info->micvdd)) {
+Thanks,
 -- 
-1.7.2.5
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
