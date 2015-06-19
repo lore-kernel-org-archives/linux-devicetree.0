@@ -1,77 +1,88 @@
-From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Subject: [PATCH v3 5/7] extcon: arizona: Ensure variables are set for headphone detection
-Date: Fri, 19 Jun 2015 11:33:07 +0100
-Message-ID: <1434709989-28300-6-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: [PATCH v3 3/7] extcon: arizona: Add basic microphone detection DT/ACPI bindings
+Date: Fri, 19 Jun 2015 11:33:05 +0100
+Message-ID: <1434709989-28300-4-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 References: <1434709989-28300-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1434709989-28300-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org, cw00.choi@samsung.com
-Cc: myungjoo.ham@samsung.com, sameo@linux.intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1434709989-28300-1-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Cc: myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The detecting flag really refers to the microphone detection stage and
-as such should be cleared before arizona_identify_headphones is called.
-Also the mic flag should be set before identify headphones is called as
-well.
+This patch adds bindings for the basic microphone detection platform
+data.
 
-Otherwise the microphone detection will not be disabled during the
-headphone detection and we can get false button reports caused by the
-clamping that is part of the headphone detection.
-
-Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 ---
- drivers/extcon/extcon-arizona.c |   11 +++++++----
- 1 files changed, 7 insertions(+), 4 deletions(-)
+ drivers/extcon/extcon-arizona.c   |   30 ++++++++++++++++++++++++++++++
+ include/linux/mfd/arizona/pdata.h |    3 +++
+ 2 files changed, 33 insertions(+), 0 deletions(-)
 
 diff --git a/drivers/extcon/extcon-arizona.c b/drivers/extcon/extcon-arizona.c
-index eb8cf74..8a87ecd 100644
+index d990495..6826d99 100644
 --- a/drivers/extcon/extcon-arizona.c
 +++ b/drivers/extcon/extcon-arizona.c
-@@ -765,10 +765,11 @@ static void arizona_micd_timeout_work(struct work_struct *work)
- 	mutex_lock(&info->lock);
+@@ -1115,6 +1115,7 @@ static int arizona_extcon_device_get_pdata(struct arizona *arizona)
+ {
+ 	struct arizona_pdata *pdata = &arizona->pdata;
+ 	unsigned int val = ARIZONA_ACCDET_MODE_HPL;
++	unsigned int num_debounces;
  
- 	dev_dbg(info->arizona->dev, "MICD timed out, reporting HP\n");
--	arizona_identify_headphone(info);
- 
- 	info->detecting = false;
- 
-+	arizona_identify_headphone(info);
-+
- 	arizona_stop_mic(info);
- 
- 	mutex_unlock(&info->lock);
-@@ -834,6 +835,9 @@ static void arizona_micd_detect(struct work_struct *work)
- 
- 	/* If we got a high impedence we should have a headset, report it. */
- 	if (info->detecting && (val & ARIZONA_MICD_LVL_8)) {
-+		info->mic = true;
-+		info->detecting = false;
-+
- 		arizona_identify_headphone(info);
- 
- 		ret = extcon_set_cable_state_(info->edev,
-@@ -849,8 +853,6 @@ static void arizona_micd_detect(struct work_struct *work)
- 				ret);
- 		}
- 
--		info->mic = true;
--		info->detecting = false;
- 		goto handled;
+ 	device_property_read_u32(arizona->dev, "wlf,hpdet-channel", &val);
+ 	switch (val) {
+@@ -1128,6 +1129,35 @@ static int arizona_extcon_device_get_pdata(struct arizona *arizona)
+ 		pdata->hpdet_channel = ARIZONA_ACCDET_MODE_HPL;
  	}
  
-@@ -863,10 +865,11 @@ static void arizona_micd_detect(struct work_struct *work)
- 	if (info->detecting && (val & MICD_LVL_1_TO_7)) {
- 		if (info->jack_flips >= info->micd_num_modes * 10) {
- 			dev_dbg(arizona->dev, "Detected HP/line\n");
--			arizona_identify_headphone(info);
- 
- 			info->detecting = false;
- 
-+			arizona_identify_headphone(info);
++	device_property_read_u32(arizona->dev, "wlf,micd-detect-debounce",
++				 &pdata->micd_detect_debounce);
 +
- 			arizona_stop_mic(info);
- 		} else {
- 			info->micd_mode++;
++	device_property_read_u32(arizona->dev, "wlf,micd-bias-start-time",
++				 &pdata->micd_bias_start_time);
++
++	device_property_read_u32(arizona->dev, "wlf,micd-rate",
++				 &pdata->micd_rate);
++
++	num_debounces = 0;
++	device_property_read_u32(arizona->dev, "wlf,micd-dbtime",
++				 &num_debounces);
++	switch (num_debounces) {
++	case 2:
++		pdata->micd_dbtime = ARIZONA_MICD_DBTIME_TWO_DEBOUNCES;
++		break;
++	case 4:
++		pdata->micd_dbtime = ARIZONA_MICD_DBTIME_FOUR_DEBOUNCES;
++		break;
++	default:
++		break;
++	}
++
++	device_property_read_u32(arizona->dev, "wlf,micd-timeout",
++				 &pdata->micd_timeout);
++
++	pdata->micd_force_micbias = device_property_read_bool(arizona->dev,
++						"wlf,micd-force-micbias");
++
+ 	return 0;
+ }
+ 
+diff --git a/include/linux/mfd/arizona/pdata.h b/include/linux/mfd/arizona/pdata.h
+index aa5c48b..af44081 100644
+--- a/include/linux/mfd/arizona/pdata.h
++++ b/include/linux/mfd/arizona/pdata.h
+@@ -53,6 +53,9 @@
+ 
+ #define ARIZONA_MAX_PDM_SPK 2
+ 
++#define ARIZONA_MICD_DBTIME_TWO_DEBOUNCES 0x10000
++#define ARIZONA_MICD_DBTIME_FOUR_DEBOUNCES 0x0001
++
+ struct regulator_init_data;
+ 
+ struct arizona_micbias {
 -- 
 1.7.2.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
