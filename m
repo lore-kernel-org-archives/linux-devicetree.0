@@ -1,70 +1,58 @@
-From: Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/7] soc: brcmstb: add system suspend support for STB SoCs
-Date: Thu, 18 Jun 2015 20:20:52 -0700
-Message-ID: <CADtm3G7GQNuaZDoNe84YAh7pRV9s_2VhUuW8YpaCoNuozoyVZA@mail.gmail.com>
-References: <1434672696-13632-1-git-send-email-computersforpeace@gmail.com>
+From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 3/5] clk: add lpc18xx ccu clk driver
+Date: Fri, 19 Jun 2015 07:17:50 +0200
+Message-ID: <CAGhQ9Vz9MYc60=L5mZnxzHO3PpST0fukRpK77cF3C4=XDrWByw@mail.gmail.com>
+References: <1432845107-12458-1-git-send-email-manabian@gmail.com>
+	<1432845107-12458-4-git-send-email-manabian@gmail.com>
+	<20150610021315.6017.58085@quantum>
+	<CAGhQ9VwONWTULGUbGuf_2HbLpfU4pp8S49xdtoCcKcm1p=n7hg@mail.gmail.com>
+	<20150618224538.9112.61682@quantum>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1434672696-13632-1-git-send-email-computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20150618224538.9112.61682@quantum>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+To: Michael Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 18, 2015 at 5:11 PM, Brian Norris
-<computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Hi,
+On 19 June 2015 at 00:45, Michael Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> Quoting Joachim Eastwood (2015-06-10 07:02:59)
+>> Hi Mike,
+>>
+>>
+>> > Hi Joachim,
+>> >
+>> > If it were me, I would have broken this up into two tables, one for each
+>> > CCU. In general I would structure the code to reflect the fact that two
+>> > different IP blocks are being accessed. This isn't a deal breaker but I
+>> > thought I would mention it in case you want to make the change.
+>> >
+>> > Otherwise this series looks good to me. Let me know if you plan a V5
+>> > submission.
+>>
+>> If there is still time for 4.2 and you don't have any more comments on
+>> how the driver uses the DT bindings I would rather send a follow up
+>> patch that splits the ccu table for 4.3.
+>>
+>>
+>> > I can take patches #1-4 into the clk tree. Please add my Acked-by to
+>> > patch #5. I will create an immutable branch to share with the arm-soc
+>> > tree so that they can take #5 and have access to the dt-bindings
+>> > headers.
+>>
+>> Sounds good. I'll talk to arm-soc team about it. But it isn't critical
+>> for me to get the DTS changes in for 4.2, but I would be very grateful
+>> for getting the drivers and headers in for 4.2 so that 4.3 is ready
+>> and doesn't have any header dependencies for all the driver DTS stuff.
 >
-> This patch set introduces system suspend/resume support for Broadcom STB SoCs.
-> There are two suspend modes (S2 and S3) as well as a related low-power shutdown
-> mode (S5).
->
-> Along with the core PM support, include a driver for the wakeup-timer, which
-> allows for simple testing of suspend/resume wakeup cycles.
->
-> Brian
->
-> Brian Norris (7):
->   Documentation: dt: brcmstb: add system PM bindings
->   Documentation: dt: brcmstb: add waketimer documentation
->   soc: add stubs for brcmstb SoC's
->   soc: brcmstb: add PM suspend/resume support (S2/S3/S5)
->   soc: brcmstb: add wake-timer driver
->   ARM: brcmstb: mask GIC IRQs on suspend
->   ARM: dts: brcmstb: add BCM7445 system PM DT nodes
->
+> Patches #1-4 applied to clk-next for 4.2.
 
-I tested this series two ways: with the device tree built into the
-bootloader (BOLT) on BCM7445 and by using
-arch/arm/boot/dts/bcm7445-bcm97445svmb.dtb
+Thanks a lot, Mike.
 
-With the device tree from BOLT, everything works fine.  Tested the
-waketimer for S2, S3, and S5.
 
-With the device tree in arch/arm/boot/dts/bcm7445-bcm97445svmb.dts, S2
-works, but S3 and S5 do not.  It comes back up but doesn't reach the
-prompt:
-
-[    6.050808] PM: suspend of devices complete after 1.425 msecs
-[    6.051760] PM: late suspend of devices complete after 0.947 msecs
-[    6.052535] PM: noirq suspend of devices complete after 0.770 msecs
-[    6.052537] Disabling non-boot CPUs ...
-[    6.053005] CPU1: shutdown
-[    6.065914] CPU2: shutdown
-[    6.080756] CPU3: shutdown
-[    6.095214] Enabling non-boot CPUs ...
-[    6.111496] CPU1 is up
-[    6.126934] CPU2 is up
-[    6.142511] CPU3 is up
-[    6.145308] PM: noirq resume of devices complete after 2.772 msecs
-[    6.148022] PM: early resume of devices complete after 2.626 msecs
-[    6.151017] PM: resume of devices complete after 2.976 msecs
-[    6.212771] Restarting tasks ... done.
-[[[ output stops here ]]]
-
-I suspect there might be an issue somewhere in
-[PATCH 7/7] ARM: dts: brcmstb: add BCM7445 system PM DT nodes.
+regards,
+Joachim Eastwood
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
