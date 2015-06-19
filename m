@@ -1,7 +1,7 @@
 From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Subject: [PATCH v5 2/7] extcon: arizona: Update to use the new device properties API
-Date: Fri, 19 Jun 2015 17:23:29 +0100
-Message-ID: <1434731014-19980-3-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+Subject: [PATCH v5 7/7] mfd: arizona: Update several pdata members to unsigned
+Date: Fri, 19 Jun 2015 17:23:34 +0100
+Message-ID: <1434731014-19980-8-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 References: <1434731014-19980-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1434731014-19980-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
@@ -10,53 +10,57 @@ To: lee.jones@linaro.org, cw00.choi@samsung.com
 Cc: myungjoo.ham@samsung.com, sameo@linux.intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-The device properties API will load data from both device tree and ACPI,
-update the binding to use this API instead of the OF API.
+Device tree and ACPI primarily deal with unsigned ints, many of the
+pdata members in the Arizona driver are signed ints but are only ever
+assigned positive values. Changing these pdata fields to unsigned ints
+avoids us having to choose between overly verbose code and Sparse
+warnings.
 
 Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
 ---
- drivers/extcon/extcon-arizona.c |   11 +++++------
- 1 files changed, 5 insertions(+), 6 deletions(-)
+ include/linux/mfd/arizona/pdata.h |   12 ++++++------
+ 1 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/extcon/extcon-arizona.c b/drivers/extcon/extcon-arizona.c
-index 1fbe3b4..57755e8 100644
---- a/drivers/extcon/extcon-arizona.c
-+++ b/drivers/extcon/extcon-arizona.c
-@@ -24,6 +24,7 @@
- #include <linux/input.h>
- #include <linux/platform_device.h>
- #include <linux/pm_runtime.h>
-+#include <linux/property.h>
- #include <linux/regulator/consumer.h>
- #include <linux/extcon.h>
+diff --git a/include/linux/mfd/arizona/pdata.h b/include/linux/mfd/arizona/pdata.h
+index bd68355..85b132c 100644
+--- a/include/linux/mfd/arizona/pdata.h
++++ b/include/linux/mfd/arizona/pdata.h
+@@ -104,7 +104,7 @@ struct arizona_pdata {
+ 	 * useful for systems where and I2S bus with multiple data
+ 	 * lines is mastered.
+ 	 */
+-	int max_channels_clocked[ARIZONA_MAX_AIF];
++	unsigned int max_channels_clocked[ARIZONA_MAX_AIF];
  
-@@ -1110,12 +1111,12 @@ static void arizona_micd_set_level(struct arizona *arizona, int index,
- 	regmap_update_bits(arizona->regmap, reg, mask, level);
- }
+ 	/** GPIO5 is used for jack detection */
+ 	bool jd_gpio5;
+@@ -128,22 +128,22 @@ struct arizona_pdata {
+ 	unsigned int hpdet_channel;
  
--static int arizona_extcon_of_get_pdata(struct arizona *arizona)
-+static int arizona_extcon_device_get_pdata(struct arizona *arizona)
- {
- 	struct arizona_pdata *pdata = &arizona->pdata;
- 	unsigned int val = ARIZONA_ACCDET_MODE_HPL;
+ 	/** Extra debounce timeout used during initial mic detection (ms) */
+-	int micd_detect_debounce;
++	unsigned int micd_detect_debounce;
  
--	of_property_read_u32(arizona->dev->of_node, "wlf,hpdet-channel", &val);
-+	device_property_read_u32(arizona->dev, "wlf,hpdet-channel", &val);
- 	switch (val) {
- 	case ARIZONA_ACCDET_MODE_HPL:
- 	case ARIZONA_ACCDET_MODE_HPR:
-@@ -1147,10 +1148,8 @@ static int arizona_extcon_probe(struct platform_device *pdev)
- 	if (!info)
- 		return -ENOMEM;
+ 	/** GPIO for mic detection polarity */
+ 	int micd_pol_gpio;
  
--	if (IS_ENABLED(CONFIG_OF)) {
--		if (!dev_get_platdata(arizona->dev))
--			arizona_extcon_of_get_pdata(arizona);
--	}
-+	if (!dev_get_platdata(arizona->dev))
-+		arizona_extcon_device_get_pdata(arizona);
+ 	/** Mic detect ramp rate */
+-	int micd_bias_start_time;
++	unsigned int micd_bias_start_time;
  
- 	info->micvdd = devm_regulator_get(&pdev->dev, "MICVDD");
- 	if (IS_ERR(info->micvdd)) {
+ 	/** Mic detect sample rate */
+-	int micd_rate;
++	unsigned int micd_rate;
+ 
+ 	/** Mic detect debounce level */
+-	int micd_dbtime;
++	unsigned int micd_dbtime;
+ 
+ 	/** Mic detect timeout (ms) */
+-	int micd_timeout;
++	unsigned int micd_timeout;
+ 
+ 	/** Force MICBIAS on for mic detect */
+ 	bool micd_force_micbias;
 -- 
 1.7.2.5
