@@ -1,7 +1,7 @@
 From: Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: [PATCH v2 4/6] ARM: dts: pxa: add embedded pxa camera capture interface
-Date: Fri, 19 Jun 2015 20:38:20 +0200
-Message-ID: <1434739102-26217-4-git-send-email-robert.jarzmik@free.fr>
+Subject: [PATCH v2 6/6] ARM: dts: pxa: add the usb host controller
+Date: Fri, 19 Jun 2015 20:38:22 +0200
+Message-ID: <1434739102-26217-6-git-send-email-robert.jarzmik@free.fr>
 References: <1434739102-26217-1-git-send-email-robert.jarzmik@free.fr>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1434739102-26217-1-git-send-email-robert.jarzmik@free.fr>
@@ -10,39 +10,47 @@ To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutl
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Robert Jarzmik <robert.jarzmik@free.fr>
 List-Id: devicetree@vger.kernel.org
 
-The pxa27x SoCs have an embedded camera host controller. Add the
-description to the family description.
+Add the usb host controller to pxa27x and pxa3xx.
 
 Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
 ---
-Since v1: Sergey's comment on ePAR standard: "imaging"
----
- arch/arm/boot/dts/pxa27x.dtsi | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ arch/arm/boot/dts/pxa27x.dtsi | 8 ++++++++
+ arch/arm/boot/dts/pxa3xx.dtsi | 8 ++++++++
+ 2 files changed, 16 insertions(+)
 
 diff --git a/arch/arm/boot/dts/pxa27x.dtsi b/arch/arm/boot/dts/pxa27x.dtsi
-index 506db86..1402e23 100644
+index fc79df9..97220ac 100644
 --- a/arch/arm/boot/dts/pxa27x.dtsi
 +++ b/arch/arm/boot/dts/pxa27x.dtsi
-@@ -77,6 +77,23 @@
- 			clocks = <&clks CLK_KEYPAD>;
+@@ -26,6 +26,14 @@
+ 			clocks = <&clks CLK_NONE>;
+ 		};
+ 
++		pxa27x_ohci: ohci@4c000000 {
++			compatible = "marvell,pxa-ohci";
++			reg = <0x4c000000 0x10000>;
++			interrupts = <3>;
++			clocks = <&clks CLK_USBHOST>;
++			status = "disabled";
++		};
++
+ 		pwm0: pwm@40b00000 {
+ 			compatible = "marvell,pxa270-pwm", "marvell,pxa250-pwm";
+ 			reg = <0x40b00000 0x10>;
+diff --git a/arch/arm/boot/dts/pxa3xx.dtsi b/arch/arm/boot/dts/pxa3xx.dtsi
+index 29aeac5..67bd4fe 100644
+--- a/arch/arm/boot/dts/pxa3xx.dtsi
++++ b/arch/arm/boot/dts/pxa3xx.dtsi
+@@ -86,6 +86,14 @@
+ 			dma-names = "rx", "tx";
  			status = "disabled";
  		};
 +
-+		pxa_camera: imaging@50000000 {
-+			compatible = "marvell,pxa270-qci";
-+			reg = <0x50000000 0x1000>;
-+			interrupts = <33>;
-+			dmas = <&pdma 68 0	/* Y channel */
-+				&pdma 69 0	/* U channel */
-+				&pdma 70 0>;	/* V channel */
-+			dma-names = "CI_Y", "CI_U", "CI_V";
-+
-+			clocks = <&clks CLK_CAMERA>;
-+			clock-names = "ciclk";
-+			clock-frequency = <5000000>;
-+			clock-output-names = "qci_mclk";
-+
++		pxa3xx_ohci: ohci@4c000000 {
++			compatible = "marvell,pxa-ohci";
++			reg = <0x4c000000 0x10000>;
++			interrupts = <3>;
++			clocks = <&clks CLK_USBHOST>;
 +			status = "disabled";
 +		};
  	};
