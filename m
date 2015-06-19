@@ -1,68 +1,63 @@
-From: Yi Zhang <yizhang@marvell.com>
-Subject: Re: [PATCH V2 0/2] add basic support to Marvell 88pm880/88pm886 PMIC
- chip
-Date: Fri, 19 Jun 2015 16:33:57 +0800
-Message-ID: <20150619083357.GA4502@yizhang>
-References: <1434098601-3498-1-git-send-email-yizhang@marvell.com>
+From: Chanwoo Choi <cwchoi00-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 3/5] extcon: arizona: Convert to gpiod
+Date: Fri, 19 Jun 2015 17:39:22 +0900
+Message-ID: <CAGTfZH3USsR5AVQn2UMBH_y-25nsXBw3cdjBLbEiRWJu7Q+Tsg@mail.gmail.com>
+References: <1434638631-16451-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+	<1434638631-16451-4-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+	<CAGTfZH0AsRwcFwevAiQeyL=VUxiCvCx+3OEFKQ4nV3DpRdsdoQ@mail.gmail.com>
+	<20150619081433.GR32730@opensource.wolfsonmicro.com>
+Reply-To: cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1434098601-3498-1-git-send-email-yizhang@marvell.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sameo@linux.intel.com, lee.jones@linaro.org, pebolle@tiscali.nl
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, zhouqiao@marvell.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150619081433.GR32730-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 12, 2015 at 04:43:19PM +0800, Yi Zhang wrote:
+On Fri, Jun 19, 2015 at 5:14 PM, Charles Keepax
+<ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrote:
+> On Fri, Jun 19, 2015 at 11:36:47AM +0900, Chanwoo Choi wrote:
+>> Hi Charles,
+>>
+>> On Thu, Jun 18, 2015 at 11:43 PM, Charles Keepax
+>> <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrote:
+>> > Convert to using the newer gpiod interface for the micd_pol_gpio.
+>> > Although we still carry support for the old gpio interface from pdata.
+>> >
+>> > Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+>> > ---
+>> > +                       mode = GPIOD_OUT_HIGH;
+>> > +               else
+>> > +                       mode = GPIOD_OUT_LOW;
+>> > +
+>> > +               info->micd_pol_gpio = gpiod_get_optional(arizona->dev,
+>> > +                                                        "wlf,micd-pol",
+>> > +                                                        GPIOD_OUT_LOW);
+>>
+>> You can use the devm_gpiod_get_optional() to manage the system
+>> resource automatically.
+>>
+>
+> We can't actually use the devm call here, we need to pass
+> arizona->dev as that is where the DT will reside, which is the
+> device for the MFD. But if the devm is attached to the device for
+> the MFD then it will not clear up when the extcon driver is
+> unloaded. As such we have to do the put manually.
+>
+> I will look at respinning for the other comments.
 
-Hi, Samuel and Lee:
+I don't understand. extcon-arizona.c used already following devm_* functions:
+- devm_kzalloc()
+- devm_regulator_get()
+- devm_extcon_dev_*()
+- devm_input_allocate_device()
+- devm_gpio_request_one()
 
-Could you please share your comments on this patch? 
-then I can modify accordingly;
-
-thanks very much;
->   - 88pm880 and 88pm886 are PMIC chips which integrates regulator,
->     gpadc, charger, fuelgauge, etc;
-> 	they share most of the functions and register mapping
->   - this version removes the redundant EXPORT_SYMBOL_GPL, compared with the
->     first version
-> 
-> 
-> Yi Zhang (2):
->   mfd: add Marvell 88pm88x description
->   mfd: 88pm88x: initialize 88pm886/88pm880 base support
-> 
->  Documentation/devicetree/bindings/mfd/88pm88x.txt |  33 ++
->  drivers/mfd/88pm880-table.c                       | 173 +++++++
->  drivers/mfd/88pm886-table.c                       | 173 +++++++
->  drivers/mfd/88pm88x-core.c                        | 584 ++++++++++++++++++++++
->  drivers/mfd/88pm88x-i2c.c                         | 167 +++++++
->  drivers/mfd/88pm88x-irq.c                         | 171 +++++++
->  drivers/mfd/88pm88x.h                             |  51 ++
->  drivers/mfd/Kconfig                               |  12 +
->  drivers/mfd/Makefile                              |   3 +
->  include/linux/mfd/88pm880-reg.h                   |  98 ++++
->  include/linux/mfd/88pm880.h                       |  59 +++
->  include/linux/mfd/88pm886-reg.h                   |  59 +++
->  include/linux/mfd/88pm886.h                       |  55 ++
->  include/linux/mfd/88pm88x-reg.h                   | 118 +++++
->  include/linux/mfd/88pm88x.h                       | 202 ++++++++
->  15 files changed, 1958 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/88pm88x.txt
->  create mode 100644 drivers/mfd/88pm880-table.c
->  create mode 100644 drivers/mfd/88pm886-table.c
->  create mode 100644 drivers/mfd/88pm88x-core.c
->  create mode 100644 drivers/mfd/88pm88x-i2c.c
->  create mode 100644 drivers/mfd/88pm88x-irq.c
->  create mode 100644 drivers/mfd/88pm88x.h
->  create mode 100644 include/linux/mfd/88pm880-reg.h
->  create mode 100644 include/linux/mfd/88pm880.h
->  create mode 100644 include/linux/mfd/88pm886-reg.h
->  create mode 100644 include/linux/mfd/88pm886.h
->  create mode 100644 include/linux/mfd/88pm88x-reg.h
->  create mode 100644 include/linux/mfd/88pm88x.h
-> 
-> -- 
-> 1.9.1
-> 
+Thanks,
+Chanwoo Choi
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
