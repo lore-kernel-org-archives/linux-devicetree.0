@@ -1,7 +1,7 @@
 From: Brian Norris <computersforpeace@gmail.com>
-Subject: [PATCH 5/7] soc: brcmstb: add wake-timer driver
-Date: Thu, 18 Jun 2015 17:11:34 -0700
-Message-ID: <1434672696-13632-6-git-send-email-computersforpeace@gmail.com>
+Subject: [PATCH 4/7] soc: brcmstb: add PM suspend/resume support (S2/S3/S5)
+Date: Thu, 18 Jun 2015 17:11:33 -0700
+Message-ID: <1434672696-13632-5-git-send-email-computersforpeace@gmail.com>
 References: <1434672696-13632-1-git-send-email-computersforpeace@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -13,74 +13,73 @@ To: Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail
 Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-Useful for waking the system from suspend after a specified period of
-time.
-
-This IP could potentially be supported as an RTC driver (for use with
-the 'rtcwake' utility), but it is not battery backed, so that's not a
-great fit. Implement a custom sysfs interface instead.
+Support S2, S3, and S5 through /sys/power/state ("standby" and "mem")
+and the poweroff code paths. See comments in pm.c for a few more detail=
+s
+about these system suspend modes.
 
 Signed-off-by: Brian Norris <computersforpeace@gmail.com>
 ---
- .../ABI/testing/sysfs-driver-wktmr-brcmstb         |  12 +
- drivers/soc/brcmstb/Kconfig                        |   3 +
- drivers/soc/brcmstb/Makefile                       |   1 +
- drivers/soc/brcmstb/wktmr.c                        | 242 +++++++++++++=
+ drivers/soc/brcmstb/Kconfig       |  10 +
+ drivers/soc/brcmstb/Makefile      |   2 +
+ drivers/soc/brcmstb/pm/Makefile   |   1 +
+ drivers/soc/brcmstb/pm/aon_defs.h |  85 +++++++
+ drivers/soc/brcmstb/pm/pm.c       | 512 ++++++++++++++++++++++++++++++=
 ++++++++
- 4 files changed, 258 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-driver-wktmr-brcmst=
-b
- create mode 100644 drivers/soc/brcmstb/wktmr.c
+ drivers/soc/brcmstb/pm/pm.h       |  40 +++
+ drivers/soc/brcmstb/pm/s2.S       |  73 ++++++
+ 7 files changed, 723 insertions(+)
+ create mode 100644 drivers/soc/brcmstb/pm/Makefile
+ create mode 100644 drivers/soc/brcmstb/pm/aon_defs.h
+ create mode 100644 drivers/soc/brcmstb/pm/pm.c
+ create mode 100644 drivers/soc/brcmstb/pm/pm.h
+ create mode 100644 drivers/soc/brcmstb/pm/s2.S
 
-diff --git a/Documentation/ABI/testing/sysfs-driver-wktmr-brcmstb b/Doc=
-umentation/ABI/testing/sysfs-driver-wktmr-brcmstb
-new file mode 100644
-index 000000000000..e563f8b8d969
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-driver-wktmr-brcmstb
-@@ -0,0 +1,12 @@
-+What:		/sys/bus/platform/drivers/brcm-waketimer/<MMIO-address>.waketim=
-er/timeout
-+Date:		November 21, 2014
-+KernelVersion:	3.14
-+Contact:	Brian Norris <norris@broadcom.com>
-+Description:	The control file for the wakeup timer. This integer value
-+		represents the number of seconds between a suspend operation
-+		(e.g., S3 suspend-to-RAM) and the time at which the wakeup
-+		timer should fire.
-+
-+		Values are -1 (default) or any non-negative integer. Units are
-+		in seconds. The special value of -1 means the timer should not
-+		wake up the system.
 diff --git a/drivers/soc/brcmstb/Kconfig b/drivers/soc/brcmstb/Kconfig
-index 5025dacce6f0..e818eca7e847 100644
+index 39cab3bd544d..5025dacce6f0 100644
 --- a/drivers/soc/brcmstb/Kconfig
 +++ b/drivers/soc/brcmstb/Kconfig
-@@ -16,4 +16,7 @@ config BRCMSTB_PM
- 	depends on PM
- 	depends on ARM && ARCH_BRCMSTB
+@@ -7,3 +7,13 @@ menuconfig SOC_BRCMSTB
+ 	  can be enabled individually within this menu.
 =20
-+config BRCMSTB_WKTMR
-+	tristate "Support wake-up timer"
+ 	  If unsure, say N.
 +
- endif # SOC_BRCMSTB
++if SOC_BRCMSTB
++
++config BRCMSTB_PM
++	bool "Support suspend/resume for STB platforms"
++	default y
++	depends on PM
++	depends on ARM && ARCH_BRCMSTB
++
++endif # SOC_BRCMSTB
 diff --git a/drivers/soc/brcmstb/Makefile b/drivers/soc/brcmstb/Makefil=
 e
-index 677e3fa0d042..6ecba0644229 100644
+index 183280e39f80..677e3fa0d042 100644
 --- a/drivers/soc/brcmstb/Makefile
 +++ b/drivers/soc/brcmstb/Makefile
-@@ -1,3 +1,4 @@
- obj-$(CONFIG_BRCMSTB_PM)	+=3D pm/
-=20
+@@ -1 +1,3 @@
++obj-$(CONFIG_BRCMSTB_PM)	+=3D pm/
++
  obj-y				+=3D common.o
-+obj-$(CONFIG_BRCMSTB_WKTMR)	+=3D wktmr.o
-diff --git a/drivers/soc/brcmstb/wktmr.c b/drivers/soc/brcmstb/wktmr.c
+diff --git a/drivers/soc/brcmstb/pm/Makefile b/drivers/soc/brcmstb/pm/M=
+akefile
 new file mode 100644
-index 000000000000..89f989724d3c
+index 000000000000..71a1ff4c368b
 --- /dev/null
-+++ b/drivers/soc/brcmstb/wktmr.c
-@@ -0,0 +1,242 @@
++++ b/drivers/soc/brcmstb/pm/Makefile
+@@ -0,0 +1 @@
++obj-y				+=3D pm.o s2.o
+diff --git a/drivers/soc/brcmstb/pm/aon_defs.h b/drivers/soc/brcmstb/pm=
+/aon_defs.h
+new file mode 100644
+index 000000000000..2b660fa788e4
+--- /dev/null
++++ b/drivers/soc/brcmstb/pm/aon_defs.h
+@@ -0,0 +1,85 @@
 +/*
++ * Always ON (AON) register interface between bootloader and Linux
++ *
 + * Copyright =C2=A9 2014-2015 Broadcom Corporation
 + *
 + * This program is free software; you can redistribute it and/or modif=
@@ -94,238 +93,738 @@ y
 + * GNU General Public License for more details.
 + */
 +
-+#define pr_fmt(fmt)	KBUILD_MODNAME ": " fmt
++#ifndef __BRCMSTB_AON_DEFS_H__
++#define __BRCMSTB_AON_DEFS_H__
 +
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/stat.h>
-+#include <linux/device.h>
-+#include <linux/platform_device.h>
-+#include <linux/suspend.h>
-+#include <linux/err.h>
-+#include <linux/of.h>
-+#include <linux/pm.h>
-+#include <linux/io.h>
-+#include <linux/interrupt.h>
-+#include <linux/irqreturn.h>
-+#include <linux/pm_wakeup.h>
-+#include <linux/reboot.h>
++#include <linux/compiler.h>
 +
-+#define DRV_NAME	"brcm-waketimer"
++/* Magic number in upper 16-bits */
++#define BRCMSTB_S3_MAGIC_MASK                   0xffff0000
++#define BRCMSTB_S3_MAGIC_SHORT                  0x5AFE0000
 +
-+struct brcmstb_waketmr {
-+	struct device *dev;
-+	void __iomem *base;
-+	unsigned int irq;
++enum {
++	/* Restore random key for AES memory verification (off =3D fixed key)=
+ */
++	S3_FLAG_LOAD_RANDKEY		=3D (1 << 0),
 +
-+	int wake_timeout;
-+	struct notifier_block reboot_notifier;
++	/* Scratch buffer page table is present */
++	S3_FLAG_SCRATCH_BUFFER_TABLE	=3D (1 << 1),
++
++	/* Skip all memory verification */
++	S3_FLAG_NO_MEM_VERIFY		=3D (1 << 2),
 +};
 +
-+/* No timeout */
-+#define BRCMSTB_WKTMR_DEFAULT_TIMEOUT	(-1)
++#define BRCMSTB_HASH_LEN			(128 / 8) /* 128-bit hash */
 +
-+#define BRCMSTB_WKTMR_EVENT		0x00
-+#define BRCMSTB_WKTMR_COUNTER		0x04
-+#define BRCMSTB_WKTMR_ALARM		0x08
-+#define BRCMSTB_WKTMR_PRESCALER		0x0C
-+#define BRCMSTB_WKTMR_PRESACALER_VAL	0x10
++#define AON_REG_MAGIC_FLAGS			0x00
++#define AON_REG_CONTROL_LOW			0x04
++#define AON_REG_CONTROL_HIGH			0x08
++#define AON_REG_S3_HASH				0x0c /* hash of S3 params */
++#define AON_REG_CONTROL_HASH_LEN		0x1c
 +
-+static inline void brcmstb_waketmr_clear_alarm(struct brcmstb_waketmr =
-*timer)
-+{
-+	writel_relaxed(1, timer->base + BRCMSTB_WKTMR_EVENT);
-+	(void)readl_relaxed(timer->base + BRCMSTB_WKTMR_EVENT);
-+}
++#define BRCMSTB_S3_MAGIC		0x5AFEB007
++#define BOOTLOADER_SCRATCH_SIZE		64
++#define IMAGE_DESCRIPTORS_BUFSIZE	(2 * 1024)
 +
-+static void brcmstb_waketmr_set_alarm(struct brcmstb_waketmr *timer,
-+		unsigned int secs)
-+{
-+	unsigned int t;
++/*
++ * Bootloader utilizes a custom parameter block left in DRAM for handl=
+ing S3
++ * warm resume
++ */
++struct brcmstb_s3_params {
++	/* scratch memory for bootloader */
++	uint8_t scratch[BOOTLOADER_SCRATCH_SIZE];
 +
-+	brcmstb_waketmr_clear_alarm(timer);
++	uint32_t magic; /* BRCMSTB_S3_MAGIC */
++	uint64_t reentry; /* PA */
 +
-+	t =3D readl_relaxed(timer->base + BRCMSTB_WKTMR_COUNTER);
-+	writel_relaxed(t + secs + 1, timer->base + BRCMSTB_WKTMR_ALARM);
-+}
-+
-+static irqreturn_t brcmstb_waketmr_irq(int irq, void *data)
-+{
-+	struct brcmstb_waketmr *timer =3D data;
-+	pm_wakeup_event(timer->dev, 0);
-+	return IRQ_HANDLED;
-+}
-+
-+static ssize_t brcmstb_waketmr_timeout_show(struct device *dev,
-+		struct device_attribute *attr, char *buf)
-+{
-+	struct brcmstb_waketmr *timer =3D dev_get_drvdata(dev);
-+
-+	return snprintf(buf, PAGE_SIZE, "%d\n", timer->wake_timeout);
-+}
-+
-+static ssize_t brcmstb_waketmr_timeout_store(struct device *dev,
-+		struct device_attribute *attr, const char *buf, size_t count)
-+{
-+	struct brcmstb_waketmr *timer =3D dev_get_drvdata(dev);
-+	int timeout;
-+	int ret;
-+
-+	ret =3D kstrtoint(buf, 0, &timeout);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Allow -1 as "no timeout" */
-+	if (timeout < -1)
-+		return -EINVAL;
-+
-+	timer->wake_timeout =3D timeout;
-+
-+	return count;
-+}
-+
-+static const DEVICE_ATTR(timeout, S_IRUGO | S_IWUSR,
-+		brcmstb_waketmr_timeout_show,
-+		brcmstb_waketmr_timeout_store);
-+
-+static int brcmstb_waketmr_prepare_suspend(struct brcmstb_waketmr *tim=
-er)
-+{
-+	struct device *dev =3D timer->dev;
-+	int ret;
-+
-+	if (device_may_wakeup(dev) && timer->wake_timeout >=3D 0) {
-+		ret =3D enable_irq_wake(timer->irq);
-+		if (ret) {
-+			dev_err(dev, "failed to enable wake-up interrupt\n");
-+			return ret;
-+		}
-+
-+		brcmstb_waketmr_set_alarm(timer, timer->wake_timeout);
-+	}
-+	return 0;
-+}
-+
-+/* If enabled as a wakeup-source, arm the timer when powering off */
-+static int brcmstb_waketmr_reboot(struct notifier_block *nb,
-+		unsigned long action, void *data)
-+{
-+	struct brcmstb_waketmr *timer;
-+	timer =3D container_of(nb, struct brcmstb_waketmr, reboot_notifier);
-+
-+	/* Set timer for cold boot */
-+	if (action =3D=3D SYS_POWER_OFF)
-+		brcmstb_waketmr_prepare_suspend(timer);
-+
-+	return NOTIFY_DONE;
-+}
-+
-+static int brcmstb_waketmr_probe(struct platform_device *pdev)
-+{
-+	struct device *dev =3D &pdev->dev;
-+	struct brcmstb_waketmr *timer;
-+	struct resource *res;
-+	int ret;
-+
-+	timer =3D devm_kzalloc(dev, sizeof(*timer), GFP_KERNEL);
-+	if (!timer)
-+		return -ENOMEM;
-+	platform_set_drvdata(pdev, timer);
-+
-+	timer->dev =3D dev;
-+
-+	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	timer->base =3D devm_ioremap_resource(dev, res);
-+	if (IS_ERR(timer->base))
-+		return PTR_ERR(timer->base);
++	/* descriptors */
++	uint32_t hash[BRCMSTB_HASH_LEN / 4];
 +
 +	/*
-+	 * Set wakeup capability before requesting wakeup interrupt, so we ca=
-n
-+	 * process boot-time "wakeups" (e.g., from S5 soft-off)
++	 * If 0, then ignore this parameter (there is only one set of
++	 *   descriptors)
++	 *
++	 * If non-0, then a second set of descriptors is stored at:
++	 *
++	 *   descriptors + desc_offset_2
++	 *
++	 * The MAC result of both descriptors is XOR'd and stored in @hash
 +	 */
-+	device_set_wakeup_capable(dev, true);
-+	device_wakeup_enable(dev);
++	uint32_t desc_offset_2;
 +
-+	timer->irq =3D platform_get_irq(pdev, 0);
-+	if ((int)timer->irq < 0)
-+		return -ENODEV;
++	/*
++	 * (Physical) address of a brcmstb_bootloader_scratch_table, for
++	 * providing a large DRAM buffer to the bootloader
++	 */
++	uint64_t buffer_table;
 +
-+	ret =3D devm_request_irq(dev, timer->irq, brcmstb_waketmr_irq, 0,
-+			       DRV_NAME, timer);
-+	if (ret < 0)
++	uint32_t spare[70];
++
++	uint8_t descriptors[IMAGE_DESCRIPTORS_BUFSIZE];
++} __packed;
++
++#endif /* __BRCMSTB_AON_DEFS_H__ */
+diff --git a/drivers/soc/brcmstb/pm/pm.c b/drivers/soc/brcmstb/pm/pm.c
+new file mode 100644
+index 000000000000..04f0528d5322
+--- /dev/null
++++ b/drivers/soc/brcmstb/pm/pm.c
+@@ -0,0 +1,512 @@
++/*
++ * ARM-specific support for Broadcom STB S2/S3/S5 power management
++ *
++ * S2: clock gate CPUs and as many peripherals as possible
++ * S3: power off all of the chip except the Always ON (AON) island; ke=
+ep DDR is
++ *     self-refresh
++ * S5: (a.k.a. S3 cold boot) much like S3, except DDR is powered down,=
+ so we
++ *     treat this mode like a soft power-off, with wakeup allowed from=
+ AON
++ *
++ * Copyright =C2=A9 2014-2015 Broadcom Corporation
++ *
++ * This program is free software; you can redistribute it and/or modif=
+y
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++ * GNU General Public License for more details.
++ */
++
++#define pr_fmt(fmt) "brcmstb-pm: " fmt
++
++#include <linux/kernel.h>
++#include <linux/printk.h>
++#include <linux/io.h>
++#include <linux/ioport.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/init.h>
++#include <linux/types.h>
++#include <linux/suspend.h>
++#include <linux/err.h>
++#include <linux/delay.h>
++#include <linux/compiler.h>
++#include <linux/pm.h>
++#include <linux/bitops.h>
++#include <linux/dma-mapping.h>
++#include <linux/sizes.h>
++#include <linux/slab.h>
++#include <linux/kconfig.h>
++#include <asm/fncpy.h>
++#include <asm/suspend.h>
++#include <asm/setup.h>
++
++#include <soc/brcmstb/common.h>
++
++#include "pm.h"
++#include "aon_defs.h"
++
++#define BRCMSTB_DDR_PHY_PLL_STATUS	0x04
++
++#define SHIMPHY_DDR_PAD_CNTRL		0x8c
++#define SHIMPHY_PAD_PLL_SEQUENCE	BIT(8)
++#define SHIMPHY_PAD_GATE_PLL_S3		BIT(9)
++
++#define MAX_NUM_MEMC			3
++
++/* Capped for performance reasons */
++#define MAX_HASH_SIZE			SZ_256M
++/* Max per bank, to keep some fairness */
++#define MAX_HASH_SIZE_BANK		SZ_64M
++
++struct brcmstb_memc {
++	void __iomem *ddr_phy_base;
++	void __iomem *ddr_shimphy_base;
++};
++
++struct brcmstb_pm_control {
++	void __iomem *aon_ctrl_base;
++	void __iomem *aon_sram;
++	struct brcmstb_memc memcs[MAX_NUM_MEMC];
++
++	void __iomem *boot_sram;
++	size_t boot_sram_len;
++
++	bool support_warm_boot;
++	int num_memc;
++
++	struct brcmstb_s3_params *s3_params;
++	dma_addr_t s3_params_pa;
++};
++
++enum bsp_initiate_command {
++	BSP_CLOCK_STOP		=3D 0x00,
++	BSP_GEN_RANDOM_KEY	=3D 0x4A,
++	BSP_RESTORE_RANDOM_KEY	=3D 0x55,
++	BSP_GEN_FIXED_KEY	=3D 0x63,
++};
++
++#define PM_INITIATE		0x01
++#define PM_INITIATE_SUCCESS	0x00
++#define PM_INITIATE_FAIL	0xfe
++
++static struct brcmstb_pm_control ctrl;
++
++extern const unsigned long brcmstb_pm_do_s2_sz;
++extern asmlinkage int brcmstb_pm_do_s2(void __iomem *aon_ctrl_base,
++		void __iomem *ddr_phy_pll_status);
++
++static int (*brcmstb_pm_do_s2_sram)(void __iomem *aon_ctrl_base,
++		void __iomem *ddr_phy_pll_status);
++
++static int brcmstb_init_sram(struct device_node *dn)
++{
++	void __iomem *sram;
++	struct resource res;
++	int ret;
++
++	ret =3D of_address_to_resource(dn, 0, &res);
++	if (ret)
 +		return ret;
 +
-+	timer->reboot_notifier.notifier_call =3D brcmstb_waketmr_reboot;
-+	register_reboot_notifier(&timer->reboot_notifier);
++	/* Cached, executable remapping of SRAM */
++	sram =3D __arm_ioremap_exec(res.start, resource_size(&res), true);
++	if (!sram)
++		return -ENOMEM;
 +
-+	timer->wake_timeout =3D BRCMSTB_WKTMR_DEFAULT_TIMEOUT;
-+
-+	ret =3D device_create_file(dev, &dev_attr_timeout);
-+	if (ret)
-+		unregister_reboot_notifier(&timer->reboot_notifier);
-+	else
-+		dev_info(dev, "registered, with irq %d\n", timer->irq);
-+	return ret;
-+}
-+
-+static int brcmstb_waketmr_remove(struct platform_device *pdev)
-+{
-+	struct brcmstb_waketmr *timer =3D dev_get_drvdata(&pdev->dev);
-+
-+	device_remove_file(&pdev->dev, &dev_attr_timeout);
-+	unregister_reboot_notifier(&timer->reboot_notifier);
++	ctrl.boot_sram =3D sram;
++	ctrl.boot_sram_len =3D resource_size(&res);
 +
 +	return 0;
 +}
 +
-+#ifdef CONFIG_PM_SLEEP
-+static int brcmstb_waketmr_suspend(struct device *dev)
-+{
-+	struct brcmstb_waketmr *timer =3D dev_get_drvdata(dev);
++/*
++ * Latch into the BRCM SRAM compatible property here to be more specif=
+ic than
++ * the standard "mmio-sram". Could be supported with genalloc too, but=
+ that
++ * would be overkill for its current single use-case.
++ */
++static const struct of_device_id sram_dt_ids[] =3D {
++	{ .compatible =3D "brcm,boot-sram" },
++	{}
++};
 +
-+	return brcmstb_waketmr_prepare_suspend(timer);
++static int do_bsp_initiate_command(enum bsp_initiate_command cmd)
++{
++	void __iomem *base =3D ctrl.aon_ctrl_base;
++	int ret;
++	int timeo =3D 1000 * 1000; /* 1 second */
++
++	__raw_writel(0, base + AON_CTRL_PM_INITIATE);
++	(void)__raw_readl(base + AON_CTRL_PM_INITIATE);
++
++	/* Go! */
++	__raw_writel((cmd << 1) | PM_INITIATE, base + AON_CTRL_PM_INITIATE);
++
++	for (;;) {
++		ret =3D __raw_readl(base + AON_CTRL_PM_INITIATE);
++		if (!(ret & PM_INITIATE))
++			break;
++		if (timeo <=3D 0) {
++			pr_err("error: timeout waiting for BSP (%x)\n", ret);
++			break;
++		}
++		timeo -=3D 50;
++		udelay(50);
++	}
++
++	return (ret & 0xff) !=3D PM_INITIATE_SUCCESS;
 +}
 +
-+static int brcmstb_waketmr_resume(struct device *dev)
++static int brcmstb_pm_handshake(void)
 +{
-+	struct brcmstb_waketmr *timer =3D dev_get_drvdata(dev);
++	void __iomem *base =3D ctrl.aon_ctrl_base;
++	u32 tmp;
 +	int ret;
 +
-+	if (!device_may_wakeup(dev) || timer->wake_timeout < 0)
-+		return 0;
++	/* BSP power handshake, v1 */
++	tmp =3D __raw_readl(base + AON_CTRL_HOST_MISC_CMDS);
++	tmp &=3D ~1UL;
++	__raw_writel(tmp, base + AON_CTRL_HOST_MISC_CMDS);
++	(void)__raw_readl(base + AON_CTRL_HOST_MISC_CMDS);
 +
-+	ret =3D disable_irq_wake(timer->irq);
++	ret =3D do_bsp_initiate_command(BSP_CLOCK_STOP);
++	if (ret)
++		pr_err("BSP handshake failed\n");
 +
-+	brcmstb_waketmr_clear_alarm(timer);
++	/*
++	 * HACK: BSP may have internal race on the CLOCK_STOP command.
++	 * Avoid touching the BSP for a few milliseconds.
++	 */
++	mdelay(3);
 +
 +	return ret;
 +}
-+#endif /* CONFIG_PM_SLEEP */
 +
-+static SIMPLE_DEV_PM_OPS(brcmstb_waketmr_pm_ops, brcmstb_waketmr_suspe=
-nd,
-+		brcmstb_waketmr_resume);
++/*
++ * Run a Power Management State Machine (PMSM) shutdown command and pu=
+t the CPU
++ * into a low-power mode
++ */
++static void brcmstb_do_pmsm_power_down(unsigned long base_cmd)
++{
++	void __iomem *base =3D ctrl.aon_ctrl_base;
 +
-+static const struct of_device_id brcmstb_waketmr_of_match[] =3D {
-+	{ .compatible =3D "brcm,brcmstb-waketimer" },
-+	{},
-+};
++	/* pm_start_pwrdn transition 0->1 */
++	__raw_writel(base_cmd, base + AON_CTRL_PM_CTRL);
++	(void)__raw_readl(base + AON_CTRL_PM_CTRL);
 +
-+static struct platform_driver brcmstb_waketmr_driver =3D {
-+	.probe			=3D brcmstb_waketmr_probe,
-+	.remove			=3D brcmstb_waketmr_remove,
-+	.driver =3D {
-+		.name		=3D DRV_NAME,
-+		.pm		=3D &brcmstb_waketmr_pm_ops,
-+		.of_match_table	=3D of_match_ptr(brcmstb_waketmr_of_match),
++	__raw_writel(base_cmd | PM_PWR_DOWN, base + AON_CTRL_PM_CTRL);
++	(void)__raw_readl(base + AON_CTRL_PM_CTRL);
++
++	wfi();
++}
++
++/* Support S5 cold boot out of "poweroff" */
++static void brcmstb_pm_poweroff(void)
++{
++	brcmstb_pm_handshake();
++
++	/* Clear magic S3 warm-boot value */
++	__raw_writel(0, ctrl.aon_sram + AON_REG_MAGIC_FLAGS);
++	(void)__raw_readl(ctrl.aon_sram + AON_REG_MAGIC_FLAGS);
++
++	/* Skip wait-for-interrupt signal; just use a countdown */
++	__raw_writel(0x10, ctrl.aon_ctrl_base + AON_CTRL_PM_CPU_WAIT_COUNT);
++	(void)__raw_readl(ctrl.aon_ctrl_base + AON_CTRL_PM_CPU_WAIT_COUNT);
++
++	brcmstb_do_pmsm_power_down(PM_COLD_CONFIG);
++}
++
++static void *brcmstb_pm_copy_to_sram(void *fn, size_t len)
++{
++	unsigned int size =3D ALIGN(len, FNCPY_ALIGN);
++
++	if (ctrl.boot_sram_len < size) {
++		pr_err("standby code will not fit in SRAM\n");
++		return NULL;
 +	}
-+};
-+module_platform_driver(brcmstb_waketmr_driver);
 +
-+MODULE_LICENSE("GPL v2");
-+MODULE_AUTHOR("Brian Norris");
-+MODULE_DESCRIPTION("Wake-up timer driver for STB chips");
++	return fncpy(ctrl.boot_sram, fn, size);
++}
++
++/*
++ * S2 suspend/resume picks up where we left off, so we must execute ca=
+refully
++ * from SRAM, in order to allow DDR to come back up safely before we c=
+ontinue.
++ */
++static int brcmstb_pm_s2(void)
++{
++	brcmstb_pm_do_s2_sram =3D brcmstb_pm_copy_to_sram(&brcmstb_pm_do_s2,
++			brcmstb_pm_do_s2_sz);
++	if (!brcmstb_pm_do_s2_sram)
++		return -EINVAL;
++
++	return brcmstb_pm_do_s2_sram(ctrl.aon_ctrl_base,
++			ctrl.memcs[0].ddr_phy_base +
++			BRCMSTB_DDR_PHY_PLL_STATUS);
++}
++
++static int brcmstb_pm_s3_finish(void)
++{
++	struct brcmstb_s3_params *params =3D ctrl.s3_params;
++	phys_addr_t params_pa =3D ctrl.s3_params_pa;
++	phys_addr_t reentry =3D virt_to_phys(&cpu_resume);
++	u32 flags =3D S3_FLAG_NO_MEM_VERIFY;
++	int i;
++
++	/* Clear parameter structure */
++	memset(params, 0, sizeof(*params));
++
++	params->magic =3D BRCMSTB_S3_MAGIC;
++	params->reentry =3D reentry;
++
++	flush_cache_all();
++
++	flags |=3D BRCMSTB_S3_MAGIC_SHORT;
++
++	__raw_writel(flags, ctrl.aon_sram + AON_REG_MAGIC_FLAGS);
++	__raw_writel(lower_32_bits(params_pa),
++		     ctrl.aon_sram + AON_REG_CONTROL_LOW);
++	__raw_writel(upper_32_bits(params_pa),
++		     ctrl.aon_sram + AON_REG_CONTROL_HIGH);
++
++	/* gate PLL | S3 */
++	for (i =3D 0; i < ctrl.num_memc; i++) {
++		u32 tmp;
++		tmp =3D __raw_readl(ctrl.memcs[i].ddr_shimphy_base +
++				SHIMPHY_DDR_PAD_CNTRL);
++		tmp |=3D SHIMPHY_PAD_GATE_PLL_S3 | SHIMPHY_PAD_PLL_SEQUENCE;
++		__raw_writel(tmp, ctrl.memcs[i].ddr_shimphy_base +
++				SHIMPHY_DDR_PAD_CNTRL);
++	}
++
++	brcmstb_do_pmsm_power_down(PM_WARM_CONFIG);
++
++	/* Must have been interrupted from wfi()? */
++	return -EINTR;
++}
++
++/*
++ * S3 mode resume to the bootloader before jumping back to Linux, so w=
+e can be
++ * a little less careful about running from DRAM.
++ */
++static int brcmstb_pm_do_s3(unsigned long sp)
++{
++	int ret;
++
++	/* should not return */
++	ret =3D brcmstb_pm_s3_finish();
++
++	pr_err("Could not enter S3\n");
++
++	return ret;
++}
++
++static int brcmstb_pm_s3(void)
++{
++	void __iomem *sp =3D ctrl.boot_sram + ctrl.boot_sram_len - 8;
++
++	return cpu_suspend((unsigned long)sp, brcmstb_pm_do_s3);
++}
++
++static int brcmstb_pm_standby(bool deep_standby)
++{
++	int ret;
++
++	if (brcmstb_pm_handshake())
++		return -EIO;
++
++	if (deep_standby)
++		ret =3D brcmstb_pm_s3();
++	else
++		ret =3D brcmstb_pm_s2();
++	if (ret)
++		pr_err("%s: standby failed\n", __func__);
++
++	return ret;
++}
++
++static int brcmstb_pm_enter(suspend_state_t state)
++{
++	int ret =3D -EINVAL;
++
++	switch (state) {
++	case PM_SUSPEND_STANDBY:
++		ret =3D brcmstb_pm_standby(false);
++		break;
++	case PM_SUSPEND_MEM:
++		ret =3D brcmstb_pm_standby(true);
++		break;
++	}
++
++	return ret;
++}
++
++static int brcmstb_pm_valid(suspend_state_t state)
++{
++	switch (state) {
++	case PM_SUSPEND_STANDBY:
++		return true;
++	case PM_SUSPEND_MEM:
++		return ctrl.support_warm_boot;
++	default:
++		return false;
++	}
++}
++
++static const struct platform_suspend_ops brcmstb_pm_ops =3D {
++	.enter		=3D brcmstb_pm_enter,
++	.valid		=3D brcmstb_pm_valid,
++};
++
++static const struct of_device_id aon_ctrl_dt_ids[] =3D {
++	{ .compatible =3D "brcm,brcmstb-aon-ctrl" },
++	{}
++};
++
++struct ddr_phy_ofdata {
++	bool supports_warm_boot;
++};
++
++static struct ddr_phy_ofdata ddr_phy_225_1 =3D { .supports_warm_boot =3D=
+ false, };
++static struct ddr_phy_ofdata ddr_phy_240_1 =3D { .supports_warm_boot =3D=
+ true, };
++
++static const struct of_device_id ddr_phy_dt_ids[] =3D {
++	{
++		.compatible =3D "brcm,brcmstb-ddr-phy-v225.1",
++		.data =3D &ddr_phy_225_1,
++	},
++	{
++		.compatible =3D "brcm,brcmstb-ddr-phy-v240.1",
++		.data =3D &ddr_phy_240_1,
++	},
++	{
++		/* Same as v240.1, for the registers we care about */
++		.compatible =3D "brcm,brcmstb-ddr-phy-v240.2",
++		.data =3D &ddr_phy_240_1,
++	},
++	{}
++};
++
++static const struct of_device_id ddr_shimphy_dt_ids[] =3D {
++	{ .compatible =3D "brcm,brcmstb-ddr-shimphy-v1.0" },
++	{}
++};
++
++static inline void __iomem *brcmstb_ioremap_node(struct device_node *d=
+n,
++						 int index)
++{
++	return of_io_request_and_map(dn, index, dn->full_name);
++}
++
++static void __iomem *brcmstb_ioremap_match(const struct of_device_id *=
+matches,
++					   int index, const void **ofdata)
++{
++	struct device_node *dn;
++	const struct of_device_id *match;
++
++	dn =3D of_find_matching_node_and_match(NULL, matches, &match);
++	if (!dn)
++		return ERR_PTR(-EINVAL);
++
++	if (ofdata)
++		*ofdata =3D match->data;
++
++	return brcmstb_ioremap_node(dn, index);
++}
++
++static int brcmstb_pm_init(void)
++{
++	struct device_node *dn;
++	void __iomem *base;
++	int ret, i;
++	const struct ddr_phy_ofdata *ddr_phy_data;
++
++	if (!soc_is_brcmstb())
++		return 0;
++
++	/* AON ctrl registers */
++	base =3D brcmstb_ioremap_match(aon_ctrl_dt_ids, 0, NULL);
++	if (IS_ERR(base)) {
++		pr_err("error mapping AON_CTRL\n");
++		return PTR_ERR(base);
++	}
++	ctrl.aon_ctrl_base =3D base;
++
++	/* AON SRAM registers */
++	base =3D brcmstb_ioremap_match(aon_ctrl_dt_ids, 1, NULL);
++	if (IS_ERR(base)) {
++		/* Assume standard offset */
++		ctrl.aon_sram =3D ctrl.aon_ctrl_base +
++				     AON_CTRL_SYSTEM_DATA_RAM_OFS;
++	} else {
++		ctrl.aon_sram =3D base;
++	}
++
++	/* DDR PHY registers */
++	base =3D brcmstb_ioremap_match(ddr_phy_dt_ids, 0,
++				     (const void **)&ddr_phy_data);
++	if (IS_ERR(base)) {
++		pr_err("error mapping DDR PHY\n");
++		return PTR_ERR(base);
++	}
++	ctrl.support_warm_boot =3D ddr_phy_data->supports_warm_boot;
++	/* Only need DDR PHY 0 for now? */
++	ctrl.memcs[0].ddr_phy_base =3D base;
++
++	/* DDR SHIM-PHY registers */
++	for_each_matching_node(dn, ddr_shimphy_dt_ids) {
++		i =3D ctrl.num_memc;
++		if (i >=3D MAX_NUM_MEMC) {
++			pr_warn("too many MEMCs (max %d)\n", MAX_NUM_MEMC);
++			break;
++		}
++		base =3D brcmstb_ioremap_node(dn, 0);
++		if (IS_ERR(base)) {
++			if (!ctrl.support_warm_boot)
++				break;
++
++			pr_err("error mapping DDR SHIMPHY %d\n", i);
++			return PTR_ERR(base);
++		}
++		ctrl.memcs[i].ddr_shimphy_base =3D base;
++		ctrl.num_memc++;
++	}
++
++	dn =3D of_find_matching_node(NULL, sram_dt_ids);
++	if (!dn) {
++		pr_err("SRAM not found\n");
++		return -EINVAL;
++	}
++
++	ret =3D brcmstb_init_sram(dn);
++	if (ret) {
++		pr_err("error setting up SRAM for PM\n");
++		return ret;
++	}
++
++	ctrl.s3_params =3D kmalloc(sizeof(*ctrl.s3_params), GFP_KERNEL);
++	if (!ctrl.s3_params)
++		return -ENOMEM;
++	ctrl.s3_params_pa =3D dma_map_single(NULL, ctrl.s3_params,
++					   sizeof(*ctrl.s3_params),
++					   DMA_TO_DEVICE);
++	if (dma_mapping_error(NULL, ctrl.s3_params_pa)) {
++		pr_err("error mapping DMA memory\n");
++		ret =3D -ENOMEM;
++		goto out;
++	}
++
++	pm_power_off =3D brcmstb_pm_poweroff;
++	suspend_set_ops(&brcmstb_pm_ops);
++	return 0;
++
++out:
++	kfree(ctrl.s3_params);
++
++	pr_warn("PM: initialization failed with code %d\n", ret);
++
++	return ret;
++}
++
++arch_initcall(brcmstb_pm_init);
+diff --git a/drivers/soc/brcmstb/pm/pm.h b/drivers/soc/brcmstb/pm/pm.h
+new file mode 100644
+index 000000000000..fadab6dc424a
+--- /dev/null
++++ b/drivers/soc/brcmstb/pm/pm.h
+@@ -0,0 +1,40 @@
++/*
++ * Definitions for Broadcom STB power management / Always ON (AON) blo=
+ck
++ *
++ * Copyright =C2=A9 2014 Broadcom Corporation
++ *
++ * This program is free software; you can redistribute it and/or modif=
+y
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++ * GNU General Public License for more details.
++ */
++
++#ifndef __BRCMSTB_PM_H__
++#define __BRCMSTB_PM_H__
++
++#define AON_CTRL_RESET_CTRL		0x00
++#define AON_CTRL_PM_CTRL		0x04
++#define AON_CTRL_PM_STATUS		0x08
++#define AON_CTRL_PM_CPU_WAIT_COUNT	0x10
++#define AON_CTRL_PM_INITIATE		0x88
++#define AON_CTRL_HOST_MISC_CMDS		0x8c
++#define AON_CTRL_SYSTEM_DATA_RAM_OFS	0x200
++
++/* PM_CTRL bitfield */
++#define PM_FAST_PWRDOWN			(1 << 6)
++#define PM_WARM_BOOT			(1 << 5)
++#define PM_DEEP_STANDBY			(1 << 4)
++#define PM_CPU_PWR			(1 << 3)
++#define PM_USE_CPU_RDY			(1 << 2)
++#define PM_PLL_PWRDOWN			(1 << 1)
++#define PM_PWR_DOWN			(1 << 0)
++
++#define PM_S2_COMMAND	(PM_PLL_PWRDOWN | PM_USE_CPU_RDY | PM_PWR_DOWN)
++#define PM_COLD_CONFIG	(PM_PLL_PWRDOWN | PM_DEEP_STANDBY)
++#define PM_WARM_CONFIG	(PM_COLD_CONFIG | PM_USE_CPU_RDY | PM_WARM_BOOT=
+)
++
++#endif /* __BRCMSTB_PM_H__ */
+diff --git a/drivers/soc/brcmstb/pm/s2.S b/drivers/soc/brcmstb/pm/s2.S
+new file mode 100644
+index 000000000000..704c4ecb6f6f
+--- /dev/null
++++ b/drivers/soc/brcmstb/pm/s2.S
+@@ -0,0 +1,73 @@
++/*
++ * Copyright =C2=A9 2014 Broadcom Corporation
++ *
++ * This program is free software; you can redistribute it and/or modif=
+y
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/linkage.h>
++#include <asm/assembler.h>
++
++#include "pm.h"
++
++	.text
++	.align	3
++
++#define AON_CTRL_REG		r10
++#define DDR_PHY_STATUS_REG	r11
++
++/*
++ * r0: AON_CTRL base address
++ * r1: DDRY PHY PLL status register address
++ */
++ENTRY(brcmstb_pm_do_s2)
++	stmfd	sp!, {r4-r11, lr}
++	mov	AON_CTRL_REG, r0
++	mov	DDR_PHY_STATUS_REG, r1
++
++	/* Flush memory transactions */
++	dsb
++
++	/* power down request */
++	ldr	r0, =3DPM_S2_COMMAND
++	ldr	r1, =3D0
++	str	r1, [AON_CTRL_REG, #AON_CTRL_PM_CTRL]
++	ldr	r1, [AON_CTRL_REG, #AON_CTRL_PM_CTRL]
++	str	r0, [AON_CTRL_REG, #AON_CTRL_PM_CTRL]
++	ldr	r0, [AON_CTRL_REG, #AON_CTRL_PM_CTRL]
++
++	/* Wait for interrupt */
++	wfi
++	nop
++
++	/* Bring MEMC back up */
++1:	ldr	r0, [DDR_PHY_STATUS_REG]
++	ands	r0, #1
++	beq	1b
++
++	/* Power-up handshake */
++	ldr	r0, =3D1
++	str	r0, [AON_CTRL_REG, #AON_CTRL_HOST_MISC_CMDS]
++	ldr	r0, [AON_CTRL_REG, #AON_CTRL_HOST_MISC_CMDS]
++
++	ldr	r0, =3D0
++	str	r0, [AON_CTRL_REG, #AON_CTRL_PM_CTRL]
++	ldr	r0, [AON_CTRL_REG, #AON_CTRL_PM_CTRL]
++
++	/* Return to caller */
++	ldr	r0, =3D0
++	ldmfd	sp!, {r4-r11, pc}
++
++	ENDPROC(brcmstb_pm_do_s2)
++
++	/* Place literal pool here */
++	.ltorg
++
++ENTRY(brcmstb_pm_do_s2_sz)
++	.word   . - brcmstb_pm_do_s2
 --=20
 1.9.1
