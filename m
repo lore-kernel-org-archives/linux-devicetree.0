@@ -1,11 +1,8 @@
 From: Brian Norris <computersforpeace@gmail.com>
-Subject: [PATCH 3/7] soc: add stubs for brcmstb SoC's
-Date: Thu, 18 Jun 2015 17:11:32 -0700
-Message-ID: <1434672696-13632-4-git-send-email-computersforpeace@gmail.com>
+Subject: [PATCH 7/7] ARM: dts: brcmstb: add BCM7445 system PM DT nodes
+Date: Thu, 18 Jun 2015 17:11:36 -0700
+Message-ID: <1434672696-13632-8-git-send-email-computersforpeace@gmail.com>
 References: <1434672696-13632-1-git-send-email-computersforpeace@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1434672696-13632-1-git-send-email-computersforpeace@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
@@ -13,144 +10,133 @@ To: Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail
 Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-Used on BCM7xxx Set-Top Box chips (e.g., BCM7445).
+Need the aon_pm_l2_intc, aon-ctrl, waketimer, boot SRAM, and
+memory_controller descriptions.
 
 Signed-off-by: Brian Norris <computersforpeace@gmail.com>
 ---
- arch/arm/mach-bcm/Kconfig    |  1 +
- drivers/soc/Kconfig          |  1 +
- drivers/soc/Makefile         |  1 +
- drivers/soc/brcmstb/Kconfig  |  9 +++++++++
- drivers/soc/brcmstb/Makefile |  1 +
- drivers/soc/brcmstb/common.c | 33 +++++++++++++++++++++++++++++++++
- include/soc/brcmstb/common.h | 15 +++++++++++++++
- 7 files changed, 61 insertions(+)
- create mode 100644 drivers/soc/brcmstb/Kconfig
- create mode 100644 drivers/soc/brcmstb/Makefile
- create mode 100644 drivers/soc/brcmstb/common.c
- create mode 100644 include/soc/brcmstb/common.h
+ arch/arm/boot/dts/bcm7445.dtsi | 102 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 102 insertions(+)
 
-diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
-index e9184feffc4e..11cf1c97093f 100644
---- a/arch/arm/mach-bcm/Kconfig
-+++ b/arch/arm/mach-bcm/Kconfig
-@@ -146,6 +146,7 @@ config ARCH_BRCMSTB
- 	select BRCMSTB_L2_IRQ
- 	select BCM7120_L2_IRQ
- 	select ARCH_WANT_OPTIONAL_GPIOLIB
-+	select SOC_BRCMSTB
- 	help
- 	  Say Y if you intend to run the kernel on a Broadcom ARM-based STB
- 	  chipset.
-diff --git a/drivers/soc/Kconfig b/drivers/soc/Kconfig
-index 96ddecb92254..c9c0fcce98a7 100644
---- a/drivers/soc/Kconfig
-+++ b/drivers/soc/Kconfig
-@@ -1,5 +1,6 @@
- menu "SOC (System On Chip) specific Drivers"
-=20
-+source "drivers/soc/brcmstb/Kconfig"
- source "drivers/soc/mediatek/Kconfig"
- source "drivers/soc/qcom/Kconfig"
- source "drivers/soc/sunxi/Kconfig"
-diff --git a/drivers/soc/Makefile b/drivers/soc/Makefile
-index 7dc7c0d8a2c1..2706b1159e32 100644
---- a/drivers/soc/Makefile
-+++ b/drivers/soc/Makefile
-@@ -2,6 +2,7 @@
- # Makefile for the Linux Kernel SOC specific device drivers.
- #
-=20
-+obj-$(CONFIG_SOC_BRCMSTB)	+=3D brcmstb/
- obj-$(CONFIG_ARCH_MEDIATEK)	+=3D mediatek/
- obj-$(CONFIG_ARCH_QCOM)		+=3D qcom/
- obj-$(CONFIG_ARCH_SUNXI)	+=3D sunxi/
-diff --git a/drivers/soc/brcmstb/Kconfig b/drivers/soc/brcmstb/Kconfig
-new file mode 100644
-index 000000000000..39cab3bd544d
---- /dev/null
-+++ b/drivers/soc/brcmstb/Kconfig
-@@ -0,0 +1,9 @@
-+menuconfig SOC_BRCMSTB
-+	bool "Broadcom STB SoC drivers"
-+	depends on ARM
-+	help
-+	  Enables drivers for the Broadcom Set-Top Box (STB) series of chips.
-+	  This option alone enables only some support code, while the drivers
-+	  can be enabled individually within this menu.
+diff --git a/arch/arm/boot/dts/bcm7445.dtsi b/arch/arm/boot/dts/bcm7445.dtsi
+index 58dcd666257c..5b1aeaf5ac40 100644
+--- a/arch/arm/boot/dts/bcm7445.dtsi
++++ b/arch/arm/boot/dts/bcm7445.dtsi
+@@ -119,6 +119,30 @@
+ 			interrupt-names = "hif";
+ 		};
+ 
++		aon_pm_l2_intc: interrupt-controller@410640 {
++			compatible = "brcm,l2-intc";
++			reg = <0x410640 0x30>;
++			interrupt-controller;
++			#interrupt-cells = <1>;
++			interrupts = <GIC_SPI 0x40 0x0>;
++			interrupt-parent = <&gic>;
++			brcm,irq-can-wake;
++		};
 +
-+	  If unsure, say N.
-diff --git a/drivers/soc/brcmstb/Makefile b/drivers/soc/brcmstb/Makefil=
-e
-new file mode 100644
-index 000000000000..183280e39f80
---- /dev/null
-+++ b/drivers/soc/brcmstb/Makefile
-@@ -0,0 +1 @@
-+obj-y				+=3D common.o
-diff --git a/drivers/soc/brcmstb/common.c b/drivers/soc/brcmstb/common.=
-c
-new file mode 100644
-index 000000000000..c262c029b1b8
---- /dev/null
-+++ b/drivers/soc/brcmstb/common.c
-@@ -0,0 +1,33 @@
-+/*
-+ * Copyright =C2=A9 2014 NVIDIA Corporation
-+ * Copyright =C2=A9 2015 Broadcom Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or modif=
-y
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-+ * GNU General Public License for more details.
-+ */
++		aon-ctrl@410000 {
++			compatible = "brcm,brcmstb-aon-ctrl";
++			reg = <0x410000 0x200>, <0x410200 0x400>;
++			reg-names = "aon-ctrl", "aon-sram";
++		};
 +
-+#include <linux/of.h>
++		waketimer@f0417580 {
++			compatible = "brcm,brcmstb-waketimer";
++			reg = <0x417580 0x14>;
++			interrupt-parent = <&aon_pm_l2_intc>;
++			interrupts = <3>;
++			interrupt-names = "timer";
++		};
 +
-+#include <soc/brcmstb/common.h>
+ 		nand: nand@3e2800 {
+ 			status = "disabled";
+ 			#address-cells = <1>;
+@@ -169,6 +193,84 @@
+ 		};
+ 	};
+ 
++	memory_controllers {
++		compatible = "simple-bus";
++		ranges = <0x0 0x0 0xf1100000 0x200000>;
++		#address-cells = <1>;
++		#size-cells = <1>;
 +
-+static const struct of_device_id brcmstb_machine_match[] =3D {
-+	{ .compatible =3D "brcm,brcmstb", },
-+	{ }
-+};
++		memc@0 {
++			compatible = "brcm,brcmstb-memc", "simple-bus";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0x0 0x0 0x80000>;
 +
-+bool soc_is_brcmstb(void)
-+{
-+	struct device_node *root;
++			memc-ddr@2000 {
++				compatible = "brcm,brcmstb-memc-ddr";
++				reg = <0x2000 0x800>;
++			};
 +
-+	root =3D of_find_node_by_path("/");
-+	if (!root)
-+		return false;
++			ddr-phy@6000 {
++				compatible = "brcm,brcmstb-ddr-phy-v240.1";
++				reg = <0x6000 0x21c>;
++				};
 +
-+	return of_match_node(brcmstb_machine_match, root) !=3D NULL;
-+}
-diff --git a/include/soc/brcmstb/common.h b/include/soc/brcmstb/common.=
-h
-new file mode 100644
-index 000000000000..cfb5335f2a15
---- /dev/null
-+++ b/include/soc/brcmstb/common.h
-@@ -0,0 +1,15 @@
-+/*
-+ * Copyright =C2=A9 2014 NVIDIA Corporation
-+ * Copyright =C2=A9 2015 Broadcom Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or modif=
-y
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
++			shimphy@8000 {
++				compatible = "brcm,brcmstb-ddr-shimphy-v1.0";
++				reg = <0x8000 0xe4>;
++			};
++		};
 +
-+#ifndef __SOC_BRCMSTB_COMMON_H__
-+#define __SOC_BRCMSTB_COMMON_H__
++		memc@1 {
++			compatible = "brcm,brcmstb-memc", "simple-bus";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0x0 0x80000 0x80000>;
 +
-+bool soc_is_brcmstb(void);
++			memc-ddr@2000 {
++				compatible = "brcm,brcmstb-memc-ddr";
++				reg = <0x2000 0x800>;
++			};
 +
-+#endif /* __SOC_BRCMSTB_COMMON_H__ */
---=20
++			ddr-phy@6000 {
++				compatible = "brcm,brcmstb-ddr-phy-v240.1";
++				reg = <0x6000 0x21c>;
++			};
++
++			shimphy@8000 {
++				compatible = "brcm,brcmstb-ddr-shimphy-v1.0";
++				reg = <0x8000 0xe4>;
++			};
++		};
++
++		memc@2 {
++			compatible = "brcm,brcmstb-memc", "simple-bus";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0x0 0x100000 0x80000>;
++
++			memc-ddr@2000 {
++				compatible = "brcm,brcmstb-memc-ddr";
++				reg = <0x2000 0x800>;
++			};
++
++			ddr-phy@6000 {
++				compatible = "brcm,brcmstb-ddr-phy-v240.1";
++				reg = <0x6000 0x21c>;
++			};
++
++			shimphy@8000 {
++				compatible = "brcm,brcmstb-ddr-shimphy-v1.0";
++				reg = <0x8000 0xe4>;
++			};
++		};
++	};
++
++	sram@ffe00000 {
++		compatible = "brcm,boot-sram", "mmio-sram";
++		reg = <0x0 0xffe00000 0x0 0x10000>;
++	};
++
+ 	smpboot {
+ 		compatible = "brcm,brcmstb-smpboot";
+ 		syscon-cpu = <&hif_cpubiuctrl 0x88 0x178>;
+-- 
 1.9.1
