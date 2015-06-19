@@ -1,73 +1,73 @@
-From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: [PATCH v4 1/8] extcon: arizona: Simplify pdata symantics for micd_dbtime
-Date: Fri, 19 Jun 2015 13:37:29 +0100
-Message-ID: <1434717456-31995-2-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Subject: [PATCH v4 6/8] extcon: arizona: Ensure variables are set for headphone detection
+Date: Fri, 19 Jun 2015 13:37:34 +0100
+Message-ID: <1434717456-31995-7-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 References: <1434717456-31995-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1434717456-31995-1-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
-Cc: myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1434717456-31995-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: lee.jones@linaro.org, cw00.choi@samsung.com
+Cc: myungjoo.ham@samsung.com, sameo@linux.intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-Currently micd_dbtime can be set to 0 for default, 1 for 4 measurements,
-or a greater than 16-bit value for 2 measurements. This patch simplifies
-the symantics to 2 for 2 measurements, 4 for 4 measurements and any
-other value for the default.
+The detecting flag really refers to the microphone detection stage and
+as such should be cleared before arizona_identify_headphones is called.
+Also the mic flag should be set before identify headphones is called as
+well.
 
-I am not super keen on changing the symantics of the pdata at this stage
-in the drivers life, but acceptance of the DT binding for this field has
-been made conditional on this happening.
-
-Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
 ---
- drivers/extcon/extcon-arizona.c   |   14 +++++++++++---
- include/linux/mfd/arizona/pdata.h |    3 +++
- 2 files changed, 14 insertions(+), 3 deletions(-)
+ drivers/extcon/extcon-arizona.c |   11 +++++++----
+ 1 files changed, 7 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/extcon/extcon-arizona.c b/drivers/extcon/extcon-arizona.c
-index 9262b45..1fbe3b4 100644
+index f30ae57..e23508c 100644
 --- a/drivers/extcon/extcon-arizona.c
 +++ b/drivers/extcon/extcon-arizona.c
-@@ -1267,11 +1267,19 @@ static int arizona_extcon_probe(struct platform_device *pdev)
- 				   arizona->pdata.micd_rate
- 				   << ARIZONA_MICD_RATE_SHIFT);
+@@ -765,10 +765,11 @@ static void arizona_micd_timeout_work(struct work_struct *work)
+ 	mutex_lock(&info->lock);
  
--	if (arizona->pdata.micd_dbtime)
-+	switch (arizona->pdata.micd_dbtime) {
-+	case ARIZONA_MICD_DBTIME_FOUR_READINGS:
- 		regmap_update_bits(arizona->regmap, ARIZONA_MIC_DETECT_1,
- 				   ARIZONA_MICD_DBTIME_MASK,
--				   arizona->pdata.micd_dbtime
--				   << ARIZONA_MICD_DBTIME_SHIFT);
-+				   ARIZONA_MICD_DBTIME);
-+		break;
-+	case ARIZONA_MICD_DBTIME_TWO_READINGS:
-+		regmap_update_bits(arizona->regmap, ARIZONA_MIC_DETECT_1,
-+				   ARIZONA_MICD_DBTIME_MASK, 0);
-+		break;
-+	default:
-+		break;
-+	}
+ 	dev_dbg(info->arizona->dev, "MICD timed out, reporting HP\n");
+-	arizona_identify_headphone(info);
  
- 	BUILD_BUG_ON(ARRAY_SIZE(arizona_micd_levels) != 0x40);
+ 	info->detecting = false;
  
-diff --git a/include/linux/mfd/arizona/pdata.h b/include/linux/mfd/arizona/pdata.h
-index aa5c48b..bd68355 100644
---- a/include/linux/mfd/arizona/pdata.h
-+++ b/include/linux/mfd/arizona/pdata.h
-@@ -53,6 +53,9 @@
- 
- #define ARIZONA_MAX_PDM_SPK 2
- 
-+#define ARIZONA_MICD_DBTIME_TWO_READINGS 2
-+#define ARIZONA_MICD_DBTIME_FOUR_READINGS 4
++	arizona_identify_headphone(info);
 +
- struct regulator_init_data;
+ 	arizona_stop_mic(info);
  
- struct arizona_micbias {
+ 	mutex_unlock(&info->lock);
+@@ -834,6 +835,9 @@ static void arizona_micd_detect(struct work_struct *work)
+ 
+ 	/* If we got a high impedence we should have a headset, report it. */
+ 	if (info->detecting && (val & ARIZONA_MICD_LVL_8)) {
++		info->mic = true;
++		info->detecting = false;
++
+ 		arizona_identify_headphone(info);
+ 
+ 		ret = extcon_set_cable_state_(info->edev,
+@@ -849,8 +853,6 @@ static void arizona_micd_detect(struct work_struct *work)
+ 				ret);
+ 		}
+ 
+-		info->mic = true;
+-		info->detecting = false;
+ 		goto handled;
+ 	}
+ 
+@@ -863,10 +865,11 @@ static void arizona_micd_detect(struct work_struct *work)
+ 	if (info->detecting && (val & MICD_LVL_1_TO_7)) {
+ 		if (info->jack_flips >= info->micd_num_modes * 10) {
+ 			dev_dbg(arizona->dev, "Detected HP/line\n");
+-			arizona_identify_headphone(info);
+ 
+ 			info->detecting = false;
+ 
++			arizona_identify_headphone(info);
++
+ 			arizona_stop_mic(info);
+ 		} else {
+ 			info->micd_mode++;
 -- 
 1.7.2.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
