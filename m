@@ -1,45 +1,74 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH v7 04/14] crypto: add a new driver for Marvell's CESA
-Date: Fri, 19 Jun 2015 10:24:07 +0200
-Message-ID: <20150619102407.01187ff0@free-electrons.com>
-References: <1434635190-27733-1-git-send-email-boris.brezillon@free-electrons.com>
-	<1434635190-27733-5-git-send-email-boris.brezillon@free-electrons.com>
-	<20150619064256.GA10246@gondor.apana.org.au>
+From: Chanwoo Choi <cwchoi00-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 2/5] extcon: arizona: Add basic microphone detection
+ DT/ACPI bindings
+Date: Fri, 19 Jun 2015 17:28:11 +0900
+Message-ID: <CAGTfZH1a6H4Virm-mZDeOD9Pt5M-Q13xo7v+bQwBguJuy1AJXg@mail.gmail.com>
+References: <1434638631-16451-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+	<1434638631-16451-3-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+	<CAGTfZH0uds0swf-x0naTJeMRvOB6DkekdmSSGWA5KpNCWVOWZw@mail.gmail.com>
+	<20150619081737.GS32730@opensource.wolfsonmicro.com>
+Reply-To: cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <20150619064256.GA10246@gondor.apana.org.au>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, "David S. Miller" <davem@davemloft.net>, linux-crypto@vger.kernel.org, Arnaud Ebalard <arno@natisbad.org>, Tawfik Bayouk <tawfik@marvell.com>, Lior Amsalem <alior@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Eran Ben-Avi <benavi@marvell.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Imre Kaloz <kaloz@openwrt.org>, Russell King - ARM Linux <linux@arm>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150619081737.GS32730-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Herbert,
+On Fri, Jun 19, 2015 at 5:17 PM, Charles Keepax
+<ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrote:
+> On Fri, Jun 19, 2015 at 11:25:57AM +0900, Chanwoo Choi wrote:
+>> Hi Charles,
+>>
+>> On Thu, Jun 18, 2015 at 11:43 PM, Charles Keepax
+>> <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrote:
+>> > This patch adds bindings for the basic microphone detection platform
+>> > data.
+>> >
+>> > Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+>> > ---
+>> > +       dbtime = 0;
+>> > +       device_property_read_u32(arizona->dev, "wlf,micd-dbtime", &dbtime);
+>> > +       switch (dbtime) {
+>> > +       case 2:
+>>
+>> I'd like you to define the constant variable for specific integer
+>> value to improve the readability.
+>> e.g.,
+>>
+>> #define MICD_DBTIME_XXX 2
+>> #define MICD_DBTIME_XXX 4
+>>
+>> > +               pdata->micd_dbtime = 0x10000;
+>>
+>> Also, you better to define the constant variable for "0x10000" to
+>> improbe readability in the include/linux/mfd/arizona.h. If you just
+>> use the hex value, the other developer cannot analyze the meaning of
+>> "0x10000".
+>>
+>> > +               break;
+>> > +       case 4:
+>>
+>> ditto.
+>>
+>
+> I am not sure these two really warrant a define the number in DT
+> indicates the number of debounces to perform.
+>
+> #define MICD_DBTIME_TWO 2
 
-On Fri, 19 Jun 2015 14:42:56 +0800, Herbert Xu wrote:
-> On Thu, Jun 18, 2015 at 03:46:20PM +0200, Boris Brezillon wrote:
-> >
-> > +	dram = mv_mbus_dram_info_nooverlap();
-> 
-> This doesn't compile because it hasn't made it into mainline yet.
-> I'm afraid this patch-set will have to wait until that happens.
+No. I mean that you should define the appropriate name of definition
+to indicate the meaning of 2 or 4. Just not 2 -> TWO.
 
-We have two options here:
+2 is 2 second? or 2 is milli-second? or Is there any other meaning?
+I can never know the meaning of '2' without any description and any
+proper name of definition.
 
- 1/ We can ask the mach-mvebu maintainers to provide a branch with just
-    the commit implementing mv_mbus_dram_info_nooverlap(), and you
-    merge that branch into your tree as a dependency.
-
- 2/ We temporarily revert back to using mv_mbus_dram_info(). For the
-    vast majority of platforms, this is OK. It's only if you have 4 GB
-    of RAM or more that it causes problem. And then we switch to
-    mv_mbus_dram_info_nooverlap() as part of the -rc cycle.
-
-(2) is probably easier. Herbert, what do you think?
-
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Thanks,
+Chanwoo CHOi
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
