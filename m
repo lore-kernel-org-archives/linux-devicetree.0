@@ -1,83 +1,39 @@
-From: Nicolae Rosia <nicolae.rosia@gmail.com>
-Subject: Re: [PATCH v2 0/8] add basic support for i.mx6 ul chip
-Date: Fri, 19 Jun 2015 19:43:04 +0300
-Message-ID: <CAH=tA9FyfB4PR+YXnHBssnSirvQfSw6AAY1gJz3=L=a9UL0Z6g@mail.gmail.com>
-References: <1434727951-4852-1-git-send-email-Frank.Li@freescale.com>
+From: Paul Bolle <pebolle@tiscali.nl>
+Subject: Re: [PATCH 1/4] mfd: da9150: Add support for Fuel-Gauge
+Date: Fri, 19 Jun 2015 18:47:41 +0200
+Message-ID: <1434732461.2385.162.camel@x220>
+References: <cover.1434643491.git.Adam.Thomson.Opensource@diasemi.com>
+	 <8d8f583fee9313f261efa96a038874e552995c17.1434643491.git.Adam.Thomson.Opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1434727951-4852-1-git-send-email-Frank.Li@freescale.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Frank Li <Frank.Li@freescale.com>
-Cc: linux-arm-kernel@lists.infradead.org, Shawn Guo <shawn.guo@linaro.org>, shawnguo@kernel.org, linus.walleij@linaro.org, lznuaa@gmail.com, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <8d8f583fee9313f261efa96a038874e552995c17.1434643491.git.Adam.Thomson.Opensource@diasemi.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Support Opensource <support.opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thu, 2015-06-18 at 17:06 +0100, Adam Thomson wrote:
+> --- /dev/null
+> +++ b/include/linux/mfd/da9150/fg.h
 
-I can't seem to find a datasheet for this series.
+> +/*
+> + * Function template to provide battery temperature. Should provide
+> + * 0.1 degrees C resolution return values.
+> + */
+> +typedef int (*da9150_read_temp_t)(void *context);
+> +
+> +/* Register temp callback function */
+> +void da9150_fg_register_temp_cb(struct power_supply *psy, da9150_read_temp_t cb,
+> +				void *cb_context);
 
-Best regards,
-Nicolae Rosia
+The pedant in me noticed that this function is actually added in 3/4. So
+this chunk might be moved to 3/4, if you like to entertain pedantry like
+that, that is. (But see my remark on 3/4 too.)
 
-On Fri, Jun 19, 2015 at 6:32 PM,  <Frank.Li@freescale.com> wrote:
-> From: Frank Li <Frank.Li@freescale.com>
->
-> Add basic function support i.mx6ul.
-> add simple dts.
-> add full pin function define
-> add clock support.
-> add low level debug
->
-> Change from v1 to v2:
->  - Remove unnecessary clk_register_clkdev for gpt
->  - use fat iomux in dts
->  - use macro GPIO_ACTIVE_LOW
->
-> Anson Huang (1):
->   ARM: imx: add low-level debug support for i.mx6ul
->
-> Frank Li (7):
->   ARM: imx: add i.mx6ul msl support
->   ARM: imx: add imx6ul clk tree support
->   Document: dt: binding: imx: update document for imx6ul support
->   ARM: pinctrl: imx: add i.mx6ul pinctrl driver
->   ARM: dts: add i.mx6ul pin function include file
->   ARM: dts: imx: add imx6ul and imx6ul evk board support
->   ARM: imx: imx_v6_v7_defconfig enable imx6ul support
->
->  .../devicetree/bindings/clock/imx6ul-clock.txt     |  13 +
->  .../bindings/pinctrl/fsl,imx6ul-pinctrl.txt        |  36 +
->  arch/arm/Kconfig.debug                             |   9 +
->  arch/arm/boot/dts/Makefile                         |   2 +
->  arch/arm/boot/dts/imx6ul-14x14-evk.dts             | 335 ++++++++
->  arch/arm/boot/dts/imx6ul-pinfunc.h                 | 938 +++++++++++++++++++++
->  arch/arm/boot/dts/imx6ul.dtsi                      | 645 ++++++++++++++
->  arch/arm/configs/imx_v6_v7_defconfig               |   1 +
->  arch/arm/include/debug/imx-uart.h                  |  13 +
->  arch/arm/mach-imx/Kconfig                          |   8 +
->  arch/arm/mach-imx/Makefile                         |   1 +
->  arch/arm/mach-imx/mach-imx6ul.c                    |  43 +
->  drivers/clk/imx/Makefile                           |   1 +
->  drivers/clk/imx/clk-imx6ul.c                       | 432 ++++++++++
->  drivers/pinctrl/freescale/Kconfig                  |   7 +
->  drivers/pinctrl/freescale/Makefile                 |   1 +
->  drivers/pinctrl/freescale/pinctrl-imx6ul.c         | 323 +++++++
->  include/dt-bindings/clock/imx6ul-clock.h           | 240 ++++++
->  18 files changed, 3048 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/imx6ul-clock.txt
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx6ul-pinctrl.txt
->  create mode 100644 arch/arm/boot/dts/imx6ul-14x14-evk.dts
->  create mode 100644 arch/arm/boot/dts/imx6ul-pinfunc.h
->  create mode 100644 arch/arm/boot/dts/imx6ul.dtsi
->  create mode 100644 arch/arm/mach-imx/mach-imx6ul.c
->  create mode 100644 drivers/clk/imx/clk-imx6ul.c
->  create mode 100644 drivers/pinctrl/freescale/pinctrl-imx6ul.c
->  create mode 100644 include/dt-bindings/clock/imx6ul-clock.h
->
-> --
-> 1.9.1
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+
+Paul Bolle
+
 --
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" in
+To unsubscribe from this list: send the line "unsubscribe linux-pm" in
