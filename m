@@ -1,179 +1,75 @@
-From: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 2/2] mfd: flexcom: add a driver for Atmel Flexible Serial Communication Unit
-Date: Fri, 19 Jun 2015 10:49:35 +0200
-Message-ID: <4b10b4bf7824134dfc91c5e4f25de3086163bba7.1434703451.git.cyrille.pitchen@atmel.com>
-References: <cover.1434703451.git.cyrille.pitchen@atmel.com>
+From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: Re: [PATCH v2 2/5] extcon: arizona: Add basic microphone detection
+	DT/ACPI bindings
+Date: Fri, 19 Jun 2015 10:08:40 +0100
+Message-ID: <20150619090839.GT32730@opensource.wolfsonmicro.com>
+References: <1434638631-16451-1-git-send-email-ckeepax@opensource.wolfsonmicro.com> <1434638631-16451-3-git-send-email-ckeepax@opensource.wolfsonmicro.com> <CAGTfZH0uds0swf-x0naTJeMRvOB6DkekdmSSGWA5KpNCWVOWZw@mail.gmail.com> <20150619081737.GS32730@opensource.wolfsonmicro.com> <CAGTfZH1a6H4Virm-mZDeOD9Pt5M-Q13xo7v+bQwBguJuy1AJXg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1434703451.git.cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAGTfZH1a6H4Virm-mZDeOD9Pt5M-Q13xo7v+bQwBguJuy1AJXg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+To: cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This driver supports the new Atmel Flexcom. The Flexcom is a wrapper which
-integrates one SPI controller, one I2C controller and one USART. Only one
-function can be enabled at a time. This driver selects the function once
-for all, when the Flexcom is probed, according to the value of the new
-"atmel,flexcom-mode" device tree property.
+On Fri, Jun 19, 2015 at 05:28:11PM +0900, Chanwoo Choi wrote:
+> On Fri, Jun 19, 2015 at 5:17 PM, Charles Keepax
+> <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrote:
+> > On Fri, Jun 19, 2015 at 11:25:57AM +0900, Chanwoo Choi wrote:
+> >> Hi Charles,
+> >>
+> >> On Thu, Jun 18, 2015 at 11:43 PM, Charles Keepax
+> >> <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrote:
+> >> > This patch adds bindings for the basic microphone detection platform
+> >> > data.
+> >> >
+> >> > Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+> >> > ---
+> >> > +       dbtime = 0;
+> >> > +       device_property_read_u32(arizona->dev, "wlf,micd-dbtime", &dbtime);
+> >> > +       switch (dbtime) {
+> >> > +       case 2:
+> >>
+> >> I'd like you to define the constant variable for specific integer
+> >> value to improve the readability.
+> >> e.g.,
+> >>
+> >> #define MICD_DBTIME_XXX 2
+> >> #define MICD_DBTIME_XXX 4
+> >>
+> >> > +               pdata->micd_dbtime = 0x10000;
+> >>
+> >> Also, you better to define the constant variable for "0x10000" to
+> >> improbe readability in the include/linux/mfd/arizona.h. If you just
+> >> use the hex value, the other developer cannot analyze the meaning of
+> >> "0x10000".
+> >>
+> >> > +               break;
+> >> > +       case 4:
+> >>
+> >> ditto.
+> >>
+> >
+> > I am not sure these two really warrant a define the number in DT
+> > indicates the number of debounces to perform.
+> >
+> > #define MICD_DBTIME_TWO 2
+> 
+> No. I mean that you should define the appropriate name of definition
+> to indicate the meaning of 2 or 4. Just not 2 -> TWO.
+> 
+> 2 is 2 second? or 2 is milli-second? or Is there any other meaning?
+> I can never know the meaning of '2' without any description and any
+> proper name of definition.
 
-This driver has chosen to present the Flexcom to the system as a MFD so
-the implementation is seamless for the existing Atmel SPI, I2C and USART
-drivers.
+It is literally two, two debounces, I really can't see what I
+could call the define. What do you think to the idea I suggested
+to rename the variable dbtime -> num_debounces?
 
-Also the Flexcom embeds FIFOs: the latest patches of the SPI, I2C and
-USART drivers take advantage of this new feature.
-
-Signed-off-by: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Acked-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Acked-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- drivers/mfd/Kconfig         | 11 ++++++
- drivers/mfd/Makefile        |  1 +
- drivers/mfd/atmel-flexcom.c | 96 +++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 108 insertions(+)
- create mode 100644 drivers/mfd/atmel-flexcom.c
-
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index d5ad04d..9b33ad0 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -59,6 +59,17 @@ config MFD_AAT2870_CORE
- 	  additional drivers must be enabled in order to use the
- 	  functionality of the device.
- 
-+config MFD_ATMEL_FLEXCOM
-+	tristate "Atmel Flexcom (Flexible Serial Communication Unit)"
-+	select MFD_CORE
-+	depends on OF
-+	help
-+	  Select this to get support for Atmel Flexcom. This is a wrapper
-+	  which embeds a SPI controller, a I2C controller and a USART. Only
-+	  one function can be used at a time. The choice is done at boot time
-+	  by the probe function of this MFD driver according to a device tree
-+	  property.
-+
- config MFD_ATMEL_HLCDC
- 	tristate "Atmel HLCDC (High-end LCD Controller)"
- 	select MFD_CORE
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index 0e5cfeb..c666bf5 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -160,6 +160,7 @@ obj-$(CONFIG_MFD_SPMI_PMIC)	+= qcom-spmi-pmic.o
- obj-$(CONFIG_TPS65911_COMPARATOR)	+= tps65911-comparator.o
- obj-$(CONFIG_MFD_TPS65090)	+= tps65090.o
- obj-$(CONFIG_MFD_AAT2870_CORE)	+= aat2870-core.o
-+obj-$(CONFIG_MFD_ATMEL_FLEXCOM)	+= atmel-flexcom.o
- obj-$(CONFIG_MFD_ATMEL_HLCDC)	+= atmel-hlcdc.o
- obj-$(CONFIG_MFD_INTEL_MSIC)	+= intel_msic.o
- obj-$(CONFIG_MFD_PALMAS)	+= palmas.o
-diff --git a/drivers/mfd/atmel-flexcom.c b/drivers/mfd/atmel-flexcom.c
-new file mode 100644
-index 0000000..04ce104
---- /dev/null
-+++ b/drivers/mfd/atmel-flexcom.c
-@@ -0,0 +1,96 @@
-+/*
-+ * Driver for Atmel Flexcom
-+ *
-+ * Copyright (C) 2015 Atmel Corporation
-+ *
-+ * Author: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/types.h>
-+#include <linux/kernel.h>
-+#include <linux/platform_device.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/clk.h>
-+
-+#define FX_MR		0x0
-+#define FX_RHR		0x10
-+#define FX_THR		0x20
-+#define FX_VERSION	0xfc
-+
-+#define FX_MR_NO_COM	0
-+#define FX_MR_USART	1
-+#define FX_MR_SPI	2
-+#define FX_MR_TWI	3
-+
-+
-+static int atmel_flexcom_probe(struct platform_device *pdev)
-+{
-+	struct clk *clk;
-+	struct resource *res;
-+	unsigned char __iomem *map;
-+	unsigned int version, mr;
-+	const char *mode;
-+	int err;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	map = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(map))
-+		return PTR_ERR(map);
-+
-+	clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(clk))
-+		return PTR_ERR(clk);
-+
-+	err = of_property_read_string(pdev->dev.of_node,
-+				      "atmel,flexcom-mode", &mode);
-+	if (err)
-+		return err;
-+
-+	if (!strcmp(mode, "usart"))
-+		mr = FX_MR_USART;
-+	else if (!strcmp(mode, "spi"))
-+		mr = FX_MR_SPI;
-+	else if (!strcmp(mode, "twi") || !strcmp(mode, "i2c"))
-+		mr = FX_MR_TWI;
-+	else
-+		return -EINVAL;
-+
-+	clk_prepare_enable(clk);
-+	version = readl(map + FX_VERSION);
-+	writel(mr, map + FX_MR);
-+	clk_disable_unprepare(clk);
-+
-+	dev_info(&pdev->dev, "version: %#x, mode: %s\n", version, mode);
-+
-+	return of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
-+}
-+
-+static const struct of_device_id atmel_flexcom_of_match[] = {
-+	{ .compatible = "atmel,sama5d2-flexcom" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, atmel_flexcom_of_match);
-+
-+static struct platform_driver atmel_flexcom_driver = {
-+	.driver		= {
-+		.name	= "atmel_flexcom",
-+		.of_match_table = atmel_flexcom_of_match,
-+	},
-+	.probe		= atmel_flexcom_probe,
-+};
-+
-+module_platform_driver(atmel_flexcom_driver);
-+
-+MODULE_AUTHOR("Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>");
-+MODULE_DESCRIPTION("Atmel Flexcom MFD driver");
-+MODULE_LICENSE("GPL");
--- 
-1.8.2.2
-
+Thanks,
+Charles
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
