@@ -1,124 +1,49 @@
-From: Michael van der Westhuizen <michael-XrNoQAPr3WXM9gW82pYGhQ@public.gmane.org>
-Subject: [PATCH 1/2] spi: dw: Allow interface drivers to limit data I/O to word sizes
-Date: Fri, 19 Jun 2015 10:43:55 +0200
-Message-ID: <1434703435-25198-3-git-send-email-michael@smart-africa.com>
-References: <1434703435-25198-1-git-send-email-michael@smart-africa.com>
+From: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3 0/2] mfd: flexcom: add a driver for Flexcom
+Date: Fri, 19 Jun 2015 10:49:33 +0200
+Message-ID: <cover.1434703451.git.cyrille.pitchen@atmel.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1434703435-25198-1-git-send-email-michael-XrNoQAPr3WXM9gW82pYGhQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michael van der Westhuizen <michael-XrNoQAPr3WXM9gW82pYGhQ@public.gmane.org>
+To: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The commit dd11444327ce ("spi: dw-spi: Convert 16bit accesses to 32bit
-accesses") changed all 16bit accesses in the DW_apb_ssi driver to 32bit.
-This, unfortunately, breaks data register access on picoXcell, where the
-DW IP needs data register accesses to be word accesses (all other
-accesses appear to be OK).
+ChangeLog
 
-This change introduces a new master variable to allow interface drivers
-to specify that 16bit data transfer I/O is required.  This change also
-introduces the ability to set this variable via device tree bindings in
-the MMIO interface driver.
+v3:
+- remove MODULE_ALIAS()
+- add Acked-by from Boris Brezillon and Alexandre Belloni
 
-Before this change, on a picoXcell pc3x3:
- spi_master spi32766: interrupt_transfer: fifo overrun/underrun
- m25p80 spi32766.0: error -5 reading 9f
- m25p80: probe of spi32766.0 failed with error -5
+v2:
+- enhance the documentation of DT bindings and change the way the "ranges"
+  property is used.
+- replace __raw_readl() and __raw_writel() by readl() and writel().
+- change the module license to "GPL" for v2 or later
+- print the selected flexcom mode after the hardware version
 
-After this change:
- m25p80 spi32766.0: m25p40 (512 Kbytes)
+v1:
+This series of patches a support to the Atmel Flexcom, a wrapper which
+integrates an USART, a SPI controller and a TWI controller. Only one
+peripheral can be used at a time. The active function is selected though
+the Flexcom Mode Register.
 
-Signed-off-by: Michael van der Westhuizen <michael-XrNoQAPr3WXM9gW82pYGhQ@public.gmane.org>
----
- drivers/spi/spi-dw-mmio.c |  5 +++++
- drivers/spi/spi-dw.c      | 13 +++++++++++--
- drivers/spi/spi-dw.h      | 11 +++++++++++
- 3 files changed, 27 insertions(+), 2 deletions(-)
+Cyrille Pitchen (2):
+  mfd: devicetree: add bindings for Atmel Flexcom
+  mfd: flexcom: add a driver for Atmel Flexible Serial Communication
+    Unit
 
-diff --git a/drivers/spi/spi-dw-mmio.c b/drivers/spi/spi-dw-mmio.c
-index eb03e12..1397424 100644
---- a/drivers/spi/spi-dw-mmio.c
-+++ b/drivers/spi/spi-dw-mmio.c
-@@ -74,6 +74,11 @@ static int dw_spi_mmio_probe(struct platform_device *pdev)
- 
- 	dws->max_freq = clk_get_rate(dwsmmio->clk);
- 
-+	if (pdev->dev.of_node)
-+		dws->data_io_16bit =
-+			of_property_read_bool(pdev->dev.of_node,
-+					      "snps,data-io-16bit");
-+
- 	num_cs = 4;
- 
- 	if (pdev->dev.of_node)
-diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
-index 8d67d03..862b001 100644
---- a/drivers/spi/spi-dw.c
-+++ b/drivers/spi/spi-dw.c
-@@ -194,7 +194,12 @@ static void dw_writer(struct dw_spi *dws)
- 			else
- 				txw = *(u16 *)(dws->tx);
- 		}
--		dw_writel(dws, DW_SPI_DR, txw);
-+
-+		if (dws->data_io_16bit)
-+			dw_writew(dws, DW_SPI_DR, txw);
-+		else
-+			dw_writel(dws, DW_SPI_DR, txw);
-+
- 		dws->tx += dws->n_bytes;
- 	}
- }
-@@ -205,7 +210,11 @@ static void dw_reader(struct dw_spi *dws)
- 	u16 rxw;
- 
- 	while (max--) {
--		rxw = dw_readl(dws, DW_SPI_DR);
-+		if (dws->data_io_16bit)
-+			rxw = dw_readw(dws, DW_SPI_DR);
-+		else
-+			rxw = dw_readl(dws, DW_SPI_DR);
-+
- 		/* Care rx only if the transfer's original "rx" is not null */
- 		if (dws->rx_end - dws->len) {
- 			if (dws->n_bytes == 1)
-diff --git a/drivers/spi/spi-dw.h b/drivers/spi/spi-dw.h
-index 6c91391..ced276a 100644
---- a/drivers/spi/spi-dw.h
-+++ b/drivers/spi/spi-dw.h
-@@ -109,6 +109,7 @@ struct dw_spi {
- 	u32			fifo_len;	/* depth of the FIFO buffer */
- 	u32			max_freq;	/* max bus freq supported */
- 
-+	bool			data_io_16bit;	/* DR is only 16 bits wide */
- 	u16			bus_num;
- 	u16			num_cs;		/* supported slave numbers */
- 
-@@ -145,11 +146,21 @@ static inline u32 dw_readl(struct dw_spi *dws, u32 offset)
- 	return __raw_readl(dws->regs + offset);
- }
- 
-+static inline u16 dw_readw(struct dw_spi *dws, u32 offset)
-+{
-+	return __raw_readw(dws->regs + offset);
-+}
-+
- static inline void dw_writel(struct dw_spi *dws, u32 offset, u32 val)
- {
- 	__raw_writel(val, dws->regs + offset);
- }
- 
-+static inline void dw_writew(struct dw_spi *dws, u32 offset, u16 val)
-+{
-+	__raw_writew(val, dws->regs + offset);
-+}
-+
- static inline void spi_enable_chip(struct dw_spi *dws, int enable)
- {
- 	dw_writel(dws, DW_SPI_SSIENR, (enable ? 1 : 0));
+ .../devicetree/bindings/mfd/atmel-flexcom.txt      | 58 +++++++++++++
+ drivers/mfd/Kconfig                                | 11 +++
+ drivers/mfd/Makefile                               |  1 +
+ drivers/mfd/atmel-flexcom.c                        | 96 ++++++++++++++++++++++
+ 4 files changed, 166 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/atmel-flexcom.txt
+ create mode 100644 drivers/mfd/atmel-flexcom.c
+
 -- 
-2.1.4
+1.8.2.2
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
