@@ -1,45 +1,52 @@
-From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: [PATCH v3 1/7] extcon: arizona: Factor out initial GPIO state
-Date: Fri, 19 Jun 2015 11:33:03 +0100
-Message-ID: <1434709989-28300-2-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-References: <1434709989-28300-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1434709989-28300-1-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
-Cc: myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
+From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Subject: [PATCH v3 0/7] Add basic microphone detection bindings
+Date: Fri, 19 Jun 2015 11:33:02 +0100
+Message-ID: <1434709989-28300-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: lee.jones@linaro.org, cw00.choi@samsung.com
+Cc: myungjoo.ham@samsung.com, sameo@linux.intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
----
- drivers/extcon/extcon-arizona.c |    4 +++-
- 1 files changed, 3 insertions(+), 1 deletions(-)
+This series adds basic microphone detection DT/ACPI bindings
+using the device properties API.
 
-diff --git a/drivers/extcon/extcon-arizona.c b/drivers/extcon/extcon-arizona.c
-index 9262b45..e31613a 100644
---- a/drivers/extcon/extcon-arizona.c
-+++ b/drivers/extcon/extcon-arizona.c
-@@ -1135,6 +1135,7 @@ static int arizona_extcon_probe(struct platform_device *pdev)
- 	struct arizona *arizona = dev_get_drvdata(pdev->dev.parent);
- 	struct arizona_pdata *pdata = &arizona->pdata;
- 	struct arizona_extcon_info *info;
-+	int gpio_initial_level;
- 	unsigned int val;
- 	unsigned int clamp_mode;
- 	int jack_irq_fall, jack_irq_rise;
-@@ -1226,8 +1227,9 @@ static int arizona_extcon_probe(struct platform_device *pdev)
- 		info->micd_num_modes = ARRAY_SIZE(micd_default_modes);
- 	}
- 
-+	gpio_initial_level = info->micd_modes[0].gpio;
- 	if (arizona->pdata.micd_pol_gpio > 0) {
--		if (info->micd_modes[0].gpio)
-+		if (gpio_initial_level)
- 			mode = GPIOF_OUT_INIT_HIGH;
- 		else
- 			mode = GPIOF_OUT_INIT_LOW;
+The MFD parts and the extcon parts can go seperately through
+there respective trees, but I sent them together so everyone
+can see what is going on. There is no build dependency
+although the MFD patch will fix a couple of Sparse warnings
+that you get if using -Wsparse-all.
+
+Changes since v1:
+ - Removed double include of property.h
+
+Changes since v2:
+ - Removed check for CONFIG_OF to call
+   arizona_extcon_device_get_pdata.
+ - Add some defines for the pdata values of micd-dbtime.
+ - Factor out the initial gpio level for the micd-pol-gpio.
+ - Don't check if null before calling gpiod_set_value_cansleep.
+ - Added a comment to explain why we can't use devm for gpiod.
+ - Added patch to make some small corrections to the jack
+   detection into this series to keep them all together for
+   easy of applying.
+
+Thanks,
+Charles
+
+Charles Keepax (7):
+  extcon: arizona: Factor out initial GPIO state
+  extcon: arizona: Update to use the new device properties API
+  extcon: arizona: Add basic microphone detection DT/ACPI bindings
+  extcon: arizona: Convert to gpiod
+  extcon: arizona: Ensure variables are set for headphone detection
+  mfd: arizona: Update DT doc for new mic detection bindings
+  mfd: arizona: Update several pdata members to unsigned
+
+ Documentation/devicetree/bindings/mfd/arizona.txt |   16 ++++
+ drivers/extcon/extcon-arizona.c                   |   97 +++++++++++++++++----
+ include/linux/mfd/arizona/pdata.h                 |   15 ++--
+ 3 files changed, 106 insertions(+), 22 deletions(-)
+
 -- 
 1.7.2.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
