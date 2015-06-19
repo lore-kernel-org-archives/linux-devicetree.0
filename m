@@ -1,7 +1,7 @@
 From: Adrian Alonso <aalonso@freescale.com>
 Subject: [PATCH 1/4] ARM: imx: imx7d-pinfunc: add gpio pad iomuxc settings
-Date: Fri, 19 Jun 2015 14:59:07 -0500
-Message-ID: <1434743950-7771-1-git-send-email-aalonso@freescale.com>
+Date: Fri, 19 Jun 2015 15:03:54 -0500
+Message-ID: <1434744234-7822-1-git-send-email-aalonso@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
