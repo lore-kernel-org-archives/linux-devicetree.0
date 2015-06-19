@@ -1,40 +1,49 @@
-From: Paul Bolle <pebolle@tiscali.nl>
-Subject: Re: [PATCH 3/4] power: Add support for DA9150 Fuel-Gauge
-Date: Fri, 19 Jun 2015 18:51:56 +0200
-Message-ID: <1434732716.2385.166.camel@x220>
-References: <cover.1434643491.git.Adam.Thomson.Opensource@diasemi.com>
-	 <b1f1574e717d393b036bd7d01933d4d0b0ade408.1434643491.git.Adam.Thomson.Opensource@diasemi.com>
+From: Nicolae Rosia <nicolae.rosia@gmail.com>
+Subject: Re: [PATCH v2 6/8] ARM: dts: imx: add imx6ul and imx6ul evk board support
+Date: Fri, 19 Jun 2015 20:05:22 +0300
+Message-ID: <CAH=tA9G_x=6wNTOWbOc2FGGARTxioikUSwqyENKk74wL=7uzaw@mail.gmail.com>
+References: <1434727951-4852-1-git-send-email-Frank.Li@freescale.com>
+	<1434727951-4852-7-git-send-email-Frank.Li@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <b1f1574e717d393b036bd7d01933d4d0b0ade408.1434643491.git.Adam.Thomson.Opensource@diasemi.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Support Opensource <support.opensource@diasemi.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1434727951-4852-7-git-send-email-Frank.Li@freescale.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Frank Li <Frank.Li@freescale.com>
+Cc: linux-arm-kernel@lists.infradead.org, Shawn Guo <shawn.guo@linaro.org>, shawnguo@kernel.org, linus.walleij@linaro.org, lznuaa@gmail.com, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Anson Huang <b20788@freescale.com>, Fugang Duan <B38611@freescale.com>, Fancy Fang <chen.fang@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2015-06-18 at 17:06 +0100, Adam Thomson wrote:
-> --- /dev/null
-> +++ b/drivers/power/da9150-fg.c
+Hi,
 
-> +/* Register external function to give battery temperature */
-> +void da9150_fg_register_temp_cb(struct power_supply *psy, da9150_read_temp_t cb,
-> +				void *cb_context)
-> +{
-> +	struct da9150_fg *fg = dev_get_drvdata(psy->dev.parent);
+On Fri, Jun 19, 2015 at 6:32 PM,  <Frank.Li@freescale.com> wrote:
+> From: Frank Li <Frank.Li@freescale.com>
+[...]
+> +       cpus {
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
 > +
-> +	fg->read_bat_temp = cb;
-> +	fg->bat_temp_context = cb_context;
-> +}
-> +EXPORT_SYMBOL_GPL(da9150_fg_register_temp_cb);
+> +               cpu0: cpu@0 {
+> +                       compatible = "arm,cortex-a7";
+> +                       device_type = "cpu";
+> +                       reg = <0>;
+> +                       clock-latency = <61036>; /* two CLK32 periods */
+> +                       operating-points = <
+> +                               /* kHz  uV */
+> +                               528000  1250000
+> +                               396000  1150000
+> +                               198000  1150000
+> +                       >;
+> +                       fsl,soc-operating-points = <
+> +                               /* KHz  uV */
+> +                               528000  1250000
+> +                               396000  1150000
+> +                               198000  1150000
+> +                       >;
+Why is this necessary? Can't you adapt the driver to use operating-points?
+I have looked through other imx dts and saw that some had different
+values in these two tables.
 
-This series doesn't add a user of this export. Actually, it doesn't even
-add a local caller of this function. Is a patch that adds a user of this
-function queued somewhere?
-
-
-Paul Bolle
-
+Best regards,
+Nicolae Rosia
 --
-To unsubscribe from this list: send the line "unsubscribe linux-pm" in
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" in
