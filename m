@@ -1,140 +1,77 @@
-From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: [PATCH v3 4/7] extcon: arizona: Convert to gpiod
-Date: Fri, 19 Jun 2015 11:33:06 +0100
-Message-ID: <1434709989-28300-5-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Subject: [PATCH v3 5/7] extcon: arizona: Ensure variables are set for headphone detection
+Date: Fri, 19 Jun 2015 11:33:07 +0100
+Message-ID: <1434709989-28300-6-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 References: <1434709989-28300-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1434709989-28300-1-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
-Cc: myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1434709989-28300-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: lee.jones@linaro.org, cw00.choi@samsung.com
+Cc: myungjoo.ham@samsung.com, sameo@linux.intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-Convert to using the newer gpiod interface for the micd_pol_gpio.
-Although we still carry support for the old gpio interface from pdata.
+The detecting flag really refers to the microphone detection stage and
+as such should be cleared before arizona_identify_headphones is called.
+Also the mic flag should be set before identify headphones is called as
+well.
 
-Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Otherwise the microphone detection will not be disabled during the
+headphone detection and we can get false button reports caused by the
+clamping that is part of the headphone detection.
+
+Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
 ---
- drivers/extcon/extcon-arizona.c |   41 ++++++++++++++++++++++++++++++++++----
- 1 files changed, 36 insertions(+), 5 deletions(-)
+ drivers/extcon/extcon-arizona.c |   11 +++++++----
+ 1 files changed, 7 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/extcon/extcon-arizona.c b/drivers/extcon/extcon-arizona.c
-index 6826d99..eb8cf74 100644
+index eb8cf74..8a87ecd 100644
 --- a/drivers/extcon/extcon-arizona.c
 +++ b/drivers/extcon/extcon-arizona.c
-@@ -20,6 +20,7 @@
- #include <linux/slab.h>
- #include <linux/interrupt.h>
- #include <linux/err.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/gpio.h>
- #include <linux/input.h>
- #include <linux/platform_device.h>
-@@ -95,6 +96,8 @@ struct arizona_extcon_info {
- 	int hpdet_ip_version;
+@@ -765,10 +765,11 @@ static void arizona_micd_timeout_work(struct work_struct *work)
+ 	mutex_lock(&info->lock);
  
- 	struct extcon_dev *edev;
+ 	dev_dbg(info->arizona->dev, "MICD timed out, reporting HP\n");
+-	arizona_identify_headphone(info);
+ 
+ 	info->detecting = false;
+ 
++	arizona_identify_headphone(info);
 +
-+	struct gpio_desc *micd_pol_gpio;
- };
+ 	arizona_stop_mic(info);
  
- static const struct arizona_micd_config micd_default_modes[] = {
-@@ -205,6 +208,10 @@ static void arizona_extcon_set_mode(struct arizona_extcon_info *info, int mode)
- 	if (arizona->pdata.micd_pol_gpio > 0)
- 		gpio_set_value_cansleep(arizona->pdata.micd_pol_gpio,
- 					info->micd_modes[mode].gpio);
-+	else
-+		gpiod_set_value_cansleep(info->micd_pol_gpio,
-+					 info->micd_modes[mode].gpio);
+ 	mutex_unlock(&info->lock);
+@@ -834,6 +835,9 @@ static void arizona_micd_detect(struct work_struct *work)
+ 
+ 	/* If we got a high impedence we should have a headset, report it. */
+ 	if (info->detecting && (val & ARIZONA_MICD_LVL_8)) {
++		info->mic = true;
++		info->detecting = false;
 +
- 	regmap_update_bits(arizona->regmap, ARIZONA_MIC_DETECT_1,
- 			   ARIZONA_MICD_BIAS_SRC_MASK,
- 			   info->micd_modes[mode].bias <<
-@@ -1272,6 +1279,27 @@ static int arizona_extcon_probe(struct platform_device *pdev)
- 				arizona->pdata.micd_pol_gpio, ret);
- 			goto err_register;
- 		}
-+	} else {
-+		if (gpio_initial_level)
-+			mode = GPIOD_OUT_HIGH;
-+		else
-+			mode = GPIOD_OUT_LOW;
-+
-+		/* We can't use devm here because we need to do the get
-+		 * against the MFD device, as that is where the of_node
-+		 * will reside, but if we devm against that the GPIO
-+		 * will not be freed if the extcon driver is unloaded.
-+		 */
-+		info->micd_pol_gpio = gpiod_get_optional(arizona->dev,
-+							 "wlf,micd-pol",
-+							 GPIOD_OUT_LOW);
-+		if (IS_ERR(info->micd_pol_gpio)) {
-+			ret = PTR_ERR(info->micd_pol_gpio);
-+			dev_err(arizona->dev,
-+				"Failed to get microphone polarity GPIO: %d\n",
-+				ret);
-+			goto err_register;
-+		}
- 	}
+ 		arizona_identify_headphone(info);
  
- 	if (arizona->pdata.hpdet_id_gpio > 0) {
-@@ -1282,7 +1310,7 @@ static int arizona_extcon_probe(struct platform_device *pdev)
- 		if (ret != 0) {
- 			dev_err(arizona->dev, "Failed to request GPIO%d: %d\n",
- 				arizona->pdata.hpdet_id_gpio, ret);
--			goto err_register;
-+			goto err_gpio;
- 		}
- 	}
- 
-@@ -1326,7 +1354,7 @@ static int arizona_extcon_probe(struct platform_device *pdev)
- 				dev_err(arizona->dev,
- 					"MICD ranges must be sorted\n");
- 				ret = -EINVAL;
--				goto err_input;
-+				goto err_gpio;
- 			}
- 		}
- 	}
-@@ -1345,7 +1373,7 @@ static int arizona_extcon_probe(struct platform_device *pdev)
- 			dev_err(arizona->dev, "Unsupported MICD level %d\n",
- 				info->micd_ranges[i].max);
- 			ret = -EINVAL;
--			goto err_input;
-+			goto err_gpio;
+ 		ret = extcon_set_cable_state_(info->edev,
+@@ -849,8 +853,6 @@ static void arizona_micd_detect(struct work_struct *work)
+ 				ret);
  		}
  
- 		dev_dbg(arizona->dev, "%d ohms for MICD threshold %d\n",
-@@ -1418,7 +1446,7 @@ static int arizona_extcon_probe(struct platform_device *pdev)
- 	if (ret != 0) {
- 		dev_err(&pdev->dev, "Failed to get JACKDET rise IRQ: %d\n",
- 			ret);
--		goto err_input;
-+		goto err_gpio;
+-		info->mic = true;
+-		info->detecting = false;
+ 		goto handled;
  	}
  
- 	ret = arizona_set_irq_wake(arizona, jack_irq_rise, 1);
-@@ -1489,7 +1517,8 @@ err_rise_wake:
- 	arizona_set_irq_wake(arizona, jack_irq_rise, 0);
- err_rise:
- 	arizona_free_irq(arizona, jack_irq_rise, info);
--err_input:
-+err_gpio:
-+	gpiod_put(info->micd_pol_gpio);
- err_register:
- 	pm_runtime_disable(&pdev->dev);
- 	return ret;
-@@ -1501,6 +1530,8 @@ static int arizona_extcon_remove(struct platform_device *pdev)
- 	struct arizona *arizona = info->arizona;
- 	int jack_irq_rise, jack_irq_fall;
+@@ -863,10 +865,11 @@ static void arizona_micd_detect(struct work_struct *work)
+ 	if (info->detecting && (val & MICD_LVL_1_TO_7)) {
+ 		if (info->jack_flips >= info->micd_num_modes * 10) {
+ 			dev_dbg(arizona->dev, "Detected HP/line\n");
+-			arizona_identify_headphone(info);
  
-+	gpiod_put(info->micd_pol_gpio);
+ 			info->detecting = false;
+ 
++			arizona_identify_headphone(info);
 +
- 	pm_runtime_disable(&pdev->dev);
- 
- 	regmap_update_bits(arizona->regmap,
+ 			arizona_stop_mic(info);
+ 		} else {
+ 			info->micd_mode++;
 -- 
 1.7.2.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
