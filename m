@@ -1,101 +1,60 @@
-From: Chanwoo Choi <cwchoi00-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/5] extcon: arizona: Add basic microphone detection
- DT/ACPI bindings
-Date: Fri, 19 Jun 2015 11:25:57 +0900
-Message-ID: <CAGTfZH0uds0swf-x0naTJeMRvOB6DkekdmSSGWA5KpNCWVOWZw@mail.gmail.com>
-References: <1434638631-16451-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-	<1434638631-16451-3-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-Reply-To: cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] dt/fdt: add empty versions of early_init_dt_*_memory_arch
+Date: Thu, 18 Jun 2015 21:33:07 -0500
+Message-ID: <1434681187-14752-1-git-send-email-robh@kernel.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1434638631-16451-3-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Charles,
+With the addition of commit 0166dc1 (of: make CONFIG_OF user
+selectable), architectures which don't enable memblock and don't
+have their own early_init_dt_*_memory_arch implementations will break
+when CONFIG_OF is enabled.
 
-On Thu, Jun 18, 2015 at 11:43 PM, Charles Keepax
-<ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrote:
-> This patch adds bindings for the basic microphone detection platform
-> data.
->
-> Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-> ---
->  drivers/extcon/extcon-arizona.c |   29 +++++++++++++++++++++++++++++
->  1 files changed, 29 insertions(+), 0 deletions(-)
->
-> diff --git a/drivers/extcon/extcon-arizona.c b/drivers/extcon/extcon-arizona.c
-> index 1153929..5bf1b19 100644
-> --- a/drivers/extcon/extcon-arizona.c
-> +++ b/drivers/extcon/extcon-arizona.c
-> @@ -1115,6 +1115,7 @@ static int arizona_extcon_device_get_pdata(struct arizona *arizona)
->  {
->         struct arizona_pdata *pdata = &arizona->pdata;
->         unsigned int val = ARIZONA_ACCDET_MODE_HPL;
-> +       unsigned int dbtime;
->
->         device_property_read_u32(arizona->dev, "wlf,hpdet-channel", &val);
->         switch (val) {
-> @@ -1128,6 +1129,34 @@ static int arizona_extcon_device_get_pdata(struct arizona *arizona)
->                 pdata->hpdet_channel = ARIZONA_ACCDET_MODE_HPL;
->         }
->
-> +       device_property_read_u32(arizona->dev, "wlf,micd-detect-debounce",
-> +                                &pdata->micd_detect_debounce);
-> +
-> +       device_property_read_u32(arizona->dev, "wlf,micd-bias-start-time",
-> +                                &pdata->micd_bias_start_time);
-> +
-> +       device_property_read_u32(arizona->dev, "wlf,micd-rate",
-> +                                &pdata->micd_rate);
-> +
-> +       dbtime = 0;
-> +       device_property_read_u32(arizona->dev, "wlf,micd-dbtime", &dbtime);
-> +       switch (dbtime) {
-> +       case 2:
+Really, we should have better separation of CONFIG_OF and
+CONFIG_OF_EARLY_FLATTREE, but doing that will require quite a bit of
+shuffling of architecture code. That will have to wait for another day.
 
-I'd like you to define the constant variable for specific integer
-value to improve the readability.
-e.g.,
+Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ drivers/of/fdt.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-#define MICD_DBTIME_XXX 2
-#define MICD_DBTIME_XXX 4
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 9628c4a..0e314ba 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -1015,6 +1015,11 @@ void * __init __weak early_init_dt_alloc_memory_arch(u64 size, u64 align)
+ 	return __va(memblock_alloc(size, align));
+ }
+ #else
++void __init __weak early_init_dt_add_memory_arch(u64 base, u64 size)
++{
++	WARN_ON(1);
++}
++
+ int __init __weak early_init_dt_reserve_memory_arch(phys_addr_t base,
+ 					phys_addr_t size, bool nomap)
+ {
+@@ -1022,6 +1027,12 @@ int __init __weak early_init_dt_reserve_memory_arch(phys_addr_t base,
+ 		  &base, &size, nomap ? " (nomap)" : "");
+ 	return -ENOSYS;
+ }
++
++void * __init __weak early_init_dt_alloc_memory_arch(u64 size, u64 align)
++{
++	WARN_ON(1);
++	return NULL;
++}
+ #endif
+ 
+ bool __init early_init_dt_verify(void *params)
+-- 
+2.1.0
 
-> +               pdata->micd_dbtime = 0x10000;
-
-Also, you better to define the constant variable for "0x10000" to
-improbe readability in the include/linux/mfd/arizona.h. If you just
-use the hex value, the other developer cannot analyze the meaning of
-"0x10000".
-
-> +               break;
-> +       case 4:
-
-ditto.
-
-> +               pdata->micd_dbtime = 0x0001;
-
-ditto.
-
-> +               break;
-> +       default:
-> +               break;
-> +       }
-> +
-> +       device_property_read_u32(arizona->dev, "wlf,micd-timeout",
-> +                                &pdata->micd_timeout);
-> +
-> +       pdata->micd_force_micbias = device_property_read_bool(arizona->dev,
-> +                                               "wlf,micd-force-micbias");
-> +
->         return 0;
->  }
-
-Thanks,
-Chanwoo Choi
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
