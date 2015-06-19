@@ -1,99 +1,97 @@
-From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [PATCH v2 3/5] extcon: arizona: Convert to gpiod
-Date: Fri, 19 Jun 2015 10:54:34 +0100
-Message-ID: <20150619095434.GV32730@opensource.wolfsonmicro.com>
-References: <1434638631-16451-1-git-send-email-ckeepax@opensource.wolfsonmicro.com> <1434638631-16451-4-git-send-email-ckeepax@opensource.wolfsonmicro.com> <CAGTfZH0AsRwcFwevAiQeyL=VUxiCvCx+3OEFKQ4nV3DpRdsdoQ@mail.gmail.com> <20150619081433.GR32730@opensource.wolfsonmicro.com> <CAGTfZH3USsR5AVQn2UMBH_y-25nsXBw3cdjBLbEiRWJu7Q+Tsg@mail.gmail.com> <20150619091349.GU32730@opensource.wolfsonmicro.com> <CAGTfZH3RWaSGKM66dp1YeLivPq504mys-xnBFJ56ob_qWZ03nA@mail.gmail.com>
+From: Chanwoo Choi <cwchoi00@gmail.com>
+Subject: Re: [PATCH v2 2/5] extcon: arizona: Add basic microphone detection
+ DT/ACPI bindings
+Date: Fri, 19 Jun 2015 19:31:49 +0900
+Message-ID: <CAGTfZH19cvcb2PXn69pZY-JpkaOYsCsJC1rrQWy06eNav=+VuA@mail.gmail.com>
+References: <1434638631-16451-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+	<1434638631-16451-3-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+	<CAGTfZH0uds0swf-x0naTJeMRvOB6DkekdmSSGWA5KpNCWVOWZw@mail.gmail.com>
+	<20150619081737.GS32730@opensource.wolfsonmicro.com>
+	<CAGTfZH1a6H4Virm-mZDeOD9Pt5M-Q13xo7v+bQwBguJuy1AJXg@mail.gmail.com>
+	<20150619090839.GT32730@opensource.wolfsonmicro.com>
+Reply-To: cw00.choi@samsung.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAGTfZH3RWaSGKM66dp1YeLivPq504mys-xnBFJ56ob_qWZ03nA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150619090839.GT32730@opensource.wolfsonmicro.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Cc: Lee Jones <lee.jones@linaro.org>, "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>, Samuel Ortiz <sameo@linux.intel.com>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, patches@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 19, 2015 at 06:50:03PM +0900, Chanwoo Choi wrote:
-> On Fri, Jun 19, 2015 at 6:13 PM, Charles Keepax
-> <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrote:
-> > On Fri, Jun 19, 2015 at 05:39:22PM +0900, Chanwoo Choi wrote:
-> >> On Fri, Jun 19, 2015 at 5:14 PM, Charles Keepax
-> >> <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrote:
-> >> > On Fri, Jun 19, 2015 at 11:36:47AM +0900, Chanwoo Choi wrote:
-> >> >> Hi Charles,
-> >> >>
-> >> >> On Thu, Jun 18, 2015 at 11:43 PM, Charles Keepax
-> >> >> <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrote:
-> >> >> > Convert to using the newer gpiod interface for the micd_pol_gpio.
-> >> >> > Although we still carry support for the old gpio interface from pdata.
-> >> >> >
-> >> >> > Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-> >> >> > ---
-> >> >> > +                       mode = GPIOD_OUT_HIGH;
-> >> >> > +               else
-> >> >> > +                       mode = GPIOD_OUT_LOW;
-> >> >> > +
-> >> >> > +               info->micd_pol_gpio = gpiod_get_optional(arizona->dev,
-> >> >> > +                                                        "wlf,micd-pol",
-> >> >> > +                                                        GPIOD_OUT_LOW);
-> >> >>
-> >> >> You can use the devm_gpiod_get_optional() to manage the system
-> >> >> resource automatically.
-> >> >>
-> >> >
-> >> > We can't actually use the devm call here, we need to pass
-> >> > arizona->dev as that is where the DT will reside, which is the
-> >> > device for the MFD. But if the devm is attached to the device for
-> >> > the MFD then it will not clear up when the extcon driver is
-> >> > unloaded. As such we have to do the put manually.
-> >> >
-> >> > I will look at respinning for the other comments.
-> >>
-> >> I don't understand. extcon-arizona.c used already following devm_* functions:
-> >> - devm_kzalloc()
-> >> - devm_regulator_get()
-> >> - devm_extcon_dev_*()
-> >> - devm_input_allocate_device()
-> >> - devm_gpio_request_one()
-> >
-> > Yes but if you look at those all of those are against &pdev->dev
-> > which is the extcon device.
-> >
-> > The gpiod interface expects the device passed to both contain
-> > the of_node and be used for the devm operations. But we need to
-> > use the extcon device for the devm operations, but the of_node is
-> > contained on the MFD device.
-> >
-> > So if I do:
-> >
-> > devm_gpiod_get_optional(arizona->dev, ....
-> >
-> > Then the gpiod won't be released when the extcon device is
-> > removed. But if I do:
-> >
-> > devm_gpiod_get_optional(&pdev->dev, ....
-> >
-> > Then it won't be able to find the DT entries.
-> 
-> I understand the difference between arizona->dev and &pdev->dev.
-> 
-> But, extcon-arizona.c already get the instance of regulator by using
-> devm_regulator_get() with &pdev->dev as following:
-> The devm_regulator_get() can find the DT entry in dts file.
->                  info->micvdd = devm_regulator_get(&pdev-dev, "MICVDD");
-> 
-> How did extcon-arizona.c get the instance of regulator throught
-> devm_regulator_get() in dts file?
+On Fri, Jun 19, 2015 at 6:08 PM, Charles Keepax
+<ckeepax@opensource.wolfsonmicro.com> wrote:
+> On Fri, Jun 19, 2015 at 05:28:11PM +0900, Chanwoo Choi wrote:
+>> On Fri, Jun 19, 2015 at 5:17 PM, Charles Keepax
+>> <ckeepax@opensource.wolfsonmicro.com> wrote:
+>> > On Fri, Jun 19, 2015 at 11:25:57AM +0900, Chanwoo Choi wrote:
+>> >> Hi Charles,
+>> >>
+>> >> On Thu, Jun 18, 2015 at 11:43 PM, Charles Keepax
+>> >> <ckeepax@opensource.wolfsonmicro.com> wrote:
+>> >> > This patch adds bindings for the basic microphone detection platform
+>> >> > data.
+>> >> >
+>> >> > Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+>> >> > ---
+>> >> > +       dbtime = 0;
+>> >> > +       device_property_read_u32(arizona->dev, "wlf,micd-dbtime", &dbtime);
+>> >> > +       switch (dbtime) {
+>> >> > +       case 2:
+>> >>
+>> >> I'd like you to define the constant variable for specific integer
+>> >> value to improve the readability.
+>> >> e.g.,
+>> >>
+>> >> #define MICD_DBTIME_XXX 2
+>> >> #define MICD_DBTIME_XXX 4
+>> >>
+>> >> > +               pdata->micd_dbtime = 0x10000;
+>> >>
+>> >> Also, you better to define the constant variable for "0x10000" to
+>> >> improbe readability in the include/linux/mfd/arizona.h. If you just
+>> >> use the hex value, the other developer cannot analyze the meaning of
+>> >> "0x10000".
+>> >>
+>> >> > +               break;
+>> >> > +       case 4:
+>> >>
+>> >> ditto.
+>> >>
+>> >
+>> > I am not sure these two really warrant a define the number in DT
+>> > indicates the number of debounces to perform.
+>> >
+>> > #define MICD_DBTIME_TWO 2
+>>
+>> No. I mean that you should define the appropriate name of definition
+>> to indicate the meaning of 2 or 4. Just not 2 -> TWO.
+>>
+>> 2 is 2 second? or 2 is milli-second? or Is there any other meaning?
+>> I can never know the meaning of '2' without any description and any
+>> proper name of definition.
+>
+> It is literally two, two debounces, I really can't see what I
+> could call the define. What do you think to the idea I suggested
+> to rename the variable dbtime -> num_debounces?
 
-The regulator API contains a feature called regulator aliases,
-(see regulator_register_supply_alias) which the MFD driver for
-Arizona registers a bunch of. So when the regulator lookup is
-done the regulator core will actually do the lookup on the
-parent MFD device rather than on the extcon device.
+Is it either "debounce time" or "the number of debounce"?
+
+Also,
+
+When extcon-arizona driver update the bit for micd_dbtime, use the
+ARIZONA_MICD_DBTIME_MASK (0x0002).
+
+In following case, 0x10000 is larger than ARIZONA_MICD_DBTIME_MASK(0x0002).
+
+          case 2:
+                pdata->micd_dbtime = 0x10000;
+
+Is it correct?
+
+I thinkt that "arizona->pdata.micd_dbtime <<
+ARIZONA_MICD_DBTIME_SHIFT" value should be included in the range of
+ARIZONA_MICD_DBTIME_MASK(0x0002).
 
 Thanks,
-Charles
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Chanwoo Choi
