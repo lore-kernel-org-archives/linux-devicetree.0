@@ -1,169 +1,98 @@
 From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: FW: [PATCH v4 1/4] Broadcom Bluetooth UART Device Tree bindings
-Date: Fri, 19 Jun 2015 13:49:06 -0500
-Message-ID: <CAL_JsqLr7JZ9=i2XuWR0_FZDyxpDRwDS5dkSpzjKA-8V=-mpOw@mail.gmail.com>
-References: <1434576658-20730-1-git-send-email-ifaenson@broadcom.com>
- <1434576658-20730-2-git-send-email-ifaenson@broadcom.com> <E0D3336E15B58B4294723AC879BA5E942634F2@IRVEXCHMB15.corp.ad.broadcom.com>
- <CAL_JsqK9kup3sm3qgDLqtT8ajrN1ee6zfXwOoZqoq9cXQNwE_w@mail.gmail.com>
- <E0D3336E15B58B4294723AC879BA5E94263E58@IRVEXCHMB15.corp.ad.broadcom.com>
- <CAL_JsqJAUTjNehtr_Af93k71mdSREb9pLMoSyDTm1S42VkA2sQ@mail.gmail.com>
- <E0D3336E15B58B4294723AC879BA5E942640A3@IRVEXCHMB15.corp.ad.broadcom.com>
- <CAL_JsqJKyj8sDwG82jb_CzXEDBN8aznR7eF5yTOiWruW8o3cng@mail.gmail.com> <55844C1E.8020301@broadcom.com>
+Subject: Re: [PATCH V7 2/3] OPP: Allow multiple OPP tables to be passed via DT
+Date: Fri, 19 Jun 2015 13:52:10 -0500
+Message-ID: <CAL_JsqJfWDO4r_FP6xHSxRkMM-pSnbEUB=d9Gj6mhvPY+ouLxA@mail.gmail.com>
+References: <cover.1433434659.git.viresh.kumar@linaro.org> <263c128844f5a3c9280c8be71f6c9eb1869a5188.1433434659.git.viresh.kumar@linaro.org>
+ <CAL_Jsq+EOOeQw42wZi+H82ovLn8LcQUuK9HGT+FvewdhTf7Q1w@mail.gmail.com>
+ <20150617133314.GB15153@linux> <CAL_Jsq+SdgAf7=Yq7Jk_1d9jTpAOLCEuEDCZvD=-h=2MWsNfFw@mail.gmail.com>
+ <55821F30.2090802@codeaurora.org> <20150618022543.GA28820@linux>
+ <20150618025034.GB28820@linux> <20150619184747.GD22132@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55844C1E.8020301-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Ilya Faenson <ifaenson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org" <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150619184747.GD22132-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, "linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org" <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mike Turquette <mike.turquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Viswanath Puttagunta <viswanath.puttagunta-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Thomas Abraham <ta.omasab-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Abhilash Kesavan <kesavan.abhilash-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Santosh
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 19, 2015 at 12:06 PM, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
-> On 06/19/15 17:47, Rob Herring wrote:
+On Fri, Jun 19, 2015 at 1:47 PM, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+> On 06/18, Viresh Kumar wrote:
+>> On 18-06-15, 07:55, Viresh Kumar wrote:
+>> > Why do you think so? For me the operating-points-v2-names property
+>> > will be present in CPU node (as there is no OPP node which can have
+>> > it) and so every CPU is free to choose what it wants to.
 >>
->> On Thu, Jun 18, 2015 at 3:37 PM, Ilya Faenson<ifaenson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->> wrote:
->>>
->>> Hi Rob.
->>>
->>> -----Original Message-----
->>> From: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>> [mailto:linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org] On Behalf Of Rob Herring
->>> Sent: Thursday, June 18, 2015 3:41 PM
->>> To: Ilya Faenson
->>> Cc: marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org; Arend Van Spriel; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
->>> linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>> Subject: Re: FW: [PATCH v4 1/4] Broadcom Bluetooth UART Device Tree
->>> bindings
->>>
->>> On Thu, Jun 18, 2015 at 1:54 PM, Ilya Faenson<ifaenson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->>> wrote:
->>>>
->>>> Hi Rob,
->>>
->>>
->>> Your emails are base64 encoded. They should be plain text for the list.
->>>
->>> IF: The Outlook is configured to respond in the sender's format. I
->>> therefore respond in the encoding you've used.
+>> So, I had something like this in mind:
 >>
+>> From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Date: Thu, 30 Apr 2015 17:38:00 +0530
+>> Subject: [PATCH] OPP: Allow multiple OPP tables to be passed via DT
 >>
->> I assure you that that is not the case or I would be banished from
->> lists by now. Outlook is generally incapable of correctly sending
->> mails to lists. The reply header above is one aspect of that. The
->> other problem is your replies don't get wrapped and prefixed properly.
->> That could be my client I guess, but *all* other mails are fine.
+>> On some platforms (Like Qualcomm's SoCs), it is not decided until
+>> runtime on what OPPs to use. The OPP tables can be fixed at compile
+>> time, but which table to use is found out only after reading some efuses
+>> (sort of an prom) and knowing characteristics of the SoC.
 >>
->> My sent mails have:
+>> To support such platform we need to pass multiple OPP tables per device
+>> and hardware should be able to choose one and only one table out of
+>> those.
 >>
->> Content-Type: text/plain; charset=UTF-8
->> Content-Transfer-Encoding: quoted-printable
+>> Update operating-points-v2 bindings to support that.
 >>
->>
->>>> -----Original Message-----
->>>> From: Rob Herring [mailto:robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org]
->>>> Sent: Thursday, June 18, 2015 11:03 AM
->>>> To: Ilya Faenson
->>>> Cc: marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org; Arend Van Spriel; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
->>>> linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>>> Subject: Re: FW: [PATCH v4 1/4] Broadcom Bluetooth UART Device Tree
->>>> bindings
->>>>
->>>> On Wed, Jun 17, 2015 at 6:11 PM, Ilya Faenson<ifaenson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->>>> wrote:
->>>>>
->>>>> + devicetree lists
->>>
->>>
->>> [...]
->>>
->>>>> diff --git a/Documentation/devicetree/bindings/net/bluetooth/btbcm.txt
->>>>> b/Documentation/devicetree/bindings/net/bluetooth/btbcm.txt
->>>>> new file mode 100644
->>>>> index 0000000..5dbcd57
->>>>> --- /dev/null
->>>>> +++ b/Documentation/devicetree/bindings/net/bluetooth/btbcm.txt
->>>>> @@ -0,0 +1,86 @@
->>>>> +btbcm
->>>>> +------
->>>>> +
->>>>> +Required properties:
->>>>> +
->>>>> +       - compatible : must be "brcm,brcm-bt-uart".
->>>>
->>>>
->>>> You need to describe the chip, not the interface.
->>>>
->>>> IF: This driver is for all Broadcom Bluetooth UART based chips.
->>>
->>>
->>> BT only chips? Most/many Broadcom chips are combo chips. I understand
->>> the driver for BT is *mostly* separate from other chip functions like
->>> WiFi, GPS and NFC, but the h/w is a single chip. I say most because
->>> likely there are some parts shared: a voltage rail, reset line, or
->>> power down line. I think some can do BT over the SDIO interface too,
->>> so the interface may be shared. The DT is a description of the h/w
->>> (i.e. what part # for a chip) and not a driver data structure. You
->>> need to describe the whole chip in the binding. It is a Linux problem
->>> if there needs to be multiple separate drivers.
->>>
->>> IF: Defining complete DT description for the Broadcom combo chips for
->>> multiple interfaces is well beyond the scope of what I am doing. I just need
->>> to define a DT node for the input and output GPIOs connected to the BT UART
->>> chip. BT may or may not be part of the combo chip: it does not really matter
->>> for this exercise. I thought I would take this opportunity to place some BT
->>> device parameters into that node as well. If you're not comfortable with
->>> this, I could just call it a "GPIO set" to avoid mentioning BT and UART at
->>> all but it would make little sense. Still, I could consider it. Would you
->>> have "GPIO set" recommendations? Alternatively, NFC Marvell code you're
->>> referring to has parameters configured as Linux module parameters. I could
->>> do the same too, avoiding this device tree discussion. Let me know.
->>>
->>
->> I don't completely follow what you mean by "GPIO set", but I'm
->> guessing that is not the right path.
->>
->>> Generally speaking (pontification hat on :-)), what you're trying to do
->>> (description of the whole chip) is well beyond what say ACPI has done (I was
->>> involved some in the BT ACPI exercise a few years ago). BT UART interface is
->>> described in ACPI independently of other parts of the same combo chip.
->>> Requirements like that slow down the DT development in my opinion as
->>> companies are understandably reluctant to work with unrealistic goals. End
->>> of pontification. :-)
->>>
->>
->> ACPI and DT are very different models in terms of abstraction and
->> governance. I'm not going to hash through all the details.
->>
->> I'm not necessarily saying we have to have a single node, but that is
->> my default position. You have convince me that the functions are
->> completely independent and I cannot judge that if you are completely
->> ignoring the WiFi part. From Broadcom chips I've worked with, the
->> supplies at least are shared (something ACPI does not expose). Perhaps
->> we could fudge that and just require the same supply has to be
->> connected to each half. I still worry there could be other internal
->> inter-dependencies. Perhaps BT requires the SDIO clock to be active or
->> something like that. Maybe not on Broadcom chips, but on other vendors
->> and I have to care about them all.
+>> Signed-off-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 >
+> Looks mostly ok..
 >
-> All Broadcom combo chips that I know of have separate supplies, ie.
-> wl-reg-on and bt-reg-on. There already is a binding present for the wifi
+>> ---
+>>  Documentation/devicetree/bindings/power/opp.txt | 63 +++++++++++++++++++++++++
+>>  1 file changed, 63 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/power/opp.txt b/Documentation/devicetree/bindings/power/opp.txt
+>> index 259bf00edf7d..72ccacaac9c9 100644
+>> --- a/Documentation/devicetree/bindings/power/opp.txt
+>> +++ b/Documentation/devicetree/bindings/power/opp.txt
+>> @@ -45,10 +45,21 @@ Devices supporting OPPs must set their "operating-points-v2" property with
+>>  phandle to a OPP table in their DT node. The OPP core will use this phandle to
+>>  find the operating points for the device.
+>>
+>> +Devices may want to choose OPP tables at runtime and so can provide a list of
+>> +phandles here. But only *one* of them should be chosen at runtime. This must be
+>> +accompanied by a corresponding "operating-points-v2-names" property, to uniquely
+>> +identify the OPP tables.
+>> +
+>>  If required, this can be extended for SoC vendor specfic bindings. Such bindings
+>>  should be documented as Documentation/devicetree/bindings/power/<vendor>-opp.txt
+>>  and should have a compatible description like: "operating-points-v2-<vendor>".
+>>
+>> +Optional properties:
+>> +- operating-points-v2-names: Names of OPP tables (required if multiple OPP
 
-GPIOs are not supplies. For the module I'm working with (43340 based)
-there is a single VDDIO and VBAT supplies which are shared. Now
-whether the module or the chip are tying things together, I don't
-know. There is also a 32kHz clock input. Is that part of WiFi or BT?
+Let's drop v2. We know it only applies to v2.
 
-> part. Not extending that may seem ignorant, but as wifi and bt can have a
-> separate interface to the host (admittedly they could share SDIO interface,
-> but they would be exposed as a separate SDIO function) I did not see a
-> reason to object against a separate binding for BT. Whether wifi and bt are
-> on the same device does not seem like something that must be expressed in
-> DT. The physical state may help in determining DT bindings, but it should
-> not be mandatory in my opinion.
+>> +  tables are present), to uniquely identify them. The same list must be present
+>> +  for all the CPUs which are sharing clock/voltage rails and hence the OPP
+>> +  tables.
+>> +
+>>  * OPP Table Node
+>>
+>>  This describes the OPPs belonging to a device. This node can have following
+>> @@ -63,11 +74,16 @@ This describes the OPPs belonging to a device. This node can have following
+>>    reference an OPP.
+>>
+>>  Optional properties:
+>> +- opp-name: Name of the OPP table, to uniquely identify it if more than one OPP
+>> +  table is supplied in "operating-points-v2" property of device.
+>> +
+>
+> But isn't this being removed? If it is removed, feel free to add
+>
+> Reviewed-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 
-We don't need it in DT until we do. Soon as there is some some
-interdependence, something in DT will be needed.
+Same question here.
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
 Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
