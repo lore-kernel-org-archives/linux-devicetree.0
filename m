@@ -1,8 +1,11 @@
 From: Brian Norris <computersforpeace@gmail.com>
-Subject: [PATCH 7/7] ARM: dts: brcmstb: add BCM7445 system PM DT nodes
-Date: Thu, 18 Jun 2015 17:11:36 -0700
-Message-ID: <1434672696-13632-8-git-send-email-computersforpeace@gmail.com>
+Subject: [PATCH 5/7] soc: brcmstb: add wake-timer driver
+Date: Thu, 18 Jun 2015 17:11:34 -0700
+Message-ID: <1434672696-13632-6-git-send-email-computersforpeace@gmail.com>
 References: <1434672696-13632-1-git-send-email-computersforpeace@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1434672696-13632-1-git-send-email-computersforpeace@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
@@ -10,133 +13,319 @@ To: Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail
 Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-Need the aon_pm_l2_intc, aon-ctrl, waketimer, boot SRAM, and
-memory_controller descriptions.
+Useful for waking the system from suspend after a specified period of
+time.
+
+This IP could potentially be supported as an RTC driver (for use with
+the 'rtcwake' utility), but it is not battery backed, so that's not a
+great fit. Implement a custom sysfs interface instead.
 
 Signed-off-by: Brian Norris <computersforpeace@gmail.com>
 ---
- arch/arm/boot/dts/bcm7445.dtsi | 102 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 102 insertions(+)
+ .../ABI/testing/sysfs-driver-wktmr-brcmstb         |  12 +
+ drivers/soc/brcmstb/Kconfig                        |   3 +
+ drivers/soc/brcmstb/Makefile                       |   1 +
+ drivers/soc/brcmstb/wktmr.c                        | 242 +++++++++++++=
+++++++++
+ 4 files changed, 258 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-driver-wktmr-brcmst=
+b
+ create mode 100644 drivers/soc/brcmstb/wktmr.c
 
-diff --git a/arch/arm/boot/dts/bcm7445.dtsi b/arch/arm/boot/dts/bcm7445.dtsi
-index 58dcd666257c..5b1aeaf5ac40 100644
---- a/arch/arm/boot/dts/bcm7445.dtsi
-+++ b/arch/arm/boot/dts/bcm7445.dtsi
-@@ -119,6 +119,30 @@
- 			interrupt-names = "hif";
- 		};
- 
-+		aon_pm_l2_intc: interrupt-controller@410640 {
-+			compatible = "brcm,l2-intc";
-+			reg = <0x410640 0x30>;
-+			interrupt-controller;
-+			#interrupt-cells = <1>;
-+			interrupts = <GIC_SPI 0x40 0x0>;
-+			interrupt-parent = <&gic>;
-+			brcm,irq-can-wake;
-+		};
+diff --git a/Documentation/ABI/testing/sysfs-driver-wktmr-brcmstb b/Doc=
+umentation/ABI/testing/sysfs-driver-wktmr-brcmstb
+new file mode 100644
+index 000000000000..e563f8b8d969
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-driver-wktmr-brcmstb
+@@ -0,0 +1,12 @@
++What:		/sys/bus/platform/drivers/brcm-waketimer/<MMIO-address>.waketim=
+er/timeout
++Date:		November 21, 2014
++KernelVersion:	3.14
++Contact:	Brian Norris <norris@broadcom.com>
++Description:	The control file for the wakeup timer. This integer value
++		represents the number of seconds between a suspend operation
++		(e.g., S3 suspend-to-RAM) and the time at which the wakeup
++		timer should fire.
 +
-+		aon-ctrl@410000 {
-+			compatible = "brcm,brcmstb-aon-ctrl";
-+			reg = <0x410000 0x200>, <0x410200 0x400>;
-+			reg-names = "aon-ctrl", "aon-sram";
-+		};
++		Values are -1 (default) or any non-negative integer. Units are
++		in seconds. The special value of -1 means the timer should not
++		wake up the system.
+diff --git a/drivers/soc/brcmstb/Kconfig b/drivers/soc/brcmstb/Kconfig
+index 5025dacce6f0..e818eca7e847 100644
+--- a/drivers/soc/brcmstb/Kconfig
++++ b/drivers/soc/brcmstb/Kconfig
+@@ -16,4 +16,7 @@ config BRCMSTB_PM
+ 	depends on PM
+ 	depends on ARM && ARCH_BRCMSTB
+=20
++config BRCMSTB_WKTMR
++	tristate "Support wake-up timer"
 +
-+		waketimer@f0417580 {
-+			compatible = "brcm,brcmstb-waketimer";
-+			reg = <0x417580 0x14>;
-+			interrupt-parent = <&aon_pm_l2_intc>;
-+			interrupts = <3>;
-+			interrupt-names = "timer";
-+		};
+ endif # SOC_BRCMSTB
+diff --git a/drivers/soc/brcmstb/Makefile b/drivers/soc/brcmstb/Makefil=
+e
+index 677e3fa0d042..6ecba0644229 100644
+--- a/drivers/soc/brcmstb/Makefile
++++ b/drivers/soc/brcmstb/Makefile
+@@ -1,3 +1,4 @@
+ obj-$(CONFIG_BRCMSTB_PM)	+=3D pm/
+=20
+ obj-y				+=3D common.o
++obj-$(CONFIG_BRCMSTB_WKTMR)	+=3D wktmr.o
+diff --git a/drivers/soc/brcmstb/wktmr.c b/drivers/soc/brcmstb/wktmr.c
+new file mode 100644
+index 000000000000..89f989724d3c
+--- /dev/null
++++ b/drivers/soc/brcmstb/wktmr.c
+@@ -0,0 +1,242 @@
++/*
++ * Copyright =C2=A9 2014-2015 Broadcom Corporation
++ *
++ * This program is free software; you can redistribute it and/or modif=
+y
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++ * GNU General Public License for more details.
++ */
 +
- 		nand: nand@3e2800 {
- 			status = "disabled";
- 			#address-cells = <1>;
-@@ -169,6 +193,84 @@
- 		};
- 	};
- 
-+	memory_controllers {
-+		compatible = "simple-bus";
-+		ranges = <0x0 0x0 0xf1100000 0x200000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
++#define pr_fmt(fmt)	KBUILD_MODNAME ": " fmt
 +
-+		memc@0 {
-+			compatible = "brcm,brcmstb-memc", "simple-bus";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x0 0x80000>;
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/init.h>
++#include <linux/stat.h>
++#include <linux/device.h>
++#include <linux/platform_device.h>
++#include <linux/suspend.h>
++#include <linux/err.h>
++#include <linux/of.h>
++#include <linux/pm.h>
++#include <linux/io.h>
++#include <linux/interrupt.h>
++#include <linux/irqreturn.h>
++#include <linux/pm_wakeup.h>
++#include <linux/reboot.h>
 +
-+			memc-ddr@2000 {
-+				compatible = "brcm,brcmstb-memc-ddr";
-+				reg = <0x2000 0x800>;
-+			};
++#define DRV_NAME	"brcm-waketimer"
 +
-+			ddr-phy@6000 {
-+				compatible = "brcm,brcmstb-ddr-phy-v240.1";
-+				reg = <0x6000 0x21c>;
-+				};
++struct brcmstb_waketmr {
++	struct device *dev;
++	void __iomem *base;
++	unsigned int irq;
 +
-+			shimphy@8000 {
-+				compatible = "brcm,brcmstb-ddr-shimphy-v1.0";
-+				reg = <0x8000 0xe4>;
-+			};
-+		};
++	int wake_timeout;
++	struct notifier_block reboot_notifier;
++};
 +
-+		memc@1 {
-+			compatible = "brcm,brcmstb-memc", "simple-bus";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x80000 0x80000>;
++/* No timeout */
++#define BRCMSTB_WKTMR_DEFAULT_TIMEOUT	(-1)
 +
-+			memc-ddr@2000 {
-+				compatible = "brcm,brcmstb-memc-ddr";
-+				reg = <0x2000 0x800>;
-+			};
++#define BRCMSTB_WKTMR_EVENT		0x00
++#define BRCMSTB_WKTMR_COUNTER		0x04
++#define BRCMSTB_WKTMR_ALARM		0x08
++#define BRCMSTB_WKTMR_PRESCALER		0x0C
++#define BRCMSTB_WKTMR_PRESACALER_VAL	0x10
 +
-+			ddr-phy@6000 {
-+				compatible = "brcm,brcmstb-ddr-phy-v240.1";
-+				reg = <0x6000 0x21c>;
-+			};
++static inline void brcmstb_waketmr_clear_alarm(struct brcmstb_waketmr =
+*timer)
++{
++	writel_relaxed(1, timer->base + BRCMSTB_WKTMR_EVENT);
++	(void)readl_relaxed(timer->base + BRCMSTB_WKTMR_EVENT);
++}
 +
-+			shimphy@8000 {
-+				compatible = "brcm,brcmstb-ddr-shimphy-v1.0";
-+				reg = <0x8000 0xe4>;
-+			};
-+		};
++static void brcmstb_waketmr_set_alarm(struct brcmstb_waketmr *timer,
++		unsigned int secs)
++{
++	unsigned int t;
 +
-+		memc@2 {
-+			compatible = "brcm,brcmstb-memc", "simple-bus";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x100000 0x80000>;
++	brcmstb_waketmr_clear_alarm(timer);
 +
-+			memc-ddr@2000 {
-+				compatible = "brcm,brcmstb-memc-ddr";
-+				reg = <0x2000 0x800>;
-+			};
++	t =3D readl_relaxed(timer->base + BRCMSTB_WKTMR_COUNTER);
++	writel_relaxed(t + secs + 1, timer->base + BRCMSTB_WKTMR_ALARM);
++}
 +
-+			ddr-phy@6000 {
-+				compatible = "brcm,brcmstb-ddr-phy-v240.1";
-+				reg = <0x6000 0x21c>;
-+			};
++static irqreturn_t brcmstb_waketmr_irq(int irq, void *data)
++{
++	struct brcmstb_waketmr *timer =3D data;
++	pm_wakeup_event(timer->dev, 0);
++	return IRQ_HANDLED;
++}
 +
-+			shimphy@8000 {
-+				compatible = "brcm,brcmstb-ddr-shimphy-v1.0";
-+				reg = <0x8000 0xe4>;
-+			};
-+		};
-+	};
++static ssize_t brcmstb_waketmr_timeout_show(struct device *dev,
++		struct device_attribute *attr, char *buf)
++{
++	struct brcmstb_waketmr *timer =3D dev_get_drvdata(dev);
 +
-+	sram@ffe00000 {
-+		compatible = "brcm,boot-sram", "mmio-sram";
-+		reg = <0x0 0xffe00000 0x0 0x10000>;
-+	};
++	return snprintf(buf, PAGE_SIZE, "%d\n", timer->wake_timeout);
++}
 +
- 	smpboot {
- 		compatible = "brcm,brcmstb-smpboot";
- 		syscon-cpu = <&hif_cpubiuctrl 0x88 0x178>;
--- 
++static ssize_t brcmstb_waketmr_timeout_store(struct device *dev,
++		struct device_attribute *attr, const char *buf, size_t count)
++{
++	struct brcmstb_waketmr *timer =3D dev_get_drvdata(dev);
++	int timeout;
++	int ret;
++
++	ret =3D kstrtoint(buf, 0, &timeout);
++	if (ret < 0)
++		return ret;
++
++	/* Allow -1 as "no timeout" */
++	if (timeout < -1)
++		return -EINVAL;
++
++	timer->wake_timeout =3D timeout;
++
++	return count;
++}
++
++static const DEVICE_ATTR(timeout, S_IRUGO | S_IWUSR,
++		brcmstb_waketmr_timeout_show,
++		brcmstb_waketmr_timeout_store);
++
++static int brcmstb_waketmr_prepare_suspend(struct brcmstb_waketmr *tim=
+er)
++{
++	struct device *dev =3D timer->dev;
++	int ret;
++
++	if (device_may_wakeup(dev) && timer->wake_timeout >=3D 0) {
++		ret =3D enable_irq_wake(timer->irq);
++		if (ret) {
++			dev_err(dev, "failed to enable wake-up interrupt\n");
++			return ret;
++		}
++
++		brcmstb_waketmr_set_alarm(timer, timer->wake_timeout);
++	}
++	return 0;
++}
++
++/* If enabled as a wakeup-source, arm the timer when powering off */
++static int brcmstb_waketmr_reboot(struct notifier_block *nb,
++		unsigned long action, void *data)
++{
++	struct brcmstb_waketmr *timer;
++	timer =3D container_of(nb, struct brcmstb_waketmr, reboot_notifier);
++
++	/* Set timer for cold boot */
++	if (action =3D=3D SYS_POWER_OFF)
++		brcmstb_waketmr_prepare_suspend(timer);
++
++	return NOTIFY_DONE;
++}
++
++static int brcmstb_waketmr_probe(struct platform_device *pdev)
++{
++	struct device *dev =3D &pdev->dev;
++	struct brcmstb_waketmr *timer;
++	struct resource *res;
++	int ret;
++
++	timer =3D devm_kzalloc(dev, sizeof(*timer), GFP_KERNEL);
++	if (!timer)
++		return -ENOMEM;
++	platform_set_drvdata(pdev, timer);
++
++	timer->dev =3D dev;
++
++	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	timer->base =3D devm_ioremap_resource(dev, res);
++	if (IS_ERR(timer->base))
++		return PTR_ERR(timer->base);
++
++	/*
++	 * Set wakeup capability before requesting wakeup interrupt, so we ca=
+n
++	 * process boot-time "wakeups" (e.g., from S5 soft-off)
++	 */
++	device_set_wakeup_capable(dev, true);
++	device_wakeup_enable(dev);
++
++	timer->irq =3D platform_get_irq(pdev, 0);
++	if ((int)timer->irq < 0)
++		return -ENODEV;
++
++	ret =3D devm_request_irq(dev, timer->irq, brcmstb_waketmr_irq, 0,
++			       DRV_NAME, timer);
++	if (ret < 0)
++		return ret;
++
++	timer->reboot_notifier.notifier_call =3D brcmstb_waketmr_reboot;
++	register_reboot_notifier(&timer->reboot_notifier);
++
++	timer->wake_timeout =3D BRCMSTB_WKTMR_DEFAULT_TIMEOUT;
++
++	ret =3D device_create_file(dev, &dev_attr_timeout);
++	if (ret)
++		unregister_reboot_notifier(&timer->reboot_notifier);
++	else
++		dev_info(dev, "registered, with irq %d\n", timer->irq);
++	return ret;
++}
++
++static int brcmstb_waketmr_remove(struct platform_device *pdev)
++{
++	struct brcmstb_waketmr *timer =3D dev_get_drvdata(&pdev->dev);
++
++	device_remove_file(&pdev->dev, &dev_attr_timeout);
++	unregister_reboot_notifier(&timer->reboot_notifier);
++
++	return 0;
++}
++
++#ifdef CONFIG_PM_SLEEP
++static int brcmstb_waketmr_suspend(struct device *dev)
++{
++	struct brcmstb_waketmr *timer =3D dev_get_drvdata(dev);
++
++	return brcmstb_waketmr_prepare_suspend(timer);
++}
++
++static int brcmstb_waketmr_resume(struct device *dev)
++{
++	struct brcmstb_waketmr *timer =3D dev_get_drvdata(dev);
++	int ret;
++
++	if (!device_may_wakeup(dev) || timer->wake_timeout < 0)
++		return 0;
++
++	ret =3D disable_irq_wake(timer->irq);
++
++	brcmstb_waketmr_clear_alarm(timer);
++
++	return ret;
++}
++#endif /* CONFIG_PM_SLEEP */
++
++static SIMPLE_DEV_PM_OPS(brcmstb_waketmr_pm_ops, brcmstb_waketmr_suspe=
+nd,
++		brcmstb_waketmr_resume);
++
++static const struct of_device_id brcmstb_waketmr_of_match[] =3D {
++	{ .compatible =3D "brcm,brcmstb-waketimer" },
++	{},
++};
++
++static struct platform_driver brcmstb_waketmr_driver =3D {
++	.probe			=3D brcmstb_waketmr_probe,
++	.remove			=3D brcmstb_waketmr_remove,
++	.driver =3D {
++		.name		=3D DRV_NAME,
++		.pm		=3D &brcmstb_waketmr_pm_ops,
++		.of_match_table	=3D of_match_ptr(brcmstb_waketmr_of_match),
++	}
++};
++module_platform_driver(brcmstb_waketmr_driver);
++
++MODULE_LICENSE("GPL v2");
++MODULE_AUTHOR("Brian Norris");
++MODULE_DESCRIPTION("Wake-up timer driver for STB chips");
+--=20
 1.9.1
