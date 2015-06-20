@@ -1,67 +1,62 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 3/4] ARM: dts: sun4i: Enable otg controller on
- the mini-x
-Date: Sat, 20 Jun 2015 17:40:09 +0200
-Message-ID: <1434814810-26285-4-git-send-email-hdegoede@redhat.com>
-References: <1434814810-26285-1-git-send-email-hdegoede@redhat.com>
-Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBZESS2WAKGQE4CTDJMI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1434814810-26285-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+From: Philippe Reynes <tremyfr@gmail.com>
+Subject: [PATCH v3 5/6] dt-binding: document the binding for mxc rtc
+Date: Sat, 20 Jun 2015 19:12:39 +0200
+Message-ID: <1434820360-21935-6-git-send-email-tremyfr@gmail.com>
+References: <1434820360-21935-1-git-send-email-tremyfr@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1434820360-21935-1-git-send-email-tremyfr@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: a.zummo@towertech.it, alexandre.belloni@free-electrons.com, shawn.guo@linaro.org, kernel@pengutronix.de, linux@arm.linux.org.uk
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, rtc-linux@googlegroups.com, Philippe Reynes <tremyfr@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The mini-x has the otg controller connected to one of the 2 usb-A
-receptacles it has on the front, so enable the otg controller in host-only
-mode.
+This adds documentation of device tree bindings for the
+mxc rtc.
 
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Philippe Reynes <tremyfr@gmail.com>
 ---
- arch/arm/boot/dts/sun4i-a10-mini-xplus.dts | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ Documentation/devicetree/bindings/rtc/rtc-mxc.txt |   27 +++++++++++++++++++++
+ 1 files changed, 27 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/rtc/rtc-mxc.txt
 
-diff --git a/arch/arm/boot/dts/sun4i-a10-mini-xplus.dts b/arch/arm/boot/dts/sun4i-a10-mini-xplus.dts
-index ebe2a04..a7dd86d 100644
---- a/arch/arm/boot/dts/sun4i-a10-mini-xplus.dts
-+++ b/arch/arm/boot/dts/sun4i-a10-mini-xplus.dts
-@@ -114,6 +114,15 @@
- 	status = "okay";
- };
- 
-+&otg_sram {
-+	status = "okay";
-+};
+diff --git a/Documentation/devicetree/bindings/rtc/rtc-mxc.txt b/Documentation/devicetree/bindings/rtc/rtc-mxc.txt
+new file mode 100644
+index 0000000..5505493
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/rtc-mxc.txt
+@@ -0,0 +1,27 @@
++* Real Time Clock of the i.MX SoCs
 +
-+&reg_usb0_vbus {
-+	regulator-boot-on;
-+	status = "okay";
-+};
++RTC controller for the i.MX SoCs
 +
- &reg_usb1_vbus {
- 	status = "okay";
- };
-@@ -128,7 +137,13 @@
- 	status = "okay";
- };
- 
-+&usb_otg {
-+	dr_mode = "host";
-+	status = "okay";
-+};
++Required properties:
++- compatible: Should be "fsl,imx1-rtc" or "fsl,imx21-rtc".
++- reg: physical base address of the controller and length of memory mapped
++  region.
++- interrupts: IRQ line for the RTC.
++- clocks: should contain two entries:
++  * one for the input reference
++  * one for the the SoC RTC
++- clock-names: should contain:
++  * "rtc" for the input reference clock
++  * "ipg" for the SoC RTC clock
 +
- &usbphy {
-+	usb0_vbus-supply = <&reg_usb0_vbus>;
- 	usb1_vbus-supply = <&reg_usb1_vbus>;
- 	usb2_vbus-supply = <&reg_usb2_vbus>;
- 	status = "okay";
++Example:
++
++rtc@10007000 {
++	compatible = "fsl,imx21-rtc";
++	reg = <0x10007000 0x1000>;
++	interrupts = <22>;
++	clocks = <&clks IMX27_CLK_CKIL>,
++	       	 <&clks IMX27_CLK_RTC_IPG_GATE>;
++	clock-names = "rtc, "ipg";
++	status = "disabled";
++};
 -- 
-2.4.3
+1.7.4.4
