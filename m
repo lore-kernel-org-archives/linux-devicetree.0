@@ -1,79 +1,48 @@
-From: Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: [PATCH v3 3/6] ARM: dts: pxa: add dma pxamci nodes to pxa3xx
-Date: Sat, 20 Jun 2015 10:17:28 +0200
-Message-ID: <1434788251-11839-3-git-send-email-robert.jarzmik@free.fr>
+From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Subject: [PATCH v3 4/6] ARM: dts: pxa: add embedded pxa camera capture interface
+Date: Sat, 20 Jun 2015 10:17:29 +0200
+Message-ID: <1434788251-11839-4-git-send-email-robert.jarzmik@free.fr>
 References: <1434788251-11839-1-git-send-email-robert.jarzmik@free.fr>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1434788251-11839-1-git-send-email-robert.jarzmik@free.fr>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Robert Jarzmik <robert.jarzmik@free.fr>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1434788251-11839-1-git-send-email-robert.jarzmik-GANU6spQydw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the 3 possible mmc controllers on pxa3xx SoCs to the devicetree
-description. Add the dma and clocks to the device-tree description of
-pxa27x and pxa3xx at the same time.
+The pxa27x SoCs have an embedded camera host controller. Add the
+description to the family description.
 
-Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
+Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
 ---
- arch/arm/boot/dts/pxa2xx.dtsi |  4 ++++
- arch/arm/boot/dts/pxa3xx.dtsi | 33 +++++++++++++++++++++++++++++++++
- 2 files changed, 37 insertions(+)
+Since v1: Sergey's comment on ePAR standard: "imaging"
+---
+ arch/arm/boot/dts/pxa27x.dtsi | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/arch/arm/boot/dts/pxa2xx.dtsi b/arch/arm/boot/dts/pxa2xx.dtsi
-index 71a0cd7..5e5af07 100644
---- a/arch/arm/boot/dts/pxa2xx.dtsi
-+++ b/arch/arm/boot/dts/pxa2xx.dtsi
-@@ -128,6 +128,10 @@
- 			compatible = "marvell,pxa-mmc";
- 			reg = <0x41100000 0x1000>;
- 			interrupts = <23>;
-+			clocks = <&clks CLK_MMC>;
-+			dmas = <&pdma 21 3
-+				&pdma 22 3>;
-+			dma-names = "rx", "tx";
+diff --git a/arch/arm/boot/dts/pxa27x.dtsi b/arch/arm/boot/dts/pxa27x.dtsi
+index 506db86..1402e23 100644
+--- a/arch/arm/boot/dts/pxa27x.dtsi
++++ b/arch/arm/boot/dts/pxa27x.dtsi
+@@ -77,6 +77,23 @@
+ 			clocks = <&clks CLK_KEYPAD>;
  			status = "disabled";
  		};
- 
-diff --git a/arch/arm/boot/dts/pxa3xx.dtsi b/arch/arm/boot/dts/pxa3xx.dtsi
-index d90489b..29aeac5 100644
---- a/arch/arm/boot/dts/pxa3xx.dtsi
-+++ b/arch/arm/boot/dts/pxa3xx.dtsi
-@@ -53,6 +53,39 @@
- 			interrupt-controller;
- 			#interrupt-cells = <0x2>;
- 		};
 +
-+		mmc0: mmc@41100000 {
-+			compatible = "marvell,pxa-mmc";
-+			reg = <0x41100000 0x1000>;
-+			interrupts = <23>;
-+			clocks = <&clks CLK_MMC>;
-+			dmas = <&pdma 21 3
-+				&pdma 22 3>;
-+			dma-names = "rx", "tx";
-+			status = "disabled";
-+		};
++		pxa_camera: imaging@50000000 {
++			compatible = "marvell,pxa270-qci";
++			reg = <0x50000000 0x1000>;
++			interrupts = <33>;
++			dmas = <&pdma 68 0	/* Y channel */
++				&pdma 69 0	/* U channel */
++				&pdma 70 0>;	/* V channel */
++			dma-names = "CI_Y", "CI_U", "CI_V";
 +
-+		mmc1: mmc@42000000 {
-+			compatible = "marvell,pxa-mmc";
-+			reg = <0x42000000 0x1000>;
-+			interrupts = <41>;
-+			clocks = <&clks CLK_MMC1>;
-+			dmas = <&pdma 93 3
-+				&pdma 94 3>;
-+			dma-names = "rx", "tx";
-+			status = "disabled";
-+		};
++			clocks = <&clks CLK_CAMERA>;
++			clock-names = "ciclk";
++			clock-frequency = <5000000>;
++			clock-output-names = "qci_mclk";
 +
-+		mmc2: mmc@42500000 {
-+			compatible = "marvell,pxa-mmc";
-+			reg = <0x42500000 0x1000>;
-+			interrupts = <55>;
-+			clocks = <&clks CLK_MMC2>;
-+			dmas = <&pdma 46 3
-+				&pdma 47 3>;
-+			dma-names = "rx", "tx";
 +			status = "disabled";
 +		};
  	};
@@ -81,3 +50,6 @@ index d90489b..29aeac5 100644
  	clocks {
 -- 
 2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
