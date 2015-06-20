@@ -1,62 +1,45 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [rtc-linux] [PATCH-v2] rtc: 88pm80x: add device tree support
-Date: Sat, 20 Jun 2015 02:43:54 +0200
-Message-ID: <20150620004354.GY27492@piout.net>
-References: <vaibhav.hiremath@linaro.org>
- <1434567488-6477-1-git-send-email-vaibhav.hiremath@linaro.org>
- <1434567488-6477-3-git-send-email-vaibhav.hiremath@linaro.org>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH V7 2/3] OPP: Allow multiple OPP tables to be passed via DT
+Date: Sat, 20 Jun 2015 07:48:41 +0530
+Message-ID: <20150620021841.GA1955@linux>
+References: <cover.1433434659.git.viresh.kumar@linaro.org>
+ <263c128844f5a3c9280c8be71f6c9eb1869a5188.1433434659.git.viresh.kumar@linaro.org>
+ <CAL_Jsq+EOOeQw42wZi+H82ovLn8LcQUuK9HGT+FvewdhTf7Q1w@mail.gmail.com>
+ <20150617133314.GB15153@linux>
+ <CAL_Jsq+SdgAf7=Yq7Jk_1d9jTpAOLCEuEDCZvD=-h=2MWsNfFw@mail.gmail.com>
+ <55821F30.2090802@codeaurora.org>
+ <20150618022543.GA28820@linux>
+ <20150619184403.GC22132@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1434567488-6477-3-git-send-email-vaibhav.hiremath@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, lee.jones@linaro.org, devicetree@vger.kernel.org, rtc-linux@googlegroups.com, linux-kernel@vger.kernel.org, Chao Xie <chao.xie@marvell.com>
+In-Reply-To: <20150619184403.GC22132@codeaurora.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Rob Herring <robherring2@gmail.com>, Rafael Wysocki <rjw@rjwysocki.net>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Nishanth Menon <nm@ti.com>, Mark Brown <broonie@kernel.org>, Mike Turquette <mike.turquette@linaro.org>, Grant Likely <grant.likely@linaro.org>, Olof Johansson <olof@lixom.net>, Sudeep Holla <Sudeep.Holla@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Viswanath Puttagunta <viswanath.puttagunta@linaro.org>, Lucas Stach <l.stach@pengutronix.de>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Abraham <ta.omasab@gmail.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Kevin Hilman <khilman@linaro.org>, Santosh
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 19-06-15, 11:44, Stephen Boyd wrote:
+> On 06/18, Viresh Kumar wrote:
+> > The problem you stated now was there with the current state of
+> > bindings. The name is embedded into the OPP table node and so is fixed
+> > for all the CPUs. Moving it to the CPU node will give all CPUs a
+> > chance to name it whatever they want to. And the same list has to be
+> > replicated to all CPUs sharing the clock rails.
+> > 
+> 
+> Yes I don't see how the name will be different for any CPU, hence
+> my complaint/question about duplicate names in each CPU. I guess
+> it isn't any worse than clock-names though so I'm fine with it.
 
-On 18/06/2015 at 00:28:06 +0530, Vaibhav Hiremath wrote :
-> -	pdata = dev_get_platdata(&pdev->dev);
-> -	if (pdata == NULL)
-> -		dev_warn(&pdev->dev, "No platform data!\n");
-> +	if (!pdata && !node) {
-> +		dev_err(&pdev->dev,
-> +			"pm80x-rtc requires platform data or of_node\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (!pdata) {
-> +		pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
-
-I had troubles to follow the rtc_wakeup initialization cleanup but it
-seems OK. However, I'm wondering why you are adding DT support as this
-will always be probed from the MFD driver which pass the platform_data
-and avoids that allocation.
-
-> +		if (!pdata) {
-> +			dev_err(&pdev->dev, "failed to allocate memory\n");
-> +			return -ENOMEM;
-> +		}
-> +	}
->  
->  	info =
->  	    devm_kzalloc(&pdev->dev, sizeof(struct pm80x_rtc_info), GFP_KERNEL);
-> @@ -327,11 +336,8 @@ static int pm80x_rtc_probe(struct platform_device *pdev)
->  	regmap_update_bits(info->map, PM800_RTC_CONTROL, PM800_RTC1_USE_XO,
->  			   PM800_RTC1_USE_XO);
->  
-> -	if (pm80x_pdata) {
-> -		pdata = pm80x_pdata->rtc;
-> -		if (pdata)
-> -			info->rtc_dev->dev.platform_data = &pdata->rtc_wakeup;
-> -	}
-> +	/* remeber whether this power up is caused by PMIC RTC or not */
-remember -^
-
+So what I wrote about the string being same for all CPUs, is valid
+only to CPUs sharing clock line and hence OPPs. If there are CPUs with
+independent lines, like in Krait, then the CPUs are free to choose
+whatever name they want for the OPP tables, even if they are sharing
+the same tables.
 
 -- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+viresh
+--
+To unsubscribe from this list: send the line "unsubscribe linux-pm" in
