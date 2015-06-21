@@ -1,62 +1,65 @@
-From: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 05/08] devicetree: bindings: r8a73a4 and R-Car Gen2 CMT bindings
-Date: Sun, 21 Jun 2015 17:10:00 +0900
-Message-ID: <20150621081000.10187.3979.sendpatchset@little-apple>
+From: Magnus Damm <magnus.damm@gmail.com>
+Subject: [PATCH 07/08] devicetree: bindings: Deprecate property, update example
+Date: Sun, 21 Jun 2015 17:10:22 +0900
+Message-ID: <20150621081022.10187.18366.sendpatchset@little-apple>
 References: <20150621080903.10187.20998.sendpatchset@little-apple>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <20150621080903.10187.20998.sendpatchset@little-apple>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org
+Sender: linux-sh-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, laurent.pinchart+renesas@ideasonboard.com, geert+renesas@glider.be, linux-sh@vger.kernel.org, daniel.lezcano@linaro.org, horms+renesas@verge.net.au, Magnus Damm <magnus.damm@gmail.com>, tglx@linutronix.de
 List-Id: devicetree@vger.kernel.org
 
-From: Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
+From: Magnus Damm <damm+renesas@opensource.se>
 
-Update SoC-specific bindings for r8a73a4 and R-Car Gen2 CMT0 and CMT1.
+Deprecate "renesas,channels-mask" and update the r8a7790 CMT example.
 
-Signed-off-by: Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
+Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
 ---
 
- Documentation/devicetree/bindings/timer/renesas,cmt.txt |   26 ++++++++-------
- 1 file changed, 15 insertions(+), 11 deletions(-)
+ Documentation/devicetree/bindings/timer/renesas,cmt.txt |   24 ++++++++++-----
+ 1 file changed, 17 insertions(+), 7 deletions(-)
 
 --- 0006/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-+++ work/Documentation/devicetree/bindings/timer/renesas,cmt.txt	2015-06-20 14:34:16.092366518 +0900
-@@ -40,20 +40,24 @@ Required Properties:
- 		(CMT1 on sh7372, sh73a0 and r8a7740)
- 		This is a fallback for the above renesas,cmt-48-* entries.
++++ work/Documentation/devicetree/bindings/timer/renesas,cmt.txt	2015-06-20 15:13:32.752366518 +0900
+@@ -60,21 +60,31 @@ Required Properties:
+     in clock-names.
+   - clock-names: must contain "fck" for the functional clock.
  
-+    - "renesas,cmt0-r8a73a4" for the 32-bit CMT0 device included in r8a73a4.
-+    - "renesas,cmt1-r8a73a4" for the 48-bit CMT1 device included in r8a73a4.
-+    - "renesas,cmt0-r8a7790" for the 32-bit CMT0 device included in r8a7790.
-+    - "renesas,cmt1-r8a7790" for the 48-bit CMT1 device included in r8a7790.
-+    - "renesas,cmt0-r8a7791" for the 32-bit CMT0 device included in r8a7791.
-+    - "renesas,cmt1-r8a7791" for the 48-bit CMT1 device included in r8a7791.
-+    - "renesas,cmt0-r8a7793" for the 32-bit CMT0 device included in r8a7793.
-+    - "renesas,cmt1-r8a7793" for the 48-bit CMT1 device included in r8a7793.
-+    - "renesas,cmt0-r8a7794" for the 32-bit CMT0 device included in r8a7794.
-+    - "renesas,cmt1-r8a7794" for the 48-bit CMT1 device included in r8a7794.
-+
-     - "renesas,cmt0-rcar-gen2" for 32-bit CMT0 devices included in R-Car Gen2.
-     - "renesas,cmt1-rcar-gen2" for 48-bit CMT1 devices included in R-Car Gen2.
-+		These are fallbacks for r8a73a4 and all the R-Car Gen2
-+		entries	listed above.
+-  - renesas,channels-mask: bitmask of the available channels.
++  - renesas,channels-mask: <deprecated>, information kept in device driver.
  
--    - "renesas,cmt-48-r8a73a4" for the r8a73a4 48-bit CMT
--		(CMT[01])
--    - "renesas,cmt-48-r8a7790" for the r8a7790 48-bit CMT
--		(CMT[01])
--    - "renesas,cmt-48-r8a7791" for the r8a7791 48-bit CMT
--		(CMT[01])
--    - "renesas,cmt-48-gen2" for all second generation 48-bit CMT
--		(CMT[01] on r8a73a4, r8a7790 and r8a7791)
--		This is a fallback for the renesas,cmt-48-r8a73a4,
--		renesas,cmt-48-r8a7790 and renesas,cmt-48-r8a7791 entries.
+ 
+-Example: R8A7790 (R-Car H2) CMT0 node
 -
-+    - "renesas,cmt-48-gen2" is <deprecated>, use "renesas,cmt[01]-*" instead.
-+    
-   - reg: base address and length of the registers block for the timer module.
-   - interrupts: interrupt-specifier for the timer, one per channel.
-   - clocks: a list of phandle + clock-specifier pairs, one for each entry
+-	CMT0 on R8A7790 implements hardware channels 5 and 6 only and names
+-	them channels 0 and 1 in the documentation.
++Example: R8A7790 (R-Car H2) CMT0 and CMT1 nodes
+ 
+ 	cmt0: timer@ffca0000 {
+-		compatible = "renesas,cmt-48-r8a7790", "renesas,cmt-48-gen2";
++		compatible = "renesas,cmt0-r8a7790", "renesas,cmt0-rcar-gen2";
+ 		reg = <0 0xffca0000 0 0x1004>;
+ 		interrupts = <0 142 IRQ_TYPE_LEVEL_HIGH>,
+ 			     <0 142 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&mstp1_clks R8A7790_CLK_CMT0>;
+ 		clock-names = "fck";
++	};
+ 
+-		renesas,channels-mask = <0x60>;
++	cmt1: timer@e6130000 {
++		compatible = "renesas,cmt1-r8a7790", "renesas,cmt1-rcar-gen2";
++		reg = <0 0xe6130000 0 0x1004>;
++		interrupts = <0 120 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 121 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 122 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 123 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 124 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 125 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 126 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 127 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp3_clks R8A7790_CLK_CMT1>;
++		clock-names = "fck";
+ 	};
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-sh" in
