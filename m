@@ -1,136 +1,122 @@
-From: Magnus Damm <magnus.damm@gmail.com>
-Subject: [PATCH 04/08] clocksource: sh_cmt: Support separate R-Car Gen2 CMT0/1
-Date: Sun, 21 Jun 2015 17:09:49 +0900
-Message-ID: <20150621080949.10187.66490.sendpatchset@little-apple>
+From: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 06/08] ARM: shmobile: Update CMT compat string users in DTS
+Date: Sun, 21 Jun 2015 17:10:11 +0900
+Message-ID: <20150621081011.10187.94046.sendpatchset@little-apple>
 References: <20150621080903.10187.20998.sendpatchset@little-apple>
-Return-path: <linux-sh-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20150621080903.10187.20998.sendpatchset@little-apple>
-Sender: linux-sh-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, laurent.pinchart+renesas@ideasonboard.com, geert+renesas@glider.be, linux-sh@vger.kernel.org, daniel.lezcano@linaro.org, horms+renesas@verge.net.au, Magnus Damm <magnus.damm@gmail.com>, tglx@linutronix.de
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Magnus Damm <damm+renesas@opensource.se>
+From: Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
 
-Add support for the new R-Car Gen2 CMT0 and CMT1 bindings. Support
-for the old DT binding is still kept around, however devices using
-such binding will be treated as a low-feature CMT0 device. If users
-want to make use of CMT1-specific features then they need to update
-their DTBs. No special CMT1-specific features are however implemented
-by his patch, only DT bindings are redone as groundwork for future
-feature patches.
+Use recently updated r8a73a4 and R-Car Gen2 CMT0 and CMT1 compat strings.
 
-Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
+With this change in place we can keep device-specific configuration in
+the driver and the driver can be able to support CMT1 specific features.
+
+Signed-off-by: Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
 ---
 
- drivers/clocksource/sh_cmt.c |   40 ++++++++++++++++++++++++++++------------
- 1 file changed, 28 insertions(+), 12 deletions(-)
+ arch/arm/boot/dts/r8a73a4.dtsi |    2 +-
+ arch/arm/boot/dts/r8a7790.dtsi |    4 ++--
+ arch/arm/boot/dts/r8a7791.dtsi |    4 ++--
+ arch/arm/boot/dts/r8a7793.dtsi |    4 ++--
+ arch/arm/boot/dts/r8a7794.dtsi |    4 ++--
+ 5 files changed, 9 insertions(+), 9 deletions(-)
 
---- 0005/drivers/clocksource/sh_cmt.c
-+++ work/drivers/clocksource/sh_cmt.c	2015-06-20 14:16:44.472366518 +0900
-@@ -39,16 +39,16 @@ struct sh_cmt_device;
-  * SoC but also on the particular instance. The following table lists the main
-  * characteristics of those flavours.
-  *
-- *			16B	32B	32B-F	48B	48B-2
-+ *			16B	32B	32B-F	48B	R-Car Gen2
-  * -----------------------------------------------------------------------------
-  * Channels		2	1/4	1	6	2/8
-  * Control Width	16	16	16	16	32
-  * Counter Width	16	32	32	32/48	32/48
-  * Shared Start/Stop	Y	Y	Y	Y	N
-  *
-- * The 48-bit gen2 version has a per-channel start/stop register located in the
-- * channel registers block. All other versions have a shared start/stop register
-- * located in the global space.
-+ * The r8a73a4 / R-Car Gen2 version has a per-channel start/stop register
-+ * located in the channel registers block. All other versions have a shared
-+ * start/stop register located in the global space.
-  *
-  * Channels are indexed from 0 to N-1 in the documentation. The channel index
-  * infers the start/stop bit position in the control register and the channel
-@@ -68,7 +68,8 @@ enum sh_cmt_model {
- 	SH_CMT_32BIT,
- 	SH_CMT_32BIT_FAST,
- 	SH_CMT_48BIT,
--	SH_CMT_48BIT_GEN2,
-+	SH_CMT0_RCAR_GEN2,
-+	SH_CMT1_RCAR_GEN2,
- };
+--- 0001/arch/arm/boot/dts/r8a73a4.dtsi
++++ work/arch/arm/boot/dts/r8a73a4.dtsi	2015-06-20 14:46:07.442366518 +0900
+@@ -114,7 +114,7 @@
+ 	};
  
- struct sh_cmt_info {
-@@ -223,8 +224,20 @@ static const struct sh_cmt_info sh_cmt_i
- 		.read_count = sh_cmt_read32,
- 		.write_count = sh_cmt_write32,
- 	},
--	[SH_CMT_48BIT_GEN2] = {
--		.model = SH_CMT_48BIT_GEN2,
-+	[SH_CMT0_RCAR_GEN2] = {
-+		.model = SH_CMT0_RCAR_GEN2,
-+		.channels_mask = 0x60,
-+		.width = 32,
-+		.overflow_bit = SH_CMT32_CMCSR_CMF,
-+		.clear_bits = ~(SH_CMT32_CMCSR_CMF | SH_CMT32_CMCSR_OVF),
-+		.read_control = sh_cmt_read32,
-+		.write_control = sh_cmt_write32,
-+		.read_count = sh_cmt_read32,
-+		.write_count = sh_cmt_write32,
-+	},
-+	[SH_CMT1_RCAR_GEN2] = {
-+		.model = SH_CMT1_RCAR_GEN2,
-+		.channels_mask = 0xff,
- 		.width = 32,
- 		.overflow_bit = SH_CMT32_CMCSR_CMF,
- 		.clear_bits = ~(SH_CMT32_CMCSR_CMF | SH_CMT32_CMCSR_OVF),
-@@ -861,6 +874,7 @@ static int sh_cmt_setup_channel(struct s
- 	ch->cmt = cmt;
- 	ch->index = index;
- 	ch->hwidx = hwidx;
-+	ch->timer_bit = hwidx;
+ 	cmt1: timer@e6130000 {
+-		compatible = "renesas,cmt-48-r8a73a4", "renesas,cmt-48-gen2";
++		compatible = "renesas,cmt1-r8a73a4", "renesas,cmt1-rcar-gen2";
+ 		reg = <0 0xe6130000 0 0x1004>;
+ 		interrupts = <0 120 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&mstp3_clks R8A73A4_CLK_CMT1>;
+--- 0001/arch/arm/boot/dts/r8a7790.dtsi
++++ work/arch/arm/boot/dts/r8a7790.dtsi	2015-06-20 14:47:48.652366518 +0900
+@@ -212,7 +212,7 @@
+ 	};
  
- 	/*
- 	 * Compute the address of the channel control register block. For the
-@@ -882,9 +896,11 @@ static int sh_cmt_setup_channel(struct s
- 		 */
- 		ch->ioctrl = cmt->mapbase + 0x40;
- 		break;
--	case SH_CMT_48BIT_GEN2:
-+	case SH_CMT0_RCAR_GEN2:
-+	case SH_CMT1_RCAR_GEN2:
- 		ch->iostart = cmt->mapbase + ch->hwidx * 0x100;
- 		ch->ioctrl = ch->iostart + 0x10;
-+		ch->timer_bit = 0;
- 		break;
- 	}
+ 	cmt0: timer@ffca0000 {
+-		compatible = "renesas,cmt-48-r8a7790", "renesas,cmt-48-gen2";
++		compatible = "renesas,cmt0-r8a7790", "renesas,cmt0-rcar-gen2";
+ 		reg = <0 0xffca0000 0 0x1004>;
+ 		interrupts = <0 142 IRQ_TYPE_LEVEL_HIGH>,
+ 			     <0 143 IRQ_TYPE_LEVEL_HIGH>;
+@@ -225,7 +225,7 @@
+ 	};
  
-@@ -896,8 +912,6 @@ static int sh_cmt_setup_channel(struct s
- 	ch->match_value = ch->max_match_value;
- 	raw_spin_lock_init(&ch->lock);
+ 	cmt1: timer@e6130000 {
+-		compatible = "renesas,cmt-48-r8a7790", "renesas,cmt-48-gen2";
++		compatible = "renesas,cmt1-r8a7790", "renesas,cmt1-rcar-gen2";
+ 		reg = <0 0xe6130000 0 0x1004>;
+ 		interrupts = <0 120 IRQ_TYPE_LEVEL_HIGH>,
+ 			     <0 121 IRQ_TYPE_LEVEL_HIGH>,
+--- 0001/arch/arm/boot/dts/r8a7791.dtsi
++++ work/arch/arm/boot/dts/r8a7791.dtsi	2015-06-20 14:47:28.652366518 +0900
+@@ -193,7 +193,7 @@
+ 	};
  
--	ch->timer_bit = cmt->info->model == SH_CMT_48BIT_GEN2 ? 0 : ch->hwidx;
--
- 	ret = sh_cmt_register(ch, dev_name(&cmt->pdev->dev),
- 			      clockevent, clocksource);
- 	if (ret) {
-@@ -934,7 +948,7 @@ static const struct platform_device_id s
- 	{ "sh-cmt-32", (kernel_ulong_t)&sh_cmt_info[SH_CMT_32BIT] },
- 	{ "sh-cmt-32-fast", (kernel_ulong_t)&sh_cmt_info[SH_CMT_32BIT_FAST] },
- 	{ "sh-cmt-48", (kernel_ulong_t)&sh_cmt_info[SH_CMT_48BIT] },
--	{ "sh-cmt-48-gen2", (kernel_ulong_t)&sh_cmt_info[SH_CMT_48BIT_GEN2] },
-+	{ "sh-cmt-48-gen2", (kernel_ulong_t)&sh_cmt_info[SH_CMT0_RCAR_GEN2] },
- 	{ }
- };
- MODULE_DEVICE_TABLE(platform, sh_cmt_id_table);
-@@ -943,7 +957,9 @@ static const struct of_device_id sh_cmt_
- 	{ .compatible = "renesas,cmt-32", .data = &sh_cmt_info[SH_CMT_32BIT] },
- 	{ .compatible = "renesas,cmt-32-fast", .data = &sh_cmt_info[SH_CMT_32BIT_FAST] },
- 	{ .compatible = "renesas,cmt-48", .data = &sh_cmt_info[SH_CMT_48BIT] },
--	{ .compatible = "renesas,cmt-48-gen2", .data = &sh_cmt_info[SH_CMT_48BIT_GEN2] },
-+	{ .compatible = "renesas,cmt-48-gen2", .data = &sh_cmt_info[SH_CMT0_RCAR_GEN2] },
-+	{ .compatible = "renesas,cmt0-rcar-gen2", .data = &sh_cmt_info[SH_CMT0_RCAR_GEN2] },
-+	{ .compatible = "renesas,cmt1-rcar-gen2", .data = &sh_cmt_info[SH_CMT1_RCAR_GEN2] },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, sh_cmt_of_table);
+ 	cmt0: timer@ffca0000 {
+-		compatible = "renesas,cmt-48-r8a7791", "renesas,cmt-48-gen2";
++		compatible = "renesas,cmt0-r8a7791", "renesas,cmt0-rcar-gen2";
+ 		reg = <0 0xffca0000 0 0x1004>;
+ 		interrupts = <0 142 IRQ_TYPE_LEVEL_HIGH>,
+ 			     <0 143 IRQ_TYPE_LEVEL_HIGH>;
+@@ -206,7 +206,7 @@
+ 	};
+ 
+ 	cmt1: timer@e6130000 {
+-		compatible = "renesas,cmt-48-r8a7791", "renesas,cmt-48-gen2";
++		compatible = "renesas,cmt1-r8a7791", "renesas,cmt1-rcar-gen2";
+ 		reg = <0 0xe6130000 0 0x1004>;
+ 		interrupts = <0 120 IRQ_TYPE_LEVEL_HIGH>,
+ 			     <0 121 IRQ_TYPE_LEVEL_HIGH>,
+--- 0001/arch/arm/boot/dts/r8a7793.dtsi
++++ work/arch/arm/boot/dts/r8a7793.dtsi	2015-06-20 14:46:58.642366518 +0900
+@@ -62,7 +62,7 @@
+ 	};
+ 
+ 	cmt0: timer@ffca0000 {
+-		compatible = "renesas,cmt-48-r8a7793", "renesas,cmt-48-gen2";
++		compatible = "renesas,cmt0-r8a7793", "renesas,cmt0-rcar-gen2";
+ 		reg = <0 0xffca0000 0 0x1004>;
+ 		interrupts = <0 142 IRQ_TYPE_LEVEL_HIGH>,
+ 			     <0 143 IRQ_TYPE_LEVEL_HIGH>;
+@@ -75,7 +75,7 @@
+ 	};
+ 
+ 	cmt1: timer@e6130000 {
+-		compatible = "renesas,cmt-48-r8a7793", "renesas,cmt-48-gen2";
++		compatible = "renesas,cmt1-r8a7793", "renesas,cmt1-rcar-gen2";
+ 		reg = <0 0xe6130000 0 0x1004>;
+ 		interrupts = <0 120 IRQ_TYPE_LEVEL_HIGH>,
+ 			     <0 121 IRQ_TYPE_LEVEL_HIGH>,
+--- 0001/arch/arm/boot/dts/r8a7794.dtsi
++++ work/arch/arm/boot/dts/r8a7794.dtsi	2015-06-20 14:47:17.122366518 +0900
+@@ -51,7 +51,7 @@
+ 	};
+ 
+ 	cmt0: timer@ffca0000 {
+-		compatible = "renesas,cmt-48-gen2";
++		compatible = "renesas,cmt0-r8a7794", "renesas,cmt0-rcar-gen2";
+ 		reg = <0 0xffca0000 0 0x1004>;
+ 		interrupts = <0 142 IRQ_TYPE_LEVEL_HIGH>,
+ 			     <0 143 IRQ_TYPE_LEVEL_HIGH>;
+@@ -64,7 +64,7 @@
+ 	};
+ 
+ 	cmt1: timer@e6130000 {
+-		compatible = "renesas,cmt-48-gen2";
++		compatible = "renesas,cmt1-r8a7794", "renesas,cmt1-rcar-gen2";
+ 		reg = <0 0xe6130000 0 0x1004>;
+ 		interrupts = <0 120 IRQ_TYPE_LEVEL_HIGH>,
+ 			     <0 121 IRQ_TYPE_LEVEL_HIGH>,
 --
-To unsubscribe from this list: send the line "unsubscribe linux-sh" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
