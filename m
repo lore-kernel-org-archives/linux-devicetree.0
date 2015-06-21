@@ -1,7 +1,7 @@
 From: Magnus Damm <magnus.damm@gmail.com>
-Subject: [PATCH 01/08] devicetree: bindings: Remove sh7372 CMT binding
-Date: Sun, 21 Jun 2015 17:09:15 +0900
-Message-ID: <20150621080915.10187.97464.sendpatchset@little-apple>
+Subject: [PATCH 02/08] clocksource: sh_cmt: Use 0x3f mask for SH_CMT_48BIT case
+Date: Sun, 21 Jun 2015 17:09:27 +0900
+Message-ID: <20150621080927.10187.98007.sendpatchset@little-apple>
 References: <20150621080903.10187.20998.sendpatchset@little-apple>
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <20150621080903.10187.20998.sendpatchset@little-apple>
@@ -12,29 +12,54 @@ List-Id: devicetree@vger.kernel.org
 
 From: Magnus Damm <damm+renesas@opensource.se>
 
-Remove the sh7372 CMT compat string to reduce maintenance burden.
-
-It should be fine to break DT compatibility because:
-1) The sh7372 SoC support has been removed from upstream
-2) The sh7372 CMT DT binding was never part of upstream DTS
-3) The CMT driver never matches on the sh7372 binding
+Always use 0x3f as channel mask for the SH_CMT_48BIT type of devices.
+Once this patch is applied the "renesas,channels-mask" property will
+be ignored by the driver for older devices matching SH_CMT_48BIT. In
+the future when all CMT types store channel mask in the driver then
+we will be able to deprecate and remove "renesas,channels-mask" from DTS.
 
 Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
 ---
 
- Documentation/devicetree/bindings/timer/renesas,cmt.txt |    2 --
- 1 file changed, 2 deletions(-)
+ drivers/clocksource/sh_cmt.c |   14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
---- 0001/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-+++ work/Documentation/devicetree/bindings/timer/renesas,cmt.txt	2015-06-20 13:47:59.922366518 +0900
-@@ -32,8 +32,6 @@ Required Properties:
- 		(CMT[234] on sh7372, sh73a0 and r8a7740)
- 		This is a fallback for the above renesas,cmt-32-fast-* entries.
+--- 0001/drivers/clocksource/sh_cmt.c
++++ work/drivers/clocksource/sh_cmt.c	2015-06-20 15:25:54.302366518 +0900
+@@ -74,6 +74,8 @@ enum sh_cmt_model {
+ struct sh_cmt_info {
+ 	enum sh_cmt_model model;
  
--    - "renesas,cmt-48-sh7372" for the sh7372 48-bit CMT
--		(CMT1)
-     - "renesas,cmt-48-sh73a0" for the sh73A0 48-bit CMT
- 		(CMT1)
-     - "renesas,cmt-48-r8a7740" for the r8a7740 48-bit CMT
++	unsigned long channels_mask;
++
+ 	unsigned long width; /* 16 or 32 bit version of hardware block */
+ 	unsigned long overflow_bit;
+ 	unsigned long clear_bits;
+@@ -212,6 +214,7 @@ static const struct sh_cmt_info sh_cmt_i
+ 	},
+ 	[SH_CMT_48BIT] = {
+ 		.model = SH_CMT_48BIT,
++		.channels_mask = 0x3f,
+ 		.width = 32,
+ 		.overflow_bit = SH_CMT32_CMCSR_CMF,
+ 		.clear_bits = ~(SH_CMT32_CMCSR_CMF | SH_CMT32_CMCSR_OVF),
+@@ -969,9 +972,14 @@ static int sh_cmt_setup(struct sh_cmt_de
+ 		id = of_match_node(sh_cmt_of_table, pdev->dev.of_node);
+ 		cmt->info = id->data;
+ 
+-		ret = sh_cmt_parse_dt(cmt);
+-		if (ret < 0)
+-			return ret;
++		/* prefer in-driver channel configuration over DT */
++		if (cmt->info->channels_mask) {
++			cmt->hw_channels = cmt->info_channels_mask;
++		} else {
++			ret = sh_cmt_parse_dt(cmt);
++			if (ret < 0)
++				return ret;
++		}
+ 	} else if (pdev->dev.platform_data) {
+ 		struct sh_timer_config *cfg = pdev->dev.platform_data;
+ 		const struct platform_device_id *id = pdev->id_entry;
 --
 To unsubscribe from this list: send the line "unsubscribe linux-sh" in
