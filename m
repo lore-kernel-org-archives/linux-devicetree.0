@@ -1,7 +1,7 @@
 From: Magnus Damm <magnus.damm@gmail.com>
-Subject: [PATCH 07/08] devicetree: bindings: Deprecate property, update example
-Date: Sun, 21 Jun 2015 17:10:22 +0900
-Message-ID: <20150621081022.10187.18366.sendpatchset@little-apple>
+Subject: [PATCH 08/08] ARM: shmobile: Remove CMT renesas,channels-mask from DTS
+Date: Sun, 21 Jun 2015 17:10:33 +0900
+Message-ID: <20150621081033.10187.38630.sendpatchset@little-apple>
 References: <20150621080903.10187.20998.sendpatchset@little-apple>
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <20150621080903.10187.20998.sendpatchset@little-apple>
@@ -12,54 +12,146 @@ List-Id: devicetree@vger.kernel.org
 
 From: Magnus Damm <damm+renesas@opensource.se>
 
-Deprecate "renesas,channels-mask" and update the r8a7790 CMT example.
+Update the DTS to remove the now deprecated "renesas,channels-mask" property.
+
+The channel information is now kept in the device driver and can easily
+be determined based on the compat string.
 
 Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
 ---
 
- Documentation/devicetree/bindings/timer/renesas,cmt.txt |   24 ++++++++++-----
- 1 file changed, 17 insertions(+), 7 deletions(-)
+ arch/arm/boot/dts/r8a73a4.dtsi |    3 ---
+ arch/arm/boot/dts/r8a7740.dtsi |    3 ---
+ arch/arm/boot/dts/r8a7790.dtsi |    6 ------
+ arch/arm/boot/dts/r8a7791.dtsi |    6 ------
+ arch/arm/boot/dts/r8a7793.dtsi |    6 ------
+ arch/arm/boot/dts/r8a7794.dtsi |    6 ------
+ arch/arm/boot/dts/sh73a0.dtsi  |    3 ---
+ 7 files changed, 33 deletions(-)
 
---- 0006/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-+++ work/Documentation/devicetree/bindings/timer/renesas,cmt.txt	2015-06-20 15:13:32.752366518 +0900
-@@ -60,21 +60,31 @@ Required Properties:
-     in clock-names.
-   - clock-names: must contain "fck" for the functional clock.
- 
--  - renesas,channels-mask: bitmask of the available channels.
-+  - renesas,channels-mask: <deprecated>, information kept in device driver.
- 
- 
--Example: R8A7790 (R-Car H2) CMT0 node
+--- 0009/arch/arm/boot/dts/r8a73a4.dtsi
++++ work/arch/arm/boot/dts/r8a73a4.dtsi	2015-06-20 14:51:41.942366518 +0900
+@@ -120,9 +120,6 @@
+ 		clocks = <&mstp3_clks R8A73A4_CLK_CMT1>;
+ 		clock-names = "fck";
+ 		power-domains = <&pd_c5>;
 -
--	CMT0 on R8A7790 implements hardware channels 5 and 6 only and names
--	them channels 0 and 1 in the documentation.
-+Example: R8A7790 (R-Car H2) CMT0 and CMT1 nodes
+-		renesas,channels-mask = <0xff>;
+-
+ 		status = "disabled";
+ 	};
  
- 	cmt0: timer@ffca0000 {
--		compatible = "renesas,cmt-48-r8a7790", "renesas,cmt-48-gen2";
-+		compatible = "renesas,cmt0-r8a7790", "renesas,cmt0-rcar-gen2";
- 		reg = <0 0xffca0000 0 0x1004>;
- 		interrupts = <0 142 IRQ_TYPE_LEVEL_HIGH>,
- 			     <0 142 IRQ_TYPE_LEVEL_HIGH>;
+--- 0001/arch/arm/boot/dts/r8a7740.dtsi
++++ work/arch/arm/boot/dts/r8a7740.dtsi	2015-06-20 14:52:11.332366518 +0900
+@@ -60,9 +60,6 @@
+ 		clocks = <&mstp3_clks R8A7740_CLK_CMT1>;
+ 		clock-names = "fck";
+ 		power-domains = <&pd_c5>;
+-
+-		renesas,channels-mask = <0x3f>;
+-
+ 		status = "disabled";
+ 	};
+ 
+--- 0009/arch/arm/boot/dts/r8a7790.dtsi
++++ work/arch/arm/boot/dts/r8a7790.dtsi	2015-06-20 14:50:43.532366518 +0900
+@@ -218,9 +218,6 @@
+ 			     <0 143 IRQ_TYPE_LEVEL_HIGH>;
  		clocks = <&mstp1_clks R8A7790_CLK_CMT0>;
  		clock-names = "fck";
-+	};
- 
+-
 -		renesas,channels-mask = <0x60>;
-+	cmt1: timer@e6130000 {
-+		compatible = "renesas,cmt1-r8a7790", "renesas,cmt1-rcar-gen2";
-+		reg = <0 0xe6130000 0 0x1004>;
-+		interrupts = <0 120 IRQ_TYPE_LEVEL_HIGH>,
-+			     <0 121 IRQ_TYPE_LEVEL_HIGH>,
-+			     <0 122 IRQ_TYPE_LEVEL_HIGH>,
-+			     <0 123 IRQ_TYPE_LEVEL_HIGH>,
-+			     <0 124 IRQ_TYPE_LEVEL_HIGH>,
-+			     <0 125 IRQ_TYPE_LEVEL_HIGH>,
-+			     <0 126 IRQ_TYPE_LEVEL_HIGH>,
-+			     <0 127 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp3_clks R8A7790_CLK_CMT1>;
-+		clock-names = "fck";
+-
+ 		status = "disabled";
  	};
+ 
+@@ -237,9 +234,6 @@
+ 			     <0 127 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&mstp3_clks R8A7790_CLK_CMT1>;
+ 		clock-names = "fck";
+-
+-		renesas,channels-mask = <0xff>;
+-
+ 		status = "disabled";
+ 	};
+ 
+--- 0009/arch/arm/boot/dts/r8a7791.dtsi
++++ work/arch/arm/boot/dts/r8a7791.dtsi	2015-06-20 14:51:00.622366518 +0900
+@@ -199,9 +199,6 @@
+ 			     <0 143 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&mstp1_clks R8A7791_CLK_CMT0>;
+ 		clock-names = "fck";
+-
+-		renesas,channels-mask = <0x60>;
+-
+ 		status = "disabled";
+ 	};
+ 
+@@ -218,9 +215,6 @@
+ 			     <0 127 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&mstp3_clks R8A7791_CLK_CMT1>;
+ 		clock-names = "fck";
+-
+-		renesas,channels-mask = <0xff>;
+-
+ 		status = "disabled";
+ 	};
+ 
+--- 0009/arch/arm/boot/dts/r8a7793.dtsi
++++ work/arch/arm/boot/dts/r8a7793.dtsi	2015-06-20 14:51:16.702366518 +0900
+@@ -68,9 +68,6 @@
+ 			     <0 143 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&mstp1_clks R8A7793_CLK_CMT0>;
+ 		clock-names = "fck";
+-
+-		renesas,channels-mask = <0x60>;
+-
+ 		status = "disabled";
+ 	};
+ 
+@@ -87,9 +84,6 @@
+ 			     <0 127 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&mstp3_clks R8A7793_CLK_CMT1>;
+ 		clock-names = "fck";
+-
+-		renesas,channels-mask = <0xff>;
+-
+ 		status = "disabled";
+ 	};
+ 
+--- 0009/arch/arm/boot/dts/r8a7794.dtsi
++++ work/arch/arm/boot/dts/r8a7794.dtsi	2015-06-20 14:51:29.512366518 +0900
+@@ -57,9 +57,6 @@
+ 			     <0 143 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&mstp1_clks R8A7794_CLK_CMT0>;
+ 		clock-names = "fck";
+-
+-		renesas,channels-mask = <0x60>;
+-
+ 		status = "disabled";
+ 	};
+ 
+@@ -76,9 +73,6 @@
+ 			     <0 127 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&mstp3_clks R8A7794_CLK_CMT1>;
+ 		clock-names = "fck";
+-
+-		renesas,channels-mask = <0xff>;
+-
+ 		status = "disabled";
+ 	};
+ 
+--- 0001/arch/arm/boot/dts/sh73a0.dtsi
++++ work/arch/arm/boot/dts/sh73a0.dtsi	2015-06-20 14:51:56.502366518 +0900
+@@ -84,9 +84,6 @@
+ 		clocks = <&mstp3_clks SH73A0_CLK_CMT1>;
+ 		clock-names = "fck";
+ 		power-domains = <&pd_c5>;
+-
+-		renesas,channels-mask = <0x3f>;
+-
+ 		status = "disabled";
+ 	};
+ 
 --
 To unsubscribe from this list: send the line "unsubscribe linux-sh" in
