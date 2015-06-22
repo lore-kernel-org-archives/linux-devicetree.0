@@ -1,80 +1,82 @@
-From: Stefan Wahren <info-saaNCTdWVBT7BZbvpMY5sg@public.gmane.org>
-Subject: Re: [PATCH 2/2] dt: brcm, bcm2835-aux-spi: add binding documentation
- for new spi-bcm2835aux
-Date: Mon, 22 Jun 2015 19:55:55 +0200
-Message-ID: <55884C2B.8040601@lategoodbye.de>
-References: <1434980408-4086-1-git-send-email-kernel@martin.sperl.org> <1434980408-4086-2-git-send-email-kernel@martin.sperl.org>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v5 1/2] dt: add cap11xx LED documentation
+Date: Mon, 22 Jun 2015 10:59:14 -0700
+Message-ID: <20150622175914.GA15851@dtor-ws>
+References: <1434599897-22505-1-git-send-email-mranostay@gmail.com>
+ <1434599897-22505-2-git-send-email-mranostay@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1434980408-4086-2-git-send-email-kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1434599897-22505-2-git-send-email-mranostay@gmail.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Matt Ranostay <mranostay@gmail.com>
+Cc: zonque@gmail.com, linux-input@vger.kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Martin,
-
-Am 22.06.2015 um 15:40 schrieb kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org:
-> From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
->
-> Signed-off-by: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+On Wed, Jun 17, 2015 at 08:58:16PM -0700, Matt Ranostay wrote:
+> Signed-off-by: Matt Ranostay <mranostay@gmail.com>
 > ---
->   .../bindings/spi/brcm,bcm2835-aux-spi.txt          |   33 ++++++++++++++++++++
->   1 file changed, 33 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/spi/brcm,bcm2835-aux-spi.txt
->
-> diff --git a/Documentation/devicetree/bindings/spi/brcm,bcm2835-aux-spi.txt b/Documentation/devicetree/bindings/spi/brcm,bcm2835-aux-spi.txt
-> new file mode 100644
-> index 0000000..23e4138
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spi/brcm,bcm2835-aux-spi.txt
-> @@ -0,0 +1,33 @@
-> +Broadcom BCM2835 SPI1/2 controller
-> +
-> +The BCM2835 contains two forms of SPI master controller, one known simply as
-> +SPI0, and the other known as the "Universal SPI Master"; part of the
-> +auxiliary block. This binding applies to the SPI1/2 controller.
-> +
-> +Required properties:
-> +- compatible: Should be "brcm,bcm2835-aux-spi".
-> +- reg: Should contain register location and length for the spi block
-> +       as well as for the common aux block control
-> +- interrupts: Should contain shared interrupt of the aux block
-> +- clocks: The clock feeding the SPI controller.
-> +- gpio-cs: the gpio-cs (native cs is NOT supported)
+>  .../devicetree/bindings/input/cap11xx.txt          | 25 ++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/input/cap11xx.txt b/Documentation/devicetree/bindings/input/cap11xx.txt
+> index 7d0a300..09cdc43 100644
+> --- a/Documentation/devicetree/bindings/input/cap11xx.txt
+> +++ b/Documentation/devicetree/bindings/input/cap11xx.txt
+> @@ -38,6 +38,11 @@ Optional properties:
+>  				defaults. The array must have exactly six
+>  				entries.
+>  
+> +	linux,led-brightness:	Defines the ON brightness when the optional LED
+> +				functionality is used. Valid values are 1-15.
+> +				By default a value of 15 is set.
 
-do you mean "gpio-cs" or "cs-gpios" from spi/spi-bus.txt?
+Please mention the device does not allow controlling brightness of leds
+individually and that is why this property is at device level, not
+individual led level.
+
+Also, why does it have "linux" prefix? It does not appear to control
+any linux-specific functionality.
 
 > +
-> +Example:
 > +
-> +spi1@7e215080 {
-> +	compatible = "brcm,bcm2835-aux-spi";
-> +	reg = <0x7e215080 0x40>, <0x7e215000 0x08>;
-> +	interrupts = <1 29>;
-> +	clocks = <&clk_spi>;
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-
-Why is gpio-cs is missing in the examples, if it's required?
-
-> +};
+>  Example:
+>  
+>  i2c_controller {
+> @@ -55,5 +60,25 @@ i2c_controller {
+>  				 <105>,		/* KEY_LEFT */
+>  				 <109>,		/* KEY_PAGEDOWN */
+>  				 <104>;		/* KEY_PAGEUP */
 > +
-> +spi2@7e215080 {
+> +		linux,led-brightness = <15>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		usr@0 {
+> +			label = "cap11xx:green:usr0";
+> +			reg = <0>;
+> +		};
+> +
+> +		usr@1 {
+> +			label = "cap11xx:green:usr1";
+> +			reg = <1>;
+> +		};
+> +
+> +		alive@2 {
+> +			label = "cap11xx:green:alive";
+> +			reg = <2>;
+> +			linux,default_trigger = "heartbeat";
+> +		};
+>  	};
+>  }
+> -- 
+> 1.9.1
+> 
 
-spi2@7e2150c0 ?
+Thanks.
 
-> +	compatible = "brcm,bcm2835-aux-spi";
-> +	reg = <0x7e2150c0 0x40>, <0x7e215000 0x08>;
-> +	interrupts = <1 29>;
-> +	clocks = <&clk_spi>;
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +};
->
-
-Regards
-Stefan
+-- 
+Dmitry
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-input" in
