@@ -1,58 +1,40 @@
-From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Subject: Re: [PATCH 1/2] spi: bcm2835: add spi-bcm2835aux driver for the auxiliar spi1 and spi2
-Date: Mon, 22 Jun 2015 17:26:42 +0200
-Message-ID: <E72B3D8C-EA1B-4B4C-8EAF-C14A5631882E@martin.sperl.org>
-References: <1434980408-4086-1-git-send-email-kernel@martin.sperl.org> <20150622165529.1b758b07@north>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2098\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150622165529.1b758b07@north>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?utf-8?Q?Jakub_Kici=C5=84ski?= <moorray3-5tc4TXWwyLM@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 0/8] cpufreq: Introduce support for ST's cpufreq functionality
+Date: Mon, 22 Jun 2015 16:43:49 +0100
+Message-ID: <1434987837-24212-1-git-send-email-lee.jones@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ajitpal.singh-qxv4g6HH51o@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This driver reads very platform specific information in from Device Tree
+and translates it into frequency tables.  The generic drivers then use the
+tables to conduct frequency and voltage scaling in the normal way.
 
-> On 22.06.2015, at 16:55, Jakub Kici=C5=84ski <moorray3-5tc4TXWwyLM@public.gmane.org> wrote:
-> As mentioned by Noralf UART1 is quite commonly used on Compute Module=
-s.
-> Proper driver - perhaps modelled as a bus - seems like a prerequisite
-> for this work.  You are also not using IRQ mux in DT binding example
-> which is very misleading.
+Lee Jones (8):
+  ARM: STi: STiH407: Provide generic (safe) DVFS configuration
+  ARM: STi: STiH407: Provide CPU with clocking information
+  ARM: STi: STiH407: Link CPU with its voltage supply
+  ARM: STi: STiH407: Provide a node for CPUFreq
+  ARM: STi: STiH407: Move PWM nodes STiH407 => STiH407-family
+  ARM: multi_v7_defconfig: Enable support for PWM Regulators
+  cpufreq: st: Provide runtime initialised driver for ST's platforms
+  dt: cpufreq: st: Provide bindings for ST's CPUFreq implementation
 
-Well - there is no support far for uart1 in upstream as of now.
-And I am not even sure if the compute module is supported as there
-is no device tree available in upstream for that...
+ .../devicetree/bindings/cpufreq/cpufreq-st.txt     |  48 +++
+ arch/arm/boot/dts/stih407-family.dtsi              |  49 +++
+ arch/arm/boot/dts/stih407.dtsi                     |  28 --
+ arch/arm/configs/multi_v7_defconfig                |   1 +
+ drivers/cpufreq/Kconfig.arm                        |   7 +
+ drivers/cpufreq/Makefile                           |   1 +
+ drivers/cpufreq/st-cpufreq.c                       | 450 +++++++++++++++++++++
+ 7 files changed, 556 insertions(+), 28 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-st.txt
+ create mode 100644 drivers/cpufreq/st-cpufreq.c
 
-So I have taken the simple route of using shared interrupts and providi=
-ng
-a minimal framework to enable the spi1/spi2 hw blocks with proper locki=
-ng.
-And I have mentioned that it would need to get modified when uart1 supp=
-ort
-comes along.
+-- 
+1.9.1
 
-If you know of a better solution how to control this and that also
-incorporates a patch to enable uart1, then please share it!
-
-Just modify the bcm2835aux_spi_enable/disable to use a different framew=
-ork
-than just bcm2835_aux_modify_enable.
-
-The patch Noralf mentions only applies downstream and only sets the
-enable-register during the boot sequence, so it would not impact the
-solution as is.
-
-> Do we have any indication weather this AUX hardware is available on
-> RPi2 as well?  IIRC bcm2836 differs only in CPU cores, peripherals
-> remain identical.  Perhaps this driver could be used on RPi2 and
-> naming it 283x would be more appropriate?
-
-I have not checked, but I would guess that it exists.
-
-As for naming: I have asked around and bcm2835aux seemed fine.
-Also if we go that route we should start renaming ALL driver instances =
-that
-contain 2835.--
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
