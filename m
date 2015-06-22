@@ -1,92 +1,63 @@
-From: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v6] usb: common: add API to set usb otg capabilities by
- device tree
-Date: Mon, 22 Jun 2015 18:56:18 +0800
-Message-ID: <20150622105617.GB25349@shlinux2>
-References: <1434590302-18066-1-git-send-email-jun.li@freescale.com>
- <20150618103650.7c3d1b8ceb134388b0d8b093@ti.com>
- <20150618084747.GD15280@shlinux2>
- <20150622124337.bf42b82956e2431cd7e32900@ti.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/4] mfd: da9150: Add support for Fuel-Gauge
+Date: Mon, 22 Jun 2015 12:16:24 +0100
+Message-ID: <20150622111624.GF19061@x1>
+References: <cover.1434643491.git.Adam.Thomson.Opensource@diasemi.com>
+ <8d8f583fee9313f261efa96a038874e552995c17.1434643491.git.Adam.Thomson.Opensource@diasemi.com>
+ <1434732461.2385.162.camel@x220>
+ <2E89032DDAA8B9408CB92943514A0337AB555F28@SW-EX-MBX01.diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20150622124337.bf42b82956e2431cd7e32900-l0cyMroinI0@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Cc: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+In-Reply-To: <2E89032DDAA8B9408CB92943514A0337AB555F28-68WUHU125fLLPO1uwJ3ImwLouzNaz+3S@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Cc: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 22, 2015 at 12:43:37PM +0300, Roger Quadros wrote:
-> On Thu, 18 Jun 2015 16:47:48 +0800
-> Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> 
-> > On Thu, Jun 18, 2015 at 10:36:50AM +0300, Roger Quadros wrote:
-> > > Lin,
-> > > 
-> > > You can use --in-reply-to "message id of v5 of this path" so that it appears together
-> > > with the other patches in peoples mailboxes.
-> > > 
-> > > > + * the passed properties in DT.
-> > > > + * @np: Pointer to the given device_node
-> > > > + * @otg_caps: Pointer to the target usb_otg_caps to be set
-> > > > + *
-> > > > + * The function gets and sets the otg capabilities
-> > > > + */
-> > > > +void of_usb_set_otg_caps(struct device_node *np, struct usb_otg_caps *otg_caps)
-> > > > +{
-> > > > +	u32 otg_rev;
-> > > > +
-> > > > +	if (!otg_caps)
-> > > > +		return;
-> > > > +
-> > > > +	if (!of_property_read_u32(np, "otg-rev", &otg_rev))
-> > > > +		otg_caps->otg_rev = otg_rev;
-> > > 
-> > > should we check if otg_rev is in correct format?
-> > > anything non BCD and greater than 0x9999 is invalid.
-> > > 
-> > > Also if otg-rev is not passed then we need to treat it as legacy
-> > > platform right? How is this taken care of?
-> > > 
-> > Missed this comment
-> > This handling rely on controller driver, cannot decided here.
-> > There are several cases we need take care:
-> > 1) otg-rev is not passed, but all 3 disable flags passed, this is
-> >   valid, means user want to disable whole OTG, so only "otg-rev"
-> >   not passed, cannot treat as legacy platform.
-> > 2) Legacy platform means: none of 4 properties is present.
-> 
-> OK this was our difference in understanding. I was thinking that for non
-> legacy code otg-rev _must_ be passed. without otg-rev the disable flags
-> will be ignored. It makes life much easier no?
-> 
+On Mon, 22 Jun 2015, Opensource [Adam Thomson] wrote:
 
-I have to consider ID pint detect case, this is a most common usage,
-after controller driver use otg_caps and enable OTG HNP/SRP, some
-platform still just want ID pin detect, no more otg feature required,
-it need disable OTG HNP/SRP/ADP, the dt should be:
-dr_mode = "otg";
-adp-disable;
-hnp-disable;
-srp-didable;
+> On June 19, 2015 17:48, Paul Bolle wrote:
+>=20
+> > On Thu, 2015-06-18 at 17:06 +0100, Adam Thomson wrote:
+> > > --- /dev/null
+> > > +++ b/include/linux/mfd/da9150/fg.h
+> >=20
+> > > +/*
+> > > + * Function template to provide battery temperature. Should prov=
+ide
+> > > + * 0.1 degrees C resolution return values.
+> > > + */
+> > > +typedef int (*da9150_read_temp_t)(void *context);
+> > > +
+> > > +/* Register temp callback function */
+> > > +void da9150_fg_register_temp_cb(struct power_supply *psy,
+> > da9150_read_temp_t cb,
+> > > +				void *cb_context);
+> >=20
+> > The pedant in me noticed that this function is actually added in 3/=
+4. So
+> > this chunk might be moved to 3/4, if you like to entertain pedantry=
+ like
+> > that, that is. (But see my remark on 3/4 too.)
+>=20
+> This is true, but as the header is part of MFD, I included it as part=
+ of that
+> patch as I thought this made more sense. I guess Lee will comment as =
+to whether
+> that was correct or not. :)
 
-in this case, we cannot require DT user still pass a otg-rev, right?
+Glanced over this (as I still have 240 unread emails to attend to).
+If the question is whether to submit the prototype at the same time as
+the associated function, the answer is yes.
 
-> why do you want otg-rev to be optional for non-legacy DT?
-> 
-
-For above ID pin detect case.
-
-> > 3) Some controller drivers already support OTG HNP/SRP, then change
-> >   to utilize those new flags, still should support OTG HNP/SRP w/o
-> >   any dt change, so OTG caps should be enabled for legacy platforms.
-> > 4) Some controller drivers does not support any OTG, after add OTG
-> >   functions and utilize those new flags, should keep OTG disabled
-> >   for legacy platforms.
-> > 
-> 
-> cheers,
-> -roger
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
