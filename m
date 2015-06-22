@@ -1,55 +1,80 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 1/8] ARM: STi: STiH407: Provide generic (safe) DVFS configuration
-Date: Mon, 22 Jun 2015 16:43:50 +0100
-Message-ID: <1434987837-24212-2-git-send-email-lee.jones@linaro.org>
-References: <1434987837-24212-1-git-send-email-lee.jones@linaro.org>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1434987837-24212-1-git-send-email-lee.jones@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: kernel@stlinux.com, rjw@rjwysocki.net, viresh.kumar@linaro.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, ajitpal.singh@st.com, Lee Jones <lee.jones@linaro.org>
+From: Stefan Wahren <info-saaNCTdWVBT7BZbvpMY5sg@public.gmane.org>
+Subject: Re: [PATCH 2/2] dt: brcm, bcm2835-aux-spi: add binding documentation
+ for new spi-bcm2835aux
+Date: Mon, 22 Jun 2015 19:55:55 +0200
+Message-ID: <55884C2B.8040601@lategoodbye.de>
+References: <1434980408-4086-1-git-send-email-kernel@martin.sperl.org> <1434980408-4086-2-git-send-email-kernel@martin.sperl.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1434980408-4086-2-git-send-email-kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-You'll notice that the voltage cell is populated with 0's.  Voltage
-information is very platform specific, even depends on 'cut' and
-'substrate' versions.  Thus it is left blank for a generic (safe)
-implementation.  If other nodes/properties are provided by the
-bootloader, the ST CPUFreq driver will over-ride these generic
-values.
+Hi Martin,
 
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- arch/arm/boot/dts/stih407-family.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+Am 22.06.2015 um 15:40 schrieb kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org:
+> From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+>
+> Signed-off-by: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+> ---
+>   .../bindings/spi/brcm,bcm2835-aux-spi.txt          |   33 ++++++++++++++++++++
+>   1 file changed, 33 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/spi/brcm,bcm2835-aux-spi.txt
+>
+> diff --git a/Documentation/devicetree/bindings/spi/brcm,bcm2835-aux-spi.txt b/Documentation/devicetree/bindings/spi/brcm,bcm2835-aux-spi.txt
+> new file mode 100644
+> index 0000000..23e4138
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/spi/brcm,bcm2835-aux-spi.txt
+> @@ -0,0 +1,33 @@
+> +Broadcom BCM2835 SPI1/2 controller
+> +
+> +The BCM2835 contains two forms of SPI master controller, one known simply as
+> +SPI0, and the other known as the "Universal SPI Master"; part of the
+> +auxiliary block. This binding applies to the SPI1/2 controller.
+> +
+> +Required properties:
+> +- compatible: Should be "brcm,bcm2835-aux-spi".
+> +- reg: Should contain register location and length for the spi block
+> +       as well as for the common aux block control
+> +- interrupts: Should contain shared interrupt of the aux block
+> +- clocks: The clock feeding the SPI controller.
+> +- gpio-cs: the gpio-cs (native cs is NOT supported)
 
-diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
-index be201aa..2680ac7 100644
---- a/arch/arm/boot/dts/stih407-family.dtsi
-+++ b/arch/arm/boot/dts/stih407-family.dtsi
-@@ -22,11 +22,21 @@
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a9";
- 			reg = <0>;
-+					 /* kHz     uV   */
-+			operating-points = <1500000 0
-+					    1200000 0
-+					    800000  0
-+					    500000  0>;
- 		};
- 		cpu@1 {
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a9";
- 			reg = <1>;
-+					 /* kHz     uV   */
-+			operating-points = <1500000 0
-+					    1200000 0
-+					    800000  0
-+					    500000  0>;
- 		};
- 	};
- 
--- 
-1.9.1
+do you mean "gpio-cs" or "cs-gpios" from spi/spi-bus.txt?
 
+> +
+> +Example:
+> +
+> +spi1@7e215080 {
+> +	compatible = "brcm,bcm2835-aux-spi";
+> +	reg = <0x7e215080 0x40>, <0x7e215000 0x08>;
+> +	interrupts = <1 29>;
+> +	clocks = <&clk_spi>;
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+
+Why is gpio-cs is missing in the examples, if it's required?
+
+> +};
+> +
+> +spi2@7e215080 {
+
+spi2@7e2150c0 ?
+
+> +	compatible = "brcm,bcm2835-aux-spi";
+> +	reg = <0x7e2150c0 0x40>, <0x7e215000 0x08>;
+> +	interrupts = <1 29>;
+> +	clocks = <&clk_spi>;
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +};
+>
+
+Regards
+Stefan
 --
-To unsubscribe from this list: send the line "unsubscribe linux-pm" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
