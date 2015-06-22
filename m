@@ -1,171 +1,59 @@
-From: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v6] usb: common: add API to set usb otg capabilities by
- device tree
-Date: Mon, 22 Jun 2015 22:36:40 +0800
-Message-ID: <20150622143638.GC25349@shlinux2>
-References: <1434590302-18066-1-git-send-email-jun.li@freescale.com>
- <20150618103650.7c3d1b8ceb134388b0d8b093@ti.com>
- <20150618084747.GD15280@shlinux2>
- <20150618150748.db2217278ae71f01df625ff2@ti.com>
- <20150618133703.GF15280@shlinux2>
- <20150622124122.a3155a04430083b24d775aa4@ti.com>
- <20150622104535.GA25349@shlinux2>
- <20150622163256.418a1b05d9848a7342669fe4@ti.com>
+From: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/4] ARM: dts: sunxi: Add regulator-boot-on
+ to usb host port regulator nodes
+Date: Tue, 23 Jun 2015 00:54:41 +1000
+Message-ID: <CAGRGNgXrXgGXhLAQYXVVyG98NbJF4bDE5OWM9TSgYzZYkOR29g@mail.gmail.com>
+References: <1434814810-26285-1-git-send-email-hdegoede@redhat.com>
+ <1434814810-26285-2-git-send-email-hdegoede@redhat.com> <CAGRGNgU7179K408=PekziP9ZzzG7+rvhm=e7TWjZk1UhkAnVZQ@mail.gmail.com>
+ <5587C720.9040007@redhat.com>
+Reply-To: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150622163256.418a1b05d9848a7342669fe4-l0cyMroinI0@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Cc: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDQIP76OUQLBBRGDUCWAKGQE26X6OHQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <5587C720.9040007-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 22, 2015 at 04:32:56PM +0300, Roger Quadros wrote:
-> On Mon, 22 Jun 2015 18:45:37 +0800
-> Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> 
-> > On Mon, Jun 22, 2015 at 12:41:22PM +0300, Roger Quadros wrote:
-> > > On Thu, 18 Jun 2015 21:37:04 +0800
-> > > Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> > > 
-> > > > On Thu, Jun 18, 2015 at 03:07:48PM +0300, Roger Quadros wrote:
-> > > > > On Thu, 18 Jun 2015 16:47:48 +0800
-> > > > > Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> > > > > 
-> > > > > > On Thu, Jun 18, 2015 at 10:36:50AM +0300, Roger Quadros wrote:
-> > > > > > > Lin,
-> > > > > > > 
-> > > > > > > You can use --in-reply-to "message id of v5 of this path" so that it appears together
-> > > > > > > with the other patches in peoples mailboxes.
-> > > > > > > 
-> > > > > > > > + * the passed properties in DT.
-> > > > > > > > + * @np: Pointer to the given device_node
-> > > > > > > > + * @otg_caps: Pointer to the target usb_otg_caps to be set
-> > > > > > > > + *
-> > > > > > > > + * The function gets and sets the otg capabilities
-> > > > > > > > + */
-> > > > > > > > +void of_usb_set_otg_caps(struct device_node *np, struct usb_otg_caps *otg_caps)
-> > > > > > > > +{
-> > > > > > > > +	u32 otg_rev;
-> > > > > > > > +
-> > > > > > > > +	if (!otg_caps)
-> > > > > > > > +		return;
-> > > > > > > > +
-> > > > > > > > +	if (!of_property_read_u32(np, "otg-rev", &otg_rev))
-> > > > > > > > +		otg_caps->otg_rev = otg_rev;
-> > > > > > > 
-> > > > > > > should we check if otg_rev is in correct format?
-> > > > > > > anything non BCD and greater than 0x9999 is invalid.
-> > > > > > > 
-> > > > > > > Also if otg-rev is not passed then we need to treat it as legacy
-> > > > > > > platform right? How is this taken care of?
-> > > > > > > 
-> > > > > > Missed this comment
-> > > > > > This handling rely on controller driver, cannot decided here.
-> > > > > > There are several cases we need take care:
-> > > > > > 1) otg-rev is not passed, but all 3 disable flags passed, this is
-> > > > > >   valid, means user want to disable whole OTG, so only "otg-rev"
-> > > > > >   not passed, cannot treat as legacy platform.
-> > > > > > 2) Legacy platform means: none of 4 properties is present.
-> > > > > 
-> > > > > Right. Plus controller drivers that are not updated to use these otg_caps
-> > > > > are also legacy.
-> > > > >
-> > > > Did not understand the "Plus" case.
-> > > > Some of 4 properties is present, but its driver dose not use otg_caps?
-> > > 
-> > > yes that is what I meant.
-> > > 
-> > > > 
-> > > > > > 3) Some controller drivers already support OTG HNP/SRP, then change
-> > > > > >   to utilize those new flags, still should support OTG HNP/SRP w/o
-> > > > > >   any dt change, so OTG caps should be enabled for legacy platforms.
-> > > > > 
-> > > > > I didn't understand this point. If a controller driver is not updated
-> > > > > to use otg_caps it is legacy and gadget->otg_caps will be NULL.
-> > > > > 
-> > > > Some of existing chipdea platforms work fine on HNP and SRP , which did
-> > > > not use any new flags and properties, after my patch, those platform should
-> > > > still enable HNP and SRP without any DT change.
-> > > 
-> > > Agreed.
-> > > > 
-> > > > > > 4) Some controller drivers does not support any OTG, after add OTG
-> > > > > >   functions and utilize those new flags, should keep OTG disabled
-> > > > > >   for legacy platforms.
-> > > > > 
-> > > > > If controller drivers don't support OTG. gadget->is_otg and
-> > > > > gadget->otg_caps will not be set by them and they don't have to use
-> > > > > of_usb_set_otg_caps().
-> > > > > 
-> > > > But after my patch, some time later, this driver adds OTG functions on
-> > > > it new platform, it should disable any OTG feature for its legacy
-> > > > platforms (none of properties is passed).
-> > > 
-> > > That can be decided in of_usb_update_otg_caps().
-> > > Controller sets whatever it supports in otg_caps.
-> > > of_usb_updade_otg_caps() checks if it is legacy DT (i.e. no otg-rev) and then
-> > > overrides to legacy otg_caps.
-> > > 
-> > > >  
-> > > > > So I didn't understand why the decision can't be taken here
-> > > > > for non-legacy controller drivers with legacy DT.
-> > > > > They will set gadget->otg_caps and gadget->is_otg.
-> > > > > 
-> > > > > If none of the 4 DT flags are passed then we know it is legacy DT
-> > > > > and we can limit to legacy behaviour.
-> > > > > 
-> > > > legacy behaviour number is 2, not only one legacy behaviour.
-> > > > That's why I leave the otg caps decided by controller drivers.
-> > > 
-> > > I'm only suggesting that it be decided at one place i.e. in 
-> > > of_usb_updade_otg_caps() instead of every controller.
-> > > 
-> > > Do you see any problems with that approach?
-> > > 
-> > The problem is the override policy for legacy platforms. 
-> > For case 3) above, we should enable HNP and SRP,
-> 
-> case 3 is controller is supporting new flags but DT is not and we want
-> legacy OTG enabled, right?
-> Can't we detect if none of the new otg flags are present then it is legacy DT
-> so use legacy OTG mode?
-> 
-Yes, we can. The legacy OTG mode is HNP&SRP is enabled.
+Hi Hans,
 
-> > For case 4) above, after add OTG HNP&SRP support, it should disable HNP and SRP.
-> 
-> case 4 is controller was not supporting OTG at all before and now is updated to support
-> OTG. But for such cases isn't dr_mode = "peripheral" in the DT?
-> one example is dwc3 controller.
-> 
-> If the dr_mode was "otg" for such case and we want OTG disabled then it is really the DT fault.
+On Mon, Jun 22, 2015 at 6:28 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> Hi,
+>
+> On 22-06-15 02:30, Julian Calaby wrote:
+>>
+>> Hi Hans,
+>>
+>> On Sun, Jun 21, 2015 at 1:40 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> wrote:
+>>>
+>>> u-boot will have turned on the power to the usb host ports, so mark them
+>>> as regulator-boot-on, this stops the power on the ports from temporarily
+>>> getting turned off during boot, causing issues with e.g. usb powered
+>>> harddisks.
+>>
+>>
+>> Stupid question: shouldn't u-boot set this property?
+>
+>
+> We could make u-boot set this property but that will require a lot of code
+> on
+> u-boot's side which is simply not there atm. And traditionally this property
+> is is simply a part of the dts files as shipped with the kernel.
 
-It's ID pin detect for dual role switch as many current OTG controllers have.
-not DT fault, its dt only has a dr_mode = "otg".
+Fair enough.
 
-> We don't need to tackle this case. Just fix up the DT to dr_mode = "peripheral" if
-> OTG behaviour is not needed.
-> 
-OTG behaviour is not needed, so we need disable HNP/SRP/ADP. but dr_mode =
-"otg" as it already works fine with ID pin detect.
+Thanks,
 
-> > 
-> > How I make one decision in of_usb_updade_otg_caps()
-> > for above 2 cases?(the otg-rev is 0 for both).
-> > 
-> 
-> For case 3. otg-rev passed by controller is not 0. otg-rev is just not present in DT.
-> 
+-- 
+Julian Calaby
 
-Current OTG situation is not so simple, so that we can not use one simple
-rule to handle legacy cases in a common place, but for a particular controller
-driver, make decision on this is a simple work, I think.
-
-Li Jun
-
-> cheers,
-> -roger
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+Email: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Profile: http://www.google.com/profiles/julian.calaby/
