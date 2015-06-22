@@ -1,627 +1,607 @@
-From: kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org
-Subject: [PATCH 1/2] spi: bcm2835: add spi-bcm2835aux driver for the auxiliar spi1 and spi2
-Date: Mon, 22 Jun 2015 13:40:06 +0000
-Message-ID: <1434980408-4086-1-git-send-email-kernel@martin.sperl.org>
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+From: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH 3/4] soc: Mediatek: Add SCPSYS power domain driver
+Date: Mon, 22 Jun 2015 21:53:59 +0800
+Message-ID: <CAGS+omA5STFAG7nrcXj=DnTuLJQfhx2xJyVF+gWqsUjSaVMi_w@mail.gmail.com>
+References: <1434954942-30179-1-git-send-email-s.hauer@pengutronix.de> <1434954942-30179-4-git-send-email-s.hauer@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1434954942-30179-4-git-send-email-s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+On Mon, Jun 22, 2015 at 2:35 PM, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> This adds a power domain driver for the Mediatek SCPSYS unit.
+>
+> The System Control Processor System (SCPSYS) has several power
+> management related tasks in the system. The tasks include thermal
+> measurement, dynamic voltage frequency scaling (DVFS), interrupt
+> filter and lowlevel sleep control. The System Power Manager (SPM)
+> inside the SCPSYS is for the MTCMOS power domain control.
+>
+> For now this driver only adds power domain support, the more
+> advanced features are not yet supported. The driver implements
+> the generic PM domain device tree bindings, the first user will
+> most likely be the Mediatek AFE audio driver.
+>
+> Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> ---
+>  drivers/soc/mediatek/Kconfig             |  10 +
+>  drivers/soc/mediatek/Makefile            |   1 +
+>  drivers/soc/mediatek/mtk-scpsys.c        | 487 +++++++++++++++++++++++++++++++
+>  include/dt-bindings/power/mt8173-power.h |  15 +
+>  4 files changed, 513 insertions(+)
+>  create mode 100644 drivers/soc/mediatek/mtk-scpsys.c
+>  create mode 100644 include/dt-bindings/power/mt8173-power.h
+>
+> diff --git a/drivers/soc/mediatek/Kconfig b/drivers/soc/mediatek/Kconfig
+> index e4f37a3..32eff1b 100644
+> --- a/drivers/soc/mediatek/Kconfig
+> +++ b/drivers/soc/mediatek/Kconfig
+> @@ -18,3 +18,13 @@ config MTK_PMIC_WRAP
+>           Say yes here to add support for MediaTek PMIC Wrapper found
+>           on different MediaTek SoCs. The PMIC wrapper is a proprietary
+>           hardware to connect the PMIC.
+> +
+> +config MTK_SCPSYS
+> +       bool "MediaTek SCPSYS Support"
+> +       depends on ARCH_MEDIATEK || COMPILE_TEST
+> +       select REGMAP
+> +       select MTK_INFRACFG
+> +       select PM_GENERIC_DOMAINS if PM
+> +       help
+> +         Say yes here to add support for the MediaTek SCPSYS power domain
+> +         driver.
+> diff --git a/drivers/soc/mediatek/Makefile b/drivers/soc/mediatek/Makefile
+> index 3fa940f..12998b0 100644
+> --- a/drivers/soc/mediatek/Makefile
+> +++ b/drivers/soc/mediatek/Makefile
+> @@ -1,2 +1,3 @@
+>  obj-$(CONFIG_MTK_INFRACFG) += mtk-infracfg.o
+>  obj-$(CONFIG_MTK_PMIC_WRAP) += mtk-pmic-wrap.o
+> +obj-$(CONFIG_MTK_SCPSYS) += mtk-scpsys.o
+> diff --git a/drivers/soc/mediatek/mtk-scpsys.c b/drivers/soc/mediatek/mtk-scpsys.c
+> new file mode 100644
+> index 0000000..84c306a
+> --- /dev/null
+> +++ b/drivers/soc/mediatek/mtk-scpsys.c
+> @@ -0,0 +1,487 @@
+> +/*
+> + * Copyright (c) 2015 Pengutronix, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_domain.h>
+> +#include <linux/regmap.h>
+> +#include <linux/soc/mediatek/infracfg.h>
+> +#include <dt-bindings/power/mt8173-power.h>
+> +
+> +#define SPM_VDE_PWR_CON                        0x0210
+> +#define SPM_MFG_PWR_CON                        0x0214
+> +#define SPM_VEN_PWR_CON                        0x0230
+> +#define SPM_ISP_PWR_CON                        0x0238
+> +#define SPM_DIS_PWR_CON                        0x023c
+> +#define SPM_VEN2_PWR_CON               0x0298
+> +#define SPM_AUDIO_PWR_CON              0x029c
+> +#define SPM_MFG_2D_PWR_CON             0x02c0
+> +#define SPM_MFG_ASYNC_PWR_CON          0x02c4
+> +#define SPM_USB_PWR_CON                        0x02cc
+> +#define SPM_PWR_STATUS                 0x060c
+> +#define SPM_PWR_STATUS_2ND             0x0610
+> +
+> +#define PWR_RST_B_BIT                  BIT(0)
+> +#define PWR_ISO_BIT                    BIT(1)
+> +#define PWR_ON_BIT                     BIT(2)
+> +#define PWR_ON_2ND_BIT                 BIT(3)
+> +#define PWR_CLK_DIS_BIT                        BIT(4)
+> +
+> +#define PWR_STATUS_DISP                        BIT(3)
+> +#define PWR_STATUS_MFG                 BIT(4)
+> +#define PWR_STATUS_ISP                 BIT(5)
+> +#define PWR_STATUS_VDEC                        BIT(7)
+> +#define PWR_STATUS_VENC_LT             BIT(20)
+> +#define PWR_STATUS_VENC                        BIT(21)
+> +#define PWR_STATUS_MFG_2D              BIT(22)
+> +#define PWR_STATUS_MFG_ASYNC           BIT(23)
+> +#define PWR_STATUS_AUDIO               BIT(24)
+> +#define PWR_STATUS_USB                 BIT(25)
+> +
+> +enum clk_id {
+> +       MT8173_CLK_NONE,
+> +       MT8173_CLK_MM,
+> +       MT8173_CLK_MFG,
+> +       MT8173_CLK_MAX = MT8173_CLK_MFG,
 
-This driver does NOT make use of native chip-selects but uses the
-generic cs-gpios facilities provided by the framework allowing for
-more than 3 chip-selects.
+This sets MT8173_CLK_MAX = 2 ...
 
-Signed-off-by: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+> +};
+> +
+> +struct scp_domain_data {
+> +       const char *name;
+> +       u32 sta_mask;
+> +       int ctl_offs;
+> +       u32 sram_pdn_bits;
+> +       u32 sram_pdn_ack_bits;
+> +       u32 bus_prot_mask;
+> +       enum clk_id clk_id;
+> +};
+> +
+> +static const struct scp_domain_data scp_domain_data[] __initconst = {
+> +       [MT8173_POWER_DOMAIN_VDEC] = {
+> +               .name = "vdec",
+> +               .sta_mask = PWR_STATUS_VDEC,
+> +               .ctl_offs = SPM_VDE_PWR_CON,
+> +               .sram_pdn_bits = GENMASK(11, 8),
+> +               .sram_pdn_ack_bits = GENMASK(12, 12),
+> +               .clk_id = MT8173_CLK_MM,
+> +       },
+> +       [MT8173_POWER_DOMAIN_VENC] = {
+> +               .name = "venc",
+> +               .sta_mask = PWR_STATUS_VENC,
+> +               .ctl_offs = SPM_VEN_PWR_CON,
+> +               .sram_pdn_bits = GENMASK(11, 8),
+> +               .sram_pdn_ack_bits = GENMASK(15, 12),
+> +               .clk_id = MT8173_CLK_MM,
+> +       },
+> +       [MT8173_POWER_DOMAIN_ISP] = {
+> +               .name = "isp",
+> +               .sta_mask = PWR_STATUS_ISP,
+> +               .ctl_offs = SPM_ISP_PWR_CON,
+> +               .sram_pdn_bits = GENMASK(11, 8),
+> +               .sram_pdn_ack_bits = GENMASK(13, 12),
+> +               .clk_id = MT8173_CLK_MM,
+> +       },
+> +       [MT8173_POWER_DOMAIN_MM] = {
+> +               .name = "mm",
+> +               .sta_mask = PWR_STATUS_DISP,
+> +               .ctl_offs = SPM_DIS_PWR_CON,
+> +               .sram_pdn_bits = GENMASK(11, 8),
+> +               .sram_pdn_ack_bits = GENMASK(12, 12),
+> +               .clk_id = MT8173_CLK_MM,
+> +               .bus_prot_mask = MT8173_TOP_AXI_PROT_EN_MM_M0 |
+> +                       MT8173_TOP_AXI_PROT_EN_MM_M1,
+> +       },
+> +       [MT8173_POWER_DOMAIN_VENC_LT] = {
+> +               .name = "venc_lt",
+> +               .sta_mask = PWR_STATUS_VENC_LT,
+> +               .ctl_offs = SPM_VEN2_PWR_CON,
+> +               .sram_pdn_bits = GENMASK(11, 8),
+> +               .sram_pdn_ack_bits = GENMASK(15, 12),
+> +               .clk_id = MT8173_CLK_MM,
+> +       },
+> +       [MT8173_POWER_DOMAIN_AUDIO] = {
+> +               .name = "audio",
+> +               .sta_mask = PWR_STATUS_AUDIO,
+> +               .ctl_offs = SPM_AUDIO_PWR_CON,
+> +               .sram_pdn_bits = GENMASK(11, 8),
+> +               .sram_pdn_ack_bits = GENMASK(15, 12),
+> +               .clk_id = MT8173_CLK_NONE,
+> +       },
+> +       [MT8173_POWER_DOMAIN_USB] = {
+> +               .name = "usb",
+> +               .sta_mask = PWR_STATUS_USB,
+> +               .ctl_offs = SPM_USB_PWR_CON,
+> +               .sram_pdn_bits = GENMASK(11, 8),
+> +               .sram_pdn_ack_bits = GENMASK(15, 12),
+> +               .clk_id = MT8173_CLK_NONE,
+> +       },
+> +       [MT8173_POWER_DOMAIN_MFG_ASYNC] = {
+> +               .name = "mfg_async",
+> +               .sta_mask = PWR_STATUS_MFG_ASYNC,
+> +               .ctl_offs = SPM_MFG_ASYNC_PWR_CON,
+> +               .sram_pdn_bits = GENMASK(11, 8),
+> +               .sram_pdn_ack_bits = 0,
+> +               .clk_id = MT8173_CLK_MFG,
+> +       },
+> +       [MT8173_POWER_DOMAIN_MFG_2D] = {
+> +               .name = "mfg_2d",
+> +               .sta_mask = PWR_STATUS_MFG_2D,
+> +               .ctl_offs = SPM_MFG_2D_PWR_CON,
+> +               .sram_pdn_bits = GENMASK(11, 8),
+> +               .sram_pdn_ack_bits = GENMASK(13, 12),
+> +               .clk_id = MT8173_CLK_NONE,
+> +       },
+> +       [MT8173_POWER_DOMAIN_MFG] = {
+> +               .name = "mfg",
+> +               .sta_mask = PWR_STATUS_MFG,
+> +               .ctl_offs = SPM_MFG_PWR_CON,
+> +               .sram_pdn_bits = GENMASK(13, 8),
+> +               .sram_pdn_ack_bits = GENMASK(21, 16),
+> +               .clk_id = MT8173_CLK_NONE,
+> +               .bus_prot_mask = MT8173_TOP_AXI_PROT_EN_MFG_S |
+> +                       MT8173_TOP_AXI_PROT_EN_MFG_M0 |
+> +                       MT8173_TOP_AXI_PROT_EN_MFG_M1 |
+> +                       MT8173_TOP_AXI_PROT_EN_MFG_SNOOP_OUT,
+> +       },
+> +};
+> +
+> +#define NUM_DOMAINS    ARRAY_SIZE(scp_domain_data)
+> +
+> +struct scp;
+> +
+> +struct scp_domain {
+> +       struct generic_pm_domain genpd;
+> +       struct scp *scp;
+> +       struct clk *clk;
+> +       u32 sta_mask;
+> +       void __iomem *ctl_addr;
+> +       u32 sram_pdn_bits;
+> +       u32 sram_pdn_ack_bits;
+> +       u32 bus_prot_mask;
+> +};
+> +
+> +struct scp {
+> +       struct scp_domain domains[NUM_DOMAINS];
+> +       struct genpd_onecell_data pd_data;
+> +       struct device *dev;
+> +       void __iomem *base;
+> +       struct regmap *infracfg;
+> +};
+> +
+> +static int scpsys_domain_is_on(struct scp_domain *scpd)
+> +{
+> +       struct scp *scp = scpd->scp;
+> +
+> +       u32 status = readl(scp->base + SPM_PWR_STATUS) & scpd->sta_mask;
+> +       u32 status2 = readl(scp->base + SPM_PWR_STATUS_2ND) & scpd->sta_mask;
+> +
+> +       /*
+> +        * A domain is on when both status bits are set. If only one is set
+> +        * return an error. This happens while powering up a domain
+> +        */
+> +
+> +       if (status && status2)
+> +               return true;
+> +       if (!status && !status2)
+> +               return false;
+> +
+> +       return -EINVAL;
+> +}
+> +
+> +static int scpsys_power_on(struct generic_pm_domain *genpd)
+> +{
+> +       struct scp_domain *scpd = container_of(genpd, struct scp_domain, genpd);
+> +       struct scp *scp = scpd->scp;
+> +       unsigned long timeout;
+> +       bool expired;
+> +       void __iomem *ctl_addr = scpd->ctl_addr;
+> +       u32 sram_pdn_ack = scpd->sram_pdn_ack_bits;
+> +       u32 val;
+> +       int ret;
+> +
+> +       if (scpd->clk) {
+> +               ret = clk_prepare_enable(scpd->clk);
+> +               if (ret)
+> +                       goto err_clk;
+> +       }
+> +
+> +       val = readl(ctl_addr);
+> +       val |= PWR_ON_BIT;
+> +       writel(val, ctl_addr);
+> +       val |= PWR_ON_2ND_BIT;
+> +       writel(val, ctl_addr);
+> +
+> +       /* wait until PWR_ACK = 1 */
+> +       timeout = jiffies + HZ;
+> +       expired = false;
+> +       while (1) {
+> +               ret = scpsys_domain_is_on(scpd);
+> +               if (ret > 0)
+> +                       break;
+> +
+> +               if (expired) {
+> +                       ret = -ETIMEDOUT;
+> +                       goto err_pwr_ack;
+> +               }
+> +
+> +               cpu_relax();
+> +
+> +               if (time_after(jiffies, timeout))
+> +                       expired = true;
+> +       }
+> +
+> +       val &= ~PWR_CLK_DIS_BIT;
+> +       writel(val, ctl_addr);
+> +
+> +       val &= ~PWR_ISO_BIT;
+> +       writel(val, ctl_addr);
+> +
+> +       val |= PWR_RST_B_BIT;
+> +       writel(val, ctl_addr);
+> +
+> +       val &= ~scpd->sram_pdn_bits;
+> +       writel(val, ctl_addr);
+> +
+> +       /* wait until SRAM_PDN_ACK all 0 */
+> +       timeout = jiffies + HZ;
+> +       expired = false;
+> +       while (sram_pdn_ack && (readl(ctl_addr) & sram_pdn_ack)) {
+> +
+> +               if (expired) {
+> +                       ret = -ETIMEDOUT;
+> +                       goto err_pwr_ack;
+> +               }
+> +
+> +               cpu_relax();
+> +
+> +               if (time_after(jiffies, timeout))
+> +                       expired = true;
+> +       }
+> +
+> +       if (scpd->bus_prot_mask) {
+> +               ret = mtk_infracfg_clear_bus_protection(scp->infracfg,
+> +                               scpd->bus_prot_mask);
+> +               if (ret)
+> +                       goto err_pwr_ack;
+> +       }
+> +
+> +       return 0;
+> +
+> +err_pwr_ack:
+> +       clk_disable_unprepare(scpd->clk);
+> +err_clk:
+> +       dev_err(scp->dev, "Failed to power on domain %s\n", genpd->name);
+> +
+> +       return ret;
+> +}
+> +
+> +static int scpsys_power_off(struct generic_pm_domain *genpd)
+> +{
+> +       struct scp_domain *scpd = container_of(genpd, struct scp_domain, genpd);
+> +       struct scp *scp = scpd->scp;
+> +       unsigned long timeout;
+> +       bool expired;
+> +       void __iomem *ctl_addr = scpd->ctl_addr;
+> +       u32 pdn_ack = scpd->sram_pdn_ack_bits;
+> +       u32 val;
+> +       int ret;
+> +
+> +       if (scpd->bus_prot_mask) {
+> +               ret = mtk_infracfg_set_bus_protection(scp->infracfg,
+> +                               scpd->bus_prot_mask);
+> +               if (ret)
+> +                       goto out;
+> +       }
+> +
+> +       val = readl(ctl_addr);
+> +       val |= scpd->sram_pdn_bits;
+> +       writel(val, ctl_addr);
+> +
+> +       /* wait until SRAM_PDN_ACK all 1 */
+> +       timeout = jiffies + HZ;
+> +       expired = false;
+> +       while (pdn_ack && (readl(ctl_addr) & pdn_ack) != pdn_ack) {
+> +               if (expired) {
+> +                       ret = -ETIMEDOUT;
+> +                       goto out;
+> +               }
+> +
+> +               cpu_relax();
+> +
+> +               if (time_after(jiffies, timeout))
+> +                       expired = true;
+> +       }
+> +
+> +       val |= PWR_ISO_BIT;
+> +       writel(val, ctl_addr);
+> +
+> +       val &= ~PWR_RST_B_BIT;
+> +       writel(val, ctl_addr);
+> +
+> +       val |= PWR_CLK_DIS_BIT;
+> +       writel(val, ctl_addr);
+> +
+> +       val &= ~PWR_ON_BIT;
+> +       writel(val, ctl_addr);
+> +
+> +       val &= ~PWR_ON_2ND_BIT;
+> +       writel(val, ctl_addr);
+> +
+> +       /* wait until PWR_ACK = 0 */
+> +       timeout = jiffies + HZ;
+> +       expired = false;
+> +       while (1) {
+> +               ret = scpsys_domain_is_on(scpd);
+> +               if (ret == 0)
+> +                       break;
+> +
+> +               if (expired) {
+> +                       ret = -ETIMEDOUT;
+> +                       goto out;
+> +               }
+> +
+> +               cpu_relax();
+> +
+> +               if (time_after(jiffies, timeout))
+> +                       expired = true;
+> +       }
+> +
+> +       if (scpd->clk)
+> +               clk_disable_unprepare(scpd->clk);
+> +
+> +       return 0;
+> +
+> +out:
+> +       dev_err(scp->dev, "Failed to power off domain %s\n", genpd->name);
+> +
+> +       return ret;
+> +}
+> +
+> +static int __init scpsys_probe(struct platform_device *pdev)
+> +{
+> +       struct genpd_onecell_data *pd_data;
+> +       struct resource *res;
+> +       int i, ret;
+> +       struct scp *scp;
+> +       struct clk *clk[MT8173_CLK_MAX];
 
----
- drivers/spi/Kconfig          |   10 +
- drivers/spi/Makefile         |    1 +
- drivers/spi/spi-bcm2835aux.c |  549 ++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 560 insertions(+)
- create mode 100644 drivers/spi/spi-bcm2835aux.c
+So ARRAY_SIZE(clk) == 2 ...
 
-Only tested spi1, as no Compute Module is available to me to test spi2.
+> +
+> +       scp = devm_kzalloc(&pdev->dev, sizeof(*scp), GFP_KERNEL);
+> +       if (!scp)
+> +               return -ENOMEM;
+> +
+> +       scp->dev = &pdev->dev;
+> +
+> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +       scp->base = devm_ioremap_resource(&pdev->dev, res);
+> +       if (IS_ERR(scp->base))
+> +               return PTR_ERR(scp->base);
+> +
+> +       pd_data = &scp->pd_data;
+> +
+> +       pd_data->domains = devm_kzalloc(&pdev->dev,
+> +                       sizeof(*pd_data->domains) * NUM_DOMAINS, GFP_KERNEL);
+> +       if (!pd_data->domains)
+> +               return -ENOMEM;
+> +
+> +       clk[MT8173_CLK_MM] = devm_clk_get(&pdev->dev, "mm");
 
-Also note that the driver currently implements locking of the auxiliar
-device enable bits inside the driver. This is shared with the uart1,
-for which we have so far no driver. Ideally this should get moved out
-as soon as we get the uart1 driver enabled.
+here we want to access:
+   clk[MT8173_CLK_MM]  == clk[1]
 
-Uart1 is also only accessible on the Compute Module.
+> +       if (IS_ERR(clk[MT8173_CLK_MM]))
+> +               return PTR_ERR(clk[MT8173_CLK_MM]);
+> +
+> +       clk[MT8173_CLK_MFG] = devm_clk_get(&pdev->dev, "mfg");
 
-diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
-index 0cae169..270445c 100644
---- a/drivers/spi/Kconfig
-+++ b/drivers/spi/Kconfig
-@@ -88,6 +88,16 @@ config SPI_BCM2835
- 	  is for the regular SPI controller. Slave mode operation is not also
- 	  not supported.
- 
-+config SPI_BCM2835AUX
-+	tristate "BCM2835 SPI auxiliar controller"
-+	depends on ARCH_BCM2835 || COMPILE_TEST
-+	help
-+	  This selects a driver for the Broadcom BCM2835 SPI aux master.
-+
-+	  The BCM2835 contains two types of SPI master controller; the
-+	  "universal SPI master", and the regular SPI controller. This driver
-+	  is for the universal/auxiliar SPI controller.
-+
- config SPI_BFIN5XX
- 	tristate "SPI controller driver for ADI Blackfin5xx"
- 	depends on BLACKFIN && !BF60x
-diff --git a/drivers/spi/Makefile b/drivers/spi/Makefile
-index 1154dba..eed9614 100644
---- a/drivers/spi/Makefile
-+++ b/drivers/spi/Makefile
-@@ -15,6 +15,7 @@ obj-$(CONFIG_SPI_ATMEL)			+= spi-atmel.o
- obj-$(CONFIG_SPI_ATH79)			+= spi-ath79.o
- obj-$(CONFIG_SPI_AU1550)		+= spi-au1550.o
- obj-$(CONFIG_SPI_BCM2835)		+= spi-bcm2835.o
-+obj-$(CONFIG_SPI_BCM2835AUX)		+= spi-bcm2835aux.o
- obj-$(CONFIG_SPI_BCM53XX)		+= spi-bcm53xx.o
- obj-$(CONFIG_SPI_BCM63XX)		+= spi-bcm63xx.o
- obj-$(CONFIG_SPI_BCM63XX_HSSPI)		+= spi-bcm63xx-hsspi.o
-diff --git a/drivers/spi/spi-bcm2835aux.c b/drivers/spi/spi-bcm2835aux.c
-new file mode 100644
-index 0000000..0e48ec5
---- /dev/null
-+++ b/drivers/spi/spi-bcm2835aux.c
-@@ -0,0 +1,549 @@
-+/*
-+ * Driver for Broadcom BCM2835 SPI Controllers
-+ *
-+ * the driver does not rely on the native chipselects at all
-+ * but only uses the gpio type chipselects
-+ *
-+ * Based on: spi-bcm2835.c
-+ *
-+ * Copyright (C) 2015 Martin Sperl
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/completion.h>
-+#include <linux/delay.h>
-+#include <linux/err.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_device.h>
-+#include <linux/of_gpio.h>
-+#include <linux/of_irq.h>
-+#include <linux/spi/spi.h>
-+#include <linux/spinlock.h>
-+
-+/*
-+ * shared aux registers between spi1/spi2 and uart1
-+ *
-+ * these defines could go to a separate module if needed
-+ * so that it can also get used with the uart1 implementation
-+ * when it materializes.
-+ */
-+
-+/* the AUX register offsets */
-+#define BCM2835_AUX_IRQ		0x00
-+#define BCM2835_AUX_ENABLE	0x04
-+
-+/* the AUX Bitfield identical for both register */
-+#define BCM2835_AUX_BIT_UART	0x00000001
-+#define BCM2835_AUX_BIT_SPI1	0x00000002
-+#define BCM2835_AUX_BIT_SPI2	0x00000004
-+
-+/*
-+ * spi register defines
-+ *
-+ * note there is garbage in the "official" documentation,
-+ * so somedata taken from the file:
-+ *   brcm_usrlib/dag/vmcsx/vcinclude/bcm2708_chip/aux_io.h
-+ * inside of:
-+ *   http://www.broadcom.com/docs/support/videocore/Brcm_Android_ICS_Graphics_Stack.tar.gz
-+ */
-+
-+/* SPI register offsets */
-+#define BCM2835_AUX_SPI_CNTL0	0x00
-+#define BCM2835_AUX_SPI_CNTL1	0x04
-+#define BCM2835_AUX_SPI_STAT	0x08
-+#define BCM2835_AUX_SPI_PEEK	0x0C
-+#define BCM2835_AUX_SPI_IO	0x20
-+#define BCM2835_AUX_SPI_TXHOLD	0x30
-+
-+/* Bitfields in CNTL0 */
-+#define BCM2835_AUX_SPI_CNTL0_SPEED	0xFFF00000
-+#define BCM2835_AUX_SPI_CNTL0_SPEED_MAX	0xFFF
-+#define BCM2835_AUX_SPI_CNTL0_SPEED_SHIFT	20
-+#define BCM2835_AUX_SPI_CNTL0_CS	0x000E0000
-+#define BCM2835_AUX_SPI_CNTL0_POSTINPUT	0x00010000
-+#define BCM2835_AUX_SPI_CNTL0_VAR_CS	0x00008000
-+#define BCM2835_AUX_SPI_CNTL0_VAR_WIDTH	0x00004000
-+#define BCM2835_AUX_SPI_CNTL0_DOUTHOLD	0x00003000
-+#define BCM2835_AUX_SPI_CNTL0_ENABLE	0x00000800
-+#define BCM2835_AUX_SPI_CNTL0_CPHA_IN	0x00000400
-+#define BCM2835_AUX_SPI_CNTL0_CLEARFIFO	0x00000200
-+#define BCM2835_AUX_SPI_CNTL0_CPHA_OUT	0x00000100
-+#define BCM2835_AUX_SPI_CNTL0_CPOL	0x00000080
-+#define BCM2835_AUX_SPI_CNTL0_MSBF_OUT	0x00000040
-+#define BCM2835_AUX_SPI_CNTL0_SHIFTLEN	0x0000003F
-+
-+/* Bitfields in CNTL1 */
-+#define BCM2835_AUX_SPI_CNTL1_CSHIGH	0x00000700
-+#define BCM2835_AUX_SPI_CNTL1_IDLE	0x00000080
-+#define BCM2835_AUX_SPI_CNTL1_TXEMPTY	0x00000040
-+#define BCM2835_AUX_SPI_CNTL1_MSBF_IN	0x00000002
-+#define BCM2835_AUX_SPI_CNTL1_KEEP_IN	0x00000001
-+
-+/* Bitfields in STAT */
-+#define BCM2835_AUX_SPI_STAT_TX_LVL	0xFF000000
-+#define BCM2835_AUX_SPI_STAT_RX_LVL	0x00FF0000
-+#define BCM2835_AUX_SPI_STAT_TX_FULL	0x00000400
-+#define BCM2835_AUX_SPI_STAT_TX_EMPTY	0x00000200
-+#define BCM2835_AUX_SPI_STAT_RX_FULL	0x00000100
-+#define BCM2835_AUX_SPI_STAT_RX_EMPTY	0x00000080
-+#define BCM2835_AUX_SPI_STAT_BUSY	0x00000040
-+#define BCM2835_AUX_SPI_STAT_BITCOUNT	0x0000003F
-+
-+/* timeout values */
-+#define BCM2835_AUX_SPI_POLLING_LIMIT_US	30
-+#define BCM2835_AUX_SPI_POLLING_JIFFIES		2
-+
-+#define BCM2835_AUX_SPI_MODE_BITS (SPI_CPOL | SPI_CPHA | SPI_CS_HIGH \
-+				  | SPI_NO_CS)
-+
-+#define DRV_NAME	"spi-bcm2835aux"
-+
-+struct bcm2835aux_spi {
-+	void __iomem *regs;
-+	void __iomem *aux_regs;
-+	struct clk *clk;
-+	int irq;
-+	u32 cntl[2];
-+	const u8 *tx_buf;
-+	u8 *rx_buf;
-+	int tx_len;
-+	int rx_len;
-+};
-+
-+/* this function could go to a separate module if needed
-+ * so that it can also get used with the uart1 implementation
-+ */
-+
-+DEFINE_SPINLOCK(__bcm2835_aux_lock);
-+static void bcm2835_aux_modify_enable(struct bcm2835aux_spi *bs,
-+				      u32 mask, u32 val)
-+{
-+	unsigned long flags;
-+	u32 r;
-+
-+	spin_lock_irqsave(&__bcm2835_aux_lock, flags);
-+
-+	r = readl(bs->aux_regs + BCM2835_AUX_ENABLE);
-+	r &= mask;
-+	r |= val;
-+	writel(r, bs->aux_regs + BCM2835_AUX_ENABLE);
-+
-+	spin_unlock_irqrestore(&__bcm2835_aux_lock, flags);
-+}
-+
-+static void bcm2835aux_spi_enable(struct bcm2835aux_spi *bs)
-+{
-+	/* identify the spi device - needed to activate the right HW-block */
-+	u32 mask = (size_t)bs->regs & 0x00000040 ?
-+		   BCM2835_AUX_BIT_SPI2 : BCM2835_AUX_BIT_SPI1;
-+
-+	bcm2835_aux_modify_enable(bs, ~mask, mask);
-+}
-+
-+static void bcm2835aux_spi_disable(struct bcm2835aux_spi *bs)
-+{
-+	/* identify the spi device - needed to activate the right HW-block */
-+	u32 mask = (size_t)bs->regs & 0x00000040 ?
-+		   BCM2835_AUX_BIT_SPI2 : BCM2835_AUX_BIT_SPI1;
-+
-+	bcm2835_aux_modify_enable(bs, ~mask, 0);
-+}
-+
-+static inline u32 bcm2835aux_rd(struct bcm2835aux_spi *bs, unsigned reg)
-+{
-+	return readl(bs->regs + reg);
-+}
-+
-+static inline void bcm2835aux_wr(struct bcm2835aux_spi *bs, unsigned reg,
-+				 u32 val)
-+{
-+	writel(val, bs->regs + reg);
-+}
-+
-+static inline void bcm2835aux_rd_fifo(struct bcm2835aux_spi *bs)
-+{
-+	u32 data;
-+	int i;
-+	int count = min(bs->rx_len, 3);
-+
-+	data = bcm2835aux_rd(bs, BCM2835_AUX_SPI_IO);
-+	if (bs->rx_buf) {
-+		for (i = 0; i < count; i++)
-+			*bs->rx_buf++ = (data >> (8 * (2 - i))) & 0xff;
-+	}
-+	bs->rx_len -= count;
-+}
-+
-+static inline void bcm2835aux_wr_fifo(struct bcm2835aux_spi *bs)
-+{
-+	u32 data;
-+	u8 byte;
-+	int count;
-+	int i;
-+
-+	/* gather up to 3 bytes to write to the FIFO */
-+	count = min(bs->tx_len, 3);
-+	data = 0;
-+	for (i = 0; i < count; i++) {
-+		byte = bs->tx_buf ? *bs->tx_buf++ : 0;
-+		data |= byte << (8 * (2 - i));
-+	}
-+
-+	/* and set the variable bit-length */
-+	data |= (count * 8) << 24;
-+
-+	/* and decrement length */
-+	bs->tx_len -= count;
-+
-+	/* write to the correct TX-register */
-+	if (bs->tx_len)
-+		bcm2835aux_wr(bs, BCM2835_AUX_SPI_TXHOLD, data);
-+	else
-+		bcm2835aux_wr(bs, BCM2835_AUX_SPI_IO, data);
-+}
-+
-+static void bcm2835aux_spi_reset_hw(struct bcm2835aux_spi *bs)
-+{
-+	/* disable spi clearing fifo and interrupts */
-+	bcm2835aux_wr(bs, BCM2835_AUX_SPI_CNTL1, 0);
-+	bcm2835aux_wr(bs, BCM2835_AUX_SPI_CNTL0,
-+		      BCM2835_AUX_SPI_CNTL0_CLEARFIFO);
-+}
-+
-+static irqreturn_t bcm2835aux_spi_interrupt(int irq, void *dev_id)
-+{
-+	struct spi_master *master = dev_id;
-+	struct bcm2835aux_spi *bs = spi_master_get_devdata(master);
-+	irqreturn_t ret = IRQ_NONE;
-+
-+	/* check if we have data to read */
-+	while (bs->rx_len &&
-+	       (!(bcm2835aux_rd(bs, BCM2835_AUX_SPI_STAT) &
-+		  BCM2835_AUX_SPI_STAT_RX_EMPTY))) {
-+		bcm2835aux_rd_fifo(bs);
-+		ret = IRQ_HANDLED;
-+	}
-+
-+	/* check if we have data to write */
-+	while (bs->tx_len &&
-+	       (!(bcm2835aux_rd(bs, BCM2835_AUX_SPI_STAT) &
-+		  BCM2835_AUX_SPI_STAT_TX_FULL))) {
-+		bcm2835aux_wr_fifo(bs);
-+		ret = IRQ_HANDLED;
-+	}
-+
-+	/* and check if we have reached "done" */
-+	while (bs->rx_len &&
-+	       (!(bcm2835aux_rd(bs, BCM2835_AUX_SPI_STAT) &
-+		  BCM2835_AUX_SPI_STAT_BUSY))) {
-+		bcm2835aux_rd_fifo(bs);
-+		ret = IRQ_HANDLED;
-+	}
-+
-+	/* and if rx_len is 0 then wake up completion and disable spi */
-+	if (!bs->rx_len) {
-+		bcm2835aux_spi_reset_hw(bs);
-+		complete(&master->xfer_completion);
-+	}
-+
-+	/* and return */
-+	return ret;
-+}
-+
-+static int __bcm2835aux_spi_transfer_one_irq(struct spi_master *master,
-+					     struct spi_device *spi,
-+					     struct spi_transfer *tfr)
-+{
-+	struct bcm2835aux_spi *bs = spi_master_get_devdata(master);
-+
-+	/* enable interrupts */
-+	bcm2835aux_wr(bs, BCM2835_AUX_SPI_CNTL1, bs->cntl[1] |
-+		BCM2835_AUX_SPI_CNTL1_TXEMPTY |
-+		BCM2835_AUX_SPI_CNTL1_IDLE);
-+
-+	/* and wait for finish... */
-+	return 1;
-+}
-+
-+static int bcm2835aux_spi_transfer_one_irq(struct spi_master *master,
-+					   struct spi_device *spi,
-+					   struct spi_transfer *tfr)
-+{
-+	struct bcm2835aux_spi *bs = spi_master_get_devdata(master);
-+
-+	/* fill in registers and fifos before enabling interrupts */
-+	bcm2835aux_wr(bs, BCM2835_AUX_SPI_CNTL1, bs->cntl[1]);
-+	bcm2835aux_wr(bs, BCM2835_AUX_SPI_CNTL0, bs->cntl[0]);
-+
-+	/* fill in tx fifo with data before enabling interrupts */
-+	while ((bs->tx_len) &&
-+	       (!(bcm2835aux_rd(bs, BCM2835_AUX_SPI_STAT) &
-+		  BCM2835_AUX_SPI_STAT_TX_FULL))) {
-+		bcm2835aux_wr_fifo(bs);
-+	}
-+
-+	/* now run the interrupt mode */
-+	return __bcm2835aux_spi_transfer_one_irq(master, spi, tfr);
-+}
-+
-+static int bcm2835aux_spi_transfer_one_poll(struct spi_master *master,
-+					    struct spi_device *spi,
-+					    struct spi_transfer *tfr,
-+					    unsigned long xfer_time_us)
-+{
-+	struct bcm2835aux_spi *bs = spi_master_get_devdata(master);
-+	unsigned long timeout;
-+	u32 stat;
-+
-+	/* configure spi */
-+	bcm2835aux_wr(bs, BCM2835_AUX_SPI_CNTL1, bs->cntl[1]);
-+	bcm2835aux_wr(bs, BCM2835_AUX_SPI_CNTL0, bs->cntl[0]);
-+
-+	/* set the timeout */
-+	timeout = jiffies + BCM2835_AUX_SPI_POLLING_JIFFIES;
-+
-+	/* loop until finished the transfer */
-+	while (bs->rx_len) {
-+		/* read status */
-+		stat = bcm2835aux_rd(bs, BCM2835_AUX_SPI_STAT);
-+
-+		/* fill in tx fifo with remaining data */
-+		if ((bs->tx_len) && (!(stat & BCM2835_AUX_SPI_STAT_TX_FULL))) {
-+			bcm2835aux_wr_fifo(bs);
-+			continue;
-+		}
-+
-+		/* read data from fifo for both cases */
-+		if (!(stat & BCM2835_AUX_SPI_STAT_RX_EMPTY)) {
-+			bcm2835aux_rd_fifo(bs);
-+			continue;
-+		}
-+		if (!(stat & BCM2835_AUX_SPI_STAT_BUSY)) {
-+			bcm2835aux_rd_fifo(bs);
-+			continue;
-+		}
-+
-+		/* there is still data pending to read check the timeout */
-+		if (bs->rx_len && time_after(jiffies, timeout)) {
-+			dev_dbg_ratelimited(&spi->dev,
-+					    "timeout period reached: jiffies: %lu remaining tx/rx: %d/%d - falling back to interrupt mode\n",
-+					    jiffies - timeout,
-+					    bs->tx_len, bs->rx_len);
-+			/* forward to interrupt handler */
-+			return __bcm2835aux_spi_transfer_one_irq(master,
-+							       spi, tfr);
-+		}
-+	}
-+
-+	/* Transfer complete - reset SPI HW */
-+	bcm2835aux_spi_reset_hw(bs);
-+
-+	/* and return without waiting for completion */
-+	return 0;
-+}
-+
-+static int bcm2835aux_spi_transfer_one(struct spi_master *master,
-+				       struct spi_device *spi,
-+				       struct spi_transfer *tfr)
-+{
-+	struct bcm2835aux_spi *bs = spi_master_get_devdata(master);
-+	unsigned long spi_hz, clk_hz, speed;
-+	unsigned long spi_used_hz, xfer_time_us;
-+
-+	/* calculate the registers to handle
-+	 *
-+	 * note that we use the variable data mode, which
-+	 * is not optimal for longer transfers as we waste registers
-+	 * resulting (potentially) in more interrupts when transferring
-+	 * more than 12 bytes
-+	 */
-+	bs->cntl[0] = BCM2835_AUX_SPI_CNTL0_ENABLE |
-+		      BCM2835_AUX_SPI_CNTL0_VAR_WIDTH |
-+		      BCM2835_AUX_SPI_CNTL0_MSBF_OUT;
-+	bs->cntl[1] = BCM2835_AUX_SPI_CNTL1_MSBF_IN;
-+
-+	/* set clock */
-+	spi_hz = tfr->speed_hz;
-+	clk_hz = clk_get_rate(bs->clk);
-+
-+	if (spi_hz >= clk_hz / 2) {
-+		speed = 0;
-+	} else if (spi_hz) {
-+		speed = DIV_ROUND_UP(clk_hz, 2 * spi_hz) - 1;
-+		if (speed >  BCM2835_AUX_SPI_CNTL0_SPEED_MAX)
-+			speed = BCM2835_AUX_SPI_CNTL0_SPEED_MAX;
-+	} else { /* the slowest we can go */
-+		speed = BCM2835_AUX_SPI_CNTL0_SPEED_MAX;
-+	}
-+	bs->cntl[0] |= speed << BCM2835_AUX_SPI_CNTL0_SPEED_SHIFT;
-+	spi_used_hz = clk_hz / (2 * (speed + 1));
-+
-+	/* handle all the modes */
-+	if (spi->mode & SPI_CPOL)
-+		bs->cntl[0] |= BCM2835_AUX_SPI_CNTL0_CPOL;
-+	if (spi->mode & SPI_CPHA)
-+		bs->cntl[0] |= BCM2835_AUX_SPI_CNTL0_CPHA_OUT |
-+			       BCM2835_AUX_SPI_CNTL0_CPHA_IN;
-+
-+	/* set transmit buffers and length */
-+	bs->tx_buf = tfr->tx_buf;
-+	bs->rx_buf = tfr->rx_buf;
-+	bs->tx_len = tfr->len;
-+	bs->rx_len = tfr->len;
-+
-+	/* calculate the estimated time in us the transfer runs */
-+	xfer_time_us = tfr->len
-+		* 9 /* clocks/byte - SPI-HW waits 1 clock after each byte */
-+		* 1000000 / spi_used_hz;
-+
-+	/* run in polling mode for short transfers */
-+	if (xfer_time_us < BCM2835_AUX_SPI_POLLING_LIMIT_US)
-+		return bcm2835aux_spi_transfer_one_poll(master, spi, tfr,
-+							xfer_time_us);
-+
-+	/* run in interrupt mode for all others */
-+	return bcm2835aux_spi_transfer_one_irq(master, spi, tfr);
-+}
-+
-+static void bcm2835aux_spi_handle_err(struct spi_master *master,
-+				      struct spi_message *msg)
-+{
-+	struct bcm2835aux_spi *bs = spi_master_get_devdata(master);
-+
-+	bcm2835aux_spi_reset_hw(bs);
-+}
-+
-+static int bcm2835aux_spi_probe(struct platform_device *pdev)
-+{
-+	struct spi_master *master;
-+	struct bcm2835aux_spi *bs;
-+	struct resource *res;
-+	int err;
-+
-+	master = spi_alloc_master(&pdev->dev, sizeof(*bs));
-+	if (!master) {
-+		dev_err(&pdev->dev, "spi_alloc_master() failed\n");
-+		return -ENOMEM;
-+	}
-+
-+	platform_set_drvdata(pdev, master);
-+	master->mode_bits = BCM2835_AUX_SPI_MODE_BITS;
-+	master->bits_per_word_mask = SPI_BPW_MASK(8);
-+	master->num_chipselect = -1;
-+	master->transfer_one = bcm2835aux_spi_transfer_one;
-+	master->handle_err = bcm2835aux_spi_handle_err;
-+	master->dev.of_node = pdev->dev.of_node;
-+
-+	bs = spi_master_get_devdata(master);
-+
-+	/* the main area */
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	bs->regs = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(bs->regs)) {
-+		err = PTR_ERR(bs->regs);
-+		goto out_master_put;
-+	}
-+	/* the aux area - slight hack...*/
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-+	bs->aux_regs = devm_ioremap(&pdev->dev, res->start,
-+				    resource_size(res));
-+	if (IS_ERR(bs->aux_regs)) {
-+		err = PTR_ERR(bs->aux_regs);
-+		goto out_master_put;
-+	}
-+
-+	bs->clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(bs->clk)) {
-+		err = PTR_ERR(bs->clk);
-+		dev_err(&pdev->dev, "could not get clk: %d\n", err);
-+		goto out_master_put;
-+	}
-+	bs->irq = irq_of_parse_and_map(pdev->dev.of_node, 0);
-+	if (bs->irq <= 0) {
-+		dev_err(&pdev->dev, "could not get IRQ: %d\n", bs->irq);
-+		err = bs->irq ? bs->irq : -ENODEV;
-+		goto out_master_put;
-+	}
-+
-+	clk_prepare_enable(bs->clk);
-+
-+	err = devm_request_irq(&pdev->dev, bs->irq,
-+			       bcm2835aux_spi_interrupt,
-+			       IRQF_SHARED,
-+			       dev_name(&pdev->dev), master);
-+	if (err) {
-+		dev_err(&pdev->dev, "could not request IRQ: %d\n", err);
-+		goto out_clk_disable;
-+	}
-+
-+	/* enable HW block and reset it */
-+	bcm2835aux_spi_enable(bs);
-+	bcm2835aux_spi_reset_hw(bs);
-+
-+	err = devm_spi_register_master(&pdev->dev, master);
-+	if (err) {
-+		dev_err(&pdev->dev, "could not register SPI master: %d\n", err);
-+		goto out_hw_disable;
-+	}
-+
-+	return 0;
-+
-+out_hw_disable:
-+	bcm2835aux_spi_disable(bs);
-+out_clk_disable:
-+	clk_disable_unprepare(bs->clk);
-+out_master_put:
-+	spi_master_put(master);
-+	return err;
-+}
-+
-+static int bcm2835aux_spi_remove(struct platform_device *pdev)
-+{
-+	struct spi_master *master = platform_get_drvdata(pdev);
-+	struct bcm2835aux_spi *bs = spi_master_get_devdata(master);
-+
-+	/* Clear FIFOs, and disable the HW block */
-+	clk_disable_unprepare(bs->clk);
-+
-+	bcm2835aux_spi_reset_hw(bs);
-+
-+	/* disable HW block */
-+	bcm2835aux_spi_disable(bs);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id bcm2835aux_spi_match[] = {
-+	{ .compatible = "brcm,bcm2835-aux-spi", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, bcm2835aux_spi_match);
-+
-+static struct platform_driver bcm2835aux_spi_driver = {
-+	.driver		= {
-+		.name		= DRV_NAME,
-+		.of_match_table	= bcm2835aux_spi_match,
-+	},
-+	.probe		= bcm2835aux_spi_probe,
-+	.remove		= bcm2835aux_spi_remove,
-+};
-+module_platform_driver(bcm2835aux_spi_driver);
-+
-+MODULE_DESCRIPTION("SPI controller driver for Broadcom BCM2835 aux");
-+MODULE_AUTHOR("Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>");
-+MODULE_LICENSE("GPL v2");
--- 
-1.7.10.4
+and here...
+   clk[MT8173_CLK_MFG] == clk[2]
 
+oops.
+
+> +       if (IS_ERR(clk[MT8173_CLK_MFG]))
+> +               return PTR_ERR(clk[MT8173_CLK_MFG]);
+> +
+> +       scp->infracfg = syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
+> +                       "infracfg");
+> +       if (IS_ERR(scp->infracfg)) {
+> +               dev_err(&pdev->dev, "Cannot find infracfg controller: %ld\n",
+> +                               PTR_ERR(scp->infracfg));
+> +               return PTR_ERR(scp->infracfg);
+> +       }
+> +
+> +       pd_data->num_domains = NUM_DOMAINS;
+> +
+> +       for (i = 0; i < NUM_DOMAINS; i++) {
+> +               struct scp_domain *scpd = &scp->domains[i];
+> +               struct generic_pm_domain *genpd = &scpd->genpd;
+> +               const struct scp_domain_data *data = &scp_domain_data[i];
+> +
+> +               pd_data->domains[i] = genpd;
+> +               scpd->scp = scp;
+> +
+> +               scpd->sta_mask = data->sta_mask;
+> +               scpd->ctl_addr = scp->base + data->ctl_offs;
+> +               scpd->sram_pdn_bits = data->sram_pdn_bits;
+> +               scpd->sram_pdn_ack_bits = data->sram_pdn_ack_bits;
+> +               scpd->bus_prot_mask = data->bus_prot_mask;
+> +               if (data->clk_id != MT8173_CLK_NONE)
+> +                       scpd->clk = clk[data->clk_id];
+
+(and here)
+
+-Dan
+
+> +
+> +               genpd->name = data->name;
+> +               genpd->power_off = scpsys_power_off;
+> +               genpd->power_on = scpsys_power_on;
+> +
+> +               /*
+> +                * Initially turn on all domains to make the domains usable
+> +                * with !CONFIG_PM and to get the hardware in sync with the
+> +                * software.  The unused domains will be switched off during
+> +                * late_init time.
+> +                */
+> +               genpd->power_on(genpd);
+> +
+> +               pm_genpd_init(genpd, NULL, false);
+> +       }
+> +
+> +       /*
+> +        * We are not allowed to fail here since there is no way to unregister
+> +        * a power domain. Once registered above we have to keep the domains
+> +        * valid.
+> +        */
+> +
+> +       ret = pm_genpd_add_subdomain(pd_data->domains[MT8173_POWER_DOMAIN_MFG_ASYNC],
+> +               pd_data->domains[MT8173_POWER_DOMAIN_MFG_2D]);
+> +       if (ret && IS_ENABLED(CONFIG_PM))
+> +               dev_err(&pdev->dev, "Failed to add subdomain: %d\n", ret);
+> +
+> +       ret = pm_genpd_add_subdomain(pd_data->domains[MT8173_POWER_DOMAIN_MFG_2D],
+> +               pd_data->domains[MT8173_POWER_DOMAIN_MFG]);
+> +       if (ret && IS_ENABLED(CONFIG_PM))
+> +               dev_err(&pdev->dev, "Failed to add subdomain: %d\n", ret);
+> +
+> +       ret = of_genpd_add_provider_onecell(pdev->dev.of_node, pd_data);
+> +       if (ret)
+> +               dev_err(&pdev->dev, "Failed to add OF provider: %d\n", ret);
+> +
+> +       return 0;
+> +}
+> +
+> +static const struct of_device_id of_scpsys_match_tbl[] = {
+> +       {
+> +               .compatible = "mediatek,mt8173-scpsys",
+> +       }, {
+> +               /* sentinel */
+> +       }
+> +};
+> +
+> +static struct platform_driver scpsys_drv = {
+> +       .driver = {
+> +               .name = "mtk-scpsys",
+> +               .owner = THIS_MODULE,
+> +               .of_match_table = of_match_ptr(of_scpsys_match_tbl),
+> +       },
+> +};
+> +
+> +module_platform_driver_probe(scpsys_drv, scpsys_probe);
+> diff --git a/include/dt-bindings/power/mt8173-power.h b/include/dt-bindings/power/mt8173-power.h
+> new file mode 100644
+> index 0000000..b34cee9
+> --- /dev/null
+> +++ b/include/dt-bindings/power/mt8173-power.h
+> @@ -0,0 +1,15 @@
+> +#ifndef _DT_BINDINGS_POWER_MT8183_POWER_H
+> +#define _DT_BINDINGS_POWER_MT8183_POWER_H
+> +
+> +#define MT8173_POWER_DOMAIN_VDEC       0
+> +#define MT8173_POWER_DOMAIN_VENC       1
+> +#define MT8173_POWER_DOMAIN_ISP                2
+> +#define MT8173_POWER_DOMAIN_MM         3
+> +#define MT8173_POWER_DOMAIN_VENC_LT    4
+> +#define MT8173_POWER_DOMAIN_AUDIO      5
+> +#define MT8173_POWER_DOMAIN_USB                6
+> +#define MT8173_POWER_DOMAIN_MFG_ASYNC  7
+> +#define MT8173_POWER_DOMAIN_MFG_2D     8
+> +#define MT8173_POWER_DOMAIN_MFG                9
+> +
+> +#endif /* _DT_BINDINGS_POWER_MT8183_POWER_H */
+> --
+> 2.1.4
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> Please read the FAQ at  http://www.tux.org/lkml/
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
