@@ -1,129 +1,180 @@
-From: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] arm64: dts: mt8173: Add I2C device node
-Date: Mon, 22 Jun 2015 14:32:32 +0800
-Message-ID: <CAGS+omAW=L3S2TG3Vw8=7UrkmcDMMQDmpKikmC+BO5iMUVr2CQ@mail.gmail.com>
-References: <1434553683-11651-1-git-send-email-eddie.huang@mediatek.com>
- <1434553683-11651-3-git-send-email-eddie.huang@mediatek.com>
- <CAGS+omCVFwHndKSN0A7PrYUArfPLfCoL6iiSJYEik1PVkMBrKA@mail.gmail.com> <1434944170.25921.6.camel@mtksdaap41>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v5] Mediatek SCPSYS power domain support
+Date: Mon, 22 Jun 2015 08:35:38 +0200
+Message-ID: <1434954942-30179-1-git-send-email-s.hauer@pengutronix.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1434944170.25921.6.camel@mtksdaap41>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 22, 2015 at 11:36 AM, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> Hi Dan,
->
-> On Thu, 2015-06-18 at 23:16 +0800, Daniel Kurtz wrote:
->> On Wed, Jun 17, 2015 at 11:08 PM, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
->> > Add MT8173 I2C device nodes, include I2C controllers and pins.
->> > MT8173 has six I2C controllers, from i2c0 to i2c6, exclude i2c5.
->> > The 6th I2C controller register base doesn't next to 5th I2C,
->> > and there is a hardware between 5th and 6th I2C controller. So
->> > SoC designer name 6th controller as "i2c6", not "i2c5".
->> >
->> > Signed-off-by: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->> > ---
->> >  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 144 +++++++++++++++++++++++++++++++
->> >  1 file changed, 144 insertions(+)
->> >
->> > diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
->> > index b52ec43..1816c8f 100644
->> > --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
->> > +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
->> > @@ -158,6 +158,54 @@
->> >                         interrupts = <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>,
->> >                                                 <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>,
->> >                                                 <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
->> > +
->> > +                       i2c0_pins_a: i2c0 {
->> > +                               pins1 {
->> > +                                       pinmux = <MT8173_PIN_45_SDA0__FUNC_SDA0>,
->> > +                                                <MT8173_PIN_46_SCL0__FUNC_SCL0>;
->> > +                                       bias-disable;
->> > +                               };
->> > +                       };
->> > +
->> > +                       i2c1_pins_a: i2c1 {
->> > +                               pins1 {
->> > +                                       pinmux = <MT8173_PIN_125_SDA1__FUNC_SDA1>,
->> > +                                                <MT8173_PIN_126_SCL1__FUNC_SCL1>;
->> > +                                       bias-disable;
->> > +                               };
->> > +                       };
->> > +
->> > +                       i2c2_pins_a: i2c2 {
->> > +                               pins1 {
->> > +                                       pinmux = <MT8173_PIN_43_SDA2__FUNC_SDA2>,
->> > +                                                <MT8173_PIN_44_SCL2__FUNC_SCL2>;
->> > +                                       bias-disable;
->> > +                               };
->> > +                       };
->> > +
->> > +                       i2c3_pins_a: i2c3 {
->> > +                               pins1 {
->> > +                                       pinmux = <MT8173_PIN_106_SDA3__FUNC_SDA3>,
->> > +                                                <MT8173_PIN_107_SCL3__FUNC_SCL3>;
->> > +                                       bias-disable;
->> > +                               };
->> > +                       };
->> > +
->> > +                       i2c4_pins_a: i2c4 {
->> > +                               pins1 {
->> > +                                       pinmux = <MT8173_PIN_133_SDA4__FUNC_SDA4>,
->> > +                                                <MT8173_PIN_134_SCL4__FUNC_SCL4>;
->> > +                                       bias-disable;
->> > +                               };
->> > +                       };
->> > +
->> > +                       i2c6_pins_a: i2c6 {
->> > +                               pins1 {
->> > +                                       pinmux = <MT8173_PIN_100_MSDC2_DAT0__FUNC_SDA5>,
->> > +                                                <MT8173_PIN_101_MSDC2_DAT1__FUNC_SCL5>;
->> > +                                       bias-disable;
->> > +                               };
->> > +                       };
->> >                 };
->> >
->> >                 watchdog: watchdog@10007000 {
->> > @@ -229,6 +277,102 @@
->> >                         clocks = <&uart_clk>;
->> >                         status = "disabled";
->> >                 };
->> > +
->> > +               i2c0: i2c@11007000 {
->> > +                       compatible = "mediatek,mt8173-i2c";
->> > +                       reg = <0 0x11007000 0 0x70>,
->> > +                             <0 0x11000100 0 0x80>;
->> > +                       interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_LOW>;
->> > +                       clock-div = <16>;
->>
->> According to the i2c-mt6577 dt binding:
->>    - clock-div: the fixed value for frequency divider of clock source in i2c
->>      module. Each IC may be different.
->>
->> For other drivers I've seen this kind of hardware-specific value
->> implemented as a table in the driver that is indexed based on the
->> compatible.
->>
->> Any particular reason to specify it here in every device tree node instead?
->>
->
-> If put in device tree, it is not necessary to add new compatible if new
-> SoC has the same I2C controller hardware except clock-div.The benefit is
-> keep driver clean, but the side-effect is add clock-div in device node.I
-> assume clock-div has the same concept of clock, so I put in device tree.
+This series adds support for the MediaTek SCPSYS unit.
 
-Sounds reasonable to me.  This patch is:
+The SCPSYS unit handles several power management related tasks such
+as thermal measurement, DVFS, interrupt filter and low level sleep
+control.
 
-Reviewed-by: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+The initial support only contains the generic power domain handling.
+This is needed to turn on power to the different power domains.
 
-> Eddie
-> Thanks
->
->
+The driver is quite straight forward now. Due to the lack of a better
+place I have put it to drivers/soc/mediatek. As the SCPSYS unit has
+several other tasks that also do not fit into some specific subsystem
+this probably is a good place for this driver.
+
+Please review, any input welcome.
+
+Sascha
+
+Changes since v4:
+- move Kconfig dependency "select PM_GENERIC_DOMAINS if PM" from arch/arm64
+  next to the driver which needs this dependency
+- drop unnecessary clk[] array from struct scp and make the array local to
+  the function which needs it.
+- Disable clock when enabling the domain fails
+- Drop error message when devm_clk_get fails. The core already issues a
+  similar warning
+- Add clocks/clock-names description to the binding doc
+
+Changes since v3:
+- Drop unnecessary MODULE_* macros for builtin code
+- introduce scpsys_domain_is_on() function instead of open coding this
+  twice
+- Drop unnecessary initialisation of power_o[ff|n]_latencies. The kernel
+  updates them with the measured values anyway.
+
+changes since v2:
+- Add missing include/linux/soc/mediatek/infracfg.h file
+- rename VDE -> VDEC, VEN -> VENC, DIS -> DISP and VEN2 -> VENC_LT
+  to make the abbreviatons more clear
+- make of_device_id const
+- remove double loop
+- fix hunk in wrong patch
+- Fix order of domains. Some domains depend on other domains. Reorder
+  the domains so that all domains can be turned on in order when
+  CONFIG_PM is disabled. Also fixes earlier mixups in the domain array
+- Do not allow compilation as modules. pm_domains cannot be removed, so
+  compilation as module is not that useful
+- reorder Kconfig items alphabetically
+- reorder #includes alphabetically
+- select MTK_INFRACFG instead of depending on it
+- Use only two clocks as dependencies for the domains. The previously
+  used 5 clocks are not necessary as confirmed by the hardware designers
+- use 'genpd' as variable name for struct generic_pm_domain like done in
+  other pm code
+
+changes since v1:
+- make MFG_ASYNC a subdomain of MFG_2D and MFG_2D a subdomain of MFG
+- Add (now hopefully properly) infracfg register handling again
+- Add clock handling
+- Fix on/off mixup in error message
+- Make readonly data const
+- Fix MODULE_LICENSE to GPL v2
+
+changes since RFC:
+
+- add a commit log to driver patch
+- drop manipulating infracfg registers for now, can be added (properly)
+  later
+- Add warning messages when errors occur
+- add NULL pointer check for kmalloc
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAABCAAGBQJVdqbqAAoJEPFlmONMx+ezvloP/jpQ1JBTkYvivy4oB+t8GuxU
+J6xLeo5k4uBKHNbTVm/2YbpROwwxA8Q+B/S4iG5mKNSydW6pf9jfA05XFpto0yKr
+CXkbSoWWS2emP3HlnObnW5DYf6ggSq349E5Sopl5G4nW+tOBc1GceND4k9HoRNSu
+MRRlZE0YK+QZ0Mz2x+RVNBnfiI8EU4gXcNdPq/aMEXIj+gSHtMeg2s7Zlg7zzyTQ
+x4ambA2DiGSumqYMWscJUGxJT1GLH7cMmfe5pKDFu9P0z11Og/8A7ix00x0UTdto
+DKqxOyGE4qdQ3Ma8Fb7j15VZ56Y21e7EKkSrv1FK5qSKcfzXnoOWu1xmBL2q0Jht
+X/kfEShfoeU8AMDf89zwxmUTqNx3nPuhsPpQeuVEIiO70cWvJ0dchL4Kp0t8a+xs
+nTmnS6S6Mm8MEUfhYmkJJ7p8WR4roQ+b+W5yeVFPWL9ft81CuioLrAEr/57GeIdR
+bhd4MgWlatNprBRvv/I6aBhFklWoSY87ERKJC9w9vvogZ7of/TEv1lMOI91qKMNL
+eg9y4Pw/FWkZyK0bIysykGHwQcNGLxqlKX52QLbefAM0jzdaljtbyHr3u7SnvpZS
+AikPoSJ+RC3jbP15Fx7IuD/XUCFt3fuSmUbyODpZJZM9MNo6xgmfsqmtwGUoTsbP
+DAFexU9wsU/2Xny1Ygjk
+=UL1E
+-----END PGP SIGNATURE-----
+
+commit 5e33965ca0b265401349229773ee7a3732a63388
+Author: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Date:   Mon Mar 9 08:41:36 2015 +0100
+
+    ARM64: MediaTek MT8173: Add SCPSYS device node
+
+    This adds the SCPSYS device node to the MT8173 dtsi file.
+
+    Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+
+diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+index 924fdb6..12430f0 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+@@ -125,6 +125,16 @@
+ 						<GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
+
++		scpsys: scpsys@10006000 {
++			compatible = "mediatek,mt8173-scpsys";
++			#power-domain-cells = <1>;
++			reg = <0 0x10006000 0 0x1000>;
++			clocks = <&clk26m>,
++				 <&topckgen CLK_TOP_MM_SEL>;
++			clock-names = "mfg", "mm";
++			infracfg = <&infracfg>;
++		};
++
+ 		sysirq: intpol-controller@10200620 {
+ 			compatible = "mediatek,mt8173-sysirq",
+ 					"mediatek,mt6577-sysirq";
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAABCAAGBQJVh6xeAAoJEPFlmONMx+ezuAQP/3OsxylPoreCDqeqJ/JMToPw
+WUp9Yrxu9BJPg7zV56nZAf+3gKNXgMkV5wyb6WpCYT0rRRabX6iALs0taPysYoRY
+IUkq57w8bl+oWS0rJwagXx6BclH2uzjlBor9DTLU7PKjRRmPBvfiLwqJjiGABxf3
+yz4AFptnKkaj6IAudQDl1d2xJevmnzDDL3dMYhZy/VddaC8Gi/CmP86Pxnmr1Vt/
+dTzwDsw3NSF0Hhuy601OFnwRiLDH+8C8xwg+j68kYfWbftrhHrTJZLCeJ+WvCSPL
+aCyrM0MZN+RkBzBgg1ZcdMAJPkjnxie4jERofafiEusLNEmiNln47bIPECMs7/7U
+IVVyCTLFuHljnVC/7Kf5t6RStlohzSgs3FdOs0raV9ObbnEb9Tg9mwSLHJIk6wmr
+xO6X5gqIURHkAODBvmi6MDWTTKmVv0Ep/N6c/HqLaEJEkeS5bP/gge3/l6O7LN9t
+1ZGAjvGQwELszivh0YcFXsN+g1iDjIFSzwvXCCbeCmE1pZoa4JQsKCgLxQWJw3d/
+dtWGtVt4IEX9qAb2UCIwU3HREP6JPn3Zd9QfOOXV2A9Lt0gfFqO7tiKrG4T4QBcx
+4f9h48W4MmygCkNu87jG/3QLpn2p40MzNtvK3ffvP5acaoUtuQL1z1bCoEktDQ58
+MIZ0jg9h66cFyJumlwbm
+=ZIEi
+-----END PGP SIGNATURE-----
+
+commit 4aa48202b3f22a71685f66d66beff0f040781bfd
+Author: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Date:   Mon Mar 9 08:41:36 2015 +0100
+
+    ARM64: MediaTek MT8173: Add SCPSYS device node
+    
+    This adds the SCPSYS device node to the MT8173 dtsi file.
+    
+    Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+
+diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+index 924fdb6..12430f0 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+@@ -125,6 +125,16 @@
+ 						<GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
+ 
++		scpsys: scpsys@10006000 {
++			compatible = "mediatek,mt8173-scpsys";
++			#power-domain-cells = <1>;
++			reg = <0 0x10006000 0 0x1000>;
++			clocks = <&clk26m>,
++				 <&topckgen CLK_TOP_MM_SEL>;
++			clock-names = "mfg", "mm";
++			infracfg = <&infracfg>;
++		};
++
+ 		sysirq: intpol-controller@10200620 {
+ 			compatible = "mediatek,mt8173-sysirq",
+ 					"mediatek,mt6577-sysirq";
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
