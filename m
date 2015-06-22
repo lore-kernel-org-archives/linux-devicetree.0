@@ -1,63 +1,100 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/4] mfd: da9150: Add support for Fuel-Gauge
-Date: Mon, 22 Jun 2015 12:16:24 +0100
-Message-ID: <20150622111624.GF19061@x1>
-References: <cover.1434643491.git.Adam.Thomson.Opensource@diasemi.com>
- <8d8f583fee9313f261efa96a038874e552995c17.1434643491.git.Adam.Thomson.Opensource@diasemi.com>
- <1434732461.2385.162.camel@x220>
- <2E89032DDAA8B9408CB92943514A0337AB555F28@SW-EX-MBX01.diasemi.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH 02/13] dmaengine: Introduce
+ dma_request_slave_channel_compat_reason()
+Date: Mon, 22 Jun 2015 14:31:00 +0300
+Message-ID: <5587F1F4.1060905@ti.com>
+References: <1432646768-12532-1-git-send-email-peter.ujfalusi@ti.com>
+ <1432646768-12532-3-git-send-email-peter.ujfalusi@ti.com>
+ <20150529093317.GF3140@localhost>
+ <CAMuHMdVJ0h9qXxBWH9L2y4O2KLkEq12KW_6k8rTgi+Lux=C0gw@mail.gmail.com>
+ <20150529101846.GG3140@localhost> <55687892.7050606@ti.com>
+ <20150602125535.GS3140@localhost> <5570758E.6030302@ti.com>
+ <20150612125837.GJ28601@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <2E89032DDAA8B9408CB92943514A0337AB555F28-68WUHU125fLLPO1uwJ3ImwLouzNaz+3S@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Cc: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20150612125837.GJ28601@localhost>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, ALSA Development Mailing List <alsa-devel@alsa-project.org>, Tony Lindgren <tony@atomide.com>, Linux MMC List <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, linux-crypto@vger.kernel.org, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, dmaengine@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 22 Jun 2015, Opensource [Adam Thomson] wrote:
+On 06/12/2015 03:58 PM, Vinod Koul wrote:
+> Sorry this slipped thru
 
-> On June 19, 2015 17:48, Paul Bolle wrote:
->=20
-> > On Thu, 2015-06-18 at 17:06 +0100, Adam Thomson wrote:
-> > > --- /dev/null
-> > > +++ b/include/linux/mfd/da9150/fg.h
-> >=20
-> > > +/*
-> > > + * Function template to provide battery temperature. Should prov=
-ide
-> > > + * 0.1 degrees C resolution return values.
-> > > + */
-> > > +typedef int (*da9150_read_temp_t)(void *context);
-> > > +
-> > > +/* Register temp callback function */
-> > > +void da9150_fg_register_temp_cb(struct power_supply *psy,
-> > da9150_read_temp_t cb,
-> > > +				void *cb_context);
-> >=20
-> > The pedant in me noticed that this function is actually added in 3/=
-4. So
-> > this chunk might be moved to 3/4, if you like to entertain pedantry=
- like
-> > that, that is. (But see my remark on 3/4 too.)
->=20
-> This is true, but as the header is part of MFD, I included it as part=
- of that
-> patch as I thought this made more sense. I guess Lee will comment as =
-to whether
-> that was correct or not. :)
+I was away for a week anyways ;)
 
-Glanced over this (as I still have 240 unread emails to attend to).
-If the question is whether to submit the prototype at the same time as
-the associated function, the answer is yes.
+> Thinking about it again, I think we should coverge to two APIs and mark t=
+he
+> legacy depracuated and look to convert folks and phase that out
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+Currently, w/o this series we have these APIs:
+/* to be used with DT/ACPI */
+dma_request_slave_channel(dev, name)		/* NULL on failure */
+dma_request_slave_channel_reason(dev, name)	/* error code on failure */
+
+/* Legacy mode only - no DT/ACPI lookup */
+dma_request_channel(mask, fn, fn_param) /* NULL on failure */
+
+/* to be used with DT/ACPI or legacy boot */
+dma_request_slave_channel_compat(mask, fn, fn_param, dev, name)	/* NULL on
+failure */
+
+To request _any_ channel to be used for memcpy one has to use
+dma_request_channel(mask, NULL, NULL);
+
+If I did not missed something.
+
+As we need different types of parameters for DT/ACPI and legacy (non DT/ACPI
+lookup) and the good API names are already taken, we might need to settle:
+
+/* to be used with DT/ACPI */
+dma_request_slave_channel(dev, name) /* error code on failure */
+- Convert users to check IS_ERR_OR_NULL() instead against NULL
+- Mark dma_request_slave_channel_reason() deprecated and convert the curren=
+t users
+
+/* to be used with DT/ACPI or legacy boot */
+dma_request_slave_channel_compat(mask, fn, fn_param, dev, name) /* error co=
+de
+on failure */
+- Convert users to check IS_ERR_OR_NULL() instead against NULL
+- Do not try legacy mode if either OF or ACPI failed because of real error
+
+/* Legacy mode only - no DT/ACPI lookup */
+dma_request_channel_legacy(mask, fn, fn_param) /* error code on failure */
+- convert users of dma_request_channel()
+- mark dma_request_channel() deprecated
+
+/* to be used to get a channel for memcpy for example */
+dma_request_any_channel(mask) /* error code on failure */
+- Convert current dma_request_channel(mask, NULL, NULL) users
+I know, any of the other function could be prepared to handle this when
+parameters are missing, but it is a bit cleaner to have separate API for th=
+is.
+
+It would be nice to find another name for the
+dma_request_slave_channel_compat() so with the new name we could have chance
+to rearrange the parameters: (dev, name, mask, fn, fn_param)
+
+We would end up with the following APIs, all returning with error code on f=
+ailure:
+dma_request_slave_channel(dev, name);
+dma_request_channel_legacy(mask, fn, fn_param);
+dma_request_slave_channel_compat(mask, fn, fn_param, dev, name);
+dma_request_any_channel(mask);
+
+What do you think?
+
+-- =
+
+P=E9ter
