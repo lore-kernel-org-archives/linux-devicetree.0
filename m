@@ -1,59 +1,62 @@
-From: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/4] ARM: dts: sunxi: Add regulator-boot-on
- to usb host port regulator nodes
-Date: Tue, 23 Jun 2015 00:54:41 +1000
-Message-ID: <CAGRGNgXrXgGXhLAQYXVVyG98NbJF4bDE5OWM9TSgYzZYkOR29g@mail.gmail.com>
-References: <1434814810-26285-1-git-send-email-hdegoede@redhat.com>
- <1434814810-26285-2-git-send-email-hdegoede@redhat.com> <CAGRGNgU7179K408=PekziP9ZzzG7+rvhm=e7TWjZk1UhkAnVZQ@mail.gmail.com>
- <5587C720.9040007@redhat.com>
-Reply-To: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Antony Pavlov <antonynpavlov@gmail.com>
+Subject: Re: [PATCH v4 12/12] MIPS: Add basic support for the TL-WR1043ND
+ version 1
+Date: Mon, 22 Jun 2015 18:01:23 +0300
+Message-ID: <20150622180123.f171a1985eb3c984465144f8@gmail.com>
+References: <1433029955-7346-1-git-send-email-albeu@free.fr>
+	<1433031506-7984-5-git-send-email-albeu@free.fr>
+	<20150608131758.9d76be074998ea3de0e976a4@gmail.com>
+	<20150610235811.0b18af9b@tock>
+	<20150615104213.92258d2d0616c12e4aa7bf1a@gmail.com>
+	<20150620125137.2020a855@tock>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDQIP76OUQLBBRGDUCWAKGQE26X6OHQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <5587C720.9040007-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150620125137.2020a855@tock>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alban <albeu@free.fr>
+Cc: linux-mips@linux-mips.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Ralf Baechle <ralf@linux-mips.org>, Andrew Bresticker <abrestic@chromium.org>, Qais Yousef <qais.yousef@imgtec.com>, Gabor Juhos <juhosg@openwrt.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
+On Sat, 20 Jun 2015 12:51:37 +0200
+Alban <albeu@free.fr> wrote:
 
-On Mon, Jun 22, 2015 at 6:28 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
-> Hi,
->
-> On 22-06-15 02:30, Julian Calaby wrote:
->>
->> Hi Hans,
->>
->> On Sun, Jun 21, 2015 at 1:40 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> wrote:
->>>
->>> u-boot will have turned on the power to the usb host ports, so mark them
->>> as regulator-boot-on, this stops the power on the ports from temporarily
->>> getting turned off during boot, causing issues with e.g. usb powered
->>> harddisks.
->>
->>
->> Stupid question: shouldn't u-boot set this property?
->
->
-> We could make u-boot set this property but that will require a lot of code
-> on
-> u-boot's side which is simply not there atm. And traditionally this property
-> is is simply a part of the dts files as shipped with the kernel.
+> On Mon, 15 Jun 2015 10:42:13 +0300
+> Antony Pavlov <antonynpavlov@gmail.com> wrote:
+>=20
+> > On Wed, 10 Jun 2015 23:58:11 +0200
+> > Alban <albeu@free.fr> wrote:
+> >=20
+> > > On Mon, 8 Jun 2015 13:17:58 +0300
+> > > Antony Pavlov <antonynpavlov@gmail.com> wrote:
+> > >=20
+> > > > IMHO AR9132 SoC can't work without external oscilator.
+> > > >=20
+> > > > Can we just move basic extosc declaration to SoC dt file
+> > > > (ar9132.dtsi)? So board dt file ar9132_tl_wr1043nd_v1.dts will
+> > > > contain only oscilator clock frequency value.
+> > >=20
+> > > I would prefer to keep the split between the files in sync with t=
+he
+> > > hardware. I understand that most simple board designs use a fixed
+> > > oscillator, but that might not always be the case.
+> > >=20
+> >=20
+> > The AR9132 SoC __always__ use one external oscilator.
+>=20
+> Yes, but what I don't like is to impose the clock source being a
+> fixed-oscillator. What if the board use a clock from another
+> component that need to be represented in the DT as something else
+> than a fixed-oscillator?
 
-Fair enough.
+The absolute majority of the ar9132-based boards has fixed-oscillator
+(Actually I suppose all of them has fixed oscillator).
 
-Thanks,
+If some board has different clock source then we can completely alter
+extosc node in the board dts file. (But I have some doubts in existence
+of such board.)
 
--- 
-Julian Calaby
-
-Email: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Profile: http://www.google.com/profiles/julian.calaby/
+--=A0
+Best regards,
+=A0 Antony Pavlov
