@@ -1,39 +1,125 @@
-From: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/4] ARM: dts: sunxi: Add regulator-boot-on
- to usb host port regulator nodes
-Date: Mon, 22 Jun 2015 10:30:38 +1000
-Message-ID: <CAGRGNgU7179K408=PekziP9ZzzG7+rvhm=e7TWjZk1UhkAnVZQ@mail.gmail.com>
-References: <1434814810-26285-1-git-send-email-hdegoede@redhat.com> <1434814810-26285-2-git-send-email-hdegoede@redhat.com>
-Reply-To: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] arm64: dts: mt8173: Add I2C device node
+Date: Mon, 22 Jun 2015 11:36:10 +0800
+Message-ID: <1434944170.25921.6.camel@mtksdaap41>
+References: <1434553683-11651-1-git-send-email-eddie.huang@mediatek.com>
+	 <1434553683-11651-3-git-send-email-eddie.huang@mediatek.com>
+	 <CAGS+omCVFwHndKSN0A7PrYUArfPLfCoL6iiSJYEik1PVkMBrKA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDQIP76OUQLBBQNOTWWAKGQEOSKPX3Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1434814810-26285-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAGS+omCVFwHndKSN0A7PrYUArfPLfCoL6iiSJYEik1PVkMBrKA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
+Hi Dan,
 
-On Sun, Jun 21, 2015 at 1:40 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
-> u-boot will have turned on the power to the usb host ports, so mark them
-> as regulator-boot-on, this stops the power on the ports from temporarily
-> getting turned off during boot, causing issues with e.g. usb powered
-> harddisks.
+On Thu, 2015-06-18 at 23:16 +0800, Daniel Kurtz wrote:
+> On Wed, Jun 17, 2015 at 11:08 PM, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> > Add MT8173 I2C device nodes, include I2C controllers and pins.
+> > MT8173 has six I2C controllers, from i2c0 to i2c6, exclude i2c5.
+> > The 6th I2C controller register base doesn't next to 5th I2C,
+> > and there is a hardware between 5th and 6th I2C controller. So
+> > SoC designer name 6th controller as "i2c6", not "i2c5".
+> >
+> > Signed-off-by: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > ---
+> >  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 144 +++++++++++++++++++++++++++++++
+> >  1 file changed, 144 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> > index b52ec43..1816c8f 100644
+> > --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> > +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> > @@ -158,6 +158,54 @@
+> >                         interrupts = <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>,
+> >                                                 <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>,
+> >                                                 <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
+> > +
+> > +                       i2c0_pins_a: i2c0 {
+> > +                               pins1 {
+> > +                                       pinmux = <MT8173_PIN_45_SDA0__FUNC_SDA0>,
+> > +                                                <MT8173_PIN_46_SCL0__FUNC_SCL0>;
+> > +                                       bias-disable;
+> > +                               };
+> > +                       };
+> > +
+> > +                       i2c1_pins_a: i2c1 {
+> > +                               pins1 {
+> > +                                       pinmux = <MT8173_PIN_125_SDA1__FUNC_SDA1>,
+> > +                                                <MT8173_PIN_126_SCL1__FUNC_SCL1>;
+> > +                                       bias-disable;
+> > +                               };
+> > +                       };
+> > +
+> > +                       i2c2_pins_a: i2c2 {
+> > +                               pins1 {
+> > +                                       pinmux = <MT8173_PIN_43_SDA2__FUNC_SDA2>,
+> > +                                                <MT8173_PIN_44_SCL2__FUNC_SCL2>;
+> > +                                       bias-disable;
+> > +                               };
+> > +                       };
+> > +
+> > +                       i2c3_pins_a: i2c3 {
+> > +                               pins1 {
+> > +                                       pinmux = <MT8173_PIN_106_SDA3__FUNC_SDA3>,
+> > +                                                <MT8173_PIN_107_SCL3__FUNC_SCL3>;
+> > +                                       bias-disable;
+> > +                               };
+> > +                       };
+> > +
+> > +                       i2c4_pins_a: i2c4 {
+> > +                               pins1 {
+> > +                                       pinmux = <MT8173_PIN_133_SDA4__FUNC_SDA4>,
+> > +                                                <MT8173_PIN_134_SCL4__FUNC_SCL4>;
+> > +                                       bias-disable;
+> > +                               };
+> > +                       };
+> > +
+> > +                       i2c6_pins_a: i2c6 {
+> > +                               pins1 {
+> > +                                       pinmux = <MT8173_PIN_100_MSDC2_DAT0__FUNC_SDA5>,
+> > +                                                <MT8173_PIN_101_MSDC2_DAT1__FUNC_SCL5>;
+> > +                                       bias-disable;
+> > +                               };
+> > +                       };
+> >                 };
+> >
+> >                 watchdog: watchdog@10007000 {
+> > @@ -229,6 +277,102 @@
+> >                         clocks = <&uart_clk>;
+> >                         status = "disabled";
+> >                 };
+> > +
+> > +               i2c0: i2c@11007000 {
+> > +                       compatible = "mediatek,mt8173-i2c";
+> > +                       reg = <0 0x11007000 0 0x70>,
+> > +                             <0 0x11000100 0 0x80>;
+> > +                       interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_LOW>;
+> > +                       clock-div = <16>;
+> 
+> According to the i2c-mt6577 dt binding:
+>    - clock-div: the fixed value for frequency divider of clock source in i2c
+>      module. Each IC may be different.
+> 
+> For other drivers I've seen this kind of hardware-specific value
+> implemented as a table in the driver that is indexed based on the
+> compatible.
+> 
+> Any particular reason to specify it here in every device tree node instead?
+> 
 
-Stupid question: shouldn't u-boot set this property?
+If put in device tree, it is not necessary to add new compatible if new
+SoC has the same I2C controller hardware except clock-div.The benefit is
+keep driver clean, but the side-effect is add clock-div in device node.I
+assume clock-div has the same concept of clock, so I put in device tree.
 
-Thanks,
+Eddie
+Thanks
 
--- 
-Julian Calaby
 
-Email: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Profile: http://www.google.com/profiles/julian.calaby/
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
