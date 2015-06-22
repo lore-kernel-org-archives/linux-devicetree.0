@@ -1,88 +1,170 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: mt8173: add clock_null
-Date: Mon, 22 Jun 2015 14:53:38 +0200
-Message-ID: <8860488.JuX1EN5tWB@diego>
-References: <1434605351-64592-1-git-send-email-eddie.huang@mediatek.com> <8371528.SNAmOgosfF@phil> <1434944317.25948.8.camel@mtksdaap41>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH 1/2] power_supply: bq2415x_charger: Fix coding style
+ issues
+Date: Mon, 22 Jun 2015 14:55:24 +0200
+Message-ID: <20150622125524.GA26143@xo-6d-61-c0.localdomain>
+References: <1431421893-18816-1-git-send-email-anda-maria.nicolae@intel.com>
+ <1431421893-18816-2-git-send-email-anda-maria.nicolae@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1434944317.25948.8.camel@mtksdaap41>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1431421893-18816-2-git-send-email-anda-maria.nicolae@intel.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Anda-Maria Nicolae <anda-maria.nicolae@intel.com>
+Cc: sre@kernel.org, dbaryshkov@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dwmw2@infradead.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi James,
+On Tue 2015-05-12 12:11:32, Anda-Maria Nicolae wrote:
+> This patch fixes the following issues reported by checkpatch.pl:
+> - use -EINVAL instead of -ENOSYS, to fix warning message:
+>   "ENOSYS means 'invalid syscall nr' and nothing else"
 
-Am Montag, 22. Juni 2015, 11:38:37 schrieb James Liao:
-> On Fri, 2015-06-19 at 13:36 +0200, Heiko Stuebner wrote:
-> > Am Donnerstag, 18. Juni 2015, 18:15:03 schrieb Heiko Stuebner:
-> > > Am Donnerstag, 18. Juni 2015, 13:29:11 schrieb Eddie Huang:
-> > > > Add clk_null, which represents clocks that can not / need not
-> > > > controlled by software.
-> > > > There are many clocks' parent set to clk_null.
-> > > 
-> > > Devicetree is supposed to describe hardware, and ideally not what
-> > > software
-> > > does with it. If the clock simply cannot be controlled by software, it
-> > > will
-> > > still have a rate and I think it should probably be modelled - similarly
-> > > we
-> > > sometimes have fixed regulators that also are not software controllable.
-> > > 
-> > > 
-> > > While it might be ok to define dummy clocks as a temporary stopgap,
-> > > these
-> > > should definitly be marked as such. This clk_null at least sounds like
-> > > there is no plan to replace this with a real solution at some point.
-> > > 
-> > > And of course a bit of context would be cool, to know which type of
-> > > clocks
-> > > this actually replaces.
-> > 
-> > After looking a bit more into this, I'm feel that the clk_null approach is
-> > wrong.
-> > 
-> > For one, even if the clk_null stuff would be ok, the binding doc of the
-> > clock controller does not describe the need of this specific clock at
-> > all.
-> > 
-> > 
-> > The other more important point, looking at clk-mt8173 I see at least these
-> > clocks being set as children of "clk_null":
-> > 
-> > static const struct mtk_fixed_factor root_clk_alias[] __initconst = {
-> > 
-> > 	FACTOR(CLK_TOP_CLKPH_MCK_O, "clkph_mck_o", "clk_null", 1, 1),
-> > 	FACTOR(CLK_TOP_DPI, "dpi_ck", "clk_null", 1, 1),
-> > 	FACTOR(CLK_TOP_USB_SYSPLL_125M, "usb_syspll_125m", "clk_null", 1, 1),
-> > 	FACTOR(CLK_TOP_HDMITX_DIG_CTS, "hdmitx_dig_cts", "clk_null", 1, 1),
-> > 
-> > };
-> > 
-> > 
-> > These look more like they are fed from some external source to the clock
-> > controller? I did ask Matthias but he also couldn't find anything
-> > describing where these clocks actually come from.
+
+So you change the ABI? Just like that? With changelog saying "cleanup checkpatch"?
+
+Maybe it is ok to change the ABI... but you should say so clearly in the changelog...
+
+									Pavel
+
+> diff --git a/drivers/power/bq2415x_charger.c b/drivers/power/bq2415x_charger.c
+> index 6c534dc..2cf8ec7 100644
+> --- a/drivers/power/bq2415x_charger.c
+> +++ b/drivers/power/bq2415x_charger.c
+> @@ -631,7 +631,7 @@ static int bq2415x_set_charge_current(struct bq2415x_device *bq, int mA)
+>  	int val;
+>  
+>  	if (bq->init_data.resistor_sense <= 0)
+> -		return -ENOSYS;
+> +		return -EINVAL;
+>  
+>  	val = (mA * bq->init_data.resistor_sense - 37400) / 6800;
+>  	if (val < 0)
+> @@ -650,7 +650,7 @@ static int bq2415x_get_charge_current(struct bq2415x_device *bq)
+>  	int ret;
+>  
+>  	if (bq->init_data.resistor_sense <= 0)
+> -		return -ENOSYS;
+> +		return -EINVAL;
+>  
+>  	ret = bq2415x_i2c_read_mask(bq, BQ2415X_REG_CURRENT,
+>  			BQ2415X_MASK_VI_CHRG, BQ2415X_SHIFT_VI_CHRG);
+> @@ -665,7 +665,7 @@ static int bq2415x_set_termination_current(struct bq2415x_device *bq, int mA)
+>  	int val;
+>  
+>  	if (bq->init_data.resistor_sense <= 0)
+> -		return -ENOSYS;
+> +		return -EINVAL;
+>  
+>  	val = (mA * bq->init_data.resistor_sense - 3400) / 3400;
+>  	if (val < 0)
+> @@ -684,7 +684,7 @@ static int bq2415x_get_termination_current(struct bq2415x_device *bq)
+>  	int ret;
+>  
+>  	if (bq->init_data.resistor_sense <= 0)
+> -		return -ENOSYS;
+> +		return -EINVAL;
+>  
+>  	ret = bq2415x_i2c_read_mask(bq, BQ2415X_REG_CURRENT,
+>  			BQ2415X_MASK_VI_TERM, BQ2415X_SHIFT_VI_TERM);
+> @@ -1166,7 +1166,7 @@ static ssize_t bq2415x_sysfs_set_mode(struct device *dev,
+>  
+>  	if (strncmp(buf, "auto", 4) == 0) {
+>  		if (bq->automode < 0)
+> -			return -ENOSYS;
+> +			return -EINVAL;
+>  		bq->automode = 1;
+>  		mode = bq->reported_mode;
+>  	} else if (strncmp(buf, "off", 3) == 0) {
+> @@ -1556,28 +1556,28 @@ static int bq2415x_probe(struct i2c_client *client,
+>  
+>  	bq = devm_kzalloc(&client->dev, sizeof(*bq), GFP_KERNEL);
+>  	if (!bq) {
+> -		dev_err(&client->dev, "failed to allocate device data\n");
+>  		ret = -ENOMEM;
+>  		goto error_2;
+>  	}
+>  
+>  	if (np) {
+> -		bq->notify_psy = power_supply_get_by_phandle(np, "ti,usb-charger-detection");
+> +		bq->notify_psy = power_supply_get_by_phandle(np,
+> +						"ti,usb-charger-detection");
+>  
+>  		if (IS_ERR(bq->notify_psy)) {
+>  			dev_info(&client->dev,
+> -				"no 'ti,usb-charger-detection' property (err=%ld)\n",
+> +				 "no 'ti,usb-charger-detection' property (err=%ld)\n",
+>  				PTR_ERR(bq->notify_psy));
+>  			bq->notify_psy = NULL;
+>  		} else if (!bq->notify_psy) {
+>  			ret = -EPROBE_DEFER;
+>  			goto error_2;
+>  		}
+> -	}
+> -	else if (pdata->notify_device)
+> +	} else if (pdata->notify_device) {
+>  		bq->notify_psy = power_supply_get_by_name(pdata->notify_device);
+> -	else
+> +	} else {
+>  		bq->notify_psy = NULL;
+> +	}
+>  
+>  	i2c_set_clientdata(client, bq);
+>  
+> @@ -1592,11 +1592,11 @@ static int bq2415x_probe(struct i2c_client *client,
+>  
+>  	if (np) {
+>  		ret = of_property_read_u32(np, "ti,current-limit",
+> -				&bq->init_data.current_limit);
+> +					   &bq->init_data.current_limit);
+>  		if (ret)
+>  			goto error_3;
+>  		ret = of_property_read_u32(np, "ti,weak-battery-voltage",
+> -				&bq->init_data.weak_battery_voltage);
+> +					   &bq->init_data.weak_battery_voltage);
+>  		if (ret)
+>  			goto error_3;
+>  		ret = of_property_read_u32(np, "ti,battery-regulation-voltage",
+> @@ -1604,15 +1604,15 @@ static int bq2415x_probe(struct i2c_client *client,
+>  		if (ret)
+>  			goto error_3;
+>  		ret = of_property_read_u32(np, "ti,charge-current",
+> -				&bq->init_data.charge_current);
+> +					   &bq->init_data.charge_current);
+>  		if (ret)
+>  			goto error_3;
+>  		ret = of_property_read_u32(np, "ti,termination-current",
+> -				&bq->init_data.termination_current);
+> +					   &bq->init_data.termination_current);
+>  		if (ret)
+>  			goto error_3;
+>  		ret = of_property_read_u32(np, "ti,resistor-sense",
+> -				&bq->init_data.resistor_sense);
+> +					   &bq->init_data.resistor_sense);
+>  		if (ret)
+>  			goto error_3;
+>  	} else {
+> @@ -1648,7 +1648,8 @@ static int bq2415x_probe(struct i2c_client *client,
+>  		}
+>  
+>  		/* Query for initial reported_mode and set it */
+> -		bq2415x_notifier_call(&bq->nb, PSY_EVENT_PROP_CHANGED, bq->notify_psy);
+> +		bq2415x_notifier_call(&bq->nb, PSY_EVENT_PROP_CHANGED,
+> +				      bq->notify_psy);
+>  		bq2415x_set_mode(bq, bq->reported_mode);
+>  
+>  		bq->automode = 1;
+> -- 
+> 1.7.9.5
 > 
-> Some clocks such as clkph_mck_o, we don't really care where they come
-> from and what frequencies are. We model these clocks just because they
-> or their derived clocks can be the source of topckgen muxes. Is there a
-> better way to model "don't care" clocks?
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
 
-There are two different concepts at work here. You might not care in your 
-kernel driver implementation _at the moment_ where the clocks come from; but 
-the devicetree is supposed to model how the hardware is structured and not 
-contain implementation specific details.
-
-So the clock tree should be modeled according to how the hardware is layed out 
-not how you want to use the clocks at the moment :-) .
-
-It would it any case be good, if you could describe where these clocks come 
-from in the hardware, so we can find the best solution on how to model those.
-
-
-Heiko
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-pm" in
