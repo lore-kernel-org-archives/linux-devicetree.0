@@ -1,112 +1,64 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v6] usb: common: add API to set usb otg capabilities by
- device tree
-Date: Mon, 22 Jun 2015 16:36:35 +0300
-Message-ID: <20150622163635.c348b003f621cc0c4a6058cf@ti.com>
-References: <1434590302-18066-1-git-send-email-jun.li@freescale.com>
-	<20150618103650.7c3d1b8ceb134388b0d8b093@ti.com>
-	<20150618084747.GD15280@shlinux2>
-	<20150622124337.bf42b82956e2431cd7e32900@ti.com>
-	<20150622105617.GB25349@shlinux2>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150622105617.GB25349@shlinux2>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org
+Subject: [PATCH 2/2] dt: brcm,bcm2835-aux-spi: add binding documentation for new spi-bcm2835aux
+Date: Mon, 22 Jun 2015 13:40:07 +0000
+Message-ID: <1434980408-4086-2-git-send-email-kernel@martin.sperl.org>
+References: <1434980408-4086-1-git-send-email-kernel@martin.sperl.org>
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1434980408-4086-1-git-send-email-kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 22 Jun 2015 18:56:18 +0800
-Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
 
-> On Mon, Jun 22, 2015 at 12:43:37PM +0300, Roger Quadros wrote:
-> > On Thu, 18 Jun 2015 16:47:48 +0800
-> > Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> > 
-> > > On Thu, Jun 18, 2015 at 10:36:50AM +0300, Roger Quadros wrote:
-> > > > Lin,
-> > > > 
-> > > > You can use --in-reply-to "message id of v5 of this path" so that it appears together
-> > > > with the other patches in peoples mailboxes.
-> > > > 
-> > > > > + * the passed properties in DT.
-> > > > > + * @np: Pointer to the given device_node
-> > > > > + * @otg_caps: Pointer to the target usb_otg_caps to be set
-> > > > > + *
-> > > > > + * The function gets and sets the otg capabilities
-> > > > > + */
-> > > > > +void of_usb_set_otg_caps(struct device_node *np, struct usb_otg_caps *otg_caps)
-> > > > > +{
-> > > > > +	u32 otg_rev;
-> > > > > +
-> > > > > +	if (!otg_caps)
-> > > > > +		return;
-> > > > > +
-> > > > > +	if (!of_property_read_u32(np, "otg-rev", &otg_rev))
-> > > > > +		otg_caps->otg_rev = otg_rev;
-> > > > 
-> > > > should we check if otg_rev is in correct format?
-> > > > anything non BCD and greater than 0x9999 is invalid.
-> > > > 
-> > > > Also if otg-rev is not passed then we need to treat it as legacy
-> > > > platform right? How is this taken care of?
-> > > > 
-> > > Missed this comment
-> > > This handling rely on controller driver, cannot decided here.
-> > > There are several cases we need take care:
-> > > 1) otg-rev is not passed, but all 3 disable flags passed, this is
-> > >   valid, means user want to disable whole OTG, so only "otg-rev"
-> > >   not passed, cannot treat as legacy platform.
-> > > 2) Legacy platform means: none of 4 properties is present.
-> > 
-> > OK this was our difference in understanding. I was thinking that for non
-> > legacy code otg-rev _must_ be passed. without otg-rev the disable flags
-> > will be ignored. It makes life much easier no?
-> > 
-> 
-> I have to consider ID pint detect case, this is a most common usage,
-> after controller driver use otg_caps and enable OTG HNP/SRP, some
-> platform still just want ID pin detect, no more otg feature required,
-> it need disable OTG HNP/SRP/ADP, the dt should be:
-> dr_mode = "otg";
-> adp-disable;
-> hnp-disable;
-> srp-didable;
-> 
-> in this case, we cannot require DT user still pass a otg-rev, right?
+Signed-off-by: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+---
+ .../bindings/spi/brcm,bcm2835-aux-spi.txt          |   33 ++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/brcm,bcm2835-aux-spi.txt
 
-Right. Although I'm beginning to think if we should add "drd-only" flag
-to explicitly state DRD feature as it might be more common than OTG.
+diff --git a/Documentation/devicetree/bindings/spi/brcm,bcm2835-aux-spi.txt b/Documentation/devicetree/bindings/spi/brcm,bcm2835-aux-spi.txt
+new file mode 100644
+index 0000000..23e4138
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/brcm,bcm2835-aux-spi.txt
+@@ -0,0 +1,33 @@
++Broadcom BCM2835 SPI1/2 controller
++
++The BCM2835 contains two forms of SPI master controller, one known simply as
++SPI0, and the other known as the "Universal SPI Master"; part of the
++auxiliary block. This binding applies to the SPI1/2 controller.
++
++Required properties:
++- compatible: Should be "brcm,bcm2835-aux-spi".
++- reg: Should contain register location and length for the spi block
++       as well as for the common aux block control
++- interrupts: Should contain shared interrupt of the aux block
++- clocks: The clock feeding the SPI controller.
++- gpio-cs: the gpio-cs (native cs is NOT supported)
++
++Example:
++
++spi1@7e215080 {
++	compatible = "brcm,bcm2835-aux-spi";
++	reg = <0x7e215080 0x40>, <0x7e215000 0x08>;
++	interrupts = <1 29>;
++	clocks = <&clk_spi>;
++	#address-cells = <1>;
++	#size-cells = <0>;
++};
++
++spi2@7e215080 {
++	compatible = "brcm,bcm2835-aux-spi";
++	reg = <0x7e2150c0 0x40>, <0x7e215000 0x08>;
++	interrupts = <1 29>;
++	clocks = <&clk_spi>;
++	#address-cells = <1>;
++	#size-cells = <0>;
++};
+-- 
+1.7.10.4
 
-But for current patches I think we can safely assume that
-if the 3 flags are not passed and otg-rev is not passed then it is
-legacy DT requiring OTG with HNP/SRP.
-
-> 
-> > why do you want otg-rev to be optional for non-legacy DT?
-> > 
-> 
-> For above ID pin detect case.
-
-Got it.
-
-cheers,
--roger
-
-> 
-> > > 3) Some controller drivers already support OTG HNP/SRP, then change
-> > >   to utilize those new flags, still should support OTG HNP/SRP w/o
-> > >   any dt change, so OTG caps should be enabled for legacy platforms.
-> > > 4) Some controller drivers does not support any OTG, after add OTG
-> > >   functions and utilize those new flags, should keep OTG disabled
-> > >   for legacy platforms.
-> > > 
-> > 
-> > cheers,
-> > -roger
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
