@@ -1,380 +1,134 @@
-From: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 12/12] MIPS: Add basic support for the TL-WR1043ND
- version 1
-Date: Mon, 22 Jun 2015 18:11:12 +0300
-Message-ID: <20150622181112.ab7a4c6764b0aa2236e43ab4@gmail.com>
-References: <1433029955-7346-1-git-send-email-albeu@free.fr>
-	<1433031506-7984-5-git-send-email-albeu@free.fr>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 01/14] clk: shmobile: Add CPG Clock Domain support
+Date: Mon, 22 Jun 2015 17:07:23 +0200
+Message-ID: <CAMuHMdUuQkz9oiKdntd9KhMM9NGy1gMkiJ9jVZvkHA2yQNWBTg@mail.gmail.com>
+References: <1432839219-475-1-git-send-email-geert+renesas@glider.be>
+	<1432839219-475-2-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1433031506-7984-5-git-send-email-albeu-GANU6spQydw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Gabor Juhos <juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1432839219-475-2-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, linux-clk@vger.kernel.org, Linux PM list <linux-pm@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 31 May 2015 02:18:26 +0200
-Alban Bedel <albeu-GANU6spQydw@public.gmane.org> wrote:
-
-> Add a DTS for TL-WR1043ND version 1 and allow to have it built in the
-> kernel to circumvent the broken u-boot found on these boards.
-> Currently only the UART, LEDs and buttons are supported.
->=20
-> Signed-off-by: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
+On Thu, May 28, 2015 at 8:53 PM, Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
+> Add Clock Domain support to the Clock Pulse Generator (CPG) Module Stop
+> (MSTP) Clocks driver using the generic PM Domain.  This allows to
+> power-manage the module clocks of SoC devices that are part of the CPG
+> Clock Domain using Runtime PM, or for system suspend/resume.
+>
+> SoC devices that are part of a CPG Clock Domain and can be
+> power-managed through an MSTP clock should be tagged in DT with a
+> proper "power-domains" property.
+>
+> The CPG Clock Domain code will scan such devices for clocks that are
+> suitable for power-managing the device, by looking for a clock that is
+> compatible with "renesas,cpg-mstp-clocks".
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+> Reviewed-by: Kevin Hilman <khilman@linaro.org>
 > ---
-> v2: * Rebased for the new vendor directory structure
->     * Merged the 2 separate patch for SoC dtsi and board DTS in a
->       single one
->     * Fixed the node names to use ePAPR standardized names
-> v3: * Moved adding the Kconfig Builtin devicetree menu to this patch
->     * Set the Kconfig builtin DTB menu as optional, removed config
->       DTB_ATH79_NONE and slightly improved the menu name and help
->       message.
-> v4: * Always build the DTB to improve testing coverage
->     * Added the SPI controller as the binding has been accepted in
->       the SPI tree.
+> v2:
+>   - Add Acked-by and Reviewed-by,
+>   - Move core CPG Clock Domain code from the R-Car Gen2 driver to the
+>     CPG MSTP Clocks driver, as it's generic, and can be used on other
+>     Renesas SoCs that have a CPG/MSTP block,
+>   - Scan for an MSTP clock instead of using the first clock tied to the
+>     device (con_id NULL),
+>   - Extract R-Car Gen2 specifics to a separate patch.
 > ---
->  arch/mips/ath79/Kconfig                          |  12 ++
->  arch/mips/boot/dts/Makefile                      |   1 +
->  arch/mips/boot/dts/qca/Makefile                  |  11 ++
->  arch/mips/boot/dts/qca/ar9132.dtsi               | 133 +++++++++++++=
-++++++++++
->  arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts | 112 +++++++++++++=
-++++++
->  5 files changed, 269 insertions(+)
->  create mode 100644 arch/mips/boot/dts/qca/Makefile
->  create mode 100644 arch/mips/boot/dts/qca/ar9132.dtsi
->  create mode 100644 arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
->=20
-> diff --git a/arch/mips/ath79/Kconfig b/arch/mips/ath79/Kconfig
-> index dfc6020..13c04cf 100644
-> --- a/arch/mips/ath79/Kconfig
-> +++ b/arch/mips/ath79/Kconfig
-> @@ -71,6 +71,18 @@ config ATH79_MACH_UBNT_XM
->  	  Say 'Y' here if you want your kernel to support the
->  	  Ubiquiti Networks XM (rev 1.0) board.
-> =20
-> +choice
-> +	prompt "Build a DTB in the kernel"
-> +	optional
-> +	help
-> +	  Select a devicetree that should be built into the kernel.
-> +
-> +	config DTB_TL_WR1043ND_V1
-> +		bool "TL-WR1043ND Version 1"
-> +		select BUILTIN_DTB
-> +		select SOC_AR913X
-> +endchoice
-> +
->  endmenu
-> =20
->  config SOC_AR71XX
-> diff --git a/arch/mips/boot/dts/Makefile b/arch/mips/boot/dts/Makefil=
-e
-> index 5d95e4b..9975485 100644
-> --- a/arch/mips/boot/dts/Makefile
-> +++ b/arch/mips/boot/dts/Makefile
-> @@ -3,6 +3,7 @@ dts-dirs	+=3D cavium-octeon
->  dts-dirs	+=3D lantiq
->  dts-dirs	+=3D mti
->  dts-dirs	+=3D netlogic
-> +dts-dirs	+=3D qca
->  dts-dirs	+=3D ralink
-> =20
->  obj-y		:=3D $(addsuffix /, $(dts-dirs))
-> diff --git a/arch/mips/boot/dts/qca/Makefile b/arch/mips/boot/dts/qca=
-/Makefile
-> new file mode 100644
-> index 0000000..2d61455d
-> --- /dev/null
-> +++ b/arch/mips/boot/dts/qca/Makefile
-> @@ -0,0 +1,11 @@
-> +# All DTBs
-> +dtb-$(CONFIG_ATH79)			+=3D ar9132_tl_wr1043nd_v1.dtb
-> +
-> +# Select a DTB to build in the kernel
-> +obj-$(CONFIG_DTB_TL_WR1043ND_V1)	+=3D ar9132_tl_wr1043nd_v1.dtb.o
-> +
-> +# Force kbuild to make empty built-in.o if necessary
-> +obj-				+=3D dummy.o
-> +
-> +always				:=3D $(dtb-y)
-> +clean-files			:=3D *.dtb *.dtb.S
-> diff --git a/arch/mips/boot/dts/qca/ar9132.dtsi b/arch/mips/boot/dts/=
-qca/ar9132.dtsi
-> new file mode 100644
-> index 0000000..4759cff
-> --- /dev/null
-> +++ b/arch/mips/boot/dts/qca/ar9132.dtsi
-> @@ -0,0 +1,133 @@
-> +/ {
-> +	compatible =3D "qca,ar9132";
-> +
-> +	#address-cells =3D <1>;
-> +	#size-cells =3D <1>;
-> +
-> +	cpus {
-> +		#address-cells =3D <1>;
-> +		#size-cells =3D <0>;
-> +
-> +		cpu@0 {
-> +			device_type =3D "cpu";
-> +			compatible =3D "mips,mips24Kc";
-> +			reg =3D <0>;
-> +		};
-> +	};
-> +
-> +	cpuintc: interrupt-controller {
-> +		compatible =3D "qca,ar9132-cpu-intc", "qca,ar7100-cpu-intc";
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells =3D <1>;
-> +
-> +		qca,ddr-wb-channel-interrupts =3D <2>, <3>, <4>, <5>;
-> +		qca,ddr-wb-channels =3D <&ddr_ctrl 3>, <&ddr_ctrl 2>,
-> +					<&ddr_ctrl 0>, <&ddr_ctrl 1>;
-> +	};
-> +
-> +	ahb {
-> +		compatible =3D "simple-bus";
-> +		ranges;
-> +
-> +		#address-cells =3D <1>;
-> +		#size-cells =3D <1>;
-> +
-> +		interrupt-parent =3D <&cpuintc>;
-> +
-> +		apb {
-> +			compatible =3D "simple-bus";
-> +			ranges;
-> +
-> +			#address-cells =3D <1>;
-> +			#size-cells =3D <1>;
-> +
-> +			interrupt-parent =3D <&miscintc>;
-> +
-> +			ddr_ctrl: memory-controller@18000000 {
-> +				compatible =3D "qca,ar9132-ddr-controller",
-> +						"qca,ar7240-ddr-controller";
-> +				reg =3D <0x18000000 0x100>;
-> +
-> +				#qca,ddr-wb-channel-cells =3D <1>;
-> +			};
-> +
-> +			uart@18020000 {
-> +				compatible =3D "ns8250";
-> +				reg =3D <0x18020000 0x20>;
-> +				interrupts =3D <3>;
-> +
-> +				clocks =3D <&pll 2>;
-> +				clock-names =3D "uart";
-> +
-> +				reg-io-width =3D <4>;
-> +				reg-shift =3D <2>;
-> +				no-loopback-test;
-> +
-> +				status =3D "disabled";
-> +			};
-> +
-> +			gpio: gpio@18040000 {
-> +				compatible =3D "qca,ar9132-gpio",
-> +						"qca,ar7100-gpio";
-> +				reg =3D <0x18040000 0x30>;
-> +				interrupts =3D <2>;
-> +
-> +				ngpios =3D <22>;
-> +
-> +				gpio-controller;
-> +				#gpio-cells =3D <2>;
-> +
-> +				interrupt-controller;
-> +				#interrupt-cells =3D <2>;
-> +			};
-> +
-> +			pll: pll-controller@18050000 {
-> +				compatible =3D "qca,ar9132-ppl",
-> +						"qca,ar9130-pll";
-> +				reg =3D <0x18050000 0x20>;
-> +
-> +				clock-names =3D "ref";
-> +				/* The board must provides the ref clock */
-> +
-> +				#clock-cells =3D <1>;
-> +				clock-output-names =3D "cpu", "ddr", "ahb";
-> +			};
-> +
-> +			wdt@18060008 {
-> +				compatible =3D "qca,ar7130-wdt";
-> +				reg =3D <0x18060008 0x8>;
-> +
-> +				interrupts =3D <4>;
-> +
-> +				clocks =3D <&pll 2>;
-> +				clock-names =3D "wdt";
-> +			};
-> +
-> +			miscintc: interrupt-controller@18060010 {
-> +				compatible =3D "qca,ar9132-misc-intc",
-> +					   "qca,ar7100-misc-intc";
-> +				reg =3D <0x18060010 0x4>;
-> +
-> +				interrupt-parent =3D <&cpuintc>;
-> +				interrupts =3D <6>;
-> +
-> +				interrupt-controller;
-> +				#interrupt-cells =3D <1>;
-> +			};
-> +		};
-> +
-> +		spi@1f000000 {
+>  drivers/clk/shmobile/clk-mstp.c      | 86 ++++++++++++++++++++++++++++++++++++
+>  drivers/clk/shmobile/clk-rcar-gen2.c |  2 +
+>  include/linux/clk/shmobile.h         | 12 +++++
+>  3 files changed, 100 insertions(+)
+>
+> diff --git a/drivers/clk/shmobile/clk-mstp.c b/drivers/clk/shmobile/clk-mstp.c
+> index 2d2fe773ac8168f9..619f3eccefd4884f 100644
+> --- a/drivers/clk/shmobile/clk-mstp.c
+> +++ b/drivers/clk/shmobile/clk-mstp.c
 
-Could we add an alias here? E.g.
+> @@ -236,3 +241,84 @@ static void __init cpg_mstp_clocks_init(struct device_node *np)
+>         of_clk_add_provider(np, of_clk_src_onecell_get, &group->data);
+>  }
+>  CLK_OF_DECLARE(cpg_mstp_clks, "renesas,cpg-mstp-clocks", cpg_mstp_clocks_init);
+> +
+> +
+> +#ifdef CONFIG_PM_GENERIC_DOMAINS_OF
+> +int cpg_mstp_attach_dev(struct generic_pm_domain *domain, struct device *dev)
+> +{
+> +       struct device_node *np = dev->of_node;
+> +       struct of_phandle_args clkspec;
+> +       struct clk *clk;
+> +       int i = 0;
+> +       int error;
+> +
+> +       while (!of_parse_phandle_with_args(np, "clocks", "#clock-cells", i,
+> +                                          &clkspec)) {
+> +               if (of_device_is_compatible(clkspec.np,
+> +                                           "renesas,cpg-mstp-clocks"))
+> +                       goto found;
+> +
+> +               of_node_put(clkspec.np);
+> +               i++;
+> +       }
+> +
+> +       return 0;
+> +
+> +found:
+> +       clk = of_clk_get_from_provider(&clkspec);
+> +       of_node_put(clkspec.np);
+> +
+> +       if (IS_ERR(clk))
+> +               return PTR_ERR(clk);
+> +
+> +       error = pm_clk_create(dev);
+> +       if (error) {
+> +               dev_err(dev, "pm_clk_create failed %d\n", error);
+> +               goto fail_put;
+> +       }
+> +
+> +       error = pm_clk_add_clk(dev, clk);
+> +       if (error) {
+> +               dev_err(dev, "pm_clk_add_clk %pC failed %d\n", clk, error);
+> +               goto fail_destroy;
+> +       }
+> +
+> +       return 0;
+> +
+> +fail_destroy:
+> +       pm_clk_destroy(dev);
+> +fail_put:
+> +       clk_put(clk);
+> +       return error;
+> +}
+> +
+> +void cpg_mstp_detach_dev(struct generic_pm_domain *domain, struct device *dev)
+> +{
+> +       pm_clk_destroy(dev);
 
-		spi: spi@1f000000 {
+This should only be done if cpg_mstp_attach_dev() actually added a clock, i.e.
 
-So we can use the alias in the board dts file with zero indent. E.g=20
+        if (!list_empty(&dev->power.subsys_data->clock_list))
+                pm_clk_destroy(dev);
 
-&spi {
-	status =3D "okay";
-	num-cs =3D <1>;
+Else it will free the subsys_data allocated by genpd_alloc_dev_data()
+prematurely, and genpd_free_dev_data() will crash when dereferencing
+dev->power.subsys_data.
 
-	flash@0 {
-=2E..
+Gr{oetje,eeting}s,
 
+                        Geert
 
-Just the same change can be used with uart@18020000.
-
-> diff --git a/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts b/arch/=
-mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
-> new file mode 100644
-> index 0000000..003015a
-> --- /dev/null
-> +++ b/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
-> @@ -0,0 +1,112 @@
-> +/dts-v1/;
-> +
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/input/input.h>
-> +
-> +#include "ar9132.dtsi"
-> +
-> +/ {
-> +	compatible =3D "tplink,tl-wr1043nd-v1", "qca,ar9132";
-> +	model =3D "TP-Link TL-WR1043ND Version 1";
-> +
-> +	alias {
-> +		serial0 =3D "/ahb/apb/uart@18020000";
-> +	};
-> +
-> +	memory@0 {
-> +		device_type =3D "memory";
-> +		reg =3D <0x0 0x2000000>;
-> +	};
-> +
-> +	extosc: oscillator {
-> +		compatible =3D "fixed-clock";
-> +		#clock-cells =3D <0>;
-> +		clock-frequency =3D <40000000>;
-> +	};
-> +
-> +	ahb {
-> +		apb {
-> +			uart@18020000 {
-> +				status =3D "okay";
-> +			};
-> +
-> +			pll-controller@18050000 {
-> +				clocks =3D <&extosc>;
-> +			};
-> +		};
-> +
-> +		spi@1f000000 {
-> +			status =3D "okay";
-> +			num-cs =3D <1>;
-> +
-> +			flash@0 {
-> +				#address-cells =3D <1>;
-> +				#size-cells =3D <1>;
-> +				compatible =3D "s25sl064a";
-> +				reg =3D <0>;
-> +				spi-max-frequency =3D <25000000>;
-> +
-> +				partition@0 {
-> +					label =3D "u-boot";
-> +					reg =3D <0x000000 0x020000>;
-> +				};
-> +
-> +				partition@1 {
-> +					label =3D "firmware";
-> +					reg =3D <0x020000 0x7D0000>;
-> +				};
-> +
-> +				partition@2 {
-> +					label =3D "art";
-> +					reg =3D <0x7F0000 0x010000>;
-> +					read-only;
-> +				};
-> +			};
-> +		};
-> +	};
-> +
-> +	gpio-keys {
-> +		compatible =3D "gpio-keys-polled";
-> +		#address-cells =3D <1>;
-> +		#size-cells =3D <0>;
-> +
-> +		poll-interval =3D <20>;
-> +		button@0 {
-> +			label =3D "reset";
-> +			linux,code =3D <KEY_RESTART>;
-> +			gpios =3D <&gpio 3 GPIO_ACTIVE_LOW>;
-> +			debounce-interval =3D <60>;
-> +		};
-> +
-> +		button@1 {
-> +			label =3D "qss";
-> +			linux,code =3D <KEY_WPS_BUTTON>;
-> +			gpios =3D <&gpio 7 GPIO_ACTIVE_LOW>;
-> +			debounce-interval =3D <60>;
-> +		};
-> +	};
-> +
-> +	leds {
-> +		compatible =3D "gpio-leds";
-> +		led@0 {
-> +			label =3D "tp-link:green:usb";
-> +			gpios =3D <&gpio 1 GPIO_ACTIVE_LOW>;
-> +		};
-> +
-> +		led@1 {
-> +			label =3D "tp-link:green:system";
-> +			gpios =3D <&gpio 2 GPIO_ACTIVE_LOW>;
-> +			linux,default-trigger =3D "heartbeat";
-> +		};
-> +
-> +		led@2 {
-> +			label =3D "tp-link:green:qss";
-> +			gpios =3D <&gpio 5 GPIO_ACTIVE_HIGH>;
-> +		};
-> +
-> +		led@3 {
-> +			label =3D "tp-link:green:wlan";
-> +			gpios =3D <&gpio 9 GPIO_ACTIVE_LOW>;
-> +		};
-> +	};
-> +};
-> --=20
-> 2.0.0
->=20
->=20
-
-
---=20
---=A0
-Best regards,
-=A0 Antony Pavlov
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe linux-sh" in
