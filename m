@@ -1,196 +1,67 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH 1/4] soc: mediatek: Add infracfg misc driver support
-Date: Mon, 22 Jun 2015 08:35:39 +0200
-Message-ID: <1434954942-30179-2-git-send-email-s.hauer@pengutronix.de>
-References: <1434954942-30179-1-git-send-email-s.hauer@pengutronix.de>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v7 00/14] crypto: add a new driver for Marvell's CESA
+Date: Mon, 22 Jun 2015 09:23:36 +0200
+Message-ID: <20150622092336.5949e258@bbrezillon>
+References: <1434635190-27733-1-git-send-email-boris.brezillon@free-electrons.com>
+	<20150619142444.GA15234@gondor.apana.org.au>
+	<CAP=VYLqQynCNRTpm4JnOxeO6DH_739fO2QNcDMxaXqCKCHiTtQ@mail.gmail.com>
+	<CAP=VYLpSrTvXRovWo4G7AXWv1OKFQRpQR255hS5z+=h4+XOLhg@mail.gmail.com>
+	<20150621102418.2ea74910@bbrezillon>
+	<20150621082717.GA29128@gondor.apana.org.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1434954942-30179-1-git-send-email-s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <20150621082717.GA29128@gondor.apana.org.au>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Paul Gortmaker <paul.gortmaker@windriver.com>, "David S. Miller" <davem@davemloft.net>, linux-crypto@vger.kernel.org, Arnaud Ebalard <arno@natisbad.org>, Tawfik Bayouk <tawfik@marvell.com>, Lior Amsalem <alior@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Eran Ben-Avi <benavi@marvell.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Jason Gunthorpe <jg>
 List-Id: devicetree@vger.kernel.org
 
-This adds support for some miscellaneous bits of the infracfg controller.
-The mtk_infracfg_set/clear_bus_protection functions are necessary for
-the scpsys power domain driver to handle the bus protection bits which
-are contained in the infacfg register space.
+Hi Herbert,
 
-Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+On Sun, 21 Jun 2015 16:27:17 +0800
+Herbert Xu <herbert@gondor.apana.org.au> wrote:
+
+> On Sun, Jun 21, 2015 at 10:24:18AM +0200, Boris Brezillon wrote:
+> > 
+> > Indeed. Here is a patch fixing that.
+> 
+> I think you should just kill COMPILE_TEST instead of adding ARM.
+
+The following patch is killing the COMPILE_TEST dependency.
+
+-- >8 --
+
+>From 772232fe4f5e597e45701dd9c3ab68c4a065342f Mon Sep 17 00:00:00 2001
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Date: Mon, 22 Jun 2015 09:22:14 +0200
+Subject: [PATCH] crypto: marvell/CESA: remove COMPILE_TEST dependency
+
+The CESA driver calls phys_to_virt() which is not available on all
+architectures.
+Remove the depency on COMPILE_TEST to prevent building this driver on
+non ARM architectures.
+
+Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+Reported-by: Paul Gortmaker <paul.gortmaker@windriver.com>
+Suggested-by: Herbert Xu <herbert@gondor.apana.org.au>
 ---
- drivers/soc/mediatek/Kconfig          |  9 ++++
- drivers/soc/mediatek/Makefile         |  1 +
- drivers/soc/mediatek/mtk-infracfg.c   | 91 +++++++++++++++++++++++++++++++++++
- include/linux/soc/mediatek/infracfg.h | 26 ++++++++++
- 4 files changed, 127 insertions(+)
- create mode 100644 drivers/soc/mediatek/mtk-infracfg.c
- create mode 100644 include/linux/soc/mediatek/infracfg.h
+ drivers/crypto/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/soc/mediatek/Kconfig b/drivers/soc/mediatek/Kconfig
-index bcdb22d..e4f37a3 100644
---- a/drivers/soc/mediatek/Kconfig
-+++ b/drivers/soc/mediatek/Kconfig
-@@ -1,6 +1,15 @@
- #
- # MediaTek SoC drivers
- #
-+config MTK_INFRACFG
-+	bool "MediaTek INFRACFG Support"
-+	depends on ARCH_MEDIATEK
-+	select REGMAP
-+	help
-+	  Say yes here to add support for the MediaTek INFRACFG controller. The
-+	  INFRACFG controller contains various infrastructure registers not
-+	  directly associated to any device.
-+
- config MTK_PMIC_WRAP
- 	tristate "MediaTek PMIC Wrapper Support"
- 	depends on ARCH_MEDIATEK
-diff --git a/drivers/soc/mediatek/Makefile b/drivers/soc/mediatek/Makefile
-index ecaf4de..3fa940f 100644
---- a/drivers/soc/mediatek/Makefile
-+++ b/drivers/soc/mediatek/Makefile
-@@ -1 +1,2 @@
-+obj-$(CONFIG_MTK_INFRACFG) += mtk-infracfg.o
- obj-$(CONFIG_MTK_PMIC_WRAP) += mtk-pmic-wrap.o
-diff --git a/drivers/soc/mediatek/mtk-infracfg.c b/drivers/soc/mediatek/mtk-infracfg.c
-new file mode 100644
-index 0000000..ca786e0
---- /dev/null
-+++ b/drivers/soc/mediatek/mtk-infracfg.c
-@@ -0,0 +1,91 @@
-+/*
-+ * Copyright (c) 2015 Pengutronix, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/export.h>
-+#include <linux/jiffies.h>
-+#include <linux/regmap.h>
-+#include <linux/soc/mediatek/infracfg.h>
-+#include <asm/processor.h>
-+
-+#define INFRA_TOPAXI_PROTECTEN		0x0220
-+#define INFRA_TOPAXI_PROTECTSTA1	0x0228
-+
-+/**
-+ * mtk_infracfg_set_bus_protection - enable bus protection
-+ * @regmap: The infracfg regmap
-+ * @mask: The mask containing the protection bits to be enabled.
-+ *
-+ * This function enables the bus protection bits for disabled power
-+ * domains so that the system does not hanf when some unit accesses the
-+ * bus while in power down.
-+ */
-+int mtk_infracfg_set_bus_protection(struct regmap *infracfg, u32 mask)
-+{
-+	unsigned long expired;
-+	u32 val;
-+	int ret;
-+
-+	regmap_update_bits(infracfg, INFRA_TOPAXI_PROTECTEN, mask, mask);
-+
-+	expired = jiffies + HZ;
-+
-+	while (1) {
-+		ret = regmap_read(infracfg, INFRA_TOPAXI_PROTECTSTA1, &val);
-+		if (ret)
-+			return ret;
-+
-+		if ((val & mask) == mask)
-+			break;
-+
-+		cpu_relax();
-+		if (time_after(jiffies, expired))
-+			return -EIO;
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * mtk_infracfg_clear_bus_protection - disable bus protection
-+ * @regmap: The infracfg regmap
-+ * @mask: The mask containing the protection bits to be disabled.
-+ *
-+ * This function disables the bus protection bits previously enabled with
-+ * mtk_infracfg_set_bus_protection.
-+ */
-+int mtk_infracfg_clear_bus_protection(struct regmap *infracfg, u32 mask)
-+{
-+	unsigned long expired;
-+	int ret;
-+
-+	regmap_update_bits(infracfg, INFRA_TOPAXI_PROTECTEN, mask, 0);
-+
-+	expired = jiffies + HZ;
-+
-+	while (1) {
-+		u32 val;
-+
-+		ret = regmap_read(infracfg, INFRA_TOPAXI_PROTECTSTA1, &val);
-+		if (ret)
-+			return ret;
-+
-+		if (!(val & mask))
-+			break;
-+
-+		cpu_relax();
-+		if (time_after(jiffies, expired))
-+			return -EIO;
-+	}
-+
-+	return 0;
-+}
-diff --git a/include/linux/soc/mediatek/infracfg.h b/include/linux/soc/mediatek/infracfg.h
-new file mode 100644
-index 0000000..a5714e9
---- /dev/null
-+++ b/include/linux/soc/mediatek/infracfg.h
-@@ -0,0 +1,26 @@
-+#ifndef __SOC_MEDIATEK_INFRACFG_H
-+#define __SOC_MEDIATEK_INFRACFG_H
-+
-+#define MT8173_TOP_AXI_PROT_EN_MCI_M2		BIT(0)
-+#define MT8173_TOP_AXI_PROT_EN_MM_M0		BIT(1)
-+#define MT8173_TOP_AXI_PROT_EN_MM_M1		BIT(2)
-+#define MT8173_TOP_AXI_PROT_EN_MMAPB_S		BIT(6)
-+#define MT8173_TOP_AXI_PROT_EN_L2C_M2		BIT(9)
-+#define MT8173_TOP_AXI_PROT_EN_L2SS_SMI		BIT(11)
-+#define MT8173_TOP_AXI_PROT_EN_L2SS_ADD		BIT(12)
-+#define MT8173_TOP_AXI_PROT_EN_CCI_M2		BIT(13)
-+#define MT8173_TOP_AXI_PROT_EN_MFG_S		BIT(14)
-+#define MT8173_TOP_AXI_PROT_EN_PERI_M0		BIT(15)
-+#define MT8173_TOP_AXI_PROT_EN_PERI_M1		BIT(16)
-+#define MT8173_TOP_AXI_PROT_EN_DEBUGSYS		BIT(17)
-+#define MT8173_TOP_AXI_PROT_EN_CQ_DMA		BIT(18)
-+#define MT8173_TOP_AXI_PROT_EN_GCPU		BIT(19)
-+#define MT8173_TOP_AXI_PROT_EN_IOMMU		BIT(20)
-+#define MT8173_TOP_AXI_PROT_EN_MFG_M0		BIT(21)
-+#define MT8173_TOP_AXI_PROT_EN_MFG_M1		BIT(22)
-+#define MT8173_TOP_AXI_PROT_EN_MFG_SNOOP_OUT	BIT(23)
-+
-+int mtk_infracfg_set_bus_protection(struct regmap *infracfg, u32 mask);
-+int mtk_infracfg_clear_bus_protection(struct regmap *infracfg, u32 mask);
-+
-+#endif /* __SOC_MEDIATEK_INFRACFG_H */
+diff --git a/drivers/crypto/Kconfig b/drivers/crypto/Kconfig
+index cdca762..f965d0c 100644
+--- a/drivers/crypto/Kconfig
++++ b/drivers/crypto/Kconfig
+@@ -176,7 +176,7 @@ config CRYPTO_DEV_MV_CESA
+ 
+ config CRYPTO_DEV_MARVELL_CESA
+ 	tristate "New Marvell's Cryptographic Engine driver"
+-	depends on (PLAT_ORION || ARCH_MVEBU || COMPILE_TEST) && HAS_DMA && HAS_IOMEM
++	depends on PLAT_ORION || ARCH_MVEBU
+ 	select CRYPTO_AES
+ 	select CRYPTO_DES
+ 	select CRYPTO_BLKCIPHER
 -- 
-2.1.4
+1.9.1
