@@ -1,223 +1,103 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH] of: acpi: Rename of_node() and acpi_node() to to_of_node() and to_acpi_node()
-Date: Tue, 23 Jun 2015 01:45 +0200
-Message-ID: <2099562.7T915zWny0@vostro.rjw.lan>
-References: <5588725D.6000101@gmail.com>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v3 2/3] clk: stm32: Add clock driver for STM32F4[23]xxx
+ devices
+Date: Mon, 22 Jun 2015 16:21:14 -0700
+Message-ID: <20150622232114.GK22132@codeaurora.org>
+References: <1432327273-6810-1-git-send-email-daniel.thompson@linaro.org>
+ <1433966978-24422-1-git-send-email-daniel.thompson@linaro.org>
+ <1433966978-24422-3-git-send-email-daniel.thompson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <5588725D.6000101@gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Alexander Sverdlin <alexander.sverdlin@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Robert Moore <robert.moore@intel.com>, Lv Zheng <lv.zheng@intel.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Len Brown <lenb@kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-leds@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1433966978-24422-3-git-send-email-daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kamil Lulko <rev13-5tc4TXWwyLM@public.gmane.org>, Andreas Farber <afaerber-l3A5Bk7waGM@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday, June 22, 2015 10:38:53 PM Alexander Sverdlin wrote:
-> Commit 8a0662d9 introduced of_node and acpi_node symbols in global namespace
-> but there were already ~63 of_node local variables or function parameters
-> (no single acpi_node though, but anyway).
+On 06/10, Daniel Thompson wrote:
+> The driver supports decoding and statically modelling PLL state (i.e.
+> we inherit state from bootloader) and provides support for all
+> peripherals that support simple one-bit gated clocks. The covers all
+> peripherals whose clocks come from the AHB, APB1 or APB2 buses.
 > 
-> After debugging undefined but used of_node local varible (which turned out
-> to reference static function of_node() instead) it became clear that the names
-> for the functions are too short and too generic for global scope.
+> It has been tested on an STM32F429I-Discovery board. The clock counts
+> for TIM2, USART1 and SYSTICK are all set correctly and the wall clock
+> looks OK when checked with a stopwatch. I have also tested a prototype
+> driver for the RNG hardware. The RNG clock is correctly enabled by the
+> framework (also did inverse test and proved that by changing DT to
+> configure the wrong clock bit then we observe the RNG driver to fail).
 > 
-> Signed-off-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
+> Signed-off-by: Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Reviewed-by: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Putting the whole world into the To: field of your messages is not a good idea
-in general.
+I also squashed in some sparse fixes. Please check.
 
-I'm fine with this change, personally.
+drivers/clk/clk-stm32f4.c:135:44:
+warning: constant 0x000000f17ef417ff is so big it is long
+drivers/clk/clk-stm32f4.c:137:44:
+warning: constant 0x04777f33f6fec9ff is so big it is long
+drivers/clk/clk-stm32f4.c:206:12:
+warning: symbol 'clk_register_apb_mul' was not declared. Should
+it be static?
+drivers/clk/clk-stm32f4.c:285:12:
+warning: symbol 'stm32f4_rcc_lookup_clk' was not declared. Should
+it be static?
 
-Does anyone in the CC list have any objections?
+---8<----
+diff --git a/drivers/clk/clk-stm32f4.c b/drivers/clk/clk-stm32f4.c
+index c825bbd4335f..b9b12a742970 100644
+--- a/drivers/clk/clk-stm32f4.c
++++ b/drivers/clk/clk-stm32f4.c
+@@ -132,9 +132,9 @@ enum { SYSTICK, FCLK };
+  * This bitmask tells us which bit offsets (0..192) on STM32F4[23]xxx
+  * have gate bits associated with them. Its combined hweight is 71.
+  */
+-static const u64 stm32f42xx_gate_map[] = { 0x000000f17ef417ff,
+-					   0x0000000000000001,
+-					   0x04777f33f6fec9ff };
++static const u64 stm32f42xx_gate_map[] = { 0x000000f17ef417ffull,
++					   0x0000000000000001ull,
++					   0x04777f33f6fec9ffull };
+ 
+ static struct clk *clks[MAX_CLKS];
+ static DEFINE_SPINLOCK(stm32f4_clk_lock);
+@@ -186,7 +186,7 @@ static long clk_apb_mul_round_rate(struct clk_hw *hw, unsigned long rate,
+ }
+ 
+ static int clk_apb_mul_set_rate(struct clk_hw *hw, unsigned long rate,
+-				 unsigned long parent_rate)
++				unsigned long parent_rate)
+ {
+ 	/*
+ 	 * We must report success but we can do so unconditionally because
+@@ -203,9 +203,9 @@ static const struct clk_ops clk_apb_mul_factor_ops = {
+ 	.recalc_rate = clk_apb_mul_recalc_rate,
+ };
+ 
+-struct clk *clk_register_apb_mul(struct device *dev, const char *name,
+-				 const char *parent_name, unsigned long flags,
+-				 u8 bit_idx)
++static struct clk *clk_register_apb_mul(struct device *dev, const char *name,
++					const char *parent_name,
++					unsigned long flags, u8 bit_idx)
+ {
+ 	struct clk_apb_mul *am;
+ 	struct clk_init_data init;
+@@ -282,7 +282,8 @@ static int stm32f4_rcc_lookup_clk_idx(u8 primary, u8 secondary)
+ 	       (BIT_ULL_WORD(secondary) >= 2 ? hweight64(table[2]) : 0);
+ }
+ 
+-struct clk *stm32f4_rcc_lookup_clk(struct of_phandle_args *clkspec, void *data)
++static struct clk *
++stm32f4_rcc_lookup_clk(struct of_phandle_args *clkspec, void *data)
+ {
+ 	int i = stm32f4_rcc_lookup_clk_idx(clkspec->args[0], clkspec->args[1]);
+ 
 
-
-> ---
-> 
-> Compile-tested on x86_64 with ACPI and ARM with OF.
-> 
->  drivers/base/property.c  | 26 +++++++++++++-------------
->  drivers/gpio/gpiolib.c   |  4 ++--
->  drivers/leds/leds-gpio.c |  2 +-
->  include/acpi/acpi_bus.h  |  2 +-
->  include/linux/acpi.h     |  4 ++--
->  include/linux/of.h       |  4 ++--
->  6 files changed, 21 insertions(+), 21 deletions(-)
-> 
-> diff --git a/drivers/base/property.c b/drivers/base/property.c
-> index 1d0b116..dfd4de6 100644
-> --- a/drivers/base/property.c
-> +++ b/drivers/base/property.c
-> @@ -128,9 +128,9 @@ EXPORT_SYMBOL_GPL(device_property_present);
->  bool fwnode_property_present(struct fwnode_handle *fwnode, const char *propname)
->  {
->  	if (is_of_node(fwnode))
-> -		return of_property_read_bool(of_node(fwnode), propname);
-> +		return of_property_read_bool(to_of_node(fwnode), propname);
->  	else if (is_acpi_node(fwnode))
-> -		return !acpi_dev_prop_get(acpi_node(fwnode), propname, NULL);
-> +		return !acpi_dev_prop_get(to_acpi_node(fwnode), propname, NULL);
-> 
->  	return !!pset_prop_get(to_pset(fwnode), propname);
->  }
-> @@ -285,10 +285,10 @@ EXPORT_SYMBOL_GPL(device_property_read_string);
->  ({ \
->  	int _ret_; \
->  	if (is_of_node(_fwnode_)) \
-> -		_ret_ = OF_DEV_PROP_READ_ARRAY(of_node(_fwnode_), _propname_, \
-> +		_ret_ = OF_DEV_PROP_READ_ARRAY(to_of_node(_fwnode_), _propname_, \
->  					       _type_, _val_, _nval_); \
->  	else if (is_acpi_node(_fwnode_)) \
-> -		_ret_ = acpi_dev_prop_read(acpi_node(_fwnode_), _propname_, \
-> +		_ret_ = acpi_dev_prop_read(to_acpi_node(_fwnode_), _propname_, \
->  					   _proptype_, _val_, _nval_); \
->  	else \
->  		_ret_ = pset_prop_read_array(to_pset(_fwnode_), _propname_, \
-> @@ -424,11 +424,11 @@ int fwnode_property_read_string_array(struct fwnode_handle *fwnode,
->  {
->  	if (is_of_node(fwnode))
->  		return val ?
-> -			of_property_read_string_array(of_node(fwnode), propname,
-> -						      val, nval) :
-> -			of_property_count_strings(of_node(fwnode), propname);
-> +			of_property_read_string_array(to_of_node(fwnode),
-> +						      propname, val, nval) :
-> +			of_property_count_strings(to_of_node(fwnode), propname);
->  	else if (is_acpi_node(fwnode))
-> -		return acpi_dev_prop_read(acpi_node(fwnode), propname,
-> +		return acpi_dev_prop_read(to_acpi_node(fwnode), propname,
->  					  DEV_PROP_STRING, val, nval);
-> 
->  	return pset_prop_read_array(to_pset(fwnode), propname,
-> @@ -455,9 +455,9 @@ int fwnode_property_read_string(struct fwnode_handle *fwnode,
->  				const char *propname, const char **val)
->  {
->  	if (is_of_node(fwnode))
-> -		return of_property_read_string(of_node(fwnode), propname, val);
-> +		return of_property_read_string(to_of_node(fwnode), propname, val);
->  	else if (is_acpi_node(fwnode))
-> -		return acpi_dev_prop_read(acpi_node(fwnode), propname,
-> +		return acpi_dev_prop_read(to_acpi_node(fwnode), propname,
->  					  DEV_PROP_STRING, val, 1);
-> 
->  	return -ENXIO;
-> @@ -475,13 +475,13 @@ struct fwnode_handle *device_get_next_child_node(struct device *dev,
->  	if (IS_ENABLED(CONFIG_OF) && dev->of_node) {
->  		struct device_node *node;
-> 
-> -		node = of_get_next_available_child(dev->of_node, of_node(child));
-> +		node = of_get_next_available_child(dev->of_node, to_of_node(child));
->  		if (node)
->  			return &node->fwnode;
->  	} else if (IS_ENABLED(CONFIG_ACPI)) {
->  		struct acpi_device *node;
-> 
-> -		node = acpi_get_next_child(dev, acpi_node(child));
-> +		node = acpi_get_next_child(dev, to_acpi_node(child));
->  		if (node)
->  			return acpi_fwnode_handle(node);
->  	}
-> @@ -500,7 +500,7 @@ EXPORT_SYMBOL_GPL(device_get_next_child_node);
->  void fwnode_handle_put(struct fwnode_handle *fwnode)
->  {
->  	if (is_of_node(fwnode))
-> -		of_node_put(of_node(fwnode));
-> +		of_node_put(to_of_node(fwnode));
->  }
->  EXPORT_SYMBOL_GPL(fwnode_handle_put);
-> 
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index 6bc612b..5d8b2b3 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -2040,14 +2040,14 @@ struct gpio_desc *fwnode_get_named_gpiod(struct fwnode_handle *fwnode,
->  	if (is_of_node(fwnode)) {
->  		enum of_gpio_flags flags;
-> 
-> -		desc = of_get_named_gpiod_flags(of_node(fwnode), propname, 0,
-> +		desc = of_get_named_gpiod_flags(to_of_node(fwnode), propname, 0,
->  						&flags);
->  		if (!IS_ERR(desc))
->  			active_low = flags & OF_GPIO_ACTIVE_LOW;
->  	} else if (is_acpi_node(fwnode)) {
->  		struct acpi_gpio_info info;
-> 
-> -		desc = acpi_get_gpiod_by_index(acpi_node(fwnode), propname, 0,
-> +		desc = acpi_get_gpiod_by_index(to_acpi_node(fwnode), propname, 0,
->  					       &info);
->  		if (!IS_ERR(desc))
->  			active_low = info.active_low;
-> diff --git a/drivers/leds/leds-gpio.c b/drivers/leds/leds-gpio.c
-> index 15eb3f8..d2d54d6 100644
-> --- a/drivers/leds/leds-gpio.c
-> +++ b/drivers/leds/leds-gpio.c
-> @@ -191,7 +191,7 @@ static struct gpio_leds_priv *gpio_leds_create(struct platform_device *pdev)
->  			goto err;
->  		}
-> 
-> -		np = of_node(child);
-> +		np = to_of_node(child);
-> 
->  		if (fwnode_property_present(child, "label")) {
->  			fwnode_property_read_string(child, "label", &led.name);
-> diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
-> index 8de4fa9..1224be8 100644
-> --- a/include/acpi/acpi_bus.h
-> +++ b/include/acpi/acpi_bus.h
-> @@ -385,7 +385,7 @@ static inline bool is_acpi_node(struct fwnode_handle *fwnode)
->  	return fwnode && fwnode->type == FWNODE_ACPI;
->  }
-> 
-> -static inline struct acpi_device *acpi_node(struct fwnode_handle *fwnode)
-> +static inline struct acpi_device *to_acpi_node(struct fwnode_handle *fwnode)
->  {
->  	return is_acpi_node(fwnode) ?
->  		container_of(fwnode, struct acpi_device, fwnode) : NULL;
-> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-> index e4da5e3..ec3c98e 100644
-> --- a/include/linux/acpi.h
-> +++ b/include/linux/acpi.h
-> @@ -53,7 +53,7 @@ static inline acpi_handle acpi_device_handle(struct acpi_device *adev)
->  	return adev ? adev->handle : NULL;
->  }
-> 
-> -#define ACPI_COMPANION(dev)		acpi_node((dev)->fwnode)
-> +#define ACPI_COMPANION(dev)		to_acpi_node((dev)->fwnode)
->  #define ACPI_COMPANION_SET(dev, adev)	set_primary_fwnode(dev, (adev) ? \
->  	acpi_fwnode_handle(adev) : NULL)
->  #define ACPI_HANDLE(dev)		acpi_device_handle(ACPI_COMPANION(dev))
-> @@ -473,7 +473,7 @@ static inline bool is_acpi_node(struct fwnode_handle *fwnode)
->  	return false;
->  }
-> 
-> -static inline struct acpi_device *acpi_node(struct fwnode_handle *fwnode)
-> +static inline struct acpi_device *to_acpi_node(struct fwnode_handle *fwnode)
->  {
->  	return NULL;
->  }
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index b871ff9..f05fdce 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -128,7 +128,7 @@ static inline bool is_of_node(struct fwnode_handle *fwnode)
->  	return fwnode && fwnode->type == FWNODE_OF;
->  }
-> 
-> -static inline struct device_node *of_node(struct fwnode_handle *fwnode)
-> +static inline struct device_node *to_of_node(struct fwnode_handle *fwnode)
->  {
->  	return fwnode ? container_of(fwnode, struct device_node, fwnode) : NULL;
->  }
-> @@ -387,7 +387,7 @@ static inline bool is_of_node(struct fwnode_handle *fwnode)
->  	return false;
->  }
-> 
-> -static inline struct device_node *of_node(struct fwnode_handle *fwnode)
-> +static inline struct device_node *to_of_node(struct fwnode_handle *fwnode)
->  {
->  	return NULL;
->  }
-> --
-
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
 --
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
