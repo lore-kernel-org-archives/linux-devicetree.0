@@ -1,100 +1,54 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH 02/13] dmaengine: Introduce
- dma_request_slave_channel_compat_reason()
-Date: Mon, 22 Jun 2015 14:31:00 +0300
-Message-ID: <5587F1F4.1060905@ti.com>
-References: <1432646768-12532-1-git-send-email-peter.ujfalusi@ti.com>
- <1432646768-12532-3-git-send-email-peter.ujfalusi@ti.com>
- <20150529093317.GF3140@localhost>
- <CAMuHMdVJ0h9qXxBWH9L2y4O2KLkEq12KW_6k8rTgi+Lux=C0gw@mail.gmail.com>
- <20150529101846.GG3140@localhost> <55687892.7050606@ti.com>
- <20150602125535.GS3140@localhost> <5570758E.6030302@ti.com>
- <20150612125837.GJ28601@localhost>
+From: Inki Dae <inki.dae@samsung.com>
+Subject: Re: [PATCH v6 15/15] ARM: dts: rename the clock of MIPI DSI 'pll_clk'
+ to 'sclk_mipi'
+Date: Mon, 22 Jun 2015 20:42:25 +0900
+Message-ID: <5587F4A1.2090502@samsung.com>
+References: <1434113958-15877-1-git-send-email-human.hwang@samsung.com>
+ <1434113958-15877-16-git-send-email-human.hwang@samsung.com>
+ <5587D111.9090602@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20150612125837.GJ28601@localhost>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, ALSA Development Mailing List <alsa-devel@alsa-project.org>, Tony Lindgren <tony@atomide.com>, Linux MMC List <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, linux-crypto@vger.kernel.org, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, dmaengine@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <5587D111.9090602@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Hyungwon Hwang <human.hwang@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Krzysztof Kozlowski <k.kozlowski.k@gmail.com>
+Cc: devicetree@vger.kernel.org, sw0312.kim@samsung.com, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/12/2015 03:58 PM, Vinod Koul wrote:
-> Sorry this slipped thru
-
-I was away for a week anyways ;)
-
-> Thinking about it again, I think we should coverge to two APIs and mark t=
-he
-> legacy depracuated and look to convert folks and phase that out
-
-Currently, w/o this series we have these APIs:
-/* to be used with DT/ACPI */
-dma_request_slave_channel(dev, name)		/* NULL on failure */
-dma_request_slave_channel_reason(dev, name)	/* error code on failure */
-
-/* Legacy mode only - no DT/ACPI lookup */
-dma_request_channel(mask, fn, fn_param) /* NULL on failure */
-
-/* to be used with DT/ACPI or legacy boot */
-dma_request_slave_channel_compat(mask, fn, fn_param, dev, name)	/* NULL on
-failure */
-
-To request _any_ channel to be used for memcpy one has to use
-dma_request_channel(mask, NULL, NULL);
-
-If I did not missed something.
-
-As we need different types of parameters for DT/ACPI and legacy (non DT/ACPI
-lookup) and the good API names are already taken, we might need to settle:
-
-/* to be used with DT/ACPI */
-dma_request_slave_channel(dev, name) /* error code on failure */
-- Convert users to check IS_ERR_OR_NULL() instead against NULL
-- Mark dma_request_slave_channel_reason() deprecated and convert the curren=
-t users
-
-/* to be used with DT/ACPI or legacy boot */
-dma_request_slave_channel_compat(mask, fn, fn_param, dev, name) /* error co=
-de
-on failure */
-- Convert users to check IS_ERR_OR_NULL() instead against NULL
-- Do not try legacy mode if either OF or ACPI failed because of real error
-
-/* Legacy mode only - no DT/ACPI lookup */
-dma_request_channel_legacy(mask, fn, fn_param) /* error code on failure */
-- convert users of dma_request_channel()
-- mark dma_request_channel() deprecated
-
-/* to be used to get a channel for memcpy for example */
-dma_request_any_channel(mask) /* error code on failure */
-- Convert current dma_request_channel(mask, NULL, NULL) users
-I know, any of the other function could be prepared to handle this when
-parameters are missing, but it is a bit cleaner to have separate API for th=
-is.
-
-It would be nice to find another name for the
-dma_request_slave_channel_compat() so with the new name we could have chance
-to rearrange the parameters: (dev, name, mask, fn, fn_param)
-
-We would end up with the following APIs, all returning with error code on f=
-ailure:
-dma_request_slave_channel(dev, name);
-dma_request_channel_legacy(mask, fn, fn_param);
-dma_request_slave_channel_compat(mask, fn, fn_param, dev, name);
-dma_request_any_channel(mask);
-
-What do you think?
-
--- =
-
-P=E9ter
+KyBLcnp5c3p0b2YKCk9uIDIwMTXrhYQgMDbsm5QgMjLsnbwgMTg6MTAsIElua2kgRGFlIHdyb3Rl
+Ogo+IE9uIDIwMTXrhYQgMDbsm5QgMTLsnbwgMjE6NTksIEh5dW5nd29uIEh3YW5nIHdyb3RlOgo+
+PiBUaGUgY2xvY2sgd2hpY2ggd2FzIG5hbWVkIGFzICdwbGxfY2xrJyBpcyBhY3R1YWxseSBub3Qg
+dGhlIGNsb2NrIHNvdXJjZQo+PiBvZiBQTEwgaW4gTUlQSSBEU0kuIFRoaXMgcGF0Y2ggZml4ZXMg
+dGhpcyBkaXNhZ3JlZW1lbnQuCj4gCj4gTXIuIEt1a2ppbiBhbmQgS3J6eXN6dG9mLCBjYW4geW91
+IGdpdmUgbWUgQWNrZWQtYnkgb3IgU2luZ2VkLW9mZi1ieT8gSSdkCj4gbGlrZSB0byBtZXJnZSB0
+aGlzIHBhdGNoIHRvIG1haW5saW5lIHRocm91Z2ggZHJtLW5leHQuCj4gCj4gVGhhbmtzLAo+IElu
+a2kgRGFlCj4gCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IEh5dW5nd29uIEh3YW5nIDxodW1hbi5od2Fu
+Z0BzYW1zdW5nLmNvbT4KPj4gLS0tCj4+IENoYW5nZXMgYmVmb3JlOgo+PiAtIFJlZmVyIGh0dHBz
+Oi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvNjE5MTgxMQo+PiBDaGFuZ2VzIGZvciB2NjoK
+Pj4gLSBOb25lCj4+Cj4+ICBhcmNoL2FybS9ib290L2R0cy9leHlub3M0LmR0c2kgfCAyICstCj4+
+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkKPj4KPj4gZGlm
+ZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczQuZHRzaSBiL2FyY2gvYXJtL2Jvb3Qv
+ZHRzL2V4eW5vczQuZHRzaQo+PiBpbmRleCBlMjBjZGMyLi4xNTM4ZDdhIDEwMDY0NAo+PiAtLS0g
+YS9hcmNoL2FybS9ib290L2R0cy9leHlub3M0LmR0c2kKPj4gKysrIGIvYXJjaC9hcm0vYm9vdC9k
+dHMvZXh5bm9zNC5kdHNpCj4+IEBAIC0xNjcsNyArMTY3LDcgQEAKPj4gIAkJcGh5cyA9IDwmbWlw
+aV9waHkgMT47Cj4+ICAJCXBoeS1uYW1lcyA9ICJkc2ltIjsKPj4gIAkJY2xvY2tzID0gPCZjbG9j
+ayBDTEtfRFNJTTA+LCA8JmNsb2NrIENMS19TQ0xLX01JUEkwPjsKPj4gLQkJY2xvY2stbmFtZXMg
+PSAiYnVzX2NsayIsICJwbGxfY2xrIjsKPj4gKwkJY2xvY2stbmFtZXMgPSAiYnVzX2NsayIsICJz
+Y2xrX21pcGkiOwo+PiAgCQlzdGF0dXMgPSAiZGlzYWJsZWQiOwo+PiAgCQkjYWRkcmVzcy1jZWxs
+cyA9IDwxPjsKPj4gIAkJI3NpemUtY2VsbHMgPSA8MD47Cj4+IC0tCj4+IDEuOS4xCj4+Cj4+IC0t
+Cj4+IFRvIHVuc3Vic2NyaWJlIGZyb20gdGhpcyBsaXN0OiBzZW5kIHRoZSBsaW5lICJ1bnN1YnNj
+cmliZSBkZXZpY2V0cmVlIiBpbgo+PiB0aGUgYm9keSBvZiBhIG1lc3NhZ2UgdG8gbWFqb3Jkb21v
+QHZnZXIua2VybmVsLm9yZwo+PiBNb3JlIG1ham9yZG9tbyBpbmZvIGF0ICBodHRwOi8vdmdlci5r
+ZXJuZWwub3JnL21ham9yZG9tby1pbmZvLmh0bWwKPj4KPiAKCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
+dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
+aWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
