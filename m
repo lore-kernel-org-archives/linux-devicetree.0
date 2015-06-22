@@ -1,209 +1,118 @@
-From: Alexander Sverdlin <alexander.sverdlin@gmail.com>
-Subject: [PATCH] of: acpi: Rename of_node() and acpi_node() to to_of_node()
- and to_acpi_node()
-Date: Mon, 22 Jun 2015 22:38:53 +0200
-Message-ID: <5588725D.6000101@gmail.com>
+From: Michael Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH v2 00/14] ARM: shmobile: Add CPG Clock Domains
+Date: Mon, 22 Jun 2015 13:46:17 -0700
+Message-ID: <20150622204617.9112.71054@quantum>
+References: <1432839219-475-1-git-send-email-geert+renesas@glider.be>
+ <CAMuHMdXntR6c4-uUNGVGx7D7941e8hvnmtVBvDu2+iUsNHQ=Qw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Robert Moore <robert.moore@intel.com>, Lv Zheng <lv.zheng@intel.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Len Brown <lenb@kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-leds@vger.kernel.org, linux-acpi@vger.kernel.org, devel@acpica.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdXntR6c4-uUNGVGx7D7941e8hvnmtVBvDu2+iUsNHQ=Qw@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, Simon Horman <horms@verge.net.au>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, linux-clk@vger.kernel.org, Linux PM list <linux-pm@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Commit 8a0662d9 introduced of_node and acpi_node symbols in global namespace
-but there were already ~63 of_node local variables or function parameters
-(no single acpi_node though, but anyway).
+Quoting Geert Uytterhoeven (2015-06-15 09:15:04)
+> On Thu, May 28, 2015 at 8:53 PM, Geert Uytterhoeven
+> <geert+renesas@glider.be> wrote:
+> >         Hi all,
+> >
+> > This patch series adds Clock Domain support to the Clock Pulse Generator
+> > (CPG) Module Stop (MSTP) Clocks driver using the generic PM Domain, to
+> > be used on shmobile SoCs without device power domains (R-Car Gen1 and
+> > Gen2, RZ).  This allows to power-manage the module clocks of SoC devices
+> > that are part of the CPG Clock Domain using Runtime PM, or for system
+> > suspend/resume, similar to SoCs with device power domains (SH-Mobile and
+> > R-Mobile).
+> >
+> > SoC devices that are part of the CPG Clock Domain and can be
+> > power-managed through an MSTP clock are tagged in DT with a proper
+> > "power-domains" property. This applies to most on-SoC devices, which
+> > have a one-to-one mapping from SoC device to DT device node.
+> > Notable exceptions are "display" and "sound" device nodes, which
+> > represent multiple SoC devices, each having their own MSTP clocks. Hence
+> > drivers for such devices still have to manage their (multiple module)
+> > clocks themselves.
+> >
+> > The (MSTP) clock to use for power-management is found by scanning for
+> > clocks that are compatible with "renesas,cpg-mstp-clocks".
+> > Before, the "first" clock tied to each device (con_id NULL) was used,
+> > being a bit ad-hoc. It was suggested to use the "fck" clock instead,
+> > but this may conflict with DT bindings for devices we don't control
+> > (e.g. GIC-400 plans to mandate "clk" for the clk-name of its single
+> > clock). Looking for real MSTP clocks avoids this problem.
+> >
+> > Logically, the CPG Clock Domain operates on the SoC CPG/MSTP block.
+> > As there's no single device node in DT representing this block (there
+> > are separate device nodes for the CPG and for the individual MSTP
+> > clocks), I bound the logic to the CPG device node.
+> > Perhaps this is something we should change for future SoCs?
+> 
 
-After debugging undefined but used of_node local varible (which turned out
-to reference static function of_node() instead) it became clear that the names
-for the functions are too short and too generic for global scope.
+Hello Geert,
 
-Signed-off-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
----
+I'm still going through this series but I have a few comments/questions.
 
-Compile-tested on x86_64 with ACPI and ARM with OF.
+> Inside Renesas, we've been discussing this face-to-face, but haven't
+> reached a conclusion yet.
+> 
+> In Linux terminology, "PM domain" is a higher-level abstraction than
+> just (hardware) "power domain" (sometimes called "power area").
+> A "PM domain" is any collection of devices that are power-managed
+> similarly. As such it covers not only hardware power domains, but also
+> clock domains, and even firmware controlled devices (e.g. as used by the
+> Linux ACPI subsystem).
+> 
+> I find it a bit unfortunate this was not reflected in the DT bindings
+> for Generic PM domains, which use "power-domains" properties, making
+> believe people this is about hardware power domains only.
 
- drivers/base/property.c  | 26 +++++++++++++-------------
- drivers/gpio/gpiolib.c   |  4 ++--
- drivers/leds/leds-gpio.c |  2 +-
- include/acpi/acpi_bus.h  |  2 +-
- include/linux/acpi.h     |  4 ++--
- include/linux/of.h       |  4 ++--
- 6 files changed, 21 insertions(+), 21 deletions(-)
+"Power island" is used commonly to describe the hardware power domain.
+I like that one since it conveys the concept of power isolation/clamping
+in a power distribution network.  It might be more clear to refer to the
+hardware as power islands and reserve "power domains" for the Linux
+construct?
 
-diff --git a/drivers/base/property.c b/drivers/base/property.c
-index 1d0b116..dfd4de6 100644
---- a/drivers/base/property.c
-+++ b/drivers/base/property.c
-@@ -128,9 +128,9 @@ EXPORT_SYMBOL_GPL(device_property_present);
- bool fwnode_property_present(struct fwnode_handle *fwnode, const char *propname)
- {
- 	if (is_of_node(fwnode))
--		return of_property_read_bool(of_node(fwnode), propname);
-+		return of_property_read_bool(to_of_node(fwnode), propname);
- 	else if (is_acpi_node(fwnode))
--		return !acpi_dev_prop_get(acpi_node(fwnode), propname, NULL);
-+		return !acpi_dev_prop_get(to_acpi_node(fwnode), propname, NULL);
+> 
+> One other point of confusion is that there are multiple kernel
+> subsystems that can (or seem to be able to) be used for the same
+> purpose. Both regulators and power domains are used to "control power".
+> The same is true for clocks vs. clock domains.
+> My point of view is that the regulator and clock subsystems are more
+> about the properties of regulators (voltage, current) resp. clocks
+> (frequencies), while power/clock domains are about being active or
+> inactive.
 
- 	return !!pset_prop_get(to_pset(fwnode), propname);
- }
-@@ -285,10 +285,10 @@ EXPORT_SYMBOL_GPL(device_property_read_string);
- ({ \
- 	int _ret_; \
- 	if (is_of_node(_fwnode_)) \
--		_ret_ = OF_DEV_PROP_READ_ARRAY(of_node(_fwnode_), _propname_, \
-+		_ret_ = OF_DEV_PROP_READ_ARRAY(to_of_node(_fwnode_), _propname_, \
- 					       _type_, _val_, _nval_); \
- 	else if (is_acpi_node(_fwnode_)) \
--		_ret_ = acpi_dev_prop_read(acpi_node(_fwnode_), _propname_, \
-+		_ret_ = acpi_dev_prop_read(to_acpi_node(_fwnode_), _propname_, \
- 					   _proptype_, _val_, _nval_); \
- 	else \
- 		_ret_ = pset_prop_read_array(to_pset(_fwnode_), _propname_, \
-@@ -424,11 +424,11 @@ int fwnode_property_read_string_array(struct fwnode_handle *fwnode,
- {
- 	if (is_of_node(fwnode))
- 		return val ?
--			of_property_read_string_array(of_node(fwnode), propname,
--						      val, nval) :
--			of_property_count_strings(of_node(fwnode), propname);
-+			of_property_read_string_array(to_of_node(fwnode),
-+						      propname, val, nval) :
-+			of_property_count_strings(to_of_node(fwnode), propname);
- 	else if (is_acpi_node(fwnode))
--		return acpi_dev_prop_read(acpi_node(fwnode), propname,
-+		return acpi_dev_prop_read(to_acpi_node(fwnode), propname,
- 					  DEV_PROP_STRING, val, nval);
+Only speaking for the clock framework, but the prepare/unprepare and
+enable/disable semantics are very important here, not just the
+rate-change stuff.
 
- 	return pset_prop_read_array(to_pset(fwnode), propname,
-@@ -455,9 +455,9 @@ int fwnode_property_read_string(struct fwnode_handle *fwnode,
- 				const char *propname, const char **val)
- {
- 	if (is_of_node(fwnode))
--		return of_property_read_string(of_node(fwnode), propname, val);
-+		return of_property_read_string(to_of_node(fwnode), propname, val);
- 	else if (is_acpi_node(fwnode))
--		return acpi_dev_prop_read(acpi_node(fwnode), propname,
-+		return acpi_dev_prop_read(to_acpi_node(fwnode), propname,
- 					  DEV_PROP_STRING, val, 1);
+> 
+> On Renesas SoCs (SH/R-Mobile, R-Car, RZ), the MSTP (Module Standby and
+> Software Reset) block is very intimately tied to the CPG (Clock Pulse
+> Generator) block.
+> 
+> The MSTP block provides two functions:
+>   1. Module Standby: "Clock supply to specified modules is stopped by
+>      setting the module stop control register bits."
+>      However, the clock supply to a module is not stopped until all CPUs
+>      in the SoC agree.  Indeed, there are separate MSTP registers for
+>      application (Cortex-A) and real-time (SH and/or Cortex-R) cores.
+>   2. Reset control. to perform a software reset of a specific module.
+> 
+> Given the second function, perhaps the MSTP bits shouldn't have been
+> moduled as clocks, but it made sense at the time of introduction, and
+> IMHO it still does.
 
- 	return -ENXIO;
-@@ -475,13 +475,13 @@ struct fwnode_handle *device_get_next_child_node(struct device *dev,
- 	if (IS_ENABLED(CONFIG_OF) && dev->of_node) {
- 		struct device_node *node;
+Does the clk.enable_count refcount for an MSTP "clock" mirror your
+statement, "the clock supply to a module is not stopped until all CPUs
+in the SoC agree"? Put another way, is it possble in a shmobile system
+for an MSTP "clock" to have an enable_count of zero, but still by
+physically enabled in hardware?
 
--		node = of_get_next_available_child(dev->of_node, of_node(child));
-+		node = of_get_next_available_child(dev->of_node, to_of_node(child));
- 		if (node)
- 			return &node->fwnode;
- 	} else if (IS_ENABLED(CONFIG_ACPI)) {
- 		struct acpi_device *node;
-
--		node = acpi_get_next_child(dev, acpi_node(child));
-+		node = acpi_get_next_child(dev, to_acpi_node(child));
- 		if (node)
- 			return acpi_fwnode_handle(node);
- 	}
-@@ -500,7 +500,7 @@ EXPORT_SYMBOL_GPL(device_get_next_child_node);
- void fwnode_handle_put(struct fwnode_handle *fwnode)
- {
- 	if (is_of_node(fwnode))
--		of_node_put(of_node(fwnode));
-+		of_node_put(to_of_node(fwnode));
- }
- EXPORT_SYMBOL_GPL(fwnode_handle_put);
-
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 6bc612b..5d8b2b3 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -2040,14 +2040,14 @@ struct gpio_desc *fwnode_get_named_gpiod(struct fwnode_handle *fwnode,
- 	if (is_of_node(fwnode)) {
- 		enum of_gpio_flags flags;
-
--		desc = of_get_named_gpiod_flags(of_node(fwnode), propname, 0,
-+		desc = of_get_named_gpiod_flags(to_of_node(fwnode), propname, 0,
- 						&flags);
- 		if (!IS_ERR(desc))
- 			active_low = flags & OF_GPIO_ACTIVE_LOW;
- 	} else if (is_acpi_node(fwnode)) {
- 		struct acpi_gpio_info info;
-
--		desc = acpi_get_gpiod_by_index(acpi_node(fwnode), propname, 0,
-+		desc = acpi_get_gpiod_by_index(to_acpi_node(fwnode), propname, 0,
- 					       &info);
- 		if (!IS_ERR(desc))
- 			active_low = info.active_low;
-diff --git a/drivers/leds/leds-gpio.c b/drivers/leds/leds-gpio.c
-index 15eb3f8..d2d54d6 100644
---- a/drivers/leds/leds-gpio.c
-+++ b/drivers/leds/leds-gpio.c
-@@ -191,7 +191,7 @@ static struct gpio_leds_priv *gpio_leds_create(struct platform_device *pdev)
- 			goto err;
- 		}
-
--		np = of_node(child);
-+		np = to_of_node(child);
-
- 		if (fwnode_property_present(child, "label")) {
- 			fwnode_property_read_string(child, "label", &led.name);
-diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
-index 8de4fa9..1224be8 100644
---- a/include/acpi/acpi_bus.h
-+++ b/include/acpi/acpi_bus.h
-@@ -385,7 +385,7 @@ static inline bool is_acpi_node(struct fwnode_handle *fwnode)
- 	return fwnode && fwnode->type == FWNODE_ACPI;
- }
-
--static inline struct acpi_device *acpi_node(struct fwnode_handle *fwnode)
-+static inline struct acpi_device *to_acpi_node(struct fwnode_handle *fwnode)
- {
- 	return is_acpi_node(fwnode) ?
- 		container_of(fwnode, struct acpi_device, fwnode) : NULL;
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index e4da5e3..ec3c98e 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -53,7 +53,7 @@ static inline acpi_handle acpi_device_handle(struct acpi_device *adev)
- 	return adev ? adev->handle : NULL;
- }
-
--#define ACPI_COMPANION(dev)		acpi_node((dev)->fwnode)
-+#define ACPI_COMPANION(dev)		to_acpi_node((dev)->fwnode)
- #define ACPI_COMPANION_SET(dev, adev)	set_primary_fwnode(dev, (adev) ? \
- 	acpi_fwnode_handle(adev) : NULL)
- #define ACPI_HANDLE(dev)		acpi_device_handle(ACPI_COMPANION(dev))
-@@ -473,7 +473,7 @@ static inline bool is_acpi_node(struct fwnode_handle *fwnode)
- 	return false;
- }
-
--static inline struct acpi_device *acpi_node(struct fwnode_handle *fwnode)
-+static inline struct acpi_device *to_acpi_node(struct fwnode_handle *fwnode)
- {
- 	return NULL;
- }
-diff --git a/include/linux/of.h b/include/linux/of.h
-index b871ff9..f05fdce 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -128,7 +128,7 @@ static inline bool is_of_node(struct fwnode_handle *fwnode)
- 	return fwnode && fwnode->type == FWNODE_OF;
- }
-
--static inline struct device_node *of_node(struct fwnode_handle *fwnode)
-+static inline struct device_node *to_of_node(struct fwnode_handle *fwnode)
- {
- 	return fwnode ? container_of(fwnode, struct device_node, fwnode) : NULL;
- }
-@@ -387,7 +387,7 @@ static inline bool is_of_node(struct fwnode_handle *fwnode)
- 	return false;
- }
-
--static inline struct device_node *of_node(struct fwnode_handle *fwnode)
-+static inline struct device_node *to_of_node(struct fwnode_handle *fwnode)
- {
- 	return NULL;
- }
+Regards,
+Mike
 --
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" in
+To unsubscribe from this list: send the line "unsubscribe linux-pm" in
