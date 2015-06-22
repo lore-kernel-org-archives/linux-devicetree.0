@@ -1,128 +1,53 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 00/08] clocksource: sh_cmt: DT binding rework
-Date: Mon, 22 Jun 2015 11:49:35 +0200
-Message-ID: <CAMuHMdX_BG7gaXvU9Dp7_idrAi9MKwEkGCaLYcS0U1+6pZ0Dbw@mail.gmail.com>
-References: <20150621080903.10187.20998.sendpatchset@little-apple>
+From: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v4 0/2] mfd: flexcom: add a driver for Flexcom
+Date: Mon, 22 Jun 2015 12:12:52 +0200
+Message-ID: <cover.1434967670.git.cyrille.pitchen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20150621080903.10187.20998.sendpatchset@little-apple>
-Sender: linux-sh-owner@vger.kernel.org
-To: Magnus Damm <magnus.damm@gmail.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linux-sh list <linux-sh@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Simon Horman <horms+renesas@verge.net.au>, Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Magnus,
+ChangeLog
 
-On Sun, Jun 21, 2015 at 10:09 AM, Magnus Damm <magnus.damm@gmail.com> w=
-rote:
-> clocksource: sh_cmt: DT binding rework
->
-> [PATCH 01/08] devicetree: bindings: Remove sh7372 CMT binding
-> [PATCH 02/08] clocksource: sh_cmt: Use 0x3f mask for SH_CMT_48BIT cas=
-e
-> [PATCH 03/08] devicetree: bindings: R-Car Gen2 CMT0 and CMT1 bindings
-> [PATCH 04/08] clocksource: sh_cmt: Support separate R-Car Gen2 CMT0/1
-> [PATCH 05/08] devicetree: bindings: r8a73a4 and R-Car Gen2 CMT bindin=
-gs
-> [PATCH 06/08] ARM: shmobile: Update CMT compat string users in DTS
-> [PATCH 07/08] devicetree: bindings: Deprecate property, update exampl=
-e
-> [PATCH 08/08] ARM: shmobile: Remove CMT renesas,channels-mask from DT=
-S
->
-> This series reworks the CMT DT bindings to try to deal with the follo=
-wing:
-> - R-Car Gen2 CMT0 and CMT1 hardware instances are not identical
-> - The property renesas,channels-mask is not enough to describe the di=
-fference
-> - DT should describe the hardware, not the software implementation
-> - Not all documented DT bindings are actually used
+v4:
+- check clk_prepare_enable() return code in atmel_flexcom_probe()
+- add a commit message to the DT binding patch
 
-Thanks for your series!
+v3:
+- remove MODULE_ALIAS()
+- add Acked-by from Boris Brezillon and Alexandre Belloni
 
-> Without these patches the binding "renesas,cmt-48-gen2" is used for b=
-oth
-> CMT0 and CMT1 on R-Car Gen2 SoCs. CMT0 and CMT1 are currently seen by=
- the
-> Linux device driver as compatible hardware, and the device-specific p=
-roperty
-> "renesas,channels-mask" is used to point out some of the hardware con=
-figuration
-> differences. Since the driver is not feature complete only some diffe=
-rences are
-> described and when diving into the data sheet we can see that:
->
-> 1) CMT0 is not 48-bit at all, instead it only supports 32-bit counter=
-s.
-> 2) Some channels of CMT1 are 48-bit, some 32-bit.
-> 3) A couple of CMT1 channels have even more features.
->
-> It turns out that none of the above differences are described in our =
-current
-> DT files. And since we use the same compat string for CMT0 and CMT1 t=
-he driver
-> itself cannot enable features specific only to CMT1 without first upd=
-ating
-> the DTS. So this series is ground work for future feature patches.
->
-> It seems that we have two choices if we want to support CMT1 features=
-:
-> A) Keep existing DT bindings, add more properties for CMT1
-> B) Rework the compatible strings and keep configuration in the driver
->
-> Judging by above it seems that DT update is inevitable. In my mind it=
- is
-> rather painful to update the DT so I'd like to minimize the number of
-> updates and let the majority of the changes only happen in the driver=
-=2E
-> And since we should really describe hardware in DT but driver feature=
-s tend
-> to be implemented incrementally then B) seems like a good fit to me.
->
-> I wouldn't mind going with A) but to be honest I must say that the ex=
-isting
-> compat string "renesas,cmt-48-gen2" is just too confusing with "48"
-> (when CMT0 is 32bit-only) and also "gen2" (used without product line =
-R-Car).
->
-> Because of that I've gone with B) and reworked the bindings to separa=
-te
-> CMT0 from CMT1 and keep channel configuration in the device driver.
+v2:
+- enhance the documentation of DT bindings and change the way the "ranges"
+  property is used.
+- replace __raw_readl() and __raw_writel() by readl() and writel().
+- change the module license to "GPL" for v2 or later
+- print the selected flexcom mode after the hardware version
 
-I'm also in favor of B. I'd also like to use this opportunity to point
-to slide 30
-of my presentation "Engaging Device Trees" at ELC2014:
+v1:
+This series of patches a support to the Atmel Flexcom, a wrapper which
+integrates an USART, a SPI controller and a TWI controller. Only one
+peripheral can be used at a time. The active function is selected though
+the Flexcom Mode Register.
 
-  - Avoid adding more properties to differentiate
-      - You may be/guess wrong about compatibility
-      - What if you discover an incompatibility later?
-        =E2=86=92 Use SoC-specific compatible properties from the start
+Cyrille Pitchen (2):
+  mfd: devicetree: add bindings for Atmel Flexcom
+  mfd: flexcom: add a driver for Atmel Flexible Serial Communication
+    Unit
 
-(http://elinux.org/images/e/e2/Engaging_Device_Trees_0.pdf)
+ .../devicetree/bindings/mfd/atmel-flexcom.txt      | 58 +++++++++++++
+ drivers/mfd/Kconfig                                | 11 +++
+ drivers/mfd/Makefile                               |  1 +
+ drivers/mfd/atmel-flexcom.c                        | 98 ++++++++++++++++++++++
+ 4 files changed, 168 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/atmel-flexcom.txt
+ create mode 100644 drivers/mfd/atmel-flexcom.c
 
-> Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
-
-(if you implemented my comment on 01/08)
-Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-(with 02/08 fixed)
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
-on sh73a0/kzm9g, r8a7740/armadillo, r8a73a4/ape6evm, r8a7791/koelsch.
-
-Gr{oetje,eeting}s,
-
-                        Geert
+-- 
+1.8.2.2
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-=
-m68k.org
-
-In personal conversations with technical people, I call myself a hacker=
-=2E But
-when I'm talking to journalists I just say "programmer" or something li=
-ke that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe linux-sh" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
