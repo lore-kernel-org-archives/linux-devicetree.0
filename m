@@ -1,60 +1,128 @@
-From: Magnus Damm <magnus.damm@gmail.com>
-Subject: Re: [PATCH 02/08] clocksource: sh_cmt: Use 0x3f mask for SH_CMT_48BIT case
-Date: Mon, 22 Jun 2015 18:45:30 +0900
-Message-ID: <CANqRtoRs_uiBGCTa=+M0turFpyyf1kAfohzyqoRBvgKmo1eg=Q@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 00/08] clocksource: sh_cmt: DT binding rework
+Date: Mon, 22 Jun 2015 11:49:35 +0200
+Message-ID: <CAMuHMdX_BG7gaXvU9Dp7_idrAi9MKwEkGCaLYcS0U1+6pZ0Dbw@mail.gmail.com>
 References: <20150621080903.10187.20998.sendpatchset@little-apple>
-	<20150621080927.10187.98007.sendpatchset@little-apple>
-	<CAMuHMdVgEh3d_OU1NVTHuP2gYrHf6mj36FQaTjMKBzqn6JA_cw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdVgEh3d_OU1NVTHuP2gYrHf6mj36FQaTjMKBzqn6JA_cw@mail.gmail.com>
+In-Reply-To: <20150621080903.10187.20998.sendpatchset@little-apple>
 Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
+To: Magnus Damm <magnus.damm@gmail.com>
 Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linux-sh list <linux-sh@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Simon Horman <horms+renesas@verge.net.au>, Thomas Gleixner <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 22, 2015 at 6:43 PM, Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
-> On Sun, Jun 21, 2015 at 10:09 AM, Magnus Damm <magnus.damm@gmail.com> wrote:
->> From: Magnus Damm <damm+renesas@opensource.se>
->>
->> Always use 0x3f as channel mask for the SH_CMT_48BIT type of devices.
->> Once this patch is applied the "renesas,channels-mask" property will
->> be ignored by the driver for older devices matching SH_CMT_48BIT. In
->> the future when all CMT types store channel mask in the driver then
->> we will be able to deprecate and remove "renesas,channels-mask" from DTS.
->>
->> Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
->> ---
->>
->>  drivers/clocksource/sh_cmt.c |   14 +++++++++++---
->>  1 file changed, 11 insertions(+), 3 deletions(-)
->>
->> --- 0001/drivers/clocksource/sh_cmt.c
->> +++ work/drivers/clocksource/sh_cmt.c   2015-06-20 15:25:54.302366518 +0900
->
->> @@ -969,9 +972,14 @@ static int sh_cmt_setup(struct sh_cmt_de
->>                 id = of_match_node(sh_cmt_of_table, pdev->dev.of_node);
->>                 cmt->info = id->data;
->>
->> -               ret = sh_cmt_parse_dt(cmt);
->> -               if (ret < 0)
->> -                       return ret;
->> +               /* prefer in-driver channel configuration over DT */
->> +               if (cmt->info->channels_mask) {
->> +                       cmt->hw_channels = cmt->info_channels_mask;
->
-> drivers/clocksource/sh_cmt.c: In function 'sh_cmt_setup':
-> drivers/clocksource/sh_cmt.c:996:26: error: 'struct sh_cmt_device' has
-> no member named 'info_channels_mask'
->     cmt->hw_channels = cmt->info_channels_mask;
->                           ^
->
-> "cmt->info->channels_mask"
+Hi Magnus,
 
-Ouch, will fix. Thanks!
+On Sun, Jun 21, 2015 at 10:09 AM, Magnus Damm <magnus.damm@gmail.com> w=
+rote:
+> clocksource: sh_cmt: DT binding rework
+>
+> [PATCH 01/08] devicetree: bindings: Remove sh7372 CMT binding
+> [PATCH 02/08] clocksource: sh_cmt: Use 0x3f mask for SH_CMT_48BIT cas=
+e
+> [PATCH 03/08] devicetree: bindings: R-Car Gen2 CMT0 and CMT1 bindings
+> [PATCH 04/08] clocksource: sh_cmt: Support separate R-Car Gen2 CMT0/1
+> [PATCH 05/08] devicetree: bindings: r8a73a4 and R-Car Gen2 CMT bindin=
+gs
+> [PATCH 06/08] ARM: shmobile: Update CMT compat string users in DTS
+> [PATCH 07/08] devicetree: bindings: Deprecate property, update exampl=
+e
+> [PATCH 08/08] ARM: shmobile: Remove CMT renesas,channels-mask from DT=
+S
+>
+> This series reworks the CMT DT bindings to try to deal with the follo=
+wing:
+> - R-Car Gen2 CMT0 and CMT1 hardware instances are not identical
+> - The property renesas,channels-mask is not enough to describe the di=
+fference
+> - DT should describe the hardware, not the software implementation
+> - Not all documented DT bindings are actually used
 
-/ magnus
+Thanks for your series!
+
+> Without these patches the binding "renesas,cmt-48-gen2" is used for b=
+oth
+> CMT0 and CMT1 on R-Car Gen2 SoCs. CMT0 and CMT1 are currently seen by=
+ the
+> Linux device driver as compatible hardware, and the device-specific p=
+roperty
+> "renesas,channels-mask" is used to point out some of the hardware con=
+figuration
+> differences. Since the driver is not feature complete only some diffe=
+rences are
+> described and when diving into the data sheet we can see that:
+>
+> 1) CMT0 is not 48-bit at all, instead it only supports 32-bit counter=
+s.
+> 2) Some channels of CMT1 are 48-bit, some 32-bit.
+> 3) A couple of CMT1 channels have even more features.
+>
+> It turns out that none of the above differences are described in our =
+current
+> DT files. And since we use the same compat string for CMT0 and CMT1 t=
+he driver
+> itself cannot enable features specific only to CMT1 without first upd=
+ating
+> the DTS. So this series is ground work for future feature patches.
+>
+> It seems that we have two choices if we want to support CMT1 features=
+:
+> A) Keep existing DT bindings, add more properties for CMT1
+> B) Rework the compatible strings and keep configuration in the driver
+>
+> Judging by above it seems that DT update is inevitable. In my mind it=
+ is
+> rather painful to update the DT so I'd like to minimize the number of
+> updates and let the majority of the changes only happen in the driver=
+=2E
+> And since we should really describe hardware in DT but driver feature=
+s tend
+> to be implemented incrementally then B) seems like a good fit to me.
+>
+> I wouldn't mind going with A) but to be honest I must say that the ex=
+isting
+> compat string "renesas,cmt-48-gen2" is just too confusing with "48"
+> (when CMT0 is 32bit-only) and also "gen2" (used without product line =
+R-Car).
+>
+> Because of that I've gone with B) and reworked the bindings to separa=
+te
+> CMT0 from CMT1 and keep channel configuration in the device driver.
+
+I'm also in favor of B. I'd also like to use this opportunity to point
+to slide 30
+of my presentation "Engaging Device Trees" at ELC2014:
+
+  - Avoid adding more properties to differentiate
+      - You may be/guess wrong about compatibility
+      - What if you discover an incompatibility later?
+        =E2=86=92 Use SoC-specific compatible properties from the start
+
+(http://elinux.org/images/e/e2/Engaging_Device_Trees_0.pdf)
+
+> Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
+
+(if you implemented my comment on 01/08)
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+(with 02/08 fixed)
+Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+on sh73a0/kzm9g, r8a7740/armadillo, r8a73a4/ape6evm, r8a7791/koelsch.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-=
+m68k.org
+
+In personal conversations with technical people, I call myself a hacker=
+=2E But
+when I'm talking to journalists I just say "programmer" or something li=
+ke that.
+                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe linux-sh" in
