@@ -1,377 +1,91 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 2/2] cpufreq: mediatek: Add MT8173 cpufreq driver
-Date: Mon, 22 Jun 2015 17:15:11 +0530
-Message-ID: <20150622114511.GA28340@linux>
-References: <1433766561-1330-1-git-send-email-pi-cheng.chen@linaro.org>
- <1433766561-1330-3-git-send-email-pi-cheng.chen@linaro.org>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v6 15/15] ARM: dts: rename the clock of MIPI DSI 'pll_clk'
+ to 'sclk_mipi'
+Date: Mon, 22 Jun 2015 20:59:36 +0900
+Message-ID: <CAJKOXPegwXD18tt2dFmHAE4imZSp2JUbEy7RDcRxqhiRQfoMvw@mail.gmail.com>
+References: <1434113958-15877-1-git-send-email-human.hwang@samsung.com>
+	<1434113958-15877-16-git-send-email-human.hwang@samsung.com>
+	<5587D111.9090602@samsung.com>
+	<5587F4A1.2090502@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1433766561-1330-3-git-send-email-pi-cheng.chen@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Pi-Cheng Chen <pi-cheng.chen@linaro.org>
-Cc: Mike Turquette <mturquette@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linaro-kernel@lists.linaro.org, linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <5587F4A1.2090502@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Inki Dae <inki.dae@samsung.com>
+Cc: Hyungwon Hwang <human.hwang@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, daniel@fooishbar.org, sw0312.kim@samsung.com, jy0922.shim@samsung.com, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 08-06-15, 20:29, Pi-Cheng Chen wrote:
+2015-06-22 20:42 GMT+09:00 Inki Dae <inki.dae@samsung.com>:
+> + Krzysztof
+>
+> On 2015=EB=85=84 06=EC=9B=94 22=EC=9D=BC 18:10, Inki Dae wrote:
+>> On 2015=EB=85=84 06=EC=9B=94 12=EC=9D=BC 21:59, Hyungwon Hwang wrote=
+:
+>>> The clock which was named as 'pll_clk' is actually not the clock so=
+urce
+>>> of PLL in MIPI DSI. This patch fixes this disagreement.
+>>
+>> Mr. Kukjin and Krzysztof, can you give me Acked-by or Singed-off-by?=
+ I'd
+>> like to merge this patch to mainline through drm-next.
 
-Sorry for the delay, I have been quite busy recently.
+Dear Hyungwon Hwang,
 
-> +++ b/drivers/cpufreq/mt8173-cpufreq.c
-> +static LIST_HEAD(cpu_dvfs_info_list);
-> +
-> +static inline struct mtk_cpu_dvfs_info *to_mtk_cpu_dvfs_info(
-> +			struct list_head *list)
-> +{
-> +	return list_entry(list, struct mtk_cpu_dvfs_info, node);
-> +}
-> +
-> +static inline void mtk_cpu_dvfs_info_add(struct mtk_cpu_dvfs_info *info)
-> +{
-> +	list_add(&info->node, &cpu_dvfs_info_list);
-> +}
+Please always CC samsung-soc mailing list on such patches. I won't
+receive it on my personal email if you don't CC the list. The
+get_maintainers.pl gives necessary addresses.
 
-No stupid wrappers please. Doesn't make anything better.
+Comment below,
 
-> +
-> +static struct mtk_cpu_dvfs_info *mtk_cpu_dvfs_info_get(int cpu)
+>>
+>> Thanks,
+>> Inki Dae
+>>
+>>>
+>>> Signed-off-by: Hyungwon Hwang <human.hwang@samsung.com>
+>>> ---
+>>> Changes before:
+>>> - Refer https://patchwork.kernel.org/patch/6191811
+>>> Changes for v6:
+>>> - None
+>>>
+>>>  arch/arm/boot/dts/exynos4.dtsi | 2 +-
+>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exy=
+nos4.dtsi
+>>> index e20cdc2..1538d7a 100644
+>>> --- a/arch/arm/boot/dts/exynos4.dtsi
+>>> +++ b/arch/arm/boot/dts/exynos4.dtsi
+>>> @@ -167,7 +167,7 @@
+>>>              phys =3D <&mipi_phy 1>;
+>>>              phy-names =3D "dsim";
+>>>              clocks =3D <&clock CLK_DSIM0>, <&clock CLK_SCLK_MIPI0>=
+;
+>>> -            clock-names =3D "bus_clk", "pll_clk";
+>>> +            clock-names =3D "bus_clk", "sclk_mipi";
 
-A very bad name to a routine with very specific functionality.
+It seems wrong. The driver fetches reference from a name of "pll_clk",
+not "sclk_mipi". Also bindings documentation mentions pll_clk and
+bus_clk only.
 
-> +{
-> +	struct mtk_cpu_dvfs_info *info;
-> +	struct list_head *list;
-> +
-> +	list_for_each(list, &cpu_dvfs_info_list) {
-> +		info = to_mtk_cpu_dvfs_info(list);
-> +
-> +		if (cpumask_test_cpu(cpu, info->cpus))
-> +			return info;
-> +	}
-> +
-> +	return NULL;
-> +}
-> +
-> +static void mtk_cpu_dvfs_info_release(void)
-> +{
-> +	struct list_head *list, *tmp;
-> +	struct mtk_cpu_dvfs_info *info;
-> +
-> +	list_for_each_safe(list, tmp, &cpu_dvfs_info_list) {
-> +		info = to_mtk_cpu_dvfs_info(list);
-> +
-> +		dev_pm_opp_free_cpufreq_table(info->cpu_dev,
-> +					      &info->freq_table);
-> +
-> +		if (!IS_ERR(info->proc_reg))
-> +			regulator_put(info->proc_reg);
-> +		if (!IS_ERR(info->sram_reg))
-> +			regulator_put(info->sram_reg);
-> +		if (!IS_ERR(info->cpu_clk))
-> +			clk_put(info->cpu_clk);
-> +		if (!IS_ERR(info->inter_clk))
-> +			clk_put(info->inter_clk);
-> +
-> +		of_free_opp_table(info->cpu_dev);
-> +
-> +		list_del(list);
-> +		kfree(info);
-> +	}
-> +}
-> +
-> +#define MIN(a, b) ((a) < (b) ? (a) : (b))
-> +#define MAX(a, b) ((a) > (b) ? (a) : (b))
+Best regards,
+Krzysztof
 
-Look for these in kernel.h
 
-> +static int mtk_cpufreq_set_voltage(struct mtk_cpu_dvfs_info *info, int vproc)
-> +{
-> +	if (info->need_voltage_trace)
-> +		return mtk_cpufreq_voltage_trace(info, vproc);
-> +	else
-> +		return regulator_set_voltage(info->proc_reg, vproc,
-> +					     vproc + VOLT_TOL);
-> +}
-> +
-> +static int mtk_cpufreq_set_target(struct cpufreq_policy *policy,
-> +				  unsigned int index)
-> +{
-> +	struct cpufreq_frequency_table *freq_table = policy->freq_table;
-> +	struct clk *cpu_clk = policy->clk;
-> +	struct clk *armpll = clk_get_parent(cpu_clk);
-> +	struct mtk_cpu_dvfs_info *info = policy->driver_data;
-> +	struct device *cpu_dev = info->cpu_dev;
-> +	struct dev_pm_opp *opp;
-> +	long freq_hz, old_freq_hz;
-> +	int vproc, old_vproc, inter_vproc, target_vproc, ret;
-> +
-> +	inter_vproc = info->intermediate_voltage;
-> +
-> +	old_freq_hz = clk_get_rate(cpu_clk);
-> +	old_vproc = regulator_get_voltage(info->proc_reg);
-> +
-> +	freq_hz = freq_table[index].frequency * 1000;
-
-A blank line here.
-
-> +	rcu_read_lock();
-> +	opp = dev_pm_opp_find_freq_ceil(cpu_dev, &freq_hz);
-> +	if (IS_ERR(opp)) {
-> +		rcu_read_unlock();
-> +		pr_err("cpu%d: failed to find OPP for %ld\n",
-> +		       policy->cpu, freq_hz);
-> +		return PTR_ERR(opp);
-> +	}
-> +	vproc = dev_pm_opp_get_voltage(opp);
-> +	rcu_read_unlock();
-> +
-> +	/*
-> +	 * If the new voltage or the intermediate voltage is higher than the
-> +	 * current voltage, scale up voltage first.
-> +	 */
-> +	target_vproc = (inter_vproc > vproc) ? inter_vproc : vproc;
-> +	if (old_vproc < target_vproc) {
-> +		ret = mtk_cpufreq_set_voltage(info, target_vproc);
-> +		if (ret) {
-> +			pr_err("cpu%d: failed to scale up voltage!\n",
-> +			       policy->cpu);
-> +			mtk_cpufreq_set_voltage(info, old_vproc);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	/* Reparent the CPU clock to intermediate clock. */
-> +	ret = clk_set_parent(cpu_clk, info->inter_clk);
-> +	if (ret) {
-> +		pr_err("cpu%d: failed to re-parent cpu clock!\n",
-> +		       policy->cpu);
-> +		mtk_cpufreq_set_voltage(info, old_vproc);
-> +		WARN_ON(1);
-> +		return ret;
-> +	}
-> +
-> +	/* Set the original PLL to target rate. */
-> +	ret = clk_set_rate(armpll, freq_hz);
-> +	if (ret) {
-> +		pr_err("cpu%d: failed to scale cpu clock rate!\n",
-> +		       policy->cpu);
-> +		clk_set_parent(cpu_clk, armpll);
-> +		mtk_cpufreq_set_voltage(info, old_vproc);
-> +		return ret;
-> +	}
-> +
-> +	/* Set parent of CPU clock back to the original PLL. */
-> +	ret = clk_set_parent(cpu_clk, armpll);
-> +	if (ret) {
-> +		pr_err("cpu%d: failed to re-parent cpu clock!\n",
-> +		       policy->cpu);
-> +		mtk_cpufreq_set_voltage(info, inter_vproc);
-> +		WARN_ON(1);
-> +		return ret;
-> +	}
-> +
-> +	/*
-> +	 * If the new voltage is lower than the intermediate voltage or the
-> +	 * original voltage, scale down to the new voltage.
-> +	 */
-> +	if (vproc < inter_vproc || vproc < old_vproc) {
-> +		ret = mtk_cpufreq_set_voltage(info, vproc);
-> +		if (ret) {
-> +			pr_err("cpu%d: failed to scale down voltage!\n",
-> +			       policy->cpu);
-> +			clk_set_parent(cpu_clk, info->inter_clk);
-> +			clk_set_rate(armpll, old_freq_hz);
-> +			clk_set_parent(cpu_clk, armpll);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int mtk_cpufreq_init(struct cpufreq_policy *policy)
-> +{
-> +	struct mtk_cpu_dvfs_info *info;
-> +	int ret;
-> +
-> +	info = mtk_cpu_dvfs_info_get(policy->cpu);
-> +	if (!info) {
-> +		pr_err("%s: mtk cpu dvfs info for cpu%d is not initialized\n",
-> +		       __func__, policy->cpu);
-> +		return -ENODEV;
-> +	}
-> +
-> +	ret = cpufreq_table_validate_and_show(policy, info->freq_table);
-> +	if (ret) {
-> +		pr_err("%s: invalid frequency table: %d\n", __func__, ret);
-> +		return ret;
-> +	}
-> +
-> +	cpumask_copy(policy->cpus, info->cpus);
-> +	policy->driver_data = info;
-> +	policy->clk = info->cpu_clk;
-> +
-> +	return 0;
-> +}
-> +
-> +static struct cpufreq_driver mt8173_cpufreq_driver = {
-> +	.flags = CPUFREQ_STICKY | CPUFREQ_NEED_INITIAL_FREQ_CHECK,
-> +	.verify = cpufreq_generic_frequency_table_verify,
-> +	.target_index = mtk_cpufreq_set_target,
-> +	.get = cpufreq_generic_get,
-> +	.init = mtk_cpufreq_init,
-> +	.name = "mtk-cpufreq",
-> +	.attr = cpufreq_generic_attr,
-> +};
-> +
-> +static int mtk_cpu_dvfs_info_init(int cpu)
-> +{
-> +	struct device *cpu_dev;
-> +	struct regulator *proc_reg = ERR_PTR(-ENODEV);
-> +	struct regulator *sram_reg = ERR_PTR(-ENODEV);
-> +	struct clk *cpu_clk = ERR_PTR(-ENODEV);
-> +	struct clk *inter_clk = ERR_PTR(-ENODEV);
-> +	struct mtk_cpu_dvfs_info *info;
-> +	struct cpufreq_frequency_table *freq_table;
-> +	struct dev_pm_opp *opp;
-> +	unsigned long rate;
-> +	int ret;
-> +
-> +	cpu_dev = get_cpu_device(cpu);
-> +	if (!cpu_dev) {
-> +		pr_err("failed to get cpu%d device\n", cpu);
-> +		return -ENODEV;
-> +	}
-> +
-> +	ret = of_init_opp_table(cpu_dev);
-> +	if (ret) {
-> +		pr_warn("no OPP table for cpu%d\n", cpu);
-> +		return ret;
-> +	}
-> +
-> +	cpu_clk = clk_get(cpu_dev, "cpu");
-> +	if (IS_ERR(cpu_clk)) {
-> +		if (PTR_ERR(cpu_clk) == -EPROBE_DEFER)
-> +			pr_warn("cpu clk for cpu%d not ready, retry.\n", cpu);
-> +		else
-> +			pr_err("failed to get cpu clk for cpu%d\n", cpu);
-> +
-> +		ret = PTR_ERR(cpu_clk);
-> +		goto out_free_opp_table;
-> +	}
-> +
-> +	inter_clk = clk_get(cpu_dev, "intermediate");
-> +	if (IS_ERR(inter_clk)) {
-> +		if (PTR_ERR(inter_clk) == -EPROBE_DEFER)
-> +			pr_warn("intermediate clk for cpu%d not ready, retry.\n",
-> +				cpu);
-> +		else
-> +			pr_err("failed to get intermediate clk for cpu%d\n",
-> +			       cpu);
-> +
-> +		ret = PTR_ERR(cpu_clk);
-> +		goto out_free_resources;
-> +	}
-> +
-> +	proc_reg = regulator_get_exclusive(cpu_dev, "proc");
-> +	if (IS_ERR(proc_reg)) {
-> +		if (PTR_ERR(proc_reg) == -EPROBE_DEFER)
-> +			pr_warn("proc regulator for cpu%d not ready, retry.\n",
-> +				cpu);
-> +		else
-> +			pr_err("failed to get proc regulator for cpu%d\n",
-> +			       cpu);
-> +
-> +		ret = PTR_ERR(proc_reg);
-> +		goto out_free_resources;
-> +	}
-> +
-> +	/* Both presence and absence of sram regulator are valid cases. */
-> +	sram_reg = regulator_get_exclusive(cpu_dev, "sram");
-> +
-> +	info = kzalloc(sizeof(*info), GFP_KERNEL);
-> +	if (!info) {
-> +		ret = -ENOMEM;
-> +		goto out_free_resources;
-> +	}
-> +
-> +	ret = dev_pm_opp_init_cpufreq_table(cpu_dev, &freq_table);
-> +	if (ret) {
-> +		pr_err("failed to init cpufreq table for cpu%d: %d\n",
-> +		       cpu, ret);
-> +		goto out_free_mtk_cpu_dvfs_info;
-> +	}
-> +
-> +	if (!alloc_cpumask_var(&info->cpus, GFP_KERNEL))
-
-Why getting into such trouble? What about just saving policy's pointer
-in info and use it for freq_table, cpus mask, etc ?
-
-> +		goto out_free_cpufreq_table;
-> +
-
-> +}
-> +
-> +static int mt8173_cpufreq_probe(struct platform_device *pdev)
-> +{
-> +	int cpu, ret;
-> +
-> +	for_each_possible_cpu(cpu) {
-> +		/*
-> +		 * If the struct mtk_cpu_dvfs_info for the cpu power domain
-> +		 * is already initialized, skip this CPU.
-> +		 */
-> +		if (!mtk_cpu_dvfs_info_get(cpu)) {
-> +			ret = mtk_cpu_dvfs_info_init(cpu);
-> +			if (ret) {
-> +				if (ret != -EPROBE_DEFER)
-> +					pr_err("%s probe fail\n", __func__);
-> +
-> +				mtk_cpu_dvfs_info_release();
-> +				return ret;
-> +			}
-> +		}
-> +	}
-> +
-> +	ret = cpufreq_register_driver(&mt8173_cpufreq_driver);
-> +	if (ret) {
-> +		pr_err("failed to register mtk cpufreq driver\n");
-> +		mtk_cpu_dvfs_info_release();
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static struct platform_driver mt8173_cpufreq_platdrv = {
-> +	.driver = {
-> +		.name	= "mt8173-cpufreq",
-> +	},
-> +	.probe		= mt8173_cpufreq_probe,
-> +};
-> +module_platform_driver(mt8173_cpufreq_platdrv);
-> +
-> +static int mt8173_cpufreq_driver_init(void)
-> +{
-> +	struct platform_device *pdev;
-> +
-> +	if (!of_machine_is_compatible("mediatek,mt8173"))
-> +		return -ENODEV;
-> +
-> +	pdev = platform_device_register_simple("mt8173-cpufreq", -1, NULL, 0);
-> +	if (IS_ERR(pdev)) {
-> +		pr_err("failed to register mtk-cpufreq platform device\n");
-> +		return PTR_ERR(pdev);
-> +	}
-> +
-> +	return 0;
-> +}
-> +module_init(mt8173_cpufreq_driver_init);
-
-Can this driver be built as module? Why this module* crap all over the
-place?
-
--- 
-viresh
---
-To unsubscribe from this list: send the line "unsubscribe linux-pm" in
+>>>              status =3D "disabled";
+>>>              #address-cells =3D <1>;
+>>>              #size-cells =3D <0>;
+>>> --
+>>> 1.9.1
+>>>
+>>> --
+>>> To unsubscribe from this list: send the line "unsubscribe devicetre=
+e" in
+>>> the body of a message to majordomo@vger.kernel.org
+>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>>
+>>
+>
