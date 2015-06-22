@@ -1,179 +1,43 @@
 From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Subject: Re: [PATCH 2/2] power_supply: bq2415x_charger: Add ACPI support
-Date: Mon, 22 Jun 2015 14:56:08 +0200
-Message-ID: <20150622125607.GB26143@xo-6d-61-c0.localdomain>
-References: <1431421893-18816-1-git-send-email-anda-maria.nicolae@intel.com>
- <1431421893-18816-3-git-send-email-anda-maria.nicolae@intel.com>
+Subject: Re: Device Tree Blob (DTB) licence
+Date: Mon, 22 Jun 2015 14:57:16 +0200
+Message-ID: <20150622125716.GC26143@xo-6d-61-c0.localdomain>
+References: <1430820315.19516.26.camel@opteya.com>
+ <CAL_Jsq+T5c7qornpRVCduEjUSCeM+0xqbtVYovtH76y=4BqhLQ@mail.gmail.com>
+ <1432289148.5304.58.camel@opteya.com>
+ <1432322832.5304.63.camel@opteya.com>
+ <CAOS_Y6Q37ps+VEnzUZ_uwX++qrRm9Hgx45Q_pmiZSLSNjmKwZg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1431421893-18816-3-git-send-email-anda-maria.nicolae-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <CAOS_Y6Q37ps+VEnzUZ_uwX++qrRm9Hgx45Q_pmiZSLSNjmKwZg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anda-Maria Nicolae <anda-maria.nicolae-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
+Cc: Yann Droneaud <ydroneaud-RlY5vtjFyJ3QT0dZR+AlfA@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue 2015-05-12 12:11:33, Anda-Maria Nicolae wrote:
-> Replace of_property_read_u32() with device_property_read_u32(), which is a
-> wrapper over ACPI and device tree enumeration methods.
-> When ACPI enumeration is used, automode is not supported. Therefore,
-> bq2415x_charger does not update its input current automatically, depending
-> on the USB port type that is connected to. Input current may be updated via
-> sysfs.
+On Mon 2015-05-25 02:14:28, Rob Landley wrote:
+> On Fri, May 22, 2015 at 2:27 PM, Yann Droneaud <ydroneaud-RlY5vtjFyJ3QT0dZR+AlfA@public.gmane.org> wrote:
+> > I've added licensing-VjfpZJbb0kk@public.gmane.org in Cc: in my previous message to have an
+> > advice on this subject, but I failed to notice licensing-dGWS0fDw8IM@public.gmane.org
+> > is not a mailing list: I was assigned request ID [gnu.org #1017262].
+> >
+> > Regards.
 > 
-> Signed-off-by: Anda-Maria Nicolae <anda-maria.nicolae-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-> ---
->  drivers/power/bq2415x_charger.c |   73 +++++++++++++++++++++++++++++----------
->  1 file changed, 55 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/power/bq2415x_charger.c b/drivers/power/bq2415x_charger.c
-> index 2cf8ec7..e98dcb6 100644
-> --- a/drivers/power/bq2415x_charger.c
-> +++ b/drivers/power/bq2415x_charger.c
-> @@ -35,6 +35,7 @@
->  #include <linux/idr.h>
->  #include <linux/i2c.h>
->  #include <linux/slab.h>
-> +#include <linux/acpi.h>
->  
->  #include <linux/power/bq2415x_charger.h>
->  
-> @@ -1530,13 +1531,14 @@ static int bq2415x_probe(struct i2c_client *client,
->  {
->  	int ret;
->  	int num;
-> -	char *name;
-> +	char *name = NULL;
->  	struct bq2415x_device *bq;
-Why?
+> They're also not an unbiased source. Their job is to reply "you should
+> license it under GPLv3" without actually looking at your message.
+> (This is a slight oversimplification, they may instead recomend the
+> GFDL. They will never _not_ recommend one of their licenses.)
 
-> @@ -1547,7 +1549,14 @@ static int bq2415x_probe(struct i2c_client *client,
->  	if (num < 0)
->  		return num;
->  
-> -	name = kasprintf(GFP_KERNEL, "%s-%d", id->name, num);
-> +	if (id) {
-> +		name = kasprintf(GFP_KERNEL, "%s-%d", id->name, num);
-> +	} else if (ACPI_HANDLE(&client->dev)) {
-> +		acpi_id =
-> +			acpi_match_device(client->dev.driver->acpi_match_table,
-> +					  &client->dev);
-> +		name = kasprintf(GFP_KERNEL, "%s-%d", acpi_id->id, num);
-> +	}
+Actually, I got FSF to change license on piece of code from GPLv2 to LGPLv2
+before. They are not completely evil :-).
 
-You have both branches covered.
+> Personally, I'm sad we're starting to get ACPI for arm but if device
+> tree data files are only available under GPL, people will hold their
+> nose and deploy ACPI.
+
 									Pavel
-
->  	if (!name) {
->  		dev_err(&client->dev, "failed to allocate device name\n");
->  		ret = -ENOMEM;
-> @@ -1573,7 +1582,7 @@ static int bq2415x_probe(struct i2c_client *client,
->  			ret = -EPROBE_DEFER;
->  			goto error_2;
->  		}
-> -	} else if (pdata->notify_device) {
-> +	} else if (pdata && pdata->notify_device) {
->  		bq->notify_psy = power_supply_get_by_name(pdata->notify_device);
->  	} else {
->  		bq->notify_psy = NULL;
-> @@ -1583,36 +1592,45 @@ static int bq2415x_probe(struct i2c_client *client,
->  
->  	bq->id = num;
->  	bq->dev = &client->dev;
-> -	bq->chip = id->driver_data;
-> +	if (id)
-> +		bq->chip = id->driver_data;
-> +	else if (ACPI_HANDLE(bq->dev))
-> +		bq->chip = acpi_id->driver_data;
->  	bq->name = name;
->  	bq->mode = BQ2415X_MODE_OFF;
->  	bq->reported_mode = BQ2415X_MODE_OFF;
->  	bq->autotimer = 0;
->  	bq->automode = 0;
->  
-> -	if (np) {
-> -		ret = of_property_read_u32(np, "ti,current-limit",
-> -					   &bq->init_data.current_limit);
-> +	if (np || ACPI_HANDLE(bq->dev)) {
-> +		ret = device_property_read_u32(bq->dev,
-> +					       "ti,current-limit",
-> +					       &bq->init_data.current_limit);
->  		if (ret)
->  			goto error_3;
-> -		ret = of_property_read_u32(np, "ti,weak-battery-voltage",
-> -					   &bq->init_data.weak_battery_voltage);
-> +		ret = device_property_read_u32(bq->dev,
-> +					"ti,weak-battery-voltage",
-> +					&bq->init_data.weak_battery_voltage);
->  		if (ret)
->  			goto error_3;
-> -		ret = of_property_read_u32(np, "ti,battery-regulation-voltage",
-> +		ret = device_property_read_u32(bq->dev,
-> +				"ti,battery-regulation-voltage",
->  				&bq->init_data.battery_regulation_voltage);
->  		if (ret)
->  			goto error_3;
-> -		ret = of_property_read_u32(np, "ti,charge-current",
-> -					   &bq->init_data.charge_current);
-> +		ret = device_property_read_u32(bq->dev,
-> +					       "ti,charge-current",
-> +					       &bq->init_data.charge_current);
->  		if (ret)
->  			goto error_3;
-> -		ret = of_property_read_u32(np, "ti,termination-current",
-> -					   &bq->init_data.termination_current);
-> +		ret = device_property_read_u32(bq->dev,
-> +				"ti,termination-current",
-> +				&bq->init_data.termination_current);
->  		if (ret)
->  			goto error_3;
-> -		ret = of_property_read_u32(np, "ti,resistor-sense",
-> -					   &bq->init_data.resistor_sense);
-> +		ret = device_property_read_u32(bq->dev,
-> +					       "ti,resistor-sense",
-> +					       &bq->init_data.resistor_sense);
->  		if (ret)
->  			goto error_3;
->  	} else {
-> @@ -1728,9 +1746,28 @@ static const struct i2c_device_id bq2415x_i2c_id_table[] = {
->  };
->  MODULE_DEVICE_TABLE(i2c, bq2415x_i2c_id_table);
->  
-> +static const struct acpi_device_id bq2415x_i2c_acpi_match[] = {
-> +	{ "BQ2415X", BQUNKNOWN },
-> +	{ "BQ241500", BQ24150 },
-> +	{ "BQA24150", BQ24150A },
-> +	{ "BQ241510", BQ24151 },
-> +	{ "BQA24151", BQ24151A },
-> +	{ "BQ241520", BQ24152 },
-> +	{ "BQ241530", BQ24153 },
-> +	{ "BQA24153", BQ24153A },
-> +	{ "BQ241550", BQ24155 },
-> +	{ "BQ241560", BQ24156 },
-> +	{ "BQA24156", BQ24156A },
-> +	{ "BQS24157", BQ24157S },
-> +	{ "BQ241580", BQ24158 },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(acpi, bq2415x_i2c_acpi_match);
-> +
->  static struct i2c_driver bq2415x_driver = {
->  	.driver = {
->  		.name = "bq2415x-charger",
-> +		.acpi_match_table = ACPI_PTR(bq2415x_i2c_acpi_match),
->  	},
->  	.probe = bq2415x_probe,
->  	.remove = bq2415x_remove,
-> -- 
-> 1.7.9.5
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
-
 -- 
 (english) http://www.livejournal.com/~pavelmachek
 (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
