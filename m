@@ -1,217 +1,153 @@
-From: Henry Chen <henryc.chen@mediatek.com>
-Subject: [PATCH] arm64: dts: mt8173-evb: Add PMIC support
-Date: Mon, 22 Jun 2015 21:19:37 +0800
-Message-ID: <1434979177-7575-1-git-send-email-henryc.chen@mediatek.com>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v6] usb: common: add API to set usb otg capabilities by
+ device tree
+Date: Mon, 22 Jun 2015 16:32:56 +0300
+Message-ID: <20150622163256.418a1b05d9848a7342669fe4@ti.com>
+References: <1434590302-18066-1-git-send-email-jun.li@freescale.com>
+	<20150618103650.7c3d1b8ceb134388b0d8b093@ti.com>
+	<20150618084747.GD15280@shlinux2>
+	<20150618150748.db2217278ae71f01df625ff2@ti.com>
+	<20150618133703.GF15280@shlinux2>
+	<20150622124122.a3155a04430083b24d775aa4@ti.com>
+	<20150622104535.GA25349@shlinux2>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <kernel@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, henryc.chen@mediatek.com, eddie.huang@mediatek.com
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150622104535.GA25349@shlinux2>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Eddie Huang <eddie.huang@mediatek.com>
+On Mon, 22 Jun 2015 18:45:37 +0800
+Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
 
-The MT8173 eval board contains a MT6397 PMIC. This adds the
-corresponding device node to the dts file.
+> On Mon, Jun 22, 2015 at 12:41:22PM +0300, Roger Quadros wrote:
+> > On Thu, 18 Jun 2015 21:37:04 +0800
+> > Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> > 
+> > > On Thu, Jun 18, 2015 at 03:07:48PM +0300, Roger Quadros wrote:
+> > > > On Thu, 18 Jun 2015 16:47:48 +0800
+> > > > Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> > > > 
+> > > > > On Thu, Jun 18, 2015 at 10:36:50AM +0300, Roger Quadros wrote:
+> > > > > > Lin,
+> > > > > > 
+> > > > > > You can use --in-reply-to "message id of v5 of this path" so that it appears together
+> > > > > > with the other patches in peoples mailboxes.
+> > > > > > 
+> > > > > > > + * the passed properties in DT.
+> > > > > > > + * @np: Pointer to the given device_node
+> > > > > > > + * @otg_caps: Pointer to the target usb_otg_caps to be set
+> > > > > > > + *
+> > > > > > > + * The function gets and sets the otg capabilities
+> > > > > > > + */
+> > > > > > > +void of_usb_set_otg_caps(struct device_node *np, struct usb_otg_caps *otg_caps)
+> > > > > > > +{
+> > > > > > > +	u32 otg_rev;
+> > > > > > > +
+> > > > > > > +	if (!otg_caps)
+> > > > > > > +		return;
+> > > > > > > +
+> > > > > > > +	if (!of_property_read_u32(np, "otg-rev", &otg_rev))
+> > > > > > > +		otg_caps->otg_rev = otg_rev;
+> > > > > > 
+> > > > > > should we check if otg_rev is in correct format?
+> > > > > > anything non BCD and greater than 0x9999 is invalid.
+> > > > > > 
+> > > > > > Also if otg-rev is not passed then we need to treat it as legacy
+> > > > > > platform right? How is this taken care of?
+> > > > > > 
+> > > > > Missed this comment
+> > > > > This handling rely on controller driver, cannot decided here.
+> > > > > There are several cases we need take care:
+> > > > > 1) otg-rev is not passed, but all 3 disable flags passed, this is
+> > > > >   valid, means user want to disable whole OTG, so only "otg-rev"
+> > > > >   not passed, cannot treat as legacy platform.
+> > > > > 2) Legacy platform means: none of 4 properties is present.
+> > > > 
+> > > > Right. Plus controller drivers that are not updated to use these otg_caps
+> > > > are also legacy.
+> > > >
+> > > Did not understand the "Plus" case.
+> > > Some of 4 properties is present, but its driver dose not use otg_caps?
+> > 
+> > yes that is what I meant.
+> > 
+> > > 
+> > > > > 3) Some controller drivers already support OTG HNP/SRP, then change
+> > > > >   to utilize those new flags, still should support OTG HNP/SRP w/o
+> > > > >   any dt change, so OTG caps should be enabled for legacy platforms.
+> > > > 
+> > > > I didn't understand this point. If a controller driver is not updated
+> > > > to use otg_caps it is legacy and gadget->otg_caps will be NULL.
+> > > > 
+> > > Some of existing chipdea platforms work fine on HNP and SRP , which did
+> > > not use any new flags and properties, after my patch, those platform should
+> > > still enable HNP and SRP without any DT change.
+> > 
+> > Agreed.
+> > > 
+> > > > > 4) Some controller drivers does not support any OTG, after add OTG
+> > > > >   functions and utilize those new flags, should keep OTG disabled
+> > > > >   for legacy platforms.
+> > > > 
+> > > > If controller drivers don't support OTG. gadget->is_otg and
+> > > > gadget->otg_caps will not be set by them and they don't have to use
+> > > > of_usb_set_otg_caps().
+> > > > 
+> > > But after my patch, some time later, this driver adds OTG functions on
+> > > it new platform, it should disable any OTG feature for its legacy
+> > > platforms (none of properties is passed).
+> > 
+> > That can be decided in of_usb_update_otg_caps().
+> > Controller sets whatever it supports in otg_caps.
+> > of_usb_updade_otg_caps() checks if it is legacy DT (i.e. no otg-rev) and then
+> > overrides to legacy otg_caps.
+> > 
+> > >  
+> > > > So I didn't understand why the decision can't be taken here
+> > > > for non-legacy controller drivers with legacy DT.
+> > > > They will set gadget->otg_caps and gadget->is_otg.
+> > > > 
+> > > > If none of the 4 DT flags are passed then we know it is legacy DT
+> > > > and we can limit to legacy behaviour.
+> > > > 
+> > > legacy behaviour number is 2, not only one legacy behaviour.
+> > > That's why I leave the otg caps decided by controller drivers.
+> > 
+> > I'm only suggesting that it be decided at one place i.e. in 
+> > of_usb_updade_otg_caps() instead of every controller.
+> > 
+> > Do you see any problems with that approach?
+> > 
+> The problem is the override policy for legacy platforms. 
+> For case 3) above, we should enable HNP and SRP,
 
-Signed-off-by: Henry Chen <henryc.chen@mediatek.com>
-Signed-off-by: Eddie Huang <eddie.huang@mediatek.com>
----
-Base on 4.1-rc1 and commit as following,
-ARM64: dts: Mediatek: MT8173 updates [1] and 
-clk: Add common clock support for Mediatek MT8135 and MT8173 [2] patch
+case 3 is controller is supporting new flags but DT is not and we want
+legacy OTG enabled, right?
+Can't we detect if none of the new otg flags are present then it is legacy DT
+so use legacy OTG mode?
 
-[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-May/344751.html
-[2] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-April/338763.html
----
- arch/arm64/boot/dts/mediatek/mt8173-evb.dts | 174 ++++++++++++++++++++++++++++
- 1 file changed, 174 insertions(+)
+> For case 4) above, after add OTG HNP&SRP support, it should disable HNP and SRP.
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-index 43d5401..b967914 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-@@ -33,6 +33,180 @@
- 	chosen { };
- };
- 
-+&pwrap {
-+	pmic: mt6397 {
-+		compatible = "mediatek,mt6397";
-+		interrupt-parent = <&pio>;
-+		interrupts = <11 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+
-+		mt6397regulator: mt6397regulator {
-+			compatible = "mediatek,mt6397-regulator";
-+			mt6397_vpca15_reg: buck_vpca15 {
-+				regulator-compatible = "buck_vpca15";
-+				regulator-name = "vpca15";
-+				regulator-min-microvolt = < 700000>;
-+				regulator-max-microvolt = <1350000>;
-+				regulator-ramp-delay = <12500>;
-+				regulator-always-on;
-+			};
-+			mt6397_vpca7_reg: buck_vpca7 {
-+				regulator-compatible = "buck_vpca7";
-+				regulator-name = "vpca7";
-+				regulator-min-microvolt = < 700000>;
-+				regulator-max-microvolt = <1350000>;
-+				regulator-ramp-delay = <12500>;
-+				regulator-enable-ramp-delay = <115>;
-+			};
-+			mt6397_vsramca15_reg: buck_vsramca15 {
-+				regulator-compatible = "buck_vsramca15";
-+				regulator-name = "vsramca15";
-+				regulator-min-microvolt = < 700000>;
-+				regulator-max-microvolt = <1350000>;
-+				regulator-ramp-delay = <12500>;
-+				regulator-always-on;
-+			};
-+			mt6397_vsramca7_reg: buck_vsramca7 {
-+				regulator-compatible = "buck_vsramca7";
-+				regulator-name = "vsramca7";
-+				regulator-min-microvolt = < 700000>;
-+				regulator-max-microvolt = <1350000>;
-+				regulator-ramp-delay = <12500>;
-+				regulator-always-on;
-+			};
-+			mt6397_vcore_reg: buck_vcore {
-+				regulator-compatible = "buck_vcore";
-+				regulator-name = "vcore";
-+				regulator-min-microvolt = < 700000>;
-+				regulator-max-microvolt = <1350000>;
-+				regulator-ramp-delay = <12500>;
-+				regulator-always-on;
-+			};
-+			mt6397_vgpu_reg: buck_vgpu {
-+				regulator-compatible = "buck_vgpu";
-+				regulator-name = "vgpu";
-+				regulator-min-microvolt = < 700000>;
-+				regulator-max-microvolt = <1350000>;
-+				regulator-ramp-delay = <12500>;
-+				regulator-enable-ramp-delay = <115>;
-+			};
-+			mt6397_vdrm_reg: buck_vdrm {
-+				regulator-compatible = "buck_vdrm";
-+				regulator-name = "vdrm";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <1400000>;
-+				regulator-ramp-delay = <12500>;
-+				regulator-always-on;
-+			};
-+			mt6397_vio18_reg: buck_vio18 {
-+				regulator-compatible = "buck_vio18";
-+				regulator-name = "vio18";
-+				regulator-min-microvolt = <1620000>;
-+				regulator-max-microvolt = <1980000>;
-+				regulator-ramp-delay = <12500>;
-+				regulator-always-on;
-+			};
-+			mt6397_vtcxo_reg: ldo_vtcxo {
-+				regulator-compatible = "ldo_vtcxo";
-+				regulator-name = "vtcxo";
-+				regulator-always-on;
-+			};
-+			mt6397_va28_reg: ldo_va28 {
-+				regulator-compatible = "ldo_va28";
-+				regulator-name = "va28";
-+				regulator-always-on;
-+			};
-+			mt6397_vcama_reg: ldo_vcama {
-+				regulator-compatible = "ldo_vcama";
-+				regulator-name = "vcama";
-+				regulator-min-microvolt = <1500000>;
-+				regulator-max-microvolt = <2800000>;
-+				regulator-enable-ramp-delay = <218>;
-+			};
-+			mt6397_vio28_reg: ldo_vio28 {
-+				regulator-compatible = "ldo_vio28";
-+				regulator-name = "vio28";
-+				regulator-always-on;
-+			};
-+			mt6397_vusb_reg: ldo_vusb {
-+				regulator-compatible = "ldo_vusb";
-+				regulator-name = "vusb";
-+			};
-+			mt6397_vmc_reg: ldo_vmc {
-+				regulator-compatible = "ldo_vmc";
-+				regulator-name = "vmc";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-enable-ramp-delay = <218>;
-+			};
-+			mt6397_vmch_reg: ldo_vmch {
-+				regulator-compatible = "ldo_vmch";
-+				regulator-name = "vmch";
-+				regulator-min-microvolt = <3000000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-enable-ramp-delay = <218>;
-+			};
-+			mt6397_vemc_3v3_reg: ldo_vemc3v3 {
-+				regulator-compatible = "ldo_vemc3v3";
-+				regulator-name = "vemc_3v3";
-+				regulator-min-microvolt = <3000000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-enable-ramp-delay = <218>;
-+			};
-+			mt6397_vgp1_reg: ldo_vgp1 {
-+				regulator-compatible = "ldo_vgp1";
-+				regulator-name = "vcamd";
-+				regulator-min-microvolt = <1220000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-enable-ramp-delay = <240>;
-+			};
-+			mt6397_vgp2_reg: ldo_vgp2 {
-+				regulator-compatible = "ldo_vgp2";
-+				regulator-name = "vcamio";
-+				regulator-min-microvolt = <1000000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-enable-ramp-delay = <218>;
-+			};
-+			mt6397_vgp3_reg: ldo_vgp3 {
-+				regulator-compatible = "ldo_vgp3";
-+				regulator-name = "vcamaf";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-enable-ramp-delay = <218>;
-+			};
-+			mt6397_vgp4_reg: ldo_vgp4 {
-+				regulator-compatible = "ldo_vgp4";
-+				regulator-name = "vgp4";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-enable-ramp-delay = <218>;
-+			};
-+			mt6397_vgp5_reg: ldo_vgp5 {
-+				regulator-compatible = "ldo_vgp5";
-+				regulator-name = "vgp5";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <3000000>;
-+				regulator-enable-ramp-delay = <218>;
-+			};
-+			mt6397_vgp6_reg: ldo_vgp6 {
-+				regulator-compatible = "ldo_vgp6";
-+				regulator-name = "vgp6";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-enable-ramp-delay = <218>;
-+			};
-+			mt6397_vibr_reg: ldo_vibr {
-+				regulator-compatible = "ldo_vibr";
-+				regulator-name = "vibr";
-+				regulator-min-microvolt = <1300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-enable-ramp-delay = <218>;
-+			};
-+		};
-+	};
-+};
-+
- &uart0 {
- 	status = "okay";
- };
--- 
-1.8.1.1.dirty
+case 4 is controller was not supporting OTG at all before and now is updated to support
+OTG. But for such cases isn't dr_mode = "peripheral" in the DT?
+one example is dwc3 controller.
+
+If the dr_mode was "otg" for such case and we want OTG disabled then it is really the DT fault.
+We don't need to tackle this case. Just fix up the DT to dr_mode = "peripheral" if
+OTG behaviour is not needed.
+
+> 
+> How I make one decision in of_usb_updade_otg_caps()
+> for above 2 cases?(the otg-rev is 0 for both).
+> 
+
+For case 3. otg-rev passed by controller is not 0. otg-rev is just not present in DT.
+
+cheers,
+-roger
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
