@@ -1,139 +1,26 @@
 MIME-Version: 1.0
-In-Reply-To: <1433400131-18429-41-git-send-email-gwshan@linux.vnet.ibm.com>
-References: <1433400131-18429-1-git-send-email-gwshan@linux.vnet.ibm.com>
-	<1433400131-18429-41-git-send-email-gwshan@linux.vnet.ibm.com>
-Date: Thu, 4 Jun 2015 17:10:52 -0500
-Message-ID: <CAL_JsqJ9eprTRd9v6Y63if5ypuvk_=QZk5kDTG1qJU=A8AAFLw@mail.gmail.com>
-Subject: Re: [PATCH v5 40/42] drivers/of: Allow to specify root node in of_fdt_unflatten_tree()
+In-Reply-To: <20150622192702.GC19203@piout.net>
+References: <1434820360-21935-1-git-send-email-tremyfr@gmail.com>
+	<1434820360-21935-6-git-send-email-tremyfr@gmail.com>
+	<CAL_JsqKQzC=aSuORGhsuPQ0Ciha2JVpYOGU91M2iHaG8RousnQ@mail.gmail.com>
+	<20150622192702.GC19203@piout.net>
+Date: Mon, 22 Jun 2015 16:50:31 -0500
+Message-ID: <CAL_JsqLi=JhHq0kkcOxP5hWBH3gdC1EmjfxuLDApXgM02koT_Q@mail.gmail.com>
+Subject: Re: [PATCH v3 5/6] dt-binding: document the binding for mxc rtc
 From: Rob Herring <robherring2@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Bjorn Helgaas <bhelgaas@google.com>, aik@ozlabs.ru, Pantelis Antoniou <panto@antoniou-consulting.com>, Grant Likely <grant.likely@linaro.org>
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: Philippe Reynes <tremyfr@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Shawn Guo <shawn.guo@linaro.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, rtc-linux@googlegroups.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On Thu, Jun 4, 2015 at 1:42 AM, Gavin Shan <gwshan@linux.vnet.ibm.com> wrote:
-> The patch introduces one more argument to of_fdt_unflatten_tree()
-> to specify the root node for the FDT blob, which is going to be
-> unflattened. In the result, the function can be used to unflatten
-> FDT blob, which represents device sub-tree in subsequent patches.
+On Mon, Jun 22, 2015 at 2:27 PM, Alexandre Belloni <alexandre.belloni@free-electrons.com> wrote:
+> On 22/06/2015 at 08:59:06 -0500, Rob Herring wrote :
+>> What about newer versions with the secure functionality. IIRC, that
+>> was in MX31 and later.
+>>
 >
-> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
-> ---
-> v5:
->   * Newly introduced
-> ---
->  drivers/of/fdt.c       | 26 ++++++++++++++++++--------
->  drivers/of/unittest.c  |  2 +-
->  include/linux/of_fdt.h |  3 ++-
->  3 files changed, 21 insertions(+), 10 deletions(-)
->
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index b87c157..b6a6c59 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -380,9 +380,16 @@ static void *unflatten_dt_node(void *blob,
->                                struct device_node **nodepp,
->                                bool dryrun)
->  {
-> +       unsigned long fpsize = 0;
-> +
-> +       if (dad)
-> +               fpsize = strlen(of_node_full_name(dad));
-> +       else
-> +               fpsize = 0;
-> +
->         cur_node_depth = 1;
->         return __unflatten_dt_node(blob, mem, poffset,
-> -                                  dad, nodepp, 0, dryrun);
-> +                                  dad, nodepp, fpsize, dryrun);
->  }
->
->  /**
-> @@ -393,13 +400,15 @@ static void *unflatten_dt_node(void *blob,
->   * pointers of the nodes so the normal device-tree walking functions
->   * can be used.
->   * @blob: The blob to expand
-> + * @dad: The root node of the created device_node tree
->   * @mynodes: The device_node tree created by the call
->   * @dt_alloc: An allocator that provides a virtual address to memory
->   * for the resulting tree
->   */
->  static void __unflatten_device_tree(void *blob,
-> -                            struct device_node **mynodes,
-> -                            void * (*dt_alloc)(u64 size, u64 align))
-> +                                   struct device_node *dad,
-> +                                   struct device_node **mynodes,
-> +                                   void * (*dt_alloc)(u64 size, u64 align))
->  {
->         unsigned long size;
->         int start;
-> @@ -425,7 +434,7 @@ static void __unflatten_device_tree(void *blob,
->         /* First pass, scan for size */
->         start = 0;
->         size = (unsigned long)unflatten_dt_node(blob, NULL, &start,
-> -                                               NULL, NULL, true);
-> +                                               dad, NULL, true);
->         size = ALIGN(size, 4);
->
->         pr_debug("  size is %lx, allocating...\n", size);
-> @@ -440,7 +449,7 @@ static void __unflatten_device_tree(void *blob,
->
->         /* Second pass, do actual unflattening */
->         start = 0;
-> -       unflatten_dt_node(blob, mem, &start, NULL, mynodes, false);
-> +       unflatten_dt_node(blob, mem, &start, dad, mynodes, false);
->         if (be32_to_cpup(mem + size) != 0xdeadbeef)
->                 pr_warning("End of tree marker overwritten: %08x\n",
->                            be32_to_cpup(mem + size));
-> @@ -462,9 +471,10 @@ static void *kernel_tree_alloc(u64 size, u64 align)
->   * can be used.
->   */
->  void of_fdt_unflatten_tree(unsigned long *blob,
-> -                       struct device_node **mynodes)
-> +                          struct device_node *dad,
-> +                          struct device_node **mynodes)
->  {
-> -       __unflatten_device_tree(blob, mynodes, &kernel_tree_alloc);
-> +       __unflatten_device_tree(blob, dad, mynodes, &kernel_tree_alloc);
->  }
->  EXPORT_SYMBOL_GPL(of_fdt_unflatten_tree);
->
-> @@ -1095,7 +1105,7 @@ bool __init early_init_dt_scan(void *params)
->   */
->  void __init unflatten_device_tree(void)
->  {
-> -       __unflatten_device_tree(initial_boot_params, &of_root,
-> +       __unflatten_device_tree(initial_boot_params, NULL, &of_root,
->                                 early_init_dt_alloc_memory_arch);
->
->         /* Get pointer to "/chosen" and "/aliases" nodes for use everywhere */
-> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-> index 1801634..2270830 100644
-> --- a/drivers/of/unittest.c
-> +++ b/drivers/of/unittest.c
-> @@ -907,7 +907,7 @@ static int __init unittest_data_add(void)
->                         "not running tests\n", __func__);
->                 return -ENOMEM;
->         }
-> -       of_fdt_unflatten_tree(unittest_data, &unittest_data_node);
-> +       of_fdt_unflatten_tree(unittest_data, NULL, &unittest_data_node);
->         if (!unittest_data_node) {
->                 pr_warn("%s: No tree to attach; not running tests\n", __func__);
->                 return -ENODATA;
-> diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-> index 587ee50..8882640 100644
-> --- a/include/linux/of_fdt.h
-> +++ b/include/linux/of_fdt.h
-> @@ -38,7 +38,8 @@ extern bool of_fdt_is_big_endian(const void *blob,
->  extern int of_fdt_match(const void *blob, unsigned long node,
->                         const char *const *compat);
->  extern void of_fdt_unflatten_tree(unsigned long *blob,
-> -                              struct device_node **mynodes);
-> +                                 struct device_node *dad,
-> +                                 struct device_node **mynodes);
->
->  /* TBD: Temporary export of fdt globals - remove when code fully merged */
->  extern int __initdata dt_root_addr_cells;
-> --
-> 2.1.0
->
+> Aren't those covered by the snvs driver?
+
+Maybe so. I haven't checked.
+
+Rob
