@@ -1,33 +1,74 @@
-From: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] drivercore: Fix unregistration path of platform devices
-Date: Tue, 23 Jun 2015 19:12:42 +0200
-Message-ID: <CAPybu_0S2b+xo3UJKbgpu39rtPT2x89+nEZ_hahLXiGbcCmeEA@mail.gmail.com>
-References: <1433686811-12303-1-git-send-email-grant.likely@linaro.org>
- <1433686811-12303-3-git-send-email-grant.likely@linaro.org> <20150615164630.GC1583@katana>
+From: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 1/2] dt: add cap11xx LED documentation
+Date: Tue, 23 Jun 2015 10:23:57 -0700
+Message-ID: <CAKzfze8jC1Nq9+AWFZbbC4=jzLwUZumbXYmg9O=0190Ne+f7fg@mail.gmail.com>
+References: <1434599897-22505-1-git-send-email-mranostay@gmail.com>
+	<1434599897-22505-2-git-send-email-mranostay@gmail.com>
+	<20150622175914.GA15851@dtor-ws>
+	<55891A84.1070509@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150615164630.GC1583@katana>
+In-Reply-To: <55891A84.1070509-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+To: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello
+On Tue, Jun 23, 2015 at 1:36 AM, Jacek Anaszewski
+<j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> On 06/22/2015 07:59 PM, Dmitry Torokhov wrote:
+>>
+>> On Wed, Jun 17, 2015 at 08:58:16PM -0700, Matt Ranostay wrote:
+>>>
+>>> Signed-off-by: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>> ---
+>>>   .../devicetree/bindings/input/cap11xx.txt          | 25
+>>> ++++++++++++++++++++++
+>>>   1 file changed, 25 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/input/cap11xx.txt
+>>> b/Documentation/devicetree/bindings/input/cap11xx.txt
+>>> index 7d0a300..09cdc43 100644
+>>> --- a/Documentation/devicetree/bindings/input/cap11xx.txt
+>>> +++ b/Documentation/devicetree/bindings/input/cap11xx.txt
+>>> @@ -38,6 +38,11 @@ Optional properties:
+>>>                                 defaults. The array must have exactly six
+>>>                                 entries.
+>>>
+>>> +       linux,led-brightness:   Defines the ON brightness when the
+>>> optional LED
+>>> +                               functionality is used. Valid values are
+>>> 1-15.
+>>> +                               By default a value of 15 is set.
+>>
+>>
+>> Please mention the device does not allow controlling brightness of leds
+>> individually and that is why this property is at device level, not
+>> individual led level.
+>
+>
+> I've just noticed that we have drivers/leds/leds-netxbig.c driver, which
+> also doesn't allow controlling the LEDs on extension board individually,
+> but it still does allow changing their brightness. I am leaning towards
+> allowing this also for this driver and adding similar comment in the
+> source code like at the line 218 of the aforementioned driver.
+> As a result this property wouldn't be required.
+>
 
-> Tested-by: Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
+Ok that should be pretty simple to do. But seems kind weird to have
+each led channel to be changing the brightness of all.  Wouldn't the
+brightness sysfs entries of the other led channels be showing
+incorrect values?
 
-This patch now have a bunch of tested-by and without it, the current
-version of linux-next crash.
-
-Who will take it? Grant,  Greg? Please make sure to notify
-linux-stable since at least 4.1
-
-Thanks!
-
-
--- 
-Ricardo Ribalda
+>> Also, why does it have "linux" prefix? It does not appear to control
+>> any linux-specific functionality.
+>
+>
+>
+> --
+> Best Regards,
+> Jacek Anaszewski
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
