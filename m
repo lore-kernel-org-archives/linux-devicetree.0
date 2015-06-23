@@ -1,77 +1,52 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 8/8] dt: cpufreq: st: Provide bindings for ST's CPUFreq
- implementation
-Date: Tue, 23 Jun 2015 08:04:58 +0530
-Message-ID: <20150623023458.GC16776@linux>
-References: <1434987837-24212-1-git-send-email-lee.jones@linaro.org>
- <1434987837-24212-9-git-send-email-lee.jones@linaro.org>
+From: Magnus Damm <magnus.damm@gmail.com>
+Subject: Re: [PATCH 08/08] ARM: shmobile: Remove CMT renesas,channels-mask
+ from DTS
+Date: Tue, 23 Jun 2015 11:46:45 +0900
+Message-ID: <CANqRtoRcv4VpF3vAgYKTOL1FyYURHx13-5-L9fH1HrJ-QvPymQ@mail.gmail.com>
+References: <20150621080903.10187.20998.sendpatchset@little-apple>
+	<20150621081033.10187.38630.sendpatchset@little-apple>
+	<8019375.XSP9R0ZLbm@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1434987837-24212-9-git-send-email-lee.jones@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, robh@kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, rjw@rjwysocki.net, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, ajitpal.singh@st.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <8019375.XSP9R0ZLbm@avalon>
+Sender: linux-sh-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, SH-Linux <linux-sh@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Simon Horman <horms+renesas@verge.net.au>, Thomas Gleixner <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-[Adding Rob]
+Hi Laurent,
 
-On 22-06-15, 16:43, Lee Jones wrote:
+On Tue, Jun 23, 2015 at 7:40 AM, Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+> Hi Magnus,
+>
+> Thank you for the patch.
+>
+> On Sunday 21 June 2015 17:10:33 Magnus Damm wrote:
+>> From: Magnus Damm <damm+renesas@opensource.se>
+>>
+>> Update the DTS to remove the now deprecated "renesas,channels-mask"
+>> property.
+>>
+>> The channel information is now kept in the device driver and can easily
+>> be determined based on the compat string.
+>
+> Unless I've missed something (which is entirely possibly given the late hour),
+> the channel mask is only stored in the driver for the Gen2 CMT instances.
 
-At least some description was required here on why you need additional
-bindings are what are they.
+The case for sh73a0 and r8a7740 is also covered by some of the earlier
+patches in this series. So unless I'm mistaken the series should cover
+all current in-tree CMT DT users that we have. I'm not aware of any
+out-of-tree users.
 
-Over that, this patch should have been present before any other
-patches using these bindings.
+You are right that there are more unused compat strings documented, so
+those will break. I would be tempted in phasing those out somehow.
+Also, I did not spend much time cleaning up the non R-Car Gen2 cases,
+so in general that needs some love.
 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
->  .../devicetree/bindings/cpufreq/cpufreq-st.txt     | 48 ++++++++++++++++++++++
->  1 file changed, 48 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-st.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-st.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-st.txt
-> new file mode 100644
-> index 0000000..cfa8952
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-st.txt
-> @@ -0,0 +1,48 @@
-> +Binding for ST's CPUFreq driver
-> +===============================
+Thanks!
 
-OPP-v2 bindings are out now and you can probably use them to make life
-simple, they are part of Rafael's recent pull request:
-https://lkml.org/lkml/2015/6/22/606
-
-> +Required properties:
-> +-------------------
-> +- compatible		: Supported values are:
-> +				"st,stih407-cpufreq"
-
-Nodes for virtual devices aren't allowed in DT.
-
-> +Required properties [for working voltage scaling]:
-> +-------------------------------------------------
-> +
-> +Located in CPUFreq's node:
-> +
-> +- st,syscfg		: Phandle to Major number register
-> +				First cell: offset to major number
-> +- st,syscfg-eng		: Phandle to Minor number and Pcode registers
-> +				First cell: offset to process code
-> +				Second cell: offset to minor number
-> +
-> +Located in CPU's node:
-> +
-> +- st,opp-list		: Bootloader provided node containing one or more 'opp@X' sub-nodes
-
-I can see that this will be passed in from the bootloader. But at
-least an example on how exactly things would actually look would have
-been good. In logs if not in this file.
-
--- 
-viresh
+/ magnus
 --
-To unsubscribe from this list: send the line "unsubscribe linux-pm" in
+To unsubscribe from this list: send the line "unsubscribe linux-sh" in
