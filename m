@@ -1,57 +1,103 @@
-From: Inki Dae <inki.dae@samsung.com>
-Subject: [PATCH Resend] of: fix a build error to f_graph_get_endpoint_by_regs
- function
-Date: Tue, 23 Jun 2015 16:06:44 +0900
-Message-ID: <1435043204-23133-1-git-send-email-inki.dae@samsung.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 8/8] dt: cpufreq: st: Provide bindings for ST's CPUFreq
+ implementation
+Date: Tue, 23 Jun 2015 08:06:51 +0100
+Message-ID: <20150623070651.GA3245@x1>
+References: <1434987837-24212-1-git-send-email-lee.jones@linaro.org>
+ <1434987837-24212-9-git-send-email-lee.jones@linaro.org>
+ <20150623023458.GC16776@linux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: devicetree@vger.kernel.org, robh+dt@kernel.org
-Cc: mark.rutland@arm.com, sfr@canb.auug.org.au, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, dri-devel@lists.freedesktop.org, galak@codeaurora.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150623023458.GC16776@linux>
+Sender: linux-pm-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: robh@kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, rjw@rjwysocki.net, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, ajitpal.singh@st.com
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBwYXRjaCBmaXhlcyB0aGUgYmVsb3cgYnVpbGQgZXJyb3IgcmVwb3J0ZWQgYnkgU3RlcGhl
-biwKCiAgICAgU3RlcGhlbiByZXBvcnRlZDoKICAgICBBZnRlciBtZXJnaW5nIHRoZSBkcm0tZXh5
-bm9zIHRyZWUsIHRvZGF5J3MgbGludXgtbmV4dCBidWlsZCAoeDg2XzY0CiAgICAgYWxsbW9kY29u
-ZmlnKSBmYWlsZWQgbGlrZSB0aGlzOgoKICAgICBkcml2ZXJzL21lZGlhL2kyYy9hZHY3NjA0Lm86
-IEluIGZ1bmN0aW9uIGBvZl9ncmFwaF9nZXRfZW5kcG9pbnRfYnlfcmVncyc6CiAgICAgYWR2NzYw
-NC5jOigudGV4dCsweDU4NmMpOiBtdWx0aXBsZSBkZWZpbml0aW9uIG9mIGBvZl9ncmFwaF9nZXRf
-ZW5kcG9pbnRfYnlfcmVncycKICAgICBkcml2ZXJzL21lZGlhL2kyYy9hZHY3MzQzLm86YWR2NzM0
-My5jOigudGV4dCsweGExMyk6IGZpcnN0IGRlZmluZWQgaGVyZQogICAgIGRyaXZlcnMvbWVkaWEv
-cGxhdGZvcm0vc29jX2NhbWVyYS9hdG1lbC1pc2kubzogSW4gZnVuY3Rpb24gYG9mX2dyYXBoX2dl
-dF9lbmRwb2ludF9ieV9yZWdzJzoKICAgICBhdG1lbC1pc2kuYzooLnRleHQrMHgxZWM5KTogbXVs
-dGlwbGUgZGVmaW5pdGlvbiBvZiBgb2ZfZ3JhcGhfZ2V0X2VuZHBvaW50X2J5X3JlZ3MnCiAgICAg
-ZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9zb2NfY2FtZXJhL3NvY19jYW1lcmEubzpzb2NfY2FtZXJh
-LmM6KC50ZXh0KzB4MmNlMyk6IGZpcnN0IGRlZmluZWQgaGVyZQogICAgIGRyaXZlcnMvbWVkaWEv
-cGxhdGZvcm0vc29jX2NhbWVyYS9yY2FyX3Zpbi5vOiBJbiBmdW5jdGlvbiBgb2ZfZ3JhcGhfZ2V0
-X2VuZHBvaW50X2J5X3JlZ3MnOgogICAgIHJjYXJfdmluLmM6KC50ZXh0KzB4MzA3Yyk6IG11bHRp
-cGxlIGRlZmluaXRpb24gb2YgYG9mX2dyYXBoX2dldF9lbmRwb2ludF9ieV9yZWdzJwogICAgIGRy
-aXZlcnMvbWVkaWEvcGxhdGZvcm0vc29jX2NhbWVyYS9zb2NfY2FtZXJhLm86c29jX2NhbWVyYS5j
-OigudGV4dCsweDJjZTMpOiBmaXJzdCBkZWZpbmVkIGhlcmUKCiAgICAgQ2F1c2VkIGJ5IGNvbW1p
-dDoKICAgICAgIGEwZjcwMDFjMThjYSAoIm9mOiBhZGQgaGVscGVyIGZvciBnZXR0aW5nIGVuZHBv
-aW50IG5vZGUgb2Ygc3BlY2lmaWMgaWRlbnRpZmllcnMiKQoKVG8gZml4IHRoZSBlcnJvciwgdGhp
-cyBwYXRjaCBkZWNsYXJlcyBvZl9ncmFwaF9nZXRfZW5kcG9pbnRfYnlfcmVncyBmdW5jdGlvbgp3
-aXRoICJzdGF0aWMgaW5saW5lIi4KClNpZ25lZC1vZmYtYnk6IElua2kgRGFlIDxpbmtpLmRhZUBz
-YW1zdW5nLmNvbT4KLS0tCiBpbmNsdWRlL2xpbnV4L29mX2dyYXBoLmggfCAgICAyICstCiAxIGZp
-bGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkKCmRpZmYgLS1naXQgYS9p
-bmNsdWRlL2xpbnV4L29mX2dyYXBoLmggYi9pbmNsdWRlL2xpbnV4L29mX2dyYXBoLmgKaW5kZXgg
-MWMxZDViOS4uZjhiY2QwZSAxMDA2NDQKLS0tIGEvaW5jbHVkZS9saW51eC9vZl9ncmFwaC5oCisr
-KyBiL2luY2x1ZGUvbGludXgvb2ZfZ3JhcGguaApAQCAtNzEsNyArNzEsNyBAQCBzdGF0aWMgaW5s
-aW5lIHN0cnVjdCBkZXZpY2Vfbm9kZSAqb2ZfZ3JhcGhfZ2V0X25leHRfZW5kcG9pbnQoCiAJcmV0
-dXJuIE5VTEw7CiB9CiAKLXN0cnVjdCBkZXZpY2Vfbm9kZSAqb2ZfZ3JhcGhfZ2V0X2VuZHBvaW50
-X2J5X3JlZ3MoCitzdGF0aWMgaW5saW5lIHN0cnVjdCBkZXZpY2Vfbm9kZSAqb2ZfZ3JhcGhfZ2V0
-X2VuZHBvaW50X2J5X3JlZ3MoCiAJCWNvbnN0IHN0cnVjdCBkZXZpY2Vfbm9kZSAqcGFyZW50LCBp
-bnQgcG9ydF9yZWcsIGludCByZWcpCiB7CiAJcmV0dXJuIE5VTEw7Ci0tIAoxLjcuOS41CgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
-bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZy
-ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+> [Adding Rob]
+
+Rob is not the only DT Maintainer, there are many of them.  The DT
+list was CC'ed, which they are all part of.  Adding them all
+separately is not required IMO.
+
+> On 22-06-15, 16:43, Lee Jones wrote:
+>=20
+> At least some description was required here on why you need additiona=
+l
+> bindings are what are they.
+
+Sure, I can do that.
+
+> Over that, this patch should have been present before any other
+> patches using these bindings.
+
+I've never heard that one before, but it's easy to re-order the set.
+
+> > Cc: devicetree@vger.kernel.org
+> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > ---
+> >  .../devicetree/bindings/cpufreq/cpufreq-st.txt     | 48 ++++++++++=
+++++++++++++
+> >  1 file changed, 48 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufr=
+eq-st.txt
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-st.t=
+xt b/Documentation/devicetree/bindings/cpufreq/cpufreq-st.txt
+> > new file mode 100644
+> > index 0000000..cfa8952
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-st.txt
+> > @@ -0,0 +1,48 @@
+> > +Binding for ST's CPUFreq driver
+> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>=20
+> OPP-v2 bindings are out now and you can probably use them to make lif=
+e
+> simple, they are part of Rafael's recent pull request:
+> https://lkml.org/lkml/2015/6/22/606
+>=20
+> > +Required properties:
+> > +-------------------
+> > +- compatible		: Supported values are:
+> > +				"st,stih407-cpufreq"
+>=20
+> Nodes for virtual devices aren't allowed in DT.
+
+Then why do Exynos, Spear, HREF and Snowball have CPUFreq nodes?
+
+One rule for one ... ?
+
+> > +Required properties [for working voltage scaling]:
+> > +-------------------------------------------------
+> > +
+> > +Located in CPUFreq's node:
+> > +
+> > +- st,syscfg		: Phandle to Major number register
+> > +				First cell: offset to major number
+> > +- st,syscfg-eng		: Phandle to Minor number and Pcode registers
+> > +				First cell: offset to process code
+> > +				Second cell: offset to minor number
+> > +
+> > +Located in CPU's node:
+> > +
+> > +- st,opp-list		: Bootloader provided node containing one or more '=
+opp@X' sub-nodes
+>=20
+> I can see that this will be passed in from the bootloader. But at
+> least an example on how exactly things would actually look would have
+> been good. In logs if not in this file.
+
+Sure.
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe linux-pm" in
