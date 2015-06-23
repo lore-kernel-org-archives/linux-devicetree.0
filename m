@@ -1,54 +1,74 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [linux-nfc] [PATCH v3 0/2] Marvell NFC NCI UART driver and DT configuration
-Date: Tue, 23 Jun 2015 09:42:52 -0500
-Message-ID: <CAL_JsqJ6MuJOb2BpWse7GbV1+pH_-KSjZGXZgWjVRAdBc8G3ow@mail.gmail.com>
-References: <1434024020-17048-1-git-send-email-cuissard@marvell.com> <20150611214400.GD10011@ribalta.mp.intel.com>
+From: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
+Subject: Re: [PATCH V2 1/2] mfd: add Marvell 88pm88x description
+Date: Tue, 23 Jun 2015 20:16:01 +0530
+Message-ID: <55897129.1060500@linaro.org>
+References: <1434098601-3498-1-git-send-email-yizhang@marvell.com> <1434098601-3498-2-git-send-email-yizhang@marvell.com> <CAL_JsqKjNdtp1A7LqqnjAnGPmCu-fwum6D9EPOoaVF0C=DacTw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150611214400.GD10011-41CF7WKNp/HfYmLG0ciiYFaTQe2KTcn/@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Vincent Cuissard <cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqKjNdtp1A7LqqnjAnGPmCu-fwum6D9EPOoaVF0C=DacTw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>, Yi Zhang <yizhang@marvell.com>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Paul Bolle <pebolle@tiscali.nl>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Qiao Zhou <zhouqiao@marvell.com>, zhenzh@marvell.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 11, 2015 at 4:44 PM, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
-> Hi Vincent,
+
+
+On Tuesday 23 June 2015 08:01 PM, Rob Herring wrote:
+> On Fri, Jun 12, 2015 at 3:43 AM, Yi Zhang <yizhang@marvell.com> wrote:
+>> 88pm880 and 88pm886 are two combo PMIC chips, most of the function and the
+>> register mapping are the same
 >
-> On Thu, Jun 11, 2015 at 02:00:18PM +0200, Vincent Cuissard wrote:
->> Hi,
->>
->> Please find patches that add platform data configuration, DT bindings,
->> and UART driver for nfcmrvl NFC NCI driver.
->>
->> Br,
->> Vincent
->>
->> Vincent Cuissard (2):
->>   NFC: nfcmrvl: add platform_data and DT configuration
->>   NFC: nfcmrvl: add UART driver
-> Both patches applied to nfc-next, thanks a lot.
-
-This binding needs some work still. I just noticed you applied it a
-few hours before I replied.
-
-Primarily, this is one function of a combo chip. If the NFC functions
-are completely independent from the other functions, then the binding
-like this is probably okay. But I would expect there are some
-inter-dependencies such as clock, reset line, or regulators. We should
-be reviewing an 8887 binding as a whole including WiFi and BT. There's
-a similar discussion happening for BT on Broadcom chips.
-
-Rob
-
+> How do they compare to 80x/822/860 PMICs?
 >
-> Cheers,
-> Samuel.
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Zhang,
+
+Sorry, I missed this patch-series.
+
+Is there any way we can get access to datahsheets of all these devices?
+
+>>
+>> Signed-off-by: Yi Zhang <yizhang@marvell.com>
+>> ---
+>>   Documentation/devicetree/bindings/mfd/88pm88x.txt | 33 +++++++++++++++++++++++
+>>   1 file changed, 33 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/mfd/88pm88x.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/mfd/88pm88x.txt b/Documentation/devicetree/bindings/mfd/88pm88x.txt
+>> new file mode 100644
+>> index 0000000..72e741c
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mfd/88pm88x.txt
+>> @@ -0,0 +1,33 @@
+>> +Marvell 88pm88x combo PMIC chip
+>> +
+>> +This series of chip integrates regulator, rtc, onkey, switch charger,
+>> +fuelgauge, gpadc and a range of I/O pins.
+>> +
+>> +88pm886 and 88pm880 are two very similar chips, most of the registers mapping
+>> +and functions are the same, the main difference is the latter has a separate
+>> +i2c slave address to cover BUCK related setting
+>> +
+>> +Required properties:
+>> +- compatible: one of the strings for a specific chip:
+>> +  "marvell,88pm886"
+>> +  "marvell,88pm880"
+>> +- reg: the i2c address
+>> +- interrupt-controller: it works as an interrupt controller managing its irqs
+>> +- interrupt-cells: this value is 1
+>> +
+>> +Optional properties:
+>> +- marvell,88pm88x-irq-write-clear: the interrupt ack method
+>
+> The 80x/860 binding needs the same property. Please coordinate this
+> with Vaibhav.
+>
+
+Please refer to the patch
+
+https://lkml.org/lkml/2015/6/17/545
+
+Thanks,
+Vaibhav
