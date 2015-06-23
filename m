@@ -1,106 +1,46 @@
-From: Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 6/9] drivers: clk: st: Add CLK_GET_RATE_NOCACHE flag to clocks
-Date: Tue, 23 Jun 2015 16:09:24 +0200
-Message-ID: <1435068567-30995-7-git-send-email-gabriel.fernandez@linaro.org>
+From: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Subject: [PATCH 2/9] drivers: clk: st: Incorrect register offset used for
+ lock_status
+Date: Tue, 23 Jun 2015 16:09:20 +0200
+Message-ID: <1435068567-30995-3-git-send-email-gabriel.fernandez@linaro.org>
 References: <1435068567-30995-1-git-send-email-gabriel.fernandez@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1435068567-30995-1-git-send-email-gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pankaj Dev <pankaj.dev-qxv4g6HH51o@public.gmane.org>, Olivier Bideau <olivier.bideau-qxv4g6HH51o@public.gmane.org>, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Fabian Frederick <fabf-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1435068567-30995-1-git-send-email-gabriel.fernandez@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Peter Griffin <peter.griffin@linaro.org>, Pankaj Dev <pankaj.dev@st.com>, Olivier Bideau <olivier.bideau@st.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Geert Uytterhoeven <geert+renesas@glider.be>, Fabian Frederick <fabf@skynet.be>
+Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
 List-Id: devicetree@vger.kernel.org
 
-From: Pankaj Dev <pankaj.dev-qxv4g6HH51o@public.gmane.org>
+Incorrect register offset used for sthi407 clockgenC
 
-Add the CLK_GET_RATE_NOCACHE flag to all the clocks with recalc ops,
-so that they reflect Hw rate after CPS wake-up when a clk_get_rate()
-is called
-
-Signed-off-by: Pankaj Dev <pankaj.dev-qxv4g6HH51o@public.gmane.org>
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Pankaj Dev <pankaj.dev@st.com>
 ---
- drivers/clk/st/clk-flexgen.c | 2 +-
  drivers/clk/st/clkgen-fsyn.c | 2 +-
- drivers/clk/st/clkgen-mux.c  | 8 +++++---
- drivers/clk/st/clkgen-pll.c  | 2 +-
- 4 files changed, 8 insertions(+), 6 deletions(-)
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/st/clk-flexgen.c b/drivers/clk/st/clk-flexgen.c
-index be06d2a..8dd8cce 100644
---- a/drivers/clk/st/clk-flexgen.c
-+++ b/drivers/clk/st/clk-flexgen.c
-@@ -190,7 +190,7 @@ static struct clk *clk_register_flexgen(const char *name,
- 
- 	init.name = name;
- 	init.ops = &flexgen_ops;
--	init.flags = CLK_IS_BASIC | flexgen_flags;
-+	init.flags = CLK_IS_BASIC | CLK_GET_RATE_NOCACHE | flexgen_flags;
- 	init.parent_names = parent_names;
- 	init.num_parents = num_parents;
- 
 diff --git a/drivers/clk/st/clkgen-fsyn.c b/drivers/clk/st/clkgen-fsyn.c
-index 9e26099..d9eb2e1 100644
+index e94197f..e6d7073 100644
 --- a/drivers/clk/st/clkgen-fsyn.c
 +++ b/drivers/clk/st/clkgen-fsyn.c
-@@ -635,7 +635,7 @@ static struct clk * __init st_clk_register_quadfs_pll(
- 
- 	init.name = name;
- 	init.ops = quadfs->pll_ops;
--	init.flags = CLK_IS_BASIC;
-+	init.flags = CLK_IS_BASIC | CLK_GET_RATE_NOCACHE;
- 	init.parent_names = &parent_name;
- 	init.num_parents = 1;
- 
-diff --git a/drivers/clk/st/clkgen-mux.c b/drivers/clk/st/clkgen-mux.c
-index c94b56b..3919a67 100644
---- a/drivers/clk/st/clkgen-mux.c
-+++ b/drivers/clk/st/clkgen-mux.c
-@@ -239,7 +239,7 @@ static struct clk *clk_register_genamux(const char *name,
- 
- 	init.name = name;
- 	init.ops = &clkgena_divmux_ops;
--	init.flags = CLK_IS_BASIC;
-+	init.flags = CLK_IS_BASIC | CLK_GET_RATE_NOCACHE;
- 	init.parent_names = parent_names;
- 	init.num_parents = num_parents;
- 
-@@ -516,7 +516,8 @@ static void __init st_of_clkgena_prediv_setup(struct device_node *np)
- 					  0, &clk_name))
- 		return;
- 
--	clk = clk_register_divider_table(NULL, clk_name, parent_name, 0,
-+	clk = clk_register_divider_table(NULL, clk_name, parent_name,
-+					 CLK_GET_RATE_NOCACHE,
- 					 reg + data->offset, data->shift, 1,
- 					 0, data->table, NULL);
- 	if (IS_ERR(clk))
-@@ -789,7 +790,8 @@ static void __init st_of_clkgen_vcc_setup(struct device_node *np)
- 					     &mux->hw, &clk_mux_ops,
- 					     &div->hw, &clk_divider_ops,
- 					     &gate->hw, &clk_gate_ops,
--					     data->clk_flags);
-+					     data->clk_flags |
-+					     CLK_GET_RATE_NOCACHE);
- 		if (IS_ERR(clk)) {
- 			kfree(gate);
- 			kfree(div);
-diff --git a/drivers/clk/st/clkgen-pll.c b/drivers/clk/st/clkgen-pll.c
-index 1065322..72d1c27 100644
---- a/drivers/clk/st/clkgen-pll.c
-+++ b/drivers/clk/st/clkgen-pll.c
-@@ -406,7 +406,7 @@ static struct clk * __init clkgen_pll_register(const char *parent_name,
- 	init.name = clk_name;
- 	init.ops = pll_data->ops;
- 
--	init.flags = CLK_IS_BASIC;
-+	init.flags = CLK_IS_BASIC | CLK_GET_RATE_NOCACHE;
- 	init.parent_names = &parent_name;
- 	init.num_parents  = 1;
- 
+@@ -340,7 +340,7 @@ static const struct clkgen_quadfs_data st_fs660c32_C_407 = {
+ 		    CLKGEN_FIELD(0x30c, 0xf, 20),
+ 		    CLKGEN_FIELD(0x310, 0xf, 20) },
+ 	.lockstatus_present = true,
+-	.lock_status = CLKGEN_FIELD(0x2A0, 0x1, 24),
++	.lock_status = CLKGEN_FIELD(0x2f0, 0x1, 24),
+ 	.powerup_polarity = 1,
+ 	.standby_polarity = 1,
+ 	.pll_ops	= &st_quadfs_pll_c32_ops,
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
