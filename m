@@ -1,109 +1,61 @@
-From: Bastien Nocera <hadess@hadess.net>
-Subject: Re: [PATCH v2 4/8] input: goodix: reset device at init
-Date: Tue, 23 Jun 2015 16:12:57 +0200
-Message-ID: <1435068777.22211.4.camel@hadess.net>
-References: <1433774273-23103-1-git-send-email-irina.tirdea@intel.com>
-	 <1433774273-23103-5-git-send-email-irina.tirdea@intel.com>
-	 <1433864084.5707.4.camel@hadess.net> <1433865182.5707.7.camel@hadess.net>
-	 <1F3AC3675D538145B1661F571FE1805F2F061650@irsmsx105.ger.corp.intel.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 2/3] Documentation: dt-bindings: Add snps,need-phy-for-wake
+ for dwc2 USB
+Date: Tue, 23 Jun 2015 09:17:23 -0500
+Message-ID: <CAL_JsqJT42GhY45FWY5G=450zxSRVLHu36_O1tPkTdH39JeEcw@mail.gmail.com>
+References: <1435017144-2971-1-git-send-email-dianders@chromium.org> <1435017144-2971-3-git-send-email-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1F3AC3675D538145B1661F571FE1805F2F061650@irsmsx105.ger.corp.intel.com>
-Sender: linux-input-owner@vger.kernel.org
-To: "Tirdea, Irina" <irina.tirdea@intel.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "Purdila, Octavian" <octavian.purdila@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1435017144-2971-3-git-send-email-dianders@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Douglas Anderson <dianders@chromium.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, John Youn <johnyoun@synopsys.com>, Felipe Balbi <balbi@ti.com>, Chris Zhong <zyw@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>, Julius Werner <jwerner@chromium.org>, Andrew Bresticker <abrestic@chromium.org>, Alexandru Stan <amstan@chromium.org>, lyz@rock-chips.com, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kever Yang <kever.yang@rock-chips.com>, Paul Zimmerman <paulz@synopsys.com>, Gregory Herrero <gregory.herrero@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-06-23 at 13:23 +0000, Tirdea, Irina wrote:
-> 
-> > -----Original Message-----
-> > From: linux-input-owner@vger.kernel.org [mailto:
-> > linux-input-owner@vger.kernel.org] On Behalf Of Bastien Nocera
-> > Sent: 09 June, 2015 18:53
-> > To: Tirdea, Irina
-> > Cc: Dmitry Torokhov; Mark Rutland; linux-input@vger.kernel.org; 
-> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; Rob
-> > Herring; Pawel Moll; Ian Campbell; Kumar Gala; Purdila, Octavian
-> > Subject: Re: [PATCH v2 4/8] input: goodix: reset device at init
-> > 
-> > On Tue, 2015-06-09 at 17:34 +0200, Bastien Nocera wrote:
-> > > On Mon, 2015-06-08 at 17:37 +0300, Irina Tirdea wrote:
-> > > > After power on, it is recommended that the driver resets the
-> > > > device.
-> > > > The reset procedure timing is described in the datasheet and is
-> > > > used
-> > > > at device init (before writing device configuration) and
-> > > > for power management. It is a sequence of setting the interrupt
-> > > > and reset pins high/low at specific timing intervals. This
-> > > > procedure
-> > > > also includes setting the slave address to the one specified in 
-> > > > the
-> > > > ACPI/device tree.
-> > > 
-> > > This breaks the touchscreen on my Onda v975w:
-> > > [  239.732858] Goodix-TS i2c-GDIX1001:00: ID 9271, version: 1020
-> > > [  239.732977] Goodix-TS i2c-GDIX1001:00: Failed to get reset 
-> > > GPIO:
-> > > -16
-> > > [  239.736071] Goodix-TS: probe of i2c-GDIX1001:00 failed with 
-> > > error
-> > > -16
-> > > 
-> > > This is the DSDT for that device:
-> > > https://bugzilla.kernel.org/attachment.cgi?id=149331
-> > 
-> 
-> Oops. That's right - I am using named interrupts which are available 
-> only for ACPI 5.1, so 
-> devices already out there will not work.
-> 
-> The problem here is that handling -ENOENT will not help. The gpio 
-> pins are declared in the
-> ACPI DSDT, but are not named. The devm_gpiod_get API will look for 
-> the named interrupt
-> first and fallback to searching by index if not found. Index will be 
-> 0 in both cases, this is why
-> the first call will succeed and the second will fail with -EBUSY.
-> 
-> One way to handle this would be to use indexed gpio pins instead of 
-> named gpio pins:
-> e.g. consider the first gpio pin to be the reset pin and the second 
-> to be the interrupt pin.
-> This is used in other drivers as well, e.g. zforce_ts. The problem 
-> with this approach is that
-> any devices that declare the gpio pins in reversed order in the DSDT 
-> will not work and give
-> no warning (the pins will be requested successfully, but some of the 
-> functionality will not
-> work). The DSDT mentioned in 
-> https://bugzilla.kernel.org/attachment.cgi?id=149331 lists
-> the reset pin first, while I am working on some devices that declare 
-> the interrupt gpio pin
-> first.
-> 
-> Another way to handle this is to treat -EBUSY like -ENOENT and not 
-> use any functionality
-> that depends on the gpio pins. Unfortunately, this means we will not 
-> have suspend, esd and
-> custom configs even if the pins are connected on the board and 
-> available in ACPI(just not
-> named).
-> 
-> I would go with the first approach and document the order requested 
-> for the pins, but I would
-> like to hear what you think first. Is there a better way to do this?
-> 
-> > (Note that this means that I haven't been able to test any 
-> > following
-> > patches in that series than 4/8).
-> 
-> Sure, that makes sense. The following patches depend on the gpio pins 
-> so they would not have
-> worked either.
+On Mon, Jun 22, 2015 at 6:52 PM, Douglas Anderson <dianders@chromium.org> wrote:
+> Some SoCs with a dwc2 USB controller may need to keep the PHY on to
+> support remote wakeup.  Allow specifying this as a device tree
+> property.
 
-We can apply quirks based on DMI information, so that devices with ACPI
-in different orders will work after applying a quirk (as long as
-there's a way to detect that it's in the wrong order, obviously).
+I find it hard to believe that any host can support wake-up without
+the PHY. Does this really need to be conditional? Perhaps other cases
+are just always-on or remote wake-up has not been tested.
 
+Assuming the PHY was provided with the knowledge that remote wakeup is
+enabled, it would be able to figure out within its driver how to
+support that. Unfortunately the generic PHY framework is a completely
+lacking in its ability to support protocol specific features like this
+or other USB PHY features like Vbus detect or charger detection.
+
+Rob
+
+>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+>  Documentation/devicetree/bindings/usb/dwc2.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
+> index fd132cb..84d258d 100644
+> --- a/Documentation/devicetree/bindings/usb/dwc2.txt
+> +++ b/Documentation/devicetree/bindings/usb/dwc2.txt
+> @@ -17,6 +17,9 @@ Refer to clk/clock-bindings.txt for generic clock consumer properties
+>  Optional properties:
+>  - phys: phy provider specifier
+>  - phy-names: shall be "usb2-phy"
+> +- snps,need-phy-for-wake: if present indicates that the phy needs to be left
+> +  on for remote wakeup during suspend.
+> +
+>  Refer to phy/phy-bindings.txt for generic phy consumer properties
+>  - dr_mode: shall be one of "host", "peripheral" and "otg"
+>    Refer to usb/generic.txt
+> @@ -35,4 +38,5 @@ Example:
+>                 clock-names = "otg";
+>                 phys = <&usbphy>;
+>                 phy-names = "usb2-phy";
+> +               snps,need-phy-for-wake;
+>          };
+> --
+> 2.4.3.573.g4eafbef
+>
