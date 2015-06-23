@@ -1,104 +1,70 @@
-From: Walter Lozano <walter-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: socfpga: dts: Add adxl34x
-Date: Tue, 23 Jun 2015 17:20:00 -0300
-Message-ID: <CABxpGwC_Eaz593gvPsS=jRpgxY1SM17hsArGfFPBjow-oBYB9g@mail.gmail.com>
-References: <1419462712-14151-1-git-send-email-walter@vanguardiasur.com.ar>
-	<20150105092153.GJ13070@pengutronix.de>
-	<CABxpGwCbFF+pJ0H_sMjqk6c9awdRuxi6j0CL_d3mH5z4Qht+ng@mail.gmail.com>
-	<CABxpGwAFdLET+fg3WvMWqXdzsPQHv3hKx9cFwk9RQE9w6+rEbg@mail.gmail.com>
-	<550F8297.80809@opensource.altera.com>
-	<CABxpGwA3cs11Wtvs_8iGka9anb2+vHhfph19VKbTwBJOeh9bbw@mail.gmail.com>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [PATCH v6 3/9] nvmem: Add nvmem_device based consumer apis.
+Date: Tue, 23 Jun 2015 22:28:50 +0200 (CEST)
+Message-ID: <1344600420.252283.1435091331020.JavaMail.open-xchange@oxbsltgw00.schlund.de>
+References: <1435014459-26138-1-git-send-email-srinivas.kandagatla@linaro.org> <1435014527-26265-1-git-send-email-srinivas.kandagatla@linaro.org>
+Reply-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CABxpGwA3cs11Wtvs_8iGka9anb2+vHhfph19VKbTwBJOeh9bbw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1435014527-26265-1-git-send-email-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 23, 2015 at 11:29 PM, Walter Lozano
-<walter-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org> wrote:
-> Hi Dinh
->
-> On Mon, Mar 23, 2015 at 12:03 AM, Dinh Nguyen
-> <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org> wrote:
->> Hi Walter,
->>
->> On 3/19/15 4:27 PM, Walter Lozano wrote:
->>> Hi Dinh,
->>>
->>> On Mon, Mar 16, 2015 at 10:10 AM, Walter Lozano
->>> <walter-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org> wrote:
->>>> On Mon, Jan 5, 2015 at 6:21 AM, Steffen Trumtrar
->>>> <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
->>>>> Hi!
->>>>>
->>>>> On Wed, Dec 24, 2014 at 08:11:52PM -0300, Walter Lozano wrote:
->>>>>> This patch adds the DTS bindings for the adxl34x digital
->>>>>> accelerometer.
->>>>>>
->>>>>> Signed-off-by: Walter Lozano <walter-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
->>>>>> ---
->>>>>>  arch/arm/boot/dts/socfpga_cyclone5_sockit.dts |   16 ++++++++++++++++
->>>>>>  1 file changed, 16 insertions(+)
->>>>>>
->>>>>> diff --git a/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts b/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
->>>>>> index 16ea6f5..d343e03 100644
->>>>>> --- a/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
->>>>>> +++ b/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
->>>>>> @@ -60,6 +60,22 @@
->>>>>>       rxc-skew-ps = <2000>;
->>>>>>  };
->>>>>>
->>>>>> +&gpio2 {
->>>>>> +     status = "okay";
->>>>>> +};
->>>>>> +
->>>>>> +&i2c1 {
->>>>>> +     status = "okay";
->>>>>> +
->>>>>> +     accel1: accelerometer@53 {
->>>>>> +             compatible = "adxl34x";
->>
->> Shouldn't this be "adi,adxl34x"? At least that's what the documentation
->> says.
->>
->>>>>> +             reg = <0x53>;
->>>>>> +
->>>>>> +             interrupt-parent = <&portc>;
->>>>>> +             interrupts = <3 2>;
->>>>>> +     };
->>>>>> +};
->>>>>> +
->>>>>>  &mmc0 {
->>>>>>       vmmc-supply = <&regulator_3_3v>;
->>>>>>       vqmmc-supply = <&regulator_3_3v>;
->>>>>
->>>>> I just gave it a short spin. I get some interrupts and the position property
->>>>> changes, so it seems to work:
->>>>>
->>>>>         Acked-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->>>>>
->>>>
->>>> Ping?
->>>> How should this continue?
->>>
->>> Any news about this patch? It has been acked by Pavel Machek and
->>> Steffen Trumtrar a while ago.
->>>
->>
->> Sorry, since I wasn't CC on the original patch and somehow my filter
->> didn't catch it, I didn't see this patch until now.
->
-> No problem, I know it was my fault as I trust the output of get_maintainer.pl
->
 
-Ping?
+> Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> hat am 23. Juni 2015 um
+> 01:08 geschrieben:
+>
+>
+> This patch adds read/write apis which are based on nvmem_device. It is
+> common that the drivers like omap cape manager or qcom cpr driver to
+> access bytes directly at particular offset in the eeprom and not from
+> nvmem cell info in DT. These driver would need to get access to the nvmem
+> directly, which is what these new APIS provide.
+>
+> [...]
+> diff --git a/include/linux/nvmem-consumer.h b/include/linux/nvmem-consumer.h
+> index 123af62..f9acc43 100644
+> --- a/include/linux/nvmem-consumer.h
+> +++ b/include/linux/nvmem-consumer.h
+> @@ -15,6 +15,15 @@
+> struct device;
+> /* consumer cookie */
+> struct nvmem_cell;
+> +struct nvmem_device;
+> +
+> +struct nvmem_cell_info {
+> + const char *name;
+> + int offset;
+> + int bytes;
+> + int bit_offset;
+> + int nbits;
+> +};
+>
+> #if IS_ENABLED(CONFIG_NVMEM)
+>
+> @@ -26,6 +35,21 @@ void devm_nvmem_cell_put(struct device *dev, struct
+> nvmem_cell *cell);
+> void *nvmem_cell_read(struct nvmem_cell *cell, ssize_t *len);
+> int nvmem_cell_write(struct nvmem_cell *cell, void *buf, ssize_t len);
+>
+> +/* direct nvmem device read/write interface */
+> +struct nvmem_device *nvmem_device_get(struct device *dev, const char *name);
+> +struct nvmem_device *devm_nvmem_device_get(struct device *dev,
+> + const char *name);
+> +void nvmem_device_put(struct nvmem_device *nvmem);
+> +void devm_nvmem_device_put(struct device *dev, struct nvmem_device *nvmem);
+> +int nvmem_device_read(struct nvmem_device *nvmem, unsigned int offset,
+> + size_t bytes, void *buf);
+> +int nvmem_device_write(struct nvmem_device *nvmem, unsigned int offset,
+> + size_t bytes, void *buf);
 
--- 
-Walter Lozano, VanguardiaSur
-www.vanguardiasur.com.ar
+Maybe i mixed something but those functions use the datatype unsigned int for
+offset
+and the offset in the structs use datatype int. Looks a little bit inconsistent.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
