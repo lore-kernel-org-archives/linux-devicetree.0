@@ -1,42 +1,44 @@
-From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Subject: Re: [PATCH v3 0/3] clk: stm32: Add clock driver for STM32F4[23]xxx devices
-Date: Tue, 23 Jun 2015 11:24:26 +0200
-Message-ID: <CALszF6Dw7hWATpjVvpxmitKWSJ458JXWOZFXMjudcW_jaNiZdw@mail.gmail.com>
-References: <1432327273-6810-1-git-send-email-daniel.thompson@linaro.org>
-	<1433966978-24422-1-git-send-email-daniel.thompson@linaro.org>
-	<20150622224832.GI22132@codeaurora.org>
-	<55891729.7070809@linaro.org>
+From: Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v6 7/9] nvmem: qfprom: Add bindings for qfprom
+Date: Tue, 23 Jun 2015 14:55:22 +0530
+Message-ID: <55892602.2030809@codeaurora.org>
+References: <1435014459-26138-1-git-send-email-srinivas.kandagatla@linaro.org> <1435014570-26434-1-git-send-email-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <55891729.7070809@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Thompson <daniel.thompson@linaro.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kamil Lulko <rev13@wp.pl>, Andreas Farber <afaerber@suse.de>, linux-clk@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, patches@linaro.org, linaro-kernel@lists.linaro.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1435014570-26434-1-git-send-email-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, stefan.wahren-eS4NqCHxEME@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2015-06-23 10:22 GMT+02:00 Daniel Thompson <daniel.thompson@linaro.org>:
-> On 22/06/15 23:48, Stephen Boyd wrote:
->>
->> On 06/10, Daniel Thompson wrote:
->>>
->>> This patchset implements a clock driver for STM32F42xxx and STM32F43xxx
->>> series devices. It supports decoding the state configured by the
->>> bootloader (PLL, clock select, bus dividers) and all the gates clocks.
->>> It does not currently support the I2S and SAI PLLs.
->>>
->>> Relies on "Add support to STMicroeletronics STM32 family" v9 by Maxime
->>> Coquelin: http://thread.gmane.org/gmane.linux.kernel/1961049 .
->>>
->>
->> I applied 1 and 2. Looks like #3 should go through arm-soc at
->> some later time?
->
->
-> Agreed (that is also the patch that must be correctly ordered w.r.t.
-> Maxime's patches).
+[]..
 
-Indeed, I will take care of patch 3.
+> +Example:
+> +
+> +	qfprom: qfprom@00700000 {
+> +		compatible 	= "qcom,qfprom";
+> +		reg		= <0x00700000 0x8000>;
+> +		...
+> +		/* Data cells */
+> +		tsens_calibration: calib@404 {
+> +			reg = <0x4404 0x10>;
+> +		};
+> +	};
+> +
+> +
+> += Data consumers =
+> +Are device nodes which consume nvmem data cells.
+> +
+> +For example:
+> +
+> +	tsens {
+> +		...
+> +		nvmem-cell = <&tsens_calibration>;
 
-Thanks,
-Maxime
+Shouldn't this be nvmem-cells instead?
+
+> +		nvmem-cell-names = "calibration";
+> +	};
+>
