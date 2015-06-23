@@ -1,61 +1,75 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH 2/3] Documentation: dt-bindings: Add snps,need-phy-for-wake
- for dwc2 USB
-Date: Tue, 23 Jun 2015 09:17:23 -0500
-Message-ID: <CAL_JsqJT42GhY45FWY5G=450zxSRVLHu36_O1tPkTdH39JeEcw@mail.gmail.com>
-References: <1435017144-2971-1-git-send-email-dianders@chromium.org> <1435017144-2971-3-git-send-email-dianders@chromium.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1435017144-2971-3-git-send-email-dianders@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Douglas Anderson <dianders@chromium.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, John Youn <johnyoun@synopsys.com>, Felipe Balbi <balbi@ti.com>, Chris Zhong <zyw@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>, Julius Werner <jwerner@chromium.org>, Andrew Bresticker <abrestic@chromium.org>, Alexandru Stan <amstan@chromium.org>, lyz@rock-chips.com, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kever Yang <kever.yang@rock-chips.com>, Paul Zimmerman <paulz@synopsys.com>, Gregory Herrero <gregory.herrero@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Subject: [PATCH v6 1/8] Documentation: add sbsa-gwdt.txt documentation
+Date: Tue, 23 Jun 2015 22:16:27 +0800
+Message-ID: <1435068994-13526-2-git-send-email-fu.wei@linaro.org>
+References: <=fu.wei@linaro.org>
+ <1435068994-13526-1-git-send-email-fu.wei@linaro.org>
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1435068994-13526-1-git-send-email-fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org, linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, leo.duran-5C7GfCeVMHo@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, panand-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 22, 2015 at 6:52 PM, Douglas Anderson <dianders@chromium.org> wrote:
-> Some SoCs with a dwc2 USB controller may need to keep the PHY on to
-> support remote wakeup.  Allow specifying this as a device tree
-> property.
+From: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-I find it hard to believe that any host can support wake-up without
-the PHY. Does this really need to be conditional? Perhaps other cases
-are just always-on or remote wake-up has not been tested.
+The sbsa-gwdt.txt documentation in devicetree/bindings/watchdog is for
+introducing SBSA(Server Base System Architecture) Generic Watchdog
+device node info into FDT.
 
-Assuming the PHY was provided with the knowledge that remote wakeup is
-enabled, it would be able to figure out within its driver how to
-support that. Unfortunately the generic PHY framework is a completely
-lacking in its ability to support protocol specific features like this
-or other USB PHY features like Vbus detect or charger detection.
+Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Signed-off-by: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ .../devicetree/bindings/watchdog/sbsa-gwdt.txt     | 36 ++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/sbsa-gwdt.txt
 
-Rob
+diff --git a/Documentation/devicetree/bindings/watchdog/sbsa-gwdt.txt b/Documentation/devicetree/bindings/watchdog/sbsa-gwdt.txt
+new file mode 100644
+index 0000000..010e5c4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/watchdog/sbsa-gwdt.txt
+@@ -0,0 +1,36 @@
++* SBSA(Server Base System Architecture) Generic Watchdog
++
++The SBSA Generic Watchdog Timer is used for resetting the system after
++two stages of timeout.
++More details: ARM-DEN-0029 - Server Base System Architecture (SBSA)
++
++Required properties:
++- compatible : Should at least contain "arm,sbsa-gwdt".
++
++- reg : base physical address of the frames and length of memory mapped region.
++
++- reg-names : Should contain the resource reg names to show the order of
++  the values in "reg".
++  Must include the following entries : "refresh", "control".
++
++- interrupts : Should at least contain WS0 interrupt,
++  the WS1 Signal is optional.
++
++- interrupt-names : Should contain the resource interrupt names.
++  Must include the following entries : "ws0". "ws1" is optional.
++
++Optional properties
++- timeout-sec : Watchdog pre-timeout and timeout values (in seconds).
++	The first is timeout values, then pre-timeout.
++
++Example for FVP Foundation Model v8:
++
++watchdog@2a440000 {
++	compatible = "arm,sbsa-gwdt";
++	reg = <0x0 0x2a440000 0 0x1000>,
++	      <0x0 0x2a450000 0 0x1000>;
++	reg-names = "control", "refresh";
++	interrupts = <0 27 4>;
++	interrupt-names = "ws0";
++	timeout-sec = <10 5>;
++};
+-- 
+1.9.1
 
->
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
->  Documentation/devicetree/bindings/usb/dwc2.txt | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
-> index fd132cb..84d258d 100644
-> --- a/Documentation/devicetree/bindings/usb/dwc2.txt
-> +++ b/Documentation/devicetree/bindings/usb/dwc2.txt
-> @@ -17,6 +17,9 @@ Refer to clk/clock-bindings.txt for generic clock consumer properties
->  Optional properties:
->  - phys: phy provider specifier
->  - phy-names: shall be "usb2-phy"
-> +- snps,need-phy-for-wake: if present indicates that the phy needs to be left
-> +  on for remote wakeup during suspend.
-> +
->  Refer to phy/phy-bindings.txt for generic phy consumer properties
->  - dr_mode: shall be one of "host", "peripheral" and "otg"
->    Refer to usb/generic.txt
-> @@ -35,4 +38,5 @@ Example:
->                 clock-names = "otg";
->                 phys = <&usbphy>;
->                 phy-names = "usb2-phy";
-> +               snps,need-phy-for-wake;
->          };
-> --
-> 2.4.3.573.g4eafbef
->
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
