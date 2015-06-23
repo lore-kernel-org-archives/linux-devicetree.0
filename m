@@ -1,38 +1,22 @@
-From: Paul Bolle <pebolle@tiscali.nl>
-Subject: Re: [PATCH 7/8] cpufreq: st: Provide runtime initialised driver for
- ST's platforms
-Date: Tue, 23 Jun 2015 22:03:16 +0200
-Message-ID: <1435089796.4528.53.camel@tiscali.nl>
-References: <1434987837-24212-1-git-send-email-lee.jones@linaro.org>
-	 <1434987837-24212-8-git-send-email-lee.jones@linaro.org>
-	 <1435046411.4528.6.camel@tiscali.nl> <20150623082857.GG3245@x1>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v2 1/2] arm64: dts: mt8173: Add watchdog device node
+Date: Tue, 23 Jun 2015 22:03:29 +0200
+Message-ID: <1643494.zkVa9qjb01@ubix>
+References: <1433164107-26568-1-git-send-email-eddie.huang@mediatek.com> <1433164107-26568-2-git-send-email-eddie.huang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20150623082857.GG3245@x1>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, rjw@rjwysocki.net, viresh.kumar@linaro.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, ajitpal.singh@st.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1433164107-26568-2-git-send-email-eddie.huang@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eddie Huang <eddie.huang@mediatek.com>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-06-23 at 09:28 +0100, Lee Jones wrote:
-> BTW, do you have a script that does this now, or are you still
-> hand-rolling these?
+On Monday, June 01, 2015 09:08:26 PM Eddie Huang wrote:
+> Add MT8173 watchdog device node.
+> 
+> Signed-off-by: Eddie Huang <eddie.huang@mediatek.com>
+> ---
 
-There was a script detecting Kconfig problems that is basically
-retired. (The messages I sent were always manually written.) That
-script's function is now performed, much better, by the undertaker
--checkpatch bot (courtesy of a group of people apparently all
-affiliated with the university of Erlangen, Germany). We're in virtual
-contact but that group is doing fine so I'm basically not contributing.
-
-Anyhow, my reply to your patch was the result of a manual scan for a
-small set of common (and mostly trivial) mistakes in patches that I try
-to do regularly. All pretty basic stuff, otherwise I wouldn't been able
-to spot these mistakes.
-
-Does this answer your question?
-
-
-Paul Bolle
+applied to v4.2-next/arm64
