@@ -1,214 +1,140 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 02/17] phy: ti-pipe3: use *syscon* framework to power
- on/off the PHY
-Date: Tue, 23 Jun 2015 17:53:55 +0300
-Message-ID: <20150623175355.d80c1d6626439fbb6c26169c@ti.com>
-References: <1435060743-5511-1-git-send-email-kishon@ti.com>
-	<1435060743-5511-3-git-send-email-kishon@ti.com>
+From: m.silentcreek-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: Re: [PATCH] touchscreen: sun4i-ts: Really fix A10
+ temperature reporting
+Date: Tue, 23 Jun 2015 08:06:51 -0700 (PDT)
+Message-ID: <41a7a857-96fd-48ab-9778-127cfc091ef0@googlegroups.com>
+References: <1425893870-28715-1-git-send-email-hdegoede@redhat.com>
+Reply-To: m.silentcreek-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1435060743-5511-3-git-send-email-kishon-l0cyMroinI0@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org
+Content-Type: multipart/mixed;
+	boundary="----=_Part_4634_1918132801.1435072011222"
+Return-path: <linux-sunxi+bncBDGZFWHP6IMBBC7MUWWAKGQECEKLBSI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1425893870-28715-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kishon,
+------=_Part_4634_1918132801.1435072011222
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 23 Jun 2015 17:28:47 +0530
-Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> wrote:
+Hi Hans,
 
-> Deprecate using phy-omap-control driver to power on/off the PHY and
-> use *syscon* framework to do the same.
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+is it possible that this patch (and the parent commit "Input: sun4i-ts - al=
+low controlling filter and sensitivity via DT") has quite an adversial effe=
+ct on other boards than the ones tested?
+
+On my Lemaker Bananapi the temperature is now being reported as somwhere be=
+tween -15=C2=B0C to -10=C2=B0C with the latest Kernel 4.1.0. These negative=
+ values are obviously way off. On Kernel 4.0.5 the temperature reading was =
+usually around 40=C2=B0C. While that might not have been accurate either, i=
+t was at least plausible.
+
+Given that there is no Documentation and things seem quite board-specific, =
+I really don't know how this could be improved, so I can merely report my o=
+bservation.
+
+Kind regards,
+
+Timo=20
+
+
+Am Montag, 9. M=C3=A4rz 2015 10:38:02 UTC+1 schrieb Hans de Goede:
+> The commit titled:
+> "touchscreen: sun4i-ts: A10 (sun4i) has a different temperature curve"
+> contains a math error, the offset it uses is in degrees, but the actual c=
+ode
+> applies the offset before multiplying by stepsize :|
+>=20
+> Given that this is rather backwards (every math course ever thought appli=
+es
+> the multiplication before the offset for linear functions), this commit
+> fixes things by changing the code applying the offset to do the logical
+> thing, adjusting the offset for the other models accordingly.
+>=20
+> This has been tested on an A10, A13, A20 and A31 to make sure everything =
+really
+> is correct now.
+>=20
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/phy/ti-phy.txt |   10 ++-
->  drivers/phy/phy-ti-pipe3.c                       |   91 ++++++++++++++++++----
->  2 files changed, 86 insertions(+), 15 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/ti-phy.txt b/Documentation/devicetree/bindings/phy/ti-phy.txt
-> index f0f5537..d3ad3bf 100644
-> --- a/Documentation/devicetree/bindings/phy/ti-phy.txt
-> +++ b/Documentation/devicetree/bindings/phy/ti-phy.txt
-> @@ -77,8 +77,6 @@ Required properties:
->     * "div-clk" - apll clock
->  
->  Optional properties:
-> - - ctrl-module : phandle of the control module used by PHY driver to power on
-> -   the PHY.
->   - id: If there are multiple instance of the same type, in order to
->     differentiate between each instance "id" can be used (e.g., multi-lane PCIe
->     PHY). If "id" is not provided, it is set to default value of '1'.
-> @@ -86,6 +84,14 @@ Optional properties:
->     CTRL_CORE_SMA_SW_0 register and register offset to the CTRL_CORE_SMA_SW_0
->     register that contains the SATA_PLL_SOFT_RESET bit. Only valid for sata_phy.
->  
-> +Deprecated properties:
-> + - ctrl-module : phandle of the control module used by PHY driver to power on
-> +   the PHY.
-> +
-> +Recommended properies:
-> + - syscon-phy-power : phandle/offset pair. Phandle to the system control
-> +   module and the register offset to power on/off the PHY.
-> +
->  This is usually a subnode of ocp2scp to which it is connected.
->  
->  usb3phy@4a084400 {
-> diff --git a/drivers/phy/phy-ti-pipe3.c b/drivers/phy/phy-ti-pipe3.c
-> index d784426..78bac00 100644
-> --- a/drivers/phy/phy-ti-pipe3.c
-> +++ b/drivers/phy/phy-ti-pipe3.c
-> @@ -56,6 +56,15 @@
->  
->  #define SATA_PLL_SOFT_RESET	BIT(18)
->  
-> +#define PIPE3_PHY_PWRCTL_CLK_CMD_MASK	0x003FC000
-> +#define PIPE3_PHY_PWRCTL_CLK_CMD_SHIFT	14
-> +
-> +#define PIPE3_PHY_PWRCTL_CLK_FREQ_MASK	0xFFC00000
-> +#define PIPE3_PHY_PWRCTL_CLK_FREQ_SHIFT	22
-> +
-> +#define PIPE3_PHY_TX_RX_POWERON		0x3
-> +#define PIPE3_PHY_TX_RX_POWEROFF	0x0
-> +
->  /*
->   * This is an Empirical value that works, need to confirm the actual
->   * value required for the PIPE3PHY_PLL_CONFIGURATION2.PLL_IDLE status
-> @@ -86,8 +95,10 @@ struct ti_pipe3 {
->  	struct clk		*refclk;
->  	struct clk		*div_clk;
->  	struct pipe3_dpll_map	*dpll_map;
-> +	struct regmap		*phy_power_syscon; /* ctrl. reg. acces */
->  	struct regmap		*dpll_reset_syscon; /* ctrl. reg. acces */
->  	unsigned int		dpll_reset_reg; /* reg. index within syscon */
-> +	unsigned int		power_reg; /* power reg. index within syscon */
->  	bool			sata_refclk_enabled;
->  };
->  
-> @@ -144,18 +155,49 @@ static void ti_pipe3_disable_clocks(struct ti_pipe3 *phy);
->  
->  static int ti_pipe3_power_off(struct phy *x)
->  {
-> +	u32 val;
-> +	int ret;
->  	struct ti_pipe3 *phy = phy_get_drvdata(x);
->  
-> -	omap_control_phy_power(phy->control_dev, 0);
-> +	if (phy->phy_power_syscon) {
-> +		val = PIPE3_PHY_TX_RX_POWEROFF <<
-> +			PIPE3_PHY_PWRCTL_CLK_CMD_SHIFT;
-> +
-> +		ret = regmap_update_bits(phy->phy_power_syscon, phy->power_reg,
-> +					 PIPE3_PHY_PWRCTL_CLK_CMD_MASK, val);
-> +		if (ret < 0)
-> +			return ret;
-> +	} else {
-> +		omap_control_phy_power(phy->control_dev, 0);
-> +	}
->  
+> Note if possible this commit should be squashed into the original
+> "touchscreen: sun4i-ts: A10 (sun4i) has a different temperature curve"
+> commit as a fixup.
+> ---
+>  drivers/input/touchscreen/sun4i-ts.c | 14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
+>=20
+> diff --git a/drivers/input/touchscreen/sun4i-ts.c b/drivers/input/touchsc=
+reen/sun4i-ts.c
+> index 66ccd5a..178d2ef 100644
+> --- a/drivers/input/touchscreen/sun4i-ts.c
+> +++ b/drivers/input/touchscreen/sun4i-ts.c
+> @@ -193,7 +193,7 @@ static int sun4i_get_temp(const struct sun4i_ts_data =
+*ts, long *temp)
+>  	if (ts->temp_data =3D=3D -1)
+>  		return -EAGAIN;
+> =20
+> -	*temp =3D (ts->temp_data - ts->temp_offset) * ts->temp_step;
+> +	*temp =3D ts->temp_data * ts->temp_step - ts->temp_offset;
+> =20
 >  	return 0;
 >  }
->  
->  static int ti_pipe3_power_on(struct phy *x)
->  {
-> +	u32 val;
-> +	u32 mask;
-> +	int ret;
-> +	unsigned long rate;
->  	struct ti_pipe3 *phy = phy_get_drvdata(x);
->  
-> -	omap_control_phy_power(phy->control_dev, 1);
-> +	if (phy->phy_power_syscon) {
-> +		rate = clk_get_rate(phy->sys_clk);
-
-what if clk_get_rate() returns 0?
-
-> +		rate = rate / 1000000;
-> +		mask = OMAP_CTRL_PIPE3_PHY_PWRCTL_CLK_CMD_MASK |
-> +			  OMAP_CTRL_PIPE3_PHY_PWRCTL_CLK_FREQ_MASK;
-> +		val = PIPE3_PHY_TX_RX_POWERON <<
-> +			PIPE3_PHY_PWRCTL_CLK_CMD_SHIFT;
-> +		val |= rate << OMAP_CTRL_PIPE3_PHY_PWRCTL_CLK_FREQ_SHIFT;
-> +
-> +		ret = regmap_update_bits(phy->phy_power_syscon, phy->power_reg,
-> +					 mask, val);
-> +		if (ret < 0)
-> +			return ret;
-> +	} else {
-> +		omap_control_phy_power(phy->control_dev, 1);
-> +	}
->  
->  	return 0;
->  }
-> @@ -417,19 +459,42 @@ static int ti_pipe3_probe(struct platform_device *pdev)
->  		phy->div_clk = ERR_PTR(-ENODEV);
+> @@ -255,17 +255,17 @@ static int sun4i_ts_probe(struct platform_device *p=
+dev)
+>  	ts->ignore_fifo_data =3D true;
+>  	ts->temp_data =3D -1;
+>  	if (of_device_is_compatible(np, "allwinner,sun6i-a31-ts")) {
+> -		/* Allwinner SDK has temperature =3D -271 + (value / 6) (C) */
+> -		ts->temp_offset =3D 1626;
+> +		/* Allwinner SDK has temperature (C) =3D (value / 6) - 271 */
+> +		ts->temp_offset =3D 271000;
+>  		ts->temp_step =3D 167;
+>  	} else if (of_device_is_compatible(np, "allwinner,sun4i-a10-ts")) {
+>  		/*
+>  		 * The A10 temperature sensor has quite a wide spread, these
+>  		 * parameters are based on the averaging of the calibration
+>  		 * results of 4 completely different boards, with a spread of
+> -		 * temp_step from 96 - 170 and temp_offset from 1758 - 3310.
+> +		 * temp_step from 0.096 - 0.170 and temp_offset from 176 - 331.
+>  		 */
+> -		ts->temp_offset =3D 2570;
+> +		ts->temp_offset =3D 257000;
+>  		ts->temp_step =3D 133;
+>  	} else {
+>  		/*
+> @@ -273,13 +273,13 @@ static int sun4i_ts_probe(struct platform_device *p=
+dev)
+>  		 * the temperature. The formula used here is from the AXP209,
+>  		 * which is designed by X-Powers, an affiliate of Allwinner:
+>  		 *
+> -		 *     temperature =3D -144.7 + (value * 0.1)
+> +		 *     temperature (C) =3D (value * 0.1) - 144.7
+>  		 *
+>  		 * Allwinner does not have any documentation whatsoever for
+>  		 * this hardware. Moreover, it is claimed that the sensor
+>  		 * is inaccurate and cannot work properly.
+>  		 */
+> -		ts->temp_offset =3D 1447;
+> +		ts->temp_offset =3D 144700;
+>  		ts->temp_step =3D 100;
 >  	}
->  
-> -	control_node = of_parse_phandle(node, "ctrl-module", 0);
-> -	if (!control_node) {
-> -		dev_err(&pdev->dev, "Failed to get control device phandle\n");
-> -		return -EINVAL;
-> -	}
-> +	phy->phy_power_syscon = syscon_regmap_lookup_by_phandle(node,
-> +							"syscon-phy-power");
-> +	if (IS_ERR(phy->phy_power_syscon)) {
-> +		dev_info(&pdev->dev,
-> +			 "can't get syscon-phy-power, using control device\n");
+> =20
+> --=20
+> 2.3.1
 
-dev_dbg()? as we don't want to annoy old DT users?
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
 
-> +		phy->phy_power_syscon = NULL;
-> +
-> +		control_node = of_parse_phandle(node, "ctrl-module", 0);
-> +		if (!control_node) {
-> +			dev_err(&pdev->dev,
-> +				"Failed to get control device phandle\n");
-> +			return -EINVAL;
-> +		}
->  
-> -	control_pdev = of_find_device_by_node(control_node);
-> -	if (!control_pdev) {
-> -		dev_err(&pdev->dev, "Failed to get control device\n");
-> -		return -EINVAL;
-> -	}
-> +		control_pdev = of_find_device_by_node(control_node);
-> +		if (!control_pdev) {
-> +			dev_err(&pdev->dev, "Failed to get control device\n");
-> +			return -EINVAL;
-> +		}
->  
-> -	phy->control_dev = &control_pdev->dev;
-> +		phy->control_dev = &control_pdev->dev;
-> +	} else {
-> +		phy->sys_clk = devm_clk_get(phy->dev, "sysclk");
-> +		if (IS_ERR(phy->sys_clk)) {
-> +			dev_err(&pdev->dev, "unable to get sysclk\n");
-> +			return -EINVAL;
-> +		}
-
-we're already doing this at another place in pipe3_probe. Let's do it at one place.
-
-> +
-> +		if (of_property_read_u32_index(node,
-> +					       "syscon-phy-power", 1,
-> +					       &phy->power_reg)) {
-> +			dev_err(&pdev->dev,
-> +				"couldn't get power reg. offset\n");
-> +			return -EINVAL;
-> +		}
-> +	}
->  
->  	platform_set_drvdata(pdev, phy);
->  	pm_runtime_enable(phy->dev);
-> -- 
-> 1.7.9.5
-> 
-cheers,
--roger
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+------=_Part_4634_1918132801.1435072011222--
