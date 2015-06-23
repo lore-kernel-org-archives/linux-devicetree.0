@@ -1,143 +1,101 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH 00/21] On-demand device registration
-Date: Mon, 22 Jun 2015 19:01:32 -0500
-Message-ID: <CAL_JsqKAWs2McpAP-47UwDMtuBoR+0xkJYvu8+-7yOQwiUfvpw@mail.gmail.com>
-References: <1432565608-26036-1-git-send-email-tomeu.vizoso@collabora.com>
- <CAL_Jsq+EWLEJhRudTGAwYsOg4tX2-pGhygeQGHae9RL8rBpMiA@mail.gmail.com> <CAAObsKCdv_X+YPFacO7NjbRMnvuDisAmiQOWE-Xb3xFFrn6Qog@mail.gmail.com>
+From: Dave Airlie <airlied@gmail.com>
+Subject: Re: [PATCH v6 06/15] of: add helper for getting endpoint node of
+ specific identifiers
+Date: Tue, 23 Jun 2015 10:19:05 +1000
+Message-ID: <CAPM=9tydy9NXh-P8=d62tewqtCKwZtd-SJUcb-vM4KMARA+sMA@mail.gmail.com>
+References: <1434113958-15877-1-git-send-email-human.hwang@samsung.com>
+ <1434113958-15877-7-git-send-email-human.hwang@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAAObsKCdv_X+YPFacO7NjbRMnvuDisAmiQOWE-Xb3xFFrn6Qog@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, =?UTF-8?Q?St=C3=A9phane_Marchesin?= <stephane.marchesin@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Alexander Holler <holler@ahsoftware.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Dan Williams <dan.j.williams@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dmaengine@vger.kernel.org, dri-devel <dri-devel@lists.freedesktop.org>, linux-clk@vger.kernel.org, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.or>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1434113958-15877-7-git-send-email-human.hwang@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Hyungwon Hwang <human.hwang@samsung.com>, Inki Dae <inki.dae@samsung.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sw0312.kim@samsung.com" <sw0312.kim@samsung.com>, dri-devel <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 22, 2015 at 10:23 AM, Tomeu Vizoso
-<tomeu.vizoso@collabora.com> wrote:
-> On 28 May 2015 at 06:33, Rob Herring <robherring2@gmail.com> wrote:
->> On Mon, May 25, 2015 at 9:53 AM, Tomeu Vizoso
->> <tomeu.vizoso@collabora.com> wrote:
->>> Hello,
->>>
->>> I have a problem with the panel on my Tegra Chromebook taking longe=
-r than
->>> expected to be ready during boot (St=C3=A9phane Marchesin reported =
-what is
->>> basically the same issue in [0]), and have looked into ordered prob=
-ing as a
->>> better way of solving this than moving nodes around in the DT or pl=
-aying with
->>> initcall levels.
->>>
->>> While reading the thread [1] that Alexander Holler started with his=
- series to
->>> make probing order deterministic, it occurred to me that it should =
-be possible
->>> to achieve the same by registering devices as they are referenced b=
-y other
->>> devices.
->>
->> I like the concept and novel approach.
->>
->>> This basically reuses the information that is already implicit in t=
-he probe()
->>> implementations, saving us from refactoring existing drivers or add=
-ing
->>> information to DTBs.
->>>
->>> Something I'm not completely happy with is that I have had to move =
-the call to
->>> of_platform_populate after all platform drivers have been registere=
-d.
->>> Otherwise I don't see how I could register drivers on demand as we =
-don't have
->>> yet each driver's compatible strings.
->>
->> Yeah, this is the opposite of what we'd really like.
->
-> Can you elaborate on the reasons why we would like to have devices
-> registered before built-in drivers finish registering, even if we
-> don't probe them yet?
-
-My main thought was for modules we will almost always have devices
-appearing first. More generally, we can have devices and drivers
-coming or going at any point in time and should not put restrictions
-on ordering.
-
-Also, I think all the probe ordering and dependency tracking should be
-done within the driver core (i.e. dependencies are a list of struct
-devices). At some level it has to become firmware specific, but we
-want to minimize that part. I could be convinced otherwise and you
-have put more thought into this problem than I have.
-
->> Ideally, we would
->> have a solution that works for modules too. However, we're no worse
->> off. We pretty much build-in dependencies to avoid module ordering
->> problems.
->
-> Nod, I haven't looked yet at requesting modules on-demand, but I gues=
-s
-> it should be doable. Modules that have dependencies described in the
-> firmware should get them probed automatically already though.
->
->> Perhaps we need to make the probing on-demand rather than simply on
->> device<->driver match occurring.
->
-> I'm afraid that too much old code depends on that. For example, Rafae=
-l
-> pointed out to the PNP subsystem, which registers a driver that will
-> probe devices with the EISA ID PNP0c02 to reserve memory regions for
-> devices that will be probed later.
->
-> http://lxr.free-electrons.com/source/drivers/pnp/system.c
->
-> My understanding is that probing of PNP0c02 devices must happen befor=
-e
-> the actual devices that depend on those regions are probed, so if we
-> decoupled the probing from the driver/device registration, we would b=
-e
-> breaking that assumption.
-
-That shouldn't matter as PNP matching is PNP specific. We already have
-different ways of matching with device/driver name or of_match_table
-for example. Changing how and when OF matching occurs would not affect
-PNP matching. We do matching on device and driver add currently. For
-the "when" part, we would need to add what I'll call async matching or
-deferred matching which in addition to matching on the of_match_table
-also matches on the dependency list having probed. Your last series
-essentially does this, but the difference is yours is not OF specific
-and I think it needs to be. I mean it is OF specific only in the
-aspect that matching already is. From a driver and subsystem
-standpoint, it should not be OF specific much like deferred probe is
-not OF specific, but in reality only occurs (currently) on OF probed
-drivers.
-
->>> For machs that don't move of_platform_populate() to a later point, =
-these
->>> patches shouldn't cause any problems but it's not guaranteed that w=
-e'll avoid
->>> all the deferred probes as some drivers may not be registered yet.
->>
->> Ideally, of_platform_populate is not explicitly called by each
->> platform. So I think we need to make this work for the default case.
->
-> The problem is that some platforms will need fixing because some
-> initcalls assume that some devices will have been registered already,
-> or even probed. I think removing those assumptions shouldn't be
-> problematic because I haven't had much trouble with this on the four
-> platforms I have tested with, but I cannot test every board that is
-> supported upstream.
->
-> I can ask though the KernelCI folks to boot my branch in all their
-> boards and make sure that those work when of_platform_populate is
-> called in late_initcall.
-
-I'd imagine Kevin would be happy to. That is still a subset of h/w, so
-we'd need a way to disable any solution.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
+T24gMTIgSnVuZSAyMDE1IGF0IDIyOjU5LCBIeXVuZ3dvbiBId2FuZyA8aHVtYW4uaHdhbmdAc2Ft
+c3VuZy5jb20+IHdyb3RlOgo+IFdoZW4gdGhlcmUgYXJlIG11bHRpcGxlIHBvcnRzIG9yIG11bHRp
+cGxlIGVuZHBvaW50cyBpbiBhIHBvcnQsIHRoZXkgaGF2ZSB0byBiZQo+IGRpc3Rpbmd1aXNoZWQg
+YnkgdGhlIHZhbHVlIG9mIHJlZyBwcm9wZXJ0eS4gSXQgaXMgY29tbW9uLiBUaGUgZHJpdmVycyBj
+YW4gZ2V0Cj4gdGhlIHNwZWNpZmljIGVuZHBvaW50IGluIHRoZSBzcGVjaWZpYyBwb3J0IHZpYSB0
+aGlzIGZ1bmN0aW9uLiBOb3cgdGhlIGRyaXZlcnMKPiBoYXZlIHRvIGltcGxlbWVudCB0aGlzIGNv
+ZGUgaW4gdGhlbXNlbHZlcyBvciBoYXZlIHRvIGZvcmNlIHRoZSBvcmRlciBvZiBkdCBub2Rlcwo+
+IHRvIGdldCB0aGUgcmlnaHQgbm9kZS4KPgo+IFNpZ25lZC1vZmYtYnk6IEh5dW5nd29uIEh3YW5n
+IDxodW1hbi5od2FuZ0BzYW1zdW5nLmNvbT4KPiBBY2tlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmgr
+ZHRAa2VybmVsLm9yZz4KCkZZSSwgU2luY2UgSSdtIG1lcmdpbmcgdGhpcyB2aWEgZXh5bm9zLW5l
+eHQgaW50byBteSB0cmVlLCBpdCBicm9rZQptb2R1bGUgYnVpbGRzIG9mIGV4eW5vcywgYmVjYXVz
+ZSBpdCBkb2Vzbid0IGV4cG9ydCB0aGUgc3ltYm9sIGl0IGFkZHMsCkkndmUgYWRkZWQgYSBwYXRj
+aCB0byBteSAtbmV4dCB0cmVlIHRvIGZpeCBpdCB1cC4KCklua2ksIGluIGZ1dHVyZSBjYW4geW91
+IGFkZCBhIG1vZHVsYXIgYnVpbGQgdG8gcHJlLXB1bGwgdGVzdGluZy4KCkRhdmUuCgo+IC0tLQo+
+IENoYW5nZXMgYmVmb3JlOgo+IC0gUmVmZXIgaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9w
+YXRjaC82MTkxNzUxLwo+IENoYW5nZXMgZm9yIHY2Ogo+IC0gTm9uZQo+ICBkcml2ZXJzL29mL2Jh
+c2UuYyAgICAgICAgfCAzMyArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysKPiAgaW5j
+bHVkZS9saW51eC9vZl9ncmFwaC5oIHwgIDggKysrKysrKysKPiAgMiBmaWxlcyBjaGFuZ2VkLCA0
+MSBpbnNlcnRpb25zKCspCj4KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9vZi9iYXNlLmMgYi9kcml2
+ZXJzL29mL2Jhc2UuYwo+IGluZGV4IDk5NzY0ZGIuLmYzYjU4M2IgMTAwNjQ0Cj4gLS0tIGEvZHJp
+dmVycy9vZi9iYXNlLmMKPiArKysgYi9kcml2ZXJzL29mL2Jhc2UuYwo+IEBAIC0yMjMzLDYgKzIy
+MzMsMzkgQEAgc3RydWN0IGRldmljZV9ub2RlICpvZl9ncmFwaF9nZXRfbmV4dF9lbmRwb2ludChj
+b25zdCBzdHJ1Y3QgZGV2aWNlX25vZGUgKnBhcmVudCwKPiAgRVhQT1JUX1NZTUJPTChvZl9ncmFw
+aF9nZXRfbmV4dF9lbmRwb2ludCk7Cj4KPiAgLyoqCj4gKyAqIG9mX2dyYXBoX2dldF9lbmRwb2lu
+dF9ieV9yZWdzKCkgLSBnZXQgZW5kcG9pbnQgbm9kZSBvZiBzcGVjaWZpYyBpZGVudGlmaWVycwo+
+ICsgKiBAcGFyZW50OiBwb2ludGVyIHRvIHRoZSBwYXJlbnQgZGV2aWNlIG5vZGUKPiArICogQHBv
+cnRfcmVnOiBpZGVudGlmaWVyICh2YWx1ZSBvZiByZWcgcHJvcGVydHkpIG9mIHRoZSBwYXJlbnQg
+cG9ydCBub2RlCj4gKyAqIEByZWc6IGlkZW50aWZpZXIgKHZhbHVlIG9mIHJlZyBwcm9wZXJ0eSkg
+b2YgdGhlIGVuZHBvaW50IG5vZGUKPiArICoKPiArICogUmV0dXJuOiBBbiAnZW5kcG9pbnQnIG5v
+ZGUgcG9pbnRlciB3aGljaCBpcyBpZGVudGlmaWVkIGJ5IHJlZyBhbmQgYXQgdGhlIHNhbWUKPiAr
+ICogaXMgdGhlIGNoaWxkIG9mIGEgcG9ydCBub2RlIGlkZW50aWZpZWQgYnkgcG9ydF9yZWcuIHJl
+ZyBhbmQgcG9ydF9yZWcgYXJlCj4gKyAqIGlnbm9yZWQgd2hlbiB0aGV5IGFyZSAtMS4KPiArICov
+Cj4gK3N0cnVjdCBkZXZpY2Vfbm9kZSAqb2ZfZ3JhcGhfZ2V0X2VuZHBvaW50X2J5X3JlZ3MoCj4g
+KyAgICAgICBjb25zdCBzdHJ1Y3QgZGV2aWNlX25vZGUgKnBhcmVudCwgaW50IHBvcnRfcmVnLCBp
+bnQgcmVnKQo+ICt7Cj4gKyAgICAgICBzdHJ1Y3Qgb2ZfZW5kcG9pbnQgZW5kcG9pbnQ7Cj4gKyAg
+ICAgICBzdHJ1Y3QgZGV2aWNlX25vZGUgKm5vZGUsICpwcmV2X25vZGUgPSBOVUxMOwo+ICsKPiAr
+ICAgICAgIHdoaWxlICgxKSB7Cj4gKyAgICAgICAgICAgICAgIG5vZGUgPSBvZl9ncmFwaF9nZXRf
+bmV4dF9lbmRwb2ludChwYXJlbnQsIHByZXZfbm9kZSk7Cj4gKyAgICAgICAgICAgICAgIG9mX25v
+ZGVfcHV0KHByZXZfbm9kZSk7Cj4gKyAgICAgICAgICAgICAgIGlmICghbm9kZSkKPiArICAgICAg
+ICAgICAgICAgICAgICAgICBicmVhazsKPiArCj4gKyAgICAgICAgICAgICAgIG9mX2dyYXBoX3Bh
+cnNlX2VuZHBvaW50KG5vZGUsICZlbmRwb2ludCk7Cj4gKyAgICAgICAgICAgICAgIGlmICgoKHBv
+cnRfcmVnID09IC0xKSB8fCAoZW5kcG9pbnQucG9ydCA9PSBwb3J0X3JlZykpICYmCj4gKyAgICAg
+ICAgICAgICAgICAgICAgICAgKChyZWcgPT0gLTEpIHx8IChlbmRwb2ludC5pZCA9PSByZWcpKSkK
+PiArICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gbm9kZTsKPiArCj4gKyAgICAgICAgICAg
+ICAgIHByZXZfbm9kZSA9IG5vZGU7Cj4gKyAgICAgICB9Cj4gKwo+ICsgICAgICAgcmV0dXJuIE5V
+TEw7Cj4gK30KPiArCj4gKy8qKgo+ICAgKiBvZl9ncmFwaF9nZXRfcmVtb3RlX3BvcnRfcGFyZW50
+KCkgLSBnZXQgcmVtb3RlIHBvcnQncyBwYXJlbnQgbm9kZQo+ICAgKiBAbm9kZTogcG9pbnRlciB0
+byBhIGxvY2FsIGVuZHBvaW50IGRldmljZV9ub2RlCj4gICAqCj4gZGlmZiAtLWdpdCBhL2luY2x1
+ZGUvbGludXgvb2ZfZ3JhcGguaCBiL2luY2x1ZGUvbGludXgvb2ZfZ3JhcGguaAo+IGluZGV4IDdi
+YzkyZTAuLjFjMWQ1YjkgMTAwNjQ0Cj4gLS0tIGEvaW5jbHVkZS9saW51eC9vZl9ncmFwaC5oCj4g
+KysrIGIvaW5jbHVkZS9saW51eC9vZl9ncmFwaC5oCj4gQEAgLTQ1LDYgKzQ1LDggQEAgaW50IG9m
+X2dyYXBoX3BhcnNlX2VuZHBvaW50KGNvbnN0IHN0cnVjdCBkZXZpY2Vfbm9kZSAqbm9kZSwKPiAg
+c3RydWN0IGRldmljZV9ub2RlICpvZl9ncmFwaF9nZXRfcG9ydF9ieV9pZChzdHJ1Y3QgZGV2aWNl
+X25vZGUgKm5vZGUsIHUzMiBpZCk7Cj4gIHN0cnVjdCBkZXZpY2Vfbm9kZSAqb2ZfZ3JhcGhfZ2V0
+X25leHRfZW5kcG9pbnQoY29uc3Qgc3RydWN0IGRldmljZV9ub2RlICpwYXJlbnQsCj4gICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0cnVjdCBkZXZpY2Vfbm9kZSAqcHJl
+dmlvdXMpOwo+ICtzdHJ1Y3QgZGV2aWNlX25vZGUgKm9mX2dyYXBoX2dldF9lbmRwb2ludF9ieV9y
+ZWdzKAo+ICsgICAgICAgICAgICAgICBjb25zdCBzdHJ1Y3QgZGV2aWNlX25vZGUgKnBhcmVudCwg
+aW50IHBvcnRfcmVnLCBpbnQgcmVnKTsKPiAgc3RydWN0IGRldmljZV9ub2RlICpvZl9ncmFwaF9n
+ZXRfcmVtb3RlX3BvcnRfcGFyZW50KAo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICBjb25zdCBzdHJ1Y3QgZGV2aWNlX25vZGUgKm5vZGUpOwo+ICBzdHJ1Y3QgZGV2aWNl
+X25vZGUgKm9mX2dyYXBoX2dldF9yZW1vdGVfcG9ydChjb25zdCBzdHJ1Y3QgZGV2aWNlX25vZGUg
+Km5vZGUpOwo+IEBAIC02OSw2ICs3MSwxMiBAQCBzdGF0aWMgaW5saW5lIHN0cnVjdCBkZXZpY2Vf
+bm9kZSAqb2ZfZ3JhcGhfZ2V0X25leHRfZW5kcG9pbnQoCj4gICAgICAgICByZXR1cm4gTlVMTDsK
+PiAgfQo+Cj4gK3N0cnVjdCBkZXZpY2Vfbm9kZSAqb2ZfZ3JhcGhfZ2V0X2VuZHBvaW50X2J5X3Jl
+Z3MoCj4gKyAgICAgICAgICAgICAgIGNvbnN0IHN0cnVjdCBkZXZpY2Vfbm9kZSAqcGFyZW50LCBp
+bnQgcG9ydF9yZWcsIGludCByZWcpCj4gK3sKPiArICAgICAgIHJldHVybiBOVUxMOwo+ICt9Cj4g
+Kwo+ICBzdGF0aWMgaW5saW5lIHN0cnVjdCBkZXZpY2Vfbm9kZSAqb2ZfZ3JhcGhfZ2V0X3JlbW90
+ZV9wb3J0X3BhcmVudCgKPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+Y29uc3Qgc3RydWN0IGRldmljZV9ub2RlICpub2RlKQo+ICB7Cj4gLS0KPiAxLjkuMQo+Cj4gX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPiBkcmktZGV2ZWwg
+bWFpbGluZyBsaXN0Cj4gZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwo+IGh0dHA6Ly9s
+aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwKX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
+bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVz
+a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
