@@ -1,49 +1,45 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] of/address: use atomic allocation in pci_register_io_range()
-Date: Tue, 23 Jun 2015 10:29:30 -0500
-Message-ID: <CAL_JsqJcVuQpCxmmNwMzRu1Ypxdnaijroz7va5CuevJe_M2r+A@mail.gmail.com>
-References: <000301d0a910$09d9bd60$1d8d3820$@com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] of: Add vendor prefix for Zodiac Inflight Innovations
+Date: Tue, 23 Jun 2015 10:29:54 -0500
+Message-ID: <CAL_JsqLD7=JSR5BZQOwrOf6kOBCBjkPgO7Mo=1MNW2q7AL4jPw@mail.gmail.com>
+References: <1434123847-13713-1-git-send-email-andrew@lunn.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <000301d0a910$09d9bd60$1d8d3820$@com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Jingoo Han <jingoohan1@gmail.com>
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Liviu Dudau <liviu.dudau@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1434123847-13713-1-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 17, 2015 at 10:12 AM, Jingoo Han <jingoohan1@gmail.com> wrote:
-> When kzalloc() is called under spin_lock(), GFP_ATOMIC should be
-> used to avoid sleeping allocation.
-> The call tree is:
->   of_pci_range_to_resource()
->     --> pci_register_io_range() <-- takes spin_lock(&io_range_lock);
->        --> kzalloc()
->
-> Signed-off-by: Jingoo Han <jingoohan1@gmail.com>
+On Fri, Jun 12, 2015 at 10:44 AM, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> wrote:
+> Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 
 Applied. Thanks.
 
 Rob
 
 > ---
->  drivers/of/address.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
 >
-> diff --git a/drivers/of/address.c b/drivers/of/address.c
-> index 78a7dcb..65c3289 100644
-> --- a/drivers/of/address.c
-> +++ b/drivers/of/address.c
-> @@ -712,7 +712,7 @@ int __weak pci_register_io_range(phys_addr_t addr, resource_size_t size)
->         }
->
->         /* add the range to the list */
-> -       range = kzalloc(sizeof(*range), GFP_KERNEL);
-> +       range = kzalloc(sizeof(*range), GFP_ATOMIC);
->         if (!range) {
->                 err = -ENOMEM;
->                 goto end_register;
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 80339192c93e..c400c95abc67 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -211,3 +211,4 @@ xillybus    Xillybus Ltd.
+>  xlnx   Xilinx
+>  zyxel  ZyXEL Communications Corp.
+>  zarlink        Zarlink Semiconductor
+> +zii    Zodiac Inflight Innovations
 > --
-> 1.9.1
+> 2.1.4
 >
->
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
