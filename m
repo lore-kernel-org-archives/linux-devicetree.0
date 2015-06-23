@@ -1,74 +1,92 @@
-From: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 1/2] dt: add cap11xx LED documentation
-Date: Tue, 23 Jun 2015 10:23:57 -0700
-Message-ID: <CAKzfze8jC1Nq9+AWFZbbC4=jzLwUZumbXYmg9O=0190Ne+f7fg@mail.gmail.com>
-References: <1434599897-22505-1-git-send-email-mranostay@gmail.com>
-	<1434599897-22505-2-git-send-email-mranostay@gmail.com>
-	<20150622175914.GA15851@dtor-ws>
-	<55891A84.1070509@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCHv5 1/2] dts: Adding docs for Xilinx LogiCORE IP mailbox driver.
+Date: Tue, 23 Jun 2015 11:00:01 -0700
+Message-ID: <1435082402-29239-2-git-send-email-moritz.fischer@ettus.com>
+References: <1435082402-29239-1-git-send-email-moritz.fischer@ettus.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55891A84.1070509-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1435082402-29239-1-git-send-email-moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 23, 2015 at 1:36 AM, Jacek Anaszewski
-<j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> On 06/22/2015 07:59 PM, Dmitry Torokhov wrote:
->>
->> On Wed, Jun 17, 2015 at 08:58:16PM -0700, Matt Ranostay wrote:
->>>
->>> Signed-off-by: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> ---
->>>   .../devicetree/bindings/input/cap11xx.txt          | 25
->>> ++++++++++++++++++++++
->>>   1 file changed, 25 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/input/cap11xx.txt
->>> b/Documentation/devicetree/bindings/input/cap11xx.txt
->>> index 7d0a300..09cdc43 100644
->>> --- a/Documentation/devicetree/bindings/input/cap11xx.txt
->>> +++ b/Documentation/devicetree/bindings/input/cap11xx.txt
->>> @@ -38,6 +38,11 @@ Optional properties:
->>>                                 defaults. The array must have exactly six
->>>                                 entries.
->>>
->>> +       linux,led-brightness:   Defines the ON brightness when the
->>> optional LED
->>> +                               functionality is used. Valid values are
->>> 1-15.
->>> +                               By default a value of 15 is set.
->>
->>
->> Please mention the device does not allow controlling brightness of leds
->> individually and that is why this property is at device level, not
->> individual led level.
->
->
-> I've just noticed that we have drivers/leds/leds-netxbig.c driver, which
-> also doesn't allow controlling the LEDs on extension board individually,
-> but it still does allow changing their brightness. I am leaning towards
-> allowing this also for this driver and adding similar comment in the
-> source code like at the line 218 of the aforementioned driver.
-> As a result this property wouldn't be required.
->
+Changes from v4:
+- Changed mbox cells property from 1 to 0
+- Fixed interrupt property
 
-Ok that should be pretty simple to do. But seems kind weird to have
-each led channel to be changing the brightness of all.  Wouldn't the
-brightness sysfs entries of the other led channels be showing
-incorrect values?
+Changes from v3:
+- Changed reg size to 0x100
 
->> Also, why does it have "linux" prefix? It does not appear to control
->> any linux-specific functionality.
->
->
->
-> --
-> Best Regards,
-> Jacek Anaszewski
+Changes from v2:
+- Addressed Michal's stylistic comments
+- Fixed typo in compatible string
+
+Changes from v1:
+- Added common clock framework support
+
+Changes from v0:
+- Fixed example bindings
+
+Signed-off-by: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+Acked-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+---
+ .../devicetree/bindings/mailbox/xilinx-mailbox.txt | 44 ++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/xilinx-mailbox.txt
+
+diff --git a/Documentation/devicetree/bindings/mailbox/xilinx-mailbox.txt b/Documentation/devicetree/bindings/mailbox/xilinx-mailbox.txt
+new file mode 100644
+index 0000000..269c026
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mailbox/xilinx-mailbox.txt
+@@ -0,0 +1,44 @@
++Xilinx Mailbox Driver
++=====================
++
++Required properties:
++- compatible       : "xlnx,mailbox-2.1".
++- reg              :  physical base address of the mailbox and length of
++                      memory mapped region.
++- #mbox-cells      :  common mailbox binding property to identify the number
++                      of cells required for the mailbox specifier, should be 1
++- clocks           :  phandle to clock provider
++- clock-names      :  must be 'mbox'
++
++Optional properties:
++- interrupt-parent : interrupt source phandle
++- interrupts       : interrupt number, The interrupt specifier format
++                     depends on the interrupt controller parent.
++
++Example:
++	mbox: mailbox@40400000 {
++		compatible = "xlnx,mailbox-2.1";
++		reg = <0x40400000 0x100>;
++		interrupt-parent = <&intc>;
++		interrupts = <0 32 1>;
++		#mbox-cells = <0>;
++		clocks = <&clkc 15>;
++		clock-names = "mbox";
++	};
++
++Mailbox client
++===============
++"mboxes" and the optional "mbox-names" (please see
++Documentation/devicetree/bindings/mailbox/mailbox.txt for details). Each value
++of the mboxes property should contain a phandle to the mailbox controller
++device node and second argument is the channel index. It must be 0 (hardware
++support only one channel). The equivalent "mbox-names" property value can be
++used to give a name to the communication channel to be used by the client user.
++
++Example:
++	mclient0: mclient0@400 {
++		compatible = "client-1.0";
++		reg = <0x400 0x10>;
++		mbox-names = "mbox";
++		mboxes = <&mbox 0>;
++	};
+-- 
+2.4.2
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
