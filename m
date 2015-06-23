@@ -1,71 +1,82 @@
-From: Moritz Fischer <moritz.fischer@ettus.com>
-Subject: Re: [PATCHv5 1/2] dts: Adding docs for Xilinx LogiCORE IP mailbox driver.
-Date: Tue, 23 Jun 2015 11:23:51 -0700
-Message-ID: <CAAtXAHd9zcrUGpYcPFaMDF-eDMN+-t4tuB7KmH7A2B1AzW+psg@mail.gmail.com>
-References: <1435082402-29239-1-git-send-email-moritz.fischer@ettus.com>
-	<1435082402-29239-2-git-send-email-moritz.fischer@ettus.com>
-	<20150623180513.GE20178@xsjsorenbubuntu>
+From: Matt Ranostay <mranostay@gmail.com>
+Subject: Re: [PATCH v5 1/2] dt: add cap11xx LED documentation
+Date: Tue, 23 Jun 2015 11:24:42 -0700
+Message-ID: <CAKzfze_n7hf629=aUb6j-tcPcBLcwTH-a8yLJWS0cLM=dOkEVQ@mail.gmail.com>
+References: <1434599897-22505-1-git-send-email-mranostay@gmail.com>
+	<1434599897-22505-2-git-send-email-mranostay@gmail.com>
+	<20150622175914.GA15851@dtor-ws>
+	<55891A84.1070509@samsung.com>
+	<CAKzfze8jC1Nq9+AWFZbbC4=jzLwUZumbXYmg9O=0190Ne+f7fg@mail.gmail.com>
+	<20150623180706.GA40168@dtor-ws>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150623180513.GE20178@xsjsorenbubuntu>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, Michal Simek <michal.simek@xilinx.com>, akpm@linux-foundation.org, Greg KH <gregkh@linuxfoundation.org>, mchehab@osg.samsung.com, Arnd Bergmann <arnd@arndb.de>, joe@perches.com, Jingoo Han <jingoohan1@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <20150623180706.GA40168@dtor-ws>
+Sender: linux-leds-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, Daniel Mack <zonque@gmail.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, linux-leds@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 23, 2015 at 11:05 AM, S=C3=B6ren Brinkmann
-<soren.brinkmann@xilinx.com> wrote:
-> On Tue, 2015-06-23 at 11:00AM -0700, Moritz Fischer wrote:
->> Changes from v4:
->> - Changed mbox cells property from 1 to 0
->> - Fixed interrupt property
+On Tue, Jun 23, 2015 at 11:07 AM, Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
+> On Tue, Jun 23, 2015 at 10:23:57AM -0700, Matt Ranostay wrote:
+>> On Tue, Jun 23, 2015 at 1:36 AM, Jacek Anaszewski
+>> <j.anaszewski@samsung.com> wrote:
+>> > On 06/22/2015 07:59 PM, Dmitry Torokhov wrote:
+>> >>
+>> >> On Wed, Jun 17, 2015 at 08:58:16PM -0700, Matt Ranostay wrote:
+>> >>>
+>> >>> Signed-off-by: Matt Ranostay <mranostay@gmail.com>
+>> >>> ---
+>> >>>   .../devicetree/bindings/input/cap11xx.txt          | 25
+>> >>> ++++++++++++++++++++++
+>> >>>   1 file changed, 25 insertions(+)
+>> >>>
+>> >>> diff --git a/Documentation/devicetree/bindings/input/cap11xx.txt
+>> >>> b/Documentation/devicetree/bindings/input/cap11xx.txt
+>> >>> index 7d0a300..09cdc43 100644
+>> >>> --- a/Documentation/devicetree/bindings/input/cap11xx.txt
+>> >>> +++ b/Documentation/devicetree/bindings/input/cap11xx.txt
+>> >>> @@ -38,6 +38,11 @@ Optional properties:
+>> >>>                                 defaults. The array must have exactly six
+>> >>>                                 entries.
+>> >>>
+>> >>> +       linux,led-brightness:   Defines the ON brightness when the
+>> >>> optional LED
+>> >>> +                               functionality is used. Valid values are
+>> >>> 1-15.
+>> >>> +                               By default a value of 15 is set.
+>> >>
+>> >>
+>> >> Please mention the device does not allow controlling brightness of leds
+>> >> individually and that is why this property is at device level, not
+>> >> individual led level.
+>> >
+>> >
+>> > I've just noticed that we have drivers/leds/leds-netxbig.c driver, which
+>> > also doesn't allow controlling the LEDs on extension board individually,
+>> > but it still does allow changing their brightness. I am leaning towards
+>> > allowing this also for this driver and adding similar comment in the
+>> > source code like at the line 218 of the aforementioned driver.
+>> > As a result this property wouldn't be required.
+>> >
 >>
->> Changes from v3:
->> - Changed reg size to 0x100
->>
->> Changes from v2:
->> - Addressed Michal's stylistic comments
->> - Fixed typo in compatible string
->>
->> Changes from v1:
->> - Added common clock framework support
->>
->> Changes from v0:
->> - Fixed example bindings
->>
->> Signed-off-by: Moritz Fischer <moritz.fischer@ettus.com>
->> Acked-by: Michal Simek <michal.simek@xilinx.com>
->> ---
->>  .../devicetree/bindings/mailbox/xilinx-mailbox.txt | 44 +++++++++++=
-+++++++++++
->>  1 file changed, 44 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/mailbox/xilinx=
--mailbox.txt
->>
->> diff --git a/Documentation/devicetree/bindings/mailbox/xilinx-mailbo=
-x.txt b/Documentation/devicetree/bindings/mailbox/xilinx-mailbox.txt
->> new file mode 100644
->> index 0000000..269c026
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mailbox/xilinx-mailbox.txt
->> @@ -0,0 +1,44 @@
->> +Xilinx Mailbox Driver
->> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->> +
->> +Required properties:
->> +- compatible       : "xlnx,mailbox-2.1".
->> +- reg              :  physical base address of the mailbox and leng=
-th of
->> +                      memory mapped region.
->> +- #mbox-cells      :  common mailbox binding property to identify t=
-he number
->> +                      of cells required for the mailbox specifier, =
-should be 1
+>> Ok that should be pretty simple to do. But seems kind weird to have
+>> each led channel to be changing the brightness of all.  Wouldn't the
+>> brightness sysfs entries of the other led channels be showing
+>> incorrect values?
 >
-> I guess this should say "should be 0" now?
+> I agree, this is kind of weird. Maybe we should have a device-specific
+> attribute (on the platform device level) that allows controlling overall
+> brightness, but I think LEDs should be just on/off with max brightness
+> of 1. Userspace should not have to be aware about the fact that on that
+> particular device LEDs are not completely independent as far as their
+> brightness goes.
 
-D'Oh, yeah ...
+So should I drop the devicetree part of the patch in v6?
 
-Moritz
+>
+> Thanks.
+>
+> --
+> Dmitry
