@@ -1,45 +1,66 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of: Add vendor prefix for Zodiac Inflight Innovations
-Date: Tue, 23 Jun 2015 10:29:54 -0500
-Message-ID: <CAL_JsqLD7=JSR5BZQOwrOf6kOBCBjkPgO7Mo=1MNW2q7AL4jPw@mail.gmail.com>
-References: <1434123847-13713-1-git-send-email-andrew@lunn.ch>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] of: define of_find_node_by_phandle for !CONFIG_OF
+Date: Tue, 23 Jun 2015 10:30:42 -0500
+Message-ID: <CAL_JsqKTnDXdgnKYhKcLnJ_PvEnM6HnU_N455cG6Wd_p2rrEag@mail.gmail.com>
+References: <1434560033-26681-1-git-send-email-s-anna@ti.com>
+ <CAL_JsqKHFwhsdYmhq2_DJS+mf1jPcfCuSQgwCusTriv-NPLEdg@mail.gmail.com> <5582FEF4.3090708@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1434123847-13713-1-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5582FEF4.3090708@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Suman Anna <s-anna@ti.com>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 12, 2015 at 10:44 AM, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> wrote:
-> Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+On Thu, Jun 18, 2015 at 12:25 PM, Suman Anna <s-anna@ti.com> wrote:
+> On 06/17/2015 06:33 PM, Rob Herring wrote:
+>> On Wed, Jun 17, 2015 at 11:53 AM, Suman Anna <s-anna@ti.com> wrote:
+>>> Define stub implementation for of_find_node_by_phandle() API
+>>> so that users of this API can build properly even when CONFIG_OF
+>>> is not defined.
+>>>
+>>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>>
+>> Do you have a user for this? If not, apply it when you do.
+>
+> Yeah, ran into a randconfig build problem on x86 when we tried to add an
+> API to remoteproc core [1] that used this function.
 
-Applied. Thanks.
+Applied adding this info to the commit message. Thanks.
 
 Rob
 
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
 >
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 80339192c93e..c400c95abc67 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -211,3 +211,4 @@ xillybus    Xillybus Ltd.
->  xlnx   Xilinx
->  zyxel  ZyXEL Communications Corp.
->  zarlink        Zarlink Semiconductor
-> +zii    Zodiac Inflight Innovations
-> --
-> 2.1.4
+> regards
+> Suman
 >
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> [1] http://marc.info/?l=devicetree&m=143232772426559&w=2
+>
+>>
+>> Acked-by: Rob Herring <robh@kernel.org>
+>>
+>>> ---
+>>>  include/linux/of.h | 5 +++++
+>>>  1 file changed, 5 insertions(+)
+>>>
+>>> diff --git a/include/linux/of.h b/include/linux/of.h
+>>> index ddeaae6d2083..90dfdc47ae26 100644
+>>> --- a/include/linux/of.h
+>>> +++ b/include/linux/of.h
+>>> @@ -422,6 +422,11 @@ static inline struct device_node *of_find_node_opts_by_path(const char *path,
+>>>         return NULL;
+>>>  }
+>>>
+>>> +static inline struct device_node *of_find_node_by_phandle(phandle handle)
+>>> +{
+>>> +       return NULL;
+>>> +}
+>>> +
+>>>  static inline struct device_node *of_get_parent(const struct device_node *node)
+>>>  {
+>>>         return NULL;
+>>> --
+>>> 2.4.1
+>>>
+>
