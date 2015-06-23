@@ -1,7 +1,7 @@
 From: Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 4/9] drivers: clk: st: Fix FSYN channel values
-Date: Tue, 23 Jun 2015 16:09:22 +0200
-Message-ID: <1435068567-30995-5-git-send-email-gabriel.fernandez@linaro.org>
+Subject: [PATCH 9/9] ARM: STi: DT: Rename st_pll3200c32_407_c0_x into st_pll3200c32_cx_x
+Date: Tue, 23 Jun 2015 16:09:27 +0200
+Message-ID: <1435068567-30995-10-git-send-email-gabriel.fernandez@linaro.org>
 References: <1435068567-30995-1-git-send-email-gabriel.fernandez@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1435068567-30995-1-git-send-email-gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
@@ -10,37 +10,97 @@ To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <p
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch fixes the value for disabling the FSYN channel clock.
-The 'is_enabled' returned value is also fixed.
+Use a generic name for this kind of PLL
 
-Signed-off-by: Pankaj Dev <pankaj.dev-qxv4g6HH51o@public.gmane.org>
 Signed-off-by: Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- drivers/clk/st/clkgen-fsyn.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt | 4 ++--
+ arch/arm/boot/dts/stih407-clock.dtsi                         | 4 ++--
+ arch/arm/boot/dts/stih410-clock.dtsi                         | 4 ++--
+ arch/arm/boot/dts/stih418-clock.dtsi                         | 4 ++--
+ 4 files changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/clk/st/clkgen-fsyn.c b/drivers/clk/st/clkgen-fsyn.c
-index e7e6782..9e26099 100644
---- a/drivers/clk/st/clkgen-fsyn.c
-+++ b/drivers/clk/st/clkgen-fsyn.c
-@@ -489,7 +489,7 @@ static int quadfs_pll_is_enabled(struct clk_hw *hw)
- 	struct st_clk_quadfs_pll *pll = to_quadfs_pll(hw);
- 	u32 npda = CLKGEN_READ(pll, npda);
+diff --git a/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt b/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt
+index efb51cf..d8b168e 100644
+--- a/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt
++++ b/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt
+@@ -21,8 +21,8 @@ Required properties:
+ 	"st,stih416-plls-c32-ddr",	"st,clkgen-plls-c32"
+ 	"st,stih407-plls-c32-a0",	"st,clkgen-plls-c32"
+ 	"st,stih407-plls-c32-a9",	"st,clkgen-plls-c32"
+-	"st,stih407-plls-c32-c0_0",	"st,clkgen-plls-c32"
+-	"st,stih407-plls-c32-c0_1",	"st,clkgen-plls-c32"
++	"sst,plls-c32-cx_0",		"st,clkgen-plls-c32"
++	"sst,plls-c32-cx_1",		"st,clkgen-plls-c32"
  
--	return !!npda;
-+	return pll->data->powerup_polarity ? !npda : !!npda;
- }
+ 	"st,stih415-gpu-pll-c32",	"st,clkgengpu-pll-c32"
+ 	"st,stih416-gpu-pll-c32",	"st,clkgengpu-pll-c32"
+diff --git a/arch/arm/boot/dts/stih407-clock.dtsi b/arch/arm/boot/dts/stih407-clock.dtsi
+index e65744f..ad45f5e 100644
+--- a/arch/arm/boot/dts/stih407-clock.dtsi
++++ b/arch/arm/boot/dts/stih407-clock.dtsi
+@@ -134,7 +134,7 @@
  
- static int clk_fs660c32_vco_get_rate(unsigned long input, struct stm_fs *fs,
-@@ -774,7 +774,7 @@ static void quadfs_fsynth_disable(struct clk_hw *hw)
- 	if (fs->lock)
- 		spin_lock_irqsave(fs->lock, flags);
+ 			clk_s_c0_pll0: clk-s-c0-pll0 {
+ 				#clock-cells = <1>;
+-				compatible = "st,stih407-plls-c32-c0_0", "st,clkgen-plls-c32";
++				compatible = "st,plls-c32-cx_0", "st,clkgen-plls-c32";
  
--	CLKGEN_WRITE(fs, nsb[fs->chan], !fs->data->standby_polarity);
-+	CLKGEN_WRITE(fs, nsb[fs->chan], fs->data->standby_polarity);
+ 				clocks = <&clk_sysin>;
  
- 	if (fs->lock)
- 		spin_unlock_irqrestore(fs->lock, flags);
+@@ -143,7 +143,7 @@
+ 
+ 			clk_s_c0_pll1: clk-s-c0-pll1 {
+ 				#clock-cells = <1>;
+-				compatible = "st,stih407-plls-c32-c0_1", "st,clkgen-plls-c32";
++				compatible = "st,plls-c32-cx_1", "st,clkgen-plls-c32";
+ 
+ 				clocks = <&clk_sysin>;
+ 
+diff --git a/arch/arm/boot/dts/stih410-clock.dtsi b/arch/arm/boot/dts/stih410-clock.dtsi
+index 6b5803a..d1f2aca 100644
+--- a/arch/arm/boot/dts/stih410-clock.dtsi
++++ b/arch/arm/boot/dts/stih410-clock.dtsi
+@@ -137,7 +137,7 @@
+ 
+ 			clk_s_c0_pll0: clk-s-c0-pll0 {
+ 				#clock-cells = <1>;
+-				compatible = "st,stih407-plls-c32-c0_0", "st,clkgen-plls-c32";
++				compatible = "st,plls-c32-cx_0", "st,clkgen-plls-c32";
+ 
+ 				clocks = <&clk_sysin>;
+ 
+@@ -146,7 +146,7 @@
+ 
+ 			clk_s_c0_pll1: clk-s-c0-pll1 {
+ 				#clock-cells = <1>;
+-				compatible = "st,stih407-plls-c32-c0_1", "st,clkgen-plls-c32";
++				compatible = "st,plls-c32-cx_1", "st,clkgen-plls-c32";
+ 
+ 				clocks = <&clk_sysin>;
+ 
+diff --git a/arch/arm/boot/dts/stih418-clock.dtsi b/arch/arm/boot/dts/stih418-clock.dtsi
+index 0ab23da..148e177 100644
+--- a/arch/arm/boot/dts/stih418-clock.dtsi
++++ b/arch/arm/boot/dts/stih418-clock.dtsi
+@@ -137,7 +137,7 @@
+ 
+ 			clk_s_c0_pll0: clk-s-c0-pll0 {
+ 				#clock-cells = <1>;
+-				compatible = "st,stih407-plls-c32-c0_0", "st,clkgen-plls-c32";
++				compatible = "st,plls-c32-cx_0", "st,clkgen-plls-c32";
+ 
+ 				clocks = <&clk_sysin>;
+ 
+@@ -146,7 +146,7 @@
+ 
+ 			clk_s_c0_pll1: clk-s-c0-pll1 {
+ 				#clock-cells = <1>;
+-				compatible = "st,stih407-plls-c32-c0_1", "st,clkgen-plls-c32";
++				compatible = "st,plls-c32-cx_1", "st,clkgen-plls-c32";
+ 
+ 				clocks = <&clk_sysin>;
+ 
 -- 
 1.9.1
 
