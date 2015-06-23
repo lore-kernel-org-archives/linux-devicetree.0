@@ -1,37 +1,35 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 5/8] ARM: STi: STiH407: Move PWM nodes STiH407 =>
- STiH407-family
-Date: Tue, 23 Jun 2015 08:08:22 +0100
-Message-ID: <20150623070822.GB3245@x1>
-References: <1434987837-24212-1-git-send-email-lee.jones@linaro.org>
- <1434987837-24212-6-git-send-email-lee.jones@linaro.org>
- <20150623021708.GB16776@linux>
+From: Inki Dae <inki.dae@samsung.com>
+Subject: Re: [PATCH] of: fix a build error to f_graph_get_endpoint_by_regs
+ function
+Date: Tue, 23 Jun 2015 16:08:47 +0900
+Message-ID: <558905FF.7060502@samsung.com>
+References: <1435040094-22793-1-git-send-email-inki.dae@samsung.com>
+ <20150623164354.00844400@canb.auug.org.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150623021708.GB16776@linux>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, rjw@rjwysocki.net, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, ajitpal.singh@st.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <20150623164354.00844400@canb.auug.org.au>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, samsung-soc@vger.kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, galak@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 23 Jun 2015, Viresh Kumar wrote:
-> On 22-06-15, 16:43, Lee Jones wrote:
-> > This also incorporates the STiH410.
->=20
-> Any explanation to why this patch is part of this series ?
-
-Because the CPUFreq regulator is controlled with PWM and CPUFreq will
-fail on STiH410 (my main development platform) without it.
-
-It's safe for you to ignore it though.
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe linux-pm" in
+SGkgU3RlcGhlbiwKCk9uIDIwMTXrhYQgMDbsm5QgMjPsnbwgMTU6NDMsIFN0ZXBoZW4gUm90aHdl
+bGwgd3JvdGU6Cj4gSGkgSW5raSwKPiAKPiBPbiBUdWUsIDIzIEp1biAyMDE1IDE1OjE0OjUzICsw
+OTAwIElua2kgRGFlIDxpbmtpLmRhZUBzYW1zdW5nLmNvbT4gd3JvdGU6Cj4+Cj4+IFRoaXMgcGF0
+Y2ggZml4ZXMgdGhlIGJlbG93IGJ1aWxkIGVycm9yIHJlcG9ydGVkIGJ5IFN0ZXBoZW4sCj4+IAlo
+dHRwczovL2xrbWwub3JnL2xrbWwvMjAxNS82LzIyLzY2NQo+IAo+IERvbid0IGRvIHRoaXMuICBQ
+dXQgdGhlIGVycm9ycyBleHBsaWNpdGx5IGluIHRoZSBtYWlsLiAgbGttbC5vcmcgVVJMcwo+IGFy
+ZSBwYXJ0aWN1bGFybHkgYmFkLgoKUG9zdGVkIGl0IGFnYWluLgoKVGhhbmtzLApJbmtpIERhZQoK
+PiAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1k
+ZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8v
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
