@@ -1,36 +1,55 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 6/9] arm: twr-k70f120m: clock source drivers for Kinetis SoC
-Date: Wed, 24 Jun 2015 00:25:11 +0200
-Message-ID: <1914738.cJbsHkbelI@wuerfel>
-References: <1435094387-20146-1-git-send-email-pawelo@king.net.pl> <1435094387-20146-7-git-send-email-pawelo@king.net.pl>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [RFC 3/4] arm64: Do not call enable PCI resources when specify
+ PCI_PROBE_ONLY
+Date: Wed, 24 Jun 2015 08:32:14 +1000
+Message-ID: <1435098734.3996.5.camel@kernel.crashing.org>
+References: <1411937610-22125-1-git-send-email-suravee.suthikulpanit@amd.com>
+	 <1411937610-22125-4-git-send-email-suravee.suthikulpanit@amd.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1435094387-20146-7-git-send-email-pawelo@king.net.pl>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Paul Osmialowski <pawelo@king.net.pl>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Anson Huang <b20788@freescale.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Bhupesh Sharma <bhupesh.sharma@freescale.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Frank Li <Frank.Li@freescale.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Haojian Zhuang <haojian.zhuang@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jingchang Lu <jingchang.lu@freescale.com>, Jiri Slaby <jslaby@suse.cz>, Kees Cook <keescook@chromium.org>, Kumar Gala <galak@codeaurora.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Linus Walleij <linus.walleij@linaro.org>, Magnus Damm <damm+renesas@opensource.se>, Michael Turquette <mturquette@baylibre.com>, Nathan Lynch <nathan_lynch@mentor.com>, Nicolas Pitre <nico@linaro.org>, Maxime
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1411937610-22125-4-git-send-email-suravee.suthikulpanit@amd.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: suravee.suthikulpanit@amd.com
+Cc: will.deacon@arm.com, liviu.dudau@arm.com, marc.zyngier@arm.com, mark.rutland@arm.com, catalin.marinas@arm.com, jason@lakedaemon.net, tglx@linutronix.de, robh+dt@kernel.org, bhelgaas@google.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 23 June 2015 23:19:44 Paul Osmialowski wrote:
-> +#define KINETIS_CG_UART0       KINETIS_MKCG(3, 10)     /* SIM_SCGC4[10] */
-> +#define KINETIS_CG_UART1       KINETIS_MKCG(3, 11)     /* SIM_SCGC4[11] */
-> +#define KINETIS_CG_UART2       KINETIS_MKCG(3, 12)     /* SIM_SCGC4[12] */
-> +#define KINETIS_CG_UART3       KINETIS_MKCG(3, 13)     /* SIM_SCGC4[13] */
-> +#define KINETIS_CG_UART4       KINETIS_MKCG(0, 10)     /* SIM_SCGC1[10] */
-> +#define KINETIS_CG_UART5       KINETIS_MKCG(0, 11)     /* SIM_SCGC1[11] */
-> +/* Ports */
-> +#define KINETIS_CG_PORTA       KINETIS_MKCG(4, 9)      /* SIM_SCGC5[9] */
-> +#define KINETIS_CG_PORTB       KINETIS_MKCG(4, 10)     /* SIM_SCGC5[10] */
-> +#define KINETIS_CG_PORTC       KINETIS_MKCG(4, 11)     /* SIM_SCGC5[11] */
-> +#define KINETIS_CG_PORTD       KINETIS_MKCG(4, 12)     /* SIM_SCGC5[12] */
-> +#define KINETIS_CG_PORTE       KINETIS_MKCG(4, 13)     /* SIM_SCGC5[13] */
-> +#define KINETIS_CG_PORTF       KINETIS_MKCG(4, 14)     /* SIM_SCGC5[14] */
+On Sun, 2014-09-28 at 15:53 -0500, suravee.suthikulpanit@amd.com wrote:
+> From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
 > 
+> When specify PCI_PROBE_ONLY, the resource parent does not get assigned.
+> Therefore, pci_enable_resources() return error saying that
+> "BAR x not claimed".
+> 
+> Note: This same logic is also used in the arch/arm/kernel/bios32.c
 
-Instead of using a triple indirection here, just put the tuples
-in the DT directly using #clock-cells=<2>, and get rid of both this
-header file and the dt-bindings/clock/kinetis-mcg.h file.
+This looks broken. Why don't you assign the resource parent ?
 
-	Arnd
+> Cc: Liviu Dudau <Liviu.Dudau@arm.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Will Deacon <will.deacon@arm.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Signed-off-by: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+> ---
+>  arch/arm64/kernel/pci.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/arch/arm64/kernel/pci.c b/arch/arm64/kernel/pci.c
+> index ce5836c..7fd4d2b 100644
+> --- a/arch/arm64/kernel/pci.c
+> +++ b/arch/arm64/kernel/pci.c
+> @@ -68,3 +68,11 @@ void pci_bus_assign_domain_nr(struct pci_bus *bus, struct device *parent)
+>  	bus->domain_nr = domain;
+>  }
+>  #endif
+> +
+> +int pcibios_enable_device(struct pci_dev *dev, int mask)
+> +{
+> +	if (pci_has_flag(PCI_PROBE_ONLY))
+> +		return 0;
+> +
+> +	return pci_enable_resources(dev, mask);
+> +}
+
+
