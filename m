@@ -1,177 +1,150 @@
-From: m.silentcreek-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: Re: [PATCH] touchscreen: sun4i-ts: Really fix A10
- temperature reporting
-Date: Tue, 23 Jun 2015 14:06:34 -0700 (PDT)
-Message-ID: <2b011bd9-f8a8-4fa9-adc8-2ee91b0e6527@googlegroups.com>
-References: <1425893870-28715-1-git-send-email-hdegoede@redhat.com> <41a7a857-96fd-48ab-9778-127cfc091ef0@googlegroups.com>
- <5589B78C.4080600@redhat.com>
-Reply-To: m.silentcreek-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: rockchip: Add DMA tx and rx channels in UART
+ interfaces for RK3288 SoCs
+Date: Tue, 23 Jun 2015 14:11:36 -0700
+Message-ID: <CAPz6YkUPm+r5BmfxYokJF22yS71VXcsutwKR9y7FiET_3eLpeg@mail.gmail.com>
+References: <1434475166-30338-1-git-send-email-romain.perier@gmail.com>
+ <CABgxDo+8MafT8hOzpG=gjju=S7bVtNBOKxmi_JPHv1bDZSGeCQ@mail.gmail.com> <1475991.JRcDMpQrFc@diego>
 Mime-Version: 1.0
-Content-Type: multipart/mixed;
-	boundary="----=_Part_4830_678480457.1435093594477"
-Return-path: <linux-sunxi+bncBDGZFWHP6IMBBWUUU6WAKGQE4MKSEMY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <5589B78C.4080600-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: wens-jdAy2FN1RRM@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1475991.JRcDMpQrFc@diego>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-------=_Part_4830_678480457.1435093594477
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+On Tue, Jun 23, 2015 at 4:09 AM, Heiko St=C3=BCbner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> w=
+rote:
+> Hi Romain,
+>
+> Am Dienstag, 23. Juni 2015, 08:53:17 schrieb Romain Perier:
+>> ping :)
+>
+> I haven't forgotten this patch :-)
+>
+> I just haven't fully made up my mind concerning the bug in the pl330
+> implementation on Rockchip SoCs - aka if we'll make it worse by also =
+enabling
+> dma on the uarts.
+>
+> So far the problem reports I read only mentioned degraded functionali=
+ty like
+> popping sounds in audio, not full system failures or freezes. So I te=
+nd to
+> include the patch and see what happens ;-)
 
-Hi again,
+You should look out for corrupted data -- like zeros or repeated data
+in the serial input or output.  That was what was causing the pops --
+a sudden sample of zeros, or buzzing from repeated samples.
 
-Am Dienstag, 23. Juni 2015 21:46:25 UTC+2 schrieb Hans de Goede:
-> Hi,
->=20
-> On 06/23/2015 05:06 PM, m.silentcreek-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> > Hi Hans,
-> >
-> > is it possible that this patch (and the parent commit "Input: sun4i-ts =
-- allow controlling filter and sensitivity via DT") has quite an adversial =
-effect on other boards than the ones tested?
-> >
-> > On my Lemaker Bananapi the temperature is now being reported as somwher=
-e between -15=C2=B0C to -10=C2=B0C with the latest Kernel 4.1.0. These nega=
-tive values are obviously way off. On Kernel 4.0.5 the temperature reading =
-was usually around 40=C2=B0C. While that might not have been accurate eithe=
-r, it was at least plausible.
->=20
-> The temperature curve for the A20 SoC was not changed, if it did change t=
-hen
-> you're using an old dtb file with a new kernel, you must always update yo=
-ur
-> dtb file together with the kernel.
+It may not happen at low speeds, but might happen if you tried doing
+something like PPP over the UART.
 
-I just checked the diff for Linux 4.0 and 4.1 and noticed that sun7i-a20.dt=
-si in fact has not changed. Is it possible that something that should have =
-been merged got delayed?
-
-I looked in Maxime's tree "dt-for-4.2" and found this patch that looks like=
- it could be related: https://git.kernel.org/cgit/linux/kernel/git/mripard/=
-linux.git/commit/?h=3Dsunxi/dt-for-4.2&id=3D8bf1b9b3d90194a174493febc731f77=
-83f2adf1a
-
->=20
->=20
->=20
-> >
-> > Given that there is no Documentation and things seem quite board-specif=
-ic, I really don't know how this could be improved, so I can merely report =
-my observation.
-> >
-> > Kind regards,
-> >
-> > Timo
-> >
-> >
-> > Am Montag, 9. M=C3=A4rz 2015 10:38:02 UTC+1 schrieb Hans de Goede:
-> >> The commit titled:
-> >> "touchscreen: sun4i-ts: A10 (sun4i) has a different temperature curve"
-> >> contains a math error, the offset it uses is in degrees, but the actua=
-l code
-> >> applies the offset before multiplying by stepsize :|
-> >>
-> >> Given that this is rather backwards (every math course ever thought ap=
-plies
-> >> the multiplication before the offset for linear functions), this commi=
-t
-> >> fixes things by changing the code applying the offset to do the logica=
-l
-> >> thing, adjusting the offset for the other models accordingly.
-> >>
-> >> This has been tested on an A10, A13, A20 and A31 to make sure everythi=
-ng really
-> >> is correct now.
-> >>
-> >> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> >> ---
-> >> Note if possible this commit should be squashed into the original
-> >> "touchscreen: sun4i-ts: A10 (sun4i) has a different temperature curve"
-> >> commit as a fixup.
-> >> ---
-> >>   drivers/input/touchscreen/sun4i-ts.c | 14 +++++++-------
-> >>   1 file changed, 7 insertions(+), 7 deletions(-)
-> >>
-> >> diff --git a/drivers/input/touchscreen/sun4i-ts.c b/drivers/input/touc=
-hscreen/sun4i-ts.c
-> >> index 66ccd5a..178d2ef 100644
-> >> --- a/drivers/input/touchscreen/sun4i-ts.c
-> >> +++ b/drivers/input/touchscreen/sun4i-ts.c
-> >> @@ -193,7 +193,7 @@ static int sun4i_get_temp(const struct sun4i_ts_da=
-ta *ts, long *temp)
-> >>   	if (ts->temp_data =3D=3D -1)
-> >>   		return -EAGAIN;
-> >>
-> >> -	*temp =3D (ts->temp_data - ts->temp_offset) * ts->temp_step;
-> >> +	*temp =3D ts->temp_data * ts->temp_step - ts->temp_offset;
-> >>
-> >>   	return 0;
-> >>   }
-> >> @@ -255,17 +255,17 @@ static int sun4i_ts_probe(struct platform_device=
- *pdev)
-> >>   	ts->ignore_fifo_data =3D true;
-> >>   	ts->temp_data =3D -1;
-> >>   	if (of_device_is_compatible(np, "allwinner,sun6i-a31-ts")) {
-> >> -		/* Allwinner SDK has temperature =3D -271 + (value / 6) (C) */
-> >> -		ts->temp_offset =3D 1626;
-> >> +		/* Allwinner SDK has temperature (C) =3D (value / 6) - 271 */
-> >> +		ts->temp_offset =3D 271000;
-> >>   		ts->temp_step =3D 167;
-> >>   	} else if (of_device_is_compatible(np, "allwinner,sun4i-a10-ts")) {
-> >>   		/*
-> >>   		 * The A10 temperature sensor has quite a wide spread, these
-> >>   		 * parameters are based on the averaging of the calibration
-> >>   		 * results of 4 completely different boards, with a spread of
-> >> -		 * temp_step from 96 - 170 and temp_offset from 1758 - 3310.
-> >> +		 * temp_step from 0.096 - 0.170 and temp_offset from 176 - 331.
-> >>   		 */
-> >> -		ts->temp_offset =3D 2570;
-> >> +		ts->temp_offset =3D 257000;
-> >>   		ts->temp_step =3D 133;
-> >>   	} else {
-> >>   		/*
-> >> @@ -273,13 +273,13 @@ static int sun4i_ts_probe(struct platform_device=
- *pdev)
-> >>   		 * the temperature. The formula used here is from the AXP209,
-> >>   		 * which is designed by X-Powers, an affiliate of Allwinner:
-> >>   		 *
-> >> -		 *     temperature =3D -144.7 + (value * 0.1)
-> >> +		 *     temperature (C) =3D (value * 0.1) - 144.7
-> >>   		 *
-> >>   		 * Allwinner does not have any documentation whatsoever for
-> >>   		 * this hardware. Moreover, it is claimed that the sensor
-> >>   		 * is inaccurate and cannot work properly.
-> >>   		 */
-> >> -		ts->temp_offset =3D 1447;
-> >> +		ts->temp_offset =3D 144700;
-> >>   		ts->temp_step =3D 100;
-> >>   	}
-> >>
-> >> --
-> >> 2.3.1
-> >
->=20
-> Regards,
->=20
-> Hans
-
-Regards,
-
-Timo
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
-
-------=_Part_4830_678480457.1435093594477--
+>
+>
+> Heiko
+>
+>
+>
+>> 2015-06-16 19:19 GMT+02:00 Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
+>> > This enable DMA capability for the corresponding UART interfaces, =
+also it
+>> > removes warning "ttyS%d - Failed to request dma" from kernel logs.
+>> >
+>> > Signed-off-by: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> > ---
+>> >
+>> > Changes since v1 ("[PATCH] ARM: dts: rockchip: Add dmac_bus rx and=
+ tx for
+> uart2"):
+>> >         - Add DMA tx and rx channels for all UART interfaces
+>> >         - Rename commit summary
+>> >
+>> >  arch/arm/boot/dts/rk3288.dtsi | 10 ++++++++++
+>> >  1 file changed, 10 insertions(+)
+>> >
+>> > diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3=
+288.dtsi
+>> > index 22316d0..1996452 100644
+>> > --- a/arch/arm/boot/dts/rk3288.dtsi
+>> > +++ b/arch/arm/boot/dts/rk3288.dtsi
+>> > @@ -359,6 +359,8 @@
+>> >
+>> >                 clock-names =3D "baudclk", "apb_pclk";
+>> >                 pinctrl-names =3D "default";
+>> >                 pinctrl-0 =3D <&uart0_xfer>;
+>> >
+>> > +               dmas =3D <&dmac_peri 1>, <&dmac_peri 2>;
+>> > +               dma-names =3D "tx", "rx";
+>> >
+>> >                 status =3D "disabled";
+>> >
+>> >         };
+>> >
+>> > @@ -372,6 +374,8 @@
+>> >
+>> >                 clock-names =3D "baudclk", "apb_pclk";
+>> >                 pinctrl-names =3D "default";
+>> >                 pinctrl-0 =3D <&uart1_xfer>;
+>> >
+>> > +               dmas =3D <&dmac_peri 3>, <&dmac_peri 4>;
+>> > +               dma-names =3D "tx", "rx";
+>> >
+>> >                 status =3D "disabled";
+>> >
+>> >         };
+>> >
+>> > @@ -385,6 +389,8 @@
+>> >
+>> >                 clock-names =3D "baudclk", "apb_pclk";
+>> >                 pinctrl-names =3D "default";
+>> >                 pinctrl-0 =3D <&uart2_xfer>;
+>> >
+>> > +               dmas =3D <&dmac_bus_s 4>, <&dmac_bus_s 5>;
+>> > +               dma-names =3D "tx", "rx";
+>> >
+>> >                 status =3D "disabled";
+>> >
+>> >         };
+>> >
+>> > @@ -398,6 +404,8 @@
+>> >
+>> >                 clock-names =3D "baudclk", "apb_pclk";
+>> >                 pinctrl-names =3D "default";
+>> >                 pinctrl-0 =3D <&uart3_xfer>;
+>> >
+>> > +               dmas =3D <&dmac_peri 7>, <&dmac_peri 8>;
+>> > +               dma-names =3D "tx", "rx";
+>> >
+>> >                 status =3D "disabled";
+>> >
+>> >         };
+>> >
+>> > @@ -411,6 +419,8 @@
+>> >
+>> >                 clock-names =3D "baudclk", "apb_pclk";
+>> >                 pinctrl-names =3D "default";
+>> >                 pinctrl-0 =3D <&uart4_xfer>;
+>> >
+>> > +               dmas =3D <&dmac_peri 9>, <&dmac_peri 10>;
+>> > +               dma-names =3D "tx", "rx";
+>> >
+>> >                 status =3D "disabled";
+>> >
+>> >         };
+>> >
+>> > --
+>> > 1.9.1
+>
+>
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
