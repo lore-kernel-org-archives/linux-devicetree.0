@@ -1,101 +1,57 @@
-From: Dave Airlie <airlied@gmail.com>
-Subject: Re: [PATCH v6 06/15] of: add helper for getting endpoint node of
- specific identifiers
-Date: Tue, 23 Jun 2015 10:19:05 +1000
-Message-ID: <CAPM=9tydy9NXh-P8=d62tewqtCKwZtd-SJUcb-vM4KMARA+sMA@mail.gmail.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v6 15/15] ARM: dts: rename the clock of MIPI DSI 'pll_clk'
+ to 'sclk_mipi'
+Date: Tue, 23 Jun 2015 11:10:18 +0900
+Message-ID: <CAJKOXPeZY=RmFxozjGPoUbP+-LcnEOE=vEcj-gHDyaoYXLTS4Q@mail.gmail.com>
 References: <1434113958-15877-1-git-send-email-human.hwang@samsung.com>
- <1434113958-15877-7-git-send-email-human.hwang@samsung.com>
+	<1434113958-15877-16-git-send-email-human.hwang@samsung.com>
+	<5587D111.9090602@samsung.com>
+	<5587F4A1.2090502@samsung.com>
+	<CAJKOXPe-XJb2qCSWxY2gQnYpACGcN=6=1XmWHX5gF7s2a_UTPw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1434113958-15877-7-git-send-email-human.hwang@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Hyungwon Hwang <human.hwang@samsung.com>, Inki Dae <inki.dae@samsung.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sw0312.kim@samsung.com" <sw0312.kim@samsung.com>, dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAJKOXPe-XJb2qCSWxY2gQnYpACGcN=6=1XmWHX5gF7s2a_UTPw@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Inki Dae <inki.dae@samsung.com>, Hyungwon Hwang <human.hwang@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, daniel@fooishbar.org, sw0312.kim@samsung.com, jy0922.shim@samsung.com, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTIgSnVuZSAyMDE1IGF0IDIyOjU5LCBIeXVuZ3dvbiBId2FuZyA8aHVtYW4uaHdhbmdAc2Ft
-c3VuZy5jb20+IHdyb3RlOgo+IFdoZW4gdGhlcmUgYXJlIG11bHRpcGxlIHBvcnRzIG9yIG11bHRp
-cGxlIGVuZHBvaW50cyBpbiBhIHBvcnQsIHRoZXkgaGF2ZSB0byBiZQo+IGRpc3Rpbmd1aXNoZWQg
-YnkgdGhlIHZhbHVlIG9mIHJlZyBwcm9wZXJ0eS4gSXQgaXMgY29tbW9uLiBUaGUgZHJpdmVycyBj
-YW4gZ2V0Cj4gdGhlIHNwZWNpZmljIGVuZHBvaW50IGluIHRoZSBzcGVjaWZpYyBwb3J0IHZpYSB0
-aGlzIGZ1bmN0aW9uLiBOb3cgdGhlIGRyaXZlcnMKPiBoYXZlIHRvIGltcGxlbWVudCB0aGlzIGNv
-ZGUgaW4gdGhlbXNlbHZlcyBvciBoYXZlIHRvIGZvcmNlIHRoZSBvcmRlciBvZiBkdCBub2Rlcwo+
-IHRvIGdldCB0aGUgcmlnaHQgbm9kZS4KPgo+IFNpZ25lZC1vZmYtYnk6IEh5dW5nd29uIEh3YW5n
-IDxodW1hbi5od2FuZ0BzYW1zdW5nLmNvbT4KPiBBY2tlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmgr
-ZHRAa2VybmVsLm9yZz4KCkZZSSwgU2luY2UgSSdtIG1lcmdpbmcgdGhpcyB2aWEgZXh5bm9zLW5l
-eHQgaW50byBteSB0cmVlLCBpdCBicm9rZQptb2R1bGUgYnVpbGRzIG9mIGV4eW5vcywgYmVjYXVz
-ZSBpdCBkb2Vzbid0IGV4cG9ydCB0aGUgc3ltYm9sIGl0IGFkZHMsCkkndmUgYWRkZWQgYSBwYXRj
-aCB0byBteSAtbmV4dCB0cmVlIHRvIGZpeCBpdCB1cC4KCklua2ksIGluIGZ1dHVyZSBjYW4geW91
-IGFkZCBhIG1vZHVsYXIgYnVpbGQgdG8gcHJlLXB1bGwgdGVzdGluZy4KCkRhdmUuCgo+IC0tLQo+
-IENoYW5nZXMgYmVmb3JlOgo+IC0gUmVmZXIgaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9w
-YXRjaC82MTkxNzUxLwo+IENoYW5nZXMgZm9yIHY2Ogo+IC0gTm9uZQo+ICBkcml2ZXJzL29mL2Jh
-c2UuYyAgICAgICAgfCAzMyArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysKPiAgaW5j
-bHVkZS9saW51eC9vZl9ncmFwaC5oIHwgIDggKysrKysrKysKPiAgMiBmaWxlcyBjaGFuZ2VkLCA0
-MSBpbnNlcnRpb25zKCspCj4KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9vZi9iYXNlLmMgYi9kcml2
-ZXJzL29mL2Jhc2UuYwo+IGluZGV4IDk5NzY0ZGIuLmYzYjU4M2IgMTAwNjQ0Cj4gLS0tIGEvZHJp
-dmVycy9vZi9iYXNlLmMKPiArKysgYi9kcml2ZXJzL29mL2Jhc2UuYwo+IEBAIC0yMjMzLDYgKzIy
-MzMsMzkgQEAgc3RydWN0IGRldmljZV9ub2RlICpvZl9ncmFwaF9nZXRfbmV4dF9lbmRwb2ludChj
-b25zdCBzdHJ1Y3QgZGV2aWNlX25vZGUgKnBhcmVudCwKPiAgRVhQT1JUX1NZTUJPTChvZl9ncmFw
-aF9nZXRfbmV4dF9lbmRwb2ludCk7Cj4KPiAgLyoqCj4gKyAqIG9mX2dyYXBoX2dldF9lbmRwb2lu
-dF9ieV9yZWdzKCkgLSBnZXQgZW5kcG9pbnQgbm9kZSBvZiBzcGVjaWZpYyBpZGVudGlmaWVycwo+
-ICsgKiBAcGFyZW50OiBwb2ludGVyIHRvIHRoZSBwYXJlbnQgZGV2aWNlIG5vZGUKPiArICogQHBv
-cnRfcmVnOiBpZGVudGlmaWVyICh2YWx1ZSBvZiByZWcgcHJvcGVydHkpIG9mIHRoZSBwYXJlbnQg
-cG9ydCBub2RlCj4gKyAqIEByZWc6IGlkZW50aWZpZXIgKHZhbHVlIG9mIHJlZyBwcm9wZXJ0eSkg
-b2YgdGhlIGVuZHBvaW50IG5vZGUKPiArICoKPiArICogUmV0dXJuOiBBbiAnZW5kcG9pbnQnIG5v
-ZGUgcG9pbnRlciB3aGljaCBpcyBpZGVudGlmaWVkIGJ5IHJlZyBhbmQgYXQgdGhlIHNhbWUKPiAr
-ICogaXMgdGhlIGNoaWxkIG9mIGEgcG9ydCBub2RlIGlkZW50aWZpZWQgYnkgcG9ydF9yZWcuIHJl
-ZyBhbmQgcG9ydF9yZWcgYXJlCj4gKyAqIGlnbm9yZWQgd2hlbiB0aGV5IGFyZSAtMS4KPiArICov
-Cj4gK3N0cnVjdCBkZXZpY2Vfbm9kZSAqb2ZfZ3JhcGhfZ2V0X2VuZHBvaW50X2J5X3JlZ3MoCj4g
-KyAgICAgICBjb25zdCBzdHJ1Y3QgZGV2aWNlX25vZGUgKnBhcmVudCwgaW50IHBvcnRfcmVnLCBp
-bnQgcmVnKQo+ICt7Cj4gKyAgICAgICBzdHJ1Y3Qgb2ZfZW5kcG9pbnQgZW5kcG9pbnQ7Cj4gKyAg
-ICAgICBzdHJ1Y3QgZGV2aWNlX25vZGUgKm5vZGUsICpwcmV2X25vZGUgPSBOVUxMOwo+ICsKPiAr
-ICAgICAgIHdoaWxlICgxKSB7Cj4gKyAgICAgICAgICAgICAgIG5vZGUgPSBvZl9ncmFwaF9nZXRf
-bmV4dF9lbmRwb2ludChwYXJlbnQsIHByZXZfbm9kZSk7Cj4gKyAgICAgICAgICAgICAgIG9mX25v
-ZGVfcHV0KHByZXZfbm9kZSk7Cj4gKyAgICAgICAgICAgICAgIGlmICghbm9kZSkKPiArICAgICAg
-ICAgICAgICAgICAgICAgICBicmVhazsKPiArCj4gKyAgICAgICAgICAgICAgIG9mX2dyYXBoX3Bh
-cnNlX2VuZHBvaW50KG5vZGUsICZlbmRwb2ludCk7Cj4gKyAgICAgICAgICAgICAgIGlmICgoKHBv
-cnRfcmVnID09IC0xKSB8fCAoZW5kcG9pbnQucG9ydCA9PSBwb3J0X3JlZykpICYmCj4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgKChyZWcgPT0gLTEpIHx8IChlbmRwb2ludC5pZCA9PSByZWcpKSkK
-PiArICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gbm9kZTsKPiArCj4gKyAgICAgICAgICAg
-ICAgIHByZXZfbm9kZSA9IG5vZGU7Cj4gKyAgICAgICB9Cj4gKwo+ICsgICAgICAgcmV0dXJuIE5V
-TEw7Cj4gK30KPiArCj4gKy8qKgo+ICAgKiBvZl9ncmFwaF9nZXRfcmVtb3RlX3BvcnRfcGFyZW50
-KCkgLSBnZXQgcmVtb3RlIHBvcnQncyBwYXJlbnQgbm9kZQo+ICAgKiBAbm9kZTogcG9pbnRlciB0
-byBhIGxvY2FsIGVuZHBvaW50IGRldmljZV9ub2RlCj4gICAqCj4gZGlmZiAtLWdpdCBhL2luY2x1
-ZGUvbGludXgvb2ZfZ3JhcGguaCBiL2luY2x1ZGUvbGludXgvb2ZfZ3JhcGguaAo+IGluZGV4IDdi
-YzkyZTAuLjFjMWQ1YjkgMTAwNjQ0Cj4gLS0tIGEvaW5jbHVkZS9saW51eC9vZl9ncmFwaC5oCj4g
-KysrIGIvaW5jbHVkZS9saW51eC9vZl9ncmFwaC5oCj4gQEAgLTQ1LDYgKzQ1LDggQEAgaW50IG9m
-X2dyYXBoX3BhcnNlX2VuZHBvaW50KGNvbnN0IHN0cnVjdCBkZXZpY2Vfbm9kZSAqbm9kZSwKPiAg
-c3RydWN0IGRldmljZV9ub2RlICpvZl9ncmFwaF9nZXRfcG9ydF9ieV9pZChzdHJ1Y3QgZGV2aWNl
-X25vZGUgKm5vZGUsIHUzMiBpZCk7Cj4gIHN0cnVjdCBkZXZpY2Vfbm9kZSAqb2ZfZ3JhcGhfZ2V0
-X25leHRfZW5kcG9pbnQoY29uc3Qgc3RydWN0IGRldmljZV9ub2RlICpwYXJlbnQsCj4gICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0cnVjdCBkZXZpY2Vfbm9kZSAqcHJl
-dmlvdXMpOwo+ICtzdHJ1Y3QgZGV2aWNlX25vZGUgKm9mX2dyYXBoX2dldF9lbmRwb2ludF9ieV9y
-ZWdzKAo+ICsgICAgICAgICAgICAgICBjb25zdCBzdHJ1Y3QgZGV2aWNlX25vZGUgKnBhcmVudCwg
-aW50IHBvcnRfcmVnLCBpbnQgcmVnKTsKPiAgc3RydWN0IGRldmljZV9ub2RlICpvZl9ncmFwaF9n
-ZXRfcmVtb3RlX3BvcnRfcGFyZW50KAo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICBjb25zdCBzdHJ1Y3QgZGV2aWNlX25vZGUgKm5vZGUpOwo+ICBzdHJ1Y3QgZGV2aWNl
-X25vZGUgKm9mX2dyYXBoX2dldF9yZW1vdGVfcG9ydChjb25zdCBzdHJ1Y3QgZGV2aWNlX25vZGUg
-Km5vZGUpOwo+IEBAIC02OSw2ICs3MSwxMiBAQCBzdGF0aWMgaW5saW5lIHN0cnVjdCBkZXZpY2Vf
-bm9kZSAqb2ZfZ3JhcGhfZ2V0X25leHRfZW5kcG9pbnQoCj4gICAgICAgICByZXR1cm4gTlVMTDsK
-PiAgfQo+Cj4gK3N0cnVjdCBkZXZpY2Vfbm9kZSAqb2ZfZ3JhcGhfZ2V0X2VuZHBvaW50X2J5X3Jl
-Z3MoCj4gKyAgICAgICAgICAgICAgIGNvbnN0IHN0cnVjdCBkZXZpY2Vfbm9kZSAqcGFyZW50LCBp
-bnQgcG9ydF9yZWcsIGludCByZWcpCj4gK3sKPiArICAgICAgIHJldHVybiBOVUxMOwo+ICt9Cj4g
-Kwo+ICBzdGF0aWMgaW5saW5lIHN0cnVjdCBkZXZpY2Vfbm9kZSAqb2ZfZ3JhcGhfZ2V0X3JlbW90
-ZV9wb3J0X3BhcmVudCgKPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-Y29uc3Qgc3RydWN0IGRldmljZV9ub2RlICpub2RlKQo+ICB7Cj4gLS0KPiAxLjkuMQo+Cj4gX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPiBkcmktZGV2ZWwg
-bWFpbGluZyBsaXN0Cj4gZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwo+IGh0dHA6Ly9s
-aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
-bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVz
-a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+2015-06-22 21:35 GMT+09:00 Krzysztof Kozlowski <k.kozlowski@samsung.com=
+>:
+> 2015-06-22 20:42 GMT+09:00 Inki Dae <inki.dae@samsung.com>:
+>> + Krzysztof
+>>
+>> On 2015=EB=85=84 06=EC=9B=94 22=EC=9D=BC 18:10, Inki Dae wrote:
+>>> On 2015=EB=85=84 06=EC=9B=94 12=EC=9D=BC 21:59, Hyungwon Hwang wrot=
+e:
+>>>> The clock which was named as 'pll_clk' is actually not the clock s=
+ource
+>>>> of PLL in MIPI DSI. This patch fixes this disagreement.
+>>>
+>>> Mr. Kukjin and Krzysztof, can you give me Acked-by or Singed-off-by=
+? I'd
+>>> like to merge this patch to mainline through drm-next.
+>
+> Thanks for forwarding me other necessary patch. All that burden could
+> be easily avoided by sending everything to samsung-soc anyway.
+>
+> The patch itself looks good:
+> Acked-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+>
+> Best regards,
+> Krzysztof
+
+To clarify. There were seven versions of this patch and none of them
+were sent to samsung-soc list, to Kukjin Kim or to me.
+
+I also wonder about patch 2: "of: add helper for getting endpoint node
+with specific identifiers"
+for which I can't find respective ack from Rob Herring (+Cc). I only fo=
+und this:
+http://www.spinics.net/lists/devicetree/msg69336.html
+but there are only comments, not an ack.
+
+Best regards,
+Krzysztof
