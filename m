@@ -1,56 +1,77 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: Re: [PATCHv5 1/2] dts: Adding docs for Xilinx LogiCORE IP mailbox
- driver.
-Date: Tue, 23 Jun 2015 11:05:14 -0700
-Message-ID: <20150623180513.GE20178@xsjsorenbubuntu>
-References: <1435082402-29239-1-git-send-email-moritz.fischer@ettus.com>
- <1435082402-29239-2-git-send-email-moritz.fischer@ettus.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v5 1/2] dt: add cap11xx LED documentation
+Date: Tue, 23 Jun 2015 11:07:06 -0700
+Message-ID: <20150623180706.GA40168@dtor-ws>
+References: <1434599897-22505-1-git-send-email-mranostay@gmail.com>
+ <1434599897-22505-2-git-send-email-mranostay@gmail.com>
+ <20150622175914.GA15851@dtor-ws>
+ <55891A84.1070509@samsung.com>
+ <CAKzfze8jC1Nq9+AWFZbbC4=jzLwUZumbXYmg9O=0190Ne+f7fg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-leds-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1435082402-29239-2-git-send-email-moritz.fischer@ettus.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Moritz Fischer <moritz.fischer@ettus.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, arnd@arndb.de, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, gregkh@linuxfoundation.org, jassisinghbrar@gmail.com, linux-kernel@vger.kernel.org, michal.simek@xilinx.com, jingoohan1@gmail.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, galak@codeaurora.org, joe@perches.com, akpm@linux-foundation.org, mchehab@osg.samsung.com
+In-Reply-To: <CAKzfze8jC1Nq9+AWFZbbC4=jzLwUZumbXYmg9O=0190Ne+f7fg@mail.gmail.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Matt Ranostay <mranostay@gmail.com>
+Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, Daniel Mack <zonque@gmail.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, linux-leds@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAyMDE1LTA2LTIzIGF0IDExOjAwQU0gLTA3MDAsIE1vcml0eiBGaXNjaGVyIHdyb3Rl
-Ogo+IENoYW5nZXMgZnJvbSB2NDoKPiAtIENoYW5nZWQgbWJveCBjZWxscyBwcm9wZXJ0eSBmcm9t
-IDEgdG8gMAo+IC0gRml4ZWQgaW50ZXJydXB0IHByb3BlcnR5Cj4gCj4gQ2hhbmdlcyBmcm9tIHYz
-Ogo+IC0gQ2hhbmdlZCByZWcgc2l6ZSB0byAweDEwMAo+IAo+IENoYW5nZXMgZnJvbSB2MjoKPiAt
-IEFkZHJlc3NlZCBNaWNoYWwncyBzdHlsaXN0aWMgY29tbWVudHMKPiAtIEZpeGVkIHR5cG8gaW4g
-Y29tcGF0aWJsZSBzdHJpbmcKPiAKPiBDaGFuZ2VzIGZyb20gdjE6Cj4gLSBBZGRlZCBjb21tb24g
-Y2xvY2sgZnJhbWV3b3JrIHN1cHBvcnQKPiAKPiBDaGFuZ2VzIGZyb20gdjA6Cj4gLSBGaXhlZCBl
-eGFtcGxlIGJpbmRpbmdzCj4gCj4gU2lnbmVkLW9mZi1ieTogTW9yaXR6IEZpc2NoZXIgPG1vcml0
-ei5maXNjaGVyQGV0dHVzLmNvbT4KPiBBY2tlZC1ieTogTWljaGFsIFNpbWVrIDxtaWNoYWwuc2lt
-ZWtAeGlsaW54LmNvbT4KPiAtLS0KPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvbWFpbGJveC94
-aWxpbngtbWFpbGJveC50eHQgfCA0NCArKysrKysrKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBj
-aGFuZ2VkLCA0NCBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWFpbGJveC94aWxpbngtbWFpbGJveC50eHQKPiAKPiBk
-aWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21haWxib3gveGls
-aW54LW1haWxib3gudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21haWxi
-b3gveGlsaW54LW1haWxib3gudHh0Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAw
-MDAwLi4yNjljMDI2Cj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9tYWlsYm94L3hpbGlueC1tYWlsYm94LnR4dAo+IEBAIC0wLDAgKzEsNDQg
-QEAKPiArWGlsaW54IE1haWxib3ggRHJpdmVyCj4gKz09PT09PT09PT09PT09PT09PT09PQo+ICsK
-PiArUmVxdWlyZWQgcHJvcGVydGllczoKPiArLSBjb21wYXRpYmxlICAgICAgIDogInhsbngsbWFp
-bGJveC0yLjEiLgo+ICstIHJlZyAgICAgICAgICAgICAgOiAgcGh5c2ljYWwgYmFzZSBhZGRyZXNz
-IG9mIHRoZSBtYWlsYm94IGFuZCBsZW5ndGggb2YKPiArICAgICAgICAgICAgICAgICAgICAgIG1l
-bW9yeSBtYXBwZWQgcmVnaW9uLgo+ICstICNtYm94LWNlbGxzICAgICAgOiAgY29tbW9uIG1haWxi
-b3ggYmluZGluZyBwcm9wZXJ0eSB0byBpZGVudGlmeSB0aGUgbnVtYmVyCj4gKyAgICAgICAgICAg
-ICAgICAgICAgICBvZiBjZWxscyByZXF1aXJlZCBmb3IgdGhlIG1haWxib3ggc3BlY2lmaWVyLCBz
-aG91bGQgYmUgMQoKSSBndWVzcyB0aGlzIHNob3VsZCBzYXkgInNob3VsZCBiZSAwIiBub3c/CgoJ
-U8O2cmVuCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwps
-aW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJh
-ZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51
-eC1hcm0ta2VybmVsCg==
+On Tue, Jun 23, 2015 at 10:23:57AM -0700, Matt Ranostay wrote:
+> On Tue, Jun 23, 2015 at 1:36 AM, Jacek Anaszewski
+> <j.anaszewski@samsung.com> wrote:
+> > On 06/22/2015 07:59 PM, Dmitry Torokhov wrote:
+> >>
+> >> On Wed, Jun 17, 2015 at 08:58:16PM -0700, Matt Ranostay wrote:
+> >>>
+> >>> Signed-off-by: Matt Ranostay <mranostay@gmail.com>
+> >>> ---
+> >>>   .../devicetree/bindings/input/cap11xx.txt          | 25
+> >>> ++++++++++++++++++++++
+> >>>   1 file changed, 25 insertions(+)
+> >>>
+> >>> diff --git a/Documentation/devicetree/bindings/input/cap11xx.txt
+> >>> b/Documentation/devicetree/bindings/input/cap11xx.txt
+> >>> index 7d0a300..09cdc43 100644
+> >>> --- a/Documentation/devicetree/bindings/input/cap11xx.txt
+> >>> +++ b/Documentation/devicetree/bindings/input/cap11xx.txt
+> >>> @@ -38,6 +38,11 @@ Optional properties:
+> >>>                                 defaults. The array must have exactly six
+> >>>                                 entries.
+> >>>
+> >>> +       linux,led-brightness:   Defines the ON brightness when the
+> >>> optional LED
+> >>> +                               functionality is used. Valid values are
+> >>> 1-15.
+> >>> +                               By default a value of 15 is set.
+> >>
+> >>
+> >> Please mention the device does not allow controlling brightness of leds
+> >> individually and that is why this property is at device level, not
+> >> individual led level.
+> >
+> >
+> > I've just noticed that we have drivers/leds/leds-netxbig.c driver, which
+> > also doesn't allow controlling the LEDs on extension board individually,
+> > but it still does allow changing their brightness. I am leaning towards
+> > allowing this also for this driver and adding similar comment in the
+> > source code like at the line 218 of the aforementioned driver.
+> > As a result this property wouldn't be required.
+> >
+> 
+> Ok that should be pretty simple to do. But seems kind weird to have
+> each led channel to be changing the brightness of all.  Wouldn't the
+> brightness sysfs entries of the other led channels be showing
+> incorrect values?
+
+I agree, this is kind of weird. Maybe we should have a device-specific
+attribute (on the platform device level) that allows controlling overall
+brightness, but I think LEDs should be just on/off with max brightness
+of 1. Userspace should not have to be aware about the fact that on that
+particular device LEDs are not completely independent as far as their
+brightness goes.
+
+Thanks.
+
+-- 
+Dmitry
