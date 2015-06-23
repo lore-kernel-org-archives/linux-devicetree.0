@@ -1,57 +1,44 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v6 15/15] ARM: dts: rename the clock of MIPI DSI 'pll_clk'
- to 'sclk_mipi'
-Date: Tue, 23 Jun 2015 11:10:18 +0900
-Message-ID: <CAJKOXPeZY=RmFxozjGPoUbP+-LcnEOE=vEcj-gHDyaoYXLTS4Q@mail.gmail.com>
-References: <1434113958-15877-1-git-send-email-human.hwang@samsung.com>
-	<1434113958-15877-16-git-send-email-human.hwang@samsung.com>
-	<5587D111.9090602@samsung.com>
-	<5587F4A1.2090502@samsung.com>
-	<CAJKOXPe-XJb2qCSWxY2gQnYpACGcN=6=1XmWHX5gF7s2a_UTPw@mail.gmail.com>
+From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 4/8] ARM: STi: STiH407: Provide a node for CPUFreq
+Date: Tue, 23 Jun 2015 07:46:22 +0530
+Message-ID: <20150623021622.GA16776@linux>
+References: <1434987837-24212-1-git-send-email-lee.jones@linaro.org>
+ <1434987837-24212-5-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAJKOXPe-XJb2qCSWxY2gQnYpACGcN=6=1XmWHX5gF7s2a_UTPw@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Inki Dae <inki.dae@samsung.com>, Hyungwon Hwang <human.hwang@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, daniel@fooishbar.org, sw0312.kim@samsung.com, jy0922.shim@samsung.com, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1434987837-24212-5-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ajitpal.singh-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2015-06-22 21:35 GMT+09:00 Krzysztof Kozlowski <k.kozlowski@samsung.com=
->:
-> 2015-06-22 20:42 GMT+09:00 Inki Dae <inki.dae@samsung.com>:
->> + Krzysztof
->>
->> On 2015=EB=85=84 06=EC=9B=94 22=EC=9D=BC 18:10, Inki Dae wrote:
->>> On 2015=EB=85=84 06=EC=9B=94 12=EC=9D=BC 21:59, Hyungwon Hwang wrot=
-e:
->>>> The clock which was named as 'pll_clk' is actually not the clock s=
-ource
->>>> of PLL in MIPI DSI. This patch fixes this disagreement.
->>>
->>> Mr. Kukjin and Krzysztof, can you give me Acked-by or Singed-off-by=
-? I'd
->>> like to merge this patch to mainline through drm-next.
->
-> Thanks for forwarding me other necessary patch. All that burden could
-> be easily avoided by sending everything to samsung-soc anyway.
->
-> The patch itself looks good:
-> Acked-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
->
-> Best regards,
-> Krzysztof
+[Ccing Rob]
 
-To clarify. There were seven versions of this patch and none of them
-were sent to samsung-soc list, to Kukjin Kim or to me.
+On 22-06-15, 16:43, Lee Jones wrote:
+> Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/stih407-family.dtsi | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
+> index f48767e..f57fd83 100644
+> --- a/arch/arm/boot/dts/stih407-family.dtsi
+> +++ b/arch/arm/boot/dts/stih407-family.dtsi
+> @@ -98,6 +98,11 @@
+>  		ranges;
+>  		compatible = "simple-bus";
+>  
+> +		cpufreq {
+> +			compatible = "st,stih407-cpufreq";
+> +			st,syscfg = <&syscfg_core 0x8e0>;
+> +		};
 
-I also wonder about patch 2: "of: add helper for getting endpoint node
-with specific identifiers"
-for which I can't find respective ack from Rob Herring (+Cc). I only fo=
-und this:
-http://www.spinics.net/lists/devicetree/msg69336.html
-but there are only comments, not an ack.
+These virtual nodes aren't allowed in DT and you have added them
+before the bindings patch :).
 
-Best regards,
-Krzysztof
+-- 
+viresh
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
