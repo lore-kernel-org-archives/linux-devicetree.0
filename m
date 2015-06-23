@@ -1,35 +1,57 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH v5 2/2] cap11xx: add LED support
-Date: Tue, 23 Jun 2015 09:00:31 +0200
-Message-ID: <5589040F.5050605@samsung.com>
-References: <1434599897-22505-1-git-send-email-mranostay@gmail.com>
- <1434599897-22505-3-git-send-email-mranostay@gmail.com>
- <20150622180828.GB15851@dtor-ws>
+From: Inki Dae <inki.dae@samsung.com>
+Subject: [PATCH Resend] of: fix a build error to f_graph_get_endpoint_by_regs
+ function
+Date: Tue, 23 Jun 2015 16:06:44 +0900
+Message-ID: <1435043204-23133-1-git-send-email-inki.dae@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <20150622180828.GB15851@dtor-ws>
-Sender: linux-leds-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Matt Ranostay <mranostay@gmail.com>, zonque@gmail.com, linux-input@vger.kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: devicetree@vger.kernel.org, robh+dt@kernel.org
+Cc: mark.rutland@arm.com, sfr@canb.auug.org.au, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, dri-devel@lists.freedesktop.org, galak@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/22/2015 08:08 PM, Dmitry Torokhov wrote:
-[...]
-
->> +
->> +	for_each_child_of_node(node, child) {
->> +		led->cdev.name =
->> +			of_get_property(child, "label", NULL) ? : child->name;
->> +		led->cdev.default_trigger =
->> +			of_get_property(child, "linux,default-trigger", NULL);
->
-> Hmm, we do not have standard LEDs fwnode parser? Maybe we should have
-> one.
-
-We don't have one. That's something to be added.
-
--- 
-Best Regards,
-Jacek Anaszewski
+VGhpcyBwYXRjaCBmaXhlcyB0aGUgYmVsb3cgYnVpbGQgZXJyb3IgcmVwb3J0ZWQgYnkgU3RlcGhl
+biwKCiAgICAgU3RlcGhlbiByZXBvcnRlZDoKICAgICBBZnRlciBtZXJnaW5nIHRoZSBkcm0tZXh5
+bm9zIHRyZWUsIHRvZGF5J3MgbGludXgtbmV4dCBidWlsZCAoeDg2XzY0CiAgICAgYWxsbW9kY29u
+ZmlnKSBmYWlsZWQgbGlrZSB0aGlzOgoKICAgICBkcml2ZXJzL21lZGlhL2kyYy9hZHY3NjA0Lm86
+IEluIGZ1bmN0aW9uIGBvZl9ncmFwaF9nZXRfZW5kcG9pbnRfYnlfcmVncyc6CiAgICAgYWR2NzYw
+NC5jOigudGV4dCsweDU4NmMpOiBtdWx0aXBsZSBkZWZpbml0aW9uIG9mIGBvZl9ncmFwaF9nZXRf
+ZW5kcG9pbnRfYnlfcmVncycKICAgICBkcml2ZXJzL21lZGlhL2kyYy9hZHY3MzQzLm86YWR2NzM0
+My5jOigudGV4dCsweGExMyk6IGZpcnN0IGRlZmluZWQgaGVyZQogICAgIGRyaXZlcnMvbWVkaWEv
+cGxhdGZvcm0vc29jX2NhbWVyYS9hdG1lbC1pc2kubzogSW4gZnVuY3Rpb24gYG9mX2dyYXBoX2dl
+dF9lbmRwb2ludF9ieV9yZWdzJzoKICAgICBhdG1lbC1pc2kuYzooLnRleHQrMHgxZWM5KTogbXVs
+dGlwbGUgZGVmaW5pdGlvbiBvZiBgb2ZfZ3JhcGhfZ2V0X2VuZHBvaW50X2J5X3JlZ3MnCiAgICAg
+ZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9zb2NfY2FtZXJhL3NvY19jYW1lcmEubzpzb2NfY2FtZXJh
+LmM6KC50ZXh0KzB4MmNlMyk6IGZpcnN0IGRlZmluZWQgaGVyZQogICAgIGRyaXZlcnMvbWVkaWEv
+cGxhdGZvcm0vc29jX2NhbWVyYS9yY2FyX3Zpbi5vOiBJbiBmdW5jdGlvbiBgb2ZfZ3JhcGhfZ2V0
+X2VuZHBvaW50X2J5X3JlZ3MnOgogICAgIHJjYXJfdmluLmM6KC50ZXh0KzB4MzA3Yyk6IG11bHRp
+cGxlIGRlZmluaXRpb24gb2YgYG9mX2dyYXBoX2dldF9lbmRwb2ludF9ieV9yZWdzJwogICAgIGRy
+aXZlcnMvbWVkaWEvcGxhdGZvcm0vc29jX2NhbWVyYS9zb2NfY2FtZXJhLm86c29jX2NhbWVyYS5j
+OigudGV4dCsweDJjZTMpOiBmaXJzdCBkZWZpbmVkIGhlcmUKCiAgICAgQ2F1c2VkIGJ5IGNvbW1p
+dDoKICAgICAgIGEwZjcwMDFjMThjYSAoIm9mOiBhZGQgaGVscGVyIGZvciBnZXR0aW5nIGVuZHBv
+aW50IG5vZGUgb2Ygc3BlY2lmaWMgaWRlbnRpZmllcnMiKQoKVG8gZml4IHRoZSBlcnJvciwgdGhp
+cyBwYXRjaCBkZWNsYXJlcyBvZl9ncmFwaF9nZXRfZW5kcG9pbnRfYnlfcmVncyBmdW5jdGlvbgp3
+aXRoICJzdGF0aWMgaW5saW5lIi4KClNpZ25lZC1vZmYtYnk6IElua2kgRGFlIDxpbmtpLmRhZUBz
+YW1zdW5nLmNvbT4KLS0tCiBpbmNsdWRlL2xpbnV4L29mX2dyYXBoLmggfCAgICAyICstCiAxIGZp
+bGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkKCmRpZmYgLS1naXQgYS9p
+bmNsdWRlL2xpbnV4L29mX2dyYXBoLmggYi9pbmNsdWRlL2xpbnV4L29mX2dyYXBoLmgKaW5kZXgg
+MWMxZDViOS4uZjhiY2QwZSAxMDA2NDQKLS0tIGEvaW5jbHVkZS9saW51eC9vZl9ncmFwaC5oCisr
+KyBiL2luY2x1ZGUvbGludXgvb2ZfZ3JhcGguaApAQCAtNzEsNyArNzEsNyBAQCBzdGF0aWMgaW5s
+aW5lIHN0cnVjdCBkZXZpY2Vfbm9kZSAqb2ZfZ3JhcGhfZ2V0X25leHRfZW5kcG9pbnQoCiAJcmV0
+dXJuIE5VTEw7CiB9CiAKLXN0cnVjdCBkZXZpY2Vfbm9kZSAqb2ZfZ3JhcGhfZ2V0X2VuZHBvaW50
+X2J5X3JlZ3MoCitzdGF0aWMgaW5saW5lIHN0cnVjdCBkZXZpY2Vfbm9kZSAqb2ZfZ3JhcGhfZ2V0
+X2VuZHBvaW50X2J5X3JlZ3MoCiAJCWNvbnN0IHN0cnVjdCBkZXZpY2Vfbm9kZSAqcGFyZW50LCBp
+bnQgcG9ydF9yZWcsIGludCByZWcpCiB7CiAJcmV0dXJuIE5VTEw7Ci0tIAoxLjcuOS41CgpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
+bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZy
+ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
