@@ -1,7 +1,7 @@
 From: Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 1/9] drivers: clk: st: Incorrect clocks status
-Date: Tue, 23 Jun 2015 16:09:19 +0200
-Message-ID: <1435068567-30995-2-git-send-email-gabriel.fernandez@linaro.org>
+Subject: [PATCH 4/9] drivers: clk: st: Fix FSYN channel values
+Date: Tue, 23 Jun 2015 16:09:22 +0200
+Message-ID: <1435068567-30995-5-git-send-email-gabriel.fernandez@linaro.org>
 References: <1435068567-30995-1-git-send-email-gabriel.fernandez@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1435068567-30995-1-git-send-email-gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
@@ -10,56 +10,37 @@ To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <p
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-In the clk_summary output, the h/w status of DivMux is incorrect
-(Parent and Enable status), since the clk_mux_ops.get_parent()
-returns -ERRCODE when clock is OFF.
+This patch fixes the value for disabling the FSYN channel clock.
+The 'is_enabled' returned value is also fixed.
 
 Signed-off-by: Pankaj Dev <pankaj.dev-qxv4g6HH51o@public.gmane.org>
 Signed-off-by: Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- drivers/clk/st/clkgen-mux.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ drivers/clk/st/clkgen-fsyn.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clk/st/clkgen-mux.c b/drivers/clk/st/clkgen-mux.c
-index 4fbe6e0..c94b56b 100644
---- a/drivers/clk/st/clkgen-mux.c
-+++ b/drivers/clk/st/clkgen-mux.c
-@@ -128,7 +128,7 @@ static int clkgena_divmux_is_enabled(struct clk_hw *hw)
+diff --git a/drivers/clk/st/clkgen-fsyn.c b/drivers/clk/st/clkgen-fsyn.c
+index e7e6782..9e26099 100644
+--- a/drivers/clk/st/clkgen-fsyn.c
++++ b/drivers/clk/st/clkgen-fsyn.c
+@@ -489,7 +489,7 @@ static int quadfs_pll_is_enabled(struct clk_hw *hw)
+ 	struct st_clk_quadfs_pll *pll = to_quadfs_pll(hw);
+ 	u32 npda = CLKGEN_READ(pll, npda);
  
- 	__clk_hw_set_clk(mux_hw, hw);
- 
--	return (s8)clk_mux_ops.get_parent(mux_hw) > 0;
-+	return ((s8)clk_mux_ops.get_parent(mux_hw) >= 0);
+-	return !!npda;
++	return pll->data->powerup_polarity ? !npda : !!npda;
  }
  
- static u8 clkgena_divmux_get_parent(struct clk_hw *hw)
-@@ -138,11 +138,13 @@ static u8 clkgena_divmux_get_parent(struct clk_hw *hw)
+ static int clk_fs660c32_vco_get_rate(unsigned long input, struct stm_fs *fs,
+@@ -774,7 +774,7 @@ static void quadfs_fsynth_disable(struct clk_hw *hw)
+ 	if (fs->lock)
+ 		spin_lock_irqsave(fs->lock, flags);
  
- 	__clk_hw_set_clk(mux_hw, hw);
+-	CLKGEN_WRITE(fs, nsb[fs->chan], !fs->data->standby_polarity);
++	CLKGEN_WRITE(fs, nsb[fs->chan], fs->data->standby_polarity);
  
--	genamux->muxsel = clk_mux_ops.get_parent(mux_hw);
--	if ((s8)genamux->muxsel < 0) {
--		pr_debug("%s: %s: Invalid parent, setting to default.\n",
--		      __func__, __clk_get_name(hw->clk));
--		genamux->muxsel = 0;
-+	if (genamux->muxsel == CKGAX_CLKOPSRC_SWITCH_OFF) {
-+		genamux->muxsel = clk_mux_ops.get_parent(mux_hw);
-+		if ((s8)genamux->muxsel < 0) {
-+			pr_debug("%s: %s: Invalid parent, setting to default.\n",
-+				  __func__, __clk_get_name(hw->clk));
-+			genamux->muxsel = 0;
-+		}
- 	}
- 
- 	return genamux->muxsel;
-@@ -254,6 +256,7 @@ static struct clk *clk_register_genamux(const char *name,
- 	} else {
- 		genamux->mux.reg   = reg + muxdata->mux_offset;
- 	}
-+	genamux->muxsel = CKGAX_CLKOPSRC_SWITCH_OFF;
- 
- 	for (i = 0; i < NUM_INPUTS; i++) {
- 		/*
+ 	if (fs->lock)
+ 		spin_unlock_irqrestore(fs->lock, flags);
 -- 
 1.9.1
 
