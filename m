@@ -1,129 +1,77 @@
-From: Peter Chen <peter.chen@freescale.com>
-Subject: Re: [PATCH] usb: ci_hdrc_imx: add optional hub clock
-Date: Tue, 23 Jun 2015 10:55:35 +0800
-Message-ID: <20150623025534.GA15147@shlinux2>
-References: <5586EC36.1070403@maciej.szmigiero.name>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v6 15/15] ARM: dts: rename the clock of MIPI DSI 'pll_clk'
+ to 'sclk_mipi'
+Date: Tue, 23 Jun 2015 13:00:14 +0900
+Message-ID: <5588D9CE.2090103@samsung.com>
+References: <1434113958-15877-1-git-send-email-human.hwang@samsung.com>
+ <1434113958-15877-16-git-send-email-human.hwang@samsung.com>
+ <5587D111.9090602@samsung.com> <5587F4A1.2090502@samsung.com>
+ <CAJKOXPe-XJb2qCSWxY2gQnYpACGcN=6=1XmWHX5gF7s2a_UTPw@mail.gmail.com>
+ <CAJKOXPeZY=RmFxozjGPoUbP+-LcnEOE=vEcj-gHDyaoYXLTS4Q@mail.gmail.com>
+ <5588C444.1000301@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5586EC36.1070403@maciej.szmigiero.name>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
-Cc: USB list <linux-usb@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Markus Pargmann <mpa@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Fabio Estevam <festevam@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <5588C444.1000301@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Inki Dae <inki.dae@samsung.com>
+Cc: devicetree@vger.kernel.org, Kukjin Kim <kgene.kim@samsung.com>, sw0312.kim@samsung.com, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 22, 2015 at 12:54:14AM +0800, Maciej S. Szmigiero wrote:
-> This patch adds ability to define optional clock of connected
-> USB hub to ChipIdea i.MX usb controller driver.
-> 
-> This is needed for example for UDOO board.
-> Previously, this board DT file used a fact that non-core registers
-> of this USB controller have a separate driver (usbmisc_imx) which
-> did allow defining a separate clock.
-> 
-> Because the non-core registers are in fact using the same clock as
-> main controller this allowed to use one of such clock definitions
-> to enable USB hub clock instead.
-> 
-> However, since commit 73dea4a912b2
-> ("usb: chipidea: usbmisc_imx: delete clock information") this
-> possibility no longer exists and loading USB support on this board
-> results in a hard SoC lockup.
-> 
-> Note that this is not specific to particular USB hub chip used,
-> rather than to a particular board.
-> Since this is a DT-based board there is no board platform file to
-> put such clock enable.
-> Also, USB bus devices aren't instantiated in DT file since it is an
-> enumerable bus.
-> 
-> NOP PHY also can't be used as clock consumer since this
-> USB controller needs a true MXS phy definition, which accepts only
-> one clock (different from USB controller one).
-> 
-> Based on a patch previously submitted by Fabio Estevam, with consent.
-> 
-> Signed-off-by: Maciej Szmigiero <mail@maciej.szmigiero.name>
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-imx.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-imx.txt
-> index 38a5480..fc65f1c 100644
-> --- a/Documentation/devicetree/bindings/usb/ci-hdrc-imx.txt
-> +++ b/Documentation/devicetree/bindings/usb/ci-hdrc-imx.txt
-> @@ -5,6 +5,8 @@ Required properties:
->  - reg: Should contain registers location and length
->  - interrupts: Should contain controller interrupt
->  - fsl,usbphy: phandle of usb phy that connects to the port
-> +- clocks: phandles of clocks that drive the controller and optionally
-> +  an USB hub connected to it
->  
->  Recommended properies:
->  - phy_type: the type of the phy connected to the core. Should be one
-> @@ -20,12 +22,14 @@ Optional properties:
->  - external-vbus-divider: enables off-chip resistor divider for Vbus
->  - maximum-speed: limit the maximum connection speed to "full-speed".
->  - tpl-support: TPL (Targeted Peripheral List) feature for targeted hosts
-> +- clock-names: must be "default", "hub" if optional USB hub clock is used
->  
->  Examples:
->  usb@02184000 { /* USB OTG */
->  	compatible = "fsl,imx6q-usb", "fsl,imx27-usb";
->  	reg = <0x02184000 0x200>;
->  	interrupts = <0 43 0x04>;
-> +	clocks = <&clks IMX6QDL_CLK_USBOH3>;
->  	fsl,usbphy = <&usbphy1>;
->  	fsl,usbmisc = <&usbmisc 0>;
->  	disable-over-current;
-> diff --git a/drivers/usb/chipidea/ci_hdrc_imx.c b/drivers/usb/chipidea/ci_hdrc_imx.c
-> index 389f0e0..bb7f859 100644
-> --- a/drivers/usb/chipidea/ci_hdrc_imx.c
-> +++ b/drivers/usb/chipidea/ci_hdrc_imx.c
-> @@ -65,6 +65,7 @@ struct ci_hdrc_imx_data {
->  	struct usb_phy *phy;
->  	struct platform_device *ci_pdev;
->  	struct clk *clk;
-> +	struct clk *clk_hub;
->  	struct imx_usbmisc_data *usbmisc_data;
->  	bool supports_runtime_pm;
->  	bool in_lpm;
-> @@ -196,6 +197,16 @@ static int ci_hdrc_imx_probe(struct platform_device *pdev)
->  		goto disable_device;
->  	}
->  
-> +	data->clk_hub = devm_clk_get(&pdev->dev, "hub");
-> +	if (!IS_ERR(data->clk_hub)) {
-> +		ret = clk_prepare_enable(data->clk_hub);
-> +		if (ret) {
-> +			dev_err(&pdev->dev,
-> +				"Failed to enable clk_hub: %d\n", ret);
-> +			goto disable_device;
-> +		}
-> +	}
-> +
-
-Hi Maciej,
-
-As I said before, the USB HUB is just an USB peripheral, we should
-not put a peripheral's clock information to controller driver, I think
-hub driver should take responsibilities for it, just like other usb
-pheripheral drivers, like usb modem, etc. You can talk it with Alan
-Stern about it.
-
->  	platform_set_drvdata(pdev, data);
->  
->  	if (data->supports_runtime_pm) {
-> @@ -223,6 +234,8 @@ static int ci_hdrc_imx_remove(struct platform_device *pdev)
->  		pm_runtime_disable(&pdev->dev);
->  		pm_runtime_put_noidle(&pdev->dev);
->  	}
-> +	if (!IS_ERR(data->clk_hub))
-> +		clk_disable_unprepare(data->clk_hub);
->  	ci_hdrc_remove_device(data->ci_pdev);
->  	clk_disable_unprepare(data->clk);
->  
-> 
-
--- 
-
-Best Regards,
-Peter Chen
+T24gMjMuMDYuMjAxNSAxMToyOCwgSW5raSBEYWUgd3JvdGU6Cj4gT24gMjAxNeuFhCAwNuyblCAy
+M+ydvCAxMToxMCwgS3J6eXN6dG9mIEtvemxvd3NraSB3cm90ZToKPj4gMjAxNS0wNi0yMiAyMToz
+NSBHTVQrMDk6MDAgS3J6eXN6dG9mIEtvemxvd3NraSA8ay5rb3psb3dza2lAc2Ftc3VuZy5jb20+
+Ogo+Pj4gMjAxNS0wNi0yMiAyMDo0MiBHTVQrMDk6MDAgSW5raSBEYWUgPGlua2kuZGFlQHNhbXN1
+bmcuY29tPjoKPj4+PiArIEtyenlzenRvZgo+Pj4+Cj4+Pj4gT24gMjAxNeuFhCAwNuyblCAyMuyd
+vCAxODoxMCwgSW5raSBEYWUgd3JvdGU6Cj4+Pj4+IE9uIDIwMTXrhYQgMDbsm5QgMTLsnbwgMjE6
+NTksIEh5dW5nd29uIEh3YW5nIHdyb3RlOgo+Pj4+Pj4gVGhlIGNsb2NrIHdoaWNoIHdhcyBuYW1l
+ZCBhcyAncGxsX2NsaycgaXMgYWN0dWFsbHkgbm90IHRoZSBjbG9jayBzb3VyY2UKPj4+Pj4+IG9m
+IFBMTCBpbiBNSVBJIERTSS4gVGhpcyBwYXRjaCBmaXhlcyB0aGlzIGRpc2FncmVlbWVudC4KPj4+
+Pj4KPj4+Pj4gTXIuIEt1a2ppbiBhbmQgS3J6eXN6dG9mLCBjYW4geW91IGdpdmUgbWUgQWNrZWQt
+Ynkgb3IgU2luZ2VkLW9mZi1ieT8gSSdkCj4+Pj4+IGxpa2UgdG8gbWVyZ2UgdGhpcyBwYXRjaCB0
+byBtYWlubGluZSB0aHJvdWdoIGRybS1uZXh0Lgo+Pj4KPj4+IFRoYW5rcyBmb3IgZm9yd2FyZGlu
+ZyBtZSBvdGhlciBuZWNlc3NhcnkgcGF0Y2guIEFsbCB0aGF0IGJ1cmRlbiBjb3VsZAo+Pj4gYmUg
+ZWFzaWx5IGF2b2lkZWQgYnkgc2VuZGluZyBldmVyeXRoaW5nIHRvIHNhbXN1bmctc29jIGFueXdh
+eS4KPj4+Cj4+PiBUaGUgcGF0Y2ggaXRzZWxmIGxvb2tzIGdvb2Q6Cj4+PiBBY2tlZC1ieTogS3J6
+eXN6dG9mIEtvemxvd3NraSA8ay5rb3psb3dza2lAc2Ftc3VuZy5jb20+Cj4+Pgo+Pj4gQmVzdCBy
+ZWdhcmRzLAo+Pj4gS3J6eXN6dG9mCj4+Cj4+IFRvIGNsYXJpZnkuIFRoZXJlIHdlcmUgc2V2ZW4g
+dmVyc2lvbnMgb2YgdGhpcyBwYXRjaCBhbmQgbm9uZSBvZiB0aGVtCj4+IHdlcmUgc2VudCB0byBz
+YW1zdW5nLXNvYyBsaXN0LCB0byBLdWtqaW4gS2ltIG9yIHRvIG1lLgo+Pgo+PiBJIGFsc28gd29u
+ZGVyIGFib3V0IHBhdGNoIDI6ICJvZjogYWRkIGhlbHBlciBmb3IgZ2V0dGluZyBlbmRwb2ludCBu
+b2RlCj4+IHdpdGggc3BlY2lmaWMgaWRlbnRpZmllcnMiCj4+IGZvciB3aGljaCBJIGNhbid0IGZp
+bmQgcmVzcGVjdGl2ZSBhY2sgZnJvbSBSb2IgSGVycmluZyAoK0NjKS4gSSBvbmx5IGZvdW5kIHRo
+aXM6Cj4+IGh0dHA6Ly93d3cuc3Bpbmljcy5uZXQvbGlzdHMvZGV2aWNldHJlZS9tc2c2OTMzNi5o
+dG1sCj4+IGJ1dCB0aGVyZSBhcmUgb25seSBjb21tZW50cywgbm90IGFuIGFjay4KPiAKPiBCZWxv
+dyBpcyB0aGUgY29tbWVudHMgZnJvbSBSb2IgSGVycmluZy4gSG93IGFib3V0IHN1YnNjcmliaW5n
+IGRldmljZQo+IHRyZWUgbWFpbmxpbmcgbGlzdD8gWW91IGFyZSBhIG1haW50YWluZXIgb2YgRXh5
+bm9zIFNvQy4gVGhpcyBwYXRjaCB3YXMKPiBwb3N0ZWQgdG8gZGV2aWNlIHRyZWUgbWFpbGluZyBs
+aXN0IGNjaW5nIEdyYW50IGFuZCBSb2IuIElmIHlvdSBsaXN0ZW4gdG8KPiBvbmx5IFNhbXN1bmcg
+U29DIG1haWxpbmcgbGlzdCB0aGVuIHlvdSBjb3VsZG4ndCBmaW5kIHRoaXMgcGF0Y2ggaW4geW91
+cgo+IGVtYWlsIGJveC4KClNvbWUgdGltZSBhZ28gSSB3YXMgc3Vic2NyaWJpbmcgZGV2aWNldHJl
+ZSwgYnV0IGFzIEkgYW0gbm90IGRldmljZSB0cmVlCm1haW50YWluZXIgYW5kIHRoZSB0cmFmZmlj
+IHRoZXJlIGlzIHJlYWxseSBodWdlLCBJIHVuc3Vic2NyaWJlZC4KCj4gCj4gIk9uIFN1biwgRmVi
+IDIyLCAyMDE1IGF0IDc6NDEgUE0sIEh5dW5nd29uIEh3YW5nCj4gPGh1bWFuLmh3YW5nQHNhbXN1
+bmcuY29tPiB3cm90ZToKPiAgPiBXaGVuIHRoZXJlIGFyZSBtdWx0aXBsZSBwb3J0cyBvciBtdWx0
+aXBsZSBlbmRwb2ludHMgaW4gYSBwb3J0LCB0aGV5Cj4gaGF2ZSB0byBiZQo+ICA+IGRpc3Rpbmd1
+aXNoZWQgYnkgdGhlIHZhbHVlIG9mIHJlZyBwcm9wZXJ0eS4gSXQgaXMgY29tbW9uLiBUaGUgZHJp
+dmVycwo+IGNhbiBnZXQKPiAgPiB0aGUgc3BlY2lmaWMgZW5kcG9pbnQgaW4gdGhlIHNwZWNpZmlj
+IHBvcnQgdmlhIHRoaXMgZnVuY3Rpb24uIE5vdyB0aGUKPiBkcml2ZXJzCj4gID4gaGF2ZSB0byBp
+bXBsZW1lbnQgdGhpcyBjb2RlIGluIHRoZW1zZWx2ZXMgb3IgaGF2ZSB0byBmb3JjZSB0aGUgb3Jk
+ZXIKPiBvZiBkdCBub2Rlcwo+ICA+IHRvIGdldCB0aGUgcmlnaHQgbm9kZS4KPiAgPgo+ICA+IFNp
+Z25lZC1vZmYtYnk6IEh5dW5nd29uIEh3YW5nIDxodW1hbi5od2FuZ0BzYW1zdW5nLmNvbT4KPiAK
+PiBBY2tlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KPiAKPiAgSSdtIG5vdCBh
+cHBseWluZyBhcyB0aGVyZSBpcyBubyB1c2VyLCBzbyBhcHBseSB0aGlzIHBhdGNoIGFsb25nIHdp
+dGggYQo+ICB1c2VyIG9mIHRoZSBmdW5jdGlvbi4iCgpUaGFua3MhIFRoYXQgaGVscGVkIG1lIGZp
+bmRpbmcgaXQgaW4gdGhlIGFyY2hpdmVzLgoKQmVzdCByZWdhcmRzLApLcnp5c3p0b2YKCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
+aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
