@@ -1,26 +1,63 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH v6 1/9] nvmem: Add a simple NVMEM framework for nvmem
- providers
-Date: Mon, 22 Jun 2015 21:52:53 -0700
-Message-ID: <1435035173.9808.35.camel@perches.com>
-References: <1435014459-26138-1-git-send-email-srinivas.kandagatla@linaro.org>
-	 <1435014507-26181-1-git-send-email-srinivas.kandagatla@linaro.org>
+From: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
+Subject: Re: [PATCH-v2 0/3] mfd: 88pm800: Add Device tree support
+Date: Tue, 23 Jun 2015 10:37:12 +0530
+Message-ID: <5588E980.2010603@linaro.org>
+References: <vaibhav.hiremath@linaro.org> <1434567488-6477-1-git-send-email-vaibhav.hiremath@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1435014507-26181-1-git-send-email-srinivas.kandagatla@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Brown <broonie@kernel.org>, s.hauer@pengutronix.de, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, arnd@arndb.de, sboyd@codeaurora.org, pantelis.antoniou@konsulko.com, mporter@konsulko.com, stefan.wahren@i2se.com, wxt@rock-chips.com
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1434567488-6477-1-git-send-email-vaibhav.hiremath@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: robh+dt@kernel.org, lee.jones@linaro.org, devicetree@vger.kernel.org, rtc-linux@googlegroups.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-06-23 at 00:08 +0100, Srinivas Kandagatla wrote:
-> This patch adds just providers part of the framework just to enable easy
-> review.
-[]
->  include/linux/nvmem-provider.h |  54 ++++++
 
-Unless there are going to be users of nvmem-provider.h
-outside of the drivers/nvmem directory, perhaps that
-file (and nvmem-consumer.h) should be in drivers/nvmem/
+
+On Thursday 18 June 2015 12:28 AM, Vaibhav Hiremath wrote:
+> This patch-series adds support for Device tree to 88PM800 mfd driver.
+> It also enabled configuration of irq clear method through DT.
+>
+> Testing::
+>   - Boot tested on PXA1928 based platform.
+>   - probe of mfd, rtc and regulator function passing successfully.
+>   - Basic read operations on registers
+>
+>
+> V1 => V1
+> =======
+> Link to V1: http://lkml.iu.edu/hypermail/linux/kernel/1505.3/04386.html
+>
+>    - Split binding changes from original commit
+>    - Updated binding info as per Rob's suggestion
+>    - Dropped PATCH 4/4, as discussed during review
+>    - Dropped PATCH 3/4, as it is independent RTC code change,
+>      so will submit it separately to ease merging.
+>    - Fixed all other minor comments
+>
+> Attempt has been made to push some of the patches to the list sometime
+> back in 2013.
+>
+> Link to previous patch submission:
+>          https://lkml.org/lkml/2013/8/14/86
+>
+> Vaibhav Hiremath (3):
+>    mfd: 88pm800: Add device tree support
+>    mfd: 88pm800: Allow configuration of interrupt clear method
+>    mfd: devicetree: bindings: Add new 88pm800 mfd binding
+>
+>   Documentation/devicetree/bindings/mfd/88pm800.txt | 60 +++++++++++++++++++++++
+>   drivers/mfd/88pm800.c                             | 40 +++++++++++++--
+>   include/linux/mfd/88pm80x.h                       |  6 ++-
+>   3 files changed, 99 insertions(+), 7 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/mfd/88pm800.txt
+>
+
+
+Any update on this?
+
+If there are no review comments, then can it be queued ?
+
+Thanks,
+Vaibhav
