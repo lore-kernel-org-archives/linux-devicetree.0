@@ -1,255 +1,580 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH 07/17] usb: musb: omap2430: use *syscon* framework to write to mailbox register
-Date: Tue, 23 Jun 2015 17:28:52 +0530
-Message-ID: <1435060743-5511-8-git-send-email-kishon@ti.com>
-References: <1435060743-5511-1-git-send-email-kishon@ti.com>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH v3 1/3] leds: netxbig: add device tree binding
+Date: Tue, 23 Jun 2015 14:11:54 +0200
+Message-ID: <55894D0A.8000306@samsung.com>
+References: <1434639590-27389-1-git-send-email-simon.guinot@sequanux.org>
+ <1434639590-27389-2-git-send-email-simon.guinot@sequanux.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1435060743-5511-1-git-send-email-kishon@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: bcousson@baylibre.com, tony@atomide.com, balbi@ti.com, rogerq@ti.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, kishon@ti.com
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, gregkh@linuxfoundation.org, nsekhar@ti.com
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <1434639590-27389-2-git-send-email-simon.guinot@sequanux.org>
+Sender: linux-leds-owner@vger.kernel.org
+To: Simon Guinot <simon.guinot@sequanux.org>
+Cc: Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, linux-leds@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Dan Carpenter <dan.carpenter@oracle.com>, Vincent Donnefort <vdonnefort@gmail.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Deprecate using phy-omap-control driver to write to the mailbox register
-and start using *syscon* framework to do the same.
+Hi Simon,
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- Documentation/devicetree/bindings/usb/omap-usb.txt |    7 +-
- drivers/usb/musb/omap2430.c                        |  118 ++++++++++++++++----
- 2 files changed, 102 insertions(+), 23 deletions(-)
+On 06/18/2015 04:59 PM, Simon Guinot wrote:
+> This patch adds device tree support for the netxbig LEDs.
+>
+> This also introduces a additionnal DT binding for the GPIO extension bus
+> (netxbig-gpio-ext) used to configure the LEDs. Since this bus could also
+> be used to control other devices, then it seems more suitable to have it
+> in a separate DT binding.
+>
+> Signed-off-by: Simon Guinot <simon.guinot@sequanux.org>
+> ---
+> Changes since v1:
+> - Check timer mode value retrieved from DT.
+> - In netxbig_leds_get_of_pdata, don't use unsigned long variables to get
+>    timer delay values from DT with function of_property_read_u32_index.
+>    Instead, use a temporary u32 variable. This allows to silence a static
+>    checker warning.
+> - Make timer property optional in the binding documentation. It is now
+>    aligned with the driver code.
+>
+> Changes since v2:
+> - Fix pointer usage with the temporary u32 variable while calling
+>    of_property_read_u32_index.
+>
+>   .../devicetree/bindings/gpio/netxbig-gpio-ext.txt  |  22 ++
+>   .../devicetree/bindings/leds/leds-netxbig.txt      |  92 ++++++++
+>   drivers/leds/leds-netxbig.c                        | 250 +++++++++++++++++++--
+>   include/dt-bindings/leds/leds-netxbig.h            |  18 ++
+>   4 files changed, 361 insertions(+), 21 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/gpio/netxbig-gpio-ext.txt
+>   create mode 100644 Documentation/devicetree/bindings/leds/leds-netxbig.txt
+>   create mode 100644 include/dt-bindings/leds/leds-netxbig.h
+>
+> diff --git a/Documentation/devicetree/bindings/gpio/netxbig-gpio-ext.txt b/Documentation/devicetree/bindings/gpio/netxbig-gpio-ext.txt
+> new file mode 100644
+> index 000000000000..e4fb2fe11086
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/netxbig-gpio-ext.txt
+> @@ -0,0 +1,22 @@
+> +Binding for the GPIO extension bus found on some LaCie/Seagate boards
+> +(Example: 2Big/5Big Network v2, 2Big NAS).
+> +
+> +Required properties:
+> +- compatible: "lacie,netxbig-gpio-ext".
+> +- addr-gpios: GPIOs representing the address register.
+> +- data-gpios: GPIOs representing the data register.
+> +- enable-gpio: GPIO used to enable the new configuration (address, data).
 
-diff --git a/Documentation/devicetree/bindings/usb/omap-usb.txt b/Documentation/devicetree/bindings/usb/omap-usb.txt
-index 38d9bb8..c001306 100644
---- a/Documentation/devicetree/bindings/usb/omap-usb.txt
-+++ b/Documentation/devicetree/bindings/usb/omap-usb.txt
-@@ -20,10 +20,15 @@ OMAP MUSB GLUE
-  - phy-names : the names of the PHY corresponding to the PHYs present in the
-    *phy* phandle.
- 
--Optional properties:
-+Optional Properties:
-+Deprecated properties:
-  - ctrl-module : phandle of the control module this glue uses to write to
-    mailbox
- 
-+Recommended properies:
-+ - syscon-otghs : phandle/offset pair. Phandle to the system control module and the
-+   register offset of the mailbox.
-+
- SOC specific device node entry
- usb_otg_hs: usb_otg_hs@4a0ab000 {
- 	compatible = "ti,omap4-musb";
-diff --git a/drivers/usb/musb/omap2430.c b/drivers/usb/musb/omap2430.c
-index cc752d8..bcd6d1e 100644
---- a/drivers/usb/musb/omap2430.c
-+++ b/drivers/usb/musb/omap2430.c
-@@ -39,16 +39,27 @@
- #include <linux/usb/musb-omap.h>
- #include <linux/phy/omap_control_phy.h>
- #include <linux/of_platform.h>
-+#include <linux/regmap.h>
-+#include <linux/mfd/syscon.h>
- 
- #include "musb_core.h"
- #include "omap2430.h"
- 
-+#define OMAP2430_MUSB_MODE_MASK	0x1f
-+#define OMAP2430_MUSB_AVALID	(0x1 << 0)
-+#define OMAP2430_MUSB_BVALID	(0x1 << 1)
-+#define OMAP2430_MUSB_VBUSVALID	(0x1 << 2)
-+#define OMAP2430_MUSB_SESSEND	(0x1 << 3)
-+#define OMAP2430_MUSB_IDDIG	(0x1 << 4)
-+
- struct omap2430_glue {
- 	struct device		*dev;
- 	struct platform_device	*musb;
- 	enum omap_musb_vbus_id_status status;
- 	struct work_struct	omap_musb_mailbox_work;
- 	struct device		*control_otghs;
-+	struct regmap		*syscon_otghs; /* ctrl. reg. acces */
-+	unsigned int            otghs_reg; /* otghs reg. index within syscon */
- };
- #define glue_to_musb(g)		platform_get_drvdata(g->musb)
- 
-@@ -253,6 +264,47 @@ void omap_musb_mailbox(enum omap_musb_vbus_id_status status)
- }
- EXPORT_SYMBOL_GPL(omap_musb_mailbox);
- 
-+static void omap2430_musb_set_usbmode(struct omap2430_glue *glue,
-+				      enum omap_control_usb_mode mode)
-+{
-+	u32 val;
-+	int ret;
-+
-+	if (glue->syscon_otghs) {
-+		switch (mode) {
-+		case USB_MODE_HOST:
-+			val = OMAP2430_MUSB_AVALID | OMAP2430_MUSB_VBUSVALID;
-+			break;
-+
-+		case USB_MODE_DEVICE:
-+			val = OMAP2430_MUSB_IDDIG | OMAP2430_MUSB_AVALID |
-+				OMAP2430_MUSB_VBUSVALID;
-+			break;
-+
-+		case USB_MODE_DISCONNECT:
-+			val = OMAP2430_MUSB_IDDIG | OMAP2430_MUSB_SESSEND;
-+			break;
-+
-+		default:
-+			dev_dbg(glue->dev, "Invalid mode\n");
-+			goto err_regmap_update;
-+		}
-+
-+		ret = regmap_update_bits(glue->syscon_otghs,
-+					 glue->otghs_reg,
-+					 OMAP2430_MUSB_MODE_MASK, val);
-+		if (ret < 0)
-+			goto err_regmap_update;
-+	} else {
-+		omap_control_usb_set_mode(glue->control_otghs, mode);
-+	}
-+
-+	return;
-+
-+err_regmap_update:
-+	dev_err(glue->dev, "Failed to set mode to %d\n", mode);
-+}
-+
- static void omap_musb_set_mailbox(struct omap2430_glue *glue)
- {
- 	struct musb *musb = glue_to_musb(glue);
-@@ -270,8 +322,7 @@ static void omap_musb_set_mailbox(struct omap2430_glue *glue)
- 		musb->xceiv->last_event = USB_EVENT_ID;
- 		if (musb->gadget_driver) {
- 			pm_runtime_get_sync(dev);
--			omap_control_usb_set_mode(glue->control_otghs,
--				USB_MODE_HOST);
-+			omap2430_musb_set_usbmode(glue, USB_MODE_HOST);
- 			omap2430_musb_set_vbus(musb, 1);
- 		}
- 		break;
-@@ -284,7 +335,7 @@ static void omap_musb_set_mailbox(struct omap2430_glue *glue)
- 		musb->xceiv->last_event = USB_EVENT_VBUS;
- 		if (musb->gadget_driver)
- 			pm_runtime_get_sync(dev);
--		omap_control_usb_set_mode(glue->control_otghs, USB_MODE_DEVICE);
-+		omap2430_musb_set_usbmode(glue, USB_MODE_DEVICE);
- 		break;
- 
- 	case OMAP_MUSB_ID_FLOAT:
-@@ -301,8 +352,7 @@ static void omap_musb_set_mailbox(struct omap2430_glue *glue)
- 		if (data->interface_type == MUSB_INTERFACE_UTMI)
- 			otg_set_vbus(musb->xceiv->otg, 0);
- 
--		omap_control_usb_set_mode(glue->control_otghs,
--			USB_MODE_DISCONNECT);
-+		omap2430_musb_set_usbmode(glue, USB_MODE_DISCONNECT);
- 		break;
- 	default:
- 		dev_dbg(dev, "ID float\n");
-@@ -444,7 +494,7 @@ static void omap2430_musb_enable(struct musb *musb)
- 	switch (glue->status) {
- 
- 	case OMAP_MUSB_ID_GROUND:
--		omap_control_usb_set_mode(glue->control_otghs, USB_MODE_HOST);
-+		omap2430_musb_set_usbmode(glue, USB_MODE_HOST);
- 		if (data->interface_type != MUSB_INTERFACE_UTMI)
- 			break;
- 		devctl = musb_readb(musb->mregs, MUSB_DEVCTL);
-@@ -463,7 +513,7 @@ static void omap2430_musb_enable(struct musb *musb)
- 		break;
- 
- 	case OMAP_MUSB_VBUS_VALID:
--		omap_control_usb_set_mode(glue->control_otghs, USB_MODE_DEVICE);
-+		omap2430_musb_set_usbmode(glue, USB_MODE_DEVICE);
- 		break;
- 
- 	default:
-@@ -477,8 +527,7 @@ static void omap2430_musb_disable(struct musb *musb)
- 	struct omap2430_glue *glue = dev_get_drvdata(dev->parent);
- 
- 	if (glue->status != OMAP_MUSB_UNKNOWN)
--		omap_control_usb_set_mode(glue->control_otghs,
--			USB_MODE_DISCONNECT);
-+		omap2430_musb_set_usbmode(glue, USB_MODE_DISCONNECT);
- }
- 
- static int omap2430_musb_exit(struct musb *musb)
-@@ -507,6 +556,40 @@ static const struct musb_platform_ops omap2430_ops = {
- 
- static u64 omap2430_dmamask = DMA_BIT_MASK(32);
- 
-+static int omap2430_get_control(struct omap2430_glue *glue,
-+				struct device_node *np)
-+{
-+	struct device_node *control_node;
-+	struct platform_device *control_pdev;
-+
-+	glue->syscon_otghs = syscon_regmap_lookup_by_phandle(np,
-+							     "syscon-otghs");
-+	if (IS_ERR(glue->syscon_otghs)) {
-+		dev_info(glue->dev, "can't get syscon, using control device\n");
-+		glue->syscon_otghs = NULL;
-+
-+		control_node = of_parse_phandle(np, "ctrl-module", 0);
-+		if (control_node) {
-+			control_pdev = of_find_device_by_node(control_node);
-+			if (!control_pdev) {
-+				dev_err(glue->dev,
-+					"Failed to get control device\n");
-+				return -EINVAL;
-+			}
-+			glue->control_otghs = &control_pdev->dev;
-+		}
-+	} else {
-+		if (of_property_read_u32_index(np, "syscon-otghs", 1,
-+					       &glue->otghs_reg)) {
-+			dev_err(glue->dev,
-+				"couldn't get otghs reg. offset\n");
-+			return -EINVAL;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- static int omap2430_probe(struct platform_device *pdev)
- {
- 	struct resource			musb_resources[3];
-@@ -538,9 +621,6 @@ static int omap2430_probe(struct platform_device *pdev)
- 	glue->control_otghs = ERR_PTR(-ENODEV);
- 
- 	if (np) {
--		struct device_node *control_node;
--		struct platform_device *control_pdev;
--
- 		pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
- 		if (!pdata)
- 			goto err2;
-@@ -567,16 +647,10 @@ static int omap2430_probe(struct platform_device *pdev)
- 		pdata->board_data	= data;
- 		pdata->config		= config;
- 
--		control_node = of_parse_phandle(np, "ctrl-module", 0);
--		if (control_node) {
--			control_pdev = of_find_device_by_node(control_node);
--			if (!control_pdev) {
--				dev_err(&pdev->dev, "Failed to get control device\n");
--				ret = -EINVAL;
--				goto err2;
--			}
--			glue->control_otghs = &control_pdev->dev;
--		}
-+		ret = omap2430_get_control(glue, np);
-+		if (ret)
-+			goto err2;
-+
- 	}
- 	pdata->platform_ops		= &omap2430_ops;
- 
+Please mention that enable-gpio latches the settings on raising edge.
+
+> +
+> +Example:
+> +
+> +netxbig_gpio_ext: netxbig-gpio-ext {
+> +	compatible = "lacie,netxbig-gpio-ext";
+> +
+> +	addr-gpios = <&gpio1 15 GPIO_ACTIVE_HIGH
+> +		      &gpio1 16 GPIO_ACTIVE_HIGH
+> +		      &gpio1 17 GPIO_ACTIVE_HIGH>;
+> +	data-gpios = <&gpio1 12 GPIO_ACTIVE_HIGH
+> +		      &gpio1 13 GPIO_ACTIVE_HIGH
+> +		      &gpio1 14 GPIO_ACTIVE_HIGH>;
+
+You should indicate which element is MSB/LSB.
+
+> +	enable-gpio = <&gpio0 29 GPIO_ACTIVE_HIGH>;
+> +};
+
+This needs gpio maintainer ack. Adding Linus and Alexandre.
+
+Please also cc devicetree@vger.kernel.org always when modifying
+DT bindings.
+
+> diff --git a/Documentation/devicetree/bindings/leds/leds-netxbig.txt b/Documentation/devicetree/bindings/leds/leds-netxbig.txt
+> new file mode 100644
+> index 000000000000..efadbecbfeb9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/leds-netxbig.txt
+> @@ -0,0 +1,92 @@
+> +Binding for the CPLD LEDs (GPIO extension bus) found on some LaCie/Seagate
+> +boards (Example: 2Big/5Big Network v2, 2Big NAS).
+> +
+> +Required properties:
+> +- compatible: "lacie,netxbig-leds".
+> +- gpio-ext: Phandle for the gpio-ext bus.
+> +
+> +Optional properties:
+> +- timers: Timer array. Each timer entry is represented by three integers:
+> +  Mode (gpio-ext bus), delay_on and delay_off.
+> +
+> +Each LED is represented as a sub-node of the netxbig-leds device.
+> +
+> +Required sub-node properties:
+> +- mode-addr: Mode register address on gpio-ext bus.
+> +- mode-val: Mode to value mapping. Each entry is represented by two integers:
+> +  A mode and the corresponding value on the gpio-ext bus.
+> +- bright-addr: Brightness register address on gpio-ext bus.
+> +- bright-max: Maximum brightness value.
+
+We have a property led-max-microamp for this. Since LED subsystem
+brightness level is not suitable for describing hardware properties,
+we've switched to using microamperes. There is pending patch [1] that
+makes the things more precise.
+
+> +
+> +Optional sub-node properties:
+> +- label: Name for this LED. If omitted, the label is taken from the node name.
+> +- linux,default-trigger: Trigger assigned to the LED.
+> +
+> +Example:
+> +
+> +netxbig-leds {
+> +	compatible = "lacie,netxbig-leds";
+> +
+> +	gpio-ext = &gpio_ext;
+> +
+> +	timers = <NETXBIG_LED_TIMER1 500 500
+> +		  NETXBIG_LED_TIMER2 500 1000>;
+> +
+> +	blue-power {
+> +		label = "netxbig:blue:power";
+> +		mode-addr = <0>;
+> +		mode-val = <NETXBIG_LED_OFF 0
+> +			    NETXBIG_LED_ON 1
+> +			    NETXBIG_LED_TIMER1 3
+> +			    NETXBIG_LED_TIMER2 7>;
+> +		bright-addr = <1>;
+> +		bright-max = <7>;
+> +	};
+> +	red-power {
+> +		label = "netxbig:red:power";
+> +		mode-addr = <0>;
+> +		mode-val = <NETXBIG_LED_OFF 0
+> +			    NETXBIG_LED_ON 2
+> +			    NETXBIG_LED_TIMER1 4>;
+> +		bright-addr = <1>;
+> +		bright-max = <7>;
+> +	};
+> +	blue-sata0 {
+> +		label = "netxbig:blue:sata0";
+> +		mode-addr = <3>;
+> +		mode-val = <NETXBIG_LED_OFF 0
+> +			    NETXBIG_LED_ON 7
+> +			    NETXBIG_LED_SATA 1
+> +			    NETXBIG_LED_TIMER1 3>;
+> +		bright-addr = <2>;
+> +		bright-max = <7>;
+> +	};
+> +	red-sata0 {
+> +		label = "netxbig:red:sata0";
+> +		mode-addr = <3>;
+> +		mode-val = <NETXBIG_LED_OFF 0
+> +			    NETXBIG_LED_ON 2
+> +			    NETXBIG_LED_TIMER1 4>;
+> +		bright-addr = <2>;
+> +		bright-max = <7>;
+> +	};
+> +	blue-sata1 {
+> +		label = "netxbig:blue:sata1";
+> +		mode-addr = <4>;
+> +		mode-val = <NETXBIG_LED_OFF 0
+> +			    NETXBIG_LED_ON 7
+> +			    NETXBIG_LED_SATA 1
+> +			    NETXBIG_LED_TIMER1 3>;
+> +		bright-addr = <2>;
+> +		bright-max = <7>;
+> +	};
+> +	red-sata1 {
+> +		label = "netxbig:red:sata1";
+> +		mode-addr = <4>;
+> +		mode-val = <NETXBIG_LED_OFF 0
+> +			    NETXBIG_LED_ON 2
+> +			    NETXBIG_LED_TIMER1 4>;
+> +		bright-addr = <2>;
+> +		bright-max = <7>;
+> +	};
+> +};
+> diff --git a/drivers/leds/leds-netxbig.c b/drivers/leds/leds-netxbig.c
+> index 25e419752a7b..3649dfebd1d3 100644
+> --- a/drivers/leds/leds-netxbig.c
+> +++ b/drivers/leds/leds-netxbig.c
+> @@ -26,6 +26,7 @@
+>   #include <linux/spinlock.h>
+>   #include <linux/platform_device.h>
+>   #include <linux/gpio.h>
+> +#include <linux/of_gpio.h>
+>   #include <linux/leds.h>
+>   #include <linux/platform_data/leds-kirkwood-netxbig.h>
+>
+> @@ -140,6 +141,11 @@ struct netxbig_led_data {
+>   	spinlock_t		lock;
+>   };
+>
+> +struct netxbig_led_priv {
+> +	struct netxbig_led_platform_data *pdata;
+> +	struct netxbig_led_data leds_data[];
+> +};
+> +
+>   static int netxbig_led_get_timer_mode(enum netxbig_led_mode *mode,
+>   				      unsigned long delay_on,
+>   				      unsigned long delay_off,
+> @@ -304,12 +310,12 @@ static void delete_netxbig_led(struct netxbig_led_data *led_dat)
+>   	led_classdev_unregister(&led_dat->cdev);
+>   }
+>
+> -static int
+> -create_netxbig_led(struct platform_device *pdev,
+> -		   struct netxbig_led_data *led_dat,
+> -		   const struct netxbig_led *template)
+> +static int create_netxbig_led(struct platform_device *pdev, int led,
+> +			      struct netxbig_led_priv *priv)
+>   {
+> -	struct netxbig_led_platform_data *pdata = dev_get_platdata(&pdev->dev);
+> +	struct netxbig_led_platform_data *pdata = priv->pdata;
+> +	struct netxbig_led_data *led_dat = &priv->leds_data[led];
+> +	const struct netxbig_led *template = &priv->pdata->leds[led];
+>
+>   	spin_lock_init(&led_dat->lock);
+>   	led_dat->gpio_ext = pdata->gpio_ext;
+> @@ -346,38 +352,241 @@ create_netxbig_led(struct platform_device *pdev,
+>   	return led_classdev_register(&pdev->dev, &led_dat->cdev);
+>   }
+>
+> +#ifdef CONFIG_OF_GPIO
+> +static int gpio_ext_get_of_pdata(struct device *dev, struct device_node *np,
+> +				 struct netxbig_gpio_ext *gpio_ext)
+> +{
+> +	int *addr, *data;
+> +	int num_addr, num_data;
+> +	int ret;
+> +	int i;
+> +
+> +	ret = of_gpio_named_count(np, "addr-gpios");
+> +	if (ret < 0)
+> +		return ret;
+
+Please add error messages when parsing fails somewhere. There is a bit
+to parse in this driver and the messages would make debugging easier.
+
+> +	num_addr = ret;
+> +	addr = devm_kzalloc(dev, num_addr * sizeof(unsigned int), GFP_KERNEL);
+> +	if (!addr)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < num_addr; i++) {
+> +		ret = of_get_named_gpio(np, "addr-gpios", i);
+> +		if (ret < 0)
+> +			return ret;
+> +		addr[i] = ret;
+> +	}
+> +	gpio_ext->addr = addr;
+> +	gpio_ext->num_addr = num_addr;
+> +
+> +	ret = of_gpio_named_count(np, "data-gpios");
+> +	if (ret < 0)
+> +		return ret;
+> +	num_data = ret;
+> +	data = devm_kzalloc(dev, num_data * sizeof(unsigned int), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < num_data; i++) {
+> +		ret = of_get_named_gpio(np, "data-gpios", i);
+> +		if (ret < 0)
+> +			return ret;
+> +		data[i] = ret;
+> +	}
+> +	gpio_ext->data = data;
+> +	gpio_ext->num_data = num_data;
+> +
+> +	ret = of_get_named_gpio(np, "enable-gpio", 0);
+> +	if (ret < 0)
+> +		return ret;
+> +	gpio_ext->enable = ret;
+> +
+> +	return 0;
+> +}
+> +
+> +static int netxbig_leds_get_of_pdata(struct device *dev,
+> +				     struct netxbig_led_platform_data *pdata)
+> +{
+> +	struct device_node *np = dev->of_node;
+> +	struct device_node *gpio_ext_np;
+> +	struct device_node *child;
+> +	struct netxbig_gpio_ext *gpio_ext;
+> +	struct netxbig_led_timer *timers;
+> +	struct netxbig_led *leds, *led;
+> +	int num_timers;
+> +	int num_leds = 0;
+> +	int ret;
+> +	int i;
+> +
+> +	/* GPIO extension */
+> +	gpio_ext_np = of_parse_phandle(np, "gpio-ext", 0);
+> +	if (!gpio_ext_np)
+> +		return -EINVAL;
+
+Please add error message here.
+
+> +	gpio_ext = devm_kzalloc(dev, sizeof(struct netxbig_gpio_ext),
+> +				GFP_KERNEL);
+
+Kernel code style would be: sizeof(*gpio_ext). The same is relevant
+to all other occurrences of sizeof in this file.
+
+> +	if (!gpio_ext)
+> +		return -ENOMEM;
+> +	ret = gpio_ext_get_of_pdata(dev, gpio_ext_np, gpio_ext);
+> +	if (ret)
+> +		return ret;
+> +	of_node_put(gpio_ext_np);
+> +	pdata->gpio_ext = gpio_ext;
+> +
+> +	/* Timers (optional) */
+> +	ret = of_property_count_u32_elems(np, "timers");
+> +	if (ret > 0) {
+> +		if (ret % 3)
+> +			return -EINVAL;
+> +		num_timers = ret / 3;
+> +		timers = devm_kzalloc(dev,
+> +				num_timers * sizeof(struct netxbig_led_timer),
+> +				GFP_KERNEL);
+> +		if (!timers)
+> +			return -ENOMEM;
+> +		for (i = 0; i < num_timers; i++) {
+> +			u32 tmp;
+> +
+> +			of_property_read_u32_index(np, "timers", 3 * i,
+> +						   &timers[i].mode);
+> +			if (timers[i].mode >= NETXBIG_LED_MODE_NUM)
+> +				return -EINVAL;
+> +			of_property_read_u32_index(np, "timers",
+> +						   3 * i + 1, &tmp);
+> +			timers[i].delay_on = tmp;
+> +			of_property_read_u32_index(np, "timers",
+> +						   3 * i + 2, &tmp);
+> +			timers[i].delay_off = tmp;
+
+You could get rid of tmp by reformatting above as follows:
+
+of_property_read_u32_index(np, "timers", 3 * i + 1,
+                            &timers[i].delay_on);
+of_property_read_u32_index(np, "timers", 3 * i + 2,
+                            &timers[i].delay_off);
+
+> +		}
+> +		pdata->timer = timers;
+> +		pdata->num_timer = num_timers;
+> +	}
+> +
+> +	/* LEDs */
+> +	num_leds = of_get_child_count(np);
+> +	if (!num_leds)
+> +		return -ENODEV;
+> +
+> +	leds = devm_kzalloc(dev, num_leds * sizeof(struct netxbig_led),
+> +			    GFP_KERNEL);
+> +	if (!leds)
+> +		return -ENOMEM;
+> +
+> +	led = leds;
+> +	for_each_child_of_node(np, child) {
+> +		const char *string;
+> +		int *mode_val;
+> +		int num_modes;
+> +
+> +		if (!of_property_read_string(child, "label", &string))
+> +			led->name = string;
+> +		else
+> +			led->name = child->name;
+> +
+> +		if (!of_property_read_string(child,
+> +					     "linux,default-trigger", &string))
+> +			led->default_trigger = string;
+
+Please put above calls to of_property_read_string after all the
+below conditions that can end up with returning an error.
+
+> +
+> +		if (of_property_read_u32(child, "mode-addr",
+> +					 &led->mode_addr))
+> +			return -EINVAL;
+> +
+> +		if (of_property_read_u32(child, "bright-addr",
+> +					 &led->bright_addr))
+> +			return -EINVAL;
+> +
+> +		mode_val = devm_kzalloc(dev,
+> +					NETXBIG_LED_MODE_NUM * sizeof(int),
+> +					GFP_KERNEL);
+> +		if (!mode_val)
+> +			return -ENOMEM;
+> +
+> +		for (i = 0; i < NETXBIG_LED_MODE_NUM; i++)
+> +			mode_val[i] = NETXBIG_LED_INVALID_MODE;
+> +
+> +		ret = of_property_count_u32_elems(child, "mode-val");
+> +		if (ret < 0 || ret % 2)
+> +			return -EINVAL;
+> +		num_modes = ret / 2;
+> +		if (num_modes > NETXBIG_LED_MODE_NUM)
+> +			return -EINVAL;
+> +
+> +		for (i = 0; i < num_modes; i++) {
+> +			int mode;
+> +			int val;
+> +
+> +			of_property_read_u32_index(child,
+> +						   "mode-val", 2 * i, &mode);
+> +			of_property_read_u32_index(child,
+> +						   "mode-val", 2 * i + 1, &val);
+> +			if (mode >= NETXBIG_LED_MODE_NUM)
+> +				return -EINVAL;
+> +			mode_val[mode] = val;
+> +		}
+> +		led->mode_val = mode_val;
+> +
+> +		led++;
+> +	}
+> +
+> +	pdata->leds = leds;
+> +	pdata->num_leds = num_leds;
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id of_netxbig_leds_match[] = {
+> +	{ .compatible = "lacie,netxbig-leds", },
+> +	{},
+> +};
+> +#else
+> +static int netxbig_leds_get_of_pdata(struct device *dev,
+> +				     struct netxbig_led_platform_data *pdata)
+> +{
+> +	return -ENODEV;
+> +}
+> +#endif /* CONFIG_OF_GPIO */
+> +
+>   static int netxbig_led_probe(struct platform_device *pdev)
+>   {
+>   	struct netxbig_led_platform_data *pdata = dev_get_platdata(&pdev->dev);
+> -	struct netxbig_led_data *leds_data;
+> +	struct netxbig_led_priv *priv;
+>   	int i;
+>   	int ret;
+>
+> -	if (!pdata)
+> -		return -EINVAL;
+> +	if (!pdata) {
+> +		pdata = devm_kzalloc(&pdev->dev,
+> +				     sizeof(struct netxbig_led_platform_data),
+> +				     GFP_KERNEL);
+> +		if (!pdata)
+> +			return -ENOMEM;
+> +		ret = netxbig_leds_get_of_pdata(&pdev->dev, pdata);
+> +		if (ret)
+> +			return ret;
+> +	}
+
+You're removing board file for the device later in this patch set, but
+in the same time you seem to expect pdata from board file as the
+first choice and resort to parsing DT only if pdata is not available.
+This is inconsistent. I'd leave the board file intact for now, also
+because there can be some users of it.
+
+BTW how do you compile the driver? I've tried to use
+multi_v5_defconfig and mvebu_v5_defconfig and I have build breaks
+with both of them on the recent linux-next.
+
+>
+> -	leds_data = devm_kzalloc(&pdev->dev,
+> -		sizeof(struct netxbig_led_data) * pdata->num_leds, GFP_KERNEL);
+> -	if (!leds_data)
+> +	priv = devm_kzalloc(&pdev->dev,
+> +			    sizeof(struct netxbig_led_priv) +
+> +			    pdata->num_leds * sizeof(struct netxbig_led_data),
+> +			    GFP_KERNEL);
+> +	if (!priv)
+>   		return -ENOMEM;
+> +	priv->pdata = pdata;
+>
+>   	ret = gpio_ext_init(pdata->gpio_ext);
+>   	if (ret < 0)
+>   		return ret;
+>
+>   	for (i = 0; i < pdata->num_leds; i++) {
+> -		ret = create_netxbig_led(pdev, &leds_data[i], &pdata->leds[i]);
+> +		ret = create_netxbig_led(pdev, i, priv);
+>   		if (ret < 0)
+>   			goto err_free_leds;
+>   	}
+> -
+> -	platform_set_drvdata(pdev, leds_data);
+> +	platform_set_drvdata(pdev, priv);
+>
+>   	return 0;
+>
+>   err_free_leds:
+>   	for (i = i - 1; i >= 0; i--)
+> -		delete_netxbig_led(&leds_data[i]);
+> +		delete_netxbig_led(&priv->leds_data[i]);
+>
+>   	gpio_ext_free(pdata->gpio_ext);
+>   	return ret;
+> @@ -385,14 +594,12 @@ err_free_leds:
+>
+>   static int netxbig_led_remove(struct platform_device *pdev)
+>   {
+> -	struct netxbig_led_platform_data *pdata = dev_get_platdata(&pdev->dev);
+> -	struct netxbig_led_data *leds_data;
+> +	struct netxbig_led_priv *priv = platform_get_drvdata(pdev);
+> +	struct netxbig_led_platform_data *pdata = priv->pdata;
+>   	int i;
+>
+> -	leds_data = platform_get_drvdata(pdev);
+> -
+>   	for (i = 0; i < pdata->num_leds; i++)
+> -		delete_netxbig_led(&leds_data[i]);
+> +		delete_netxbig_led(&priv->leds_data[i]);
+>
+>   	gpio_ext_free(pdata->gpio_ext);
+>
+> @@ -403,7 +610,8 @@ static struct platform_driver netxbig_led_driver = {
+>   	.probe		= netxbig_led_probe,
+>   	.remove		= netxbig_led_remove,
+>   	.driver		= {
+> -		.name	= "leds-netxbig",
+> +		.name		= "leds-netxbig",
+> +		.of_match_table	= of_match_ptr(of_netxbig_leds_match),
+>   	},
+>   };
+>
+> diff --git a/include/dt-bindings/leds/leds-netxbig.h b/include/dt-bindings/leds/leds-netxbig.h
+> new file mode 100644
+> index 000000000000..92658b0310b2
+> --- /dev/null
+> +++ b/include/dt-bindings/leds/leds-netxbig.h
+> @@ -0,0 +1,18 @@
+> +/*
+> + * This header provides constants for netxbig LED bindings.
+> + *
+> + * This file is licensed under the terms of the GNU General Public
+> + * License version 2.  This program is licensed "as is" without any
+> + * warranty of any kind, whether express or implied.
+> + */
+> +
+> +#ifndef _DT_BINDINGS_LEDS_NETXBIG_H
+> +#define _DT_BINDINGS_LEDS_NETXBIG_H
+> +
+> +#define NETXBIG_LED_OFF		0
+> +#define NETXBIG_LED_ON		1
+> +#define NETXBIG_LED_SATA	2
+> +#define NETXBIG_LED_TIMER1	3
+> +#define NETXBIG_LED_TIMER2	4
+> +
+> +#endif /* _DT_BINDINGS_LEDS_NETXBIG_H */
+>
+
+[1] https://patchwork.ozlabs.org/patch/459991/
+
 -- 
-1.7.9.5
+Best Regards,
+Jacek Anaszewski
