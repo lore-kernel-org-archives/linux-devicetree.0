@@ -1,83 +1,58 @@
 From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 1/2] iio: adc: vf610: implement configurable conversion modes
-Date: Tue, 23 Jun 2015 09:27:36 -0500
-Message-ID: <CAL_JsqLX88SFHPrAwaPMijW0_3mOge43FZ4Cw08WwdNVjZJ-WA@mail.gmail.com>
-References: <1432730872-14325-1-git-send-email-stefan@agner.ch>
- <1432730872-14325-2-git-send-email-stefan@agner.ch> <CAL_JsqK0YxgJ-k8kSs6XQj9n3FSg4QBd-GdFEfcafH7Cm4NreQ@mail.gmail.com>
- <14d469dedae9de1ce519fe90401e526e@agner.ch> <557D6184.90105@kernel.org>
+Subject: Re: [PATCH V2 1/2] mfd: add Marvell 88pm88x description
+Date: Tue, 23 Jun 2015 09:31:00 -0500
+Message-ID: <CAL_JsqKjNdtp1A7LqqnjAnGPmCu-fwum6D9EPOoaVF0C=DacTw@mail.gmail.com>
+References: <1434098601-3498-1-git-send-email-yizhang@marvell.com> <1434098601-3498-2-git-send-email-yizhang@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <557D6184.90105-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1434098601-3498-2-git-send-email-yizhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, knaack.h-Mmb7MZpHnFY@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Yi Zhang <yizhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Qiao Zhou <zhouqiao-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, zhenzh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 14, 2015 at 6:12 AM, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On 08/06/15 21:07, Stefan Agner wrote:
->> On 2015-06-08 19:49, Rob Herring wrote:
->>> On Wed, May 27, 2015 at 7:47 AM, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org> wrote:
->>>> Support configurable conversion mode through sysfs. So far, the
->>>> mode used was low-power, which is enabled by default now. Beside
->>>> that, the modes normal and high-speed are selectable as well.
->>>>
->>>> Use the new device tree property which specifies the maximum ADC
->>>> conversion clock frequencies. Depending on the mode used, the
->>>> available resulting conversion frequency are calculated
->>>> dynamically.
->>>>
->>>> Acked-by: Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->>>> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
->>>> ---
->>>>  Documentation/ABI/testing/sysfs-bus-iio-vf610      |   7 +
->>>>  .../devicetree/bindings/iio/adc/vf610-adc.txt      |   9 ++
->>>>  drivers/iio/adc/vf610_adc.c                        | 146 +++++++++++++++------
->>>>  3 files changed, 120 insertions(+), 42 deletions(-)
->>>>  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-vf610
->>>>
->>>> diff --git a/Documentation/ABI/testing/sysfs-bus-iio-vf610 b/Documentation/ABI/testing/sysfs-bus-iio-vf610
->>>> new file mode 100644
->>>> index 0000000..ecbc1f4
->>>> --- /dev/null
->>>> +++ b/Documentation/ABI/testing/sysfs-bus-iio-vf610
->>>> @@ -0,0 +1,7 @@
->>>> +What:          /sys/bus/iio/devices/iio:deviceX/conversion_mode
->>>> +KernelVersion: 4.2
->>>> +Contact:       linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>>> +Description:
->>>> +               Specifies the hardware conversion mode used. The three
->>>> +               available modes are "normal", "high-speed" and "low-power",
->>>> +               where the last is the default mode.
->>>> diff --git a/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt b/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt
->>>> index 1a4a43d..3eb40e2 100644
->>>> --- a/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt
->>>> +++ b/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt
->>>> @@ -11,6 +11,13 @@ Required properties:
->>>>  - clock-names: Must contain "adc", matching entry in the clocks property.
->>>>  - vref-supply: The regulator supply ADC reference voltage.
->>>>
->>>> +Recommended properties:
->>>> +- fsl,adck-max-frequency: Maximum frequencies according to datasheets operating
->>>> +  requirements. Three values are required, depending on conversion mode:
->>>> +  - Frequency in normal mode (ADLPC=0, ADHSC=0)
->>>> +  - Frequency in high-speed mode (ADLPC=0, ADHSC=1)
->>>> +  - Frequency in low-power mode (ADLPC=1, ADHSC=0)
->>>
->>> Why is this "adck" rather than "adc"?
->>
->> That is the name of the clock according to the reference manual and data
->> sheet.
->>
->>> How is this related to today's patch adding min-sample-time?
->>
->> It is related in that this clock is the base to calculate the sampling
->> time, but otherwise not really related. Afaik, not respecting the
->> maximum clock frequency is probably more a issue for the SAR part of the
->> ADC.
-> Rob, are you happy with Stefan's responses?
+On Fri, Jun 12, 2015 at 3:43 AM, Yi Zhang <yizhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org> wrote:
+> 88pm880 and 88pm886 are two combo PMIC chips, most of the function and the
+> register mapping are the same
 
-Yes, it is fine.
+How do they compare to 80x/822/860 PMICs?
+
+>
+> Signed-off-by: Yi Zhang <yizhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/mfd/88pm88x.txt | 33 +++++++++++++++++++++++
+>  1 file changed, 33 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/88pm88x.txt
+>
+> diff --git a/Documentation/devicetree/bindings/mfd/88pm88x.txt b/Documentation/devicetree/bindings/mfd/88pm88x.txt
+> new file mode 100644
+> index 0000000..72e741c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/88pm88x.txt
+> @@ -0,0 +1,33 @@
+> +Marvell 88pm88x combo PMIC chip
+> +
+> +This series of chip integrates regulator, rtc, onkey, switch charger,
+> +fuelgauge, gpadc and a range of I/O pins.
+> +
+> +88pm886 and 88pm880 are two very similar chips, most of the registers mapping
+> +and functions are the same, the main difference is the latter has a separate
+> +i2c slave address to cover BUCK related setting
+> +
+> +Required properties:
+> +- compatible: one of the strings for a specific chip:
+> +  "marvell,88pm886"
+> +  "marvell,88pm880"
+> +- reg: the i2c address
+> +- interrupt-controller: it works as an interrupt controller managing its irqs
+> +- interrupt-cells: this value is 1
+> +
+> +Optional properties:
+> +- marvell,88pm88x-irq-write-clear: the interrupt ack method
+
+The 80x/860 binding needs the same property. Please coordinate this
+with Vaibhav.
 
 Rob
 --
