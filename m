@@ -1,74 +1,61 @@
-From: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
-Subject: Re: [PATCH V2 1/2] mfd: add Marvell 88pm88x description
-Date: Tue, 23 Jun 2015 20:16:01 +0530
-Message-ID: <55897129.1060500@linaro.org>
-References: <1434098601-3498-1-git-send-email-yizhang@marvell.com> <1434098601-3498-2-git-send-email-yizhang@marvell.com> <CAL_JsqKjNdtp1A7LqqnjAnGPmCu-fwum6D9EPOoaVF0C=DacTw@mail.gmail.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH 01/17] phy: ti-pipe3: use ti_pipe3_power_off to power
+ off the PHY during probe
+Date: Tue, 23 Jun 2015 17:47:23 +0300
+Message-ID: <20150623174723.f6d28a668421d6c16289770f@ti.com>
+References: <1435060743-5511-1-git-send-email-kishon@ti.com>
+	<1435060743-5511-2-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKjNdtp1A7LqqnjAnGPmCu-fwum6D9EPOoaVF0C=DacTw@mail.gmail.com>
+In-Reply-To: <1435060743-5511-2-git-send-email-kishon@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>, Yi Zhang <yizhang@marvell.com>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Paul Bolle <pebolle@tiscali.nl>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Qiao Zhou <zhouqiao@marvell.com>, zhenzh@marvell.com
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: bcousson@baylibre.com, tony@atomide.com, balbi@ti.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, gregkh@linuxfoundation.org, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
+On Tue, 23 Jun 2015 17:28:46 +0530
+Kishon Vijay Abraham I <kishon@ti.com> wrote:
 
+> No functional change. Previously omap_control_phy_power() was used to power
+> off the PHY during probe. But once PIPE3 driver is adapted to use syscon,
+> omap_control_phy_power() cannot be used. Hence used ti_pipe3_power_off
+> to power off the PHY.
+> 
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 
-On Tuesday 23 June 2015 08:01 PM, Rob Herring wrote:
-> On Fri, Jun 12, 2015 at 3:43 AM, Yi Zhang <yizhang@marvell.com> wrote:
->> 88pm880 and 88pm886 are two combo PMIC chips, most of the function and the
->> register mapping are the same
->
-> How do they compare to 80x/822/860 PMICs?
->
+Acked-by: Roger Quadros <rogerq@ti.com>
 
-Zhang,
+cheers,
+-roger
 
-Sorry, I missed this patch-series.
-
-Is there any way we can get access to datahsheets of all these devices?
-
->>
->> Signed-off-by: Yi Zhang <yizhang@marvell.com>
->> ---
->>   Documentation/devicetree/bindings/mfd/88pm88x.txt | 33 +++++++++++++++++++++++
->>   1 file changed, 33 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/mfd/88pm88x.txt
->>
->> diff --git a/Documentation/devicetree/bindings/mfd/88pm88x.txt b/Documentation/devicetree/bindings/mfd/88pm88x.txt
->> new file mode 100644
->> index 0000000..72e741c
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mfd/88pm88x.txt
->> @@ -0,0 +1,33 @@
->> +Marvell 88pm88x combo PMIC chip
->> +
->> +This series of chip integrates regulator, rtc, onkey, switch charger,
->> +fuelgauge, gpadc and a range of I/O pins.
->> +
->> +88pm886 and 88pm880 are two very similar chips, most of the registers mapping
->> +and functions are the same, the main difference is the latter has a separate
->> +i2c slave address to cover BUCK related setting
->> +
->> +Required properties:
->> +- compatible: one of the strings for a specific chip:
->> +  "marvell,88pm886"
->> +  "marvell,88pm880"
->> +- reg: the i2c address
->> +- interrupt-controller: it works as an interrupt controller managing its irqs
->> +- interrupt-cells: this value is 1
->> +
->> +Optional properties:
->> +- marvell,88pm88x-irq-write-clear: the interrupt ack method
->
-> The 80x/860 binding needs the same property. Please coordinate this
-> with Vaibhav.
->
-
-Please refer to the patch
-
-https://lkml.org/lkml/2015/6/17/545
-
-Thanks,
-Vaibhav
+> ---
+>  drivers/phy/phy-ti-pipe3.c |    4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/phy/phy-ti-pipe3.c b/drivers/phy/phy-ti-pipe3.c
+> index 08020dc..d784426 100644
+> --- a/drivers/phy/phy-ti-pipe3.c
+> +++ b/drivers/phy/phy-ti-pipe3.c
+> @@ -431,8 +431,6 @@ static int ti_pipe3_probe(struct platform_device *pdev)
+>  
+>  	phy->control_dev = &control_pdev->dev;
+>  
+> -	omap_control_phy_power(phy->control_dev, 0);
+> -
+>  	platform_set_drvdata(pdev, phy);
+>  	pm_runtime_enable(phy->dev);
+>  
+> @@ -451,6 +449,8 @@ static int ti_pipe3_probe(struct platform_device *pdev)
+>  		return PTR_ERR(generic_phy);
+>  
+>  	phy_set_drvdata(generic_phy, phy);
+> +	ti_pipe3_power_off(generic_phy);
+> +
+>  	phy_provider = devm_of_phy_provider_register(phy->dev,
+>  			of_phy_simple_xlate);
+>  	if (IS_ERR(phy_provider))
+> -- 
+> 1.7.9.5
+> 
