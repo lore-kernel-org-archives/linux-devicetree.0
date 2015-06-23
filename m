@@ -1,55 +1,41 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [linux-sunxi] [PATCH 1/4] ARM: dts: sunxi: Add regulator-boot-on
- to usb host port regulator nodes
-Date: Tue, 23 Jun 2015 10:19:10 +0200
-Message-ID: <5589167E.4020905@redhat.com>
-References: <1434814810-26285-1-git-send-email-hdegoede@redhat.com> <1434814810-26285-2-git-send-email-hdegoede@redhat.com> <CAGRGNgU7179K408=PekziP9ZzzG7+rvhm=e7TWjZk1UhkAnVZQ@mail.gmail.com> <5587C720.9040007@redhat.com> <20150623071646.GL2266@lukather>
+From: Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 0/3] clk: stm32: Add clock driver for STM32F4[23]xxx
+ devices
+Date: Tue, 23 Jun 2015 09:22:01 +0100
+Message-ID: <55891729.7070809@linaro.org>
+References: <1432327273-6810-1-git-send-email-daniel.thompson@linaro.org> <1433966978-24422-1-git-send-email-daniel.thompson@linaro.org> <20150622224832.GI22132@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150623071646.GL2266@lukather>
+In-Reply-To: <20150622224832.GI22132-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kamil Lulko <rev13-5tc4TXWwyLM@public.gmane.org>, Andreas Farber <afaerber-l3A5Bk7waGM@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 23-06-15 09:16, Maxime Ripard wrote:
-> On Mon, Jun 22, 2015 at 10:28:16AM +0200, Hans de Goede wrote:
->> Hi,
+On 22/06/15 23:48, Stephen Boyd wrote:
+> On 06/10, Daniel Thompson wrote:
+>> This patchset implements a clock driver for STM32F42xxx and STM32F43xxx
+>> series devices. It supports decoding the state configured by the
+>> bootloader (PLL, clock select, bus dividers) and all the gates clocks.
+>> It does not currently support the I2S and SAI PLLs.
 >>
->> On 22-06-15 02:30, Julian Calaby wrote:
->>> Hi Hans,
->>>
->>> On Sun, Jun 21, 2015 at 1:40 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
->>>> u-boot will have turned on the power to the usb host ports, so mark them
->>>> as regulator-boot-on, this stops the power on the ports from temporarily
->>>> getting turned off during boot, causing issues with e.g. usb powered
->>>> harddisks.
->>>
->>> Stupid question: shouldn't u-boot set this property?
+>> Relies on "Add support to STMicroeletronics STM32 family" v9 by Maxime
+>> Coquelin: http://thread.gmane.org/gmane.linux.kernel/1961049 .
 >>
->> We could make u-boot set this property but that will require a lot of code on
->> u-boot's side which is simply not there atm. And traditionally this property
->> is is simply a part of the dts files as shipped with the kernel.
 >
-> What happens if the property is set but the regulator is not actually
-> enabled?
+> I applied 1 and 2. Looks like #3 should go through arm-soc at
+> some later time?
 
-Then its gets enabled when the regulator loads, so assuming that the usb driver
-is enabled in the kernel config 0.5 (built-in) - 3 (module) seconds earlier then
-it otherwise would.
+Agreed (that is also the patch that must be correctly ordered w.r.t. 
+Maxime's patches).
 
-This is not a problem since usb-ports are normally always powered anyways, the only
-reason they can be turned off on embedded systems like sunxi is for powersaving
-during suspend (which actually goes against the usb spec, but usually works so
-most tablets / laptops do this).
 
-Regards,
+Thanks.
 
-Hans
+Daniel.
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
