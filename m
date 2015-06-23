@@ -1,108 +1,77 @@
-From: Inki Dae <inki.dae@samsung.com>
-Subject: Re: [PATCH v6 06/15] of: add helper for getting endpoint node of
- specific identifiers
-Date: Tue, 23 Jun 2015 11:29:06 +0900
-Message-ID: <5588C472.4060400@samsung.com>
-References: <1434113958-15877-1-git-send-email-human.hwang@samsung.com>
- <1434113958-15877-7-git-send-email-human.hwang@samsung.com>
- <CAPM=9tydy9NXh-P8=d62tewqtCKwZtd-SJUcb-vM4KMARA+sMA@mail.gmail.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH 8/8] dt: cpufreq: st: Provide bindings for ST's CPUFreq
+ implementation
+Date: Tue, 23 Jun 2015 08:04:58 +0530
+Message-ID: <20150623023458.GC16776@linux>
+References: <1434987837-24212-1-git-send-email-lee.jones@linaro.org>
+ <1434987837-24212-9-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <CAPM=9tydy9NXh-P8=d62tewqtCKwZtd-SJUcb-vM4KMARA+sMA@mail.gmail.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Dave Airlie <airlied@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sw0312.kim@samsung.com" <sw0312.kim@samsung.com>, dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1434987837-24212-9-git-send-email-lee.jones@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>, robh@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, rjw@rjwysocki.net, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, ajitpal.singh@st.com
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAxNeuFhCAwNuyblCAyM+ydvCAwOToxOSwgRGF2ZSBBaXJsaWUgd3JvdGU6Cj4gT24gMTIg
-SnVuZSAyMDE1IGF0IDIyOjU5LCBIeXVuZ3dvbiBId2FuZyA8aHVtYW4uaHdhbmdAc2Ftc3VuZy5j
-b20+IHdyb3RlOgo+PiBXaGVuIHRoZXJlIGFyZSBtdWx0aXBsZSBwb3J0cyBvciBtdWx0aXBsZSBl
-bmRwb2ludHMgaW4gYSBwb3J0LCB0aGV5IGhhdmUgdG8gYmUKPj4gZGlzdGluZ3Vpc2hlZCBieSB0
-aGUgdmFsdWUgb2YgcmVnIHByb3BlcnR5LiBJdCBpcyBjb21tb24uIFRoZSBkcml2ZXJzIGNhbiBn
-ZXQKPj4gdGhlIHNwZWNpZmljIGVuZHBvaW50IGluIHRoZSBzcGVjaWZpYyBwb3J0IHZpYSB0aGlz
-IGZ1bmN0aW9uLiBOb3cgdGhlIGRyaXZlcnMKPj4gaGF2ZSB0byBpbXBsZW1lbnQgdGhpcyBjb2Rl
-IGluIHRoZW1zZWx2ZXMgb3IgaGF2ZSB0byBmb3JjZSB0aGUgb3JkZXIgb2YgZHQgbm9kZXMKPj4g
-dG8gZ2V0IHRoZSByaWdodCBub2RlLgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBIeXVuZ3dvbiBId2Fu
-ZyA8aHVtYW4uaHdhbmdAc2Ftc3VuZy5jb20+Cj4+IEFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9i
-aCtkdEBrZXJuZWwub3JnPgo+IAo+IEZZSSwgU2luY2UgSSdtIG1lcmdpbmcgdGhpcyB2aWEgZXh5
-bm9zLW5leHQgaW50byBteSB0cmVlLCBpdCBicm9rZQo+IG1vZHVsZSBidWlsZHMgb2YgZXh5bm9z
-LCBiZWNhdXNlIGl0IGRvZXNuJ3QgZXhwb3J0IHRoZSBzeW1ib2wgaXQgYWRkcywKPiBJJ3ZlIGFk
-ZGVkIGEgcGF0Y2ggdG8gbXkgLW5leHQgdHJlZSB0byBmaXggaXQgdXAuCj4gCj4gSW5raSwgaW4g
-ZnV0dXJlIGNhbiB5b3UgYWRkIGEgbW9kdWxhciBidWlsZCB0byBwcmUtcHVsbCB0ZXN0aW5nLgoK
-WWVzIEkgZG8uIEkgc2hvdWxkIGhhdmUgdGVzdGVkIHRoZSBtb2R1bGFyIGJ1aWxkLiBTb3JyeSBm
-b3IgdGhpcy4KClRoYW5rcywKSW5raSBEYWUKCj4gCj4gRGF2ZS4KPiAKPj4gLS0tCj4+IENoYW5n
-ZXMgYmVmb3JlOgo+PiAtIFJlZmVyIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gv
-NjE5MTc1MS8KPj4gQ2hhbmdlcyBmb3IgdjY6Cj4+IC0gTm9uZQo+PiAgZHJpdmVycy9vZi9iYXNl
-LmMgICAgICAgIHwgMzMgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCj4+ICBpbmNs
-dWRlL2xpbnV4L29mX2dyYXBoLmggfCAgOCArKysrKysrKwo+PiAgMiBmaWxlcyBjaGFuZ2VkLCA0
-MSBpbnNlcnRpb25zKCspCj4+Cj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL29mL2Jhc2UuYyBiL2Ry
-aXZlcnMvb2YvYmFzZS5jCj4+IGluZGV4IDk5NzY0ZGIuLmYzYjU4M2IgMTAwNjQ0Cj4+IC0tLSBh
-L2RyaXZlcnMvb2YvYmFzZS5jCj4+ICsrKyBiL2RyaXZlcnMvb2YvYmFzZS5jCj4+IEBAIC0yMjMz
-LDYgKzIyMzMsMzkgQEAgc3RydWN0IGRldmljZV9ub2RlICpvZl9ncmFwaF9nZXRfbmV4dF9lbmRw
-b2ludChjb25zdCBzdHJ1Y3QgZGV2aWNlX25vZGUgKnBhcmVudCwKPj4gIEVYUE9SVF9TWU1CT0wo
-b2ZfZ3JhcGhfZ2V0X25leHRfZW5kcG9pbnQpOwo+Pgo+PiAgLyoqCj4+ICsgKiBvZl9ncmFwaF9n
-ZXRfZW5kcG9pbnRfYnlfcmVncygpIC0gZ2V0IGVuZHBvaW50IG5vZGUgb2Ygc3BlY2lmaWMgaWRl
-bnRpZmllcnMKPj4gKyAqIEBwYXJlbnQ6IHBvaW50ZXIgdG8gdGhlIHBhcmVudCBkZXZpY2Ugbm9k
-ZQo+PiArICogQHBvcnRfcmVnOiBpZGVudGlmaWVyICh2YWx1ZSBvZiByZWcgcHJvcGVydHkpIG9m
-IHRoZSBwYXJlbnQgcG9ydCBub2RlCj4+ICsgKiBAcmVnOiBpZGVudGlmaWVyICh2YWx1ZSBvZiBy
-ZWcgcHJvcGVydHkpIG9mIHRoZSBlbmRwb2ludCBub2RlCj4+ICsgKgo+PiArICogUmV0dXJuOiBB
-biAnZW5kcG9pbnQnIG5vZGUgcG9pbnRlciB3aGljaCBpcyBpZGVudGlmaWVkIGJ5IHJlZyBhbmQg
-YXQgdGhlIHNhbWUKPj4gKyAqIGlzIHRoZSBjaGlsZCBvZiBhIHBvcnQgbm9kZSBpZGVudGlmaWVk
-IGJ5IHBvcnRfcmVnLiByZWcgYW5kIHBvcnRfcmVnIGFyZQo+PiArICogaWdub3JlZCB3aGVuIHRo
-ZXkgYXJlIC0xLgo+PiArICovCj4+ICtzdHJ1Y3QgZGV2aWNlX25vZGUgKm9mX2dyYXBoX2dldF9l
-bmRwb2ludF9ieV9yZWdzKAo+PiArICAgICAgIGNvbnN0IHN0cnVjdCBkZXZpY2Vfbm9kZSAqcGFy
-ZW50LCBpbnQgcG9ydF9yZWcsIGludCByZWcpCj4+ICt7Cj4+ICsgICAgICAgc3RydWN0IG9mX2Vu
-ZHBvaW50IGVuZHBvaW50Owo+PiArICAgICAgIHN0cnVjdCBkZXZpY2Vfbm9kZSAqbm9kZSwgKnBy
-ZXZfbm9kZSA9IE5VTEw7Cj4+ICsKPj4gKyAgICAgICB3aGlsZSAoMSkgewo+PiArICAgICAgICAg
-ICAgICAgbm9kZSA9IG9mX2dyYXBoX2dldF9uZXh0X2VuZHBvaW50KHBhcmVudCwgcHJldl9ub2Rl
-KTsKPj4gKyAgICAgICAgICAgICAgIG9mX25vZGVfcHV0KHByZXZfbm9kZSk7Cj4+ICsgICAgICAg
-ICAgICAgICBpZiAoIW5vZGUpCj4+ICsgICAgICAgICAgICAgICAgICAgICAgIGJyZWFrOwo+PiAr
-Cj4+ICsgICAgICAgICAgICAgICBvZl9ncmFwaF9wYXJzZV9lbmRwb2ludChub2RlLCAmZW5kcG9p
-bnQpOwo+PiArICAgICAgICAgICAgICAgaWYgKCgocG9ydF9yZWcgPT0gLTEpIHx8IChlbmRwb2lu
-dC5wb3J0ID09IHBvcnRfcmVnKSkgJiYKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgKChyZWcg
-PT0gLTEpIHx8IChlbmRwb2ludC5pZCA9PSByZWcpKSkKPj4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgcmV0dXJuIG5vZGU7Cj4+ICsKPj4gKyAgICAgICAgICAgICAgIHByZXZfbm9kZSA9IG5vZGU7
-Cj4+ICsgICAgICAgfQo+PiArCj4+ICsgICAgICAgcmV0dXJuIE5VTEw7Cj4+ICt9Cj4+ICsKPj4g
-Ky8qKgo+PiAgICogb2ZfZ3JhcGhfZ2V0X3JlbW90ZV9wb3J0X3BhcmVudCgpIC0gZ2V0IHJlbW90
-ZSBwb3J0J3MgcGFyZW50IG5vZGUKPj4gICAqIEBub2RlOiBwb2ludGVyIHRvIGEgbG9jYWwgZW5k
-cG9pbnQgZGV2aWNlX25vZGUKPj4gICAqCj4+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L29m
-X2dyYXBoLmggYi9pbmNsdWRlL2xpbnV4L29mX2dyYXBoLmgKPj4gaW5kZXggN2JjOTJlMC4uMWMx
-ZDViOSAxMDA2NDQKPj4gLS0tIGEvaW5jbHVkZS9saW51eC9vZl9ncmFwaC5oCj4+ICsrKyBiL2lu
-Y2x1ZGUvbGludXgvb2ZfZ3JhcGguaAo+PiBAQCAtNDUsNiArNDUsOCBAQCBpbnQgb2ZfZ3JhcGhf
-cGFyc2VfZW5kcG9pbnQoY29uc3Qgc3RydWN0IGRldmljZV9ub2RlICpub2RlLAo+PiAgc3RydWN0
-IGRldmljZV9ub2RlICpvZl9ncmFwaF9nZXRfcG9ydF9ieV9pZChzdHJ1Y3QgZGV2aWNlX25vZGUg
-Km5vZGUsIHUzMiBpZCk7Cj4+ICBzdHJ1Y3QgZGV2aWNlX25vZGUgKm9mX2dyYXBoX2dldF9uZXh0
-X2VuZHBvaW50KGNvbnN0IHN0cnVjdCBkZXZpY2Vfbm9kZSAqcGFyZW50LAo+PiAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc3RydWN0IGRldmljZV9ub2RlICpwcmV2aW91
-cyk7Cj4+ICtzdHJ1Y3QgZGV2aWNlX25vZGUgKm9mX2dyYXBoX2dldF9lbmRwb2ludF9ieV9yZWdz
-KAo+PiArICAgICAgICAgICAgICAgY29uc3Qgc3RydWN0IGRldmljZV9ub2RlICpwYXJlbnQsIGlu
-dCBwb3J0X3JlZywgaW50IHJlZyk7Cj4+ICBzdHJ1Y3QgZGV2aWNlX25vZGUgKm9mX2dyYXBoX2dl
-dF9yZW1vdGVfcG9ydF9wYXJlbnQoCj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICBjb25zdCBzdHJ1Y3QgZGV2aWNlX25vZGUgKm5vZGUpOwo+PiAgc3RydWN0IGRldmlj
-ZV9ub2RlICpvZl9ncmFwaF9nZXRfcmVtb3RlX3BvcnQoY29uc3Qgc3RydWN0IGRldmljZV9ub2Rl
-ICpub2RlKTsKPj4gQEAgLTY5LDYgKzcxLDEyIEBAIHN0YXRpYyBpbmxpbmUgc3RydWN0IGRldmlj
-ZV9ub2RlICpvZl9ncmFwaF9nZXRfbmV4dF9lbmRwb2ludCgKPj4gICAgICAgICByZXR1cm4gTlVM
-TDsKPj4gIH0KPj4KPj4gK3N0cnVjdCBkZXZpY2Vfbm9kZSAqb2ZfZ3JhcGhfZ2V0X2VuZHBvaW50
-X2J5X3JlZ3MoCj4+ICsgICAgICAgICAgICAgICBjb25zdCBzdHJ1Y3QgZGV2aWNlX25vZGUgKnBh
-cmVudCwgaW50IHBvcnRfcmVnLCBpbnQgcmVnKQo+PiArewo+PiArICAgICAgIHJldHVybiBOVUxM
-Owo+PiArfQo+PiArCj4+ICBzdGF0aWMgaW5saW5lIHN0cnVjdCBkZXZpY2Vfbm9kZSAqb2ZfZ3Jh
-cGhfZ2V0X3JlbW90ZV9wb3J0X3BhcmVudCgKPj4gICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIGNvbnN0IHN0cnVjdCBkZXZpY2Vfbm9kZSAqbm9kZSkKPj4gIHsKPj4gLS0K
-Pj4gMS45LjEKPj4KPj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18KPj4gZHJpLWRldmVsIG1haWxpbmcgbGlzdAo+PiBkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnCj4+IGh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9kcmktZGV2ZWwKPiAtLQo+IFRvIHVuc3Vic2NyaWJlIGZyb20gdGhpcyBsaXN0OiBzZW5kIHRo
-ZSBsaW5lICJ1bnN1YnNjcmliZSBkZXZpY2V0cmVlIiBpbgo+IAoKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
-ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+[Adding Rob]
+
+On 22-06-15, 16:43, Lee Jones wrote:
+
+At least some description was required here on why you need additional
+bindings are what are they.
+
+Over that, this patch should have been present before any other
+patches using these bindings.
+
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> ---
+>  .../devicetree/bindings/cpufreq/cpufreq-st.txt     | 48 ++++++++++++++++++++++
+>  1 file changed, 48 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-st.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-st.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-st.txt
+> new file mode 100644
+> index 0000000..cfa8952
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-st.txt
+> @@ -0,0 +1,48 @@
+> +Binding for ST's CPUFreq driver
+> +===============================
+
+OPP-v2 bindings are out now and you can probably use them to make life
+simple, they are part of Rafael's recent pull request:
+https://lkml.org/lkml/2015/6/22/606
+
+> +Required properties:
+> +-------------------
+> +- compatible		: Supported values are:
+> +				"st,stih407-cpufreq"
+
+Nodes for virtual devices aren't allowed in DT.
+
+> +Required properties [for working voltage scaling]:
+> +-------------------------------------------------
+> +
+> +Located in CPUFreq's node:
+> +
+> +- st,syscfg		: Phandle to Major number register
+> +				First cell: offset to major number
+> +- st,syscfg-eng		: Phandle to Minor number and Pcode registers
+> +				First cell: offset to process code
+> +				Second cell: offset to minor number
+> +
+> +Located in CPU's node:
+> +
+> +- st,opp-list		: Bootloader provided node containing one or more 'opp@X' sub-nodes
+
+I can see that this will be passed in from the bootloader. But at
+least an example on how exactly things would actually look would have
+been good. In logs if not in this file.
+
+-- 
+viresh
+--
+To unsubscribe from this list: send the line "unsubscribe linux-pm" in
