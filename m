@@ -1,85 +1,100 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [PATCH 04/11] mtd: ofpart: do not fail probe when no partitions
- exist
-Date: Tue, 23 Jun 2015 11:26:33 -0700
-Message-ID: <20150623182633.GO4917@ld-irv-0074>
-References: <cover.1433364398.git.hramrach@gmail.com>
- <36e315552c849a4d22ac0fcff7958f6ffcafb160.1433364398.git.hramrach@gmail.com>
+From: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>
+Subject: Re: [PATCH Resend] of: fix a build error to
+ f_graph_get_endpoint_by_regs function
+Date: Wed, 24 Jun 2015 04:27:58 +1000
+Message-ID: <20150624042758.2ccbc886@canb.auug.org.au>
+References: <1435043204-23133-1-git-send-email-inki.dae@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <36e315552c849a4d22ac0fcff7958f6ffcafb160.1433364398.git.hramrach@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Michal Suchanek <hramrach@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, David Woodhouse <dwmw2@infradead.org>, Han Xu <han.xu@freescale.com>, Mark Brown <broonie@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Marek Vasut <marex@denx.de>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Alison Chaiken <alison_chaiken@mentor.com>, Huang Shijie <b32955@freescale.com>, Ben Hutchings <ben@decadent.org.uk>, Knut Wohlrab <knut.wohlrab@de.bosch.com>, Bean Huo =?utf-8?B?6ZyN5paM5paMIChiZWFuaHVvKQ==?= <beanhuo@micron.com>, "grmoore@altera.com" <grmoore@alter>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/aLQcvnqZ__CMGffjJo5C157"; protocol="application/pgp-signature"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1435043204-23133-1-git-send-email-inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, airlied-cv59FeDIM0c@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 03, 2015 at 09:26:40PM -0000, Michal Suchanek wrote:
-> On Exynos it is necessary to set SPI controller parameters that apply to
-> a SPI slave in a DT subnode of the slave device. The ofpart code returns
-> an error when there are subnodes of the SPI flash but no partitions are
-> found. Change this condition to a warning so that flash without
-> partitions can be accessed on Exynos.
+--Sig_/aLQcvnqZ__CMGffjJo5C157
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-So judging by the subsequent discussion, you're looking at handling
-nodes like this:
+Hi Dave,
 
-	flash@... {
-		compatible = "m25p80";
-		...
+On Tue, 23 Jun 2015 16:06:44 +0900 Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+>
+> This patch fixes the below build error reported by Stephen,
+>=20
+>      Stephen reported:
+>      After merging the drm-exynos tree, today's linux-next build (x86_64
+>      allmodconfig) failed like this:
+>=20
+>      drivers/media/i2c/adv7604.o: In function `of_graph_get_endpoint_by_r=
+egs':
+>      adv7604.c:(.text+0x586c): multiple definition of `of_graph_get_endpo=
+int_by_regs'
+>      drivers/media/i2c/adv7343.o:adv7343.c:(.text+0xa13): first defined h=
+ere
+>      drivers/media/platform/soc_camera/atmel-isi.o: In function `of_graph=
+_get_endpoint_by_regs':
+>      atmel-isi.c:(.text+0x1ec9): multiple definition of `of_graph_get_end=
+point_by_regs'
+>      drivers/media/platform/soc_camera/soc_camera.o:soc_camera.c:(.text+0=
+x2ce3): first defined here
+>      drivers/media/platform/soc_camera/rcar_vin.o: In function `of_graph_=
+get_endpoint_by_regs':
+>      rcar_vin.c:(.text+0x307c): multiple definition of `of_graph_get_endp=
+oint_by_regs'
+>      drivers/media/platform/soc_camera/soc_camera.o:soc_camera.c:(.text+0=
+x2ce3): first defined here
+>=20
+>      Caused by commit:
+>        a0f7001c18ca ("of: add helper for getting endpoint node of specifi=
+c identifiers")
+>=20
+> To fix the error, this patch declares of_graph_get_endpoint_by_regs funct=
+ion
+> with "static inline".
+>=20
+> Signed-off-by: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 
-		controller-data {
-			samsung,spi-feedback-delay = <0>;
-		};
-	};
+In case it is not obvious, this is needed in the drm tree now.
+However, you seem to have been sent a rebased version of the drm-exynos
+tree and so the commit referred to above is commit 8ccd0d0ca041 in your
+tree.  :-(
 
-Now, I'm not a real fan of this controller-data node in the first place
-(did that binding get reviewed?). But this is especially bad since
-we now have collisions on what to do with subnodes that don't have a
-compatible property. By legacy, ofpart has already claimed ownership of
-subnodes of an MTD node, where the subnode does not have a compatible
-property. See Documentation/devicetree/bindings/mtd/partition.txt:
+Inki, please clean up your tree now that Dave has merged a rebased
+version of it (and please do *not* rebase your tree before asking Dave
+to merge it in the future - or if you must do that, then also update
+the branch that I include in linux-next first).
 
-  "NOTE: if the sub-node has a compatible string, then it is not a
-  partition."
+--=20
+Cheers,
+Stephen Rothwell                    sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org
 
-So it seems the natural solution is to just define a proper
-compatibile property for this subnode, and ofpart.c will naturally
-handle this. See:
+--Sig_/aLQcvnqZ__CMGffjJo5C157
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-commit e79265ba6bdb31437bd4c3e7911950f9d1262a07
-Author: Josh Wu <josh.wu@atmel.com>
-Date:   Mon Aug 5 19:14:38 2013 +0800
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-    mtd: ofpart: add compatible check for child nodes
+iQIcBAEBCAAGBQJViaU0AAoJEMDTa8Ir7ZwV/2wP/2P0viFoej+/XzWcOaBO4XpQ
+zUtCAuRjlnSt0lRCLdmLzkluSbd4MfrSFruUe67k7YkWOrzvkBnln/mo0nmJv282
+zdNm8yD9wSkPQPaz6ekBl6qBLl1Jhw2/Cs2WjRNLnjlVE7Qgcf8mqe3ujJyV8yXT
+bq03ah4aC62bD/QM1b/NCD1NzVlIz0EsXSdyvrOgEVlCXF24TlNLM59+o/hB4ksM
+LJBYnOMp0CaemfY3pULuuRE0qYHO5mQIxwMAeEGPyqnDL0+RlEdEsD8SRzSgjXfK
+9cqk8qUQfiimheKoxqDxkiacGOQj2ynSkksfc/JgpZIUZdTlwcrOdOx1m982yk5S
+jsDNpWKcOYFQdxwuA1Xd2wnOV/4067xjUB6BeK5MzVkl9OoRf1YpIVGt6shpdiRO
+eF+lOxhb8lC+15ylv7tQ0LkQEZjNmjX0ebxrCC3IeoeUKUwP58we8KvjVJbv1Ta3
+bsADYtjBS764gigwaQ6YVmj+OByhRx70jfYg9FD9/YnfwHk9ldaIl5XhnemQo8NL
+5QYIOw/p6WZsM7pPHfjhCyHhdfiSfDe4QzKHnuhccoRTIW4K5SXsfgE0aNBKk14D
+00jB/F8KH9zkbQmNOYkyLtk5/fapCtc0NsU2J9vJyToeS19+RvIGiLprJExD+1vA
+UIPkdkiblZ/49xdEBlrI
+=k3BO
+-----END PGP SIGNATURE-----
 
-
-
-Brian
-
-> Signed-off-by: Michal Suchanek <hramrach@gmail.com>
-> ---
->  drivers/mtd/ofpart.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/mtd/ofpart.c b/drivers/mtd/ofpart.c
-> index aa26c32..a29d29f 100644
-> --- a/drivers/mtd/ofpart.c
-> +++ b/drivers/mtd/ofpart.c
-> @@ -94,10 +94,10 @@ static int parse_ofpart_partitions(struct mtd_info *master,
->  
->  	if (!i) {
->  		of_node_put(pp);
-> -		pr_err("No valid partition found on %s\n", node->full_name);
-> +		pr_warn("No valid partition found on %s\n", node->full_name);
->  		kfree(*pparts);
->  		*pparts = NULL;
-> -		return -EINVAL;
-> +		return 0;
->  	}
->  
->  	return nr_parts;
-> -- 
-> 2.1.4
-> 
+--Sig_/aLQcvnqZ__CMGffjJo5C157--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
