@@ -1,26 +1,32 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 4/4] ARM64: MediaTek MT8173: Add SCPSYS device node
-Date: Wed, 24 Jun 2015 22:13:53 +0200
-Message-ID: <1847352.ZmZUcgYQZ1@ubix>
-References: <1435126625-9634-1-git-send-email-s.hauer@pengutronix.de> <1435126625-9634-5-git-send-email-s.hauer@pengutronix.de>
+From: Paul Bolle <pebolle@tiscali.nl>
+Subject: Re: [PATCHv5 2/2] mailbox: Adding driver for Xilinx LogiCORE IP
+ mailbox.
+Date: Wed, 24 Jun 2015 22:36:45 +0200
+Message-ID: <1435178205.4528.77.camel@tiscali.nl>
+References: <1435082402-29239-1-git-send-email-moritz.fischer@ettus.com>
+	 <1435082402-29239-3-git-send-email-moritz.fischer@ettus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1435126625-9634-5-git-send-email-s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1435082402-29239-3-git-send-email-moritz.fischer@ettus.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Moritz Fischer <moritz.fischer@ettus.com>, jassisinghbrar@gmail.com
+Cc: linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, akpm@linux-foundation.org, gregkh@linuxfoundation.org, mchehab@osg.samsung.com, arnd@arndb.de, joe@perches.com, jingoohan1@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, June 24, 2015 08:17:05 AM Sascha Hauer wrote:
-> This adds the SCPSYS device node to the MT8173 dtsi file.
-> 
-> Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
+On Tue, 2015-06-23 at 11:00 -0700, Moritz Fischer wrote:
+> +MODULE_ALIAS("platform:xilinx-mailbox");
 
-Applied to v4.2-next/arm64
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+So I think this MODULE_ALIAS() is only useful if, in short, there's a
+corresponding platform_device created. Ie, a platform_device with a
+name "xilinx-mailbox" that will fire of a "MODALIAS=platform:xilinx
+-mailbox" when it's created.
+
+I couldn't spot such a platform_device. Provided git grep didn't let me
+down here: what breaks if this line is dropped?
+
+Thanks,
+
+
+Paul Bolle
