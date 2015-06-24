@@ -1,32 +1,64 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH V3] added device tree support to gpio-generic driver
-Date: Wed, 24 Jun 2015 20:55:29 +0900
-Message-ID: <CAK7LNATOzogcZ_Hmbz-_AHbSP9+aQAxVaqjrmto-VGV2pFYSkw@mail.gmail.com>
-References: <CACRpkdaOQmRQFNn7z1UOxMpQpi=ZVMzWBm=YpcPP=2EXSXZHBQ@mail.gmail.com>
-	<1435139689-5800-1-git-send-email-romain.baeriswyl@alitech.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH 08/17] ARM: dts: dra7: Add dt node for the sycon pcie
+Date: Wed, 24 Jun 2015 14:56:17 +0300
+Message-ID: <20150624145617.e5248d466fe5b2e0eb1ca087@ti.com>
+References: <1435060743-5511-1-git-send-email-kishon@ti.com>
+	<1435060743-5511-9-git-send-email-kishon@ti.com>
+	<20150624145017.9b70a1fba477d8b99ce85702@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1435139689-5800-1-git-send-email-romain.baeriswyl@alitech.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Romain Baeriswyl <romain.baeriswyl@alitech.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, linux-gpio@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Christian Ruppert <christian.ruppert@alitech.com>, Anton Vorontsov <cbouatmailru@gmail.com>, Rojhalat Ibrahim <imr@rtschenk.de>, abdoulaye berthe <berthe.ab@gmail.com>, Anthony Fee <anthony.fee@emutex.com>, Alexander Shiyan <shc_work@mail.ru>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150624145017.9b70a1fba477d8b99ce85702@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, bcousson@baylibre.com, tony@atomide.com, balbi@ti.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, gregkh@linuxfoundation.org, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Just cosmetic comments.
+On Wed, 24 Jun 2015 14:50:17 +0300
+Roger Quadros <rogerq@ti.com> wrote:
 
-> added device tree support to gpio-generic driver
+> On Tue, 23 Jun 2015 17:28:53 +0530
+> Kishon Vijay Abraham I <kishon@ti.com> wrote:
+> 
+> > Add new device tree node for the control module register space where
+> > PCIe registers are present.
+> > 
+> > Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> > ---
+> >  arch/arm/boot/dts/dra7.dtsi |    5 +++++
+> >  1 file changed, 5 insertions(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+> > index 260f300..3f434f7 100644
+> > --- a/arch/arm/boot/dts/dra7.dtsi
+> > +++ b/arch/arm/boot/dts/dra7.dtsi
+> > @@ -291,6 +291,11 @@
+> >  			reg = <0x4a002e00 0x7c>;
+> >  		};
+> >  
+> > +		dra7_ctrl_pcie: tisyscon@4a003c00 {
+> > +			compatible = "syscon";
+> > +			reg = <0x4a003c00 0x48>;
+> > +		};
+> > +
+> 
+> Why do you need to start from 0x4a003c00?
+> CTRL_CORE_PCIESS1_PCS1 is at 0x4a003c24
 
- - Please use the present tense in your commit subject
- - Please prefix the subject with a word describing which area your
-patch is related to, in this case "gpio: "
+Also, why can't this dra7_ctrl_pcie node be where scm_conf is.
 
-So, your patch subject can be improved as  "gpio: add device tree
-support to gpio-generic driver"
-
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+> 
+> >  		sdma: dma-controller@4a056000 {
+> >  			compatible = "ti,omap4430-sdma";
+> >  			reg = <0x4a056000 0x1000>;
+> > -- 
+> > 1.7.9.5
+> > 
+> 
+> cheers,
+> -roger
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
