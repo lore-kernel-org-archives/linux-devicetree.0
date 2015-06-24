@@ -1,57 +1,32 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 08/17] ARM: dts: dra7: Add dt node for the sycon pcie
-Date: Wed, 24 Jun 2015 14:50:17 +0300
-Message-ID: <20150624145017.9b70a1fba477d8b99ce85702@ti.com>
-References: <1435060743-5511-1-git-send-email-kishon@ti.com>
-	<1435060743-5511-9-git-send-email-kishon@ti.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH V3] added device tree support to gpio-generic driver
+Date: Wed, 24 Jun 2015 20:55:29 +0900
+Message-ID: <CAK7LNATOzogcZ_Hmbz-_AHbSP9+aQAxVaqjrmto-VGV2pFYSkw@mail.gmail.com>
+References: <CACRpkdaOQmRQFNn7z1UOxMpQpi=ZVMzWBm=YpcPP=2EXSXZHBQ@mail.gmail.com>
+	<1435139689-5800-1-git-send-email-romain.baeriswyl@alitech.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1435060743-5511-9-git-send-email-kishon-l0cyMroinI0@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1435139689-5800-1-git-send-email-romain.baeriswyl@alitech.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Romain Baeriswyl <romain.baeriswyl@alitech.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, linux-gpio@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Christian Ruppert <christian.ruppert@alitech.com>, Anton Vorontsov <cbouatmailru@gmail.com>, Rojhalat Ibrahim <imr@rtschenk.de>, abdoulaye berthe <berthe.ab@gmail.com>, Anthony Fee <anthony.fee@emutex.com>, Alexander Shiyan <shc_work@mail.ru>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 23 Jun 2015 17:28:53 +0530
-Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> wrote:
+Just cosmetic comments.
 
-> Add new device tree node for the control module register space where
-> PCIe registers are present.
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-> ---
->  arch/arm/boot/dts/dra7.dtsi |    5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-> index 260f300..3f434f7 100644
-> --- a/arch/arm/boot/dts/dra7.dtsi
-> +++ b/arch/arm/boot/dts/dra7.dtsi
-> @@ -291,6 +291,11 @@
->  			reg = <0x4a002e00 0x7c>;
->  		};
->  
-> +		dra7_ctrl_pcie: tisyscon@4a003c00 {
-> +			compatible = "syscon";
-> +			reg = <0x4a003c00 0x48>;
-> +		};
-> +
+> added device tree support to gpio-generic driver
 
-Why do you need to start from 0x4a003c00?
-CTRL_CORE_PCIESS1_PCS1 is at 0x4a003c24
+ - Please use the present tense in your commit subject
+ - Please prefix the subject with a word describing which area your
+patch is related to, in this case "gpio: "
 
->  		sdma: dma-controller@4a056000 {
->  			compatible = "ti,omap4430-sdma";
->  			reg = <0x4a056000 0x1000>;
-> -- 
-> 1.7.9.5
-> 
+So, your patch subject can be improved as  "gpio: add device tree
+support to gpio-generic driver"
 
-cheers,
--roger
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
