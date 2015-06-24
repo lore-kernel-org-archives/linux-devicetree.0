@@ -1,62 +1,97 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v6 6/9] nvmem: qfprom: Add Qualcomm QFPROM support.
-Date: Wed, 24 Jun 2015 15:07:05 -0700
-Message-ID: <558B2A09.3020407@codeaurora.org>
-References: <1435014459-26138-1-git-send-email-srinivas.kandagatla@linaro.org> <1435014556-26392-1-git-send-email-srinivas.kandagatla@linaro.org>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH-v3 1/3] mfd: 88pm800: Add device tree support
+Date: Thu, 25 Jun 2015 08:57:57 +0900
+Message-ID: <CAJKOXPfc4rf4rB54CjPVzZ=v3uWVhciygqN7=gNYMShFf+eatQ@mail.gmail.com>
+References: <1435137673-1629-1-git-send-email-vaibhav.hiremath@linaro.org>
+	<1435137673-1629-2-git-send-email-vaibhav.hiremath@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1435014556-26392-1-git-send-email-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, stefan.wahren-eS4NqCHxEME@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1435137673-1629-2-git-send-email-vaibhav.hiremath@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chao Xie <chao.xie@marvell.com>, robh+dt@kernel.org, lee.jones@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/22/2015 04:09 PM, Srinivas Kandagatla wrote:
-> diff --git a/drivers/nvmem/qfprom.c b/drivers/nvmem/qfprom.c
-> new file mode 100644
-> index 0000000..7f7a82f
-> --- /dev/null
-> +++ b/drivers/nvmem/qfprom.c
-> @@ -0,0 +1,89 @@
+2015-06-24 18:21 GMT+09:00 Vaibhav Hiremath <vaibhav.hiremath@linaro.org>:
+> Add DT support to the 88pm800 driver, along with compatible
+> field for it's sub-devices (rtc, onkey and regulator)
 >
-> +
-> +#include <linux/platform_device.h>
-> +#include <linux/nvmem-provider.h>
-> +#include <linux/slab.h>
-> +#include <linux/regmap.h>
-> +#include <linux/device.h>
-> +#include <linux/io.h>
-
-Is this include used?
-
-> +#include <linux/module.h>
-> +#include <linux/delay.h>
-
-Is this include used?
-
-> +#include <linux/of.h>
-> +
-> +static struct regmap_config qfprom_regmap_config = {
-
-Can this be const?
-
-> +	.reg_bits = 32,
-> +	.val_bits = 8,
-> +	.reg_stride = 1,
+> Signed-off-by: Chao Xie <chao.xie@marvell.com>
+> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
+> ---
+>  drivers/mfd/88pm800.c | 25 +++++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+>
+> diff --git a/drivers/mfd/88pm800.c b/drivers/mfd/88pm800.c
+> index 841717a..059f01a 100644
+> --- a/drivers/mfd/88pm800.c
+> +++ b/drivers/mfd/88pm800.c
+> @@ -27,6 +27,7 @@
+>  #include <linux/mfd/core.h>
+>  #include <linux/mfd/88pm80x.h>
+>  #include <linux/slab.h>
+> +#include <linux/of_device.h>
+>
+>  /* Interrupt Registers */
+>  #define PM800_INT_STATUS1              (0x05)
+> @@ -121,6 +122,11 @@ static const struct i2c_device_id pm80x_id_table[] = {
+>  };
+>  MODULE_DEVICE_TABLE(i2c, pm80x_id_table);
+>
+> +static const struct of_device_id pm80x_of_match_table[] = {
+> +       { .compatible = "marvell,88pm800", },
+> +       {},
 > +};
 > +
-> +static struct nvmem_config econfig = {
-
-And this one too?
-
-> +	.name = "qfprom",
-> +	.owner = THIS_MODULE,
-> +};
+>  static struct resource rtc_resources[] = {
+>         {
+>          .name = "88pm80x-rtc",
+> @@ -133,6 +139,7 @@ static struct resource rtc_resources[] = {
+>  static struct mfd_cell rtc_devs[] = {
+>         {
+>          .name = "88pm80x-rtc",
+> +        .of_compatible = "marvell,88pm80x-rtc",
+>          .num_resources = ARRAY_SIZE(rtc_resources),
+>          .resources = &rtc_resources[0],
+>          .id = -1,
+> @@ -151,6 +158,7 @@ static struct resource onkey_resources[] = {
+>  static const struct mfd_cell onkey_devs[] = {
+>         {
+>          .name = "88pm80x-onkey",
+> +        .of_compatible = "marvell,88pm80x-onkey",
+>          .num_resources = 1,
+>          .resources = &onkey_resources[0],
+>          .id = -1,
+> @@ -160,6 +168,7 @@ static const struct mfd_cell onkey_devs[] = {
+>  static const struct mfd_cell regulator_devs[] = {
+>         {
+>          .name = "88pm80x-regulator",
+> +        .of_compatible = "marvell,88pm80x-regulator",
+>          .id = -1,
+>         },
+>  };
+> @@ -544,8 +553,23 @@ static int pm800_probe(struct i2c_client *client,
+>         int ret = 0;
+>         struct pm80x_chip *chip;
+>         struct pm80x_platform_data *pdata = dev_get_platdata(&client->dev);
+> +       struct device_node *np = client->dev.of_node;
+>         struct pm80x_subchip *subchip;
+>
+> +       if (!pdata && !np) {
+> +               dev_err(&client->dev,
+> +                       "pm80x requires platform data or of_node\n");
+> +               return -EINVAL;
+> +       }
 > +
+> +       if (!pdata) {
+> +               pdata = devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL);
+> +               if (!pdata) {
+> +                       dev_err(&client->dev, "failed to allocaate memory\n");
 
+Generic error message for ENOMEM is not needed. Just return ENOMEM and
+the core code will print the error.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Rest looks fine,
+Best regards,
+Krzysztof
