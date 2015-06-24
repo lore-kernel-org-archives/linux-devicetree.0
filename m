@@ -1,80 +1,47 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH 05/17] phy: omap-usb2: Add a new compatible string for
- USB2 PHY2
-Date: Wed, 24 Jun 2015 14:03:54 +0300
-Message-ID: <20150624140354.c3c1b0fc24dc37eae5097b4c@ti.com>
-References: <1435060743-5511-1-git-send-email-kishon@ti.com>
-	<1435060743-5511-6-git-send-email-kishon@ti.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] added device tree support to gpio-generic driver
+Date: Wed, 24 Jun 2015 13:07:57 +0200
+Message-ID: <CAMuHMdUCNQV=9vEmNPHtuwXw3jZ_NWwpJaTb6eBXvYJiDKhGaw@mail.gmail.com>
+References: <1433487062-10647-1-git-send-email-romain.baeriswyl@alitech.com>
+	<CACRpkdbWhtkMgz2qTg1y7AguLQCJXnAoi7gVnFvPb1sR7eES_g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1435060743-5511-6-git-send-email-kishon@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: bcousson@baylibre.com, tony@atomide.com, balbi@ti.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, gregkh@linuxfoundation.org, nsekhar@ti.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdbWhtkMgz2qTg1y7AguLQCJXnAoi7gVnFvPb1sR7eES_g@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Romain Baeriswyl <romain.baeriswyl@alitech.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Christian Ruppert <christian.ruppert@alitech.com>, Anton Vorontsov <cbouatmailru@gmail.com>, Rojhalat Ibrahim <imr@rtschenk.de>, abdoulaye berthe <berthe.ab@gmail.com>, Anthony Fee <anthony.fee@emutex.com>, Alexander Shiyan <shc_work@mail.ru>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 23 Jun 2015 17:28:50 +0530
-Kishon Vijay Abraham I <kishon@ti.com> wrote:
+On Wed, Jun 10, 2015 at 10:42 AM, Linus Walleij
+<linus.walleij@linaro.org> wrote:
+> On Fri, Jun 5, 2015 at 8:51 AM, Romain Baeriswyl
+> <romain.baeriswyl@alitech.com> wrote:
+>
+>> +Required properties:
+>> +- compatible : "basic-mmio-gpio" for little endian register access or
+>> +               "basic-mmio-gpio-be" for big endian register access
+>
+> Basic I don't know.
+>
+> "single-register-gpio" is more to the point, don't you think?
+>
+>> +- ngpios: Specifies the number of gpio mapped in the register. The value is
+>> +          limited to the number of bits of the LONG type.
+>
+> So if it is 8 for a 32 bit register, does it mean bits 0..7 little endian or
+> big endian, or does it depend on endianness? Clarify this
+> in the binding.
 
-> The USB2 PHY2 has a different register map compared to USB2 PHY1
-> to power on/off the PHY. In order to handle it, add a new
-> "compatible" string.
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  Documentation/devicetree/bindings/phy/ti-phy.txt |    2 ++
->  drivers/phy/phy-omap-usb2.c                      |    9 +++++++++
->  2 files changed, 11 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/ti-phy.txt b/Documentation/devicetree/bindings/phy/ti-phy.txt
-> index 52c7a92..b9101b9 100644
-> --- a/Documentation/devicetree/bindings/phy/ti-phy.txt
-> +++ b/Documentation/devicetree/bindings/phy/ti-phy.txt
-> @@ -31,6 +31,8 @@ OMAP USB2 PHY
->  
->  Required properties:
->   - compatible: Should be "ti,omap-usb2"
-> +	       Should be "ti,dra7x-usb2-phy2" for the 2nd instance of USB2 PHY
-> +			in DRA7x
->   - reg : Address and length of the register set for the device.
->   - #phy-cells: determine the number of cells that should be given in the
->     phandle while referencing this phy.
-> diff --git a/drivers/phy/phy-omap-usb2.c b/drivers/phy/phy-omap-usb2.c
-> index b5c266a..2f7220f 100644
-> --- a/drivers/phy/phy-omap-usb2.c
-> +++ b/drivers/phy/phy-omap-usb2.c
-> @@ -159,6 +159,11 @@ static const struct usb_phy_data dra7x_usb2_data = {
->  	.flags = OMAP_USB2_CALIBRATE_FALSE_DISCONNECT,
->  };
->  
-> +static const struct usb_phy_data dra7x_usb2_phy2_data = {
-> +	.label = "dra7x_usb2_phy2",
-> +	.flags = OMAP_USB2_CALIBRATE_FALSE_DISCONNECT,
+LONG can be 64-bit too.
 
-Isn't it better to define the register map in usb_phy_data
-so that you don't need to check for compatible flag everytime?
+Gr{oetje,eeting}s,
 
-> +};
-> +
->  static const struct usb_phy_data am437x_usb2_data = {
->  	.label = "am437x_usb2",
->  	.flags =  0,
-> @@ -178,6 +183,10 @@ static const struct of_device_id omap_usb2_id_table[] = {
->  		.data = &dra7x_usb2_data,
->  	},
->  	{
-> +		.compatible = "ti,dra7x-usb2-phy2",
-> +		.data = &dra7x_usb2_phy2_data,
-> +	},
-> +	{
->  		.compatible = "ti,am437x-usb2",
->  		.data = &am437x_usb2_data,
->  	},
-> -- 
-> 1.7.9.5
-> 
+                        Geert
 
-cheers,
--roger
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
