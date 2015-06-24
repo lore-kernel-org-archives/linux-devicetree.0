@@ -1,62 +1,64 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 11/17] ARM: dts: dra7: Use "ti,dra7x-usb2-phy2"
- compatible string for USB2 PHY2
-Date: Wed, 24 Jun 2015 16:50:08 +0300
-Message-ID: <20150624165008.36bed5c058fa4f43e7748c5c@ti.com>
-References: <1435060743-5511-1-git-send-email-kishon@ti.com>
-	<1435060743-5511-12-git-send-email-kishon@ti.com>
-	<20150624150750.9435096c85253cfe528ebbc3@ti.com>
-	<558AAC47.2070305@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <558AAC47.2070305-l0cyMroinI0@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2 0/9] cpufreq: Introduce support for ST's cpufreq functionality
+Date: Wed, 24 Jun 2015 14:58:59 +0100
+Message-ID: <1435154348-28840-1-git-send-email-lee.jones@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ajitpal.singh-qxv4g6HH51o@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 24 Jun 2015 18:40:31 +0530
-Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> wrote:
+This driver reads very platform specific information in from Device Tree
+and translates it into frequency tables.  The generic drivers then use the
+tables to conduct frequency and voltage scaling in the normal way.
 
-> Hi,
-> 
-> On Wednesday 24 June 2015 05:37 PM, Roger Quadros wrote:
-> > On Tue, 23 Jun 2015 17:28:56 +0530
-> > Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> wrote:
-> > 
-> >> The USB2 PHY2 has a different register map compared to USB2 PHY1
-> >> to power on/off the PHY. In order to handle it, use the new compatible
-> >> string "ti,dra7x-usb2-phy2" for the second instance of USB2 PHY.
-> >>
-> >> Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-> >> ---
-> >>  arch/arm/boot/dts/dra7.dtsi |    2 +-
-> >>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >>
-> >> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-> >> index f69db70..a8ee829 100644
-> >> --- a/arch/arm/boot/dts/dra7.dtsi
-> >> +++ b/arch/arm/boot/dts/dra7.dtsi
-> >> @@ -1235,7 +1235,7 @@
-> >>  			};
-> >>  
-> >>  			usb2_phy2: phy@4a085000 {
-> >> -				compatible = "ti,omap-usb2";
-> >> +				compatible = "ti,dra7x-usb2-phy2", "ti,omap-usb2";
-> > 
-> > Why do you want to retain "ti,omap-usb2".
-> > It is not backward compatible with it right?
-> 
-> The newer dtbs will anyway have "ti,dra7x-usb2-phy2", so "ti,omap-usb2" was
-> kept just for legacy reasons.
+There are 'ARM' patches in the set which are not necessarily related to CPUFreq,
+but are required to get it to work.  Anyone who is not interested in general STi
+DT changes can safely ignore these.
 
-OK then.
+v1 => v2:
+ - CPUFreq is no longer it's own device in DT; instead:
+   - It is probed from the platform area
+   - Key properties have been moved into the CPU's node
+ - Driver is less generic [ST => STI]
+ - Documentation has been updated
+   - Point one (above) has been accounted for
+   - Example of bootloader supplied node has been provided
+ - GPL licensing has been updated to reflected the header
+ - Kconfig disparity has been rectified [bool => tristate]
 
-cheers,
--roger
+Lee Jones (9):
+  ARM: STi: STiH407: Provide generic (safe) DVFS configuration
+  ARM: STi: STiH407: Provide CPU with clocking information
+  ARM: STi: STiH407: Link CPU with its voltage supply
+  ARM: STi: STiH407: Provide CPU with a means to look-up Major number
+  ARM: STi: Register CPUFreq device
+  ARM: STi: STiH407: Move PWM nodes STiH407 => STiH407-family
+  ARM: multi_v7_defconfig: Enable support for PWM Regulators
+  dt: cpufreq: st: Provide bindings for ST's CPUFreq implementation
+  cpufreq: st: Provide runtime initialised driver for ST's platforms
+
+ .../devicetree/bindings/cpufreq/cpufreq-st.txt     |  72 ++++
+ arch/arm/boot/dts/stih407-family.dtsi              |  45 +++
+ arch/arm/boot/dts/stih407.dtsi                     |  28 --
+ arch/arm/configs/multi_v7_defconfig                |   1 +
+ arch/arm/mach-sti/Makefile                         |   2 +-
+ arch/arm/mach-sti/board-dt.c                       |   3 +-
+ arch/arm/mach-sti/{platsmp.c => cpu.c}             |  17 +-
+ arch/arm/mach-sti/{smp.h => cpu.h}                 |   2 +
+ drivers/cpufreq/Kconfig.arm                        |   7 +
+ drivers/cpufreq/Makefile                           |   1 +
+ drivers/cpufreq/sti-cpufreq.c                      | 447 +++++++++++++++++++++
+ 11 files changed, 593 insertions(+), 32 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-st.txt
+ rename arch/arm/mach-sti/{platsmp.c => cpu.c} (91%)
+ rename arch/arm/mach-sti/{smp.h => cpu.h} (92%)
+ create mode 100644 drivers/cpufreq/sti-cpufreq.c
+
+-- 
+1.9.1
+
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
