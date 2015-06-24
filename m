@@ -1,145 +1,86 @@
-From: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v5 08/23] usb: chipidea: set usb gadeget's otg
- capabilities
-Date: Wed, 24 Jun 2015 15:22:18 +0800
-Message-ID: <20150624072217.GB29386@shlinux2>
-References: <1434541230-15090-1-git-send-email-jun.li@freescale.com>
- <1434541230-15090-9-git-send-email-jun.li@freescale.com>
- <20150624030442.GB3475@shlinux2> <20150624033421.GA29386@shlinux2>
- <20150624034922.GC3475@shlinux2>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH v5 1/2] dt: add cap11xx LED documentation
+Date: Wed, 24 Jun 2015 09:28:14 +0200
+Message-ID: <558A5C0E.8090105@samsung.com>
+References: <1434599897-22505-1-git-send-email-mranostay@gmail.com>
+ <1434599897-22505-2-git-send-email-mranostay@gmail.com>
+ <20150622175914.GA15851@dtor-ws> <55891A84.1070509@samsung.com>
+ <CAKzfze8jC1Nq9+AWFZbbC4=jzLwUZumbXYmg9O=0190Ne+f7fg@mail.gmail.com>
+ <20150623180706.GA40168@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150624034922.GC3475@shlinux2>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <20150623180706.GA40168@dtor-ws>
+Sender: linux-leds-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Matt Ranostay <mranostay@gmail.com>, Daniel Mack <zonque@gmail.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, linux-leds@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 24, 2015 at 11:49:23AM +0800, Peter Chen wrote:
-> On Wed, Jun 24, 2015 at 11:34:23AM +0800, Li Jun wrote:
-> > On Wed, Jun 24, 2015 at 11:04:43AM +0800, Peter Chen wrote:
-> > > On Wed, Jun 17, 2015 at 07:40:15PM +0800, Li Jun wrote:
-> > > > Set gadget's otg capabilities according to controller's capability and otg
-> > > > properties in device tree.
-> > > > 
-> > > > Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > > > ---
-> > > >  drivers/usb/chipidea/core.c  | 8 ++++++++
-> > > >  drivers/usb/chipidea/udc.c   | 7 ++++++-
-> > > >  include/linux/usb/chipidea.h | 1 +
-> > > >  3 files changed, 15 insertions(+), 1 deletion(-)
-> > > > 
-> > > > diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
-> > > > index 74fea4f..2abecbc 100644
-> > > > --- a/drivers/usb/chipidea/core.c
-> > > > +++ b/drivers/usb/chipidea/core.c
-> > > > @@ -588,6 +588,14 @@ static int ci_get_platdata(struct device *dev,
-> > > >  				of_usb_host_tpl_support(dev->of_node);
-> > > >  	}
-> > > >  
-> > > > +	if (platdata->dr_mode == USB_DR_MODE_OTG) {
-> > > > +		/* We can support HNP and SRP */
-> > > > +		platdata->ci_otg_caps.hnp_support = true;
-> > > > +		platdata->ci_otg_caps.srp_support = true;
-> > > > +		/* Update otg capabilities by DT properties */
-> > > > +		of_usb_set_otg_caps(dev->of_node, &platdata->ci_otg_caps);
-> > > > +	}
-> > > > +
-> > > 
-> > > For current dual-role supported platforms (through ID pin), their dts has nothing
-> > > with otg capabilities, what will happen if we set .hnp_support as true?
-> > > 
-> > No impact for them, those platforms will continue work as before(i.e.
-> > otg descriptor with HNP&SRP enabled if CONFIG_USB_OTG is selected,
-> > no otg fsm if CONFIG_USB_OTG_FSM is not selected).
-> 
-> So if CONFIG_USB_OTG is not chosen, even platdata->ci_otg_caps.hnp_support
-> is true, it will be act as pure host or peripheral, right?
-> 
-Yes.
+On 06/23/2015 08:07 PM, Dmitry Torokhov wrote:
+> On Tue, Jun 23, 2015 at 10:23:57AM -0700, Matt Ranostay wrote:
+>> On Tue, Jun 23, 2015 at 1:36 AM, Jacek Anaszewski
+>> <j.anaszewski@samsung.com> wrote:
+>>> On 06/22/2015 07:59 PM, Dmitry Torokhov wrote:
+>>>>
+>>>> On Wed, Jun 17, 2015 at 08:58:16PM -0700, Matt Ranostay wrote:
+>>>>>
+>>>>> Signed-off-by: Matt Ranostay <mranostay@gmail.com>
+>>>>> ---
+>>>>>    .../devicetree/bindings/input/cap11xx.txt          | 25
+>>>>> ++++++++++++++++++++++
+>>>>>    1 file changed, 25 insertions(+)
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/input/cap11xx.txt
+>>>>> b/Documentation/devicetree/bindings/input/cap11xx.txt
+>>>>> index 7d0a300..09cdc43 100644
+>>>>> --- a/Documentation/devicetree/bindings/input/cap11xx.txt
+>>>>> +++ b/Documentation/devicetree/bindings/input/cap11xx.txt
+>>>>> @@ -38,6 +38,11 @@ Optional properties:
+>>>>>                                  defaults. The array must have exactly six
+>>>>>                                  entries.
+>>>>>
+>>>>> +       linux,led-brightness:   Defines the ON brightness when the
+>>>>> optional LED
+>>>>> +                               functionality is used. Valid values are
+>>>>> 1-15.
+>>>>> +                               By default a value of 15 is set.
+>>>>
+>>>>
+>>>> Please mention the device does not allow controlling brightness of leds
+>>>> individually and that is why this property is at device level, not
+>>>> individual led level.
+>>>
+>>>
+>>> I've just noticed that we have drivers/leds/leds-netxbig.c driver, which
+>>> also doesn't allow controlling the LEDs on extension board individually,
+>>> but it still does allow changing their brightness. I am leaning towards
+>>> allowing this also for this driver and adding similar comment in the
+>>> source code like at the line 218 of the aforementioned driver.
+>>> As a result this property wouldn't be required.
+>>>
+>>
+>> Ok that should be pretty simple to do. But seems kind weird to have
+>> each led channel to be changing the brightness of all.  Wouldn't the
+>> brightness sysfs entries of the other led channels be showing
+>> incorrect values?
 
-> > 
-> > > For non-dt platform (eg i686), how it changes otg capabilities through
-> > > their platform data?
-> > > 
-> > Directly override platdata->ci_otg_caps in its platform driver after
-> > ci_hdrc_add_device().
-> 
-> After ci_hdrc_add_device, the device may begin to enumerate, we need to
-> make sure otg capabilities before the device goes to work.
-> 
-> Peter
+If you implemented brightness_get op it would show proper value.
+Assuming that the device allows reading current brightness.
 
-How about add a flag for platdata->flags like 
-if (platdata->flags & CI_HDRC_USE_PREDEF_OTG_CAPS == 0) {
-	... ...
-}
-then non-dt platform driver can set CI_HDRC_USE_PREDEF_OTG_CAPS flag and
-pre-define otg caps before call to ci_hdrc_add_device().
+> I agree, this is kind of weird. Maybe we should have a device-specific
+> attribute (on the platform device level) that allows controlling overall
+> brightness, but I think LEDs should be just on/off with max brightness
+> of 1. Userspace should not have to be aware about the fact that on that
+> particular device LEDs are not completely independent as far as their
+> brightness goes.
 
-Li Jun
+This way we are removing the possibility of controlling LED brightness
+at all, the feature that the hardware supports. Anyway, we will have to
+add a mechanism to the LED subsystem for detecting which LED class
+devices are controlled by the same hardware. This will allow for
+describing this type of dependencies. This is on "to do" list.
 
-> > > 
-> > > For current dual-role supported platforms (through ID pin), their dts has nothing
-> > 
-> > > Peter
-> > > >  	if (of_usb_get_maximum_speed(dev->of_node) == USB_SPEED_FULL)
-> > > >  		platdata->flags |= CI_HDRC_FORCE_FULLSPEED;
-> > > >  
-> > > > diff --git a/drivers/usb/chipidea/udc.c b/drivers/usb/chipidea/udc.c
-> > > > index 764f668..858bd21 100644
-> > > > --- a/drivers/usb/chipidea/udc.c
-> > > > +++ b/drivers/usb/chipidea/udc.c
-> > > > @@ -1827,6 +1827,7 @@ static irqreturn_t udc_irq(struct ci_hdrc *ci)
-> > > >  static int udc_start(struct ci_hdrc *ci)
-> > > >  {
-> > > >  	struct device *dev = ci->dev;
-> > > > +	struct usb_otg_caps *otg_caps = &ci->platdata->ci_otg_caps;
-> > > >  	int retval = 0;
-> > > >  
-> > > >  	spin_lock_init(&ci->lock);
-> > > > @@ -1834,8 +1835,12 @@ static int udc_start(struct ci_hdrc *ci)
-> > > >  	ci->gadget.ops          = &usb_gadget_ops;
-> > > >  	ci->gadget.speed        = USB_SPEED_UNKNOWN;
-> > > >  	ci->gadget.max_speed    = USB_SPEED_HIGH;
-> > > > -	ci->gadget.is_otg       = ci->is_otg ? 1 : 0;
-> > > >  	ci->gadget.name         = ci->platdata->name;
-> > > > +	ci->gadget.otg_caps	= otg_caps;
-> > > > +
-> > > > +	if (otg_caps->otg_rev && (otg_caps->hnp_support ||
-> > > > +		otg_caps->srp_support || otg_caps->adp_support))
-> > > > +		ci->gadget.is_otg = 1;
-> > > >  
-> > > >  	INIT_LIST_HEAD(&ci->gadget.ep_list);
-> > > >  
-> > > > diff --git a/include/linux/usb/chipidea.h b/include/linux/usb/chipidea.h
-> > > > index ab94f78..e10cefc 100644
-> > > > --- a/include/linux/usb/chipidea.h
-> > > > +++ b/include/linux/usb/chipidea.h
-> > > > @@ -34,6 +34,7 @@ struct ci_hdrc_platform_data {
-> > > >  #define CI_HDRC_CONTROLLER_STOPPED_EVENT	1
-> > > >  	void	(*notify_event) (struct ci_hdrc *ci, unsigned event);
-> > > >  	struct regulator	*reg_vbus;
-> > > > +	struct usb_otg_caps	ci_otg_caps;
-> > > >  	bool			tpl_support;
-> > > >  };
-> > > >  
-> > > > -- 
-> > > > 1.9.1
-> > > > 
-> > > 
-> > > -- 
-> > > 
-> > > Best Regards,
-> > > Peter Chen
-> 
-> -- 
-> 
-> Best Regards,
-> Peter Chen
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Best Regards,
+Jacek Anaszewski
