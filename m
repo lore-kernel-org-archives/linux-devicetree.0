@@ -1,32 +1,62 @@
-From: Paul Bolle <pebolle@tiscali.nl>
-Subject: Re: [PATCHv5 2/2] mailbox: Adding driver for Xilinx LogiCORE IP
- mailbox.
-Date: Wed, 24 Jun 2015 22:36:45 +0200
-Message-ID: <1435178205.4528.77.camel@tiscali.nl>
-References: <1435082402-29239-1-git-send-email-moritz.fischer@ettus.com>
-	 <1435082402-29239-3-git-send-email-moritz.fischer@ettus.com>
+From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: Re: [PATCH] input: axp20x-pek: Fix reporting button
+ state as inverted
+Date: Wed, 24 Jun 2015 14:28:57 -0700
+Message-ID: <20150624212857.GA3636@dtor-ws>
+References: <1434278541-21355-1-git-send-email-hdegoede@redhat.com>
+ <20150622213051.GD2350@dtor-ws>
+ <CAGb2v64AF3bnd-QBRCszjD7MSfCnGSvfu3wUT2W+7fNTE76d5g@mail.gmail.com>
+ <CAOQ7t2a+3TvmgfW3dJBc=FJk1sXNAT+SE6qP0r5ovG7yx9fYHA@mail.gmail.com>
+Reply-To: dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1435082402-29239-3-git-send-email-moritz.fischer@ettus.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Moritz Fischer <moritz.fischer@ettus.com>, jassisinghbrar@gmail.com
-Cc: linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, akpm@linux-foundation.org, gregkh@linuxfoundation.org, mchehab@osg.samsung.com, arnd@arndb.de, joe@perches.com, jingoohan1@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDP6N55ZUYDRBHWCVSWAKGQEK2OPASY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAOQ7t2a+3TvmgfW3dJBc=FJk1sXNAT+SE6qP0r5ovG7yx9fYHA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-06-23 at 11:00 -0700, Moritz Fischer wrote:
-> +MODULE_ALIAS("platform:xilinx-mailbox");
+On Wed, Jun 24, 2015 at 11:19:39AM +0200, Carlo Caione wrote:
+> On Wed, Jun 24, 2015 at 3:42 AM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+> > On Tue, Jun 23, 2015 at 5:30 AM, Dmitry Torokhov
+> > <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> >> On Sun, Jun 14, 2015 at 12:42:21PM +0200, Hans de Goede wrote:
+> >>> Currently we are reporting the button state as inverted on all boards with
+> >>> an axp209 pmic, tested on a ba10-tvbox, bananapi, bananapro, cubietruck and
+> >>> utoo-p66 tablet.
+> >>>
+> >>> The axp209 datasheet clearly states that the power button must be connected
+> >>> between the PWRON key and ground. Which means that on a press we will get
+> >>> a falling edge (dbf) irq not a rising one, and likewise on release we will
+> >>> get a rising edge (dbr) irq, not a falling one.
+> >>>
+> >>> This commit swaps the check for the 2 irqs fixing the inverted reporting of
+> >>> the power button state.
+> >>>
+> >>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> >>
+> >> Carlo, Chen-Yu, could you please give this patch a spin and let us know
+> >> if it works on your boards?
+> >
+> > I've not actually tested this patch on my boards, but I can confirm that
+> > the original code had the state inverted, by checking /proc/interrupts
+> > counters, before and after releasing the power button.
+> >
+> > Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> 
+> Same here (I don't have the board anymore)
+> 
+> Acked-by: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
 
-So I think this MODULE_ALIAS() is only useful if, in short, there's a
-corresponding platform_device created. Ie, a platform_device with a
-name "xilinx-mailbox" that will fire of a "MODALIAS=platform:xilinx
--mailbox" when it's created.
+Applied, thank you.
 
-I couldn't spot such a platform_device. Provided git grep didn't let me
-down here: what breaks if this line is dropped?
-
-Thanks,
-
-
-Paul Bolle
+-- 
+Dmitry
