@@ -1,94 +1,46 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH 6/9] arm: twr-k70f120m: clock source drivers for Kinetis
- SoC
-Date: Wed, 24 Jun 2015 09:53:30 +0200 (CEST)
-Message-ID: <alpine.DEB.2.11.1506240947330.4037@nanos>
-References: <1435094387-20146-1-git-send-email-pawelo@king.net.pl> <1435094387-20146-7-git-send-email-pawelo@king.net.pl>
+From: "Ivan T. Ivanov" <ivan.ivanov@linaro.org>
+Subject: Re: [PATCH 5/8] pinctrl: qcom: spmi-mpp: Add support for setting
+ analog output level
+Date: Wed, 24 Jun 2015 11:17:07 +0300
+Message-ID: <1435133827.2334.33.camel@linaro.org>
+References: <1434610052-602-1-git-send-email-bjorn.andersson@sonymobile.com>
+	 <1434610052-602-6-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1435094387-20146-7-git-send-email-pawelo@king.net.pl>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Paul Osmialowski <pawelo@king.net.pl>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Anson Huang <b20788@freescale.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Bhupesh Sharma <bhupesh.sharma@freescale.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Frank Li <Frank.Li@freescale.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Haojian Zhuang <haojian.zhuang@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jingchang Lu <jingchang.lu@freescale.com>, Jiri Slaby <jslaby@suse.cz>, Kees Cook <keescook@chromium.org>, Kumar Gala <galak@codeaurora.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Linus Walleij <linus.walleij@linaro.org>, Magnus Damm <damm+renesas@opensource.se>, Michael Turquette <mturquette@baylibre.com>, Nathan Lynch <nathan_lynch@mentor.com>, Nicolas
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1434610052-602-6-git-send-email-bjorn.andersson@sonymobile.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 23 Jun 2015, Paul Osmialowski wrote:
-> +/*
-> + * Clock event device set mode function
-> + */
-> +static void kinetis_clockevent_tmr_set_mode(
-> +	enum clock_event_mode mode, struct clock_event_device *clk)
-> +{
-> +	struct kinetis_clock_event_ddata *pit =
-> +		container_of(clk, struct kinetis_clock_event_ddata, evtdev);
+Hi Bjorn, 
+
+On Wed, 2015-06-17 at 23:47 -0700, Bjorn Andersson wrote:
+> When the MPP is configured for analog output the output level is selected by
+> the AOUT_CTL register, this patch makes it possible to control this.
+> 
+<snip>
+
+>         }
+> @@ -748,6 +765,10 @@ static int pmic_mpp_populate(struct pmic_mpp_state *state,
+> 
+>         pad->drive_strength = val;
+> 
+> +       val = pmic_mpp_read(state, pad, PMIC_MPP_REG_AOUT_CTL);
+> +       if (val < 0)
+> +               return val;
 > +
-> +	switch (mode) {
-> +	case CLOCK_EVT_MODE_PERIODIC:
-> +		kinetis_pit_enable(pit->base, 1);
-> +		break;
-> +	case CLOCK_EVT_MODE_ONESHOT:
-> +	case CLOCK_EVT_MODE_UNUSED:
-> +	case CLOCK_EVT_MODE_SHUTDOWN:
-> +	default:
-> +		kinetis_pit_enable(pit->base, 0);
-> +	}
-> +}
 
-Please move to the new set_state_* interfaces. set_mode() is deprecated.
+Missing 
 
-> +static int kinetis_clockevent_tmr_set_next_event(
-> +	unsigned long delta, struct clock_event_device *c)
-> +{
-> +	struct kinetis_clock_event_ddata *pit =
-> +		container_of(c, struct kinetis_clock_event_ddata, evtdev);
-> +	unsigned long flags;
-> +
-> +	raw_local_irq_save(flags);
+        pad->aout_level = val;
 
-Pointless exercise. This is called with interrupts disabled.
+>         val = pmic_mpp_read(state, pad, PMIC_MPP_REG_EN_CTL);
+>         if (val < 0)
+>                 return val;
+> 
 
-> +	kinetis_pit_init(pit->base, delta);
-> +	kinetis_pit_enable(pit->base, 1);
-> +	raw_local_irq_restore(flags);
-
-
-> +static struct irqaction kinetis_clockevent_irqaction[KINETIS_PIT_CHANNELS] = {
-> +	{
-> +		.name = "Kinetis Kernel Time Tick (pit0)",
-
-Please use oneword descriptive names not half sentences.
-
-> +		.flags = IRQF_TIMER | IRQF_IRQPOLL,
-> +		.dev_id = &kinetis_clockevent_tmrs[0],
-> +		.handler = kinetis_clockevent_tmr_irq_handler,
-> +	}, {
-> +		.name = "Kinetis Kernel Time Tick (pit1)",
-> +		.flags = IRQF_TIMER | IRQF_IRQPOLL,
-> +		.dev_id = &kinetis_clockevent_tmrs[1],
-> +		.handler = kinetis_clockevent_tmr_irq_handler,
-> +	}, {
-> +		.name = "Kinetis Kernel Time Tick (pit2)",
-> +		.flags = IRQF_TIMER | IRQF_IRQPOLL,
-> +		.dev_id = &kinetis_clockevent_tmrs[2],
-> +		.handler = kinetis_clockevent_tmr_irq_handler,
-> +	}, {
-> +		.name = "Kinetis Kernel Time Tick (pit3)",
-> +		.flags = IRQF_TIMER | IRQF_IRQPOLL,
-> +		.dev_id = &kinetis_clockevent_tmrs[3],
-> +		.handler = kinetis_clockevent_tmr_irq_handler,
-> +	},
-
-Aside of that. Please use standard request_irq() there is no reason to
-use setup_irq here.
-
-> +
-> +	setup_irq(irq, &(kinetis_clockevent_irqaction[chan]));
-
-  request_irq(irq, handler, flags, "name", &kinetis_clockevent_tmrs[chan]);
-
-....
-
-Thanks,
-
-	tglx
+Regards,
+Ivan
