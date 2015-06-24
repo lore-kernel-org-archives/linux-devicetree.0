@@ -1,97 +1,67 @@
-From: "Timo S." <m.silentcreek-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] touchscreen: sun4i-ts: Really fix A10
- temperature reporting
-Date: Wed, 24 Jun 2015 13:59:17 +0200
-Message-ID: <CAKLfuV2rvTy2vSLQfN+db-4J+nTvcRuH6kfGzw4E16wTLjSP4Q@mail.gmail.com>
-References: <1425893870-28715-1-git-send-email-hdegoede@redhat.com>
-	<41a7a857-96fd-48ab-9778-127cfc091ef0@googlegroups.com>
-	<5589B78C.4080600@redhat.com>
-	<20150623195424.GE40168@dtor-ws>
-	<558A5966.9010908@redhat.com>
-Reply-To: m.silentcreek-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH 17/17] ARM: dts: omap4: Use "syscon-otghs" instead of
+ "ctrl-module" in USB node
+Date: Wed, 24 Jun 2015 15:02:22 +0300
+Message-ID: <20150624150222.98f9bfec890438c67e4d52eb@ti.com>
+References: <1435060743-5511-1-git-send-email-kishon@ti.com>
+	<1435060743-5511-18-git-send-email-kishon@ti.com>
+	<20150624104116.GC4156@atomide.com>
 Mime-Version: 1.0
-Content-Type: multipart/alternative; boundary=047d7b6dcd748e6df00519423c9b
-Return-path: <linux-sunxi+bncBDGZFWHP6IMBBFVXVKWAKGQERYWAKLI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <558A5966.9010908-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150624104116.GC4156@atomide.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, bcousson@baylibre.com, balbi@ti.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, gregkh@linuxfoundation.org, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
---047d7b6dcd748e6df00519423c9b
-Content-Type: text/plain; charset=UTF-8
+On Wed, 24 Jun 2015 03:41:16 -0700
+Tony Lindgren <tony@atomide.com> wrote:
 
-Hi Hans,
+> * Kishon Vijay Abraham I <kishon@ti.com> [150623 05:02]:
+> > --- a/arch/arm/boot/dts/omap4.dtsi
+> > +++ b/arch/arm/boot/dts/omap4.dtsi
+> > @@ -852,12 +852,6 @@
+> >  			};
+> >  		};
+> >  
+> > -		omap_control_usbotg: control-phy@4a00233c {
+> > -			compatible = "ti,control-phy-otghs";
+> > -			reg = <0x4a00233c 0x4>;
+> > -			reg-names = "otghs_control";
+> > -		};
+> > -
+> >  		usb_otg_hs: usb_otg_hs@4a0ab000 {
+> >  			compatible = "ti,omap4-musb";
+> >  			reg = <0x4a0ab000 0x7ff>;
+> > @@ -870,7 +864,7 @@
+> >  			multipoint = <1>;
+> >  			num-eps = <16>;
+> >  			ram-bits = <12>;
+> > -			ctrl-module = <&omap_control_usbotg>;
+> > +			syscon-otghs = <&scm_conf 0x33c>;
+> >  		};
+> >  
+> >  		aes: aes@4b501000 {
+> 
+> We should still keep a separate entry for the phy in the dtsi
+> files. And the phy should be a child of the scm_conf area in the
+> dtsi file.
 
-On Wed, Jun 24, 2015 at 9:16 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+The PHY already has a separate entry with its own set of registers.
+Just that some bits have been shoved into the control module space
+not only for PHY but for other modules as well like DSS, DCAN, etc.
 
-Ah yes, something went wrong during the 4.1 cycle wrt merging ARM patches
-> which have caused almost all ARM patches intended for 4.1 to get delayed to
-> 4.2, including that one, that is the problem.
->
-> We did our best to update the driver and the dts in lockstep, and you
-> should
-> have never seen this problem, but the missing of the merge window for all
-> ARM patches during the 4.1 cycle has caused our carefully planned lock-step
-> update to fail, sorry about that.
->
+> 
+> This is because the scm and usb_otg_hs are separate devices and
+> can be clocked separately. So the phy driver needs to be a
+> separate driver to avoid spaghetti code and issues with clocking.
 
-No need to apologize. Things happen. Glad to see this cleared up so quickly.
+for the PHY register space this is already done.
 
-Thanks for the help (and all the other work you do ;)).
+But for the register bits that lie in control module space isn't that
+taken care by syscon driver?
 
-Kind regards,
-
-Timo
-
--- 
-You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
-
---047d7b6dcd748e6df00519423c9b
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr">Hi Hans,<br><div><div class=3D"gmail_extra"><br><div class=
-=3D"gmail_quote">On Wed, Jun 24, 2015 at 9:16 AM, Hans de Goede <span dir=
-=3D"ltr">&lt;<a href=3D"mailto:hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" target=3D"_blank">hdego=
-ede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org</a>&gt;</span> wrote:<br><br><blockquote class=3D"gmail_quot=
-e" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204)=
-;padding-left:1ex"><span class=3D""></span>
-Ah yes, something went wrong during the 4.1 cycle wrt merging ARM patches<b=
-r>
-which have caused almost all ARM patches intended for 4.1 to get delayed to=
-<br>
-4.2, including that one, that is the problem.<br>
-<br>
-We did our best to update the driver and the dts in lockstep, and you shoul=
-d<br>
-have never seen this problem, but the missing of the merge window for all<b=
-r>
-ARM patches during the 4.1 cycle has caused our carefully planned lock-step=
-<br>
-update to fail, sorry about that.<br></blockquote><div><br></div><div>No ne=
-ed to apologize. Things happen. Glad to see this cleared up so quickly.<br>=
-<br></div><div>Thanks for the help (and all the other work you do ;)).<br><=
-br></div><div>Kind regards,<br><br></div><div>Timo<br></div></div><br></div=
-></div></div>
-
-<p></p>
-
--- <br />
-You received this message because you are subscribed to the Google Groups &=
-quot;linux-sunxi&quot; group.<br />
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to <a href=3D"mailto:linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org">linux-s=
-unxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org</a>.<br />
-For more options, visit <a href=3D"https://groups.google.com/d/optout">http=
-s://groups.google.com/d/optout</a>.<br />
-
---047d7b6dcd748e6df00519423c9b--
+cheers,
+-roger
