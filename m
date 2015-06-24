@@ -1,95 +1,50 @@
-From: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH-v3 3/3] mfd: devicetree: bindings: Add new 88pm800 mfd binding
-Date: Wed, 24 Jun 2015 14:51:13 +0530
-Message-ID: <1435137673-1629-4-git-send-email-vaibhav.hiremath@linaro.org>
-References: <1435137673-1629-1-git-send-email-vaibhav.hiremath@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1435137673-1629-1-git-send-email-vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v6 0/9] Add simple NVMEM Framework via regmap.
+Date: Wed, 24 Jun 2015 10:46:58 +0100
+Message-ID: <558A7C92.2040102@linaro.org>
+References: <1435014459-26138-1-git-send-email-srinivas.kandagatla@linaro.org> <235181230.251177.1435088854197.JavaMail.open-xchange@oxbsltgw00.schlund.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <235181230.251177.1435088854197.JavaMail.open-xchange@oxbsltgw00.schlund.de>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stefan Wahren <stefan.wahren@i2se.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-kernel@lists.infradead.org
+Cc: wxt@rock-chips.com, linux-api@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, sboyd@codeaurora.org, arnd@arndb.de, s.hauer@pengutronix.de, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, mporter@konsulko.com, Maxime Ripard <maxime.ripard@free-electrons.com>, pantelis.antoniou@konsulko.com, devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-With addition of DT support to 88pm800 mfd driver, this patch
-adds new DT binding documentation along with respective properties.
 
-Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- Documentation/devicetree/bindings/mfd/88pm800.txt | 60 +++++++++++++++++++++++
- 1 file changed, 60 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/88pm800.txt
 
-diff --git a/Documentation/devicetree/bindings/mfd/88pm800.txt b/Documentation/devicetree/bindings/mfd/88pm800.txt
-new file mode 100644
-index 0000000..6897119
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/88pm800.txt
-@@ -0,0 +1,60 @@
-+* Marvell 88PM8xx Power Management IC
-+
-+Required parent device properties:
-+- compatible : "marvell,88pm800", "marvell,88pm805", "marvell,88pm860"
-+- reg : the I2C slave address for the 88pm8xx chip
-+- interrupts : IRQ line for the 88pm8xx chip
-+- interrupt-controller: describes the 88pm8xx as an interrupt controller
-+- #interrupt-cells : should be 1.
-+		- The cell is the 88pm8xx local IRQ number
-+
-+Optional parent device properties:
-+- marvell,irq-clr-on-write: indicates whether interrupt status is cleared
-+  by write or read.
-+  If enabled, interrupt is cleared by write else just read would do.
-+
-+88pm8xx family of devices consists of varied group of sub-devices:
-+
-+Device		 	Supply Names	 Description
-+------		 	------------	 -----------
-+88pm80x-onkey		:		: On key
-+88pm80x-rtc		:		: RTC
-+88pm80x-regulator	:		: Regulators
-+
-+Note: More device list will follow
-+
-+Example:
-+
-+	pmic: 88pm800@30 {
-+		compatible = "marvell,88pm800";
-+		reg = <0x30>;
-+		interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-parent = <&gic>;
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+
-+		marvell,irq-clr-on-write;
-+
-+		regulators {
-+			compatible = "marvell,88pm80x-regulator";
-+
-+			buck1a: BUCK1A {
-+				regulator-name = "BUCK1A";
-+				regulator-min-microvolt = <600000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+			ldo1: LDO1 {
-+				regulator-name = "LDO1";
-+				regulator-min-microvolt = <1700000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+		};
-+
-+		rtc {
-+			compatible = "marvell,88pm80x-rtc";
-+		};
-+	};
--- 
-1.9.1
+On 23/06/15 20:47, Stefan Wahren wrote:
+>> 0001000
+>> >
+> i want to port OCOTP driver for MXS, which hasn't MMIO. From my understanding
+That's cool.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> hexdump would readout the complete register range defined in provider DT node.
+>
+> How can i achieve that hexdump only reads the data area within the register
+> range?
+
+If the question is just about hexdump, then hexdump itself can read file 
+from given offset and size.
+
+But I believe the real question is "How can we dump each nvmem cell 
+independently"
+
+In one of my replies I mentioned that am planning to add sysfs entries 
+under /sys/class/nvmem/<provider>/cells/
+
+ex:
+for qfprom tsens calibration it would look like:
+
+$ hexdump /sys/class/nvmem/qfprom0/cells/tsens_calibration
+
+0000000 e000 0c00 0c00 0000 0c00
+...
+
+Is that what you guys are looking for?
+
+--srini
+>
+> Stefan
