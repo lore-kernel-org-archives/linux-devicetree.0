@@ -1,90 +1,89 @@
-From: Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 3/4] MIPS: BMIPS: bcm7360: add nodes for NAND
-Date: Wed, 24 Jun 2015 15:08:33 +0900
-Message-ID: <72f9d919f140dcab72b7e3b6f1432430b1d4c441.1435124524.git.jaedon.shin@gmail.com>
-References: <cover.1435124524.git.jaedon.shin@gmail.com>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v6] Mediatek SCPSYS power domain support
+Date: Wed, 24 Jun 2015 08:17:01 +0200
+Message-ID: <1435126625-9634-1-git-send-email-s.hauer@pengutronix.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1435124524.git.jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-In-Reply-To: <cover.1435124524.git.jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-References: <cover.1435124524.git.jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
-Cc: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add NAND device nodes to BMIPS based BCM7360 platform.
+Just a small update to this series with a memory corruption bug fixed.
 
-Signed-off-by: Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/mips/boot/dts/brcm/bcm7360.dtsi     | 22 ++++++++++++++++++++++
- arch/mips/boot/dts/brcm/bcm97360svmb.dts | 23 +++++++++++++++++++++++
- 2 files changed, 45 insertions(+)
+This series adds support for the MediaTek SCPSYS unit.
 
-diff --git a/arch/mips/boot/dts/brcm/bcm7360.dtsi b/arch/mips/boot/dts/brcm/bcm7360.dtsi
-index f23b0aed276f..cfa1830a411c 100644
---- a/arch/mips/boot/dts/brcm/bcm7360.dtsi
-+++ b/arch/mips/boot/dts/brcm/bcm7360.dtsi
-@@ -157,5 +157,27 @@
- 			interrupts = <66>;
- 			status = "disabled";
- 		};
-+
-+		hif_intr2_intc: interrupt-controller@411000 {
-+			compatible = "brcm,l2-intc";
-+			reg = <0x411000 0x30>;
-+			interrupt-controller;
-+			#interrupt-cells = <1>;
-+			interrupt-parent = <&periph_intc>;
-+			interrupts = <30>;
-+			interrupt-names = "hif";
-+		};
-+
-+		nand0: nand@412800 {
-+			compatible = "brcm,brcmnand-v5.0", "brcm,brcmnand";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg-names = "nand";
-+			reg = <0x412800 0x400>;
-+			interrupt-parent = <&hif_intr2_intc>;
-+			interrupt-names = "nand_ctlrdy";
-+			interrupts = <24>;
-+			status = "disabled";
-+		};
- 	};
- };
-diff --git a/arch/mips/boot/dts/brcm/bcm97360svmb.dts b/arch/mips/boot/dts/brcm/bcm97360svmb.dts
-index 4fe515500102..e45f1d519667 100644
---- a/arch/mips/boot/dts/brcm/bcm97360svmb.dts
-+++ b/arch/mips/boot/dts/brcm/bcm97360svmb.dts
-@@ -32,3 +32,26 @@
- &ohci0 {
- 	status = "okay";
- };
-+
-+&nand0 {
-+	status = "okay";
-+
-+	nandcs@1 {
-+		compatible = "brcm,nandcs";
-+		reg = <1>;
-+		nand-ecc-step-size = <512>;
-+		nand-ecc-strength = <8>;
-+		nand-on-flash-bbt;
-+
-+		#size-cells = <2>;
-+		#address-cells = <2>;
-+
-+		flash1.rootfs0@0 {
-+			reg = <0x0 0x0 0x0 0x80000000>;
-+		};
-+
-+		flash1.rootfs1@80000000 {
-+			reg = <0x0 0x80000000 0x0 0x80000000>;
-+		};
-+	};
-+};
--- 
-2.4.4
+The SCPSYS unit handles several power management related tasks such
+as thermal measurement, DVFS, interrupt filter and low level sleep
+control.
+
+The initial support only contains the generic power domain handling.
+This is needed to turn on power to the different power domains.
+
+The driver is quite straight forward now. Due to the lack of a better
+place I have put it to drivers/soc/mediatek. As the SCPSYS unit has
+several other tasks that also do not fit into some specific subsystem
+this probably is a good place for this driver.
+
+Please review, any input welcome.
+
+Sascha
+
+changes since v5:
+- Fix array out of bounds access
+- Fix typo
+
+Changes since v4:
+- move Kconfig dependency "select PM_GENERIC_DOMAINS if PM" from arch/arm64
+  next to the driver which needs this dependency
+- drop unnecessary clk[] array from struct scp and make the array local to
+  the function which needs it.
+- Disable clock when enabling the domain fails
+- Drop error message when devm_clk_get fails. The core already issues a
+  similar warning
+- Add clocks/clock-names description to the binding doc
+
+Changes since v3:
+- Drop unnecessary MODULE_* macros for builtin code
+- introduce scpsys_domain_is_on() function instead of open coding this
+  twice
+- Drop unnecessary initialisation of power_o[ff|n]_latencies. The kernel
+  updates them with the measured values anyway.
+
+changes since v2:
+- Add missing include/linux/soc/mediatek/infracfg.h file
+- rename VDE -> VDEC, VEN -> VENC, DIS -> DISP and VEN2 -> VENC_LT
+  to make the abbreviatons more clear
+- make of_device_id const
+- remove double loop
+- fix hunk in wrong patch
+- Fix order of domains. Some domains depend on other domains. Reorder
+  the domains so that all domains can be turned on in order when
+  CONFIG_PM is disabled. Also fixes earlier mixups in the domain array
+- Do not allow compilation as modules. pm_domains cannot be removed, so
+  compilation as module is not that useful
+- reorder Kconfig items alphabetically
+- reorder #includes alphabetically
+- select MTK_INFRACFG instead of depending on it
+- Use only two clocks as dependencies for the domains. The previously
+  used 5 clocks are not necessary as confirmed by the hardware designers
+- use 'genpd' as variable name for struct generic_pm_domain like done in
+  other pm code
+
+changes since v1:
+- make MFG_ASYNC a subdomain of MFG_2D and MFG_2D a subdomain of MFG
+- Add (now hopefully properly) infracfg register handling again
+- Add clock handling
+- Fix on/off mixup in error message
+- Make readonly data const
+- Fix MODULE_LICENSE to GPL v2
+
+changes since RFC:
+
+- add a commit log to driver patch
+- drop manipulating infracfg registers for now, can be added (properly)
+  later
+- Add warning messages when errors occur
+- add NULL pointer check for kmalloc
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
