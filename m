@@ -1,129 +1,181 @@
-From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v5 08/23] usb: chipidea: set usb gadeget's otg
- capabilities
-Date: Wed, 24 Jun 2015 11:49:23 +0800
-Message-ID: <20150624034922.GC3475@shlinux2>
-References: <1434541230-15090-1-git-send-email-jun.li@freescale.com>
- <1434541230-15090-9-git-send-email-jun.li@freescale.com>
- <20150624030442.GB3475@shlinux2> <20150624033421.GA29386@shlinux2>
+From: Paul Osmialowski <pawelo@king.net.pl>
+Subject: Re: [PATCH 5/9] arm: twr-k70f120m: basic support for Kinetis
+ TWR-K70F120M
+Date: Wed, 24 Jun 2015 06:42:58 +0200 (CEST)
+Message-ID: <alpine.LNX.2.00.1506240627020.24366@localhost.localdomain>
+References: <1435094387-20146-1-git-send-email-pawelo@king.net.pl> <1435094387-20146-6-git-send-email-pawelo@king.net.pl> <3935594.UmXqE2ND2k@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150624033421.GA29386@shlinux2>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII; format=flowed
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <3935594.UmXqE2ND2k@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Paul Osmialowski <pawelo@king.net.pl>, Andrew Morton <akpm@linux-foundation.org>, Anson Huang <b20788@freescale.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Bhupesh Sharma <bhupesh.sharma@freescale.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Frank Li <Frank.Li@freescale.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Haojian Zhuang <haojian.zhuang@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jingchang Lu <jingchang.lu@freescale.com>, Jiri Slaby <jslaby@suse.cz>, Kees Cook <keescook@chromium.org>, Kumar Gala <galak@codeaurora.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Linus Walleij <linus.walleij@linaro.org>, Magnus Damm <damm+renesas@opensource.se>, Michael Turquette <mturquette@baylibre.com>, Nathan Lynch <nathan_lynch@mentor.com>, Nic
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 24, 2015 at 11:34:23AM +0800, Li Jun wrote:
-> On Wed, Jun 24, 2015 at 11:04:43AM +0800, Peter Chen wrote:
-> > On Wed, Jun 17, 2015 at 07:40:15PM +0800, Li Jun wrote:
-> > > Set gadget's otg capabilities according to controller's capability and otg
-> > > properties in device tree.
-> > > 
-> > > Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > > ---
-> > >  drivers/usb/chipidea/core.c  | 8 ++++++++
-> > >  drivers/usb/chipidea/udc.c   | 7 ++++++-
-> > >  include/linux/usb/chipidea.h | 1 +
-> > >  3 files changed, 15 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
-> > > index 74fea4f..2abecbc 100644
-> > > --- a/drivers/usb/chipidea/core.c
-> > > +++ b/drivers/usb/chipidea/core.c
-> > > @@ -588,6 +588,14 @@ static int ci_get_platdata(struct device *dev,
-> > >  				of_usb_host_tpl_support(dev->of_node);
-> > >  	}
-> > >  
-> > > +	if (platdata->dr_mode == USB_DR_MODE_OTG) {
-> > > +		/* We can support HNP and SRP */
-> > > +		platdata->ci_otg_caps.hnp_support = true;
-> > > +		platdata->ci_otg_caps.srp_support = true;
-> > > +		/* Update otg capabilities by DT properties */
-> > > +		of_usb_set_otg_caps(dev->of_node, &platdata->ci_otg_caps);
-> > > +	}
-> > > +
-> > 
-> > For current dual-role supported platforms (through ID pin), their dts has nothing
-> > with otg capabilities, what will happen if we set .hnp_support as true?
-> > 
-> No impact for them, those platforms will continue work as before(i.e.
-> otg descriptor with HNP&SRP enabled if CONFIG_USB_OTG is selected,
-> no otg fsm if CONFIG_USB_OTG_FSM is not selected).
+Hi Arnd,
 
-So if CONFIG_USB_OTG is not chosen, even platdata->ci_otg_caps.hnp_support
-is true, it will be act as pure host or peripheral, right?
+Thanks for all of your input. Your comments will all be considered during 
+my works on the second iteration of this patchset.
 
-> 
-> > For non-dt platform (eg i686), how it changes otg capabilities through
-> > their platform data?
-> > 
-> Directly override platdata->ci_otg_caps in its platform driver after
-> ci_hdrc_add_device().
+On Wed, 24 Jun 2015, Arnd Bergmann wrote:
 
-After ci_hdrc_add_device, the device may begin to enumerate, we need to
-make sure otg capabilities before the device goes to work.
-
-Peter
-> 
-> > Peter
-> > >  	if (of_usb_get_maximum_speed(dev->of_node) == USB_SPEED_FULL)
-> > >  		platdata->flags |= CI_HDRC_FORCE_FULLSPEED;
-> > >  
-> > > diff --git a/drivers/usb/chipidea/udc.c b/drivers/usb/chipidea/udc.c
-> > > index 764f668..858bd21 100644
-> > > --- a/drivers/usb/chipidea/udc.c
-> > > +++ b/drivers/usb/chipidea/udc.c
-> > > @@ -1827,6 +1827,7 @@ static irqreturn_t udc_irq(struct ci_hdrc *ci)
-> > >  static int udc_start(struct ci_hdrc *ci)
-> > >  {
-> > >  	struct device *dev = ci->dev;
-> > > +	struct usb_otg_caps *otg_caps = &ci->platdata->ci_otg_caps;
-> > >  	int retval = 0;
-> > >  
-> > >  	spin_lock_init(&ci->lock);
-> > > @@ -1834,8 +1835,12 @@ static int udc_start(struct ci_hdrc *ci)
-> > >  	ci->gadget.ops          = &usb_gadget_ops;
-> > >  	ci->gadget.speed        = USB_SPEED_UNKNOWN;
-> > >  	ci->gadget.max_speed    = USB_SPEED_HIGH;
-> > > -	ci->gadget.is_otg       = ci->is_otg ? 1 : 0;
-> > >  	ci->gadget.name         = ci->platdata->name;
-> > > +	ci->gadget.otg_caps	= otg_caps;
-> > > +
-> > > +	if (otg_caps->otg_rev && (otg_caps->hnp_support ||
-> > > +		otg_caps->srp_support || otg_caps->adp_support))
-> > > +		ci->gadget.is_otg = 1;
-> > >  
-> > >  	INIT_LIST_HEAD(&ci->gadget.ep_list);
-> > >  
-> > > diff --git a/include/linux/usb/chipidea.h b/include/linux/usb/chipidea.h
-> > > index ab94f78..e10cefc 100644
-> > > --- a/include/linux/usb/chipidea.h
-> > > +++ b/include/linux/usb/chipidea.h
-> > > @@ -34,6 +34,7 @@ struct ci_hdrc_platform_data {
-> > >  #define CI_HDRC_CONTROLLER_STOPPED_EVENT	1
-> > >  	void	(*notify_event) (struct ci_hdrc *ci, unsigned event);
-> > >  	struct regulator	*reg_vbus;
-> > > +	struct usb_otg_caps	ci_otg_caps;
-> > >  	bool			tpl_support;
-> > >  };
-> > >  
-> > > -- 
-> > > 1.9.1
-> > > 
-> > 
-> > -- 
-> > 
-> > Best Regards,
-> > Peter Chen
-
--- 
-
-Best Regards,
-Peter Chen
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> On Tuesday 23 June 2015 23:19:43 Paul Osmialowski wrote:
+>> @@ -1740,7 +1752,7 @@ source "mm/Kconfig"
+>>  config FORCE_MAX_ZONEORDER
+>>  	int "Maximum zone order" if ARCH_SHMOBILE_LEGACY
+>>  	range 11 64 if ARCH_SHMOBILE_LEGACY
+>> -	default "12" if SOC_AM33XX
+>> +	default "12" if SOC_AM33XX || ARCH_KINETIS
+>>  	default "9" if SA1111 || ARCH_EFM32
+>>  	default "11"
+>>  	help
+>
+> Put it in the defconfig?
+>
+>> +#
+>> +
+>> +obj-$(CONFIG_MACH_KINETIS)	+= kinetis_platform.o
+>
+> just use
+>
+> obj-y	+= kinetis.o
+>
+>> diff --git a/arch/arm/mach-kinetis/include/mach/idle.h b/arch/arm/mach-kinetis/include/mach/idle.h
+>> new file mode 100644
+>> index 0000000..0aafefd
+>> --- /dev/null
+>> +++ b/arch/arm/mach-kinetis/include/mach/idle.h
+>
+> No mach/*.h files please.
+>
+>> +/*
+>> + * This Kinetis port assumes that the CPU works in little-endian mode.
+>> + * Switching to big-endian will require different bit offsets in peripheral
+>> + * devices' registers. Also, some bit groups may lay on byte edges, so issue
+>> + * with big-endian cannot be fixed only by defining bit offsets differently
+>> + * for the big-endian mode.
+>> + */
+>> +#ifndef __LITTLE_ENDIAN
+>> +#error This Kinetis port assumes that the CPU works in little-endian mode
+>> +#endif
+>
+> Fix the drivers instead?
+>
+>> +/*
+>> + * Peripheral memory map
+>> + */
+>> +#define KINETIS_AIPS0PERIPH_BASE	0x40000000
+>> +#define KINETIS_AIPS1PERIPH_BASE	0x40080000
+>
+> Move it into DT
+>
+>> +/*
+>> + * System Integration Module (SIM) register map
+>> + *
+>> + * This map actually covers two hardware modules:
+>> + *     1. SIM low-power logic, at 0x40047000
+>> + *     2. System integration module (SIM), at 0x40048000
+>> + */
+>> +struct kinetis_sim_regs {
+>> +	u32 sopt1;	/* System Options Register 1 */
+>> +	u32 rsv0[1024];
+>> +	u32 sopt2;	/* System Options Register 2 */
+>> +	u32 rsv1;
+>> +	u32 sopt4;	/* System Options Register 4 */
+>> +	u32 sopt5;	/* System Options Register 5 */
+>> +	u32 sopt6;	/* System Options Register 6 */
+>> +	u32 sopt7;	/* System Options Register 7 */
+>> +	u32 rsv2[2];
+>> +	u32 sdid;	/* System Device Identification Register */
+>> +	u32 scgc[KINETIS_SIM_CG_NUMREGS];	/* Clock Gating Regs 1...7 */
+>> +	u32 clkdiv1;	/* System Clock Divider Register 1 */
+>> +	u32 clkdiv2;	/* System Clock Divider Register 2 */
+>> +	u32 fcfg1;	/* Flash Configuration Register 1 */
+>> +	u32 fcfg2;	/* Flash Configuration Register 2 */
+>> +	u32 uidh;	/* Unique Identification Register High */
+>> +	u32 uidmh;	/* Unique Identification Register Mid-High */
+>> +	u32 uidml;	/* Unique Identification Register Mid Low */
+>> +	u32 uidl;	/* Unique Identification Register Low */
+>> +	u32 clkdiv3;	/* System Clock Divider Register 3 */
+>> +	u32 clkdiv4;	/* System Clock Divider Register 4 */
+>> +	u32 mcr;	/* Misc Control Register */
+>> +};
+>
+> Move it into the driver that uses these.
+>
+>> +/*
+>> + * SIM registers base
+>> + */
+>> +#define KINETIS_SIM_BASE		(KINETIS_AIPS0PERIPH_BASE + 0x00047000)
+>> +#define KINETIS_SIM_PTR(reg) \
+>> +	(&(((struct kinetis_sim_regs *)(KINETIS_SIM_BASE))->reg))
+>> +#define KINETIS_SIM_RD(reg) readl_relaxed(KINETIS_SIM_PTR(reg))
+>> +#define KINETIS_SIM_WR(reg, val) writel_relaxed((val), KINETIS_SIM_PTR(reg))
+>> +#define KINETIS_SIM_SET(reg, mask) \
+>> +	KINETIS_SIM_WR(reg, (KINETIS_SIM_RD(reg)) | (mask))
+>> +#define KINETIS_SIM_RESET(reg, mask) \
+>> +	KINETIS_SIM_WR(reg, (KINETIS_SIM_RD(reg)) & (~(mask)))
+>> +#define KINETIS_SIM_ISSET(reg, mask) \
+>> +	(KINETIS_SIM_RD(reg) & (mask))
+>> +
+>> +/*
+>> + * SIM registers
+>> + */
+>> +/*
+>> + * System Options Register 2
+>> + */
+>> +/* USB HS clock source select */
+>> +#define KINETIS_SIM_SOPT2_USBHSRC_BITS	2
+>> +#define KINETIS_SIM_SOPT2_USBHSRC_MSK	(3 << KINETIS_SIM_SOPT2_USBHSRC_BITS)
+>> +#define KINETIS_SIM_SOPT2_USBHSRC_PLL0	(1 << KINETIS_SIM_SOPT2_USBHSRC_BITS)
+>> +#define KINETIS_SIM_SOPT2_USBHSRC_PLL1	(2 << KINETIS_SIM_SOPT2_USBHSRC_BITS)
+>> +
+>> +/* USB FS clock source select */
+>> +#define KINETIS_SIM_SOPT2_USBFSRC_BITS	22
+>> +#define KINETIS_SIM_SOPT2_USBFSRC_MSK	(3 << KINETIS_SIM_SOPT2_USBFSRC_BITS)
+>> +#define KINETIS_SIM_SOPT2_USBFSRC_PLL0	(1 << KINETIS_SIM_SOPT2_USBFSRC_BITS)
+>> +#define KINETIS_SIM_SOPT2_USBFSRC_PLL1	(2 << KINETIS_SIM_SOPT2_USBFSRC_BITS)
+>> +#define KINETIS_SIM_SOPT2_USBF_CLKSEL	(1 << 18)
+>> +
+>
+> remove all these here.
+>
+>> +/*
+>> + * Map required regions.
+>> + * This being the no-MMU Linux, I am not mapping anything
+>> + * since all I/O registers are available at their physical addresses.
+>> + */
+>> +static void __init kinetis_map_io(void)
+>> +{
+>> +}
+>
+> Not needed, remove.
+>
+>> +/*
+>> + * Freescale Kinetis platform initialization
+>> + */
+>> +static void __init kinetis_init(void)
+>> +{
+>> +	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
+>> +}
+>
+> same here.
+>
+>> diff --git a/arch/arm/tools/mach-types b/arch/arm/tools/mach-types
+>> index 2ed1b8a..1d05516 100644
+>> --- a/arch/arm/tools/mach-types
+>> +++ b/arch/arm/tools/mach-types
+>> @@ -554,6 +554,7 @@ smdk4412		MACH_SMDK4412		SMDK4412		3765
+>>  marzen			MACH_MARZEN		MARZEN			3790
+>>  krome			MACH_KROME		KROME			3797
+>>  armadillo800eva		MACH_ARMADILLO800EVA	ARMADILLO800EVA		3863
+>> +kinetis			MACH_KINETIS		KINETIS			3896
+>>  mx53_umobo		MACH_MX53_UMOBO		MX53_UMOBO		3927
+>>  mt4			MACH_MT4		MT4			3981
+>>  u8520			MACH_U8520		U8520			3990
+>
+> Unused, please remove.
+>
+> 	Arnd
+>
