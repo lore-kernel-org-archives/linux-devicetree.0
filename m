@@ -1,82 +1,92 @@
-From: Sanchayan Maity <maitysanchayan@gmail.com>
-Subject: Re: [PATCH v6 0/9] Add simple NVMEM Framework via regmap.
-Date: Wed, 24 Jun 2015 11:24:29 +0530
-Message-ID: <20150624055429.GC11753@Sanchayan-Arch.toradex.int>
-References: <1435014459-26138-1-git-send-email-srinivas.kandagatla@linaro.org>
- <235181230.251177.1435088854197.JavaMail.open-xchange@oxbsltgw00.schlund.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <235181230.251177.1435088854197.JavaMail.open-xchange@oxbsltgw00.schlund.de>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Stefan Wahren <stefan.wahren@i2se.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, arnd@arndb.de, linux-api@vger.kernel.org, s.hauer@pengutronix.de, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, pantelis.antoniou@konsulko.com, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Kumar Gala <galak@codeaurora.org>, mporter@konsulko.com, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-msm@vger.kernel.org, wxt@rock-chips.com
+From: Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 2/4] MIPS: BMIPS: bcm7358: add nodes for NAND
+Date: Wed, 24 Jun 2015 15:08:32 +0900
+Message-ID: <39b905de5fadc2243f12aae2ae2ed22dc128e624.1435124524.git.jaedon.shin@gmail.com>
+References: <cover.1435124524.git.jaedon.shin@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1435124524.git.jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <cover.1435124524.git.jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+References: <cover.1435124524.git.jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+Cc: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Add NAND device nodes to BMIPS based BCM7358 platform.
 
-On 15-06-23 21:47:34, Stefan Wahren wrote:
-> Hi Srinivas,
-> 
-> > Srinivas Kandagatla <srinivas.kandagatla@linaro.org> hat am 23. Juni 2015 um
-> > 01:07 geschrieben:
-> >
-> >
-> > [...]
-> >
-> > Device Tree:
-> >
-> > /* Provider */
-> > qfprom: qfprom@00700000 {
-> > ...
-> >
-> > /* Data cells */
-> > tsens_calibration: calib@404 {
-> > reg = <0x404 0x10>;
-> > };
-> >
-> > tsens_calibration_bckp: calib_bckp@504 {
-> > reg = <0x504 0x11>;
-> > bit-offset = 6;
-> > nbits = 128;
-> > };
-> >
-> > pvs_version: pvs-version@6 {
-> > reg = <0x6 0x2>
-> > bit-offset = 7;
-> > nbits = 2;
-> > };
-> >
-> > speed_bin: speed-bin@c{
-> > reg = <0xc 0x1>;
-> > bit-offset = 2;
-> > nbits = 3;
-> >
-> > };
-> > ...
-> > };
-> >
-> > userspace interface: binary file in /sys/class/nvmem/*/nvmem
-> >
-> > ex:
-> > hexdump /sys/class/nvmem/qfprom0/nvmem
-> >
-> > 0000000 0000 0000 0000 0000 0000 0000 0000 0000
-> > *
-> > 00000a0 db10 2240 0000 e000 0c00 0c00 0000 0c00
-> > 0000000 0000 0000 0000 0000 0000 0000 0000 0000
-> > ...
-> > *
-> > 0001000
-> >
-> 
-> i want to port OCOTP driver for MXS, which hasn't MMIO. From my understanding
-> hexdump would readout the complete register range defined in provider DT node.
-> 
-> How can i achieve that hexdump only reads the data area within the register
-> range?
+Signed-off-by: Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/mips/boot/dts/brcm/bcm7358.dtsi     | 22 ++++++++++++++++++++++
+ arch/mips/boot/dts/brcm/bcm97358svmb.dts | 23 +++++++++++++++++++++++
+ 2 files changed, 45 insertions(+)
 
-I also had a similar question in my mind.
+diff --git a/arch/mips/boot/dts/brcm/bcm7358.dtsi b/arch/mips/boot/dts/brcm/bcm7358.dtsi
+index 2c2aa9368f76..481d754d1b19 100644
+--- a/arch/mips/boot/dts/brcm/bcm7358.dtsi
++++ b/arch/mips/boot/dts/brcm/bcm7358.dtsi
+@@ -157,5 +157,27 @@
+ 			interrupts = <66>;
+ 			status = "disabled";
+ 		};
++
++		hif_intr2_intc: interrupt-controller@411000 {
++			compatible = "brcm,l2-intc";
++			reg = <0x411000 0x30>;
++			interrupt-controller;
++			#interrupt-cells = <1>;
++			interrupt-parent = <&periph_intc>;
++			interrupts = <30>;
++			interrupt-names = "hif";
++		};
++
++		nand0: nand@412800 {
++			compatible = "brcm,brcmnand-v5.0", "brcm,brcmnand";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg-names = "nand";
++			reg = <0x412800 0x400>;
++			interrupt-parent = <&hif_intr2_intc>;
++			interrupt-names = "nand_ctlrdy";
++			interrupts = <24>;
++			status = "disabled";
++		};
+ 	};
+ };
+diff --git a/arch/mips/boot/dts/brcm/bcm97358svmb.dts b/arch/mips/boot/dts/brcm/bcm97358svmb.dts
+index d18e6d947739..5f7b25410032 100644
+--- a/arch/mips/boot/dts/brcm/bcm97358svmb.dts
++++ b/arch/mips/boot/dts/brcm/bcm97358svmb.dts
+@@ -32,3 +32,26 @@
+ &ohci0 {
+ 	status = "okay";
+ };
++
++&nand0 {
++	status = "okay";
++
++	nandcs@1 {
++		compatible = "brcm,nandcs";
++		reg = <1>;
++		nand-ecc-step-size = <512>;
++		nand-ecc-strength = <8>;
++		nand-on-flash-bbt;
++
++		#size-cells = <2>;
++		#address-cells = <2>;
++
++		flash1.rootfs0@0 {
++			reg = <0x0 0x0 0x0 0x80000000>;
++		};
++
++		flash1.rootfs1@80000000 {
++			reg = <0x0 0x80000000 0x0 0x80000000>;
++		};
++	};
++};
+-- 
+2.4.4
 
-- Sanchayan.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
