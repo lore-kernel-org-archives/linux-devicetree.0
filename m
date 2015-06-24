@@ -1,51 +1,80 @@
-From: Peter Chen <Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH v5 08/23] usb: chipidea: set usb gadeget's otg
- capabilities
-Date: Wed, 24 Jun 2015 07:44:47 +0000
-Message-ID: <BN3PR0301MB0849817C3D6F3DB9C39704CC81AF0@BN3PR0301MB0849.namprd03.prod.outlook.com>
-References: <1434541230-15090-1-git-send-email-jun.li@freescale.com>
- <1434541230-15090-9-git-send-email-jun.li@freescale.com>
- <20150624030442.GB3475@shlinux2> <20150624033421.GA29386@shlinux2>
- <20150624034922.GC3475@shlinux2> <20150624072217.GB29386@shlinux2>
+From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: mt8173: add clock_null
+Date: Wed, 24 Jun 2015 15:54:15 +0800
+Message-ID: <1435132455.28866.21.camel@mtksdaap41>
+References: <1434605351-64592-1-git-send-email-eddie.huang@mediatek.com>
+	 <8371528.SNAmOgosfF@phil> <1434944317.25948.8.camel@mtksdaap41>
+	 <8860488.JuX1EN5tWB@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150624072217.GB29386@shlinux2>
-Content-Language: en-US
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Li Jun <Jun.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "rogerq-l0cyMroinI0@public.gmane.org" <rogerq-l0cyMroinI0@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <8860488.JuX1EN5tWB@diego>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
- 
-> 
-> > >
-> > > > For non-dt platform (eg i686), how it changes otg capabilities
-> > > > through their platform data?
-> > > >
-> > > Directly override platdata->ci_otg_caps in its platform driver after
-> > > ci_hdrc_add_device().
-> >
-> > After ci_hdrc_add_device, the device may begin to enumerate, we need
-> > to make sure otg capabilities before the device goes to work.
-> >
-> > Peter
-> 
-> How about add a flag for platdata->flags like if (platdata->flags &
-> CI_HDRC_USE_PREDEF_OTG_CAPS == 0) {
-> 	... ...
-> }
-> then non-dt platform driver can set CI_HDRC_USE_PREDEF_OTG_CAPS flag
-> and pre-define otg caps before call to ci_hdrc_add_device().
-> 
+Hi Heiko,
 
-Add Andy Shevchenko.
+On Mon, 2015-06-22 at 14:53 +0200, Heiko St=FCbner wrote:
+> Hi James,
+>=20
+> Am Montag, 22. Juni 2015, 11:38:37 schrieb James Liao:
+> > On Fri, 2015-06-19 at 13:36 +0200, Heiko Stuebner wrote:
+> >=20
+> > Some clocks such as clkph_mck_o, we don't really care where they co=
+me
+> > from and what frequencies are. We model these clocks just because t=
+hey
+> > or their derived clocks can be the source of topckgen muxes. Is the=
+re a
+> > better way to model "don't care" clocks?
+>=20
+> There are two different concepts at work here. You might not care in =
+your=20
+> kernel driver implementation _at the moment_ where the clocks come fr=
+om; but=20
+> the devicetree is supposed to model how the hardware is structured an=
+d not=20
+> contain implementation specific details.
 
-I think the current i686 platforms does not support full otg, you may not need
-to consider this to avoid unnecessary complexities,  unless someone wants.
- 
-Peter
+If we model "don't care" clocks inside the driver (i.e. create clk_null
+in clock driver), then we don't need to model the dummy clock in device=
+=2E
+Is it an acceptable way?
+
+> So the clock tree should be modeled according to how the hardware is =
+layed out=20
+> not how you want to use the clocks at the moment :-) .
+>=20
+> It would it any case be good, if you could describe where these clock=
+s come=20
+> from in the hardware, so we can find the best solution on how to mode=
+l those.
+
+In fact, I don't know where these clocks come from at all, especially
+when they come from outside of SoC. Besides, some clocks don't need to
+model in CCF, but they can be the source of clocks that controlled by
+CCF.
+
+I don't think ALL clocks on a SoC need to be handled in CCF, so there
+should be some clocks don't have a "real" or "correct" parent. In
+current implementation I use a dummy clock (clk_null) to be the unreal
+parent.
+
+Do you think we should model as more clocks as we can in CCF even we
+don't need them? If no, how do we handle those clocks which are not
+handled in CCF but can be parent of CCF clocks?
+
+
+Best regards,
+
+James
+
+
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
