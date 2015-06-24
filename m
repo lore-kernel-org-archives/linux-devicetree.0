@@ -1,181 +1,109 @@
-From: Paul Osmialowski <pawelo@king.net.pl>
-Subject: Re: [PATCH 5/9] arm: twr-k70f120m: basic support for Kinetis
- TWR-K70F120M
-Date: Wed, 24 Jun 2015 06:42:58 +0200 (CEST)
-Message-ID: <alpine.LNX.2.00.1506240627020.24366@localhost.localdomain>
-References: <1435094387-20146-1-git-send-email-pawelo@king.net.pl> <1435094387-20146-6-git-send-email-pawelo@king.net.pl> <3935594.UmXqE2ND2k@wuerfel>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH 0/7] soc: brcmstb: add system suspend support for STB
+ SoCs
+Date: Tue, 23 Jun 2015 21:47:17 -0700
+Message-ID: <558A3655.9070705@gmail.com>
+References: <1434672696-13632-1-git-send-email-computersforpeace@gmail.com> <20150622194714.GM4917@ld-irv-0074>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII; format=flowed
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3935594.UmXqE2ND2k@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Paul Osmialowski <pawelo@king.net.pl>, Andrew Morton <akpm@linux-foundation.org>, Anson Huang <b20788@freescale.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Bhupesh Sharma <bhupesh.sharma@freescale.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Frank Li <Frank.Li@freescale.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Haojian Zhuang <haojian.zhuang@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jingchang Lu <jingchang.lu@freescale.com>, Jiri Slaby <jslaby@suse.cz>, Kees Cook <keescook@chromium.org>, Kumar Gala <galak@codeaurora.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Linus Walleij <linus.walleij@linaro.org>, Magnus Damm <damm+renesas@opensource.se>, Michael Turquette <mturquette@baylibre.com>, Nathan Lynch <nathan_lynch@mentor.com>, Nic
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20150622194714.GM4917@ld-irv-0074>
+Sender: linux-pm-owner@vger.kernel.org
+To: Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-pm@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+Le 06/22/15 12:47, Brian Norris a =C3=A9crit :
+> + others
+>=20
+> On Thu, Jun 18, 2015 at 05:11:29PM -0700, Brian Norris wrote:
+>> Hi,
+>>
+>> This patch set introduces system suspend/resume support for Broadcom=
+ STB SoCs.
+>> There are two suspend modes (S2 and S3) as well as a related low-pow=
+er shutdown
+>> mode (S5).
+>>
+>> Along with the core PM support, include a driver for the wakeup-time=
+r, which
+>> allows for simple testing of suspend/resume wakeup cycles.
+>>
+>> Brian
+>=20
+> Somehow I completely missed out on sending this to a few of the right
+> places, like linux-pm and the PM maintainers. I guess I just trusted
+> get_maintainer.pl (which doesn't know what to do with drivers/soc/) t=
+oo
+> much, and forgot to turn my brain on...
+>=20
+> Anyway, if y'all can track down the patches via archives, feel free. =
+Or
+> I will resend this shortly as a v2, with a few suggested fixes and wi=
+th
+> a more complete CC list.
 
-Thanks for all of your input. Your comments will all be considered during 
-my works on the second iteration of this patchset.
+Works for me, thanks for getting this out:
 
-On Wed, 24 Jun 2015, Arnd Bergmann wrote:
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 
-> On Tuesday 23 June 2015 23:19:43 Paul Osmialowski wrote:
->> @@ -1740,7 +1752,7 @@ source "mm/Kconfig"
->>  config FORCE_MAX_ZONEORDER
->>  	int "Maximum zone order" if ARCH_SHMOBILE_LEGACY
->>  	range 11 64 if ARCH_SHMOBILE_LEGACY
->> -	default "12" if SOC_AM33XX
->> +	default "12" if SOC_AM33XX || ARCH_KINETIS
->>  	default "9" if SA1111 || ARCH_EFM32
->>  	default "11"
->>  	help
->
-> Put it in the defconfig?
->
->> +#
->> +
->> +obj-$(CONFIG_MACH_KINETIS)	+= kinetis_platform.o
->
-> just use
->
-> obj-y	+= kinetis.o
->
->> diff --git a/arch/arm/mach-kinetis/include/mach/idle.h b/arch/arm/mach-kinetis/include/mach/idle.h
->> new file mode 100644
->> index 0000000..0aafefd
->> --- /dev/null
->> +++ b/arch/arm/mach-kinetis/include/mach/idle.h
->
-> No mach/*.h files please.
->
->> +/*
->> + * This Kinetis port assumes that the CPU works in little-endian mode.
->> + * Switching to big-endian will require different bit offsets in peripheral
->> + * devices' registers. Also, some bit groups may lay on byte edges, so issue
->> + * with big-endian cannot be fixed only by defining bit offsets differently
->> + * for the big-endian mode.
->> + */
->> +#ifndef __LITTLE_ENDIAN
->> +#error This Kinetis port assumes that the CPU works in little-endian mode
->> +#endif
->
-> Fix the drivers instead?
->
->> +/*
->> + * Peripheral memory map
->> + */
->> +#define KINETIS_AIPS0PERIPH_BASE	0x40000000
->> +#define KINETIS_AIPS1PERIPH_BASE	0x40080000
->
-> Move it into DT
->
->> +/*
->> + * System Integration Module (SIM) register map
->> + *
->> + * This map actually covers two hardware modules:
->> + *     1. SIM low-power logic, at 0x40047000
->> + *     2. System integration module (SIM), at 0x40048000
->> + */
->> +struct kinetis_sim_regs {
->> +	u32 sopt1;	/* System Options Register 1 */
->> +	u32 rsv0[1024];
->> +	u32 sopt2;	/* System Options Register 2 */
->> +	u32 rsv1;
->> +	u32 sopt4;	/* System Options Register 4 */
->> +	u32 sopt5;	/* System Options Register 5 */
->> +	u32 sopt6;	/* System Options Register 6 */
->> +	u32 sopt7;	/* System Options Register 7 */
->> +	u32 rsv2[2];
->> +	u32 sdid;	/* System Device Identification Register */
->> +	u32 scgc[KINETIS_SIM_CG_NUMREGS];	/* Clock Gating Regs 1...7 */
->> +	u32 clkdiv1;	/* System Clock Divider Register 1 */
->> +	u32 clkdiv2;	/* System Clock Divider Register 2 */
->> +	u32 fcfg1;	/* Flash Configuration Register 1 */
->> +	u32 fcfg2;	/* Flash Configuration Register 2 */
->> +	u32 uidh;	/* Unique Identification Register High */
->> +	u32 uidmh;	/* Unique Identification Register Mid-High */
->> +	u32 uidml;	/* Unique Identification Register Mid Low */
->> +	u32 uidl;	/* Unique Identification Register Low */
->> +	u32 clkdiv3;	/* System Clock Divider Register 3 */
->> +	u32 clkdiv4;	/* System Clock Divider Register 4 */
->> +	u32 mcr;	/* Misc Control Register */
->> +};
->
-> Move it into the driver that uses these.
->
->> +/*
->> + * SIM registers base
->> + */
->> +#define KINETIS_SIM_BASE		(KINETIS_AIPS0PERIPH_BASE + 0x00047000)
->> +#define KINETIS_SIM_PTR(reg) \
->> +	(&(((struct kinetis_sim_regs *)(KINETIS_SIM_BASE))->reg))
->> +#define KINETIS_SIM_RD(reg) readl_relaxed(KINETIS_SIM_PTR(reg))
->> +#define KINETIS_SIM_WR(reg, val) writel_relaxed((val), KINETIS_SIM_PTR(reg))
->> +#define KINETIS_SIM_SET(reg, mask) \
->> +	KINETIS_SIM_WR(reg, (KINETIS_SIM_RD(reg)) | (mask))
->> +#define KINETIS_SIM_RESET(reg, mask) \
->> +	KINETIS_SIM_WR(reg, (KINETIS_SIM_RD(reg)) & (~(mask)))
->> +#define KINETIS_SIM_ISSET(reg, mask) \
->> +	(KINETIS_SIM_RD(reg) & (mask))
->> +
->> +/*
->> + * SIM registers
->> + */
->> +/*
->> + * System Options Register 2
->> + */
->> +/* USB HS clock source select */
->> +#define KINETIS_SIM_SOPT2_USBHSRC_BITS	2
->> +#define KINETIS_SIM_SOPT2_USBHSRC_MSK	(3 << KINETIS_SIM_SOPT2_USBHSRC_BITS)
->> +#define KINETIS_SIM_SOPT2_USBHSRC_PLL0	(1 << KINETIS_SIM_SOPT2_USBHSRC_BITS)
->> +#define KINETIS_SIM_SOPT2_USBHSRC_PLL1	(2 << KINETIS_SIM_SOPT2_USBHSRC_BITS)
->> +
->> +/* USB FS clock source select */
->> +#define KINETIS_SIM_SOPT2_USBFSRC_BITS	22
->> +#define KINETIS_SIM_SOPT2_USBFSRC_MSK	(3 << KINETIS_SIM_SOPT2_USBFSRC_BITS)
->> +#define KINETIS_SIM_SOPT2_USBFSRC_PLL0	(1 << KINETIS_SIM_SOPT2_USBFSRC_BITS)
->> +#define KINETIS_SIM_SOPT2_USBFSRC_PLL1	(2 << KINETIS_SIM_SOPT2_USBFSRC_BITS)
->> +#define KINETIS_SIM_SOPT2_USBF_CLKSEL	(1 << 18)
->> +
->
-> remove all these here.
->
->> +/*
->> + * Map required regions.
->> + * This being the no-MMU Linux, I am not mapping anything
->> + * since all I/O registers are available at their physical addresses.
->> + */
->> +static void __init kinetis_map_io(void)
->> +{
->> +}
->
-> Not needed, remove.
->
->> +/*
->> + * Freescale Kinetis platform initialization
->> + */
->> +static void __init kinetis_init(void)
->> +{
->> +	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
->> +}
->
-> same here.
->
->> diff --git a/arch/arm/tools/mach-types b/arch/arm/tools/mach-types
->> index 2ed1b8a..1d05516 100644
->> --- a/arch/arm/tools/mach-types
->> +++ b/arch/arm/tools/mach-types
->> @@ -554,6 +554,7 @@ smdk4412		MACH_SMDK4412		SMDK4412		3765
->>  marzen			MACH_MARZEN		MARZEN			3790
->>  krome			MACH_KROME		KROME			3797
->>  armadillo800eva		MACH_ARMADILLO800EVA	ARMADILLO800EVA		3863
->> +kinetis			MACH_KINETIS		KINETIS			3896
->>  mx53_umobo		MACH_MX53_UMOBO		MX53_UMOBO		3927
->>  mt4			MACH_MT4		MT4			3981
->>  u8520			MACH_U8520		U8520			3990
->
-> Unused, please remove.
->
-> 	Arnd
->
+I would like some comments on the Device Tree binding portion so I can
+take these patches and submit them for our next Broadcom arm-soc pull
+requests, thanks!
+
+>=20
+> Regards,
+> Brian
+>=20
+>> Brian Norris (7):
+>>   Documentation: dt: brcmstb: add system PM bindings
+>>   Documentation: dt: brcmstb: add waketimer documentation
+>>   soc: add stubs for brcmstb SoC's
+>>   soc: brcmstb: add PM suspend/resume support (S2/S3/S5)
+>>   soc: brcmstb: add wake-timer driver
+>>   ARM: brcmstb: mask GIC IRQs on suspend
+>>   ARM: dts: brcmstb: add BCM7445 system PM DT nodes
+>>
+>>  .../ABI/testing/sysfs-driver-wktmr-brcmstb         |  12 +
+>>  .../devicetree/bindings/arm/bcm/brcm,brcmstb.txt   | 142 +++++-
+>>  .../soc/brcmstb/brcm,brcmstb-waketimer.txt         |  20 +
+>>  arch/arm/boot/dts/bcm7445.dtsi                     | 102 ++++
+>>  arch/arm/mach-bcm/Kconfig                          |   1 +
+>>  arch/arm/mach-bcm/brcmstb.c                        |  10 +
+>>  drivers/soc/Kconfig                                |   1 +
+>>  drivers/soc/Makefile                               |   1 +
+>>  drivers/soc/brcmstb/Kconfig                        |  22 +
+>>  drivers/soc/brcmstb/Makefile                       |   4 +
+>>  drivers/soc/brcmstb/common.c                       |  33 ++
+>>  drivers/soc/brcmstb/pm/Makefile                    |   1 +
+>>  drivers/soc/brcmstb/pm/aon_defs.h                  |  85 ++++
+>>  drivers/soc/brcmstb/pm/pm.c                        | 512 ++++++++++=
++++++++++++
+>>  drivers/soc/brcmstb/pm/pm.h                        |  40 ++
+>>  drivers/soc/brcmstb/pm/s2.S                        |  73 +++
+>>  drivers/soc/brcmstb/wktmr.c                        | 242 ++++++++++
+>>  include/soc/brcmstb/common.h                       |  15 +
+>>  18 files changed, 1314 insertions(+), 2 deletions(-)
+>>  create mode 100644 Documentation/ABI/testing/sysfs-driver-wktmr-brc=
+mstb
+>>  create mode 100644 Documentation/devicetree/bindings/soc/brcmstb/br=
+cm,brcmstb-waketimer.txt
+>>  create mode 100644 drivers/soc/brcmstb/Kconfig
+>>  create mode 100644 drivers/soc/brcmstb/Makefile
+>>  create mode 100644 drivers/soc/brcmstb/common.c
+>>  create mode 100644 drivers/soc/brcmstb/pm/Makefile
+>>  create mode 100644 drivers/soc/brcmstb/pm/aon_defs.h
+>>  create mode 100644 drivers/soc/brcmstb/pm/pm.c
+>>  create mode 100644 drivers/soc/brcmstb/pm/pm.h
+>>  create mode 100644 drivers/soc/brcmstb/pm/s2.S
+>>  create mode 100644 drivers/soc/brcmstb/wktmr.c
+>>  create mode 100644 include/soc/brcmstb/common.h
+>>
+>> --=20
+>> 1.9.1
+>>
+
+
+--=20
+=46lorian
