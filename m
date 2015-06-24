@@ -1,26 +1,26 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 6/7] mfd: arizona: Update DT doc for new mic detection
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 6/7] mfd: arizona: Update DT doc for new mic detection
  bindings
-Date: Wed, 24 Jun 2015 15:15:34 +0100
-Message-ID: <20150624141534.GN15013@x1>
-References: <1434709467-28147-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <1434709467-28147-7-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+Date: Wed, 24 Jun 2015 15:19:08 +0100
+Message-ID: <20150624141908.GR15013@x1>
+References: <1434731014-19980-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <1434731014-19980-7-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1434709467-28147-7-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Cc: cw00.choi@samsung.com, myungjoo.ham@samsung.com, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com, devicetree@vger.kernel.org
+In-Reply-To: <1434731014-19980-7-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This requires a DT Ack.
+Ah, you did Cc the DT guys on this version.
 
-[... which would be pretty difficult, as you didn't Cc them]
+DT Ack please.
 
-> Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+> Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 > ---
 >  Documentation/devicetree/bindings/mfd/arizona.txt |   16 +++++++++++=
 +++++
@@ -69,3 +69,8 @@ Lee Jones
 Linaro STMicroelectronics Landing Team Lead
 Linaro.org =E2=94=82 Open source software for ARM SoCs
 =46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
