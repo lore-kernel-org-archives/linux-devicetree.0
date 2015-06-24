@@ -1,68 +1,205 @@
 From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 6/7] mfd: arizona: Update DT doc for new mic detection
- bindings
-Date: Wed, 24 Jun 2015 15:19:08 +0100
-Message-ID: <20150624141908.GR15013@x1>
-References: <1434731014-19980-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <1434731014-19980-7-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH v4 2/2] mfd: flexcom: add a driver for Atmel Flexible
+ Serial Communication Unit
+Date: Wed, 24 Jun 2015 15:24:56 +0100
+Message-ID: <20150624142456.GS15013@x1>
+References: <cover.1434967670.git.cyrille.pitchen@atmel.com>
+ <dddf7a6d750967785255733a7931780b3c465d5f.1434967670.git.cyrille.pitchen@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1434731014-19980-7-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+In-Reply-To: <dddf7a6d750967785255733a7931780b3c465d5f.1434967670.git.cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
+To: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Ah, you did Cc the DT guys on this version.
+On Mon, 22 Jun 2015, Cyrille Pitchen wrote:
 
-DT Ack please.
-
-> Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/mfd/arizona.txt |   16 +++++++++++=
-+++++
->  1 files changed, 16 insertions(+), 0 deletions(-)
+> This driver supports the new Atmel Flexcom. The Flexcom is a wrapper =
+which
+> integrates one SPI controller, one I2C controller and one USART. Only=
+ one
+> function can be enabled at a time. This driver selects the function o=
+nce
+> for all, when the Flexcom is probed, according to the value of the ne=
+w
+> "atmel,flexcom-mode" device tree property.
 >=20
-> diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Docu=
-mentation/devicetree/bindings/mfd/arizona.txt
-> index 32a71b7..8d92c92 100644
-> --- a/Documentation/devicetree/bindings/mfd/arizona.txt
-> +++ b/Documentation/devicetree/bindings/mfd/arizona.txt
-> @@ -68,6 +68,22 @@ Optional properties:
->      If this node is not mentioned or if the value is unknown, then
->      headphone detection mode is set to HPDETL.
+> This driver has chosen to present the Flexcom to the system as a MFD =
+so
+> the implementation is seamless for the existing Atmel SPI, I2C and US=
+ART
+> drivers.
+
+No need for this driver.
+
+Just create your 3 platform drivers and get them to read the mode at
+probe time.  If the mode isn't the one pertaining to itself return
+-ENODEV and the Device Driver API will attempt the probe the next
+device.  Ensure all of the devices have the same compatible string
+i.e. atmel,sama5d2-flexcom.
+
+> Also the Flexcom embeds FIFOs: the latest patches of the SPI, I2C and
+> USART drivers take advantage of this new feature.
+>=20
+> Signed-off-by: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> Acked-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Acked-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  drivers/mfd/Kconfig         | 11 +++++
+>  drivers/mfd/Makefile        |  1 +
+>  drivers/mfd/atmel-flexcom.c | 98 +++++++++++++++++++++++++++++++++++=
+++++++++++
+>  3 files changed, 110 insertions(+)
+>  create mode 100644 drivers/mfd/atmel-flexcom.c
+>=20
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index d5ad04d..9b33ad0 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -59,6 +59,17 @@ config MFD_AAT2870_CORE
+>  	  additional drivers must be enabled in order to use the
+>  	  functionality of the device.
 > =20
-> +  - wlf,micd-detect-debounce : Additional software microphone detect=
-ion
-> +    debounce specified in milliseconds.
-> +  - wlf,micd-pol-gpio : GPIO specifier for the GPIO controlling the =
-headset
-> +    polarity if one exists.
-> +  - wlf,micd-bias-start-time : Time allowed for MICBIAS to startup p=
-rior to
-> +    performing microphone detection, specified as per the ARIZONA_MI=
-CD_TIME_XXX
-> +    defines.
-> +  - wlf,micd-rate : Delay between successive microphone detection me=
-asurements,
-> +    specified as per the ARIZONA_MICD_TIME_XXX defines.
-> +  - wlf,micd-dbtime : Microphone detection hardware debounces specif=
-ied as the
-> +    number of measurements to take, valid values being 2 and 4.
-> +  - wlf,micd-timeout : Timeout for microphone detection, specified i=
-n
-> +    milliseconds.
-> +  - wlf,micd-force-micbias : Force MICBIAS continuously on during mi=
-crophone
-> +    detection.
+> +config MFD_ATMEL_FLEXCOM
+> +	tristate "Atmel Flexcom (Flexible Serial Communication Unit)"
+> +	select MFD_CORE
+> +	depends on OF
+> +	help
+> +	  Select this to get support for Atmel Flexcom. This is a wrapper
+> +	  which embeds a SPI controller, a I2C controller and a USART. Only
+> +	  one function can be used at a time. The choice is done at boot ti=
+me
+> +	  by the probe function of this MFD driver according to a device tr=
+ee
+> +	  property.
 > +
->    - DCVDD-supply, MICVDD-supply : Power supplies, only need to be sp=
-ecified if
->      they are being externally supplied. As covered in
->      Documentation/devicetree/bindings/regulator/regulator.txt
+>  config MFD_ATMEL_HLCDC
+>  	tristate "Atmel HLCDC (High-end LCD Controller)"
+>  	select MFD_CORE
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index 0e5cfeb..c666bf5 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -160,6 +160,7 @@ obj-$(CONFIG_MFD_SPMI_PMIC)	+=3D qcom-spmi-pmic.o
+>  obj-$(CONFIG_TPS65911_COMPARATOR)	+=3D tps65911-comparator.o
+>  obj-$(CONFIG_MFD_TPS65090)	+=3D tps65090.o
+>  obj-$(CONFIG_MFD_AAT2870_CORE)	+=3D aat2870-core.o
+> +obj-$(CONFIG_MFD_ATMEL_FLEXCOM)	+=3D atmel-flexcom.o
+>  obj-$(CONFIG_MFD_ATMEL_HLCDC)	+=3D atmel-hlcdc.o
+>  obj-$(CONFIG_MFD_INTEL_MSIC)	+=3D intel_msic.o
+>  obj-$(CONFIG_MFD_PALMAS)	+=3D palmas.o
+> diff --git a/drivers/mfd/atmel-flexcom.c b/drivers/mfd/atmel-flexcom.=
+c
+> new file mode 100644
+> index 0000000..7e7d4b8
+> --- /dev/null
+> +++ b/drivers/mfd/atmel-flexcom.c
+> @@ -0,0 +1,98 @@
+> +/*
+> + * Driver for Atmel Flexcom
+> + *
+> + * Copyright (C) 2015 Atmel Corporation
+> + *
+> + * Author: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or mod=
+ify
+> + * it under the terms of the GNU General Public License as published=
+ by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/types.h>
+> +#include <linux/kernel.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/of.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/clk.h>
+> +
+> +#define FX_MR		0x0
+> +#define FX_RHR		0x10
+> +#define FX_THR		0x20
+> +#define FX_VERSION	0xfc
+> +
+> +#define FX_MR_NO_COM	0
+> +#define FX_MR_USART	1
+> +#define FX_MR_SPI	2
+> +#define FX_MR_TWI	3
+> +
+> +
+> +static int atmel_flexcom_probe(struct platform_device *pdev)
+> +{
+> +	struct clk *clk;
+> +	struct resource *res;
+> +	unsigned char __iomem *map;
+> +	unsigned int version, mr;
+> +	const char *mode;
+> +	int err;
+> +
+> +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	map =3D devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(map))
+> +		return PTR_ERR(map);
+> +
+> +	clk =3D devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(clk))
+> +		return PTR_ERR(clk);
+> +
+> +	err =3D of_property_read_string(pdev->dev.of_node,
+> +				      "atmel,flexcom-mode", &mode);
+> +	if (err)
+> +		return err;
+> +
+> +	if (!strcmp(mode, "usart"))
+> +		mr =3D FX_MR_USART;
+> +	else if (!strcmp(mode, "spi"))
+> +		mr =3D FX_MR_SPI;
+> +	else if (!strcmp(mode, "twi") || !strcmp(mode, "i2c"))
+> +		mr =3D FX_MR_TWI;
+> +	else
+> +		return -EINVAL;
+> +
+> +	err =3D clk_prepare_enable(clk);
+> +	if (err)
+> +		return err;
+> +	version =3D readl(map + FX_VERSION);
+> +	writel(mr, map + FX_MR);
+> +	clk_disable_unprepare(clk);
+> +
+> +	dev_info(&pdev->dev, "version: %#x, mode: %s\n", version, mode);
+> +
+> +	return of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->d=
+ev);
+> +}
+> +
+> +static const struct of_device_id atmel_flexcom_of_match[] =3D {
+> +	{ .compatible =3D "atmel,sama5d2-flexcom" },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, atmel_flexcom_of_match);
+> +
+> +static struct platform_driver atmel_flexcom_driver =3D {
+> +	.driver		=3D {
+> +		.name	=3D "atmel_flexcom",
+> +		.of_match_table =3D atmel_flexcom_of_match,
+> +	},
+> +	.probe		=3D atmel_flexcom_probe,
+> +};
+> +
+> +module_platform_driver(atmel_flexcom_driver);
+> +
+> +MODULE_AUTHOR("Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>");
+> +MODULE_DESCRIPTION("Atmel Flexcom MFD driver");
+> +MODULE_LICENSE("GPL");
 
 --=20
 Lee Jones
