@@ -1,175 +1,90 @@
-From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 02/12] [media] dvb-pll: Add support for THOMSON DTT7546X tuner.
-Date: Wed, 24 Jun 2015 16:11:00 +0100
-Message-ID: <1435158670-7195-3-git-send-email-peter.griffin@linaro.org>
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: [PATCH 06/12] ARM: DT: STi: STiH407: Add c8sectpfe LinuxDVB DT node.
+Date: Wed, 24 Jun 2015 16:11:04 +0100
+Message-ID: <1435158670-7195-7-git-send-email-peter.griffin@linaro.org>
 References: <1435158670-7195-1-git-send-email-peter.griffin@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1435158670-7195-1-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org
-Cc: peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hugues.fruchet-qxv4g6HH51o@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1435158670-7195-1-git-send-email-peter.griffin@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, mchehab@osg.samsung.com
+Cc: peter.griffin@linaro.org, lee.jones@linaro.org, hugues.fruchet@st.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This is used in conjunction with the STV0367 demodulator on
-the STV0367-NIM-V1.0 NIM card which can be used with the STi
-STB SoC's.
+This patch adds in the required DT node for the c8sectpfe
+Linux DVB demux driver which allows the tsin channels
+to be used on an upstream kernel.
 
-This tuner has a fifth register, so some changes have been made
-to accommodate this.
-
-Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
 ---
- drivers/media/dvb-frontends/dvb-pll.c | 74 +++++++++++++++++++++++++++++------
- drivers/media/dvb-frontends/dvb-pll.h |  1 +
- 2 files changed, 64 insertions(+), 11 deletions(-)
+ arch/arm/boot/dts/stihxxx-b2120.dtsi | 50 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
 
-diff --git a/drivers/media/dvb-frontends/dvb-pll.c b/drivers/media/dvb-frontends/dvb-pll.c
-index 6d8fe88..f7381c7 100644
---- a/drivers/media/dvb-frontends/dvb-pll.c
-+++ b/drivers/media/dvb-frontends/dvb-pll.c
-@@ -141,6 +141,35 @@ static struct dvb_pll_desc dvb_pll_thomson_dtt7520x = {
- 	},
+diff --git a/arch/arm/boot/dts/stihxxx-b2120.dtsi b/arch/arm/boot/dts/stihxxx-b2120.dtsi
+index 1f27589..ece2ede 100644
+--- a/arch/arm/boot/dts/stihxxx-b2120.dtsi
++++ b/arch/arm/boot/dts/stihxxx-b2120.dtsi
+@@ -6,6 +6,10 @@
+  * it under the terms of the GNU General Public License version 2 as
+  * published by the Free Software Foundation.
+  */
++
++#include <dt-bindings/clock/stih407-clks.h>
++#include <dt-bindings/media/c8sectpfe.h>
++
+ / {
+ 	soc {
+ 		sbc_serial0: serial@9530000 {
+@@ -72,5 +76,51 @@
+ 				st,osc-force-ext;
+ 			};
+ 		};
++
++		c8sectpfe@08a20000 {
++			compatible = "st,stih407-c8sectpfe";
++			status = "okay";
++			reg = <0x08a20000 0x10000>, <0x08a00000 0x4000>;
++			reg-names = "c8sectpfe", "c8sectpfe-ram";
++
++			interrupts = <0 34 0>, <0 35 0>;
++			interrupt-names = "c8sectpfe-error-irq",
++					  "c8sectpfe-idle-irq";
++
++			pinctrl-names	= "tsin0-serial", "tsin0-parallel",
++					  "tsin3-serial", "tsin4-serial",
++					  "tsin5-serial";
++
++			pinctrl-0	= <&pinctrl_tsin0_serial>;
++			pinctrl-1	= <&pinctrl_tsin0_parallel>;
++			pinctrl-2	= <&pinctrl_tsin3_serial>;
++			pinctrl-3	= <&pinctrl_tsin4_serial_alt3>;
++			pinctrl-4	= <&pinctrl_tsin5_serial_alt1>;
++
++			clocks = <&clk_s_c0_flexgen CLK_PROC_STFE>;
++			clock-names = "c8sectpfe";
++
++			/* tsin0 is TSA on NIMA */
++			tsin0: port@0 {
++
++				tsin-num = <0>;
++				serial-not-parallel;
++				i2c-bus = <&ssc2>;
++				rst-gpio = <&pio15 4 0>;
++
++				dvb-card = <STV0367_TDA18212_NIMA_1>;
++			};
++
++			/* tsin3 is TSB on NIMB */
++			tsin3: port@3 {
++
++				tsin-num = <3>;
++				serial-not-parallel;
++				i2c-bus = <&ssc3>;
++				rst-gpio = <&pio15 7 0>;
++
++				dvb-card = <STV0367_PLL_BOARD_NIMB>;
++			};
++		};
+ 	};
  };
- 
-+static void thomson_dtt7546x_bw(struct dvb_frontend *fe, u8 *buf)
-+{
-+	/* set CB2 reg - set ATC, XTO */
-+	buf[4] = 0xc3;
-+}
-+
-+static struct dvb_pll_desc dvb_pll_thomson_dtt7546x = {
-+	.name  = "Thomson dtt7546x",
-+	.min   = 44250000,
-+	.max   = 863250000,
-+	.set   = thomson_dtt7546x_bw,
-+	.iffreq= 36166667,
-+	.count = 12,
-+	.entries = {
-+		{  121000000, 166667, 0x88, 0x01 },
-+		{  141000000, 166667, 0x88, 0x41 },
-+		{  166000000, 166667, 0x88, 0x81 },
-+		{  182000000, 166667, 0x88, 0xc1 },
-+		{  286000000, 166667, 0x88, 0x02 },
-+		{  386000000, 166667, 0x88, 0x42 },
-+		{  446000000, 166667, 0x88, 0x82 },
-+		{  466000000, 166667, 0x88, 0xc2 },
-+		{  506000000, 166667, 0x88, 0x08 },
-+		{  761000000, 166667, 0x88, 0x48 },
-+		{  846000000, 166667, 0x88, 0x88 },
-+		{  905000000, 166667, 0x88, 0xc8 },
-+	},
-+};
-+
- static struct dvb_pll_desc dvb_pll_lg_z201 = {
- 	.name  = "LG z201",
- 	.min   = 174000000,
-@@ -537,6 +566,7 @@ static struct dvb_pll_desc dvb_pll_alps_tdee4 = {
- static struct dvb_pll_desc *pll_list[] = {
- 	[DVB_PLL_UNDEFINED]              = NULL,
- 	[DVB_PLL_THOMSON_DTT7579]        = &dvb_pll_thomson_dtt7579,
-+	[DVB_PLL_THOMSON_DTT7546X]       = &dvb_pll_thomson_dtt7546x,
- 	[DVB_PLL_THOMSON_DTT759X]        = &dvb_pll_thomson_dtt759x,
- 	[DVB_PLL_THOMSON_DTT7520X]       = &dvb_pll_thomson_dtt7520x,
- 	[DVB_PLL_LG_Z201]                = &dvb_pll_lg_z201,
-@@ -561,7 +591,7 @@ static struct dvb_pll_desc *pll_list[] = {
- /* code                                                        */
- 
- static int dvb_pll_configure(struct dvb_frontend *fe, u8 *buf,
--			     const u32 frequency)
-+			const u32 frequency, const u32 len)
- {
- 	struct dvb_pll_priv *priv = fe->tuner_priv;
- 	struct dvb_pll_desc *desc = priv->pll_desc;
-@@ -593,11 +623,15 @@ static int dvb_pll_configure(struct dvb_frontend *fe, u8 *buf,
- 	if (desc->set)
- 		desc->set(fe, buf);
- 
--	if (debug)
--		printk("pll: %s: div=%d | buf=0x%02x,0x%02x,0x%02x,0x%02x\n",
--		       desc->name, div, buf[0], buf[1], buf[2], buf[3]);
-+	if (debug) {
-+		printk(KERN_DEBUG "pll: %s: div=%d | buf=", desc->name, div);
-+		for (i = 0; i < len; i++)
-+			printk(KERN_DEBUG "0x%02x,", buf[i]);
- 
--	// calculate the frequency we set it to
-+		printk(KERN_DEBUG "\n");
-+	}
-+
-+	/* calculate the frequency we set it to */
- 	return (div * desc->entries[i].stepsize) - desc->iffreq;
- }
- 
-@@ -634,21 +668,39 @@ static int dvb_pll_sleep(struct dvb_frontend *fe)
- 	return -EINVAL;
- }
- 
-+static int dvb_pll_get_num_regs(struct dvb_pll_priv *priv)
-+{
-+	int num_regs = 4;
-+
-+	if (strncmp(priv->pll_desc->name, "Thomson dtt7546x", 16) == 0)
-+		num_regs = 5;
-+
-+	return num_regs;
-+}
-+
- static int dvb_pll_set_params(struct dvb_frontend *fe)
- {
- 	struct dtv_frontend_properties *c = &fe->dtv_property_cache;
- 	struct dvb_pll_priv *priv = fe->tuner_priv;
--	u8 buf[4];
--	struct i2c_msg msg =
--		{ .addr = priv->pll_i2c_address, .flags = 0,
--		  .buf = buf, .len = sizeof(buf) };
-+	struct i2c_msg msg;
-+	u8 *bufp;
- 	int result;
- 	u32 frequency = 0;
- 
-+	bufp = kzalloc(dvb_pll_get_num_regs(priv), GFP_KERNEL);
-+
-+	if (!bufp)
-+		return -ENOMEM;
-+
-+	msg.addr = priv->pll_i2c_address;
-+	msg.flags = 0;
-+	msg.buf = bufp;
-+	msg.len = dvb_pll_get_num_regs(priv);
-+
- 	if (priv->i2c == NULL)
- 		return -EINVAL;
- 
--	result = dvb_pll_configure(fe, buf, c->frequency);
-+	result = dvb_pll_configure(fe, bufp, c->frequency, msg.len);
- 	if (result < 0)
- 		return result;
- 	else
-@@ -677,7 +729,7 @@ static int dvb_pll_calc_regs(struct dvb_frontend *fe,
- 	if (buf_len < 5)
- 		return -EINVAL;
- 
--	result = dvb_pll_configure(fe, buf + 1, c->frequency);
-+	result = dvb_pll_configure(fe, buf + 1, c->frequency, buf_len - 1);
- 	if (result < 0)
- 		return result;
- 	else
-diff --git a/drivers/media/dvb-frontends/dvb-pll.h b/drivers/media/dvb-frontends/dvb-pll.h
-index bf9602a..f523f42 100644
---- a/drivers/media/dvb-frontends/dvb-pll.h
-+++ b/drivers/media/dvb-frontends/dvb-pll.h
-@@ -28,6 +28,7 @@
- #define DVB_PLL_SAMSUNG_TBMU24112      17
- #define DVB_PLL_TDEE4		       18
- #define DVB_PLL_THOMSON_DTT7520X       19
-+#define DVB_PLL_THOMSON_DTT7546X       20
- 
- /**
-  * Attach a dvb-pll to the supplied frontend structure.
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
