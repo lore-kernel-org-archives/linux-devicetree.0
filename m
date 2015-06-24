@@ -1,47 +1,106 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] added device tree support to gpio-generic driver
-Date: Wed, 24 Jun 2015 13:07:57 +0200
-Message-ID: <CAMuHMdUCNQV=9vEmNPHtuwXw3jZ_NWwpJaTb6eBXvYJiDKhGaw@mail.gmail.com>
-References: <1433487062-10647-1-git-send-email-romain.baeriswyl@alitech.com>
-	<CACRpkdbWhtkMgz2qTg1y7AguLQCJXnAoi7gVnFvPb1sR7eES_g@mail.gmail.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] mfd: axp20x: Add missing registers,
+ and mark more registers volatile
+Date: Wed, 24 Jun 2015 12:19:04 +0100
+Message-ID: <20150624111904.GG15013@x1>
+References: <1434211748-25572-1-git-send-email-hdegoede@redhat.com>
+ <1434211748-25572-3-git-send-email-hdegoede@redhat.com>
+Reply-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdbWhtkMgz2qTg1y7AguLQCJXnAoi7gVnFvPb1sR7eES_g@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Romain Baeriswyl <romain.baeriswyl@alitech.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Christian Ruppert <christian.ruppert@alitech.com>, Anton Vorontsov <cbouatmailru@gmail.com>, Rojhalat Ibrahim <imr@rtschenk.de>, abdoulaye berthe <berthe.ab@gmail.com>, Anthony Fee <anthony.fee@emutex.com>, Alexander Shiyan <shc_work@mail.ru>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDA7X7F2WUEBBLFEVKWAKGQEIMY5W2A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1434211748-25572-3-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Bruno =?iso-8859-1?Q?Pr=E9mont?= <bonbons-ud5FBsm0p/xEiooADzr8i9i2O/JbrIOy@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 10, 2015 at 10:42 AM, Linus Walleij
-<linus.walleij@linaro.org> wrote:
-> On Fri, Jun 5, 2015 at 8:51 AM, Romain Baeriswyl
-> <romain.baeriswyl@alitech.com> wrote:
->
->> +Required properties:
->> +- compatible : "basic-mmio-gpio" for little endian register access or
->> +               "basic-mmio-gpio-be" for big endian register access
->
-> Basic I don't know.
->
-> "single-register-gpio" is more to the point, don't you think?
->
->> +- ngpios: Specifies the number of gpio mapped in the register. The value is
->> +          limited to the number of bits of the LONG type.
->
-> So if it is 8 for a 32 bit register, does it mean bits 0..7 little endian or
-> big endian, or does it depend on endianness? Clarify this
-> in the binding.
+On Sat, 13 Jun 2015, Hans de Goede wrote:
 
-LONG can be 64-bit too.
+> From: Bruno Pr=C3=A9mont <bonbons-ud5FBsm0p/xEiooADzr8i9i2O/JbrIOy@public.gmane.org>
+>=20
+> Add an extra set of registers which is necessary tu support the PMICs
+> battery charger function, and mark registers which contain status bits,
+> gpio status, and adc readings as volatile.
+>=20
+> Cc: Bruno Pr=C3=A9mont <bonbons-ud5FBsm0p/xEiooADzr8i9i2O/JbrIOy@public.gmane.org>
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> ---
+> Changes in v2:
+> -Add a AXP20X_OCV_MAX define
+> ---
+>  drivers/mfd/axp20x.c       | 8 +++++++-
+>  include/linux/mfd/axp20x.h | 6 ++++++
+>  2 files changed, 13 insertions(+), 1 deletion(-)
 
-Gr{oetje,eeting}s,
+Patch looks good, but you're missing Bruno's SoB.
 
-                        Geert
+> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
+> index 6df9155..f9a3c2d 100644
+> --- a/drivers/mfd/axp20x.c
+> +++ b/drivers/mfd/axp20x.c
+> @@ -39,10 +39,16 @@ static const char * const axp20x_model_names[] =3D {
+>  static const struct regmap_range axp20x_writeable_ranges[] =3D {
+>  	regmap_reg_range(AXP20X_DATACACHE(0), AXP20X_IRQ5_STATE),
+>  	regmap_reg_range(AXP20X_DCDC_MODE, AXP20X_FG_RES),
+> +	regmap_reg_range(AXP20X_RDC_H, AXP20X_OCV(15)),
+>  };
+> =20
+>  static const struct regmap_range axp20x_volatile_ranges[] =3D {
+> +	regmap_reg_range(AXP20X_PWR_INPUT_STATUS, AXP20X_USB_OTG_STATUS),
+> +	regmap_reg_range(AXP20X_CHRG_CTRL1, AXP20X_CHRG_CTRL2),
+>  	regmap_reg_range(AXP20X_IRQ1_EN, AXP20X_IRQ5_STATE),
+> +	regmap_reg_range(AXP20X_ACIN_V_ADC_H, AXP20X_IPSOUT_V_HIGH_L),
+> +	regmap_reg_range(AXP20X_GPIO20_SS, AXP20X_GPIO3_CTRL),
+> +	regmap_reg_range(AXP20X_FG_RES, AXP20X_RDC_L),
+>  };
+> =20
+>  static const struct regmap_access_table axp20x_writeable_table =3D {
+> @@ -159,7 +165,7 @@ static const struct regmap_config axp20x_regmap_confi=
+g =3D {
+>  	.val_bits	=3D 8,
+>  	.wr_table	=3D &axp20x_writeable_table,
+>  	.volatile_table	=3D &axp20x_volatile_table,
+> -	.max_register	=3D AXP20X_FG_RES,
+> +	.max_register	=3D AXP20X_OCV(AXP20X_OCV_MAX),
+>  	.cache_type	=3D REGCACHE_RBTREE,
+>  };
+> =20
+> diff --git a/include/linux/mfd/axp20x.h b/include/linux/mfd/axp20x.h
+> index 5275423..6d8b39a 100644
+> --- a/include/linux/mfd/axp20x.h
+> +++ b/include/linux/mfd/axp20x.h
+> @@ -151,6 +151,12 @@ enum {
+>  #define AXP20X_CC_CTRL			0xb8
+>  #define AXP20X_FG_RES			0xb9
+> =20
+> +/* OCV */
+> +#define AXP20X_RDC_H			0xba
+> +#define AXP20X_RDC_L			0xbb
+> +#define AXP20X_OCV(m)			(0xc0 + (m))
+> +#define AXP20X_OCV_MAX			0xf
+> +
+>  /* AXP22X specific registers */
+>  #define AXP22X_BATLOW_THRES1		0xe6
+> =20
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
