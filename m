@@ -1,80 +1,56 @@
-From: "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
-Subject: Re: [PATCH] usb: ci_hdrc_imx: add optional hub clock
-Date: Wed, 24 Jun 2015 18:27:10 +0200
-Message-ID: <558ADA5E.3070902@maciej.szmigiero.name>
-References: <5586EC36.1070403@maciej.szmigiero.name> <20150623025534.GA15147@shlinux2>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150623025534.GA15147@shlinux2>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Chen <peter.chen@freescale.com>
-Cc: USB list <linux-usb@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Markus Pargmann <mpa@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Fabio Estevam <festevam@gmail.com>, Alan Stern <stern@rowland.harvard.edu>
+From: Michael van der Westhuizen <michael-XrNoQAPr3WXM9gW82pYGhQ@public.gmane.org>
+Subject: [PATCH v2 0/2] spi: dw: Reintroduce optional 16 bit data register I/O
+Date: Wed, 24 Jun 2015 18:34:54 +0200
+Message-ID: <1435163696-14767-1-git-send-email-michael@smart-africa.com>
+References: <1434703435-25198-1-git-send-email-michael@smart-africa.com>
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1434703435-25198-1-git-send-email-michael-XrNoQAPr3WXM9gW82pYGhQ@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michael van der Westhuizen <michael-XrNoQAPr3WXM9gW82pYGhQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Peter,
+The commit dd11444327ce ("spi: dw-spi: Convert 16bit accesses to 32bit
+accesses") globally changed all register access in the dw_apb_ssi driver
+to 32 bit access, which breaks data register (FIFO) access on picoXcell
+platforms.
 
-W dniu 23.06.2015 04:55, Peter Chen pisze:
-> On Mon, Jun 22, 2015 at 12:54:14AM +0800, Maciej S. Szmigiero wrote:
->> This patch adds ability to define optional clock of connected
->> USB hub to ChipIdea i.MX usb controller driver.
->>
->> This is needed for example for UDOO board.
->> Previously, this board DT file used a fact that non-core registers
->> of this USB controller have a separate driver (usbmisc_imx) which
->> did allow defining a separate clock.
->>
->> Because the non-core registers are in fact using the same clock as
->> main controller this allowed to use one of such clock definitions
->> to enable USB hub clock instead.
->>
->> However, since commit 73dea4a912b2
->> ("usb: chipidea: usbmisc_imx: delete clock information") this
->> possibility no longer exists and loading USB support on this board
->> results in a hard SoC lockup.
->>
->> Note that this is not specific to particular USB hub chip used,
->> rather than to a particular board.
->> Since this is a DT-based board there is no board platform file to
->> put such clock enable.
->> Also, USB bus devices aren't instantiated in DT file since it is an
->> enumerable bus.
->>
->> NOP PHY also can't be used as clock consumer since this
->> USB controller needs a true MXS phy definition, which accepts only
->> one clock (different from USB controller one).
->>
->> Based on a patch previously submitted by Fabio Estevam, with consent.
->>
->> Signed-off-by: Maciej Szmigiero <mail@maciej.szmigiero.name>
->>
-(..)
-> Hi Maciej,
-> 
-> As I said before, the USB HUB is just an USB peripheral, we should
-> not put a peripheral's clock information to controller driver, I think
-> hub driver should take responsibilities for it, just like other usb
-> pheripheral drivers, like usb modem, etc. You can talk it with Alan
-> Stern about it.
+This series introduces a boolean to the core spi-dw driver to indicate
+to the core that 16 bit data register access is appropriate, implements
+the code that respects that flag and updates the dw-spi-mmio driver to
+allow setting this boolean from the device tree.
 
-I understand you position, but there is a problem with this solution
-that USB devices - including hubs - as devices on an enumerable bus
-don't have DT bindings to put such clock handle in,
-since they are instantiated by their bus scanning code. 
+A binding documentation fix is included in this series.
 
-If such devices would be added to DT at least there would be need to
-somehow match the discovered device with its DT counterpart.
-In case of USB this would need address like controller X,
-port x (or port x,y,z in case of multiple hubs in between controller
-and device).
+Prior to applying this change the following error presents on
+a picoCell pc3x3 platform:
+  spi_master spi32766: interrupt_transfer: fifo overrun/underrun
+  m25p80 spi32766.0: error -5 reading 9f
+  m25p80: probe of spi32766.0 failed with error -5
 
-As far I see there is nothing like this in USB core yet.
+With this series applied:
+  m25p80 spi32766.0: m25p40 (512 Kbytes)
 
-Of course, there is still possibly to add something like a generic
-OF USB hub driver which will take care of configuring extra clocks,
-pins, GPIOs, etc. but which will be otherwise unrelated to normal
-USB hub driver.
+Changes in v2:
+  - Incorporate review feedback from Andy Shevchenko, reworking the
+    bindings to reflect common practice and adjusting the driver
+    to suit.
+  - Add a wrapper inline function for accessing the data register
+    using the configured with.
 
-Best regards,
-Maciej Szmigiero
+Michael van der Westhuizen (2):
+  dt: snps,dw-apb-ssi: Document new I/O data register width property
+  spi: dw: Allow interface drivers to limit data I/O to word sizes
+
+ drivers/spi/spi-dw-mmio.c |  4 ++++
+ drivers/spi/spi-dw.c      |  4 ++--
+ drivers/spi/spi-dw.h      | 35 +++++++++++++++++++++++++++++++++++
+ 3 files changed, 41 insertions(+), 2 deletions(-)
+
+-- 
+2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
