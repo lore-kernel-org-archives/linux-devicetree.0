@@ -1,95 +1,82 @@
-From: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH-v2 3/3] mfd: devicetree: bindings: Add new 88pm800 mfd
- binding
-Date: Wed, 24 Jun 2015 10:49:47 +0530
-Message-ID: <558A3DF3.5030804@linaro.org>
-References: <vaibhav.hiremath@linaro.org>	<1434567488-6477-1-git-send-email-vaibhav.hiremath@linaro.org>	<1434567488-6477-5-git-send-email-vaibhav.hiremath@linaro.org> <CAJKOXPf7OuGfxsZeewoimyyCRKGqjH+j-S81cAH=6DSRQmaS0A@mail.gmail.com>
+From: Sanchayan Maity <maitysanchayan@gmail.com>
+Subject: Re: [PATCH v6 0/9] Add simple NVMEM Framework via regmap.
+Date: Wed, 24 Jun 2015 11:24:29 +0530
+Message-ID: <20150624055429.GC11753@Sanchayan-Arch.toradex.int>
+References: <1435014459-26138-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <235181230.251177.1435088854197.JavaMail.open-xchange@oxbsltgw00.schlund.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAJKOXPf7OuGfxsZeewoimyyCRKGqjH+j-S81cAH=6DSRQmaS0A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <235181230.251177.1435088854197.JavaMail.open-xchange@oxbsltgw00.schlund.de>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Stefan Wahren <stefan.wahren@i2se.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, arnd@arndb.de, linux-api@vger.kernel.org, s.hauer@pengutronix.de, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, pantelis.antoniou@konsulko.com, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Kumar Gala <galak@codeaurora.org>, mporter@konsulko.com, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-msm@vger.kernel.org, wxt@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
+Hello,
 
+On 15-06-23 21:47:34, Stefan Wahren wrote:
+> Hi Srinivas,
+> 
+> > Srinivas Kandagatla <srinivas.kandagatla@linaro.org> hat am 23. Juni 2015 um
+> > 01:07 geschrieben:
+> >
+> >
+> > [...]
+> >
+> > Device Tree:
+> >
+> > /* Provider */
+> > qfprom: qfprom@00700000 {
+> > ...
+> >
+> > /* Data cells */
+> > tsens_calibration: calib@404 {
+> > reg = <0x404 0x10>;
+> > };
+> >
+> > tsens_calibration_bckp: calib_bckp@504 {
+> > reg = <0x504 0x11>;
+> > bit-offset = 6;
+> > nbits = 128;
+> > };
+> >
+> > pvs_version: pvs-version@6 {
+> > reg = <0x6 0x2>
+> > bit-offset = 7;
+> > nbits = 2;
+> > };
+> >
+> > speed_bin: speed-bin@c{
+> > reg = <0xc 0x1>;
+> > bit-offset = 2;
+> > nbits = 3;
+> >
+> > };
+> > ...
+> > };
+> >
+> > userspace interface: binary file in /sys/class/nvmem/*/nvmem
+> >
+> > ex:
+> > hexdump /sys/class/nvmem/qfprom0/nvmem
+> >
+> > 0000000 0000 0000 0000 0000 0000 0000 0000 0000
+> > *
+> > 00000a0 db10 2240 0000 e000 0c00 0c00 0000 0c00
+> > 0000000 0000 0000 0000 0000 0000 0000 0000 0000
+> > ...
+> > *
+> > 0001000
+> >
+> 
+> i want to port OCOTP driver for MXS, which hasn't MMIO. From my understanding
+> hexdump would readout the complete register range defined in provider DT node.
+> 
+> How can i achieve that hexdump only reads the data area within the register
+> range?
 
-On Wednesday 24 June 2015 05:59 AM, Krzysztof Kozlowski wrote:
-> 2015-06-18 3:58 GMT+09:00 Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
->> With addition of DT support to 88pm800 mfd driver, this patch
->> adds new DT binding documentation along with respective properties.
->>
->> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> ---
->>   Documentation/devicetree/bindings/mfd/88pm800.txt | 60 +++++++++++++++++++++++
->>   1 file changed, 60 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/mfd/88pm800.txt
->>
->> diff --git a/Documentation/devicetree/bindings/mfd/88pm800.txt b/Documentation/devicetree/bindings/mfd/88pm800.txt
->> new file mode 100644
->> index 0000000..b8e72df
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mfd/88pm800.txt
->> @@ -0,0 +1,60 @@
->> +* Marvell 88PM8xx Power Management IC
->> +
->> +Required parent device properties:
->> +- compatible : "marvell,88pm800", "marvell,88pm805", "marvell,88pm860"
->> +- reg : the I2C slave address for the 88pm8xx chip
->> +- interrupts : IRQ line for the 88pm8xx chip
->> +- interrupt-controller: describes the 88pm8xx as an interrupt controller
->> +- #interrupt-cells : should be 1.
->> +               - The cell is the 88pm8xx local IRQ number
->> +
->> +Optional parent device properties:
->> +- marvell,irq-clr-on-write: indicates whether interrupt status is cleared
->> +  by write or read.
->> +  If enabled, interrupt is cleared by write else just read would do.
->> +
->> +88pm8xx family of devices consists of varied group of sub-devices:
->> +
->> +Device                 Supply Names     Description
->> +------                 ------------     -----------
->> +88pm80x-onkey          :               : On key
->> +88pm80x-rtc            :               : RTC
->> +88pm80x-regulator      :               : Regulators
->> +
->> +Note: More device list will follow
->> +
->> +Example:
->> +
->> +       pmic: 88pm800@30 {
->> +               compatible = "marvell,88pm800";
->> +               reg = <0x30>;
->> +               interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
->> +               interrupt-parent = <&gic>;
->> +               interrupt-controller;
->> +               #interrupt-cells = <1>;
->> +
->> +               marvell,irq-clr-on-write;
->> +
->> +               regulators {
->> +                       compatible = "marvell,88pm80x-regulator";
->> +
->> +                       buck1a: BUCK1A {
->> +                               regulator-compatible = "88PM800-BUCK1A";
->
-> That's a deprecated property.
-> Documentation/devicetree/bindings/regulator/regulator.txt
->
+I also had a similar question in my mind.
 
-Yes,
-
-Will replace with regulator-name and resubmit shortly with Rob's
-Acked-by.
-
-
-
-Thanks,
-Vaibhav
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+- Sanchayan.
