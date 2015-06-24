@@ -1,35 +1,53 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] touchscreen: sun4i-ts: Really fix A10 temperature reporting
-Date: Wed, 24 Jun 2015 09:31:41 +0200
-Message-ID: <558A5CDD.1070704@redhat.com>
-References: <1425893870-28715-1-git-send-email-hdegoede@redhat.com> <41a7a857-96fd-48ab-9778-127cfc091ef0@googlegroups.com> <5589B78C.4080600@redhat.com> <20150623195424.GE40168@dtor-ws> <558A5966.9010908@redhat.com> <20150624072840.GV2266@lukather>
+From: Laurentiu Palcu <laurentiu.palcu@intel.com>
+Subject: Re: [PATCH 2/2] power_supply: Add support for TI BQ25890 charger chip
+Date: Wed, 24 Jun 2015 10:32:54 +0300
+Message-ID: <20150624073254.GD10146@lpalcu-linux>
+References: <1431698778-29462-1-git-send-email-laurentiu.palcu@intel.com>
+ <1431698778-29462-3-git-send-email-laurentiu.palcu@intel.com>
+ <20150502145933.GA1331@xo-6d-61-c0.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150624072840.GV2266@lukather>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, m.silentcreek-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150502145933.GA1331@xo-6d-61-c0.localdomain>
+Sender: linux-pm-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Sebastian Reichel <sre@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Sat, May 02, 2015 at 04:59:34PM +0200, Pavel Machek wrote:
+> 
+> Should this link....
+> 
+> > More details about the chip can be found here:
+> > http://www.ti.com/product/bq25890
+> 
+> > @@ -0,0 +1,998 @@
+> > +/*
+> > + * TI BQ25890 charger driver
+> > + *
+> > + * Copyright (C) 2015 Intel Corporation
+> > + *
+> > + * This program is free software; you can redistribute it and/or modify
+> > + * it under the terms of the GNU General Public License as published by
+> > + * the Free Software Foundation; either version 2 of the License, or
+> > + * (at your option) any later version.
+> > + *
+> > + * This program is distributed in the hope that it will be useful,
+> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > + * GNU General Public License for more details.
+> 
+> > + *
+> > + */
+> 
+> Go here?
+Where exactly? Was 'here' supposed to be a hyperlink that, for some
+reason, is missing? Anyway, if you're asking why the link I provided
+doesn't go directly to the documentation, but to the product page,
+here's the answer: the documentation for this chip was not released
+publicly, yet, by TI. I was told they intend to do so in the near
+future. So, for the time being, this link will do. I'll update it when
+they'll release the docs.
 
-On 24-06-15 09:28, Maxime Ripard wrote:
-> Hi,
->
-> On Wed, Jun 24, 2015 at 09:16:54AM +0200, Hans de Goede wrote:
->> Maxime I think we should send the mentioned dts patch to stable for
->> 4.1 , do you agree ?
->
-> Yep. We should definitely do that. You take care of this?
-
-Yes I'll try to do so later today.
-
-Regards,
-
-Hans
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+laurentiu
