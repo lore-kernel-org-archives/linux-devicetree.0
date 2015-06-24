@@ -1,130 +1,56 @@
-Return-Path: <me@kylehuey.com>
+Return-Path: <pawelo@king.net.pl>
+Date: Wed, 24 Jun 2015 09:17:18 +0200 (CEST)
+From: Paul Osmialowski <pawelo@king.net.pl>
+Subject: Re: [PATCH 2/9] arm: do not place huge encoder tables on stack when
+ it is too small
+In-Reply-To: <CAMuHMdUhLwZZRQwTecjrJ22v1kTNc-3PUM+w64vHUs=-D06VpA@mail.gmail.com>
+Message-ID: <alpine.LNX.2.00.1506240913001.26071@localhost.localdomain>
+References: <1435094387-20146-1-git-send-email-pawelo@king.net.pl> <1435094387-20146-3-git-send-email-pawelo@king.net.pl> <CAMuHMdUhLwZZRQwTecjrJ22v1kTNc-3PUM+w64vHUs=-D06VpA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20150616091619.GA17817@leverpostej>
-References: <1434393968-1105-1-git-send-email-khuey@kylehuey.com>
-	<20150616091619.GA17817@leverpostej>
-Date: Tue, 16 Jun 2015 14:29:51 -0700
-Message-ID: <CAP045ArZzj3Bda7J97VgZ10Xo79MwYGUs3=L5Qb9e-pRWiusSw@mail.gmail.com>
-Subject: Re: [PATCH v2] ARM: tegra124: pmu support
-From: Kyle Huey <me@kylehuey.com>
-Content-Type: multipart/alternative; boundary=047d7bd75ba24663900518a94610
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jon Hunter <jonathanh@nvidia.com>, Kyle Huey <khuey@kylehuey.com>
+Content-Type: TEXT/PLAIN; charset=US-ASCII; format=flowed
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Paul Osmialowski <pawelo@king.net.pl>, Andrew Morton <akpm@linux-foundation.org>, Anson Huang <b20788@freescale.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Bhupesh Sharma <bhupesh.sharma@freescale.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Frank Li <Frank.Li@freescale.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Haojian Zhuang <haojian.zhuang@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jingchang Lu <jingchang.lu@freescale.com>, Jiri Slaby <jslaby@suse.cz>, Kees Cook <keescook@chromium.org>, Kumar Gala <galak@codeaurora.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Linus Walleij <linus.walleij@linaro.org>, Magnus Damm <damm+renesas@opensource.se>, Michael Turquette <mturquette@baylibre.com>, Nathan Lynch <nathan_lynch@mentor.com>, Nicolas Pitre <nico@linaro.org>, Maxime Coquelin stm32 <mcoquelin.stm32@gmail.com>, Olof Johansson <olof@lixom.net>, Paul Bolle <pebolle@tiscali.nl>, Rob Herring <r.herring@freescale.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Shawn Guo <shawn.guo@linaro.org>, Simon Horman <horms+renesas@verge.net.au>, Stefan Agner <stefan@agner.ch>, Stephen Boyd <sboyd@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Uwe Kleine-Koenig <u.kleine-koenig@pengutronix.de>, Catalin Marinas <catalin.marinas@arm.com>, Dave Martin <Dave.Martin@arm.com>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-clk@vger.kernel.org, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dmaengine@vger.kernel.org, Yuri Tikhonov <yur@emcraft.com>, Sergei Poselenov <sposelenov@emcraft.com>, Dmitry Cherkassov <d_cherkasov@emcraft.com>, Alexander Potashev <aspotashev@emcraft.com>
 List-ID: <devicetree@vger.kernel.org>
 
---047d7bd75ba24663900518a94610
-Content-Type: text/plain; charset=UTF-8
+Hi Geert,
 
-On Tue, Jun 16, 2015 at 2:16 AM, Mark Rutland <mark.rutland@arm.com> wrote:
+You're right. To be removed. Thanks for spotting this.
 
-> On Mon, Jun 15, 2015 at 07:46:08PM +0100, Kyle Huey wrote:
-> > This patch modifies the device tree for tegra124 based devices to enable
-> the Cortex A15 PMU.  The interrupt numbers are taken from NVIDIA TRM
-> DP-06905-001_v03p.  This patch was tested on a Jetson TK1.
-> >
-> > Signed-off-by: Kyle Huey <khuey@kylehuey.com>
-> > ---
-> >  arch/arm/boot/dts/tegra124.dtsi | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> >
-> > diff --git a/arch/arm/boot/dts/tegra124.dtsi
-> b/arch/arm/boot/dts/tegra124.dtsi
-> > index 4be06c6..d966d4e 100644
-> > --- a/arch/arm/boot/dts/tegra124.dtsi
-> > +++ b/arch/arm/boot/dts/tegra124.dtsi
-> > @@ -906,16 +906,24 @@
-> >
-> >               cpu@3 {
-> >                       device_type = "cpu";
-> >                       compatible = "arm,cortex-a15";
-> >                       reg = <3>;
-> >               };
-> >       };
-> >
-> > +     pmu {
-> > +             compatible = "arm,cortex-a15-pmu";
-> > +             interrupts = <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>,
-> > +                          <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>,
-> > +                          <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>,
-> > +                          <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
-> > +     };
+On Wed, 24 Jun 2015, Geert Uytterhoeven wrote:
+
+> On Tue, Jun 23, 2015 at 11:19 PM, Paul Osmialowski <pawelo@king.net.pl> wrote:
+>> Since stack on Cortex-M3 is too small, we need configuration option
+>> to avoid using it for huge encoder tables of zlib.
+>>
+>> Signed-off-by: Paul Osmialowski <pawelo@king.net.pl>
 >
-> As these are SPIs, you should fill in the interrupt-affinity property
-> (see Documentation/devicetree/bindings/arm/pmu.txt). That'll avoid
-> potential problems with CPU renumbering, and prevent the kernel from
-> complaining at boot time.
+>> --- a/lib/zlib_inflate/inflate.c
+>> +++ b/lib/zlib_inflate/inflate.c
+>> @@ -75,9 +75,14 @@ int zlib_inflateInit2(z_streamp strm, int windowBits)
+>>     Return state with length and distance decoding tables and index sizes set to
+>>     fixed code decoding.  This returns fixed tables from inffixed.h.
+>>   */
+>> +#ifdef CONFIG_ZLIB_INFLATE_STACK_SAVING
+>> +#   include "inffixed.h"
+>> +#endif
+>>  static void zlib_fixedtables(struct inflate_state *state)
+>>  {
+>> +#ifndef CONFIG_ZLIB_INFLATE_STACK_SAVING
+>>  #   include "inffixed.h"
 >
-> Otherwise, this looks fine.
+> All variables in inffixed.h are "static const", so they are not on the stack
+> anyway, and this patch shouldn't make a difference.
 >
-> Thanks,
-> Mark.
+>> +#endif
 >
-
-Thanks for the review.  I just sent a v3 with this addressed.
-
-- Kyle
-
---047d7bd75ba24663900518a94610
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div class=3D"gmail_extra"><div class=3D"gmail_quote">On T=
-ue, Jun 16, 2015 at 2:16 AM, Mark Rutland <span dir=3D"ltr">&lt;<a href=3D"=
-mailto:mark.rutland@arm.com" target=3D"_blank">mark.rutland@arm.com</a>&gt;=
-</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .=
-8ex;border-left:1px #ccc solid;padding-left:1ex"><span class=3D"">On Mon, J=
-un 15, 2015 at 07:46:08PM +0100, Kyle Huey wrote:<br>
-&gt; This patch modifies the device tree for tegra124 based devices to enab=
-le the Cortex A15 PMU.=C2=A0 The interrupt numbers are taken from NVIDIA TR=
-M DP-06905-001_v03p.=C2=A0 This patch was tested on a Jetson TK1.<br>
-&gt;<br>
-&gt; Signed-off-by: Kyle Huey &lt;<a href=3D"mailto:khuey@kylehuey.com">khu=
-ey@kylehuey.com</a>&gt;<br>
-&gt; ---<br>
-&gt;=C2=A0 arch/arm/boot/dts/tegra124.dtsi | 8 ++++++++<br>
-&gt;=C2=A0 1 file changed, 8 insertions(+)<br>
-&gt;<br>
-&gt; diff --git a/arch/arm/boot/dts/tegra124.dtsi b/arch/arm/boot/dts/tegra=
-124.dtsi<br>
-&gt; index 4be06c6..d966d4e 100644<br>
-&gt; --- a/arch/arm/boot/dts/tegra124.dtsi<br>
-&gt; +++ b/arch/arm/boot/dts/tegra124.dtsi<br>
-&gt; @@ -906,16 +906,24 @@<br>
-&gt;<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0cpu@3 {<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0device_type =3D &quot;cpu&quot;;<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0compatible =3D &quot;arm,cortex-a15&quot;;<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0reg =3D &lt;3&gt;;<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0};<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0};<br>
-&gt;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0pmu {<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0compatible =3D &quot;=
-arm,cortex-a15-pmu&quot;;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0interrupts =3D &lt;GI=
-C_SPI 144 IRQ_TYPE_LEVEL_HIGH&gt;,<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 &lt;GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH&gt;,<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 &lt;GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH&gt;,<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 &lt;GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH&gt;;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0};<br>
-<br>
-</span>As these are SPIs, you should fill in the interrupt-affinity propert=
-y<br>
-(see Documentation/devicetree/bindings/arm/pmu.txt). That&#39;ll avoid<br>
-potential problems with CPU renumbering, and prevent the kernel from<br>
-complaining at boot time.<br>
-<br>
-Otherwise, this looks fine.<br>
-<br>
-Thanks,<br>
-Mark.<br></blockquote><div><br></div><div>Thanks for the review.=C2=A0 I ju=
-st sent a v3 with this addressed.<br><br></div><div>- Kyle <br></div></div>=
-<br></div></div>
-
---047d7bd75ba24663900518a94610--
+> Gr{oetje,eeting}s,
+>
+>                        Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                -- Linus Torvalds
+>
