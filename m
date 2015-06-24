@@ -1,50 +1,63 @@
-From: Carlo Caione <carlo@caione.org>
-Subject: Re: [linux-sunxi] Re: [PATCH] input: axp20x-pek: Fix reporting button
- state as inverted
-Date: Wed, 24 Jun 2015 11:19:39 +0200
-Message-ID: <CAOQ7t2a+3TvmgfW3dJBc=FJk1sXNAT+SE6qP0r5ovG7yx9fYHA@mail.gmail.com>
-References: <1434278541-21355-1-git-send-email-hdegoede@redhat.com>
-	<20150622213051.GD2350@dtor-ws>
-	<CAGb2v64AF3bnd-QBRCszjD7MSfCnGSvfu3wUT2W+7fNTE76d5g@mail.gmail.com>
+From: Laurentiu Palcu <laurentiu.palcu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/2] power_supply: Add support for TI BQ25890 charger chip
+Date: Wed, 24 Jun 2015 12:20:50 +0300
+Message-ID: <20150624092050.GE10146@lpalcu-linux>
+References: <1431698778-29462-1-git-send-email-laurentiu.palcu@intel.com>
+ <1431698778-29462-3-git-send-email-laurentiu.palcu@intel.com>
+ <20150502145933.GA1331@xo-6d-61-c0.localdomain>
+ <20150624073254.GD10146@lpalcu-linux>
+ <20150624083058.GA17732@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <CAGb2v64AF3bnd-QBRCszjD7MSfCnGSvfu3wUT2W+7fNTE76d5g@mail.gmail.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Hans de Goede <hdegoede@redhat.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Carlo Caione <carlo@caione.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150624083058.GA17732@amd>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 24, 2015 at 3:42 AM, Chen-Yu Tsai <wens@csie.org> wrote:
-> On Tue, Jun 23, 2015 at 5:30 AM, Dmitry Torokhov
-> <dmitry.torokhov@gmail.com> wrote:
->> On Sun, Jun 14, 2015 at 12:42:21PM +0200, Hans de Goede wrote:
->>> Currently we are reporting the button state as inverted on all boards with
->>> an axp209 pmic, tested on a ba10-tvbox, bananapi, bananapro, cubietruck and
->>> utoo-p66 tablet.
->>>
->>> The axp209 datasheet clearly states that the power button must be connected
->>> between the PWRON key and ground. Which means that on a press we will get
->>> a falling edge (dbf) irq not a rising one, and likewise on release we will
->>> get a rising edge (dbr) irq, not a falling one.
->>>
->>> This commit swaps the check for the 2 irqs fixing the inverted reporting of
->>> the power button state.
->>>
->>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->>
->> Carlo, Chen-Yu, could you please give this patch a spin and let us know
->> if it works on your boards?
->
-> I've not actually tested this patch on my boards, but I can confirm that
-> the original code had the state inverted, by checking /proc/interrupts
-> counters, before and after releasing the power button.
->
-> Acked-by: Chen-Yu Tsai <wens@csie.org>
+On Wed, Jun 24, 2015 at 10:30:58AM +0200, Pavel Machek wrote:
+> On Wed 2015-06-24 10:32:54, Laurentiu Palcu wrote:
+> > On Sat, May 02, 2015 at 04:59:34PM +0200, Pavel Machek wrote:
+> > > 
+> > > Should this link....
+> > > 
+> > > > More details about the chip can be found here:
+> > > > http://www.ti.com/product/bq25890
+> > > 
+> > > > @@ -0,0 +1,998 @@
+> > > > +/*
+> > > > + * TI BQ25890 charger driver
+> > > > + *
+> > > > + * Copyright (C) 2015 Intel Corporation
+> > > > + *
+> > > > + * This program is free software; you can redistribute it and/or modify
+> > > > + * it under the terms of the GNU General Public License as published by
+> > > > + * the Free Software Foundation; either version 2 of the License, or
+> > > > + * (at your option) any later version.
+> > > > + *
+> > > > + * This program is distributed in the hope that it will be useful,
+> > > > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > > > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > > > + * GNU General Public License for more details.
+> > > 
+> > > > + *
+> > > > + */
+> > > 
+> > > Go here?
+> > Where exactly? Was 'here' supposed to be a hyperlink that, for some
+> > reason, is missing? Anyway, if you're asking why the link I provided
+> 
+> 
+> Put the link to the comment at top of the driver, not into the
+> changelog.
+I see now what you meant. :) I'll do that once the documentation is
+public.
 
-Same here (I don't have the board anymore)
+laurentiu
 
-Acked-by: Carlo Caione <carlo@caione.org>
-
--- 
-Carlo Caione
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
