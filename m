@@ -1,42 +1,26 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: [PATCH 4/4] ARM64: MediaTek MT8173: Add SCPSYS device node
-Date: Wed, 24 Jun 2015 08:17:05 +0200
-Message-ID: <1435126625-9634-5-git-send-email-s.hauer@pengutronix.de>
-References: <1435126625-9634-1-git-send-email-s.hauer@pengutronix.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1435126625-9634-1-git-send-email-s.hauer@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Kevin Hilman <khilman@kernel.org>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, kernel@pengutronix.de, Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>
+From: Matt Ranostay <mranostay@gmail.com>
+Subject: [PATCH v6 0/2] cap11xx: add LED support
+Date: Tue, 23 Jun 2015 23:50:52 -0700
+Message-ID: <1435128654-19454-1-git-send-email-mranostay@gmail.com>
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: zonque@gmail.com, dmitry.torokhov@gmail.com
+Cc: linux-input@vger.kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Matt Ranostay <mranostay@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds the SCPSYS device node to the MT8173 dtsi file.
+changes from v5:
+* Dropped linux,led-brightness DT property
+* Removed several ifdefs to LED CLASS
+* Added cap11xx_init_leds stub
 
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
----
- arch/arm64/boot/dts/mediatek/mt8173.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+Matt Ranostay (2):
+  dt: add cap11xx LED documentation
+  cap11xx: add LED support
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index 924fdb6..12430f0 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -125,6 +125,16 @@
- 						<GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
- 		};
- 
-+		scpsys: scpsys@10006000 {
-+			compatible = "mediatek,mt8173-scpsys";
-+			#power-domain-cells = <1>;
-+			reg = <0 0x10006000 0 0x1000>;
-+			clocks = <&clk26m>,
-+				 <&topckgen CLK_TOP_MM_SEL>;
-+			clock-names = "mfg", "mm";
-+			infracfg = <&infracfg>;
-+		};
-+
- 		sysirq: intpol-controller@10200620 {
- 			compatible = "mediatek,mt8173-sysirq",
- 					"mediatek,mt6577-sysirq";
+ .../devicetree/bindings/input/cap11xx.txt          |  19 +++
+ drivers/input/keyboard/cap11xx.c                   | 140 ++++++++++++++++++++-
+ 2 files changed, 156 insertions(+), 3 deletions(-)
+
 -- 
-2.1.4
+1.9.1
+
