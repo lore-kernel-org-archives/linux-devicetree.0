@@ -1,7 +1,7 @@
 From: Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 1/4] MIPS: BMIPS: bcm7346: add nodes for NAND
-Date: Wed, 24 Jun 2015 15:08:31 +0900
-Message-ID: <1544bf6110b43fbaa8dbb3b06a18e08ae87b386d.1435124524.git.jaedon.shin@gmail.com>
+Subject: [PATCH 4/4] MIPS: BMIPS: bcm7362: add nodes for NAND
+Date: Wed, 24 Jun 2015 15:08:34 +0900
+Message-ID: <21fa822ca7f49134595d1102c7ebcd13227b85d2.1435124524.git.jaedon.shin@gmail.com>
 References: <cover.1435124524.git.jaedon.shin@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <cover.1435124524.git.jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
@@ -12,20 +12,20 @@ To: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
 Cc: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add NAND device nodes to BMIPS based BCM7346 platform.
+Add NAND device nodes to BMIPS based BCM7362 platform.
 
 Signed-off-by: Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/mips/boot/dts/brcm/bcm7346.dtsi      | 22 ++++++++++++++++++++++
- arch/mips/boot/dts/brcm/bcm97346dbsmb.dts | 23 +++++++++++++++++++++++
+ arch/mips/boot/dts/brcm/bcm7362.dtsi     | 22 ++++++++++++++++++++++
+ arch/mips/boot/dts/brcm/bcm97362svmb.dts | 23 +++++++++++++++++++++++
  2 files changed, 45 insertions(+)
 
-diff --git a/arch/mips/boot/dts/brcm/bcm7346.dtsi b/arch/mips/boot/dts/brcm/bcm7346.dtsi
-index 1f30728a3177..5080df3fc594 100644
---- a/arch/mips/boot/dts/brcm/bcm7346.dtsi
-+++ b/arch/mips/boot/dts/brcm/bcm7346.dtsi
-@@ -220,5 +220,27 @@
- 			interrupts = <76>;
+diff --git a/arch/mips/boot/dts/brcm/bcm7362.dtsi b/arch/mips/boot/dts/brcm/bcm7362.dtsi
+index da99db665bbc..175998e388cf 100644
+--- a/arch/mips/boot/dts/brcm/bcm7362.dtsi
++++ b/arch/mips/boot/dts/brcm/bcm7362.dtsi
+@@ -163,5 +163,27 @@
+ 			interrupts = <66>;
  			status = "disabled";
  		};
 +
@@ -52,12 +52,12 @@ index 1f30728a3177..5080df3fc594 100644
 +		};
  	};
  };
-diff --git a/arch/mips/boot/dts/brcm/bcm97346dbsmb.dts b/arch/mips/boot/dts/brcm/bcm97346dbsmb.dts
-index 70f196d89d26..ee9a68f945fd 100644
---- a/arch/mips/boot/dts/brcm/bcm97346dbsmb.dts
-+++ b/arch/mips/boot/dts/brcm/bcm97346dbsmb.dts
-@@ -56,3 +56,26 @@
- &ohci3 {
+diff --git a/arch/mips/boot/dts/brcm/bcm97362svmb.dts b/arch/mips/boot/dts/brcm/bcm97362svmb.dts
+index b7b88e5dc9e7..4fe069c5392b 100644
+--- a/arch/mips/boot/dts/brcm/bcm97362svmb.dts
++++ b/arch/mips/boot/dts/brcm/bcm97362svmb.dts
+@@ -32,3 +32,26 @@
+ &ohci0 {
  	status = "okay";
  };
 +
