@@ -1,63 +1,115 @@
-From: Laurentiu Palcu <laurentiu.palcu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] power_supply: Add support for TI BQ25890 charger chip
-Date: Wed, 24 Jun 2015 12:20:50 +0300
-Message-ID: <20150624092050.GE10146@lpalcu-linux>
-References: <1431698778-29462-1-git-send-email-laurentiu.palcu@intel.com>
- <1431698778-29462-3-git-send-email-laurentiu.palcu@intel.com>
- <20150502145933.GA1331@xo-6d-61-c0.localdomain>
- <20150624073254.GD10146@lpalcu-linux>
- <20150624083058.GA17732@amd>
+From: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/3] iio: adc: hi-843x: Holt HI-8435/8436/8437 descrete
+ ADC
+Date: Wed, 24 Jun 2015 12:25:32 +0300
+Message-ID: <558A778C.40306@cogentembedded.com>
+References: <1433161073-21967-1-git-send-email-vladimir.barinov@cogentembedded.com> <1433161211-22034-1-git-send-email-vladimir.barinov@cogentembedded.com> <55746D35.1030409@kernel.org> <55831CF3.3070906@metafoo.de> <55833B1D.8000407@cogentembedded.com> <5586C6C0.8000307@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150624083058.GA17732@amd>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5586C6C0.8000307-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 24, 2015 at 10:30:58AM +0200, Pavel Machek wrote:
-> On Wed 2015-06-24 10:32:54, Laurentiu Palcu wrote:
-> > On Sat, May 02, 2015 at 04:59:34PM +0200, Pavel Machek wrote:
-> > > 
-> > > Should this link....
-> > > 
-> > > > More details about the chip can be found here:
-> > > > http://www.ti.com/product/bq25890
-> > > 
-> > > > @@ -0,0 +1,998 @@
-> > > > +/*
-> > > > + * TI BQ25890 charger driver
-> > > > + *
-> > > > + * Copyright (C) 2015 Intel Corporation
-> > > > + *
-> > > > + * This program is free software; you can redistribute it and/or modify
-> > > > + * it under the terms of the GNU General Public License as published by
-> > > > + * the Free Software Foundation; either version 2 of the License, or
-> > > > + * (at your option) any later version.
-> > > > + *
-> > > > + * This program is distributed in the hope that it will be useful,
-> > > > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> > > > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> > > > + * GNU General Public License for more details.
-> > > 
-> > > > + *
-> > > > + */
-> > > 
-> > > Go here?
-> > Where exactly? Was 'here' supposed to be a hyperlink that, for some
-> > reason, is missing? Anyway, if you're asking why the link I provided
-> 
-> 
-> Put the link to the comment at top of the driver, not into the
-> changelog.
-I see now what you meant. :) I'll do that once the documentation is
-public.
+On 21.06.2015 17:14, Jonathan Cameron wrote:
+>>> I'd call this a threshold detector. The device seems to have two
+>>> comparators for each channel, one for the lower threshold, one for
+>>> the upper threshold. If the voltage level goes above the upper
+>>> threshold a FF is set, if it goes below the lower threshold the FF
+>>> is cleared. Both transitions happen asynchronously as soon has the
+>>> signal is below/above the threshold. And while converts a analog
+>>> signal to digital one this is not what you typically call a ADC.
+>> Should this be a separate/new directory in the drivers/iio/ for such driver?
+> Given we could in theory have comparators for any type of channel it probably doesn't
+> make sense to have a whole new directory.  Perhaps a section in the config.
+>> What the type of iio_chan_spec should I use instead of IIO_VOLTAGE?
+> I've been thinking about this.  Maybe we should use the same approach we already
+> use for 'computed' channel values such as root sum squared accelerations that turn
+> up occasionally and do this as a modifier.
+>
+> So the channel type would be voltage, but with the modifier comparator (shortening
+> it would just get confusing).  This also maps nicely to devices that offer both
+> normal adc channels and comparators on the same pin (if that ever happens!)
+>
+> Hence the attributes etc would be:
+> in_voltage0_comparator_raw
+>
+> Do you think that would be clear / flexible enough?
+yes
+>>>> I wonder if we want to take this oportunity to add 1 bit packing to the
+>>>> demux etc in the IIO core so we can have tighter packing on these
+>>>> values.  Shouldn't be too hard to do and we probably do want it if we are
+>>>> going to support these sorts of devices.
+>>>>
+>>>> Will take a bit of shuffling to pack the relevant channels together if only
+>>>> a subset are enabled and to notice when no repacking at all is needed.
+>>>> This will probably first one implementing in the core and pushing out into
+>>>> the dummy driver to allow for testing of corner cases.
+>>> Yeah, the bit shuffling gets quite cumbersome and potentially
+>>> expensive. I think we should try to avoid it if at least one of the
+>>> channels in the same bank is enabled all of them are read. And then
+>>> let userspace figure out which bits it wants to use.
+>>>
+>>> But how exactly is the typical expect usage of this device. Like
+>>> how would a userspace application use it? Is buffered mode where
+>>> samples are taken in a continuous mode something that is really
+>>> needed?
+>> I was expecting to use triggered buffer for this device:
+>> 1) setup threshold levels via sysfs
+>> 2) enable scan elements
+>> 3) setup trigger
+>> 4) grab data from triggered iio buffer like the
+>> tools/iio/generic_buffer.c does, f.e. ./generic_buffer -n hi-8435 -t
+>> irqtrig0 -l 100 -c 1000
+> Good, you are going about it the right way then.  Makes sense as this
+> is what you'd do for similar devices such as a logic analyzer.
+>> Actually I understand that I can just read manually the
+>> /sysfs/.../in_voltageXX_raw (or new/other name) values but using of
+>> iio generic irq trigger would be very good.
+> What is generating the interrupt?   Are we looking at a 'dataready'
+> type interrupt or some other pseudo (or actual) fixed frequency, or
+> are we talking an interrupt on the state of one of the inputs changing?
+>
+> If the second case, then an event based approach may make more sense
+> than using buffers.
+Actually it is a interrupt that should occur on the state change of one 
+of the inputs.
 
-laurentiu
+But hi8435 chip does not have it's own dedicated/hardware interrupt line 
+for this purposes, so it
+requires any kind of polling (hardware from pwm/gpio, or s/w polling 
+inside the driver)
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Probably I'm not right by trying to use "iio irq trigger" from external 
+hardware line (like gpio/pwm)
+and I have to implement polling inside driver.
+
+Event based approach is good enough.
+>> About bits shuffling/separating. I do think we can use banks byte
+>> length for one iio channel instead of 1-bit length to avoid such
+>> complexity. Then let user space separate bank's channels by itself.
+> On high channel count devices this could get nasty quickly.
+>
+> I'd like to explore Lars' suggestion that we use shared scan_indexes
+> for a set of channels, and different shift / mask values.  I don't
+> think it would need any particularly substantial changes in kernel
+> and obviously only usespace code using this new type of device would
+> need to know about it.
+>
+> I'd relax the suggestion he made to have it always sample all channels
+> in a given scan index, to say that it can if it makes sense.  We won't
+> bother masking them out, but if it is quicker for the device to not read
+> those that aren't enabled, then it is up to the device whether it does.
+>
+> The issue is that if we let a device in now with the 8bits per bit
+> interface, we kind of commit to at least having userspace support that
+> long term which isn't nice (though not too bad I suppose as it is just
+> the least efficient case of what we are talking about doing anyway).
+>
+Ok, I see
+
+Regards,
+Vladimir
