@@ -1,81 +1,148 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 09/17] ARM: dts: dra7: Use "syscon-phy-power" instead of
- "ctrl-module" in SATA PHY node
-Date: Wed, 24 Jun 2015 15:12:57 +0300
-Message-ID: <20150624151257.fe5f1594db1afe4c1da8027d@ti.com>
-References: <1435060743-5511-1-git-send-email-kishon@ti.com>
-	<1435060743-5511-10-git-send-email-kishon@ti.com>
-	<20150624150602.0e73fc8f9dda1624f22059db@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150624150602.0e73fc8f9dda1624f22059db-l0cyMroinI0@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] regulator: da9210: Add optional interrupt support
+Date: Wed, 24 Jun 2015 14:14:21 +0200
+Message-ID: <1435148061-11844-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: Support Opensource <support.opensource@diasemi.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Steve Twiss <stwiss.opensource@diasemi.com>
+Cc: linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 24 Jun 2015 15:06:02 +0300
-Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> wrote:
+Add optional interrupt support to the da9210 regulator driver, to handle
+over-current, under- and over-voltage, and over-temperature events.
 
-> On Tue, 23 Jun 2015 17:28:54 +0530
-> Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> wrote:
-> 
-> > Add "syscon-phy-power" property and remove the deprecated "ctrl-module"
-> > property from SATA PHY node. Since "omap_control_sata" note is no longer
-> > used, remove it.
-> > 
-> > Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-> 
-> Acked-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Only the interrupt sources for which we handle events are unmasked, to
+avoid interrupts we cannot handle.
 
-One comment though.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: devicetree@vger.kernel.org
+---
+I do not have access to the da9210 datasheet, but looked at the da9211
+driver.
 
-> 
-> > ---
-> >  arch/arm/boot/dts/dra7.dtsi |   10 +---------
-> >  1 file changed, 1 insertion(+), 9 deletions(-)
-> > 
-> > diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-> > index 3f434f7..92e0741 100644
-> > --- a/arch/arm/boot/dts/dra7.dtsi
-> > +++ b/arch/arm/boot/dts/dra7.dtsi
-> > @@ -1115,14 +1115,6 @@
-> >  			status = "disabled";
-> >  		};
-> >  
-> > -		omap_control_sata: control-phy@4a002374 {
-> > -			compatible = "ti,control-phy-pipe3";
-> > -			reg = <0x4a002374 0x4>;
-> > -			reg-names = "power";
-> > -			clocks = <&sys_clkin1>;
-> > -			clock-names = "sysclk";
-> > -		};
-> > -
-> >  		/* OCP2SCP3 */
-> >  		ocp2scp@4a090000 {
-> >  			compatible = "ti,omap-ocp2scp";
-> > @@ -1137,7 +1129,7 @@
-> >  				      <0x4A096400 0x64>, /* phy_tx */
-> >  				      <0x4A096800 0x40>; /* pll_ctrl */
-> >  				reg-names = "phy_rx", "phy_tx", "pll_ctrl";
-> > -				ctrl-module = <&omap_control_sata>;
-> > +				syscon-phy-power = <&dra7_ctrl_core 0x374>;
+v2:
+  - Only acknowledge unmasked sources,
+  - Handle DA9210_E_VMAX using REGULATOR_EVENT_REGULATION_OUT.
+---
+ .../devicetree/bindings/regulator/da9210.txt       |  4 ++
+ drivers/regulator/da9210-regulator.c               | 75 ++++++++++++++++++++++
+ 2 files changed, 79 insertions(+)
 
-why can't we use scm_conf instead of dra7_ctrl_core?
-dra7_ctrl_core seems to be redundant and wrongly placed.
+diff --git a/Documentation/devicetree/bindings/regulator/da9210.txt b/Documentation/devicetree/bindings/regulator/da9210.txt
+index 3297c53cb9152395..7aa9b1fa6b21ca18 100644
+--- a/Documentation/devicetree/bindings/regulator/da9210.txt
++++ b/Documentation/devicetree/bindings/regulator/da9210.txt
+@@ -5,6 +5,10 @@ Required properties:
+ - compatible:	must be "dlg,da9210"
+ - reg:		the i2c slave address of the regulator. It should be 0x68.
+ 
++Optional properties:
++
++- interrupts:	a reference to the DA9210 interrupt, if available.
++
+ Any standard regulator properties can be used to configure the single da9210
+ DCDC.
+ 
+diff --git a/drivers/regulator/da9210-regulator.c b/drivers/regulator/da9210-regulator.c
+index f0489cb9018b4e78..8e39f7457bc36a07 100644
+--- a/drivers/regulator/da9210-regulator.c
++++ b/drivers/regulator/da9210-regulator.c
+@@ -22,6 +22,8 @@
+ #include <linux/i2c.h>
+ #include <linux/module.h>
+ #include <linux/init.h>
++#include <linux/interrupt.h>
++#include <linux/irq.h>
+ #include <linux/slab.h>
+ #include <linux/regulator/driver.h>
+ #include <linux/regulator/machine.h>
+@@ -120,6 +122,55 @@ static int da9210_get_current_limit(struct regulator_dev *rdev)
+ 	return da9210_buck_limits[sel];
+ }
+ 
++static irqreturn_t da9210_irq_handler(int irq, void *data)
++{
++	struct da9210 *chip = data;
++	unsigned int val, handled = 0;
++	int error, ret = IRQ_NONE;
++
++	error = regmap_read(chip->regmap, DA9210_REG_EVENT_B, &val);
++	if (error < 0)
++		goto error_i2c;
++
++	if (val & DA9210_E_OVCURR) {
++		regulator_notifier_call_chain(chip->rdev,
++					      REGULATOR_EVENT_OVER_CURRENT,
++					      NULL);
++		handled |= DA9210_E_OVCURR;
++	}
++	if (val & DA9210_E_NPWRGOOD) {
++		regulator_notifier_call_chain(chip->rdev,
++					      REGULATOR_EVENT_UNDER_VOLTAGE,
++					      NULL);
++		handled |= DA9210_E_NPWRGOOD;
++	}
++	if (val & (DA9210_E_TEMP_WARN | DA9210_E_TEMP_CRIT)) {
++		regulator_notifier_call_chain(chip->rdev,
++					      REGULATOR_EVENT_OVER_TEMP, NULL);
++		handled |= val & (DA9210_E_TEMP_WARN | DA9210_E_TEMP_CRIT);
++	}
++	if (val & DA9210_E_VMAX) {
++		regulator_notifier_call_chain(chip->rdev,
++					      REGULATOR_EVENT_REGULATION_OUT,
++					      NULL);
++		handled |= DA9210_E_VMAX;
++	}
++	if (handled) {
++		/* Clear handled events */
++		error = regmap_write(chip->regmap, DA9210_REG_EVENT_B, handled);
++		if (error < 0)
++			goto error_i2c;
++
++		ret = IRQ_HANDLED;
++	}
++
++	return ret;
++
++error_i2c:
++	dev_err(regmap_get_device(chip->regmap), "I2C error : %d\n", error);
++	return ret;
++}
++
+ /*
+  * I2C driver interface functions
+  */
+@@ -168,6 +219,30 @@ static int da9210_i2c_probe(struct i2c_client *i2c,
+ 	}
+ 
+ 	chip->rdev = rdev;
++	if (i2c->irq) {
++		error = devm_request_threaded_irq(&i2c->dev, i2c->irq, NULL,
++						  da9210_irq_handler,
++						  IRQF_TRIGGER_LOW |
++						  IRQF_ONESHOT | IRQF_SHARED,
++						  "da9210", chip);
++		if (error) {
++			dev_err(&i2c->dev, "Failed to request IRQ%u: %d\n",
++				i2c->irq, error);
++			return error;
++		}
++
++		error = regmap_update_bits(chip->regmap, DA9210_REG_MASK_B,
++					 DA9210_M_OVCURR | DA9210_M_NPWRGOOD |
++					 DA9210_M_TEMP_WARN |
++					 DA9210_M_TEMP_CRIT | DA9210_M_VMAX, 0);
++		if (error < 0) {
++			dev_err(&i2c->dev, "Failed to update mask reg: %d\n",
++				error);
++			return error;
++		}
++	} else {
++		dev_warn(&i2c->dev, "No IRQ configured\n");
++	}
+ 
+ 	i2c_set_clientdata(i2c, chip);
+ 
+-- 
+1.9.1
 
-> >  				clocks = <&sys_clkin1>, <&sata_ref_clk>;
-> >  				clock-names = "sysclk", "refclk";
-> >  				syscon-pllreset = <&dra7_ctrl_core 0x3fc>;
-> > -- 
-> > 1.7.9.5
-> > 
-
-cheers,
--roger
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
