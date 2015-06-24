@@ -1,172 +1,97 @@
-From: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH 1/2] spi: dw: Allow interface drivers to limit data I/O
- to word sizes
-Date: Wed, 24 Jun 2015 14:57:44 +0300
-Message-ID: <1435147064.10393.100.camel@linux.intel.com>
-References: <1434703435-25198-1-git-send-email-michael@smart-africa.com>
-	 <1434703435-25198-3-git-send-email-michael@smart-africa.com>
+From: "Timo S." <m.silentcreek-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] touchscreen: sun4i-ts: Really fix A10
+ temperature reporting
+Date: Wed, 24 Jun 2015 13:59:17 +0200
+Message-ID: <CAKLfuV2rvTy2vSLQfN+db-4J+nTvcRuH6kfGzw4E16wTLjSP4Q@mail.gmail.com>
+References: <1425893870-28715-1-git-send-email-hdegoede@redhat.com>
+	<41a7a857-96fd-48ab-9778-127cfc091ef0@googlegroups.com>
+	<5589B78C.4080600@redhat.com>
+	<20150623195424.GE40168@dtor-ws>
+	<558A5966.9010908@redhat.com>
+Reply-To: m.silentcreek-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1434703435-25198-3-git-send-email-michael-XrNoQAPr3WXM9gW82pYGhQ@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael van der Westhuizen <michael-XrNoQAPr3WXM9gW82pYGhQ@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: multipart/alternative; boundary=047d7b6dcd748e6df00519423c9b
+Return-path: <linux-sunxi+bncBDGZFWHP6IMBBFVXVKWAKGQERYWAKLI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <558A5966.9010908-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2015-06-19 at 10:43 +0200, Michael van der Westhuizen wrote:
-> The commit dd11444327ce ("spi: dw-spi: Convert 16bit accesses to 
-> 32bit
-> accesses") changed all 16bit accesses in the DW_apb_ssi driver to 
-> 32bit.
-> This, unfortunately, breaks data register access on picoXcell, where 
-> the
-> DW IP needs data register accesses to be word accesses (all other
-> accesses appear to be OK).
+--047d7b6dcd748e6df00519423c9b
+Content-Type: text/plain; charset=UTF-8
 
-Thanks for the patch. My comments below.
+Hi Hans,
 
-> 
-> This change introduces a new master variable to allow interface 
-> drivers
-> to specify that 16bit data transfer I/O is required.  This change 
-> also
-> introduces the ability to set this variable via device tree bindings 
-> in
-> the MMIO interface driver.
-> 
-> Before this change, on a picoXcell pc3x3:
->  spi_master spi32766: interrupt_transfer: fifo overrun/underrun
->  m25p80 spi32766.0: error -5 reading 9f
->  m25p80: probe of spi32766.0 failed with error -5
-> 
-> After this change:
->  m25p80 spi32766.0: m25p40 (512 Kbytes)
-> 
+On Wed, Jun 24, 2015 at 9:16 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
 
-Please, add Fixes: tag as well.
+Ah yes, something went wrong during the 4.1 cycle wrt merging ARM patches
+> which have caused almost all ARM patches intended for 4.1 to get delayed to
+> 4.2, including that one, that is the problem.
+>
+> We did our best to update the driver and the dts in lockstep, and you
+> should
+> have never seen this problem, but the missing of the merge window for all
+> ARM patches during the 4.1 cycle has caused our carefully planned lock-step
+> update to fail, sorry about that.
+>
 
-> Signed-off-by: Michael van der Westhuizen <michael-XrNoQAPr3WXM9gW82pYGhQ@public.gmane.org>
-> ---
->  drivers/spi/spi-dw-mmio.c |  5 +++++
->  drivers/spi/spi-dw.c      | 13 +++++++++++--
->  drivers/spi/spi-dw.h      | 11 +++++++++++
->  3 files changed, 27 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/spi/spi-dw-mmio.c b/drivers/spi/spi-dw-mmio.c
-> index eb03e12..1397424 100644
-> --- a/drivers/spi/spi-dw-mmio.c
-> +++ b/drivers/spi/spi-dw-mmio.c
-> @@ -74,6 +74,11 @@ static int dw_spi_mmio_probe(struct 
-> platform_device *pdev)
->  
->  	dws->max_freq = clk_get_rate(dwsmmio->clk);
->  
-> +	if (pdev->dev.of_node)
-> +		dws->data_io_16bit =
+No need to apologize. Things happen. Glad to see this cleared up so quickly.
 
-I don't like "flexibility" in the  DeviceTree data base and thus I
-would prefer to see what we already have in naming there, i.e.
-reg-io-width = 2 or 4.
+Thanks for the help (and all the other work you do ;)).
 
-> +			of_property_read_bool(pdev->dev.of_node,
-> +					      "snps,data-io-16bit");
-> +
->  	num_cs = 4;
->  
->  	if (pdev->dev.of_node)
-> diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
-> index 8d67d03..862b001 100644
-> --- a/drivers/spi/spi-dw.c
-> +++ b/drivers/spi/spi-dw.c
-> @@ -194,7 +194,12 @@ static void dw_writer(struct dw_spi *dws)
->  			else
->  				txw = *(u16 *)(dws->tx);
->  		}
-> -		dw_writel(dws, DW_SPI_DR, txw);
-> +
-> +		if (dws->data_io_16bit)
-> +			dw_writew(dws, DW_SPI_DR, txw);
-> +		else
-> +			dw_writel(dws, DW_SPI_DR, txw);
-> +
->  		dws->tx += dws->n_bytes;
->  	}
->  }
-> @@ -205,7 +210,11 @@ static void dw_reader(struct dw_spi *dws)
->  	u16 rxw;
->  
->  	while (max--) {
-> -		rxw = dw_readl(dws, DW_SPI_DR);
-> +		if (dws->data_io_16bit)
-> +			rxw = dw_readw(dws, DW_SPI_DR);
-> +		else
-> +			rxw = dw_readl(dws, DW_SPI_DR);
-> +
->  		/* Care rx only if the transfer's original "rx" is 
-> not null */
->  		if (dws->rx_end - dws->len) {
->  			if (dws->n_bytes == 1)
-> diff --git a/drivers/spi/spi-dw.h b/drivers/spi/spi-dw.h
-> index 6c91391..ced276a 100644
-> --- a/drivers/spi/spi-dw.h
-> +++ b/drivers/spi/spi-dw.h
-> @@ -109,6 +109,7 @@ struct dw_spi {
->  	u32			fifo_len;	/* depth of the FIFO 
-> buffer */
->  	u32			max_freq;	/* max bus freq 
-> supported */
->  
-> +	bool			data_io_16bit;	/* DR is only 16 
-> bits wide */
->  	u16			bus_num;
->  	u16			num_cs;		/* supported 
-> slave numbers */
->  
-> @@ -145,11 +146,21 @@ static inline u32 dw_readl(struct dw_spi *dws, 
-> u32 offset)
->  	return __raw_readl(dws->regs + offset);
->  }
->  
-> +static inline u16 dw_readw(struct dw_spi *dws, u32 offset)
-> +{
-> +	return __raw_readw(dws->regs + offset);
-> +}
-> +
->  static inline void dw_writel(struct dw_spi *dws, u32 offset, u32 
-> val)
->  {
->  	__raw_writel(val, dws->regs + offset);
->  }
->  
-> +static inline void dw_writew(struct dw_spi *dws, u32 offset, u16 
-> val)
-> +{
-> +	__raw_writew(val, dws->regs + offset);
-> +}
-> +
->  static inline void spi_enable_chip(struct dw_spi *dws, int enable)
->  {
->  	dw_writel(dws, DW_SPI_SSIENR, (enable ? 1 : 0));
+Kind regards,
 
-Regarding to above comment what about something like
-
-static inline u32 dw_read_reg(dws, offset)
-{
- switch (reg_io_width)
- case 2:
-  return dw_readw();
- case 4:
- default:
-  return dw_readl();
-}
-
+Timo
 
 -- 
-Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Intel Finland Oy
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
+
+--047d7b6dcd748e6df00519423c9b
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">Hi Hans,<br><div><div class=3D"gmail_extra"><br><div class=
+=3D"gmail_quote">On Wed, Jun 24, 2015 at 9:16 AM, Hans de Goede <span dir=
+=3D"ltr">&lt;<a href=3D"mailto:hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" target=3D"_blank">hdego=
+ede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org</a>&gt;</span> wrote:<br><br><blockquote class=3D"gmail_quot=
+e" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204)=
+;padding-left:1ex"><span class=3D""></span>
+Ah yes, something went wrong during the 4.1 cycle wrt merging ARM patches<b=
+r>
+which have caused almost all ARM patches intended for 4.1 to get delayed to=
+<br>
+4.2, including that one, that is the problem.<br>
+<br>
+We did our best to update the driver and the dts in lockstep, and you shoul=
+d<br>
+have never seen this problem, but the missing of the merge window for all<b=
+r>
+ARM patches during the 4.1 cycle has caused our carefully planned lock-step=
+<br>
+update to fail, sorry about that.<br></blockquote><div><br></div><div>No ne=
+ed to apologize. Things happen. Glad to see this cleared up so quickly.<br>=
+<br></div><div>Thanks for the help (and all the other work you do ;)).<br><=
+br></div><div>Kind regards,<br><br></div><div>Timo<br></div></div><br></div=
+></div></div>
+
+<p></p>
+
+-- <br />
+You received this message because you are subscribed to the Google Groups &=
+quot;linux-sunxi&quot; group.<br />
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to <a href=3D"mailto:linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org">linux-s=
+unxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org</a>.<br />
+For more options, visit <a href=3D"https://groups.google.com/d/optout">http=
+s://groups.google.com/d/optout</a>.<br />
+
+--047d7b6dcd748e6df00519423c9b--
