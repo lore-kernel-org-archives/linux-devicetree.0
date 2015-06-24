@@ -1,78 +1,105 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [linux-sunxi] Re: [PATCH] input: axp20x-pek: Fix reporting button
- state as inverted
-Date: Wed, 24 Jun 2015 09:42:25 +0800
-Message-ID: <CAGb2v64AF3bnd-QBRCszjD7MSfCnGSvfu3wUT2W+7fNTE76d5g@mail.gmail.com>
-References: <1434278541-21355-1-git-send-email-hdegoede@redhat.com> <20150622213051.GD2350@dtor-ws>
+From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v5 08/23] usb: chipidea: set usb gadeget's otg
+ capabilities
+Date: Wed, 24 Jun 2015 11:04:43 +0800
+Message-ID: <20150624030442.GB3475@shlinux2>
+References: <1434541230-15090-1-git-send-email-jun.li@freescale.com>
+ <1434541230-15090-9-git-send-email-jun.li@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20150622213051.GD2350@dtor-ws>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Carlo Caione <carlo@caione.org>, Chen-Yu Tsai <wens@csie.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1434541230-15090-9-git-send-email-jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 23, 2015 at 5:30 AM, Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
-> On Sun, Jun 14, 2015 at 12:42:21PM +0200, Hans de Goede wrote:
->> Currently we are reporting the button state as inverted on all boards with
->> an axp209 pmic, tested on a ba10-tvbox, bananapi, bananapro, cubietruck and
->> utoo-p66 tablet.
->>
->> The axp209 datasheet clearly states that the power button must be connected
->> between the PWRON key and ground. Which means that on a press we will get
->> a falling edge (dbf) irq not a rising one, and likewise on release we will
->> get a rising edge (dbr) irq, not a falling one.
->>
->> This commit swaps the check for the 2 irqs fixing the inverted reporting of
->> the power button state.
->>
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->
-> Carlo, Chen-Yu, could you please give this patch a spin and let us know
-> if it works on your boards?
+On Wed, Jun 17, 2015 at 07:40:15PM +0800, Li Jun wrote:
+> Set gadget's otg capabilities according to controller's capability and otg
+> properties in device tree.
+> 
+> Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+>  drivers/usb/chipidea/core.c  | 8 ++++++++
+>  drivers/usb/chipidea/udc.c   | 7 ++++++-
+>  include/linux/usb/chipidea.h | 1 +
+>  3 files changed, 15 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
+> index 74fea4f..2abecbc 100644
+> --- a/drivers/usb/chipidea/core.c
+> +++ b/drivers/usb/chipidea/core.c
+> @@ -588,6 +588,14 @@ static int ci_get_platdata(struct device *dev,
+>  				of_usb_host_tpl_support(dev->of_node);
+>  	}
+>  
+> +	if (platdata->dr_mode == USB_DR_MODE_OTG) {
+> +		/* We can support HNP and SRP */
+> +		platdata->ci_otg_caps.hnp_support = true;
+> +		platdata->ci_otg_caps.srp_support = true;
+> +		/* Update otg capabilities by DT properties */
+> +		of_usb_set_otg_caps(dev->of_node, &platdata->ci_otg_caps);
+> +	}
+> +
 
-I've not actually tested this patch on my boards, but I can confirm that
-the original code had the state inverted, by checking /proc/interrupts
-counters, before and after releasing the power button.
+For current dual-role supported platforms (through ID pin), their dts has nothing
+with otg capabilities, what will happen if we set .hnp_support as true?
 
-Acked-by: Chen-Yu Tsai <wens@csie.org>
+For non-dt platform (eg i686), how it changes otg capabilities through
+their platform data?
 
-> Thanks!
->
->> ---
->>  drivers/input/misc/axp20x-pek.c | 8 ++++++--
->>  1 file changed, 6 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/input/misc/axp20x-pek.c b/drivers/input/misc/axp20x-pek.c
->> index f1c8447..10e140a 100644
->> --- a/drivers/input/misc/axp20x-pek.c
->> +++ b/drivers/input/misc/axp20x-pek.c
->> @@ -167,9 +167,13 @@ static irqreturn_t axp20x_pek_irq(int irq, void *pwr)
->>       struct input_dev *idev = pwr;
->>       struct axp20x_pek *axp20x_pek = input_get_drvdata(idev);
->>
->> -     if (irq == axp20x_pek->irq_dbr)
->> +     /*
->> +      * The power-button is connected to ground so a falling edge (dbf)
->> +      * means it is pressed.
->> +      */
->> +     if (irq == axp20x_pek->irq_dbf)
->>               input_report_key(idev, KEY_POWER, true);
->> -     else if (irq == axp20x_pek->irq_dbf)
->> +     else if (irq == axp20x_pek->irq_dbr)
->>               input_report_key(idev, KEY_POWER, false);
->>
->>       input_sync(idev);
->> --
->> 2.4.3
->>
->
-> --
-> Dmitry
->
-> --
-> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
-> For more options, visit https://groups.google.com/d/optout.
+Peter
+>  	if (of_usb_get_maximum_speed(dev->of_node) == USB_SPEED_FULL)
+>  		platdata->flags |= CI_HDRC_FORCE_FULLSPEED;
+>  
+> diff --git a/drivers/usb/chipidea/udc.c b/drivers/usb/chipidea/udc.c
+> index 764f668..858bd21 100644
+> --- a/drivers/usb/chipidea/udc.c
+> +++ b/drivers/usb/chipidea/udc.c
+> @@ -1827,6 +1827,7 @@ static irqreturn_t udc_irq(struct ci_hdrc *ci)
+>  static int udc_start(struct ci_hdrc *ci)
+>  {
+>  	struct device *dev = ci->dev;
+> +	struct usb_otg_caps *otg_caps = &ci->platdata->ci_otg_caps;
+>  	int retval = 0;
+>  
+>  	spin_lock_init(&ci->lock);
+> @@ -1834,8 +1835,12 @@ static int udc_start(struct ci_hdrc *ci)
+>  	ci->gadget.ops          = &usb_gadget_ops;
+>  	ci->gadget.speed        = USB_SPEED_UNKNOWN;
+>  	ci->gadget.max_speed    = USB_SPEED_HIGH;
+> -	ci->gadget.is_otg       = ci->is_otg ? 1 : 0;
+>  	ci->gadget.name         = ci->platdata->name;
+> +	ci->gadget.otg_caps	= otg_caps;
+> +
+> +	if (otg_caps->otg_rev && (otg_caps->hnp_support ||
+> +		otg_caps->srp_support || otg_caps->adp_support))
+> +		ci->gadget.is_otg = 1;
+>  
+>  	INIT_LIST_HEAD(&ci->gadget.ep_list);
+>  
+> diff --git a/include/linux/usb/chipidea.h b/include/linux/usb/chipidea.h
+> index ab94f78..e10cefc 100644
+> --- a/include/linux/usb/chipidea.h
+> +++ b/include/linux/usb/chipidea.h
+> @@ -34,6 +34,7 @@ struct ci_hdrc_platform_data {
+>  #define CI_HDRC_CONTROLLER_STOPPED_EVENT	1
+>  	void	(*notify_event) (struct ci_hdrc *ci, unsigned event);
+>  	struct regulator	*reg_vbus;
+> +	struct usb_otg_caps	ci_otg_caps;
+>  	bool			tpl_support;
+>  };
+>  
+> -- 
+> 1.9.1
+> 
+
+-- 
+
+Best Regards,
+Peter Chen
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
