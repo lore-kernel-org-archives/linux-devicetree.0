@@ -1,199 +1,221 @@
-From: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 1/2] iio: adc: Determine sampling frequencies by using minimum sample time
-Date: Wed, 24 Jun 2015 14:03:40 +0530
-Message-ID: <01b93ea50b59c93a783fac26b4671313b794bd24.1435134626.git.maitysanchayan@gmail.com>
-References: <cover.1435134626.git.maitysanchayan@gmail.com>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1435134626.git.maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-In-Reply-To: <cover.1435134626.git.maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-References: <cover.1435134626.git.maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org, Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Pi-Cheng Chen <pi-cheng.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] cpufreq: mediatek: Add MT8173 cpufreq driver
+Date: Wed, 24 Jun 2015 16:44:58 +0800
+Message-ID: <CALx668UUUCzswiXyM9e4v9fhu6PTXq5DLu_O3swTPhJUjJPBFg@mail.gmail.com>
+References: <1433766561-1330-1-git-send-email-pi-cheng.chen@linaro.org>
+	<1433766561-1330-3-git-send-email-pi-cheng.chen@linaro.org>
+	<20150622114511.GA28340@linux>
+	<CALx668VmT+90y712QO4JQCh-nTCxStWYY+ygJ_1KiVN7VnmmpQ@mail.gmail.com>
+	<20150624005759.GA6424@linux>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150624005759.GA6424@linux>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Kernel Mailman List <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The driver currently does not take into account the minimum sample time
-as per the Figure 6-8 Chapter 9.1.1 12-bit ADC electrical characteristics.
-We set a static amount of cycles instead of considering the sample time
-as a given value, which depends on hardware characteristics.
+Hi Viresh,
 
-Determine sampling frequencies by first reading the device tree property
-node and then calculating the required Long Sample Time Adder (LSTAdder)
-value based on the ADC clock frequency and sample time value obtained
-from the device tree, this LSTAdder value is then used for calculating
-the sampling frequencies possible.
+On Wed, Jun 24, 2015 at 8:57 AM, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On 23-06-15, 23:25, Pi-Cheng Chen wrote:
+>> On Mon, Jun 22, 2015 at 7:45 PM, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> >> +static struct mtk_cpu_dvfs_info *mtk_cpu_dvfs_info_get(int cpu)
+>> >
+>> > A very bad name to a routine with very specific functionality.
+>>
+>> Would get_mtk_cpu_dvfs_info() or cpu_to_mtk_cpu_dvfs_info() be better?
+>>
+>> >
+>> >> +{
+>> >> +     struct mtk_cpu_dvfs_info *info;
+>> >> +     struct list_head *list;
+>> >> +
+>> >> +     list_for_each(list, &cpu_dvfs_info_list) {
+>> >> +             info = to_mtk_cpu_dvfs_info(list);
+>> >> +
+>> >> +             if (cpumask_test_cpu(cpu, info->cpus))
+>> >> +                     return info;
+>> >> +     }
+>
+> Firstly there is no need of extra long name for static routines. Just
+> keep them simple. i.e. no need of mtk_cpu_.
+>
+> And then I was a bit confused about the functionality earlier and your
+> initial name wasn't that bad. Sorry :(
 
-Signed-off-by: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- .../devicetree/bindings/iio/adc/vf610-adc.txt      |  6 ++
- drivers/iio/adc/vf610_adc.c                        | 74 ++++++++++++++++++++--
- 2 files changed, 76 insertions(+), 4 deletions(-)
+That's ok. :)
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt b/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt
-index 3eb40e2..39b86ea 100644
---- a/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt
-+++ b/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt
-@@ -17,6 +17,11 @@ Recommended properties:
-   - Frequency in normal mode (ADLPC=0, ADHSC=0)
-   - Frequency in high-speed mode (ADLPC=0, ADHSC=1)
-   - Frequency in low-power mode (ADLPC=1, ADHSC=0)
-+  - min-sample-time: Minimum sampling time in nanoseconds. This value has
-+    to be chosen according to the conversion mode and the connected analog
-+	 source resistance (R_as) and capacitance (C_as). Refer the datasheet's
-+	 operating requirements. A safe default across a wide range of R_as and
-+	 C_as as well as conversion modes is 1000ns.
- 
- Example:
- adc0: adc@4003b000 {
-@@ -27,5 +32,6 @@ adc0: adc@4003b000 {
- 	clock-names = "adc";
- 	fsl,adck-max-frequency = <30000000>, <40000000>,
- 				<20000000>;
-+	min-sample-time = <1000>;
- 	vref-supply = <&reg_vcc_3v3_mcu>;
- };
-diff --git a/drivers/iio/adc/vf610_adc.c b/drivers/iio/adc/vf610_adc.c
-index 480f335..8322027 100644
---- a/drivers/iio/adc/vf610_adc.c
-+++ b/drivers/iio/adc/vf610_adc.c
-@@ -68,6 +68,9 @@
- #define VF610_ADC_CLK_DIV8		0x60
- #define VF610_ADC_CLK_MASK		0x60
- #define VF610_ADC_ADLSMP_LONG		0x10
-+#define VF610_ADC_ADSTS_SHORT   0x100
-+#define VF610_ADC_ADSTS_NORMAL  0x200
-+#define VF610_ADC_ADSTS_LONG    0x300
- #define VF610_ADC_ADSTS_MASK		0x300
- #define VF610_ADC_ADLPC_EN		0x80
- #define VF610_ADC_ADHSC_EN		0x400
-@@ -124,6 +127,17 @@ enum conversion_mode_sel {
- 	VF610_ADC_CONV_LOW_POWER,
- };
- 
-+enum lst_adder_sel {
-+	VF610_ADCK_CYCLES_3,
-+	VF610_ADCK_CYCLES_5,
-+	VF610_ADCK_CYCLES_7,
-+	VF610_ADCK_CYCLES_9,
-+	VF610_ADCK_CYCLES_13,
-+	VF610_ADCK_CYCLES_17,
-+	VF610_ADCK_CYCLES_21,
-+	VF610_ADCK_CYCLES_25,
-+};
-+
- struct vf610_adc_feature {
- 	enum clk_sel	clk_sel;
- 	enum vol_ref	vol_ref;
-@@ -132,6 +146,8 @@ struct vf610_adc_feature {
- 	int	clk_div;
- 	int     sample_rate;
- 	int	res_mode;
-+	u32 lst_adder_index;
-+	u32 default_sample_time;
- 
- 	bool	calibration;
- 	bool	ovwren;
-@@ -155,11 +171,13 @@ struct vf610_adc {
- };
- 
- static const u32 vf610_hw_avgs[] = { 1, 4, 8, 16, 32 };
-+static const u32 vf610_lst_adder[] = { 3, 5, 7, 9, 13, 17, 21, 25 };
- 
- static inline void vf610_adc_calculate_rates(struct vf610_adc *info)
- {
- 	struct vf610_adc_feature *adc_feature = &info->adc_feature;
- 	unsigned long adck_rate, ipg_rate = clk_get_rate(info->clk);
-+	u32 adck_period, lst_addr_min;
- 	int divisor, i;
- 
- 	adck_rate = info->max_adck_rate[adc_feature->conv_mode];
-@@ -174,6 +192,19 @@ static inline void vf610_adc_calculate_rates(struct vf610_adc *info)
- 	}
- 
- 	/*
-+	 * Determine the long sample time adder value to be used based
-+	 * on the default minimum sample time provided.
-+	 */
-+	adck_period = NSEC_PER_SEC / adck_rate;
-+	lst_addr_min = adc_feature->default_sample_time / adck_period;
-+	for (i = 0; i < ARRAY_SIZE(vf610_lst_adder); i++) {
-+		if (vf610_lst_adder[i] > lst_addr_min) {
-+			adc_feature->lst_adder_index = i;
-+			break;
-+		}
-+	}
-+
-+	/*
- 	 * Calculate ADC sample frequencies
- 	 * Sample time unit is ADCK cycles. ADCK clk source is ipg clock,
- 	 * which is the same as bus clock.
-@@ -182,12 +213,13 @@ static inline void vf610_adc_calculate_rates(struct vf610_adc *info)
- 	 * SFCAdder: fixed to 6 ADCK cycles
- 	 * AverageNum: 1, 4, 8, 16, 32 samples for hardware average.
- 	 * BCT (Base Conversion Time): fixed to 25 ADCK cycles for 12 bit mode
--	 * LSTAdder(Long Sample Time): fixed to 3 ADCK cycles
-+	 * LSTAdder(Long Sample Time): 3, 5, 7, 9, 13, 17, 21, 25 ADCK cycles
- 	 */
- 	adck_rate = ipg_rate / info->adc_feature.clk_div;
- 	for (i = 0; i < ARRAY_SIZE(vf610_hw_avgs); i++)
- 		info->sample_freq_avail[i] =
--			adck_rate / (6 + vf610_hw_avgs[i] * (25 + 3));
-+			adck_rate / (6 + vf610_hw_avgs[i] *
-+			 (25 + vf610_lst_adder[adc_feature->lst_adder_index]));
- }
- 
- static inline void vf610_adc_cfg_init(struct vf610_adc *info)
-@@ -347,8 +379,40 @@ static void vf610_adc_sample_set(struct vf610_adc *info)
- 		break;
- 	}
- 
--	/* Use the short sample mode */
--	cfg_data &= ~(VF610_ADC_ADLSMP_LONG | VF610_ADC_ADSTS_MASK);
-+	/*
-+	 * Set ADLSMP and ADSTS based on the Long Sample Time Adder value
-+	 * determined.
-+	 */
-+	switch (adc_feature->lst_adder_index) {
-+	case VF610_ADCK_CYCLES_3:
-+		break;
-+	case VF610_ADCK_CYCLES_5:
-+		cfg_data |= VF610_ADC_ADSTS_SHORT;
-+		break;
-+	case VF610_ADCK_CYCLES_7:
-+		cfg_data |= VF610_ADC_ADSTS_NORMAL;
-+		break;
-+	case VF610_ADCK_CYCLES_9:
-+		cfg_data |= VF610_ADC_ADSTS_LONG;
-+		break;
-+	case VF610_ADCK_CYCLES_13:
-+		cfg_data |= VF610_ADC_ADLSMP_LONG;
-+		break;
-+	case VF610_ADCK_CYCLES_17:
-+		cfg_data |= VF610_ADC_ADLSMP_LONG;
-+		cfg_data |= VF610_ADC_ADSTS_SHORT;
-+		break;
-+	case VF610_ADCK_CYCLES_21:
-+		cfg_data |= VF610_ADC_ADLSMP_LONG;
-+		cfg_data |= VF610_ADC_ADSTS_NORMAL;
-+		break;
-+	case VF610_ADCK_CYCLES_25:
-+		cfg_data |= VF610_ADC_ADLSMP_LONG;
-+		cfg_data |= VF610_ADC_ADSTS_NORMAL;
-+		break;
-+	default:
-+		dev_err(info->dev, "error in sample time select\n");
-+	}
- 
- 	/* update hardware average selection */
- 	cfg_data &= ~VF610_ADC_AVGS_MASK;
-@@ -712,6 +776,8 @@ static int vf610_adc_probe(struct platform_device *pdev)
- 
- 	of_property_read_u32_array(pdev->dev.of_node, "fsl,adck-max-frequency",
- 			info->max_adck_rate, 3);
-+	of_property_read_u32(pdev->dev.of_node, "min-sample-time",
-+			&info->adc_feature.default_sample_time);
- 
- 	platform_set_drvdata(pdev, indio_dev);
- 
--- 
-2.4.4
+>
+> So maybe just, get_dvfs_info().
+
+Yes. Thanks. I'll pick this one.
+
+>
+>> >> +     freq_hz = freq_table[index].frequency * 1000;
+>> >
+>> > A blank line here.
+>>
+>> Will remove it.
+>>
+>
+> I was asking you to add it :)
+
+I thought you were asking to remove the previous one originally.
+Sorry for my misunderstanding.
+Will add it.
+
+>
+>> >> +     rcu_read_lock();
+>
+>
+>> >> +static int mtk_cpu_dvfs_info_init(int cpu)
+>> >> +{
+>> >> +     struct device *cpu_dev;
+>> >> +     struct regulator *proc_reg = ERR_PTR(-ENODEV);
+>> >> +     struct regulator *sram_reg = ERR_PTR(-ENODEV);
+>> >> +     struct clk *cpu_clk = ERR_PTR(-ENODEV);
+>> >> +     struct clk *inter_clk = ERR_PTR(-ENODEV);
+>> >> +     struct mtk_cpu_dvfs_info *info;
+>> >> +     struct cpufreq_frequency_table *freq_table;
+>> >> +     struct dev_pm_opp *opp;
+>> >> +     unsigned long rate;
+>> >> +     int ret;
+>> >> +
+>> >> +     cpu_dev = get_cpu_device(cpu);
+>> >> +     if (!cpu_dev) {
+>> >> +             pr_err("failed to get cpu%d device\n", cpu);
+>> >> +             return -ENODEV;
+>> >> +     }
+>> >> +
+>> >> +     ret = of_init_opp_table(cpu_dev);
+>> >> +     if (ret) {
+>> >> +             pr_warn("no OPP table for cpu%d\n", cpu);
+>> >> +             return ret;
+>> >> +     }
+>> >> +
+>> >> +     cpu_clk = clk_get(cpu_dev, "cpu");
+>> >> +     if (IS_ERR(cpu_clk)) {
+>> >> +             if (PTR_ERR(cpu_clk) == -EPROBE_DEFER)
+>> >> +                     pr_warn("cpu clk for cpu%d not ready, retry.\n", cpu);
+>> >> +             else
+>> >> +                     pr_err("failed to get cpu clk for cpu%d\n", cpu);
+>> >> +
+>> >> +             ret = PTR_ERR(cpu_clk);
+>> >> +             goto out_free_opp_table;
+>> >> +     }
+>> >> +
+>> >> +     inter_clk = clk_get(cpu_dev, "intermediate");
+>> >> +     if (IS_ERR(inter_clk)) {
+>> >> +             if (PTR_ERR(inter_clk) == -EPROBE_DEFER)
+>> >> +                     pr_warn("intermediate clk for cpu%d not ready, retry.\n",
+>> >> +                             cpu);
+>> >> +             else
+>> >> +                     pr_err("failed to get intermediate clk for cpu%d\n",
+>> >> +                            cpu);
+>> >> +
+>> >> +             ret = PTR_ERR(cpu_clk);
+>> >> +             goto out_free_resources;
+>> >> +     }
+>> >> +
+>> >> +     proc_reg = regulator_get_exclusive(cpu_dev, "proc");
+>> >> +     if (IS_ERR(proc_reg)) {
+>> >> +             if (PTR_ERR(proc_reg) == -EPROBE_DEFER)
+>> >> +                     pr_warn("proc regulator for cpu%d not ready, retry.\n",
+>> >> +                             cpu);
+>> >> +             else
+>> >> +                     pr_err("failed to get proc regulator for cpu%d\n",
+>> >> +                            cpu);
+>> >> +
+>> >> +             ret = PTR_ERR(proc_reg);
+>> >> +             goto out_free_resources;
+>> >> +     }
+>> >> +
+>> >> +     /* Both presence and absence of sram regulator are valid cases. */
+>> >> +     sram_reg = regulator_get_exclusive(cpu_dev, "sram");
+>> >> +
+>> >> +     info = kzalloc(sizeof(*info), GFP_KERNEL);
+>> >> +     if (!info) {
+>> >> +             ret = -ENOMEM;
+>> >> +             goto out_free_resources;
+>> >> +     }
+>> >> +
+>> >> +     ret = dev_pm_opp_init_cpufreq_table(cpu_dev, &freq_table);
+>> >> +     if (ret) {
+>> >> +             pr_err("failed to init cpufreq table for cpu%d: %d\n",
+>> >> +                    cpu, ret);
+>> >> +             goto out_free_mtk_cpu_dvfs_info;
+>> >> +     }
+>> >> +
+>> >> +     if (!alloc_cpumask_var(&info->cpus, GFP_KERNEL))
+>> >
+>> > Why getting into such trouble? What about just saving policy's pointer
+>> > in info and use it for freq_table, cpus mask, etc ?
+>>
+>> This function is called from driver probe function. At this moment, cpufreq
+>> driver is not yet registered and the policy struct for each cluster is not yet
+>> allocated.
+>
+> This should be called from ->init() callback of the cpufreq driver.
+
+Some reasons I did this in probe(). Please see below.
+
+>
+>> Also, the mtk_cpu_dvfs_info structs for all clusters are stored in a list
+>> after probe done. cpus mask is used to find out the proper info struct
+>> for corresponding cpu.
+>
+> Yeah, but this will be exactly same to policy->related_cpus, just use
+> that. Why allocate another mask for same purpose?
+
+Yes. I agree. Please see the reasons why I did it below.
+
+>
+>> For freq_table, I simply don't want to free and allocate the table
+>> every time when cpu is unplugged and plugged so I just allocate it
+>> in the probe function call path, and cache it in the info struct.
+>
+> ->exit() will be called only when all the CPUs from a policy are
+> hotplugged out. Not on every hotplug. So you probably have 4 big and 4
+> little cores. So policy for big cluster will be removed only when all
+> the CPUs are down. And so no point storing things from probe.
+>
+> Or is there anything special with your usecase?
+
+One reason to put those initialization and resource allocation in probe is
+that it's easier to handle the return value -PROBE_DEFER from clock
+and regulator framework when trying to get clocks and regulators
+consumed by cpufreq driver.
+
+The other reason is when the whole system is resuming from suspend,
+the other subsystem e.g. i2c on which cpufreq driver depends might not
+ready yet during cpufreq driver initialization. In this case, the cpufreq
+driver will be blocked when trying to get resources e.g. regulator on i2c
+bus, and the whole system will stuck for seconds.
+
+For the two reasons above, I try to do all resource initialization and
+allocation in probe(), and leave less things to do in init() as possible.
+Do you have any suggestion for this?
+
+>
+>> But for module_platform_driver(mt8173_cpufreq_platdrv), I saw many
+>> built-in drivers in kernel call module_platform_driver() also so I use it.
+>
+> That was wrong for them as well :)
+>
+>> Would it be better to use platform_driver_register() instead?
+>
+> Hmm..
+
+Will fix it.
+
+Thanks.
+Pi-Cheng
+>
+> --
+> viresh
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
