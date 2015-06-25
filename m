@@ -1,64 +1,40 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 7/9] ARM: multi_v7_defconfig: Enable support for PWM
- Regulators
-Date: Thu, 25 Jun 2015 16:02:55 +0100
-Message-ID: <20150625150255.GE23990@x1>
-References: <1435154348-28840-1-git-send-email-lee.jones@linaro.org>
- <1435154348-28840-8-git-send-email-lee.jones@linaro.org>
- <CABxcv==J2hi0y+=s3nK_U=-jkjTW3L9jCC2JfebnWwRfpDGLAQ@mail.gmail.com>
- <20150625084204.GW15013@x1>
- <CABxcv==_YZ7BCCzfbLXYxwUL_kKLtBxOVTCvcUnvGVnrD4bVpg@mail.gmail.com>
+From: santosh shilimkar <santosh.shilimkar@oracle.com>
+Subject: Re: [PATCH v2 0/3] ARM: keystone: add ecc error interrupt handling
+Date: Thu, 25 Jun 2015 08:04:43 -0700
+Message-ID: <558C188B.5060107@oracle.com>
+References: <1435242710-31346-1-git-send-email-vitalya@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CABxcv==_YZ7BCCzfbLXYxwUL_kKLtBxOVTCvcUnvGVnrD4bVpg@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@dowhile0.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, kernel@stlinux.com, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Ajit Pal Singh <ajitpal.singh@st.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1435242710-31346-1-git-send-email-vitalya@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vitaly Andrianov <vitalya@ti.com>, ssantosh@kernel.org, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 25 Jun 2015, Javier Martinez Canillas wrote:
-> On Thu, Jun 25, 2015 at 10:42 AM, Lee Jones <lee.jones@linaro.org> wr=
-ote:
-> > On Wed, 24 Jun 2015, Javier Martinez Canillas wrote:
->=20
-> [...]
->=20
-> >> > diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/conf=
-igs/multi_v7_defconfig
-> >> > index f632af0..6666973 100644
-> >> > --- a/arch/arm/configs/multi_v7_defconfig
-> >> > +++ b/arch/arm/configs/multi_v7_defconfig
-> >> > @@ -365,6 +365,7 @@ CONFIG_REGULATOR_MAX8907=3Dy
-> >> >  CONFIG_REGULATOR_MAX8973=3Dy
-> >> >  CONFIG_REGULATOR_MAX77686=3Dy
-> >> >  CONFIG_REGULATOR_PALMAS=3Dy
-> >> > +CONFIG_REGULATOR_PWM=3Dy
-> >>
-> >> The current policy is to build as much as possible as a module in
-> >> multi_v7_defconfig. Since this is a tristate Kconfig symbol, could=
- you
-> >> please change it to =3Dm ?
-> >
-> > I would prefer that it stays built-in.
-> >
->=20
-> Ok, I've no strong opinion on this. I was just mentioning what arm-so=
-c
-> maintainers prefer nowadays.
->=20
-> May I ask what's the rationale for leaving this option built-in?
+On 6/25/2015 7:31 AM, Vitaly Andrianov wrote:
+> This patch series adds support for arm L1/L2 ecc and ddr3 ecc error handling
+> for Keystone devices
+>
+> Change Log
+>
+> v2:
+> - removing unused and sorting headers of keystone.c are moved to a separate
+>    patch.
+> - l1l2 ecc and ddr3 ecc error handling are split it to separate patches
+> - removed unused headers from keystone_ecc.c
+> - platsmp.c removed from the patch.
+> - return IRQ_HANDLED for 1 bit error in l1l2 ecc handler
+> - checked and handled existing ecc error before enabling ddr3 interrupt
+> - 1 bit ddr3 interrupt is disabled, because it is handled by hardware and
+>    there is no reason to handle it by software
+>
+This version looks good to me. As already commented, I would have liked
+the patch 2/3(L2 ECC) code in ARM generic code so will give some more 
+time for others to come back. Otherwise I will queue this up for next
+window.
 
-My view is that multi_v7 is used for prototyping, testing and to
-ensure all of the vendors are playing nice together.  Hopefully
-vendors aren't actually releasing kernels built with this defconfig!
-During testing/prototyping time; installing and messing around with
-modules is an over-head I can do without.
+Thanks for follow up Vitaly.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Regards,
+Santosh
