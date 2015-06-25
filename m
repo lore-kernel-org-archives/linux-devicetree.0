@@ -1,63 +1,56 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v0] arm64: dts: Add poweroff button device node for APM
- X-Gene platform
-Date: Thu, 25 Jun 2015 16:09:38 +0100
-Message-ID: <20150625150938.GB6844@leverpostej>
-References: <1434505312-27977-1-git-send-email-yvo@apm.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] i2c: removed work arounds in i2c driver for Zynq
+ Ultrascale+ MPSoC
+Date: Thu, 25 Jun 2015 16:18:00 +0100
+Message-ID: <20150625151800.GC6844@leverpostej>
+References: <1434644382-11905-1-git-send-email-anuragku@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1434505312-27977-1-git-send-email-yvo@apm.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Y Vo <yvo@apm.com>
-Cc: "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "arm@kernel.org" <arm@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Phong Vo <pvo@apm.com>, Toan Le <toanle@apm.com>, "patches@apm.com" <patches@apm.com>, Loc Ho <lho@apm.com>
+In-Reply-To: <1434644382-11905-1-git-send-email-anuragku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Anurag Kumar Vulisha <anurag.kumar.vulisha-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: "wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org" <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "svemula-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <svemula-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Anurag Kumar Vulisha <anuragku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 17, 2015 at 02:41:52AM +0100, Y Vo wrote:
-> This patch adds poweroff button device node to support poweroff feature
-> on APM X-Gene Mustang platform.
+On Thu, Jun 18, 2015 at 05:19:42PM +0100, Anurag Kumar Vulisha wrote:
+> Removed the workarounds present in the cadence i2c driver for
+> Zynq Ultrascale+ MPSoC
+
+I guess this means that cdns,i2c-r1p10 had quirks fixed in
+cdns,i2c-r1p14? It would be helpful to be a bit more explicit in the
+commit message.
+
 > 
-> Signed-off-by: Y Vo <yvo@apm.com>
+> Signed-off-by: Anurag Kumar Vulisha <anuragku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 > ---
->  arch/arm64/boot/dts/apm/apm-mustang.dts |   11 +++++++++++
->  1 files changed, 11 insertions(+), 0 deletions(-)
+>  .../devicetree/bindings/i2c/i2c-cadence.txt        |    2 +-
+>  drivers/i2c/busses/i2c-cadence.c                   |   67 ++++++++++++++++---
+>  2 files changed, 57 insertions(+), 12 deletions(-)
 > 
-> diff --git a/arch/arm64/boot/dts/apm/apm-mustang.dts b/arch/arm64/boot/dts/apm/apm-mustang.dts
-> index 83578e7..67979c8 100644
-> --- a/arch/arm64/boot/dts/apm/apm-mustang.dts
-> +++ b/arch/arm64/boot/dts/apm/apm-mustang.dts
-> @@ -23,6 +23,17 @@
->  		device_type = "memory";
->  		reg = < 0x1 0x00000000 0x0 0x80000000 >; /* Updated by bootloader */
->  	};
-> +
-> +	gpio-keys {
-> +		compatible = "gpio-keys";
-> +		apm_ctrl_name = "Power Button";
-
-Huh?
-
-Undocumented, unused, and doesn't follwo the "vendor,property" naming
-scheme...
-
-Mark.
-
-> +		btn3 {
-> +			label = "EXT_PWR";
-> +			linux,code = <116>;
-> +			linux,input-type = <0x1>;     /* EV_KEY */
-> +			interrupts = <0x0 0x2d 0x1>;
-> +		};
-> +	};
->  };
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-cadence.txt b/Documentation/devicetree/bindings/i2c/i2c-cadence.txt
+> index 7cb0b56..11ef7f2 100644
+> --- a/Documentation/devicetree/bindings/i2c/i2c-cadence.txt
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-cadence.txt
+> @@ -2,7 +2,7 @@ Binding for the Cadence I2C controller
 >  
->  &pcie0clk {
-> -- 
-> 1.7.1
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+>  Required properties:
+>    - reg: Physical base address and size of the controller's register area.
+> -  - compatible: Compatibility string. Must be 'cdns,i2c-r1p10'.
+> +  - compatible: Compatibility string.Use 'cdns,i2c-r1p10' or 'cdns,i2c-r1p14'
+
+Please format this as a list. It aids legibility and expansion. e.g:
+
+- compatible: should contain one of:
+  * "cdns,i2c-r1p10"
+  * "cdns,i2c-r1p14"
+
+Perhaps with notes as to the differences.
+
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
