@@ -1,141 +1,152 @@
-From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH-v3 2/3] mfd: 88pm800: Allow configuration of interrupt
- clear method
-Date: Thu, 25 Jun 2015 09:03:10 +0900
-Message-ID: <CAJKOXPdqTnkB6Lw4fsJ-=o4=QcYcAtZK0zgOM9aqgesTU=Dw+A@mail.gmail.com>
-References: <1435137673-1629-1-git-send-email-vaibhav.hiremath@linaro.org>
-	<1435137673-1629-3-git-send-email-vaibhav.hiremath@linaro.org>
+From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v5 4/7] extcon: arizona: Convert to gpiod
+Date: Thu, 25 Jun 2015 09:13:31 +0900
+Message-ID: <558B47AB.8050800@samsung.com>
+References: <1434731014-19980-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <1434731014-19980-5-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1435137673-1629-3-git-send-email-vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-reply-to: <1434731014-19980-5-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Zhao Ye <zhaoy-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2015-06-24 18:21 GMT+09:00 Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
-> As per the spec, bit 1 (INT_CLEAR_MODE) of reg addr 0xe
-> (page 0) controls the method of clearing interrupt
-> status of 88pm800 family of devices;
->
->   0: clear on read
->   1: clear on write
->
-> This patch allows to configure this field, through DT.
->
-> Also, as suggested by "Lee Jones" renaming DT property and variable
-> field to appropriate name.
->
-> Signed-off-by: Zhao Ye <zhaoy-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Hi,
 
-It does not look like a property of the board. Instead it looks like a
-runtime configuration so it should not be part of DT bindings.
+Applied it.
 
-I understand that previously this was configured by platform data and
-now you want to move everything to DT. But this does not belong to
-DT...
+Thanks,
+Chanwoo Choi
 
-Best regards,
-Krzysztof
-
+On 06/20/2015 01:23 AM, Charles Keepax wrote:
+> Convert to using the newer gpiod interface for the micd_pol_gpio.
+> Although we still carry support for the old gpio interface from pdata.
+> 
+> Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 > ---
->  drivers/mfd/88pm800.c       | 15 ++++++++++-----
->  include/linux/mfd/88pm80x.h |  6 ++++--
->  2 files changed, 14 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/mfd/88pm800.c b/drivers/mfd/88pm800.c
-> index 059f01a..c1a6306 100644
-> --- a/drivers/mfd/88pm800.c
-> +++ b/drivers/mfd/88pm800.c
-> @@ -376,7 +376,7 @@ static int device_irq_init_800(struct pm80x_chip *chip)
->  {
->         struct regmap *map = chip->regmap;
->         unsigned long flags = IRQF_ONESHOT;
-> -       int data, mask, ret = -EINVAL;
-> +       int irq_clr_mode, mask, ret = -EINVAL;
->
->         if (!map || !chip->irq) {
->                 dev_err(chip->dev, "incorrect parameters\n");
-> @@ -384,15 +384,16 @@ static int device_irq_init_800(struct pm80x_chip *chip)
->         }
->
->         /*
-> -        * irq_mode defines the way of clearing interrupt. it's read-clear by
-> -        * default.
-> +        * irq_clr_on_wr defines the way of clearing interrupt by
-> +        * read/write(0/1).  It's read-clear by default.
->          */
->         mask =
->             PM800_WAKEUP2_INV_INT | PM800_WAKEUP2_INT_CLEAR |
->             PM800_WAKEUP2_INT_MASK;
->
-> -       data = PM800_WAKEUP2_INT_CLEAR;
-> -       ret = regmap_update_bits(map, PM800_WAKEUP2, mask, data);
-> +       irq_clr_mode = (chip->irq_clr_on_wr) ?
-> +               PM800_WAKEUP2_INT_WRITE_CLEAR : PM800_WAKEUP2_INT_READ_CLEAR;
-> +       ret = regmap_update_bits(map, PM800_WAKEUP2, mask, irq_clr_mode);
->
->         if (ret < 0)
->                 goto out;
-> @@ -514,6 +515,7 @@ static int device_800_init(struct pm80x_chip *chip,
->         }
->
->         chip->regmap_irq_chip = &pm800_irq_chip;
-> +       chip->irq_clr_on_wr = pdata->irq_clr_on_wr;
->
->         ret = device_irq_init_800(chip);
->         if (ret < 0) {
-> @@ -568,6 +570,9 @@ static int pm800_probe(struct i2c_client *client,
->                         dev_err(&client->dev, "failed to allocaate memory\n");
->                         return -ENOMEM;
->                 }
+>  drivers/extcon/extcon-arizona.c |   41 ++++++++++++++++++++++++++++++++++----
+>  1 files changed, 36 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/extcon/extcon-arizona.c b/drivers/extcon/extcon-arizona.c
+> index b364b8b..8f0ef72 100644
+> --- a/drivers/extcon/extcon-arizona.c
+> +++ b/drivers/extcon/extcon-arizona.c
+> @@ -20,6 +20,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/err.h>
+> +#include <linux/gpio/consumer.h>
+>  #include <linux/gpio.h>
+>  #include <linux/input.h>
+>  #include <linux/platform_device.h>
+> @@ -95,6 +96,8 @@ struct arizona_extcon_info {
+>  	int hpdet_ip_version;
+>  
+>  	struct extcon_dev *edev;
 > +
-> +               pdata->irq_clr_on_wr = of_property_read_bool(np,
-> +                                       "marvell,irq-clr-on-write");
->         }
->
->         ret = pm80x_init(client);
-> diff --git a/include/linux/mfd/88pm80x.h b/include/linux/mfd/88pm80x.h
-> index 97cb283..94b3dcd 100644
-> --- a/include/linux/mfd/88pm80x.h
-> +++ b/include/linux/mfd/88pm80x.h
-> @@ -77,6 +77,8 @@ enum {
->  #define PM800_WAKEUP2          (0x0E)
->  #define PM800_WAKEUP2_INV_INT          (1 << 0)
->  #define PM800_WAKEUP2_INT_CLEAR                (1 << 1)
-> +#define PM800_WAKEUP2_INT_READ_CLEAR           (0 << 1)
-> +#define PM800_WAKEUP2_INT_WRITE_CLEAR          (1 << 1)
->  #define PM800_WAKEUP2_INT_MASK         (1 << 2)
->
->  #define PM800_POWER_UP_LOG     (0x10)
-> @@ -300,7 +302,7 @@ struct pm80x_chip {
->         struct regmap_irq_chip_data *irq_data;
->         int type;
->         int irq;
-> -       int irq_mode;
-> +       int irq_clr_on_wr;      /* '1': Clear on write, '0': Clear on read*/
->         unsigned long wu_flag;
->         spinlock_t lock;
+> +	struct gpio_desc *micd_pol_gpio;
 >  };
-> @@ -315,7 +317,7 @@ struct pm80x_platform_data {
->          */
->         struct regulator_init_data *regulators[PM800_ID_RG_MAX];
->         unsigned int num_regulators;
-> -       int irq_mode;           /* Clear interrupt by read/write(0/1) */
-> +       int irq_clr_on_wr;              /* Clear interrupt by read/write(0/1) */
->         int batt_det;           /* enable/disable */
->         int (*plat_config)(struct pm80x_chip *chip,
->                                 struct pm80x_platform_data *pdata);
-> --
-> 1.9.1
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>  
+>  static const struct arizona_micd_config micd_default_modes[] = {
+> @@ -205,6 +208,10 @@ static void arizona_extcon_set_mode(struct arizona_extcon_info *info, int mode)
+>  	if (arizona->pdata.micd_pol_gpio > 0)
+>  		gpio_set_value_cansleep(arizona->pdata.micd_pol_gpio,
+>  					info->micd_modes[mode].gpio);
+> +	else
+> +		gpiod_set_value_cansleep(info->micd_pol_gpio,
+> +					 info->micd_modes[mode].gpio);
+> +
+>  	regmap_update_bits(arizona->regmap, ARIZONA_MIC_DETECT_1,
+>  			   ARIZONA_MICD_BIAS_SRC_MASK,
+>  			   info->micd_modes[mode].bias <<
+> @@ -1258,6 +1265,27 @@ static int arizona_extcon_probe(struct platform_device *pdev)
+>  				arizona->pdata.micd_pol_gpio, ret);
+>  			goto err_register;
+>  		}
+> +	} else {
+> +		if (info->micd_modes[0].gpio)
+> +			mode = GPIOD_OUT_HIGH;
+> +		else
+> +			mode = GPIOD_OUT_LOW;
+> +
+> +		/* We can't use devm here because we need to do the get
+> +		 * against the MFD device, as that is where the of_node
+> +		 * will reside, but if we devm against that the GPIO
+> +		 * will not be freed if the extcon driver is unloaded.
+> +		 */
+> +		info->micd_pol_gpio = gpiod_get_optional(arizona->dev,
+> +							 "wlf,micd-pol",
+> +							 GPIOD_OUT_LOW);
+> +		if (IS_ERR(info->micd_pol_gpio)) {
+> +			ret = PTR_ERR(info->micd_pol_gpio);
+> +			dev_err(arizona->dev,
+> +				"Failed to get microphone polarity GPIO: %d\n",
+> +				ret);
+> +			goto err_register;
+> +		}
+>  	}
+>  
+>  	if (arizona->pdata.hpdet_id_gpio > 0) {
+> @@ -1268,7 +1296,7 @@ static int arizona_extcon_probe(struct platform_device *pdev)
+>  		if (ret != 0) {
+>  			dev_err(arizona->dev, "Failed to request GPIO%d: %d\n",
+>  				arizona->pdata.hpdet_id_gpio, ret);
+> -			goto err_register;
+> +			goto err_gpio;
+>  		}
+>  	}
+>  
+> @@ -1320,7 +1348,7 @@ static int arizona_extcon_probe(struct platform_device *pdev)
+>  				dev_err(arizona->dev,
+>  					"MICD ranges must be sorted\n");
+>  				ret = -EINVAL;
+> -				goto err_input;
+> +				goto err_gpio;
+>  			}
+>  		}
+>  	}
+> @@ -1339,7 +1367,7 @@ static int arizona_extcon_probe(struct platform_device *pdev)
+>  			dev_err(arizona->dev, "Unsupported MICD level %d\n",
+>  				info->micd_ranges[i].max);
+>  			ret = -EINVAL;
+> -			goto err_input;
+> +			goto err_gpio;
+>  		}
+>  
+>  		dev_dbg(arizona->dev, "%d ohms for MICD threshold %d\n",
+> @@ -1412,7 +1440,7 @@ static int arizona_extcon_probe(struct platform_device *pdev)
+>  	if (ret != 0) {
+>  		dev_err(&pdev->dev, "Failed to get JACKDET rise IRQ: %d\n",
+>  			ret);
+> -		goto err_input;
+> +		goto err_gpio;
+>  	}
+>  
+>  	ret = arizona_set_irq_wake(arizona, jack_irq_rise, 1);
+> @@ -1483,7 +1511,8 @@ err_rise_wake:
+>  	arizona_set_irq_wake(arizona, jack_irq_rise, 0);
+>  err_rise:
+>  	arizona_free_irq(arizona, jack_irq_rise, info);
+> -err_input:
+> +err_gpio:
+> +	gpiod_put(info->micd_pol_gpio);
+>  err_register:
+>  	pm_runtime_disable(&pdev->dev);
+>  	return ret;
+> @@ -1495,6 +1524,8 @@ static int arizona_extcon_remove(struct platform_device *pdev)
+>  	struct arizona *arizona = info->arizona;
+>  	int jack_irq_rise, jack_irq_fall;
+>  
+> +	gpiod_put(info->micd_pol_gpio);
+> +
+>  	pm_runtime_disable(&pdev->dev);
+>  
+>  	regmap_update_bits(arizona->regmap,
+> 
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
