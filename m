@@ -1,53 +1,66 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 7/9] ARM: multi_v7_defconfig: Enable support for PWM
- Regulators
-Date: Thu, 25 Jun 2015 09:42:04 +0100
-Message-ID: <20150625084204.GW15013@x1>
-References: <1435154348-28840-1-git-send-email-lee.jones@linaro.org>
- <1435154348-28840-8-git-send-email-lee.jones@linaro.org>
- <CABxcv==J2hi0y+=s3nK_U=-jkjTW3L9jCC2JfebnWwRfpDGLAQ@mail.gmail.com>
+From: Simon Guinot <simon.guinot@sequanux.org>
+Subject: Re: [PATCH v3 1/3] leds: netxbig: add device tree binding
+Date: Thu, 25 Jun 2015 10:46:03 +0200
+Message-ID: <20150625084603.GG4853@kw.sim.vm.gnt>
+References: <1434639590-27389-1-git-send-email-simon.guinot@sequanux.org>
+ <1434639590-27389-2-git-send-email-simon.guinot@sequanux.org>
+ <55894D0A.8000306@samsung.com>
+ <20150623211711.GF4853@kw.sim.vm.gnt>
+ <558A736D.8030503@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="jQblWL/lOOo35ApW"
+Return-path: <linux-leds-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CABxcv==J2hi0y+=s3nK_U=-jkjTW3L9jCC2JfebnWwRfpDGLAQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@dowhile0.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, kernel@stlinux.com, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Ajit Pal Singh <ajitpal.singh@st.com>
+In-Reply-To: <558A736D.8030503@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Bryan Wu <cooloney@gmail.com>, Vincent Donnefort <vdonnefort@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, linux-arm-kernel@lists.infradead.org, Gregory Clement <gregory.clement@free-electrons.com>, Dan Carpenter <dan.carpenter@oracle.com>, Alexandre Courbot <gnurou@gmail.com>, linux-leds@vger.kernel.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 24 Jun 2015, Javier Martinez Canillas wrote:
 
-> Hello Lee,
->=20
-> On Wed, Jun 24, 2015 at 3:59 PM, Lee Jones <lee.jones@linaro.org> wro=
-te:
-> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > ---
-> >  arch/arm/configs/multi_v7_defconfig | 1 +
-> >  1 file changed, 1 insertion(+)
+--jQblWL/lOOo35ApW
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Jun 24, 2015 at 11:07:57AM +0200, Jacek Anaszewski wrote:
+> >>BTW how do you compile the driver? I've tried to use
+> >>multi_v5_defconfig and mvebu_v5_defconfig and I have build breaks
+> >>with both of them on the recent linux-next.
 > >
-> > diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs=
-/multi_v7_defconfig
-> > index f632af0..6666973 100644
-> > --- a/arch/arm/configs/multi_v7_defconfig
-> > +++ b/arch/arm/configs/multi_v7_defconfig
-> > @@ -365,6 +365,7 @@ CONFIG_REGULATOR_MAX8907=3Dy
-> >  CONFIG_REGULATOR_MAX8973=3Dy
-> >  CONFIG_REGULATOR_MAX77686=3Dy
-> >  CONFIG_REGULATOR_PALMAS=3Dy
-> > +CONFIG_REGULATOR_PWM=3Dy
+> >For the original patch set version (Linux 4.0 at the time), I have used
+> >the mvebu_v5_defconfig. Now I am using a lighter configuration because
+> >I don't need to build the whole mvebu stuff.
+> >
+> >What kind of error do you get ? I remember something about setting
+> >CONFIG_HZ to 250.
 >=20
-> The current policy is to build as much as possible as a module in
-> multi_v7_defconfig. Since this is a tristate Kconfig symbol, could yo=
-u
-> please change it to =3Dm ?
+> I am getting:
+>=20
+> drivers/crypto/mv_cesa.c:1037:2: error: implicit declaration of
+> function =E2=80=98of_get_named_gen_pool=E2=80=99
+> [-Werror=3Dimplicit-function-declaration]
+>=20
+> Compilation succeeded after disabling CONFIG_CRYPTO_DEV_MV_CESA.
 
-I would prefer that it stays built-in.
+It is because the merge in linux-next missed the renaming of
+of_get_named_gen_pool() in of_gen_pool_get() for the mv_cesa driver.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+I have sent a patch, just in case.
+
+Simon
+
+--jQblWL/lOOo35ApW
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlWLv8sACgkQgtp0PDeOcDo+dwCggPZSw/wmFL9Eq05+hIzfzdw0
+/wIAnAiBlLN7JVwqt38aNBgkpGxkIzrH
+=KNM2
+-----END PGP SIGNATURE-----
+
+--jQblWL/lOOo35ApW--
