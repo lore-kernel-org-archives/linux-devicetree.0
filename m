@@ -1,46 +1,84 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [RESEND] [PATCH v2 1/2] arm: devtree: Set system_rev from DT
- revision
-Date: Thu, 25 Jun 2015 11:03:51 +0100
-Message-ID: <20150625100351.GB7576@n2100.arm.linux.org.uk>
-References: <1430902142-17035-1-git-send-email-pali.rohar@gmail.com>
- <3577431.y872Foi4kj@wuerfel> <20150506103752.GG30910@pali>
- <3529567.PeFp1NNa1q@wuerfel> <20150506114417.GI30910@pali>
+From: Cyrille Pitchen <cyrille.pitchen@atmel.com>
+Subject: Re: [PATCH v4 2/2] mfd: flexcom: add a driver for Atmel Flexible
+ Serial Communication Unit
+Date: Thu, 25 Jun 2015 12:11:04 +0200
+Message-ID: <558BD3B8.10709@atmel.com>
+References: <cover.1434967670.git.cyrille.pitchen@atmel.com> <dddf7a6d750967785255733a7931780b3c465d5f.1434967670.git.cyrille.pitchen@atmel.com> <20150624142456.GS15013@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20150506114417.GI30910@pali>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc: devicetree@vger.kernel.org, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Tony Lindgren <tony@atomide.com>, Sebastian Reichel <sre@debian.org>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pavel Machek <pavel@ucw.cz>, linux-omap@vger.kernel.org, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150624142456.GS15013@x1>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: nicolas.ferre@atmel.com, boris.brezillon@free-electrons.com, alexandre.belloni@free-electrons.com, sameo@linux.intel.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 06, 2015 at 01:44:17PM +0200, Pali Roh=E1r wrote:
-> On Wednesday 06 May 2015 13:04:01 Arnd Bergmann wrote:
-> > What I mean is which code accesses this variable that early?
-> > =
+Hi lee,
 
-> =
+Le 24/06/2015 16:24, Lee Jones a =C3=A9crit :
+> On Mon, 22 Jun 2015, Cyrille Pitchen wrote:
+>=20
+>> This driver supports the new Atmel Flexcom. The Flexcom is a wrapper=
+ which
+>> integrates one SPI controller, one I2C controller and one USART. Onl=
+y one
+>> function can be enabled at a time. This driver selects the function =
+once
+>> for all, when the Flexcom is probed, according to the value of the n=
+ew
+>> "atmel,flexcom-mode" device tree property.
+>>
+>> This driver has chosen to present the Flexcom to the system as a MFD=
+ so
+>> the implementation is seamless for the existing Atmel SPI, I2C and U=
+SART
+>> drivers.
+>=20
+> No need for this driver.
+>=20
+> Just create your 3 platform drivers and get them to read the mode at
+> probe time.  If the mode isn't the one pertaining to itself return
+> -ENODEV and the Device Driver API will attempt the probe the next
+> device.  Ensure all of the devices have the same compatible string
+> i.e. atmel,sama5d2-flexcom.
+>=20
 
-> ATAG code is doing it at same early stage, so I added it to same early
-> stage...
+The main idea of this patch was to hide the Flexcom overlay from the 3 =
+serial
+drivers. The Flexcom is a kind of muxer which selects one of the 3 IPs:=
+ it=20
+doesn't change the internal of the IPs. For instance, on sama5d2x SoCs,
+some SPI controlers are still standalone whereas others are wrapped by =
+a
+=46lexcom but all these SPI controllers share the same IP version.
 
-ATAG code does it early because ATAGs are only available early on, and
-it's simpler to parse them all in one go, rather than having to do
-multiple passes over the structure - especially when most instances are
-just storing an integer to some BSS variable.
+Also, the Flexcom has its own I/O range. Especially, the Flexcom Mode R=
+egister
+which selects the active peripheral is outside the I/O ranges of the SP=
+I, I2C
+or USART IPs.
 
--- =
+The active peripheral must be selected first then its driver can access=
+ its I/O
+registers but registers of the other inactive peripherals are still una=
+vailable
+and would be read as zero since their peripherals are still disabled.
+That's why the very first version of the driver presented the Flexcom a=
+s a
+clock because most peripherals can't be used before enabling their cloc=
+k.
+However the Flexcom is not an actual clock so I was told that it would =
+be
+better to introduce the Flexcom as an MFD.
 
-FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
-according to speedtest.net.
+The idea is to separate the serial controller drivers and the Flexcom d=
+river
+the same way as a clock driver and a pin controller driver are separate=
+d from
+the driver of a peripheral which uses them.
+
+
+Best Regards,
+
+Cyrille
