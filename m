@@ -1,112 +1,59 @@
 From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH-v4 1/3] mfd: 88pm800: Add device tree support
-Date: Thu, 25 Jun 2015 15:48:00 +0100
-Message-ID: <20150625144800.GC23990@x1>
-References: <1435217189-19578-1-git-send-email-vaibhav.hiremath@linaro.org>
- <1435217189-19578-2-git-send-email-vaibhav.hiremath@linaro.org>
- <20150625101916.GB15013@x1>
- <558BE1B7.2060308@linaro.org>
+Subject: Re: [PATCH 1/4] mfd: da9150: Add support for Fuel-Gauge
+Date: Thu, 25 Jun 2015 15:55:35 +0100
+Message-ID: <20150625145535.GD23990@x1>
+References: <cover.1434643491.git.Adam.Thomson.Opensource@diasemi.com>
+ <8d8f583fee9313f261efa96a038874e552995c17.1434643491.git.Adam.Thomson.Opensource@diasemi.com>
+ <1434732461.2385.162.camel@x220>
+ <2E89032DDAA8B9408CB92943514A0337AB555F28@SW-EX-MBX01.diasemi.com>
+ <20150622111624.GF19061@x1>
+ <2E89032DDAA8B9408CB92943514A0337AB557CA1@SW-EX-MBX01.diasemi.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <558BE1B7.2060308-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <2E89032DDAA8B9408CB92943514A0337AB557CA1-68WUHU125fLLPO1uwJ3ImwLouzNaz+3S@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, yizhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+To: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Cc: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 25 Jun 2015, Vaibhav Hiremath wrote:
-> On Thursday 25 June 2015 03:49 PM, Lee Jones wrote:
-> >On Thu, 25 Jun 2015, Vaibhav Hiremath wrote:
-> >
-> >>Add DT support to the 88pm800 driver, along with compatible
-> >>field for it's sub-devices (rtc, onkey and regulator)
-> >>
-> >>Signed-off-by: Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-> >>Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >>---
-> >>  drivers/mfd/88pm800.c | 23 +++++++++++++++++++++++
-> >>  1 file changed, 23 insertions(+)
-> >>
-> >>diff --git a/drivers/mfd/88pm800.c b/drivers/mfd/88pm800.c
-> >>index 841717a..40fd014 100644
-> >>--- a/drivers/mfd/88pm800.c
-> >>+++ b/drivers/mfd/88pm800.c
-> >>@@ -27,6 +27,7 @@
-> >>  #include <linux/mfd/core.h>
-> >>  #include <linux/mfd/88pm80x.h>
-> >>  #include <linux/slab.h>
-> >>+#include <linux/of_device.h>
-> >>
-> >>  /* Interrupt Registers */
-> >>  #define PM800_INT_STATUS1		(0x05)
-> >>@@ -121,6 +122,11 @@ static const struct i2c_device_id pm80x_id_tab=
-le[] =3D {
-> >>  };
-> >>  MODULE_DEVICE_TABLE(i2c, pm80x_id_table);
-> >>
-> >>+static const struct of_device_id pm80x_of_match_table[] =3D {
-> >>+	{ .compatible =3D "marvell,88pm800", },
-> >>+	{},
-> >>+};
-> >>+
-> >>  static struct resource rtc_resources[] =3D {
-> >>  	{
-> >>  	 .name =3D "88pm80x-rtc",
-> >>@@ -133,6 +139,7 @@ static struct resource rtc_resources[] =3D {
-> >>  static struct mfd_cell rtc_devs[] =3D {
-> >>  	{
-> >>  	 .name =3D "88pm80x-rtc",
-> >>+	 .of_compatible =3D "marvell,88pm80x-rtc",
-> >>  	 .num_resources =3D ARRAY_SIZE(rtc_resources),
-> >>  	 .resources =3D &rtc_resources[0],
-> >>  	 .id =3D -1,
-> >>@@ -151,6 +158,7 @@ static struct resource onkey_resources[] =3D {
-> >>  static const struct mfd_cell onkey_devs[] =3D {
-> >>  	{
-> >>  	 .name =3D "88pm80x-onkey",
-> >>+	 .of_compatible =3D "marvell,88pm80x-onkey",
-> >>  	 .num_resources =3D 1,
-> >>  	 .resources =3D &onkey_resources[0],
-> >>  	 .id =3D -1,
-> >>@@ -160,6 +168,7 @@ static const struct mfd_cell onkey_devs[] =3D {
-> >>  static const struct mfd_cell regulator_devs[] =3D {
-> >>  	{
-> >>  	 .name =3D "88pm80x-regulator",
-> >>+	 .of_compatible =3D "marvell,88pm80x-regulator",
-> >>  	 .id =3D -1,
-> >>  	},
-> >>  };
-> >>@@ -544,8 +553,21 @@ static int pm800_probe(struct i2c_client *clie=
-nt,
-> >>  	int ret =3D 0;
-> >>  	struct pm80x_chip *chip;
-> >>  	struct pm80x_platform_data *pdata =3D dev_get_platdata(&client->=
-dev);
-> >>+	struct device_node *np =3D client->dev.of_node;
-> >>  	struct pm80x_subchip *subchip;
-> >>
-> >>+	if (!pdata && !np) {
-> >>+		dev_err(&client->dev,
-> >>+			"pm80x requires platform data or of_node\n");
-> >>+		return -EINVAL;
-> >>+	}
-> >>+
-> >>+	if (!pdata) {
-> >>+		pdata =3D devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL)=
-;
-> >>+		if (!pdata)
-> >>+			return -ENOMEM;
-> >>+	}
-> >
-> >Why have you allocated data for pdata, then done nothing with it?
-> >
->=20
-> Not in this patch, but subsequent patches would use it.
+On Thu, 25 Jun 2015, Opensource [Adam Thomson] wrote:
 
-Only provide it when you start using it please.
+> On June 22, 2015 17:48, Lee Jones wrote:
+>=20
+> > > > The pedant in me noticed that this function is actually added i=
+n 3/4. So
+> > > > this chunk might be moved to 3/4, if you like to entertain peda=
+ntry like
+> > > > that, that is. (But see my remark on 3/4 too.)
+> > >
+> > > This is true, but as the header is part of MFD, I included it as =
+part of that
+> > > patch as I thought this made more sense. I guess Lee will comment=
+ as to whether
+> > > that was correct or not. :)
+> >=20
+> > Glanced over this (as I still have 240 unread emails to attend to).
+> > If the question is whether to submit the prototype at the same time=
+ as
+> > the associated function, the answer is yes.
+>=20
+> Hope you've managed to trawl through the e-mails.
+>=20
+> The question was whether or not the function and prototype should be =
+submitted
+> as part of the same individual patch file. Both are submitted as part=
+ of the
+> patch set but the prototype resides in the MFD patch, and the functio=
+n in the
+> power (fuel-gauge) patch. Personally, this seems fine to me but I'm n=
+ot a
+> maintainer.
+
+Please move the prototype into the same patch that introduced the funct=
+ion.
 
 --=20
 Lee Jones
