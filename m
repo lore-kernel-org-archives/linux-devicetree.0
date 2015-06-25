@@ -1,38 +1,41 @@
-From: Paul Bolle <pebolle@tiscali.nl>
-Subject: Re: [PATCH 11/12] [media] tsin: c8sectpfe: Add Kconfig and Makefile
- for the driver.
-Date: Thu, 25 Jun 2015 09:23:18 +0200
-Message-ID: <1435216998.4528.100.camel@tiscali.nl>
-References: <1435158670-7195-1-git-send-email-peter.griffin@linaro.org>
-	 <1435158670-7195-12-git-send-email-peter.griffin@linaro.org>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: [RESEND] [PATCH v2 1/2] arm: devtree: Set system_rev from DT
+ revision
+Date: Thu, 25 Jun 2015 09:27:11 +0200
+Message-ID: <20150625072711.GD2890@pali>
+References: <1430902142-17035-1-git-send-email-pali.rohar@gmail.com>
+ <3577431.y872Foi4kj@wuerfel>
+ <20150506103752.GG30910@pali>
+ <3529567.PeFp1NNa1q@wuerfel>
+ <20150506114417.GI30910@pali>
+ <20150625050138.GL4156@atomide.com>
+ <20150625071851.GB2890@pali>
+ <20150625072205.GO4156@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1435158670-7195-12-git-send-email-peter.griffin@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <20150625072205.GO4156@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Griffin <peter.griffin@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, mchehab@osg.samsung.com
-Cc: lee.jones@linaro.org, hugues.fruchet@st.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, Rob Herring <robherring2@gmail.com>, Russell King <linux@arm.linux.org.uk>, Will Deacon <will.deacon@arm.com>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, Sebastian Reichel <sre@debian.org>, Pavel Machek <pavel@ucw.cz>, Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>, linux-omap@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2015-06-24 at 16:11 +0100, Peter Griffin wrote:
-> --- /dev/null
-> +++ b/drivers/media/tsin/c8sectpfe/Makefile
+On Thursday 25 June 2015 00:22:05 Tony Lindgren wrote:
+> * Pali Roh=C3=A1r <pali.rohar@gmail.com> [150625 00:21]:
+> >=20
+> > Ok, but what do you mean to forget any string conversion?
+>=20
+> No need for tohexstr() in the uncommpress code if the system_rev
+> value is a number coming from the dts.
+>=20
+> Regards,
+>=20
+> Tony
 
-> +c8sectpfe-y += c8sectpfe-core.o c8sectpfe-common.o c8sectpfe-dvb.o
-> +
-> +obj-$(CONFIG_DVB_C8SECTPFE) += c8sectpfe.o
-> +
-> +ifneq ($(CONFIG_DVB_C8SECTPFE),)
-> +	c8sectpfe-y += c8sectpfe-debugfs.o
-> +endif
+So /revision DT property will be (binary) value, right?
 
-Isn't the above equivalent to
-    c8sectpfe-y += c8sectpfe-core.o c8sectpfe-common.o c8sectpfe-dvb.o c8sectpfe-debugfs.o
-
-    obj-$(CONFIG_DVB_C8SECTPFE) += c8sectpfe.o
-
-Or am I missing something subtle here?
-
-
-Paul Bolle
+--=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
