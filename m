@@ -1,111 +1,73 @@
-From: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH-v4 2/3] mfd: 88pm800: Set default interrupt clear method
-Date: Thu, 25 Jun 2015 18:06:07 +0530
-Message-ID: <558BF5B7.6070708@linaro.org>
-References: <1435217189-19578-1-git-send-email-vaibhav.hiremath@linaro.org>	<1435217189-19578-3-git-send-email-vaibhav.hiremath@linaro.org>	<20150625102618.GC15013@x1>	<558BE3D6.2010801@linaro.org> <CAJKOXPfbSV-WVVQrxrzvBJwpLaLskZVmnTQ5SUv=kV3SL_1SMQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Subject: Re: [PATCH 1/2] spi: bcm2835: add spi-bcm2835aux driver for the auxiliar spi1 and spi2
+Date: Thu, 25 Jun 2015 16:19:17 +0200
+Message-ID: <97C7561C-6D67-4F51-94BB-3B8D401D77A0@martin.sperl.org>
+References: <1434980408-4086-1-git-send-email-kernel@martin.sperl.org> <20150622165529.1b758b07@north> <E72B3D8C-EA1B-4B4C-8EAF-C14A5631882E@martin.sperl.org>
+Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2098\))
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAJKOXPfbSV-WVVQrxrzvBJwpLaLskZVmnTQ5SUv=kV3SL_1SMQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <E72B3D8C-EA1B-4B4C-8EAF-C14A5631882E-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Zhao Ye <zhaoy-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yizhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?utf-8?Q?Jakub_Kici=C5=84ski?= <moorray3-5tc4TXWwyLM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+So what does it require to get this merged?
 
+Rename of the module?
 
-On Thursday 25 June 2015 05:15 PM, Krzysztof Kozlowski wrote:
-> 2015-06-25 20:19 GMT+09:00 Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
->>
->>
->> On Thursday 25 June 2015 03:56 PM, Lee Jones wrote:
->
-> (...)
->
->>>> diff --git a/include/linux/mfd/88pm80x.h b/include/linux/mfd/88pm80x.h
->>>> index 97cb283..94b3dcd 100644
->>>> --- a/include/linux/mfd/88pm80x.h
->>>> +++ b/include/linux/mfd/88pm80x.h
->>>> @@ -77,6 +77,8 @@ enum {
->>>>    #define PM800_WAKEUP2         (0x0E)
->>>>    #define PM800_WAKEUP2_INV_INT         (1 << 0)
->>>>    #define PM800_WAKEUP2_INT_CLEAR               (1 << 1)
->>>> +#define PM800_WAKEUP2_INT_READ_CLEAR           (0 << 1)
->>>> +#define PM800_WAKEUP2_INT_WRITE_CLEAR          (1 << 1)
->>>>    #define PM800_WAKEUP2_INT_MASK                (1 << 2)
->>>
->>>
->>> Use the BIT() macro.
->>>
->>
->> I thought about this, but the whole file doesn't use it, so I also
->> chose not to.
->>
->>
->>>>    #define PM800_POWER_UP_LOG    (0x10)
->>>> @@ -300,7 +302,7 @@ struct pm80x_chip {
->>>>          struct regmap_irq_chip_data *irq_data;
->>>>          int type;
->>>>          int irq;
->>>> -       int irq_mode;
->>>> +       int irq_clr_on_wr;      /* '1': Clear on write, '0': Clear on
->>>> read*/
->>>
->>>
->>> Whitespace issue.
->>>
->>
->> Didn't see any...and I also ran checkpatch.
->>
->>> Shouldn't this be a bool?
->>>
->>
->> Just was not sure about any older board file interface.
->> Ideally it should be bool only.
->>
->>> Actually even better, I would define; CLR_ON_WRITE and CLR_ON_READ,
->>> and call the variable irq_clear_method, or something.
->>>
->>> Much clearer that way I think.
->>>
->>
->> We have slowly decided to almost hardcode it to one value if there is
->> no board file. I feel we should just keep it to simple.
->>
->> If you still insist, I can implement.
->
-> The bool would be indeed nicer and still you could hard-code the
-> desired value on DT system:
-> +               /* by default, set irq clear method on write */
-> +               pdata->irq_clear_method = CLR_ON_WRITE;
->
-> However the question is how this would influence existing platforms
-> using board files. Are there any in kernel or in downstream?
->
+Thanks
 
-No, not atleast I am aware of.
-I did grep on mainline kernel, and here is what I got
+> On 22.06.2015, at 17:26, Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org> wrote=
+:
+>=20
+>=20
+>> On 22.06.2015, at 16:55, Jakub Kici=C5=84ski <moorray3-5tc4TXWwyLM@public.gmane.org> wrote:
+>> As mentioned by Noralf UART1 is quite commonly used on Compute Modul=
+es.
+>> Proper driver - perhaps modelled as a bus - seems like a prerequisit=
+e
+>> for this work.  You are also not using IRQ mux in DT binding example
+>> which is very misleading.
+>=20
+> Well - there is no support far for uart1 in upstream as of now.
+> And I am not even sure if the compute module is supported as there
+> is no device tree available in upstream for that...
+>=20
+> So I have taken the simple route of using shared interrupts and provi=
+ding
+> a minimal framework to enable the spi1/spi2 hw blocks with proper loc=
+king.
+> And I have mentioned that it would need to get modified when uart1 su=
+pport
+> comes along.
+>=20
+> If you know of a better solution how to control this and that also
+> incorporates a patch to enable uart1, then please share it!
+>=20
+> Just modify the bcm2835aux_spi_enable/disable to use a different fram=
+ework
+> than just bcm2835_aux_modify_enable.
+>=20
+> The patch Noralf mentions only applies downstream and only sets the
+> enable-register during the boot sequence, so it would not impact the
+> solution as is.
+>=20
+>> Do we have any indication weather this AUX hardware is available on
+>> RPi2 as well?  IIRC bcm2836 differs only in CPU cores, peripherals
+>> remain identical.  Perhaps this driver could be used on RPi2 and
+>> naming it 283x would be more appropriate?
+>=20
+> I have not checked, but I would guess that it exists.
+>=20
+> As for naming: I have asked around and bcm2835aux seemed fine.
+> Also if we go that route we should start renaming ALL driver instance=
+s that
+> contain 2835.
 
-
-drivers/regulator/88pm800.c:	struct pm80x_platform_data *pdata = 
-dev_get_platdata(pdev->dev.parent);
-drivers/mfd/88pm800.c:				       struct pm80x_platform_data *pdata)
-drivers/mfd/88pm800.c:				struct pm80x_platform_data *pdata)
-drivers/mfd/88pm800.c:				struct pm80x_platform_data *pdata)
-drivers/mfd/88pm800.c:					   struct pm80x_platform_data *pdata)
-drivers/mfd/88pm800.c:				     struct pm80x_platform_data *pdata)
-drivers/mfd/88pm800.c:	struct pm80x_platform_data *pdata = 
-dev_get_platdata(&client->dev);
-drivers/mfd/88pm805.c:	struct pm80x_platform_data *pdata = 
-dev_get_platdata(&client->dev);
-include/linux/mfd/88pm80x.h:struct pm80x_platform_data {
-include/linux/mfd/88pm80x.h:				struct pm80x_platform_data *pdata);
-
-
-Thanks,
-Vaibhav
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
