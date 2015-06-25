@@ -1,89 +1,110 @@
-From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+From: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Subject: Re: [PATCH-v4 2/3] mfd: 88pm800: Set default interrupt clear method
-Date: Thu, 25 Jun 2015 20:45:22 +0900
-Message-ID: <CAJKOXPfbSV-WVVQrxrzvBJwpLaLskZVmnTQ5SUv=kV3SL_1SMQ@mail.gmail.com>
-References: <1435217189-19578-1-git-send-email-vaibhav.hiremath@linaro.org>
-	<1435217189-19578-3-git-send-email-vaibhav.hiremath@linaro.org>
-	<20150625102618.GC15013@x1>
-	<558BE3D6.2010801@linaro.org>
+Date: Thu, 25 Jun 2015 18:06:07 +0530
+Message-ID: <558BF5B7.6070708@linaro.org>
+References: <1435217189-19578-1-git-send-email-vaibhav.hiremath@linaro.org>	<1435217189-19578-3-git-send-email-vaibhav.hiremath@linaro.org>	<20150625102618.GC15013@x1>	<558BE3D6.2010801@linaro.org> <CAJKOXPfbSV-WVVQrxrzvBJwpLaLskZVmnTQ5SUv=kV3SL_1SMQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <558BE3D6.2010801-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <CAJKOXPfbSV-WVVQrxrzvBJwpLaLskZVmnTQ5SUv=kV3SL_1SMQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Zhao Ye <zhaoy-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yizhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2015-06-25 20:19 GMT+09:00 Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
->
->
-> On Thursday 25 June 2015 03:56 PM, Lee Jones wrote:
 
-(...)
 
->>> diff --git a/include/linux/mfd/88pm80x.h b/include/linux/mfd/88pm80x.h
->>> index 97cb283..94b3dcd 100644
->>> --- a/include/linux/mfd/88pm80x.h
->>> +++ b/include/linux/mfd/88pm80x.h
->>> @@ -77,6 +77,8 @@ enum {
->>>   #define PM800_WAKEUP2         (0x0E)
->>>   #define PM800_WAKEUP2_INV_INT         (1 << 0)
->>>   #define PM800_WAKEUP2_INT_CLEAR               (1 << 1)
->>> +#define PM800_WAKEUP2_INT_READ_CLEAR           (0 << 1)
->>> +#define PM800_WAKEUP2_INT_WRITE_CLEAR          (1 << 1)
->>>   #define PM800_WAKEUP2_INT_MASK                (1 << 2)
+On Thursday 25 June 2015 05:15 PM, Krzysztof Kozlowski wrote:
+> 2015-06-25 20:19 GMT+09:00 Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
 >>
 >>
->> Use the BIT() macro.
+>> On Thursday 25 June 2015 03:56 PM, Lee Jones wrote:
+>
+> (...)
+>
+>>>> diff --git a/include/linux/mfd/88pm80x.h b/include/linux/mfd/88pm80x.h
+>>>> index 97cb283..94b3dcd 100644
+>>>> --- a/include/linux/mfd/88pm80x.h
+>>>> +++ b/include/linux/mfd/88pm80x.h
+>>>> @@ -77,6 +77,8 @@ enum {
+>>>>    #define PM800_WAKEUP2         (0x0E)
+>>>>    #define PM800_WAKEUP2_INV_INT         (1 << 0)
+>>>>    #define PM800_WAKEUP2_INT_CLEAR               (1 << 1)
+>>>> +#define PM800_WAKEUP2_INT_READ_CLEAR           (0 << 1)
+>>>> +#define PM800_WAKEUP2_INT_WRITE_CLEAR          (1 << 1)
+>>>>    #define PM800_WAKEUP2_INT_MASK                (1 << 2)
+>>>
+>>>
+>>> Use the BIT() macro.
+>>>
 >>
->
-> I thought about this, but the whole file doesn't use it, so I also
-> chose not to.
->
->
->>>   #define PM800_POWER_UP_LOG    (0x10)
->>> @@ -300,7 +302,7 @@ struct pm80x_chip {
->>>         struct regmap_irq_chip_data *irq_data;
->>>         int type;
->>>         int irq;
->>> -       int irq_mode;
->>> +       int irq_clr_on_wr;      /* '1': Clear on write, '0': Clear on
->>> read*/
+>> I thought about this, but the whole file doesn't use it, so I also
+>> chose not to.
 >>
 >>
->> Whitespace issue.
+>>>>    #define PM800_POWER_UP_LOG    (0x10)
+>>>> @@ -300,7 +302,7 @@ struct pm80x_chip {
+>>>>          struct regmap_irq_chip_data *irq_data;
+>>>>          int type;
+>>>>          int irq;
+>>>> -       int irq_mode;
+>>>> +       int irq_clr_on_wr;      /* '1': Clear on write, '0': Clear on
+>>>> read*/
+>>>
+>>>
+>>> Whitespace issue.
+>>>
 >>
->
-> Didn't see any...and I also ran checkpatch.
->
->> Shouldn't this be a bool?
+>> Didn't see any...and I also ran checkpatch.
 >>
->
-> Just was not sure about any older board file interface.
-> Ideally it should be bool only.
->
->> Actually even better, I would define; CLR_ON_WRITE and CLR_ON_READ,
->> and call the variable irq_clear_method, or something.
+>>> Shouldn't this be a bool?
+>>>
 >>
->> Much clearer that way I think.
+>> Just was not sure about any older board file interface.
+>> Ideally it should be bool only.
 >>
+>>> Actually even better, I would define; CLR_ON_WRITE and CLR_ON_READ,
+>>> and call the variable irq_clear_method, or something.
+>>>
+>>> Much clearer that way I think.
+>>>
+>>
+>> We have slowly decided to almost hardcode it to one value if there is
+>> no board file. I feel we should just keep it to simple.
+>>
+>> If you still insist, I can implement.
 >
-> We have slowly decided to almost hardcode it to one value if there is
-> no board file. I feel we should just keep it to simple.
+> The bool would be indeed nicer and still you could hard-code the
+> desired value on DT system:
+> +               /* by default, set irq clear method on write */
+> +               pdata->irq_clear_method = CLR_ON_WRITE;
 >
-> If you still insist, I can implement.
+> However the question is how this would influence existing platforms
+> using board files. Are there any in kernel or in downstream?
+>
 
-The bool would be indeed nicer and still you could hard-code the
-desired value on DT system:
-+               /* by default, set irq clear method on write */
-+               pdata->irq_clear_method = CLR_ON_WRITE;
+No, not atleast I am aware of.
+I did grep on mainline kernel, and here is what I got
 
-However the question is how this would influence existing platforms
-using board files. Are there any in kernel or in downstream?
 
-Best regards,
-Krzysztof
+drivers/regulator/88pm800.c:	struct pm80x_platform_data *pdata = 
+dev_get_platdata(pdev->dev.parent);
+drivers/mfd/88pm800.c:				       struct pm80x_platform_data *pdata)
+drivers/mfd/88pm800.c:				struct pm80x_platform_data *pdata)
+drivers/mfd/88pm800.c:				struct pm80x_platform_data *pdata)
+drivers/mfd/88pm800.c:					   struct pm80x_platform_data *pdata)
+drivers/mfd/88pm800.c:				     struct pm80x_platform_data *pdata)
+drivers/mfd/88pm800.c:	struct pm80x_platform_data *pdata = 
+dev_get_platdata(&client->dev);
+drivers/mfd/88pm805.c:	struct pm80x_platform_data *pdata = 
+dev_get_platdata(&client->dev);
+include/linux/mfd/88pm80x.h:struct pm80x_platform_data {
+include/linux/mfd/88pm80x.h:				struct pm80x_platform_data *pdata);
+
+
+Thanks,
+Vaibhav
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
