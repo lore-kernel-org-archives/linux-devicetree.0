@@ -1,48 +1,188 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 02/13] dmaengine: Introduce dma_request_slave_channel_compat_reason()
-Date: Thu, 25 Jun 2015 13:15:57 +0200
-Message-ID: <4970019.av0JOFIyTW@wuerfel>
-References: <1432646768-12532-1-git-send-email-peter.ujfalusi@ti.com> <5587F1F4.1060905@ti.com> <20150624162401.GP19530@localhost>
+From: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH-v4 2/3] mfd: 88pm800: Set default interrupt clear method
+Date: Thu, 25 Jun 2015 16:49:50 +0530
+Message-ID: <558BE3D6.2010801@linaro.org>
+References: <1435217189-19578-1-git-send-email-vaibhav.hiremath@linaro.org> <1435217189-19578-3-git-send-email-vaibhav.hiremath@linaro.org> <20150625102618.GC15013@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <20150624162401.GP19530@localhost>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Tony Lindgren <tony@atomide.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Linux MMC List <linux-mmc@vger.kernel.org>, linux-crypto@vger.kernel.org, linux-spi <linux-spi@vger.kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, ALSA Development Mailing List <alsa-devel@alsa-project.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150625102618.GC15013@x1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, yizhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, Zhao Ye <zhaoy-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 24 June 2015 21:54:01 Vinod Koul wrote:
-> > It would be nice to find another name for the
-> > dma_request_slave_channel_compat() so with the new name we could have chance
-> > to rearrange the parameters: (dev, name, mask, fn, fn_param)
-> > 
-> > We would end up with the following APIs, all returning with error code on failure:
-> > dma_request_slave_channel(dev, name);
-> > dma_request_channel_legacy(mask, fn, fn_param);
-> > dma_request_slave_channel_compat(mask, fn, fn_param, dev, name);
-> > dma_request_any_channel(mask);
-> This is good idea but still we end up with 4 APIs. Why not just converge to
-> two API, one legacy + memcpy + filer fn and one untimate API for slave?
-> 
-> Internally we may have 4 APIs for cleaner handling...
-> 
 
-Not sure if it's realistic, but I think it would be nice to have
-a way for converting the current slave drivers that use the
-mask/filter/param API to the dev/name based API. We should
-be able to do this by registering a lookup table from platform
-code that translates one to the other, like we do with the
-clkdev lookup to find a device clock based on a local identifier.
 
-The main downside of this is that it's a lot of work if we want
-to completely remove dma_request_channel() for slave drivers,
-but it could be done more gradually.
+On Thursday 25 June 2015 03:56 PM, Lee Jones wrote:
+> On Thu, 25 Jun 2015, Vaibhav Hiremath wrote:
+>
+>> As per the spec, bit 1 (INT_CLEAR_MODE) of reg addr 0xe
+>> (page 0) controls the method of clearing interrupt
+>> status of 88pm800 family of devices;
+>>
+>>    0: clear on read
+>>    1: clear on write
+>>
+>> If pdata is not coming from board file, then set the
+>> default irq clear method to "irq clear on write"
+>>
+>> Also, as suggested by "Lee Jones" renaming variable field
+>> to appropriate name.
+>>
+>> Signed-off-by: Zhao Ye <zhaoy-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+>> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>>   drivers/mfd/88pm800.c       | 15 ++++++++++-----
+>>   include/linux/mfd/88pm80x.h |  6 ++++--
+>>   2 files changed, 14 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/drivers/mfd/88pm800.c b/drivers/mfd/88pm800.c
+>> index 40fd014..e0cd7ad 100644
+>> --- a/drivers/mfd/88pm800.c
+>> +++ b/drivers/mfd/88pm800.c
+>> @@ -376,7 +376,7 @@ static int device_irq_init_800(struct pm80x_chip *chip)
+>>   {
+>>   	struct regmap *map = chip->regmap;
+>>   	unsigned long flags = IRQF_ONESHOT;
+>> -	int data, mask, ret = -EINVAL;
+>> +	int irq_clr_mode, mask, ret = -EINVAL;
+>>
+>>   	if (!map || !chip->irq) {
+>>   		dev_err(chip->dev, "incorrect parameters\n");
+>> @@ -384,15 +384,16 @@ static int device_irq_init_800(struct pm80x_chip *chip)
+>>   	}
+>>
+>>   	/*
+>> -	 * irq_mode defines the way of clearing interrupt. it's read-clear by
+>> -	 * default.
+>> +	 * irq_clr_on_wr defines the way of clearing interrupt by
+>> +	 * read/write(0/1).  It's read-clear by default.
+>>   	 */
+>>   	mask =
+>>   	    PM800_WAKEUP2_INV_INT | PM800_WAKEUP2_INT_CLEAR |
+>>   	    PM800_WAKEUP2_INT_MASK;
+>>
+>> -	data = PM800_WAKEUP2_INT_CLEAR;
+>> -	ret = regmap_update_bits(map, PM800_WAKEUP2, mask, data);
+>> +	irq_clr_mode = (chip->irq_clr_on_wr) ?
+>
+> Drop the brackets.
+>
 
-Another upside is that we could come up with a mechanism to
-avoid the link-time dependency on the filter-function that
-causes problems when that filter is defined in a loadable
-module for the dmaengine driver.
+Ok
 
-	Arnd
+>> +		PM800_WAKEUP2_INT_WRITE_CLEAR : PM800_WAKEUP2_INT_READ_CLEAR;
+>> +	ret = regmap_update_bits(map, PM800_WAKEUP2, mask, irq_clr_mode);
+>>
+>>   	if (ret < 0)
+>>   		goto out;
+>> @@ -514,6 +515,7 @@ static int device_800_init(struct pm80x_chip *chip,
+>>   	}
+>>
+>>   	chip->regmap_irq_chip = &pm800_irq_chip;
+>> +	chip->irq_clr_on_wr = pdata->irq_clr_on_wr;
+>
+> You have protection around pdata everywhere else in the file, I
+> suggest you supply some here too.
+>
+
+Actually it is not really needed, as the PATCH 1/1 introduces
+
+
+         if (!pdata && !np) {
+                 dev_err(&client->dev,
+                         "pm80x requires platform data or of_node\n");
+                 return -EINVAL;
+         }
+
+         if (!pdata && !np) {
+                 dev_err(&client->dev,
+                         "pm80x requires platform data or of_node\n");
+                 return -EINVAL;
+         }
+
+
+So there is no way you can have pdata = NULL beyond this point.
+
+
+>>   	ret = device_irq_init_800(chip);
+>>   	if (ret < 0) {
+>> @@ -566,6 +568,9 @@ static int pm800_probe(struct i2c_client *client,
+>>   		pdata = devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL);
+>>   		if (!pdata)
+>>   			return -ENOMEM;
+>> +
+>> +		/* by default, set irq clear method on write */
+>> +		pdata->irq_clr_on_wr = true;
+>
+> You can save yourself some memory here, by removing this seemingly
+> pointless allocation and do this above:
+>
+>          chip->irq_clr_on_wr = pdata ? pdata->irq_clr_on_wr : true;
+>
+
+Yes certainly better way of doing it :)
+I will change it.
+
+
+>>   	}
+>>
+>>   	ret = pm80x_init(client);
+>> diff --git a/include/linux/mfd/88pm80x.h b/include/linux/mfd/88pm80x.h
+>> index 97cb283..94b3dcd 100644
+>> --- a/include/linux/mfd/88pm80x.h
+>> +++ b/include/linux/mfd/88pm80x.h
+>> @@ -77,6 +77,8 @@ enum {
+>>   #define PM800_WAKEUP2		(0x0E)
+>>   #define PM800_WAKEUP2_INV_INT		(1 << 0)
+>>   #define PM800_WAKEUP2_INT_CLEAR		(1 << 1)
+>> +#define PM800_WAKEUP2_INT_READ_CLEAR		(0 << 1)
+>> +#define PM800_WAKEUP2_INT_WRITE_CLEAR		(1 << 1)
+>>   #define PM800_WAKEUP2_INT_MASK		(1 << 2)
+>
+> Use the BIT() macro.
+>
+
+I thought about this, but the whole file doesn't use it, so I also
+chose not to.
+
+
+>>   #define PM800_POWER_UP_LOG	(0x10)
+>> @@ -300,7 +302,7 @@ struct pm80x_chip {
+>>   	struct regmap_irq_chip_data *irq_data;
+>>   	int type;
+>>   	int irq;
+>> -	int irq_mode;
+>> +	int irq_clr_on_wr;	/* '1': Clear on write, '0': Clear on read*/
+>
+> Whitespace issue.
+>
+
+Didn't see any...and I also ran checkpatch.
+
+> Shouldn't this be a bool?
+>
+
+Just was not sure about any older board file interface.
+Ideally it should be bool only.
+
+> Actually even better, I would define; CLR_ON_WRITE and CLR_ON_READ,
+> and call the variable irq_clear_method, or something.
+>
+> Much clearer that way I think.
+>
+
+We have slowly decided to almost hardcode it to one value if there is
+no board file. I feel we should just keep it to simple.
+
+If you still insist, I can implement.
+
+
+Thanks,
+Vaibhav
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
