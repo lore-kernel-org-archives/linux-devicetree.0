@@ -1,54 +1,46 @@
 From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 0/4] arm64: add initial support for the Rockchip rk3368
-Date: Thu, 25 Jun 2015 20:12:45 +0200
-Message-ID: <1650408.ovnAjReNFJ@diego>
+Subject: [PATCH 1/4] arm64: add Rockchip architecture entry
+Date: Thu, 25 Jun 2015 20:13:33 +0200
+Message-ID: <1462660.1vQgjvZxuE@diego>
+References: <1650408.ovnAjReNFJ@diego>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1650408.ovnAjReNFJ@diego>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
 Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds initial support for the new rk3368 ARM64 soc from Rockchip.
+The rk3368 is Rockchip's first ARM64 soc, build around 8 Cortex-A53 cores.
 
-Overall it looks like someone dropped some A53 cores into a rk3288, so
-it shares a lot of peripherals that only differ in details. Therefore
-stuff like the mmc, usb, spi, i2c controllers work out of the box.
-The support for the gmac already made it into the merge window as well
-as the pinctrl support.
+Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+---
+ arch/arm64/Kconfig | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-Interestingly, in its core the rk3368 seems trying to be a model student
-with psci for smp and using scpi for ddr frequency scaling, although I
-currently do not understand how the mailbox works yet. The display
-controllers also are only minimally different so I'm hopefully to have
-working graphics in the near-ish future :-)
-
-
-As mentioned in the dts patch, this series depends on the dt-binding
-header for the clock ids, so will need a shared branch once this is ready.
-
-
-Heiko Stuebner (4):
-  arm64: add Rockchip architecture entry
-  arm64: defconfig: enable ARCH_ROCKCHIP
-  arm64: dts: add Rockchip rk3368 core dtsi and board dts for the r88
-    board
-  dt-bindings: document rk3368 R89 board from Rockchip
-
- Documentation/devicetree/bindings/arm/rockchip.txt |   4 +
- arch/arm64/Kconfig                                 |  10 +
- arch/arm64/boot/dts/Makefile                       |   1 +
- arch/arm64/boot/dts/rockchip/Makefile              |   5 +
- arch/arm64/boot/dts/rockchip/rk3368-r88.dts        | 353 ++++++++
- arch/arm64/boot/dts/rockchip/rk3368.dtsi           | 900 +++++++++++++++++++++
- arch/arm64/configs/defconfig                       |   2 +
- 7 files changed, 1275 insertions(+)
- create mode 100644 arch/arm64/boot/dts/rockchip/Makefile
- create mode 100644 arch/arm64/boot/dts/rockchip/rk3368-r88.dts
- create mode 100644 arch/arm64/boot/dts/rockchip/rk3368.dtsi
-
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 290ed64..9af528a 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -197,6 +197,16 @@ config ARCH_QCOM
+ 	help
+ 	  This enables support for the ARMv8 based Qualcomm chipsets.
+ 
++config ARCH_ROCKCHIP
++	bool "Rockchip Platforms"
++	select ARCH_HAS_RESET_CONTROLLER
++	select ARCH_REQUIRE_GPIOLIB
++	select PINCTRL
++	select PINCTRL_ROCKCHIP
++	help
++	  This enables support for the ARMv8 based Rockchip chipsets,
++	  like the RK3368.
++
+ config ARCH_SEATTLE
+ 	bool "AMD Seattle SoC Family"
+ 	help
 -- 
 2.1.4
 
