@@ -1,58 +1,110 @@
-From: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
-Subject: Re: [PATCH-v3 2/3] mfd: 88pm800: Allow configuration of interrupt
- clear method
-Date: Thu, 25 Jun 2015 10:56:15 +0530
-Message-ID: <558B90F7.80700@linaro.org>
-References: <1435137673-1629-1-git-send-email-vaibhav.hiremath@linaro.org>	<1435137673-1629-3-git-send-email-vaibhav.hiremath@linaro.org> <CAJKOXPdqTnkB6Lw4fsJ-=o4=QcYcAtZK0zgOM9aqgesTU=Dw+A@mail.gmail.com>
+From: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH-v3 1/3] mfd: 88pm800: Add device tree support
+Date: Thu, 25 Jun 2015 10:57:16 +0530
+Message-ID: <558B9134.5090409@linaro.org>
+References: <1435137673-1629-1-git-send-email-vaibhav.hiremath@linaro.org>	<1435137673-1629-2-git-send-email-vaibhav.hiremath@linaro.org> <CAJKOXPfc4rf4rB54CjPVzZ=v3uWVhciygqN7=gNYMShFf+eatQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJKOXPdqTnkB6Lw4fsJ-=o4=QcYcAtZK0zgOM9aqgesTU=Dw+A@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: linux-arm-kernel@lists.infradead.org, Zhao Ye <zhaoy@marvell.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, lee.jones@linaro.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAJKOXPfc4rf4rB54CjPVzZ=v3uWVhciygqN7=gNYMShFf+eatQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
 
-On Thursday 25 June 2015 05:33 AM, Krzysztof Kozlowski wrote:
-> 2015-06-24 18:21 GMT+09:00 Vaibhav Hiremath <vaibhav.hiremath@linaro.org>:
->> As per the spec, bit 1 (INT_CLEAR_MODE) of reg addr 0xe
->> (page 0) controls the method of clearing interrupt
->> status of 88pm800 family of devices;
+On Thursday 25 June 2015 05:27 AM, Krzysztof Kozlowski wrote:
+> 2015-06-24 18:21 GMT+09:00 Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
+>> Add DT support to the 88pm800 driver, along with compatible
+>> field for it's sub-devices (rtc, onkey and regulator)
 >>
->>    0: clear on read
->>    1: clear on write
+>> Signed-off-by: Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+>> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>>   drivers/mfd/88pm800.c | 25 +++++++++++++++++++++++++
+>>   1 file changed, 25 insertions(+)
 >>
->> This patch allows to configure this field, through DT.
+>> diff --git a/drivers/mfd/88pm800.c b/drivers/mfd/88pm800.c
+>> index 841717a..059f01a 100644
+>> --- a/drivers/mfd/88pm800.c
+>> +++ b/drivers/mfd/88pm800.c
+>> @@ -27,6 +27,7 @@
+>>   #include <linux/mfd/core.h>
+>>   #include <linux/mfd/88pm80x.h>
+>>   #include <linux/slab.h>
+>> +#include <linux/of_device.h>
 >>
->> Also, as suggested by "Lee Jones" renaming DT property and variable
->> field to appropriate name.
+>>   /* Interrupt Registers */
+>>   #define PM800_INT_STATUS1              (0x05)
+>> @@ -121,6 +122,11 @@ static const struct i2c_device_id pm80x_id_table[] = {
+>>   };
+>>   MODULE_DEVICE_TABLE(i2c, pm80x_id_table);
 >>
->> Signed-off-by: Zhao Ye <zhaoy@marvell.com>
->> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
+>> +static const struct of_device_id pm80x_of_match_table[] = {
+>> +       { .compatible = "marvell,88pm800", },
+>> +       {},
+>> +};
+>> +
+>>   static struct resource rtc_resources[] = {
+>>          {
+>>           .name = "88pm80x-rtc",
+>> @@ -133,6 +139,7 @@ static struct resource rtc_resources[] = {
+>>   static struct mfd_cell rtc_devs[] = {
+>>          {
+>>           .name = "88pm80x-rtc",
+>> +        .of_compatible = "marvell,88pm80x-rtc",
+>>           .num_resources = ARRAY_SIZE(rtc_resources),
+>>           .resources = &rtc_resources[0],
+>>           .id = -1,
+>> @@ -151,6 +158,7 @@ static struct resource onkey_resources[] = {
+>>   static const struct mfd_cell onkey_devs[] = {
+>>          {
+>>           .name = "88pm80x-onkey",
+>> +        .of_compatible = "marvell,88pm80x-onkey",
+>>           .num_resources = 1,
+>>           .resources = &onkey_resources[0],
+>>           .id = -1,
+>> @@ -160,6 +168,7 @@ static const struct mfd_cell onkey_devs[] = {
+>>   static const struct mfd_cell regulator_devs[] = {
+>>          {
+>>           .name = "88pm80x-regulator",
+>> +        .of_compatible = "marvell,88pm80x-regulator",
+>>           .id = -1,
+>>          },
+>>   };
+>> @@ -544,8 +553,23 @@ static int pm800_probe(struct i2c_client *client,
+>>          int ret = 0;
+>>          struct pm80x_chip *chip;
+>>          struct pm80x_platform_data *pdata = dev_get_platdata(&client->dev);
+>> +       struct device_node *np = client->dev.of_node;
+>>          struct pm80x_subchip *subchip;
+>>
+>> +       if (!pdata && !np) {
+>> +               dev_err(&client->dev,
+>> +                       "pm80x requires platform data or of_node\n");
+>> +               return -EINVAL;
+>> +       }
+>> +
+>> +       if (!pdata) {
+>> +               pdata = devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL);
+>> +               if (!pdata) {
+>> +                       dev_err(&client->dev, "failed to allocaate memory\n");
 >
-> It does not look like a property of the board. Instead it looks like a
-> runtime configuration so it should not be part of DT bindings.
+> Generic error message for ENOMEM is not needed. Just return ENOMEM and
+> the core code will print the error.
 >
+> Rest looks fine,
 
-Why do you say that?
 
-It is very well feature of 88PM860 device, where you can control irq
-clear operation (either read/write).
+Ok, will remove it.
 
+Should I add your reviewed-by in V4 for this patch?
 
 Thanks,
 Vaibhav
-
-> I understand that previously this was configured by platform data and
-> now you want to move everything to DT. But this does not belong to
-> DT...
->
-
-Thats not completely true.
-I think DT is the right place for this configuration.
-
-Thanks,
-Vaibhav
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
