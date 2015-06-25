@@ -1,65 +1,60 @@
-From: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [rtc-linux] [PATCH-v2] rtc: 88pm80x: add device tree support
-Date: Thu, 25 Jun 2015 13:16:09 +0530
-Message-ID: <558BB1C1.2090400@linaro.org>
-References: <vaibhav.hiremath@linaro.org> <1434567488-6477-1-git-send-email-vaibhav.hiremath@linaro.org> <1434567488-6477-3-git-send-email-vaibhav.hiremath@linaro.org> <20150620004354.GY27492@piout.net>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCHv5 2/2] mailbox: Adding driver for Xilinx LogiCORE IP mailbox.
+Date: Thu, 25 Jun 2015 09:47:35 +0200
+Message-ID: <558BB217.5080200@xilinx.com>
+References: <1435082402-29239-1-git-send-email-moritz.fischer@ettus.com>
+	 <1435082402-29239-3-git-send-email-moritz.fischer@ettus.com>
+	 <1435178205.4528.77.camel@tiscali.nl> <558BA5D4.8060903@xilinx.com>
+ <1435217491.16792.5.camel@tiscali.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150620004354.GY27492-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1435217491.16792.5.camel@tiscali.nl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Bolle <pebolle@tiscali.nl>, Michal Simek <michal.simek@xilinx.com>, Moritz Fischer <moritz.fischer@ettus.com>, jassisinghbrar@gmail.com
+Cc: linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, soren.brinkmann@xilinx.com, akpm@linux-foundation.org, gregkh@linuxfoundation.org, mchehab@osg.samsung.com, arnd@arndb.de, joe@perches.com, jingoohan1@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On 06/25/2015 09:31 AM, Paul Bolle wrote:
+> On Thu, 2015-06-25 at 08:55 +0200, Michal Simek wrote:
+>> On 06/24/2015 10:36 PM, Paul Bolle wrote:
+>>> On Tue, 2015-06-23 at 11:00 -0700, Moritz Fischer wrote:
+>>>> +MODULE_ALIAS("platform:xilinx-mailbox");
+>>>
+>>> So I think this MODULE_ALIAS() is only useful if, in short, there's 
+>>> a corresponding platform_device created. Ie, a platform_device with 
+>>> a name "xilinx-mailbox" that will fire of a "MODALIAS=platform:xili
+>>> nx-mailbox" when it's created.
+>>>
+>>> I couldn't spot such a platform_device. Provided git grep didn't 
+>>> let me down here: what breaks if this line is dropped?
+>>
+>> IRC you don't need to have this platform_device in the kernel 
+>> present. Only one thing which should be check is that this driver can 
+>> be used as platform device driver.
+>>
+>> The only one problematic part is devm_clk_get() and this should be
+>> checked if you can use this as platform driver. From the first look 
+>> it looks like that this will break it.
+>>
+>> Anyway if Moritz is able to use this a platform driver he can keep 
+>> this line there. If not, it should be removed.
+> 
+> But, assuming this works as a platform driver, where does the "xilinx
+> -mailbox" platform device originate?
 
+It has to be platform_device somewhere for sure.
+In past we had folder in arch/microblaze/platform folder.
+Currently you can add this code to for example
+arch/microblaze/kernel/platform.c
 
-On Saturday 20 June 2015 06:13 AM, Alexandre Belloni wrote:
-> Hi,
->
-
-Sorry I missed this email.
-Just wanted to send reminder email and saw this :)
-
-> On 18/06/2015 at 00:28:06 +0530, Vaibhav Hiremath wrote :
->> -	pdata = dev_get_platdata(&pdev->dev);
->> -	if (pdata == NULL)
->> -		dev_warn(&pdev->dev, "No platform data!\n");
->> +	if (!pdata && !node) {
->> +		dev_err(&pdev->dev,
->> +			"pm80x-rtc requires platform data or of_node\n");
->> +		return -EINVAL;
->> +	}
->> +
->> +	if (!pdata) {
->> +		pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
->
-> I had troubles to follow the rtc_wakeup initialization cleanup but it
-> seems OK.
-
-Probably, once we have complete PM support ready then it would be
-easier to understand. I think as of now lets have this minimal code for
-rtc_wakeup.
-
-> However, I'm wondering why you are adding DT support as this
-> will always be probed from the MFD driver which pass the platform_data
-> and avoids that allocation.
->
-
-You are right.
-
-Originally, it was cleanup patch,
-
-  - remove pm80x_pdata
-  - Add check for pdata and np
-  - and around rtc_wakeup
-
-While doing that I added this nice to have allocation.
+But as I said I don't think it is really important. There will be a lot
+of others drivers in the kernel which can be used as platform drivers
+but you are not able to find out platform_device for it.
+The important part is that driver can work as is.
+Also it is quite common that users create own BSP for their custom
+boards but they don't push it to mainline.
 
 Thanks,
-Vaibhav
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Michal
