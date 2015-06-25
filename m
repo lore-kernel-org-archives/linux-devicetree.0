@@ -1,191 +1,106 @@
-From: "Opensource [Steve Twiss]" <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH] regulator: da9210: Add optional interrupt support
-Date: Thu, 25 Jun 2015 10:58:21 +0000
-Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7014B2323E5@SW-EX-MBX02.diasemi.com>
-References: <1435148061-11844-1-git-send-email-geert+renesas@glider.be>
+From: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH-v4 1/3] mfd: 88pm800: Add device tree support
+Date: Thu, 25 Jun 2015 16:40:47 +0530
+Message-ID: <558BE1B7.2060308@linaro.org>
+References: <1435217189-19578-1-git-send-email-vaibhav.hiremath@linaro.org> <1435217189-19578-2-git-send-email-vaibhav.hiremath@linaro.org> <20150625101916.GB15013@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1435148061-11844-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <20150625101916.GB15013@x1>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Opensource [Steve Twiss]" <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Cc: "linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, yizhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 24 June 2015 13:14, Geert Uytterhoeven wrote:
 
-> To: Support Opensource; Liam Girdwood; Mark Brown; Opensource [Steve Twiss]
-> Subject: [PATCH] regulator: da9210: Add optional interrupt support
-> 
-> Add optional interrupt support to the da9210 regulator driver, to handle
-> over-current, under- and over-voltage, and over-temperature events.
-> 
-> Only the interrupt sources for which we handle events are unmasked, to
-> avoid interrupts we cannot handle.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> ---
-> I do not have access to the da9210 datasheet, but looked at the da9211 driver.
-> 
-> v2:
->   - Only acknowledge unmasked sources,
->   - Handle DA9210_E_VMAX using REGULATOR_EVENT_REGULATION_OUT.
-> ---
 
-Hi Geert,
+On Thursday 25 June 2015 03:49 PM, Lee Jones wrote:
+> On Thu, 25 Jun 2015, Vaibhav Hiremath wrote:
+>
+>> Add DT support to the 88pm800 driver, along with compatible
+>> field for it's sub-devices (rtc, onkey and regulator)
+>>
+>> Signed-off-by: Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+>> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>>   drivers/mfd/88pm800.c | 23 +++++++++++++++++++++++
+>>   1 file changed, 23 insertions(+)
+>>
+>> diff --git a/drivers/mfd/88pm800.c b/drivers/mfd/88pm800.c
+>> index 841717a..40fd014 100644
+>> --- a/drivers/mfd/88pm800.c
+>> +++ b/drivers/mfd/88pm800.c
+>> @@ -27,6 +27,7 @@
+>>   #include <linux/mfd/core.h>
+>>   #include <linux/mfd/88pm80x.h>
+>>   #include <linux/slab.h>
+>> +#include <linux/of_device.h>
+>>
+>>   /* Interrupt Registers */
+>>   #define PM800_INT_STATUS1		(0x05)
+>> @@ -121,6 +122,11 @@ static const struct i2c_device_id pm80x_id_table[] = {
+>>   };
+>>   MODULE_DEVICE_TABLE(i2c, pm80x_id_table);
+>>
+>> +static const struct of_device_id pm80x_of_match_table[] = {
+>> +	{ .compatible = "marvell,88pm800", },
+>> +	{},
+>> +};
+>> +
+>>   static struct resource rtc_resources[] = {
+>>   	{
+>>   	 .name = "88pm80x-rtc",
+>> @@ -133,6 +139,7 @@ static struct resource rtc_resources[] = {
+>>   static struct mfd_cell rtc_devs[] = {
+>>   	{
+>>   	 .name = "88pm80x-rtc",
+>> +	 .of_compatible = "marvell,88pm80x-rtc",
+>>   	 .num_resources = ARRAY_SIZE(rtc_resources),
+>>   	 .resources = &rtc_resources[0],
+>>   	 .id = -1,
+>> @@ -151,6 +158,7 @@ static struct resource onkey_resources[] = {
+>>   static const struct mfd_cell onkey_devs[] = {
+>>   	{
+>>   	 .name = "88pm80x-onkey",
+>> +	 .of_compatible = "marvell,88pm80x-onkey",
+>>   	 .num_resources = 1,
+>>   	 .resources = &onkey_resources[0],
+>>   	 .id = -1,
+>> @@ -160,6 +168,7 @@ static const struct mfd_cell onkey_devs[] = {
+>>   static const struct mfd_cell regulator_devs[] = {
+>>   	{
+>>   	 .name = "88pm80x-regulator",
+>> +	 .of_compatible = "marvell,88pm80x-regulator",
+>>   	 .id = -1,
+>>   	},
+>>   };
+>> @@ -544,8 +553,21 @@ static int pm800_probe(struct i2c_client *client,
+>>   	int ret = 0;
+>>   	struct pm80x_chip *chip;
+>>   	struct pm80x_platform_data *pdata = dev_get_platdata(&client->dev);
+>> +	struct device_node *np = client->dev.of_node;
+>>   	struct pm80x_subchip *subchip;
+>>
+>> +	if (!pdata && !np) {
+>> +		dev_err(&client->dev,
+>> +			"pm80x requires platform data or of_node\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	if (!pdata) {
+>> +		pdata = devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL);
+>> +		if (!pdata)
+>> +			return -ENOMEM;
+>> +	}
+>
+> Why have you allocated data for pdata, then done nothing with it?
+>
 
-https://lkml.org/lkml/2015/2/17/358
-I got side-tracked with other things and this one got forgotten ...
+Not in this patch, but subsequent patches would use it.
 
-I'll take another look at this. A cursory glance from me -- it seems fair and
-consistent with the DA9210 data sheet. I'll check with the engineers here.
-
-Regards,
-Steve
-
->  .../devicetree/bindings/regulator/da9210.txt       |  4 ++
->  drivers/regulator/da9210-regulator.c               | 75
-> ++++++++++++++++++++++
->  2 files changed, 79 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/regulator/da9210.txt
-> b/Documentation/devicetree/bindings/regulator/da9210.txt
-> index 3297c53cb9152395..7aa9b1fa6b21ca18 100644
-> --- a/Documentation/devicetree/bindings/regulator/da9210.txt
-> +++ b/Documentation/devicetree/bindings/regulator/da9210.txt
-> @@ -5,6 +5,10 @@ Required properties:
->  - compatible:	must be "dlg,da9210"
->  - reg:		the i2c slave address of the regulator. It should be 0x68.
-> 
-> +Optional properties:
-> +
-> +- interrupts:	a reference to the DA9210 interrupt, if available.
-> +
->  Any standard regulator properties can be used to configure the single
-> da9210
->  DCDC.
-> 
-> diff --git a/drivers/regulator/da9210-regulator.c b/drivers/regulator/da9210-
-> regulator.c
-> index f0489cb9018b4e78..8e39f7457bc36a07 100644
-> --- a/drivers/regulator/da9210-regulator.c
-> +++ b/drivers/regulator/da9210-regulator.c
-> @@ -22,6 +22,8 @@
->  #include <linux/i2c.h>
->  #include <linux/module.h>
->  #include <linux/init.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/irq.h>
->  #include <linux/slab.h>
->  #include <linux/regulator/driver.h>
->  #include <linux/regulator/machine.h>
-> @@ -120,6 +122,55 @@ static int da9210_get_current_limit(struct
-> regulator_dev *rdev)
->  	return da9210_buck_limits[sel];
->  }
-> 
-> +static irqreturn_t da9210_irq_handler(int irq, void *data)
-> +{
-> +	struct da9210 *chip = data;
-> +	unsigned int val, handled = 0;
-> +	int error, ret = IRQ_NONE;
-> +
-> +	error = regmap_read(chip->regmap, DA9210_REG_EVENT_B, &val);
-> +	if (error < 0)
-> +		goto error_i2c;
-> +
-> +	if (val & DA9210_E_OVCURR) {
-> +		regulator_notifier_call_chain(chip->rdev,
-> +
-> REGULATOR_EVENT_OVER_CURRENT,
-> +					      NULL);
-> +		handled |= DA9210_E_OVCURR;
-> +	}
-> +	if (val & DA9210_E_NPWRGOOD) {
-> +		regulator_notifier_call_chain(chip->rdev,
-> +
-> REGULATOR_EVENT_UNDER_VOLTAGE,
-> +					      NULL);
-> +		handled |= DA9210_E_NPWRGOOD;
-> +	}
-> +	if (val & (DA9210_E_TEMP_WARN | DA9210_E_TEMP_CRIT)) {
-> +		regulator_notifier_call_chain(chip->rdev,
-> +					      REGULATOR_EVENT_OVER_TEMP,
-> NULL);
-> +		handled |= val & (DA9210_E_TEMP_WARN |
-> DA9210_E_TEMP_CRIT);
-> +	}
-> +	if (val & DA9210_E_VMAX) {
-> +		regulator_notifier_call_chain(chip->rdev,
-> +
-> REGULATOR_EVENT_REGULATION_OUT,
-> +					      NULL);
-> +		handled |= DA9210_E_VMAX;
-> +	}
-> +	if (handled) {
-> +		/* Clear handled events */
-> +		error = regmap_write(chip->regmap,
-> DA9210_REG_EVENT_B, handled);
-> +		if (error < 0)
-> +			goto error_i2c;
-> +
-> +		ret = IRQ_HANDLED;
-> +	}
-> +
-> +	return ret;
-> +
-> +error_i2c:
-> +	dev_err(regmap_get_device(chip->regmap), "I2C error : %d\n",
-> error);
-> +	return ret;
-> +}
-> +
->  /*
->   * I2C driver interface functions
->   */
-> @@ -168,6 +219,30 @@ static int da9210_i2c_probe(struct i2c_client *i2c,
->  	}
-> 
->  	chip->rdev = rdev;
-> +	if (i2c->irq) {
-> +		error = devm_request_threaded_irq(&i2c->dev, i2c->irq,
-> NULL,
-> +						  da9210_irq_handler,
-> +						  IRQF_TRIGGER_LOW |
-> +						  IRQF_ONESHOT |
-> IRQF_SHARED,
-> +						  "da9210", chip);
-> +		if (error) {
-> +			dev_err(&i2c->dev, "Failed to request IRQ%u: %d\n",
-> +				i2c->irq, error);
-> +			return error;
-> +		}
-> +
-> +		error = regmap_update_bits(chip->regmap,
-> DA9210_REG_MASK_B,
-> +					 DA9210_M_OVCURR |
-> DA9210_M_NPWRGOOD |
-> +					 DA9210_M_TEMP_WARN |
-> +					 DA9210_M_TEMP_CRIT |
-> DA9210_M_VMAX, 0);
-> +		if (error < 0) {
-> +			dev_err(&i2c->dev, "Failed to update mask reg:
-> %d\n",
-> +				error);
-> +			return error;
-> +		}
-> +	} else {
-> +		dev_warn(&i2c->dev, "No IRQ configured\n");
-> +	}
-> 
->  	i2c_set_clientdata(i2c, chip);
-> 
-> --
-> 1.9.1
-
+Thanks,
+Vaibhav
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
