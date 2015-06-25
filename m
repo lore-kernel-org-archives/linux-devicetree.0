@@ -1,32 +1,159 @@
-From: Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [PATCH] crypto: mv_cesa - fix up for of_get_named_gen_pool()
- rename
-Date: Thu, 25 Jun 2015 23:30:06 +0800
-Message-ID: <20150625153006.GA11513@gondor.apana.org.au>
-References: <CABxcv=m4juAMHaMYSB+8O8cEX+YZCJ0cArS2wN-YGpTBgWe-CA@mail.gmail.com>
- <1435221470-5382-1-git-send-email-simon.guinot@sequanux.org>
+From: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH-v4 2/3] mfd: 88pm800: Set default interrupt clear method
+Date: Thu, 25 Jun 2015 21:01:28 +0530
+Message-ID: <558C1ED0.4010408@linaro.org>
+References: <1435217189-19578-1-git-send-email-vaibhav.hiremath@linaro.org> <1435217189-19578-3-git-send-email-vaibhav.hiremath@linaro.org> <20150625102618.GC15013@x1> <558BE3D6.2010801@linaro.org> <20150625144627.GB23990@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-crypto-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1435221470-5382-1-git-send-email-simon.guinot@sequanux.org>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Simon Guinot <simon.guinot@sequanux.org>
-Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Nadav Haklai <nadavh@marvell.com>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Tawfik Bayouk <tawfik@marvell.com>, Eran Ben-Avi <benavi@marvell.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, linux-next@vger.kernel.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Arnaud Ebalard <arno@natisbad.org>, Rob Herring <robh+dt@kernel.org>, Gregory CLEMENT <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, LKML <linux-kernel@vger.kernel.org>, linux-crypto@vger.kernel.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150625144627.GB23990@x1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, yizhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, Zhao Ye <zhaoy-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 25, 2015 at 10:37:50AM +0200, Simon Guinot wrote:
-> This patch fixes the following build error:
-> 
-> drivers/crypto/mv_cesa.c: In function 'mv_cesa_get_sram':
-> drivers/crypto/mv_cesa.c:1037: error: implicit declaration of function 'of_get_named_gen_pool'
-> drivers/crypto/mv_cesa.c:1038: warning: assignment makes pointer from integer without a cast
-> scripts/Makefile.build:258: recipe for target 'drivers/crypto/mv_cesa.o' failed
-> 
-> Signed-off-by: Simon Guinot <simon.guinot@sequanux.org>
 
-This patch doesn't compile.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+
+On Thursday 25 June 2015 08:16 PM, Lee Jones wrote:
+> On Thu, 25 Jun 2015, Vaibhav Hiremath wrote:
+>> On Thursday 25 June 2015 03:56 PM, Lee Jones wrote:
+>>> On Thu, 25 Jun 2015, Vaibhav Hiremath wrote:
+>>>
+>>>> As per the spec, bit 1 (INT_CLEAR_MODE) of reg addr 0xe
+>>>> (page 0) controls the method of clearing interrupt
+>>>> status of 88pm800 family of devices;
+>>>>
+>>>>    0: clear on read
+>>>>    1: clear on write
+>>>>
+>>>> If pdata is not coming from board file, then set the
+>>>> default irq clear method to "irq clear on write"
+>>>>
+>>>> Also, as suggested by "Lee Jones" renaming variable field
+>>>> to appropriate name.
+>>>>
+>>>> Signed-off-by: Zhao Ye <zhaoy-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+>>>> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>> ---
+>>>>   drivers/mfd/88pm800.c       | 15 ++++++++++-----
+>>>>   include/linux/mfd/88pm80x.h |  6 ++++--
+>>>>   2 files changed, 14 insertions(+), 7 deletions(-)
+>>>>
+>>>> diff --git a/drivers/mfd/88pm800.c b/drivers/mfd/88pm800.c
+>>>> index 40fd014..e0cd7ad 100644
+>>>> --- a/drivers/mfd/88pm800.c
+>>>> +++ b/drivers/mfd/88pm800.c
+>
+> [...]
+>
+>>>> +		PM800_WAKEUP2_INT_WRITE_CLEAR : PM800_WAKEUP2_INT_READ_CLEAR;
+>>>> +	ret = regmap_update_bits(map, PM800_WAKEUP2, mask, irq_clr_mode);
+>>>>
+>>>>   	if (ret < 0)
+>>>>   		goto out;
+>>>> @@ -514,6 +515,7 @@ static int device_800_init(struct pm80x_chip *chip,
+>>>>   	}
+>>>>
+>>>>   	chip->regmap_irq_chip = &pm800_irq_chip;
+>>>> +	chip->irq_clr_on_wr = pdata->irq_clr_on_wr;
+>>>
+>>> You have protection around pdata everywhere else in the file, I
+>>> suggest you supply some here too.
+>>>
+>>
+>> Actually it is not really needed, as the PATCH 1/1 introduces
+>>
+>>
+>>          if (!pdata && !np) {
+>>                  dev_err(&client->dev,
+>>                          "pm80x requires platform data or of_node\n");
+>>                  return -EINVAL;
+>>          }
+>>
+>>          if (!pdata && !np) {
+>>                  dev_err(&client->dev,
+>>                          "pm80x requires platform data or of_node\n");
+>>                  return -EINVAL;
+>>          }
+>>
+>>
+>> So there is no way you can have pdata = NULL beyond this point.
+>
+> I saw that.  I want you to remove that too.
+>
+
+You mean, remove existing protection in the driver?
+I will create a separate patch for this.
+
+> [...]
+>
+>>>> --- a/include/linux/mfd/88pm80x.h
+>>>> +++ b/include/linux/mfd/88pm80x.h
+>>>> @@ -77,6 +77,8 @@ enum {
+>>>>   #define PM800_WAKEUP2		(0x0E)
+>>>>   #define PM800_WAKEUP2_INV_INT		(1 << 0)
+>>>>   #define PM800_WAKEUP2_INT_CLEAR		(1 << 1)
+>>>> +#define PM800_WAKEUP2_INT_READ_CLEAR		(0 << 1)
+>>>> +#define PM800_WAKEUP2_INT_WRITE_CLEAR		(1 << 1)
+>>>>   #define PM800_WAKEUP2_INT_MASK		(1 << 2)
+>>>
+>>> Use the BIT() macro.
+>>>
+>>
+>> I thought about this, but the whole file doesn't use it, so I also
+>> chose not to.
+>
+> Then the whole file needs moving over.
+>
+> Patches accepted.
+>
+
+Will change the driver and submit the patch.
+
+
+>>>>   #define PM800_POWER_UP_LOG	(0x10)
+>>>> @@ -300,7 +302,7 @@ struct pm80x_chip {
+>>>>   	struct regmap_irq_chip_data *irq_data;
+>>>>   	int type;
+>>>>   	int irq;
+>>>> -	int irq_mode;
+>>>> +	int irq_clr_on_wr;	/* '1': Clear on write, '0': Clear on read*/
+>>>
+>>> Whitespace issue.
+>>
+>> Didn't see any...and I also ran checkpatch.
+>
+> You have no space before the '*/'.
+>
+>>> Shouldn't this be a bool?
+>>>
+>>
+>> Just was not sure about any older board file interface.
+>> Ideally it should be bool only.
+>
+> Right.
+>
+>>> Actually even better, I would define; CLR_ON_WRITE and CLR_ON_READ,
+>>> and call the variable irq_clear_method, or something.
+>>>
+>>> Much clearer that way I think.
+>>>
+>>
+>> We have slowly decided to almost hardcode it to one value if there is
+>> no board file. I feel we should just keep it to simple.
+>>
+>> If you still insist, I can implement.
+>
+> I like clarity and by your own admission (by warranting an additional
+> comment) it's not clear.  Please make it as clear as you can.
+>
+
+OK, will change the code for CLEAR_ON_READ and CLEAR_ON_WRITE.
+
+Thanks,
+Vaibhav
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
