@@ -1,79 +1,270 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: Re: [PATCH v7 00/14] crypto: add a new driver for Marvell's CESA
-Date: Thu, 25 Jun 2015 02:33:43 +0200
-Message-ID: <CABxcv=m4juAMHaMYSB+8O8cEX+YZCJ0cArS2wN-YGpTBgWe-CA@mail.gmail.com>
-References: <1434635190-27733-1-git-send-email-boris.brezillon@free-electrons.com>
- <20150619142444.GA15234@gondor.apana.org.au>
- <CAP=VYLqQynCNRTpm4JnOxeO6DH_739fO2QNcDMxaXqCKCHiTtQ@mail.gmail.com>
- <CAP=VYLpSrTvXRovWo4G7AXWv1OKFQRpQR255hS5z+=h4+XOLhg@mail.gmail.com>
- <20150621102418.2ea74910@bbrezillon>
- <20150621082717.GA29128@gondor.apana.org.au>
- <20150622092336.5949e258@bbrezillon>
- <20150622075910.GA7659@gondor.apana.org.au>
- <20150625000037.GK31584@windriver.com>
+From: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 02/12] [media] dvb-pll: Add support for THOMSON DTT7546X
+ tuner.
+Date: Wed, 24 Jun 2015 18:17:37 -0700
+Message-ID: <1435195057.9377.18.camel@perches.com>
+References: <1435158670-7195-1-git-send-email-peter.griffin@linaro.org>
+	 <1435158670-7195-3-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20150625000037.GK31584@windriver.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Paul Gortmaker <paul.gortmaker@windriver.com>
-Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Nadav Haklai <nadavh@marvell.com>, Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Herbert Xu <herbert@gondor.apana.org.au>, Tawfik Bayouk <tawfik@marvell.com>, Eran Ben-Avi <benavi@marvell.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Arnaud Ebalard <arno@natisbad.org>, Rob Herring <robh+dt@kernel.org>, Gregory CLEMENT <gregory.clement@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1435158670-7195-3-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hugues.fruchet-qxv4g6HH51o@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Paul,
+On Wed, 2015-06-24 at 16:11 +0100, Peter Griffin wrote:
+> This is used in conjunction with the STV0367 demodulator on
+> the STV0367-NIM-V1.0 NIM card which can be used with the STi
+> STB SoC's.
 
-On Thu, Jun 25, 2015 at 2:00 AM, Paul Gortmaker
-<paul.gortmaker@windriver.com> wrote:
-> [Re: [PATCH v7 00/14] crypto: add a new driver for Marvell's CESA] On 22/06/2015 (Mon 15:59) Herbert Xu wrote:
->
->> On Mon, Jun 22, 2015 at 09:23:36AM +0200, Boris Brezillon wrote:
->> > Hi Herbert,
->> >
->> > On Sun, 21 Jun 2015 16:27:17 +0800
->> > Herbert Xu <herbert@gondor.apana.org.au> wrote:
->> >
->> > > On Sun, Jun 21, 2015 at 10:24:18AM +0200, Boris Brezillon wrote:
->> > > >
->> > > > Indeed. Here is a patch fixing that.
->> > >
->> > > I think you should just kill COMPILE_TEST instead of adding ARM.
->> >
->> > The following patch is killing the COMPILE_TEST dependency.
->>
->> Patch applied.
->
-> Just a heads up, this driver is still killing a couple of linux-next
-> builds today and for the past few days.
->
-> drivers/crypto/mv_cesa.c:1037:2: error: implicit declaration of function
-> 'of_get_named_gen_pool' [-Werror=implicit-function-declaration]
->
-> http://kisskb.ellerman.id.au/kisskb/buildresult/12448851/
-> http://kisskb.ellerman.id.au/kisskb/buildresult/12448776/
->
-> Missing dependency on CONFIG_OF_<blah> presumably.
->
+Barely associated to this specific patch, but for
+dvb-pll.c, another thing that seems possible is to
+convert the struct dvb_pll_desc uses to const and
+change the "entries" fixed array size from 12 to []
 
-I haven't looked at the series but <linux/genalloc.h> has a stub
-of_get_named_gen_pool() function if CONFIG_OF is not enabled [0].
+It'd save a couple KB overall and remove ~5KB of data.
 
-So it seems that the problem is rather that the header is not being
-included in some file.
+$ size drivers/media/dvb-frontends/dvb-pll.o*
+   text	   data	    bss	    dec	    hex	filename
+   8520	   1552	   2120	  12192	   2fa0	drivers/media/dvb-frontends/dvb-pll.o.new
+   5624	   6363	   2120	  14107	   371b	drivers/media/dvb-frontends/dvb-pll.o.old
+---
+ drivers/media/dvb-frontends/dvb-pll.c | 50 +++++++++++++++++------------------
+ 1 file changed, 25 insertions(+), 25 deletions(-)
 
-> Paul.
-> --
->
+diff --git a/drivers/media/dvb-frontends/dvb-pll.c b/drivers/media/dvb-frontends/dvb-pll.c
+index 6d8fe88..53089e1 100644
+--- a/drivers/media/dvb-frontends/dvb-pll.c
++++ b/drivers/media/dvb-frontends/dvb-pll.c
+@@ -34,7 +34,7 @@ struct dvb_pll_priv {
+ 	struct i2c_adapter *i2c;
+ 
+ 	/* the PLL descriptor */
+-	struct dvb_pll_desc *pll_desc;
++	const struct dvb_pll_desc *pll_desc;
+ 
+ 	/* cached frequency/bandwidth */
+ 	u32 frequency;
+@@ -57,7 +57,7 @@ MODULE_PARM_DESC(id, "force pll id to use (DEBUG ONLY)");
+ /* ----------------------------------------------------------- */
+ 
+ struct dvb_pll_desc {
+-	char *name;
++	const char *name;
+ 	u32  min;
+ 	u32  max;
+ 	u32  iffreq;
+@@ -71,13 +71,13 @@ struct dvb_pll_desc {
+ 		u32 stepsize;
+ 		u8  config;
+ 		u8  cb;
+-	} entries[12];
++	} entries[];
+ };
+ 
+ /* ----------------------------------------------------------- */
+ /* descriptions                                                */
+ 
+-static struct dvb_pll_desc dvb_pll_thomson_dtt7579 = {
++static const struct dvb_pll_desc dvb_pll_thomson_dtt7579 = {
+ 	.name  = "Thomson dtt7579",
+ 	.min   = 177000000,
+ 	.max   = 858000000,
+@@ -99,7 +99,7 @@ static void thomson_dtt759x_bw(struct dvb_frontend *fe, u8 *buf)
+ 		buf[3] |= 0x10;
+ }
+ 
+-static struct dvb_pll_desc dvb_pll_thomson_dtt759x = {
++static const struct dvb_pll_desc dvb_pll_thomson_dtt759x = {
+ 	.name  = "Thomson dtt759x",
+ 	.min   = 177000000,
+ 	.max   = 896000000,
+@@ -123,7 +123,7 @@ static void thomson_dtt7520x_bw(struct dvb_frontend *fe, u8 *buf)
+ 		buf[3] ^= 0x10;
+ }
+ 
+-static struct dvb_pll_desc dvb_pll_thomson_dtt7520x = {
++static const struct dvb_pll_desc dvb_pll_thomson_dtt7520x = {
+ 	.name  = "Thomson dtt7520x",
+ 	.min   = 185000000,
+ 	.max   = 900000000,
+@@ -141,7 +141,7 @@ static struct dvb_pll_desc dvb_pll_thomson_dtt7520x = {
+ 	},
+ };
+ 
+-static struct dvb_pll_desc dvb_pll_lg_z201 = {
++static const struct dvb_pll_desc dvb_pll_lg_z201 = {
+ 	.name  = "LG z201",
+ 	.min   = 174000000,
+ 	.max   = 862000000,
+@@ -157,7 +157,7 @@ static struct dvb_pll_desc dvb_pll_lg_z201 = {
+ 	},
+ };
+ 
+-static struct dvb_pll_desc dvb_pll_unknown_1 = {
++static const struct dvb_pll_desc dvb_pll_unknown_1 = {
+ 	.name  = "unknown 1", /* used by dntv live dvb-t */
+ 	.min   = 174000000,
+ 	.max   = 862000000,
+@@ -179,7 +179,7 @@ static struct dvb_pll_desc dvb_pll_unknown_1 = {
+ /* Infineon TUA6010XS
+  * used in Thomson Cable Tuner
+  */
+-static struct dvb_pll_desc dvb_pll_tua6010xs = {
++static const struct dvb_pll_desc dvb_pll_tua6010xs = {
+ 	.name  = "Infineon TUA6010XS",
+ 	.min   =  44250000,
+ 	.max   = 858000000,
+@@ -193,7 +193,7 @@ static struct dvb_pll_desc dvb_pll_tua6010xs = {
+ };
+ 
+ /* Panasonic env57h1xd5 (some Philips PLL ?) */
+-static struct dvb_pll_desc dvb_pll_env57h1xd5 = {
++static const struct dvb_pll_desc dvb_pll_env57h1xd5 = {
+ 	.name  = "Panasonic ENV57H1XD5",
+ 	.min   =  44250000,
+ 	.max   = 858000000,
+@@ -217,7 +217,7 @@ static void tda665x_bw(struct dvb_frontend *fe, u8 *buf)
+ 		buf[3] |= 0x08;
+ }
+ 
+-static struct dvb_pll_desc dvb_pll_tda665x = {
++static const struct dvb_pll_desc dvb_pll_tda665x = {
+ 	.name  = "Philips TDA6650/TDA6651",
+ 	.min   =  44250000,
+ 	.max   = 858000000,
+@@ -251,7 +251,7 @@ static void tua6034_bw(struct dvb_frontend *fe, u8 *buf)
+ 		buf[3] |= 0x08;
+ }
+ 
+-static struct dvb_pll_desc dvb_pll_tua6034 = {
++static const struct dvb_pll_desc dvb_pll_tua6034 = {
+ 	.name  = "Infineon TUA6034",
+ 	.min   =  44250000,
+ 	.max   = 858000000,
+@@ -275,7 +275,7 @@ static void tded4_bw(struct dvb_frontend *fe, u8 *buf)
+ 		buf[3] |= 0x04;
+ }
+ 
+-static struct dvb_pll_desc dvb_pll_tded4 = {
++static const struct dvb_pll_desc dvb_pll_tded4 = {
+ 	.name = "ALPS TDED4",
+ 	.min = 47000000,
+ 	.max = 863000000,
+@@ -293,7 +293,7 @@ static struct dvb_pll_desc dvb_pll_tded4 = {
+ /* ALPS TDHU2
+  * used in AverTVHD MCE A180
+  */
+-static struct dvb_pll_desc dvb_pll_tdhu2 = {
++static const struct dvb_pll_desc dvb_pll_tdhu2 = {
+ 	.name = "ALPS TDHU2",
+ 	.min = 54000000,
+ 	.max = 864000000,
+@@ -310,7 +310,7 @@ static struct dvb_pll_desc dvb_pll_tdhu2 = {
+ /* Samsung TBMV30111IN / TBMV30712IN1
+  * used in Air2PC ATSC - 2nd generation (nxt2002)
+  */
+-static struct dvb_pll_desc dvb_pll_samsung_tbmv = {
++static const struct dvb_pll_desc dvb_pll_samsung_tbmv = {
+ 	.name = "Samsung TBMV30111IN / TBMV30712IN1",
+ 	.min = 54000000,
+ 	.max = 860000000,
+@@ -329,7 +329,7 @@ static struct dvb_pll_desc dvb_pll_samsung_tbmv = {
+ /*
+  * Philips SD1878 Tuner.
+  */
+-static struct dvb_pll_desc dvb_pll_philips_sd1878_tda8261 = {
++static const struct dvb_pll_desc dvb_pll_philips_sd1878_tda8261 = {
+ 	.name  = "Philips SD1878",
+ 	.min   =  950000,
+ 	.max   = 2150000,
+@@ -395,7 +395,7 @@ static void opera1_bw(struct dvb_frontend *fe, u8 *buf)
+ 	return;
+ }
+ 
+-static struct dvb_pll_desc dvb_pll_opera1 = {
++static const struct dvb_pll_desc dvb_pll_opera1 = {
+ 	.name  = "Opera Tuner",
+ 	.min   =  900000,
+ 	.max   = 2250000,
+@@ -442,7 +442,7 @@ static void samsung_dtos403ih102a_set(struct dvb_frontend *fe, u8 *buf)
+ }
+ 
+ /* unknown pll used in Samsung DTOS403IH102A DVB-C tuner */
+-static struct dvb_pll_desc dvb_pll_samsung_dtos403ih102a = {
++static const struct dvb_pll_desc dvb_pll_samsung_dtos403ih102a = {
+ 	.name   = "Samsung DTOS403IH102A",
+ 	.min    =  44250000,
+ 	.max    = 858000000,
+@@ -462,7 +462,7 @@ static struct dvb_pll_desc dvb_pll_samsung_dtos403ih102a = {
+ };
+ 
+ /* Samsung TDTC9251DH0 DVB-T NIM, as used on AirStar 2 */
+-static struct dvb_pll_desc dvb_pll_samsung_tdtc9251dh0 = {
++static const struct dvb_pll_desc dvb_pll_samsung_tdtc9251dh0 = {
+ 	.name	= "Samsung TDTC9251DH0",
+ 	.min	=  48000000,
+ 	.max	= 863000000,
+@@ -476,7 +476,7 @@ static struct dvb_pll_desc dvb_pll_samsung_tdtc9251dh0 = {
+ };
+ 
+ /* Samsung TBDU18132 DVB-S NIM with TSA5059 PLL, used in SkyStar2 DVB-S 2.3 */
+-static struct dvb_pll_desc dvb_pll_samsung_tbdu18132 = {
++static const struct dvb_pll_desc dvb_pll_samsung_tbdu18132 = {
+ 	.name = "Samsung TBDU18132",
+ 	.min	=  950000,
+ 	.max	= 2150000, /* guesses */
+@@ -497,7 +497,7 @@ static struct dvb_pll_desc dvb_pll_samsung_tbdu18132 = {
+ };
+ 
+ /* Samsung TBMU24112 DVB-S NIM with SL1935 zero-IF tuner */
+-static struct dvb_pll_desc dvb_pll_samsung_tbmu24112 = {
++static const struct dvb_pll_desc dvb_pll_samsung_tbmu24112 = {
+ 	.name = "Samsung TBMU24112",
+ 	.min	=  950000,
+ 	.max	= 2150000, /* guesses */
+@@ -518,7 +518,7 @@ static struct dvb_pll_desc dvb_pll_samsung_tbmu24112 = {
+  * 153 - 430   0  *  0   0   0   0   1   0   0x02
+  * 430 - 822   0  *  0   0   1   0   0   0   0x08
+  * 822 - 862   1  *  0   0   1   0   0   0   0x88 */
+-static struct dvb_pll_desc dvb_pll_alps_tdee4 = {
++static const struct dvb_pll_desc dvb_pll_alps_tdee4 = {
+ 	.name = "ALPS TDEE4",
+ 	.min	=  47000000,
+ 	.max	= 862000000,
+@@ -534,7 +534,7 @@ static struct dvb_pll_desc dvb_pll_alps_tdee4 = {
+ 
+ /* ----------------------------------------------------------- */
+ 
+-static struct dvb_pll_desc *pll_list[] = {
++static const struct dvb_pll_desc *pll_list[] = {
+ 	[DVB_PLL_UNDEFINED]              = NULL,
+ 	[DVB_PLL_THOMSON_DTT7579]        = &dvb_pll_thomson_dtt7579,
+ 	[DVB_PLL_THOMSON_DTT759X]        = &dvb_pll_thomson_dtt759x,
+@@ -564,7 +564,7 @@ static int dvb_pll_configure(struct dvb_frontend *fe, u8 *buf,
+ 			     const u32 frequency)
+ {
+ 	struct dvb_pll_priv *priv = fe->tuner_priv;
+-	struct dvb_pll_desc *desc = priv->pll_desc;
++	const struct dvb_pll_desc *desc = priv->pll_desc;
+ 	u32 div;
+ 	int i;
+ 
+@@ -758,7 +758,7 @@ struct dvb_frontend *dvb_pll_attach(struct dvb_frontend *fe, int pll_addr,
+ 			       .buf = b1, .len = 1 };
+ 	struct dvb_pll_priv *priv = NULL;
+ 	int ret;
+-	struct dvb_pll_desc *desc;
++	const struct dvb_pll_desc *desc;
+ 
+ 	if ((id[dvb_pll_devcount] > DVB_PLL_UNDEFINED) &&
+ 	    (id[dvb_pll_devcount] < ARRAY_SIZE(pll_list)))
 
-Best regards,
-Javier
 
-[0]: http://lxr.free-electrons.com/source/include/linux/genalloc.h#L131
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
