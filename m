@@ -1,75 +1,89 @@
-From: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH-v4 3/3] mfd: devicetree: bindings: Add new 88pm800 mfd
- binding
-Date: Thu, 25 Jun 2015 16:52:14 +0530
-Message-ID: <558BE466.3090408@linaro.org>
-References: <1435217189-19578-1-git-send-email-vaibhav.hiremath@linaro.org> <1435217189-19578-4-git-send-email-vaibhav.hiremath@linaro.org> <20150625102823.GD15013@x1>
+From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH-v4 2/3] mfd: 88pm800: Set default interrupt clear method
+Date: Thu, 25 Jun 2015 20:45:22 +0900
+Message-ID: <CAJKOXPfbSV-WVVQrxrzvBJwpLaLskZVmnTQ5SUv=kV3SL_1SMQ@mail.gmail.com>
+References: <1435217189-19578-1-git-send-email-vaibhav.hiremath@linaro.org>
+	<1435217189-19578-3-git-send-email-vaibhav.hiremath@linaro.org>
+	<20150625102618.GC15013@x1>
+	<558BE3D6.2010801@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150625102823.GD15013@x1>
+In-Reply-To: <558BE3D6.2010801-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, yizhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org
+To: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Zhao Ye <zhaoy-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yizhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On Thursday 25 June 2015 03:58 PM, Lee Jones wrote:
-> On Thu, 25 Jun 2015, Vaibhav Hiremath wrote:
+2015-06-25 20:19 GMT+09:00 Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
 >
->> With addition of DT support to 88pm800 mfd driver, this patch
->> adds new DT binding documentation along with respective properties.
+>
+> On Thursday 25 June 2015 03:56 PM, Lee Jones wrote:
+
+(...)
+
+>>> diff --git a/include/linux/mfd/88pm80x.h b/include/linux/mfd/88pm80x.h
+>>> index 97cb283..94b3dcd 100644
+>>> --- a/include/linux/mfd/88pm80x.h
+>>> +++ b/include/linux/mfd/88pm80x.h
+>>> @@ -77,6 +77,8 @@ enum {
+>>>   #define PM800_WAKEUP2         (0x0E)
+>>>   #define PM800_WAKEUP2_INV_INT         (1 << 0)
+>>>   #define PM800_WAKEUP2_INT_CLEAR               (1 << 1)
+>>> +#define PM800_WAKEUP2_INT_READ_CLEAR           (0 << 1)
+>>> +#define PM800_WAKEUP2_INT_WRITE_CLEAR          (1 << 1)
+>>>   #define PM800_WAKEUP2_INT_MASK                (1 << 2)
 >>
->> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> ---
->>   Documentation/devicetree/bindings/mfd/88pm800.txt | 54 +++++++++++++++++++++++
->>   1 file changed, 54 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/mfd/88pm800.txt
 >>
->> diff --git a/Documentation/devicetree/bindings/mfd/88pm800.txt b/Documentation/devicetree/bindings/mfd/88pm800.txt
->> new file mode 100644
->> index 0000000..f56b751
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mfd/88pm800.txt
->> @@ -0,0 +1,54 @@
->> +* Marvell 88PM8xx Power Management IC
->> +
->> +Required parent device properties:
->> +- compatible : "marvell,88pm800", "marvell,88pm805", "marvell,88pm860"
->> +- reg : the I2C slave address for the 88pm8xx chip
->> +- interrupts : IRQ line for the 88pm8xx chip
->> +- interrupt-controller: describes the 88pm8xx as an interrupt controller
->> +- #interrupt-cells : should be 1.
->> +		- The cell is the 88pm8xx local IRQ number
+>> Use the BIT() macro.
+>>
 >
-> Might just be a personal thing, but I would line up the ':', it's much
-> easier on the eyes that way.
-
-Ok,
-
+> I thought about this, but the whole file doesn't use it, so I also
+> chose not to.
 >
->> +88pm8xx family of devices consists of varied group of sub-devices:
->> +
->> +Device		 	Supply Names	 Description
->> +------		 	------------	 -----------
->> +88pm80x-onkey		:		: On key
->> +88pm80x-rtc		:		: RTC
->> +88pm80x-regulator	:		: Regulators
->> +
->> +Note: More device list will follow
 >
-> No real need for this.
+>>>   #define PM800_POWER_UP_LOG    (0x10)
+>>> @@ -300,7 +302,7 @@ struct pm80x_chip {
+>>>         struct regmap_irq_chip_data *irq_data;
+>>>         int type;
+>>>         int irq;
+>>> -       int irq_mode;
+>>> +       int irq_clr_on_wr;      /* '1': Clear on write, '0': Clear on
+>>> read*/
+>>
+>>
+>> Whitespace issue.
+>>
 >
+> Didn't see any...and I also ran checkpatch.
+>
+>> Shouldn't this be a bool?
+>>
+>
+> Just was not sure about any older board file interface.
+> Ideally it should be bool only.
+>
+>> Actually even better, I would define; CLR_ON_WRITE and CLR_ON_READ,
+>> and call the variable irq_clear_method, or something.
+>>
+>> Much clearer that way I think.
+>>
+>
+> We have slowly decided to almost hardcode it to one value if there is
+> no board file. I feel we should just keep it to simple.
+>
+> If you still insist, I can implement.
 
-I deliberately added it, as I was sure i would get comment if I only
-put e devices in the list. And guess what, as expected I got comment.
+The bool would be indeed nicer and still you could hard-code the
+desired value on DT system:
++               /* by default, set irq clear method on write */
++               pdata->irq_clear_method = CLR_ON_WRITE;
 
-Anyway, I agree and Will remove it.
+However the question is how this would influence existing platforms
+using board files. Are there any in kernel or in downstream?
 
-Thanks,
-Vaibhav
+Best regards,
+Krzysztof
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
