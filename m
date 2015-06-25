@@ -1,41 +1,120 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [RESEND] [PATCH v2 1/2] arm: devtree: Set system_rev from DT
- revision
-Date: Thu, 25 Jun 2015 09:27:11 +0200
-Message-ID: <20150625072711.GD2890@pali>
-References: <1430902142-17035-1-git-send-email-pali.rohar@gmail.com>
- <3577431.y872Foi4kj@wuerfel>
- <20150506103752.GG30910@pali>
- <3529567.PeFp1NNa1q@wuerfel>
- <20150506114417.GI30910@pali>
- <20150625050138.GL4156@atomide.com>
- <20150625071851.GB2890@pali>
- <20150625072205.GO4156@atomide.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2] ARM: socfpga: dts: Add adxl34x
+Date: Thu, 25 Jun 2015 09:28:44 +0200
+Message-ID: <CAMuHMdW5EG+LnWE7sFYVJKHjN=k7mUUp7U5-r3hMjQvsKgf3ug@mail.gmail.com>
+References: <1419462712-14151-1-git-send-email-walter@vanguardiasur.com.ar>
+	<20150105092153.GJ13070@pengutronix.de>
+	<CABxpGwCbFF+pJ0H_sMjqk6c9awdRuxi6j0CL_d3mH5z4Qht+ng@mail.gmail.com>
+	<CABxpGwAFdLET+fg3WvMWqXdzsPQHv3hKx9cFwk9RQE9w6+rEbg@mail.gmail.com>
+	<550F8297.80809@opensource.altera.com>
+	<CABxpGwA3cs11Wtvs_8iGka9anb2+vHhfph19VKbTwBJOeh9bbw@mail.gmail.com>
+	<CABxpGwC_Eaz593gvPsS=jRpgxY1SM17hsArGfFPBjow-oBYB9g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150625072205.GO4156@atomide.com>
+In-Reply-To: <CABxpGwC_Eaz593gvPsS=jRpgxY1SM17hsArGfFPBjow-oBYB9g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, Rob Herring <robherring2@gmail.com>, Russell King <linux@arm.linux.org.uk>, Will Deacon <will.deacon@arm.com>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, Sebastian Reichel <sre@debian.org>, Pavel Machek <pavel@ucw.cz>, Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>, linux-omap@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+To: Walter Lozano <walter@vanguardiasur.com.ar>
+Cc: Dinh Nguyen <dinguyen@opensource.altera.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Steffen Trumtrar <s.trumtrar@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 25 June 2015 00:22:05 Tony Lindgren wrote:
-> * Pali Roh=C3=A1r <pali.rohar@gmail.com> [150625 00:21]:
-> >=20
-> > Ok, but what do you mean to forget any string conversion?
->=20
-> No need for tohexstr() in the uncommpress code if the system_rev
-> value is a number coming from the dts.
->=20
-> Regards,
->=20
-> Tony
+On Tue, Jun 23, 2015 at 10:20 PM, Walter Lozano
+<walter@vanguardiasur.com.ar> wrote:
+> On Mon, Mar 23, 2015 at 11:29 PM, Walter Lozano
+> <walter@vanguardiasur.com.ar> wrote:
+>> On Mon, Mar 23, 2015 at 12:03 AM, Dinh Nguyen
+>> <dinguyen@opensource.altera.com> wrote:
+>>> On 3/19/15 4:27 PM, Walter Lozano wrote:
+>>>> On Mon, Mar 16, 2015 at 10:10 AM, Walter Lozano
+>>>> <walter@vanguardiasur.com.ar> wrote:
+>>>>> On Mon, Jan 5, 2015 at 6:21 AM, Steffen Trumtrar
+>>>>> <s.trumtrar@pengutronix.de> wrote:
+>>>>>> On Wed, Dec 24, 2014 at 08:11:52PM -0300, Walter Lozano wrote:
+>>>>>>> This patch adds the DTS bindings for the adxl34x digital
+>>>>>>> accelerometer.
+>>>>>>>
+>>>>>>> Signed-off-by: Walter Lozano <walter@vanguardiasur.com.ar>
+>>>>>>> ---
+>>>>>>>  arch/arm/boot/dts/socfpga_cyclone5_sockit.dts |   16 ++++++++++++++++
+>>>>>>>  1 file changed, 16 insertions(+)
+>>>>>>>
+>>>>>>> diff --git a/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts b/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
+>>>>>>> index 16ea6f5..d343e03 100644
+>>>>>>> --- a/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
+>>>>>>> +++ b/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
+>>>>>>> @@ -60,6 +60,22 @@
+>>>>>>>       rxc-skew-ps = <2000>;
+>>>>>>>  };
+>>>>>>>
+>>>>>>> +&gpio2 {
+>>>>>>> +     status = "okay";
+>>>>>>> +};
+>>>>>>> +
+>>>>>>> +&i2c1 {
+>>>>>>> +     status = "okay";
+>>>>>>> +
+>>>>>>> +     accel1: accelerometer@53 {
+>>>>>>> +             compatible = "adxl34x";
+>>>
+>>> Shouldn't this be "adi,adxl34x"? At least that's what the documentation
+>>> says.
+>>>
+>>>>>>> +             reg = <0x53>;
+>>>>>>> +
+>>>>>>> +             interrupt-parent = <&portc>;
+>>>>>>> +             interrupts = <3 2>;
+>>>>>>> +     };
+>>>>>>> +};
+>>>>>>> +
+>>>>>>>  &mmc0 {
+>>>>>>>       vmmc-supply = <&regulator_3_3v>;
+>>>>>>>       vqmmc-supply = <&regulator_3_3v>;
+>>>>>>
+>>>>>> I just gave it a short spin. I get some interrupts and the position property
+>>>>>> changes, so it seems to work:
+>>>>>>
+>>>>>>         Acked-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+>>>>>>
+>>>>>
+>>>>> Ping?
+>>>>> How should this continue?
+>>>>
+>>>> Any news about this patch? It has been acked by Pavel Machek and
+>>>> Steffen Trumtrar a while ago.
+>>>>
+>>>
+>>> Sorry, since I wasn't CC on the original patch and somehow my filter
+>>> didn't catch it, I didn't see this patch until now.
+>>
+>> No problem, I know it was my fault as I trust the output of get_maintainer.pl
+>>
+>
+> Ping?
+>
+> --
+> Walter Lozano, VanguardiaSur
+> www.vanguardiasur.com.ar
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-So /revision DT property will be (binary) value, right?
+Now these commits are in:
+  - 3a38958d2477b718 ("Input: adxl34x - add OF match support") [1]
+  - e465bf6fc55d5ce2 ("DT: i2c: Deprecate adi,adxl34x compatible string") [2]
 
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+you can use "adi,adxl345" (or "adi,adxl346", "adi,adxl345").
+
+[1] http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=3a38958d2477b718d1011fb88c24c4f264ee9700
+[2] http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=e465bf6fc55d5ce21fb45a75c3fa613505e6be20
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
