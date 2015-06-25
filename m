@@ -1,45 +1,78 @@
-From: Simon Guinot <simon.guinot-jKBdWWKqtFpg9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH] crypto: mv_cesa - fix up for of_get_named_gen_pool() rename
-Date: Thu, 25 Jun 2015 10:37:50 +0200
-Message-ID: <1435221470-5382-1-git-send-email-simon.guinot@sequanux.org>
-References: <CABxcv=m4juAMHaMYSB+8O8cEX+YZCJ0cArS2wN-YGpTBgWe-CA@mail.gmail.com>
+From: Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/9] drivers: clk: st: Incorrect clocks status
+Date: Thu, 25 Jun 2015 10:41:22 +0200
+Message-ID: <CAG374jAE78p_4=MYg9iNqo-4j8gE5OspzKwphfBUBtr5iOx-1g@mail.gmail.com>
+References: <1435068567-30995-1-git-send-email-gabriel.fernandez@linaro.org>
+ <1435068567-30995-2-git-send-email-gabriel.fernandez@linaro.org> <558B0CD7.6040302@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CABxcv=m4juAMHaMYSB+8O8cEX+YZCJ0cArS2wN-YGpTBgWe-CA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <558B0CD7.6040302-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, linux-next-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Imre Kaloz <kaloz@o>
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pankaj Dev <pankaj.dev-qxv4g6HH51o@public.gmane.org>, Olivier Bideau <olivier.bideau-qxv4g6HH51o@public.gmane.org>, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Fabian Frederick <fabf-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, kernel@stlinu
 List-Id: devicetree@vger.kernel.org
 
-This patch fixes the following build error:
+Hi Stephen,
 
-drivers/crypto/mv_cesa.c: In function 'mv_cesa_get_sram':
-drivers/crypto/mv_cesa.c:1037: error: implicit declaration of function 'of_get_named_gen_pool'
-drivers/crypto/mv_cesa.c:1038: warning: assignment makes pointer from integer without a cast
-scripts/Makefile.build:258: recipe for target 'drivers/crypto/mv_cesa.o' failed
+Thanks for reviewing
 
-Signed-off-by: Simon Guinot <simon.guinot-jKBdWWKqtFpg9hUCZPvPmw@public.gmane.org>
----
- drivers/crypto/mv_cesa.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/crypto/mv_cesa.c b/drivers/crypto/mv_cesa.c
-index 5bcd575fa96f..e6b658faef63 100644
---- a/drivers/crypto/mv_cesa.c
-+++ b/drivers/crypto/mv_cesa.c
-@@ -1034,8 +1034,8 @@ static int mv_cesa_get_sram(struct platform_device *pdev,
- 			     &sram_size);
- 
- 	cp->sram_size = sram_size;
--	cp->sram_pool = of_get_named_gen_pool(pdev->dev.of_node,
--					      "marvell,crypto-srams", 0);
-+	cp->sram_pool = of_gen_pool_get(pdev->dev.of_node,
-+					"marvell,crypto-srams", 0);
- 	if (cp->sram_pool) {
- 		cp->sram = gen_pool_dma_alloc(cp->sram_pool, sram_size,
- 					      &cp->sram_dma);
--- 
-2.1.4
+On 24 June 2015 at 22:02, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+> On 06/23/2015 07:09 AM, Gabriel Fernandez wrote:
+>> In the clk_summary output, the h/w status of DivMux is incorrect
+>> (Parent and Enable status), since the clk_mux_ops.get_parent()
+>> returns -ERRCODE when clock is OFF.
+>>
+>> Signed-off-by: Pankaj Dev <pankaj.dev-qxv4g6HH51o@public.gmane.org>
+>> Signed-off-by: Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>>  drivers/clk/st/clkgen-mux.c | 15 +++++++++------
+>>  1 file changed, 9 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/clk/st/clkgen-mux.c b/drivers/clk/st/clkgen-mux.c
+>> index 4fbe6e0..c94b56b 100644
+>> --- a/drivers/clk/st/clkgen-mux.c
+>> +++ b/drivers/clk/st/clkgen-mux.c
+>> @@ -128,7 +128,7 @@ static int clkgena_divmux_is_enabled(struct clk_hw *hw)
+>>
+>>       __clk_hw_set_clk(mux_hw, hw);
+>>
+>> -     return (s8)clk_mux_ops.get_parent(mux_hw) > 0;
+>> +     return ((s8)clk_mux_ops.get_parent(mux_hw) >= 0);
+>
+> Useless parentheses around it all, please drop.
+>
+Ok
 
+>>  }
+>>
+>>  static u8 clkgena_divmux_get_parent(struct clk_hw *hw)
+>> @@ -138,11 +138,13 @@ static u8 clkgena_divmux_get_parent(struct clk_hw *hw)
+>>
+>>       __clk_hw_set_clk(mux_hw, hw);
+>>
+>> -     genamux->muxsel = clk_mux_ops.get_parent(mux_hw);
+>> -     if ((s8)genamux->muxsel < 0) {
+>> -             pr_debug("%s: %s: Invalid parent, setting to default.\n",
+>> -                   __func__, __clk_get_name(hw->clk));
+>> -             genamux->muxsel = 0;
+>> +     if (genamux->muxsel == CKGAX_CLKOPSRC_SWITCH_OFF) {
+>> +             genamux->muxsel = clk_mux_ops.get_parent(mux_hw);
+>
+> Hm.. maybe we should fix clk_mux_ops to return 0 if it can't find the
+> parent? Or when this clock is registered we should read the hardware and
+> set a default parent so that we can't get an error code here.
+>
+I 'll try the second solution.
+
+Best regards
+
+Gabriel
+> --
+> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
