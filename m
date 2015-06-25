@@ -1,460 +1,124 @@
-Return-Path: <michael@smart-africa.com>
-Content-Type: multipart/alternative; boundary="Apple-Mail=_E08F9BCE-929A-4096-9765-23611B350F1E"
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2098\))
-Subject: Re: [PATCH 1/2] spi: dw: Allow interface drivers to limit data I/O to word sizes
-From: Michael van der Westhuizen <michael@smart-africa.com>
-In-Reply-To: <1435147064.10393.100.camel@linux.intel.com>
-Date: Wed, 24 Jun 2015 18:11:04 +0200
-Message-Id: <4C67526B-0B28-4539-8E7F-7F2D6B8967EC@smart-africa.com>
-References: <1434703435-25198-1-git-send-email-michael@smart-africa.com> <1434703435-25198-3-git-send-email-michael@smart-africa.com> <1435147064.10393.100.camel@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Thor Thayer <tthayer@opensource.altera.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Return-Path: <sfr@canb.auug.org.au>
+Date: Thu, 25 Jun 2015 10:33:59 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: [PATCH v7 00/14] crypto: add a new driver for Marvell's CESA
+Message-ID: <20150625103359.34d26955@canb.auug.org.au>
+In-Reply-To: <20150625000037.GK31584@windriver.com>
+References: <1434635190-27733-1-git-send-email-boris.brezillon@free-electrons.com>
+	<20150619142444.GA15234@gondor.apana.org.au>
+	<CAP=VYLqQynCNRTpm4JnOxeO6DH_739fO2QNcDMxaXqCKCHiTtQ@mail.gmail.com>
+	<CAP=VYLpSrTvXRovWo4G7AXWv1OKFQRpQR255hS5z+=h4+XOLhg@mail.gmail.com>
+	<20150621102418.2ea74910@bbrezillon>
+	<20150621082717.GA29128@gondor.apana.org.au>
+	<20150622092336.5949e258@bbrezillon>
+	<20150622075910.GA7659@gondor.apana.org.au>
+	<20150625000037.GK31584@windriver.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/M8UwRpFYe0+s/MxyWtgfE5q"; protocol="application/pgp-signature"
+To: Paul Gortmaker <paul.gortmaker@windriver.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>, Boris Brezillon <boris.brezillon@free-electrons.com>, "David S. Miller" <davem@davemloft.net>, linux-crypto@vger.kernel.org, Arnaud Ebalard <arno@natisbad.org>, Tawfik Bayouk <tawfik@marvell.com>, Lior Amsalem <alior@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Eran Ben-Avi <benavi@marvell.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, "linux-arm-kernel@lists.infradead.org\" " <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Imre Kaloz <kaloz@openwrt.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Andrew Morton <akpm@linux-foundation.org>
 List-ID: <devicetree@vger.kernel.org>
 
-
---Apple-Mail=_E08F9BCE-929A-4096-9765-23611B350F1E
+--Sig_/M8UwRpFYe0+s/MxyWtgfE5q
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;
-	charset=utf-8
 
+Hi Paul,
 
-> On 24 Jun 2015, at 1:57 PM, Andy Shevchenko =
-<andriy.shevchenko@linux.intel.com> wrote:
+On Wed, 24 Jun 2015 20:00:38 -0400 Paul Gortmaker <paul.gortmaker@windriver=
+.com> wrote:
+>
+> [Re: [PATCH v7 00/14] crypto: add a new driver for Marvell's CESA] On 22/=
+06/2015 (Mon 15:59) Herbert Xu wrote:
 >=20
-> On Fri, 2015-06-19 at 10:43 +0200, Michael van der Westhuizen wrote:
->> The commit dd11444327ce ("spi: dw-spi: Convert 16bit accesses to=20
->> 32bit
->> accesses") changed all 16bit accesses in the DW_apb_ssi driver to=20
->> 32bit.
->> This, unfortunately, breaks data register access on picoXcell, where=20=
-
->> the
->> DW IP needs data register accesses to be word accesses (all other
->> accesses appear to be OK).
+> > On Mon, Jun 22, 2015 at 09:23:36AM +0200, Boris Brezillon wrote:
+> > > Hi Herbert,
+> > >=20
+> > > On Sun, 21 Jun 2015 16:27:17 +0800
+> > > Herbert Xu <herbert@gondor.apana.org.au> wrote:
+> > >=20
+> > > > On Sun, Jun 21, 2015 at 10:24:18AM +0200, Boris Brezillon wrote:
+> > > > >=20
+> > > > > Indeed. Here is a patch fixing that.
+> > > >=20
+> > > > I think you should just kill COMPILE_TEST instead of adding ARM.
+> > >=20
+> > > The following patch is killing the COMPILE_TEST dependency.
+> >=20
+> > Patch applied.
 >=20
-> Thanks for the patch. My comments below.
+> Just a heads up, this driver is still killing a couple of linux-next
+> builds today and for the past few days.
 >=20
->>=20
->> This change introduces a new master variable to allow interface=20
->> drivers
->> to specify that 16bit data transfer I/O is required.  This change=20
->> also
->> introduces the ability to set this variable via device tree bindings=20=
-
->> in
->> the MMIO interface driver.
->>=20
->> Before this change, on a picoXcell pc3x3:
->> spi_master spi32766: interrupt_transfer: fifo overrun/underrun
->> m25p80 spi32766.0: error -5 reading 9f
->> m25p80: probe of spi32766.0 failed with error -5
->>=20
->> After this change:
->> m25p80 spi32766.0: m25p40 (512 Kbytes)
->>=20
+> drivers/crypto/mv_cesa.c:1037:2: error: implicit declaration of function
+> 'of_get_named_gen_pool' [-Werror=3Dimplicit-function-declaration]
 >=20
-> Please, add Fixes: tag as well.
-
-OK.
-
+> http://kisskb.ellerman.id.au/kisskb/buildresult/12448851/
+> http://kisskb.ellerman.id.au/kisskb/buildresult/12448776/
 >=20
->> Signed-off-by: Michael van der Westhuizen <michael@smart-africa.com>
->> ---
->> drivers/spi/spi-dw-mmio.c |  5 +++++
->> drivers/spi/spi-dw.c      | 13 +++++++++++--
->> drivers/spi/spi-dw.h      | 11 +++++++++++
->> 3 files changed, 27 insertions(+), 2 deletions(-)
->>=20
->> diff --git a/drivers/spi/spi-dw-mmio.c b/drivers/spi/spi-dw-mmio.c
->> index eb03e12..1397424 100644
->> --- a/drivers/spi/spi-dw-mmio.c
->> +++ b/drivers/spi/spi-dw-mmio.c
->> @@ -74,6 +74,11 @@ static int dw_spi_mmio_probe(struct=20
->> platform_device *pdev)
->>=20
->> 	dws->max_freq =3D clk_get_rate(dwsmmio->clk);
->>=20
->> +	if (pdev->dev.of_node)
->> +		dws->data_io_16bit =3D
->=20
-> I don't like "flexibility" in the  DeviceTree data base and thus I
-> would prefer to see what we already have in naming there, i.e.
-> reg-io-width =3D 2 or 4.
+> Missing dependency on CONFIG_OF_<blah> presumably.
 
-Will update.
+Actually this is caused by patch "genalloc: rename
+of_get_named_gen_pool() to of_gen_pool_get()" from Andrew's series.  I
+fixed one of the breakages, but clearly not all.
 
-<snip>
+I will add this patch to today's linux-next (Andrew, you will need
+this, obviously):
 
->> @@ -145,11 +146,21 @@ static inline u32 dw_readl(struct dw_spi *dws,=20=
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Thu, 25 Jun 2015 10:31:33 +1000
+Subject: [PATCH] crypto: marvell/cesa - another fix up for of_get_named_gen=
+_pool() rename
 
->> u32 offset)
->> 	return __raw_readl(dws->regs + offset);
->> }
->>=20
->> +static inline u16 dw_readw(struct dw_spi *dws, u32 offset)
->> +{
->> +	return __raw_readw(dws->regs + offset);
->> +}
->> +
->> static inline void dw_writel(struct dw_spi *dws, u32 offset, u32=20
->> val)
->> {
->> 	__raw_writel(val, dws->regs + offset);
->> }
->>=20
->> +static inline void dw_writew(struct dw_spi *dws, u32 offset, u16=20
->> val)
->> +{
->> +	__raw_writew(val, dws->regs + offset);
->> +}
->> +
->> static inline void spi_enable_chip(struct dw_spi *dws, int enable)
->> {
->> 	dw_writel(dws, DW_SPI_SSIENR, (enable ? 1 : 0));
->=20
-> Regarding to above comment what about something like
->=20
-> static inline u32 dw_read_reg(dws, offset)
-> {
-> switch (reg_io_width)
-> case 2:
->  return dw_readw();
-> case 4:
-> default:
->  return dw_readl();
-> }
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ drivers/crypto/mv_cesa.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Yes, that would be better.  Note that this will only be used for data
-register access, as the other registers seem fine with 32 bit access.
+diff --git a/drivers/crypto/mv_cesa.c b/drivers/crypto/mv_cesa.c
+index 5bcd575fa96f..e6b658faef63 100644
+--- a/drivers/crypto/mv_cesa.c
++++ b/drivers/crypto/mv_cesa.c
+@@ -1034,8 +1034,8 @@ static int mv_cesa_get_sram(struct platform_device *p=
+dev,
+ 			     &sram_size);
+=20
+ 	cp->sram_size =3D sram_size;
+-	cp->sram_pool =3D of_get_named_gen_pool(pdev->dev.of_node,
+-					      "marvell,crypto-srams", 0);
++	cp->sram_pool =3D of_gen_pool_get(pdev->dev.of_node,
++					"marvell,crypto-srams", 0);
+ 	if (cp->sram_pool) {
+ 		cp->sram =3D gen_pool_dma_alloc(cp->sram_pool, sram_size,
+ 					      &cp->sram_dma);
+--=20
+2.1.4
 
-I=E2=80=99ll update the series and resend.
+--=20
+Cheers,
+Stephen Rothwell                    sfr@canb.auug.org.au
 
-Michael
+--Sig_/M8UwRpFYe0+s/MxyWtgfE5q
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
---Apple-Mail=_E08F9BCE-929A-4096-9765-23611B350F1E
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/html;
-	charset=utf-8
+iQIcBAEBCAAGBQJVi0x9AAoJEMDTa8Ir7ZwVgFYP+gPIFn4D7LlLG9SChItaAmek
+0He6RtWATowgK7/h/utmYiiGvw1mFz7GzINH4a/UG1/lx+lkcd5ARS4CbpzAUh2h
+YMzVAcVRKBBLMDeNZF4aj2MZ8x/h3M2iWTdieOlivjfwGUXMztMNq85CbGMT3dkX
+7t1s8BYsjmbCvMBegQ3miDPNSfASKZinqWaEOtpLw979zfGHiWuiRsuk2tQ+w0SC
+BOVg7Qpbwp7UBnR1pAzkTMdv+o0VnkwRs0D93lmj/Fv1PDP16lTbl5bJ7Mx4X948
+FhOXZn0B3uim71FjPswwgxFy8ZRSAoDnopDRVY5gntR9Hl8s+6owRoiJ36ZphahN
+cwCREcouXl2ivnl1IknMmPI/QPFJkBXDsoy8tY3Tqo4hlrN4Sc7vGDk6E8W3Hr1Q
+iwtAZ5MLXc18KejpQQGvKWYRpmrwGsc+0U/DPA+Xk4i7v4I5U1Mrsatb5yngkeTM
+NVJkH4DRHqSxpliLei1qqs/wRAAgjFgKZa+GEAEC2nz/z8D8WkzZrtPYdlQcItRp
+9vyUZrSkFWZoHfcWEm7/UmLpqJNxP0IPgQa6WpupFkE3k7eetBIA8RPtadDzO+Ii
+nsitikVotx+KrKz0o2TR+6iCfzO/wycPLCDGFP+fiS3m5vVyIrJC1x4cB5E/tJk6
+cBkf68H03ff5yFwLL1Pd
+=HaAb
+-----END PGP SIGNATURE-----
 
-<html><head><meta http-equiv=3D"Content-Type" content=3D"text/html =
-charset=3Dutf-8"></head><body style=3D"word-wrap: break-word; =
--webkit-nbsp-mode: space; -webkit-line-break: after-white-space;" =
-class=3D""><br class=3D""><div><blockquote type=3D"cite" class=3D""><div =
-class=3D"">On 24 Jun 2015, at 1:57 PM, Andy Shevchenko &lt;<a =
-href=3D"mailto:andriy.shevchenko@linux.intel.com" =
-class=3D"">andriy.shevchenko@linux.intel.com</a>&gt; wrote:</div><br =
-class=3D"Apple-interchange-newline"><div class=3D""><span =
-style=3D"font-family: Helvetica; font-size: 12px; font-style: normal; =
-font-variant: normal; font-weight: normal; letter-spacing: normal; =
-line-height: normal; orphans: auto; text-align: start; text-indent: 0px; =
-text-transform: none; white-space: normal; widows: auto; word-spacing: =
-0px; -webkit-text-stroke-width: 0px; float: none; display: inline =
-!important;" class=3D"">On Fri, 2015-06-19 at 10:43 +0200, Michael van =
-der Westhuizen wrote:</span><br style=3D"font-family: Helvetica; =
-font-size: 12px; font-style: normal; font-variant: normal; font-weight: =
-normal; letter-spacing: normal; line-height: normal; orphans: auto; =
-text-align: start; text-indent: 0px; text-transform: none; white-space: =
-normal; widows: auto; word-spacing: 0px; -webkit-text-stroke-width: =
-0px;" class=3D""><blockquote type=3D"cite" style=3D"font-family: =
-Helvetica; font-size: 12px; font-style: normal; font-variant: normal; =
-font-weight: normal; letter-spacing: normal; line-height: normal; =
-orphans: auto; text-align: start; text-indent: 0px; text-transform: =
-none; white-space: normal; widows: auto; word-spacing: 0px; =
--webkit-text-stroke-width: 0px;" class=3D"">The commit dd11444327ce =
-("spi: dw-spi: Convert 16bit accesses to<span =
-class=3D"Apple-converted-space">&nbsp;</span><br class=3D"">32bit<br =
-class=3D"">accesses") changed all 16bit accesses in the DW_apb_ssi =
-driver to<span class=3D"Apple-converted-space">&nbsp;</span><br =
-class=3D"">32bit.<br class=3D"">This, unfortunately, breaks data =
-register access on picoXcell, where<span =
-class=3D"Apple-converted-space">&nbsp;</span><br class=3D"">the<br =
-class=3D"">DW IP needs data register accesses to be word accesses (all =
-other<br class=3D"">accesses appear to be OK).<br =
-class=3D""></blockquote><br style=3D"font-family: Helvetica; font-size: =
-12px; font-style: normal; font-variant: normal; font-weight: normal; =
-letter-spacing: normal; line-height: normal; orphans: auto; text-align: =
-start; text-indent: 0px; text-transform: none; white-space: normal; =
-widows: auto; word-spacing: 0px; -webkit-text-stroke-width: 0px;" =
-class=3D""><span style=3D"font-family: Helvetica; font-size: 12px; =
-font-style: normal; font-variant: normal; font-weight: normal; =
-letter-spacing: normal; line-height: normal; orphans: auto; text-align: =
-start; text-indent: 0px; text-transform: none; white-space: normal; =
-widows: auto; word-spacing: 0px; -webkit-text-stroke-width: 0px; float: =
-none; display: inline !important;" class=3D"">Thanks for the patch. My =
-comments below.</span><br style=3D"font-family: Helvetica; font-size: =
-12px; font-style: normal; font-variant: normal; font-weight: normal; =
-letter-spacing: normal; line-height: normal; orphans: auto; text-align: =
-start; text-indent: 0px; text-transform: none; white-space: normal; =
-widows: auto; word-spacing: 0px; -webkit-text-stroke-width: 0px;" =
-class=3D""><br style=3D"font-family: Helvetica; font-size: 12px; =
-font-style: normal; font-variant: normal; font-weight: normal; =
-letter-spacing: normal; line-height: normal; orphans: auto; text-align: =
-start; text-indent: 0px; text-transform: none; white-space: normal; =
-widows: auto; word-spacing: 0px; -webkit-text-stroke-width: 0px;" =
-class=3D""><blockquote type=3D"cite" style=3D"font-family: Helvetica; =
-font-size: 12px; font-style: normal; font-variant: normal; font-weight: =
-normal; letter-spacing: normal; line-height: normal; orphans: auto; =
-text-align: start; text-indent: 0px; text-transform: none; white-space: =
-normal; widows: auto; word-spacing: 0px; -webkit-text-stroke-width: =
-0px;" class=3D""><br class=3D"">This change introduces a new master =
-variable to allow interface<span =
-class=3D"Apple-converted-space">&nbsp;</span><br class=3D"">drivers<br =
-class=3D"">to specify that 16bit data transfer I/O is required. =
-&nbsp;This change<span class=3D"Apple-converted-space">&nbsp;</span><br =
-class=3D"">also<br class=3D"">introduces the ability to set this =
-variable via device tree bindings<span =
-class=3D"Apple-converted-space">&nbsp;</span><br class=3D"">in<br =
-class=3D"">the MMIO interface driver.<br class=3D""><br class=3D"">Before =
-this change, on a picoXcell pc3x3:<br class=3D"">spi_master spi32766: =
-interrupt_transfer: fifo overrun/underrun<br class=3D"">m25p80 =
-spi32766.0: error -5 reading 9f<br class=3D"">m25p80: probe of =
-spi32766.0 failed with error -5<br class=3D""><br class=3D"">After this =
-change:<br class=3D"">m25p80 spi32766.0: m25p40 (512 Kbytes)<br =
-class=3D""><br class=3D""></blockquote><br style=3D"font-family: =
-Helvetica; font-size: 12px; font-style: normal; font-variant: normal; =
-font-weight: normal; letter-spacing: normal; line-height: normal; =
-orphans: auto; text-align: start; text-indent: 0px; text-transform: =
-none; white-space: normal; widows: auto; word-spacing: 0px; =
--webkit-text-stroke-width: 0px;" class=3D""><span style=3D"font-family: =
-Helvetica; font-size: 12px; font-style: normal; font-variant: normal; =
-font-weight: normal; letter-spacing: normal; line-height: normal; =
-orphans: auto; text-align: start; text-indent: 0px; text-transform: =
-none; white-space: normal; widows: auto; word-spacing: 0px; =
--webkit-text-stroke-width: 0px; float: none; display: inline =
-!important;" class=3D"">Please, add Fixes: tag as well.</span><br =
-style=3D"font-family: Helvetica; font-size: 12px; font-style: normal; =
-font-variant: normal; font-weight: normal; letter-spacing: normal; =
-line-height: normal; orphans: auto; text-align: start; text-indent: 0px; =
-text-transform: none; white-space: normal; widows: auto; word-spacing: =
-0px; -webkit-text-stroke-width: 0px;" =
-class=3D""></div></blockquote><div><br class=3D""></div>OK.</div><div><br =
-class=3D""><blockquote type=3D"cite" class=3D""><div class=3D""><br =
-style=3D"font-family: Helvetica; font-size: 12px; font-style: normal; =
-font-variant: normal; font-weight: normal; letter-spacing: normal; =
-line-height: normal; orphans: auto; text-align: start; text-indent: 0px; =
-text-transform: none; white-space: normal; widows: auto; word-spacing: =
-0px; -webkit-text-stroke-width: 0px;" class=3D""><blockquote type=3D"cite"=
- style=3D"font-family: Helvetica; font-size: 12px; font-style: normal; =
-font-variant: normal; font-weight: normal; letter-spacing: normal; =
-line-height: normal; orphans: auto; text-align: start; text-indent: 0px; =
-text-transform: none; white-space: normal; widows: auto; word-spacing: =
-0px; -webkit-text-stroke-width: 0px;" class=3D"">Signed-off-by: Michael =
-van der Westhuizen &lt;<a href=3D"mailto:michael@smart-africa.com" =
-class=3D"">michael@smart-africa.com</a>&gt;<br class=3D"">---<br =
-class=3D"">drivers/spi/spi-dw-mmio.c | &nbsp;5 +++++<br =
-class=3D"">drivers/spi/spi-dw.c &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| 13 =
-+++++++++++--<br class=3D"">drivers/spi/spi-dw.h =
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| 11 +++++++++++<br class=3D"">3 files =
-changed, 27 insertions(+), 2 deletions(-)<br class=3D""><br =
-class=3D"">diff --git a/drivers/spi/spi-dw-mmio.c =
-b/drivers/spi/spi-dw-mmio.c<br class=3D"">index eb03e12..1397424 =
-100644<br class=3D"">--- a/drivers/spi/spi-dw-mmio.c<br class=3D"">+++ =
-b/drivers/spi/spi-dw-mmio.c<br class=3D"">@@ -74,6 +74,11 @@ static int =
-dw_spi_mmio_probe(struct<span =
-class=3D"Apple-converted-space">&nbsp;</span><br =
-class=3D"">platform_device *pdev)<br class=3D""><br class=3D""><span =
-class=3D"Apple-tab-span" style=3D"white-space: pre;">	=
-</span>dws-&gt;max_freq =3D clk_get_rate(dwsmmio-&gt;clk);<br =
-class=3D""><br class=3D"">+<span class=3D"Apple-tab-span" =
-style=3D"white-space: pre;">	</span>if (pdev-&gt;dev.of_node)<br =
-class=3D"">+<span class=3D"Apple-tab-span" style=3D"white-space: pre;">	=
-</span><span class=3D"Apple-tab-span" style=3D"white-space: pre;">	=
-</span>dws-&gt;data_io_16bit =3D<br class=3D""></blockquote><br =
-style=3D"font-family: Helvetica; font-size: 12px; font-style: normal; =
-font-variant: normal; font-weight: normal; letter-spacing: normal; =
-line-height: normal; orphans: auto; text-align: start; text-indent: 0px; =
-text-transform: none; white-space: normal; widows: auto; word-spacing: =
-0px; -webkit-text-stroke-width: 0px;" class=3D""><span =
-style=3D"font-family: Helvetica; font-size: 12px; font-style: normal; =
-font-variant: normal; font-weight: normal; letter-spacing: normal; =
-line-height: normal; orphans: auto; text-align: start; text-indent: 0px; =
-text-transform: none; white-space: normal; widows: auto; word-spacing: =
-0px; -webkit-text-stroke-width: 0px; float: none; display: inline =
-!important;" class=3D"">I don't like "flexibility" in the =
-&nbsp;DeviceTree data base and thus I</span><br style=3D"font-family: =
-Helvetica; font-size: 12px; font-style: normal; font-variant: normal; =
-font-weight: normal; letter-spacing: normal; line-height: normal; =
-orphans: auto; text-align: start; text-indent: 0px; text-transform: =
-none; white-space: normal; widows: auto; word-spacing: 0px; =
--webkit-text-stroke-width: 0px;" class=3D""><span style=3D"font-family: =
-Helvetica; font-size: 12px; font-style: normal; font-variant: normal; =
-font-weight: normal; letter-spacing: normal; line-height: normal; =
-orphans: auto; text-align: start; text-indent: 0px; text-transform: =
-none; white-space: normal; widows: auto; word-spacing: 0px; =
--webkit-text-stroke-width: 0px; float: none; display: inline =
-!important;" class=3D"">would prefer to see what we already have in =
-naming there, i.e.</span><br style=3D"font-family: Helvetica; font-size: =
-12px; font-style: normal; font-variant: normal; font-weight: normal; =
-letter-spacing: normal; line-height: normal; orphans: auto; text-align: =
-start; text-indent: 0px; text-transform: none; white-space: normal; =
-widows: auto; word-spacing: 0px; -webkit-text-stroke-width: 0px;" =
-class=3D""><span style=3D"font-family: Helvetica; font-size: 12px; =
-font-style: normal; font-variant: normal; font-weight: normal; =
-letter-spacing: normal; line-height: normal; orphans: auto; text-align: =
-start; text-indent: 0px; text-transform: none; white-space: normal; =
-widows: auto; word-spacing: 0px; -webkit-text-stroke-width: 0px; float: =
-none; display: inline !important;" class=3D"">reg-io-width =3D 2 or =
-4.</span><br style=3D"font-family: Helvetica; font-size: 12px; =
-font-style: normal; font-variant: normal; font-weight: normal; =
-letter-spacing: normal; line-height: normal; orphans: auto; text-align: =
-start; text-indent: 0px; text-transform: none; white-space: normal; =
-widows: auto; word-spacing: 0px; -webkit-text-stroke-width: 0px;" =
-class=3D""></div></blockquote><div><br class=3D""></div><div>Will =
-update.</div><div><br class=3D""></div><div>&lt;snip&gt;</div><br =
-class=3D""><blockquote type=3D"cite" class=3D""><div =
-class=3D""><blockquote type=3D"cite" style=3D"font-family: Helvetica; =
-font-size: 12px; font-style: normal; font-variant: normal; font-weight: =
-normal; letter-spacing: normal; line-height: normal; orphans: auto; =
-text-align: start; text-indent: 0px; text-transform: none; white-space: =
-normal; widows: auto; word-spacing: 0px; -webkit-text-stroke-width: =
-0px;" class=3D"">@@ -145,11 +146,21 @@ static inline u32 dw_readl(struct =
-dw_spi *dws,<span class=3D"Apple-converted-space">&nbsp;</span><br =
-class=3D"">u32 offset)<br class=3D""><span class=3D"Apple-tab-span" =
-style=3D"white-space: pre;">	</span>return __raw_readl(dws-&gt;regs + =
-offset);<br class=3D"">}<br class=3D""><br class=3D"">+static inline u16 =
-dw_readw(struct dw_spi *dws, u32 offset)<br class=3D"">+{<br =
-class=3D"">+<span class=3D"Apple-tab-span" style=3D"white-space: pre;">	=
-</span>return __raw_readw(dws-&gt;regs + offset);<br class=3D"">+}<br =
-class=3D"">+<br class=3D"">static inline void dw_writel(struct dw_spi =
-*dws, u32 offset, u32<span =
-class=3D"Apple-converted-space">&nbsp;</span><br class=3D"">val)<br =
-class=3D"">{<br class=3D""><span class=3D"Apple-tab-span" =
-style=3D"white-space: pre;">	</span>__raw_writel(val, dws-&gt;regs + =
-offset);<br class=3D"">}<br class=3D""><br class=3D"">+static inline =
-void dw_writew(struct dw_spi *dws, u32 offset, u16<span =
-class=3D"Apple-converted-space">&nbsp;</span><br class=3D"">val)<br =
-class=3D"">+{<br class=3D"">+<span class=3D"Apple-tab-span" =
-style=3D"white-space: pre;">	</span>__raw_writew(val, dws-&gt;regs + =
-offset);<br class=3D"">+}<br class=3D"">+<br class=3D"">static inline =
-void spi_enable_chip(struct dw_spi *dws, int enable)<br class=3D"">{<br =
-class=3D""><span class=3D"Apple-tab-span" style=3D"white-space: pre;">	=
-</span>dw_writel(dws, DW_SPI_SSIENR, (enable ? 1 : 0));<br =
-class=3D""></blockquote><br style=3D"font-family: Helvetica; font-size: =
-12px; font-style: normal; font-variant: normal; font-weight: normal; =
-letter-spacing: normal; line-height: normal; orphans: auto; text-align: =
-start; text-indent: 0px; text-transform: none; white-space: normal; =
-widows: auto; word-spacing: 0px; -webkit-text-stroke-width: 0px;" =
-class=3D""><span style=3D"font-family: Helvetica; font-size: 12px; =
-font-style: normal; font-variant: normal; font-weight: normal; =
-letter-spacing: normal; line-height: normal; orphans: auto; text-align: =
-start; text-indent: 0px; text-transform: none; white-space: normal; =
-widows: auto; word-spacing: 0px; -webkit-text-stroke-width: 0px; float: =
-none; display: inline !important;" class=3D"">Regarding to above comment =
-what about something like</span><br style=3D"font-family: Helvetica; =
-font-size: 12px; font-style: normal; font-variant: normal; font-weight: =
-normal; letter-spacing: normal; line-height: normal; orphans: auto; =
-text-align: start; text-indent: 0px; text-transform: none; white-space: =
-normal; widows: auto; word-spacing: 0px; -webkit-text-stroke-width: =
-0px;" class=3D""><br style=3D"font-family: Helvetica; font-size: 12px; =
-font-style: normal; font-variant: normal; font-weight: normal; =
-letter-spacing: normal; line-height: normal; orphans: auto; text-align: =
-start; text-indent: 0px; text-transform: none; white-space: normal; =
-widows: auto; word-spacing: 0px; -webkit-text-stroke-width: 0px;" =
-class=3D""><span style=3D"font-family: Helvetica; font-size: 12px; =
-font-style: normal; font-variant: normal; font-weight: normal; =
-letter-spacing: normal; line-height: normal; orphans: auto; text-align: =
-start; text-indent: 0px; text-transform: none; white-space: normal; =
-widows: auto; word-spacing: 0px; -webkit-text-stroke-width: 0px; float: =
-none; display: inline !important;" class=3D"">static inline u32 =
-dw_read_reg(dws, offset)</span><br style=3D"font-family: Helvetica; =
-font-size: 12px; font-style: normal; font-variant: normal; font-weight: =
-normal; letter-spacing: normal; line-height: normal; orphans: auto; =
-text-align: start; text-indent: 0px; text-transform: none; white-space: =
-normal; widows: auto; word-spacing: 0px; -webkit-text-stroke-width: =
-0px;" class=3D""><span style=3D"font-family: Helvetica; font-size: 12px; =
-font-style: normal; font-variant: normal; font-weight: normal; =
-letter-spacing: normal; line-height: normal; orphans: auto; text-align: =
-start; text-indent: 0px; text-transform: none; white-space: normal; =
-widows: auto; word-spacing: 0px; -webkit-text-stroke-width: 0px; float: =
-none; display: inline !important;" class=3D"">{</span><br =
-style=3D"font-family: Helvetica; font-size: 12px; font-style: normal; =
-font-variant: normal; font-weight: normal; letter-spacing: normal; =
-line-height: normal; orphans: auto; text-align: start; text-indent: 0px; =
-text-transform: none; white-space: normal; widows: auto; word-spacing: =
-0px; -webkit-text-stroke-width: 0px;" class=3D""><span =
-style=3D"font-family: Helvetica; font-size: 12px; font-style: normal; =
-font-variant: normal; font-weight: normal; letter-spacing: normal; =
-line-height: normal; orphans: auto; text-align: start; text-indent: 0px; =
-text-transform: none; white-space: normal; widows: auto; word-spacing: =
-0px; -webkit-text-stroke-width: 0px; float: none; display: inline =
-!important;" class=3D"">switch (reg_io_width)</span><br =
-style=3D"font-family: Helvetica; font-size: 12px; font-style: normal; =
-font-variant: normal; font-weight: normal; letter-spacing: normal; =
-line-height: normal; orphans: auto; text-align: start; text-indent: 0px; =
-text-transform: none; white-space: normal; widows: auto; word-spacing: =
-0px; -webkit-text-stroke-width: 0px;" class=3D""><span =
-style=3D"font-family: Helvetica; font-size: 12px; font-style: normal; =
-font-variant: normal; font-weight: normal; letter-spacing: normal; =
-line-height: normal; orphans: auto; text-align: start; text-indent: 0px; =
-text-transform: none; white-space: normal; widows: auto; word-spacing: =
-0px; -webkit-text-stroke-width: 0px; float: none; display: inline =
-!important;" class=3D"">case 2:</span><br style=3D"font-family: =
-Helvetica; font-size: 12px; font-style: normal; font-variant: normal; =
-font-weight: normal; letter-spacing: normal; line-height: normal; =
-orphans: auto; text-align: start; text-indent: 0px; text-transform: =
-none; white-space: normal; widows: auto; word-spacing: 0px; =
--webkit-text-stroke-width: 0px;" class=3D""><span style=3D"font-family: =
-Helvetica; font-size: 12px; font-style: normal; font-variant: normal; =
-font-weight: normal; letter-spacing: normal; line-height: normal; =
-orphans: auto; text-align: start; text-indent: 0px; text-transform: =
-none; white-space: normal; widows: auto; word-spacing: 0px; =
--webkit-text-stroke-width: 0px; float: none; display: inline =
-!important;" class=3D"">&nbsp;return dw_readw();</span><br =
-style=3D"font-family: Helvetica; font-size: 12px; font-style: normal; =
-font-variant: normal; font-weight: normal; letter-spacing: normal; =
-line-height: normal; orphans: auto; text-align: start; text-indent: 0px; =
-text-transform: none; white-space: normal; widows: auto; word-spacing: =
-0px; -webkit-text-stroke-width: 0px;" class=3D""><span =
-style=3D"font-family: Helvetica; font-size: 12px; font-style: normal; =
-font-variant: normal; font-weight: normal; letter-spacing: normal; =
-line-height: normal; orphans: auto; text-align: start; text-indent: 0px; =
-text-transform: none; white-space: normal; widows: auto; word-spacing: =
-0px; -webkit-text-stroke-width: 0px; float: none; display: inline =
-!important;" class=3D"">case 4:</span><br style=3D"font-family: =
-Helvetica; font-size: 12px; font-style: normal; font-variant: normal; =
-font-weight: normal; letter-spacing: normal; line-height: normal; =
-orphans: auto; text-align: start; text-indent: 0px; text-transform: =
-none; white-space: normal; widows: auto; word-spacing: 0px; =
--webkit-text-stroke-width: 0px;" class=3D""><span style=3D"font-family: =
-Helvetica; font-size: 12px; font-style: normal; font-variant: normal; =
-font-weight: normal; letter-spacing: normal; line-height: normal; =
-orphans: auto; text-align: start; text-indent: 0px; text-transform: =
-none; white-space: normal; widows: auto; word-spacing: 0px; =
--webkit-text-stroke-width: 0px; float: none; display: inline =
-!important;" class=3D"">default:</span><br style=3D"font-family: =
-Helvetica; font-size: 12px; font-style: normal; font-variant: normal; =
-font-weight: normal; letter-spacing: normal; line-height: normal; =
-orphans: auto; text-align: start; text-indent: 0px; text-transform: =
-none; white-space: normal; widows: auto; word-spacing: 0px; =
--webkit-text-stroke-width: 0px;" class=3D""><span style=3D"font-family: =
-Helvetica; font-size: 12px; font-style: normal; font-variant: normal; =
-font-weight: normal; letter-spacing: normal; line-height: normal; =
-orphans: auto; text-align: start; text-indent: 0px; text-transform: =
-none; white-space: normal; widows: auto; word-spacing: 0px; =
--webkit-text-stroke-width: 0px; float: none; display: inline =
-!important;" class=3D"">&nbsp;return dw_readl();</span><br =
-style=3D"font-family: Helvetica; font-size: 12px; font-style: normal; =
-font-variant: normal; font-weight: normal; letter-spacing: normal; =
-line-height: normal; orphans: auto; text-align: start; text-indent: 0px; =
-text-transform: none; white-space: normal; widows: auto; word-spacing: =
-0px; -webkit-text-stroke-width: 0px;" class=3D""><span =
-style=3D"font-family: Helvetica; font-size: 12px; font-style: normal; =
-font-variant: normal; font-weight: normal; letter-spacing: normal; =
-line-height: normal; orphans: auto; text-align: start; text-indent: 0px; =
-text-transform: none; white-space: normal; widows: auto; word-spacing: =
-0px; -webkit-text-stroke-width: 0px; float: none; display: inline =
-!important;" class=3D"">}</span><br style=3D"font-family: Helvetica; =
-font-size: 12px; font-style: normal; font-variant: normal; font-weight: =
-normal; letter-spacing: normal; line-height: normal; orphans: auto; =
-text-align: start; text-indent: 0px; text-transform: none; white-space: =
-normal; widows: auto; word-spacing: 0px; -webkit-text-stroke-width: =
-0px;" class=3D""></div></blockquote><div><br class=3D""></div></div>Yes, =
-that would be better. &nbsp;Note that this will only be used for =
-data<div class=3D"">register access, as the other registers seem fine =
-with 32 bit access.</div><div class=3D""><br class=3D""></div><div =
-class=3D"">I=E2=80=99ll update the series and resend.</div><div =
-class=3D""><br class=3D""></div><div class=3D"">Michael</div><div =
-class=3D""><br class=3D""></div></body></html>=
-
---Apple-Mail=_E08F9BCE-929A-4096-9765-23611B350F1E--
+--Sig_/M8UwRpFYe0+s/MxyWtgfE5q--
