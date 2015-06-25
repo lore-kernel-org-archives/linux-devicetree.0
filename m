@@ -1,50 +1,74 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 08/08] ARM: shmobile: Remove CMT renesas,channels-mask from DTS
-Date: Fri, 26 Jun 2015 00:56 +0300
-Message-ID: <1618432.qSqOq2tHsD@avalon>
-References: <20150621080903.10187.20998.sendpatchset@little-apple> <8019375.XSP9R0ZLbm@avalon> <CANqRtoRcv4VpF3vAgYKTOL1FyYURHx13-5-L9fH1HrJ-QvPymQ@mail.gmail.com>
+From: "Chalamarla, Tirumalesh" <Tirumalesh.Chalamarla@caviumnetworks.com>
+Subject: Re: [PATCH 2/6] GICv3: Add ITS entry to THUNDER dts
+Date: Thu, 25 Jun 2015 23:19:59 +0000
+Message-ID: <9184A2BB-2852-4B73-B964-881A1491EEA8@caviumnetworks.com>
+References: <1411573068-12952-1-git-send-email-rric@kernel.org>
+ <1411573068-12952-3-git-send-email-rric@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <CANqRtoRcv4VpF3vAgYKTOL1FyYURHx13-5-L9fH1HrJ-QvPymQ@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Magnus Damm <magnus.damm@gmail.com>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, SH-Linux <linux-sh@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Simon Horman <horms+renesas@verge.net.au>, Thomas Gleixner <tglx@linutronix.de>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1411573068-12952-3-git-send-email-rric@kernel.org>
+Content-Language: en-US
+Content-ID: <8CD627DE3C759D4C9F572C68F60E30B7@namprd07.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "marc.zyngier@arm.com" <marc.zyngier@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Robert Richter <rrichter@cavium.com>, Tirumalesh Chalamarla <tchalamarla@cavium.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Bjorn Helgaas <bhelgaas@google.com>, Liviu Dudau <liviu.dudau@arm.com>, Sunil Goutham <sgoutham@cavium.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Magnus,
+Hi Marc,
 
-On Tuesday 23 June 2015 11:46:45 Magnus Damm wrote:
-> On Tue, Jun 23, 2015 at 7:40 AM, Laurent Pinchart wrote:
-> > On Sunday 21 June 2015 17:10:33 Magnus Damm wrote:
-> >> From: Magnus Damm <damm+renesas@opensource.se>
-> >> 
-> >> Update the DTS to remove the now deprecated "renesas,channels-mask"
-> >> property.
-> >> 
-> >> The channel information is now kept in the device driver and can easily
-> >> be determined based on the compat string.
-> > 
-> > Unless I've missed something (which is entirely possibly given the late
-> > hour), the channel mask is only stored in the driver for the Gen2 CMT
-> > instances.
->
-> The case for sh73a0 and r8a7740 is also covered by some of the earlier
-> patches in this series.
+Any feed back on this. 
+Do you want me to submit this as a separate patch?so that it is easy for getting acceptance. 
 
-My bad, I've missed that. We should be good then.
+Thanks,
+Tirumalesh. 
 
-> So unless I'm mistaken the series should cover all current in-tree CMT DT
-> users that we have. I'm not aware of any out-of-tree users.
+> On Sep 24, 2014, at 8:37 AM, Robert Richter <rric@kernel.org> wrote:
 > 
-> You are right that there are more unused compat strings documented, so
-> those will break. I would be tempted in phasing those out somehow.
-> Also, I did not spend much time cleaning up the non R-Car Gen2 cases,
-> so in general that needs some love.
-
--- 
-Regards,
-
-Laurent Pinchart
-
+> From: Tirumalesh Chalamarla <tchalamarla@cavium.com>
+> 
+> The PCIe host controller uses MSIs provided by GICv3 ITS. Enable it on
+> Thunder SoCs by adding an entry to DT.
+> 
+> Signed-off-by: Tirumalesh Chalamarla <tchalamarla@cavium.com>
+> Signed-off-by: Robert Richter <rrichter@cavium.com>
+> ---
+> arch/arm64/boot/dts/thunder-88xx.dtsi | 9 +++++++++
+> 1 file changed, 9 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/thunder-88xx.dtsi b/arch/arm64/boot/dts/thunder-88xx.dtsi
+> index d8c0bdc51882..9cb7cf94284a 100644
+> --- a/arch/arm64/boot/dts/thunder-88xx.dtsi
+> +++ b/arch/arm64/boot/dts/thunder-88xx.dtsi
+> @@ -376,10 +376,19 @@
+> 		gic0: interrupt-controller@8010,00000000 {
+> 			compatible = "arm,gic-v3";
+> 			#interrupt-cells = <3>;
+> +			#address-cells = <2>;
+> +			#size-cells = <2>;
+> +			ranges;
+> 			interrupt-controller;
+> 			reg = <0x8010 0x00000000 0x0 0x010000>, /* GICD */
+> 			      <0x8010 0x80000000 0x0 0x600000>; /* GICR */
+> 			interrupts = <1 9 0xf04>;
+> +
+> +			its: gic-its@8010,00020000 {
+> +				compatible = "arm,gic-v3-its";
+> +				msi-controller;
+> +				reg = <0x8010 0x20000 0x0 0x200000>;
+> +			};
+> 		};
+> 
+> 		uaa0: serial@87e0,24000000 {
+> -- 
+> 2.1.0
+> 
