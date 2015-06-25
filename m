@@ -1,171 +1,59 @@
-From: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-Subject: [RFC PATCH 1/2] of: base: Allow more args than MAX_PHANDLE_ARGS if
-	required
-Date: Thu, 25 Jun 2015 17:52:27 +0200
-Message-ID: <1435247548-32201-1-git-send-email-joro@8bytes.org>
+From: Simon Guinot <simon.guinot@sequanux.org>
+Subject: Re: [PATCH] crypto: mv_cesa - fix up for of_get_named_gen_pool()
+ rename
+Date: Thu, 25 Jun 2015 17:56:05 +0200
+Message-ID: <20150625155605.GI4853@kw.sim.vm.gnt>
+References: <CABxcv=m4juAMHaMYSB+8O8cEX+YZCJ0cArS2wN-YGpTBgWe-CA@mail.gmail.com>
+ <1435221470-5382-1-git-send-email-simon.guinot@sequanux.org>
+ <20150625153006.GA11513@gondor.apana.org.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Joerg Roedel <jroedel-l3A5Bk7waGM@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ixNtouB4hv1hrEz3"
+Return-path: <linux-next-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150625153006.GA11513@gondor.apana.org.au>
+Sender: linux-next-owner@vger.kernel.org
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Nadav Haklai <nadavh@marvell.com>, Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Tawfik Bayouk <tawfik@marvell.com>, Eran Ben-Avi <benavi@marvell.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, linux-next@vger.kernel.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Arnaud Ebalard <arno@natisbad.org>, Rob Herring <robh+dt@kernel.org>, Gregory CLEMENT <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, LKML <linux-kernel@vger.kernel.org>, linux-crypto@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Joerg Roedel <jroedel-l3A5Bk7waGM@public.gmane.org>
 
-The main use of MAX_PHANDLE_ARGS is to define the number of
-args elements in 'struct of_phandle_args'. This struct is
-often declared on the stack and thus it is impractical to
-increase MAX_PHANDLE_ARGS again and again.
+--ixNtouB4hv1hrEz3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-To handle situations where more than MAX_PHANDLE_ARGS
-elements may appear in a device-tree, introduce functions
-to allocate/free 'struct of_phandle_args' with more than
-MAX_PHANDLE_ARGS elements and provide the new function
-of_parse_phandle_with_var_args(), which can handle those
-variable-size structs.
+On Thu, Jun 25, 2015 at 11:30:06PM +0800, Herbert Xu wrote:
+> On Thu, Jun 25, 2015 at 10:37:50AM +0200, Simon Guinot wrote:
+> > This patch fixes the following build error:
+> >=20
+> > drivers/crypto/mv_cesa.c: In function 'mv_cesa_get_sram':
+> > drivers/crypto/mv_cesa.c:1037: error: implicit declaration of function =
+'of_get_named_gen_pool'
+> > drivers/crypto/mv_cesa.c:1038: warning: assignment makes pointer from i=
+nteger without a cast
+> > scripts/Makefile.build:258: recipe for target 'drivers/crypto/mv_cesa.o=
+' failed
+> >=20
+> > Signed-off-by: Simon Guinot <simon.guinot@sequanux.org>
+>=20
+> This patch doesn't compile.
 
-This is necessary for the ARM-SMMU driver, where the number
-of mmu-masters can be up to 128.
+It does compile. How it could not ?
+But since the issue has already been fixed, it doesn't really matter.
 
-Signed-off-by: Joerg Roedel <jroedel-l3A5Bk7waGM@public.gmane.org>
----
- drivers/of/base.c  | 43 ++++++++++++++++++++++++++++++++++++-------
- include/linux/of.h |  7 +++++++
- 2 files changed, 43 insertions(+), 7 deletions(-)
+Simon
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index f065026..1cba334 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -54,6 +54,24 @@ DEFINE_MUTEX(of_mutex);
-  */
- DEFINE_RAW_SPINLOCK(devtree_lock);
- 
-+struct of_phandle_args *of_alloc_phandle_args(int size)
-+{
-+	struct of_phandle_args *args;
-+	int e = max(0, size - MAX_PHANDLE_ARGS);
-+
-+	args =  kzalloc(sizeof(struct of_phandle_args) + e * sizeof(uint32_t),
-+			GFP_KERNEL);
-+
-+	return args;
-+}
-+EXPORT_SYMBOL(of_alloc_phandle_args);
-+
-+void of_free_phandle_args(struct of_phandle_args *args)
-+{
-+	kfree(args);
-+}
-+EXPORT_SYMBOL(of_free_phandle_args);
-+
- int of_n_addr_cells(struct device_node *np)
- {
- 	const __be32 *ip;
-@@ -1446,7 +1464,8 @@ static int __of_parse_phandle_with_args(const struct device_node *np,
- 					const char *list_name,
- 					const char *cells_name,
- 					int cell_count, int index,
--					struct of_phandle_args *out_args)
-+					struct of_phandle_args *out_args,
-+					int elems)
- {
- 	const __be32 *list, *list_end;
- 	int rc = 0, size, cur_index = 0;
-@@ -1525,8 +1544,8 @@ static int __of_parse_phandle_with_args(const struct device_node *np,
- 
- 			if (out_args) {
- 				int i;
--				if (WARN_ON(count > MAX_PHANDLE_ARGS))
--					count = MAX_PHANDLE_ARGS;
-+				if (WARN_ON(count > elems))
-+					count = elems;
- 				out_args->np = node;
- 				out_args->args_count = count;
- 				for (i = 0; i < count; i++)
-@@ -1577,7 +1596,7 @@ struct device_node *of_parse_phandle(const struct device_node *np,
- 		return NULL;
- 
- 	if (__of_parse_phandle_with_args(np, phandle_name, NULL, 0,
--					 index, &args))
-+					 index, &args, MAX_PHANDLE_ARGS))
- 		return NULL;
- 
- 	return args.np;
-@@ -1623,10 +1642,20 @@ int of_parse_phandle_with_args(const struct device_node *np, const char *list_na
- 	if (index < 0)
- 		return -EINVAL;
- 	return __of_parse_phandle_with_args(np, list_name, cells_name, 0,
--					    index, out_args);
-+					    index, out_args, MAX_PHANDLE_ARGS);
- }
- EXPORT_SYMBOL(of_parse_phandle_with_args);
- 
-+int of_parse_phandle_with_var_args(const struct device_node *np, const char *list_name,
-+				   const char *cells_name, int index,
-+				   struct of_phandle_args *out_args, int elems)
-+{
-+	if (index < 0)
-+		return -EINVAL;
-+	return __of_parse_phandle_with_args(np, list_name, cells_name, 0,
-+					    index, out_args, elems);
-+}
-+EXPORT_SYMBOL(of_parse_phandle_with_var_args);
- /**
-  * of_parse_phandle_with_fixed_args() - Find a node pointed by phandle in a list
-  * @np:		pointer to a device tree node containing a list
-@@ -1664,7 +1693,7 @@ int of_parse_phandle_with_fixed_args(const struct device_node *np,
- 	if (index < 0)
- 		return -EINVAL;
- 	return __of_parse_phandle_with_args(np, list_name, NULL, cell_count,
--					   index, out_args);
-+					   index, out_args, MAX_PHANDLE_ARGS);
- }
- EXPORT_SYMBOL(of_parse_phandle_with_fixed_args);
- 
-@@ -1687,7 +1716,7 @@ int of_count_phandle_with_args(const struct device_node *np, const char *list_na
- 				const char *cells_name)
- {
- 	return __of_parse_phandle_with_args(np, list_name, cells_name, 0, -1,
--					    NULL);
-+					    NULL, MAX_PHANDLE_ARGS);
- }
- EXPORT_SYMBOL(of_count_phandle_with_args);
- 
-diff --git a/include/linux/of.h b/include/linux/of.h
-index b871ff9..afb7893 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -75,6 +75,10 @@ struct of_phandle_args {
- 	uint32_t args[MAX_PHANDLE_ARGS];
- };
- 
-+/* Use these if you need more that MAX_PHANDLE_ARGS */
-+extern struct of_phandle_args *of_alloc_phandle_args(int size);
-+extern void of_free_phandle_args(struct of_phandle_args *args);
-+
- struct of_reconfig_data {
- 	struct device_node	*dn;
- 	struct property		*prop;
-@@ -327,6 +331,9 @@ extern struct device_node *of_parse_phandle(const struct device_node *np,
- extern int of_parse_phandle_with_args(const struct device_node *np,
- 	const char *list_name, const char *cells_name, int index,
- 	struct of_phandle_args *out_args);
-+extern int of_parse_phandle_with_var_args(const struct device_node *np,
-+	const char *list_name, const char *cells_name, int index,
-+	struct of_phandle_args *out_args, int elems);
- extern int of_parse_phandle_with_fixed_args(const struct device_node *np,
- 	const char *list_name, int cells_count, int index,
- 	struct of_phandle_args *out_args);
--- 
-1.9.1
+--ixNtouB4hv1hrEz3
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlWMJJUACgkQgtp0PDeOcDrrIgCeIK8ognMIibnhMwkgTykdiHGF
+tZoAoKE1jmRtSe/rQopXtJfvoo9JANre
+=vl6b
+-----END PGP SIGNATURE-----
+
+--ixNtouB4hv1hrEz3--
