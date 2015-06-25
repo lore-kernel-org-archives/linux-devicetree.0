@@ -1,48 +1,82 @@
-From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCHv5 2/2] mailbox: Adding driver for Xilinx LogiCORE IP mailbox.
-Date: Thu, 25 Jun 2015 08:55:16 +0200
-Message-ID: <558BA5D4.8060903@xilinx.com>
-References: <1435082402-29239-1-git-send-email-moritz.fischer@ettus.com>
-	 <1435082402-29239-3-git-send-email-moritz.fischer@ettus.com>
- <1435178205.4528.77.camel@tiscali.nl>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: [RESEND] [PATCH v2 1/2] arm: devtree: Set system_rev from DT
+ revision
+Date: Thu, 25 Jun 2015 09:18:51 +0200
+Message-ID: <20150625071851.GB2890@pali>
+References: <1430902142-17035-1-git-send-email-pali.rohar@gmail.com>
+ <3577431.y872Foi4kj@wuerfel>
+ <20150506103752.GG30910@pali>
+ <3529567.PeFp1NNa1q@wuerfel>
+ <20150506114417.GI30910@pali>
+ <20150625050138.GL4156@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1435178205.4528.77.camel-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150625050138.GL4156@atomide.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, Rob Herring <robherring2@gmail.com>, Russell King <linux@arm.linux.org.uk>, Will Deacon <will.deacon@arm.com>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, Sebastian Reichel <sre@debian.org>, Pavel Machek <pavel@ucw.cz>, Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>, linux-omap@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/24/2015 10:36 PM, Paul Bolle wrote:
-> On Tue, 2015-06-23 at 11:00 -0700, Moritz Fischer wrote:
->> +MODULE_ALIAS("platform:xilinx-mailbox");
-> 
-> So I think this MODULE_ALIAS() is only useful if, in short, there's a
-> corresponding platform_device created. Ie, a platform_device with a
-> name "xilinx-mailbox" that will fire of a "MODALIAS=platform:xilinx
-> -mailbox" when it's created.
-> 
-> I couldn't spot such a platform_device. Provided git grep didn't let me
-> down here: what breaks if this line is dropped?
+On Wednesday 24 June 2015 22:01:38 Tony Lindgren wrote:
+> * Pali Roh=C3=A1r <pali.rohar@gmail.com> [150506 04:45]:
+> > On Wednesday 06 May 2015 13:04:01 Arnd Bergmann wrote:
+> > > >=20
+> > > > It needs to be done in this code, so "system_rev" variable is s=
+et
+> > > > properly...
+> > >=20
+> > > What I mean is which code accesses this variable that early?
+> > >=20
+> >=20
+> > ATAG code is doing it at same early stage, so I added it to same ea=
+rly
+> > stage...
+>=20
+> Yes we should do this early like the other atags.
+> =20
+> > > > > Also, it seems strange to have a string property and then use=
+ kstrtouint
+> > > > > to convert it into a number. I think it should either be spec=
+ified in a DT
+> > > > > binding to be a string and then have the kernel not assume th=
+at it is a number,
+> > > > > or we should define it to be binary.
+> > > > >=20
+> > > > >       Arnd
+> > > >=20
+> > > > Variable "system_rev" is number and it always was. So chaning t=
+ype will
+> > > > break more parts.
+> > > >=20
+> > > > And it is string DT property to be human readable. Some other d=
+evelopers
+> > > > suggested for v2 to change it to string (from number).
+> > >=20
+> > > Both of them would be human readable, you just use something else=
+ to
+> > > read them ;-)
+> > >=20
+> > > If we have a string here, we should just change all uses of syste=
+m_rev
+> > > in the kernel accordingly, there are only a few of them:
+>=20
+> Let's just keep it as a hex as it was. After all it's an existing
+> interface in /proc that user space programs may expect to be in
+> hex format already.
+>=20
+> Pali, care to repost the whole set again right after -rc1 with
+> with rev property naming and documentation added? Just keep it
+> as hex and let's forget any string conversion.
+>=20
+> Regards,
+>=20
+> Tony
 
-IRC you don't need to have this platform_device in the kernel present.
-Only one thing which should be check is that this driver can be used as
-platform device driver.
+Ok, but what do you mean to forget any string conversion?
 
-The only one problematic part is devm_clk_get() and this should be
-checked if you can use this as platform driver. From the first look it
-looks like that this will break it.
-
-Anyway if Moritz is able to use this a platform driver he can keep this
-line there. If not, it should be removed.
-
-Thanks,
-Michal
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
