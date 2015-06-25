@@ -1,76 +1,48 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/4] ARM: dts: sunxi: Add regulator-boot-on
- to usb host port regulator nodes
-Date: Thu, 25 Jun 2015 13:12:05 +0200
-Message-ID: <20150625111205.GC2266@lukather>
-References: <1434814810-26285-1-git-send-email-hdegoede@redhat.com>
- <1434814810-26285-2-git-send-email-hdegoede@redhat.com>
- <CAGRGNgU7179K408=PekziP9ZzzG7+rvhm=e7TWjZk1UhkAnVZQ@mail.gmail.com>
- <5587C720.9040007@redhat.com>
- <20150623071646.GL2266@lukather>
- <5589167E.4020905@redhat.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 02/13] dmaengine: Introduce dma_request_slave_channel_compat_reason()
+Date: Thu, 25 Jun 2015 13:15:57 +0200
+Message-ID: <4970019.av0JOFIyTW@wuerfel>
+References: <1432646768-12532-1-git-send-email-peter.ujfalusi@ti.com> <5587F1F4.1060905@ti.com> <20150624162401.GP19530@localhost>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="fblc08uBQ7kpPybH"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBN6FV6WAKGQEZ7RXV7Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5589167E.4020905-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <20150624162401.GP19530@localhost>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Tony Lindgren <tony@atomide.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Linux MMC List <linux-mmc@vger.kernel.org>, linux-crypto@vger.kernel.org, linux-spi <linux-spi@vger.kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, ALSA Development Mailing List <alsa-devel@alsa-project.org>
 List-Id: devicetree@vger.kernel.org
 
---fblc08uBQ7kpPybH
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
-
-On Tue, Jun 23, 2015 at 10:19:10AM +0200, Hans de Goede wrote:
-> Hi,
+On Wednesday 24 June 2015 21:54:01 Vinod Koul wrote:
+> > It would be nice to find another name for the
+> > dma_request_slave_channel_compat() so with the new name we could have chance
+> > to rearrange the parameters: (dev, name, mask, fn, fn_param)
+> > 
+> > We would end up with the following APIs, all returning with error code on failure:
+> > dma_request_slave_channel(dev, name);
+> > dma_request_channel_legacy(mask, fn, fn_param);
+> > dma_request_slave_channel_compat(mask, fn, fn_param, dev, name);
+> > dma_request_any_channel(mask);
+> This is good idea but still we end up with 4 APIs. Why not just converge to
+> two API, one legacy + memcpy + filer fn and one untimate API for slave?
 > 
-> On 23-06-15 09:16, Maxime Ripard wrote:
-> >On Mon, Jun 22, 2015 at 10:28:16AM +0200, Hans de Goede wrote:
-> >>Hi,
-> >>
-> >>On 22-06-15 02:30, Julian Calaby wrote:
-> >>>Hi Hans,
-> >>>
-> >>>On Sun, Jun 21, 2015 at 1:40 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
-> >>>>u-boot will have turned on the power to the usb host ports, so mark them
-> >>>>as regulator-boot-on, this stops the power on the ports from temporarily
-> >>>>getting turned off during boot, causing issues with e.g. usb powered
-> >>>>harddisks.
-> >>>
-> >>>Stupid question: shouldn't u-boot set this property?
-> >>
-> >>We could make u-boot set this property but that will require a lot of code on
-> >>u-boot's side which is simply not there atm. And traditionally this property
-> >>is is simply a part of the dts files as shipped with the kernel.
-> >
-> >What happens if the property is set but the regulator is not actually
-> >enabled?
+> Internally we may have 4 APIs for cleaner handling...
 > 
-> Then its gets enabled when the regulator loads, so assuming that the usb driver
-> is enabled in the kernel config 0.5 (built-in) - 3 (module) seconds earlier then
-> it otherwise would.
 
-Ok, perfect then.
+Not sure if it's realistic, but I think it would be nice to have
+a way for converting the current slave drivers that use the
+mask/filter/param API to the dev/name based API. We should
+be able to do this by registering a lookup table from platform
+code that translates one to the other, like we do with the
+clkdev lookup to find a device clock based on a local identifier.
 
-> This is not a problem since usb-ports are normally always powered anyways
+The main downside of this is that it's a lot of work if we want
+to completely remove dma_request_channel() for slave drivers,
+but it could be done more gradually.
 
-That might be true using mainline u-boot, but might not be on other
-bootloaders, hence why I asked that.
+Another upside is that we could come up with a mechanism to
+avoid the link-time dependency on the filter-function that
+causes problems when that filter is defined in a loadable
+module for the dmaengine driver.
 
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---fblc08uBQ7kpPybH--
+	Arnd
