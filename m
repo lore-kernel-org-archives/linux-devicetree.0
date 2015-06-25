@@ -1,186 +1,48 @@
-From: Alison Wang <b18965@freescale.com>
-Subject: [PATCH] dts: ls1021a: Add dts nodes for eTSEC0, eTSEC1 and eTSEC2
-Date: Thu, 25 Jun 2015 14:24:58 +0800
-Message-ID: <1435213498-21025-1-git-send-email-b18965@freescale.com>
+From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCHv5 2/2] mailbox: Adding driver for Xilinx LogiCORE IP mailbox.
+Date: Thu, 25 Jun 2015 08:55:16 +0200
+Message-ID: <558BA5D4.8060903@xilinx.com>
+References: <1435082402-29239-1-git-send-email-moritz.fischer@ettus.com>
+	 <1435082402-29239-3-git-send-email-moritz.fischer@ettus.com>
+ <1435178205.4528.77.camel@tiscali.nl>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, shawn.guo@linaro.org
-Cc: Claudiu Manoil <claudiu.manoil@freescale.com>, Alison Wang <alison.wang@freescale.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1435178205.4528.77.camel-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds generic dts nodes for eTSEC0, eTSEC1 and eTSEC2.
+On 06/24/2015 10:36 PM, Paul Bolle wrote:
+> On Tue, 2015-06-23 at 11:00 -0700, Moritz Fischer wrote:
+>> +MODULE_ALIAS("platform:xilinx-mailbox");
+> 
+> So I think this MODULE_ALIAS() is only useful if, in short, there's a
+> corresponding platform_device created. Ie, a platform_device with a
+> name "xilinx-mailbox" that will fire of a "MODALIAS=platform:xilinx
+> -mailbox" when it's created.
+> 
+> I couldn't spot such a platform_device. Provided git grep didn't let me
+> down here: what breaks if this line is dropped?
 
-Signed-off-by: Claudiu Manoil <claudiu.manoil@freescale.com>
-Signed-off-by: Alison Wang <alison.wang@freescale.com>
----
- arch/arm/boot/dts/ls1021a-qds.dts | 20 ++++++++++
- arch/arm/boot/dts/ls1021a-twr.dts | 20 ++++++++++
- arch/arm/boot/dts/ls1021a.dtsi    | 82 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 122 insertions(+)
+IRC you don't need to have this platform_device in the kernel present.
+Only one thing which should be check is that this driver can be used as
+platform device driver.
 
-diff --git a/arch/arm/boot/dts/ls1021a-qds.dts b/arch/arm/boot/dts/ls1021a-qds.dts
-index 9c5e16b..f16a061 100644
---- a/arch/arm/boot/dts/ls1021a-qds.dts
-+++ b/arch/arm/boot/dts/ls1021a-qds.dts
-@@ -75,6 +75,26 @@
- 	};
- };
- 
-+&enet0 {
-+	tbi-handle = <&tbi0>;
-+	phy-handle = <&sgmii_phy1c>;
-+	phy-connection-type = "sgmii";
-+	status = "okay";
-+};
-+
-+&enet1 {
-+	tbi-handle = <&tbi0>;
-+	phy-handle = <&sgmii_phy1d>;
-+	phy-connection-type = "sgmii";
-+	status = "okay";
-+};
-+
-+&enet2 {
-+	phy-handle = <&rgmii_phy3>;
-+	phy-connection-type = "rgmii-id";
-+	status = "okay";
-+};
-+
- &i2c0 {
- 	status = "okay";
- 
-diff --git a/arch/arm/boot/dts/ls1021a-twr.dts b/arch/arm/boot/dts/ls1021a-twr.dts
-index a2c591e..4b61766 100644
---- a/arch/arm/boot/dts/ls1021a-twr.dts
-+++ b/arch/arm/boot/dts/ls1021a-twr.dts
-@@ -73,6 +73,26 @@
- 	};
- };
- 
-+&enet0 {
-+	tbi-handle = <&tbi1>;
-+	phy-handle = <&sgmii_phy2>;
-+	phy-connection-type = "sgmii";
-+	status = "okay";
-+};
-+
-+&enet1 {
-+	tbi-handle = <&tbi1>;
-+	phy-handle = <&sgmii_phy0>;
-+	phy-connection-type = "sgmii";
-+	status = "okay";
-+};
-+
-+&enet2 {
-+	phy-handle = <&rgmii_phy1>;
-+	phy-connection-type = "rgmii-id";
-+	status = "okay";
-+};
-+
- &i2c0 {
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-index c70bb27..6c41b10 100644
---- a/arch/arm/boot/dts/ls1021a.dtsi
-+++ b/arch/arm/boot/dts/ls1021a.dtsi
-@@ -59,6 +59,9 @@
- 		serial3 = &lpuart3;
- 		serial4 = &lpuart4;
- 		serial5 = &lpuart5;
-+		ethernet0 = &enet0;
-+		ethernet1 = &enet1;
-+		ethernet2 = &enet2;
- 		sysclk = &sysclk;
- 	};
- 
-@@ -391,6 +394,85 @@
- 			reg = <0x0 0x2d24000 0x0 0x4000>;
- 		};
- 
-+		enet0: ethernet@2d10000 {
-+			compatible = "fsl,etsec2";
-+			device_type = "network";
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			interrupt-parent = <&gic>;
-+			model = "eTSEC";
-+			fsl,dma-endian-le;
-+			fsl,magic-packet;
-+			fsl,wake-on-filer;
-+			fsl,num_rx_queues = <0x1>;
-+			fsl,num_tx_queues = <0x1>;
-+			local-mac-address = [ 00 00 00 00 00 00 ];
-+			ranges;
-+
-+			queue-group@0 {
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				reg = <0x0 0x2d10000 0x0 0x8000>;
-+				fsl,rx-bit-map = <0xff>;
-+				fsl,tx-bit-map = <0xff>;
-+				interrupts = <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+
-+		};
-+
-+		enet1: ethernet@2d50000 {
-+			compatible = "fsl,etsec2";
-+			device_type = "network";
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			interrupt-parent = <&gic>;
-+			model = "eTSEC";
-+			fsl,dma-endian-le;
-+			fsl,num_rx_queues = <0x1>;
-+			fsl,num_tx_queues = <0x1>;
-+			local-mac-address = [ 00 00 00 00 00 00 ];
-+			ranges;
-+
-+			queue-group@0 {
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				reg = <0x0 0x2d50000 0x0 0x8000>;
-+				fsl,rx-bit-map = <0xff>;
-+				fsl,tx-bit-map = <0xff>;
-+				interrupts = <GIC_SPI 150 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 152 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+
-+		};
-+
-+		enet2: ethernet@2d90000 {
-+			compatible = "fsl,etsec2";
-+			device_type = "network";
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			interrupt-parent = <&gic>;
-+			model = "eTSEC";
-+			fsl,dma-endian-le;
-+			fsl,num_rx_queues = <0x1>;
-+			fsl,num_tx_queues = <0x1>;
-+			local-mac-address = [ 00 00 00 00 00 00 ];
-+			ranges;
-+
-+			queue-group@0 {
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				reg = <0x0 0x2d90000 0x0 0x8000>;
-+				fsl,rx-bit-map = <0xff>;
-+				fsl,tx-bit-map = <0xff>;
-+				interrupts = <GIC_SPI 157 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 158 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 159 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+		};
-+
- 		usb@8600000 {
- 			compatible = "fsl-usb2-dr-v2.5", "fsl-usb2-dr";
- 			reg = <0x0 0x8600000 0x0 0x1000>;
--- 
-2.1.0.27.g96db324
+The only one problematic part is devm_clk_get() and this should be
+checked if you can use this as platform driver. From the first look it
+looks like that this will break it.
+
+Anyway if Moritz is able to use this a platform driver he can keep this
+line there. If not, it should be removed.
+
+Thanks,
+Michal
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
