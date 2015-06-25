@@ -1,48 +1,48 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 6/7] mfd: arizona: Update DT doc for new mic detection
- bindings
-Date: Thu, 25 Jun 2015 09:53:41 +0100
-Message-ID: <20150625085341.GZ15013@x1>
-References: <1434709467-28147-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <1434709467-28147-7-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <20150624141534.GN15013@x1>
- <20150624154139.GD6321@opensource.wolfsonmicro.com>
+From: Javier Martinez Canillas <javier@dowhile0.org>
+Subject: Re: [PATCH v2 7/9] ARM: multi_v7_defconfig: Enable support for PWM Regulators
+Date: Thu, 25 Jun 2015 11:18:13 +0200
+Message-ID: <CABxcv==_YZ7BCCzfbLXYxwUL_kKLtBxOVTCvcUnvGVnrD4bVpg@mail.gmail.com>
+References: <1435154348-28840-1-git-send-email-lee.jones@linaro.org>
+	<1435154348-28840-8-git-send-email-lee.jones@linaro.org>
+	<CABxcv==J2hi0y+=s3nK_U=-jkjTW3L9jCC2JfebnWwRfpDGLAQ@mail.gmail.com>
+	<20150625084204.GW15013@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150624154139.GD6321-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20150625084204.GW15013@x1>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, kernel@stlinux.com, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Ajit Pal Singh <ajitpal.singh@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 24 Jun 2015, Charles Keepax wrote:
+Hello Lee,
 
-> On Wed, Jun 24, 2015 at 03:15:34PM +0100, Lee Jones wrote:
-> > This requires a DT Ack.
-> >=20
-> > [... which would be pretty difficult, as you didn't Cc them]
-> >=20
->=20
-> I was under the impression that for fairly non-controversial
-> bindings (which I really feel these are) that CCing the DT
-> mailing list was considered sufficient. But I am more than happy
-> to resend with more people on the CC if you prefer.
+On Thu, Jun 25, 2015 at 10:42 AM, Lee Jones <lee.jones@linaro.org> wrote:
+> On Wed, 24 Jun 2015, Javier Martinez Canillas wrote:
 
-I never Cc the Maintainers personally, as there are a lot of them.
-AFAIU Cc'ing the list is fine.
+[...]
 
-However ... you didn't do that either.
+>> > diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+>> > index f632af0..6666973 100644
+>> > --- a/arch/arm/configs/multi_v7_defconfig
+>> > +++ b/arch/arm/configs/multi_v7_defconfig
+>> > @@ -365,6 +365,7 @@ CONFIG_REGULATOR_MAX8907=y
+>> >  CONFIG_REGULATOR_MAX8973=y
+>> >  CONFIG_REGULATOR_MAX77686=y
+>> >  CONFIG_REGULATOR_PALMAS=y
+>> > +CONFIG_REGULATOR_PWM=y
+>>
+>> The current policy is to build as much as possible as a module in
+>> multi_v7_defconfig. Since this is a tristate Kconfig symbol, could you
+>> please change it to =m ?
+>
+> I would prefer that it stays built-in.
+>
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ok, I've no strong opinion on this. I was just mentioning what arm-soc
+maintainers prefer nowadays.
+
+May I ask what's the rationale for leaving this option built-in?
+
+Best regards,
+Javier
