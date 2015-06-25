@@ -1,35 +1,63 @@
-From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-Subject: [PATCH] Documentation: dt: clk: fix typo in assigned-clock-rates name
-Date: Thu, 25 Jun 2015 18:06:30 +0300
-Message-ID: <1435244790-13064-1-git-send-email-vladimir_zapolskiy@mentor.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v0] arm64: dts: Add poweroff button device node for APM
+ X-Gene platform
+Date: Thu, 25 Jun 2015 16:09:38 +0100
+Message-ID: <20150625150938.GB6844@leverpostej>
+References: <1434505312-27977-1-git-send-email-yvo@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mike Turquette <mturquette@linaro.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1434505312-27977-1-git-send-email-yvo@apm.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Y Vo <yvo@apm.com>
+Cc: "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "arm@kernel.org" <arm@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Phong Vo <pvo@apm.com>, Toan Le <toanle@apm.com>, "patches@apm.com" <patches@apm.com>, Loc Ho <lho@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-Fix a trivial copy-paste typo, "assigned-clock-rates" property is
-named as "assigned-clock-parents".
+On Wed, Jun 17, 2015 at 02:41:52AM +0100, Y Vo wrote:
+> This patch adds poweroff button device node to support poweroff feature
+> on APM X-Gene Mustang platform.
+> 
+> Signed-off-by: Y Vo <yvo@apm.com>
+> ---
+>  arch/arm64/boot/dts/apm/apm-mustang.dts |   11 +++++++++++
+>  1 files changed, 11 insertions(+), 0 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/apm/apm-mustang.dts b/arch/arm64/boot/dts/apm/apm-mustang.dts
+> index 83578e7..67979c8 100644
+> --- a/arch/arm64/boot/dts/apm/apm-mustang.dts
+> +++ b/arch/arm64/boot/dts/apm/apm-mustang.dts
+> @@ -23,6 +23,17 @@
+>  		device_type = "memory";
+>  		reg = < 0x1 0x00000000 0x0 0x80000000 >; /* Updated by bootloader */
+>  	};
+> +
+> +	gpio-keys {
+> +		compatible = "gpio-keys";
+> +		apm_ctrl_name = "Power Button";
 
-Signed-off-by: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
----
- Documentation/devicetree/bindings/clock/clock-bindings.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Huh?
 
-diff --git a/Documentation/devicetree/bindings/clock/clock-bindings.txt b/Documentation/devicetree/bindings/clock/clock-bindings.txt
-index 06fc6d5..bf5b041 100644
---- a/Documentation/devicetree/bindings/clock/clock-bindings.txt
-+++ b/Documentation/devicetree/bindings/clock/clock-bindings.txt
-@@ -138,7 +138,7 @@ Some platforms may require initial configuration of default parent clocks
- and clock frequencies. Such a configuration can be specified in a device tree
- node through assigned-clocks, assigned-clock-parents and assigned-clock-rates
- properties. The assigned-clock-parents property should contain a list of parent
--clocks in form of phandle and clock specifier pairs, the assigned-clock-parents
-+clocks in form of phandle and clock specifier pairs, the assigned-clock-rates
- property the list of assigned clock frequency values - corresponding to clocks
- listed in the assigned-clocks property.
- 
--- 
-2.1.4
+Undocumented, unused, and doesn't follwo the "vendor,property" naming
+scheme...
+
+Mark.
+
+> +		btn3 {
+> +			label = "EXT_PWR";
+> +			linux,code = <116>;
+> +			linux,input-type = <0x1>;     /* EV_KEY */
+> +			interrupts = <0x0 0x2d 0x1>;
+> +		};
+> +	};
+>  };
+>  
+>  &pcie0clk {
+> -- 
+> 1.7.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
