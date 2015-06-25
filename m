@@ -1,101 +1,88 @@
-From: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
-Subject: [PATCH-v4 1/3] mfd: 88pm800: Add device tree support
-Date: Thu, 25 Jun 2015 12:56:27 +0530
-Message-ID: <1435217189-19578-2-git-send-email-vaibhav.hiremath@linaro.org>
+From: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH-v4 3/3] mfd: devicetree: bindings: Add new 88pm800 mfd binding
+Date: Thu, 25 Jun 2015 12:56:29 +0530
+Message-ID: <1435217189-19578-4-git-send-email-vaibhav.hiremath@linaro.org>
 References: <1435217189-19578-1-git-send-email-vaibhav.hiremath@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1435217189-19578-1-git-send-email-vaibhav.hiremath@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, lee.jones@linaro.org, robh+dt@kernel.org, yizhang@marvell.com, Vaibhav Hiremath <vaibhav.hiremath@linaro.org>, Chao Xie <chao.xie@marvell.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1435217189-19578-1-git-send-email-vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, yizhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add DT support to the 88pm800 driver, along with compatible
-field for it's sub-devices (rtc, onkey and regulator)
+With addition of DT support to 88pm800 mfd driver, this patch
+adds new DT binding documentation along with respective properties.
 
-Signed-off-by: Chao Xie <chao.xie@marvell.com>
-Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
+Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- drivers/mfd/88pm800.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ Documentation/devicetree/bindings/mfd/88pm800.txt | 54 +++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/88pm800.txt
 
-diff --git a/drivers/mfd/88pm800.c b/drivers/mfd/88pm800.c
-index 841717a..40fd014 100644
---- a/drivers/mfd/88pm800.c
-+++ b/drivers/mfd/88pm800.c
-@@ -27,6 +27,7 @@
- #include <linux/mfd/core.h>
- #include <linux/mfd/88pm80x.h>
- #include <linux/slab.h>
-+#include <linux/of_device.h>
- 
- /* Interrupt Registers */
- #define PM800_INT_STATUS1		(0x05)
-@@ -121,6 +122,11 @@ static const struct i2c_device_id pm80x_id_table[] = {
- };
- MODULE_DEVICE_TABLE(i2c, pm80x_id_table);
- 
-+static const struct of_device_id pm80x_of_match_table[] = {
-+	{ .compatible = "marvell,88pm800", },
-+	{},
-+};
+diff --git a/Documentation/devicetree/bindings/mfd/88pm800.txt b/Documentation/devicetree/bindings/mfd/88pm800.txt
+new file mode 100644
+index 0000000..f56b751
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/88pm800.txt
+@@ -0,0 +1,54 @@
++* Marvell 88PM8xx Power Management IC
 +
- static struct resource rtc_resources[] = {
- 	{
- 	 .name = "88pm80x-rtc",
-@@ -133,6 +139,7 @@ static struct resource rtc_resources[] = {
- static struct mfd_cell rtc_devs[] = {
- 	{
- 	 .name = "88pm80x-rtc",
-+	 .of_compatible = "marvell,88pm80x-rtc",
- 	 .num_resources = ARRAY_SIZE(rtc_resources),
- 	 .resources = &rtc_resources[0],
- 	 .id = -1,
-@@ -151,6 +158,7 @@ static struct resource onkey_resources[] = {
- static const struct mfd_cell onkey_devs[] = {
- 	{
- 	 .name = "88pm80x-onkey",
-+	 .of_compatible = "marvell,88pm80x-onkey",
- 	 .num_resources = 1,
- 	 .resources = &onkey_resources[0],
- 	 .id = -1,
-@@ -160,6 +168,7 @@ static const struct mfd_cell onkey_devs[] = {
- static const struct mfd_cell regulator_devs[] = {
- 	{
- 	 .name = "88pm80x-regulator",
-+	 .of_compatible = "marvell,88pm80x-regulator",
- 	 .id = -1,
- 	},
- };
-@@ -544,8 +553,21 @@ static int pm800_probe(struct i2c_client *client,
- 	int ret = 0;
- 	struct pm80x_chip *chip;
- 	struct pm80x_platform_data *pdata = dev_get_platdata(&client->dev);
-+	struct device_node *np = client->dev.of_node;
- 	struct pm80x_subchip *subchip;
- 
-+	if (!pdata && !np) {
-+		dev_err(&client->dev,
-+			"pm80x requires platform data or of_node\n");
-+		return -EINVAL;
-+	}
++Required parent device properties:
++- compatible : "marvell,88pm800", "marvell,88pm805", "marvell,88pm860"
++- reg : the I2C slave address for the 88pm8xx chip
++- interrupts : IRQ line for the 88pm8xx chip
++- interrupt-controller: describes the 88pm8xx as an interrupt controller
++- #interrupt-cells : should be 1.
++		- The cell is the 88pm8xx local IRQ number
 +
-+	if (!pdata) {
-+		pdata = devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL);
-+		if (!pdata)
-+			return -ENOMEM;
-+	}
++88pm8xx family of devices consists of varied group of sub-devices:
 +
- 	ret = pm80x_init(client);
- 	if (ret) {
- 		dev_err(&client->dev, "pm800_init fail\n");
-@@ -611,6 +633,7 @@ static struct i2c_driver pm800_driver = {
- 		.name = "88PM800",
- 		.owner = THIS_MODULE,
- 		.pm = &pm80x_pm_ops,
-+		.of_match_table	= pm80x_of_match_table,
- 		},
- 	.probe = pm800_probe,
- 	.remove = pm800_remove,
++Device		 	Supply Names	 Description
++------		 	------------	 -----------
++88pm80x-onkey		:		: On key
++88pm80x-rtc		:		: RTC
++88pm80x-regulator	:		: Regulators
++
++Note: More device list will follow
++
++Example:
++
++	pmic: 88pm800@30 {
++		compatible = "marvell,88pm800";
++		reg = <0x30>;
++		interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-parent = <&gic>;
++		interrupt-controller;
++		#interrupt-cells = <1>;
++
++		regulators {
++			compatible = "marvell,88pm80x-regulator";
++
++			buck1a: BUCK1A {
++				regulator-name = "BUCK1A";
++				regulator-min-microvolt = <600000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			ldo1: LDO1 {
++				regulator-name = "LDO1";
++				regulator-min-microvolt = <1700000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++		};
++
++		rtc {
++			compatible = "marvell,88pm80x-rtc";
++		};
++	};
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
