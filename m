@@ -1,120 +1,55 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2] ARM: socfpga: dts: Add adxl34x
-Date: Thu, 25 Jun 2015 09:28:44 +0200
-Message-ID: <CAMuHMdW5EG+LnWE7sFYVJKHjN=k7mUUp7U5-r3hMjQvsKgf3ug@mail.gmail.com>
-References: <1419462712-14151-1-git-send-email-walter@vanguardiasur.com.ar>
-	<20150105092153.GJ13070@pengutronix.de>
-	<CABxpGwCbFF+pJ0H_sMjqk6c9awdRuxi6j0CL_d3mH5z4Qht+ng@mail.gmail.com>
-	<CABxpGwAFdLET+fg3WvMWqXdzsPQHv3hKx9cFwk9RQE9w6+rEbg@mail.gmail.com>
-	<550F8297.80809@opensource.altera.com>
-	<CABxpGwA3cs11Wtvs_8iGka9anb2+vHhfph19VKbTwBJOeh9bbw@mail.gmail.com>
-	<CABxpGwC_Eaz593gvPsS=jRpgxY1SM17hsArGfFPBjow-oBYB9g@mail.gmail.com>
+From: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
+Subject: Re: [PATCHv5 2/2] mailbox: Adding driver for Xilinx LogiCORE IP
+ mailbox.
+Date: Thu, 25 Jun 2015 09:31:31 +0200
+Message-ID: <1435217491.16792.5.camel@tiscali.nl>
+References: <1435082402-29239-1-git-send-email-moritz.fischer@ettus.com>
+	 <1435082402-29239-3-git-send-email-moritz.fischer@ettus.com>
+	 <1435178205.4528.77.camel@tiscali.nl> <558BA5D4.8060903@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABxpGwC_Eaz593gvPsS=jRpgxY1SM17hsArGfFPBjow-oBYB9g@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Walter Lozano <walter@vanguardiasur.com.ar>
-Cc: Dinh Nguyen <dinguyen@opensource.altera.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <558BA5D4.8060903-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 23, 2015 at 10:20 PM, Walter Lozano
-<walter@vanguardiasur.com.ar> wrote:
-> On Mon, Mar 23, 2015 at 11:29 PM, Walter Lozano
-> <walter@vanguardiasur.com.ar> wrote:
->> On Mon, Mar 23, 2015 at 12:03 AM, Dinh Nguyen
->> <dinguyen@opensource.altera.com> wrote:
->>> On 3/19/15 4:27 PM, Walter Lozano wrote:
->>>> On Mon, Mar 16, 2015 at 10:10 AM, Walter Lozano
->>>> <walter@vanguardiasur.com.ar> wrote:
->>>>> On Mon, Jan 5, 2015 at 6:21 AM, Steffen Trumtrar
->>>>> <s.trumtrar@pengutronix.de> wrote:
->>>>>> On Wed, Dec 24, 2014 at 08:11:52PM -0300, Walter Lozano wrote:
->>>>>>> This patch adds the DTS bindings for the adxl34x digital
->>>>>>> accelerometer.
->>>>>>>
->>>>>>> Signed-off-by: Walter Lozano <walter@vanguardiasur.com.ar>
->>>>>>> ---
->>>>>>>  arch/arm/boot/dts/socfpga_cyclone5_sockit.dts |   16 ++++++++++++++++
->>>>>>>  1 file changed, 16 insertions(+)
->>>>>>>
->>>>>>> diff --git a/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts b/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
->>>>>>> index 16ea6f5..d343e03 100644
->>>>>>> --- a/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
->>>>>>> +++ b/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
->>>>>>> @@ -60,6 +60,22 @@
->>>>>>>       rxc-skew-ps = <2000>;
->>>>>>>  };
->>>>>>>
->>>>>>> +&gpio2 {
->>>>>>> +     status = "okay";
->>>>>>> +};
->>>>>>> +
->>>>>>> +&i2c1 {
->>>>>>> +     status = "okay";
->>>>>>> +
->>>>>>> +     accel1: accelerometer@53 {
->>>>>>> +             compatible = "adxl34x";
->>>
->>> Shouldn't this be "adi,adxl34x"? At least that's what the documentation
->>> says.
->>>
->>>>>>> +             reg = <0x53>;
->>>>>>> +
->>>>>>> +             interrupt-parent = <&portc>;
->>>>>>> +             interrupts = <3 2>;
->>>>>>> +     };
->>>>>>> +};
->>>>>>> +
->>>>>>>  &mmc0 {
->>>>>>>       vmmc-supply = <&regulator_3_3v>;
->>>>>>>       vqmmc-supply = <&regulator_3_3v>;
->>>>>>
->>>>>> I just gave it a short spin. I get some interrupts and the position property
->>>>>> changes, so it seems to work:
->>>>>>
->>>>>>         Acked-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
->>>>>>
->>>>>
->>>>> Ping?
->>>>> How should this continue?
->>>>
->>>> Any news about this patch? It has been acked by Pavel Machek and
->>>> Steffen Trumtrar a while ago.
->>>>
->>>
->>> Sorry, since I wasn't CC on the original patch and somehow my filter
->>> didn't catch it, I didn't see this patch until now.
->>
->> No problem, I know it was my fault as I trust the output of get_maintainer.pl
->>
->
-> Ping?
->
-> --
-> Walter Lozano, VanguardiaSur
-> www.vanguardiasur.com.ar
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Thu, 2015-06-25 at 08:55 +0200, Michal Simek wrote:
+> On 06/24/2015 10:36 PM, Paul Bolle wrote:
+> > On Tue, 2015-06-23 at 11:00 -0700, Moritz Fischer wrote:
+> > > +MODULE_ALIAS("platform:xilinx-mailbox");
+> > 
+> > So I think this MODULE_ALIAS() is only useful if, in short, there's 
+> > a corresponding platform_device created. Ie, a platform_device with 
+> > a name "xilinx-mailbox" that will fire of a "MODALIAS=platform:xili
+> > nx-mailbox" when it's created.
+> > 
+> > I couldn't spot such a platform_device. Provided git grep didn't 
+> > let me down here: what breaks if this line is dropped?
+> 
+> IRC you don't need to have this platform_device in the kernel 
+> present. Only one thing which should be check is that this driver can 
+> be used as platform device driver.
+> 
+> The only one problematic part is devm_clk_get() and this should be
+> checked if you can use this as platform driver. From the first look 
+> it looks like that this will break it.
+> 
+> Anyway if Moritz is able to use this a platform driver he can keep 
+> this line there. If not, it should be removed.
 
-Now these commits are in:
-  - 3a38958d2477b718 ("Input: adxl34x - add OF match support") [1]
-  - e465bf6fc55d5ce2 ("DT: i2c: Deprecate adi,adxl34x compatible string") [2]
+But, assuming this works as a platform driver, where does the "xilinx
+-mailbox" platform device originate?
 
-you can use "adi,adxl345" (or "adi,adxl346", "adi,adxl345").
 
-[1] http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=3a38958d2477b718d1011fb88c24c4f264ee9700
-[2] http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=e465bf6fc55d5ce21fb45a75c3fa613505e6be20
+Paul Bolle
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
+PS Evolution 3.16 is nearly unbearable in its handling of replies to
+plain text messages. Doe anyone know how to make it handle them
+sensibly?
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
