@@ -1,147 +1,54 @@
-From: Dinh Nguyen <dinguyen@opensource.altera.com>
-Subject: Re: [PATCH v2] ARM: socfpga: dts: Add adxl34x
-Date: Thu, 25 Jun 2015 12:05:53 -0500
-Message-ID: <558C34F1.4080407@opensource.altera.com>
-References: <1419462712-14151-1-git-send-email-walter@vanguardiasur.com.ar>
-	<20150105092153.GJ13070@pengutronix.de>
-	<CABxpGwCbFF+pJ0H_sMjqk6c9awdRuxi6j0CL_d3mH5z4Qht+ng@mail.gmail.com>
-	<CABxpGwAFdLET+fg3WvMWqXdzsPQHv3hKx9cFwk9RQE9w6+rEbg@mail.gmail.com>
-	<550F8297.80809@opensource.altera.com>
-	<CABxpGwA3cs11Wtvs_8iGka9anb2+vHhfph19VKbTwBJOeh9bbw@mail.gmail.com>
-	<CABxpGwC_Eaz593gvPsS=jRpgxY1SM17hsArGfFPBjow-oBYB9g@mail.gmail.com>
-	<CAMuHMdW5EG+LnWE7sFYVJKHjN=k7mUUp7U5-r3hMjQvsKgf3ug@mail.gmail.com>
- <CABxpGwCYjw87pgHczooC4qTebGO1_vc+CH_1fkD0XjEDpbAVzQ@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 2/3] ARM: dts: axp152: Add a dtsi file for
+ the axp152 pmic
+Date: Thu, 25 Jun 2015 19:40:27 +0200
+Message-ID: <20150625174027.GF2266@lukather>
+References: <1435088503-20776-1-git-send-email-hdegoede@redhat.com>
+ <1435088503-20776-3-git-send-email-hdegoede@redhat.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABxpGwCYjw87pgHczooC4qTebGO1_vc+CH_1fkD0XjEDpbAVzQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Walter Lozano <walter@vanguardiasur.com.ar>, Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="r4jNezHNW2wfBox+"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBI74WCWAKGQEOSAK6XY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1435088503-20776-3-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+--r4jNezHNW2wfBox+
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
+Hi,
 
-On 6/25/15 12:01 PM, Walter Lozano wrote:
-> On Thu, Jun 25, 2015 at 4:28 AM, Geert Uytterhoeven
-> <geert@linux-m68k.org> wrote:
->> On Tue, Jun 23, 2015 at 10:20 PM, Walter Lozano
->> <walter@vanguardiasur.com.ar> wrote:
->>> On Mon, Mar 23, 2015 at 11:29 PM, Walter Lozano
->>> <walter@vanguardiasur.com.ar> wrote:
->>>> On Mon, Mar 23, 2015 at 12:03 AM, Dinh Nguyen
->>>> <dinguyen@opensource.altera.com> wrote:
->>>>> On 3/19/15 4:27 PM, Walter Lozano wrote:
->>>>>> On Mon, Mar 16, 2015 at 10:10 AM, Walter Lozano
->>>>>> <walter@vanguardiasur.com.ar> wrote:
->>>>>>> On Mon, Jan 5, 2015 at 6:21 AM, Steffen Trumtrar
->>>>>>> <s.trumtrar@pengutronix.de> wrote:
->>>>>>>> On Wed, Dec 24, 2014 at 08:11:52PM -0300, Walter Lozano wrote:
->>>>>>>>> This patch adds the DTS bindings for the adxl34x digital
->>>>>>>>> accelerometer.
->>>>>>>>>
->>>>>>>>> Signed-off-by: Walter Lozano <walter@vanguardiasur.com.ar>
->>>>>>>>> ---
->>>>>>>>>  arch/arm/boot/dts/socfpga_cyclone5_sockit.dts |   16 ++++++++++++++++
->>>>>>>>>  1 file changed, 16 insertions(+)
->>>>>>>>>
->>>>>>>>> diff --git a/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts b/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
->>>>>>>>> index 16ea6f5..d343e03 100644
->>>>>>>>> --- a/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
->>>>>>>>> +++ b/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
->>>>>>>>> @@ -60,6 +60,22 @@
->>>>>>>>>       rxc-skew-ps = <2000>;
->>>>>>>>>  };
->>>>>>>>>
->>>>>>>>> +&gpio2 {
->>>>>>>>> +     status = "okay";
->>>>>>>>> +};
->>>>>>>>> +
->>>>>>>>> +&i2c1 {
->>>>>>>>> +     status = "okay";
->>>>>>>>> +
->>>>>>>>> +     accel1: accelerometer@53 {
->>>>>>>>> +             compatible = "adxl34x";
->>>>>
->>>>> Shouldn't this be "adi,adxl34x"? At least that's what the documentation
->>>>> says.
->>>>>
->>>>>>>>> +             reg = <0x53>;
->>>>>>>>> +
->>>>>>>>> +             interrupt-parent = <&portc>;
->>>>>>>>> +             interrupts = <3 2>;
->>>>>>>>> +     };
->>>>>>>>> +};
->>>>>>>>> +
->>>>>>>>>  &mmc0 {
->>>>>>>>>       vmmc-supply = <&regulator_3_3v>;
->>>>>>>>>       vqmmc-supply = <&regulator_3_3v>;
->>>>>>>>
->>>>>>>> I just gave it a short spin. I get some interrupts and the position property
->>>>>>>> changes, so it seems to work:
->>>>>>>>
->>>>>>>>         Acked-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
->>>>>>>>
->>>>>>>
->>>>>>> Ping?
->>>>>>> How should this continue?
->>>>>>
->>>>>> Any news about this patch? It has been acked by Pavel Machek and
->>>>>> Steffen Trumtrar a while ago.
->>>>>>
->>>>>
->>>>> Sorry, since I wasn't CC on the original patch and somehow my filter
->>>>> didn't catch it, I didn't see this patch until now.
->>>>
->>>> No problem, I know it was my fault as I trust the output of get_maintainer.pl
->>>>
->>>
->>> Ping?
->>>
->>> --
->>> Walter Lozano, VanguardiaSur
->>> www.vanguardiasur.com.ar
->>> --
->>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
->>> the body of a message to majordomo@vger.kernel.org
->>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>
->> Now these commits are in:
->>   - 3a38958d2477b718 ("Input: adxl34x - add OF match support") [1]
->>   - e465bf6fc55d5ce2 ("DT: i2c: Deprecate adi,adxl34x compatible string") [2]
->>
->> you can use "adi,adxl345" (or "adi,adxl346", "adi,adxl345").
->>
->> [1] http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=3a38958d2477b718d1011fb88c24c4f264ee9700
->> [2] http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=e465bf6fc55d5ce21fb45a75c3fa613505e6be20
->>
->> Gr{oetje,eeting}s,
->>
->>                         Geert
->>
->> --
->> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->>
->> In personal conversations with technical people, I call myself a hacker. But
->> when I'm talking to journalists I just say "programmer" or something like that.
->>                                 -- Linus Torvalds
+On Tue, Jun 23, 2015 at 09:41:42PM +0200, Hans de Goede wrote:
+> From: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > 
+> Add a dtsi file for the axp152 pmic, this mirrors the way things are
+> handled for the axp202 pmic.
 > 
-> Thanks for the information Geert.
-> 
-> Dihn, as I can see you have apply an old version of the this patch
-> (V1), instead of V2 which has some format corrections suggested by
-> Steffen Trumtrar. I addition, as Geert points, the compatibility
-> string should now be updated.
-> 
-> How would you like to proceed?
-> 
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/axp152.dtsi | 49 +++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 49 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/axp152.dtsi
 
-Your commit is staged for v4.2 in the arm-soc tree[1]. Please submit a
-patch to correct it for an -rc.
+Unfortunately, Mark expressed clearly that he didn't want such files.
 
-[1]
-https://git.kernel.org/cgit/linux/kernel/git/arm/arm-soc.git/commit/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts?h=for-next&id=bf513bf04660321eb6181082def79ee1fd93b48f
+Sorry...
 
-Dinh
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--r4jNezHNW2wfBox+--
