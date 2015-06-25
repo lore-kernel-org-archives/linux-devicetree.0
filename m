@@ -1,68 +1,190 @@
-From: kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org
-Subject: [PATCH V2] dt: brcm,bcm2835-aux-spi: add binding documentation for new spi-bcm2835aux
-Date: Thu, 25 Jun 2015 10:54:32 +0000
-Message-ID: <1435229673-2214-1-git-send-email-kernel@martin.sperl.org>
+From: "Opensource [Steve Twiss]" <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH] regulator: da9210: Add optional interrupt support
+Date: Thu, 25 Jun 2015 10:58:21 +0000
+Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7014B2323E5@SW-EX-MBX02.diasemi.com>
+References: <1435148061-11844-1-git-send-email-geert+renesas@glider.be>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1435148061-11844-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Stefan Wahren <info-saaNCTdWVBT7BZbvpMY5sg@public.gmane.org>
-Cc: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Opensource [Steve Twiss]" <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Cc: "linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+On 24 June 2015 13:14, Geert Uytterhoeven wrote:
 
-Signed-off-by: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
----
- .../bindings/spi/brcm,bcm2835-aux-spi.txt          |   35 ++++++++++++++++++++
- 1 file changed, 35 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/spi/brcm,bcm2835-aux-spi.txt
+> To: Support Opensource; Liam Girdwood; Mark Brown; Opensource [Steve Twiss]
+> Subject: [PATCH] regulator: da9210: Add optional interrupt support
+> 
+> Add optional interrupt support to the da9210 regulator driver, to handle
+> over-current, under- and over-voltage, and over-temperature events.
+> 
+> Only the interrupt sources for which we handle events are unmasked, to
+> avoid interrupts we cannot handle.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> ---
+> I do not have access to the da9210 datasheet, but looked at the da9211 driver.
+> 
+> v2:
+>   - Only acknowledge unmasked sources,
+>   - Handle DA9210_E_VMAX using REGULATOR_EVENT_REGULATION_OUT.
+> ---
 
-Changelog:
-  V1 -> V2:	fixed typo
-		added cs-gpios
+Hi Geert,
 
-diff --git a/Documentation/devicetree/bindings/spi/brcm,bcm2835-aux-spi.txt b/Documentation/devicetree/bindings/spi/brcm,bcm2835-aux-spi.txt
-new file mode 100644
-index 0000000..66f52d3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/brcm,bcm2835-aux-spi.txt
-@@ -0,0 +1,35 @@
-+Broadcom BCM2835 auxiliar SPI1/2 controller
-+
-+The BCM2835 contains two forms of SPI master controller, one known simply as
-+SPI0, and the other known as the "Universal SPI Master"; part of the
-+auxiliary block. This binding applies to the SPI1/2 controller.
-+
-+Required properties:
-+- compatible: Should be "brcm,bcm2835-aux-spi".
-+- reg: Should contain register location and length for the spi block
-+       as well as for the common aux block control
-+- interrupts: Should contain shared interrupt of the aux block
-+- clocks: The clock feeding the SPI controller.
-+- cs-gpios: the cs-gpios (native cs is NOT supported)
-+
-+Example:
-+
-+spi1@7e215080 {
-+	compatible = "brcm,bcm2835-aux-spi";
-+	reg = <0x7e215080 0x40>, <0x7e215000 0x08>;
-+	interrupts = <1 29>;
-+	clocks = <&clk_spi>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	cs-gpios = <&gpio 18>, <&gpio 17>, <&gpio 16>;
-+};
-+
-+spi2@7e2150c0 {
-+	compatible = "brcm,bcm2835-aux-spi";
-+	reg = <0x7e2150c0 0x40>, <0x7e215000 0x08>;
-+	interrupts = <1 29>;
-+	clocks = <&clk_spi>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	cs-gpios = <&gpio 43>, <&gpio 44>, <&gpio 45>;
-+};
--- 
-1.7.10.4
+https://lkml.org/lkml/2015/2/17/358
+I got side-tracked with other things and this one got forgotten ...
+
+I'll take another look at this. A cursory glance from me -- it seems fair and
+consistent with the DA9210 data sheet. I'll check with the engineers here.
+
+Regards,
+Steve
+
+>  .../devicetree/bindings/regulator/da9210.txt       |  4 ++
+>  drivers/regulator/da9210-regulator.c               | 75
+> ++++++++++++++++++++++
+>  2 files changed, 79 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/regulator/da9210.txt
+> b/Documentation/devicetree/bindings/regulator/da9210.txt
+> index 3297c53cb9152395..7aa9b1fa6b21ca18 100644
+> --- a/Documentation/devicetree/bindings/regulator/da9210.txt
+> +++ b/Documentation/devicetree/bindings/regulator/da9210.txt
+> @@ -5,6 +5,10 @@ Required properties:
+>  - compatible:	must be "dlg,da9210"
+>  - reg:		the i2c slave address of the regulator. It should be 0x68.
+> 
+> +Optional properties:
+> +
+> +- interrupts:	a reference to the DA9210 interrupt, if available.
+> +
+>  Any standard regulator properties can be used to configure the single
+> da9210
+>  DCDC.
+> 
+> diff --git a/drivers/regulator/da9210-regulator.c b/drivers/regulator/da9210-
+> regulator.c
+> index f0489cb9018b4e78..8e39f7457bc36a07 100644
+> --- a/drivers/regulator/da9210-regulator.c
+> +++ b/drivers/regulator/da9210-regulator.c
+> @@ -22,6 +22,8 @@
+>  #include <linux/i2c.h>
+>  #include <linux/module.h>
+>  #include <linux/init.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/irq.h>
+>  #include <linux/slab.h>
+>  #include <linux/regulator/driver.h>
+>  #include <linux/regulator/machine.h>
+> @@ -120,6 +122,55 @@ static int da9210_get_current_limit(struct
+> regulator_dev *rdev)
+>  	return da9210_buck_limits[sel];
+>  }
+> 
+> +static irqreturn_t da9210_irq_handler(int irq, void *data)
+> +{
+> +	struct da9210 *chip = data;
+> +	unsigned int val, handled = 0;
+> +	int error, ret = IRQ_NONE;
+> +
+> +	error = regmap_read(chip->regmap, DA9210_REG_EVENT_B, &val);
+> +	if (error < 0)
+> +		goto error_i2c;
+> +
+> +	if (val & DA9210_E_OVCURR) {
+> +		regulator_notifier_call_chain(chip->rdev,
+> +
+> REGULATOR_EVENT_OVER_CURRENT,
+> +					      NULL);
+> +		handled |= DA9210_E_OVCURR;
+> +	}
+> +	if (val & DA9210_E_NPWRGOOD) {
+> +		regulator_notifier_call_chain(chip->rdev,
+> +
+> REGULATOR_EVENT_UNDER_VOLTAGE,
+> +					      NULL);
+> +		handled |= DA9210_E_NPWRGOOD;
+> +	}
+> +	if (val & (DA9210_E_TEMP_WARN | DA9210_E_TEMP_CRIT)) {
+> +		regulator_notifier_call_chain(chip->rdev,
+> +					      REGULATOR_EVENT_OVER_TEMP,
+> NULL);
+> +		handled |= val & (DA9210_E_TEMP_WARN |
+> DA9210_E_TEMP_CRIT);
+> +	}
+> +	if (val & DA9210_E_VMAX) {
+> +		regulator_notifier_call_chain(chip->rdev,
+> +
+> REGULATOR_EVENT_REGULATION_OUT,
+> +					      NULL);
+> +		handled |= DA9210_E_VMAX;
+> +	}
+> +	if (handled) {
+> +		/* Clear handled events */
+> +		error = regmap_write(chip->regmap,
+> DA9210_REG_EVENT_B, handled);
+> +		if (error < 0)
+> +			goto error_i2c;
+> +
+> +		ret = IRQ_HANDLED;
+> +	}
+> +
+> +	return ret;
+> +
+> +error_i2c:
+> +	dev_err(regmap_get_device(chip->regmap), "I2C error : %d\n",
+> error);
+> +	return ret;
+> +}
+> +
+>  /*
+>   * I2C driver interface functions
+>   */
+> @@ -168,6 +219,30 @@ static int da9210_i2c_probe(struct i2c_client *i2c,
+>  	}
+> 
+>  	chip->rdev = rdev;
+> +	if (i2c->irq) {
+> +		error = devm_request_threaded_irq(&i2c->dev, i2c->irq,
+> NULL,
+> +						  da9210_irq_handler,
+> +						  IRQF_TRIGGER_LOW |
+> +						  IRQF_ONESHOT |
+> IRQF_SHARED,
+> +						  "da9210", chip);
+> +		if (error) {
+> +			dev_err(&i2c->dev, "Failed to request IRQ%u: %d\n",
+> +				i2c->irq, error);
+> +			return error;
+> +		}
+> +
+> +		error = regmap_update_bits(chip->regmap,
+> DA9210_REG_MASK_B,
+> +					 DA9210_M_OVCURR |
+> DA9210_M_NPWRGOOD |
+> +					 DA9210_M_TEMP_WARN |
+> +					 DA9210_M_TEMP_CRIT |
+> DA9210_M_VMAX, 0);
+> +		if (error < 0) {
+> +			dev_err(&i2c->dev, "Failed to update mask reg:
+> %d\n",
+> +				error);
+> +			return error;
+> +		}
+> +	} else {
+> +		dev_warn(&i2c->dev, "No IRQ configured\n");
+> +	}
+> 
+>  	i2c_set_clientdata(i2c, chip);
+> 
+> --
+> 1.9.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
