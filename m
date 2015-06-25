@@ -1,109 +1,45 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH-v4 3/3] mfd: devicetree: bindings: Add new 88pm800 mfd
- binding
-Date: Thu, 25 Jun 2015 11:28:23 +0100
-Message-ID: <20150625102823.GD15013@x1>
-References: <1435217189-19578-1-git-send-email-vaibhav.hiremath@linaro.org>
- <1435217189-19578-4-git-send-email-vaibhav.hiremath@linaro.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH V4 2/2] devicetree: Add msi to the
+ vendor-prefix list
+Date: Thu, 25 Jun 2015 12:42:29 +0200
+Message-ID: <20150625104229.GA2266@lukather>
+References: <20150618115838.GL11732@lukather>
+ <1435078949-3383-1-git-send-email-merker@debian.org>
+ <1435078949-3383-3-git-send-email-merker@debian.org>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="PAKmkkBo0+rTwAqJ"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBL5XV6WAKGQELCOV2NY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1435217189-19578-4-git-send-email-vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, yizhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org
+In-Reply-To: <1435078949-3383-3-git-send-email-merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Cc: Siarhei Siamashka <siarhei.siamashka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 25 Jun 2015, Vaibhav Hiremath wrote:
+--PAKmkkBo0+rTwAqJ
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-> With addition of DT support to 88pm800 mfd driver, this patch
-> adds new DT binding documentation along with respective properties.
->=20
-> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/mfd/88pm800.txt | 54 +++++++++++++=
-++++++++++
->  1 file changed, 54 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/88pm800.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/mfd/88pm800.txt b/Docu=
-mentation/devicetree/bindings/mfd/88pm800.txt
-> new file mode 100644
-> index 0000000..f56b751
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/88pm800.txt
-> @@ -0,0 +1,54 @@
-> +* Marvell 88PM8xx Power Management IC
-> +
-> +Required parent device properties:
-> +- compatible : "marvell,88pm800", "marvell,88pm805", "marvell,88pm86=
-0"
-> +- reg : the I2C slave address for the 88pm8xx chip
-> +- interrupts : IRQ line for the 88pm8xx chip
-> +- interrupt-controller: describes the 88pm8xx as an interrupt contro=
-ller
-> +- #interrupt-cells : should be 1.
-> +		- The cell is the 88pm8xx local IRQ number
+On Tue, Jun 23, 2015 at 07:02:29PM +0200, Karsten Merker wrote:
+> Document the the "msi" (Micro-Star International Co. Ltd.) vendor prefix
+> which is used in sun6i-a31s-primo81.dts.
+> 
+> Signed-off-by: Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
 
-Might just be a personal thing, but I would line up the ':', it's much
-easier on the eyes that way.
+Applied, thanks!
 
-> +88pm8xx family of devices consists of varied group of sub-devices:
-> +
-> +Device		 	Supply Names	 Description
-> +------		 	------------	 -----------
-> +88pm80x-onkey		:		: On key
-> +88pm80x-rtc		:		: RTC
-> +88pm80x-regulator	:		: Regulators
-> +
-> +Note: More device list will follow
+Maxime
 
-No real need for this.
-
-> +Example:
-> +
-> +	pmic: 88pm800@30 {
-> +		compatible =3D "marvell,88pm800";
-> +		reg =3D <0x30>;
-> +		interrupts =3D <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
-> +		interrupt-parent =3D <&gic>;
-> +		interrupt-controller;
-> +		#interrupt-cells =3D <1>;
-> +
-> +		regulators {
-> +			compatible =3D "marvell,88pm80x-regulator";
-> +
-> +			buck1a: BUCK1A {
-> +				regulator-name =3D "BUCK1A";
-> +				regulator-min-microvolt =3D <600000>;
-> +				regulator-max-microvolt =3D <1800000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +			};
-> +
-> +			ldo1: LDO1 {
-> +				regulator-name =3D "LDO1";
-> +				regulator-min-microvolt =3D <1700000>;
-> +				regulator-max-microvolt =3D <3300000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +			};
-> +		};
-> +
-> +		rtc {
-> +			compatible =3D "marvell,88pm80x-rtc";
-> +		};
-> +	};
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--PAKmkkBo0+rTwAqJ--
