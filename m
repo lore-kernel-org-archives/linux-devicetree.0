@@ -1,79 +1,117 @@
-From: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH-v4 0/3] mfd: 88pm800: Add Device tree support
-Date: Thu, 25 Jun 2015 12:56:26 +0530
-Message-ID: <1435217189-19578-1-git-send-email-vaibhav.hiremath@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, yizhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
+Subject: [PATCH-v4 2/3] mfd: 88pm800: Set default interrupt clear method
+Date: Thu, 25 Jun 2015 12:56:28 +0530
+Message-ID: <1435217189-19578-3-git-send-email-vaibhav.hiremath@linaro.org>
+References: <1435217189-19578-1-git-send-email-vaibhav.hiremath@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1435217189-19578-1-git-send-email-vaibhav.hiremath@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, lee.jones@linaro.org, robh+dt@kernel.org, yizhang@marvell.com, Vaibhav Hiremath <vaibhav.hiremath@linaro.org>, Zhao Ye <zhaoy@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch-series adds support for Device tree to 88PM800 mfd driver.
-It also sets default configuration of irq clear method if board file
-doesn't exist.
+As per the spec, bit 1 (INT_CLEAR_MODE) of reg addr 0xe
+(page 0) controls the method of clearing interrupt
+status of 88pm800 family of devices;
 
-Testing::
- - Boot tested on PXA1928 based platform.
- - probe of mfd, rtc and regulator function passing successfully.
- - Basic read operations on registers
- - irq clear configuration
+  0: clear on read
+  1: clear on write
 
-V3 => V4
-=======
-Link to V3: https://lkml.org/lkml/2015/6/24/143
+If pdata is not coming from board file, then set the
+default irq clear method to "irq clear on write"
 
-   - Removed generic error msg when returning -ENOMEM
-   - irq clear method is 88PM800 feature, which is not dependent on board or
-     doesn't require any wiring changes, so DT is not the way.
-     Hardcoded to "irq clear on write" if board file doesn't exist.
-   - Updated binding patch (PATCH 3/3) to remove irq-clr-on-wr entry.
-   - Since PATCH 3/3 changed from original, removed Rob's Acked-by.
+Also, as suggested by "Lee Jones" renaming variable field
+to appropriate name.
 
-V2 => V3
-=======
-Link to V2: https://www.mail-archive.com/linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg914299.html
+Signed-off-by: Zhao Ye <zhaoy@marvell.com>
+Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
+---
+ drivers/mfd/88pm800.c       | 15 ++++++++++-----
+ include/linux/mfd/88pm80x.h |  6 ++++--
+ 2 files changed, 14 insertions(+), 7 deletions(-)
 
-   - Replaced deprecated "regulator-compatible" property with "regulator-name".
-   - Added Rob's Acked-by  to [PATCH 3/3]
-
-V1 => V2
-=======
-Link to V1: http://lkml.iu.edu/hypermail/linux/kernel/1505.3/04386.html
-
-  - Split binding changes from original commit
-  - Updated binding info as per Rob's suggestion
-  - Dropped PATCH 4/4, as discussed during review
-  - Dropped PATCH 3/4, as it is independent RTC code change,
-    so will submit it separately to ease merging.
-  - Fixed all other minor comments
-
-Attempt has been made to push some of the patches to the list sometime
-back in 2013.
-
-Link to previous patch submission:
-        https://lkml.org/lkml/2013/8/14/86
-
-TODO:
-=====
-   - init config for 88PM860 device
-   - Rgulator driver changes to add support for 88PM860 device
-
-
-Vaibhav Hiremath (3):
-  mfd: 88pm800: Add device tree support
-  mfd: 88pm800: Set default interrupt clear method
-  mfd: devicetree: bindings: Add new 88pm800 mfd binding
-
- Documentation/devicetree/bindings/mfd/88pm800.txt | 54 +++++++++++++++++++++++
- drivers/mfd/88pm800.c                             | 38 +++++++++++++---
- include/linux/mfd/88pm80x.h                       |  6 ++-
- 3 files changed, 91 insertions(+), 7 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/88pm800.txt
-
+diff --git a/drivers/mfd/88pm800.c b/drivers/mfd/88pm800.c
+index 40fd014..e0cd7ad 100644
+--- a/drivers/mfd/88pm800.c
++++ b/drivers/mfd/88pm800.c
+@@ -376,7 +376,7 @@ static int device_irq_init_800(struct pm80x_chip *chip)
+ {
+ 	struct regmap *map = chip->regmap;
+ 	unsigned long flags = IRQF_ONESHOT;
+-	int data, mask, ret = -EINVAL;
++	int irq_clr_mode, mask, ret = -EINVAL;
+ 
+ 	if (!map || !chip->irq) {
+ 		dev_err(chip->dev, "incorrect parameters\n");
+@@ -384,15 +384,16 @@ static int device_irq_init_800(struct pm80x_chip *chip)
+ 	}
+ 
+ 	/*
+-	 * irq_mode defines the way of clearing interrupt. it's read-clear by
+-	 * default.
++	 * irq_clr_on_wr defines the way of clearing interrupt by
++	 * read/write(0/1).  It's read-clear by default.
+ 	 */
+ 	mask =
+ 	    PM800_WAKEUP2_INV_INT | PM800_WAKEUP2_INT_CLEAR |
+ 	    PM800_WAKEUP2_INT_MASK;
+ 
+-	data = PM800_WAKEUP2_INT_CLEAR;
+-	ret = regmap_update_bits(map, PM800_WAKEUP2, mask, data);
++	irq_clr_mode = (chip->irq_clr_on_wr) ?
++		PM800_WAKEUP2_INT_WRITE_CLEAR : PM800_WAKEUP2_INT_READ_CLEAR;
++	ret = regmap_update_bits(map, PM800_WAKEUP2, mask, irq_clr_mode);
+ 
+ 	if (ret < 0)
+ 		goto out;
+@@ -514,6 +515,7 @@ static int device_800_init(struct pm80x_chip *chip,
+ 	}
+ 
+ 	chip->regmap_irq_chip = &pm800_irq_chip;
++	chip->irq_clr_on_wr = pdata->irq_clr_on_wr;
+ 
+ 	ret = device_irq_init_800(chip);
+ 	if (ret < 0) {
+@@ -566,6 +568,9 @@ static int pm800_probe(struct i2c_client *client,
+ 		pdata = devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL);
+ 		if (!pdata)
+ 			return -ENOMEM;
++
++		/* by default, set irq clear method on write */
++		pdata->irq_clr_on_wr = true;
+ 	}
+ 
+ 	ret = pm80x_init(client);
+diff --git a/include/linux/mfd/88pm80x.h b/include/linux/mfd/88pm80x.h
+index 97cb283..94b3dcd 100644
+--- a/include/linux/mfd/88pm80x.h
++++ b/include/linux/mfd/88pm80x.h
+@@ -77,6 +77,8 @@ enum {
+ #define PM800_WAKEUP2		(0x0E)
+ #define PM800_WAKEUP2_INV_INT		(1 << 0)
+ #define PM800_WAKEUP2_INT_CLEAR		(1 << 1)
++#define PM800_WAKEUP2_INT_READ_CLEAR		(0 << 1)
++#define PM800_WAKEUP2_INT_WRITE_CLEAR		(1 << 1)
+ #define PM800_WAKEUP2_INT_MASK		(1 << 2)
+ 
+ #define PM800_POWER_UP_LOG	(0x10)
+@@ -300,7 +302,7 @@ struct pm80x_chip {
+ 	struct regmap_irq_chip_data *irq_data;
+ 	int type;
+ 	int irq;
+-	int irq_mode;
++	int irq_clr_on_wr;	/* '1': Clear on write, '0': Clear on read*/
+ 	unsigned long wu_flag;
+ 	spinlock_t lock;
+ };
+@@ -315,7 +317,7 @@ struct pm80x_platform_data {
+ 	 */
+ 	struct regulator_init_data *regulators[PM800_ID_RG_MAX];
+ 	unsigned int num_regulators;
+-	int irq_mode;		/* Clear interrupt by read/write(0/1) */
++	int irq_clr_on_wr;		/* Clear interrupt by read/write(0/1) */
+ 	int batt_det;		/* enable/disable */
+ 	int (*plat_config)(struct pm80x_chip *chip,
+ 				struct pm80x_platform_data *pdata);
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
