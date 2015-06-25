@@ -1,69 +1,50 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v2 0/3] ARM: keystone: add ecc error interrupt handling
-Date: Thu, 25 Jun 2015 14:35:51 -0700
-Message-ID: <558C7437.2090306@codeaurora.org>
-References: <1435242710-31346-1-git-send-email-vitalya@ti.com> <558C188B.5060107@oracle.com> <558C6C4F.1090102@codeaurora.org> <558C72EB.8010502@oracle.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 08/08] ARM: shmobile: Remove CMT renesas,channels-mask from DTS
+Date: Fri, 26 Jun 2015 00:56 +0300
+Message-ID: <1618432.qSqOq2tHsD@avalon>
+References: <20150621080903.10187.20998.sendpatchset@little-apple> <8019375.XSP9R0ZLbm@avalon> <CANqRtoRcv4VpF3vAgYKTOL1FyYURHx13-5-L9fH1HrJ-QvPymQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <558C72EB.8010502-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: santosh shilimkar <santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Vitaly Andrianov <vitalya-l0cyMroinI0@public.gmane.org>, ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <CANqRtoRcv4VpF3vAgYKTOL1FyYURHx13-5-L9fH1HrJ-QvPymQ@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, SH-Linux <linux-sh@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Simon Horman <horms+renesas@verge.net.au>, Thomas Gleixner <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On 06/25/2015 02:30 PM, santosh shilimkar wrote:
-> On 6/25/2015 2:02 PM, Stephen Boyd wrote:
->> On 06/25/2015 08:04 AM, santosh shilimkar wrote:
->>> On 6/25/2015 7:31 AM, Vitaly Andrianov wrote:
->>>> This patch series adds support for arm L1/L2 ecc and ddr3 ecc error
->>>> handling
->>>> for Keystone devices
->>>>
->>>> Change Log
->>>>
->>>> v2:
->>>> - removing unused and sorting headers of keystone.c are moved to a
->>>> separate
->>>>     patch.
->>>> - l1l2 ecc and ddr3 ecc error handling are split it to separate
->>>> patches
->>>> - removed unused headers from keystone_ecc.c
->>>> - platsmp.c removed from the patch.
->>>> - return IRQ_HANDLED for 1 bit error in l1l2 ecc handler
->>>> - checked and handled existing echttps://lwn.net/Articles/593336/c
->>>> error before enabling ddr3 interrupt
->>>> - 1 bit ddr3 interrupt is disabled, because it is handled by hardware
->>>> and
->>>>     there is no reason to handle it by software
->>>>
->>> This version looks good to me. As already commented, I would have liked
->>> the patch 2/3(L2 ECC) code in ARM generic code so will give some more
->>> time for others to come back. Otherwise I will queue this up for next
->>> window.
->>
->> Why not make this into an edac driver? I sent out an L1/L2 error
->> detection edac driver for Krait processors a year ago, but it stalled
->> due to some DT binding stuff[1]. This looks fairly similar.
->>
-> Indeed the error detection part is very similar(expected as well
-> considering the same processor L2 regs). I am not sure we need
-> full driver only for that but at least the IRQ error handler
-> related code can reside together. Lets see what RMK thinks
-> on this.
+Hi Magnus,
+
+On Tuesday 23 June 2015 11:46:45 Magnus Damm wrote:
+> On Tue, Jun 23, 2015 at 7:40 AM, Laurent Pinchart wrote:
+> > On Sunday 21 June 2015 17:10:33 Magnus Damm wrote:
+> >> From: Magnus Damm <damm+renesas@opensource.se>
+> >> 
+> >> Update the DTS to remove the now deprecated "renesas,channels-mask"
+> >> property.
+> >> 
+> >> The channel information is now kept in the device driver and can easily
+> >> be determined based on the compat string.
+> > 
+> > Unless I've missed something (which is entirely possibly given the late
+> > hour), the channel mask is only stored in the driver for the Gen2 CMT
+> > instances.
 >
+> The case for sh73a0 and r8a7740 is also covered by some of the earlier
+> patches in this series.
 
-There's an existing one for highbank (drivers/edac/highbank_l2_edac.c)
-and there was a patch set for the pl310 as well[1]. I don't think we
-want any architecture specific code for this, just use the EDAC framework.
+My bad, I've missed that. We should be good then.
 
-[1] https://lkml.org/lkml/2014/3/2/87
+> So unless I'm mistaken the series should cover all current in-tree CMT DT
+> users that we have. I'm not aware of any out-of-tree users.
+> 
+> You are right that there are more unused compat strings documented, so
+> those will break. I would be tempted in phasing those out somehow.
+> Also, I did not spend much time cleaning up the non R-Car Gen2 cases,
+> so in general that needs some love.
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Regards,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Laurent Pinchart
+
