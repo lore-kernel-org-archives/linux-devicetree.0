@@ -1,81 +1,162 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH-v4 1/3] mfd: 88pm800: Add device tree support
-Date: Thu, 25 Jun 2015 11:19:16 +0100
-Message-ID: <20150625101916.GB15013@x1>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH-v4 2/3] mfd: 88pm800: Set default interrupt clear method
+Date: Thu, 25 Jun 2015 11:26:18 +0100
+Message-ID: <20150625102618.GC15013@x1>
 References: <1435217189-19578-1-git-send-email-vaibhav.hiremath@linaro.org>
- <1435217189-19578-2-git-send-email-vaibhav.hiremath@linaro.org>
+ <1435217189-19578-3-git-send-email-vaibhav.hiremath@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1435217189-19578-2-git-send-email-vaibhav.hiremath@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
-Cc: devicetree@vger.kernel.org, yizhang@marvell.com, linux-kernel@vger.kernel.org, Chao Xie <chao.xie@marvell.com>, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1435217189-19578-3-git-send-email-vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, yizhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, Zhao Ye <zhaoy-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCAyNSBKdW4gMjAxNSwgVmFpYmhhdiBIaXJlbWF0aCB3cm90ZToKCj4gQWRkIERUIHN1
-cHBvcnQgdG8gdGhlIDg4cG04MDAgZHJpdmVyLCBhbG9uZyB3aXRoIGNvbXBhdGlibGUKPiBmaWVs
-ZCBmb3IgaXQncyBzdWItZGV2aWNlcyAocnRjLCBvbmtleSBhbmQgcmVndWxhdG9yKQo+IAo+IFNp
-Z25lZC1vZmYtYnk6IENoYW8gWGllIDxjaGFvLnhpZUBtYXJ2ZWxsLmNvbT4KPiBTaWduZWQtb2Zm
-LWJ5OiBWYWliaGF2IEhpcmVtYXRoIDx2YWliaGF2LmhpcmVtYXRoQGxpbmFyby5vcmc+Cj4gLS0t
-Cj4gIGRyaXZlcnMvbWZkLzg4cG04MDAuYyB8IDIzICsrKysrKysrKysrKysrKysrKysrKysrCj4g
-IDEgZmlsZSBjaGFuZ2VkLCAyMyBpbnNlcnRpb25zKCspCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZl
-cnMvbWZkLzg4cG04MDAuYyBiL2RyaXZlcnMvbWZkLzg4cG04MDAuYwo+IGluZGV4IDg0MTcxN2Eu
-LjQwZmQwMTQgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9tZmQvODhwbTgwMC5jCj4gKysrIGIvZHJp
-dmVycy9tZmQvODhwbTgwMC5jCj4gQEAgLTI3LDYgKzI3LDcgQEAKPiAgI2luY2x1ZGUgPGxpbnV4
-L21mZC9jb3JlLmg+Cj4gICNpbmNsdWRlIDxsaW51eC9tZmQvODhwbTgweC5oPgo+ICAjaW5jbHVk
-ZSA8bGludXgvc2xhYi5oPgo+ICsjaW5jbHVkZSA8bGludXgvb2ZfZGV2aWNlLmg+Cj4gIAo+ICAv
-KiBJbnRlcnJ1cHQgUmVnaXN0ZXJzICovCj4gICNkZWZpbmUgUE04MDBfSU5UX1NUQVRVUzEJCSgw
-eDA1KQo+IEBAIC0xMjEsNiArMTIyLDExIEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgaTJjX2Rldmlj
-ZV9pZCBwbTgweF9pZF90YWJsZVtdID0gewo+ICB9Owo+ICBNT0RVTEVfREVWSUNFX1RBQkxFKGky
-YywgcG04MHhfaWRfdGFibGUpOwo+ICAKPiArc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2Vf
-aWQgcG04MHhfb2ZfbWF0Y2hfdGFibGVbXSA9IHsKPiArCXsgLmNvbXBhdGlibGUgPSAibWFydmVs
-bCw4OHBtODAwIiwgfSwKPiArCXt9LAo+ICt9Owo+ICsKPiAgc3RhdGljIHN0cnVjdCByZXNvdXJj
-ZSBydGNfcmVzb3VyY2VzW10gPSB7Cj4gIAl7Cj4gIAkgLm5hbWUgPSAiODhwbTgweC1ydGMiLAo+
-IEBAIC0xMzMsNiArMTM5LDcgQEAgc3RhdGljIHN0cnVjdCByZXNvdXJjZSBydGNfcmVzb3VyY2Vz
-W10gPSB7Cj4gIHN0YXRpYyBzdHJ1Y3QgbWZkX2NlbGwgcnRjX2RldnNbXSA9IHsKPiAgCXsKPiAg
-CSAubmFtZSA9ICI4OHBtODB4LXJ0YyIsCj4gKwkgLm9mX2NvbXBhdGlibGUgPSAibWFydmVsbCw4
-OHBtODB4LXJ0YyIsCj4gIAkgLm51bV9yZXNvdXJjZXMgPSBBUlJBWV9TSVpFKHJ0Y19yZXNvdXJj
-ZXMpLAo+ICAJIC5yZXNvdXJjZXMgPSAmcnRjX3Jlc291cmNlc1swXSwKPiAgCSAuaWQgPSAtMSwK
-PiBAQCAtMTUxLDYgKzE1OCw3IEBAIHN0YXRpYyBzdHJ1Y3QgcmVzb3VyY2Ugb25rZXlfcmVzb3Vy
-Y2VzW10gPSB7Cj4gIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbWZkX2NlbGwgb25rZXlfZGV2c1tdID0g
-ewo+ICAJewo+ICAJIC5uYW1lID0gIjg4cG04MHgtb25rZXkiLAo+ICsJIC5vZl9jb21wYXRpYmxl
-ID0gIm1hcnZlbGwsODhwbTgweC1vbmtleSIsCj4gIAkgLm51bV9yZXNvdXJjZXMgPSAxLAo+ICAJ
-IC5yZXNvdXJjZXMgPSAmb25rZXlfcmVzb3VyY2VzWzBdLAo+ICAJIC5pZCA9IC0xLAo+IEBAIC0x
-NjAsNiArMTY4LDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBtZmRfY2VsbCBvbmtleV9kZXZzW10g
-PSB7Cj4gIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbWZkX2NlbGwgcmVndWxhdG9yX2RldnNbXSA9IHsK
-PiAgCXsKPiAgCSAubmFtZSA9ICI4OHBtODB4LXJlZ3VsYXRvciIsCj4gKwkgLm9mX2NvbXBhdGli
-bGUgPSAibWFydmVsbCw4OHBtODB4LXJlZ3VsYXRvciIsCj4gIAkgLmlkID0gLTEsCj4gIAl9LAo+
-ICB9Owo+IEBAIC01NDQsOCArNTUzLDIxIEBAIHN0YXRpYyBpbnQgcG04MDBfcHJvYmUoc3RydWN0
-IGkyY19jbGllbnQgKmNsaWVudCwKPiAgCWludCByZXQgPSAwOwo+ICAJc3RydWN0IHBtODB4X2No
-aXAgKmNoaXA7Cj4gIAlzdHJ1Y3QgcG04MHhfcGxhdGZvcm1fZGF0YSAqcGRhdGEgPSBkZXZfZ2V0
-X3BsYXRkYXRhKCZjbGllbnQtPmRldik7Cj4gKwlzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wID0gY2xp
-ZW50LT5kZXYub2Zfbm9kZTsKPiAgCXN0cnVjdCBwbTgweF9zdWJjaGlwICpzdWJjaGlwOwo+ICAK
-PiArCWlmICghcGRhdGEgJiYgIW5wKSB7Cj4gKwkJZGV2X2VycigmY2xpZW50LT5kZXYsCj4gKwkJ
-CSJwbTgweCByZXF1aXJlcyBwbGF0Zm9ybSBkYXRhIG9yIG9mX25vZGVcbiIpOwo+ICsJCXJldHVy
-biAtRUlOVkFMOwo+ICsJfQo+ICsKPiArCWlmICghcGRhdGEpIHsKPiArCQlwZGF0YSA9IGRldm1f
-a3phbGxvYygmY2xpZW50LT5kZXYsIHNpemVvZigqcGRhdGEpLCBHRlBfS0VSTkVMKTsKPiArCQlp
-ZiAoIXBkYXRhKQo+ICsJCQlyZXR1cm4gLUVOT01FTTsKPiArCX0KCldoeSBoYXZlIHlvdSBhbGxv
-Y2F0ZWQgZGF0YSBmb3IgcGRhdGEsIHRoZW4gZG9uZSBub3RoaW5nIHdpdGggaXQ/Cgo+ICAJcmV0
-ID0gcG04MHhfaW5pdChjbGllbnQpOwo+ICAJaWYgKHJldCkgewo+ICAJCWRldl9lcnIoJmNsaWVu
-dC0+ZGV2LCAicG04MDBfaW5pdCBmYWlsXG4iKTsKPiBAQCAtNjExLDYgKzYzMyw3IEBAIHN0YXRp
-YyBzdHJ1Y3QgaTJjX2RyaXZlciBwbTgwMF9kcml2ZXIgPSB7Cj4gIAkJLm5hbWUgPSAiODhQTTgw
-MCIsCj4gIAkJLm93bmVyID0gVEhJU19NT0RVTEUsCj4gIAkJLnBtID0gJnBtODB4X3BtX29wcywK
-PiArCQkub2ZfbWF0Y2hfdGFibGUJPSBwbTgweF9vZl9tYXRjaF90YWJsZSwKPiAgCQl9LAo+ICAJ
-LnByb2JlID0gcG04MDBfcHJvYmUsCj4gIAkucmVtb3ZlID0gcG04MDBfcmVtb3ZlLAoKLS0gCkxl
-ZSBKb25lcwpMaW5hcm8gU1RNaWNyb2VsZWN0cm9uaWNzIExhbmRpbmcgVGVhbSBMZWFkCkxpbmFy
-by5vcmcg4pSCIE9wZW4gc291cmNlIHNvZnR3YXJlIGZvciBBUk0gU29DcwpGb2xsb3cgTGluYXJv
-OiBGYWNlYm9vayB8IFR3aXR0ZXIgfCBCbG9nCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1h
-cm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On Thu, 25 Jun 2015, Vaibhav Hiremath wrote:
+
+> As per the spec, bit 1 (INT_CLEAR_MODE) of reg addr 0xe
+> (page 0) controls the method of clearing interrupt
+> status of 88pm800 family of devices;
+>=20
+>   0: clear on read
+>   1: clear on write
+>=20
+> If pdata is not coming from board file, then set the
+> default irq clear method to "irq clear on write"
+>=20
+> Also, as suggested by "Lee Jones" renaming variable field
+> to appropriate name.
+>=20
+> Signed-off-by: Zhao Ye <zhaoy-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  drivers/mfd/88pm800.c       | 15 ++++++++++-----
+>  include/linux/mfd/88pm80x.h |  6 ++++--
+>  2 files changed, 14 insertions(+), 7 deletions(-)
+>=20
+> diff --git a/drivers/mfd/88pm800.c b/drivers/mfd/88pm800.c
+> index 40fd014..e0cd7ad 100644
+> --- a/drivers/mfd/88pm800.c
+> +++ b/drivers/mfd/88pm800.c
+> @@ -376,7 +376,7 @@ static int device_irq_init_800(struct pm80x_chip =
+*chip)
+>  {
+>  	struct regmap *map =3D chip->regmap;
+>  	unsigned long flags =3D IRQF_ONESHOT;
+> -	int data, mask, ret =3D -EINVAL;
+> +	int irq_clr_mode, mask, ret =3D -EINVAL;
+> =20
+>  	if (!map || !chip->irq) {
+>  		dev_err(chip->dev, "incorrect parameters\n");
+> @@ -384,15 +384,16 @@ static int device_irq_init_800(struct pm80x_chi=
+p *chip)
+>  	}
+> =20
+>  	/*
+> -	 * irq_mode defines the way of clearing interrupt. it's read-clear =
+by
+> -	 * default.
+> +	 * irq_clr_on_wr defines the way of clearing interrupt by
+> +	 * read/write(0/1).  It's read-clear by default.
+>  	 */
+>  	mask =3D
+>  	    PM800_WAKEUP2_INV_INT | PM800_WAKEUP2_INT_CLEAR |
+>  	    PM800_WAKEUP2_INT_MASK;
+> =20
+> -	data =3D PM800_WAKEUP2_INT_CLEAR;
+> -	ret =3D regmap_update_bits(map, PM800_WAKEUP2, mask, data);
+> +	irq_clr_mode =3D (chip->irq_clr_on_wr) ?
+
+Drop the brackets.
+
+> +		PM800_WAKEUP2_INT_WRITE_CLEAR : PM800_WAKEUP2_INT_READ_CLEAR;
+> +	ret =3D regmap_update_bits(map, PM800_WAKEUP2, mask, irq_clr_mode);
+> =20
+>  	if (ret < 0)
+>  		goto out;
+> @@ -514,6 +515,7 @@ static int device_800_init(struct pm80x_chip *chi=
+p,
+>  	}
+> =20
+>  	chip->regmap_irq_chip =3D &pm800_irq_chip;
+> +	chip->irq_clr_on_wr =3D pdata->irq_clr_on_wr;
+
+You have protection around pdata everywhere else in the file, I
+suggest you supply some here too.
+
+>  	ret =3D device_irq_init_800(chip);
+>  	if (ret < 0) {
+> @@ -566,6 +568,9 @@ static int pm800_probe(struct i2c_client *client,
+>  		pdata =3D devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL);
+>  		if (!pdata)
+>  			return -ENOMEM;
+> +
+> +		/* by default, set irq clear method on write */
+> +		pdata->irq_clr_on_wr =3D true;
+
+You can save yourself some memory here, by removing this seemingly
+pointless allocation and do this above:
+
+        chip->irq_clr_on_wr =3D pdata ? pdata->irq_clr_on_wr : true;
+
+>  	}
+> =20
+>  	ret =3D pm80x_init(client);
+> diff --git a/include/linux/mfd/88pm80x.h b/include/linux/mfd/88pm80x.=
+h
+> index 97cb283..94b3dcd 100644
+> --- a/include/linux/mfd/88pm80x.h
+> +++ b/include/linux/mfd/88pm80x.h
+> @@ -77,6 +77,8 @@ enum {
+>  #define PM800_WAKEUP2		(0x0E)
+>  #define PM800_WAKEUP2_INV_INT		(1 << 0)
+>  #define PM800_WAKEUP2_INT_CLEAR		(1 << 1)
+> +#define PM800_WAKEUP2_INT_READ_CLEAR		(0 << 1)
+> +#define PM800_WAKEUP2_INT_WRITE_CLEAR		(1 << 1)
+>  #define PM800_WAKEUP2_INT_MASK		(1 << 2)
+
+Use the BIT() macro.
+
+>  #define PM800_POWER_UP_LOG	(0x10)
+> @@ -300,7 +302,7 @@ struct pm80x_chip {
+>  	struct regmap_irq_chip_data *irq_data;
+>  	int type;
+>  	int irq;
+> -	int irq_mode;
+> +	int irq_clr_on_wr;	/* '1': Clear on write, '0': Clear on read*/
+
+Whitespace issue.
+
+Shouldn't this be a bool?
+
+Actually even better, I would define; CLR_ON_WRITE and CLR_ON_READ,
+and call the variable irq_clear_method, or something.
+
+Much clearer that way I think.
+
+>  	unsigned long wu_flag;
+>  	spinlock_t lock;
+>  };
+> @@ -315,7 +317,7 @@ struct pm80x_platform_data {
+>  	 */
+>  	struct regulator_init_data *regulators[PM800_ID_RG_MAX];
+>  	unsigned int num_regulators;
+> -	int irq_mode;		/* Clear interrupt by read/write(0/1) */
+> +	int irq_clr_on_wr;		/* Clear interrupt by read/write(0/1) */
+>  	int batt_det;		/* enable/disable */
+>  	int (*plat_config)(struct pm80x_chip *chip,
+>  				struct pm80x_platform_data *pdata);
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
