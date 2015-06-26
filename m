@@ -1,115 +1,102 @@
-From: Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH v8 1/2] arm64: dts: Add the arasan mmc nodes in apm-storm.dtsi
-Date: Fri, 26 Jun 2015 19:03:45 +0530
-Message-ID: <CAOHikRCtWqvdnO1ec7dEPNPD9TMfrC=4k0V00tuiC9GLnNy7Tg@mail.gmail.com>
-References: <1434715227-27399-1-git-send-email-stripathi@apm.com>
-	<1434715227-27399-2-git-send-email-stripathi@apm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/4] MIPS: BMIPS: bcm7346: add nodes for NAND
+Date: Fri, 26 Jun 2015 22:54:35 +0900
+Message-ID: <D85A0C84-46BA-4F77-9A90-DE21EBED1887@gmail.com>
+References: <cover.1435124524.git.jaedon.shin@gmail.com> <1544bf6110b43fbaa8dbb3b06a18e08ae87b386d.1435124524.git.jaedon.shin@gmail.com> <558B05B7.8010401@gmail.com> <EFAFA0BE-CC2F-4342-9C89-DED8EC6CF377@gmail.com> <558CC050.6040101@gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2102\))
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1434715227-27399-2-git-send-email-stripathi-qTEPVZfXA3Y@public.gmane.org>
+In-Reply-To: <558CC050.6040101-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Don Dutile <ddutile-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mark Langsdorf <mlangsdo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>, Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Any comments on this patch ??
 
-On Fri, Jun 19, 2015 at 5:30 PM, Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org> wrote:
-> This patch adds the arasan mmc nodes to reuse the of-arasan
-> driver for APM X-Gene SoC.
->
-> Signed-off-by: Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
-> ---
-> ---
->  arch/arm64/boot/dts/apm/apm-mustang.dts |  4 +++
->  arch/arm64/boot/dts/apm/apm-storm.dtsi  | 43 +++++++++++++++++++++++++++++++++
->  2 files changed, 47 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/apm/apm-mustang.dts b/arch/arm64/boot/dts/apm/apm-mustang.dts
-> index 83578e7..7a3ea72 100644
-> --- a/arch/arm64/boot/dts/apm/apm-mustang.dts
-> +++ b/arch/arm64/boot/dts/apm/apm-mustang.dts
-> @@ -52,3 +52,7 @@
->  &xgenet {
->         status = "ok";
->  };
-> +
-> +&mmc0 {
-> +       status = "ok";
-> +};
-> diff --git a/arch/arm64/boot/dts/apm/apm-storm.dtsi b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-> index c8d3e0e..8e03ecd 100644
-> --- a/arch/arm64/boot/dts/apm/apm-storm.dtsi
-> +++ b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-> @@ -145,6 +145,40 @@
->                                 clock-output-names = "socplldiv2";
->                         };
->
-> +                       ahbclk: ahbclk@1f2ac000 {
-> +                               compatible = "apm,xgene-device-clock";
-> +                               #clock-cells = <1>;
-> +                               clocks = <&socplldiv2 0>;
-> +                               reg = <0x0 0x1f2ac000 0x0 0x1000
-> +                                       0x0 0x17000000 0x0 0x2000>;
-> +                               reg-names = "csr-reg", "div-reg";
-> +                               csr-offset = <0x0>;
-> +                               csr-mask = <0x1>;
-> +                               enable-offset = <0x8>;
-> +                               enable-mask = <0x1>;
-> +                               divider-offset = <0x164>;
-> +                               divider-width = <0x5>;
-> +                               divider-shift = <0x0>;
-> +                               clock-output-names = "ahbclk";
-> +                       };
-> +
-> +                       sdioclk: sdioclk@1f2ac000 {
-> +                               compatible = "apm,xgene-device-clock";
-> +                               #clock-cells = <1>;
-> +                               clocks = <&socplldiv2 0>;
-> +                               reg = <0x0 0x1f2ac000 0x0 0x1000
-> +                                       0x0 0x17000000 0x0 0x2000>;
-> +                               reg-names = "csr-reg", "div-reg";
-> +                               csr-offset = <0x0>;
-> +                               csr-mask = <0x2>;
-> +                               enable-offset = <0x8>;
-> +                               enable-mask = <0x2>;
-> +                               divider-offset = <0x178>;
-> +                               divider-width = <0x8>;
-> +                               divider-shift = <0x0>;
-> +                               clock-output-names = "sdioclk";
-> +                       };
-> +
->                         qmlclk: qmlclk {
->                                 compatible = "apm,xgene-device-clock";
->                                 #clock-cells = <1>;
-> @@ -533,6 +567,15 @@
->                         interrupts = <0x0 0x4f 0x4>;
->                 };
->
-> +               mmc0: mmc@1c000000 {
-> +                       compatible = "arasan,sdhci-4.9a";
-> +                       reg = <0x0 0x1c000000 0x0 0x100>;
-> +                       interrupts = <0x0 0x49 0x4>;
-> +                       dma-coherent;
-> +                       clock-names = "clk_xin", "clk_ahb";
-> +                       clocks = <&sdioclk 0>, <&ahbclk 0>;
-> +               };
-> +
->                 phy1: phy@1f21a000 {
->                         compatible = "apm,xgene-phy";
->                         reg = <0x0 0x1f21a000 0x0 0x100>;
-> --
-> 1.8.2.1
->
+> On Jun 26, 2015, at 12:00 PM, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>=
+ wrote:
+>=20
+> Le 06/25/15 01:52, Jaedon Shin a =C3=A9crit :
+>>=20
+>>> On Jun 25, 2015, at 4:32 AM, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org=
+> wrote:
+>>>=20
+>>> +Brian,
+>>>=20
+>>> On 23/06/15 23:08, Jaedon Shin wrote:
+>>>> Add NAND device nodes to BMIPS based BCM7346 platform.
+>>>>=20
+>>>> Signed-off-by: Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>> ---
+>>>=20
+>>> [snip]
+>>>=20
+>>>> +
+>>>> +&nand0 {
+>>>> +	status =3D "okay";
+>>>> +
+>>>> +	nandcs@1 {
+>>>> +		compatible =3D "brcm,nandcs";
+>>>> +		reg =3D <1>;
+>>>> +		nand-ecc-step-size =3D <512>;
+>>>> +		nand-ecc-strength =3D <8>;
+>>>> +		nand-on-flash-bbt;
+>>>> +
+>>>> +		#size-cells =3D <2>;
+>>>> +		#address-cells =3D <2>;
+>>>> +
+>>>> +		flash1.rootfs0@0 {
+>>>> +			reg =3D <0x0 0x0 0x0 0x80000000>;
+>>>> +		};
+>>>> +
+>>>> +		flash1.rootfs1@80000000 {
+>>>> +			reg =3D <0x0 0x80000000 0x0 0x80000000>;
+>>>> +		};
+>>>> +	};
+>>>> +};
+>>>=20
+>>> Should we create something like brcmnand-cs1-512-8 to reduce the am=
+ount
+>>> of duplication between DTS files?
+>>> --=20
+>>> Florian
+>>=20
+>> I Think that is not duplication.
+>>=20
+>> I have no reference boards, but this node is maybe explaining for ha=
+rdware
+>> description of the BCM97346DBSMB reference board. The nodes are chan=
+ged by
+>> EBI CS and ECC capabilities of NAND flash. I used brcmnand-cs2-512-4=
+ and
+>> brcmnand-cs1-512-4 for others.
+>=20
 
+The *others* means BCM7346 based set-top box of manufacturer. they are =
+not
+bcm973XX{dbsmb,svmb} boards.
 
+> Then I am confused, your 4 patches add identical NAND flash chip
+> properties for 7346, 7358, 7360 and 7362: CS#1, 512 bytes of ECC step
+> size and 8 bits of ECC strength, am I missing something?
+> --=20
+> Florian
 
--- 
-Thanks,
-with regards,
-Suman Tripathi
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+The mips based reference boards have postfix of DBSMB, SVMB, SFF and ot=
+hers.
+they have different properties of DDR, #CS, SPI-NOR, NOR, NAND. if we w=
+rite
+the DT of bcm97346sff.dts, therefore it has different fields.
+
+Then I expected that mips 40nm based SVMB type reference boards have th=
+e same
+properties. but, I don't have confidence. AISE I have no reference boar=
+ds
+unfortunately. if you can contact with people who have reference board,=
+ would
+tell me information of #CS and NAND. --
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
