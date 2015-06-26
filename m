@@ -1,122 +1,104 @@
-From: bjorn@kryo.se
-Subject: [PATCH v2 10/11] ARM: dts: msm8974: Add smd, rpm and regulator nodes
-Date: Fri, 26 Jun 2015 14:50:18 -0700
-Message-ID: <1435355419-23602-11-git-send-email-bjorn.andersson@sonymobile.com>
-References: <1435355419-23602-1-git-send-email-bjorn.andersson@sonymobile.com>
+From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: pSeries boot failure due to wrong interrupt controller
+Date: Sat, 27 Jun 2015 07:54:47 +1000
+Message-ID: <1435355687.26815.8.camel@kernel.crashing.org>
+References: <CAEFTgiyHkf8ooYdWW0nTLcdraJ_L9FpLSVZa4KS3CcdpGWJxew@mail.gmail.com>
+	 <CAL_JsqJqkUL8XyqR6yjg+-thj4YOQ6cUohGHHid71tdRFft7vw@mail.gmail.com>
+	 <558D91C1.6030004@tributary.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1435355419-23602-1-git-send-email-bjorn.andersson@sonymobile.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andy Gross <agross@codeaurora.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <558D91C1.6030004-WMdfZNuR64nqlBn2x/YWAg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jeremy Linton <jlinton-WMdfZNuR64nqlBn2x/YWAg@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jeremy Linton <lintonrjeremy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+On Fri, 2015-06-26 at 12:54 -0500, Jeremy Linton wrote:
+> Ping? Anyone?
+> 
+> I'm adding ppc-dev to see if anyone there is interested in picking up the patch..
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
----
- arch/arm/boot/dts/qcom-msm8974.dtsi | 74 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 74 insertions(+)
+Ah I missed that completely. From your discussion, it looks correct,
+I'll see if I can find a machine to test, however I think we dropped
+support for POWER3 so it might be non-trivial to do so.
 
-diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
-index d7c99b8..65f5496 100644
---- a/arch/arm/boot/dts/qcom-msm8974.dtsi
-+++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
-@@ -114,6 +114,11 @@
- 			      <0xf9002000 0x1000>;
- 		};
- 
-+		apcs: syscon@f9011000 {
-+			compatible = "syscon";
-+			reg = <0xf9011000 0x1000>;
-+		};
-+
- 		timer@f9020000 {
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-@@ -334,4 +339,73 @@
- 			#interrupt-cells = <4>;
- 		};
- 	};
-+
-+	smd {
-+		compatible = "qcom,smd";
-+
-+		rpm {
-+			interrupts = <0 168 1>;
-+			qcom,ipc = <&apcs 8 0>;
-+			qcom,smd-edge = <15>;
-+
-+			rpm_requests {
-+				compatible = "qcom,rpm-msm8974";
-+				qcom,smd-channels = "rpm_requests";
-+
-+				pm8841-regulators {
-+					compatible = "qcom,rpm-pm8841-regulators";
-+
-+					pm8841_s1: s1 {};
-+					pm8841_s2: s2 {};
-+					pm8841_s3: s3 {};
-+					pm8841_s4: s4 {};
-+					pm8841_s5: s5 {};
-+					pm8841_s6: s6 {};
-+					pm8841_s7: s7 {};
-+					pm8841_s8: s8 {};
-+				};
-+
-+				pm8941-regulators {
-+					compatible = "qcom,rpm-pm8941-regulators";
-+
-+					pm8941_s1: s1 {};
-+					pm8941_s2: s2 {};
-+					pm8941_s3: s3 {};
-+					pm8941_5v: s4 {};
-+
-+					pm8941_l1: l1 {};
-+					pm8941_l2: l2 {};
-+					pm8941_l3: l3 {};
-+					pm8941_l4: l4 {};
-+					pm8941_l5: l5 {};
-+					pm8941_l6: l6 {};
-+					pm8941_l7: l7 {};
-+					pm8941_l8: l8 {};
-+					pm8941_l9: l9 {};
-+					pm8941_l10: l10 {};
-+					pm8941_l11: l11 {};
-+					pm8941_l12: l12 {};
-+					pm8941_l13: l13 {};
-+					pm8941_l14: l14 {};
-+					pm8941_l15: l15 {};
-+					pm8941_l16: l16 {};
-+					pm8941_l17: l17 {};
-+					pm8941_l18: l18 {};
-+					pm8941_l19: l19 {};
-+					pm8941_l20: l20 {};
-+					pm8941_l21: l21 {};
-+					pm8941_l22: l22 {};
-+					pm8941_l23: l23 {};
-+					pm8941_l24: l24 {};
-+
-+					pm8941_lvs1: lvs1 {};
-+					pm8941_lvs2: lvs2 {};
-+					pm8941_lvs3: lvs3 {};
-+
-+					pm8941_5vs1: 5vs1 {};
-+					pm8941_5vs2: 5vs2 {};
-+				};
-+			};
-+		};
-+	};
- };
--- 
-1.9.3 (Apple Git-50)
+And yes, when there is no map, the parent should be the interrupt-parent
+with a fallback to the parent node if that doesn't exist.
+
+Cheers,
+Ben.
+
+> Thanks,
+> 	Jeremy
+> 
+> 
+> Ok so I messed up the formatting a little and was lazy and didn't checkpatch it
+> cause I mean, it was 1 line! If someone wants it resent I will do so.
+> 
+> 
+> 
+> 
+> 
+> On 6/23/2015 8:42 AM, Rob Herring wrote:
+> > +Grant
+> > 
+> > On Mon, Jun 22, 2015 at 2:44 PM, Jeremy Linton <lintonrjeremy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> >> The OF IRQ logic was refactored a while back, and it appears that it
+> >> broke the case where a device doesn't have an interrupt-map
+> >> (legacy/ISA platform peripherals). In particular on the older pSeries
+> >> platforms the console serial port (keyboard/etc) is attached via a
+> >> Winbond super I/O controller. With the refactored logic
+> >> of_irq_parse_raw() returns with the out_irq->np pointing at the bus,
+> >> rather than the interrupt controller. This results in the platform
+> >> logic getting confused about the appropriate interrupt host, and in
+> >> ics_rtas_host_match() it doesn't match "chrp,iic" and the xics takes
+> >> over and tries to use RTAS to map the interrupt. RTAS then crashes the
+> >> machine.
+> >>
+> >> This tweaks the "-> no map, getting parent" behavior to behave as
+> >> before, and the machine boots.
+> > 
+> > I think the real question is why doesn't of_irq_find_parent return the
+> > interrupt controller node instead of the bus node.
+> > 
+> > While I think this fix is correct, I think of_irq_parse_raw should be
+> > a nop in the case of no interrupt-map.
+> > 
+> > Rob
+> > 
+> >>
+> >> Thanks
+> >>
+> >> Signed-off-by: Jeremy Linton <lintonrjeremy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >>
+> >>
+> >> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+> >> index 1a79806..78b4161b 100644
+> >> --- a/drivers/of/irq.c
+> >> +++ b/drivers/of/irq.c
+> >> @@ -252,7 +252,6 @@ int of_irq_parse_raw(const __be32 *addr, struct
+> >> of_phandle_args *out_irq)
+> >>                  * Successfully parsed an interrrupt-map translation; copy new
+> >>                  * interrupt specifier into the out_irq structure
+> >>                  */
+> >> -               out_irq->np = newpar;
+> >>
+> >>                 match_array = imap - newaddrsize - newintsize;
+> >>                 for (i = 0; i < newintsize; i++)
+> >> @@ -262,6 +261,7 @@ int of_irq_parse_raw(const __be32 *addr, struct
+> >> of_phandle_args *out_irq)
+> >>
+> >>         skiplevel:
+> >>                 /* Iterate again with new parent */
+> >> +               out_irq->np = newpar;
+> >>                 pr_debug(" -> new parent: %s\n", of_node_full_name(newpar));
+> >>                 of_node_put(ipar);
+> >>                 ipar = newpar;
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
