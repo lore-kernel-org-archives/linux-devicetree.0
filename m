@@ -1,80 +1,71 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/4] MIPS: BMIPS: bcm7346: add nodes for NAND
-Date: Thu, 25 Jun 2015 20:00:32 -0700
-Message-ID: <558CC050.6040101@gmail.com>
-References: <cover.1435124524.git.jaedon.shin@gmail.com> <1544bf6110b43fbaa8dbb3b06a18e08ae87b386d.1435124524.git.jaedon.shin@gmail.com> <558B05B7.8010401@gmail.com> <EFAFA0BE-CC2F-4342-9C89-DED8EC6CF377@gmail.com>
+From: Dudley Du <dudl@cypress.com>
+Subject: RE: [PATCH v1 0/7] input: cyapa: instruction of cyapa patches.patch
+Date: Fri, 26 Jun 2015 01:37:26 +0000
+Message-ID: <CY1PR06MB18179B077AE07045821D9EB3D1AD0@CY1PR06MB1817.namprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <EFAFA0BE-CC2F-4342-9C89-DED8EC6CF377-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-input-owner@vger.kernel.org
+To: "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "rydberg@euromail.se" <rydberg@euromail.se>
+Cc: "bleung@google.com" <bleung@google.com>, "jmmahler@gmail.com" <jmmahler@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Le 06/25/15 01:52, Jaedon Shin a =C3=A9crit :
->=20
->> On Jun 25, 2015, at 4:32 AM, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>=
- wrote:
->>
->> +Brian,
->>
->> On 23/06/15 23:08, Jaedon Shin wrote:
->>> Add NAND device nodes to BMIPS based BCM7346 platform.
->>>
->>> Signed-off-by: Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> ---
->>
->> [snip]
->>
->>> +
->>> +&nand0 {
->>> +	status =3D "okay";
->>> +
->>> +	nandcs@1 {
->>> +		compatible =3D "brcm,nandcs";
->>> +		reg =3D <1>;
->>> +		nand-ecc-step-size =3D <512>;
->>> +		nand-ecc-strength =3D <8>;
->>> +		nand-on-flash-bbt;
->>> +
->>> +		#size-cells =3D <2>;
->>> +		#address-cells =3D <2>;
->>> +
->>> +		flash1.rootfs0@0 {
->>> +			reg =3D <0x0 0x0 0x0 0x80000000>;
->>> +		};
->>> +
->>> +		flash1.rootfs1@80000000 {
->>> +			reg =3D <0x0 0x80000000 0x0 0x80000000>;
->>> +		};
->>> +	};
->>> +};
->>
->> Should we create something like brcmnand-cs1-512-8 to reduce the amo=
-unt
->> of duplication between DTS files?
->> --=20
->> Florian
->=20
-> I Think that is not duplication.
->=20
-> I have no reference boards, but this node is maybe explaining for har=
-dware
-> description of the BCM97346DBSMB reference board. The nodes are chang=
-ed by
-> EBI CS and ECC capabilities of NAND flash. I used brcmnand-cs2-512-4 =
-and
-> brcmnand-cs1-512-4 for others.
+Hi Dmitry, Jmmahler, All,
 
-Then I am confused, your 4 patches add identical NAND flash chip
-properties for 7346, 7358, 7360 and 7362: CS#1, 512 bytes of ECC step
-size and 8 bits of ECC strength, am I missing something?
---=20
-=46lorian
+Is there any review points or comments on the v1 patches?
+
+Thanks in advance,
+Dudley
+
+
+
+V1 patches mainly have following updates compared with V0 patches:
+1) This patch series is generated base on code base linux-next 20150612,
+   so fix the patch v0 6/7 failed to apply on linux-next 20150611 issue.
+1) Fix spelling errors, space and black line format errors in patch v1 1/7.
+2) Add detail description of the new interrupt and proximity interfaces in
+   patch v1 5/7.
+
+
+This patch series is mainly aimed to add new gen6 trackpad devices support,
+and also new function to report proximity data/vent for Gen5 and Gen6 trackpad
+devices.
+
+
+Dudley Du (7):
+  input: cyapa: change strings of gen5 to pip in the name when they are
+    shared
+  input: cyapa: add gen6 device module support in driver
+  input: cyapa: add proximity function support for gen5 and gen6 modules
+  input: cyapa: fully support runtime suspend power management
+  input: cyapa: add proximity and interrupt sysfs interfaces support
+  input: cyapa: add of match device support and description document
+  input: cyapa: add CYAP0002 Gen6 device for ACPI configuration
+
+ .../devicetree/bindings/input/cypress,cyapa.txt    |   44 +
+ .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+ drivers/input/mouse/Makefile                       |    2 +-
+ drivers/input/mouse/cyapa.c                        |  266 ++++-
+ drivers/input/mouse/cyapa.h                        |  161 ++-
+ drivers/input/mouse/cyapa_gen3.c                   |   11 +-
+ drivers/input/mouse/cyapa_gen5.c                   | 1254 +++++++++++---------
+ drivers/input/mouse/cyapa_gen6.c                   |  760 ++++++++++++
+ 8 files changed, 1854 insertions(+), 645 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/input/cypress,cyapa.txt
+ create mode 100644 drivers/input/mouse/cyapa_gen6.c
+
+
+History patch series modifications list:
+V0 patches mainly have following updates:
+1) Add Gen6 trackpad device support;
+2) Add report proximity data function support for Gen5 and Gen6 devices;
+3) Fully support runtime suspend/resume power management;
+4) Add of_match_table mechanism support.
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
+
+
+This message and any attachments may contain Cypress (or its subsidiaries) confidential information. If it has been received in error, please advise the sender and immediately delete this message.
