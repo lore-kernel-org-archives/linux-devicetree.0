@@ -1,91 +1,61 @@
-From: Vitaly Andrianov <vitalya-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 0/3] ARM: keystone: add ecc error interrupt handling
-Date: Fri, 26 Jun 2015 08:20:15 -0400
-Message-ID: <558D437F.30705@ti.com>
-References: <1435242710-31346-1-git-send-email-vitalya@ti.com> <558C188B.5060107@oracle.com> <558C6C4F.1090102@codeaurora.org> <558C72EB.8010502@oracle.com> <558C7437.2090306@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <558C7437.2090306-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, santosh shilimkar <santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] of/irq: Rename "intc_desc" to "of_intc_desc" to fix OF on sh
+Date: Fri, 26 Jun 2015 14:42:45 +0200
+Message-ID: <1435322565-18798-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-next@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
+Now CONFIG_OF can be enabled on sh:
 
+    drivers/of/irq.c:472:8: error: redefinition of 'struct intc_desc'
+    include/linux/sh_intc.h:109:8: note: originally defined here
 
-On 06/25/2015 05:35 PM, Stephen Boyd wrote:
-> On 06/25/2015 02:30 PM, santosh shilimkar wrote:
->> On 6/25/2015 2:02 PM, Stephen Boyd wrote:
->>> On 06/25/2015 08:04 AM, santosh shilimkar wrote:
->>>> On 6/25/2015 7:31 AM, Vitaly Andrianov wrote:
->>>>> This patch series adds support for arm L1/L2 ecc and ddr3 ecc error
->>>>> handling
->>>>> for Keystone devices
->>>>>
->>>>> Change Log
->>>>>
->>>>> v2:
->>>>> - removing unused and sorting headers of keystone.c are moved to a
->>>>> separate
->>>>>      patch.
->>>>> - l1l2 ecc and ddr3 ecc error handling are split it to separate
->>>>> patches
->>>>> - removed unused headers from keystone_ecc.c
->>>>> - platsmp.c removed from the patch.
->>>>> - return IRQ_HANDLED for 1 bit error in l1l2 ecc handler
->>>>> - checked and handled existing echttps://lwn.net/Articles/593336/c
->>>>> error before enabling ddr3 interrupt
->>>>> - 1 bit ddr3 interrupt is disabled, because it is handled by hardware
->>>>> and
->>>>>      there is no reason to handle it by software
->>>>>
->>>> This version looks good to me. As already commented, I would have liked
->>>> the patch 2/3(L2 ECC) code in ARM generic code so will give some more
->>>> time for others to come back. Otherwise I will queue this up for next
->>>> window.
->>>
->>> Why not make this into an edac driver? I sent out an L1/L2 error
->>> detection edac driver for Krait processors a year ago, but it stalled
->>> due to some DT binding stuff[1]. This looks fairly similar.
->>>
->> Indeed the error detection part is very similar(expected as well
->> considering the same processor L2 regs). I am not sure we need
->> full driver only for that but at least the IRQ error handler
->> related code can reside together. Lets see what RMK thinks
->> on this.
->>
->
-> There's an existing one for highbank (drivers/edac/highbank_l2_edac.c)
-> and there was a patch set for the pl310 as well[1]. I don't think we
-> want any architecture specific code for this, just use the EDAC framework.
->
-> [1] https://lkml.org/lkml/2014/3/2/87
->
+As "intc_desc" is used all over the place in sh platform code, while
+drivers/of/irq.c has a local definition used in a single function,
+rename the latter by prefixing it with "of_".
 
-Before porting that patch I was looking to implementation of the EDAC 
-for L2 cache and tried to use the framework. Sorry, but I couldn't 
-understand why would the Keystone platform may need it. Most likely 
-because I didn't understand the framework itself :(
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+sh-allmodconfig in next-20150626
+http://kisskb.ellerman.id.au/kisskb/buildresult/12450810/
+---
+ drivers/of/irq.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-In order the Keystone ECC works u-boot has to initialize the entire DDR3 
-and enable ECC. When kernel boots up it has to install the ECC interrupt 
-handlers for Cortex-A15 L1/L2 ECC and Keystone2 DDR3 ECC. As far as 
-1-bit errors handled and corrected by hardware the software even doesn't 
-need to handle those errors. We need to handle 2-bit errors and just 
-reboot the board.
+diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+index 1a7980692f254c69..f6794aafa9925af2 100644
+--- a/drivers/of/irq.c
++++ b/drivers/of/irq.c
+@@ -469,7 +469,7 @@ int of_irq_to_resource_table(struct device_node *dev, struct resource *res,
+ }
+ EXPORT_SYMBOL_GPL(of_irq_to_resource_table);
+ 
+-struct intc_desc {
++struct of_intc_desc {
+ 	struct list_head	list;
+ 	struct device_node	*dev;
+ 	struct device_node	*interrupt_parent;
+@@ -485,7 +485,7 @@ struct intc_desc {
+ void __init of_irq_init(const struct of_device_id *matches)
+ {
+ 	struct device_node *np, *parent = NULL;
+-	struct intc_desc *desc, *temp_desc;
++	struct of_intc_desc *desc, *temp_desc;
+ 	struct list_head intc_desc_list, intc_parent_list;
+ 
+ 	INIT_LIST_HEAD(&intc_desc_list);
+@@ -496,7 +496,7 @@ void __init of_irq_init(const struct of_device_id *matches)
+ 				!of_device_is_available(np))
+ 			continue;
+ 		/*
+-		 * Here, we allocate and populate an intc_desc with the node
++		 * Here, we allocate and populate an of_intc_desc with the node
+ 		 * pointer, interrupt-parent device_node etc.
+ 		 */
+ 		desc = kzalloc(sizeof(*desc), GFP_KERNEL);
+-- 
+1.9.1
 
-As the ECC detection has to be enable on kernel boot time and cannot be 
-disabled there is not sense to make it in a module.
-
-So, shall Keystone use the EDAC framework to install the onetime working 
-interrupt handler? What are advantages to use the framework?
-
-I appreciate your opinion.
-
-Thanks,
-Vitaly
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
