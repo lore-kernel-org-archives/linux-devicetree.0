@@ -1,65 +1,90 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 2/2] arm/smmu: Make use of of_parse_phandle_with_var_args
-Date: Fri, 26 Jun 2015 12:10:47 +0100
-Message-ID: <20150626111047.GA9791@arm.com>
-References: <1435247548-32201-1-git-send-email-joro@8bytes.org>
- <1435247548-32201-2-git-send-email-joro@8bytes.org>
+From: Vitaly Andrianov <vitalya-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 0/3] ARM: keystone: add ecc error interrupt handling
+Date: Fri, 26 Jun 2015 08:20:15 -0400
+Message-ID: <558D437F.30705@ti.com>
+References: <1435242710-31346-1-git-send-email-vitalya@ti.com> <558C188B.5060107@oracle.com> <558C6C4F.1090102@codeaurora.org> <558C72EB.8010502@oracle.com> <558C7437.2090306@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1435247548-32201-2-git-send-email-joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <558C7437.2090306-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andre Przywara <Andre.Przywara-5wv7dgnIgG8@public.gmane.org>, Joerg Roedel <jroedel-l3A5Bk7waGM@public.gmane.org>
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, santosh shilimkar <santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Joerg,
 
-Thanks for looking at this! I'm fine with the general idea, but obviously
-the first patch needs an Ack from a devicetree person.
 
-One comment on the code below...
+On 06/25/2015 05:35 PM, Stephen Boyd wrote:
+> On 06/25/2015 02:30 PM, santosh shilimkar wrote:
+>> On 6/25/2015 2:02 PM, Stephen Boyd wrote:
+>>> On 06/25/2015 08:04 AM, santosh shilimkar wrote:
+>>>> On 6/25/2015 7:31 AM, Vitaly Andrianov wrote:
+>>>>> This patch series adds support for arm L1/L2 ecc and ddr3 ecc error
+>>>>> handling
+>>>>> for Keystone devices
+>>>>>
+>>>>> Change Log
+>>>>>
+>>>>> v2:
+>>>>> - removing unused and sorting headers of keystone.c are moved to a
+>>>>> separate
+>>>>>      patch.
+>>>>> - l1l2 ecc and ddr3 ecc error handling are split it to separate
+>>>>> patches
+>>>>> - removed unused headers from keystone_ecc.c
+>>>>> - platsmp.c removed from the patch.
+>>>>> - return IRQ_HANDLED for 1 bit error in l1l2 ecc handler
+>>>>> - checked and handled existing echttps://lwn.net/Articles/593336/c
+>>>>> error before enabling ddr3 interrupt
+>>>>> - 1 bit ddr3 interrupt is disabled, because it is handled by hardware
+>>>>> and
+>>>>>      there is no reason to handle it by software
+>>>>>
+>>>> This version looks good to me. As already commented, I would have liked
+>>>> the patch 2/3(L2 ECC) code in ARM generic code so will give some more
+>>>> time for others to come back. Otherwise I will queue this up for next
+>>>> window.
+>>>
+>>> Why not make this into an edac driver? I sent out an L1/L2 error
+>>> detection edac driver for Krait processors a year ago, but it stalled
+>>> due to some DT binding stuff[1]. This looks fairly similar.
+>>>
+>> Indeed the error detection part is very similar(expected as well
+>> considering the same processor L2 regs). I am not sure we need
+>> full driver only for that but at least the IRQ error handler
+>> related code can reside together. Lets see what RMK thinks
+>> on this.
+>>
+>
+> There's an existing one for highbank (drivers/edac/highbank_l2_edac.c)
+> and there was a patch set for the pl310 as well[1]. I don't think we
+> want any architecture specific code for this, just use the EDAC framework.
+>
+> [1] https://lkml.org/lkml/2014/3/2/87
+>
 
-On Thu, Jun 25, 2015 at 04:52:28PM +0100, Joerg Roedel wrote:
-> The function of_parse_phandle_with_args() can only handle 16
-> args, but there are systems that require more (25 in my
-> case). So use the newly introduced function
-> of_parse_phandle_with_var_args() instead.
+Before porting that patch I was looking to implementation of the EDAC 
+for L2 cache and tried to use the framework. Sorry, but I couldn't 
+understand why would the Keystone platform may need it. Most likely 
+because I didn't understand the framework itself :(
 
-[...]
+In order the Keystone ECC works u-boot has to initialize the entire DDR3 
+and enable ECC. When kernel boots up it has to install the ECC interrupt 
+handlers for Cortex-A15 L1/L2 ECC and Keystone2 DDR3 ECC. As far as 
+1-bit errors handled and corrected by hardware the software even doesn't 
+need to handle those errors. We need to handle 2-bit errors and just 
+reboot the board.
 
-> +	masterspec = of_alloc_phandle_args(MAX_MASTER_STREAMIDS);
-> +	if (!masterspec)
-> +		return -ENOMEM;
-> +
->  	i = 0;
->  	smmu->masters = RB_ROOT;
-> -	while (!of_parse_phandle_with_args(dev->of_node, "mmu-masters",
-> -					   "#stream-id-cells", i,
-> -					   &masterspec)) {
-> -		err = register_smmu_master(smmu, dev, &masterspec);
-> +	while (!of_parse_phandle_with_var_args(dev->of_node, "mmu-masters",
-> +					   "#stream-id-cells", i, masterspec,
-> +					   MAX_MASTER_STREAMIDS)) {
-> +		err = register_smmu_master(smmu, dev, masterspec);
->  		if (err) {
->  			dev_err(dev, "failed to add master %s\n",
-> -				masterspec.np->name);
-> +				masterspec->np->name);
->  			goto out_put_masters;
->  		}
->  
-> @@ -1811,6 +1815,9 @@ out_free_irqs:
->  		free_irq(smmu->irqs[i], smmu);
->  
->  out_put_masters:
-> +
-> +	of_free_phandle_args(masterspec);
+As the ECC detection has to be enable on kernel boot time and cannot be 
+disabled there is not sense to make it in a module.
 
-Shouldn't we also free the masterspec on success?
+So, shall Keystone use the EDAC framework to install the onetime working 
+interrupt handler? What are advantages to use the framework?
 
-Will
+I appreciate your opinion.
+
+Thanks,
+Vitaly
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
