@@ -1,31 +1,157 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 3/9] arm: add call to CPU idle quirks handler
-Date: Fri, 26 Jun 2015 09:40:10 +0200
-Message-ID: <2139691.3OPR29uKdT@wuerfel>
-References: <1435094387-20146-1-git-send-email-pawelo@king.net.pl> <alpine.LFD.2.11.1506251237000.2617@knanqh.ubzr> <alpine.LNX.2.00.1506260715300.499@localhost.localdomain>
+From: Yi Zhang <yizhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH-v4 1/3] mfd: 88pm800: Add device tree support
+Date: Fri, 26 Jun 2015 15:41:20 +0800
+Message-ID: <20150626074120.GD32687@yizhang>
+References: <1435217189-19578-1-git-send-email-vaibhav.hiremath@linaro.org>
+ <1435217189-19578-2-git-send-email-vaibhav.hiremath@linaro.org>
+ <20150625101916.GB15013@x1>
+ <558BE1B7.2060308@linaro.org>
+ <20150625144800.GC23990@x1>
+ <558C1DF5.2060103@linaro.org>
+ <20150626055317.GA32687@yizhang>
+ <558CEA41.8020508@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <alpine.LNX.2.00.1506260715300.499@localhost.localdomain>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Paul Osmialowski <pawelo@king.net.pl>
-Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Anson Huang <b20788@freescale.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Bhupesh Sharma <bhupesh.sharma@freescale.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Frank Li <Frank.Li@freescale.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Haojian Zhuang <haojian.zhuang@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jingchang Lu <jingchang.lu@freescale.com>, Jiri Slaby <jslaby@suse.cz>, Kees Cook <keescook@chromium.org>, Kumar Gala <galak@codeaurora.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Linus Walleij <linus.walleij@linaro.org>, Magnus Damm <damm+renesas@opensource.se>, Michael Turquette <mturquette@baylibre.com>, Nathan Lynch <nathan_lynch@mentor.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <558CEA41.8020508-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 26 June 2015 07:30:49 Paul Osmialowski wrote:
-> ENDPROC(cpu_kinetis_do_idle)
+On Fri, Jun 26, 2015 at 11:29:29AM +0530, Vaibhav Hiremath wrote:
 > 
-> But... what about the rest of this hypothetical proc_kinetis.S file?
 > 
-> It would be a lot of code duplication with proc-v7m.S I think.
+> On Friday 26 June 2015 11:23 AM, Yi Zhang wrote:
+> >On Thu, Jun 25, 2015 at 08:57:49PM +0530, Vaibhav Hiremath wrote:
+> >>
+> >>
+> >>On Thursday 25 June 2015 08:18 PM, Lee Jones wrote:
+> >>>On Thu, 25 Jun 2015, Vaibhav Hiremath wrote:
+> >>>>On Thursday 25 June 2015 03:49 PM, Lee Jones wrote:
+> >>>>>On Thu, 25 Jun 2015, Vaibhav Hiremath wrote:
+> >>>>>
+> >>>>>>Add DT support to the 88pm800 driver, along with compatible
+> >>>>>>field for it's sub-devices (rtc, onkey and regulator)
+> >>>>>>
+> >>>>>>Signed-off-by: Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> >>>>>>Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >>>>>>---
+> >>>>>>  drivers/mfd/88pm800.c | 23 +++++++++++++++++++++++
+> >>>>>>  1 file changed, 23 insertions(+)
+> >>>>>>
+> >>>>>>diff --git a/drivers/mfd/88pm800.c b/drivers/mfd/88pm800.c
+> >>>>>>index 841717a..40fd014 100644
+> >>>>>>--- a/drivers/mfd/88pm800.c
+> >>>>>>+++ b/drivers/mfd/88pm800.c
+> >>>>>>@@ -27,6 +27,7 @@
+> >>>>>>  #include <linux/mfd/core.h>
+> >>>>>>  #include <linux/mfd/88pm80x.h>
+> >>>>>>  #include <linux/slab.h>
+> >>>>>>+#include <linux/of_device.h>
+> >>>>>>
+> >>>>>>  /* Interrupt Registers */
+> >>>>>>  #define PM800_INT_STATUS1		(0x05)
+> >>>>>>@@ -121,6 +122,11 @@ static const struct i2c_device_id pm80x_id_table[] = {
+> >>>>>>  };
+> >>>>>>  MODULE_DEVICE_TABLE(i2c, pm80x_id_table);
+> >>>>>>
+> >>>>>>+static const struct of_device_id pm80x_of_match_table[] = {
+> >>>>>>+	{ .compatible = "marvell,88pm800", },
+> >>>>>>+	{},
+> >>>>>>+};
+> >>>>>>+
+> >>>>>>  static struct resource rtc_resources[] = {
+> >>>>>>  	{
+> >>>>>>  	 .name = "88pm80x-rtc",
+> >>>>>>@@ -133,6 +139,7 @@ static struct resource rtc_resources[] = {
+> >>>>>>  static struct mfd_cell rtc_devs[] = {
+> >>>>>>  	{
+> >>>>>>  	 .name = "88pm80x-rtc",
+> >>>>>>+	 .of_compatible = "marvell,88pm80x-rtc",
+> >>>>>>  	 .num_resources = ARRAY_SIZE(rtc_resources),
+> >>>>>>  	 .resources = &rtc_resources[0],
+> >>>>>>  	 .id = -1,
+> >>>>>>@@ -151,6 +158,7 @@ static struct resource onkey_resources[] = {
+> >>>>>>  static const struct mfd_cell onkey_devs[] = {
+> >>>>>>  	{
+> >>>>>>  	 .name = "88pm80x-onkey",
+> >>>>>>+	 .of_compatible = "marvell,88pm80x-onkey",
+> >>>>>>  	 .num_resources = 1,
+> >>>>>>  	 .resources = &onkey_resources[0],
+> >>>>>>  	 .id = -1,
+> >>>>>>@@ -160,6 +168,7 @@ static const struct mfd_cell onkey_devs[] = {
+> >>>>>>  static const struct mfd_cell regulator_devs[] = {
+> >>>>>>  	{
+> >>>>>>  	 .name = "88pm80x-regulator",
+> >>>>>>+	 .of_compatible = "marvell,88pm80x-regulator",
+> >>>>>>  	 .id = -1,
+> >>>>>>  	},
+> >>>>>>  };
+> >>>>>>@@ -544,8 +553,21 @@ static int pm800_probe(struct i2c_client *client,
+> >>>>>>  	int ret = 0;
+> >>>>>>  	struct pm80x_chip *chip;
+> >>>>>>  	struct pm80x_platform_data *pdata = dev_get_platdata(&client->dev);
+> >>>>>>+	struct device_node *np = client->dev.of_node;
+> >>>>>>  	struct pm80x_subchip *subchip;
+> >>>>>>
+> >>>>>>+	if (!pdata && !np) {
+> >>>>>>+		dev_err(&client->dev,
+> >>>>>>+			"pm80x requires platform data or of_node\n");
+> >>>>>>+		return -EINVAL;
+> >>>>>>+	}
+> >>>>>>+
+> >>>>>>+	if (!pdata) {
+> >>>>>>+		pdata = devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL);
+> >>>>>>+		if (!pdata)
+> >>>>>>+			return -ENOMEM;
+> >>>>>>+	}
+> >>>>>
+> >>>>>Why have you allocated data for pdata, then done nothing with it?
+> >>>>>
+> >>>>
+> >>>>Not in this patch, but subsequent patches would use it.
+> >>>
+> >>>Only provide it when you start using it please.
+> >>>
+> >>
+> >>I will take back my earlier comment of "not using in this patch, but
+> >>subsequent patches".
+> >>
+> >>pdata is being used, couple of places in the driver,
+> >>
+> >>
+> >>@line-751
+> >>
+> >>         ret = device_800_init(chip, pdata);
+> >>         if (ret) {
+> >>                 dev_err(chip->dev, "Failed to initialize 88pm800
+> >>devices\n");
+> >>                 goto err_device_init;
+> >>         }
+> >>
+> >>         if (pdata && pdata->plat_config)
+> >>                 pdata->plat_config(chip, pdata);
+> >
+> >   this plat_config() is used in legacy non-device-tree code, it's used
+> >   to implement fixup for chip or board level, it exists in
+> >   the board configuration file
+> >
+> >   just curious, do you think we still need to keep it?
+> >   considering device-tree has been used. thanks;
+> >
 > 
+> I do not see it anywhere in mainline kernel tree, is it part of some
+> internal tree?
+> 
+> If we know that it is being used, then lets not remove it now.
 
-I doubt that the Kinetis has a custom version of the CPU core. Are you
-sure that not all Cortex-M4 need this?
-
-As long as the idle implementation depends only on the CPU core type,
-it's easy to just define multiple .proc.info.init entries in the
-same file, like we do in proc-v7.S.
-
-	Arnd
+  Yes, got your point, it may still be used by other trees, thanks;
+> 
+> Thanks,
+> Vaibhav
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
