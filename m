@@ -1,84 +1,79 @@
-From: Yi Zhang <yizhang@marvell.com>
-Subject: Re: [PATCH V2 1/2] mfd: add Marvell 88pm88x description
-Date: Fri, 26 Jun 2015 11:43:07 +0800
-Message-ID: <20150626034307.GB32229@yizhang>
-References: <1434098601-3498-1-git-send-email-yizhang@marvell.com>
- <1434098601-3498-2-git-send-email-yizhang@marvell.com>
- <CAL_JsqKjNdtp1A7LqqnjAnGPmCu-fwum6D9EPOoaVF0C=DacTw@mail.gmail.com>
- <55897129.1060500@linaro.org>
+From: Scott Wood <scottwood@freescale.com>
+Subject: Re: [PATCH v4] powerpc/rcpm: add RCPM driver
+Date: Thu, 25 Jun 2015 23:16:32 -0500
+Message-ID: <1435292192.6524.16.camel@freescale.com>
+References: <1435046827-7683-1-git-send-email-Yuantian.Tang@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <55897129.1060500@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
-Cc: Rob Herring <robherring2@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Paul Bolle <pebolle@tiscali.nl>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Qiao Zhou <zhouqiao@marvell.com>, zhenzh@marvell.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1435046827-7683-1-git-send-email-Yuantian.Tang@freescale.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Yuantian.Tang@freescale.com
+Cc: b07421@freescale.com, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, Chenhui Zhao <chenhui.zhao@freescale.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 23, 2015 at 08:16:01PM +0530, Vaibhav Hiremath wrote:
-> 
-> 
-> On Tuesday 23 June 2015 08:01 PM, Rob Herring wrote:
-> >On Fri, Jun 12, 2015 at 3:43 AM, Yi Zhang <yizhang@marvell.com> wrote:
-> >>88pm880 and 88pm886 are two combo PMIC chips, most of the function and the
-> >>register mapping are the same
-> >
-> >How do they compare to 80x/822/860 PMICs?
-> >
-> 
-> Zhang,
-> 
-> Sorry, I missed this patch-series.
-> 
-> Is there any way we can get access to datahsheets of all these devices?
-
-  Hi, Vaibhav:
-
-  https://extranet.marvell.com/ is a useful place to access to them
-> 
-> >>
-> >>Signed-off-by: Yi Zhang <yizhang@marvell.com>
-> >>---
-> >>  Documentation/devicetree/bindings/mfd/88pm88x.txt | 33 +++++++++++++++++++++++
-> >>  1 file changed, 33 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/mfd/88pm88x.txt
-> >>
-> >>diff --git a/Documentation/devicetree/bindings/mfd/88pm88x.txt b/Documentation/devicetree/bindings/mfd/88pm88x.txt
-> >>new file mode 100644
-> >>index 0000000..72e741c
-> >>--- /dev/null
-> >>+++ b/Documentation/devicetree/bindings/mfd/88pm88x.txt
-> >>@@ -0,0 +1,33 @@
-> >>+Marvell 88pm88x combo PMIC chip
-> >>+
-> >>+This series of chip integrates regulator, rtc, onkey, switch charger,
-> >>+fuelgauge, gpadc and a range of I/O pins.
-> >>+
-> >>+88pm886 and 88pm880 are two very similar chips, most of the registers mapping
-> >>+and functions are the same, the main difference is the latter has a separate
-> >>+i2c slave address to cover BUCK related setting
-> >>+
-> >>+Required properties:
-> >>+- compatible: one of the strings for a specific chip:
-> >>+  "marvell,88pm886"
-> >>+  "marvell,88pm880"
-> >>+- reg: the i2c address
-> >>+- interrupt-controller: it works as an interrupt controller managing its irqs
-> >>+- interrupt-cells: this value is 1
-> >>+
-> >>+Optional properties:
-> >>+- marvell,88pm88x-irq-write-clear: the interrupt ack method
-> >
-> >The 80x/860 binding needs the same property. Please coordinate this
-> >with Vaibhav.
-> >
-> 
-> Please refer to the patch
-> 
-> https://lkml.org/lkml/2015/6/17/545
-
-  Thanks;
-> 
-> Thanks,
-> Vaibhav
+T24gVHVlLCAyMDE1LTA2LTIzIGF0IDE2OjA3ICswODAwLCBZdWFudGlhbi5UYW5nQGZyZWVzY2Fs
+ZS5jb20gd3JvdGU6Cj4gRnJvbTogVGFuZyBZdWFudGlhbiA8WXVhbnRpYW4uVGFuZ0BmcmVlc2Nh
+bGUuY29tPgo+IAo+IFRoZXJlIGlzIGEgUkNQTSAoUnVuIENvbnRyb2wvUG93ZXIgTWFuYWdlbWVu
+dCkgaW4gRnJlZXNjYWxlIFFvcklRCj4gc2VyaWVzIHByb2Nlc3NvcnMuIFRoZSBkZXZpY2UgcGVy
+Zm9ybXMgdGFza3MgYXNzb2NpYXRlZCB3aXRoIGRldmljZQo+IHJ1biBjb250cm9sIGFuZCBwb3dl
+ciBtYW5hZ2VtZW50Lgo+IAo+IFRoZSBkcml2ZXIgaW1wbGVtZW50cyBzb21lIGZlYXR1cmVzOiBt
+YXNrL3VubWFzayBpcnEsIGVudGVyL2V4aXQgbG93Cj4gcG93ZXIgc3RhdGVzLCBmcmVlemUgdGlt
+ZSBiYXNlLCBldGMuCj4gCj4gU2lnbmVkLW9mZi1ieTogQ2hlbmh1aSBaaGFvIDxjaGVuaHVpLnpo
+YW9AZnJlZXNjYWxlLmNvbT4KPiBTaWduZWQtb2ZmLWJ5OiBUYW5nIFl1YW50aWFuIDxZdWFudGlh
+bi5UYW5nQGZyZWVzY2FsZS5jb20+Cj4gLS0tCj4gdjQ6Cj4gICAgICAgLSByZWZpbmUgYmluZGlu
+Z3MgZG9jdW1lbnQKPiB2MzoKPiAgICAgICAtIGFkZGVkIHN0YXRpYyBhbmQgX19pbml0IG1vZGlm
+aWVyIHRvIGZzbF9yY3BtX2luaXQKPiB2MjoKPiAgICAgICAtIGZpeCBjb2RlIHN0eWxlIGlzc3Vl
+cwo+ICAgICAgIC0gcmVmaW5lIGNvbXBhdGlibGUgc3RyaW5nIG1hdGNoIHBhcnQKPiAKPiAgRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9mc2wvcmNwbS50eHQgfCAgNDIgKysr
+Cj4gIGFyY2gvcG93ZXJwYy9pbmNsdWRlL2FzbS9mc2xfZ3V0cy5oICAgICAgICAgICAgICAgIHwg
+MTA1ICsrKysrKysKPiAgYXJjaC9wb3dlcnBjL2luY2x1ZGUvYXNtL2ZzbF9wbS5oICAgICAgICAg
+ICAgICAgICAgfCAgNDggKysrCj4gIGFyY2gvcG93ZXJwYy9wbGF0Zm9ybXMvODV4eC9LY29uZmln
+ICAgICAgICAgICAgICAgIHwgICAxICsKPiAgYXJjaC9wb3dlcnBjL3N5c2Rldi9LY29uZmlnICAg
+ICAgICAgICAgICAgICAgICAgICAgfCAgIDUgKwo+ICBhcmNoL3Bvd2VycGMvc3lzZGV2L01ha2Vm
+aWxlICAgICAgICAgICAgICAgICAgICAgICB8ICAgMSArCj4gIGFyY2gvcG93ZXJwYy9zeXNkZXYv
+ZnNsX3JjcG0uYyAgICAgICAgICAgICAgICAgICAgIHwgMzM4IAo+ICsrKysrKysrKysrKysrKysr
+KysrKwo+ICA3IGZpbGVzIGNoYW5nZWQsIDU0MCBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2Rl
+IDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL2ZzbC9yY3BtLnR4
+dAo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9wb3dlcnBjL2luY2x1ZGUvYXNtL2ZzbF9wbS5o
+Cj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL3Bvd2VycGMvc3lzZGV2L2ZzbF9yY3BtLmMKPiAK
+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9mc2wv
+cmNwbS50eHQgCj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL2ZzbC9y
+Y3BtLnR4dAo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMC4uMWY1ODAxOAo+
+IC0tLSAvZGV2L251bGwKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+c29jL2ZzbC9yY3BtLnR4dAo+IEBAIC0wLDAgKzEsNDIgQEAKPiArKiBSdW4gQ29udHJvbCBhbmQg
+UG93ZXIgTWFuYWdlbWVudAo+ICsKPiArVGhlIFJDUE0gcGVyZm9ybXMgYWxsIGRldmljZS1sZXZl
+bCB0YXNrcyBhc3NvY2lhdGVkIHdpdGggZGV2aWNlIHJ1biBjb250cm9sCj4gK2FuZCBwb3dlciBt
+YW5hZ2VtZW50Lgo+ICsKPiArUmVxdWlyZWQgcHJvcGVyaXRlczoKPiArICAtIHJlZyA6IE9mZnNl
+dCBhbmQgbGVuZ3RoIG9mIHRoZSByZWdpc3RlciBzZXQgb2YgUkNQTSBibG9jay4KPiArICAtIGNv
+bXBhdGlibGUgOiBTb3VsZCBjb250YWluIGEgY2hpcC1zcGVjaWZpYyBSQ1BNIGJsb2NrIGNvbXBh
+dGlibGUgc3RyaW5nCj4gKyAgICAgYW5kIChpZiBhcHBsaWNhYmxlKSBtYXkgY29udGFpbiBhIGNo
+YXNzaXMtdmVyc2lvbiBSQ1BNIGNvbXBhdGlibGUgc3RyaW5nLgo+ICsgICAgIENoaXAtc3BlY2lm
+aWMgc3RyaW5ncyBhcmUgb2YgdGhlIGZvcm0gImZzbCw8Y2hpcD4tcmNwbSIsIHN1Y2ggYXM6Cj4g
+KyAgICAgKiAiZnNsLHAyMDQxLXJjcG0iCj4gKyAgICAgKiAiZnNsLHAzMDQxLXJjcG0iCj4gKyAg
+ICAgKiAiZnNsLHA0MDgwLXJjcG0iCj4gKyAgICAgKiAiZnNsLHA1MDIwLXJjcG0iCj4gKyAgICAg
+KiAiZnNsLHA1MDQwLXJjcG0iCj4gKyAgICAgKiAiZnNsLHQ0MjQwLXJjcG0iCj4gKyAgICAgKiAi
+ZnNsLGI0NDIwLXJjcG0iCj4gKyAgICAgKiAiZnNsLGI0ODYwLXJjcG0iCj4gKwo+ICsgICAgIENo
+YXNzaXMtdmVyc2lvbiBSQ1BNIHN0cmluZ3MgaW5jbHVkZToKPiArICAgICAqICJmc2wscW9yaXEt
+cmNwbS0xLjAiOiBmb3IgY2hhc3NpcyAxLjAgcmNwbQo+ICsgICAgICogImZzbCxxb3JpcS1yY3Bt
+LTIuMCI6IGZvciBjaGFzc2lzIDIuMCByY3BtCj4gKwo+ICtBbGwgcmVmZXJlbmNlcyB0byAiMS4w
+IiBhbmQgIjIuMCIgcmVmZXIgdG8gdGhlIFFvcklRIGNoYXNzaXMgdmVyc2lvbiB0bwo+ICt3aGlj
+aCB0aGUgY2hpcCBjb21wbGllcy4KPiArQ2hhc3NpcyBWZXJzaW9uICAgICAgICAgICAgICBFeGFt
+cGxlIENoaXBzCj4gKy0tLS0tLS0tLS0tLS0tLSAgICAgICAgICAgICAgLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLQo+ICsxLjAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+cDQwODAsIHA1MDIwLCBwNTA0MCwgcDIwNDEsIHAzMDQxCj4gKzIuMCAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICB0NDI0MCwgYjQ4NjAsIHQxMDQwLCBiNDQyMAoKSSBkb24ndCB0aGlu
+ayBpdCdzIGFjY3VyYXRlIHRvIGNhbGwgdDEwNDAgY2hhc3NpcyAyLjAuCgotU2NvdHQKCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4cHBjLWRldiBt
+YWlsaW5nIGxpc3QKTGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5v
+emxhYnMub3JnL2xpc3RpbmZvL2xpbnV4cHBjLWRldg==
