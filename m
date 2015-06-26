@@ -1,33 +1,47 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH 1/1] pci: xgene: Enable huge outbound bar support
-Date: Fri, 26 Jun 2015 09:26:21 -0500
-Message-ID: <CAErSpo7rE8yAS--L+aQmN-DqfL6uGxFBxD2WOPowoBsrvOZ7eg@mail.gmail.com>
-References: <1435280756-24455-1-git-send-email-dhdang@apm.com>
+From: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] arm/smmu: Make use of of_parse_phandle_with_var_args
+Date: Fri, 26 Jun 2015 17:44:03 +0200
+Message-ID: <20150626154403.GD18569@8bytes.org>
+References: <1435247548-32201-1-git-send-email-joro@8bytes.org>
+	<1435247548-32201-2-git-send-email-joro@8bytes.org>
+	<20150626111047.GA9791@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1435280756-24455-1-git-send-email-dhdang@apm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Duc Dang <dhdang@apm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Will Deacon <will.deacon@arm.com>, "David S. Miller" <davem@davemloft.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Tanmay Inamdar <tinamdar@apm.com>, patches <patches@apm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150626111047.GA9791-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Joerg Roedel <jroedel-l3A5Bk7waGM@public.gmane.org>, Andre Przywara <Andre.Przywara-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Duc,
+Hi Will,
 
-On Thu, Jun 25, 2015 at 8:05 PM, Duc Dang <dhdang@apm.com> wrote:
-> X-Gene PCIe controllers support huge outbound BARs (with size upto
-> 64GB). This patch configures additional 1 outbound BAR for X-Gene
-> PCIe controllers with size larger than 4GB. This is required to
-> support devices that request huge outbound memory (nVidia K40 as an
-> example)
+On Fri, Jun 26, 2015 at 12:10:47PM +0100, Will Deacon wrote:
+> Thanks for looking at this! I'm fine with the general idea, but obviously
+> the first patch needs an Ack from a devicetree person.
 
-The PCI specs don't use the "outbound BAR" terminology.  I assume this
-is what we normally call "windows" or "apertures" for MMIO access by
-the CPU?  (The specs rarely use those terms either, but they're
-commonly used in Linux, and the PCIe spec does mention them a couple
-times.)
+Yeah, sure. I was looking into a simple solution that does not require
+to rewrite all the callers. Lets see what the device-tree maintainers
+think about it :)
 
-By "request huge outbound memory," I assume you simply mean the device
-has a huge BAR, right?
+> >  out_put_masters:
+> > +
+> > +	of_free_phandle_args(masterspec);
+> 
+> Shouldn't we also free the masterspec on success?
 
-Bjorn
+Right, thanks. This code is only the error path. I'll add this in the
+next version.
+
+
+	Joerg
