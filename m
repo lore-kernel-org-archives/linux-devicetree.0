@@ -1,32 +1,62 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 1/1] pci: xgene: Enable huge outbound bar support
-Date: Fri, 26 Jun 2015 22:43:32 +0200
-Message-ID: <1674778.6xGik39Z0J@wuerfel>
-References: <1435280756-24455-1-git-send-email-dhdang@apm.com> <CADaLNDkck5TaG48sjF9y1wrXTzUeVkYOsXw7Dm8a629KqBafFg@mail.gmail.com> <46305464.n5SOjGAhJb@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <46305464.n5SOjGAhJb@wuerfel>
-Sender: linux-pci-owner@vger.kernel.org
-To: Duc Dang <dhdang@apm.com>
-Cc: linux-arm <linux-arm-kernel@lists.infradead.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <catalin.marinas@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Will Deacon <will.deacon@arm.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, patches <patches@apm.com>, linux-kernel@vger.kernel.org, Tanmay Inamdar <tinamdar@apm.com>
+From: bjorn@kryo.se
+Subject: [PATCH v2 00/11] Qualcomm Shared Memory & RPM drivers
+Date: Fri, 26 Jun 2015 14:50:08 -0700
+Message-ID: <1435355419-23602-1-git-send-email-bjorn.andersson@sonymobile.com>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Andy Gross <agross@codeaurora.org>, David Brown <davidb@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>
+Cc: Jeffrey Hugo <jhugo@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 26 June 2015 22:35:08 Arnd Bergmann wrote:
-> > >
-> > > Can you configure one of the two windows as prefetchable for improved performance?
-> > >
-> > The new huge window will be prefetchable.
-> 
-> The DT marks it as non-prefetchable, so the kernel will now try to allocate
-> space for non-prefetchable BARs from this area, which is a bug. If the second
-> memory window is always prefetchable, you have to mark it accordingly in DT,
-> to prevent it from being used for normal 64 bit BARs.
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
 
-Forget what I wrote here, I just remembered that 64-bit BARs are by definition
-prefetchable. You should still mark the range accordingly in DT for correct
-operation, but it won't be used for non-prefetchable 64-bit BARs if you don't
-because they do not exist.
+This second incarnation of the SMEM, SMD, RPM and pm8x41 regulator series fixes
+the review comments received on v1 and adds the dts patches at the end.
 
-	Arnd
+Bjorn Andersson (11):
+  soc: qcom: Add device tree binding for SMEM
+  soc: qcom: Add Shared Memory Manager driver
+  soc: qcom: Add device tree binding for Shared Memory Device
+  soc: qcom: Add Shared Memory Driver
+  mfd: devicetree: bindings: Add Qualcomm SMD based RPM DT binding
+  mfd: qcom-smd-rpm: Driver for the Qualcomm RPM over SMD
+  regulator: qcom: smd: Regulator driver for the Qualcomm RPM
+  ARM: dts: msm8974: Add tcsr mutex node
+  ARM: dts: msm8974: Add smem reservation and node
+  ARM: dts: msm8974: Add smd, rpm and regulator nodes
+  ARM: dts: xperia-honami: Add regulator nodes for Honami
+
+ .../devicetree/bindings/mfd/qcom-rpm-smd.txt       |  117 ++
+ .../devicetree/bindings/soc/qcom/qcom,smd.txt      |   79 ++
+ .../devicetree/bindings/soc/qcom/qcom,smem.txt     |   51 +
+ .../boot/dts/qcom-msm8974-sony-xperia-honami.dts   |  199 +++
+ arch/arm/boot/dts/qcom-msm8974.dtsi                |  106 ++
+ drivers/mfd/Kconfig                                |   14 +
+ drivers/mfd/Makefile                               |    1 +
+ drivers/mfd/qcom-smd-rpm.c                         |  236 ++++
+ drivers/regulator/Kconfig                          |   12 +
+ drivers/regulator/Makefile                         |    1 +
+ drivers/regulator/qcom_smd-regulator.c             |  350 ++++++
+ drivers/soc/qcom/Kconfig                           |   16 +
+ drivers/soc/qcom/Makefile                          |    2 +
+ drivers/soc/qcom/smd.c                             | 1324 ++++++++++++++++++++
+ drivers/soc/qcom/smem.c                            |  775 ++++++++++++
+ include/dt-bindings/mfd/qcom-smd-rpm.h             |   28 +
+ include/linux/mfd/qcom-smd-rpm.h                   |   35 +
+ include/linux/soc/qcom/smd.h                       |   46 +
+ include/linux/soc/qcom/smem.h                      |   11 +
+ 19 files changed, 3403 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/qcom-rpm-smd.txt
+ create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,smd.txt
+ create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,smem.txt
+ create mode 100644 drivers/mfd/qcom-smd-rpm.c
+ create mode 100644 drivers/regulator/qcom_smd-regulator.c
+ create mode 100644 drivers/soc/qcom/smd.c
+ create mode 100644 drivers/soc/qcom/smem.c
+ create mode 100644 include/dt-bindings/mfd/qcom-smd-rpm.h
+ create mode 100644 include/linux/mfd/qcom-smd-rpm.h
+ create mode 100644 include/linux/soc/qcom/smd.h
+ create mode 100644 include/linux/soc/qcom/smem.h
+
+-- 
+1.9.3 (Apple Git-50)
