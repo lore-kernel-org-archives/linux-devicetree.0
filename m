@@ -1,259 +1,204 @@
-From: Paul Osmialowski <pawelo-rhuoMcPwk82rDJvtcaxF/A@public.gmane.org>
-Subject: Re: [PATCH 3/9] arm: add call to CPU idle quirks handler
-Date: Fri, 26 Jun 2015 23:52:23 +0200 (CEST)
-Message-ID: <alpine.LNX.2.00.1506262324230.5744@localhost.localdomain>
-References: <1435094387-20146-1-git-send-email-pawelo@king.net.pl> <alpine.LFD.2.11.1506251237000.2617@knanqh.ubzr> <alpine.LNX.2.00.1506260715300.499@localhost.localdomain> <2139691.3OPR29uKdT@wuerfel>
+From: Duc Dang <dhdang-qTEPVZfXA3Y@public.gmane.org>
+Subject: Re: [PATCH 1/1] pci: xgene: Enable huge outbound bar support
+Date: Fri, 26 Jun 2015 14:56:01 -0700
+Message-ID: <CADaLNDnDg-oTU1PTnUh-h_XhbiALshyLg2EScwZb7AjXq5yrhw@mail.gmail.com>
+References: <1435280756-24455-1-git-send-email-dhdang@apm.com>
+ <1692416.bxUuWm82Pk@wuerfel> <CADaLNDkck5TaG48sjF9y1wrXTzUeVkYOsXw7Dm8a629KqBafFg@mail.gmail.com>
+ <46305464.n5SOjGAhJb@wuerfel>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2139691.3OPR29uKdT@wuerfel>
+In-Reply-To: <46305464.n5SOjGAhJb@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Paul Osmialowski <pawelo-rhuoMcPwk82rDJvtcaxF/A@public.gmane.org>, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>N
+Cc: linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches <patches-qTEPVZfXA3Y@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tanmay Inamdar <tinamdar-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Jun 26, 2015 at 1:35 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Friday 26 June 2015 11:56:47 Duc Dang wrote:
+>> Hi Arnd,
+>>
+>> On Fri, Jun 26, 2015 at 12:59 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+>> > On Thursday 25 June 2015 18:05:56 Duc Dang wrote:
+>> >> X-Gene PCIe controllers support huge outbound BARs (with size upto
+>> >> 64GB). This patch configures additional 1 outbound BAR for X-Gene
+>> >> PCIe controllers with size larger than 4GB. This is required to
+>> >> support devices that request huge outbound memory (nVidia K40 as an
+>> >> example)
+>> >>
+>> >> Signed-off-by: Duc Dang <dhdang-qTEPVZfXA3Y@public.gmane.org>
+>> >> Signed-off-by: Tanmay Inamdar <tinamdar-qTEPVZfXA3Y@public.gmane.org>
+>> >> ---
+>> >>  arch/arm64/boot/dts/apm/apm-storm.dtsi | 33 +++++++++++++++++++--------------
+>> >>  drivers/pci/host/pci-xgene.c           |  6 +++++-
+>> >>  2 files changed, 24 insertions(+), 15 deletions(-)
+>> >
+>> > It seems you do multiple things here:
+>> >
+>> > - add an entry in the ranges
+>> > - move the config space
+>> > - fix driver to handle multiple memory ranges
+>> >
+>> > but your description only mentions the first one. Please submit separate
+>> > patches for these and explain for each patch why it is required, so we can
+>> > pick them up into the arm-soc and pci git repositories separately, and make
+>> > sure that each patch works by itself to guarantee we don't get incompatible
+>> > binding changes.
+>>
+>> Move config space can be in a separate patch. But it is not absolutely
+>> necessary to move the configuration space. The reason I change it is
+>> to have config space starting from the beginning of SoC PCIe physical
+>> address space. I will drop it in next patch.
+>>
+>> But add 'an entry in the ranges' and 'fix driver to handle multiple
+>> memory ranges' should go together as single patch because the old
+>> driver will break when it sees multiple ranges.
+>>
+>> >
+>> >> diff --git a/arch/arm64/boot/dts/apm/apm-storm.dtsi b/arch/arm64/boot/dts/apm/apm-storm.dtsi
+>> >> index d8f3a1c..039206b 100644
+>> >> --- a/arch/arm64/boot/dts/apm/apm-storm.dtsi
+>> >> +++ b/arch/arm64/boot/dts/apm/apm-storm.dtsi
+>> >> @@ -404,10 +404,11 @@
+>> >>                       #size-cells = <2>;
+>> >>                       #address-cells = <3>;
+>> >>                       reg = < 0x00 0x1f2b0000 0x0 0x00010000   /* Controller registers */
+>> >> -                             0xe0 0xd0000000 0x0 0x00040000>; /* PCI config space */
+>> >> +                             0xe0 0x00000000 0x0 0x00040000>; /* PCI config space */
+>> >>                       reg-names = "csr", "cfg";
+>> >>                       ranges = <0x01000000 0x00 0x00000000 0xe0 0x10000000 0x00 0x00010000   /* io */
+>> >> -                               0x02000000 0x00 0x80000000 0xe1 0x80000000 0x00 0x80000000>; /* mem */
+>> >> +                               0x02000000 0x00 0x80000000 0xe1 0x80000000 0x00 0x80000000   /* mem */
+>> >> +                               0x02000000 0x10 0x00000000 0xf0 0x00000000 0x10 0x00000000>; /* mem */
+>> >>                       dma-ranges = <0x42000000 0x80 0x00000000 0x80 0x00000000 0x00 0x80000000
+>> >>                                     0x42000000 0x00 0x00000000 0x00 0x00000000 0x80 0x00000000>;
+>> >>                       interrupt-map-mask = <0x0 0x0 0x0 0x7>;
+>> >
+>> > What is the reason for picking the 0x10.00000000 address? We normally try
+>> > to use an identity mapping (mem_offset=0) on the bus, or fall back to starting
+>> > at zero (mem_offset=cpu_offset), but you use seemingly random mem_offset values.
+>> >
+>>
+>> I just randomly pick 0x10 00000000 as it is not used. I will change to
+>> use 0xf0 00000000:
+>> 0x02000000 0xf0 0x00000000 0xf0 0x00000000 0x10 0x00000000
+>
+> Ok
+>
+>> > Could you get the same effect by extending the 0x80000000 mapping to a length
+>> > of 58GB (just before the start of the second window)?
+>>
+>> I don't think so. It will break with the PCIe device that requires 32-bit BAR.
+>
+> Are you sure? If this is true, maybe this should be fixed in the PCI core.
 
-
-On Fri, 26 Jun 2015, Arnd Bergmann wrote:
-
-> I doubt that the Kinetis has a custom version of the CPU core. Are you
-> sure that not all Cortex-M4 need this?
-
-I'm not sure and I don't have any other Cortex-M SoC to verify that...
-Without this hack, I'm experiencing following exception:
-
-init started: BusyBox v1.17.0 (2015-03-27 08:16:34 CET)
-~ # [    1.910000]
-[    1.910000] Unhandled exception: IPSR = 00000006 LR = fffffff1
-[    1.910000] CPU: 0 PID: 0 Comm: swapper Not tainted 
-4.1.0-next-20150623-00007-gf22ea1d-dirty #1
-[    1.910000] Hardware name: Freescale Kinetis
-[    1.910000] task: 082666f8 ti: 08264000 task.ti: 08264000
-[    1.910000] PC is at arch_cpu_idle+0x14/0x1c
-[    1.910000] LR is at arch_cpu_idle+0x13/0x1c
-[    1.910000] pc : [<0800a928>]    lr : [<0800a927>]    psr: 6100000b
-[    1.910000] sp : 08265f98  ip : 08264020  fp : 00000001
-[    1.910000] r10: 0827433d  r9 : 00000000  r8 : 08266070
-[    1.910000] r7 : 08272a88  r6 : 08266068  r5 : 00000000  r4 : 08266068
-[    1.910000] r3 : 00000000  r2 : 08265fa0  r1 : 08264020  r0 : 08264000
-[    1.910000] xPSR: 6100000b
-[    1.910000] CPU: 0 PID: 0 Comm: swapper Not tainted 
-4.1.0-next-20150623-00007-gf22ea1d-dirty #1
-[    1.910000] Hardware name: Freescale Kinetis
-[    1.910000] [<0800c5cd>] (unwind_backtrace) from [<0800b8b3>] 
-(show_stack+0xb/0xc)
-[    1.910000] [<0800b8b3>] (show_stack) from [<0800bd8b>] 
-(__invalid_entry+0x4b/0x4c)
-[    1.910000] [<0800bd8b>] (__invalid_entry) from [<ffffffff>] 
-(0xffffffff)
-
-Funny, it does not occur when JTAG is connected.
+The controller requires the size of windows must be in power of 2, so
+programing the size as 58GB will cause
+ transaction failures.
 
 >
-> As long as the idle implementation depends only on the CPU core type,
-> it's easy to just define multiple .proc.info.init entries in the
-> same file, like we do in proc-v7.S.
+>> >
+>> > Can you configure one of the two windows as prefetchable for improved performance?
+>> >
+>> The new huge window will be prefetchable.
 >
+> The DT marks it as non-prefetchable, so the kernel will now try to allocate
+> space for non-prefetchable BARs from this area, which is a bug. If the second
+> memory window is always prefetchable, you have to mark it accordingly in DT,
+> to prevent it from being used for normal 64 bit BARs.
+>
+>> > I also notice that the 0x80000000-0xffffffff bus range is list both in
+>> > ranges and dma-ranges. Does that mean that devices on this host cannot
+>> > access MMIO ranges of other devices, or should you exclude this range from
+>> > the dma-ranges property?
+>> >
+>>
+>> As I understand, the mem entries in 'ranges' are for controller to
+>> access remote PCIe devices (EP)  BAR; while the entries in
+>> 'dma-ranges'
+>> are for remote PCIe devices (EP) to access controller memory. So they
+>> are different. Or are you asking about something else?
+>
+> Your understanding is correct, but from the perspective of a PCI device
+> the two are the same: when a device issues a bus master transaction,
+> the target can either be an MMIO BAR on the same PCI host, or it can
+> get turned into a DMA that ends up in RAM. The way you list the ranges,
+> it is a bit ambiguous about what happens when a transaction is targetted
+> at address 0x80000000: does your PCI host send that to a device with a
+> BAR at that address (CPU address 0xe1.80000000), or upstream to the
+> parent bus for CPU address 0x00.80000000?
 
-I tried it and it works. This approach does not cause code duplication, 
-but (comparing to arm_pm_idle-based approach) its long. Would something 
-like this be accepted ever?
+The PCIe devices connecting to this host cannot access MMIO ranges on
+other devices, so when the host receives transaction
+that targets address  0x80000000 from device, it will translate it to
+CPU address 0x80000000.
 
-Note that contrary to proc-v7, there's no __v7m_proc macro, I had to 
-define it in order to avoid another code duplication:
+>>
+>> > Style-wise, it would be nice to submit an extra patch that groups entries
+>> > in the ranges and reg lists like
+>> >
+>> >                         ranges = <0x01000000 0x00 0x00000000 0xe0 0x10000000 0x00 0x00010000>, /* io */
+>> >                                  <0x02000000 0x00 0x80000000 0xe1 0x80000000 0x00 0x80000000>, /* mem */
+>> >                                  <0x02000000 0x10 0x00000000 0xf0 0x00000000 0x10 0x00000000>; /* mem */
+>> >
+>> > but that is just a cosmetic change and should be kept separate.
+>>
+>> Would you mind if I make this change as well and include in next patch?
+>
+> It's normally better to keep cleanups and functional changes separate, so
+> better do two patches.
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 8ccffee..da35b0b 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -967,6 +967,7 @@ config ARCH_EFM32
-  config ARCH_KINETIS
-  	bool "Freescale Kinetis MCU"
-  	depends on ARM_SINGLE_ARMV7M
-+	select CPU_KINETIS
-  	select ARMV7M_SYSTICK
-  	select CLKSRC_KINETIS
-  	select PINCTRL
-diff --git a/arch/arm/include/asm/cputype.h 
-b/arch/arm/include/asm/cputype.h
-index 85e374f..79792e9 100644
---- a/arch/arm/include/asm/cputype.h
-+++ b/arch/arm/include/asm/cputype.h
-@@ -234,6 +234,12 @@ static inline int cpu_is_xsc3(void)
-  #define	cpu_is_xscale()	1
-  #endif
+Sure, I will post a cleanup patch later.
 
-+#if !defined(CONFIG_CPU_KINETIS)
-+#define	cpu_is_kinetis()	0
-+#else
-+#define	cpu_is_kinetis()	1
-+#endif
-+
-  /*
-   * Marvell's PJ4 and PJ4B cores are based on V7 version,
-   * but require a specical sequence for enabling coprocessors.
-diff --git a/arch/arm/include/asm/glue-proc.h 
-b/arch/arm/include/asm/glue-proc.h
-index 74be7c2..08583bb 100644
---- a/arch/arm/include/asm/glue-proc.h
-+++ b/arch/arm/include/asm/glue-proc.h
-@@ -230,6 +230,15 @@
-  # endif
-  #endif
+>
+>> >> @@ -321,8 +322,11 @@ static int xgene_pcie_map_ranges(struct xgene_pcie_port *port,
+>> >>                               return ret;
+>> >>                       break;
+>> >>               case IORESOURCE_MEM:
+>> >> -                     xgene_pcie_setup_ob_reg(port, res, OMR1BARL, res->start,
+>> >> +                     xgene_pcie_setup_ob_reg(port, res,
+>> >> +                                             OMR1BARL + (omr_idx * 0x18),
+>> >> +                                             res->start,
+>> >>                                               res->start - window->offset);
+>> >> +                     omr_idx++;
+>> >>                       break;
+>> >>               case IORESOURCE_BUS:
+>> >>                       break;
+>> >
+>> > Can you describe what happens when you boot an older kernel with the new
+>> > dt file, or vice versa? Will that simply ignore the first ranges entries
+>> > and use only the last one, or does it break in interesting ways?
+>>
+>> Older kernel and new dtb: the new entry in 'ranges' will overwrite the
+>> old entry, so device that requires 32-bit BAR will break.
+>> New kernel and old dtb: works fine but without huge bar support.
+>
+> Ok, so the patches cannot trivially get merged through separate trees,
+> but have to be ordered. Please split up the driver change from the
+> DT change anyway, and then we can decide whether to take both through
+> arm-soc or the PCI tree.
 
-+#ifdef CONFIG_CPU_KINETIS
-+# ifdef CPU_NAME
-+#  undef  MULTI_CPU
-+#  define MULTI_CPU
-+# else
-+#  define CPU_NAME cpu_kinetis
-+# endif
-+#endif
-+
-  #ifdef CONFIG_CPU_PJ4B
-  # ifdef CPU_NAME
-  #  undef  MULTI_CPU
-diff --git a/arch/arm/mm/Kconfig b/arch/arm/mm/Kconfig
-index 121b580..ef59407 100644
---- a/arch/arm/mm/Kconfig
-+++ b/arch/arm/mm/Kconfig
-@@ -356,6 +356,11 @@ config CPU_PJ4B
-  	bool
-  	select CPU_V7
+I will do that.
+>
+> Regarding the functional change, I suppose you should take prefetchable/
+> non-prefetchable settings into account here. My guess is that the first
+> window is always non-prefetchable, while the second one is always
+> prefetchable. If that is the case, it would be more robust to replace
+> the counter with another conditional that looks at the IORESOURCE_PREFETCH
+> flag to decide which register to program.
+>
+I will look into using IORESOURCE_PREFETCH flag in next patch.
 
-+# Freescale Kinetis
-+config CPU_KINETIS
-+	bool
-+	select CPU_V7M
-+
-  # ARMv6
-  config CPU_V6
-  	bool "Support ARM V6 processor" if (!ARCH_MULTIPLATFORM || 
-ARCH_MULTI_V6) && (ARCH_INTEGRATOR || MACH_REALVIEW_EB || 
-MACH_REALVIEW_PBX)
-diff --git a/arch/arm/mm/proc-v7m.S b/arch/arm/mm/proc-v7m.S
-index ded9504..671374f 100644
---- a/arch/arm/mm/proc-v7m.S
-+++ b/arch/arm/mm/proc-v7m.S
-@@ -73,6 +73,30 @@ ENTRY(cpu_v7m_do_resume)
-  ENDPROC(cpu_v7m_do_resume)
-  #endif
-
-+#ifdef CONFIG_CPU_KINETIS
-+	globl_equ	cpu_kinetis_switch_mm,	cpu_v7m_switch_mm
-+	globl_equ	cpu_kinetis_proc_init,	cpu_v7m_proc_init
-+	globl_equ	cpu_kinetis_proc_fin, 	cpu_v7m_proc_fin
-+	globl_equ	cpu_kinetis_reset,	cpu_v7m_reset
-+ENTRY(cpu_kinetis_do_idle)
-+	dsb
-+	wfi
-+	movw	r3, #:lower16:0xe0082000
-+	movt	r3, #:upper16:0xe0082000
-+	ldr	r0, [r3, #0]
-+	orr	r2, r0, #0x85000000
-+	str	r2, [r3, #0]
-+	ret	lr
-+ENDPROC(cpu_kinetis_do_idle)
-+	globl_equ	cpu_kinetis_dcache_clean_area, 
-cpu_v7m_dcache_clean_area
-+#ifdef CONFIG_ARM_CPU_SUSPEND
-+	globl_equ	cpu_kinetis_do_suspend,	cpu_v7m_do_suspend
-+	globl_equ	cpu_kinedis_do_resume,	cpu_v7m_do_resume
-+#endif
-+.globl	cpu_kinetis_suspend_size
-+.equ	cpu_kinetis_suspend_size, cpu_v7m_suspend_size
-+#endif
-+
-  	.section ".text.init", #alloc, #execinstr
-
-  /*
-@@ -140,6 +164,9 @@ __v7m_setup_stack:
-  __v7m_setup_stack_top:
-
-  	define_processor_functions v7m, dabort=nommu_early_abort, 
-pabort=legacy_pabort, nommu=1
-+#ifdef CONFIG_CPU_KINETIS
-+	define_processor_functions kinetis, dabort=nommu_early_abort, 
-pabort=legacy_pabort, nommu=1
-+#endif
-
-  	.section ".rodata"
-  	string cpu_arch_name, "armv7m"
-@@ -148,23 +175,35 @@ __v7m_setup_stack_top:
-
-  	.section ".proc.info.init", #alloc
-
--	/*
--	 * Match any ARMv7-M processor core.
--	 */
--	.type	__v7m_proc_info, #object
--__v7m_proc_info:
--	.long	0x000f0000		@ Required ID value
--	.long	0x000f0000		@ Mask for ID
-+.macro __v7m_proc name, initfunc, proc_fns = v7m_processor_functions
-  	.long   0			@ 
-proc_info_list.__cpu_mm_mmu_flags
-  	.long   0			@ 
-proc_info_list.__cpu_io_mmu_flags
--	initfn	__v7m_setup, __v7m_proc_info	@ 
-proc_info_list.__cpu_flush
-+	initfn	\initfunc, \name	@ proc_info_list.__cpu_flush
-  	.long	cpu_arch_name
-  	.long	cpu_elf_name
-  	.long	HWCAP_HALF|HWCAP_THUMB|HWCAP_FAST_MULT
-  	.long	cpu_v7m_name
--	.long	v7m_processor_functions	@ proc_info_list.proc
-+	.long	\proc_fns		@ proc_info_list.proc
-  	.long	0			@ proc_info_list.tlb
-  	.long	0			@ proc_info_list.user
-  	.long	nop_cache_fns		@ proc_info_list.cache
--	.size	__v7m_proc_info, . - __v7m_proc_info
-+.endm
-+
-+#ifdef CONFIG_CPU_KINETIS
-+	.type   __v7m_kinetis_proc_info, #object
-+__v7m_kinetis_proc_info:
-+	.long	0x410fc240
-+	.long	0xff0ffff0
-+	__v7m_proc __v7m_kinetis_proc_info, __v7m_setup, proc_fns = 
-kinetis_processor_functions
-+	.size	__v7m_kinetis_proc_info, . - __v7m_kinetis_proc_info
-+#endif
-
-+	/*
-+	 * Match any ARMv7-M processor core.
-+	 */
-+	.type	__v7m_proc_info, #object
-+__v7m_proc_info:
-+	.long	0x000f0000		@ Required ID value
-+	.long	0x000f0000		@ Mask for ID
-+	__v7m_proc __v7m_proc_info, __v7m_setup
-+	.size	__v7m_proc_info, . - __v7m_proc_info
+> If you have more than two windows, better do both and use a total of
+> four windows for all combinations of 32/64 bit addressing and prefetch.
+>
+>         Arnd
 
 
-Works with and without JTAG connected.
 
-(gdb) c
-Continuing.
-^C
-Program received signal SIGTRAP, Trace/breakpoint trap.
-cpu_kinetis_do_idle () at ../arch/arm/mm/proc-v7m.S:84
-84		movw	r3, #:lower16:0xe0082000
-(gdb) bt
-#0  cpu_kinetis_do_idle () at ../arch/arm/mm/proc-v7m.S:84
-#1  0x0800a4b0 in arch_cpu_idle () at ../arch/arm/kernel/process.c:72
-#2  0x0802542a in cpuidle_idle_call (state=<value optimized out>)
-     at ../kernel/sched/idle.c:157
-#3  cpu_idle_loop (state=<value optimized out>) at 
-../kernel/sched/idle.c:253
-#4  cpu_startup_entry (state=<value optimized out>) at 
-../kernel/sched/idle.c:301
-#5  0x081bf816 in start_kernel () at ../init/main.c:683
-#6  0x08008024 in stext () at ../arch/arm/kernel/head-nommu.S:85
-(gdb)
-
-Note dsb before wfi - I'm experiencing another (different) exception 
-without it.
+-- 
+Regards,
+Duc Dang.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
