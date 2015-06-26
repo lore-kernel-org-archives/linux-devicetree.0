@@ -1,79 +1,77 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [PATCH v4] powerpc/rcpm: add RCPM driver
-Date: Thu, 25 Jun 2015 23:16:32 -0500
-Message-ID: <1435292192.6524.16.camel@freescale.com>
-References: <1435046827-7683-1-git-send-email-Yuantian.Tang@freescale.com>
+From: Bamvor Jian Zhang <bamv2005-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/4] arm64: add initial support for the Rockchip rk3368
+Date: Fri, 26 Jun 2015 12:35:58 +0800
+Message-ID: <558CD6AE.7030505@gmail.com>
+References: <1650408.ovnAjReNFJ@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1435046827-7683-1-git-send-email-Yuantian.Tang@freescale.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Yuantian.Tang@freescale.com
-Cc: b07421@freescale.com, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, Chenhui Zhao <chenhui.zhao@freescale.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1650408.ovnAjReNFJ@diego>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?windows-1252?Q?Heiko_St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAyMDE1LTA2LTIzIGF0IDE2OjA3ICswODAwLCBZdWFudGlhbi5UYW5nQGZyZWVzY2Fs
-ZS5jb20gd3JvdGU6Cj4gRnJvbTogVGFuZyBZdWFudGlhbiA8WXVhbnRpYW4uVGFuZ0BmcmVlc2Nh
-bGUuY29tPgo+IAo+IFRoZXJlIGlzIGEgUkNQTSAoUnVuIENvbnRyb2wvUG93ZXIgTWFuYWdlbWVu
-dCkgaW4gRnJlZXNjYWxlIFFvcklRCj4gc2VyaWVzIHByb2Nlc3NvcnMuIFRoZSBkZXZpY2UgcGVy
-Zm9ybXMgdGFza3MgYXNzb2NpYXRlZCB3aXRoIGRldmljZQo+IHJ1biBjb250cm9sIGFuZCBwb3dl
-ciBtYW5hZ2VtZW50Lgo+IAo+IFRoZSBkcml2ZXIgaW1wbGVtZW50cyBzb21lIGZlYXR1cmVzOiBt
-YXNrL3VubWFzayBpcnEsIGVudGVyL2V4aXQgbG93Cj4gcG93ZXIgc3RhdGVzLCBmcmVlemUgdGlt
-ZSBiYXNlLCBldGMuCj4gCj4gU2lnbmVkLW9mZi1ieTogQ2hlbmh1aSBaaGFvIDxjaGVuaHVpLnpo
-YW9AZnJlZXNjYWxlLmNvbT4KPiBTaWduZWQtb2ZmLWJ5OiBUYW5nIFl1YW50aWFuIDxZdWFudGlh
-bi5UYW5nQGZyZWVzY2FsZS5jb20+Cj4gLS0tCj4gdjQ6Cj4gICAgICAgLSByZWZpbmUgYmluZGlu
-Z3MgZG9jdW1lbnQKPiB2MzoKPiAgICAgICAtIGFkZGVkIHN0YXRpYyBhbmQgX19pbml0IG1vZGlm
-aWVyIHRvIGZzbF9yY3BtX2luaXQKPiB2MjoKPiAgICAgICAtIGZpeCBjb2RlIHN0eWxlIGlzc3Vl
-cwo+ICAgICAgIC0gcmVmaW5lIGNvbXBhdGlibGUgc3RyaW5nIG1hdGNoIHBhcnQKPiAKPiAgRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9mc2wvcmNwbS50eHQgfCAgNDIgKysr
-Cj4gIGFyY2gvcG93ZXJwYy9pbmNsdWRlL2FzbS9mc2xfZ3V0cy5oICAgICAgICAgICAgICAgIHwg
-MTA1ICsrKysrKysKPiAgYXJjaC9wb3dlcnBjL2luY2x1ZGUvYXNtL2ZzbF9wbS5oICAgICAgICAg
-ICAgICAgICAgfCAgNDggKysrCj4gIGFyY2gvcG93ZXJwYy9wbGF0Zm9ybXMvODV4eC9LY29uZmln
-ICAgICAgICAgICAgICAgIHwgICAxICsKPiAgYXJjaC9wb3dlcnBjL3N5c2Rldi9LY29uZmlnICAg
-ICAgICAgICAgICAgICAgICAgICAgfCAgIDUgKwo+ICBhcmNoL3Bvd2VycGMvc3lzZGV2L01ha2Vm
-aWxlICAgICAgICAgICAgICAgICAgICAgICB8ICAgMSArCj4gIGFyY2gvcG93ZXJwYy9zeXNkZXYv
-ZnNsX3JjcG0uYyAgICAgICAgICAgICAgICAgICAgIHwgMzM4IAo+ICsrKysrKysrKysrKysrKysr
-KysrKwo+ICA3IGZpbGVzIGNoYW5nZWQsIDU0MCBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2Rl
-IDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL2ZzbC9yY3BtLnR4
-dAo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9wb3dlcnBjL2luY2x1ZGUvYXNtL2ZzbF9wbS5o
-Cj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL3Bvd2VycGMvc3lzZGV2L2ZzbF9yY3BtLmMKPiAK
-PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9mc2wv
-cmNwbS50eHQgCj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL2ZzbC9y
-Y3BtLnR4dAo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMC4uMWY1ODAxOAo+
-IC0tLSAvZGV2L251bGwKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-c29jL2ZzbC9yY3BtLnR4dAo+IEBAIC0wLDAgKzEsNDIgQEAKPiArKiBSdW4gQ29udHJvbCBhbmQg
-UG93ZXIgTWFuYWdlbWVudAo+ICsKPiArVGhlIFJDUE0gcGVyZm9ybXMgYWxsIGRldmljZS1sZXZl
-bCB0YXNrcyBhc3NvY2lhdGVkIHdpdGggZGV2aWNlIHJ1biBjb250cm9sCj4gK2FuZCBwb3dlciBt
-YW5hZ2VtZW50Lgo+ICsKPiArUmVxdWlyZWQgcHJvcGVyaXRlczoKPiArICAtIHJlZyA6IE9mZnNl
-dCBhbmQgbGVuZ3RoIG9mIHRoZSByZWdpc3RlciBzZXQgb2YgUkNQTSBibG9jay4KPiArICAtIGNv
-bXBhdGlibGUgOiBTb3VsZCBjb250YWluIGEgY2hpcC1zcGVjaWZpYyBSQ1BNIGJsb2NrIGNvbXBh
-dGlibGUgc3RyaW5nCj4gKyAgICAgYW5kIChpZiBhcHBsaWNhYmxlKSBtYXkgY29udGFpbiBhIGNo
-YXNzaXMtdmVyc2lvbiBSQ1BNIGNvbXBhdGlibGUgc3RyaW5nLgo+ICsgICAgIENoaXAtc3BlY2lm
-aWMgc3RyaW5ncyBhcmUgb2YgdGhlIGZvcm0gImZzbCw8Y2hpcD4tcmNwbSIsIHN1Y2ggYXM6Cj4g
-KyAgICAgKiAiZnNsLHAyMDQxLXJjcG0iCj4gKyAgICAgKiAiZnNsLHAzMDQxLXJjcG0iCj4gKyAg
-ICAgKiAiZnNsLHA0MDgwLXJjcG0iCj4gKyAgICAgKiAiZnNsLHA1MDIwLXJjcG0iCj4gKyAgICAg
-KiAiZnNsLHA1MDQwLXJjcG0iCj4gKyAgICAgKiAiZnNsLHQ0MjQwLXJjcG0iCj4gKyAgICAgKiAi
-ZnNsLGI0NDIwLXJjcG0iCj4gKyAgICAgKiAiZnNsLGI0ODYwLXJjcG0iCj4gKwo+ICsgICAgIENo
-YXNzaXMtdmVyc2lvbiBSQ1BNIHN0cmluZ3MgaW5jbHVkZToKPiArICAgICAqICJmc2wscW9yaXEt
-cmNwbS0xLjAiOiBmb3IgY2hhc3NpcyAxLjAgcmNwbQo+ICsgICAgICogImZzbCxxb3JpcS1yY3Bt
-LTIuMCI6IGZvciBjaGFzc2lzIDIuMCByY3BtCj4gKwo+ICtBbGwgcmVmZXJlbmNlcyB0byAiMS4w
-IiBhbmQgIjIuMCIgcmVmZXIgdG8gdGhlIFFvcklRIGNoYXNzaXMgdmVyc2lvbiB0bwo+ICt3aGlj
-aCB0aGUgY2hpcCBjb21wbGllcy4KPiArQ2hhc3NpcyBWZXJzaW9uICAgICAgICAgICAgICBFeGFt
-cGxlIENoaXBzCj4gKy0tLS0tLS0tLS0tLS0tLSAgICAgICAgICAgICAgLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLQo+ICsxLjAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-cDQwODAsIHA1MDIwLCBwNTA0MCwgcDIwNDEsIHAzMDQxCj4gKzIuMCAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICB0NDI0MCwgYjQ4NjAsIHQxMDQwLCBiNDQyMAoKSSBkb24ndCB0aGlu
-ayBpdCdzIGFjY3VyYXRlIHRvIGNhbGwgdDEwNDAgY2hhc3NpcyAyLjAuCgotU2NvdHQKCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4cHBjLWRldiBt
-YWlsaW5nIGxpc3QKTGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5v
-emxhYnMub3JnL2xpc3RpbmZvL2xpbnV4cHBjLWRldg==
+Hi, Heiko
+
+Could I test the code on rk3368 STB such as EKB368, CSA90?
+Is there some documents about it?
+
+Thanks
+
+bamvor=09
+
+On 06/26/2015 02:12 AM, Heiko St=FCbner wrote:
+> This adds initial support for the new rk3368 ARM64 soc from Rockchip.
+>
+> Overall it looks like someone dropped some A53 cores into a rk3288, s=
+o
+> it shares a lot of peripherals that only differ in details. Therefore
+> stuff like the mmc, usb, spi, i2c controllers work out of the box.
+> The support for the gmac already made it into the merge window as wel=
+l
+> as the pinctrl support.
+>
+> Interestingly, in its core the rk3368 seems trying to be a model stud=
+ent
+> with psci for smp and using scpi for ddr frequency scaling, although =
+I
+> currently do not understand how the mailbox works yet. The display
+> controllers also are only minimally different so I'm hopefully to hav=
+e
+> working graphics in the near-ish future :-)
+>
+>
+> As mentioned in the dts patch, this series depends on the dt-binding
+> header for the clock ids, so will need a shared branch once this is r=
+eady.
+>
+>
+> Heiko Stuebner (4):
+>    arm64: add Rockchip architecture entry
+>    arm64: defconfig: enable ARCH_ROCKCHIP
+>    arm64: dts: add Rockchip rk3368 core dtsi and board dts for the r8=
+8
+>      board
+>    dt-bindings: document rk3368 R89 board from Rockchip
+>
+>   Documentation/devicetree/bindings/arm/rockchip.txt |   4 +
+>   arch/arm64/Kconfig                                 |  10 +
+>   arch/arm64/boot/dts/Makefile                       |   1 +
+>   arch/arm64/boot/dts/rockchip/Makefile              |   5 +
+>   arch/arm64/boot/dts/rockchip/rk3368-r88.dts        | 353 ++++++++
+>   arch/arm64/boot/dts/rockchip/rk3368.dtsi           | 900 ++++++++++=
++++++++++++
+>   arch/arm64/configs/defconfig                       |   2 +
+>   7 files changed, 1275 insertions(+)
+>   create mode 100644 arch/arm64/boot/dts/rockchip/Makefile
+>   create mode 100644 arch/arm64/boot/dts/rockchip/rk3368-r88.dts
+>   create mode 100644 arch/arm64/boot/dts/rockchip/rk3368.dtsi
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
