@@ -1,155 +1,143 @@
-From: Paul Osmialowski <pawelo-rhuoMcPwk82rDJvtcaxF/A@public.gmane.org>
-Subject: Re: [PATCH 3/9] arm: add call to CPU idle quirks handler
-Date: Fri, 26 Jun 2015 07:30:49 +0200 (CEST)
-Message-ID: <alpine.LNX.2.00.1506260715300.499@localhost.localdomain>
-References: <1435094387-20146-1-git-send-email-pawelo@king.net.pl> <1435094387-20146-4-git-send-email-pawelo@king.net.pl> <2235698.8UjxLOMCMb@wuerfel> <alpine.LFD.2.11.1506251237000.2617@knanqh.ubzr>
+From: Yi Zhang <yizhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH-v4 1/3] mfd: 88pm800: Add device tree support
+Date: Fri, 26 Jun 2015 13:53:17 +0800
+Message-ID: <20150626055317.GA32687@yizhang>
+References: <1435217189-19578-1-git-send-email-vaibhav.hiremath@linaro.org>
+ <1435217189-19578-2-git-send-email-vaibhav.hiremath@linaro.org>
+ <20150625101916.GB15013@x1>
+ <558BE1B7.2060308@linaro.org>
+ <20150625144800.GC23990@x1>
+ <558C1DF5.2060103@linaro.org>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.LFD.2.11.1506251237000.2617-fMhRO7WWcppj+hNMo8g0rg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <558C1DF5.2060103-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Paul Osmialowski <pawelo-rhuoMcPwk82rDJvtcaxF/A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Nathan
+To: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Nicolas,
+On Thu, Jun 25, 2015 at 08:57:49PM +0530, Vaibhav Hiremath wrote:
+> 
+> 
+> On Thursday 25 June 2015 08:18 PM, Lee Jones wrote:
+> >On Thu, 25 Jun 2015, Vaibhav Hiremath wrote:
+> >>On Thursday 25 June 2015 03:49 PM, Lee Jones wrote:
+> >>>On Thu, 25 Jun 2015, Vaibhav Hiremath wrote:
+> >>>
+> >>>>Add DT support to the 88pm800 driver, along with compatible
+> >>>>field for it's sub-devices (rtc, onkey and regulator)
+> >>>>
+> >>>>Signed-off-by: Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> >>>>Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >>>>---
+> >>>>  drivers/mfd/88pm800.c | 23 +++++++++++++++++++++++
+> >>>>  1 file changed, 23 insertions(+)
+> >>>>
+> >>>>diff --git a/drivers/mfd/88pm800.c b/drivers/mfd/88pm800.c
+> >>>>index 841717a..40fd014 100644
+> >>>>--- a/drivers/mfd/88pm800.c
+> >>>>+++ b/drivers/mfd/88pm800.c
+> >>>>@@ -27,6 +27,7 @@
+> >>>>  #include <linux/mfd/core.h>
+> >>>>  #include <linux/mfd/88pm80x.h>
+> >>>>  #include <linux/slab.h>
+> >>>>+#include <linux/of_device.h>
+> >>>>
+> >>>>  /* Interrupt Registers */
+> >>>>  #define PM800_INT_STATUS1		(0x05)
+> >>>>@@ -121,6 +122,11 @@ static const struct i2c_device_id pm80x_id_table[] = {
+> >>>>  };
+> >>>>  MODULE_DEVICE_TABLE(i2c, pm80x_id_table);
+> >>>>
+> >>>>+static const struct of_device_id pm80x_of_match_table[] = {
+> >>>>+	{ .compatible = "marvell,88pm800", },
+> >>>>+	{},
+> >>>>+};
+> >>>>+
+> >>>>  static struct resource rtc_resources[] = {
+> >>>>  	{
+> >>>>  	 .name = "88pm80x-rtc",
+> >>>>@@ -133,6 +139,7 @@ static struct resource rtc_resources[] = {
+> >>>>  static struct mfd_cell rtc_devs[] = {
+> >>>>  	{
+> >>>>  	 .name = "88pm80x-rtc",
+> >>>>+	 .of_compatible = "marvell,88pm80x-rtc",
+> >>>>  	 .num_resources = ARRAY_SIZE(rtc_resources),
+> >>>>  	 .resources = &rtc_resources[0],
+> >>>>  	 .id = -1,
+> >>>>@@ -151,6 +158,7 @@ static struct resource onkey_resources[] = {
+> >>>>  static const struct mfd_cell onkey_devs[] = {
+> >>>>  	{
+> >>>>  	 .name = "88pm80x-onkey",
+> >>>>+	 .of_compatible = "marvell,88pm80x-onkey",
+> >>>>  	 .num_resources = 1,
+> >>>>  	 .resources = &onkey_resources[0],
+> >>>>  	 .id = -1,
+> >>>>@@ -160,6 +168,7 @@ static const struct mfd_cell onkey_devs[] = {
+> >>>>  static const struct mfd_cell regulator_devs[] = {
+> >>>>  	{
+> >>>>  	 .name = "88pm80x-regulator",
+> >>>>+	 .of_compatible = "marvell,88pm80x-regulator",
+> >>>>  	 .id = -1,
+> >>>>  	},
+> >>>>  };
+> >>>>@@ -544,8 +553,21 @@ static int pm800_probe(struct i2c_client *client,
+> >>>>  	int ret = 0;
+> >>>>  	struct pm80x_chip *chip;
+> >>>>  	struct pm80x_platform_data *pdata = dev_get_platdata(&client->dev);
+> >>>>+	struct device_node *np = client->dev.of_node;
+> >>>>  	struct pm80x_subchip *subchip;
+> >>>>
+> >>>>+	if (!pdata && !np) {
+> >>>>+		dev_err(&client->dev,
+> >>>>+			"pm80x requires platform data or of_node\n");
+> >>>>+		return -EINVAL;
+> >>>>+	}
+> >>>>+
+> >>>>+	if (!pdata) {
+> >>>>+		pdata = devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL);
+> >>>>+		if (!pdata)
+> >>>>+			return -ENOMEM;
+> >>>>+	}
+> >>>
+> >>>Why have you allocated data for pdata, then done nothing with it?
+> >>>
+> >>
+> >>Not in this patch, but subsequent patches would use it.
+> >
+> >Only provide it when you start using it please.
+> >
+> 
+> I will take back my earlier comment of "not using in this patch, but
+> subsequent patches".
+> 
+> pdata is being used, couple of places in the driver,
+> 
+> 
+> @line-751
+> 
+>         ret = device_800_init(chip, pdata);
+>         if (ret) {
+>                 dev_err(chip->dev, "Failed to initialize 88pm800
+> devices\n");
+>                 goto err_device_init;
+>         }
+> 
+>         if (pdata && pdata->plat_config)
+>                 pdata->plat_config(chip, pdata);
 
-Thanks for your proposal, however, I have some trouble with it.
+  this plat_config() is used in legacy non-device-tree code, it's used
+  to implement fixup for chip or board level, it exists in
+  the board configuration file
 
-That would look lovely:
+  just curious, do you think we still need to keep it?
+  considering device-tree has been used. thanks;
 
-#include <linux/linkage.h>
-#include <asm/assembler.h>
-
-/*
-  *      cpu_kinetis_do_idle()
-  *
-  *      Idle the processor (wait for interrupt).
-  *
-  *      IRQs are already disabled.
-  */
-ENTRY(cpu_kinetis_do_idle)
-         wfi
-         movw    r3, #:lower16:0xe0082000
-         movt    r3, #:upper16:0xe0082000
-         ldr     r0, [r3, #0]
-         orr     r2, r0, #0x85000000
-         str     r2, [r3, #0]
-         ret     lr
-ENDPROC(cpu_kinetis_do_idle)
-
-But... what about the rest of this hypothetical proc_kinetis.S file?
-
-It would be a lot of code duplication with proc-v7m.S I think.
-
-I could define CPU_KINETIS as such:
-
-config CPU_KINETIS
- 	bool
- 	select CPU_V7M
-
-But there's no such thing like customize_processor_functions that would be 
-called after proc-v7m.S define_processor_functions specified things like 
-idle routine.
-
-Finally, while I was searching for suitable arm_pm_idle-based solution, I 
-found idle.c in mach-gemini that encouraged me to write my own idle.c for 
-Kinetis:
-
-/*
-  * arch/arm/mach-kinetis/idle.c
-  */
-
-#include <linux/init.h>
-#include <linux/io.h>
-#include <asm/system_misc.h>
-#include <asm/proc-fns.h>
-
-static void kinetis_idle(void)
-{
-         asm volatile ("wfi");
-
-         /*
-          * This is a dirty hack that invalidates the I/D bus cache
-          * on Kinetis K70. This must be done after idle.
-          */
-         writel(readl(IOMEM(0xe0082000)) | 0x85000000, IOMEM(0xe0082000));
-}
-
-static int __init kinetis_idle_init(void)
-{
-         arm_pm_idle = kinetis_idle;
-         return 0;
-}
-
-arch_initcall(kinetis_idle_init);
-
-Et voila:
-
-(gdb) c
-Continuing.
-^C
-Program received signal SIGTRAP, Trace/breakpoint trap.
-kinetis_idle () at ../arch/arm/mach-kinetis/idle.c:18
-18		writel(readl(IOMEM(0xe0082000)) | 0x85000000, 
-IOMEM(0xe0082000));
-(gdb) bt
-#0  kinetis_idle () at ../arch/arm/mach-kinetis/idle.c:18
-#1  0x0800a91e in arch_cpu_idle () at ../arch/arm/kernel/process.c:70
-#2  0x08025402 in cpuidle_idle_call (state=<value optimized out>)
-     at ../kernel/sched/idle.c:157
-#3  cpu_idle_loop (state=<value optimized out>) at 
-../kernel/sched/idle.c:253
-#4  cpu_startup_entry (state=<value optimized out>) at 
-../kernel/sched/idle.c:301
-#5  0x081bf816 in start_kernel () at ../init/main.c:683
-#6  0x08008024 in stext () at ../arch/arm/kernel/head-nommu.S:85
-(gdb)
-
-On Thu, 25 Jun 2015, Nicolas Pitre wrote:
-
-> On Tue, 23 Jun 2015, Arnd Bergmann wrote:
->
->> On Tuesday 23 June 2015 23:19:41 Paul Osmialowski wrote:
->>> Some SoCs need additional actions to be performed after arch idle,
->>> e.g. Kinetis requires invalidation of the I/D bus cache.
->>>
->>> Such handler could be held in provided <mach/idle.h> header file.
->>>
->>> Signed-off-by: Paul Osmialowski <pawelo-rhuoMcPwk82rDJvtcaxF/A@public.gmane.org>
->>> ---
->>>  arch/arm/Kconfig          | 7 +++++++
->>>  arch/arm/kernel/process.c | 7 +++++++
->>>  2 files changed, 14 insertions(+)
->>>
->>> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
->>> index 8e3a833..8ef8f8f 100644
->>> --- a/arch/arm/Kconfig
->>> +++ b/arch/arm/Kconfig
->>> @@ -98,6 +98,13 @@ config ARM_HAS_SG_CHAIN
->>>  config NEED_SG_DMA_LENGTH
->>>  	bool
->>>
->>> +config NEED_MACH_IDLE_H
->>> +	bool
->>> +
->>> +config ARM_CPU_IDLE_QUIRKS
->>> +	bool
->>> +	select NEED_MACH_IDLE_H
->>> +
->>
->> We're not adding header files like this, please come up
->> with another solution. How about a cpuidle driver, or
->> possibly just overriding arm_pm_idle()?
->
-> If the WFI instruction always requires I and D flushing, then it might
-> be a better idea to provide a replacement for the corresponding
-> cpu_*_do_idle function.  Plenty of examples exist for other cpu_*
-> functions.
->
->
-> Nicolas
->
+> 
+> Thanks,
+> Vaibhav
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
