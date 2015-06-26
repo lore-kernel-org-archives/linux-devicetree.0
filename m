@@ -1,30 +1,44 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] ARM: dts: sunxi: Adjust touchscreen compatible for sun5i
- and later
-Date: Fri, 26 Jun 2015 09:42:41 -0700
-Message-ID: <20150626164241.GD13320@kroah.com>
-References: <1435322859-27760-1-git-send-email-hdegoede@redhat.com>
+From: Duc Dang <dhdang@apm.com>
+Subject: Re: [PATCH 1/1] pci: xgene: Enable huge outbound bar support
+Date: Fri, 26 Jun 2015 10:26:48 -0700
+Message-ID: <CADaLNDmUiZwQfyk_XE9tr03jsM_fW+aXk3b3krAFuqsfNvkLYA@mail.gmail.com>
+References: <1435280756-24455-1-git-send-email-dhdang@apm.com> <CAErSpo7rE8yAS--L+aQmN-DqfL6uGxFBxD2WOPowoBsrvOZ7eg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <stable-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1435322859-27760-1-git-send-email-hdegoede@redhat.com>
-Sender: stable-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: stable@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>, m.silentcreek@gmail.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAErSpo7rE8yAS--L+aQmN-DqfL6uGxFBxD2WOPowoBsrvOZ7eg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Will Deacon <will.deacon@arm.com>, "David S. Miller" <davem@davemloft.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Tanmay Inamdar <tinamdar@apm.com>, patches <patches@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 26, 2015 at 02:47:39PM +0200, Hans de Goede wrote:
-> This is a manual cherry pick of a commit currently queued up for merging
-> into 4.2, titled:
-> "ARM: dts: sunxi Adjust touchscreen compatible for sun5i and later"
-> 
-> For the 4.1 stable series, fixing a regression in 4.1 where we are now
-> reporting the wrong SoC temperature for sun5i and sun7i SoCs.
+On Fri, Jun 26, 2015 at 7:26 AM, Bjorn Helgaas <bhelgaas@google.com> wrote:
+> Hi Duc,
+>
+> On Thu, Jun 25, 2015 at 8:05 PM, Duc Dang <dhdang@apm.com> wrote:
+>> X-Gene PCIe controllers support huge outbound BARs (with size upto
+>> 64GB). This patch configures additional 1 outbound BAR for X-Gene
+>> PCIe controllers with size larger than 4GB. This is required to
+>> support devices that request huge outbound memory (nVidia K40 as an
+>> example)
+>
+> The PCI specs don't use the "outbound BAR" terminology.  I assume this
+> is what we normally call "windows" or "apertures" for MMIO access by
+> the CPU?  (The specs rarely use those terms either, but they're
+> commonly used in Linux, and the PCIe spec does mention them a couple
+> times.)
 
-What is the git commit id of it?  I can't do anything with this until it
-hits Linus's tree.
+Yes, Bjorn. The "outbound BAR" that I mentioned is the MMIO window. I
+will change these terms in next patch.
 
-thanks,
+>
+> By "request huge outbound memory," I assume you simply mean the device
+> has a huge BAR, right?
+Yes, I meant "the device has a huge BAR". I will change the
+description for this in next patch as well
 
-greg k-h
+>
+> Bjorn
+
+Regards,
+Duc Dang.
