@@ -1,77 +1,156 @@
-From: Bamvor Jian Zhang <bamv2005-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/4] arm64: add initial support for the Rockchip rk3368
-Date: Fri, 26 Jun 2015 12:35:58 +0800
-Message-ID: <558CD6AE.7030505@gmail.com>
-References: <1650408.ovnAjReNFJ@diego>
+From: Paul Osmialowski <pawelo-rhuoMcPwk82rDJvtcaxF/A@public.gmane.org>
+Subject: Re: [PATCH 3/9] arm: add call to CPU idle quirks handler
+Date: Fri, 26 Jun 2015 07:30:49 +0200 (CEST)
+Message-ID: <alpine.LNX.2.00.1506260715300.499@localhost.localdomain>
+References: <1435094387-20146-1-git-send-email-pawelo@king.net.pl> <1435094387-20146-4-git-send-email-pawelo@king.net.pl> <2235698.8UjxLOMCMb@wuerfel> <alpine.LFD.2.11.1506251237000.2617@knanqh.ubzr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: TEXT/PLAIN; charset=US-ASCII; format=flowed
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1650408.ovnAjReNFJ@diego>
+In-Reply-To: <alpine.LFD.2.11.1506251237000.2617-fMhRO7WWcppj+hNMo8g0rg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?windows-1252?Q?Heiko_St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Paul Osmialowski <pawelo-rhuoMcPwk82rDJvtcaxF/A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Nathan
 List-Id: devicetree@vger.kernel.org
 
-Hi, Heiko
+Hi Nicolas,
 
-Could I test the code on rk3368 STB such as EKB368, CSA90?
-Is there some documents about it?
+Thanks for your proposal, however, I have some trouble with it.
 
-Thanks
+That would look lovely:
 
-bamvor=09
+#include <linux/linkage.h>
+#include <asm/assembler.h>
 
-On 06/26/2015 02:12 AM, Heiko St=FCbner wrote:
-> This adds initial support for the new rk3368 ARM64 soc from Rockchip.
+/*
+  *      cpu_kinetis_do_idle()
+  *
+  *      Idle the processor (wait for interrupt).
+  *
+  *      IRQs are already disabled.
+  */
+ENTRY(cpu_kinetis_do_idle)
+         wfi
+         movw    r3, #:lower16:0xe0082000
+         movt    r3, #:upper16:0xe0082000
+         ldr     r0, [r3, #0]
+         orr     r2, r0, #0x85000000
+         str     r2, [r3, #0]
+         ret     lr
+ENDPROC(cpu_kinetis_do_idle)
+
+But... what about the rest of this hypothetical proc_kinetis.S file?
+
+It would be a lot of code duplication with proc-v7m.S I think.
+
+I could define CPU_KINETIS as such:
+
+config CPU_KINETIS
+ 	bool
+ 	select CPU_V7M
+
+But there's no such thing like customize_processor_functions that would be 
+called after proc-v7m.S define_processor_functions specified things like 
+idle routine.
+
+Finally, while I was searching for suitable arm_pm_idle-based solution, I 
+found idle.c in mach-gemini that encouraged me to write my own idle.c for 
+Kinetis:
+
+/*
+  * arch/arm/mach-kinetis/idle.c
+  */
+
+#include <linux/init.h>
+#include <linux/io.h>
+#include <asm/system_misc.h>
+#include <asm/proc-fns.h>
+
+static void kinetis_idle(void)
+{
+         asm volatile ("wfi");
+
+         /*
+          * This is a dirty hack that invalidates the I/D bus cache
+          * on Kinetis K70. This must be done after idle.
+          */
+         writel(readl(IOMEM(0xe0082000)) | 0x85000000, IOMEM(0xe0082000));
+}
+
+static int __init kinetis_idle_init(void)
+{
+         arm_pm_idle = kinetis_idle;
+         return 0;
+}
+
+arch_initcall(kinetis_idle_init);
+
+Et voila:
+
+(gdb) c
+Continuing.
+^C
+Program received signal SIGTRAP, Trace/breakpoint trap.
+kinetis_idle () at ../arch/arm/mach-kinetis/idle.c:18
+18		writel(readl(IOMEM(0xe0082000)) | 0x85000000, 
+IOMEM(0xe0082000));
+(gdb) bt
+#0  kinetis_idle () at ../arch/arm/mach-kinetis/idle.c:18
+#1  0x0800a91e in arch_cpu_idle () at ../arch/arm/kernel/process.c:70
+#2  0x08025402 in cpuidle_idle_call (state=<value optimized out>)
+     at ../kernel/sched/idle.c:157
+#3  cpu_idle_loop (state=<value optimized out>) at 
+../kernel/sched/idle.c:253
+#4  cpu_startup_entry (state=<value optimized out>) at 
+../kernel/sched/idle.c:301
+#5  0x081bf816 in start_kernel () at ../init/main.c:683
+#6  0x08008024 in stext () at ../arch/arm/kernel/head-nommu.S:85
+(gdb)
+
+On Thu, 25 Jun 2015, Nicolas Pitre wrote:
+
+> On Tue, 23 Jun 2015, Arnd Bergmann wrote:
 >
-> Overall it looks like someone dropped some A53 cores into a rk3288, s=
-o
-> it shares a lot of peripherals that only differ in details. Therefore
-> stuff like the mmc, usb, spi, i2c controllers work out of the box.
-> The support for the gmac already made it into the merge window as wel=
-l
-> as the pinctrl support.
+>> On Tuesday 23 June 2015 23:19:41 Paul Osmialowski wrote:
+>>> Some SoCs need additional actions to be performed after arch idle,
+>>> e.g. Kinetis requires invalidation of the I/D bus cache.
+>>>
+>>> Such handler could be held in provided <mach/idle.h> header file.
+>>>
+>>> Signed-off-by: Paul Osmialowski <pawelo-rhuoMcPwk82rDJvtcaxF/A@public.gmane.org>
+>>> ---
+>>>  arch/arm/Kconfig          | 7 +++++++
+>>>  arch/arm/kernel/process.c | 7 +++++++
+>>>  2 files changed, 14 insertions(+)
+>>>
+>>> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+>>> index 8e3a833..8ef8f8f 100644
+>>> --- a/arch/arm/Kconfig
+>>> +++ b/arch/arm/Kconfig
+>>> @@ -98,6 +98,13 @@ config ARM_HAS_SG_CHAIN
+>>>  config NEED_SG_DMA_LENGTH
+>>>  	bool
+>>>
+>>> +config NEED_MACH_IDLE_H
+>>> +	bool
+>>> +
+>>> +config ARM_CPU_IDLE_QUIRKS
+>>> +	bool
+>>> +	select NEED_MACH_IDLE_H
+>>> +
+>>
+>> We're not adding header files like this, please come up
+>> with another solution. How about a cpuidle driver, or
+>> possibly just overriding arm_pm_idle()?
 >
-> Interestingly, in its core the rk3368 seems trying to be a model stud=
-ent
-> with psci for smp and using scpi for ddr frequency scaling, although =
-I
-> currently do not understand how the mailbox works yet. The display
-> controllers also are only minimally different so I'm hopefully to hav=
-e
-> working graphics in the near-ish future :-)
+> If the WFI instruction always requires I and D flushing, then it might
+> be a better idea to provide a replacement for the corresponding
+> cpu_*_do_idle function.  Plenty of examples exist for other cpu_*
+> functions.
 >
 >
-> As mentioned in the dts patch, this series depends on the dt-binding
-> header for the clock ids, so will need a shared branch once this is r=
-eady.
->
->
-> Heiko Stuebner (4):
->    arm64: add Rockchip architecture entry
->    arm64: defconfig: enable ARCH_ROCKCHIP
->    arm64: dts: add Rockchip rk3368 core dtsi and board dts for the r8=
-8
->      board
->    dt-bindings: document rk3368 R89 board from Rockchip
->
->   Documentation/devicetree/bindings/arm/rockchip.txt |   4 +
->   arch/arm64/Kconfig                                 |  10 +
->   arch/arm64/boot/dts/Makefile                       |   1 +
->   arch/arm64/boot/dts/rockchip/Makefile              |   5 +
->   arch/arm64/boot/dts/rockchip/rk3368-r88.dts        | 353 ++++++++
->   arch/arm64/boot/dts/rockchip/rk3368.dtsi           | 900 ++++++++++=
-+++++++++++
->   arch/arm64/configs/defconfig                       |   2 +
->   7 files changed, 1275 insertions(+)
->   create mode 100644 arch/arm64/boot/dts/rockchip/Makefile
->   create mode 100644 arch/arm64/boot/dts/rockchip/rk3368-r88.dts
->   create mode 100644 arch/arm64/boot/dts/rockchip/rk3368.dtsi
+> Nicolas
 >
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
