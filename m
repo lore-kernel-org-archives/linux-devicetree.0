@@ -1,71 +1,71 @@
-From: Dudley Du <dudl@cypress.com>
-Subject: RE: [PATCH v1 0/7] input: cyapa: instruction of cyapa patches.patch
-Date: Fri, 26 Jun 2015 01:37:26 +0000
-Message-ID: <CY1PR06MB18179B077AE07045821D9EB3D1AD0@CY1PR06MB1817.namprd06.prod.outlook.com>
+From: Yi Zhang <yizhang@marvell.com>
+Subject: Re: [PATCH V2 1/2] mfd: add Marvell 88pm88x description
+Date: Fri, 26 Jun 2015 11:35:25 +0800
+Message-ID: <20150626033338.GA32229@yizhang>
+References: <1434098601-3498-1-git-send-email-yizhang@marvell.com>
+ <1434098601-3498-2-git-send-email-yizhang@marvell.com>
+ <CAL_JsqKjNdtp1A7LqqnjAnGPmCu-fwum6D9EPOoaVF0C=DacTw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-input-owner@vger.kernel.org
-To: "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "rydberg@euromail.se" <rydberg@euromail.se>
-Cc: "bleung@google.com" <bleung@google.com>, "jmmahler@gmail.com" <jmmahler@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqKjNdtp1A7LqqnjAnGPmCu-fwum6D9EPOoaVF0C=DacTw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Paul Bolle <pebolle@tiscali.nl>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Qiao Zhou <zhouqiao@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dmitry, Jmmahler, All,
+On Tue, Jun 23, 2015 at 09:31:00AM -0500, Rob Herring wrote:
+> On Fri, Jun 12, 2015 at 3:43 AM, Yi Zhang <yizhang@marvell.com> wrote:
+> > 88pm880 and 88pm886 are two combo PMIC chips, most of the function and the
+> > register mapping are the same
+> 
+> How do they compare to 80x/822/860 PMICs?
 
-Is there any review points or comments on the v1 patches?
+Hi, Rob:
 
-Thanks in advance,
-Dudley
+88pm80x/822/860 and 88pm886/88pm880 are two different series:
+- the register mapping is totally different, it's hard to reuse the
+  existed code for 88pm80x
+- the latter is a chip which integrates the charger/fuelgauge/camera
+  flash which doesn't exist in 88pm80x
+> 
+> >
+> > Signed-off-by: Yi Zhang <yizhang@marvell.com>
+> > ---
+> >  Documentation/devicetree/bindings/mfd/88pm88x.txt | 33 +++++++++++++++++++++++
+> >  1 file changed, 33 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/mfd/88pm88x.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/mfd/88pm88x.txt b/Documentation/devicetree/bindings/mfd/88pm88x.txt
+> > new file mode 100644
+> > index 0000000..72e741c
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mfd/88pm88x.txt
+> > @@ -0,0 +1,33 @@
+> > +Marvell 88pm88x combo PMIC chip
+> > +
+> > +This series of chip integrates regulator, rtc, onkey, switch charger,
+> > +fuelgauge, gpadc and a range of I/O pins.
+> > +
+> > +88pm886 and 88pm880 are two very similar chips, most of the registers mapping
+> > +and functions are the same, the main difference is the latter has a separate
+> > +i2c slave address to cover BUCK related setting
+> > +
+> > +Required properties:
+> > +- compatible: one of the strings for a specific chip:
+> > +  "marvell,88pm886"
+> > +  "marvell,88pm880"
+> > +- reg: the i2c address
+> > +- interrupt-controller: it works as an interrupt controller managing its irqs
+> > +- interrupt-cells: this value is 1
+> > +
+> > +Optional properties:
+> > +- marvell,88pm88x-irq-write-clear: the interrupt ack method
+> 
+> The 80x/860 binding needs the same property. Please coordinate this
+> with Vaibhav.
 
-
-
-V1 patches mainly have following updates compared with V0 patches:
-1) This patch series is generated base on code base linux-next 20150612,
-   so fix the patch v0 6/7 failed to apply on linux-next 20150611 issue.
-1) Fix spelling errors, space and black line format errors in patch v1 1/7.
-2) Add detail description of the new interrupt and proximity interfaces in
-   patch v1 5/7.
-
-
-This patch series is mainly aimed to add new gen6 trackpad devices support,
-and also new function to report proximity data/vent for Gen5 and Gen6 trackpad
-devices.
-
-
-Dudley Du (7):
-  input: cyapa: change strings of gen5 to pip in the name when they are
-    shared
-  input: cyapa: add gen6 device module support in driver
-  input: cyapa: add proximity function support for gen5 and gen6 modules
-  input: cyapa: fully support runtime suspend power management
-  input: cyapa: add proximity and interrupt sysfs interfaces support
-  input: cyapa: add of match device support and description document
-  input: cyapa: add CYAP0002 Gen6 device for ACPI configuration
-
- .../devicetree/bindings/input/cypress,cyapa.txt    |   44 +
- .../devicetree/bindings/vendor-prefixes.txt        |    1 +
- drivers/input/mouse/Makefile                       |    2 +-
- drivers/input/mouse/cyapa.c                        |  266 ++++-
- drivers/input/mouse/cyapa.h                        |  161 ++-
- drivers/input/mouse/cyapa_gen3.c                   |   11 +-
- drivers/input/mouse/cyapa_gen5.c                   | 1254 +++++++++++---------
- drivers/input/mouse/cyapa_gen6.c                   |  760 ++++++++++++
- 8 files changed, 1854 insertions(+), 645 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/input/cypress,cyapa.txt
- create mode 100644 drivers/input/mouse/cyapa_gen6.c
-
-
-History patch series modifications list:
-V0 patches mainly have following updates:
-1) Add Gen6 trackpad device support;
-2) Add report proximity data function support for Gen5 and Gen6 devices;
-3) Fully support runtime suspend/resume power management;
-4) Add of_match_table mechanism support.
-
---
-1.9.1
-
-
-This message and any attachments may contain Cypress (or its subsidiaries) confidential information. If it has been received in error, please advise the sender and immediately delete this message.
+  Thanks for your reminder, got it
+> 
+> Rob
