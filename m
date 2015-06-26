@@ -1,61 +1,78 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] of/irq: Rename "intc_desc" to "of_intc_desc" to fix OF on sh
-Date: Fri, 26 Jun 2015 14:42:45 +0200
-Message-ID: <1435322565-18798-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-sh-owner@vger.kernel.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-next@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH] ARM: dts: sunxi: Adjust touchscreen compatible for sun5i and later
+Date: Fri, 26 Jun 2015 14:47:39 +0200
+Message-ID: <1435322859-27760-1-git-send-email-hdegoede@redhat.com>
+Return-path: <stable-owner@vger.kernel.org>
+Sender: stable-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>, m.silentcreek@gmail.com, Hans de Goede <hdegoede@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-Now CONFIG_OF can be enabled on sh:
+This is a manual cherry pick of a commit currently queued up for merging
+into 4.2, titled:
+"ARM: dts: sunxi Adjust touchscreen compatible for sun5i and later"
 
-    drivers/of/irq.c:472:8: error: redefinition of 'struct intc_desc'
-    include/linux/sh_intc.h:109:8: note: originally defined here
+For the 4.1 stable series, fixing a regression in 4.1 where we are now
+reporting the wrong SoC temperature for sun5i and sun7i SoCs.
 
-As "intc_desc" is used all over the place in sh platform code, while
-drivers/of/irq.c has a local definition used in a single function,
-rename the latter by prefixing it with "of_".
+Conflicts:
+	arch/arm/boot/dts/sun5i.dtsi
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Original commit message:
+
+The touchscreen controller in the A13 and later has a different temperature
+curve than the one in the original A10, change the compatible for the A13 and
+later so that the kernel will use the correct curve.
+
+Cc: stable@vger.kernel.org # 4.1
+Reported-by: m.silentcreek@gmail.com
+Reported-by: Tong Zhang <lovewilliam@gmail.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 ---
-sh-allmodconfig in next-20150626
-http://kisskb.ellerman.id.au/kisskb/buildresult/12450810/
----
- drivers/of/irq.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/sun5i-a10s.dtsi | 2 +-
+ arch/arm/boot/dts/sun5i-a13.dtsi  | 2 +-
+ arch/arm/boot/dts/sun7i-a20.dtsi  | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-index 1a7980692f254c69..f6794aafa9925af2 100644
---- a/drivers/of/irq.c
-+++ b/drivers/of/irq.c
-@@ -469,7 +469,7 @@ int of_irq_to_resource_table(struct device_node *dev, struct resource *res,
- }
- EXPORT_SYMBOL_GPL(of_irq_to_resource_table);
+diff --git a/arch/arm/boot/dts/sun5i-a10s.dtsi b/arch/arm/boot/dts/sun5i-a10s.dtsi
+index 2fd8988..3794ca1 100644
+--- a/arch/arm/boot/dts/sun5i-a10s.dtsi
++++ b/arch/arm/boot/dts/sun5i-a10s.dtsi
+@@ -573,7 +573,7 @@
+ 		};
  
--struct intc_desc {
-+struct of_intc_desc {
- 	struct list_head	list;
- 	struct device_node	*dev;
- 	struct device_node	*interrupt_parent;
-@@ -485,7 +485,7 @@ struct intc_desc {
- void __init of_irq_init(const struct of_device_id *matches)
- {
- 	struct device_node *np, *parent = NULL;
--	struct intc_desc *desc, *temp_desc;
-+	struct of_intc_desc *desc, *temp_desc;
- 	struct list_head intc_desc_list, intc_parent_list;
+ 		rtp: rtp@01c25000 {
+-			compatible = "allwinner,sun4i-a10-ts";
++			compatible = "allwinner,sun5i-a13-ts";
+ 			reg = <0x01c25000 0x100>;
+ 			interrupts = <29>;
+ 			#thermal-sensor-cells = <0>;
+diff --git a/arch/arm/boot/dts/sun5i-a13.dtsi b/arch/arm/boot/dts/sun5i-a13.dtsi
+index 883cb48..5098185 100644
+--- a/arch/arm/boot/dts/sun5i-a13.dtsi
++++ b/arch/arm/boot/dts/sun5i-a13.dtsi
+@@ -555,7 +555,7 @@
+ 		};
  
- 	INIT_LIST_HEAD(&intc_desc_list);
-@@ -496,7 +496,7 @@ void __init of_irq_init(const struct of_device_id *matches)
- 				!of_device_is_available(np))
- 			continue;
- 		/*
--		 * Here, we allocate and populate an intc_desc with the node
-+		 * Here, we allocate and populate an of_intc_desc with the node
- 		 * pointer, interrupt-parent device_node etc.
- 		 */
- 		desc = kzalloc(sizeof(*desc), GFP_KERNEL);
+ 		rtp: rtp@01c25000 {
+-			compatible = "allwinner,sun4i-a10-ts";
++			compatible = "allwinner,sun5i-a13-ts";
+ 			reg = <0x01c25000 0x100>;
+ 			interrupts = <29>;
+ 			#thermal-sensor-cells = <0>;
+diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
+index fdd1817..2b4847c 100644
+--- a/arch/arm/boot/dts/sun7i-a20.dtsi
++++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+@@ -1042,7 +1042,7 @@
+ 		};
+ 
+ 		rtp: rtp@01c25000 {
+-			compatible = "allwinner,sun4i-a10-ts";
++			compatible = "allwinner,sun5i-a13-ts";
+ 			reg = <0x01c25000 0x100>;
+ 			interrupts = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
+ 			#thermal-sensor-cells = <0>;
 -- 
-1.9.1
-
+2.4.3
