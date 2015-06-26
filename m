@@ -1,50 +1,51 @@
-From: Adam Thomson <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v2 0/4] Add support for DA9150 Fuel-Gauge
-Date: Fri, 26 Jun 2015 09:47:38 +0100
-Message-ID: <cover.1435308209.git.Adam.Thomson.Opensource@diasemi.com>
+From: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Subject: [PATCH v2 2/4] mfd: da9150: Update DT bindings for Fuel-Gauge support
+Date: Fri, 26 Jun 2015 09:47:49 +0100
+Message-ID: <afbda3c9439f08cbf57c184ff6b96bdf7f5ca8b4.1435308209.git.Adam.Thomson.Opensource@diasemi.com>
+References: <cover.1435308209.git.Adam.Thomson.Opensource@diasemi.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Support Opensource <support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <cover.1435308209.git.Adam.Thomson.Opensource@diasemi.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Support Opensource <support.opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch set adds support for the Dialog DA9150 Fuel-Gauge.
+Signed-off-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+---
+ Documentation/devicetree/bindings/mfd/da9150.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-In this patch set the following is provided:
- - MFD Core and DT bindings updates.
- - Power Supply Fuel-Gauge support and DT bindings documentation.
+diff --git a/Documentation/devicetree/bindings/mfd/da9150.txt b/Documentation/devicetree/bindings/mfd/da9150.txt
+index d0588ea..8bf1a20 100644
+--- a/Documentation/devicetree/bindings/mfd/da9150.txt
++++ b/Documentation/devicetree/bindings/mfd/da9150.txt
+@@ -6,6 +6,7 @@ Device			 Description
+ ------			 -----------
+ da9150-gpadc		: General Purpose ADC
+ da9150-charger		: Battery Charger
++da9150-fg		: Battery Fuel-Gauge
 
-This patch set is baselined against the v4.1 kernel version.
+ ======
 
-Changes in v2:
- - Moved temp callback function prototype to be part of power fuel-gauge patch,
-   as requested by Lee Jones.
+@@ -22,6 +23,7 @@ Required properties:
+ Sub-devices:
+ - da9150-gpadc: See Documentation/devicetree/bindings/iio/adc/da9150-gpadc.txt
+ - da9150-charger: See Documentation/devicetree/bindings/power/da9150-charger.txt
++- da9150-fg: See Documentation/devicetree/bindings/power/da9150-fg.txt
 
-Adam Thomson (4):
-  mfd: da9150: Add support for Fuel-Gauge
-  mfd: da9150: Update DT bindings for Fuel-Gauge support
-  power: Add support for DA9150 Fuel-Gauge
-  power: da9150: Add DT bindings documentation for Fuel-Gauge
 
- Documentation/devicetree/bindings/mfd/da9150.txt   |   6 +
- .../devicetree/bindings/power/da9150-fg.txt        |  23 +
- drivers/mfd/da9150-core.c                          | 162 +++++-
- drivers/power/Kconfig                              |  10 +
- drivers/power/Makefile                             |   1 +
- drivers/power/da9150-fg.c                          | 589 +++++++++++++++++++++
- include/linux/mfd/da9150/core.h                    |  19 +
- include/linux/mfd/da9150/fg.h                      |  39 ++
- 8 files changed, 841 insertions(+), 8 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/power/da9150-fg.txt
- create mode 100644 drivers/power/da9150-fg.c
- create mode 100644 include/linux/mfd/da9150/fg.h
-
+ Example:
+@@ -40,4 +42,8 @@ Example:
+ 		da9150-charger {
+ 			...
+ 		};
++
++		da9150-fg {
++			...
++		};
+ 	};
 --
 1.9.3
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
