@@ -1,77 +1,35 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH 2/6] GICv3: Add ITS entry to THUNDER dts
-Date: Fri, 26 Jun 2015 10:00:48 +0100
-Message-ID: <558D14C0.6030001@arm.com>
-References: <1411573068-12952-1-git-send-email-rric@kernel.org> <1411573068-12952-3-git-send-email-rric@kernel.org> <9184A2BB-2852-4B73-B964-881A1491EEA8@caviumnetworks.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 3/4] arm64: dts: add Rockchip rk3368 core dtsi and board
+ dts for the r88 board
+Date: Fri, 26 Jun 2015 10:34:01 +0100
+Message-ID: <20150626093400.GA19947@leverpostej>
+References: <1650408.ovnAjReNFJ@diego>
+ <3220645.At1oVfRcjk@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <9184A2BB-2852-4B73-B964-881A1491EEA8@caviumnetworks.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: "Chalamarla, Tirumalesh" <Tirumalesh.Chalamarla@caviumnetworks.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Liviu Dudau <Liviu.Dudau@arm.com>, Arnd Bergmann <arnd@arndb.de>, Sunil Goutham <sgoutham@cavium.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Tirumalesh Chalamarla <tchalamarla@cavium.com>, Robert Richter <rrichter@cavium.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <3220645.At1oVfRcjk@diego>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Heiko =?utf-8?Q?St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 26/06/15 00:19, Chalamarla, Tirumalesh wrote:
-> Hi Marc,
-> 
-> Any feed back on this. 
-> Do you want me to submit this as a separate patch?so that it is easy for getting acceptance. 
+[...]
 
-It looks good to me, so you can add my Acked-by on it.
+> +       memory {
+> +               reg = <0x0 0x0 0x0 0x40000000>;
+> +       };
 
-I think you should repost it and get it merged through arm-soc.
+This needs device_type = "memory", no?
+
+I guess the bootloader is overriding this anyway?
+
+Otherwise this looked fine to me.
 
 Thanks,
-
-	M.
-
-> Thanks,
-> Tirumalesh. 
-> 
->> On Sep 24, 2014, at 8:37 AM, Robert Richter <rric@kernel.org> wrote:
->>
->> From: Tirumalesh Chalamarla <tchalamarla@cavium.com>
->>
->> The PCIe host controller uses MSIs provided by GICv3 ITS. Enable it on
->> Thunder SoCs by adding an entry to DT.
->>
->> Signed-off-by: Tirumalesh Chalamarla <tchalamarla@cavium.com>
->> Signed-off-by: Robert Richter <rrichter@cavium.com>
->> ---
->> arch/arm64/boot/dts/thunder-88xx.dtsi | 9 +++++++++
->> 1 file changed, 9 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/thunder-88xx.dtsi b/arch/arm64/boot/dts/thunder-88xx.dtsi
->> index d8c0bdc51882..9cb7cf94284a 100644
->> --- a/arch/arm64/boot/dts/thunder-88xx.dtsi
->> +++ b/arch/arm64/boot/dts/thunder-88xx.dtsi
->> @@ -376,10 +376,19 @@
->> 		gic0: interrupt-controller@8010,00000000 {
->> 			compatible = "arm,gic-v3";
->> 			#interrupt-cells = <3>;
->> +			#address-cells = <2>;
->> +			#size-cells = <2>;
->> +			ranges;
->> 			interrupt-controller;
->> 			reg = <0x8010 0x00000000 0x0 0x010000>, /* GICD */
->> 			      <0x8010 0x80000000 0x0 0x600000>; /* GICR */
->> 			interrupts = <1 9 0xf04>;
->> +
->> +			its: gic-its@8010,00020000 {
->> +				compatible = "arm,gic-v3-its";
->> +				msi-controller;
->> +				reg = <0x8010 0x20000 0x0 0x200000>;
->> +			};
->> 		};
->>
->> 		uaa0: serial@87e0,24000000 {
->> -- 
->> 2.1.0
->>
-> 
-
-
--- 
-Jazz is not dead. It just smells funny...
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
