@@ -1,67 +1,95 @@
-From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 1/3] ARM: socfpga: dts: Fix adxl34x formating
-Date: Fri, 26 Jun 2015 09:16:56 +0200
-Message-ID: <20150626071656.GC26041@pengutronix.de>
-References: <1435285559-11053-1-git-send-email-walter@vanguardiasur.com.ar>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 0/4] arm64: add initial support for the Rockchip rk3368
+Date: Fri, 26 Jun 2015 09:17:25 +0200
+Message-ID: <2154359.YLevLOlh2Y@diego>
+References: <1650408.ovnAjReNFJ@diego> <558CD6AE.7030505@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1435285559-11053-1-git-send-email-walter-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+In-Reply-To: <558CD6AE.7030505-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Walter Lozano <walter-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
-Cc: dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bamvor Jian Zhang <bamv2005-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Walter!
+Hi Bamvor,
 
-On Thu, Jun 25, 2015 at 11:25:57PM -0300, Walter Lozano wrote:
-> This patch fixes the formating of DTS bindings for the adxl34x digital
-> accelerometer.
-> 
-> Signed-off-by: Walter Lozano <walter-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
-> ---
->  arch/arm/boot/dts/socfpga_cyclone5_sockit.dts |    6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts b/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
-> index 71468a7..5b60692 100644
-> --- a/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
-> +++ b/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
-> @@ -73,14 +73,14 @@
->  	status = "okay";
->  };
->  
-> -&i2c1{
-> +&i2c1 {
->  	status = "okay";
->  
-> -	accel1: accel1@53{
-> +	accel1: accelerometer@53 {
->  		compatible = "adxl34x";
->  		reg = <0x53>;
->  
-> -		interrupt-parent = < &portc >;
-> +		interrupt-parent = <&portc>;
->  		interrupts = <3 2>;
->  	};
->  };
+Am Freitag, 26. Juni 2015, 12:35:58 schrieb Bamvor Jian Zhang:
+> Could I test the code on rk3368 STB such as EKB368, CSA90?
+> Is there some documents about it?
 
-I would personally squash 3/3 into this one, but otherwise:
+General information on flashing generic Rockchip devices can be found o=
+n [0].=20
+That didn't change for the rk3368 it seems - although a device _might_ =
+be=20
+locked down to prevent reflashing it seems.
 
-Whole series
+You will of course also need a serial console on the device for the tim=
+e=20
+being, so finding the test-points and soldering is probably required.
 
-	Acked-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-Thanks,
-Steffen
+Heiko
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+[0] http://linux-rockchip.info
+
+
+> On 06/26/2015 02:12 AM, Heiko St=FCbner wrote:
+> > This adds initial support for the new rk3368 ARM64 soc from Rockchi=
+p.
+> >=20
+> > Overall it looks like someone dropped some A53 cores into a rk3288,=
+ so
+> > it shares a lot of peripherals that only differ in details. Therefo=
+re
+> > stuff like the mmc, usb, spi, i2c controllers work out of the box.
+> > The support for the gmac already made it into the merge window as w=
+ell
+> > as the pinctrl support.
+> >=20
+> > Interestingly, in its core the rk3368 seems trying to be a model st=
+udent
+> > with psci for smp and using scpi for ddr frequency scaling, althoug=
+h I
+> > currently do not understand how the mailbox works yet. The display
+> > controllers also are only minimally different so I'm hopefully to h=
+ave
+> > working graphics in the near-ish future :-)
+> >=20
+> >=20
+> > As mentioned in the dts patch, this series depends on the dt-bindin=
+g
+> > header for the clock ids, so will need a shared branch once this is=
+ ready.
+> >=20
+> > Heiko Stuebner (4):
+> >    arm64: add Rockchip architecture entry
+> >    arm64: defconfig: enable ARCH_ROCKCHIP
+> >    arm64: dts: add Rockchip rk3368 core dtsi and board dts for the =
+r88
+> >   =20
+> >      board
+> >   =20
+> >    dt-bindings: document rk3368 R89 board from Rockchip
+> >  =20
+> >   Documentation/devicetree/bindings/arm/rockchip.txt |   4 +
+> >   arch/arm64/Kconfig                                 |  10 +
+> >   arch/arm64/boot/dts/Makefile                       |   1 +
+> >   arch/arm64/boot/dts/rockchip/Makefile              |   5 +
+> >   arch/arm64/boot/dts/rockchip/rk3368-r88.dts        | 353 ++++++++
+> >   arch/arm64/boot/dts/rockchip/rk3368.dtsi           | 900
+> >   +++++++++++++++++++++ arch/arm64/configs/defconfig               =
+     =20
+> >    |   2 +
+> >   7 files changed, 1275 insertions(+)
+> >   create mode 100644 arch/arm64/boot/dts/rockchip/Makefile
+> >   create mode 100644 arch/arm64/boot/dts/rockchip/rk3368-r88.dts
+> >   create mode 100644 arch/arm64/boot/dts/rockchip/rk3368.dtsi
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
