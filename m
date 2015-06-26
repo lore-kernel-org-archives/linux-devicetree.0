@@ -1,21 +1,22 @@
-From: Tirumalesh Chalamarla <tchalamarla@caviumnetworks.com>
+From: Tirumalesh Chalamarla <tchalamarla-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
 Subject: [PATCH] GICv3: Add ITS entry to THUNDER dts
-Date: Fri, 26 Jun 2015 12:10:14 -0700
-Message-ID: <1435345814-31768-1-git-send-email-tchalamarla@caviumnetworks.com>
+Date: Fri, 26 Jun 2015 12:12:23 -0700
+Message-ID: <1435345943-31833-1-git-send-email-tchalamarla@caviumnetworks.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: marc.zyngier@arm.com, Catalin.Marinas@arm.com, Will.Deacon@arm.com
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, rrichter@cavium.com, devicetree@vger.kernel.org, Tirumalesh Chalamarla <tchalamarla@cavium.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: marc.zyngier-5wv7dgnIgG8@public.gmane.org, Catalin.Marinas-5wv7dgnIgG8@public.gmane.org, Will.Deacon-5wv7dgnIgG8@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tirumalesh Chalamarla <tchalamarla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Tirumalesh Chalamarla <tchalamarla@cavium.com>
+From: Tirumalesh Chalamarla <tchalamarla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 
 The PCIe host controller uses MSIs provided by GICv3 ITS. Enable it on
 Thunder SoCs by adding an entry to DT.
 
-Signed-off-by: Tirumalesh Chalamarla <tchalamarla@cavium.com>
+Signed-off-by: Tirumalesh Chalamarla <tchalamarla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Acked-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
 ---
  arch/arm64/boot/dts/cavium/thunder-88xx.dtsi | 9 +++++++++
  1 file changed, 9 insertions(+)
@@ -46,3 +47,8 @@ index d8c0bdc..9cb7cf9 100644
  		uaa0: serial@87e0,24000000 {
 -- 
 2.1.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
