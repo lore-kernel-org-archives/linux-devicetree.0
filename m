@@ -1,426 +1,72 @@
-From: Bruno =?UTF-8?B?UHLDqW1vbnQ=?= <bonbons-ud5FBsm0p/xEiooADzr8i9i2O/JbrIOy@public.gmane.org>
-Subject: Re: [PATCH v3 4/4] power: Add an axp20x-usb-power driver
-Date: Sat, 27 Jun 2015 22:25:05 +0200
-Message-ID: <20150627222505.1a312c78@uranus>
-References: <1435316357-26606-1-git-send-email-hdegoede@redhat.com>
-	<1435316357-26606-4-git-send-email-hdegoede@redhat.com>
-	<558E3488.9070501@samsung.com>
-Reply-To: bonbons-ud5FBsm0p/xEiooADzr8i9i2O/JbrIOy@public.gmane.org
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: BCM5301X: Enable UART0 for SmartRG SR-400AC
+Date: Sun, 28 Jun 2015 00:08:05 +0200
+Message-ID: <CACna6rzJE8Gzrwvj+nCw=qCRho=6nZ+k1h_tFQLhNZvf5zWTDg@mail.gmail.com>
+References: <1435103504-28592-1-git-send-email-f.fainelli@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDCZ5GUK4UNRBK4NXSWAKGQE6WOKE5Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <558E3488.9070501-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1435103504-28592-1-git-send-email-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 27 Jun 2015 14:28:40 Krzysztof Kozlowski wrote:
-> W dniu 26.06.2015 o 19:59, Hans de Goede pisze:
-> > This adds a driver for the usb power_supply bits of the axp20x PMICs.
-> >=20
-> > I initially started writing my own driver, before coming aware of
-> > Bruno Pr=C3=A9mont's excellent earlier RFC with a driver for this.
-> >=20
-> > My driver was lacking CURRENT_MAX and VOLTAGE_MIN support Bruno's
-> > drvier has, so I've copied the code for those from his driver.
-> >=20
-> > Note that the AC-power-supply and battery charger bits will need separa=
-te
-> > drivers. Each one needs its own devictree child-node so that other
-> > devicetree nodes can reference the right power-supply, and thus each on=
-e
-> > will get its own mfd-cell / platform_device and platform-driver.
-> >=20
-> > Cc: Bruno Pr=C3=A9mont <bonbons-ud5FBsm0p/xEiooADzr8i9i2O/JbrIOy@public.gmane.org>
-> > Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > Signed-off-by: Bruno Pr=C3=A9mont <bonbons-ud5FBsm0p/xEiooADzr8i9i2O/JbrIOy@public.gmane.org>
-> > Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> > ---
-> > Changes in v2:
-> > -Split out the dt-bindings documentation into a separate patch
-> > -Renamed axp20x_read_16bit to axp20x_read_variable_width
-> > -Use better local variable names inside axp20x_read_variable_width
-> > Changes in v3:
-> > -Add Bruno's S-o-b
->=20
-> Hi,
->=20
-> Two minor comments below, the driver itself looks good.
->=20
->=20
-> > ---
-> >  drivers/power/Kconfig            |   7 ++
-> >  drivers/power/Makefile           |   1 +
-> >  drivers/power/axp20x_usb_power.c | 243 +++++++++++++++++++++++++++++++=
-++++++++
-> >  include/linux/mfd/axp20x.h       |  24 ++++
-> >  4 files changed, 275 insertions(+)
-> >  create mode 100644 drivers/power/axp20x_usb_power.c
-> >=20
-> > diff --git a/drivers/power/Kconfig b/drivers/power/Kconfig
-> > index 4091fb0..1fee60c 100644
-> > --- a/drivers/power/Kconfig
-> > +++ b/drivers/power/Kconfig
-> > @@ -439,6 +439,13 @@ config BATTERY_RT5033
-> >  	  The fuelgauge calculates and determines the battery state of charge
-> >  	  according to battery open circuit voltage.
-> > =20
-> > +config AXP20X_POWER
-> > +	tristate "AXP20x power supply driver"
-> > +	depends on MFD_AXP20X
-> > +	help
-> > +	  This driver provides support for the power supply features of
-> > +	  AXP20x PMIC.
-> > +
-> >  source "drivers/power/reset/Kconfig"
-> > =20
-> >  endif # POWER_SUPPLY
-> > diff --git a/drivers/power/Makefile b/drivers/power/Makefile
-> > index b7b0181..ae0f27d 100644
-> > --- a/drivers/power/Makefile
-> > +++ b/drivers/power/Makefile
-> > @@ -9,6 +9,7 @@ obj-$(CONFIG_GENERIC_ADC_BATTERY)	+=3D generic-adc-batt=
-ery.o
-> > =20
-> >  obj-$(CONFIG_PDA_POWER)		+=3D pda_power.o
-> >  obj-$(CONFIG_APM_POWER)		+=3D apm_power.o
-> > +obj-$(CONFIG_AXP20X_POWER)	+=3D axp20x_usb_power.o
-> >  obj-$(CONFIG_MAX8925_POWER)	+=3D max8925_power.o
-> >  obj-$(CONFIG_WM831X_BACKUP)	+=3D wm831x_backup.o
-> >  obj-$(CONFIG_WM831X_POWER)	+=3D wm831x_power.o
-> > diff --git a/drivers/power/axp20x_usb_power.c b/drivers/power/axp20x_us=
-b_power.c
-> > new file mode 100644
-> > index 0000000..09f388e
-> > --- /dev/null
-> > +++ b/drivers/power/axp20x_usb_power.c
-> > @@ -0,0 +1,243 @@
-> > +/*
-> > + * AXP20x PMIC USB power supply status driver
-> > + *
-> > + * Copyright (C) 2015 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> > + * Copyright (C) 2014 Bruno Pr=C3=A9mont <bonbons-ud5FBsm0p/xEiooADzr8i9i2O/JbrIOy@public.gmane.org>
-> > + *
-> > + * This program is free software; you can redistribute it and/or modif=
-y it
-> > + * under  the terms of the GNU General  Public License as published by=
- the
-> > + * Free Software Foundation;  either version 2 of the License, or (at =
-your
-> > + * option) any later version.
-> > + */
-> > +
-> > +#include <linux/device.h>
-> > +#include <linux/init.h>
-> > +#include <linux/interrupt.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/mfd/axp20x.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/power_supply.h>
-> > +#include <linux/regmap.h>
-> > +#include <linux/slab.h>
-> > +
-> > +#define DRVNAME "axp20x-usb-power-supply"
-> > +
-> > +#define AXP20X_PWR_STATUS_VBUS_PRESENT	BIT(5)
-> > +#define AXP20X_PWR_STATUS_VBUS_USED	BIT(4)
-> > +
-> > +#define AXP20X_USB_STATUS_VBUS_VALID	BIT(2)
-> > +
-> > +#define AXP20X_VBUS_VHOLD_uV(b)		(4000000 + (((b) >> 3) & 7) * 100000)
-> > +#define AXP20X_VBUS_CLIMIT_MASK		3
-> > +#define AXP20X_VBUC_CLIMIT_900mA	0
-> > +#define AXP20X_VBUC_CLIMIT_500mA	1
-> > +#define AXP20X_VBUC_CLIMIT_100mA	2
-> > +#define AXP20X_VBUC_CLIMIT_NONE		3
-> > +
-> > +#define AXP20X_ADC_EN1_VBUS_CURR	BIT(2)
-> > +#define AXP20X_ADC_EN1_VBUS_VOLT	BIT(3)
-> > +
-> > +#define AXP20X_VBUS_MON_VBUS_VALID	BIT(3)
-> > +
-> > +struct axp20x_usb_power {
-> > +	struct regmap *regmap;
-> > +	struct power_supply *supply;
-> > +};
-> > +
-> > +static irqreturn_t axp20x_usb_power_irq(int irq, void *devid)
-> > +{
-> > +	struct axp20x_usb_power *power =3D devid;
-> > +
-> > +	power_supply_changed(power->supply);
-> > +
-> > +	return IRQ_HANDLED;
-> > +}
-> > +
-> > +static int axp20x_usb_power_get_property(struct power_supply *psy,
-> > +	enum power_supply_property psp, union power_supply_propval *val)
-> > +{
-> > +	struct axp20x_usb_power *power =3D power_supply_get_drvdata(psy);
-> > +	unsigned int input, v;
-> > +	int r;
->=20
-> Here and in probe function - it is strictly personal but I don't like
-> the 'r' variable. I got used to 'err' or 'ret' which are more
-> descriptive to me. 'r' may look like 'resource' for example.
+On 24 June 2015 at 01:51, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote=
+:
+> Enable the use of UART0 by overriding its default status property.
+>
+> Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts b/arch/arm=
+/boot/dts/bcm4708-smartrg-sr400ac.dts
+> index d6a033b97c70..64a5e8ab65e0 100644
+> --- a/arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts
+> +++ b/arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts
+> @@ -118,3 +118,7 @@
+>                 };
+>         };
+>  };
+> +
+> +&uart0 {
+> +       status =3D "okay";
+> +};
 
-'ret' might work but doesn't it imply return value for this function
-instead of return value from a called function?
+We have many more changes like this in OpenWrt, I just didn't upstream
+them because of current chipcommonA state.
 
-> > +
-> > +	switch (psp) {
-> > +	case POWER_SUPPLY_PROP_VOLTAGE_MIN:
-> > +		r =3D regmap_read(power->regmap, AXP20X_VBUS_IPSOUT_MGMT, &v);
-> > +		if (r)
-> > +			return r;
-> > +
-> > +		val->intval =3D AXP20X_VBUS_VHOLD_uV(v);
-> > +		return 0;
-> > +	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
-> > +		r =3D axp20x_read_variable_width(power->regmap,
-> > +					       AXP20X_VBUS_V_ADC_H, 12);
-> > +		if (r < 0)
-> > +			return r;
-> > +
-> > +		val->intval =3D r * 1700; /* 1 step =3D 1.7 mV */
-> > +		return 0;
-> > +	case POWER_SUPPLY_PROP_CURRENT_MAX:
-> > +		r =3D regmap_read(power->regmap, AXP20X_VBUS_IPSOUT_MGMT, &v);
-> > +		if (r)
-> > +			return r;
-> > +
-> > +		switch (v & AXP20X_VBUS_CLIMIT_MASK) {
-> > +		case AXP20X_VBUC_CLIMIT_100mA:
-> > +			val->intval =3D 100000;
-> > +			break;
-> > +		case AXP20X_VBUC_CLIMIT_500mA:
-> > +			val->intval =3D 500000;
-> > +			break;
-> > +		case AXP20X_VBUC_CLIMIT_900mA:
-> > +			val->intval =3D 900000;
-> > +			break;
-> > +		case AXP20X_VBUC_CLIMIT_NONE:
-> > +			val->intval =3D -1;
-> > +			break;
-> > +		}
-> > +		return 0;
-> > +	case POWER_SUPPLY_PROP_CURRENT_NOW:
-> > +		r =3D axp20x_read_variable_width(power->regmap,
-> > +					       AXP20X_VBUS_I_ADC_H, 12);
-> > +		if (r < 0)
-> > +			return r;
-> > +
-> > +		val->intval =3D r * 375; /* 1 step =3D 0.375 mA */
-> > +		return 0;
-> > +	default:
-> > +		break;
-> > +	}
-> > +
-> > +	/* All the properties below need the input-status reg value */
-> > +	r =3D regmap_read(power->regmap, AXP20X_PWR_INPUT_STATUS, &input);
-> > +	if (r)
-> > +		return r;
-> > +
-> > +	switch (psp) {
-> > +	case POWER_SUPPLY_PROP_HEALTH:
-> > +		if (!(input & AXP20X_PWR_STATUS_VBUS_PRESENT)) {
-> > +			val->intval =3D POWER_SUPPLY_HEALTH_UNKNOWN;
-> > +			break;
-> > +		}
-> > +
-> > +		r =3D regmap_read(power->regmap, AXP20X_USB_OTG_STATUS, &v);
-> > +		if (r)
-> > +			return r;
-> > +
-> > +		if (!(v & AXP20X_USB_STATUS_VBUS_VALID)) {
-> > +			val->intval =3D POWER_SUPPLY_HEALTH_UNSPEC_FAILURE;
-> > +			break;
-> > +		}
-> > +
-> > +		val->intval =3D POWER_SUPPLY_HEALTH_GOOD;
-> > +		break;
-> > +	case POWER_SUPPLY_PROP_PRESENT:
-> > +		val->intval =3D !!(input & AXP20X_PWR_STATUS_VBUS_PRESENT);
-> > +		break;
-> > +	case POWER_SUPPLY_PROP_ONLINE:
-> > +		val->intval =3D !!(input & AXP20X_PWR_STATUS_VBUS_USED);
-> > +		break;
-> > +	default:
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static enum power_supply_property axp20x_usb_power_properties[] =3D {
-> > +	POWER_SUPPLY_PROP_HEALTH,
-> > +	POWER_SUPPLY_PROP_PRESENT,
-> > +	POWER_SUPPLY_PROP_ONLINE,
-> > +	POWER_SUPPLY_PROP_VOLTAGE_MIN,
-> > +	POWER_SUPPLY_PROP_VOLTAGE_NOW,
-> > +	POWER_SUPPLY_PROP_CURRENT_MAX,
-> > +	POWER_SUPPLY_PROP_CURRENT_NOW,
-> > +};
-> > +
-> > +static const struct power_supply_desc axp20x_usb_power_desc =3D {
-> > +	.name =3D "axp20x-usb",
-> > +	.type =3D POWER_SUPPLY_TYPE_USB,
-> > +	.properties =3D axp20x_usb_power_properties,
-> > +	.num_properties =3D ARRAY_SIZE(axp20x_usb_power_properties),
-> > +	.get_property =3D axp20x_usb_power_get_property,
-> > +};
-> > +
-> > +static int axp20x_usb_power_probe(struct platform_device *pdev)
-> > +{
-> > +	struct axp20x_dev *axp20x =3D dev_get_drvdata(pdev->dev.parent);
-> > +	struct power_supply_config psy_cfg =3D {};
-> > +	struct axp20x_usb_power *power;
-> > +	static const char * const irq_names[] =3D { "VBUS_PLUGIN",
-> > +		"VBUS_REMOVAL", "VBUS_VALID", "VBUS_NOT_VALID" };
-> > +	int i, irq, r;
-> > +
-> > +	if (!of_device_is_available(pdev->dev.of_node))
-> > +		return -ENODEV;
-> > +
-> > +	power =3D devm_kzalloc(&pdev->dev, sizeof(*power), GFP_KERNEL);
-> > +	if (!power)
-> > +		return -ENOMEM;
-> > +
-> > +	power->regmap =3D axp20x->regmap;
-> > +
-> > +	/* Enable vbus valid checking */
-> > +	r =3D regmap_update_bits(power->regmap, AXP20X_VBUS_MON,
-> > +		    AXP20X_VBUS_MON_VBUS_VALID, AXP20X_VBUS_MON_VBUS_VALID);
-> > +	if (r)
-> > +		return r;
-> > +
-> > +	/* Enable vbus voltage and current measurement */
-> > +	r =3D regmap_update_bits(power->regmap, AXP20X_ADC_EN1,
-> > +			AXP20X_ADC_EN1_VBUS_CURR | AXP20X_ADC_EN1_VBUS_VOLT,
-> > +			AXP20X_ADC_EN1_VBUS_CURR | AXP20X_ADC_EN1_VBUS_VOLT);
-> > +	if (r)
-> > +		return r;
-> > +
-> > +	psy_cfg.of_node =3D pdev->dev.of_node;
-> > +	psy_cfg.drv_data =3D power;
-> > +
-> > +	power->supply =3D devm_power_supply_register(&pdev->dev,
-> > +					&axp20x_usb_power_desc, &psy_cfg);
-> > +	if (IS_ERR(power->supply))
-> > +		return PTR_ERR(power->supply);
-> > +
-> > +	/* Request irqs after registering, as irqs may trigger immediately */
-> > +	for (i =3D 0; i < ARRAY_SIZE(irq_names); i++) {
-> > +		irq =3D platform_get_irq_byname(pdev, irq_names[i]);
-> > +		if (irq < 0) {
-> > +			dev_warn(&pdev->dev, "No IRQ for %s: %d\n",
-> > +				 irq_names[i], irq);
-> > +			continue;
-> > +		}
-> > +		irq =3D regmap_irq_get_virq(axp20x->regmap_irqc, irq);
-> > +		r =3D devm_request_any_context_irq(&pdev->dev, irq,
-> > +				axp20x_usb_power_irq, 0, DRVNAME, power);
-> > +		if (r < 0)
-> > +			dev_warn(&pdev->dev, "Error requesting %s IRQ: %d\n",
-> > +				 irq_names[i], r);
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static const struct of_device_id axp20x_usb_power_match[] =3D {
-> > +	{ .compatible =3D "x-powers,axp202-usb-power-supply" },
-> > +	{ }
-> > +};
-> > +MODULE_DEVICE_TABLE(of, axp20x_usb_power_match);
-> > +
-> > +static struct platform_driver axp20x_usb_power_driver =3D {
-> > +	.probe =3D axp20x_usb_power_probe,
-> > +	.driver =3D {
-> > +		.name =3D DRVNAME,
-> > +		.of_match_table =3D axp20x_usb_power_match,
-> > +	},
-> > +};
-> > +
-> > +module_platform_driver(axp20x_usb_power_driver);
-> > +
-> > +MODULE_AUTHOR("Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>");
-> > +MODULE_DESCRIPTION("AXP20x PMIC USB power supply status driver");
-> > +MODULE_LICENSE("GPL");
-> > diff --git a/include/linux/mfd/axp20x.h b/include/linux/mfd/axp20x.h
-> > index 6d8b39a..8ec996e 100644
-> > --- a/include/linux/mfd/axp20x.h
-> > +++ b/include/linux/mfd/axp20x.h
-> > @@ -11,6 +11,8 @@
-> >  #ifndef __LINUX_MFD_AXP20X_H
-> >  #define __LINUX_MFD_AXP20X_H
-> > =20
-> > +#include <linux/regmap.h>
-> > +
-> >  enum {
-> >  	AXP202_ID =3D 0,
-> >  	AXP209_ID,
-> > @@ -372,4 +374,26 @@ struct axp288_extcon_pdata {
-> >  	struct gpio_desc *gpio_mux_cntl;
-> >  };
-> > =20
-> > +/* generic helper function for reading 9-16 bit wide regs */
-> > +static inline int axp20x_read_variable_width(struct regmap *regmap,
-> > +	unsigned int reg, unsigned int width)
-> > +{
-> > +	unsigned int reg_val, result;
-> > +	int err;
-> > +
-> > +	err =3D regmap_read(regmap, reg, &reg_val);
-> > +	if (err)
-> > +		return err;
-> > +
-> > +	result =3D reg_val << (width - 8);
-> > +
-> > +	err =3D regmap_read(regmap, reg + 1, &reg_val);
-> > +	if (err)
-> > +		return err;
-> > +
-> > +	result |=3D reg_val;
-> > +
-> > +	return result;
-> > +}
-> > +
-> >  #endif /* __LINUX_MFD_AXP20X_H */
->=20
-> Is this static inline function used outside of
-> drivers/power/axp20x_usb_power.c? Looks like it isn't, but maybe you
-> have a plan for it? If not, then it shouldn't be in header file.
+It was added before we got "brcm,bus-axi" and I believe Hauke wanted
+move it to the "correct" place at some point. Since UART is part of
+ChipCommon device and ChipCommon is part of "brcm,bus-axi",.I guess we
+should add UARTs as a ChipCommon device subnodes. We already have
+chipcommon: chipcommon@0 {
+        reg =3D <0x00000000 0x1000>;
 
-See comments for first iteration of this patch:
-| | This is only used twice and only in one file.
-| |
-| | Do you know of any other uses of this call that will be upstreamed
-| | shortly? =20
-|=20
-| Yes I plan to write drivers for the other 3 power_supply class
-| cells (ac-power, battery-charger, rtc-bat-charger) in the axp209,
-| and most of those need the same helper which I why I put it here. =20
+        gpio-controller;
+        #gpio-cells =3D <2>;
+};
+, is it possible to move UARTs there?
 
-> Best regards,
-> Krzysztof
+I'm not sure if this UART cleanup should block your change. I guess it
+depends on the way it'll finally look like.
 
-Best regards,
-Bruno
+I'm also wondering: is there any preference between overwriting status
+with something like
+&uart0 { };
+and
+chipcommonA {
+    uart0: serial@0300 { };
+};
+? I don't know DT that well, just asking.
 
 --=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Rafa=C5=82
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
