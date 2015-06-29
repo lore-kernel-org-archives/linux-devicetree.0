@@ -1,315 +1,59 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH linux-next v2 3/4] tty/serial: at91: add support to FIFOs
-Date: Mon, 29 Jun 2015 15:11:18 +0200
-Message-ID: <559143F6.7070409@atmel.com>
-References: <cover.1434038494.git.cyrille.pitchen@atmel.com> <e9b7445f103969a286d586054d79461a6efacd65.1434038494.git.cyrille.pitchen@atmel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <e9b7445f103969a286d586054d79461a6efacd65.1434038494.git.cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, leilei.zhao-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Robert Baldyga <r.baldyga@samsung.com>
+Subject: [PATCH] ARM: dts: exynos4: add DMA support for serial ports
+Date: Mon, 29 Jun 2015 15:22:34 +0200
+Message-ID: <1435584154-4969-1-git-send-email-r.baldyga@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux@arm.linux.org.uk, kgene@kernel.org
+Cc: k.kozlowski@samsung.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, m.szyprowski@samsung.com, Robert Baldyga <r.baldyga@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Le 11/06/2015 18:20, Cyrille Pitchen a =E9crit :
-> Depending on the hardware, TX and RX FIFOs may be available. The RX
-> FIFO can avoid receive overruns, especially when DMA transfers are
-> not used to read data from the Receive Holding Register. For heavy
-> system load, The CPU is likely not be able to fetch data fast enough
-> from the RHR.
->=20
-> In addition, the RX FIFO can supersede the DMA/PDC to control the RTS
-> line when the Hardware Handshaking mode is enabled. Two thresholds
-> are to be set for that purpose:
-> - When the number of data in the RX FIFO crosses and becomes lower
->   than or equal to the low threshold, the RTS line is set to low
->   level: the remote peer is requested to send data.
-> - When the number of data in the RX FIFO crosses and becomes greater
->   than or equal to the high threshold, the RTS line is set to high
->   level: the remote peer should stop sending new data.
-> - low threshold <=3D high threshold
-> Once these two thresholds are set properly, this new feature is
-> enabled by setting the FIFO RTS Control bit of the FIFO Mode Register=
-=2E
->=20
-> FIFOs also introduce a new multiple data mode: the USART works either
-> in multiple data mode or in single data (legacy) mode.
->=20
-> If MODE9 bit is set into the Mode Register or if USMODE is set to
-> either LIN_MASTER, LIN_SLAVE or LON_MODE, FIFOs operate in single
-> data mode. Otherwise, they operate in multiple data mode.
->=20
-> In this new multiple data mode, accesses to the Receive Holding
-> Register or Transmit Holding Register slightly change.
->=20
-> Since this driver implements neither the 9bit data feature (MODE9 bit
-> set into the Mode Register) nor LIN modes, the USART works in
-> multiple data mode whenever FIFOs are available and enabled. We also
-> assume that data are 8bit wide.
->=20
-> In single data mode, 32bit access CAN be used to read a single data
-> from RHR or write a single data into THR.
-> However in multiple data mode, a 32bit access to RHR now allows us to
-> read four consecutive data from RX FIFO. Also a 32bit access to THR
-> now allows to write four consecutive data into TX FIFO. So we MUST
-> use 8bit access whenever only one data have to be read/written at a
-> time.
->=20
-> Signed-off-by: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> ---
->  drivers/tty/serial/atmel_serial.c | 79 +++++++++++++++++++++++++++++=
-+++++++++-
->  include/linux/atmel_serial.h      | 36 ++++++++++++++++++
->  2 files changed, 113 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/tty/serial/atmel_serial.c b/drivers/tty/serial/a=
-tmel_serial.c
-> index 112e74b..6767570 100644
-> --- a/drivers/tty/serial/atmel_serial.c
-> +++ b/drivers/tty/serial/atmel_serial.c
-> @@ -96,8 +96,8 @@ static void atmel_stop_rx(struct uart_port *port);
->  #define UART_PUT_IDR(port, v)  __raw_writel(v, (port)->membase + ATM=
-EL_US_IDR)
->  #define UART_GET_IMR(port)     __raw_readl((port)->membase + ATMEL_U=
-S_IMR)
->  #define UART_GET_CSR(port)     __raw_readl((port)->membase + ATMEL_U=
-S_CSR)
-> -#define UART_GET_CHAR(port)    __raw_readl((port)->membase + ATMEL_U=
-S_RHR)
-> -#define UART_PUT_CHAR(port, v) __raw_writel(v, (port)->membase + ATM=
-EL_US_THR)
-> +#define UART_GET_CHAR(port)    __raw_readb((port)->membase + ATMEL_U=
-S_RHR)
-> +#define UART_PUT_CHAR(port, v) __raw_writeb(v, (port)->membase + ATM=
-EL_US_THR)
->  #define UART_GET_BRGR(port)    __raw_readl((port)->membase + ATMEL_U=
-S_BRGR)
->  #define UART_PUT_BRGR(port, v) __raw_writel(v, (port)->membase + ATM=
-EL_US_BRGR)
->  #define UART_PUT_RTOR(port, v) __raw_writel(v, (port)->membase + ATM=
-EL_US_RTOR)
-> @@ -119,6 +119,16 @@ static void atmel_stop_rx(struct uart_port *port=
-);
->  #define UART_PUT_TCR(port, v)  __raw_writel(v, (port)->membase + ATM=
-EL_PDC_TCR)
->  #define UART_GET_TCR(port)     __raw_readl((port)->membase + ATMEL_P=
-DC_TCR)
-> =20
-> +/* FIFO registers */
-> +#define UART_PUT_FMR(port, v)  __raw_writel(v, (port)->membase + ATM=
-EL_US_FMR)
-> +#define UART_GET_FMR(port)     __raw_readl((port)->membase + ATMEL_U=
-S_FMR)
-> +#define UART_GET_FESR(port)    __raw_readl((port)->membase + ATMEL_U=
-S_FESR)
-> +#define UART_PUT_FIER(port, v) __raw_writel(v, (port)->membase + ATM=
-EL_US_FIER)
-> +#define UART_PUT_FIDR(port, v) __raw_writel(v, (port)->membase + ATM=
-EL_US_FIDR)
-> +#define UART_GET_FIMR(port)    __raw_readl((port)->membase + ATMEL_U=
-S_FIMR)
-> +#define UART_GET_FLR(port)     __raw_readl((port)->membase + ATMEL_U=
-S_FLR)
-> +
-> +
->  struct atmel_dma_buffer {
->  	unsigned char	*buf;
->  	dma_addr_t	dma_addr;
-> @@ -172,6 +182,9 @@ struct atmel_uart_port {
->  	struct mctrl_gpios	*gpios;
->  	int			gpio_irq[UART_GPIO_MAX];
->  	unsigned int		tx_done_mask;
-> +	u32			fifo_size;
-> +	u32			rts_high;
-> +	u32			rts_low;
->  	bool			ms_irq_enabled;
->  	bool			is_usart;	/* usart or uart */
->  	struct timer_list	uart_timer;	/* uart timer */
-> @@ -1797,6 +1810,29 @@ static int atmel_startup(struct uart_port *por=
-t)
->  			atmel_set_ops(port);
->  	}
-> =20
-> +	/*
-> +	 * Enable FIFO when available
-> +	 */
-> +	if (atmel_port->fifo_size) {
-> +		unsigned int txrdym =3D ATMEL_US_ONE_DATA;
-> +		unsigned int rxrdym =3D ATMEL_US_ONE_DATA;
-> +		unsigned int fmr;
-> +
-> +		UART_PUT_CR(port,
-> +			    ATMEL_US_FIFOEN |
-> +			    ATMEL_US_RXFCLR |
-> +			    ATMEL_US_TXFLCLR);
-> +
-> +		fmr =3D ATMEL_US_TXRDYM(txrdym) | ATMEL_US_RXRDYM(rxrdym);
+Enable DMA transfers for serial ports.
 
-If above is the only place where we use txrdym and rxrdym, why not use
-directly the defined constants here?
+Signed-off-by: Robert Baldyga <r.baldyga@samsung.com>
+---
+ arch/arm/boot/dts/exynos4.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-
-> +		if (atmel_port->rts_high &&
-> +		    atmel_port->rts_low)
-> +			fmr |=3D	ATMEL_US_FRTSC |
-> +				ATMEL_US_RXFTHRES(atmel_port->rts_high) |
-> +				ATMEL_US_RXFTHRES2(atmel_port->rts_low);
-> +
-> +		UART_PUT_FMR(port, fmr);
-> +	}
-> +
->  	/* Save current CSR for comparison in atmel_tasklet_func() */
->  	atmel_port->irq_status_prev =3D atmel_get_lines_status(port);
->  	atmel_port->irq_status =3D atmel_port->irq_status_prev;
-> @@ -2599,6 +2635,44 @@ static int atmel_init_gpios(struct atmel_uart_=
-port *p, struct device *dev)
->  	return 0;
->  }
-> =20
-> +static void atmel_serial_probe_fifos(struct atmel_uart_port *port,
-> +				     struct platform_device *pdev)
-> +{
-> +	port->fifo_size =3D 0;
-> +	port->rts_low =3D 0;
-> +	port->rts_high =3D 0;
-> +
-> +	if (of_property_read_u32(pdev->dev.of_node,
-> +				 "atmel,fifo-size",
-> +				 &port->fifo_size) ||
-> +	    !port->fifo_size)
-
-I understand, but here, please split the test in 2: it's far more reada=
-ble.
-
-> +		return;
-> +
-> +	if (port->fifo_size < 8 || port->fifo_size > 32) {
-
-Can you define constants for these 2 values and use them here?
-
-> +		port->fifo_size =3D 0;
-> +		dev_err(&pdev->dev, "Invalid FIFO size\n");
-> +		return;
-> +	}
-> +
-> +	/*
-> +	 * 0 <=3D rts_low <=3D rts_high <=3D fifo_size
-> +	 * Once their CTS line asserted by the remote peer, some x86 UARTs =
-tend
-> +	 * to flush their internal TX FIFO, commonly up to 8 data, before
-> +	 * actually stopping to send new data. So we try to set the RTS Hig=
-h
-> +	 * Threshold to a raisonable high value respecting this 8 data empi=
-rical
-> +	 * rule when possible.
-> +	 */
-> +	port->rts_high =3D max_t(int, port->fifo_size >> 1, port->fifo_size=
- - 8);
-> +	port->rts_low  =3D max_t(int, port->fifo_size >> 2, port->fifo_size=
- - 16);
-
-Same here: I'd prefer constants with meaningful names.
-
-> +
-> +	dev_info(&pdev->dev, "Using FIFO (%u data)\n",
-> +		 port->fifo_size);
-
-Okay for this information.
-
-> +	dev_info(&pdev->dev, "RTS High Threshold : %2u data\n",
-> +		 port->rts_high);
-> +	dev_info(&pdev->dev, "RTS Low Threshold  : %2u data\n",
-> +		 port->rts_low);
-
-Aren't these two other dev_info() better suited as dev_dbg()?
-
-
-> +}
-> +
->  static int atmel_serial_probe(struct platform_device *pdev)
->  {
->  	struct atmel_uart_port *port;
-> @@ -2635,6 +2709,7 @@ static int atmel_serial_probe(struct platform_d=
-evice *pdev)
->  	port =3D &atmel_ports[ret];
->  	port->backup_imr =3D 0;
->  	port->uart.line =3D ret;
-> +	atmel_serial_probe_fifos(port, pdev);
-> =20
->  	spin_lock_init(&port->lock_suspended);
-> =20
-> diff --git a/include/linux/atmel_serial.h b/include/linux/atmel_seria=
-l.h
-> index c384c21..ee696d7 100644
-> --- a/include/linux/atmel_serial.h
-> +++ b/include/linux/atmel_serial.h
-> @@ -35,6 +35,11 @@
->  #define	ATMEL_US_DTRDIS		BIT(17)	/* Data Terminal Ready Disable */
->  #define	ATMEL_US_RTSEN		BIT(18)	/* Request To Send Enable */
->  #define	ATMEL_US_RTSDIS		BIT(19)	/* Request To Send Disable */
-> +#define	ATMEL_US_TXFCLR		BIT(24)	/* Transmit FIFO Clear */
-> +#define	ATMEL_US_RXFCLR		BIT(25)	/* Receive FIFO Clear */
-> +#define	ATMEL_US_TXFLCLR	BIT(26)	/* Transmit FIFO Lock Clear */
-> +#define	ATMEL_US_FIFOEN		BIT(30)	/* FIFO enable */
-> +#define	ATMEL_US_FIFODIS	BIT(31)	/* FIFO disable */
-> =20
->  #define ATMEL_US_MR		0x04	/* Mode Register */
->  #define	ATMEL_US_USMODE		GENMASK(3, 0)	/* Mode of the USART */
-> @@ -124,6 +129,37 @@
->  #define ATMEL_US_NER		0x44	/* Number of Errors Register */
->  #define ATMEL_US_IF		0x4c	/* IrDA Filter Register */
-> =20
-> +#define ATMEL_US_CMPR		0x90	/* Comparaison Register */
-> +#define ATMEL_US_FMR		0xa0	/* FIFO Mode Register */
-> +#define	ATMEL_US_TXRDYM(data)	(((data) & 0x3) << 0)	/* TX Ready Mode=
- */
-> +#define	ATMEL_US_RXRDYM(data)	(((data) & 0x3) << 4)	/* RX Ready Mode=
- */
-> +#define		ATMEL_US_ONE_DATA	0x0
-> +#define		ATMEL_US_TWO_DATA	0x1
-> +#define		ATMEL_US_FOUR_DATA	0x2
-> +#define	ATMEL_US_FRTSC		BIT(7)	/* FIFO RTS pin Control */
-> +#define	ATMEL_US_TXFTHRES(thr)	(((thr) & 0x3f) << 8)	/* TX FIFO Thre=
-shold */
-> +#define	ATMEL_US_RXFTHRES(thr)	(((thr) & 0x3f) << 16)	/* RX FIFO Thr=
-eshold */
-> +#define	ATMEL_US_RXFTHRES2(thr)	(((thr) & 0x3f) << 24)	/* RX FIFO Th=
-reshold2 */
-> +
-> +#define ATMEL_US_FLR		0xa4	/* FIFO Level Register */
-> +#define	ATMEL_US_TXFL(reg)	(((reg) >> 0) & 0x3f)	/* TX FIFO Level */
-> +#define	ATMEL_US_RXFL(reg)	(((reg) >> 16) & 0x3f)	/* RX FIFO Level *=
-/
-> +
-> +#define ATMEL_US_FIER		0xa8	/* FIFO Interrupt Enable Register */
-> +#define ATMEL_US_FIDR		0xac	/* FIFO Interrupt Disable Register */
-> +#define ATMEL_US_FIMR		0xb0	/* FIFO Interrupt Mask Register */
-> +#define ATMEL_US_FESR		0xb4	/* FIFO Event Status Register */
-> +#define	ATMEL_US_TXFEF		BIT(0)	/* Transmit FIFO Empty Flag */
-> +#define	ATMEL_US_TXFFF		BIT(1)	/* Transmit FIFO Full Flag */
-> +#define	ATMEL_US_TXFTHF		BIT(2)	/* Transmit FIFO Threshold Flag */
-> +#define	ATMEL_US_RXFEF		BIT(3)	/* Receive FIFO Empty Flag */
-> +#define	ATMEL_US_RXFFF		BIT(4)	/* Receive FIFO Full Flag */
-> +#define	ATMEL_US_RXFTHF		BIT(5)	/* Receive FIFO Threshold Flag */
-> +#define	ATMEL_US_TXFPTEF	BIT(6)	/* Transmit FIFO Pointer Error Flag =
-*/
-> +#define	ATMEL_US_RXFPTEF	BIT(7)	/* Receive FIFO Pointer Error Flag *=
-/
-> +#define	ATMEL_US_TXFLOCK	BIT(8)	/* Transmit FIFO Lock (FESR only) */
-> +#define	ATMEL_US_RXFTHF2	BIT(9)	/* Receive FIFO Threshold Flag 2 */
-> +
->  #define ATMEL_US_NAME		0xf0	/* Ip Name */
->  #define ATMEL_US_VERSION	0xfc	/* Ip Version */
-
-Otherwise it look good.
-
-Thanks, bye,
---=20
-Nicolas Ferre
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
+index e20cdc2..21b839b 100644
+--- a/arch/arm/boot/dts/exynos4.dtsi
++++ b/arch/arm/boot/dts/exynos4.dtsi
+@@ -426,6 +426,8 @@
+ 		interrupts = <0 52 0>;
+ 		clocks = <&clock CLK_UART0>, <&clock CLK_SCLK_UART0>;
+ 		clock-names = "uart", "clk_uart_baud0";
++		dmas = <&pdma0 15>, <&pdma0 16>;
++		dma-names = "rx", "tx";
+ 		status = "disabled";
+ 	};
+ 
+@@ -435,6 +437,8 @@
+ 		interrupts = <0 53 0>;
+ 		clocks = <&clock CLK_UART1>, <&clock CLK_SCLK_UART1>;
+ 		clock-names = "uart", "clk_uart_baud0";
++		dmas = <&pdma1 15>, <&pdma1 16>;
++		dma-names = "rx", "tx";
+ 		status = "disabled";
+ 	};
+ 
+@@ -444,6 +448,8 @@
+ 		interrupts = <0 54 0>;
+ 		clocks = <&clock CLK_UART2>, <&clock CLK_SCLK_UART2>;
+ 		clock-names = "uart", "clk_uart_baud0";
++		dmas = <&pdma0 17>, <&pdma0 18>;
++		dma-names = "rx", "tx";
+ 		status = "disabled";
+ 	};
+ 
+@@ -453,6 +459,8 @@
+ 		interrupts = <0 55 0>;
+ 		clocks = <&clock CLK_UART3>, <&clock CLK_SCLK_UART3>;
+ 		clock-names = "uart", "clk_uart_baud0";
++		dmas = <&pdma1 17>, <&pdma1 18>;
++		dma-names = "rx", "tx";
+ 		status = "disabled";
+ 	};
+ 
+-- 
+1.9.1
