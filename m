@@ -1,13 +1,13 @@
 From: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v6 21/23] usb: gadget: printer: allocate and init otg descriptor by otg capabilities
-Date: Mon, 29 Jun 2015 15:48:00 +0800
-Message-ID: <1435564082-14583-22-git-send-email-jun.li@freescale.com>
+Subject: [PATCH v6 20/23] usb: gadget: ncm: allocate and init otg descriptor by otg capabilities
+Date: Mon, 29 Jun 2015 15:47:59 +0800
+Message-ID: <1435564082-14583-21-git-send-email-jun.li@freescale.com>
 References: <1435564082-14583-1-git-send-email-jun.li@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1435564082-14583-1-git-send-email-jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+d-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org, Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
@@ -18,21 +18,25 @@ is not defined, keep its original otg descriptor unchanged.
 
 Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- drivers/usb/gadget/legacy/printer.c | 26 +++++++++++++++-----------
- 1 file changed, 15 insertions(+), 11 deletions(-)
+ drivers/usb/gadget/legacy/ncm.c | 34 +++++++++++++++++++---------------
+ 1 file changed, 19 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/usb/gadget/legacy/printer.c b/drivers/usb/gadget/legacy/printer.c
-index 1ce7df1..2ad1124 100644
---- a/drivers/usb/gadget/legacy/printer.c
-+++ b/drivers/usb/gadget/legacy/printer.c
-@@ -82,16 +82,7 @@ static struct usb_device_descriptor device_desc = {
- 	.bNumConfigurations =	1
+diff --git a/drivers/usb/gadget/legacy/ncm.c b/drivers/usb/gadget/legacy/ncm.c
+index 6ce7421..2bae438 100644
+--- a/drivers/usb/gadget/legacy/ncm.c
++++ b/drivers/usb/gadget/legacy/ncm.c
+@@ -69,20 +69,7 @@ static struct usb_device_descriptor device_desc = {
+ 	.bNumConfigurations =	1,
  };
  
 -static struct usb_otg_descriptor otg_descriptor = {
--	.bLength =              sizeof otg_descriptor,
--	.bDescriptorType =      USB_DT_OTG,
--	.bmAttributes =         USB_OTG_SRP,
+-	.bLength =		sizeof otg_descriptor,
+-	.bDescriptorType =	USB_DT_OTG,
+-
+-	/* REVISIT SRP-only hardware is possible, although
+-	 * it would not be called "OTG" ...
+-	 */
+-	.bmAttributes =		USB_OTG_SRP | USB_OTG_HNP,
 -};
 -
 -static const struct usb_descriptor_header *otg_desc[] = {
@@ -41,38 +45,44 @@ index 1ce7df1..2ad1124 100644
 -};
 +static const struct usb_descriptor_header *otg_desc[2];
  
- /*-------------------------------------------------------------------------*/
+ /* string IDs are assigned dynamically */
+ static struct usb_string strings_dev[] = {
+@@ -171,16 +158,30 @@ static int gncm_bind(struct usb_composite_dev *cdev)
+ 	device_desc.iManufacturer = strings_dev[USB_GADGET_MANUFACTURER_IDX].id;
+ 	device_desc.iProduct = strings_dev[USB_GADGET_PRODUCT_IDX].id;
  
-@@ -136,7 +127,6 @@ static int printer_do_config(struct usb_configuration *c)
- 	usb_gadget_set_selfpowered(gadget);
- 
- 	if (gadget_is_otg(gadget)) {
--		otg_descriptor.bmAttributes |= USB_OTG_HNP;
- 		printer_cfg_driver.descriptors = otg_desc;
- 		printer_cfg_driver.bmAttributes |= USB_CONFIG_ATT_WAKEUP;
- 	}
-@@ -182,6 +172,17 @@ static int printer_bind(struct usb_composite_dev *cdev)
- 	device_desc.iProduct = strings[USB_GADGET_PRODUCT_IDX].id;
- 	device_desc.iSerialNumber = strings[USB_GADGET_SERIAL_IDX].id;
- 
-+	if (gadget_is_otg(cdev->gadget) && !otg_desc[0]) {
++	if (gadget_is_otg(gadget) && !otg_desc[0]) {
 +		struct usb_descriptor_header *usb_desc;
 +
-+		usb_desc = usb_otg_descriptor_alloc(cdev->gadget);
++		usb_desc = usb_otg_descriptor_alloc(gadget);
 +		if (!usb_desc)
-+			return -ENOMEM;
-+		usb_otg_descriptor_init(cdev->gadget, usb_desc);
++			goto fail;
++		usb_otg_descriptor_init(gadget, usb_desc);
 +		otg_desc[0] = usb_desc;
 +		otg_desc[1] = NULL;
 +	}
 +
- 	ret = usb_add_config(cdev, &printer_cfg_driver, printer_do_config);
- 	if (ret) {
- 		usb_put_function_instance(fi_printer);
-@@ -196,6 +197,9 @@ static int printer_unbind(struct usb_composite_dev *cdev)
- 	usb_put_function(f_printer);
- 	usb_put_function_instance(fi_printer);
+ 	status = usb_add_config(cdev, &ncm_config_driver,
+ 				ncm_do_config);
+ 	if (status < 0)
+-		goto fail;
++		goto fail1;
  
+ 	usb_composite_overwrite_options(cdev, &coverwrite);
+ 	dev_info(&gadget->dev, "%s\n", DRIVER_DESC);
+ 
+ 	return 0;
+ 
++fail1:
++	kfree(otg_desc[0]);
++	otg_desc[0] = NULL;
+ fail:
+ 	usb_put_function_instance(f_ncm_inst);
+ 	return status;
+@@ -192,6 +193,9 @@ static int gncm_unbind(struct usb_composite_dev *cdev)
+ 		usb_put_function(f_ncm);
+ 	if (!IS_ERR_OR_NULL(f_ncm_inst))
+ 		usb_put_function_instance(f_ncm_inst);
 +	kfree(otg_desc[0]);
 +	otg_desc[0] = NULL;
 +
@@ -83,6 +93,6 @@ index 1ce7df1..2ad1124 100644
 1.9.1
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
