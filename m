@@ -1,7 +1,7 @@
 From: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v6 08/23] usb: chipidea: set usb otg capabilities
-Date: Mon, 29 Jun 2015 15:47:47 +0800
-Message-ID: <1435564082-14583-9-git-send-email-jun.li@freescale.com>
+Subject: [PATCH v6 12/23] usb: gadget: ether: allocate and init otg descriptor by otg capabilities
+Date: Mon, 29 Jun 2015 15:47:51 +0800
+Message-ID: <1435564082-14583-13-git-send-email-jun.li@freescale.com>
 References: <1435564082-14583-1-git-send-email-jun.li@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,74 +12,92 @@ To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@
 Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org, Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Init and update otg capabilities by DT, set gadget's otg capabilities
-accordingly.
+Allocate and initialize usb otg descriptor according to gadget otg
+capabilities, add it for each usb configurations, free it while
+ether unbind. If otg capability is not defined, keep its otg
+descriptor unchanged.
 
 Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- drivers/usb/chipidea/core.c  | 10 ++++++++++
- drivers/usb/chipidea/udc.c   |  7 ++++++-
- include/linux/usb/chipidea.h |  1 +
- 3 files changed, 17 insertions(+), 1 deletion(-)
+ drivers/usb/gadget/legacy/ether.c | 36 ++++++++++++++++++++----------------
+ 1 file changed, 20 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
-index 74fea4f..248f571 100644
---- a/drivers/usb/chipidea/core.c
-+++ b/drivers/usb/chipidea/core.c
-@@ -588,6 +588,16 @@ static int ci_get_platdata(struct device *dev,
- 				of_usb_host_tpl_support(dev->of_node);
- 	}
+diff --git a/drivers/usb/gadget/legacy/ether.c b/drivers/usb/gadget/legacy/ether.c
+index a3323dc..31e9160 100644
+--- a/drivers/usb/gadget/legacy/ether.c
++++ b/drivers/usb/gadget/legacy/ether.c
+@@ -171,20 +171,7 @@ static struct usb_device_descriptor device_desc = {
+ 	.bNumConfigurations =	1,
+ };
  
-+	if (platdata->dr_mode == USB_DR_MODE_OTG) {
-+		/* We can support HNP and SRP of OTG 2.0 */
-+		platdata->ci_otg_caps.otg_rev = 0x0200;
-+		platdata->ci_otg_caps.hnp_support = true;
-+		platdata->ci_otg_caps.srp_support = true;
+-static struct usb_otg_descriptor otg_descriptor = {
+-	.bLength =		sizeof otg_descriptor,
+-	.bDescriptorType =	USB_DT_OTG,
+-
+-	/* REVISIT SRP-only hardware is possible, although
+-	 * it would not be called "OTG" ...
+-	 */
+-	.bmAttributes =		USB_OTG_SRP | USB_OTG_HNP,
+-};
+-
+-static const struct usb_descriptor_header *otg_desc[] = {
+-	(struct usb_descriptor_header *) &otg_descriptor,
+-	NULL,
+-};
++static const struct usb_descriptor_header *otg_desc[2];
+ 
+ static struct usb_string strings_dev[] = {
+ 	[USB_GADGET_MANUFACTURER_IDX].s = "",
+@@ -416,17 +403,28 @@ static int eth_bind(struct usb_composite_dev *cdev)
+ 	device_desc.iManufacturer = strings_dev[USB_GADGET_MANUFACTURER_IDX].id;
+ 	device_desc.iProduct = strings_dev[USB_GADGET_PRODUCT_IDX].id;
+ 
++	if (gadget_is_otg(gadget) && !otg_desc[0]) {
++		struct usb_descriptor_header *usb_desc;
 +
-+		/* Update otg capabilities by DT properties */
-+		of_usb_update_otg_caps(dev->of_node, &platdata->ci_otg_caps);
++		usb_desc = usb_otg_descriptor_alloc(gadget);
++		if (!usb_desc)
++			goto fail1;
++		usb_otg_descriptor_init(gadget, usb_desc);
++		otg_desc[0] = usb_desc;
++		otg_desc[1] = NULL;
 +	}
 +
- 	if (of_usb_get_maximum_speed(dev->of_node) == USB_SPEED_FULL)
- 		platdata->flags |= CI_HDRC_FORCE_FULLSPEED;
+ 	/* register our configuration(s); RNDIS first, if it's used */
+ 	if (has_rndis()) {
+ 		status = usb_add_config(cdev, &rndis_config_driver,
+ 				rndis_do_config);
+ 		if (status < 0)
+-			goto fail1;
++			goto fail2;
+ 	}
  
-diff --git a/drivers/usb/chipidea/udc.c b/drivers/usb/chipidea/udc.c
-index 764f668..b7cca3e 100644
---- a/drivers/usb/chipidea/udc.c
-+++ b/drivers/usb/chipidea/udc.c
-@@ -1827,6 +1827,7 @@ static irqreturn_t udc_irq(struct ci_hdrc *ci)
- static int udc_start(struct ci_hdrc *ci)
- {
- 	struct device *dev = ci->dev;
-+	struct usb_otg_caps *otg_caps = &ci->platdata->ci_otg_caps;
- 	int retval = 0;
+ 	status = usb_add_config(cdev, &eth_config_driver, eth_do_config);
+ 	if (status < 0)
+-		goto fail1;
++		goto fail2;
  
- 	spin_lock_init(&ci->lock);
-@@ -1834,8 +1835,12 @@ static int udc_start(struct ci_hdrc *ci)
- 	ci->gadget.ops          = &usb_gadget_ops;
- 	ci->gadget.speed        = USB_SPEED_UNKNOWN;
- 	ci->gadget.max_speed    = USB_SPEED_HIGH;
--	ci->gadget.is_otg       = ci->is_otg ? 1 : 0;
- 	ci->gadget.name         = ci->platdata->name;
-+	ci->gadget.otg_caps	= otg_caps;
+ 	usb_composite_overwrite_options(cdev, &coverwrite);
+ 	dev_info(&gadget->dev, "%s, version: " DRIVER_VERSION "\n",
+@@ -434,6 +432,9 @@ static int eth_bind(struct usb_composite_dev *cdev)
+ 
+ 	return 0;
+ 
++fail2:
++	kfree(otg_desc[0]);
++	otg_desc[0] = NULL;
+ fail1:
+ 	if (has_rndis())
+ 		usb_put_function_instance(fi_rndis);
+@@ -463,6 +464,9 @@ static int eth_unbind(struct usb_composite_dev *cdev)
+ 		usb_put_function(f_geth);
+ 		usb_put_function_instance(fi_geth);
+ 	}
++	kfree(otg_desc[0]);
++	otg_desc[0] = NULL;
 +
-+	if (otg_caps->hnp_support || otg_caps->srp_support ||
-+					otg_caps->adp_support)
-+		ci->gadget.is_otg = 1;
- 
- 	INIT_LIST_HEAD(&ci->gadget.ep_list);
- 
-diff --git a/include/linux/usb/chipidea.h b/include/linux/usb/chipidea.h
-index ab94f78..e10cefc 100644
---- a/include/linux/usb/chipidea.h
-+++ b/include/linux/usb/chipidea.h
-@@ -34,6 +34,7 @@ struct ci_hdrc_platform_data {
- #define CI_HDRC_CONTROLLER_STOPPED_EVENT	1
- 	void	(*notify_event) (struct ci_hdrc *ci, unsigned event);
- 	struct regulator	*reg_vbus;
-+	struct usb_otg_caps	ci_otg_caps;
- 	bool			tpl_support;
- };
+ 	return 0;
+ }
  
 -- 
 1.9.1
