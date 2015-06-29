@@ -1,107 +1,90 @@
 From: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v6 11/23] usb: gadget: configfs: allocate and init otg descriptor by otg capabilities
-Date: Mon, 29 Jun 2015 15:47:50 +0800
-Message-ID: <1435564082-14583-12-git-send-email-jun.li@freescale.com>
+Subject: [PATCH v6 08/23] usb: chipidea: set usb otg capabilities
+Date: Mon, 29 Jun 2015 15:47:47 +0800
+Message-ID: <1435564082-14583-9-git-send-email-jun.li@freescale.com>
 References: <1435564082-14583-1-git-send-email-jun.li@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1435564082-14583-1-git-send-email-jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+d-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org, Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Allocate and initialize usb otg descriptor according to gadget otg
-capabilities, add it for each usb configurations, free it while
-composite unbind. If otg capability is not defined, keep its otg
-descriptor unchanged.
+Init and update otg capabilities by DT, set gadget's otg capabilities
+accordingly.
 
 Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Reviewed-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
 ---
- drivers/usb/gadget/configfs.c | 29 ++++++++++++++++++++---------
- 1 file changed, 20 insertions(+), 9 deletions(-)
+ drivers/usb/chipidea/core.c  | 10 ++++++++++
+ drivers/usb/chipidea/udc.c   |  7 ++++++-
+ include/linux/usb/chipidea.h |  1 +
+ 3 files changed, 17 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/gadget/configfs.c b/drivers/usb/gadget/configfs.c
-index 0495c94..c7b62ef 100644
---- a/drivers/usb/gadget/configfs.c
-+++ b/drivers/usb/gadget/configfs.c
-@@ -41,6 +41,8 @@ int check_user_usb_string(const char *name,
- #define MAX_NAME_LEN	40
- #define MAX_USB_STRING_LANGS 2
- 
-+static const struct usb_descriptor_header *otg_desc[2];
-+
- struct gadget_info {
- 	struct config_group group;
- 	struct config_group functions_group;
-@@ -55,9 +57,6 @@ struct gadget_info {
- 	struct list_head available_func;
- 
- 	const char *udc_name;
--#ifdef CONFIG_USB_OTG
--	struct usb_otg_descriptor otg;
--#endif
- 	struct usb_composite_driver composite;
- 	struct usb_composite_dev cdev;
- 	bool use_os_desc;
-@@ -1376,6 +1375,19 @@ static int configfs_composite_bind(struct usb_gadget *gadget,
- 		memcpy(cdev->qw_sign, gi->qw_sign, OS_STRING_QW_SIGN_LEN);
+diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
+index 74fea4f..248f571 100644
+--- a/drivers/usb/chipidea/core.c
++++ b/drivers/usb/chipidea/core.c
+@@ -588,6 +588,16 @@ static int ci_get_platdata(struct device *dev,
+ 				of_usb_host_tpl_support(dev->of_node);
  	}
  
-+	if (gadget_is_otg(gadget) && !otg_desc[0]) {
-+		struct usb_descriptor_header *usb_desc;
++	if (platdata->dr_mode == USB_DR_MODE_OTG) {
++		/* We can support HNP and SRP of OTG 2.0 */
++		platdata->ci_otg_caps.otg_rev = 0x0200;
++		platdata->ci_otg_caps.hnp_support = true;
++		platdata->ci_otg_caps.srp_support = true;
 +
-+		usb_desc = usb_otg_descriptor_alloc(gadget);
-+		if (!usb_desc) {
-+			ret = -ENOMEM;
-+			goto err_comp_cleanup;
-+		}
-+		usb_otg_descriptor_init(gadget, usb_desc);
-+		otg_desc[0] = usb_desc;
-+		otg_desc[1] = NULL;
++		/* Update otg capabilities by DT properties */
++		of_usb_update_otg_caps(dev->of_node, &platdata->ci_otg_caps);
 +	}
 +
- 	/* Go through all configs, attach all functions */
- 	list_for_each_entry(c, &gi->cdev.configs, list) {
- 		struct config_usb_cfg *cfg;
-@@ -1383,6 +1395,9 @@ static int configfs_composite_bind(struct usb_gadget *gadget,
- 		struct usb_function *tmp;
- 		struct gadget_config_name *cn;
+ 	if (of_usb_get_maximum_speed(dev->of_node) == USB_SPEED_FULL)
+ 		platdata->flags |= CI_HDRC_FORCE_FULLSPEED;
  
-+		if (gadget_is_otg(gadget))
-+			c->descriptors = otg_desc;
+diff --git a/drivers/usb/chipidea/udc.c b/drivers/usb/chipidea/udc.c
+index 764f668..b7cca3e 100644
+--- a/drivers/usb/chipidea/udc.c
++++ b/drivers/usb/chipidea/udc.c
+@@ -1827,6 +1827,7 @@ static irqreturn_t udc_irq(struct ci_hdrc *ci)
+ static int udc_start(struct ci_hdrc *ci)
+ {
+ 	struct device *dev = ci->dev;
++	struct usb_otg_caps *otg_caps = &ci->platdata->ci_otg_caps;
+ 	int retval = 0;
+ 
+ 	spin_lock_init(&ci->lock);
+@@ -1834,8 +1835,12 @@ static int udc_start(struct ci_hdrc *ci)
+ 	ci->gadget.ops          = &usb_gadget_ops;
+ 	ci->gadget.speed        = USB_SPEED_UNKNOWN;
+ 	ci->gadget.max_speed    = USB_SPEED_HIGH;
+-	ci->gadget.is_otg       = ci->is_otg ? 1 : 0;
+ 	ci->gadget.name         = ci->platdata->name;
++	ci->gadget.otg_caps	= otg_caps;
 +
- 		cfg = container_of(c, struct config_usb_cfg, c);
- 		if (!list_empty(&cfg->string_list)) {
- 			i = 0;
-@@ -1437,6 +1452,8 @@ static void configfs_composite_unbind(struct usb_gadget *gadget)
- 	cdev = get_gadget_data(gadget);
- 	gi = container_of(cdev, struct gadget_info, cdev);
++	if (otg_caps->hnp_support || otg_caps->srp_support ||
++					otg_caps->adp_support)
++		ci->gadget.is_otg = 1;
  
-+	kfree(otg_desc[0]);
-+	otg_desc[0] = NULL;
- 	purge_configs_funcs(gi);
- 	composite_dev_cleanup(cdev);
- 	usb_ep_autoconfig_reset(cdev->gadget);
-@@ -1510,12 +1527,6 @@ static struct config_group *gadgets_make(
- 	if (!gi->composite.gadget_driver.function)
- 		goto err;
+ 	INIT_LIST_HEAD(&ci->gadget.ep_list);
  
--#ifdef CONFIG_USB_OTG
--	gi->otg.bLength = sizeof(struct usb_otg_descriptor);
--	gi->otg.bDescriptorType = USB_DT_OTG;
--	gi->otg.bmAttributes = USB_OTG_SRP | USB_OTG_HNP;
--#endif
--
- 	config_group_init_type_name(&gi->group, name,
- 				&gadget_root_type);
- 	return &gi->group;
+diff --git a/include/linux/usb/chipidea.h b/include/linux/usb/chipidea.h
+index ab94f78..e10cefc 100644
+--- a/include/linux/usb/chipidea.h
++++ b/include/linux/usb/chipidea.h
+@@ -34,6 +34,7 @@ struct ci_hdrc_platform_data {
+ #define CI_HDRC_CONTROLLER_STOPPED_EVENT	1
+ 	void	(*notify_event) (struct ci_hdrc *ci, unsigned event);
+ 	struct regulator	*reg_vbus;
++	struct usb_otg_caps	ci_otg_caps;
+ 	bool			tpl_support;
+ };
+ 
 -- 
 1.9.1
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
