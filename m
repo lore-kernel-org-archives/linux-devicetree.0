@@ -1,82 +1,49 @@
-From: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH v4 0/4] arm64:numa: Add numa support for arm64 platforms.
-Date: Mon, 29 Jun 2015 16:27:49 +0530
-Message-ID: <CAFpQJXXZc0sop601wrmTe5Ng0SiSGfT9AA2Dpf=X9bgGN9srrA@mail.gmail.com>
-References: <1421924755-26029-1-git-send-email-gkulkarni@caviumnetworks.com>
+From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH RFC 0/4] PL08x DT bindings and LPC18xx DMA support
+Date: Mon, 29 Jun 2015 13:06:47 +0200
+Message-ID: <CAGhQ9VxXHdPwUR0AWC8SVA9iRV8pazVC1atmrEKzP5dJx81MBw@mail.gmail.com>
+References: <1434280937-8369-1-git-send-email-manabian@gmail.com>
+	<CACRpkdZZBGzioO25-Sov0CVK8JuRp1uuJDEZKFtLxg9WwsSzww@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1421924755-26029-1-git-send-email-gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <CACRpkdZZBGzioO25-Sov0CVK8JuRp1uuJDEZKFtLxg9WwsSzww-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Roy Franz <roy.franz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Steve Capper <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org" <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "ddutile-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <ddutile-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Prasun Kapoor <Prasun.Kapoor-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Catalin, Will, Mark,
+Hi Linus,
 
-can you please have a look of numa patches and share your review comments.
+On 29 June 2015 at 12:53, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Sun, Jun 14, 2015 at 1:22 PM, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>
+>> This patch set aims to add support for DMA on the NXP LPC18xx/43xx
+>> (Cortex-M3/M4) platform. The platform has a PL080 controller with a
+>> mux in front of the DMA request lines. This setup is quite common
+>> and can be found on most other, if not all, NXP LPC devices.
+>
+> Nice!
+>
+>>  - remove channel sub-nodes from driver and dt doc.
+>
+> Why? It was a good approach for the Nomadik. Well I'll look
+> how you do it for NXP, I guess it makes total sense for you.
+
+Since the bus specifier (AHB1 / AHB2) property has been moved into the
+DMA cell, I don't see a reason to keep channel sub-nodes stuff.
+
+And I also agree with Arnd's other comments on the subject here:
+https://www.marc.info/?l=linux-arm-kernel&m=141088461506806&w=2
+(see at the bottom)
+
+Summary:
+* No other driver does this.
+* Removing it make the driver a bit simpler.
 
 
-thanks
-Ganapat
-
-On Thu, Jan 22, 2015 at 4:35 PM, Ganapatrao Kulkarni
-<gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org> wrote:
-> v4:
-> done changes as per Arnd review comments.
->
-> v3:
-> Added changes to support numa on arm64 based platforms.
-> Tested these patches on cavium's multinode(2 node topology) platform.
-> In this patchset, defined and implemented dt bindings for numa mapping
-> for core and memory using device node property arm,associativity.
->
-> v2:
-> Defined and implemented numa map for memory, cores to node and
-> proximity distance matrix of nodes to each other.
->
-> v1:
-> Initial patchset to support numa on arm64 platforms.
->
-> Hi Arnd,
->    there are not many common functions to pull to of driver from
->    powerpc and arm.
->
-> thanks
-> Ganapat
->
-> Ganapatrao Kulkarni (4):
->   arm64: defconfig: increase NR_CPUS range to 2-4096.
->   Documentation: arm64/arm: dt bindings for numa.
->   arm64:thunder: Add initial dts for Cavium's Thunder SoC in 2     Node
->     topology.
->   arm64:numa: adding numa support for arm64 platforms.
->
->  Documentation/devicetree/bindings/arm/numa.txt | 212 +++++++
->  arch/arm64/Kconfig                             |  36 +-
->  arch/arm64/boot/dts/thunder-88xx-2n.dts        |  78 +++
->  arch/arm64/boot/dts/thunder-88xx-2n.dtsi       | 790 +++++++++++++++++++++++++
->  arch/arm64/include/asm/mmzone.h                |  32 +
->  arch/arm64/include/asm/numa.h                  |  43 ++
->  arch/arm64/kernel/Makefile                     |   1 +
->  arch/arm64/kernel/dt_numa.c                    | 302 ++++++++++
->  arch/arm64/kernel/setup.c                      |   8 +
->  arch/arm64/kernel/smp.c                        |   2 +
->  arch/arm64/mm/Makefile                         |   1 +
->  arch/arm64/mm/init.c                           |  34 +-
->  arch/arm64/mm/numa.c                           | 522 ++++++++++++++++
->  13 files changed, 2053 insertions(+), 8 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/numa.txt
->  create mode 100644 arch/arm64/boot/dts/thunder-88xx-2n.dts
->  create mode 100644 arch/arm64/boot/dts/thunder-88xx-2n.dtsi
->  create mode 100644 arch/arm64/include/asm/mmzone.h
->  create mode 100644 arch/arm64/include/asm/numa.h
->  create mode 100644 arch/arm64/kernel/dt_numa.c
->  create mode 100644 arch/arm64/mm/numa.c
->
-> --
-> 1.8.1.4
->
+regards,
+Joachim Eastwood
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
