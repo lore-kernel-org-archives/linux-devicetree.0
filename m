@@ -1,127 +1,45 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH V4 1/2] ARM: dts: sun6i: Add dts file for
- MSI Primo81 tablet
-Date: Sun, 28 Jun 2015 22:25:45 +0200
-Message-ID: <20150628202545.GW2266@lukather>
-References: <20150618115838.GL11732@lukather>
- <1435078949-3383-1-git-send-email-merker@debian.org>
- <1435078949-3383-2-git-send-email-merker@debian.org>
- <20150625104402.GB2266@lukather>
- <20150625172219.GA1773@excalibur.cnev.de>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 2/3] ARM: dts: configure regulators for Gumstix Pepper
+Date: Sun, 28 Jun 2015 23:47:17 -0700
+Message-ID: <20150629064717.GR4156@atomide.com>
+References: <1433441299-18887-1-git-send-email-arun@gumstix.com>
+ <1433441299-18887-3-git-send-email-arun@gumstix.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="jnMVwoCxRq79IEpO"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBS5SYGWAKGQEHLVPJWQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20150625172219.GA1773-Hlt6eto4P0pdWf7zwHaZWbNAH6kLmebB@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Cc: Siarhei Siamashka <siarhei.siamashka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1433441299-18887-3-git-send-email-arun-EiDWdcs9+yZBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arun Bharadwaj <arun-EiDWdcs9+yZBDgjK7y7TUQ@public.gmane.org>
+Cc: =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Adam YH Lee <adam.yh.lee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ash Charles <ashcharles-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---jnMVwoCxRq79IEpO
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
-
-On Thu, Jun 25, 2015 at 07:22:19PM +0200, Karsten Merker wrote:
-> > > +&ehci0 {
-> > > +	/* rtl8188etv wifi is connected here */
-> > 
-> > No need to mention it, it's what discoverable buses are made for.
+* Arun Bharadwaj <arun-EiDWdcs9+yZBDgjK7y7TUQ@public.gmane.org> [150604 11:10]:
+> From: Adam YH Lee <adam.yh.lee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > 
-> Hello Maxime,
-> 
-> using the same reasoning that caused you to ask for a description
-> of the uart0 config (no external connector available, so why is
-> there a uart0 enabled and how is it usable), I think it makes
-> sense to leave this comment in the dts.  The Primo 81 doesn't
-> have any external USB host connectors and the fact that the
-> internal Realtek USB WLAN chip is connected there is the only
-> reason that the EHCI controller gets enabled in the dts at all. 
-> If you really prefer, I'll remove the comment in a V5; in that
-> case please let me know.
+> Boot process is halting in midway because some of the necessary voltage
+> regulators are deemed unused and subsequently powered off, leading to
+> a completely unresponsive system.
 
-Except that you have no way to magically find out where you're
-supposed to get the UART from, while the WiFi module will be magically
-discovered, reported in the logs, without any kind of user
-interaction, and you actually don't even care.
+OK that needs to be fixed for v4.2-rc series.
+ 
+> Most of the device nodes had correct voltage regulator attachments.
+> Yet these nodes had to set stricter enforcement on them through
+> 'regulator-boot-on' and 'regulator-always-on' to function correctly.
 
-> > > +&uart0 {
-> > > +	/* The default uart0 pins (PH20: TX, PH21: RX) are not accessible
-> > > +	 * on an external connector. Possible ways to get physical access
-> > > +	 * to uart0 include:
-> > > +	 * - disabling mmc0, changing the pinmuxing for the SD card pins
-> > > +	 *   to the uart0 function (PF2: TX, PF4: RX) and using an SD card
-> > > +	 *   breakout board
-> > > +	 * - opening the case and finding appropriate test points connected
-> > > +	 *   to PH20 and PH21
-> > > +	 */
-> > 
-> > You already made a choice here, so just document the choice you
-> > made. I'm guessing from what you said that it's the latter, in which
-> > case please document which test points you're talking about.
-> 
-> Upwards in this thread you wrote:
-> > [Karsten Merker wrote]
-> > > I have tagged this patch RFC as I am unsure what to do with the
-> > > /chosen/stdout-path node. For now, I have set Siarhei's original
-> > > choice (first serial port), but I am unsure whether this is the
-> > > right thing to do as the Primo81 does by default not have a
-> > > user-accessible serial port.  The only way to get a serial
-> > > console is to either break the case open and find some test
-> > > points that carry the RX/TX lines (which with the Primo81 case
-> > > poses a high risk of breaking the display glass), or to use an SD
-> > > card breakout board and change the pinmuxing for the SD card pins
-> > > to the "serial" function.  The latter would not work without
-> > > modifying the dts, so the SD-breakout case doesn't really count
-> > > for setting the default stdout-path in the general use case.
-> >
-> > Having that as a comment on top of whatever uart you've been using
-> > would be great, so that people know where to look at on their device
-> > to find it.
-> 
-> Maybe I have misunderstood you, but to my understanding the
-> comment I added represents exactly what you asked me to do above?
+That's a lot of regulators marked as regulator-always-on. Could
+you please update the description what consumers are using them
+so we know why they are all needed always-on?
+ 
+> Signed-off-by: Ash Charles <ashcharles-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Sorry if I haven't been clear enough.
+>From Adam, sent by Arun, signed by Ash? Can you please check
+that too.
 
-> I cannot tell which test points carry the TX/RX lines from PH20
-> and PH21 as I have not opened the case (and to my knowledge
-> nobody else @linunx-sunxi has done that), due to the fact that
-> the Primo 81 doesn't have one of typical cheap two-part plastic
-> cases which can be easily opened without destroying anything, but
-> a one-part aluminum case which fits tightly with the display
-> glass.  To pry open the aluminium case one would have to apply
-> pressure to the glass and I don't want to void my warranty and
-> risk breaking the display while doing that.
->
-> The u-boot and the android kernel that come preinstalled on the
-> tablet use PH20 and PH21 for uart0, so there is an extremely high
-> probability that there are test points on the board that carry
-> these lines, but I cannot tell which ones.
+Regards,
 
-So you enable a device that you have never actually tested, and you
-document a procedure you have never seen to be working? I really hope
-the rest of the DTS is not made that way too.
-
-> So the same question as above: if you really want me to do
-> that, I'll remove the SD card breakout info in a V5 (just tell me
-> so), but I think it makes sense to leave it in the dts.
-
-Don't enable what you haven't tested, or anything that isn't used for
-what it's been intended to. Which means don't put any UART on there.
-
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---jnMVwoCxRq79IEpO--
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
