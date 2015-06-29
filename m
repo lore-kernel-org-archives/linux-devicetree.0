@@ -1,184 +1,184 @@
-From: Irina Tirdea <irina.tirdea@intel.com>
-Subject: [PATCH v3 3/5] Input: goodix - add power management support
-Date: Mon, 29 Jun 2015 19:28:22 +0300
-Message-ID: <1435595304-4840-4-git-send-email-irina.tirdea@intel.com>
-References: <1435595304-4840-1-git-send-email-irina.tirdea@intel.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1435595304-4840-1-git-send-email-irina.tirdea@intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bastien Nocera <hadess@hadess.net>, Mark Rutland <mark.rutland@arm.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Irina Tirdea <irina.tirdea@intel.com>, Octavian Purdila <octavian.purdila@intel.com>
+From: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 0/8] Watchdog: introduce ARM SBSA watchdog driver
+Date: Tue, 30 Jun 2015 00:53:16 +0800
+Message-ID: <CADyBb7vgfFTmqLMMDOjWxwk3B-he2hTYAGpB3diKf47eB=dc=A@mail.gmail.com>
+References: <=fu.wei@linaro.org>
+	<1435068994-13526-1-git-send-email-fu.wei@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1435068994-13526-1-git-send-email-fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Linaro ACPI Mailman List <linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Wei Fu <tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, G Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Vipul Gandhi <vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Leo Duran <leo.duran-5C7GfCeVMHo@public.gmane.org>, Jon Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, panand-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Implement suspend/resume for goodix driver.
+Hi Guenter,
 
-The suspend and resume process uses the gpio pins.
-If the device ACPI/DT information does not declare gpio pins,
-suspend/resume will not be available for these devices.
+Any suggestion on this v6 patchset, for now , I only got :
+(1) delete WCV output:
+diff --git a/drivers/watchdog/sbsa_gwdt.c b/drivers/watchdog/sbsa_gwdt.c
+index 2de5899..c42883b 100644
+--- a/drivers/watchdog/sbsa_gwdt.c
++++ b/drivers/watchdog/sbsa_gwdt.c
+@@ -344,8 +342,7 @@ static int sbsa_gwdt_probe(struct platform_device *pdev)
 
-This is based on Goodix datasheets for GT911 and GT9271
-and on Goodix driver gt9xx.c for Android (publicly available
-in Android kernel trees for various devices).
+        status = readl_relaxed(gwdt->control_base + SBSA_GWDT_WCS);
+        if (status & SBSA_GWDT_WCS_WS1) {
+-               dev_warn(dev, "System reset by WDT(WCV: %llx)\n",
+-                        sbsa_gwdt_get_wcv(wdd));
++               dev_warn(dev, "System reset by WDT.\n");
+                wdd->bootstatus |= WDIOF_CARDRESET;
+        } else if (status == (SBSA_GWDT_WCS_WS0 | SBSA_GWDT_WCS_EN)) {
+                gwdt->ws0_mode = true;
 
-Signed-off-by: Octavian Purdila <octavian.purdila@intel.com>
-Signed-off-by: Irina Tirdea <irina.tirdea@intel.com>
----
- drivers/input/touchscreen/goodix.c | 94 ++++++++++++++++++++++++++++++++++++--
- 1 file changed, 89 insertions(+), 5 deletions(-)
+any question or anything I can improve for this patchset?
 
-diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
-index d2d72c1..a50a1fd 100644
---- a/drivers/input/touchscreen/goodix.c
-+++ b/drivers/input/touchscreen/goodix.c
-@@ -41,6 +41,7 @@ struct goodix_ts_data {
- 	u16 id;
- 	u16 version;
- 	char *cfg_name;
-+	unsigned long irq_flags;
- };
- 
- struct goodix_gpio_data {
-@@ -57,6 +58,9 @@ struct goodix_gpio_data {
- #define GOODIX_CONFIG_MAX_LENGTH	240
- 
- /* Register defines */
-+#define GOODIX_REG_COMMAND		0x8040
-+#define GOODIX_CMD_SCREEN_OFF		0x05
-+
- #define GOODIX_READ_COOR_ADDR		0x814E
- #define GOODIX_REG_CONFIG_DATA		0x8047
- #define GOODIX_REG_ID			0x8140
-@@ -144,6 +148,11 @@ static int goodix_i2c_write(struct i2c_client *client, u16 reg, const u8 *buf,
- 	return ret < 0 ? ret : (ret != 1 ? -EIO : 0);
- }
- 
-+static int goodix_i2c_write_u8(struct i2c_client *client, u16 reg, u8 value)
-+{
-+	return goodix_i2c_write(client, reg, &value, sizeof(value));
-+}
-+
- static int goodix_ts_read_input_report(struct goodix_ts_data *ts, u8 *data)
- {
- 	int touch_num;
-@@ -241,6 +250,18 @@ static irqreturn_t goodix_ts_irq_handler(int irq, void *dev_id)
- 	return IRQ_HANDLED;
- }
- 
-+static void goodix_free_irq(struct goodix_ts_data *ts)
-+{
-+	devm_free_irq(&ts->client->dev, ts->client->irq, ts);
-+}
-+
-+static int goodix_request_irq(struct goodix_ts_data *ts)
-+{
-+	return devm_request_threaded_irq(&ts->client->dev, ts->client->irq,
-+					 NULL, goodix_ts_irq_handler,
-+					 ts->irq_flags, ts->client->name, ts);
-+}
-+
- /**
-  * goodix_check_cfg - Checks if config fw is valid
-  *
-@@ -553,7 +574,6 @@ static int goodix_request_input_dev(struct goodix_ts_data *ts)
- static int goodix_configure_dev(struct goodix_ts_data *ts)
- {
- 	int error;
--	unsigned long irq_flags;
- 
- 	goodix_read_config(ts);
- 
-@@ -561,10 +581,8 @@ static int goodix_configure_dev(struct goodix_ts_data *ts)
- 	if (error)
- 		return error;
- 
--	irq_flags = goodix_irq_flags[ts->int_trigger_type] | IRQF_ONESHOT;
--	error = devm_request_threaded_irq(&ts->client->dev, ts->client->irq,
--					  NULL, goodix_ts_irq_handler,
--					  irq_flags, ts->client->name, ts);
-+	ts->irq_flags = goodix_irq_flags[ts->int_trigger_type] | IRQF_ONESHOT;
-+	error = goodix_request_irq(ts);
- 	if (error) {
- 		dev_err(&ts->client->dev, "request IRQ failed: %d\n", error);
- 		return error;
-@@ -666,6 +684,71 @@ static int goodix_ts_probe(struct i2c_client *client,
- 	return goodix_configure_dev(ts);
- }
- 
-+static int __maybe_unused goodix_suspend(struct device *dev)
-+{
-+	struct i2c_client *client = to_i2c_client(dev);
-+	struct goodix_ts_data *ts = i2c_get_clientdata(client);
-+	int ret;
-+
-+	/* We need gpio pins to suspend/resume */
-+	if (!ts->gpiod_int || !ts->gpiod_rst)
-+		return 0;
-+
-+	/* Free IRQ as IRQ pin is used as output in the suspend sequence */
-+	goodix_free_irq(ts);
-+	/* Output LOW on the INT pin for 5 ms */
-+	ret = gpiod_direction_output(ts->gpiod_int, 0);
-+	if (ret) {
-+		goodix_request_irq(ts);
-+		return ret;
-+	}
-+	usleep_range(5000, 6000);
-+
-+	ret = goodix_i2c_write_u8(ts->client, GOODIX_REG_COMMAND,
-+				  GOODIX_CMD_SCREEN_OFF);
-+	if (ret) {
-+		dev_err(&ts->client->dev, "Screen off command failed\n");
-+		gpiod_direction_input(ts->gpiod_int);
-+		goodix_request_irq(ts);
-+		return -EAGAIN;
-+	}
-+
-+	/*
-+	 * The datasheet specifies that the interval between sending screen-off
-+	 * command and wake-up should be longer than 58 ms. To avoid waking up
-+	 * sooner, delay 58ms here.
-+	 */
-+	msleep(58);
-+	return 0;
-+}
-+
-+static int __maybe_unused goodix_resume(struct device *dev)
-+{
-+	struct i2c_client *client = to_i2c_client(dev);
-+	struct goodix_ts_data *ts = i2c_get_clientdata(client);
-+	int ret;
-+
-+	if (!ts->gpiod_int || !ts->gpiod_rst)
-+		return 0;
-+
-+	/*
-+	 * Exit sleep mode by outputting HIGH level to INT pin
-+	 * for 2ms~5ms.
-+	 */
-+	ret = gpiod_direction_output(ts->gpiod_int, 1);
-+	if (ret)
-+		return ret;
-+	usleep_range(2000, 5000);
-+
-+	ret = goodix_int_sync(ts);
-+	if (ret)
-+		return ret;
-+
-+	return goodix_request_irq(ts);
-+}
-+
-+static SIMPLE_DEV_PM_OPS(goodix_pm_ops, goodix_suspend, goodix_resume);
-+
- static const struct i2c_device_id goodix_ts_id[] = {
- 	{ "GDIX1001:00", (kernel_ulong_t)&goodix_gpio_rst_irq },
- 	{ }
-@@ -701,6 +784,7 @@ static struct i2c_driver goodix_ts_driver = {
- 		.owner = THIS_MODULE,
- 		.acpi_match_table = ACPI_PTR(goodix_acpi_match),
- 		.of_match_table = of_match_ptr(goodix_of_match),
-+		.pm = &goodix_pm_ops,
- 	},
- };
- module_i2c_driver(goodix_ts_driver);
+Great thanks for your help.
+
+
+On 23 June 2015 at 22:16,  <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> From: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>
+> This patchset:
+>     (1)Introduce Documentation/devicetree/bindings/watchdog/sbsa-gwdt.txt
+>     for FDT info of SBSA Generic Watchdog, and give two examples of
+>     adding SBSA Generic Watchdog device node into the dts files:
+>     foundation-v8.dts and amd-seattle-soc.dtsi.
+>
+>     (2)Introduce "pretimeout" into the watchdog framework, and update
+>     Documentation/watchdog/watchdog-kernel-api.txt to introduce:
+>         (1)the new elements in the watchdog_device and watchdog_ops struct;
+>         (2)the new API "watchdog_init_timeouts".
+>
+>     (3)Introduce ARM SBSA watchdog driver:
+>         a.Use linux kernel watchdog framework;
+>         b.Work with FDT on ARM64;
+>         c.Use "pretimeout" in watchdog framework;
+>         d.Support getting timeout and pretimeout from parameter and FDT
+>           at the driver init stage.
+>         e.In the first timeout, do panic to save system context;
+>         f.In the second stage, user can still feed the dog without
+>           cleaning WS0. By this feature, we can avoid the panic infinite
+>           loops, while backing up a large system context in a server.
+>         g.In the second stage, can trigger WS1 by setting pretimeout = 0
+>           if necessary.
+>
+>     (4)Introduce ACPI GTDT parser: drivers/acpi/gtdt.c
+>     Parse SBSA Generic Watchdog Structure in GTDT table of ACPI,
+>     and create a platform device with that information.
+>     This platform device can be used by This Watchdog driver.
+>     drivers/clocksource/arm_arch_timer.c is simplified by this GTDT support.
+>
+> This patchset has been tested with watchdog daemon
+> (ACPI/FDT, module/build-in) on the following platforms:
+>     (1)ARM Foundation v8 model
+>
+> Changelog:
+> v6: Improve the dtb example files: reduce the register frame size to 4K.
+>     Improve pretimeout support:
+>         (1) improve watchdog_init_timeouts function
+>         (2) rename watchdog_check_min_max_timeouts back to the original name
+>         (1) improve watchdog_timeout_invalid/watchdog_pretimeout_invalid
+>     Add the new features in the sbsa_gwdt driver:
+>         (1) In the second stage, user can feed the dog without cleaning WS0.
+>         (2) In the second stage, user can trigger WS1 by setting pretimeout = 0.
+>         (3) expand the max value of pretimeout, in case 10 second is not enough
+>             for a kdump kernel reboot in panic.
+>
+> v5: Improve pretimeout support:
+>         (1)fix typo in documentation and comments.
+>         (2)fix the timeout limits validation bug.
+>     Simplify sbsa_gwdt driver:
+>         (1)integrate all the registers access functions into caller.
+>
+> v4: Refactor GTDT support code: remove it from arch/arm64/kernel/acpi.c,
+>     put it into drivers/acpi/gtdt.c file.
+>     Integrate the GTDT code of drivers/clocksource/arm_arch_timer.c into
+>     drivers/acpi/gtdt.c.
+>     Improve pretimeout support, fix "pretimeout == 0" problem.
+>     Simplify sbsa_gwdt driver:
+>         (1)timeout/pretimeout limits setup;
+>         (2)keepalive function;
+>         (3)delete "clk == 0" check;
+>         (4)delete WS0 status bit check in interrupt routine;
+>         (5)sbsa_gwdt_set_wcv function.
+>
+> v3: Delete "export arch_timer_get_rate" patch.
+>     Driver back to use arch_timer_get_cntfrq.
+>     Improve watchdog_init_timeouts function and update relevant documentation.
+>     Improve watchdog_timeout_invalid and watchdog_pretimeout_invalid.
+>     Improve foundation-v8.dts: delete the unnecessary tag of device node.
+>     Remove "ARM64 || COMPILE_TEST" from Kconfig.
+>     Add comments in arch/arm64/kernel/acpi.c
+>     Fix typoes and incorrect comments.
+>
+> v2: Improve watchdog-kernel-api.txt documentation for pretimeout support.
+>     Export "arch_timer_get_rate" in arm_arch_timer.c.
+>     Add watchdog_init_timeouts API for pretimeout support in framework.
+>     Improve suspend and resume foundation in driver
+>     Improve timeout/pretimeout values init code in driver.
+>     Delete unnecessary items of the sbsa_gwdt struct and #define.
+>     Delete all unnecessary debug info in driver.
+>     Fix 64bit division bug.
+>     Use the arch_timer interface to get watchdog clock rate.
+>     Add MODULE_DEVICE_TABLE for platform device id.
+>     Fix typoes.
+>
+> v1: The first version upstream patchset to linux mailing list.
+>
+> Fu Wei (8):
+>   Documentation: add sbsa-gwdt.txt documentation
+>   ARM64: add SBSA Generic Watchdog device node in foundation-v8.dts
+>   ARM64: add SBSA Generic Watchdog device node in amd-seattle-soc.dtsi
+>   Watchdog: introdouce "pretimeout" into framework
+>   Watchdog: introduce ARM SBSA watchdog driver
+>   ACPI: add GTDT table parse driver into ACPI driver
+>   Watchdog: enable ACPI GTDT support for ARM SBSA watchdog driver
+>   clocksource: simplify ACPI code in arm_arch_timer.c
+>
+>  .../devicetree/bindings/watchdog/sbsa-gwdt.txt     |  36 ++
+>  Documentation/watchdog/watchdog-kernel-api.txt     |  47 ++-
+>  arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi       |  11 +
+>  arch/arm64/boot/dts/arm/foundation-v8.dts          |  10 +
+>  arch/arm64/kernel/time.c                           |   4 +-
+>  drivers/acpi/Kconfig                               |   9 +
+>  drivers/acpi/Makefile                              |   1 +
+>  drivers/acpi/gtdt.c                                | 180 ++++++++
+>  drivers/clocksource/Kconfig                        |   1 +
+>  drivers/clocksource/arm_arch_timer.c               |  60 +--
+>  drivers/watchdog/Kconfig                           |  15 +
+>  drivers/watchdog/Makefile                          |   1 +
+>  drivers/watchdog/sbsa_gwdt.c                       | 455 +++++++++++++++++++++
+>  drivers/watchdog/watchdog_core.c                   |  98 +++--
+>  drivers/watchdog/watchdog_dev.c                    |  53 +++
+>  include/clocksource/arm_arch_timer.h               |   8 +
+>  include/linux/acpi.h                               |   5 +
+>  include/linux/clocksource.h                        |   4 +-
+>  include/linux/watchdog.h                           |  39 +-
+>  19 files changed, 947 insertions(+), 90 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/sbsa-gwdt.txt
+>  create mode 100644 drivers/acpi/gtdt.c
+>  create mode 100644 drivers/watchdog/sbsa_gwdt.c
+>
+> --
+> 1.9.1
+>
+
+
+
 -- 
-1.9.1
+Best regards,
+
+Fu Wei
+Software Engineer
+Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
+Ph: +86 21 61221326(direct)
+Ph: +86 186 2020 4684 (mobile)
+Room 1512, Regus One Corporate Avenue,Level 15,
+One Corporate Avenue,222 Hubin Road,Huangpu District,
+Shanghai,China 200021
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
