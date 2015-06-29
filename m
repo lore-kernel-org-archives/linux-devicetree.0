@@ -1,87 +1,44 @@
-From: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v6 23/23] usb: gadget: zero: allocate and init otg descriptor by otg capabilities
-Date: Mon, 29 Jun 2015 15:48:02 +0800
-Message-ID: <1435564082-14583-24-git-send-email-jun.li@freescale.com>
-References: <1435564082-14583-1-git-send-email-jun.li@freescale.com>
+From: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
+Subject: RE: [PATCH V3 1/4] mfd: da9062: DA9062 MFD core driver
+Date: Mon, 29 Jun 2015 08:01:36 +0000
+Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7014B233463@SW-EX-MBX02.diasemi.com>
+References: <cover.1432041031.git.stwiss.opensource@diasemi.com>
+ <ecf72b79429e6758111a908fd1ded29c0b96da15.1432041031.git.stwiss.opensource@diasemi.com>
+ <20150526161024.GQ11677@x1>
+ <6ED8E3B22081A4459DAC7699F3695FB7014B22F4C4@SW-EX-MBX02.diasemi.com>
+ <20150611085653.GG2982@x1>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1435564082-14583-1-git-send-email-jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+d-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org, Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20150611085653.GG2982@x1>
+Content-Language: en-US
+Sender: linux-input-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: LINUXKERNEL <linux-kernel@vger.kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Alessandro Zummo <a.zummo@towertech.it>, DEVICETREE <devicetree@vger.kernel.org>, David Dajun Chen <david.chen@diasemi.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, LINUXINPUT <linux-input@vger.kernel.org>, LINUXWATCHDOG <linux-watchdog@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, RTCLINUX <rtc-linux@googlegroups.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <Support.Opensource@diasemi.com>, Wim Van Sebroeck <wim@iguana.be>
 List-Id: devicetree@vger.kernel.org
 
-Allocate and initialize usb otg descriptor according to gadget otg
-capabilities, add it for each usb configurations. If otg capability
-is not defined, keep its original otg descriptor unchanged.
-
-Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- drivers/usb/gadget/legacy/zero.c | 32 ++++++++++++++------------------
- 1 file changed, 14 insertions(+), 18 deletions(-)
-
-diff --git a/drivers/usb/gadget/legacy/zero.c b/drivers/usb/gadget/legacy/zero.c
-index c986e8a..695c2cb 100644
---- a/drivers/usb/gadget/legacy/zero.c
-+++ b/drivers/usb/gadget/legacy/zero.c
-@@ -121,24 +121,7 @@ static struct usb_device_descriptor device_desc = {
- 	.bNumConfigurations =	2,
- };
- 
--#ifdef CONFIG_USB_OTG
--static struct usb_otg_descriptor otg_descriptor = {
--	.bLength =		sizeof otg_descriptor,
--	.bDescriptorType =	USB_DT_OTG,
--
--	/* REVISIT SRP-only hardware is possible, although
--	 * it would not be called "OTG" ...
--	 */
--	.bmAttributes =		USB_OTG_SRP | USB_OTG_HNP,
--};
--
--static const struct usb_descriptor_header *otg_desc[] = {
--	(struct usb_descriptor_header *) &otg_descriptor,
--	NULL,
--};
--#else
--#define otg_desc	NULL
--#endif
-+static const struct usb_descriptor_header *otg_desc[2];
- 
- /* string IDs are assigned dynamically */
- /* default serial number takes at least two packets */
-@@ -341,6 +324,16 @@ static int zero_bind(struct usb_composite_dev *cdev)
- 
- 	/* support OTG systems */
- 	if (gadget_is_otg(cdev->gadget)) {
-+		if (!otg_desc[0]) {
-+			struct usb_descriptor_header *usb_desc;
-+
-+			usb_desc = usb_otg_descriptor_alloc(cdev->gadget);
-+			if (!usb_desc)
-+				return -ENOMEM;
-+			usb_otg_descriptor_init(cdev->gadget, usb_desc);
-+			otg_desc[0] = usb_desc;
-+			otg_desc[1] = NULL;
-+		}
- 		sourcesink_driver.descriptors = otg_desc;
- 		sourcesink_driver.bmAttributes |= USB_CONFIG_ATT_WAKEUP;
- 		loopback_driver.descriptors = otg_desc;
-@@ -397,6 +390,9 @@ static int zero_unbind(struct usb_composite_dev *cdev)
- 	if (!IS_ERR_OR_NULL(func_lb))
- 		usb_put_function(func_lb);
- 	usb_put_function_instance(func_inst_lb);
-+	kfree(otg_desc[0]);
-+	otg_desc[0] = NULL;
-+
- 	return 0;
- }
- 
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gMTEgSnVuZSAyMDE1IDA5OjU3LCBMZWUgSm9uZXMgd3JvdGU6DQoNCj4gVG86IE9wZW5zb3Vy
+Y2UgW1N0ZXZlIFR3aXNzXQ0KPiBTdWJqZWN0OiBSZTogW1BBVENIIFYzIDEvNF0gbWZkOiBkYTkw
+NjI6IERBOTA2MiBNRkQgY29yZSBkcml2ZXINCj4gDQo+ID4gPiA+ID4gU3RldmUgVHdpc3Mgd3Jv
+dGU6DQo+ID4gPiA+ID4gKyNkZWZpbmUgREE5MDYyQUFfUEFHRV9TSElGVAkJMA0KPiA+ID4gPiA+
+ICsjZGVmaW5lIERBOTA2MkFBX1BBR0VfTUFTSwkJKDB4M2YgPDwgMCkNCj4gPiA+ID4gPiArI2Rl
+ZmluZSBEQTkwNjJBQV9XUklURV9NT0RFX1NISUZUCTYNCj4gPiA+ID4gPiArI2RlZmluZSBEQTkw
+NjJBQV9XUklURV9NT0RFX01BU0sJKDB4MDEgPDwgNikNCj4gPiA+ID4NCj4gPiA+ID4gTGVlIEpv
+bmVzIHdyb3RlOg0KPiA+ID4gPiBGb3IgMSA8PCBYLCB5b3Ugc2hvdWxkIHVzZSBCSVQoWCkuDQo+
+ID4gPg0KPiA+ID4gU3RldmUgVHdpc3Mgd3JvdGU6DQo+ID4gPiBUaGUgd2hvbGUgb2YgdGhpcyBm
+aWxlIGlzIGF1dG9tYXRpY2FsbHkgZ2VuZXJhdGVkIGJ5IG91ciBoYXJkd2FyZSBkZXNpZ25lcnMN
+Cj4gPiA+IEkgd291bGQgcHJlZmVyIGl0IGlmIHRoZSByZWdpc3RlciBkZWZpbml0aW9ucyBhbmQg
+Yml0IGZpZWxkcyBhcmUgbm90IGFsdGVyZWQgWy4uLl0NCg0KWy4uLl0NCg0KPiBMZWUgSm9uZXMg
+d3JvdGU6DQo+IFRvIGJlIGhvbmVzdCwgaXQncyBwcm9iYWJseSBub3QgYSBibG9ja2VyIGZvciBh
+Y2NlcHRhbmNlLCBidXQgaWYgc29tZW9uZQ0KPiB3cml0ZXMgYSBwYXRjaCBuZXh0IHdlZWsgdG8g
+Y2hhbmdlIGFsbCBvZiB0aGUgKDB4MDEgPDwgWCkgbGluZXMgdG8NCj4gc3RhcnQgdXNpbmcgdGhl
+IEJJVCgpIG1hY3JvLCBJIHdpbGwgYWNjZXB0IGl0LiAgQmV0dGVyIHRvIGluZmx1ZW5jZWQNCj4g
+eW91ciBndXlzIHNvIHlvdSBhcmUgbm90IG92ZXJseSBpbmNvbnZlbmllbmNlZC4NCj4gRldJVywg
+d2hlbiB1cHN0cmVhbWluZyBjb2RlLCB0aGUgZXhjdXNlICJzb21lb25lIGVsc2Ugd3JvdGUgaXQi
+LCBoYXMNCj4gbmV2ZXIgYmVlbiBhIGdvb2Qgb25lIHRvIHVzZSBvbiB0aGUgbGlzdHMuICAgQmVs
+aWV2ZSBtZSwgSSd2ZQ0KPiB0cmllZC4gOykNCg0KSGkgTGVlLA0KDQpEZXBlbmRpbmcgb24geW91
+ciBuZXh0IHN0ZXAgLi4NCkkgY2FuIGVpdGhlciBzZW5kIGEgcGF0Y2ggdG8gdGhpcyBub3cgb3Ig
+d2FpdCB1bnRpbCB5b3UgaGF2ZSByZXZpZXdlZCB0aGUgTUZEDQpjb3JlOiBpZiB0aGVyZSBhcmUg
+YW55IGZ1cnRoZXIgY29tbWVudHMgb24gdGhpcywgSSBjYW4gdXBkYXRlIHRoZSBzdWJtaXNzaW9u
+DQpyZXRyb3NwZWN0aXZlbHkuDQoNClJlZ2FyZHMsDQpTdGV2ZQ0K
