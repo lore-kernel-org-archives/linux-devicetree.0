@@ -1,13 +1,13 @@
 From: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v6 15/23] usb: gadget: cdc2: allocate and init otg descriptor by otg capabilities
-Date: Mon, 29 Jun 2015 15:47:54 +0800
-Message-ID: <1435564082-14583-16-git-send-email-jun.li@freescale.com>
+Subject: [PATCH v6 14/23] usb: gadget: audio: allocate and init otg descriptor by otg capabilities
+Date: Mon, 29 Jun 2015 15:47:53 +0800
+Message-ID: <1435564082-14583-15-git-send-email-jun.li@freescale.com>
 References: <1435564082-14583-1-git-send-email-jun.li@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1435564082-14583-1-git-send-email-jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+d-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org, Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
@@ -18,14 +18,14 @@ is not defined, keep its original otg descriptor unchanged.
 
 Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- drivers/usb/gadget/legacy/cdc2.c | 35 +++++++++++++++++++----------------
- 1 file changed, 19 insertions(+), 16 deletions(-)
+ drivers/usb/gadget/legacy/audio.c | 34 +++++++++++++++++++---------------
+ 1 file changed, 19 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/usb/gadget/legacy/cdc2.c b/drivers/usb/gadget/legacy/cdc2.c
-index afd3e37..ecd8c8d 100644
---- a/drivers/usb/gadget/legacy/cdc2.c
-+++ b/drivers/usb/gadget/legacy/cdc2.c
-@@ -60,21 +60,7 @@ static struct usb_device_descriptor device_desc = {
+diff --git a/drivers/usb/gadget/legacy/audio.c b/drivers/usb/gadget/legacy/audio.c
+index f289caf..51a2380 100644
+--- a/drivers/usb/gadget/legacy/audio.c
++++ b/drivers/usb/gadget/legacy/audio.c
+@@ -150,20 +150,7 @@ static struct usb_device_descriptor device_desc = {
  	.bNumConfigurations =	1,
  };
  
@@ -43,48 +43,44 @@ index afd3e37..ecd8c8d 100644
 -	(struct usb_descriptor_header *) &otg_descriptor,
 -	NULL,
 -};
--
 +static const struct usb_descriptor_header *otg_desc[2];
  
- /* string IDs are assigned dynamically */
- static struct usb_string strings_dev[] = {
-@@ -193,10 +179,21 @@ static int cdc_bind(struct usb_composite_dev *cdev)
+ /*-------------------------------------------------------------------------*/
+ 
+@@ -259,14 +246,28 @@ static int audio_bind(struct usb_composite_dev *cdev)
  	device_desc.iManufacturer = strings_dev[USB_GADGET_MANUFACTURER_IDX].id;
  	device_desc.iProduct = strings_dev[USB_GADGET_PRODUCT_IDX].id;
  
-+	if (gadget_is_otg(gadget) && !otg_desc[0]) {
++	if (gadget_is_otg(cdev->gadget) && !otg_desc[0]) {
 +		struct usb_descriptor_header *usb_desc;
 +
-+		usb_desc = usb_otg_descriptor_alloc(gadget);
++		usb_desc = usb_otg_descriptor_alloc(cdev->gadget);
 +		if (!usb_desc)
-+			goto fail1;
-+		usb_otg_descriptor_init(gadget, usb_desc);
++			goto fail;
++		usb_otg_descriptor_init(cdev->gadget, usb_desc);
 +		otg_desc[0] = usb_desc;
 +		otg_desc[1] = NULL;
 +	}
 +
- 	/* register our configuration */
- 	status = usb_add_config(cdev, &cdc_config_driver, cdc_do_config);
+ 	status = usb_add_config(cdev, &audio_config_driver, audio_do_config);
  	if (status < 0)
--		goto fail1;
-+		goto fail2;
- 
+-		goto fail;
++		goto fail_otg_desc;
  	usb_composite_overwrite_options(cdev, &coverwrite);
- 	dev_info(&gadget->dev, "%s, version: " DRIVER_VERSION "\n",
-@@ -204,6 +201,9 @@ static int cdc_bind(struct usb_composite_dev *cdev)
  
+ 	INFO(cdev, "%s, version: %s\n", DRIVER_DESC, DRIVER_VERSION);
  	return 0;
  
-+fail2:
++fail_otg_desc:
 +	kfree(otg_desc[0]);
 +	otg_desc[0] = NULL;
- fail1:
- 	usb_put_function_instance(fi_serial);
  fail:
-@@ -219,6 +219,9 @@ static int cdc_unbind(struct usb_composite_dev *cdev)
- 		usb_put_function(f_ecm);
- 	if (!IS_ERR_OR_NULL(fi_ecm))
- 		usb_put_function_instance(fi_ecm);
+ #ifndef CONFIG_GADGET_UAC1
+ 	usb_put_function_instance(fi_uac2);
+@@ -289,6 +290,9 @@ static int audio_unbind(struct usb_composite_dev *cdev)
+ 	if (!IS_ERR_OR_NULL(fi_uac2))
+ 		usb_put_function_instance(fi_uac2);
+ #endif
 +	kfree(otg_desc[0]);
 +	otg_desc[0] = NULL;
 +
@@ -95,6 +91,6 @@ index afd3e37..ecd8c8d 100644
 1.9.1
 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
