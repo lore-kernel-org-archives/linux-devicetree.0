@@ -1,184 +1,235 @@
-From: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 0/8] Watchdog: introduce ARM SBSA watchdog driver
-Date: Tue, 30 Jun 2015 00:53:16 +0800
-Message-ID: <CADyBb7vgfFTmqLMMDOjWxwk3B-he2hTYAGpB3diKf47eB=dc=A@mail.gmail.com>
-References: <=fu.wei@linaro.org>
-	<1435068994-13526-1-git-send-email-fu.wei@linaro.org>
+From: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: FW: [PATCH v4 1/4] Broadcom Bluetooth UART Device Tree bindings
+Date: Mon, 29 Jun 2015 20:36:19 +0200
+Message-ID: <55919023.200@broadcom.com>
+References: <1434576658-20730-1-git-send-email-ifaenson@broadcom.com> <1434576658-20730-2-git-send-email-ifaenson@broadcom.com> <E0D3336E15B58B4294723AC879BA5E942634F2@IRVEXCHMB15.corp.ad.broadcom.com> <CAL_JsqK9kup3sm3qgDLqtT8ajrN1ee6zfXwOoZqoq9cXQNwE_w@mail.gmail.com> <E0D3336E15B58B4294723AC879BA5E94263E58@IRVEXCHMB15.corp.ad.broadcom.com> <CAL_JsqJAUTjNehtr_Af93k71mdSREb9pLMoSyDTm1S42VkA2sQ@mail.gmail.com> <E0D3336E15B58B4294723AC879BA5E942640A3@IRVEXCHMB15.corp.ad.broadcom.com> <CAL_JsqJKyj8sDwG82jb_CzXEDBN8aznR7eF5yTOiWruW8o3cng@mail.gmail.com> <55844C1E.8020301@broadcom.com> <CAL_JsqLr7JZ9=i2XuWR0_FZDyxpDRwDS5dkSpzjKA-8V=-mpOw@mail.gmail.com> <55846B7D.1060601@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1435068994-13526-1-git-send-email-fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Linaro ACPI Mailman List <linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Wei Fu <tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, G Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Vipul Gandhi <vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Leo Duran <leo.duran-5C7GfCeVMHo@public.gmane.org>, Jon Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, panand-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55846B7D.1060601-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Ilya Faenson <ifaenson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org" <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Guenter,
+On 06/19/15 21:20, Arend van Spriel wrote:
+> On 06/19/15 20:49, Rob Herring wrote:
+>> On Fri, Jun 19, 2015 at 12:06 PM, Arend van Spriel<arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> wrote:
+>>> On 06/19/15 17:47, Rob Herring wrote:
+>>>>
+>>>> On Thu, Jun 18, 2015 at 3:37 PM, Ilya Faenson<ifaenson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>>> wrote:
+>>>>>
+>>>>> Hi Rob.
+>>>>>
+>>>>> -----Original Message-----
+>>>>> From: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>>>> [mailto:linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org] On Behalf Of Rob
+>>>>> Herring
+>>>>> Sent: Thursday, June 18, 2015 3:41 PM
+>>>>> To: Ilya Faenson
+>>>>> Cc: marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org; Arend Van Spriel; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+>>>>> linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>>>> Subject: Re: FW: [PATCH v4 1/4] Broadcom Bluetooth UART Device Tree
+>>>>> bindings
+>>>>>
+>>>>> On Thu, Jun 18, 2015 at 1:54 PM, Ilya Faenson<ifaenson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>>>> wrote:
+>>>>>>
+>>>>>> Hi Rob,
+>>>>>
+>>>>>
+>>>>> Your emails are base64 encoded. They should be plain text for the
+>>>>> list.
+>>>>>
+>>>>> IF: The Outlook is configured to respond in the sender's format. I
+>>>>> therefore respond in the encoding you've used.
+>>>>
+>>>>
+>>>> I assure you that that is not the case or I would be banished from
+>>>> lists by now. Outlook is generally incapable of correctly sending
+>>>> mails to lists. The reply header above is one aspect of that. The
+>>>> other problem is your replies don't get wrapped and prefixed properly.
+>>>> That could be my client I guess, but *all* other mails are fine.
+>>>>
+>>>> My sent mails have:
+>>>>
+>>>> Content-Type: text/plain; charset=UTF-8
+>>>> Content-Transfer-Encoding: quoted-printable
+>>>>
+>>>>
+>>>>>> -----Original Message-----
+>>>>>> From: Rob Herring [mailto:robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org]
+>>>>>> Sent: Thursday, June 18, 2015 11:03 AM
+>>>>>> To: Ilya Faenson
+>>>>>> Cc: marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org; Arend Van Spriel;
+>>>>>> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+>>>>>> linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>>>>> Subject: Re: FW: [PATCH v4 1/4] Broadcom Bluetooth UART Device Tree
+>>>>>> bindings
+>>>>>>
+>>>>>> On Wed, Jun 17, 2015 at 6:11 PM, Ilya Faenson<ifaenson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>>>>> wrote:
+>>>>>>>
+>>>>>>> + devicetree lists
+>>>>>
+>>>>>
+>>>>> [...]
+>>>>>
+>>>>>>> diff --git
+>>>>>>> a/Documentation/devicetree/bindings/net/bluetooth/btbcm.txt
+>>>>>>> b/Documentation/devicetree/bindings/net/bluetooth/btbcm.txt
+>>>>>>> new file mode 100644
+>>>>>>> index 0000000..5dbcd57
+>>>>>>> --- /dev/null
+>>>>>>> +++ b/Documentation/devicetree/bindings/net/bluetooth/btbcm.txt
+>>>>>>> @@ -0,0 +1,86 @@
+>>>>>>> +btbcm
+>>>>>>> +------
+>>>>>>> +
+>>>>>>> +Required properties:
+>>>>>>> +
+>>>>>>> + - compatible : must be "brcm,brcm-bt-uart".
+>>>>>>
+>>>>>>
+>>>>>> You need to describe the chip, not the interface.
+>>>>>>
+>>>>>> IF: This driver is for all Broadcom Bluetooth UART based chips.
+>>>>>
+>>>>>
+>>>>> BT only chips? Most/many Broadcom chips are combo chips. I understand
+>>>>> the driver for BT is *mostly* separate from other chip functions like
+>>>>> WiFi, GPS and NFC, but the h/w is a single chip. I say most because
+>>>>> likely there are some parts shared: a voltage rail, reset line, or
+>>>>> power down line. I think some can do BT over the SDIO interface too,
+>>>>> so the interface may be shared. The DT is a description of the h/w
+>>>>> (i.e. what part # for a chip) and not a driver data structure. You
+>>>>> need to describe the whole chip in the binding. It is a Linux problem
+>>>>> if there needs to be multiple separate drivers.
+>>>>>
+>>>>> IF: Defining complete DT description for the Broadcom combo chips for
+>>>>> multiple interfaces is well beyond the scope of what I am doing. I
+>>>>> just need
+>>>>> to define a DT node for the input and output GPIOs connected to the
+>>>>> BT UART
+>>>>> chip. BT may or may not be part of the combo chip: it does not
+>>>>> really matter
+>>>>> for this exercise. I thought I would take this opportunity to place
+>>>>> some BT
+>>>>> device parameters into that node as well. If you're not comfortable
+>>>>> with
+>>>>> this, I could just call it a "GPIO set" to avoid mentioning BT and
+>>>>> UART at
+>>>>> all but it would make little sense. Still, I could consider it.
+>>>>> Would you
+>>>>> have "GPIO set" recommendations? Alternatively, NFC Marvell code
+>>>>> you're
+>>>>> referring to has parameters configured as Linux module parameters.
+>>>>> I could
+>>>>> do the same too, avoiding this device tree discussion. Let me know.
+>>>>>
+>>>>
+>>>> I don't completely follow what you mean by "GPIO set", but I'm
+>>>> guessing that is not the right path.
+>>>>
+>>>>> Generally speaking (pontification hat on :-)), what you're trying
+>>>>> to do
+>>>>> (description of the whole chip) is well beyond what say ACPI has
+>>>>> done (I was
+>>>>> involved some in the BT ACPI exercise a few years ago). BT UART
+>>>>> interface is
+>>>>> described in ACPI independently of other parts of the same combo chip.
+>>>>> Requirements like that slow down the DT development in my opinion as
+>>>>> companies are understandably reluctant to work with unrealistic
+>>>>> goals. End
+>>>>> of pontification. :-)
+>>>>>
+>>>>
+>>>> ACPI and DT are very different models in terms of abstraction and
+>>>> governance. I'm not going to hash through all the details.
+>>>>
+>>>> I'm not necessarily saying we have to have a single node, but that is
+>>>> my default position. You have convince me that the functions are
+>>>> completely independent and I cannot judge that if you are completely
+>>>> ignoring the WiFi part. From Broadcom chips I've worked with, the
+>>>> supplies at least are shared (something ACPI does not expose). Perhaps
+>>>> we could fudge that and just require the same supply has to be
+>>>> connected to each half. I still worry there could be other internal
+>>>> inter-dependencies. Perhaps BT requires the SDIO clock to be active or
+>>>> something like that. Maybe not on Broadcom chips, but on other vendors
+>>>> and I have to care about them all.
+>>>
+>>>
+>>> All Broadcom combo chips that I know of have separate supplies, ie.
+>>> wl-reg-on and bt-reg-on. There already is a binding present for the wifi
+>>
+>> GPIOs are not supplies. For the module I'm working with (43340 based)
+>> there is a single VDDIO and VBAT supplies which are shared. Now
+>> whether the module or the chip are tying things together, I don't
+>> know. There is also a 32kHz clock input. Is that part of WiFi or BT?
+>
+> True and I see where you are going here. The 32kHz clock is input for
+> low-power oscillator in the chip. That LPO provides clock for the
+> interconnect in the chip so it is not part of wifi nor bt.
 
-Any suggestion on this v6 patchset, for now , I only got :
-(1) delete WCV output:
-diff --git a/drivers/watchdog/sbsa_gwdt.c b/drivers/watchdog/sbsa_gwdt.c
-index 2de5899..c42883b 100644
---- a/drivers/watchdog/sbsa_gwdt.c
-+++ b/drivers/watchdog/sbsa_gwdt.c
-@@ -344,8 +342,7 @@ static int sbsa_gwdt_probe(struct platform_device *pdev)
+Hi Rob,
 
-        status = readl_relaxed(gwdt->control_base + SBSA_GWDT_WCS);
-        if (status & SBSA_GWDT_WCS_WS1) {
--               dev_warn(dev, "System reset by WDT(WCV: %llx)\n",
--                        sbsa_gwdt_get_wcv(wdd));
-+               dev_warn(dev, "System reset by WDT.\n");
-                wdd->bootstatus |= WDIOF_CARDRESET;
-        } else if (status == (SBSA_GWDT_WCS_WS0 | SBSA_GWDT_WCS_EN)) {
-                gwdt->ws0_mode = true;
+Haven't seen much follow up so how to move forward here. We could go for 
+a devicetree node covering all functional entities on the device. 
+However, we are making the chipset and users more often as not end up 
+with a module that some manufacturer cooked up. So whether signals are 
+optional or not is hard to say for us. Making them optional by default 
+seems safest.
 
-any question or anything I can improve for this patchset?
+So could something like below work? Just wanted to know your opinion 
+before moving in that direction.
 
-Great thanks for your help.
+bcm43341: {
+	compatible: 'brcm,bcm43340';
+	brcm,lpo-clock: <&32khz_clk>;
+	:
+	brcm_wifi: {
+		compatible: "brcm,bcm4329-fmac";
+		wifi-port: <&mmc3>;
+		:
+	}
+	brcm_bt: {
+		compatible: "brcm,bcm43xx-bt-uart";
+		bt-port: <&uart1>;
+		:
+	}
+	brcm_nfc: {
+		compatible: "brcm,bcm43340-nfc";
+		nfc-port: <&uart2>;
+		:
+	}
+}
 
+Regards,
+Arend
 
-On 23 June 2015 at 22:16,  <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> From: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>> part. Not extending that may seem ignorant, but as wifi and bt can
+>>> have a
+>>> separate interface to the host (admittedly they could share SDIO
+>>> interface,
+>>> but they would be exposed as a separate SDIO function) I did not see a
+>>> reason to object against a separate binding for BT. Whether wifi and
+>>> bt are
+>>> on the same device does not seem like something that must be
+>>> expressed in
+>>> DT. The physical state may help in determining DT bindings, but it
+>>> should
+>>> not be mandatory in my opinion.
+>>
+>> We don't need it in DT until we do. Soon as there is some some
+>> interdependence, something in DT will be needed.
 >
-> This patchset:
->     (1)Introduce Documentation/devicetree/bindings/watchdog/sbsa-gwdt.txt
->     for FDT info of SBSA Generic Watchdog, and give two examples of
->     adding SBSA Generic Watchdog device node into the dts files:
->     foundation-v8.dts and amd-seattle-soc.dtsi.
+> Agree.
 >
->     (2)Introduce "pretimeout" into the watchdog framework, and update
->     Documentation/watchdog/watchdog-kernel-api.txt to introduce:
->         (1)the new elements in the watchdog_device and watchdog_ops struct;
->         (2)the new API "watchdog_init_timeouts".
->
->     (3)Introduce ARM SBSA watchdog driver:
->         a.Use linux kernel watchdog framework;
->         b.Work with FDT on ARM64;
->         c.Use "pretimeout" in watchdog framework;
->         d.Support getting timeout and pretimeout from parameter and FDT
->           at the driver init stage.
->         e.In the first timeout, do panic to save system context;
->         f.In the second stage, user can still feed the dog without
->           cleaning WS0. By this feature, we can avoid the panic infinite
->           loops, while backing up a large system context in a server.
->         g.In the second stage, can trigger WS1 by setting pretimeout = 0
->           if necessary.
->
->     (4)Introduce ACPI GTDT parser: drivers/acpi/gtdt.c
->     Parse SBSA Generic Watchdog Structure in GTDT table of ACPI,
->     and create a platform device with that information.
->     This platform device can be used by This Watchdog driver.
->     drivers/clocksource/arm_arch_timer.c is simplified by this GTDT support.
->
-> This patchset has been tested with watchdog daemon
-> (ACPI/FDT, module/build-in) on the following platforms:
->     (1)ARM Foundation v8 model
->
-> Changelog:
-> v6: Improve the dtb example files: reduce the register frame size to 4K.
->     Improve pretimeout support:
->         (1) improve watchdog_init_timeouts function
->         (2) rename watchdog_check_min_max_timeouts back to the original name
->         (1) improve watchdog_timeout_invalid/watchdog_pretimeout_invalid
->     Add the new features in the sbsa_gwdt driver:
->         (1) In the second stage, user can feed the dog without cleaning WS0.
->         (2) In the second stage, user can trigger WS1 by setting pretimeout = 0.
->         (3) expand the max value of pretimeout, in case 10 second is not enough
->             for a kdump kernel reboot in panic.
->
-> v5: Improve pretimeout support:
->         (1)fix typo in documentation and comments.
->         (2)fix the timeout limits validation bug.
->     Simplify sbsa_gwdt driver:
->         (1)integrate all the registers access functions into caller.
->
-> v4: Refactor GTDT support code: remove it from arch/arm64/kernel/acpi.c,
->     put it into drivers/acpi/gtdt.c file.
->     Integrate the GTDT code of drivers/clocksource/arm_arch_timer.c into
->     drivers/acpi/gtdt.c.
->     Improve pretimeout support, fix "pretimeout == 0" problem.
->     Simplify sbsa_gwdt driver:
->         (1)timeout/pretimeout limits setup;
->         (2)keepalive function;
->         (3)delete "clk == 0" check;
->         (4)delete WS0 status bit check in interrupt routine;
->         (5)sbsa_gwdt_set_wcv function.
->
-> v3: Delete "export arch_timer_get_rate" patch.
->     Driver back to use arch_timer_get_cntfrq.
->     Improve watchdog_init_timeouts function and update relevant documentation.
->     Improve watchdog_timeout_invalid and watchdog_pretimeout_invalid.
->     Improve foundation-v8.dts: delete the unnecessary tag of device node.
->     Remove "ARM64 || COMPILE_TEST" from Kconfig.
->     Add comments in arch/arm64/kernel/acpi.c
->     Fix typoes and incorrect comments.
->
-> v2: Improve watchdog-kernel-api.txt documentation for pretimeout support.
->     Export "arch_timer_get_rate" in arm_arch_timer.c.
->     Add watchdog_init_timeouts API for pretimeout support in framework.
->     Improve suspend and resume foundation in driver
->     Improve timeout/pretimeout values init code in driver.
->     Delete unnecessary items of the sbsa_gwdt struct and #define.
->     Delete all unnecessary debug info in driver.
->     Fix 64bit division bug.
->     Use the arch_timer interface to get watchdog clock rate.
->     Add MODULE_DEVICE_TABLE for platform device id.
->     Fix typoes.
->
-> v1: The first version upstream patchset to linux mailing list.
->
-> Fu Wei (8):
->   Documentation: add sbsa-gwdt.txt documentation
->   ARM64: add SBSA Generic Watchdog device node in foundation-v8.dts
->   ARM64: add SBSA Generic Watchdog device node in amd-seattle-soc.dtsi
->   Watchdog: introdouce "pretimeout" into framework
->   Watchdog: introduce ARM SBSA watchdog driver
->   ACPI: add GTDT table parse driver into ACPI driver
->   Watchdog: enable ACPI GTDT support for ARM SBSA watchdog driver
->   clocksource: simplify ACPI code in arm_arch_timer.c
->
->  .../devicetree/bindings/watchdog/sbsa-gwdt.txt     |  36 ++
->  Documentation/watchdog/watchdog-kernel-api.txt     |  47 ++-
->  arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi       |  11 +
->  arch/arm64/boot/dts/arm/foundation-v8.dts          |  10 +
->  arch/arm64/kernel/time.c                           |   4 +-
->  drivers/acpi/Kconfig                               |   9 +
->  drivers/acpi/Makefile                              |   1 +
->  drivers/acpi/gtdt.c                                | 180 ++++++++
->  drivers/clocksource/Kconfig                        |   1 +
->  drivers/clocksource/arm_arch_timer.c               |  60 +--
->  drivers/watchdog/Kconfig                           |  15 +
->  drivers/watchdog/Makefile                          |   1 +
->  drivers/watchdog/sbsa_gwdt.c                       | 455 +++++++++++++++++++++
->  drivers/watchdog/watchdog_core.c                   |  98 +++--
->  drivers/watchdog/watchdog_dev.c                    |  53 +++
->  include/clocksource/arm_arch_timer.h               |   8 +
->  include/linux/acpi.h                               |   5 +
->  include/linux/clocksource.h                        |   4 +-
->  include/linux/watchdog.h                           |  39 +-
->  19 files changed, 947 insertions(+), 90 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/watchdog/sbsa-gwdt.txt
->  create mode 100644 drivers/acpi/gtdt.c
->  create mode 100644 drivers/watchdog/sbsa_gwdt.c
->
+> Regards,
+> Arend
 > --
-> 1.9.1
->
-
-
-
--- 
-Best regards,
-
-Fu Wei
-Software Engineer
-Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
-Ph: +86 21 61221326(direct)
-Ph: +86 186 2020 4684 (mobile)
-Room 1512, Regus One Corporate Avenue,Level 15,
-One Corporate Avenue,222 Hubin Road,Huangpu District,
-Shanghai,China 200021
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> To unsubscribe from this list: send the line "unsubscribe
+> linux-bluetooth" in
