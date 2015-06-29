@@ -1,7 +1,7 @@
 From: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v6 20/23] usb: gadget: ncm: allocate and init otg descriptor by otg capabilities
-Date: Mon, 29 Jun 2015 15:47:59 +0800
-Message-ID: <1435564082-14583-21-git-send-email-jun.li@freescale.com>
+Subject: [PATCH v6 22/23] usb: gadget: serial: allocate and init otg descriptor by otg capabilities
+Date: Mon, 29 Jun 2015 15:48:01 +0800
+Message-ID: <1435564082-14583-23-git-send-email-jun.li@freescale.com>
 References: <1435564082-14583-1-git-send-email-jun.li@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -18,14 +18,14 @@ is not defined, keep its original otg descriptor unchanged.
 
 Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- drivers/usb/gadget/legacy/ncm.c | 34 +++++++++++++++++++---------------
- 1 file changed, 19 insertions(+), 15 deletions(-)
+ drivers/usb/gadget/legacy/serial.c | 29 +++++++++++++++--------------
+ 1 file changed, 15 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/usb/gadget/legacy/ncm.c b/drivers/usb/gadget/legacy/ncm.c
-index 6ce7421..2bae438 100644
---- a/drivers/usb/gadget/legacy/ncm.c
-+++ b/drivers/usb/gadget/legacy/ncm.c
-@@ -69,20 +69,7 @@ static struct usb_device_descriptor device_desc = {
+diff --git a/drivers/usb/gadget/legacy/serial.c b/drivers/usb/gadget/legacy/serial.c
+index 8b7528f..d1cd025 100644
+--- a/drivers/usb/gadget/legacy/serial.c
++++ b/drivers/usb/gadget/legacy/serial.c
+@@ -79,20 +79,7 @@ static struct usb_device_descriptor device_desc = {
  	.bNumConfigurations =	1,
  };
  
@@ -45,44 +45,30 @@ index 6ce7421..2bae438 100644
 -};
 +static const struct usb_descriptor_header *otg_desc[2];
  
- /* string IDs are assigned dynamically */
- static struct usb_string strings_dev[] = {
-@@ -171,16 +158,30 @@ static int gncm_bind(struct usb_composite_dev *cdev)
- 	device_desc.iManufacturer = strings_dev[USB_GADGET_MANUFACTURER_IDX].id;
- 	device_desc.iProduct = strings_dev[USB_GADGET_PRODUCT_IDX].id;
+ /*-------------------------------------------------------------------------*/
  
-+	if (gadget_is_otg(gadget) && !otg_desc[0]) {
-+		struct usb_descriptor_header *usb_desc;
+@@ -191,6 +178,16 @@ static int gs_bind(struct usb_composite_dev *cdev)
+ 	serial_config_driver.iConfiguration = status;
+ 
+ 	if (gadget_is_otg(cdev->gadget)) {
++		if (!otg_desc[0]) {
++			struct usb_descriptor_header *usb_desc;
 +
-+		usb_desc = usb_otg_descriptor_alloc(gadget);
-+		if (!usb_desc)
-+			goto fail;
-+		usb_otg_descriptor_init(gadget, usb_desc);
-+		otg_desc[0] = usb_desc;
-+		otg_desc[1] = NULL;
-+	}
++			usb_desc = usb_otg_descriptor_alloc(cdev->gadget);
++			if (!usb_desc)
++				return -ENOMEM;
++			usb_otg_descriptor_init(cdev->gadget, usb_desc);
++			otg_desc[0] = usb_desc;
++			otg_desc[1] = NULL;
++		}
+ 		serial_config_driver.descriptors = otg_desc;
+ 		serial_config_driver.bmAttributes |= USB_CONFIG_ATT_WAKEUP;
+ 	}
+@@ -227,6 +224,10 @@ static int gs_unbind(struct usb_composite_dev *cdev)
+ 		usb_put_function(f_serial[i]);
+ 		usb_put_function_instance(fi_serial[i]);
+ 	}
 +
- 	status = usb_add_config(cdev, &ncm_config_driver,
- 				ncm_do_config);
- 	if (status < 0)
--		goto fail;
-+		goto fail1;
- 
- 	usb_composite_overwrite_options(cdev, &coverwrite);
- 	dev_info(&gadget->dev, "%s\n", DRIVER_DESC);
- 
- 	return 0;
- 
-+fail1:
-+	kfree(otg_desc[0]);
-+	otg_desc[0] = NULL;
- fail:
- 	usb_put_function_instance(f_ncm_inst);
- 	return status;
-@@ -192,6 +193,9 @@ static int gncm_unbind(struct usb_composite_dev *cdev)
- 		usb_put_function(f_ncm);
- 	if (!IS_ERR_OR_NULL(f_ncm_inst))
- 		usb_put_function_instance(f_ncm_inst);
 +	kfree(otg_desc[0]);
 +	otg_desc[0] = NULL;
 +
