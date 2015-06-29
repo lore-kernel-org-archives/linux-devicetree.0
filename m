@@ -1,721 +1,315 @@
-From: Leilk Liu <leilk.liu@mediatek.com>
-Subject: [PATCH v2 3/4] spi: mediatek: Add spi bus for Mediatek MT8173
-Date: Mon, 29 Jun 2015 21:04:29 +0800
-Message-ID: <1435583070-9600-4-git-send-email-leilk.liu@mediatek.com>
-References: <1435583070-9600-1-git-send-email-leilk.liu@mediatek.com>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH linux-next v2 3/4] tty/serial: at91: add support to FIFOs
+Date: Mon, 29 Jun 2015 15:11:18 +0200
+Message-ID: <559143F6.7070409@atmel.com>
+References: <cover.1434038494.git.cyrille.pitchen@atmel.com> <e9b7445f103969a286d586054d79461a6efacd65.1434038494.git.cyrille.pitchen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1435583070-9600-1-git-send-email-leilk.liu@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org, linux-mediatek@lists.infradead.org, Leilk Liu <leilk.liu@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <e9b7445f103969a286d586054d79461a6efacd65.1434038494.git.cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, leilei.zhao-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds basic spi bus for MT8173.
+Le 11/06/2015 18:20, Cyrille Pitchen a =E9crit :
+> Depending on the hardware, TX and RX FIFOs may be available. The RX
+> FIFO can avoid receive overruns, especially when DMA transfers are
+> not used to read data from the Receive Holding Register. For heavy
+> system load, The CPU is likely not be able to fetch data fast enough
+> from the RHR.
+>=20
+> In addition, the RX FIFO can supersede the DMA/PDC to control the RTS
+> line when the Hardware Handshaking mode is enabled. Two thresholds
+> are to be set for that purpose:
+> - When the number of data in the RX FIFO crosses and becomes lower
+>   than or equal to the low threshold, the RTS line is set to low
+>   level: the remote peer is requested to send data.
+> - When the number of data in the RX FIFO crosses and becomes greater
+>   than or equal to the high threshold, the RTS line is set to high
+>   level: the remote peer should stop sending new data.
+> - low threshold <=3D high threshold
+> Once these two thresholds are set properly, this new feature is
+> enabled by setting the FIFO RTS Control bit of the FIFO Mode Register=
+=2E
+>=20
+> FIFOs also introduce a new multiple data mode: the USART works either
+> in multiple data mode or in single data (legacy) mode.
+>=20
+> If MODE9 bit is set into the Mode Register or if USMODE is set to
+> either LIN_MASTER, LIN_SLAVE or LON_MODE, FIFOs operate in single
+> data mode. Otherwise, they operate in multiple data mode.
+>=20
+> In this new multiple data mode, accesses to the Receive Holding
+> Register or Transmit Holding Register slightly change.
+>=20
+> Since this driver implements neither the 9bit data feature (MODE9 bit
+> set into the Mode Register) nor LIN modes, the USART works in
+> multiple data mode whenever FIFOs are available and enabled. We also
+> assume that data are 8bit wide.
+>=20
+> In single data mode, 32bit access CAN be used to read a single data
+> from RHR or write a single data into THR.
+> However in multiple data mode, a 32bit access to RHR now allows us to
+> read four consecutive data from RX FIFO. Also a 32bit access to THR
+> now allows to write four consecutive data into TX FIFO. So we MUST
+> use 8bit access whenever only one data have to be read/written at a
+> time.
+>=20
+> Signed-off-by: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> ---
+>  drivers/tty/serial/atmel_serial.c | 79 +++++++++++++++++++++++++++++=
++++++++++-
+>  include/linux/atmel_serial.h      | 36 ++++++++++++++++++
+>  2 files changed, 113 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/tty/serial/atmel_serial.c b/drivers/tty/serial/a=
+tmel_serial.c
+> index 112e74b..6767570 100644
+> --- a/drivers/tty/serial/atmel_serial.c
+> +++ b/drivers/tty/serial/atmel_serial.c
+> @@ -96,8 +96,8 @@ static void atmel_stop_rx(struct uart_port *port);
+>  #define UART_PUT_IDR(port, v)  __raw_writel(v, (port)->membase + ATM=
+EL_US_IDR)
+>  #define UART_GET_IMR(port)     __raw_readl((port)->membase + ATMEL_U=
+S_IMR)
+>  #define UART_GET_CSR(port)     __raw_readl((port)->membase + ATMEL_U=
+S_CSR)
+> -#define UART_GET_CHAR(port)    __raw_readl((port)->membase + ATMEL_U=
+S_RHR)
+> -#define UART_PUT_CHAR(port, v) __raw_writel(v, (port)->membase + ATM=
+EL_US_THR)
+> +#define UART_GET_CHAR(port)    __raw_readb((port)->membase + ATMEL_U=
+S_RHR)
+> +#define UART_PUT_CHAR(port, v) __raw_writeb(v, (port)->membase + ATM=
+EL_US_THR)
+>  #define UART_GET_BRGR(port)    __raw_readl((port)->membase + ATMEL_U=
+S_BRGR)
+>  #define UART_PUT_BRGR(port, v) __raw_writel(v, (port)->membase + ATM=
+EL_US_BRGR)
+>  #define UART_PUT_RTOR(port, v) __raw_writel(v, (port)->membase + ATM=
+EL_US_RTOR)
+> @@ -119,6 +119,16 @@ static void atmel_stop_rx(struct uart_port *port=
+);
+>  #define UART_PUT_TCR(port, v)  __raw_writel(v, (port)->membase + ATM=
+EL_PDC_TCR)
+>  #define UART_GET_TCR(port)     __raw_readl((port)->membase + ATMEL_P=
+DC_TCR)
+> =20
+> +/* FIFO registers */
+> +#define UART_PUT_FMR(port, v)  __raw_writel(v, (port)->membase + ATM=
+EL_US_FMR)
+> +#define UART_GET_FMR(port)     __raw_readl((port)->membase + ATMEL_U=
+S_FMR)
+> +#define UART_GET_FESR(port)    __raw_readl((port)->membase + ATMEL_U=
+S_FESR)
+> +#define UART_PUT_FIER(port, v) __raw_writel(v, (port)->membase + ATM=
+EL_US_FIER)
+> +#define UART_PUT_FIDR(port, v) __raw_writel(v, (port)->membase + ATM=
+EL_US_FIDR)
+> +#define UART_GET_FIMR(port)    __raw_readl((port)->membase + ATMEL_U=
+S_FIMR)
+> +#define UART_GET_FLR(port)     __raw_readl((port)->membase + ATMEL_U=
+S_FLR)
+> +
+> +
+>  struct atmel_dma_buffer {
+>  	unsigned char	*buf;
+>  	dma_addr_t	dma_addr;
+> @@ -172,6 +182,9 @@ struct atmel_uart_port {
+>  	struct mctrl_gpios	*gpios;
+>  	int			gpio_irq[UART_GPIO_MAX];
+>  	unsigned int		tx_done_mask;
+> +	u32			fifo_size;
+> +	u32			rts_high;
+> +	u32			rts_low;
+>  	bool			ms_irq_enabled;
+>  	bool			is_usart;	/* usart or uart */
+>  	struct timer_list	uart_timer;	/* uart timer */
+> @@ -1797,6 +1810,29 @@ static int atmel_startup(struct uart_port *por=
+t)
+>  			atmel_set_ops(port);
+>  	}
+> =20
+> +	/*
+> +	 * Enable FIFO when available
+> +	 */
+> +	if (atmel_port->fifo_size) {
+> +		unsigned int txrdym =3D ATMEL_US_ONE_DATA;
+> +		unsigned int rxrdym =3D ATMEL_US_ONE_DATA;
+> +		unsigned int fmr;
+> +
+> +		UART_PUT_CR(port,
+> +			    ATMEL_US_FIFOEN |
+> +			    ATMEL_US_RXFCLR |
+> +			    ATMEL_US_TXFLCLR);
+> +
+> +		fmr =3D ATMEL_US_TXRDYM(txrdym) | ATMEL_US_RXRDYM(rxrdym);
 
-Signed-off-by: Leilk Liu <leilk.liu@mediatek.com>
-Signed-off-by: Eddie Huang <eddie.huang@mediatek.com>
----
- drivers/spi/Kconfig      |   9 +
- drivers/spi/Makefile     |   1 +
- drivers/spi/spi-mt65xx.c | 656 +++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 666 insertions(+)
- create mode 100644 drivers/spi/spi-mt65xx.c
+If above is the only place where we use txrdym and rxrdym, why not use
+directly the defined constants here?
 
-diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
-index 198f96b..06f9514 100644
---- a/drivers/spi/Kconfig
-+++ b/drivers/spi/Kconfig
-@@ -324,6 +324,15 @@ config SPI_MESON_SPIFC
- 	  This enables master mode support for the SPIFC (SPI flash
- 	  controller) available in Amlogic Meson SoCs.
- 
-+config SPI_MT65XX
-+	tristate "MediaTek SPI controller"
-+	depends on ARCH_MEDIATEK || COMPILE_TEST
-+	help
-+	  This selects the MediaTek(R) SPI bus driver.
-+	  If you want to use MediaTek(R) SPI interface,
-+	  say Y or M here.If you are not sure, say N.
-+	  SPI drivers for Mediatek mt65XX series ARM SoCs.
-+
- config SPI_OC_TINY
- 	tristate "OpenCores tiny SPI"
- 	depends on GPIOLIB
-diff --git a/drivers/spi/Makefile b/drivers/spi/Makefile
-index d8cbf65..ab332ef 100644
---- a/drivers/spi/Makefile
-+++ b/drivers/spi/Makefile
-@@ -48,6 +48,7 @@ obj-$(CONFIG_SPI_MESON_SPIFC)		+= spi-meson-spifc.o
- obj-$(CONFIG_SPI_MPC512x_PSC)		+= spi-mpc512x-psc.o
- obj-$(CONFIG_SPI_MPC52xx_PSC)		+= spi-mpc52xx-psc.o
- obj-$(CONFIG_SPI_MPC52xx)		+= spi-mpc52xx.o
-+obj-$(CONFIG_SPI_MT65XX)                += spi-mt65xx.o
- obj-$(CONFIG_SPI_MXS)			+= spi-mxs.o
- obj-$(CONFIG_SPI_NUC900)		+= spi-nuc900.o
- obj-$(CONFIG_SPI_OC_TINY)		+= spi-oc-tiny.o
-diff --git a/drivers/spi/spi-mt65xx.c b/drivers/spi/spi-mt65xx.c
-new file mode 100644
-index 0000000..6cb54587
---- /dev/null
-+++ b/drivers/spi/spi-mt65xx.c
-@@ -0,0 +1,656 @@
-+/*
-+ * Copyright (c) 2015 MediaTek Inc.
-+ * Author: Leilk Liu <leilk.liu@mediatek.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/init.h>
-+#include <linux/module.h>
-+#include <linux/device.h>
-+#include <linux/ioport.h>
-+#include <linux/errno.h>
-+#include <linux/spi/spi.h>
-+#include <linux/workqueue.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/platform_device.h>
-+#include <linux/interrupt.h>
-+#include <linux/irqreturn.h>
-+#include <linux/types.h>
-+#include <linux/delay.h>
-+#include <linux/clk.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/sched.h>
-+#include <linux/of.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_address.h>
-+#include <linux/of_gpio.h>
-+#include <linux/kernel.h>
-+#include <linux/gpio.h>
-+#include <linux/module.h>
-+#include <linux/pm_runtime.h>
-+
-+#define SPI_CFG0_REG                      0x0000
-+#define SPI_CFG1_REG                      0x0004
-+#define SPI_TX_SRC_REG                    0x0008
-+#define SPI_RX_DST_REG                    0x000c
-+#define SPI_CMD_REG                       0x0018
-+#define SPI_STATUS0_REG                   0x001c
-+#define SPI_PAD_SEL_REG                   0x0024
-+
-+#define SPI_CFG0_SCK_HIGH_OFFSET          0
-+#define SPI_CFG0_SCK_LOW_OFFSET           8
-+#define SPI_CFG0_CS_HOLD_OFFSET           16
-+#define SPI_CFG0_CS_SETUP_OFFSET          24
-+
-+#define SPI_CFG0_SCK_HIGH_MASK            0xff
-+#define SPI_CFG0_SCK_LOW_MASK             0xff00
-+#define SPI_CFG0_CS_HOLD_MASK             0xff0000
-+#define SPI_CFG0_CS_SETUP_MASK            0xff000000
-+
-+#define SPI_CFG1_CS_IDLE_OFFSET           0
-+#define SPI_CFG1_PACKET_LOOP_OFFSET       8
-+#define SPI_CFG1_PACKET_LENGTH_OFFSET     16
-+#define SPI_CFG1_GET_TICK_DLY_OFFSET      30
-+
-+#define SPI_CFG1_CS_IDLE_MASK             0xff
-+#define SPI_CFG1_PACKET_LOOP_MASK         0xff00
-+#define SPI_CFG1_PACKET_LENGTH_MASK       0x3ff0000
-+#define SPI_CFG1_GET_TICK_DLY_MASK        0xc0000000
-+
-+#define SPI_CMD_ACT_OFFSET                0
-+#define SPI_CMD_RESUME_OFFSET             1
-+#define SPI_CMD_RST_OFFSET                2
-+#define SPI_CMD_PAUSE_EN_OFFSET           4
-+#define SPI_CMD_DEASSERT_OFFSET           5
-+#define SPI_CMD_CPHA_OFFSET               8
-+#define SPI_CMD_CPOL_OFFSET               9
-+#define SPI_CMD_RX_DMA_OFFSET             10
-+#define SPI_CMD_TX_DMA_OFFSET             11
-+#define SPI_CMD_TXMSBF_OFFSET             12
-+#define SPI_CMD_RXMSBF_OFFSET             13
-+#define SPI_CMD_RX_ENDIAN_OFFSET          14
-+#define SPI_CMD_TX_ENDIAN_OFFSET          15
-+#define SPI_CMD_FINISH_IE_OFFSET          16
-+#define SPI_CMD_PAUSE_IE_OFFSET           17
-+
-+#define SPI_CMD_RST_MASK                  0x4
-+#define SPI_CMD_PAUSE_EN_MASK             0x10
-+#define SPI_CMD_DEASSERT_MASK             0x20
-+#define SPI_CMD_CPHA_MASK                 0x100
-+#define SPI_CMD_CPOL_MASK                 0x200
-+#define SPI_CMD_RX_DMA_MASK               0x400
-+#define SPI_CMD_TX_DMA_MASK               0x800
-+#define SPI_CMD_TXMSBF_MASK               0x1000
-+#define SPI_CMD_RXMSBF_MASK               0x2000
-+#define SPI_CMD_RX_ENDIAN_MASK            0x4000
-+#define SPI_CMD_TX_ENDIAN_MASK            0x8000
-+#define SPI_CMD_FINISH_IE_MASK            0x10000
-+
-+#define COMPAT_MT6589			(0x1 << 0)
-+#define COMPAT_MT8135			(0x1 << 1)
-+#define COMPAT_MT8173			(0x1 << 2)
-+
-+#define MT8173_MAX_PAD_SEL 3
-+
-+#define MTK_SPI_IDLE 0
-+#define MTK_SPI_INPROGRESS 1
-+#define MTK_SPI_PAUSED 2
-+
-+#define MTK_SPI_PACKET_SIZE 1024
-+#define MTK_SPI_MAX_PACKET_LOOP 256
-+
-+struct mtk_chip_config {
-+	u32 setuptime;
-+	u32 holdtime;
-+	u32 high_time;
-+	u32 low_time;
-+	u32 cs_idletime;
-+	u32 tx_mlsb;
-+	u32 rx_mlsb;
-+	u32 tx_endian;
-+	u32 rx_endian;
-+	u32 pause;
-+	u32 finish_intr;
-+	u32 deassert;
-+	u32 tckdly;
-+};
-+
-+struct mtk_spi_ddata {
-+	struct device *dev;
-+	struct spi_master *master;
-+	void __iomem *base;
-+	u32 irq;
-+	u32 state;
-+	u32 platform_compat;
-+	u32 pad_sel;
-+	struct clk *clk;
-+
-+	const u8 *tx_buf;
-+	u8 *rx_buf;
-+	u32 tx_len, rx_len;
-+	struct completion done;
-+};
-+
-+/*
-+ * A piece of default chip info unless the platform
-+ * supplies it.
-+ */
-+static const struct mtk_chip_config mtk_default_chip_info = {
-+	.setuptime = 6,
-+	.holdtime = 6,
-+	.high_time = 3,
-+	.low_time = 3,
-+	.cs_idletime = 6,
-+	.rx_mlsb = 1,
-+	.tx_mlsb = 1,
-+	.tx_endian = 0,
-+	.rx_endian = 0,
-+	.pause = 0,
-+	.finish_intr = 1,
-+	.deassert = 0,
-+	.tckdly = 0,
-+};
-+
-+static const struct of_device_id mtk_spi_of_match[] = {
-+	{ .compatible = "mediatek,mt6589-spi", .data = (void *)COMPAT_MT6589},
-+	{ .compatible = "mediatek,mt8135-spi", .data = (void *)COMPAT_MT8135},
-+	{ .compatible = "mediatek,mt8173-spi", .data = (void *)COMPAT_MT8173},
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, mtk_spi_of_match);
-+
-+static void mtk_spi_reset(struct mtk_spi_ddata *mdata)
-+{
-+	u32 reg_val;
-+
-+	/* set the software reset bit in SPI_CMD_REG. */
-+	reg_val = readl(mdata->base + SPI_CMD_REG);
-+	reg_val &= ~SPI_CMD_RST_MASK;
-+	reg_val |= 1 << SPI_CMD_RST_OFFSET;
-+	writel(reg_val, mdata->base + SPI_CMD_REG);
-+	reg_val = readl(mdata->base + SPI_CMD_REG);
-+	reg_val &= ~SPI_CMD_RST_MASK;
-+	writel(reg_val, mdata->base + SPI_CMD_REG);
-+}
-+
-+static int mtk_spi_config(struct mtk_spi_ddata *mdata,
-+			  struct mtk_chip_config *chip_config)
-+{
-+	u32 reg_val;
-+
-+	/* set the timing */
-+	reg_val = readl(mdata->base + SPI_CFG0_REG);
-+	reg_val &= ~(SPI_CFG0_SCK_HIGH_MASK | SPI_CFG0_SCK_LOW_MASK);
-+	reg_val &= ~(SPI_CFG0_CS_HOLD_MASK | SPI_CFG0_CS_SETUP_MASK);
-+	reg_val |= ((chip_config->high_time - 1) << SPI_CFG0_SCK_HIGH_OFFSET);
-+	reg_val |= ((chip_config->low_time - 1) << SPI_CFG0_SCK_LOW_OFFSET);
-+	reg_val |= ((chip_config->holdtime - 1) << SPI_CFG0_CS_HOLD_OFFSET);
-+	reg_val |= ((chip_config->setuptime - 1) << SPI_CFG0_CS_SETUP_OFFSET);
-+	writel(reg_val, mdata->base + SPI_CFG0_REG);
-+
-+	reg_val = readl(mdata->base + SPI_CFG1_REG);
-+	reg_val &= ~SPI_CFG1_CS_IDLE_MASK;
-+	reg_val |= ((chip_config->cs_idletime - 1) << SPI_CFG1_CS_IDLE_OFFSET);
-+	reg_val &= ~SPI_CFG1_GET_TICK_DLY_MASK;
-+	reg_val |= ((chip_config->tckdly) << SPI_CFG1_GET_TICK_DLY_OFFSET);
-+	writel(reg_val, mdata->base + SPI_CFG1_REG);
-+
-+	/* set the mlsbx and mlsbtx */
-+	reg_val = readl(mdata->base + SPI_CMD_REG);
-+	reg_val &= ~(SPI_CMD_TX_ENDIAN_MASK | SPI_CMD_RX_ENDIAN_MASK);
-+	reg_val &= ~(SPI_CMD_TXMSBF_MASK | SPI_CMD_RXMSBF_MASK);
-+	reg_val |= (chip_config->tx_mlsb << SPI_CMD_TXMSBF_OFFSET);
-+	reg_val |= (chip_config->rx_mlsb << SPI_CMD_RXMSBF_OFFSET);
-+	reg_val |= (chip_config->tx_endian << SPI_CMD_TX_ENDIAN_OFFSET);
-+	reg_val |= (chip_config->rx_endian << SPI_CMD_RX_ENDIAN_OFFSET);
-+	writel(reg_val, mdata->base + SPI_CMD_REG);
-+
-+	/* set finish and pause interrupt always enable */
-+	reg_val = readl(mdata->base + SPI_CMD_REG);
-+	reg_val &= ~SPI_CMD_FINISH_IE_MASK;
-+	reg_val |= (chip_config->finish_intr << SPI_CMD_FINISH_IE_OFFSET);
-+	writel(reg_val, mdata->base + SPI_CMD_REG);
-+
-+	reg_val = readl(mdata->base + SPI_CMD_REG);
-+	reg_val |= 1 << SPI_CMD_TX_DMA_OFFSET;
-+	reg_val |= 1 << SPI_CMD_RX_DMA_OFFSET;
-+	writel(reg_val, mdata->base + SPI_CMD_REG);
-+
-+	/* set deassert mode */
-+	reg_val = readl(mdata->base + SPI_CMD_REG);
-+	reg_val &= ~SPI_CMD_DEASSERT_MASK;
-+	reg_val |= (chip_config->deassert << SPI_CMD_DEASSERT_OFFSET);
-+	writel(reg_val, mdata->base + SPI_CMD_REG);
-+
-+	/* pad select */
-+	if (mdata->platform_compat & COMPAT_MT8173)
-+		writel(mdata->pad_sel, mdata->base + SPI_PAD_SEL_REG);
-+
-+	return 0;
-+}
-+
-+static int mtk_spi_prepare_message(struct spi_master *master,
-+				   struct spi_message *msg)
-+{
-+	u32 reg_val;
-+	u8 cpha, cpol;
-+	struct spi_transfer *trans;
-+	struct mtk_chip_config *chip_config;
-+	struct spi_device *spi = msg->spi;
-+	struct mtk_spi_ddata *mdata = spi_master_get_devdata(master);
-+
-+	if (spi->mode & SPI_CPHA)
-+		cpha = 1;
-+	else
-+		cpha = 0;
-+
-+	if (spi->mode & SPI_CPOL)
-+		cpol = 1;
-+	else
-+		cpol = 0;
-+
-+	reg_val = readl(mdata->base + SPI_CMD_REG);
-+	reg_val &= ~(SPI_CMD_CPHA_MASK | SPI_CMD_CPOL_MASK);
-+	reg_val |= (cpha << SPI_CMD_CPHA_OFFSET);
-+	reg_val |= (cpol << SPI_CMD_CPOL_OFFSET);
-+	writel(reg_val, mdata->base + SPI_CMD_REG);
-+
-+	chip_config = (struct mtk_chip_config *)spi->controller_data;
-+	if (!chip_config) {
-+		chip_config = (void *)&mtk_default_chip_info;
-+		spi->controller_data = chip_config;
-+	}
-+
-+	trans = list_first_entry(&msg->transfers, struct spi_transfer,
-+				 transfer_list);
-+	if (trans->cs_change == 0) {
-+		mdata->state = MTK_SPI_IDLE;
-+		mtk_spi_reset(mdata);
-+	}
-+
-+	mtk_spi_config(mdata, chip_config);
-+
-+	return 0;
-+}
-+
-+static void mtk_spi_set_cs(struct spi_device *spi, bool enable)
-+{
-+	u32 reg_val;
-+	struct mtk_spi_ddata *mdata = spi_master_get_devdata(spi->master);
-+
-+	reg_val = readl(mdata->base + SPI_CMD_REG);
-+	if (!enable)
-+		reg_val |= 1 << SPI_CMD_PAUSE_EN_OFFSET;
-+	else
-+		reg_val &= ~SPI_CMD_PAUSE_EN_MASK;
-+	writel(reg_val, mdata->base + SPI_CMD_REG);
-+}
-+
-+static int mtk_spi_setup_packet(struct mtk_spi_ddata *mdata,
-+				struct spi_transfer *xfer)
-+{
-+	u32 packet_size, packet_loop, reg_val;
-+
-+	packet_size = min_t(unsigned, xfer->len, MTK_SPI_PACKET_SIZE);
-+
-+	/* mtk hw has the restriction that xfer len must be a multiple of 1024,
-+	 * when it is greater than 1024bytes.
-+	 */
-+	if (xfer->len % packet_size) {
-+		dev_err(mdata->dev, "ERROR!The lens must be a multiple of %d, your len %d\n",
-+			MTK_SPI_PACKET_SIZE, xfer->len);
-+		return -EINVAL;
-+	}
-+
-+	packet_loop = xfer->len / packet_size;
-+	if (packet_loop > MTK_SPI_MAX_PACKET_LOOP) {
-+		dev_err(mdata->dev, "packet_loop(%d) error\n", packet_loop);
-+		return -EINVAL;
-+	}
-+
-+	reg_val = readl(mdata->base + SPI_CFG1_REG);
-+	reg_val &= ~(SPI_CFG1_PACKET_LENGTH_MASK + SPI_CFG1_PACKET_LOOP_MASK);
-+	reg_val |= (packet_size - 1) << SPI_CFG1_PACKET_LENGTH_OFFSET;
-+	reg_val |= (packet_loop - 1) << SPI_CFG1_PACKET_LOOP_OFFSET;
-+	writel(reg_val, mdata->base + SPI_CFG1_REG);
-+
-+	return 0;
-+}
-+
-+static int mtk_spi_transfer_one(struct spi_master *master,
-+				struct spi_device *spi,
-+				struct spi_transfer *xfer)
-+{
-+	int cmd = 0, ret = 0;
-+	unsigned int tx_sgl_len = 0, rx_sgl_len = 0;
-+	struct scatterlist *tx_sgl = NULL, *rx_sgl = NULL;
-+	struct mtk_spi_ddata *mdata = spi_master_get_devdata(master);
-+
-+	/* Here is mt8173 HW issue: RX must enable TX, then TX transfer
-+	 * dummy data; TX don't need to enable RX. so enable TX dma for
-+	 * RX to workaround.
-+	 */
-+	cmd = readl(mdata->base + SPI_CMD_REG);
-+	if (xfer->tx_buf || (mdata->platform_compat & COMPAT_MT8173))
-+		cmd |= 1 << SPI_CMD_TX_DMA_OFFSET;
-+	if (xfer->rx_buf)
-+		cmd |= 1 << SPI_CMD_RX_DMA_OFFSET;
-+	writel(cmd, mdata->base + SPI_CMD_REG);
-+
-+	if (xfer->tx_buf)
-+		tx_sgl = xfer->tx_sg.sgl;
-+	if (xfer->rx_buf)
-+		rx_sgl = xfer->rx_sg.sgl;
-+
-+	while (rx_sgl || tx_sgl) {
-+		if (tx_sgl && (tx_sgl_len == 0)) {
-+			xfer->tx_dma = sg_dma_address(tx_sgl);
-+			tx_sgl_len = sg_dma_len(tx_sgl);
-+		}
-+		if (rx_sgl && (rx_sgl_len == 0)) {
-+			xfer->rx_dma = sg_dma_address(rx_sgl);
-+			rx_sgl_len = sg_dma_len(rx_sgl);
-+		}
-+
-+		if (tx_sgl && rx_sgl)
-+			xfer->len = min_t(unsigned int, tx_sgl_len, rx_sgl_len);
-+		else
-+			xfer->len = max_t(unsigned int, tx_sgl_len, rx_sgl_len);
-+
-+		ret = mtk_spi_setup_packet(mdata, xfer);
-+		if (ret != 0)
-+			return ret;
-+
-+		/* set up the DMA bus address */
-+		writel(cpu_to_le32(xfer->tx_dma), mdata->base + SPI_TX_SRC_REG);
-+		writel(cpu_to_le32(xfer->rx_dma), mdata->base + SPI_RX_DST_REG);
-+
-+		/* trigger to transfer */
-+		if (mdata->state == MTK_SPI_IDLE) {
-+			cmd = readl(mdata->base + SPI_CMD_REG);
-+			cmd |= 1 << SPI_CMD_ACT_OFFSET;
-+			writel(cmd, mdata->base + SPI_CMD_REG);
-+		} else if (mdata->state == MTK_SPI_PAUSED) {
-+			cmd = readl(mdata->base + SPI_CMD_REG);
-+			cmd |= 1 << SPI_CMD_RESUME_OFFSET;
-+			writel(cmd, mdata->base + SPI_CMD_REG);
-+		} else {
-+			mdata->state = MTK_SPI_INPROGRESS;
-+		}
-+
-+		wait_for_completion(&mdata->done);
-+
-+		if (tx_sgl && rx_sgl) {
-+			if (tx_sgl_len > rx_sgl_len) {
-+				xfer->tx_dma += rx_sgl_len;
-+				tx_sgl_len -= rx_sgl_len;
-+				rx_sgl_len = 0;
-+				rx_sgl = sg_next(rx_sgl);
-+				continue;
-+			} else if (tx_sgl_len < rx_sgl_len) {
-+				xfer->rx_dma += tx_sgl_len;
-+				rx_sgl_len -= tx_sgl_len;
-+				tx_sgl_len = 0;
-+				tx_sgl = sg_next(tx_sgl);
-+				continue;
-+			}
-+		}
-+
-+		rx_sgl_len = 0;
-+		tx_sgl_len = 0;
-+
-+		if (rx_sgl)
-+			rx_sgl = sg_next(rx_sgl);
-+		if (tx_sgl)
-+			tx_sgl = sg_next(tx_sgl);
-+	}
-+
-+	/* spi disable dma */
-+	cmd = readl(mdata->base + SPI_CMD_REG);
-+	cmd &= ~SPI_CMD_TX_DMA_MASK;
-+	cmd &= ~SPI_CMD_RX_DMA_MASK;
-+	writel(cmd, mdata->base + SPI_CMD_REG);
-+
-+	return ret;
-+}
-+
-+static bool mtk_spi_can_dma(struct spi_master *master,
-+			    struct spi_device *spi,
-+			    struct spi_transfer *xfer)
-+{
-+	return true;
-+}
-+
-+static irqreturn_t mtk_spi_interrupt(int irq, void *dev_id)
-+{
-+	struct mtk_spi_ddata *mdata = dev_id;
-+	u32 reg_val;
-+
-+	reg_val = readl(mdata->base + SPI_STATUS0_REG);
-+	if (reg_val & 0x2)
-+		mdata->state = MTK_SPI_PAUSED;
-+	else
-+		mdata->state = MTK_SPI_IDLE;
-+
-+	complete(&mdata->done);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int mtk_spi_probe(struct platform_device *pdev)
-+{
-+	struct spi_master *master;
-+	struct mtk_spi_ddata *mdata;
-+	const struct of_device_id *of_id;
-+	struct resource *res;
-+	int	ret;
-+
-+	master = spi_alloc_master(&pdev->dev, sizeof(struct mtk_spi_ddata));
-+	if (!master) {
-+		dev_err(&pdev->dev, "failed to alloc spi master\n");
-+		return -ENOMEM;
-+	}
-+
-+	pm_runtime_set_active(&pdev->dev);
-+	pm_runtime_enable(&pdev->dev);
-+
-+	master->auto_runtime_pm = true;
-+	master->dev.of_node = pdev->dev.of_node;
-+	master->bus_num = pdev->id;
-+	master->num_chipselect = 1;
-+	master->mode_bits = SPI_CPOL | SPI_CPHA;
-+
-+	mdata = spi_master_get_devdata(master);
-+	memset(mdata, 0, sizeof(struct mtk_spi_ddata));
-+
-+	mdata->master = master;
-+	mdata->dev = &pdev->dev;
-+
-+	master->set_cs = mtk_spi_set_cs;
-+	master->prepare_message = mtk_spi_prepare_message;
-+	master->transfer_one = mtk_spi_transfer_one;
-+	master->can_dma = mtk_spi_can_dma;
-+
-+	of_id = of_match_node(mtk_spi_of_match, pdev->dev.of_node);
-+	if (!of_id) {
-+		dev_err(&pdev->dev, "failed to probe of_node\n");
-+		ret = -EINVAL;
-+		goto err;
-+	}
-+
-+	mdata->platform_compat = (unsigned long)of_id->data;
-+
-+	if (mdata->platform_compat & COMPAT_MT8173) {
-+		ret = of_property_read_u32(pdev->dev.of_node, "pad-select",
-+					   &mdata->pad_sel);
-+		if (ret) {
-+			dev_err(&pdev->dev, "failed to read pad select: %d\n",
-+				ret);
-+			goto err;
-+		}
-+
-+		if (mdata->pad_sel > MT8173_MAX_PAD_SEL) {
-+			dev_err(&pdev->dev, "wrong pad-select: %u\n",
-+				mdata->pad_sel);
-+			ret = -EINVAL;
-+			goto err;
-+		}
-+	}
-+
-+	platform_set_drvdata(pdev, master);
-+	init_completion(&mdata->done);
-+
-+	mdata->clk = devm_clk_get(&pdev->dev, "main");
-+	if (IS_ERR(mdata->clk)) {
-+		ret = PTR_ERR(mdata->clk);
-+		dev_err(&pdev->dev, "failed to get clock: %d\n", ret);
-+		goto err;
-+	}
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!res) {
-+		ret = -ENODEV;
-+		dev_err(&pdev->dev, "failed to determine base address\n");
-+		goto err;
-+	}
-+
-+	mdata->base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(mdata->base)) {
-+		ret = PTR_ERR(mdata->base);
-+		goto err;
-+	}
-+
-+	ret = platform_get_irq(pdev, 0);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "failed to get irq (%d)\n", ret);
-+		goto err;
-+	}
-+
-+	mdata->irq = ret;
-+
-+	if (!pdev->dev.dma_mask)
-+		pdev->dev.dma_mask = &pdev->dev.coherent_dma_mask;
-+
-+	ret = clk_prepare_enable(mdata->clk);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "failed to enable clock (%d)\n", ret);
-+		goto err;
-+	}
-+
-+	ret = devm_request_irq(&pdev->dev, mdata->irq, mtk_spi_interrupt,
-+			       IRQF_TRIGGER_NONE, dev_name(&pdev->dev), mdata);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to register irq (%d)\n", ret);
-+		goto err_disable_clk;
-+	}
-+
-+	ret = devm_spi_register_master(&pdev->dev, master);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to register master (%d)\n", ret);
-+err_disable_clk:
-+		clk_disable_unprepare(mdata->clk);
-+err:
-+		spi_master_put(master);
-+	}
-+
-+	return ret;
-+}
-+
-+static int mtk_spi_remove(struct platform_device *pdev)
-+{
-+	struct spi_master *master = platform_get_drvdata(pdev);
-+	struct mtk_spi_ddata *mdata = spi_master_get_devdata(master);
-+
-+	pm_runtime_disable(&pdev->dev);
-+
-+	mtk_spi_reset(mdata);
-+	clk_disable_unprepare(mdata->clk);
-+	spi_master_put(master);
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_PM_SLEEP
-+static int mtk_spi_suspend(struct device *dev)
-+{
-+	int ret = 0;
-+	struct spi_master *master = dev_get_drvdata(dev);
-+	struct mtk_spi_ddata *mdata = spi_master_get_devdata(master);
-+
-+	ret = spi_master_suspend(master);
-+	if (ret)
-+		return ret;
-+
-+	if (!pm_runtime_suspended(dev))
-+		clk_disable_unprepare(mdata->clk);
-+
-+	return ret;
-+}
-+
-+static int mtk_spi_resume(struct device *dev)
-+{
-+	int ret = 0;
-+	struct spi_master *master = dev_get_drvdata(dev);
-+	struct mtk_spi_ddata *mdata = spi_master_get_devdata(master);
-+
-+	if (!pm_runtime_suspended(dev)) {
-+		ret = clk_prepare_enable(mdata->clk);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	return spi_master_resume(master);
-+}
-+#endif /* CONFIG_PM_SLEEP */
-+
-+#ifdef CONFIG_PM
-+static int mtk_spi_runtime_suspend(struct device *dev)
-+{
-+	struct spi_master *master = dev_get_drvdata(dev);
-+	struct mtk_spi_ddata *mdata = spi_master_get_devdata(master);
-+
-+	clk_disable_unprepare(mdata->clk);
-+
-+	return 0;
-+}
-+
-+static int mtk_spi_runtime_resume(struct device *dev)
-+{
-+	struct spi_master *master = dev_get_drvdata(dev);
-+	struct mtk_spi_ddata *mdata = spi_master_get_devdata(master);
-+
-+	return clk_prepare_enable(mdata->clk);
-+}
-+#endif /* CONFIG_PM */
-+
-+static const struct dev_pm_ops mtk_spi_pm = {
-+	SET_SYSTEM_SLEEP_PM_OPS(mtk_spi_suspend, mtk_spi_resume)
-+	SET_RUNTIME_PM_OPS(mtk_spi_runtime_suspend,
-+			   mtk_spi_runtime_resume, NULL)
-+};
-+
-+struct platform_driver mtk_spi_driver = {
-+	.driver = {
-+		.name = "mtk-spi",
-+		.pm	= &mtk_spi_pm,
-+		.of_match_table = mtk_spi_of_match,
-+	},
-+	.probe = mtk_spi_probe,
-+	.remove = mtk_spi_remove,
-+};
-+
-+module_platform_driver(mtk_spi_driver);
-+
-+MODULE_DESCRIPTION("MTK SPI Controller driver");
-+MODULE_AUTHOR("Leilk Liu <leilk.liu@mediatek.com>");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform: mtk_spi");
--- 
-1.8.1.1.dirty
+
+> +		if (atmel_port->rts_high &&
+> +		    atmel_port->rts_low)
+> +			fmr |=3D	ATMEL_US_FRTSC |
+> +				ATMEL_US_RXFTHRES(atmel_port->rts_high) |
+> +				ATMEL_US_RXFTHRES2(atmel_port->rts_low);
+> +
+> +		UART_PUT_FMR(port, fmr);
+> +	}
+> +
+>  	/* Save current CSR for comparison in atmel_tasklet_func() */
+>  	atmel_port->irq_status_prev =3D atmel_get_lines_status(port);
+>  	atmel_port->irq_status =3D atmel_port->irq_status_prev;
+> @@ -2599,6 +2635,44 @@ static int atmel_init_gpios(struct atmel_uart_=
+port *p, struct device *dev)
+>  	return 0;
+>  }
+> =20
+> +static void atmel_serial_probe_fifos(struct atmel_uart_port *port,
+> +				     struct platform_device *pdev)
+> +{
+> +	port->fifo_size =3D 0;
+> +	port->rts_low =3D 0;
+> +	port->rts_high =3D 0;
+> +
+> +	if (of_property_read_u32(pdev->dev.of_node,
+> +				 "atmel,fifo-size",
+> +				 &port->fifo_size) ||
+> +	    !port->fifo_size)
+
+I understand, but here, please split the test in 2: it's far more reada=
+ble.
+
+> +		return;
+> +
+> +	if (port->fifo_size < 8 || port->fifo_size > 32) {
+
+Can you define constants for these 2 values and use them here?
+
+> +		port->fifo_size =3D 0;
+> +		dev_err(&pdev->dev, "Invalid FIFO size\n");
+> +		return;
+> +	}
+> +
+> +	/*
+> +	 * 0 <=3D rts_low <=3D rts_high <=3D fifo_size
+> +	 * Once their CTS line asserted by the remote peer, some x86 UARTs =
+tend
+> +	 * to flush their internal TX FIFO, commonly up to 8 data, before
+> +	 * actually stopping to send new data. So we try to set the RTS Hig=
+h
+> +	 * Threshold to a raisonable high value respecting this 8 data empi=
+rical
+> +	 * rule when possible.
+> +	 */
+> +	port->rts_high =3D max_t(int, port->fifo_size >> 1, port->fifo_size=
+ - 8);
+> +	port->rts_low  =3D max_t(int, port->fifo_size >> 2, port->fifo_size=
+ - 16);
+
+Same here: I'd prefer constants with meaningful names.
+
+> +
+> +	dev_info(&pdev->dev, "Using FIFO (%u data)\n",
+> +		 port->fifo_size);
+
+Okay for this information.
+
+> +	dev_info(&pdev->dev, "RTS High Threshold : %2u data\n",
+> +		 port->rts_high);
+> +	dev_info(&pdev->dev, "RTS Low Threshold  : %2u data\n",
+> +		 port->rts_low);
+
+Aren't these two other dev_info() better suited as dev_dbg()?
+
+
+> +}
+> +
+>  static int atmel_serial_probe(struct platform_device *pdev)
+>  {
+>  	struct atmel_uart_port *port;
+> @@ -2635,6 +2709,7 @@ static int atmel_serial_probe(struct platform_d=
+evice *pdev)
+>  	port =3D &atmel_ports[ret];
+>  	port->backup_imr =3D 0;
+>  	port->uart.line =3D ret;
+> +	atmel_serial_probe_fifos(port, pdev);
+> =20
+>  	spin_lock_init(&port->lock_suspended);
+> =20
+> diff --git a/include/linux/atmel_serial.h b/include/linux/atmel_seria=
+l.h
+> index c384c21..ee696d7 100644
+> --- a/include/linux/atmel_serial.h
+> +++ b/include/linux/atmel_serial.h
+> @@ -35,6 +35,11 @@
+>  #define	ATMEL_US_DTRDIS		BIT(17)	/* Data Terminal Ready Disable */
+>  #define	ATMEL_US_RTSEN		BIT(18)	/* Request To Send Enable */
+>  #define	ATMEL_US_RTSDIS		BIT(19)	/* Request To Send Disable */
+> +#define	ATMEL_US_TXFCLR		BIT(24)	/* Transmit FIFO Clear */
+> +#define	ATMEL_US_RXFCLR		BIT(25)	/* Receive FIFO Clear */
+> +#define	ATMEL_US_TXFLCLR	BIT(26)	/* Transmit FIFO Lock Clear */
+> +#define	ATMEL_US_FIFOEN		BIT(30)	/* FIFO enable */
+> +#define	ATMEL_US_FIFODIS	BIT(31)	/* FIFO disable */
+> =20
+>  #define ATMEL_US_MR		0x04	/* Mode Register */
+>  #define	ATMEL_US_USMODE		GENMASK(3, 0)	/* Mode of the USART */
+> @@ -124,6 +129,37 @@
+>  #define ATMEL_US_NER		0x44	/* Number of Errors Register */
+>  #define ATMEL_US_IF		0x4c	/* IrDA Filter Register */
+> =20
+> +#define ATMEL_US_CMPR		0x90	/* Comparaison Register */
+> +#define ATMEL_US_FMR		0xa0	/* FIFO Mode Register */
+> +#define	ATMEL_US_TXRDYM(data)	(((data) & 0x3) << 0)	/* TX Ready Mode=
+ */
+> +#define	ATMEL_US_RXRDYM(data)	(((data) & 0x3) << 4)	/* RX Ready Mode=
+ */
+> +#define		ATMEL_US_ONE_DATA	0x0
+> +#define		ATMEL_US_TWO_DATA	0x1
+> +#define		ATMEL_US_FOUR_DATA	0x2
+> +#define	ATMEL_US_FRTSC		BIT(7)	/* FIFO RTS pin Control */
+> +#define	ATMEL_US_TXFTHRES(thr)	(((thr) & 0x3f) << 8)	/* TX FIFO Thre=
+shold */
+> +#define	ATMEL_US_RXFTHRES(thr)	(((thr) & 0x3f) << 16)	/* RX FIFO Thr=
+eshold */
+> +#define	ATMEL_US_RXFTHRES2(thr)	(((thr) & 0x3f) << 24)	/* RX FIFO Th=
+reshold2 */
+> +
+> +#define ATMEL_US_FLR		0xa4	/* FIFO Level Register */
+> +#define	ATMEL_US_TXFL(reg)	(((reg) >> 0) & 0x3f)	/* TX FIFO Level */
+> +#define	ATMEL_US_RXFL(reg)	(((reg) >> 16) & 0x3f)	/* RX FIFO Level *=
+/
+> +
+> +#define ATMEL_US_FIER		0xa8	/* FIFO Interrupt Enable Register */
+> +#define ATMEL_US_FIDR		0xac	/* FIFO Interrupt Disable Register */
+> +#define ATMEL_US_FIMR		0xb0	/* FIFO Interrupt Mask Register */
+> +#define ATMEL_US_FESR		0xb4	/* FIFO Event Status Register */
+> +#define	ATMEL_US_TXFEF		BIT(0)	/* Transmit FIFO Empty Flag */
+> +#define	ATMEL_US_TXFFF		BIT(1)	/* Transmit FIFO Full Flag */
+> +#define	ATMEL_US_TXFTHF		BIT(2)	/* Transmit FIFO Threshold Flag */
+> +#define	ATMEL_US_RXFEF		BIT(3)	/* Receive FIFO Empty Flag */
+> +#define	ATMEL_US_RXFFF		BIT(4)	/* Receive FIFO Full Flag */
+> +#define	ATMEL_US_RXFTHF		BIT(5)	/* Receive FIFO Threshold Flag */
+> +#define	ATMEL_US_TXFPTEF	BIT(6)	/* Transmit FIFO Pointer Error Flag =
+*/
+> +#define	ATMEL_US_RXFPTEF	BIT(7)	/* Receive FIFO Pointer Error Flag *=
+/
+> +#define	ATMEL_US_TXFLOCK	BIT(8)	/* Transmit FIFO Lock (FESR only) */
+> +#define	ATMEL_US_RXFTHF2	BIT(9)	/* Receive FIFO Threshold Flag 2 */
+> +
+>  #define ATMEL_US_NAME		0xf0	/* Ip Name */
+>  #define ATMEL_US_VERSION	0xfc	/* Ip Version */
+
+Otherwise it look good.
+
+Thanks, bye,
+--=20
+Nicolas Ferre
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
