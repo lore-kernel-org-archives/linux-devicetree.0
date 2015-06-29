@@ -1,100 +1,113 @@
-From: Anda Nicolae <nicolae.anda@gmail.com>
-Subject: Re: [PATCH] power_supply: rt9455_charger: Properly notify userspace
- about charging events
-Date: Mon, 29 Jun 2015 10:08:05 +0300
-Message-ID: <CAKfO3xaj8RBkLNS-pbB8=Og+iDm2W9Hh7wzC9sscHkL56MCpYQ@mail.gmail.com>
-References: <1434558539-30591-1-git-send-email-anda-maria.nicolae@intel.com>
+From: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH v6 00/23] usb gadget update for OTG 2.0
+Date: Mon, 29 Jun 2015 15:47:39 +0800
+Message-ID: <1435564082-14583-1-git-send-email-jun.li@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1434558539-30591-1-git-send-email-anda-maria.nicolae@intel.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Anda-Maria Nicolae <anda-maria.nicolae@intel.com>
-Cc: sre@kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+d-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org, Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 17, 2015 at 7:28 PM, Anda-Maria Nicolae
-<anda-maria.nicolae@intel.com> wrote:
-> Do not call power_supply_changed() when CHRVPI interrupt has occurred.
-> CHRVPI interrupt occurs when the charger is connected to or disconnected
-> from the power source. Call power_supply_changed() after PWR_RDY bit is
-> read, to distinguish between connection to or disconnection from the power
-> source.
-> Also, call power_supply_changed() after the battery is reconnected to the
-> charger, to notify userspace that the battery is no longer absent.
->
-> Signed-off-by: Anda-Maria Nicolae <anda-maria.nicolae@intel.com>
-> ---
->  drivers/power/rt9455_charger.c |   16 ++++++++++++++--
->  1 file changed, 14 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/power/rt9455_charger.c b/drivers/power/rt9455_charger.c
-> index 08baac6..a49a9d4 100644
-> --- a/drivers/power/rt9455_charger.c
-> +++ b/drivers/power/rt9455_charger.c
-> @@ -973,7 +973,6 @@ static int rt9455_irq_handler_check_irq2_register(struct rt9455_info *info,
->
->         if (irq2 & GET_MASK(F_CHRVPI)) {
->                 dev_dbg(dev, "Charger fault occurred\n");
-> -               alert_userspace = true;
->                 /*
->                  * CHRVPI bit is set in 2 cases:
->                  * 1. when the power source is connected to the charger.
-> @@ -981,6 +980,9 @@ static int rt9455_irq_handler_check_irq2_register(struct rt9455_info *info,
->                  * To identify the case, PWR_RDY bit is checked. Because
->                  * PWR_RDY bit is set / cleared after CHRVPI interrupt is
->                  * triggered, it is used delayed_work to later read PWR_RDY bit.
-> +                * Also, do not set to true alert_userspace, because there is no
-> +                * need to notify userspace when CHRVPI interrupt has occurred.
-> +                * Userspace will be notified after PWR_RDY bit is read.
->                  */
->                 queue_delayed_work(system_power_efficient_wq,
->                                    &info->pwr_rdy_work,
-> @@ -1178,7 +1180,7 @@ static irqreturn_t rt9455_irq_handler_thread(int irq, void *data)
->                 /*
->                  * Sometimes, an interrupt occurs while rt9455_probe() function
->                  * is executing and power_supply_register() is not yet called.
-> -                * Do not call power_supply_charged() in this case.
-> +                * Do not call power_supply_changed() in this case.
->                  */
->                 if (info->charger)
->                         power_supply_changed(info->charger);
-> @@ -1478,6 +1480,11 @@ static void rt9455_pwr_rdy_work_callback(struct work_struct *work)
->                                    RT9455_MAX_CHARGING_TIME * HZ);
->                 break;
->         }
-> +       /*
-> +        * Notify userspace that the charger has been either connected to or
-> +        * disconnected from the power source.
-> +        */
-> +       power_supply_changed(info->charger);
->  }
->
->  static void rt9455_max_charging_time_work_callback(struct work_struct *work)
-> @@ -1533,6 +1540,11 @@ static void rt9455_batt_presence_work_callback(struct work_struct *work)
->                         if (ret)
->                                 dev_err(dev, "Failed to unmask BATAB interrupt\n");
->                 }
-> +               /*
-> +                * Notify userspace that the battery is now connected to the
-> +                * charger.
-> +                */
-> +               power_supply_changed(info->charger);
->         }
->  }
->
-> --
-> 1.7.9.5
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pm" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Change for v6:
+- Change of_usb_set_otg_caps to be of_usb_update_otg_caps, and add
+  sanity check of otg-rev.
+- Add chipidea otg-rev ability to be 0x0200, which will be updated
+  in DT, if not passed, will be reset to be 0.
+- Remove unnecessary change: move config's descriptor and bmAttributes
+  init from xxxi_config() to xxx_bind() in leagcy gadget drivers.
 
+Changes for v5:
+- By default otg feature are enabled if usb controller can support it.
+  use of_usb_set_otg_caps to set otg_rev and disable features by DT.
+- Update legacy drivers, allocate and init otg descriptor in bind
+  function, free it in unbind, to make alloation and free are symmetric.
+- Add Roger's reviewed-by.
 
-Hi all,
+This is a follow-up of Macpaul Lin's previous patchset to resolve usb
+gadget driver working with OTG 2.0, and set otg features by not only
+usb driver config but also usb hardware property in DT, main changes:
+1. Add usb_otg20_descriptor definition for OTG 2.0 which introduces bcdOTG
+   field for otg revision, bcdOTG can be passed via device tree.
+2. OTG features(SRP/HNP/ADP) can be decided by combination of usb HW
+   properties and usb driver config.
+3. Change the chipidea usb driver to use the updated mechanism.
+4. Remove static usb otg descriptor definition, but allocate and init it
+   according to otg capabilities in each gadget driver, if otg capabilities
+   is not defined for legacy platforms, the usb otg descriptor content is
+   kept the same as current static definition.
 
-Can you please take a look at the patch listed above?
+Li Jun (19):
+  usb: otg: add usb_otg_caps structure for otg capabilities
+  doc: dt-binding: usb: add otg related properties
+  usb: common: add API to update usb otg capabilities by device tree
+  usb: chipidea: set usb otg capabilities
+  usb: chipidea: update ci_otg_is_fsm_mode conditions
+  usb: gadget: add usb otg descriptor allocate and init interface
+  usb: gadget: configfs: allocate and init otg descriptor by otg
+    capabilities
+  usb: gadget: ether: allocate and init otg descriptor by otg
+    capabilities
+  usb: gadget: acm_ms: allocate and init otg descriptor by otg
+    capabilities
+  usb: gadget: audio: allocate and init otg descriptor by otg
+    capabilities
+  usb: gadget: cdc2: allocate and init otg descriptor by otg
+    capabilities
+  usb: gadget: g_ffs: allocate and init otg descriptor by otg
+    capabilities
+  usb: gadget: hid: allocate and init otg descriptor by otg capabilities
+  usb: gadget: mass_storage: allocate and init otg descriptor by otg
+    capabilities
+  usb: gadget: multi: allocate and init otg descriptor by otg
+    capabilities
+  usb: gadget: ncm: allocate and init otg descriptor by otg capabilities
+  usb: gadget: printer: allocate and init otg descriptor by otg
+    capabilities
+  usb: gadget: serial: allocate and init otg descriptor by otg
+    capabilities
+  usb: gadget: zero: allocate and init otg descriptor by otg
+    capabilities
 
-Thanks,
-Anda
+Macpaul Lin (4):
+  usb: add usb_otg20_descriptor for OTG 2.0 and above
+  usb: add USB_OTG_ADP definition
+  usb: add usb_otg_caps to usb_gadget structure.
+  usb: gadget: composite: add USB_DT_OTG request handling
+
+ Documentation/devicetree/bindings/usb/generic.txt | 15 ++++++
+ drivers/usb/chipidea/ci.h                         |  5 +-
+ drivers/usb/chipidea/core.c                       | 10 ++++
+ drivers/usb/chipidea/debug.c                      |  1 +
+ drivers/usb/chipidea/udc.c                        |  7 ++-
+ drivers/usb/common/common.c                       | 47 +++++++++++++++++++
+ drivers/usb/gadget/composite.c                    | 27 +++++++++++
+ drivers/usb/gadget/config.c                       | 56 +++++++++++++++++++++++
+ drivers/usb/gadget/configfs.c                     | 29 ++++++++----
+ drivers/usb/gadget/legacy/acm_ms.c                | 35 +++++++-------
+ drivers/usb/gadget/legacy/audio.c                 | 34 ++++++++------
+ drivers/usb/gadget/legacy/cdc2.c                  | 35 +++++++-------
+ drivers/usb/gadget/legacy/ether.c                 | 36 ++++++++-------
+ drivers/usb/gadget/legacy/g_ffs.c                 | 32 +++++++------
+ drivers/usb/gadget/legacy/hid.c                   | 36 ++++++++-------
+ drivers/usb/gadget/legacy/mass_storage.c          | 35 +++++++-------
+ drivers/usb/gadget/legacy/multi.c                 | 37 ++++++++-------
+ drivers/usb/gadget/legacy/ncm.c                   | 34 ++++++++------
+ drivers/usb/gadget/legacy/printer.c               | 26 ++++++-----
+ drivers/usb/gadget/legacy/serial.c                | 29 ++++++------
+ drivers/usb/gadget/legacy/zero.c                  | 32 ++++++-------
+ include/linux/usb/chipidea.h                      |  1 +
+ include/linux/usb/gadget.h                        |  6 +++
+ include/linux/usb/of.h                            |  7 +++
+ include/linux/usb/otg.h                           | 15 ++++++
+ include/uapi/linux/usb/ch9.h                      | 12 +++++
+ 26 files changed, 443 insertions(+), 196 deletions(-)
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
