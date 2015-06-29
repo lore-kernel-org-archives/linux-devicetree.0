@@ -1,7 +1,7 @@
 From: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v6 22/23] usb: gadget: serial: allocate and init otg descriptor by otg capabilities
-Date: Mon, 29 Jun 2015 15:48:01 +0800
-Message-ID: <1435564082-14583-23-git-send-email-jun.li@freescale.com>
+Subject: [PATCH v6 19/23] usb: gadget: multi: allocate and init otg descriptor by otg capabilities
+Date: Mon, 29 Jun 2015 15:47:58 +0800
+Message-ID: <1435564082-14583-20-git-send-email-jun.li@freescale.com>
 References: <1435564082-14583-1-git-send-email-jun.li@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -18,57 +18,78 @@ is not defined, keep its original otg descriptor unchanged.
 
 Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- drivers/usb/gadget/legacy/serial.c | 29 +++++++++++++++--------------
- 1 file changed, 15 insertions(+), 14 deletions(-)
+ drivers/usb/gadget/legacy/multi.c | 37 ++++++++++++++++++++-----------------
+ 1 file changed, 20 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/usb/gadget/legacy/serial.c b/drivers/usb/gadget/legacy/serial.c
-index 8b7528f..d1cd025 100644
---- a/drivers/usb/gadget/legacy/serial.c
-+++ b/drivers/usb/gadget/legacy/serial.c
-@@ -79,20 +79,7 @@ static struct usb_device_descriptor device_desc = {
- 	.bNumConfigurations =	1,
+diff --git a/drivers/usb/gadget/legacy/multi.c b/drivers/usb/gadget/legacy/multi.c
+index b21b51f..c38ead1 100644
+--- a/drivers/usb/gadget/legacy/multi.c
++++ b/drivers/usb/gadget/legacy/multi.c
+@@ -78,21 +78,7 @@ static struct usb_device_descriptor device_desc = {
+ 	.idProduct =		cpu_to_le16(MULTI_PRODUCT_NUM),
  };
  
--static struct usb_otg_descriptor otg_descriptor = {
--	.bLength =		sizeof otg_descriptor,
--	.bDescriptorType =	USB_DT_OTG,
--
--	/* REVISIT SRP-only hardware is possible, although
--	 * it would not be called "OTG" ...
--	 */
--	.bmAttributes =		USB_OTG_SRP | USB_OTG_HNP,
--};
 -
 -static const struct usb_descriptor_header *otg_desc[] = {
--	(struct usb_descriptor_header *) &otg_descriptor,
+-	(struct usb_descriptor_header *) &(struct usb_otg_descriptor){
+-		.bLength =		sizeof(struct usb_otg_descriptor),
+-		.bDescriptorType =	USB_DT_OTG,
+-
+-		/*
+-		 * REVISIT SRP-only hardware is possible, although
+-		 * it would not be called "OTG" ...
+-		 */
+-		.bmAttributes =		USB_OTG_SRP | USB_OTG_HNP,
+-	},
 -	NULL,
 -};
+-
 +static const struct usb_descriptor_header *otg_desc[2];
  
- /*-------------------------------------------------------------------------*/
+ enum {
+ 	MULTI_STRING_RNDIS_CONFIG_IDX = USB_GADGET_FIRST_AVAIL_IDX,
+@@ -429,14 +415,25 @@ static int __ref multi_bind(struct usb_composite_dev *cdev)
+ 		goto fail_string_ids;
+ 	device_desc.iProduct = strings_dev[USB_GADGET_PRODUCT_IDX].id;
  
-@@ -191,6 +178,16 @@ static int gs_bind(struct usb_composite_dev *cdev)
- 	serial_config_driver.iConfiguration = status;
++	if (gadget_is_otg(gadget) && !otg_desc[0]) {
++		struct usb_descriptor_header *usb_desc;
++
++		usb_desc = usb_otg_descriptor_alloc(gadget);
++		if (!usb_desc)
++			goto fail_string_ids;
++		usb_otg_descriptor_init(gadget, usb_desc);
++		otg_desc[0] = usb_desc;
++		otg_desc[1] = NULL;
++	}
++
+ 	/* register configurations */
+ 	status = rndis_config_register(cdev);
+ 	if (unlikely(status < 0))
+-		goto fail_string_ids;
++		goto fail_otg_desc;
  
- 	if (gadget_is_otg(cdev->gadget)) {
-+		if (!otg_desc[0]) {
-+			struct usb_descriptor_header *usb_desc;
-+
-+			usb_desc = usb_otg_descriptor_alloc(cdev->gadget);
-+			if (!usb_desc)
-+				return -ENOMEM;
-+			usb_otg_descriptor_init(cdev->gadget, usb_desc);
-+			otg_desc[0] = usb_desc;
-+			otg_desc[1] = NULL;
-+		}
- 		serial_config_driver.descriptors = otg_desc;
- 		serial_config_driver.bmAttributes |= USB_CONFIG_ATT_WAKEUP;
- 	}
-@@ -227,6 +224,10 @@ static int gs_unbind(struct usb_composite_dev *cdev)
- 		usb_put_function(f_serial[i]);
- 		usb_put_function_instance(fi_serial[i]);
- 	}
-+
+ 	status = cdc_config_register(cdev);
+ 	if (unlikely(status < 0))
+-		goto fail_string_ids;
++		goto fail_otg_desc;
+ 	usb_composite_overwrite_options(cdev, &coverwrite);
+ 
+ 	/* we're done */
+@@ -445,6 +442,9 @@ static int __ref multi_bind(struct usb_composite_dev *cdev)
+ 
+ 
+ 	/* error recovery */
++fail_otg_desc:
++	kfree(otg_desc[0]);
++	otg_desc[0] = NULL;
+ fail_string_ids:
+ 	fsg_common_remove_luns(fsg_opts->common);
+ fail_set_cdev:
+@@ -490,6 +490,9 @@ static int multi_unbind(struct usb_composite_dev *cdev)
+ 	usb_put_function(f_ecm);
+ 	usb_put_function_instance(fi_ecm);
+ #endif
 +	kfree(otg_desc[0]);
 +	otg_desc[0] = NULL;
 +
