@@ -1,13 +1,13 @@
 From: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v6 16/23] usb: gadget: g_ffs: allocate and init otg descriptor by otg capabilities
-Date: Mon, 29 Jun 2015 15:47:55 +0800
-Message-ID: <1435564082-14583-17-git-send-email-jun.li@freescale.com>
+Subject: [PATCH v6 18/23] usb: gadget: mass_storage: allocate and init otg descriptor by otg capabilities
+Date: Mon, 29 Jun 2015 15:47:57 +0800
+Message-ID: <1435564082-14583-19-git-send-email-jun.li@freescale.com>
 References: <1435564082-14583-1-git-send-email-jun.li@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1435564082-14583-1-git-send-email-jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+d-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org, Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
@@ -18,69 +18,74 @@ is not defined, keep its original otg descriptor unchanged.
 
 Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- drivers/usb/gadget/legacy/g_ffs.c | 32 +++++++++++++++++---------------
- 1 file changed, 17 insertions(+), 15 deletions(-)
+ drivers/usb/gadget/legacy/mass_storage.c | 35 +++++++++++++++++---------------
+ 1 file changed, 19 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/usb/gadget/legacy/g_ffs.c b/drivers/usb/gadget/legacy/g_ffs.c
-index 7b9ef7e..ddb853d 100644
---- a/drivers/usb/gadget/legacy/g_ffs.c
-+++ b/drivers/usb/gadget/legacy/g_ffs.c
-@@ -88,21 +88,7 @@ MODULE_PARM_DESC(bDeviceProtocol, "USB Device protocol");
- module_param_array_named(functions, func_names, charp, &func_num, 0);
- MODULE_PARM_DESC(functions, "USB Functions list");
+diff --git a/drivers/usb/gadget/legacy/mass_storage.c b/drivers/usb/gadget/legacy/mass_storage.c
+index e7bfb08..ab1a42c 100644
+--- a/drivers/usb/gadget/legacy/mass_storage.c
++++ b/drivers/usb/gadget/legacy/mass_storage.c
+@@ -64,21 +64,7 @@ static struct usb_device_descriptor msg_device_desc = {
+ 	.bNumConfigurations =	1,
+ };
  
--static const struct usb_descriptor_header *gfs_otg_desc[] = {
--	(const struct usb_descriptor_header *)
--	&(const struct usb_otg_descriptor) {
--		.bLength		= sizeof(struct usb_otg_descriptor),
--		.bDescriptorType	= USB_DT_OTG,
+-static struct usb_otg_descriptor otg_descriptor = {
+-	.bLength =		sizeof otg_descriptor,
+-	.bDescriptorType =	USB_DT_OTG,
 -
--		/*
--		 * REVISIT SRP-only hardware is possible, although
--		 * it would not be called "OTG" ...
--		 */
--		.bmAttributes		= USB_OTG_SRP | USB_OTG_HNP,
--	},
--
--	NULL
+-	/*
+-	 * REVISIT SRP-only hardware is possible, although
+-	 * it would not be called "OTG" ...
+-	 */
+-	.bmAttributes =		USB_OTG_SRP | USB_OTG_HNP,
 -};
-+static const struct usb_descriptor_header *gfs_otg_desc[2];
+-
+-static const struct usb_descriptor_header *otg_desc[] = {
+-	(struct usb_descriptor_header *) &otg_descriptor,
+-	NULL,
+-};
++static const struct usb_descriptor_header *otg_desc[2];
  
- /* String IDs are assigned dynamically */
- static struct usb_string gfs_strings[] = {
-@@ -410,6 +396,17 @@ static int gfs_bind(struct usb_composite_dev *cdev)
- 		goto error_rndis;
- 	gfs_dev_desc.iProduct = gfs_strings[USB_GADGET_PRODUCT_IDX].id;
+ static struct usb_string strings_dev[] = {
+ 	[USB_GADGET_MANUFACTURER_IDX].s = "",
+@@ -214,9 +200,20 @@ static int msg_bind(struct usb_composite_dev *cdev)
+ 		goto fail_string_ids;
+ 	msg_device_desc.iProduct = strings_dev[USB_GADGET_PRODUCT_IDX].id;
  
-+	if (gadget_is_otg(cdev->gadget) && !gfs_otg_desc[0]) {
++	if (gadget_is_otg(cdev->gadget) && !otg_desc[0]) {
 +		struct usb_descriptor_header *usb_desc;
 +
 +		usb_desc = usb_otg_descriptor_alloc(cdev->gadget);
 +		if (!usb_desc)
-+			goto error_rndis;
++			goto fail_string_ids;
 +		usb_otg_descriptor_init(cdev->gadget, usb_desc);
-+		gfs_otg_desc[0] = usb_desc;
-+		gfs_otg_desc[1] = NULL;
++		otg_desc[0] = usb_desc;
++		otg_desc[1] = NULL;
 +	}
 +
- 	for (i = 0; i < ARRAY_SIZE(gfs_configurations); ++i) {
- 		struct gfs_configuration *c = gfs_configurations + i;
- 		int sid = USB_GADGET_FIRST_AVAIL_IDX + i;
-@@ -430,6 +427,8 @@ static int gfs_bind(struct usb_composite_dev *cdev)
+ 	status = usb_add_config(cdev, &msg_config_driver, msg_do_config);
+ 	if (status < 0)
+-		goto fail_string_ids;
++		goto fail_otg_desc;
  
- /* TODO */
- error_unbind:
-+	kfree(gfs_otg_desc[0]);
-+	gfs_otg_desc[0] = NULL;
- error_rndis:
- #ifdef CONFIG_USB_FUNCTIONFS_RNDIS
- 	usb_put_function_instance(fi_rndis);
-@@ -471,6 +470,9 @@ static int gfs_unbind(struct usb_composite_dev *cdev)
- 	for (i = 0; i < N_CONF * func_num; ++i)
- 		usb_put_function(*(f_ffs[0] + i));
+ 	usb_composite_overwrite_options(cdev, &coverwrite);
+ 	dev_info(&cdev->gadget->dev,
+@@ -224,6 +221,9 @@ static int msg_bind(struct usb_composite_dev *cdev)
+ 	set_bit(0, &msg_registered);
+ 	return 0;
  
-+	kfree(gfs_otg_desc[0]);
-+	gfs_otg_desc[0] = NULL;
++fail_otg_desc:
++	kfree(otg_desc[0]);
++	otg_desc[0] = NULL;
+ fail_string_ids:
+ 	fsg_common_remove_luns(opts->common);
+ fail_set_cdev:
+@@ -243,6 +243,9 @@ static int msg_unbind(struct usb_composite_dev *cdev)
+ 	if (!IS_ERR(fi_msg))
+ 		usb_put_function_instance(fi_msg);
+ 
++	kfree(otg_desc[0]);
++	otg_desc[0] = NULL;
 +
  	return 0;
  }
@@ -89,6 +94,6 @@ index 7b9ef7e..ddb853d 100644
 1.9.1
 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
