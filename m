@@ -1,45 +1,100 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 2/3] ARM: dts: configure regulators for Gumstix Pepper
-Date: Sun, 28 Jun 2015 23:47:17 -0700
-Message-ID: <20150629064717.GR4156@atomide.com>
-References: <1433441299-18887-1-git-send-email-arun@gumstix.com>
- <1433441299-18887-3-git-send-email-arun@gumstix.com>
+From: Anda Nicolae <nicolae.anda@gmail.com>
+Subject: Re: [PATCH] power_supply: rt9455_charger: Properly notify userspace
+ about charging events
+Date: Mon, 29 Jun 2015 10:08:05 +0300
+Message-ID: <CAKfO3xaj8RBkLNS-pbB8=Og+iDm2W9Hh7wzC9sscHkL56MCpYQ@mail.gmail.com>
+References: <1434558539-30591-1-git-send-email-anda-maria.nicolae@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1433441299-18887-3-git-send-email-arun-EiDWdcs9+yZBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arun Bharadwaj <arun-EiDWdcs9+yZBDgjK7y7TUQ@public.gmane.org>
-Cc: =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Adam YH Lee <adam.yh.lee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ash Charles <ashcharles-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1434558539-30591-1-git-send-email-anda-maria.nicolae@intel.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Anda-Maria Nicolae <anda-maria.nicolae@intel.com>
+Cc: sre@kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Arun Bharadwaj <arun-EiDWdcs9+yZBDgjK7y7TUQ@public.gmane.org> [150604 11:10]:
-> From: Adam YH Lee <adam.yh.lee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 
-> Boot process is halting in midway because some of the necessary voltage
-> regulators are deemed unused and subsequently powered off, leading to
-> a completely unresponsive system.
+On Wed, Jun 17, 2015 at 7:28 PM, Anda-Maria Nicolae
+<anda-maria.nicolae@intel.com> wrote:
+> Do not call power_supply_changed() when CHRVPI interrupt has occurred.
+> CHRVPI interrupt occurs when the charger is connected to or disconnected
+> from the power source. Call power_supply_changed() after PWR_RDY bit is
+> read, to distinguish between connection to or disconnection from the power
+> source.
+> Also, call power_supply_changed() after the battery is reconnected to the
+> charger, to notify userspace that the battery is no longer absent.
+>
+> Signed-off-by: Anda-Maria Nicolae <anda-maria.nicolae@intel.com>
+> ---
+>  drivers/power/rt9455_charger.c |   16 ++++++++++++++--
+>  1 file changed, 14 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/power/rt9455_charger.c b/drivers/power/rt9455_charger.c
+> index 08baac6..a49a9d4 100644
+> --- a/drivers/power/rt9455_charger.c
+> +++ b/drivers/power/rt9455_charger.c
+> @@ -973,7 +973,6 @@ static int rt9455_irq_handler_check_irq2_register(struct rt9455_info *info,
+>
+>         if (irq2 & GET_MASK(F_CHRVPI)) {
+>                 dev_dbg(dev, "Charger fault occurred\n");
+> -               alert_userspace = true;
+>                 /*
+>                  * CHRVPI bit is set in 2 cases:
+>                  * 1. when the power source is connected to the charger.
+> @@ -981,6 +980,9 @@ static int rt9455_irq_handler_check_irq2_register(struct rt9455_info *info,
+>                  * To identify the case, PWR_RDY bit is checked. Because
+>                  * PWR_RDY bit is set / cleared after CHRVPI interrupt is
+>                  * triggered, it is used delayed_work to later read PWR_RDY bit.
+> +                * Also, do not set to true alert_userspace, because there is no
+> +                * need to notify userspace when CHRVPI interrupt has occurred.
+> +                * Userspace will be notified after PWR_RDY bit is read.
+>                  */
+>                 queue_delayed_work(system_power_efficient_wq,
+>                                    &info->pwr_rdy_work,
+> @@ -1178,7 +1180,7 @@ static irqreturn_t rt9455_irq_handler_thread(int irq, void *data)
+>                 /*
+>                  * Sometimes, an interrupt occurs while rt9455_probe() function
+>                  * is executing and power_supply_register() is not yet called.
+> -                * Do not call power_supply_charged() in this case.
+> +                * Do not call power_supply_changed() in this case.
+>                  */
+>                 if (info->charger)
+>                         power_supply_changed(info->charger);
+> @@ -1478,6 +1480,11 @@ static void rt9455_pwr_rdy_work_callback(struct work_struct *work)
+>                                    RT9455_MAX_CHARGING_TIME * HZ);
+>                 break;
+>         }
+> +       /*
+> +        * Notify userspace that the charger has been either connected to or
+> +        * disconnected from the power source.
+> +        */
+> +       power_supply_changed(info->charger);
+>  }
+>
+>  static void rt9455_max_charging_time_work_callback(struct work_struct *work)
+> @@ -1533,6 +1540,11 @@ static void rt9455_batt_presence_work_callback(struct work_struct *work)
+>                         if (ret)
+>                                 dev_err(dev, "Failed to unmask BATAB interrupt\n");
+>                 }
+> +               /*
+> +                * Notify userspace that the battery is now connected to the
+> +                * charger.
+> +                */
+> +               power_supply_changed(info->charger);
+>         }
+>  }
+>
+> --
+> 1.7.9.5
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pm" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-OK that needs to be fixed for v4.2-rc series.
- 
-> Most of the device nodes had correct voltage regulator attachments.
-> Yet these nodes had to set stricter enforcement on them through
-> 'regulator-boot-on' and 'regulator-always-on' to function correctly.
 
-That's a lot of regulators marked as regulator-always-on. Could
-you please update the description what consumers are using them
-so we know why they are all needed always-on?
- 
-> Signed-off-by: Ash Charles <ashcharles-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Hi all,
 
->From Adam, sent by Arun, signed by Ash? Can you please check
-that too.
+Can you please take a look at the patch listed above?
 
-Regards,
-
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Anda
