@@ -1,7 +1,7 @@
 From: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v6 01/23] usb: add usb_otg20_descriptor for OTG 2.0 and above
-Date: Mon, 29 Jun 2015 15:47:40 +0800
-Message-ID: <1435564082-14583-2-git-send-email-jun.li@freescale.com>
+Subject: [PATCH v6 03/23] usb: otg: add usb_otg_caps structure for otg capabilities
+Date: Mon, 29 Jun 2015 15:47:42 +0800
+Message-ID: <1435564082-14583-4-git-send-email-jun.li@freescale.com>
 References: <1435564082-14583-1-git-send-email-jun.li@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,41 +12,42 @@ To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@
 Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org, Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Macpaul Lin <macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+This patch adds a structure usb_otg_caps to cover all otg related
+capabilities of the device, including otg revision, and if hnp/srp/adp
+is supported.
 
-OTG 2.0 introduces bcdOTG in otg descriptor to identify the OTG and EH
-supplement release number with which the OTG device is compliant, this
-patch adds structure usb_otg20_descriptor for OTG 2.0 and above.
-
-Signed-off-by: Macpaul Lin <macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Reviewed-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
 ---
- include/uapi/linux/usb/ch9.h | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ include/linux/usb/otg.h | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/include/uapi/linux/usb/ch9.h b/include/uapi/linux/usb/ch9.h
-index aa33fd1..aec6899 100644
---- a/include/uapi/linux/usb/ch9.h
-+++ b/include/uapi/linux/usb/ch9.h
-@@ -674,6 +674,17 @@ struct usb_otg_descriptor {
- 	__u8  bmAttributes;	/* support for HNP, SRP, etc */
- } __attribute__ ((packed));
+diff --git a/include/linux/usb/otg.h b/include/linux/usb/otg.h
+index 52661c5..bd1dcf8 100644
+--- a/include/linux/usb/otg.h
++++ b/include/linux/usb/otg.h
+@@ -41,6 +41,21 @@ struct usb_otg {
  
-+/* USB_DT_OTG (from OTG 2.0 supplement) */
-+struct usb_otg20_descriptor {
-+	__u8  bLength;
-+	__u8  bDescriptorType;
+ };
+ 
++/**
++ * struct usb_otg_caps - describes the otg capabilities of the device
++ * @otg_rev: The OTG revision number the device is compliant with, it's
++ *		in binary-coded decimal (i.e. 2.0 is 0200H).
++ * @hnp_support: Indicates if the device supports HNP.
++ * @srp_support: Indicates if the device supports SRP.
++ * @adp_support: Indicates if the device supports ADP.
++ */
++struct usb_otg_caps {
++	u16 otg_rev;
++	bool hnp_support;
++	bool srp_support;
++	bool adp_support;
++};
 +
-+	__u8  bmAttributes;	/* support for HNP, SRP and ADP, etc */
-+	__le16 bcdOTG;		/* OTG and EH supplement release number
-+				 * in binary-coded decimal(i.e. 2.0 is 0200H)
-+				 */
-+} __attribute__ ((packed));
-+
- /* from usb_otg_descriptor.bmAttributes */
- #define USB_OTG_SRP		(1 << 0)
- #define USB_OTG_HNP		(1 << 1)	/* swap host/device roles */
+ extern const char *usb_otg_state_string(enum usb_otg_state state);
+ 
+ /* Context: can sleep */
 -- 
 1.9.1
 
