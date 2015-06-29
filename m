@@ -1,59 +1,37 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: renesas,h8300-bsc
-Date: Mon, 29 Jun 2015 11:51:13 +0200
-Message-ID: <CAMuHMdUUt6pgYqz35MyxSEnOds3Ji9CpQMU4m4ihqS_PO6ei=w@mail.gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH RFC 0/4] PL08x DT bindings and LPC18xx DMA support
+Date: Mon, 29 Jun 2015 12:53:04 +0200
+Message-ID: <CACRpkdZZBGzioO25-Sov0CVK8JuRp1uuJDEZKFtLxg9WwsSzww@mail.gmail.com>
+References: <1434280937-8369-1-git-send-email-manabian@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1434280937-8369-1-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yoshinori Sato <ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org>
-Cc: uclinux-h8-devel-5NWGOfrQmneRv+LV9MX5uooqe+aC9MnS@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sato-san,
+On Sun, Jun 14, 2015 at 1:22 PM, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> =
+wrote:
 
-Documentation/devicetree/bindings/memory-controllers/renesas,h8300-bsc.txt says:
+> This patch set aims to add support for DMA on the NXP LPC18xx/43xx
+> (Cortex-M3/M4) platform. The platform has a PL080 controller with a
+> mux in front of the DMA request lines. This setup is quite common
+> and can be found on most other, if not all, NXP LPC devices.
 
-+Required properties:
-+  - compatible: Must be "renesas,h8300-bsc".
-+  - reg: Base address and length of BSC registers.
+Nice!
 
-But the example uses another compatible value, which is not documented,
-in addition to the one above:
+>  - remove channel sub-nodes from driver and dt doc.
 
-+Example.
-+       bsc: memory-controller@fee01e {
-+               compatible = "renesas,h8300h-bsc", "renesas,h8300-bsc";
-+               reg = <0xfee01e 8>;
-+       };
+Why? It was a good approach for the Nomadik. Well I'll look
+how you do it for NXP, I guess it makes total sense for you.
 
-The example matches the simulator's dts:
-
-h8300h_sim.dts: compatible = "renesas,h8300h-bsc", "renesas,h8300-bsc";
-
-But the dtses for real hardware use yet another undocumented value:
-
-edosk2674.dts: compatible = "renesas,h8s-bsc", "renesas,h8300-bsc";
-h8s_sim.dts: compatible = "renesas,h8s-bsc", "renesas,h8300-bsc";
-
-Can you please fix this?
-
-BTW, scripts/checkpatch.pl should have told you about some of the
-discrepancies.
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+N=C3=B3ras,
+Linus Walleij
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
