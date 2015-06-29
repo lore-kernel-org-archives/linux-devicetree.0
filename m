@@ -1,7 +1,7 @@
 From: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v6 12/23] usb: gadget: ether: allocate and init otg descriptor by otg capabilities
-Date: Mon, 29 Jun 2015 15:47:51 +0800
-Message-ID: <1435564082-14583-13-git-send-email-jun.li@freescale.com>
+Subject: [PATCH v6 15/23] usb: gadget: cdc2: allocate and init otg descriptor by otg capabilities
+Date: Mon, 29 Jun 2015 15:47:54 +0800
+Message-ID: <1435564082-14583-16-git-send-email-jun.li@freescale.com>
 References: <1435564082-14583-1-git-send-email-jun.li@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -13,20 +13,19 @@ Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z
 List-Id: devicetree@vger.kernel.org
 
 Allocate and initialize usb otg descriptor according to gadget otg
-capabilities, add it for each usb configurations, free it while
-ether unbind. If otg capability is not defined, keep its otg
-descriptor unchanged.
+capabilities, add it for each usb configurations. If otg capability
+is not defined, keep its original otg descriptor unchanged.
 
 Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- drivers/usb/gadget/legacy/ether.c | 36 ++++++++++++++++++++----------------
- 1 file changed, 20 insertions(+), 16 deletions(-)
+ drivers/usb/gadget/legacy/cdc2.c | 35 +++++++++++++++++++----------------
+ 1 file changed, 19 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/usb/gadget/legacy/ether.c b/drivers/usb/gadget/legacy/ether.c
-index a3323dc..31e9160 100644
---- a/drivers/usb/gadget/legacy/ether.c
-+++ b/drivers/usb/gadget/legacy/ether.c
-@@ -171,20 +171,7 @@ static struct usb_device_descriptor device_desc = {
+diff --git a/drivers/usb/gadget/legacy/cdc2.c b/drivers/usb/gadget/legacy/cdc2.c
+index afd3e37..ecd8c8d 100644
+--- a/drivers/usb/gadget/legacy/cdc2.c
++++ b/drivers/usb/gadget/legacy/cdc2.c
+@@ -60,21 +60,7 @@ static struct usb_device_descriptor device_desc = {
  	.bNumConfigurations =	1,
  };
  
@@ -44,11 +43,12 @@ index a3323dc..31e9160 100644
 -	(struct usb_descriptor_header *) &otg_descriptor,
 -	NULL,
 -};
+-
 +static const struct usb_descriptor_header *otg_desc[2];
  
+ /* string IDs are assigned dynamically */
  static struct usb_string strings_dev[] = {
- 	[USB_GADGET_MANUFACTURER_IDX].s = "",
-@@ -416,17 +403,28 @@ static int eth_bind(struct usb_composite_dev *cdev)
+@@ -193,10 +179,21 @@ static int cdc_bind(struct usb_composite_dev *cdev)
  	device_desc.iManufacturer = strings_dev[USB_GADGET_MANUFACTURER_IDX].id;
  	device_desc.iProduct = strings_dev[USB_GADGET_PRODUCT_IDX].id;
  
@@ -63,23 +63,15 @@ index a3323dc..31e9160 100644
 +		otg_desc[1] = NULL;
 +	}
 +
- 	/* register our configuration(s); RNDIS first, if it's used */
- 	if (has_rndis()) {
- 		status = usb_add_config(cdev, &rndis_config_driver,
- 				rndis_do_config);
- 		if (status < 0)
--			goto fail1;
-+			goto fail2;
- 	}
- 
- 	status = usb_add_config(cdev, &eth_config_driver, eth_do_config);
+ 	/* register our configuration */
+ 	status = usb_add_config(cdev, &cdc_config_driver, cdc_do_config);
  	if (status < 0)
 -		goto fail1;
 +		goto fail2;
  
  	usb_composite_overwrite_options(cdev, &coverwrite);
  	dev_info(&gadget->dev, "%s, version: " DRIVER_VERSION "\n",
-@@ -434,6 +432,9 @@ static int eth_bind(struct usb_composite_dev *cdev)
+@@ -204,6 +201,9 @@ static int cdc_bind(struct usb_composite_dev *cdev)
  
  	return 0;
  
@@ -87,12 +79,12 @@ index a3323dc..31e9160 100644
 +	kfree(otg_desc[0]);
 +	otg_desc[0] = NULL;
  fail1:
- 	if (has_rndis())
- 		usb_put_function_instance(fi_rndis);
-@@ -463,6 +464,9 @@ static int eth_unbind(struct usb_composite_dev *cdev)
- 		usb_put_function(f_geth);
- 		usb_put_function_instance(fi_geth);
- 	}
+ 	usb_put_function_instance(fi_serial);
+ fail:
+@@ -219,6 +219,9 @@ static int cdc_unbind(struct usb_composite_dev *cdev)
+ 		usb_put_function(f_ecm);
+ 	if (!IS_ERR_OR_NULL(fi_ecm))
+ 		usb_put_function_instance(fi_ecm);
 +	kfree(otg_desc[0]);
 +	otg_desc[0] = NULL;
 +
