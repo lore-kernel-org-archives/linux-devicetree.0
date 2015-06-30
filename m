@@ -1,60 +1,86 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] spi: bcm2835: add spi-bcm2835aux driver for the
- auxiliar spi1 and spi2
-Date: Tue, 30 Jun 2015 10:42:32 +0100
-Message-ID: <20150630094232.GM11162@sirena.org.uk>
-References: <1434980408-4086-1-git-send-email-kernel@martin.sperl.org>
- <20150622165529.1b758b07@north>
- <E72B3D8C-EA1B-4B4C-8EAF-C14A5631882E@martin.sperl.org>
- <97C7561C-6D67-4F51-94BB-3B8D401D77A0@martin.sperl.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="um2V5WpqCyd73IVb"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <97C7561C-6D67-4F51-94BB-3B8D401D77A0-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Cc: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jakub =?utf-8?B?S2ljacWEc2tp?= <moorray3-5tc4TXWwyLM@public.gmane.org>
+From: Kimmo Saarela <kimmo.saarela-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 3/5] ASoC: tlv320aic32x4: Move bit polarity config to specific switch statement
+Date: Tue, 30 Jun 2015 13:25:11 +0300
+Message-ID: <7007ae68aa1b5585ca791cedcf0527d1c918d2ce.1435569929.git.kimmo.saarela@gmail.com>
+References: <cover.1435569929.git.kimmo.saarela@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1435569929.git.kimmo.saarela-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <cover.1435569929.git.kimmo.saarela-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+References: <cover.1435569929.git.kimmo.saarela-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Kimmo Saarela <kimmo.saarela-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Move data format bit polarity control to its own switch statement,
+instead of magically selecting invert for specific formats.
+Fix supply format in binding documentation
 
---um2V5WpqCyd73IVb
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Kimmo Saarela <kimmo.saarela-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ .../devicetree/bindings/sound/tlv320aic32x4.txt    |  2 +-
+ sound/soc/codecs/tlv320aic32x4.c                   | 22 ++++++++++++++++++++--
+ 2 files changed, 21 insertions(+), 3 deletions(-)
 
-On Thu, Jun 25, 2015 at 04:19:17PM +0200, Martin Sperl wrote:
-> So what does it require to get this merged?
+diff --git a/Documentation/devicetree/bindings/sound/tlv320aic32x4.txt b/Documentation/devicetree/bindings/sound/tlv320aic32x4.txt
+index 5e2741a..143a192 100644
+--- a/Documentation/devicetree/bindings/sound/tlv320aic32x4.txt
++++ b/Documentation/devicetree/bindings/sound/tlv320aic32x4.txt
+@@ -5,7 +5,7 @@ The tlv320aic32x4 serial control bus communicates through I2C protocols
+ Required properties:
+  - compatible: Should be "ti,tlv320aic32x4"
+  - reg: I2C slave address
+- - supply-*: Required supply regulators are:
++ - *-supply: Required supply regulators are:
+     "iov" - digital IO power supply
+     "ldoin" - LDO power supply
+     "dv" - Digital core power supply
+diff --git a/sound/soc/codecs/tlv320aic32x4.c b/sound/soc/codecs/tlv320aic32x4.c
+index ce0972f..d3636c1 100644
+--- a/sound/soc/codecs/tlv320aic32x4.c
++++ b/sound/soc/codecs/tlv320aic32x4.c
+@@ -353,17 +353,35 @@ static int aic32x4_set_dai_fmt(struct snd_soc_dai *codec_dai, unsigned int fmt)
+ 		return -EINVAL;
+ 	}
+ 
++	switch (fmt & SND_SOC_DAIFMT_INV_MASK) {
++	case SND_SOC_DAIFMT_IB_NF:
++		iface_reg_3 |= (1 << 3); /* invert bit clock */
++		break;
++
++	case SND_SOC_DAIFMT_NB_IF:
++		break;
++
++	case SND_SOC_DAIFMT_IB_IF:
++		iface_reg_3 |= (1 << 3); /* invert bit clock */
++		break;
++
++	case SND_SOC_DAIFMT_NB_NF:
++		break;
++
++	default:
++		return -EINVAL;
++	}
++
++
+ 	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
+ 	case SND_SOC_DAIFMT_I2S:
+ 		break;
+ 	case SND_SOC_DAIFMT_DSP_A:
+ 		iface_reg_1 |= (AIC32X4_DSP_MODE << AIC32X4_PLLJ_SHIFT);
+-		iface_reg_3 |= (1 << 3); /* invert bit clock */
+ 		iface_reg_2 = 0x01; /* add offset 1 */
+ 		break;
+ 	case SND_SOC_DAIFMT_DSP_B:
+ 		iface_reg_1 |= (AIC32X4_DSP_MODE << AIC32X4_PLLJ_SHIFT);
+-		iface_reg_3 |= (1 << 3); /* invert bit clock */
+ 		break;
+ 	case SND_SOC_DAIFMT_RIGHT_J:
+ 		iface_reg_1 |=
+-- 
+1.9.1
 
-Don't top post.
-
-This looks relevant:
-
-> >> On 22.06.2015, at 16:55, Jakub Kici=C5=84ski <moorray3-5tc4TXWwyLM@public.gmane.org> wrote:
-> >> As mentioned by Noralf UART1 is quite commonly used on Compute Modules.
-> >> Proper driver - perhaps modelled as a bus - seems like a prerequisite
-> >> for this work.  You are also not using IRQ mux in DT binding example
-> >> which is very misleading.
-
---um2V5WpqCyd73IVb
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVkmSHAAoJECTWi3JdVIfQk8gH/1fvuSsjq7h/kj0PBkRKVXSw
-z2ixs8Wx7meucb7w3T+fVvaUJ5CTQIFGoA2nCRDDDupNkjMFraNnhhS5W2UFdnDy
-Z2ONmywiySMc3wfUl0MmXgz0ETF6Q9OwQ8DFsdQVsl7KnVvgW0TUWJo8DugX2hJD
-DFt/eImM6YrbIjAz2H4UatKb5xsoogpeImoT6eXxKCEPtrBxvOG/h+UPMWSFFyco
-BP3j7P6BT9rSElPObl47O0aCz30+78JlkZrd8vf8NEkEEyTiUiSmr5cFrTmSP9mO
-5nQmis/29NgnI/JotjSoKsp/lg5JaR7zlPPAzGJi1McVRlTtpNpz1toyFKDOpo0=
-=OWhC
------END PGP SIGNATURE-----
-
---um2V5WpqCyd73IVb--
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
