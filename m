@@ -1,83 +1,71 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] Fix pSeries boot failure, by returning
- =?iso-8859-1?Q?interrupt=0D?= controller node when an interrupt-map
- property doesn't exist
-Date: Tue, 30 Jun 2015 17:01:56 +0100
-Message-ID: <20150630160156.7010DC405A7@trevor.secretlab.ca>
-References: <CAEFTgixGKnMuMGp2DfoksqF0m_P6-EGJ0sUjg2=ReX2X0tq2nA@mail.gmail.com>
-	<1435634613.26815.78.camel@kernel.crashing.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1435634613.26815.78.camel-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Jeremy Linton <lintonrjeremy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH] of/irq: Rename "intc_desc" to "of_intc_desc" to fix OF
+ on sh
+Date: Tue, 30 Jun 2015 17:04:06 +0100
+Message-ID: <20150630160406.7105EC405A7@trevor.secretlab.ca>
+References: <1435322565-18798-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-next-owner@vger.kernel.org>
+In-Reply-To: <1435322565-18798-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-next-owner@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-next@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 30 Jun 2015 13:23:33 +1000
-, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+On Fri, 26 Jun 2015 14:42:45 +0200
+, Geert Uytterhoeven <geert+renesas@glider.be>
  wrote:
-> On Mon, 2015-06-29 at 18:50 -0500, Jeremy Linton wrote:
-> > This is a reformat of the patch attached to "pSeries boot failure due
-> > to wrong interrupt controller".
-> > 
-> > It allows of_irq_parse_raw() to return the node pointer of the
-> > interrupt controller, rather than the parent bus. This allows
-> > ics_rtas_host_match() to detect that the controller is a legacy 8259
-> > and avoid using xics. This avoids an RTAS assertion/crash during early
-> > kernel bootstrapping
-> > 
-> > Signed-off-by: Jeremy Linton <lintonrjeremy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Now CONFIG_OF can be enabled on sh:
 > 
-> Reviewed-by: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-> ---
+>     drivers/of/irq.c:472:8: error: redefinition of 'struct intc_desc'
+>     include/linux/sh_intc.h:109:8: note: originally defined here
 > 
-> Rob, do you want to take this or should we ?
+> As "intc_desc" is used all over the place in sh platform code, while
+> drivers/of/irq.c has a local definition used in a single function,
+> rename the latter by prefixing it with "of_".
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Merged, thanks.
+Applied, thanks.
 
-Jeremy, please check your mailer configuration. The patch was mangled
-and would not apply. I had to fix it up manually.
-
-Also, does this patch need to be backported into stable? What commit
-introduced this bug, and which kernel does it first appear in?
-
-Thanks,
 g.
 
+> ---
+> sh-allmodconfig in next-20150626
+> http://kisskb.ellerman.id.au/kisskb/buildresult/12450810/
+> ---
+>  drivers/of/irq.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
-> > ---
-> >  drivers/of/irq.c | 3 +--
-> >  1 file changed, 1 insertion(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-> > index 1a79806..cb4b9ae 100644
-> > --- a/drivers/of/irq.c
-> > +++ b/drivers/of/irq.c
-> > @@ -252,8 +252,6 @@ int of_irq_parse_raw(const __be32 *addr, struct
-> > of_phandle_args *out_irq)
-> >                  * Successfully parsed an interrrupt-map translation; copy new
-> >                  * interrupt specifier into the out_irq structure
-> >                  */
-> > -               out_irq->np = newpar;
-> > -
-> >                 match_array = imap - newaddrsize - newintsize;
-> >                 for (i = 0; i < newintsize; i++)
-> >                         out_irq->args[i] = be32_to_cpup(imap - newintsize + i);
-> > @@ -262,6 +260,7 @@ int of_irq_parse_raw(const __be32 *addr, struct
-> > of_phandle_args *out_irq)
-> > 
-> >         skiplevel:
-> >                 /* Iterate again with new parent */
-> > +               out_irq->np = newpar;
-> >                 pr_debug(" -> new parent: %s\n", of_node_full_name(newpar));
-> >                 of_node_put(ipar);
-> >                 ipar = newpar;
-> > --
-> > 1.8.1.4
+> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+> index 1a7980692f254c69..f6794aafa9925af2 100644
+> --- a/drivers/of/irq.c
+> +++ b/drivers/of/irq.c
+> @@ -469,7 +469,7 @@ int of_irq_to_resource_table(struct device_node *dev, struct resource *res,
+>  }
+>  EXPORT_SYMBOL_GPL(of_irq_to_resource_table);
+>  
+> -struct intc_desc {
+> +struct of_intc_desc {
+>  	struct list_head	list;
+>  	struct device_node	*dev;
+>  	struct device_node	*interrupt_parent;
+> @@ -485,7 +485,7 @@ struct intc_desc {
+>  void __init of_irq_init(const struct of_device_id *matches)
+>  {
+>  	struct device_node *np, *parent = NULL;
+> -	struct intc_desc *desc, *temp_desc;
+> +	struct of_intc_desc *desc, *temp_desc;
+>  	struct list_head intc_desc_list, intc_parent_list;
+>  
+>  	INIT_LIST_HEAD(&intc_desc_list);
+> @@ -496,7 +496,7 @@ void __init of_irq_init(const struct of_device_id *matches)
+>  				!of_device_is_available(np))
+>  			continue;
+>  		/*
+> -		 * Here, we allocate and populate an intc_desc with the node
+> +		 * Here, we allocate and populate an of_intc_desc with the node
+>  		 * pointer, interrupt-parent device_node etc.
+>  		 */
+>  		desc = kzalloc(sizeof(*desc), GFP_KERNEL);
+> -- 
+> 1.9.1
 > 
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
