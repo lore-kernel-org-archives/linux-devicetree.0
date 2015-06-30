@@ -1,58 +1,46 @@
-From: Jeremy Linton <lintonrjeremy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] Fix pSeries boot failure, by returning interrupt controller
- node when an interrupt-map property doesn't exist
-Date: Mon, 29 Jun 2015 18:50:55 -0500
-Message-ID: <CAEFTgixGKnMuMGp2DfoksqF0m_P6-EGJ0sUjg2=ReX2X0tq2nA@mail.gmail.com>
+From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH-V5 3/4] mfd: 88pm800: Set default interrupt clear method
+Date: Tue, 30 Jun 2015 09:29:26 +0900
+Message-ID: <CAJKOXPd0raMXohsBK8rB8VsRt0kDTD9es6MAjHLKCqYyCAZC1A@mail.gmail.com>
+References: <1435591877-18214-1-git-send-email-vaibhav.hiremath@linaro.org>
+	<1435591877-18214-4-git-send-email-vaibhav.hiremath@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1435591877-18214-4-git-send-email-vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org
-Cc: robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org
+To: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Zhao Ye <zhaoy-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, yizhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is a reformat of the patch attached to "pSeries boot failure due
-to wrong interrupt controller".
+2015-06-30 0:31 GMT+09:00 Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
+> As per the spec, bit 1 (INT_CLEAR_MODE) of reg addr 0xe
+> (page 0) controls the method of clearing interrupt
+> status of 88pm800 family of devices;
+>
+>   0: clear on read
+>   1: clear on write
+>
+> If pdata is not coming from board file, then set the
+> default irq clear method to "irq clear on write"
+>
+> Also, as suggested by "Lee Jones" renaming variable field
+> to appropriate name.
+>
+> Signed-off-by: Zhao Ye <zhaoy-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  drivers/mfd/88pm800.c       | 15 ++++++++++-----
+>  include/linux/mfd/88pm80x.h | 10 ++++++++--
+>  2 files changed, 18 insertions(+), 7 deletions(-)
+>
 
-It allows of_irq_parse_raw() to return the node pointer of the
-interrupt controller, rather than the parent bus. This allows
-ics_rtas_host_match() to detect that the controller is a legacy 8259
-and avoid using xics. This avoids an RTAS assertion/crash during early
-kernel bootstrapping.
+Looks fine to me.
 
+Reviewed-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 
-
-
-Signed-off-by: Jeremy Linton <lintonrjeremy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- drivers/of/irq.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-index 1a79806..cb4b9ae 100644
---- a/drivers/of/irq.c
-+++ b/drivers/of/irq.c
-@@ -252,8 +252,6 @@ int of_irq_parse_raw(const __be32 *addr, struct
-of_phandle_args *out_irq)
-                 * Successfully parsed an interrrupt-map translation; copy new
-                 * interrupt specifier into the out_irq structure
-                 */
--               out_irq->np = newpar;
--
-                match_array = imap - newaddrsize - newintsize;
-                for (i = 0; i < newintsize; i++)
-                        out_irq->args[i] = be32_to_cpup(imap - newintsize + i);
-@@ -262,6 +260,7 @@ int of_irq_parse_raw(const __be32 *addr, struct
-of_phandle_args *out_irq)
-
-        skiplevel:
-                /* Iterate again with new parent */
-+               out_irq->np = newpar;
-                pr_debug(" -> new parent: %s\n", of_node_full_name(newpar));
-                of_node_put(ipar);
-                ipar = newpar;
---
-1.8.1.4
+Best regards,
+Krzysztof
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
