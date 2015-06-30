@@ -1,173 +1,68 @@
-From: James Liao <jamesjj.liao@mediatek.com>
-Subject: [PATCH v2 2/4] dt-bindings: ARM: Mediatek: Document devicetree bindings for clock controllers
-Date: Tue, 30 Jun 2015 10:58:45 +0800
-Message-ID: <1435633127-31952-3-git-send-email-jamesjj.liao@mediatek.com>
-References: <1435633127-31952-1-git-send-email-jamesjj.liao@mediatek.com>
+From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH] Fix pSeries boot failure, by returning interrupt
+ controller node when an interrupt-map property doesn't exist
+Date: Tue, 30 Jun 2015 13:23:33 +1000
+Message-ID: <1435634613.26815.78.camel@kernel.crashing.org>
+References: <CAEFTgixGKnMuMGp2DfoksqF0m_P6-EGJ0sUjg2=ReX2X0tq2nA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1435633127-31952-1-git-send-email-jamesjj.liao@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>, Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: srv_heupstream@mediatek.com, Daniel Kurtz <djkurtz@chromium.org>, Ricky Liang <jcliang@chromium.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, James Liao <jamesjj.liao@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAEFTgixGKnMuMGp2DfoksqF0m_P6-EGJ0sUjg2=ReX2X0tq2nA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jeremy Linton <lintonrjeremy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds the binding documentation for the mmsys, imgsys, vdecsys,
-vencsys and vencltsys controllers found on Mediatek SoCs.
+On Mon, 2015-06-29 at 18:50 -0500, Jeremy Linton wrote:
+> This is a reformat of the patch attached to "pSeries boot failure due
+> to wrong interrupt controller".
+> 
+> It allows of_irq_parse_raw() to return the node pointer of the
+> interrupt controller, rather than the parent bus. This allows
+> ics_rtas_host_match() to detect that the controller is a legacy 8259
+> and avoid using xics. This avoids an RTAS assertion/crash during early
+> kernel bootstrapping
+> 
+> Signed-off-by: Jeremy Linton <lintonrjeremy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
+Reviewed-by: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
 ---
- .../bindings/arm/mediatek/mediatek,imgsys.txt      | 22 ++++++++++++++++++++++
- .../bindings/arm/mediatek/mediatek,mmsys.txt       | 22 ++++++++++++++++++++++
- .../bindings/arm/mediatek/mediatek,vdecsys.txt     | 22 ++++++++++++++++++++++
- .../bindings/arm/mediatek/mediatek,vencltsys.txt   | 22 ++++++++++++++++++++++
- .../bindings/arm/mediatek/mediatek,vencsys.txt     | 22 ++++++++++++++++++++++
- 5 files changed, 110 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,imgsys.txt
- create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.txt
- create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,vdecsys.txt
- create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,vencltsys.txt
- create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,vencsys.txt
 
-diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,imgsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,imgsys.txt
-new file mode 100644
-index 0000000..7612bac
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,imgsys.txt
-@@ -0,0 +1,22 @@
-+Mediatek imgsys controller
-+============================
-+
-+The Mediatek imgsys controller provides various clocks to the system.
-+
-+Required Properties:
-+
-+- compatible: Should be:
-+	- "mediatek,mt8173-imgsys", "syscon"
-+- #clock-cells: Must be 1
-+
-+The imgsys controller uses the common clk binding from
-+Documentation/devicetree/bindings/clock/clock-bindings.txt
-+The available clocks are defined in dt-bindings/clock/mt*-clk.h.
-+
-+Example:
-+
-+imgsys: imgsys@15000000 {
-+	compatible = "mediatek,mt8173-imgsys", "syscon";
-+	reg = <0 0x15000000 0 0x1000>;
-+	#clock-cells = <1>;
-+};
-diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.txt
-new file mode 100644
-index 0000000..b51e417
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.txt
-@@ -0,0 +1,22 @@
-+Mediatek mmsys controller
-+============================
-+
-+The Mediatek mmsys controller provides various clocks to the system.
-+
-+Required Properties:
-+
-+- compatible: Should be:
-+	- "mediatek,mt8173-mmsys", "syscon"
-+- #clock-cells: Must be 1
-+
-+The mmsys controller uses the common clk binding from
-+Documentation/devicetree/bindings/clock/clock-bindings.txt
-+The available clocks are defined in dt-bindings/clock/mt*-clk.h.
-+
-+Example:
-+
-+mmsys: mmsys@14000000 {
-+	compatible = "mediatek,mt8173-mmsys", "syscon";
-+	reg = <0 0x14000000 0 0x1000>;
-+	#clock-cells = <1>;
-+};
-diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,vdecsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,vdecsys.txt
-new file mode 100644
-index 0000000..a5b94a7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,vdecsys.txt
-@@ -0,0 +1,22 @@
-+Mediatek vdecsys controller
-+============================
-+
-+The Mediatek vdecsys controller provides various clocks to the system.
-+
-+Required Properties:
-+
-+- compatible: Should be:
-+	- "mediatek,mt8173-vdecsys", "syscon"
-+- #clock-cells: Must be 1
-+
-+The vdecsys controller uses the common clk binding from
-+Documentation/devicetree/bindings/clock/clock-bindings.txt
-+The available clocks are defined in dt-bindings/clock/mt*-clk.h.
-+
-+Example:
-+
-+vdecsys: vdecsys@16000000 {
-+	compatible = "mediatek,mt8173-vdecsys", "syscon";
-+	reg = <0 0x16000000 0 0x1000>;
-+	#clock-cells = <1>;
-+};
-diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,vencltsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,vencltsys.txt
-new file mode 100644
-index 0000000..3d4e8d8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,vencltsys.txt
-@@ -0,0 +1,22 @@
-+Mediatek vencltsys controller
-+============================
-+
-+The Mediatek vencltsys controller provides various clocks to the system.
-+
-+Required Properties:
-+
-+- compatible: Should be:
-+	- "mediatek,mt8173-vencltsys", "syscon"
-+- #clock-cells: Must be 1
-+
-+The vencltsys controller uses the common clk binding from
-+Documentation/devicetree/bindings/clock/clock-bindings.txt
-+The available clocks are defined in dt-bindings/clock/mt*-clk.h.
-+
-+Example:
-+
-+vencltsys: vencltsys@19000000 {
-+	compatible = "mediatek,mt8173-vencltsys", "syscon";
-+	reg = <0 0x19000000 0 0x1000>;
-+	#clock-cells = <1>;
-+};
-diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,vencsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,vencsys.txt
-new file mode 100644
-index 0000000..e5b72f5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,vencsys.txt
-@@ -0,0 +1,22 @@
-+Mediatek vencsys controller
-+============================
-+
-+The Mediatek vencsys controller provides various clocks to the system.
-+
-+Required Properties:
-+
-+- compatible: Should be:
-+	- "mediatek,mt8173-vencsys", "syscon"
-+- #clock-cells: Must be 1
-+
-+The vencsys controller uses the common clk binding from
-+Documentation/devicetree/bindings/clock/clock-bindings.txt
-+The available clocks are defined in dt-bindings/clock/mt*-clk.h.
-+
-+Example:
-+
-+vencsys: vencsys@18000000 {
-+	compatible = "mediatek,mt8173-vencsys", "syscon";
-+	reg = <0 0x18000000 0 0x1000>;
-+	#clock-cells = <1>;
-+};
--- 
-1.8.1.1.dirty
+Rob, do you want to take this or should we ?
+
+> ---
+>  drivers/of/irq.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+> index 1a79806..cb4b9ae 100644
+> --- a/drivers/of/irq.c
+> +++ b/drivers/of/irq.c
+> @@ -252,8 +252,6 @@ int of_irq_parse_raw(const __be32 *addr, struct
+> of_phandle_args *out_irq)
+>                  * Successfully parsed an interrrupt-map translation; copy new
+>                  * interrupt specifier into the out_irq structure
+>                  */
+> -               out_irq->np = newpar;
+> -
+>                 match_array = imap - newaddrsize - newintsize;
+>                 for (i = 0; i < newintsize; i++)
+>                         out_irq->args[i] = be32_to_cpup(imap - newintsize + i);
+> @@ -262,6 +260,7 @@ int of_irq_parse_raw(const __be32 *addr, struct
+> of_phandle_args *out_irq)
+> 
+>         skiplevel:
+>                 /* Iterate again with new parent */
+> +               out_irq->np = newpar;
+>                 pr_debug(" -> new parent: %s\n", of_node_full_name(newpar));
+>                 of_node_put(ipar);
+>                 ipar = newpar;
+> --
+> 1.8.1.4
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
