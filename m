@@ -1,98 +1,45 @@
 From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH/RFC 3/3] of/dynamic: Update list of aliases on aliases
- changes
-Date: Tue, 30 Jun 2015 18:21:31 +0100
-Message-ID: <20150630172131.D4E6CC4041A@trevor.secretlab.ca>
-References: <1435675876-2159-1-git-send-email-geert+renesas@glider.be>
-	<1435675876-2159-4-git-send-email-geert+renesas@glider.be>
+Subject: Re: [PATCH v1 01/10] of/platform: Set fwnode field for new devices
+Date: Tue, 30 Jun 2015 19:24:19 +0100
+Message-ID: <20150630182419.79B03C4086C@trevor.secretlab.ca>
+References: <1435676108-20590-1-git-send-email-tomeu.vizoso@collabora.com>
+	<1435676108-20590-2-git-send-email-tomeu.vizoso@collabora.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1435675876-2159-4-git-send-email-geert+renesas@glider.be>
+In-Reply-To: <1435676108-20590-2-git-send-email-tomeu.vizoso@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+To: linux-kernel@vger.kernel.org
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Mark Brown <broonie@kernel.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 30 Jun 2015 16:51:16 +0200
-, Geert Uytterhoeven <geert+renesas@glider.be>
+On Tue, 30 Jun 2015 16:54:59 +0200
+, Tomeu Vizoso <tomeu.vizoso@collabora.com>
  wrote:
-> Currently the list of aliases is not updated when an overlay that
-> modifies /aliases is added or removed. This breaks drivers (e.g. serial)
-> that rely on of_alias_get_id().
+> When allocating a new platform device, set the fwnode field in the
+> struct device to point to the device_node.
 > 
-> Update the list of aliases when a property of the /aliases node is
-> added, removed, or updated.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
->   - Should the OF core handle this itself, by registering a notifier
->     using of_reconfig_notifier_register()?
+> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
 
-Yes. Let's not add new hooks.
-
->   - Adding or destroying the /aliases node itself should be handled,
->     too.
-
-Yes
-
->   - Is it safe to deallocate struct alias_prop using kfree()? It may
->     have been allocated using early_init_dt_alloc_memory_arch() /
->     memblock_alloc(). What's the alternative? Leaking memory?
-
-Properties are not refcounted, so yes we leak memory. The memory remains
-owned by the aliases node, but because the aliases node is never freed,
-neither are any of the properties. Solving this isn't easy because it
-would require adding refcounting *everywhere* that properties are
-accessed. I think we have to just live with it until someone clever can
-some up with a solution.
+Acked-by: Grant Likely <grant.likely@linaro.org>
 
 g.
 
 > ---
->  drivers/of/dynamic.c | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
 > 
-> diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
-> index 1901f8870591fe30..65dfb26f879c3a9a 100644
-> --- a/drivers/of/dynamic.c
-> +++ b/drivers/of/dynamic.c
-> @@ -502,6 +502,16 @@ static void __of_changeset_entry_invert(struct of_changeset_entry *ce,
->  	}
->  }
->  
-> +static void *alias_alloc(u64 size, u64 align)
-> +{
-> +	return kzalloc(size, GFP_KERNEL);
-> +}
-> +
-> +static void alias_free(void *p)
-> +{
-> +	kfree(p);
-> +}
-> +
->  static void __of_changeset_entry_notify(struct of_changeset_entry *ce, bool revert)
->  {
->  	struct of_reconfig_data rd;
-> @@ -513,6 +523,20 @@ static void __of_changeset_entry_notify(struct of_changeset_entry *ce, bool reve
->  		ce = &ce_inverted;
+>  drivers/of/platform.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> index ddf8e42..e880f55 100644
+> --- a/drivers/of/platform.c
+> +++ b/drivers/of/platform.c
+> @@ -139,6 +139,7 @@ struct platform_device *of_device_alloc(struct device_node *np,
 >  	}
 >  
-> +	if (ce->np == of_aliases) {
-> +		switch (ce->action) {
-> +		case OF_RECONFIG_ADD_PROPERTY:
-> +			of_alias_create(ce->prop, alias_alloc);
-> +			break;
-> +		case OF_RECONFIG_REMOVE_PROPERTY:
-> +			of_alias_destroy(ce->prop->name, alias_free);
-> +			break;
-> +		case OF_RECONFIG_UPDATE_PROPERTY:
-> +			of_alias_destroy(ce->old_prop->name, alias_free);
-> +			of_alias_create(ce->prop, alias_alloc);
-> +			break;
-> +		}
-> +	}
->  	switch (ce->action) {
->  	case OF_RECONFIG_ATTACH_NODE:
->  	case OF_RECONFIG_DETACH_NODE:
+>  	dev->dev.of_node = of_node_get(np);
+> +	dev->dev.fwnode = &dev->dev.of_node->fwnode;
+>  	dev->dev.parent = parent ? : &platform_bus;
+>  
+>  	if (bus_id)
 > -- 
-> 1.9.1
+> 2.4.1
 > 
