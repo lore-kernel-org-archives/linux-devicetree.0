@@ -1,35 +1,32 @@
-From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH-V5 2/4] mfd: 88pm800: Remove unnecessary protection around pdata
-Date: Tue, 30 Jun 2015 09:34:21 +0900
-Message-ID: <CAJKOXPduM_7vjiyFOtzqDyULSgk+ZG3rnn5qmm+ON+-uTJs_HA@mail.gmail.com>
-References: <1435591877-18214-1-git-send-email-vaibhav.hiremath@linaro.org>
-	<1435591877-18214-3-git-send-email-vaibhav.hiremath@linaro.org>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] ARM: dts: sunxi: Adjust touchscreen compatible for sun5i
+ and later
+Date: Mon, 29 Jun 2015 17:39:16 -0700
+Message-ID: <20150630003916.GI6430@kroah.com>
+References: <1435322859-27760-1-git-send-email-hdegoede@redhat.com>
+ <20150626164241.GD13320@kroah.com>
+ <CAKLfuV1DHGQT=ejXfPYnNB6U_BoZqO0OpTsKY3NCrmL+1Yus5Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1435591877-18214-3-git-send-email-vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, yizhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <stable-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAKLfuV1DHGQT=ejXfPYnNB6U_BoZqO0OpTsKY3NCrmL+1Yus5Q@mail.gmail.com>
+Sender: stable-owner@vger.kernel.org
+To: "Timo S." <m.silentcreek@gmail.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, stable@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-2015-06-30 0:31 GMT+09:00 Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
-> With addition of proper checks in place in pm800_probe function,
-> which makes sure that pdata would never become NULL.
-> So remove all unnecessary protection around pdata in whole
-> driver code.
->
-> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  drivers/mfd/88pm800.c | 14 ++++++--------
->  1 file changed, 6 insertions(+), 8 deletions(-)
->
+On Sat, Jun 27, 2015 at 10:20:23AM +0200, Timo S. wrote:
+> Sorry, once again in plain text mode:
+> 
+> On Fri, Jun 26, 2015 at 6:42 PM, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> > What is the git commit id of it?  I can't do anything with this until it
+> > hits Linus's tree.
+> 
+> It's in Linus' tree now:
+> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=8bf1b9b3d90194a174493febc731f7783f2adf1a
 
-Reviewed-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Thanks, now queued up.
 
-Best regards,
-Krzysztof
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+greg k-h
