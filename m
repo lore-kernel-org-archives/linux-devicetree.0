@@ -1,45 +1,33 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH v1 01/10] of/platform: Set fwnode field for new devices
-Date: Tue, 30 Jun 2015 19:24:19 +0100
-Message-ID: <20150630182419.79B03C4086C@trevor.secretlab.ca>
-References: <1435676108-20590-1-git-send-email-tomeu.vizoso@collabora.com>
-	<1435676108-20590-2-git-send-email-tomeu.vizoso@collabora.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1435676108-20590-2-git-send-email-tomeu.vizoso@collabora.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Mark Brown <broonie@kernel.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v3 2/4] tty/serial: at91: fix some macro definitions to fit coding style
+Date: Tue, 30 Jun 2015 22:28:42 +0200
+Message-ID: <11308515.NsBzDiA1lH@wuerfel>
+References: <cover.1435672649.git.cyrille.pitchen@atmel.com> <9f0f19d2fe05ea95572b467ec49ecd11389e3be9.1435672649.git.cyrille.pitchen@atmel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <9f0f19d2fe05ea95572b467ec49ecd11389e3be9.1435672649.git.cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, leilei.zhao-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 30 Jun 2015 16:54:59 +0200
-, Tomeu Vizoso <tomeu.vizoso@collabora.com>
- wrote:
-> When allocating a new platform device, set the fwnode field in the
-> struct device to point to the device_node.
+On Tuesday 30 June 2015 16:05:15 Cyrille Pitchen wrote:
+> +#define UART_PUT_CR(port, v)   __raw_writel(v, (port)->membase + ATMEL_US_CR)
+> +#define UART_GET_MR(port)      __raw_readl((port)->membase + ATMEL_US_MR)
+> +#define UART_PUT_MR(port, v)   __raw_writel(v, (port)->membase + ATMEL_US_MR)
+> +#define UART_PUT_IER(port, v)  __raw_writel(v, (port)->membase + ATMEL_US_IER)
 > 
-> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
 
-Acked-by: Grant Likely <grant.likely@linaro.org>
+How about removing these macros entirely? I'm not aware of other drivers
+doing it like this, and it does not seem to add any value?
 
-g.
+At the same time, you could use readl_relaxed() to make the driver
+endian-safe.
 
-> ---
-> 
->  drivers/of/platform.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> index ddf8e42..e880f55 100644
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -139,6 +139,7 @@ struct platform_device *of_device_alloc(struct device_node *np,
->  	}
->  
->  	dev->dev.of_node = of_node_get(np);
-> +	dev->dev.fwnode = &dev->dev.of_node->fwnode;
->  	dev->dev.parent = parent ? : &platform_bus;
->  
->  	if (bus_id)
-> -- 
-> 2.4.1
-> 
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
