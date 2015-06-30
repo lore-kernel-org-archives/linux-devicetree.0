@@ -1,124 +1,110 @@
-Return-Path: <rvolkov@v1ros.org>
-Date: Wed, 3 Jun 2015 11:06:14 +0300
-From: Roman Volkov <rvolkov@v1ros.org>
-Subject: Re: [PATCH v3 1/5] i8042: intel-8042 DT documentation
-Message-ID: <20150603110614.3833fd37@v1ron-s7>
-In-Reply-To: <20150531190015.66c02b8f@v1ron-s7>
-References: <E1Yz4NQ-0000Cw-B5@feisty.vs19.net>
-	<20150531183740.17593bd3@v1ron-s7>
-	<20150531190015.66c02b8f@v1ron-s7>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Jiri Kosina <jkosina@suse.cz>, Wolfram Sang <wsa@the-dreams.de>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tony Prisk <linux@prisktech.co.nz>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, In-reply-to 20150315032038.GA13064@dtor-ws
-List-ID: <devicetree@vger.kernel.org>
+From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Subject: Re: [PATCH] ARM: BCM5301X: Enable UART0 for SmartRG SR-400AC
+Date: Wed, 01 Jul 2015 00:04:55 +0200
+Message-ID: <55931287.4040609@hauke-m.de>
+References: <1435103504-28592-1-git-send-email-f.fainelli@gmail.com> <CACna6rzJE8Gzrwvj+nCw=qCRho=6nZ+k1h_tFQLhNZvf5zWTDg@mail.gmail.com> <558F500C.6040004@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <558F500C.6040004-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2s=?= =?UTF-8?B?aQ==?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+List-Id: devicetree@vger.kernel.org
 
-Sun, 31 May 2015 19:00:15 +0300
-Roman Volkov <rvolkov@v1ros.org> wrote:
+On 06/28/2015 03:38 AM, Florian Fainelli wrote:
+> Le 06/27/15 15:08, Rafa=C5=82 Mi=C5=82ecki a =C3=A9crit :
+>> On 24 June 2015 at 01:51, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wr=
+ote:
+>>> Enable the use of UART0 by overriding its default status property.
+>>>
+>>> Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>> ---
+>>>  arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts | 4 ++++
+>>>  1 file changed, 4 insertions(+)
+>>>
+>>> diff --git a/arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts b/arch/a=
+rm/boot/dts/bcm4708-smartrg-sr400ac.dts
+>>> index d6a033b97c70..64a5e8ab65e0 100644
+>>> --- a/arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts
+>>> +++ b/arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts
+>>> @@ -118,3 +118,7 @@
+>>>                 };
+>>>         };
+>>>  };
+>>> +
+>>> +&uart0 {
+>>> +       status =3D "okay";
+>>> +};
+>>
+>> We have many more changes like this in OpenWrt, I just didn't upstre=
+am
+>> them because of current chipcommonA state.
+>>
+>> It was added before we got "brcm,bus-axi" and I believe Hauke wanted
+>> move it to the "correct" place at some point. Since UART is part of
+>> ChipCommon device and ChipCommon is part of "brcm,bus-axi",.I guess =
+we
+>> should add UARTs as a ChipCommon device subnodes. We already have
+>> chipcommon: chipcommon@0 {
+>>         reg =3D <0x00000000 0x1000>;
+>>
+>>         gpio-controller;
+>>         #gpio-cells =3D <2>;
+>> };
+>> , is it possible to move UARTs there?
 
-> =D0=92 Sat, 14 Mar 2015 20:20:38 -0700
-> Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:
+I added it at the beginning of the port so I have serial, even without
+adding support for bcma. I haven't look at that part later, but it
+should go into the chipcommon part. Thats for the patches.
+
+>>
+>> I'm not sure if this UART cleanup should block your change. I guess =
+it
+>> depends on the way it'll finally look like.
 >=20
-> >=20
-> > Hi Roman,
-> >=20
-> > On Mon, Feb 16, 2015 at 12:11:43AM +0300, Roman Volkov wrote: =20
-> > > Documentation for 'intel,8042' DT compatible node.
-> > >=20
-> > > Signed-off-by: Tony Prisk <linux@prisktech.co.nz>
-> > > Signed-off-by: Roman Volkov <v1ron@v1ros.org>
-> > > ---
-> > >  .../devicetree/bindings/input/intel-8042.txt       | 26
-> > > ++++++++++++++++++++++ 1 file changed, 26 insertions(+)
-> > >  create mode 100644
-> > > Documentation/devicetree/bindings/input/intel-8042.txt
-> > >=20
-> > > diff --git
-> > > a/Documentation/devicetree/bindings/input/intel-8042.txt
-> > > b/Documentation/devicetree/bindings/input/intel-8042.txt new file
-> > > mode 100644 index 0000000..ab8a3e0 --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/input/intel-8042.txt
-> > > @@ -0,0 +1,26 @@
-> > > +Intel 8042 Keyboard Controller
-> > > +
-> > > +Required properties:
-> > > +- compatible: should be "intel,8042"
-> > > +- regs: memory for keyboard controller
-> > > +- interrupts: usually, two interrupts should be specified
-> > > (keyboard and aux).
-> > > +	However, only one interrupt is also allowed in case of
-> > > absence of the
-> > > +	physical port in the controller. The i8042 driver must be
-> > > loaded with
-> > > +	nokbd/noaux option in this case.
-> > > +- interrupt-names: interrupt names corresponding to numbers in
-> > > the list.
-> > > +	"kbd" is the keyboard interrupt and "aux" is the
-> > > auxiliary (mouse)
-> > > +	interrupt.
-> > > +- command-reg: offset in memory for command register
-> > > +- status-reg: offset in memory for status register
-> > > +- data-reg: offset in memory for data register
-> > > +
-> > > +Example:
-> > > +	i8042@d8008800 {
-> > > +		compatible =3D "intel,8042";
-> > > +		regs =3D <0xd8008800 0x100>;
-> > > +		interrupts =3D <23>, <4>;
-> > > +		interrupt-names =3D "kbd", "aux";
-> > > +		command-reg =3D <0x04>;
-> > > +		status-reg =3D <0x04>;
-> > > +		data-reg =3D <0x00>;
-> > > +	}; =20
-> >=20
-> > No, we already have existing OF bindings for i8042 on sparc and
-> > powerpc, I do not think we need to invent a brand new one.
-> >=20
-> > Thanks.
-> >  =20
+> I do not think it will, see below:
 >=20
-> Hi Dmitry,
+>>
+>> I'm also wondering: is there any preference between overwriting stat=
+us
+>> with something like
+>> &uart0 { };
+>> and
+>> chipcommonA {
+>>     uart0: serial@0300 { };
+>> };
+>> ? I don't know DT that well, just asking.
 >=20
-> I see some OF code in i8042-sparcio.h file. There are node definitions
-> like "kb_ps2", "keyboard", "kdmouse", "mouse". Are these documented
-> somewhere?
+> An alias can be located pretty much anywhere in the DTS as long as th=
+e
+> name is unique, which is why I took this approach, because I do not h=
+ave
+> to do something like this and need to know the full depth of the tree=
+:
 >=20
-> Great if vt8500 is not unique with OF bindings for i8042. The code
-> from sparc even looks compatible, only register offsets are hardcoded
-> for specific machine. Is it possible to read offsets from Device Tree
-> using these existing bindings without dealing with the kernel
-> configuration?
+> foo0 {
+> 	bar0 {
+> 		baz0 {
+> 			status =3D "okay";
+> 		};
+> 	};
+> };
 >=20
-> Regards,
-> Roman
+> This is both more compact, and more robust to re-parenting the UART0
+> node in case you ever wanted to do it in the future.
+>=20
+> I will happily fix the other DTSes to use that convention if we agree
+> this is the route to take.
 
-Sun, 31 May 2015 17:53:22 +0200
-Hans de Goede <hdegoede@redhat.com> wrote:
+I haven't used that earlier because I did not know of this feature. I
+think Rafa=C5=82 already did or is currently doing this steps.
 
-> Have you looked at the existing bindings for ps/2 controllers
-> under Documentation/devicetree/bindings/serio ?
->
-> Regards,
->
-> Hans
+Hauke
 
-Hi Hans,
-
-No, there is no bindings exactly for sparc ps/2 under that folder. There
-is documentation for some custom drivers like altera and others, not
-sure how much these are compatible with Intel's 8042. The sparcio
-header looks like a special case when the Intel's 8042 driver is used
-for non-x86 with OF. There is even no 'compatible' property in the
-of_device_id in i8042-sparcio.h under drivers/input/serio, just the
-name '8042'.
-
-It is still open question what compatible strings should be used for
-Intel's ps/2. Also I am not sure if it should be different in context
-of different machines (as described in
-http://devicetree.org/Device_Tree_Usage#Understanding_the_compatible_Proper=
-ty).
-The difference between various machines may be in the register offsets.
-
-Regards,
-Roman
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
