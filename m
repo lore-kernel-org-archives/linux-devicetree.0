@@ -1,67 +1,61 @@
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH] Fix pSeries boot failure, by returning interrupt
- controller node when an interrupt-map property doesn't exist
-Date: Tue, 30 Jun 2015 13:23:33 +1000
-Message-ID: <1435634613.26815.78.camel@kernel.crashing.org>
-References: <CAEFTgixGKnMuMGp2DfoksqF0m_P6-EGJ0sUjg2=ReX2X0tq2nA@mail.gmail.com>
+From: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v2 4/4] arm64: dts: Add spi bus dts
+Date: Tue, 30 Jun 2015 12:43:16 +0800
+Message-ID: <CAGS+omDOU9UwtNVPA5YCWXgWQKjeskX-3uK_vxmeAgLzb9sxXg@mail.gmail.com>
+References: <1435583070-9600-1-git-send-email-leilk.liu@mediatek.com> <1435583070-9600-5-git-send-email-leilk.liu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAEFTgixGKnMuMGp2DfoksqF0m_P6-EGJ0sUjg2=ReX2X0tq2nA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1435583070-9600-5-git-send-email-leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jeremy Linton <lintonrjeremy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org
+To: Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2015-06-29 at 18:50 -0500, Jeremy Linton wrote:
-> This is a reformat of the patch attached to "pSeries boot failure due
-> to wrong interrupt controller".
-> 
-> It allows of_irq_parse_raw() to return the node pointer of the
-> interrupt controller, rather than the parent bus. This allows
-> ics_rtas_host_match() to detect that the controller is a legacy 8259
-> and avoid using xics. This avoids an RTAS assertion/crash during early
-> kernel bootstrapping
-> 
-> Signed-off-by: Jeremy Linton <lintonrjeremy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Hi Leilk,
 
-Reviewed-by: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
----
-
-Rob, do you want to take this or should we ?
-
+On Mon, Jun 29, 2015 at 9:04 PM, Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> This patch adds MT8173 spi bus controllers into device tree.
+>
+> Signed-off-by: Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 > ---
->  drivers/of/irq.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-> index 1a79806..cb4b9ae 100644
-> --- a/drivers/of/irq.c
-> +++ b/drivers/of/irq.c
-> @@ -252,8 +252,6 @@ int of_irq_parse_raw(const __be32 *addr, struct
-> of_phandle_args *out_irq)
->                  * Successfully parsed an interrrupt-map translation; copy new
->                  * interrupt specifier into the out_irq structure
->                  */
-> -               out_irq->np = newpar;
-> -
->                 match_array = imap - newaddrsize - newintsize;
->                 for (i = 0; i < newintsize; i++)
->                         out_irq->args[i] = be32_to_cpup(imap - newintsize + i);
-> @@ -262,6 +260,7 @@ int of_irq_parse_raw(const __be32 *addr, struct
-> of_phandle_args *out_irq)
-> 
->         skiplevel:
->                 /* Iterate again with new parent */
-> +               out_irq->np = newpar;
->                 pr_debug(" -> new parent: %s\n", of_node_full_name(newpar));
->                 of_node_put(ipar);
->                 ipar = newpar;
+>  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> index 512e4eb..923d2eb 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> @@ -259,6 +259,15 @@
+>                         status = "disabled";
+>                 };
+>
+> +               spi: spi@1100a000 {
+
+This should be between i2c2: i2c@11009000 and i2c3: i2c3@11010000.
+
+Thanks,
+-Dan
+
+> +                       compatible = "mediatek,mt8173-spi";
+> +                       reg = <0 0x1100a000 0 0x1000>;
+> +                       interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_LOW>;
+> +                       clocks = <&pericfg CLK_PERI_SPI0>;
+> +                       clock-names = "main";
+> +                       status = "disabled";
+> +               };
+> +
+>                 mmsys: mmsys@14000000 {
+>                         compatible = "mediatek,mt8173-mmsys", "syscon";
+>                         reg = <0 0x14000000 0 0x1000>;
 > --
-> 1.8.1.4
-
-
+> 1.8.1.1.dirty
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
