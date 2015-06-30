@@ -1,35 +1,31 @@
-From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Subject: [PATCH v1 01/10] of/platform: Set fwnode field for new devices
-Date: Tue, 30 Jun 2015 16:54:59 +0200
-Message-ID: <1435676108-20590-2-git-send-email-tomeu.vizoso@collabora.com>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v1 0/10] Fixes and API additions for firmware nodes
+Date: Tue, 30 Jun 2015 17:32:56 +0200
+Message-ID: <1941489.kUW5F8q9QD@vostro.rjw.lan>
 References: <1435676108-20590-1-git-send-email-tomeu.vizoso@collabora.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
 In-Reply-To: <1435676108-20590-1-git-send-email-tomeu.vizoso@collabora.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Mark Brown <broonie@kernel.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc: linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, Robert Moore <robert.moore@intel.com>, Lee Jones <lee.jones@linaro.org>, Wolfram Sang <wsa@the-dreams.de>, Lv Zheng <lv.zheng@intel.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, devel@acpica.org
 List-Id: devicetree@vger.kernel.org
 
-When allocating a new platform device, set the fwnode field in the
-struct device to point to the device_node.
+On Tuesday, June 30, 2015 04:54:58 PM Tomeu Vizoso wrote:
+> Hi,
+> 
+> this series makes it possible to extract device dependencies from firmware data
+> with fwnode, thus not depending on the particular format of that data.
+> 
+> The first patches are about making sure that we can reach the fwnode
+> handle of the firmware data associated with a given device, and the rest
+> add API that makes dependency extraction possible.
 
-Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
----
+It would really help if you sent the whole series to linux-acpi.  People on
+that list would see the entire context then.
 
- drivers/of/platform.c | 1 +
- 1 file changed, 1 insertion(+)
+Thanks,
+Rafael
 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index ddf8e42..e880f55 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -139,6 +139,7 @@ struct platform_device *of_device_alloc(struct device_node *np,
- 	}
- 
- 	dev->dev.of_node = of_node_get(np);
-+	dev->dev.fwnode = &dev->dev.of_node->fwnode;
- 	dev->dev.parent = parent ? : &platform_bus;
- 
- 	if (bus_id)
--- 
-2.4.1
