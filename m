@@ -1,86 +1,60 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RESEND PATCH 1/2] pinctrl: change function behavior for per
- pin muxing controllers
-Date: Tue, 30 Jun 2015 11:17:37 +0200
-Message-ID: <55925EB1.1030500@atmel.com>
-References: <1433948699-19800-1-git-send-email-ludovic.desroches@atmel.com> <1433948699-19800-2-git-send-email-ludovic.desroches@atmel.com> <557EF60D.8020007@wwwdotorg.org> <20150617123816.GB12295@odux.rfo.atmel.com> <5581988C.50000@wwwdotorg.org>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] spi: bcm2835: add spi-bcm2835aux driver for the
+ auxiliar spi1 and spi2
+Date: Tue, 30 Jun 2015 10:42:32 +0100
+Message-ID: <20150630094232.GM11162@sirena.org.uk>
+References: <1434980408-4086-1-git-send-email-kernel@martin.sperl.org>
+ <20150622165529.1b758b07@north>
+ <E72B3D8C-EA1B-4B4C-8EAF-C14A5631882E@martin.sperl.org>
+ <97C7561C-6D67-4F51-94BB-3B8D401D77A0@martin.sperl.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5581988C.50000-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="um2V5WpqCyd73IVb"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <97C7561C-6D67-4F51-94BB-3B8D401D77A0-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Cc: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jakub =?utf-8?B?S2ljacWEc2tp?= <moorray3-5tc4TXWwyLM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Le 17/06/2015 17:55, Stephen Warren a =E9crit :
-> On 06/17/2015 06:38 AM, Ludovic Desroches wrote:
 
-[..]
+--um2V5WpqCyd73IVb
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->> I have sent patches months ago trying to improve things by having
->> something more flexible. I don't think I introduce too big changes.
->> The only answers I got were from people thinking that pinctrl framew=
-ork
->> conception is not good to fit all kind of controllers. I re-sent the
->> patch series to gain more expose and have no  answer...
->=20
-> I don't see anything in your description which implies pinctrl isn't=20
-> perfectly suitable for your HW.
+On Thu, Jun 25, 2015 at 04:19:17PM +0200, Martin Sperl wrote:
+> So what does it require to get this merged?
 
-We are not talking about suitability, we are talking about some little
-changes to the generic part, just to have more accurate information and
-a little bit more flexibility with our controller.
+Don't top post.
 
-We read the drivers that Stephen pointed out and it seems that it even
-doesn't use the whole generic part of the pinconf. Moreover, we do thin=
-k
-that the statement "one pin" =3D=3D "one group" leads to a loss of
-information and ease of use.
-We are not talking about the use of defines, tables, macros to reach an
-usable pinctrl: let's say that we have different views.
+This looks relevant:
 
-> Note that I'm on vacation for a couple weeks soon, and I don't expect=
- to=20
-> follow this conversation during that time. Ultimately, LinusW owns th=
-e=20
-> pinctrl subsystem, and you need to convince him of any changes.
+> >> On 22.06.2015, at 16:55, Jakub Kici=C5=84ski <moorray3-5tc4TXWwyLM@public.gmane.org> wrote:
+> >> As mentioned by Noralf UART1 is quite commonly used on Compute Modules.
+> >> Proper driver - perhaps modelled as a bus - seems like a prerequisite
+> >> for this work.  You are also not using IRQ mux in DT binding example
+> >> which is very misleading.
 
-Okay, so we are back at the same situation we had ended up with several
-months ago:
+--um2V5WpqCyd73IVb
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-- no agreement on 3 points:
-1/ ways to use groups in generic pinctrl
-2/ ways to describe a comprehensive configuration in device tree
-3/ readability of a sysfs information
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-- no way out on the generic pinctrl little changes that Ludovic propose=
-d
-as Linus W. never gave his point of view (RFC posts on April the 2nd).
+iQEcBAEBCAAGBQJVkmSHAAoJECTWi3JdVIfQk8gH/1fvuSsjq7h/kj0PBkRKVXSw
+z2ixs8Wx7meucb7w3T+fVvaUJ5CTQIFGoA2nCRDDDupNkjMFraNnhhS5W2UFdnDy
+Z2ONmywiySMc3wfUl0MmXgz0ETF6Q9OwQ8DFsdQVsl7KnVvgW0TUWJo8DugX2hJD
+DFt/eImM6YrbIjAz2H4UatKb5xsoogpeImoT6eXxKCEPtrBxvOG/h+UPMWSFFyco
+BP3j7P6BT9rSElPObl47O0aCz30+78JlkZrd8vf8NEkEEyTiUiSmr5cFrTmSP9mO
+5nQmis/29NgnI/JotjSoKsp/lg5JaR7zlPPAzGJi1McVRlTtpNpz1toyFKDOpo0=
+=OWhC
+-----END PGP SIGNATURE-----
 
-Ludovic explained at length our point of view and gave detailed
-technical arguments. We don't intend to convince you, we just would lik=
-e
-the harmless modifications to be integrated.
-
-As we preferred to give a chance to the generic pinconf/pinctrl for our
-use by adding a little bit of flexibility, we are now in a situation
-where we are nearly obliged to give up this approach and write a new
-driver without the use of the generic facilities: what a pity!
-We lost several months of useless work to match what we thought the
-maintainer would prefer.
-
-So Linus, do you confirm that we won't go further with this approach?
-
-We are pretty disappointed by the way this interaction with the pinctrl
-sub-system went.
-
-Best regards,
---=20
-Nicolas Ferre
+--um2V5WpqCyd73IVb--
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
