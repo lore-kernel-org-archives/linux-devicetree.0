@@ -1,32 +1,27 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] ARM: dts: sunxi: Adjust touchscreen compatible for sun5i
- and later
-Date: Mon, 29 Jun 2015 17:39:16 -0700
-Message-ID: <20150630003916.GI6430@kroah.com>
-References: <1435322859-27760-1-git-send-email-hdegoede@redhat.com>
- <20150626164241.GD13320@kroah.com>
- <CAKLfuV1DHGQT=ejXfPYnNB6U_BoZqO0OpTsKY3NCrmL+1Yus5Q@mail.gmail.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH] ARM: dts: exynos4: add DMA support for serial ports
+Date: Tue, 30 Jun 2015 09:56:11 +0900
+Message-ID: <5591E92B.4020809@samsung.com>
+References: <1435584154-4969-1-git-send-email-r.baldyga@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <stable-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAKLfuV1DHGQT=ejXfPYnNB6U_BoZqO0OpTsKY3NCrmL+1Yus5Q@mail.gmail.com>
-Sender: stable-owner@vger.kernel.org
-To: "Timo S." <m.silentcreek@gmail.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, stable@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1435584154-4969-1-git-send-email-r.baldyga@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Robert Baldyga <r.baldyga@samsung.com>, linux@arm.linux.org.uk, kgene@kernel.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jun 27, 2015 at 10:20:23AM +0200, Timo S. wrote:
-> Sorry, once again in plain text mode:
+On 29.06.2015 22:22, Robert Baldyga wrote:
+> Enable DMA transfers for serial ports.
 > 
-> On Fri, Jun 26, 2015 at 6:42 PM, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> > What is the git commit id of it?  I can't do anything with this until it
-> > hits Linus's tree.
-> 
-> It's in Linus' tree now:
-> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=8bf1b9b3d90194a174493febc731f7783f2adf1a
+> Signed-off-by: Robert Baldyga <r.baldyga@samsung.com>
+> ---
+>  arch/arm/boot/dts/exynos4.dtsi | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 
-Thanks, now queued up.
+Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
 
-greg k-h
+Best regards,
+Krzysztof
