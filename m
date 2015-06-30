@@ -1,60 +1,191 @@
-From: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v2 4/4] arm64: dts: Add spi bus dts
-Date: Tue, 30 Jun 2015 15:55:33 +0800
-Message-ID: <CAGS+omAyzGpZE2SDN45dD1PrLr00d=3Tu8BCAL09N8ih6W+yiA@mail.gmail.com>
-References: <1435583070-9600-1-git-send-email-leilk.liu@mediatek.com> <1435583070-9600-5-git-send-email-leilk.liu@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1435583070-9600-5-git-send-email-leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH] pinctrl: sh-pfc: Accept standard function, pins and groups properties
+Date: Tue, 30 Jun 2015 11:29:57 +0300
+Message-ID: <1435652997-25254-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: linux-gpio@vger.kernel.org
+Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Leilk,
+The "function", "pins" and "groups" pinmux and pinctrl properties have
+been standardized. Support them in addition to the custom "renesas,*"
+properties. New-style and old-style properties can't be mixed in DT.
 
-On Mon, Jun 29, 2015 at 9:04 PM, Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> This patch adds MT8173 spi bus controllers into device tree.
->
-> Signed-off-by: Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 9 +++++++++
->  1 file changed, 9 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> index 512e4eb..923d2eb 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> @@ -259,6 +259,15 @@
->                         status = "disabled";
->                 };
->
-> +               spi: spi@1100a000 {
-> +                       compatible = "mediatek,mt8173-spi";
-> +                       reg = <0 0x1100a000 0 0x1000>;
-> +                       interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_LOW>;
-> +                       clocks = <&pericfg CLK_PERI_SPI0>;
-> +                       clock-names = "main";
+Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+---
+ .../bindings/pinctrl/renesas,pfc-pinctrl.txt       | 20 +++++------
+ drivers/pinctrl/sh-pfc/pinctrl.c                   | 42 +++++++++++++++++-----
+ 2 files changed, 44 insertions(+), 18 deletions(-)
 
-Please also add the spi pinctl node, and set it as the default pinctl
-for this spi node.
+diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
+index 51cee44fc140..e089142cfb14 100644
+--- a/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
+@@ -58,12 +58,12 @@ are parsed through phandles and processed purely based on their content.
+ 
+ Pin Configuration Node Properties:
+ 
+-- renesas,pins : An array of strings, each string containing the name of a pin.
+-- renesas,groups : An array of strings, each string containing the name of a pin
++- pins : An array of strings, each string containing the name of a pin.
++- groups : An array of strings, each string containing the name of a pin
+   group.
+ 
+-- renesas,function: A string containing the name of the function to mux to the
+-  pin group(s) specified by the renesas,groups property
++- function: A string containing the name of the function to mux to the pin
++  group(s) specified by the groups property.
+ 
+   Valid values for pin, group and function names can be found in the group and
+   function arrays of the PFC data file corresponding to the SoC
+@@ -141,19 +141,19 @@ Example 3: KZM-A9-GT (SH-Mobile AG5) default pin state hog and pin control maps
+ 
+ 		mmcif_pins: mmcif {
+ 			mux {
+-				renesas,groups = "mmc0_data8_0", "mmc0_ctrl_0";
+-				renesas,function = "mmc0";
++				groups = "mmc0_data8_0", "mmc0_ctrl_0";
++				function = "mmc0";
+ 			};
+ 			cfg {
+-				renesas,groups = "mmc0_data8_0";
+-				renesas,pins = "PORT279";
++				groups = "mmc0_data8_0";
++				pins = "PORT279";
+ 				bias-pull-up;
+ 			};
+ 		};
+ 
+ 		scifa4_pins: scifa4 {
+-			renesas,groups = "scifa4_data", "scifa4_ctrl";
+-			renesas,function = "scifa4";
++			groups = "scifa4_data", "scifa4_ctrl";
++			function = "scifa4";
+ 		};
+ 	};
+ 
+diff --git a/drivers/pinctrl/sh-pfc/pinctrl.c b/drivers/pinctrl/sh-pfc/pinctrl.c
+index ff678966008b..6fe7459f0ccb 100644
+--- a/drivers/pinctrl/sh-pfc/pinctrl.c
++++ b/drivers/pinctrl/sh-pfc/pinctrl.c
+@@ -40,6 +40,10 @@ struct sh_pfc_pinctrl {
+ 
+ 	struct pinctrl_pin_desc *pins;
+ 	struct sh_pfc_pin_config *configs;
++
++	const char *func_prop_name;
++	const char *groups_prop_name;
++	const char *pins_prop_name;
+ };
+ 
+ static int sh_pfc_get_groups_count(struct pinctrl_dev *pctldev)
+@@ -96,10 +100,13 @@ static int sh_pfc_map_add_config(struct pinctrl_map *map,
+ 	return 0;
+ }
+ 
+-static int sh_pfc_dt_subnode_to_map(struct device *dev, struct device_node *np,
++static int sh_pfc_dt_subnode_to_map(struct pinctrl_dev *pctldev,
++				    struct device_node *np,
+ 				    struct pinctrl_map **map,
+ 				    unsigned int *num_maps, unsigned int *index)
+ {
++	struct sh_pfc_pinctrl *pmx = pinctrl_dev_get_drvdata(pctldev);
++	struct device *dev = pmx->pfc->dev;
+ 	struct pinctrl_map *maps = *map;
+ 	unsigned int nmaps = *num_maps;
+ 	unsigned int idx = *index;
+@@ -113,10 +120,27 @@ static int sh_pfc_dt_subnode_to_map(struct device *dev, struct device_node *np,
+ 	const char *pin;
+ 	int ret;
+ 
++	/* Support both the old Renesas-specific properties and the new standard
++	 * properties. Mixing old and new properties isn't allowed, neither
++	 * inside a subnode nor across subnodes.
++	 */
++	if (!pmx->func_prop_name) {
++		if (of_find_property(np, "groups", NULL) ||
++		    of_find_property(np, "pins", NULL)) {
++			pmx->func_prop_name = "function";
++			pmx->groups_prop_name = "groups";
++			pmx->pins_prop_name = "pins";
++		} else {
++			pmx->func_prop_name = "renesas,function";
++			pmx->groups_prop_name = "renesas,groups";
++			pmx->pins_prop_name = "renesas,pins";
++		}
++	}
++
+ 	/* Parse the function and configuration properties. At least a function
+ 	 * or one configuration must be specified.
+ 	 */
+-	ret = of_property_read_string(np, "renesas,function", &function);
++	ret = of_property_read_string(np, pmx->func_prop_name, &function);
+ 	if (ret < 0 && ret != -EINVAL) {
+ 		dev_err(dev, "Invalid function in DT\n");
+ 		return ret;
+@@ -129,11 +153,12 @@ static int sh_pfc_dt_subnode_to_map(struct device *dev, struct device_node *np,
+ 	if (!function && num_configs == 0) {
+ 		dev_err(dev,
+ 			"DT node must contain at least a function or config\n");
++		ret = -ENODEV;
+ 		goto done;
+ 	}
+ 
+ 	/* Count the number of pins and groups and reallocate mappings. */
+-	ret = of_property_count_strings(np, "renesas,pins");
++	ret = of_property_count_strings(np, pmx->pins_prop_name);
+ 	if (ret == -EINVAL) {
+ 		num_pins = 0;
+ 	} else if (ret < 0) {
+@@ -143,7 +168,7 @@ static int sh_pfc_dt_subnode_to_map(struct device *dev, struct device_node *np,
+ 		num_pins = ret;
+ 	}
+ 
+-	ret = of_property_count_strings(np, "renesas,groups");
++	ret = of_property_count_strings(np, pmx->groups_prop_name);
+ 	if (ret == -EINVAL) {
+ 		num_groups = 0;
+ 	} else if (ret < 0) {
+@@ -174,7 +199,7 @@ static int sh_pfc_dt_subnode_to_map(struct device *dev, struct device_node *np,
+ 	*num_maps = nmaps;
+ 
+ 	/* Iterate over pins and groups and create the mappings. */
+-	of_property_for_each_string(np, "renesas,groups", prop, group) {
++	of_property_for_each_string(np, pmx->groups_prop_name, prop, group) {
+ 		if (function) {
+ 			maps[idx].type = PIN_MAP_TYPE_MUX_GROUP;
+ 			maps[idx].data.mux.group = group;
+@@ -198,7 +223,7 @@ static int sh_pfc_dt_subnode_to_map(struct device *dev, struct device_node *np,
+ 		goto done;
+ 	}
+ 
+-	of_property_for_each_string(np, "renesas,pins", prop, pin) {
++	of_property_for_each_string(np, pmx->pins_prop_name, prop, pin) {
+ 		ret = sh_pfc_map_add_config(&maps[idx], pin,
+ 					    PIN_MAP_TYPE_CONFIGS_PIN,
+ 					    configs, num_configs);
+@@ -246,7 +271,7 @@ static int sh_pfc_dt_node_to_map(struct pinctrl_dev *pctldev,
+ 	index = 0;
+ 
+ 	for_each_child_of_node(np, child) {
+-		ret = sh_pfc_dt_subnode_to_map(dev, child, map, num_maps,
++		ret = sh_pfc_dt_subnode_to_map(pctldev, child, map, num_maps,
+ 					       &index);
+ 		if (ret < 0)
+ 			goto done;
+@@ -254,7 +279,8 @@ static int sh_pfc_dt_node_to_map(struct pinctrl_dev *pctldev,
+ 
+ 	/* If no mapping has been found in child nodes try the config node. */
+ 	if (*num_maps == 0) {
+-		ret = sh_pfc_dt_subnode_to_map(dev, np, map, num_maps, &index);
++		ret = sh_pfc_dt_subnode_to_map(pctldev, np, map, num_maps,
++					       &index);
+ 		if (ret < 0)
+ 			goto done;
+ 	}
+-- 
+Regards,
 
-> +                       status = "disabled";
-> +               };
-> +
->                 mmsys: mmsys@14000000 {
->                         compatible = "mediatek,mt8173-mmsys", "syscon";
->                         reg = <0 0x14000000 0 0x1000>;
-> --
-> 1.8.1.1.dirty
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Laurent Pinchart
+
