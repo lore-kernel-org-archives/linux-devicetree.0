@@ -1,34 +1,39 @@
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH v5 40/42] drivers/of: Allow to specify root node in
- of_fdt_unflatten_tree()
-Date: Wed, 01 Jul 2015 07:46:54 +1000
-Message-ID: <1435700814.1475.15.camel@kernel.crashing.org>
-References: <1433400131-18429-1-git-send-email-gwshan@linux.vnet.ibm.com>
-	 <1433400131-18429-41-git-send-email-gwshan@linux.vnet.ibm.com>
-	 <20150630180652.198E2C4063C@trevor.secretlab.ca>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH v3 2/4] tty/serial: at91: fix some macro definitions to
+ fit coding style
+Date: Tue, 30 Jun 2015 23:53:19 +0200
+Message-ID: <20150630215319.GM485@piout.net>
+References: <cover.1435672649.git.cyrille.pitchen@atmel.com>
+ <9f0f19d2fe05ea95572b467ec49ecd11389e3be9.1435672649.git.cyrille.pitchen@atmel.com>
+ <11308515.NsBzDiA1lH@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150630180652.198E2C4063C-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, aik-sLpHqDYs0B2HXe+LvDLADg@public.gmane.org, panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <11308515.NsBzDiA1lH@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Cyrille Pitchen <cyrille.pitchen@atmel.com>, nicolas.ferre@atmel.com, gregkh@linuxfoundation.org, wenyou.yang@atmel.com, ludovic.desroches@atmel.com, leilei.zhao@atmel.com, josh.wu@atmel.com, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-06-30 at 19:06 +0100, Grant Likely wrote:
-> It may be time to dump the special allocation of fdt.c entirely and
-> treat all nodes the same way, with name and properties all allocated
-> with normal kmallocs.... Investigation is needed to figure out if this
-> is feasible.
+On 30/06/2015 at 22:28:42 +0200, Arnd Bergmann wrote :
+> On Tuesday 30 June 2015 16:05:15 Cyrille Pitchen wrote:
+> > +#define UART_PUT_CR(port, v)   __raw_writel(v, (port)->membase + ATMEL_US_CR)
+> > +#define UART_GET_MR(port)      __raw_readl((port)->membase + ATMEL_US_MR)
+> > +#define UART_PUT_MR(port, v)   __raw_writel(v, (port)->membase + ATMEL_US_MR)
+> > +#define UART_PUT_IER(port, v)  __raw_writel(v, (port)->membase + ATMEL_US_IER)
+> > 
+> 
+> How about removing these macros entirely? I'm not aware of other drivers
+> doing it like this, and it does not seem to add any value?
+> 
+> At the same time, you could use readl_relaxed() to make the driver
+> endian-safe.
+> 
 
-kmalloc isn't available early enough
+I think using readl_relaxed() would break avr32.
 
-Cheers,
-Ben.
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
