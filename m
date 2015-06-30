@@ -1,56 +1,75 @@
-From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH v5 1/7] extcon: arizona: Simplify pdata symantics for
-	micd_dbtime
-Date: Tue, 30 Jun 2015 11:51:49 +0100
-Message-ID: <20150630105149.GK6321@opensource.wolfsonmicro.com>
-References: <1434731014-19980-1-git-send-email-ckeepax@opensource.wolfsonmicro.com> <1434731014-19980-2-git-send-email-ckeepax@opensource.wolfsonmicro.com> <CAGTfZH3BvPz82j-JQhLDYAp=VcKSy9jtsTPhe53PfioPq684Fw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAGTfZH3BvPz82j-JQhLDYAp=VcKSy9jtsTPhe53PfioPq684Fw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: cw00.choi@samsung.com
-Cc: Lee Jones <lee.jones@linaro.org>, "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>, Samuel Ortiz <sameo@linux.intel.com>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, patches@opensource.wolfsonmicro.com
+From: Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 2/2] iio: mma8452: change iio event type to IIO_EV_TYPE_MAG
+Date: Tue, 30 Jun 2015 13:26:42 +0200
+Message-ID: <1435663602-29868-3-git-send-email-martink@posteo.de>
+References: <1435663602-29868-1-git-send-email-martink@posteo.de>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1435663602-29868-1-git-send-email-martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org, martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 21, 2015 at 11:17:56PM +0900, Chanwoo Choi wrote:
-> Hi Charles,
-> 
-> Looks good go me. But you need the review from MFD maintainer
-> before appling it.
-> 
-> Thanks,
-> Chanwoo Choi
-> 
-> On Sat, Jun 20, 2015 at 1:23 AM, Charles Keepax
-> <ckeepax@opensource.wolfsonmicro.com> wrote:
-> > Currently micd_dbtime can be set to 0 for default, 1 for 4 measurements,
-> > or a greater than 16-bit value for 2 measurements. This patch simplifies
-> > the symantics to 2 for 2 measurements, 4 for 4 measurements and any
-> > other value for the default.
-> >
-> > I am not super keen on changing the symantics of the pdata at this stage
-> > in the drivers life, but acceptance of the DT binding for this field has
-> > been made conditional on this happening.
-> >
-> > Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-> > ---
-> > diff --git a/include/linux/mfd/arizona/pdata.h b/include/linux/mfd/arizona/pdata.h
-> > index aa5c48b..bd68355 100644
-> > --- a/include/linux/mfd/arizona/pdata.h
-> > +++ b/include/linux/mfd/arizona/pdata.h
-> > @@ -53,6 +53,9 @@
-> >
-> >  #define ARIZONA_MAX_PDM_SPK 2
-> >
-> > +#define ARIZONA_MICD_DBTIME_TWO_READINGS 2
-> > +#define ARIZONA_MICD_DBTIME_FOUR_READINGS 4
-> > +
+IIO_EV_TYPE_THRESH with the RISING event assumes a signed threshold value
+and describes the crossing in the rising direction, positive or negative
+values.
 
-I am gonna respin and move these into the extcon driver itself,
-should allow us to get the patch merged and their use in the
-pdata header is probably minimal.
+This is not the case here. It's the magnitude of the acceleration
+value that is compared and IIO_EV_TYPE_MAG describes the behaviour of these
+devices.
 
-Thanks,
-Charles
+Signed-off-by: Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+Signed-off-by: Christoph Muellner <christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+---
+ drivers/iio/accel/mma8452.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/iio/accel/mma8452.c b/drivers/iio/accel/mma8452.c
+index a5fd3ff..1c48d9d 100644
+--- a/drivers/iio/accel/mma8452.c
++++ b/drivers/iio/accel/mma8452.c
+@@ -604,21 +604,21 @@ static void mma8452_transient_interrupt(struct iio_dev *indio_dev)
+ 	if (src & data->chip_info->ev_src_xe)
+ 		iio_push_event(indio_dev,
+ 			       IIO_MOD_EVENT_CODE(IIO_ACCEL, 0, IIO_MOD_X,
+-						  IIO_EV_TYPE_THRESH,
++						  IIO_EV_TYPE_MAG,
+ 						  IIO_EV_DIR_RISING),
+ 			       ts);
+ 
+ 	if (src & data->chip_info->ev_src_ye)
+ 		iio_push_event(indio_dev,
+ 			       IIO_MOD_EVENT_CODE(IIO_ACCEL, 0, IIO_MOD_Y,
+-						  IIO_EV_TYPE_THRESH,
++						  IIO_EV_TYPE_MAG,
+ 						  IIO_EV_DIR_RISING),
+ 			       ts);
+ 
+ 	if (src & data->chip_info->ev_src_ze)
+ 		iio_push_event(indio_dev,
+ 			       IIO_MOD_EVENT_CODE(IIO_ACCEL, 0, IIO_MOD_Z,
+-						  IIO_EV_TYPE_THRESH,
++						  IIO_EV_TYPE_MAG,
+ 						  IIO_EV_DIR_RISING),
+ 			       ts);
+ }
+@@ -695,7 +695,7 @@ static int mma8452_reg_access_dbg(struct iio_dev *indio_dev,
+ 
+ static const struct iio_event_spec mma8452_transient_event[] = {
+ 	{
+-		.type = IIO_EV_TYPE_THRESH,
++		.type = IIO_EV_TYPE_MAG,
+ 		.dir = IIO_EV_DIR_RISING,
+ 		.mask_separate = BIT(IIO_EV_INFO_ENABLE),
+ 		.mask_shared_by_type = BIT(IIO_EV_INFO_VALUE) |
+@@ -706,7 +706,7 @@ static const struct iio_event_spec mma8452_transient_event[] = {
+ 
+ static const struct iio_event_spec mma8452_motion_event[] = {
+ 	{
+-		.type = IIO_EV_TYPE_THRESH,
++		.type = IIO_EV_TYPE_MAG,
+ 		.dir = IIO_EV_DIR_RISING,
+ 		.mask_separate = BIT(IIO_EV_INFO_ENABLE),
+ 		.mask_shared_by_type = BIT(IIO_EV_INFO_VALUE) |
+-- 
+2.1.4
