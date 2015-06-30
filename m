@@ -1,168 +1,233 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 40/42] drivers/of: Allow to specify root node in
- of_fdt_unflatten_tree()
-Date: Tue, 30 Jun 2015 19:06:52 +0100
-Message-ID: <20150630180652.198E2C4063C@trevor.secretlab.ca>
-References: <1433400131-18429-1-git-send-email-gwshan@linux.vnet.ibm.com>
-	<1433400131-18429-41-git-send-email-gwshan@linux.vnet.ibm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1433400131-18429-41-git-send-email-gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, aik-sLpHqDYs0B2HXe+LvDLADg@public.gmane.org, panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH] of: acpi: Rename of_node() and acpi_node() to
+ to_of_node() and to_acpi_node()
+Date: Tue, 30 Jun 2015 18:26:39 +0100
+Message-ID: <20150630172639.F02C2C407A6@trevor.secretlab.ca>
+References: <5588725D.6000101@gmail.com>
+	<2099562.7T915zWny0@vostro.rjw.lan> <10569034.P3OFQNPcxE@vostro.rjw.lan>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <10569034.P3OFQNPcxE@vostro.rjw.lan>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Alexander Sverdlin <alexander.sverdlin@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Robert Moore <robert.moore@intel.com>, Lv Zheng <lv.zheng@intel.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Len Brown <lenb@kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-leds@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On Thu,  4 Jun 2015 16:42:09 +1000
-, Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+On Thu, 25 Jun 2015 00:20:31 +0200
+, "Rafael J. Wysocki" <rjw@rjwysocki.net>
  wrote:
-> The patch introduces one more argument to of_fdt_unflatten_tree()
-> to specify the root node for the FDT blob, which is going to be
-> unflattened. In the result, the function can be used to unflatten
-> FDT blob, which represents device sub-tree in subsequent patches.
+> On Tuesday, June 23, 2015 01:45:00 AM Rafael J. Wysocki wrote:
+> > On Monday, June 22, 2015 10:38:53 PM Alexander Sverdlin wrote:
+> > > Commit 8a0662d9 introduced of_node and acpi_node symbols in global namespace
+> > > but there were already ~63 of_node local variables or function parameters
+> > > (no single acpi_node though, but anyway).
+> > > 
+> > > After debugging undefined but used of_node local varible (which turned out
+> > > to reference static function of_node() instead) it became clear that the names
+> > > for the functions are too short and too generic for global scope.
+> > > 
+> > > Signed-off-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
+> > 
+> > Putting the whole world into the To: field of your messages is not a good idea
+> > in general.
+> > 
+> > I'm fine with this change, personally.
+> > 
+> > Does anyone in the CC list have any objections?
 > 
-> Signed-off-by: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-
-In principle, looks okay. There are going to be lifecycle issues though
-because nodes allocated from unflatten_dt_node cannot be cleanly freed
-because they aren't allocated in the same way as OF_DYNAMIC nodes are
-allocated.
-
-It may be time to dump the special allocation of fdt.c entirely and
-treat all nodes the same way, with name and properties all allocated
-with normal kmallocs.... Investigation is needed to figure out if this
-is feasible.
-
-Comments below.
-
-> ---
-> v5:
->   * Newly introduced
-> ---
->  drivers/of/fdt.c       | 26 ++++++++++++++++++--------
->  drivers/of/unittest.c  |  2 +-
->  include/linux/of_fdt.h |  3 ++-
->  3 files changed, 21 insertions(+), 10 deletions(-)
+> No objections apparently.
 > 
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index b87c157..b6a6c59 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -380,9 +380,16 @@ static void *unflatten_dt_node(void *blob,
->  			       struct device_node **nodepp,
->  			       bool dryrun)
->  {
-> +	unsigned long fpsize = 0;
-> +
-> +	if (dad)
-> +		fpsize = strlen(of_node_full_name(dad));
-> +	else
-> +		fpsize = 0;
+> OK, I've queued this one up for the next PM+ACPI pull request, thanks!
 
-The 'else' is redundant. Better yet:
+Acked-by: Grant Likely <grant.likely@linaro.org>
 
-	unsigned long fpsize = dad ? strlen(of_node_full_name(dad)) : 0;
-
->  	cur_node_depth = 1;
->  	return __unflatten_dt_node(blob, mem, poffset,
-> -				   dad, nodepp, 0, dryrun);
-> +				   dad, nodepp, fpsize, dryrun);
->  }
->  
->  /**
-> @@ -393,13 +400,15 @@ static void *unflatten_dt_node(void *blob,
->   * pointers of the nodes so the normal device-tree walking functions
->   * can be used.
->   * @blob: The blob to expand
-> + * @dad: The root node of the created device_node tree
->   * @mynodes: The device_node tree created by the call
->   * @dt_alloc: An allocator that provides a virtual address to memory
->   * for the resulting tree
->   */
->  static void __unflatten_device_tree(void *blob,
-> -			     struct device_node **mynodes,
-> -			     void * (*dt_alloc)(u64 size, u64 align))
-> +				    struct device_node *dad,
-> +				    struct device_node **mynodes,
-> +				    void * (*dt_alloc)(u64 size, u64 align))
-
-Same comment as before, don't reflow the indentation unless you really
-need to.
-
->  {
->  	unsigned long size;
->  	int start;
-> @@ -425,7 +434,7 @@ static void __unflatten_device_tree(void *blob,
->  	/* First pass, scan for size */
->  	start = 0;
->  	size = (unsigned long)unflatten_dt_node(blob, NULL, &start,
-> -						NULL, NULL, true);
-> +						dad, NULL, true);
->  	size = ALIGN(size, 4);
->  
->  	pr_debug("  size is %lx, allocating...\n", size);
-> @@ -440,7 +449,7 @@ static void __unflatten_device_tree(void *blob,
->  
->  	/* Second pass, do actual unflattening */
->  	start = 0;
-> -	unflatten_dt_node(blob, mem, &start, NULL, mynodes, false);
-> +	unflatten_dt_node(blob, mem, &start, dad, mynodes, false);
->  	if (be32_to_cpup(mem + size) != 0xdeadbeef)
->  		pr_warning("End of tree marker overwritten: %08x\n",
->  			   be32_to_cpup(mem + size));
-> @@ -462,9 +471,10 @@ static void *kernel_tree_alloc(u64 size, u64 align)
->   * can be used.
->   */
->  void of_fdt_unflatten_tree(unsigned long *blob,
-> -			struct device_node **mynodes)
-> +			   struct device_node *dad,
-> +			   struct device_node **mynodes)
->  {
-> -	__unflatten_device_tree(blob, mynodes, &kernel_tree_alloc);
-> +	__unflatten_device_tree(blob, dad, mynodes, &kernel_tree_alloc);
->  }
->  EXPORT_SYMBOL_GPL(of_fdt_unflatten_tree);
->  
-> @@ -1095,7 +1105,7 @@ bool __init early_init_dt_scan(void *params)
->   */
->  void __init unflatten_device_tree(void)
->  {
-> -	__unflatten_device_tree(initial_boot_params, &of_root,
-> +	__unflatten_device_tree(initial_boot_params, NULL, &of_root,
->  				early_init_dt_alloc_memory_arch);
->  
->  	/* Get pointer to "/chosen" and "/aliases" nodes for use everywhere */
-> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-> index 1801634..2270830 100644
-> --- a/drivers/of/unittest.c
-> +++ b/drivers/of/unittest.c
-> @@ -907,7 +907,7 @@ static int __init unittest_data_add(void)
->  			"not running tests\n", __func__);
->  		return -ENOMEM;
->  	}
-> -	of_fdt_unflatten_tree(unittest_data, &unittest_data_node);
-> +	of_fdt_unflatten_tree(unittest_data, NULL, &unittest_data_node);
->  	if (!unittest_data_node) {
->  		pr_warn("%s: No tree to attach; not running tests\n", __func__);
->  		return -ENODATA;
-> diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-> index 587ee50..8882640 100644
-> --- a/include/linux/of_fdt.h
-> +++ b/include/linux/of_fdt.h
-> @@ -38,7 +38,8 @@ extern bool of_fdt_is_big_endian(const void *blob,
->  extern int of_fdt_match(const void *blob, unsigned long node,
->  			const char *const *compat);
->  extern void of_fdt_unflatten_tree(unsigned long *blob,
-> -			       struct device_node **mynodes);
-> +				  struct device_node *dad,
-> +				  struct device_node **mynodes);
->  
->  /* TBD: Temporary export of fdt globals - remove when code fully merged */
->  extern int __initdata dt_root_addr_cells;
-> -- 
-> 2.1.0
+g.
 > 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > 
+> > 
+> > > ---
+> > > 
+> > > Compile-tested on x86_64 with ACPI and ARM with OF.
+> > > 
+> > >  drivers/base/property.c  | 26 +++++++++++++-------------
+> > >  drivers/gpio/gpiolib.c   |  4 ++--
+> > >  drivers/leds/leds-gpio.c |  2 +-
+> > >  include/acpi/acpi_bus.h  |  2 +-
+> > >  include/linux/acpi.h     |  4 ++--
+> > >  include/linux/of.h       |  4 ++--
+> > >  6 files changed, 21 insertions(+), 21 deletions(-)
+> > > 
+> > > diff --git a/drivers/base/property.c b/drivers/base/property.c
+> > > index 1d0b116..dfd4de6 100644
+> > > --- a/drivers/base/property.c
+> > > +++ b/drivers/base/property.c
+> > > @@ -128,9 +128,9 @@ EXPORT_SYMBOL_GPL(device_property_present);
+> > >  bool fwnode_property_present(struct fwnode_handle *fwnode, const char *propname)
+> > >  {
+> > >  	if (is_of_node(fwnode))
+> > > -		return of_property_read_bool(of_node(fwnode), propname);
+> > > +		return of_property_read_bool(to_of_node(fwnode), propname);
+> > >  	else if (is_acpi_node(fwnode))
+> > > -		return !acpi_dev_prop_get(acpi_node(fwnode), propname, NULL);
+> > > +		return !acpi_dev_prop_get(to_acpi_node(fwnode), propname, NULL);
+> > > 
+> > >  	return !!pset_prop_get(to_pset(fwnode), propname);
+> > >  }
+> > > @@ -285,10 +285,10 @@ EXPORT_SYMBOL_GPL(device_property_read_string);
+> > >  ({ \
+> > >  	int _ret_; \
+> > >  	if (is_of_node(_fwnode_)) \
+> > > -		_ret_ = OF_DEV_PROP_READ_ARRAY(of_node(_fwnode_), _propname_, \
+> > > +		_ret_ = OF_DEV_PROP_READ_ARRAY(to_of_node(_fwnode_), _propname_, \
+> > >  					       _type_, _val_, _nval_); \
+> > >  	else if (is_acpi_node(_fwnode_)) \
+> > > -		_ret_ = acpi_dev_prop_read(acpi_node(_fwnode_), _propname_, \
+> > > +		_ret_ = acpi_dev_prop_read(to_acpi_node(_fwnode_), _propname_, \
+> > >  					   _proptype_, _val_, _nval_); \
+> > >  	else \
+> > >  		_ret_ = pset_prop_read_array(to_pset(_fwnode_), _propname_, \
+> > > @@ -424,11 +424,11 @@ int fwnode_property_read_string_array(struct fwnode_handle *fwnode,
+> > >  {
+> > >  	if (is_of_node(fwnode))
+> > >  		return val ?
+> > > -			of_property_read_string_array(of_node(fwnode), propname,
+> > > -						      val, nval) :
+> > > -			of_property_count_strings(of_node(fwnode), propname);
+> > > +			of_property_read_string_array(to_of_node(fwnode),
+> > > +						      propname, val, nval) :
+> > > +			of_property_count_strings(to_of_node(fwnode), propname);
+> > >  	else if (is_acpi_node(fwnode))
+> > > -		return acpi_dev_prop_read(acpi_node(fwnode), propname,
+> > > +		return acpi_dev_prop_read(to_acpi_node(fwnode), propname,
+> > >  					  DEV_PROP_STRING, val, nval);
+> > > 
+> > >  	return pset_prop_read_array(to_pset(fwnode), propname,
+> > > @@ -455,9 +455,9 @@ int fwnode_property_read_string(struct fwnode_handle *fwnode,
+> > >  				const char *propname, const char **val)
+> > >  {
+> > >  	if (is_of_node(fwnode))
+> > > -		return of_property_read_string(of_node(fwnode), propname, val);
+> > > +		return of_property_read_string(to_of_node(fwnode), propname, val);
+> > >  	else if (is_acpi_node(fwnode))
+> > > -		return acpi_dev_prop_read(acpi_node(fwnode), propname,
+> > > +		return acpi_dev_prop_read(to_acpi_node(fwnode), propname,
+> > >  					  DEV_PROP_STRING, val, 1);
+> > > 
+> > >  	return -ENXIO;
+> > > @@ -475,13 +475,13 @@ struct fwnode_handle *device_get_next_child_node(struct device *dev,
+> > >  	if (IS_ENABLED(CONFIG_OF) && dev->of_node) {
+> > >  		struct device_node *node;
+> > > 
+> > > -		node = of_get_next_available_child(dev->of_node, of_node(child));
+> > > +		node = of_get_next_available_child(dev->of_node, to_of_node(child));
+> > >  		if (node)
+> > >  			return &node->fwnode;
+> > >  	} else if (IS_ENABLED(CONFIG_ACPI)) {
+> > >  		struct acpi_device *node;
+> > > 
+> > > -		node = acpi_get_next_child(dev, acpi_node(child));
+> > > +		node = acpi_get_next_child(dev, to_acpi_node(child));
+> > >  		if (node)
+> > >  			return acpi_fwnode_handle(node);
+> > >  	}
+> > > @@ -500,7 +500,7 @@ EXPORT_SYMBOL_GPL(device_get_next_child_node);
+> > >  void fwnode_handle_put(struct fwnode_handle *fwnode)
+> > >  {
+> > >  	if (is_of_node(fwnode))
+> > > -		of_node_put(of_node(fwnode));
+> > > +		of_node_put(to_of_node(fwnode));
+> > >  }
+> > >  EXPORT_SYMBOL_GPL(fwnode_handle_put);
+> > > 
+> > > diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> > > index 6bc612b..5d8b2b3 100644
+> > > --- a/drivers/gpio/gpiolib.c
+> > > +++ b/drivers/gpio/gpiolib.c
+> > > @@ -2040,14 +2040,14 @@ struct gpio_desc *fwnode_get_named_gpiod(struct fwnode_handle *fwnode,
+> > >  	if (is_of_node(fwnode)) {
+> > >  		enum of_gpio_flags flags;
+> > > 
+> > > -		desc = of_get_named_gpiod_flags(of_node(fwnode), propname, 0,
+> > > +		desc = of_get_named_gpiod_flags(to_of_node(fwnode), propname, 0,
+> > >  						&flags);
+> > >  		if (!IS_ERR(desc))
+> > >  			active_low = flags & OF_GPIO_ACTIVE_LOW;
+> > >  	} else if (is_acpi_node(fwnode)) {
+> > >  		struct acpi_gpio_info info;
+> > > 
+> > > -		desc = acpi_get_gpiod_by_index(acpi_node(fwnode), propname, 0,
+> > > +		desc = acpi_get_gpiod_by_index(to_acpi_node(fwnode), propname, 0,
+> > >  					       &info);
+> > >  		if (!IS_ERR(desc))
+> > >  			active_low = info.active_low;
+> > > diff --git a/drivers/leds/leds-gpio.c b/drivers/leds/leds-gpio.c
+> > > index 15eb3f8..d2d54d6 100644
+> > > --- a/drivers/leds/leds-gpio.c
+> > > +++ b/drivers/leds/leds-gpio.c
+> > > @@ -191,7 +191,7 @@ static struct gpio_leds_priv *gpio_leds_create(struct platform_device *pdev)
+> > >  			goto err;
+> > >  		}
+> > > 
+> > > -		np = of_node(child);
+> > > +		np = to_of_node(child);
+> > > 
+> > >  		if (fwnode_property_present(child, "label")) {
+> > >  			fwnode_property_read_string(child, "label", &led.name);
+> > > diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
+> > > index 8de4fa9..1224be8 100644
+> > > --- a/include/acpi/acpi_bus.h
+> > > +++ b/include/acpi/acpi_bus.h
+> > > @@ -385,7 +385,7 @@ static inline bool is_acpi_node(struct fwnode_handle *fwnode)
+> > >  	return fwnode && fwnode->type == FWNODE_ACPI;
+> > >  }
+> > > 
+> > > -static inline struct acpi_device *acpi_node(struct fwnode_handle *fwnode)
+> > > +static inline struct acpi_device *to_acpi_node(struct fwnode_handle *fwnode)
+> > >  {
+> > >  	return is_acpi_node(fwnode) ?
+> > >  		container_of(fwnode, struct acpi_device, fwnode) : NULL;
+> > > diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+> > > index e4da5e3..ec3c98e 100644
+> > > --- a/include/linux/acpi.h
+> > > +++ b/include/linux/acpi.h
+> > > @@ -53,7 +53,7 @@ static inline acpi_handle acpi_device_handle(struct acpi_device *adev)
+> > >  	return adev ? adev->handle : NULL;
+> > >  }
+> > > 
+> > > -#define ACPI_COMPANION(dev)		acpi_node((dev)->fwnode)
+> > > +#define ACPI_COMPANION(dev)		to_acpi_node((dev)->fwnode)
+> > >  #define ACPI_COMPANION_SET(dev, adev)	set_primary_fwnode(dev, (adev) ? \
+> > >  	acpi_fwnode_handle(adev) : NULL)
+> > >  #define ACPI_HANDLE(dev)		acpi_device_handle(ACPI_COMPANION(dev))
+> > > @@ -473,7 +473,7 @@ static inline bool is_acpi_node(struct fwnode_handle *fwnode)
+> > >  	return false;
+> > >  }
+> > > 
+> > > -static inline struct acpi_device *acpi_node(struct fwnode_handle *fwnode)
+> > > +static inline struct acpi_device *to_acpi_node(struct fwnode_handle *fwnode)
+> > >  {
+> > >  	return NULL;
+> > >  }
+> > > diff --git a/include/linux/of.h b/include/linux/of.h
+> > > index b871ff9..f05fdce 100644
+> > > --- a/include/linux/of.h
+> > > +++ b/include/linux/of.h
+> > > @@ -128,7 +128,7 @@ static inline bool is_of_node(struct fwnode_handle *fwnode)
+> > >  	return fwnode && fwnode->type == FWNODE_OF;
+> > >  }
+> > > 
+> > > -static inline struct device_node *of_node(struct fwnode_handle *fwnode)
+> > > +static inline struct device_node *to_of_node(struct fwnode_handle *fwnode)
+> > >  {
+> > >  	return fwnode ? container_of(fwnode, struct device_node, fwnode) : NULL;
+> > >  }
+> > > @@ -387,7 +387,7 @@ static inline bool is_of_node(struct fwnode_handle *fwnode)
+> > >  	return false;
+> > >  }
+> > > 
+> > > -static inline struct device_node *of_node(struct fwnode_handle *fwnode)
+> > > +static inline struct device_node *to_of_node(struct fwnode_handle *fwnode)
+> > >  {
+> > >  	return NULL;
+> > >  }
+> > > --
+> 
