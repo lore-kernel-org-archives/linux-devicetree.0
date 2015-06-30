@@ -1,31 +1,28 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v1 0/10] Fixes and API additions for firmware nodes
-Date: Tue, 30 Jun 2015 17:32:56 +0200
-Message-ID: <1941489.kUW5F8q9QD@vostro.rjw.lan>
-References: <1435676108-20590-1-git-send-email-tomeu.vizoso@collabora.com>
+From: Bastien Nocera <hadess@hadess.net>
+Subject: Re: [PATCH v3 3/5] Input: goodix - add power management support
+Date: Tue, 30 Jun 2015 17:56:12 +0200
+Message-ID: <1435679772.2612.12.camel@hadess.net>
+References: <1435595304-4840-1-git-send-email-irina.tirdea@intel.com>
+	 <1435595304-4840-4-git-send-email-irina.tirdea@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1435676108-20590-1-git-send-email-tomeu.vizoso@collabora.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc: linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, Robert Moore <robert.moore@intel.com>, Lee Jones <lee.jones@linaro.org>, Wolfram Sang <wsa@the-dreams.de>, Lv Zheng <lv.zheng@intel.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, devel@acpica.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1435595304-4840-4-git-send-email-irina.tirdea@intel.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Irina Tirdea <irina.tirdea@intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Octavian Purdila <octavian.purdila@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, June 30, 2015 04:54:58 PM Tomeu Vizoso wrote:
-> Hi,
+On Mon, 2015-06-29 at 19:28 +0300, Irina Tirdea wrote:
+> Implement suspend/resume for goodix driver.
 > 
-> this series makes it possible to extract device dependencies from firmware data
-> with fwnode, thus not depending on the particular format of that data.
+> The suspend and resume process uses the gpio pins.
+> If the device ACPI/DT information does not declare gpio pins,
+> suspend/resume will not be available for these devices.
 > 
-> The first patches are about making sure that we can reach the fwnode
-> handle of the firmware data associated with a given device, and the rest
-> add API that makes dependency extraction possible.
+> This is based on Goodix datasheets for GT911 and GT9271
+> and on Goodix driver gt9xx.c for Android (publicly available
+> in Android kernel trees for various devices).
 
-It would really help if you sent the whole series to linux-acpi.  People on
-that list would see the entire context then.
-
-Thanks,
-Rafael
-
+How can I functionally test this?
