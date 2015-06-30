@@ -1,37 +1,27 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] arm64: dts: mt8173: Add I2C device node
-Date: Tue, 30 Jun 2015 08:26:45 +0200
-Message-ID: <CACRpkdY4=SSZQRQY_ydcsv-S8ezrYbzp2rdD4qRuHkF8oowOEw@mail.gmail.com>
-References: <1434101229-32695-1-git-send-email-eddie.huang@mediatek.com>
-	<1434101229-32695-3-git-send-email-eddie.huang@mediatek.com>
-	<CAGS+omB1UadXeKZLmMdhSamsPpipQLmoH_PhbUPvszrYTq68fA@mail.gmail.com>
-	<1863259.t4daGE7nbQ@ubix>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH RESEND v0] arm64: dts: Add APM X-Gene standby GPIO
+ controller DTS entries
+Date: Tue, 30 Jun 2015 08:34:54 +0200
+Message-ID: <CACRpkdajRMBBs1SN3vz81hCnr6isTSsuHejiZBJkTAXeG8M4og@mail.gmail.com>
+References: <1434448184-10584-1-git-send-email-yvo@apm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1863259.t4daGE7nbQ@ubix>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1434448184-10584-1-git-send-email-yvo@apm.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Y Vo <yvo@apm.com>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "arm@kernel.org" <arm@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Phong Vo <pvo@apm.com>, Toan Le <toanle@apm.com>, patches <patches@apm.com>, Loc Ho <lho@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 12, 2015 at 7:13 PM, Matthias Brugger
-<matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+On Tue, Jun 16, 2015 at 11:49 AM, Y Vo <yvo@apm.com> wrote:
 
-> In the future when all the device drivers are implemented, this gets you a
-> really huge dtsi. AFAIK this can cause a somewhat long parsing time of the dtb
-> when booting the system.
+> Add standby domain gpio controller for APM X-Gene SoC platform.
+>
+> Signed-off-by: Y Vo <yvo@apm.com>
 
-Boot time claims need to be backed up with ftrace logs or something. One of
-the arguments against device tree in the beginning was parse time and then
-we made measurements and it proved moot.
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-However being unable to manage the dts[i] sources is a valid argument for
-simplifying and splitting up stuff.
+Please funnel this through the ARM SoC tree.
 
 Yours,
 Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
