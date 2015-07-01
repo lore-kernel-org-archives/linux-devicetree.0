@@ -1,69 +1,41 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: [PATCH v5 0/3] cpufreq: Use cpufreq-dt driver for Exynos3250
-Date: Wed, 01 Jul 2015 22:21:14 +0900
-Message-ID: <1435756877-26736-1-git-send-email-cw00.choi@samsung.com>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v2 4/9] arm: twr-k70f120m: timer driver for Kinetis SoC
+Date: Wed, 1 Jul 2015 15:28:08 +0200 (CEST)
+Message-ID: <alpine.DEB.2.11.1507011527380.3916@nanos>
+References: <1435667250-28299-1-git-send-email-pawelo@king.net.pl> <1435667250-28299-5-git-send-email-pawelo@king.net.pl> <alpine.DEB.2.11.1507010944580.3916@nanos> <alpine.LNX.2.00.1507011031050.9009@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: s.nawrocki@samsung.com, tomasz.figa@gmail.com, mturquette@baylibre.com, sboyd@codeaurora.org, kgene@kernel.org, k.kozlowski@samsung.com
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, linux-kernel@vger.kernel.org, cw00.choi@samsung.com, kyungmin.park@samsung.com, thomas.ab@samsung.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <alpine.LNX.2.00.1507011031050.9009@localhost.localdomain>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Paul Osmialowski <pawelo@king.net.pl>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jiri Slaby <jslaby@suse.cz>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Stephen Boyd <sboyd@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Nicolas Pitre <nicolas.pitre@linaro.org>, Paul Bolle <pebolle@tiscali.nl>, Uwe Kleine-Koenig <u.kleine-koenig@pengutronix.de>, Anson
 List-Id: devicetree@vger.kernel.org
 
-This patchset use cpufreq-dt driver to support Exynos3250 cpufreq and tested it
-on Exynos3250-based Rinato board.
+On Wed, 1 Jul 2015, Paul Osmialowski wrote:
 
-Depends on:
-- next-20150701 tag (master branch) of linux-next kernel tree
-- This patch-set is based on Exynos5250 patch-set[1] because two patch-set
-  modify the 'arch/arm/mach-exynos/exynos.c' to add the compatible string.
-  [1] https://lkml.org/lkml/2015/6/29/361
-  : [PATCH v2 0/4] cpufreq: use generic cpufreq drivers for Exynos5250 platform
+> Hi Thomas,
+> 
+> On Wed, 1 Jul 2015, Thomas Gleixner wrote:
+> 
+> > > +		clockevents_register_device(
+> > > +				&kinetis_clockevent_tmrs[chan].evtdev);
+> > > +
+> > > +		kinetis_pit_init(&kinetis_clockevent_tmrs[chan],
+> > > +						(rate / HZ) - 1);
+> > > +		kinetis_pit_enable(&kinetis_clockevent_tmrs[chan], 1);
+> > 
+> > No point doing this. The core code has invoked the set_periodic call
+> > back via clockevents_register_device() already.
+> > 
+> 
+> As I removed this kinetis_pit_enable() line, the timer did not start,
+> therefore the system became unusable. What could be possible reason for that?
 
-Changes from v4:
-(https://lkml.org/lkml/2014/10/20/215)
-- Rebased on latest linux-next git repository.
-- Remove unnecessary divider clock flag from divider of DIV_CPU0/DIV_CPU1 register
+Well, you need to move both, the init and the enable into
+set_periodic().
 
-Changes from v3:
-- This patchset is based on 3.18-rc1 with new patchset[3] of Thomas Abraham
-  [3] [PATCH v11 0/6] cpufreq: use generic cpufreq drivers for exynos platforms
-  - http://www.spinics.net/lists/arm-kernel/msg370412.html
+Thanks,
 
-Changes from v2:
-- Rebased on new patchset of Thomas Abraham
-  and for-next branch of samsunc-clk.git of Tomasz Figa
+	tglx
 
-Changes from v1:
-- Rebased on new patchset[1] by Thomas Abraham
-  [1] [PATCH v10 0/6] cpufreq: use generic cpufreq drivers for exynos platforms
-  - http://www.spinics.net/lists/arm-kernel/msg364790.html
-- Modify clk-cpu.c to support Exynos3250
-- Drop documentation patch on previous patchset[2]
-  [2] http://www.spinics.net/lists/cpufreq/msg10265.html
-- Add only operating-points for Exynos3250 without armclk-divider-table
-
-Chanwoo Choi (3):
-  clk: samsung: exynos3250: Add cpu clock configuration data and instaniate cpu clock
-  ARM: dts: Add CPU OPP and regulator supply property for Exynos3250
-  ARM: exynos: Add exynos3250 compatible to use generic cpufreq driver
-
- arch/arm/boot/dts/exynos3250-monk.dts   |  4 ++++
- arch/arm/boot/dts/exynos3250-rinato.dts |  4 ++++
- arch/arm/boot/dts/exynos3250.dtsi       | 15 +++++++++++++++
- arch/arm/mach-exynos/exynos.c           |  1 +
- drivers/clk/samsung/clk-exynos3250.c    | 32 ++++++++++++++++++++++++++++++--
- include/dt-bindings/clock/exynos3250.h  |  1 +
- 6 files changed, 55 insertions(+), 2 deletions(-)
-
--- 
-1.8.5.5
