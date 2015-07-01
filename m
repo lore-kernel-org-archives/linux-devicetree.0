@@ -1,144 +1,155 @@
-From: Paul Osmialowski <pawelo@king.net.pl>
-Subject: Re: [PATCH v2 7/9] arm: twr-k70f120m: use Freescale eDMA driver with
- Kinetis SoC
-Date: Wed, 1 Jul 2015 08:54:56 +0200 (CEST)
-Message-ID: <alpine.LNX.2.00.1507010849390.8255@localhost.localdomain>
-References: <1435667250-28299-1-git-send-email-pawelo@king.net.pl> <1435667250-28299-8-git-send-email-pawelo@king.net.pl> <1650263.FfdEQKm1Bu@wuerfel>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [RFC 2/3] i2c: mux: demux-pinctrl: add driver
+Date: Wed, 1 Jul 2015 09:08:12 +0200
+Message-ID: <CAMuHMdW+rd+U0VQjitbyJ3AiZakhLztdYe27n1rkK9tFWT=z4w@mail.gmail.com>
+References: <1435700651-3543-1-git-send-email-wsa@the-dreams.de>
+	<1435700651-3543-3-git-send-email-wsa@the-dreams.de>
 Mime-Version: 1.0
-Content-Type: MULTIPART/MIXED; BOUNDARY="98048-2106302197-1435733717=:8255"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1650263.FfdEQKm1Bu@wuerfel>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, Paul Osmialowski <pawelo@king.net.pl>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jiri Slaby <jslaby@suse.cz>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Stephen Boyd <sboyd@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, Nicolas Pitre <nicolas.pitre@linaro.org>, Sergei Poselenov <sposelenov@emcraft.com>, Paul Bolle <pebolle@tiscali.nl>, Jingchang Lu <jingchang.lu@freescale.com>, Yuri
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1435700651-3543-3-git-send-email-wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux I2C <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi Wolfram,
 
---98048-2106302197-1435733717=:8255
-Content-Type: TEXT/PLAIN; charset=US-ASCII; format=flowed
-
-Hi Arnd,
-
-Thanks for pointing this - dma-ranges seem to work properly. This makes 
-the patch much simpler. To be included to the next iteration.
-
-I also removed DMA_OF from Kconfig and CONFIG_DMA_OF from my defconfig and 
-it was automatically added during preparation of .cofing for build.
-
-On Tue, 30 Jun 2015, Arnd Bergmann wrote:
-
-> On Tuesday 30 June 2015 14:27:28 Paul Osmialowski wrote:
->> Note that <mach/memory.h> is needed (which is denoted by
->> CONFIG_NEED_MACH_MEMORY_H) as it provides macros required for proper
->> operation of DMA allocation functions.
+On Tue, Jun 30, 2015 at 11:44 PM, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> wrote:
+> From: Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
 >
-> You can't do this, it breaks compilation when multiple platforms
-> are enabled.
+> This driver allows an I2C bus to switch between multiple masters. This
+> is not hot-switching because connected I2C slaves will be
+> re-instantiated. It is meant to select the best I2C core at runtime once
+> the task is known. Example: Prefer i2c-gpio over another I2C core
+> because of HW errata affecting your use case.
 >
->> Signed-off-by: Paul Osmialowski <pawelo@king.net.pl>
->> ---
->>  arch/arm/Kconfig                            |  4 ++
->>  arch/arm/boot/dts/kinetis.dtsi              | 34 ++++++++++++++++
->>  arch/arm/mach-kinetis/include/mach/memory.h | 61 +++++++++++++++++++++++++++++
->>  3 files changed, 99 insertions(+)
->>  create mode 100644 arch/arm/mach-kinetis/include/mach/memory.h
->>
->> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
->> index b21592b..8ccffee 100644
->> --- a/arch/arm/Kconfig
->> +++ b/arch/arm/Kconfig
->> @@ -971,6 +971,10 @@ config ARCH_KINETIS
->>  	select CLKSRC_KINETIS
->>  	select PINCTRL
->>  	select PINCTRL_KINETIS
->> +	select DMADEVICES
->> +	select FSL_EDMA
->> +	select DMA_OF
->> +	select NEED_MACH_MEMORY_H
+> Signed-off-by: Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
+> ---
+>  .../devicetree/bindings/i2c/i2c-demux-pinctrl.txt  |  44 ++++
+>  drivers/i2c/muxes/Kconfig                          |   9 +
+>  drivers/i2c/muxes/Makefile                         |   2 +
+>  drivers/i2c/muxes/i2c-demux-pinctrl.c              | 266 +++++++++++++++++++++
+>  4 files changed, 321 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-demux-pinctrl.txt
+>  create mode 100644 drivers/i2c/muxes/i2c-demux-pinctrl.c
 >
-> I think DMA_OF is implied by dmaengine support in combination with CONFIG_OF
->
->> +
->> +#ifndef _MACH_KINETIS_MEMORY_H
->> +#define _MACH_KINETIS_MEMORY_H
->> +
->> +#ifndef __ASSEMBLY__
->> +
->> +/*
->> + * On Kinetis K70, consistent DMA memory resides in a special
->> + * DDRAM alias region (non-cacheable DDRAM at 0x80000000).
->> + *
->> + */
->> +#define KINETIS_PHYS_DMA_OFFSET UL(0x80000000)
->> +
->> +/*
->> + * Mask of the field used to distinguish DDRAM aliases
->> + */
->> +#define KINETIS_DRAM_ALIAS_MASK UL(0xf8000000)
->
-> This should be expressed using the 'dma-ranges' properties in the
-> bus nodes above any DMA master, the normal DMA mapping code will
-> then do the right thing.
->
-> 	Arnd
->
---98048-2106302197-1435733717=:8255
-Content-Type: TEXT/x-diff; name=0007-arm-twr-k70f120m-use-Freescale-eDMA-driver-with-Kine.patch
-Content-Transfer-Encoding: BASE64
-Content-ID: <alpine.LNX.2.00.1507010854560.8255@localhost.localdomain>
-Content-Description: 
-Content-Disposition: attachment; filename=0007-arm-twr-k70f120m-use-Freescale-eDMA-driver-with-Kine.patch
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-demux-pinctrl.txt b/Documentation/devicetree/bindings/i2c/i2c-demux-pinctrl.txt
+> new file mode 100644
+> index 00000000000000..2211f6acbf8c0c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-demux-pinctrl.txt
 
-RnJvbSBlMGI1NDkxNTFiM2VlOGQ0NDE5MzQ0YTJiNWVmNDYxYmFkMTliMmFm
-IE1vbiBTZXAgMTcgMDA6MDA6MDAgMjAwMQ0KRnJvbTogUGF1bCBPc21pYWxv
-d3NraSA8cGF3ZWxvQGtpbmcubmV0LnBsPg0KRGF0ZTogTW9uLCAyOSBKdW4g
-MjAxNSAyMzozNzoyMCArMDIwMA0KU3ViamVjdDogW1BBVENIIDcvOV0gYXJt
-OiB0d3ItazcwZjEyMG06IHVzZSBGcmVlc2NhbGUgZURNQSBkcml2ZXIgd2l0
-aCBLaW5ldGlzDQogU29DDQoNClNpZ25lZC1vZmYtYnk6IFBhdWwgT3NtaWFs
-b3dza2kgPHBhd2Vsb0BraW5nLm5ldC5wbD4NCi0tLQ0KIGFyY2gvYXJtL0tj
-b25maWcgICAgICAgICAgICAgICB8ICAyICsrDQogYXJjaC9hcm0vYm9vdC9k
-dHMva2luZXRpcy5kdHNpIHwgMzYgKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrDQogMiBmaWxlcyBjaGFuZ2VkLCAzOCBpbnNlcnRpb25z
-KCspDQoNCmRpZmYgLS1naXQgYS9hcmNoL2FybS9LY29uZmlnIGIvYXJjaC9h
-cm0vS2NvbmZpZw0KaW5kZXggYjIxNTkyYi4uODFhNjMyOCAxMDA2NDQNCi0t
-LSBhL2FyY2gvYXJtL0tjb25maWcNCisrKyBiL2FyY2gvYXJtL0tjb25maWcN
-CkBAIC05NzEsNiArOTcxLDggQEAgY29uZmlnIEFSQ0hfS0lORVRJUw0KIAlz
-ZWxlY3QgQ0xLU1JDX0tJTkVUSVMNCiAJc2VsZWN0IFBJTkNUUkwNCiAJc2Vs
-ZWN0IFBJTkNUUkxfS0lORVRJUw0KKwlzZWxlY3QgRE1BREVWSUNFUw0KKwlz
-ZWxlY3QgRlNMX0VETUENCiAJaGVscA0KIAkgIFRoaXMgZW5hYmxlcyBzdXBw
-b3J0IGZvciB0aGUgRnJlZXNjYWxlIEtpbmV0aXMgTUNVcw0KIA0KZGlmZiAt
-LWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2tpbmV0aXMuZHRzaSBiL2FyY2gv
-YXJtL2Jvb3QvZHRzL2tpbmV0aXMuZHRzaQ0KaW5kZXggNWZmMWQzYi4uNzVm
-YzZkNCAxMDA2NDQNCi0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2tpbmV0aXMu
-ZHRzaQ0KKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMva2luZXRpcy5kdHNpDQpA
-QCAtMTksNiArMTksNDIgQEANCiAJfTsNCiANCiAJc29jIHsNCisJCWRtYS1y
-YW5nZXMgPSA8MHg4MDAwMDAwMCAweDAwMDAwMDAwIDB4MDgwMDAwMDA+Ow0K
-Kw0KKwkJZWRtYTogZG1hLWNvbnRyb2xsZXJANDAwMDgwMDAgew0KKwkJCWNv
-bXBhdGlibGUgPSAiZnNsLGtpbmV0aXMtZWRtYSI7DQorCQkJcmVnID0gPDB4
-NDAwMDgwMDAgMHgyMDAwPiwgLyogRE1BQyAqLw0KKwkJCQk8MHg0MDAyMTAw
-MCAweDEwMDA+LCAvKiBETUFNVVgwICovDQorCQkJCTwweDQwMDIyMDAwIDB4
-MTAwMD47IC8qIERNQU1VWDEgKi8NCisJCQkjZG1hLWNlbGxzID0gPDI+Ow0K
-KwkJCWRtYS1jaGFubmVscyA9IDwzMj47DQorCQkJaW50ZXJydXB0cyA9CSA8
-MD4sICA8MT4sICA8Mj4sICA8Mz4sDQorCQkJCQkgPDQ+LCAgPDU+LCAgPDY+
-LCAgPDc+LA0KKwkJCQkJIDw4PiwgIDw5PiwgPDEwPiwgPDExPiwNCisJCQkJ
-CTwxMj4sIDwxMz4sIDwxND4sIDwxNT4sDQorCQkJCQk8MTY+Ow0KKwkJCWlu
-dGVycnVwdC1uYW1lcyA9ICJlZG1hLXR4LTAsMTYiLA0KKwkJCQkJICAiZWRt
-YS10eC0xLDE3IiwNCisJCQkJCSAgImVkbWEtdHgtMiwxOCIsDQorCQkJCQkg
-ICJlZG1hLXR4LTMsMTkiLA0KKwkJCQkJICAiZWRtYS10eC00LDIwIiwNCisJ
-CQkJCSAgImVkbWEtdHgtNSwyMSIsDQorCQkJCQkgICJlZG1hLXR4LTYsMjIi
-LA0KKwkJCQkJICAiZWRtYS10eC03LDIzIiwNCisJCQkJCSAgImVkbWEtdHgt
-OCwyNCIsDQorCQkJCQkgICJlZG1hLXR4LTksMjUiLA0KKwkJCQkJICAiZWRt
-YS10eC0xMCwyNiIsDQorCQkJCQkgICJlZG1hLXR4LTExLDI3IiwNCisJCQkJ
-CSAgImVkbWEtdHgtMTIsMjgiLA0KKwkJCQkJICAiZWRtYS10eC0xMywyOSIs
-DQorCQkJCQkgICJlZG1hLXR4LTE0LDMwIiwNCisJCQkJCSAgImVkbWEtdHgt
-MTUsMzEiLA0KKwkJCQkJICAiZWRtYS1lcnIiOw0KKwkJCWNsb2NrcyA9IDwm
-bWNnX2NjbGtfZ2F0ZSA2IDE+LA0KKwkJCQkgPCZtY2dfcGNsa19nYXRlIDUg
-MT4sIDwmbWNnX3BjbGtfZ2F0ZSA1IDI+Ow0KKwkJCWNsb2NrLW5hbWVzID0g
-ImVkbWEiLCAiZG1hbXV4MCIsICJkbWFtdXgxIjsNCisJCX07DQorDQogCQlw
-b3J0QTogcGlubXV4QDQwMDQ5MDAwIHsNCiAJCQljb21wYXRpYmxlID0gImZz
-bCxraW5ldGlzLXBhZGNvbmYiOw0KIAkJCXJlZyA9IDwweDQwMDQ5MDAwIDB4
-MTAwMD47DQotLSANCjIuMy42DQoNCg==
+> +Changing I2C controllers:
+> +
+> +The created mux-device will have a file "cur_master" in its sysfs-entry. Write
+> +0 there for the first master listed in the "i2c-parent" property, 1 for the
+> +second etc. Reading the file will give you a list with the active master
+> +marked.
 
---98048-2106302197-1435733717=:8255--
+This paragraph doesn't belong in the DT binding doc, but somewhere
+under Documentation/i2c/
+
+> diff --git a/drivers/i2c/muxes/i2c-demux-pinctrl.c b/drivers/i2c/muxes/i2c-demux-pinctrl.c
+> new file mode 100644
+> index 00000000000000..5444c65de76c55
+> --- /dev/null
+> +++ b/drivers/i2c/muxes/i2c-demux-pinctrl.c
+> @@ -0,0 +1,266 @@
+> +/*
+> + * Pinctrl based I2C DeMultiplexer V2 PROTOTYPE!
+> + *
+> + * Copyright (C) 2015 by Wolfram Sang, Sang Engineering <wsa-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
+> + * Copyright (C) 2015 by Renesas Electronics Corporation
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms of the GNU General Public License as published by the
+> + * Free Software Foundation; version 2 of the License.
+> + *
+> + * See the bindings doc for DTS setup.
+> + */
+> +
+> +#include <linux/i2c.h>
+> +#include <linux/init.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/of.h>
+> +#include <linux/pinctrl/consumer.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/slab.h>
+> +#include <linux/sysfs.h>
+> +
+> +struct i2c_demux_pinctrl_chan {
+> +       struct device_node *parent_np;
+> +       struct i2c_adapter *parent_adap;
+> +       struct of_changeset chgset;
+> +};
+> +
+> +struct i2c_demux_pinctrl_priv {
+> +       int cur_chan;
+> +       int num_chan;
+
+unsigned int
+
+> +       struct device *dev;
+> +       const char *bus_name;
+> +       struct i2c_adapter cur_adap;
+> +       struct i2c_algorithm algo;
+> +       struct i2c_demux_pinctrl_chan chan[];
+> +};
+> +
+> +static struct property status_okay = { .name = "status", .length = 3, .value = "ok" };
+
+"okay" or "ok"?
+
+> +static ssize_t cur_master_show(struct device *dev, struct device_attribute *attr,
+> +                          char *buf)
+> +{
+> +       struct i2c_demux_pinctrl_priv *priv = dev_get_drvdata(dev);
+> +       int count = 0, i;
+
+unsigned int i
+
+> +
+> +       for (i = 0; i < priv->num_chan; i++)
+> +               count += sprintf(buf + count, "%c %d - %s\n",
+> +                                i == priv->cur_chan ? '*' : ' ', i,
+> +                                priv->chan[i].parent_np->full_name);
+> +       //FIXME: Check count > PAGE_SIZE
+
+Can you use seq_printf() for device attributes?
+
+> +
+> +       return count;
+> +}
+> +
+> +static ssize_t cur_master_store(struct device *dev, struct device_attribute *attr,
+> +                           const char *buf, size_t count)
+> +{
+> +       struct i2c_demux_pinctrl_priv *priv = dev_get_drvdata(dev);
+> +       unsigned long val;
+
+unsigned int
+
+> +       int ret;
+> +
+> +       ret = kstrtoul(buf, 0, &val);
+
+kstrtouint()
+
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       if (val >= priv->num_chan)
+> +               return -EINVAL;
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
