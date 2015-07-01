@@ -1,37 +1,125 @@
 From: Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 6/8] iio: mma8452: add copyright notice comment
-Date: Wed,  1 Jul 2015 10:22:00 +0200
-Message-ID: <1435738922-12580-7-git-send-email-martink@posteo.de>
+Subject: [PATCH 3/8] iio: mma8452: add freefall / motion interrupt source
+Date: Wed,  1 Jul 2015 10:21:57 +0200
+Message-ID: <1435738922-12580-4-git-send-email-martink@posteo.de>
 References: <1435738922-12580-1-git-send-email-martink@posteo.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1435738922-12580-1-git-send-email-martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>, Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This adds the freefall / motion interrupt source definitions to the driver.
+It is not in use now, but mma_chip_info and iio_chan_spec can easily be
+adapted to use it instead of the transient interrupt source.
+
 Signed-off-by: Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
 Signed-off-by: Christoph Muellner <christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
 ---
- drivers/iio/accel/mma8452.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/iio/accel/mma8452.c | 45 ++++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 36 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/iio/accel/mma8452.c b/drivers/iio/accel/mma8452.c
-index ccce925..7f6e3b4 100644
+index 209b0d7..0498b6e 100644
 --- a/drivers/iio/accel/mma8452.c
 +++ b/drivers/iio/accel/mma8452.c
-@@ -6,6 +6,7 @@
-  *	MMA8652FC
-  *	MMA8653FC
-  *
-+ * Copyright 2015 Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
-  * Copyright 2014 Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
-  *
-  * This file is subject to the terms and conditions of version 2 of
+@@ -38,9 +38,18 @@
+ #define MMA8452_DATA_CFG 0x0e
+ #define MMA8452_HP_FILTER_CUTOFF 0x0f
+ #define MMA8452_HP_FILTER_CUTOFF_SEL_MASK	(BIT(0) | BIT(1))
++#define MMA8452_FF_MT_CFG 0x15
++#define MMA8452_FF_MT_CFG_OAE			BIT(6)
++#define MMA8452_FF_MT_CFG_ELE			BIT(7)
++#define MMA8452_FF_MT_SRC 0x16
++#define MMA8452_FF_MT_SRC_XHE			BIT(1)
++#define MMA8452_FF_MT_SRC_YHE			BIT(3)
++#define MMA8452_FF_MT_SRC_ZHE			BIT(5)
++#define MMA8452_FF_MT_THS 0x17
++#define MMA8452_FF_MT_THS_MASK 0x7f
++#define MMA8452_FF_MT_COUNT 0x18
+ #define MMA8452_TRANSIENT_CFG 0x1d
+ #define MMA8452_TRANSIENT_CFG_ELE		BIT(4)
+-#define MMA8452_TRANSIENT_CFG_CHAN(chan)	BIT(chan + 1)
+ #define MMA8452_TRANSIENT_CFG_HPF_BYP		BIT(0)
+ #define MMA8452_TRANSIENT_SRC 0x1e
+ #define MMA8452_TRANSIENT_SRC_XTRANSE		BIT(1)
+@@ -74,6 +83,7 @@
+ #define MMA8452_DATA_CFG_HPF_MASK BIT(4)
+ 
+ #define MMA8452_INT_DRDY	BIT(0)
++#define MMA8452_INT_FF_MT	BIT(2)
+ #define MMA8452_INT_TRANS	BIT(5)
+ 
+ #define MMA8452_DEVICE_ID 0x2a
+@@ -564,7 +574,8 @@ static int mma8452_write_event_config(struct iio_dev *indio_dev,
+ 	else
+ 		val &= ~BIT(chan->scan_index + chip->ev_cfg_chan_shift);
+ 
+-	val |= MMA8452_TRANSIENT_CFG_ELE;
++	val |= chip->ev_cfg_ele;
++	val |= MMA8452_FF_MT_CFG_OAE;
+ 
+ 	return mma8452_change_config(data, chip->ev_cfg, val);
+ }
+@@ -605,6 +616,7 @@ static irqreturn_t mma8452_interrupt(int irq, void *p)
+ {
+ 	struct iio_dev *indio_dev = p;
+ 	struct mma8452_data *data = iio_priv(indio_dev);
++	const struct mma_chip_info *chip = data->chip_info;
+ 	int ret = IRQ_NONE;
+ 	int src;
+ 
+@@ -617,7 +629,10 @@ static irqreturn_t mma8452_interrupt(int irq, void *p)
+ 		ret = IRQ_HANDLED;
+ 	}
+ 
+-	if (src & MMA8452_INT_TRANS) {
++	if ((src & MMA8452_INT_TRANS &&
++	     chip->ev_src == MMA8452_TRANSIENT_SRC) ||
++	    (src & MMA8452_INT_FF_MT &&
++	     chip->ev_src == MMA8452_FF_MT_SRC)) {
+ 		mma8452_transient_interrupt(indio_dev);
+ 		ret = IRQ_HANDLED;
+ 	}
+@@ -678,6 +693,16 @@ static const struct iio_event_spec mma8452_transient_event[] = {
+ 	},
+ };
+ 
++static const struct iio_event_spec mma8452_motion_event[] = {
++	{
++		.type = IIO_EV_TYPE_THRESH,
++		.dir = IIO_EV_DIR_RISING,
++		.mask_separate = BIT(IIO_EV_INFO_ENABLE),
++		.mask_shared_by_type = BIT(IIO_EV_INFO_VALUE) |
++					BIT(IIO_EV_INFO_PERIOD)
++	},
++};
++
+ /*
+  * Threshold is configured in fixed 8G/127 steps regardless of
+  * currently selected scale for measurement.
+@@ -962,13 +987,15 @@ static int mma8452_probe(struct i2c_client *client,
+ 
+ 	if (client->irq) {
+ 		/*
+-		 * Although we enable the transient interrupt source once and
+-		 * for all here the transient event detection itself is not
+-		 * enabled until userspace asks for it by
+-		 * mma8452_write_event_config()
++		 * Although we enable the interrupt sources once and for
++		 * all here the event detection itself is not enabled until
++		 * userspace asks for it by mma8452_write_event_config()
+ 		 */
+-		int supported_interrupts = MMA8452_INT_DRDY | MMA8452_INT_TRANS;
+-		int enabled_interrupts = MMA8452_INT_TRANS;
++		int supported_interrupts = MMA8452_INT_DRDY |
++					   MMA8452_INT_TRANS |
++					   MMA8452_INT_FF_MT;
++		int enabled_interrupts = MMA8452_INT_TRANS |
++					 MMA8452_INT_FF_MT;
+ 
+ 		/* Assume wired to INT1 pin */
+ 		ret = i2c_smbus_write_byte_data(client,
 -- 
 2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
