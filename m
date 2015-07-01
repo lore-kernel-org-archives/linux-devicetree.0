@@ -1,74 +1,42 @@
-From: Vitaly Andrianov <vitalya-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH] keystone: dts: add psci command definition
-Date: Wed, 1 Jul 2015 09:05:31 -0400
-Message-ID: <5593E59B.9090304@ti.com>
-References: <1435752784-30639-1-git-send-email-vitalya@ti.com> <1435752784-30639-2-git-send-email-vitalya@ti.com> <20150701124101.GB2310@leverpostej>
+From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 1/3] regulator: max8973: Fix up control flag option for bias control
+Date: Wed, 1 Jul 2015 18:31:42 +0530
+Message-ID: <1435755704-1164-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150701124101.GB2310@leverpostej>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+The control flag for the bias control is MAX8973_CONTROL_BIAS_ENABLE
+rather than MAX8973_BIAS_ENABLE which is macro for the bits in
+register.
 
+Fix this typo.
 
-On 07/01/2015 08:41 AM, Mark Rutland wrote:
-> On Wed, Jul 01, 2015 at 01:13:04PM +0100, Vitaly Andrianov wrote:
->> This commit adds definition for cpu_on, cpu_off and cpu_suspend commands.
->> These definitions must match the corresponding PSCI definitions in
->> boot monitor.
->>
->> Signed-off-by: Vitaly Andrianov <vitalya-l0cyMroinI0@public.gmane.org>
->> ---
->>   arch/arm/boot/dts/keystone.dtsi | 8 ++++++++
->>   1 file changed, 8 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
->> index c06542b..ab60fca 100644
->> --- a/arch/arm/boot/dts/keystone.dtsi
->> +++ b/arch/arm/boot/dts/keystone.dtsi
->> @@ -58,6 +58,14 @@
->>   			     <GIC_SPI 23 IRQ_TYPE_EDGE_RISING>;
->>   	};
->>
->> +	psci {
->> +		compatible	= "arm,psci";
->> +		method		= "smc";
->> +		cpu_suspend	= <0x84000001>;
->> +		cpu_off		= <0x84000002>;
->> +		cpu_on		= <0x84000003>;
->> +	};
->
-> It would be nice to have this injected automatically by the bootlaoder
-> when PSCI is present, as that way users of existing systems can upgrade
-> their DTB and still have things boot.
->
-> Thanks,
-> Mark.
->
+Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+ drivers/regulator/max8973-regulator.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-So, KS2 kernel doesn't need that commit and has to wait this from 
-u-boot? Actually PSCI support is a part of KS2 boot-monitor. U-boot is 
-just responsible to load and start it, but doesn't know whether PSCI is 
-supported.
+diff --git a/drivers/regulator/max8973-regulator.c b/drivers/regulator/max8973-regulator.c
+index 6f2bdad..e94ddcf 100644
+--- a/drivers/regulator/max8973-regulator.c
++++ b/drivers/regulator/max8973-regulator.c
+@@ -450,7 +450,7 @@ static struct max8973_regulator_platform_data *max8973_parse_dt(
+ 		pdata->control_flags  |= MAX8973_CONTROL_FREQ_SHIFT_9PER_ENABLE;
+ 
+ 	if (of_property_read_bool(np, "maxim,enable-bias-control"))
+-		pdata->control_flags  |= MAX8973_BIAS_ENABLE;
++		pdata->control_flags  |= MAX8973_CONTROL_BIAS_ENABLE;
+ 
+ 	return pdata;
+ }
+-- 
+2.1.4
 
-In any case you are right. The DTS also doesn't know whether boot- 
-monitor supports PSCI. It is better to make u-boot to fix up the dts.
-Let's forget about this patch. I'll work on dts fix-up in u-boot.
-
-Thanks,
-Vitaly
-
->> +
->>   	soc {
->>   		#address-cells = <1>;
->>   		#size-cells = <1>;
->> --
->> 1.9.1
->>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
