@@ -1,131 +1,116 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V2 2/2] mfd: 88pm88x: initialize 88pm886/88pm880 base
- support
-Date: Wed, 1 Jul 2015 13:20:18 +0100
-Message-ID: <20150701122018.GJ3210@x1>
-References: <1434098601-3498-1-git-send-email-yizhang@marvell.com>
- <1434098601-3498-3-git-send-email-yizhang@marvell.com>
- <20150625083248.GT15013@x1>
- <20150626124928.GF32687@yizhang>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 7/9] ARM: multi_v7_defconfig: Enable support for PWM
+ Regulators
+Date: Wed, 1 Jul 2015 13:31:46 +0100
+Message-ID: <20150701123146.GK3210@x1>
+References: <1435154348-28840-1-git-send-email-lee.jones@linaro.org>
+ <1435154348-28840-8-git-send-email-lee.jones@linaro.org>
+ <CABxcv==J2hi0y+=s3nK_U=-jkjTW3L9jCC2JfebnWwRfpDGLAQ@mail.gmail.com>
+ <20150625084204.GW15013@x1>
+ <CABxcv==_YZ7BCCzfbLXYxwUL_kKLtBxOVTCvcUnvGVnrD4bVpg@mail.gmail.com>
+ <20150625150255.GE23990@x1>
+ <CABxcv==dWX_J_+zhqjn61QXGtxCKmK62_HEj4R7wsMAWcC=H=Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20150626124928.GF32687@yizhang>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yi Zhang <yizhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Cc: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, zhouqiao-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org
+In-Reply-To: <CABxcv==dWX_J_+zhqjn61QXGtxCKmK62_HEj4R7wsMAWcC=H=Q@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier@dowhile0.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, kernel@stlinux.com, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Ajit Pal Singh <ajitpal.singh@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 26 Jun 2015, Yi Zhang wrote:
-> On Thu, Jun 25, 2015 at 09:32:48AM +0100, Lee Jones wrote:
-> > On Fri, 12 Jun 2015, Yi Zhang wrote:
-> >=20
-> > > 88pm886 and 88pm880 are combo PMIC chip, which integrates
-> > > regulator, onkey, rtc, gpadc, charger, fuelgauge function;
-> > >=20
-> > > this patch add the basic support for them, adding related resourc=
-e, such as
-> > > interrupt, preparing for the client-device driver
-> > >=20
-> > > Signed-off-by: Yi Zhang <yizhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-> > > ---
-> > >  drivers/mfd/88pm880-table.c     | 173 ++++++++++++
-> > >  drivers/mfd/88pm886-table.c     | 173 ++++++++++++
-> > >  drivers/mfd/88pm88x-core.c      | 584 ++++++++++++++++++++++++++=
-++++++++++++++
-> > >  drivers/mfd/88pm88x-i2c.c       | 167 ++++++++++++
-> > >  drivers/mfd/88pm88x-irq.c       | 171 ++++++++++++
-> > >  drivers/mfd/88pm88x.h           |  51 ++++
+On Thu, 25 Jun 2015, Javier Martinez Canillas wrote:
+> On Thu, Jun 25, 2015 at 5:02 PM, Lee Jones <lee.jones@linaro.org> wro=
+te:
+> > On Thu, 25 Jun 2015, Javier Martinez Canillas wrote:
+> >> On Thu, Jun 25, 2015 at 10:42 AM, Lee Jones <lee.jones@linaro.org>=
+ wrote:
+> >> > On Wed, 24 Jun 2015, Javier Martinez Canillas wrote:
+> >>
+> >> [...]
+> >>
+> >> >> > diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/c=
+onfigs/multi_v7_defconfig
+> >> >> > index f632af0..6666973 100644
+> >> >> > --- a/arch/arm/configs/multi_v7_defconfig
+> >> >> > +++ b/arch/arm/configs/multi_v7_defconfig
+> >> >> > @@ -365,6 +365,7 @@ CONFIG_REGULATOR_MAX8907=3Dy
+> >> >> >  CONFIG_REGULATOR_MAX8973=3Dy
+> >> >> >  CONFIG_REGULATOR_MAX77686=3Dy
+> >> >> >  CONFIG_REGULATOR_PALMAS=3Dy
+> >> >> > +CONFIG_REGULATOR_PWM=3Dy
+> >> >>
+> >> >> The current policy is to build as much as possible as a module =
+in
+> >> >> multi_v7_defconfig. Since this is a tristate Kconfig symbol, co=
+uld you
+> >> >> please change it to =3Dm ?
+> >> >
+> >> > I would prefer that it stays built-in.
+> >> >
+> >>
+> >> Ok, I've no strong opinion on this. I was just mentioning what arm=
+-soc
+> >> maintainers prefer nowadays.
+> >>
+> >> May I ask what's the rationale for leaving this option built-in?
+> >
+> > My view is that multi_v7 is used for prototyping, testing and to
+> > ensure all of the vendors are playing nice together.  Hopefully
+> > vendors aren't actually releasing kernels built with this defconfig=
+!
 >=20
->   Thanks very much for your patience on such a long patch, it is my
->   fault, I will modify according to your precious comments and split
->   them in the next version, thanks very much;
+> Agreed and same for the per SoC family defconfigs, vendors should shi=
+p
+> kernels with a customized defconfig.
 
-You are welcome.
+Right.
 
-[...] /* Cut 100's of lines where you were agreeing with me */
-
-In future, please cut all of the lines that you agree with me and only
-leave in the useful or contentious items.
-
-> > > +	chip->ldo_page_addr =3D client->addr + 1;
-> > > +	chip->power_page_addr =3D client->addr + 1;
-> > > +	chip->gpadc_page_addr =3D client->addr + 2;
-> > > +	chip->battery_page_addr =3D client->addr + 3;
-> > > +	chip->buck_page_addr =3D client->addr + 4;
-> > > +	chip->test_page_addr =3D client->addr + 7;
-> >=20
-> > I have no idea what's going on here, but it's almost certainly not
-> > correct.  Instead of separating these out per device have a base
-> > address and create DEFINES for each of them.
+> > During testing/prototyping time; installing and messing around with
+> > modules is an over-head I can do without.
 >=20
->   it is because this PMIC has several i2c address, each has different
->   function, the offset vesus the client->addr is fixed, the client->a=
-ddr
->   is 0x30 from device tree, then the gpadc_page_addr is 0x32, that is
->   why I use client->addr + 2;
->=20
->   you mean the DEFINES are better?
+> Right but my question wasn't whether multi_v7 should have the options
+> as built-in or as modules. That has already been decided by the
+> arm-soc maintainers who want to have as much as possible as modules.
+> In fact, there have been patches posted recently to change the curren=
+t
+> multi_v7 options from built-in to modules.
 
-I do mean that, yes.  If you don't want supply nodes for each of the
-client devices (what is the reason for that?), then just supply the
-base address and use DEFINES to obtain the offsets.
+Then I need to either stop using multi_v7 or write a pre-build script
+to turn it into something useful I guess.
 
-[...] /* Lots more 'yes's removed */
+Thanks for the heads-up.
 
-> > > +	ret =3D mfd_add_devices(chip->dev, 0, common_cell_devs,
-> >=20
-> > What does 0 mean?
->=20
->   I should use -1 here, though it _seems_ works..
+> Instead my question was what makes this driver special to not follow
+> the current convention.
 
-Please use the pre-allocated platform DEFINEs for them.
+There is nothing special about this particular driver to warrant that.
 
-[...]
+> I agree that there is a trade off between having options as built-in
+> or modules and I believe that is why most SoC specific defconfigs hav=
+e
+> the opposite policy,  that is to enable everything as built-in so one
+> doesn't have to mess with modules as you said.
 
-> > > +	for (;;)
-> > > +		cpu_relax();
-> >=20
-> > What's the point of this?
->=20
->   I just would like to busy loop at the end of the power_off callback=
-;
+Precisely.
 
-Is that when you're meant to do?  Why can't you just return?
+> But again, I don't have a strong opinion on this. What I think though
+> is that this should be documented somewhere so the options are enable=
+d
+> following a documented rule instead of just whatever fits in someone
+> workflow.
 
-[...]
-
-> > > +#define CELL_DEV(_name, _r, _compatible, _id) { \
-> > > +	.name =3D _name, \
-> > > +	.of_compatible =3D _compatible, \
-> > > +	.num_resources =3D ARRAY_SIZE(_r), \
-> > > +	.resources =3D _r, \
-> > > +	.id =3D _id, \
-> > > +	}
-> >=20
-> > This is not required.
-> >=20
-> > If you feel the need for an MFD Cell macro, you probably have too m=
-any
-> > MFD cells and you have done something wrong..
->=20
->   Yes, I should use one MFD to cover regulators and one MFD to cover
->   LEDs, I will remember this lesson; thanks;
-
-That wasn't what I was saying.  Just remove the MACRO and add the
-information into the cells like all the other MFD drivers do.
-
-[...]
+News of this new convention is new to me.  As I said, this driver
+isn't in any way "special".  I was merely enabling it to make it
+useful to everyone, rather than only people who are currently
+supporting module support in their builds.  Which as a low-level guy,
+I currently have no requirement for -- it just adds time, complexity
+and more things to debug.
 
 --=20
 Lee Jones
 Linaro STMicroelectronics Landing Team Lead
 Linaro.org =E2=94=82 Open source software for ARM SoCs
 =46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
