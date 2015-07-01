@@ -1,55 +1,71 @@
-From: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 2/2] arm: dts: socfpga: Provide the gpio numbers in the controller nodes.
-Date: Wed,  1 Jul 2015 21:34:03 +0200
-Message-ID: <ae92c1716c6eaa816e07c1551dc1113d6021e93b.1435777856.git.rcochran@linutronix.de>
+From: Richard Cochran <richardcochran@gmail.com>
+Subject: [PATCH 1/2] gpio: dwapb: Use human understandable gpio numbering.
+Date: Wed,  1 Jul 2015 21:34:02 +0200
+Message-ID: <d6b5ce85a17164970d454583560e07f7aed7b8ca.1435777856.git.rcochran@linutronix.de>
 References: <cover.1435777856.git.rcochran@linutronix.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1435777856.git.rcochran-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alan Tull <atull-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <cover.1435777856.git.rcochran@linutronix.de>
+Sender: linux-gpio-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Alan Tull <atull@altera.com>, Alexandre Courbot <gnurou@gmail.com>, Dinh Nguyen <dinguyen@altera.com>, Linus Walleij <linus.walleij@linaro.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-This patch provides the base gpio numbers in accordance with the published
-data sheet.
+The system-on-chips using this IP core have well defined gpio numbers.
+Instead of using random numbers, this patch lets the device tree specify
+the correct gpio numbering.
 
-Signed-off-by: Richard Cochran <rcochran-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Signed-off-by: Richard Cochran <rcochran@linutronix.de>
 ---
- arch/arm/boot/dts/socfpga.dtsi | 3 +++
- 1 file changed, 3 insertions(+)
+ Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt | 2 ++
+ drivers/gpio/gpio-dwapb.c                                  | 8 +++++++-
+ 2 files changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-index d9176e6..b3eecc1 100644
---- a/arch/arm/boot/dts/socfpga.dtsi
-+++ b/arch/arm/boot/dts/socfpga.dtsi
-@@ -559,6 +559,7 @@
- 				compatible = "snps,dw-apb-gpio-port";
- 				gpio-controller;
- 				#gpio-cells = <2>;
-+				snps,base = <0>;
- 				snps,nr-gpios = <29>;
- 				reg = <0>;
- 				interrupt-controller;
-@@ -579,6 +580,7 @@
- 				compatible = "snps,dw-apb-gpio-port";
- 				gpio-controller;
- 				#gpio-cells = <2>;
-+				snps,base = <29>;
- 				snps,nr-gpios = <29>;
- 				reg = <0>;
- 				interrupt-controller;
-@@ -599,6 +601,7 @@
- 				compatible = "snps,dw-apb-gpio-port";
- 				gpio-controller;
- 				#gpio-cells = <2>;
-+				snps,base = <58>;
- 				snps,nr-gpios = <27>;
- 				reg = <0>;
- 				interrupt-controller;
+diff --git a/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt b/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
+index dd5d2c0..5c9effd 100644
+--- a/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
++++ b/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
+@@ -28,6 +28,7 @@ controller.
+ - interrupt-parent : The parent interrupt controller.
+ - interrupts : The interrupt to the parent controller raised when GPIOs
+   generate the interrupts.
++- snps,base : The base gpio number.
+ - snps,nr-gpios : The number of pins in the port, a single cell.
+ 
+ Example:
+@@ -42,6 +43,7 @@ gpio: gpio@20000 {
+ 		compatible = "snps,dw-apb-gpio-port";
+ 		gpio-controller;
+ 		#gpio-cells = <2>;
++		snps,base = <8>;
+ 		snps,nr-gpios = <8>;
+ 		reg = <0>;
+ 		interrupt-controller;
+diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
+index 58faf04..b7e7977 100644
+--- a/drivers/gpio/gpio-dwapb.c
++++ b/drivers/gpio/gpio-dwapb.c
+@@ -491,6 +491,13 @@ dwapb_gpio_get_pdata_of(struct device *dev)
+ 			return ERR_PTR(-EINVAL);
+ 		}
+ 
++		if (of_property_read_u32(port_np, "snps,base",
++					 &pp->gpio_base)) {
++			dev_info(dev, "no base gpio specified for %s\n",
++				 port_np->full_name);
++			pp->gpio_base = -1;
++		}
++
+ 		if (of_property_read_u32(port_np, "snps,nr-gpios",
+ 					 &pp->ngpio)) {
+ 			dev_info(dev, "failed to get number of gpios for %s\n",
+@@ -512,7 +519,6 @@ dwapb_gpio_get_pdata_of(struct device *dev)
+ 		}
+ 
+ 		pp->irq_shared	= false;
+-		pp->gpio_base	= -1;
+ 		pp->name	= port_np->full_name;
+ 	}
+ 
 -- 
 2.1.4
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
