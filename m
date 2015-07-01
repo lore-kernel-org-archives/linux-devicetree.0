@@ -1,64 +1,46 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [RFC 3/3] ARM: shmobile: r8a7790: rework dts to use i2c demuxer
-Date: Wed, 1 Jul 2015 12:08:03 +0200
-Message-ID: <20150701100803.GB1926@katana>
-References: <1435700651-3543-1-git-send-email-wsa@the-dreams.de>
- <1435700651-3543-4-git-send-email-wsa@the-dreams.de>
- <CAMuHMdXTnY_gg+VWcSxUZWnD6yrL9xxCSoJYQVCh4Dj7Lxr8Qg@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] mmc: core: Set load on vmmc and vqmmc
+Date: Wed, 1 Jul 2015 11:59:25 +0100
+Message-ID: <20150701105925.GT11162@sirena.org.uk>
+References: <1435725525-4367-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="7iMSBzlTiPOCCT2k"
-Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="HtRZva1Vzv8iP5ye"
+Return-path: <linux-mmc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdXTnY_gg+VWcSxUZWnD6yrL9xxCSoJYQVCh4Dj7Lxr8Qg@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Linux-sh list <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux I2C <linux-i2c@vger.kernel.org>
+In-Reply-To: <1435725525-4367-1-git-send-email-bjorn.andersson@sonymobile.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---7iMSBzlTiPOCCT2k
+--HtRZva1Vzv8iP5ye
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 01, 2015 at 09:10:23AM +0200, Geert Uytterhoeven wrote:
-> On Tue, Jun 30, 2015 at 11:44 PM, Wolfram Sang <wsa@the-dreams.de> wrote:
-> > --- a/arch/arm/boot/dts/r8a7790-lager.dts
-> > +++ b/arch/arm/boot/dts/r8a7790-lager.dts
-> > @@ -49,6 +49,8 @@
-> >         aliases {
-> >                 serial0 =3D &scifa0;
-> >                 serial1 =3D &scifa1;
-> > +               i2c8 =3D &i2chdmi;
-> > +               i2c9 =3D &gpioi2c;
->=20
-> "i2c<suffix>" or "<prefix>i2c"?
+On Tue, Jun 30, 2015 at 09:38:45PM -0700, Bjorn Andersson wrote:
 
-i2c<suffix> describes the bus here. <prefix>i2c another master. Could be
-made more obvious, probably.
+> +- vmmc-load: requested load for the vmmc regulator, in mA
+> +- vqmmc-load: requested load for the vqmmc regulator, in mA
 
+Isn't this something that should have default values from the spec?  The
+binding also ought to say what a "requested load" is.
 
---7iMSBzlTiPOCCT2k
+--HtRZva1Vzv8iP5ye
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Version: GnuPG v2
 
-iQIcBAEBAgAGBQJVk7wDAAoJEBQN5MwUoCm2rRQP/1paHnQcfriGVGKjmlk11v+H
-RXpWNGV2VYGIEb9QDtmniTqQrGR5Z0ZrItrXJo5Xnd6wY92kYQ30DQtCvYUnSVy+
-5TJ1ibS7zsV98cR4Qrnsuf9NzY9YsJPTFteJcJfiMuqvU59uRkX8qelszYk0NA+z
-520Bos8PdEoaLNi2Zxf6SKtCA3AAUlJewDyxm0QjqhYHQwuF+svZJyX94ygMGfLt
-S/2tQJ6jLiwwVhGlPKG+rK9BiorMcHlgwNGrVOR6sGCmYKvzP2AVgqW2BoUG17zy
-b3cMSeNliqxgA1jPZlWWGfEvD4czDoEa8irl6wLgZ/jW5unghxUUFKlyw7/c54A9
-80huHVtZzzZ1pnC3Ivr57dWBV/tnnwEDEisto0+Yz3qZL7ijSTkRG8WMeUvF9V4t
-JztUJsCJJCFrzVnEi9zhOokF9gI21yLk3Omu4d2K9Yq6246PlO0grYOgYjSePxA0
-hDLikoOCcCoFgQr6VMW/sQdXEHFuIXoKe8TE6BIuL1/N0LGhZ0I2ew07jAU9bhYR
-qLn46vCTT9wkrv7VBpVzCBUjpBe9eaogX63yLIZF7qnnpG6I0hCzlgWlePYpsDop
-T5m6GJkZArhxYZVKdUGPEyuVvGbNVGmYG3pql6Ygn1EhD5j43Sb80UXI9vt2nx5w
-LVCS6gAKbmj20IbfR72u
-=JXYV
+iQEcBAEBCAAGBQJVk8gMAAoJECTWi3JdVIfQ/F8H/1zbZ/Cz+O2qCTwqijuWpnmY
+Dhrz3oJn6yEBq6lRu3ZAnebhA9qV0vgCQOxnbMWrf4CXrarLSP470SIpciWiD+aq
+Z+SkTDKtbGbEMv2Xn/8zrw7jsprW8KJnVbi0OqOy8+oCvWoblhajovfPPityBiEP
+qst+ANqrF3/8kgST56pJBGbM4tDf+AVf7fUdYp2MebHuYp7UDEv1vrFTdXkynyQH
++faadFPTAi7sDMVKNhPgt5cHd3Ryghj1SkKlJjVgifw6VwSHaewY5H5CBjm5UBXA
+MqM+HlaBeIP0zi4t4C/6XF+v1kVED8mM1kxCq9X9+dy5SR5clax6OzioMv0hbMs=
+=LfQn
 -----END PGP SIGNATURE-----
 
---7iMSBzlTiPOCCT2k--
+--HtRZva1Vzv8iP5ye--
