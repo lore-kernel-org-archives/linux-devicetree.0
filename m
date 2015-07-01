@@ -1,54 +1,45 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 11/12] ASoC: tegra: register dependency parser for
- firmware nodes
-Date: Wed, 1 Jul 2015 18:38:02 +0100
-Message-ID: <20150701173802.GW11162@sirena.org.uk>
-References: <1435743667-11987-1-git-send-email-tomeu.vizoso@collabora.com>
- <1435743667-11987-12-git-send-email-tomeu.vizoso@collabora.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] of: add stub for for_each_property_of_node()
+Date: Wed, 1 Jul 2015 12:39:28 -0500
+Message-ID: <CAL_JsqKPz0tDx7i0HUDw33tDozBTsU4dQyo73-t_OafytRGZUw@mail.gmail.com>
+References: <1435738208-3740-1-git-send-email-tomeu.vizoso@collabora.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="TcuvTDpCAASXpu1W"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1435743667-11987-12-git-send-email-tomeu.vizoso@collabora.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc: linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, alsa-devel@alsa-project.org, Jaroslav Kysela <perex@perex.cz>, Thierry Reding <thierry.reding@gmail.com>, Takashi Iwai <tiwai@suse.de>, Stephen Warren <swarren@wwwdotorg.org>, Liam Girdwood <lgirdwood@gmail.com>, linux-tegra@vger.kernel.org, Alexandre Courbot <gnurou@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1435738208-3740-1-git-send-email-tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Jul 1, 2015 at 3:10 AM, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org> wrote:
+> So code that isn't protected by CONFIG_OF can still build.
 
---TcuvTDpCAASXpu1W
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Is something in mainline/next broken? If not do you have a user?
 
-On Wed, Jul 01, 2015 at 11:41:06AM +0200, Tomeu Vizoso wrote:
+>
+> Signed-off-by: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+> ---
+>  include/linux/of.h | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index edc068d..8922448 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -673,6 +673,9 @@ static inline void of_property_clear_flag(struct property *p, unsigned long flag
+>
+>  #define of_match_ptr(_ptr)     NULL
+>  #define of_match_node(_matches, _node) NULL
+> +#define for_each_property_of_node(dn, pp)      \
+> +       for (; NULL; )
+> +
 
-> +static void tegra_max98090_get_dependencies(struct fwnode_handle *fwnode,
-> +					    struct list_head *deps)
-> +{
-> +	add_dependency(fwnode, "nvidia,i2s-controller", deps);
-> +	add_dependency(fwnode, "nvidia,audio-codec", deps);
-> +}
+We normally add empty functions that the iterator calls rather than an
+empty for loop.
 
-Why is this all being open coded in an individual driver (we already
-know about and manage all these dependencies in the core...)?  If we're
-going to do this I'd expect the interface for specifying DT nodes to the
-core to be changed to support this.
-
---TcuvTDpCAASXpu1W
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVlCV6AAoJECTWi3JdVIfQ9sQH/07qCQICx8rYy7I6jC+6lWam
-k0oQM1iJtoGIzxrnjZ3kPkumKA1N/p1bXAx3NVcmrD7KcOhALqe50qpheQ+CmVOZ
-LYAhUrbBYuPUBBqd9hsT7ZfLnAM9/jHCI04ch/Z8qo2khMwXmPPcm4tQeijJLLki
-dpvepRs8pRozlpKkQroJJQ1zleI/D64IxnqRbKauI+3MPBxyZeUe9ozjZI8VjxWq
-7N/AUIKachCgud0DNxjtdmsNMh6teCXQeV5YOGqcOsFHXQodpiRozw+2/As5N/Te
-fllk/BbgQInsWyI9MG0D69+KvSgNkBB+k4YODNzV7AKYE3IqKxJdDP+C+HKeubg=
-=TvF/
------END PGP SIGNATURE-----
-
---TcuvTDpCAASXpu1W--
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
