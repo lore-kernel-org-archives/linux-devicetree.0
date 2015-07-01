@@ -1,591 +1,927 @@
-From: Pi-Cheng Chen <pi-cheng.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v5 2/2] cpufreq: mediatek: Add MT8173 cpufreq driver
-Date: Wed,  1 Jul 2015 10:16:45 +0800
-Message-ID: <1435717005-20012-3-git-send-email-pi-cheng.chen@linaro.org>
-References: <1435717005-20012-1-git-send-email-pi-cheng.chen@linaro.org>
+From: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v2 3/4] spi: mediatek: Add spi bus for Mediatek MT8173
+Date: Wed, 1 Jul 2015 12:06:02 +0800
+Message-ID: <CAGS+omD3anZyJST90QVoJ5N-OPsdYYj3_Fq0rJSXADt84EL6yg@mail.gmail.com>
+References: <1435583070-9600-1-git-send-email-leilk.liu@mediatek.com> <1435583070-9600-4-git-send-email-leilk.liu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1435717005-20012-1-git-send-email-pi-cheng.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1435583070-9600-4-git-send-email-leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch implements MT8173 cpufreq driver.
+Hi Leilk,
 
-Signed-off-by: Pi-Cheng Chen <pi-cheng.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- drivers/cpufreq/Kconfig.arm      |   7 +
- drivers/cpufreq/Makefile         |   1 +
- drivers/cpufreq/mt8173-cpufreq.c | 520 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 528 insertions(+)
- create mode 100644 drivers/cpufreq/mt8173-cpufreq.c
+Please see comments inline...
 
-diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
-index 611cb09..2a305c0 100644
---- a/drivers/cpufreq/Kconfig.arm
-+++ b/drivers/cpufreq/Kconfig.arm
-@@ -141,6 +141,13 @@ config ARM_KIRKWOOD_CPUFREQ
- 	  This adds the CPUFreq driver for Marvell Kirkwood
- 	  SoCs.
- 
-+config ARM_MT8173_CPUFREQ
-+	bool "Mediatek MT8173 CPUFreq support"
-+	depends on ARCH_MEDIATEK && REGULATOR
-+	select PM_OPP
-+	help
-+	  This adds the CPUFreq driver support for Mediatek MT8173 SoC.
-+
- config ARM_OMAP2PLUS_CPUFREQ
- 	bool "TI OMAP2+"
- 	depends on ARCH_OMAP2PLUS
-diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
-index cdce92a..97f9a9b 100644
---- a/drivers/cpufreq/Makefile
-+++ b/drivers/cpufreq/Makefile
-@@ -63,6 +63,7 @@ obj-$(CONFIG_ARM_HISI_ACPU_CPUFREQ)	+= hisi-acpu-cpufreq.o
- obj-$(CONFIG_ARM_IMX6Q_CPUFREQ)		+= imx6q-cpufreq.o
- obj-$(CONFIG_ARM_INTEGRATOR)		+= integrator-cpufreq.o
- obj-$(CONFIG_ARM_KIRKWOOD_CPUFREQ)	+= kirkwood-cpufreq.o
-+obj-$(CONFIG_ARM_MT8173_CPUFREQ)	+= mt8173-cpufreq.o
- obj-$(CONFIG_ARM_OMAP2PLUS_CPUFREQ)	+= omap-cpufreq.o
- obj-$(CONFIG_ARM_PXA2xx_CPUFREQ)	+= pxa2xx-cpufreq.o
- obj-$(CONFIG_PXA3xx)			+= pxa3xx-cpufreq.o
-diff --git a/drivers/cpufreq/mt8173-cpufreq.c b/drivers/cpufreq/mt8173-cpufreq.c
-new file mode 100644
-index 0000000..6284e67
---- /dev/null
-+++ b/drivers/cpufreq/mt8173-cpufreq.c
-@@ -0,0 +1,520 @@
-+/*
-+ * Copyright (c) 2015 Linaro Ltd.
-+ * Author: Pi-Cheng Chen <pi-cheng.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/cpu.h>
-+#include <linux/cpu_cooling.h>
-+#include <linux/cpufreq.h>
-+#include <linux/cpumask.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_opp.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/slab.h>
-+#include <linux/thermal.h>
-+
-+#define MIN_VOLT_SHIFT		(100000)
-+#define MAX_VOLT_SHIFT		(200000)
-+#define MAX_VOLT_LIMIT		(1150000)
-+#define VOLT_TOL		(10000)
-+
-+/*
-+ * The struct mtk_cpu_dvfs_info holds necessary information for doing CPU DVFS
-+ * on each CPU power/clock domain of Mediatek SoCs. Each CPU cluster in
-+ * Mediatek SoCs has two voltage inputs, Vproc and Vsram. In some cases the two
-+ * voltage inputs need to be controlled under a hardware limitation:
-+ * 100mV < Vsram - Vproc < 200mV
-+ *
-+ * When scaling the clock frequency of a CPU clock domain, the clock source
-+ * needs to be switched to another stable PLL clock temporarily until
-+ * the original PLL becomes stable at target frequency.
-+ */
-+struct mtk_cpu_dvfs_info {
-+	struct device *cpu_dev;
-+	struct regulator *proc_reg;
-+	struct regulator *sram_reg;
-+	struct clk *cpu_clk;
-+	struct clk *inter_clk;
-+	struct thermal_cooling_device *cdev;
-+	int intermediate_voltage;
-+	bool need_voltage_trace;
-+};
-+
-+static int mtk_cpufreq_voltage_trace(struct mtk_cpu_dvfs_info *info,
-+				     int new_vproc)
-+{
-+	struct regulator *proc_reg = info->proc_reg;
-+	struct regulator *sram_reg = info->sram_reg;
-+	int old_vproc, old_vsram, new_vsram, vsram, vproc, ret;
-+
-+	old_vproc = regulator_get_voltage(proc_reg);
-+	old_vsram = regulator_get_voltage(sram_reg);
-+	/* Vsram should not exceed the maximum allowed voltage of SoC. */
-+	new_vsram = min(new_vproc + MIN_VOLT_SHIFT, MAX_VOLT_LIMIT);
-+
-+	if (old_vproc < new_vproc) {
-+		/*
-+		 * When scaling up voltages, Vsram and Vproc scale up step
-+		 * by step. At each step, set Vsram to (Vproc + 200mV) first,
-+		 * then set Vproc to (Vsram - 100mV).
-+		 * Keep doing it until Vsram and Vproc hit target voltages.
-+		 */
-+		do {
-+			old_vsram = regulator_get_voltage(sram_reg);
-+			old_vproc = regulator_get_voltage(proc_reg);
-+
-+			vsram = min(new_vsram, old_vproc + MAX_VOLT_SHIFT);
-+
-+			if (vsram + VOLT_TOL >= MAX_VOLT_LIMIT) {
-+				vsram = MAX_VOLT_LIMIT;
-+
-+				/*
-+				 * If the target Vsram hits the maximum voltage,
-+				 * try to set the exact voltage value first.
-+				 */
-+				ret = regulator_set_voltage(sram_reg, vsram,
-+							    vsram);
-+				if (ret)
-+					ret = regulator_set_voltage(sram_reg,
-+							vsram - VOLT_TOL,
-+							vsram);
-+
-+				vproc = new_vproc;
-+			} else {
-+				ret = regulator_set_voltage(sram_reg, vsram,
-+							    vsram + VOLT_TOL);
-+
-+				vproc = vsram - MIN_VOLT_SHIFT;
-+			}
-+			if (ret)
-+				return ret;
-+
-+			ret = regulator_set_voltage(proc_reg, vproc,
-+						    vproc + VOLT_TOL);
-+			if (ret) {
-+				regulator_set_voltage(sram_reg, old_vsram,
-+						      old_vsram);
-+				return ret;
-+			}
-+		} while (vproc < new_vproc || vsram < new_vsram);
-+	} else if (old_vproc > new_vproc) {
-+		/*
-+		 * When scaling down voltages, Vsram and Vproc scale down step
-+		 * by step. At each step, set Vproc to (Vsram - 200mV) first,
-+		 * then set Vproc to (Vproc + 100mV).
-+		 * Keep doing it until Vsram and Vproc hit target voltages.
-+		 */
-+		do {
-+			old_vproc = regulator_get_voltage(proc_reg);
-+			old_vsram = regulator_get_voltage(sram_reg);
-+
-+			vproc = max(new_vproc, old_vsram - MAX_VOLT_SHIFT);
-+			ret = regulator_set_voltage(proc_reg, vproc,
-+						    vproc + VOLT_TOL);
-+			if (ret)
-+				return ret;
-+
-+			if (vproc == new_vproc)
-+				vsram = new_vsram;
-+			else
-+				vsram = max(new_vsram, vproc + MIN_VOLT_SHIFT);
-+
-+			if (vsram + VOLT_TOL >= MAX_VOLT_LIMIT) {
-+				vsram = MAX_VOLT_LIMIT;
-+
-+				/*
-+				 * If the target Vsram hits the maximum voltage,
-+				 * try to set the exact voltage value first.
-+				 */
-+				ret = regulator_set_voltage(sram_reg, vsram,
-+							    vsram);
-+				if (ret)
-+					ret = regulator_set_voltage(sram_reg,
-+							vsram - VOLT_TOL,
-+							vsram);
-+			} else {
-+				ret = regulator_set_voltage(sram_reg, vsram,
-+							    vsram + VOLT_TOL);
-+			}
-+
-+			if (ret) {
-+				regulator_set_voltage(proc_reg, old_vproc,
-+						      old_vproc);
-+				return ret;
-+			}
-+		} while (vproc > new_vproc + VOLT_TOL ||
-+			 vsram > new_vsram + VOLT_TOL);
-+	}
-+
-+	return 0;
-+}
-+
-+static int mtk_cpufreq_set_voltage(struct mtk_cpu_dvfs_info *info, int vproc)
-+{
-+	if (info->need_voltage_trace)
-+		return mtk_cpufreq_voltage_trace(info, vproc);
-+	else
-+		return regulator_set_voltage(info->proc_reg, vproc,
-+					     vproc + VOLT_TOL);
-+}
-+
-+static int mtk_cpufreq_set_target(struct cpufreq_policy *policy,
-+				  unsigned int index)
-+{
-+	struct cpufreq_frequency_table *freq_table = policy->freq_table;
-+	struct clk *cpu_clk = policy->clk;
-+	struct clk *armpll = clk_get_parent(cpu_clk);
-+	struct mtk_cpu_dvfs_info *info = policy->driver_data;
-+	struct device *cpu_dev = info->cpu_dev;
-+	struct dev_pm_opp *opp;
-+	long freq_hz, old_freq_hz;
-+	int vproc, old_vproc, inter_vproc, target_vproc, ret;
-+
-+	inter_vproc = info->intermediate_voltage;
-+
-+	old_freq_hz = clk_get_rate(cpu_clk);
-+	old_vproc = regulator_get_voltage(info->proc_reg);
-+
-+	freq_hz = freq_table[index].frequency * 1000;
-+
-+	rcu_read_lock();
-+	opp = dev_pm_opp_find_freq_ceil(cpu_dev, &freq_hz);
-+	if (IS_ERR(opp)) {
-+		rcu_read_unlock();
-+		pr_err("cpu%d: failed to find OPP for %ld\n",
-+		       policy->cpu, freq_hz);
-+		return PTR_ERR(opp);
-+	}
-+	vproc = dev_pm_opp_get_voltage(opp);
-+	rcu_read_unlock();
-+
-+	/*
-+	 * If the new voltage or the intermediate voltage is higher than the
-+	 * current voltage, scale up voltage first.
-+	 */
-+	target_vproc = (inter_vproc > vproc) ? inter_vproc : vproc;
-+	if (old_vproc < target_vproc) {
-+		ret = mtk_cpufreq_set_voltage(info, target_vproc);
-+		if (ret) {
-+			pr_err("cpu%d: failed to scale up voltage!\n",
-+			       policy->cpu);
-+			mtk_cpufreq_set_voltage(info, old_vproc);
-+			return ret;
-+		}
-+	}
-+
-+	/* Reparent the CPU clock to intermediate clock. */
-+	ret = clk_set_parent(cpu_clk, info->inter_clk);
-+	if (ret) {
-+		pr_err("cpu%d: failed to re-parent cpu clock!\n",
-+		       policy->cpu);
-+		mtk_cpufreq_set_voltage(info, old_vproc);
-+		WARN_ON(1);
-+		return ret;
-+	}
-+
-+	/* Set the original PLL to target rate. */
-+	ret = clk_set_rate(armpll, freq_hz);
-+	if (ret) {
-+		pr_err("cpu%d: failed to scale cpu clock rate!\n",
-+		       policy->cpu);
-+		clk_set_parent(cpu_clk, armpll);
-+		mtk_cpufreq_set_voltage(info, old_vproc);
-+		return ret;
-+	}
-+
-+	/* Set parent of CPU clock back to the original PLL. */
-+	ret = clk_set_parent(cpu_clk, armpll);
-+	if (ret) {
-+		pr_err("cpu%d: failed to re-parent cpu clock!\n",
-+		       policy->cpu);
-+		mtk_cpufreq_set_voltage(info, inter_vproc);
-+		WARN_ON(1);
-+		return ret;
-+	}
-+
-+	/*
-+	 * If the new voltage is lower than the intermediate voltage or the
-+	 * original voltage, scale down to the new voltage.
-+	 */
-+	if (vproc < inter_vproc || vproc < old_vproc) {
-+		ret = mtk_cpufreq_set_voltage(info, vproc);
-+		if (ret) {
-+			pr_err("cpu%d: failed to scale down voltage!\n",
-+			       policy->cpu);
-+			clk_set_parent(cpu_clk, info->inter_clk);
-+			clk_set_rate(armpll, old_freq_hz);
-+			clk_set_parent(cpu_clk, armpll);
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static void mtk_cpufreq_ready(struct cpufreq_policy *policy)
-+{
-+	struct mtk_cpu_dvfs_info *info = policy->driver_data;
-+	struct device_node *np = of_node_get(info->cpu_dev->of_node);
-+
-+	if (WARN_ON(!np))
-+		return;
-+
-+	if (of_find_property(np, "#cooling-cells", NULL)) {
-+		info->cdev = of_cpufreq_cooling_register(np,
-+							 policy->related_cpus);
-+
-+		if (IS_ERR(info->cdev)) {
-+			dev_err(info->cpu_dev,
-+				"running cpufreq without cooling device: %ld\n",
-+				PTR_ERR(info->cdev));
-+
-+			info->cdev = NULL;
-+		}
-+	}
-+
-+	of_node_put(np);
-+}
-+
-+static int mtk_cpu_dvfs_info_init(struct mtk_cpu_dvfs_info *info, int cpu)
-+{
-+	struct device *cpu_dev;
-+	struct regulator *proc_reg = ERR_PTR(-ENODEV);
-+	struct regulator *sram_reg = ERR_PTR(-ENODEV);
-+	struct clk *cpu_clk = ERR_PTR(-ENODEV);
-+	struct clk *inter_clk = ERR_PTR(-ENODEV);
-+	struct dev_pm_opp *opp;
-+	unsigned long rate;
-+	int ret;
-+
-+	cpu_dev = get_cpu_device(cpu);
-+	if (!cpu_dev) {
-+		pr_err("failed to get cpu%d device\n", cpu);
-+		return -ENODEV;
-+	}
-+
-+	ret = of_init_opp_table(cpu_dev);
-+	if (ret) {
-+		pr_warn("no OPP table for cpu%d\n", cpu);
-+		return ret;
-+	}
-+
-+	cpu_clk = clk_get(cpu_dev, "cpu");
-+	if (IS_ERR(cpu_clk)) {
-+		if (PTR_ERR(cpu_clk) == -EPROBE_DEFER)
-+			pr_warn("cpu clk for cpu%d not ready, retry.\n", cpu);
-+		else
-+			pr_err("failed to get cpu clk for cpu%d\n", cpu);
-+
-+		ret = PTR_ERR(cpu_clk);
-+		goto out_free_opp_table;
-+	}
-+
-+	inter_clk = clk_get(cpu_dev, "intermediate");
-+	if (IS_ERR(inter_clk)) {
-+		if (PTR_ERR(inter_clk) == -EPROBE_DEFER)
-+			pr_warn("intermediate clk for cpu%d not ready, retry.\n",
-+				cpu);
-+		else
-+			pr_err("failed to get intermediate clk for cpu%d\n",
-+			       cpu);
-+
-+		ret = PTR_ERR(inter_clk);
-+		goto out_free_resources;
-+	}
-+
-+	proc_reg = regulator_get_exclusive(cpu_dev, "proc");
-+	if (IS_ERR(proc_reg)) {
-+		if (PTR_ERR(proc_reg) == -EPROBE_DEFER)
-+			pr_warn("proc regulator for cpu%d not ready, retry.\n",
-+				cpu);
-+		else
-+			pr_err("failed to get proc regulator for cpu%d\n",
-+			       cpu);
-+
-+		ret = PTR_ERR(proc_reg);
-+		goto out_free_resources;
-+	}
-+
-+	/* Both presence and absence of sram regulator are valid cases. */
-+	sram_reg = regulator_get_exclusive(cpu_dev, "sram");
-+
-+	/* Search a safe voltage for intermediate frequency. */
-+	rate = clk_get_rate(inter_clk);
-+	rcu_read_lock();
-+	opp = dev_pm_opp_find_freq_ceil(cpu_dev, &rate);
-+	if (IS_ERR(opp)) {
-+		pr_err("failed to get intermediate opp for cpu%d\n", cpu);
-+		ret = PTR_ERR(opp);
-+		goto out_free_resources;
-+	}
-+	info->intermediate_voltage = dev_pm_opp_get_voltage(opp);
-+	rcu_read_unlock();
-+
-+	info->cpu_dev = cpu_dev;
-+	info->proc_reg = proc_reg;
-+	info->sram_reg = IS_ERR(sram_reg) ? NULL : sram_reg;
-+	info->cpu_clk = cpu_clk;
-+	info->inter_clk = inter_clk;
-+
-+	/*
-+	 * If SRAM regulator is present, software "voltage trace" is needed
-+	 * for this CPU power domain.
-+	 */
-+	info->need_voltage_trace = !IS_ERR(sram_reg);
-+
-+	return 0;
-+
-+out_free_resources:
-+	if (!IS_ERR(proc_reg))
-+		regulator_put(proc_reg);
-+	if (!IS_ERR(sram_reg))
-+		regulator_put(sram_reg);
-+	if (!IS_ERR(cpu_clk))
-+		clk_put(cpu_clk);
-+	if (!IS_ERR(inter_clk))
-+		clk_put(inter_clk);
-+
-+out_free_opp_table:
-+	of_free_opp_table(cpu_dev);
-+
-+	return ret;
-+}
-+
-+static void mtk_cpu_dvfs_info_release(struct mtk_cpu_dvfs_info *info)
-+{
-+	if (!IS_ERR(info->proc_reg))
-+		regulator_put(info->proc_reg);
-+	if (!IS_ERR(info->sram_reg))
-+		regulator_put(info->sram_reg);
-+	if (!IS_ERR(info->cpu_clk))
-+		clk_put(info->cpu_clk);
-+	if (!IS_ERR(info->inter_clk))
-+		clk_put(info->inter_clk);
-+
-+	of_free_opp_table(info->cpu_dev);
-+}
-+
-+static int mtk_cpufreq_init(struct cpufreq_policy *policy)
-+{
-+	struct mtk_cpu_dvfs_info *info;
-+	struct cpufreq_frequency_table *freq_table;
-+	int ret;
-+
-+	info = kzalloc(sizeof(*info), GFP_KERNEL);
-+	if (!info)
-+		return -ENOMEM;
-+
-+	ret = mtk_cpu_dvfs_info_init(info, policy->cpu);
-+	if (ret) {
-+		pr_err("%s failed to initialize dvfs info for cpu%d\n",
-+		       __func__, policy->cpu);
-+		goto out_free_dvfs_info;
-+	}
-+
-+	ret = dev_pm_opp_init_cpufreq_table(info->cpu_dev, &freq_table);
-+	if (ret) {
-+		pr_err("failed to init cpufreq table for cpu%d: %d\n",
-+		       policy->cpu, ret);
-+		goto out_release_dvfs_info;
-+	}
-+
-+	ret = cpufreq_table_validate_and_show(policy, freq_table);
-+	if (ret) {
-+		pr_err("%s: invalid frequency table: %d\n", __func__, ret);
-+		goto out_free_cpufreq_table;
-+	}
-+
-+	/* CPUs in the same cluster share a clock and power domain. */
-+	cpumask_copy(policy->cpus, &cpu_topology[policy->cpu].core_sibling);
-+	policy->driver_data = info;
-+	policy->clk = info->cpu_clk;
-+
-+	return 0;
-+
-+out_free_cpufreq_table:
-+	dev_pm_opp_free_cpufreq_table(info->cpu_dev, &freq_table);
-+
-+out_release_dvfs_info:
-+	mtk_cpu_dvfs_info_release(info);
-+
-+out_free_dvfs_info:
-+	kfree(info);
-+
-+	return ret;
-+}
-+
-+static int mtk_cpufreq_exit(struct cpufreq_policy *policy)
-+{
-+	struct mtk_cpu_dvfs_info *info = policy->driver_data;
-+
-+	cpufreq_cooling_unregister(info->cdev);
-+	dev_pm_opp_free_cpufreq_table(info->cpu_dev, &policy->freq_table);
-+	mtk_cpu_dvfs_info_release(info);
-+	kfree(info);
-+
-+	return 0;
-+}
-+
-+static struct cpufreq_driver mt8173_cpufreq_driver = {
-+	.flags = CPUFREQ_STICKY | CPUFREQ_NEED_INITIAL_FREQ_CHECK,
-+	.verify = cpufreq_generic_frequency_table_verify,
-+	.target_index = mtk_cpufreq_set_target,
-+	.get = cpufreq_generic_get,
-+	.init = mtk_cpufreq_init,
-+	.exit = mtk_cpufreq_exit,
-+	.ready = mtk_cpufreq_ready,
-+	.name = "mtk-cpufreq",
-+	.attr = cpufreq_generic_attr,
-+};
-+
-+static int mt8173_cpufreq_probe(struct platform_device *pdev)
-+{
-+	int ret;
-+
-+	ret = cpufreq_register_driver(&mt8173_cpufreq_driver);
-+	if (ret)
-+		pr_err("failed to register mtk cpufreq driver\n");
-+
-+	return ret;
-+}
-+
-+static struct platform_driver mt8173_cpufreq_platdrv = {
-+	.driver = {
-+		.name	= "mt8173-cpufreq",
-+	},
-+	.probe		= mt8173_cpufreq_probe,
-+};
-+
-+static int mt8173_cpufreq_driver_init(void)
-+{
-+	struct platform_device *pdev;
-+	int err;
-+
-+	if (!of_machine_is_compatible("mediatek,mt8173"))
-+		return -ENODEV;
-+
-+	err = platform_driver_register(&mt8173_cpufreq_platdrv);
-+	if (err)
-+		return err;
-+
-+	pdev = platform_device_register_simple("mt8173-cpufreq", -1, NULL, 0);
-+	if (IS_ERR(pdev)) {
-+		pr_err("failed to register mtk-cpufreq platform device\n");
-+		return PTR_ERR(pdev);
-+	}
-+
-+	return 0;
-+}
-+device_initcall(mt8173_cpufreq_driver_init);
--- 
-1.9.1
+On Mon, Jun 29, 2015 at 9:04 PM, Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> This patch adds basic spi bus for MT8173.
+>
+> Signed-off-by: Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>  drivers/spi/Kconfig      |   9 +
+>  drivers/spi/Makefile     |   1 +
+>  drivers/spi/spi-mt65xx.c | 656 +++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 666 insertions(+)
+>  create mode 100644 drivers/spi/spi-mt65xx.c
+>
+> diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
+> index 198f96b..06f9514 100644
+> --- a/drivers/spi/Kconfig
+> +++ b/drivers/spi/Kconfig
+> @@ -324,6 +324,15 @@ config SPI_MESON_SPIFC
+>           This enables master mode support for the SPIFC (SPI flash
+>           controller) available in Amlogic Meson SoCs.
+>
+> +config SPI_MT65XX
+> +       tristate "MediaTek SPI controller"
+> +       depends on ARCH_MEDIATEK || COMPILE_TEST
+> +       help
+> +         This selects the MediaTek(R) SPI bus driver.
+> +         If you want to use MediaTek(R) SPI interface,
+> +         say Y or M here.If you are not sure, say N.
+> +         SPI drivers for Mediatek mt65XX series ARM SoCs.
+> +
+>  config SPI_OC_TINY
+>         tristate "OpenCores tiny SPI"
+>         depends on GPIOLIB
+> diff --git a/drivers/spi/Makefile b/drivers/spi/Makefile
+> index d8cbf65..ab332ef 100644
+> --- a/drivers/spi/Makefile
+> +++ b/drivers/spi/Makefile
+> @@ -48,6 +48,7 @@ obj-$(CONFIG_SPI_MESON_SPIFC)         += spi-meson-spifc.o
+>  obj-$(CONFIG_SPI_MPC512x_PSC)          += spi-mpc512x-psc.o
+>  obj-$(CONFIG_SPI_MPC52xx_PSC)          += spi-mpc52xx-psc.o
+>  obj-$(CONFIG_SPI_MPC52xx)              += spi-mpc52xx.o
+> +obj-$(CONFIG_SPI_MT65XX)                += spi-mt65xx.o
+>  obj-$(CONFIG_SPI_MXS)                  += spi-mxs.o
+>  obj-$(CONFIG_SPI_NUC900)               += spi-nuc900.o
+>  obj-$(CONFIG_SPI_OC_TINY)              += spi-oc-tiny.o
+> diff --git a/drivers/spi/spi-mt65xx.c b/drivers/spi/spi-mt65xx.c
+> new file mode 100644
+> index 0000000..6cb54587
+> --- /dev/null
+> +++ b/drivers/spi/spi-mt65xx.c
+> @@ -0,0 +1,656 @@
+> +/*
+> + * Copyright (c) 2015 MediaTek Inc.
+> + * Author: Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/init.h>
+> +#include <linux/module.h>
+> +#include <linux/device.h>
+> +#include <linux/ioport.h>
+> +#include <linux/errno.h>
+> +#include <linux/spi/spi.h>
+> +#include <linux/workqueue.h>
+> +#include <linux/dma-mapping.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/irqreturn.h>
+> +#include <linux/types.h>
+> +#include <linux/delay.h>
+> +#include <linux/clk.h>
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/sched.h>
+> +#include <linux/of.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_gpio.h>
+> +#include <linux/kernel.h>
+> +#include <linux/gpio.h>
+> +#include <linux/module.h>
+> +#include <linux/pm_runtime.h>
+
+It would be nicer if you can alphabetize these headers.
+
+> +
+> +#define SPI_CFG0_REG                      0x0000
+> +#define SPI_CFG1_REG                      0x0004
+> +#define SPI_TX_SRC_REG                    0x0008
+> +#define SPI_RX_DST_REG                    0x000c
+> +#define SPI_CMD_REG                       0x0018
+> +#define SPI_STATUS0_REG                   0x001c
+> +#define SPI_PAD_SEL_REG                   0x0024
+> +
+> +#define SPI_CFG0_SCK_HIGH_OFFSET          0
+> +#define SPI_CFG0_SCK_LOW_OFFSET           8
+> +#define SPI_CFG0_CS_HOLD_OFFSET           16
+> +#define SPI_CFG0_CS_SETUP_OFFSET          24
+> +
+> +#define SPI_CFG0_SCK_HIGH_MASK            0xff
+> +#define SPI_CFG0_SCK_LOW_MASK             0xff00
+> +#define SPI_CFG0_CS_HOLD_MASK             0xff0000
+> +#define SPI_CFG0_CS_SETUP_MASK            0xff000000
+> +
+> +#define SPI_CFG1_CS_IDLE_OFFSET           0
+> +#define SPI_CFG1_PACKET_LOOP_OFFSET       8
+> +#define SPI_CFG1_PACKET_LENGTH_OFFSET     16
+> +#define SPI_CFG1_GET_TICK_DLY_OFFSET      30
+> +
+> +#define SPI_CFG1_CS_IDLE_MASK             0xff
+> +#define SPI_CFG1_PACKET_LOOP_MASK         0xff00
+> +#define SPI_CFG1_PACKET_LENGTH_MASK       0x3ff0000
+> +#define SPI_CFG1_GET_TICK_DLY_MASK        0xc0000000
+> +
+> +#define SPI_CMD_ACT_OFFSET                0
+> +#define SPI_CMD_RESUME_OFFSET             1
+> +#define SPI_CMD_RST_OFFSET                2
+> +#define SPI_CMD_PAUSE_EN_OFFSET           4
+> +#define SPI_CMD_DEASSERT_OFFSET           5
+> +#define SPI_CMD_CPHA_OFFSET               8
+> +#define SPI_CMD_CPOL_OFFSET               9
+> +#define SPI_CMD_RX_DMA_OFFSET             10
+> +#define SPI_CMD_TX_DMA_OFFSET             11
+> +#define SPI_CMD_TXMSBF_OFFSET             12
+> +#define SPI_CMD_RXMSBF_OFFSET             13
+> +#define SPI_CMD_RX_ENDIAN_OFFSET          14
+> +#define SPI_CMD_TX_ENDIAN_OFFSET          15
+> +#define SPI_CMD_FINISH_IE_OFFSET          16
+> +#define SPI_CMD_PAUSE_IE_OFFSET           17
+> +
+> +#define SPI_CMD_RST_MASK                  0x4
+> +#define SPI_CMD_PAUSE_EN_MASK             0x10
+> +#define SPI_CMD_DEASSERT_MASK             0x20
+> +#define SPI_CMD_CPHA_MASK                 0x100
+> +#define SPI_CMD_CPOL_MASK                 0x200
+> +#define SPI_CMD_RX_DMA_MASK               0x400
+> +#define SPI_CMD_TX_DMA_MASK               0x800
+> +#define SPI_CMD_TXMSBF_MASK               0x1000
+> +#define SPI_CMD_RXMSBF_MASK               0x2000
+> +#define SPI_CMD_RX_ENDIAN_MASK            0x4000
+> +#define SPI_CMD_TX_ENDIAN_MASK            0x8000
+> +#define SPI_CMD_FINISH_IE_MASK            0x10000
+
+Use the BIT() macro do define these bit masks.
+In fact, for these 1-bit fields, just use the MASK rather than "(1 <<
+*_OFFSET)" when setting/clearing the bits in code.
+
+> +
+> +#define COMPAT_MT6589                  (0x1 << 0)
+> +#define COMPAT_MT8135                  (0x1 << 1)
+> +#define COMPAT_MT8173                  (0x1 << 2)
+
+Rather than define per-platform "COMPAT" flags, I think it would be
+better to define these as a set of quirks.
+Individual platforms would then specify a mask indicating which quirks
+they support.
+
+In this case, there are only two, and both are present on mt8173, but
+not on the other 2 listed parts:
+  MTK_SPI_QUIRK_PAD_SELECT
+  MTK_SPI_QUIRK_MUST_TX  /* Must explicitly send dummy Tx bytes to do
+Rx only transfer */
+
+For MTK_SPI_QUIRK_MUST_TX, I think it just means that we must set the
+SPI_MASTER_MUST_TX flag when registering the spi_master?
+
+> +
+> +#define MT8173_MAX_PAD_SEL 3
+
+I'm not exactly sure how to deal with PAD_SEL either:
+
+The MT8173 SPI device supports four SPI ports.
+Each port has the full complement of 4 signals (nSS, CLK, MISO, MOSI).
+However, only one can be selected at a time via the "PAD_SEL" register.
+In addition, the SPI function for the SPI port pins must be enabled
+for the corresponding GPIOs via pinctl.
+If the nSS pin has its SPI function selected, it will be controlled
+automatically by SPI hardware.
+
+Relying on hardware control of the SPI nSS pin seems quite limiting -
+it means each SPI port can only control a single slave device.
+I would think that allowing any GPIO to act as nSS would be much more
+flexible, since then each SPI port could truly be a multi-slave bus.
+I also believe the standard linux SPI infrastructure has support for
+using GPIOs in this way.
+How is this handled for other platforms (using built-in nSS versus
+using GPIOs as nSS)?
+
+> +
+> +#define MTK_SPI_IDLE 0
+> +#define MTK_SPI_INPROGRESS 1
+> +#define MTK_SPI_PAUSED 2
+> +
+> +#define MTK_SPI_PACKET_SIZE 1024
+> +#define MTK_SPI_MAX_PACKET_LOOP 256
+> +
+> +struct mtk_chip_config {
+> +       u32 setuptime;
+> +       u32 holdtime;
+> +       u32 high_time;
+> +       u32 low_time;
+> +       u32 cs_idletime;
+> +       u32 tx_mlsb;
+> +       u32 rx_mlsb;
+> +       u32 tx_endian;
+> +       u32 rx_endian;
+> +       u32 pause;
+> +       u32 finish_intr;
+> +       u32 deassert;
+> +       u32 tckdly;
+> +};
+> +
+> +struct mtk_spi_ddata {
+
+nit: you can probably shorten this to just "struct mtk_spi".
+
+> +       struct device *dev;
+> +       struct spi_master *master;
+> +       void __iomem *base;
+> +       u32 irq;
+> +       u32 state;
+> +       u32 platform_compat;
+> +       u32 pad_sel;
+> +       struct clk *clk;
+> +
+> +       const u8 *tx_buf;
+> +       u8 *rx_buf;
+> +       u32 tx_len, rx_len;
+> +       struct completion done;
+> +};
+> +
+> +/*
+> + * A piece of default chip info unless the platform
+> + * supplies it.
+
+How can platform supply this when the struct is defined in this .c file?
+
+> + */
+> +static const struct mtk_chip_config mtk_default_chip_info = {
+> +       .setuptime = 6,
+> +       .holdtime = 6,
+> +       .high_time = 3,
+> +       .low_time = 3,
+
+Individual spi devices should be able to set their min/max transfer
+rate, and that rate can even be modified per-transaction.
+The high & low time should be computed from the SPI block main clock,
+and the requested SPI transfer rate.
+I can't find where this computation is done.
+
+> +       .cs_idletime = 6,
+> +       .rx_mlsb = 1,
+> +       .tx_mlsb = 1,
+> +       .tx_endian = 0,
+> +       .rx_endian = 0,
+
+I think there are standard linux flags for data endianness and bit order.
+
+> +       .pause = 0,
+> +       .finish_intr = 1,
+> +       .deassert = 0,
+> +       .tckdly = 0,
+
+What is tckdly, and how should it be set for a spi_device?
+
+> +};
+> +
+> +static const struct of_device_id mtk_spi_of_match[] = {
+> +       { .compatible = "mediatek,mt6589-spi", .data = (void *)COMPAT_MT6589},
+
+add a space here before '}'
+
+> +       { .compatible = "mediatek,mt8135-spi", .data = (void *)COMPAT_MT8135},
+> +       { .compatible = "mediatek,mt8173-spi", .data = (void *)COMPAT_MT8173},
+> +       {}
+> +};
+> +MODULE_DEVICE_TABLE(of, mtk_spi_of_match);
+> +
+> +static void mtk_spi_reset(struct mtk_spi_ddata *mdata)
+> +{
+> +       u32 reg_val;
+> +
+> +       /* set the software reset bit in SPI_CMD_REG. */
+> +       reg_val = readl(mdata->base + SPI_CMD_REG);
+> +       reg_val &= ~SPI_CMD_RST_MASK;
+> +       reg_val |= 1 << SPI_CMD_RST_OFFSET;
+> +       writel(reg_val, mdata->base + SPI_CMD_REG);
+> +       reg_val = readl(mdata->base + SPI_CMD_REG);
+
+The read here is probably redundant.
+Also, are you sure you do not need a pause between asserting and
+releasing reset?
+Sometimes hardware blocks have a minimum "reset hold" time.
+
+> +       reg_val &= ~SPI_CMD_RST_MASK;
+> +       writel(reg_val, mdata->base + SPI_CMD_REG
+> +}
+> +
+> +static int mtk_spi_config(struct mtk_spi_ddata *mdata,
+> +                         struct mtk_chip_config *chip_config)
+> +{
+> +       u32 reg_val;
+> +
+> +       /* set the timing */
+> +       reg_val = readl(mdata->base + SPI_CFG0_REG);
+> +       reg_val &= ~(SPI_CFG0_SCK_HIGH_MASK | SPI_CFG0_SCK_LOW_MASK);
+> +       reg_val &= ~(SPI_CFG0_CS_HOLD_MASK | SPI_CFG0_CS_SETUP_MASK);
+
+For CFG0 & CFG1, you are writing the whole 32-bit register, so no need
+to read and mask the old value.
+
+> +       reg_val |= ((chip_config->high_time - 1) << SPI_CFG0_SCK_HIGH_OFFSET);
+> +       reg_val |= ((chip_config->low_time - 1) << SPI_CFG0_SCK_LOW_OFFSET);
+> +       reg_val |= ((chip_config->holdtime - 1) << SPI_CFG0_CS_HOLD_OFFSET);
+> +       reg_val |= ((chip_config->setuptime - 1) << SPI_CFG0_CS_SETUP_OFFSET);
+
+However, the (chip_config->X -1) values here should be masked, to
+ensure they do not overwrite the wrong bits.
+
+> +       writel(reg_val, mdata->base + SPI_CFG0_REG);
+> +
+> +       reg_val = readl(mdata->base + SPI_CFG1_REG);
+> +       reg_val &= ~SPI_CFG1_CS_IDLE_MASK;
+> +       reg_val |= ((chip_config->cs_idletime - 1) << SPI_CFG1_CS_IDLE_OFFSET);
+> +       reg_val &= ~SPI_CFG1_GET_TICK_DLY_MASK;
+> +       reg_val |= ((chip_config->tckdly) << SPI_CFG1_GET_TICK_DLY_OFFSET);
+> +       writel(reg_val, mdata->base + SPI_CFG1_REG);
+> +
+> +       /* set the mlsbx and mlsbtx */
+> +       reg_val = readl(mdata->base + SPI_CMD_REG);
+> +       reg_val &= ~(SPI_CMD_TX_ENDIAN_MASK | SPI_CMD_RX_ENDIAN_MASK);
+> +       reg_val &= ~(SPI_CMD_TXMSBF_MASK | SPI_CMD_RXMSBF_MASK);
+> +       reg_val |= (chip_config->tx_mlsb << SPI_CMD_TXMSBF_OFFSET);
+> +       reg_val |= (chip_config->rx_mlsb << SPI_CMD_RXMSBF_OFFSET);
+> +       reg_val |= (chip_config->tx_endian << SPI_CMD_TX_ENDIAN_OFFSET);
+> +       reg_val |= (chip_config->rx_endian << SPI_CMD_RX_ENDIAN_OFFSET);
+> +       writel(reg_val, mdata->base + SPI_CMD_REG);
+> +
+> +       /* set finish and pause interrupt always enable */
+> +       reg_val = readl(mdata->base + SPI_CMD_REG);
+
+I don't think we need to keep writing and re-reading this register.
+Just generate the subfields directly into reg_val first, and then
+write it once to SPI_CMD_REG.
+
+> +       reg_val &= ~SPI_CMD_FINISH_IE_MASK;
+> +       reg_val |= (chip_config->finish_intr << SPI_CMD_FINISH_IE_OFFSET);
+> +       writel(reg_val, mdata->base + SPI_CMD_REG);
+> +
+> +       reg_val = readl(mdata->base + SPI_CMD_REG);
+> +       reg_val |= 1 << SPI_CMD_TX_DMA_OFFSET;
+> +       reg_val |= 1 << SPI_CMD_RX_DMA_OFFSET;
+> +       writel(reg_val, mdata->base + SPI_CMD_REG);
+
+This could use a comment saying that the driver is hard-coding support
+for only DMA mode (not FIFO mode).
+Are there times (short transactions?) where using FIFO mode may be
+preferred to DMA?
+
+> +
+> +       /* set deassert mode */
+> +       reg_val = readl(mdata->base + SPI_CMD_REG);
+> +       reg_val &= ~SPI_CMD_DEASSERT_MASK;
+> +       reg_val |= (chip_config->deassert << SPI_CMD_DEASSERT_OFFSET);
+> +       writel(reg_val, mdata->base + SPI_CMD_REG);
+> +
+> +       /* pad select */
+> +       if (mdata->platform_compat & COMPAT_MT8173)
+> +               writel(mdata->pad_sel, mdata->base + SPI_PAD_SEL_REG);
+> +
+> +       return 0;
+> +}
+> +
+> +static int mtk_spi_prepare_message(struct spi_master *master,
+> +                                  struct spi_message *msg)
+> +{
+> +       u32 reg_val;
+> +       u8 cpha, cpol;
+> +       struct spi_transfer *trans;
+> +       struct mtk_chip_config *chip_config;
+> +       struct spi_device *spi = msg->spi;
+> +       struct mtk_spi_ddata *mdata = spi_master_get_devdata(master);
+> +
+> +       if (spi->mode & SPI_CPHA)
+> +               cpha = 1;
+> +       else
+> +               cpha = 0;
+
+style nit: I prefer the tertiary operator for setting values like
+this, but others may not:
+
+  cpha = (spi->mode & SPI_CPHA) ? 1 : 0;
+  cpol = (spi->mode & SPI_CPOL) ? 1 : 0;
+
+> +
+> +       if (spi->mode & SPI_CPOL)
+> +               cpol = 1;
+> +       else
+> +               cpol = 0;
+> +
+> +       reg_val = readl(mdata->base + SPI_CMD_REG);
+> +       reg_val &= ~(SPI_CMD_CPHA_MASK | SPI_CMD_CPOL_MASK);
+> +       reg_val |= (cpha << SPI_CMD_CPHA_OFFSET);
+> +       reg_val |= (cpol << SPI_CMD_CPOL_OFFSET);
+> +       writel(reg_val, mdata->base + SPI_CMD_REG);
+> +
+> +       chip_config = (struct mtk_chip_config *)spi->controller_data;
+
+The cast here is not necessary (you shouldn't need to cast to/from (void *))
+
+> +       if (!chip_config) {
+> +               chip_config = (void *)&mtk_default_chip_info;
+> +               spi->controller_data = chip_config;
+> +       }
+> +
+> +       trans = list_first_entry(&msg->transfers, struct spi_transfer,
+> +                                transfer_list);
+
+This looks inherently racy, and should be unnecessary.
+I believe what you want here is to implement a
+prepare_transfer_hardware() callback.
+
+> +       if (trans->cs_change == 0) {
+> +               mdata->state = MTK_SPI_IDLE;
+> +               mtk_spi_reset(mdata);
+> +       }
+> +
+> +       mtk_spi_config(mdata, chip_config);
+> +
+> +       return 0;
+> +}
+> +
+> +static void mtk_spi_set_cs(struct spi_device *spi, bool enable)
+> +{
+> +       u32 reg_val;
+> +       struct mtk_spi_ddata *mdata = spi_master_get_devdata(spi->master);
+> +
+> +       reg_val = readl(mdata->base + SPI_CMD_REG);
+> +       if (!enable)
+> +               reg_val |= 1 << SPI_CMD_PAUSE_EN_OFFSET;
+> +       else
+> +               reg_val &= ~SPI_CMD_PAUSE_EN_MASK;
+> +       writel(reg_val, mdata->base + SPI_CMD_REG);
+> +}
+> +
+> +static int mtk_spi_setup_packet(struct mtk_spi_ddata *mdata,
+> +                               struct spi_transfer *xfer)
+> +{
+> +       u32 packet_size, packet_loop, reg_val;
+> +
+> +       packet_size = min_t(unsigned, xfer->len, MTK_SPI_PACKET_SIZE);
+> +
+> +       /* mtk hw has the restriction that xfer len must be a multiple of 1024,
+> +        * when it is greater than 1024bytes.
+> +        */
+
+Is this really true?
+It looks like the length of a single mtk_spi transaction is
+PACKET_LENGTH * PACKET_LOOP.
+So, it should be possible to support any non-prime length.
+
+In addition, using the "PAUSE" mode, it should be possible to
+represent any length as a sequence of smaller transactions,
+potentially of different sizes.
+I think the only real limitiation is that without an IOMMU, the SPI
+hardware can only access a physically contiguous memory buffer.
+
+> +       if (xfer->len % packet_size) {
+> +               dev_err(mdata->dev, "ERROR!The lens must be a multiple of %d, your len %d\n",
+> +                       MTK_SPI_PACKET_SIZE, xfer->len);
+> +               return -EINVAL;
+> +       }
+> +
+> +       packet_loop = xfer->len / packet_size;
+> +       if (packet_loop > MTK_SPI_MAX_PACKET_LOOP) {
+> +               dev_err(mdata->dev, "packet_loop(%d) error\n", packet_loop);
+> +               return -EINVAL;
+> +       }
+> +
+> +       reg_val = readl(mdata->base + SPI_CFG1_REG);
+> +       reg_val &= ~(SPI_CFG1_PACKET_LENGTH_MASK + SPI_CFG1_PACKET_LOOP_MASK);
+> +       reg_val |= (packet_size - 1) << SPI_CFG1_PACKET_LENGTH_OFFSET;
+> +       reg_val |= (packet_loop - 1) << SPI_CFG1_PACKET_LOOP_OFFSET;
+> +       writel(reg_val, mdata->base + SPI_CFG1_REG);
+> +
+> +       return 0;
+> +}
+> +
+> +static int mtk_spi_transfer_one(struct spi_master *master,
+> +                               struct spi_device *spi,
+> +                               struct spi_transfer *xfer)
+> +{
+> +       int cmd = 0, ret = 0;
+
+There is no need to 0 initialize these two variables.
+
+> +       unsigned int tx_sgl_len = 0, rx_sgl_len = 0;
+> +       struct scatterlist *tx_sgl = NULL, *rx_sgl = NULL;
+> +       struct mtk_spi_ddata *mdata = spi_master_get_devdata(master);
+> +
+> +       /* Here is mt8173 HW issue: RX must enable TX, then TX transfer
+> +        * dummy data; TX don't need to enable RX. so enable TX dma for
+> +        * RX to workaround.
+> +        */
+> +       cmd = readl(mdata->base + SPI_CMD_REG);
+> +       if (xfer->tx_buf || (mdata->platform_compat & COMPAT_MT8173))
+> +               cmd |= 1 << SPI_CMD_TX_DMA_OFFSET;
+> +       if (xfer->rx_buf)
+> +               cmd |= 1 << SPI_CMD_RX_DMA_OFFSET;
+> +       writel(cmd, mdata->base + SPI_CMD_REG);
+> +
+> +       if (xfer->tx_buf)
+> +               tx_sgl = xfer->tx_sg.sgl;
+> +       if (xfer->rx_buf)
+> +               rx_sgl = xfer->rx_sg.sgl;
+> +
+> +       while (rx_sgl || tx_sgl) {
+> +               if (tx_sgl && (tx_sgl_len == 0)) {
+> +                       xfer->tx_dma = sg_dma_address(tx_sgl);
+> +                       tx_sgl_len = sg_dma_len(tx_sgl);
+> +               }
+> +               if (rx_sgl && (rx_sgl_len == 0)) {
+> +                       xfer->rx_dma = sg_dma_address(rx_sgl);
+> +                       rx_sgl_len = sg_dma_len(rx_sgl);
+> +               }
+> +
+> +               if (tx_sgl && rx_sgl)
+> +                       xfer->len = min_t(unsigned int, tx_sgl_len, rx_sgl_len);
+> +               else
+> +                       xfer->len = max_t(unsigned int, tx_sgl_len, rx_sgl_len);
+> +
+> +               ret = mtk_spi_setup_packet(mdata, xfer);
+> +               if (ret != 0)
+> +                       return ret;
+> +
+> +               /* set up the DMA bus address */
+> +               writel(cpu_to_le32(xfer->tx_dma), mdata->base + SPI_TX_SRC_REG);
+> +               writel(cpu_to_le32(xfer->rx_dma), mdata->base + SPI_RX_DST_REG);
+> +
+> +               /* trigger to transfer */
+> +               if (mdata->state == MTK_SPI_IDLE) {
+> +                       cmd = readl(mdata->base + SPI_CMD_REG);
+> +                       cmd |= 1 << SPI_CMD_ACT_OFFSET;
+> +                       writel(cmd, mdata->base + SPI_CMD_REG);
+> +               } else if (mdata->state == MTK_SPI_PAUSED) {
+> +                       cmd = readl(mdata->base + SPI_CMD_REG);
+> +                       cmd |= 1 << SPI_CMD_RESUME_OFFSET;
+> +                       writel(cmd, mdata->base + SPI_CMD_REG);
+> +               } else {
+> +                       mdata->state = MTK_SPI_INPROGRESS;
+> +               }
+> +
+> +               wait_for_completion(&mdata->done);
+> +
+> +               if (tx_sgl && rx_sgl) {
+> +                       if (tx_sgl_len > rx_sgl_len) {
+> +                               xfer->tx_dma += rx_sgl_len;
+> +                               tx_sgl_len -= rx_sgl_len;
+> +                               rx_sgl_len = 0;
+> +                               rx_sgl = sg_next(rx_sgl);
+> +                               continue;
+> +                       } else if (tx_sgl_len < rx_sgl_len) {
+> +                               xfer->rx_dma += tx_sgl_len;
+> +                               rx_sgl_len -= tx_sgl_len;
+> +                               tx_sgl_len = 0;
+> +                               tx_sgl = sg_next(tx_sgl);
+> +                               continue;
+> +                       }
+> +               }
+> +
+> +               rx_sgl_len = 0;
+> +               tx_sgl_len = 0;
+> +
+> +               if (rx_sgl)
+> +                       rx_sgl = sg_next(rx_sgl);
+> +               if (tx_sgl)
+> +                       tx_sgl = sg_next(tx_sgl);
+> +       }
+> +
+> +       /* spi disable dma */
+> +       cmd = readl(mdata->base + SPI_CMD_REG);
+> +       cmd &= ~SPI_CMD_TX_DMA_MASK;
+> +       cmd &= ~SPI_CMD_RX_DMA_MASK;
+> +       writel(cmd, mdata->base + SPI_CMD_REG);
+
+I think there is an unprepare_transfer_hardware() callback for this
+that will be called when the message queue is empty.
+
+> +
+> +       return ret;
+> +}
+> +
+> +static bool mtk_spi_can_dma(struct spi_master *master,
+> +                           struct spi_device *spi,
+> +                           struct spi_transfer *xfer)
+> +{
+> +       return true;
+
+I haven't really investigated how this is supposed to work, but I
+think we need a dma_chan to do proper dma.
+I think for the first version of this driver, we might as well return
+false here, and use FIFO mode to handle.
+
+> +}
+> +
+> +static irqreturn_t mtk_spi_interrupt(int irq, void *dev_id)
+> +{
+> +       struct mtk_spi_ddata *mdata = dev_id;
+> +       u32 reg_val;
+> +
+> +       reg_val = readl(mdata->base + SPI_STATUS0_REG);
+> +       if (reg_val & 0x2)
+> +               mdata->state = MTK_SPI_PAUSED;
+> +       else
+> +               mdata->state = MTK_SPI_IDLE;
+> +
+> +       complete(&mdata->done);
+
+Rather than waking up the main thread, to configure the next
+scatterlist, perhaps we can just use the interrupt handler to walk the
+sg list (ie if reg_val & 0x2).
+"When the last scatterlist has been sent (reg_val & 0x1), we can then
+call spi_finalize_current_transfer().
+In this way, we can remove the loop from transfer_one(), return 1 from
+transfer_one() and remove the driver-specific completion
+"mdata->done".
+
+> +
+> +       return IRQ_HANDLED;
+> +}
+> +
+> +static int mtk_spi_probe(struct platform_device *pdev)
+> +{
+> +       struct spi_master *master;
+> +       struct mtk_spi_ddata *mdata;
+> +       const struct of_device_id *of_id;
+> +       struct resource *res;
+> +       int     ret;
+> +
+> +       master = spi_alloc_master(&pdev->dev, sizeof(struct mtk_spi_ddata));
+
+master = spi_alloc_master(dev, sizeof *mdata)
+
+> +       if (!master) {
+> +               dev_err(&pdev->dev, "failed to alloc spi master\n");
+> +               return -ENOMEM;
+> +       }
+> +
+> +       pm_runtime_set_active(&pdev->dev);
+> +       pm_runtime_enable(&pdev->dev);
+
+Why set_active?  I think we probably don't need to turn on the SPI
+clocks until the first SPI transaction.
+In any case, move this to the end of mtk_spi_probe(), after we are
+sure we aren't going to return an error.
+
+> +
+> +       master->auto_runtime_pm = true;
+> +       master->dev.of_node = pdev->dev.of_node;
+
+I believe spi_alloc_master() actually sets pdev->dev as master's parent device.
+Why do you need to copy its of_node to master->dev?
+
+> +       master->bus_num = pdev->id;
+> +       master->num_chipselect = 1;
+
+This is the default, so not technically needed.
+
+> +       master->mode_bits = SPI_CPOL | SPI_CPHA;
+> +
+> +       mdata = spi_master_get_devdata(master);
+> +       memset(mdata, 0, sizeof(struct mtk_spi_ddata));
+
+This memset() is not necessary.  spi_alloc_master() will zero init this for us.
+
+> +
+> +       mdata->master = master;
+
+This pointer back to master should not be needed.  I think in all
+cases we will given master, and want to extract mdata, not the other
+way around.
+
+> +       mdata->dev = &pdev->dev;
+
+This mdata->dev should not be needed; Just use master->dev.
+
+> +
+> +       master->set_cs = mtk_spi_set_cs;
+> +       master->prepare_message = mtk_spi_prepare_message;
+> +       master->transfer_one = mtk_spi_transfer_one;
+> +       master->can_dma = mtk_spi_can_dma;
+> +
+> +       of_id = of_match_node(mtk_spi_of_match, pdev->dev.of_node);
+> +       if (!of_id) {
+> +               dev_err(&pdev->dev, "failed to probe of_node\n");
+> +               ret = -EINVAL;
+> +               goto err;
+> +       }
+> +
+> +       mdata->platform_compat = (unsigned long)of_id->data;
+> +
+> +       if (mdata->platform_compat & COMPAT_MT8173) {
+> +               ret = of_property_read_u32(pdev->dev.of_node, "pad-select",
+> +                                          &mdata->pad_sel);
+> +               if (ret) {
+> +                       dev_err(&pdev->dev, "failed to read pad select: %d\n",
+> +                               ret);
+> +                       goto err;
+> +               }
+> +
+> +               if (mdata->pad_sel > MT8173_MAX_PAD_SEL) {
+> +                       dev_err(&pdev->dev, "wrong pad-select: %u\n",
+> +                               mdata->pad_sel);
+> +                       ret = -EINVAL;
+> +                       goto err;
+> +               }
+> +       }
+> +
+> +       platform_set_drvdata(pdev, master);
+> +       init_completion(&mdata->done);
+> +
+> +       mdata->clk = devm_clk_get(&pdev->dev, "main");
+> +       if (IS_ERR(mdata->clk)) {
+> +               ret = PTR_ERR(mdata->clk);
+> +               dev_err(&pdev->dev, "failed to get clock: %d\n", ret);
+> +               goto err;
+> +       }
+> +
+> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +       if (!res) {
+> +               ret = -ENODEV;
+> +               dev_err(&pdev->dev, "failed to determine base address\n");
+> +               goto err;
+> +       }
+> +
+> +       mdata->base = devm_ioremap_resource(&pdev->dev, res);
+> +       if (IS_ERR(mdata->base)) {
+> +               ret = PTR_ERR(mdata->base);
+> +               goto err;
+> +       }
+> +
+> +       ret = platform_get_irq(pdev, 0);
+> +       if (ret < 0) {
+> +               dev_err(&pdev->dev, "failed to get irq (%d)\n", ret);
+> +               goto err;
+> +       }
+> +
+> +       mdata->irq = ret;
+> +
+> +       if (!pdev->dev.dma_mask)
+> +               pdev->dev.dma_mask = &pdev->dev.coherent_dma_mask;
+> +
+> +       ret = clk_prepare_enable(mdata->clk);
+> +       if (ret < 0) {
+> +               dev_err(&pdev->dev, "failed to enable clock (%d)\n", ret);
+> +               goto err;
+> +       }
+> +
+> +       ret = devm_request_irq(&pdev->dev, mdata->irq, mtk_spi_interrupt,
+> +                              IRQF_TRIGGER_NONE, dev_name(&pdev->dev), mdata);
+> +       if (ret) {
+> +               dev_err(&pdev->dev, "failed to register irq (%d)\n", ret);
+> +               goto err_disable_clk;
+> +       }
+> +
+> +       ret = devm_spi_register_master(&pdev->dev, master);
+> +       if (ret) {
+> +               dev_err(&pdev->dev, "failed to register master (%d)\n", ret);
+> +err_disable_clk:
+
+Don't use a goto to jump into the middle of a block like this.
+Add the err handling labels after a "return 0;", like this:
+
+   return 0;
+ err_disable_clk:
+   clk_disable_unprepare(mdata->clk);
+ err_put_master:
+   spi_master_put(master);
+   kfree(master);
+   return ret;
+
+> +               clk_disable_unprepare(mdata->clk);
+> +err:
+> +               spi_master_put(master);
+
+On add failure, must also:
+   kfree(master);
+
+> +       }
+> +
+> +       return ret;
+> +}
+> +
+> +static int mtk_spi_remove(struct platform_device *pdev)
+> +{
+> +       struct spi_master *master = platform_get_drvdata(pdev);
+> +       struct mtk_spi_ddata *mdata = spi_master_get_devdata(master);
+> +
+> +       pm_runtime_disable(&pdev->dev);
+> +
+> +       mtk_spi_reset(mdata);
+> +       clk_disable_unprepare(mdata->clk);
+> +       spi_master_put(master);
+> +
+> +       return 0;
+> +}
+> +
+> +#ifdef CONFIG_PM_SLEEP
+> +static int mtk_spi_suspend(struct device *dev)
+> +{
+> +       int ret = 0;
+> +       struct spi_master *master = dev_get_drvdata(dev);
+> +       struct mtk_spi_ddata *mdata = spi_master_get_devdata(master);
+> +
+> +       ret = spi_master_suspend(master);
+> +       if (ret)
+> +               return ret;
+> +
+> +       if (!pm_runtime_suspended(dev))
+> +               clk_disable_unprepare(mdata->clk);
+> +
+> +       return ret;
+> +}
+> +
+> +static int mtk_spi_resume(struct device *dev)
+> +{
+> +       int ret = 0;
+> +       struct spi_master *master = dev_get_drvdata(dev);
+> +       struct mtk_spi_ddata *mdata = spi_master_get_devdata(master);
+> +
+> +       if (!pm_runtime_suspended(dev)) {
+> +               ret = clk_prepare_enable(mdata->clk);
+> +               if (ret < 0)
+> +                       return ret;
+> +       }
+> +
+> +       return spi_master_resume(master);
+
+If this fails, you should disable the clock if it was just enabled.
+
+Ok, enough for now!
+
+Thanks,
+-Dan
+
+> +}
+> +#endif /* CONFIG_PM_SLEEP */
+> +
+> +#ifdef CONFIG_PM
+> +static int mtk_spi_runtime_suspend(struct device *dev)
+> +{
+> +       struct spi_master *master = dev_get_drvdata(dev);
+> +       struct mtk_spi_ddata *mdata = spi_master_get_devdata(master);
+> +
+> +       clk_disable_unprepare(mdata->clk);
+> +
+> +       return 0;
+> +}
+> +
+> +static int mtk_spi_runtime_resume(struct device *dev)
+> +{
+> +       struct spi_master *master = dev_get_drvdata(dev);
+> +       struct mtk_spi_ddata *mdata = spi_master_get_devdata(master);
+> +
+> +       return clk_prepare_enable(mdata->clk);
+> +}
+> +#endif /* CONFIG_PM */
+> +
+> +static const struct dev_pm_ops mtk_spi_pm = {
+> +       SET_SYSTEM_SLEEP_PM_OPS(mtk_spi_suspend, mtk_spi_resume)
+> +       SET_RUNTIME_PM_OPS(mtk_spi_runtime_suspend,
+> +                          mtk_spi_runtime_resume, NULL)
+> +};
+> +
+> +struct platform_driver mtk_spi_driver = {
+> +       .driver = {
+> +               .name = "mtk-spi",
+> +               .pm     = &mtk_spi_pm,
+> +               .of_match_table = mtk_spi_of_match,
+> +       },
+> +       .probe = mtk_spi_probe,
+> +       .remove = mtk_spi_remove,
+> +};
+> +
+> +module_platform_driver(mtk_spi_driver);
+> +
+> +MODULE_DESCRIPTION("MTK SPI Controller driver");
+> +MODULE_AUTHOR("Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>");
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_ALIAS("platform: mtk_spi");
+> --
+> 1.8.1.1.dirty
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
