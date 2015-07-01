@@ -1,14 +1,14 @@
 From: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
 Subject: [RFC PATCH] mmc: sprd: add MMC host driver for Spreadtrum SoC
-Date: Wed, 1 Jul 2015 15:12:54 +0800
-Message-ID: <1435734774-10993-1-git-send-email-chunyan.zhang@spreadtrum.com>
+Date: Wed, 1 Jul 2015 15:23:19 +0800
+Message-ID: <1435735399-15333-1-git-send-email-chunyan.zhang@spreadtrum.com>
 References: <sprd-mmc-rfc>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <sprd-mmc-rfc>
 Sender: linux-kernel-owner@vger.kernel.org
-To: hris@printf.net, ulf.hansson@linaro.org, lee.jones@linaro.org, shawn.guo@linaro.org
+To: chris@printf.net, ulf.hansson@linaro.org, lee.jones@linaro.org, shawn.guo@linaro.org
 Cc: grant.likely@linaro.org, robh+dt@kernel.org, arnd@arndb.de, billows.wu@spreadtrum.com, wei.qiao@spreadtrum.com, baolin.wang@spreadtrum.com, ning.yang@spreadtrum.com, orson.zhai@spreadtrum.com, jason.wu@spreadtrum.com, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
