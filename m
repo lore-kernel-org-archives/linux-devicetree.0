@@ -1,67 +1,54 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of: Add vendor prefix for Sharp Microelectronics
-Date: Wed, 1 Jul 2015 14:01:43 +0200
-Message-ID: <20150701120141.GA18065@ulmo.nvidia.com>
-References: <1406901044-32654-1-git-send-email-thierry.reding@gmail.com>
- <20141013115409.GB16186@ulmo>
+From: Vitaly Andrianov <vitalya-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH] ARM: psci: keystone: remove keystone_smp_ops code if psci is supported
+Date: Wed, 1 Jul 2015 08:13:03 -0400
+Message-ID: <1435752784-30639-1-git-send-email-vitalya@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="NzB8fVQJ5HfG6fxh"
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20141013115409.GB16186@ulmo>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Vitaly Andrianov <vitalya-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+If we enable psci support we don't need keystone_smp_ops anymore.
 
---NzB8fVQJ5HfG6fxh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Vitaly Andrianov <vitalya-l0cyMroinI0@public.gmane.org>
+---
+ arch/arm/mach-keystone/Makefile   | 2 ++
+ arch/arm/mach-keystone/keystone.c | 2 ++
+ 2 files changed, 4 insertions(+)
 
-On Mon, Oct 13, 2014 at 01:54:09PM +0200, Thierry Reding wrote:
-> On Fri, Aug 01, 2014 at 03:50:44PM +0200, Thierry Reding wrote:
-> > From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> >=20
-> > Use "sharp" as the vendor prefix for Sharp Microelectronics in device
-> > tree compatible strings.
-> >=20
-> > Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> > ---
-> >  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
-> >  1 file changed, 1 insertion(+)
->=20
-> Ping?
+diff --git a/arch/arm/mach-keystone/Makefile b/arch/arm/mach-keystone/Makefile
+index 25d9239..5cc5ca4 100644
+--- a/arch/arm/mach-keystone/Makefile
++++ b/arch/arm/mach-keystone/Makefile
+@@ -3,7 +3,9 @@ obj-y					:= keystone.o smc.o
+ plus_sec := $(call as-instr,.arch_extension sec,+sec)
+ AFLAGS_smc.o				:=-Wa,-march=armv7-a$(plus_sec)
+ 
++ifneq ($(CONFIG_ARM_PSCI),y)
+ obj-$(CONFIG_SMP)			+= platsmp.o
++endif
+ 
+ # PM domain driver for Keystone SOCs
+ obj-$(CONFIG_ARCH_KEYSTONE)		+= pm_domain.o
+diff --git a/arch/arm/mach-keystone/keystone.c b/arch/arm/mach-keystone/keystone.c
+index e2880105..9cc489c 100644
+--- a/arch/arm/mach-keystone/keystone.c
++++ b/arch/arm/mach-keystone/keystone.c
+@@ -105,7 +105,9 @@ DT_MACHINE_START(KEYSTONE, "Keystone")
+ #if defined(CONFIG_ZONE_DMA) && defined(CONFIG_ARM_LPAE)
+ 	.dma_zone_size	= SZ_2G,
+ #endif
++#ifndef CONFIG_ARM_PSCI
+ 	.smp		= smp_ops(keystone_smp_ops),
++#endif
+ 	.init_machine	= keystone_init,
+ 	.dt_compat	= keystone_match,
+ 	.pv_fixup	= keystone_pv_fixup,
+-- 
+1.9.1
 
-Rob, I just stumbled across this in my stack of patches that never got
-merged. Can you ack this?
-
-Thierry
-
---NzB8fVQJ5HfG6fxh
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJVk9aiAAoJEN0jrNd/PrOhrYYQAKjMAR6PwN4bxIlx3RbRvoNL
-EbSmU3QIr4d1Zb3NI0tVTKya94YwK3DI4EkBV/Ul9xxLHURx8bKMn14hX2jiv32H
-MJC4lfkSs6JAQuTLARO1WU6MOBxFt4DfOJIBU27K4eAzXv0D/ZVaN1ObdKHQwaJX
-Ztn539NmsVyQWAKYkWEAUYSioE1w8Lz1fNDDp/K7HfsWzbCp23uuTvjLHNZ4XsBt
-5G8Hivn2O6SKrDVl7tHrmAi09irVdpLZSeYB1uyZ/nmmdHreujwGEeAfEZ7J+XBc
-CzjCW8mBo9fHMxNuqu3Kt+7P8WJqIbFZfGQgqlStmvdToh8Zo1pHjKsVq7z0C3bp
-NcO5X2+sB9rUK6x6ArO+iukdNCUKWcgjg8scU9vw3M0ji00JKTNrhwM1eQrfXiqe
-j1Q920zD0KMxw1wx2S2E+kW64GqpBFbDOl/oRj+6imWxw823ktYaEUIG+p+OxBLu
-HkFV+78D8QEeefaCuXvCByJqO0D/aM1nvHsLl/y9hnpuF0xu6ekNOdx9MUMkMAad
-XFS1omjZBotwXJR2oTET7Yuopvg3MND7xNQquZHFJuw/mFWz7xDMdHkngQWHR12g
-1kceNwV8R9n0wj7Y7VXhgbfSASVe8qw+BhirSUKWwk04y4IusnA20VYLLGFjL2h6
-5AWltK1TlvEcgOp6wK2c
-=0qpi
------END PGP SIGNATURE-----
-
---NzB8fVQJ5HfG6fxh--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
