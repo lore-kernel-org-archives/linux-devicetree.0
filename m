@@ -1,7 +1,7 @@
 From: Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 8/8] iio: mma8452: leave sysfs namings to the iio core
-Date: Wed,  1 Jul 2015 10:22:02 +0200
-Message-ID: <1435738922-12580-9-git-send-email-martink@posteo.de>
+Subject: [PATCH 7/8] iio: mma8452: change iio event type to IIO_EV_TYPE_MAG
+Date: Wed,  1 Jul 2015 10:22:01 +0200
+Message-ID: <1435738922-12580-8-git-send-email-martink@posteo.de>
 References: <1435738922-12580-1-git-send-email-martink@posteo.de>
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1435738922-12580-1-git-send-email-martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
@@ -10,27 +10,66 @@ To: pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>, Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This doesn't actually change anything since the core names the sysfs folder
-for the iio event attributes "events" anyways. It only leaves the job to the
-core.
+IIO_EV_TYPE_THRESH in rising direction describes an event where the
+threshold is crossed in rising direction, positive or negative values
+being possible. This is not the case here.
+
+Since the threshold is no signed value and only the magnitude is compared,
+IIO_EV_TYPE_MAG is what describes the behaviour of these devices, see the
+sysfs-bus-iio ABI Documentation.
 
 Signed-off-by: Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
 Signed-off-by: Christoph Muellner <christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
 ---
- drivers/iio/accel/mma8452.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/iio/accel/mma8452.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/iio/accel/mma8452.c b/drivers/iio/accel/mma8452.c
-index e23ebd0..2491ed0 100644
+index 7f6e3b4..e23ebd0 100644
 --- a/drivers/iio/accel/mma8452.c
 +++ b/drivers/iio/accel/mma8452.c
-@@ -721,7 +721,6 @@ static struct attribute *mma8452_event_attributes[] = {
+@@ -598,21 +598,21 @@ static void mma8452_transient_interrupt(struct iio_dev *indio_dev)
+ 	if (src & data->chip_info->ev_src_xe)
+ 		iio_push_event(indio_dev,
+ 			       IIO_MOD_EVENT_CODE(IIO_ACCEL, 0, IIO_MOD_X,
+-						  IIO_EV_TYPE_THRESH,
++						  IIO_EV_TYPE_MAG,
+ 						  IIO_EV_DIR_RISING),
+ 			       ts);
  
- static struct attribute_group mma8452_event_attribute_group = {
- 	.attrs = mma8452_event_attributes,
--	.name = "events",
- };
+ 	if (src & data->chip_info->ev_src_ye)
+ 		iio_push_event(indio_dev,
+ 			       IIO_MOD_EVENT_CODE(IIO_ACCEL, 0, IIO_MOD_Y,
+-						  IIO_EV_TYPE_THRESH,
++						  IIO_EV_TYPE_MAG,
+ 						  IIO_EV_DIR_RISING),
+ 			       ts);
  
- #define MMA8452_CHANNEL(axis, idx, bits) { \
+ 	if (src & data->chip_info->ev_src_ze)
+ 		iio_push_event(indio_dev,
+ 			       IIO_MOD_EVENT_CODE(IIO_ACCEL, 0, IIO_MOD_Z,
+-						  IIO_EV_TYPE_THRESH,
++						  IIO_EV_TYPE_MAG,
+ 						  IIO_EV_DIR_RISING),
+ 			       ts);
+ }
+@@ -689,7 +689,7 @@ static int mma8452_reg_access_dbg(struct iio_dev *indio_dev,
+ 
+ static const struct iio_event_spec mma8452_transient_event[] = {
+ 	{
+-		.type = IIO_EV_TYPE_THRESH,
++		.type = IIO_EV_TYPE_MAG,
+ 		.dir = IIO_EV_DIR_RISING,
+ 		.mask_separate = BIT(IIO_EV_INFO_ENABLE),
+ 		.mask_shared_by_type = BIT(IIO_EV_INFO_VALUE) |
+@@ -700,7 +700,7 @@ static const struct iio_event_spec mma8452_transient_event[] = {
+ 
+ static const struct iio_event_spec mma8452_motion_event[] = {
+ 	{
+-		.type = IIO_EV_TYPE_THRESH,
++		.type = IIO_EV_TYPE_MAG,
+ 		.dir = IIO_EV_DIR_RISING,
+ 		.mask_separate = BIT(IIO_EV_INFO_ENABLE),
+ 		.mask_shared_by_type = BIT(IIO_EV_INFO_VALUE) |
 -- 
 2.1.4
