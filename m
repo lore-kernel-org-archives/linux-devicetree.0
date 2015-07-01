@@ -1,190 +1,47 @@
-From: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v2 2/4] dt-bindings: ARM: Mediatek: Document devicetree
- bindings for clock controllers
-Date: Wed, 1 Jul 2015 21:47:11 +0800
-Message-ID: <CAGS+omD9Mvz0-RQMc5TsWCPct80S5fyqMn3+-zR7HB9yb7KoDQ@mail.gmail.com>
-References: <1435633127-31952-1-git-send-email-jamesjj.liao@mediatek.com> <1435633127-31952-3-git-send-email-jamesjj.liao@mediatek.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: psci: keystone: remove keystone_smp_ops code if
+ psci is supported
+Date: Wed, 1 Jul 2015 15:12:12 +0100
+Message-ID: <20150701141211.GK7557@n2100.arm.linux.org.uk>
+References: <1435752784-30639-1-git-send-email-vitalya@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1435633127-31952-3-git-send-email-jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1435752784-30639-1-git-send-email-vitalya-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Vitaly Andrianov <vitalya-l0cyMroinI0@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 30, 2015 at 10:58 AM, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
->
-> This adds the binding documentation for the mmsys, imgsys, vdecsys,
-> vencsys and vencltsys controllers found on Mediatek SoCs.
->
-> Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->  .../bindings/arm/mediatek/mediatek,imgsys.txt      | 22 ++++++++++++++++++++++
->  .../bindings/arm/mediatek/mediatek,mmsys.txt       | 22 ++++++++++++++++++++++
->  .../bindings/arm/mediatek/mediatek,vdecsys.txt     | 22 ++++++++++++++++++++++
->  .../bindings/arm/mediatek/mediatek,vencltsys.txt   | 22 ++++++++++++++++++++++
->  .../bindings/arm/mediatek/mediatek,vencsys.txt     | 22 ++++++++++++++++++++++
->  5 files changed, 110 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,imgsys.txt
->  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.txt
->  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,vdecsys.txt
->  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,vencltsys.txt
->  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,vencsys.txt
->
-> diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,imgsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,imgsys.txt
-> new file mode 100644
-> index 0000000..7612bac
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,imgsys.txt
-> @@ -0,0 +1,22 @@
-> +Mediatek imgsys controller
-> +============================
-> +
-> +The Mediatek imgsys controller provides various clocks to the system.
-> +
-> +Required Properties:
-> +
-> +- compatible: Should be:
-> +       - "mediatek,mt8173-imgsys", "syscon"
-> +- #clock-cells: Must be 1
-> +
-> +The imgsys controller uses the common clk binding from
-> +Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +The available clocks are defined in dt-bindings/clock/mt*-clk.h.
-> +
-> +Example:
-> +
-> +imgsys: imgsys@15000000 {
+On Wed, Jul 01, 2015 at 08:13:03AM -0400, Vitaly Andrianov wrote:
+> If we enable psci support we don't need keystone_smp_ops anymore.
+> 
+> Signed-off-by: Vitaly Andrianov <vitalya-l0cyMroinI0@public.gmane.org>
 
-Since these nodes will be supplying clocks to the rest of the system,
-I think the "name" part of each of these should all be
-"clock-controller", like topckgen and apmixedsys:
+However, this is not necessary.  If you look at arch/arm/kernel/setup.c,
+it contains this:
 
-  imgsys: clock-controller@15000000 {
+        psci_init();
+#ifdef CONFIG_SMP
+        if (is_smp()) {
+                if (!mdesc->smp_init || !mdesc->smp_init()) {
+                        if (psci_smp_available())
+                                smp_set_ops(&psci_smp_ops);
+                        else if (mdesc->smp)
+                                smp_set_ops(mdesc->smp);
+                }
+                smp_init_cpus();
+                smp_build_mpidr_hash();
+        }
+#endif
 
--Dan
+So, the platforms' SMP ops won't be used even if they're provided
+when PSCI is available.
 
->
-> +       compatible = "mediatek,mt8173-imgsys", "syscon";
-> +       reg = <0 0x15000000 0 0x1000>;
-> +       #clock-cells = <1>;
-> +};
-> diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.txt
-> new file mode 100644
-> index 0000000..b51e417
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.txt
-> @@ -0,0 +1,22 @@
-> +Mediatek mmsys controller
-> +============================
-> +
-> +The Mediatek mmsys controller provides various clocks to the system.
-> +
-> +Required Properties:
-> +
-> +- compatible: Should be:
-> +       - "mediatek,mt8173-mmsys", "syscon"
-> +- #clock-cells: Must be 1
-> +
-> +The mmsys controller uses the common clk binding from
-> +Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +The available clocks are defined in dt-bindings/clock/mt*-clk.h.
-> +
-> +Example:
-> +
-> +mmsys: mmsys@14000000 {
-> +       compatible = "mediatek,mt8173-mmsys", "syscon";
-> +       reg = <0 0x14000000 0 0x1000>;
-> +       #clock-cells = <1>;
-> +};
-> diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,vdecsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,vdecsys.txt
-> new file mode 100644
-> index 0000000..a5b94a7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,vdecsys.txt
-> @@ -0,0 +1,22 @@
-> +Mediatek vdecsys controller
-> +============================
-> +
-> +The Mediatek vdecsys controller provides various clocks to the system.
-> +
-> +Required Properties:
-> +
-> +- compatible: Should be:
-> +       - "mediatek,mt8173-vdecsys", "syscon"
-> +- #clock-cells: Must be 1
-> +
-> +The vdecsys controller uses the common clk binding from
-> +Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +The available clocks are defined in dt-bindings/clock/mt*-clk.h.
-> +
-> +Example:
-> +
-> +vdecsys: vdecsys@16000000 {
-> +       compatible = "mediatek,mt8173-vdecsys", "syscon";
-> +       reg = <0 0x16000000 0 0x1000>;
-> +       #clock-cells = <1>;
-> +};
-> diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,vencltsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,vencltsys.txt
-> new file mode 100644
-> index 0000000..3d4e8d8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,vencltsys.txt
-> @@ -0,0 +1,22 @@
-> +Mediatek vencltsys controller
-> +============================
-> +
-> +The Mediatek vencltsys controller provides various clocks to the system.
-> +
-> +Required Properties:
-> +
-> +- compatible: Should be:
-> +       - "mediatek,mt8173-vencltsys", "syscon"
-> +- #clock-cells: Must be 1
-> +
-> +The vencltsys controller uses the common clk binding from
-> +Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +The available clocks are defined in dt-bindings/clock/mt*-clk.h.
-> +
-> +Example:
-> +
-> +vencltsys: vencltsys@19000000 {
-> +       compatible = "mediatek,mt8173-vencltsys", "syscon";
-> +       reg = <0 0x19000000 0 0x1000>;
-> +       #clock-cells = <1>;
-> +};
-> diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,vencsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,vencsys.txt
-> new file mode 100644
-> index 0000000..e5b72f5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,vencsys.txt
-> @@ -0,0 +1,22 @@
-> +Mediatek vencsys controller
-> +============================
-> +
-> +The Mediatek vencsys controller provides various clocks to the system.
-> +
-> +Required Properties:
-> +
-> +- compatible: Should be:
-> +       - "mediatek,mt8173-vencsys", "syscon"
-> +- #clock-cells: Must be 1
-> +
-> +The vencsys controller uses the common clk binding from
-> +Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +The available clocks are defined in dt-bindings/clock/mt*-clk.h.
-> +
-> +Example:
-> +
-> +vencsys: vencsys@18000000 {
-> +       compatible = "mediatek,mt8173-vencsys", "syscon";
-> +       reg = <0 0x18000000 0 0x1000>;
-> +       #clock-cells = <1>;
-> +};
-> --
-> 1.8.1.1.dirty
->
+-- 
+FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+according to speedtest.net.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
