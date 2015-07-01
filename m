@@ -1,7 +1,7 @@
 From: Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 7/8] iio: mma8452: change iio event type to IIO_EV_TYPE_MAG
-Date: Wed,  1 Jul 2015 10:22:01 +0200
-Message-ID: <1435738922-12580-8-git-send-email-martink@posteo.de>
+Subject: [PATCH 5/8] iio: mma8452: add devicetree documentation
+Date: Wed,  1 Jul 2015 10:21:59 +0200
+Message-ID: <1435738922-12580-6-git-send-email-martink@posteo.de>
 References: <1435738922-12580-1-git-send-email-martink@posteo.de>
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1435738922-12580-1-git-send-email-martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
@@ -10,66 +10,39 @@ To: pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>, Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-IIO_EV_TYPE_THRESH in rising direction describes an event where the
-threshold is crossed in rising direction, positive or negative values
-being possible. This is not the case here.
-
-Since the threshold is no signed value and only the magnitude is compared,
-IIO_EV_TYPE_MAG is what describes the behaviour of these devices, see the
-sysfs-bus-iio ABI Documentation.
-
 Signed-off-by: Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
 Signed-off-by: Christoph Muellner <christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
 ---
- drivers/iio/accel/mma8452.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ .../devicetree/bindings/iio/accel/mma8452.txt       | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/accel/mma8452.txt
 
-diff --git a/drivers/iio/accel/mma8452.c b/drivers/iio/accel/mma8452.c
-index 7f6e3b4..e23ebd0 100644
---- a/drivers/iio/accel/mma8452.c
-+++ b/drivers/iio/accel/mma8452.c
-@@ -598,21 +598,21 @@ static void mma8452_transient_interrupt(struct iio_dev *indio_dev)
- 	if (src & data->chip_info->ev_src_xe)
- 		iio_push_event(indio_dev,
- 			       IIO_MOD_EVENT_CODE(IIO_ACCEL, 0, IIO_MOD_X,
--						  IIO_EV_TYPE_THRESH,
-+						  IIO_EV_TYPE_MAG,
- 						  IIO_EV_DIR_RISING),
- 			       ts);
- 
- 	if (src & data->chip_info->ev_src_ye)
- 		iio_push_event(indio_dev,
- 			       IIO_MOD_EVENT_CODE(IIO_ACCEL, 0, IIO_MOD_Y,
--						  IIO_EV_TYPE_THRESH,
-+						  IIO_EV_TYPE_MAG,
- 						  IIO_EV_DIR_RISING),
- 			       ts);
- 
- 	if (src & data->chip_info->ev_src_ze)
- 		iio_push_event(indio_dev,
- 			       IIO_MOD_EVENT_CODE(IIO_ACCEL, 0, IIO_MOD_Z,
--						  IIO_EV_TYPE_THRESH,
-+						  IIO_EV_TYPE_MAG,
- 						  IIO_EV_DIR_RISING),
- 			       ts);
- }
-@@ -689,7 +689,7 @@ static int mma8452_reg_access_dbg(struct iio_dev *indio_dev,
- 
- static const struct iio_event_spec mma8452_transient_event[] = {
- 	{
--		.type = IIO_EV_TYPE_THRESH,
-+		.type = IIO_EV_TYPE_MAG,
- 		.dir = IIO_EV_DIR_RISING,
- 		.mask_separate = BIT(IIO_EV_INFO_ENABLE),
- 		.mask_shared_by_type = BIT(IIO_EV_INFO_VALUE) |
-@@ -700,7 +700,7 @@ static const struct iio_event_spec mma8452_transient_event[] = {
- 
- static const struct iio_event_spec mma8452_motion_event[] = {
- 	{
--		.type = IIO_EV_TYPE_THRESH,
-+		.type = IIO_EV_TYPE_MAG,
- 		.dir = IIO_EV_DIR_RISING,
- 		.mask_separate = BIT(IIO_EV_INFO_ENABLE),
- 		.mask_shared_by_type = BIT(IIO_EV_INFO_VALUE) |
+diff --git a/Documentation/devicetree/bindings/iio/accel/mma8452.txt b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
+new file mode 100644
+index 0000000..8d98e05
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
+@@ -0,0 +1,21 @@
++Freescale MMA8452Q, MMA8453Q, MMA8652FC or MMA8653FC triaxial accelerometer
++
++Required properties:
++
++  - compatible: should be "fsl,mma8653", "fsl,mma8652", "fsl,mma8453" or
++    "fsl,mma8452" respectively.
++  - reg: the I2C address of the chip
++
++Optional properties:
++
++  - interrupt-parent: should be the phandle for the interrupt controller
++  - interrupts: interrupt mapping for GPIO IRQ
++
++Example:
++
++	mma8653fc@1d {
++		compatible = "fsl,mma8653";
++		reg = <0x1d>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <5 0>;
++	};
 -- 
 2.1.4
