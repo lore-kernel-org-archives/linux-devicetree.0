@@ -1,47 +1,128 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: psci: keystone: remove keystone_smp_ops code if
- psci is supported
-Date: Wed, 1 Jul 2015 15:12:12 +0100
-Message-ID: <20150701141211.GK7557@n2100.arm.linux.org.uk>
-References: <1435752784-30639-1-git-send-email-vitalya@ti.com>
+From: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] clk: mediatek: mt8173: Fix enabling of critical clocks
+Date: Wed, 1 Jul 2015 22:21:55 +0800
+Message-ID: <CAGS+omDqSEn_WnUYz0XmeRpejhthb0J_qa4H9VEfihtA0Axorg@mail.gmail.com>
+References: <1435633127-31952-1-git-send-email-jamesjj.liao@mediatek.com> <1435633127-31952-2-git-send-email-jamesjj.liao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1435752784-30639-1-git-send-email-vitalya-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1435633127-31952-2-git-send-email-jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vitaly Andrianov <vitalya-l0cyMroinI0@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 01, 2015 at 08:13:03AM -0400, Vitaly Andrianov wrote:
-> If we enable psci support we don't need keystone_smp_ops anymore.
-> 
-> Signed-off-by: Vitaly Andrianov <vitalya-l0cyMroinI0@public.gmane.org>
+Hi James,
 
-However, this is not necessary.  If you look at arch/arm/kernel/setup.c,
-it contains this:
+To be precise, it is the CLK_TOP clocks that have CLK_APMIXED PLLs as
+their parents, so we cannot enable the CLK_TOP critical clocks until
+the CLK_APMIXED clocks have all been registered.
 
-        psci_init();
-#ifdef CONFIG_SMP
-        if (is_smp()) {
-                if (!mdesc->smp_init || !mdesc->smp_init()) {
-                        if (psci_smp_available())
-                                smp_set_ops(&psci_smp_ops);
-                        else if (mdesc->smp)
-                                smp_set_ops(mdesc->smp);
-                }
-                smp_init_cpus();
-                smp_build_mpidr_hash();
-        }
-#endif
+Please add something like the above to the commit message.
 
-So, the platforms' SMP ops won't be used even if they're provided
-when PSCI is available.
+More comments inline...
 
--- 
-FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
-according to speedtest.net.
+On Tue, Jun 30, 2015 at 10:58 AM, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>
+> On the MT8173 the clocks are provided by different units. To enable
+> the critical clocks we must be sure that all parent clocks are already
+> registered, otherwise the parents of the critical clocks end up being
+> unused and get disabled later. To find a place where all parents are
+> registered we try each time after we've registered some clocks if
+> all known providers are present now and only then we enable the critical
+> clocks
+>
+> Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>  drivers/clk/mediatek/clk-mt8173.c | 26 +++++++++++++++++++++-----
+>  1 file changed, 21 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/clk/mediatek/clk-mt8173.c b/drivers/clk/mediatek/clk-mt8173.c
+> index 4b9e04c..c483336 100644
+> --- a/drivers/clk/mediatek/clk-mt8173.c
+> +++ b/drivers/clk/mediatek/clk-mt8173.c
+> @@ -700,6 +700,22 @@ static const struct mtk_composite peri_clks[] __initconst = {
+>         MUX(CLK_PERI_UART3_SEL, "uart3_ck_sel", uart_ck_sel_parents, 0x40c, 3, 1),
+>  };
+>
+> +static struct clk_onecell_data *mt8173_top_clk_data;
+> +static struct clk_onecell_data *mt8173_pll_clk_data;
+
+These globals can be:
+__initdata
+
+> +
+> +static void mtk_clk_enable_critical(void)
+
+And this function is:
+
+static void __init
+
+Other than the above, this one is:
+
+Reviewed-by: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+
+-Dan
+
+> +{
+> +       if (!mt8173_top_clk_data || !mt8173_pll_clk_data)
+> +               return;
+> +
+> +       clk_prepare_enable(mt8173_pll_clk_data->clks[CLK_APMIXED_ARMCA15PLL]);
+> +       clk_prepare_enable(mt8173_pll_clk_data->clks[CLK_APMIXED_ARMCA7PLL]);
+> +       clk_prepare_enable(mt8173_top_clk_data->clks[CLK_TOP_MEM_SEL]);
+> +       clk_prepare_enable(mt8173_top_clk_data->clks[CLK_TOP_DDRPHYCFG_SEL]);
+> +       clk_prepare_enable(mt8173_top_clk_data->clks[CLK_TOP_CCI400_SEL]);
+> +       clk_prepare_enable(mt8173_top_clk_data->clks[CLK_TOP_RTC_SEL]);
+> +}
+> +
+>  static void __init mtk_topckgen_init(struct device_node *node)
+>  {
+>         struct clk_onecell_data *clk_data;
+> @@ -712,19 +728,19 @@ static void __init mtk_topckgen_init(struct device_node *node)
+>                 return;
+>         }
+>
+> -       clk_data = mtk_alloc_clk_data(CLK_TOP_NR_CLK);
+> +       mt8173_top_clk_data = clk_data = mtk_alloc_clk_data(CLK_TOP_NR_CLK);
+>
+>         mtk_clk_register_factors(root_clk_alias, ARRAY_SIZE(root_clk_alias), clk_data);
+>         mtk_clk_register_factors(top_divs, ARRAY_SIZE(top_divs), clk_data);
+>         mtk_clk_register_composites(top_muxes, ARRAY_SIZE(top_muxes), base,
+>                         &mt8173_clk_lock, clk_data);
+>
+> -       clk_prepare_enable(clk_data->clks[CLK_TOP_CCI400_SEL]);
+> -
+>         r = of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
+>         if (r)
+>                 pr_err("%s(): could not register clock provider: %d\n",
+>                         __func__, r);
+> +
+> +       mtk_clk_enable_critical();
+>  }
+>  CLK_OF_DECLARE(mtk_topckgen, "mediatek,mt8173-topckgen", mtk_topckgen_init);
+>
+> @@ -818,13 +834,13 @@ static void __init mtk_apmixedsys_init(struct device_node *node)
+>  {
+>         struct clk_onecell_data *clk_data;
+>
+> -       clk_data = mtk_alloc_clk_data(CLK_APMIXED_NR_CLK);
+> +       mt8173_pll_clk_data = clk_data = mtk_alloc_clk_data(CLK_APMIXED_NR_CLK);
+>         if (!clk_data)
+>                 return;
+>
+>         mtk_clk_register_plls(node, plls, ARRAY_SIZE(plls), clk_data);
+>
+> -       clk_prepare_enable(clk_data->clks[CLK_APMIXED_ARMCA15PLL]);
+> +       mtk_clk_enable_critical();
+>  }
+>  CLK_OF_DECLARE(mtk_apmixedsys, "mediatek,mt8173-apmixedsys",
+>                 mtk_apmixedsys_init);
+> --
+> 1.8.1.1.dirty
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
