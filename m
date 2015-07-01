@@ -1,116 +1,74 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 7/9] ARM: multi_v7_defconfig: Enable support for PWM
- Regulators
-Date: Wed, 1 Jul 2015 13:31:46 +0100
-Message-ID: <20150701123146.GK3210@x1>
-References: <1435154348-28840-1-git-send-email-lee.jones@linaro.org>
- <1435154348-28840-8-git-send-email-lee.jones@linaro.org>
- <CABxcv==J2hi0y+=s3nK_U=-jkjTW3L9jCC2JfebnWwRfpDGLAQ@mail.gmail.com>
- <20150625084204.GW15013@x1>
- <CABxcv==_YZ7BCCzfbLXYxwUL_kKLtBxOVTCvcUnvGVnrD4bVpg@mail.gmail.com>
- <20150625150255.GE23990@x1>
- <CABxcv==dWX_J_+zhqjn61QXGtxCKmK62_HEj4R7wsMAWcC=H=Q@mail.gmail.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] ARM: psci: keystone: remove keystone_smp_ops code if
+ psci is supported
+Date: Wed, 1 Jul 2015 13:39:08 +0100
+Message-ID: <20150701123908.GA2310@leverpostej>
+References: <1435752784-30639-1-git-send-email-vitalya@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CABxcv==dWX_J_+zhqjn61QXGtxCKmK62_HEj4R7wsMAWcC=H=Q@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@dowhile0.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, kernel@stlinux.com, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Ajit Pal Singh <ajitpal.singh@st.com>
+In-Reply-To: <1435752784-30639-1-git-send-email-vitalya-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vitaly Andrianov <vitalya-l0cyMroinI0@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 25 Jun 2015, Javier Martinez Canillas wrote:
-> On Thu, Jun 25, 2015 at 5:02 PM, Lee Jones <lee.jones@linaro.org> wro=
-te:
-> > On Thu, 25 Jun 2015, Javier Martinez Canillas wrote:
-> >> On Thu, Jun 25, 2015 at 10:42 AM, Lee Jones <lee.jones@linaro.org>=
- wrote:
-> >> > On Wed, 24 Jun 2015, Javier Martinez Canillas wrote:
-> >>
-> >> [...]
-> >>
-> >> >> > diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/c=
-onfigs/multi_v7_defconfig
-> >> >> > index f632af0..6666973 100644
-> >> >> > --- a/arch/arm/configs/multi_v7_defconfig
-> >> >> > +++ b/arch/arm/configs/multi_v7_defconfig
-> >> >> > @@ -365,6 +365,7 @@ CONFIG_REGULATOR_MAX8907=3Dy
-> >> >> >  CONFIG_REGULATOR_MAX8973=3Dy
-> >> >> >  CONFIG_REGULATOR_MAX77686=3Dy
-> >> >> >  CONFIG_REGULATOR_PALMAS=3Dy
-> >> >> > +CONFIG_REGULATOR_PWM=3Dy
-> >> >>
-> >> >> The current policy is to build as much as possible as a module =
-in
-> >> >> multi_v7_defconfig. Since this is a tristate Kconfig symbol, co=
-uld you
-> >> >> please change it to =3Dm ?
-> >> >
-> >> > I would prefer that it stays built-in.
-> >> >
-> >>
-> >> Ok, I've no strong opinion on this. I was just mentioning what arm=
--soc
-> >> maintainers prefer nowadays.
-> >>
-> >> May I ask what's the rationale for leaving this option built-in?
-> >
-> > My view is that multi_v7 is used for prototyping, testing and to
-> > ensure all of the vendors are playing nice together.  Hopefully
-> > vendors aren't actually releasing kernels built with this defconfig=
-!
->=20
-> Agreed and same for the per SoC family defconfigs, vendors should shi=
-p
-> kernels with a customized defconfig.
+On Wed, Jul 01, 2015 at 01:13:03PM +0100, Vitaly Andrianov wrote:
+> If we enable psci support we don't need keystone_smp_ops anymore.
 
-Right.
+You need them for existing users.
 
-> > During testing/prototyping time; installing and messing around with
-> > modules is an over-head I can do without.
->=20
-> Right but my question wasn't whether multi_v7 should have the options
-> as built-in or as modules. That has already been decided by the
-> arm-soc maintainers who want to have as much as possible as modules.
-> In fact, there have been patches posted recently to change the curren=
-t
-> multi_v7 options from built-in to modules.
+> 
+> Signed-off-by: Vitaly Andrianov <vitalya-l0cyMroinI0@public.gmane.org>
+> ---
+>  arch/arm/mach-keystone/Makefile   | 2 ++
+>  arch/arm/mach-keystone/keystone.c | 2 ++
+>  2 files changed, 4 insertions(+)
+> 
+> diff --git a/arch/arm/mach-keystone/Makefile b/arch/arm/mach-keystone/Makefile
+> index 25d9239..5cc5ca4 100644
+> --- a/arch/arm/mach-keystone/Makefile
+> +++ b/arch/arm/mach-keystone/Makefile
+> @@ -3,7 +3,9 @@ obj-y					:= keystone.o smc.o
+>  plus_sec := $(call as-instr,.arch_extension sec,+sec)
+>  AFLAGS_smc.o				:=-Wa,-march=armv7-a$(plus_sec)
+>  
+> +ifneq ($(CONFIG_ARM_PSCI),y)
+>  obj-$(CONFIG_SMP)			+= platsmp.o
+> +endif
+>  
+>  # PM domain driver for Keystone SOCs
+>  obj-$(CONFIG_ARCH_KEYSTONE)		+= pm_domain.o
+> diff --git a/arch/arm/mach-keystone/keystone.c b/arch/arm/mach-keystone/keystone.c
+> index e2880105..9cc489c 100644
+> --- a/arch/arm/mach-keystone/keystone.c
+> +++ b/arch/arm/mach-keystone/keystone.c
+> @@ -105,7 +105,9 @@ DT_MACHINE_START(KEYSTONE, "Keystone")
+>  #if defined(CONFIG_ZONE_DMA) && defined(CONFIG_ARM_LPAE)
+>  	.dma_zone_size	= SZ_2G,
+>  #endif
+> +#ifndef CONFIG_ARM_PSCI
+>  	.smp		= smp_ops(keystone_smp_ops),
+> +#endif
 
-Then I need to either stop using multi_v7 or write a pre-build script
-to turn it into something useful I guess.
+This will prevent building a kernel that supports PSCI and your legacy
+SMP bringup.
 
-Thanks for the heads-up.
+I don't think this is necessary, given the code in setup_arch and the
+absence of mdesc->smp_init for keystone. A single kernel can support
+both, and it should support both.
 
-> Instead my question was what makes this driver special to not follow
-> the current convention.
+Thanks,
+Mark.
 
-There is nothing special about this particular driver to warrant that.
-
-> I agree that there is a trade off between having options as built-in
-> or modules and I believe that is why most SoC specific defconfigs hav=
-e
-> the opposite policy,  that is to enable everything as built-in so one
-> doesn't have to mess with modules as you said.
-
-Precisely.
-
-> But again, I don't have a strong opinion on this. What I think though
-> is that this should be documented somewhere so the options are enable=
-d
-> following a documented rule instead of just whatever fits in someone
-> workflow.
-
-News of this new convention is new to me.  As I said, this driver
-isn't in any way "special".  I was merely enabling it to make it
-useful to everyone, rather than only people who are currently
-supporting module support in their builds.  Which as a low-level guy,
-I currently have no requirement for -- it just adds time, complexity
-and more things to debug.
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+>  	.init_machine	= keystone_init,
+>  	.dt_compat	= keystone_match,
+>  	.pv_fixup	= keystone_pv_fixup,
+> -- 
+> 1.9.1
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
