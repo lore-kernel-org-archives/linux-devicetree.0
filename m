@@ -1,71 +1,71 @@
-From: Richard Cochran <richardcochran@gmail.com>
-Subject: [PATCH 1/2] gpio: dwapb: Use human understandable gpio numbering.
-Date: Wed,  1 Jul 2015 21:34:02 +0200
-Message-ID: <d6b5ce85a17164970d454583560e07f7aed7b8ca.1435777856.git.rcochran@linutronix.de>
-References: <cover.1435777856.git.rcochran@linutronix.de>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <cover.1435777856.git.rcochran@linutronix.de>
-Sender: linux-gpio-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Alan Tull <atull@altera.com>, Alexandre Courbot <gnurou@gmail.com>, Dinh Nguyen <dinguyen@altera.com>, Linus Walleij <linus.walleij@linaro.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Subject: Re: [PATCH 1/2] spi: bcm2835: add spi-bcm2835aux driver for the auxiliar spi1 and spi2
+Date: Thu, 2 Jul 2015 05:39:31 +1000
+Message-ID: <6A2CCE70-5DAF-4E86-A0A4-F5E93FD1B540@martin.sperl.org>
+References: <1434980408-4086-1-git-send-email-kernel@martin.sperl.org> <20150622165529.1b758b07@north> <E72B3D8C-EA1B-4B4C-8EAF-C14A5631882E@martin.sperl.org> <97C7561C-6D67-4F51-94BB-3B8D401D77A0@martin.sperl.org> <20150630094232.GM11162@sirena.org.uk>
+Mime-Version: 1.0 (1.0)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150630094232.GM11162-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-rpi-kernel <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?utf-8?Q?Jakub_Kici=C5=84ski?= <moorray3-5tc4TXWwyLM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The system-on-chips using this IP core have well defined gpio numbers.
-Instead of using random numbers, this patch lets the device tree specify
-the correct gpio numbering.
 
-Signed-off-by: Richard Cochran <rcochran@linutronix.de>
----
- Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt | 2 ++
- drivers/gpio/gpio-dwapb.c                                  | 8 +++++++-
- 2 files changed, 9 insertions(+), 1 deletion(-)
+> On 30.06.2015, at 19:42, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>=20
+> This looks relevant:
+>=20
+>>>> On 22.06.2015, at 16:55, Jakub Kici=C5=84ski <moorray3-5tc4TXWwyLM@public.gmane.org> wrot=
+e:
+>>>> As mentioned by Noralf UART1 is quite commonly used on Compute Mod=
+ules.
+>>>> Proper driver - perhaps modelled as a bus - seems like a prerequis=
+ite
+>>>> for this work.  You are also not using IRQ mux in DT binding examp=
+le
+>>>> which is very misleading.
+Well, we are using shared interrupts, which is typical for other driver=
+s on
+the rpi as well - i2c and usb are examples for multiple handlers on
+a single irq line on the rpi - excerpt from /proc/interrupts:
+          CPU0
+33: 3547607286  ARMCTRL-level  41 Edge      20980000.usb, dwc2_hsotg:us=
+b1
+77:          0  ARMCTRL-level  85 Edge      20205000.i2c, 20804000.i2c
 
-diff --git a/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt b/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
-index dd5d2c0..5c9effd 100644
---- a/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
-+++ b/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
-@@ -28,6 +28,7 @@ controller.
- - interrupt-parent : The parent interrupt controller.
- - interrupts : The interrupt to the parent controller raised when GPIOs
-   generate the interrupts.
-+- snps,base : The base gpio number.
- - snps,nr-gpios : The number of pins in the port, a single cell.
- 
- Example:
-@@ -42,6 +43,7 @@ gpio: gpio@20000 {
- 		compatible = "snps,dw-apb-gpio-port";
- 		gpio-controller;
- 		#gpio-cells = <2>;
-+		snps,base = <8>;
- 		snps,nr-gpios = <8>;
- 		reg = <0>;
- 		interrupt-controller;
-diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
-index 58faf04..b7e7977 100644
---- a/drivers/gpio/gpio-dwapb.c
-+++ b/drivers/gpio/gpio-dwapb.c
-@@ -491,6 +491,13 @@ dwapb_gpio_get_pdata_of(struct device *dev)
- 			return ERR_PTR(-EINVAL);
- 		}
- 
-+		if (of_property_read_u32(port_np, "snps,base",
-+					 &pp->gpio_base)) {
-+			dev_info(dev, "no base gpio specified for %s\n",
-+				 port_np->full_name);
-+			pp->gpio_base = -1;
-+		}
-+
- 		if (of_property_read_u32(port_np, "snps,nr-gpios",
- 					 &pp->ngpio)) {
- 			dev_info(dev, "failed to get number of gpios for %s\n",
-@@ -512,7 +519,6 @@ dwapb_gpio_get_pdata_of(struct device *dev)
- 		}
- 
- 		pp->irq_shared	= false;
--		pp->gpio_base	= -1;
- 		pp->name	= port_np->full_name;
- 	}
- 
--- 
-2.1.4
 
+The compute module is not supported upstream and nobody
+created any patches for a device tree for a cm...
+
+On top there is no direct support for uart1 in the upstream kernel.
+
+Support only exists in the foundation kernel where the implementation
+enables the uart1 in the board-config directly, so that uart1
+can also get used as the console during boot.
+
+This means (as far as I understand) that there can be no=20
+race-condition, as spi would get configured later during boot
+and the access to the enable register is then properly
+protected against concurrent access when enabling both
+auxiliar spi devices (and spi2 is only usable on the compute
+Module - see above for upstream support of the cm)
+
+=46inally asking for a recommendation with regards to using a bus
+to arbitrate access to the enable register there was no feedback
+how this could be get implemented...
+
+This last piece is actually one of the last reasons why I have not
+posted a patch for spi1 and spi2 to the default device-trees for
+the rpi models yet.
+(That and the fact that assigning pins in multiple pinctrl groups
+- i2s and spi1 - gives warnings or errors in dmesg, because i2s is
+also requiring Gpio 18, 19, 20 and 21 on the model-b-plus
+device tree - so it can only be either/or not both...)
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
