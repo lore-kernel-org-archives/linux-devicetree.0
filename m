@@ -1,135 +1,103 @@
-From: S Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH V5 2/2] devicetree: da9062: Add bindings for DA9062 driver
-Date: Wed, 1 Jul 2015 14:11:33 +0100
-Message-ID: <f7d3b86530f871549159fed1fd0519375997a2af.1435756293.git.stwiss.opensource@diasemi.com>
-References: <cover.1435756293.git.stwiss.opensource@diasemi.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1435756293.git.stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: DEVICETREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, LINUXKERNEL <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, David Dajun Chen <david.chen-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, LINUXINPUT <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUXWATCHDOG <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, RTCLINUX <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, S Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Support Opensource <support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: [PATCH v5 1/3] clk: samsung: exynos3250: Add cpu clock configuration
+ data and instaniate cpu clock
+Date: Wed, 01 Jul 2015 22:21:15 +0900
+Message-ID: <1435756877-26736-2-git-send-email-cw00.choi@samsung.com>
+References: <1435756877-26736-1-git-send-email-cw00.choi@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1435756877-26736-1-git-send-email-cw00.choi@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: s.nawrocki@samsung.com, tomasz.figa@gmail.com, mturquette@baylibre.com, sboyd@codeaurora.org, kgene@kernel.org, k.kozlowski@samsung.com
+Cc: thomas.ab@samsung.com, b.zolnierkie@samsung.com, kyungmin.park@samsung.com, cw00.choi@samsung.com, linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: S Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+This patch add CPU clock configuration data and instantiate the CPU clock type
+for Exynos3250 to support Samsung specific cpu-clock type.
 
-Add device tree bindings for the DA9062 driver
-
-Signed-off-by: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
 ---
-Changes in V5:
- - No change
+ drivers/clk/samsung/clk-exynos3250.c   | 32 ++++++++++++++++++++++++++++++--
+ include/dt-bindings/clock/exynos3250.h |  1 +
+ 2 files changed, 31 insertions(+), 2 deletions(-)
 
-Changes in V4:
- - No change
-
-Changes in V3:
- - No change
+diff --git a/drivers/clk/samsung/clk-exynos3250.c b/drivers/clk/samsung/clk-exynos3250.c
+index 538de66a759e..378ad5ad3492 100644
+--- a/drivers/clk/samsung/clk-exynos3250.c
++++ b/drivers/clk/samsung/clk-exynos3250.c
+@@ -19,6 +19,7 @@
+ #include <dt-bindings/clock/exynos3250.h>
  
-Changes in V2:
- - Dropped the RTC and Onkey binding information in this patch-set
-   Those drivers have been dropped from this patch set and the
-   binding information has been removed accordingly.
-
-This patch applies against linux-next and next-20150701 
-
-
-
- Documentation/devicetree/bindings/mfd/da9062.txt | 79 ++++++++++++++++++++++++
- 1 file changed, 79 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/da9062.txt
-
-diff --git a/Documentation/devicetree/bindings/mfd/da9062.txt b/Documentation/devicetree/bindings/mfd/da9062.txt
-new file mode 100644
-index 0000000..5765ed9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/da9062.txt
-@@ -0,0 +1,79 @@
-+* Dialog DA9062 Power Management Integrated Circuit (PMIC)
+ #include "clk.h"
++#include "clk-cpu.h"
+ #include "clk-pll.h"
+ 
+ #define SRC_LEFTBUS		0x4200
+@@ -319,8 +320,10 @@ static struct samsung_mux_clock mux_clks[] __initdata = {
+ 	MUX(CLK_MOUT_MPLL_USER_C, "mout_mpll_user_c", mout_mpll_user_p,
+ 	    SRC_CPU, 24, 1),
+ 	MUX(CLK_MOUT_HPM, "mout_hpm", mout_hpm_p, SRC_CPU, 20, 1),
+-	MUX(CLK_MOUT_CORE, "mout_core", mout_core_p, SRC_CPU, 16, 1),
+-	MUX(CLK_MOUT_APLL, "mout_apll", mout_apll_p, SRC_CPU, 0, 1),
++	MUX_F(CLK_MOUT_CORE, "mout_core", mout_core_p, SRC_CPU, 16, 1,
++			CLK_SET_RATE_PARENT, 0),
++	MUX_F(CLK_MOUT_APLL, "mout_apll", mout_apll_p, SRC_CPU, 0, 1,
++			CLK_SET_RATE_PARENT, 0),
+ };
+ 
+ static struct samsung_div_clock div_clks[] __initdata = {
+@@ -772,6 +775,26 @@ static struct samsung_cmu_info cmu_info __initdata = {
+ 	.nr_clk_regs		= ARRAY_SIZE(exynos3250_cmu_clk_regs),
+ };
+ 
++#define E3250_CPU_DIV0(apll, pclk_dbg, atb, corem)                     \
++               (((apll) << 24) | ((pclk_dbg) << 20) | ((atb) << 16) |  \
++               ((corem) << 4))
++#define E3250_CPU_DIV1(hpm, copy)					\
++		(((hpm) << 4) | ((copy) << 0))
 +
-+DA9062 consists of a large and varied group of sub-devices:
++static const struct exynos_cpuclk_cfg_data e3250_armclk_d[] __initconst = {
++       { 1000000, E3250_CPU_DIV0(1, 7, 4, 1), E3250_CPU_DIV1(7, 7), },
++       {  900000, E3250_CPU_DIV0(1, 7, 3, 1), E3250_CPU_DIV1(7, 7), },
++       {  800000, E3250_CPU_DIV0(1, 7, 3, 1), E3250_CPU_DIV1(7, 7), },
++       {  700000, E3250_CPU_DIV0(1, 7, 3, 1), E3250_CPU_DIV1(7, 7), },
++       {  600000, E3250_CPU_DIV0(1, 7, 3, 1), E3250_CPU_DIV1(7, 7), },
++       {  500000, E3250_CPU_DIV0(1, 7, 3, 1), E3250_CPU_DIV1(7, 7), },
++       {  400000, E3250_CPU_DIV0(1, 7, 3, 1), E3250_CPU_DIV1(7, 7), },
++       {  300000, E3250_CPU_DIV0(1, 5, 3, 1), E3250_CPU_DIV1(7, 7), },
++       {  200000, E3250_CPU_DIV0(1, 3, 3, 1), E3250_CPU_DIV1(7, 7), },
++       {  100000, E3250_CPU_DIV0(1, 1, 1, 1), E3250_CPU_DIV1(7, 7), },
++       {  0 },
++};
 +
-+Device                   Supply Names    Description
-+------                   ------------    -----------
-+da9062-regulator        :               : LDOs & BUCKs
-+da9062-watchdog         :               : Watchdog Timer
+ static void __init exynos3250_cmu_init(struct device_node *np)
+ {
+ 	struct samsung_clk_provider *ctx;
+@@ -780,6 +803,11 @@ static void __init exynos3250_cmu_init(struct device_node *np)
+ 	if (!ctx)
+ 		return;
+ 
++	exynos_register_cpu_clock(ctx, CLK_ARM_CLK, "armclk",
++			mout_core_p[0], mout_core_p[1], 0x14200,
++			e3250_armclk_d, ARRAY_SIZE(e3250_armclk_d),
++			CLK_CPU_HAS_DIV1);
 +
-+======
-+
-+Required properties:
-+
-+- compatible : Should be "dlg,da9062".
-+- reg : Specifies the I2C slave address (this defaults to 0x58 but it can be
-+  modified to match the chip's OTP settings).
-+- interrupt-parent : Specifies the reference to the interrupt controller for
-+  the DA9062.
-+- interrupts : IRQ line information.
-+- interrupt-controller
-+
-+See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt for
-+further information on IRQ bindings.
-+
-+Sub-nodes:
-+
-+- regulators : This node defines the settings for the LDOs and BUCKs. The
-+  DA9062 regulators are bound using their names listed below:
-+
-+    buck1    : BUCK_1
-+    buck2    : BUCK_2
-+    buck3    : BUCK_3
-+    buck4    : BUCK_4
-+    ldo1     : LDO_1
-+    ldo2     : LDO_2
-+    ldo3     : LDO_3
-+    ldo4     : LDO_4
-+
-+  The component follows the standard regulator framework and the bindings
-+  details of individual regulator device can be found in:
-+  Documentation/devicetree/bindings/regulator/regulator.txt
-+
-+
-+- watchdog: This node defines the settings for the watchdog driver associated
-+  with the DA9062 PMIC. The compatible = "dlg,da9062-watchdog" should be added
-+  if a node is created.
-+
-+
-+Example:
-+
-+	pmic0: da9062@58 {
-+		compatible = "dlg,da9062";
-+		reg = <0x58>;
-+		interrupt-parent = <&gpio6>;
-+		interrupts = <11 IRQ_TYPE_LEVEL_LOW>;
-+		interrupt-controller;
-+
-+		watchdog {
-+			compatible = "dlg,da9062-watchdog";
-+		};
-+
-+		regulators {
-+			DA9062_BUCK1: buck1 {
-+				regulator-name = "BUCK1";
-+				regulator-min-microvolt = <300000>;
-+				regulator-max-microvolt = <1570000>;
-+				regulator-min-microamp = <500000>;
-+				regulator-max-microamp = <2000000>;
-+				regulator-boot-on;
-+			};
-+			DA9062_LDO1: ldo1 {
-+				regulator-name = "LDO_1";
-+				regulator-min-microvolt = <900000>;
-+				regulator-max-microvolt = <3600000>;
-+				regulator-boot-on;
-+			};
-+		};
-+	};
-+
+ 	exynos3_core_down_clock(ctx->reg_base);
+ }
+ CLK_OF_DECLARE(exynos3250_cmu, "samsung,exynos3250-cmu", exynos3250_cmu_init);
+diff --git a/include/dt-bindings/clock/exynos3250.h b/include/dt-bindings/clock/exynos3250.h
+index aab088d30199..63d01c15d2b3 100644
+--- a/include/dt-bindings/clock/exynos3250.h
++++ b/include/dt-bindings/clock/exynos3250.h
+@@ -31,6 +31,7 @@
+ #define CLK_FOUT_VPLL			4
+ #define CLK_FOUT_UPLL			5
+ #define CLK_FOUT_MPLL			6
++#define CLK_ARM_CLK			7
+ 
+ /* Muxes */
+ #define CLK_MOUT_MPLL_USER_L		16
 -- 
-end-of-patch for PATCH V5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.8.5.5
