@@ -1,297 +1,284 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH v3 1/5] ARM/PCI: remove align_resource callback in
- pcibios_align_resource
-Date: Thu, 2 Jul 2015 18:50:56 +0100
-Message-ID: <20150702175056.GX944@e106497-lin.cambridge.arm.com>
-References: <1435743817-19083-1-git-send-email-wangzhou1@hisilicon.com>
- <1435743817-19083-2-git-send-email-wangzhou1@hisilicon.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1435743817-19083-2-git-send-email-wangzhou1@hisilicon.com>
-Content-Disposition: inline
-Sender: linux-pci-owner@vger.kernel.org
-To: Zhou Wang <wangzhou1@hisilicon.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jg1.han@samsung.com>, Pratyush Anand <pratyush.anand@gmail.com>, Arnd Bergmann <arnd@arndb.de>, "gabriele.paoloni@huawei.com" <gabriele.paoloni@huawei.com>, James Morse <James.Morse@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "yuanzhichang@hisilicon.com" <yuanzhichang@hisilicon.com>, "zhudacai@hisilicon.com" <zhudacai@hisilicon.com>, "zhangjukuo@huawei.com" <zhangjukuo@huawei.com>, "qiuzhenfa@hisilicon.com" <qiuzhenfa@hisilicon.com>, "liguozhu@hisilicon.com" <liguozhu@hisilicon.com>
+From: Simon Guinot <simon.guinot@sequanux.org>
+Subject: [PATCH v2 1/4] leds: leds-ns2: move LED modes mapping outside of the driver
+Date: Thu,  2 Jul 2015 19:56:40 +0200
+Message-ID: <1435859803-19583-2-git-send-email-simon.guinot@sequanux.org>
+References: <1435859803-19583-1-git-send-email-simon.guinot@sequanux.org>
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <1435859803-19583-1-git-send-email-simon.guinot@sequanux.org>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, linux-leds@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Vincent Donnefort <vdonnefort@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 01, 2015 at 10:43:33AM +0100, Zhou Wang wrote:
-> This patch had added by Arnd Bergmann during last reviewing of v1 pat=
-chset[1].
->=20
-> PCI core codes call pcibios_align_resource(). In ARM specific one, it=
- will
-> dereference pci_sys_data and call sys->align_resource. If we try to u=
-nify ARM
-> and ARM64 PCIe API in pcie-designware. it will bring kernel crash whe=
-n run into
-> this dereferencing.
->=20
-> However, in ARM there is only pci-mvebu which implements align_resour=
-ce. So
-> add align_resource call back in pci_host_bridge structure and overrid=
-e
-> pcibios_align_resource with it.
->=20
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
-> Tested-by: Fabrice Gasnier <fabrice.gasnier@st.com>
->=20
-> [1] http://www.spinics.net/lists/linux-pci/msg41671.html
-> ---
->  arch/arm/kernel/bios32.c     |  6 ------
->  drivers/pci/host/pci-mvebu.c | 47 ++++++++++++++++++++++++++++------=
-----------
->  drivers/pci/setup-res.c      | 27 ++++++++++++++++++++-----
->  include/linux/pci.h          |  3 +++
->  4 files changed, 55 insertions(+), 28 deletions(-)
->=20
-> diff --git a/arch/arm/kernel/bios32.c b/arch/arm/kernel/bios32.c
-> index fcbbbb1..b01189f 100644
-> --- a/arch/arm/kernel/bios32.c
-> +++ b/arch/arm/kernel/bios32.c
-> @@ -468,7 +468,6 @@ static void pcibios_init_hw(struct device *parent=
-, struct hw_pci *hw,
->  		sys->busnr   =3D busnr;
->  		sys->swizzle =3D hw->swizzle;
->  		sys->map_irq =3D hw->map_irq;
-> -		sys->align_resource =3D hw->align_resource;
->  		INIT_LIST_HEAD(&sys->resources);
-> =20
->  		if (hw->private_data)
-> @@ -588,8 +587,6 @@ char * __init pcibios_setup(char *str)
->  resource_size_t pcibios_align_resource(void *data, const struct reso=
-urce *res,
->  				resource_size_t size, resource_size_t align)
->  {
-> -	struct pci_dev *dev =3D data;
-> -	struct pci_sys_data *sys =3D dev->sysdata;
->  	resource_size_t start =3D res->start;
-> =20
->  	if (res->flags & IORESOURCE_IO && start & 0x300)
-> @@ -597,9 +594,6 @@ resource_size_t pcibios_align_resource(void *data=
-, const struct resource *res,
-> =20
->  	start =3D (start + align - 1) & ~(align - 1);
-> =20
-> -	if (sys->align_resource)
-> -		return sys->align_resource(dev, res, start, size, align);
-> -
->  	return start;
->  }
-> =20
-> diff --git a/drivers/pci/host/pci-mvebu.c b/drivers/pci/host/pci-mveb=
-u.c
-> index 1ab8635..155d05f 100644
-> --- a/drivers/pci/host/pci-mvebu.c
-> +++ b/drivers/pci/host/pci-mvebu.c
-> @@ -22,6 +22,8 @@
->  #include <linux/of_pci.h>
->  #include <linux/of_platform.h>
-> =20
-> +#include "../pci.h" /* HACK to see pci_find_host_bridge */
-> +
->  /*
->   * PCIe unit register offsets.
->   */
-> @@ -751,27 +753,20 @@ static int mvebu_pcie_setup(int nr, struct pci_=
-sys_data *sys)
->  	return 1;
->  }
-> =20
-> -static struct pci_bus *mvebu_pcie_scan_bus(int nr, struct pci_sys_da=
-ta *sys)
-> +static resource_size_t mvebu_pcie_align_resource(void *data,
-> +						 const struct resource *res,
-> +						 resource_size_t size,
-> +						 resource_size_t align)
->  {
-> -	struct mvebu_pcie *pcie =3D sys_to_pcie(sys);
-> -	struct pci_bus *bus;
-> +	struct pci_dev *dev =3D data;
-> =20
-> -	bus =3D pci_create_root_bus(&pcie->pdev->dev, sys->busnr,
-> -				  &mvebu_pcie_ops, sys, &sys->resources);
-> -	if (!bus)
-> -		return NULL;
-> +	resource_size_t start =3D res->start;
-> =20
-> -	pci_scan_child_bus(bus);
-> +	if (res->flags & IORESOURCE_IO && start & 0x300)
-> +		start =3D (start + 0x3ff) & ~0x3ff;
-> =20
-> -	return bus;
-> -}
-> +	start =3D (start + align - 1) & ~(align - 1);
+From: Vincent Donnefort <vdonnefort@gmail.com>
 
-Honestly, I don't see here anything that is mvebu specific. Could you m=
-ove
-this function in the generic pci/host area and have a flag in the pci_h=
-ost_bridge
-structure whether the function should be called or not? I know that in =
-a way
-that looks very close to the existing implementation which uses pcibios=
-_align_resource,
-but the problem with pcibios_ version is that it is arch specific and n=
-ot driver
-specific the way we want.
+On the board n090401 (Seagate NAS 4-Bay), the LED mode mapping (GPIO
+values to LED mode) is different from the one used on other boards
+supported by the leds-ns2 driver.
 
-Having this version as a generic implementation would also remove at le=
-ast 2 more
-arch version, possibly more after testing by the arch maintainers.
+With this patch the hardcoded mapping is removed from leds-ns2. Now,
+it must be defined either in the platform data (if an old-fashion board
+setup file is used) or in the DT node. In order to allow the later, this
+patch also introduces a modes-map property for the leds-ns2 DT binding.
 
-Best regards,
-Liviu
+Signed-off-by: Vincent Donnefort <vdonnefort@gmail.com>
+---
+ .../devicetree/bindings/leds/leds-ns2.txt          |   9 ++
+ drivers/leds/leds-ns2.c                            | 102 +++++++++++----------
+ include/dt-bindings/leds/leds-ns2.h                |   8 ++
+ include/linux/platform_data/leds-kirkwood-ns2.h    |  14 +++
+ 4 files changed, 85 insertions(+), 48 deletions(-)
+ create mode 100644 include/dt-bindings/leds/leds-ns2.h
 
-> =20
-> -static resource_size_t mvebu_pcie_align_resource(struct pci_dev *dev=
-,
-> -						 const struct resource *res,
-> -						 resource_size_t start,
-> -						 resource_size_t size,
-> -						 resource_size_t align)
-> -{
->  	if (dev->bus->number !=3D 0)
->  		return start;
-> =20
-> @@ -796,6 +791,25 @@ static resource_size_t mvebu_pcie_align_resource=
-(struct pci_dev *dev,
->  		return start;
->  }
-> =20
-> +static struct pci_bus *mvebu_pcie_scan_bus(int nr, struct pci_sys_da=
-ta *sys)
-> +{
-> +	struct mvebu_pcie *pcie =3D sys_to_pcie(sys);
-> +	struct pci_host_bridge *phb;
-> +	struct pci_bus *bus;
-> +
-> +	bus =3D pci_create_root_bus(&pcie->pdev->dev, sys->busnr,
-> +				  &mvebu_pcie_ops, sys, &sys->resources);
-> +	if (!bus)
-> +		return NULL;
-> +
-> +	phb =3D pci_find_host_bridge(bus);
-> +	phb->align_resource =3D mvebu_pcie_align_resource;
-> +
-> +	pci_scan_child_bus(bus);
-> +
-> +	return bus;
-> +}
-> +
->  static void mvebu_pcie_enable(struct mvebu_pcie *pcie)
->  {
->  	struct hw_pci hw;
-> @@ -812,7 +826,6 @@ static void mvebu_pcie_enable(struct mvebu_pcie *=
-pcie)
->  	hw.scan           =3D mvebu_pcie_scan_bus;
->  	hw.map_irq        =3D of_irq_parse_and_map_pci;
->  	hw.ops            =3D &mvebu_pcie_ops;
-> -	hw.align_resource =3D mvebu_pcie_align_resource;
-> =20
->  	pci_common_init(&hw);
->  }
-> diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
-> index 232f925..73abca7 100644
-> --- a/drivers/pci/setup-res.c
-> +++ b/drivers/pci/setup-res.c
-> @@ -200,7 +200,11 @@ static int pci_revert_fw_address(struct resource=
- *res, struct pci_dev *dev,
->  }
-> =20
->  static int __pci_assign_resource(struct pci_bus *bus, struct pci_dev=
- *dev,
-> -		int resno, resource_size_t size, resource_size_t align)
-> +		int resno, resource_size_t size, resource_size_t align,
-> +		resource_size_t (*alignf)(void *,
-> +					  const struct resource *,
-> +					  resource_size_t,
-> +					  resource_size_t))
->  {
->  	struct resource *res =3D dev->resource + resno;
->  	resource_size_t min;
-> @@ -217,7 +221,7 @@ static int __pci_assign_resource(struct pci_bus *=
-bus, struct pci_dev *dev,
->  	 */
->  	ret =3D pci_bus_alloc_resource(bus, res, size, align, min,
->  				     IORESOURCE_PREFETCH | IORESOURCE_MEM_64,
-> -				     pcibios_align_resource, dev);
-> +				     alignf, dev);
->  	if (ret =3D=3D 0)
->  		return 0;
-> =20
-> @@ -229,7 +233,7 @@ static int __pci_assign_resource(struct pci_bus *=
-bus, struct pci_dev *dev,
->  	     (IORESOURCE_PREFETCH | IORESOURCE_MEM_64)) {
->  		ret =3D pci_bus_alloc_resource(bus, res, size, align, min,
->  					     IORESOURCE_PREFETCH,
-> -					     pcibios_align_resource, dev);
-> +					     alignf, dev);
->  		if (ret =3D=3D 0)
->  			return 0;
->  	}
-> @@ -242,7 +246,7 @@ static int __pci_assign_resource(struct pci_bus *=
-bus, struct pci_dev *dev,
->  	 */
->  	if (res->flags & (IORESOURCE_PREFETCH | IORESOURCE_MEM_64))
->  		ret =3D pci_bus_alloc_resource(bus, res, size, align, min, 0,
-> -					     pcibios_align_resource, dev);
-> +					     alignf, dev);
-> =20
->  	return ret;
->  }
-> @@ -251,10 +255,23 @@ static int _pci_assign_resource(struct pci_dev =
-*dev, int resno,
->  				resource_size_t size, resource_size_t min_align)
->  {
->  	struct pci_bus *bus;
-> +	struct pci_host_bridge *phb;
-> +	resource_size_t (*alignf)(void *,
-> +				  const struct resource *,
-> +				  resource_size_t,
-> +				  resource_size_t);
->  	int ret;
-> =20
->  	bus =3D dev->bus;
-> -	while ((ret =3D __pci_assign_resource(bus, dev, resno, size, min_al=
-ign))) {
-> +	phb =3D pci_find_host_bridge(bus);
-> +
-> +	if (phb->align_resource)
-> +		alignf =3D phb->align_resource;
-> +	else
-> +		alignf =3D pcibios_align_resource;
-> +
-> +	while ((ret =3D __pci_assign_resource(bus, dev, resno, size,
-> +					    min_align, alignf))) {
->  		if (!bus->parent || !bus->self->transparent)
->  			break;
->  		bus =3D bus->parent;
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 353db8d..39e48fc 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -404,6 +404,9 @@ struct pci_host_bridge {
->  	struct device dev;
->  	struct pci_bus *bus;		/* root bus */
->  	struct list_head windows;	/* resource_entry */
-> +	resource_size_t (*align_resource)(void *data,
-> +			 const struct resource *res,
-> +			 resource_size_t size, resource_size_t align);
->  	void (*release_fn)(struct pci_host_bridge *);
->  	void *release_data;
->  	unsigned int ignore_reset_delay:1;	/* for entire hierarchy */
-> --=20
-> 1.9.1
->=20
-
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+diff --git a/Documentation/devicetree/bindings/leds/leds-ns2.txt b/Documentation/devicetree/bindings/leds/leds-ns2.txt
+index aef3aca34d2d..9f81258a5b6e 100644
+--- a/Documentation/devicetree/bindings/leds/leds-ns2.txt
++++ b/Documentation/devicetree/bindings/leds/leds-ns2.txt
+@@ -8,6 +8,9 @@ Each LED is represented as a sub-node of the ns2-leds device.
+ Required sub-node properties:
+ - cmd-gpio: Command LED GPIO. See OF device-tree GPIO specification.
+ - slow-gpio: Slow LED GPIO. See OF device-tree GPIO specification.
++- modes-map: A mapping between LED modes (off, on or SATA activity blinking) and
++  the corresponding cmd-gpio/slow-gpio values. All the GPIO values combinations
++  should be given in order to avoid having an unknown mode at driver probe time.
+ 
+ Optional sub-node properties:
+ - label: Name for this LED. If omitted, the label is taken from the node name.
+@@ -15,6 +18,8 @@ Optional sub-node properties:
+ 
+ Example:
+ 
++#include <dt-bindings/leds/leds-ns2.h>
++
+ ns2-leds {
+ 	compatible = "lacie,ns2-leds";
+ 
+@@ -22,5 +27,9 @@ ns2-leds {
+ 		label = "ns2:blue:sata";
+ 		slow-gpio = <&gpio0 29 0>;
+ 		cmd-gpio = <&gpio0 30 0>;
++		modes-map = <NS_V2_LED_OFF  0 1
++			     NS_V2_LED_ON   1 0
++			     NS_V2_LED_ON   0 0
++			     NS_V2_LED_SATA 1 1>;
+ 	};
+ };
+diff --git a/drivers/leds/leds-ns2.c b/drivers/leds/leds-ns2.c
+index 1fd6adbb43b7..b0bc03539dbb 100644
+--- a/drivers/leds/leds-ns2.c
++++ b/drivers/leds/leds-ns2.c
+@@ -33,46 +33,20 @@
+ #include <linux/of_gpio.h>
+ 
+ /*
+- * The Network Space v2 dual-GPIO LED is wired to a CPLD and can blink in
+- * relation with the SATA activity. This capability is exposed through the
+- * "sata" sysfs attribute.
+- *
+- * The following array detail the different LED registers and the combination
+- * of their possible values:
+- *
+- *  cmd_led   |  slow_led  | /SATA active | LED state
+- *            |            |              |
+- *     1      |     0      |      x       |  off
+- *     -      |     1      |      x       |  on
+- *     0      |     0      |      1       |  on
+- *     0      |     0      |      0       |  blink (rate 300ms)
++ * The Network Space v2 dual-GPIO LED is wired to a CPLD. Three different LED
++ * modes are available: off, on and SATA activity blinking. The LED modes are
++ * controlled through two GPIOs (command and slow): each combination of values
++ * for the command/slow GPIOs corresponds to a LED mode.
+  */
+ 
+-enum ns2_led_modes {
+-	NS_V2_LED_OFF,
+-	NS_V2_LED_ON,
+-	NS_V2_LED_SATA,
+-};
+-
+-struct ns2_led_mode_value {
+-	enum ns2_led_modes	mode;
+-	int			cmd_level;
+-	int			slow_level;
+-};
+-
+-static struct ns2_led_mode_value ns2_led_modval[] = {
+-	{ NS_V2_LED_OFF	, 1, 0 },
+-	{ NS_V2_LED_ON	, 0, 1 },
+-	{ NS_V2_LED_ON	, 1, 1 },
+-	{ NS_V2_LED_SATA, 0, 0 },
+-};
+-
+ struct ns2_led_data {
+ 	struct led_classdev	cdev;
+ 	unsigned		cmd;
+ 	unsigned		slow;
+ 	unsigned char		sata; /* True when SATA mode active. */
+ 	rwlock_t		rw_lock; /* Lock GPIOs. */
++	int			num_modes;
++	struct ns2_led_modval	*modval;
+ };
+ 
+ static int ns2_led_get_mode(struct ns2_led_data *led_dat,
+@@ -88,10 +62,10 @@ static int ns2_led_get_mode(struct ns2_led_data *led_dat,
+ 	cmd_level = gpio_get_value(led_dat->cmd);
+ 	slow_level = gpio_get_value(led_dat->slow);
+ 
+-	for (i = 0; i < ARRAY_SIZE(ns2_led_modval); i++) {
+-		if (cmd_level == ns2_led_modval[i].cmd_level &&
+-		    slow_level == ns2_led_modval[i].slow_level) {
+-			*mode = ns2_led_modval[i].mode;
++	for (i = 0; i < led_dat->num_modes; i++) {
++		if (cmd_level == led_dat->modval[i].cmd_level &&
++		    slow_level == led_dat->modval[i].slow_level) {
++			*mode = led_dat->modval[i].mode;
+ 			ret = 0;
+ 			break;
+ 		}
+@@ -110,12 +84,12 @@ static void ns2_led_set_mode(struct ns2_led_data *led_dat,
+ 
+ 	write_lock_irqsave(&led_dat->rw_lock, flags);
+ 
+-	for (i = 0; i < ARRAY_SIZE(ns2_led_modval); i++) {
+-		if (mode == ns2_led_modval[i].mode) {
++	for (i = 0; i < led_dat->num_modes; i++) {
++		if (mode == led_dat->modval[i].mode) {
+ 			gpio_set_value(led_dat->cmd,
+-				       ns2_led_modval[i].cmd_level);
++				       led_dat->modval[i].cmd_level);
+ 			gpio_set_value(led_dat->slow,
+-				       ns2_led_modval[i].slow_level);
++				       led_dat->modval[i].slow_level);
+ 		}
+ 	}
+ 
+@@ -228,6 +202,8 @@ create_ns2_led(struct platform_device *pdev, struct ns2_led_data *led_dat,
+ 	led_dat->cdev.groups = ns2_led_groups;
+ 	led_dat->cmd = template->cmd;
+ 	led_dat->slow = template->slow;
++	led_dat->modval = template->modval;
++	led_dat->num_modes = template->num_modes;
+ 
+ 	ret = ns2_led_get_mode(led_dat, &mode);
+ 	if (ret < 0)
+@@ -259,9 +235,8 @@ ns2_leds_get_of_pdata(struct device *dev, struct ns2_led_platform_data *pdata)
+ {
+ 	struct device_node *np = dev->of_node;
+ 	struct device_node *child;
+-	struct ns2_led *leds;
++	struct ns2_led *led, *leds;
+ 	int num_leds = 0;
+-	int i = 0;
+ 
+ 	num_leds = of_get_child_count(np);
+ 	if (!num_leds)
+@@ -272,26 +247,57 @@ ns2_leds_get_of_pdata(struct device *dev, struct ns2_led_platform_data *pdata)
+ 	if (!leds)
+ 		return -ENOMEM;
+ 
++	led = leds;
+ 	for_each_child_of_node(np, child) {
+ 		const char *string;
+-		int ret;
++		int ret, i, num_modes;
++		struct ns2_led_modval *modval;
+ 
+ 		ret = of_get_named_gpio(child, "cmd-gpio", 0);
+ 		if (ret < 0)
+ 			return ret;
+-		leds[i].cmd = ret;
++		led->cmd = ret;
+ 		ret = of_get_named_gpio(child, "slow-gpio", 0);
+ 		if (ret < 0)
+ 			return ret;
+-		leds[i].slow = ret;
++		led->slow = ret;
+ 		ret = of_property_read_string(child, "label", &string);
+-		leds[i].name = (ret == 0) ? string : child->name;
++		led->name = (ret == 0) ? string : child->name;
+ 		ret = of_property_read_string(child, "linux,default-trigger",
+ 					      &string);
+ 		if (ret == 0)
+-			leds[i].default_trigger = string;
++			led->default_trigger = string;
++
++		ret = of_property_count_u32_elems(child, "modes-map");
++		if (ret < 0 || ret % 3) {
++			dev_err(dev,
++				"Missing or malformed modes-map property\n");
++			return -EINVAL;
++		}
++
++		num_modes = ret / 3;
++		modval = devm_kzalloc(dev,
++				      num_modes * sizeof(struct ns2_led_modval),
++				      GFP_KERNEL);
++		if (!modval)
++			return -ENOMEM;
++
++		for (i = 0; i < num_modes; i++) {
++			of_property_read_u32_index(child,
++						"modes-map", 3 * i,
++						(u32 *) &modval[i].mode);
++			of_property_read_u32_index(child,
++						"modes-map", 3 * i + 1,
++						(u32 *) &modval[i].cmd_level);
++			of_property_read_u32_index(child,
++						"modes-map", 3 * i + 2,
++						(u32 *) &modval[i].slow_level);
++		}
++
++		led->num_modes = num_modes;
++		led->modval = modval;
+ 
+-		i++;
++		led++;
+ 	}
+ 
+ 	pdata->leds = leds;
+diff --git a/include/dt-bindings/leds/leds-ns2.h b/include/dt-bindings/leds/leds-ns2.h
+new file mode 100644
+index 000000000000..491c5f974a92
+--- /dev/null
++++ b/include/dt-bindings/leds/leds-ns2.h
+@@ -0,0 +1,8 @@
++#ifndef _DT_BINDINGS_LEDS_NS2_H
++#define _DT_BINDINGS_LEDS_NS2_H
++
++#define NS_V2_LED_OFF	0
++#define NS_V2_LED_ON	1
++#define NS_V2_LED_SATA	2
++
++#endif
+diff --git a/include/linux/platform_data/leds-kirkwood-ns2.h b/include/linux/platform_data/leds-kirkwood-ns2.h
+index 6a9fed57f346..eb8a6860e816 100644
+--- a/include/linux/platform_data/leds-kirkwood-ns2.h
++++ b/include/linux/platform_data/leds-kirkwood-ns2.h
+@@ -9,11 +9,25 @@
+ #ifndef __LEDS_KIRKWOOD_NS2_H
+ #define __LEDS_KIRKWOOD_NS2_H
+ 
++enum ns2_led_modes {
++	NS_V2_LED_OFF,
++	NS_V2_LED_ON,
++	NS_V2_LED_SATA,
++};
++
++struct ns2_led_modval {
++	enum ns2_led_modes	mode;
++	int			cmd_level;
++	int			slow_level;
++};
++
+ struct ns2_led {
+ 	const char	*name;
+ 	const char	*default_trigger;
+ 	unsigned	cmd;
+ 	unsigned	slow;
++	int		num_modes;
++	struct ns2_led_modval *modval;
+ };
+ 
+ struct ns2_led_platform_data {
+-- 
+2.1.4
