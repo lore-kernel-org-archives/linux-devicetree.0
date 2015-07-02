@@ -1,85 +1,101 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: [PATCH v6 2/3] ARM: dts: Add CPU OPP and regulator supply property for
- Exynos3250
-Date: Thu, 02 Jul 2015 09:42:40 +0900
-Message-ID: <1435797761-3339-3-git-send-email-cw00.choi@samsung.com>
-References: <1435797761-3339-1-git-send-email-cw00.choi@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1435797761-3339-1-git-send-email-cw00.choi@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: s.nawrocki@samsung.com, tomasz.figa@gmail.com, mturquette@baylibre.com, sboyd@codeaurora.org, kgene@kernel.org, k.kozlowski@samsung.com
-Cc: thomas.ab@samsung.com, b.zolnierkie@samsung.com, kyungmin.park@samsung.com, cw00.choi@samsung.com, linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH] power_supply: rt9455_charger: Properly notify userspace
+ about charging events
+Date: Thu, 2 Jul 2015 09:49:46 +0900
+Message-ID: <CAJKOXPcbGLo9BvU_7+OdMZ_PcMp6+ZaUWh46APxgMg3nyZ-SdQ@mail.gmail.com>
+References: <1434558539-30591-1-git-send-email-anda-maria.nicolae@intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1434558539-30591-1-git-send-email-anda-maria.nicolae@intel.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Anda-Maria Nicolae <anda-maria.nicolae@intel.com>
+Cc: sre@kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch add CPU operating points which include CPU frequency and regulator
-voltage to use generic cpufreq drivers.
+2015-06-18 1:28 GMT+09:00 Anda-Maria Nicolae <anda-maria.nicolae@intel.com>:
+> Do not call power_supply_changed() when CHRVPI interrupt has occurred.
 
-Cc: Kukjin Kim <kgene@kernel.org>
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
----
- arch/arm/boot/dts/exynos3250-monk.dts   |  4 ++++
- arch/arm/boot/dts/exynos3250-rinato.dts |  4 ++++
- arch/arm/boot/dts/exynos3250.dtsi       | 15 +++++++++++++++
- 3 files changed, 23 insertions(+)
+What I cannot find here is the answer to: why? I am not familiar with
+the driver so this is just guessing that you wanted to notify
+userspace about connected/disconnected charger. In both cases (before
+and after the patch) this is achieved, isn't it?
 
-diff --git a/arch/arm/boot/dts/exynos3250-monk.dts b/arch/arm/boot/dts/exynos3250-monk.dts
-index a5863acc5fff..7863265d4868 100644
---- a/arch/arm/boot/dts/exynos3250-monk.dts
-+++ b/arch/arm/boot/dts/exynos3250-monk.dts
-@@ -141,6 +141,10 @@
- 	};
- };
- 
-+&cpu0 {
-+	cpu0-supply = <&buck2_reg>;
-+};
-+
- &exynos_usbphy {
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/exynos3250-rinato.dts b/arch/arm/boot/dts/exynos3250-rinato.dts
-index 031853b75528..ddd7ac283045 100644
---- a/arch/arm/boot/dts/exynos3250-rinato.dts
-+++ b/arch/arm/boot/dts/exynos3250-rinato.dts
-@@ -132,6 +132,10 @@
- 	};
- };
- 
-+&cpu0 {
-+	cpu0-supply = <&buck2_reg>;
-+};
-+
- &exynos_usbphy {
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
-index d7201333e3bc..e0f3b2ed41a3 100644
---- a/arch/arm/boot/dts/exynos3250.dtsi
-+++ b/arch/arm/boot/dts/exynos3250.dtsi
-@@ -53,6 +53,21 @@
- 			compatible = "arm,cortex-a7";
- 			reg = <0>;
- 			clock-frequency = <1000000000>;
-+			clocks = <&cmu CLK_ARM_CLK>;
-+			clock-names = "cpu";
-+
-+			operating-points = <
-+				1000000 1150000
-+				900000  1112500
-+				800000  1075000
-+				700000  1037500
-+				600000  1000000
-+				500000  962500
-+				400000  925000
-+				300000  887500
-+				200000  850000
-+				100000  850000
-+			>;
- 		};
- 
- 		cpu1: cpu@1 {
--- 
-1.8.5.5
+Best regards,
+Krzysztof
+
+
+> CHRVPI interrupt occurs when the charger is connected to or disconnected
+> from the power source. Call power_supply_changed() after PWR_RDY bit is
+> read, to distinguish between connection to or disconnection from the power
+> source.
+> Also, call power_supply_changed() after the battery is reconnected to the
+> charger, to notify userspace that the battery is no longer absent.
+>
+> Signed-off-by: Anda-Maria Nicolae <anda-maria.nicolae@intel.com>
+> ---
+>  drivers/power/rt9455_charger.c |   16 ++++++++++++++--
+>  1 file changed, 14 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/power/rt9455_charger.c b/drivers/power/rt9455_charger.c
+> index 08baac6..a49a9d4 100644
+> --- a/drivers/power/rt9455_charger.c
+> +++ b/drivers/power/rt9455_charger.c
+> @@ -973,7 +973,6 @@ static int rt9455_irq_handler_check_irq2_register(struct rt9455_info *info,
+>
+>         if (irq2 & GET_MASK(F_CHRVPI)) {
+>                 dev_dbg(dev, "Charger fault occurred\n");
+> -               alert_userspace = true;
+>                 /*
+>                  * CHRVPI bit is set in 2 cases:
+>                  * 1. when the power source is connected to the charger.
+> @@ -981,6 +980,9 @@ static int rt9455_irq_handler_check_irq2_register(struct rt9455_info *info,
+>                  * To identify the case, PWR_RDY bit is checked. Because
+>                  * PWR_RDY bit is set / cleared after CHRVPI interrupt is
+>                  * triggered, it is used delayed_work to later read PWR_RDY bit.
+> +                * Also, do not set to true alert_userspace, because there is no
+> +                * need to notify userspace when CHRVPI interrupt has occurred.
+> +                * Userspace will be notified after PWR_RDY bit is read.
+>                  */
+>                 queue_delayed_work(system_power_efficient_wq,
+>                                    &info->pwr_rdy_work,
+> @@ -1178,7 +1180,7 @@ static irqreturn_t rt9455_irq_handler_thread(int irq, void *data)
+>                 /*
+>                  * Sometimes, an interrupt occurs while rt9455_probe() function
+>                  * is executing and power_supply_register() is not yet called.
+> -                * Do not call power_supply_charged() in this case.
+> +                * Do not call power_supply_changed() in this case.
+>                  */
+>                 if (info->charger)
+>                         power_supply_changed(info->charger);
+> @@ -1478,6 +1480,11 @@ static void rt9455_pwr_rdy_work_callback(struct work_struct *work)
+>                                    RT9455_MAX_CHARGING_TIME * HZ);
+>                 break;
+>         }
+> +       /*
+> +        * Notify userspace that the charger has been either connected to or
+> +        * disconnected from the power source.
+> +        */
+> +       power_supply_changed(info->charger);
+>  }
+>
+>  static void rt9455_max_charging_time_work_callback(struct work_struct *work)
+> @@ -1533,6 +1540,11 @@ static void rt9455_batt_presence_work_callback(struct work_struct *work)
+>                         if (ret)
+>                                 dev_err(dev, "Failed to unmask BATAB interrupt\n");
+>                 }
+> +               /*
+> +                * Notify userspace that the battery is now connected to the
+> +                * charger.
+> +                */
+> +               power_supply_changed(info->charger);
+>         }
+>  }
+>
+> --
+> 1.7.9.5
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pm" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
