@@ -1,44 +1,54 @@
-From: Chunyan Zhang <zhang.lyra@gmail.com>
-Subject: Re: [RFC PATCH] mmc: sprd: add MMC host driver for Spreadtrum SoC
-Date: Thu, 2 Jul 2015 10:35:16 +0800
-Message-ID: <CAAfSe-uuO5VYA9_x_6mog9r=KNTtudRCqz7q46TZhWw8BagMKA@mail.gmail.com>
-References: <sprd-mmc-rfc@samsung.com>
-	<1435734774-10993-1-git-send-email-chunyan.zhang@spreadtrum.com>
-	<5593B971.1010601@samsung.com>
+From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] dt-bindings: ARM: Mediatek: Document devicetree
+ bindings for clock controllers
+Date: Thu, 2 Jul 2015 10:52:14 +0800
+Message-ID: <1435805534.3526.23.camel@mtksdaap41>
+References: <1435633127-31952-1-git-send-email-jamesjj.liao@mediatek.com>
+	 <1435633127-31952-3-git-send-email-jamesjj.liao@mediatek.com>
+	 <CAGS+omD9Mvz0-RQMc5TsWCPct80S5fyqMn3+-zR7HB9yb7KoDQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <5593B971.1010601@samsung.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Jaehoon Chung <jh80.chung@samsung.com>
-Cc: Chunyan Zhang <chunyan.zhang@spreadtrum.com>, ulf.hansson@linaro.org, Lee Jones <lee.jones@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, Grant Likely <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, billows.wu@spreadtrum.com, =?UTF-8?B?V2VpIFFpYW8gKOS5lOS8nyk=?= <wei.qiao@spreadtrum.com>, baolin.wang@spreadtrum.com, ning.yang@spreadtrum.com, orson.zhai@spreadtrum.com, jason.wu@spreadtrum.com, linux-mmc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, chris@printf.net
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAGS+omD9Mvz0-RQMc5TsWCPct80S5fyqMn3+-zR7HB9yb7KoDQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 1, 2015 at 5:57 PM, Jaehoon Chung <jh80.chung@samsung.com> wrote:
-> Hi,
->
-> Is sdhost based on SDHCI controller?
-> Why don't use sdhci.c? Is there any reason?
->
-> Best Regards,
-> Jaehoon Chung
->
+Hi Daniel,
 
-Because of base64 code problem of his email server, I'm reporting his
-reply instead.
+> > +Required Properties:
+> > +
+> > +- compatible: Should be:
+> > +       - "mediatek,mt8173-imgsys", "syscon"
+> > +- #clock-cells: Must be 1
+> > +
+> > +The imgsys controller uses the common clk binding from
+> > +Documentation/devicetree/bindings/clock/clock-bindings.txt
+> > +The available clocks are defined in dt-bindings/clock/mt*-clk.h.
+> > +
+> > +Example:
+> > +
+> > +imgsys: imgsys@15000000 {
+> 
+> Since these nodes will be supplying clocks to the rest of the system,
+> I think the "name" part of each of these should all be
+> "clock-controller", like topckgen and apmixedsys:
+> 
+>   imgsys: clock-controller@15000000 {
 
->From Billows Wu <billows.wu@spreadtrum.com>
-----------------------------------------------------------------------------------------------------------------------------------------
-Hi Jaehoon,
-Sdhost driver is not based on SDHCI controller.
-Our MMC controller is not a standard controller which meets host
-controller specification completely.
-We add some registers and change some bits in the remaining register,
-such as about clock and regulator portion.
-If our driver base on SDHCI controller, we must change many codes in
-sdhci.c, and our MMC driver will become more complicated.
-In order to better use our controller capability and make MMC driver
-more compact, we do not use SDHCI controller.
+These subsystems (and topckgen also) also contains other functions such
+as reset controller, which may be implemented in clk/mediatek/ in the
+future. It is suitable to use "clock-controller" as their name?
 
-Thanks.
---------------------------------------------------------------------------------------------------------------------------------------------------
+
+Best regards,
+
+James
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
