@@ -1,29 +1,116 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 3/9] arm: twr-k70f120m: clock driver for Kinetis SoC
-Date: Thu, 02 Jul 2015 14:40:23 +0200
-Message-ID: <1861313.aMcV1xHCIq@wuerfel>
-References: <1435667250-28299-1-git-send-email-pawelo@king.net.pl> <alpine.LNX.2.00.1507011756140.14440@localhost.localdomain> <alpine.LNX.2.00.1507021206410.13210@localhost.localdomain>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH 2/2] ARM: DTS: am437x-sk-evm: Switch using
+ simple-audio-card for audio support
+Date: Thu, 2 Jul 2015 15:52:49 +0300
+Message-ID: <55953421.30009@ti.com>
+References: <1435838286-30491-1-git-send-email-peter.ujfalusi@ti.com>
+ <1435838286-30491-3-git-send-email-peter.ujfalusi@ti.com>
+ <20150702122337.GE5837@saruman.tx.rr.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <alpine.LNX.2.00.1507021206410.13210@localhost.localdomain>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Paul Osmialowski <pawelo@king.net.pl>
-Cc: linux-arm-kernel@lists.infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jiri Slaby <jslaby@suse.cz>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Stephen Boyd <sboyd@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, Nicolas Pitre <nicolas.pitre@linaro.org>, Sergei Poselenov <sposelenov@emcraft.com>, Paul Bolle <pebolle@tiscali.nl>, Jingchang Lu <jingchang.lu@freescale.com>, Yuri Tikhonov <yur@emcraft.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150702122337.GE5837@saruman.tx.rr.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: balbi@ti.com
+Cc: tony@atomide.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 02 July 2015 12:08:39 Paul Osmialowski wrote:
-> Nah, I've found this code hard to maintain. I'm attaching simplified 
-> version.
-> 
+On 07/02/2015 03:23 PM, Felipe Balbi wrote:
+> On Thu, Jul 02, 2015 at 02:58:06PM +0300, Peter Ujfalusi wrote:
+>> The sound support consist only Headset output on the board and can b=
+e
+>> handled by "simple-audio-card"
+>>
+>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>=20
+> Still works fine:
+>=20
+> Tested-by: Felipe Balbi <balbi@ti.com>
+>=20
+> one question though, should Line In be listed below ?
 
-Looks better to me, but of course needs full review from the clock
-maintainers.
+Does the board have Line-in? I don't have the board, but I know this pa=
+tch
+works on it ;)
+We only had playback path before also.
 
-I wonder if you could move out the fixed rate clocks into their own
-nodes. Are they actually controlled by the same block? If they are
-just fixed, you can use the normal binding for fixed rate clocks
-and only describe the clocks that are related to the driver.
+> Also, unrelated to
+> $subject, but if I wait for a few seconds between runs of speaker-tes=
+t
+> (iow, if I allow mcasp to idle) then I hear a slight chopping sound w=
+hen
+> starting, perhaps we're unmuting too early ?
 
-	Arnd
+Is it only with this patch (via simple-card) or was it the same via the
+davinci-evm (ti,da830-evm-audio)?
+
+--=20
+P=E9ter
+
+>=20
+>> ---
+>>  arch/arm/boot/dts/am437x-sk-evm.dts | 30 ++++++++++++++++++++++----=
+----
+>>  1 file changed, 22 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/am437x-sk-evm.dts b/arch/arm/boot/dts=
+/am437x-sk-evm.dts
+>> index b5de6b0d622c..e09216cb14df 100644
+>> --- a/arch/arm/boot/dts/am437x-sk-evm.dts
+>> +++ b/arch/arm/boot/dts/am437x-sk-evm.dts
+>> @@ -32,14 +32,26 @@
+>>  	};
+>> =20
+>>  	sound {
+>> -		compatible =3D "ti,da830-evm-audio";
+>> -		ti,model =3D "AM437x-SK-EVM";
+>> -		ti,audio-codec =3D <&tlv320aic3106>;
+>> -		ti,mcasp-controller =3D <&mcasp1>;
+>> -		ti,codec-clock-rate =3D <24000000>;
+>> -		ti,audio-routing =3D
+>> -			"Headphone Jack",       "HPLOUT",
+>> -			"Headphone Jack",       "HPROUT";
+>> +		compatible =3D "simple-audio-card";
+>> +		simple-audio-card,name =3D "AM437x-SK-EVM";
+>> +		simple-audio-card,widgets =3D
+>> +			"Headphone", "Headphone Jack";
+>> +		simple-audio-card,routing =3D
+>> +			"Headphone Jack",	"HPLOUT",
+>> +			"Headphone Jack",	"HPROUT";
+>> +		simple-audio-card,format =3D "dsp_b";
+>> +		simple-audio-card,bitclock-master =3D <&sound_master>;
+>> +		simple-audio-card,frame-master =3D <&sound_master>;
+>> +		simple-audio-card,bitclock-inversion;
+>> +
+>> +		simple-audio-card,cpu {
+>> +			sound-dai =3D <&mcasp1>;
+>> +		};
+>> +
+>> +		sound_master: simple-audio-card,codec {
+>> +			sound-dai =3D <&tlv320aic3106>;
+>> +			system-clock-frequency =3D <24000000>;
+>> +		};
+>>  	};
+>> =20
+>>  	matrix_keypad: matrix_keypad@0 {
+>> @@ -489,6 +501,7 @@
+>>  	};
+>> =20
+>>  	tlv320aic3106: tlv320aic3106@1b {
+>> +		#sound-dai-cells =3D <0>;
+>>  		compatible =3D "ti,tlv320aic3106";
+>>  		reg =3D <0x1b>;
+>>  		status =3D "okay";
+>> @@ -649,6 +662,7 @@
+>>  };
+>> =20
+>>  &mcasp1 {
+>> +	#sound-dai-cells =3D <0>;
+>>  	pinctrl-names =3D "default", "sleep";
+>>  	pinctrl-0 =3D <&mcasp1_pins>;
+>>  	pinctrl-1 =3D <&mcasp1_pins_sleep>;
+>> --=20
+>> 2.4.5
+>>
+>=20
