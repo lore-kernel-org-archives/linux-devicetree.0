@@ -1,53 +1,41 @@
-From: Gabriele Paoloni <gabriele.paoloni@huawei.com>
-Subject: RE: [PATCH v3 2/5] PCI: designware: Add ARM64 support
-Date: Thu, 2 Jul 2015 07:24:40 +0000
-Message-ID: <EE11001F9E5DDD47B7634E2F8A612F2E01D4EC38@lhreml503-mbs>
-References: <1435743817-19083-1-git-send-email-wangzhou1@hisilicon.com>
- <1435743817-19083-3-git-send-email-wangzhou1@hisilicon.com>
- <EE11001F9E5DDD47B7634E2F8A612F2E01D4E4BB@lhreml503-mbs>
- <5593F899.6050306@arm.com>
- <EE11001F9E5DDD47B7634E2F8A612F2E01D4E6A2@lhreml503-mbs>
- <55942441.3050705@arm.com>
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: Re: [PATCH 1/2] gpio: dwapb: Use human understandable gpio numbering.
+Date: Thu, 02 Jul 2015 09:36:22 +0200
+Message-ID: <5594E9F6.7040701@linutronix.de>
+References: <cover.1435777856.git.rcochran@linutronix.de> <d6b5ce85a17164970d454583560e07f7aed7b8ca.1435777856.git.rcochran@linutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <55942441.3050705@arm.com>
-Content-Language: en-US
-Sender: linux-pci-owner@vger.kernel.org
-To: James Morse <james.morse@arm.com>, "Wangzhou (B)" <wangzhou1@hisilicon.com>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jg1.han@samsung.com>, Pratyush Anand <pratyush.anand@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Liviu Dudau <Liviu.Dudau@arm.com>, "kishon@ti.com" <kishon@ti.com>, "xobs@kosagi.com" <xobs@kosagi.com>, "m-karicheri2@ti.com" <m-karicheri2@ti.com>, "Minghuan.Lian@freescale.com" <Minghuan.Lian@freescale.com>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Yuanzhichang <yuanzhichang@hisilicon.com>, Zhudacai <zhudacai@hisilicon.com>, zhangjukuo <zhangjukuo@huawei.com>, qiuzhenfa <qiuzhenfa@hisilicon.com>, "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <d6b5ce85a17164970d454583560e07f7aed7b8ca.1435777856.git.rcochran@linutronix.de>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Richard Cochran <richardcochran@gmail.com>, linux-arm-kernel@lists.infradead.org
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Alan Tull <atull@altera.com>, Alexandre Courbot <gnurou@gmail.com>, Dinh Nguyen <dinguyen@altera.com>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogbGludXgtcGNpLW93bmVy
-QHZnZXIua2VybmVsLm9yZyBbbWFpbHRvOmxpbnV4LXBjaS0NCj4gb3duZXJAdmdlci5rZXJuZWwu
-b3JnXSBPbiBCZWhhbGYgT2YgSmFtZXMgTW9yc2UNCj4gU2VudDogMDEgSnVseSAyMDE1IDE4OjMz
-DQo+IFRvOiBHYWJyaWVsZSBQYW9sb25pOyBXYW5nemhvdSAoQik7IEJqb3JuIEhlbGdhYXM7IEpp
-bmdvbyBIYW47IFByYXR5dXNoDQo+IEFuYW5kOyBBcm5kIEJlcmdtYW5uOyBMaXZpdSBEdWRhdTsg
-a2lzaG9uQHRpLmNvbTsgeG9ic0Brb3NhZ2kuY29tOyBtLQ0KPiBrYXJpY2hlcmkyQHRpLmNvbTsg
-TWluZ2h1YW4uTGlhbkBmcmVlc2NhbGUuY29tDQo+IENjOiBsaW51eC1wY2lAdmdlci5rZXJuZWwu
-b3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+IGRldmljZXRyZWVA
-dmdlci5rZXJuZWwub3JnOyBZdWFuemhpY2hhbmc7IFpodWRhY2FpOyB6aGFuZ2p1a3VvOw0KPiBx
-aXV6aGVuZmE7IExpZ3Vvemh1IChLZW5uZXRoKQ0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYzIDIv
-NV0gUENJOiBkZXNpZ253YXJlOiBBZGQgQVJNNjQgc3VwcG9ydA0KPiANCj4gR2FicmllbGUgUGFv
-bG9uaSB3cm90ZToNCj4gPj4gQm90aCBzZXJpZXMgYXJlIGFwcGxpZWQgdG8gdjQuMSwgdXNlIHRo
-ZSBzYW1lIC5jb25maWcgZmlsZSwgYW5kIHRoZQ0KPiA+PiBzYW1lIGR0Yi4NCj4gPj4gSSB3aWxs
-IGludmVzdGlnYXRlIGZ1cnRoZXIuDQo+ID4+DQo+ID4+IChSZS10ZXN0aW5nIHYyIHdvcmtzLCBz
-byB0aGlzIGlzbid0IGFuIGludGVyaW0gaGFyZHdhcmUgZmFpbHVyZSkNCj4gPg0KPiA+IFRoaXMg
-aXMgYSBiaXQgd2VpcmQuLi4uDQo+ID4NCj4gPiBQYXRjaCAyLzUgaXMgdGhlIG9ubHkgb25lIHRo
-YXQgYWZmZWN0IHBsYXRmb3JtcyBkaWZmZXJlbnQgZnJvbQ0KPiBIaXNpbGljb24NCj4gPg0KPiA+
-IFRoZSBvbmx5IGRpZmZlcmVuY2UgYmV0d2VlbiBWMyBwYXRjaFsyLzVdIGFuZCB2MiBwYXRjaFsy
-LzRdIGlzDQo+IA0KPiBCZXR3ZWVuIHYzOjIvNSBhbmQgeW91ciByZXBsYWNlbWVudCBmb3IgdjI6
-Mi80LCB3aGljaCBhcnJpdmVkIGFmdGVyIEkNCj4gaGFkDQo+IHRlc3RlZCB0aGUgdjIgc2VyaWVz
-LiBBcyB0aGUgcGF0Y2ggaGFzIGJlZW4gcmVwbGFjZWQgd2l0aCBhIGRpZmZlcmVudA0KPiBvbmUg
-LQ0KPiBuZWl0aGVyICd0ZXN0ZWQtYnknIGlzIHRydWUgYW55IG1vcmUuDQoNClNvcnJ5IEkgbWlz
-cmVhZCB5b3VyIHByZXZpb3VzIGVtYWlsDQoNCj4gDQo+IEl0IGxvb2tzIGxpa2UgdGhlIEJBUiBj
-b250YWluaW5nIHRoZSBicmlkZ2Ugd2luZG93IGlzIG5vdCBiZWluZyBhc3NpZ25lZCwNCj4gc28g
-bm8gZGV2aWNlcyBvbiBidXMgMSBhcmUgZGlzY292ZXJlZC4NCg0KQ2FuIHlvdSBjb25maXJtIHRo
-ZSBkdHNpIHlvdSBhcmUgdXNpbmcuLi4iaW14NnFkbC5kdHNpIiA/DQoNClRoYW5rcw0KDQpHYWIN
-Cg0KPiANCj4gSSB3aWxsIHNlbmQgdGhlIGZ1bGwgdjIgYW5kIHYzIGRtZXNnIG91dHB1dCBzZXBh
-cmF0ZWx5Lg0KPiANCj4gDQo+IFRoYW5rcywNCj4gDQo+IEphbWVzDQo+IA0KPiAtLQ0KPiBUbyB1
-bnN1YnNjcmliZSBmcm9tIHRoaXMgbGlzdDogc2VuZCB0aGUgbGluZSAidW5zdWJzY3JpYmUgbGlu
-dXgtcGNpIiBpbg0KPiB0aGUgYm9keSBvZiBhIG1lc3NhZ2UgdG8gbWFqb3Jkb21vQHZnZXIua2Vy
-bmVsLm9yZw0KPiBNb3JlIG1ham9yZG9tbyBpbmZvIGF0ICBodHRwOi8vdmdlci5rZXJuZWwub3Jn
-L21ham9yZG9tby1pbmZvLmh0bWwNCg==
+On 07/01/2015 09:34 PM, Richard Cochran wrote:
+> diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
+> index 58faf04..b7e7977 100644
+> --- a/drivers/gpio/gpio-dwapb.c
+> +++ b/drivers/gpio/gpio-dwapb.c
+> @@ -491,6 +491,13 @@ dwapb_gpio_get_pdata_of(struct device *dev)
+>  			return ERR_PTR(-EINVAL);
+>  		}
+>  
+> +		if (of_property_read_u32(port_np, "snps,base",
+> +					 &pp->gpio_base)) {
+> +			dev_info(dev, "no base gpio specified for %s\n",
+> +				 port_np->full_name);
+> +			pp->gpio_base = -1;
+> +		}
+> +
+
+If you are in a specific SoC you could do
+	base = of_alias_get_id(np, "gpio") * num_of_gpio_per_chip
+and get consistent numbers / sane.
+I think this is the one reason why there is no generic binding for the
+starting address. The other reason might be that this is simply a user
+space problem. To get consistent numbers all you need to do to lookup
+each gpio's memory address and decide if this is the one you look for.
+
+Sebastian
