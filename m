@@ -1,55 +1,66 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH 1/2] ARM: DTS: am437x-sk-evm: Add sleep pin settings for mcasp1
-Date: Thu, 2 Jul 2015 14:58:05 +0300
-Message-ID: <1435838286-30491-2-git-send-email-peter.ujfalusi@ti.com>
-References: <1435838286-30491-1-git-send-email-peter.ujfalusi@ti.com>
+From: Phil Edworthy <phil.edworthy@renesas.com>
+Subject: RE: [PATCH v2] arm: koelsch: make USB0 perform Host/Function
+ switching
+Date: Thu, 2 Jul 2015 12:11:00 +0000
+Message-ID: <SIXPR06MB0639A6F4258A9BE3B6AB16DDF5970@SIXPR06MB0639.apcprd06.prod.outlook.com>
+References: <1435824869-22784-1-git-send-email-phil.edworthy@renesas.com>
+ <5595213B.7080809@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1435838286-30491-1-git-send-email-peter.ujfalusi@ti.com>
+In-Reply-To: <5595213B.7080809@cogentembedded.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: tony@atomide.com
-Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, balbi@ti.com
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Simon Horman <horms@verge.net.au>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-When McASP is not in use the pins can be put to sleep mode to conserve
-power.
+Hi Sergei.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
- arch/arm/boot/dts/am437x-sk-evm.dts | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+On 02 July 2015 12:32, Sergei wrote:
+> Hello.
+> 
+> On 7/2/2015 11:14 AM, Phil Edworthy wrote:
+> 
+> > Both USB Host (pci0) and Function (USBHS) drivers are enabled.
+> > The USB PHY driver determines which IP block should be connected
+> > based on vbus and id signals read via gpios.
+> 
+> > Note that switch SW5 and SW6 on Koelsch board needs to be set to
+> > position 3 for this to work.
+> 
+> [...]
+> 
+> > diff --git a/arch/arm/boot/dts/r8a7791-koelsch.dts
+> b/arch/arm/boot/dts/r8a7791-koelsch.dts
+> > index cffe33f..1bb34d0 100644
+> > --- a/arch/arm/boot/dts/r8a7791-koelsch.dts
+> > +++ b/arch/arm/boot/dts/r8a7791-koelsch.dts
+> > @@ -615,7 +615,6 @@
+> >
+> >   &pci0 {
+> >   	status = "okay";
+> > -	pinctrl-0 = <&usb0_pins>;
+> >   	pinctrl-names = "default";
+> 
+>     As you're removing "pinctrl-0" prop, you also should remove "pinctrl-names".
+Ok.
 
-diff --git a/arch/arm/boot/dts/am437x-sk-evm.dts b/arch/arm/boot/dts/am437x-sk-evm.dts
-index c17097d2c167..b5de6b0d622c 100644
---- a/arch/arm/boot/dts/am437x-sk-evm.dts
-+++ b/arch/arm/boot/dts/am437x-sk-evm.dts
-@@ -364,6 +364,15 @@
- 		>;
- 	};
- 
-+	mcasp1_pins_sleep: mcasp1_pins_sleep {
-+		pinctrl-single,pins = <
-+			0x10c (PIN_INPUT_PULLDOWN | MUX_MODE7)
-+			0x110 (PIN_INPUT_PULLDOWN | MUX_MODE7)
-+			0x108 (PIN_INPUT_PULLDOWN | MUX_MODE7)
-+			0x144 (PIN_INPUT_PULLDOWN | MUX_MODE7)
-+		>;
-+	};
-+
- 	lcd_pins: lcd_pins {
- 		pinctrl-single,pins = <
- 			0x1c (PIN_OUTPUT_PULLDOWN | MUX_MODE7) /* gpcm_ad7.gpio1_7 */
-@@ -640,8 +649,9 @@
- };
- 
- &mcasp1 {
--	pinctrl-names = "default";
-+	pinctrl-names = "default", "sleep";
- 	pinctrl-0 = <&mcasp1_pins>;
-+	pinctrl-1 = <&mcasp1_pins_sleep>;
- 
- 	status = "okay";
- 
--- 
-2.4.5
+> >   };
+> >
+> > @@ -627,13 +626,15 @@
+> >
+> >   &hsusb {
+> >   	status = "okay";
+> > -	pinctrl-0 = <&usb0_pins>;
+> 
+>     Likewise.
+Sure.
+
+> [...]
+> 
+> WBR, Sergei
+
+Thanks
+Phil
