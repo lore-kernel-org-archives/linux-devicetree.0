@@ -1,64 +1,82 @@
-From: Zhou Wang <wangzhou1@hisilicon.com>
-Subject: Re: [PATCH v3 2/5] PCI: designware: Add ARM64 support
-Date: Thu, 2 Jul 2015 09:38:29 +0800
-Message-ID: <55949615.1070304@hisilicon.com>
-References: <1435743817-19083-1-git-send-email-wangzhou1@hisilicon.com> <1435743817-19083-3-git-send-email-wangzhou1@hisilicon.com> <EE11001F9E5DDD47B7634E2F8A612F2E01D4E4BB@lhreml503-mbs> <5593F899.6050306@arm.com> <EE11001F9E5DDD47B7634E2F8A612F2E01D4E6A2@lhreml503-mbs> <55942441.3050705@arm.com>
+From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: mt8173: add clock_null
+Date: Thu, 2 Jul 2015 10:05:22 +0800
+Message-ID: <1435802722.3526.13.camel@mtksdaap41>
+References: <1434605351-64592-1-git-send-email-eddie.huang@mediatek.com>
+	 <8860488.JuX1EN5tWB@diego> <1435132455.28866.21.camel@mtksdaap41>
+	 <1510058.fTE6dlSRsH@diego> <1435655229.19330.15.camel@mtksdaap41>
+	 <20150701064935.GC18611@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <55942441.3050705@arm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: James Morse <james.morse@arm.com>
-Cc: Gabriele Paoloni <gabriele.paoloni@huawei.com>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jg1.han@samsung.com>, Pratyush Anand <pratyush.anand@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Liviu Dudau <Liviu.Dudau@arm.com>, "kishon@ti.com" <kishon@ti.com>, "xobs@kosagi.com" <xobs@kosagi.com>, "m-karicheri2@ti.com" <m-karicheri2@ti.com>, "Minghuan.Lian@freescale.com" <Minghuan.Lian@freescale.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Yuanzhichang <yuanzhichang@hisilicon.com>, Zhudacai <zhudacai@hisilicon.com>, zhangjukuo <zhangjukuo@huawei.com>, qiuzhenfa <qiuzhenfa@hisilicon.com>, "liguozhu@hisilicon.com" <liguozhu@hisilicon.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150701064935.GC18611-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, ted.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2015/7/2 1:32, James Morse wrote:
-> Gabriele Paoloni wrote:
->>> Both series are applied to v4.1, use the same .config file, and the
->>> same dtb.
->>> I will investigate further.
->>>
->>> (Re-testing v2 works, so this isn't an interim hardware failure)
->>
->> This is a bit weird....
->>
->> Patch 2/5 is the only one that affect platforms different from Hisilicon
->>
->> The only difference between V3 patch[2/5] and v2 patch[2/4] is
-> 
-> Between v3:2/5 and your replacement for v2:2/4, which arrived after I had
-> tested the v2 series. As the patch has been replaced with a different one -
-> neither 'tested-by' is true any more.
->
+Hi Sascha,
 
-Hi James,
-
-Firstly, many thanks for your test!
-
-Yes. v3:2/5 had merged Gabriele's codes in. So if you made test on original
-v2 patchset and v3 patchset, I think the differences include Gabriele's codes
-and codes in pci-keystone-dw.c.
-
-As the patch has been replaced with a different one, I think I should have
-added 'tested-by' after it passes your test, is this right?
-
-> It looks like the BAR containing the bridge window is not being assigned,
-> so no devices on bus 1 are discovered.
+On Wed, 2015-07-01 at 08:49 +0200, Sascha Hauer wrote:
+> On Tue, Jun 30, 2015 at 05:07:09PM +0800, James Liao wrote:
+> > There are 4 clocks which are derived from clk_null directly in current
+> > topckgen implementation:
+> > 
+> > 	clkph_mck_o, dpi_ck, usb_syspll_125m, hdmitx_dig_cts
+> > 
+> > Our designer mentioned 2 things about external clocks:
+> > 
+> > 1. These 4 clocks come from analog macro, not from PLL, nor from
+> > external clocks directly.
 > 
-> I will send the full v2 and v3 dmesg output separately.
+> Ok, this means there actually are clocks. We can't control these clock and
+> they have some known or unknown rate. This makes them fixed clocks. Just
+> specify them in the device tree and you are done. Give them reasonable
+> names and the rate if you know it, 0 otherwise.
 > 
+> The problem is not that you use fixed clocks for non software
+> controllable clocks of unknwown rates, but that you try to use a single
+> clock for all of them and name it 'dummy' or 'null'. Name it
+> 
+> dpi_ck {
+> 	compatible = "fixed-clock";
+> 	rate = <0>; /* unknown, generated by some Analog block */
+> };
+> 
+> Technically it's the same, but it sounds much more professional and like
+> you know what you are doing ;)
 
-Thanks, I will debug the problem according your log.
+These clocks are SoC internal clocks. Is it suitable to specify them in
+the device tree?
 
-Regards,
-Zhou
+According to your and Heiko's suggestion, it looks the best way should
+be specifying these clocks in the driver code without a dummy parent.
+i.e.:
 
-> 
-> Thanks,
-> 
-> James
-> 
-> 
-> .
-> 
+Original code:
+
+FACTOR(CLK_TOP_CLKPH_MCK_O, "clkph_mck_o", "clk_null", 1, 1),
+FACTOR(CLK_TOP_DPI, "dpi_ck", "clk_null", 1, 1),
+FACTOR(CLK_TOP_USB_SYSPLL_125M, "usb_syspll_125m", "clk_null", 1, 1),
+FACTOR(CLK_TOP_HDMITX_DIG_CTS, "hdmitx_dig_cts", "clk_null", 1, 1),
+
+New code:
+
+FIXED(CLK_TOP_CLKPH_MCK_O, "clkph_mck_o", UNKNOWN_RATE),
+FIXED(CLK_TOP_DPI, "dpi_ck", UNKNOWN_RATE),
+FIXED(CLK_TOP_USB_SYSPLL_125M, "usb_syspll_125m", UNKNOWN_RATE),
+FIXED(CLK_TOP_HDMITX_DIG_CTS, "hdmitx_dig_cts", UNKNOWN_RATE),
+
+Then we don't need to specify a dummy clock such as clk_null in device
+tree.
+
+
+Best regards,
+
+James
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
