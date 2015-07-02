@@ -1,138 +1,54 @@
-From: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] clk: mediatek: mt8173: Fix enabling of critical clocks
-Date: Thu, 2 Jul 2015 10:07:42 +0800
-Message-ID: <CAGS+omBdggG5RqP5grZjDSuWTxRKWMt5zRqqB=Mk=KFqhsSj4g@mail.gmail.com>
+From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] clk: mediatek: mt8173: Fix enabling of critical
+ clocks
+Date: Thu, 2 Jul 2015 10:18:09 +0800
+Message-ID: <1435803489.3526.18.camel@mtksdaap41>
 References: <1435633127-31952-1-git-send-email-jamesjj.liao@mediatek.com>
- <1435633127-31952-2-git-send-email-jamesjj.liao@mediatek.com> <CAGS+omDqSEn_WnUYz0XmeRpejhthb0J_qa4H9VEfihtA0Axorg@mail.gmail.com>
+	 <1435633127-31952-2-git-send-email-jamesjj.liao@mediatek.com>
+	 <CAGS+omDqSEn_WnUYz0XmeRpejhthb0J_qa4H9VEfihtA0Axorg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <CAGS+omDqSEn_WnUYz0XmeRpejhthb0J_qa4H9VEfihtA0Axorg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+To: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 1, 2015 at 10:21 PM, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
-> Hi James,
->
+Hi Daniel,
+
+On Wed, 2015-07-01 at 22:21 +0800, Daniel Kurtz wrote:
 > To be precise, it is the CLK_TOP clocks that have CLK_APMIXED PLLs as
 > their parents, so we cannot enable the CLK_TOP critical clocks until
 > the CLK_APMIXED clocks have all been registered.
->
+> 
 > Please add something like the above to the commit message.
->
-> More comments inline...
->
-> On Tue, Jun 30, 2015 at 10:58 AM, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
->> From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->>
->> On the MT8173 the clocks are provided by different units. To enable
->> the critical clocks we must be sure that all parent clocks are already
->> registered, otherwise the parents of the critical clocks end up being
->> unused and get disabled later. To find a place where all parents are
->> registered we try each time after we've registered some clocks if
->> all known providers are present now and only then we enable the critical
->> clocks
->>
->> Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->> Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->> ---
->>  drivers/clk/mediatek/clk-mt8173.c | 26 +++++++++++++++++++++-----
->>  1 file changed, 21 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/clk/mediatek/clk-mt8173.c b/drivers/clk/mediatek/clk-mt8173.c
->> index 4b9e04c..c483336 100644
->> --- a/drivers/clk/mediatek/clk-mt8173.c
->> +++ b/drivers/clk/mediatek/clk-mt8173.c
->> @@ -700,6 +700,22 @@ static const struct mtk_composite peri_clks[] __initconst = {
->>         MUX(CLK_PERI_UART3_SEL, "uart3_ck_sel", uart_ck_sel_parents, 0x40c, 3, 1),
->>  };
->>
->> +static struct clk_onecell_data *mt8173_top_clk_data;
->> +static struct clk_onecell_data *mt8173_pll_clk_data;
->
+
+OK. I'll add them.
+
+> 
+> >
+> > +static struct clk_onecell_data *mt8173_top_clk_data;
+> > +static struct clk_onecell_data *mt8173_pll_clk_data;
+> 
 > These globals can be:
 > __initdata
-
-Oops, never mind about this comment...
-Using "__initdata" for uninitialized variables doesn't make sense -
-"__initdata" is for initialization data, not variables themselves.
-
-Sorry for the noise,
--Dan
-
->
->> +
->> +static void mtk_clk_enable_critical(void)
->
+> 
+> > +
+> > +static void mtk_clk_enable_critical(void)
+> 
 > And this function is:
->
+> 
 > static void __init
->
-> Other than the above, this one is:
->
-> Reviewed-by: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->
-> -Dan
->
->> +{
->> +       if (!mt8173_top_clk_data || !mt8173_pll_clk_data)
->> +               return;
->> +
->> +       clk_prepare_enable(mt8173_pll_clk_data->clks[CLK_APMIXED_ARMCA15PLL]);
->> +       clk_prepare_enable(mt8173_pll_clk_data->clks[CLK_APMIXED_ARMCA7PLL]);
->> +       clk_prepare_enable(mt8173_top_clk_data->clks[CLK_TOP_MEM_SEL]);
->> +       clk_prepare_enable(mt8173_top_clk_data->clks[CLK_TOP_DDRPHYCFG_SEL]);
->> +       clk_prepare_enable(mt8173_top_clk_data->clks[CLK_TOP_CCI400_SEL]);
->> +       clk_prepare_enable(mt8173_top_clk_data->clks[CLK_TOP_RTC_SEL]);
->> +}
->> +
->>  static void __init mtk_topckgen_init(struct device_node *node)
->>  {
->>         struct clk_onecell_data *clk_data;
->> @@ -712,19 +728,19 @@ static void __init mtk_topckgen_init(struct device_node *node)
->>                 return;
->>         }
->>
->> -       clk_data = mtk_alloc_clk_data(CLK_TOP_NR_CLK);
->> +       mt8173_top_clk_data = clk_data = mtk_alloc_clk_data(CLK_TOP_NR_CLK);
->>
->>         mtk_clk_register_factors(root_clk_alias, ARRAY_SIZE(root_clk_alias), clk_data);
->>         mtk_clk_register_factors(top_divs, ARRAY_SIZE(top_divs), clk_data);
->>         mtk_clk_register_composites(top_muxes, ARRAY_SIZE(top_muxes), base,
->>                         &mt8173_clk_lock, clk_data);
->>
->> -       clk_prepare_enable(clk_data->clks[CLK_TOP_CCI400_SEL]);
->> -
->>         r = of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
->>         if (r)
->>                 pr_err("%s(): could not register clock provider: %d\n",
->>                         __func__, r);
->> +
->> +       mtk_clk_enable_critical();
->>  }
->>  CLK_OF_DECLARE(mtk_topckgen, "mediatek,mt8173-topckgen", mtk_topckgen_init);
->>
->> @@ -818,13 +834,13 @@ static void __init mtk_apmixedsys_init(struct device_node *node)
->>  {
->>         struct clk_onecell_data *clk_data;
->>
->> -       clk_data = mtk_alloc_clk_data(CLK_APMIXED_NR_CLK);
->> +       mt8173_pll_clk_data = clk_data = mtk_alloc_clk_data(CLK_APMIXED_NR_CLK);
->>         if (!clk_data)
->>                 return;
->>
->>         mtk_clk_register_plls(node, plls, ARRAY_SIZE(plls), clk_data);
->>
->> -       clk_prepare_enable(clk_data->clks[CLK_APMIXED_ARMCA15PLL]);
->> +       mtk_clk_enable_critical();
->>  }
->>  CLK_OF_DECLARE(mtk_apmixedsys, "mediatek,mt8173-apmixedsys",
->>                 mtk_apmixedsys_init);
->> --
->> 1.8.1.1.dirty
->>
+
+I'll add them in next patch.
+
+
+Best regards,
+
+James
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
