@@ -1,49 +1,58 @@
-From: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] gpio: dwapb: Use human understandable gpio numbering.
-Date: Thu, 2 Jul 2015 17:21:47 +0200
-Message-ID: <20150702152147.GA10111@localhost.localdomain>
-References: <cover.1435777856.git.rcochran@linutronix.de>
- <d6b5ce85a17164970d454583560e07f7aed7b8ca.1435777856.git.rcochran@linutronix.de>
- <5594E9F6.7040701@linutronix.de>
- <20150702142601.GB9349@localhost.localdomain>
- <55954B17.3020303@linutronix.de>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v1 1/3] gpio: defer probe if pinctrl cannot be found
+Date: Thu, 2 Jul 2015 10:38:21 -0500
+Message-ID: <CAL_JsqL_ri3XgojPWnhJ9DrUTgqS2ucJbXacVaY5B5VaKfT7eQ@mail.gmail.com>
+References: <1435754753-31307-1-git-send-email-tomeu.vizoso@collabora.com>
+ <1435754753-31307-2-git-send-email-tomeu.vizoso@collabora.com>
+ <CAL_JsqKXODBk4FVB-kiWFHLGFLCwJDjXvpVqOTvuEJubApbVSg@mail.gmail.com> <CAMuHMdXfKD200tpcJdxBrmwFQhyYLiptOxHOXKLRM9eRfJ9uqg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <55954B17.3020303-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alan Tull <atull-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdXfKD200tpcJdxBrmwFQhyYLiptOxHOXKLRM9eRfJ9uqg@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Tomeu Vizoso <tomeu.vizoso@collabora.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Alexandre Courbot <gnurou@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 02, 2015 at 04:30:47PM +0200, Sebastian Andrzej Siewior wrote:
-> On 07/02/2015 04:26 PM, Richard Cochran wrote:
-> > On Thu, Jul 02, 2015 at 09:36:22AM +0200, Sebastian Andrzej Siewior wrote:
-> >> If you are in a specific SoC you could do
-> >> 	base = of_alias_get_id(np, "gpio") * num_of_gpio_per_chip
-> >> and get consistent numbers / sane.
-> > 
-> > And what about /sys/class/gpio ?
-> 
-> What about it?
+On Thu, Jul 2, 2015 at 3:59 AM, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> Hi Rob,
+>
+> On Wed, Jul 1, 2015 at 7:36 PM, Rob Herring <robherring2@gmail.com> wrote:
+>> On Wed, Jul 1, 2015 at 7:45 AM, Tomeu Vizoso <tomeu.vizoso@collabora.com> wrote:
+>>> When an OF node has a pin range for its GPIOs, return -EPROBE_DEFER if
+>>> the pin controller isn't available.
+>>>
+>>> Otherwise, the GPIO range wouldn't be set at all unless the pin
+>>> controller probed always before the GPIO chip.
+>>>
+>>> With this change, the probe of the GPIO chip will be deferred and will
+>>> be retried at a later point, hopefully once the pin controller has been
+>>> registered and probed already.
+>>
+>> This will break cases where the pinctrl driver does not exist, but the
+>> DT contains pinctrl bindings. We can have similar problems already
+>> with clocks though. However, IMO this problem is a bit different in
+>> that pinctrl is more likely entirely optional while clocks are often
+>> required. You may do all pin setup in bootloader/firmware on some
+>> boards and not others. Of course then why put pinctrl in the DT in
+>> that case? They could be present just due to how chip vs. board dts
+>> files are structured.
+>
+> Isn't that already the case?
+> If I change the compatible value of a pinctrl node to an invalid value, I get:
+>
+>     sh-sci e6c50000.serial: could not find pctldev for node
+> /pfc@e6050000/serial1, deferring probe
 
-The poor users of that interface cannot use "of_alias_get_id" as you suggest.
+I guess so.
 
-> > (Other gpio controllers are doing that, too, BTW.)
-> 
-> I'm not saying that you should not do so. There is _no_ generic binding
-> for this and this is what I suggest.
+>> We could address this by simply marking the pin controller node
+>> disabled. However, ...
+>
+> Doesn't seem to make any difference.
 
-I can surely change "snps,base" to something like "gpio-base" as a
-generic binding.  Would that be better?
+No doubt. I'm proposing that it should, not that it does already. Of
+course, the callers will also have to test for -ENODEV and ignore
+those errors.
 
-I expected to find the base number as a standard property, but I'm no
-DT expert, and I have learned not to question it.
-
-Thanks,
-Richard
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
