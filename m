@@ -1,55 +1,44 @@
-From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] clk: mediatek: mt8173: Fix enabling of critical
- clocks
-Date: Thu, 2 Jul 2015 10:18:09 +0800
-Message-ID: <1435803489.3526.18.camel@mtksdaap41>
-References: <1435633127-31952-1-git-send-email-jamesjj.liao@mediatek.com>
-	 <1435633127-31952-2-git-send-email-jamesjj.liao@mediatek.com>
-	 <CAGS+omDqSEn_WnUYz0XmeRpejhthb0J_qa4H9VEfihtA0Axorg@mail.gmail.com>
+From: Chunyan Zhang <zhang.lyra@gmail.com>
+Subject: Re: [RFC PATCH] mmc: sprd: add MMC host driver for Spreadtrum SoC
+Date: Thu, 2 Jul 2015 10:35:16 +0800
+Message-ID: <CAAfSe-uuO5VYA9_x_6mog9r=KNTtudRCqz7q46TZhWw8BagMKA@mail.gmail.com>
+References: <sprd-mmc-rfc@samsung.com>
+	<1435734774-10993-1-git-send-email-chunyan.zhang@spreadtrum.com>
+	<5593B971.1010601@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGS+omDqSEn_WnUYz0XmeRpejhthb0J_qa4H9VEfihtA0Axorg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <5593B971.1010601@samsung.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Jaehoon Chung <jh80.chung@samsung.com>
+Cc: Chunyan Zhang <chunyan.zhang@spreadtrum.com>, ulf.hansson@linaro.org, Lee Jones <lee.jones@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, Grant Likely <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, billows.wu@spreadtrum.com, =?UTF-8?B?V2VpIFFpYW8gKOS5lOS8nyk=?= <wei.qiao@spreadtrum.com>, baolin.wang@spreadtrum.com, ning.yang@spreadtrum.com, orson.zhai@spreadtrum.com, jason.wu@spreadtrum.com, linux-mmc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, chris@printf.net
 List-Id: devicetree@vger.kernel.org
 
-Hi Daniel,
+On Wed, Jul 1, 2015 at 5:57 PM, Jaehoon Chung <jh80.chung@samsung.com> wrote:
+> Hi,
+>
+> Is sdhost based on SDHCI controller?
+> Why don't use sdhci.c? Is there any reason?
+>
+> Best Regards,
+> Jaehoon Chung
+>
 
-On Wed, 2015-07-01 at 22:21 +0800, Daniel Kurtz wrote:
-> To be precise, it is the CLK_TOP clocks that have CLK_APMIXED PLLs as
-> their parents, so we cannot enable the CLK_TOP critical clocks until
-> the CLK_APMIXED clocks have all been registered.
-> 
-> Please add something like the above to the commit message.
+Because of base64 code problem of his email server, I'm reporting his
+reply instead.
 
-OK. I'll add them.
+>From Billows Wu <billows.wu@spreadtrum.com>
+----------------------------------------------------------------------------------------------------------------------------------------
+Hi Jaehoon,
+Sdhost driver is not based on SDHCI controller.
+Our MMC controller is not a standard controller which meets host
+controller specification completely.
+We add some registers and change some bits in the remaining register,
+such as about clock and regulator portion.
+If our driver base on SDHCI controller, we must change many codes in
+sdhci.c, and our MMC driver will become more complicated.
+In order to better use our controller capability and make MMC driver
+more compact, we do not use SDHCI controller.
 
-> 
-> >
-> > +static struct clk_onecell_data *mt8173_top_clk_data;
-> > +static struct clk_onecell_data *mt8173_pll_clk_data;
-> 
-> These globals can be:
-> __initdata
-> 
-> > +
-> > +static void mtk_clk_enable_critical(void)
-> 
-> And this function is:
-> 
-> static void __init
-
-I'll add them in next patch.
-
-
-Best regards,
-
-James
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks.
+--------------------------------------------------------------------------------------------------------------------------------------------------
