@@ -1,62 +1,60 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: Re: [RFC PATCH 2/7] ARM: dts: vfxxx: Include support for qspi1
- functionality.
-Date: Thu, 02 Jul 2015 15:44:20 +0200
-Message-ID: <0d7c39d4b78fec56adc8a8d66301a3ad@agner.ch>
-References: <1435782010-9809-1-git-send-email-cory.tusar@pid1solutions.com>
- <1435782010-9809-4-git-send-email-cory.tusar@pid1solutions.com>
+From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v2 02/20] ARM: DTS: am437x-sk-evm: Add sleep pin settings for mcasp1
+Date: Thu, 2 Jul 2015 17:06:17 +0300
+Message-ID: <1435845995-19085-3-git-send-email-peter.ujfalusi@ti.com>
+References: <1435845995-19085-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1435782010-9809-4-git-send-email-cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
+In-Reply-To: <1435845995-19085-1-git-send-email-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, han.xu-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org
+To: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2015-07-01 22:20, Cory Tusar wrote:
-> This commit extends the existing Vybrid QSPI devicetree implementation
-> to also describe the qspi1 functional block.
-> 
-> Signed-off-by: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
-> ---
->  arch/arm/boot/dts/vfxxx.dtsi | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
-> index 089a263..a7c370e 100644
-> --- a/arch/arm/boot/dts/vfxxx.dtsi
-> +++ b/arch/arm/boot/dts/vfxxx.dtsi
-> @@ -251,6 +251,19 @@
->  				status = "disabled";
->  			};
->  
-> +			qspi1: quadspi@400c4000 {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +				compatible = "fsl,vf610-qspi";
-> +				reg = <0x400c4000 0x1000>, <0x50000000 0x10000000>;
-> +				reg-names = "QuadSPI", "QuadSPI-memory";
-> +				interrupts = <25 IRQ_TYPE_LEVEL_HIGH>;
-> +				clocks = <&clks VF610_CLK_QSPI1_EN>,
-> +					<&clks VF610_CLK_QSPI1>;
-> +				clock-names = "qspi_en", "qspi";
-> +				status = "disabled";
-> +			};
-> +
->  			iomuxc: iomuxc@40048000 {
->  				compatible = "fsl,vf610-iomuxc";
->  				reg = <0x40048000 0x1000>;
+When McASP is not in use the pins can be put to sleep mode to conserve
+power.
 
-This seem to be at the wrong place under aips0. qspi1 should be under
-aips1. just before fec0. But other than that, I checked the addresses
-looks good to me. Hence with that change applied you can include:
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Tested-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+---
+ arch/arm/boot/dts/am437x-sk-evm.dts | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-Reviewed-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+diff --git a/arch/arm/boot/dts/am437x-sk-evm.dts b/arch/arm/boot/dts/am437x-sk-evm.dts
+index c17097d2c167..b5de6b0d622c 100644
+--- a/arch/arm/boot/dts/am437x-sk-evm.dts
++++ b/arch/arm/boot/dts/am437x-sk-evm.dts
+@@ -364,6 +364,15 @@
+ 		>;
+ 	};
+ 
++	mcasp1_pins_sleep: mcasp1_pins_sleep {
++		pinctrl-single,pins = <
++			0x10c (PIN_INPUT_PULLDOWN | MUX_MODE7)
++			0x110 (PIN_INPUT_PULLDOWN | MUX_MODE7)
++			0x108 (PIN_INPUT_PULLDOWN | MUX_MODE7)
++			0x144 (PIN_INPUT_PULLDOWN | MUX_MODE7)
++		>;
++	};
++
+ 	lcd_pins: lcd_pins {
+ 		pinctrl-single,pins = <
+ 			0x1c (PIN_OUTPUT_PULLDOWN | MUX_MODE7) /* gpcm_ad7.gpio1_7 */
+@@ -640,8 +649,9 @@
+ };
+ 
+ &mcasp1 {
+-	pinctrl-names = "default";
++	pinctrl-names = "default", "sleep";
+ 	pinctrl-0 = <&mcasp1_pins>;
++	pinctrl-1 = <&mcasp1_pins_sleep>;
+ 
+ 	status = "okay";
+ 
+-- 
+2.4.5
 
---
-Stefan
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
