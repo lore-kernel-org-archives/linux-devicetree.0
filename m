@@ -1,594 +1,477 @@
-From: Zhou Wang <wangzhou1@hisilicon.com>
-Subject: Re: [PATCH v3 2/5] PCI: designware: Add ARM64 support
-Date: Thu, 2 Jul 2015 09:16:28 +0800
-Message-ID: <559490EC.8040909@hisilicon.com>
-References: <1435743817-19083-1-git-send-email-wangzhou1@hisilicon.com> <1435743817-19083-3-git-send-email-wangzhou1@hisilicon.com> <EE11001F9E5DDD47B7634E2F8A612F2E01D4E4BB@lhreml503-mbs>
+From: Pi-Cheng Chen <pi-cheng.chen@linaro.org>
+Subject: Re: [PATCH v5 2/2] cpufreq: mediatek: Add MT8173 cpufreq driver
+Date: Thu, 2 Jul 2015 09:31:59 +0800
+Message-ID: <CALx668X8fB_annmjL+ga7=fmY596HC0-nr+x6r2p0=aaCUJ3-Q@mail.gmail.com>
+References: <1435717005-20012-1-git-send-email-pi-cheng.chen@linaro.org>
+	<1435717005-20012-3-git-send-email-pi-cheng.chen@linaro.org>
+	<CALW4P+L=q6z3LW2Da9XoU8HBHMgai-B7okRuMxSYCZv5-fj8Bw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="GB2312"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <EE11001F9E5DDD47B7634E2F8A612F2E01D4E4BB@lhreml503-mbs>
-Sender: linux-pci-owner@vger.kernel.org
-To: Gabriele Paoloni <gabriele.paoloni@huawei.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jg1.han@samsung.com>, Pratyush Anand <pratyush.anand@gmail.com>, Arnd Bergmann <arnd@arndb.de>, James Morse <james.morse@arm.com>, Liviu Dudau <Liviu.Dudau@arm.com>, "kishon@ti.com" <kishon@ti.com>, "xobs@kosagi.com" <xobs@kosagi.com>, "m-karicheri2@ti.com" <m-karicheri2@ti.com>, "Minghuan.Lian@freescale.com" <Minghuan.Lian@freescale.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Yuanzhichang <yuanzhichang@hisilicon.com>, Zhudacai <zhudacai@hisilicon.com>, zhangjukuo <zhangjukuo@huawei.com>, qiuzhenfa <qiuzhenfa@hisilicon.com>, "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CALW4P+L=q6z3LW2Da9XoU8HBHMgai-B7okRuMxSYCZv5-fj8Bw@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Alexey Klimov <klimov.linux@gmail.com>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-mediatek@lists.infradead.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2015/7/1 21:29, Gabriele Paoloni wrote:
-> Adding to the recipients list the authors of the drivers that depend on Synopsys Designware and that are not included
-> 
-> Respectively:
-> pci-dra7xx Kishon Vijay Abraham I <kishon@ti.com>
-> pci-imx6 Sean Cross <xobs@kosagi.com>
-> pci-keystone Murali Karicheri <m-karicheri2@ti.com>
-> pci-layerscape Minghuan Lian <Minghuan.Lian@freescale.com>
-> 
-> Driver Authors already included:
-> pci-exynos Jingoo Han <jg1.han@samsung.com>
-> pcie-spear13xx Pratyush Anand <pratyush.anand@st.com>
-> 
-> Cheers
-> 
-> Gab
-> 
+Hi Alexey,
 
-Hi Gab,
-
-Many thanks for adding the related guys.
-
-Regards,
-Zhou
-
->> -----Original Message-----
->> From: Wangzhou (B)
->> Sent: Wednesday, July 01, 2015 10:44 AM
->> To: Bjorn Helgaas; Jingoo Han; Pratyush Anand; Arnd Bergmann; Gabriele
->> Paoloni; James Morse; Liviu Dudau
->> Cc: linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
->> devicetree@vger.kernel.org; Yuanzhichang; Zhudacai; zhangjukuo;
->> qiuzhenfa; Liguozhu (Kenneth); Wangzhou (B)
->> Subject: [PATCH v3 2/5] PCI: designware: Add ARM64 support
+On Thu, Jul 2, 2015 at 5:24 AM, Alexey Klimov <klimov.linux@gmail.com> wrote:
+> Hi Pi-Cheng,
+>
+> On Wed, Jul 1, 2015 at 5:16 AM, Pi-Cheng Chen <pi-cheng.chen@linaro.org> wrote:
+>> This patch implements MT8173 cpufreq driver.
 >>
->> This patch tries to unify ARM32 and ARM64 PCIe in designware driver.
->> Delete
->> function dw_pcie_setup, dw_pcie_scan_bus, dw_pcie_map_irq and struct
->> hw_pci,
->> move related operations to dw_pcie_host_init. Also set pp->root_bus_nr
->> = 0 in
->> each PCIe host driver which is based on pcie-designware. This patch
->> also try
->> to use of_pci_get_host_bridge_resources for ARM32 and ARM64 according
->> to the
->> suggestion for Gabriele[1]
->>
->> I tested this patch on D02 board of Hisilicon. It works well.
->> I have compiled the driver with multi_v7_defconfig. However, I don't
->> have
->> ARM32 PCIe related board to do test. It will be appreciated if someone
->> could
->> help to test it.
->>
->> Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
->> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->> Signed-off-by: Gabriele Paoloni <gabriele.paoloni@huawei.com>
->> Tested-by: Fabrice Gasnier <fabrice.gasnier@st.com>
->> Tested-by: James Morse <james.morse@arm.com>
->>
->> [1] http://www.spinics.net/lists/linux-pci/msg42194.html
+>> Signed-off-by: Pi-Cheng Chen <pi-cheng.chen@linaro.org>
 >> ---
->>  drivers/pci/host/pci-dra7xx.c      |   1 +
->>  drivers/pci/host/pci-exynos.c      |   2 +-
->>  drivers/pci/host/pci-imx6.c        |   2 +-
->>  drivers/pci/host/pci-keystone-dw.c |   2 +-
->>  drivers/pci/host/pci-keystone.c    |   2 +-
->>  drivers/pci/host/pci-layerscape.c  |   2 +-
->>  drivers/pci/host/pcie-designware.c | 242 +++++++++++++++--------------
->> --------
->>  drivers/pci/host/pcie-designware.h |  10 +-
->>  drivers/pci/host/pcie-spear13xx.c  |   2 +-
->>  9 files changed, 110 insertions(+), 155 deletions(-)
+>>  drivers/cpufreq/Kconfig.arm      |   7 +
+>>  drivers/cpufreq/Makefile         |   1 +
+>>  drivers/cpufreq/mt8173-cpufreq.c | 520 +++++++++++++++++++++++++++++++++++++++
+>>  3 files changed, 528 insertions(+)
+>>  create mode 100644 drivers/cpufreq/mt8173-cpufreq.c
 >>
->> diff --git a/drivers/pci/host/pci-dra7xx.c b/drivers/pci/host/pci-
->> dra7xx.c
->> index 2d57e19..5c8b6ab 100644
->> --- a/drivers/pci/host/pci-dra7xx.c
->> +++ b/drivers/pci/host/pci-dra7xx.c
->> @@ -280,6 +280,7 @@ static int __init dra7xx_add_pcie_port(struct
->> dra7xx_pcie *dra7xx,
+>> diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
+>> index 611cb09..2a305c0 100644
+>> --- a/drivers/cpufreq/Kconfig.arm
+>> +++ b/drivers/cpufreq/Kconfig.arm
+>> @@ -141,6 +141,13 @@ config ARM_KIRKWOOD_CPUFREQ
+>>           This adds the CPUFreq driver for Marvell Kirkwood
+>>           SoCs.
 >>
->>  	pp = &dra7xx->pp;
->>  	pp->dev = dev;
->> +	pp->root_bus_nr = 0;
->>  	pp->ops = &dra7xx_pcie_host_ops;
->>
->>  	pp->irq = platform_get_irq(pdev, 1);
->> diff --git a/drivers/pci/host/pci-exynos.c b/drivers/pci/host/pci-
->> exynos.c
->> index c139237..4b6db6c 100644
->> --- a/drivers/pci/host/pci-exynos.c
->> +++ b/drivers/pci/host/pci-exynos.c
->> @@ -534,7 +534,7 @@ static int __init exynos_add_pcie_port(struct
->> pcie_port *pp,
->>  		}
->>  	}
->>
->> -	pp->root_bus_nr = -1;
->> +	pp->root_bus_nr = 0;
->>  	pp->ops = &exynos_pcie_host_ops;
->>
->>  	ret = dw_pcie_host_init(pp);
->> diff --git a/drivers/pci/host/pci-imx6.c b/drivers/pci/host/pci-imx6.c
->> index fdb9536..c4a80c5 100644
->> --- a/drivers/pci/host/pci-imx6.c
->> +++ b/drivers/pci/host/pci-imx6.c
->> @@ -541,7 +541,7 @@ static int __init imx6_add_pcie_port(struct
->> pcie_port *pp,
->>  		}
->>  	}
->>
->> -	pp->root_bus_nr = -1;
->> +	pp->root_bus_nr = 0;
->>  	pp->ops = &imx6_pcie_host_ops;
->>
->>  	ret = dw_pcie_host_init(pp);
->> diff --git a/drivers/pci/host/pci-keystone-dw.c b/drivers/pci/host/pci-
->> keystone-dw.c
->> index f34892e..b1e4135 100644
->> --- a/drivers/pci/host/pci-keystone-dw.c
->> +++ b/drivers/pci/host/pci-keystone-dw.c
->> @@ -327,7 +327,7 @@ static void ks_dw_pcie_clear_dbi_mode(void __iomem
->> *reg_virt)
->>  void ks_dw_pcie_setup_rc_app_regs(struct keystone_pcie *ks_pcie)
->>  {
->>  	struct pcie_port *pp = &ks_pcie->pp;
->> -	u32 start = pp->mem.start, end = pp->mem.end;
->> +	u32 start = pp->mem->start, end = pp->mem->end;
->>  	int i, tr_size;
->>
->>  	/* Disable BARs for inbound access */
->> diff --git a/drivers/pci/host/pci-keystone.c b/drivers/pci/host/pci-
->> keystone.c
->> index 75333b0..df91f5e 100644
->> --- a/drivers/pci/host/pci-keystone.c
->> +++ b/drivers/pci/host/pci-keystone.c
->> @@ -312,7 +312,7 @@ static int __init ks_add_pcie_port(struct
->> keystone_pcie *ks_pcie,
->>  			return ret;
->>  	}
->>
->> -	pp->root_bus_nr = -1;
->> +	pp->root_bus_nr = 0;
->>  	pp->ops = &keystone_pcie_host_ops;
->>  	ret = ks_dw_pcie_host_init(ks_pcie, ks_pcie->msi_intc_np);
->>  	if (ret) {
->> diff --git a/drivers/pci/host/pci-layerscape.c b/drivers/pci/host/pci-
->> layerscape.c
->> index 4a6e62f..5c7a9c4 100644
->> --- a/drivers/pci/host/pci-layerscape.c
->> +++ b/drivers/pci/host/pci-layerscape.c
->> @@ -101,7 +101,7 @@ static int ls_add_pcie_port(struct ls_pcie *pcie)
->>  	pp = &pcie->pp;
->>  	pp->dev = pcie->dev;
->>  	pp->dbi_base = pcie->dbi;
->> -	pp->root_bus_nr = -1;
->> +	pp->root_bus_nr = 0;
->>  	pp->ops = &ls_pcie_host_ops;
->>
->>  	ret = dw_pcie_host_init(pp);
->> diff --git a/drivers/pci/host/pcie-designware.c
->> b/drivers/pci/host/pcie-designware.c
->> index 2e9f84f..844febee 100644
->> --- a/drivers/pci/host/pcie-designware.c
->> +++ b/drivers/pci/host/pcie-designware.c
->> @@ -11,6 +11,7 @@
->>   * published by the Free Software Foundation.
->>   */
->>
->> +#include <linux/hardirq.h>
->>  #include <linux/irq.h>
->>  #include <linux/irqdomain.h>
->>  #include <linux/kernel.h>
->> @@ -67,16 +68,7 @@
->>  #define PCIE_ATU_FUNC(x)		(((x) & 0x7) << 16)
->>  #define PCIE_ATU_UPPER_TARGET		0x91C
->>
->> -static struct hw_pci dw_pci;
->> -
->> -static unsigned long global_io_offset;
->> -
->> -static inline struct pcie_port *sys_to_pcie(struct pci_sys_data *sys)
->> -{
->> -	BUG_ON(!sys->private_data);
->> -
->> -	return sys->private_data;
->> -}
->> +static struct pci_ops dw_pcie_ops;
->>
->>  int dw_pcie_cfg_read(void __iomem *addr, int where, int size, u32 *val)
->>  {
->> @@ -238,7 +230,7 @@ static void dw_pcie_msi_set_irq(struct pcie_port
->> *pp, int irq)
->>  static int assign_irq(int no_irqs, struct msi_desc *desc, int *pos)
->>  {
->>  	int irq, pos0, i;
->> -	struct pcie_port *pp = sys_to_pcie(desc->dev->bus->sysdata);
->> +	struct pcie_port *pp = desc->dev->bus->sysdata;
->>
->>  	pos0 = bitmap_find_free_region(pp->msi_irq_in_use, MAX_MSI_IRQS,
->>  				       order_base_2(no_irqs));
->> @@ -281,7 +273,7 @@ static int dw_msi_setup_irq(struct msi_controller
->> *chip, struct pci_dev *pdev,
->>  {
->>  	int irq, pos;
->>  	struct msi_msg msg;
->> -	struct pcie_port *pp = sys_to_pcie(pdev->bus->sysdata);
->> +	struct pcie_port *pp = pdev->bus->sysdata;
->>
->>  	if (desc->msi_attrib.is_msix)
->>  		return -EINVAL;
->> @@ -310,7 +302,7 @@ static void dw_msi_teardown_irq(struct
->> msi_controller *chip, unsigned int irq)
->>  {
->>  	struct irq_data *data = irq_get_irq_data(irq);
->>  	struct msi_desc *msi = irq_data_get_msi(data);
->> -	struct pcie_port *pp = sys_to_pcie(msi->dev->bus->sysdata);
->> +	struct pcie_port *pp = msi->dev->bus->sysdata;
->>
->>  	clear_irq_range(pp, irq, 1, data->hwirq);
->>  }
->> @@ -342,16 +334,24 @@ static const struct irq_domain_ops msi_domain_ops
->> = {
->>  	.map = dw_pcie_msi_map,
->>  };
->>
->> -int dw_pcie_host_init(struct pcie_port *pp)
->> +int __init dw_pcie_host_init(struct pcie_port *pp)
->>  {
->>  	struct device_node *np = pp->dev->of_node;
->>  	struct platform_device *pdev = to_platform_device(pp->dev);
->> -	struct of_pci_range range;
->> -	struct of_pci_range_parser parser;
->> +	struct pci_bus *bus;
->>  	struct resource *cfg_res;
->> +	LIST_HEAD(res);
->>  	u32 val, na, ns;
->>  	const __be32 *addrp;
->>  	int i, index, ret;
->> +	int rlen;
->> +	struct resource_entry *win;
->> +	const __be32 *parser_range_end = of_get_property(np, "ranges",
->> &rlen);
+>> +config ARM_MT8173_CPUFREQ
+>> +       bool "Mediatek MT8173 CPUFreq support"
+>> +       depends on ARCH_MEDIATEK && REGULATOR
+>> +       select PM_OPP
+>> +       help
+>> +         This adds the CPUFreq driver support for Mediatek MT8173 SoC.
 >> +
->> +	if (parser_range_end == NULL)
->> +			return -ENOENT;
->> +	parser_range_end += rlen/sizeof(__be32);
+>>  config ARM_OMAP2PLUS_CPUFREQ
+>>         bool "TI OMAP2+"
+>>         depends on ARCH_OMAP2PLUS
+>> diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
+>> index cdce92a..97f9a9b 100644
+>> --- a/drivers/cpufreq/Makefile
+>> +++ b/drivers/cpufreq/Makefile
+>> @@ -63,6 +63,7 @@ obj-$(CONFIG_ARM_HISI_ACPU_CPUFREQ)   += hisi-acpu-cpufreq.o
+>>  obj-$(CONFIG_ARM_IMX6Q_CPUFREQ)                += imx6q-cpufreq.o
+>>  obj-$(CONFIG_ARM_INTEGRATOR)           += integrator-cpufreq.o
+>>  obj-$(CONFIG_ARM_KIRKWOOD_CPUFREQ)     += kirkwood-cpufreq.o
+>> +obj-$(CONFIG_ARM_MT8173_CPUFREQ)       += mt8173-cpufreq.o
+>>  obj-$(CONFIG_ARM_OMAP2PLUS_CPUFREQ)    += omap-cpufreq.o
+>>  obj-$(CONFIG_ARM_PXA2xx_CPUFREQ)       += pxa2xx-cpufreq.o
+>>  obj-$(CONFIG_PXA3xx)                   += pxa3xx-cpufreq.o
+>> diff --git a/drivers/cpufreq/mt8173-cpufreq.c b/drivers/cpufreq/mt8173-cpufreq.c
+>> new file mode 100644
+>> index 0000000..6284e67
+>> --- /dev/null
+>> +++ b/drivers/cpufreq/mt8173-cpufreq.c
+>> @@ -0,0 +1,520 @@
+>> +/*
+>> + * Copyright (c) 2015 Linaro Ltd.
+>> + * Author: Pi-Cheng Chen <pi-cheng.chen@linaro.org>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + *
+>> + * This program is distributed in the hope that it will be useful,
+>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + */
 >> +
->>
->>  	/* Find the address cell size and the number of cells in order to
->> get
->>  	 * the untranslated address.
->> @@ -375,78 +375,67 @@ int dw_pcie_host_init(struct pcie_port *pp)
->>  		dev_err(pp->dev, "missing *config* reg space\n");
->>  	}
->>
->> -	if (of_pci_range_parser_init(&parser, np)) {
->> -		dev_err(pp->dev, "missing ranges property\n");
->> -		return -EINVAL;
->> -	}
->> +	ret = of_pci_get_host_bridge_resources(np, 0, 0xff, &res, &pp-
->>> io_base);
->> +	if (ret)
->> +		return ret;
->>
->>  	/* Get the I/O and memory ranges from DT */
->> -	for_each_of_pci_range(&parser, &range) {
->> -		unsigned long restype = range.flags & IORESOURCE_TYPE_BITS;
->> -
->> -		if (restype == IORESOURCE_IO) {
->> -			of_pci_range_to_resource(&range, np, &pp->io);
->> -			pp->io.name = "I/O";
->> -			pp->io.start = max_t(resource_size_t,
->> -					     PCIBIOS_MIN_IO,
->> -					     range.pci_addr + global_io_offset);
->> -			pp->io.end = min_t(resource_size_t,
->> -					   IO_SPACE_LIMIT,
->> -					   range.pci_addr + range.size
->> -					   + global_io_offset - 1);
->> -			pp->io_size = resource_size(&pp->io);
->> -			pp->io_bus_addr = range.pci_addr;
->> -			pp->io_base = range.cpu_addr;
->> -
->> -			/* Find the untranslated IO space address */
->> -			pp->io_mod_base = of_read_number(parser.range -
->> -							 parser.np + na, ns);
->> -		}
->> -		if (restype == IORESOURCE_MEM) {
->> -			of_pci_range_to_resource(&range, np, &pp->mem);
->> -			pp->mem.name = "MEM";
->> -			pp->mem_size = resource_size(&pp->mem);
->> -			pp->mem_bus_addr = range.pci_addr;
->> -
->> -			/* Find the untranslated MEM space address */
->> -			pp->mem_mod_base = of_read_number(parser.range -
->> -							  parser.np + na, ns);
->> -		}
->> -		if (restype == 0) {
->> -			of_pci_range_to_resource(&range, np, &pp->cfg);
->> -			pp->cfg0_size = resource_size(&pp->cfg)/2;
->> -			pp->cfg1_size = resource_size(&pp->cfg)/2;
->> -			pp->cfg0_base = pp->cfg.start;
->> -			pp->cfg1_base = pp->cfg.start + pp->cfg0_size;
->> +	resource_list_for_each_entry(win, &res) {
->> +		switch (resource_type(win->res)) {
->> +		case IORESOURCE_IO:
->> +			pp->io = win->res;
->> +			pp->io->name = "I/O";
->> +			pp->io_size = resource_size(pp->io);
->> +			pp->io_bus_addr = pp->io->start - win->offset;
->> +			/* magic 5 below comes from magic na and ns in
->> +			 * of_pci_range_parser_init()                 */
->> +			pp->io_mod_base = of_read_number(parser_range_end -
->> +					of_n_addr_cells(np) - 5 + na, ns);
->> +			ret = pci_remap_iospace(pp->io, pp->io_base);
->> +			if (ret) {
->> +				dev_warn(pp->dev, "error %d: failed to map
->> resource %pR\n",
->> +				ret, pp->io);
->> +			continue;
->> +			}
->> +			break;
->> +		case IORESOURCE_MEM:
->> +			pp->mem = win->res;
->> +			pp->mem->name = "MEM";
->> +			pp->mem_size = resource_size(pp->mem);
->> +			pp->mem_bus_addr = pp->mem->start - win->offset;
->> +			pp->mem_mod_base = of_read_number(parser_range_end -
->> +					of_n_addr_cells(np) - 5 + na, ns);
->> +			break;
->> +		case 0:
->> +			pp->cfg = win->res;
->> +			pp->cfg0_size = resource_size(pp->cfg)/2;
->> +			pp->cfg1_size = resource_size(pp->cfg)/2;
->> +			pp->cfg0_base = pp->cfg->start;
->> +			pp->cfg1_base = pp->cfg->start + pp->cfg0_size;
->>
->>  			/* Find the untranslated configuration space address
->> */
->> -			pp->cfg0_mod_base = of_read_number(parser.range -
->> -							   parser.np + na, ns);
->> -			pp->cfg1_mod_base = pp->cfg0_mod_base +
->> -					    pp->cfg0_size;
->> +			pp->cfg0_mod_base = of_read_number(parser_range_end -
->> +					of_n_addr_cells(np) - 5 + na, ns);
->> +			pp->cfg1_mod_base = pp->cfg0_mod_base + pp->cfg0_size;
->> +			break;
->> +		case IORESOURCE_BUS:
->> +			pp->busn = win->res;
->> +			break;
->> +		default:
->> +			continue;
->>  		}
->>  	}
->>
->> -	ret = of_pci_parse_bus_range(np, &pp->busn);
->> -	if (ret < 0) {
->> -		pp->busn.name = np->name;
->> -		pp->busn.start = 0;
->> -		pp->busn.end = 0xff;
->> -		pp->busn.flags = IORESOURCE_BUS;
->> -		dev_dbg(pp->dev, "failed to parse bus-range property: %d,
->> using default %pR\n",
->> -			ret, &pp->busn);
->> -	}
->> -
->>  	if (!pp->dbi_base) {
->> -		pp->dbi_base = devm_ioremap(pp->dev, pp->cfg.start,
->> -					resource_size(&pp->cfg));
->> +		pp->dbi_base = devm_ioremap(pp->dev, pp->cfg->start,
->> +					resource_size(pp->cfg));
->>  		if (!pp->dbi_base) {
->>  			dev_err(pp->dev, "error with ioremap\n");
->>  			return -ENOMEM;
->>  		}
->>  	}
->>
->> -	pp->mem_base = pp->mem.start;
->> +	pp->mem_base = pp->mem->start;
->>
->>  	if (!pp->va_cfg0_base) {
->>  		pp->va_cfg0_base = devm_ioremap(pp->dev, pp->cfg0_base,
->> @@ -493,24 +482,47 @@ int dw_pcie_host_init(struct pcie_port *pp)
->>  	if (pp->ops->host_init)
->>  		pp->ops->host_init(pp);
->>
->> -	dw_pcie_wr_own_conf(pp, PCI_BASE_ADDRESS_0, 4, 0);
->> +	if (dw_pcie_wr_own_conf(pp, PCI_BASE_ADDRESS_0, 4, 0)
->> +			!= PCIBIOS_SUCCESSFUL)
->> +		return -EINVAL;
->>
->>  	/* program correct class for RC */
->> -	dw_pcie_wr_own_conf(pp, PCI_CLASS_DEVICE, 2,
->> PCI_CLASS_BRIDGE_PCI);
->> +	if (dw_pcie_wr_own_conf(pp, PCI_CLASS_DEVICE, 2,
->> PCI_CLASS_BRIDGE_PCI)
->> +			!= PCIBIOS_SUCCESSFUL)
->> +		return -EINVAL;
+>> +#include <linux/clk.h>
+>> +#include <linux/cpu.h>
+>> +#include <linux/cpu_cooling.h>
+>> +#include <linux/cpufreq.h>
+>> +#include <linux/cpumask.h>
+>> +#include <linux/of.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/pm_opp.h>
+>> +#include <linux/regulator/consumer.h>
+>> +#include <linux/slab.h>
+>> +#include <linux/thermal.h>
 >> +
->> +	if (dw_pcie_rd_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4,
->> &val)
->> +			!= PCIBIOS_SUCCESSFUL)
->> +		return -EINVAL;
->>
->> -	dw_pcie_rd_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, &val);
->>  	val |= PORT_LOGIC_SPEED_CHANGE;
->> -	dw_pcie_wr_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, val);
->>
->> -#ifdef CONFIG_PCI_MSI
->> -	dw_pcie_msi_chip.dev = pp->dev;
->> -	dw_pci.msi_ctrl = &dw_pcie_msi_chip;
->> +	if (dw_pcie_wr_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, val)
->> +			!= PCIBIOS_SUCCESSFUL)
->> +		return -EINVAL;
+>> +#define MIN_VOLT_SHIFT         (100000)
+>> +#define MAX_VOLT_SHIFT         (200000)
+>> +#define MAX_VOLT_LIMIT         (1150000)
+>> +#define VOLT_TOL               (10000)
 >> +
->> +	bus = pci_create_root_bus(pp->dev, pp->root_bus_nr, &dw_pcie_ops,
->> +			      pp, &res);
->> +	if (!bus)
->> +		return -ENOMEM;
+>> +/*
+>> + * The struct mtk_cpu_dvfs_info holds necessary information for doing CPU DVFS
+>> + * on each CPU power/clock domain of Mediatek SoCs. Each CPU cluster in
+>> + * Mediatek SoCs has two voltage inputs, Vproc and Vsram. In some cases the two
+>> + * voltage inputs need to be controlled under a hardware limitation:
+>> + * 100mV < Vsram - Vproc < 200mV
+>> + *
+>> + * When scaling the clock frequency of a CPU clock domain, the clock source
+>> + * needs to be switched to another stable PLL clock temporarily until
+>> + * the original PLL becomes stable at target frequency.
+>> + */
+>> +struct mtk_cpu_dvfs_info {
+>> +       struct device *cpu_dev;
+>> +       struct regulator *proc_reg;
+>> +       struct regulator *sram_reg;
+>> +       struct clk *cpu_clk;
+>> +       struct clk *inter_clk;
+>> +       struct thermal_cooling_device *cdev;
+>> +       int intermediate_voltage;
+>> +       bool need_voltage_trace;
+>> +};
 >> +
->> +#ifdef CONFIG_GENERIC_MSI_IRQ_DOMAIN
->> +	bus->msi = container_of(&pp->irq_domain, struct msi_controller,
->> domain);
->> +#else
->> +	bus->msi = &dw_pcie_msi_chip;
->>  #endif
->>
->> -	dw_pci.nr_controllers = 1;
->> -	dw_pci.private_data = (void **)&pp;
->> +	pci_scan_child_bus(bus);
->> +	if (pp->ops->scan_bus)
->> +		pp->ops->scan_bus(pp);
->>
->> -	pci_common_init_dev(pp->dev, &dw_pci);
->> +#ifdef CONFIG_ARM
->> +	/* support old dtbs that incorrectly describe IRQs */
->> +	pci_fixup_irqs(pci_common_swizzle, of_irq_parse_and_map_pci);
->> +#endif
+>> +static int mtk_cpufreq_voltage_trace(struct mtk_cpu_dvfs_info *info,
+>> +                                    int new_vproc)
+>> +{
+>> +       struct regulator *proc_reg = info->proc_reg;
+>> +       struct regulator *sram_reg = info->sram_reg;
+>> +       int old_vproc, old_vsram, new_vsram, vsram, vproc, ret;
 >> +
->> +	pci_assign_unassigned_bus_resources(bus);
->> +	pci_bus_add_devices(bus);
->>
->>  	return 0;
->>  }
->> @@ -653,7 +665,7 @@ static int dw_pcie_valid_config(struct pcie_port
->> *pp,
->>  static int dw_pcie_rd_conf(struct pci_bus *bus, u32 devfn, int where,
->>  			int size, u32 *val)
->>  {
->> -	struct pcie_port *pp = sys_to_pcie(bus->sysdata);
->> +	struct pcie_port *pp = bus->sysdata;
->>  	int ret;
->>
->>  	if (dw_pcie_valid_config(pp, bus, PCI_SLOT(devfn)) == 0) {
->> @@ -677,7 +689,7 @@ static int dw_pcie_rd_conf(struct pci_bus *bus, u32
->> devfn, int where,
->>  static int dw_pcie_wr_conf(struct pci_bus *bus, u32 devfn,
->>  			int where, int size, u32 val)
->>  {
->> -	struct pcie_port *pp = sys_to_pcie(bus->sysdata);
->> +	struct pcie_port *pp = bus->sysdata;
->>  	int ret;
->>
->>  	if (dw_pcie_valid_config(pp, bus, PCI_SLOT(devfn)) == 0)
->> @@ -701,64 +713,6 @@ static struct pci_ops dw_pcie_ops = {
->>  	.write = dw_pcie_wr_conf,
->>  };
->>
->> -static int dw_pcie_setup(int nr, struct pci_sys_data *sys)
->> -{
->> -	struct pcie_port *pp;
->> -
->> -	pp = sys_to_pcie(sys);
->> -
->> -	if (global_io_offset < SZ_1M && pp->io_size > 0) {
->> -		sys->io_offset = global_io_offset - pp->io_bus_addr;
->> -		pci_ioremap_io(global_io_offset, pp->io_base);
->> -		global_io_offset += SZ_64K;
->> -		pci_add_resource_offset(&sys->resources, &pp->io,
->> -					sys->io_offset);
->> -	}
->> -
->> -	sys->mem_offset = pp->mem.start - pp->mem_bus_addr;
->> -	pci_add_resource_offset(&sys->resources, &pp->mem, sys-
->>> mem_offset);
->> -	pci_add_resource(&sys->resources, &pp->busn);
->> -
->> -	return 1;
->> -}
->> -
->> -static struct pci_bus *dw_pcie_scan_bus(int nr, struct pci_sys_data
->> *sys)
->> -{
->> -	struct pci_bus *bus;
->> -	struct pcie_port *pp = sys_to_pcie(sys);
->> -
->> -	pp->root_bus_nr = sys->busnr;
->> -	bus = pci_create_root_bus(pp->dev, sys->busnr,
->> -				  &dw_pcie_ops, sys, &sys->resources);
->> -	if (!bus)
->> -		return NULL;
->> -
->> -	pci_scan_child_bus(bus);
->> -
->> -	if (bus && pp->ops->scan_bus)
->> -		pp->ops->scan_bus(pp);
->> -
->> -	return bus;
->> -}
->> -
->> -static int dw_pcie_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
->> -{
->> -	struct pcie_port *pp = sys_to_pcie(dev->bus->sysdata);
->> -	int irq;
->> -
->> -	irq = of_irq_parse_and_map_pci(dev, slot, pin);
->> -	if (!irq)
->> -		irq = pp->irq;
->> -
->> -	return irq;
->> -}
->> -
->> -static struct hw_pci dw_pci = {
->> -	.setup		= dw_pcie_setup,
->> -	.scan		= dw_pcie_scan_bus,
->> -	.map_irq	= dw_pcie_map_irq,
->> -};
->> -
->>  void dw_pcie_setup_rc(struct pcie_port *pp)
->>  {
->>  	u32 val;
->> diff --git a/drivers/pci/host/pcie-designware.h
->> b/drivers/pci/host/pcie-designware.h
->> index d0bbd27..ab78710 100644
->> --- a/drivers/pci/host/pcie-designware.h
->> +++ b/drivers/pci/host/pcie-designware.h
->> @@ -34,7 +34,7 @@ struct pcie_port {
->>  	u64			cfg1_mod_base;
->>  	void __iomem		*va_cfg1_base;
->>  	u32			cfg1_size;
->> -	u64			io_base;
->> +	resource_size_t			io_base;
->>  	u64			io_mod_base;
->>  	phys_addr_t		io_bus_addr;
->>  	u32			io_size;
->> @@ -42,10 +42,10 @@ struct pcie_port {
->>  	u64			mem_mod_base;
->>  	phys_addr_t		mem_bus_addr;
->>  	u32			mem_size;
->> -	struct resource		cfg;
->> -	struct resource		io;
->> -	struct resource		mem;
->> -	struct resource		busn;
->> +	struct resource		*cfg;
->> +	struct resource		*io;
->> +	struct resource		*mem;
->> +	struct resource		*busn;
->>  	int			irq;
->>  	u32			lanes;
->>  	struct pcie_host_ops	*ops;
->> diff --git a/drivers/pci/host/pcie-spear13xx.c b/drivers/pci/host/pcie-
->> spear13xx.c
->> index 020d788..e78ddf8 100644
->> --- a/drivers/pci/host/pcie-spear13xx.c
->> +++ b/drivers/pci/host/pcie-spear13xx.c
->> @@ -287,7 +287,7 @@ static int spear13xx_add_pcie_port(struct pcie_port
->> *pp,
->>  		return ret;
->>  	}
->>
->> -	pp->root_bus_nr = -1;
->> +	pp->root_bus_nr = 0;
->>  	pp->ops = &spear13xx_pcie_host_ops;
->>
->>  	ret = dw_pcie_host_init(pp);
->> --
->> 1.9.1
-> 
+>> +       old_vproc = regulator_get_voltage(proc_reg);
+>> +       old_vsram = regulator_get_voltage(sram_reg);
+>> +       /* Vsram should not exceed the maximum allowed voltage of SoC. */
+>> +       new_vsram = min(new_vproc + MIN_VOLT_SHIFT, MAX_VOLT_LIMIT);
+>> +
+>> +       if (old_vproc < new_vproc) {
+>> +               /*
+>> +                * When scaling up voltages, Vsram and Vproc scale up step
+>> +                * by step. At each step, set Vsram to (Vproc + 200mV) first,
+>> +                * then set Vproc to (Vsram - 100mV).
+>> +                * Keep doing it until Vsram and Vproc hit target voltages.
+>> +                */
+>> +               do {
+>> +                       old_vsram = regulator_get_voltage(sram_reg);
+>> +                       old_vproc = regulator_get_voltage(proc_reg);
+>> +
+>> +                       vsram = min(new_vsram, old_vproc + MAX_VOLT_SHIFT);
+>> +
+>> +                       if (vsram + VOLT_TOL >= MAX_VOLT_LIMIT) {
+>> +                               vsram = MAX_VOLT_LIMIT;
+>> +
+>> +                               /*
+>> +                                * If the target Vsram hits the maximum voltage,
+>> +                                * try to set the exact voltage value first.
+>> +                                */
+>> +                               ret = regulator_set_voltage(sram_reg, vsram,
+>> +                                                           vsram);
+>> +                               if (ret)
+>> +                                       ret = regulator_set_voltage(sram_reg,
+>> +                                                       vsram - VOLT_TOL,
+>> +                                                       vsram);
+>> +
+>> +                               vproc = new_vproc;
+>> +                       } else {
+>> +                               ret = regulator_set_voltage(sram_reg, vsram,
+>> +                                                           vsram + VOLT_TOL);
+>> +
+>> +                               vproc = vsram - MIN_VOLT_SHIFT;
+>> +                       }
+>> +                       if (ret)
+>> +                               return ret;
+>> +
+>> +                       ret = regulator_set_voltage(proc_reg, vproc,
+>> +                                                   vproc + VOLT_TOL);
+>> +                       if (ret) {
+>> +                               regulator_set_voltage(sram_reg, old_vsram,
+>> +                                                     old_vsram);
+>> +                               return ret;
+>> +                       }
+>> +               } while (vproc < new_vproc || vsram < new_vsram);
+>> +       } else if (old_vproc > new_vproc) {
+>> +               /*
+>> +                * When scaling down voltages, Vsram and Vproc scale down step
+>> +                * by step. At each step, set Vproc to (Vsram - 200mV) first,
+>> +                * then set Vproc to (Vproc + 100mV).
+>> +                * Keep doing it until Vsram and Vproc hit target voltages.
+>> +                */
+>> +               do {
+>> +                       old_vproc = regulator_get_voltage(proc_reg);
+>> +                       old_vsram = regulator_get_voltage(sram_reg);
+>> +
+>> +                       vproc = max(new_vproc, old_vsram - MAX_VOLT_SHIFT);
+>> +                       ret = regulator_set_voltage(proc_reg, vproc,
+>> +                                                   vproc + VOLT_TOL);
+>> +                       if (ret)
+>> +                               return ret;
+>> +
+>> +                       if (vproc == new_vproc)
+>> +                               vsram = new_vsram;
+>> +                       else
+>> +                               vsram = max(new_vsram, vproc + MIN_VOLT_SHIFT);
+>> +
+>> +                       if (vsram + VOLT_TOL >= MAX_VOLT_LIMIT) {
+>> +                               vsram = MAX_VOLT_LIMIT;
+>> +
+>> +                               /*
+>> +                                * If the target Vsram hits the maximum voltage,
+>> +                                * try to set the exact voltage value first.
+>> +                                */
+>> +                               ret = regulator_set_voltage(sram_reg, vsram,
+>> +                                                           vsram);
+>> +                               if (ret)
+>> +                                       ret = regulator_set_voltage(sram_reg,
+>> +                                                       vsram - VOLT_TOL,
+>> +                                                       vsram);
+>> +                       } else {
+>> +                               ret = regulator_set_voltage(sram_reg, vsram,
+>> +                                                           vsram + VOLT_TOL);
+>> +                       }
+>> +
+>> +                       if (ret) {
+>> +                               regulator_set_voltage(proc_reg, old_vproc,
+>> +                                                     old_vproc);
+>> +                               return ret;
+>> +                       }
+>> +               } while (vproc > new_vproc + VOLT_TOL ||
+>> +                        vsram > new_vsram + VOLT_TOL);
+>> +       }
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static int mtk_cpufreq_set_voltage(struct mtk_cpu_dvfs_info *info, int vproc)
+>> +{
+>> +       if (info->need_voltage_trace)
+>> +               return mtk_cpufreq_voltage_trace(info, vproc);
+>> +       else
+>> +               return regulator_set_voltage(info->proc_reg, vproc,
+>> +                                            vproc + VOLT_TOL);
+>> +}
+>> +
+>> +static int mtk_cpufreq_set_target(struct cpufreq_policy *policy,
+>> +                                 unsigned int index)
+>> +{
+>> +       struct cpufreq_frequency_table *freq_table = policy->freq_table;
+>> +       struct clk *cpu_clk = policy->clk;
+>> +       struct clk *armpll = clk_get_parent(cpu_clk);
+>> +       struct mtk_cpu_dvfs_info *info = policy->driver_data;
+>> +       struct device *cpu_dev = info->cpu_dev;
+>> +       struct dev_pm_opp *opp;
+>> +       long freq_hz, old_freq_hz;
+>> +       int vproc, old_vproc, inter_vproc, target_vproc, ret;
+>> +
+>> +       inter_vproc = info->intermediate_voltage;
+>> +
+>> +       old_freq_hz = clk_get_rate(cpu_clk);
+>> +       old_vproc = regulator_get_voltage(info->proc_reg);
+>> +
+>> +       freq_hz = freq_table[index].frequency * 1000;
+>> +
+>> +       rcu_read_lock();
+>> +       opp = dev_pm_opp_find_freq_ceil(cpu_dev, &freq_hz);
+>> +       if (IS_ERR(opp)) {
+>> +               rcu_read_unlock();
+>> +               pr_err("cpu%d: failed to find OPP for %ld\n",
+>> +                      policy->cpu, freq_hz);
+>> +               return PTR_ERR(opp);
+>> +       }
+>> +       vproc = dev_pm_opp_get_voltage(opp);
+>> +       rcu_read_unlock();
+>> +
+>> +       /*
+>> +        * If the new voltage or the intermediate voltage is higher than the
+>> +        * current voltage, scale up voltage first.
+>> +        */
+>> +       target_vproc = (inter_vproc > vproc) ? inter_vproc : vproc;
+>> +       if (old_vproc < target_vproc) {
+>> +               ret = mtk_cpufreq_set_voltage(info, target_vproc);
+>> +               if (ret) {
+>> +                       pr_err("cpu%d: failed to scale up voltage!\n",
+>> +                              policy->cpu);
+>> +                       mtk_cpufreq_set_voltage(info, old_vproc);
+>> +                       return ret;
+>> +               }
+>> +       }
+>> +
+>> +       /* Reparent the CPU clock to intermediate clock. */
+>> +       ret = clk_set_parent(cpu_clk, info->inter_clk);
+>> +       if (ret) {
+>> +               pr_err("cpu%d: failed to re-parent cpu clock!\n",
+>> +                      policy->cpu);
+>> +               mtk_cpufreq_set_voltage(info, old_vproc);
+>> +               WARN_ON(1);
+>> +               return ret;
+>> +       }
+>> +
+>> +       /* Set the original PLL to target rate. */
+>> +       ret = clk_set_rate(armpll, freq_hz);
+>> +       if (ret) {
+>> +               pr_err("cpu%d: failed to scale cpu clock rate!\n",
+>> +                      policy->cpu);
+>> +               clk_set_parent(cpu_clk, armpll);
+>> +               mtk_cpufreq_set_voltage(info, old_vproc);
+>> +               return ret;
+>> +       }
+>> +
+>> +       /* Set parent of CPU clock back to the original PLL. */
+>> +       ret = clk_set_parent(cpu_clk, armpll);
+>> +       if (ret) {
+>> +               pr_err("cpu%d: failed to re-parent cpu clock!\n",
+>> +                      policy->cpu);
+>> +               mtk_cpufreq_set_voltage(info, inter_vproc);
+>> +               WARN_ON(1);
+>> +               return ret;
+>> +       }
+>> +
+>> +       /*
+>> +        * If the new voltage is lower than the intermediate voltage or the
+>> +        * original voltage, scale down to the new voltage.
+>> +        */
+>> +       if (vproc < inter_vproc || vproc < old_vproc) {
+>> +               ret = mtk_cpufreq_set_voltage(info, vproc);
+>> +               if (ret) {
+>> +                       pr_err("cpu%d: failed to scale down voltage!\n",
+>> +                              policy->cpu);
+>> +                       clk_set_parent(cpu_clk, info->inter_clk);
+>> +                       clk_set_rate(armpll, old_freq_hz);
+>> +                       clk_set_parent(cpu_clk, armpll);
+>> +                       return ret;
+>> +               }
+>> +       }
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static void mtk_cpufreq_ready(struct cpufreq_policy *policy)
+>> +{
+>> +       struct mtk_cpu_dvfs_info *info = policy->driver_data;
+>> +       struct device_node *np = of_node_get(info->cpu_dev->of_node);
+>> +
+>> +       if (WARN_ON(!np))
+>> +               return;
+>> +
+>> +       if (of_find_property(np, "#cooling-cells", NULL)) {
+>> +               info->cdev = of_cpufreq_cooling_register(np,
+>> +                                                        policy->related_cpus);
+>> +
+>> +               if (IS_ERR(info->cdev)) {
+>> +                       dev_err(info->cpu_dev,
+>> +                               "running cpufreq without cooling device: %ld\n",
+>> +                               PTR_ERR(info->cdev));
+>> +
+>> +                       info->cdev = NULL;
+>> +               }
+>> +       }
+>> +
+>> +       of_node_put(np);
+>> +}
+>> +
+>> +static int mtk_cpu_dvfs_info_init(struct mtk_cpu_dvfs_info *info, int cpu)
+>> +{
+>> +       struct device *cpu_dev;
+>> +       struct regulator *proc_reg = ERR_PTR(-ENODEV);
+>> +       struct regulator *sram_reg = ERR_PTR(-ENODEV);
+>> +       struct clk *cpu_clk = ERR_PTR(-ENODEV);
+>> +       struct clk *inter_clk = ERR_PTR(-ENODEV);
+>> +       struct dev_pm_opp *opp;
+>> +       unsigned long rate;
+>> +       int ret;
+>> +
+>> +       cpu_dev = get_cpu_device(cpu);
+>> +       if (!cpu_dev) {
+>> +               pr_err("failed to get cpu%d device\n", cpu);
+>> +               return -ENODEV;
+>> +       }
+>> +
+>> +       ret = of_init_opp_table(cpu_dev);
+>> +       if (ret) {
+>> +               pr_warn("no OPP table for cpu%d\n", cpu);
+>> +               return ret;
+>> +       }
+>> +
+>> +       cpu_clk = clk_get(cpu_dev, "cpu");
+>> +       if (IS_ERR(cpu_clk)) {
+>> +               if (PTR_ERR(cpu_clk) == -EPROBE_DEFER)
+>> +                       pr_warn("cpu clk for cpu%d not ready, retry.\n", cpu);
+>> +               else
+>> +                       pr_err("failed to get cpu clk for cpu%d\n", cpu);
+>> +
+>> +               ret = PTR_ERR(cpu_clk);
+>> +               goto out_free_opp_table;
+>> +       }
+>> +
+>> +       inter_clk = clk_get(cpu_dev, "intermediate");
+>> +       if (IS_ERR(inter_clk)) {
+>> +               if (PTR_ERR(inter_clk) == -EPROBE_DEFER)
+>> +                       pr_warn("intermediate clk for cpu%d not ready, retry.\n",
+>> +                               cpu);
+>> +               else
+>> +                       pr_err("failed to get intermediate clk for cpu%d\n",
+>> +                              cpu);
+>> +
+>> +               ret = PTR_ERR(inter_clk);
+>> +               goto out_free_resources;
+>> +       }
+>> +
+>> +       proc_reg = regulator_get_exclusive(cpu_dev, "proc");
+>> +       if (IS_ERR(proc_reg)) {
+>> +               if (PTR_ERR(proc_reg) == -EPROBE_DEFER)
+>> +                       pr_warn("proc regulator for cpu%d not ready, retry.\n",
+>> +                               cpu);
+>> +               else
+>> +                       pr_err("failed to get proc regulator for cpu%d\n",
+>> +                              cpu);
+>> +
+>> +               ret = PTR_ERR(proc_reg);
+>> +               goto out_free_resources;
+>> +       }
+>> +
+>> +       /* Both presence and absence of sram regulator are valid cases. */
+>> +       sram_reg = regulator_get_exclusive(cpu_dev, "sram");
+>> +
+>> +       /* Search a safe voltage for intermediate frequency. */
+>> +       rate = clk_get_rate(inter_clk);
+>> +       rcu_read_lock();
+>> +       opp = dev_pm_opp_find_freq_ceil(cpu_dev, &rate);
+>> +       if (IS_ERR(opp)) {
+>> +               pr_err("failed to get intermediate opp for cpu%d\n", cpu);
+>> +               ret = PTR_ERR(opp);
+>> +               goto out_free_resources;
+>> +       }
+>
+> Could you please check this error path? Probably you missed
+> rcu_read_unlock() here.
+
+Yes. rcu_read_unlock is missed here. I will add it.
+Thanks for your reviewing.
+
+Best Regards,
+Pi-Cheng
+
+>
+>> +       info->intermediate_voltage = dev_pm_opp_get_voltage(opp);
+>> +       rcu_read_unlock();
+>> +
+>> +       info->cpu_dev = cpu_dev;
+>> +       info->proc_reg = proc_reg;
+>> +       info->sram_reg = IS_ERR(sram_reg) ? NULL : sram_reg;
+>> +       info->cpu_clk = cpu_clk;
+>> +       info->inter_clk = inter_clk;
+>> +
+>> +       /*
+>> +        * If SRAM regulator is present, software "voltage trace" is needed
+>> +        * for this CPU power domain.
+>> +        */
+>> +       info->need_voltage_trace = !IS_ERR(sram_reg);
+>> +
+>> +       return 0;
+>> +
+>> +out_free_resources:
+>> +       if (!IS_ERR(proc_reg))
+>> +               regulator_put(proc_reg);
+>> +       if (!IS_ERR(sram_reg))
+>> +               regulator_put(sram_reg);
+>> +       if (!IS_ERR(cpu_clk))
+>> +               clk_put(cpu_clk);
+>> +       if (!IS_ERR(inter_clk))
+>> +               clk_put(inter_clk);
+>> +
+>> +out_free_opp_table:
+>> +       of_free_opp_table(cpu_dev);
+>> +
+>> +       return ret;
+>> +}
+>
+> <snip>
+>
+> Best regards,
+> Alexey Klimov
