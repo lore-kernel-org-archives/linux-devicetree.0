@@ -1,56 +1,32 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v2] arm: koelsch: make USB0 perform Host/Function
- switching
-Date: Thu, 2 Jul 2015 14:32:11 +0300
-Message-ID: <5595213B.7080809@cogentembedded.com>
-References: <1435824869-22784-1-git-send-email-phil.edworthy@renesas.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: [PATCH 0/2] ARM: DTS: am437x-sk-evm: Use simple-card for audio support
+Date: Thu, 2 Jul 2015 14:58:04 +0300
+Message-ID: <1435838286-30491-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1435824869-22784-1-git-send-email-phil.edworthy@renesas.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Phil Edworthy <phil.edworthy@renesas.com>, Simon Horman <horms@verge.net.au>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-sh@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: tony@atomide.com
+Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, balbi@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Hi,
 
-On 7/2/2015 11:14 AM, Phil Edworthy wrote:
+There is no reason to use the davinci-evm machine driver's compatible for audio
+support since the setup is simple and the common simple-audio-card can handle it
+just fine.
+Also add McASP1 sleep pin configuration.
 
-> Both USB Host (pci0) and Function (USBHS) drivers are enabled.
-> The USB PHY driver determines which IP block should be connected
-> based on vbus and id signals read via gpios.
+Regards,
+Peter
+---
+Peter Ujfalusi (2):
+  ARM: DTS: am437x-sk-evm: Add sleep pin settings for mcasp1
+  ARM: DTS: am437x-sk-evm: Switch using simple-audio-card for audio
+    support
 
-> Note that switch SW5 and SW6 on Koelsch board needs to be set to
-> position 3 for this to work.
+ arch/arm/boot/dts/am437x-sk-evm.dts | 42 +++++++++++++++++++++++++++++--------
+ 1 file changed, 33 insertions(+), 9 deletions(-)
 
-[...]
-
-> diff --git a/arch/arm/boot/dts/r8a7791-koelsch.dts b/arch/arm/boot/dts/r8a7791-koelsch.dts
-> index cffe33f..1bb34d0 100644
-> --- a/arch/arm/boot/dts/r8a7791-koelsch.dts
-> +++ b/arch/arm/boot/dts/r8a7791-koelsch.dts
-> @@ -615,7 +615,6 @@
->
->   &pci0 {
->   	status = "okay";
-> -	pinctrl-0 = <&usb0_pins>;
->   	pinctrl-names = "default";
-
-    As you're removing "pinctrl-0" prop, you also should remove "pinctrl-names".
-
->   };
->
-> @@ -627,13 +626,15 @@
->
->   &hsusb {
->   	status = "okay";
-> -	pinctrl-0 = <&usb0_pins>;
-
-    Likewise.
-
-[...]
-
-WBR, Sergei
-
+-- 
+2.4.5
