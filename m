@@ -1,37 +1,52 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 6/9] drivers: clk: st: Add CLK_GET_RATE_NOCACHE flag to
- clocks
-Date: Thu, 2 Jul 2015 10:00:09 -0700
-Message-ID: <20150702170009.GD4301@codeaurora.org>
-References: <1435068567-30995-1-git-send-email-gabriel.fernandez@linaro.org>
- <1435068567-30995-7-git-send-email-gabriel.fernandez@linaro.org>
+From: James Morse <james.morse@arm.com>
+Subject: Re: [PATCH v3 2/5] PCI: designware: Add ARM64 support
+Date: Thu, 02 Jul 2015 18:40:32 +0100
+Message-ID: <55957790.9060802@arm.com>
+References: <1435743817-19083-1-git-send-email-wangzhou1@hisilicon.com> <1435743817-19083-3-git-send-email-wangzhou1@hisilicon.com> <EE11001F9E5DDD47B7634E2F8A612F2E01D4E4BB@lhreml503-mbs> <5593F899.6050306@arm.com> <EE11001F9E5DDD47B7634E2F8A612F2E01D4E6A2@lhreml503-mbs> <55942441.3050705@arm.com> <EE11001F9E5DDD47B7634E2F8A612F2E01D4EC38@lhreml503-mbs>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1435068567-30995-7-git-send-email-gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pankaj Dev <pankaj.dev-qxv4g6HH51o@public.gmane.org>, Olivier Bideau <olivier.bideau-qxv4g6HH51o@public.gmane.org>, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Fabian Frederick <fabf-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <EE11001F9E5DDD47B7634E2F8A612F2E01D4EC38@lhreml503-mbs>
+Sender: linux-pci-owner@vger.kernel.org
+To: Gabriele Paoloni <gabriele.paoloni@huawei.com>, "Wangzhou (B)" <wangzhou1@hisilicon.com>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jg1.han@samsung.com>, Pratyush Anand <pratyush.anand@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Liviu Dudau <Liviu.Dudau@arm.com>, "kishon@ti.com" <kishon@ti.com>, "xobs@kosagi.com" <xobs@kosagi.com>, "m-karicheri2@ti.com" <m-karicheri2@ti.com>, "Minghuan.Lian@freescale.com" <Minghuan.Lian@freescale.com>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Yuanzhichang <yuanzhichang@hisilicon.com>, Zhudacai <zhudacai@hisilicon.com>, zhangjukuo <zhangjukuo@huawei.com>, qiuzhenfa <qiuzhenfa@hisilicon.com>, "liguozhu@hisilicon.com" <liguozhu@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
-On 06/23, Gabriel Fernandez wrote:
-> From: Pankaj Dev <pankaj.dev-qxv4g6HH51o@public.gmane.org>
+On 02/07/15 08:24, Gabriele Paoloni wrote:
+>> It looks like the BAR containing the bridge window is not being assigned,
+>> so no devices on bus 1 are discovered.
 > 
-> Add the CLK_GET_RATE_NOCACHE flag to all the clocks with recalc ops,
-> so that they reflect Hw rate after CPS wake-up when a clk_get_rate()
-> is called
-> 
-> Signed-off-by: Pankaj Dev <pankaj.dev-qxv4g6HH51o@public.gmane.org>
-> Signed-off-by: Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
+> Can you confirm the dtsi you are using..."imx6qdl.dtsi" ?
 
-Applied to clk-fixes
+Yes, that looks right.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The on-disk file was 'imx6q-sabrelite.dtb' when I received the board, I
+replaced it with the one from the v4.1 kernel tree.
+
+Decompiled from /sys/firmware/fdt (to eliminate bootloader trickery), the
+pcie section reads:
+pcie@0x01000000 {
+	compatible = "fsl,imx6q-pcie", "snps,dw-pcie";
+	reg = <0x1ffc000 0x4000 0x1f00000 0x80000>;
+	reg-names = "dbi", "config";
+	#address-cells = <0x3>;
+	#size-cells = <0x2>;
+	device_type = "pci";
+	ranges = <0x800 0x0 0x1f00000 0x1f00000 0x0 0x80000 0x81000000 0x0 0x0
+0x1f80000 0x0 0x10000 0x82000000 0x0 0x1000000 0x1000000 0x0 0xf00000>;
+	num-lanes = <0x1>;
+	interrupts = <0x0 0x78 0x4>;
+	interrupt-names = "msi";
+	#interrupt-cells = <0x1>;
+	interrupt-map-mask = <0x0 0x0 0x0 0x7>;
+	interrupt-map = <0x0 0x0 0x0 0x1 0x1 0x0 0x7b 0x4 0x0 0x0 0x0 0x2 0x1 0x0
+0x7a 0x4 0x0 0x0 0x0 0x3 0x1 0x0 0x79 0x4 0x0 0x0 0x0 0x4 0x1 0x0 0x78 0x4>;
+	clocks = <0x3 0x90 0x3 0xce 0x3 0xbd>;
+	clock-names = "pcie", "pcie_bus", "pcie_phy";
+	status = "okay";
+};
+
+
+
+James
