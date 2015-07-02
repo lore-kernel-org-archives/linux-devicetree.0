@@ -1,55 +1,51 @@
-From: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 2/4] tty/serial: at91: fix some macro definitions to
- fit coding style
-Date: Thu, 2 Jul 2015 15:36:49 +0200
-Message-ID: <55953E71.4070109@atmel.com>
-References: <cover.1435672649.git.cyrille.pitchen@atmel.com> <9f0f19d2fe05ea95572b467ec49ecd11389e3be9.1435672649.git.cyrille.pitchen@atmel.com> <11308515.NsBzDiA1lH@wuerfel>
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: Re: [RFC PATCH 1/7] ARM: dts: vf610: Add missing QuadSPI register
+ mapping and names.
+Date: Thu, 02 Jul 2015 15:34:58 +0200
+Message-ID: <cfce9c6cf3d8f1cab843ec4aed37e1f5@agner.ch>
+References: <1435782010-9809-1-git-send-email-cory.tusar@pid1solutions.com>
+ <1435782010-9809-3-git-send-email-cory.tusar@pid1solutions.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <11308515.NsBzDiA1lH@wuerfel>
+In-Reply-To: <1435782010-9809-3-git-send-email-cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, leilei.zhao-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, julia.lawall-L2FTfq7BK8M@public.gmane.org
+To: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, han.xu-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+On 2015-07-01 22:20, Cory Tusar wrote:
+> Both 'reg' and 'reg-names' are required properties according to binding
+> documentation, and both should contain two items.
+> 
+> Signed-off-by: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/vfxxx.dtsi | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
+> index 4aa3351..089a263 100644
+> --- a/arch/arm/boot/dts/vfxxx.dtsi
+> +++ b/arch/arm/boot/dts/vfxxx.dtsi
+> @@ -242,7 +242,8 @@
+>  				#address-cells = <1>;
+>  				#size-cells = <0>;
+>  				compatible = "fsl,vf610-qspi";
+> -				reg = <0x40044000 0x1000>;
+> +				reg = <0x40044000 0x1000>, <0x20000000 0x10000000>;
+> +				reg-names = "QuadSPI", "QuadSPI-memory";
+>  				interrupts = <24 IRQ_TYPE_LEVEL_HIGH>;
+>  				clocks = <&clks VF610_CLK_QSPI0_EN>,
+>  					<&clks VF610_CLK_QSPI0>;
 
-I've just sent a new series of patches to remove all those macros.
-By the way, the patch dedicated to this update was created using coccin=
-elle.
-Based on Alexandre comment, I leave __raw_writel() and __raw_readl() fo=
-r now.
+Hm, this seem to have been wrong since the beginning...
 
-Best Regards,
-
-Cyrille
-
-Le 30/06/2015 22:28, Arnd Bergmann a =E9crit :
-> On Tuesday 30 June 2015 16:05:15 Cyrille Pitchen wrote:
->> +#define UART_PUT_CR(port, v)   __raw_writel(v, (port)->membase + AT=
-MEL_US_CR)
->> +#define UART_GET_MR(port)      __raw_readl((port)->membase + ATMEL_=
-US_MR)
->> +#define UART_PUT_MR(port, v)   __raw_writel(v, (port)->membase + AT=
-MEL_US_MR)
->> +#define UART_PUT_IER(port, v)  __raw_writel(v, (port)->membase + AT=
-MEL_US_IER)
->>
->=20
-> How about removing these macros entirely? I'm not aware of other driv=
-ers
-> doing it like this, and it does not seem to add any value?
->=20
-> At the same time, you could use readl_relaxed() to make the driver
-> endian-safe.
->=20
-> 	Arnd
->=20
+Acked-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+Stefan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
