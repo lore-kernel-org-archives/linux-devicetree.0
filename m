@@ -1,65 +1,79 @@
-From: Michael van der Westhuizen <michael@smart-africa.com>
-Subject: Re: [PATCH 1/2] gpio: dwapb: Use human understandable gpio numbering.
-Date: Thu, 2 Jul 2015 17:02:34 +0100
-Message-ID: <038289C9-2848-4545-B450-7D4EA074CD26@smart-africa.com>
-References: <cover.1435777856.git.rcochran@linutronix.de> <d6b5ce85a17164970d454583560e07f7aed7b8ca.1435777856.git.rcochran@linutronix.de> <5594E9F6.7040701@linutronix.de> <20150702142601.GB9349@localhost.localdomain> <55954B17.3020303@linutronix.de> <20150702152147.GA10111@localhost.localdomain> <55955EB5.4090400@linutronix.de>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2102\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <55955EB5.4090400@linutronix.de>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Richard Cochran <richardcochran@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, Alan Tull <atull@altera.com>, linux-arm-kernel@lists.infradead.org, Dinh Nguyen <dinguyen@altera.com>
+From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [PATCH v6 0/3] cpufreq: Use cpufreq-dt driver for Exynos3250
+Date: Thu, 02 Jul 2015 18:13:22 +0200
+Message-ID: <4464631.oZyVO4Z0Ov@amdc1976>
+References: <1435797761-3339-1-git-send-email-cw00.choi@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1435797761-3339-1-git-send-email-cw00.choi@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: s.nawrocki@samsung.com, tomasz.figa@gmail.com, mturquette@baylibre.com, sboyd@codeaurora.org, kgene@kernel.org, k.kozlowski@samsung.com, thomas.ab@samsung.com, kyungmin.park@samsung.com, linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
-> On 02 Jul 2015, at 4:54 PM, Sebastian Andrzej Siewior <bigeasy@linutr=
-onix.de> wrote:
->=20
-> On 07/02/2015 05:21 PM, Richard Cochran wrote:
->> On Thu, Jul 02, 2015 at 04:30:47PM +0200, Sebastian Andrzej Siewior =
-wrote:
->>> On 07/02/2015 04:26 PM, Richard Cochran wrote:
->>>> On Thu, Jul 02, 2015 at 09:36:22AM +0200, Sebastian Andrzej Siewio=
-r wrote:
->>>>> If you are in a specific SoC you could do
->>>>> 	base =3D of_alias_get_id(np, "gpio") * num_of_gpio_per_chip
->>>>> and get consistent numbers / sane.
->>>>=20
->>>> And what about /sys/class/gpio ?
->>>=20
->>> What about it?
->>=20
->> The poor users of that interface cannot use "of_alias_get_id" as you=
- suggest.
->=20
-> You do that in the driver. The only problem with that is that the
-> synopsys controller can have between one and four banks and a bank ca=
-n
-> have 1-32 GPIOs if I remember correctly. That means you can't have a
-> static number of GPIOs like others do.
+Hi,
 
-This is correct.
+On Thursday, July 02, 2015 09:42:38 AM Chanwoo Choi wrote:
+> This patchset use cpufreq-dt driver to support Exynos3250 cpufreq and tested it
+> on Exynos3250-based Rinato board.
+> 
+> Depends on:
+> - next-20150701 tag (master branch) of linux-next kernel tree
+> - This patch-set is based on Exynos5250 patch-set[1] because two patch-set
+>   modify the 'arch/arm/mach-exynos/exynos.c' to add the compatible string.
+>   [1] https://lkml.org/lkml/2015/6/29/361
+>   : [PATCH v2 0/4] cpufreq: use generic cpufreq drivers for Exynos5250 platform
+> 
+> Changes from v5:
+> (https://lkml.org/lkml/2015/7/1/324)
+> - Reorder the cpu dt node in exynos3250-rinato/monk.dts alpabetically.
+> - Add reviewed-by tag of Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> 
+> Changes from v4:
+> (https://lkml.org/lkml/2014/10/20/215)
+> - Rebased on latest linux-next git repository.
+> - Remove unnecessary divider clock flag from divider of DIV_CPU0/DIV_CPU1 register
+> 
+> Changes from v3:
+> - This patchset is based on 3.18-rc1 with new patchset[3] of Thomas Abraham
+>   [3] [PATCH v11 0/6] cpufreq: use generic cpufreq drivers for exynos platforms
+>   - http://www.spinics.net/lists/arm-kernel/msg370412.html
+> 
+> Changes from v2:
+> - Rebased on new patchset of Thomas Abraham
+>   and for-next branch of samsunc-clk.git of Tomasz Figa
+> 
+> Changes from v1:
+> - Rebased on new patchset[1] by Thomas Abraham
+>   [1] [PATCH v10 0/6] cpufreq: use generic cpufreq drivers for exynos platforms
+>   - http://www.spinics.net/lists/arm-kernel/msg364790.html
+> - Modify clk-cpu.c to support Exynos3250
+> - Drop documentation patch on previous patchset[2]
+>   [2] http://www.spinics.net/lists/cpufreq/msg10265.html
+> - Add only operating-points for Exynos3250 without armclk-divider-table
+> 
+> Chanwoo Choi (3):
+>   clk: samsung: exynos3250: Add cpu clock configuration data and instaniate cpu clock
+>   ARM: dts: Add CPU OPP and regulator supply property for Exynos3250
+>   ARM: exynos: Add exynos3250 compatible to use generic cpufreq driver
+> 
+>  arch/arm/boot/dts/exynos3250-monk.dts   |  4 ++++
+>  arch/arm/boot/dts/exynos3250-rinato.dts |  4 ++++
+>  arch/arm/boot/dts/exynos3250.dtsi       | 15 +++++++++++++++
+>  arch/arm/mach-exynos/exynos.c           |  1 +
+>  drivers/clk/samsung/clk-exynos3250.c    | 32 ++++++++++++++++++++++++++++++--
+>  include/dt-bindings/clock/exynos3250.h  |  1 +
+>  6 files changed, 55 insertions(+), 2 deletions(-)
 
-> Therefore I think a starting property is the only way and I would
-> prefer a generic one.
+Reviewed-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 
-I would prefer a generic property too.  I was rather surprised that one=
- did not exist.
+Thank you for working on this.
 
->=20
-> What confuses me a little: Why is there a snps,nr-gpios property?
-> Doesn't the snps' IP-Core expose this information?
-
-Not in the documentation I have (but there=E2=80=99s an awful lot of re=
-served space in the
-register map).
-
-Michael
-
+Best regards,
 --
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
