@@ -1,87 +1,169 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH 2/2] ARM: DTS: am437x-sk-evm: Switch using
- simple-audio-card for audio support
-Date: Thu, 2 Jul 2015 08:19:31 -0500
-Message-ID: <20150702131931.GH5837@saruman.tx.rr.com>
-References: <1435838286-30491-1-git-send-email-peter.ujfalusi@ti.com>
- <1435838286-30491-3-git-send-email-peter.ujfalusi@ti.com>
- <20150702122337.GE5837@saruman.tx.rr.com>
- <55953421.30009@ti.com>
-Reply-To: <balbi@ti.com>
+From: Cyrille Pitchen <cyrille.pitchen@atmel.com>
+Subject: [PATCH v4 5/5] tty/serial: at91: use 32bit writes into TX FIFO when DMA is enabled
+Date: Thu, 2 Jul 2015 15:18:13 +0200
+Message-ID: <744588591e107efd4eb55c768384e13e49f1f032.1435842688.git.cyrille.pitchen@atmel.com>
+References: <cover.1435842688.git.cyrille.pitchen@atmel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="vtJ+CqYNzKB4ukR4"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <55953421.30009@ti.com>
+In-Reply-To: <cover.1435842688.git.cyrille.pitchen@atmel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: balbi@ti.com, tony@atomide.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: nicolas.ferre@atmel.com, gregkh@linuxfoundation.org, wenyou.yang@atmel.com, ludovic.desroches@atmel.com, leilei.zhao@atmel.com, josh.wu@atmel.com, alexandre.belloni@free-electrons.com, linux-serial@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
---vtJ+CqYNzKB4ukR4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+For now this improvement is only used with TX DMA transfers. The data
+width must be set properly when configuring the DMA controller. Also
+the FIFO configuration must be set to match the DMA transfer data
+width:
+TXRDYM (Transmitter Ready Mode) and RXRDYM (Receiver Ready Mode) must
+be set into the FIFO Mode Register. These values are used by the
+USART to trigger the DMA controller. In single data mode they are not
+used and should be reset to 0.
+So the TXRDYM bits are changed to FOUR_DATA; then USART triggers the
+DMA controller when at least 4 data can be written into the TX FIFO
+througth the THR. On the other hand the RXRDYM bits are left unchanged
+to ONE_DATA.
 
-On Thu, Jul 02, 2015 at 03:52:49PM +0300, Peter Ujfalusi wrote:
-> On 07/02/2015 03:23 PM, Felipe Balbi wrote:
-> > On Thu, Jul 02, 2015 at 02:58:06PM +0300, Peter Ujfalusi wrote:
-> >> The sound support consist only Headset output on the board and can be
-> >> handled by "simple-audio-card"
-> >>
-> >> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> >=20
-> > Still works fine:
-> >=20
-> > Tested-by: Felipe Balbi <balbi@ti.com>
-> >=20
-> > one question though, should Line In be listed below ?
->=20
-> Does the board have Line-in? I don't have the board, but I know this patch
+Atmel eXtended DMA controller allows us to set a different data width
+for each part of a scatter-gather transfer. So when calling
+dmaengine_slave_config() to configure the TX path, we just need to set
+dst_addr_width to the maximum data width. Then DMA writes into THR are
+split into up to two parts. The first part carries the first data to
+be sent and has a length equal to the greatest multiple of 4 (bytes)
+lower than or equal to the total length of the TX DMA transfer. The
+second part carries the trailing data (up to 3 bytes). The first part
+is written by the DMA into THR using 32 bit accesses, whereas 8bit
+accesses are used for the second part.
 
-yeah, it does :-)
+Signed-off-by: Cyrille Pitchen <cyrille.pitchen@atmel.com>
+Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+---
+ drivers/tty/serial/atmel_serial.c | 66 ++++++++++++++++++++++++++++++---------
+ 1 file changed, 51 insertions(+), 15 deletions(-)
 
-> works on it ;)
-> We only had playback path before also.
-
-indeed, should go for -next only :-s
-
-> > Also, unrelated to
-> > $subject, but if I wait for a few seconds between runs of speaker-test
-> > (iow, if I allow mcasp to idle) then I hear a slight chopping sound when
-> > starting, perhaps we're unmuting too early ?
->=20
-> Is it only with this patch (via simple-card) or was it the same via the
-> davinci-evm (ti,da830-evm-audio)?
-
-/me goes test again
-
-also without this patch :-)
-
---=20
-balbi
-
---vtJ+CqYNzKB4ukR4
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJVlTpjAAoJEIaOsuA1yqRE2koP/3hXDB6mGWORmB69vlA1wZab
-yv8h3xQHdbqECw/PIK3fqRNtrd2Ir564keKH8LWj5+EQIamlEiYK+Qop5TTBXupk
-RYDtMGyW18qGQhmKKY9CYCxQrkqsBBNDUpDgNwNA6Ppz/fDkSc76CrB8T3qRu57U
-FNbw+jtHrNMG6LY/N47EOlblCScWWohVdqRZrGB2EzqO32emBHXbr11K+cbesDwn
-PVK/6KlGyMjszjkOX3oPG5YaL4DEm4arEJGcI7+O0hPlSTyv5fObf/YDDc8G0AFV
-mzRSRHJIs/i4FhWXMlA9OkiqUx9G8e2Mg0UzBAETS7dagl8HX4H/cbJR4wCf9Wzz
-8igKfZNpoP+7pxQGHU7BTYNlcScMLVnXL0xi2U5zFcLx/qVciP+HAbKNDIawbEmx
-Ouj23q69rugYwKW/Yd1fKSNhCQCfF1DbtPTPaDZkym5JPAvF1fDakcr0zRSws+g5
-XoCiErdZW5ScD/O7KZXksC5iy6RtWyQXf/HUwnPhKigi+otuisk7usvrpsqgR4Ju
-Ld2pkaDUt/bJwJrCdV4LLju9uKTS8k5eAgbtfzYqVCMTvgNoZ7vQOXJlE2dqgV9R
-kaNNGWW/VUr4hs95pDg2Q1Lq2aIFcUxKiY4mNt3d9UourB0ZtaUv7R/HF9EqWfxP
-INl/PCTIKv3OKTMU8H5l
-=z9e4
------END PGP SIGNATURE-----
-
---vtJ+CqYNzKB4ukR4--
+diff --git a/drivers/tty/serial/atmel_serial.c b/drivers/tty/serial/atmel_serial.c
+index 87de21f0c7a3..e91b3b2f0590 100644
+--- a/drivers/tty/serial/atmel_serial.c
++++ b/drivers/tty/serial/atmel_serial.c
+@@ -144,6 +144,7 @@ struct atmel_uart_port {
+ 	unsigned int		irq_status;
+ 	unsigned int		irq_status_prev;
+ 	unsigned int		status_change;
++	unsigned int		tx_len;
+ 
+ 	struct circ_buf		rx_ring;
+ 
+@@ -745,10 +746,10 @@ static void atmel_complete_tx_dma(void *arg)
+ 
+ 	if (chan)
+ 		dmaengine_terminate_all(chan);
+-	xmit->tail += sg_dma_len(&atmel_port->sg_tx);
++	xmit->tail += atmel_port->tx_len;
+ 	xmit->tail &= UART_XMIT_SIZE - 1;
+ 
+-	port->icount.tx += sg_dma_len(&atmel_port->sg_tx);
++	port->icount.tx += atmel_port->tx_len;
+ 
+ 	spin_lock_irq(&atmel_port->lock_tx);
+ 	async_tx_ack(atmel_port->desc_tx);
+@@ -796,7 +797,9 @@ static void atmel_tx_dma(struct uart_port *port)
+ 	struct circ_buf *xmit = &port->state->xmit;
+ 	struct dma_chan *chan = atmel_port->chan_tx;
+ 	struct dma_async_tx_descriptor *desc;
+-	struct scatterlist *sg = &atmel_port->sg_tx;
++	struct scatterlist sgl[2], *sg, *sg_tx = &atmel_port->sg_tx;
++	unsigned int tx_len, part1_len, part2_len, sg_len;
++	dma_addr_t phys_addr;
+ 
+ 	/* Make sure we have an idle channel */
+ 	if (atmel_port->desc_tx != NULL)
+@@ -812,18 +815,46 @@ static void atmel_tx_dma(struct uart_port *port)
+ 		 * Take the port lock to get a
+ 		 * consistent xmit buffer state.
+ 		 */
+-		sg->offset = xmit->tail & (UART_XMIT_SIZE - 1);
+-		sg_dma_address(sg) = (sg_dma_address(sg) &
+-					~(UART_XMIT_SIZE - 1))
+-					+ sg->offset;
+-		sg_dma_len(sg) = CIRC_CNT_TO_END(xmit->head,
+-						xmit->tail,
+-						UART_XMIT_SIZE);
+-		BUG_ON(!sg_dma_len(sg));
++		tx_len = CIRC_CNT_TO_END(xmit->head,
++					 xmit->tail,
++					 UART_XMIT_SIZE);
++
++		if (atmel_port->fifo_size) {
++			/* multi data mode */
++			part1_len = (tx_len & ~0x3); /* DWORD access */
++			part2_len = (tx_len & 0x3); /* BYTE access */
++		} else {
++			/* single data (legacy) mode */
++			part1_len = 0;
++			part2_len = tx_len; /* BYTE access only */
++		}
++
++		sg_init_table(sgl, 2);
++		sg_len = 0;
++		phys_addr = sg_dma_address(sg_tx) + xmit->tail;
++		if (part1_len) {
++			sg = &sgl[sg_len++];
++			sg_dma_address(sg) = phys_addr;
++			sg_dma_len(sg) = part1_len;
++
++			phys_addr += part1_len;
++		}
++
++		if (part2_len) {
++			sg = &sgl[sg_len++];
++			sg_dma_address(sg) = phys_addr;
++			sg_dma_len(sg) = part2_len;
++		}
++
++		/*
++		 * save tx_len so atmel_complete_tx_dma() will increase
++		 * xmit->tail correctly
++		 */
++		atmel_port->tx_len = tx_len;
+ 
+ 		desc = dmaengine_prep_slave_sg(chan,
+-					       sg,
+-					       1,
++					       sgl,
++					       sg_len,
+ 					       DMA_MEM_TO_DEV,
+ 					       DMA_PREP_INTERRUPT |
+ 					       DMA_CTRL_ACK);
+@@ -832,7 +863,7 @@ static void atmel_tx_dma(struct uart_port *port)
+ 			return;
+ 		}
+ 
+-		dma_sync_sg_for_device(port->dev, sg, 1, DMA_TO_DEVICE);
++		dma_sync_sg_for_device(port->dev, sg_tx, 1, DMA_TO_DEVICE);
+ 
+ 		atmel_port->desc_tx = desc;
+ 		desc->callback = atmel_complete_tx_dma;
+@@ -892,7 +923,9 @@ static int atmel_prepare_tx_dma(struct uart_port *port)
+ 	/* Configure the slave DMA */
+ 	memset(&config, 0, sizeof(config));
+ 	config.direction = DMA_MEM_TO_DEV;
+-	config.dst_addr_width = DMA_SLAVE_BUSWIDTH_1_BYTE;
++	config.dst_addr_width = (atmel_port->fifo_size) ?
++				DMA_SLAVE_BUSWIDTH_4_BYTES :
++				DMA_SLAVE_BUSWIDTH_1_BYTE;
+ 	config.dst_addr = port->mapbase + ATMEL_US_THR;
+ 	config.dst_maxburst = 1;
+ 
+@@ -1831,6 +1864,9 @@ static int atmel_startup(struct uart_port *port)
+ 				  ATMEL_US_RXFCLR |
+ 				  ATMEL_US_TXFLCLR);
+ 
++		if (atmel_use_dma_tx(port))
++			txrdym = ATMEL_US_FOUR_DATA;
++
+ 		fmr = ATMEL_US_TXRDYM(txrdym) | ATMEL_US_RXRDYM(rxrdym);
+ 		if (atmel_port->rts_high &&
+ 		    atmel_port->rts_low)
+-- 
+1.8.2.2
