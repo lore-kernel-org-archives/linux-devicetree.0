@@ -1,46 +1,46 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v2 3/9] arm: twr-k70f120m: clock driver for Kinetis SoC
-Date: Fri, 3 Jul 2015 00:08:27 +0200 (CEST)
-Message-ID: <alpine.DEB.2.11.1507030006280.3916@nanos>
-References: <1435667250-28299-1-git-send-email-pawelo@king.net.pl>
- <alpine.LNX.2.00.1507011756140.14440@localhost.localdomain>
- <alpine.LNX.2.00.1507021206410.13210@localhost.localdomain>
- <1861313.aMcV1xHCIq@wuerfel>
- <alpine.LNX.2.00.1507022338070.28322@localhost.localdomain>
+From: Andreas Dannenberg <dannenberg-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v3 2/2] iio: light: opt3001: Add device tree binding documentation
+Date: Thu, 2 Jul 2015 17:27:59 -0500
+Message-ID: <1435876079-26287-3-git-send-email-dannenberg@ti.com>
+References: <1435876079-26287-1-git-send-email-dannenberg@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <alpine.LNX.2.00.1507022338070.28322@localhost.localdomain>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Paul Osmialowski <pawelo@king.net.pl>
-Cc: Mark Rutland <mark.rutland@arm.com>, Nicolas Pitre <nicolas.pitre@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <r.herring@freescale.com>, Alexander Potashev <aspotashev@emcraft.com>, Jiri Slaby <jslaby@suse.cz>, linux-clk@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Vinod Koul <vinod.koul@intel.com>, Geert Uytterhoeven <geert@linux-m68k.org>, linux-serial@vger.kernel.org, Uwe Kleine-Koenig <u.kleine-koenig@pengutronix.de>, Anson Huang <b20788@freescale.com>, Michael Turquette <mturquette@baylibre.com>, devicetree@vger.kernel.org, Frank Li <Frank.Li@freescale.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jingchang Lu <jingchang.lu@freescale.com>, Yuri Tikhonov <yur@emcraft.com>, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infrad
+Content-Type: text/plain
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1435876079-26287-1-git-send-email-dannenberg-l0cyMroinI0@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Andreas Dannenberg <dannenberg-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2 Jul 2015, Paul Osmialowski wrote:
-> On Thu, 2 Jul 2015, Arnd Bergmann wrote:
-> 
-> > I wonder if you could move out the fixed rate clocks into their own
-> > nodes. Are they actually controlled by the same block? If they are
-> > just fixed, you can use the normal binding for fixed rate clocks
-> > and only describe the clocks that are related to the driver.
-> 
-> In my view having these clocks grouped together looks more convincing. After
-> all, they all share the same I/O regs in order to read configuration.
+Signed-off-by: Andreas Dannenberg <dannenberg-l0cyMroinI0@public.gmane.org>
+---
+ .../devicetree/bindings/iio/light/opt3001.txt          | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/light/opt3001.txt
 
-The fact that they share a register is not making them a group. That's
-just a HW design decision and you need to deal with that by protecting
-the register access, but not by trying to group them artificially at
-the functional level.
-
-Thanks,
-
-	tglx
+diff --git a/Documentation/devicetree/bindings/iio/light/opt3001.txt b/Documentation/devicetree/bindings/iio/light/opt3001.txt
+new file mode 100644
+index 0000000..d5f0765
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/light/opt3001.txt
+@@ -0,0 +1,18 @@
++* Texas Instruments OPT3001 Ambient Light Sensor
++
++http://www.ti.com/product/opt3001
++
++Required properties:
++  - compatible: should be "ti,opt3001"
++  - reg: the I2C address of the sensor
++  - interrupt-parent: should be the phandle for the interrupt controller
++  - interrupts: interrupt mapping for GPIO IRQ (configure for falling edge)
++
++Example:
++
++opt3001@44 {
++	compatible = "ti,opt3001";
++	reg = <0x44>;
++	interrupt-parent = <&gpio1>;
++	interrupts = <28 IRQ_TYPE_EDGE_FALLING>;
++};
+-- 
+1.9.1
