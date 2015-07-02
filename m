@@ -1,81 +1,47 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [RFC PATCH] mmc: sprd: add MMC host driver for Spreadtrum SoC
-Date: Thu, 2 Jul 2015 10:47:16 -0500
-Message-ID: <CAL_JsqKk0KOheyGvc=EBkgH3K4fPDsppLQGtXjNA4cekW57bvQ@mail.gmail.com>
-References: <1435735399-15333-1-git-send-email-chunyan.zhang@spreadtrum.com>
- <CAL_JsqKcZ-7rM5YrkpJSP7OfECmRg4hWPRFy=UqZn1y74R8qsg@mail.gmail.com> <CA+H2tpG+_pCR-j3nZ+SeAhpj6QfiPK2=Q0pwjndQoG9R4+LMYw@mail.gmail.com>
+From: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] gpio: dwapb: Use human understandable gpio numbering.
+Date: Thu, 02 Jul 2015 17:54:29 +0200
+Message-ID: <55955EB5.4090400@linutronix.de>
+References: <cover.1435777856.git.rcochran@linutronix.de> <d6b5ce85a17164970d454583560e07f7aed7b8ca.1435777856.git.rcochran@linutronix.de> <5594E9F6.7040701@linutronix.de> <20150702142601.GB9349@localhost.localdomain> <55954B17.3020303@linutronix.de> <20150702152147.GA10111@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CA+H2tpG+_pCR-j3nZ+SeAhpj6QfiPK2=Q0pwjndQoG9R4+LMYw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Orson Zhai <orsonzhai@gmail.com>
-Cc: Chunyan Zhang <chunyan.zhang@spreadtrum.com>, "chris@printf.net" <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Lee Jones <lee.jones@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, billows.wu@spreadtrum.com, =?UTF-8?B?V2VpIFFpYW8gKOS5lOS8nyk=?= <wei.qiao@spreadtrum.com>, baolin.wang@spreadtrum.com, ning.yang@spreadtrum.com, =?UTF-8?B?T3Jzb24gWmhhaSjnv5/kuqwp?= <orson.zhai@spreadtrum.com>, jason.wu@spreadtrum.com, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150702152147.GA10111-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alan Tull <atull-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 2, 2015 at 4:26 AM, Orson Zhai <orsonzhai@gmail.com> wrote:
-> Hi Rob,
->
-> Thanks for your quick reply.
-> I have one question to your last comment.
->
-> On Thu, Jul 2, 2015 at 1:50 AM, Rob Herring <robherring2@gmail.com> wrote:
->> On Wed, Jul 1, 2015 at 2:23 AM, Chunyan Zhang
->> <chunyan.zhang@spreadtrum.com> wrote:
->>> From: Billows Wu <billows.wu@spreadtrum.com>
-
-[...]
-
->>> +const struct of_device_id sdhost_of_match[] = {
->>> +       {.compatible = "sprd,sd-sdhost-3.0", .data = &sd_caps_info,},
->>> +       {.compatible = "sprd,wifi-sdhost-3.0", .data = &wifi_caps_info,},
->>> +       {.compatible = "sprd,emmc-sdhost-3.0",  .data = &emmc_caps_info,},
+On 07/02/2015 05:21 PM, Richard Cochran wrote:
+> On Thu, Jul 02, 2015 at 04:30:47PM +0200, Sebastian Andrzej Siewior wrote:
+>> On 07/02/2015 04:26 PM, Richard Cochran wrote:
+>>> On Thu, Jul 02, 2015 at 09:36:22AM +0200, Sebastian Andrzej Siewior wrote:
+>>>> If you are in a specific SoC you could do
+>>>> 	base = of_alias_get_id(np, "gpio") * num_of_gpio_per_chip
+>>>> and get consistent numbers / sane.
+>>>
+>>> And what about /sys/class/gpio ?
 >>
->> What these are connected to is irrelevant to the driver and compatible
->> string. All these differences belong in the DT unless the IP blocks
->> are really different.
->
-> It's my idea to let Billows do like this.
-> I learn from SSP part in freescale  "arch/arm/boot/dts/imx28-evk.dts"
-> Their ssp0-ssp2 each have 2 roles, mmc or generic spi bus.
-> And they may write one of their combo configuration like this:
+>> What about it?
+> 
+> The poor users of that interface cannot use "of_alias_get_id" as you suggest.
 
-That is a bit different as the host controller is operating in
-completely different modes. In your case, the host controller is the
-same and functions the same way, but just has different cards
-attached.
+You do that in the driver. The only problem with that is that the
+synopsys controller can have between one and four banks and a bank can
+have 1-32 GPIOs if I remember correctly. That means you can't have a
+static number of GPIOs like others do.
+Therefore I think a starting property is the only way and I would
+prefer a generic one.
 
->
->  43                         ssp1: ssp@80012000 {
->  44                                 compatible = "fsl,imx28-mmc";
->  45                                 bus-width = <8>;
->  46                                 wp-gpios = <&gpio0 28 0>;
->  47                         };
->  48
->  49                         ssp2: ssp@80014000 {
->  50                                 #address-cells = <1>;
->  51                                 #size-cells = <0>;
->  52                                 compatible = "fsl,imx28-spi";
->  53                                 pinctrl-names = "default";
->  54                                 pinctrl-0 = <&spi2_pins_a>;
->  55                                 status = "okay";
->  56
->  57                                 flash: m25p80@0 {
->  58                                         #address-cells = <1>;
->  59                                         #size-cells = <1>;
->  60                                         compatible = "sst,sst25vf016b";
->  61                                         spi-max-frequency = <40000000>;
->  62                                         reg = <0>;
->  63                                 };
->  64                         };
->
-> Billows tell me they also have 3 roles in their sd host controller
-> corresponding to 3 kinds of different operation.
-> He used to create "sprd,name" property for this. Is it a good way or
-> anything else better?
+What confuses me a little: Why is there a snps,nr-gpios property?
+Doesn't the snps' IP-Core expose this information?
 
-Why do you need to know? You can define parameters which can't be
-probed such as bus width, voltage, and clock freq. in DT for each
-host. The MMC subsys core will figure out the type of device attached.
-
-Rob
+> Thanks,
+> Richard
+> 
+Sebastian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
