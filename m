@@ -1,36 +1,56 @@
-From: Hailegiorgis Elisabeth <HailegiorgisE-NHM1aXe82jSQDjxAF6CYGw@public.gmane.org>
-Subject: RE: IT-SERVICES
-Date: Thu, 2 Jul 2015 10:01:01 +0000
-Message-ID: <6F2CFF884312F245B522F158CCD9791822698E39@spstuex01.student.fr.ch>
-References: <6F2CFF884312F245B522F158CCD9791822694032@spstuex01.student.fr.ch>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v2] arm: koelsch: make USB0 perform Host/Function
+ switching
+Date: Thu, 2 Jul 2015 14:32:11 +0300
+Message-ID: <5595213B.7080809@cogentembedded.com>
+References: <1435824869-22784-1-git-send-email-phil.edworthy@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <6F2CFF884312F245B522F158CCD9791822694032-qmjxzHsc3WIiSJNnTqgc9Ao3rjdOA7Uf@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hailegiorgis Elisabeth <HailegiorgisE-NHM1aXe82jSQDjxAF6CYGw@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1435824869-22784-1-git-send-email-phil.edworthy@renesas.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Phil Edworthy <phil.edworthy@renesas.com>, Simon Horman <horms@verge.net.au>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hello.
 
-________________________________
-From: Hailegiorgis Elisabeth
-Sent: Thursday, July 02, 2015 11:27
-To: info-gHn85NwdPMZiLUuM0BA3LQ@public.gmane.org
-Subject: IT-SERVICES
+On 7/2/2015 11:14 AM, Phil Edworthy wrote:
 
+> Both USB Host (pci0) and Function (USBHS) drivers are enabled.
+> The USB PHY driver determines which IP block should be connected
+> based on vbus and id signals read via gpios.
 
-To All Faculty\Staff
+> Note that switch SW5 and SW6 on Koelsch board needs to be set to
+> position 3 for this to work.
 
-Take note of this important update that our new web mail has been improved with a new messaging system from Owa/outlook which also include faster usage on email, shared calendar,web-documents and the new 2015 anti-spam version.
+[...]
 
- Kindly use the link below to complete your update for our new Owa/outlook improved web mail immediately.
-CLICK on Outlook Web Access<http://outlookwebapp_org.tripod.com> to update
-Regards,
-IT Service Desk Support
-01-07-2015
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> diff --git a/arch/arm/boot/dts/r8a7791-koelsch.dts b/arch/arm/boot/dts/r8a7791-koelsch.dts
+> index cffe33f..1bb34d0 100644
+> --- a/arch/arm/boot/dts/r8a7791-koelsch.dts
+> +++ b/arch/arm/boot/dts/r8a7791-koelsch.dts
+> @@ -615,7 +615,6 @@
+>
+>   &pci0 {
+>   	status = "okay";
+> -	pinctrl-0 = <&usb0_pins>;
+>   	pinctrl-names = "default";
+
+    As you're removing "pinctrl-0" prop, you also should remove "pinctrl-names".
+
+>   };
+>
+> @@ -627,13 +626,15 @@
+>
+>   &hsusb {
+>   	status = "okay";
+> -	pinctrl-0 = <&usb0_pins>;
+
+    Likewise.
+
+[...]
+
+WBR, Sergei
+
