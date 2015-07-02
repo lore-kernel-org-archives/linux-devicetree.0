@@ -1,94 +1,428 @@
-From: leilk liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 2/4] dt-bindings: ARM: Mediatek: Document devicetree
- bindings for spi bus
-Date: Thu, 2 Jul 2015 15:43:42 +0800
-Message-ID: <1435823022.7819.8.camel@mhfsdcap03>
-References: <1435583070-9600-1-git-send-email-leilk.liu@mediatek.com>
- <1435583070-9600-3-git-send-email-leilk.liu@mediatek.com>
- <CAGS+omBLNWUnNCt5XEAAqiCxzCZOsNQOXSK0ij13Wxro+Q9qLQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <CAGS+omBLNWUnNCt5XEAAqiCxzCZOsNQOXSK0ij13Wxro+Q9qLQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Phil Edworthy <phil.edworthy-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v2] phy: rcar-gen2 usb: Add Host/Function switching for USB0
+Date: Thu, 2 Jul 2015 09:05:47 +0100
+Message-ID: <1435824347-22732-1-git-send-email-phil.edworthy@renesas.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Phil Edworthy <phil.edworthy-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> > +
-> > +- pad-select: should specify spi pad used, only required for MT8173.
-> > +       This value should be 0~3.
-> > +
-> > +Example:
-> > +
-> > +- SoC Specific Portion:
-> > +spi: spi@1100a000 {
-> > +       compatible = "mediatek,mt8173-spi";
-> > +       reg = <0 0x1100a000 0 0x1000>;
-> > +       interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_LOW>;
-> > +       clocks = <&pericfg PERI_SPI0>;
-> 
-> CLK_PERI_SPI0
+Instead of statically selecting the PHY connection to either the
+USBHS (Function) or PCI0 (Host) IP blocks, this change allows the
+dts to specifiy gpio pins for the vbus and id signals. Additional
+gpio pins are used to control power to an external OTG device and
+an override to turn vbus on/off.
 
-yes,it will be fixed.
+Note: the R-Car USB PHY only allows this Host/Function switching
+on channel 0.
 
-> 
-> > +       clock-names = "main";
-> > +       pad-select = <1>;
-> 
-> According to [0], a SPI bus should also specify
-> address-cells/size-cells to allow SPI bus devices to specify a chip
-> select.
-> [0] Documentation/devicetree/bindings/spi/spi-bus.txt
-> 
-> - #address-cells  - number of cells required to define a chip select
-> address on the SPI bus.
-> - #size-cells     - should be zero.
-> 
-> The spi-bus document even describes how to mix "native" and gpio CS lines.
-> 
- Got it, it will be added in mt8173.dtsi.
+This has been tested on a r8a7791 based Koelsch board, which uses
+a MAX3355 device to supply vbus power when needed.
 
-> 
-> I am still not sure what to do with the "pad-select" feature.
-> Does "pad-select" just select one of 4 dedicated chip select lines?
-> Or, does it also change which CK/MOSI/MISO lines are used?
-> 
-> Ideally, the same CK/MOSI/MISO signals are sent on all CK/MOSI/MISO
-> lines enabled by pinctrl, and "pad-select" just chooses which CS_N
-> line to use.
-> In this case, we can use the SPI slave device reg value to select
-> which CS_N to use for any given device.
-> Furthermore, we can also support using additional cs-gpios.
-> 
-> However, if the pad-select also specifies which CK/MOSI/MISO pins are
-> used for a given transaction, then supporting cs-gpios becomes a bit
-> trickier, since the spi slave device would need to specify both which
-> gpio-cs to use, as well as which SPI pad it is connected to.
-> 
-> -Dan
+Signed-off-by: Phil Edworthy <phil.edworthy-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 
-The pad-select changes CS/CK/MO/MI lines. Mt8173 spi has 4 group pins,
-and it can select which group pins will be used.
+---
+Tested with patch "usb: renesas_usbhs: Allow an OTG PHY driver to provide VBUS"
+and changes to koelsch dts.
 
-Leilk.
+v2:
+  - Added -gpio to dts prop names of GPIO pins.
+  - Document the new bindings.
+---
+ .../devicetree/bindings/phy/rcar-gen2-phy.txt      |  10 +
+ drivers/phy/phy-rcar-gen2.c                        | 269 +++++++++++++++++++--
+ 2 files changed, 257 insertions(+), 22 deletions(-)
 
-> > +       status = "disabled";
-> > +};
-> > --
-> > 1.8.1.1.dirty
-> >
-> >
-> > _______________________________________________
-> > Linux-mediatek mailing list
-> > Linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> > http://lists.infradead.org/mailman/listinfo/linux-mediatek
+diff --git a/Documentation/devicetree/bindings/phy/rcar-gen2-phy.txt b/Documentation/devicetree/bindings/phy/rcar-gen2-phy.txt
+index 00fc52a..3a501fe 100644
+--- a/Documentation/devicetree/bindings/phy/rcar-gen2-phy.txt
++++ b/Documentation/devicetree/bindings/phy/rcar-gen2-phy.txt
+@@ -30,6 +30,16 @@ the USB channel; see the selector meanings below:
+ | 2         | PCI EHCI/OHCI | xHCI          |
+ +-----------+---------------+---------------+
+ 
++Optional properties:
++  - renesas,pwr-gpio: 		A gpio specifier that will be active when the
++				PHY is powered on.
++  - renesas,id-gpio:		A gpio specifier that is read to get the USB
++				ID signal.
++  - renesas,vbus-gpio:		A gpio specifier that is read to get the USB
++				VBUS signal.
++  - renesas,vbus-pwr-gpio:	A gpio specifier that will be active when VBUS
++				is required to be powered.
++
+ Example (Lager board):
+ 
+ 	usb-phy@e6590100 {
+diff --git a/drivers/phy/phy-rcar-gen2.c b/drivers/phy/phy-rcar-gen2.c
+index 97d45f4..1e7a4d9 100644
+--- a/drivers/phy/phy-rcar-gen2.c
++++ b/drivers/phy/phy-rcar-gen2.c
+@@ -1,5 +1,5 @@
+ /*
+- * Renesas R-Car Gen2 PHY driver
++ * Renesas R-Car Gen2 USB PHY driver
+  *
+  * Copyright (C) 2014 Renesas Solutions Corp.
+  * Copyright (C) 2014 Cogent Embedded, Inc.
+@@ -12,11 +12,16 @@
+ #include <linux/clk.h>
+ #include <linux/delay.h>
+ #include <linux/io.h>
++#include <linux/interrupt.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
++#include <linux/of_gpio.h>
+ #include <linux/phy/phy.h>
+ #include <linux/platform_device.h>
+ #include <linux/spinlock.h>
++#include <linux/usb/gadget.h>
++#include <linux/usb/otg.h>
++#include <linux/workqueue.h>
+ 
+ #include <asm/cmpxchg.h>
+ 
+@@ -58,6 +63,18 @@ struct rcar_gen2_channel {
+ 	struct rcar_gen2_phy phys[PHYS_PER_CHANNEL];
+ 	int selected_phy;
+ 	u32 select_mask;
++
++	/* external power enable pin */
++	int			gpio_pwr;
++
++	/* Host/Function switching */
++	struct delayed_work	work;
++	int			use_otg;
++	int			gpio_vbus;
++	int			gpio_id;
++	int			gpio_vbus_pwr;
++	struct usb_phy		*usbphy;
++	struct usb_otg		*otg;
+ };
+ 
+ struct rcar_gen2_phy_driver {
+@@ -68,31 +85,50 @@ struct rcar_gen2_phy_driver {
+ 	struct rcar_gen2_channel *channels;
+ };
+ 
+-static int rcar_gen2_phy_init(struct phy *p)
++static void rcar_gen2_phy_switch(struct rcar_gen2_channel *channel,
++	u32 select_value)
+ {
+-	struct rcar_gen2_phy *phy = phy_get_drvdata(p);
+-	struct rcar_gen2_channel *channel = phy->channel;
+ 	struct rcar_gen2_phy_driver *drv = channel->drv;
+ 	unsigned long flags;
+ 	u32 ugctrl2;
+ 
+-	/*
+-	 * Try to acquire exclusive access to PHY.  The first driver calling
+-	 * phy_init()  on a given channel wins, and all attempts  to use another
+-	 * PHY on this channel will fail until phy_exit() is called by the first
+-	 * driver.   Achieving this with cmpxcgh() should be SMP-safe.
+-	 */
+-	if (cmpxchg(&channel->selected_phy, -1, phy->number) != -1)
+-		return -EBUSY;
+-
+-	clk_prepare_enable(drv->clk);
+-
+ 	spin_lock_irqsave(&drv->lock, flags);
+ 	ugctrl2 = readl(drv->base + USBHS_UGCTRL2);
+ 	ugctrl2 &= ~channel->select_mask;
+-	ugctrl2 |= phy->select_value;
++	ugctrl2 |= select_value;
+ 	writel(ugctrl2, drv->base + USBHS_UGCTRL2);
+ 	spin_unlock_irqrestore(&drv->lock, flags);
++}
++
++static int rcar_gen2_phy_init(struct phy *p)
++{
++	struct rcar_gen2_phy *phy = phy_get_drvdata(p);
++	struct rcar_gen2_channel *channel = phy->channel;
++	struct rcar_gen2_phy_driver *drv = channel->drv;
++
++	if (!channel->use_otg) {
++		/*
++		 * Static Host/Function role.
++		 * Try to acquire exclusive access to PHY. The first driver
++		 * calling phy_init() on a given channel wins, and all attempts
++		 * to use another PHY on this channel will fail until
++		 * phy_exit() is called by the first driver. Achieving this
++		 * with cmpxcgh() should be SMP-safe.
++		 */
++		if (cmpxchg(&channel->selected_phy, -1, phy->number) != -1)
++			return -EBUSY;
++
++		clk_prepare_enable(drv->clk);
++		rcar_gen2_phy_switch(channel, phy->select_value);
++	} else {
++		/*
++		 * Using Host/Function switching, so schedule work to determine
++		 * which role to use.
++		 */
++		clk_prepare_enable(drv->clk);
++		schedule_delayed_work(&channel->work, 100);
++	}
++
+ 	return 0;
+ }
+ 
+@@ -117,9 +153,9 @@ static int rcar_gen2_phy_power_on(struct phy *p)
+ 	u32 value;
+ 	int err = 0, i;
+ 
+-	/* Skip if it's not USBHS */
+-	if (phy->select_value != USBHS_UGCTRL2_USB0SEL_HS_USB)
+-		return 0;
++	/* Optional external power pin */
++	if (gpio_is_valid(phy->channel->gpio_pwr))
++		gpio_direction_output(phy->channel->gpio_pwr, 1);
+ 
+ 	spin_lock_irqsave(&drv->lock, flags);
+ 
+@@ -160,9 +196,9 @@ static int rcar_gen2_phy_power_off(struct phy *p)
+ 	unsigned long flags;
+ 	u32 value;
+ 
+-	/* Skip if it's not USBHS */
+-	if (phy->select_value != USBHS_UGCTRL2_USB0SEL_HS_USB)
+-		return 0;
++	/* External power pin */
++	if (gpio_is_valid(phy->channel->gpio_pwr))
++		gpio_direction_output(phy->channel->gpio_pwr, 0);
+ 
+ 	spin_lock_irqsave(&drv->lock, flags);
+ 
+@@ -236,6 +272,132 @@ static const u32 select_value[][PHYS_PER_CHANNEL] = {
+ 	[2]	= { USBHS_UGCTRL2_USB2SEL_PCI, USBHS_UGCTRL2_USB2SEL_USB30 },
+ };
+ 
++
++#define VBUS_IRQ_FLAGS \
++	(IRQF_SHARED | IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING)
++
++static void gpio_vbus_work(struct work_struct *work)
++{
++	struct rcar_gen2_channel *channel = container_of(work,
++					struct rcar_gen2_channel, work.work);
++	struct usb_phy *usbphy = channel->usbphy;
++	int status, vbus, id;
++
++	vbus = !!gpio_get_value(channel->gpio_vbus);
++	id = !!gpio_get_value(channel->gpio_id);
++
++	/* Switch the PHY over */
++	if (id)
++		rcar_gen2_phy_switch(channel, USBHS_UGCTRL2_USB0SEL_HS_USB);
++	else
++		rcar_gen2_phy_switch(channel, USBHS_UGCTRL2_USB0SEL_PCI);
++
++	/* If VBUS is powered and we are not the initial Host, turn off VBUS */
++	if (gpio_is_valid(channel->gpio_vbus_pwr))
++		gpio_direction_output(channel->gpio_vbus_pwr, !(id && vbus));
++
++	if (!channel->otg->gadget)
++		return;
++
++	/* Function handling: vbus=1 when initially plugged into a Host */
++	if (vbus) {
++		status = USB_EVENT_VBUS;
++		usbphy->otg->state = OTG_STATE_B_PERIPHERAL;
++		usbphy->last_event = status;
++		usb_gadget_vbus_connect(usbphy->otg->gadget);
++
++		atomic_notifier_call_chain(&usbphy->notifier,
++					   status, usbphy->otg->gadget);
++	} else {
++		usb_gadget_vbus_disconnect(usbphy->otg->gadget);
++		status = USB_EVENT_NONE;
++		usbphy->otg->state = OTG_STATE_B_IDLE;
++		usbphy->last_event = status;
++
++		atomic_notifier_call_chain(&usbphy->notifier,
++					   status, usbphy->otg->gadget);
++	}
++}
++
++/* VBUS change IRQ handler */
++static irqreturn_t gpio_vbus_irq(int irq, void *data)
++{
++	struct rcar_gen2_channel *channel = data;
++
++	/* Wait 20ms before doing anything as VBUS needs to settle */
++	schedule_delayed_work(&channel->work, msecs_to_jiffies(20));
++
++	return IRQ_HANDLED;
++}
++
++static int probe_otg(struct platform_device *pdev,
++	struct rcar_gen2_phy_driver *drv)
++{
++	struct device *dev = &pdev->dev;
++	struct rcar_gen2_channel *ch = drv->channels;
++	int irq;
++	int ret;
++
++	/* GPIOs for Host/Fn switching */
++	ch->gpio_id = of_get_named_gpio_flags(dev->of_node,
++				"renesas,id-gpio", 0, NULL);
++	ch->gpio_vbus = of_get_named_gpio_flags(dev->of_node,
++				"renesas,vbus-gpio", 0, NULL);
++
++	/* Need valid ID and VBUS gpios for Host/Fn switching */
++	if (gpio_is_valid(ch->gpio_id) && gpio_is_valid(ch->gpio_vbus)) {
++		ch->use_otg = 1;
++
++		/* GPIO for ID input */
++		ret = devm_gpio_request_one(dev, ch->gpio_id, GPIOF_IN, "id");
++		if (ret)
++			return ret;
++
++		/* GPIO for VBUS input */
++		ret = devm_gpio_request_one(dev, ch->gpio_vbus, GPIOF_IN, "vbus");
++		if (ret)
++			return ret;
++
++		irq = gpio_to_irq(ch->gpio_vbus);
++		ret = devm_request_irq(dev, irq, gpio_vbus_irq, VBUS_IRQ_FLAGS,
++				"vbus_detect", ch);
++		if (ret)
++			return ret;
++
++		/* Optional GPIO for VBUS power */
++		ch->gpio_vbus_pwr = of_get_named_gpio_flags(dev->of_node,
++						"renesas,vbus-pwr-gpio", 0, NULL);
++		if (gpio_is_valid(ch->gpio_id)) {
++			ret = devm_gpio_request_one(dev, ch->gpio_vbus_pwr,
++					GPIOF_OUT_INIT_LOW, "vbus-pwr");
++			if (ret)
++				return ret;
++		}
++
++	} else if (gpio_is_valid(ch->gpio_id)) {
++		dev_err(dev, "Failed to get VBUS gpio\n");
++		return ch->gpio_vbus;
++	} else if (gpio_is_valid(ch->gpio_vbus)) {
++		dev_err(dev, "Failed to get ID gpio\n");
++		return ch->gpio_id;
++	}
++
++	return 0;
++}
++
++/* bind/unbind the peripheral controller */
++static int rcar_gen2_usb_set_peripheral(struct usb_otg *otg,
++					struct usb_gadget *gadget)
++{
++	otg->gadget = gadget;
++	if (!gadget) {
++		usb_gadget_vbus_disconnect(otg->gadget);
++		otg->state = OTG_STATE_UNDEFINED;
++	}
++
++	return 0;
++}
++
+ static int rcar_gen2_phy_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+@@ -245,7 +407,9 @@ static int rcar_gen2_phy_probe(struct platform_device *pdev)
+ 	struct resource *res;
+ 	void __iomem *base;
+ 	struct clk *clk;
++	struct usb_otg *otg;
+ 	int i = 0;
++	int err;
+ 
+ 	if (!dev->of_node) {
+ 		dev_err(dev,
+@@ -280,6 +444,57 @@ static int rcar_gen2_phy_probe(struct platform_device *pdev)
+ 	if (!drv->channels)
+ 		return -ENOMEM;
+ 
++	/* USB0 optional GPIO power pin for external devices */
++	drv->channels->gpio_pwr = of_get_named_gpio_flags(dev->of_node,
++						"renesas,pwr-gpio", 0, NULL);
++	if (drv->channels->gpio_pwr == -EPROBE_DEFER)
++		return -EPROBE_DEFER;
++
++	if (gpio_is_valid(drv->channels->gpio_pwr)) {
++		err = devm_gpio_request(dev, drv->channels->gpio_pwr, "pwr");
++		if (err)
++			return err;
++	}
++
++	/* USB0 Host/Function switching info */
++	err = probe_otg(pdev, drv);
++	if (err)
++		return err;
++
++	/*
++	 * The PHY connected to channel 0 can be used to steer signals to the
++	 * USB Host IP that stils behind a PCI bridge (pci0), or the USB Func
++	 * IP (hsusb). We can dynamically switch this based on VBUS and ID
++	 * signals connected to gpios, to get something approaching OTG.
++	 */
++	if (drv->channels->use_otg) {
++		struct usb_phy *usbphy;
++
++		usbphy = devm_kzalloc(dev, sizeof(*usbphy), GFP_KERNEL);
++		if (!usbphy)
++			return -ENOMEM;
++
++		otg = devm_kzalloc(dev, sizeof(*otg), GFP_KERNEL);
++		if (!otg)
++			return -ENOMEM;
++
++		usbphy->dev		= dev;
++		usbphy->otg		= otg;
++
++		otg->usb_phy		= usbphy;
++		otg->state		= OTG_STATE_UNDEFINED;
++		otg->set_peripheral	= rcar_gen2_usb_set_peripheral;
++
++		drv->channels->otg	= otg;
++		drv->channels->usbphy	= usbphy;
++
++		ATOMIC_INIT_NOTIFIER_HEAD(&usbphy->notifier);
++
++		INIT_DELAYED_WORK(&drv->channels->work, gpio_vbus_work);
++
++		usb_add_phy_dev(usbphy);
++	}
++
+ 	for_each_child_of_node(dev->of_node, np) {
+ 		struct rcar_gen2_channel *channel = drv->channels + i;
+ 		u32 channel_num;
+@@ -288,6 +503,8 @@ static int rcar_gen2_phy_probe(struct platform_device *pdev)
+ 		channel->of_node = np;
+ 		channel->drv = drv;
+ 		channel->selected_phy = -1;
++		if (i != 0)
++			channel->gpio_pwr = -ENOENT;
+ 
+ 		error = of_property_read_u32(np, "reg", &channel_num);
+ 		if (error || channel_num > 2) {
+@@ -323,6 +540,14 @@ static int rcar_gen2_phy_probe(struct platform_device *pdev)
+ 
+ 	dev_set_drvdata(dev, drv);
+ 
++	/*
++	 * If we already have something plugged into USB0, we won't get an edge
++	 * on VBUS, so we have to manually schedule work to look at the VBUS
++	 * and ID signals.
++	 */
++	if (drv->channels->use_otg)
++		schedule_delayed_work(&drv->channels->work, msecs_to_jiffies(100));
++
+ 	return 0;
+ }
+ 
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
