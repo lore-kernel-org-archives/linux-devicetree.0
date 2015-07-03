@@ -1,35 +1,65 @@
-From: Michael van der Westhuizen <michael@smart-africa.com>
-Subject: Re: [PATCH 1/2] gpio: dwapb: Use human understandable gpio numbering.
-Date: Fri, 3 Jul 2015 10:18:28 +0100
-Message-ID: <C1BD6DA3-F32E-4CAD-8DA9-6F74A7966DBE@smart-africa.com>
-References: <cover.1435777856.git.rcochran@linutronix.de> <d6b5ce85a17164970d454583560e07f7aed7b8ca.1435777856.git.rcochran@linutronix.de> <267A46E7-C5C5-4696-90CC-D44F4130B3EF@smart-africa.com> <20150703091347.GA17808@localhost.localdomain>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2102\))
+From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] GICv3: Add ITS entry to THUNDER dts
+Date: Fri, 3 Jul 2015 10:57:56 +0100
+Message-ID: <20150703095755.GH25907@e104818-lin.cambridge.arm.com>
+References: <1435345943-31833-1-git-send-email-tchalamarla@caviumnetworks.com>
+ <D2BD6D7B-E4B2-46B8-A324-9261DCFA2642@caviumnetworks.com>
+Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20150703091347.GA17808@localhost.localdomain>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Richard Cochran <richardcochran@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, Alexandre Courbot <gnurou@gmail.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, Alan Tull <atull@altera.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Dinh Nguyen <dinguyen@altera.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <D2BD6D7B-E4B2-46B8-A324-9261DCFA2642-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Chalamarla, Tirumalesh" <Tirumalesh.Chalamarla-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Cc: "marc.zyngier-5wv7dgnIgG8@public.gmane.org" <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, "Will.Deacon-5wv7dgnIgG8@public.gmane.org" <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tirumalesh Chalamarla <tchalamarla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-> On 03 Jul 2015, at 10:13 AM, Richard Cochran <richardcochran@gmail.com> wrote:
+On Thu, Jul 02, 2015 at 08:26:02PM +0000, Chalamarla, Tirumalesh wrote:
+> > On Jun 26, 2015, at 12:12 PM, Tirumalesh Chalamarla <tchalamarla-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org> wrote:
+> > 
+> > From: Tirumalesh Chalamarla <tchalamarla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+> > 
+> > The PCIe host controller uses MSIs provided by GICv3 ITS. Enable it on
+> > Thunder SoCs by adding an entry to DT.
+> > 
+> > Signed-off-by: Tirumalesh Chalamarla <tchalamarla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+> > Acked-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+> > ---
+> > arch/arm64/boot/dts/cavium/thunder-88xx.dtsi | 9 +++++++++
+> > 1 file changed, 9 insertions(+)
+> > 
+> > diff --git a/arch/arm64/boot/dts/cavium/thunder-88xx.dtsi b/arch/arm64/boot/dts/cavium/thunder-88xx.dtsi
+> > index d8c0bdc..9cb7cf9 100644
+> > --- a/arch/arm64/boot/dts/cavium/thunder-88xx.dtsi
+> > +++ b/arch/arm64/boot/dts/cavium/thunder-88xx.dtsi
+> > @@ -376,10 +376,19 @@
+> > 		gic0: interrupt-controller@8010,00000000 {
+> > 			compatible = "arm,gic-v3";
+> > 			#interrupt-cells = <3>;
+> > +			#address-cells = <2>;
+> > +			#size-cells = <2>;
+> > +			ranges;
+> > 			interrupt-controller;
+> > 			reg = <0x8010 0x00000000 0x0 0x010000>, /* GICD */
+> > 			      <0x8010 0x80000000 0x0 0x600000>; /* GICR */
+> > 			interrupts = <1 9 0xf04>;
+> > +
+> > +			its: gic-its@8010,00020000 {
+> > +				compatible = "arm,gic-v3-its";
+> > +				msi-controller;
+> > +				reg = <0x8010 0x20000 0x0 0x200000>;
+> > +			};
+> > 		};
+> > 
+> > 		uaa0: serial@87e0,24000000 {
 > 
-> On Thu, Jul 02, 2015 at 08:05:26AM +0100, Michael van der Westhuizen wrote:
->>> On 01 Jul 2015, at 8:34 PM, Richard Cochran <richardcochran@gmail.com> wrote:
->>> 
->>> The system-on-chips using this IP core have well defined gpio numbers.
->>> Instead of using random numbers, this patch lets the device tree specify
->>> the correct gpio numbering.
->> 
->> The subject should not end with a full-stop.
-> 
-> Sorry, I really have no idea what you mean.
+> is it possible to pull this for 4.2?
 
-The subject should be:
-  gpio: dwapb: Use human understandable gpio numbering
-Not:
-  gpio: dwapb: Use human understandable gpio numbering.
+The dts files go in via the arm-soc tree (cc'ing arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org).
 
-Michael
+-- 
+Catalin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
