@@ -1,521 +1,435 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH v1 3/4] touchscreen: colibri-vf50-ts: Add touchscreen
- support for Colibri VF50
-Date: Fri, 03 Jul 2015 16:29:35 +0200
-Message-ID: <8b2b1766136d6e48f8b641e729405a30@agner.ch>
-References: <cover.1435646447.git.maitysanchayan@gmail.com>
- <bfbf5a2114cbe07c98fdbee45b90c8838ac76056.1435646447.git.maitysanchayan@gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 1/4] mfd: da9150: Add support for Fuel-Gauge
+Date: Fri, 3 Jul 2015 16:16:08 +0100
+Message-ID: <20150703151608.GA10500@x1>
+References: <cover.1435308209.git.Adam.Thomson.Opensource@diasemi.com>
+ <11b930c87ee9728ce8911896aa673e2ad1dedf40.1435308209.git.Adam.Thomson.Opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <bfbf5a2114cbe07c98fdbee45b90c8838ac76056.1435646447.git.maitysanchayan@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <11b930c87ee9728ce8911896aa673e2ad1dedf40.1435308209.git.Adam.Thomson.Opensource@diasemi.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sanchayan Maity <maitysanchayan@gmail.com>
-Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, shawn.guo@linaro.org, kernel@pengutronix.de, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Support Opensource <support.opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sanchayan,
+On Fri, 26 Jun 2015, Adam Thomson wrote:
 
-I wrote the driver some while ago, so reading it today again feels like
-reading someone else's code again :-)
-
-Some minor nits below:
-
-On 2015-06-30 08:54, Sanchayan Maity wrote:
-> The Colibri Vybrid VF50 module supports 4-wire touchscreens using
-> FETs and ADC inputs. This driver uses the IIO consumer interface
-> and relies on the vf610_adc driver based on the IIO framework.
-> 
-> Signed-off-by: Sanchayan Maity <maitysanchayan@gmail.com>
+> Signed-off-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
 > ---
->  drivers/input/touchscreen/Kconfig           |  12 +
->  drivers/input/touchscreen/Makefile          |   1 +
->  drivers/input/touchscreen/colibri-vf50-ts.c | 466 ++++++++++++++++++++++++++++
->  3 files changed, 479 insertions(+)
->  create mode 100644 drivers/input/touchscreen/colibri-vf50-ts.c
-> 
-> diff --git a/drivers/input/touchscreen/Kconfig
-> b/drivers/input/touchscreen/Kconfig
-> index 80f6386..c243914 100644
-> --- a/drivers/input/touchscreen/Kconfig
-> +++ b/drivers/input/touchscreen/Kconfig
-> @@ -1027,4 +1027,16 @@ config TOUCHSCREEN_ZFORCE
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called zforce_ts.
->  
-> +config TOUCHSCREEN_COLIBRI_VF50
-> +	tristate "Toradex Colibri on board touchscreen driver"
-> +	depends on IIO && VF610_ADC
 
-Since we use GPIO's this also depends on GPIOLIB
+Changelog v1 =3D> v2?
 
-> +	help
-> +	  Say Y here if you have a Colibri VF50 and plan to use
-> +	  the on-board provided 4-wire touchscreen driver.
+>  drivers/mfd/da9150-core.c       | 162 ++++++++++++++++++++++++++++++=
+++++++++--
+>  include/linux/mfd/da9150/core.h |  19 +++++
+>  include/linux/mfd/da9150/fg.h   |  29 +++++++
+>  3 files changed, 202 insertions(+), 8 deletions(-)
+>  create mode 100644 include/linux/mfd/da9150/fg.h
+>=20
+> diff --git a/drivers/mfd/da9150-core.c b/drivers/mfd/da9150-core.c
+> index 5549817..8feb75d 100644
+> --- a/drivers/mfd/da9150-core.c
+> +++ b/drivers/mfd/da9150-core.c
+> @@ -21,8 +21,80 @@
+>  #include <linux/interrupt.h>
+>  #include <linux/mfd/core.h>
+>  #include <linux/mfd/da9150/core.h>
+> +#include <linux/mfd/da9150/fg.h>
+>  #include <linux/mfd/da9150/registers.h>
+>=20
+> +/* Raw device access, used for QIF */
+> +static int da9150_i2c_read_device(struct i2c_client *client, u8 addr=
+, int count,
+> +				  u8 *buf)
+> +{
+> +	struct i2c_msg xfer;
+> +	int ret;
 > +
-> +	  If unsure, say N.
+> +	/*
+> +	 * Read is split into two transfers as device expects STOP/START ra=
+ther
+> +	 * than repeated start to carry out this kind of access.
+> +	 */
 > +
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called colibri_vf50_ts.
+> +	/* Write address */
+> +	xfer.addr =3D client->addr;
+> +	xfer.flags =3D 0;
+> +	xfer.len =3D 1;
+> +	xfer.buf =3D &addr;
 > +
-<snip>
-> +
-> +	/* Use hrtimer sleep since msleep sleeps 10ms+ */
-
-This comment is probably somewhat outdated. Depending on kernel
-configuration probably wrong too. Just drop it.
-
-> +	usleep_range(COLI_TOUCH_MIN_DELAY_US, COLI_TOUCH_MAX_DELAY_US);
-> +
-> +	for (i = 0; i < 5; i++) {
-> +		ret = iio_read_channel_raw(channel, &val);
+> +	ret =3D i2c_transfer(client->adapter, &xfer, 1);
+> +	if (ret !=3D 1) {
 > +		if (ret < 0)
-> +			return -EINVAL;
-> +
-> +		value += val;
+> +			return ret;
+> +		else
+> +			return -EIO;
 > +	}
 > +
-> +	value /= 5;
+> +	/* Read data */
+> +	xfer.addr =3D client->addr;
+> +	xfer.flags =3D I2C_M_RD;
+> +	xfer.len =3D count;
+> +	xfer.buf =3D buf;
 > +
-> +	gpiod_set_value(plate_p, 0);
-> +	gpiod_set_value(plate_m, 0);
-> +
-> +	return value;
+> +	ret =3D i2c_transfer(client->adapter, &xfer, 1);
+> +	if (ret =3D=3D 1)
+> +		return 0;
+> +	else if (ret < 0)
+> +		return ret;
+> +	else
+> +		return -EIO;
 > +}
 > +
-> +/*
-> + * Enable touch detection using falling edge detection on XM
-> + */
-> +static void vf50_ts_enable_touch_detection(struct vf50_touch_device *vf50_ts)
+> +static int da9150_i2c_write_device(struct i2c_client *client, u8 add=
+r,
+> +				   int count, const u8 *buf)
 > +{
-> +	/* Enable plate YM (needs to be strong GND, high active) */
-> +	gpiod_set_value(vf50_ts->gpio_ym, 1);
+> +	struct i2c_msg xfer;
+> +	u8 *reg_data;
+> +	int ret;
 > +
-> +	/* Let the platform mux to GPIO in order to enable Pull-Up on GPIO */
-
-The comment is somewhat configuing, since you use the pinctrl framework
-to mux to the state "idle" I would write "Let the platform mux to
-idle..."
-
-> +	pinctrl_pm_select_idle_state(&vf50_ts->pdev->dev);
+> +	reg_data =3D kzalloc(1 + count, GFP_KERNEL);
+> +	if (!reg_data)
+> +		return -ENOMEM;
+> +
+> +	reg_data[0] =3D addr;
+> +	memcpy(&reg_data[1], buf, count);
+> +
+> +	/* Write address & data */
+> +	xfer.addr =3D client->addr;
+> +	xfer.flags =3D 0;
+> +	xfer.len =3D 1 + count;
+> +	xfer.buf =3D reg_data;
+> +
+> +	ret =3D i2c_transfer(client->adapter, &xfer, 1);
+> +	kfree(reg_data);
+> +	if (ret =3D=3D 1)
+> +		return 0;
+> +	else if (ret < 0)
+> +		return ret;
+> +	else
+> +		return -EIO;
 > +}
 > +
-> +/*
-> + * ADC touch screen sampling worker function
-> + */
-> +static void vf50_ts_work(struct work_struct *ts_work)
-> +{
-> +	struct vf50_touch_device *vf50_ts = container_of(ts_work,
-> +				struct vf50_touch_device, ts_work);
-> +	struct device *dev = &vf50_ts->pdev->dev;
-> +	int val_x, val_y, val_z1, val_z2, val_p = 0;
-> +	bool discard_val_on_start = true;
-> +
-> +	while (!vf50_ts->stop_touchscreen) {
-> +		/* X-Direction */
-> +		val_x = adc_ts_measure(&vf50_ts->channels[0],
-> +				vf50_ts->gpio_xp, vf50_ts->gpio_xm);
-> +		if (val_x < 0)
-> +			continue;
-> +
-> +		/* Y-Direction */
-> +		val_y = adc_ts_measure(&vf50_ts->channels[1],
-> +				vf50_ts->gpio_yp, vf50_ts->gpio_ym);
-> +		if (val_y < 0)
-> +			continue;
-> +
-> +		/*
-> +		 * Touch pressure
-> +		 * Measure on XP/YM
-> +		 */
-> +		val_z1 = adc_ts_measure(&vf50_ts->channels[2],
-> +				vf50_ts->gpio_yp, vf50_ts->gpio_xm);
-> +		if (val_z1 < 0)
-> +			continue;
-> +		val_z2 = adc_ts_measure(&vf50_ts->channels[3],
-> +				vf50_ts->gpio_yp, vf50_ts->gpio_xm);
-> +		if (val_z2 < 0)
-> +			continue;
-> +
-> +		/*
-> +		 * According to datasheet of our touchscreen,
-> +		 * resistance on X axis is 400~1200..
-> +		 */
-
-This is somewhat vague and not really helpful, either mention the type
-(I think it was an EDT) or drop that...
-
-> +
-> +		/* Validate signal (avoid calculation using noise) */
-> +		if (val_z1 > 64 && val_x > 64) {
-> +			/*
-> +			 * Calculate resistance between the plates
-> +			 * lower resistance means higher pressure
-> +			 */
-> +			int r_x = (1000 * val_x) / VF_ADC_MAX;
-> +
-> +			val_p = (r_x * val_z2) / val_z1 - r_x;
-> +
-> +		} else {
-> +			val_p = 2000;
-> +		}
-> +
-> +		val_p = 2000 - val_p;
-> +		dev_dbg(dev, "Measured values: x: %d, y: %d, z1: %d, z2: %d, "
-> +			"p: %d\n", val_x, val_y, val_z1, val_z2, val_p);
-> +
-> +		/*
-> +		 * If touch pressure is too low, stop measuring and reenable
-> +		 * touch detection
-> +		 */
-> +		if (val_p < min_pressure || val_p > 2000)
-> +			break;
-> +
-> +		/*
-> +		 * The pressure may not be enough for the first x and the
-> +		 * second y measurement, but, the pressure is ok when the
-> +		 * driver is doing the third and fourth measurement. To
-> +		 * take care of this, we drop the first measurement always.
-> +		 */
-> +		if (discard_val_on_start) {
-> +			discard_val_on_start = false;
-> +		} else {
-> +			/*
-> +			 * Report touch position and sleep for
-> +			 * next measurement
-> +			 */
-> +			input_report_abs(vf50_ts->ts_input,
-> +					ABS_X, VF_ADC_MAX - val_x);
-> +			input_report_abs(vf50_ts->ts_input,
-> +					ABS_Y, VF_ADC_MAX - val_y);
-> +			input_report_abs(vf50_ts->ts_input,
-> +					ABS_PRESSURE, val_p);
-> +			input_report_key(vf50_ts->ts_input, BTN_TOUCH, 1);
-> +			input_sync(vf50_ts->ts_input);
-> +		}
-> +
-> +		msleep(10);
-> +	}
-> +
-> +	/* Report no more touch, reenable touch detection */
-> +	input_report_abs(vf50_ts->ts_input, ABS_PRESSURE, 0);
-> +	input_report_key(vf50_ts->ts_input, BTN_TOUCH, 0);
-> +	input_sync(vf50_ts->ts_input);
-> +
-> +	/* Wait the pull-up to be stable on high */
-> +	vf50_ts_enable_touch_detection(vf50_ts);
-
-I would move that comment one line lower, since that is the place we
-wait until the pin is high.
-
-> +	msleep(10);
-> +
-> +	/* Reenable IRQ to detect touch */
-> +	enable_irq(vf50_ts->pen_irq);
-> +
-> +	dev_dbg(dev, "Reenabled touch detection interrupt\n");
-> +}
-> +
-> +static irqreturn_t vf50_tc_touched(int irq, void *dev_id)
-
-tc?
-
-> +{
-> +	struct vf50_touch_device *vf50_ts = (struct vf50_touch_device *)dev_id;
-> +	struct device *dev = &vf50_ts->pdev->dev;
-> +
-> +	dev_dbg(dev, "Touch detected, start worker thread\n");
-> +
-> +	/* Stop IRQ */
-
-Some comments like this...
-
-> +	disable_irq_nosync(irq);
-> +
-> +	/* Disable the touch detection plates */
-> +	gpiod_set_value(vf50_ts->gpio_ym, 0);
-> +
-> +	/* Let the platform mux to GPIO in order to enable Pull-Up on GPIO */
-> +	pinctrl_pm_select_default_state(dev);
-> +
-> +	/* Start worker thread */
-
-or this are not really required since the function name called is
-actually verbose enough.
-
-> +	queue_work(vf50_ts->ts_workqueue, &vf50_ts->ts_work);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int vf50_ts_open(struct input_dev *dev_input)
+>  static bool da9150_volatile_reg(struct device *dev, unsigned int reg=
+)
+>  {
+>  	switch (reg) {
+> @@ -107,6 +179,28 @@ static const struct regmap_config da9150_regmap_=
+config =3D {
+>  	.volatile_reg =3D da9150_volatile_reg,
+>  };
+>=20
+> +void da9150_read_qif(struct da9150 *da9150, u8 addr, int count, u8 *=
+buf)
 > +{
 > +	int ret;
-> +	struct vf50_touch_device *touchdev = input_get_drvdata(dev_input);
-> +	struct device *dev = &touchdev->pdev->dev;
 > +
-> +	dev_dbg(dev, "Input device %s opened, starting touch detection\n",
-> +			dev_input->name);
-> +
-> +	touchdev->stop_touchscreen = false;
-> +
-> +	ret = gpiod_direction_output(touchdev->gpio_xp, 0);
-> +	if (ret) {
-> +		dev_err(dev, "Could not set gpio xp as output %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = gpiod_direction_output(touchdev->gpio_xm, 0);
-> +	if (ret) {
-> +		dev_err(dev, "Could not set gpio xm as output %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = gpiod_direction_output(touchdev->gpio_yp, 0);
-> +	if (ret) {
-> +		dev_err(dev, "Could not set gpio yp as output %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = gpiod_direction_output(touchdev->gpio_ym, 0);
-> +	if (ret) {
-> +		dev_err(dev, "Could not set gpio ym as output %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = gpiod_direction_input(touchdev->gpio_pen_detect);
-> +	if (ret) {
-> +		dev_err(dev,
-> +			"Could not set gpio pen detect as input %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = gpiod_direction_input(touchdev->gpio_pen_detect_pullup);
-> +	if (ret) {
-> +		dev_err(dev,
-> +			"Could not set pen detect pullup as input %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	/* Mux detection before request IRQ, wait for pull-up to settle */
-> +	vf50_ts_enable_touch_detection(touchdev);
-> +	msleep(10);
-> +
-> +	touchdev->pen_irq = gpiod_to_irq(touchdev->gpio_pen_detect);
-> +	if (touchdev->pen_irq < 0) {
-> +		dev_err(dev, "Unable to get IRQ for GPIO\n");
-> +		return touchdev->pen_irq;
-> +	}
-> +
-> +	ret = request_irq(touchdev->pen_irq, vf50_tc_touched,
-> +			IRQF_TRIGGER_FALLING, "touch detected", touchdev);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Unable to request IRQ %d\n", touchdev->pen_irq);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
+> +	ret =3D da9150->read_dev(da9150->core_qif, addr, count, buf);
+> +	if (ret < 0)
+> +		dev_err(da9150->dev, "Failed to read from QIF 0x%x: %d\n",
+> +			addr, ret);
 > +}
+> +EXPORT_SYMBOL_GPL(da9150_read_qif);
 > +
-> +static void vf50_ts_close(struct input_dev *dev_input)
+> +void da9150_write_qif(struct da9150 *da9150, u8 addr, int count, con=
+st u8 *buf)
 > +{
-> +	struct vf50_touch_device *touchdev = input_get_drvdata(dev_input);
-> +	struct device *dev = &touchdev->pdev->dev;
+> +	int ret;
 > +
-> +	free_irq(touchdev->pen_irq, touchdev);
-> +
-> +	touchdev->stop_touchscreen = true;
-> +
-> +	/* Wait until touchscreen thread finishes any possible remnants. */
-> +	cancel_work_sync(&touchdev->ts_work);
-> +
-> +	dev_dbg(dev, "Input device %s closed, disable touch detection\n",
-> +		dev_input->name);
+> +	ret =3D da9150->write_dev(da9150->core_qif, addr, count, buf);
+> +	if (ret < 0)
+> +		dev_err(da9150->dev, "Failed to write to QIF 0x%x: %d\n",
+> +			addr, ret);
 > +}
+> +EXPORT_SYMBOL_GPL(da9150_write_qif);
 > +
-> +static int vf50_ts_probe(struct platform_device *pdev)
-> +{
-> +	int ret = 0;
-> +	struct device *dev = &pdev->dev;
-> +	struct device_node *node = dev->of_node;
-> +	struct vf50_touch_device *touchdev;
-> +	struct input_dev *input;
-> +	struct iio_channel *channels;
-> +
-> +	if (!node) {
-> +		dev_err(dev, "Device does not have associated DT data\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	channels = iio_channel_get_all(dev);
-> +	if (IS_ERR(channels))
-> +		return PTR_ERR(channels);
-> +
-> +	touchdev = devm_kzalloc(dev, sizeof(*touchdev), GFP_KERNEL);
-> +	if (touchdev == NULL) {
-> +		ret = -ENOMEM;
-> +		goto error_release_channels;
-> +	}
-> +
-> +	input = devm_input_allocate_device(dev);
-> +	if (!input) {
-> +		dev_err(dev, "Failed to allocate TS input device\n");
-> +		ret = -ENOMEM;
-> +		goto error_release_channels;
-> +	}
-> +
-> +	platform_set_drvdata(pdev, touchdev);
-> +
-> +	touchdev->pdev = pdev;
-> +	touchdev->channels = channels;
-> +
-> +	input->name = DRIVER_NAME;
-> +	input->id.bustype = BUS_HOST;
-> +	input->dev.parent = dev;
-> +	input->open = vf50_ts_open;
-> +	input->close = vf50_ts_close;
-> +
-> +	_set_bit(EV_ABS, input->evbit);
-> +	_set_bit(EV_KEY, input->evbit);
-> +	_set_bit(BTN_TOUCH, input->keybit);
-> +	input_set_abs_params(input, ABS_X, 0, VF_ADC_MAX, 0, 0);
-> +	input_set_abs_params(input, ABS_Y, 0, VF_ADC_MAX, 0, 0);
-> +	input_set_abs_params(input, ABS_PRESSURE, 0, VF_ADC_MAX, 0, 0);
-> +
-> +	touchdev->ts_input = input;
-> +	input_set_drvdata(input, touchdev);
-> +	ret = input_register_device(input);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to register input device\n");
-> +		goto error_release_channels;
-> +	}
-> +
-> +	touchdev->gpio_xp = devm_gpiod_get(dev, "xp");
-> +	if (IS_ERR(touchdev->gpio_xp)) {
-> +		ret = PTR_ERR(touchdev->gpio_xp);
-> +		dev_err(dev, "Could not get gpio_xp %d\n", ret);
-> +		goto error_release_channels;
-> +	}
-> +
-> +	touchdev->gpio_xm = devm_gpiod_get(dev, "xm");
-> +	if (IS_ERR(touchdev->gpio_xm)) {
-> +		ret = PTR_ERR(touchdev->gpio_xm);
-> +		dev_err(dev, "Could not get gpio_xm %d\n", ret);
-> +		goto error_release_channels;
-> +	}
-> +
-> +	touchdev->gpio_yp = devm_gpiod_get(dev, "yp");
-> +	if (IS_ERR(touchdev->gpio_yp)) {
-> +		ret = PTR_ERR(touchdev->gpio_yp);
-> +		dev_err(dev, "Could not get gpio_yp %d\n", ret);
-> +		goto error_release_channels;
-> +	}
-> +
-> +	touchdev->gpio_ym = devm_gpiod_get(dev, "ym");
-> +	if (IS_ERR(touchdev->gpio_ym)) {
-> +		ret = PTR_ERR(touchdev->gpio_ym);
-> +		dev_err(dev, "Could not get gpio_ym %d\n", ret);
-> +		goto error_release_channels;
-> +	}
-> +
-> +	touchdev->gpio_pen_detect = devm_gpiod_get(dev, "pen-detect");
-> +	if (IS_ERR(touchdev->gpio_pen_detect)) {
-> +		ret = PTR_ERR(touchdev->gpio_pen_detect);
-> +		dev_err(dev, "Could not get gpio_pen_detect %d\n", ret);
-> +		goto error_release_channels;
-> +	}
-> +
-> +	touchdev->gpio_pen_detect_pullup = devm_gpiod_get(dev, "pen-pullup");
-> +	if (IS_ERR(touchdev->gpio_pen_detect_pullup)) {
-> +		ret = PTR_ERR(touchdev->gpio_pen_detect_pullup);
-> +		dev_err(dev, "Could not get gpio_pen_detect_pullup %d\n", ret);
-> +		goto error_release_channels;
-> +	}
+>  u8 da9150_reg_read(struct da9150 *da9150, u16 reg)
+>  {
+>  	int val, ret;
+> @@ -297,6 +391,15 @@ static struct resource da9150_charger_resources[=
+] =3D {
+>  	},
+>  };
+>=20
+> +static struct resource da9150_fg_resources[] =3D {
+> +	{
+> +		.name =3D "FG",
+> +		.start =3D DA9150_IRQ_FG,
+> +		.end =3D DA9150_IRQ_FG,
+> +		.flags =3D IORESOURCE_IRQ,
 
-Quite some repetition here. Maybe a inline function vf50_ts_get_gpio?
+Can you use the DEFINE_RES_* helpers?=20
 
-static inline int vf50_ts_get_gpio(...)
-{
-...
-		dev_err(dev, "Could not get gpio-%s: %d\n", gpio, ret);
-...
-}
-
-
-if (ret = vf50_ts_get_gpio(&touchdev->gpio_pen_detect_pullup,
-"pen-pullup")
-	goto error_release_channels;
-
-This would also save some message strings and we can reuse the GPIO name
-string.
-
-I think it should also be possible to move the channel initialization
-below the GPIO's, hence saving the goto...
-
-We could do something similar above in the open function, although its
-not that huge of a deal there. But when we do here, I would probably do
-it above to, just for the sake of consistency.
-
-> +
-> +	/* Create workqueue for ADC sampling and calculation */
-> +	INIT_WORK(&touchdev->ts_work, vf50_ts_work);
-> +	touchdev->ts_workqueue = create_singlethread_workqueue("vf50-ts-touch");
-> +
-> +	if (!touchdev->ts_workqueue) {
-> +		ret = PTR_ERR(touchdev->ts_workqueue);
-> +		dev_err(dev,
-> +			"Failed creating vf50-ts-touch workqueue %d\n", ret);
-> +		goto error_release_channels;
-> +	}
-> +
-> +	dev_info(dev, "Attached colibri-vf50-ts driver successfully\n");
-> +
-> +	return 0;
-> +
-> +error_release_channels:
-> +	iio_channel_release_all(channels);
-> +	return ret;
-> +}
-> +
-> +static int vf50_ts_remove(struct platform_device *pdev)
-> +{
-> +	struct vf50_touch_device *touchdev = platform_get_drvdata(pdev);
-> +
-> +	destroy_workqueue(touchdev->ts_workqueue);
-> +	iio_channel_release_all(touchdev->channels);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id vf50_touch_of_match[] = {
-> +	{ .compatible = "toradex,vf50-touchctrl", },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, vf50_touch_of_match);
-> +
-> +static struct platform_driver __refdata vf50_touch_driver = {
-> +	.driver = {
-> +		.name = "toradex,vf50_touchctrl",
-> +		.owner = THIS_MODULE,
-
-I think the owner is not needed any more.
-
---
-Stefan
-
-> +		.of_match_table = vf50_touch_of_match,
 > +	},
-> +	.probe = vf50_ts_probe,
-> +	.remove = vf50_ts_remove,
-> +	.prevent_deferred_probe = false,
 > +};
 > +
-> +module_platform_driver(vf50_touch_driver);
+>  static struct mfd_cell da9150_devs[] =3D {
+>  	{
+>  		.name =3D "da9150-gpadc",
+> @@ -310,6 +413,12 @@ static struct mfd_cell da9150_devs[] =3D {
+>  		.resources =3D da9150_charger_resources,
+>  		.num_resources =3D ARRAY_SIZE(da9150_charger_resources),
+>  	},
+> +	{
+> +		.name =3D "da9150-fuelgauge",
+> +		.of_compatible =3D "dlg,da9150-fg",
+> +		.resources =3D da9150_fg_resources,
+> +		.num_resources =3D ARRAY_SIZE(da9150_fg_resources),
+> +	},
+>  };
+>=20
+>  static int da9150_probe(struct i2c_client *client,
+> @@ -317,11 +426,14 @@ static int da9150_probe(struct i2c_client *clie=
+nt,
+>  {
+>  	struct da9150 *da9150;
+>  	struct da9150_pdata *pdata =3D dev_get_platdata(&client->dev);
+> +	int qif_addr;
+>  	int ret;
+>=20
+>  	da9150 =3D devm_kzalloc(&client->dev, sizeof(*da9150), GFP_KERNEL);
+> -	if (!da9150)
+> -		return -ENOMEM;
+> +	if (!da9150) {
+> +		ret =3D -ENOMEM;
+> +		goto fail;
+
+Don't do this.  'fail' doesn't do anything, just return here.
+
+> +	}
+>=20
+>  	da9150->dev =3D &client->dev;
+>  	da9150->irq =3D client->irq;
+> @@ -332,19 +444,46 @@ static int da9150_probe(struct i2c_client *clie=
+nt,
+>  		ret =3D PTR_ERR(da9150->regmap);
+>  		dev_err(da9150->dev, "Failed to allocate register map: %d\n",
+>  			ret);
+> -		return ret;
+> +		goto fail;
+
+It was better before.
+
+> +	}
 > +
-> +module_param(min_pressure, int, 0600);
-> +MODULE_PARM_DESC(min_pressure, "Minimum pressure for touch detection");
-> +MODULE_AUTHOR("Sanchayan Maity");
-> +MODULE_DESCRIPTION("Colibri VF50 Touchscreen driver");
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_VERSION(DRV_VERSION);
+> +	/* Setup secondary I2C interface for QIF access */
+> +	qif_addr =3D da9150_reg_read(da9150, DA9150_CORE2WIRE_CTRL_A);
+> +	qif_addr =3D (qif_addr & DA9150_CORE_BASE_ADDR_MASK) >> 1;
+> +	qif_addr |=3D DA9150_QIF_I2C_ADDR_LSB;
+> +	da9150->core_qif =3D i2c_new_dummy(client->adapter, qif_addr);
+> +	if (!da9150->core_qif) {
+> +		dev_err(da9150->dev, "Failed to attach QIF client\n");
+> +		ret =3D -ENODEV;
+> +		goto fail;
+
+Same.
+
+>  	}
+>=20
+> -	da9150->irq_base =3D pdata ? pdata->irq_base : -1;
+> +	i2c_set_clientdata(da9150->core_qif, da9150);
+> +	da9150->read_dev =3D (read_dev_t) da9150_i2c_read_device;
+> +	da9150->write_dev =3D (write_dev_t) da9150_i2c_write_device;
+
+Is it possible for read_dev to be set to anything other than
+da9150_i2c_read_device?
+
+> +	if (pdata) {
+> +		da9150->irq_base =3D pdata->irq_base;
+> +
+> +		da9150_devs[2].platform_data =3D pdata->fg_pdata;
+> +		da9150_devs[2].pdata_size =3D sizeof(struct da9150_fg_pdata);
+
+This is fragile.
+
+If another device gets inserted above the FG, this will break.
+
+> +	} else {
+> +		da9150->irq_base =3D -1;
+> +	}
+>=20
+>  	ret =3D regmap_add_irq_chip(da9150->regmap, da9150->irq,
+>  				  IRQF_TRIGGER_LOW | IRQF_ONESHOT,
+>  				  da9150->irq_base, &da9150_regmap_irq_chip,
+>  				  &da9150->regmap_irq_data);
+> -	if (ret)
+> -		return ret;
+> +	if (ret) {
+> +		dev_err(da9150->dev, "Failed to add regmap irq chip: %d\n",
+> +			ret);
+> +		goto regmap_irq_fail;
+> +	}
+> +
+>=20
+>  	da9150->irq_base =3D regmap_irq_chip_get_base(da9150->regmap_irq_da=
+ta);
+> +
+>  	enable_irq_wake(da9150->irq);
+>=20
+>  	ret =3D mfd_add_devices(da9150->dev, -1, da9150_devs,
+> @@ -352,11 +491,17 @@ static int da9150_probe(struct i2c_client *clie=
+nt,
+>  			      da9150->irq_base, NULL);
+>  	if (ret) {
+>  		dev_err(da9150->dev, "Failed to add child devices: %d\n", ret);
+> -		regmap_del_irq_chip(da9150->irq, da9150->regmap_irq_data);
+> -		return ret;
+> +		goto mfd_fail;
+>  	}
+>=20
+>  	return 0;
+> +
+> +mfd_fail:
+> +	regmap_del_irq_chip(da9150->irq, da9150->regmap_irq_data);
+> +regmap_irq_fail:
+> +	i2c_unregister_device(da9150->core_qif);
+> +fail:
+> +	return ret;
+>  }
+>=20
+>  static int da9150_remove(struct i2c_client *client)
+> @@ -365,6 +510,7 @@ static int da9150_remove(struct i2c_client *clien=
+t)
+>=20
+>  	regmap_del_irq_chip(da9150->irq, da9150->regmap_irq_data);
+>  	mfd_remove_devices(da9150->dev);
+> +	i2c_unregister_device(da9150->core_qif);
+>=20
+>  	return 0;
+>  }
+> diff --git a/include/linux/mfd/da9150/core.h b/include/linux/mfd/da91=
+50/core.h
+> index 76e6689..98ecfea 100644
+> --- a/include/linux/mfd/da9150/core.h
+> +++ b/include/linux/mfd/da9150/core.h
+> @@ -15,9 +15,11 @@
+>  #define __DA9150_CORE_H
+>=20
+>  #include <linux/device.h>
+> +#include <linux/i2c.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/regmap.h>
+>=20
+> +
+
+Please remove this.
+
+>  /* I2C address paging */
+>  #define DA9150_REG_PAGE_SHIFT	8
+>  #define DA9150_REG_PAGE_MASK	0xFF
+> @@ -46,23 +48,40 @@
+>  #define DA9150_IRQ_GPADC	19
+>  #define DA9150_IRQ_WKUP		20
+>=20
+> +/* Platform Data */
+
+No need for this comment.  The pdata in the name give it away.
+
+> +struct da9150_fg_pdata;
+
+Why can't you just put the struct definition in here?
+
+>  struct da9150_pdata {
+>  	int irq_base;
+> +	struct da9150_fg_pdata *fg_pdata;
+>  };
+>=20
+> +/* I/O function typedefs for raw access */
+> +typedef int (*read_dev_t)(void *client, u8 addr, int count, u8 *buf)=
+;
+> +typedef int (*write_dev_t)(void *client, u8 addr, int count, const u=
+8 *buf);
+
+No need to typedef, just pop them directly into the struct.  Although
+I'm not convinced that need them at all really.
+
+>  struct da9150 {
+>  	struct device *dev;
+>  	struct regmap *regmap;
+> +	struct i2c_client *core_qif;
+> +
+> +	read_dev_t read_dev;
+> +	write_dev_t write_dev;
+> +
+>  	struct regmap_irq_chip_data *regmap_irq_data;
+>  	int irq;
+>  	int irq_base;
+
+Why are there 2 irq_bases?  That could get pretty confusing.
+
+Why is it being stored?
+
+Same with irq.
+
+>  };
+>=20
+>  /* Device I/O */
+> +void da9150_read_qif(struct da9150 *da9150, u8 addr, int count, u8 *=
+buf);
+> +void da9150_write_qif(struct da9150 *da9150, u8 addr, int count, con=
+st u8 *buf);
+
+What is qif?  The naming convention isn't very transparent.
+
+>  u8 da9150_reg_read(struct da9150 *da9150, u16 reg);
+>  void da9150_reg_write(struct da9150 *da9150, u16 reg, u8 val);
+>  void da9150_set_bits(struct da9150 *da9150, u16 reg, u8 mask, u8 val=
+);
+>=20
+>  void da9150_bulk_read(struct da9150 *da9150, u16 reg, int count, u8 =
+*buf);
+>  void da9150_bulk_write(struct da9150 *da9150, u16 reg, int count, co=
+nst u8 *buf);
+> +
+>  #endif /* __DA9150_CORE_H */
+> diff --git a/include/linux/mfd/da9150/fg.h b/include/linux/mfd/da9150=
+/fg.h
+> new file mode 100644
+> index 0000000..0ff52ab
+> --- /dev/null
+> +++ b/include/linux/mfd/da9150/fg.h
+> @@ -0,0 +1,29 @@
+> +/*
+> + * DA9150 MFD Driver - Fuel Gauge Data
+
+Does it really require it's very own header file?
+
+> + * Copyright (c) 2015 Dialog Semiconductor
+> + *
+> + * Author: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+> + *
+> + * This program is free software; you can redistribute  it and/or mo=
+dify it
+> + * under  the terms of  the GNU General  Public License as published=
+ by the
+> + * Free Software Foundation;  either version 2 of the  License, or (=
+at your
+> + * option) any later version.
+> + */
+> +
+> +#ifndef __DA9150_FG_H
+> +#define __DA9150_FG_H
+> +
+> +#include <linux/power_supply.h>
+> +
+> +/* I2C sub-device address */
+> +#define DA9150_QIF_I2C_ADDR_LSB		0x5
+> +
+> +/* Platform data */
+> +struct da9150_fg_pdata {
+> +	u32 update_interval;	/* msecs */
+> +	u8 warn_soc_lvl;	/* % value */
+> +	u8 crit_soc_lvl;	/* % value */
+> +};
+> +
+> +#endif /* __DA9150_FG_H */
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
