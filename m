@@ -1,59 +1,46 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [RFC 1/3] of: make of_mutex public
-Date: Fri, 3 Jul 2015 09:24:55 +0200
-Message-ID: <20150703072455.GA1521@katana>
-References: <1435700651-3543-1-git-send-email-wsa@the-dreams.de>
- <1435700651-3543-2-git-send-email-wsa@the-dreams.de>
- <CAL_Jsq+-Tx=hwj9ScXBXeGxNwHhq-Lpe-5Kzd-Tu_SNue2aWTA@mail.gmail.com>
- <8FECDF89-828C-4F8F-A141-B2E1EF2E2B24@konsulko.com>
+From: Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v2 0/8] iio: mma8452: support more devices and improve
+ driver
+Date: Fri, 03 Jul 2015 09:32:07 +0200
+Message-ID: <55963A77.5040202@posteo.de>
+References: <1435738922-12580-1-git-send-email-martink@posteo.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="9jxsPFA5p3P2qPhR"
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <8FECDF89-828C-4F8F-A141-B2E1EF2E2B24@konsulko.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Cc: Rob Herring <robherring2@gmail.com>, SH-Linux <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-15
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1435738922-12580-1-git-send-email-martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Am 2015-07-01 um 10:21 schrieb Martin Kepplinger:
+> This is the 2nd version that adds support for motion interrupts and 3 more
+> accelerometer chips, two of which use them because they don't support the
+> until now included transient interrupt sources:
+> 
+> MMA8453Q, MMA8652FC and MMA8653FC; datasheets are in the commit messages.
+> 
+> The driver and module name remains the same, seperating it from the device
+> names it now supports.
+> 
+> On top of this, there are minor documentation additions, and more notably,
+> the change of the existing iio event type from IIO_EV_TYPE_THRESH to
+> IIO_EV_TYPE_MAG since it's the magnitude of the threshold that is relevant
+> for these devices, not a signed value.
+> 
+> Please review and test if you can. For MMA8452Q, other than the event type,
+> nothing should have changed.
+> 
 
---9jxsPFA5p3P2qPhR
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Any wishes, suggestions, objections about this change?
+
+thanks,
+                           martin
 
 
-> What is it that we=E2=80=99re trying to do here? What is the use case?
 
-http://www.spinics.net/lists/devicetree/msg85462.html
-
-I'll bounce the mails to you as well.
-
-Thanks,
-
-   Wolfram
-
---9jxsPFA5p3P2qPhR
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJVljjHAAoJEBQN5MwUoCm2sXMQAIJtiQXzlloIQrFD0LzHtWji
-Gbm2WLmN6uga46dx12SMx4ANhygtN7rRmgb0y8yt1rDKGO/1kTN6bQ6yW32zfqUp
-tSn4dQdsAHjNL2EPTvkWcmXGOiOdasQ6EGtgGEqoFhSYtT3nYw4PSn0PnENstT+z
-oPm86v2SAYILVrM9hoh4YTXFcnusIYKAnJy+WGEEEfdd4R4k+sW9aqtdXpWdEu1j
-2v6PVFwQ3B8E2CnW4UzQd4vCQVmViqF9uOxBTrgyOXK0CU3j7A/WLvtQYKWZVlD1
-MqkFYeVK4ZFTcgR6za+D5qijxZqoPEa4zpUMm1RPoygDjcipPUxKyYUxEkuK6vYc
-q1T+UaVejYB95jNHewp9425cldggZ1afXem1Oaj4VyvyJl4CCfSHnJBq/FM6SGXj
-4ZvNBRxm8UG9UegBuvRgszu9S3JPLZldQmEw/QMDD6bv1rfZHCC4KQrtQlR64H2f
-sC3RxkJoPR1/knrMTjk/mcAQd2hquxeneYCSvHq9wW2mdZGCWLrKjhVg0GMSADGJ
-untwQCuqU1y+sy5mCeW61fUxy9KP1ZLt8fW73WfzEf8vTw8j7xUROlVVcKqW5lFH
-icN9Yn3TnYeLhog1d09N2pvCZ1dEI7oFhZBYMpHYZ2M1RinY2gx67eI0TaxynQqA
-vP4aRpQMCzCoIrQD4s+6
-=tcnr
------END PGP SIGNATURE-----
-
---9jxsPFA5p3P2qPhR--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
