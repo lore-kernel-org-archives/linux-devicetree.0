@@ -1,119 +1,45 @@
-From: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v2 2/4] dt-bindings: ARM: Mediatek: Document devicetree
- bindings for clock controllers
-Date: Fri, 3 Jul 2015 18:46:33 +0800
-Message-ID: <CAGS+omAo-d_bK=2HDu98xHvqhnVgJUBy4jbYVGKqsfWRX-EfDA@mail.gmail.com>
-References: <1435633127-31952-1-git-send-email-jamesjj.liao@mediatek.com>
- <1435633127-31952-3-git-send-email-jamesjj.liao@mediatek.com>
- <CAGS+omD9Mvz0-RQMc5TsWCPct80S5fyqMn3+-zR7HB9yb7KoDQ@mail.gmail.com>
- <1435805534.3526.23.camel@mtksdaap41> <CAGS+omCgNstb+NPmRdbngnLm754hDPLO28KRc4RanCD2Myv7dQ@mail.gmail.com>
- <5595CBDC.7090101@codeaurora.org>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH 1/2] gpio: dwapb: Use human understandable gpio numbering.
+Date: Fri, 3 Jul 2015 11:55:26 +0100
+Message-ID: <20150703105525.GU7557@n2100.arm.linux.org.uk>
+References: <cover.1435777856.git.rcochran@linutronix.de>
+ <d6b5ce85a17164970d454583560e07f7aed7b8ca.1435777856.git.rcochran@linutronix.de>
+ <267A46E7-C5C5-4696-90CC-D44F4130B3EF@smart-africa.com>
+ <20150703091347.GA17808@localhost.localdomain>
+ <C1BD6DA3-F32E-4CAD-8DA9-6F74A7966DBE@smart-africa.com>
+ <20150703103626.GA18893@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5595CBDC.7090101-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150703103626.GA18893@localhost.localdomain>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Richard Cochran <richardcochran@gmail.com>
+Cc: Michael van der Westhuizen <michael@smart-africa.com>, Alexandre Courbot <gnurou@gmail.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, Alan Tull <atull@altera.com>, Dinh Nguyen <dinguyen@altera.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 3, 2015 at 7:40 AM, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
-> On 07/01/2015 09:26 PM, Daniel Kurtz wrote:
->> On Thu, Jul 2, 2015 at 10:52 AM, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
->>> Hi Daniel,
->>>
->>>>> +Required Properties:
->>>>> +
->>>>> +- compatible: Should be:
->>>>> +       - "mediatek,mt8173-imgsys", "syscon"
->>>>> +- #clock-cells: Must be 1
->>>>> +
->>>>> +The imgsys controller uses the common clk binding from
->>>>> +Documentation/devicetree/bindings/clock/clock-bindings.txt
->>>>> +The available clocks are defined in dt-bindings/clock/mt*-clk.h.
->>>>> +
->>>>> +Example:
->>>>> +
->>>>> +imgsys: imgsys@15000000 {
->>>> Since these nodes will be supplying clocks to the rest of the system,
->>>> I think the "name" part of each of these should all be
->>>> "clock-controller", like topckgen and apmixedsys:
->>>>
->>>>   imgsys: clock-controller@15000000 {
->>> These subsystems (and topckgen also) also contains other functions such
->>> as reset controller, which may be implemented in clk/mediatek/ in the
->>> future. It is suitable to use "clock-controller" as their name?
->> Hmm,
->>
->> I don't know the "right way" to do this either.
->> Pardon me if you've already had these discussions.
->> I only recently started looking at these clock nodes in detail :-).
->>
->> I think what we really have in register space is a "syscon", as
->> described in [0]:
->> [0] Documentation/devicetree/bindings/mfd/syscon.txt
->>
->> So, we can define this block of registers as a syscon:
->>
->> mmsys_syscon: syscon@14000000 {
->>        compatible = "mediatek,mt8173-mmsys", "syscon";
->>        reg = <0 0x14000000 0 0x1000>;
->> };
->>
->>
->> Then for the clock controller functionality, we create a node with a
->> "clock-controller" name and a "-clock" compatible, like this:
->>
->> mmsys_clock: clock-controller {
->>        compatible = "mediatek,mt8173-mmsys-clock";
->>        #clock-cells = <1>;
->>        mediatek,syscon = <&mmsys_syscon>;
->> };
->>
->> You could then do:
->> CLK_OF_DECLARE(mtk_mmsys, "mediatek,mt8173-mmsys-clock", mtk_mmsys_init);
->>
->>
->> If you want to reuse the same register range for some other
->> functionality, we could then use a different node, with a different
->> compatible:
->>
->> mmsys: reset-controller {
->>        compatible = "mediatek,mt8173-mmsys-reset";
->>        mediatek,syscon = <&mmsys_syscon>;
->> };
->>
->> What do you think of this approach?
->
-> DT nodes typically have a reg property. Not having a reg property is a
-> good indicator of a problem with the binding. A syscon is used when you
-> have a DT node with a reg property and some driver attached to it, but
-> you need to poke some bits in another register region that isn't part of
-> the reg property. Instead of having multiple nodes with two reg
-> properties where the second one is the same, we use a phandle and a syscon.
->
-> If clock-controller isn't acceptable maybe clock-reset-contoller would
-> work? Or "power-controller"? We certainly shouldn't be making up
-> multiple nodes for one hardware block. Of course, the subject of the
-> patch is "bindings for clock controllers", so it may be that the
-> registers are predominantly clock related and so the name is appropriate
-> already.
+On Fri, Jul 03, 2015 at 12:36:26PM +0200, Richard Cochran wrote:
+> On Fri, Jul 03, 2015 at 10:18:28AM +0100, Michael van der Westhuizen wrote:
+> > The subject should be:
+> >   gpio: dwapb: Use human understandable gpio numbering
+> > Not:
+> >   gpio: dwapb: Use human understandable gpio numbering.
+> 
+> Ok, I see.  I would call that dot a "period", not a full-stop.
+> 
+> Must be a British thing...
 
-Using "clock-controller" seems to fit best with the bindings
-introduced by this patch.
+https://en.wikipedia.org/wiki/Full_stop
 
-However, if these bindings are for hardware blocks that contain a grab
-bag of various functionality that will be added in later patches, then
-I think "syscon" might be best.
+says that '.' is a period in both American and British English, but when
+used at the end of a sentence, the period is called a "full stop" in both.
+(A full stop is a period used to end a sentence.)
 
--Dan
+It also says that in British English, '.' used elsewhere has also become
+known as a "full stop" (I regard that as incorrect, despite myself being
+British - it's a dilution of terms, and we'd now be in need of a new term
+to describe the '.' at the end of a sentence because of this.)
 
->
-> --
-> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-> a Linux Foundation Collaborative Project
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+according to speedtest.net.
