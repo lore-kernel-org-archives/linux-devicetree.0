@@ -1,67 +1,74 @@
-From: Michael van der Westhuizen <michael@smart-africa.com>
-Subject: Re: [PATCH 1/2] gpio: dwapb: Use human understandable gpio numbering.
-Date: Fri, 3 Jul 2015 14:30:12 +0100
-Message-ID: <A32F9C0A-E306-44CE-A556-281FFF64865C@smart-africa.com>
-References: <cover.1435777856.git.rcochran@linutronix.de> <d6b5ce85a17164970d454583560e07f7aed7b8ca.1435777856.git.rcochran@linutronix.de> <5594E9F6.7040701@linutronix.de> <20150702142601.GB9349@localhost.localdomain> <55954B17.3020303@linutronix.de> <20150702152147.GA10111@localhost.localdomain> <55955EB5.4090400@linutronix.de> <038289C9-2848-4545-B450-7D4EA074CD26@smart-africa.com>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2102\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <038289C9-2848-4545-B450-7D4EA074CD26@smart-africa.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Richard Cochran <richardcochran@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, Alan Tull <atull@altera.com>, linux-arm-kernel@lists.infradead.org, Dinh Nguyen <dinguyen@altera.com>
+From: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v2 4/9] clocksource: mediatek: Use GPT as sched clock source
+Date: Fri, 3 Jul 2015 21:48:42 +0800
+Message-ID: <CAGS+omDa4X7daAYD6SDuEM6bMQwojNUCnGMGiUwnJ6M_yBTRLg@mail.gmail.com>
+References: <1431763110-443-1-git-send-email-yingjoe.chen@mediatek.com>
+ <1431763110-443-5-git-send-email-yingjoe.chen@mediatek.com> <CABuKBeJhdRBBw1v1kj8J0YFVWZ27vzx5W=XU8jiwePVgL_7g_g@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CABuKBeJhdRBBw1v1kj8J0YFVWZ27vzx5W=XU8jiwePVgL_7g_g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, May 20, 2015 at 7:02 PM, Matthias Brugger
+<matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> 2015-05-16 9:58 GMT+02:00 Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>:
+>> When cpu is in deep idle, arch timer will stop counting. Setup GPT as
+>> sched clock source so it can keep counting in idle.
+>>
+>> Signed-off-by: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>> ---
+>>  drivers/clocksource/mtk_timer.c | 10 ++++++++++
+>>  1 file changed, 10 insertions(+)
+>>
+>> diff --git a/drivers/clocksource/mtk_timer.c b/drivers/clocksource/mtk_timer.c
+>> index 91206f9..fe7cf72 100644
+>> --- a/drivers/clocksource/mtk_timer.c
+>> +++ b/drivers/clocksource/mtk_timer.c
+>> @@ -24,6 +24,7 @@
+>>  #include <linux/of.h>
+>>  #include <linux/of_address.h>
+>>  #include <linux/of_irq.h>
+>> +#include <linux/sched_clock.h>
+>>  #include <linux/slab.h>
+>>
+>>  #define GPT_IRQ_EN_REG         0x00
+>> @@ -59,6 +60,13 @@ struct mtk_clock_event_device {
+>>         struct clock_event_device dev;
+>>  };
+>>
+>> +static void __iomem *gpt_base __read_mostly;
+>> +
+>> +static u64 notrace mtk_read_sched_clock(void)
+>> +{
+>> +       return readl_relaxed(gpt_base + TIMER_CNT_REG(GPT_CLK_SRC));
+>> +}
+>> +
+>>  static inline struct mtk_clock_event_device *to_mtk_clk(
+>>                                 struct clock_event_device *c)
+>>  {
+>> @@ -243,6 +251,8 @@ static void __init mtk_timer_init(struct device_node *node)
+>>         mtk_timer_setup(evt, GPT_CLK_SRC, TIMER_CTRL_OP_FREERUN, 1);
+>>         clocksource_mmio_init(evt->gpt_base + TIMER_CNT_REG(GPT_CLK_SRC),
+>>                         node->name, rate, 300, 32, clocksource_mmio_readl_up);
+>> +       gpt_base = evt->gpt_base;
+>
+> This is really hacky. We should clean up the code and provide
+> mtk_clock_event_device globally.
+> Please add the patch below, which does exactly this.
 
-> On 02 Jul 2015, at 5:02 PM, Michael van der Westhuizen <michael@smart=
--africa.com> wrote:
->=20
->=20
->> On 02 Jul 2015, at 4:54 PM, Sebastian Andrzej Siewior <bigeasy@linut=
-ronix.de> wrote:
->>=20
->> On 07/02/2015 05:21 PM, Richard Cochran wrote:
->>> On Thu, Jul 02, 2015 at 04:30:47PM +0200, Sebastian Andrzej Siewior=
- wrote:
->>>> On 07/02/2015 04:26 PM, Richard Cochran wrote:
->>>>> On Thu, Jul 02, 2015 at 09:36:22AM +0200, Sebastian Andrzej Siewi=
-or wrote:
->>>>>> If you are in a specific SoC you could do
->>>>>> 	base =3D of_alias_get_id(np, "gpio") * num_of_gpio_per_chip
->>>>>> and get consistent numbers / sane.
->>>>>=20
->>>>> And what about /sys/class/gpio ?
->>>>=20
->>>> What about it?
->>>=20
->>> The poor users of that interface cannot use "of_alias_get_id" as yo=
-u suggest.
->>=20
->> You do that in the driver. The only problem with that is that the
->> synopsys controller can have between one and four banks and a bank c=
-an
->> have 1-32 GPIOs if I remember correctly. That means you can't have a
->> static number of GPIOs like others do.
->=20
-> This is correct.
->=20
->> Therefore I think a starting property is the only way and I would
->> prefer a generic one.
->=20
-> I would prefer a generic property too.  I was rather surprised that o=
-ne did not exist.
+I don't think this is so hacky.
+In light of Stephen's comment about the benefit of using
+container_of() to extract gpt_base from the passed in struct
+clock_event_device in the other routines, what is the benefit of
+making more of mtk_clock_event_device global?
+I think what Yingjoe has implemented is short and sweet.
 
-=E2=80=A6 looking into this more closely, by the time we get into gpioc=
-hip_add there=E2=80=99s no notion
-of the DT node that is associated to the gpiochip being added (and the =
-gpiochip->dev
-points to the parent device, which is the generally the parent DT node)=
-, so this can=E2=80=99t be
-done generically without at least some churn in the individual drivers.
-
-Michael--
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
+Reviewed-by: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
