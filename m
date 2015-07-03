@@ -1,73 +1,113 @@
-From: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v2 4/9] clocksource: mediatek: Use GPT as sched clock source
-Date: Fri, 3 Jul 2015 21:48:42 +0800
-Message-ID: <CAGS+omDa4X7daAYD6SDuEM6bMQwojNUCnGMGiUwnJ6M_yBTRLg@mail.gmail.com>
-References: <1431763110-443-1-git-send-email-yingjoe.chen@mediatek.com>
- <1431763110-443-5-git-send-email-yingjoe.chen@mediatek.com> <CABuKBeJhdRBBw1v1kj8J0YFVWZ27vzx5W=XU8jiwePVgL_7g_g@mail.gmail.com>
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: Re: [PATCH v1 2/4] ARM: dts: vf500-colibri: Add device tree node for
+ touchscreen support
+Date: Fri, 03 Jul 2015 15:50:11 +0200
+Message-ID: <347f8e8a9ec4c71bab9713bc2e980ebb@agner.ch>
+References: <cover.1435646447.git.maitysanchayan@gmail.com>
+ <2fa8c45a15acc7fdcf75611d46530a643858115d.1435646447.git.maitysanchayan@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CABuKBeJhdRBBw1v1kj8J0YFVWZ27vzx5W=XU8jiwePVgL_7g_g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <2fa8c45a15acc7fdcf75611d46530a643858115d.1435646447.git.maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 20, 2015 at 7:02 PM, Matthias Brugger
-<matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> 2015-05-16 9:58 GMT+02:00 Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>:
->> When cpu is in deep idle, arch timer will stop counting. Setup GPT as
->> sched clock source so it can keep counting in idle.
->>
->> Signed-off-by: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->> ---
->>  drivers/clocksource/mtk_timer.c | 10 ++++++++++
->>  1 file changed, 10 insertions(+)
->>
->> diff --git a/drivers/clocksource/mtk_timer.c b/drivers/clocksource/mtk_timer.c
->> index 91206f9..fe7cf72 100644
->> --- a/drivers/clocksource/mtk_timer.c
->> +++ b/drivers/clocksource/mtk_timer.c
->> @@ -24,6 +24,7 @@
->>  #include <linux/of.h>
->>  #include <linux/of_address.h>
->>  #include <linux/of_irq.h>
->> +#include <linux/sched_clock.h>
->>  #include <linux/slab.h>
->>
->>  #define GPT_IRQ_EN_REG         0x00
->> @@ -59,6 +60,13 @@ struct mtk_clock_event_device {
->>         struct clock_event_device dev;
->>  };
->>
->> +static void __iomem *gpt_base __read_mostly;
->> +
->> +static u64 notrace mtk_read_sched_clock(void)
->> +{
->> +       return readl_relaxed(gpt_base + TIMER_CNT_REG(GPT_CLK_SRC));
->> +}
->> +
->>  static inline struct mtk_clock_event_device *to_mtk_clk(
->>                                 struct clock_event_device *c)
->>  {
->> @@ -243,6 +251,8 @@ static void __init mtk_timer_init(struct device_node *node)
->>         mtk_timer_setup(evt, GPT_CLK_SRC, TIMER_CTRL_OP_FREERUN, 1);
->>         clocksource_mmio_init(evt->gpt_base + TIMER_CNT_REG(GPT_CLK_SRC),
->>                         node->name, rate, 300, 32, clocksource_mmio_readl_up);
->> +       gpt_base = evt->gpt_base;
->
-> This is really hacky. We should clean up the code and provide
-> mtk_clock_event_device globally.
-> Please add the patch below, which does exactly this.
+On 2015-06-30 08:54, Sanchayan Maity wrote:
+> Add device tree node for touchscreen support on Colibri VF50. The
+> touchscreen functionality on VF50 uses the ADC channels of Vybrid
+> and some GPIOs. Also add pinctrl nodes for proper pinmux.
+> 
+> Signed-off-by: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/vf500-colibri-eval-v3.dts |  4 +++
+>  arch/arm/boot/dts/vf500-colibri.dtsi        | 46 +++++++++++++++++++++++++++++
+>  2 files changed, 50 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/vf500-colibri-eval-v3.dts
+> b/arch/arm/boot/dts/vf500-colibri-eval-v3.dts
+> index 7fc782c..c5efb57 100644
+> --- a/arch/arm/boot/dts/vf500-colibri-eval-v3.dts
+> +++ b/arch/arm/boot/dts/vf500-colibri-eval-v3.dts
+> @@ -15,3 +15,7 @@
+>  	model = "Toradex Colibri VF50 on Colibri Evaluation Board";
+>  	compatible = "toradex,vf500-colibri_vf50-on-eval",
+> "toradex,vf500-colibri_vf50", "fsl,vf500";
+>  };
+> +
+> +&touchctrl {
+> +	status = "okay";
+> +};
+> diff --git a/arch/arm/boot/dts/vf500-colibri.dtsi
+> b/arch/arm/boot/dts/vf500-colibri.dtsi
+> index cee34a3..4807a32 100644
+> --- a/arch/arm/boot/dts/vf500-colibri.dtsi
+> +++ b/arch/arm/boot/dts/vf500-colibri.dtsi
+> @@ -17,4 +17,50 @@
+>  	memory {
+>  		reg = <0x80000000 0x8000000>;
+>  	};
+> +
+> +	touchctrl: vf50_touchctrl {
+> +		compatible = "toradex,vf50-touchctrl";
+> +		io-channels = <&adc1 0>,<&adc0 0>,
+> +				<&adc0 1>,<&adc1 2>;
+> +		xp-gpios = <&gpio0 13 GPIO_ACTIVE_LOW>;
+> +		xm-gpios = <&gpio2 29 GPIO_ACTIVE_HIGH>;
+> +		yp-gpios = <&gpio0 12 GPIO_ACTIVE_LOW>;
+> +		ym-gpios = <&gpio0 4 GPIO_ACTIVE_HIGH>;
+> +		pen-detect-gpios = <&gpio0 8 GPIO_ACTIVE_HIGH>;
+> +		pen-pullup-gpios = <&gpio0 9 GPIO_ACTIVE_HIGH>;
+> +		pinctrl-names = "idle","default","gpios";
+> +		pinctrl-0 = <&pinctrl_touchctrl_idle>;
+> +		pinctrl-1 = <&pinctrl_touchctrl_default>;
+> +		pinctrl-2 = <&pinctrl_touchctrl_gpios>;
+> +		status = "disabled";
+> +	};
+> +};
+> +
+> +&iomuxc {
+> +	vf610-colibri {
+> +		pinctrl_touchctrl_idle: touchctrl_idle {
+> +			fsl,pins = <
+> +				VF610_PAD_PTA18__GPIO_8		0x206d
 
-I don't think this is so hacky.
-In light of Stephen's comment about the benefit of using
-container_of() to extract gpt_base from the passed in struct
-clock_event_device in the other routines, what is the benefit of
-making more of mtk_clock_event_device global?
-I think what Yingjoe has implemented is short and sweet.
+I think the detect pin should be in Hi-Z, not be pulled up. Probably the
+resistance over the plates is much smaller on pen down, hence it doesn't
+matter too much.
 
-Reviewed-by: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> +				VF610_PAD_PTA19__GPIO_9		0x206d
+> +				>;
+> +		};
+> +
+> +		pinctrl_touchctrl_default: touchctrl_default {
+> +			fsl,pins = <
+> +				VF610_PAD_PTA18__ADC0_SE0	0x2060
+> +				VF610_PAD_PTA19__ADC0_SE1	0x2060
+> +				VF610_PAD_PTA16__ADC1_SE0	0x2060
+> +				VF610_PAD_PTB2__ADC1_SE2	0x2060
+> +				>;
+> +		};
+> +
+> +		pinctrl_touchctrl_gpios: touchctrl_gpios {
+> +			fsl,pins = <
+> +				VF610_PAD_PTA23__GPIO_13	0x22ed
+> +				VF610_PAD_PTB23__GPIO_93	0x22ed
+> +				VF610_PAD_PTA22__GPIO_12	0x22ed
+> +				VF610_PAD_PTA11__GPIO_4		0x22ed
+> +				>;
+> +		};
+
+Hm, those have pull-ups on too, since you set them as output in the
+drivers open function, I don't think this is necessary.
+
+> +	};
+>  };
+
+--
+Stefan
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
