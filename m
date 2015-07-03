@@ -1,23 +1,62 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v2 2/4] dt-bindings: ARM: Mediatek: Document devicetree bindings for spi bus
-Date: Sat, 04 Jul 2015 00:15:43 +0200
-Message-ID: <1791305.A5zNADo8Wb@ubix>
-References: <1435583070-9600-1-git-send-email-leilk.liu@mediatek.com> <1435583070-9600-3-git-send-email-leilk.liu@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+From: Philippe Reynes <tremyfr@gmail.com>
+Subject: [PATCH v4 5/7] dt-binding: document the binding for mxc rtc
+Date: Sat,  4 Jul 2015 01:15:18 +0200
+Message-ID: <1435965320-1478-6-git-send-email-tremyfr@gmail.com>
+References: <1435965320-1478-1-git-send-email-tremyfr@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1435583070-9600-3-git-send-email-leilk.liu@mediatek.com>
+In-Reply-To: <1435965320-1478-1-git-send-email-tremyfr@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Leilk Liu <leilk.liu@mediatek.com>
-Cc: Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org, linux-mediatek@lists.infradead.org
+To: a.zummo@towertech.it, alexandre.belloni@free-electrons.com, shawn.guo@linaro.org, kernel@pengutronix.de, linux@arm.linux.org.uk
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, rtc-linux@googlegroups.com, Philippe Reynes <tremyfr@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday, June 29, 2015 09:04:28 PM Leilk Liu wrote:
-> Signed-off-by: Leilk Liu <leilk.liu@mediatek.com>
-> ---
+This adds documentation of device tree bindings for the
+mxc rtc.
 
-Please add a proper patch description.
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Philippe Reynes <tremyfr@gmail.com>
+---
+ Documentation/devicetree/bindings/rtc/rtc-mxc.txt |   27 +++++++++++++++++++++
+ 1 files changed, 27 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/rtc/rtc-mxc.txt
 
-Cheers,
-Matthias
+diff --git a/Documentation/devicetree/bindings/rtc/rtc-mxc.txt b/Documentation/devicetree/bindings/rtc/rtc-mxc.txt
+new file mode 100644
+index 0000000..5505493
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/rtc-mxc.txt
+@@ -0,0 +1,27 @@
++* Real Time Clock of the i.MX SoCs
++
++RTC controller for the i.MX SoCs
++
++Required properties:
++- compatible: Should be "fsl,imx1-rtc" or "fsl,imx21-rtc".
++- reg: physical base address of the controller and length of memory mapped
++  region.
++- interrupts: IRQ line for the RTC.
++- clocks: should contain two entries:
++  * one for the input reference
++  * one for the the SoC RTC
++- clock-names: should contain:
++  * "rtc" for the input reference clock
++  * "ipg" for the SoC RTC clock
++
++Example:
++
++rtc@10007000 {
++	compatible = "fsl,imx21-rtc";
++	reg = <0x10007000 0x1000>;
++	interrupts = <22>;
++	clocks = <&clks IMX27_CLK_CKIL>,
++	       	 <&clks IMX27_CLK_RTC_IPG_GATE>;
++	clock-names = "rtc, "ipg";
++	status = "disabled";
++};
+-- 
+1.7.4.4
