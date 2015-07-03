@@ -1,89 +1,45 @@
-From: Daniel Kurtz <djkurtz@chromium.org>
-Subject: Re: [PATCH v2 4/4] clk: mediatek: Add USB clock support in MT8173 APMIXEDSYS
-Date: Fri, 3 Jul 2015 14:28:17 +0800
-Message-ID: <CAGS+omCaQp8k41rRQeamsAg9Zn1w5jM_7x5XiQfdM==4D7bQDg@mail.gmail.com>
+From: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] clk: mediatek: mt8173: Fix enabling of critical clocks
+Date: Fri, 3 Jul 2015 14:29:07 +0800
+Message-ID: <CAGS+omCwxLNha7EJ2nZ1++E-D5G1d-oRmh1C=m3OQWtbX0SH4w@mail.gmail.com>
 References: <1435633127-31952-1-git-send-email-jamesjj.liao@mediatek.com>
- <1435633127-31952-5-git-send-email-jamesjj.liao@mediatek.com>
- <CAGS+omBRAJVN3uPYn9YdKZ3VBj61c-rpY_cNgnK6x9U0uJBPYw@mail.gmail.com>
- <CAGS+omBsu3zkBf0C_QECBP7NShFhkMih36z1vynvVQ5wCLfZ8w@mail.gmail.com> <1435901927.3526.48.camel@mtksdaap41>
+ <1435633127-31952-2-git-send-email-jamesjj.liao@mediatek.com> <20150702230300.GO4301@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1435901927.3526.48.camel@mtksdaap41>
-Sender: linux-kernel-owner@vger.kernel.org
-To: James Liao <jamesjj.liao@mediatek.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, srv_heupstream <srv_heupstream@mediatek.com>, Ricky Liang <jcliang@chromium.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mediatek@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150702230300.GO4301-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 3, 2015 at 1:38 PM, James Liao <jamesjj.liao@mediatek.com> wrote:
-> Hi Daniel,
->
-> On Wed, 2015-07-01 at 23:22 +0800, Daniel Kurtz wrote:
->> This looks like 3 separate gate clocks in a chain, with a timing
->> constraint: USB_LPF must be enabled 100 us after USB_TX.
+Hi Stephen,
+
+On Fri, Jul 3, 2015 at 7:03 AM, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+> On 06/30, James Liao wrote:
+>> From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 >>
->>   26MHz--> [GATE] --USB_TX--> [LPF] --USB_LPF--> [GATE] --USB_OUT-->
->>             ^                  ^                  ^
->>             +--------------+   |                  |
->> AP_PLL_CON2.REF2USB_TX_EN -+   |                  |
->> AP_PLL_CON2.REF2USB_TX_LPF_EN -+                  |
->> AP_PLL_CON2.REF2USB_TX_OUT_EN --------------------+
+>> On the MT8173 the clocks are provided by different units. To enable
+>> the critical clocks we must be sure that all parent clocks are already
+>> registered, otherwise the parents of the critical clocks end up being
+>> unused and get disabled later. To find a place where all parents are
+>> registered we try each time after we've registered some clocks if
+>> all known providers are present now and only then we enable the critical
+>> clocks
 >>
->>
->> I think we can model the gate parts using a proper clock tree model
->> and the existing clock gate semantics.
->> I'm not sure the best way to model the delay; but in theory that could
->> be handled by the clock user (USB driver).
+>> Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>> Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>> ---
 >
-> Do you mean to create 3 hierarchical clocks (may be clock gates) to
-> model these clocks as the following ?
+> Applied to clk-fixes
+
+I think James plans to send an updated version of this patch.
+
 >
-> EN -- LPF -- OUT_EN
->
-> (EN is the parent of LPF, and LPF is the parent of EN)
->
-> If we model these 3 clocks like above, we can't prevent clock users to
-> enable OUT_EN directly, and there will be no delay between EN and LPF.
->
-> Or you have other suggestions to model these 3 clcoks?
-
-I don't really know.
-I was hoping someone would know of a way to add a "delay" when
-enabling a clock gate. :-)
-Why do we need the delay anyway?
-Is the delay really between LPF and OUT_EN?
-Or, is the delay between enabling OUT_EN and when the USB block can
-use the clock?
-
-Some ideas:
-(1) Handled the LPF delay in the USB driver itself:
-  (a) if the delay is really between OUT_EN and when it is used:
-  /* Enabling USB_OUT will enable its parents, USB_LPF and USB_TX */
-  clk_enable(clk_usb_out);
-  udelay();
-
-  (b) Or if the delay is really needed between LPF and OUT, this can
-be implemented in the USB driver:
-
-  /* Enable LPF and its parent USB_TX */
-  clk_enable(clk_lpf);
-  udelay();
-  clk_enable(clk_usb_out);
-
- (2) Add a "delay" property to "struct mtk_clk_gate", with a non-zero
-value for just this one special LPF clock.  The downside is then every
-gate clock would have to carry this extra field.
-
- (3) Add a new clk type, struct mtk_clk_delayed_gate, that includes a
-struct mtk_clk_gate, plus a delay.  I would add this to its own file,
-or maybe clk-gate.c, though, rather than mediatek/clk-mt8173.c.  And
-then use this for instantiating the LPF clock.
-
--Dan
-
-
-
-> Best regards,
->
-> James
->
+> --
+> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
