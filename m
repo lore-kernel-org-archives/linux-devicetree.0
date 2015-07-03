@@ -1,59 +1,96 @@
-From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 4/4] clk: mediatek: Add USB clock support in MT8173
- APMIXEDSYS
-Date: Fri, 3 Jul 2015 13:38:47 +0800
-Message-ID: <1435901927.3526.48.camel@mtksdaap41>
-References: <1435633127-31952-1-git-send-email-jamesjj.liao@mediatek.com>
-	 <1435633127-31952-5-git-send-email-jamesjj.liao@mediatek.com>
-	 <CAGS+omBRAJVN3uPYn9YdKZ3VBj61c-rpY_cNgnK6x9U0uJBPYw@mail.gmail.com>
-	 <CAGS+omBsu3zkBf0C_QECBP7NShFhkMih36z1vynvVQ5wCLfZ8w@mail.gmail.com>
+From: =?gb2312?B?QmlsbG93cyBXdSAozuS66czOKQ==?=
+	<Billows.Wu@spreadtrum.com>
+Subject: RE: [RFC PATCH] mmc: sprd: add MMC host driver for Spreadtrum SoC
+Date: Fri, 3 Jul 2015 05:44:17 +0000
+Message-ID: <f3e0e99497ba4b729fb0e016677f4e16@SHMBX03.spreadtrum.com>
+References: <1435735399-15333-1-git-send-email-chunyan.zhang@spreadtrum.com>
+	<CAL_JsqKcZ-7rM5YrkpJSP7OfECmRg4hWPRFy=UqZn1y74R8qsg@mail.gmail.com>
+	<CA+H2tpG+_pCR-j3nZ+SeAhpj6QfiPK2=Q0pwjndQoG9R4+LMYw@mail.gmail.com>
+	<CAL_JsqKk0KOheyGvc=EBkgH3K4fPDsppLQGtXjNA4cekW57bvQ@mail.gmail.com>,<CA+H2tpFO2uz3Pr4bxoesqc8teF+SYhw-GqKOdk_w4_p5KvJR6A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGS+omBsu3zkBf0C_QECBP7NShFhkMih36z1vynvVQ5wCLfZ8w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CA+H2tpFO2uz3Pr4bxoesqc8teF+SYhw-GqKOdk_w4_p5KvJR6A@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Orson Zhai <orsonzhai@gmail.com>, Rob Herring <robherring2@gmail.com>
+Cc: =?gb2312?B?Q2h1bnlhbiBaaGFuZyAo1cW0utHeKQ==?= <Chunyan.Zhang@spreadtrum.com>, "chris@printf.net" <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Lee Jones <lee.jones@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, =?gb2312?B?V2VpIFFpYW8gKMfHzrAp?= <Wei.Qiao@spreadtrum.com>, =?gb2312?B?QmFvbGluIFdhbmcgKM31sabB1ik=?= <Baolin.Wang@spreadtrum.com>, =?gb2312?B?TmluZyBZYW5nICjR7sT+KQ==?= <Ning.Yang@spreadtrum.com>, =?gb2312?B?T3Jzb24gWmhhaSAotdS+qSk=?= <Orson.Zhai@spreadtrum.com>, =?gb2312?B?SmFzb24gV3UgKM7i9qvLrCk=?= <Jason.Wu@spreadtrum.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Daniel,
-
-On Wed, 2015-07-01 at 23:22 +0800, Daniel Kurtz wrote:
-> This looks like 3 separate gate clocks in a chain, with a timing
-> constraint: USB_LPF must be enabled 100 us after USB_TX.
-> 
->   26MHz--> [GATE] --USB_TX--> [LPF] --USB_LPF--> [GATE] --USB_OUT-->
->             ^                  ^                  ^
->             +--------------+   |                  |
-> AP_PLL_CON2.REF2USB_TX_EN -+   |                  |
-> AP_PLL_CON2.REF2USB_TX_LPF_EN -+                  |
-> AP_PLL_CON2.REF2USB_TX_OUT_EN --------------------+
-> 
-> 
-> I think we can model the gate parts using a proper clock tree model
-> and the existing clock gate semantics.
-> I'm not sure the best way to model the delay; but in theory that could
-> be handled by the clock user (USB driver).
-
-Do you mean to create 3 hierarchical clocks (may be clock gates) to
-model these clocks as the following ?
-
-EN -- LPF -- OUT_EN
-
-(EN is the parent of LPF, and LPF is the parent of EN)
-
-If we model these 3 clocks like above, we can't prevent clock users to
-enable OUT_EN directly, and there will be no delay between EN and LPF.
-
-Or you have other suggestions to model these 3 clcoks?
-
-
-Best regards,
-
-James
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgUm9iLAoKVGhhbmtzIGZvciB5b3VyIHJlcGx5LgpUaGUgTU1DIHN1YnN5cyBjb3JlIGNhbiBm
+aWd1cmUgb3V0IHRoZSB0eXBlIG9mIHRoZSBkZXZpY2UgYXR0YWNoZWQuIEJ1dCBpdCBoYXBwYXBl
+ZCBhZnRlciBNTUMgcHJvYmUgZnVuY3Rpb24gcnVuIG92ZXIuIApJZiB3ZSB3YW50IHRvIGRpc3Rp
+bmd1aXNoIE1NQ6OsU0Qgb3IgV2ktRmkgaW4gY29udHJvbGxlcidzIHByb2JlIGZ1bmN0aW9uLCB3
+ZSBtYXkgYnkgY29udHJvbGxlcidzIHJlZ2lzdGVyIHBoeXNpY2FsIGFkZHJlc3MsIGZvciBleGFt
+cGxlICAyMDYwMDAwMC5zZGlvo6wyLjQwMDAwMC5zZGlvIG9yIDIwMzAwMDAwLnNkaW8uICAgU28g
+d2UgbXVzdCBrbm93IE1NQyBjb250cm9sbGVyJ3MgcGh5c2ljYWwgYWRkcmVzcyBpcyAweDIwNjAw
+MDAwIGFuZCBTRCBjb250cm9sbGVyJ3MgcGh5c2ljYWwgYWRkcmVzcyBpcyAweDIwMzAwMDAwLiBU
+aGlzIHJlZHVjZXMgdGhlIGNvZGUgcmVhZGFiaWxpdHkuIApJZiB5b3UgaGF2ZSBhIGdvb2Qgb3Bp
+bmlvbiBob3cgdG8gZGlzdGluZ3Vpc2ggTU1DIGZvcm0gU0Qgb3IgU0RJTyBkZXZpY2UgaW4gaG9z
+dCBjb250cm9sbGVyIHByb2JlIGZ1bmN0aW9uIG5vdCBieSBwaHlzaWNhbCBhZGRyZXNzLCBwbGVh
+c2UgdGVsbCB1cy4KClRoYW5rcyEgICAgICAgICAgICAgICAgICAgIAotLWJpbGxvd3MKX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KRnJvbTogT3Jzb24gWmhhaSA8b3Jzb256aGFp
+QGdtYWlsLmNvbT4KU2VudDogRnJpZGF5LCBKdWx5IDMsIDIwMTUgMTA6NTAgQU0KVG86IFJvYiBI
+ZXJyaW5nCkNjOiBDaHVueWFuIFpoYW5nICjVxbS60d4pOyBjaHJpc0BwcmludGYubmV0OyBVbGYg
+SGFuc3NvbjsgTGVlIEpvbmVzOyBTaGF3biBHdW87IEdyYW50IExpa2VseTsgUm9iIEhlcnJpbmc7
+IEFybmQgQmVyZ21hbm47IEJpbGxvd3MgV3UgKM7kuunMzik7IFdlaSBRaWFvICjHx86wKTsgQmFv
+bGluIFdhbmcgKM31sabB1ik7IE5pbmcgWWFuZyAo0e7E/ik7IE9yc29uIFpoYWkgKLXUvqkpOyBK
+YXNvbiBXdSAozuL2q8usKTsgbGludXgtbW1jQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVs
+QHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcKU3ViamVjdDogUmU6
+IFtSRkMgUEFUQ0hdIG1tYzogc3ByZDogYWRkIE1NQyBob3N0IGRyaXZlciBmb3IgU3ByZWFkdHJ1
+bSBTb0MKCk9uIFRodSwgSnVsIDIsIDIwMTUgYXQgMTE6NDcgUE0sIFJvYiBIZXJyaW5nIDxyb2Jo
+ZXJyaW5nMkBnbWFpbC5jb20+IHdyb3RlOgo+IE9uIFRodSwgSnVsIDIsIDIwMTUgYXQgNDoyNiBB
+TSwgT3Jzb24gWmhhaSA8b3Jzb256aGFpQGdtYWlsLmNvbT4gd3JvdGU6Cj4+IEhpIFJvYiwKPj4K
+Pj4gVGhhbmtzIGZvciB5b3VyIHF1aWNrIHJlcGx5Lgo+PiBJIGhhdmUgb25lIHF1ZXN0aW9uIHRv
+IHlvdXIgbGFzdCBjb21tZW50Lgo+Pgo+PiBPbiBUaHUsIEp1bCAyLCAyMDE1IGF0IDE6NTAgQU0s
+IFJvYiBIZXJyaW5nIDxyb2JoZXJyaW5nMkBnbWFpbC5jb20+IHdyb3RlOgo+Pj4gT24gV2VkLCBK
+dWwgMSwgMjAxNSBhdCAyOjIzIEFNLCBDaHVueWFuIFpoYW5nCj4+PiA8Y2h1bnlhbi56aGFuZ0Bz
+cHJlYWR0cnVtLmNvbT4gd3JvdGU6Cj4+Pj4gRnJvbTogQmlsbG93cyBXdSA8YmlsbG93cy53dUBz
+cHJlYWR0cnVtLmNvbT4KPgo+IFsuLi5dCj4KPj4+PiArY29uc3Qgc3RydWN0IG9mX2RldmljZV9p
+ZCBzZGhvc3Rfb2ZfbWF0Y2hbXSA9IHsKPj4+PiArICAgICAgIHsuY29tcGF0aWJsZSA9ICJzcHJk
+LHNkLXNkaG9zdC0zLjAiLCAuZGF0YSA9ICZzZF9jYXBzX2luZm8sfSwKPj4+PiArICAgICAgIHsu
+Y29tcGF0aWJsZSA9ICJzcHJkLHdpZmktc2Rob3N0LTMuMCIsIC5kYXRhID0gJndpZmlfY2Fwc19p
+bmZvLH0sCj4+Pj4gKyAgICAgICB7LmNvbXBhdGlibGUgPSAic3ByZCxlbW1jLXNkaG9zdC0zLjAi
+LCAgLmRhdGEgPSAmZW1tY19jYXBzX2luZm8sfSwKPj4+Cj4+PiBXaGF0IHRoZXNlIGFyZSBjb25u
+ZWN0ZWQgdG8gaXMgaXJyZWxldmFudCB0byB0aGUgZHJpdmVyIGFuZCBjb21wYXRpYmxlCj4+PiBz
+dHJpbmcuIEFsbCB0aGVzZSBkaWZmZXJlbmNlcyBiZWxvbmcgaW4gdGhlIERUIHVubGVzcyB0aGUg
+SVAgYmxvY2tzCj4+PiBhcmUgcmVhbGx5IGRpZmZlcmVudC4KPj4KPj4gSXQncyBteSBpZGVhIHRv
+IGxldCBCaWxsb3dzIGRvIGxpa2UgdGhpcy4KPj4gSSBsZWFybiBmcm9tIFNTUCBwYXJ0IGluIGZy
+ZWVzY2FsZSAgImFyY2gvYXJtL2Jvb3QvZHRzL2lteDI4LWV2ay5kdHMiCj4+IFRoZWlyIHNzcDAt
+c3NwMiBlYWNoIGhhdmUgMiByb2xlcywgbW1jIG9yIGdlbmVyaWMgc3BpIGJ1cy4KPj4gQW5kIHRo
+ZXkgbWF5IHdyaXRlIG9uZSBvZiB0aGVpciBjb21ibyBjb25maWd1cmF0aW9uIGxpa2UgdGhpczoK
+Pgo+IFRoYXQgaXMgYSBiaXQgZGlmZmVyZW50IGFzIHRoZSBob3N0IGNvbnRyb2xsZXIgaXMgb3Bl
+cmF0aW5nIGluCj4gY29tcGxldGVseSBkaWZmZXJlbnQgbW9kZXMuIEluIHlvdXIgY2FzZSwgdGhl
+IGhvc3QgY29udHJvbGxlciBpcyB0aGUKPiBzYW1lIGFuZCBmdW5jdGlvbnMgdGhlIHNhbWUgd2F5
+LCBidXQganVzdCBoYXMgZGlmZmVyZW50IGNhcmRzCj4gYXR0YWNoZWQuCj4KPj4KPj4gIDQzICAg
+ICAgICAgICAgICAgICAgICAgICAgIHNzcDE6IHNzcEA4MDAxMjAwMCB7Cj4+ICA0NCAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiZnNsLGlteDI4LW1tYyI7Cj4+
+ICA0NSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGJ1cy13aWR0aCA9IDw4PjsKPj4g
+IDQ2ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgd3AtZ3Bpb3MgPSA8JmdwaW8wIDI4
+IDA+Owo+PiAgNDcgICAgICAgICAgICAgICAgICAgICAgICAgfTsKPj4gIDQ4Cj4+ICA0OSAgICAg
+ICAgICAgICAgICAgICAgICAgICBzc3AyOiBzc3BAODAwMTQwMDAgewo+PiAgNTAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAjYWRkcmVzcy1jZWxscyA9IDwxPjsKPj4gIDUxICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgI3NpemUtY2VsbHMgPSA8MD47Cj4+ICA1MiAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiZnNsLGlteDI4LXNwaSI7
+Cj4+ICA1MyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBpbmN0cmwtbmFtZXMgPSAi
+ZGVmYXVsdCI7Cj4+ICA1NCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBpbmN0cmwt
+MCA9IDwmc3BpMl9waW5zX2E+Owo+PiAgNTUgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICBzdGF0dXMgPSAib2theSI7Cj4+ICA1Ngo+PiAgNTcgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICBmbGFzaDogbTI1cDgwQDAgewo+PiAgNTggICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICNhZGRyZXNzLWNlbGxzID0gPDE+Owo+PiAgNTkgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICNzaXplLWNlbGxzID0gPDE+Owo+PiAgNjAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAic3N0LHNz
+dDI1dmYwMTZiIjsKPj4gIDYxICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICBzcGktbWF4LWZyZXF1ZW5jeSA9IDw0MDAwMDAwMD47Cj4+ICA2MiAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDA+Owo+PiAgNjMgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICB9Owo+PiAgNjQgICAgICAgICAgICAgICAgICAgICAgICAgfTsKPj4K
+Pj4gQmlsbG93cyB0ZWxsIG1lIHRoZXkgYWxzbyBoYXZlIDMgcm9sZXMgaW4gdGhlaXIgc2QgaG9z
+dCBjb250cm9sbGVyCj4+IGNvcnJlc3BvbmRpbmcgdG8gMyBraW5kcyBvZiBkaWZmZXJlbnQgb3Bl
+cmF0aW9uLgo+PiBIZSB1c2VkIHRvIGNyZWF0ZSAic3ByZCxuYW1lIiBwcm9wZXJ0eSBmb3IgdGhp
+cy4gSXMgaXQgYSBnb29kIHdheSBvcgo+PiBhbnl0aGluZyBlbHNlIGJldHRlcj8KPgo+IFdoeSBk
+byB5b3UgbmVlZCB0byBrbm93PyBZb3UgY2FuIGRlZmluZSBwYXJhbWV0ZXJzIHdoaWNoIGNhbid0
+IGJlCj4gcHJvYmVkIHN1Y2ggYXMgYnVzIHdpZHRoLCB2b2x0YWdlLCBhbmQgY2xvY2sgZnJlcS4g
+aW4gRFQgZm9yIGVhY2gKPiBob3N0LiBUaGUgTU1DIHN1YnN5cyBjb3JlIHdpbGwgZmlndXJlIG91
+dCB0aGUgdHlwZSBvZiBkZXZpY2UgYXR0YWNoZWQuCgpJIHRoaW5rIHlvdSdyZSByaWdodC4KVGhh
+bmtzIQotb3Jzb24KCj4KPiBSb2IK
