@@ -1,106 +1,59 @@
-From: James Liao <jamesjj.liao@mediatek.com>
-Subject: Re: [PATCH v2 3/4] clk: mediatek: Add subsystem clocks of MT8173
-Date: Fri, 3 Jul 2015 13:15:31 +0800
-Message-ID: <1435900531.3526.41.camel@mtksdaap41>
+From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 4/4] clk: mediatek: Add USB clock support in MT8173
+ APMIXEDSYS
+Date: Fri, 3 Jul 2015 13:38:47 +0800
+Message-ID: <1435901927.3526.48.camel@mtksdaap41>
 References: <1435633127-31952-1-git-send-email-jamesjj.liao@mediatek.com>
-	 <1435633127-31952-4-git-send-email-jamesjj.liao@mediatek.com>
-	 <CAGS+omDJtTcVvcL925LFxUSeunWONp188OOP-H42uQ=6BaY9FQ@mail.gmail.com>
+	 <1435633127-31952-5-git-send-email-jamesjj.liao@mediatek.com>
+	 <CAGS+omBRAJVN3uPYn9YdKZ3VBj61c-rpY_cNgnK6x9U0uJBPYw@mail.gmail.com>
+	 <CAGS+omBsu3zkBf0C_QECBP7NShFhkMih36z1vynvVQ5wCLfZ8w@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGS+omDJtTcVvcL925LFxUSeunWONp188OOP-H42uQ=6BaY9FQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Kurtz <djkurtz@chromium.org>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, srv_heupstream <srv_heupstream@mediatek.com>, Ricky Liang <jcliang@chromium.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mediatek@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAGS+omBsu3zkBf0C_QECBP7NShFhkMih36z1vynvVQ5wCLfZ8w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2015-07-01 at 22:54 +0800, Daniel Kurtz wrote:
-> On Tue, Jun 30, 2015 at 10:58 AM, James Liao <jamesjj.liao@mediatek.com> wrote:
-> >
-> > +static struct mtk_gate_regs cg_regs_4_8_0 = {
+Hi Daniel,
+
+On Wed, 2015-07-01 at 23:22 +0800, Daniel Kurtz wrote:
+> This looks like 3 separate gate clocks in a chain, with a timing
+> constraint: USB_LPF must be enabled 100 us after USB_TX.
 > 
-> These should all be:
+>   26MHz--> [GATE] --USB_TX--> [LPF] --USB_LPF--> [GATE] --USB_OUT-->
+>             ^                  ^                  ^
+>             +--------------+   |                  |
+> AP_PLL_CON2.REF2USB_TX_EN -+   |                  |
+> AP_PLL_CON2.REF2USB_TX_LPF_EN -+                  |
+> AP_PLL_CON2.REF2USB_TX_OUT_EN --------------------+
 > 
-> static const struct mtk_gate_regs ...
-
-OK, I'll fix it.
-
-> > +       .set_ofs = 0x0004,
-> > +       .clr_ofs = 0x0008,
-> > +       .sta_ofs = 0x0000,
-> > +};
-> > +
-> > +#define GATE_IMG(_id, _name, _parent, _shift) {                        \
-> > +               .id = _id,                                      \
-> > +               .name = _name,                                  \
-> > +               .parent_name = _parent,                         \
-> > +               .regs = &cg_regs_4_8_0,                         \
-> > +               .shift = _shift,                                \
-> > +               .ops = &mtk_clk_gate_ops_setclr,                \
-> > +       }
-> > +
-> > +static struct mtk_gate img_clks[] __initdata = {
 > 
-> These should all be:
-> 
-> static const ... __initconst = {
+> I think we can model the gate parts using a proper clock tree model
+> and the existing clock gate semantics.
+> I'm not sure the best way to model the delay; but in theory that could
+> be handled by the clock user (USB driver).
 
-OK, I'll fix it.
+Do you mean to create 3 hierarchical clocks (may be clock gates) to
+model these clocks as the following ?
 
-> > +
-> > +static void __init mtk_imgsys_init(struct device_node *node)
-> > +{
-> > +       struct clk_onecell_data *clk_data;
-> > +       void __iomem *base;
-> 
-> I don't think you need base for any of these.
-> mtk_clk_register_gates() will use syscon_node_to_regmap() to lookup
-> the regmap by itself.
+EN -- LPF -- OUT_EN
 
-OK, I'll remove it.
+(EN is the parent of LPF, and LPF is the parent of EN)
 
-> > +       int r;
-> > +
-> > +       base = of_iomap(node, 0);
-> > +       if (!base) {
-> > +               pr_err("%s(): ioremap failed\n", __func__);
-> > +               return;
-> > +       }
-> > +
-> > +       clk_data = mtk_alloc_clk_data(CLK_IMG_NR_CLK);
-> 
-> Unrelated to this patch, but:
-> I think each clock node should statically declare its
-> clk_onecell_data, and pass it to mtk_alloc_clk_data().
-> mtk_alloc_clk_data() should then just allocate and initialize the clks array.
+If we model these 3 clocks like above, we can't prevent clock users to
+enable OUT_EN directly, and there will be no delay between EN and LPF.
 
-Is there any different from allocating clk_onecell_data and clks arary
-dynamically?
-
-
-> >  /* APMIXED_SYS */
-> >
-> > -#define CLK_APMIXED_ARMCA15PLL 1
-> > -#define CLK_APMIXED_ARMCA7PLL  2
-> > +#define CLK_APMIXED_ARMCA15PLL         1
-> > +#define CLK_APMIXED_ARMCA7PLL          2
-> >  #define CLK_APMIXED_MAINPLL            3
-> >  #define CLK_APMIXED_UNIVPLL            4
-> >  #define CLK_APMIXED_MMPLL              5
-> > @@ -232,4 +232,91 @@
-> >  #define CLK_PERI_UART3_SEL             39
-> >  #define CLK_PERI_NR_CLK                        40
-> 
-> Why do we count up from 1 instead of 0?
-> This means that for each clock-controller:
->   clk_onecell_data->clk[0] == ERR_PTR(-ENOENT)
-
-It's a legacy implementation. I think it doesn't matter for function or
-size in this implementation. We may change clock index to start from 0
-in next SoC clock implementation.
+Or you have other suggestions to model these 3 clcoks?
 
 
 Best regards,
 
 James
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
