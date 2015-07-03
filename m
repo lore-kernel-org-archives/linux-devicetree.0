@@ -1,45 +1,59 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH 1/2] gpio: dwapb: Use human understandable gpio numbering.
-Date: Fri, 3 Jul 2015 11:55:26 +0100
-Message-ID: <20150703105525.GU7557@n2100.arm.linux.org.uk>
-References: <cover.1435777856.git.rcochran@linutronix.de>
- <d6b5ce85a17164970d454583560e07f7aed7b8ca.1435777856.git.rcochran@linutronix.de>
- <267A46E7-C5C5-4696-90CC-D44F4130B3EF@smart-africa.com>
- <20150703091347.GA17808@localhost.localdomain>
- <C1BD6DA3-F32E-4CAD-8DA9-6F74A7966DBE@smart-africa.com>
- <20150703103626.GA18893@localhost.localdomain>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH v1 1/4] ARM: dts: vfxxx: Add io-channel-cells property for
+ ADC node
+Date: Fri, 03 Jul 2015 14:57:45 +0200
+Message-ID: <101a8c84fbe2063f6cf56737a5f9417f@agner.ch>
+References: <cover.1435646447.git.maitysanchayan@gmail.com>
+ <916569b56d60d41f9cd12c5244be3778857a971b.1435646447.git.maitysanchayan@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150703103626.GA18893@localhost.localdomain>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Richard Cochran <richardcochran@gmail.com>
-Cc: Michael van der Westhuizen <michael@smart-africa.com>, Alexandre Courbot <gnurou@gmail.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, Alan Tull <atull@altera.com>, Dinh Nguyen <dinguyen@altera.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <916569b56d60d41f9cd12c5244be3778857a971b.1435646447.git.maitysanchayan@gmail.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Sanchayan Maity <maitysanchayan@gmail.com>
+Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, shawn.guo@linaro.org, kernel@pengutronix.de, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 03, 2015 at 12:36:26PM +0200, Richard Cochran wrote:
-> On Fri, Jul 03, 2015 at 10:18:28AM +0100, Michael van der Westhuizen wrote:
-> > The subject should be:
-> >   gpio: dwapb: Use human understandable gpio numbering
-> > Not:
-> >   gpio: dwapb: Use human understandable gpio numbering.
+On 2015-06-30 08:54, Sanchayan Maity wrote:
+> This commit adds io-channel-cells property to the ADC node. This
+> property is required in order for an IIO consumer driver to work.
+> Especially required for Colibri VF50, as the touchscreen driver
+> uses ADC channels with the ADC driver based on IIO framework.
 > 
-> Ok, I see.  I would call that dot a "period", not a full-stop.
+> Signed-off-by: Sanchayan Maity <maitysanchayan@gmail.com>
+> ---
+>  arch/arm/boot/dts/vfxxx.dtsi | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> Must be a British thing...
+> diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
+> index 2c20f3f..f7d8fb6 100644
+> --- a/arch/arm/boot/dts/vfxxx.dtsi
+> +++ b/arch/arm/boot/dts/vfxxx.dtsi
+> @@ -227,6 +227,7 @@
+>  				clocks = <&clks VF610_CLK_ADC0>;
+>  				clock-names = "adc";
+>  				status = "disabled";
+> +				#io-channel-cells = <1>;
+>  			};
+>  
+>  			tcon0: tcon@4003d000 {
+> @@ -461,6 +462,7 @@
+>  				clocks = <&clks VF610_CLK_ADC1>;
+>  				clock-names = "adc";
+>  				status = "disabled";
+> +				#io-channel-cells = <1>;
+>  			};
+>  
+>  			esdhc1: esdhc@400b2000 {
 
-https://en.wikipedia.org/wiki/Full_stop
+Minor nitpick: can you put the new property one line up? That way it
+would be sorted alphabetically and status is conveniently still at the
+end.
 
-says that '.' is a period in both American and British English, but when
-used at the end of a sentence, the period is called a "full stop" in both.
-(A full stop is a period used to end a sentence.)
+Otherwise:
 
-It also says that in British English, '.' used elsewhere has also become
-known as a "full stop" (I regard that as incorrect, despite myself being
-British - it's a dilution of terms, and we'd now be in need of a new term
-to describe the '.' at the end of a sentence because of this.)
+Acked-by: Stefan Agner <stefan@agner.ch>
 
--- 
-FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
-according to speedtest.net.
+--
+Stefan
