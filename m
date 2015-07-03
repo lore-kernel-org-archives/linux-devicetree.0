@@ -1,105 +1,190 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v2 2/4] dt-bindings: ARM: Mediatek: Document devicetree
- bindings for clock controllers
-Date: Thu, 02 Jul 2015 16:40:12 -0700
-Message-ID: <5595CBDC.7090101@codeaurora.org>
-References: <1435633127-31952-1-git-send-email-jamesjj.liao@mediatek.com> <1435633127-31952-3-git-send-email-jamesjj.liao@mediatek.com> <CAGS+omD9Mvz0-RQMc5TsWCPct80S5fyqMn3+-zR7HB9yb7KoDQ@mail.gmail.com> <1435805534.3526.23.camel@mtksdaap41> <CAGS+omCgNstb+NPmRdbngnLm754hDPLO28KRc4RanCD2Myv7dQ@mail.gmail.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH] power_supply: rt9455_charger: Properly notify userspace
+ about charging events
+Date: Fri, 03 Jul 2015 09:03:53 +0900
+Message-ID: <5595D169.1070602@samsung.com>
+References: <1434558539-30591-1-git-send-email-anda-maria.nicolae@intel.com>
+ <CAJKOXPcbGLo9BvU_7+OdMZ_PcMp6+ZaUWh46APxgMg3nyZ-SdQ@mail.gmail.com>
+ <5594EAE9.8010506@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGS+omCgNstb+NPmRdbngnLm754hDPLO28KRc4RanCD2Myv7dQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-reply-to: <5594EAE9.8010506@intel.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Anda-Maria Nicolae <anda-maria.nicolae@intel.com>
+Cc: sre@kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/01/2015 09:26 PM, Daniel Kurtz wrote:
-> On Thu, Jul 2, 2015 at 10:52 AM, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
->> Hi Daniel,
+On 02.07.2015 16:40, Anda-Maria Nicolae wrote:
+> Hello Krzysztof,
+> 
+> The information provided to userspace is not accurate in current driver
+> implementation and it is accurate with this patch.
+> Also, when the battery is reconnected to the charger (after it has been
+> disconnected from the charger), the charger does not trigger any
+> interrupt. Since power_supply_changed() is called only in interrupt
+> handler, the userspace is never notified that the battery is reconnected.
+> 
+> Let me explain to you why power_supply_changed() is called in
+> rt9455_pwr_rdy_work_callback() and not in interrupt handler, when CHRVPI
+> interrupt occurs.
+> 
+> I created a userspace tool that waits for notifications from the driver.
+> A notification is sent when the driver calls power_supply_changed().
+> When my userspace tool receives a notification, it reads the files from
+> /sys/class/power_supply/rt9455-charger/ folder. The tool reads each file
+> this to figure it out what has been changed, since the driver notifies
+> the tool only when a change has been made.
+> These files include /sys/class/power_supply/rt9455-charger/online. This
+> file displays 1 if the power source is connected to the charger and 0
+> otherwise.
+> When the userspace tool reads
+> /sys/class/power_supply/rt9455-charger/online,
+> rt9455_charger_get_online() function from the driver is called.
+> rt9455_charger_get_online() returns the value of PWR_RDY bit.
+> But whenever the power source is connected to / disconnected from the
+> charger, RT9455 first sets CHRVPI interrupt bit, triggers an interrupt,
+> and after almost 1-2 seconds, the charger also updates PWR_RDY bit.
+> So, if we check PWR_RDY bit immediately after CHRVPI bit is set, we will
+> not obtain accurate info about the change that has been made (i.e.: if
+> the power source was connected or disconnected).
+> This is why the driver has struct delayed_work pwr_rdy_work, which is
+> scheduled whenever CHRVPI interrupt bit is set.
+> This is why in this patch, in rt9455_pwr_rdy_work_callback(),
+> power_supply_changed() is called, and not in interrupt handler.
+
+That explains it, thank you. It would be nice if such answer to "why"
+would be also in commit message (maybe a shorter one).
+
+Beside of that the patch looks good:
+Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+
+Best regards,
+Krzysztof
+
+
+
+> 
+> Let me explain to you why power_supply_changed() is called in
+> rt9455_batt_presence_work_callback().
+> 
+> As previously stated, the userspace tool is never notified that the
+> battery is reconnected. But since the driver uses struct delayed_work
+> batt_presence_work, to determine whether the battery has been
+> reconnected, we can call power_supply_changed() whenever the driver
+> determines the battery is reconnected (i.e. BATAB interrupt bit is
+> cleared).
+> This is why in this patch, in rt9455_batt_presence_work_callback(),
+> power_supply_changed() is called.
+> 
+> On 07/02/2015 03:49 AM, Krzysztof Kozlowski wrote:
+>> 2015-06-18 1:28 GMT+09:00 Anda-Maria Nicolae
+>> <anda-maria.nicolae@intel.com>:
+>>> Do not call power_supply_changed() when CHRVPI interrupt has occurred.
+>> What I cannot find here is the answer to: why? I am not familiar with
+>> the driver so this is just guessing that you wanted to notify
+>> userspace about connected/disconnected charger. In both cases (before
+>> and after the patch) this is achieved, isn't it?
 >>
->>>> +Required Properties:
->>>> +
->>>> +- compatible: Should be:
->>>> +       - "mediatek,mt8173-imgsys", "syscon"
->>>> +- #clock-cells: Must be 1
->>>> +
->>>> +The imgsys controller uses the common clk binding from
->>>> +Documentation/devicetree/bindings/clock/clock-bindings.txt
->>>> +The available clocks are defined in dt-bindings/clock/mt*-clk.h.
->>>> +
->>>> +Example:
->>>> +
->>>> +imgsys: imgsys@15000000 {
->>> Since these nodes will be supplying clocks to the rest of the system,
->>> I think the "name" part of each of these should all be
->>> "clock-controller", like topckgen and apmixedsys:
+>> Best regards,
+>> Krzysztof
+>>
+>>
+>>> CHRVPI interrupt occurs when the charger is connected to or disconnected
+>>> from the power source. Call power_supply_changed() after PWR_RDY bit is
+>>> read, to distinguish between connection to or disconnection from the
+>>> power
+>>> source.
+>>> Also, call power_supply_changed() after the battery is reconnected to
+>>> the
+>>> charger, to notify userspace that the battery is no longer absent.
 >>>
->>>   imgsys: clock-controller@15000000 {
->> These subsystems (and topckgen also) also contains other functions such
->> as reset controller, which may be implemented in clk/mediatek/ in the
->> future. It is suitable to use "clock-controller" as their name?
-> Hmm,
->
-> I don't know the "right way" to do this either.
-> Pardon me if you've already had these discussions.
-> I only recently started looking at these clock nodes in detail :-).
->
-> I think what we really have in register space is a "syscon", as
-> described in [0]:
-> [0] Documentation/devicetree/bindings/mfd/syscon.txt
->
-> So, we can define this block of registers as a syscon:
->
-> mmsys_syscon: syscon@14000000 {
->        compatible = "mediatek,mt8173-mmsys", "syscon";
->        reg = <0 0x14000000 0 0x1000>;
-> };
->
->
-> Then for the clock controller functionality, we create a node with a
-> "clock-controller" name and a "-clock" compatible, like this:
->
-> mmsys_clock: clock-controller {
->        compatible = "mediatek,mt8173-mmsys-clock";
->        #clock-cells = <1>;
->        mediatek,syscon = <&mmsys_syscon>;
-> };
->
-> You could then do:
-> CLK_OF_DECLARE(mtk_mmsys, "mediatek,mt8173-mmsys-clock", mtk_mmsys_init);
->
->
-> If you want to reuse the same register range for some other
-> functionality, we could then use a different node, with a different
-> compatible:
->
-> mmsys: reset-controller {
->        compatible = "mediatek,mt8173-mmsys-reset";
->        mediatek,syscon = <&mmsys_syscon>;
-> };
->
-> What do you think of this approach?
+>>> Signed-off-by: Anda-Maria Nicolae <anda-maria.nicolae@intel.com>
+>>> ---
+>>>   drivers/power/rt9455_charger.c |   16 ++++++++++++++--
+>>>   1 file changed, 14 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/power/rt9455_charger.c
+>>> b/drivers/power/rt9455_charger.c
+>>> index 08baac6..a49a9d4 100644
+>>> --- a/drivers/power/rt9455_charger.c
+>>> +++ b/drivers/power/rt9455_charger.c
+>>> @@ -973,7 +973,6 @@ static int
+>>> rt9455_irq_handler_check_irq2_register(struct rt9455_info *info,
+>>>
+>>>          if (irq2 & GET_MASK(F_CHRVPI)) {
+>>>                  dev_dbg(dev, "Charger fault occurred\n");
+>>> -               alert_userspace = true;
+>>>                  /*
+>>>                   * CHRVPI bit is set in 2 cases:
+>>>                   * 1. when the power source is connected to the
+>>> charger.
+>>> @@ -981,6 +980,9 @@ static int
+>>> rt9455_irq_handler_check_irq2_register(struct rt9455_info *info,
+>>>                   * To identify the case, PWR_RDY bit is checked.
+>>> Because
+>>>                   * PWR_RDY bit is set / cleared after CHRVPI
+>>> interrupt is
+>>>                   * triggered, it is used delayed_work to later read
+>>> PWR_RDY bit.
+>>> +                * Also, do not set to true alert_userspace, because
+>>> there is no
+>>> +                * need to notify userspace when CHRVPI interrupt has
+>>> occurred.
+>>> +                * Userspace will be notified after PWR_RDY bit is read.
+>>>                   */
+>>>                  queue_delayed_work(system_power_efficient_wq,
+>>>                                     &info->pwr_rdy_work,
+>>> @@ -1178,7 +1180,7 @@ static irqreturn_t
+>>> rt9455_irq_handler_thread(int irq, void *data)
+>>>                  /*
+>>>                   * Sometimes, an interrupt occurs while
+>>> rt9455_probe() function
+>>>                   * is executing and power_supply_register() is not
+>>> yet called.
+>>> -                * Do not call power_supply_charged() in this case.
+>>> +                * Do not call power_supply_changed() in this case.
+>>>                   */
+>>>                  if (info->charger)
+>>>                          power_supply_changed(info->charger);
+>>> @@ -1478,6 +1480,11 @@ static void
+>>> rt9455_pwr_rdy_work_callback(struct work_struct *work)
+>>>                                     RT9455_MAX_CHARGING_TIME * HZ);
+>>>                  break;
+>>>          }
+>>> +       /*
+>>> +        * Notify userspace that the charger has been either
+>>> connected to or
+>>> +        * disconnected from the power source.
+>>> +        */
+>>> +       power_supply_changed(info->charger);
+>>>   }
+>>>
+>>>   static void rt9455_max_charging_time_work_callback(struct
+>>> work_struct *work)
+>>> @@ -1533,6 +1540,11 @@ static void
+>>> rt9455_batt_presence_work_callback(struct work_struct *work)
+>>>                          if (ret)
+>>>                                  dev_err(dev, "Failed to unmask BATAB
+>>> interrupt\n");
+>>>                  }
+>>> +               /*
+>>> +                * Notify userspace that the battery is now connected
+>>> to the
+>>> +                * charger.
+>>> +                */
+>>> +               power_supply_changed(info->charger);
+>>>          }
+>>>   }
+>>>
+>>> -- 
+>>> 1.7.9.5
+>>>
+>>> -- 
+>>> To unsubscribe from this list: send the line "unsubscribe linux-pm" in
+>>> the body of a message to majordomo@vger.kernel.org
+>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> 
 
-DT nodes typically have a reg property. Not having a reg property is a
-good indicator of a problem with the binding. A syscon is used when you
-have a DT node with a reg property and some driver attached to it, but
-you need to poke some bits in another register region that isn't part of
-the reg property. Instead of having multiple nodes with two reg
-properties where the second one is the same, we use a phandle and a syscon.
-
-If clock-controller isn't acceptable maybe clock-reset-contoller would
-work? Or "power-controller"? We certainly shouldn't be making up
-multiple nodes for one hardware block. Of course, the subject of the
-patch is "bindings for clock controllers", so it may be that the
-registers are predominantly clock related and so the name is appropriate
-already.
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
