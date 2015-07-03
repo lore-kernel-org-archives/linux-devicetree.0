@@ -1,29 +1,23 @@
 From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH] dts: mt8173-evb: Add da9211 to i2c1
-Date: Fri, 03 Jul 2015 23:57:28 +0200
-Message-ID: <1564415.ZMUL1dYkVh@ubix>
-References: <1435890506-25425-1-git-send-email-henryc.chen@mediatek.com>
+Subject: Re: [PATCH v2 2/4] dt-bindings: ARM: Mediatek: Document devicetree bindings for spi bus
+Date: Sat, 04 Jul 2015 00:15:43 +0200
+Message-ID: <1791305.A5zNADo8Wb@ubix>
+References: <1435583070-9600-1-git-send-email-leilk.liu@mediatek.com> <1435583070-9600-3-git-send-email-leilk.liu@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1435890506-25425-1-git-send-email-henryc.chen@mediatek.com>
+In-Reply-To: <1435583070-9600-3-git-send-email-leilk.liu@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Henry Chen <henryc.chen@mediatek.com>
-Cc: Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <kernel@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, eddie.huang@mediatek.com
+To: Leilk Liu <leilk.liu@mediatek.com>
+Cc: Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday, July 03, 2015 10:28:26 AM Henry Chen wrote:
-> Add a DA9211 dual-channel BUCK regulator to i2c1.
-> This regulator supplies GPU and DVFS1 voltages.
-> 
-> Signed-off-by: Henry Chen <henryc.chen@mediatek.com>
+On Monday, June 29, 2015 09:04:28 PM Leilk Liu wrote:
+> Signed-off-by: Leilk Liu <leilk.liu@mediatek.com>
 > ---
-> This patch based on https://github.com/mbgg/linux-mediatek.git
-> branch/v4.2-next/arm64 ---
->  arch/arm64/boot/dts/mediatek/mt8173-evb.dts | 30
-> +++++++++++++++++++++++++++++ 1 file changed, 30 insertions(+)
 
-applied to v4.2-next/arm64
+Please add a proper patch description.
 
-Thanks.
+Cheers,
+Matthias
