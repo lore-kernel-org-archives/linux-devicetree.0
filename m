@@ -1,160 +1,76 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH v2 6/9] arm: twr-k70f120m: extend Freescale eDMA driver
- with the ability to support Kinetis SoC
-Date: Sun, 5 Jul 2015 12:15:46 +0530
-Message-ID: <20150705064546.GY3246@localhost>
-References: <1435667250-28299-1-git-send-email-pawelo@king.net.pl>
- <1435667250-28299-7-git-send-email-pawelo@king.net.pl>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1435667250-28299-7-git-send-email-pawelo@king.net.pl>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Paul Osmialowski <pawelo@king.net.pl>
-Cc: Mark Rutland <mark.rutland@arm.com>, Nicolas Pitre <nicolas.pitre@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <r.herring@freescale.com>, Alexander Potashev <aspotashev@emcraft.com>, Jiri Slaby <jslaby@suse.cz>, linux-clk@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Geert Uytterhoeven <geert@linux-m68k.org>, linux-serial@vger.kernel.org, Uwe Kleine-Koenig <u.kleine-koenig@pengutronix.de>, Anson Huang <b20788@freescale.com>, Michael Turquette <mturquette@baylibre.com>, devicetree@vger.kernel.org, Frank Li <Frank.Li@freescale.com>, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jingchang Lu <jingchang.lu@freescale.com>, Yuri Tikhonov <yur@emcraft.com>, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.inf
+From: Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 9/9] iio: mma8452: add devicetree property to allow all pin wirings
+Date: Sat,  4 Jul 2015 15:55:10 +0200
+Message-ID: <1436018110-3903-10-git-send-email-martink@posteo.de>
+References: <1436018110-3903-1-git-send-email-martink@posteo.de>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1436018110-3903-1-git-send-email-martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org, roberta.dobrescu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>, Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 30, 2015 at 02:27:27PM +0200, Paul Osmialowski wrote:
-The patch title is not per subsystem semantics, pls fix that
+For the devices supported by the mma8452 driver, two interrupt pins are
+available to route the interrupt signals to. By default INT1 is assumed.
 
-> Surprisingly small amount of work was required in order to extend already
-> existing eDMA driver with the support for Kinetis SoC architecture.
-And this doesn't tell me the stuff you added/removed/fixed in current driver
-to extend to Kinetis. Our changelog should tell what changed and why
+This adds a simple boolean DT property, for users to configure it for
+INT2, if that is the wired interrupt pin for them.
 
-Btw is this patch dependent upon the rest of the series?
+This is important for everyone to be able to use this driver, no matter
+how their chip is wired.
 
->  
->  static int
-> -fsl_edma_irq_init(struct platform_device *pdev, struct fsl_edma_engine *fsl_edma)
-> +fsl_edma_irq_init(struct platform_device *pdev,
-> +		  struct fsl_edma_engine *fsl_edma)
-please keep style changes in a separate patch
+Since this doesn't change the default behaviour, it doesn't break anything
+for existing users.
 
->  {
-> +	struct device_node *np = pdev->dev.of_node;
-> +	int irq, errirq;
->  	int ret;
->  
-> -	fsl_edma->txirq = platform_get_irq_byname(pdev, "edma-tx");
-> -	if (fsl_edma->txirq < 0) {
-> -		dev_err(&pdev->dev, "Can't get edma-tx irq.\n");
-> -		return fsl_edma->txirq;
-> -	}
-> -
-> -	fsl_edma->errirq = platform_get_irq_byname(pdev, "edma-err");
-> -	if (fsl_edma->errirq < 0) {
-> +	errirq = platform_get_irq_byname(pdev, "edma-err");
-> +	if (errirq < 0) {
->  		dev_err(&pdev->dev, "Can't get edma-err irq.\n");
-> -		return fsl_edma->errirq;
-> +		return irq;
-shouldn't this be errirq
+Signed-off-by: Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+Signed-off-by: Christoph Muellner <christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+---
+ Documentation/devicetree/bindings/iio/accel/mma8452.txt |  2 ++
+ drivers/iio/accel/mma8452.c                             | 14 ++++++++------
+ 2 files changed, 10 insertions(+), 6 deletions(-)
 
->  	}
->  
-> -	if (fsl_edma->txirq == fsl_edma->errirq) {
-> -		ret = devm_request_irq(&pdev->dev, fsl_edma->txirq,
-> -				fsl_edma_irq_handler, 0, "eDMA", fsl_edma);
-> -		if (ret) {
-> -			dev_err(&pdev->dev, "Can't register eDMA IRQ.\n");
-> -			 return  ret;
-> +	if (fsl_edma->kinetis) {
-> +		int i;
-> +		int irqs = of_irq_count(np);
-> +
-> +		if (irqs <= 1) {
-> +			dev_err(&pdev->dev, "Wrong eDMA irq count %d\n", irqs);
-> +			return -EINVAL;
-why not return irqs?
-
->  		}
-> -	} else {
-> -		ret = devm_request_irq(&pdev->dev, fsl_edma->txirq,
-> +
-> +		for (i = 0; i < (irqs - 1); i++) {
-> +			char irq_name[32];
-> +
-> +			sprintf(irq_name, "edma-tx-%d,%d", i, 16 + i);
-> +			irq = platform_get_irq_byname(pdev, irq_name);
-> +			if (irq < 0) {
-> +				dev_err(&pdev->dev, "Can't get %s irq.\n",
-> +							irq_name);
-> +				return irq;
-> +			}
-> +
-> +			ret = devm_request_irq(&pdev->dev, irq,
->  				fsl_edma_tx_handler, 0, "eDMA tx", fsl_edma);
-> -		if (ret) {
-> -			dev_err(&pdev->dev, "Can't register eDMA tx IRQ.\n");
-> -			return  ret;
-> +			if (ret) {
-> +				dev_err(&pdev->dev, "Can't register %s IRQ.\n",
-> +							irq_name);
-> +				return  ret;
-> +			}
->  		}
->  
-> -		ret = devm_request_irq(&pdev->dev, fsl_edma->errirq,
-> -				fsl_edma_err_handler, 0, "eDMA err", fsl_edma);
-> +		ret = devm_request_irq(&pdev->dev, errirq,
-> +			fsl_edma_err_handler, 0, "eDMA err", fsl_edma);
->  		if (ret) {
->  			dev_err(&pdev->dev, "Can't register eDMA err IRQ.\n");
-> -			return  ret;
-> +		return  ret;
-> +		}
-> +	} else {
-> +		irq = platform_get_irq_byname(pdev, "edma-tx");
-> +		if (irq < 0) {
-> +			dev_err(&pdev->dev, "Can't get edma-tx irq.\n");
-> +			return irq;
-> +		}
-> +
-> +		if (irq == errirq) {
-> +			ret = devm_request_irq(&pdev->dev, irq,
-> +				fsl_edma_irq_handler, 0, "eDMA", fsl_edma);
-> +			if (ret) {
-> +				dev_err(&pdev->dev,
-> +						"Can't register eDMA IRQ.\n");
-> +				return  ret;
-> +			}
-> +		} else {
-> +			ret = devm_request_irq(&pdev->dev, irq,
-> +				fsl_edma_tx_handler, 0, "eDMA tx", fsl_edma);
-> +			if (ret) {
-> +				dev_err(&pdev->dev,
-> +					    "Can't register eDMA tx IRQ.\n");
-> +				return  ret;
-> +			}
-> +
-> +			ret = devm_request_irq(&pdev->dev, errirq,
-> +				fsl_edma_err_handler, 0, "eDMA err", fsl_edma);
-> +			if (ret) {
-> +				dev_err(&pdev->dev,
-> +					    "Can't register eDMA err IRQ.\n");
-> +				return  ret;
-> +			}
->  		}
->  	}
-Okay here we have a bunch of changes without explanation on why these are
-required and what are they supposed to do. So it is kind of very difficult to
-review!
-
-So please split these up in sequence of patches where each patch does only
-ONE thing with right changelog messages
-
-Thanks
-
+diff --git a/Documentation/devicetree/bindings/iio/accel/mma8452.txt b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
+index 8d98e05..0048415 100644
+--- a/Documentation/devicetree/bindings/iio/accel/mma8452.txt
++++ b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
+@@ -10,6 +10,7 @@ Optional properties:
+ 
+   - interrupt-parent: should be the phandle for the interrupt controller
+   - interrupts: interrupt mapping for GPIO IRQ
++  - int2: assume interrupt pin wired to INT2 instead of INT1
+ 
+ Example:
+ 
+@@ -18,4 +19,5 @@ Example:
+ 		reg = <0x1d>;
+ 		interrupt-parent = <&gpio1>;
+ 		interrupts = <5 0>;
++		int2;
+ 	};
+diff --git a/drivers/iio/accel/mma8452.c b/drivers/iio/accel/mma8452.c
+index 2491ed0..0768e66 100644
+--- a/drivers/iio/accel/mma8452.c
++++ b/drivers/iio/accel/mma8452.c
+@@ -1072,12 +1072,14 @@ static int mma8452_probe(struct i2c_client *client,
+ 		int enabled_interrupts = MMA8452_INT_TRANS |
+ 					 MMA8452_INT_FF_MT;
+ 
+-		/* Assume wired to INT1 pin */
+-		ret = i2c_smbus_write_byte_data(client,
+-						MMA8452_CTRL_REG5,
+-						supported_interrupts);
+-		if (ret < 0)
+-			return ret;
++		/* Assume wired to INT1 pin, except "int2" is found in DT */
++		if (!of_property_read_bool(client->dev.of_node, "int2")) {
++			ret = i2c_smbus_write_byte_data(client,
++							MMA8452_CTRL_REG5,
++							supported_interrupts);
++			if (ret < 0)
++				return ret;
++		}
+ 
+ 		ret = i2c_smbus_write_byte_data(client,
+ 						MMA8452_CTRL_REG4,
 -- 
-~Vinod
+2.1.4
