@@ -1,101 +1,67 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 4/7] dt-bindings: add documentation of rk3668 clock controller
-Date: Sun,  5 Jul 2015 11:00:17 +0200
-Message-ID: <1436086820-3757-5-git-send-email-heiko@sntech.de>
-References: <1436086820-3757-1-git-send-email-heiko@sntech.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1436086820-3757-1-git-send-email-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
-Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Roman Volkov <rvolkov@v1ros.org>
+Subject: [PATCH v4 0/4] FDT support for i8042 driver
+Date: Sat,  4 Jul 2015 20:35:40 +0300
+Message-ID: <1436031344-15455-1-git-send-email-rvolkov@v1ros.org>
+References: <342234234esdfewrewrwer@dkoi.org>
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <342234234esdfewrewrwer@dkoi.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, Jiri Kosina <jkosina@suse.cz>, Wolfram Sang <wsa@the-dreams.de>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Tony Prisk <linux@prisktech.co.nz>, Roman Volkov <rvolkov@v1ros.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the devicetree binding for the cru on the rk3368 which quite similar
-structured as previous clock controllers.
+The i8042 interface is used not only on the x86 architecture. Some of
+non-x86 architectures are using Open Firmware device tree, like SPARC
+and PowerPC. There is also non-x86 platforms with the FDT support, such
+as ARM SoCs. There is no code in Linux to support i8042-capable input
+devices on these newer platforms.
 
-Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
----
- .../bindings/clock/rockchip,rk3368-cru.txt         | 61 ++++++++++++++++++++++
- 1 file changed, 61 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/rockchip,rk3368-cru.txt
+This patch creates one more file (i8042-of.h), with OF parsing code
+for the ePAPR-compatible binding with the 'compatible' property. The
+binding is based on existing OF code for older platforms, making it
+possible to reuse this code for these platforms.
 
-diff --git a/Documentation/devicetree/bindings/clock/rockchip,rk3368-cru.txt b/Documentation/devicetree/bindings/clock/rockchip,rk3368-cru.txt
-new file mode 100644
-index 0000000..7c8bbcf
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/rockchip,rk3368-cru.txt
-@@ -0,0 +1,61 @@
-+* Rockchip RK3368 Clock and Reset Unit
-+
-+The RK3368 clock controller generates and supplies clock to various
-+controllers within the SoC and also implements a reset controller for SoC
-+peripherals.
-+
-+Required Properties:
-+
-+- compatible: should be "rockchip,rk3368-cru"
-+- reg: physical base address of the controller and length of memory mapped
-+  region.
-+- #clock-cells: should be 1.
-+- #reset-cells: should be 1.
-+
-+Optional Properties:
-+
-+- rockchip,grf: phandle to the syscon managing the "general register files"
-+  If missing, pll rates are not changeable, due to the missing pll lock status.
-+
-+Each clock is assigned an identifier and client nodes can use this identifier
-+to specify the clock which they consume. All available clocks are defined as
-+preprocessor macros in the dt-bindings/clock/rk3368-cru.h headers and can be
-+used in device tree sources. Similar macros exist for the reset sources in
-+these files.
-+
-+External clocks:
-+
-+There are several clocks that are generated outside the SoC. It is expected
-+that they are defined using standard clock bindings with following
-+clock-output-names:
-+ - "xin24m" - crystal input - required,
-+ - "xin32k" - rtc clock - optional,
-+ - "ext_i2s" - external I2S clock - optional,
-+ - "ext_gmac" - external GMAC clock - optional
-+ - "ext_hsadc" - external HSADC clock - optional,
-+ - "ext_isp" - external ISP clock - optional,
-+ - "ext_jtag" - external JTAG clock - optional
-+ - "ext_vip" - external VIP clock - optional,
-+ - "usbotg_out" - output clock of the pll in the otg phy
-+
-+Example: Clock controller node:
-+
-+	cru: clock-controller@ff760000 {
-+		compatible = "rockchip,rk3368-cru";
-+		reg = <0x0 0xff760000 0x0 0x1000>;
-+		rockchip,grf = <&grf>;
-+		#clock-cells = <1>;
-+		#reset-cells = <1>;
-+	};
-+
-+Example: UART controller node that consumes the clock generated by the clock
-+  controller:
-+
-+	uart0: serial@10124000 {
-+		compatible = "snps,dw-apb-uart";
-+		reg = <0x10124000 0x400>;
-+		interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
-+		reg-shift = <2>;
-+		reg-io-width = <1>;
-+		clocks = <&cru SCLK_UART0>;
-+	};
+ v2:
+ -Changes in the documentation.
+ -Errors fixed in the initialization function.
+ -Redundant parameters removed from Device Tree bindings (init-reset, etc.).
+
+ v3:
+ -Reduced amount of 'ifdefs' in the i8042.c file. Initialization order
+    is now the same for all architectures.
+
+ Warning: the change in v3 is more controversial and needs more testing
+ since affects all architectures which use the driver. Please give
+ information regarding required steps to get this patch accepted. Would
+ be great to find testers to get additional tested-by records.
+
+ v4:
+ -Rename i8042-dt.h to i8042-of.h, rewrite init/probe/remove functions with
+    OF code to be compatible with SPARC/PowerPC.
+ -Add MODULE_DEVICE_TABLE (it was a mistake to forget about it)
+ -Remove 'command-reg', 'status-reg', 'data-reg' from the binding; it is not
+    required for now.
+ -Yet another variant of changes in i8042.c. Unfortunately, it is not possible
+    to avoid these changes.
+ -Move the documentation file into the right place
+    (thanks to Hans de Goede for the hint)
+ -Change the order of patches
+ Tested on: x86, ARM-vt8500, both as a module\built-in.
+
+Roman Volkov (4):
+  i8042: Add i8042_of.h header
+  i8042: Kernel configuration for OF/FDT support
+  i8042: Add OF/FDT support to the driver
+  Documentation: Add 'intel,8042' FDT bindings
+
+ .../devicetree/bindings/serio/intel,8042.txt       |  82 ++++++++++
+ drivers/input/serio/i8042-of.h                     | 168 +++++++++++++++++++++
+ drivers/input/serio/i8042.c                        |  43 +++++-
+ drivers/input/serio/i8042.h                        |   3 +
+ 4 files changed, 291 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/serio/intel,8042.txt
+ create mode 100644 drivers/input/serio/i8042-of.h
+
 -- 
-2.1.4
+2.4.2
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
