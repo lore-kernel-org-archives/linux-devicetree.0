@@ -1,38 +1,53 @@
-From: Martin Kepplinger <martink@posteo.de>
-Subject: [PATCH v3 0/9] iio: mma8452: improve driver and support more chips
-Date: Sat,  4 Jul 2015 15:55:01 +0200
-Message-ID: <1436018110-3903-1-git-send-email-martink@posteo.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mfuzzey@parkeon.com, roberta.dobrescu@gmail.com, christoph.muellner@theobroma-systems.com
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 5/9] iio: mma8452: add devicetree documentation
+Date: Sat,  4 Jul 2015 15:55:06 +0200
+Message-ID: <1436018110-3903-6-git-send-email-martink@posteo.de>
+References: <1436018110-3903-1-git-send-email-martink@posteo.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1436018110-3903-1-git-send-email-martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org, roberta.dobrescu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>, Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is version 3 of the mma8452 driver improvements. Version 3 adds one
-patch to allow all possible pin wirings for users and adds more relevant
-people to the discussion, I forgot about before. I'm sorry.
+Signed-off-by: Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+Signed-off-by: Christoph Muellner <christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+---
+ .../devicetree/bindings/iio/accel/mma8452.txt       | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/accel/mma8452.txt
 
-These changes add support for motion interrupts and 3 more accelerometer
-chips, two of which use them because they don't support the until now
-included transient interrupt sources:
+diff --git a/Documentation/devicetree/bindings/iio/accel/mma8452.txt b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
+new file mode 100644
+index 0000000..8d98e05
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
+@@ -0,0 +1,21 @@
++Freescale MMA8452Q, MMA8453Q, MMA8652FC or MMA8653FC triaxial accelerometer
++
++Required properties:
++
++  - compatible: should be "fsl,mma8653", "fsl,mma8652", "fsl,mma8453" or
++    "fsl,mma8452" respectively.
++  - reg: the I2C address of the chip
++
++Optional properties:
++
++  - interrupt-parent: should be the phandle for the interrupt controller
++  - interrupts: interrupt mapping for GPIO IRQ
++
++Example:
++
++	mma8653fc@1d {
++		compatible = "fsl,mma8653";
++		reg = <0x1d>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <5 0>;
++	};
+-- 
+2.1.4
 
-MMA8453Q, MMA8652FC and MMA8653FC; datasheets are in the commit messages.
-
-The driver and module name remains the same, seperating it from the device
-names it now supports.
-
-On top of this, there are minor documentation additions, and more notably,
-the change of the existing iio event type from IIO_EV_TYPE_THRESH to
-IIO_EV_TYPE_MAG since it's the magnitude of the threshold that is relevant
-for these devices, not a signed value. Finally it allows to use the driver,
-no matter how the interrupt pins are wired on your board.
-
-Please review and test if you can. For MMA8452Q, other than the event type,
-nothing should have changed.
-
-revision history
-----------------
-v3   adds one patch to allow all possible pin wirings; adds more email
-     recipients
-v2   splits the work into a series of smaller pieces
-v1   initial post
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
