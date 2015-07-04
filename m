@@ -1,191 +1,40 @@
-From: Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 4/9] iio: mma8452: add support for MMA8652FC and MMA8653FC accelerometers
-Date: Sat,  4 Jul 2015 15:55:05 +0200
-Message-ID: <1436018110-3903-5-git-send-email-martink@posteo.de>
-References: <1436018110-3903-1-git-send-email-martink@posteo.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1436018110-3903-1-git-send-email-martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org, roberta.dobrescu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>, Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+From: Paul Bolle <pebolle@tiscali.nl>
+Subject: Re: [PATCH 2/3] mmc: sdhci-of-at91: introduce driver for the Atmel
+ SDMMC
+Date: Sat, 04 Jul 2015 10:30:28 +0200
+Message-ID: <1435998628.20057.26.camel@tiscali.nl>
+References: <1435933037-12889-1-git-send-email-ludovic.desroches@atmel.com>
+	 <1435933037-12889-3-git-send-email-ludovic.desroches@atmel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1435933037-12889-3-git-send-email-ludovic.desroches@atmel.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ludovic Desroches <ludovic.desroches@atmel.com>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: ulf.hansson@linaro.org, nicolas.ferre@atmel.com, alexandre.belloni@free-electrons.com
 List-Id: devicetree@vger.kernel.org
 
-MMA8652FC and MMA8653FC don't provide the transient interrupt source, so
-the motion interrupt source is used by providing a new iio_chan_spec
-definition, so that other supported devices are not affected by this.
+A nit only: a license mismatch.
 
-Datasheets for the newly supported devices are available at Freescale's
-website:
+On vr, 2015-07-03 at 16:17 +0200, Ludovic Desroches wrote:
+> --- /dev/null
+> +++ b/drivers/mmc/host/sdhci-of-at91.c
+> 
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or (at
+> + * your option) any later version.
 
-http://cache.freescale.com/files/sensors/doc/data_sheet/MMA8652FC.pdf
-http://cache.freescale.com/files/sensors/doc/data_sheet/MMA8653FC.pdf
+This states the license is GPL v2 or later.
 
-Signed-off-by: Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
-Signed-off-by: Christoph Muellner <christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
----
- drivers/iio/accel/Kconfig   |  2 +-
- drivers/iio/accel/mma8452.c | 79 ++++++++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 79 insertions(+), 2 deletions(-)
+> +MODULE_LICENSE("GPL v2");
 
-diff --git a/drivers/iio/accel/Kconfig b/drivers/iio/accel/Kconfig
-index 91fab16..684c8b5 100644
---- a/drivers/iio/accel/Kconfig
-+++ b/drivers/iio/accel/Kconfig
-@@ -93,7 +93,7 @@ config MMA8452
- 	select IIO_TRIGGERED_BUFFER
- 	help
- 	  Say yes here to build support for the following Freescale 3-axis
--	  accelerometers: MMA8452Q, MMA8453Q.
-+	  accelerometers: MMA8452Q, MMA8453Q, MMA8652FC, MMA8653FC.
- 
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called mma8452.
-diff --git a/drivers/iio/accel/mma8452.c b/drivers/iio/accel/mma8452.c
-index 0498b6e..ccce925 100644
---- a/drivers/iio/accel/mma8452.c
-+++ b/drivers/iio/accel/mma8452.c
-@@ -3,6 +3,8 @@
-  *
-  *	MMA8452Q
-  *	MMA8453Q
-+ *	MMA8652FC
-+ *	MMA8653FC
-  *
-  * Copyright 2014 Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
-  *
-@@ -88,6 +90,8 @@
- 
- #define MMA8452_DEVICE_ID 0x2a
- #define MMA8453_DEVICE_ID 0x3a
-+#define MMA8652_DEVICE_ID 0x4a
-+#define MMA8653_DEVICE_ID 0x5a
- 
- struct mma8452_data {
- 	struct i2c_client *client;
-@@ -740,6 +744,26 @@ static struct attribute_group mma8452_event_attribute_group = {
- 	.num_event_specs = ARRAY_SIZE(mma8452_transient_event), \
- }
- 
-+#define MMA8652_CHANNEL(axis, idx, bits) { \
-+	.type = IIO_ACCEL, \
-+	.modified = 1, \
-+	.channel2 = IIO_MOD_##axis, \
-+	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) | \
-+		BIT(IIO_CHAN_INFO_CALIBBIAS), \
-+	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SAMP_FREQ) | \
-+		BIT(IIO_CHAN_INFO_SCALE), \
-+	.scan_index = idx, \
-+	.scan_type = { \
-+		.sign = 's', \
-+		.realbits = (bits), \
-+		.storagebits = 16, \
-+		.shift = 16 - (bits), \
-+		.endianness = IIO_BE, \
-+	}, \
-+	.event_spec = mma8452_motion_event, \
-+	.num_event_specs = ARRAY_SIZE(mma8452_motion_event), \
-+}
-+
- static const struct iio_chan_spec mma8452_channels[] = {
- 	MMA8452_CHANNEL(X, 0, 12),
- 	MMA8452_CHANNEL(Y, 1, 12),
-@@ -754,9 +778,25 @@ static const struct iio_chan_spec mma8453_channels[] = {
- 	IIO_CHAN_SOFT_TIMESTAMP(3),
- };
- 
-+static const struct iio_chan_spec mma8652_channels[] = {
-+	MMA8652_CHANNEL(X, 0, 12),
-+	MMA8652_CHANNEL(Y, 1, 12),
-+	MMA8652_CHANNEL(Z, 2, 12),
-+	IIO_CHAN_SOFT_TIMESTAMP(3),
-+};
-+
-+static const struct iio_chan_spec mma8653_channels[] = {
-+	MMA8652_CHANNEL(X, 0, 10),
-+	MMA8652_CHANNEL(Y, 1, 10),
-+	MMA8652_CHANNEL(Z, 2, 10),
-+	IIO_CHAN_SOFT_TIMESTAMP(3),
-+};
-+
- enum {
- 	mma8452,
- 	mma8453,
-+	mma8652,
-+	mma8653,
- };
- 
- /*
-@@ -800,6 +840,38 @@ static const struct mma_chip_info mma_chip_info_table[] = {
- 		.ev_ths_mask = MMA8452_TRANSIENT_THS_MASK,
- 		.ev_count = MMA8452_TRANSIENT_COUNT,
- 	},
-+	[mma8652] = {
-+		.chip_id = MMA8652_DEVICE_ID,
-+		.channels = mma8652_channels,
-+		.num_channels = ARRAY_SIZE(mma8652_channels),
-+		.mma_scales = { {0, 9577}, {0, 19154}, {0, 38307} },
-+		.ev_cfg = MMA8452_FF_MT_CFG,
-+		.ev_cfg_ele = MMA8452_FF_MT_CFG_ELE,
-+		.ev_cfg_chan_shift = 3,
-+		.ev_src = MMA8452_FF_MT_SRC,
-+		.ev_src_xe = MMA8452_FF_MT_SRC_XHE,
-+		.ev_src_ye = MMA8452_FF_MT_SRC_YHE,
-+		.ev_src_ze = MMA8452_FF_MT_SRC_ZHE,
-+		.ev_ths = MMA8452_FF_MT_THS,
-+		.ev_ths_mask = MMA8452_FF_MT_THS_MASK,
-+		.ev_count = MMA8452_FF_MT_COUNT,
-+	},
-+	[mma8653] = {
-+		.chip_id = MMA8653_DEVICE_ID,
-+		.channels = mma8653_channels,
-+		.num_channels = ARRAY_SIZE(mma8653_channels),
-+		.mma_scales = { {0, 38307}, {0, 76614}, {0, 153228} },
-+		.ev_cfg = MMA8452_FF_MT_CFG,
-+		.ev_cfg_ele = MMA8452_FF_MT_CFG_ELE,
-+		.ev_cfg_chan_shift = 3,
-+		.ev_src = MMA8452_FF_MT_SRC,
-+		.ev_src_xe = MMA8452_FF_MT_SRC_XHE,
-+		.ev_src_ye = MMA8452_FF_MT_SRC_YHE,
-+		.ev_src_ze = MMA8452_FF_MT_SRC_ZHE,
-+		.ev_ths = MMA8452_FF_MT_THS,
-+		.ev_ths_mask = MMA8452_FF_MT_THS_MASK,
-+		.ev_count = MMA8452_FF_MT_COUNT,
-+	},
- };
- 
- static struct attribute *mma8452_attributes[] = {
-@@ -921,6 +993,8 @@ static int mma8452_reset(struct i2c_client *client)
- static const struct of_device_id mma8452_dt_ids[] = {
- 	{ .compatible = "fsl,mma8452", .data = &mma_chip_info_table[mma8452] },
- 	{ .compatible = "fsl,mma8453", .data = &mma_chip_info_table[mma8453] },
-+	{ .compatible = "fsl,mma8652", .data = &mma_chip_info_table[mma8652] },
-+	{ .compatible = "fsl,mma8653", .data = &mma_chip_info_table[mma8653] },
- 	{ }
- };
- 
-@@ -936,7 +1010,8 @@ static int mma8452_probe(struct i2c_client *client,
- 	if (ret < 0)
- 		return ret;
- 
--	if (ret != MMA8452_DEVICE_ID && ret != MMA8453_DEVICE_ID)
-+	if (ret != MMA8452_DEVICE_ID && ret != MMA8453_DEVICE_ID &&
-+	    ret != MMA8652_DEVICE_ID && ret != MMA8653_DEVICE_ID)
- 		return -ENODEV;
- 
- 	match = of_match_device(mma8452_dt_ids, &client->dev);
-@@ -1086,6 +1161,8 @@ static SIMPLE_DEV_PM_OPS(mma8452_pm_ops, mma8452_suspend, mma8452_resume);
- static const struct i2c_device_id mma8452_id[] = {
- 	{ "mma8452", mma8452 },
- 	{ "mma8453", mma8453 },
-+	{ "mma8652", mma8652 },
-+	{ "mma8653", mma8653 },
- 	{ }
- };
- MODULE_DEVICE_TABLE(i2c, mma8452_id);
--- 
-2.1.4
+And, according to include/linux/module.h, this states the license is
+(only) GPL v2. So I think that either the comment at the top of this
+file or the ident used in MODULE_LICENSE() needs to change.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+
+
+Paul Bolle
