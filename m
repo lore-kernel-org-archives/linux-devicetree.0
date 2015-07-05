@@ -1,82 +1,65 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 9/9] iio: mma8452: add devicetree property to allow all
- pin wirings
-Date: Sun, 05 Jul 2015 12:51:24 +0100
-Message-ID: <55991A3C.8000701@kernel.org>
-References: <1436018110-3903-1-git-send-email-martink@posteo.de> <1436018110-3903-10-git-send-email-martink@posteo.de>
+From: Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 5/9] iio: mma8452: add devicetree documentation
+Date: Sun, 05 Jul 2015 13:50:54 +0200
+Message-ID: <55991A1E.30608@posteo.de>
+References: <1436018110-3903-1-git-send-email-martink@posteo.de> <1436018110-3903-6-git-send-email-martink@posteo.de> <5599199B.6030006@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1436018110-3903-10-git-send-email-martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
+In-Reply-To: <5599199B.6030006-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org, roberta.dobrescu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org, roberta.dobrescu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org
 Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/07/15 14:55, Martin Kepplinger wrote:
-> For the devices supported by the mma8452 driver, two interrupt pins are
-> available to route the interrupt signals to. By default INT1 is assumed.
+Am 2015-07-05 um 13:48 schrieb Jonathan Cameron:
+> On 04/07/15 14:55, Martin Kepplinger wrote:
+>> Signed-off-by: Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+>> Signed-off-by: Christoph Muellner <christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+> This is trivial enough I'll take it without a device tree ack (after a few days)
+> but convention is to CC all device tree patches to the maintainers of devicetree
+> bindings as well as the devicetree list.  
 > 
-> This adds a simple boolean DT property, for users to configure it for
-> INT2, if that is the wired interrupt pin for them.
-> 
-> This is important for everyone to be able to use this driver, no matter
-> how their chip is wired.
-> 
-> Since this doesn't change the default behaviour, it doesn't break anything
-> for existing users.
-> 
-> Signed-off-by: Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
-> Signed-off-by: Christoph Muellner <christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
-I just wonder if we can make the naming more obvious.
-> ---
->  Documentation/devicetree/bindings/iio/accel/mma8452.txt |  2 ++
->  drivers/iio/accel/mma8452.c                             | 14 ++++++++------
->  2 files changed, 10 insertions(+), 6 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/accel/mma8452.txt b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
-> index 8d98e05..0048415 100644
-> --- a/Documentation/devicetree/bindings/iio/accel/mma8452.txt
-> +++ b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
-> @@ -10,6 +10,7 @@ Optional properties:
->  
->    - interrupt-parent: should be the phandle for the interrupt controller
->    - interrupts: interrupt mapping for GPIO IRQ
-> +  - int2: assume interrupt pin wired to INT2 instead of INT1
-use_int2 perhaps?
->  
->  Example:
->  
-> @@ -18,4 +19,5 @@ Example:
->  		reg = <0x1d>;
->  		interrupt-parent = <&gpio1>;
->  		interrupts = <5 0>;
-> +		int2;
->  	};
-> diff --git a/drivers/iio/accel/mma8452.c b/drivers/iio/accel/mma8452.c
-> index 2491ed0..0768e66 100644
-> --- a/drivers/iio/accel/mma8452.c
-> +++ b/drivers/iio/accel/mma8452.c
-> @@ -1072,12 +1072,14 @@ static int mma8452_probe(struct i2c_client *client,
->  		int enabled_interrupts = MMA8452_INT_TRANS |
->  					 MMA8452_INT_FF_MT;
->  
-> -		/* Assume wired to INT1 pin */
-> -		ret = i2c_smbus_write_byte_data(client,
-> -						MMA8452_CTRL_REG5,
-> -						supported_interrupts);
-> -		if (ret < 0)
-> -			return ret;
-> +		/* Assume wired to INT1 pin, except "int2" is found in DT */
-> +		if (!of_property_read_bool(client->dev.of_node, "int2")) {
-> +			ret = i2c_smbus_write_byte_data(client,
-> +							MMA8452_CTRL_REG5,
-> +							supported_interrupts);
-> +			if (ret < 0)
-> +				return ret;
-> +		}
->  
->  		ret = i2c_smbus_write_byte_data(client,
->  						MMA8452_CTRL_REG4,
+> Jonathan
+
+Thanks a lot so far. I'll send a next version based on your review and
+will add devicetree people. Maybe you can take the series cleanly in one
+go after that. Someone that quickly runs it, other than me, would be
+awesome of course ;)
+
+                     martin
+>> ---
+>>  .../devicetree/bindings/iio/accel/mma8452.txt       | 21 +++++++++++++++++++++
+>>  1 file changed, 21 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/iio/accel/mma8452.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/iio/accel/mma8452.txt b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
+>> new file mode 100644
+>> index 0000000..8d98e05
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
+>> @@ -0,0 +1,21 @@
+>> +Freescale MMA8452Q, MMA8453Q, MMA8652FC or MMA8653FC triaxial accelerometer
+>> +
+>> +Required properties:
+>> +
+>> +  - compatible: should be "fsl,mma8653", "fsl,mma8652", "fsl,mma8453" or
+>> +    "fsl,mma8452" respectively.
+>> +  - reg: the I2C address of the chip
+>> +
+>> +Optional properties:
+>> +
+>> +  - interrupt-parent: should be the phandle for the interrupt controller
+>> +  - interrupts: interrupt mapping for GPIO IRQ
+>> +
+>> +Example:
+>> +
+>> +	mma8653fc@1d {
+>> +		compatible = "fsl,mma8653";
+>> +		reg = <0x1d>;
+>> +		interrupt-parent = <&gpio1>;
+>> +		interrupts = <5 0>;
+>> +	};
+>>
 > 
