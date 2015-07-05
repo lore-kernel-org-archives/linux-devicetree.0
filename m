@@ -1,70 +1,166 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 5/9] iio: mma8452: add devicetree documentation
-Date: Sun, 05 Jul 2015 13:12:29 +0100
-Message-ID: <55991F2D.3030902@kernel.org>
-References: <1436018110-3903-1-git-send-email-martink@posteo.de> <1436018110-3903-6-git-send-email-martink@posteo.de> <5599199B.6030006@kernel.org> <55991A1E.30608@posteo.de>
+From: "Jingoo Han" <jingoohan1@gmail.com>
+Subject: Re: [PATCH] backlight: lp855x: use private data for regulator control
+Date: Sun, 5 Jul 2015 21:49:01 +0900
+Message-ID: <000701d0b720$fb7a09e0$f26e1da0$@com>
+References: <1435644981-5568-1-git-send-email-milo.kim@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain;
+	charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55991A1E.30608-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org, roberta.dobrescu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1435644981-5568-1-git-send-email-milo.kim@ti.com>
+Content-Language: ko
+Sender: linux-kernel-owner@vger.kernel.org
+To: 'Milo Kim' <milo.kim@ti.com>, "'Jingoo Han <jingoohan1@gmail.com>;Lee Jones'" <lee.jones@linaro.org>
+Cc: 'Sean Paul' <seanpaul@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/07/15 12:50, Martin Kepplinger wrote:
-> Am 2015-07-05 um 13:48 schrieb Jonathan Cameron:
->> On 04/07/15 14:55, Martin Kepplinger wrote:
->>> Signed-off-by: Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
->>> Signed-off-by: Christoph Muellner <christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
->> This is trivial enough I'll take it without a device tree ack (after a few days)
->> but convention is to CC all device tree patches to the maintainers of devicetree
->> bindings as well as the devicetree list.  
->>
->> Jonathan
+On Tuesday, June 30, 2015 3:16 PM, Milo Kim wrote:
 > 
-> Thanks a lot so far. I'll send a next version based on your review and
-> will add devicetree people. Maybe you can take the series cleanly in one
-> go after that. Someone that quickly runs it, other than me, would be
-> awesome of course ;)
-Wuss ;)  You'd be amazed how many invasive changes go in without anyone
-every finding anyone to test them on particular obscure parts.
-Still it is indeed always nice.
+> LP855x backlight device can be enabled by external VDD input.
+> The 'supply' data is used for this purpose.
+> It's kind of private data which runs internally, so there is no reason to
+> expose to the platform data.
 > 
->                      martin
->>> ---
->>>  .../devicetree/bindings/iio/accel/mma8452.txt       | 21 +++++++++++++++++++++
->>>  1 file changed, 21 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/iio/accel/mma8452.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/iio/accel/mma8452.txt b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
->>> new file mode 100644
->>> index 0000000..8d98e05
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
->>> @@ -0,0 +1,21 @@
->>> +Freescale MMA8452Q, MMA8453Q, MMA8652FC or MMA8653FC triaxial accelerometer
->>> +
->>> +Required properties:
->>> +
->>> +  - compatible: should be "fsl,mma8653", "fsl,mma8652", "fsl,mma8453" or
->>> +    "fsl,mma8452" respectively.
->>> +  - reg: the I2C address of the chip
->>> +
->>> +Optional properties:
->>> +
->>> +  - interrupt-parent: should be the phandle for the interrupt controller
->>> +  - interrupts: interrupt mapping for GPIO IRQ
->>> +
->>> +Example:
->>> +
->>> +	mma8653fc@1d {
->>> +		compatible = "fsl,mma8653";
->>> +		reg = <0x1d>;
->>> +		interrupt-parent = <&gpio1>;
->>> +		interrupts = <5 0>;
->>> +	};
->>>
->>
+> And LP855x DT property, 'power-supply' is unnecessary.
+> If a regulator is registered correctly, then lp855x driver can get
+> regulator resource by using devm_regulator_get().
+> So devm_regulator_get() is moved from _parse_dt() to _probe().
+> Ex) The following device tree works without 'power-supply' property.
 > 
+> 	i2c0: i2c@10002000 {
+> 		(snip)
+> 
+> 		backlight@2c {
+> 			compatible = "ti,lp8556";
+> 			reg = <0x2c>;
+> 
+> 			bl-name = "lcd-bl";
+> 			dev-ctrl = /bits/ 8 <0x85>;
+> 			init-brt = /bits/ 8 <0x10>;
+> 		};
+> 	};
+> 
+> 	/* 'power' regulator for LP8556 VDD */
+> 	bl_vdd: fixed-regulator@1 {
+> 		compatible = "regulator-fixed";
+> 		regulator-name = "power";
+> 		regulator-min-microvolt = <3300000>;
+> 		regulator-max-microvolt = <3300000>;
+> 
+> 		(snip)
+> 	};
+> 
+> Cc: Sean Paul <seanpaul@chromium.org>
+> Cc: Jingoo Han <jingoohan1@gmail.com>
+> Cc: Lee Jones <lee.jones@linaro.org>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Milo Kim <milo.kim@ti.com>
+
+Acked-by: Jingoo Han <jingoohan1@gmail.com>
+
+Best regards,
+Jingoo Han
+
+> ---
+>  .../devicetree/bindings/video/backlight/lp855x.txt   |  2 --
+>  drivers/video/backlight/lp855x_bl.c                  | 20 +++++++++-----------
+>  include/linux/platform_data/lp855x.h                 |  2 --
+>  3 files changed, 9 insertions(+), 15 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/video/backlight/lp855x.txt
+> b/Documentation/devicetree/bindings/video/backlight/lp855x.txt
+> index 0a3ecbc..96e83a5 100644
+> --- a/Documentation/devicetree/bindings/video/backlight/lp855x.txt
+> +++ b/Documentation/devicetree/bindings/video/backlight/lp855x.txt
+> @@ -12,7 +12,6 @@ Optional properties:
+>    - pwm-period: PWM period value. Set only PWM input mode used (u32)
+>    - rom-addr: Register address of ROM area to be updated (u8)
+>    - rom-val: Register value to be updated (u8)
+> -  - power-supply: Regulator which controls the 3V rail
+> 
+>  Example:
+> 
+> @@ -57,7 +56,6 @@ Example:
+>  	backlight@2c {
+>  		compatible = "ti,lp8557";
+>  		reg = <0x2c>;
+> -		power-supply = <&backlight_vdd>;
+> 
+>  		dev-ctrl = /bits/ 8 <0x41>;
+>  		init-brt = /bits/ 8 <0x0a>;
+> diff --git a/drivers/video/backlight/lp855x_bl.c b/drivers/video/backlight/lp855x_bl.c
+> index a26d3bb..277d5ca 100644
+> --- a/drivers/video/backlight/lp855x_bl.c
+> +++ b/drivers/video/backlight/lp855x_bl.c
+> @@ -73,6 +73,7 @@ struct lp855x {
+>  	struct device *dev;
+>  	struct lp855x_platform_data *pdata;
+>  	struct pwm_device *pwm;
+> +	struct regulator *supply;	/* regulator for VDD input */
+>  };
+> 
+>  static int lp855x_write_byte(struct lp855x *lp, u8 reg, u8 data)
+> @@ -384,13 +385,6 @@ static int lp855x_parse_dt(struct lp855x *lp)
+>  		pdata->rom_data = &rom[0];
+>  	}
+> 
+> -	pdata->supply = devm_regulator_get(dev, "power");
+> -	if (IS_ERR(pdata->supply)) {
+> -		if (PTR_ERR(pdata->supply) == -EPROBE_DEFER)
+> -			return -EPROBE_DEFER;
+> -		pdata->supply = NULL;
+> -	}
+> -
+>  	lp->pdata = pdata;
+> 
+>  	return 0;
+> @@ -431,8 +425,12 @@ static int lp855x_probe(struct i2c_client *cl, const struct i2c_device_id *id)
+>  	else
+>  		lp->mode = REGISTER_BASED;
+> 
+> -	if (lp->pdata->supply) {
+> -		ret = regulator_enable(lp->pdata->supply);
+> +	lp->supply = devm_regulator_get(lp->dev, "power");
+> +	if (IS_ERR(lp->supply))
+> +		lp->supply = NULL;
+> +
+> +	if (lp->supply) {
+> +		ret = regulator_enable(lp->supply);
+>  		if (ret < 0) {
+>  			dev_err(&cl->dev, "failed to enable supply: %d\n", ret);
+>  			return ret;
+> @@ -470,8 +468,8 @@ static int lp855x_remove(struct i2c_client *cl)
+> 
+>  	lp->bl->props.brightness = 0;
+>  	backlight_update_status(lp->bl);
+> -	if (lp->pdata->supply)
+> -		regulator_disable(lp->pdata->supply);
+> +	if (lp->supply)
+> +		regulator_disable(lp->supply);
+>  	sysfs_remove_group(&lp->dev->kobj, &lp855x_attr_group);
+> 
+>  	return 0;
+> diff --git a/include/linux/platform_data/lp855x.h b/include/linux/platform_data/lp855x.h
+> index 9c7fd1e..1b2ba24 100644
+> --- a/include/linux/platform_data/lp855x.h
+> +++ b/include/linux/platform_data/lp855x.h
+> @@ -136,7 +136,6 @@ struct lp855x_rom_data {
+>  		Only valid when mode is PWM_BASED.
+>   * @size_program : total size of lp855x_rom_data
+>   * @rom_data : list of new eeprom/eprom registers
+> - * @supply : regulator that supplies 3V input
+>   */
+>  struct lp855x_platform_data {
+>  	const char *name;
+> @@ -145,7 +144,6 @@ struct lp855x_platform_data {
+>  	unsigned int period_ns;
+>  	int size_program;
+>  	struct lp855x_rom_data *rom_data;
+> -	struct regulator *supply;
+>  };
+> 
+>  #endif
+> --
+> 1.9.1
