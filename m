@@ -1,202 +1,152 @@
 From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] iio: adc: Determine sampling frequencies by using
- minimum sample time
-Date: Sun, 05 Jul 2015 14:38:15 +0100
-Message-ID: <55993347.7010002@kernel.org>
-References: <cover.1435134626.git.maitysanchayan@gmail.com> <01b93ea50b59c93a783fac26b4671313b794bd24.1435134626.git.maitysanchayan@gmail.com>
+Subject: Re: [PATCH v3 1/2] iio: light: add support for TI's opt3001 light
+ sensor
+Date: Sun, 05 Jul 2015 15:08:12 +0100
+Message-ID: <55993A4C.10105@kernel.org>
+References: <1435876079-26287-1-git-send-email-dannenberg@ti.com> <1435876079-26287-2-git-send-email-dannenberg@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <01b93ea50b59c93a783fac26b4671313b794bd24.1435134626.git.maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1435876079-26287-2-git-send-email-dannenberg-l0cyMroinI0@public.gmane.org>
 Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org
+To: Andreas Dannenberg <dannenberg-l0cyMroinI0@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 24/06/15 09:33, Sanchayan Maity wrote:
-> The driver currently does not take into account the minimum sample time
-> as per the Figure 6-8 Chapter 9.1.1 12-bit ADC electrical characteristics.
-> We set a static amount of cycles instead of considering the sample time
-> as a given value, which depends on hardware characteristics.
+On 02/07/15 23:27, Andreas Dannenberg wrote:
+> TI's opt3001 light sensor is a simple and yet powerful
+> little device. The device provides 99% IR rejection,
+> automatic full-scale, very low power consumption and
+> measurements from 0.01 to 83k lux.
 > 
-> Determine sampling frequencies by first reading the device tree property
-> node and then calculating the required Long Sample Time Adder (LSTAdder)
-> value based on the ADC clock frequency and sample time value obtained
-> from the device tree, this LSTAdder value is then used for calculating
-> the sampling frequencies possible.
+> This patch adds support for that device using the IIO
+> framework.
 > 
-> Signed-off-by: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Looking for an Ack on this from Fugang. Device tree ack also good ;)
-> ---
->  .../devicetree/bindings/iio/adc/vf610-adc.txt      |  6 ++
->  drivers/iio/adc/vf610_adc.c                        | 74 ++++++++++++++++++++--
->  2 files changed, 76 insertions(+), 4 deletions(-)
+> See http://www.ti.com/product/opt3001 for more information.
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt b/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt
-> index 3eb40e2..39b86ea 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt
-> +++ b/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt
-> @@ -17,6 +17,11 @@ Recommended properties:
->    - Frequency in normal mode (ADLPC=0, ADHSC=0)
->    - Frequency in high-speed mode (ADLPC=0, ADHSC=1)
->    - Frequency in low-power mode (ADLPC=1, ADHSC=0)
-> +  - min-sample-time: Minimum sampling time in nanoseconds. This value has
-> +    to be chosen according to the conversion mode and the connected analog
-> +	 source resistance (R_as) and capacitance (C_as). Refer the datasheet's
-> +	 operating requirements. A safe default across a wide range of R_as and
-> +	 C_as as well as conversion modes is 1000ns.
->  
->  Example:
->  adc0: adc@4003b000 {
-> @@ -27,5 +32,6 @@ adc0: adc@4003b000 {
->  	clock-names = "adc";
->  	fsl,adck-max-frequency = <30000000>, <40000000>,
->  				<20000000>;
-> +	min-sample-time = <1000>;
->  	vref-supply = <&reg_vcc_3v3_mcu>;
->  };
-> diff --git a/drivers/iio/adc/vf610_adc.c b/drivers/iio/adc/vf610_adc.c
-> index 480f335..8322027 100644
-> --- a/drivers/iio/adc/vf610_adc.c
-> +++ b/drivers/iio/adc/vf610_adc.c
-> @@ -68,6 +68,9 @@
->  #define VF610_ADC_CLK_DIV8		0x60
->  #define VF610_ADC_CLK_MASK		0x60
->  #define VF610_ADC_ADLSMP_LONG		0x10
-> +#define VF610_ADC_ADSTS_SHORT   0x100
-> +#define VF610_ADC_ADSTS_NORMAL  0x200
-> +#define VF610_ADC_ADSTS_LONG    0x300
->  #define VF610_ADC_ADSTS_MASK		0x300
->  #define VF610_ADC_ADLPC_EN		0x80
->  #define VF610_ADC_ADHSC_EN		0x400
-> @@ -124,6 +127,17 @@ enum conversion_mode_sel {
->  	VF610_ADC_CONV_LOW_POWER,
->  };
->  
-> +enum lst_adder_sel {
-> +	VF610_ADCK_CYCLES_3,
-> +	VF610_ADCK_CYCLES_5,
-> +	VF610_ADCK_CYCLES_7,
-> +	VF610_ADCK_CYCLES_9,
-> +	VF610_ADCK_CYCLES_13,
-> +	VF610_ADCK_CYCLES_17,
-> +	VF610_ADCK_CYCLES_21,
-> +	VF610_ADCK_CYCLES_25,
+> Signed-off-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: Andreas Dannenberg <dannenberg-l0cyMroinI0@public.gmane.org>
+Hi Andreas,
+
+Looking pretty good to me, though I'd like to give Peter time to take
+another look and give his reviewed-by etc.
+
+One really minor suggestion from me...
+<snip>
+> +
+> +static int opt3001_probe(struct i2c_client *client,
+> +		const struct i2c_device_id *id)
+> +{
+> +	struct device *dev = &client->dev;
+> +
+> +	struct iio_dev *iio;
+> +	struct opt3001 *opt;
+> +	int irq = client->irq;
+> +	int ret = -ENOMEM;
+> +
+> +	iio = devm_iio_device_alloc(dev, sizeof(*opt));
+> +	if (!iio)
+return -ENOMEM; would be cleaner, then there is no need to initialize
+ret either.
+> +		return ret;
+> +
+> +	opt = iio_priv(iio);
+> +	opt->client = client;
+> +	opt->dev = dev;
+> +
+> +	mutex_init(&opt->lock);
+> +	init_waitqueue_head(&opt->result_ready_queue);
+> +	i2c_set_clientdata(client, iio);
+> +
+> +	ret = opt3001_read_id(opt);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = opt3001_configure(opt);
+> +	if (ret)
+> +		return ret;
+> +
+> +	iio->name = client->name;
+> +	iio->channels = opt3001_channels;
+> +	iio->num_channels = ARRAY_SIZE(opt3001_channels);
+> +	iio->dev.parent = dev;
+> +	iio->modes = INDIO_DIRECT_MODE;
+> +	iio->info = &opt3001_info;
+> +
+> +	ret = devm_iio_device_register(dev, iio);
+> +	if (ret) {
+> +		dev_err(dev, "failed to register IIO device\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = request_threaded_irq(irq, NULL, opt3001_irq,
+> +			IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
+> +			"opt3001", iio);
+> +	if (ret) {
+> +		dev_err(dev, "failed to request IRQ #%d\n", irq);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int opt3001_remove(struct i2c_client *client)
+> +{
+> +	struct iio_dev *iio = i2c_get_clientdata(client);
+> +	struct opt3001 *opt = iio_priv(iio);
+> +	int ret;
+> +	u16 reg;
+> +
+> +	free_irq(client->irq, iio);
+> +
+> +	ret = i2c_smbus_read_word_swapped(opt->client, OPT3001_CONFIGURATION);
+> +	if (ret < 0) {
+> +		dev_err(opt->dev, "failed to read register %02x\n",
+> +				OPT3001_CONFIGURATION);
+> +		return ret;
+> +	}
+> +
+> +	reg = ret;
+> +	opt3001_set_mode(opt, &reg, OPT3001_CONFIGURATION_M_SHUTDOWN);
+> +
+> +	ret = i2c_smbus_write_word_swapped(opt->client, OPT3001_CONFIGURATION,
+> +			reg);
+> +	if (ret < 0) {
+> +		dev_err(opt->dev, "failed to write register %02x\n",
+> +				OPT3001_CONFIGURATION);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct i2c_device_id opt3001_id[] = {
+> +	{ "opt3001", 0 },
+> +	{ } /* Terminating Entry */
+> +};
+> +MODULE_DEVICE_TABLE(i2c, opt3001_id);
+> +
+> +static const struct of_device_id opt3001_of_match[] = {
+> +	{ .compatible = "ti,opt3001" },
+> +	{ }
 > +};
 > +
->  struct vf610_adc_feature {
->  	enum clk_sel	clk_sel;
->  	enum vol_ref	vol_ref;
-> @@ -132,6 +146,8 @@ struct vf610_adc_feature {
->  	int	clk_div;
->  	int     sample_rate;
->  	int	res_mode;
-> +	u32 lst_adder_index;
-> +	u32 default_sample_time;
->  
->  	bool	calibration;
->  	bool	ovwren;
-> @@ -155,11 +171,13 @@ struct vf610_adc {
->  };
->  
->  static const u32 vf610_hw_avgs[] = { 1, 4, 8, 16, 32 };
-> +static const u32 vf610_lst_adder[] = { 3, 5, 7, 9, 13, 17, 21, 25 };
->  
->  static inline void vf610_adc_calculate_rates(struct vf610_adc *info)
->  {
->  	struct vf610_adc_feature *adc_feature = &info->adc_feature;
->  	unsigned long adck_rate, ipg_rate = clk_get_rate(info->clk);
-> +	u32 adck_period, lst_addr_min;
->  	int divisor, i;
->  
->  	adck_rate = info->max_adck_rate[adc_feature->conv_mode];
-> @@ -174,6 +192,19 @@ static inline void vf610_adc_calculate_rates(struct vf610_adc *info)
->  	}
->  
->  	/*
-> +	 * Determine the long sample time adder value to be used based
-> +	 * on the default minimum sample time provided.
-> +	 */
-> +	adck_period = NSEC_PER_SEC / adck_rate;
-> +	lst_addr_min = adc_feature->default_sample_time / adck_period;
-> +	for (i = 0; i < ARRAY_SIZE(vf610_lst_adder); i++) {
-> +		if (vf610_lst_adder[i] > lst_addr_min) {
-> +			adc_feature->lst_adder_index = i;
-> +			break;
-> +		}
-> +	}
+> +static struct i2c_driver opt3001_driver = {
+> +	.probe = opt3001_probe,
+> +	.remove = opt3001_remove,
+> +	.id_table = opt3001_id,
 > +
-> +	/*
->  	 * Calculate ADC sample frequencies
->  	 * Sample time unit is ADCK cycles. ADCK clk source is ipg clock,
->  	 * which is the same as bus clock.
-> @@ -182,12 +213,13 @@ static inline void vf610_adc_calculate_rates(struct vf610_adc *info)
->  	 * SFCAdder: fixed to 6 ADCK cycles
->  	 * AverageNum: 1, 4, 8, 16, 32 samples for hardware average.
->  	 * BCT (Base Conversion Time): fixed to 25 ADCK cycles for 12 bit mode
-> -	 * LSTAdder(Long Sample Time): fixed to 3 ADCK cycles
-> +	 * LSTAdder(Long Sample Time): 3, 5, 7, 9, 13, 17, 21, 25 ADCK cycles
->  	 */
->  	adck_rate = ipg_rate / info->adc_feature.clk_div;
->  	for (i = 0; i < ARRAY_SIZE(vf610_hw_avgs); i++)
->  		info->sample_freq_avail[i] =
-> -			adck_rate / (6 + vf610_hw_avgs[i] * (25 + 3));
-> +			adck_rate / (6 + vf610_hw_avgs[i] *
-> +			 (25 + vf610_lst_adder[adc_feature->lst_adder_index]));
->  }
->  
->  static inline void vf610_adc_cfg_init(struct vf610_adc *info)
-> @@ -347,8 +379,40 @@ static void vf610_adc_sample_set(struct vf610_adc *info)
->  		break;
->  	}
->  
-> -	/* Use the short sample mode */
-> -	cfg_data &= ~(VF610_ADC_ADLSMP_LONG | VF610_ADC_ADSTS_MASK);
-> +	/*
-> +	 * Set ADLSMP and ADSTS based on the Long Sample Time Adder value
-> +	 * determined.
-> +	 */
-> +	switch (adc_feature->lst_adder_index) {
-> +	case VF610_ADCK_CYCLES_3:
-> +		break;
-> +	case VF610_ADCK_CYCLES_5:
-> +		cfg_data |= VF610_ADC_ADSTS_SHORT;
-> +		break;
-> +	case VF610_ADCK_CYCLES_7:
-> +		cfg_data |= VF610_ADC_ADSTS_NORMAL;
-> +		break;
-> +	case VF610_ADCK_CYCLES_9:
-> +		cfg_data |= VF610_ADC_ADSTS_LONG;
-> +		break;
-> +	case VF610_ADCK_CYCLES_13:
-> +		cfg_data |= VF610_ADC_ADLSMP_LONG;
-> +		break;
-> +	case VF610_ADCK_CYCLES_17:
-> +		cfg_data |= VF610_ADC_ADLSMP_LONG;
-> +		cfg_data |= VF610_ADC_ADSTS_SHORT;
-> +		break;
-> +	case VF610_ADCK_CYCLES_21:
-> +		cfg_data |= VF610_ADC_ADLSMP_LONG;
-> +		cfg_data |= VF610_ADC_ADSTS_NORMAL;
-> +		break;
-> +	case VF610_ADCK_CYCLES_25:
-> +		cfg_data |= VF610_ADC_ADLSMP_LONG;
-> +		cfg_data |= VF610_ADC_ADSTS_NORMAL;
-> +		break;
-> +	default:
-> +		dev_err(info->dev, "error in sample time select\n");
-> +	}
->  
->  	/* update hardware average selection */
->  	cfg_data &= ~VF610_ADC_AVGS_MASK;
-> @@ -712,6 +776,8 @@ static int vf610_adc_probe(struct platform_device *pdev)
->  
->  	of_property_read_u32_array(pdev->dev.of_node, "fsl,adck-max-frequency",
->  			info->max_adck_rate, 3);
-> +	of_property_read_u32(pdev->dev.of_node, "min-sample-time",
-> +			&info->adc_feature.default_sample_time);
->  
->  	platform_set_drvdata(pdev, indio_dev);
->  
+> +	.driver = {
+> +		.name = "opt3001",
+> +		.of_match_table = of_match_ptr(opt3001_of_match),
+> +		.owner = THIS_MODULE,
+> +	},
+> +};
+> +
+> +module_i2c_driver(opt3001_driver);
+> +
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_AUTHOR("Andreas Dannenberg <dannenberg-l0cyMroinI0@public.gmane.org>");
+> +MODULE_DESCRIPTION("Texas Instruments OPT3001 Light Sensor Driver");
 > 
