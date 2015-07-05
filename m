@@ -1,40 +1,101 @@
-From: Paul Bolle <pebolle@tiscali.nl>
-Subject: Re: [PATCH 2/3] mmc: sdhci-of-at91: introduce driver for the Atmel
- SDMMC
-Date: Sat, 04 Jul 2015 10:30:28 +0200
-Message-ID: <1435998628.20057.26.camel@tiscali.nl>
-References: <1435933037-12889-1-git-send-email-ludovic.desroches@atmel.com>
-	 <1435933037-12889-3-git-send-email-ludovic.desroches@atmel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1435933037-12889-3-git-send-email-ludovic.desroches@atmel.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Ludovic Desroches <ludovic.desroches@atmel.com>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: ulf.hansson@linaro.org, nicolas.ferre@atmel.com, alexandre.belloni@free-electrons.com
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 4/7] dt-bindings: add documentation of rk3668 clock controller
+Date: Sun,  5 Jul 2015 11:00:17 +0200
+Message-ID: <1436086820-3757-5-git-send-email-heiko@sntech.de>
+References: <1436086820-3757-1-git-send-email-heiko@sntech.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1436086820-3757-1-git-send-email-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-A nit only: a license mismatch.
+Add the devicetree binding for the cru on the rk3368 which quite similar
+structured as previous clock controllers.
 
-On vr, 2015-07-03 at 16:17 +0200, Ludovic Desroches wrote:
-> --- /dev/null
-> +++ b/drivers/mmc/host/sdhci-of-at91.c
-> 
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or (at
-> + * your option) any later version.
+Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+---
+ .../bindings/clock/rockchip,rk3368-cru.txt         | 61 ++++++++++++++++++++++
+ 1 file changed, 61 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/rockchip,rk3368-cru.txt
 
-This states the license is GPL v2 or later.
+diff --git a/Documentation/devicetree/bindings/clock/rockchip,rk3368-cru.txt b/Documentation/devicetree/bindings/clock/rockchip,rk3368-cru.txt
+new file mode 100644
+index 0000000..7c8bbcf
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/rockchip,rk3368-cru.txt
+@@ -0,0 +1,61 @@
++* Rockchip RK3368 Clock and Reset Unit
++
++The RK3368 clock controller generates and supplies clock to various
++controllers within the SoC and also implements a reset controller for SoC
++peripherals.
++
++Required Properties:
++
++- compatible: should be "rockchip,rk3368-cru"
++- reg: physical base address of the controller and length of memory mapped
++  region.
++- #clock-cells: should be 1.
++- #reset-cells: should be 1.
++
++Optional Properties:
++
++- rockchip,grf: phandle to the syscon managing the "general register files"
++  If missing, pll rates are not changeable, due to the missing pll lock status.
++
++Each clock is assigned an identifier and client nodes can use this identifier
++to specify the clock which they consume. All available clocks are defined as
++preprocessor macros in the dt-bindings/clock/rk3368-cru.h headers and can be
++used in device tree sources. Similar macros exist for the reset sources in
++these files.
++
++External clocks:
++
++There are several clocks that are generated outside the SoC. It is expected
++that they are defined using standard clock bindings with following
++clock-output-names:
++ - "xin24m" - crystal input - required,
++ - "xin32k" - rtc clock - optional,
++ - "ext_i2s" - external I2S clock - optional,
++ - "ext_gmac" - external GMAC clock - optional
++ - "ext_hsadc" - external HSADC clock - optional,
++ - "ext_isp" - external ISP clock - optional,
++ - "ext_jtag" - external JTAG clock - optional
++ - "ext_vip" - external VIP clock - optional,
++ - "usbotg_out" - output clock of the pll in the otg phy
++
++Example: Clock controller node:
++
++	cru: clock-controller@ff760000 {
++		compatible = "rockchip,rk3368-cru";
++		reg = <0x0 0xff760000 0x0 0x1000>;
++		rockchip,grf = <&grf>;
++		#clock-cells = <1>;
++		#reset-cells = <1>;
++	};
++
++Example: UART controller node that consumes the clock generated by the clock
++  controller:
++
++	uart0: serial@10124000 {
++		compatible = "snps,dw-apb-uart";
++		reg = <0x10124000 0x400>;
++		interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
++		reg-shift = <2>;
++		reg-io-width = <1>;
++		clocks = <&cru SCLK_UART0>;
++	};
+-- 
+2.1.4
 
-> +MODULE_LICENSE("GPL v2");
-
-And, according to include/linux/module.h, this states the license is
-(only) GPL v2. So I think that either the comment at the top of this
-file or the ident used in MODULE_LICENSE() needs to change.
-
-Thanks,
-
-
-Paul Bolle
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
