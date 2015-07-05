@@ -1,94 +1,173 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 2/3] mmc: sdhci-of-at91: introduce driver for the Atmel SDMMC
-Date: Sat, 04 Jul 2015 22:06:49 +0200
-Message-ID: <8304633.2ajieYmcMU@wuerfel>
-References: <1435933037-12889-1-git-send-email-ludovic.desroches@atmel.com> <1435933037-12889-3-git-send-email-ludovic.desroches@atmel.com>
+From: Paul Osmialowski <pawelo-rhuoMcPwk82rDJvtcaxF/A@public.gmane.org>
+Subject: Re: [PATCH v2 6/9] arm: twr-k70f120m: extend Freescale eDMA driver
+ with the ability to support Kinetis SoC
+Date: Sun, 5 Jul 2015 11:45:56 +0200 (CEST)
+Message-ID: <alpine.LNX.2.00.1507051141370.15162@localhost.localdomain>
+References: <1435667250-28299-1-git-send-email-pawelo@king.net.pl> <1435667250-28299-7-git-send-email-pawelo@king.net.pl> <20150705064546.GY3246@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1435933037-12889-3-git-send-email-ludovic.desroches@atmel.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Ludovic Desroches <ludovic.desroches@atmel.com>
-Cc: linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, ulf.hansson@linaro.org, nicolas.ferre@atmel.com, alexandre.belloni@free-electrons.com
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150705064546.GY3246@localhost>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Paul Osmialowski <pawelo-rhuoMcPwk82rDJvtcaxF/A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Uwe
 List-Id: devicetree@vger.kernel.org
 
-On Friday 03 July 2015 16:17:16 Ludovic Desroches wrote:
-> Introduce driver for he Atmel SDMMC available on sama5d2. It is a sdhci
-> compliant controller.
-> 
-> Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
-> ---
->  .../devicetree/bindings/mmc/sdhci-atmel.txt        |  21 +++
->  drivers/mmc/host/Kconfig                           |   8 +
->  drivers/mmc/host/Makefile                          |   1 +
->  drivers/mmc/host/sdhci-of-at91.c                   | 188 +++++++++++++++++++++
->  4 files changed, 218 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-atmel.txt
->  create mode 100644 drivers/mmc/host/sdhci-of-at91.c
-> 
-> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-atmel.txt b/Documentation/devicetree/bindings/mmc/sdhci-atmel.txt
-> new file mode 100644
-> index 0000000..1b662d7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/sdhci-atmel.txt
-> @@ -0,0 +1,21 @@
-> +* Atmel SDHCI controller
-> +
-> +This file documents the differences between the core properties in
-> +Documentation/devicetree/bindings/mmc/mmc.txt and the properties used by the
-> +sdhci-of-at91 driver.
-> +
-> +Required properties:
-> +- compatible:		Must be "atmel,sama5d2-sdhci".
-> +- clocks:		Phandlers to the clocks.
-> +- clock-names:		Must be "hclock", "multclk", "baseclk";
-> +
+Hi Vinod,
 
-Are you sure that these are all new clocks that are unrelated to the "core",
-"mmc", and "iface" clocks that are used in other drivers?
+You're right, this should be separate patchset. Having patchset too big
+leads to huge list of maintainers and lack of focusing on details 
+(on-error return values are total mess now!).
 
-> +
-> +	priv->mainck = devm_clk_get(&pdev->dev, "baseclk");
-> +	if (IS_ERR(priv->mainck)) {
-> +		dev_err(&pdev->dev, "failed to get baseclk\n");
-> +		return PTR_ERR(priv->mainck);
-> +	}
-> +
-> +	priv->hclock = devm_clk_get(&pdev->dev, "hclock");
-> +	if (IS_ERR(priv->hclock)) {
-> +		dev_err(&pdev->dev, "failed to get hclock\n");
-> +		return PTR_ERR(priv->hclock);
-> +	}
-> +
-> +	priv->gck = devm_clk_get(&pdev->dev, "multclk");
-> +	if (IS_ERR(priv->gck)) {
-> +		dev_err(&pdev->dev, "failed to get multclk\n");
-> +		return PTR_ERR(priv->gck);
-> +	}
-> +
-> +	host = sdhci_pltfm_init(pdev, soc_data, 0);
-> +	if (IS_ERR(host))
-> +		return PTR_ERR(host);
-> +
-> +	/*
-> +	 * The mult clock is provided by as a generated clock by the PMC
-> +	 * controller. In order to set the rate of gck, we have to get the
-> +	 * base clock rate and the clock mult from capabilities.
-> +	 */
-> +	clk_prepare_enable(priv->hclock);
-> +	caps0 = readl(host->ioaddr + SDHCI_CAPABILITIES);
-> +	caps1 = readl(host->ioaddr + SDHCI_CAPABILITIES_1);
-> +	clk_base = (caps0 & SDHCI_CLOCK_V3_BASE_MASK) >> SDHCI_CLOCK_BASE_SHIFT;
-> +	clk_mul = (caps1 & SDHCI_CLOCK_MUL_MASK) >> SDHCI_CLOCK_MUL_SHIFT;
-> +	gck_rate = clk_base * 1000000 * (clk_mul + 1);
-> +	ret = clk_set_rate(priv->gck, gck_rate);
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "failed to set gck");
-> +		goto hclock_disable_unprepare;
-> +		return -EINVAL;
-> +	}
+I plan to split it into three: 1) initial support (so the proof that 
+platform is living could be read only on JTAG), 2) DMA support and 3) UART 
+support.
 
-Could this be shared with other drivers?
+Also in my view extending this DMA driver requires acceptance of initial
+platform support first - there's no point in extending this driver without
+having support for a platform for which we are extending it.
 
-	Arnd
+Thanks,
+Paul
+
+On Sun, 5 Jul 2015, Vinod Koul wrote:
+
+> On Tue, Jun 30, 2015 at 02:27:27PM +0200, Paul Osmialowski wrote:
+> The patch title is not per subsystem semantics, pls fix that
+>
+>> Surprisingly small amount of work was required in order to extend already
+>> existing eDMA driver with the support for Kinetis SoC architecture.
+> And this doesn't tell me the stuff you added/removed/fixed in current driver
+> to extend to Kinetis. Our changelog should tell what changed and why
+>
+> Btw is this patch dependent upon the rest of the series?
+>
+>>
+>>  static int
+>> -fsl_edma_irq_init(struct platform_device *pdev, struct fsl_edma_engine *fsl_edma)
+>> +fsl_edma_irq_init(struct platform_device *pdev,
+>> +		  struct fsl_edma_engine *fsl_edma)
+> please keep style changes in a separate patch
+>
+>>  {
+>> +	struct device_node *np = pdev->dev.of_node;
+>> +	int irq, errirq;
+>>  	int ret;
+>>
+>> -	fsl_edma->txirq = platform_get_irq_byname(pdev, "edma-tx");
+>> -	if (fsl_edma->txirq < 0) {
+>> -		dev_err(&pdev->dev, "Can't get edma-tx irq.\n");
+>> -		return fsl_edma->txirq;
+>> -	}
+>> -
+>> -	fsl_edma->errirq = platform_get_irq_byname(pdev, "edma-err");
+>> -	if (fsl_edma->errirq < 0) {
+>> +	errirq = platform_get_irq_byname(pdev, "edma-err");
+>> +	if (errirq < 0) {
+>>  		dev_err(&pdev->dev, "Can't get edma-err irq.\n");
+>> -		return fsl_edma->errirq;
+>> +		return irq;
+> shouldn't this be errirq
+>
+>>  	}
+>>
+>> -	if (fsl_edma->txirq == fsl_edma->errirq) {
+>> -		ret = devm_request_irq(&pdev->dev, fsl_edma->txirq,
+>> -				fsl_edma_irq_handler, 0, "eDMA", fsl_edma);
+>> -		if (ret) {
+>> -			dev_err(&pdev->dev, "Can't register eDMA IRQ.\n");
+>> -			 return  ret;
+>> +	if (fsl_edma->kinetis) {
+>> +		int i;
+>> +		int irqs = of_irq_count(np);
+>> +
+>> +		if (irqs <= 1) {
+>> +			dev_err(&pdev->dev, "Wrong eDMA irq count %d\n", irqs);
+>> +			return -EINVAL;
+> why not return irqs?
+>
+>>  		}
+>> -	} else {
+>> -		ret = devm_request_irq(&pdev->dev, fsl_edma->txirq,
+>> +
+>> +		for (i = 0; i < (irqs - 1); i++) {
+>> +			char irq_name[32];
+>> +
+>> +			sprintf(irq_name, "edma-tx-%d,%d", i, 16 + i);
+>> +			irq = platform_get_irq_byname(pdev, irq_name);
+>> +			if (irq < 0) {
+>> +				dev_err(&pdev->dev, "Can't get %s irq.\n",
+>> +							irq_name);
+>> +				return irq;
+>> +			}
+>> +
+>> +			ret = devm_request_irq(&pdev->dev, irq,
+>>  				fsl_edma_tx_handler, 0, "eDMA tx", fsl_edma);
+>> -		if (ret) {
+>> -			dev_err(&pdev->dev, "Can't register eDMA tx IRQ.\n");
+>> -			return  ret;
+>> +			if (ret) {
+>> +				dev_err(&pdev->dev, "Can't register %s IRQ.\n",
+>> +							irq_name);
+>> +				return  ret;
+>> +			}
+>>  		}
+>>
+>> -		ret = devm_request_irq(&pdev->dev, fsl_edma->errirq,
+>> -				fsl_edma_err_handler, 0, "eDMA err", fsl_edma);
+>> +		ret = devm_request_irq(&pdev->dev, errirq,
+>> +			fsl_edma_err_handler, 0, "eDMA err", fsl_edma);
+>>  		if (ret) {
+>>  			dev_err(&pdev->dev, "Can't register eDMA err IRQ.\n");
+>> -			return  ret;
+>> +		return  ret;
+>> +		}
+>> +	} else {
+>> +		irq = platform_get_irq_byname(pdev, "edma-tx");
+>> +		if (irq < 0) {
+>> +			dev_err(&pdev->dev, "Can't get edma-tx irq.\n");
+>> +			return irq;
+>> +		}
+>> +
+>> +		if (irq == errirq) {
+>> +			ret = devm_request_irq(&pdev->dev, irq,
+>> +				fsl_edma_irq_handler, 0, "eDMA", fsl_edma);
+>> +			if (ret) {
+>> +				dev_err(&pdev->dev,
+>> +						"Can't register eDMA IRQ.\n");
+>> +				return  ret;
+>> +			}
+>> +		} else {
+>> +			ret = devm_request_irq(&pdev->dev, irq,
+>> +				fsl_edma_tx_handler, 0, "eDMA tx", fsl_edma);
+>> +			if (ret) {
+>> +				dev_err(&pdev->dev,
+>> +					    "Can't register eDMA tx IRQ.\n");
+>> +				return  ret;
+>> +			}
+>> +
+>> +			ret = devm_request_irq(&pdev->dev, errirq,
+>> +				fsl_edma_err_handler, 0, "eDMA err", fsl_edma);
+>> +			if (ret) {
+>> +				dev_err(&pdev->dev,
+>> +					    "Can't register eDMA err IRQ.\n");
+>> +				return  ret;
+>> +			}
+>>  		}
+>>  	}
+> Okay here we have a bunch of changes without explanation on why these are
+> required and what are they supposed to do. So it is kind of very difficult to
+> review!
+>
+> So please split these up in sequence of patches where each patch does only
+> ONE thing with right changelog messages
+>
+> Thanks
+>
+> -- 
+> ~Vinod
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
