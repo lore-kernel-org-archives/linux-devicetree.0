@@ -1,166 +1,46 @@
-From: "Jingoo Han" <jingoohan1@gmail.com>
-Subject: Re: [PATCH] backlight: lp855x: use private data for regulator control
-Date: Sun, 5 Jul 2015 21:49:01 +0900
-Message-ID: <000701d0b720$fb7a09e0$f26e1da0$@com>
-References: <1435644981-5568-1-git-send-email-milo.kim@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain;
-	charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1435644981-5568-1-git-send-email-milo.kim@ti.com>
-Content-Language: ko
-Sender: linux-kernel-owner@vger.kernel.org
-To: 'Milo Kim' <milo.kim@ti.com>, "'Jingoo Han <jingoohan1@gmail.com>;Lee Jones'" <lee.jones@linaro.org>
-Cc: 'Sean Paul' <seanpaul@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Subject: Re: [PATCH 1/2] spi: bcm2835: add spi-bcm2835aux driver for the auxiliar spi1 and spi2
+Date: Sun, 5 Jul 2015 23:11:52 +1000
+Message-ID: <51801EDD-782C-4553-9462-D4873B2D7085@martin.sperl.org>
+References: <1434980408-4086-1-git-send-email-kernel@martin.sperl.org> <20150622165529.1b758b07@north> <E72B3D8C-EA1B-4B4C-8EAF-C14A5631882E@martin.sperl.org> <97C7561C-6D67-4F51-94BB-3B8D401D77A0@martin.sperl.org> <20150630094232.GM11162@sirena.org.uk> <6A2CCE70-5DAF-4E86-A0A4-F5E93FD1B540@martin.sperl.org> <55945448.7010502@tronnes.org> <1400E1A3-43E1-4D0E-A54D-E5D668A4C516@martin.sperl.org> <55990904.9040002@tronnes.org>
+Mime-Version: 1.0 (1.0)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55990904.9040002-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?utf-8?Q?Noralf_Tr=C3=B8nnes?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?utf-8?Q?Jakub_Kici=C5=84ski?= <moorray3-5tc4TXWwyLM@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-rpi-kernel <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, June 30, 2015 3:16 PM, Milo Kim wrote:
-> 
-> LP855x backlight device can be enabled by external VDD input.
-> The 'supply' data is used for this purpose.
-> It's kind of private data which runs internally, so there is no reason to
-> expose to the platform data.
-> 
-> And LP855x DT property, 'power-supply' is unnecessary.
-> If a regulator is registered correctly, then lp855x driver can get
-> regulator resource by using devm_regulator_get().
-> So devm_regulator_get() is moved from _parse_dt() to _probe().
-> Ex) The following device tree works without 'power-supply' property.
-> 
-> 	i2c0: i2c@10002000 {
-> 		(snip)
-> 
-> 		backlight@2c {
-> 			compatible = "ti,lp8556";
-> 			reg = <0x2c>;
-> 
-> 			bl-name = "lcd-bl";
-> 			dev-ctrl = /bits/ 8 <0x85>;
-> 			init-brt = /bits/ 8 <0x10>;
-> 		};
-> 	};
-> 
-> 	/* 'power' regulator for LP8556 VDD */
-> 	bl_vdd: fixed-regulator@1 {
-> 		compatible = "regulator-fixed";
-> 		regulator-name = "power";
-> 		regulator-min-microvolt = <3300000>;
-> 		regulator-max-microvolt = <3300000>;
-> 
-> 		(snip)
-> 	};
-> 
-> Cc: Sean Paul <seanpaul@chromium.org>
-> Cc: Jingoo Han <jingoohan1@gmail.com>
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Milo Kim <milo.kim@ti.com>
 
-Acked-by: Jingoo Han <jingoohan1@gmail.com>
+> On 05.07.2015, at 20:37, Noralf Tr=C3=B8nnes <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org> wro=
+te:
+>=20
+> I have looked closer at the 8250 serial driver, and in fact it has a
+> framework for writing 8250 like drivers. This makes it easy to extend
+> it to include support for the mini uart.
+> drivers/tty/serial/8250/8250_dw.c is an example of a driver that
+> overrides the interrupt handler. So a 8250_bcm2835.c can easily be
+> made with interrupt sharing as you suggest (and aux enabling). But
+> this means that the irq status register has to be included in the
+> syscon regmap as well.
 
-Best regards,
-Jingoo Han
+With the Module parameter share_irqs=3D1 the stock 8250 driver will
+request a shared irq, but you can also control it via:
+CONFIG_SERIAL_8250_SHARE_IRQ
 
-> ---
->  .../devicetree/bindings/video/backlight/lp855x.txt   |  2 --
->  drivers/video/backlight/lp855x_bl.c                  | 20 +++++++++-----------
->  include/linux/platform_data/lp855x.h                 |  2 --
->  3 files changed, 9 insertions(+), 15 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/video/backlight/lp855x.txt
-> b/Documentation/devicetree/bindings/video/backlight/lp855x.txt
-> index 0a3ecbc..96e83a5 100644
-> --- a/Documentation/devicetree/bindings/video/backlight/lp855x.txt
-> +++ b/Documentation/devicetree/bindings/video/backlight/lp855x.txt
-> @@ -12,7 +12,6 @@ Optional properties:
->    - pwm-period: PWM period value. Set only PWM input mode used (u32)
->    - rom-addr: Register address of ROM area to be updated (u8)
->    - rom-val: Register value to be updated (u8)
-> -  - power-supply: Regulator which controls the 3V rail
-> 
->  Example:
-> 
-> @@ -57,7 +56,6 @@ Example:
->  	backlight@2c {
->  		compatible = "ti,lp8557";
->  		reg = <0x2c>;
-> -		power-supply = <&backlight_vdd>;
-> 
->  		dev-ctrl = /bits/ 8 <0x41>;
->  		init-brt = /bits/ 8 <0x0a>;
-> diff --git a/drivers/video/backlight/lp855x_bl.c b/drivers/video/backlight/lp855x_bl.c
-> index a26d3bb..277d5ca 100644
-> --- a/drivers/video/backlight/lp855x_bl.c
-> +++ b/drivers/video/backlight/lp855x_bl.c
-> @@ -73,6 +73,7 @@ struct lp855x {
->  	struct device *dev;
->  	struct lp855x_platform_data *pdata;
->  	struct pwm_device *pwm;
-> +	struct regulator *supply;	/* regulator for VDD input */
->  };
-> 
->  static int lp855x_write_byte(struct lp855x *lp, u8 reg, u8 data)
-> @@ -384,13 +385,6 @@ static int lp855x_parse_dt(struct lp855x *lp)
->  		pdata->rom_data = &rom[0];
->  	}
-> 
-> -	pdata->supply = devm_regulator_get(dev, "power");
-> -	if (IS_ERR(pdata->supply)) {
-> -		if (PTR_ERR(pdata->supply) == -EPROBE_DEFER)
-> -			return -EPROBE_DEFER;
-> -		pdata->supply = NULL;
-> -	}
-> -
->  	lp->pdata = pdata;
-> 
->  	return 0;
-> @@ -431,8 +425,12 @@ static int lp855x_probe(struct i2c_client *cl, const struct i2c_device_id *id)
->  	else
->  		lp->mode = REGISTER_BASED;
-> 
-> -	if (lp->pdata->supply) {
-> -		ret = regulator_enable(lp->pdata->supply);
-> +	lp->supply = devm_regulator_get(lp->dev, "power");
-> +	if (IS_ERR(lp->supply))
-> +		lp->supply = NULL;
-> +
-> +	if (lp->supply) {
-> +		ret = regulator_enable(lp->supply);
->  		if (ret < 0) {
->  			dev_err(&cl->dev, "failed to enable supply: %d\n", ret);
->  			return ret;
-> @@ -470,8 +468,8 @@ static int lp855x_remove(struct i2c_client *cl)
-> 
->  	lp->bl->props.brightness = 0;
->  	backlight_update_status(lp->bl);
-> -	if (lp->pdata->supply)
-> -		regulator_disable(lp->pdata->supply);
-> +	if (lp->supply)
-> +		regulator_disable(lp->supply);
->  	sysfs_remove_group(&lp->dev->kobj, &lp855x_attr_group);
-> 
->  	return 0;
-> diff --git a/include/linux/platform_data/lp855x.h b/include/linux/platform_data/lp855x.h
-> index 9c7fd1e..1b2ba24 100644
-> --- a/include/linux/platform_data/lp855x.h
-> +++ b/include/linux/platform_data/lp855x.h
-> @@ -136,7 +136,6 @@ struct lp855x_rom_data {
->  		Only valid when mode is PWM_BASED.
->   * @size_program : total size of lp855x_rom_data
->   * @rom_data : list of new eeprom/eprom registers
-> - * @supply : regulator that supplies 3V input
->   */
->  struct lp855x_platform_data {
->  	const char *name;
-> @@ -145,7 +144,6 @@ struct lp855x_platform_data {
->  	unsigned int period_ns;
->  	int size_program;
->  	struct lp855x_rom_data *rom_data;
-> -	struct regulator *supply;
->  };
-> 
->  #endif
-> --
-> 1.9.1
+As for regmap support - the driver only uses the status register of
+the uart so it does not need access to the shared interrupt flag regist=
+er.
+(If no irq condition is detected then IRQ_NoNE is returned and the
+Shared irq system will call the next irq handler in the list)
+
+So all that is left to do is enabling the uart device in the aux-enable
+registers using regmap and then the uart can get used.
+
+Martin--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
