@@ -1,56 +1,65 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 4/9] arm: twr-k70f120m: timer driver for Kinetis SoC
-Date: Sun, 5 Jul 2015 09:39:26 -0500
-Message-ID: <CAL_Jsq+r9fNWqD9O8Kz7Tn7oCaiJv7fSjEJ5QNcf+YLO146wPw@mail.gmail.com>
-References: <1435667250-28299-1-git-send-email-pawelo@king.net.pl>
- <1435667250-28299-5-git-send-email-pawelo@king.net.pl> <2939807.q7WvOoYzDX@wuerfel>
+From: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] dt-bindings: ARM: Mediatek: Document devicetree
+ bindings for spi bus
+Date: Sun, 5 Jul 2015 18:55:18 +0200
+Message-ID: <CAOiHx=nLx14VTrm_buqbZX15Ry+YQnNfEmWuimUvk9_5zrgjng@mail.gmail.com>
+References: <1435583070-9600-1-git-send-email-leilk.liu@mediatek.com> <1435583070-9600-3-git-send-email-leilk.liu@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2939807.q7WvOoYzDX@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Paul Osmialowski <pawelo-rhuoMcPwk82rDJvtcaxF/A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1435583070-9600-3-git-send-email-leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 30, 2015 at 3:43 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Tuesday 30 June 2015 14:27:25 Paul Osmialowski wrote:
+Hi,
+
+On Mon, Jun 29, 2015 at 3:04 PM, Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> Signed-off-by: Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/spi/spi-mt65xx.txt         | 32 ++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/spi/spi-mt65xx.txt
 >
+> diff --git a/Documentation/devicetree/bindings/spi/spi-mt65xx.txt b/Documentation/devicetree/bindings/spi/spi-mt65xx.txt
+> new file mode 100644
+> index 0000000..04c28fd
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/spi/spi-mt65xx.txt
+> @@ -0,0 +1,32 @@
+> +MTK SPI device
 
->>  / {
->> +     aliases {
->> +             pit0 = &pit0;
->> +             pit1 = &pit1;
->> +             pit2 = &pit2;
->> +             pit3 = &pit3;
->> +     };
->> +
->>       soc {
->> +             pit@40037000 {
->> +                     compatible = "fsl,kinetis-pit-timer";
->> +                     reg = <0x40037000 0x100>;
->> +                     clocks = <&mcg_pclk_gate 5 23>;
->> +                     #address-cells = <1>;
->> +                     #size-cells = <1>;
->> +                     ranges;
->> +
->> +                     pit0: timer@40037100 {
->> +                             reg = <0x40037100 0x10>;
->> +                             interrupts = <68>;
->> +                             status = "disabled";
->> +                     };
->
-> I don't think it's necessary to have both an alias
-> and a label here. What do you use the alias for?
+"SPI device" lets me think "SPI slave device", not "SPI master
+controller", so maybe call it "MTK SPI Controller"?
 
-Yes, don't use aliases. If you really need a specific timer to be used
-then there must be some feature it has or doesn't have (e.g. always
-on, output compare pin, specific clock, etc.) Put those those
-properties in DT if that is the case. See OMAP timers for a complex
-example of this.
+> +
+> +Required properties:
+> +- compatible: should be one of the following.
+> +    - mediatek,mt8173-spi: for mt8173 platforms
+> +    - mediatek,mt8135-spi: for mt8135 platforms
+> +    - mediatek,mt6589-spi: for mt6589 platforms
+> +
+> +- reg: Address and length of the register set for the device
+> +
+> +- interrupts: Should contain spi interrupt
+> +
+> +- clock-names: tuple listing input clock names.
+> +       Required elements: "main"
+> +
+> +- clocks: phandles to input clocks.
+> +
+> +- pad-select: should specify spi pad used, only required for MT8173.
+> +       This value should be 0~3.
 
-Rob
+AFAIK device-specific non-generic properties should be
+vendor-prefixed, i.e. it should be "mediatek,pad-select", not just
+"pad-select".
+
+
+Regards
+Jonas
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
