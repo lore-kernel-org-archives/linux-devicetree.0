@@ -1,59 +1,160 @@
-From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Subject: Re: [PATCH 1/2] spi: bcm2835: add spi-bcm2835aux driver for the
- auxiliar spi1 and spi2
-Date: Sun, 5 Jul 2015 11:14:59 +1000
-Message-ID: <1400E1A3-43E1-4D0E-A54D-E5D668A4C516@martin.sperl.org>
-References: <1434980408-4086-1-git-send-email-kernel@martin.sperl.org>
- <20150622165529.1b758b07@north>
- <E72B3D8C-EA1B-4B4C-8EAF-C14A5631882E@martin.sperl.org>
- <97C7561C-6D67-4F51-94BB-3B8D401D77A0@martin.sperl.org>
- <20150630094232.GM11162@sirena.org.uk>
- <6A2CCE70-5DAF-4E86-A0A4-F5E93FD1B540@martin.sperl.org>
- <55945448.7010502@tronnes.org>
-Mime-Version: 1.0 (1.0)
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-rpi-kernel-bounces+glkr-linux-rpi-kernel=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <55945448.7010502-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rpi-kernel>,
- <mailto:linux-rpi-kernel-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rpi-kernel/>
-List-Post: <mailto:linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rpi-kernel-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rpi-kernel>,
- <mailto:linux-rpi-kernel-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "linux-rpi-kernel" <linux-rpi-kernel-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rpi-kernel-bounces+glkr-linux-rpi-kernel=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: =?utf-8?Q?Noralf_Tr=C3=B8nnes?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-rpi-kernel <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, =?utf-8?Q?Jakub_Kici=C5=84ski?= <moorray3-5tc4TXWwyLM@public.gmane.org>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH v2 6/9] arm: twr-k70f120m: extend Freescale eDMA driver
+ with the ability to support Kinetis SoC
+Date: Sun, 5 Jul 2015 12:15:46 +0530
+Message-ID: <20150705064546.GY3246@localhost>
+References: <1435667250-28299-1-git-send-email-pawelo@king.net.pl>
+ <1435667250-28299-7-git-send-email-pawelo@king.net.pl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1435667250-28299-7-git-send-email-pawelo@king.net.pl>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Paul Osmialowski <pawelo@king.net.pl>
+Cc: Mark Rutland <mark.rutland@arm.com>, Nicolas Pitre <nicolas.pitre@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <r.herring@freescale.com>, Alexander Potashev <aspotashev@emcraft.com>, Jiri Slaby <jslaby@suse.cz>, linux-clk@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Geert Uytterhoeven <geert@linux-m68k.org>, linux-serial@vger.kernel.org, Uwe Kleine-Koenig <u.kleine-koenig@pengutronix.de>, Anson Huang <b20788@freescale.com>, Michael Turquette <mturquette@baylibre.com>, devicetree@vger.kernel.org, Frank Li <Frank.Li@freescale.com>, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jingchang Lu <jingchang.lu@freescale.com>, Yuri Tikhonov <yur@emcraft.com>, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.inf
 List-Id: devicetree@vger.kernel.org
 
-Cj4gT24gMDIuMDcuMjAxNSwgYXQgMDY6NTcsIE5vcmFsZiBUcsO4bm5lcyA8bm9yYWxmQHRyb25u
-ZXMub3JnPiB3cm90ZToKPiAKPiAKPiBEZW4gMDEuMDcuMjAxNSAyMTozOSwgc2tyZXYgTWFydGlu
-IFNwZXJsOgo+Pj4gT24gMzAuMDYuMjAxNSwgYXQgMTk6NDIsIE1hcmsgQnJvd24gPGJyb29uaWVA
-a2VybmVsLm9yZz4gd3JvdGU6Cj4+PiAKPj4+IFRoaXMgbG9va3MgcmVsZXZhbnQ6Cj4+PiAKPj4+
-Pj4+IE9uIDIyLjA2LjIwMTUsIGF0IDE2OjU1LCBKYWt1YiBLaWNpxYRza2kgPG1vb3JyYXkzQHdw
-LnBsPiB3cm90ZToKPj4+Pj4+IEFzIG1lbnRpb25lZCBieSBOb3JhbGYgVUFSVDEgaXMgcXVpdGUg
-Y29tbW9ubHkgdXNlZCBvbiBDb21wdXRlIE1vZHVsZXMuCj4+Pj4+PiBQcm9wZXIgZHJpdmVyIC0g
-cGVyaGFwcyBtb2RlbGxlZCBhcyBhIGJ1cyAtIHNlZW1zIGxpa2UgYSBwcmVyZXF1aXNpdGUKPj4+
-Pj4+IGZvciB0aGlzIHdvcmsuICBZb3UgYXJlIGFsc28gbm90IHVzaW5nIElSUSBtdXggaW4gRFQg
-YmluZGluZyBleGFtcGxlCj4+Pj4+PiB3aGljaCBpcyB2ZXJ5IG1pc2xlYWRpbmcuCj4gCj4gWy4u
-Ll0KPiAKPj4gRmluYWxseSBhc2tpbmcgZm9yIGEgcmVjb21tZW5kYXRpb24gd2l0aCByZWdhcmRz
-IHRvIHVzaW5nIGEgYnVzCj4+IHRvIGFyYml0cmF0ZSBhY2Nlc3MgdG8gdGhlIGVuYWJsZSByZWdp
-c3RlciB0aGVyZSB3YXMgbm8gZmVlZGJhY2sKPj4gaG93IHRoaXMgY291bGQgYmUgZ2V0IGltcGxl
-bWVudGVkLi4uCj4gCj4gTWF5YmUgeW91IGNhbiB1c2UgZHJpdmVycy9tZmQvc3lzY29uLmMgdG8g
-ZW5hYmxlIHNoYXJlZCBhY2Nlc3MgdG8gdGhlCj4gYXV4IGVuYWJsZSByZWdpc3Rlci4gVGhlbiB0
-aGUgc3BpIGRyaXZlciBjb3VsZCBnZXQgdGhlIHJlZ21hcCB3aXRoOgo+IGF1eF9yZWdtYXAgPSBz
-eXNjb25fcmVnbWFwX2xvb2t1cF9ieV9waGFuZGxlKG5wLCAic3lzY29uIik7CgpTZWVtcyBhcyBp
-ZiB5b3UgZm91bmQgYW4gYW5zd2VyIHRvIG15IG9yaWdpbmFsIHF1ZXN0aW9uIG9mIGlmCnRoZXJl
-IGlzIGEgZnJhbWV3b3JrIHRvIGhhbmRsZSB0aGlzLgoKPiBBYm91dCBzaGFyaW5nIHRoZSBhdXgg
-aW50ZXJydXB0LCBjb3VsZCB0aGlzIGJlIGltcGxlbWVudGVkIGluIGlycS1iY20yODM1Cj4gYXMg
-YSBCYW5rIDM/Ck9idmlvdXNseSBpdCBjb3VsZCwgYnV0IHRoZSBxdWVzdGlvbiBpcyBpZiBpdCBp
-cyBub3QgbW9yZSBvdmVyaGVhZCB0aGFuIHVzaW5nCmEgc2hhcmVkIGludGVycnVwdCAocmVxdWVz
-dGluZyBhbiBpbnRlcnJ1cHQgd2l0aCB0aGUgc2hhcmVkIGZsYWcgc2V0KSBpbiB0aGUKZmlyc3Qg
-cGxhY2UgKGxpa2UgdGhpcyBkcml2ZXIgY3VycmVudGx5IGRvZXMgb3IgaTJjIGFuZCBVU0IgZG8p
-LgoKSSBhbSB3b3JraW5nIG9uIGEgbmV3IHZlcnNpb24gdG8gbWFrZSB1c2Ugb2Ygc3lzY29uLgoK
-VGhhbmtzLCBNYXJ0aW4KCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KbGludXgtcnBpLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtcnBpLWtlcm5lbEBs
-aXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlz
-dGluZm8vbGludXgtcnBpLWtlcm5lbAo=
+On Tue, Jun 30, 2015 at 02:27:27PM +0200, Paul Osmialowski wrote:
+The patch title is not per subsystem semantics, pls fix that
+
+> Surprisingly small amount of work was required in order to extend already
+> existing eDMA driver with the support for Kinetis SoC architecture.
+And this doesn't tell me the stuff you added/removed/fixed in current driver
+to extend to Kinetis. Our changelog should tell what changed and why
+
+Btw is this patch dependent upon the rest of the series?
+
+>  
+>  static int
+> -fsl_edma_irq_init(struct platform_device *pdev, struct fsl_edma_engine *fsl_edma)
+> +fsl_edma_irq_init(struct platform_device *pdev,
+> +		  struct fsl_edma_engine *fsl_edma)
+please keep style changes in a separate patch
+
+>  {
+> +	struct device_node *np = pdev->dev.of_node;
+> +	int irq, errirq;
+>  	int ret;
+>  
+> -	fsl_edma->txirq = platform_get_irq_byname(pdev, "edma-tx");
+> -	if (fsl_edma->txirq < 0) {
+> -		dev_err(&pdev->dev, "Can't get edma-tx irq.\n");
+> -		return fsl_edma->txirq;
+> -	}
+> -
+> -	fsl_edma->errirq = platform_get_irq_byname(pdev, "edma-err");
+> -	if (fsl_edma->errirq < 0) {
+> +	errirq = platform_get_irq_byname(pdev, "edma-err");
+> +	if (errirq < 0) {
+>  		dev_err(&pdev->dev, "Can't get edma-err irq.\n");
+> -		return fsl_edma->errirq;
+> +		return irq;
+shouldn't this be errirq
+
+>  	}
+>  
+> -	if (fsl_edma->txirq == fsl_edma->errirq) {
+> -		ret = devm_request_irq(&pdev->dev, fsl_edma->txirq,
+> -				fsl_edma_irq_handler, 0, "eDMA", fsl_edma);
+> -		if (ret) {
+> -			dev_err(&pdev->dev, "Can't register eDMA IRQ.\n");
+> -			 return  ret;
+> +	if (fsl_edma->kinetis) {
+> +		int i;
+> +		int irqs = of_irq_count(np);
+> +
+> +		if (irqs <= 1) {
+> +			dev_err(&pdev->dev, "Wrong eDMA irq count %d\n", irqs);
+> +			return -EINVAL;
+why not return irqs?
+
+>  		}
+> -	} else {
+> -		ret = devm_request_irq(&pdev->dev, fsl_edma->txirq,
+> +
+> +		for (i = 0; i < (irqs - 1); i++) {
+> +			char irq_name[32];
+> +
+> +			sprintf(irq_name, "edma-tx-%d,%d", i, 16 + i);
+> +			irq = platform_get_irq_byname(pdev, irq_name);
+> +			if (irq < 0) {
+> +				dev_err(&pdev->dev, "Can't get %s irq.\n",
+> +							irq_name);
+> +				return irq;
+> +			}
+> +
+> +			ret = devm_request_irq(&pdev->dev, irq,
+>  				fsl_edma_tx_handler, 0, "eDMA tx", fsl_edma);
+> -		if (ret) {
+> -			dev_err(&pdev->dev, "Can't register eDMA tx IRQ.\n");
+> -			return  ret;
+> +			if (ret) {
+> +				dev_err(&pdev->dev, "Can't register %s IRQ.\n",
+> +							irq_name);
+> +				return  ret;
+> +			}
+>  		}
+>  
+> -		ret = devm_request_irq(&pdev->dev, fsl_edma->errirq,
+> -				fsl_edma_err_handler, 0, "eDMA err", fsl_edma);
+> +		ret = devm_request_irq(&pdev->dev, errirq,
+> +			fsl_edma_err_handler, 0, "eDMA err", fsl_edma);
+>  		if (ret) {
+>  			dev_err(&pdev->dev, "Can't register eDMA err IRQ.\n");
+> -			return  ret;
+> +		return  ret;
+> +		}
+> +	} else {
+> +		irq = platform_get_irq_byname(pdev, "edma-tx");
+> +		if (irq < 0) {
+> +			dev_err(&pdev->dev, "Can't get edma-tx irq.\n");
+> +			return irq;
+> +		}
+> +
+> +		if (irq == errirq) {
+> +			ret = devm_request_irq(&pdev->dev, irq,
+> +				fsl_edma_irq_handler, 0, "eDMA", fsl_edma);
+> +			if (ret) {
+> +				dev_err(&pdev->dev,
+> +						"Can't register eDMA IRQ.\n");
+> +				return  ret;
+> +			}
+> +		} else {
+> +			ret = devm_request_irq(&pdev->dev, irq,
+> +				fsl_edma_tx_handler, 0, "eDMA tx", fsl_edma);
+> +			if (ret) {
+> +				dev_err(&pdev->dev,
+> +					    "Can't register eDMA tx IRQ.\n");
+> +				return  ret;
+> +			}
+> +
+> +			ret = devm_request_irq(&pdev->dev, errirq,
+> +				fsl_edma_err_handler, 0, "eDMA err", fsl_edma);
+> +			if (ret) {
+> +				dev_err(&pdev->dev,
+> +					    "Can't register eDMA err IRQ.\n");
+> +				return  ret;
+> +			}
+>  		}
+>  	}
+Okay here we have a bunch of changes without explanation on why these are
+required and what are they supposed to do. So it is kind of very difficult to
+review!
+
+So please split these up in sequence of patches where each patch does only
+ONE thing with right changelog messages
+
+Thanks
+
+-- 
+~Vinod
