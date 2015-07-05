@@ -1,173 +1,63 @@
-From: Paul Osmialowski <pawelo-rhuoMcPwk82rDJvtcaxF/A@public.gmane.org>
-Subject: Re: [PATCH v2 6/9] arm: twr-k70f120m: extend Freescale eDMA driver
- with the ability to support Kinetis SoC
-Date: Sun, 5 Jul 2015 11:45:56 +0200 (CEST)
-Message-ID: <alpine.LNX.2.00.1507051141370.15162@localhost.localdomain>
-References: <1435667250-28299-1-git-send-email-pawelo@king.net.pl> <1435667250-28299-7-git-send-email-pawelo@king.net.pl> <20150705064546.GY3246@localhost>
+From: =?UTF-8?B?Tm9yYWxmIFRyw7hubmVz?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
+Subject: Re: [PATCH 1/2] spi: bcm2835: add spi-bcm2835aux driver for the auxiliar
+ spi1 and spi2
+Date: Sun, 05 Jul 2015 12:37:56 +0200
+Message-ID: <55990904.9040002@tronnes.org>
+References: <1434980408-4086-1-git-send-email-kernel@martin.sperl.org> <20150622165529.1b758b07@north> <E72B3D8C-EA1B-4B4C-8EAF-C14A5631882E@martin.sperl.org> <97C7561C-6D67-4F51-94BB-3B8D401D77A0@martin.sperl.org> <20150630094232.GM11162@sirena.org.uk> <6A2CCE70-5DAF-4E86-A0A4-F5E93FD1B540@martin.sperl.org> <55945448.7010502@tronnes.org> <1400E1A3-43E1-4D0E-A54D-E5D668A4C516@martin.sperl.org>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150705064546.GY3246@localhost>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Paul Osmialowski <pawelo-rhuoMcPwk82rDJvtcaxF/A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Uwe
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1400E1A3-43E1-4D0E-A54D-E5D668A4C516-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?B?SmFrdWIgS2ljacWEc2tp?= <moorray3-5tc4TXWwyLM@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-rpi-kernel <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vinod,
-
-You're right, this should be separate patchset. Having patchset too big
-leads to huge list of maintainers and lack of focusing on details 
-(on-error return values are total mess now!).
-
-I plan to split it into three: 1) initial support (so the proof that 
-platform is living could be read only on JTAG), 2) DMA support and 3) UART 
-support.
-
-Also in my view extending this DMA driver requires acceptance of initial
-platform support first - there's no point in extending this driver without
-having support for a platform for which we are extending it.
-
-Thanks,
-Paul
-
-On Sun, 5 Jul 2015, Vinod Koul wrote:
-
-> On Tue, Jun 30, 2015 at 02:27:27PM +0200, Paul Osmialowski wrote:
-> The patch title is not per subsystem semantics, pls fix that
->
->> Surprisingly small amount of work was required in order to extend already
->> existing eDMA driver with the support for Kinetis SoC architecture.
-> And this doesn't tell me the stuff you added/removed/fixed in current driver
-> to extend to Kinetis. Our changelog should tell what changed and why
->
-> Btw is this patch dependent upon the rest of the series?
->
+Den 05.07.2015 03:14, skrev Martin Sperl:
+>> On 02.07.2015, at 06:57, Noralf Tr=C3=B8nnes <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org> wr=
+ote:
 >>
->>  static int
->> -fsl_edma_irq_init(struct platform_device *pdev, struct fsl_edma_engine *fsl_edma)
->> +fsl_edma_irq_init(struct platform_device *pdev,
->> +		  struct fsl_edma_engine *fsl_edma)
-> please keep style changes in a separate patch
->
->>  {
->> +	struct device_node *np = pdev->dev.of_node;
->> +	int irq, errirq;
->>  	int ret;
 >>
->> -	fsl_edma->txirq = platform_get_irq_byname(pdev, "edma-tx");
->> -	if (fsl_edma->txirq < 0) {
->> -		dev_err(&pdev->dev, "Can't get edma-tx irq.\n");
->> -		return fsl_edma->txirq;
->> -	}
->> -
->> -	fsl_edma->errirq = platform_get_irq_byname(pdev, "edma-err");
->> -	if (fsl_edma->errirq < 0) {
->> +	errirq = platform_get_irq_byname(pdev, "edma-err");
->> +	if (errirq < 0) {
->>  		dev_err(&pdev->dev, "Can't get edma-err irq.\n");
->> -		return fsl_edma->errirq;
->> +		return irq;
-> shouldn't this be errirq
->
->>  	}
->>
->> -	if (fsl_edma->txirq == fsl_edma->errirq) {
->> -		ret = devm_request_irq(&pdev->dev, fsl_edma->txirq,
->> -				fsl_edma_irq_handler, 0, "eDMA", fsl_edma);
->> -		if (ret) {
->> -			dev_err(&pdev->dev, "Can't register eDMA IRQ.\n");
->> -			 return  ret;
->> +	if (fsl_edma->kinetis) {
->> +		int i;
->> +		int irqs = of_irq_count(np);
->> +
->> +		if (irqs <= 1) {
->> +			dev_err(&pdev->dev, "Wrong eDMA irq count %d\n", irqs);
->> +			return -EINVAL;
-> why not return irqs?
->
->>  		}
->> -	} else {
->> -		ret = devm_request_irq(&pdev->dev, fsl_edma->txirq,
->> +
->> +		for (i = 0; i < (irqs - 1); i++) {
->> +			char irq_name[32];
->> +
->> +			sprintf(irq_name, "edma-tx-%d,%d", i, 16 + i);
->> +			irq = platform_get_irq_byname(pdev, irq_name);
->> +			if (irq < 0) {
->> +				dev_err(&pdev->dev, "Can't get %s irq.\n",
->> +							irq_name);
->> +				return irq;
->> +			}
->> +
->> +			ret = devm_request_irq(&pdev->dev, irq,
->>  				fsl_edma_tx_handler, 0, "eDMA tx", fsl_edma);
->> -		if (ret) {
->> -			dev_err(&pdev->dev, "Can't register eDMA tx IRQ.\n");
->> -			return  ret;
->> +			if (ret) {
->> +				dev_err(&pdev->dev, "Can't register %s IRQ.\n",
->> +							irq_name);
->> +				return  ret;
->> +			}
->>  		}
->>
->> -		ret = devm_request_irq(&pdev->dev, fsl_edma->errirq,
->> -				fsl_edma_err_handler, 0, "eDMA err", fsl_edma);
->> +		ret = devm_request_irq(&pdev->dev, errirq,
->> +			fsl_edma_err_handler, 0, "eDMA err", fsl_edma);
->>  		if (ret) {
->>  			dev_err(&pdev->dev, "Can't register eDMA err IRQ.\n");
->> -			return  ret;
->> +		return  ret;
->> +		}
->> +	} else {
->> +		irq = platform_get_irq_byname(pdev, "edma-tx");
->> +		if (irq < 0) {
->> +			dev_err(&pdev->dev, "Can't get edma-tx irq.\n");
->> +			return irq;
->> +		}
->> +
->> +		if (irq == errirq) {
->> +			ret = devm_request_irq(&pdev->dev, irq,
->> +				fsl_edma_irq_handler, 0, "eDMA", fsl_edma);
->> +			if (ret) {
->> +				dev_err(&pdev->dev,
->> +						"Can't register eDMA IRQ.\n");
->> +				return  ret;
->> +			}
->> +		} else {
->> +			ret = devm_request_irq(&pdev->dev, irq,
->> +				fsl_edma_tx_handler, 0, "eDMA tx", fsl_edma);
->> +			if (ret) {
->> +				dev_err(&pdev->dev,
->> +					    "Can't register eDMA tx IRQ.\n");
->> +				return  ret;
->> +			}
->> +
->> +			ret = devm_request_irq(&pdev->dev, errirq,
->> +				fsl_edma_err_handler, 0, "eDMA err", fsl_edma);
->> +			if (ret) {
->> +				dev_err(&pdev->dev,
->> +					    "Can't register eDMA err IRQ.\n");
->> +				return  ret;
->> +			}
->>  		}
->>  	}
-> Okay here we have a bunch of changes without explanation on why these are
-> required and what are they supposed to do. So it is kind of very difficult to
-> review!
->
-> So please split these up in sequence of patches where each patch does only
-> ONE thing with right changelog messages
->
-> Thanks
->
-> -- 
-> ~Vinod
->
+>> Den 01.07.2015 21:39, skrev Martin Sperl:
+>>>> On 30.06.2015, at 19:42, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>>>>
+>>>> This looks relevant:
+>>>>
+>>>>>>> On 22.06.2015, at 16:55, Jakub Kici=C5=84ski <moorray3-5tc4TXWwyLM@public.gmane.org> w=
+rote:
+>>>>>>> As mentioned by Noralf UART1 is quite commonly used on Compute =
+Modules.
+>>>>>>> Proper driver - perhaps modelled as a bus - seems like a prereq=
+uisite
+>>>>>>> for this work.  You are also not using IRQ mux in DT binding ex=
+ample
+>>>>>>> which is very misleading.
+
+[...]
+
+>> About sharing the aux interrupt, could this be implemented in irq-bc=
+m2835
+>> as a Bank 3?
+> Obviously it could, but the question is if it is not more overhead th=
+an using
+> a shared interrupt (requesting an interrupt with the shared flag set)=
+ in the
+> first place (like this driver currently does or i2c and USB do).
+
+I have looked closer at the 8250 serial driver, and in fact it has a
+framework for writing 8250 like drivers. This makes it easy to extend
+it to include support for the mini uart.
+drivers/tty/serial/8250/8250_dw.c is an example of a driver that
+overrides the interrupt handler. So a 8250_bcm2835.c can easily be
+made with interrupt sharing as you suggest (and aux enabling). But
+this means that the irq status register has to be included in the
+syscon regmap as well.
+
+
+Noralf.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
