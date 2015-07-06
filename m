@@ -1,145 +1,103 @@
-From: Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 3/8] iio: mma8452: add freefall / motion interrupt source
-Date: Mon, 06 Jul 2015 14:47:16 +0200
-Message-ID: <559A78D4.3080207@posteo.de>
-References: <1436186062-5766-1-git-send-email-martink@posteo.de> <1436186062-5766-4-git-send-email-martink@posteo.de>
+From: Daniel Kurtz <djkurtz@chromium.org>
+Subject: Re: [PATCH] arm64: dts: mt8173: Add afe device node
+Date: Mon, 6 Jul 2015 21:00:28 +0800
+Message-ID: <CAGS+omCtfCUQEczX+OCLa7jfOnxE=jFq8os0m2LCi87ELMTK9g@mail.gmail.com>
+References: <1436165530-41963-1-git-send-email-koro.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1436186062-5766-4-git-send-email-martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org, roberta.dobrescu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org, Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1436165530-41963-1-git-send-email-koro.chen@mediatek.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Koro Chen <koro.chen@mediatek.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, alsa-devel@alsa-project.org, Nicolas Boichat <drinkcat@chromium.org>, srv_heupstream <srv_heupstream@mediatek.com>, Sascha Hauer <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 2015-07-06 um 14:34 schrieb Martin Kepplinger:
-> This adds the freefall / motion interrupt source definitions to the driver.
-> It is used in this series' next patch, for chips that don't support the
-> transient interrupt source.
-> 
-> The iio event type is IIO_EV_TYPE_MAG since the threshold for comparison
-> is no signed value. An interrupt occurs on positive and negative values
-> when the magnitude crosses the threshold value.
-> 
-> Signed-off-by: Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
-> Signed-off-by: Christoph Muellner <christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+On Mon, Jul 6, 2015 at 2:52 PM, Koro Chen <koro.chen@mediatek.com> wrote:
+
+> This adds afe (audio front end) device node to the MT8173 dtsi file.
+>
+> This patch is based on Matthias's tree:
+> https://github.com/mbgg/linux-mediatek
+> branch: v4.2-next/arm64
+>
+> Signed-off-by: Koro Chen <koro.chen@mediatek.com>
 > ---
->  drivers/iio/accel/mma8452.c | 45 ++++++++++++++++++++++++++++++++++++---------
->  1 file changed, 36 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/iio/accel/mma8452.c b/drivers/iio/accel/mma8452.c
-> index 71b40f7..1337707 100644
-> --- a/drivers/iio/accel/mma8452.c
-> +++ b/drivers/iio/accel/mma8452.c
-> @@ -38,9 +38,18 @@
->  #define MMA8452_DATA_CFG 0x0e
->  #define MMA8452_HP_FILTER_CUTOFF 0x0f
->  #define MMA8452_HP_FILTER_CUTOFF_SEL_MASK	(BIT(0) | BIT(1))
-> +#define MMA8452_FF_MT_CFG 0x15
-> +#define MMA8452_FF_MT_CFG_OAE			BIT(6)
-> +#define MMA8452_FF_MT_CFG_ELE			BIT(7)
-> +#define MMA8452_FF_MT_SRC 0x16
-> +#define MMA8452_FF_MT_SRC_XHE			BIT(1)
-> +#define MMA8452_FF_MT_SRC_YHE			BIT(3)
-> +#define MMA8452_FF_MT_SRC_ZHE			BIT(5)
-> +#define MMA8452_FF_MT_THS 0x17
-> +#define MMA8452_FF_MT_THS_MASK 0x7f
-> +#define MMA8452_FF_MT_COUNT 0x18
->  #define MMA8452_TRANSIENT_CFG 0x1d
->  #define MMA8452_TRANSIENT_CFG_ELE		BIT(4)
-> -#define MMA8452_TRANSIENT_CFG_CHAN(chan)	BIT(chan + 1)
->  #define MMA8452_TRANSIENT_CFG_HPF_BYP		BIT(0)
->  #define MMA8452_TRANSIENT_SRC 0x1e
->  #define MMA8452_TRANSIENT_SRC_XTRANSE		BIT(1)
-> @@ -74,6 +83,7 @@
->  #define MMA8452_DATA_CFG_HPF_MASK BIT(4)
->  
->  #define MMA8452_INT_DRDY	BIT(0)
-> +#define MMA8452_INT_FF_MT	BIT(2)
->  #define MMA8452_INT_TRANS	BIT(5)
->  
->  #define MMA8452_DEVICE_ID 0x2a
-> @@ -591,7 +601,8 @@ static int mma8452_write_event_config(struct iio_dev *indio_dev,
->  	else
->  		val &= ~BIT(chan->scan_index + chip->ev_cfg_chan_shift);
->  
-> -	val |= MMA8452_TRANSIENT_CFG_ELE;
-> +	val |= chip->ev_cfg_ele;
-> +	val |= MMA8452_FF_MT_CFG_OAE;
->  
->  	return mma8452_change_config(data, chip->ev_cfg, val);
->  }
-> @@ -632,6 +643,7 @@ static irqreturn_t mma8452_interrupt(int irq, void *p)
->  {
->  	struct iio_dev *indio_dev = p;
->  	struct mma8452_data *data = iio_priv(indio_dev);
-> +	const struct mma_chip_info *chip = data->chip_info;
->  	int ret = IRQ_NONE;
->  	int src;
->  
-> @@ -644,7 +656,10 @@ static irqreturn_t mma8452_interrupt(int irq, void *p)
->  		ret = IRQ_HANDLED;
->  	}
->  
-> -	if (src & MMA8452_INT_TRANS) {
-> +	if ((src & MMA8452_INT_TRANS &&
-> +	     chip->ev_src == MMA8452_TRANSIENT_SRC) ||
-> +	    (src & MMA8452_INT_FF_MT &&
-> +	     chip->ev_src == MMA8452_FF_MT_SRC)) {
->  		mma8452_transient_interrupt(indio_dev);
->  		ret = IRQ_HANDLED;
->  	}
-> @@ -705,6 +720,16 @@ static const struct iio_event_spec mma8452_transient_event[] = {
->  	},
->  };
->  
-> +static const struct iio_event_spec mma8452_motion_event[] = {
-> +	{
-> +		.type = IIO_EV_TYPE_MAG,
-> +		.dir = IIO_EV_DIR_RISING,
-> +		.mask_separate = BIT(IIO_EV_INFO_ENABLE),
-> +		.mask_shared_by_type = BIT(IIO_EV_INFO_VALUE) |
-> +					BIT(IIO_EV_INFO_PERIOD)
-> +	},
-> +};
+>  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 32
+> ++++++++++++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> index 0696f8f..f8afab4 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> @@ -14,6 +14,7 @@
+>  #include <dt-bindings/clock/mt8173-clk.h>
+>  #include <dt-bindings/interrupt-controller/irq.h>
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include <dt-bindings/power/mt8173-power.h>
+>  #include <dt-bindings/reset-controller/mt8173-resets.h>
+>  #include "mt8173-pinfunc.h"
+>
+> @@ -393,6 +394,37 @@
+>                         #size-cells = <0>;
+>                         status = "disabled";
+>                 };
 > +
+> +               afe: mt8173-afe-pcm@11220000  {
+>
 
-Quick thing: This series applies with all events _pushed_ being still
-THRESH.
+I believe this should be something generic, like:
 
-For the newly added motion events, I show MAG events to the user, but
-sill, THRESH events are being pushed when they occur.
+  afe: audio-controller@11220000
 
-In case this inconsistency is not allowed, but you want to take the
-series, please either change "IIO_EV_TYPE_MAG" to "IIO_EV_TYPE_THRESH"
-or tell me to reply PATCH 3/8 with this half word changed here.
+Thanks!
+-Dan
 
-thanks!
 
->  /*
->   * Threshold is configured in fixed 8G/127 steps regardless of
->   * currently selected scale for measurement.
-> @@ -988,13 +1013,15 @@ static int mma8452_probe(struct i2c_client *client,
->  
->  	if (client->irq) {
->  		/*
-> -		 * Although we enable the transient interrupt source once and
-> -		 * for all here the transient event detection itself is not
-> -		 * enabled until userspace asks for it by
-> -		 * mma8452_write_event_config()
-> +		 * Although we enable the interrupt sources once and for
-> +		 * all here the event detection itself is not enabled until
-> +		 * userspace asks for it by mma8452_write_event_config()
->  		 */
-> -		int supported_interrupts = MMA8452_INT_DRDY | MMA8452_INT_TRANS;
-> -		int enabled_interrupts = MMA8452_INT_TRANS;
-> +		int supported_interrupts = MMA8452_INT_DRDY |
-> +					   MMA8452_INT_TRANS |
-> +					   MMA8452_INT_FF_MT;
-> +		int enabled_interrupts = MMA8452_INT_TRANS |
-> +					 MMA8452_INT_FF_MT;
->  
->  		/* Assume wired to INT1 pin */
->  		ret = i2c_smbus_write_byte_data(client,
-> 
+> +                       compatible = "mediatek,mt8173-afe-pcm";
+> +                       reg = <0 0x11220000 0 0x1000>;
+> +                       interrupts = <GIC_SPI 134 IRQ_TYPE_EDGE_FALLING>;
+> +                       power-domains = <&scpsys
+> MT8173_POWER_DOMAIN_AUDIO>;
+> +                       clocks = <&infracfg CLK_INFRA_AUDIO>,
+> +                                <&topckgen CLK_TOP_AUDIO_SEL>,
+> +                                <&topckgen CLK_TOP_AUD_INTBUS_SEL>,
+> +                                <&topckgen CLK_TOP_APLL1_DIV0>,
+> +                                <&topckgen CLK_TOP_APLL2_DIV0>,
+> +                                <&topckgen CLK_TOP_I2S0_M_SEL>,
+> +                                <&topckgen CLK_TOP_I2S1_M_SEL>,
+> +                                <&topckgen CLK_TOP_I2S2_M_SEL>,
+> +                                <&topckgen CLK_TOP_I2S3_M_SEL>,
+> +                                <&topckgen CLK_TOP_I2S3_B_SEL>;
+> +                       clock-names = "infra_sys_audio_clk",
+> +                                     "top_pdn_audio",
+> +                                     "top_pdn_aud_intbus",
+> +                                     "bck0",
+> +                                     "bck1",
+> +                                     "i2s0_m",
+> +                                     "i2s1_m",
+> +                                     "i2s2_m",
+> +                                     "i2s3_m",
+> +                                     "i2s3_b";
+> +                       assigned-clocks = <&topckgen CLK_TOP_AUD_1_SEL>,
+> +                                         <&topckgen CLK_TOP_AUD_2_SEL>;
+> +                       assigned-clock-parents = <&topckgen CLK_TOP_APLL1>,
+> +                                                <&topckgen CLK_TOP_APLL2>;
+> +               };
+>         };
+>  };
+>
+> --
+> 1.8.1.1.dirty
+>
+>
