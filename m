@@ -1,48 +1,67 @@
-From: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [REPOST PATCH 2/3] Documentation: dt-bindings: Add snps,need-phy-for-wake for dwc2 USB
-Date: Mon,  6 Jul 2015 11:27:03 -0700
-Message-ID: <1436207224-21849-3-git-send-email-dianders@chromium.org>
-References: <1436207224-21849-1-git-send-email-dianders@chromium.org>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1436207224-21849-1-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Julius Werner <jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Alexandru Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Gregory Herrero <gregory.herrero-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v5 1/3] musb: sunxi: Add support for the
+ Allwinner sunxi musb controller
+Date: Mon, 6 Jul 2015 13:54:49 -0500
+Message-ID: <20150706185449.GL20779@saruman.tx.rr.com>
+References: <1434199330-22263-1-git-send-email-hdegoede@redhat.com>
+ <1434199330-22263-2-git-send-email-hdegoede@redhat.com>
+Reply-To: balbi-l0cyMroinI0@public.gmane.org
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="x38akuY2VS0PywU3"
+Return-path: <linux-sunxi+bncBC5M7T4HYEKRBA465OWAKGQENMEUAWY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1434199330-22263-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Some SoCs with a dwc2 USB controller may need to keep the PHY on to
-support remote wakeup.  Allow specifying this as a device tree
-property.
+--x38akuY2VS0PywU3
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Signed-off-by: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
----
- Documentation/devicetree/bindings/usb/dwc2.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+On Sat, Jun 13, 2015 at 02:42:08PM +0200, Hans de Goede wrote:
+> This is based on initial code to get the Allwinner sunxi musb controller
+> supported by Chen-Yu Tsai and Roman Byshko.
+> 
+> This adds support for the Allwinner sunxi musb controller in both host only
+> and otg mode. Peripheral only mode is not supported, as no boards use that.
+> 
+> This has been tested on a cubietruck (A20 SoC) and an UTOO P66 tablet
+> (A13 SoC) with a variety of devices in host mode and with the g_serial gadget
+> driver in peripheral mode, plugging otg / host cables in/out a lot of times
+> in all possible imaginable plug orders.
+> 
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> ---
+> Changes in v2:
+> -Move polling of id and vbus-det gpio-s to the phy driver
+> -Use extcon to get id (USB_HOST mode) status changes from the phy driver
+> -Stop using syscon, instead use Maxime Ripard's sunxi SRAM controller driver
+> Changes in v3:
+> -Check that USB_MUSB_FOO config is compatible with the dr_mode setting from dt
+> Changes in v4:
+> -Squash in "musb: sunxi: Add pre/post root reset end platform functions" patch
+> -Adjust for sunxi_sram controller driver changes
+> -Stop musb work from turning vbus off again when in host mode
+> Changes in v5:
+> -Squash in "musb: sunxi: Remove special MUSB_SUN4I flag" patch, as it was
+>  mostly revering changes done by this patch
+> -Adjust for extcon api changes landing in 4.2
 
-diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
-index fd132cb..84d258d 100644
---- a/Documentation/devicetree/bindings/usb/dwc2.txt
-+++ b/Documentation/devicetree/bindings/usb/dwc2.txt
-@@ -17,6 +17,9 @@ Refer to clk/clock-bindings.txt for generic clock consumer properties
- Optional properties:
- - phys: phy provider specifier
- - phy-names: shall be "usb2-phy"
-+- snps,need-phy-for-wake: if present indicates that the phy needs to be left
-+  on for remote wakeup during suspend.
-+
- Refer to phy/phy-bindings.txt for generic phy consumer properties
- - dr_mode: shall be one of "host", "peripheral" and "otg"
-   Refer to usb/generic.txt
-@@ -35,4 +38,5 @@ Example:
- 		clock-names = "otg";
- 		phys = <&usbphy>;
- 		phy-names = "usb2-phy";
-+		snps,need-phy-for-wake;
-         };
+drivers/usb/musb/sunxi.c:75:13: warning: symbol 'sunxi_musb' was not declared. Should it be static?
+drivers/usb/musb/sunxi.c:151:6: warning: symbol 'sunxi_musb_pre_root_reset_end' was not declared. Should it be static?
+drivers/usb/musb/sunxi.c:158:6: warning: symbol 'sunxi_musb_post_root_reset_end' was not declared. Should it be static?
+
+please fix.
+
 -- 
-2.4.3.573.g4eafbef
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+balbi
+--x38akuY2VS0PywU3--
