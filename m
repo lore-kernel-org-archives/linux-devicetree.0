@@ -1,212 +1,64 @@
-From: Martin Kepplinger <martink@posteo.de>
-Subject: [PATCH 4/8] iio: mma8452: add support for MMA8652FC and MMA8653FC accelerometers
-Date: Mon,  6 Jul 2015 14:34:18 +0200
-Message-ID: <1436186062-5766-5-git-send-email-martink@posteo.de>
-References: <1436186062-5766-1-git-send-email-martink@posteo.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1436186062-5766-1-git-send-email-martink@posteo.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mfuzzey@parkeon.com, roberta.dobrescu@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, christoph.muellner@theobroma-systems.com, Martin Kepplinger <martink@posteo.de>, Martin Kepplinger <martin.kepplinger@theobroma-systems.com>
+From: YH Huang <yh.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v3 0/2] Add MediaTek display PWM driver
+Date: Mon, 6 Jul 2015 20:43:31 +0800
+Message-ID: <1436186611.32512.3.camel@mtksdaap41>
+References: <1435590211-38854-1-git-send-email-yh.huang@mediatek.com>
+	 <CAGS+omANeUxcRdY-qQzxjtBY5Yhx56mSneuuXh+bGjbahKhDeA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAGS+omANeUxcRdY-qQzxjtBY5Yhx56mSneuuXh+bGjbahKhDeA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, yh.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-MMA8652FC and MMA8653FC don't provide the transient interrupt source, so
-the motion interrupt source is used by providing a new iio_chan_spec
-definition, so that other supported devices are not affected by this.
+Hi Daniel,
 
-Datasheets for the newly supported devices are available at Freescale's
-website:
+I will add PWM dtsi in the next patch and also fix the code with your
+suggestions in other mails.
 
-http://cache.freescale.com/files/sensors/doc/data_sheet/MMA8652FC.pdf
-http://cache.freescale.com/files/sensors/doc/data_sheet/MMA8653FC.pdf
+Regards,
+YH Huang
 
-Signed-off-by: Martin Kepplinger <martin.kepplinger@theobroma-systems.com>
-Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
----
- drivers/iio/accel/Kconfig   |  2 +-
- drivers/iio/accel/mma8452.c | 98 +++++++++++++++++++++++++++++++++++++++++----
- 2 files changed, 92 insertions(+), 8 deletions(-)
+On Tue, 2015-06-30 at 14:35 +0800, Daniel Kurtz wrote:
+> Hi YH,
+> 
+> Please also include a patch that adds PWM bindings to mt8173.dtsi.
+> The clock definitions (CLK_MM_DISP_PWM*) are added by James LIao's patch:
+>   clk: mediatek: Add subsystem clocks of MT8173
+> 
+> I think it is ok to mention in the cover-letter that the PWM .dtsi
+> change depends on that other patch.
+> 
+> Also, cover-letters usually contain a "shortlog" and diffstatm that
+> gives summary of patches and changed files, generated along with the
+> patches using:
+>  git format-patch --cover-letter
+> 
+> Thanks,
+> -Daniel
+> 
+> On Mon, Jun 29, 2015 at 11:03 PM, YH Huang <yh.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> > This patch series add the use of display PWM driver and documentation
+> > for Mediatek SoCs. The driver is used to support the backlight of
+> > the panel. This is based on v4.1-rc1.
+> >
+> > Change in v3:
+> > 1. Add suspend/resume function
+> > 2. Fix the formula for high_width calculation
+> > 3. Rewrite some code to make it easier to read
+> > 4. Add more information in the commit message
+> >
+> > --
+> > To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> > the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > Please read the FAQ at  http://www.tux.org/lkml/
 
-diff --git a/drivers/iio/accel/Kconfig b/drivers/iio/accel/Kconfig
-index dc80dc9..fdb59e0 100644
---- a/drivers/iio/accel/Kconfig
-+++ b/drivers/iio/accel/Kconfig
-@@ -93,7 +93,7 @@ config MMA8452
- 	select IIO_TRIGGERED_BUFFER
- 	help
- 	  Say yes here to build support for the following Freescale 3-axis
--	  accelerometers: MMA8452Q, MMA8453Q.
-+	  accelerometers: MMA8452Q, MMA8453Q, MMA8652FC, MMA8653FC.
- 
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called mma8452.
-diff --git a/drivers/iio/accel/mma8452.c b/drivers/iio/accel/mma8452.c
-index 1337707..cc19a5d8 100644
---- a/drivers/iio/accel/mma8452.c
-+++ b/drivers/iio/accel/mma8452.c
-@@ -3,6 +3,8 @@
-  *
-  *	MMA8452Q
-  *	MMA8453Q
-+ *	MMA8652FC
-+ *	MMA8653FC
-  *
-  * Copyright 2014 Peter Meerwald <pmeerw@pmeerw.net>
-  *
-@@ -88,6 +90,8 @@
- 
- #define MMA8452_DEVICE_ID 0x2a
- #define MMA8453_DEVICE_ID 0x3a
-+#define MMA8652_DEVICE_ID 0x4a
-+#define MMA8653_DEVICE_ID 0x5a
- 
- struct mma8452_data {
- 	struct i2c_client *client;
-@@ -767,6 +771,26 @@ static struct attribute_group mma8452_event_attribute_group = {
- 	.num_event_specs = ARRAY_SIZE(mma8452_transient_event), \
- }
- 
-+#define MMA8652_CHANNEL(axis, idx, bits) { \
-+	.type = IIO_ACCEL, \
-+	.modified = 1, \
-+	.channel2 = IIO_MOD_##axis, \
-+	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) | \
-+		BIT(IIO_CHAN_INFO_CALIBBIAS), \
-+	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SAMP_FREQ) | \
-+		BIT(IIO_CHAN_INFO_SCALE), \
-+	.scan_index = idx, \
-+	.scan_type = { \
-+		.sign = 's', \
-+		.realbits = (bits), \
-+		.storagebits = 16, \
-+		.shift = 16 - (bits), \
-+		.endianness = IIO_BE, \
-+	}, \
-+	.event_spec = mma8452_motion_event, \
-+	.num_event_specs = ARRAY_SIZE(mma8452_motion_event), \
-+}
-+
- static const struct iio_chan_spec mma8452_channels[] = {
- 	MMA8452_CHANNEL(X, 0, 12),
- 	MMA8452_CHANNEL(Y, 1, 12),
-@@ -781,9 +805,25 @@ static const struct iio_chan_spec mma8453_channels[] = {
- 	IIO_CHAN_SOFT_TIMESTAMP(3),
- };
- 
-+static const struct iio_chan_spec mma8652_channels[] = {
-+	MMA8652_CHANNEL(X, 0, 12),
-+	MMA8652_CHANNEL(Y, 1, 12),
-+	MMA8652_CHANNEL(Z, 2, 12),
-+	IIO_CHAN_SOFT_TIMESTAMP(3),
-+};
-+
-+static const struct iio_chan_spec mma8653_channels[] = {
-+	MMA8652_CHANNEL(X, 0, 10),
-+	MMA8652_CHANNEL(Y, 1, 10),
-+	MMA8652_CHANNEL(Z, 2, 10),
-+	IIO_CHAN_SOFT_TIMESTAMP(3),
-+};
-+
- enum {
- 	mma8452,
- 	mma8453,
-+	mma8652,
-+	mma8653,
- };
- 
- static const struct mma_chip_info mma_chip_info_table[] = {
-@@ -826,6 +866,38 @@ static const struct mma_chip_info mma_chip_info_table[] = {
- 		.ev_ths_mask = MMA8452_TRANSIENT_THS_MASK,
- 		.ev_count = MMA8452_TRANSIENT_COUNT,
- 	},
-+	[mma8652] = {
-+		.chip_id = MMA8652_DEVICE_ID,
-+		.channels = mma8652_channels,
-+		.num_channels = ARRAY_SIZE(mma8652_channels),
-+		.mma_scales = { {0, 9577}, {0, 19154}, {0, 38307} },
-+		.ev_cfg = MMA8452_FF_MT_CFG,
-+		.ev_cfg_ele = MMA8452_FF_MT_CFG_ELE,
-+		.ev_cfg_chan_shift = 3,
-+		.ev_src = MMA8452_FF_MT_SRC,
-+		.ev_src_xe = MMA8452_FF_MT_SRC_XHE,
-+		.ev_src_ye = MMA8452_FF_MT_SRC_YHE,
-+		.ev_src_ze = MMA8452_FF_MT_SRC_ZHE,
-+		.ev_ths = MMA8452_FF_MT_THS,
-+		.ev_ths_mask = MMA8452_FF_MT_THS_MASK,
-+		.ev_count = MMA8452_FF_MT_COUNT,
-+	},
-+	[mma8653] = {
-+		.chip_id = MMA8653_DEVICE_ID,
-+		.channels = mma8653_channels,
-+		.num_channels = ARRAY_SIZE(mma8653_channels),
-+		.mma_scales = { {0, 38307}, {0, 76614}, {0, 153228} },
-+		.ev_cfg = MMA8452_FF_MT_CFG,
-+		.ev_cfg_ele = MMA8452_FF_MT_CFG_ELE,
-+		.ev_cfg_chan_shift = 3,
-+		.ev_src = MMA8452_FF_MT_SRC,
-+		.ev_src_xe = MMA8452_FF_MT_SRC_XHE,
-+		.ev_src_ye = MMA8452_FF_MT_SRC_YHE,
-+		.ev_src_ze = MMA8452_FF_MT_SRC_ZHE,
-+		.ev_ths = MMA8452_FF_MT_THS,
-+		.ev_ths_mask = MMA8452_FF_MT_THS_MASK,
-+		.ev_count = MMA8452_FF_MT_COUNT,
-+	},
- };
- 
- static struct attribute *mma8452_attributes[] = {
-@@ -947,6 +1019,8 @@ static int mma8452_reset(struct i2c_client *client)
- static const struct of_device_id mma8452_dt_ids[] = {
- 	{ .compatible = "fsl,mma8452", .data = &mma_chip_info_table[mma8452] },
- 	{ .compatible = "fsl,mma8453", .data = &mma_chip_info_table[mma8453] },
-+	{ .compatible = "fsl,mma8652", .data = &mma_chip_info_table[mma8652] },
-+	{ .compatible = "fsl,mma8653", .data = &mma_chip_info_table[mma8653] },
- 	{ }
- };
- 
-@@ -958,13 +1032,6 @@ static int mma8452_probe(struct i2c_client *client,
- 	int ret;
- 	const struct of_device_id *match;
- 
--	ret = i2c_smbus_read_byte_data(client, MMA8452_WHO_AM_I);
--	if (ret < 0)
--		return ret;
--
--	if (ret != MMA8452_DEVICE_ID && ret != MMA8453_DEVICE_ID)
--		return -ENODEV;
--
- 	match = of_match_device(mma8452_dt_ids, &client->dev);
- 	if (!match) {
- 		dev_err(&client->dev, "unknown device model\n");
-@@ -980,6 +1047,21 @@ static int mma8452_probe(struct i2c_client *client,
- 	mutex_init(&data->lock);
- 	data->chip_info = match->data;
- 
-+	ret = i2c_smbus_read_byte_data(client, MMA8452_WHO_AM_I);
-+	if (ret < 0)
-+		return ret;
-+
-+	switch (ret) {
-+	case MMA8452_DEVICE_ID:
-+	case MMA8453_DEVICE_ID:
-+	case MMA8652_DEVICE_ID:
-+	case MMA8653_DEVICE_ID:
-+		if (ret == data->chip_info->chip_id)
-+			break;
-+	default:
-+		return -ENODEV;
-+	}
-+
- 	dev_info(&client->dev, "registering %s accelerometer; ID 0x%x\n",
- 		 match->compatible, data->chip_info->chip_id);
- 
-@@ -1112,6 +1194,8 @@ static SIMPLE_DEV_PM_OPS(mma8452_pm_ops, mma8452_suspend, mma8452_resume);
- static const struct i2c_device_id mma8452_id[] = {
- 	{ "mma8452", mma8452 },
- 	{ "mma8453", mma8453 },
-+	{ "mma8652", mma8652 },
-+	{ "mma8653", mma8653 },
- 	{ }
- };
- MODULE_DEVICE_TABLE(i2c, mma8452_id);
--- 
-2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
