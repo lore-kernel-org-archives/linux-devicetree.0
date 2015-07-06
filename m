@@ -1,87 +1,82 @@
-From: Daniel Kurtz <djkurtz@chromium.org>
-Subject: Re: [PATCH] arm64: dts: mt8173: Add afe device node
-Date: Mon, 6 Jul 2015 21:02:38 +0800
-Message-ID: <CAGS+omCOzJs=VWboU_7doUum6BEfmh1hV88HmJiin2c-A_n_Mw@mail.gmail.com>
-References: <1436165530-41963-1-git-send-email-koro.chen@mediatek.com>
+From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RESEND] [PATCH v2 1/2] arm: devtree: Set system_rev from DT revision
+Date: Mon, 6 Jul 2015 15:12:27 +0200
+Message-ID: <201507061512.27124@pali>
+References: <1430902142-17035-1-git-send-email-pali.rohar@gmail.com> <201507061423.23505@pali> <20150706123126.GG10705@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1436165530-41963-1-git-send-email-koro.chen@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Koro Chen <koro.chen@mediatek.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, srv_heupstream <srv_heupstream@mediatek.com>, linux-mediatek@lists.infradead.org, Sascha Hauer <s.hauer@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, alsa-devel@alsa-project.org, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Nicolas Boichat <drinkcat@chromium.org>
+Content-Type: multipart/signed;
+  boundary="nextPart1533396.2MSfHpyKUP";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150706123126.GG10705-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Andreas =?utf-8?q?F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 6, 2015 at 2:52 PM, Koro Chen <koro.chen@mediatek.com> wrote:
-> This adds afe (audio front end) device node to the MT8173 dtsi file.
->
-> This patch is based on Matthias's tree:
-> https://github.com/mbgg/linux-mediatek
-> branch: v4.2-next/arm64
->
-> Signed-off-by: Koro Chen <koro.chen@mediatek.com>
-> ---
->  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 32 ++++++++++++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> index 0696f8f..f8afab4 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> @@ -14,6 +14,7 @@
->  #include <dt-bindings/clock/mt8173-clk.h>
->  #include <dt-bindings/interrupt-controller/irq.h>
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/power/mt8173-power.h>
->  #include <dt-bindings/reset-controller/mt8173-resets.h>
->  #include "mt8173-pinfunc.h"
->
-> @@ -393,6 +394,37 @@
->                         #size-cells = <0>;
->                         status = "disabled";
->                 };
-> +
-> +               afe: mt8173-afe-pcm@11220000  {
+--nextPart1533396.2MSfHpyKUP
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-I believe this should be something generic, like:
+On Monday 06 July 2015 14:31:27 Tony Lindgren wrote:
+> * Pali Roh=C3=A1r <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [150706 05:25]:
+> > into which file should I put documentation about new DT properties?
+>=20
+> If it's Linux generic like linux,revision, then how about
+> Documentation/devicetree/bindings/revision.txt?
+>=20
+> For the ATAGs, Documentation/devicetree/bindings/arm/atag.txt?
+>=20
+> Regards,
+>=20
+> Tony
 
-  afe: audio-controller@11220000
+Hm... now I'm thinking into which DT field should I put atags and=20
+revision. In previous emails you wrote to use "linux,atags", now=20
+"arm,atags"? And put them into root node? Or other?
 
-Thanks!
--Dan
+In arch/arm/boot/compressed/atags_to_fdt.c code I see that most atag=20
+properties are converted into "/chosen" node in DT...
 
-> +                       compatible = "mediatek,mt8173-afe-pcm";
-> +                       reg = <0 0x11220000 0 0x1000>;
-> +                       interrupts = <GIC_SPI 134 IRQ_TYPE_EDGE_FALLING>;
-> +                       power-domains = <&scpsys MT8173_POWER_DOMAIN_AUDIO>;
-> +                       clocks = <&infracfg CLK_INFRA_AUDIO>,
-> +                                <&topckgen CLK_TOP_AUDIO_SEL>,
-> +                                <&topckgen CLK_TOP_AUD_INTBUS_SEL>,
-> +                                <&topckgen CLK_TOP_APLL1_DIV0>,
-> +                                <&topckgen CLK_TOP_APLL2_DIV0>,
-> +                                <&topckgen CLK_TOP_I2S0_M_SEL>,
-> +                                <&topckgen CLK_TOP_I2S1_M_SEL>,
-> +                                <&topckgen CLK_TOP_I2S2_M_SEL>,
-> +                                <&topckgen CLK_TOP_I2S3_M_SEL>,
-> +                                <&topckgen CLK_TOP_I2S3_B_SEL>;
-> +                       clock-names = "infra_sys_audio_clk",
-> +                                     "top_pdn_audio",
-> +                                     "top_pdn_aud_intbus",
-> +                                     "bck0",
-> +                                     "bck1",
-> +                                     "i2s0_m",
-> +                                     "i2s1_m",
-> +                                     "i2s2_m",
-> +                                     "i2s3_m",
-> +                                     "i2s3_b";
-> +                       assigned-clocks = <&topckgen CLK_TOP_AUD_1_SEL>,
-> +                                         <&topckgen CLK_TOP_AUD_2_SEL>;
-> +                       assigned-clock-parents = <&topckgen CLK_TOP_APLL1>,
-> +                                                <&topckgen CLK_TOP_APLL2>;
-> +               };
->         };
->  };
->
-> --
-> 1.8.1.1.dirty
->
+So what do you prefer for "revision" and what for "atags"?
+
+Some mentioned examples:
+
+"/revision"
+"/chosen/revision"
+"/linux,revision"
+"/chosen/linux,revision"
+=2E..
+
+"/atags"
+"/chosen/atags"
+"/linux,atags"
+"/chosen/linux,atags"
+"/arm,atags"
+"/chosen/arm,atags"
+=2E..
+
+=2D-=20
+Pali Roh=C3=A1r
+pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+
+--nextPart1533396.2MSfHpyKUP
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iEYEABECAAYFAlWafrsACgkQi/DJPQPkQ1IfZACfTJJCt2EvEed0eNR2dk1ReJ1K
+0WoAoMGhe4onh7EJr0jwWA7iq3yY1a94
+=AEDq
+-----END PGP SIGNATURE-----
+
+--nextPart1533396.2MSfHpyKUP--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
