@@ -1,39 +1,28 @@
-From: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>
-Subject: RE: [PATCH v2 3/4] power: Add support for DA9150 Fuel-Gauge
-Date: Mon, 6 Jul 2015 14:27:28 +0000
-Message-ID: <2E89032DDAA8B9408CB92943514A0337AB55C839@SW-EX-MBX01.diasemi.com>
-References: <cover.1435308209.git.Adam.Thomson.Opensource@diasemi.com>
- <596f44407759e2047a02594367116f9c92afee56.1435308209.git.Adam.Thomson.Opensource@diasemi.com>
- <20150703152217.GC10500@x1>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [RESEND] [PATCH v2 1/2] arm: devtree: Set system_rev from DT revision
+Date: Mon, 6 Jul 2015 10:20:56 -0500
+Message-ID: <CAL_JsqK193CBPwvDpPvpDSbGFRfkpxpox45parCoC+ofWE4hUA@mail.gmail.com>
+References: <1430902142-17035-1-git-send-email-pali.rohar@gmail.com>
+ <20150506114417.GI30910@pali> <20150625050138.GL4156@atomide.com>
+ <201507061423.23505@pali> <20150706123126.GG10705@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150703152217.GC10500@x1>
-Content-Language: en-US
+In-Reply-To: <20150706123126.GG10705@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Support Opensource <Support.Opensource@diasemi.com>
+To: Tony Lindgren <tony@atomide.com>
+Cc: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Russell King <linux@arm.linux.org.uk>, Will Deacon <will.deacon@arm.com>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, Sebastian Reichel <sre@debian.org>, Pavel Machek <pavel@ucw.cz>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, linux-omap <linux-omap@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gSnVseSAzLCAyMDE1IDE2OjIyLCBMZWUgSm9uZXMgd3JvdGU6DQoNCj4gPiArLyoNCj4gPiAr
-ICogRnVuY3Rpb24gdGVtcGxhdGUgdG8gcHJvdmlkZSBiYXR0ZXJ5IHRlbXBlcmF0dXJlLiBTaG91
-bGQgcHJvdmlkZQ0KPiA+ICsgKiAwLjEgZGVncmVlcyBDIHJlc29sdXRpb24gcmV0dXJuIHZhbHVl
-cy4NCj4gPiArICovDQo+ID4gK3R5cGVkZWYgaW50ICgqZGE5MTUwX3JlYWRfdGVtcF90KSh2b2lk
-ICpjb250ZXh0KTsNCj4gPiArDQo+ID4gKy8qIFJlZ2lzdGVyIHRlbXAgY2FsbGJhY2sgZnVuY3Rp
-b24gKi8NCj4gPiArdm9pZCBkYTkxNTBfZmdfcmVnaXN0ZXJfdGVtcF9jYihzdHJ1Y3QgcG93ZXJf
-c3VwcGx5ICpwc3ksDQo+IGRhOTE1MF9yZWFkX3RlbXBfdCBjYiwNCj4gPiArCQkJCXZvaWQgKmNi
-X2NvbnRleHQpOw0KPiA+ICsNCj4gPiAgI2VuZGlmIC8qIF9fREE5MTUwX0ZHX0ggKi8NCj4gDQo+
-IEkgc3RpbGwgZG9uJ3QgZ2V0IHdoeSB5b3UgdGhpbmsgcG9pbnRlcnMgYXJlIGJldHRlciB0aGFu
-IGp1c3QgY2FsbGluZw0KPiB0aGUgZnVuY3Rpb24gZGlyZWN0bHkuICBDYW4gdGhlICpmbigpIGV2
-ZXIgcG9pbnQgdG8gZGlmZmVyZW50IGZ1bmN0aW9ucz8NCg0KSGVyZSwgdGhlIGludGVudGlvbiBp
-cyB0byBjb3ZlciB0aGUgc2NlbmFyaW8gd2hlcmUgYSBiYXR0ZXJ5IGhhcyBubyBpbnRlcm5hbA0K
-dGhlcm1pc3RvciwgYW5kIGNhbm5vdCBwcm92aWRlIHRlbXBlcmF0dXJlIHJlYWRpbmdzIHRvIHRo
-ZSBEQTkxNTAgZGV2aWNlLiBJbg0KdGhhdCBzY2VuYXJpbyBJJ3ZlIGFsbG93ZWQgZm9yIHRoZSBv
-cHRpb24gb2YgcHJvdmlkaW5nIGFuIGV4dGVybmFsIGZ1bmN0aW9uDQp3aGljaCBjYW4gZ2l2ZSB0
-aGUgdGVtcGVyYXR1cmUgcmVhZGluZyBpbnN0ZWFkIGFzIERBOTE1MCB3aWxsIG5vdCBiZSBhYmxl
-IHRvDQpwcm92aWRlIGEgY29ycmVjdCByZWFkaW5nIGluIHRoYXQgc2NlbmFyaW8uIFRoaXMgd291
-bGQgYmUgcGxhdGZvcm0gZGVwZW5kZW50IGFuZA0Kc3VjaCBhIHBsYXRmb3JtIHVzaW5nIGEgYmF0
-dGVyeSBub3QgZW1wbG95aW5nIGFuIE5UQyBpbiB0aGVpciBiYXR0ZXJ5IGNhbg0KcmVnaXN0ZXIg
-aXRzIG93biBjYWxsLWJhY2sgZnVuY3Rpb24gdG8gcHJvdmlkZSBiYXR0ZXJ5IHRlbXBlcmF0dXJl
-IGluc3RlYWQuDQoNClNvLCBpbiBhbnN3ZXIgdG8geW91ciBxdWVzdGlvbiwgeWVzLg0K
+On Mon, Jul 6, 2015 at 7:31 AM, Tony Lindgren <tony@atomide.com> wrote:
+> * Pali Roh=C3=A1r <pali.rohar@gmail.com> [150706 05:25]:
+>>
+>> into which file should I put documentation about new DT properties?
+>
+> If it's Linux generic like linux,revision, then how about
+
+Just "revision" at the top level please. I'd prefer a string still,
+but either is fine.
+
+Rob
