@@ -1,105 +1,71 @@
-From: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
-Subject: Re: [RFC PATCH] pinctrl-single: Use of pinctrl-single for external
- device over I2C
-Date: Mon, 06 Jul 2015 17:32:37 +0530
-Message-ID: <559A6E5D.9040202@linaro.org>
-References: <1435855992-10312-1-git-send-email-vaibhav.hiremath@linaro.org> <20150706063532.GB10705@atomide.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [linux-sunxi] Re: [PATCH 2/3] ARM: dts: axp152: Add a dtsi file
+ for the axp152 pmic
+Date: Mon, 6 Jul 2015 14:12:38 +0200
+Message-ID: <559A70B6.3010101@redhat.com>
+References: <1435088503-20776-1-git-send-email-hdegoede@redhat.com>
+ <1435088503-20776-3-git-send-email-hdegoede@redhat.com>
+ <20150625174027.GF2266@lukather> <558D0BC2.10004@redhat.com>
+ <20150706085713.GE3269@lukather>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20150706063532.GB10705@atomide.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, lee.jones@linaro.org, linus.walleij@linaro.org, will.deacon@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150706085713.GE3269@lukather>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
-
-On Monday 06 July 2015 12:05 PM, Tony Lindgren wrote:
-> * Vaibhav Hiremath <vaibhav.hiremath@linaro.org> [150702 09:58]:
->> --- a/drivers/pinctrl/pinctrl-single.c
->> +++ b/drivers/pinctrl/pinctrl-single.c
+On 06-07-15 10:57, Maxime Ripard wrote:
+> Hi,
+>
+> On Fri, Jun 26, 2015 at 10:22:26AM +0200, Hans de Goede wrote:
+>> Hi,
 >>
->> -static unsigned __maybe_unused pcs_readb(void __iomem *reg)
->> +static unsigned pcs_read(struct regmap *map, unsigned int reg)
->>   {
->> -	return readb(reg);
->> -}
->> +	unsigned int val;
+>> On 25-06-15 19:40, Maxime Ripard wrote:
+>>> Hi,
+>>>
+>>> On Tue, Jun 23, 2015 at 09:41:42PM +0200, Hans de Goede wrote:
+>>>> From: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>>
+>>>> Add a dtsi file for the axp152 pmic, this mirrors the way things are
+>>>> handled for the axp202 pmic.
+>>>>
+>>>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>>>> ---
+>>>>   arch/arm/boot/dts/axp152.dtsi | 49 +++++++++++++++++++++++++++++++++++++++++++
+>>>>   1 file changed, 49 insertions(+)
+>>>>   create mode 100644 arch/arm/boot/dts/axp152.dtsi
+>>>
+>>> Unfortunately, Mark expressed clearly that he didn't want such files.
 >>
->> -static unsigned __maybe_unused pcs_readw(void __iomem *reg)
->> -{
->> -	return readw(reg);
->> -}
->> -
->> -static unsigned __maybe_unused pcs_readl(void __iomem *reg)
->> -{
->> -	return readl(reg);
->> -}
->> -
->> -static void __maybe_unused pcs_writeb(unsigned val, void __iomem *reg)
->> -{
->> -	writeb(val, reg);
->> -}
->> +	regmap_read(map, reg, &val);
+>> That is not how I remember the discussion, he said that he did not consider
+>> them useful, we explained why we do consider them useful for the sunxi
+>> case and then things went quiet.
+>>
+>> And we do already have an axp209.dtsi, and I find having that useful
+>> for enabling the regulators on axp209 using boards.
 >
-> Sorry this won't work. Most platforms don't need regmap here, and I
-> certainly don't want to use regmap for toggling pins for runtime
-> PM because of the extra overhead.
+> Hmmm, reading this discussion again, it indeed looks like I
+> misremembered what he was saying.
 >
-
-That's exactly my question was in my first email. It's ok.
-
-What is your openion on overall code changes for regmap support ?
-Any other feedback or suggestions?
-
-> It seems you need to stash the regmap pointer to struct pcs_device
-> and just the function pointers. As this driver is ioremapping the
-> region, we certainly want to keep things using void __iomem * too.
-> You can cast that to whatever regmap needs in the wrapper functions
-> for regmap. Note that the extra overhead there won't matter as we
-> are using regmap mostly for devices over I2C and so on.
+>> Ultimately it is your call, but I really think we should be consistent
+>> and add an axp152.dtsi to mirror how we do things with the axp209.
 >
+> Was there any other comments on this serie (and are you going to send
+> a v2?) or should I apply this patch?
 
-The issue I have here with the signature of read/write fn
+There were some comments on the actual mfd bits of this series, and
+I will send a v2 for that sometime this week. The dts patches however
+are good to go, so please apply this one.
 
-static unsigned __maybe_unused pcs_read(void __iomem *reg)
-static void __maybe_unused pcs_writeX(unsigned val, void __iomem *reg)
+Regards,
 
-
-For regmap, I need 2 arguments,
-
-1. Pointer to regmap
-2. Offset to register
-
-
-So I will have to change the signature to
-
-static unsigned __maybe_unused pcs_read(void __iomem *reg, unsigned int 
-offset)
-static void __maybe_unused pcs_write(void __iomem *reg, unsigned val, 
-unsigned int offset)
-
-
-And,
-On the same direction, will having separate functions for regmap.
-
-static unsigned pcs_read_regmap(void __iomem *reg, unsigned int offset)
-{
-	unsigned int val;
-
-	regmap_read((struct regmap *)reg, offset, &val);
-}
-
-static void pcs_write_regmap(void __iomem *reg, unsigned val, unsigned 
-int offset)
-{
-        regmap_write((struct regmap *)reg, offset, val);
-  }
-
-
-This functions will be initialized to pcs_device->read/write.
-
-I will have to do some more changes, specially around pcs_interrupt
-usage.
+Hans
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
