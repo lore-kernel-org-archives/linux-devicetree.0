@@ -1,78 +1,89 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [RESEND] [PATCH v2 1/2] arm: devtree: Set system_rev from DT revision
-Date: Mon, 6 Jul 2015 12:30:15 -0500
-Message-ID: <CAL_Jsq+A8v4EPZaGvAFohrg4TAw9a5fJy7ZJOOJ8T-OAyPuBUg@mail.gmail.com>
-References: <1430902142-17035-1-git-send-email-pali.rohar@gmail.com>
- <201507061512.27124@pali> <CAL_Jsq+ysDqxTgfW1JvG5czHa4UkZQDv1BN63iK4jvV9kDXM8w@mail.gmail.com>
- <201507061820.35789@pali>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 0/3] dwc2 patches to allow wakeup on Rockchip rk3288
+Date: Mon, 6 Jul 2015 12:48:38 -0500
+Message-ID: <20150706174838.GD20779@saruman.tx.rr.com>
+References: <1435017144-2971-1-git-send-email-dianders@chromium.org>
+Reply-To: balbi-l0cyMroinI0@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201507061820.35789@pali>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
-Cc: Tony Lindgren <tony@atomide.com>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Russell King <linux@arm.linux.org.uk>, Will Deacon <will.deacon@arm.com>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, Sebastian Reichel <sre@debian.org>, Pavel Machek <pavel@ucw.cz>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, linux-omap <linux-omap@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: multipart/mixed; boundary="===============4406327196233960582=="
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1435017144-2971-1-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Petr Mladek <pmladek-AlSwsSmVLrQ@public.gmane.org>, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Pratyush Anand <pratyush.anand-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandru Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthew Garrett <mjg59-JW9irJGTvgXQT0dZR+AlfA@public.gmane.org>, Robert Schlabbach <Robert.Schlabbach-hi6Y0CQ0nG0@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Zhuang Jin Can <jin.can.zhuang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Gregory Herrero <gregory.herrero-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb@
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 6, 2015 at 11:20 AM, Pali Roh=C3=A1r <pali.rohar@gmail.com>=
- wrote:
-> On Monday 06 July 2015 17:22:58 Rob Herring wrote:
->> On Mon, Jul 6, 2015 at 8:12 AM, Pali Roh=C3=A1r <pali.rohar@gmail.co=
-m> wrote:
->> > On Monday 06 July 2015 14:31:27 Tony Lindgren wrote:
->> >> * Pali Roh=C3=A1r <pali.rohar@gmail.com> [150706 05:25]:
->> >> > into which file should I put documentation about new DT
->> >> > properties?
->> >>
->> >> If it's Linux generic like linux,revision, then how about
->> >> Documentation/devicetree/bindings/revision.txt?
->> >>
->> >> For the ATAGs, Documentation/devicetree/bindings/arm/atag.txt?
->> >>
->> >> Regards,
->> >>
->> >> Tony
->> >
->> > Hm... now I'm thinking into which DT field should I put atags and
->> > revision. In previous emails you wrote to use "linux,atags", now
->> > "arm,atags"? And put them into root node? Or other?
->> >
->> > In arch/arm/boot/compressed/atags_to_fdt.c code I see that most
->> > atag properties are converted into "/chosen" node in DT...
->> >
->> > So what do you prefer for "revision" and what for "atags"?
->> >
->> > Some mentioned examples:
->> >
->> > "/revision"
->>
->> This one. This is a top level h/w property.
->>
->> > "/chosen/revision"
->> > "/linux,revision"
->> > "/chosen/linux,revision"
->> > ...
->> >
->> > "/atags"
->> > "/chosen/atags"
->> > "/linux,atags"
->> > "/chosen/linux,atags"
->>
->> This one. ATAGs are a Linux data struct.
->>
->> Rob
->>
->
-> Ok, and how read that property "/chosen/linux,atags" in function
-> setup_machine_fdt() from file arch/arm/kernel/devtree.c ?
->
-> of_get_flat_dt_prop() cannot be used unless somebody get me offset to
-> node "/chosen"...
+--===============4406327196233960582==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="M38YqGLZlgb6RLPS"
+Content-Disposition: inline
 
-Why can't you get the offset yourself?
+--M38YqGLZlgb6RLPS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-However, why does this need to be early? It is only used to populate
-/proc, right?
+On Mon, Jun 22, 2015 at 04:52:21PM -0700, Douglas Anderson wrote:
+> This series of patches, together with
+> <https://patchwork.kernel.org/patch/6652341/> from Chris Zhong and a
+> dts change allow us to wake up from a USB device on rk3288 boards.
+> The patches were tested on rk3288-jerry in the chromeos-3.14 kernel.
+> The chromeos-3.14 kernel tested included a full set of dwc2 backports
+> from upstream, so this is expected to function upstream once we get
+> everything setup there.
+>=20
+>=20
+> Douglas Anderson (3):
+>   USB: Export usb_wakeup_enabled_descendants()
+>   Documentation: dt-bindings: Add snps,need-phy-for-wake for dwc2 USB
 
-Rob
+I didn't get 2/3 :-(
+
+--=20
+balbi
+
+--M38YqGLZlgb6RLPS
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJVmr92AAoJEIaOsuA1yqREKuoQALOULNfJ8txhSHI7L3MCsQT0
+A/osvYOhlN3d75hgD2s/TtaHhR2YyhKgEMqwPdmkyEIaJGKXnfyKMmNK9C6/V8l2
+Odx5W6Qt3OUJ5GaXecK8FdgBpewJ2sUD6IdTHhKmDZlzAE4d1dh5KuZ9NNpyh7zo
+k+ZBzXy6moxDlp1OLePWPcXQC3SYS6+sgQM13qXcfVuODYYy1JqVgxoUkC5SXz93
+34RTIcuVEJmI4dfjhwJHHBHI8jylJc8+4jCzj3TE95X0A8x1sfLTRSRSKAadZJ26
+6doaEx3blo+Nf1nq0svA2NTT+FgiaRLqJKvRTtkv6bXLbh0/huE+kmjELK1E9nN3
+MobmHeExIAYVNSELt9VritRNmTkGhWybVdq8P+ElbdZBakNm3+P6go5VtotiipY3
+vzzkhRR5EGRAoWuN/8rAqUkYuv0lH4n+ZUl9qrkFyTGmV2ZOYB4/UFbbFD99CAjI
+xTGEd01t+lATyEdZhvdabFAj2zHnqHDYN+v8lG8pRRKFVRxoHl+tKwTWIsyiBLPt
+v6E6PcxMgeTSZ3wcg00Cpx9MuQbWeyOQIoGgvHZ5Eu51knb6PO6he8Vmcs2JjRRb
+1oiK+7LJAWuAROtOMTyGFxSh/3rMu8Dhm1clayhqQ0NPrsGcSJdMmIWDAVWEC2k2
+0WexqwzFtOh5JN5YhajY
+=cEP3
+-----END PGP SIGNATURE-----
+
+--M38YqGLZlgb6RLPS--
+
+
+--===============4406327196233960582==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+Linux-rockchip mailing list
+Linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+http://lists.infradead.org/mailman/listinfo/linux-rockchip
+
+--===============4406327196233960582==--
