@@ -1,36 +1,74 @@
-From: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 0/2] arm: dts: berlin: use stdout-path
-Date: Mon, 6 Jul 2015 17:50:32 +0800
-Message-ID: <1436176234-819-1-git-send-email-jszhang@marvell.com>
+From: Jisheng Zhang <jszhang@marvell.com>
+Subject: [PATCH 1/2] arm: dts: berlin: add aliases for serial
+Date: Mon, 6 Jul 2015 17:50:33 +0800
+Message-ID: <1436176234-819-2-git-send-email-jszhang@marvell.com>
+References: <1436176234-819-1-git-send-email-jszhang@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1436176234-819-1-git-send-email-jszhang@marvell.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sebastian.hesselbarth@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, antoine.tenart@free-electrons.com, boris.brezillon@free-electrons.com, Jisheng Zhang <jszhang@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-These two simple patches use stdout-path to specify the console.
-The first patch add aliases for serial uarts. The second patch
-removes the console argument from the command line, uses stdout-path
-instead.
+This is to prepare for the using stdout-path in next commit.
 
-Jisheng Zhang (2):
-  arm: dts: berlin: add aliases for serial
-  arm: dts: berlin: use stdout-path
+Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
+---
+ arch/arm/boot/dts/berlin2.dtsi   | 6 ++++++
+ arch/arm/boot/dts/berlin2cd.dtsi | 5 +++++
+ arch/arm/boot/dts/berlin2q.dtsi  | 5 +++++
+ 3 files changed, 16 insertions(+)
 
- arch/arm/boot/dts/berlin2-sony-nsz-gs7.dts        | 3 ++-
- arch/arm/boot/dts/berlin2.dtsi                    | 6 ++++++
- arch/arm/boot/dts/berlin2cd-google-chromecast.dts | 3 ++-
- arch/arm/boot/dts/berlin2cd.dtsi                  | 5 +++++
- arch/arm/boot/dts/berlin2q-marvell-dmp.dts        | 3 ++-
- arch/arm/boot/dts/berlin2q.dtsi                   | 5 +++++
- 6 files changed, 22 insertions(+), 3 deletions(-)
-
+diff --git a/arch/arm/boot/dts/berlin2.dtsi b/arch/arm/boot/dts/berlin2.dtsi
+index ef811de..40cf262 100644
+--- a/arch/arm/boot/dts/berlin2.dtsi
++++ b/arch/arm/boot/dts/berlin2.dtsi
+@@ -47,6 +47,12 @@
+ 	model = "Marvell Armada 1500 (BG2) SoC";
+ 	compatible = "marvell,berlin2", "marvell,berlin";
+ 
++	aliases {
++		serial0 = &uart0;
++		serial1 = &uart1;
++		serial2 = &uart2;
++	};
++
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+diff --git a/arch/arm/boot/dts/berlin2cd.dtsi b/arch/arm/boot/dts/berlin2cd.dtsi
+index 900213d..6246aec 100644
+--- a/arch/arm/boot/dts/berlin2cd.dtsi
++++ b/arch/arm/boot/dts/berlin2cd.dtsi
+@@ -47,6 +47,11 @@
+ 	model = "Marvell Armada 1500-mini (BG2CD) SoC";
+ 	compatible = "marvell,berlin2cd", "marvell,berlin";
+ 
++	aliases {
++		serial0 = &uart0;
++		serial1 = &uart1;
++	};
++
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+diff --git a/arch/arm/boot/dts/berlin2q.dtsi b/arch/arm/boot/dts/berlin2q.dtsi
+index 63a4849..380fa18 100644
+--- a/arch/arm/boot/dts/berlin2q.dtsi
++++ b/arch/arm/boot/dts/berlin2q.dtsi
+@@ -43,6 +43,11 @@
+ 	model = "Marvell Armada 1500 pro (BG2-Q) SoC";
+ 	compatible = "marvell,berlin2q", "marvell,berlin";
+ 
++	aliases {
++		serial0 = &uart0;
++		serial1 = &uart1;
++	};
++
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
 -- 
 2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
