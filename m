@@ -1,18 +1,107 @@
-From: Maria McCumiskey <mmccumiskey-lqx8lhQw8zCcz5eJ4cSZ1A@public.gmane.org>
-Subject: (unknown)
-Date: Mon, 6 Jul 2015 15:57:02 +0000
-Message-ID: <FFEFB36E3845C346B6BFD0B6EA059E4BEC6C8C89@pob-mail.pob.k12.ny.us>
+From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RESEND] [PATCH v2 1/2] arm: devtree: Set system_rev from DT revision
+Date: Mon, 6 Jul 2015 18:20:35 +0200
+Message-ID: <201507061820.35789@pali>
+References: <1430902142-17035-1-git-send-email-pali.rohar@gmail.com> <201507061512.27124@pali> <CAL_Jsq+ysDqxTgfW1JvG5czHa4UkZQDv1BN63iK4jvV9kDXM8w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
+Content-Type: multipart/signed;
+  boundary="nextPart2694513.j5x1bJWHGc";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Subject: 
-Content-Language: en-US
+In-Reply-To: <CAL_Jsq+ysDqxTgfW1JvG5czHa4UkZQDv1BN63iK4jvV9kDXM8w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Andreas =?utf-8?q?F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-I and my wife violet donated $500,000.00 USD as our personal donation to you this year 2015.Contact us:
-allenlarge0452-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org
+--nextPart2694513.j5x1bJWHGc
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Monday 06 July 2015 17:22:58 Rob Herring wrote:
+> On Mon, Jul 6, 2015 at 8:12 AM, Pali Roh=C3=A1r <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wr=
+ote:
+> > On Monday 06 July 2015 14:31:27 Tony Lindgren wrote:
+> >> * Pali Roh=C3=A1r <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [150706 05:25]:
+> >> > into which file should I put documentation about new DT
+> >> > properties?
+> >>=20
+> >> If it's Linux generic like linux,revision, then how about
+> >> Documentation/devicetree/bindings/revision.txt?
+> >>=20
+> >> For the ATAGs, Documentation/devicetree/bindings/arm/atag.txt?
+> >>=20
+> >> Regards,
+> >>=20
+> >> Tony
+> >=20
+> > Hm... now I'm thinking into which DT field should I put atags and
+> > revision. In previous emails you wrote to use "linux,atags", now
+> > "arm,atags"? And put them into root node? Or other?
+> >=20
+> > In arch/arm/boot/compressed/atags_to_fdt.c code I see that most
+> > atag properties are converted into "/chosen" node in DT...
+> >=20
+> > So what do you prefer for "revision" and what for "atags"?
+> >=20
+> > Some mentioned examples:
+> >=20
+> > "/revision"
+>=20
+> This one. This is a top level h/w property.
+>=20
+> > "/chosen/revision"
+> > "/linux,revision"
+> > "/chosen/linux,revision"
+> > ...
+> >=20
+> > "/atags"
+> > "/chosen/atags"
+> > "/linux,atags"
+> > "/chosen/linux,atags"
+>=20
+> This one. ATAGs are a Linux data struct.
+>=20
+> Rob
+>=20
+
+Ok, and how read that property "/chosen/linux,atags" in function
+setup_machine_fdt() from file arch/arm/kernel/devtree.c ?
+
+of_get_flat_dt_prop() cannot be used unless somebody get me offset to
+node "/chosen"...
+
+Any idea?
+
+> > "/arm,atags"
+> > "/chosen/arm,atags"
+> > ...
+> >=20
+> > --
+> > Pali Roh=C3=A1r
+> > pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+
+
+=2D-=20
+Pali Roh=C3=A1r
+pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+
+--nextPart2694513.j5x1bJWHGc
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iEYEABECAAYFAlWaqtMACgkQi/DJPQPkQ1L2qwCgtZWepIPRCCyWD9/08tSrKn5s
+doIAoLWbVp2qOcwCWo7lr0u39uFNYQ2K
+=Rc2x
+-----END PGP SIGNATURE-----
+
+--nextPart2694513.j5x1bJWHGc--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
