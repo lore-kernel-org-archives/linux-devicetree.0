@@ -1,42 +1,37 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] of: add HAS_IOMEM depends to OF_ADDRESS
-Date: Sun,  5 Jul 2015 12:26:50 -0500
-Message-ID: <1436117210-17485-1-git-send-email-robh@kernel.org>
+From: Matt Ranostay <mranostay@gmail.com>
+Subject: Re: [PATCH v6 0/2] cap11xx: add LED support
+Date: Sun, 5 Jul 2015 17:18:29 -0700
+Message-ID: <CAKzfze9og8i7EBr=bUL4zxwKW9=6k80k3+dD3a3OknSZDwVxwQ@mail.gmail.com>
+References: <1435128654-19454-1-git-send-email-mranostay@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Rob Herring <robh@kernel.org>, Grant Likely <grant.likely@linaro.org>
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <1435128654-19454-1-git-send-email-mranostay@gmail.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Daniel Mack <zonque@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, linux-leds@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Matt Ranostay <mranostay@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On UML builds, of_address.c fails to compile:
+Was there any more input or changes needed for this patchset?
 
-=2E./drivers/of/address.c:873:2: error: implicit declaration of functio=
-n =E2=80=98ioremap=E2=80=99 [-Werror=3Dimplicit-function-declaration]
+Thanks,
 
-This is due to CONFIG_OF now being user selectable. Add a dependency on
-HAS_IOMEM to OF_ADDRESS in order to fix this.
+Matt
 
-Signed-off-by: Rob Herring <robh@kernel.org>
-Cc: Grant Likely <grant.likely@linaro.org>
----
- drivers/of/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-index 8df1b17..59bb855 100644
---- a/drivers/of/Kconfig
-+++ b/drivers/of/Kconfig
-@@ -47,7 +47,7 @@ config OF_DYNAMIC
-=20
- config OF_ADDRESS
- 	def_bool y
--	depends on !SPARC
-+	depends on !SPARC && HAS_IOMEM
- 	select OF_ADDRESS_PCI if PCI
-=20
- config OF_ADDRESS_PCI
---=20
-2.1.0
+On Tue, Jun 23, 2015 at 11:50 PM, Matt Ranostay <mranostay@gmail.com> wrote:
+> changes from v5:
+> * Dropped linux,led-brightness DT property
+> * Removed several ifdefs to LED CLASS
+> * Added cap11xx_init_leds stub
+>
+> Matt Ranostay (2):
+>   dt: add cap11xx LED documentation
+>   cap11xx: add LED support
+>
+>  .../devicetree/bindings/input/cap11xx.txt          |  19 +++
+>  drivers/input/keyboard/cap11xx.c                   | 140 ++++++++++++++++++++-
+>  2 files changed, 156 insertions(+), 3 deletions(-)
+>
+> --
+> 1.9.1
+>
