@@ -1,196 +1,216 @@
-From: Jingoo Han <jingoohan1@gmail.com>
-Subject: Re: [PATCH] backlight: lp855x: use private data for regulator control
-Date: Mon, 6 Jul 2015 16:33:05 +0900
-Message-ID: <978FE9A0-FC45-4BD5-A0DA-E68F06901DEE@gmail.com>
-References: <1435644981-5568-1-git-send-email-milo.kim@ti.com> <000701d0b720$fb7a09e0$f26e1da0$@com> <20150706065435.GA3182@x1>
-Mime-Version: 1.0 (1.0)
-Content-Type: text/plain; charset=euc-kr
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH v2 1/2] iio: adc: Determine sampling frequencies by using
+ minimum sample time
+Date: Mon, 06 Jul 2015 09:31:20 +0200
+Message-ID: <b284836504b46346ae5cb9efa2459131@agner.ch>
+References: <cover.1435134626.git.maitysanchayan@gmail.com>
+ <01b93ea50b59c93a783fac26b4671313b794bd24.1435134626.git.maitysanchayan@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150706065435.GA3182@x1>
+In-Reply-To: <01b93ea50b59c93a783fac26b4671313b794bd24.1435134626.git.maitysanchayan@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Milo Kim <milo.kim@ti.com>
-Cc: Sean Paul <seanpaul@chromium.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>
+To: Sanchayan Maity <maitysanchayan@gmail.com>
+Cc: jic23@kernel.org, shawn.guo@linaro.org, kernel@pengutronix.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, B38611@freescale.com, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2015. 7. 6., at PM 3:54, Lee Jones <lee.jones@linaro.org> wrote:
->=20
->> On Sun, 05 Jul 2015, Jingoo Han wrote:
->>=20
->>> On Tuesday, June 30, 2015 3:16 PM, Milo Kim wrote:
->>>=20
->>> LP855x backlight device can be enabled by external VDD input.
->>> The 'supply' data is used for this purpose.
->>> It's kind of private data which runs internally, so there is no rea=
-son to
->>> expose to the platform data.
->>>=20
->>> And LP855x DT property, 'power-supply' is unnecessary.
->>> If a regulator is registered correctly, then lp855x driver can get
->>> regulator resource by using devm_regulator_get().
->>> So devm_regulator_get() is moved from _parse_dt() to _probe().
->>> Ex) The following device tree works without 'power-supply' property=
-=2E
->=20
-> Even if it's not 'required', I think it would be good to have it in
-> DT, as it describes the hardware, right?
+On 2015-06-24 10:33, Sanchayan Maity wrote:
+> The driver currently does not take into account the minimum sample time
+> as per the Figure 6-8 Chapter 9.1.1 12-bit ADC electrical characteristics.
+> We set a static amount of cycles instead of considering the sample time
+> as a given value, which depends on hardware characteristics.
+> 
+> Determine sampling frequencies by first reading the device tree property
+> node and then calculating the required Long Sample Time Adder (LSTAdder)
+> value based on the ADC clock frequency and sample time value obtained
+> from the device tree, this LSTAdder value is then used for calculating
+> the sampling frequencies possible.
+> 
+> Signed-off-by: Sanchayan Maity <maitysanchayan@gmail.com>
 
-OK, I see.
-If the 'regulator-name' is changed from 'power' to other names,
-lp855x driver will not find the regulator. However, when 'power-supply'=
- is added, it is more noticeable.
+Not respecting the sampling time leads to issues especially when using
+multiple channel: You basically still have some capacity from the last
+measurement, which distorts the next measurements. We noticed this when
+using the touch screen while measuring the SoC temperature.
 
-To Milo,
+The required sampling time is partly given by the SoC, but depends on
+the connected analog source too. A device tree property is the right
+approach here.
 
-Would you send the patch v2 that
-does not remove dt property from lp855x.txt?
+Acked-by: Stefan Agner <stefan@agner.ch>
 
-Best regards,
-Jingoo Han
 
->>>    i2c0: i2c@10002000 {
->>>        (snip)
->>>=20
->>>        backlight@2c {
->>>            compatible =3D "ti,lp8556";
->>>            reg =3D <0x2c>;
->>>=20
->>>            bl-name =3D "lcd-bl";
->>>            dev-ctrl =3D /bits/ 8 <0x85>;
->>>            init-brt =3D /bits/ 8 <0x10>;
->>>        };
->>>    };
->>>=20
->>>    /* 'power' regulator for LP8556 VDD */
->>>    bl_vdd: fixed-regulator@1 {
->>>        compatible =3D "regulator-fixed";
->>>        regulator-name =3D "power";
->>>        regulator-min-microvolt =3D <3300000>;
->>>        regulator-max-microvolt =3D <3300000>;
->>>=20
->>>        (snip)
->>>    };
->>>=20
->>> Cc: Sean Paul <seanpaul@chromium.org>
->>> Cc: Jingoo Han <jingoohan1@gmail.com>
->>> Cc: Lee Jones <lee.jones@linaro.org>
->>> Cc: devicetree@vger.kernel.org
->>> Cc: linux-kernel@vger.kernel.org
->>> Signed-off-by: Milo Kim <milo.kim@ti.com>
->>=20
->> Acked-by: Jingoo Han <jingoohan1@gmail.com>
->>=20
->> Best regards,
->> Jingoo Han
->>=20
->>> ---
->>> .../devicetree/bindings/video/backlight/lp855x.txt   |  2 --
->>> drivers/video/backlight/lp855x_bl.c                  | 20 +++++++++=
------------
->>> include/linux/platform_data/lp855x.h                 |  2 --
->>> 3 files changed, 9 insertions(+), 15 deletions(-)
->>>=20
->>> diff --git a/Documentation/devicetree/bindings/video/backlight/lp85=
-5x.txt
->>> b/Documentation/devicetree/bindings/video/backlight/lp855x.txt
->>> index 0a3ecbc..96e83a5 100644
->>> --- a/Documentation/devicetree/bindings/video/backlight/lp855x.txt
->>> +++ b/Documentation/devicetree/bindings/video/backlight/lp855x.txt
->>> @@ -12,7 +12,6 @@ Optional properties:
->>>   - pwm-period: PWM period value. Set only PWM input mode used (u32=
-)
->>>   - rom-addr: Register address of ROM area to be updated (u8)
->>>   - rom-val: Register value to be updated (u8)
->>> -  - power-supply: Regulator which controls the 3V rail
->>>=20
->>> Example:
->>>=20
->>> @@ -57,7 +56,6 @@ Example:
->>>    backlight@2c {
->>>        compatible =3D "ti,lp8557";
->>>        reg =3D <0x2c>;
->>> -        power-supply =3D <&backlight_vdd>;
->>>=20
->>>        dev-ctrl =3D /bits/ 8 <0x41>;
->>>        init-brt =3D /bits/ 8 <0x0a>;
->>> diff --git a/drivers/video/backlight/lp855x_bl.c b/drivers/video/ba=
-cklight/lp855x_bl.c
->>> index a26d3bb..277d5ca 100644
->>> --- a/drivers/video/backlight/lp855x_bl.c
->>> +++ b/drivers/video/backlight/lp855x_bl.c
->>> @@ -73,6 +73,7 @@ struct lp855x {
->>>    struct device *dev;
->>>    struct lp855x_platform_data *pdata;
->>>    struct pwm_device *pwm;
->>> +    struct regulator *supply;    /* regulator for VDD input */
->>> };
->>>=20
->>> static int lp855x_write_byte(struct lp855x *lp, u8 reg, u8 data)
->>> @@ -384,13 +385,6 @@ static int lp855x_parse_dt(struct lp855x *lp)
->>>        pdata->rom_data =3D &rom[0];
->>>    }
->>>=20
->>> -    pdata->supply =3D devm_regulator_get(dev, "power");
->>> -    if (IS_ERR(pdata->supply)) {
->>> -        if (PTR_ERR(pdata->supply) =3D=3D -EPROBE_DEFER)
->>> -            return -EPROBE_DEFER;
->>> -        pdata->supply =3D NULL;
->>> -    }
->>> -
->>>    lp->pdata =3D pdata;
->>>=20
->>>    return 0;
->>> @@ -431,8 +425,12 @@ static int lp855x_probe(struct i2c_client *cl,=
- const struct i2c_device_id *id)
->>>    else
->>>        lp->mode =3D REGISTER_BASED;
->>>=20
->>> -    if (lp->pdata->supply) {
->>> -        ret =3D regulator_enable(lp->pdata->supply);
->>> +    lp->supply =3D devm_regulator_get(lp->dev, "power");
->>> +    if (IS_ERR(lp->supply))
->>> +        lp->supply =3D NULL;
->>> +
->>> +    if (lp->supply) {
->>> +        ret =3D regulator_enable(lp->supply);
->>>        if (ret < 0) {
->>>            dev_err(&cl->dev, "failed to enable supply: %d\n", ret);
->>>            return ret;
->>> @@ -470,8 +468,8 @@ static int lp855x_remove(struct i2c_client *cl)
->>>=20
->>>    lp->bl->props.brightness =3D 0;
->>>    backlight_update_status(lp->bl);
->>> -    if (lp->pdata->supply)
->>> -        regulator_disable(lp->pdata->supply);
->>> +    if (lp->supply)
->>> +        regulator_disable(lp->supply);
->>>    sysfs_remove_group(&lp->dev->kobj, &lp855x_attr_group);
->>>=20
->>>    return 0;
->>> diff --git a/include/linux/platform_data/lp855x.h b/include/linux/p=
-latform_data/lp855x.h
->>> index 9c7fd1e..1b2ba24 100644
->>> --- a/include/linux/platform_data/lp855x.h
->>> +++ b/include/linux/platform_data/lp855x.h
->>> @@ -136,7 +136,6 @@ struct lp855x_rom_data {
->>>        Only valid when mode is PWM_BASED.
->>>  * @size_program : total size of lp855x_rom_data
->>>  * @rom_data : list of new eeprom/eprom registers
->>> - * @supply : regulator that supplies 3V input
->>>  */
->>> struct lp855x_platform_data {
->>>    const char *name;
->>> @@ -145,7 +144,6 @@ struct lp855x_platform_data {
->>>    unsigned int period_ns;
->>>    int size_program;
->>>    struct lp855x_rom_data *rom_data;
->>> -    struct regulator *supply;
->>> };
->>>=20
->>> #endif
->=20
-> --=20
-> Lee Jones
-> Linaro STMicroelectronics Landing Team Lead
-> Linaro.org =A6=A2 Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
+> ---
+>  .../devicetree/bindings/iio/adc/vf610-adc.txt      |  6 ++
+>  drivers/iio/adc/vf610_adc.c                        | 74 ++++++++++++++++++++--
+>  2 files changed, 76 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt
+> b/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt
+> index 3eb40e2..39b86ea 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt
+> +++ b/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt
+> @@ -17,6 +17,11 @@ Recommended properties:
+>    - Frequency in normal mode (ADLPC=0, ADHSC=0)
+>    - Frequency in high-speed mode (ADLPC=0, ADHSC=1)
+>    - Frequency in low-power mode (ADLPC=1, ADHSC=0)
+> +  - min-sample-time: Minimum sampling time in nanoseconds. This value has
+> +    to be chosen according to the conversion mode and the connected analog
+> +	 source resistance (R_as) and capacitance (C_as). Refer the datasheet's
+> +	 operating requirements. A safe default across a wide range of R_as and
+> +	 C_as as well as conversion modes is 1000ns.
+>  
+>  Example:
+>  adc0: adc@4003b000 {
+> @@ -27,5 +32,6 @@ adc0: adc@4003b000 {
+>  	clock-names = "adc";
+>  	fsl,adck-max-frequency = <30000000>, <40000000>,
+>  				<20000000>;
+> +	min-sample-time = <1000>;
+>  	vref-supply = <&reg_vcc_3v3_mcu>;
+>  };
+> diff --git a/drivers/iio/adc/vf610_adc.c b/drivers/iio/adc/vf610_adc.c
+> index 480f335..8322027 100644
+> --- a/drivers/iio/adc/vf610_adc.c
+> +++ b/drivers/iio/adc/vf610_adc.c
+> @@ -68,6 +68,9 @@
+>  #define VF610_ADC_CLK_DIV8		0x60
+>  #define VF610_ADC_CLK_MASK		0x60
+>  #define VF610_ADC_ADLSMP_LONG		0x10
+> +#define VF610_ADC_ADSTS_SHORT   0x100
+> +#define VF610_ADC_ADSTS_NORMAL  0x200
+> +#define VF610_ADC_ADSTS_LONG    0x300
+>  #define VF610_ADC_ADSTS_MASK		0x300
+>  #define VF610_ADC_ADLPC_EN		0x80
+>  #define VF610_ADC_ADHSC_EN		0x400
+> @@ -124,6 +127,17 @@ enum conversion_mode_sel {
+>  	VF610_ADC_CONV_LOW_POWER,
+>  };
+>  
+> +enum lst_adder_sel {
+> +	VF610_ADCK_CYCLES_3,
+> +	VF610_ADCK_CYCLES_5,
+> +	VF610_ADCK_CYCLES_7,
+> +	VF610_ADCK_CYCLES_9,
+> +	VF610_ADCK_CYCLES_13,
+> +	VF610_ADCK_CYCLES_17,
+> +	VF610_ADCK_CYCLES_21,
+> +	VF610_ADCK_CYCLES_25,
+> +};
+> +
+>  struct vf610_adc_feature {
+>  	enum clk_sel	clk_sel;
+>  	enum vol_ref	vol_ref;
+> @@ -132,6 +146,8 @@ struct vf610_adc_feature {
+>  	int	clk_div;
+>  	int     sample_rate;
+>  	int	res_mode;
+> +	u32 lst_adder_index;
+> +	u32 default_sample_time;
+>  
+>  	bool	calibration;
+>  	bool	ovwren;
+> @@ -155,11 +171,13 @@ struct vf610_adc {
+>  };
+>  
+>  static const u32 vf610_hw_avgs[] = { 1, 4, 8, 16, 32 };
+> +static const u32 vf610_lst_adder[] = { 3, 5, 7, 9, 13, 17, 21, 25 };
+>  
+>  static inline void vf610_adc_calculate_rates(struct vf610_adc *info)
+>  {
+>  	struct vf610_adc_feature *adc_feature = &info->adc_feature;
+>  	unsigned long adck_rate, ipg_rate = clk_get_rate(info->clk);
+> +	u32 adck_period, lst_addr_min;
+>  	int divisor, i;
+>  
+>  	adck_rate = info->max_adck_rate[adc_feature->conv_mode];
+> @@ -174,6 +192,19 @@ static inline void
+> vf610_adc_calculate_rates(struct vf610_adc *info)
+>  	}
+>  
+>  	/*
+> +	 * Determine the long sample time adder value to be used based
+> +	 * on the default minimum sample time provided.
+> +	 */
+> +	adck_period = NSEC_PER_SEC / adck_rate;
+> +	lst_addr_min = adc_feature->default_sample_time / adck_period;
+> +	for (i = 0; i < ARRAY_SIZE(vf610_lst_adder); i++) {
+> +		if (vf610_lst_adder[i] > lst_addr_min) {
+> +			adc_feature->lst_adder_index = i;
+> +			break;
+> +		}
+> +	}
+> +
+> +	/*
+>  	 * Calculate ADC sample frequencies
+>  	 * Sample time unit is ADCK cycles. ADCK clk source is ipg clock,
+>  	 * which is the same as bus clock.
+> @@ -182,12 +213,13 @@ static inline void
+> vf610_adc_calculate_rates(struct vf610_adc *info)
+>  	 * SFCAdder: fixed to 6 ADCK cycles
+>  	 * AverageNum: 1, 4, 8, 16, 32 samples for hardware average.
+>  	 * BCT (Base Conversion Time): fixed to 25 ADCK cycles for 12 bit mode
+> -	 * LSTAdder(Long Sample Time): fixed to 3 ADCK cycles
+> +	 * LSTAdder(Long Sample Time): 3, 5, 7, 9, 13, 17, 21, 25 ADCK cycles
+>  	 */
+>  	adck_rate = ipg_rate / info->adc_feature.clk_div;
+>  	for (i = 0; i < ARRAY_SIZE(vf610_hw_avgs); i++)
+>  		info->sample_freq_avail[i] =
+> -			adck_rate / (6 + vf610_hw_avgs[i] * (25 + 3));
+> +			adck_rate / (6 + vf610_hw_avgs[i] *
+> +			 (25 + vf610_lst_adder[adc_feature->lst_adder_index]));
+>  }
+>  
+>  static inline void vf610_adc_cfg_init(struct vf610_adc *info)
+> @@ -347,8 +379,40 @@ static void vf610_adc_sample_set(struct vf610_adc *info)
+>  		break;
+>  	}
+>  
+> -	/* Use the short sample mode */
+> -	cfg_data &= ~(VF610_ADC_ADLSMP_LONG | VF610_ADC_ADSTS_MASK);
+> +	/*
+> +	 * Set ADLSMP and ADSTS based on the Long Sample Time Adder value
+> +	 * determined.
+> +	 */
+> +	switch (adc_feature->lst_adder_index) {
+> +	case VF610_ADCK_CYCLES_3:
+> +		break;
+> +	case VF610_ADCK_CYCLES_5:
+> +		cfg_data |= VF610_ADC_ADSTS_SHORT;
+> +		break;
+> +	case VF610_ADCK_CYCLES_7:
+> +		cfg_data |= VF610_ADC_ADSTS_NORMAL;
+> +		break;
+> +	case VF610_ADCK_CYCLES_9:
+> +		cfg_data |= VF610_ADC_ADSTS_LONG;
+> +		break;
+> +	case VF610_ADCK_CYCLES_13:
+> +		cfg_data |= VF610_ADC_ADLSMP_LONG;
+> +		break;
+> +	case VF610_ADCK_CYCLES_17:
+> +		cfg_data |= VF610_ADC_ADLSMP_LONG;
+> +		cfg_data |= VF610_ADC_ADSTS_SHORT;
+> +		break;
+> +	case VF610_ADCK_CYCLES_21:
+> +		cfg_data |= VF610_ADC_ADLSMP_LONG;
+> +		cfg_data |= VF610_ADC_ADSTS_NORMAL;
+> +		break;
+> +	case VF610_ADCK_CYCLES_25:
+> +		cfg_data |= VF610_ADC_ADLSMP_LONG;
+> +		cfg_data |= VF610_ADC_ADSTS_NORMAL;
+> +		break;
+> +	default:
+> +		dev_err(info->dev, "error in sample time select\n");
+> +	}
+>  
+>  	/* update hardware average selection */
+>  	cfg_data &= ~VF610_ADC_AVGS_MASK;
+> @@ -712,6 +776,8 @@ static int vf610_adc_probe(struct platform_device *pdev)
+>  
+>  	of_property_read_u32_array(pdev->dev.of_node, "fsl,adck-max-frequency",
+>  			info->max_adck_rate, 3);
+> +	of_property_read_u32(pdev->dev.of_node, "min-sample-time",
+> +			&info->adc_feature.default_sample_time);
+>  
+>  	platform_set_drvdata(pdev, indio_dev);
