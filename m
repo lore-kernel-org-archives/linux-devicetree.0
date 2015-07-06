@@ -1,72 +1,46 @@
-From: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: mt8173-evb: Add PMIC support
-Date: Mon, 6 Jul 2015 15:43:57 +0800
-Message-ID: <1436168637.6986.6.camel@mtksdaap41>
-References: <1434979177-7575-1-git-send-email-henryc.chen@mediatek.com>
+From: Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 8/9] drivers: clk: st: Rename st_pll3200c32_407_c0_x into st_pll3200c32_cx_x
+Date: Mon, 6 Jul 2015 10:00:54 +0200
+Message-ID: <CAG374jC1fABjS3H+umrqVG2M0OXEHgj3pF0e9R7V0X1rjvvC9g@mail.gmail.com>
+References: <1435068567-30995-1-git-send-email-gabriel.fernandez@linaro.org>
+ <1435068567-30995-9-git-send-email-gabriel.fernandez@linaro.org> <20150702165914.GE7201@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1434979177-7575-1-git-send-email-henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <20150702165914.GE7201-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Henry Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pankaj Dev <pankaj.dev-qxv4g6HH51o@public.gmane.org>, Olivier Bideau <olivier.bideau-qxv4g6HH51o@public.gmane.org>, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Fabian Frederick <fabf-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, kernel@stlinu
 List-Id: devicetree@vger.kernel.org
 
-Hi Matthias,
+Hi Stephen,
 
-On Mon, 2015-06-22 at 21:19 +0800, Henry Chen wrote:
-> From: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> 
-> The MT8173 eval board contains a MT6397 PMIC. This adds the
-> corresponding device node to the dts file.
-> 
-> Signed-off-by: Henry Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> Signed-off-by: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
-> Base on 4.1-rc1 and commit as following,
-> ARM64: dts: Mediatek: MT8173 updates [1] and 
-> clk: Add common clock support for Mediatek MT8135 and MT8173 [2] patch
-> 
-> [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-May/344751.html
-> [2] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-April/338763.html
-> ---
->  arch/arm64/boot/dts/mediatek/mt8173-evb.dts | 174 ++++++++++++++++++++++++++++
->  1 file changed, 174 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-> index 43d5401..b967914 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-> +++ b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-> @@ -33,6 +33,180 @@
->  	chosen { };
->  };
->  
-> +&pwrap {
-> +	pmic: mt6397 {
-> +		compatible = "mediatek,mt6397";
-> +		interrupt-parent = <&pio>;
-> +		interrupts = <11 IRQ_TYPE_LEVEL_HIGH>;
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +
-> +		mt6397regulator: mt6397regulator {
-> +			compatible = "mediatek,mt6397-regulator";
-> +			mt6397_vpca15_reg: buck_vpca15 {
-> +				regulator-compatible = "buck_vpca15";
-> +				regulator-name = "vpca15";
-> +				regulator-min-microvolt = < 700000>;
-> +				regulator-max-microvolt = <1350000>;
-> +				regulator-ramp-delay = <12500>;
-> +				regulator-always-on;
+Sorry for the delay i was in day off.
 
-I see you pull da9211 regulator dts patch, but not this one. How about
-this patch ?
+Yes it's just a cleanup but it's to prepare introduction of new
+platform which use this PLL.
 
-Thanks
-Eddie
+If you want apply only fixes we can drop these last two patches.
 
+And in a second phase,  deals with Maxime to avoid break compatibility.
 
+BR
+
+Gabriel.
+
+On 2 July 2015 at 18:59, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+> On 06/23, Gabriel Fernandez wrote:
+>> Use a generic name for this kind of PLL
+>>
+>> Signed-off-by: Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>
+> Is this just a cleanup/nicety? I could take this patch but patch
+> 9 needs to go through arm-soc and then we have to deal with DT
+> incompatibility. How about we drop these last two patches?
+>
+> --
+> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+> a Linux Foundation Collaborative Project
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
