@@ -1,33 +1,48 @@
-From: Douglas Anderson <dianders@chromium.org>
-Subject: [REPOST PATCH 0/3] dwc2 patches to allow wakeup on Rockchip rk3288
-Date: Mon,  6 Jul 2015 11:27:01 -0700
-Message-ID: <1436207224-21849-1-git-send-email-dianders@chromium.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, John Youn <johnyoun@synopsys.com>, Felipe Balbi <balbi@ti.com>
-Cc: linux-usb@vger.kernel.org, Chris Zhong <zyw@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>, Julius Werner <jwerner@chromium.org>, Andrew Bresticker <abrestic@chromium.org>, Alexandru Stan <amstan@chromium.org>, lyz@rock-chips.com, linux-rockchip@lists.infradead.org, Douglas Anderson <dianders@chromium.org>, Petr Mladek <pmladek@suse.cz>, Alan Stern <stern@rowland.harvard.edu>, devicetree@vger.kernel.org, Kever Yang <kever.yang@rock-chips.com>, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Dan Williams <dan.j.williams@intel.com>, Matthew Garrett <mjg59@coreos.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pratyush Anand <pratyush.anand@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Peter Chen <peter.chen@freescale.com>, Gregory Herrero <gregory.herrero@intel.com>, Robert
+From: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [REPOST PATCH 2/3] Documentation: dt-bindings: Add snps,need-phy-for-wake for dwc2 USB
+Date: Mon,  6 Jul 2015 11:27:03 -0700
+Message-ID: <1436207224-21849-3-git-send-email-dianders@chromium.org>
+References: <1436207224-21849-1-git-send-email-dianders@chromium.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1436207224-21849-1-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Julius Werner <jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Alexandru Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Gregory Herrero <gregory.herrero-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This series of patches, together with
-<https://patchwork.kernel.org/patch/6652341/> from Chris Zhong and a
-dts change allow us to wake up from a USB device on rk3288 boards.
-The patches were tested on rk3288-jerry in the chromeos-3.14 kernel.
-The chromeos-3.14 kernel tested included a full set of dwc2 backports
-from upstream, so this is expected to function upstream once we get
-everything setup there.
+Some SoCs with a dwc2 USB controller may need to keep the PHY on to
+support remote wakeup.  Allow specifying this as a device tree
+property.
 
+Signed-off-by: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+---
+ Documentation/devicetree/bindings/usb/dwc2.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Douglas Anderson (3):
-  USB: Export usb_wakeup_enabled_descendants()
-  Documentation: dt-bindings: Add snps,need-phy-for-wake for dwc2 USB
-  USB: dwc2: Don't turn off the usbphy in suspend if wakeup is enabled
-
- Documentation/devicetree/bindings/usb/dwc2.txt |  4 +++
- drivers/usb/core/hub.c                         |  7 ++--
- drivers/usb/dwc2/core.h                        |  2 ++
- drivers/usb/dwc2/platform.c                    | 45 ++++++++++++++++++++++++--
- include/linux/usb/hcd.h                        |  5 +++
- 5 files changed, 58 insertions(+), 5 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
+index fd132cb..84d258d 100644
+--- a/Documentation/devicetree/bindings/usb/dwc2.txt
++++ b/Documentation/devicetree/bindings/usb/dwc2.txt
+@@ -17,6 +17,9 @@ Refer to clk/clock-bindings.txt for generic clock consumer properties
+ Optional properties:
+ - phys: phy provider specifier
+ - phy-names: shall be "usb2-phy"
++- snps,need-phy-for-wake: if present indicates that the phy needs to be left
++  on for remote wakeup during suspend.
++
+ Refer to phy/phy-bindings.txt for generic phy consumer properties
+ - dr_mode: shall be one of "host", "peripheral" and "otg"
+   Refer to usb/generic.txt
+@@ -35,4 +38,5 @@ Example:
+ 		clock-names = "otg";
+ 		phys = <&usbphy>;
+ 		phy-names = "usb2-phy";
++		snps,need-phy-for-wake;
+         };
 -- 
 2.4.3.573.g4eafbef
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
