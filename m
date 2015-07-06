@@ -1,77 +1,62 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: Re: [PATCH 2/3] ARM: dts: axp152: Add a dtsi file
- for the axp152 pmic
-Date: Mon, 6 Jul 2015 10:57:13 +0200
-Message-ID: <20150706085713.GE3269@lukather>
-References: <1435088503-20776-1-git-send-email-hdegoede@redhat.com>
- <1435088503-20776-3-git-send-email-hdegoede@redhat.com>
- <20150625174027.GF2266@lukather>
- <558D0BC2.10004@redhat.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH RESEND 1/7] tty: serial: 8250: omap: fix kernel crash in suspend-to-ram
+Date: Mon, 6 Jul 2015 15:17:51 +0530
+Message-ID: <d8cb86b2717e0fc084b6651be54ee6d96dbc603a.1436174801.git.nsekhar@ti.com>
+References: <cover.1436174801.git.nsekhar@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="M/SuVGWktc5uNpra"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBEUH5GWAKGQEWKVFY3Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <558D0BC2.10004-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1436174801.git.nsekhar-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, John Ogness <john.ogness-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---M/SuVGWktc5uNpra
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+omap_device infrastructure has a suspend_noirq hook which
+runtime suspends all devices late in the suspend cycle (see
+_od_suspend_noirq() in arch/arm/mach-omap2/omap_device.c)
 
-Hi,
+This leads to a NULL pointer exception in 8250_omap driver
+since by the time omap8250_runtime_suspend() is called, 8250_dma
+driver has already set rxchan to NULL via serial8250_release_dma().
 
-On Fri, Jun 26, 2015 at 10:22:26AM +0200, Hans de Goede wrote:
-> Hi,
-> 
-> On 25-06-15 19:40, Maxime Ripard wrote:
-> >Hi,
-> >
-> >On Tue, Jun 23, 2015 at 09:41:42PM +0200, Hans de Goede wrote:
-> >>From: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >>
-> >>Add a dtsi file for the axp152 pmic, this mirrors the way things are
-> >>handled for the axp202 pmic.
-> >>
-> >>Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> >>---
-> >>  arch/arm/boot/dts/axp152.dtsi | 49 +++++++++++++++++++++++++++++++++++++++++++
-> >>  1 file changed, 49 insertions(+)
-> >>  create mode 100644 arch/arm/boot/dts/axp152.dtsi
-> >
-> >Unfortunately, Mark expressed clearly that he didn't want such files.
-> 
-> That is not how I remember the discussion, he said that he did not consider
-> them useful, we explained why we do consider them useful for the sunxi
-> case and then things went quiet.
-> 
-> And we do already have an axp209.dtsi, and I find having that useful
-> for enabling the regulators on axp209 using boards.
+Make an explicit check to see if rxchan is NULL in
+runtime_{suspend|resume} hooks to fix this.
 
-Hmmm, reading this discussion again, it indeed looks like I
-misremembered what he was saying.
+Signed-off-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+---
+Previous version: http://www.spinics.net/lists/linux-omap/msg119459.html
+No change in this version except rebased to v4.2-rc1
 
-> Ultimately it is your call, but I really think we should be consistent
-> and add an axp152.dtsi to mirror how we do things with the axp209.
+ drivers/tty/serial/8250/8250_omap.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Was there any other comments on this serie (and are you going to send
-a v2?) or should I apply this patch?
-
-Thanks,
-Maxime
-
+diff --git a/drivers/tty/serial/8250/8250_omap.c b/drivers/tty/serial/8250/8250_omap.c
+index d75a66c72750..20c5b9c4c288 100644
+--- a/drivers/tty/serial/8250/8250_omap.c
++++ b/drivers/tty/serial/8250/8250_omap.c
+@@ -1285,7 +1285,7 @@ static int omap8250_runtime_suspend(struct device *dev)
+ 			return -EBUSY;
+ 	}
+ 
+-	if (up->dma)
++	if (up->dma && up->dma->rxchan)
+ 		omap_8250_rx_dma(up, UART_IIR_RX_TIMEOUT);
+ 
+ 	priv->latency = PM_QOS_CPU_DMA_LAT_DEFAULT_VALUE;
+@@ -1310,7 +1310,7 @@ static int omap8250_runtime_resume(struct device *dev)
+ 	if (loss_cntx)
+ 		omap8250_restore_regs(up);
+ 
+-	if (up->dma)
++	if (up->dma && up->dma->rxchan)
+ 		omap_8250_rx_dma(up, 0);
+ 
+ 	priv->latency = priv->calc_latency;
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---M/SuVGWktc5uNpra--
+2.4.4.408.g16da57c
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
