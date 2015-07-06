@@ -1,115 +1,77 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [RESEND 06/10] dt: regulator: pwm-regulator: Re-write bindings
-Date: Mon,  6 Jul 2015 09:58:28 +0100
-Message-ID: <1436173112-21397-7-git-send-email-lee.jones@linaro.org>
-References: <1436173112-21397-1-git-send-email-lee.jones@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1436173112-21397-1-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: Re: [PATCH 2/3] ARM: dts: axp152: Add a dtsi file
+ for the axp152 pmic
+Date: Mon, 6 Jul 2015 10:57:13 +0200
+Message-ID: <20150706085713.GE3269@lukather>
+References: <1435088503-20776-1-git-send-email-hdegoede@redhat.com>
+ <1435088503-20776-3-git-send-email-hdegoede@redhat.com>
+ <20150625174027.GF2266@lukather>
+ <558D0BC2.10004@redhat.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="M/SuVGWktc5uNpra"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBEUH5GWAKGQEWKVFY3Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <558D0BC2.10004-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Add support for continuous-voltage mode
-* Put more meat on the bones with regards to voltage-table mode
-* Sort out formatting for ease of consumption
+--M/SuVGWktc5uNpra
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- .../bindings/regulator/pwm-regulator.txt           | 66 ++++++++++++++++++----
- 1 file changed, 54 insertions(+), 12 deletions(-)
+Hi,
 
-diff --git a/Documentation/devicetree/bindings/regulator/pwm-regulator.txt b/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
-index ce91f61..0ae7895 100644
---- a/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
-@@ -1,27 +1,69 @@
--pwm regulator bindings
-+Bindings for the Generic PWM Regulator
-+======================================
-+
-+Currently supports 2 modes of operation:
-+
-+voltage-table:		When in this mode, a voltage table (See below) of predefined
-+			voltage <=> duty-cycle values must be provided via DT.
-+			Limitations are that the regulator can only operate at the
-+			voltages supplied in the table.  Intermediary duty-cycle
-+			values which would normally allow finer grained voltage
-+			selection are ignored and rendered useless.  Although more
-+			control is given to the user if the assumptions made in
-+			continuous-voltage mode do not reign true.
-+
-+continuous-voltage:	This mode uses the regulator's maximum and minimum supplied
-+			voltages specified in the regulator-{min,max}-microvolt
-+			properties to calculate appropriate duty-cycle values.  This
-+			allows for a much more fine grained solution when compared
-+			with voltage-table mode above.  This solution does make an
-+			assumption that a %50 duty-cycle value will cause the
-+			regulator voltage to run at half way between the supplied
-+			max_uV and min_uV values.
- 
- Required properties:
--- compatible: Should be "pwm-regulator"
--- pwms: OF device-tree PWM specification (see PWM binding pwm.txt)
--- voltage-table: voltage and duty table, include 2 members in each set of
--  brackets, first one is voltage(unit: uv), the next is duty(unit: percent)
-+--------------------
-+- compatible:		Should be "pwm-regulator"
-+
-+- pwms:			PWM specification (See: ../pwm/pwm.txt)
-+
-+One of these must be provided:
-+- voltage-table: 	Voltage and Duty-Cycle table consisting of 2 cells
-+			    First cell is voltage in microvolts (uV)
-+			    Second cell is duty-cycle in percent (%)
-+
-+- max-duty-cycle:	Maximum Duty-Cycle value -- this will normally be 255 (0xff)
-+			for an 8 bit PWM device
- 
--Any property defined as part of the core regulator binding defined in
--regulator.txt can also be used.
-+If both are provided, the current default is voltage-table mode.
- 
--Example:
-+Any property defined as part of the core regulator binding can also be used.
-+(See: ../regulator/regulator.txt)
-+
-+Continuous Voltage Example:
- 	pwm_regulator {
- 		compatible = "pwm-regulator;
- 		pwms = <&pwm1 0 8448 0>;
-+		regulator-min-microvolt = <1016000>;
-+		regulator-max-microvolt = <1114000>;
-+		regulator-name = "vdd_logic";
-+
-+		max-duty-cycle = <255>; /* 8bit PWM */
-+	};
- 
-+Voltage Table Example:
-+	pwm_regulator {
-+		compatible = "pwm-regulator;
-+		pwms = <&pwm1 0 8448 0>;
-+		regulator-min-microvolt = <1016000>;
-+		regulator-max-microvolt = <1114000>;
-+		regulator-name = "vdd_logic";
-+
-+			      /* Voltage Duty-Cycle */
- 		voltage-table = <1114000 0>,
- 				<1095000 10>,
- 				<1076000 20>,
- 				<1056000 30>,
- 				<1036000 40>,
- 				<1016000 50>;
--
--		regulator-min-microvolt = <1016000>;
--		regulator-max-microvolt = <1114000>;
--		regulator-name = "vdd_logic";
- 	};
+On Fri, Jun 26, 2015 at 10:22:26AM +0200, Hans de Goede wrote:
+> Hi,
+> 
+> On 25-06-15 19:40, Maxime Ripard wrote:
+> >Hi,
+> >
+> >On Tue, Jun 23, 2015 at 09:41:42PM +0200, Hans de Goede wrote:
+> >>From: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >>
+> >>Add a dtsi file for the axp152 pmic, this mirrors the way things are
+> >>handled for the axp202 pmic.
+> >>
+> >>Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> >>---
+> >>  arch/arm/boot/dts/axp152.dtsi | 49 +++++++++++++++++++++++++++++++++++++++++++
+> >>  1 file changed, 49 insertions(+)
+> >>  create mode 100644 arch/arm/boot/dts/axp152.dtsi
+> >
+> >Unfortunately, Mark expressed clearly that he didn't want such files.
+> 
+> That is not how I remember the discussion, he said that he did not consider
+> them useful, we explained why we do consider them useful for the sunxi
+> case and then things went quiet.
+> 
+> And we do already have an axp209.dtsi, and I find having that useful
+> for enabling the regulators on axp209 using boards.
+
+Hmmm, reading this discussion again, it indeed looks like I
+misremembered what he was saying.
+
+> Ultimately it is your call, but I really think we should be consistent
+> and add an axp152.dtsi to mirror how we do things with the axp209.
+
+Was there any other comments on this serie (and are you going to send
+a v2?) or should I apply this patch?
+
+Thanks,
+Maxime
+
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--M/SuVGWktc5uNpra--
