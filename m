@@ -1,44 +1,63 @@
-From: YH Huang <yh.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v4 0/3] Add MediaTek display PWM driver
-Date: Mon, 6 Jul 2015 21:29:25 +0800
-Message-ID: <1436189368-1826-1-git-send-email-yh.huang@mediatek.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: shmobile: kzm9g dts: Use adxl345-specific compatible property
+Date: Mon, 06 Jul 2015 16:29:33 +0300
+Message-ID: <15966074.zDS67FO48r@avalon>
+References: <1436180132-26190-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1436180132-26190-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch series add the use of display PWM driver, documentation 
-and device tree for Mediatek SoCs. The driver is used to support 
-the backlight of the panel. This is based on v4.2-rc1.
+Hi Geert,
 
-The clock definitions (CLK_MM_DISP_PWM*) are added by James Liao's patch: 
-clk: mediatek: Add subsystem clocks of MT8173
+Thank you for the patch.
 
-Change in v4:
-1. Codebase is on v4.2-rc1
-2. Add the PWM node in dtsi 
-3. Change the dependency in Kconfig
-4. Rewrite some code for readability 
+On Monday 06 July 2015 12:55:32 Geert Uytterhoeven wrote:
+> Replace the deprecated generic "adi,adxl34x" compatible value by the
+> adxl345-specific "adi,adxl345" value, cfr. commit e465bf6fc55d5ce2 ("DT:
+> i2c: Deprecate adi,adxl34x compatible string").
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 
-YH Huang (3):
-  dt-bindings: pwm: add MediaTek display PWM bindings
-  pwm: add MediaTek display PWM driver support
-  arm64: dts: mt8173: add MT8173 display PWM driver support dtsi
+Acked-by: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
 
- .../devicetree/bindings/pwm/pwm-mtk-disp.txt       |  24 ++
- arch/arm64/boot/dts/mediatek/mt8173.dtsi           |  22 ++
- drivers/pwm/Kconfig                                |  10 +
- drivers/pwm/Makefile                               |   1 +
- drivers/pwm/pwm-mtk-disp.c                         | 256 +++++++++++++++++++++
- 5 files changed, 313 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
- create mode 100644 drivers/pwm/pwm-mtk-disp.c
+> ---
+> Depends on commit 3a38958d2477b718 ("Input: adxl34x - add OF match
+> support"), which is in v4.2-rc1.
+> 
+> This is v2 of "ARM: shmobile: kzm9g dts: Add adxl345-specific compatible
+> property".
+> 
+> v2:
+>   - Drop deprecated "adi,adxl34x"
+> ---
+>  arch/arm/boot/dts/sh73a0-kzm9g.dts | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/sh73a0-kzm9g.dts
+> b/arch/arm/boot/dts/sh73a0-kzm9g.dts index
+> 24b4cd24dceb2f9e..7fc5602810ad0da1 100644
+> --- a/arch/arm/boot/dts/sh73a0-kzm9g.dts
+> +++ b/arch/arm/boot/dts/sh73a0-kzm9g.dts
+> @@ -206,7 +206,7 @@
+>  	};
+> 
+>  	accelerometer@1d {
+> -		compatible = "adi,adxl34x";
+> +		compatible = "adi,adxl345";
+>  		reg = <0x1d>;
+>  		interrupt-parent = <&irqpin3>;
+>  		interrupts = <2 IRQ_TYPE_LEVEL_HIGH>,
 
---
-1.8.1.1.dirty
+-- 
+Regards,
+
+Laurent Pinchart
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
