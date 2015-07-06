@@ -1,32 +1,146 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [RESEND] [PATCH v2 1/2] arm: devtree: Set system_rev from DT
- revision
-Date: Mon, 6 Jul 2015 05:31:27 -0700
-Message-ID: <20150706123126.GG10705@atomide.com>
-References: <1430902142-17035-1-git-send-email-pali.rohar@gmail.com>
- <20150506114417.GI30910@pali>
- <20150625050138.GL4156@atomide.com>
- <201507061423.23505@pali>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <201507061423.23505@pali>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, Rob Herring <robherring2@gmail.com>, Russell King <linux@arm.linux.org.uk>, Will Deacon <will.deacon@arm.com>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, Sebastian Reichel <sre@debian.org>, Pavel Machek <pavel@ucw.cz>, Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>, linux-omap@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+From: Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 2/8] iio: mma8452: add support for MMA8453Q accelerometer chip
+Date: Mon,  6 Jul 2015 14:34:16 +0200
+Message-ID: <1436186062-5766-3-git-send-email-martink@posteo.de>
+References: <1436186062-5766-1-git-send-email-martink@posteo.de>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1436186062-5766-1-git-send-email-martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org, roberta.dobrescu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org, Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>, Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Pali Roh=C3=A1r <pali.rohar@gmail.com> [150706 05:25]:
->
-> into which file should I put documentation about new DT properties?
+This adds support for the 10 bit version if Freescale's accelerometers
+of this series. The datasheet is available at Freescale's website:
 
-If it's Linux generic like linux,revision, then how about
-Documentation/devicetree/bindings/revision.txt?
+http://cache.freescale.com/files/sensors/doc/data_sheet/MMA8453Q.pdf
 
-=46or the ATAGs, Documentation/devicetree/bindings/arm/atag.txt?
+Signed-off-by: Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+Signed-off-by: Christoph Muellner <christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+---
+ drivers/iio/accel/Kconfig   |  6 +++---
+ drivers/iio/accel/mma8452.c | 38 +++++++++++++++++++++++++++++++++++---
+ 2 files changed, 38 insertions(+), 6 deletions(-)
 
-Regards,
-
-Tony
+diff --git a/drivers/iio/accel/Kconfig b/drivers/iio/accel/Kconfig
+index 00e7bcb..dc80dc9 100644
+--- a/drivers/iio/accel/Kconfig
++++ b/drivers/iio/accel/Kconfig
+@@ -87,13 +87,13 @@ config KXSD9
+ 	  will be called kxsd9.
+ 
+ config MMA8452
+-	tristate "Freescale MMA8452Q Accelerometer Driver"
++	tristate "Freescale MMA8452Q and similar Accelerometers Driver"
+ 	depends on I2C
+ 	select IIO_BUFFER
+ 	select IIO_TRIGGERED_BUFFER
+ 	help
+-	  Say yes here to build support for the Freescale MMA8452Q 3-axis
+-	  accelerometer.
++	  Say yes here to build support for the following Freescale 3-axis
++	  accelerometers: MMA8452Q, MMA8453Q.
+ 
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called mma8452.
+diff --git a/drivers/iio/accel/mma8452.c b/drivers/iio/accel/mma8452.c
+index 8919bfb..71b40f7 100644
+--- a/drivers/iio/accel/mma8452.c
++++ b/drivers/iio/accel/mma8452.c
+@@ -1,5 +1,8 @@
+ /*
+- * mma8452.c - Support for Freescale MMA8452Q 3-axis 12-bit accelerometer
++ * mma8452.c - Support for following Freescale 3-axis accelerometers:
++ *
++ *	MMA8452Q
++ *	MMA8453Q
+  *
+  * Copyright 2014 Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+  *
+@@ -27,7 +30,7 @@
+ 
+ #define DRIVER_NAME "mma8452"
+ #define MMA8452_STATUS 0x00
+-#define MMA8452_OUT_X 0x01 /* MSB first, 12-bit  */
++#define MMA8452_OUT_X 0x01 /* MSB first, 10 or 12-bit  */
+ #define MMA8452_OUT_Y 0x03
+ #define MMA8452_OUT_Z 0x05
+ #define MMA8452_INT_SRC 0x0c
+@@ -74,6 +77,7 @@
+ #define MMA8452_INT_TRANS	BIT(5)
+ 
+ #define MMA8452_DEVICE_ID 0x2a
++#define MMA8453_DEVICE_ID 0x3a
+ 
+ struct mma8452_data {
+ 	struct i2c_client *client;
+@@ -745,8 +749,16 @@ static const struct iio_chan_spec mma8452_channels[] = {
+ 	IIO_CHAN_SOFT_TIMESTAMP(3),
+ };
+ 
++static const struct iio_chan_spec mma8453_channels[] = {
++	MMA8452_CHANNEL(X, 0, 10),
++	MMA8452_CHANNEL(Y, 1, 10),
++	MMA8452_CHANNEL(Z, 2, 10),
++	IIO_CHAN_SOFT_TIMESTAMP(3),
++};
++
+ enum {
+ 	mma8452,
++	mma8453,
+ };
+ 
+ static const struct mma_chip_info mma_chip_info_table[] = {
+@@ -773,7 +785,24 @@ static const struct mma_chip_info mma_chip_info_table[] = {
+ 		.ev_ths_mask = MMA8452_TRANSIENT_THS_MASK,
+ 		.ev_count = MMA8452_TRANSIENT_COUNT,
+ 	},
++	[mma8453] = {
++		.chip_id = MMA8453_DEVICE_ID,
++		.channels = mma8453_channels,
++		.num_channels = ARRAY_SIZE(mma8453_channels),
++		.mma_scales = { {0, 38307}, {0, 76614}, {0, 153228} },
++		.ev_cfg = MMA8452_TRANSIENT_CFG,
++		.ev_cfg_ele = MMA8452_TRANSIENT_CFG_ELE,
++		.ev_cfg_chan_shift = 1,
++		.ev_src = MMA8452_TRANSIENT_SRC,
++		.ev_src_xe = MMA8452_TRANSIENT_SRC_XTRANSE,
++		.ev_src_ye = MMA8452_TRANSIENT_SRC_YTRANSE,
++		.ev_src_ze = MMA8452_TRANSIENT_SRC_ZTRANSE,
++		.ev_ths = MMA8452_TRANSIENT_THS,
++		.ev_ths_mask = MMA8452_TRANSIENT_THS_MASK,
++		.ev_count = MMA8452_TRANSIENT_COUNT,
++	},
+ };
++
+ static struct attribute *mma8452_attributes[] = {
+ 	&iio_dev_attr_sampling_frequency_available.dev_attr.attr,
+ 	&iio_dev_attr_in_accel_scale_available.dev_attr.attr,
+@@ -892,6 +921,7 @@ static int mma8452_reset(struct i2c_client *client)
+ 
+ static const struct of_device_id mma8452_dt_ids[] = {
+ 	{ .compatible = "fsl,mma8452", .data = &mma_chip_info_table[mma8452] },
++	{ .compatible = "fsl,mma8453", .data = &mma_chip_info_table[mma8453] },
+ 	{ }
+ };
+ 
+@@ -906,7 +936,8 @@ static int mma8452_probe(struct i2c_client *client,
+ 	ret = i2c_smbus_read_byte_data(client, MMA8452_WHO_AM_I);
+ 	if (ret < 0)
+ 		return ret;
+-	if (ret != MMA8452_DEVICE_ID)
++
++	if (ret != MMA8452_DEVICE_ID && ret != MMA8453_DEVICE_ID)
+ 		return -ENODEV;
+ 
+ 	match = of_match_device(mma8452_dt_ids, &client->dev);
+@@ -1053,6 +1084,7 @@ static SIMPLE_DEV_PM_OPS(mma8452_pm_ops, mma8452_suspend, mma8452_resume);
+ 
+ static const struct i2c_device_id mma8452_id[] = {
+ 	{ "mma8452", mma8452 },
++	{ "mma8453", mma8453 },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(i2c, mma8452_id);
+-- 
+2.1.4
