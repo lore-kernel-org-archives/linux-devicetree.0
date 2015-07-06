@@ -1,75 +1,137 @@
-From: Koro Chen <koro.chen@mediatek.com>
-Subject: [PATCH] arm64: dts: mt8173: Add afe device node
-Date: Mon, 6 Jul 2015 14:52:10 +0800
-Message-ID: <1436165530-41963-1-git-send-email-koro.chen@mediatek.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: RE: [PATCH v2] phy: rcar-gen2 usb: Add Host/Function switching for
+ USB0
+Date: Mon, 6 Jul 2015 07:18:24 +0000
+Message-ID: <SG2PR06MB0919835888EBD162D4B86C24D8930@SG2PR06MB0919.apcprd06.prod.outlook.com>
+References: <1435824347-22732-1-git-send-email-phil.edworthy@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1435824347-22732-1-git-send-email-phil.edworthy@renesas.com>
+Content-Language: ja-JP
 Sender: linux-kernel-owner@vger.kernel.org
-To: matthias.bgg@gmail.com
-Cc: srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org, s.hauer@pengutronix.de, djkurtz@chromium.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, drinkcat@chromium.org, Koro Chen <koro.chen@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, Phil Edworthy <phil.edworthy@renesas.com>, Kishon Vijay Abraham I <kishon@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds afe (audio front end) device node to the MT8173 dtsi file.
+Hi Phil-san,
 
-This patch is based on Matthias's tree:
-https://github.com/mbgg/linux-mediatek
-branch: v4.2-next/arm64
+Thank you very much for the patch!
 
-Signed-off-by: Koro Chen <koro.chen@mediatek.com>
----
- arch/arm64/boot/dts/mediatek/mt8173.dtsi | 32 ++++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+> Sent: Thursday, July 02, 2015 5:06 PM
+< snip >
+> +/* VBUS change IRQ handler */
+> +static irqreturn_t gpio_vbus_irq(int irq, void *data)
+> +{
+> +	struct rcar_gen2_channel *channel = data;
+> +
+> +	/* Wait 20ms before doing anything as VBUS needs to settle */
+> +	schedule_delayed_work(&channel->work, msecs_to_jiffies(20));
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int probe_otg(struct platform_device *pdev,
+> +	struct rcar_gen2_phy_driver *drv)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct rcar_gen2_channel *ch = drv->channels;
+> +	int irq;
+> +	int ret;
+> +
+> +	/* GPIOs for Host/Fn switching */
+> +	ch->gpio_id = of_get_named_gpio_flags(dev->of_node,
+> +				"renesas,id-gpio", 0, NULL);
+> +	ch->gpio_vbus = of_get_named_gpio_flags(dev->of_node,
+> +				"renesas,vbus-gpio", 0, NULL);
+> +
+> +	/* Need valid ID and VBUS gpios for Host/Fn switching */
+> +	if (gpio_is_valid(ch->gpio_id) && gpio_is_valid(ch->gpio_vbus)) {
+> +		ch->use_otg = 1;
+> +
+> +		/* GPIO for ID input */
+> +		ret = devm_gpio_request_one(dev, ch->gpio_id, GPIOF_IN, "id");
+> +		if (ret)
+> +			return ret;
+> +
+> +		/* GPIO for VBUS input */
+> +		ret = devm_gpio_request_one(dev, ch->gpio_vbus, GPIOF_IN, "vbus");
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index 0696f8f..f8afab4 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -14,6 +14,7 @@
- #include <dt-bindings/clock/mt8173-clk.h>
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/power/mt8173-power.h>
- #include <dt-bindings/reset-controller/mt8173-resets.h>
- #include "mt8173-pinfunc.h"
- 
-@@ -393,6 +394,37 @@
- 			#size-cells = <0>;
- 			status = "disabled";
- 		};
-+
-+		afe: mt8173-afe-pcm@11220000  {
-+			compatible = "mediatek,mt8173-afe-pcm";
-+			reg = <0 0x11220000 0 0x1000>;
-+			interrupts = <GIC_SPI 134 IRQ_TYPE_EDGE_FALLING>;
-+			power-domains = <&scpsys MT8173_POWER_DOMAIN_AUDIO>;
-+			clocks = <&infracfg CLK_INFRA_AUDIO>,
-+				 <&topckgen CLK_TOP_AUDIO_SEL>,
-+				 <&topckgen CLK_TOP_AUD_INTBUS_SEL>,
-+				 <&topckgen CLK_TOP_APLL1_DIV0>,
-+				 <&topckgen CLK_TOP_APLL2_DIV0>,
-+				 <&topckgen CLK_TOP_I2S0_M_SEL>,
-+				 <&topckgen CLK_TOP_I2S1_M_SEL>,
-+				 <&topckgen CLK_TOP_I2S2_M_SEL>,
-+				 <&topckgen CLK_TOP_I2S3_M_SEL>,
-+				 <&topckgen CLK_TOP_I2S3_B_SEL>;
-+			clock-names = "infra_sys_audio_clk",
-+				      "top_pdn_audio",
-+				      "top_pdn_aud_intbus",
-+				      "bck0",
-+				      "bck1",
-+				      "i2s0_m",
-+				      "i2s1_m",
-+				      "i2s2_m",
-+				      "i2s3_m",
-+				      "i2s3_b";
-+			assigned-clocks = <&topckgen CLK_TOP_AUD_1_SEL>,
-+					  <&topckgen CLK_TOP_AUD_2_SEL>;
-+			assigned-clock-parents = <&topckgen CLK_TOP_APLL1>,
-+						 <&topckgen CLK_TOP_APLL2>;
-+		};
- 	};
- };
- 
--- 
-1.8.1.1.dirty
+According to the checkpatch.pl, "line over 80 characters".
+
+> +		if (ret)
+> +			return ret;
+> +
+> +		irq = gpio_to_irq(ch->gpio_vbus);
+> +		ret = devm_request_irq(dev, irq, gpio_vbus_irq, VBUS_IRQ_FLAGS,
+> +				"vbus_detect", ch);
+> +		if (ret)
+> +			return ret;
+> +
+> +		/* Optional GPIO for VBUS power */
+> +		ch->gpio_vbus_pwr = of_get_named_gpio_flags(dev->of_node,
+> +						"renesas,vbus-pwr-gpio", 0, NULL);
+
+Same above.
+
+> +		if (gpio_is_valid(ch->gpio_id)) {
+> +			ret = devm_gpio_request_one(dev, ch->gpio_vbus_pwr,
+> +					GPIOF_OUT_INIT_LOW, "vbus-pwr");
+> +			if (ret)
+> +				return ret;
+> +		}
+> +
+> +	} else if (gpio_is_valid(ch->gpio_id)) {
+> +		dev_err(dev, "Failed to get VBUS gpio\n");
+> +		return ch->gpio_vbus;
+> +	} else if (gpio_is_valid(ch->gpio_vbus)) {
+> +		dev_err(dev, "Failed to get ID gpio\n");
+> +		return ch->gpio_id;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +/* bind/unbind the peripheral controller */
+> +static int rcar_gen2_usb_set_peripheral(struct usb_otg *otg,
+> +					struct usb_gadget *gadget)
+> +{
+> +	otg->gadget = gadget;
+> +	if (!gadget) {
+> +		usb_gadget_vbus_disconnect(otg->gadget);
+
+Since the otg->gadget is NULL, this driver should not call this function here.
+
+> +		otg->state = OTG_STATE_UNDEFINED;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static int rcar_gen2_phy_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+< snip >
+> @@ -323,6 +540,14 @@ static int rcar_gen2_phy_probe(struct platform_device *pdev)
+> 
+>  	dev_set_drvdata(dev, drv);
+> 
+> +	/*
+> +	 * If we already have something plugged into USB0, we won't get an edge
+> +	 * on VBUS, so we have to manually schedule work to look at the VBUS
+> +	 * and ID signals.
+> +	 */
+> +	if (drv->channels->use_otg)
+> +		schedule_delayed_work(&drv->channels->work, msecs_to_jiffies(100));
+
+This line is also "line over 80 characters".
+
+Best regards,
+Yoshihiro Shimoda
+
+> +
+>  	return 0;
+>  }
+> 
+> --
+> 1.9.1
