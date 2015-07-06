@@ -1,28 +1,18 @@
 From: Daniel Kurtz <djkurtz@chromium.org>
 Subject: Re: [PATCH] arm64: dts: mt8173: Add afe device node
-Date: Mon, 6 Jul 2015 21:00:28 +0800
-Message-ID: <CAGS+omCtfCUQEczX+OCLa7jfOnxE=jFq8os0m2LCi87ELMTK9g@mail.gmail.com>
+Date: Mon, 6 Jul 2015 21:02:38 +0800
+Message-ID: <CAGS+omCOzJs=VWboU_7doUum6BEfmh1hV88HmJiin2c-A_n_Mw@mail.gmail.com>
 References: <1436165530-41963-1-git-send-email-koro.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1436165530-41963-1-git-send-email-koro.chen@mediatek.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Koro Chen <koro.chen@mediatek.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, alsa-devel@alsa-project.org, Nicolas Boichat <drinkcat@chromium.org>, srv_heupstream <srv_heupstream@mediatek.com>, Sascha Hauer <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Koro Chen <koro.chen@mediatek.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, srv_heupstream <srv_heupstream@mediatek.com>, linux-mediatek@lists.infradead.org, Sascha Hauer <s.hauer@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, alsa-devel@alsa-project.org, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Nicolas Boichat <drinkcat@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
 On Mon, Jul 6, 2015 at 2:52 PM, Koro Chen <koro.chen@mediatek.com> wrote:
-
 > This adds afe (audio front end) device node to the MT8173 dtsi file.
 >
 > This patch is based on Matthias's tree:
@@ -31,12 +21,10 @@ On Mon, Jul 6, 2015 at 2:52 PM, Koro Chen <koro.chen@mediatek.com> wrote:
 >
 > Signed-off-by: Koro Chen <koro.chen@mediatek.com>
 > ---
->  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 32
-> ++++++++++++++++++++++++++++++++
+>  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 32 ++++++++++++++++++++++++++++++++
 >  1 file changed, 32 insertions(+)
 >
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
 > index 0696f8f..f8afab4 100644
 > --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
 > +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
@@ -54,7 +42,6 @@ On Mon, Jul 6, 2015 at 2:52 PM, Koro Chen <koro.chen@mediatek.com> wrote:
 >                 };
 > +
 > +               afe: mt8173-afe-pcm@11220000  {
->
 
 I believe this should be something generic, like:
 
@@ -63,12 +50,10 @@ I believe this should be something generic, like:
 Thanks!
 -Dan
 
-
 > +                       compatible = "mediatek,mt8173-afe-pcm";
 > +                       reg = <0 0x11220000 0 0x1000>;
 > +                       interrupts = <GIC_SPI 134 IRQ_TYPE_EDGE_FALLING>;
-> +                       power-domains = <&scpsys
-> MT8173_POWER_DOMAIN_AUDIO>;
+> +                       power-domains = <&scpsys MT8173_POWER_DOMAIN_AUDIO>;
 > +                       clocks = <&infracfg CLK_INFRA_AUDIO>,
 > +                                <&topckgen CLK_TOP_AUDIO_SEL>,
 > +                                <&topckgen CLK_TOP_AUD_INTBUS_SEL>,
@@ -99,5 +84,4 @@ Thanks!
 >
 > --
 > 1.8.1.1.dirty
->
 >
