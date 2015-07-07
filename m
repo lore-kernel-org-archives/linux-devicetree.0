@@ -1,92 +1,86 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: mt8173: add clock_null
-Date: Tue, 7 Jul 2015 16:36:21 +0200
-Message-ID: <20150707143621.GW18700@pengutronix.de>
-References: <1434605351-64592-1-git-send-email-eddie.huang@mediatek.com>
- <20150707130732.GD18561@pengutronix.de>
- <CAGS+omCgSjLZ2Ae5DqfmEm-2BrxQqw2ztxUCxBSngNSXxabtbg@mail.gmail.com>
+From: Kukjin Kim <kgene@kernel.org>
+Subject: RE: [PATCH v6 0/3] cpufreq: Use cpufreq-dt driver for Exynos3250
+Date: Tue, 07 Jul 2015 23:43:31 +0900
+Message-ID: <093101d0b8c3$4b5d3ec0$e217bc40$@kernel.org>
+References: <1435797761-3339-1-git-send-email-cw00.choi@samsung.com>
+ <4464631.oZyVO4Z0Ov@amdc1976>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAGS+omCgSjLZ2Ae5DqfmEm-2BrxQqw2ztxUCxBSngNSXxabtbg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <4464631.oZyVO4Z0Ov@amdc1976>
+Content-language: ko
+Sender: linux-kernel-owner@vger.kernel.org
+To: 'Bartlomiej Zolnierkiewicz' <b.zolnierkie@samsung.com>, 'Chanwoo Choi' <cw00.choi@samsung.com>
+Cc: s.nawrocki@samsung.com, tomasz.figa@gmail.com, mturquette@baylibre.com, sboyd@codeaurora.org, kgene@kernel.org, k.kozlowski@samsung.com, thomas.ab@samsung.com, kyungmin.park@samsung.com, linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 07, 2015 at 10:15:29PM +0800, Daniel Kurtz wrote:
-> On Tue, Jul 7, 2015 at 9:07 PM, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> > On Thu, Jun 18, 2015 at 01:29:11PM +0800, Eddie Huang wrote:
-> >> Add clk_null, which represents clocks that can not / need not
-> >> controlled by software.
-> >> There are many clocks' parent set to clk_null.
-> >>
-> >> Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> >> Signed-off-by: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> >> ---
-> >> Base on 4.1-rc1
-> >>
-> >> Change-Id: I4db9b40d07e28f54f7bae9b676316cbd6a962124
-> >> ---
-> >>  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 6 ++++++
-> >>  1 file changed, 6 insertions(+)
-> >>
-> >> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> >> index 924fdb6..4798f44 100644
-> >> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> >> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> >> @@ -81,6 +81,12 @@
-> >>               cpu_on        = <0x84000003>;
-> >>       };
-> >>
-> >> +     clk_null: clk_null {
-> >> +             compatible = "fixed-clock";
-> >> +             clock-frequency = <0>;
-> >> +             #clock-cells = <0>;
-> >> +     };
-> >
-> > The discussion around this patch shows that we don't want to have this
-> > clock in the device tree as it is not a hardware description.
-> >
-> > Ok, fine. Eddie, you told us that the rate of the current clk_null children
-> > is not interesting. What's the motivation to send this patch anyway
-> > then? Why can't you keep its children on the orphan list where they are
-> > already now?
-> >
-> > Another possibility would be to instantiate the clk_null clock from C
-> > code rather than from the device tree. This way we wouldn't put any
-> > wrong descriptions into the device tree and still can implement the
-> > support for the real parent clocks when we actually need them.
+Bartlomiej Zolnierkiewicz wrote:
 > 
-> Some device nodes, like mmc, use a clk_null phandle as one of their clocks:
+> Hi,
+>
+Hi,
+
+> On Thursday, July 02, 2015 09:42:38 AM Chanwoo Choi wrote:
+> > This patchset use cpufreq-dt driver to support Exynos3250 cpufreq and tested it
+> > on Exynos3250-based Rinato board.
+> >
+> > Depends on:
+> > - next-20150701 tag (master branch) of linux-next kernel tree
+> > - This patch-set is based on Exynos5250 patch-set[1] because two patch-set
+> >   modify the 'arch/arm/mach-exynos/exynos.c' to add the compatible string.
+> >   [1] https://lkml.org/lkml/2015/6/29/361
+> >   : [PATCH v2 0/4] cpufreq: use generic cpufreq drivers for Exynos5250 platform
+> >
+> > Changes from v5:
+> > (https://lkml.org/lkml/2015/7/1/324)
+> > - Reorder the cpu dt node in exynos3250-rinato/monk.dts alpabetically.
+> > - Add reviewed-by tag of Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> >
+> > Changes from v4:
+> > (https://lkml.org/lkml/2014/10/20/215)
+> > - Rebased on latest linux-next git repository.
+> > - Remove unnecessary divider clock flag from divider of DIV_CPU0/DIV_CPU1 register
+> >
+> > Changes from v3:
+> > - This patchset is based on 3.18-rc1 with new patchset[3] of Thomas Abraham
+> >   [3] [PATCH v11 0/6] cpufreq: use generic cpufreq drivers for exynos platforms
+> >   - http://www.spinics.net/lists/arm-kernel/msg370412.html
+> >
+> > Changes from v2:
+> > - Rebased on new patchset of Thomas Abraham
+> >   and for-next branch of samsunc-clk.git of Tomasz Figa
+> >
+> > Changes from v1:
+> > - Rebased on new patchset[1] by Thomas Abraham
+> >   [1] [PATCH v10 0/6] cpufreq: use generic cpufreq drivers for exynos platforms
+> >   - http://www.spinics.net/lists/arm-kernel/msg364790.html
+> > - Modify clk-cpu.c to support Exynos3250
+> > - Drop documentation patch on previous patchset[2]
+> >   [2] http://www.spinics.net/lists/cpufreq/msg10265.html
+> > - Add only operating-points for Exynos3250 without armclk-divider-table
+> >
+> > Chanwoo Choi (3):
+> >   clk: samsung: exynos3250: Add cpu clock configuration data and instaniate cpu clock
+> >   ARM: dts: Add CPU OPP and regulator supply property for Exynos3250
+> >   ARM: exynos: Add exynos3250 compatible to use generic cpufreq driver
+> >
+> >  arch/arm/boot/dts/exynos3250-monk.dts   |  4 ++++
+> >  arch/arm/boot/dts/exynos3250-rinato.dts |  4 ++++
+> >  arch/arm/boot/dts/exynos3250.dtsi       | 15 +++++++++++++++
+> >  arch/arm/mach-exynos/exynos.c           |  1 +
+> >  drivers/clk/samsung/clk-exynos3250.c    | 32 ++++++++++++++++++++++++++++++--
+> >  include/dt-bindings/clock/exynos3250.h  |  1 +
+> >  6 files changed, 55 insertions(+), 2 deletions(-)
 > 
-> mmc1: mmc@11240000 {
->         compatible = "mediatek,mt8173-mmc",
->                      "mediatek,mt8135-mmc";
->         reg = <0 0x11240000 0 0x1000>;
->         interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_LOW>;
->         clocks = <&pericfg CLK_PERI_MSDC30_1>,
->                  <&clk_null>;
->         clock-names = "source", "hclk";
->         status = "disabled";
-> };
+> Reviewed-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> 
+> Thank you for working on this.
+> 
++1 Thanks.
 
-This is another case than the one we discussed about. In the case above
-I motivated using a dummy clock since the clock exists in the system,
-but is not software controllable. To abstract this from the driver
-(which needs this clock since it exists) we here have the dummy clock.
-However, of course I can't prove the clock is indeed not software
-controllable; that's only the information I have.
+Mike and Sylwester, if you're OK on this series, I'd like to pick up in Samsung
+tree together. And if you want, I could provide topic branch for clk tree.
 
-Sascha
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Kukjin
