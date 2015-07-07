@@ -1,62 +1,112 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH 1/2] powerpc/85xx: Add binding for SCFG
-Date: Tue, 7 Jul 2015 14:50:20 -0500
-Message-ID: <1436298620.2658.41.camel@freescale.com>
-References: <1436262437-31390-1-git-send-email-dongsheng.wang@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: [PATCH 1/4] irqchip: bcm2835: Refactor handle_IRQ() calls out of MAKE_HWIRQ.
+Date: Tue,  7 Jul 2015 14:13:34 -0700
+Message-ID: <1436303617-17185-2-git-send-email-eric@anholt.net>
+References: <1436303617-17185-1-git-send-email-eric@anholt.net>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1436262437-31390-1-git-send-email-dongsheng.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+In-Reply-To: <1436303617-17185-1-git-send-email-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dongsheng Wang <dongsheng.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-07-07 at 17:47 +0800, Dongsheng Wang wrote:
-> From: Wang Dongsheng <dongsheng.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> 
-> SCFG provides SoC specific configuration and status registers for
-> the chip. Add this for powerpc platform.
-> 
-> Signed-off-by: Wang Dongsheng <dongsheng.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> 
-> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/board.txt 
-> b/Documentation/devicetree/bindings/powerpc/fsl/board.txt
-> index cff38bd..55604fe 100644
-> --- a/Documentation/devicetree/bindings/powerpc/fsl/board.txt
-> +++ b/Documentation/devicetree/bindings/powerpc/fsl/board.txt
-> @@ -3,6 +3,25 @@ Freescale Reference Board Bindings
->  This document describes device tree bindings for various devices that
->  exist on some Freescale reference boards.
->  
-> +* Supplement configuration unit (SCFG)
-> +
-> +SCFG is the supplemental configuration unit, that provides SoC specific
-> +configuration and status registers for the chip. Such as getting PEX port
-> +status.
-> +
-> +Required properties:
-> +
-> +- compatible: should be "fsl,<board>-scfg"
+For BCM2836, we want to chain into this IRQ chip from the root
+controller, and for chaining we need to do something else instead of
+handle_IRQ() once we have decoded the IRQ.
 
-fsl,<chip>-scfg
+Note that this changes the behavior a little bit: Previously for a
+non-shortcut IRQ, we'd loop reading and handling the second level IRQ
+status until it was cleared before returning to the loop reading the
+top level IRQ status (Note that the top level bit is just an OR of the
+low level bits).  For the expected case of just one interrupt to be
+handled, this was an extra register read, so we're down from 4 to 3
+reads.
 
-> +- reg: should contain base address and length of SCFG memory-mapped
-> +registers
-> +
-> +Example:
-> +
-> +     scfg:  global-utilities@fc000{
-> +             compatible = "fsl,t1040-scfg";
-> +             reg = <0xfc000 0x1000>;
-> +     };
-> +
+Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+---
+ drivers/irqchip/irq-bcm2835.c | 57 ++++++++++++++++++++++---------------------
+ 1 file changed, 29 insertions(+), 28 deletions(-)
 
-I don't think board.txt is the right place for this, since it's part of the 
-SoC, not the board.  Put it in its own file.
-
--Scott
+diff --git a/drivers/irqchip/irq-bcm2835.c b/drivers/irqchip/irq-bcm2835.c
+index e68c3b6..382450a 100644
+--- a/drivers/irqchip/irq-bcm2835.c
++++ b/drivers/irqchip/irq-bcm2835.c
+@@ -179,44 +179,45 @@ static int __init armctrl_of_init(struct device_node *node,
+  * handle_IRQ may briefly re-enable interrupts for soft IRQ handling.
+  */
+ 
+-static void armctrl_handle_bank(int bank, struct pt_regs *regs)
++static u32 armctrl_translate_bank(int bank)
+ {
+-	u32 stat, irq;
++	u32 stat = readl_relaxed(intc.pending[bank]);
+ 
+-	while ((stat = readl_relaxed(intc.pending[bank]))) {
+-		irq = MAKE_HWIRQ(bank, ffs(stat) - 1);
+-		handle_IRQ(irq_linear_revmap(intc.domain, irq), regs);
+-	}
++	return MAKE_HWIRQ(bank, ffs(stat) - 1);
++}
++
++static u32 armctrl_translate_shortcut(int bank, u32 stat)
++{
++	return MAKE_HWIRQ(bank, shortcuts[ffs(stat >> SHORTCUT_SHIFT) - 1]);
+ }
+ 
+-static void armctrl_handle_shortcut(int bank, struct pt_regs *regs,
+-	u32 stat)
++static u32 get_next_armctrl_hwirq(void)
+ {
+-	u32 irq = MAKE_HWIRQ(bank, shortcuts[ffs(stat >> SHORTCUT_SHIFT) - 1]);
+-	handle_IRQ(irq_linear_revmap(intc.domain, irq), regs);
++	u32 stat = readl_relaxed(intc.pending[0]) & BANK0_VALID_MASK;
++
++	if (stat == 0)
++		return ~0;
++	else if (stat & BANK0_HWIRQ_MASK)
++		return MAKE_HWIRQ(0, ffs(stat & BANK0_HWIRQ_MASK) - 1);
++	else if (stat & SHORTCUT1_MASK)
++		return armctrl_translate_shortcut(1, stat & SHORTCUT1_MASK);
++	else if (stat & SHORTCUT2_MASK)
++		return armctrl_translate_shortcut(2, stat & SHORTCUT2_MASK);
++	else if (stat & BANK1_HWIRQ)
++		return armctrl_translate_bank(1);
++	else if (stat & BANK2_HWIRQ)
++		return armctrl_translate_bank(2);
++	else
++		BUG();
+ }
+ 
+ static void __exception_irq_entry bcm2835_handle_irq(
+ 	struct pt_regs *regs)
+ {
+-	u32 stat, irq;
+-
+-	while ((stat = readl_relaxed(intc.pending[0]) & BANK0_VALID_MASK)) {
+-		if (stat & BANK0_HWIRQ_MASK) {
+-			irq = MAKE_HWIRQ(0, ffs(stat & BANK0_HWIRQ_MASK) - 1);
+-			handle_IRQ(irq_linear_revmap(intc.domain, irq), regs);
+-		} else if (stat & SHORTCUT1_MASK) {
+-			armctrl_handle_shortcut(1, regs, stat & SHORTCUT1_MASK);
+-		} else if (stat & SHORTCUT2_MASK) {
+-			armctrl_handle_shortcut(2, regs, stat & SHORTCUT2_MASK);
+-		} else if (stat & BANK1_HWIRQ) {
+-			armctrl_handle_bank(1, regs);
+-		} else if (stat & BANK2_HWIRQ) {
+-			armctrl_handle_bank(2, regs);
+-		} else {
+-			BUG();
+-		}
+-	}
++	u32 hwirq;
++
++	while ((hwirq = get_next_armctrl_hwirq()) != ~0)
++		handle_IRQ(irq_linear_revmap(intc.domain, hwirq), regs);
+ }
+ 
+ IRQCHIP_DECLARE(bcm2835_armctrl_ic, "brcm,bcm2835-armctrl-ic", armctrl_of_init);
+-- 
+2.1.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
