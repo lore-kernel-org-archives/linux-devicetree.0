@@ -1,70 +1,74 @@
-From: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [rtc-linux] [PATCH-v2] rtc: 88pm80x: add device tree support
-Date: Tue, 07 Jul 2015 12:07:14 +0530
-Message-ID: <559B739A.3080300@linaro.org>
-References: <vaibhav.hiremath@linaro.org> <1434567488-6477-1-git-send-email-vaibhav.hiremath@linaro.org> <1434567488-6477-3-git-send-email-vaibhav.hiremath@linaro.org> <20150620004354.GY27492@piout.net> <558BB1C1.2090400@linaro.org>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: shmobile: kzm9g dts: Use adxl345-specific compatible property
+Date: Tue, 07 Jul 2015 09:56:29 +0300
+Message-ID: <9389528.5qtaECVqX7@avalon>
+References: <1436180132-26190-1-git-send-email-geert+renesas@glider.be> <15966074.zDS67FO48r@avalon> <20150707002621.GD13326@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <558BB1C1.2090400-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20150707002621.GD13326-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Simon,
 
+On Tuesday 07 July 2015 09:26:21 Simon Horman wrote:
+> On Mon, Jul 06, 2015 at 04:29:33PM +0300, Laurent Pinchart wrote:
+> > On Monday 06 July 2015 12:55:32 Geert Uytterhoeven wrote:
+> > > Replace the deprecated generic "adi,adxl34x" compatible value by the
+> > > adxl345-specific "adi,adxl345" value, cfr. commit e465bf6fc55d5ce2 ("DT:
+> > > i2c: Deprecate adi,adxl34x compatible string").
+> > > 
+> > > Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> > 
+> > Acked-by: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+> > 
+> > > ---
+> > > Depends on commit 3a38958d2477b718 ("Input: adxl34x - add OF match
+> > > support"), which is in v4.2-rc1.
+> > > 
+> > > This is v2 of "ARM: shmobile: kzm9g dts: Add adxl345-specific compatible
+> > > property".
+> 
+> It appears to me that this will cause a regression when booting old kernels
+> with new dts blobs. For that reason think we should consider v1
+> of this change coupled with a schedule to remove use of the deprecated
+> compat string.
 
-On Thursday 25 June 2015 01:16 PM, Vaibhav Hiremath wrote:
->
->
-> On Saturday 20 June 2015 06:13 AM, Alexandre Belloni wrote:
->> Hi,
->>
->
-> Sorry I missed this email.
-> Just wanted to send reminder email and saw this :)
->
->> On 18/06/2015 at 00:28:06 +0530, Vaibhav Hiremath wrote :
->>> -    pdata = dev_get_platdata(&pdev->dev);
->>> -    if (pdata == NULL)
->>> -        dev_warn(&pdev->dev, "No platform data!\n");
->>> +    if (!pdata && !node) {
->>> +        dev_err(&pdev->dev,
->>> +            "pm80x-rtc requires platform data or of_node\n");
->>> +        return -EINVAL;
->>> +    }
->>> +
->>> +    if (!pdata) {
->>> +        pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
->>
->> I had troubles to follow the rtc_wakeup initialization cleanup but it
->> seems OK.
->
-> Probably, once we have complete PM support ready then it would be
-> easier to understand. I think as of now lets have this minimal code for
-> rtc_wakeup.
->
->> However, I'm wondering why you are adding DT support as this
->> will always be probed from the MFD driver which pass the platform_data
->> and avoids that allocation.
->>
->
-> You are right.
->
-> Originally, it was cleanup patch,
->
->   - remove pm80x_pdata
->   - Add check for pdata and np
->   - and around rtc_wakeup
->
-> While doing that I added this nice to have allocation.
->
+That's the forward compatibility that Geert mentioned, is that really an 
+issue, especially on this board ?
 
-Any update/feedback on this?
+> > > v2:
+> > >   - Drop deprecated "adi,adxl34x"
+> > > 
+> > > ---
+> > > 
+> > >  arch/arm/boot/dts/sh73a0-kzm9g.dts | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/arch/arm/boot/dts/sh73a0-kzm9g.dts
+> > > b/arch/arm/boot/dts/sh73a0-kzm9g.dts index
+> > > 24b4cd24dceb2f9e..7fc5602810ad0da1 100644
+> > > --- a/arch/arm/boot/dts/sh73a0-kzm9g.dts
+> > > +++ b/arch/arm/boot/dts/sh73a0-kzm9g.dts
+> > > @@ -206,7 +206,7 @@
+> > >  	};
+> > >  	
+> > >  	accelerometer@1d {
+> > > -		compatible = "adi,adxl34x";
+> > > +		compatible = "adi,adxl345";
+> > >  		reg = <0x1d>;
+> > >  		interrupt-parent = <&irqpin3>;
+> > >  		interrupts = <2 IRQ_TYPE_LEVEL_HIGH>,
 
-Thanks,
-Vaibhav
+-- 
+Regards,
+
+Laurent Pinchart
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
