@@ -1,96 +1,71 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v6 23/23] usb: gadget: zero: allocate and init otg descriptor
- by otg capabilities
-Date: Tue, 7 Jul 2015 16:55:16 +0300
-Message-ID: <559BDA44.4040700@ti.com>
-References: <1435564082-14583-1-git-send-email-jun.li@freescale.com> <1435564082-14583-24-git-send-email-jun.li@freescale.com>
+From: Dinh Nguyen <dinguyen@opensource.altera.com>
+Subject: Re: [PATCH 1/3] ARM: socfpga: dts: Fix adxl34x formating
+Date: Tue, 7 Jul 2015 09:00:02 -0500
+Message-ID: <559BDB62.4060105@opensource.altera.com>
+References: <1435285559-11053-1-git-send-email-walter@vanguardiasur.com.ar>
+	<20150626071656.GC26041@pengutronix.de>
+ <CABxpGwASLHuXtTp--q8iu3FDCsOXT-03VRCsgL51JfnTaZ80sQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1435564082-14583-24-git-send-email-jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+d-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CABxpGwASLHuXtTp--q8iu3FDCsOXT-03VRCsgL51JfnTaZ80sQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Walter Lozano <walter@vanguardiasur.com.ar>, Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 
-On 29/06/15 10:48, Li Jun wrote:
-> Allocate and initialize usb otg descriptor according to gadget otg
-> capabilities, add it for each usb configurations. If otg capability
-> is not defined, keep its original otg descriptor unchanged.
->
-> Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
->   drivers/usb/gadget/legacy/zero.c | 32 ++++++++++++++------------------
->   1 file changed, 14 insertions(+), 18 deletions(-)
->
-> diff --git a/drivers/usb/gadget/legacy/zero.c b/drivers/usb/gadget/legacy/zero.c
-> index c986e8a..695c2cb 100644
-> --- a/drivers/usb/gadget/legacy/zero.c
-> +++ b/drivers/usb/gadget/legacy/zero.c
-> @@ -121,24 +121,7 @@ static struct usb_device_descriptor device_desc = {
->   	.bNumConfigurations =	2,
->   };
->
-> -#ifdef CONFIG_USB_OTG
-> -static struct usb_otg_descriptor otg_descriptor = {
-> -	.bLength =		sizeof otg_descriptor,
-> -	.bDescriptorType =	USB_DT_OTG,
-> -
-> -	/* REVISIT SRP-only hardware is possible, although
-> -	 * it would not be called "OTG" ...
-> -	 */
-> -	.bmAttributes =		USB_OTG_SRP | USB_OTG_HNP,
-> -};
-> -
-> -static const struct usb_descriptor_header *otg_desc[] = {
-> -	(struct usb_descriptor_header *) &otg_descriptor,
-> -	NULL,
-> -};
-> -#else
-> -#define otg_desc	NULL
-> -#endif
-> +static const struct usb_descriptor_header *otg_desc[2];
->
->   /* string IDs are assigned dynamically */
->   /* default serial number takes at least two packets */
-> @@ -341,6 +324,16 @@ static int zero_bind(struct usb_composite_dev *cdev)
->
->   	/* support OTG systems */
->   	if (gadget_is_otg(cdev->gadget)) {
-> +		if (!otg_desc[0]) {
-> +			struct usb_descriptor_header *usb_desc;
-> +
-> +			usb_desc = usb_otg_descriptor_alloc(cdev->gadget);
-> +			if (!usb_desc)
-> +				return -ENOMEM;
-> +			usb_otg_descriptor_init(cdev->gadget, usb_desc);
-> +			otg_desc[0] = usb_desc;
-> +			otg_desc[1] = NULL;
-> +		}
 
-There is an error condition in zero_bind(). You need to free the
-otg_descriptor there.
+On 6/26/15 5:36 AM, Walter Lozano wrote:
+> Hi Steffen
+> 
+> On Fri, Jun 26, 2015 at 4:16 AM, Steffen Trumtrar
+> <s.trumtrar@pengutronix.de> wrote:
+>> Hi Walter!
+>>
+>> On Thu, Jun 25, 2015 at 11:25:57PM -0300, Walter Lozano wrote:
+>>> This patch fixes the formating of DTS bindings for the adxl34x digital
+>>> accelerometer.
+>>>
+>>> Signed-off-by: Walter Lozano <walter@vanguardiasur.com.ar>
+>>> ---
+>>>  arch/arm/boot/dts/socfpga_cyclone5_sockit.dts |    6 +++---
+>>>  1 file changed, 3 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts b/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
+>>> index 71468a7..5b60692 100644
+>>> --- a/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
+>>> +++ b/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
+>>> @@ -73,14 +73,14 @@
+>>>       status = "okay";
+>>>  };
+>>>
+>>> -&i2c1{
+>>> +&i2c1 {
+>>>       status = "okay";
+>>>
+>>> -     accel1: accel1@53{
+>>> +     accel1: accelerometer@53 {
+>>>               compatible = "adxl34x";
+>>>               reg = <0x53>;
+>>>
+>>> -             interrupt-parent = < &portc >;
+>>> +             interrupt-parent = <&portc>;
+>>>               interrupts = <3 2>;
+>>>       };
+>>>  };
+>>
+>> I would personally squash 3/3 into this one, but otherwise:
+>>
+>> Whole series
+>>
+>>         Acked-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+>>
+> 
+> Thanks for your comments. I have no problem at all. Dinh?
 
->   		sourcesink_driver.descriptors = otg_desc;
->   		sourcesink_driver.bmAttributes |= USB_CONFIG_ATT_WAKEUP;
->   		loopback_driver.descriptors = otg_desc;
-> @@ -397,6 +390,9 @@ static int zero_unbind(struct usb_composite_dev *cdev)
->   	if (!IS_ERR_OR_NULL(func_lb))
->   		usb_put_function(func_lb);
->   	usb_put_function_instance(func_inst_lb);
-> +	kfree(otg_desc[0]);
-> +	otg_desc[0] = NULL;
-> +
->   	return 0;
->   }
->
->
+I've applied and squashed 1/3 and 3/3 together.
 
-cheers,
--roger
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Dinh
