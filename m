@@ -1,124 +1,98 @@
-From: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Subject: Re: [PATCH v3 2/5] PCI: designware: Add ARM64 support
-Date: Tue, 7 Jul 2015 11:44:14 +0800
-Message-ID: <559B4B0E.4060004@hisilicon.com>
-References: <1435743817-19083-1-git-send-email-wangzhou1@hisilicon.com> <1435743817-19083-3-git-send-email-wangzhou1@hisilicon.com> <EE11001F9E5DDD47B7634E2F8A612F2E01D4E4BB@lhreml503-mbs> <5593F899.6050306@arm.com>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Subject: Re: [PATCHv6 1/2] dts: Adding docs for Xilinx LogiCORE IP mailbox driver.
+Date: Tue, 7 Jul 2015 10:20:51 +0530
+Message-ID: <CABb+yY0L1yFEhwHfRR553hFrK4v6=8p3q8w9ugwTdfrAre6OOw@mail.gmail.com>
+References: <1436202963-16922-1-git-send-email-moritz.fischer@ettus.com>
+	<1436202963-16922-2-git-send-email-moritz.fischer@ettus.com>
+	<20150706172727.GH6550@xsjsorenbubuntu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gbk"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5593F899.6050306-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
-Cc: Gabriele Paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Pratyush Anand <pratyush.anand-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, "kishon-l0cyMroinI0@public.gmane.org" <kishon-l0cyMroinI0@public.gmane.org>, "xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org" <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>, "m-karicheri2-l0cyMroinI0@public.gmane.org" <m-karicheri2-l0cyMroinI0@public.gmane.org>, "Minghuan.Lian-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Minghuan.Lian-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Yuanzhichang <yuanzhichang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Zhudacai <zhudacai-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, zhangjukuo <zhangjukuo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, qiuzhenfa <qiuzhenfa-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150706172727.GH6550@xsjsorenbubuntu>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>
+Cc: Moritz Fischer <moritz.fischer@ettus.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Michal Simek <michal.simek@xilinx.com>, Andrew Morton <akpm@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, mchehab@osg.samsung.com, Arnd Bergmann <arnd@arndb.de>, joe@perches.com, jingoohan1@gmail.com, Devicetree List <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2015/7/1 22:26, James Morse wrote:
-> Zhou Wang wrote:
->> I tested this patch on D02 board of Hisilicon. It works well.
->> I have compiled the driver with multi_v7_defconfig. However, I don't
->> have
->> ARM32 PCIe related board to do test. It will be appreciated if someone
->> could
->> help to test it.
+On Mon, Jul 6, 2015 at 10:57 PM, S=C3=B6ren Brinkmann
+<soren.brinkmann@xilinx.com> wrote:
+> On Mon, 2015-07-06 at 10:16AM -0700, Moritz Fischer wrote:
+>> Signed-off-by: Moritz Fischer <moritz.fischer@ettus.com>
+>> Acked-by: Michal Simek <michal.simek@xilinx.com>
+>> ---
+>>  .../devicetree/bindings/mailbox/xilinx-mailbox.txt | 44 +++++++++++=
++++++++++++
+>>  1 file changed, 44 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/mailbox/xilinx=
+-mailbox.txt
 >>
->> Signed-off-by: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
->> Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
->> Signed-off-by: Gabriele Paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
->> Tested-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
->> Tested-by: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
-> 
-> Tests on this new series, using the same i.MX 6Quad board, are not working.
-> 
-> The network card is no longer detected, and I get a lockup when removing
-> the root bridge and rescanning.
-> 
-> Partial dmesg output below. Significantly, the lines:
->> [    0.152128] PCI host bridge /soc/pcie@0x01000000 ranges:
->> [    0.152142]   No bus range found for /soc/pcie@0x01000000, using [bus
-> 00-ff]
-> are new.
-> 
-> Both series are applied to v4.1, use the same .config file, and the same dtb.
-> I will investigate further.
-> 
-> (Re-testing v2 works, so this isn't an interim hardware failure)
-> 
-> Thanks,
-> 
-> James
+>> diff --git a/Documentation/devicetree/bindings/mailbox/xilinx-mailbo=
+x.txt b/Documentation/devicetree/bindings/mailbox/xilinx-mailbox.txt
+>> new file mode 100644
+>> index 0000000..97b81f8
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mailbox/xilinx-mailbox.txt
+>> @@ -0,0 +1,44 @@
+>> +Xilinx Mailbox Driver
+>> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>> +
+>> +Required properties:
+>> +- compatible       : "xlnx,mailbox-2.1".
+>> +- reg              :  physical base address of the mailbox and leng=
+th of
+>> +                      memory mapped region.
+>> +- #mbox-cells      :  common mailbox binding property to identify t=
+he number
+>> +                      of cells required for the mailbox specifier, =
+should be 0
+>> +- clocks           :  phandle to clock provider
+>> +- clock-names      :  must be 'mbox'
+>> +
+>> +Optional properties:
+>> +- interrupt-parent : interrupt source phandle
+>> +- interrupts       : interrupt number, The interrupt specifier form=
+at
+>> +                     depends on the interrupt controller parent.
+>> +
+>> +Example:
+>> +     mbox: mailbox@40400000 {
+>> +             compatible =3D "xlnx,mailbox-2.1";
+>> +             reg =3D <0x40400000 0x100>;
+>> +             interrupt-parent =3D <&intc>;
+>> +             interrupts =3D <5>;
+>> +             #mbox-cells =3D <0>;
+>> +             clocks =3D <&clkc 15>;
+>> +             clock-names =3D "mbox";
+>> +     };
+>> +
+>> +Mailbox client
+>> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>> +"mboxes" and the optional "mbox-names" (please see
+>> +Documentation/devicetree/bindings/mailbox/mailbox.txt for details).=
+ Each value
+>> +of the mboxes property should contain a phandle to the mailbox cont=
+roller
+>> +device node and second argument is the channel index. It must be 0 =
+(hardware
+>> +support only one channel). The equivalent "mbox-names" property val=
+ue can be
+>> +used to give a name to the communication channel to be used by the =
+client user.
+>> +
+>> +Example:
+>> +     mclient0: mclient0@400 {
+>> +             compatible =3D "client-1.0";
+>> +             reg =3D <0x400 0x10>;
+>> +             mbox-names =3D "mbox";
+>> +             mboxes =3D <&mbox 0>;
 >
-
-Hi James,
-
-There are something wrong with v3 patch.
-
-pp->io_mod_base = of_read_number(parser_range_end -
-		of_n_addr_cells(np) - 5 + na, ns);
-pp->mem_mod_base = of_read_number(parser_range_end -
-		of_n_addr_cells(np) - 5 + na, ns);
-pp->cfg0_mod_base = of_read_number(parser_range_end -
-		of_n_addr_cells(np) - 5 + na, ns);
-are wrong.
-
-The ranges item in your dts is:
-ranges = <0x800 0x0 0x1f00000 0x1f00000 0x0 0x80000
-	  0x81000000 0x0 0x0  0x1f80000 0x0 0x10000
-	  0x82000000 0x0 0x1000000 0x1000000 0x0 0xf00000>;
-parser_range_end points to the end of ranges(0xf00000) directly. In v2 patch,
-of_read_number is of_read_number(parser.range - parser.np + na, ns); parser.range
-points to the end of each line in ranges item.
-
-When I did test on D02 board with intel82599 card, I set ranges item as:
-ranges = <0x03000000 0 0xb0000000 0x220 0x00000000 0 0xf000000>;
-It is just one line. In this case, parser_range_end is same with parser.range.
-That is why it happened to work well on D02 board.
-
-very sorry to bother you about this problem.
-
-Thanks,
-Zhou
-
-> 
-> 
-> root@localhost:~# dmesg | grep -i pci
-> [    0.126184] PCI: CLS 0 bytes, default 64
-> [    0.152128] PCI host bridge /soc/pcie@0x01000000 ranges:
-> [    0.152142]   No bus range found for /soc/pcie@0x01000000, using [bus 00-ff]
-> [    0.154183] imx6q-pcie 1ffc000.pcie: PCI host bridge to bus 0000:00
-> [    0.154201] pci_bus 0000:00: root bus resource [bus 00-ff]
-> [    0.154215] pci_bus 0000:00: root bus resource [???
-> 0x01f00000-0x01f7ffff flags 0x0]
-> [    0.154228] pci_bus 0000:00: root bus resource [io  0x0000-0xffff]
-> [    0.154270] pci_bus 0000:00: root bus resource [mem 0x01000000-0x01efffff]
-> [    0.154306] pci 0000:00:00.0: [16c3:abcd] type 01 class 0x060400
-> [    0.154333] pci 0000:00:00.0: reg 0x10: [mem 0x00000000-0x000fffff]
-> [    0.154352] pci 0000:00:00.0: reg 0x38: [mem 0x00000000-0x0000ffff pref]
-> [    0.154377] pci 0000:00:00.0: IOMMU is currently not supported for PCI
-> [    0.154429] pci 0000:00:00.0: supports D1
-> [    0.154440] pci 0000:00:00.0: PME# supported from D0 D1 D3hot D3cold
-> [    0.154683] PCI: bus0: Fast back to back transfers disabled
-> [    0.154806] PCI: bus1: Fast back to back transfers enabled
-> [    0.154884] pci 0000:00:00.0: BAR 0: assigned [mem 0x01000000-0x010fffff]
-> [    0.154903] pci 0000:00:00.0: BAR 6: assigned [mem 0x01100000-0x0110ffff
-> pref]
-> [    0.154917] pci 0000:00:00.0: PCI bridge to [bus 01]
-> [    0.155145] pcieport 0000:00:00.0: Signaling PME through PCIe PME interrupt
-> [    0.155161] pcie_pme 0000:00:00.0:pcie01: service driver pcie_pme loaded
-> [    0.155279] aer 0000:00:00.0:pcie02: service driver aer loaded
-> [    1.188840] ehci-pci: EHCI PCI platform driver
-> [    1.232518] ohci-pci: OHCI PCI platform driver
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-> .
-> 
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Sorry, to bring this up again, but I'm confused regarding the #mbox-c=
+ells
+> thing. Above it says #mbox-cells is 0. In that case, shouldn't the
+> 'mboxes' property not only be '<&mbox>'?
+>
+Yeah, this is inconsistent. Either provide your own of_xlate() for
+#cells=3D0  or have #cells=3D1 to use stock of_xlate() and specify <&mb=
+ox
+0> for the channel.
