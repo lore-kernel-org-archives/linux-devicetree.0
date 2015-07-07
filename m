@@ -1,74 +1,112 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: rx51-battery.ko incompatiblity: board code vs DT
-Date: Tue, 7 Jul 2015 17:02:30 +0200
-Message-ID: <20150707150230.GB25405@earth>
-References: <201507062144.22911@pali>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="aM3YZ0Iwxop3KEKx"
+From: Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH v2 6/9] regulator: pwm-regulator: Re-write bindings
+Date: Tue,  7 Jul 2015 16:06:50 +0100
+Message-ID: <1436281613-899-7-git-send-email-lee.jones@linaro.org>
+References: <1436281613-899-1-git-send-email-lee.jones@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <201507062144.22911@pali>
+In-Reply-To: <1436281613-899-1-git-send-email-lee.jones@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc: Tony Lindgren <tony@atomide.com>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, Pavel Machek <pavel@ucw.cz>, Aaro Koskinen <aaro.koskinen@iki.fi>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: kernel@stlinux.com, broonie@kernel.org, lgirdwood@gmail.com, Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+* Add support for continuous-voltage mode
+* Put more meat on the bones with regards to voltage-table mode
+* Sort out formatting for ease of consumption
 
---aM3YZ0Iwxop3KEKx
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+ .../bindings/regulator/pwm-regulator.txt           | 68 ++++++++++++++++++----
+ 1 file changed, 56 insertions(+), 12 deletions(-)
 
-Hi,
-
-On Mon, Jul 06, 2015 at 09:44:22PM +0200, Pali Roh=E1r wrote:
-> now I found out that rx51-battery.ko driver register sysnode=20
-> /sys/class/power_supply/rx51-battery/ when booting with legacy board=20
-> code. But when booting DT kernel it register sysnode with different name=
-=20
-> /sys/class/power_supply/n900-battery/
->=20
-> Sysfs node for DT kernel comes from Nokia N900 DTS file:=20
-> arch/arm/boot/dts/omap3-n900.dts
->=20
-> I would propose change which change DTS to "rx51-battery" to have it=20
-> compatible with naming which is for legacy board code. It is just=20
-> because to have compatibility and same naming scheme and also to make=20
-> existing programs to work without needing patching them.
->=20
-> What do you think?
-
-Change the driver instead (in rx51_battery_probe):
-
--   di->bat.name =3D dev_name(&pdev->dev);
-+   di->bat.name =3D "rx51-battery"
-
-This will keep the DT ABI stable and avoid introducing the term rx51
-in the device tree file.
-
--- Sebastian
-
---aM3YZ0Iwxop3KEKx
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJVm+oGAAoJENju1/PIO/qa/N4P/RppuQV4gbguGNRObXMmy93+
-a9+k7bD1QqyHcD46NlZjh9HkDL+UXVM6vRzuN/wZxuhH7x0+CYQVFjkSphhYh15P
-9UOaw79JJUjDoT3L8F6S15mZrGzAZ1NvJRHr6/lKXI3I3EUii77+iTLzEw6BpPuN
-01eY6THJWAPDupBPSEkpaFefGuCOLDEUMBNEHxHq4+ILk8rITI1Y508E6daZrBQW
-GGpyEzbRmIc24nB1xfVgcVcr9II0AYT0fsZblX2VCMV4+uXF0LzS8UZQ+6pNrp+r
-uczY2ejtL+LT0HUMocn1A8KAsjJ4td0ZTucAKQgMVIHK0VIAApaDi4u0dggsGyn2
-xxouxFohP1tsf2Gmb255LuDv+a8LAhujaTohiMjxZh4iUavwRFeNIgBuruLqtTay
-lelyS+AvvYkRIAceih67XeNhA8stKs7XSsvdbgst9miJ5tPMp86VLDedDsEzfdFC
-lpadCghSeqlR365tDk60mLaGB+Rg6TGmsA8rqEhgQ2Zp5Z/wW3MFWmKh2695P3hx
-O5BuJL9OEUKl44AYnjzQI07dIpCbnVtcAPR+7Z3myrvVmrlZKhwiNon70hUhi8z1
-HMKpv7Z+u48Mtw8HsZM9S1NQHdxI3aRQbHquEL9WYmG3f3I7vTBwj5hy8kYc6bsL
-8WLqbsYFwMNW/zuhmNWP
-=PZ+N
------END PGP SIGNATURE-----
-
---aM3YZ0Iwxop3KEKx--
+diff --git a/Documentation/devicetree/bindings/regulator/pwm-regulator.txt b/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
+index ce91f61..892b366 100644
+--- a/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
+@@ -1,27 +1,71 @@
+-pwm regulator bindings
++Bindings for the Generic PWM Regulator
++======================================
++
++Currently supports 2 modes of operation:
++
++voltage-table:		When in this mode, a voltage table (See below) of
++			predefined voltage <=> duty-cycle values must be
++			provided via DT. Limitations are that the regulator can
++			only operate at the voltages supplied in the table.
++			Intermediary duty-cycle values which would normally
++			allow finer grained voltage selection are ignored and
++			rendered useless.  Although more control is given to
++			the user if the assumptions made in continuous-voltage
++			mode do not reign true.
++
++continuous-voltage:	This mode uses the regulator's maximum and minimum
++			supplied voltages specified in the
++			regulator-{min,max}-microvolt properties to calculate
++			appropriate duty-cycle values.  This allows for a much
++			more fine grained solution when compared with
++			voltage-table mode above.  This solution does make an
++			assumption that a %50 duty-cycle value will cause the
++			regulator voltage to run at half way between the
++			supplied max_uV and min_uV values.
+ 
+ Required properties:
+-- compatible: Should be "pwm-regulator"
+-- pwms: OF device-tree PWM specification (see PWM binding pwm.txt)
+-- voltage-table: voltage and duty table, include 2 members in each set of
+-  brackets, first one is voltage(unit: uv), the next is duty(unit: percent)
++--------------------
++- compatible:		Should be "pwm-regulator"
++
++- pwms:			PWM specification (See: ../pwm/pwm.txt)
++
++One of these must be provided:
++- voltage-table: 	Voltage and Duty-Cycle table consisting of 2 cells
++			    First cell is voltage in microvolts (uV)
++			    Second cell is duty-cycle in percent (%)
++
++- max-duty-cycle:	Maximum Duty-Cycle value -- this will normally be
++  			255 (0xff) for an 8 bit PWM device
+ 
+-Any property defined as part of the core regulator binding defined in
+-regulator.txt can also be used.
++If both are provided, the current default is voltage-table mode.
+ 
+-Example:
++Any property defined as part of the core regulator binding can also be used.
++(See: ../regulator/regulator.txt)
++
++Continuous Voltage Example:
+ 	pwm_regulator {
+ 		compatible = "pwm-regulator;
+ 		pwms = <&pwm1 0 8448 0>;
++		regulator-min-microvolt = <1016000>;
++		regulator-max-microvolt = <1114000>;
++		regulator-name = "vdd_logic";
++
++		max-duty-cycle = <255>; /* 8bit PWM */
++	};
+ 
++Voltage Table Example:
++	pwm_regulator {
++		compatible = "pwm-regulator;
++		pwms = <&pwm1 0 8448 0>;
++		regulator-min-microvolt = <1016000>;
++		regulator-max-microvolt = <1114000>;
++		regulator-name = "vdd_logic";
++
++			      /* Voltage Duty-Cycle */
+ 		voltage-table = <1114000 0>,
+ 				<1095000 10>,
+ 				<1076000 20>,
+ 				<1056000 30>,
+ 				<1036000 40>,
+ 				<1016000 50>;
+-
+-		regulator-min-microvolt = <1016000>;
+-		regulator-max-microvolt = <1114000>;
+-		regulator-name = "vdd_logic";
+ 	};
+-- 
+1.9.1
