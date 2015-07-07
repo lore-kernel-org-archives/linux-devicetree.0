@@ -1,73 +1,54 @@
-From: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
-Subject: [PATCH] dmaengine: xgene-dma: Fix the resource map to handle overlapping
-Date: Tue,  7 Jul 2015 15:34:25 +0530
-Message-ID: <1436263465-7677-1-git-send-email-rsahu@apm.com>
+From: Dongsheng Wang <dongsheng.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH 1/2] powerpc/85xx: Add binding for SCFG
+Date: Tue, 7 Jul 2015 17:47:16 +0800
+Message-ID: <1436262437-31390-1-git-send-email-dongsheng.wang@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wang Dongsheng <dongsheng.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-There is an overlap in dma ring cmd csr region due to sharing of ethernet
-ring cmd csr region. This patch fix the resource overlapping by mapping
-the entire dma ring cmd csr region.
+From: Wang Dongsheng <dongsheng.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-Signed-off-by: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
----
- Documentation/devicetree/bindings/dma/apm-xgene-dma.txt | 2 +-
- arch/arm64/boot/dts/apm/apm-storm.dtsi                  | 2 +-
- drivers/dma/xgene-dma.c                                 | 3 +++
- 3 files changed, 5 insertions(+), 2 deletions(-)
+SCFG provides SoC specific configuration and status registers for
+the chip. Add this for powerpc platform.
 
-diff --git a/Documentation/devicetree/bindings/dma/apm-xgene-dma.txt b/Documentation/devicetree/bindings/dma/apm-xgene-dma.txt
-index d305876..c53e0b0 100644
---- a/Documentation/devicetree/bindings/dma/apm-xgene-dma.txt
-+++ b/Documentation/devicetree/bindings/dma/apm-xgene-dma.txt
-@@ -35,7 +35,7 @@ Example:
- 			device_type = "dma";
- 			reg = <0x0 0x1f270000 0x0 0x10000>,
- 			      <0x0 0x1f200000 0x0 0x10000>,
--			      <0x0 0x1b008000 0x0 0x2000>,
-+			      <0x0 0x1b000000 0x0 0x400000>,
- 			      <0x0 0x1054a000 0x0 0x100>;
- 			interrupts = <0x0 0x82 0x4>,
- 				     <0x0 0xb8 0x4>,
-diff --git a/arch/arm64/boot/dts/apm/apm-storm.dtsi b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-index 0689c3f..58093ed 100644
---- a/arch/arm64/boot/dts/apm/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-@@ -823,7 +823,7 @@
- 			device_type = "dma";
- 			reg = <0x0 0x1f270000 0x0 0x10000>,
- 			      <0x0 0x1f200000 0x0 0x10000>,
--			      <0x0 0x1b008000 0x0 0x2000>,
-+			      <0x0 0x1b000000 0x0 0x400000>,
- 			      <0x0 0x1054a000 0x0 0x100>;
- 			interrupts = <0x0 0x82 0x4>,
- 				     <0x0 0xb8 0x4>,
-diff --git a/drivers/dma/xgene-dma.c b/drivers/dma/xgene-dma.c
-index 620fd55ec..dff22ab 100644
---- a/drivers/dma/xgene-dma.c
-+++ b/drivers/dma/xgene-dma.c
-@@ -111,6 +111,7 @@
- #define XGENE_DMA_MEM_RAM_SHUTDOWN		0xD070
- #define XGENE_DMA_BLK_MEM_RDY			0xD074
- #define XGENE_DMA_BLK_MEM_RDY_VAL		0xFFFFFFFF
-+#define XGENE_DMA_RING_CMD_SM_OFFSET		0x8000
+Signed-off-by: Wang Dongsheng <dongsheng.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
- /* X-Gene SoC EFUSE csr register and bit defination */
- #define XGENE_SOC_JTAG1_SHADOW			0x18
-@@ -1887,6 +1888,8 @@ static int xgene_dma_get_resources(struct platform_device *pdev,
- 		return -ENOMEM;
- 	}
-
-+	pdma->csr_ring_cmd += XGENE_DMA_RING_CMD_SM_OFFSET;
+diff --git a/Documentation/devicetree/bindings/powerpc/fsl/board.txt b/Documentation/devicetree/bindings/powerpc/fsl/board.txt
+index cff38bd..55604fe 100644
+--- a/Documentation/devicetree/bindings/powerpc/fsl/board.txt
++++ b/Documentation/devicetree/bindings/powerpc/fsl/board.txt
+@@ -3,6 +3,25 @@ Freescale Reference Board Bindings
+ This document describes device tree bindings for various devices that
+ exist on some Freescale reference boards.
+ 
++* Supplement configuration unit (SCFG)
 +
- 	/* Get efuse csr region */
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 3);
- 	if (!res) {
---
-1.8.2.1
++SCFG is the supplemental configuration unit, that provides SoC specific
++configuration and status registers for the chip. Such as getting PEX port
++status.
++
++Required properties:
++
++- compatible: should be "fsl,<board>-scfg"
++- reg: should contain base address and length of SCFG memory-mapped
++registers
++
++Example:
++
++	scfg: global-utilities@fc000 {
++		compatible = "fsl,t1040-scfg";
++		reg = <0xfc000 0x1000>;
++	};
++
+ * Board Control and Status (BCSR)
+ 
+ Required properties:
+-- 
+2.1.0.27.g96db324
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
