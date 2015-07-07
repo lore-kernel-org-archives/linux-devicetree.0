@@ -1,62 +1,34 @@
-From: Eddie Huang <eddie.huang@mediatek.com>
-Subject: Re: [PATCH] arm64: dts: mt8173-evb: Add PMIC support
-Date: Tue, 7 Jul 2015 11:09:50 +0800
-Message-ID: <1436238590.19228.4.camel@mtksdaap41>
-References: <1434979177-7575-1-git-send-email-henryc.chen@mediatek.com>
-	 <1436168637.6986.6.camel@mtksdaap41> <1727643.5AqCaKisXT@ubix>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1727643.5AqCaKisXT@ubix>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Henry Chen <henryc.chen@mediatek.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <kernel@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>
+From: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/2] iio: light: add support for APDS9660 sensor
+Date: Mon,  6 Jul 2015 20:22:12 -0700
+Message-ID: <1436239334-15782-1-git-send-email-mranostay@gmail.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2015-07-06 at 18:39 +0200, Matthias Brugger wrote:
-> On Monday, July 06, 2015 03:43:57 PM Eddie Huang wrote:
-> > On Mon, 2015-06-22 at 21:19 +0800, Henry Chen wrote:
-> > > From: Eddie Huang <eddie.huang@mediatek.com>
-> > > 
-[...]
-> > > diff --git a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-> > > b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts index 43d5401..b967914
-> > > 100644
-> > > --- a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-> > > +++ b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-> > > @@ -33,6 +33,180 @@
-> > > 
-> > >  	chosen { };
-> > >  
-> > >  };
-> > > 
-> > > +&pwrap {
-> > > +	pmic: mt6397 {
-> > > +		compatible = "mediatek,mt6397";
-> > > +		interrupt-parent = <&pio>;
-> > > +		interrupts = <11 IRQ_TYPE_LEVEL_HIGH>;
-> > > +		interrupt-controller;
-> > > +		#interrupt-cells = <2>;
-> > > +
-> > > +		mt6397regulator: mt6397regulator {
-> > > +			compatible = "mediatek,mt6397-regulator";
-> > > +			mt6397_vpca15_reg: buck_vpca15 {
-> > > +				regulator-compatible = "buck_vpca15";
-> > > +				regulator-name = "vpca15";
-> > > +				regulator-min-microvolt = < 700000>;
-> > > +				regulator-max-microvolt = <1350000>;
-> > > +				regulator-ramp-delay = <12500>;
-> > > +				regulator-always-on;
-> > 
-> > I see you pull da9211 regulator dts patch, but not this one. How about
-> > this patch ?
-> 
-> I inserted some new-lines and added it to v4.2-next/arm64
-> 
-Thanks the pull. Normally we put alias node in alphabetical order, make
-later merge more easily. I think you can do the modification and squeeze
-into the same commit.
+This patchset adds support for the APDS9960 ALS + proximity + gesture
+sensor.
 
-Thanks
-Eddie
+Included support for the various adjustable settings and controls:
+ * Falling and rising ALS + proximity thresholds events
+ * Gain controls
+ * ALS time integration
+
+Matt Ranostay (2):
+  iio: light: DT binding docs for APDS9960 driver
+  iio: light: add APDS9960 ALS + promixity driver
+
+ .../ABI/testing/sysfs-bus-iio-light-apds9960       |  125 ++
+ .../devicetree/bindings/iio/light/apds9960.txt     |   19 +
+ drivers/iio/light/Kconfig                          |   12 +
+ drivers/iio/light/Makefile                         |    1 +
+ drivers/iio/light/apds9960.c                       | 1219 ++++++++++++++++++++
+ 5 files changed, 1376 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-light-apds9960
+ create mode 100644 Documentation/devicetree/bindings/iio/light/apds9960.txt
+ create mode 100644 drivers/iio/light/apds9960.c
+
+-- 
+1.9.1
