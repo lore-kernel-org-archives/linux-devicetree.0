@@ -1,74 +1,105 @@
-From: Phil Edworthy <phil.edworthy@renesas.com>
-Subject: [PATCH v4] ARM: shmobile: koelsch: make USB0 perform Host/Function
- switching
-Date: Tue, 7 Jul 2015 13:16:34 +0100
-Message-ID: <1436271394-25964-1-git-send-email-phil.edworthy@renesas.com>
-References: <20150703001430.GB20396@verge.net.au>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20150703001430.GB20396@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-sh@vger.kernel.org, Phil Edworthy <phil.edworthy@renesas.com>
+From: Anda-Maria Nicolae <anda-maria.nicolae-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2] power_supply: rt9455_charger: Properly notify userspace about charging events
+Date: Tue,  7 Jul 2015 15:25:53 +0300
+Message-ID: <1436271953-24564-1-git-send-email-anda-maria.nicolae@intel.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: k.kozlowski.k-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Both USB Host (pci0) and Function (USBHS) drivers are enabled.
-The USB PHY driver determines which IP block should be connected
-based on vbus and id signals read via gpios.
+Charging events this patch refers to are:
+- charger is connected to/disconnected from the power source
+- battery is reconnected to the charger, after it was absent.
 
-Note that switch SW5 and SW6 on Koelsch board needs to be set to
-position 3 for this to work.
+When the charger is connected to/disconnected from the power source, CHRVPI
+interrupt occurs and PWR_RDY bit is either set or cleared. PWR_RDY bit is
+updated after 1-2 seconds CHRVPI interrupt has occurred.
+power_supply_changed() should be called after PWR_RDY bit is updated.
+/sys/class/power_supply/rt9455-charger/online file displays the value of
+PWR_RDY bit.
+This way, if the userspace is notified that a charging event has occurred
+and the userspace reads /sys/class/power_supply/rt9455-charger/online file,
+this file is properly updated when the userspace reads it.
+This is the reason why power_supply_changed() is called in
+rt9455_pwr_rdy_work_callback(), instead of being called in interrupt
+handler.
 
-Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
+Since no interrupt is triggered when the battery is reconnected to the
+charger, the userspace is never notified that the battery is reconnected.
+This is why power_supply_changed() is called in
+rt9455_max_charging_time_work_callback(), so that the userspace is notified
+that the battery is reconnected.
 
+Signed-off-by: Anda-Maria Nicolae <anda-maria.nicolae-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 ---
-Not for upstream until the following patches have been accepted:
-"usb: renesas_usbhs: Allow an OTG PHY driver to provide VBUS"
-"phy: rcar-gen2 usb: Add Host/Function switching for USB0"
-Hence, not signed off.
 
-v4:
-  - Changed prefix in title.
+Updates from v1 version:
+- I have followed Kzrysztof's suggestion and I have added explanations in
+the commit message so that the change is more clear
+- Code is the same as in v1
 
-v3:
-  - Remove "pinctrl-names" as well as "pinctrl-0" props.
+ drivers/power/rt9455_charger.c |   16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
-v2:
-  - Added -gpio to dts prop names of GPIO pins.
----
- arch/arm/boot/dts/r8a7791-koelsch.dts | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
-
-diff --git a/arch/arm/boot/dts/r8a7791-koelsch.dts b/arch/arm/boot/dts/r8a7791-koelsch.dts
-index cffe33f..21c2fdc 100644
---- a/arch/arm/boot/dts/r8a7791-koelsch.dts
-+++ b/arch/arm/boot/dts/r8a7791-koelsch.dts
-@@ -615,8 +615,6 @@
+diff --git a/drivers/power/rt9455_charger.c b/drivers/power/rt9455_charger.c
+index 08baac6..a49a9d4 100644
+--- a/drivers/power/rt9455_charger.c
++++ b/drivers/power/rt9455_charger.c
+@@ -973,7 +973,6 @@ static int rt9455_irq_handler_check_irq2_register(struct rt9455_info *info,
  
- &pci0 {
- 	status = "okay";
--	pinctrl-0 = <&usb0_pins>;
--	pinctrl-names = "default";
- };
+ 	if (irq2 & GET_MASK(F_CHRVPI)) {
+ 		dev_dbg(dev, "Charger fault occurred\n");
+-		alert_userspace = true;
+ 		/*
+ 		 * CHRVPI bit is set in 2 cases:
+ 		 * 1. when the power source is connected to the charger.
+@@ -981,6 +980,9 @@ static int rt9455_irq_handler_check_irq2_register(struct rt9455_info *info,
+ 		 * To identify the case, PWR_RDY bit is checked. Because
+ 		 * PWR_RDY bit is set / cleared after CHRVPI interrupt is
+ 		 * triggered, it is used delayed_work to later read PWR_RDY bit.
++		 * Also, do not set to true alert_userspace, because there is no
++		 * need to notify userspace when CHRVPI interrupt has occurred.
++		 * Userspace will be notified after PWR_RDY bit is read.
+ 		 */
+ 		queue_delayed_work(system_power_efficient_wq,
+ 				   &info->pwr_rdy_work,
+@@ -1178,7 +1180,7 @@ static irqreturn_t rt9455_irq_handler_thread(int irq, void *data)
+ 		/*
+ 		 * Sometimes, an interrupt occurs while rt9455_probe() function
+ 		 * is executing and power_supply_register() is not yet called.
+-		 * Do not call power_supply_charged() in this case.
++		 * Do not call power_supply_changed() in this case.
+ 		 */
+ 		if (info->charger)
+ 			power_supply_changed(info->charger);
+@@ -1478,6 +1480,11 @@ static void rt9455_pwr_rdy_work_callback(struct work_struct *work)
+ 				   RT9455_MAX_CHARGING_TIME * HZ);
+ 		break;
+ 	}
++	/*
++	 * Notify userspace that the charger has been either connected to or
++	 * disconnected from the power source.
++	 */
++	power_supply_changed(info->charger);
+ }
  
- &pci1 {
-@@ -627,13 +625,14 @@
+ static void rt9455_max_charging_time_work_callback(struct work_struct *work)
+@@ -1533,6 +1540,11 @@ static void rt9455_batt_presence_work_callback(struct work_struct *work)
+ 			if (ret)
+ 				dev_err(dev, "Failed to unmask BATAB interrupt\n");
+ 		}
++		/*
++		 * Notify userspace that the battery is now connected to the
++		 * charger.
++		 */
++		power_supply_changed(info->charger);
+ 	}
+ }
  
- &hsusb {
- 	status = "okay";
--	pinctrl-0 = <&usb0_pins>;
--	pinctrl-names = "default";
--	renesas,enable-gpio = <&gpio5 31 GPIO_ACTIVE_HIGH>;
- };
- 
- &usbphy {
- 	status = "okay";
-+	renesas,pwr-gpio = <&gpio2 4 GPIO_ACTIVE_HIGH>;
-+	renesas,id-gpio = <&gpio5 31 GPIO_ACTIVE_HIGH>;
-+	renesas,vbus-gpio = <&gpio7 24 GPIO_ACTIVE_HIGH>;
-+	renesas,vbus-pwr-gpio = <&gpio7 23 GPIO_ACTIVE_HIGH>;
- };
- 
- &pcie_bus_clk {
 -- 
-1.9.1
+1.7.9.5
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
