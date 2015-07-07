@@ -1,76 +1,71 @@
-From: James Liao <jamesjj.liao@mediatek.com>
-Subject: Re: [PATCH v2 2/4] dt-bindings: ARM: Mediatek: Document devicetree
- bindings for clock controllers
-Date: Tue, 7 Jul 2015 14:56:46 +0800
-Message-ID: <1436252206.3526.80.camel@mtksdaap41>
-References: <1435633127-31952-1-git-send-email-jamesjj.liao@mediatek.com>
-	 <1435633127-31952-3-git-send-email-jamesjj.liao@mediatek.com>
-	 <CAGS+omD9Mvz0-RQMc5TsWCPct80S5fyqMn3+-zR7HB9yb7KoDQ@mail.gmail.com>
-	 <1435805534.3526.23.camel@mtksdaap41>
-	 <CAGS+omCgNstb+NPmRdbngnLm754hDPLO28KRc4RanCD2Myv7dQ@mail.gmail.com>
-	 <5595CBDC.7090101@codeaurora.org>
-	 <CAGS+omAo-d_bK=2HDu98xHvqhnVgJUBy4jbYVGKqsfWRX-EfDA@mail.gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 3/4] power: Add support for DA9150 Fuel-Gauge
+Date: Tue, 7 Jul 2015 07:58:01 +0100
+Message-ID: <20150707065801.GG3182@x1>
+References: <cover.1435308209.git.Adam.Thomson.Opensource@diasemi.com>
+ <596f44407759e2047a02594367116f9c92afee56.1435308209.git.Adam.Thomson.Opensource@diasemi.com>
+ <20150703152217.GC10500@x1>
+ <2E89032DDAA8B9408CB92943514A0337AB55C839@SW-EX-MBX01.diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGS+omAo-d_bK=2HDu98xHvqhnVgJUBy4jbYVGKqsfWRX-EfDA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Kurtz <djkurtz@chromium.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Mike Turquette <mturquette@linaro.org>, srv_heupstream <srv_heupstream@mediatek.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ricky Liang <jcliang@chromium.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <2E89032DDAA8B9408CB92943514A0337AB55C839@SW-EX-MBX01.diasemi.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Support Opensource <Support.Opensource@diasemi.com>, jic23@cam.ac.uk
 List-Id: devicetree@vger.kernel.org
 
-Hi Daniel,
+On Mon, 06 Jul 2015, Opensource [Adam Thomson] wrote:
 
-On Fri, 2015-07-03 at 18:46 +0800, Daniel Kurtz wrote:
-> On Fri, Jul 3, 2015 at 7:40 AM, Stephen Boyd <sboyd@codeaurora.org> wrote:
-> > DT nodes typically have a reg property. Not having a reg property is a
-> > good indicator of a problem with the binding. A syscon is used when you
-> > have a DT node with a reg property and some driver attached to it, but
-> > you need to poke some bits in another register region that isn't part of
-> > the reg property. Instead of having multiple nodes with two reg
-> > properties where the second one is the same, we use a phandle and a syscon.
-> >
-> > If clock-controller isn't acceptable maybe clock-reset-contoller would
-> > work? Or "power-controller"? We certainly shouldn't be making up
-> > multiple nodes for one hardware block. Of course, the subject of the
-> > patch is "bindings for clock controllers", so it may be that the
-> > registers are predominantly clock related and so the name is appropriate
-> > already.
-> 
-> Using "clock-controller" seems to fit best with the bindings
-> introduced by this patch.
-> 
-> However, if these bindings are for hardware blocks that contain a grab
-> bag of various functionality that will be added in later patches, then
-> I think "syscon" might be best.
+> On July 3, 2015 16:22, Lee Jones wrote:
+>=20
+> > > +/*
+> > > + * Function template to provide battery temperature. Should prov=
+ide
+> > > + * 0.1 degrees C resolution return values.
+> > > + */
+> > > +typedef int (*da9150_read_temp_t)(void *context);
+> > > +
+> > > +/* Register temp callback function */
+> > > +void da9150_fg_register_temp_cb(struct power_supply *psy,
+> > da9150_read_temp_t cb,
+> > > +				void *cb_context);
+> > > +
+> > >  #endif /* __DA9150_FG_H */
+> >=20
+> > I still don't get why you think pointers are better than just calli=
+ng
+> > the function directly.  Can the *fn() ever point to different funct=
+ions?
+>=20
+> Here, the intention is to cover the scenario where a battery has no i=
+nternal
+> thermistor, and cannot provide temperature readings to the DA9150 dev=
+ice. In
+> that scenario I've allowed for the option of providing an external fu=
+nction
+> which can give the temperature reading instead as DA9150 will not be =
+able to
+> provide a correct reading in that scenario. This would be platform de=
+pendent and
+> such a platform using a battery not employing an NTC in their battery=
+ can
+> register its own call-back function to provide battery temperature in=
+stead.
+>=20
+> So, in answer to your question, yes.
 
-I referred some dt-binding documents that contain clock and reset
-controller in the same unit:
+Before you add this scenario, I would like to see the code which
+utilises it.  I'm not a fan of coding-up 'just-in-case's.  Please
+re-submit when you have a user in the same patch-set.
 
-qcom,gcc.txt:
+This whole idea will need a discussion with Jonathan (the IIO
+Maintainer), now CC'ed.
 
-	clock-controller@900000 {
-		compatible = "qcom,gcc-msm8960";
-
-nvidia,tegra124-car.txt:
-
-	tegra_car: clock {
-		compatible = "nvidia,tegra124-car";
-
-rockchip,rk3188-cru.txt:
-
-	cru: cru@20000000 {
-		compatible = "rockchip,rk3188-cru";
-
-Rockchip use "Clock and Reset Unit" as their controller's name. The
-other two use "clock" or "clock-controller" as their controller's name.
-
-It looks like "clock-controller" is also an acceptable name for
-clock/reset controllers. So I would like to keep this name in next
-patch.
-
-
-Best regards,
-
-James
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
