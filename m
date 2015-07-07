@@ -1,124 +1,138 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 3/4] mfd: axp20x: Add a cell for the usb
- power_supply part of the axp20x PMICs
-Date: Tue, 7 Jul 2015 08:01:28 +0100
-Message-ID: <20150707070128.GI3182@x1>
-References: <1435316357-26606-1-git-send-email-hdegoede@redhat.com>
- <1435316357-26606-3-git-send-email-hdegoede@redhat.com>
-Reply-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: Jonathan Cameron <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>
+Subject: Re: [PATCH 7/9] iio: mma8452: change iio event type to IIO_EV_TYPE_MAG
+Date: Tue, 07 Jul 2015 08:05:36 +0100
+Message-ID: <E94BB95F-0719-41A8-B7B7-E035BE1B9C43@jic23.retrosnub.co.uk>
+References: <1436018110-3903-1-git-send-email-martink@posteo.de> <1436018110-3903-8-git-send-email-martink@posteo.de> <559919F5.8070107@kernel.org> <559A3EB0.2060200@parkeon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDA7X7F2WUEBBTHS5WWAKGQEMB3ZC7I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1435316357-26606-3-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Bruno =?iso-8859-1?Q?Pr=E9mont?= <bonbons-ud5FBsm0p/xEiooADzr8i9i2O/JbrIOy@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain;
+ charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <559A3EB0.2060200-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, roberta.dobrescu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 26 Jun 2015, Hans de Goede wrote:
 
-> Add a cell for the usb power_supply part of the axp20x PMICs.
->=20
-> Note that this cell is only for the usb power_supply part and not the
-> ac-power / battery-charger / rtc-backup-bat-charger bits.
->=20
-> Depending on the board each of those must be enabled / disabled separatel=
-y
-> in devicetree as most boards do not use all 4. So in dt each one needs it=
-s
-> own child-node of the axp20x node. Another reason for using separate chil=
-d
-> nodes for each is so that other devicetree nodes can have a power-supply
-> property with a phandle referencing a node representing a single
-> power-supply.
->=20
-> The decision to use a separate devicetree node for each is reflected on
-> the kernel side by each getting its own mfd-cell / platform_device and
-> platform-driver.
->=20
-> Note this commit also makes some whitespace changes to the intialization
-> of existing cells in axp20x_cells, these are pure whitespace changes,
-> functionally nothing changes.
->=20
-> Cc: Bruno Pr=C3=A9mont <bonbons-ud5FBsm0p/xEiooADzr8i9i2O/JbrIOy@public.gmane.org>
-> Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Bruno Pr=C3=A9mont <bonbons-ud5FBsm0p/xEiooADzr8i9i2O/JbrIOy@public.gmane.org>
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> ---
-> Changes in v2:
-> -Use DEFINE_RES_IRQ_NAMED
-> -Change indentation of axp20x_cells initializers to avoid line wrapping
-> Changes in v3:
-> -Improve commit message
-> -Add Bruno's S-o-b
-> ---
->  drivers/mfd/axp20x.c | 20 ++++++++++++++++----
->  1 file changed, 16 insertions(+), 4 deletions(-)
 
-For my own reference:
-  Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On 6 July 2015 09:39:12 BST, Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org> wrote:
+>On 05/07/15 13:50, Jonathan Cameron wrote:
+>> On 04/07/15 14:55, Martin Kepplinger wrote:
+>>> IIO_EV_TYPE_THRESH in rising direction describes an event where the
+>>> threshold is crossed in rising direction, positive or negative
+>values
+>>> being possible. This is not the case here.
+>>>
+>>> Since the threshold is no signed value and only the magnitude is
+>compared,
+>>> IIO_EV_TYPE_MAG is what describes the behaviour of these devices,
+>see the
+>>> sysfs-bus-iio ABI Documentation.
+>
+>Fwiw there was some discussion of this before the initial submission:
+>
+>http://www.spinics.net/lists/linux-iio/msg14039.html
+>
+>Initially I used a magnitude too but Jonathan convinced me it should be
+>
+>a threshold.
+>
+>"
+>
+>The  moment you know the sign of the magnitude it stops being a
+>magnitude
+>and becomes a generic threshold.  Report it as such and control it as
+>such.
+>
+>"
+>
+>Thing is that the hardware indeed only compares the absolute value for 
+>the threshold *but* indicates with the event the sign.
+>However it is true that the driver doesn't currently do anything with 
+>the sign information.
+Ah. That explains the confusion.
+This is a common enough case. 
+Usual approach is the slightly hacky option of having two threshold events. Setting limit on either effects both.
+Enabling either effects both (or you can eat the wrong one in driver if you prefer
+ when only one is enabled)
+>
+>
+>>> Signed-off-by: Martin Kepplinger
+><martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+>>> Signed-off-by: Christoph Muellner
+><christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+>> This is a fix and so should have been the first patch in the series. 
+>It will
+>> want to go via a different tree (iio-fixes) and probably be marked
+>for stable.
+>>
+>> I would however like Peter's ack on this as well before taking it.
+>>> ---
+>>>   drivers/iio/accel/mma8452.c | 10 +++++-----
+>>>   1 file changed, 5 insertions(+), 5 deletions(-)
+>>>
+>>> diff --git a/drivers/iio/accel/mma8452.c
+>b/drivers/iio/accel/mma8452.c
+>>> index 7f6e3b4..e23ebd0 100644
+>>> --- a/drivers/iio/accel/mma8452.c
+>>> +++ b/drivers/iio/accel/mma8452.c
+>>> @@ -598,21 +598,21 @@ static void mma8452_transient_interrupt(struct
+>iio_dev *indio_dev)
+>>>   	if (src & data->chip_info->ev_src_xe)
+>>>   		iio_push_event(indio_dev,
+>>>   			       IIO_MOD_EVENT_CODE(IIO_ACCEL, 0, IIO_MOD_X,
+>>> -						  IIO_EV_TYPE_THRESH,
+>>> +						  IIO_EV_TYPE_MAG,
+>>>   						  IIO_EV_DIR_RISING),
+>>>   			       ts);
+>>>   
+>>>   	if (src & data->chip_info->ev_src_ye)
+>>>   		iio_push_event(indio_dev,
+>>>   			       IIO_MOD_EVENT_CODE(IIO_ACCEL, 0, IIO_MOD_Y,
+>>> -						  IIO_EV_TYPE_THRESH,
+>>> +						  IIO_EV_TYPE_MAG,
+>>>   						  IIO_EV_DIR_RISING),
+>>>   			       ts);
+>>>   
+>>>   	if (src & data->chip_info->ev_src_ze)
+>>>   		iio_push_event(indio_dev,
+>>>   			       IIO_MOD_EVENT_CODE(IIO_ACCEL, 0, IIO_MOD_Z,
+>>> -						  IIO_EV_TYPE_THRESH,
+>>> +						  IIO_EV_TYPE_MAG,
+>>>   						  IIO_EV_DIR_RISING),
+>>>   			       ts);
+>>>   }
+>>> @@ -689,7 +689,7 @@ static int mma8452_reg_access_dbg(struct iio_dev
+>*indio_dev,
+>>>   
+>>>   static const struct iio_event_spec mma8452_transient_event[] = {
+>>>   	{
+>>> -		.type = IIO_EV_TYPE_THRESH,
+>>> +		.type = IIO_EV_TYPE_MAG,
+>>>   		.dir = IIO_EV_DIR_RISING,
+>>>   		.mask_separate = BIT(IIO_EV_INFO_ENABLE),
+>>>   		.mask_shared_by_type = BIT(IIO_EV_INFO_VALUE) |
+>>> @@ -700,7 +700,7 @@ static const struct iio_event_spec
+>mma8452_transient_event[] = {
+>>>   
+>>>   static const struct iio_event_spec mma8452_motion_event[] = {
+>>>   	{
+>>> -		.type = IIO_EV_TYPE_THRESH,
+>>> +		.type = IIO_EV_TYPE_MAG,
+>>>   		.dir = IIO_EV_DIR_RISING,
+>>>   		.mask_separate = BIT(IIO_EV_INFO_ENABLE),
+>>>   		.mask_shared_by_type = BIT(IIO_EV_INFO_VALUE) |
+>>>
+>
+>--
+>To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+>the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-Are these two patches tied to any other in the set, or can I apply
-them separately?
-
-> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
-> index f9a3c2d..ca4a604 100644
-> --- a/drivers/mfd/axp20x.c
-> +++ b/drivers/mfd/axp20x.c
-> @@ -113,6 +113,13 @@ static struct resource axp20x_pek_resources[] =3D {
->  	},
->  };
-> =20
-> +static struct resource axp20x_usb_power_supply_resources[] =3D {
-> +	DEFINE_RES_IRQ_NAMED(AXP20X_IRQ_VBUS_PLUGIN, "VBUS_PLUGIN"),
-> +	DEFINE_RES_IRQ_NAMED(AXP20X_IRQ_VBUS_REMOVAL, "VBUS_REMOVAL"),
-> +	DEFINE_RES_IRQ_NAMED(AXP20X_IRQ_VBUS_VALID, "VBUS_VALID"),
-> +	DEFINE_RES_IRQ_NAMED(AXP20X_IRQ_VBUS_NOT_VALID, "VBUS_NOT_VALID"),
-> +};
-> +
->  static struct resource axp22x_pek_resources[] =3D {
->  	{
->  		.name   =3D "PEK_DBR",
-> @@ -363,11 +370,16 @@ static const struct regmap_irq_chip axp288_regmap_i=
-rq_chip =3D {
-> =20
->  static struct mfd_cell axp20x_cells[] =3D {
->  	{
-> -		.name			=3D "axp20x-pek",
-> -		.num_resources		=3D ARRAY_SIZE(axp20x_pek_resources),
-> -		.resources		=3D axp20x_pek_resources,
-> +		.name		=3D "axp20x-pek",
-> +		.num_resources	=3D ARRAY_SIZE(axp20x_pek_resources),
-> +		.resources	=3D axp20x_pek_resources,
->  	}, {
-> -		.name			=3D "axp20x-regulator",
-> +		.name		=3D "axp20x-regulator",
-> +	}, {
-> +		.name		=3D "axp20x-usb-power-supply",
-> +		.of_compatible	=3D "x-powers,axp202-usb-power-supply",
-> +		.num_resources	=3D ARRAY_SIZE(axp20x_usb_power_supply_resources),
-> +		.resources	=3D axp20x_usb_power_supply_resources,
->  	},
->  };
-> =20
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+-- 
+Sent from my Android device with K-9 Mail. Please excuse my brevity.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
