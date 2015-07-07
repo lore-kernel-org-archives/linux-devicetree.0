@@ -1,108 +1,141 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH-V5 4/4] mfd: devicetree: bindings: Add new 88pm800 mfd
- binding
-Date: Tue, 7 Jul 2015 08:31:44 +0100
-Message-ID: <20150707073144.GQ3182@x1>
-References: <1435591877-18214-1-git-send-email-vaibhav.hiremath@linaro.org>
- <1435591877-18214-5-git-send-email-vaibhav.hiremath@linaro.org>
+From: Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 7/9] iio: mma8452: change iio event type to IIO_EV_TYPE_MAG
+Date: Tue, 07 Jul 2015 09:32:27 +0200
+Message-ID: <559B808B.30806@posteo.de>
+References: <1436018110-3903-1-git-send-email-martink@posteo.de> <1436018110-3903-8-git-send-email-martink@posteo.de> <559919F5.8070107@kernel.org> <559A3EB0.2060200@parkeon.com> <E94BB95F-0719-41A8-B7B7-E035BE1B9C43@jic23.retrosnub.co.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1435591877-18214-5-git-send-email-vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yizhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <E94BB95F-0719-41A8-B7B7-E035BE1B9C43-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>, Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, roberta.dobrescu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 29 Jun 2015, Vaibhav Hiremath wrote:
+Am 2015-07-07 um 09:05 schrieb Jonathan Cameron:
+> 
+> 
+> On 6 July 2015 09:39:12 BST, Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org> wrote:
+>> On 05/07/15 13:50, Jonathan Cameron wrote:
+>>> On 04/07/15 14:55, Martin Kepplinger wrote:
+>>>> IIO_EV_TYPE_THRESH in rising direction describes an event where the
+>>>> threshold is crossed in rising direction, positive or negative
+>> values
+>>>> being possible. This is not the case here.
+>>>>
+>>>> Since the threshold is no signed value and only the magnitude is
+>> compared,
+>>>> IIO_EV_TYPE_MAG is what describes the behaviour of these devices,
+>> see the
+>>>> sysfs-bus-iio ABI Documentation.
+>>
+>> Fwiw there was some discussion of this before the initial submission:
+>>
+>> http://www.spinics.net/lists/linux-iio/msg14039.html
+>>
+>> Initially I used a magnitude too but Jonathan convinced me it should be
+>>
+>> a threshold.
+>>
+>> "
+>>
+>> The  moment you know the sign of the magnitude it stops being a
+>> magnitude
+>> and becomes a generic threshold.  Report it as such and control it as
+>> such.
+>>
+>> "
+>>
+>> Thing is that the hardware indeed only compares the absolute value for 
+>> the threshold *but* indicates with the event the sign.
+>> However it is true that the driver doesn't currently do anything with 
+>> the sign information.
+> Ah. That explains the confusion.
+> This is a common enough case. 
+> Usual approach is the slightly hacky option of having two threshold events. Setting limit on either effects both.
+> Enabling either effects both (or you can eat the wrong one in driver if you prefer
+>  when only one is enabled)
 
-> With addition of DT support to 88pm800 mfd driver, this patch
-> adds new DT binding documentation along with respective properties.
->=20
-> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/mfd/88pm800.txt | 53 +++++++++++++=
-++++++++++
->  1 file changed, 53 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/88pm800.txt
+I tried to implement THRESH somehow but it gets too messy. Yes, what you
+*can* read for an event is positive or negative acceleration value (g,
+whatever). But, say, positive g doesn't at all indicate THRESH RISING .
+It could be negative g in freefall mode on one axis, and so on...
 
-=46or my own reference:
-  Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+So the sign of the current value doesn't help you turning MAG into
+TRESH. Really I think, MAG is what describes these devices.
 
-Yes, I plan to take this through the MFD tree.
-
-> diff --git a/Documentation/devicetree/bindings/mfd/88pm800.txt b/Docu=
-mentation/devicetree/bindings/mfd/88pm800.txt
-> new file mode 100644
-> index 0000000..dec842f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/88pm800.txt
-> @@ -0,0 +1,53 @@
-> +* Marvell 88PM80x Power Management IC
-> +
-> +Required parent device properties:
-> +- compatible		: "marvell,88pm800", "marvell,88pm805", "marvell,88pm8=
-60"
-> +- reg			: the I2C slave address for the 88pm80x family chip
-> +- interrupts		: IRQ line for the 88pm80x family chip
-> +- interrupt-controller	: describes the 88pm80x family chip as an int=
-errupt
-> +			  controller
-> +- #interrupt-cells 	: should be 1.
-> +			  The cell is the 88pm80x local IRQ number
-> +
-> +88pm80x family of devices consists of varied group of sub-devices:
-> +
-> +Device		 	Supply Names	 Description
-> +------		 	------------	 -----------
-> +88pm80x-onkey		:		: On key
-> +88pm80x-rtc		:		: RTC
-> +88pm80x-regulator	:		: Regulators
-> +
-> +Example:
-> +
-> +	pmic: 88pm800@30 {
-> +		compatible =3D "marvell,88pm800";
-> +		reg =3D <0x30>;
-> +		interrupts =3D <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
-> +		interrupt-parent =3D <&gic>;
-> +		interrupt-controller;
-> +		#interrupt-cells =3D <1>;
-> +
-> +		regulators {
-> +			compatible =3D "marvell,88pm80x-regulator";
-> +
-> +			buck1a: BUCK1A {
-> +				regulator-name =3D "BUCK1A";
-> +				regulator-min-microvolt =3D <600000>;
-> +				regulator-max-microvolt =3D <1800000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +			};
-> +
-> +			ldo1: LDO1 {
-> +				regulator-name =3D "LDO1";
-> +				regulator-min-microvolt =3D <1700000>;
-> +				regulator-max-microvolt =3D <3300000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +			};
-> +		};
-> +
-> +		rtc {
-> +			compatible =3D "marvell,88pm80x-rtc";
-> +		};
-> +	};
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>
+>>
+>>>> Signed-off-by: Martin Kepplinger
+>> <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+>>>> Signed-off-by: Christoph Muellner
+>> <christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+>>> This is a fix and so should have been the first patch in the series. 
+>> It will
+>>> want to go via a different tree (iio-fixes) and probably be marked
+>> for stable.
+>>>
+>>> I would however like Peter's ack on this as well before taking it.
+>>>> ---
+>>>>   drivers/iio/accel/mma8452.c | 10 +++++-----
+>>>>   1 file changed, 5 insertions(+), 5 deletions(-)
+>>>>
+>>>> diff --git a/drivers/iio/accel/mma8452.c
+>> b/drivers/iio/accel/mma8452.c
+>>>> index 7f6e3b4..e23ebd0 100644
+>>>> --- a/drivers/iio/accel/mma8452.c
+>>>> +++ b/drivers/iio/accel/mma8452.c
+>>>> @@ -598,21 +598,21 @@ static void mma8452_transient_interrupt(struct
+>> iio_dev *indio_dev)
+>>>>   	if (src & data->chip_info->ev_src_xe)
+>>>>   		iio_push_event(indio_dev,
+>>>>   			       IIO_MOD_EVENT_CODE(IIO_ACCEL, 0, IIO_MOD_X,
+>>>> -						  IIO_EV_TYPE_THRESH,
+>>>> +						  IIO_EV_TYPE_MAG,
+>>>>   						  IIO_EV_DIR_RISING),
+>>>>   			       ts);
+>>>>   
+>>>>   	if (src & data->chip_info->ev_src_ye)
+>>>>   		iio_push_event(indio_dev,
+>>>>   			       IIO_MOD_EVENT_CODE(IIO_ACCEL, 0, IIO_MOD_Y,
+>>>> -						  IIO_EV_TYPE_THRESH,
+>>>> +						  IIO_EV_TYPE_MAG,
+>>>>   						  IIO_EV_DIR_RISING),
+>>>>   			       ts);
+>>>>   
+>>>>   	if (src & data->chip_info->ev_src_ze)
+>>>>   		iio_push_event(indio_dev,
+>>>>   			       IIO_MOD_EVENT_CODE(IIO_ACCEL, 0, IIO_MOD_Z,
+>>>> -						  IIO_EV_TYPE_THRESH,
+>>>> +						  IIO_EV_TYPE_MAG,
+>>>>   						  IIO_EV_DIR_RISING),
+>>>>   			       ts);
+>>>>   }
+>>>> @@ -689,7 +689,7 @@ static int mma8452_reg_access_dbg(struct iio_dev
+>> *indio_dev,
+>>>>   
+>>>>   static const struct iio_event_spec mma8452_transient_event[] = {
+>>>>   	{
+>>>> -		.type = IIO_EV_TYPE_THRESH,
+>>>> +		.type = IIO_EV_TYPE_MAG,
+>>>>   		.dir = IIO_EV_DIR_RISING,
+>>>>   		.mask_separate = BIT(IIO_EV_INFO_ENABLE),
+>>>>   		.mask_shared_by_type = BIT(IIO_EV_INFO_VALUE) |
+>>>> @@ -700,7 +700,7 @@ static const struct iio_event_spec
+>> mma8452_transient_event[] = {
+>>>>   
+>>>>   static const struct iio_event_spec mma8452_motion_event[] = {
+>>>>   	{
+>>>> -		.type = IIO_EV_TYPE_THRESH,
+>>>> +		.type = IIO_EV_TYPE_MAG,
+>>>>   		.dir = IIO_EV_DIR_RISING,
+>>>>   		.mask_separate = BIT(IIO_EV_INFO_ENABLE),
+>>>>   		.mask_shared_by_type = BIT(IIO_EV_INFO_VALUE) |
+>>>>
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
