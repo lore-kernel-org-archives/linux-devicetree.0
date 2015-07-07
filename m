@@ -1,84 +1,117 @@
-From: Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [PATCH v10 4/5] crypto: Add Allwinner Security System crypto
- accelerator
-Date: Tue, 7 Jul 2015 21:49:36 +0800
-Message-ID: <20150707134936.GA2958@gondor.apana.org.au>
-References: <1436209848-16530-1-git-send-email-clabbe.montjoie@gmail.com>
- <1436209848-16530-5-git-send-email-clabbe.montjoie@gmail.com>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v6 12/23] usb: gadget: ether: allocate and init otg descriptor
+ by otg capabilities
+Date: Tue, 7 Jul 2015 16:54:47 +0300
+Message-ID: <559BDA27.5090002@ti.com>
+References: <1435564082-14583-1-git-send-email-jun.li@freescale.com> <1435564082-14583-13-git-send-email-jun.li@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1436209848-16530-5-git-send-email-clabbe.montjoie@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: LABBE Corentin <clabbe.montjoie@gmail.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, maxime.ripard@free-electrons.com, linux@arm.linux.org.uk, davem@davemloft.net, akpm@linux-foundation.org, gregkh@linuxfoundation.org, mchehab@osg.samsung.com, arnd@arndb.de, joe@perches.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, linux-sunxi@googlegroups.com
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1435564082-14583-13-git-send-email-jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+d-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 06, 2015 at 09:10:47PM +0200, LABBE Corentin wrote:
+On 29/06/15 10:47, Li Jun wrote:
+> Allocate and initialize usb otg descriptor according to gadget otg
+> capabilities, add it for each usb configurations, free it while
+> ether unbind. If otg capability is not defined, keep its otg
+> descriptor unchanged.
 >
-> +int sun4i_hash_init(struct ahash_request *areq)
-> +{
-> +	const char *hash_type;
-> +	struct sun4i_req_ctx *op = ahash_request_ctx(areq);
-> +	struct crypto_ahash *tfm = crypto_ahash_reqtfm(areq);
-> +	struct ahash_alg *alg = __crypto_ahash_alg(tfm->base.__crt_alg);
-> +	struct sun4i_ss_alg_template *algt;
-> +	struct sun4i_ss_ctx *ss;
-> +
-> +	memset(op, 0, sizeof(struct sun4i_req_ctx));
-> +
-> +	algt = container_of(alg, struct sun4i_ss_alg_template, alg.hash);
-> +	ss = algt->ss;
-> +	op->ss = algt->ss;
-> +
-> +	hash_type = crypto_tfm_alg_name(areq->base.tfm);
-> +
-> +	if (strcmp(hash_type, "sha1") == 0)
-> +		op->mode = SS_OP_SHA1;
-> +	else if (strcmp(hash_type, "md5") == 0)
-> +		op->mode = SS_OP_MD5;
+> Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-Please store these modes in algt and then you wouldn't need to do
-the strcmp.
+For patches 12 to 20
 
-> +int sun4i_hash_import_md5(struct ahash_request *areq, const void *in)
-> +{
-> +	struct sun4i_req_ctx *op = ahash_request_ctx(areq);
-> +	const struct md5_state *ictx = in;
-> +	int i;
+Reviewed-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
 
-You need to initialise op->ss here.  Ditto for SHA.
+cheers,
+-roger
 
-> +	/* get the partial hash only if something was written */
-> +	if (op->mode == SS_OP_SHA1) {
-> +		for (i = 0; i < 5; i++)
-> +			op->hash[i] = readl(ss->base + SS_MD0 + i * 4);
-> +	} else {
-> +		for (i = 0; i < 4; i++)
-> +			op->hash[i] = readl(ss->base + SS_MD0 + i * 4);
+> ---
+>   drivers/usb/gadget/legacy/ether.c | 36 ++++++++++++++++++++----------------
+>   1 file changed, 20 insertions(+), 16 deletions(-)
+>
+> diff --git a/drivers/usb/gadget/legacy/ether.c b/drivers/usb/gadget/legacy/ether.c
+> index a3323dc..31e9160 100644
+> --- a/drivers/usb/gadget/legacy/ether.c
+> +++ b/drivers/usb/gadget/legacy/ether.c
+> @@ -171,20 +171,7 @@ static struct usb_device_descriptor device_desc = {
+>   	.bNumConfigurations =	1,
+>   };
+>
+> -static struct usb_otg_descriptor otg_descriptor = {
+> -	.bLength =		sizeof otg_descriptor,
+> -	.bDescriptorType =	USB_DT_OTG,
+> -
+> -	/* REVISIT SRP-only hardware is possible, although
+> -	 * it would not be called "OTG" ...
+> -	 */
+> -	.bmAttributes =		USB_OTG_SRP | USB_OTG_HNP,
+> -};
+> -
+> -static const struct usb_descriptor_header *otg_desc[] = {
+> -	(struct usb_descriptor_header *) &otg_descriptor,
+> -	NULL,
+> -};
+> +static const struct usb_descriptor_header *otg_desc[2];
+>
+>   static struct usb_string strings_dev[] = {
+>   	[USB_GADGET_MANUFACTURER_IDX].s = "",
+> @@ -416,17 +403,28 @@ static int eth_bind(struct usb_composite_dev *cdev)
+>   	device_desc.iManufacturer = strings_dev[USB_GADGET_MANUFACTURER_IDX].id;
+>   	device_desc.iProduct = strings_dev[USB_GADGET_PRODUCT_IDX].id;
+>
+> +	if (gadget_is_otg(gadget) && !otg_desc[0]) {
+> +		struct usb_descriptor_header *usb_desc;
+> +
+> +		usb_desc = usb_otg_descriptor_alloc(gadget);
+> +		if (!usb_desc)
+> +			goto fail1;
+> +		usb_otg_descriptor_init(gadget, usb_desc);
+> +		otg_desc[0] = usb_desc;
+> +		otg_desc[1] = NULL;
 > +	}
-
-You can avoid the op->mode check by storing the hash size in algt.
-
-> +int sun4i_hash_finup(struct ahash_request *areq)
-> +{
-> +	int err;
 > +
-> +	err = sun4i_hash_update(areq);
-> +	if (err != 0)
-> +		return err;
+>   	/* register our configuration(s); RNDIS first, if it's used */
+>   	if (has_rndis()) {
+>   		status = usb_add_config(cdev, &rndis_config_driver,
+>   				rndis_do_config);
+>   		if (status < 0)
+> -			goto fail1;
+> +			goto fail2;
+>   	}
+>
+>   	status = usb_add_config(cdev, &eth_config_driver, eth_do_config);
+>   	if (status < 0)
+> -		goto fail1;
+> +		goto fail2;
+>
+>   	usb_composite_overwrite_options(cdev, &coverwrite);
+>   	dev_info(&gadget->dev, "%s, version: " DRIVER_VERSION "\n",
+> @@ -434,6 +432,9 @@ static int eth_bind(struct usb_composite_dev *cdev)
+>
+>   	return 0;
+>
+> +fail2:
+> +	kfree(otg_desc[0]);
+> +	otg_desc[0] = NULL;
+>   fail1:
+>   	if (has_rndis())
+>   		usb_put_function_instance(fi_rndis);
+> @@ -463,6 +464,9 @@ static int eth_unbind(struct usb_composite_dev *cdev)
+>   		usb_put_function(f_geth);
+>   		usb_put_function_instance(fi_geth);
+>   	}
+> +	kfree(otg_desc[0]);
+> +	otg_desc[0] = NULL;
 > +
-> +	return sun4i_hash_final(areq);
-
-You can drop finup since the API provides a default finup that's
-exactly the same as this.  You only need to provide finup if it
-can optimise on this.
-
-Ditto for digest.
- 
-Thanks,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+>   	return 0;
+>   }
+>
+>
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
