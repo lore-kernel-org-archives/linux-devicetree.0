@@ -1,112 +1,101 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v2 6/9] regulator: pwm-regulator: Re-write bindings
-Date: Tue,  7 Jul 2015 16:06:50 +0100
-Message-ID: <1436281613-899-7-git-send-email-lee.jones@linaro.org>
-References: <1436281613-899-1-git-send-email-lee.jones@linaro.org>
+From: Daniel Kurtz <djkurtz@chromium.org>
+Subject: Re: [PATCH] arm64: dts: mt8173: add clock_null
+Date: Tue, 7 Jul 2015 23:10:37 +0800
+Message-ID: <CAGS+omChOC-EYsmA5ytT+ho0UXvcL1-mjK4Z8=EgboKzwWmtyw@mail.gmail.com>
+References: <1434605351-64592-1-git-send-email-eddie.huang@mediatek.com>
+ <20150707130732.GD18561@pengutronix.de> <CAGS+omCgSjLZ2Ae5DqfmEm-2BrxQqw2ztxUCxBSngNSXxabtbg@mail.gmail.com>
+ <20150707143621.GW18700@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1436281613-899-1-git-send-email-lee.jones@linaro.org>
+In-Reply-To: <20150707143621.GW18700@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: kernel@stlinux.com, broonie@kernel.org, lgirdwood@gmail.com, Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Eddie Huang <eddie.huang@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mediatek@lists.infradead.org, James Liao <jamesjj.liao@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-* Add support for continuous-voltage mode
-* Put more meat on the bones with regards to voltage-table mode
-* Sort out formatting for ease of consumption
+On Tue, Jul 7, 2015 at 10:36 PM, Sascha Hauer <s.hauer@pengutronix.de> wrote:
+> On Tue, Jul 07, 2015 at 10:15:29PM +0800, Daniel Kurtz wrote:
+>> On Tue, Jul 7, 2015 at 9:07 PM, Sascha Hauer <s.hauer@pengutronix.de> wrote:
+>> > On Thu, Jun 18, 2015 at 01:29:11PM +0800, Eddie Huang wrote:
+>> >> Add clk_null, which represents clocks that can not / need not
+>> >> controlled by software.
+>> >> There are many clocks' parent set to clk_null.
+>> >>
+>> >> Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
+>> >> Signed-off-by: Eddie Huang <eddie.huang@mediatek.com>
+>> >> ---
+>> >> Base on 4.1-rc1
+>> >>
+>> >> Change-Id: I4db9b40d07e28f54f7bae9b676316cbd6a962124
+>> >> ---
+>> >>  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 6 ++++++
+>> >>  1 file changed, 6 insertions(+)
+>> >>
+>> >> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+>> >> index 924fdb6..4798f44 100644
+>> >> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+>> >> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+>> >> @@ -81,6 +81,12 @@
+>> >>               cpu_on        = <0x84000003>;
+>> >>       };
+>> >>
+>> >> +     clk_null: clk_null {
+>> >> +             compatible = "fixed-clock";
+>> >> +             clock-frequency = <0>;
+>> >> +             #clock-cells = <0>;
+>> >> +     };
+>> >
+>> > The discussion around this patch shows that we don't want to have this
+>> > clock in the device tree as it is not a hardware description.
+>> >
+>> > Ok, fine. Eddie, you told us that the rate of the current clk_null children
+>> > is not interesting. What's the motivation to send this patch anyway
+>> > then? Why can't you keep its children on the orphan list where they are
+>> > already now?
+>> >
+>> > Another possibility would be to instantiate the clk_null clock from C
+>> > code rather than from the device tree. This way we wouldn't put any
+>> > wrong descriptions into the device tree and still can implement the
+>> > support for the real parent clocks when we actually need them.
+>>
+>> Some device nodes, like mmc, use a clk_null phandle as one of their clocks:
+>>
+>> mmc1: mmc@11240000 {
+>>         compatible = "mediatek,mt8173-mmc",
+>>                      "mediatek,mt8135-mmc";
+>>         reg = <0 0x11240000 0 0x1000>;
+>>         interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_LOW>;
+>>         clocks = <&pericfg CLK_PERI_MSDC30_1>,
+>>                  <&clk_null>;
+>>         clock-names = "source", "hclk";
+>>         status = "disabled";
+>> };
+>
+> This is another case than the one we discussed about. In the case above
+> I motivated using a dummy clock since the clock exists in the system,
+> but is not software controllable. To abstract this from the driver
+> (which needs this clock since it exists) we here have the dummy clock.
+> However, of course I can't prove the clock is indeed not software
+> controllable; that's only the information I have.
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- .../bindings/regulator/pwm-regulator.txt           | 68 ++++++++++++++++++----
- 1 file changed, 56 insertions(+), 12 deletions(-)
+I was trying to answer your question "What's the motivation to send
+this patch anyway?".
+The motivation is to send follow on patches that use the clk_null
+phandle.  We need to provide some clock as the mmc1's hclk.  I do not
+understand why this has to be "clk_null", though.  It seems like this
+should be a real clock coming from one of the real clock_controller
+nodes.  After all, the mmc driver is going to be enabling/disabling
+this clock for power savings at runtime.  What does that even mean for
+clk_null ?
 
-diff --git a/Documentation/devicetree/bindings/regulator/pwm-regulator.txt b/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
-index ce91f61..892b366 100644
---- a/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
-@@ -1,27 +1,71 @@
--pwm regulator bindings
-+Bindings for the Generic PWM Regulator
-+======================================
-+
-+Currently supports 2 modes of operation:
-+
-+voltage-table:		When in this mode, a voltage table (See below) of
-+			predefined voltage <=> duty-cycle values must be
-+			provided via DT. Limitations are that the regulator can
-+			only operate at the voltages supplied in the table.
-+			Intermediary duty-cycle values which would normally
-+			allow finer grained voltage selection are ignored and
-+			rendered useless.  Although more control is given to
-+			the user if the assumptions made in continuous-voltage
-+			mode do not reign true.
-+
-+continuous-voltage:	This mode uses the regulator's maximum and minimum
-+			supplied voltages specified in the
-+			regulator-{min,max}-microvolt properties to calculate
-+			appropriate duty-cycle values.  This allows for a much
-+			more fine grained solution when compared with
-+			voltage-table mode above.  This solution does make an
-+			assumption that a %50 duty-cycle value will cause the
-+			regulator voltage to run at half way between the
-+			supplied max_uV and min_uV values.
- 
- Required properties:
--- compatible: Should be "pwm-regulator"
--- pwms: OF device-tree PWM specification (see PWM binding pwm.txt)
--- voltage-table: voltage and duty table, include 2 members in each set of
--  brackets, first one is voltage(unit: uv), the next is duty(unit: percent)
-+--------------------
-+- compatible:		Should be "pwm-regulator"
-+
-+- pwms:			PWM specification (See: ../pwm/pwm.txt)
-+
-+One of these must be provided:
-+- voltage-table: 	Voltage and Duty-Cycle table consisting of 2 cells
-+			    First cell is voltage in microvolts (uV)
-+			    Second cell is duty-cycle in percent (%)
-+
-+- max-duty-cycle:	Maximum Duty-Cycle value -- this will normally be
-+  			255 (0xff) for an 8 bit PWM device
- 
--Any property defined as part of the core regulator binding defined in
--regulator.txt can also be used.
-+If both are provided, the current default is voltage-table mode.
- 
--Example:
-+Any property defined as part of the core regulator binding can also be used.
-+(See: ../regulator/regulator.txt)
-+
-+Continuous Voltage Example:
- 	pwm_regulator {
- 		compatible = "pwm-regulator;
- 		pwms = <&pwm1 0 8448 0>;
-+		regulator-min-microvolt = <1016000>;
-+		regulator-max-microvolt = <1114000>;
-+		regulator-name = "vdd_logic";
-+
-+		max-duty-cycle = <255>; /* 8bit PWM */
-+	};
- 
-+Voltage Table Example:
-+	pwm_regulator {
-+		compatible = "pwm-regulator;
-+		pwms = <&pwm1 0 8448 0>;
-+		regulator-min-microvolt = <1016000>;
-+		regulator-max-microvolt = <1114000>;
-+		regulator-name = "vdd_logic";
-+
-+			      /* Voltage Duty-Cycle */
- 		voltage-table = <1114000 0>,
- 				<1095000 10>,
- 				<1076000 20>,
- 				<1056000 30>,
- 				<1036000 40>,
- 				<1016000 50>;
--
--		regulator-min-microvolt = <1016000>;
--		regulator-max-microvolt = <1114000>;
--		regulator-name = "vdd_logic";
- 	};
--- 
-1.9.1
+Sorry, I'm not exactly sure what you are saying in your last reply.
+
+>
+> Sascha
+>
+> --
+> Pengutronix e.K.                           |                             |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
