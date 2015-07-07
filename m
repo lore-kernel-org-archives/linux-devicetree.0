@@ -1,225 +1,158 @@
-From: Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: mediatek: add mt6580 basic support
-Date: Tue, 7 Jul 2015 16:10:52 +0800
-Message-ID: <1436256652.6444.2.camel@mtkswgap22>
-References: <1436255771-5367-1-git-send-email-mars.cheng@mediatek.com>
-	 <1436255771-5367-3-git-send-email-mars.cheng@mediatek.com>
+From: Phil Edworthy <phil.edworthy@renesas.com>
+Subject: RE: [PATCH v2] phy: rcar-gen2 usb: Add Host/Function switching for
+ USB0
+Date: Tue, 7 Jul 2015 08:38:49 +0000
+Message-ID: <SIXPR06MB06394AED5D183C15C5A66BCEF5920@SIXPR06MB0639.apcprd06.prod.outlook.com>
+References: <1435824347-22732-1-git-send-email-phil.edworthy@renesas.com>
+ <SG2PR06MB0919835888EBD162D4B86C24D8930@SG2PR06MB0919.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1436255771-5367-3-git-send-email-mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: cc.hwang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, loda.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, miles.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, scott.shu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jades.shih-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, my.chuang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <SG2PR06MB0919835888EBD162D4B86C24D8930@SG2PR06MB0919.apcprd06.prod.outlook.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi all
+Hi Shimoda-san,
 
-Sorry for this title of mail. It should be:
-[PATCH v3 2/2] ARM: dts: mediatek: add mt6580 basic support
-
-Thanks.
-
-On Tue, 2015-07-07 at 15:56 +0800, mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-> From: Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+On 06 July 2015 08:18, Shimoda-san wrote:
+> Hi Phil-san,
 > 
-> This adds basic chip support for Mediatek 6580.
+> Thank you very much for the patch!
 > 
-> Signed-off-by: Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/Makefile         |   1 +
->  arch/arm/boot/dts/mt6580-evbp1.dts |  35 +++++++++++
->  arch/arm/boot/dts/mt6580.dtsi      | 123 +++++++++++++++++++++++++++++++++++++
->  3 files changed, 159 insertions(+)
->  create mode 100644 arch/arm/boot/dts/mt6580-evbp1.dts
->  create mode 100644 arch/arm/boot/dts/mt6580.dtsi
+> > Sent: Thursday, July 02, 2015 5:06 PM
+> < snip >
+> > +/* VBUS change IRQ handler */
+> > +static irqreturn_t gpio_vbus_irq(int irq, void *data)
+> > +{
+> > +	struct rcar_gen2_channel *channel = data;
+> > +
+> > +	/* Wait 20ms before doing anything as VBUS needs to settle */
+> > +	schedule_delayed_work(&channel->work, msecs_to_jiffies(20));
+> > +
+> > +	return IRQ_HANDLED;
+> > +}
+> > +
+> > +static int probe_otg(struct platform_device *pdev,
+> > +	struct rcar_gen2_phy_driver *drv)
+> > +{
+> > +	struct device *dev = &pdev->dev;
+> > +	struct rcar_gen2_channel *ch = drv->channels;
+> > +	int irq;
+> > +	int ret;
+> > +
+> > +	/* GPIOs for Host/Fn switching */
+> > +	ch->gpio_id = of_get_named_gpio_flags(dev->of_node,
+> > +				"renesas,id-gpio", 0, NULL);
+> > +	ch->gpio_vbus = of_get_named_gpio_flags(dev->of_node,
+> > +				"renesas,vbus-gpio", 0, NULL);
+> > +
+> > +	/* Need valid ID and VBUS gpios for Host/Fn switching */
+> > +	if (gpio_is_valid(ch->gpio_id) && gpio_is_valid(ch->gpio_vbus)) {
+> > +		ch->use_otg = 1;
+> > +
+> > +		/* GPIO for ID input */
+> > +		ret = devm_gpio_request_one(dev, ch->gpio_id, GPIOF_IN,
+> "id");
+> > +		if (ret)
+> > +			return ret;
+> > +
+> > +		/* GPIO for VBUS input */
+> > +		ret = devm_gpio_request_one(dev, ch->gpio_vbus, GPIOF_IN,
+> "vbus");
 > 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 246473a..919e7c6 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -705,6 +705,7 @@ dtb-$(CONFIG_MACH_DOVE) += \
->  	dove-dove-db.dtb \
->  	dove-sbc-a510.dtb
->  dtb-$(CONFIG_ARCH_MEDIATEK) += \
-> +	mt6580-evbp1.dtb \
->  	mt6589-aquaris5.dtb \
->  	mt6592-evb.dtb \
->  	mt8127-moose.dtb \
-> diff --git a/arch/arm/boot/dts/mt6580-evbp1.dts b/arch/arm/boot/dts/mt6580-evbp1.dts
-> new file mode 100644
-> index 0000000..8c42335
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/mt6580-evbp1.dts
-> @@ -0,0 +1,35 @@
-> +/*
-> + * Copyright (c) 2015 MediaTek Inc.
-> + * Author: Mars.C <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +/dts-v1/;
-> +#include "mt6580.dtsi"
-> +
-> +/ {
-> +	model = "MediaTek MT6580 evaluation board";
-> +	compatible = "mediatek,mt6580-evbp1", "mediatek,mt6580";
-> +
-> +	chosen {
-> +		bootargs = "console=ttyS0,921600n8 earlyprintk";
-> +		stdout-path = &uart0;
-> +	};
-> +
-> +	memory {
-> +		reg = <0x80000000 0x20000000>;
-> +	};
-> +};
-> +
-> +&uart0 {
-> +	status = "okay";
-> +};
-> +
-> diff --git a/arch/arm/boot/dts/mt6580.dtsi b/arch/arm/boot/dts/mt6580.dtsi
-> new file mode 100644
-> index 0000000..09852cd
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/mt6580.dtsi
-> @@ -0,0 +1,123 @@
-> +/*
-> + * Copyright (c) 2015 MediaTek Inc.
-> + * Author: Mars.C <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include "skeleton.dtsi"
-> +
-> +/ {
-> +	compatible = "mediatek,mt6580";
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
-> +	interrupt-parent = <&sysirq>;
-> +
-> +	cpus {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		cpu@0 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a7";
-> +			reg = <0x0>;
-> +		};
-> +		cpu@1 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a7";
-> +			reg = <0x1>;
-> +		};
-> +		cpu@2 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a7";
-> +			reg = <0x2>;
-> +		};
-> +		cpu@3 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a7";
-> +			reg = <0x3>;
-> +		};
-> +
-> +	};
-> +
-> +	clocks {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		compatible = "simple-bus";
-> +		ranges;
-> +
-> +		system_clk: dummy13m {
-> +			compatible = "fixed-clock";
-> +			clock-frequency = <13000000>;
-> +			#clock-cells = <0>;
-> +		};
-> +
-> +		rtc_clk: dummy32k {
-> +			compatible = "fixed-clock";
-> +			clock-frequency = <32000>;
-> +			#clock-cells = <0>;
-> +		};
-> +
-> +		uart_clk: dummy26m {
-> +			compatible = "fixed-clock";
-> +			clock-frequency = <26000000>;
-> +			#clock-cells = <0>;
-> +		};
-> +	};
-> +
-> +	timer: timer@10008000 {
-> +		compatible = "mediatek,mt6580-timer",
-> +			     "mediatek,mt6577-timer";
-> +		reg = <0x10008000 0x80>;
-> +		interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&system_clk>, <&rtc_clk>;
-> +		clock-names = "system-clk", "rtc-clk";
-> +	};
-> +
-> +	sysirq: interrupt-controller@10200100 {
-> +		compatible = "mediatek,mt6580-sysirq",
-> +			     "mediatek,mt6577-sysirq";
-> +		interrupt-controller;
-> +		#interrupt-cells = <3>;
-> +		interrupt-parent = <&gic>;
-> +		reg = <0x10200100 0x1c>;
-> +	};
-> +
-> +	gic: interrupt-controller@10211000 {
-> +		compatible = "arm,cortex-a7-gic";
-> +		interrupt-controller;
-> +		#interrupt-cells = <3>;
-> +		interrupt-parent = <&gic>;
-> +		reg = <0x10211000 0x1000>,
-> +		      <0x10212000 0x1000>,
-> +		      <0x10214000 0x2000>,
-> +		      <0x10216000 0x2000>;
-> +	};
-> +
-> +	uart0: serial@11005000 {
-> +		compatible = "mediatek,mt6580-uart",
-> +			     "mediatek,mt6577-uart";
-> +		reg = <0x11005000 0x400>;
-> +		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&uart_clk>;
-> +		status = "disabled";
-> +	};
-> +
-> +	uart1: serial@11006000 {
-> +		compatible = "mediatek,mt6580-uart",
-> +			     "mediatek,mt6577-uart";
-> +		reg = <0x11006000 0x400>;
-> +		interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&uart_clk>;
-> +		status = "disabled";
-> +	};
-> +};
+> According to the checkpatch.pl, "line over 80 characters".
+As I understand it, the 80 chars is not a hard rule. One reason for the
+80 char guideline is to avoid overly complex code, but I don't think
+that can be said of the above line!
 
+> > +		if (ret)
+> > +			return ret;
+> > +
+> > +		irq = gpio_to_irq(ch->gpio_vbus);
+> > +		ret = devm_request_irq(dev, irq, gpio_vbus_irq,
+> VBUS_IRQ_FLAGS,
+> > +				"vbus_detect", ch);
+> > +		if (ret)
+> > +			return ret;
+> > +
+> > +		/* Optional GPIO for VBUS power */
+> > +		ch->gpio_vbus_pwr = of_get_named_gpio_flags(dev->of_node,
+> > +						"renesas,vbus-pwr-gpio", 0,
+> NULL);
+> 
+> Same above.
+Since this code was already split over two lines, I agree with you here.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> > +		if (gpio_is_valid(ch->gpio_id)) {
+> > +			ret = devm_gpio_request_one(dev, ch->gpio_vbus_pwr,
+> > +					GPIOF_OUT_INIT_LOW, "vbus-pwr");
+> > +			if (ret)
+> > +				return ret;
+> > +		}
+> > +
+> > +	} else if (gpio_is_valid(ch->gpio_id)) {
+> > +		dev_err(dev, "Failed to get VBUS gpio\n");
+> > +		return ch->gpio_vbus;
+> > +	} else if (gpio_is_valid(ch->gpio_vbus)) {
+> > +		dev_err(dev, "Failed to get ID gpio\n");
+> > +		return ch->gpio_id;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +/* bind/unbind the peripheral controller */
+> > +static int rcar_gen2_usb_set_peripheral(struct usb_otg *otg,
+> > +					struct usb_gadget *gadget)
+> > +{
+> > +	otg->gadget = gadget;
+> > +	if (!gadget) {
+> > +		usb_gadget_vbus_disconnect(otg->gadget);
+> 
+> Since the otg->gadget is NULL, this driver should not call this function here.
+Ah, yes you are correct!
+
+> > +		otg->state = OTG_STATE_UNDEFINED;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >  static int rcar_gen2_phy_probe(struct platform_device *pdev)
+> >  {
+> >  	struct device *dev = &pdev->dev;
+> < snip >
+> > @@ -323,6 +540,14 @@ static int rcar_gen2_phy_probe(struct platform_device
+> *pdev)
+> >
+> >  	dev_set_drvdata(dev, drv);
+> >
+> > +	/*
+> > +	 * If we already have something plugged into USB0, we won't get an edge
+> > +	 * on VBUS, so we have to manually schedule work to look at the VBUS
+> > +	 * and ID signals.
+> > +	 */
+> > +	if (drv->channels->use_otg)
+> > +		schedule_delayed_work(&drv->channels->work,
+> msecs_to_jiffies(100));
+> 
+> This line is also "line over 80 characters".
+I don't think it is necessary to force this into the 80 char recommendation.
+
+> Best regards,
+> Yoshihiro Shimoda
+> 
+> > +
+> >  	return 0;
+> >  }
+> >
+> > --
+> > 1.9.1
+
+Best regards
+Phil
