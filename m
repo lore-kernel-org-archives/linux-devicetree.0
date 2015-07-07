@@ -1,101 +1,55 @@
-From: Daniel Kurtz <djkurtz@chromium.org>
-Subject: Re: [PATCH] arm64: dts: mt8173: add clock_null
-Date: Tue, 7 Jul 2015 23:10:37 +0800
-Message-ID: <CAGS+omChOC-EYsmA5ytT+ho0UXvcL1-mjK4Z8=EgboKzwWmtyw@mail.gmail.com>
-References: <1434605351-64592-1-git-send-email-eddie.huang@mediatek.com>
- <20150707130732.GD18561@pengutronix.de> <CAGS+omCgSjLZ2Ae5DqfmEm-2BrxQqw2ztxUCxBSngNSXxabtbg@mail.gmail.com>
- <20150707143621.GW18700@pengutronix.de>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: rx51-battery.ko incompatiblity: board code vs DT
+Date: Tue, 7 Jul 2015 17:15:47 +0200
+Message-ID: <20150707151547.GN12087@pali>
+References: <201507062144.22911@pali>
+ <20150707150230.GB25405@earth>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150707143621.GW18700@pengutronix.de>
+Content-Disposition: inline
+In-Reply-To: <20150707150230.GB25405@earth>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Eddie Huang <eddie.huang@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mediatek@lists.infradead.org, James Liao <jamesjj.liao@mediatek.com>
+To: Sebastian Reichel <sre@kernel.org>
+Cc: Tony Lindgren <tony@atomide.com>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, Pavel Machek <pavel@ucw.cz>, Aaro Koskinen <aaro.koskinen@iki.fi>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 7, 2015 at 10:36 PM, Sascha Hauer <s.hauer@pengutronix.de> wrote:
-> On Tue, Jul 07, 2015 at 10:15:29PM +0800, Daniel Kurtz wrote:
->> On Tue, Jul 7, 2015 at 9:07 PM, Sascha Hauer <s.hauer@pengutronix.de> wrote:
->> > On Thu, Jun 18, 2015 at 01:29:11PM +0800, Eddie Huang wrote:
->> >> Add clk_null, which represents clocks that can not / need not
->> >> controlled by software.
->> >> There are many clocks' parent set to clk_null.
->> >>
->> >> Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
->> >> Signed-off-by: Eddie Huang <eddie.huang@mediatek.com>
->> >> ---
->> >> Base on 4.1-rc1
->> >>
->> >> Change-Id: I4db9b40d07e28f54f7bae9b676316cbd6a962124
->> >> ---
->> >>  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 6 ++++++
->> >>  1 file changed, 6 insertions(+)
->> >>
->> >> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
->> >> index 924fdb6..4798f44 100644
->> >> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
->> >> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
->> >> @@ -81,6 +81,12 @@
->> >>               cpu_on        = <0x84000003>;
->> >>       };
->> >>
->> >> +     clk_null: clk_null {
->> >> +             compatible = "fixed-clock";
->> >> +             clock-frequency = <0>;
->> >> +             #clock-cells = <0>;
->> >> +     };
->> >
->> > The discussion around this patch shows that we don't want to have this
->> > clock in the device tree as it is not a hardware description.
->> >
->> > Ok, fine. Eddie, you told us that the rate of the current clk_null children
->> > is not interesting. What's the motivation to send this patch anyway
->> > then? Why can't you keep its children on the orphan list where they are
->> > already now?
->> >
->> > Another possibility would be to instantiate the clk_null clock from C
->> > code rather than from the device tree. This way we wouldn't put any
->> > wrong descriptions into the device tree and still can implement the
->> > support for the real parent clocks when we actually need them.
->>
->> Some device nodes, like mmc, use a clk_null phandle as one of their clocks:
->>
->> mmc1: mmc@11240000 {
->>         compatible = "mediatek,mt8173-mmc",
->>                      "mediatek,mt8135-mmc";
->>         reg = <0 0x11240000 0 0x1000>;
->>         interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_LOW>;
->>         clocks = <&pericfg CLK_PERI_MSDC30_1>,
->>                  <&clk_null>;
->>         clock-names = "source", "hclk";
->>         status = "disabled";
->> };
->
-> This is another case than the one we discussed about. In the case above
-> I motivated using a dummy clock since the clock exists in the system,
-> but is not software controllable. To abstract this from the driver
-> (which needs this clock since it exists) we here have the dummy clock.
-> However, of course I can't prove the clock is indeed not software
-> controllable; that's only the information I have.
+On Tuesday 07 July 2015 17:02:30 Sebastian Reichel wrote:
+> Hi,
+>=20
+> On Mon, Jul 06, 2015 at 09:44:22PM +0200, Pali Roh=C3=A1r wrote:
+> > now I found out that rx51-battery.ko driver register sysnode=20
+> > /sys/class/power_supply/rx51-battery/ when booting with legacy boar=
+d=20
+> > code. But when booting DT kernel it register sysnode with different=
+ name=20
+> > /sys/class/power_supply/n900-battery/
+> >=20
+> > Sysfs node for DT kernel comes from Nokia N900 DTS file:=20
+> > arch/arm/boot/dts/omap3-n900.dts
+> >=20
+> > I would propose change which change DTS to "rx51-battery" to have i=
+t=20
+> > compatible with naming which is for legacy board code. It is just=20
+> > because to have compatibility and same naming scheme and also to ma=
+ke=20
+> > existing programs to work without needing patching them.
+> >=20
+> > What do you think?
+>=20
+> Change the driver instead (in rx51_battery_probe):
+>=20
+> -   di->bat.name =3D dev_name(&pdev->dev);
+> +   di->bat.name =3D "rx51-battery"
+>=20
+> This will keep the DT ABI stable and avoid introducing the term rx51
+> in the device tree file.
+>=20
+> -- Sebastian
 
-I was trying to answer your question "What's the motivation to send
-this patch anyway?".
-The motivation is to send follow on patches that use the clk_null
-phandle.  We need to provide some clock as the mmc1's hclk.  I do not
-understand why this has to be "clk_null", though.  It seems like this
-should be a real clock coming from one of the real clock_controller
-nodes.  After all, the mmc driver is going to be enabling/disabling
-this clock for power savings at runtime.  What does that even mean for
-clk_null ?
+Perfect, if it works fine can you send & apply patch?
 
-Sorry, I'm not exactly sure what you are saying in your last reply.
-
->
-> Sascha
->
-> --
-> Pengutronix e.K.                           |                             |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
