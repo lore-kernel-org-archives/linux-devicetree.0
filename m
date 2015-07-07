@@ -1,75 +1,64 @@
-From: Zhi Li <lznuaa@gmail.com>
-Subject: Re: [PATCH 4/4][v3] ARM: imx: pinctrl-imx7d: add iomuxc-lpsr gpio
- group ids
-Date: Tue, 7 Jul 2015 14:36:34 -0500
-Message-ID: <CAHrpEqQBSkw5=wj_xd=MEDbA8yiCan0ExYc=FhCKVKBOSgh=Bg@mail.gmail.com>
-References: <1436296630-20296-1-git-send-email-aalonso@freescale.com>
-	<1436296630-20296-4-git-send-email-aalonso@freescale.com>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH 1/2] powerpc/85xx: Add binding for SCFG
+Date: Tue, 7 Jul 2015 14:50:20 -0500
+Message-ID: <1436298620.2658.41.camel@freescale.com>
+References: <1436262437-31390-1-git-send-email-dongsheng.wang@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1436296630-20296-4-git-send-email-aalonso@freescale.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Adrian Alonso <aalonso@freescale.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Shawn Guo <shawn.guo@linaro.org>, Shawn Guo <shawnguo@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Anson.Huang@freescale.com, "Frank.Li@freescale.com" <Frank.Li@freescale.com>, yibin.gong@freescale.com, nitin.garg@freescale.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1436262437-31390-1-git-send-email-dongsheng.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dongsheng Wang <dongsheng.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 7, 2015 at 2:17 PM, Adrian Alonso <aalonso@freescale.com> wrote:
-> * Add imx7d SoC iomuxc-lpsr gpio group id's
-> * Add IOMUXC_LPSR_SUPPORT flag for pinctrl-imx driver to
->   support iomuxc-lpsr controller.
->
-> Signed-off-by: Adrian Alonso <aalonso@freescale.com>
+On Tue, 2015-07-07 at 17:47 +0800, Dongsheng Wang wrote:
+> From: Wang Dongsheng <dongsheng.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> 
+> SCFG provides SoC specific configuration and status registers for
+> the chip. Add this for powerpc platform.
+> 
+> Signed-off-by: Wang Dongsheng <dongsheng.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> 
+> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/board.txt 
+> b/Documentation/devicetree/bindings/powerpc/fsl/board.txt
+> index cff38bd..55604fe 100644
+> --- a/Documentation/devicetree/bindings/powerpc/fsl/board.txt
+> +++ b/Documentation/devicetree/bindings/powerpc/fsl/board.txt
+> @@ -3,6 +3,25 @@ Freescale Reference Board Bindings
+>  This document describes device tree bindings for various devices that
+>  exist on some Freescale reference boards.
+>  
+> +* Supplement configuration unit (SCFG)
+> +
+> +SCFG is the supplemental configuration unit, that provides SoC specific
+> +configuration and status registers for the chip. Such as getting PEX port
+> +status.
+> +
+> +Required properties:
+> +
+> +- compatible: should be "fsl,<board>-scfg"
 
-Acked-by: frank.li@freescale.com
+fsl,<chip>-scfg
 
->
-> - Change v1 to v3: resend patch
->
-> ---
->  drivers/pinctrl/freescale/pinctrl-imx7d.c | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->
-> diff --git a/drivers/pinctrl/freescale/pinctrl-imx7d.c b/drivers/pinctrl/freescale/pinctrl-imx7d.c
-> index 1fa7530..cf89275 100644
-> --- a/drivers/pinctrl/freescale/pinctrl-imx7d.c
-> +++ b/drivers/pinctrl/freescale/pinctrl-imx7d.c
-> @@ -172,6 +172,14 @@ enum imx7d_pads {
->         MX7D_PAD_ENET1_RX_CLK = 152,
->         MX7D_PAD_ENET1_CRS = 153,
->         MX7D_PAD_ENET1_COL = 154,
-> +       MX7D_PAD_GPIO1_IO00 = 155,
-> +       MX7D_PAD_GPIO1_IO01 = 156,
-> +       MX7D_PAD_GPIO1_IO02 = 157,
-> +       MX7D_PAD_GPIO1_IO03 = 158,
-> +       MX7D_PAD_GPIO1_IO04 = 159,
-> +       MX7D_PAD_GPIO1_IO05 = 160,
-> +       MX7D_PAD_GPIO1_IO06 = 161,
-> +       MX7D_PAD_GPIO1_IO07 = 162,
->  };
->
->  /* Pad names for the pinmux subsystem */
-> @@ -331,11 +339,20 @@ static const struct pinctrl_pin_desc imx7d_pinctrl_pads[] = {
->         IMX_PINCTRL_PIN(MX7D_PAD_ENET1_RX_CLK),
->         IMX_PINCTRL_PIN(MX7D_PAD_ENET1_CRS),
->         IMX_PINCTRL_PIN(MX7D_PAD_ENET1_COL),
-> +       IMX_PINCTRL_PIN(MX7D_PAD_GPIO1_IO00),
-> +       IMX_PINCTRL_PIN(MX7D_PAD_GPIO1_IO01),
-> +       IMX_PINCTRL_PIN(MX7D_PAD_GPIO1_IO02),
-> +       IMX_PINCTRL_PIN(MX7D_PAD_GPIO1_IO03),
-> +       IMX_PINCTRL_PIN(MX7D_PAD_GPIO1_IO04),
-> +       IMX_PINCTRL_PIN(MX7D_PAD_GPIO1_IO05),
-> +       IMX_PINCTRL_PIN(MX7D_PAD_GPIO1_IO06),
-> +       IMX_PINCTRL_PIN(MX7D_PAD_GPIO1_IO07),
->  };
->
->  static struct imx_pinctrl_soc_info imx7d_pinctrl_info = {
->         .pins = imx7d_pinctrl_pads,
->         .npins = ARRAY_SIZE(imx7d_pinctrl_pads),
-> +       .flags = IOMUXC_LPSR_SUPPORT,
->  };
->
->  static struct of_device_id imx7d_pinctrl_of_match[] = {
-> --
-> 2.1.4
->
+> +- reg: should contain base address and length of SCFG memory-mapped
+> +registers
+> +
+> +Example:
+> +
+> +     scfg:  global-utilities@fc000{
+> +             compatible = "fsl,t1040-scfg";
+> +             reg = <0xfc000 0x1000>;
+> +     };
+> +
+
+I don't think board.txt is the right place for this, since it's part of the 
+SoC, not the board.  Put it in its own file.
+
+-Scott
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
