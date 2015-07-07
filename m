@@ -1,98 +1,70 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v6 08/23] usb: chipidea: set usb otg capabilities
-Date: Tue, 7 Jul 2015 16:25:44 +0300
-Message-ID: <559BD358.4040700@ti.com>
-References: <1435564082-14583-1-git-send-email-jun.li@freescale.com> <1435564082-14583-9-git-send-email-jun.li@freescale.com>
+From: Jan =?ISO-8859-1?Q?L=FCbbe?= <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v2 5/5] i2c: davinci: use ICPFUNC to toggle I2C as gpio
+ for bus recovery
+Date: Tue, 07 Jul 2015 15:37:49 +0200
+Message-ID: <1436276269.3344.94.camel@pengutronix.de>
+References: <1417010393-30598-1-git-send-email-grygorii.strashko@ti.com>
+	 <1417010393-30598-6-git-send-email-grygorii.strashko@ti.com>
+	 <20141126160407.GN4431@pengutronix.de> <5476085B.40009@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1435564082-14583-9-git-send-email-jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+d-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5476085B.40009-l0cyMroinI0@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Cc: Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Looijmans <milo-software-Rn4VEauK+AKRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Kevin Hilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 29/06/15 10:47, Li Jun wrote:
-> Init and update otg capabilities by DT, set gadget's otg capabilities
-> accordingly.
->
-> Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
->   drivers/usb/chipidea/core.c  | 10 ++++++++++
->   drivers/usb/chipidea/udc.c   |  7 ++++++-
->   include/linux/usb/chipidea.h |  1 +
->   3 files changed, 17 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
-> index 74fea4f..248f571 100644
-> --- a/drivers/usb/chipidea/core.c
-> +++ b/drivers/usb/chipidea/core.c
-> @@ -588,6 +588,16 @@ static int ci_get_platdata(struct device *dev,
->   				of_usb_host_tpl_support(dev->of_node);
->   	}
->
-> +	if (platdata->dr_mode == USB_DR_MODE_OTG) {
-> +		/* We can support HNP and SRP of OTG 2.0 */
-> +		platdata->ci_otg_caps.otg_rev = 0x0200;
-> +		platdata->ci_otg_caps.hnp_support = true;
-> +		platdata->ci_otg_caps.srp_support = true;
-> +
-> +		/* Update otg capabilities by DT properties */
-> +		of_usb_update_otg_caps(dev->of_node, &platdata->ci_otg_caps);
+On Mi, 2014-11-26 at 19:05 +0200, Grygorii Strashko wrote:
+> On 11/26/2014 06:04 PM, Uwe Kleine-K=C3=B6nig wrote:
+> > On Wed, Nov 26, 2014 at 03:59:53PM +0200, Grygorii Strashko wrote:
+> >> Having a board where the I2C bus locks up occasionally made it cle=
+ar
+> >> that the bus recovery in the i2c-davinci driver will only work on
+> >> some boards, because on regular boards, this will only toggle GPIO
+> >> lines that aren't muxed to the actual pins.
+> >>
+> >> The I2C controller on SoCs like da850 (and da830), Keystone 2 has =
+the
+> >> built-in capability to bit-bang its lines by using the ICPFUNC reg=
+isters
+> >> of the i2c controller.
+> >> Implement the suggested procedure by toggling SCL and checking SDA=
+ using
+> >> the ICPFUNC registers of the I2C controller when present. Allow pl=
+atforms
+> >> to indicate the presence of the ICPFUNC registers with a has_pfunc=
+ platform
+> >> data flag and add optional DT property "ti,has-pfunc" to indicate
+> >> the same in DT.
+> > On what does it depend if this pfunc stuff works or not? Only the S=
+oC,
+> > or also on some board specific properties?
+>=20
+> SoC / set of SoCs. Also, similar feature is supported by OMAP and AM3=
+35x/AM437x SoCs
+> using I2C_SYSTEST register.
+>=20
+> > Given the former using the
+> > compatible string to detect its availability would be better. (In t=
+his
+> > case also sorry, didn't consider this case when requesting the prop=
+erty
+> > in the last round.)
 
-What if this function fails. e.g. DT contains unsupported OTG version?
-I think we should error out in that case.
+I only stumbled across this after it was merged, with the additional
+ti,has-pfunc property instead of using the compatible string (which
+would be better for a soc-dependent feature). Can we still fix this?
 
-> +	}
-> +
->   	if (of_usb_get_maximum_speed(dev->of_node) == USB_SPEED_FULL)
->   		platdata->flags |= CI_HDRC_FORCE_FULLSPEED;
-
-cheers,
--roger
-
->
-> diff --git a/drivers/usb/chipidea/udc.c b/drivers/usb/chipidea/udc.c
-> index 764f668..b7cca3e 100644
-> --- a/drivers/usb/chipidea/udc.c
-> +++ b/drivers/usb/chipidea/udc.c
-> @@ -1827,6 +1827,7 @@ static irqreturn_t udc_irq(struct ci_hdrc *ci)
->   static int udc_start(struct ci_hdrc *ci)
->   {
->   	struct device *dev = ci->dev;
-> +	struct usb_otg_caps *otg_caps = &ci->platdata->ci_otg_caps;
->   	int retval = 0;
->
->   	spin_lock_init(&ci->lock);
-> @@ -1834,8 +1835,12 @@ static int udc_start(struct ci_hdrc *ci)
->   	ci->gadget.ops          = &usb_gadget_ops;
->   	ci->gadget.speed        = USB_SPEED_UNKNOWN;
->   	ci->gadget.max_speed    = USB_SPEED_HIGH;
-> -	ci->gadget.is_otg       = ci->is_otg ? 1 : 0;
->   	ci->gadget.name         = ci->platdata->name;
-> +	ci->gadget.otg_caps	= otg_caps;
-> +
-> +	if (otg_caps->hnp_support || otg_caps->srp_support ||
-> +					otg_caps->adp_support)
-> +		ci->gadget.is_otg = 1;
->
->   	INIT_LIST_HEAD(&ci->gadget.ep_list);
->
-> diff --git a/include/linux/usb/chipidea.h b/include/linux/usb/chipidea.h
-> index ab94f78..e10cefc 100644
-> --- a/include/linux/usb/chipidea.h
-> +++ b/include/linux/usb/chipidea.h
-> @@ -34,6 +34,7 @@ struct ci_hdrc_platform_data {
->   #define CI_HDRC_CONTROLLER_STOPPED_EVENT	1
->   	void	(*notify_event) (struct ci_hdrc *ci, unsigned event);
->   	struct regulator	*reg_vbus;
-> +	struct usb_otg_caps	ci_otg_caps;
->   	bool			tpl_support;
->   };
->
->
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Jan
+--=20
+Pengutronix e.K.                           |                           =
+  |
+Industrial Linux Solutions                 | http://www.pengutronix.de/=
+  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0  =
+  |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-555=
+5 |
