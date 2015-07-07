@@ -1,117 +1,93 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH-V5 1/4] mfd: 88pm800: Add device tree support
-Date: Tue, 7 Jul 2015 08:30:16 +0100
-Message-ID: <20150707073016.GO3182@x1>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH-V5 2/4] mfd: 88pm800: Remove unnecessary protection
+ around pdata
+Date: Tue, 7 Jul 2015 08:30:36 +0100
+Message-ID: <20150707073036.GP3182@x1>
 References: <1435591877-18214-1-git-send-email-vaibhav.hiremath@linaro.org>
- <1435591877-18214-2-git-send-email-vaibhav.hiremath@linaro.org>
+ <1435591877-18214-3-git-send-email-vaibhav.hiremath@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1435591877-18214-2-git-send-email-vaibhav.hiremath@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, robh+dt@kernel.org, sameo@linux.intel.com, linux-kernel@vger.kernel.org, yizhang@marvell.com, Chao Xie <chao.xie@marvell.com>
+In-Reply-To: <1435591877-18214-3-git-send-email-vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yizhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 On Mon, 29 Jun 2015, Vaibhav Hiremath wrote:
 
-> Add DT support to the 88pm800 driver, along with compatible
-> field for it's sub-devices (rtc, onkey and regulator)
+> With addition of proper checks in place in pm800_probe function,
+> which makes sure that pdata would never become NULL.
+> So remove all unnecessary protection around pdata in whole
+> driver code.
 >=20
-> Signed-off-by: Chao Xie <chao.xie@marvell.com>
-> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
+> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > ---
->  drivers/mfd/88pm800.c | 23 +++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
+>  drivers/mfd/88pm800.c | 14 ++++++--------
+>  1 file changed, 6 insertions(+), 8 deletions(-)
 
-Acked-by: Lee Jones <lee.jones@linaro.org>
+Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
 > diff --git a/drivers/mfd/88pm800.c b/drivers/mfd/88pm800.c
-> index 841717a..40fd014 100644
+> index 40fd014..d495737 100644
 > --- a/drivers/mfd/88pm800.c
 > +++ b/drivers/mfd/88pm800.c
-> @@ -27,6 +27,7 @@
->  #include <linux/mfd/core.h>
->  #include <linux/mfd/88pm80x.h>
->  #include <linux/slab.h>
-> +#include <linux/of_device.h>
+> @@ -302,7 +302,7 @@ static int device_gpadc_init(struct pm80x_chip *c=
+hip,
+>  	mask =3D (PM800_GPADC_GP_BIAS_EN0 | PM800_GPADC_GP_BIAS_EN1 |
+>  		PM800_GPADC_GP_BIAS_EN2 | PM800_GPADC_GP_BIAS_EN3);
 > =20
->  /* Interrupt Registers */
->  #define PM800_INT_STATUS1		(0x05)
-> @@ -121,6 +122,11 @@ static const struct i2c_device_id pm80x_id_table=
-[] =3D {
->  };
->  MODULE_DEVICE_TABLE(i2c, pm80x_id_table);
+> -	if (pdata && (pdata->batt_det =3D=3D 0))
+> +	if (pdata->batt_det =3D=3D 0)
+>  		data =3D (PM800_GPADC_GP_BIAS_EN0 | PM800_GPADC_GP_BIAS_EN1 |
+>  			PM800_GPADC_GP_BIAS_EN2 | PM800_GPADC_GP_BIAS_EN3);
+>  	else
+> @@ -342,11 +342,9 @@ static int device_rtc_init(struct pm80x_chip *ch=
+ip,
+>  {
+>  	int ret;
 > =20
-> +static const struct of_device_id pm80x_of_match_table[] =3D {
-> +	{ .compatible =3D "marvell,88pm800", },
-> +	{},
-> +};
+> -	if (pdata) {
+> -		rtc_devs[0].platform_data =3D pdata->rtc;
+> -		rtc_devs[0].pdata_size =3D
+> -				pdata->rtc ? sizeof(struct pm80x_rtc_pdata) : 0;
+> -	}
+> +	rtc_devs[0].platform_data =3D pdata->rtc;
+> +	rtc_devs[0].pdata_size =3D pdata->rtc ? sizeof(struct pm80x_rtc_pda=
+ta) : 0;
 > +
->  static struct resource rtc_resources[] =3D {
->  	{
->  	 .name =3D "88pm80x-rtc",
-> @@ -133,6 +139,7 @@ static struct resource rtc_resources[] =3D {
->  static struct mfd_cell rtc_devs[] =3D {
->  	{
->  	 .name =3D "88pm80x-rtc",
-> +	 .of_compatible =3D "marvell,88pm80x-rtc",
->  	 .num_resources =3D ARRAY_SIZE(rtc_resources),
->  	 .resources =3D &rtc_resources[0],
->  	 .id =3D -1,
-> @@ -151,6 +158,7 @@ static struct resource onkey_resources[] =3D {
->  static const struct mfd_cell onkey_devs[] =3D {
->  	{
->  	 .name =3D "88pm80x-onkey",
-> +	 .of_compatible =3D "marvell,88pm80x-onkey",
->  	 .num_resources =3D 1,
->  	 .resources =3D &onkey_resources[0],
->  	 .id =3D -1,
-> @@ -160,6 +168,7 @@ static const struct mfd_cell onkey_devs[] =3D {
->  static const struct mfd_cell regulator_devs[] =3D {
->  	{
->  	 .name =3D "88pm80x-regulator",
-> +	 .of_compatible =3D "marvell,88pm80x-regulator",
->  	 .id =3D -1,
->  	},
->  };
-> @@ -544,8 +553,21 @@ static int pm800_probe(struct i2c_client *client=
-,
->  	int ret =3D 0;
->  	struct pm80x_chip *chip;
->  	struct pm80x_platform_data *pdata =3D dev_get_platdata(&client->dev=
-);
-> +	struct device_node *np =3D client->dev.of_node;
->  	struct pm80x_subchip *subchip;
-> =20
-> +	if (!pdata && !np) {
-> +		dev_err(&client->dev,
-> +			"pm80x requires platform data or of_node\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (!pdata) {
-> +		pdata =3D devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL);
-> +		if (!pdata)
-> +			return -ENOMEM;
-> +	}
-> +
->  	ret =3D pm80x_init(client);
+>  	ret =3D mfd_add_devices(chip->dev, 0, &rtc_devs[0],
+>  			      ARRAY_SIZE(rtc_devs), NULL, 0, NULL);
 >  	if (ret) {
->  		dev_err(&client->dev, "pm800_init fail\n");
-> @@ -611,6 +633,7 @@ static struct i2c_driver pm800_driver =3D {
->  		.name =3D "88PM800",
->  		.owner =3D THIS_MODULE,
->  		.pm =3D &pm80x_pm_ops,
-> +		.of_match_table	=3D pm80x_of_match_table,
->  		},
->  	.probe =3D pm800_probe,
->  	.remove =3D pm800_remove,
+> @@ -503,7 +501,7 @@ static int device_800_init(struct pm80x_chip *chi=
+p,
+>  		goto out;
+>  	}
+>  	if (val & PM800_ALARM_WAKEUP) {
+> -		if (pdata && pdata->rtc)
+> +		if (pdata->rtc)
+>  			pdata->rtc->rtc_wakeup =3D 1;
+>  	}
+> =20
+> @@ -602,7 +600,7 @@ static int pm800_probe(struct i2c_client *client,
+>  		goto err_device_init;
+>  	}
+> =20
+> -	if (pdata && pdata->plat_config)
+> +	if (pdata->plat_config)
+>  		pdata->plat_config(chip, pdata);
+> =20
+>  	return 0;
 
 --=20
 Lee Jones
 Linaro STMicroelectronics Landing Team Lead
 Linaro.org =E2=94=82 Open source software for ARM SoCs
 =46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
