@@ -1,225 +1,280 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH] ARM: dts: exynos4: add DMA support for serial ports
-Date: Tue, 7 Jul 2015 10:41:39 +0900
-Message-ID: <CAJKOXPfaDXVoYEBsV6_XVKF9D8WfKx-dub6NrWZb73_C6SKckQ@mail.gmail.com>
-References: <1435584154-4969-1-git-send-email-r.baldyga@samsung.com>
-	<5591E92B.4020809@samsung.com>
+From: Zhi Li <lznuaa@gmail.com>
+Subject: Re: [PATCH 3/4][v2] ARM: imx: pinctrl-imx: imx7d: add support for
+ iomuxc lpsr
+Date: Mon, 6 Jul 2015 22:02:48 -0500
+Message-ID: <CAHrpEqQJk+n=FwF_G-ugXmRtboyD2uc9LcAU9_2r2S+ra5brXg@mail.gmail.com>
+References: <1436223546-6333-1-git-send-email-aalonso@freescale.com>
+	<1436223546-6333-3-git-send-email-aalonso@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <5591E92B.4020809@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Robert Baldyga <r.baldyga@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: linux@arm.linux.org.uk, kgene@kernel.org, devicetree@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1436223546-6333-3-git-send-email-aalonso@freescale.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Adrian Alonso <aalonso@freescale.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Shawn Guo <shawn.guo@linaro.org>, Shawn Guo <shawnguo@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Anson.Huang@freescale.com, "Frank.Li@freescale.com" <Frank.Li@freescale.com>, yibin.gong@freescale.com, nitin.garg@freescale.com
 List-Id: devicetree@vger.kernel.org
 
-2015-06-30 9:56 GMT+09:00 Krzysztof Kozlowski <k.kozlowski@samsung.com>:
-> On 29.06.2015 22:22, Robert Baldyga wrote:
->> Enable DMA transfers for serial ports.
->>
->> Signed-off-by: Robert Baldyga <r.baldyga@samsung.com>
->> ---
->>  arch/arm/boot/dts/exynos4.dtsi | 8 ++++++++
->>  1 file changed, 8 insertions(+)
+On Mon, Jul 6, 2015 at 5:59 PM, Adrian Alonso <aalonso@freescale.com> wrote:
+> * Extend pinctrl-imx driver to support iomux lpsr conntroller,
+> * iMX7D has two iomuxc controllers, iomuxc controller similar as
+>   previous iMX SoC generation and iomuxc-lpsr which provides
+>   low power state rentetion capabilities on gpios that are part of
+>   iomuxc-lpsr (GPIO1_IO7..GPIO1_IO0).
+> * Use IOMUXC_LPSR_SUPPORT and iput_val most significant bits to
+>   properly configure iomuxc/iomuxc-lpsr settings.
+> * Version 2:
+>   - Add suggested comment for input select register shared between
+>     iomuxc-lpsr and normal iomuxc controller.
+>   - Use IOMUXC_LPSR_MASK to extract pad group id and aling pin_id to
+>     16 bit representation.
 >
-> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> Signed-off-by: Adrian Alonso <aalonso@freescale.com>
+> ---
 
-Unfortunately the commit (applied on 4.2-rc1) exposes lock-ups during
-Trats2 boot.
+Change log should be here
 
-Board: Trats2
-Config: exynos
-Tree: https://github.com/krzk/linux.git
-branch: for-next (v4.2-rc1-29-g1ce41c343055)
+ * Version 2:
+   - Add suggested comment for input select register shared between
+     iomuxc-lpsr and normal iomuxc controller.
+   - Use IOMUXC_LPSR_MASK to extract pad group id and aling pin_id to
+     16 bit representation.
 
-Lockdep indicated issue in Samsung serial driver
-(dma_async_issue_pending called while holding port->lock which leads
-to calling back the driver's tx_dma_complete).
+>  drivers/pinctrl/freescale/pinctrl-imx.c | 73 ++++++++++++++++++++++-----------
+>  drivers/pinctrl/freescale/pinctrl-imx.h |  7 +++-
+>  2 files changed, 56 insertions(+), 24 deletions(-)
+>
+> diff --git a/drivers/pinctrl/freescale/pinctrl-imx.c b/drivers/pinctrl/freescale/pinctrl-imx.c
+> index d7b98ba..8de1790 100644
+> --- a/drivers/pinctrl/freescale/pinctrl-imx.c
+> +++ b/drivers/pinctrl/freescale/pinctrl-imx.c
+> @@ -1,7 +1,7 @@
+>  /*
+>   * Core driver for the imx pin controller
+>   *
+> - * Copyright (C) 2012 Freescale Semiconductor, Inc.
+> + * Copyright (C) 2012-2015 Freescale Semiconductor, Inc.
+>   * Copyright (C) 2012 Linaro Ltd.
+>   *
+>   * Author: Dong Aisheng <dong.aisheng@linaro.org>
+> @@ -18,6 +18,7 @@
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+>  #include <linux/of_device.h>
+> +#include <linux/of_address.h>
+>  #include <linux/pinctrl/machine.h>
+>  #include <linux/pinctrl/pinconf.h>
+>  #include <linux/pinctrl/pinctrl.h>
+> @@ -38,7 +39,6 @@
+>  struct imx_pinctrl {
+>         struct device *dev;
+>         struct pinctrl_dev *pctl;
+> -       void __iomem *base;
+>         const struct imx_pinctrl_soc_info *info;
+>  };
+>
+> @@ -212,12 +212,12 @@ static int imx_pmx_set(struct pinctrl_dev *pctldev, unsigned selector,
+>
+>                 if (info->flags & SHARE_MUX_CONF_REG) {
+>                         u32 reg;
+> -                       reg = readl(ipctl->base + pin_reg->mux_reg);
+> +                       reg = readl(pin_reg->base + pin_reg->mux_reg);
+>                         reg &= ~(0x7 << 20);
+>                         reg |= (pin->mux_mode << 20);
+> -                       writel(reg, ipctl->base + pin_reg->mux_reg);
+> +                       writel(reg, pin_reg->base + pin_reg->mux_reg);
+>                 } else {
+> -                       writel(pin->mux_mode, ipctl->base + pin_reg->mux_reg);
+> +                       writel(pin->mux_mode, pin_reg->base + pin_reg->mux_reg);
+>                 }
+>                 dev_dbg(ipctl->dev, "write: offset 0x%x val 0x%x\n",
+>                         pin_reg->mux_reg, pin->mux_mode);
+> @@ -245,16 +245,22 @@ static int imx_pmx_set(struct pinctrl_dev *pctldev, unsigned selector,
+>                          * The input_reg[i] here is actually some IOMUXC general
+>                          * purpose register, not regular select input register.
+>                          */
+> -                       val = readl(ipctl->base + pin->input_reg);
+> +                       val = readl(pin_reg->base + pin->input_reg);
+>                         val &= ~mask;
+>                         val |= select << shift;
+> -                       writel(val, ipctl->base + pin->input_reg);
+> +                       writel(val, pin_reg->base + pin->input_reg);
+>                 } else if (pin->input_reg) {
+>                         /*
+>                          * Regular select input register can never be at offset
+>                          * 0, and we only print register value for regular case.
+>                          */
+> -                       writel(pin->input_val, ipctl->base + pin->input_reg);
+> +                       if (info->flags & IOMUXC_LPSR_SUPPORT &&
+> +                                       IOMUXC_LPSR_MASK(pin->input_val))
+> +                       /* iomuxc-lpsr select input register shared with normal iomuxc */
+> +                               writel(pin->input_val, info->base + pin->input_reg);
+> +                       else
+> +                               writel(pin->input_val, pin_reg->base + pin->input_reg);
+> +
+>                         dev_dbg(ipctl->dev,
+>                                 "==>select_input: offset 0x%x val 0x%x\n",
+>                                 pin->input_reg, pin->input_val);
+> @@ -326,10 +332,10 @@ static int imx_pmx_gpio_request_enable(struct pinctrl_dev *pctldev,
+>         return -EINVAL;
+>
+>  mux_pin:
+> -       reg = readl(ipctl->base + pin_reg->mux_reg);
+> +       reg = readl(pin_reg->base + pin_reg->mux_reg);
+>         reg &= ~(0x7 << 20);
+>         reg |= imx_pin->config;
+> -       writel(reg, ipctl->base + pin_reg->mux_reg);
+> +       writel(reg, pin_reg->base + pin_reg->mux_reg);
+>
+>         return 0;
+>  }
+> @@ -354,12 +360,12 @@ static int imx_pmx_gpio_set_direction(struct pinctrl_dev *pctldev,
+>                 return -EINVAL;
+>
+>         /* IBE always enabled allows us to read the value "on the wire" */
+> -       reg = readl(ipctl->base + pin_reg->mux_reg);
+> +       reg = readl(pin_reg->base + pin_reg->mux_reg);
+>         if (input)
+>                 reg &= ~0x2;
+>         else
+>                 reg |= 0x2;
+> -       writel(reg, ipctl->base + pin_reg->mux_reg);
+> +       writel(reg, pin_reg->base + pin_reg->mux_reg);
+>
+>         return 0;
+>  }
+> @@ -386,7 +392,7 @@ static int imx_pinconf_get(struct pinctrl_dev *pctldev,
+>                 return -EINVAL;
+>         }
+>
+> -       *config = readl(ipctl->base + pin_reg->conf_reg);
+> +       *config = readl(pin_reg->base + pin_reg->conf_reg);
+>
+>         if (info->flags & SHARE_MUX_CONF_REG)
+>                 *config &= 0xffff;
+> @@ -415,12 +421,12 @@ static int imx_pinconf_set(struct pinctrl_dev *pctldev,
+>         for (i = 0; i < num_configs; i++) {
+>                 if (info->flags & SHARE_MUX_CONF_REG) {
+>                         u32 reg;
+> -                       reg = readl(ipctl->base + pin_reg->conf_reg);
+> +                       reg = readl(pin_reg->base + pin_reg->conf_reg);
+>                         reg &= ~0xffff;
+>                         reg |= configs[i];
+> -                       writel(reg, ipctl->base + pin_reg->conf_reg);
+> +                       writel(reg, pin_reg->base + pin_reg->conf_reg);
+>                 } else {
+> -                       writel(configs[i], ipctl->base + pin_reg->conf_reg);
+> +                       writel(configs[i], pin_reg->base + pin_reg->conf_reg);
+>                 }
+>                 dev_dbg(ipctl->dev, "write: offset 0x%x val 0x%lx\n",
+>                         pin_reg->conf_reg, configs[i]);
+> @@ -442,7 +448,7 @@ static void imx_pinconf_dbg_show(struct pinctrl_dev *pctldev,
+>                 return;
+>         }
+>
+> -       config = readl(ipctl->base + pin_reg->conf_reg);
+> +       config = readl(pin_reg->base + pin_reg->conf_reg);
+>         seq_printf(s, "0x%lx", config);
+>  }
+>
+> @@ -551,14 +557,25 @@ static int imx_pinctrl_parse_groups(struct device_node *np,
+>                 }
+>
+>                 pin_id = mux_reg ? mux_reg / 4 : conf_reg / 4;
+> +
+> +               pin->input_reg = be32_to_cpu(*list++);
+> +               pin->mux_mode = be32_to_cpu(*list++);
+> +               pin->input_val = be32_to_cpu(*list++);
+> +
+> +               if (info->flags & IOMUXC_LPSR_SUPPORT &&
+> +                       IOMUXC_LPSR_MASK(pin->input_val))
+> +                               pin_id = IOMUXC_LPSR_MASK(pin->input_val);
+> +
+>                 pin_reg = &info->pin_regs[pin_id];
+>                 pin->pin = pin_id;
+>                 grp->pin_ids[i] = pin_id;
+>                 pin_reg->mux_reg = mux_reg;
+>                 pin_reg->conf_reg = conf_reg;
+> -               pin->input_reg = be32_to_cpu(*list++);
+> -               pin->mux_mode = be32_to_cpu(*list++);
+> -               pin->input_val = be32_to_cpu(*list++);
+> +               pin_reg->base = info->base;
+> +
+> +               if (info->flags & IOMUXC_LPSR_SUPPORT &&
+> +                       IOMUXC_LPSR_MASK(pin->input_val))
+> +                               pin_reg->base = info->base_lpsr;
+>
+>                 /* SION bit is in mux register */
+>                 config = be32_to_cpu(*list++);
+> @@ -683,6 +700,7 @@ static int imx_pinctrl_probe_dt(struct platform_device *pdev,
+>  int imx_pinctrl_probe(struct platform_device *pdev,
+>                       struct imx_pinctrl_soc_info *info)
+>  {
+> +       struct device_node *dev_np = pdev->dev.of_node;
+>         struct imx_pinctrl *ipctl;
+>         struct resource *res;
+>         int ret, i;
+> @@ -709,9 +727,18 @@ int imx_pinctrl_probe(struct platform_device *pdev,
+>         }
+>
+>         res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -       ipctl->base = devm_ioremap_resource(&pdev->dev, res);
+> -       if (IS_ERR(ipctl->base))
+> -               return PTR_ERR(ipctl->base);
+> +       info->base = devm_ioremap_resource(&pdev->dev, res);
+> +       if (IS_ERR(info->base))
+> +               return PTR_ERR(info->base);
+> +
+> +       if (info->flags & IOMUXC_LPSR_SUPPORT) {
+> +               info->base_lpsr = of_iomap(dev_np, 1);
 
-I tried to locate the dead lock. To me the excessive locking in serial
-driver causes such recursive locking but I am not quite sure (I am not
-familiar with the serial driver).
+Can you use ?
+           res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+           info->base_lpsr = evm_ioremap_resource(&pdev->dev, res);
 
-Anyway, till this get fixed I am dropping the patch from my tree.
-
-Best regards,
-Krzysztof
-
-
-Bug (I hope line wrapping won't mess up with it...):
-
-[   74.480535] BUG: spinlock recursion on CPU#1, systemd/1
-[   74.484293]  lock: 0xeeb1a9f4, .magic: dead4ead, .owner: systemd/1,
-.owner_cpu: 1
-[   74.491756] CPU: 1 PID: 1 Comm: systemd Not tainted
-4.2.0-rc1-00029-g1ce41c343055 #100
-[   74.499649] Hardware name: SAMSUNG EXYNOS (Flattened Device Tree)
-[   74.505752] [<c0014d2c>] (unwind_backtrace) from [<c0011c98>]
-(show_stack+0x10/0x14)
-[   74.513461] [<c0011c98>] (show_stack) from [<c051f198>]
-(dump_stack+0x70/0xbc)
-[   74.520668] [<c051f198>] (dump_stack) from [<c00562b0>]
-(do_raw_spin_lock+0x178/0x1a0)
-[   74.528568] [<c00562b0>] (do_raw_spin_lock) from [<c0524e90>]
-(_raw_spin_lock_irqsave+0x20/0x28)
-[   74.537330] [<c0524e90>] (_raw_spin_lock_irqsave) from [<c024288c>]
-(dma_pl330_rqcb.isra.4+0x24/0x58)
-[   74.546529] [<c024288c>] (dma_pl330_rqcb.isra.4) from [<c0242d78>]
-(pl330_release_channel.part.5+0x38/0x98)
-[   74.556249] [<c0242d78>] (pl330_release_channel.part.5) from
-[<c0242e2c>] (pl330_free_chan_resources+0x54/0xd8)
-[   74.566324] [<c0242e2c>] (pl330_free_chan_resources) from
-[<c0240144>] (dma_chan_put+0x88/0x8c)
-[   74.575001] [<c0240144>] (dma_chan_put) from [<c024016c>]
-(dma_release_channel+0x24/0x94)
-[   74.583163] [<c024016c>] (dma_release_channel) from [<c0271498>]
-(s3c24xx_serial_shutdown+0x18c/0x1d8)
-[   74.592447] [<c0271498>] (s3c24xx_serial_shutdown) from
-[<c026ab28>] (uart_port_shutdown+0x2c/0x38)
-[   74.601472] [<c026ab28>] (uart_port_shutdown) from [<c026acc4>]
-(uart_shutdown+0xac/0xec)
-[   74.609630] [<c026acc4>] (uart_shutdown) from [<c026ae3c>]
-(uart_close+0x64/0x1f0)
-[   74.617184] [<c026ae3c>] (uart_close) from [<c0251544>]
-(tty_release+0xf0/0x464)
-[   74.624566] [<c0251544>] (tty_release) from [<c00cca38>] (__fput+0x80/0x1bc)
-[   74.631594] [<c00cca38>] (__fput) from [<c00384d0>] (task_work_run+0xa8/0xdc)
-[   74.638711] [<c00384d0>] (task_work_run) from [<c00118dc>]
-(do_work_pending+0x94/0xb4)
-[   74.646610] [<c00118dc>] (do_work_pending) from [<c000f54c>]
-(work_pending+0xc/0x20)
-
-Lockdep:
-
-[  109.696678] #### Requested RX ee0d4a2c@TX ee0d4ac4
-[  109.701699]
-[  109.701928] =============================================
-[  109.707310] [ INFO: possible recursive locking detected ]
-[  109.712694] 4.2.0-rc1-00029-g1ce41c343055-dirty #111 Not tainted
-[  109.718680] ---------------------------------------------
-[  109.724063] swapper/0/0 is trying to acquire lock:
-[  109.728836]  (&port_lock_key){-.-...}, at: [<c02ad78c>]
-s3c24xx_serial_tx_dma_complete+0x8c/0xfc
-[  109.737603]
-[  109.737603] but task is already holding lock:
-[  109.743418]  (&port_lock_key){-.-...}, at: [<c02ac014>]
-s3c24xx_serial_tx_chars+0x18/0x180
-[  109.751664]
-[  109.751664] other info that might help us debug this:
-[  109.758174]  Possible unsafe locking scenario:
-[  109.758174]
-[  109.764076]        CPU0
-[  109.766507]        ----
-[  109.768936]   lock(&port_lock_key);
-[  109.772408]   lock(&port_lock_key);
-[  109.775881]
-[  109.775881]  *** DEADLOCK ***
-[  109.775881]
-[  109.781784]  May be due to missing lock nesting notation
-[  109.781784]
-[  109.788556] 1 lock held by swapper/0/0:
-[  109.792373]  #0:  (&port_lock_key){-.-...}, at: [<c02ac014>]
-s3c24xx_serial_tx_chars+0x18/0x180
-[  109.801053]
-[  109.801053] stack backtrace:
-[  109.805399] CPU: 0 PID: 0 Comm: swapper/0 Not tainted
-4.2.0-rc1-00029-g1ce41c343055-dirty #111
-[  109.813988] Hardware name: SAMSUNG EXYNOS (Flattened Device Tree)
-[  109.820084] [<c0015e9c>] (unwind_backtrace) from [<c0012c18>]
-(show_stack+0x10/0x14)
-[  109.827801] [<c0012c18>] (show_stack) from [<c0599b7c>]
-(dump_stack+0x70/0xbc)
-[  109.835003] [<c0599b7c>] (dump_stack) from [<c00649ec>]
-(validate_chain.isra.24+0x7b4/0x8b8)
-[  109.843419] [<c00649ec>] (validate_chain.isra.24) from [<c00656c4>]
-(__lock_acquire+0x464/0xb28)
-[  109.852185] [<c00656c4>] (__lock_acquire) from [<c0066100>]
-(lock_acquire+0x6c/0x8c)
-[  109.859915] [<c0066100>] (lock_acquire) from [<c05a0e68>]
-(_raw_spin_lock_irqsave+0x48/0x5c)
-[  109.868335] [<c05a0e68>] (_raw_spin_lock_irqsave) from [<c02ad78c>]
-(s3c24xx_serial_tx_dma_complete+0x8c/0xfc)
-[  109.878322] [<c02ad78c>] (s3c24xx_serial_tx_dma_complete) from
-[<c027b57c>] (pl330_tasklet+0x16c/0x4cc)
-[  109.887690] [<c027b57c>] (pl330_tasklet) from [<c02abf4c>]
-(s3c24xx_serial_start_tx_dma+0x1a4/0x1f4)
-[  109.896803] [<c02abf4c>] (s3c24xx_serial_start_tx_dma) from
-[<c02ac154>] (s3c24xx_serial_tx_chars+0x158/0x180)
-[  109.906784] [<c02ac154>] (s3c24xx_serial_tx_chars) from
-[<c02ad5ec>] (s3c64xx_serial_handle_irq+0x34/0x60)
-[  109.916424] [<c02ad5ec>] (s3c64xx_serial_handle_irq) from
-[<c0070f7c>] (handle_irq_event_percpu+0x50/0x154)
-[  109.926142] [<c0070f7c>] (handle_irq_event_percpu) from
-[<c00710c0>] (handle_irq_event+0x40/0x64)
-[  109.934995] [<c00710c0>] (handle_irq_event) from [<c0073fec>]
-(handle_fasteoi_irq+0xdc/0x1a4)
-[  109.943501] [<c0073fec>] (handle_fasteoi_irq) from [<c0070850>]
-(generic_handle_irq+0x20/0x30)
-[  109.952095] [<c0070850>] (generic_handle_irq) from [<c007096c>]
-(__handle_domain_irq+0x6c/0xe4)
-[  109.960774] [<c007096c>] (__handle_domain_irq) from [<c0009474>]
-(gic_handle_irq+0x2c/0x68)
-[  109.969105] [<c0009474>] (gic_handle_irq) from [<c0013744>]
-(__irq_svc+0x44/0x7c)
-[  109.976566] Exception stack(0xc085df28 to 0xc085df70)
-[  109.981603] df20:                   00000001 00000001 00000000
-c0860e78 8a83f452 00000019
-[  109.989763] df40: 8a95ae3e 00000019 eef70490 c088b8c4 00000000
-c088b8c4 00000000 c085df70
-[  109.997919] df60: c0066a34 c04154b4 200b0013 ffffffff
-[  110.002965] [<c0013744>] (__irq_svc) from [<c04154b4>]
-(cpuidle_enter_state+0x1f8/0x28c)
-[  110.011037] [<c04154b4>] (cpuidle_enter_state) from [<c005d464>]
-(cpu_startup_entry+0x158/0x26c)
-[  110.019804] [<c005d464>] (cpu_startup_entry) from [<c07f8c48>]
-(start_kernel+0x370/0x3dc)
-[  120.694973] BUG: spinlock lockup suspected on CPU#0, swapper/0/0
-[  120.699509]  lock: s3c24xx_serial_ports+0x2dc/0x560, .magic:
-dead4ead, .owner: swapper/0/0, .owner_cpu: 0
-[  120.709050] CPU: 0 PID: 0 Comm: swapper/0 Not tainted
-4.2.0-rc1-00029-g1ce41c343055-dirty #111
-[  120.717638] Hardware name: SAMSUNG EXYNOS (Flattened Device Tree)
-[  120.723727] [<c0015e9c>] (unwind_backtrace) from [<c0012c18>]
-(show_stack+0x10/0x14)
-[  120.731450] [<c0012c18>] (show_stack) from [<c0599b7c>]
-(dump_stack+0x70/0xbc)
-[  120.738652] [<c0599b7c>] (dump_stack) from [<c0069ca4>]
-(do_raw_spin_lock+0x114/0x1a0)
-[  120.746552] [<c0069ca4>] (do_raw_spin_lock) from [<c05a0e70>]
-(_raw_spin_lock_irqsave+0x50/0x5c)
-[  120.755321] [<c05a0e70>] (_raw_spin_lock_irqsave) from [<c02ad78c>]
-(s3c24xx_serial_tx_dma_complete+0x8c/0xfc)
-[  120.765304] [<c02ad78c>] (s3c24xx_serial_tx_dma_complete) from
-[<c027b57c>] (pl330_tasklet+0x16c/0x4cc)
-[  120.774675] [<c027b57c>] (pl330_tasklet) from [<c02abf4c>]
-(s3c24xx_serial_start_tx_dma+0x1a4/0x1f4)
-[  120.783788] [<c02abf4c>] (s3c24xx_serial_start_tx_dma) from
-[<c02ac154>] (s3c24xx_serial_tx_chars+0x158/0x180)
-[  120.793770] [<c02ac154>] (s3c24xx_serial_tx_chars) from
-[<c02ad5ec>] (s3c64xx_serial_handle_irq+0x34/0x60)
-[  120.803408] [<c02ad5ec>] (s3c64xx_serial_handle_irq) from
-[<c0070f7c>] (handle_irq_event_percpu+0x50/0x154)
-[  120.813128] [<c0070f7c>] (handle_irq_event_percpu) from
-[<c00710c0>] (handle_irq_event+0x40/0x64)
-[  120.821980] [<c00710c0>] (handle_irq_event) from [<c0073fec>]
-(handle_fasteoi_irq+0xdc/0x1a4)
-[  120.830486] [<c0073fec>] (handle_fasteoi_irq) from [<c0070850>]
-(generic_handle_irq+0x20/0x30)
-[  120.839080] [<c0070850>] (generic_handle_irq) from [<c007096c>]
-(__handle_domain_irq+0x6c/0xe4)
-[  120.847759] [<c007096c>] (__handle_domain_irq) from [<c0009474>]
-(gic_handle_irq+0x2c/0x68)
-[  120.856090] [<c0009474>] (gic_handle_irq) from [<c0013744>]
-(__irq_svc+0x44/0x7c)
-[  120.863550] Exception stack(0xc085df28 to 0xc085df70)
-[  120.868588] df20:                   00000001 00000001 00000000
-c0860e78 8a83f452 00000019
-[  120.876748] df40: 8a95ae3e 00000019 eef70490 c088b8c4 00000000
-c088b8c4 00000000 c085df70
-[  120.884904] df60: c0066a34 c04154b4 200b0013 ffffffff
-[  120.889946] [<c0013744>] (__irq_svc) from [<c04154b4>]
-(cpuidle_enter_state+0x1f8/0x28c)
-[  120.898019] [<c04154b4>] (cpuidle_enter_state) from [<c005d464>]
-(cpu_startup_entry+0x158/0x26c)
-[  120.906785] [<c005d464>] (cpu_startup_entry) from [<c07f8c48>]
-(start_kernel+0x370/0x3dc)
+> +               if (IS_ERR(info->base_lpsr)) {
+> +                       dev_err(&pdev->dev,
+> +                               "iomuxc-lpsr base address not found\n");
+> +                       return PTR_ERR(info->base_lpsr);
+> +               }
+> +       }
+>
+>         imx_pinctrl_desc.name = dev_name(&pdev->dev);
+>         imx_pinctrl_desc.pins = info->pins;
+> diff --git a/drivers/pinctrl/freescale/pinctrl-imx.h b/drivers/pinctrl/freescale/pinctrl-imx.h
+> index 49e55d3..5e0f2e0 100644
+> --- a/drivers/pinctrl/freescale/pinctrl-imx.h
+> +++ b/drivers/pinctrl/freescale/pinctrl-imx.h
+> @@ -1,7 +1,7 @@
+>  /*
+>   * IMX pinmux core definitions
+>   *
+> - * Copyright (C) 2012 Freescale Semiconductor, Inc.
+> + * Copyright (C) 2012-2015 Freescale Semiconductor, Inc.
+>   * Copyright (C) 2012 Linaro Ltd.
+>   *
+>   * Author: Dong Aisheng <dong.aisheng@linaro.org>
+> @@ -69,6 +69,7 @@ struct imx_pmx_func {
+>  struct imx_pin_reg {
+>         s16 mux_reg;
+>         s16 conf_reg;
+> +       void __iomem *base;
+>  };
+>
+>  struct imx_pinctrl_soc_info {
+> @@ -81,9 +82,13 @@ struct imx_pinctrl_soc_info {
+>         struct imx_pmx_func *functions;
+>         unsigned int nfunctions;
+>         unsigned int flags;
+> +       void __iomem *base;
+> +       void __iomem *base_lpsr;
+>  };
+>
+>  #define SHARE_MUX_CONF_REG     0x1
+> +#define IOMUXC_LPSR_SUPPORT    0x2
+> +#define IOMUXC_LPSR_MASK(id)   ((id >> 0x10) & 0xffff)
+>
+>  #define NO_MUX         0x0
+>  #define NO_PAD         0x0
+> --
+> 2.1.4
+>
