@@ -1,102 +1,140 @@
-From: Lee Jones <lee.jones@linaro.org>
+From: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
 Subject: Re: [PATCH-V5 3/4] mfd: 88pm800: Set default interrupt clear method
-Date: Tue, 7 Jul 2015 12:12:48 +0100
-Message-ID: <20150707111248.GU3182@x1>
-References: <1435591877-18214-1-git-send-email-vaibhav.hiremath@linaro.org>
- <1435591877-18214-4-git-send-email-vaibhav.hiremath@linaro.org>
- <20150707072958.GN3182@x1> <559BA1AE.9050006@linaro.org>
- <20150707104028.GR3182@x1> <559BAF23.90002@linaro.org>
+Date: Tue, 07 Jul 2015 16:48:38 +0530
+Message-ID: <559BB58E.9010406@linaro.org>
+References: <1435591877-18214-1-git-send-email-vaibhav.hiremath@linaro.org> <1435591877-18214-4-git-send-email-vaibhav.hiremath@linaro.org> <20150707072958.GN3182@x1> <559BA1AE.9050006@linaro.org> <20150707104028.GR3182@x1> <559BAF23.90002@linaro.org> <20150707111248.GU3182@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <559BAF23.90002@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
-Cc: Zhao Ye <zhaoy@marvell.com>, devicetree@vger.kernel.org, sameo@linux.intel.com, yizhang@marvell.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150707111248.GU3182@x1>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, robh+dt@kernel.org, sameo@linux.intel.com, linux-kernel@vger.kernel.org, yizhang@marvell.com, Zhao Ye <zhaoy@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAwNyBKdWwgMjAxNSwgVmFpYmhhdiBIaXJlbWF0aCB3cm90ZToKPiBPbiBUdWVzZGF5
-IDA3IEp1bHkgMjAxNSAwNDoxMCBQTSwgTGVlIEpvbmVzIHdyb3RlOgo+ID5PbiBUdWUsIDA3IEp1
-bCAyMDE1LCBWYWliaGF2IEhpcmVtYXRoIHdyb3RlOgo+ID4+T24gVHVlc2RheSAwNyBKdWx5IDIw
-MTUgMTI6NTkgUE0sIExlZSBKb25lcyB3cm90ZToKPiA+Pj5PbiBNb24sIDI5IEp1biAyMDE1LCBW
-YWliaGF2IEhpcmVtYXRoIHdyb3RlOgo+ID4+Pgo+ID4+Pj5BcyBwZXIgdGhlIHNwZWMsIGJpdCAx
-IChJTlRfQ0xFQVJfTU9ERSkgb2YgcmVnIGFkZHIgMHhlCj4gPj4+PihwYWdlIDApIGNvbnRyb2xz
-IHRoZSBtZXRob2Qgb2YgY2xlYXJpbmcgaW50ZXJydXB0Cj4gPj4+PnN0YXR1cyBvZiA4OHBtODAw
-IGZhbWlseSBvZiBkZXZpY2VzOwo+ID4+Pj4KPiA+Pj4+ICAgMDogY2xlYXIgb24gcmVhZAo+ID4+
-Pj4gICAxOiBjbGVhciBvbiB3cml0ZQo+ID4+Pj4KPiA+Pj4+SWYgcGRhdGEgaXMgbm90IGNvbWlu
-ZyBmcm9tIGJvYXJkIGZpbGUsIHRoZW4gc2V0IHRoZQo+ID4+Pj5kZWZhdWx0IGlycSBjbGVhciBt
-ZXRob2QgdG8gImlycSBjbGVhciBvbiB3cml0ZSIKPiA+Pj4+Cj4gPj4+PkFsc28sIGFzIHN1Z2dl
-c3RlZCBieSAiTGVlIEpvbmVzIiByZW5hbWluZyB2YXJpYWJsZSBmaWVsZAo+ID4+Pj50byBhcHBy
-b3ByaWF0ZSBuYW1lLgo+ID4+Pj4KPiA+Pj4+U2lnbmVkLW9mZi1ieTogWmhhbyBZZSA8emhhb3lA
-bWFydmVsbC5jb20+Cj4gPj4+PlNpZ25lZC1vZmYtYnk6IFZhaWJoYXYgSGlyZW1hdGggPHZhaWJo
-YXYuaGlyZW1hdGhAbGluYXJvLm9yZz4KPiA+Pj4+LS0tCj4gPj4+PiAgZHJpdmVycy9tZmQvODhw
-bTgwMC5jICAgICAgIHwgMTUgKysrKysrKysrKy0tLS0tCj4gPj4+PiAgaW5jbHVkZS9saW51eC9t
-ZmQvODhwbTgweC5oIHwgMTAgKysrKysrKystLQo+ID4+Pj4gIDIgZmlsZXMgY2hhbmdlZCwgMTgg
-aW5zZXJ0aW9ucygrKSwgNyBkZWxldGlvbnMoLSkKPiA+Pj4+Cj4gPj4+PmRpZmYgLS1naXQgYS9k
-cml2ZXJzL21mZC84OHBtODAwLmMgYi9kcml2ZXJzL21mZC84OHBtODAwLmMKPiA+Pj4+aW5kZXgg
-ZDQ5NTczNy4uNjYzNDdiZSAxMDA2NDQKPiA+Pj4+LS0tIGEvZHJpdmVycy9tZmQvODhwbTgwMC5j
-Cj4gPj4+PisrKyBiL2RyaXZlcnMvbWZkLzg4cG04MDAuYwo+ID4+Pj5AQCAtMzc0LDcgKzM3NCw3
-IEBAIHN0YXRpYyBpbnQgZGV2aWNlX2lycV9pbml0XzgwMChzdHJ1Y3QgcG04MHhfY2hpcCAqY2hp
-cCkKPiA+Pj4+ICB7Cj4gPj4+PiAgCXN0cnVjdCByZWdtYXAgKm1hcCA9IGNoaXAtPnJlZ21hcDsK
-PiA+Pj4+ICAJdW5zaWduZWQgbG9uZyBmbGFncyA9IElSUUZfT05FU0hPVDsKPiA+Pj4+LQlpbnQg
-ZGF0YSwgbWFzaywgcmV0ID0gLUVJTlZBTDsKPiA+Pj4+KwlpbnQgaXJxX2Nscl9tb2RlLCBtYXNr
-LCByZXQgPSAtRUlOVkFMOwo+ID4+Pj4KPiA+Pj4+ICAJaWYgKCFtYXAgfHwgIWNoaXAtPmlycSkg
-ewo+ID4+Pj4gIAkJZGV2X2VycihjaGlwLT5kZXYsICJpbmNvcnJlY3QgcGFyYW1ldGVyc1xuIik7
-Cj4gPj4+PkBAIC0zODIsMTUgKzM4MiwxNiBAQCBzdGF0aWMgaW50IGRldmljZV9pcnFfaW5pdF84
-MDAoc3RydWN0IHBtODB4X2NoaXAgKmNoaXApCj4gPj4+PiAgCX0KPiA+Pj4+Cj4gPj4+PiAgCS8q
-Cj4gPj4+Pi0JICogaXJxX21vZGUgZGVmaW5lcyB0aGUgd2F5IG9mIGNsZWFyaW5nIGludGVycnVw
-dC4gaXQncyByZWFkLWNsZWFyIGJ5Cj4gPj4+Pi0JICogZGVmYXVsdC4KPiA+Pj4+KwkgKiBpcnFf
-Y2xyX29uX3dyIGRlZmluZXMgdGhlIHdheSBvZiBjbGVhcmluZyBpbnRlcnJ1cHQgYnkKPiA+Pj4+
-KwkgKiByZWFkL3dyaXRlKDAvMSkuICBJdCdzIHJlYWQtY2xlYXIgYnkgZGVmYXVsdC4KPiA+Pj4+
-ICAJICovCj4gPj4+PiAgCW1hc2sgPQo+ID4+Pj4gIAkgICAgUE04MDBfV0FLRVVQMl9JTlZfSU5U
-IHwgUE04MDBfV0FLRVVQMl9JTlRfQ0xFQVIgfAo+ID4+Pj4gIAkgICAgUE04MDBfV0FLRVVQMl9J
-TlRfTUFTSzsKPiA+Pj4+Cj4gPj4+Pi0JZGF0YSA9IFBNODAwX1dBS0VVUDJfSU5UX0NMRUFSOwo+
-ID4+Pj4tCXJldCA9IHJlZ21hcF91cGRhdGVfYml0cyhtYXAsIFBNODAwX1dBS0VVUDIsIG1hc2ss
-IGRhdGEpOwo+ID4+Pj4rCWlycV9jbHJfbW9kZSA9IGNoaXAtPmlycV9jbHJfbWV0aG9kID09IFBN
-ODAwX0lSUV9DTFJfT05fV1JJVEUgPwo+ID4+Pj4rCQlQTTgwMF9XQUtFVVAyX0lOVF9XUklURV9D
-TEVBUiA6IFBNODAwX1dBS0VVUDJfSU5UX1JFQURfQ0xFQVI7Cj4gPj4+PisJcmV0ID0gcmVnbWFw
-X3VwZGF0ZV9iaXRzKG1hcCwgUE04MDBfV0FLRVVQMiwgbWFzaywgaXJxX2Nscl9tb2RlKTsKPiA+
-Pj4KPiA+Pj5XaGF0J3Mgc3RvcHBpbmcgeW91IGp1c3QgcGFzc2luZyBQTTgwMF9XQUtFVVAyX0lO
-VF9XUklURV9DTEVBUiBvcgo+ID4+PlBNODAwX1dBS0VVUDJfSU5UX1JFQURfQ0xFQVIgZnJvbSBw
-ZGF0YT8gIFRoZW4geW91IGNhbiB1c2UgdGhlIHZhbHVlCj4gPj4+ZGlyZWN0bHkgd2l0aG91dCBh
-bGwgb2YgdGhpcyBmYWZmaW5nIGFib3V0Lgo+ID4+Pgo+ID4+PiAgIHJlZ21hcF91cGRhdGVfYml0
-cyhtYXAsIFBNODAwX1dBS0VVUDIsIG1hc2ssIHBkYXRhLT5pcnFfY2xyX21vZGUpOwo+ID4+Pgo+
-ID4+Cj4gPj5CZWNhdXNlICJpcnFfY2xyX21ldGhvZCIgaXMgb2YgYm9vbGVhbiB0eXBlLgo+ID4+
-QW5kIG1hY3JvcyB3aGljaCB5b3UgYXJlIHJlZmVycmluZyB0byBpcywKPiA+Pgo+ID4+I2RlZmlu
-ZSBQTTgwMF9XQUtFVVAyX0lOVF9SRUFEX0NMRUFSICAgICAgICAgICAgKDAgPDwgMSkKPiA+PiNk
-ZWZpbmUgUE04MDBfV0FLRVVQMl9JTlRfV1JJVEVfQ0xFQVIgICAgICAgICAgICgxIDw8IDEpCj4g
-Pj4KPiA+Pgo+ID4+QW5kIGFsc28sIEkgZmVlbCBpdCBpcyBtb3JlIGNsZWFuZXIgYXBwcm9hY2gg
-d2l0aCB0aGUgY3VycmVudCBjb2RlIGFzCj4gPj5yZWdpc3RlciBkZWZpbml0aW9uIGFuZCB1c2Vy
-ZmxhZyBhcmUgbWFpbnRhaW5lZCBzZXBhcmF0ZWx5Lgo+ID4KPiA+SSBzZWUgeW91ciBwb2ludCwg
-YWx0aG91Z2ggaXQncyBhIHNoYW1lIHdlIGhhdmUgdG8gaGF2ZSB0aGlzIGNvZGUgaW4KPiA+aXRz
-IHBsYWNlLgo+ID4KPiA+T25lIHRoaW5nIEkgdGhpbmsgeW91IGNhbiBkbyB0aG91Z2ggaXMgcmlk
-IGNoaXAtPmlycV9jbHJfbWV0aG9kLCBqdXN0Cj4gPnVzZSB0aGUgb25lIHlvdSBhbHJlYWR5IGhh
-dmUgaW4gcGRhdGEuCj4gPgo+IAo+IExvb2tpbmcgYXQgdGhlIGN1cnJlbnQgY29kZSwKPiBZZXMs
-IHRoaXMgY2FuIGJlIGRvbmUsIGJ1dCBJIGhhdmUgdG8gZG8gc29tZSBtb3JlIGNoYW5nZXMgYXJv
-dW5kIGl0LAo+IHRvIG1ha2UgY29kZSBjbGVhbmVyLAo+IAo+IGNoYW5nZSB0aGUgc2lnbmF0dXJl
-IG9mCj4gCj4gc3RhdGljIGludCBkZXZpY2VfaXJxX2luaXRfODAwKHN0cnVjdCBwbTgweF9jaGlw
-ICpjaGlwKQo+IAo+IFRPCj4gCj4gc3RhdGljIGludCBkZXZpY2VfaXJxX2luaXRfODAwKHN0cnVj
-dCBwbTgweF9jaGlwICpjaGlwLCBzdHJ1Y3QKPiBwbTgweF9wbGF0Zm9ybV9kYXRhICpwZGF0YSkK
-PiAKPiAKPiBhbmQgdGhlbiBvbmx5IHVzZSBwZGF0YS0+aXJxX2Nscl9tZXRob2QuCj4gCj4gCj4g
-SG93IGRvIHlvdSB3YW50IHRvIGdldCB0aGlzIGluc2lkZT8gVjYgdmVyc2lvbj8gb3Igc2VwYXJh
-dGUgcGF0Y2g/Cj4gCj4gSSBoYXZlIG9uZSBtb3JlIGNsZWFudXAgcGF0Y2ggaW4gdGhlIHF1ZXVl
-LCB3aGljaCBJIGFtIHBsYW5uaW5nIHRvCj4gc3VibWl0IHRvZGF5LCBpZiB5b3UgYXJlIG9rIHRo
-ZW4gSSBjYW4gc3VibWl0IGFsb25nIHdpdGggdGhhdC4KCklkZWFsbHkgbm90LiAgRG9uJ3QgeW91
-IHNhdmUgdGhlICdzdHJ1Y3QgZGV2aWNlJyBpbnRvICpjaGlwPyAgWW91CnNob3VsZCB1c2UgdGhh
-dCB0byBmZXRjaCB0aGUgcGRhdGEsIGxpa2U6CgpwZGF0YSA9IGRldl9nZXRfcGxhdGRhdGEoY2hp
-cC0+ZGV2KTsKCi0tIApMZWUgSm9uZXMKTGluYXJvIFNUTWljcm9lbGVjdHJvbmljcyBMYW5kaW5n
-IFRlYW0gTGVhZApMaW5hcm8ub3JnIOKUgiBPcGVuIHNvdXJjZSBzb2Z0d2FyZSBmb3IgQVJNIFNv
-Q3MKRm9sbG93IExpbmFybzogRmFjZWJvb2sgfCBUd2l0dGVyIHwgQmxvZwoKX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWls
-aW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0
-cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+
+
+On Tuesday 07 July 2015 04:42 PM, Lee Jones wrote:
+> On Tue, 07 Jul 2015, Vaibhav Hiremath wrote:
+>> On Tuesday 07 July 2015 04:10 PM, Lee Jones wrote:
+>>> On Tue, 07 Jul 2015, Vaibhav Hiremath wrote:
+>>>> On Tuesday 07 July 2015 12:59 PM, Lee Jones wrote:
+>>>>> On Mon, 29 Jun 2015, Vaibhav Hiremath wrote:
+>>>>>
+>>>>>> As per the spec, bit 1 (INT_CLEAR_MODE) of reg addr 0xe
+>>>>>> (page 0) controls the method of clearing interrupt
+>>>>>> status of 88pm800 family of devices;
+>>>>>>
+>>>>>>    0: clear on read
+>>>>>>    1: clear on write
+>>>>>>
+>>>>>> If pdata is not coming from board file, then set the
+>>>>>> default irq clear method to "irq clear on write"
+>>>>>>
+>>>>>> Also, as suggested by "Lee Jones" renaming variable field
+>>>>>> to appropriate name.
+>>>>>>
+>>>>>> Signed-off-by: Zhao Ye <zhaoy@marvell.com>
+>>>>>> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
+>>>>>> ---
+>>>>>>   drivers/mfd/88pm800.c       | 15 ++++++++++-----
+>>>>>>   include/linux/mfd/88pm80x.h | 10 ++++++++--
+>>>>>>   2 files changed, 18 insertions(+), 7 deletions(-)
+>>>>>>
+>>>>>> diff --git a/drivers/mfd/88pm800.c b/drivers/mfd/88pm800.c
+>>>>>> index d495737..66347be 100644
+>>>>>> --- a/drivers/mfd/88pm800.c
+>>>>>> +++ b/drivers/mfd/88pm800.c
+>>>>>> @@ -374,7 +374,7 @@ static int device_irq_init_800(struct pm80x_chip *chip)
+>>>>>>   {
+>>>>>>   	struct regmap *map = chip->regmap;
+>>>>>>   	unsigned long flags = IRQF_ONESHOT;
+>>>>>> -	int data, mask, ret = -EINVAL;
+>>>>>> +	int irq_clr_mode, mask, ret = -EINVAL;
+>>>>>>
+>>>>>>   	if (!map || !chip->irq) {
+>>>>>>   		dev_err(chip->dev, "incorrect parameters\n");
+>>>>>> @@ -382,15 +382,16 @@ static int device_irq_init_800(struct pm80x_chip *chip)
+>>>>>>   	}
+>>>>>>
+>>>>>>   	/*
+>>>>>> -	 * irq_mode defines the way of clearing interrupt. it's read-clear by
+>>>>>> -	 * default.
+>>>>>> +	 * irq_clr_on_wr defines the way of clearing interrupt by
+>>>>>> +	 * read/write(0/1).  It's read-clear by default.
+>>>>>>   	 */
+>>>>>>   	mask =
+>>>>>>   	    PM800_WAKEUP2_INV_INT | PM800_WAKEUP2_INT_CLEAR |
+>>>>>>   	    PM800_WAKEUP2_INT_MASK;
+>>>>>>
+>>>>>> -	data = PM800_WAKEUP2_INT_CLEAR;
+>>>>>> -	ret = regmap_update_bits(map, PM800_WAKEUP2, mask, data);
+>>>>>> +	irq_clr_mode = chip->irq_clr_method == PM800_IRQ_CLR_ON_WRITE ?
+>>>>>> +		PM800_WAKEUP2_INT_WRITE_CLEAR : PM800_WAKEUP2_INT_READ_CLEAR;
+>>>>>> +	ret = regmap_update_bits(map, PM800_WAKEUP2, mask, irq_clr_mode);
+>>>>>
+>>>>> What's stopping you just passing PM800_WAKEUP2_INT_WRITE_CLEAR or
+>>>>> PM800_WAKEUP2_INT_READ_CLEAR from pdata?  Then you can use the value
+>>>>> directly without all of this faffing about.
+>>>>>
+>>>>>    regmap_update_bits(map, PM800_WAKEUP2, mask, pdata->irq_clr_mode);
+>>>>>
+>>>>
+>>>> Because "irq_clr_method" is of boolean type.
+>>>> And macros which you are referring to is,
+>>>>
+>>>> #define PM800_WAKEUP2_INT_READ_CLEAR            (0 << 1)
+>>>> #define PM800_WAKEUP2_INT_WRITE_CLEAR           (1 << 1)
+>>>>
+>>>>
+>>>> And also, I feel it is more cleaner approach with the current code as
+>>>> register definition and userflag are maintained separately.
+>>>
+>>> I see your point, although it's a shame we have to have this code in
+>>> its place.
+>>>
+>>> One thing I think you can do though is rid chip->irq_clr_method, just
+>>> use the one you already have in pdata.
+>>>
+>>
+>> Looking at the current code,
+>> Yes, this can be done, but I have to do some more changes around it,
+>> to make code cleaner,
+>>
+>> change the signature of
+>>
+>> static int device_irq_init_800(struct pm80x_chip *chip)
+>>
+>> TO
+>>
+>> static int device_irq_init_800(struct pm80x_chip *chip, struct
+>> pm80x_platform_data *pdata)
+>>
+>>
+>> and then only use pdata->irq_clr_method.
+>>
+>>
+>> How do you want to get this inside? V6 version? or separate patch?
+>>
+>> I have one more cleanup patch in the queue, which I am planning to
+>> submit today, if you are ok then I can submit along with that.
+>
+> Ideally not.  Don't you save the 'struct device' into *chip?  You
+> should use that to fetch the pdata, like:
+>
+> pdata = dev_get_platdata(chip->dev);
+>
+
+Yes certainly, this is another option (rather preferred one).
+
+But to be consistent with other's I proposed this, please refer to the
+fn device_800_init(), where all xxx_init() are taking 2 arguments, and
+second argument is pdata.
+
+
+There is room for cleanup, I agree.
+I can put this too in the next cleanup series.
+
+Thanks,
+Vaibhav
