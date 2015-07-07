@@ -1,80 +1,115 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: Re: [PATCH v2 5/5] i2c: davinci: use ICPFUNC to toggle I2C as gpio
- for bus recovery
-Date: Tue, 7 Jul 2015 17:53:59 +0300
-Message-ID: <559BE807.2030802@ti.com>
-References: <1417010393-30598-1-git-send-email-grygorii.strashko@ti.com>
- <1417010393-30598-6-git-send-email-grygorii.strashko@ti.com>
- <20141126160407.GN4431@pengutronix.de> <5476085B.40009@ti.com>
- <1436276269.3344.94.camel@pengutronix.de>
- <20150707134852.GE9671@pengutronix.de> <20150707141312.GC3411@katana>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH-V5 3/4] mfd: 88pm800: Set default interrupt clear method
+Date: Tue, 7 Jul 2015 15:57:56 +0100
+Message-ID: <20150707145756.GJ3182@x1>
+References: <1435591877-18214-4-git-send-email-vaibhav.hiremath@linaro.org>
+ <20150707072958.GN3182@x1>
+ <559BA1AE.9050006@linaro.org>
+ <20150707104028.GR3182@x1>
+ <559BAF23.90002@linaro.org>
+ <20150707111248.GU3182@x1>
+ <559BB58E.9010406@linaro.org>
+ <559BB727.2070106@linaro.org>
+ <20150707125439.GE3182@x1>
+ <559BE68B.3020801@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20150707141312.GC3411@katana>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Wolfram Sang <wsa@the-dreams.de>, =?UTF-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <u.kleine-koenig@pengutronix.de>
-Cc: devicetree@vger.kernel.org, =?UTF-8?B?SmFuIEzDvGJiZQ==?= <jlu@pengutronix.de>, Kevin Hilman <khilman@deeprootsystems.com>, Santosh Shilimkar <ssantosh@kernel.org>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Murali Karicheri <m-karicheri2@ti.com>, linux-i2c@vger.kernel.org, Mike Looijmans <milo-software@users.sourceforge.net>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <559BE68B.3020801@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, robh+dt@kernel.org, sameo@linux.intel.com, linux-kernel@vger.kernel.org, yizhang@marvell.com, Zhao Ye <zhaoy@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMDcvMDcvMjAxNSAwNToxMyBQTSwgV29sZnJhbSBTYW5nIHdyb3RlOgo+IE9uIFR1ZSwgSnVs
-IDA3LCAyMDE1IGF0IDAzOjQ4OjUyUE0gKzAyMDAsIFV3ZSBLbGVpbmUtS8O2bmlnIHdyb3RlOgoK
-Pj4gT24gVHVlLCBKdWwgMDcsIDIwMTUgYXQgMDM6Mzc6NDlQTSArMDIwMCwgSmFuIEzDvGJiZSB3
-cm90ZToKPj4+IE9uIE1pLCAyMDE0LTExLTI2IGF0IDE5OjA1ICswMjAwLCBHcnlnb3JpaSBTdHJh
-c2hrbyB3cm90ZToKPj4+PiBPbiAxMS8yNi8yMDE0IDA2OjA0IFBNLCBVd2UgS2xlaW5lLUvDtm5p
-ZyB3cm90ZToKPj4+Pj4gT24gV2VkLCBOb3YgMjYsIDIwMTQgYXQgMDM6NTk6NTNQTSArMDIwMCwg
-R3J5Z29yaWkgU3RyYXNoa28gd3JvdGU6Cj4+Pj4+PiBIYXZpbmcgYSBib2FyZCB3aGVyZSB0aGUg
-STJDIGJ1cyBsb2NrcyB1cCBvY2Nhc2lvbmFsbHkgbWFkZSBpdCBjbGVhcgo+Pj4+Pj4gdGhhdCB0
-aGUgYnVzIHJlY292ZXJ5IGluIHRoZSBpMmMtZGF2aW5jaSBkcml2ZXIgd2lsbCBvbmx5IHdvcmsg
-b24KPj4+Pj4+IHNvbWUgYm9hcmRzLCBiZWNhdXNlIG9uIHJlZ3VsYXIgYm9hcmRzLCB0aGlzIHdp
-bGwgb25seSB0b2dnbGUgR1BJTwo+Pj4+Pj4gbGluZXMgdGhhdCBhcmVuJ3QgbXV4ZWQgdG8gdGhl
-IGFjdHVhbCBwaW5zLgo+Pj4+Pj4KPj4+Pj4+IFRoZSBJMkMgY29udHJvbGxlciBvbiBTb0NzIGxp
-a2UgZGE4NTAgKGFuZCBkYTgzMCksIEtleXN0b25lIDIgaGFzIHRoZQo+Pj4+Pj4gYnVpbHQtaW4g
-Y2FwYWJpbGl0eSB0byBiaXQtYmFuZyBpdHMgbGluZXMgYnkgdXNpbmcgdGhlIElDUEZVTkMgcmVn
-aXN0ZXJzCj4+Pj4+PiBvZiB0aGUgaTJjIGNvbnRyb2xsZXIuCj4+Pj4+PiBJbXBsZW1lbnQgdGhl
-IHN1Z2dlc3RlZCBwcm9jZWR1cmUgYnkgdG9nZ2xpbmcgU0NMIGFuZCBjaGVja2luZyBTREEgdXNp
-bmcKPj4+Pj4+IHRoZSBJQ1BGVU5DIHJlZ2lzdGVycyBvZiB0aGUgSTJDIGNvbnRyb2xsZXIgd2hl
-biBwcmVzZW50LiBBbGxvdyBwbGF0Zm9ybXMKPj4+Pj4+IHRvIGluZGljYXRlIHRoZSBwcmVzZW5j
-ZSBvZiB0aGUgSUNQRlVOQyByZWdpc3RlcnMgd2l0aCBhIGhhc19wZnVuYyBwbGF0Zm9ybQo+Pj4+
-Pj4gZGF0YSBmbGFnIGFuZCBhZGQgb3B0aW9uYWwgRFQgcHJvcGVydHkgInRpLGhhcy1wZnVuYyIg
-dG8gaW5kaWNhdGUKPj4+Pj4+IHRoZSBzYW1lIGluIERULgo+Pj4+PiBPbiB3aGF0IGRvZXMgaXQg
-ZGVwZW5kIGlmIHRoaXMgcGZ1bmMgc3R1ZmYgd29ya3Mgb3Igbm90PyBPbmx5IHRoZSBTb0MsCj4+
-Pj4+IG9yIGFsc28gb24gc29tZSBib2FyZCBzcGVjaWZpYyBwcm9wZXJ0aWVzPwo+Pj4+Cj4+Pj4g
-U29DIC8gc2V0IG9mIFNvQ3MuIEFsc28sIHNpbWlsYXIgZmVhdHVyZSBpcyBzdXBwb3J0ZWQgYnkg
-T01BUCBhbmQgQU0zMzV4L0FNNDM3eCBTb0NzCj4+Pj4gdXNpbmcgSTJDX1NZU1RFU1QgcmVnaXN0
-ZXIuCj4+Pj4KPj4+Pj4gR2l2ZW4gdGhlIGZvcm1lciB1c2luZyB0aGUKPj4+Pj4gY29tcGF0aWJs
-ZSBzdHJpbmcgdG8gZGV0ZWN0IGl0cyBhdmFpbGFiaWxpdHkgd291bGQgYmUgYmV0dGVyLiAoSW4g
-dGhpcwo+Pj4+PiBjYXNlIGFsc28gc29ycnksIGRpZG4ndCBjb25zaWRlciB0aGlzIGNhc2Ugd2hl
-biByZXF1ZXN0aW5nIHRoZSBwcm9wZXJ0eQo+Pj4+PiBpbiB0aGUgbGFzdCByb3VuZC4pCj4+Pgo+
-Pj4gSSBvbmx5IHN0dW1ibGVkIGFjcm9zcyB0aGlzIGFmdGVyIGl0IHdhcyBtZXJnZWQsIHdpdGgg
-dGhlIGFkZGl0aW9uYWwKPj4gSSBhbHNvIHdvbmRlciBob3cgaXQgY2FtZSB0byB0aGUgUmV2aWV3
-ZWQtYnkgdGFnIGZvciBtZS4gVGhlIGxhc3QgdGhpbmcKPj4gdGhhdCBJIHNhaWQgYWJvdXQgdGhl
-IHBhdGNoIHdhcyAiT24gd2hhdCBkb2VzIGl0IGRlcGVuZCBpZiB0aGlzIHBmdW5jCj4+IHN0dWZm
-IHdvcmtzIG9yIG5vdD8gT25seSB0aGUgU29DLCBvciBhbHNvIG9uIHNvbWUgYm9hcmQgc3BlY2lm
-aWMKPj4gcHJvcGVydGllcz8iIChzZWUgYWJvdmUpIGFuZCAidGhlIHBhdGNoIGxvb2tzIG9rIi4g
-SU1ITyB0aGlzIGhhcmRseQo+PiBqdXN0aWZpZXMgdG8gYWRkIHRoZSBSZXZpZXdlZC1ieSB0YWcg
-Zm9yIHRoZSBuZXh0IHJvdW5kLiA6LSgKPiAKPiBUaGF0IG5lZWRzIHRvIGJlIGRpc2N1c3NlZCB3
-aXRoIEdyeWdvcmlpLiBJIGNhbid0IHZlcmlmeSB0aGUgY29ycmVjdG5lc3MKPiBvZiB0YWdzIGZv
-ciBldmVyeSBwYXRjaCwgYWx0aG91Z2ggSSBkbyB0cnkgdG8ga2VlcCBhbiBleWUgb24gaXQuLi4K
-PiAKClJlZ2FyZGluZyAidGhlIHBhdGNoIGxvb2tzIG9rIiAtIHNpbmNlcmVseSBzb3JyeSEKVGhp
-cyBpcyBub3QgdGhlIGZpcnN0IHRpbWUgSSd2ZSB0cmVhdGVkICJsb29rcyBnb29kLi4iIGFzIFJl
-dmlld2VkLWJ5IGFuZCBJIGdvdCBubyBjb21wbGFpbnRzIGJlZm9yZSA6KApXaWxsIHRha2UgaXQg
-aW50byBhY2NvdW50LgoKClJlZ2FyZGluZyB0ZWNobmljYWwgY29tbWVudHM6Ck9LLiBTZWVtcyBJ
-IG1pc3NlZCBzbXRoLiBvciB1bmRlcnN0b29kIHdyb25nbHkuClNvLCBJJ2xsIHNheSB3aGF0J3Mg
-cGVvcGxlIHVzdWFsbHkgc2F5aW5nIGhlcmUgLSBTb3JyeSBmb3IgdGhhdCA6KApCdXQsIHRvIGJl
-IGhvbmVzdCBJIGRvbid0IGZlZWwgZ3VpbHR5LCBiZWNhdXNlOgotIHY0IG9mIHRoZXNlIHBhdGNo
-ZXMgd2FzIG1lcmdlZCBmaW5hbGx5Ci0gdGhhdCB2NCBtaXNzZWQgPjIga2VybmVsIHJlbGVhc2Vz
-Ci0geW91IHdlcmUgYWRkZWQgaW4gIlRPOiIgZm9yIGFsbCB2ZXJzaW9ucyBvZiB0aGVzZSBwYXRj
-aGVzLgoKLS0gCnJlZ2FyZHMsCi1ncnlnb3JpaQoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgt
-YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3Jn
-L21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On Tue, 07 Jul 2015, Vaibhav Hiremath wrote:
+
+>=20
+>=20
+> On Tuesday 07 July 2015 06:24 PM, Lee Jones wrote:
+> >On Tue, 07 Jul 2015, Vaibhav Hiremath wrote:
+> >
+> >>
+> >>
+> >>On Tuesday 07 July 2015 04:48 PM, Vaibhav Hiremath wrote:
+> >>>
+> >>>
+> >>>On Tuesday 07 July 2015 04:42 PM, Lee Jones wrote:
+> >>>>On Tue, 07 Jul 2015, Vaibhav Hiremath wrote:
+> >>>>>On Tuesday 07 July 2015 04:10 PM, Lee Jones wrote:
+> >>>>>>On Tue, 07 Jul 2015, Vaibhav Hiremath wrote:
+> >>>>>>>On Tuesday 07 July 2015 12:59 PM, Lee Jones wrote:
+> >>>>>>>>On Mon, 29 Jun 2015, Vaibhav Hiremath wrote:
+> >>>>>>>>
+> >>>>>>>>>As per the spec, bit 1 (INT_CLEAR_MODE) of reg addr 0xe
+> >>>>>>>>>(page 0) controls the method of clearing interrupt
+> >>>>>>>>>status of 88pm800 family of devices;
+> >>>>>>>>>
+> >>>>>>>>>   0: clear on read
+> >>>>>>>>>   1: clear on write
+> >>>>>>>>>
+> >>>>>>>>>If pdata is not coming from board file, then set the
+> >>>>>>>>>default irq clear method to "irq clear on write"
+> >>>>>>>>>
+> >>>>>>>>>Also, as suggested by "Lee Jones" renaming variable field
+> >>>>>>>>>to appropriate name.
+> >>>>>>>>>
+> >>>>>>>>>Signed-off-by: Zhao Ye <zhaoy@marvell.com>
+> >>>>>>>>>Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath@linaro.org=
+>
+> >>>>>>>>>---
+> >>>>>>>>>  drivers/mfd/88pm800.c       | 15 ++++++++++-----
+> >>>>>>>>>  include/linux/mfd/88pm80x.h | 10 ++++++++--
+> >>>>>>>>>  2 files changed, 18 insertions(+), 7 deletions(-)
+> >>>>>>>>>
+>=20
+> <snip>
+>=20
+> >>>
+> >>>Yes certainly, this is another option (rather preferred one).
+> >>>
+> >>>But to be consistent with other's I proposed this, please refer to=
+ the
+> >>>fn device_800_init(), where all xxx_init() are taking 2 arguments,=
+ and
+> >>>second argument is pdata.
+> >>>
+> >>>
+> >>>There is room for cleanup, I agree.
+> >>>I can put this too in the next cleanup series.
+> >>>
+> >>
+> >>Note that this is init function, called from probe.
+> >>
+> >>So both approach looks ok to me.
+> >
+> >Please clean up the other.  Function and put it at the front of the
+> >set when you re-submit.
+> >
+>=20
+> Sorry for dumb question here :)
+> I did not understand what do you mean by "in front of the set"?
+>=20
+> You want to see all the patches into one single series?
+> Or
+> have separate series,
+> 	1. existing DT addition series
+> 	2. new clean-up series
+
+[PATCH v6 0/5] mfd: 88pm800: Add Device tree support
+=E2=94=9C>[PATCH v6 1/5] mfd: 88pm800: Obtain pdata from 'device' rathe=
+r than passing as parameter
+=E2=94=9C>[PATCH v6 2/5] mfd: 88pm800: Add device tree support
+=E2=94=9C>[PATCH v6 3/5] mfd: 88pm800: Remove unnecessary protection ar=
+ound pdata
+=E2=94=9C>[PATCH v6 4/5] mfd: 88pm800: Set default interrupt clear meth=
+od
+=E2=94=9C>[PATCH v6 5/5] mfd: devicetree: bindings: Add new 88pm800 mfd=
+ binding
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
