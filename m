@@ -1,98 +1,268 @@
-From: Jassi Brar <jassisinghbrar@gmail.com>
-Subject: Re: [PATCHv6 1/2] dts: Adding docs for Xilinx LogiCORE IP mailbox driver.
-Date: Tue, 7 Jul 2015 10:20:51 +0530
-Message-ID: <CABb+yY0L1yFEhwHfRR553hFrK4v6=8p3q8w9ugwTdfrAre6OOw@mail.gmail.com>
-References: <1436202963-16922-1-git-send-email-moritz.fischer@ettus.com>
-	<1436202963-16922-2-git-send-email-moritz.fischer@ettus.com>
-	<20150706172727.GH6550@xsjsorenbubuntu>
+From: Zhou Wang <wangzhou1@hisilicon.com>
+Subject: Re: [PATCH v3 1/5] ARM/PCI: remove align_resource callback in pcibios_align_resource
+Date: Tue, 7 Jul 2015 13:44:01 +0800
+Message-ID: <559B6721.4080305@hisilicon.com>
+References: <1435743817-19083-1-git-send-email-wangzhou1@hisilicon.com> <1435743817-19083-2-git-send-email-wangzhou1@hisilicon.com> <20150702175056.GX944@e106497-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150706172727.GH6550@xsjsorenbubuntu>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>
-Cc: Moritz Fischer <moritz.fischer@ettus.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Michal Simek <michal.simek@xilinx.com>, Andrew Morton <akpm@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, mchehab@osg.samsung.com, Arnd Bergmann <arnd@arndb.de>, joe@perches.com, jingoohan1@gmail.com, Devicetree List <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20150702175056.GX944@e106497-lin.cambridge.arm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jg1.han@samsung.com>, Pratyush Anand <pratyush.anand@gmail.com>, Arnd Bergmann <arnd@arndb.de>, "gabriele.paoloni@huawei.com" <gabriele.paoloni@huawei.com>, James Morse <James.Morse@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "yuanzhichang@hisilicon.com" <yuanzhichang@hisilicon.com>, "zhudacai@hisilicon.com" <zhudacai@hisilicon.com>, "zhangjukuo@huawei.com" <zhangjukuo@huawei.com>, "qiuzhenfa@hisilicon.com" <qiuzhenfa@hisilicon.com>, "liguozhu@hisilicon.com" <liguozhu@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 6, 2015 at 10:57 PM, S=C3=B6ren Brinkmann
-<soren.brinkmann@xilinx.com> wrote:
-> On Mon, 2015-07-06 at 10:16AM -0700, Moritz Fischer wrote:
->> Signed-off-by: Moritz Fischer <moritz.fischer@ettus.com>
->> Acked-by: Michal Simek <michal.simek@xilinx.com>
->> ---
->>  .../devicetree/bindings/mailbox/xilinx-mailbox.txt | 44 +++++++++++=
-+++++++++++
->>  1 file changed, 44 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/mailbox/xilinx=
--mailbox.txt
+On 2015/7/3 1:50, Liviu Dudau wrote:
+> On Wed, Jul 01, 2015 at 10:43:33AM +0100, Zhou Wang wrote:
+>> This patch had added by Arnd Bergmann during last reviewing of v1 patchset[1].
 >>
->> diff --git a/Documentation/devicetree/bindings/mailbox/xilinx-mailbo=
-x.txt b/Documentation/devicetree/bindings/mailbox/xilinx-mailbox.txt
->> new file mode 100644
->> index 0000000..97b81f8
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mailbox/xilinx-mailbox.txt
->> @@ -0,0 +1,44 @@
->> +Xilinx Mailbox Driver
->> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>> PCI core codes call pcibios_align_resource(). In ARM specific one, it will
+>> dereference pci_sys_data and call sys->align_resource. If we try to unify ARM
+>> and ARM64 PCIe API in pcie-designware. it will bring kernel crash when run into
+>> this dereferencing.
+>>
+>> However, in ARM there is only pci-mvebu which implements align_resource. So
+>> add align_resource call back in pci_host_bridge structure and override
+>> pcibios_align_resource with it.
+>>
+>> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>> Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
+>> Tested-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+>>
+>> [1] http://www.spinics.net/lists/linux-pci/msg41671.html
+>> ---
+>>  arch/arm/kernel/bios32.c     |  6 ------
+>>  drivers/pci/host/pci-mvebu.c | 47 ++++++++++++++++++++++++++++----------------
+>>  drivers/pci/setup-res.c      | 27 ++++++++++++++++++++-----
+>>  include/linux/pci.h          |  3 +++
+>>  4 files changed, 55 insertions(+), 28 deletions(-)
+>>
+>> diff --git a/arch/arm/kernel/bios32.c b/arch/arm/kernel/bios32.c
+>> index fcbbbb1..b01189f 100644
+>> --- a/arch/arm/kernel/bios32.c
+>> +++ b/arch/arm/kernel/bios32.c
+>> @@ -468,7 +468,6 @@ static void pcibios_init_hw(struct device *parent, struct hw_pci *hw,
+>>  		sys->busnr   = busnr;
+>>  		sys->swizzle = hw->swizzle;
+>>  		sys->map_irq = hw->map_irq;
+>> -		sys->align_resource = hw->align_resource;
+>>  		INIT_LIST_HEAD(&sys->resources);
+>>  
+>>  		if (hw->private_data)
+>> @@ -588,8 +587,6 @@ char * __init pcibios_setup(char *str)
+>>  resource_size_t pcibios_align_resource(void *data, const struct resource *res,
+>>  				resource_size_t size, resource_size_t align)
+>>  {
+>> -	struct pci_dev *dev = data;
+>> -	struct pci_sys_data *sys = dev->sysdata;
+>>  	resource_size_t start = res->start;
+>>  
+>>  	if (res->flags & IORESOURCE_IO && start & 0x300)
+>> @@ -597,9 +594,6 @@ resource_size_t pcibios_align_resource(void *data, const struct resource *res,
+>>  
+>>  	start = (start + align - 1) & ~(align - 1);
+>>  
+>> -	if (sys->align_resource)
+>> -		return sys->align_resource(dev, res, start, size, align);
+>> -
+>>  	return start;
+>>  }
+>>  
+>> diff --git a/drivers/pci/host/pci-mvebu.c b/drivers/pci/host/pci-mvebu.c
+>> index 1ab8635..155d05f 100644
+>> --- a/drivers/pci/host/pci-mvebu.c
+>> +++ b/drivers/pci/host/pci-mvebu.c
+>> @@ -22,6 +22,8 @@
+>>  #include <linux/of_pci.h>
+>>  #include <linux/of_platform.h>
+>>  
+>> +#include "../pci.h" /* HACK to see pci_find_host_bridge */
 >> +
->> +Required properties:
->> +- compatible       : "xlnx,mailbox-2.1".
->> +- reg              :  physical base address of the mailbox and leng=
-th of
->> +                      memory mapped region.
->> +- #mbox-cells      :  common mailbox binding property to identify t=
-he number
->> +                      of cells required for the mailbox specifier, =
-should be 0
->> +- clocks           :  phandle to clock provider
->> +- clock-names      :  must be 'mbox'
+>>  /*
+>>   * PCIe unit register offsets.
+>>   */
+>> @@ -751,27 +753,20 @@ static int mvebu_pcie_setup(int nr, struct pci_sys_data *sys)
+>>  	return 1;
+>>  }
+>>  
+>> -static struct pci_bus *mvebu_pcie_scan_bus(int nr, struct pci_sys_data *sys)
+>> +static resource_size_t mvebu_pcie_align_resource(void *data,
+>> +						 const struct resource *res,
+>> +						 resource_size_t size,
+>> +						 resource_size_t align)
+>>  {
+>> -	struct mvebu_pcie *pcie = sys_to_pcie(sys);
+>> -	struct pci_bus *bus;
+>> +	struct pci_dev *dev = data;
+>>  
+>> -	bus = pci_create_root_bus(&pcie->pdev->dev, sys->busnr,
+>> -				  &mvebu_pcie_ops, sys, &sys->resources);
+>> -	if (!bus)
+>> -		return NULL;
+>> +	resource_size_t start = res->start;
+>>  
+>> -	pci_scan_child_bus(bus);
+>> +	if (res->flags & IORESOURCE_IO && start & 0x300)
+>> +		start = (start + 0x3ff) & ~0x3ff;
+>>  
+>> -	return bus;
+>> -}
+>> +	start = (start + align - 1) & ~(align - 1);
+> 
+> Honestly, I don't see here anything that is mvebu specific. Could you move
+
+What I mean is that there is only mvebu who implemented sys->align_resource callback in ARM
+arch.
+
+> this function in the generic pci/host area and have a flag in the pci_host_bridge
+> structure whether the function should be called or not? I know that in a way
+> that looks very close to the existing implementation which uses pcibios_align_resource,
+
+I am confused about "the existing implementation". Now pcibios_align_resource are
+implemented by each arch code and are called directly. Did I miss anything about
+pcibios_align_resource?
+
+Best rgards,
+Zhou
+
+> but the problem with pcibios_ version is that it is arch specific and not driver
+> specific the way we want.
+> 
+> Having this version as a generic implementation would also remove at least 2 more
+> arch version, possibly more after testing by the arch maintainers.
+> 
+> Best regards,
+> Liviu
+> 
+>>  
+>> -static resource_size_t mvebu_pcie_align_resource(struct pci_dev *dev,
+>> -						 const struct resource *res,
+>> -						 resource_size_t start,
+>> -						 resource_size_t size,
+>> -						 resource_size_t align)
+>> -{
+>>  	if (dev->bus->number != 0)
+>>  		return start;
+>>  
+>> @@ -796,6 +791,25 @@ static resource_size_t mvebu_pcie_align_resource(struct pci_dev *dev,
+>>  		return start;
+>>  }
+>>  
+>> +static struct pci_bus *mvebu_pcie_scan_bus(int nr, struct pci_sys_data *sys)
+>> +{
+>> +	struct mvebu_pcie *pcie = sys_to_pcie(sys);
+>> +	struct pci_host_bridge *phb;
+>> +	struct pci_bus *bus;
 >> +
->> +Optional properties:
->> +- interrupt-parent : interrupt source phandle
->> +- interrupts       : interrupt number, The interrupt specifier form=
-at
->> +                     depends on the interrupt controller parent.
+>> +	bus = pci_create_root_bus(&pcie->pdev->dev, sys->busnr,
+>> +				  &mvebu_pcie_ops, sys, &sys->resources);
+>> +	if (!bus)
+>> +		return NULL;
 >> +
->> +Example:
->> +     mbox: mailbox@40400000 {
->> +             compatible =3D "xlnx,mailbox-2.1";
->> +             reg =3D <0x40400000 0x100>;
->> +             interrupt-parent =3D <&intc>;
->> +             interrupts =3D <5>;
->> +             #mbox-cells =3D <0>;
->> +             clocks =3D <&clkc 15>;
->> +             clock-names =3D "mbox";
->> +     };
+>> +	phb = pci_find_host_bridge(bus);
+>> +	phb->align_resource = mvebu_pcie_align_resource;
 >> +
->> +Mailbox client
->> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->> +"mboxes" and the optional "mbox-names" (please see
->> +Documentation/devicetree/bindings/mailbox/mailbox.txt for details).=
- Each value
->> +of the mboxes property should contain a phandle to the mailbox cont=
-roller
->> +device node and second argument is the channel index. It must be 0 =
-(hardware
->> +support only one channel). The equivalent "mbox-names" property val=
-ue can be
->> +used to give a name to the communication channel to be used by the =
-client user.
+>> +	pci_scan_child_bus(bus);
 >> +
->> +Example:
->> +     mclient0: mclient0@400 {
->> +             compatible =3D "client-1.0";
->> +             reg =3D <0x400 0x10>;
->> +             mbox-names =3D "mbox";
->> +             mboxes =3D <&mbox 0>;
->
-> Sorry, to bring this up again, but I'm confused regarding the #mbox-c=
-ells
-> thing. Above it says #mbox-cells is 0. In that case, shouldn't the
-> 'mboxes' property not only be '<&mbox>'?
->
-Yeah, this is inconsistent. Either provide your own of_xlate() for
-#cells=3D0  or have #cells=3D1 to use stock of_xlate() and specify <&mb=
-ox
-0> for the channel.
+>> +	return bus;
+>> +}
+>> +
+>>  static void mvebu_pcie_enable(struct mvebu_pcie *pcie)
+>>  {
+>>  	struct hw_pci hw;
+>> @@ -812,7 +826,6 @@ static void mvebu_pcie_enable(struct mvebu_pcie *pcie)
+>>  	hw.scan           = mvebu_pcie_scan_bus;
+>>  	hw.map_irq        = of_irq_parse_and_map_pci;
+>>  	hw.ops            = &mvebu_pcie_ops;
+>> -	hw.align_resource = mvebu_pcie_align_resource;
+>>  
+>>  	pci_common_init(&hw);
+>>  }
+>> diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
+>> index 232f925..73abca7 100644
+>> --- a/drivers/pci/setup-res.c
+>> +++ b/drivers/pci/setup-res.c
+>> @@ -200,7 +200,11 @@ static int pci_revert_fw_address(struct resource *res, struct pci_dev *dev,
+>>  }
+>>  
+>>  static int __pci_assign_resource(struct pci_bus *bus, struct pci_dev *dev,
+>> -		int resno, resource_size_t size, resource_size_t align)
+>> +		int resno, resource_size_t size, resource_size_t align,
+>> +		resource_size_t (*alignf)(void *,
+>> +					  const struct resource *,
+>> +					  resource_size_t,
+>> +					  resource_size_t))
+>>  {
+>>  	struct resource *res = dev->resource + resno;
+>>  	resource_size_t min;
+>> @@ -217,7 +221,7 @@ static int __pci_assign_resource(struct pci_bus *bus, struct pci_dev *dev,
+>>  	 */
+>>  	ret = pci_bus_alloc_resource(bus, res, size, align, min,
+>>  				     IORESOURCE_PREFETCH | IORESOURCE_MEM_64,
+>> -				     pcibios_align_resource, dev);
+>> +				     alignf, dev);
+>>  	if (ret == 0)
+>>  		return 0;
+>>  
+>> @@ -229,7 +233,7 @@ static int __pci_assign_resource(struct pci_bus *bus, struct pci_dev *dev,
+>>  	     (IORESOURCE_PREFETCH | IORESOURCE_MEM_64)) {
+>>  		ret = pci_bus_alloc_resource(bus, res, size, align, min,
+>>  					     IORESOURCE_PREFETCH,
+>> -					     pcibios_align_resource, dev);
+>> +					     alignf, dev);
+>>  		if (ret == 0)
+>>  			return 0;
+>>  	}
+>> @@ -242,7 +246,7 @@ static int __pci_assign_resource(struct pci_bus *bus, struct pci_dev *dev,
+>>  	 */
+>>  	if (res->flags & (IORESOURCE_PREFETCH | IORESOURCE_MEM_64))
+>>  		ret = pci_bus_alloc_resource(bus, res, size, align, min, 0,
+>> -					     pcibios_align_resource, dev);
+>> +					     alignf, dev);
+>>  
+>>  	return ret;
+>>  }
+>> @@ -251,10 +255,23 @@ static int _pci_assign_resource(struct pci_dev *dev, int resno,
+>>  				resource_size_t size, resource_size_t min_align)
+>>  {
+>>  	struct pci_bus *bus;
+>> +	struct pci_host_bridge *phb;
+>> +	resource_size_t (*alignf)(void *,
+>> +				  const struct resource *,
+>> +				  resource_size_t,
+>> +				  resource_size_t);
+>>  	int ret;
+>>  
+>>  	bus = dev->bus;
+>> -	while ((ret = __pci_assign_resource(bus, dev, resno, size, min_align))) {
+>> +	phb = pci_find_host_bridge(bus);
+>> +
+>> +	if (phb->align_resource)
+>> +		alignf = phb->align_resource;
+>> +	else
+>> +		alignf = pcibios_align_resource;
+>> +
+>> +	while ((ret = __pci_assign_resource(bus, dev, resno, size,
+>> +					    min_align, alignf))) {
+>>  		if (!bus->parent || !bus->self->transparent)
+>>  			break;
+>>  		bus = bus->parent;
+>> diff --git a/include/linux/pci.h b/include/linux/pci.h
+>> index 353db8d..39e48fc 100644
+>> --- a/include/linux/pci.h
+>> +++ b/include/linux/pci.h
+>> @@ -404,6 +404,9 @@ struct pci_host_bridge {
+>>  	struct device dev;
+>>  	struct pci_bus *bus;		/* root bus */
+>>  	struct list_head windows;	/* resource_entry */
+>> +	resource_size_t (*align_resource)(void *data,
+>> +			 const struct resource *res,
+>> +			 resource_size_t size, resource_size_t align);
+>>  	void (*release_fn)(struct pci_host_bridge *);
+>>  	void *release_data;
+>>  	unsigned int ignore_reset_delay:1;	/* for entire hierarchy */
+>> -- 
+>> 1.9.1
+>>
+> 
