@@ -1,158 +1,233 @@
-From: Phil Edworthy <phil.edworthy@renesas.com>
-Subject: RE: [PATCH v2] phy: rcar-gen2 usb: Add Host/Function switching for
- USB0
-Date: Tue, 7 Jul 2015 08:38:49 +0000
-Message-ID: <SIXPR06MB06394AED5D183C15C5A66BCEF5920@SIXPR06MB0639.apcprd06.prod.outlook.com>
-References: <1435824347-22732-1-git-send-email-phil.edworthy@renesas.com>
- <SG2PR06MB0919835888EBD162D4B86C24D8930@SG2PR06MB0919.apcprd06.prod.outlook.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH] clk: mediatek: Add MT8173 MMPLL change rate support
+Date: Tue, 07 Jul 2015 10:58:45 +0200
+Message-ID: <57452978.oOaMP89yJM@diego>
+References: <1433222760-5924-1-git-send-email-jamesjj.liao@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <SG2PR06MB0919835888EBD162D4B86C24D8930@SG2PR06MB0919.apcprd06.prod.outlook.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1433222760-5924-1-git-send-email-jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Shimoda-san,
+Hi James,
 
-On 06 July 2015 08:18, Shimoda-san wrote:
-> Hi Phil-san,
+Am Dienstag, 2. Juni 2015, 13:26:00 schrieb James Liao:
+> MT8173 MMPLL frequency settings are different from common PLLs.
+> It needs different post divider settings for some ranges of frequency.
+> This patch add support for MT8173 MMPLL frequency setting, includes:
 > 
-> Thank you very much for the patch!
+> 1. Add div-rate table for PLLs.
+> 2. Increase the max ost divider setting from 3 (/8) to 4 (/16).
+> 3. Write postdiv and pcw settings at the same time.
 > 
-> > Sent: Thursday, July 02, 2015 5:06 PM
-> < snip >
-> > +/* VBUS change IRQ handler */
-> > +static irqreturn_t gpio_vbus_irq(int irq, void *data)
-> > +{
-> > +	struct rcar_gen2_channel *channel = data;
-> > +
-> > +	/* Wait 20ms before doing anything as VBUS needs to settle */
-> > +	schedule_delayed_work(&channel->work, msecs_to_jiffies(20));
-> > +
-> > +	return IRQ_HANDLED;
-> > +}
-> > +
-> > +static int probe_otg(struct platform_device *pdev,
-> > +	struct rcar_gen2_phy_driver *drv)
-> > +{
-> > +	struct device *dev = &pdev->dev;
-> > +	struct rcar_gen2_channel *ch = drv->channels;
-> > +	int irq;
-> > +	int ret;
-> > +
-> > +	/* GPIOs for Host/Fn switching */
-> > +	ch->gpio_id = of_get_named_gpio_flags(dev->of_node,
-> > +				"renesas,id-gpio", 0, NULL);
-> > +	ch->gpio_vbus = of_get_named_gpio_flags(dev->of_node,
-> > +				"renesas,vbus-gpio", 0, NULL);
-> > +
-> > +	/* Need valid ID and VBUS gpios for Host/Fn switching */
-> > +	if (gpio_is_valid(ch->gpio_id) && gpio_is_valid(ch->gpio_vbus)) {
-> > +		ch->use_otg = 1;
-> > +
-> > +		/* GPIO for ID input */
-> > +		ret = devm_gpio_request_one(dev, ch->gpio_id, GPIOF_IN,
-> "id");
-> > +		if (ret)
-> > +			return ret;
-> > +
-> > +		/* GPIO for VBUS input */
-> > +		ret = devm_gpio_request_one(dev, ch->gpio_vbus, GPIOF_IN,
-> "vbus");
+> Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>  drivers/clk/mediatek/clk-mt8173.c | 24 +++++++++++++++++++++---
+>  drivers/clk/mediatek/clk-mtk.h    |  1 +
+>  drivers/clk/mediatek/clk-pll.c    | 37
+> +++++++++++++++++++++++++------------ 3 files changed, 47 insertions(+), 15
+> deletions(-)
 > 
-> According to the checkpatch.pl, "line over 80 characters".
-As I understand it, the 80 chars is not a hard rule. One reason for the
-80 char guideline is to avoid overly complex code, but I don't think
-that can be said of the above line!
+> diff --git a/drivers/clk/mediatek/clk-mt8173.c
+> b/drivers/clk/mediatek/clk-mt8173.c index 357b080..821de7d 100644
+> --- a/drivers/clk/mediatek/clk-mt8173.c
+> +++ b/drivers/clk/mediatek/clk-mt8173.c
+> @@ -779,8 +779,9 @@ CLK_OF_DECLARE(mtk_pericfg, "mediatek,mt8173-pericfg",
+> mtk_pericfg_init);
+> 
+>  #define CON0_MT8173_RST_BAR	BIT(24)
+> 
+> -#define PLL(_id, _name, _reg, _pwr_reg, _en_mask, _flags, _pcwbits,
+> _pd_reg, _pd_shift, \ -			_tuner_reg, _pcw_reg, _pcw_shift) { \
+> +#define PLL_B(_id, _name, _reg, _pwr_reg, _en_mask, _flags, _pcwbits,	\
+> +			_pd_reg, _pd_shift, _tuner_reg, _pcw_reg,	\
+> +			_pcw_shift, _div_rate) {			\
+>  		.id = _id,						\
+>  		.name = _name,						\
+>  		.reg = _reg,						\
+> @@ -795,14 +796,31 @@ CLK_OF_DECLARE(mtk_pericfg, "mediatek,mt8173-pericfg",
+> mtk_pericfg_init); .tuner_reg = _tuner_reg,				\
+>  		.pcw_reg = _pcw_reg,					\
+>  		.pcw_shift = _pcw_shift,				\
+> +		.div_rate = _div_rate,					\
+>  	}
+> 
+> +#define PLL(_id, _name, _reg, _pwr_reg, _en_mask, _flags, _pcwbits,	\
+> +			_pd_reg, _pd_shift, _tuner_reg, _pcw_reg,	\
+> +			_pcw_shift)					\
+> +		PLL_B(_id, _name, _reg, _pwr_reg, _en_mask, _flags, _pcwbits, \
+> +			_pd_reg, _pd_shift, _tuner_reg, _pcw_reg, _pcw_shift, \
+> +			NULL)
+> +
+> +const unsigned long mmpll_div_rate[] = {
 
-> > +		if (ret)
-> > +			return ret;
-> > +
-> > +		irq = gpio_to_irq(ch->gpio_vbus);
-> > +		ret = devm_request_irq(dev, irq, gpio_vbus_irq,
-> VBUS_IRQ_FLAGS,
-> > +				"vbus_detect", ch);
-> > +		if (ret)
-> > +			return ret;
-> > +
-> > +		/* Optional GPIO for VBUS power */
-> > +		ch->gpio_vbus_pwr = of_get_named_gpio_flags(dev->of_node,
-> > +						"renesas,vbus-pwr-gpio", 0,
-> NULL);
-> 
-> Same above.
-Since this code was already split over two lines, I agree with you here.
+static?
 
-> 
-> > +		if (gpio_is_valid(ch->gpio_id)) {
-> > +			ret = devm_gpio_request_one(dev, ch->gpio_vbus_pwr,
-> > +					GPIOF_OUT_INIT_LOW, "vbus-pwr");
-> > +			if (ret)
-> > +				return ret;
-> > +		}
-> > +
-> > +	} else if (gpio_is_valid(ch->gpio_id)) {
-> > +		dev_err(dev, "Failed to get VBUS gpio\n");
-> > +		return ch->gpio_vbus;
-> > +	} else if (gpio_is_valid(ch->gpio_vbus)) {
-> > +		dev_err(dev, "Failed to get ID gpio\n");
-> > +		return ch->gpio_id;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +/* bind/unbind the peripheral controller */
-> > +static int rcar_gen2_usb_set_peripheral(struct usb_otg *otg,
-> > +					struct usb_gadget *gadget)
-> > +{
-> > +	otg->gadget = gadget;
-> > +	if (!gadget) {
-> > +		usb_gadget_vbus_disconnect(otg->gadget);
-> 
-> Since the otg->gadget is NULL, this driver should not call this function here.
-Ah, yes you are correct!
+> +	MT8173_PLL_FMAX,
+> +	1000000000,
+> +	702000000,
+> +	253500000,
+> +	126750000,
+> +	0,
 
-> > +		otg->state = OTG_STATE_UNDEFINED;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> >  static int rcar_gen2_phy_probe(struct platform_device *pdev)
-> >  {
-> >  	struct device *dev = &pdev->dev;
-> < snip >
-> > @@ -323,6 +540,14 @@ static int rcar_gen2_phy_probe(struct platform_device
-> *pdev)
-> >
-> >  	dev_set_drvdata(dev, drv);
-> >
-> > +	/*
-> > +	 * If we already have something plugged into USB0, we won't get an edge
-> > +	 * on VBUS, so we have to manually schedule work to look at the VBUS
-> > +	 * and ID signals.
-> > +	 */
-> > +	if (drv->channels->use_otg)
-> > +		schedule_delayed_work(&drv->channels->work,
-> msecs_to_jiffies(100));
-> 
-> This line is also "line over 80 characters".
-I don't think it is necessary to force this into the 80 char recommendation.
+it's more common to label sentinel entries (the 0 marking the end) with
+	/* sentinel */
+instead of value 0.
 
-> Best regards,
-> Yoshihiro Shimoda
-> 
-> > +
-> >  	return 0;
-> >  }
-> >
-> > --
-> > 1.9.1
 
-Best regards
-Phil
+If I'm reading the code correctly, this is a mapping divider -> frequency, 
+right? So it may be nice to make this a bit more explicit, like:
+
+struct mtk_pll_div_table {
+	unsigned int    freq;
+	unsigned int    div;
+};
+
+static const struct mtk_pll_div_table mmpll_div_rate[] = {
+	{ .freq = MT8173_PLL_FMAX, .div = 0 },
+	{ .freq = 1000000000, .div = 1 },
+	{ .freq = 702000000, .div = 2 },
+	{ .freq = 253500000, .div = 3 },
+	{ .freq = 126750000, .div = 4 },
+	{ /* sentinel */ },
+};
+
+
+> +};
+> +
+>  static const struct mtk_pll_data plls[] = {
+>  	PLL(CLK_APMIXED_ARMCA15PLL, "armca15pll", 0x200, 0x20c, 0x00000001, 0, 
+21,
+> 0x204, 24, 0x0, 0x204, 0), PLL(CLK_APMIXED_ARMCA7PLL, "armca7pll", 0x210,
+> 0x21c, 0x00000001, 0, 21, 0x214, 24, 0x0, 0x214, 0),
+> PLL(CLK_APMIXED_MAINPLL, "mainpll", 0x220, 0x22c, 0xf0000101, HAVE_RST_BAR,
+> 21, 0x220, 4, 0x0, 0x224, 0), PLL(CLK_APMIXED_UNIVPLL, "univpll", 0x230,
+> 0x23c, 0xfe000001, HAVE_RST_BAR, 7, 0x230, 4, 0x0, 0x234, 14),
+> -	PLL(CLK_APMIXED_MMPLL, "mmpll", 0x240, 0x24c, 0x00000001, 0, 21, 0x244,
+> 24, 0x0, 0x244, 0), +	PLL_B(CLK_APMIXED_MMPLL, "mmpll", 0x240, 0x24c,
+> 0x00000001, 0, 21, 0x244, 24, 0x0, 0x244, 0, mmpll_div_rate),
+> PLL(CLK_APMIXED_MSDCPLL, "msdcpll", 0x250, 0x25c, 0x00000001, 0, 21, 0x250,
+> 4, 0x0, 0x254, 0), PLL(CLK_APMIXED_VENCPLL, "vencpll", 0x260, 0x26c,
+> 0x00000001, 0, 21, 0x260, 4, 0x0, 0x264, 0), PLL(CLK_APMIXED_TVDPLL,
+> "tvdpll", 0x270, 0x27c, 0x00000001, 0, 21, 0x270, 4, 0x0, 0x274, 0), diff
+> --git a/drivers/clk/mediatek/clk-mtk.h b/drivers/clk/mediatek/clk-mtk.h
+> index 61035b9..645af7c 100644
+> --- a/drivers/clk/mediatek/clk-mtk.h
+> +++ b/drivers/clk/mediatek/clk-mtk.h
+> @@ -150,6 +150,7 @@ struct mtk_pll_data {
+>  	int pcwbits;
+>  	uint32_t pcw_reg;
+>  	int pcw_shift;
+> +	const unsigned long *div_rate;
+>  };
+> 
+>  void __init mtk_clk_register_plls(struct device_node *node,
+> diff --git a/drivers/clk/mediatek/clk-pll.c b/drivers/clk/mediatek/clk-pll.c
+> index 44409e9..4680a09 100644
+> --- a/drivers/clk/mediatek/clk-pll.c
+> +++ b/drivers/clk/mediatek/clk-pll.c
+> @@ -90,20 +90,23 @@ static unsigned long __mtk_pll_recalc_rate(struct
+> mtk_clk_pll *pll, u32 fin, static void mtk_pll_set_rate_regs(struct
+> mtk_clk_pll *pll, u32 pcw, int postdiv)
+>  {
+
+-------------
+
+> -	u32 con1, pd, val;
+> +	u32 con1, val;
+>  	int pll_en;
+> 
+> -	/* set postdiv */
+> -	pd = readl(pll->pd_addr);
+> -	pd &= ~(POSTDIV_MASK << pll->data->pd_shift);
+> -	pd |= (ffs(postdiv) - 1) << pll->data->pd_shift;
+> -	writel(pd, pll->pd_addr);
+> -
+>  	pll_en = readl(pll->base_addr + REG_CON0) & CON0_BASE_EN;
+> 
+> -	/* set pcw */
+> -	val = readl(pll->pcw_addr);
+> +	/* set postdiv */
+> +	val = readl(pll->pd_addr);
+> +	val &= ~(POSTDIV_MASK << pll->data->pd_shift);
+> +	val |= (ffs(postdiv) - 1) << pll->data->pd_shift;
+> +
+> +	/* postdiv and pcw need to set at the same time if on same register */
+> +	if (pll->pd_addr != pll->pcw_addr) {
+> +		writel(val, pll->pd_addr);
+> +		val = readl(pll->pcw_addr);
+> +	}
+> 
+> +	/* set pcw */
+>  	val &= ~GENMASK(pll->data->pcw_shift + pll->data->pcwbits - 1,
+>  			pll->data->pcw_shift);
+>  	val |= pcw << pll->data->pcw_shift;
+
+This whole block probably wants to be a separate patch ;-) .
+
+While it may not affect previous pll implementations, it changes how register 
+accesses are handled and should not hide in another patch.
+
+
+
+> @@ -135,16 +138,26 @@ static void mtk_pll_calc_values(struct mtk_clk_pll
+> *pll, u32 *pcw, u32 *postdiv, u32 freq, u32 fin)
+>  {
+>  	unsigned long fmin = 1000 * MHZ;
+> +	const unsigned long *div_rate = pll->data->div_rate;
+>  	u64 _pcw;
+>  	u32 val;
+> 
+>  	if (freq > pll->data->fmax)
+>  		freq = pll->data->fmax;
+> 
+> -	for (val = 0; val < 4; val++) {
+> +	if (div_rate) {
+> +		for (val = 1; div_rate[val] != 0; val++) {
+> +			if (freq > div_rate[val])
+> +				break;
+> +		}
+> +		val--;
+
+if you're changing the table struct, this of course also would need to be 
+adapted.
+
+
+Hmm, what I don't understand is, what does MT8173_PLL_FMAX in the table, if 
+you ignore it here all the time?
+
+So the table should probably look more like [when using the concept from 
+above]
+
+static const struct mtk_pll_div_table mmpll_div_rate[] = {
+	{ .freq = 1000000000, .div = 0 },
+	{ .freq = 702000000, .div = 1 },
+	{ .freq = 253500000, .div = 2 },
+	{ .freq = 126750000, .div = 3 },
+	{ /* sentinel */ },
+};
+
+
+>  		*postdiv = 1 << val;
+> -		if (freq * *postdiv >= fmin)
+> -			break;
+> +	} else {
+> +		for (val = 0; val < 5; val++) {
+> +			*postdiv = 1 << val;
+> +			if ((u64)freq * *postdiv >= fmin)
+> +				break;
+> +		}
+>  	}
+> 
+>  	/* _pcw = freq * postdiv / fin * 2^pcwfbits */
+
+
+Heiko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
