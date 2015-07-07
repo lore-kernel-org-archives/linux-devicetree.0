@@ -1,71 +1,52 @@
-From: Dinh Nguyen <dinguyen@opensource.altera.com>
-Subject: Re: [PATCH 1/3] ARM: socfpga: dts: Fix adxl34x formating
-Date: Tue, 7 Jul 2015 09:00:02 -0500
-Message-ID: <559BDB62.4060105@opensource.altera.com>
-References: <1435285559-11053-1-git-send-email-walter@vanguardiasur.com.ar>
-	<20150626071656.GC26041@pengutronix.de>
- <CABxpGwASLHuXtTp--q8iu3FDCsOXT-03VRCsgL51JfnTaZ80sQ@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v10 4/5] crypto: Add Allwinner Security
+ System crypto accelerator
+Date: Tue, 7 Jul 2015 16:01:39 +0200
+Message-ID: <20150707140139.GF28632@lukather>
+References: <1436209848-16530-1-git-send-email-clabbe.montjoie@gmail.com>
+ <1436209848-16530-5-git-send-email-clabbe.montjoie@gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABxpGwASLHuXtTp--q8iu3FDCsOXT-03VRCsgL51JfnTaZ80sQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Walter Lozano <walter@vanguardiasur.com.ar>, Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="hK8Uo4Yp55NZU70L"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBFFZ56WAKGQEYMO22IQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1436209848-16530-5-git-send-email-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+--hK8Uo4Yp55NZU70L
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
+Hi Corentin,
 
-On 6/26/15 5:36 AM, Walter Lozano wrote:
-> Hi Steffen
+On Mon, Jul 06, 2015 at 09:10:47PM +0200, LABBE Corentin wrote:
+> Add support for the Security System included in Allwinner SoC A20.
+> The Security System is a hardware cryptographic accelerator that support:
+> - MD5 and SHA1 hash algorithms
+> - AES block cipher in CBC/ECB mode with 128/196/256bits keys.
+> - DES and 3DES block cipher in CBC/ECB mode
 > 
-> On Fri, Jun 26, 2015 at 4:16 AM, Steffen Trumtrar
-> <s.trumtrar@pengutronix.de> wrote:
->> Hi Walter!
->>
->> On Thu, Jun 25, 2015 at 11:25:57PM -0300, Walter Lozano wrote:
->>> This patch fixes the formating of DTS bindings for the adxl34x digital
->>> accelerometer.
->>>
->>> Signed-off-by: Walter Lozano <walter@vanguardiasur.com.ar>
->>> ---
->>>  arch/arm/boot/dts/socfpga_cyclone5_sockit.dts |    6 +++---
->>>  1 file changed, 3 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts b/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
->>> index 71468a7..5b60692 100644
->>> --- a/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
->>> +++ b/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
->>> @@ -73,14 +73,14 @@
->>>       status = "okay";
->>>  };
->>>
->>> -&i2c1{
->>> +&i2c1 {
->>>       status = "okay";
->>>
->>> -     accel1: accel1@53{
->>> +     accel1: accelerometer@53 {
->>>               compatible = "adxl34x";
->>>               reg = <0x53>;
->>>
->>> -             interrupt-parent = < &portc >;
->>> +             interrupt-parent = <&portc>;
->>>               interrupts = <3 2>;
->>>       };
->>>  };
->>
->> I would personally squash 3/3 into this one, but otherwise:
->>
->> Whole series
->>
->>         Acked-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
->>
-> 
-> Thanks for your comments. I have no problem at all. Dinh?
+> Signed-off-by: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-I've applied and squashed 1/3 and 3/3 together.
+There's still a number of style issues.
 
-Thanks,
-Dinh
+Make sure to run checkpatch with the --strict option, and fix
+everything that's reported.
+
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--hK8Uo4Yp55NZU70L--
