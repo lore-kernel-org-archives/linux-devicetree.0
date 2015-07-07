@@ -1,168 +1,146 @@
-From: James Liao <jamesjj.liao@mediatek.com>
-Subject: Re: [PATCH] clk: mediatek: Add MT8173 MMPLL change rate support
-Date: Tue, 7 Jul 2015 15:17:45 +0800
-Message-ID: <1436253465.3526.85.camel@mtksdaap41>
-References: <1433222760-5924-1-git-send-email-jamesjj.liao@mediatek.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH-V5 3/4] mfd: 88pm800: Set default interrupt clear method
+Date: Tue, 7 Jul 2015 08:29:58 +0100
+Message-ID: <20150707072958.GN3182@x1>
+References: <1435591877-18214-1-git-send-email-vaibhav.hiremath@linaro.org>
+ <1435591877-18214-4-git-send-email-vaibhav.hiremath@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1433222760-5924-1-git-send-email-jamesjj.liao@mediatek.com>
+Content-Disposition: inline
+In-Reply-To: <1435591877-18214-4-git-send-email-vaibhav.hiremath@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <kernel@pengutronix.de>, Daniel Kurtz <djkurtz@chromium.org>, srv_heupstream@mediatek.com, Stephen Boyd <sboyd@codeaurora.org>
-Cc: Ricky Liang <jcliang@chromium.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
+To: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, robh+dt@kernel.org, sameo@linux.intel.com, linux-kernel@vger.kernel.org, yizhang@marvell.com, Zhao Ye <zhaoy@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Mon, 29 Jun 2015, Vaibhav Hiremath wrote:
 
-Does anyone have comments for this patch?
-
-
-Best regards,
-
-James
-
-On Tue, 2015-06-02 at 13:26 +0800, James Liao wrote:
-> MT8173 MMPLL frequency settings are different from common PLLs.
-> It needs different post divider settings for some ranges of frequency.
-> This patch add support for MT8173 MMPLL frequency setting, includes:
-> 
-> 1. Add div-rate table for PLLs.
-> 2. Increase the max ost divider setting from 3 (/8) to 4 (/16).
-> 3. Write postdiv and pcw settings at the same time.
-> 
-> Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
+> As per the spec, bit 1 (INT_CLEAR_MODE) of reg addr 0xe
+> (page 0) controls the method of clearing interrupt
+> status of 88pm800 family of devices;
+>=20
+>   0: clear on read
+>   1: clear on write
+>=20
+> If pdata is not coming from board file, then set the
+> default irq clear method to "irq clear on write"
+>=20
+> Also, as suggested by "Lee Jones" renaming variable field
+> to appropriate name.
+>=20
+> Signed-off-by: Zhao Ye <zhaoy@marvell.com>
+> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
 > ---
->  drivers/clk/mediatek/clk-mt8173.c | 24 +++++++++++++++++++++---
->  drivers/clk/mediatek/clk-mtk.h    |  1 +
->  drivers/clk/mediatek/clk-pll.c    | 37 +++++++++++++++++++++++++------------
->  3 files changed, 47 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/clk/mediatek/clk-mt8173.c b/drivers/clk/mediatek/clk-mt8173.c
-> index 357b080..821de7d 100644
-> --- a/drivers/clk/mediatek/clk-mt8173.c
-> +++ b/drivers/clk/mediatek/clk-mt8173.c
-> @@ -779,8 +779,9 @@ CLK_OF_DECLARE(mtk_pericfg, "mediatek,mt8173-pericfg", mtk_pericfg_init);
->  
->  #define CON0_MT8173_RST_BAR	BIT(24)
->  
-> -#define PLL(_id, _name, _reg, _pwr_reg, _en_mask, _flags, _pcwbits, _pd_reg, _pd_shift, \
-> -			_tuner_reg, _pcw_reg, _pcw_shift) { \
-> +#define PLL_B(_id, _name, _reg, _pwr_reg, _en_mask, _flags, _pcwbits,	\
-> +			_pd_reg, _pd_shift, _tuner_reg, _pcw_reg,	\
-> +			_pcw_shift, _div_rate) {			\
->  		.id = _id,						\
->  		.name = _name,						\
->  		.reg = _reg,						\
-> @@ -795,14 +796,31 @@ CLK_OF_DECLARE(mtk_pericfg, "mediatek,mt8173-pericfg", mtk_pericfg_init);
->  		.tuner_reg = _tuner_reg,				\
->  		.pcw_reg = _pcw_reg,					\
->  		.pcw_shift = _pcw_shift,				\
-> +		.div_rate = _div_rate,					\
+>  drivers/mfd/88pm800.c       | 15 ++++++++++-----
+>  include/linux/mfd/88pm80x.h | 10 ++++++++--
+>  2 files changed, 18 insertions(+), 7 deletions(-)
+>=20
+> diff --git a/drivers/mfd/88pm800.c b/drivers/mfd/88pm800.c
+> index d495737..66347be 100644
+> --- a/drivers/mfd/88pm800.c
+> +++ b/drivers/mfd/88pm800.c
+> @@ -374,7 +374,7 @@ static int device_irq_init_800(struct pm80x_chip =
+*chip)
+>  {
+>  	struct regmap *map =3D chip->regmap;
+>  	unsigned long flags =3D IRQF_ONESHOT;
+> -	int data, mask, ret =3D -EINVAL;
+> +	int irq_clr_mode, mask, ret =3D -EINVAL;
+> =20
+>  	if (!map || !chip->irq) {
+>  		dev_err(chip->dev, "incorrect parameters\n");
+> @@ -382,15 +382,16 @@ static int device_irq_init_800(struct pm80x_chi=
+p *chip)
 >  	}
->  
-> +#define PLL(_id, _name, _reg, _pwr_reg, _en_mask, _flags, _pcwbits,	\
-> +			_pd_reg, _pd_shift, _tuner_reg, _pcw_reg,	\
-> +			_pcw_shift)					\
-> +		PLL_B(_id, _name, _reg, _pwr_reg, _en_mask, _flags, _pcwbits, \
-> +			_pd_reg, _pd_shift, _tuner_reg, _pcw_reg, _pcw_shift, \
-> +			NULL)
+> =20
+>  	/*
+> -	 * irq_mode defines the way of clearing interrupt. it's read-clear =
+by
+> -	 * default.
+> +	 * irq_clr_on_wr defines the way of clearing interrupt by
+> +	 * read/write(0/1).  It's read-clear by default.
+>  	 */
+>  	mask =3D
+>  	    PM800_WAKEUP2_INV_INT | PM800_WAKEUP2_INT_CLEAR |
+>  	    PM800_WAKEUP2_INT_MASK;
+> =20
+> -	data =3D PM800_WAKEUP2_INT_CLEAR;
+> -	ret =3D regmap_update_bits(map, PM800_WAKEUP2, mask, data);
+> +	irq_clr_mode =3D chip->irq_clr_method =3D=3D PM800_IRQ_CLR_ON_WRITE=
+ ?
+> +		PM800_WAKEUP2_INT_WRITE_CLEAR : PM800_WAKEUP2_INT_READ_CLEAR;
+> +	ret =3D regmap_update_bits(map, PM800_WAKEUP2, mask, irq_clr_mode);
+
+What's stopping you just passing PM800_WAKEUP2_INT_WRITE_CLEAR or
+PM800_WAKEUP2_INT_READ_CLEAR from pdata?  Then you can use the value
+directly without all of this faffing about.
+
+  regmap_update_bits(map, PM800_WAKEUP2, mask, pdata->irq_clr_mode);
+
+>  	if (ret < 0)
+>  		goto out;
+> @@ -512,6 +513,7 @@ static int device_800_init(struct pm80x_chip *chi=
+p,
+>  	}
+> =20
+>  	chip->regmap_irq_chip =3D &pm800_irq_chip;
+> +	chip->irq_clr_method =3D pdata->irq_clr_method;
+> =20
+>  	ret =3D device_irq_init_800(chip);
+>  	if (ret < 0) {
+> @@ -564,6 +566,9 @@ static int pm800_probe(struct i2c_client *client,
+>  		pdata =3D devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL);
+>  		if (!pdata)
+>  			return -ENOMEM;
 > +
-> +const unsigned long mmpll_div_rate[] = {
-> +	MT8173_PLL_FMAX,
-> +	1000000000,
-> +	702000000,
-> +	253500000,
-> +	126750000,
-> +	0,
-> +};
+> +		/* by default, set irq clear method on write */
+> +		pdata->irq_clr_method =3D PM800_IRQ_CLR_ON_WRITE;
+>  	}
+> =20
+>  	ret =3D pm80x_init(client);
+> diff --git a/include/linux/mfd/88pm80x.h b/include/linux/mfd/88pm80x.=
+h
+> index 8fcad63..648e01a 100644
+> --- a/include/linux/mfd/88pm80x.h
+> +++ b/include/linux/mfd/88pm80x.h
+> @@ -77,6 +77,8 @@ enum {
+>  #define PM800_WAKEUP2			(0x0E)
+>  #define PM800_WAKEUP2_INV_INT		BIT(0)
+>  #define PM800_WAKEUP2_INT_CLEAR		BIT(1)
+> +#define PM800_WAKEUP2_INT_READ_CLEAR	(0 << 1)
+> +#define PM800_WAKEUP2_INT_WRITE_CLEAR	(1 << 1)
+>  #define PM800_WAKEUP2_INT_MASK		BIT(2)
+> =20
+>  #define PM800_POWER_UP_LOG		(0x10)
+> @@ -300,7 +302,11 @@ struct pm80x_chip {
+>  	struct regmap_irq_chip_data *irq_data;
+>  	int type;
+>  	int irq;
+> -	int irq_mode;
 > +
->  static const struct mtk_pll_data plls[] = {
->  	PLL(CLK_APMIXED_ARMCA15PLL, "armca15pll", 0x200, 0x20c, 0x00000001, 0, 21, 0x204, 24, 0x0, 0x204, 0),
->  	PLL(CLK_APMIXED_ARMCA7PLL, "armca7pll", 0x210, 0x21c, 0x00000001, 0, 21, 0x214, 24, 0x0, 0x214, 0),
->  	PLL(CLK_APMIXED_MAINPLL, "mainpll", 0x220, 0x22c, 0xf0000101, HAVE_RST_BAR, 21, 0x220, 4, 0x0, 0x224, 0),
->  	PLL(CLK_APMIXED_UNIVPLL, "univpll", 0x230, 0x23c, 0xfe000001, HAVE_RST_BAR, 7, 0x230, 4, 0x0, 0x234, 14),
-> -	PLL(CLK_APMIXED_MMPLL, "mmpll", 0x240, 0x24c, 0x00000001, 0, 21, 0x244, 24, 0x0, 0x244, 0),
-> +	PLL_B(CLK_APMIXED_MMPLL, "mmpll", 0x240, 0x24c, 0x00000001, 0, 21, 0x244, 24, 0x0, 0x244, 0, mmpll_div_rate),
->  	PLL(CLK_APMIXED_MSDCPLL, "msdcpll", 0x250, 0x25c, 0x00000001, 0, 21, 0x250, 4, 0x0, 0x254, 0),
->  	PLL(CLK_APMIXED_VENCPLL, "vencpll", 0x260, 0x26c, 0x00000001, 0, 21, 0x260, 4, 0x0, 0x264, 0),
->  	PLL(CLK_APMIXED_TVDPLL, "tvdpll", 0x270, 0x27c, 0x00000001, 0, 21, 0x270, 4, 0x0, 0x274, 0),
-> diff --git a/drivers/clk/mediatek/clk-mtk.h b/drivers/clk/mediatek/clk-mtk.h
-> index 61035b9..645af7c 100644
-> --- a/drivers/clk/mediatek/clk-mtk.h
-> +++ b/drivers/clk/mediatek/clk-mtk.h
-> @@ -150,6 +150,7 @@ struct mtk_pll_data {
->  	int pcwbits;
->  	uint32_t pcw_reg;
->  	int pcw_shift;
-> +	const unsigned long *div_rate;
+> +#define PM800_IRQ_CLR_ON_READ	0
+> +#define PM800_IRQ_CLR_ON_WRITE	1
+
+Defines in the middle of structs makes for ugly code.
+
+> +	bool irq_clr_method;	/* '1': Clear on write, '0': Clear on read */
+>  	unsigned long wu_flag;
+>  	spinlock_t lock;
 >  };
->  
->  void __init mtk_clk_register_plls(struct device_node *node,
-> diff --git a/drivers/clk/mediatek/clk-pll.c b/drivers/clk/mediatek/clk-pll.c
-> index 44409e9..4680a09 100644
-> --- a/drivers/clk/mediatek/clk-pll.c
-> +++ b/drivers/clk/mediatek/clk-pll.c
-> @@ -90,20 +90,23 @@ static unsigned long __mtk_pll_recalc_rate(struct mtk_clk_pll *pll, u32 fin,
->  static void mtk_pll_set_rate_regs(struct mtk_clk_pll *pll, u32 pcw,
->  		int postdiv)
->  {
-> -	u32 con1, pd, val;
-> +	u32 con1, val;
->  	int pll_en;
->  
-> -	/* set postdiv */
-> -	pd = readl(pll->pd_addr);
-> -	pd &= ~(POSTDIV_MASK << pll->data->pd_shift);
-> -	pd |= (ffs(postdiv) - 1) << pll->data->pd_shift;
-> -	writel(pd, pll->pd_addr);
-> -
->  	pll_en = readl(pll->base_addr + REG_CON0) & CON0_BASE_EN;
->  
-> -	/* set pcw */
-> -	val = readl(pll->pcw_addr);
-> +	/* set postdiv */
-> +	val = readl(pll->pd_addr);
-> +	val &= ~(POSTDIV_MASK << pll->data->pd_shift);
-> +	val |= (ffs(postdiv) - 1) << pll->data->pd_shift;
-> +
-> +	/* postdiv and pcw need to set at the same time if on same register */
-> +	if (pll->pd_addr != pll->pcw_addr) {
-> +		writel(val, pll->pd_addr);
-> +		val = readl(pll->pcw_addr);
-> +	}
->  
-> +	/* set pcw */
->  	val &= ~GENMASK(pll->data->pcw_shift + pll->data->pcwbits - 1,
->  			pll->data->pcw_shift);
->  	val |= pcw << pll->data->pcw_shift;
-> @@ -135,16 +138,26 @@ static void mtk_pll_calc_values(struct mtk_clk_pll *pll, u32 *pcw, u32 *postdiv,
->  		u32 freq, u32 fin)
->  {
->  	unsigned long fmin = 1000 * MHZ;
-> +	const unsigned long *div_rate = pll->data->div_rate;
->  	u64 _pcw;
->  	u32 val;
->  
->  	if (freq > pll->data->fmax)
->  		freq = pll->data->fmax;
->  
-> -	for (val = 0; val < 4; val++) {
-> +	if (div_rate) {
-> +		for (val = 1; div_rate[val] != 0; val++) {
-> +			if (freq > div_rate[val])
-> +				break;
-> +		}
-> +		val--;
->  		*postdiv = 1 << val;
-> -		if (freq * *postdiv >= fmin)
-> -			break;
-> +	} else {
-> +		for (val = 0; val < 5; val++) {
-> +			*postdiv = 1 << val;
-> +			if ((u64)freq * *postdiv >= fmin)
-> +				break;
-> +		}
->  	}
->  
->  	/* _pcw = freq * postdiv / fin * 2^pcwfbits */
+> @@ -315,7 +321,7 @@ struct pm80x_platform_data {
+>  	 */
+>  	struct regulator_init_data *regulators[PM800_ID_RG_MAX];
+>  	unsigned int num_regulators;
+> -	int irq_mode;		/* Clear interrupt by read/write(0/1) */
+> +	bool irq_clr_method;		/* Clear interrupt by read/write(0/1) */
+>  	int batt_det;		/* enable/disable */
+>  	int (*plat_config)(struct pm80x_chip *chip,
+>  				struct pm80x_platform_data *pdata);
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
