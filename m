@@ -1,67 +1,45 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH] arm64: dts: mt8173-evb: Add PMIC support
-Date: Tue, 07 Jul 2015 09:51:28 +0200
-Message-ID: <3123164.GB0TYlAtQ5@ubix>
-References: <1434979177-7575-1-git-send-email-henryc.chen@mediatek.com> <1727643.5AqCaKisXT@ubix> <1436238590.19228.4.camel@mtksdaap41>
+From: <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v3 0/2] Add mt6580 basic chip support
+Date: Tue, 7 Jul 2015 15:56:09 +0800
+Message-ID: <1436255771-5367-1-git-send-email-mars.cheng@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1436238590.19228.4.camel@mtksdaap41>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eddie Huang <eddie.huang@mediatek.com>
-Cc: Henry Chen <henryc.chen@mediatek.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <kernel@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: cc.hwang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, loda.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, miles.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, scott.shu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jades.shih-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, my.chuang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, July 07, 2015 11:09:50 AM Eddie Huang wrote:
-> On Mon, 2015-07-06 at 18:39 +0200, Matthias Brugger wrote:
-> > On Monday, July 06, 2015 03:43:57 PM Eddie Huang wrote:
-> > > On Mon, 2015-06-22 at 21:19 +0800, Henry Chen wrote:
-> > > > From: Eddie Huang <eddie.huang@mediatek.com>
-> 
-> [...]
-> 
-> > > > diff --git a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-> > > > b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts index 43d5401..b967914
-> > > > 100644
-> > > > --- a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-> > > > +++ b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-> > > > @@ -33,6 +33,180 @@
-> > > > 
-> > > >  	chosen { };
-> > > >  
-> > > >  };
-> > > > 
-> > > > +&pwrap {
-> > > > +	pmic: mt6397 {
-> > > > +		compatible = "mediatek,mt6397";
-> > > > +		interrupt-parent = <&pio>;
-> > > > +		interrupts = <11 IRQ_TYPE_LEVEL_HIGH>;
-> > > > +		interrupt-controller;
-> > > > +		#interrupt-cells = <2>;
-> > > > +
-> > > > +		mt6397regulator: mt6397regulator {
-> > > > +			compatible = "mediatek,mt6397-regulator";
-> > > > +			mt6397_vpca15_reg: buck_vpca15 {
-> > > > +				regulator-compatible = "buck_vpca15";
-> > > > +				regulator-name = "vpca15";
-> > > > +				regulator-min-microvolt = < 700000>;
-> > > > +				regulator-max-microvolt = <1350000>;
-> > > > +				regulator-ramp-delay = <12500>;
-> > > > +				regulator-always-on;
-> > > 
-> > > I see you pull da9211 regulator dts patch, but not this one. How about
-> > > this patch ?
-> > 
-> > I inserted some new-lines and added it to v4.2-next/arm64
-> 
-> Thanks the pull. Normally we put alias node in alphabetical order, make
-> later merge more easily. I think you can do the modification and squeeze
-> into the same commit.
-> 
+This patch adds basic support for Mediatek's new 4-core chip, mt6580.
+Based on v4.2-rc1.
 
-I used the order of the dtsi file, but I think your approach is more straight 
-forward. I will change that.
+This patch add basic support for Mediatek's new 4-core chip, mt6580.
+Changes in v3:
+1. Remove useless Change-Id
+2. Add complete device tree binding in Documentation
 
-Thanks for your comment.
-Matthias
+Changes in v2:
+1. Use stdout-path in device tree to indicate console
+2. Remove board-specific bootargs
+
+Mars Cheng (2):
+  Document: DT: Add bindings for mediatek MT6580 SoC Platform
+  ARM: dts: mediatek: add mt6580 basic support
+
+ Documentation/devicetree/bindings/arm/mediatek.txt |   4 +
+ .../bindings/arm/mediatek/mediatek,sysirq.txt      |   1 +
+ .../devicetree/bindings/serial/mtk-uart.txt        |   3 +-
+ .../bindings/timer/mediatek,mtk-timer.txt          |   6 +-
+ arch/arm/boot/dts/Makefile                         |   1 +
+ arch/arm/boot/dts/mt6580-evbp1.dts                 |  35 ++++++
+ arch/arm/boot/dts/mt6580.dtsi                      | 123 +++++++++++++++++++++
+ 7 files changed, 171 insertions(+), 2 deletions(-)
+ create mode 100644 arch/arm/boot/dts/mt6580-evbp1.dts
+ create mode 100644 arch/arm/boot/dts/mt6580.dtsi
+
+--
+1.8.1.1.dirty
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
