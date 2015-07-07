@@ -1,53 +1,165 @@
-From: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Subject: [PATCH v3 0/6] Add support for DA9150 Fuel-Gauge
-Date: Tue, 7 Jul 2015 17:34:07 +0100
-Message-ID: <cover.1436284659.git.Adam.Thomson.Opensource@diasemi.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Support Opensource <support.opensource@diasemi.com>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH] ARM: perf: extend interrupt-affinity property for PPIs
+Date: Tue,  7 Jul 2015 18:15:05 +0100
+Message-ID: <1436289305-32467-1-git-send-email-will.deacon@arm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch set adds support for the Dialog DA9150 Fuel-Gauge.
+On systems containing multiple, heterogeneous clusters we need a way to
+associate a PMU "device" with the CPU(s) on which it exists. For PMUs
+that signal overflow with SPIs, this relationship is determined via the
+"interrupt-affinity" property, which contains a list of phandles to CPU
+nodes for the PMU. For PMUs using PPIs, the per-cpu nature of the
+interrupt isn't enough to determine the set of CPUs which actually
+contain the device.
 
-In this patch set the following is provided:
- - MFD Core and DT bindings updates.
- - Power Supply Fuel-Gauge support and DT bindings documentation.
+This patch allows the interrupt-affinity property to be specified on a
+PMU node irrespective of the interrupt type. For PPIs, it identifies
+the set of CPUs signalling the PPI in question.
 
-This patch set is baselined against the v4.2-rc1 kernel version.
+Tested-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> # Krait PMU
+Signed-off-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+---
+ Documentation/devicetree/bindings/arm/pmu.txt | 12 +++--
+ arch/arm/kernel/perf_event.c                  | 65 ++++++++++++++++++---------
+ 2 files changed, 53 insertions(+), 24 deletions(-)
 
-Changes in v3:
- - MFD: Some tidy up of code (gotos, dropped FG header, DEFINE_RES_IRQ_NAMED)
- - MFD & Power: Drop use of callback function for temperature reading, as
-                requested by Lee Jones.
- - MFD (DT): Binding doc update to flesh out example text.
- - MFD (DT): New patch to change MFD binding doc to use relative paths.
- - MFD: New patch to use DEFINE_RES_IRQ_NAMED for all other IRQ resources.
-
-Changes in v2:
- - Moved temp callback function prototype to be part of power fuel-gauge patch,
-   as requested by Lee Jones.
-
-Adam Thomson (6):
-  mfd: da9150: Add support for Fuel-Gauge
-  mfd: da9150: Update DT bindings for Fuel-Gauge support
-  power: Add support for DA9150 Fuel-Gauge
-  power: da9150: Add DT bindings documentation for Fuel-Gauge
-  mfd: da9150: Use relative paths in DT bindings document
-  mfd: da9150: Use DEFINE_RES_IRQ_NAMED() help macro for IRQ resource
-
- Documentation/devicetree/bindings/mfd/da9150.txt   |  31 +-
- .../devicetree/bindings/power/da9150-fg.txt        |  23 +
- drivers/mfd/da9150-core.c                          | 191 +++++--
- drivers/power/Kconfig                              |  10 +
- drivers/power/Makefile                             |   1 +
- drivers/power/da9150-fg.c                          | 574 +++++++++++++++++++++
- include/linux/mfd/da9150/core.h                    |  19 +-
- 7 files changed, 805 insertions(+), 44 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/power/da9150-fg.txt
- create mode 100644 drivers/power/da9150-fg.c
+diff --git a/Documentation/devicetree/bindings/arm/pmu.txt b/Documentation/devicetree/bindings/arm/pmu.txt
+index 3b5f5d1088c6..435251fa9ce0 100644
+--- a/Documentation/devicetree/bindings/arm/pmu.txt
++++ b/Documentation/devicetree/bindings/arm/pmu.txt
+@@ -26,13 +26,19 @@ Required properties:
+ 
+ Optional properties:
+ 
+-- interrupt-affinity : Valid only when using SPIs, specifies a list of phandles
+-                       to CPU nodes corresponding directly to the affinity of
++- interrupt-affinity : When using SPIs, specifies a list of phandles to CPU
++                       nodes corresponding directly to the affinity of
+ 		       the SPIs listed in the interrupts property.
+ 
+-		       This property should be present when there is more than
++                       When using a PPI, specifies a list of phandles to CPU
++		       nodes corresponding to the set of CPUs which have
++		       a PMU of this type signalling the PPI listed in the
++		       interrupts property.
++
++                       This property should be present when there is more than
+ 		       a single SPI.
+ 
++
+ - qcom,no-pc-write : Indicates that this PMU doesn't support the 0xc and 0xd
+                      events.
+ 
+diff --git a/arch/arm/kernel/perf_event.c b/arch/arm/kernel/perf_event.c
+index 7d5379c1c443..5a8f17bfcc60 100644
+--- a/arch/arm/kernel/perf_event.c
++++ b/arch/arm/kernel/perf_event.c
+@@ -790,32 +790,39 @@ static int probe_current_pmu(struct arm_pmu *pmu,
+ 
+ static int of_pmu_irq_cfg(struct arm_pmu *pmu)
+ {
+-	int i, irq, *irqs;
++	int *irqs, i = 0;
++	bool using_spi = false;
+ 	struct platform_device *pdev = pmu->plat_device;
+ 
+-	/* Don't bother with PPIs; they're already affine */
+-	irq = platform_get_irq(pdev, 0);
+-	if (irq >= 0 && irq_is_percpu(irq)) {
+-		cpumask_setall(&pmu->supported_cpus);
+-		return 0;
+-	}
+-
+ 	irqs = kcalloc(pdev->num_resources, sizeof(*irqs), GFP_KERNEL);
+ 	if (!irqs)
+ 		return -ENOMEM;
+ 
+-	for (i = 0; i < pdev->num_resources; ++i) {
++	do {
+ 		struct device_node *dn;
+-		int cpu;
++		int cpu, irq;
+ 
+-		dn = of_parse_phandle(pdev->dev.of_node, "interrupt-affinity",
+-				      i);
+-		if (!dn) {
+-			pr_warn("Failed to parse %s/interrupt-affinity[%d]\n",
+-				of_node_full_name(pdev->dev.of_node), i);
++		/* See if we have an affinity entry */
++		dn = of_parse_phandle(pdev->dev.of_node, "interrupt-affinity", i);
++		if (!dn)
+ 			break;
++
++		/* Check the IRQ type and prohibit a mix of PPIs and SPIs */
++		irq = platform_get_irq(pdev, i);
++		if (irq >= 0) {
++			bool spi = !irq_is_percpu(irq);
++
++			if (i > 0 && spi != using_spi) {
++				pr_err("PPI/SPI IRQ type mismatch for %s!\n",
++					dn->name);
++				kfree(irqs);
++				return -EINVAL;
++			}
++
++			using_spi = spi;
+ 		}
+ 
++		/* Now look up the logical CPU number */
+ 		for_each_possible_cpu(cpu)
+ 			if (arch_find_n_match_cpu_physical_id(dn, cpu, NULL))
+ 				break;
+@@ -824,20 +831,36 @@ static int of_pmu_irq_cfg(struct arm_pmu *pmu)
+ 			pr_warn("Failed to find logical CPU for %s\n",
+ 				dn->name);
+ 			of_node_put(dn);
++			cpumask_setall(&pmu->supported_cpus);
+ 			break;
+ 		}
+ 		of_node_put(dn);
+ 
+-		irqs[i] = cpu;
++		/* For SPIs, we need to track the affinity per IRQ */
++		if (using_spi) {
++			if (i >= pdev->num_resources) {
++				of_node_put(dn);
++				break;
++			}
++
++			irqs[i] = cpu;
++		}
++
++		/* Keep track of the CPUs containing this PMU type */
+ 		cpumask_set_cpu(cpu, &pmu->supported_cpus);
+-	}
++		of_node_put(dn);
++		i++;
++	} while (1);
+ 
+-	if (i == pdev->num_resources) {
++	/* If we didn't manage to parse anything, claim to support all CPUs */
++	if (cpumask_weight(&pmu->supported_cpus) == 0)
++		cpumask_setall(&pmu->supported_cpus);
++
++	/* If we matched up the IRQ affinities, use them to route the SPIs */
++	if (using_spi && i == pdev->num_resources)
+ 		pmu->irq_affinity = irqs;
+-	} else {
++	else
+ 		kfree(irqs);
+-		cpumask_setall(&pmu->supported_cpus);
+-	}
+ 
+ 	return 0;
+ }
+-- 
+2.1.4
 
 --
-1.9.3
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
