@@ -1,42 +1,31 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH 4/4] ARM: dts: Extend exynos5420-pinctrl nodes using labels
- instead of paths
-Date: Wed, 08 Jul 2015 17:30:50 +0900
-Message-ID: <559CDFBA.40103@samsung.com>
-References: <1436334389-18779-1-git-send-email-javier@osg.samsung.com>
+From: James Liao <jamesjj.liao@mediatek.com>
+Subject: [PATCH 0/2] Add MT8173 MMPLL change rate support
+Date: Wed, 8 Jul 2015 16:37:44 +0800
+Message-ID: <1436344666-25645-1-git-send-email-jamesjj.liao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1436334389-18779-1-git-send-email-javier@osg.samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@osg.samsung.com>, Kukjin Kim <kgene@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Heiko Stubner <heiko@sntech.de>
+Cc: srv_heupstream@mediatek.com, Daniel Kurtz <djkurtz@chromium.org>, Ricky Liang <jcliang@chromium.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 08.07.2015 14:46, Javier Martinez Canillas wrote:
-> A previously defined Device Tree node, can be extended either by defining
-> a node using the same full path or by creating a label for the node and
-> referencing to it.
-> 
-> Using full paths is more error prone since if there was a typo error, a
-> new node will be created instead of extending the node as it was desired.
-> This will lead to run-time errors that could be hard to detect.
-> 
-> A misstyped label on the other hand, will cause a dtc compile error which
+MT8173 MMPLL frequency settings are different from common PLLs.
+It needs different post divider settings for some ranges of frequency.
+This patch add support for MT8173 MMPLL frequency setting, includes:
 
-s/misstyped/mistyped/
+1. Add div-rate table for PLLs.
+2. Increase the max ost divider setting from 3 (/8) to 4 (/16).
+3. Write postdiv and pcw settings at the same time.
 
-> makes it easier to detect the mistake since happens at build-time instead.
-> 
-> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
-> 
-> ---
-> 
->  arch/arm/boot/dts/exynos5420-pinctrl.dtsi | 1411 ++++++++++++++---------------
->  1 file changed, 705 insertions(+), 706 deletions(-)
+James Liao (2):
+  clk: mediatek: Fix PLL registers setting flow
+  clk: mediatek: Add MT8173 MMPLL change rate support
 
-Acked-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+ drivers/clk/mediatek/clk-mt8173.c | 24 +++++++++++++++++++++---
+ drivers/clk/mediatek/clk-mtk.h    |  6 ++++++
+ drivers/clk/mediatek/clk-pll.c    | 39 +++++++++++++++++++++++++++------------
+ 3 files changed, 54 insertions(+), 15 deletions(-)
 
-Best regards,
-Krzysztof
+--
+1.8.1.1.dirty
