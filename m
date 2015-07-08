@@ -1,849 +1,586 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v6 2/4] musb: sunxi: Add support for the Allwinner sunxi musb controller
-Date: Wed,  8 Jul 2015 16:41:38 +0200
-Message-ID: <1436366500-12555-3-git-send-email-hdegoede@redhat.com>
-References: <1436366500-12555-1-git-send-email-hdegoede@redhat.com>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1436366500-12555-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+From: "Ivan T. Ivanov" <ivan.ivanov@linaro.org>
+Subject: [PATCH] usb: phy: qcom: New APQ8016/MSM8916 USB transceiver driver
+Date: Wed,  8 Jul 2015 17:57:40 +0300
+Message-ID: <1436367460-18526-1-git-send-email-ivan.ivanov@linaro.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This is based on initial code to get the Allwinner sunxi musb controller
-supported by Chen-Yu Tsai and Roman Byshko.
+Driver handles PHY initialization, clock management, power
+management and workarounds required after resetting the hardware.
 
-This adds support for the Allwinner sunxi musb controller in both host only
-and otg mode. Peripheral only mode is not supported, as no boards use that.
-
-This has been tested on a cubietruck (A20 SoC) and an UTOO P66 tablet
-(A13 SoC) with a variety of devices in host mode and with the g_serial gadget
-driver in peripheral mode, plugging otg / host cables in/out a lot of times
-in all possible imaginable plug orders.
-
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Ivan T. Ivanov <ivan.ivanov@linaro.org>
 ---
-Changes in v2:
--Move polling of id and vbus-det gpio-s to the phy driver
--Use extcon to get id (USB_HOST mode) status changes from the phy driver
--Stop using syscon, instead use Maxime Ripard's sunxi SRAM controller driver
-Changes in v3:
--Check that USB_MUSB_FOO config is compatible with the dr_mode setting from dt
-Changes in v4:
--Squash in "musb: sunxi: Add pre/post root reset end platform functions" patch
--Adjust for sunxi_sram controller driver changes
--Stop musb work from turning vbus off again when in host mode
-Changes in v5:
--Squash in "musb: sunxi: Remove special MUSB_SUN4I flag" patch, as it was
- mostly reverting changes done by this patch
--Adjust for extcon api changes landing in 4.2
-Changes in v6:
--Mark private variables and functions static
----
- .../bindings/usb/allwinner,sun4i-a10-musb.txt      |  27 +
- drivers/usb/musb/Kconfig                           |  13 +-
- drivers/usb/musb/Makefile                          |   1 +
- drivers/usb/musb/sunxi.c                           | 703 +++++++++++++++++++++
- 4 files changed, 743 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/usb/allwinner,sun4i-a10-musb.txt
- create mode 100644 drivers/usb/musb/sunxi.c
+ .../devicetree/bindings/usb/qcom,usb-8x16-phy.txt  |  76 ++++
+ drivers/usb/phy/Kconfig                            |  14 +
+ drivers/usb/phy/Makefile                           |   1 +
+ drivers/usb/phy/phy-qcom-8x16-usb.c                | 436 +++++++++++++++++++++
+ 4 files changed, 527 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/qcom,usb-8x16-phy.txt
+ create mode 100644 drivers/usb/phy/phy-qcom-8x16-usb.c
 
-diff --git a/Documentation/devicetree/bindings/usb/allwinner,sun4i-a10-musb.txt b/Documentation/devicetree/bindings/usb/allwinner,sun4i-a10-musb.txt
+diff --git a/Documentation/devicetree/bindings/usb/qcom,usb-8x16-phy.txt b/Documentation/devicetree/bindings/usb/qcom,usb-8x16-phy.txt
 new file mode 100644
-index 0000000..9254a6c
+index 0000000..2cb2168
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/allwinner,sun4i-a10-musb.txt
-@@ -0,0 +1,27 @@
-+Allwinner sun4i A10 musb DRC/OTG controller
-+-------------------------------------------
++++ b/Documentation/devicetree/bindings/usb/qcom,usb-8x16-phy.txt
+@@ -0,0 +1,76 @@
++Qualcomm's APQ8016/MSM8916 USB transceiver controller
 +
-+Required properties:
-+ - compatible      : "allwinner,sun4i-a10-musb"
-+ - reg             : mmio address range of the musb controller
-+ - clocks          : clock specifier for the musb controller ahb gate clock
-+ - interrupts      : interrupt to which the musb controller is connected
-+ - interrupt-names : must be "mc"
-+ - phys            : phy specifier for the otg phy
-+ - phy-names       : must be "usb"
-+ - dr_mode         : Dual-Role mode must be "host" or "otg"
-+ - extcon          : extcon specifier for the otg phy
++- compatible:
++    Usage: required
++    Value type: <string>
++    Definition: Should contain "qcom,usb-8x16-phy".
++
++- reg:
++    Usage: required
++    Value type: <prop-encoded-array>
++    Definition: USB PHY base address and length of the register map
++
++- clocks:
++    Usage: required
++    Value type: <prop-encoded-array>
++    Definition: See clock-bindings.txt section "consumers". List of
++                two clock specifiers for interface and core controller
++                clocks.
++
++- clock-names:
++    Usage: required
++    Value type: <string>
++    Definition: Must contain "iface" and "core" strings.
++
++- vddcx-supply:
++    Usage: required
++    Value type: <phandle>
++    Definition: phandle to the regulator VDCCX supply node.
++
++- v1p8-supply:
++    Usage: required
++    Value type: <phandle>
++    Definition: phandle to the regulator 1.8V supply node.
++
++- v3p3-supply:
++    Usage: required
++    Value type: <phandle>
++    Definition: phandle to the regulator 3.3V supply node.
++
++- resets:
++    Usage: required
++    Value type: <prop-encoded-array>
++    Definition: See reset.txt section "consumers". PHY reset specifier.
++
++- reset-names:
++    Usage: required
++    Value type: <string>
++    Definition: Must contain "phy" string.
++
++- switch-gpio:
++    Usage: optional
++    Value type: <prop-encoded-array>
++    Definition: Some boards are using Dual SPDT USB Switch, witch is
++                controlled by GPIO to de/multiplex D+/D- USB lines
++                between connectors.
 +
 +Example:
++	usb_phy: phy@78d9000 {
++		compatible = "qcom,usb-8x16-phy";
++		reg = <0x78d9000 0x400>;
 +
-+	usb_otg: usb@01c13000 {
-+		compatible = "allwinner,sun4i-a10-musb";
-+		reg = <0x01c13000 0x0400>;
-+		clocks = <&ahb_gates 0>;
-+		interrupts = <38>;
-+		interrupt-names = "mc";
-+		phys = <&usbphy 0>;
-+		phy-names = "usb";
-+		extcon = <&usbphy 0>;
-+		status = "disabled";
++		vddcx-supply = <&pm8916_s1_corner>;
++		v1p8-supply = <&pm8916_l7>;
++		v3p3-supply = <&pm8916_l13>;
++
++		clocks = <&gcc GCC_USB_HS_AHB_CLK>,
++			     <&gcc GCC_USB_HS_SYSTEM_CLK>;
++		clock-names = "iface", "core";
++
++		resets = <&gcc GCC_USB2A_PHY_BCR>;
++		reset-names = "phy";
++
++		// D+/D- lines: 1 - Routed to HUB, 0 - Device connector
++		switch-gpio = <&pm8916_gpios 4 GPIO_ACTIVE_HIGH>;
 +	};
-diff --git a/drivers/usb/musb/Kconfig b/drivers/usb/musb/Kconfig
-index 39db8b6..37081ed 100644
---- a/drivers/usb/musb/Kconfig
-+++ b/drivers/usb/musb/Kconfig
-@@ -5,7 +5,7 @@
- 
- # (M)HDRC = (Multipoint) Highspeed Dual-Role Controller
- config USB_MUSB_HDRC
--	tristate 'Inventra Highspeed Dual Role Controller (TI, ADI, ...)'
-+	tristate 'Inventra Highspeed Dual Role Controller (TI, ADI, AW, ...)'
- 	depends on (USB || USB_GADGET)
- 	help
- 	  Say Y here if your system has a dual role high speed USB
-@@ -20,6 +20,8 @@ config USB_MUSB_HDRC
- 	  Analog Devices parts using this IP include Blackfin BF54x,
- 	  BF525 and BF527.
- 
-+	  Allwinner SoCs using this IP include A10, A13, A20, ...
 +
- 	  If you do not know what this is, please say N.
- 
- 	  To compile this driver as a module, choose M here; the
-@@ -60,6 +62,15 @@ endchoice
- 
- comment "Platform Glue Layer"
- 
-+config USB_MUSB_SUNXI
-+	tristate "Allwinner (sunxi)"
-+	depends on ARCH_SUNXI
-+	depends on NOP_USB_XCEIV
-+	depends on PHY_SUN4I_USB
-+	depends on EXTCON
-+	depends on GENERIC_PHY
-+	select SUNXI_SRAM
+diff --git a/drivers/usb/phy/Kconfig b/drivers/usb/phy/Kconfig
+index 869c0cfcad..7d3beee 100644
+--- a/drivers/usb/phy/Kconfig
++++ b/drivers/usb/phy/Kconfig
+@@ -152,6 +152,20 @@ config USB_MSM_OTG
+ 	  This driver is not supported on boards like trout which
+ 	  has an external PHY.
+
++config USB_QCOM_8X16_PHY
++	tristate "Qualcomm APQ8016/MSM8916 on-chip USB PHY controller support"
++	depends on ARCH_QCOM || COMPILE_TEST
++	depends on RESET_CONTROLLER
++	select USB_PHY
++	select USB_ULPI_VIEWPORT
++	help
++	  Enable this to support the USB transceiver on Qualcomm 8x16 chipsets.
++	  It handles PHY initialization, clock management, power management,
++	  and workarounds required after resetting the hardware.
 +
- config USB_MUSB_DAVINCI
- 	tristate "DaVinci"
- 	depends on ARCH_DAVINCI_DMx
-diff --git a/drivers/usb/musb/Makefile b/drivers/usb/musb/Makefile
-index ba49501..f95befe 100644
---- a/drivers/usb/musb/Makefile
-+++ b/drivers/usb/musb/Makefile
-@@ -20,6 +20,7 @@ obj-$(CONFIG_USB_MUSB_DA8XX)			+= da8xx.o
- obj-$(CONFIG_USB_MUSB_BLACKFIN)			+= blackfin.o
- obj-$(CONFIG_USB_MUSB_UX500)			+= ux500.o
- obj-$(CONFIG_USB_MUSB_JZ4740)			+= jz4740.o
-+obj-$(CONFIG_USB_MUSB_SUNXI)			+= sunxi.o
- 
- 
- obj-$(CONFIG_USB_MUSB_AM335X_CHILD)		+= musb_am335x.o
-diff --git a/drivers/usb/musb/sunxi.c b/drivers/usb/musb/sunxi.c
++	  To compile this driver as a module, choose M here: the
++	  module will be called phy-qcom-8x16-usb.
++
+ config USB_MV_OTG
+ 	tristate "Marvell USB OTG support"
+ 	depends on USB_EHCI_MV && USB_MV_UDC && PM
+diff --git a/drivers/usb/phy/Makefile b/drivers/usb/phy/Makefile
+index e36ab1d..19c0dcc 100644
+--- a/drivers/usb/phy/Makefile
++++ b/drivers/usb/phy/Makefile
+@@ -20,6 +20,7 @@ obj-$(CONFIG_USB_EHCI_TEGRA)		+= phy-tegra-usb.o
+ obj-$(CONFIG_USB_GPIO_VBUS)		+= phy-gpio-vbus-usb.o
+ obj-$(CONFIG_USB_ISP1301)		+= phy-isp1301.o
+ obj-$(CONFIG_USB_MSM_OTG)		+= phy-msm-usb.o
++obj-$(CONFIG_USB_QCOM_8X16_PHY)	+= phy-qcom-8x16-usb.o
+ obj-$(CONFIG_USB_MV_OTG)		+= phy-mv-usb.o
+ obj-$(CONFIG_USB_MXS_PHY)		+= phy-mxs-usb.o
+ obj-$(CONFIG_USB_RCAR_PHY)		+= phy-rcar-usb.o
+diff --git a/drivers/usb/phy/phy-qcom-8x16-usb.c b/drivers/usb/phy/phy-qcom-8x16-usb.c
 new file mode 100644
-index 0000000..00d7248
+index 0000000..5d357a9
 --- /dev/null
-+++ b/drivers/usb/musb/sunxi.c
-@@ -0,0 +1,703 @@
++++ b/drivers/usb/phy/phy-qcom-8x16-usb.c
+@@ -0,0 +1,436 @@
 +/*
-+ * Allwinner sun4i MUSB Glue Layer
-+ *
-+ * Copyright (C) 2015 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-+ *
-+ * Based on code from
-+ * Allwinner Technology Co., Ltd. <www.allwinnertech.com>
++ * Copyright (c) 2015, Linaro Limited
 + *
 + * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
++ * it under the terms of the GNU General Public License version 2 and
++ * only version 2 as published by the Free Software Foundation.
 + *
 + * This program is distributed in the hope that it will be useful,
 + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 + * GNU General Public License for more details.
 + */
 +
 +#include <linux/clk.h>
++#include <linux/delay.h>
++#include <linux/device.h>
 +#include <linux/err.h>
 +#include <linux/extcon.h>
++#include <linux/gpio/consumer.h>
 +#include <linux/io.h>
-+#include <linux/kernel.h>
 +#include <linux/module.h>
 +#include <linux/of.h>
-+#include <linux/phy/phy-sun4i-usb.h>
 +#include <linux/platform_device.h>
-+#include <linux/soc/sunxi/sunxi_sram.h>
-+#include <linux/usb/musb.h>
-+#include <linux/usb/of.h>
-+#include <linux/usb/usb_phy_generic.h>
-+#include <linux/workqueue.h>
-+#include "musb_core.h"
++#include <linux/reboot.h>
++#include <linux/regulator/consumer.h>
++#include <linux/reset.h>
++#include <linux/slab.h>
++#include <linux/usb.h>
++#include <linux/usb/ulpi.h>
 +
-+/*
-+ * Register offsets, note sunxi musb has a different layout then most
-+ * musb implementations, we translate the layout in musb_readb & friends.
-+ */
-+#define SUNXI_MUSB_POWER			0x0040
-+#define SUNXI_MUSB_DEVCTL			0x0041
-+#define SUNXI_MUSB_INDEX			0x0042
-+#define SUNXI_MUSB_VEND0			0x0043
-+#define SUNXI_MUSB_INTRTX			0x0044
-+#define SUNXI_MUSB_INTRRX			0x0046
-+#define SUNXI_MUSB_INTRTXE			0x0048
-+#define SUNXI_MUSB_INTRRXE			0x004a
-+#define SUNXI_MUSB_INTRUSB			0x004c
-+#define SUNXI_MUSB_INTRUSBE			0x0050
-+#define SUNXI_MUSB_FRAME			0x0054
-+#define SUNXI_MUSB_TXFIFOSZ			0x0090
-+#define SUNXI_MUSB_TXFIFOADD			0x0092
-+#define SUNXI_MUSB_RXFIFOSZ			0x0094
-+#define SUNXI_MUSB_RXFIFOADD			0x0096
-+#define SUNXI_MUSB_FADDR			0x0098
-+#define SUNXI_MUSB_TXFUNCADDR			0x0098
-+#define SUNXI_MUSB_TXHUBADDR			0x009a
-+#define SUNXI_MUSB_TXHUBPORT			0x009b
-+#define SUNXI_MUSB_RXFUNCADDR			0x009c
-+#define SUNXI_MUSB_RXHUBADDR			0x009e
-+#define SUNXI_MUSB_RXHUBPORT			0x009f
-+#define SUNXI_MUSB_CONFIGDATA			0x00c0
++#define HSPHY_AHBBURST			0x0090
++#define HSPHY_AHBMODE			0x0098
++#define HSPHY_GENCONFIG			0x009c
++#define HSPHY_GENCONFIG_2		0x00a0
 +
-+/* VEND0 bits */
-+#define SUNXI_MUSB_VEND0_PIO_MODE		0
++#define HSPHY_USBCMD			0x0140
++#define HSPHY_ULPI_VIEWPORT		0x0170
++#define HSPHY_CTRL			0x0240
 +
-+/* flags */
-+#define SUNXI_MUSB_FL_ENABLED			0
-+#define SUNXI_MUSB_FL_HOSTMODE			1
-+#define SUNXI_MUSB_FL_HOSTMODE_PEND		2
-+#define SUNXI_MUSB_FL_VBUS_ON			3
-+#define SUNXI_MUSB_FL_PHY_ON			4
++#define HSPHY_TXFIFO_IDLE_FORCE_DIS	BIT(4)
++#define HSPHY_SESS_VLD_CTRL_EN		BIT(7)
++#define HSPHY_POR_ASSERT		BIT(0)
++#define HSPHY_RETEN			BIT(1)
 +
-+/* Our read/write methods need access and do not get passed in a musb ref :| */
-+static struct musb *sunxi_musb;
++#define HSPHY_SESS_VLD_CTRL		BIT(25)
 +
-+struct sunxi_glue {
-+	struct device		*dev;
-+	struct platform_device	*musb;
-+	struct clk		*clk;
-+	struct phy		*phy;
-+	struct platform_device	*usb_phy;
-+	struct usb_phy		*xceiv;
-+	unsigned long		flags;
-+	struct work_struct	work;
-+	struct extcon_dev	*extcon;
-+	struct notifier_block	host_nb;
++#define ULPI_PWR_CLK_MNG_REG		0x88
++#define ULPI_PWR_OTG_COMP_DISABLE	BIT(0)
++
++#define ULPI_MISC_A			0x96
++#define ULPI_MISC_A_VBUSVLDEXTSEL	BIT(1)
++#define ULPI_MISC_A_VBUSVLDEXT		BIT(0)
++
++#define HSPHY_3P3_MIN			3050000 /* uV */
++#define HSPHY_3P3_MAX			3300000 /* uV */
++
++#define HSPHY_1P8_MIN			1800000 /* uV */
++#define HSPHY_1P8_MAX			1800000 /* uV */
++
++#define HSPHY_VDD_MIN			5
++#define HSPHY_VDD_MAX			7
++
++struct phy_8x16 {
++	struct usb_phy			phy;
++	void __iomem			*regs;
++	struct clk			*core_clk;
++	struct clk			*iface_clk;
++	struct regulator		*v3p3;
++	struct regulator		*v1p8;
++	struct regulator		*vdd;
++
++	struct reset_control		*phy_reset;
++
++	struct extcon_specific_cable_nb vbus_cable;
++	struct notifier_block		vbus_notify;
++
++	struct gpio_desc		*switch_gpio;
++	struct notifier_block		reboot_notify;
 +};
 +
-+/* phy_power_on / off may sleep, so we use a workqueue  */
-+static void sunxi_musb_work(struct work_struct *work)
++static int phy_8x16_regulators_enable(struct phy_8x16 *qphy)
 +{
-+	struct sunxi_glue *glue = container_of(work, struct sunxi_glue, work);
-+	bool vbus_on, phy_on;
++	int ret;
 +
-+	if (!test_bit(SUNXI_MUSB_FL_ENABLED, &glue->flags))
-+		return;
++	ret = regulator_set_voltage(qphy->vdd, HSPHY_VDD_MIN, HSPHY_VDD_MAX);
++	if (ret)
++		return ret;
 +
-+	if (test_and_clear_bit(SUNXI_MUSB_FL_HOSTMODE_PEND, &glue->flags)) {
-+		struct musb *musb = platform_get_drvdata(glue->musb);
-+		unsigned long flags;
-+		u8 devctl;
++	ret = regulator_enable(qphy->vdd);
++	if (ret)
++		return ret;
 +
-+		spin_lock_irqsave(&musb->lock, flags);
++	ret = regulator_set_voltage(qphy->v3p3, HSPHY_3P3_MIN, HSPHY_3P3_MAX);
++	if (ret)
++		goto off_vdd;
 +
-+		devctl = readb(musb->mregs + SUNXI_MUSB_DEVCTL);
-+		if (test_bit(SUNXI_MUSB_FL_HOSTMODE, &glue->flags)) {
-+			set_bit(SUNXI_MUSB_FL_VBUS_ON, &glue->flags);
-+			musb->xceiv->otg->default_a = 1;
-+			musb->xceiv->otg->state = OTG_STATE_A_IDLE;
-+			MUSB_HST_MODE(musb);
-+			devctl |= MUSB_DEVCTL_SESSION;
-+		} else {
-+			clear_bit(SUNXI_MUSB_FL_VBUS_ON, &glue->flags);
-+			musb->xceiv->otg->default_a = 0;
-+			musb->xceiv->otg->state = OTG_STATE_B_IDLE;
-+			MUSB_DEV_MODE(musb);
-+			devctl &= ~MUSB_DEVCTL_SESSION;
-+		}
-+		writeb(devctl, musb->mregs + SUNXI_MUSB_DEVCTL);
++	ret = regulator_enable(qphy->v3p3);
++	if (ret)
++		goto off_vdd;
 +
-+		spin_unlock_irqrestore(&musb->lock, flags);
-+	}
++	ret = regulator_set_voltage(qphy->v1p8, HSPHY_1P8_MIN, HSPHY_1P8_MAX);
++	if (ret)
++		goto off_3p3;
 +
-+	vbus_on = test_bit(SUNXI_MUSB_FL_VBUS_ON, &glue->flags);
-+	phy_on = test_bit(SUNXI_MUSB_FL_PHY_ON, &glue->flags);
++	ret = regulator_enable(qphy->v1p8);
++	if (ret)
++		goto off_3p3;
 +
-+	if (phy_on != vbus_on) {
-+		if (vbus_on) {
-+			phy_power_on(glue->phy);
-+			set_bit(SUNXI_MUSB_FL_PHY_ON, &glue->flags);
-+		} else {
-+			phy_power_off(glue->phy);
-+			clear_bit(SUNXI_MUSB_FL_PHY_ON, &glue->flags);
-+		}
-+	}
++	return 0;
++
++off_3p3:
++	regulator_disable(qphy->v3p3);
++off_vdd:
++	regulator_disable(qphy->vdd);
++
++	return ret;
 +}
 +
-+static void sunxi_musb_set_vbus(struct musb *musb, int is_on)
++static void phy_8x16_regulators_disable(struct phy_8x16 *qphy)
 +{
-+	struct sunxi_glue *glue = dev_get_drvdata(musb->controller->parent);
-+
-+	if (is_on)
-+		set_bit(SUNXI_MUSB_FL_VBUS_ON, &glue->flags);
-+	else
-+		clear_bit(SUNXI_MUSB_FL_VBUS_ON, &glue->flags);
-+
-+	schedule_work(&glue->work);
++	regulator_disable(qphy->v1p8);
++	regulator_disable(qphy->v3p3);
++	regulator_disable(qphy->vdd);
 +}
 +
-+static void sunxi_musb_pre_root_reset_end(struct musb *musb)
++static int phy_8x16_notify_connect(struct usb_phy *phy,
++				   enum usb_device_speed speed)
 +{
-+	struct sunxi_glue *glue = dev_get_drvdata(musb->controller->parent);
++	struct phy_8x16 *qphy = container_of(phy, struct phy_8x16, phy);
++	u32 val;
 +
-+	sun4i_usb_phy_set_squelch_detect(glue->phy, false);
++	val = ULPI_MISC_A_VBUSVLDEXTSEL | ULPI_MISC_A_VBUSVLDEXT;
++	usb_phy_io_write(&qphy->phy, val, ULPI_SET(ULPI_MISC_A));
++
++	val = readl(qphy->regs + HSPHY_USBCMD);
++	val |= HSPHY_SESS_VLD_CTRL;
++	writel(val, qphy->regs + HSPHY_USBCMD);
++
++	return 0;
 +}
 +
-+static void sunxi_musb_post_root_reset_end(struct musb *musb)
++static int phy_8x16_notify_disconnect(struct usb_phy *phy,
++				      enum usb_device_speed speed)
 +{
-+	struct sunxi_glue *glue = dev_get_drvdata(musb->controller->parent);
++	struct phy_8x16 *qphy = container_of(phy, struct phy_8x16, phy);
++	u32 val;
 +
-+	sun4i_usb_phy_set_squelch_detect(glue->phy, true);
++	val = ULPI_MISC_A_VBUSVLDEXT | ULPI_MISC_A_VBUSVLDEXTSEL;
++	usb_phy_io_write(&qphy->phy, val, ULPI_CLR(ULPI_MISC_A));
++
++	val = readl(qphy->regs + HSPHY_USBCMD);
++	val &= ~HSPHY_SESS_VLD_CTRL;
++	writel(val, qphy->regs + HSPHY_USBCMD);
++
++	return 0;
 +}
 +
-+static irqreturn_t sunxi_musb_interrupt(int irq, void *__hci)
++static int phy_8x16_vbus_on(struct phy_8x16 *qphy)
 +{
-+	struct musb *musb = __hci;
-+	unsigned long flags;
++	phy_8x16_notify_connect(&qphy->phy, USB_SPEED_UNKNOWN);
 +
-+	spin_lock_irqsave(&musb->lock, flags);
++	/* Switch D+/D- lines to Device connector */
++	gpiod_set_value_cansleep(qphy->switch_gpio, 0);
 +
-+	musb->int_usb = readb(musb->mregs + SUNXI_MUSB_INTRUSB);
-+	if (musb->int_usb)
-+		writeb(musb->int_usb, musb->mregs + SUNXI_MUSB_INTRUSB);
-+
-+	/*
-+	 * sunxi musb often signals babble on low / full speed device
-+	 * disconnect, without ever raising MUSB_INTR_DISCONNECT, since
-+	 * normally babble never happens treat it as disconnect.
-+	 */
-+	if ((musb->int_usb & MUSB_INTR_BABBLE) && is_host_active(musb)) {
-+		musb->int_usb &= ~MUSB_INTR_BABBLE;
-+		musb->int_usb |= MUSB_INTR_DISCONNECT;
-+	}
-+
-+	if ((musb->int_usb & MUSB_INTR_RESET) && !is_host_active(musb)) {
-+		/* ep0 FADDR must be 0 when (re)entering peripheral mode */
-+		musb_ep_select(musb->mregs, 0);
-+		musb_writeb(musb->mregs, MUSB_FADDR, 0);
-+	}
-+
-+	musb->int_tx = readw(musb->mregs + SUNXI_MUSB_INTRTX);
-+	if (musb->int_tx)
-+		writew(musb->int_tx, musb->mregs + SUNXI_MUSB_INTRTX);
-+
-+	musb->int_rx = readw(musb->mregs + SUNXI_MUSB_INTRRX);
-+	if (musb->int_rx)
-+		writew(musb->int_rx, musb->mregs + SUNXI_MUSB_INTRRX);
-+
-+	musb_interrupt(musb);
-+
-+	spin_unlock_irqrestore(&musb->lock, flags);
-+
-+	return IRQ_HANDLED;
++	return 0;
 +}
 +
-+static int sunxi_musb_host_notifier(struct notifier_block *nb,
-+				    unsigned long event, void *ptr)
++static int phy_8x16_vbus_off(struct phy_8x16 *qphy)
 +{
-+	struct sunxi_glue *glue = container_of(nb, struct sunxi_glue, host_nb);
++	phy_8x16_notify_disconnect(&qphy->phy, USB_SPEED_UNKNOWN);
++
++	/* Switch D+/D- lines to USB HUB */
++	gpiod_set_value_cansleep(qphy->switch_gpio, 1);
++
++	return 0;
++}
++
++static int phy_8x16_vbus_notify(struct notifier_block *nb, unsigned long event,
++				void *ptr)
++{
++	struct phy_8x16 *qphy = container_of(nb, struct phy_8x16, vbus_notify);
 +
 +	if (event)
-+		set_bit(SUNXI_MUSB_FL_HOSTMODE, &glue->flags);
++		phy_8x16_vbus_on(qphy);
 +	else
-+		clear_bit(SUNXI_MUSB_FL_HOSTMODE, &glue->flags);
-+
-+	set_bit(SUNXI_MUSB_FL_HOSTMODE_PEND, &glue->flags);
-+	schedule_work(&glue->work);
++		phy_8x16_vbus_off(qphy);
 +
 +	return NOTIFY_DONE;
 +}
 +
-+static int sunxi_musb_init(struct musb *musb)
++static int phy_8x16_init(struct usb_phy *phy)
 +{
-+	struct sunxi_glue *glue = dev_get_drvdata(musb->controller->parent);
++	struct phy_8x16 *qphy = container_of(phy, struct phy_8x16, phy);
++	u32 val, init[] = {0x44, 0x6B, 0x24, 0x13};
++	u32 addr = ULPI_EXT_VENDOR_SPECIFIC;
++	int idx, state;
++
++	for (idx = 0; idx < ARRAY_SIZE(init); idx++)
++		usb_phy_io_write(phy, init[idx], addr + idx);
++
++	reset_control_reset(qphy->phy_reset);
++
++	/* Assert USB HSPHY_POR */
++	val = readl(qphy->regs + HSPHY_CTRL);
++	val |= HSPHY_POR_ASSERT;
++	writel(val, qphy->regs + HSPHY_CTRL);
++
++	/*
++	 * wait for minimum 10 microseconds as suggested in HPG.
++	 * Use a slightly larger value since the exact value didn't
++	 * work 100% of the time.
++	 */
++	usleep_range(12, 15);
++
++	/* Deassert USB HSPHY_POR */
++	val = readl(qphy->regs + HSPHY_CTRL);
++	val &= ~HSPHY_POR_ASSERT;
++	writel(val, qphy->regs + HSPHY_CTRL);
++
++	usleep_range(10, 15);
++
++	writel(0x00, qphy->regs + HSPHY_AHBBURST);
++	writel(0x08, qphy->regs + HSPHY_AHBMODE);
++
++	/* workaround for rx buffer collision issue */
++	val = readl(qphy->regs + HSPHY_GENCONFIG);
++	val &= ~HSPHY_TXFIFO_IDLE_FORCE_DIS;
++	writel(val, qphy->regs + HSPHY_GENCONFIG);
++
++	val = readl(qphy->regs + HSPHY_GENCONFIG_2);
++	val |= HSPHY_SESS_VLD_CTRL_EN;
++	writel(val, qphy->regs + HSPHY_GENCONFIG_2);
++
++	val = ULPI_PWR_OTG_COMP_DISABLE;
++	usb_phy_io_write(phy, val, ULPI_SET(ULPI_PWR_CLK_MNG_REG));
++
++	state = extcon_get_cable_state(qphy->vbus_cable.edev, "USB");
++	if (state)
++		phy_8x16_vbus_on(qphy);
++	else
++		phy_8x16_vbus_off(qphy);
++
++	val = usb_phy_io_read(&qphy->phy, ULPI_FUNC_CTRL);
++	val &= ~ULPI_FUNC_CTRL_OPMODE_MASK;
++	val |= ULPI_FUNC_CTRL_OPMODE_NORMAL;
++	usb_phy_io_write(&qphy->phy, val, ULPI_FUNC_CTRL);
++
++	return 0;
++}
++
++static void phy_8x16_shutdown(struct usb_phy *phy)
++{
++	u32 val;
++
++	/* Put the controller in non-driving mode */
++	val = usb_phy_io_read(phy, ULPI_FUNC_CTRL);
++	val &= ~ULPI_FUNC_CTRL_OPMODE_MASK;
++	val |= ULPI_FUNC_CTRL_OPMODE_NONDRIVING;
++	usb_phy_io_write(phy, val, ULPI_FUNC_CTRL);
++}
++
++static int phy_8x16_read_devicetree(struct phy_8x16 *qphy)
++{
++	struct regulator_bulk_data regs[3];
++	struct device *dev = qphy->phy.dev;
 +	int ret;
 +
-+	sunxi_musb = musb;
-+	musb->phy = glue->phy;
-+	musb->xceiv = glue->xceiv;
++	qphy->core_clk = devm_clk_get(dev, "core");
++	if (IS_ERR(qphy->core_clk))
++		return PTR_ERR(qphy->core_clk);
 +
-+	ret = sunxi_sram_claim(musb->controller->parent);
++	qphy->iface_clk = devm_clk_get(dev, "iface");
++	if (IS_ERR(qphy->iface_clk))
++		return PTR_ERR(qphy->iface_clk);
++
++	regs[0].supply = "v3p3";
++	regs[1].supply = "v1p8";
++	regs[2].supply = "vddcx";
++
++	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(regs), regs);
 +	if (ret)
 +		return ret;
 +
-+	ret = clk_prepare_enable(glue->clk);
-+	if (ret)
-+		goto error_sram_release;
++	qphy->v3p3 = regs[0].consumer;
++	qphy->v1p8 = regs[1].consumer;
++	qphy->vdd  = regs[2].consumer;
 +
-+	writeb(SUNXI_MUSB_VEND0_PIO_MODE, musb->mregs + SUNXI_MUSB_VEND0);
++	qphy->phy_reset = devm_reset_control_get(dev, "phy");
++	if (IS_ERR(qphy->phy_reset))
++		return PTR_ERR(qphy->phy_reset);
 +
-+	/* Register notifier before calling phy_init() */
-+	if (musb->port_mode == MUSB_PORT_MODE_DUAL_ROLE) {
-+		ret = extcon_register_notifier(glue->extcon, EXTCON_USB_HOST,
-+					       &glue->host_nb);
-+		if (ret)
-+			goto error_clk_disable;
-+	}
-+
-+	ret = phy_init(glue->phy);
-+	if (ret)
-+		goto error_unregister_notifier;
-+
-+	if (musb->port_mode == MUSB_PORT_MODE_HOST) {
-+		ret = phy_power_on(glue->phy);
-+		if (ret)
-+			goto error_phy_exit;
-+		set_bit(SUNXI_MUSB_FL_PHY_ON, &glue->flags);
-+		/* Stop musb work from turning vbus off again */
-+		set_bit(SUNXI_MUSB_FL_VBUS_ON, &glue->flags);
-+	}
-+
-+	musb->isr = sunxi_musb_interrupt;
-+
-+	/* Stop the musb-core from doing runtime pm (not supported on sunxi) */
-+	pm_runtime_get(musb->controller);
-+
-+	return 0;
-+
-+error_phy_exit:
-+	phy_exit(glue->phy);
-+error_unregister_notifier:
-+	if (musb->port_mode == MUSB_PORT_MODE_DUAL_ROLE)
-+		extcon_unregister_notifier(glue->extcon, EXTCON_USB_HOST,
-+					   &glue->host_nb);
-+error_clk_disable:
-+	clk_disable_unprepare(glue->clk);
-+error_sram_release:
-+	sunxi_sram_release(musb->controller->parent);
-+	return ret;
-+}
-+
-+static int sunxi_musb_exit(struct musb *musb)
-+{
-+	struct sunxi_glue *glue = dev_get_drvdata(musb->controller->parent);
-+
-+	pm_runtime_put(musb->controller);
-+
-+	cancel_work_sync(&glue->work);
-+	if (test_bit(SUNXI_MUSB_FL_PHY_ON, &glue->flags))
-+		phy_power_off(glue->phy);
-+
-+	phy_exit(glue->phy);
-+
-+	if (musb->port_mode == MUSB_PORT_MODE_DUAL_ROLE)
-+		extcon_unregister_notifier(glue->extcon, EXTCON_USB_HOST,
-+					   &glue->host_nb);
-+
-+	clk_disable_unprepare(glue->clk);
-+	sunxi_sram_release(musb->controller->parent);
++	qphy->switch_gpio = devm_gpiod_get_optional(dev, "switch",
++						   GPIOD_OUT_LOW);
++	if (IS_ERR(qphy->switch_gpio))
++		return PTR_ERR(qphy->switch_gpio);
 +
 +	return 0;
 +}
 +
-+static void sunxi_musb_enable(struct musb *musb)
++static int phy_8x16_reboot_notify(struct notifier_block *this,
++				  unsigned long code, void *unused)
 +{
-+	struct sunxi_glue *glue = dev_get_drvdata(musb->controller->parent);
++	struct phy_8x16 *qphy;
 +
-+	/* musb_core does not call us in a balanced manner */
-+	if (test_and_set_bit(SUNXI_MUSB_FL_ENABLED, &glue->flags))
-+		return;
++	qphy = container_of(this, struct phy_8x16, reboot_notify);
 +
-+	schedule_work(&glue->work);
++	/*
++	 * Ensure that D+/D- lines are routed to uB connector, so
++	 * we could load bootloader/kernel at next reboot_notify
++	 */
++	gpiod_set_value_cansleep(qphy->switch_gpio, 0);
++	return NOTIFY_DONE;
 +}
 +
-+static void sunxi_musb_disable(struct musb *musb)
++static int phy_8x16_probe(struct platform_device *pdev)
 +{
-+	struct sunxi_glue *glue = dev_get_drvdata(musb->controller->parent);
-+
-+	clear_bit(SUNXI_MUSB_FL_ENABLED, &glue->flags);
-+}
-+
-+/*
-+ * sunxi musb register layout
-+ * 0x00 - 0x17	fifo regs, 1 long per fifo
-+ * 0x40 - 0x57	generic control regs (power - frame)
-+ * 0x80 - 0x8f	ep control regs (addressed through hw_ep->regs, indexed)
-+ * 0x90 - 0x97	fifo control regs (indexed)
-+ * 0x98 - 0x9f	multipoint / busctl regs (indexed)
-+ * 0xc0		configdata reg
-+ */
-+
-+static u32 sunxi_musb_fifo_offset(u8 epnum)
-+{
-+	return (epnum * 4);
-+}
-+
-+static u32 sunxi_musb_ep_offset(u8 epnum, u16 offset)
-+{
-+	WARN_ONCE(offset != 0,
-+		  "sunxi_musb_ep_offset called with non 0 offset\n");
-+
-+	return 0x80; /* indexed, so ignore epnum */
-+}
-+
-+static u32 sunxi_musb_busctl_offset(u8 epnum, u16 offset)
-+{
-+	return SUNXI_MUSB_TXFUNCADDR + offset;
-+}
-+
-+static u8 sunxi_musb_readb(const void __iomem *addr, unsigned offset)
-+{
-+	if (addr == sunxi_musb->mregs) {
-+		/* generic control or fifo control reg access */
-+		switch (offset) {
-+		case MUSB_FADDR:
-+			return readb(addr + SUNXI_MUSB_FADDR);
-+		case MUSB_POWER:
-+			return readb(addr + SUNXI_MUSB_POWER);
-+		case MUSB_INTRUSB:
-+			return readb(addr + SUNXI_MUSB_INTRUSB);
-+		case MUSB_INTRUSBE:
-+			return readb(addr + SUNXI_MUSB_INTRUSBE);
-+		case MUSB_INDEX:
-+			return readb(addr + SUNXI_MUSB_INDEX);
-+		case MUSB_TESTMODE:
-+			return 0; /* No testmode on sunxi */
-+		case MUSB_DEVCTL:
-+			return readb(addr + SUNXI_MUSB_DEVCTL);
-+		case MUSB_TXFIFOSZ:
-+			return readb(addr + SUNXI_MUSB_TXFIFOSZ);
-+		case MUSB_RXFIFOSZ:
-+			return readb(addr + SUNXI_MUSB_RXFIFOSZ);
-+		case MUSB_CONFIGDATA + 0x10: /* See musb_read_configdata() */
-+			return readb(addr + SUNXI_MUSB_CONFIGDATA);
-+		/* Offset for these is fixed by sunxi_musb_busctl_offset() */
-+		case SUNXI_MUSB_TXFUNCADDR:
-+		case SUNXI_MUSB_TXHUBADDR:
-+		case SUNXI_MUSB_TXHUBPORT:
-+		case SUNXI_MUSB_RXFUNCADDR:
-+		case SUNXI_MUSB_RXHUBADDR:
-+		case SUNXI_MUSB_RXHUBPORT:
-+			/* multipoint / busctl reg access */
-+			return readb(addr + offset);
-+		default:
-+			dev_err(sunxi_musb->controller->parent,
-+				"Error unknown readb offset %u\n", offset);
-+			return 0;
-+		}
-+	} else if (addr == (sunxi_musb->mregs + 0x80)) {
-+		/* ep control reg access */
-+		/* sunxi has a 2 byte hole before the txtype register */
-+		if (offset >= MUSB_TXTYPE)
-+			offset += 2;
-+		return readb(addr + offset);
-+	}
-+
-+	dev_err(sunxi_musb->controller->parent,
-+		"Error unknown readb at 0x%x bytes offset\n",
-+		(int)(addr - sunxi_musb->mregs));
-+	return 0;
-+}
-+
-+static void sunxi_musb_writeb(void __iomem *addr, unsigned offset, u8 data)
-+{
-+	if (addr == sunxi_musb->mregs) {
-+		/* generic control or fifo control reg access */
-+		switch (offset) {
-+		case MUSB_FADDR:
-+			return writeb(data, addr + SUNXI_MUSB_FADDR);
-+		case MUSB_POWER:
-+			return writeb(data, addr + SUNXI_MUSB_POWER);
-+		case MUSB_INTRUSB:
-+			return writeb(data, addr + SUNXI_MUSB_INTRUSB);
-+		case MUSB_INTRUSBE:
-+			return writeb(data, addr + SUNXI_MUSB_INTRUSBE);
-+		case MUSB_INDEX:
-+			return writeb(data, addr + SUNXI_MUSB_INDEX);
-+		case MUSB_TESTMODE:
-+			if (data)
-+				dev_warn(sunxi_musb->controller->parent,
-+					"sunxi-musb does not have testmode\n");
-+			return;
-+		case MUSB_DEVCTL:
-+			return writeb(data, addr + SUNXI_MUSB_DEVCTL);
-+		case MUSB_TXFIFOSZ:
-+			return writeb(data, addr + SUNXI_MUSB_TXFIFOSZ);
-+		case MUSB_RXFIFOSZ:
-+			return writeb(data, addr + SUNXI_MUSB_RXFIFOSZ);
-+		/* Offset for these is fixed by sunxi_musb_busctl_offset() */
-+		case SUNXI_MUSB_TXFUNCADDR:
-+		case SUNXI_MUSB_TXHUBADDR:
-+		case SUNXI_MUSB_TXHUBPORT:
-+		case SUNXI_MUSB_RXFUNCADDR:
-+		case SUNXI_MUSB_RXHUBADDR:
-+		case SUNXI_MUSB_RXHUBPORT:
-+			/* multipoint / busctl reg access */
-+			return writeb(data, addr + offset);
-+		default:
-+			dev_err(sunxi_musb->controller->parent,
-+				"Error unknown writeb offset %u\n", offset);
-+			return;
-+		}
-+	} else if (addr == (sunxi_musb->mregs + 0x80)) {
-+		/* ep control reg access */
-+		if (offset >= MUSB_TXTYPE)
-+			offset += 2;
-+		return writeb(data, addr + offset);
-+	}
-+
-+	dev_err(sunxi_musb->controller->parent,
-+		"Error unknown writeb at 0x%x bytes offset\n",
-+		(int)(addr - sunxi_musb->mregs));
-+}
-+
-+static u16 sunxi_musb_readw(const void __iomem *addr, unsigned offset)
-+{
-+	if (addr == sunxi_musb->mregs) {
-+		/* generic control or fifo control reg access */
-+		switch (offset) {
-+		case MUSB_INTRTX:
-+			return readw(addr + SUNXI_MUSB_INTRTX);
-+		case MUSB_INTRRX:
-+			return readw(addr + SUNXI_MUSB_INTRRX);
-+		case MUSB_INTRTXE:
-+			return readw(addr + SUNXI_MUSB_INTRTXE);
-+		case MUSB_INTRRXE:
-+			return readw(addr + SUNXI_MUSB_INTRRXE);
-+		case MUSB_FRAME:
-+			return readw(addr + SUNXI_MUSB_FRAME);
-+		case MUSB_TXFIFOADD:
-+			return readw(addr + SUNXI_MUSB_TXFIFOADD);
-+		case MUSB_RXFIFOADD:
-+			return readw(addr + SUNXI_MUSB_RXFIFOADD);
-+		case MUSB_HWVERS:
-+			return 0; /* sunxi musb version is not known */
-+		default:
-+			dev_err(sunxi_musb->controller->parent,
-+				"Error unknown readw offset %u\n", offset);
-+			return 0;
-+		}
-+	} else if (addr == (sunxi_musb->mregs + 0x80)) {
-+		/* ep control reg access */
-+		return readw(addr + offset);
-+	}
-+
-+	dev_err(sunxi_musb->controller->parent,
-+		"Error unknown readw at 0x%x bytes offset\n",
-+		(int)(addr - sunxi_musb->mregs));
-+	return 0;
-+}
-+
-+static void sunxi_musb_writew(void __iomem *addr, unsigned offset, u16 data)
-+{
-+	if (addr == sunxi_musb->mregs) {
-+		/* generic control or fifo control reg access */
-+		switch (offset) {
-+		case MUSB_INTRTX:
-+			return writew(data, addr + SUNXI_MUSB_INTRTX);
-+		case MUSB_INTRRX:
-+			return writew(data, addr + SUNXI_MUSB_INTRRX);
-+		case MUSB_INTRTXE:
-+			return writew(data, addr + SUNXI_MUSB_INTRTXE);
-+		case MUSB_INTRRXE:
-+			return writew(data, addr + SUNXI_MUSB_INTRRXE);
-+		case MUSB_FRAME:
-+			return writew(data, addr + SUNXI_MUSB_FRAME);
-+		case MUSB_TXFIFOADD:
-+			return writew(data, addr + SUNXI_MUSB_TXFIFOADD);
-+		case MUSB_RXFIFOADD:
-+			return writew(data, addr + SUNXI_MUSB_RXFIFOADD);
-+		default:
-+			dev_err(sunxi_musb->controller->parent,
-+				"Error unknown writew offset %u\n", offset);
-+			return;
-+		}
-+	} else if (addr == (sunxi_musb->mregs + 0x80)) {
-+		/* ep control reg access */
-+		return writew(data, addr + offset);
-+	}
-+
-+	dev_err(sunxi_musb->controller->parent,
-+		"Error unknown writew at 0x%x bytes offset\n",
-+		(int)(addr - sunxi_musb->mregs));
-+}
-+
-+static const struct musb_platform_ops sunxi_musb_ops = {
-+	.quirks		= MUSB_INDEXED_EP,
-+	.init		= sunxi_musb_init,
-+	.exit		= sunxi_musb_exit,
-+	.enable		= sunxi_musb_enable,
-+	.disable	= sunxi_musb_disable,
-+	.fifo_offset	= sunxi_musb_fifo_offset,
-+	.ep_offset	= sunxi_musb_ep_offset,
-+	.busctl_offset	= sunxi_musb_busctl_offset,
-+	.readb		= sunxi_musb_readb,
-+	.writeb		= sunxi_musb_writeb,
-+	.readw		= sunxi_musb_readw,
-+	.writew		= sunxi_musb_writew,
-+	.set_vbus	= sunxi_musb_set_vbus,
-+	.pre_root_reset_end = sunxi_musb_pre_root_reset_end,
-+	.post_root_reset_end = sunxi_musb_post_root_reset_end,
-+};
-+
-+/* Allwinner OTG supports up to 5 endpoints */
-+#define SUNXI_MUSB_MAX_EP_NUM	6
-+#define SUNXI_MUSB_RAM_BITS	11
-+
-+static struct musb_fifo_cfg sunxi_musb_mode_cfg[] = {
-+	MUSB_EP_FIFO_SINGLE(1, FIFO_TX, 512),
-+	MUSB_EP_FIFO_SINGLE(1, FIFO_RX, 512),
-+	MUSB_EP_FIFO_SINGLE(2, FIFO_TX, 512),
-+	MUSB_EP_FIFO_SINGLE(2, FIFO_RX, 512),
-+	MUSB_EP_FIFO_SINGLE(3, FIFO_TX, 512),
-+	MUSB_EP_FIFO_SINGLE(3, FIFO_RX, 512),
-+	MUSB_EP_FIFO_SINGLE(4, FIFO_TX, 512),
-+	MUSB_EP_FIFO_SINGLE(4, FIFO_RX, 512),
-+	MUSB_EP_FIFO_SINGLE(5, FIFO_TX, 512),
-+	MUSB_EP_FIFO_SINGLE(5, FIFO_RX, 512),
-+};
-+
-+static struct musb_hdrc_config sunxi_musb_hdrc_config = {
-+	.fifo_cfg       = sunxi_musb_mode_cfg,
-+	.fifo_cfg_size  = ARRAY_SIZE(sunxi_musb_mode_cfg),
-+	.multipoint	= true,
-+	.dyn_fifo	= true,
-+	.soft_con       = true,
-+	.num_eps	= SUNXI_MUSB_MAX_EP_NUM,
-+	.ram_bits	= SUNXI_MUSB_RAM_BITS,
-+	.dma		= 0,
-+};
-+
-+static int sunxi_musb_probe(struct platform_device *pdev)
-+{
-+	struct musb_hdrc_platform_data	pdata;
-+	struct platform_device_info	pinfo;
-+	struct sunxi_glue		*glue;
-+	struct device_node		*np = pdev->dev.of_node;
++	struct extcon_dev *edev;
++	struct phy_8x16 *qphy;
++	struct resource *res;
++	struct usb_phy *phy;
 +	int ret;
 +
-+	if (!np) {
-+		dev_err(&pdev->dev, "Error no device tree node found\n");
-+		return -EINVAL;
-+	}
-+
-+	glue = devm_kzalloc(&pdev->dev, sizeof(*glue), GFP_KERNEL);
-+	if (!glue)
++	qphy = devm_kzalloc(&pdev->dev, sizeof(*qphy), GFP_KERNEL);
++	if (!qphy)
 +		return -ENOMEM;
 +
-+	memset(&pdata, 0, sizeof(pdata));
-+	switch (of_usb_get_dr_mode(np)) {
-+#if defined CONFIG_USB_MUSB_DUAL_ROLE || defined CONFIG_USB_MUSB_HOST
-+	case USB_DR_MODE_HOST:
-+		pdata.mode = MUSB_PORT_MODE_HOST;
-+		break;
-+#endif
-+#ifdef CONFIG_USB_MUSB_DUAL_ROLE
-+	case USB_DR_MODE_OTG:
-+		glue->extcon = extcon_get_edev_by_phandle(&pdev->dev, 0);
-+		if (IS_ERR(glue->extcon)) {
-+			if (PTR_ERR(glue->extcon) == -EPROBE_DEFER)
-+				return -EPROBE_DEFER;
-+			dev_err(&pdev->dev, "Invalid or missing extcon\n");
-+			return PTR_ERR(glue->extcon);
-+		}
-+		pdata.mode = MUSB_PORT_MODE_DUAL_ROLE;
-+		break;
-+#endif
-+	default:
-+		dev_err(&pdev->dev, "Invalid or missing 'dr_mode' property\n");
++	platform_set_drvdata(pdev, qphy);
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (!res)
 +		return -EINVAL;
-+	}
-+	pdata.platform_ops	= &sunxi_musb_ops;
-+	pdata.config		= &sunxi_musb_hdrc_config;
 +
-+	glue->dev = &pdev->dev;
-+	INIT_WORK(&glue->work, sunxi_musb_work);
-+	glue->host_nb.notifier_call = sunxi_musb_host_notifier;
++	qphy->regs = devm_ioremap(&pdev->dev, res->start, resource_size(res));
++	if (!qphy->regs)
++		return -ENOMEM;
 +
-+	glue->clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(glue->clk)) {
-+		dev_err(&pdev->dev, "Error getting clock: %ld\n",
-+			PTR_ERR(glue->clk));
-+		return PTR_ERR(glue->clk);
-+	}
++	phy			= &qphy->phy;
++	phy->dev		= &pdev->dev;
++	phy->label		= dev_name(&pdev->dev);
++	phy->init		= phy_8x16_init;
++	phy->shutdown		= phy_8x16_shutdown;
++	phy->notify_connect	= phy_8x16_notify_connect;
++	phy->notify_disconnect	= phy_8x16_notify_disconnect;
++	phy->io_priv		= qphy->regs + HSPHY_ULPI_VIEWPORT;
++	phy->io_ops		= &ulpi_viewport_access_ops;
++	phy->type		= USB_PHY_TYPE_USB2;
 +
-+	glue->phy = devm_phy_get(&pdev->dev, "usb");
-+	if (IS_ERR(glue->phy)) {
-+		if (PTR_ERR(glue->phy) == -EPROBE_DEFER)
-+			return -EPROBE_DEFER;
-+		dev_err(&pdev->dev, "Error getting phy %ld\n",
-+			PTR_ERR(glue->phy));
-+		return PTR_ERR(glue->phy);
-+	}
++	ret = phy_8x16_read_devicetree(qphy);
++	if (ret < 0)
++		return ret;
 +
-+	glue->usb_phy = usb_phy_generic_register();
-+	if (IS_ERR(glue->usb_phy)) {
-+		dev_err(&pdev->dev, "Error registering usb-phy %ld\n",
-+			PTR_ERR(glue->usb_phy));
-+		return PTR_ERR(glue->usb_phy);
-+	}
++	edev = extcon_get_edev_by_phandle(phy->dev, 0);
++	if (IS_ERR(edev))
++		return PTR_ERR(edev);
 +
-+	glue->xceiv = devm_usb_get_phy(&pdev->dev, USB_PHY_TYPE_USB2);
-+	if (IS_ERR(glue->xceiv)) {
-+		ret = PTR_ERR(glue->xceiv);
-+		dev_err(&pdev->dev, "Error getting usb-phy %d\n", ret);
-+		goto err_unregister_usb_phy;
-+	}
++	ret = clk_set_rate(qphy->core_clk, INT_MAX);
++	if (ret < 0)
++		dev_dbg(phy->dev, "Can't boost core clock\n");
 +
-+	platform_set_drvdata(pdev, glue);
++	ret = clk_prepare_enable(qphy->core_clk);
++	if (ret < 0)
++		return ret;
 +
-+	memset(&pinfo, 0, sizeof(pinfo));
-+	pinfo.name	 = "musb-hdrc";
-+	pinfo.id	= PLATFORM_DEVID_AUTO;
-+	pinfo.parent	= &pdev->dev;
-+	pinfo.res	= pdev->resource;
-+	pinfo.num_res	= pdev->num_resources;
-+	pinfo.data	= &pdata;
-+	pinfo.size_data = sizeof(pdata);
++	ret = clk_prepare_enable(qphy->iface_clk);
++	if (ret < 0)
++		goto off_core;
 +
-+	glue->musb = platform_device_register_full(&pinfo);
-+	if (IS_ERR(glue->musb)) {
-+		ret = PTR_ERR(glue->musb);
-+		dev_err(&pdev->dev, "Error registering musb dev: %d\n", ret);
-+		goto err_unregister_usb_phy;
-+	}
++	ret = phy_8x16_regulators_enable(qphy);
++	if (0 && ret)
++		goto off_clks;
++
++	qphy->vbus_notify.notifier_call = phy_8x16_vbus_notify;
++	ret = extcon_register_interest(&qphy->vbus_cable, edev->name,
++				       "USB", &qphy->vbus_notify);
++	if (ret < 0)
++		goto off_power;
++
++	ret = usb_add_phy_dev(&qphy->phy);
++	if (ret)
++		goto off_extcon;
++
++	qphy->reboot_notify.notifier_call = phy_8x16_reboot_notify;
++	register_reboot_notifier(&qphy->reboot_notify);
 +
 +	return 0;
 +
-+err_unregister_usb_phy:
-+	usb_phy_generic_unregister(glue->usb_phy);
++off_extcon:
++	extcon_unregister_interest(&qphy->vbus_cable);
++off_power:
++	phy_8x16_regulators_disable(qphy);
++off_clks:
++	clk_disable_unprepare(qphy->iface_clk);
++off_core:
++	clk_disable_unprepare(qphy->core_clk);
 +	return ret;
 +}
 +
-+static int sunxi_musb_remove(struct platform_device *pdev)
++static int phy_8x16_remove(struct platform_device *pdev)
 +{
-+	struct sunxi_glue *glue = platform_get_drvdata(pdev);
-+	struct platform_device *usb_phy = glue->usb_phy;
++	struct phy_8x16 *qphy = platform_get_drvdata(pdev);
 +
-+	platform_device_unregister(glue->musb); /* Frees glue ! */
-+	usb_phy_generic_unregister(usb_phy);
++	unregister_reboot_notifier(&qphy->reboot_notify);
++	extcon_unregister_interest(&qphy->vbus_cable);
 +
++	/*
++	 * Ensure that D+/D- lines are routed to uB connector, so
++	 * we could load bootloader/kernel at next reboot_notify
++	 */
++	gpiod_set_value_cansleep(qphy->switch_gpio, 0);
++
++	usb_remove_phy(&qphy->phy);
++
++	clk_disable_unprepare(qphy->iface_clk);
++	clk_disable_unprepare(qphy->core_clk);
++	phy_8x16_regulators_disable(qphy);
 +	return 0;
 +}
 +
-+static const struct of_device_id sunxi_musb_match[] = {
-+	{ .compatible = "allwinner,sun4i-a10-musb", },
-+	{}
++static const struct of_device_id phy_8x16_dt_match[] = {
++	{ .compatible = "qcom,usb-8x16-phy" },
++	{ }
 +};
++MODULE_DEVICE_TABLE(of, phy_8x16_dt_match);
 +
-+static struct platform_driver sunxi_musb_driver = {
-+	.probe = sunxi_musb_probe,
-+	.remove = sunxi_musb_remove,
++static struct platform_driver phy_8x16_driver = {
++	.probe	= phy_8x16_probe,
++	.remove = phy_8x16_remove,
 +	.driver = {
-+		.name = "musb-sunxi",
-+		.of_match_table = sunxi_musb_match,
++		.name = "phy-qcom-8x16-usb",
++		.of_match_table = phy_8x16_dt_match,
 +	},
 +};
-+module_platform_driver(sunxi_musb_driver);
++module_platform_driver(phy_8x16_driver);
 +
-+MODULE_DESCRIPTION("Allwinner sunxi MUSB Glue Layer");
-+MODULE_AUTHOR("Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>");
 +MODULE_LICENSE("GPL v2");
--- 
-2.4.3
-
++MODULE_DESCRIPTION("Qualcomm APQ8016/MSM8916 chipsets USB transceiver driver");
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
