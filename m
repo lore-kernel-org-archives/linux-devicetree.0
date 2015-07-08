@@ -1,114 +1,86 @@
 From: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
-Subject: Re: [PATCH-V5 3/4] mfd: 88pm800: Set default interrupt clear method
-Date: Wed, 08 Jul 2015 17:52:11 +0530
-Message-ID: <559D15F3.6090704@linaro.org>
-References: <1435591877-18214-4-git-send-email-vaibhav.hiremath@linaro.org> <20150707072958.GN3182@x1> <559BA1AE.9050006@linaro.org> <20150707104028.GR3182@x1> <559BAF23.90002@linaro.org> <20150707111248.GU3182@x1> <559BB58E.9010406@linaro.org> <559BB727.2070106@linaro.org> <20150707125439.GE3182@x1> <559BE68B.3020801@linaro.org> <20150707145756.GJ3182@x1>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Subject: [PATCH-v6 6/6] mfd: devicetree: bindings: Add new 88pm800 mfd binding
+Date: Wed,  8 Jul 2015 17:56:32 +0530
+Message-ID: <1436358392-15449-7-git-send-email-vaibhav.hiremath@linaro.org>
+References: <1436358392-15449-1-git-send-email-vaibhav.hiremath@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150707145756.GJ3182@x1>
+In-Reply-To: <1436358392-15449-1-git-send-email-vaibhav.hiremath@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, robh+dt@kernel.org, sameo@linux.intel.com, linux-kernel@vger.kernel.org, yizhang@marvell.com, Zhao Ye <zhaoy@marvell.com>
+To: linux-arm-kernel@lists.infradead.org
+Cc: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Lee Jones <lee.jones@linaro.org>, "open list:OPEN FIRMWARE AND FLATTENED
+	DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+With addition of DT support to 88pm800 mfd driver, this patch
+adds new DT binding documentation along with respective properties.
 
+Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
+Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Lee Jones <lee.jones@linaro.org>
+---
+ Documentation/devicetree/bindings/mfd/88pm800.txt | 53 +++++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/88pm800.txt
 
-On Tuesday 07 July 2015 08:27 PM, Lee Jones wrote:
-> On Tue, 07 Jul 2015, Vaibhav Hiremath wrote:
->
->>
->>
->> On Tuesday 07 July 2015 06:24 PM, Lee Jones wrote:
->>> On Tue, 07 Jul 2015, Vaibhav Hiremath wrote:
->>>
->>>>
->>>>
->>>> On Tuesday 07 July 2015 04:48 PM, Vaibhav Hiremath wrote:
->>>>>
->>>>>
->>>>> On Tuesday 07 July 2015 04:42 PM, Lee Jones wrote:
->>>>>> On Tue, 07 Jul 2015, Vaibhav Hiremath wrote:
->>>>>>> On Tuesday 07 July 2015 04:10 PM, Lee Jones wrote:
->>>>>>>> On Tue, 07 Jul 2015, Vaibhav Hiremath wrote:
->>>>>>>>> On Tuesday 07 July 2015 12:59 PM, Lee Jones wrote:
->>>>>>>>>> On Mon, 29 Jun 2015, Vaibhav Hiremath wrote:
->>>>>>>>>>
->>>>>>>>>>> As per the spec, bit 1 (INT_CLEAR_MODE) of reg addr 0xe
->>>>>>>>>>> (page 0) controls the method of clearing interrupt
->>>>>>>>>>> status of 88pm800 family of devices;
->>>>>>>>>>>
->>>>>>>>>>>    0: clear on read
->>>>>>>>>>>    1: clear on write
->>>>>>>>>>>
->>>>>>>>>>> If pdata is not coming from board file, then set the
->>>>>>>>>>> default irq clear method to "irq clear on write"
->>>>>>>>>>>
->>>>>>>>>>> Also, as suggested by "Lee Jones" renaming variable field
->>>>>>>>>>> to appropriate name.
->>>>>>>>>>>
->>>>>>>>>>> Signed-off-by: Zhao Ye <zhaoy@marvell.com>
->>>>>>>>>>> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath@linaro.or=
-g>
->>>>>>>>>>> ---
->>>>>>>>>>>   drivers/mfd/88pm800.c       | 15 ++++++++++-----
->>>>>>>>>>>   include/linux/mfd/88pm80x.h | 10 ++++++++--
->>>>>>>>>>>   2 files changed, 18 insertions(+), 7 deletions(-)
->>>>>>>>>>>
->>
->> <snip>
->>
->>>>>
->>>>> Yes certainly, this is another option (rather preferred one).
->>>>>
->>>>> But to be consistent with other's I proposed this, please refer t=
-o the
->>>>> fn device_800_init(), where all xxx_init() are taking 2 arguments=
-, and
->>>>> second argument is pdata.
->>>>>
->>>>>
->>>>> There is room for cleanup, I agree.
->>>>> I can put this too in the next cleanup series.
->>>>>
->>>>
->>>> Note that this is init function, called from probe.
->>>>
->>>> So both approach looks ok to me.
->>>
->>> Please clean up the other.  Function and put it at the front of the
->>> set when you re-submit.
->>>
->>
->> Sorry for dumb question here :)
->> I did not understand what do you mean by "in front of the set"?
->>
->> You want to see all the patches into one single series?
->> Or
->> have separate series,
->> 	1. existing DT addition series
->> 	2. new clean-up series
->
-> [PATCH v6 0/5] mfd: 88pm800: Add Device tree support
-> =E2=94=9C>[PATCH v6 1/5] mfd: 88pm800: Obtain pdata from 'device' rat=
-her than passing as parameter
-> =E2=94=9C>[PATCH v6 2/5] mfd: 88pm800: Add device tree support
-> =E2=94=9C>[PATCH v6 3/5] mfd: 88pm800: Remove unnecessary protection =
-around pdata
-> =E2=94=9C>[PATCH v6 4/5] mfd: 88pm800: Set default interrupt clear me=
-thod
-> =E2=94=9C>[PATCH v6 5/5] mfd: devicetree: bindings: Add new 88pm800 m=
-fd binding
->
-
-Thanks Lee,
-
-Just FYI,
-I have done some reordering here, because of obvious reasons.
-
-Submitting patches shortly...
-
-Thanks,
-Vaibhav
+diff --git a/Documentation/devicetree/bindings/mfd/88pm800.txt b/Documentation/devicetree/bindings/mfd/88pm800.txt
+new file mode 100644
+index 0000000..dec842f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/88pm800.txt
+@@ -0,0 +1,53 @@
++* Marvell 88PM80x Power Management IC
++
++Required parent device properties:
++- compatible		: "marvell,88pm800", "marvell,88pm805", "marvell,88pm860"
++- reg			: the I2C slave address for the 88pm80x family chip
++- interrupts		: IRQ line for the 88pm80x family chip
++- interrupt-controller	: describes the 88pm80x family chip as an interrupt
++			  controller
++- #interrupt-cells 	: should be 1.
++			  The cell is the 88pm80x local IRQ number
++
++88pm80x family of devices consists of varied group of sub-devices:
++
++Device		 	Supply Names	 Description
++------		 	------------	 -----------
++88pm80x-onkey		:		: On key
++88pm80x-rtc		:		: RTC
++88pm80x-regulator	:		: Regulators
++
++Example:
++
++	pmic: 88pm800@30 {
++		compatible = "marvell,88pm800";
++		reg = <0x30>;
++		interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-parent = <&gic>;
++		interrupt-controller;
++		#interrupt-cells = <1>;
++
++		regulators {
++			compatible = "marvell,88pm80x-regulator";
++
++			buck1a: BUCK1A {
++				regulator-name = "BUCK1A";
++				regulator-min-microvolt = <600000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			ldo1: LDO1 {
++				regulator-name = "LDO1";
++				regulator-min-microvolt = <1700000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++		};
++
++		rtc {
++			compatible = "marvell,88pm80x-rtc";
++		};
++	};
+-- 
+1.9.1
