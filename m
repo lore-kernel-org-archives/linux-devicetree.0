@@ -1,251 +1,177 @@
-From: Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 2/2] arm64: dts: mediatek: add mt6795 support
-Date: Wed, 8 Jul 2015 18:14:40 +0800
-Message-ID: <1436350480-17276-3-git-send-email-mars.cheng@mediatek.com>
-References: <1436350480-17276-1-git-send-email-mars.cheng@mediatek.com>
+From: Jens Wiklander <jens.wiklander@linaro.org>
+Subject: [PATCH v4 0/5] generic TEE subsystem
+Date: Wed,  8 Jul 2015 12:16:27 +0200
+Message-ID: <1436350592-7732-1-git-send-email-jens.wiklander@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1436350480-17276-1-git-send-email-mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: CC Hwang <cc.hwang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Loda Chou <loda.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Miles Chen <miles.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Scott Shu <scott.shu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jades Shih <jades.shih-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, MY Chuang <my.chuang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>, valentin.manea@huawei.com, jean-michel.delorme@st.com, emmanuel.michel@st.com, javier@javigon.com, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>, Jens Wiklander <jens.wiklander@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds basic chip support for MT6795 SoC
+Hi,
 
-Signed-off-by: Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- arch/arm64/boot/dts/mediatek/Makefile       |   1 +
- arch/arm64/boot/dts/mediatek/mt6795-evb.dts |  34 ++++++
- arch/arm64/boot/dts/mediatek/mt6795.dtsi    | 164 ++++++++++++++++++++++++++++
- 3 files changed, 199 insertions(+)
- create mode 100644 arch/arm64/boot/dts/mediatek/mt6795-evb.dts
- create mode 100644 arch/arm64/boot/dts/mediatek/mt6795.dtsi
+This patch set introduces a generic TEE subsystem. The TEE subsystem wi=
+ll be
+able contain drivers for various TEE implementations. A TEE (Trusted
+Execution Environment) is a trusted OS running in some secure environme=
+nt,
+for example, TrustZone on ARM cpus, or a separate secure co-processor e=
+tc.
 
-diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
-index 3ce2462..e0a4bff 100644
---- a/arch/arm64/boot/dts/mediatek/Makefile
-+++ b/arch/arm64/boot/dts/mediatek/Makefile
-@@ -1,3 +1,4 @@
-+dtb-$(CONFIG_ARCH_MEDIATEK) += mt6795-evb.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8173-evb.dtb
- 
- always		:= $(dtb-y)
-diff --git a/arch/arm64/boot/dts/mediatek/mt6795-evb.dts b/arch/arm64/boot/dts/mediatek/mt6795-evb.dts
-new file mode 100644
-index 0000000..3a43c860
---- /dev/null
-+++ b/arch/arm64/boot/dts/mediatek/mt6795-evb.dts
-@@ -0,0 +1,34 @@
-+/*
-+ * Copyright (c) 2015 MediaTek Inc.
-+ * Author: Mars.C <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+/dts-v1/;
-+#include "mt6795.dtsi"
-+
-+/ {
-+	model = "MediaTek MT6795 Evaluation Board";
-+
-+	memory@40000000 {
-+		device_type = "memory";
-+		reg = <0 0x40000000 0 0x1e800000>;
-+	};
-+
-+	chosen {
-+		bootargs = "console=ttyS0,921600n8 earlyprintk";
-+		stdout-path = &uart0;
-+	};
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-diff --git a/arch/arm64/boot/dts/mediatek/mt6795.dtsi b/arch/arm64/boot/dts/mediatek/mt6795.dtsi
-new file mode 100644
-index 0000000..832be20
---- /dev/null
-+++ b/arch/arm64/boot/dts/mediatek/mt6795.dtsi
-@@ -0,0 +1,164 @@
-+/*
-+ * Copyright (c) 2015 MediaTek Inc.
-+ * Author: Mars.C <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+/ {
-+	compatible = "mediatek,mt6795";
-+	interrupt-parent = <&sysirq>;
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			reg = <0x000>;
-+		};
-+
-+		cpu1: cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			reg = <0x001>;
-+		};
-+
-+		cpu2: cpu@2 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			reg = <0x002>;
-+		};
-+
-+		cpu3: cpu@3 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			reg = <0x003>;
-+		};
-+
-+		cpu4: cpu@4 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			reg = <0x100>;
-+		};
-+
-+		cpu5: cpu@5 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			reg = <0x101>;
-+		};
-+
-+		cpu6: cpu@6 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			reg = <0x102>;
-+		};
-+
-+		cpu7: cpu@7 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			reg = <0x103>;
-+		};
-+	};
-+
-+	clocks {
-+		system_clk: dummy13m {
-+			compatible = "fixed-clock";
-+			clock-frequency = <13000000>;
-+			#clock-cells = <0>;
-+		};
-+
-+		rtc_clk: dummy32k {
-+			compatible = "fixed-clock";
-+			clock-frequency = <32000>;
-+			#clock-cells = <0>;
-+		};
-+
-+		uart_clk: dummy26m {
-+			compatible = "fixed-clock";
-+			clock-frequency = <26000000>;
-+			#clock-cells = <0>;
-+		};
-+	};
-+
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		interrupt-parent = <&gic>;
-+		interrupts = <GIC_PPI 13
-+			     (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 14
-+			     (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 11
-+			     (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 10
-+			     (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
-+	};
-+
-+	sysirq: intpol-controller@10200620 {
-+		compatible = "mediatek,mt6795-sysirq",
-+			     "mediatek,mt6577-sysirq";
-+		interrupt-controller;
-+		#interrupt-cells = <3>;
-+		interrupt-parent = <&gic>;
-+		reg = <0 0x10200620 0 0x20>;
-+	};
-+
-+	gic: interrupt-controller@10221000 {
-+		compatible = "arm,gic-400";
-+		#interrupt-cells = <3>;
-+		interrupt-parent = <&gic>;
-+		interrupt-controller;
-+		reg = <0 0x10221000 0 0x1000>,
-+		      <0 0x10222000 0 0x2000>,
-+		      <0 0x10224000 0 0x2000>,
-+		      <0 0x10226000 0 0x2000>;
-+	};
-+
-+	uart0: serial@11002000 {
-+		compatible = "mediatek,mt6795-uart",
-+			     "mediatek,mt6577-uart";
-+		reg = <0 0x11002000 0 0x400>;
-+		interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&uart_clk>;
-+		status = "disabled";
-+	};
-+
-+	uart1: serial@11003000 {
-+		compatible = "mediatek,mt6795-uart",
-+			     "mediatek,mt6577-uart";
-+		reg = <0 0x11003000 0 0x400>;
-+		interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&uart_clk>;
-+		status = "disabled";
-+	};
-+
-+	uart2: serial@11004000 {
-+		compatible = "mediatek,mt6795-uart",
-+			     "mediatek,mt6577-uart";
-+		reg = <0 0x11004000 0 0x400>;
-+		interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&uart_clk>;
-+		status = "disabled";
-+	};
-+
-+	uart3: serial@11005000 {
-+		compatible = "mediatek,mt6795-uart",
-+			     "mediatek,mt6577-uart";
-+		reg = <0 0x11005000 0 0x400>;
-+		interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&uart_clk>;
-+		status = "disabled";
-+	};
-+};
--- 
-1.8.1.1.dirty
+Regarding use cases, TrustZone has traditionally been used for
+offloading secure tasks to the secure world. Examples include banking
+applications, Digital Rights Management (DRM), or specific secure
+solutions.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This TEE subsystem can serve a TEE driver for a Global Platform complia=
+nt
+TEE, but it's not limited to only Global Platform TEEs.  One reason why=
+ I'm
+doing this to be able to get an OP-TEE (https://github.com/OP-TEE/optee=
+_os)
+driver upstream.
+
+"tee: generic TEE subsystem" brings in the generic TEE subsystem which
+helps when writing a driver for a specific TEE, for example, OP-TEE.
+
+"tee: add OP-TEE driver" is an OP-TEE driver which uses the subsystem t=
+o do
+its work.
+
+This patch set has been prepared in cooperation with Javier Gonz=C3=A1l=
+ez who
+proposed "Generic TrustZone Driver in Linux Kernel" patches 28 Nov 2014=
+,
+https://lwn.net/Articles/623380/ . We've since then changed the scope t=
+o
+TEE instead of TrustZone.
+
+We have discussed the design on tee-dev@lists.linaro.org (archive at
+https://lists.linaro.org/pipermail/tee-dev/) with people from other
+companies, including Valentin Manea <valentin.manea@huawei.com>,
+Emmanuel MICHEL <emmanuel.michel@st.com>,
+Jean-michel DELORME <jean-michel.delorme@st.com>,
+and Joakim Bech <joakim.bech@linaro.org>. Our main concern has been to
+agree on something that is generic enough to support many different
+TEEs while still keeping the interface together.
+
+v4:
+* Rebased on 4.1
+* Redesigned the synchronization around entry exit of normal SMC
+* Replaced rwsem on the driver instance with kref and completion since
+  rwsem wasn't intended to be used in this way
+* Expanded the TEE_IOCTL_PARAM_ATTR_TYPE_MASK to make room for
+  future additional parameter types
+* Documents TEE subsystem and OP-TEE driver
+* Replaced TEE_IOC_CMD with TEE_IOC_OPEN_SESSION, TEE_IOC_INVOKE,
+  TEE_IOC_CANCEL and TEE_IOC_CLOSE_SESSION
+* DT bindings in a separate patch
+* Assembly parts moved to arch/arm and arch/arm64 respectively, in a
+  separate patch
+* Redefined/clarified the meaning of OPTEE_SMC_SHM_CACHED
+* Removed CMA usage to limit the scope of the patch set
+
+v3:
+* Rebased on 4.1-rc3 (dma_buf_export() API change)
+* A couple of small sparse fixes
+* Documents bindings for OP-TEE driver
+* Updated MAINTAINERS
+
+v2:
+* Replaced the stubbed OP-TEE driver with a real OP-TEE driver
+* Removed most APIs not needed by OP-TEE in current state
+* Update Documentation/ioctl/ioctl-number.txt with correct path to tee.=
+h
+* Rename tee_shm_pool_alloc_cma() to tee_shm_pool_alloc()
+* Moved tee.h into include/uapi/linux/
+* Redefined tee.h IOCTL macros to be directly based on _IOR and friends
+* Removed version info on the API to user space, a data blob which
+  can contain an UUID is left for user space to be able to tell which
+  protocol to use in TEE_IOC_CMD
+* Changed user space exposed structures to only have types with __ pref=
+ix
+* Dropped THIS_MODULE from tee_fops
+* Reworked how the driver is registered and ref counted:
+  - moved from using an embedded struct miscdevice to an embedded struc=
+t
+    device.
+  - uses an struct rw_semaphore as synchronization for driver detachmen=
+t
+  - uses alloc/register pattern from TPM
+
+Thanks,
+Jens
+
+Jens Wiklander (5):
+  arm/arm64: add smccc ARCH32
+  dt/bindings: add bindings for optee
+  tee: generic TEE subsystem
+  tee: add OP-TEE driver
+  Documentation: tee subsystem and op-tee driver
+
+ Documentation/00-INDEX                             |   2 +
+ Documentation/devicetree/bindings/optee/optee.txt  |  17 +
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ Documentation/ioctl/ioctl-number.txt               |   1 +
+ Documentation/tee.txt                              | 117 +++
+ MAINTAINERS                                        |  14 +
+ arch/arm/Kconfig                                   |   4 +
+ arch/arm/kernel/Makefile                           |   2 +
+ arch/arm/kernel/smccc-call.S                       |  26 +
+ arch/arm/kernel/smccc.c                            |  17 +
+ arch/arm64/Kconfig                                 |   4 +
+ arch/arm64/kernel/Makefile                         |   1 +
+ arch/arm64/kernel/smccc-call.S                     |  34 +
+ arch/arm64/kernel/smccc.c                          |  17 +
+ drivers/Kconfig                                    |   2 +
+ drivers/Makefile                                   |   1 +
+ drivers/tee/Kconfig                                |  18 +
+ drivers/tee/Makefile                               |   4 +
+ drivers/tee/optee/Kconfig                          |   8 +
+ drivers/tee/optee/Makefile                         |   5 +
+ drivers/tee/optee/call.c                           | 390 ++++++++++
+ drivers/tee/optee/core.c                           | 451 +++++++++++
+ drivers/tee/optee/optee_msg.h                      | 334 ++++++++
+ drivers/tee/optee/optee_private.h                  | 129 ++++
+ drivers/tee/optee/optee_smc.h                      | 466 ++++++++++++
+ drivers/tee/optee/rpc.c                            | 248 ++++++
+ drivers/tee/optee/supp.c                           | 212 ++++++
+ drivers/tee/tee.c                                  | 839 +++++++++++++=
+++++++++
+ drivers/tee/tee_private.h                          |  80 ++
+ drivers/tee/tee_shm.c                              | 324 ++++++++
+ drivers/tee/tee_shm_pool.c                         | 133 ++++
+ include/linux/arm-smccc.h                          |  80 ++
+ include/linux/tee_drv.h                            | 306 ++++++++
+ include/uapi/linux/tee.h                           | 376 +++++++++
+ 34 files changed, 4663 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/optee/optee.txt
+ create mode 100644 Documentation/tee.txt
+ create mode 100644 arch/arm/kernel/smccc-call.S
+ create mode 100644 arch/arm/kernel/smccc.c
+ create mode 100644 arch/arm64/kernel/smccc-call.S
+ create mode 100644 arch/arm64/kernel/smccc.c
+ create mode 100644 drivers/tee/Kconfig
+ create mode 100644 drivers/tee/Makefile
+ create mode 100644 drivers/tee/optee/Kconfig
+ create mode 100644 drivers/tee/optee/Makefile
+ create mode 100644 drivers/tee/optee/call.c
+ create mode 100644 drivers/tee/optee/core.c
+ create mode 100644 drivers/tee/optee/optee_msg.h
+ create mode 100644 drivers/tee/optee/optee_private.h
+ create mode 100644 drivers/tee/optee/optee_smc.h
+ create mode 100644 drivers/tee/optee/rpc.c
+ create mode 100644 drivers/tee/optee/supp.c
+ create mode 100644 drivers/tee/tee.c
+ create mode 100644 drivers/tee/tee_private.h
+ create mode 100644 drivers/tee/tee_shm.c
+ create mode 100644 drivers/tee/tee_shm_pool.c
+ create mode 100644 include/linux/arm-smccc.h
+ create mode 100644 include/linux/tee_drv.h
+ create mode 100644 include/uapi/linux/tee.h
+
+--=20
+1.9.1
