@@ -1,78 +1,69 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v4 3/5] tee: generic TEE subsystem
-Date: Wed, 8 Jul 2015 14:11:29 -0700
-Message-ID: <20150708211129.GA29824@kroah.com>
-References: <1436350592-7732-1-git-send-email-jens.wiklander@linaro.org>
- <1436350592-7732-4-git-send-email-jens.wiklander@linaro.org>
- <20150708171026.GA11740@obsidianresearch.com>
+From: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] GICv3: Add ITS entry to THUNDER dts
+Date: Wed, 08 Jul 2015 14:26:33 -0700
+Message-ID: <7hpp42cpdi.fsf@deeprootsystems.com>
+References: <1435345943-31833-1-git-send-email-tchalamarla@caviumnetworks.com>
+	<D2BD6D7B-E4B2-46B8-A324-9261DCFA2642@caviumnetworks.com>
+	<20150703095755.GH25907@e104818-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150708171026.GA11740@obsidianresearch.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Cc: Jens Wiklander <jens.wiklander@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, valentin.manea@huawei.com, jean-michel.delorme@st.com, emmanuel.michel@st.com, javier@javigon.com, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150703095755.GH25907-M2fw3Uu6cmfZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org> (Catalin
+	Marinas's message of "Fri, 3 Jul 2015 10:57:56 +0100")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Cc: "Chalamarla, Tirumalesh" <Tirumalesh.Chalamarla-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "marc.zyngier@arm.com" <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, "Will.Deacon@arm.com" <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "rrichter@cavium.com" <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tirumalesh Chalamarla <tchalamarla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "linux-kernel@vger.kernel.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 08, 2015 at 11:10:26AM -0600, Jason Gunthorpe wrote:
-> On Wed, Jul 08, 2015 at 12:16:30PM +0200, Jens Wiklander wrote:
-> 
-> > +static void tee_device_complete_unused(struct kref *kref)
-> > +{
-> > +	struct tee_device *teedev;
-> > +
-> > +	teedev = container_of(kref, struct tee_device, users);
-> > +	/* When the mutex is released, no other tee_device_get() will succeed */
-> > +	teedev->desc = NULL;
-> > +	complete(&teedev->c_no_users);
-> > +}
-> > +
-> > +void tee_device_put(struct tee_device *teedev)
-> > +{
-> > +	mutex_lock(&teedev->mutex);
-> > +	/* Shouldn't put in this state */
-> > +	if (!WARN_ON(!teedev->desc))
-> > +		kref_put(&teedev->users, tee_device_complete_unused);
-> > +	mutex_unlock(&teedev->mutex);
-> > +}
-> > +
-> > +bool tee_device_get(struct tee_device *teedev)
-> > +{
-> > +	mutex_lock(&teedev->mutex);
-> > +	if (!teedev->desc) {
-> > +		mutex_unlock(&teedev->mutex);
-> > +		return false;
-> > +	}
-> > +	kref_get(&teedev->users);
-> > +	mutex_unlock(&teedev->mutex);
-> > +	return true;
-> > +}
-> 
-> If you are holding the mutex then you don't really need a kref, just a
-> simple active count counter.
-> 
-> I've been a bit learly lately about seeing krefs used for something
-> other than kfree, I've seen a few subtle mistakes in those schemes -
-> yours looks OK, only because of the lock, and the lock makes the kref
-> redundant..
-> 
-> > +       cdev_init(&teedev->cdev, &tee_fops);
-> > +       teedev->cdev.owner = teedesc->owner;
-> 
-> This also needs to set teedev->cdev.kobj.parent.
-> I'm guessing:
-> 
->  teedev->cdev.kobj.parent = &teedev->dev.kobj;
-> 
-> TPM had the same mistake..
+Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org> writes:
 
-Really?  As of a few years ago, A cdev's kobject should not be touched
-by anything other than the cdev core.  It's not a "real" kobject in that
-it is never registered in sysfs, and no one sees it.  I keep meaning to
-just use something else one of these days for that structure, as lots of
-people get it wrong.  Or has things changed there?
+> On Thu, Jul 02, 2015 at 08:26:02PM +0000, Chalamarla, Tirumalesh wrote:
+>> > On Jun 26, 2015, at 12:12 PM, Tirumalesh Chalamarla <tchalamarla-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org> wrote:
+>> > 
+>> > From: Tirumalesh Chalamarla <tchalamarla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+>> > 
+>> > The PCIe host controller uses MSIs provided by GICv3 ITS. Enable it on
+>> > Thunder SoCs by adding an entry to DT.
+>> > 
+>> > Signed-off-by: Tirumalesh Chalamarla <tchalamarla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+>> > Acked-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+>> > ---
+>> > arch/arm64/boot/dts/cavium/thunder-88xx.dtsi | 9 +++++++++
+>> > 1 file changed, 9 insertions(+)
+>> > 
+>> > diff --git a/arch/arm64/boot/dts/cavium/thunder-88xx.dtsi b/arch/arm64/boot/dts/cavium/thunder-88xx.dtsi
+>> > index d8c0bdc..9cb7cf9 100644
+>> > --- a/arch/arm64/boot/dts/cavium/thunder-88xx.dtsi
+>> > +++ b/arch/arm64/boot/dts/cavium/thunder-88xx.dtsi
+>> > @@ -376,10 +376,19 @@
+>> > 		gic0: interrupt-controller@8010,00000000 {
+>> > 			compatible = "arm,gic-v3";
+>> > 			#interrupt-cells = <3>;
+>> > +			#address-cells = <2>;
+>> > +			#size-cells = <2>;
+>> > +			ranges;
+>> > 			interrupt-controller;
+>> > 			reg = <0x8010 0x00000000 0x0 0x010000>, /* GICD */
+>> > 			      <0x8010 0x80000000 0x0 0x600000>; /* GICR */
+>> > 			interrupts = <1 9 0xf04>;
+>> > +
+>> > +			its: gic-its@8010,00020000 {
+>> > +				compatible = "arm,gic-v3-its";
+>> > +				msi-controller;
+>> > +				reg = <0x8010 0x20000 0x0 0x200000>;
+>> > +			};
+>> > 		};
+>> > 
+>> > 		uaa0: serial@87e0,24000000 {
+>> 
+>> is it possible to pull this for 4.2?
+>
+> The dts files go in via the arm-soc tree (cc'ing arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org).
 
-thanks,
+Picked this up for v4.2-rc,
 
-greg k-h
+Kevin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
