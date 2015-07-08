@@ -1,68 +1,96 @@
-From: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] GICv3: Add ITS entry to THUNDER dts
-Date: Wed, 08 Jul 2015 14:26:33 -0700
-Message-ID: <7hpp42cpdi.fsf@deeprootsystems.com>
-References: <1435345943-31833-1-git-send-email-tchalamarla@caviumnetworks.com>
-	<D2BD6D7B-E4B2-46B8-A324-9261DCFA2642@caviumnetworks.com>
-	<20150703095755.GH25907@e104818-lin.cambridge.arm.com>
+From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH v4 3/5] tee: generic TEE subsystem
+Date: Wed, 8 Jul 2015 16:26:49 -0600
+Message-ID: <20150708222649.GA20068@obsidianresearch.com>
+References: <1436350592-7732-1-git-send-email-jens.wiklander@linaro.org>
+ <1436350592-7732-4-git-send-email-jens.wiklander@linaro.org>
+ <20150708171026.GA11740@obsidianresearch.com>
+ <20150708211129.GA29824@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150703095755.GH25907-M2fw3Uu6cmfZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org> (Catalin
-	Marinas's message of "Fri, 3 Jul 2015 10:57:56 +0100")
+Content-Disposition: inline
+In-Reply-To: <20150708211129.GA29824-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Cc: "Chalamarla, Tirumalesh" <Tirumalesh.Chalamarla-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "marc.zyngier@arm.com" <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, "Will.Deacon@arm.com" <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "rrichter@cavium.com" <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tirumalesh Chalamarla <tchalamarla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "linux-kernel@vger.kernel.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, valentin.manea-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, jean-michel.delorme-qxv4g6HH51o@public.gmane.org, emmanuel.michel-qxv4g6HH51o@public.gmane.org, javier-5MUHepqpBA1BDgjK7y7TUQ@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org> writes:
+On Wed, Jul 08, 2015 at 02:11:29PM -0700, Greg Kroah-Hartman wrote:
+> > > +       cdev_init(&teedev->cdev, &tee_fops);
+> > > +       teedev->cdev.owner = teedesc->owner;
+> > 
+> > This also needs to set teedev->cdev.kobj.parent.
+> > I'm guessing:
+> > 
+> >  teedev->cdev.kobj.parent = &teedev->dev.kobj;
+> > 
+> > TPM had the same mistake..
+> 
+> Really?  As of a few years ago, A cdev's kobject should not be touched
+> by anything other than the cdev core.  It's not a "real" kobject in that
+> it is never registered in sysfs, and no one sees it.  I keep meaning to
 
-> On Thu, Jul 02, 2015 at 08:26:02PM +0000, Chalamarla, Tirumalesh wrote:
->> > On Jun 26, 2015, at 12:12 PM, Tirumalesh Chalamarla <tchalamarla-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org> wrote:
->> > 
->> > From: Tirumalesh Chalamarla <tchalamarla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
->> > 
->> > The PCIe host controller uses MSIs provided by GICv3 ITS. Enable it on
->> > Thunder SoCs by adding an entry to DT.
->> > 
->> > Signed-off-by: Tirumalesh Chalamarla <tchalamarla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
->> > Acked-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
->> > ---
->> > arch/arm64/boot/dts/cavium/thunder-88xx.dtsi | 9 +++++++++
->> > 1 file changed, 9 insertions(+)
->> > 
->> > diff --git a/arch/arm64/boot/dts/cavium/thunder-88xx.dtsi b/arch/arm64/boot/dts/cavium/thunder-88xx.dtsi
->> > index d8c0bdc..9cb7cf9 100644
->> > --- a/arch/arm64/boot/dts/cavium/thunder-88xx.dtsi
->> > +++ b/arch/arm64/boot/dts/cavium/thunder-88xx.dtsi
->> > @@ -376,10 +376,19 @@
->> > 		gic0: interrupt-controller@8010,00000000 {
->> > 			compatible = "arm,gic-v3";
->> > 			#interrupt-cells = <3>;
->> > +			#address-cells = <2>;
->> > +			#size-cells = <2>;
->> > +			ranges;
->> > 			interrupt-controller;
->> > 			reg = <0x8010 0x00000000 0x0 0x010000>, /* GICD */
->> > 			      <0x8010 0x80000000 0x0 0x600000>; /* GICR */
->> > 			interrupts = <1 9 0xf04>;
->> > +
->> > +			its: gic-its@8010,00020000 {
->> > +				compatible = "arm,gic-v3-its";
->> > +				msi-controller;
->> > +				reg = <0x8010 0x20000 0x0 0x200000>;
->> > +			};
->> > 		};
->> > 
->> > 		uaa0: serial@87e0,24000000 {
->> 
->> is it possible to pull this for 4.2?
->
-> The dts files go in via the arm-soc tree (cc'ing arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org).
+Well, when I looked at it, it looked like it was necessary to maintain
+the refcount on the memory that is holding cdev.
 
-Picked this up for v4.2-rc,
+The basic issue is that cdev_del doesn't seem to be synchronizing.
 
-Kevin
+The use after free race is then something like:
+
+   struct tpm_chip {
+ 	struct device dev;
+	struct cdev cdev;
+
+       CPU0                            CPU1
+=================             ======================
+tpm_chip = kalloc
+cdev_add(&tpm_chip->cdev)
+device_add(&tpm_chip->dev)
+                                chrdev_open
+		                 filp->f_op->open
+cdev_del(&tpm_chip->cdev)
+device_unregister
+   (&tpm_chip->dev)
+ kfree(tpm_chip)
+		                  tpm_chip = container_of
+				 fput
+				  cdev_put(.. cdev)
+
+Ie we need cdev to hold a ref on tpm_chip->dev until cdev_put is
+called.
+
+> just use something else one of these days for that structure, as lots of
+> people get it wrong.  Or has things changed there?
+
+Not recently, but this is the commit:
+
+commit 2f0157f13f42800aa3d9017ebb0fb80a65f7b2de
+Author: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Date:   Sun Oct 21 17:57:19 2012 -0700
+
+    char_dev: pin parent kobject
+    
+    In certain cases (for example when a cdev structure is embedded into
+    another object whose lifetime is controlled by a separate kobject) it is
+    beneficial to tie lifetime of another object to the lifetime of
+    character device so that related object is not freed until after
+    char_dev object is freed.
+    
+    To achieve this let's pin kobject's parent when doing cdev_add() and
+    unpin when last reference to cdev structure is being released.
+    
+    Signed-off-by: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+    Acked-by: Al Viro <viro-RmSDqhL/yNMiFSDQTTA3OLVCufUGDwFn@public.gmane.org>
+    Signed-off-by: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+
+It doesn't seem the be the best situation, this is the 3rd time this
+week I've noticed cdev with a kalloc'd struct being used improperly.
+
+Perhaps cdev_init should accept the module and kref parent as an
+argument?
+
+Jason
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
