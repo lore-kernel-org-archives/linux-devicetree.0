@@ -1,47 +1,27 @@
-From: Cory Tusar <cory.tusar@pid1solutions.com>
-Subject: [PATCH 1/1] ARM: dts: vfxxx: Include support for esdhc0 functionality.
-Date: Wed,  8 Jul 2015 16:51:06 -0400
-Message-ID: <1436388666-29376-2-git-send-email-cory.tusar@pid1solutions.com>
-References: <1436388666-29376-1-git-send-email-cory.tusar@pid1solutions.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v1 3/3] ARM: tegra: Add gpio-ranges property
+Date: Wed, 08 Jul 2015 14:55:18 -0600
+Message-ID: <559D8E36.50209@wwwdotorg.org>
+References: <1435754753-31307-1-git-send-email-tomeu.vizoso@collabora.com> <1435754753-31307-4-git-send-email-tomeu.vizoso@collabora.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1436388666-29376-1-git-send-email-cory.tusar@pid1solutions.com>
+In-Reply-To: <1435754753-31307-4-git-send-email-tomeu.vizoso@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: shawnguo@kernel.org, kernel@pengutronix.de, stefan@agner.ch
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, andrew@lunn.ch, Cory Tusar <cory.tusar@pid1solutions.com>
+To: Tomeu Vizoso <tomeu.vizoso@collabora.com>, linux-kernel@vger.kernel.org
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Thierry Reding <thierry.reding@gmail.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Extend the existing Vybrid eSDHC devicetree implementation to also
-describe the esdhc0 functional block.
+On 07/01/2015 06:45 AM, Tomeu Vizoso wrote:
+> Specify how the GPIOs map to the pins in Tegra SoCs, so the dependency is
+> explicit.
+>
+> This currently will add a duplicated entry in the map from pins to gpios
+> in the pinmux controller but it should be harmless and will be fixed in a
+> later commit.
 
-Tested on a custom VF610-based board with a Toshiba THGBM1G5D2EBAI7 eMMC
-module attached to esdhc0.
+Isn't it in an earlier commit now (patch 2/3)? :-)
 
-Signed-off-by: Cory Tusar <cory.tusar@pid1solutions.com>
----
- arch/arm/boot/dts/vfxxx.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
-index 4aa3351..7e97017 100644
---- a/arch/arm/boot/dts/vfxxx.dtsi
-+++ b/arch/arm/boot/dts/vfxxx.dtsi
-@@ -445,6 +445,17 @@
- 				status = "disabled";
- 			};
- 
-+			esdhc0: esdhc@400b1000 {
-+				compatible = "fsl,imx53-esdhc";
-+				reg = <0x400b1000 0x1000>;
-+				interrupts = <27 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&clks VF610_CLK_IPG_BUS>,
-+					<&clks VF610_CLK_PLATFORM_BUS>,
-+					<&clks VF610_CLK_ESDHC0>;
-+				clock-names = "ipg", "ahb", "per";
-+				status = "disabled";
-+			};
-+
- 			esdhc1: esdhc@400b2000 {
- 				compatible = "fsl,imx53-esdhc";
- 				reg = <0x400b2000 0x1000>;
--- 
-2.3.6
+At a quick glance, I think this approach will be fine, so the series,
+Acked-by: Stephen Warren <swarren@nvidia.com>
