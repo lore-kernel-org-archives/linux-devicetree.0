@@ -1,70 +1,209 @@
-From: Jens Wiklander <jens.wiklander@linaro.org>
-Subject: [PATCH v4 2/5] dt/bindings: add bindings for optee
-Date: Wed,  8 Jul 2015 12:16:29 +0200
-Message-ID: <1436350592-7732-3-git-send-email-jens.wiklander@linaro.org>
-References: <1436350592-7732-1-git-send-email-jens.wiklander@linaro.org>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 2/2] arm64: dts: mediatek: add mt6795 support
+Date: Wed, 8 Jul 2015 11:23:43 +0100
+Message-ID: <20150708102343.GC7025@leverpostej>
+References: <1436350480-17276-1-git-send-email-mars.cheng@mediatek.com>
+ <1436350480-17276-3-git-send-email-mars.cheng@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1436350592-7732-1-git-send-email-jens.wiklander@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>
-Cc: valentin.manea@huawei.com, Mark Rutland <mark.rutland@arm.com>, javier@javigon.com, emmanuel.michel@st.com, Herbert Xu <herbert@gondor.apana.org.au>, Michal Simek <michal.simek@xilinx.com>, jean-michel.delorme@st.com, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Jens Wiklander <jens.wiklander@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1436350480-17276-3-git-send-email-mars.cheng@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mars Cheng <mars.cheng@mediatek.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, CC Hwang <cc.hwang@mediatek.com>, Loda Chou <loda.chou@mediatek.com>, Miles Chen <miles.chen@mediatek.com>, Scott Shu <scott.shu@mediatek.com>, Jades Shih <jades.shih@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, MY Chuang <my.chuang@mediatek.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Introduces optee prefix and adds bindings for ARM TrustZone based OP-TEE
-implementation.
+On Wed, Jul 08, 2015 at 11:14:40AM +0100, Mars Cheng wrote:
+> This adds basic chip support for MT6795 SoC
+> 
+> Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
+> ---
+>  arch/arm64/boot/dts/mediatek/Makefile       |   1 +
+>  arch/arm64/boot/dts/mediatek/mt6795-evb.dts |  34 ++++++
+>  arch/arm64/boot/dts/mediatek/mt6795.dtsi    | 164 ++++++++++++++++++++++++++++
+>  3 files changed, 199 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/mediatek/mt6795-evb.dts
+>  create mode 100644 arch/arm64/boot/dts/mediatek/mt6795.dtsi
+> 
+> diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
+> index 3ce2462..e0a4bff 100644
+> --- a/arch/arm64/boot/dts/mediatek/Makefile
+> +++ b/arch/arm64/boot/dts/mediatek/Makefile
+> @@ -1,3 +1,4 @@
+> +dtb-$(CONFIG_ARCH_MEDIATEK) += mt6795-evb.dtb
+>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt8173-evb.dtb
+>  
+>  always		:= $(dtb-y)
+> diff --git a/arch/arm64/boot/dts/mediatek/mt6795-evb.dts b/arch/arm64/boot/dts/mediatek/mt6795-evb.dts
+> new file mode 100644
+> index 0000000..3a43c860
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/mediatek/mt6795-evb.dts
+> @@ -0,0 +1,34 @@
+> +/*
+> + * Copyright (c) 2015 MediaTek Inc.
+> + * Author: Mars.C <mars.cheng@mediatek.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +/dts-v1/;
+> +#include "mt6795.dtsi"
+> +
+> +/ {
+> +	model = "MediaTek MT6795 Evaluation Board";
+> +
+> +	memory@40000000 {
+> +		device_type = "memory";
+> +		reg = <0 0x40000000 0 0x1e800000>;
+> +	};
+> +
+> +	chosen {
+> +		bootargs = "console=ttyS0,921600n8 earlyprintk";
 
-Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
----
- Documentation/devicetree/bindings/optee/optee.txt     | 17 +++++++++++++++++
- Documentation/devicetree/bindings/vendor-prefixes.txt |  1 +
- 2 files changed, 18 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/optee/optee.txt
+PLease get rid of bootargs here; earlyprintk doesn't do anything on
+arm64 (it's earlycon these days), and you can specify the serial
+configuration in stdout-path, so please use that instead.
 
-diff --git a/Documentation/devicetree/bindings/optee/optee.txt b/Documentation/devicetree/bindings/optee/optee.txt
-new file mode 100644
-index 0000000..4a6ff10
---- /dev/null
-+++ b/Documentation/devicetree/bindings/optee/optee.txt
-@@ -0,0 +1,17 @@
-+OP-TEE Device Tree Bindings
-+
-+OP-TEE is a piece of software using hardware features to provide a Trusted
-+Execution Environment. The security can be provided with ARM TrustZone, but
-+also by virtualization or a separate chip. As there's no single OP-TEE
-+vendor we're using "optee" as the first part of compatible property,
-+indicating the OP-TEE protocol is used when communicating with the secure
-+world.
-+
-+* OP-TEE based on ARM TrustZone required properties:
-+
-+- compatible="optee,optee-tz"
-+
-+Example:
-+	optee {
-+		compatible="optee,optee-tz";
-+	};
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 8033919..17c2a7e 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -141,6 +141,7 @@ nvidia	NVIDIA
- nxp	NXP Semiconductors
- onnn	ON Semiconductor Corp.
- opencores	OpenCores.org
-+optee	OP-TEE, Open Portable Trusted Execution Environment
- ortustech	Ortus Technology Co., Ltd.
- ovti	OmniVision Technologies
- panasonic	Panasonic Corporation
--- 
-1.9.1
+> +		stdout-path = &uart0;
+> +	};
+> +};
+> +
+> +&uart0 {
+> +	status = "okay";
+> +};
+> diff --git a/arch/arm64/boot/dts/mediatek/mt6795.dtsi b/arch/arm64/boot/dts/mediatek/mt6795.dtsi
+> new file mode 100644
+> index 0000000..832be20
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/mediatek/mt6795.dtsi
+> @@ -0,0 +1,164 @@
+> +/*
+> + * Copyright (c) 2015 MediaTek Inc.
+> + * Author: Mars.C <mars.cheng@mediatek.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +/ {
+> +	compatible = "mediatek,mt6795";
+> +	interrupt-parent = <&sysirq>;
+> +	#address-cells = <2>;
+> +	#size-cells = <2>;
+> +
+> +	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		cpu0: cpu@0 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53";
+> +			reg = <0x000>;
+> +		};
+> +
+> +		cpu1: cpu@1 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53";
+> +			reg = <0x001>;
+> +		};
+
+No enable-method? Does your FW patch that in?
+
+> +
+> +		cpu2: cpu@2 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53";
+> +			reg = <0x002>;
+> +		};
+> +
+> +		cpu3: cpu@3 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53";
+> +			reg = <0x003>;
+> +		};
+> +
+> +		cpu4: cpu@4 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53";
+> +			reg = <0x100>;
+> +		};
+
+The unit-address should match the reg (e.g. this should be cpu@100).
+
+> +
+> +		cpu5: cpu@5 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53";
+> +			reg = <0x101>;
+> +		};
+> +
+> +		cpu6: cpu@6 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53";
+> +			reg = <0x102>;
+> +		};
+> +
+> +		cpu7: cpu@7 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53";
+> +			reg = <0x103>;
+> +		};
+> +	};
+> +
+> +	clocks {
+> +		system_clk: dummy13m {
+> +			compatible = "fixed-clock";
+> +			clock-frequency = <13000000>;
+> +			#clock-cells = <0>;
+> +		};
+> +
+> +		rtc_clk: dummy32k {
+> +			compatible = "fixed-clock";
+> +			clock-frequency = <32000>;
+> +			#clock-cells = <0>;
+> +		};
+> +
+> +		uart_clk: dummy26m {
+> +			compatible = "fixed-clock";
+> +			clock-frequency = <26000000>;
+> +			#clock-cells = <0>;
+> +		};
+> +	};
+
+Get rid of the clocks node and place these directly under the root node.
+
+> +
+> +	timer {
+> +		compatible = "arm,armv8-timer";
+> +		interrupt-parent = <&gic>;
+> +		interrupts = <GIC_PPI 13
+> +			     (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 14
+> +			     (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 11
+> +			     (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 10
+> +			     (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+> +	};
+
+The mask is wrong.
+
+Thanks,
+Mark.
