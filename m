@@ -1,124 +1,56 @@
-From: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: mt8173: add clock_null
-Date: Wed, 8 Jul 2015 10:37:21 +0800
-Message-ID: <1436323041.27396.23.camel@mtksdaap41>
-References: <1434605351-64592-1-git-send-email-eddie.huang@mediatek.com>
-	 <20150707130732.GD18561@pengutronix.de>
-	 <CAGS+omCgSjLZ2Ae5DqfmEm-2BrxQqw2ztxUCxBSngNSXxabtbg@mail.gmail.com>
-	 <20150707143621.GW18700@pengutronix.de>
-	 <CAGS+omChOC-EYsmA5ytT+ho0UXvcL1-mjK4Z8=EgboKzwWmtyw@mail.gmail.com>
+From: Wang Dongsheng <Dongsheng.Wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH 1/2] powerpc/85xx: Add binding for SCFG
+Date: Wed, 8 Jul 2015 02:48:17 +0000
+Message-ID: <SN1PR0301MB1616D624A6C73B4767EE7A1B9D910@SN1PR0301MB1616.namprd03.prod.outlook.com>
+References: <1436262437-31390-1-git-send-email-dongsheng.wang@freescale.com>
+ <1436298620.2658.41.camel@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGS+omChOC-EYsmA5ytT+ho0UXvcL1-mjK4Z8=EgboKzwWmtyw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1436298620.2658.41.camel-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, mturquette-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Priyanka Jain <Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-07-07 at 23:10 +0800, Daniel Kurtz wrote:
-> On Tue, Jul 7, 2015 at 10:36 PM, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> > On Tue, Jul 07, 2015 at 10:15:29PM +0800, Daniel Kurtz wrote:
-> >> On Tue, Jul 7, 2015 at 9:07 PM, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> >> > On Thu, Jun 18, 2015 at 01:29:11PM +0800, Eddie Huang wrote:
-> >> >> Add clk_null, which represents clocks that can not / need not
-> >> >> controlled by software.
-> >> >> There are many clocks' parent set to clk_null.
-> >> >>
-> >> >> Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> >> >> Signed-off-by: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> >> >> ---
-> >> >> Base on 4.1-rc1
-> >> >>
-> >> >> Change-Id: I4db9b40d07e28f54f7bae9b676316cbd6a962124
-> >> >> ---
-> >> >>  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 6 ++++++
-> >> >>  1 file changed, 6 insertions(+)
-> >> >>
-> >> >> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> >> >> index 924fdb6..4798f44 100644
-> >> >> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> >> >> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> >> >> @@ -81,6 +81,12 @@
-> >> >>               cpu_on        = <0x84000003>;
-> >> >>       };
-> >> >>
-> >> >> +     clk_null: clk_null {
-> >> >> +             compatible = "fixed-clock";
-> >> >> +             clock-frequency = <0>;
-> >> >> +             #clock-cells = <0>;
-> >> >> +     };
-> >> >
-> >> > The discussion around this patch shows that we don't want to have this
-> >> > clock in the device tree as it is not a hardware description.
-> >> >
-> >> > Ok, fine. Eddie, you told us that the rate of the current clk_null children
-> >> > is not interesting. What's the motivation to send this patch anyway
-> >> > then? Why can't you keep its children on the orphan list where they are
-> >> > already now?
-> >> >
-> >> > Another possibility would be to instantiate the clk_null clock from C
-> >> > code rather than from the device tree. This way we wouldn't put any
-> >> > wrong descriptions into the device tree and still can implement the
-> >> > support for the real parent clocks when we actually need them.
-> >>
-> >> Some device nodes, like mmc, use a clk_null phandle as one of their clocks:
-> >>
-> >> mmc1: mmc@11240000 {
-> >>         compatible = "mediatek,mt8173-mmc",
-> >>                      "mediatek,mt8135-mmc";
-> >>         reg = <0 0x11240000 0 0x1000>;
-> >>         interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_LOW>;
-> >>         clocks = <&pericfg CLK_PERI_MSDC30_1>,
-> >>                  <&clk_null>;
-> >>         clock-names = "source", "hclk";
-> >>         status = "disabled";
-> >> };
-> >
-> > This is another case than the one we discussed about. In the case above
-> > I motivated using a dummy clock since the clock exists in the system,
-> > but is not software controllable. To abstract this from the driver
-> > (which needs this clock since it exists) we here have the dummy clock.
-> > However, of course I can't prove the clock is indeed not software
-> > controllable; that's only the information I have.
-> 
-> I was trying to answer your question "What's the motivation to send
-> this patch anyway?".
-> The motivation is to send follow on patches that use the clk_null
-> phandle.  We need to provide some clock as the mmc1's hclk.  I do not
-> understand why this has to be "clk_null", though.  It seems like this
-> should be a real clock coming from one of the real clock_controller
-> nodes.  After all, the mmc driver is going to be enabling/disabling
-> this clock for power savings at runtime.  What does that even mean for
-> clk_null ?
-
-The original purpose of this patch is to provide a common dummy clock
-for both software don't care clock and clock that is not software
-controllable.I got comments that device tree should describe hardware
-and should put exact clock in device tree. I think this is true. So we
-will remove this clock_null patch, and:
-
-1. For Mediatek SoC CCF driver, James will clarify clock usage further.
-Actually, we still think it's not necessary to describe whole tree that
-software don't care, James will deal this in clock driver.
-
-2. For other module that use SW not controllable clock (mmc case
-mentioned by Dan), because this is a real clock, we will put a dummy
-clock in device tree, like
-
-clk_mmchclk: dummyhclk {
-	compatible = "fixed-clock";
-	clock-frequency = <0>;
-	#clock-cells = <0>;
-};
-
-How about this modification ?
-
-Thanks
-Eddie
-
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogV29vZCBTY290dC1CMDc0
+MjENCj4gU2VudDogV2VkbmVzZGF5LCBKdWx5IDA4LCAyMDE1IDM6NTAgQU0NCj4gVG86IFdhbmcg
+RG9uZ3NoZW5nLUI0MDUzNA0KPiBDYzogcm9iaCtkdEBrZXJuZWwub3JnOyBpamMrZGV2aWNldHJl
+ZUBoZWxsaW9uLm9yZy51azsgZ2FsYWtAY29kZWF1cm9yYS5vcmc7DQo+IEphaW4gUHJpeWFua2Et
+QjMyMTY3OyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENI
+IDEvMl0gcG93ZXJwYy84NXh4OiBBZGQgYmluZGluZyBmb3IgU0NGRw0KPiANCj4gT24gVHVlLCAy
+MDE1LTA3LTA3IGF0IDE3OjQ3ICswODAwLCBEb25nc2hlbmcgV2FuZyB3cm90ZToNCj4gPiBGcm9t
+OiBXYW5nIERvbmdzaGVuZyA8ZG9uZ3NoZW5nLndhbmdAZnJlZXNjYWxlLmNvbT4NCj4gPg0KPiA+
+IFNDRkcgcHJvdmlkZXMgU29DIHNwZWNpZmljIGNvbmZpZ3VyYXRpb24gYW5kIHN0YXR1cyByZWdp
+c3RlcnMgZm9yIHRoZQ0KPiA+IGNoaXAuIEFkZCB0aGlzIGZvciBwb3dlcnBjIHBsYXRmb3JtLg0K
+PiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogV2FuZyBEb25nc2hlbmcgPGRvbmdzaGVuZy53YW5nQGZy
+ZWVzY2FsZS5jb20+DQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL3Bvd2VycGMvZnNsL2JvYXJkLnR4dA0KPiA+IGIvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VycGMvZnNsL2JvYXJkLnR4dA0KPiA+IGluZGV4IGNmZjM4
+YmQuLjU1NjA0ZmUgMTAwNjQ0DQo+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL3Bvd2VycGMvZnNsL2JvYXJkLnR4dA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9ib2FyZC50eHQNCj4gPiBAQCAtMyw2ICszLDI1
+IEBAIEZyZWVzY2FsZSBSZWZlcmVuY2UgQm9hcmQgQmluZGluZ3MgIFRoaXMgZG9jdW1lbnQNCj4g
+PiBkZXNjcmliZXMgZGV2aWNlIHRyZWUgYmluZGluZ3MgZm9yIHZhcmlvdXMgZGV2aWNlcyB0aGF0
+ICBleGlzdCBvbiBzb21lDQo+ID4gRnJlZXNjYWxlIHJlZmVyZW5jZSBib2FyZHMuDQo+ID4NCj4g
+PiArKiBTdXBwbGVtZW50IGNvbmZpZ3VyYXRpb24gdW5pdCAoU0NGRykNCj4gPiArDQo+ID4gK1ND
+RkcgaXMgdGhlIHN1cHBsZW1lbnRhbCBjb25maWd1cmF0aW9uIHVuaXQsIHRoYXQgcHJvdmlkZXMg
+U29DDQo+ID4gK3NwZWNpZmljIGNvbmZpZ3VyYXRpb24gYW5kIHN0YXR1cyByZWdpc3RlcnMgZm9y
+IHRoZSBjaGlwLiBTdWNoIGFzDQo+ID4gK2dldHRpbmcgUEVYIHBvcnQgc3RhdHVzLg0KPiA+ICsN
+Cj4gPiArUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiArDQo+ID4gKy0gY29tcGF0aWJsZTogc2hv
+dWxkIGJlICJmc2wsPGJvYXJkPi1zY2ZnIg0KPiANCj4gZnNsLDxjaGlwPi1zY2ZnDQoNClRoYW5r
+cy4NCg0KPiA+ICstIHJlZzogc2hvdWxkIGNvbnRhaW4gYmFzZSBhZGRyZXNzIGFuZCBsZW5ndGgg
+b2YgU0NGRyBtZW1vcnktbWFwcGVkDQo+ID4gK3JlZ2lzdGVycw0KPiA+ICsNCj4gPiArRXhhbXBs
+ZToNCj4gPiArDQo+ID4gKyAgICAgc2NmZzogIGdsb2JhbC11dGlsaXRpZXNAZmMwMDB7DQo+ID4g
+KyAgICAgICAgICAgICBjb21wYXRpYmxlID0gImZzbCx0MTA0MC1zY2ZnIjsNCj4gPiArICAgICAg
+ICAgICAgIHJlZyA9IDwweGZjMDAwIDB4MTAwMD47DQo+ID4gKyAgICAgfTsNCj4gPiArDQo+IA0K
+PiBJIGRvbid0IHRoaW5rIGJvYXJkLnR4dCBpcyB0aGUgcmlnaHQgcGxhY2UgZm9yIHRoaXMsIHNp
+bmNlIGl0J3MgcGFydCBvZiB0aGUgU29DLA0KPiBub3QgdGhlIGJvYXJkLiAgUHV0IGl0IGluIGl0
+cyBvd24gZmlsZS4NCg0KT0ssIHdpbGwgcHV0IGl0IGluIERvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9zY2ZnLnR4dC4NCg0KUmVnYXJkcywNCi1Eb25nc2hlbmcN
+Cg==
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
