@@ -1,92 +1,57 @@
-From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Subject: Re: [PATCH v4 3/5] tee: generic TEE subsystem
-Date: Wed, 8 Jul 2015 11:10:26 -0600
-Message-ID: <20150708171026.GA11740@obsidianresearch.com>
-References: <1436350592-7732-1-git-send-email-jens.wiklander@linaro.org>
- <1436350592-7732-4-git-send-email-jens.wiklander@linaro.org>
+From: Josh Cartwright <joshc@ni.com>
+Subject: Re: [PATCH v7 0/3] Add arm pl353 smc nand driver for xilinx zynq soc
+Date: Wed, 8 Jul 2015 14:40:51 -0500
+Message-ID: <20150708194051.GP25028@jcartwri.amer.corp.natinst.com>
+References: <1433786918-21500-1-git-send-email-punnaia@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="+ARLBH93C7pgvpZY"
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1433786918-21500-1-git-send-email-punnaia@xilinx.com>
 Content-Disposition: inline
-In-Reply-To: <1436350592-7732-4-git-send-email-jens.wiklander@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jens Wiklander <jens.wiklander@linaro.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, valentin.manea@huawei.com, jean-michel.delorme@st.com, emmanuel.michel@st.com, javier@javigon.com, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: dwmw2@infradead.org, computersforpeace@gmail.com, michal.simek@xilinx.com
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, grant.likely@linaro.org, gregkh@linuxfoundation.org, jason@lakedaemon.net, ezequiel.garcia@free-electrons.com, arnd@arndb.de, artem.bityutskiy@linux.intel.com, jussi.kivilinna@iki.fi, acourbot@nvidia.com, ivan.khoronzhuk@ti.com, joern@logfs.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, kpc528@gmail.com, kalluripunnaiahchoudary@gmail.com, punnaia@xilinx.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 08, 2015 at 12:16:30PM +0200, Jens Wiklander wrote:
 
-> +static void tee_device_complete_unused(struct kref *kref)
-> +{
-> +	struct tee_device *teedev;
-> +
-> +	teedev = container_of(kref, struct tee_device, users);
-> +	/* When the mutex is released, no other tee_device_get() will succeed */
-> +	teedev->desc = NULL;
-> +	complete(&teedev->c_no_users);
-> +}
-> +
-> +void tee_device_put(struct tee_device *teedev)
-> +{
-> +	mutex_lock(&teedev->mutex);
-> +	/* Shouldn't put in this state */
-> +	if (!WARN_ON(!teedev->desc))
-> +		kref_put(&teedev->users, tee_device_complete_unused);
-> +	mutex_unlock(&teedev->mutex);
-> +}
-> +
-> +bool tee_device_get(struct tee_device *teedev)
-> +{
-> +	mutex_lock(&teedev->mutex);
-> +	if (!teedev->desc) {
-> +		mutex_unlock(&teedev->mutex);
-> +		return false;
-> +	}
-> +	kref_get(&teedev->users);
-> +	mutex_unlock(&teedev->mutex);
-> +	return true;
-> +}
+--+ARLBH93C7pgvpZY
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-If you are holding the mutex then you don't really need a kref, just a
-simple active count counter.
+On Mon, Jun 08, 2015 at 11:38:35PM +0530, Punnaiah Choudary Kalluri wrote:
+> The following patches add arm pl353 static memory controller driver for
+> xilinx zynq soc. The arm pl353 smc supports two interfaces i.e nand and
+> nor/sram memory interfaces. The current implementation supports only a
+> single SMC instance and nand specific configuration.
 
-I've been a bit learly lately about seeing krefs used for something
-other than kfree, I've seen a few subtle mistakes in those schemes -
-yours looks OK, only because of the lock, and the lock makes the kref
-redundant..
+What's the integration plan for this guy?  Looks like we missed 4.2.
+It'd be swell to get have NAND support land for Zynq in 4.3.
 
-> +       cdev_init(&teedev->cdev, &tee_fops);
-> +       teedev->cdev.owner = teedesc->owner;
+Assuming there is nothing else holding it back:
 
-This also needs to set teedev->cdev.kobj.parent.
-I'm guessing:
+Brian- I'm assuming you'll want to take this through your tree.
 
- teedev->cdev.kobj.parent = &teedev->dev.kobj;
+It looks like most of the stuff in drivers/memory have historically gone
+through arm-soc/drivers, Michal- does it make sense for you to pick up
+http://lkml.kernel.org/r/1433786857-32575-1-git-send-email-punnaia@xilinx.com?
 
-TPM had the same mistake..
+Thanks,
+  Josh
 
-> +void tee_device_unregister(struct tee_device *teedev)
-> +{
-> +	if (IS_ERR_OR_NULL(teedev))
-> +		return;
+--+ARLBH93C7pgvpZY
+Content-Type: application/pgp-signature; name="signature.asc"
 
-See for some general colour on IS_ERR_OR_NULL
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-https://www.mail-archive.com/linux-omap@vger.kernel.org/msg78030.html
+iQEcBAABCAAGBQJVnXy/AAoJEKp7ZBKwQFArjI0H/ir6PMmzySwqvHfaDpdP6/ac
+LvALkoUK74SaRfxjc5NrFzF7Aah0BnjAtKrW16SsJUoYyTEghx+sZ8BzAXwG0Y+C
+iVBL5dqyeu3BjJQrup9FeiXvhQ+/VBDef2iabTeWrLjznxaXnTTEMWlLH4piZp6o
+19cyseFNEAmD+jmDIXpEclLrEHkD/JcNSlRUcJXftt6DQOulwKLcxX4FIDRgk6VR
+agp4jdPT9u8J8i7VapwVIa3kRfHD12bObe+e1Joor2ogsqj2psEbHl1hJ5T1er9T
+kYU8xCBc8mIsvBfc4iCgCX6BqZmycZ2Wctmfg2BpaSnWCYNBy3TTehTuaIwzyr8=
+=sIiL
+-----END PGP SIGNATURE-----
 
-IMHO, you should never, store an ERR pointer into long term storage,
-so I wonder why this is like this...
-
-> +	if (teedev->flags & TEE_DEVICE_FLAG_REGISTERED) {
-> +		cdev_del(&teedev->cdev);
-> +		device_del(&teedev->dev);
-> +	}
-> +
-> +	tee_device_put(teedev);
-> +	wait_for_completion(&teedev->c_no_users);
-
-Generally in a scheme like this we'd see open and release get/put the
-underlying module handle to prevent driver removal while the char dev
-is open. Otherwise module removal will hang here.
-
-Jason
+--+ARLBH93C7pgvpZY--
