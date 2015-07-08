@@ -1,57 +1,167 @@
-From: Wang Dongsheng <Dongsheng.Wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH 1/2] powerpc/85xx: Add binding for SCFG
-Date: Wed, 8 Jul 2015 02:48:17 +0000
-Message-ID: <SN1PR0301MB1616D624A6C73B4767EE7A1B9D910@SN1PR0301MB1616.namprd03.prod.outlook.com>
-References: <1436262437-31390-1-git-send-email-dongsheng.wang@freescale.com>
- <1436298620.2658.41.camel@freescale.com>
+From: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v6 07/23] usb: common: add API to update usb otg
+ capabilities by device tree
+Date: Wed, 8 Jul 2015 10:05:31 +0800
+Message-ID: <20150708020529.GA11714@shlinux2>
+References: <1435564082-14583-1-git-send-email-jun.li@freescale.com>
+ <1435564082-14583-8-git-send-email-jun.li@freescale.com>
+ <559BD2C2.3050509@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1436298620.2658.41.camel-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Priyanka Jain <Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <559BD2C2.3050509-l0cyMroinI0@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+d-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogV29vZCBTY290dC1CMDc0
-MjENCj4gU2VudDogV2VkbmVzZGF5LCBKdWx5IDA4LCAyMDE1IDM6NTAgQU0NCj4gVG86IFdhbmcg
-RG9uZ3NoZW5nLUI0MDUzNA0KPiBDYzogcm9iaCtkdEBrZXJuZWwub3JnOyBpamMrZGV2aWNldHJl
-ZUBoZWxsaW9uLm9yZy51azsgZ2FsYWtAY29kZWF1cm9yYS5vcmc7DQo+IEphaW4gUHJpeWFua2Et
-QjMyMTY3OyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENI
-IDEvMl0gcG93ZXJwYy84NXh4OiBBZGQgYmluZGluZyBmb3IgU0NGRw0KPiANCj4gT24gVHVlLCAy
-MDE1LTA3LTA3IGF0IDE3OjQ3ICswODAwLCBEb25nc2hlbmcgV2FuZyB3cm90ZToNCj4gPiBGcm9t
-OiBXYW5nIERvbmdzaGVuZyA8ZG9uZ3NoZW5nLndhbmdAZnJlZXNjYWxlLmNvbT4NCj4gPg0KPiA+
-IFNDRkcgcHJvdmlkZXMgU29DIHNwZWNpZmljIGNvbmZpZ3VyYXRpb24gYW5kIHN0YXR1cyByZWdp
-c3RlcnMgZm9yIHRoZQ0KPiA+IGNoaXAuIEFkZCB0aGlzIGZvciBwb3dlcnBjIHBsYXRmb3JtLg0K
-PiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogV2FuZyBEb25nc2hlbmcgPGRvbmdzaGVuZy53YW5nQGZy
-ZWVzY2FsZS5jb20+DQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL3Bvd2VycGMvZnNsL2JvYXJkLnR4dA0KPiA+IGIvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VycGMvZnNsL2JvYXJkLnR4dA0KPiA+IGluZGV4IGNmZjM4
-YmQuLjU1NjA0ZmUgMTAwNjQ0DQo+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL3Bvd2VycGMvZnNsL2JvYXJkLnR4dA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9ib2FyZC50eHQNCj4gPiBAQCAtMyw2ICszLDI1
-IEBAIEZyZWVzY2FsZSBSZWZlcmVuY2UgQm9hcmQgQmluZGluZ3MgIFRoaXMgZG9jdW1lbnQNCj4g
-PiBkZXNjcmliZXMgZGV2aWNlIHRyZWUgYmluZGluZ3MgZm9yIHZhcmlvdXMgZGV2aWNlcyB0aGF0
-ICBleGlzdCBvbiBzb21lDQo+ID4gRnJlZXNjYWxlIHJlZmVyZW5jZSBib2FyZHMuDQo+ID4NCj4g
-PiArKiBTdXBwbGVtZW50IGNvbmZpZ3VyYXRpb24gdW5pdCAoU0NGRykNCj4gPiArDQo+ID4gK1ND
-RkcgaXMgdGhlIHN1cHBsZW1lbnRhbCBjb25maWd1cmF0aW9uIHVuaXQsIHRoYXQgcHJvdmlkZXMg
-U29DDQo+ID4gK3NwZWNpZmljIGNvbmZpZ3VyYXRpb24gYW5kIHN0YXR1cyByZWdpc3RlcnMgZm9y
-IHRoZSBjaGlwLiBTdWNoIGFzDQo+ID4gK2dldHRpbmcgUEVYIHBvcnQgc3RhdHVzLg0KPiA+ICsN
-Cj4gPiArUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiArDQo+ID4gKy0gY29tcGF0aWJsZTogc2hv
-dWxkIGJlICJmc2wsPGJvYXJkPi1zY2ZnIg0KPiANCj4gZnNsLDxjaGlwPi1zY2ZnDQoNClRoYW5r
-cy4NCg0KPiA+ICstIHJlZzogc2hvdWxkIGNvbnRhaW4gYmFzZSBhZGRyZXNzIGFuZCBsZW5ndGgg
-b2YgU0NGRyBtZW1vcnktbWFwcGVkDQo+ID4gK3JlZ2lzdGVycw0KPiA+ICsNCj4gPiArRXhhbXBs
-ZToNCj4gPiArDQo+ID4gKyAgICAgc2NmZzogIGdsb2JhbC11dGlsaXRpZXNAZmMwMDB7DQo+ID4g
-KyAgICAgICAgICAgICBjb21wYXRpYmxlID0gImZzbCx0MTA0MC1zY2ZnIjsNCj4gPiArICAgICAg
-ICAgICAgIHJlZyA9IDwweGZjMDAwIDB4MTAwMD47DQo+ID4gKyAgICAgfTsNCj4gPiArDQo+IA0K
-PiBJIGRvbid0IHRoaW5rIGJvYXJkLnR4dCBpcyB0aGUgcmlnaHQgcGxhY2UgZm9yIHRoaXMsIHNp
-bmNlIGl0J3MgcGFydCBvZiB0aGUgU29DLA0KPiBub3QgdGhlIGJvYXJkLiAgUHV0IGl0IGluIGl0
-cyBvd24gZmlsZS4NCg0KT0ssIHdpbGwgcHV0IGl0IGluIERvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9zY2ZnLnR4dC4NCg0KUmVnYXJkcywNCi1Eb25nc2hlbmcN
-Cg==
+On Tue, Jul 07, 2015 at 04:23:14PM +0300, Roger Quadros wrote:
+> Hi,
+> 
+> On 29/06/15 10:47, Li Jun wrote:
+> >Check property of usb hardware to update otg version and disable SRP, HNP
+> >and ADP if its disable flag is present.
+> >
+> >Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> >---
+> >  drivers/usb/common/common.c | 47 +++++++++++++++++++++++++++++++++++++++++++++
+> >  include/linux/usb/of.h      |  7 +++++++
+> >  2 files changed, 54 insertions(+)
+> >
+> >diff --git a/drivers/usb/common/common.c b/drivers/usb/common/common.c
+> >index b530fd4..10c986b 100644
+> >--- a/drivers/usb/common/common.c
+> >+++ b/drivers/usb/common/common.c
+> >@@ -154,6 +154,53 @@ bool of_usb_host_tpl_support(struct device_node *np)
+> >  	return false;
+> >  }
+> >  EXPORT_SYMBOL_GPL(of_usb_host_tpl_support);
+> >+
+> >+/**
+> >+ * of_usb_update_otg_caps - to update usb otg capabilities according to
+> >+ * the passed properties in DT.
+> >+ * @np: Pointer to the given device_node
+> >+ * @otg_caps: Pointer to the target usb_otg_caps to be set
+> >+ *
+> >+ * The function updates the otg capabilities
+> >+ */
+> >+int of_usb_update_otg_caps(struct device_node *np,
+> >+			struct usb_otg_caps *otg_caps)
+> >+{
+> >+	u32 otg_rev;
+> >+
+> >+	if (!otg_caps)
+> >+		return -EINVAL;
+> >+
+> >+	if (!of_property_read_u32(np, "otg-rev", &otg_rev)) {
+> >+		switch (otg_rev) {
+> >+		case 0x0100:
+> >+		case 0x0120:
+> >+		case 0x0130:
+> >+		case 0x0200:
+> >+		case 0x0300:
+> 
+> we don't support 0x300 yet. I guess it is best to leave it out till
+> we have real otg 3.0 support.
+> 
+okay.
+
+> >+			otg_caps->otg_rev = otg_rev;
+> >+			break;
+> >+		default:
+> >+			pr_err("%s: unsupported otg-rev: 0x%x\n",
+> >+						np->full_name, otg_rev);
+> >+			return -EINVAL;
+> >+		}
+> >+	} else {
+> >+		otg_caps->otg_rev = 0;
+> 
+> Why do we set this to 0 here?
+> controller might have set a valid otg_rev and we want to
+> maintain it if nothing was passed in DT.
+> 
+Considering otg-rev is mandatory for non-legacy platformsr,
+Now you mean what I did in previous version: do not set initial otg-rev
+in controller driver, just let it to be 0, and wait it to be updated by DT
+or by platform layer code.
+
+Current idea is:
+set otg capabilities in controller driver as otg _ability_ like below:
+otg-rev = 0x0200;
+hnp_support = true;
+
+a) Call to this function to update otg caps if pass by DT, and then/or
+
+b) Update otg caps if some platforms want to update it directly(not by DT). 
+
+If both above 2 update not happen, then I need keep otg-rev to be 0 which will
+be used to judge this is a legacy platform, so I set otg-rev to be 0 if it not
+passed in DT in a).
+
+We also can do this like my previous version:
+In controller driver, only set HNP/SRP/ADP as otg ability:
+hnp_support = true;
+
+a) Call to this function to update otg caps if pass by DT, and then/or
+
+b) Update otg caps if some platforms want to update it directly(not by DT). 
+
+If both above 2 update not happen, otg-rev is still 0, so I need not set it
+to be 0 if nothing pass in DT.
+
+Either way is okay I think.
+
+Li Jun
+
+> >+	}
+> >+
+> >+	if (of_find_property(np, "hnp-disable", NULL))
+> >+		otg_caps->hnp_support = false;
+> >+	if (of_find_property(np, "srp-disable", NULL))
+> >+		otg_caps->srp_support = false;
+> >+	if (of_find_property(np, "adp-disable", NULL) ||
+> >+				(otg_caps->otg_rev < 0x0200))
+> >+		otg_caps->adp_support = false;
+> >+
+> >+	return 0;
+> >+}
+> >+EXPORT_SYMBOL_GPL(of_usb_update_otg_caps);
+> >+
+> >  #endif
+> 
+> cheers,
+> -roger
+> 
+> >
+> >  MODULE_LICENSE("GPL");
+> >diff --git a/include/linux/usb/of.h b/include/linux/usb/of.h
+> >index cfe0528..8c5a818 100644
+> >--- a/include/linux/usb/of.h
+> >+++ b/include/linux/usb/of.h
+> >@@ -15,6 +15,8 @@
+> >  enum usb_dr_mode of_usb_get_dr_mode(struct device_node *np);
+> >  enum usb_device_speed of_usb_get_maximum_speed(struct device_node *np);
+> >  bool of_usb_host_tpl_support(struct device_node *np);
+> >+int of_usb_update_otg_caps(struct device_node *np,
+> >+			struct usb_otg_caps *otg_caps);
+> >  #else
+> >  static inline enum usb_dr_mode of_usb_get_dr_mode(struct device_node *np)
+> >  {
+> >@@ -30,6 +32,11 @@ static inline bool of_usb_host_tpl_support(struct device_node *np)
+> >  {
+> >  	return false;
+> >  }
+> >+static inline int of_usb_update_otg_caps(struct device_node *np,
+> >+				struct usb_otg_caps *otg_caps)
+> >+{
+> >+	return 0;
+> >+}
+> >  #endif
+> >
+> >  #if IS_ENABLED(CONFIG_OF) && IS_ENABLED(CONFIG_USB_SUPPORT)
+> >
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
