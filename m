@@ -1,168 +1,37 @@
-From: "Ivan T. Ivanov" <ivan.ivanov@linaro.org>
-Subject: [PATCH] usb: phy: msm: Add D+/D- lines route control
-Date: Wed,  8 Jul 2015 12:45:54 +0300
-Message-ID: <1436348754-6728-1-git-send-email-ivan.ivanov@linaro.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-msm@vger.kernel.org
+From: Mars Cheng <mars.cheng@mediatek.com>
+Subject: [PATCH 0/2] Add mt6795 basic chip support
+Date: Wed, 8 Jul 2015 18:14:38 +0800
+Message-ID: <1436350480-17276-1-git-send-email-mars.cheng@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: CC Hwang <cc.hwang@mediatek.com>, Loda Chou <loda.chou@mediatek.com>, Miles Chen <miles.chen@mediatek.com>, Scott Shu <scott.shu@mediatek.com>, Jades Shih <jades.shih@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, MY Chuang <my.chuang@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-apq8016-sbc board is using Dual SPDT USB Switch (TC7USB40MU),
-witch is controlled by GPIO to de/multiplex D+/D- USB lines to
-USB2513B Hub and uB connector. Add support for this.
+This patch adds basic chip support for Mediatek 8-core chip, mt6795.
+It is also named as Helio X10. It is based on:
+1. 4.2-rc1
+2. [PATCH v3 0/2] Add mt6580 basic chip support
 
-Signed-off-by: Ivan T. Ivanov <ivan.ivanov@linaro.org>
----
- .../devicetree/bindings/usb/msm-hsusb.txt          |  4 ++
- drivers/usb/phy/phy-msm-usb.c                      | 47 ++++++++++++++++++++++
- include/linux/usb/msm_hsusb.h                      |  7 ++++
- 3 files changed, 58 insertions(+)
+The second one has added some device tree binding documentation for
+mt6580. mt6795 has some device tree binding modifications too.
+To cleanly apply this patch, please apply mt6580 patch set first.
 
-diff --git a/Documentation/devicetree/bindings/usb/msm-hsusb.txt b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
-index bd8d9e7..8654a3e 100644
---- a/Documentation/devicetree/bindings/usb/msm-hsusb.txt
-+++ b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
-@@ -52,6 +52,10 @@ Required properties:
- Optional properties:
- - dr_mode:      One of "host", "peripheral" or "otg". Defaults to "otg"
+Mars Cheng (2):
+  Document: DT: Add bindings for mediatek MT6795 SoC Platform
+  arm64: dts: mediatek: add mt6795 support
 
-+- switch-gpio:  A phandle + gpio-specifier pair. Some boards are using Dual
-+                SPDT USB Switch, witch is cotrolled by GPIO to de/multiplex
-+                D+/D- USB lines between connectors.
-+
- - qcom,phy-init-sequence: PHY configuration sequence values. This is related to Device
-                 Mode Eye Diagram test. Start address at which these values will be
-                 written is ULPI_EXT_VENDOR_SPECIFIC. Value of -1 is reserved as
-diff --git a/drivers/usb/phy/phy-msm-usb.c b/drivers/usb/phy/phy-msm-usb.c
-index 00c49bb..57c75fb 100644
---- a/drivers/usb/phy/phy-msm-usb.c
-+++ b/drivers/usb/phy/phy-msm-usb.c
-@@ -18,6 +18,7 @@
+ Documentation/devicetree/bindings/arm/mediatek.txt |   9 +-
+ .../bindings/arm/mediatek/mediatek,sysirq.txt      |   3 +-
+ .../devicetree/bindings/serial/mtk-uart.txt        |   5 +-
+ arch/arm64/boot/dts/mediatek/Makefile              |   1 +
+ arch/arm64/boot/dts/mediatek/mt6795-evb.dts        |  34 +++++
+ arch/arm64/boot/dts/mediatek/mt6795.dtsi           | 164 +++++++++++++++++++++
+ 6 files changed, 211 insertions(+), 5 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt6795-evb.dts
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt6795.dtsi
 
- #include <linux/module.h>
- #include <linux/device.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/platform_device.h>
- #include <linux/clk.h>
- #include <linux/slab.h>
-@@ -32,6 +33,7 @@
- #include <linux/pm_runtime.h>
- #include <linux/of.h>
- #include <linux/of_device.h>
-+#include <linux/reboot.h>
- #include <linux/reset.h>
-
- #include <linux/usb.h>
-@@ -1471,6 +1473,14 @@ static int msm_otg_vbus_notifier(struct notifier_block *nb, unsigned long event,
- 	else
- 		clear_bit(B_SESS_VLD, &motg->inputs);
-
-+	if (test_bit(B_SESS_VLD, &motg->inputs)) {
-+		/* Switch D+/D- lines to Device connector */
-+		gpiod_set_value_cansleep(motg->switch_gpio, 0);
-+	} else {
-+		/* Switch D+/D- lines to Hub */
-+		gpiod_set_value_cansleep(motg->switch_gpio, 1);
-+	}
-+
- 	schedule_work(&motg->sm_work);
-
- 	return NOTIFY_DONE;
-@@ -1546,6 +1556,11 @@ static int msm_otg_read_dt(struct platform_device *pdev, struct msm_otg *motg)
-
- 	motg->manual_pullup = of_property_read_bool(node, "qcom,manual-pullup");
-
-+	motg->switch_gpio = devm_gpiod_get_optional(&pdev->dev, "switch",
-+						    GPIOD_OUT_LOW);
-+	if (IS_ERR(motg->switch_gpio))
-+		return PTR_ERR(motg->switch_gpio);
-+
- 	ext_id = ERR_PTR(-ENODEV);
- 	ext_vbus = ERR_PTR(-ENODEV);
- 	if (of_property_read_bool(node, "extcon")) {
-@@ -1615,6 +1630,19 @@ static int msm_otg_read_dt(struct platform_device *pdev, struct msm_otg *motg)
- 	return 0;
- }
-
-+static int msm_otg_reboot_notify(struct notifier_block *this,
-+				 unsigned long code, void *unused)
-+{
-+	struct msm_otg *motg = container_of(this, struct msm_otg, reboot);
-+
-+	/*
-+	 * Ensure that D+/D- lines are routed to uB connector, so
-+	 * we could load bootloader/kernel at next reboot
-+	 */
-+	gpiod_set_value_cansleep(motg->switch_gpio, 0);
-+	return NOTIFY_DONE;
-+}
-+
- static int msm_otg_probe(struct platform_device *pdev)
- {
- 	struct regulator_bulk_data regs[3];
-@@ -1779,6 +1807,17 @@ static int msm_otg_probe(struct platform_device *pdev)
- 			dev_dbg(&pdev->dev, "Can not create mode change file\n");
- 	}
-
-+	if (test_bit(B_SESS_VLD, &motg->inputs)) {
-+		/* Switch D+/D- lines to Device connector */
-+		gpiod_set_value_cansleep(motg->switch_gpio, 0);
-+	} else {
-+		/* Switch D+/D- lines to Hub */
-+		gpiod_set_value_cansleep(motg->switch_gpio, 1);
-+	}
-+
-+	motg->reboot.notifier_call = msm_otg_reboot_notify;
-+	register_reboot_notifier(&motg->reboot);
-+
- 	pm_runtime_set_active(&pdev->dev);
- 	pm_runtime_enable(&pdev->dev);
-
-@@ -1805,11 +1844,19 @@ static int msm_otg_remove(struct platform_device *pdev)
- 	if (phy->otg->host || phy->otg->gadget)
- 		return -EBUSY;
-
-+	unregister_reboot_notifier(&motg->reboot);
-+
- 	if (motg->id.conn.edev)
- 		extcon_unregister_interest(&motg->id.conn);
- 	if (motg->vbus.conn.edev)
- 		extcon_unregister_interest(&motg->vbus.conn);
-
-+	/*
-+	 * Ensure that D+/D- lines are routed to uB connector, so
-+	 * we could load bootloader/kernel at next reboot
-+	 */
-+	gpiod_set_value_cansleep(motg->switch_gpio, 0);
-+
- 	msm_otg_debugfs_cleanup();
- 	cancel_delayed_work_sync(&motg->chg_work);
- 	cancel_work_sync(&motg->sm_work);
-diff --git a/include/linux/usb/msm_hsusb.h b/include/linux/usb/msm_hsusb.h
-index e55a150..536a72c 100644
---- a/include/linux/usb/msm_hsusb.h
-+++ b/include/linux/usb/msm_hsusb.h
-@@ -155,6 +155,10 @@ struct msm_usb_cable {
-  *	starting controller using usbcmd run/stop bit.
-  * @vbus: VBUS signal state trakining, using extcon framework
-  * @id: ID signal state trakining, using extcon framework
-+ * @switch_gpio: Descriptor for GPIO used to control external Dual
-+ *               SPDT USB Switch.
-+ * @reboot: Used to inform the driver to route USB D+/D- line to Device
-+ *	    connector
-  */
- struct msm_otg {
- 	struct usb_phy phy;
-@@ -188,6 +192,9 @@ struct msm_otg {
-
- 	struct msm_usb_cable vbus;
- 	struct msm_usb_cable id;
-+
-+	struct gpio_desc *switch_gpio;
-+	struct notifier_block reboot;
- };
-
- #endif
 --
-1.9.1
+1.8.1.1.dirty
