@@ -1,50 +1,56 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2] ARM: shmobile: kzm9g dts: Use adxl345-specific
- compatible property
-Date: Wed, 8 Jul 2015 09:51:49 +0900
-Message-ID: <20150708005148.GA28100@verge.net.au>
-References: <1436180132-26190-1-git-send-email-geert+renesas@glider.be>
- <15966074.zDS67FO48r@avalon>
- <20150707002621.GD13326@verge.net.au>
- <9389528.5qtaECVqX7@avalon>
+From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2] power_supply: rt9455_charger: Properly notify
+ userspace about charging events
+Date: Wed, 8 Jul 2015 10:18:36 +0900
+Message-ID: <CAJKOXPfqiQuKvPSWaYQPA06onGSoVhajXW+Q1aEds0MJKpn9Tw@mail.gmail.com>
+References: <1436271953-24564-1-git-send-email-anda-maria.nicolae@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <9389528.5qtaECVqX7@avalon>
-Sender: linux-sh-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1436271953-24564-1-git-send-email-anda-maria.nicolae-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Anda-Maria Nicolae <anda-maria.nicolae-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 07, 2015 at 09:56:29AM +0300, Laurent Pinchart wrote:
-> Hi Simon,
-> 
-> On Tuesday 07 July 2015 09:26:21 Simon Horman wrote:
-> > On Mon, Jul 06, 2015 at 04:29:33PM +0300, Laurent Pinchart wrote:
-> > > On Monday 06 July 2015 12:55:32 Geert Uytterhoeven wrote:
-> > > > Replace the deprecated generic "adi,adxl34x" compatible value by the
-> > > > adxl345-specific "adi,adxl345" value, cfr. commit e465bf6fc55d5ce2 ("DT:
-> > > > i2c: Deprecate adi,adxl34x compatible string").
-> > > > 
-> > > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > > 
-> > > Acked-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> > > 
-> > > > ---
-> > > > Depends on commit 3a38958d2477b718 ("Input: adxl34x - add OF match
-> > > > support"), which is in v4.2-rc1.
-> > > > 
-> > > > This is v2 of "ARM: shmobile: kzm9g dts: Add adxl345-specific compatible
-> > > > property".
-> > 
-> > It appears to me that this will cause a regression when booting old kernels
-> > with new dts blobs. For that reason think we should consider v1
-> > of this change coupled with a schedule to remove use of the deprecated
-> > compat string.
-> 
-> That's the forward compatibility that Geert mentioned, is that really an 
-> issue, especially on this board ?
+2015-07-07 21:25 GMT+09:00 Anda-Maria Nicolae <anda-maria.nicolae-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>:
+> Charging events this patch refers to are:
+> - charger is connected to/disconnected from the power source
+> - battery is reconnected to the charger, after it was absent.
+>
+> When the charger is connected to/disconnected from the power source, CHRVPI
+> interrupt occurs and PWR_RDY bit is either set or cleared. PWR_RDY bit is
+> updated after 1-2 seconds CHRVPI interrupt has occurred.
+> power_supply_changed() should be called after PWR_RDY bit is updated.
+> /sys/class/power_supply/rt9455-charger/online file displays the value of
+> PWR_RDY bit.
+> This way, if the userspace is notified that a charging event has occurred
+> and the userspace reads /sys/class/power_supply/rt9455-charger/online file,
+> this file is properly updated when the userspace reads it.
+> This is the reason why power_supply_changed() is called in
+> rt9455_pwr_rdy_work_callback(), instead of being called in interrupt
+> handler.
+>
+> Since no interrupt is triggered when the battery is reconnected to the
+> charger, the userspace is never notified that the battery is reconnected.
+> This is why power_supply_changed() is called in
+> rt9455_max_charging_time_work_callback(), so that the userspace is notified
+> that the battery is reconnected.
+>
+> Signed-off-by: Anda-Maria Nicolae <anda-maria.nicolae-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> ---
+>
+> Updates from v1 version:
+> - I have followed Kzrysztof's suggestion and I have added explanations in
+> the commit message so that the change is more clear
+> - Code is the same as in v1
 
-I think it would be best to provide backwards compatibility unless there
-is a compelling reason not to.
+Thanks, FWIW:
+Reviewed-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+
+Best regards,
+Krzysztof
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
