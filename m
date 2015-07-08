@@ -1,27 +1,28 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v1 3/3] ARM: tegra: Add gpio-ranges property
-Date: Wed, 08 Jul 2015 14:55:18 -0600
-Message-ID: <559D8E36.50209@wwwdotorg.org>
-References: <1435754753-31307-1-git-send-email-tomeu.vizoso@collabora.com> <1435754753-31307-4-git-send-email-tomeu.vizoso@collabora.com>
+From: Kevin Hilman <khilman@kernel.org>
+Subject: Re: [PATCH v1] arm64: dts: Add poweroff button device node for APM X-Gene platform
+Date: Wed, 08 Jul 2015 14:10:34 -0700
+Message-ID: <7ha8v6e4ol.fsf@deeprootsystems.com>
+References: <1435305707-22786-1-git-send-email-yvo@apm.com>
+	<1435305707-22786-2-git-send-email-yvo@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1435754753-31307-4-git-send-email-tomeu.vizoso@collabora.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomeu Vizoso <tomeu.vizoso@collabora.com>, linux-kernel@vger.kernel.org
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Thierry Reding <thierry.reding@gmail.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1435305707-22786-2-git-send-email-yvo@apm.com> (Y. Vo's message
+	of "Fri, 26 Jun 2015 15:01:47 +0700")
+Sender: linux-gpio-owner@vger.kernel.org
+To: Y Vo <yvo@apm.com>
+Cc: linus.walleij@linaro.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, arm@kernel.org, linux-kernel@vger.kernel.org, Phong Vo <pvo@apm.com>, Toan Le <toanle@apm.com>, patches@apm.com, Loc Ho <lho@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 07/01/2015 06:45 AM, Tomeu Vizoso wrote:
-> Specify how the GPIOs map to the pins in Tegra SoCs, so the dependency is
-> explicit.
+Y Vo <yvo@apm.com> writes:
+
+> This patch adds poweroff button device node to support poweroff feature
+> on APM X-Gene Mustang platform.
 >
-> This currently will add a duplicated entry in the map from pins to gpios
-> in the pinmux controller but it should be harmless and will be fixed in a
-> later commit.
+> Signed-off-by: Y Vo <yvo@apm.com>
 
-Isn't it in an earlier commit now (patch 2/3)? :-)
+Picking this up for v4.2-rc.
 
-At a quick glance, I think this approach will be fine, so the series,
-Acked-by: Stephen Warren <swarren@nvidia.com>
+Applied to fixes branch,
+
+Kevin
