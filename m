@@ -1,77 +1,71 @@
-From: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH RESEND 1/7] tty: serial: 8250: omap: fix kernel crash
- in suspend-to-ram
-Date: Wed, 08 Jul 2015 10:04:44 -0400
-Message-ID: <559D2DFC.9010602@hurleysoftware.com>
-References: <cover.1436174801.git.nsekhar@ti.com> <d8cb86b2717e0fc084b6651be54ee6d96dbc603a.1436174801.git.nsekhar@ti.com>
+From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Subject: Re: [PATCH 2/4] ARM: dts: Extend exynos5250-pinctrl nodes using
+ labels instead of paths
+Date: Wed, 8 Jul 2015 07:05:45 -0700
+Message-ID: <559D2E39.6060602@osg.samsung.com>
+References: <1436333790-18219-1-git-send-email-javier@osg.samsung.com>
+ <1436333790-18219-3-git-send-email-javier@osg.samsung.com>
+ <559CDF66.6080609@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <d8cb86b2717e0fc084b6651be54ee6d96dbc603a.1436174801.git.nsekhar-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <559CDF66.6080609-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, John Ogness <john.ogness-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sekhar,
+Hello Krzysztof,
 
-On 07/06/2015 05:47 AM, Sekhar Nori wrote:
-> omap_device infrastructure has a suspend_noirq hook which
-> runtime suspends all devices late in the suspend cycle (see
-> _od_suspend_noirq() in arch/arm/mach-omap2/omap_device.c)
-
-Why is omap2 the only arch/SoC that does this; ie., call the runtime
-callbacks after the system pm callbacks?
-
-Whatever positive it brings, it's a mess at the driver level.
-For example, this driver has to hook prepare()/complete() so it can
-set local state so that it can detect when the runtime suspend
-is being called during system suspend.
-
-Regards,
-Peter Hurley
-
-
-> This leads to a NULL pointer exception in 8250_omap driver
-> since by the time omap8250_runtime_suspend() is called, 8250_dma
-> driver has already set rxchan to NULL via serial8250_release_dma().
+On 07/08/2015 01:29 AM, Krzysztof Kozlowski wrote:
+> On 08.07.2015 14:36, Javier Martinez Canillas wrote:
+>> A previously defined Device Tree node, can be extended either by defining
+>> a node using the same full path or by creating a label for the node and
+>> referencing to it.
+>>
+>> Using full paths is more error prone since if there was a typo error, a
+>> new node will be created instead of extending the node as it was desired.
+>> This will lead to run-time errors that could be hard to detect.
+>>
+>> A misstyped label on the other hand, will cause a dtc compile error which
 > 
-> Make an explicit check to see if rxchan is NULL in
-> runtime_{suspend|resume} hooks to fix this.
+> s/misstyped/mistyped/
+>
+
+sigh, it's so ironic that I mistyped that.
+
+Do you want me to re-post the whole series with the typo fixed or you /
+Kukjin would fix in both patches when applying?
+
+>> makes it easier to detect the mistake since happens at build-time instead.
+>>
+>> Signed-off-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+>> ---
+>>
+>>  arch/arm/boot/dts/exynos5250-pinctrl.dtsi | 1600 ++++++++++++++---------------
+>>  1 file changed, 799 insertions(+), 801 deletions(-)
+>>
 > 
-> Signed-off-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-> ---
-> Previous version: http://www.spinics.net/lists/linux-omap/msg119459.html
-> No change in this version except rebased to v4.2-rc1
+> I didn't look carefully enough to call it a review (I trust the 'diff'
+> of yours) but it seems fine to me:
 > 
->  drivers/tty/serial/8250/8250_omap.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/tty/serial/8250/8250_omap.c b/drivers/tty/serial/8250/8250_omap.c
-> index d75a66c72750..20c5b9c4c288 100644
-> --- a/drivers/tty/serial/8250/8250_omap.c
-> +++ b/drivers/tty/serial/8250/8250_omap.c
-> @@ -1285,7 +1285,7 @@ static int omap8250_runtime_suspend(struct device *dev)
->  			return -EBUSY;
->  	}
->  
-> -	if (up->dma)
-> +	if (up->dma && up->dma->rxchan)
->  		omap_8250_rx_dma(up, UART_IIR_RX_TIMEOUT);
->  
->  	priv->latency = PM_QOS_CPU_DMA_LAT_DEFAULT_VALUE;
-> @@ -1310,7 +1310,7 @@ static int omap8250_runtime_resume(struct device *dev)
->  	if (loss_cntx)
->  		omap8250_restore_regs(up);
->  
-> -	if (up->dma)
-> +	if (up->dma && up->dma->rxchan)
->  		omap_8250_rx_dma(up, 0);
->  
->  	priv->latency = priv->calc_latency;
+> Acked-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 > 
 
+Thanks a lot for.
+
+> Best regards,
+> Krzysztof
+>
+
+Best regards,
+
+-- 
+Javier Martinez Canillas
+Sr. Linux Kernel Developer
+Open Source Group
+Samsung Research America
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
