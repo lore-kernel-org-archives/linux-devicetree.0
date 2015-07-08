@@ -1,83 +1,25 @@
 From: Cory Tusar <cory.tusar@pid1solutions.com>
-Subject: [PATCH v1 7/7] ARM: dts: vf610-twr: Enable QSPI and map flash devices.
-Date: Wed,  8 Jul 2015 16:21:21 -0400
-Message-ID: <1436386881-28088-8-git-send-email-cory.tusar@pid1solutions.com>
-References: <1436386881-28088-1-git-send-email-cory.tusar@pid1solutions.com>
+Subject: [PATCH 0/1] Add support for esdhc0 on Vybrid.
+Date: Wed,  8 Jul 2015 16:51:05 -0400
+Message-ID: <1436388666-29376-1-git-send-email-cory.tusar@pid1solutions.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1436386881-28088-1-git-send-email-cory.tusar@pid1solutions.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, shawnguo@kernel.org, kernel@pengutronix.de, han.xu@freescale.com, dwmw2@infradead.org, computersforpeace@gmail.com
-Cc: stefan@agner.ch, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, andrew@lunn.ch, Cory Tusar <cory.tusar@pid1solutions.com>
+To: shawnguo@kernel.org, kernel@pengutronix.de, stefan@agner.ch
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, andrew@lunn.ch, Cory Tusar <cory.tusar@pid1solutions.com>
 List-Id: devicetree@vger.kernel.org
 
-This commit enables the qspi0 functional block, and maps the two
-flash devices connected to QSPI0_A_CS0 and QSPI0_B_CS0 to individual MTD
-devices.
+Currently, only esdhc1 is described in vfxxx.dtsi.  This quick patch
+adds support for esdhc0 also.
 
-Tested using mtd_readtest, mtd_speedtest, and mtd_stresstest on a Rev. H
-TWR board.
+Regards,
+-Cory
 
-Signed-off-by: Cory Tusar <cory.tusar@pid1solutions.com>
----
- arch/arm/boot/dts/vf610-twr.dts | 39 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
 
-diff --git a/arch/arm/boot/dts/vf610-twr.dts b/arch/arm/boot/dts/vf610-twr.dts
-index 375ab23..6ae2e7c 100644
---- a/arch/arm/boot/dts/vf610-twr.dts
-+++ b/arch/arm/boot/dts/vf610-twr.dts
-@@ -246,6 +246,23 @@
- 			>;
- 		};
- 
-+		pinctrl_qspi0: qspi0grp {
-+			fsl,pins = <
-+				VF610_PAD_PTD0__QSPI0_A_QSCK		0x31e2
-+				VF610_PAD_PTD1__QSPI0_A_CS0		0x31e2
-+				VF610_PAD_PTD2__QSPI0_A_DATA3		0x31e3
-+				VF610_PAD_PTD3__QSPI0_A_DATA2		0x31e3
-+				VF610_PAD_PTD4__QSPI0_A_DATA1		0x31e3
-+				VF610_PAD_PTD5__QSPI0_A_DATA0		0x31e3
-+				VF610_PAD_PTD7__QSPI0_B_QSCK		0x31e2
-+				VF610_PAD_PTD8__QSPI0_B_CS0		0x31e2
-+				VF610_PAD_PTD9__QSPI0_B_DATA3		0x31e3
-+				VF610_PAD_PTD10__QSPI0_B_DATA2		0x31e3
-+				VF610_PAD_PTD11__QSPI0_B_DATA1		0x31e3
-+				VF610_PAD_PTD12__QSPI0_B_DATA0		0x31e3
-+			>;
-+		};
-+
- 		pinctrl_sai2: sai2grp {
- 			fsl,pins = <
- 				VF610_PAD_PTA16__SAI2_TX_BCLK		0x02ed
-@@ -280,6 +297,28 @@
- 	status = "okay";
- };
- 
-+&qspi0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_qspi0>;
-+	status = "okay";
-+
-+	flash0: s25fl128s@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "spansion,s25fl128s";
-+		spi-max-frequency = <66000000>;
-+		reg = <0>;
-+	};
-+
-+	flash1: s25fl128s@2 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "spansion,s25fl128s";
-+		spi-max-frequency = <66000000>;
-+		reg = <2>;
-+	};
-+};
-+
- &sai2 {
- 	#sound-dai-cells = <0>;
- 	pinctrl-names = "default";
+Cory Tusar (1):
+  ARM: dts: vfxxx: Include support for esdhc0 functionality.
+
+ arch/arm/boot/dts/vfxxx.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
 -- 
 2.3.6
