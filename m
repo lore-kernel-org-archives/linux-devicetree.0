@@ -1,38 +1,83 @@
-From: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
-Subject: [PATCH v1 6/7] mtd: spi-nor: Add support for Micron MT25QL02GC serial flash.
-Date: Wed,  8 Jul 2015 16:21:20 -0400
-Message-ID: <1436386881-28088-7-git-send-email-cory.tusar@pid1solutions.com>
+From: Cory Tusar <cory.tusar@pid1solutions.com>
+Subject: [PATCH v1 7/7] ARM: dts: vf610-twr: Enable QSPI and map flash devices.
+Date: Wed,  8 Jul 2015 16:21:21 -0400
+Message-ID: <1436386881-28088-8-git-send-email-cory.tusar@pid1solutions.com>
 References: <1436386881-28088-1-git-send-email-cory.tusar@pid1solutions.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1436386881-28088-1-git-send-email-cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, han.xu-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: stefan-XLVq0VzYD2Y@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1436386881-28088-1-git-send-email-cory.tusar@pid1solutions.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, shawnguo@kernel.org, kernel@pengutronix.de, han.xu@freescale.com, dwmw2@infradead.org, computersforpeace@gmail.com
+Cc: stefan@agner.ch, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, andrew@lunn.ch, Cory Tusar <cory.tusar@pid1solutions.com>
 List-Id: devicetree@vger.kernel.org
 
-Add Micron (mt25ql02gc) 256 MiB flash to the list of supported devices.
+This commit enables the qspi0 functional block, and maps the two
+flash devices connected to QSPI0_A_CS0 and QSPI0_B_CS0 to individual MTD
+devices.
 
-Signed-off-by: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
+Tested using mtd_readtest, mtd_speedtest, and mtd_stresstest on a Rev. H
+TWR board.
+
+Signed-off-by: Cory Tusar <cory.tusar@pid1solutions.com>
 ---
- drivers/mtd/spi-nor/spi-nor.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/vf610-twr.dts | 39 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
-diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-index d78831b..7a8896d 100644
---- a/drivers/mtd/spi-nor/spi-nor.c
-+++ b/drivers/mtd/spi-nor/spi-nor.c
-@@ -596,6 +596,7 @@ static const struct spi_device_id spi_nor_ids[] = {
- 	{ "n25q512a",    INFO(0x20bb20, 0, 64 * 1024, 1024, SECT_4K | USE_FSR | SPI_NOR_QUAD_READ) },
- 	{ "n25q512ax3",  INFO(0x20ba20, 0, 64 * 1024, 1024, SECT_4K | USE_FSR | SPI_NOR_QUAD_READ) },
- 	{ "n25q00",      INFO(0x20ba21, 0, 64 * 1024, 2048, SECT_4K | USE_FSR | SPI_NOR_QUAD_READ) },
-+	{ "mt25ql02gc",  INFO(0x20ba22, 0, 64 * 1024, 4096, SPI_NOR_QUAD_READ) },
+diff --git a/arch/arm/boot/dts/vf610-twr.dts b/arch/arm/boot/dts/vf610-twr.dts
+index 375ab23..6ae2e7c 100644
+--- a/arch/arm/boot/dts/vf610-twr.dts
++++ b/arch/arm/boot/dts/vf610-twr.dts
+@@ -246,6 +246,23 @@
+ 			>;
+ 		};
  
- 	/* PMC */
- 	{ "pm25lv512",   INFO(0,        0, 32 * 1024,    2, SECT_4K_PMC) },
++		pinctrl_qspi0: qspi0grp {
++			fsl,pins = <
++				VF610_PAD_PTD0__QSPI0_A_QSCK		0x31e2
++				VF610_PAD_PTD1__QSPI0_A_CS0		0x31e2
++				VF610_PAD_PTD2__QSPI0_A_DATA3		0x31e3
++				VF610_PAD_PTD3__QSPI0_A_DATA2		0x31e3
++				VF610_PAD_PTD4__QSPI0_A_DATA1		0x31e3
++				VF610_PAD_PTD5__QSPI0_A_DATA0		0x31e3
++				VF610_PAD_PTD7__QSPI0_B_QSCK		0x31e2
++				VF610_PAD_PTD8__QSPI0_B_CS0		0x31e2
++				VF610_PAD_PTD9__QSPI0_B_DATA3		0x31e3
++				VF610_PAD_PTD10__QSPI0_B_DATA2		0x31e3
++				VF610_PAD_PTD11__QSPI0_B_DATA1		0x31e3
++				VF610_PAD_PTD12__QSPI0_B_DATA0		0x31e3
++			>;
++		};
++
+ 		pinctrl_sai2: sai2grp {
+ 			fsl,pins = <
+ 				VF610_PAD_PTA16__SAI2_TX_BCLK		0x02ed
+@@ -280,6 +297,28 @@
+ 	status = "okay";
+ };
+ 
++&qspi0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_qspi0>;
++	status = "okay";
++
++	flash0: s25fl128s@0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "spansion,s25fl128s";
++		spi-max-frequency = <66000000>;
++		reg = <0>;
++	};
++
++	flash1: s25fl128s@2 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "spansion,s25fl128s";
++		spi-max-frequency = <66000000>;
++		reg = <2>;
++	};
++};
++
+ &sai2 {
+ 	#sound-dai-cells = <0>;
+ 	pinctrl-names = "default";
 -- 
 2.3.6
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
