@@ -1,62 +1,114 @@
-From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 0/2] Add MT8173 MMPLL change rate support
-Date: Wed, 8 Jul 2015 16:49:54 +0800
-Message-ID: <1436345394.3526.111.camel@mtksdaap41>
-References: <1436344666-25645-1-git-send-email-jamesjj.liao@mediatek.com>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v6 08/23] usb: chipidea: set usb otg capabilities
+Date: Wed, 8 Jul 2015 11:56:35 +0300
+Message-ID: <559CE5C3.2040309@ti.com>
+References: <1435564082-14583-1-git-send-email-jun.li@freescale.com> <1435564082-14583-9-git-send-email-jun.li@freescale.com> <559BD358.4040700@ti.com> <20150708022024.GB11714@shlinux2>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1436344666-25645-1-git-send-email-jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Heiko Stubner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150708022024.GB11714@shlinux2>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+d-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
-
-The cover letter's title should be "[PATCH v2 0/2] ..."
-
-changes since v1:
-- Add a separated patch for mtk_pll_set_rate_regs().
-- Use a structure array to describe a div_table.
-- Limit max frequency to div_table[0].
-- Minor changes such as static and comments.
-
-
-Best regards,
-
-James
-
-On Wed, 2015-07-08 at 16:37 +0800, James Liao wrote:
-> MT8173 MMPLL frequency settings are different from common PLLs.
-> It needs different post divider settings for some ranges of frequency.
-> This patch add support for MT8173 MMPLL frequency setting, includes:
+On 08/07/15 05:20, Li Jun wrote:
+> On Tue, Jul 07, 2015 at 04:25:44PM +0300, Roger Quadros wrote:
+>> On 29/06/15 10:47, Li Jun wrote:
+>>> Init and update otg capabilities by DT, set gadget's otg capabilities
+>>> accordingly.
+>>>
+>>> Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+>>> ---
+>>>  drivers/usb/chipidea/core.c  | 10 ++++++++++
+>>>  drivers/usb/chipidea/udc.c   |  7 ++++++-
+>>>  include/linux/usb/chipidea.h |  1 +
+>>>  3 files changed, 17 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
+>>> index 74fea4f..248f571 100644
+>>> --- a/drivers/usb/chipidea/core.c
+>>> +++ b/drivers/usb/chipidea/core.c
+>>> @@ -588,6 +588,16 @@ static int ci_get_platdata(struct device *dev,
+>>>  				of_usb_host_tpl_support(dev->of_node);
+>>>  	}
+>>>
+>>> +	if (platdata->dr_mode == USB_DR_MODE_OTG) {
+>>> +		/* We can support HNP and SRP of OTG 2.0 */
+>>> +		platdata->ci_otg_caps.otg_rev = 0x0200;
+>>> +		platdata->ci_otg_caps.hnp_support = true;
+>>> +		platdata->ci_otg_caps.srp_support = true;
+>>> +
+>>> +		/* Update otg capabilities by DT properties */
+>>> +		of_usb_update_otg_caps(dev->of_node, &platdata->ci_otg_caps);
+>>
+>> What if this function fails. e.g. DT contains unsupported OTG version?
+> Just an error print out, otg-rev will be the initial value(0x0200), it will
+> work as otg 2.0.
 > 
-> 1. Add div-rate table for PLLs.
-> 2. Increase the max ost divider setting from 3 (/8) to 4 (/16).
-> 3. Write postdiv and pcw settings at the same time.
-> 
-> James Liao (2):
->   clk: mediatek: Fix PLL registers setting flow
->   clk: mediatek: Add MT8173 MMPLL change rate support
-> 
->  drivers/clk/mediatek/clk-mt8173.c | 24 +++++++++++++++++++++---
->  drivers/clk/mediatek/clk-mtk.h    |  6 ++++++
->  drivers/clk/mediatek/clk-pll.c    | 39 +++++++++++++++++++++++++++------------
->  3 files changed, 54 insertions(+), 15 deletions(-)
-> 
-> --
-> 1.8.1.1.dirty
-> 
-> 
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+>> I think we should error out in that case.
+>>
+> Disable all otg features? or even stop all usb initialization?
 
+My preference would be to fail driver initialization but it is upto the
+chipidea maintainer to decide. This way DT errors can be caught early
+and fixed.
 
+cheers,
+-roger
+
+> 
+> Li Jun
+>>> +	}
+>>> +
+>>>  	if (of_usb_get_maximum_speed(dev->of_node) == USB_SPEED_FULL)
+>>>  		platdata->flags |= CI_HDRC_FORCE_FULLSPEED;
+>>
+>> cheers,
+>> -roger
+>>
+>>>
+>>> diff --git a/drivers/usb/chipidea/udc.c b/drivers/usb/chipidea/udc.c
+>>> index 764f668..b7cca3e 100644
+>>> --- a/drivers/usb/chipidea/udc.c
+>>> +++ b/drivers/usb/chipidea/udc.c
+>>> @@ -1827,6 +1827,7 @@ static irqreturn_t udc_irq(struct ci_hdrc *ci)
+>>>  static int udc_start(struct ci_hdrc *ci)
+>>>  {
+>>>  	struct device *dev = ci->dev;
+>>> +	struct usb_otg_caps *otg_caps = &ci->platdata->ci_otg_caps;
+>>>  	int retval = 0;
+>>>
+>>>  	spin_lock_init(&ci->lock);
+>>> @@ -1834,8 +1835,12 @@ static int udc_start(struct ci_hdrc *ci)
+>>>  	ci->gadget.ops          = &usb_gadget_ops;
+>>>  	ci->gadget.speed        = USB_SPEED_UNKNOWN;
+>>>  	ci->gadget.max_speed    = USB_SPEED_HIGH;
+>>> -	ci->gadget.is_otg       = ci->is_otg ? 1 : 0;
+>>>  	ci->gadget.name         = ci->platdata->name;
+>>> +	ci->gadget.otg_caps	= otg_caps;
+>>> +
+>>> +	if (otg_caps->hnp_support || otg_caps->srp_support ||
+>>> +					otg_caps->adp_support)
+>>> +		ci->gadget.is_otg = 1;
+>>>
+>>>  	INIT_LIST_HEAD(&ci->gadget.ep_list);
+>>>
+>>> diff --git a/include/linux/usb/chipidea.h b/include/linux/usb/chipidea.h
+>>> index ab94f78..e10cefc 100644
+>>> --- a/include/linux/usb/chipidea.h
+>>> +++ b/include/linux/usb/chipidea.h
+>>> @@ -34,6 +34,7 @@ struct ci_hdrc_platform_data {
+>>>  #define CI_HDRC_CONTROLLER_STOPPED_EVENT	1
+>>>  	void	(*notify_event) (struct ci_hdrc *ci, unsigned event);
+>>>  	struct regulator	*reg_vbus;
+>>> +	struct usb_otg_caps	ci_otg_caps;
+>>>  	bool			tpl_support;
+>>>  };
+>>>
+>>>
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
