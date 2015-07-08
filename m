@@ -1,53 +1,92 @@
-From: Andreas Dannenberg <dannenberg-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] iio: light: add support for TI's opt3001 light
- sensor
-Date: Wed, 8 Jul 2015 11:44:22 -0500
-Message-ID: <559D5366.8030003@ti.com>
-References: <1435876079-26287-1-git-send-email-dannenberg@ti.com> <1435876079-26287-2-git-send-email-dannenberg@ti.com> <55993A4C.10105@kernel.org>
+From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Subject: Re: [PATCH v4 3/5] tee: generic TEE subsystem
+Date: Wed, 8 Jul 2015 11:10:26 -0600
+Message-ID: <20150708171026.GA11740@obsidianresearch.com>
+References: <1436350592-7732-1-git-send-email-jens.wiklander@linaro.org>
+ <1436350592-7732-4-git-send-email-jens.wiklander@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55993A4C.10105-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1436350592-7732-4-git-send-email-jens.wiklander@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jens Wiklander <jens.wiklander@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, valentin.manea@huawei.com, jean-michel.delorme@st.com, emmanuel.michel@st.com, javier@javigon.com, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On 07/05/2015 09:08 AM, Jonathan Cameron wrote:
-<snip>
-> Looking pretty good to me, though I'd like to give Peter time to take
-> another look and give his reviewed-by etc.
-> 
-> One really minor suggestion from me...
-> <snip>
->> +
->> +static int opt3001_probe(struct i2c_client *client,
->> +		const struct i2c_device_id *id)
->> +{
->> +	struct device *dev = &client->dev;
->> +
->> +	struct iio_dev *iio;
->> +	struct opt3001 *opt;
->> +	int irq = client->irq;
->> +	int ret = -ENOMEM;
->> +
->> +	iio = devm_iio_device_alloc(dev, sizeof(*opt));
->> +	if (!iio)
-> return -ENOMEM; would be cleaner, then there is no need to initialize
-> ret either.
+On Wed, Jul 08, 2015 at 12:16:30PM +0200, Jens Wiklander wrote:
 
-Hi Jonathan,
-thanks for looking at my code. While we are waiting for additional feedback would you
-like me to go ahead and re-spin/re-test the patch with your latest suggestion?
+> +static void tee_device_complete_unused(struct kref *kref)
+> +{
+> +	struct tee_device *teedev;
+> +
+> +	teedev = container_of(kref, struct tee_device, users);
+> +	/* When the mutex is released, no other tee_device_get() will succeed */
+> +	teedev->desc = NULL;
+> +	complete(&teedev->c_no_users);
+> +}
+> +
+> +void tee_device_put(struct tee_device *teedev)
+> +{
+> +	mutex_lock(&teedev->mutex);
+> +	/* Shouldn't put in this state */
+> +	if (!WARN_ON(!teedev->desc))
+> +		kref_put(&teedev->users, tee_device_complete_unused);
+> +	mutex_unlock(&teedev->mutex);
+> +}
+> +
+> +bool tee_device_get(struct tee_device *teedev)
+> +{
+> +	mutex_lock(&teedev->mutex);
+> +	if (!teedev->desc) {
+> +		mutex_unlock(&teedev->mutex);
+> +		return false;
+> +	}
+> +	kref_get(&teedev->users);
+> +	mutex_unlock(&teedev->mutex);
+> +	return true;
+> +}
 
-Regards,
+If you are holding the mutex then you don't really need a kref, just a
+simple active count counter.
 
--- 
-Andreas Dannenberg
-Texas Instruments Inc.
+I've been a bit learly lately about seeing krefs used for something
+other than kfree, I've seen a few subtle mistakes in those schemes -
+yours looks OK, only because of the lock, and the lock makes the kref
+redundant..
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +       cdev_init(&teedev->cdev, &tee_fops);
+> +       teedev->cdev.owner = teedesc->owner;
+
+This also needs to set teedev->cdev.kobj.parent.
+I'm guessing:
+
+ teedev->cdev.kobj.parent = &teedev->dev.kobj;
+
+TPM had the same mistake..
+
+> +void tee_device_unregister(struct tee_device *teedev)
+> +{
+> +	if (IS_ERR_OR_NULL(teedev))
+> +		return;
+
+See for some general colour on IS_ERR_OR_NULL
+
+https://www.mail-archive.com/linux-omap@vger.kernel.org/msg78030.html
+
+IMHO, you should never, store an ERR pointer into long term storage,
+so I wonder why this is like this...
+
+> +	if (teedev->flags & TEE_DEVICE_FLAG_REGISTERED) {
+> +		cdev_del(&teedev->cdev);
+> +		device_del(&teedev->dev);
+> +	}
+> +
+> +	tee_device_put(teedev);
+> +	wait_for_completion(&teedev->c_no_users);
+
+Generally in a scheme like this we'd see open and release get/put the
+underlying module handle to prevent driver removal while the char dev
+is open. Otherwise module removal will hang here.
+
+Jason
