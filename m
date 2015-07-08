@@ -1,165 +1,105 @@
 From: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v6 07/23] usb: common: add API to update usb otg
- capabilities by device tree
-Date: Wed, 8 Jul 2015 10:05:31 +0800
-Message-ID: <20150708020529.GA11714@shlinux2>
+Subject: Re: [PATCH v6 08/23] usb: chipidea: set usb otg capabilities
+Date: Wed, 8 Jul 2015 10:20:25 +0800
+Message-ID: <20150708022024.GB11714@shlinux2>
 References: <1435564082-14583-1-git-send-email-jun.li@freescale.com>
- <1435564082-14583-8-git-send-email-jun.li@freescale.com>
- <559BD2C2.3050509@ti.com>
+ <1435564082-14583-9-git-send-email-jun.li@freescale.com>
+ <559BD358.4040700@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <559BD2C2.3050509-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <559BD358.4040700-l0cyMroinI0@public.gmane.org>
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
 Cc: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+d-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 07, 2015 at 04:23:14PM +0300, Roger Quadros wrote:
-> Hi,
-> 
+On Tue, Jul 07, 2015 at 04:25:44PM +0300, Roger Quadros wrote:
 > On 29/06/15 10:47, Li Jun wrote:
-> >Check property of usb hardware to update otg version and disable SRP, HNP
-> >and ADP if its disable flag is present.
+> >Init and update otg capabilities by DT, set gadget's otg capabilities
+> >accordingly.
 > >
 > >Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 > >---
-> >  drivers/usb/common/common.c | 47 +++++++++++++++++++++++++++++++++++++++++++++
-> >  include/linux/usb/of.h      |  7 +++++++
-> >  2 files changed, 54 insertions(+)
+> >  drivers/usb/chipidea/core.c  | 10 ++++++++++
+> >  drivers/usb/chipidea/udc.c   |  7 ++++++-
+> >  include/linux/usb/chipidea.h |  1 +
+> >  3 files changed, 17 insertions(+), 1 deletion(-)
 > >
-> >diff --git a/drivers/usb/common/common.c b/drivers/usb/common/common.c
-> >index b530fd4..10c986b 100644
-> >--- a/drivers/usb/common/common.c
-> >+++ b/drivers/usb/common/common.c
-> >@@ -154,6 +154,53 @@ bool of_usb_host_tpl_support(struct device_node *np)
-> >  	return false;
-> >  }
-> >  EXPORT_SYMBOL_GPL(of_usb_host_tpl_support);
+> >diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
+> >index 74fea4f..248f571 100644
+> >--- a/drivers/usb/chipidea/core.c
+> >+++ b/drivers/usb/chipidea/core.c
+> >@@ -588,6 +588,16 @@ static int ci_get_platdata(struct device *dev,
+> >  				of_usb_host_tpl_support(dev->of_node);
+> >  	}
+> >
+> >+	if (platdata->dr_mode == USB_DR_MODE_OTG) {
+> >+		/* We can support HNP and SRP of OTG 2.0 */
+> >+		platdata->ci_otg_caps.otg_rev = 0x0200;
+> >+		platdata->ci_otg_caps.hnp_support = true;
+> >+		platdata->ci_otg_caps.srp_support = true;
 > >+
-> >+/**
-> >+ * of_usb_update_otg_caps - to update usb otg capabilities according to
-> >+ * the passed properties in DT.
-> >+ * @np: Pointer to the given device_node
-> >+ * @otg_caps: Pointer to the target usb_otg_caps to be set
-> >+ *
-> >+ * The function updates the otg capabilities
-> >+ */
-> >+int of_usb_update_otg_caps(struct device_node *np,
-> >+			struct usb_otg_caps *otg_caps)
-> >+{
-> >+	u32 otg_rev;
-> >+
-> >+	if (!otg_caps)
-> >+		return -EINVAL;
-> >+
-> >+	if (!of_property_read_u32(np, "otg-rev", &otg_rev)) {
-> >+		switch (otg_rev) {
-> >+		case 0x0100:
-> >+		case 0x0120:
-> >+		case 0x0130:
-> >+		case 0x0200:
-> >+		case 0x0300:
+> >+		/* Update otg capabilities by DT properties */
+> >+		of_usb_update_otg_caps(dev->of_node, &platdata->ci_otg_caps);
 > 
-> we don't support 0x300 yet. I guess it is best to leave it out till
-> we have real otg 3.0 support.
+> What if this function fails. e.g. DT contains unsupported OTG version?
+Just an error print out, otg-rev will be the initial value(0x0200), it will
+work as otg 2.0.
+
+> I think we should error out in that case.
 > 
-okay.
-
-> >+			otg_caps->otg_rev = otg_rev;
-> >+			break;
-> >+		default:
-> >+			pr_err("%s: unsupported otg-rev: 0x%x\n",
-> >+						np->full_name, otg_rev);
-> >+			return -EINVAL;
-> >+		}
-> >+	} else {
-> >+		otg_caps->otg_rev = 0;
-> 
-> Why do we set this to 0 here?
-> controller might have set a valid otg_rev and we want to
-> maintain it if nothing was passed in DT.
-> 
-Considering otg-rev is mandatory for non-legacy platformsr,
-Now you mean what I did in previous version: do not set initial otg-rev
-in controller driver, just let it to be 0, and wait it to be updated by DT
-or by platform layer code.
-
-Current idea is:
-set otg capabilities in controller driver as otg _ability_ like below:
-otg-rev = 0x0200;
-hnp_support = true;
-
-a) Call to this function to update otg caps if pass by DT, and then/or
-
-b) Update otg caps if some platforms want to update it directly(not by DT). 
-
-If both above 2 update not happen, then I need keep otg-rev to be 0 which will
-be used to judge this is a legacy platform, so I set otg-rev to be 0 if it not
-passed in DT in a).
-
-We also can do this like my previous version:
-In controller driver, only set HNP/SRP/ADP as otg ability:
-hnp_support = true;
-
-a) Call to this function to update otg caps if pass by DT, and then/or
-
-b) Update otg caps if some platforms want to update it directly(not by DT). 
-
-If both above 2 update not happen, otg-rev is still 0, so I need not set it
-to be 0 if nothing pass in DT.
-
-Either way is okay I think.
+Disable all otg features? or even stop all usb initialization?
 
 Li Jun
-
 > >+	}
 > >+
-> >+	if (of_find_property(np, "hnp-disable", NULL))
-> >+		otg_caps->hnp_support = false;
-> >+	if (of_find_property(np, "srp-disable", NULL))
-> >+		otg_caps->srp_support = false;
-> >+	if (of_find_property(np, "adp-disable", NULL) ||
-> >+				(otg_caps->otg_rev < 0x0200))
-> >+		otg_caps->adp_support = false;
-> >+
-> >+	return 0;
-> >+}
-> >+EXPORT_SYMBOL_GPL(of_usb_update_otg_caps);
-> >+
-> >  #endif
+> >  	if (of_usb_get_maximum_speed(dev->of_node) == USB_SPEED_FULL)
+> >  		platdata->flags |= CI_HDRC_FORCE_FULLSPEED;
 > 
 > cheers,
 > -roger
 > 
 > >
-> >  MODULE_LICENSE("GPL");
-> >diff --git a/include/linux/usb/of.h b/include/linux/usb/of.h
-> >index cfe0528..8c5a818 100644
-> >--- a/include/linux/usb/of.h
-> >+++ b/include/linux/usb/of.h
-> >@@ -15,6 +15,8 @@
-> >  enum usb_dr_mode of_usb_get_dr_mode(struct device_node *np);
-> >  enum usb_device_speed of_usb_get_maximum_speed(struct device_node *np);
-> >  bool of_usb_host_tpl_support(struct device_node *np);
-> >+int of_usb_update_otg_caps(struct device_node *np,
-> >+			struct usb_otg_caps *otg_caps);
-> >  #else
-> >  static inline enum usb_dr_mode of_usb_get_dr_mode(struct device_node *np)
+> >diff --git a/drivers/usb/chipidea/udc.c b/drivers/usb/chipidea/udc.c
+> >index 764f668..b7cca3e 100644
+> >--- a/drivers/usb/chipidea/udc.c
+> >+++ b/drivers/usb/chipidea/udc.c
+> >@@ -1827,6 +1827,7 @@ static irqreturn_t udc_irq(struct ci_hdrc *ci)
+> >  static int udc_start(struct ci_hdrc *ci)
 > >  {
-> >@@ -30,6 +32,11 @@ static inline bool of_usb_host_tpl_support(struct device_node *np)
-> >  {
-> >  	return false;
-> >  }
-> >+static inline int of_usb_update_otg_caps(struct device_node *np,
-> >+				struct usb_otg_caps *otg_caps)
-> >+{
-> >+	return 0;
-> >+}
-> >  #endif
+> >  	struct device *dev = ci->dev;
+> >+	struct usb_otg_caps *otg_caps = &ci->platdata->ci_otg_caps;
+> >  	int retval = 0;
 > >
-> >  #if IS_ENABLED(CONFIG_OF) && IS_ENABLED(CONFIG_USB_SUPPORT)
+> >  	spin_lock_init(&ci->lock);
+> >@@ -1834,8 +1835,12 @@ static int udc_start(struct ci_hdrc *ci)
+> >  	ci->gadget.ops          = &usb_gadget_ops;
+> >  	ci->gadget.speed        = USB_SPEED_UNKNOWN;
+> >  	ci->gadget.max_speed    = USB_SPEED_HIGH;
+> >-	ci->gadget.is_otg       = ci->is_otg ? 1 : 0;
+> >  	ci->gadget.name         = ci->platdata->name;
+> >+	ci->gadget.otg_caps	= otg_caps;
+> >+
+> >+	if (otg_caps->hnp_support || otg_caps->srp_support ||
+> >+					otg_caps->adp_support)
+> >+		ci->gadget.is_otg = 1;
+> >
+> >  	INIT_LIST_HEAD(&ci->gadget.ep_list);
+> >
+> >diff --git a/include/linux/usb/chipidea.h b/include/linux/usb/chipidea.h
+> >index ab94f78..e10cefc 100644
+> >--- a/include/linux/usb/chipidea.h
+> >+++ b/include/linux/usb/chipidea.h
+> >@@ -34,6 +34,7 @@ struct ci_hdrc_platform_data {
+> >  #define CI_HDRC_CONTROLLER_STOPPED_EVENT	1
+> >  	void	(*notify_event) (struct ci_hdrc *ci, unsigned event);
+> >  	struct regulator	*reg_vbus;
+> >+	struct usb_otg_caps	ci_otg_caps;
+> >  	bool			tpl_support;
+> >  };
+> >
 > >
 --
 To unsubscribe from this list: send the line "unsubscribe linux-usb" in
