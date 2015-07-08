@@ -1,49 +1,42 @@
-From: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 1/2] iio: light: DT binding docs for APDS9960 driver
-Date: Tue,  7 Jul 2015 22:16:34 -0700
-Message-ID: <1436332595-9745-2-git-send-email-mranostay@gmail.com>
-References: <1436332595-9745-1-git-send-email-mranostay@gmail.com>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1436332595-9745-1-git-send-email-mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: [PATCH 0/4] ARM: dts: Use labels instead of full paths for Exynos5 pinctrl nodes
+Date: Tue,  7 Jul 2015 22:36:26 -0700
+Message-ID: <1436333790-18219-1-git-send-email-javier@osg.samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kukjin Kim <kgene@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Javier Martinez Canillas <javier@osg.samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Document compatible string, and required DT properties for APDS9960
-chipset driver.
+Hello Kukjin and Krzysztof,
 
-Reviewed-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Signed-off-by: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- .../devicetree/bindings/iio/light/apds9960.txt        | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/light/apds9960.txt
+This is a trivial series that changes Exynos5 pinctrl dtsi files to extend
+the pinctrl nodes using labels instead of full paths.
 
-diff --git a/Documentation/devicetree/bindings/iio/light/apds9960.txt b/Documentation/devicetree/bindings/iio/light/apds9960.txt
-new file mode 100644
-index 0000000..7a47d28
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/light/apds9960.txt
-@@ -0,0 +1,19 @@
-+* Avago APDS9960 gesture/RGB/ALS/proximity sensor
-+
-+http://www.avagotech.com/docs/AV02-4191EN
-+
-+Required properties:
-+
-+  - compatible: must be "avago,apds9960"
-+  - reg: the I2c address of the sensor
-+  - interrupt-parent: should be the phandle for the interrupt controller
-+  - interrupts: interrupt mapping for GPIO IRQ
-+
-+Example:
-+
-+apds9960@39 {
-+	compatible = "avago,apds9960";
-+	reg = <0x39>;
-+	interrupt-parent = <&gpio1>;
-+	interrupts = <16 1>;
-+};
+Using labels is less error prone since a misstyped label leads to a build
+error while full paths can lead to the creation of a new node instead of
+overriding the original which makes the mistake harder to detect.
+
+I tested the changes by decompiling the Exynos5* dtbs and comparing before
+and after. The resulting dts were identical modulo some node ordering due
+the pinctrl include change.
+
+The series is composed of the following trivial patches:
+
+
+Javier Martinez Canillas (4):
+  ARM: dts: Include exynos5250-pinctrl after the nodes were defined
+  ARM: dts: Extend exynos5250-pinctrl nodes using labels instead of
+    paths
+  ARM: dts: Include exynos5420-pinctrl after the nodes were defined
+  ARM: dts: Extend exynos5420-pinctrl nodes using labels instead of
+    paths
+
+ arch/arm/boot/dts/exynos5250-pinctrl.dtsi | 1600 ++++++++++++++---------------
+ arch/arm/boot/dts/exynos5250.dtsi         |    3 +-
+ arch/arm/boot/dts/exynos5420-pinctrl.dtsi | 1411 +++++++++++++------------
+ arch/arm/boot/dts/exynos5420.dtsi         |    3 +-
+ 4 files changed, 1508 insertions(+), 1509 deletions(-)
+
 -- 
-1.9.1
+2.4.3
