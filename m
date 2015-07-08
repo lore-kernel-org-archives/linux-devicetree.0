@@ -1,104 +1,42 @@
-From: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v6 23/23] usb: gadget: zero: allocate and init otg
- descriptor by otg capabilities
-Date: Wed, 8 Jul 2015 11:57:28 +0800
-Message-ID: <20150708035727.GC11714@shlinux2>
-References: <1435564082-14583-1-git-send-email-jun.li@freescale.com>
- <1435564082-14583-24-git-send-email-jun.li@freescale.com>
- <559BDA44.4040700@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <559BDA44.4040700-l0cyMroinI0@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Cc: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+d-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 0/2] iio: light: add support for APDS9660 sensor
+Date: Tue,  7 Jul 2015 22:16:33 -0700
+Message-ID: <1436332595-9745-1-git-send-email-mranostay@gmail.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 07, 2015 at 04:55:16PM +0300, Roger Quadros wrote:
-> 
-> On 29/06/15 10:48, Li Jun wrote:
-> >Allocate and initialize usb otg descriptor according to gadget otg
-> >capabilities, add it for each usb configurations. If otg capability
-> >is not defined, keep its original otg descriptor unchanged.
-> >
-> >Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> >---
-> >  drivers/usb/gadget/legacy/zero.c | 32 ++++++++++++++------------------
-> >  1 file changed, 14 insertions(+), 18 deletions(-)
-> >
-> >diff --git a/drivers/usb/gadget/legacy/zero.c b/drivers/usb/gadget/legacy/zero.c
-> >index c986e8a..695c2cb 100644
-> >--- a/drivers/usb/gadget/legacy/zero.c
-> >+++ b/drivers/usb/gadget/legacy/zero.c
-> >@@ -121,24 +121,7 @@ static struct usb_device_descriptor device_desc = {
-> >  	.bNumConfigurations =	2,
-> >  };
-> >
-> >-#ifdef CONFIG_USB_OTG
-> >-static struct usb_otg_descriptor otg_descriptor = {
-> >-	.bLength =		sizeof otg_descriptor,
-> >-	.bDescriptorType =	USB_DT_OTG,
-> >-
-> >-	/* REVISIT SRP-only hardware is possible, although
-> >-	 * it would not be called "OTG" ...
-> >-	 */
-> >-	.bmAttributes =		USB_OTG_SRP | USB_OTG_HNP,
-> >-};
-> >-
-> >-static const struct usb_descriptor_header *otg_desc[] = {
-> >-	(struct usb_descriptor_header *) &otg_descriptor,
-> >-	NULL,
-> >-};
-> >-#else
-> >-#define otg_desc	NULL
-> >-#endif
-> >+static const struct usb_descriptor_header *otg_desc[2];
-> >
-> >  /* string IDs are assigned dynamically */
-> >  /* default serial number takes at least two packets */
-> >@@ -341,6 +324,16 @@ static int zero_bind(struct usb_composite_dev *cdev)
-> >
-> >  	/* support OTG systems */
-> >  	if (gadget_is_otg(cdev->gadget)) {
-> >+		if (!otg_desc[0]) {
-> >+			struct usb_descriptor_header *usb_desc;
-> >+
-> >+			usb_desc = usb_otg_descriptor_alloc(cdev->gadget);
-> >+			if (!usb_desc)
-> >+				return -ENOMEM;
-> >+			usb_otg_descriptor_init(cdev->gadget, usb_desc);
-> >+			otg_desc[0] = usb_desc;
-> >+			otg_desc[1] = NULL;
-> >+		}
-> 
-> There is an error condition in zero_bind(). You need to free the
-> otg_descriptor there.
-> 
+This patchset adds support for the APDS9960 ALS + proximity + gesture
+sensor.
 
-Good catch, I will add error handling for the 3 patches you found this
-problem.
+Included support for the various adjustable settings and controls:
+ * Falling and rising ALS + proximity thresholds events
+ * Gain controls
+ * ALS time integration
 
-Li Jun
-> >  		sourcesink_driver.descriptors = otg_desc;
-> >  		sourcesink_driver.bmAttributes |= USB_CONFIG_ATT_WAKEUP;
-> >  		loopback_driver.descriptors = otg_desc;
-> >@@ -397,6 +390,9 @@ static int zero_unbind(struct usb_composite_dev *cdev)
-> >  	if (!IS_ERR_OR_NULL(func_lb))
-> >  		usb_put_function(func_lb);
-> >  	usb_put_function_instance(func_inst_lb);
-> >+	kfree(otg_desc[0]);
-> >+	otg_desc[0] = NULL;
-> >+
-> >  	return 0;
-> >  }
-> >
-> >
-> 
-> cheers,
-> -roger
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Changes from v1:
+ * Reworded sysfs-bus-iio-apds9960 to be more clear about gesture features
+ * Changed gain setting from IIO_CHAN_INFO_CALIBSCALE to IIO_CHAN_INFO_SCALE
+ * Removed superfluous information in iio_chan_spec channels
+ * Fixed likely buffer overrun issue
+ * Make mutex and gain + it setting logic more clear
+ * Fixed typos in comments
+
+Matt Ranostay (2):
+  iio: light: DT binding docs for APDS9960 driver
+  iio: light: add APDS9960 ALS + promixity driver
+
+ .../ABI/testing/sysfs-bus-iio-light-apds9960       |  128 +++
+ .../devicetree/bindings/iio/light/apds9960.txt     |   19 +
+ drivers/iio/light/Kconfig                          |   12 +
+ drivers/iio/light/Makefile                         |    1 +
+ drivers/iio/light/apds9960.c                       | 1214 ++++++++++++++++++++
+ 5 files changed, 1374 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-light-apds9960
+ create mode 100644 Documentation/devicetree/bindings/iio/light/apds9960.txt
+ create mode 100644 drivers/iio/light/apds9960.c
+
+-- 
+1.9.1
