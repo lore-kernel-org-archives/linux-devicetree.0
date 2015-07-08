@@ -1,46 +1,52 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH 2/4] ARM: dts: Extend exynos5250-pinctrl nodes using labels
- instead of paths
-Date: Thu, 09 Jul 2015 08:53:49 +0900
-Message-ID: <559DB80D.20702@samsung.com>
-References: <1436333790-18219-1-git-send-email-javier@osg.samsung.com>
- <1436333790-18219-3-git-send-email-javier@osg.samsung.com>
- <559CDF66.6080609@samsung.com> <559D2E39.6060602@osg.samsung.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v2 01/11] soc: qcom: Add device tree binding for SMEM
+Date: Wed, 08 Jul 2015 16:56:34 -0700
+Message-ID: <559DB8B2.2090202@codeaurora.org>
+References: <1435355419-23602-1-git-send-email-bjorn.andersson@sonymobile.com> <1435355419-23602-2-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <559D2E39.6060602@osg.samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@osg.samsung.com>, Kukjin Kim <kgene@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1435355419-23602-2-git-send-email-bjorn.andersson@sonymobile.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: bjorn@kryo.se, Andy Gross <agross@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: Jeffrey Hugo <jhugo@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 08.07.2015 23:05, Javier Martinez Canillas wrote:
-> Hello Krzysztof,
-> 
-> On 07/08/2015 01:29 AM, Krzysztof Kozlowski wrote:
->> On 08.07.2015 14:36, Javier Martinez Canillas wrote:
->>> A previously defined Device Tree node, can be extended either by defining
->>> a node using the same full path or by creating a label for the node and
->>> referencing to it.
->>>
->>> Using full paths is more error prone since if there was a typo error, a
->>> new node will be created instead of extending the node as it was desired.
->>> This will lead to run-time errors that could be hard to detect.
->>>
->>> A misstyped label on the other hand, will cause a dtc compile error which
->>
->> s/misstyped/mistyped/
->>
-> 
-> sigh, it's so ironic that I mistyped that.
-> 
-> Do you want me to re-post the whole series with the typo fixed or you /
-> Kukjin would fix in both patches when applying?
+On 06/26/2015 02:50 PM, bjorn@kryo.se wrote:
+> += EXAMPLE
+> +The following example shows the SMEM setup for MSM8974, with a main SMEM region
+> +at 0xfa00000 and an auxiliary region at 0xfc428000:
+> +
+> +	reserved-memory {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges;
+> +
+> +		smem_region: smem@fa00000 {
+> +			reg = <0xfa00000 0x200000>;
+> +			no-map;
+> +		};
+> +	};
+> +
+> +	smem@fa00000 {
 
-I'll fix it when applying to my tree. As for Kukjin, it depends whether
-he will pick it up from LKML or from me.
+This should be smem@fc428000 matching the first reg property. It's weird
+though, because if smem is using a secondary region it will be under the
+SoC node and have a reg property. Otherwise it would be directly under
+the root node and only have a memory-region. It would be nice if we
+could somehow move the rpm message ram (0xfc428000) into the
+reserved-memory node so that we could use memory-region for both regions.
 
-Best regards,
-Krzysztof
+> +		compatible = "qcom,smem";
+> +
+> +		memory-region = <&smem_region>;
+> +		reg = <0xfc428000 0x4000>;
+> +
+> +		hwlocks = <&tcsr_mutex 3>;
+> +	};
+
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
