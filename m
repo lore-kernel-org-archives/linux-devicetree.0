@@ -1,63 +1,62 @@
-From: James Liao <jamesjj.liao@mediatek.com>
-Subject: [PATCH v2 1/2] clk: mediatek: Fix PLL registers setting flow
-Date: Wed, 8 Jul 2015 16:37:45 +0800
-Message-ID: <1436344666-25645-2-git-send-email-jamesjj.liao@mediatek.com>
+From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 0/2] Add MT8173 MMPLL change rate support
+Date: Wed, 8 Jul 2015 16:49:54 +0800
+Message-ID: <1436345394.3526.111.camel@mtksdaap41>
 References: <1436344666-25645-1-git-send-email-jamesjj.liao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1436344666-25645-1-git-send-email-jamesjj.liao@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Heiko Stubner <heiko@sntech.de>
-Cc: srv_heupstream@mediatek.com, Daniel Kurtz <djkurtz@chromium.org>, Ricky Liang <jcliang@chromium.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, James Liao <jamesjj.liao@mediatek.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1436344666-25645-1-git-send-email-jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Heiko Stubner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Write postdiv and pcw settings at the same time for PLLs if postdiv
-and pcw settings are on the same register.
+Hi all,
 
-This is need by PLLs such as MT8173 MMPLL and ARM*PLL.
+The cover letter's title should be "[PATCH v2 0/2] ..."
 
-Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
----
- drivers/clk/mediatek/clk-pll.c | 21 ++++++++++++---------
- 1 file changed, 12 insertions(+), 9 deletions(-)
+changes since v1:
+- Add a separated patch for mtk_pll_set_rate_regs().
+- Use a structure array to describe a div_table.
+- Limit max frequency to div_table[0].
+- Minor changes such as static and comments.
 
-diff --git a/drivers/clk/mediatek/clk-pll.c b/drivers/clk/mediatek/clk-pll.c
-index 44409e9..68af518 100644
---- a/drivers/clk/mediatek/clk-pll.c
-+++ b/drivers/clk/mediatek/clk-pll.c
-@@ -90,20 +90,23 @@ static unsigned long __mtk_pll_recalc_rate(struct mtk_clk_pll *pll, u32 fin,
- static void mtk_pll_set_rate_regs(struct mtk_clk_pll *pll, u32 pcw,
- 		int postdiv)
- {
--	u32 con1, pd, val;
-+	u32 con1, val;
- 	int pll_en;
- 
--	/* set postdiv */
--	pd = readl(pll->pd_addr);
--	pd &= ~(POSTDIV_MASK << pll->data->pd_shift);
--	pd |= (ffs(postdiv) - 1) << pll->data->pd_shift;
--	writel(pd, pll->pd_addr);
--
- 	pll_en = readl(pll->base_addr + REG_CON0) & CON0_BASE_EN;
- 
--	/* set pcw */
--	val = readl(pll->pcw_addr);
-+	/* set postdiv */
-+	val = readl(pll->pd_addr);
-+	val &= ~(POSTDIV_MASK << pll->data->pd_shift);
-+	val |= (ffs(postdiv) - 1) << pll->data->pd_shift;
-+
-+	/* postdiv and pcw need to set at the same time if on same register */
-+	if (pll->pd_addr != pll->pcw_addr) {
-+		writel(val, pll->pd_addr);
-+		val = readl(pll->pcw_addr);
-+	}
- 
-+	/* set pcw */
- 	val &= ~GENMASK(pll->data->pcw_shift + pll->data->pcwbits - 1,
- 			pll->data->pcw_shift);
- 	val |= pcw << pll->data->pcw_shift;
--- 
-1.8.1.1.dirty
+
+Best regards,
+
+James
+
+On Wed, 2015-07-08 at 16:37 +0800, James Liao wrote:
+> MT8173 MMPLL frequency settings are different from common PLLs.
+> It needs different post divider settings for some ranges of frequency.
+> This patch add support for MT8173 MMPLL frequency setting, includes:
+> 
+> 1. Add div-rate table for PLLs.
+> 2. Increase the max ost divider setting from 3 (/8) to 4 (/16).
+> 3. Write postdiv and pcw settings at the same time.
+> 
+> James Liao (2):
+>   clk: mediatek: Fix PLL registers setting flow
+>   clk: mediatek: Add MT8173 MMPLL change rate support
+> 
+>  drivers/clk/mediatek/clk-mt8173.c | 24 +++++++++++++++++++++---
+>  drivers/clk/mediatek/clk-mtk.h    |  6 ++++++
+>  drivers/clk/mediatek/clk-pll.c    | 39 +++++++++++++++++++++++++++------------
+>  3 files changed, 54 insertions(+), 15 deletions(-)
+> 
+> --
+> 1.8.1.1.dirty
+> 
+> 
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
