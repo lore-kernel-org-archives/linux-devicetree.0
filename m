@@ -1,55 +1,124 @@
-From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2] power_supply: rt9455_charger: Properly notify
- userspace about charging events
-Date: Wed, 8 Jul 2015 10:18:36 +0900
-Message-ID: <CAJKOXPfqiQuKvPSWaYQPA06onGSoVhajXW+Q1aEds0MJKpn9Tw@mail.gmail.com>
-References: <1436271953-24564-1-git-send-email-anda-maria.nicolae@intel.com>
+From: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: mt8173: add clock_null
+Date: Wed, 8 Jul 2015 10:37:21 +0800
+Message-ID: <1436323041.27396.23.camel@mtksdaap41>
+References: <1434605351-64592-1-git-send-email-eddie.huang@mediatek.com>
+	 <20150707130732.GD18561@pengutronix.de>
+	 <CAGS+omCgSjLZ2Ae5DqfmEm-2BrxQqw2ztxUCxBSngNSXxabtbg@mail.gmail.com>
+	 <20150707143621.GW18700@pengutronix.de>
+	 <CAGS+omChOC-EYsmA5ytT+ho0UXvcL1-mjK4Z8=EgboKzwWmtyw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1436271953-24564-1-git-send-email-anda-maria.nicolae-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <CAGS+omChOC-EYsmA5ytT+ho0UXvcL1-mjK4Z8=EgboKzwWmtyw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anda-Maria Nicolae <anda-maria.nicolae-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, mturquette-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2015-07-07 21:25 GMT+09:00 Anda-Maria Nicolae <anda-maria.nicolae-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>:
-> Charging events this patch refers to are:
-> - charger is connected to/disconnected from the power source
-> - battery is reconnected to the charger, after it was absent.
->
-> When the charger is connected to/disconnected from the power source, CHRVPI
-> interrupt occurs and PWR_RDY bit is either set or cleared. PWR_RDY bit is
-> updated after 1-2 seconds CHRVPI interrupt has occurred.
-> power_supply_changed() should be called after PWR_RDY bit is updated.
-> /sys/class/power_supply/rt9455-charger/online file displays the value of
-> PWR_RDY bit.
-> This way, if the userspace is notified that a charging event has occurred
-> and the userspace reads /sys/class/power_supply/rt9455-charger/online file,
-> this file is properly updated when the userspace reads it.
-> This is the reason why power_supply_changed() is called in
-> rt9455_pwr_rdy_work_callback(), instead of being called in interrupt
-> handler.
->
-> Since no interrupt is triggered when the battery is reconnected to the
-> charger, the userspace is never notified that the battery is reconnected.
-> This is why power_supply_changed() is called in
-> rt9455_max_charging_time_work_callback(), so that the userspace is notified
-> that the battery is reconnected.
->
-> Signed-off-by: Anda-Maria Nicolae <anda-maria.nicolae-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-> ---
->
-> Updates from v1 version:
-> - I have followed Kzrysztof's suggestion and I have added explanations in
-> the commit message so that the change is more clear
-> - Code is the same as in v1
+On Tue, 2015-07-07 at 23:10 +0800, Daniel Kurtz wrote:
+> On Tue, Jul 7, 2015 at 10:36 PM, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> > On Tue, Jul 07, 2015 at 10:15:29PM +0800, Daniel Kurtz wrote:
+> >> On Tue, Jul 7, 2015 at 9:07 PM, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> >> > On Thu, Jun 18, 2015 at 01:29:11PM +0800, Eddie Huang wrote:
+> >> >> Add clk_null, which represents clocks that can not / need not
+> >> >> controlled by software.
+> >> >> There are many clocks' parent set to clk_null.
+> >> >>
+> >> >> Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> >> >> Signed-off-by: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> >> >> ---
+> >> >> Base on 4.1-rc1
+> >> >>
+> >> >> Change-Id: I4db9b40d07e28f54f7bae9b676316cbd6a962124
+> >> >> ---
+> >> >>  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 6 ++++++
+> >> >>  1 file changed, 6 insertions(+)
+> >> >>
+> >> >> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> >> >> index 924fdb6..4798f44 100644
+> >> >> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> >> >> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> >> >> @@ -81,6 +81,12 @@
+> >> >>               cpu_on        = <0x84000003>;
+> >> >>       };
+> >> >>
+> >> >> +     clk_null: clk_null {
+> >> >> +             compatible = "fixed-clock";
+> >> >> +             clock-frequency = <0>;
+> >> >> +             #clock-cells = <0>;
+> >> >> +     };
+> >> >
+> >> > The discussion around this patch shows that we don't want to have this
+> >> > clock in the device tree as it is not a hardware description.
+> >> >
+> >> > Ok, fine. Eddie, you told us that the rate of the current clk_null children
+> >> > is not interesting. What's the motivation to send this patch anyway
+> >> > then? Why can't you keep its children on the orphan list where they are
+> >> > already now?
+> >> >
+> >> > Another possibility would be to instantiate the clk_null clock from C
+> >> > code rather than from the device tree. This way we wouldn't put any
+> >> > wrong descriptions into the device tree and still can implement the
+> >> > support for the real parent clocks when we actually need them.
+> >>
+> >> Some device nodes, like mmc, use a clk_null phandle as one of their clocks:
+> >>
+> >> mmc1: mmc@11240000 {
+> >>         compatible = "mediatek,mt8173-mmc",
+> >>                      "mediatek,mt8135-mmc";
+> >>         reg = <0 0x11240000 0 0x1000>;
+> >>         interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_LOW>;
+> >>         clocks = <&pericfg CLK_PERI_MSDC30_1>,
+> >>                  <&clk_null>;
+> >>         clock-names = "source", "hclk";
+> >>         status = "disabled";
+> >> };
+> >
+> > This is another case than the one we discussed about. In the case above
+> > I motivated using a dummy clock since the clock exists in the system,
+> > but is not software controllable. To abstract this from the driver
+> > (which needs this clock since it exists) we here have the dummy clock.
+> > However, of course I can't prove the clock is indeed not software
+> > controllable; that's only the information I have.
+> 
+> I was trying to answer your question "What's the motivation to send
+> this patch anyway?".
+> The motivation is to send follow on patches that use the clk_null
+> phandle.  We need to provide some clock as the mmc1's hclk.  I do not
+> understand why this has to be "clk_null", though.  It seems like this
+> should be a real clock coming from one of the real clock_controller
+> nodes.  After all, the mmc driver is going to be enabling/disabling
+> this clock for power savings at runtime.  What does that even mean for
+> clk_null ?
 
-Thanks, FWIW:
-Reviewed-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+The original purpose of this patch is to provide a common dummy clock
+for both software don't care clock and clock that is not software
+controllable.I got comments that device tree should describe hardware
+and should put exact clock in device tree. I think this is true. So we
+will remove this clock_null patch, and:
 
-Best regards,
-Krzysztof
+1. For Mediatek SoC CCF driver, James will clarify clock usage further.
+Actually, we still think it's not necessary to describe whole tree that
+software don't care, James will deal this in clock driver.
+
+2. For other module that use SW not controllable clock (mmc case
+mentioned by Dan), because this is a real clock, we will put a dummy
+clock in device tree, like
+
+clk_mmchclk: dummyhclk {
+	compatible = "fixed-clock";
+	clock-frequency = <0>;
+	#clock-cells = <0>;
+};
+
+How about this modification ?
+
+Thanks
+Eddie
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
