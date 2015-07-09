@@ -1,110 +1,53 @@
 From: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v7 00/23] usb gadget update for OTG 2.0
-Date: Thu, 9 Jul 2015 15:18:37 +0800
-Message-ID: <1436426340-18477-1-git-send-email-jun.li@freescale.com>
+Subject: [PATCH v7 03/23] usb: otg: add usb_otg_caps structure for otg capabilities
+Date: Thu, 9 Jul 2015 15:18:40 +0800
+Message-ID: <1436426340-18477-4-git-send-email-jun.li@freescale.com>
+References: <1436426340-18477-1-git-send-email-jun.li@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1436426340-18477-1-git-send-email-jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+d-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org, Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Change for v7:
-- Free otg descriptor when failure of bind in patch 21, 22, 23.
-  add Roger's Reviewed-by for patch 10~20.
-- Choose the lesser otg-rev if otg-rev has been set before update by DT,
-  remove 0x0300 in supported otg-rev list, and add code comments in case
-  otg-rev is not passed in DT in patch 7.
-- Fail chipidea usb initilization if DT pass an unsupported otg-rev in patch 8.
+This patch adds a structure usb_otg_caps to cover all otg related
+capabilities of the device, including otg revision, and if hnp/srp/adp
+is supported.
 
-Change for v6:
-- Change of_usb_set_otg_caps to be of_usb_update_otg_caps, and add
-  sanity check of otg-rev.
-- Add chipidea otg-rev ability to be 0x0200, which will be updated
-  in DT, if not passed, will be reset to be 0.
-- Remove unnecessary change: move config's descriptor and bmAttributes
-  init from xxxi_config() to xxx_bind() in leagcy gadget drivers.
+Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Reviewed-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+---
+ include/linux/usb/otg.h | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-This is a follow-up of Macpaul Lin's previous patchset to resolve usb
-gadget driver working with OTG 2.0, and set otg features by not only
-usb driver config but also usb hardware property in DT, main changes:
-1. Add usb_otg20_descriptor definition for OTG 2.0 which introduces bcdOTG
-   field for otg revision, bcdOTG can be passed via device tree.
-2. OTG features(SRP/HNP/ADP) can be decided by combination of usb HW
-   properties and usb driver config.
-3. Change the chipidea usb driver to use the updated mechanism.
-4. Remove static usb otg descriptor definition, but allocate and init it
-   according to otg capabilities in each gadget driver, if otg capabilities
-   is not defined for legacy platforms, the usb otg descriptor content is
-   kept the same as current static definition.
-
-Li Jun (19):
-  usb: otg: add usb_otg_caps structure for otg capabilities
-  doc: dt-binding: usb: add otg related properties
-  usb: common: add API to update usb otg capabilities by device tree
-  usb: chipidea: set usb otg capabilities
-  usb: chipidea: update ci_otg_is_fsm_mode conditions
-  usb: gadget: add usb otg descriptor allocate and init interface
-  usb: gadget: configfs: allocate and init otg descriptor by otg
-    capabilities
-  usb: gadget: ether: allocate and init otg descriptor by otg
-    capabilities
-  usb: gadget: acm_ms: allocate and init otg descriptor by otg
-    capabilities
-  usb: gadget: audio: allocate and init otg descriptor by otg
-    capabilities
-  usb: gadget: cdc2: allocate and init otg descriptor by otg
-    capabilities
-  usb: gadget: g_ffs: allocate and init otg descriptor by otg
-    capabilities
-  usb: gadget: hid: allocate and init otg descriptor by otg capabilities
-  usb: gadget: mass_storage: allocate and init otg descriptor by otg
-    capabilities
-  usb: gadget: multi: allocate and init otg descriptor by otg
-    capabilities
-  usb: gadget: ncm: allocate and init otg descriptor by otg capabilities
-  usb: gadget: printer: allocate and init otg descriptor by otg
-    capabilities
-  usb: gadget: serial: allocate and init otg descriptor by otg
-    capabilities
-  usb: gadget: zero: allocate and init otg descriptor by otg
-    capabilities
-
-Macpaul Lin (4):
-  usb: add usb_otg20_descriptor for OTG 2.0 and above
-  usb: add USB_OTG_ADP definition
-  usb: add usb_otg_caps to usb_gadget structure.
-  usb: gadget: composite: add USB_DT_OTG request handling
-
- Documentation/devicetree/bindings/usb/generic.txt | 15 ++++++
- drivers/usb/chipidea/ci.h                         |  5 +-
- drivers/usb/chipidea/core.c                       | 15 ++++++
- drivers/usb/chipidea/debug.c                      |  1 +
- drivers/usb/chipidea/udc.c                        |  7 ++-
- drivers/usb/common/common.c                       | 56 +++++++++++++++++++++++
- drivers/usb/gadget/composite.c                    | 27 +++++++++++
- drivers/usb/gadget/config.c                       | 56 +++++++++++++++++++++++
- drivers/usb/gadget/configfs.c                     | 29 ++++++++----
- drivers/usb/gadget/legacy/acm_ms.c                | 35 +++++++-------
- drivers/usb/gadget/legacy/audio.c                 | 34 ++++++++------
- drivers/usb/gadget/legacy/cdc2.c                  | 35 +++++++-------
- drivers/usb/gadget/legacy/ether.c                 | 36 ++++++++-------
- drivers/usb/gadget/legacy/g_ffs.c                 | 32 +++++++------
- drivers/usb/gadget/legacy/hid.c                   | 36 ++++++++-------
- drivers/usb/gadget/legacy/mass_storage.c          | 35 +++++++-------
- drivers/usb/gadget/legacy/multi.c                 | 37 ++++++++-------
- drivers/usb/gadget/legacy/ncm.c                   | 34 ++++++++------
- drivers/usb/gadget/legacy/printer.c               | 49 ++++++++++++--------
- drivers/usb/gadget/legacy/serial.c                | 37 ++++++++-------
- drivers/usb/gadget/legacy/zero.c                  | 41 +++++++++--------
- include/linux/usb/chipidea.h                      |  1 +
- include/linux/usb/gadget.h                        |  6 +++
- include/linux/usb/of.h                            |  7 +++
- include/linux/usb/otg.h                           | 15 ++++++
- include/uapi/linux/usb/ch9.h                      | 12 +++++
- 26 files changed, 485 insertions(+), 208 deletions(-)
-
+diff --git a/include/linux/usb/otg.h b/include/linux/usb/otg.h
+index 52661c5..bd1dcf8 100644
+--- a/include/linux/usb/otg.h
++++ b/include/linux/usb/otg.h
+@@ -41,6 +41,21 @@ struct usb_otg {
+ 
+ };
+ 
++/**
++ * struct usb_otg_caps - describes the otg capabilities of the device
++ * @otg_rev: The OTG revision number the device is compliant with, it's
++ *		in binary-coded decimal (i.e. 2.0 is 0200H).
++ * @hnp_support: Indicates if the device supports HNP.
++ * @srp_support: Indicates if the device supports SRP.
++ * @adp_support: Indicates if the device supports ADP.
++ */
++struct usb_otg_caps {
++	u16 otg_rev;
++	bool hnp_support;
++	bool srp_support;
++	bool adp_support;
++};
++
+ extern const char *usb_otg_state_string(enum usb_otg_state state);
+ 
+ /* Context: can sleep */
 -- 
 1.9.1
 
