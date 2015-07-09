@@ -1,45 +1,48 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 3/7] tty: 8250: omap: introduce function to update mdr1
-Date: Thu, 9 Jul 2015 16:50:55 +0530
-Message-ID: <559E5917.7090707@ti.com>
-References: <cover.1436174801.git.nsekhar@ti.com> <597e0f4bf4455cb7755851f5c34a02fbdd0d4aeb.1436174801.git.nsekhar@ti.com> <559DC05F.9070707@hurleysoftware.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v2 0/2] pci: xgene: Add multiple memory ranges support
+Date: Thu, 09 Jul 2015 13:47:39 +0200
+Message-ID: <1481643.dA4ocqzitg@wuerfel>
+References: <46305464.n5SOjGAhJb@wuerfel> <cover.1435688121.git.dhdang@apm.com> <CADaLNDmpkdHT7B1fSEu9qtoVcj4ookvxh=BA4EUCvG=pp80s=A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <559DC05F.9070707-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <CADaLNDmpkdHT7B1fSEu9qtoVcj4ookvxh=BA4EUCvG=pp80s=A@mail.gmail.com>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, John Ogness <john.ogness-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Duc Dang <dhdang-qTEPVZfXA3Y@public.gmane.org>
+Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tanmay Inamdar <tinamdar-qTEPVZfXA3Y@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 09 July 2015 05:59 AM, Peter Hurley wrote:
-> Hi Sekhar,
+On Monday 06 July 2015 16:28:43 Duc Dang wrote:
+> On Tue, Jun 30, 2015 at 11:22 AM, Duc Dang <dhdang-qTEPVZfXA3Y@public.gmane.org> wrote:
+> > This patch set adds 1 large (up to 64GB) memory window for each PCIe
+> > controller nodes in X-Gene device tree and fix PCIe controller driver
+> > to handle multiple memory ranges correctly. These changes are required
+> > to support PCIe devices that has huge BAR.
+> >
+> > v2 changes:
+> >         1. Separate device-tree changes and driver changes into different
+> >         patches
+> >         2. Explicitly define new large window as 64-bit prefetchable in dts
+> >         3. Use IORESOURCE_PREFETCH flag to determine which PCIe controller
+> >         register to be used to configure the memory ranges.
+> >
+> >  arch/arm64/boot/dts/apm/apm-storm.dtsi | 23 ++++++++++++++---------
+> >  drivers/pci/host/pci-xgene.c           | 12 ++++++++++--
+> >  2 files changed, 24 insertions(+), 11 deletions(-)
 > 
-> On 07/06/2015 05:47 AM, Sekhar Nori wrote:
->> updating mdr1 register on OMAP needs to take care of
->> errata i202. Introduce a function to update mdr1.
->>
->> This will be useful later on when mdr1 needs to be
->> written to from other places. No functional change.
+> Hi Arnd, Bjorn,
 > 
-> This changelog is not clear. May I suggest:
+> Do you have additional comment on this v2 patch set?
 > 
-> serial: 8250_omap: Refactor MDR1 update
 > 
-> The errata [1] workaround implemented in follow-on patch,
-> "serial: 8250_omap: workaround errata on disabling UART after using DMA",
-> requires MDR1 register programming.
-> 
-> Extract MDR1 register update into helper function, omap8250_update_mdr1().
-> 
-> [1] Advisory 21 in http://www.ti.com/lit/er/sprz408b/sprz408b.pdf
 
-Alright, will use this description instead.
+The changes look ok to me now, but I'd mention in the changelog about
+the fact that one of the windows is prefetchable and the other one
+is not, and that only prefetchable BARs are now using the 64-bit
+window.
 
-Thanks,
-Sekhar
-
+	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
