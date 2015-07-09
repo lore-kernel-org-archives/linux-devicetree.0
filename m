@@ -1,75 +1,95 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH] i2c: Mark instantiated device nodes with OF_POPULATE
-Date: Thu, 9 Jul 2015 22:29:52 +0200
-Message-ID: <20150709202952.GQ4744@katana>
-References: <1422083789-18905-1-git-send-email-pantelis.antoniou@konsulko.com>
- <20150422074019.GA1511@katana>
- <CAMAWPa-HMhJK9UzwfaMPe-MO=4mzjvC=nRwPX-pbab_fb3YZ9A@mail.gmail.com>
- <20150506183733.GA1513@katana>
+From: Stas Sergeev <stsp@list.ru>
+Subject: Re: [PATCH 1/2] of_mdio: add new DT property 'link' for fixed-link
+Date: Thu, 9 Jul 2015 23:43:56 +0300
+Message-ID: <559EDD0C.7020907@list.ru>
+References: <559EB0A4.5080101@list.ru> <559EB1A6.1090008@list.ru>
+ <559EBC59.6020003@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="SvyA5ywaG/v2A5dH"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150506183733.GA1513@katana>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <559EBC59.6020003@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Linux kernel <linux-kernel@vger.kernel.org>, Sebastien Rannou <mxs@sbrk.org>, Arnaud Ebalard <arno@natisbad.org>, Stas Sergeev <stsp@users.sourceforge.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, netdev <netdev@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+09.07.2015 21:24, Florian Fainelli =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> (there is no such thing as linux-net@vger.kernel.org, please remove i=
+t
+> from your future submissions).
+>
+> On 09/07/15 10:38, Stas Sergeev wrote:
+>> Currently for fixed-link the link state is always set to UP.
+> Not quite true, this is always a driver decision to make.
+But what about this part of of_mdio.c:of_phy_register_fixed_link():
+---
 
---SvyA5ywaG/v2A5dH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+  	fixed_link_node =3D of_get_child_by_name(np, "fixed-link");
+  	if (fixed_link_node) {
+		status.link =3D 1
 
-On Wed, May 06, 2015 at 08:37:33PM +0200, Wolfram Sang wrote:
-> On Wed, May 06, 2015 at 10:51:07AM -0700, Kevin Hilman wrote:
-> > On Wed, Apr 22, 2015 at 12:40 AM, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> wrot=
-e:
-> > > On Sat, Jan 24, 2015 at 09:16:29AM +0200, Pantelis Antoniou wrote:
-> > >> Mark (and unmark) device nodes with the POPULATE flag as appropriate.
-> > >> This is required to avoid multi probing when using I2C and device
-> > >> overlays containing a mux.
-> > >> This patch is also more careful with the release of the adapter devi=
-ce
-> > >> which caused a deadlock with muxes, and does not break the build
-> > >> on !OF since the node flag accessors are not defined then.
-> > >>
-> > >> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-> > >
-> > > Now, that the dependency is upstream: applied to for-current, thanks!
-> >=20
-> > I'm not seeing this in linux-next, or in your for-current branch.
-> >=20
-> > Was this dropped or superseded by something else?
->=20
-> I dropped it because it caused a build bug. So, we need another
-> dependency in... I am not sure if this is already in.
+---
 
-Applied to for-current AGAIN, let's hope it will work this time...
+>> This patch introduces the new property 'link' that accepts the
+>> following string arguments: "up", "down" and "auto".
+>> "down" may be needed if the link is physically unconnected.
+> In which case you probably do not even care about inserting such a
+> property in the first place, do you? What would be the value of forci=
+bly
+> having a link permanently down (not counting loopback)?
+The DTs have a common parts that are included by other
+parts. So if you include the definition of your SoC that have
+all ethernets defined, and you only set up the external things
+like PHYs, then I would see a potential use for "down".
+Other than that, it is probably not a big deal.
+Please note that I haven't even hard-coded it anywhere:
+whatever is not "up" or "auto", is down.
+I can remove it from the description if you think that way,
+but I'd rather leave it for consistency and for a small but
+possible use. Eg my board has 4 ethernets and only 2 are
+connected. I feel its right to include the SoC definition and
+set the unconnected ones to "down", but other approaches
+are possible too.
+Should I remove it?
 
+>> "auto" is needed to enable the link paramaters auto-negotiation,
+>> that is built into some MII protocols, namely SGMII.
+> RGMII also has an in-band status FWIW.
+Thanks, will take that into account in v2.
 
---SvyA5ywaG/v2A5dH
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+>> The appropriate documentation is added and explicitly states that
+>> "auto" is very specific (protocol, HW and driver-specific), and
+>> is therefore should be used with care.
+> And therefore probably be made a device (and driver) specific decisio=
+n
+> whether this is the right thing to do.
+This doesn't work.
+It appears even if the driver supports it and wants to use it, the
+PHY HW may simply not generate the inband status. This is actually
+the whole point why we have a regression now. It is _currently_
+a driver decision, and that doesn't work for some people.
+The point of this patch set is to make it a DT decision instead.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+>> -			return -EINVAL;
+>> +		if (of_property_read_u32(fixed_link_node, "speed",
+>> +					 &status.speed) !=3D 0) {
+>> +			/* in auto mode just set to some sane value:
+>> +			 * it will be changed by MAC later */
+>> +			if (link_auto)
+>> +				status.speed =3D 1000;
+> This is a completely arbitrary speed, that does not more or less sens=
+e
+> than defaulting to 100 or anything else,
+Exactly.
+But if I leave it to 0, then fixed-phy driver will return an error,
+so I took an arbitrary value.
+But if it obscures the code, I'll hack fixed-phy to accept 0 instead,
+to get something cleaner. So in v2.
 
-iQIcBAEBAgAGBQJVntnAAAoJEBQN5MwUoCm2m/UQAIfTPxmbFXNN93x5sV0MU3I3
-fZZrl9h4/FpGcAB7MljSxJ1NdqVwp/CRJ+dAo8tm6EXpn26G3GHeUVs9oXMLqko8
-V3PRLcaJ5Es4NR893B73GWWryloYz0tabDZeTYFQ6q0/oap11DPArWAFW0LE2W/1
-rq2tHFP76TUDyHCJ/Kiy73V2SebeYYBLENkn5SsNEAU+BUtwOo6iv8bkKrjSlsqM
-iB0zZtQNfQNr0DL2XSP7JyES/mi061FujKCtZ3YWodFUDbtjDrynJfeFAIPkJ83u
-+GhtydFy9uslIK163D7ZZ4a126mB1dm+aD527gmsKTrRkAnRLeH1ZQe41wCGwTu2
-JfzSriW7LuXIBOmDS6mS3g1z2na29tzrnK1xuRICZ2JX68x9eZ+fdPKFdR+DZzhS
-rIkb1z+Z7VYjiMl+18W26tH6CGD6UyOgewlLtgW7Vh4/Hd9iJXrzjWXCHGjlhOiD
-H0v5Q2SNLk+XzdZRzeAbHD9/7/o++XsFuQiQ8CUuEGM8LMO1VOP1RhDZXEjKehmp
-em5Lf16ixSmZ2DSBuWvkqrK5kmM6ABwikzd+BJRcV53ZjmW2W8fi/HJMm7M5CIj8
-eA/aFIdfS/JO/bpaZVvOAsBxOL1qf7arMoQS8HWhWlbew1TNnGru4AL5UMVEa5MT
-NwqnsG6MOPHUnTDv6txD
-=4G+W
------END PGP SIGNATURE-----
-
---SvyA5ywaG/v2A5dH--
+>   a driver should be able to set
+> the speed it wants, based on the parsing of a 'phy-mode' property for
+> instance.
+It actually does, that value is just to "cheat" fixed-phy.
+I'll make things more obvious next time.
