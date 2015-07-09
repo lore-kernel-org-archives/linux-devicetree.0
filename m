@@ -1,83 +1,31 @@
-From: Stas Sergeev <stsp@list.ru>
-Subject: Re: [PATCH 1/2] of_mdio: add new DT property 'link' for fixed-link
-Date: Fri, 10 Jul 2015 00:43:05 +0300
-Message-ID: <559EEAE9.4000806@list.ru>
-References: <559EB0A4.5080101@list.ru> <559EB1A6.1090008@list.ru>
- <559EBC59.6020003@gmail.com> <559EDD0C.7020907@list.ru>
- <559EE45C.4040408@gmail.com>
+From: Scott Wood <scottwood@freescale.com>
+Subject: Re: [PATCH V3] QorIQ/TMU: add TMU node to device tree for QorIQ T1040
+Date: Thu, 9 Jul 2015 17:26:20 -0500
+Message-ID: <1436480780.2658.154.camel@freescale.com>
+References: <1434009188-25644-1-git-send-email-hongtao.jia@freescale.com>
+ <BLUPR03MB149A79499CAA74A15EC947FE1900@BLUPR03MB149.namprd03.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <559EE45C.4040408@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Linux kernel <linux-kernel@vger.kernel.org>, Sebastien Rannou <mxs@sbrk.org>, Arnaud Ebalard <arno@natisbad.org>, Stas Sergeev <stsp@users.sourceforge.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, netdev <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <BLUPR03MB149A79499CAA74A15EC947FE1900@BLUPR03MB149.namprd03.prod.outlook.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Jia Hongtao-B38951 <hongtao.jia@freescale.com>
+Cc: "edubezval@gmail.com" <edubezval@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-10.07.2015 00:15, Florian Fainelli =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> On 09/07/15 13:43, Stas Sergeev wrote:
->> 09.07.2015 21:24, Florian Fainelli =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>> (there is no such thing as linux-net@vger.kernel.org, please remove=
- it
->>> from your future submissions).
->>>
->>> On 09/07/15 10:38, Stas Sergeev wrote:
->>>> Currently for fixed-link the link state is always set to UP.
->>> Not quite true, this is always a driver decision to make.
->> But what about this part of of_mdio.c:of_phy_register_fixed_link():
->> ---
->>
->>       fixed_link_node =3D of_get_child_by_name(np, "fixed-link");
->>       if (fixed_link_node) {
->>          status.link =3D 1
->>
->> ---
-> This seems like a logical consequence of finding a "fixed-link" prope=
-rty
-> for the DT node of interest. If no such property exist, then we do no=
-t
-> set anything.
->
->>>> This patch introduces the new property 'link' that accepts the
->>>> following string arguments: "up", "down" and "auto".
->>>> "down" may be needed if the link is physically unconnected.
->>> In which case you probably do not even care about inserting such a
->>> property in the first place, do you? What would be the value of for=
-cibly
->>> having a link permanently down (not counting loopback)?
->> The DTs have a common parts that are included by other
->> parts. So if you include the definition of your SoC that have
->> all ethernets defined, and you only set up the external things
->> like PHYs, then I would see a potential use for "down".
-> "down" is equivalent to using a status =3D "disabled", in fact the la=
-tter
-> is much better since you can even conserve energy and resources by no=
-t
-> enabling something which is not usable.
-OK, agree.
-So I'll probably go for something like
-autoneg =3D 1 | 0;
-
->> This doesn't work.
->> It appears even if the driver supports it and wants to use it, the
->> PHY HW may simply not generate the inband status. This is actually
->> the whole point why we have a regression now. It is _currently_
->> a driver decision, and that doesn't work for some people.
->> The point of this patch set is to make it a DT decision instead.
-> Then, if the in-band status indication is not reliable (which really
-> should be completely understood),
-Agree!
-But this is not something I can help with.
-Sebastien Rannou reports the problem, please ask him whatever
-you see fits to get a better understanding of a problem.
-The fact that his HW does not generate the inband status, is
-_my own guess_.
-
->   you can just ignore the in-band status
-> and use all the parameter in a 'fixed-link' property, should not we?
-I don't think there is any way at all to find out if the inband stat is
-usable or not. I think only the user (or manufacturer) can decide
-on that. If there is any way to do a guess-work, that would be an
-entirely different story.
+T24gVGh1LCAyMDE1LTA3LTA5IGF0IDAzOjAwIC0wNTAwLCBKaWEgSG9uZ3Rhby1CMzg5NTEgd3Jv
+dGU6Cj4gSGkgU2NvdHQsCj4gCj4gUGF0Y2ggdXBkYXRlZCB0byBWMywgcGxlYXNlIGhlbHAgdG8g
+cmV2aWV3Lgo+IFRoYW5rcy4KPiAKPiAtLS0KPiBCZXN0IFJlZ2FyZHMsCj4gSG9uZ3RhbwoKSXQg
+bG9va3MgT0suCgotU2NvdHQKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpMaW51eHBwYy1kZXYgbWFpbGluZyBsaXN0CkxpbnV4cHBjLWRldkBsaXN0cy5v
+emxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9saW51eHBwYy1kZXY=
