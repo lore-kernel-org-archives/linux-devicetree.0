@@ -1,105 +1,88 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v2 6/9] regulator: pwm-regulator: Re-write bindings
-Date: Thu, 9 Jul 2015 10:01:26 +0200
-Message-ID: <20150709100126.13716904@bbrezillon>
-References: <1436281613-899-1-git-send-email-lee.jones@linaro.org>
-	<1436281613-899-7-git-send-email-lee.jones@linaro.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: Re: [PATCH 2/3] ARM: dts: axp152: Add a dtsi file
+ for the axp152 pmic
+Date: Thu, 9 Jul 2015 10:10:39 +0200
+Message-ID: <20150709081039.GQ28632@lukather>
+References: <1435088503-20776-1-git-send-email-hdegoede@redhat.com>
+ <1435088503-20776-3-git-send-email-hdegoede@redhat.com>
+ <20150625174027.GF2266@lukather>
+ <558D0BC2.10004@redhat.com>
+ <20150706085713.GE3269@lukather>
+ <559A70B6.3010101@redhat.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1436281613-899-7-git-send-email-lee.jones@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, broonie@kernel.org, kernel@stlinux.com, lgirdwood@gmail.com, Doug Anderson <dianders@google.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="b9dEYEwnDXkv9lSy"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBB637CWAKGQEW42V6IY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <559A70B6.3010101-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee,
+--b9dEYEwnDXkv9lSy
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-On Tue,  7 Jul 2015 16:06:50 +0100
-Lee Jones <lee.jones@linaro.org> wrote:
-
-> * Add support for continuous-voltage mode
-> * Put more meat on the bones with regards to voltage-table mode
-> * Sort out formatting for ease of consumption
+On Mon, Jul 06, 2015 at 02:12:38PM +0200, Hans de Goede wrote:
+> Hi,
 > 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
->  .../bindings/regulator/pwm-regulator.txt           | 68 ++++++++++++++++++----
->  1 file changed, 56 insertions(+), 12 deletions(-)
+> On 06-07-15 10:57, Maxime Ripard wrote:
+> >Hi,
+> >
+> >On Fri, Jun 26, 2015 at 10:22:26AM +0200, Hans de Goede wrote:
+> >>Hi,
+> >>
+> >>On 25-06-15 19:40, Maxime Ripard wrote:
+> >>>Hi,
+> >>>
+> >>>On Tue, Jun 23, 2015 at 09:41:42PM +0200, Hans de Goede wrote:
+> >>>>From: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >>>>
+> >>>>Add a dtsi file for the axp152 pmic, this mirrors the way things are
+> >>>>handled for the axp202 pmic.
+> >>>>
+> >>>>Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> >>>>---
+> >>>>  arch/arm/boot/dts/axp152.dtsi | 49 +++++++++++++++++++++++++++++++++++++++++++
+> >>>>  1 file changed, 49 insertions(+)
+> >>>>  create mode 100644 arch/arm/boot/dts/axp152.dtsi
+> >>>
+> >>>Unfortunately, Mark expressed clearly that he didn't want such files.
+> >>
+> >>That is not how I remember the discussion, he said that he did not consider
+> >>them useful, we explained why we do consider them useful for the sunxi
+> >>case and then things went quiet.
+> >>
+> >>And we do already have an axp209.dtsi, and I find having that useful
+> >>for enabling the regulators on axp209 using boards.
+> >
+> >Hmmm, reading this discussion again, it indeed looks like I
+> >misremembered what he was saying.
+> >
+> >>Ultimately it is your call, but I really think we should be consistent
+> >>and add an axp152.dtsi to mirror how we do things with the axp209.
+> >
+> >Was there any other comments on this serie (and are you going to send
+> >a v2?) or should I apply this patch?
 > 
-> diff --git a/Documentation/devicetree/bindings/regulator/pwm-regulator.txt b/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
-> index ce91f61..892b366 100644
-> --- a/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
-> +++ b/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
-> @@ -1,27 +1,71 @@
-> -pwm regulator bindings
-> +Bindings for the Generic PWM Regulator
-> +======================================
-> +
-> +Currently supports 2 modes of operation:
-> +
-> +voltage-table:		When in this mode, a voltage table (See below) of
-> +			predefined voltage <=> duty-cycle values must be
-> +			provided via DT. Limitations are that the regulator can
-> +			only operate at the voltages supplied in the table.
-> +			Intermediary duty-cycle values which would normally
-> +			allow finer grained voltage selection are ignored and
-> +			rendered useless.  Although more control is given to
-> +			the user if the assumptions made in continuous-voltage
-> +			mode do not reign true.
-> +
-> +continuous-voltage:	This mode uses the regulator's maximum and minimum
-> +			supplied voltages specified in the
-> +			regulator-{min,max}-microvolt properties to calculate
-> +			appropriate duty-cycle values.  This allows for a much
-> +			more fine grained solution when compared with
-> +			voltage-table mode above.  This solution does make an
-> +			assumption that a %50 duty-cycle value will cause the
-> +			regulator voltage to run at half way between the
-> +			supplied max_uV and min_uV values.
+> There were some comments on the actual mfd bits of this series, and
+> I will send a v2 for that sometime this week. The dts patches however
+> are good to go, so please apply this one.
 
-Do we really have to specify a new property to select the mode ?
-The existing DT will have to be modified anyway, so maybe we can just
-add a new compatible string differentiate those two modes.
+Applied 2 and 3 then. Thanks!
 
-Also note that if you're doing linear interpolation between the points
-specified in the voltage-table instead of doing it on the min -> max
-values, you wouldn't have to modify the binding.
-
->  
->  Required properties:
-> -- compatible: Should be "pwm-regulator"
-> -- pwms: OF device-tree PWM specification (see PWM binding pwm.txt)
-> -- voltage-table: voltage and duty table, include 2 members in each set of
-> -  brackets, first one is voltage(unit: uv), the next is duty(unit: percent)
-> +--------------------
-> +- compatible:		Should be "pwm-regulator"
-> +
-> +- pwms:			PWM specification (See: ../pwm/pwm.txt)
-> +
-> +One of these must be provided:
-> +- voltage-table: 	Voltage and Duty-Cycle table consisting of 2 cells
-> +			    First cell is voltage in microvolts (uV)
-> +			    Second cell is duty-cycle in percent (%)
-> +
-> +- max-duty-cycle:	Maximum Duty-Cycle value -- this will normally be
-> +  			255 (0xff) for an 8 bit PWM device
-
-Why are you introducing another random unit. What is max-duty-cycle
-really encoding (I guess it has to do with the precision you're
-expecting, but I'm not sure) ?
-The PWM framework is using nanoseconds, the existing pwm-regulator
-binding is using percents. Shouldn't we reuse one of them (I
-guess you changed that because the percent unit was not precise
-enough) ?
-
-Best Regards,
-
-Boris
+Maxime
 
 -- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
+--b9dEYEwnDXkv9lSy--
