@@ -1,7 +1,7 @@
 From: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v7 18/23] usb: gadget: mass_storage: allocate and init otg descriptor by otg capabilities
-Date: Thu, 9 Jul 2015 15:18:55 +0800
-Message-ID: <1436426340-18477-19-git-send-email-jun.li@freescale.com>
+Subject: [PATCH v7 20/23] usb: gadget: ncm: allocate and init otg descriptor by otg capabilities
+Date: Thu, 9 Jul 2015 15:18:57 +0800
+Message-ID: <1436426340-18477-21-git-send-email-jun.li@freescale.com>
 References: <1436426340-18477-1-git-send-email-jun.li@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -19,14 +19,14 @@ is not defined, keep its original otg descriptor unchanged.
 Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Reviewed-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
 ---
- drivers/usb/gadget/legacy/mass_storage.c | 35 +++++++++++++++++---------------
- 1 file changed, 19 insertions(+), 16 deletions(-)
+ drivers/usb/gadget/legacy/ncm.c | 34 +++++++++++++++++++---------------
+ 1 file changed, 19 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/usb/gadget/legacy/mass_storage.c b/drivers/usb/gadget/legacy/mass_storage.c
-index e7bfb08..ab1a42c 100644
---- a/drivers/usb/gadget/legacy/mass_storage.c
-+++ b/drivers/usb/gadget/legacy/mass_storage.c
-@@ -64,21 +64,7 @@ static struct usb_device_descriptor msg_device_desc = {
+diff --git a/drivers/usb/gadget/legacy/ncm.c b/drivers/usb/gadget/legacy/ncm.c
+index 6ce7421..2bae438 100644
+--- a/drivers/usb/gadget/legacy/ncm.c
++++ b/drivers/usb/gadget/legacy/ncm.c
+@@ -69,20 +69,7 @@ static struct usb_device_descriptor device_desc = {
  	.bNumConfigurations =	1,
  };
  
@@ -34,8 +34,7 @@ index e7bfb08..ab1a42c 100644
 -	.bLength =		sizeof otg_descriptor,
 -	.bDescriptorType =	USB_DT_OTG,
 -
--	/*
--	 * REVISIT SRP-only hardware is possible, although
+-	/* REVISIT SRP-only hardware is possible, although
 -	 * it would not be called "OTG" ...
 -	 */
 -	.bmAttributes =		USB_OTG_SRP | USB_OTG_HNP,
@@ -47,44 +46,44 @@ index e7bfb08..ab1a42c 100644
 -};
 +static const struct usb_descriptor_header *otg_desc[2];
  
+ /* string IDs are assigned dynamically */
  static struct usb_string strings_dev[] = {
- 	[USB_GADGET_MANUFACTURER_IDX].s = "",
-@@ -214,9 +200,20 @@ static int msg_bind(struct usb_composite_dev *cdev)
- 		goto fail_string_ids;
- 	msg_device_desc.iProduct = strings_dev[USB_GADGET_PRODUCT_IDX].id;
+@@ -171,16 +158,30 @@ static int gncm_bind(struct usb_composite_dev *cdev)
+ 	device_desc.iManufacturer = strings_dev[USB_GADGET_MANUFACTURER_IDX].id;
+ 	device_desc.iProduct = strings_dev[USB_GADGET_PRODUCT_IDX].id;
  
-+	if (gadget_is_otg(cdev->gadget) && !otg_desc[0]) {
++	if (gadget_is_otg(gadget) && !otg_desc[0]) {
 +		struct usb_descriptor_header *usb_desc;
 +
-+		usb_desc = usb_otg_descriptor_alloc(cdev->gadget);
++		usb_desc = usb_otg_descriptor_alloc(gadget);
 +		if (!usb_desc)
-+			goto fail_string_ids;
-+		usb_otg_descriptor_init(cdev->gadget, usb_desc);
++			goto fail;
++		usb_otg_descriptor_init(gadget, usb_desc);
 +		otg_desc[0] = usb_desc;
 +		otg_desc[1] = NULL;
 +	}
 +
- 	status = usb_add_config(cdev, &msg_config_driver, msg_do_config);
+ 	status = usb_add_config(cdev, &ncm_config_driver,
+ 				ncm_do_config);
  	if (status < 0)
--		goto fail_string_ids;
-+		goto fail_otg_desc;
+-		goto fail;
++		goto fail1;
  
  	usb_composite_overwrite_options(cdev, &coverwrite);
- 	dev_info(&cdev->gadget->dev,
-@@ -224,6 +221,9 @@ static int msg_bind(struct usb_composite_dev *cdev)
- 	set_bit(0, &msg_registered);
+ 	dev_info(&gadget->dev, "%s\n", DRIVER_DESC);
+ 
  	return 0;
  
-+fail_otg_desc:
++fail1:
 +	kfree(otg_desc[0]);
 +	otg_desc[0] = NULL;
- fail_string_ids:
- 	fsg_common_remove_luns(opts->common);
- fail_set_cdev:
-@@ -243,6 +243,9 @@ static int msg_unbind(struct usb_composite_dev *cdev)
- 	if (!IS_ERR(fi_msg))
- 		usb_put_function_instance(fi_msg);
- 
+ fail:
+ 	usb_put_function_instance(f_ncm_inst);
+ 	return status;
+@@ -192,6 +193,9 @@ static int gncm_unbind(struct usb_composite_dev *cdev)
+ 		usb_put_function(f_ncm);
+ 	if (!IS_ERR_OR_NULL(f_ncm_inst))
+ 		usb_put_function_instance(f_ncm_inst);
 +	kfree(otg_desc[0]);
 +	otg_desc[0] = NULL;
 +
