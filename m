@@ -1,81 +1,83 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v2] power_supply: rt9455_charger: Properly notify
- userspace about charging events
-Date: Thu, 9 Jul 2015 05:27:51 +0200
-Message-ID: <20150709032751.GA13805@earth>
-References: <1436271953-24564-1-git-send-email-anda-maria.nicolae@intel.com>
+From: Koro Chen <koro.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2] arm64: dts: mt8173: Add afe device node
+Date: Thu, 9 Jul 2015 11:32:05 +0800
+Message-ID: <1436412725-55129-1-git-send-email-koro.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="J2SCkAp4GZ/dPZZf"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1436271953-24564-1-git-send-email-anda-maria.nicolae@intel.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Anda-Maria Nicolae <anda-maria.nicolae@intel.com>
-Cc: k.kozlowski.k@gmail.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Koro Chen <koro.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This adds afe (audio front end) device node to the MT8173 dtsi file.
 
---J2SCkAp4GZ/dPZZf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Koro Chen <koro.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+---
+This patch is based on Matthias's tree:
+https://github.com/mbgg/linux-mediatek
+branch: v4.2-next/arm64
 
-Hi,
+Changes since v1:
+- change node name to afe: audio-controller@11220000
+---
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi | 32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-On Tue, Jul 07, 2015 at 03:25:53PM +0300, Anda-Maria Nicolae wrote:
-> Charging events this patch refers to are:
-> - charger is connected to/disconnected from the power source
-> - battery is reconnected to the charger, after it was absent.
->=20
-> When the charger is connected to/disconnected from the power source, CHRV=
-PI
-> interrupt occurs and PWR_RDY bit is either set or cleared. PWR_RDY bit is
-> updated after 1-2 seconds CHRVPI interrupt has occurred.
-> power_supply_changed() should be called after PWR_RDY bit is updated.
-> /sys/class/power_supply/rt9455-charger/online file displays the value of
-> PWR_RDY bit.
-> This way, if the userspace is notified that a charging event has occurred
-> and the userspace reads /sys/class/power_supply/rt9455-charger/online fil=
-e,
-> this file is properly updated when the userspace reads it.
-> This is the reason why power_supply_changed() is called in
-> rt9455_pwr_rdy_work_callback(), instead of being called in interrupt
-> handler.
->=20
-> Since no interrupt is triggered when the battery is reconnected to the
-> charger, the userspace is never notified that the battery is reconnected.
-> This is why power_supply_changed() is called in
-> rt9455_max_charging_time_work_callback(), so that the userspace is notifi=
-ed
-> that the battery is reconnected.
->=20
-> Signed-off-by: Anda-Maria Nicolae <anda-maria.nicolae@intel.com>
+diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+index 0696f8f..ce9255a 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+@@ -14,6 +14,7 @@
+ #include <dt-bindings/clock/mt8173-clk.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/power/mt8173-power.h>
+ #include <dt-bindings/reset-controller/mt8173-resets.h>
+ #include "mt8173-pinfunc.h"
+ 
+@@ -393,6 +394,37 @@
+ 			#size-cells = <0>;
+ 			status = "disabled";
+ 		};
++
++		afe: audio-controller@11220000  {
++			compatible = "mediatek,mt8173-afe-pcm";
++			reg = <0 0x11220000 0 0x1000>;
++			interrupts = <GIC_SPI 134 IRQ_TYPE_EDGE_FALLING>;
++			power-domains = <&scpsys MT8173_POWER_DOMAIN_AUDIO>;
++			clocks = <&infracfg CLK_INFRA_AUDIO>,
++				 <&topckgen CLK_TOP_AUDIO_SEL>,
++				 <&topckgen CLK_TOP_AUD_INTBUS_SEL>,
++				 <&topckgen CLK_TOP_APLL1_DIV0>,
++				 <&topckgen CLK_TOP_APLL2_DIV0>,
++				 <&topckgen CLK_TOP_I2S0_M_SEL>,
++				 <&topckgen CLK_TOP_I2S1_M_SEL>,
++				 <&topckgen CLK_TOP_I2S2_M_SEL>,
++				 <&topckgen CLK_TOP_I2S3_M_SEL>,
++				 <&topckgen CLK_TOP_I2S3_B_SEL>;
++			clock-names = "infra_sys_audio_clk",
++				      "top_pdn_audio",
++				      "top_pdn_aud_intbus",
++				      "bck0",
++				      "bck1",
++				      "i2s0_m",
++				      "i2s1_m",
++				      "i2s2_m",
++				      "i2s3_m",
++				      "i2s3_b";
++			assigned-clocks = <&topckgen CLK_TOP_AUD_1_SEL>,
++					  <&topckgen CLK_TOP_AUD_2_SEL>;
++			assigned-clock-parents = <&topckgen CLK_TOP_APLL1>,
++						 <&topckgen CLK_TOP_APLL2>;
++		};
+ 	};
+ };
+ 
+-- 
+1.8.1.1.dirty
 
-Thanks, queued with Kzrysztof's Reviewed-By.
-
--- Sebastian
-
---J2SCkAp4GZ/dPZZf
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJVneozAAoJENju1/PIO/qaEncP/3LXei9uEIJZaGDT5t2q0cgz
-uIZcpTTOWzLp1sXb6ZmLpddqjykfiwtLUnXF9k1tHy0RxlmqCD37QDZt3t+QgpyM
-ewP89J66W+BBJi5zT24UH+8om4xW6czen+RBRdADBKegaNeWp9sXLF13oOpu1Vuv
-bV2iqmoaXnsoL27nu0DO+r0bEkthd9AOh76niU9W/6OAobRHiJkIIEgYjEnETLHf
-W8Iu0pCuOxdfI6k2jto3BeuAAZU82N41LqrbTUGze1z+RTKs0AKEJEP078QyUNEd
-VgiWuBjTd8sM3Z3F1frvkcebvtdyfch3bVMyM6Fy3WxNnfEv+JLeJh8DP6ybXWwD
-1/sQyGiqJQXqtXXpVh21fJQAAplvkjRW1AKBAAxyhIVqYCtw4n1Pi011VQx4PfUG
-jlEpfv96jIEZq58Wtq/wrUyXbtutdbBRxR7GPBDLhSK1cmTOTEU6sDFwmCCvs1DR
-YOelaiT7kugt/jMPndifXQaHu3P/NGnyUhHWZ9rkmHaf6re5TvAq5tuvuzDz/gsL
-5oe1m5GUp76S3S7V4tE3HgnXnSOy8N6ULHm03XJguIjd1C2v5/CA81ULHNkWLEhC
-VZkNb9U+9CMOOxp79+SONaDG1PJG7nWu46GUEbxEl2JnQ3Muq2FnQ07tqqde5be4
-xlZf5DaXk5Nspu6t7Qkz
-=IW4j
------END PGP SIGNATURE-----
-
---J2SCkAp4GZ/dPZZf--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
