@@ -1,97 +1,75 @@
-From: <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v4 7/7] ARM: imx: add low-level debug support for i.mx6ul
-Date: Fri, 10 Jul 2015 02:09:47 +0800
-Message-ID: <1436465387-5992-8-git-send-email-Frank.Li@freescale.com>
-References: <1436465387-5992-1-git-send-email-Frank.Li@freescale.com>
+From: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 0/3] ARM: OMAP2+: wkup_m3_rproc support patches
+Date: Thu, 9 Jul 2015 14:51:07 -0500
+Message-ID: <559ED0AB.4020703@ti.com>
+References: <1427917630-43961-1-git-send-email-d-gerlach@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1436465387-5992-1-git-send-email-Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+In-Reply-To: <1427917630-43961-1-git-send-email-d-gerlach-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lznuaa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Tony,
+On 04/01/2015 02:47 PM, Dave Gerlach wrote:
+> This series adds the mach-omap2 code and DT nodes for v3 of the
+> wkup_m3_rproc driver submitted here [1]. pdata-quirks patch requires
+> the pdata added with patch 4 of the aforementioned series. Based on
+> previous discussion here [2], the wkup_m3 DT node has been moved as a
+> child of the l4_wkup as is done for l4_wkup components in Tero Kristo's
+> series "PRCM+SCM cleanup against 4.0-rc1" found here [3]. Because of that,
+> this series applies cleanly on top of that series in order to leverage the
+> l4_wkup parent node introduced there.
+> 
+> In addition to the move of the wkup_m3 node for am33xx, a new patch
+> has been added to introduce the wkup_m3 node in the same fashion for
+> am43xx as both SoCs use the same configuration. With this change
+> support was also added to pdata-quirks for passing reset handlers to
+> the driver for the am43xx binding as was already done for am33xx.
+> 
+> I have pushed a branch containing all patches for am335x suspend
+> here for a big picture view of how all patches fit together with
+> these wkup_m3_rproc series [4].
+> 
+> v2->v3:
+> -Change ti,am3353-wkup-m3 compat to ti,am3352-wkup-m3 to reflect
+>  binding documentation change
+> -Add ti,am4372-wkup-m3 node to am4372 SoC dt file
+> -Add am4372 support to pdata-quirks for reset handlers
 
-Enable low-level debug support for i.MX6UL by adding the
-debug port definitions for the SoC.
+Now that Ohad has sent a pull request for the wkup_m3_rproc driver [1] and it
+has been merged is it possible for this series with the DT nodes and pdata-quirk
+to get picked up? Let me know and I can rebase and resend if you'd like.
 
-Singed-off-by: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Signed-off-by: Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Signed-off-by: Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- arch/arm/Kconfig.debug            |  9 +++++++++
- arch/arm/include/debug/imx-uart.h | 13 +++++++++++++
- 2 files changed, 22 insertions(+)
+Regards,
+Dave
 
-diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
-index f1b1579..f21daa8 100644
---- a/arch/arm/Kconfig.debug
-+++ b/arch/arm/Kconfig.debug
-@@ -411,6 +411,13 @@ choice
- 		  Say Y here if you want kernel low-level debugging support
- 		  on i.MX6SX.
- 
-+	config DEBUG_IMX6UL_UART
-+		bool "i.MX6UL Debug UART"
-+		depends on SOC_IMX6UL
-+		help
-+		  Say Y here if you want kernel low-level debugging support
-+		  on i.MX6UL.
-+
- 	config DEBUG_IMX7D_UART
- 		bool "i.MX7D Debug UART"
- 		depends on SOC_IMX7D
-@@ -1269,6 +1276,7 @@ config DEBUG_IMX_UART_PORT
- 						DEBUG_IMX6Q_UART || \
- 						DEBUG_IMX6SL_UART || \
- 						DEBUG_IMX6SX_UART || \
-+						DEBUG_IMX6UL_UART || \
- 						DEBUG_IMX7D_UART
- 	default 1
- 	depends on ARCH_MXC
-@@ -1320,6 +1328,7 @@ config DEBUG_LL_INCLUDE
- 				 DEBUG_IMX6Q_UART || \
- 				 DEBUG_IMX6SL_UART || \
- 				 DEBUG_IMX6SX_UART || \
-+				 DEBUG_IMX6UL_UART || \
- 				 DEBUG_IMX7D_UART
- 	default "debug/ks8695.S" if DEBUG_KS8695_UART
- 	default "debug/msm.S" if DEBUG_QCOM_UARTDM
-diff --git a/arch/arm/include/debug/imx-uart.h b/arch/arm/include/debug/imx-uart.h
-index 66f736f..bce58e9 100644
---- a/arch/arm/include/debug/imx-uart.h
-+++ b/arch/arm/include/debug/imx-uart.h
-@@ -90,6 +90,17 @@
- #define IMX6SX_UART_BASE_ADDR(n) IMX6SX_UART##n##_BASE_ADDR
- #define IMX6SX_UART_BASE(n)	IMX6SX_UART_BASE_ADDR(n)
- 
-+#define IMX6UL_UART1_BASE_ADDR	0x02020000
-+#define IMX6UL_UART2_BASE_ADDR	0x021e8000
-+#define IMX6UL_UART3_BASE_ADDR	0x021ec000
-+#define IMX6UL_UART4_BASE_ADDR	0x021f0000
-+#define IMX6UL_UART5_BASE_ADDR	0x021f4000
-+#define IMX6UL_UART6_BASE_ADDR	0x021fc000
-+#define IMX6UL_UART7_BASE_ADDR	0x02018000
-+#define IMX6UL_UART8_BASE_ADDR	0x02024000
-+#define IMX6UL_UART_BASE_ADDR(n) IMX6UL_UART##n##_BASE_ADDR
-+#define IMX6UL_UART_BASE(n)	IMX6UL_UART_BASE_ADDR(n)
-+
- #define IMX7D_UART1_BASE_ADDR	0x30860000
- #define IMX7D_UART2_BASE_ADDR	0x30890000
- #define IMX7D_UART3_BASE_ADDR	0x30880000
-@@ -124,6 +135,8 @@
- #define UART_PADDR	IMX_DEBUG_UART_BASE(IMX6SL)
- #elif defined(CONFIG_DEBUG_IMX6SX_UART)
- #define UART_PADDR	IMX_DEBUG_UART_BASE(IMX6SX)
-+#elif defined(CONFIG_DEBUG_IMX6UL_UART)
-+#define UART_PADDR	IMX_DEBUG_UART_BASE(IMX6UL)
- #elif defined(CONFIG_DEBUG_IMX7D_UART)
- #define UART_PADDR	IMX_DEBUG_UART_BASE(IMX7D)
- 
--- 
-1.9.1
+[1] https://lkml.org/lkml/2015/7/1/354
+
+> 
+> Regards,
+> Dave
+> 
+> [1] https://www.mail-archive.com/linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg115869.html
+> [2] http://www.spinics.net/lists/linux-omap/msg116366.html
+> [3] http://www.spinics.net/lists/arm-kernel/msg409842.html
+> [4] https://github.com/dgerlach/linux-pm/tree/pm-v4.0-rc5-am335x-suspend
+> 
+> Dave Gerlach (1):
+>   ARM: OMAP2+: Use pdata-quirks for wkup_m3 reset management
+> 
+> Suman Anna (2):
+>   ARM: dts: AM33xx: Update and move wkup_m3 node to l4 node
+>   ARM: dts: AM4372: Add the wkupm3 rproc node
+> 
+>  arch/arm/boot/dts/am33xx.dtsi      | 17 +++++++++--------
+>  arch/arm/boot/dts/am4372.dtsi      |  9 +++++++++
+>  arch/arm/mach-omap2/pdata-quirks.c | 15 +++++++++++++++
+>  3 files changed, 33 insertions(+), 8 deletions(-)
+> 
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
