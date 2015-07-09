@@ -1,99 +1,94 @@
-From: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v2] arm64: dts: mt8173: Add afe device node
-Date: Thu, 9 Jul 2015 18:45:49 +0800
-Message-ID: <CAGS+omBqO6Zcw9KuN6p9YDvRD=UfmOnokUPeRo-iv6ruTBChwg@mail.gmail.com>
-References: <1436412725-55129-1-git-send-email-koro.chen@mediatek.com>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH RESEND 1/7] tty: serial: 8250: omap: fix kernel crash
+ in suspend-to-ram
+Date: Thu, 9 Jul 2015 16:45:14 +0530
+Message-ID: <559E57C2.5080009@ti.com>
+References: <cover.1436174801.git.nsekhar@ti.com> <d8cb86b2717e0fc084b6651be54ee6d96dbc603a.1436174801.git.nsekhar@ti.com> <559D2DFC.9010602@hurleysoftware.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1436412725-55129-1-git-send-email-koro.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <559D2DFC.9010602-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Koro Chen <koro.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, John Ogness <john.ogness-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 9, 2015 at 11:32 AM, Koro Chen <koro.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> This adds afe (audio front end) device node to the MT8173 dtsi file.
->
-> Signed-off-by: Koro Chen <koro.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Hi Peter,
 
-Reviewed-by: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+On Wednesday 08 July 2015 07:34 PM, Peter Hurley wrote:
+> Hi Sekhar,
+> 
+> On 07/06/2015 05:47 AM, Sekhar Nori wrote:
+>> omap_device infrastructure has a suspend_noirq hook which
+>> runtime suspends all devices late in the suspend cycle (see
+>> _od_suspend_noirq() in arch/arm/mach-omap2/omap_device.c)
+> 
+> Why is omap2 the only arch/SoC that does this; ie., call the runtime
+> callbacks after the system pm callbacks?
 
-I believe this patch depends on the fix in:
-https://patchwork.kernel.org/patch/6752521/
+Even I am not sure why this needs to be done. I _think_ it was done to
+make sure all IPs are idled even if driver did not implement system
+sleep ops, but I could be wrong.
 
-If so, I think it would have been better to upload them together and
-mention the dependency in the cover letter.
-However, now that they are both on the list, we just need to ensure
-they are merged together.
+Cc: Kevin Hilman since he added this support.
 
--Dan
+In any case, I think this patch is okay, as the additional NULL pointer
+check is still valid.
 
+Thanks,
+Sekhar
 
-> ---
-> This patch is based on Matthias's tree:
-> https://github.com/mbgg/linux-mediatek
-> branch: v4.2-next/arm64
->
-> Changes since v1:
-> - change node name to afe: audio-controller@11220000
-> ---
->  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 32 ++++++++++++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> index 0696f8f..ce9255a 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> @@ -14,6 +14,7 @@
->  #include <dt-bindings/clock/mt8173-clk.h>
->  #include <dt-bindings/interrupt-controller/irq.h>
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/power/mt8173-power.h>
->  #include <dt-bindings/reset-controller/mt8173-resets.h>
->  #include "mt8173-pinfunc.h"
->
-> @@ -393,6 +394,37 @@
->                         #size-cells = <0>;
->                         status = "disabled";
->                 };
-> +
-> +               afe: audio-controller@11220000  {
-> +                       compatible = "mediatek,mt8173-afe-pcm";
-> +                       reg = <0 0x11220000 0 0x1000>;
-> +                       interrupts = <GIC_SPI 134 IRQ_TYPE_EDGE_FALLING>;
-> +                       power-domains = <&scpsys MT8173_POWER_DOMAIN_AUDIO>;
-> +                       clocks = <&infracfg CLK_INFRA_AUDIO>,
-> +                                <&topckgen CLK_TOP_AUDIO_SEL>,
-> +                                <&topckgen CLK_TOP_AUD_INTBUS_SEL>,
-> +                                <&topckgen CLK_TOP_APLL1_DIV0>,
-> +                                <&topckgen CLK_TOP_APLL2_DIV0>,
-> +                                <&topckgen CLK_TOP_I2S0_M_SEL>,
-> +                                <&topckgen CLK_TOP_I2S1_M_SEL>,
-> +                                <&topckgen CLK_TOP_I2S2_M_SEL>,
-> +                                <&topckgen CLK_TOP_I2S3_M_SEL>,
-> +                                <&topckgen CLK_TOP_I2S3_B_SEL>;
-> +                       clock-names = "infra_sys_audio_clk",
-> +                                     "top_pdn_audio",
-> +                                     "top_pdn_aud_intbus",
-> +                                     "bck0",
-> +                                     "bck1",
-> +                                     "i2s0_m",
-> +                                     "i2s1_m",
-> +                                     "i2s2_m",
-> +                                     "i2s3_m",
-> +                                     "i2s3_b";
-> +                       assigned-clocks = <&topckgen CLK_TOP_AUD_1_SEL>,
-> +                                         <&topckgen CLK_TOP_AUD_2_SEL>;
-> +                       assigned-clock-parents = <&topckgen CLK_TOP_APLL1>,
-> +                                                <&topckgen CLK_TOP_APLL2>;
-> +               };
->         };
->  };
->
-> --
-> 1.8.1.1.dirty
->
+> 
+> Whatever positive it brings, it's a mess at the driver level.
+> For example, this driver has to hook prepare()/complete() so it can
+> set local state so that it can detect when the runtime suspend
+> is being called during system suspend.
+> 
+> Regards,
+> Peter Hurley
+> 
+> 
+>> This leads to a NULL pointer exception in 8250_omap driver
+>> since by the time omap8250_runtime_suspend() is called, 8250_dma
+>> driver has already set rxchan to NULL via serial8250_release_dma().
+>>
+>> Make an explicit check to see if rxchan is NULL in
+>> runtime_{suspend|resume} hooks to fix this.
+>>
+>> Signed-off-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+>> ---
+>> Previous version: http://www.spinics.net/lists/linux-omap/msg119459.html
+>> No change in this version except rebased to v4.2-rc1
+>>
+>>  drivers/tty/serial/8250/8250_omap.c | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/tty/serial/8250/8250_omap.c b/drivers/tty/serial/8250/8250_omap.c
+>> index d75a66c72750..20c5b9c4c288 100644
+>> --- a/drivers/tty/serial/8250/8250_omap.c
+>> +++ b/drivers/tty/serial/8250/8250_omap.c
+>> @@ -1285,7 +1285,7 @@ static int omap8250_runtime_suspend(struct device *dev)
+>>  			return -EBUSY;
+>>  	}
+>>  
+>> -	if (up->dma)
+>> +	if (up->dma && up->dma->rxchan)
+>>  		omap_8250_rx_dma(up, UART_IIR_RX_TIMEOUT);
+>>  
+>>  	priv->latency = PM_QOS_CPU_DMA_LAT_DEFAULT_VALUE;
+>> @@ -1310,7 +1310,7 @@ static int omap8250_runtime_resume(struct device *dev)
+>>  	if (loss_cntx)
+>>  		omap8250_restore_regs(up);
+>>  
+>> -	if (up->dma)
+>> +	if (up->dma && up->dma->rxchan)
+>>  		omap_8250_rx_dma(up, 0);
+>>  
+>>  	priv->latency = priv->calc_latency;
+>>
+> 
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
