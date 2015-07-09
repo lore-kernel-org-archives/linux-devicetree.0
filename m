@@ -1,7 +1,7 @@
 From: <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v4 3/7] Document: dt: binding: imx: update document for imx6ul support
-Date: Fri, 10 Jul 2015 02:09:43 +0800
-Message-ID: <1436465387-5992-4-git-send-email-Frank.Li@freescale.com>
+Subject: [PATCH v4 7/7] ARM: imx: add low-level debug support for i.mx6ul
+Date: Fri, 10 Jul 2015 02:09:47 +0800
+Message-ID: <1436465387-5992-8-git-send-email-Frank.Li@freescale.com>
 References: <1436465387-5992-1-git-send-email-Frank.Li@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,83 +9,87 @@ Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1436465387-5992-1-git-send-email-Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lznuaa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+From: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-This part just add necessary change to boot imx6ul.
-Update clock and pinctrl for imx6ul
+Enable low-level debug support for i.MX6UL by adding the
+debug port definitions for the SoC.
 
+Singed-off-by: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Signed-off-by: Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- .../devicetree/bindings/clock/imx6ul-clock.txt     | 13 ++++++++
- .../bindings/pinctrl/fsl,imx6ul-pinctrl.txt        | 36 ++++++++++++++++++++++
- 2 files changed, 49 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/imx6ul-clock.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx6ul-pinctrl.txt
+ arch/arm/Kconfig.debug            |  9 +++++++++
+ arch/arm/include/debug/imx-uart.h | 13 +++++++++++++
+ 2 files changed, 22 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/clock/imx6ul-clock.txt b/Documentation/devicetree/bindings/clock/imx6ul-clock.txt
-new file mode 100644
-index 0000000..571d503
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/imx6ul-clock.txt
-@@ -0,0 +1,13 @@
-+* Clock bindings for Freescale i.MX6 UltraLite
+diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
+index f1b1579..f21daa8 100644
+--- a/arch/arm/Kconfig.debug
++++ b/arch/arm/Kconfig.debug
+@@ -411,6 +411,13 @@ choice
+ 		  Say Y here if you want kernel low-level debugging support
+ 		  on i.MX6SX.
+ 
++	config DEBUG_IMX6UL_UART
++		bool "i.MX6UL Debug UART"
++		depends on SOC_IMX6UL
++		help
++		  Say Y here if you want kernel low-level debugging support
++		  on i.MX6UL.
 +
-+Required properties:
-+- compatible: Should be "fsl,imx6ul-ccm"
-+- reg: Address and length of the register set
-+- #clock-cells: Should be <1>
-+- clocks: list of clock specifiers, must contain an entry for each required
-+  entry in clock-names
-+- clock-names: should include entries "ckil", "osc", "ipp_di0" and "ipp_di1"
+ 	config DEBUG_IMX7D_UART
+ 		bool "i.MX7D Debug UART"
+ 		depends on SOC_IMX7D
+@@ -1269,6 +1276,7 @@ config DEBUG_IMX_UART_PORT
+ 						DEBUG_IMX6Q_UART || \
+ 						DEBUG_IMX6SL_UART || \
+ 						DEBUG_IMX6SX_UART || \
++						DEBUG_IMX6UL_UART || \
+ 						DEBUG_IMX7D_UART
+ 	default 1
+ 	depends on ARCH_MXC
+@@ -1320,6 +1328,7 @@ config DEBUG_LL_INCLUDE
+ 				 DEBUG_IMX6Q_UART || \
+ 				 DEBUG_IMX6SL_UART || \
+ 				 DEBUG_IMX6SX_UART || \
++				 DEBUG_IMX6UL_UART || \
+ 				 DEBUG_IMX7D_UART
+ 	default "debug/ks8695.S" if DEBUG_KS8695_UART
+ 	default "debug/msm.S" if DEBUG_QCOM_UARTDM
+diff --git a/arch/arm/include/debug/imx-uart.h b/arch/arm/include/debug/imx-uart.h
+index 66f736f..bce58e9 100644
+--- a/arch/arm/include/debug/imx-uart.h
++++ b/arch/arm/include/debug/imx-uart.h
+@@ -90,6 +90,17 @@
+ #define IMX6SX_UART_BASE_ADDR(n) IMX6SX_UART##n##_BASE_ADDR
+ #define IMX6SX_UART_BASE(n)	IMX6SX_UART_BASE_ADDR(n)
+ 
++#define IMX6UL_UART1_BASE_ADDR	0x02020000
++#define IMX6UL_UART2_BASE_ADDR	0x021e8000
++#define IMX6UL_UART3_BASE_ADDR	0x021ec000
++#define IMX6UL_UART4_BASE_ADDR	0x021f0000
++#define IMX6UL_UART5_BASE_ADDR	0x021f4000
++#define IMX6UL_UART6_BASE_ADDR	0x021fc000
++#define IMX6UL_UART7_BASE_ADDR	0x02018000
++#define IMX6UL_UART8_BASE_ADDR	0x02024000
++#define IMX6UL_UART_BASE_ADDR(n) IMX6UL_UART##n##_BASE_ADDR
++#define IMX6UL_UART_BASE(n)	IMX6UL_UART_BASE_ADDR(n)
 +
-+The clock consumer should specify the desired clock by having the clock
-+ID in its "clocks" phandle cell.  See include/dt-bindings/clock/imx6ul-clock.h
-+for the full list of i.MX6 UltraLite clock IDs.
-diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx6ul-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx6ul-pinctrl.txt
-new file mode 100644
-index 0000000..a81bbf3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx6ul-pinctrl.txt
-@@ -0,0 +1,36 @@
-+* Freescale i.MX6 UltraLite IOMUX Controller
-+
-+Please refer to fsl,imx-pinctrl.txt in this directory for common binding part
-+and usage.
-+
-+Required properties:
-+- compatible: "fsl,imx6ul-iomuxc"
-+- fsl,pins: each entry consists of 6 integers and represents the mux and config
-+  setting for one pin.  The first 5 integers <mux_reg conf_reg input_reg mux_val
-+  input_val> are specified using a PIN_FUNC_ID macro, which can be found in
-+  imx6ul-pinfunc.h under device tree source folder.  The last integer CONFIG is
-+  the pad setting value like pull-up on this pin.  Please refer to i.MX6 UltraLite
-+  Reference Manual for detailed CONFIG settings.
-+
-+CONFIG bits definition:
-+PAD_CTL_HYS                     (1 << 16)
-+PAD_CTL_PUS_100K_DOWN           (0 << 14)
-+PAD_CTL_PUS_47K_UP              (1 << 14)
-+PAD_CTL_PUS_100K_UP             (2 << 14)
-+PAD_CTL_PUS_22K_UP              (3 << 14)
-+PAD_CTL_PUE                     (1 << 13)
-+PAD_CTL_PKE                     (1 << 12)
-+PAD_CTL_ODE                     (1 << 11)
-+PAD_CTL_SPEED_LOW               (0 << 6)
-+PAD_CTL_SPEED_MED               (1 << 6)
-+PAD_CTL_SPEED_HIGH              (3 << 6)
-+PAD_CTL_DSE_DISABLE             (0 << 3)
-+PAD_CTL_DSE_260ohm              (1 << 3)
-+PAD_CTL_DSE_130ohm              (2 << 3)
-+PAD_CTL_DSE_87ohm               (3 << 3)
-+PAD_CTL_DSE_65ohm               (4 << 3)
-+PAD_CTL_DSE_52ohm               (5 << 3)
-+PAD_CTL_DSE_43ohm               (6 << 3)
-+PAD_CTL_DSE_37ohm               (7 << 3)
-+PAD_CTL_SRE_FAST                (1 << 0)
-+PAD_CTL_SRE_SLOW                (0 << 0)
+ #define IMX7D_UART1_BASE_ADDR	0x30860000
+ #define IMX7D_UART2_BASE_ADDR	0x30890000
+ #define IMX7D_UART3_BASE_ADDR	0x30880000
+@@ -124,6 +135,8 @@
+ #define UART_PADDR	IMX_DEBUG_UART_BASE(IMX6SL)
+ #elif defined(CONFIG_DEBUG_IMX6SX_UART)
+ #define UART_PADDR	IMX_DEBUG_UART_BASE(IMX6SX)
++#elif defined(CONFIG_DEBUG_IMX6UL_UART)
++#define UART_PADDR	IMX_DEBUG_UART_BASE(IMX6UL)
+ #elif defined(CONFIG_DEBUG_IMX7D_UART)
+ #define UART_PADDR	IMX_DEBUG_UART_BASE(IMX7D)
+ 
 -- 
 1.9.1
 
