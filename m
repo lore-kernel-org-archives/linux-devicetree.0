@@ -1,43 +1,100 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v6 0/4] Add Mediatek MT8173 cpufreq driver
-Date: Thu, 9 Jul 2015 16:04:20 +0530
-Message-ID: <20150709103420.GC5627@linux>
-References: <1436437661-17606-1-git-send-email-pi-cheng.chen@linaro.org>
+From: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v2] arm64: dts: mt8173: Add afe device node
+Date: Thu, 9 Jul 2015 18:45:49 +0800
+Message-ID: <CAGS+omBqO6Zcw9KuN6p9YDvRD=UfmOnokUPeRo-iv6ruTBChwg@mail.gmail.com>
+References: <1436412725-55129-1-git-send-email-koro.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1436437661-17606-1-git-send-email-pi-cheng.chen@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Pi-Cheng Chen <pi-cheng.chen@linaro.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linaro-kernel@lists.linaro.org, linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1436412725-55129-1-git-send-email-koro.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Koro Chen <koro.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09-07-15, 18:27, Pi-Cheng Chen wrote:
-> MT8173 is a ARMv8 based SoC with 2 clusters. All CPUs in a single cluster
-> share the same power and clock domain. This series tries to add cpufreq support
-> for MT8173 SoC.
-> 
-> changes in v6:
-> - Move clock and regulator consumer properties document to the device tree
->   bindings documents of MT8173 CPU DVFS clock driver
-> - Add change log to describe what is implemented in the MT8173 cpufreq driver
-> - Add missed rcu_read_unlock() in the error path
-> - Move of_init_opp_table() call to make sure all required hardware resources
->   are already there before it is called
-> - Add comments to describe why both platform driver and deivce registration
->   codes are put in the initcall function
-> - Use the term "voltage tracking" instead of "voltage trace" according to an
->   internal SoC document
+On Thu, Jul 9, 2015 at 11:32 AM, Koro Chen <koro.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> This adds afe (audio front end) device node to the MT8173 dtsi file.
+>
+> Signed-off-by: Koro Chen <koro.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-I think Mike would again need to comment or Ack 1/4 as we have moved
-the stuff to another file.
+Reviewed-by: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 
-But for [1,3-4]:
+I believe this patch depends on the fix in:
+https://patchwork.kernel.org/patch/6752521/
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+If so, I think it would have been better to upload them together and
+mention the dependency in the cover letter.
+However, now that they are both on the list, we just need to ensure
+they are merged together.
 
-Thanks for your hardwork :)
+-Dan
 
--- 
-viresh
+
+> ---
+> This patch is based on Matthias's tree:
+> https://github.com/mbgg/linux-mediatek
+> branch: v4.2-next/arm64
+>
+> Changes since v1:
+> - change node name to afe: audio-controller@11220000
+> ---
+>  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 32 ++++++++++++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> index 0696f8f..ce9255a 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> @@ -14,6 +14,7 @@
+>  #include <dt-bindings/clock/mt8173-clk.h>
+>  #include <dt-bindings/interrupt-controller/irq.h>
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include <dt-bindings/power/mt8173-power.h>
+>  #include <dt-bindings/reset-controller/mt8173-resets.h>
+>  #include "mt8173-pinfunc.h"
+>
+> @@ -393,6 +394,37 @@
+>                         #size-cells = <0>;
+>                         status = "disabled";
+>                 };
+> +
+> +               afe: audio-controller@11220000  {
+> +                       compatible = "mediatek,mt8173-afe-pcm";
+> +                       reg = <0 0x11220000 0 0x1000>;
+> +                       interrupts = <GIC_SPI 134 IRQ_TYPE_EDGE_FALLING>;
+> +                       power-domains = <&scpsys MT8173_POWER_DOMAIN_AUDIO>;
+> +                       clocks = <&infracfg CLK_INFRA_AUDIO>,
+> +                                <&topckgen CLK_TOP_AUDIO_SEL>,
+> +                                <&topckgen CLK_TOP_AUD_INTBUS_SEL>,
+> +                                <&topckgen CLK_TOP_APLL1_DIV0>,
+> +                                <&topckgen CLK_TOP_APLL2_DIV0>,
+> +                                <&topckgen CLK_TOP_I2S0_M_SEL>,
+> +                                <&topckgen CLK_TOP_I2S1_M_SEL>,
+> +                                <&topckgen CLK_TOP_I2S2_M_SEL>,
+> +                                <&topckgen CLK_TOP_I2S3_M_SEL>,
+> +                                <&topckgen CLK_TOP_I2S3_B_SEL>;
+> +                       clock-names = "infra_sys_audio_clk",
+> +                                     "top_pdn_audio",
+> +                                     "top_pdn_aud_intbus",
+> +                                     "bck0",
+> +                                     "bck1",
+> +                                     "i2s0_m",
+> +                                     "i2s1_m",
+> +                                     "i2s2_m",
+> +                                     "i2s3_m",
+> +                                     "i2s3_b";
+> +                       assigned-clocks = <&topckgen CLK_TOP_AUD_1_SEL>,
+> +                                         <&topckgen CLK_TOP_AUD_2_SEL>;
+> +                       assigned-clock-parents = <&topckgen CLK_TOP_APLL1>,
+> +                                                <&topckgen CLK_TOP_APLL2>;
+> +               };
+>         };
+>  };
+>
+> --
+> 1.8.1.1.dirty
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
