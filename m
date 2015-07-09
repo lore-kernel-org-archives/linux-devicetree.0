@@ -1,64 +1,124 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v6 4/6] ARM: vf610: enable NAND Flash Controller
-Date: Thu, 9 Jul 2015 09:55:51 +0800
-Message-ID: <20150709015551.GJ28488@tiger>
-References: <1434668319-6651-1-git-send-email-stefan@agner.ch>
- <1434668319-6651-5-git-send-email-stefan@agner.ch>
- <20150708093801.GG28488@tiger>
- <BLU436-SMTP255283C042EDEF59D9BA0CFB8910@phx.gbl>
+Subject: Re: [PATCH 1/8] ARM: imx: add i.mx6ul msl support
+Date: Thu, 9 Jul 2015 10:17:30 +0800
+Message-ID: <20150709021730.GL28488@tiger>
+References: <1434555569-8237-1-git-send-email-Frank.Li@freescale.com>
+ <1434555569-8237-2-git-send-email-Frank.Li@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <BLU436-SMTP255283C042EDEF59D9BA0CFB8910@phx.gbl>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bill Pringlemeir <bpringle@sympatico.ca>
-Cc: mark.rutland@arm.com, boris.brezillon@free-electrons.com, shawn.guo@linaro.org, marb@ixxat.de, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, devicetree@vger.kernel.org, bpringlemeir@gmail.com, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>, sebastian@breakpoint.cc, robh+dt@kernel.org, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de, galak@codeaurora.org, computersforpeace@gmail.com, dwmw2@infradead.org, aaron@tastycactus.com
+In-Reply-To: <1434555569-8237-2-git-send-email-Frank.Li@freescale.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Frank.Li@freescale.com
+Cc: linux-arm-kernel@lists.infradead.org, shawn.guo@linaro.org, linus.walleij@linaro.org, lznuaa@gmail.com, linux-gpio@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 08, 2015 at 10:32:54AM -0400, Bill Pringlemeir wrote:
+On Wed, Jun 17, 2015 at 11:39:22PM +0800, Frank.Li@freescale.com wrote:
+> From: Frank Li <Frank.Li@freescale.com>
 > 
-> On  8 Jul 2015, shawnguo@kernel.org wrote:
-> > On Fri, Jun 19, 2015 at 12:58:37AM +0200, Stefan Agner wrote:
-> >> Enable the NAND Flash Controller driver which is part of the Vybrid
-> >> SoC by default.
-> >>
-> >> Signed-off-by: Stefan Agner <stefan@agner.ch>
-> >> ---
-> >> arch/arm/mach-imx/Kconfig | 1 +
-> >> 1 file changed, 1 insertion(+)
-> >>
-> >> diff --git a/arch/arm/mach-imx/Kconfig b/arch/arm/mach-imx/Kconfig
-> >> index 3a3d3e9..9358135 100644
-> >> --- a/arch/arm/mach-imx/Kconfig
-> >> +++ b/arch/arm/mach-imx/Kconfig
-> >>>> -589,6 +589,7 @@ config SOC_VF610
-> >> 	select PINCTRL_VF610
-> >> 	select PL310_ERRATA_769419 if CACHE_L2X0
-> >> 	select SMP_ON_UP if SMP
-> >> +	select HAVE_NAND_VF610_NFC
+> i.MX6UL is a new SOC, add MSL support
 > 
-> > I'm not sure about the benefit of having this option, except we have
-> > to have this additional architecture patch.
+> Signed-off-by: Frank Li <Frank.Li@freescale.com>
+> ---
+>  arch/arm/mach-imx/Kconfig       |  8 ++++++++
+>  arch/arm/mach-imx/Makefile      |  1 +
+>  arch/arm/mach-imx/mach-imx6ul.c | 43 +++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 52 insertions(+)
+>  create mode 100644 arch/arm/mach-imx/mach-imx6ul.c
 > 
-> For other SOC, like the PowerPC or ColdFire CPUs with this controller,
-> it was a way to mark the controller as populated.  Otherwise, the
-> Kconfig entry to select the controller will pop up for everybody.
+> diff --git a/arch/arm/mach-imx/Kconfig b/arch/arm/mach-imx/Kconfig
+> index 573536f..8ceda28 100644
+> --- a/arch/arm/mach-imx/Kconfig
+> +++ b/arch/arm/mach-imx/Kconfig
+> @@ -548,6 +548,14 @@ config SOC_IMX6SX
+>  	help
+>  	  This enables support for Freescale i.MX6 SoloX processor.
+>  
+> +config SOC_IMX6UL
+> +	bool "i.MX6 UltraLite support"
+> +	select PINCTRL_IMX6UL
+> +	select SOC_IMX6
+> +
+> +	help
+> +	  This enables support for Freescale i.MX6 UltraLite processor.
+> +
+>  config SOC_IMX7D
+>  	bool "i.MX7 Dual support"
+>  	select PINCTRL_IMX7D
+> diff --git a/arch/arm/mach-imx/Makefile b/arch/arm/mach-imx/Makefile
+> index 37c502a..fb689d8 100644
+> --- a/arch/arm/mach-imx/Makefile
+> +++ b/arch/arm/mach-imx/Makefile
+> @@ -83,6 +83,7 @@ endif
+>  obj-$(CONFIG_SOC_IMX6Q) += mach-imx6q.o
+>  obj-$(CONFIG_SOC_IMX6SL) += mach-imx6sl.o
+>  obj-$(CONFIG_SOC_IMX6SX) += mach-imx6sx.o
+> +obj-$(CONFIG_SOC_IMX6UL) += mach-imx6ul.o
+>  obj-$(CONFIG_SOC_IMX7D) += mach-imx7d.o
+>  
+>  ifeq ($(CONFIG_SUSPEND),y)
+> diff --git a/arch/arm/mach-imx/mach-imx6ul.c b/arch/arm/mach-imx/mach-imx6ul.c
+> new file mode 100644
+> index 0000000..706d5f6
+> --- /dev/null
+> +++ b/arch/arm/mach-imx/mach-imx6ul.c
+> @@ -0,0 +1,43 @@
+> +/*
+> + * Copyright (C) 2015 Freescale Semiconductor, Inc.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +#include <linux/irqchip.h>
+> +#include <linux/of_platform.h>
+> +#include <asm/mach/arch.h>
+> +#include <asm/mach/map.h>
+> +
+> +#include "common.h"
+> +
+> +static void __init imx6ul_init_machine(void)
+> +{
+> +	struct device *parent;
+> +
+> +	parent = imx_soc_device_init();
 
-IMHO, having the option pop up for everybody isn't really a problem.  On
-the other hand, we can even compile test the driver on any architecture
-without the COMPILE_TEST dependency.
-
-But if MTD maintainer has a different opinion, we can still have a
-'depends on SOC_VF610' to save this patch.
+How does the soc_id of soc_device work?  I do not see any patch adding
+imx6ul soc_id.
 
 Shawn
+
+> +	if (parent == NULL)
+> +		pr_warn("failed to initialize soc device\n");
+> +
+> +	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
+> +	imx_anatop_init();
+> +}
+> +
+> +static void __init imx6ul_init_irq(void)
+> +{
+> +	imx_init_revision_from_anatop();
+> +	imx_src_init();
+> +	irqchip_init();
+> +}
+> +
+> +static const char *imx6ul_dt_compat[] __initconst = {
+> +	"fsl,imx6ul",
+> +	NULL,
+> +};
+> +
+> +DT_MACHINE_START(IMX7D, "Freescale i.MX6 Ultralite (Device Tree)")
+> +	.init_irq	= imx6ul_init_irq,
+> +	.init_machine	= imx6ul_init_machine,
+> +	.dt_compat	= imx6ul_dt_compat,
+> +MACHINE_END
+> -- 
+> 1.9.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
