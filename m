@@ -1,90 +1,52 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [RFC PATCH] pinctrl-single: Use of pinctrl-single for external
- device over I2C
-Date: Thu, 9 Jul 2015 02:10:51 -0700
-Message-ID: <20150709091051.GJ10644@atomide.com>
-References: <1435855992-10312-1-git-send-email-vaibhav.hiremath@linaro.org>
- <20150706063532.GB10705@atomide.com>
- <559A6E5D.9040202@linaro.org>
+From: Josh Wu <josh.wu@atmel.com>
+Subject: [PATCH 2/2] ARM: at91: sama5/dt: update rstc to correct compatible string
+Date: Thu, 9 Jul 2015 18:15:47 +0800
+Message-ID: <1436436947-11210-2-git-send-email-josh.wu@atmel.com>
+References: <1436436947-11210-1-git-send-email-josh.wu@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <559A6E5D.9040202@linaro.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, lee.jones@linaro.org, linus.walleij@linaro.org, will.deacon@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1436436947-11210-1-git-send-email-josh.wu@atmel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nicolas Ferre <nicolas.ferre@atmel.com>, linux-arm-kernel@lists.infradead.org
+Cc: Josh Wu <josh.wu@atmel.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Kumar Gala <galak@codeaurora.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-* Vaibhav Hiremath <vaibhav.hiremath@linaro.org> [150706 05:05]:
-> On Monday 06 July 2015 12:05 PM, Tony Lindgren wrote:
-> >
-> >Sorry this won't work. Most platforms don't need regmap here, and I
-> >certainly don't want to use regmap for toggling pins for runtime
-> >PM because of the extra overhead.
-> >
-> 
-> That's exactly my question was in my first email. It's ok.
-> 
-> What is your openion on overall code changes for regmap support ?
-> Any other feedback or suggestions?
+They'll use "atmel,sama5d3-rstc" for reset function.
 
-Seems it should work just fine once you get the IO functions
-configured :)
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Josh Wu <josh.wu@atmel.com>
+---
+
+ arch/arm/boot/dts/sama5d3.dtsi | 2 +-
+ arch/arm/boot/dts/sama5d4.dtsi | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5d3.dtsi
+index 9e2444b..280255b 100644
+--- a/arch/arm/boot/dts/sama5d3.dtsi
++++ b/arch/arm/boot/dts/sama5d3.dtsi
+@@ -1259,7 +1259,7 @@
+ 			};
  
-> >It seems you need to stash the regmap pointer to struct pcs_device
-> >and just the function pointers. As this driver is ioremapping the
-> >region, we certainly want to keep things using void __iomem * too.
-> >You can cast that to whatever regmap needs in the wrapper functions
-> >for regmap. Note that the extra overhead there won't matter as we
-> >are using regmap mostly for devices over I2C and so on.
-> >
-> 
-> The issue I have here with the signature of read/write fn
-> 
-> static unsigned __maybe_unused pcs_read(void __iomem *reg)
-> static void __maybe_unused pcs_writeX(unsigned val, void __iomem *reg)
-> 
-> 
-> For regmap, I need 2 arguments,
-> 
-> 1. Pointer to regmap
-> 2. Offset to register
-> 
-> 
-> So I will have to change the signature to
-> 
-> static unsigned __maybe_unused pcs_read(void __iomem *reg, unsigned int
-> offset)
-> static void __maybe_unused pcs_write(void __iomem *reg, unsigned val,
-> unsigned int offset)
-> 
-> 
-> And,
-> On the same direction, will having separate functions for regmap.
-> 
-> static unsigned pcs_read_regmap(void __iomem *reg, unsigned int offset)
-> {
-> 	unsigned int val;
-> 
-> 	regmap_read((struct regmap *)reg, offset, &val);
-> }
-> 
-> static void pcs_write_regmap(void __iomem *reg, unsigned val, unsigned int
-> offset)
-> {
->        regmap_write((struct regmap *)reg, offset, val);
->  }
-
-OK yeah that should work.
+ 			rstc@fffffe00 {
+-				compatible = "atmel,at91sam9g45-rstc";
++				compatible = "atmel,sama5d3-rstc";
+ 				reg = <0xfffffe00 0x10>;
+ 			};
  
-> This functions will be initialized to pcs_device->read/write.
-> 
-> I will have to do some more changes, specially around pcs_interrupt
-> usage.
-
-OK I suggest a separate patch to add support for interrupts.
-
-Regards,
-
-Tony
+diff --git a/arch/arm/boot/dts/sama5d4.dtsi b/arch/arm/boot/dts/sama5d4.dtsi
+index 3ee22ee..481196c 100644
+--- a/arch/arm/boot/dts/sama5d4.dtsi
++++ b/arch/arm/boot/dts/sama5d4.dtsi
+@@ -1277,7 +1277,7 @@
+ 			};
+ 
+ 			rstc@fc068600 {
+-				compatible = "atmel,at91sam9g45-rstc";
++				compatible = "atmel,sama5d3-rstc";
+ 				reg = <0xfc068600 0x10>;
+ 			};
+ 
+-- 
+1.9.1
