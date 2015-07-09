@@ -1,15 +1,14 @@
 From: Paul Bolle <pebolle@tiscali.nl>
-Subject: Re: [PATCH 3/7] dmaengine: st_fdma: Add STMicroelectronics FDMA
- engine driver support
-Date: Thu, 09 Jul 2015 10:17:52 +0200
-Message-ID: <1436429872.20619.77.camel@tiscali.nl>
+Subject: Re: [PATCH 4/7] dmaengine: st_fdma: Add xbar support
+Date: Thu, 09 Jul 2015 10:27:48 +0200
+Message-ID: <1436430468.20619.86.camel@tiscali.nl>
 References: <1436371888-27863-1-git-send-email-peter.griffin@linaro.org>
-	 <1436371888-27863-4-git-send-email-peter.griffin@linaro.org>
+	 <1436371888-27863-5-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1436371888-27863-4-git-send-email-peter.griffin@linaro.org>
+In-Reply-To: <1436371888-27863-5-git-send-email-peter.griffin@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Peter Griffin <peter.griffin@linaro.org>
 Cc: lee.jones@linaro.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, ludovic.barre@st.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, vinod.koul@intel.com, dan.j.williams@intel.com
@@ -19,104 +18,65 @@ On wo, 2015-07-08 at 17:11 +0100, Peter Griffin wrote:
 > --- a/drivers/dma/Kconfig
 > +++ b/drivers/dma/Kconfig
  
-> +config ST_FDMA
-> +	bool "ST FDMA dmaengine support"
-> +	depends on ARCH_STI
-> +	select DMA_ENGINE
-> +	select FW_LOADER
-> +	select FW_LOADER_USER_HELPER_FALLBACK
-> +	select LIBELF_32
-> +	select DMA_VIRTUAL_CHANNELS
+> +config ST_FDMA_XBAR
+> +	bool "ST FDMA crossbar"
+> +	depends on ST_FDMA
+> +	default y
 > +	help
-> +	  Enable support for ST FDMA controller.
-> +	  It supports 16 independent DMA channels, accepts up to 32 DMA requests
-> +
-> +	  Say Y here if you have such a chipset.
-> +	  If unsure, say N.
+> +	  Enable support for ST FDMA crossbar.
+> +	  xbar add flexibility and increase the number of peripheral request
+> +	  can be used by fdma xbar can multiplex until 96 peripheral requests
+> +	  to one of 3 fdma controller
 
+> diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
+> index f68e6d8..19f18b1 100644
 > --- a/drivers/dma/Makefile
 > +++ b/drivers/dma/Makefile
-> 
-> +obj-$(CONFIG_ST_FDMA) += st_fdma.o
 
-ST_FDMA is a bool symbol, so st_fdma.o can only be built-in.
+> +obj-$(CONFIG_ST_FDMA_XBAR) += st_fdma_xbar.o
+
+ST_FDMA_XBAR is a bool symbol, so st_fdma_xbar.o can only be built-in.
 
 > --- /dev/null
-> +++ b/drivers/dma/st_fdma.c
+> +++ b/drivers/dma/st_fdma_xbar.c
 
 > +#include <linux/module.h>
 
 Needed?
 
-> +void *st_fdma_seg_to_mem(struct st_fdma_dev *fdev, u64 da, int len)
-
-static?
-
+> +void st_fdma_xbar_free(struct st_fdma_xbar_dev *device)
 > +{
-> +	[...]
+> +	platform_device_put(device->pdev);
+> +	kfree(device);
 > +}
 
-> +static int
-> +st_fdma_elf_load_segments(struct st_fdma_dev *fdev, const struct 
-> firmware *fw)
-> +{
-> +	[...]
-> +		dst = st_fdma_seg_to_mem(fdev, da, memsz);
-> +		[...]
-> +}
+Unused.
 
-> +static const struct of_device_id st_fdma_match[] = {
-> +	{ .compatible = "st,fdma_mpe31", .data = &fdma_mpe31 },
+> +static const struct of_device_id st_fdma_xbar_match[] = {
+> +	{ .compatible = "st,fdma-xbar-1.0", .data = (void *)XBAR_1_0_MAX_REQ },
 > +	{},
 > +};
-> +MODULE_DEVICE_TABLE(of, st_fdma_match);
+> +MODULE_DEVICE_TABLE(of, st_fdma_xbar_match);
 
-MODULE_DEVICE_TABLE() is preprocessed away for built-in only code.
+See my remark on 3/7: MODULE_DEVICE_TABLE() will be preprocessed away.
 
-> +static int __exit st_fdma_remove(struct platform_device *pdev)
-> +{
-> +	struct st_fdma_dev *fdev = platform_get_drvdata(pdev);
-> +
-> +	wait_for_completion(&fdev->fw_ack);
-> +
-> +	st_fdma_clk_disable(fdev);
-> +
-> +	return 0;
-> +}
-
-Since this driver is built-in only this means st_fdma_remove() can never
-be used, right?
-
-> +static struct platform_driver st_fdma_platform_driver = {
-> +	.driver = {
-> +		.name = "st-fdma",
-> +		.of_match_table = st_fdma_match,
-> +		.pm = ST_FDMA_PM,
+> +static struct platform_driver st_fdma_xbar_driver = {
+> +	.driver	= {
+> +		.name = "st-fdma-xbar",
+> +		.of_match_table = st_fdma_xbar_match,
 > +	},
-> +	.probe = st_fdma_probe,
-> +	.remove = st_fdma_remove,
+> +	.probe = st_fdma_xbar_probe,
+> +	.remove = st_fdma_xbar_remove,
 > +};
-> +module_platform_driver(st_fdma_platform_driver);
+> +module_platform_driver(st_fdma_xbar_driver);
 
-So can .remove be dropped?
-
-Since v4.2-rc1 there's builtin_platform_driver() for built-in only code.
-
-> +bool st_fdma_filter_fn(struct dma_chan *chan, void *param)
-> +{
-> +	[...]
-> +}
-> +EXPORT_SYMBOL(st_fdma_filter_fn);
-
-This series adds no users of this export. I suppose they will be added
-in another series. Is that correct?
+See my remark on 3/7: builtin_platform_driver(). 
 
 > +MODULE_LICENSE("GPL v2");
-> +MODULE_DESCRIPTION("STMicroelectronics FDMA engine driver");
+> +MODULE_DESCRIPTION("STMicroelectronics FDMA cross bar");
 > +MODULE_AUTHOR("Ludovic.barre <Ludovic.barre@st.com>");
 
-These macros will, basically, be preprocessed away for built-in only
-code.
+See my remark on 3/7: will be preprocessed away.
 
 Thanks,
 
