@@ -1,48 +1,90 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH RFC V1 0/3] da9062: Add DA9062 RTC support using the
- existing DA9063 RTC driver
-Date: Thu, 9 Jul 2015 11:06:50 +0200
-Message-ID: <CAMuHMdWYJyzrBsMMJciyvkopAfA-omrD-eEsC2XhCvCeDBd+uQ@mail.gmail.com>
-References: <cover.1436427954.git.stwiss.opensource@diasemi.com>
-	<CAMuHMdU_AUZ9nxo25NeaFq1MeeSDZErqkNnDtXsdr7=jLm1kTw@mail.gmail.com>
-	<6ED8E3B22081A4459DAC7699F3695FB7014B23FDDA@SW-EX-MBX02.diasemi.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [RFC PATCH] pinctrl-single: Use of pinctrl-single for external
+ device over I2C
+Date: Thu, 9 Jul 2015 02:10:51 -0700
+Message-ID: <20150709091051.GJ10644@atomide.com>
+References: <1435855992-10312-1-git-send-email-vaibhav.hiremath@linaro.org>
+ <20150706063532.GB10705@atomide.com>
+ <559A6E5D.9040202@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <6ED8E3B22081A4459DAC7699F3695FB7014B23FDDA-68WUHU125fLzLL1Oxlh9IgLouzNaz+3S@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Opensource [Steve Twiss]" <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, DEVICETREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, LINUXINPUT <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUXKERNEL <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, RTCLINUX <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, David Dajun Chen <david.chen-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <559A6E5D.9040202@linaro.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, lee.jones@linaro.org, linus.walleij@linaro.org, will.deacon@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 9, 2015 at 10:42 AM, Opensource [Steve Twiss]
-<stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org> wrote:
->> > S Twiss (3):
->> >   mfd: da9062: Support for the DA9063 RTC in the DA9062 core
->>
->> "DA9062 RTC"?
->>
->
-> Hi Geert,
->
-> It's the support for the "DA9063 RTC *driver* in the DA9062 MFD driver core".
+* Vaibhav Hiremath <vaibhav.hiremath@linaro.org> [150706 05:05]:
+> On Monday 06 July 2015 12:05 PM, Tony Lindgren wrote:
+> >
+> >Sorry this won't work. Most platforms don't need regmap here, and I
+> >certainly don't want to use regmap for toggling pins for runtime
+> >PM because of the extra overhead.
+> >
+> 
+> That's exactly my question was in my first email. It's ok.
+> 
+> What is your openion on overall code changes for regmap support ?
+> Any other feedback or suggestions?
 
-Ah, I read "core" as in "hardware IP core".
+Seems it should work just fine once you get the IO functions
+configured :)
+ 
+> >It seems you need to stash the regmap pointer to struct pcs_device
+> >and just the function pointers. As this driver is ioremapping the
+> >region, we certainly want to keep things using void __iomem * too.
+> >You can cast that to whatever regmap needs in the wrapper functions
+> >for regmap. Note that the extra overhead there won't matter as we
+> >are using regmap mostly for devices over I2C and so on.
+> >
+> 
+> The issue I have here with the signature of read/write fn
+> 
+> static unsigned __maybe_unused pcs_read(void __iomem *reg)
+> static void __maybe_unused pcs_writeX(unsigned val, void __iomem *reg)
+> 
+> 
+> For regmap, I need 2 arguments,
+> 
+> 1. Pointer to regmap
+> 2. Offset to register
+> 
+> 
+> So I will have to change the signature to
+> 
+> static unsigned __maybe_unused pcs_read(void __iomem *reg, unsigned int
+> offset)
+> static void __maybe_unused pcs_write(void __iomem *reg, unsigned val,
+> unsigned int offset)
+> 
+> 
+> And,
+> On the same direction, will having separate functions for regmap.
+> 
+> static unsigned pcs_read_regmap(void __iomem *reg, unsigned int offset)
+> {
+> 	unsigned int val;
+> 
+> 	regmap_read((struct regmap *)reg, offset, &val);
+> }
+> 
+> static void pcs_write_regmap(void __iomem *reg, unsigned val, unsigned int
+> offset)
+> {
+>        regmap_write((struct regmap *)reg, offset, val);
+>  }
 
-And as the full patch description for [1/3] doesn't say "da9063" elsewhere,
-I thought it was a typo.
+OK yeah that should work.
+ 
+> This functions will be initialized to pcs_device->read/write.
+> 
+> I will have to do some more changes, specially around pcs_interrupt
+> usage.
 
-Gr{oetje,eeting}s,
+OK I suggest a separate patch to add support for interrupts.
 
-                        Geert
+Regards,
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Tony
