@@ -1,35 +1,49 @@
 From: Duc Dang <dhdang@apm.com>
-Subject: [PATCH v3 0/2] pci: xgene: Add multiple memory ranges support
-Date: Thu,  9 Jul 2015 14:20:10 -0700
-Message-ID: <cover.1436476099.git.dhdang@apm.com>
-References: <1481643.dA4ocqzitg@wuerfel>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1481643.dA4ocqzitg@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCH v3 2/2] pci: xgene: Fix driver to handle multiple memory ranges
+Date: Thu,  9 Jul 2015 14:20:12 -0700
+Message-ID: <844cb76fe55ce4ce45411281500bdb93e0d6932a.1436476100.git.dhdang@apm.com>
+References: <cover.1436476099.git.dhdang@apm.com>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <cover.1436476099.git.dhdang@apm.com>
+In-Reply-To: <cover.1436476099.git.dhdang@apm.com>
+References: <1481643.dA4ocqzitg@wuerfel> <cover.1436476099.git.dhdang@apm.com>
+Sender: linux-pci-owner@vger.kernel.org
 To: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Will Deacon <will.deacon@arm.com>, "David S. Miller" <davem@davemloft.net>
 Cc: devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Tanmay Inamdar <tinamdar@apm.com>, patches@apm.com, Duc Dang <dhdang@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch set adds 1 large (up to 64GB) memory window for each PCIe
-controller nodes in X-Gene device tree and fix PCIe controller driver
-to handle multiple memory ranges correctly. These changes are required
-to support PCIe devices that have huge BAR.
+X-Gene PCIe controller has registers to support multiple memory ranges.
+This patch implement addtional register configuration required for the
+driver to support 1 additional huge 64-bit prefetch memory window.
 
-v3 changes:
-	1. Explicitly mention in change log that: Each PCIe node in dts 
-	will have 1 32-bit non-prefetchable memory window and 1 64-bit 
-	prefetchable memory window.
+Signed-off-by: Duc Dang <dhdang@apm.com>
+Signed-off-by: Tanmay Inamdar <tinamdar@apm.com>
+---
+ drivers/pci/host/pci-xgene.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-v2 changes:
-        1. Separate device-tree changes and driver changes into different
-        patches
-        2. Explicitly define new large window as 64-bit prefetchable in dts.
-        3. Use IORESOURCE_PREFETCH flag to determine which PCIe controller
-        register to be used to configure the memory ranges.
- 
- arch/arm64/boot/dts/apm/apm-storm.dtsi | 23 ++++++++++++++---------
- drivers/pci/host/pci-xgene.c           | 12 ++++++++++--
- 2 files changed, 24 insertions(+), 11 deletions(-)
-
+diff --git a/drivers/pci/host/pci-xgene.c b/drivers/pci/host/pci-xgene.c
+index a9dfb70..55fe865 100644
+--- a/drivers/pci/host/pci-xgene.c
++++ b/drivers/pci/host/pci-xgene.c
+@@ -321,8 +321,16 @@ static int xgene_pcie_map_ranges(struct xgene_pcie_port *port,
+ 				return ret;
+ 			break;
+ 		case IORESOURCE_MEM:
+-			xgene_pcie_setup_ob_reg(port, res, OMR1BARL, res->start,
+-						res->start - window->offset);
++			if (res->flags & IORESOURCE_PREFETCH)
++				xgene_pcie_setup_ob_reg(port, res, OMR2BARL,
++							res->start,
++							res->start -
++							window->offset);
++			else
++				xgene_pcie_setup_ob_reg(port, res, OMR1BARL,
++							res->start,
++							res->start -
++							window->offset);
+ 			break;
+ 		case IORESOURCE_BUS:
+ 			break;
 -- 
 1.9.1
