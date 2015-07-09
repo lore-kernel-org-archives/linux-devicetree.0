@@ -1,215 +1,124 @@
-From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v4 1/2] phy: add lpc18xx usb otg phy driver
-Date: Thu,  9 Jul 2015 22:48:25 +0200
-Message-ID: <1436474906-2669-2-git-send-email-manabian@gmail.com>
-References: <1436474906-2669-1-git-send-email-manabian@gmail.com>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1436474906-2669-1-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: kishon-l0cyMroinI0@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
-Cc: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH 1/2] of_mdio: add new DT property 'link' for fixed-link
+Date: Thu, 09 Jul 2015 14:15:08 -0700
+Message-ID: <559EE45C.4040408@gmail.com>
+References: <559EB0A4.5080101@list.ru> <559EB1A6.1090008@list.ru> <559EBC59.6020003@gmail.com> <559EDD0C.7020907@list.ru>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <559EDD0C.7020907@list.ru>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stas Sergeev <stsp@list.ru>
+Cc: Linux kernel <linux-kernel@vger.kernel.org>, Sebastien Rannou <mxs@sbrk.org>, Arnaud Ebalard <arno@natisbad.org>, Stas Sergeev <stsp@users.sourceforge.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, netdev <netdev@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add PHY driver for the internal USB OTG PHY found on NXP
-LPC18xx and LPC43xx devices. This driver takes care of
-enabling the PHY in CREG (syscon) and setting the required
-clock frequency.
+On 09/07/15 13:43, Stas Sergeev wrote:
+> 09.07.2015 21:24, Florian Fainelli =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> (there is no such thing as linux-net@vger.kernel.org, please remove =
+it
+>> from your future submissions).
+>>
+>> On 09/07/15 10:38, Stas Sergeev wrote:
+>>> Currently for fixed-link the link state is always set to UP.
+>> Not quite true, this is always a driver decision to make.
+> But what about this part of of_mdio.c:of_phy_register_fixed_link():
+> ---
+>=20
+>      fixed_link_node =3D of_get_child_by_name(np, "fixed-link");
+>      if (fixed_link_node) {
+>         status.link =3D 1
+>=20
+> ---
 
-Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- drivers/phy/Kconfig               |  11 +++
- drivers/phy/Makefile              |   1 +
- drivers/phy/phy-lpc18xx-usb-otg.c | 143 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 155 insertions(+)
- create mode 100644 drivers/phy/phy-lpc18xx-usb-otg.c
+This seems like a logical consequence of finding a "fixed-link" propert=
+y
+for the DT node of interest. If no such property exist, then we do not
+set anything.
 
-diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-index c0e6ede3e27d..e2f2a4d394e1 100644
---- a/drivers/phy/Kconfig
-+++ b/drivers/phy/Kconfig
-@@ -54,6 +54,17 @@ config PHY_EXYNOS_MIPI_VIDEO
- 	  Support for MIPI CSI-2 and MIPI DSI DPHY found on Samsung S5P
- 	  and EXYNOS SoCs.
- 
-+config PHY_LPC18XX_USB_OTG
-+	tristate "NXP LPC18xx/43xx SoC USB OTG PHY driver"
-+	depends on OF && (ARCH_LPC18XX || COMPILE_TEST)
-+	depends on MFD_SYSCON
-+	select GENERIC_PHY
-+	help
-+	  Enable this to support NXP LPC18xx/43xx internal USB OTG PHY.
-+
-+	  This driver is need for USB0 support on LPC18xx/43xx and takes
-+	  care of enabling and clock setup.
-+
- config PHY_PXA_28NM_HSIC
- 	tristate "Marvell USB HSIC 28nm PHY Driver"
- 	select GENERIC_PHY
-diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-index f344e1b2e825..a5b18c18fc12 100644
---- a/drivers/phy/Makefile
-+++ b/drivers/phy/Makefile
-@@ -10,6 +10,7 @@ obj-$(CONFIG_ARMADA375_USBCLUSTER_PHY)	+= phy-armada375-usb2.o
- obj-$(CONFIG_BCM_KONA_USB2_PHY)		+= phy-bcm-kona-usb2.o
- obj-$(CONFIG_PHY_EXYNOS_DP_VIDEO)	+= phy-exynos-dp-video.o
- obj-$(CONFIG_PHY_EXYNOS_MIPI_VIDEO)	+= phy-exynos-mipi-video.o
-+obj-$(CONFIG_PHY_LPC18XX_USB_OTG)	+= phy-lpc18xx-usb-otg.o
- obj-$(CONFIG_PHY_PXA_28NM_USB2)		+= phy-pxa-28nm-usb2.o
- obj-$(CONFIG_PHY_PXA_28NM_HSIC)		+= phy-pxa-28nm-hsic.o
- obj-$(CONFIG_PHY_MVEBU_SATA)		+= phy-mvebu-sata.o
-diff --git a/drivers/phy/phy-lpc18xx-usb-otg.c b/drivers/phy/phy-lpc18xx-usb-otg.c
-new file mode 100644
-index 000000000000..3aa8e4de1b03
---- /dev/null
-+++ b/drivers/phy/phy-lpc18xx-usb-otg.c
-@@ -0,0 +1,143 @@
-+/*
-+ * PHY driver for NXP LPC18xx/43xx internal USB OTG PHY
-+ *
-+ * Copyright (C) 2015 Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/err.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/phy/phy.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+/* USB OTG PHY register offset and bit in CREG */
-+#define LPC18XX_CREG_CREG0		0x004
-+#define LPC18XX_CREG_CREG0_USB0PHY	BIT(5)
-+
-+struct lpc18xx_usb_otg_phy {
-+	struct phy *phy;
-+	struct clk *clk;
-+	struct regmap *reg;
-+};
-+
-+static int lpc18xx_usb_otg_phy_init(struct phy *phy)
-+{
-+	struct lpc18xx_usb_otg_phy *lpc = phy_get_drvdata(phy);
-+	int ret;
-+
-+	ret = clk_prepare(lpc->clk);
-+	if (ret)
-+		return ret;
-+
-+	/* The PHY must be clocked at 480 MHz */
-+	return clk_set_rate(lpc->clk, 480000000);
-+}
-+
-+static int lpc18xx_usb_otg_phy_exit(struct phy *phy)
-+{
-+	struct lpc18xx_usb_otg_phy *lpc = phy_get_drvdata(phy);
-+
-+	clk_unprepare(lpc->clk);
-+
-+	return 0;
-+}
-+
-+static int lpc18xx_usb_otg_phy_power_on(struct phy *phy)
-+{
-+	struct lpc18xx_usb_otg_phy *lpc = phy_get_drvdata(phy);
-+	int ret;
-+
-+	ret = clk_enable(lpc->clk);
-+	if (ret)
-+		return ret;
-+
-+	/* The bit in CREG is cleared to enable the PHY */
-+	return regmap_update_bits(lpc->reg, LPC18XX_CREG_CREG0,
-+				  LPC18XX_CREG_CREG0_USB0PHY, 0);
-+}
-+
-+static int lpc18xx_usb_otg_phy_power_off(struct phy *phy)
-+{
-+	struct lpc18xx_usb_otg_phy *lpc = phy_get_drvdata(phy);
-+	int ret;
-+
-+	ret = regmap_update_bits(lpc->reg, LPC18XX_CREG_CREG0,
-+				 LPC18XX_CREG_CREG0_USB0PHY,
-+				 LPC18XX_CREG_CREG0_USB0PHY);
-+	if (ret)
-+		return ret;
-+
-+	clk_disable(lpc->clk);
-+
-+	return 0;
-+}
-+
-+static const struct phy_ops lpc18xx_usb_otg_phy_ops = {
-+	.init		= lpc18xx_usb_otg_phy_init,
-+	.exit		= lpc18xx_usb_otg_phy_exit,
-+	.power_on	= lpc18xx_usb_otg_phy_power_on,
-+	.power_off	= lpc18xx_usb_otg_phy_power_off,
-+	.owner		= THIS_MODULE,
-+};
-+
-+static int lpc18xx_usb_otg_phy_probe(struct platform_device *pdev)
-+{
-+	struct phy_provider *phy_provider;
-+	struct lpc18xx_usb_otg_phy *lpc;
-+
-+	lpc = devm_kzalloc(&pdev->dev, sizeof(*lpc), GFP_KERNEL);
-+	if (!lpc)
-+		return -ENOMEM;
-+
-+	lpc->reg = syscon_node_to_regmap(pdev->dev.of_node->parent);
-+	if (IS_ERR(lpc->reg)) {
-+		dev_err(&pdev->dev, "failed to get syscon\n");
-+		return PTR_ERR(lpc->reg);
-+	}
-+
-+	lpc->clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(lpc->clk)) {
-+		dev_err(&pdev->dev, "failed to get clock\n");
-+		return PTR_ERR(lpc->clk);
-+	}
-+
-+	lpc->phy = devm_phy_create(&pdev->dev, NULL, &lpc18xx_usb_otg_phy_ops);
-+	if (IS_ERR(lpc->phy)) {
-+		dev_err(&pdev->dev, "failed to create PHY\n");
-+		return PTR_ERR(lpc->phy);
-+	}
-+
-+	phy_set_drvdata(lpc->phy, lpc);
-+
-+	phy_provider = devm_of_phy_provider_register(&pdev->dev,
-+						     of_phy_simple_xlate);
-+
-+	return PTR_ERR_OR_ZERO(phy_provider);
-+}
-+
-+static const struct of_device_id lpc18xx_usb_otg_phy_match[] = {
-+	{ .compatible = "nxp,lpc1850-usb-otg-phy" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, lpc18xx_usb_otg_phy_match);
-+
-+static struct platform_driver lpc18xx_usb_otg_phy_driver = {
-+	.probe		= lpc18xx_usb_otg_phy_probe,
-+	.driver		= {
-+		.name	= "lpc18xx-usb-otg-phy",
-+		.of_match_table = lpc18xx_usb_otg_phy_match,
-+	},
-+};
-+module_platform_driver(lpc18xx_usb_otg_phy_driver);
-+
-+MODULE_AUTHOR("Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>");
-+MODULE_DESCRIPTION("NXP LPC18xx/43xx USB OTG PHY driver");
-+MODULE_LICENSE("GPL v2");
--- 
-1.8.0
+>=20
+>>> This patch introduces the new property 'link' that accepts the
+>>> following string arguments: "up", "down" and "auto".
+>>> "down" may be needed if the link is physically unconnected.
+>> In which case you probably do not even care about inserting such a
+>> property in the first place, do you? What would be the value of forc=
+ibly
+>> having a link permanently down (not counting loopback)?
+> The DTs have a common parts that are included by other
+> parts. So if you include the definition of your SoC that have
+> all ethernets defined, and you only set up the external things
+> like PHYs, then I would see a potential use for "down".
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+"down" is equivalent to using a status =3D "disabled", in fact the latt=
+er
+is much better since you can even conserve energy and resources by not
+enabling something which is not usable.
+
+> Other than that, it is probably not a big deal.
+> Please note that I haven't even hard-coded it anywhere:
+> whatever is not "up" or "auto", is down.
+> I can remove it from the description if you think that way,
+> but I'd rather leave it for consistency and for a small but
+> possible use. Eg my board has 4 ethernets and only 2 are
+> connected. I feel its right to include the SoC definition and
+> set the unconnected ones to "down", but other approaches
+> are possible too.
+> Should I remove it?
+
+What you describe about your board is the perfect example of how a
+"status" property should be used.
+
+>=20
+>>> "auto" is needed to enable the link paramaters auto-negotiation,
+>>> that is built into some MII protocols, namely SGMII.
+>> RGMII also has an in-band status FWIW.
+> Thanks, will take that into account in v2.
+>=20
+>>> The appropriate documentation is added and explicitly states that
+>>> "auto" is very specific (protocol, HW and driver-specific), and
+>>> is therefore should be used with care.
+>> And therefore probably be made a device (and driver) specific decisi=
+on
+>> whether this is the right thing to do.
+> This doesn't work.
+> It appears even if the driver supports it and wants to use it, the
+> PHY HW may simply not generate the inband status. This is actually
+> the whole point why we have a regression now. It is _currently_
+> a driver decision, and that doesn't work for some people.
+> The point of this patch set is to make it a DT decision instead.
+
+Then, if the in-band status indication is not reliable (which really
+should be completely understood), you can just ignore the in-band statu=
+s
+and use all the parameter in a 'fixed-link' property, should not we?
+
+If in-band status can be used, then you can decide this with a separate
+property which is not in 'fixed-link', would that seem reasonable?
+
+>=20
+>>> -            return -EINVAL;
+>>> +        if (of_property_read_u32(fixed_link_node, "speed",
+>>> +                     &status.speed) !=3D 0) {
+>>> +            /* in auto mode just set to some sane value:
+>>> +             * it will be changed by MAC later */
+>>> +            if (link_auto)
+>>> +                status.speed =3D 1000;
+>> This is a completely arbitrary speed, that does not more or less sen=
+se
+>> than defaulting to 100 or anything else,
+> Exactly.
+> But if I leave it to 0, then fixed-phy driver will return an error,
+> so I took an arbitrary value.
+> But if it obscures the code, I'll hack fixed-phy to accept 0 instead,
+> to get something cleaner. So in v2.
+>=20
+>>   a driver should be able to set
+>> the speed it wants, based on the parsing of a 'phy-mode' property fo=
+r
+>> instance.
+> It actually does, that value is just to "cheat" fixed-phy.
+> I'll make things more obvious next time.
+
+
+--=20
+=46lorian
