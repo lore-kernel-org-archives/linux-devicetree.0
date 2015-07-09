@@ -1,45 +1,111 @@
-From: "Opensource [Steve Twiss]" <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH RFC V1 0/3] da9062: Add DA9062 RTC support using the
- existing DA9063 RTC driver
-Date: Thu, 9 Jul 2015 08:42:16 +0000
-Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7014B23FDDA@SW-EX-MBX02.diasemi.com>
-References: <cover.1436427954.git.stwiss.opensource@diasemi.com>
- <CAMuHMdU_AUZ9nxo25NeaFq1MeeSDZErqkNnDtXsdr7=jLm1kTw@mail.gmail.com>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v7 22/23] usb: gadget: serial: allocate and init otg descriptor
+ by otg capabilities
+Date: Thu, 9 Jul 2015 11:42:24 +0300
+Message-ID: <559E33F0.2030801@ti.com>
+References: <1436426340-18477-1-git-send-email-jun.li@freescale.com> <1436426340-18477-23-git-send-email-jun.li@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdU_AUZ9nxo25NeaFq1MeeSDZErqkNnDtXsdr7=jLm1kTw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, DEVICETREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, LINUXINPUT <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUXKERNEL <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, RTCLINUX <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, David Dajun Chen <david.chen-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1436426340-18477-23-git-send-email-jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+d-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMDkgSnVseSAyMDE1IDA5OjAyLCBHZWVydCBVeXR0ZXJob2V2ZW4gd3JvdGU6DQoNCj4gU3Vi
-amVjdDogUmU6IFtQQVRDSCBSRkMgVjEgMC8zXSBkYTkwNjI6IEFkZCBEQTkwNjIgUlRDIHN1cHBv
-cnQgdXNpbmcgdGhlDQo+IGV4aXN0aW5nIERBOTA2MyBSVEMgZHJpdmVyDQo+IA0KPiBIaSBTdGV2
-ZSwNCj4gDQo+IE9uIFRodSwgSnVsIDksIDIwMTUgYXQgOTo0NSBBTSwgUyBUd2lzcyA8c3R3aXNz
-Lm9wZW5zb3VyY2VAZGlhc2VtaS5jb20+DQo+IHdyb3RlOg0KPiA+IEZyb206IFMgVHdpc3MgPHN0
-d2lzcy5vcGVuc291cmNlQGRpYXNlbWkuY29tPg0KPiA+DQo+ID4gVGhpcyBwYXRjaCBzZXQgYWRk
-cyBSVEMgc3VwcG9ydCBmb3IgdGhlIERpYWxvZyBEQTkwNjIgUG93ZXIgTWFuYWdlbWVudCBJQy4N
-Cj4gPiBDaGFuZ2VzIGFyZSBtYWRlIHRvIHRoZSBleGlzdGluZyBEQTkwNjMgUlRDIGNvbXBvbmVu
-dCBzbyB0aGF0IGZ1bmN0aW9uYWxpdHkNCj4gPiBpbiB0aGlzIGRldmljZSBkcml2ZXIgY2FuIGJl
-IHJlLXVzZWQgdG8gc3VwcG9ydCB0aGUgREE5MDYyIFJUQy4NCj4gDQo+IFsuLi5dDQo+IA0KPiA+
-IFMgVHdpc3MgKDMpOg0KPiA+ICAgbWZkOiBkYTkwNjI6IFN1cHBvcnQgZm9yIHRoZSBEQTkwNjMg
-UlRDIGluIHRoZSBEQTkwNjIgY29yZQ0KPiANCj4gIkRBOTA2MiBSVEMiPw0KPiANCg0KSGkgR2Vl
-cnQsDQoNCkl0J3MgdGhlIHN1cHBvcnQgZm9yIHRoZSAiREE5MDYzIFJUQyAqZHJpdmVyKiBpbiB0
-aGUgREE5MDYyIE1GRCBkcml2ZXIgY29yZSIuDQoNCkknbSByZS13b3JraW5nIHRoZSBEQTkwNjMg
-UlRDIGRyaXZlciB0byBzdXBwb3J0IERBOTA2MiBSVEMgaGFyZHdhcmUuIFRoaXMgd2lsbCBtYWtl
-DQp0aGUgbmFtZSAiREE5MDYzIFJUQyBkcml2ZXIiIGludGVyY2hhbmdlYWJsZSB3aXRoICJEQTkw
-NjIgUlRDIGRyaXZlciIsIGJlY2F1c2UgaWYgdGhpcw0KcGF0Y2ggZ29lcyB0aHJvdWdoIHRoZXkg
-d2lsbCBib3RoIGJlIHVzaW5nIHRoZSBvcmlnaW5hbCAiREE5MDYzIFJUQyBkcml2ZXIiLg0KDQpD
-b25mdXNlZD8gIDotLw0KDQpJIHN1cHBvc2UgSSBjb3VsZCBhbHNvIGhhdmUgY2FsbGVkIHRoaXMg
-cGF0Y2ggInN1cHBvcnQgZm9yIHRoZSBEQTkwNjIgUlRDIEgvVyBpbiB0aGUNCkRBOTA2MiBNRkQg
-ZHJpdmVyIGNvcmUiLg0KDQpUaGlzIGNvbWVzIGZyb20gYSBwcmV2aW91cyB0aHJlYWQgaGVyZToN
-Cmh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDE1LzUvMTMvNDA2DQpodHRwczovL2xrbWwub3JnL2xr
-bWwvMjAxNS81LzEzLzUyOA0KDQpSZWdhcmRzLA0KU3RldmUNCg0KWy4uLl0NCg==
+On 09/07/15 10:18, Li Jun wrote:
+> Allocate and initialize usb otg descriptor according to gadget otg
+> capabilities, add it for each usb configurations. If otg capability
+> is not defined, keep its original otg descriptor unchanged.
+> 
+> Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+
+Reviewed-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+
+cheers,
+-roger
+
+> ---
+>  drivers/usb/gadget/legacy/serial.c | 37 +++++++++++++++++++++----------------
+>  1 file changed, 21 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/usb/gadget/legacy/serial.c b/drivers/usb/gadget/legacy/serial.c
+> index 8b7528f..9836d16 100644
+> --- a/drivers/usb/gadget/legacy/serial.c
+> +++ b/drivers/usb/gadget/legacy/serial.c
+> @@ -79,20 +79,7 @@ static struct usb_device_descriptor device_desc = {
+>  	.bNumConfigurations =	1,
+>  };
+>  
+> -static struct usb_otg_descriptor otg_descriptor = {
+> -	.bLength =		sizeof otg_descriptor,
+> -	.bDescriptorType =	USB_DT_OTG,
+> -
+> -	/* REVISIT SRP-only hardware is possible, although
+> -	 * it would not be called "OTG" ...
+> -	 */
+> -	.bmAttributes =		USB_OTG_SRP | USB_OTG_HNP,
+> -};
+> -
+> -static const struct usb_descriptor_header *otg_desc[] = {
+> -	(struct usb_descriptor_header *) &otg_descriptor,
+> -	NULL,
+> -};
+> +static const struct usb_descriptor_header *otg_desc[2];
+>  
+>  /*-------------------------------------------------------------------------*/
+>  
+> @@ -191,6 +178,18 @@ static int gs_bind(struct usb_composite_dev *cdev)
+>  	serial_config_driver.iConfiguration = status;
+>  
+>  	if (gadget_is_otg(cdev->gadget)) {
+> +		if (!otg_desc[0]) {
+> +			struct usb_descriptor_header *usb_desc;
+> +
+> +			usb_desc = usb_otg_descriptor_alloc(cdev->gadget);
+> +			if (!usb_desc) {
+> +				status = -ENOMEM;
+> +				goto fail;
+> +			}
+> +			usb_otg_descriptor_init(cdev->gadget, usb_desc);
+> +			otg_desc[0] = usb_desc;
+> +			otg_desc[1] = NULL;
+> +		}
+>  		serial_config_driver.descriptors = otg_desc;
+>  		serial_config_driver.bmAttributes |= USB_CONFIG_ATT_WAKEUP;
+>  	}
+> @@ -208,13 +207,15 @@ static int gs_bind(struct usb_composite_dev *cdev)
+>  				"gser");
+>  	}
+>  	if (status < 0)
+> -		goto fail;
+> +		goto fail1;
+>  
+>  	usb_composite_overwrite_options(cdev, &coverwrite);
+>  	INFO(cdev, "%s\n", GS_VERSION_NAME);
+>  
+>  	return 0;
+> -
+> +fail1:
+> +	kfree(otg_desc[0]);
+> +	otg_desc[0] = NULL;
+>  fail:
+>  	return status;
+>  }
+> @@ -227,6 +228,10 @@ static int gs_unbind(struct usb_composite_dev *cdev)
+>  		usb_put_function(f_serial[i]);
+>  		usb_put_function_instance(fi_serial[i]);
+>  	}
+> +
+> +	kfree(otg_desc[0]);
+> +	otg_desc[0] = NULL;
+> +
+>  	return 0;
+>  }
+>  
+> 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
