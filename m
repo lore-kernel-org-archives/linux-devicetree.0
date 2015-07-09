@@ -1,120 +1,82 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 5/7] tty: 8250: workaround errata on disabling UART after
- using DMA
-Date: Thu, 9 Jul 2015 19:45:37 +0530
-Message-ID: <559E8209.9080005@ti.com>
-References: <cover.1436174801.git.nsekhar@ti.com> <9f70a47010d019f76b822b60e7d4f512aa4e46d7.1436174801.git.nsekhar@ti.com> <559DCF83.8010703@hurleysoftware.com>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 5/7] dt-binding: document the binding for mxc rtc
+Date: Thu, 9 Jul 2015 22:26:48 +0800
+Message-ID: <20150709142648.GI23464@tiger>
+References: <1435965320-1478-1-git-send-email-tremyfr@gmail.com>
+ <1435965320-1478-6-git-send-email-tremyfr@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <559DCF83.8010703-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1435965320-1478-6-git-send-email-tremyfr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, John Ogness <john.ogness-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philippe Reynes <tremyfr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Peter,
-
-On Thursday 09 July 2015 07:03 AM, Peter Hurley wrote:
-> Hi Sekhar,
+On Sat, Jul 04, 2015 at 01:15:18AM +0200, Philippe Reynes wrote:
+> This adds documentation of device tree bindings for the
+> mxc rtc.
 > 
-> Patch title should start "serial: 8250_omap: .." since the patch
-> is specific to the 8250_omap serial driver.
-
-Yes, missed that.
-
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Philippe Reynes <tremyfr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/rtc/rtc-mxc.txt |   27 +++++++++++++++++++++
+>  1 files changed, 27 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/rtc/rtc-mxc.txt
 > 
-> On 07/06/2015 05:47 AM, Sekhar Nori wrote:
->> AM335x, AM437x and DRA7x SoCs have an errata due to which UART
->> cannot be disabled after it has been used with DMA.
->              ^^^^^^
->              idled
+> diff --git a/Documentation/devicetree/bindings/rtc/rtc-mxc.txt b/Documentation/devicetree/bindings/rtc/rtc-mxc.txt
+> new file mode 100644
+> index 0000000..5505493
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/rtc/rtc-mxc.txt
+> @@ -0,0 +1,27 @@
+> +* Real Time Clock of the i.MX SoCs
+> +
+> +RTC controller for the i.MX SoCs
+> +
+> +Required properties:
+> +- compatible: Should be "fsl,imx1-rtc" or "fsl,imx21-rtc".
+> +- reg: physical base address of the controller and length of memory mapped
+> +  region.
+> +- interrupts: IRQ line for the RTC.
+> +- clocks: should contain two entries:
+> +  * one for the input reference
+> +  * one for the the SoC RTC
+> +- clock-names: should contain:
+> +  * "rtc" for the input reference clock
 
-alright.
+Would it be better to use "ref" here?
 
+Shawn
+
+> +  * "ipg" for the SoC RTC clock
+> +
+> +Example:
+> +
+> +rtc@10007000 {
+> +	compatible = "fsl,imx21-rtc";
+> +	reg = <0x10007000 0x1000>;
+> +	interrupts = <22>;
+> +	clocks = <&clks IMX27_CLK_CKIL>,
+> +	       	 <&clks IMX27_CLK_RTC_IPG_GATE>;
+> +	clock-names = "rtc, "ipg";
+> +	status = "disabled";
+> +};
+> -- 
+> 1.7.4.4
 > 
->> OMAP3 has a similar sounding errata which has been worked around
->> in a2fc36613ac1af2e9 ("ARM: OMAP3: Use manual idle for UARTs
->> because of DMA errata"). But the workaround used there does not
->> apply to AM335x, AM437x SoCs.
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
 > 
->> These SoCs need a softreset of UART before disabling them.
-> 
-> "The UART module on these SoCs must be soft reset to go idle."
->  
->> This patch implements that errata workaround. It is expected that
->> UART will be used with DMA so no explicit check for DMA usage
->> has been added for errata applicability.
-> 
-> This changelog should also:
-> 
-> 1. Reference the errata document.
-
-Sure. I added that as comments in code. I can do that in the patch
-description too.
-
-> 2. Explain why SCR register has to be the context loss canary
->    rather than MDR1.
-
-Okay, will explain that too.
-
->> @@ -1307,6 +1320,36 @@ static int omap8250_runtime_suspend(struct device *dev)
->>  			return -EBUSY;
->>  	}
->>  
->> +	if (priv->habit & UART_ERRATA_CLOCK_DISABLE) {
->> +		int sysc;
->> +		int syss;
->> +		int timeout = 100;
->> +
->> +		sysc = serial_in(up, UART_OMAP_SYSC);
->> +
->> +		/* softreset the UART */
->> +		sysc |= OMAP_UART_SYSC_SOFTRESET;
->> +		serial_out(up, UART_OMAP_SYSC, sysc);
->> +
->> +		/* By experiments, 1us enough for reset complete on AM335x */
->> +		do {
->> +			udelay(1);
->> +			syss = serial_in(up, UART_OMAP_SYSS);
->> +		} while (--timeout && !(syss & OMAP_UART_SYSS_RESETDONE));
-> 
-> 
-> If there is not a omap helper function to reset modules, there should be.
-> Open-coding the module reset is not appropriate.
-
-There is work planned to have something implemented for OMAP as part of
-drivers/reset/ API. AFAIK, this depends on some PRCM code clean-up
-affecting multiple OMAP platforms and is couple of merge windows away
-from taking shape.
-
-Meanwhile, I think this is the best we can do. Other drivers like
-i2c-omap have done something similar (see omap_i2c_reset()).
-
-> 
->> +		if (!timeout) {
->> +			dev_err(dev, "timed out waiting for reset done\n");
->> +			return -ETIMEDOUT;
->> +		}
->> +
->> +		/*
->> +		 * For UART module wake-up to work, MDR1.MODESELECT should
->> +		 * not be set to "Disable", so update it.
->> +		 */
->> +		if (device_may_wakeup(dev))
->> +			omap8250_update_mdr1(up, priv);
-> 
-> Should this be unconditional?
-
-I do not see it doing any harm if done unconditionally. But it will be
-unnecessary. Unless the UART is being used for wakeup, we don't need
-MDR1 restored at this stage. And omap8250_restore_regs() will eventually
-restore the register anyway.
-
-Thanks,
-Sekhar
-
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
