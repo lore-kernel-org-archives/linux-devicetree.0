@@ -1,76 +1,78 @@
-From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 0/6] mfd: 88pm800: Add 88pm860 device support
-Date: Thu, 9 Jul 2015 21:04:27 +0900
-Message-ID: <CAJKOXPetR4KkfRVNz_QtVfFnjQ7p455QknErr1gnK9iBYgRY+A@mail.gmail.com>
-References: <1436442431-3471-1-git-send-email-vaibhav.hiremath@linaro.org>
+From: Cory Tusar <cory.tusar@pid1solutions.com>
+Subject: Re: [PATCH 0/1] Add support for esdhc0 on Vybrid.
+Date: Thu, 09 Jul 2015 08:40:01 -0400
+Message-ID: <559E6BA1.7030101@pid1solutions.com>
+References: <1436388666-29376-1-git-send-email-cory.tusar@pid1solutions.com>
+ <CAOpc7mEuDm=YS5TB6MN5PTtNy7yMiTXEetUoXdVC28ZEkf1Cvw@mail.gmail.com>
+ <63570c082077002155d3a99567664ef3@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1436442431-3471-1-git-send-email-vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kozik <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <63570c082077002155d3a99567664ef3@agner.ch>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stefan Agner <stefan@agner.ch>, Holger Schurig <holgerschurig@gmail.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, open list <linux-kernel@vger.kernel.org>, robh+dt@kernel.org, andrew@lunn.ch, Sascha Hauer <kernel@pengutronix.de>, galak@codeaurora.org, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-2015-07-09 20:47 GMT+09:00 Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
-> 88PM860 falls under 88pm800 family of devices, with some feature
-> additions, for example, support for dual phase on BUCK1.
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-Hi,
+On 07/09/2015 02:13 AM, Stefan Agner wrote:
+> On 2015-07-09 08:07, Holger Schurig wrote:
+>>> Cory Tusar (1):
+>>>   ARM: dts: vfxxx: Include support for esdhc0 functionality.
+>>>
+>>>  arch/arm/boot/dts/vfxxx.dtsi | 11 +++++++++++
+>>>  1 file changed, 11 insertions(+)
+>>>
+>>> --
+>>> 2.3.6
+>>
+>> Your patch looks empty.
+> 
+> This is a cover letter which provides overview over a whole patchset.
+> The patch is a separate reply message of this mail (PATCH 1/1). 
+> 
+> @Cory
+> However, it is unusual to use a cover letter when there is only a single
+> patch. If you want to add additional comments which should not be part
+> of the commit message, you can edit the patch and insert text after the
+> three dashes, just before the diffstat. This text won't be part of the
+> commit when applied later.
 
-There are already drivers for 88PM860: mfd, charger and battery. Isn't
-you duplicating existing code?
+Hi Stefan,
+
+Duly noted.  Appreciate the feedback, and will keep in mind for next
+time.
 
 Best regards,
-Krzysztof
+- -Cory
 
->
-> This patch series, enabled chip ID support for 88pm860 in the driver
-> and adds,
->   - Init time configuration support based on chip ID
->   - DT property for 32KHz low jitter clock enable
->   - DT property for dual phase enable
->
-> TODO:
->  - Some of init time configurations are common to both 88pm800 and 88pm860
->    devices, but since I can not validate it, decided to move it to
->    88pm860 block only.
->    But if someone is willing to help me in validation, we can move it to
->    common code later. No issues there.
->  - Sleep/low-power-mode related configuration is also part of init time,
->    but since we are too far from sleep mode support and without testing
->    I do not want add anything, decided to take it later when we actually
->    start looking at sleep support.
->  - Init time configuration also includes pinmux setting for the device.
->    I am working on using pinctrl-single driver to have standard and generic
->    interface, hopefully it will get handled through pinctrl subsystem.
->    Link to RFC - https://patches.linaro.org/50604/
->
-> Vaibhav Hiremath (6):
->   mfd: 88pm80x: Add 88pm860 chip type support
->   mfd: 88pm800: Add init time initial configuration support
->   mfd: devicetree: bindings: 88pm800: Add DT property for 32KHz output
->     enable
->   mfd: 88pm800: Enable 32KHZ XO low jitter clock out
->   mfd: devicetree: bindings: 88pm800: Add DT property for dual phase
->     enable
->   mfd: 88pm800: Add support for configuration of dual phase on BUCK1
->
->  Documentation/devicetree/bindings/mfd/88pm800.txt | 12 ++++
->  drivers/mfd/88pm800.c                             | 88 +++++++++++++++++++++++
->  drivers/mfd/88pm80x.c                             |  2 +
->  include/linux/mfd/88pm80x.h                       | 18 +++++
->  4 files changed, 120 insertions(+)
->
-> --
-> 1.9.1
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+- -- 
+Cory Tusar
+Principal
+PID 1 Solutions, Inc.
+
+
+"There are two ways of constructing a software design.  One way is to
+ make it so simple that there are obviously no deficiencies, and the
+ other way is to make it so complicated that there are no obvious
+ deficiencies."  --Sir Charles Anthony Richard Hoare
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iEYEARECAAYFAlWea6EACgkQHT1tsfGwHJ8CYACgqK20a6hhtl66aA+an5lWX4Ob
+jTgAoKiygJTWpw9oYrmiZWk874tzkoZa
+=YMvj
+-----END PGP SIGNATURE-----
