@@ -1,83 +1,46 @@
-From: Daniel Kurtz <djkurtz@chromium.org>
-Subject: Re: [PATCH v4 1/3] dt-bindings: pwm: add MediaTek display PWM bindings
-Date: Thu, 9 Jul 2015 12:47:46 +0800
-Message-ID: <CAGS+omAZismuEYXsUkHEAec4xF+KRWm62AuCUmrmso6p+DKQ4Q@mail.gmail.com>
-References: <1436189368-1826-1-git-send-email-yh.huang@mediatek.com>
- <1436189368-1826-2-git-send-email-yh.huang@mediatek.com> <CAGS+omAWNwk_PRy-eeC4bgHQ-ZC2Kvh0sqpF47VD1sfJOhHWUw@mail.gmail.com>
- <1436409944.4915.6.camel@mtksdaap41>
+From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v7 0/3] Add arm pl353 smc nand driver for xilinx zynq
+ soc
+Date: Thu, 09 Jul 2015 07:05:25 +0200
+Message-ID: <559E0115.4010304@xilinx.com>
+References: <1433786918-21500-1-git-send-email-punnaia@xilinx.com>
+ <20150708194051.GP25028@jcartwri.amer.corp.natinst.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <1436409944.4915.6.camel@mtksdaap41>
-Sender: linux-pwm-owner@vger.kernel.org
-To: YH Huang <yh.huang@mediatek.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, linux-pwm@vger.kernel.org, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, srv_heupstream <srv_heupstream@mediatek.com>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Yingjoe Chen <yingjoe.chen@mediatek.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150708194051.GP25028-ew3lsbMjNqt5wtABiV/Xjqyly8cj88Ttqxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Josh Cartwright <joshc-acOepvfBmUk@public.gmane.org>, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, jussi.kivilinna-X3B1VOXEql0@public.gmane.org, acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, ivan.khoronzhuk-l0cyMroinI0@public.gmane.org, joern-PCqxUs/MD9bYtjvyW6yDsg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kpc528-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kalluripunnaiahchoudary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 9, 2015 at 10:45 AM, YH Huang <yh.huang@mediatek.com> wrote:
->
-> On Wed, 2015-07-08 at 20:11 +0800, Daniel Kurtz wrote:
-> > On Mon, Jul 6, 2015 at 9:29 PM, YH Huang <yh.huang@mediatek.com> wrote:
-> > > Document the device-tree binding of MediatTek display PWM.
-> > > The PWM has one channel to control the backlight brightness for display.
-> > > It supports MT8173 and MT6595.
-> > >
-> > > Signed-off-by: YH Huang <yh.huang@mediatek.com>
-> > > ---
-> > >  .../devicetree/bindings/pwm/pwm-mtk-disp.txt       | 24 ++++++++++++++++++++++
-> > >  1 file changed, 24 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt b/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
-> > > new file mode 100644
-> > > index 0000000..757b974
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
-> > > @@ -0,0 +1,24 @@
-> > > +MediaTek display PWM controller
-> > > +
-> > > +Required properties:
-> > > + - compatible: should be "mediatek,<name>-disp-pwm"
-> > > +   - "mediatek,mt8173-disp-pwm": found on mt8173 SoC
-> > > +   - "mediatek,mt6595-disp-pwm": found on mt6595 SoC
-> > > + - reg: physical base address and length of the controller's registers
-> > > + - #pwm-cells: must be 2. See pwm.txt in this directory for a description of
-> > > +   the cell format
-> > > + - clocks: phandle and clock specifier of the PWM reference clock
-> > > + - clock-names: must contain the following
-> > > +   - "main": clock used to generate PWM signals
-> > > +   - "mm": sync signals from the modules of mmsys
-> > > +
-> > > +Example:
-> > > +       pwm0: pwm@1401e000 {
-> > > +               compatible = "mediatek,mt8173-disp-pwm",
-> > > +                            "mediatek,mt6595-disp-pwm";
-> > > +               reg = <0 0x1401e000 0 0x1000>;
-> > > +               #pwm-cells = <2>;
-> > > +               clocks = <&mmsys CLK_MM_DISP_PWM026M>,
-> > > +                        <&mmsys CLK_MM_DISP_PWM0MM>;
-> > > +               clock-names = "main", "mm";
-> >
-> > Should we include the pinctrl settings here to enable the PWM output?
-> >
->
-> Since we use pwm-backlight driver to control backlight, we should enable
-> PWM output in the backlight node.
->
-> Ref:
-> https://www.kernel.org/doc/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
->
+On 07/08/2015 09:40 PM, Josh Cartwright wrote:
+> On Mon, Jun 08, 2015 at 11:38:35PM +0530, Punnaiah Choudary Kalluri wrote:
+>> The following patches add arm pl353 static memory controller driver for
+>> xilinx zynq soc. The arm pl353 smc supports two interfaces i.e nand and
+>> nor/sram memory interfaces. The current implementation supports only a
+>> single SMC instance and nand specific configuration.
+> 
+> What's the integration plan for this guy?  Looks like we missed 4.2.
+> It'd be swell to get have NAND support land for Zynq in 4.3.
+> 
+> Assuming there is nothing else holding it back:
+> 
+> Brian- I'm assuming you'll want to take this through your tree.
+> 
+> It looks like most of the stuff in drivers/memory have historically gone
+> through arm-soc/drivers, Michal- does it make sense for you to pick up
+> http://lkml.kernel.org/r/1433786857-32575-1-git-send-email-punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org?
 
-The pwm-backlight binding specifies which pwm the backlight driver
-should use, and how to use it.
+I am happy to take this via zynq tree and arm-soc tree if this is the
+right way.
 
-I believe actually configuring the output pin for the pwm via pinctl
-belongs to the pwm binding.
+Josh: Also none can stop you to give us you ACK or Tested-by line.
 
-Regards,
-0Dan
-
->
-> Regards,
-> YH Huang
->
+Thanks,
+Michal
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
