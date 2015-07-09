@@ -1,114 +1,67 @@
-From: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v7 23/23] usb: gadget: zero: allocate and init otg descriptor by otg capabilities
-Date: Thu, 9 Jul 2015 15:19:00 +0800
-Message-ID: <1436426340-18477-24-git-send-email-jun.li@freescale.com>
-References: <1436426340-18477-1-git-send-email-jun.li@freescale.com>
+From: S Twiss <stwiss.opensource@diasemi.com>
+Subject: [PATCH RFC V1 1/3] mfd: da9062: Support for the DA9063 RTC in the
+ DA9062 core
+Date: Thu, 9 Jul 2015 08:45:53 +0100
+Message-ID: <e121177ed6ecae37ff94ff053478e3fb727f2619.1436427954.git.stwiss.opensource@diasemi.com>
+References: <cover.1436427954.git.stwiss.opensource@diasemi.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1436426340-18477-1-git-send-email-jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+d-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org, Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <cover.1436427954.git.stwiss.opensource@diasemi.com>
+Sender: linux-input-owner@vger.kernel.org
+To: DEVICETREE <devicetree@vger.kernel.org>, LINUXINPUT <linux-input@vger.kernel.org>, LINUXKERNEL <linux-kernel@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, RTCLINUX <rtc-linux@googlegroups.com>, S Twiss <stwiss.opensource@diasemi.com>, Samuel Ortiz <sameo@linux.intel.com>
+Cc: Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, David Dajun Chen <david.chen@diasemi.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <support.opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
-Allocate and initialize usb otg descriptor according to gadget otg
-capabilities, add it for each usb configurations. If otg capability
-is not defined, keep its original otg descriptor unchanged.
+From: S Twiss <stwiss.opensource@diasemi.com>
 
-Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Add MFD core driver support for a RTC component
+
+- MFD core adds the RTC resources da9062_rtc_resources[] for the RTC
+  alarm and tick timer IRQ
+- An appropriate mfd_cell has been added into da9062_devs[] to support
+  a component .name = "da9062-rtc" and .of_compatible  = "dlg,da9062-rtc"
+
+Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
+
 ---
- drivers/usb/gadget/legacy/zero.c | 41 ++++++++++++++++++++--------------------
- 1 file changed, 21 insertions(+), 20 deletions(-)
+Checks performed with linux-next/next-20150708/scripts/checkpatch.pl
+ da9062-core.c             total: 0 errors, 0 warnings, 523 lines checked
+This patch applies against linux-next and next-20150708 
 
-diff --git a/drivers/usb/gadget/legacy/zero.c b/drivers/usb/gadget/legacy/zero.c
-index c986e8a..37a4100 100644
---- a/drivers/usb/gadget/legacy/zero.c
-+++ b/drivers/usb/gadget/legacy/zero.c
-@@ -121,24 +121,7 @@ static struct usb_device_descriptor device_desc = {
- 	.bNumConfigurations =	2,
+
+ drivers/mfd/da9062-core.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/drivers/mfd/da9062-core.c b/drivers/mfd/da9062-core.c
+index 4cf0643..b43cd24 100644
+--- a/drivers/mfd/da9062-core.c
++++ b/drivers/mfd/da9062-core.c
+@@ -118,6 +118,11 @@ static struct resource da9062_wdt_resources[] = {
+ 	DEFINE_RES_NAMED(DA9062_IRQ_WDG_WARN, 1, "WD_WARN", IORESOURCE_IRQ),
  };
  
--#ifdef CONFIG_USB_OTG
--static struct usb_otg_descriptor otg_descriptor = {
--	.bLength =		sizeof otg_descriptor,
--	.bDescriptorType =	USB_DT_OTG,
--
--	/* REVISIT SRP-only hardware is possible, although
--	 * it would not be called "OTG" ...
--	 */
--	.bmAttributes =		USB_OTG_SRP | USB_OTG_HNP,
--};
--
--static const struct usb_descriptor_header *otg_desc[] = {
--	(struct usb_descriptor_header *) &otg_descriptor,
--	NULL,
--};
--#else
--#define otg_desc	NULL
--#endif
-+static const struct usb_descriptor_header *otg_desc[2];
- 
- /* string IDs are assigned dynamically */
- /* default serial number takes at least two packets */
-@@ -341,6 +324,18 @@ static int zero_bind(struct usb_composite_dev *cdev)
- 
- 	/* support OTG systems */
- 	if (gadget_is_otg(cdev->gadget)) {
-+		if (!otg_desc[0]) {
-+			struct usb_descriptor_header *usb_desc;
++static struct resource da9062_rtc_resources[] = {
++	DEFINE_RES_NAMED(DA9062_IRQ_ALARM, 1, "ALARM", IORESOURCE_IRQ),
++	DEFINE_RES_NAMED(DA9062_IRQ_TICK, 1, "TICK", IORESOURCE_IRQ),
++};
 +
-+			usb_desc = usb_otg_descriptor_alloc(cdev->gadget);
-+			if (!usb_desc) {
-+				status = -ENOMEM;
-+				goto err_conf_flb;
-+			}
-+			usb_otg_descriptor_init(cdev->gadget, usb_desc);
-+			otg_desc[0] = usb_desc;
-+			otg_desc[1] = NULL;
-+		}
- 		sourcesink_driver.descriptors = otg_desc;
- 		sourcesink_driver.bmAttributes |= USB_CONFIG_ATT_WAKEUP;
- 		loopback_driver.descriptors = otg_desc;
-@@ -359,12 +354,12 @@ static int zero_bind(struct usb_composite_dev *cdev)
- 	}
- 	status = usb_add_function(&sourcesink_driver, func_ss);
- 	if (status)
--		goto err_conf_flb;
-+		goto err_free_otg_desc;
+ static const struct mfd_cell da9062_devs[] = {
+ 	{
+ 		.name		= "da9062-core",
+@@ -141,6 +146,12 @@ static const struct mfd_cell da9062_devs[] = {
+ 		.resources	= da9062_thermal_resources,
+ 		.of_compatible  = "dlg,da9062-thermal",
+ 	},
++	{
++		.name		= "da9062-rtc",
++		.num_resources	= ARRAY_SIZE(da9062_rtc_resources),
++		.resources	= da9062_rtc_resources,
++		.of_compatible  = "dlg,da9062-rtc",
++	},
+ };
  
- 	usb_ep_autoconfig_reset(cdev->gadget);
- 	status = usb_add_function(&loopback_driver, func_lb);
- 	if (status)
--		goto err_conf_flb;
-+		goto err_free_otg_desc;
- 
- 	usb_ep_autoconfig_reset(cdev->gadget);
- 	usb_composite_overwrite_options(cdev, &coverwrite);
-@@ -373,6 +368,9 @@ static int zero_bind(struct usb_composite_dev *cdev)
- 
- 	return 0;
- 
-+err_free_otg_desc:
-+	kfree(otg_desc[0]);
-+	otg_desc[0] = NULL;
- err_conf_flb:
- 	usb_put_function(func_lb);
- 	func_lb = NULL;
-@@ -397,6 +395,9 @@ static int zero_unbind(struct usb_composite_dev *cdev)
- 	if (!IS_ERR_OR_NULL(func_lb))
- 		usb_put_function(func_lb);
- 	usb_put_function_instance(func_inst_lb);
-+	kfree(otg_desc[0]);
-+	otg_desc[0] = NULL;
-+
- 	return 0;
- }
- 
+ static int da9062_clear_fault_log(struct da9062 *chip)
 -- 
-1.9.1
+end-of-patch for PATCH RFC V1
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
