@@ -1,92 +1,75 @@
-From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v4 2/2] doc: dt: add documentation for nxp,lpc1773-spifi
-Date: Thu,  9 Jul 2015 22:19:07 +0200
-Message-ID: <1436473147-31063-3-git-send-email-manabian@gmail.com>
-References: <1436473147-31063-1-git-send-email-manabian@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1436473147-31063-1-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org
-Cc: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH] i2c: Mark instantiated device nodes with OF_POPULATE
+Date: Thu, 9 Jul 2015 22:29:52 +0200
+Message-ID: <20150709202952.GQ4744@katana>
+References: <1422083789-18905-1-git-send-email-pantelis.antoniou@konsulko.com>
+ <20150422074019.GA1511@katana>
+ <CAMAWPa-HMhJK9UzwfaMPe-MO=4mzjvC=nRwPX-pbab_fb3YZ9A@mail.gmail.com>
+ <20150506183733.GA1513@katana>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="SvyA5ywaG/v2A5dH"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150506183733.GA1513@katana>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree binding documentation for the SPI Flash Interface
-(SPIFI) found on NXP LPC18xx and LPC43xx devies.
 
-Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- .../devicetree/bindings/mtd/nxp-spifi.txt          | 58 ++++++++++++++++++++++
- 1 file changed, 58 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/nxp-spifi.txt
+--SvyA5ywaG/v2A5dH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/mtd/nxp-spifi.txt b/Documentation/devicetree/bindings/mtd/nxp-spifi.txt
-new file mode 100644
-index 000000000000..f8b6b250654e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/nxp-spifi.txt
-@@ -0,0 +1,58 @@
-+* NXP SPI Flash Interface (SPIFI)
-+
-+NXP SPIFI is a specialized SPI interface for serial Flash devices.
-+It supports one Flash device with 1-, 2- and 4-bits width in SPI
-+mode 0 or 3. The controller operates in either command or memory
-+mode. In memory mode the Flash is accessible from the CPU as
-+normal memory.
-+
-+Required properties:
-+  - compatible : Should be "nxp,lpc1773-spifi"
-+  - reg : the first contains the register location and length,
-+          the second contains the memory mapping address and length
-+  - reg-names: Should contain the reg names "spifi" and "flash"
-+  - interrupts : Should contain the interrupt for the device
-+  - clocks : The clocks needed by the SPIFI controller
-+  - clock-names : Should contain the clock names "spifi" and "reg"
-+
-+Optional properties:
-+ - resets : phandle + reset specifier
-+
-+The SPI Flash must be a child of the SPIFI node and must have a
-+compatible property as specified in bindings/mtd/jedec,spi-nor.txt
-+
-+Optionally it can also contain the following properties.
-+ - spi-cpol : Controller only supports mode 0 and 3 so either
-+              both spi-cpol and spi-cpha should be present or
-+              none of them
-+ - spi-cpha : See above
-+ - spi-rx-bus-width : Used to select how many pins that are used
-+                      for input on the controller
-+
-+See bindings/spi/spi-bus.txt for more information.
-+
-+Example:
-+spifi: spifi@40003000 {
-+	compatible = "nxp,lpc1773-spifi";
-+	reg = <0x40003000 0x1000>, <0x14000000 0x4000000>;
-+	reg-names = "spifi", "flash";
-+	interrupts = <30>;
-+	clocks = <&ccu1 CLK_SPIFI>, <&ccu1 CLK_CPU_SPIFI>;
-+	clock-names = "spifi", "reg";
-+	resets = <&rgu 53>;
-+
-+	flash@0 {
-+		compatible = "jedec,spi-nor";
-+		spi-cpol;
-+		spi-cpha;
-+		spi-rx-bus-width = <4>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		partition@0 {
-+			label = "data";
-+			reg = <0 0x200000>;
-+		};
-+	};
-+};
-+
--- 
-1.8.0
+On Wed, May 06, 2015 at 08:37:33PM +0200, Wolfram Sang wrote:
+> On Wed, May 06, 2015 at 10:51:07AM -0700, Kevin Hilman wrote:
+> > On Wed, Apr 22, 2015 at 12:40 AM, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> wrot=
+e:
+> > > On Sat, Jan 24, 2015 at 09:16:29AM +0200, Pantelis Antoniou wrote:
+> > >> Mark (and unmark) device nodes with the POPULATE flag as appropriate.
+> > >> This is required to avoid multi probing when using I2C and device
+> > >> overlays containing a mux.
+> > >> This patch is also more careful with the release of the adapter devi=
+ce
+> > >> which caused a deadlock with muxes, and does not break the build
+> > >> on !OF since the node flag accessors are not defined then.
+> > >>
+> > >> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+> > >
+> > > Now, that the dependency is upstream: applied to for-current, thanks!
+> >=20
+> > I'm not seeing this in linux-next, or in your for-current branch.
+> >=20
+> > Was this dropped or superseded by something else?
+>=20
+> I dropped it because it caused a build bug. So, we need another
+> dependency in... I am not sure if this is already in.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Applied to for-current AGAIN, let's hope it will work this time...
+
+
+--SvyA5ywaG/v2A5dH
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJVntnAAAoJEBQN5MwUoCm2m/UQAIfTPxmbFXNN93x5sV0MU3I3
+fZZrl9h4/FpGcAB7MljSxJ1NdqVwp/CRJ+dAo8tm6EXpn26G3GHeUVs9oXMLqko8
+V3PRLcaJ5Es4NR893B73GWWryloYz0tabDZeTYFQ6q0/oap11DPArWAFW0LE2W/1
+rq2tHFP76TUDyHCJ/Kiy73V2SebeYYBLENkn5SsNEAU+BUtwOo6iv8bkKrjSlsqM
+iB0zZtQNfQNr0DL2XSP7JyES/mi061FujKCtZ3YWodFUDbtjDrynJfeFAIPkJ83u
++GhtydFy9uslIK163D7ZZ4a126mB1dm+aD527gmsKTrRkAnRLeH1ZQe41wCGwTu2
+JfzSriW7LuXIBOmDS6mS3g1z2na29tzrnK1xuRICZ2JX68x9eZ+fdPKFdR+DZzhS
+rIkb1z+Z7VYjiMl+18W26tH6CGD6UyOgewlLtgW7Vh4/Hd9iJXrzjWXCHGjlhOiD
+H0v5Q2SNLk+XzdZRzeAbHD9/7/o++XsFuQiQ8CUuEGM8LMO1VOP1RhDZXEjKehmp
+em5Lf16ixSmZ2DSBuWvkqrK5kmM6ABwikzd+BJRcV53ZjmW2W8fi/HJMm7M5CIj8
+eA/aFIdfS/JO/bpaZVvOAsBxOL1qf7arMoQS8HWhWlbew1TNnGru4AL5UMVEa5MT
+NwqnsG6MOPHUnTDv6txD
+=4G+W
+-----END PGP SIGNATURE-----
+
+--SvyA5ywaG/v2A5dH--
