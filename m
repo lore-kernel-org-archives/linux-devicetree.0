@@ -1,31 +1,98 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [PATCH V3] QorIQ/TMU: add TMU node to device tree for QorIQ T1040
-Date: Thu, 9 Jul 2015 17:26:20 -0500
-Message-ID: <1436480780.2658.154.camel@freescale.com>
-References: <1434009188-25644-1-git-send-email-hongtao.jia@freescale.com>
- <BLUPR03MB149A79499CAA74A15EC947FE1900@BLUPR03MB149.namprd03.prod.outlook.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <BLUPR03MB149A79499CAA74A15EC947FE1900@BLUPR03MB149.namprd03.prod.outlook.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Jia Hongtao-B38951 <hongtao.jia@freescale.com>
-Cc: "edubezval@gmail.com" <edubezval@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+From: Adam YH Lee <adam.yh.lee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2] ARM: dts: configure regulators for Gumstix Pepper
+Date: Thu,  9 Jul 2015 15:37:57 -0700
+Message-ID: <1436481477-18002-1-git-send-email-adam.yh.lee@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: ashcharles-EiDWdcs9+yZBDgjK7y7TUQ@public.gmane.org, arun-EiDWdcs9+yZBDgjK7y7TUQ@public.gmane.org, Adam YH Lee <adam.yh.lee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCAyMDE1LTA3LTA5IGF0IDAzOjAwIC0wNTAwLCBKaWEgSG9uZ3Rhby1CMzg5NTEgd3Jv
-dGU6Cj4gSGkgU2NvdHQsCj4gCj4gUGF0Y2ggdXBkYXRlZCB0byBWMywgcGxlYXNlIGhlbHAgdG8g
-cmV2aWV3Lgo+IFRoYW5rcy4KPiAKPiAtLS0KPiBCZXN0IFJlZ2FyZHMsCj4gSG9uZ3RhbwoKSXQg
-bG9va3MgT0suCgotU2NvdHQKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpMaW51eHBwYy1kZXYgbWFpbGluZyBsaXN0CkxpbnV4cHBjLWRldkBsaXN0cy5v
-emxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9saW51eHBwYy1kZXY=
+Boot process is halting in midway because some of the necessary voltage
+regulators are deemed unused and subsequently powered off, leading to
+a completely unresponsive system.
+
+Most of the device nodes had correct voltage regulator attachments.
+Yet these nodes had to set stricter enforcement on them through
+'regulator-boot-on' and 'regulator-always-on' to function correctly.
+
+The consumers of the regulators this commit affect are the followings:
+
+	DCDC1: vdd_1v8 system supply, USB-PHY, and ADC
+	DCDC2: Core domain
+	DCDC3: MPU core domain
+	 LDO1: RTC
+	 LDO2: 3v3 IO domain
+	 LDO3: USB-PHY; not a boot-time requirement
+	 LDO4: LCD [16:23]
+
+All but LDO3 need to be always-on for the system to be functional.
+
+Additionally regulator-name properties have been added for the kernel to
+display the name from the schematic. This will improve diagnostics.
+
+Signed-off-by: Adam YH Lee <adam.yh.lee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/am335x-pepper.dts | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/arch/arm/boot/dts/am335x-pepper.dts b/arch/arm/boot/dts/am335x-pepper.dts
+index 0d35ab6..661f835 100644
+--- a/arch/arm/boot/dts/am335x-pepper.dts
++++ b/arch/arm/boot/dts/am335x-pepper.dts
+@@ -438,6 +438,7 @@
+ 	regulators {
+ 		dcdc1_reg: regulator@0 {
+ 			/* VDD_1V8 system supply */
++			regulator-always-on;
+ 		};
+ 
+ 		dcdc2_reg: regulator@1 {
+@@ -446,6 +447,7 @@
+ 			regulator-min-microvolt = <925000>;
+ 			regulator-max-microvolt = <1325000>;
+ 			regulator-boot-on;
++			regulator-always-on;
+ 		};
+ 
+ 		dcdc3_reg: regulator@2 {
+@@ -454,25 +456,32 @@
+ 			regulator-min-microvolt = <925000>;
+ 			regulator-max-microvolt = <1150000>;
+ 			regulator-boot-on;
++			regulator-always-on;
+ 		};
+ 
+ 		ldo1_reg: regulator@3 {
+ 			/* VRTC 1.8V always-on supply */
++			regulator-name = "vrtc,vdds";
+ 			regulator-always-on;
+ 		};
+ 
+ 		ldo2_reg: regulator@4 {
+ 			/* 3.3V rail */
++			regulator-name = "vdd_3v3aux";
++			regulator-always-on;
+ 		};
+ 
+ 		ldo3_reg: regulator@5 {
+ 			/* VDD_3V3A 3.3V rail */
++			regulator-name = "vdd_3v3a";
+ 			regulator-min-microvolt = <3300000>;
+ 			regulator-max-microvolt = <3300000>;
+ 		};
+ 
+ 		ldo4_reg: regulator@6 {
+ 			/* VDD_3V3B 3.3V rail */
++			regulator-name = "vdd_3v3b";
++			regulator-always-on;
+ 		};
+ 	};
+ };
+-- 
+2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
