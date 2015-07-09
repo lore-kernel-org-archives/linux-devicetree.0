@@ -1,194 +1,121 @@
-From: Sean Paul <seanpaul@chromium.org>
-Subject: Re: [PATCH] backlight: lp855x: use private data for regulator control
-Date: Thu, 9 Jul 2015 09:53:25 -0400
-Message-ID: <CAOw6vbLxNmdyTkzjJLV456Hie0omkanAfZYMu9=JF-4SXNQBgA@mail.gmail.com>
-References: <1435644981-5568-1-git-send-email-milo.kim@ti.com>
- <000701d0b720$fb7a09e0$f26e1da0$@com> <20150706065435.GA3182@x1>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 5/7] tty: 8250: workaround errata on disabling UART after
+ using DMA
+Date: Thu, 9 Jul 2015 19:45:37 +0530
+Message-ID: <559E8209.9080005@ti.com>
+References: <cover.1436174801.git.nsekhar@ti.com> <9f70a47010d019f76b822b60e7d4f512aa4e46d7.1436174801.git.nsekhar@ti.com> <559DCF83.8010703@hurleysoftware.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150706065435.GA3182@x1>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Jingoo Han <jingoohan1@gmail.com>, Milo Kim <milo.kim@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <559DCF83.8010703-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, John Ogness <john.ogness-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 6, 2015 at 2:54 AM, Lee Jones <lee.jones@linaro.org> wrote:
-> On Sun, 05 Jul 2015, Jingoo Han wrote:
->
->> On Tuesday, June 30, 2015 3:16 PM, Milo Kim wrote:
->> >
->> > LP855x backlight device can be enabled by external VDD input.
->> > The 'supply' data is used for this purpose.
->> > It's kind of private data which runs internally, so there is no re=
-ason to
->> > expose to the platform data.
->> >
->> > And LP855x DT property, 'power-supply' is unnecessary.
->> > If a regulator is registered correctly, then lp855x driver can get
->> > regulator resource by using devm_regulator_get().
->> > So devm_regulator_get() is moved from _parse_dt() to _probe().
->> > Ex) The following device tree works without 'power-supply' propert=
-y.
->
-> Even if it's not 'required', I think it would be good to have it in
-> DT, as it describes the hardware, right?
->
+Hi Peter,
 
-Yeah. I think it's common practice to specify regulator input in DT.
+On Thursday 09 July 2015 07:03 AM, Peter Hurley wrote:
+> Hi Sekhar,
+> 
+> Patch title should start "serial: 8250_omap: .." since the patch
+> is specific to the 8250_omap serial driver.
 
-I'd rather this patch was not merged.
+Yes, missed that.
 
-Sean
+> 
+> On 07/06/2015 05:47 AM, Sekhar Nori wrote:
+>> AM335x, AM437x and DRA7x SoCs have an errata due to which UART
+>> cannot be disabled after it has been used with DMA.
+>              ^^^^^^
+>              idled
 
+alright.
 
->> >     i2c0: i2c@10002000 {
->> >             (snip)
->> >
->> >             backlight@2c {
->> >                     compatible =3D "ti,lp8556";
->> >                     reg =3D <0x2c>;
->> >
->> >                     bl-name =3D "lcd-bl";
->> >                     dev-ctrl =3D /bits/ 8 <0x85>;
->> >                     init-brt =3D /bits/ 8 <0x10>;
->> >             };
->> >     };
->> >
->> >     /* 'power' regulator for LP8556 VDD */
->> >     bl_vdd: fixed-regulator@1 {
->> >             compatible =3D "regulator-fixed";
->> >             regulator-name =3D "power";
->> >             regulator-min-microvolt =3D <3300000>;
->> >             regulator-max-microvolt =3D <3300000>;
->> >
->> >             (snip)
->> >     };
->> >
->> > Cc: Sean Paul <seanpaul@chromium.org>
->> > Cc: Jingoo Han <jingoohan1@gmail.com>
->> > Cc: Lee Jones <lee.jones@linaro.org>
->> > Cc: devicetree@vger.kernel.org
->> > Cc: linux-kernel@vger.kernel.org
->> > Signed-off-by: Milo Kim <milo.kim@ti.com>
->>
->> Acked-by: Jingoo Han <jingoohan1@gmail.com>
->>
->> Best regards,
->> Jingoo Han
->>
->> > ---
->> >  .../devicetree/bindings/video/backlight/lp855x.txt   |  2 --
->> >  drivers/video/backlight/lp855x_bl.c                  | 20 +++++++=
-++-----------
->> >  include/linux/platform_data/lp855x.h                 |  2 --
->> >  3 files changed, 9 insertions(+), 15 deletions(-)
->> >
->> > diff --git a/Documentation/devicetree/bindings/video/backlight/lp8=
-55x.txt
->> > b/Documentation/devicetree/bindings/video/backlight/lp855x.txt
->> > index 0a3ecbc..96e83a5 100644
->> > --- a/Documentation/devicetree/bindings/video/backlight/lp855x.txt
->> > +++ b/Documentation/devicetree/bindings/video/backlight/lp855x.txt
->> > @@ -12,7 +12,6 @@ Optional properties:
->> >    - pwm-period: PWM period value. Set only PWM input mode used (u=
-32)
->> >    - rom-addr: Register address of ROM area to be updated (u8)
->> >    - rom-val: Register value to be updated (u8)
->> > -  - power-supply: Regulator which controls the 3V rail
->> >
->> >  Example:
->> >
->> > @@ -57,7 +56,6 @@ Example:
->> >     backlight@2c {
->> >             compatible =3D "ti,lp8557";
->> >             reg =3D <0x2c>;
->> > -           power-supply =3D <&backlight_vdd>;
->> >
->> >             dev-ctrl =3D /bits/ 8 <0x41>;
->> >             init-brt =3D /bits/ 8 <0x0a>;
->> > diff --git a/drivers/video/backlight/lp855x_bl.c b/drivers/video/b=
-acklight/lp855x_bl.c
->> > index a26d3bb..277d5ca 100644
->> > --- a/drivers/video/backlight/lp855x_bl.c
->> > +++ b/drivers/video/backlight/lp855x_bl.c
->> > @@ -73,6 +73,7 @@ struct lp855x {
->> >     struct device *dev;
->> >     struct lp855x_platform_data *pdata;
->> >     struct pwm_device *pwm;
->> > +   struct regulator *supply;       /* regulator for VDD input */
->> >  };
->> >
->> >  static int lp855x_write_byte(struct lp855x *lp, u8 reg, u8 data)
->> > @@ -384,13 +385,6 @@ static int lp855x_parse_dt(struct lp855x *lp)
->> >             pdata->rom_data =3D &rom[0];
->> >     }
->> >
->> > -   pdata->supply =3D devm_regulator_get(dev, "power");
->> > -   if (IS_ERR(pdata->supply)) {
->> > -           if (PTR_ERR(pdata->supply) =3D=3D -EPROBE_DEFER)
->> > -                   return -EPROBE_DEFER;
->> > -           pdata->supply =3D NULL;
->> > -   }
->> > -
->> >     lp->pdata =3D pdata;
->> >
->> >     return 0;
->> > @@ -431,8 +425,12 @@ static int lp855x_probe(struct i2c_client *cl=
-, const struct i2c_device_id *id)
->> >     else
->> >             lp->mode =3D REGISTER_BASED;
->> >
->> > -   if (lp->pdata->supply) {
->> > -           ret =3D regulator_enable(lp->pdata->supply);
->> > +   lp->supply =3D devm_regulator_get(lp->dev, "power");
->> > +   if (IS_ERR(lp->supply))
->> > +           lp->supply =3D NULL;
->> > +
->> > +   if (lp->supply) {
->> > +           ret =3D regulator_enable(lp->supply);
->> >             if (ret < 0) {
->> >                     dev_err(&cl->dev, "failed to enable supply: %d=
-\n", ret);
->> >                     return ret;
->> > @@ -470,8 +468,8 @@ static int lp855x_remove(struct i2c_client *cl=
-)
->> >
->> >     lp->bl->props.brightness =3D 0;
->> >     backlight_update_status(lp->bl);
->> > -   if (lp->pdata->supply)
->> > -           regulator_disable(lp->pdata->supply);
->> > +   if (lp->supply)
->> > +           regulator_disable(lp->supply);
->> >     sysfs_remove_group(&lp->dev->kobj, &lp855x_attr_group);
->> >
->> >     return 0;
->> > diff --git a/include/linux/platform_data/lp855x.h b/include/linux/=
-platform_data/lp855x.h
->> > index 9c7fd1e..1b2ba24 100644
->> > --- a/include/linux/platform_data/lp855x.h
->> > +++ b/include/linux/platform_data/lp855x.h
->> > @@ -136,7 +136,6 @@ struct lp855x_rom_data {
->> >             Only valid when mode is PWM_BASED.
->> >   * @size_program : total size of lp855x_rom_data
->> >   * @rom_data : list of new eeprom/eprom registers
->> > - * @supply : regulator that supplies 3V input
->> >   */
->> >  struct lp855x_platform_data {
->> >     const char *name;
->> > @@ -145,7 +144,6 @@ struct lp855x_platform_data {
->> >     unsigned int period_ns;
->> >     int size_program;
->> >     struct lp855x_rom_data *rom_data;
->> > -   struct regulator *supply;
->> >  };
->> >
->> >  #endif
->>
->
-> --
-> Lee Jones
-> Linaro STMicroelectronics Landing Team Lead
-> Linaro.org =E2=94=82 Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
+> 
+>> OMAP3 has a similar sounding errata which has been worked around
+>> in a2fc36613ac1af2e9 ("ARM: OMAP3: Use manual idle for UARTs
+>> because of DMA errata"). But the workaround used there does not
+>> apply to AM335x, AM437x SoCs.
+> 
+>> These SoCs need a softreset of UART before disabling them.
+> 
+> "The UART module on these SoCs must be soft reset to go idle."
+>  
+>> This patch implements that errata workaround. It is expected that
+>> UART will be used with DMA so no explicit check for DMA usage
+>> has been added for errata applicability.
+> 
+> This changelog should also:
+> 
+> 1. Reference the errata document.
+
+Sure. I added that as comments in code. I can do that in the patch
+description too.
+
+> 2. Explain why SCR register has to be the context loss canary
+>    rather than MDR1.
+
+Okay, will explain that too.
+
+>> @@ -1307,6 +1320,36 @@ static int omap8250_runtime_suspend(struct device *dev)
+>>  			return -EBUSY;
+>>  	}
+>>  
+>> +	if (priv->habit & UART_ERRATA_CLOCK_DISABLE) {
+>> +		int sysc;
+>> +		int syss;
+>> +		int timeout = 100;
+>> +
+>> +		sysc = serial_in(up, UART_OMAP_SYSC);
+>> +
+>> +		/* softreset the UART */
+>> +		sysc |= OMAP_UART_SYSC_SOFTRESET;
+>> +		serial_out(up, UART_OMAP_SYSC, sysc);
+>> +
+>> +		/* By experiments, 1us enough for reset complete on AM335x */
+>> +		do {
+>> +			udelay(1);
+>> +			syss = serial_in(up, UART_OMAP_SYSS);
+>> +		} while (--timeout && !(syss & OMAP_UART_SYSS_RESETDONE));
+> 
+> 
+> If there is not a omap helper function to reset modules, there should be.
+> Open-coding the module reset is not appropriate.
+
+There is work planned to have something implemented for OMAP as part of
+drivers/reset/ API. AFAIK, this depends on some PRCM code clean-up
+affecting multiple OMAP platforms and is couple of merge windows away
+from taking shape.
+
+Meanwhile, I think this is the best we can do. Other drivers like
+i2c-omap have done something similar (see omap_i2c_reset()).
+
+> 
+>> +		if (!timeout) {
+>> +			dev_err(dev, "timed out waiting for reset done\n");
+>> +			return -ETIMEDOUT;
+>> +		}
+>> +
+>> +		/*
+>> +		 * For UART module wake-up to work, MDR1.MODESELECT should
+>> +		 * not be set to "Disable", so update it.
+>> +		 */
+>> +		if (device_may_wakeup(dev))
+>> +			omap8250_update_mdr1(up, priv);
+> 
+> Should this be unconditional?
+
+I do not see it doing any harm if done unconditionally. But it will be
+unnecessary. Unless the UART is being used for wakeup, we don't need
+MDR1 restored at this stage. And omap8250_restore_regs() will eventually
+restore the register anyway.
+
+Thanks,
+Sekhar
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
