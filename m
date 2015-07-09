@@ -1,23 +1,21 @@
 From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v7 23/23] usb: gadget: zero: allocate and init otg descriptor
- by otg capabilities
-Date: Thu, 9 Jul 2015 11:46:35 +0300
-Message-ID: <559E34EB.70305@ti.com>
-References: <1436426340-18477-1-git-send-email-jun.li@freescale.com> <1436426340-18477-24-git-send-email-jun.li@freescale.com>
+Subject: Re: [PATCH v7 08/23] usb: chipidea: set usb otg capabilities
+Date: Thu, 9 Jul 2015 11:47:36 +0300
+Message-ID: <559E3528.60706@ti.com>
+References: <1436426340-18477-1-git-send-email-jun.li@freescale.com> <1436426340-18477-9-git-send-email-jun.li@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1436426340-18477-24-git-send-email-jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+In-Reply-To: <1436426340-18477-9-git-send-email-jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+d-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/07/15 10:19, Li Jun wrote:
-> Allocate and initialize usb otg descriptor according to gadget otg
-> capabilities, add it for each usb configurations. If otg capability
-> is not defined, keep its original otg descriptor unchanged.
+On 09/07/15 10:18, Li Jun wrote:
+> Init and update otg capabilities by DT, set gadget's otg capabilities
+> accordingly.
 > 
 > Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
@@ -27,92 +25,81 @@ cheers,
 -roger
 
 > ---
->  drivers/usb/gadget/legacy/zero.c | 41 ++++++++++++++++++++--------------------
->  1 file changed, 21 insertions(+), 20 deletions(-)
+>  drivers/usb/chipidea/core.c  | 15 +++++++++++++++
+>  drivers/usb/chipidea/udc.c   |  7 ++++++-
+>  include/linux/usb/chipidea.h |  1 +
+>  3 files changed, 22 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/usb/gadget/legacy/zero.c b/drivers/usb/gadget/legacy/zero.c
-> index c986e8a..37a4100 100644
-> --- a/drivers/usb/gadget/legacy/zero.c
-> +++ b/drivers/usb/gadget/legacy/zero.c
-> @@ -121,24 +121,7 @@ static struct usb_device_descriptor device_desc = {
->  	.bNumConfigurations =	2,
->  };
->  
-> -#ifdef CONFIG_USB_OTG
-> -static struct usb_otg_descriptor otg_descriptor = {
-> -	.bLength =		sizeof otg_descriptor,
-> -	.bDescriptorType =	USB_DT_OTG,
-> -
-> -	/* REVISIT SRP-only hardware is possible, although
-> -	 * it would not be called "OTG" ...
-> -	 */
-> -	.bmAttributes =		USB_OTG_SRP | USB_OTG_HNP,
-> -};
-> -
-> -static const struct usb_descriptor_header *otg_desc[] = {
-> -	(struct usb_descriptor_header *) &otg_descriptor,
-> -	NULL,
-> -};
-> -#else
-> -#define otg_desc	NULL
-> -#endif
-> +static const struct usb_descriptor_header *otg_desc[2];
->  
->  /* string IDs are assigned dynamically */
->  /* default serial number takes at least two packets */
-> @@ -341,6 +324,18 @@ static int zero_bind(struct usb_composite_dev *cdev)
->  
->  	/* support OTG systems */
->  	if (gadget_is_otg(cdev->gadget)) {
-> +		if (!otg_desc[0]) {
-> +			struct usb_descriptor_header *usb_desc;
+> diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
+> index 74fea4f..1e6d5f0 100644
+> --- a/drivers/usb/chipidea/core.c
+> +++ b/drivers/usb/chipidea/core.c
+> @@ -560,6 +560,8 @@ static irqreturn_t ci_irq(int irq, void *data)
+>  static int ci_get_platdata(struct device *dev,
+>  		struct ci_hdrc_platform_data *platdata)
+>  {
+> +	int ret;
 > +
-> +			usb_desc = usb_otg_descriptor_alloc(cdev->gadget);
-> +			if (!usb_desc) {
-> +				status = -ENOMEM;
-> +				goto err_conf_flb;
-> +			}
-> +			usb_otg_descriptor_init(cdev->gadget, usb_desc);
-> +			otg_desc[0] = usb_desc;
-> +			otg_desc[1] = NULL;
-> +		}
->  		sourcesink_driver.descriptors = otg_desc;
->  		sourcesink_driver.bmAttributes |= USB_CONFIG_ATT_WAKEUP;
->  		loopback_driver.descriptors = otg_desc;
-> @@ -359,12 +354,12 @@ static int zero_bind(struct usb_composite_dev *cdev)
+>  	if (!platdata->phy_mode)
+>  		platdata->phy_mode = of_usb_get_phy_mode(dev->of_node);
+>  
+> @@ -588,6 +590,19 @@ static int ci_get_platdata(struct device *dev,
+>  				of_usb_host_tpl_support(dev->of_node);
 >  	}
->  	status = usb_add_function(&sourcesink_driver, func_ss);
->  	if (status)
-> -		goto err_conf_flb;
-> +		goto err_free_otg_desc;
 >  
->  	usb_ep_autoconfig_reset(cdev->gadget);
->  	status = usb_add_function(&loopback_driver, func_lb);
->  	if (status)
-> -		goto err_conf_flb;
-> +		goto err_free_otg_desc;
->  
->  	usb_ep_autoconfig_reset(cdev->gadget);
->  	usb_composite_overwrite_options(cdev, &coverwrite);
-> @@ -373,6 +368,9 @@ static int zero_bind(struct usb_composite_dev *cdev)
->  
->  	return 0;
->  
-> +err_free_otg_desc:
-> +	kfree(otg_desc[0]);
-> +	otg_desc[0] = NULL;
->  err_conf_flb:
->  	usb_put_function(func_lb);
->  	func_lb = NULL;
-> @@ -397,6 +395,9 @@ static int zero_unbind(struct usb_composite_dev *cdev)
->  	if (!IS_ERR_OR_NULL(func_lb))
->  		usb_put_function(func_lb);
->  	usb_put_function_instance(func_inst_lb);
-> +	kfree(otg_desc[0]);
-> +	otg_desc[0] = NULL;
+> +	if (platdata->dr_mode == USB_DR_MODE_OTG) {
+> +		/* We can support HNP and SRP of OTG 2.0 */
+> +		platdata->ci_otg_caps.otg_rev = 0x0200;
+> +		platdata->ci_otg_caps.hnp_support = true;
+> +		platdata->ci_otg_caps.srp_support = true;
 > +
->  	return 0;
->  }
+> +		/* Update otg capabilities by DT properties */
+> +		ret = of_usb_update_otg_caps(dev->of_node,
+> +					&platdata->ci_otg_caps);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+>  	if (of_usb_get_maximum_speed(dev->of_node) == USB_SPEED_FULL)
+>  		platdata->flags |= CI_HDRC_FORCE_FULLSPEED;
+>  
+> diff --git a/drivers/usb/chipidea/udc.c b/drivers/usb/chipidea/udc.c
+> index 764f668..b7cca3e 100644
+> --- a/drivers/usb/chipidea/udc.c
+> +++ b/drivers/usb/chipidea/udc.c
+> @@ -1827,6 +1827,7 @@ static irqreturn_t udc_irq(struct ci_hdrc *ci)
+>  static int udc_start(struct ci_hdrc *ci)
+>  {
+>  	struct device *dev = ci->dev;
+> +	struct usb_otg_caps *otg_caps = &ci->platdata->ci_otg_caps;
+>  	int retval = 0;
+>  
+>  	spin_lock_init(&ci->lock);
+> @@ -1834,8 +1835,12 @@ static int udc_start(struct ci_hdrc *ci)
+>  	ci->gadget.ops          = &usb_gadget_ops;
+>  	ci->gadget.speed        = USB_SPEED_UNKNOWN;
+>  	ci->gadget.max_speed    = USB_SPEED_HIGH;
+> -	ci->gadget.is_otg       = ci->is_otg ? 1 : 0;
+>  	ci->gadget.name         = ci->platdata->name;
+> +	ci->gadget.otg_caps	= otg_caps;
+> +
+> +	if (otg_caps->hnp_support || otg_caps->srp_support ||
+> +					otg_caps->adp_support)
+> +		ci->gadget.is_otg = 1;
+>  
+>  	INIT_LIST_HEAD(&ci->gadget.ep_list);
+>  
+> diff --git a/include/linux/usb/chipidea.h b/include/linux/usb/chipidea.h
+> index ab94f78..e10cefc 100644
+> --- a/include/linux/usb/chipidea.h
+> +++ b/include/linux/usb/chipidea.h
+> @@ -34,6 +34,7 @@ struct ci_hdrc_platform_data {
+>  #define CI_HDRC_CONTROLLER_STOPPED_EVENT	1
+>  	void	(*notify_event) (struct ci_hdrc *ci, unsigned event);
+>  	struct regulator	*reg_vbus;
+> +	struct usb_otg_caps	ci_otg_caps;
+>  	bool			tpl_support;
+>  };
 >  
 > 
 --
