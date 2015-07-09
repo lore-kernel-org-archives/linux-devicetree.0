@@ -1,95 +1,60 @@
-From: Stas Sergeev <stsp@list.ru>
-Subject: Re: [PATCH 1/2] of_mdio: add new DT property 'link' for fixed-link
-Date: Thu, 9 Jul 2015 23:43:56 +0300
-Message-ID: <559EDD0C.7020907@list.ru>
-References: <559EB0A4.5080101@list.ru> <559EB1A6.1090008@list.ru>
- <559EBC59.6020003@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <559EBC59.6020003@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Linux kernel <linux-kernel@vger.kernel.org>, Sebastien Rannou <mxs@sbrk.org>, Arnaud Ebalard <arno@natisbad.org>, Stas Sergeev <stsp@users.sourceforge.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, netdev <netdev@vger.kernel.org>
+From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v4 2/2] phy: dt bindings: add NXP LPC18xx/43xx USB OTG PHY bindings
+Date: Thu,  9 Jul 2015 22:48:26 +0200
+Message-ID: <1436474906-2669-3-git-send-email-manabian@gmail.com>
+References: <1436474906-2669-1-git-send-email-manabian@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1436474906-2669-1-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: kishon-l0cyMroinI0@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
+Cc: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-09.07.2015 21:24, Florian Fainelli =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> (there is no such thing as linux-net@vger.kernel.org, please remove i=
-t
-> from your future submissions).
->
-> On 09/07/15 10:38, Stas Sergeev wrote:
->> Currently for fixed-link the link state is always set to UP.
-> Not quite true, this is always a driver decision to make.
-But what about this part of of_mdio.c:of_phy_register_fixed_link():
+Add binding documentation for NXP LPC18xx/43xx USB OTG PHY. This
+PHY can found on NXP LPC18xx and LPC43xx devices with USB support.
+
+Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
+ .../bindings/phy/phy-lpc18xx-usb-otg.txt           | 26 ++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-lpc18xx-usb-otg.txt
 
-  	fixed_link_node =3D of_get_child_by_name(np, "fixed-link");
-  	if (fixed_link_node) {
-		status.link =3D 1
+diff --git a/Documentation/devicetree/bindings/phy/phy-lpc18xx-usb-otg.txt b/Documentation/devicetree/bindings/phy/phy-lpc18xx-usb-otg.txt
+new file mode 100644
+index 000000000000..bd61b467e30a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/phy-lpc18xx-usb-otg.txt
+@@ -0,0 +1,26 @@
++NXP LPC18xx/43xx internal USB OTG PHY binding
++---------------------------------------------
++
++This file contains documentation for the internal USB OTG PHY found
++in NXP LPC18xx and LPC43xx SoCs.
++
++Required properties:
++- compatible	: must be "nxp,lpc1850-usb-otg-phy"
++- clocks	: must be exactly one entry
++See: Documentation/devicetree/bindings/clock/clock-bindings.txt
++- #phy-cells	: must be 0 for this phy
++See: Documentation/devicetree/bindings/phy/phy-bindings.txt
++
++The phy node must be a child of the creg syscon node.
++
++Example:
++creg: syscon@40043000 {
++	compatible = "nxp,lpc1850-creg", "syscon", "simple-mfd";
++	reg = <0x40043000 0x1000>;
++
++	usb0_otg_phy: phy@004 {
++		compatible = "nxp,lpc1850-usb-otg-phy";
++		clocks = <&ccu1 CLK_USB0>;
++		#phy-cells = <0>;
++	};
++};
+-- 
+1.8.0
 
----
-
->> This patch introduces the new property 'link' that accepts the
->> following string arguments: "up", "down" and "auto".
->> "down" may be needed if the link is physically unconnected.
-> In which case you probably do not even care about inserting such a
-> property in the first place, do you? What would be the value of forci=
-bly
-> having a link permanently down (not counting loopback)?
-The DTs have a common parts that are included by other
-parts. So if you include the definition of your SoC that have
-all ethernets defined, and you only set up the external things
-like PHYs, then I would see a potential use for "down".
-Other than that, it is probably not a big deal.
-Please note that I haven't even hard-coded it anywhere:
-whatever is not "up" or "auto", is down.
-I can remove it from the description if you think that way,
-but I'd rather leave it for consistency and for a small but
-possible use. Eg my board has 4 ethernets and only 2 are
-connected. I feel its right to include the SoC definition and
-set the unconnected ones to "down", but other approaches
-are possible too.
-Should I remove it?
-
->> "auto" is needed to enable the link paramaters auto-negotiation,
->> that is built into some MII protocols, namely SGMII.
-> RGMII also has an in-band status FWIW.
-Thanks, will take that into account in v2.
-
->> The appropriate documentation is added and explicitly states that
->> "auto" is very specific (protocol, HW and driver-specific), and
->> is therefore should be used with care.
-> And therefore probably be made a device (and driver) specific decisio=
-n
-> whether this is the right thing to do.
-This doesn't work.
-It appears even if the driver supports it and wants to use it, the
-PHY HW may simply not generate the inband status. This is actually
-the whole point why we have a regression now. It is _currently_
-a driver decision, and that doesn't work for some people.
-The point of this patch set is to make it a DT decision instead.
-
->> -			return -EINVAL;
->> +		if (of_property_read_u32(fixed_link_node, "speed",
->> +					 &status.speed) !=3D 0) {
->> +			/* in auto mode just set to some sane value:
->> +			 * it will be changed by MAC later */
->> +			if (link_auto)
->> +				status.speed =3D 1000;
-> This is a completely arbitrary speed, that does not more or less sens=
-e
-> than defaulting to 100 or anything else,
-Exactly.
-But if I leave it to 0, then fixed-phy driver will return an error,
-so I took an arbitrary value.
-But if it obscures the code, I'll hack fixed-phy to accept 0 instead,
-to get something cleaner. So in v2.
-
->   a driver should be able to set
-> the speed it wants, based on the parsing of a 'phy-mode' property for
-> instance.
-It actually does, that value is just to "cheat" fixed-phy.
-I'll make things more obvious next time.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
