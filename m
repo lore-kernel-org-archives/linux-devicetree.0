@@ -1,60 +1,86 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] clk: mediatek: Add MT8173 MMPLL change rate support
-Date: Wed, 08 Jul 2015 17:46:02 -0700
-Message-ID: <559DC44A.1030900@codeaurora.org>
-References: <1436344666-25645-1-git-send-email-jamesjj.liao@mediatek.com> <1436344666-25645-3-git-send-email-jamesjj.liao@mediatek.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v4 3/5] tee: generic TEE subsystem
+Date: Wed, 8 Jul 2015 17:47:29 -0700
+Message-ID: <20150709004729.GC379@dtor-ws>
+References: <1436350592-7732-1-git-send-email-jens.wiklander@linaro.org>
+ <1436350592-7732-4-git-send-email-jens.wiklander@linaro.org>
+ <20150708171026.GA11740@obsidianresearch.com>
+ <20150708211129.GA29824@kroah.com>
+ <20150708222649.GA20068@obsidianresearch.com>
+ <20150708223325.GA5843@kroah.com>
+ <20150708231612.GB20068@obsidianresearch.com>
+ <20150708235321.GB12393@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1436344666-25645-3-git-send-email-jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Heiko Stubner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150708235321.GB12393@kroah.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Jens Wiklander <jens.wiklander@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, valentin.manea@huawei.com, jean-michel.delorme@st.com, emmanuel.michel@st.com, javier@javigon.com, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On 07/08/2015 01:37 AM, James Liao wrote:
-> diff --git a/drivers/clk/mediatek/clk-pll.c b/drivers/clk/mediatek/clk-pll.c
-> index 68af518..622e7b6 100644
-> --- a/drivers/clk/mediatek/clk-pll.c
-> +++ b/drivers/clk/mediatek/clk-pll.c
-> @@ -138,16 +138,28 @@ static void mtk_pll_calc_values(struct mtk_clk_pll *pll, u32 *pcw, u32 *postdiv,
->  		u32 freq, u32 fin)
->  {
->  	unsigned long fmin = 1000 * MHZ;
-> +	const struct mtk_pll_div_table *div_table = pll->data->div_table;
->  	u64 _pcw;
->  	u32 val;
->  
->  	if (freq > pll->data->fmax)
->  		freq = pll->data->fmax;
->  
-> -	for (val = 0; val < 4; val++) {
-> +	if (div_table) {
-> +		if (freq > div_table[0].freq)
-> +			freq = div_table[0].freq;
-> +
-> +		for (val = 0; div_table[val + 1].freq != 0; val++) {
-> +			if (freq > div_table[val + 1].freq)
-> +				break;
-> +		}
->  		*postdiv = 1 << val;
-> -		if (freq * *postdiv >= fmin)
-> -			break;
-> +	} else {
-> +		for (val = 0; val < 5; val++) {
-> +			*postdiv = 1 << val;
-> +			if ((u64)freq * *postdiv >= fmin)
->
+On Wed, Jul 08, 2015 at 04:53:21PM -0700, Greg Kroah-Hartman wrote:
+> On Wed, Jul 08, 2015 at 05:16:12PM -0600, Jason Gunthorpe wrote:
+> > On Wed, Jul 08, 2015 at 03:33:25PM -0700, Greg Kroah-Hartman wrote:
+> > > > The basic issue is that cdev_del doesn't seem to be synchronizing.
+> > > > 
+> > > > The use after free race is then something like:
+> > > > 
+> > > >    struct tpm_chip {
+> > > >  	struct device dev;
+> > > > 	struct cdev cdev;
+> > > 
+> > > Oops, right there's your problem.  You can't have two reference counted
+> > > objects trying to manage the memory of a single structure.  No matter
+> > > what you do, it's going to be a pain to deal with this, so don't :)
+> > 
+> > Sure, generally, yes, but that isn't done for no reason, it is to make
+> > open straightforward:
+> > 
+> > static int tpm_open(struct inode *inode, struct file *file)
+> > {
+> > 	struct tpm_chip *chip =
+> > 		container_of(inode->i_cdev, struct tpm_chip, cdev);
+> > 
+> > We need to recover the tpm_chip associated with the char device
+> > node, in a way that is holding a kref on it, without racing with
+> > cdev_del/etc
+> > 
+> > This scheme does mean that if we have a struct file we have a kref on
+> > the cdev, and if we have cdev then we have a kref on the tpm_chip,
+> > which is really easy to use properly.
+> > 
+> > > > Ie we need cdev to hold a ref on tpm_chip->dev until cdev_put is
+> > > > called.
+> > > 
+> > > No, separate them, make the cdev a pointer and all should be fine.
+> > 
+> > Okay, cdev_alloc takes care of the cdev lifetime.
+> > 
+> > Do you have a simple solution to replace container_of as well?
+> > 
+> > What would you think about something like:
+> > 
+> >  cdev_alloc(&chip->dev.kref)
+> 
+> Just pick either the cdev to handle the lifetime rules, or the struct
+> device, you'll still need a container_of().  Just don't do both as odds
+> are the lifetime rules is going to get really hard to debug and ensure
+> that everything is correct on the shutdown/release path.
 
-No mention of this cast in the commit text. Is this fixing a bug? If so,
-please mention it and/or split this bug fix off of this patch.
+It is not that simple. The issue is that we need to ensure that cdev
+does not outlive the structure that represents the device, otherwise it
+may disappear while cdev code tries to access it. So we need a way to
+pin the "main" structure in memory until cdev is gone. But as I
+mentioned in [1] cdev is "sealed" and does not give us a way of hooking
+into add/release so that we can try to pin the object we need. And given
+that the main driver model primitive is kobject even if we "unseal" cdev
+everyone will end up doing pretty much what the above commit did.
+
+Thanks.
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Dmitry
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[1] http://www.spinics.net/lists/kernel/msg1421595.html
