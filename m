@@ -1,84 +1,39 @@
-From: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 3/7] tty: 8250: omap: introduce function to update mdr1
-Date: Wed, 08 Jul 2015 20:29:19 -0400
-Message-ID: <559DC05F.9070707@hurleysoftware.com>
-References: <cover.1436174801.git.nsekhar@ti.com> <597e0f4bf4455cb7755851f5c34a02fbdd0d4aeb.1436174801.git.nsekhar@ti.com>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 0/2] Add MT8173 MMPLL change rate support
+Date: Wed, 08 Jul 2015 17:44:31 -0700
+Message-ID: <559DC3EF.90401@codeaurora.org>
+References: <1436344666-25645-1-git-send-email-jamesjj.liao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <597e0f4bf4455cb7755851f5c34a02fbdd0d4aeb.1436174801.git.nsekhar-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1436344666-25645-1-git-send-email-jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, John Ogness <john.ogness-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Heiko Stubner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sekhar,
+On 07/08/2015 01:37 AM, James Liao wrote:
+> MT8173 MMPLL frequency settings are different from common PLLs.
+> It needs different post divider settings for some ranges of frequency.
+> This patch add support for MT8173 MMPLL frequency setting, includes:
+>
+> 1. Add div-rate table for PLLs.
+> 2. Increase the max ost divider setting from 3 (/8) to 4 (/16).
+> 3. Write postdiv and pcw settings at the same time.
+>
+> James Liao (2):
+>   clk: mediatek: Fix PLL registers setting flow
+>   clk: mediatek: Add MT8173 MMPLL change rate support
+>
 
-On 07/06/2015 05:47 AM, Sekhar Nori wrote:
-> updating mdr1 register on OMAP needs to take care of
-> errata i202. Introduce a function to update mdr1.
-> 
-> This will be useful later on when mdr1 needs to be
-> written to from other places. No functional change.
+Are these fixing regressions in 4.2-rc1? I don't see any "Fixes:" tag so
+it's not clear and makes me want to defer these until v4.3. Furthermore,
+the subject starts with "Add" so it sounds like a new feature.
 
-This changelog is not clear. May I suggest:
-
-serial: 8250_omap: Refactor MDR1 update
-
-The errata [1] workaround implemented in follow-on patch,
-"serial: 8250_omap: workaround errata on disabling UART after using DMA",
-requires MDR1 register programming.
-
-Extract MDR1 register update into helper function, omap8250_update_mdr1().
-
-[1] Advisory 21 in http://www.ti.com/lit/er/sprz408b/sprz408b.pdf
-
-
-Regards,
-Peter Hurley
-
-> Signed-off-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-> ---
->  drivers/tty/serial/8250/8250_omap.c | 17 ++++++++++++-----
->  1 file changed, 12 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/tty/serial/8250/8250_omap.c b/drivers/tty/serial/8250/8250_omap.c
-> index 20c5b9c4c288..d9c96b993a84 100644
-> --- a/drivers/tty/serial/8250/8250_omap.c
-> +++ b/drivers/tty/serial/8250/8250_omap.c
-> @@ -232,6 +232,15 @@ static void omap8250_update_scr(struct uart_8250_port *up,
->  	serial_out(up, UART_OMAP_SCR, priv->scr);
->  }
->  
-> +static void omap8250_update_mdr1(struct uart_8250_port *up,
-> +				 struct omap8250_priv *priv)
-> +{
-> +	if (priv->habit & UART_ERRATA_i202_MDR1_ACCESS)
-> +		omap_8250_mdr1_errataset(up, priv);
-> +	else
-> +		serial_out(up, UART_OMAP_MDR1, priv->mdr1);
-> +}
-> +
->  static void omap8250_restore_regs(struct uart_8250_port *up)
->  {
->  	struct omap8250_priv *priv = up->port.private_data;
-> @@ -282,11 +291,9 @@ static void omap8250_restore_regs(struct uart_8250_port *up)
->  	serial_out(up, UART_XOFF1, priv->xoff);
->  
->  	serial_out(up, UART_LCR, up->lcr);
-> -	/* need mode A for FCR */
-> -	if (priv->habit & UART_ERRATA_i202_MDR1_ACCESS)
-> -		omap_8250_mdr1_errataset(up, priv);
-> -	else
-> -		serial_out(up, UART_OMAP_MDR1, priv->mdr1);
-> +
-> +	omap8250_update_mdr1(up, priv);
-> +
->  	up->port.ops->set_mctrl(&up->port, up->port.mctrl);
->  }
->  
-> 
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
