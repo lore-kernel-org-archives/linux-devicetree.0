@@ -1,63 +1,83 @@
-From: Duc Dang <dhdang@apm.com>
-Subject: Re: [PATCH v2 0/2] pci: xgene: Add multiple memory ranges support
-Date: Thu, 9 Jul 2015 14:24:04 -0700
-Message-ID: <CADaLNDmARPFtBUuz0sOKMZDtAzgn3Q03P=ZkHsKDUAPZp6NPVA@mail.gmail.com>
-References: <46305464.n5SOjGAhJb@wuerfel> <cover.1435688121.git.dhdang@apm.com>
- <CADaLNDmpkdHT7B1fSEu9qtoVcj4ookvxh=BA4EUCvG=pp80s=A@mail.gmail.com> <1481643.dA4ocqzitg@wuerfel>
+From: Stas Sergeev <stsp@list.ru>
+Subject: Re: [PATCH 1/2] of_mdio: add new DT property 'link' for fixed-link
+Date: Fri, 10 Jul 2015 00:43:05 +0300
+Message-ID: <559EEAE9.4000806@list.ru>
+References: <559EB0A4.5080101@list.ru> <559EB1A6.1090008@list.ru>
+ <559EBC59.6020003@gmail.com> <559EDD0C.7020907@list.ru>
+ <559EE45C.4040408@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1481643.dA4ocqzitg@wuerfel>
-Sender: linux-pci-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <catalin.marinas@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Will Deacon <will.deacon@arm.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Tanmay Inamdar <tinamdar@apm.com>, patches <patches@apm.com>
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <559EE45C.4040408@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Linux kernel <linux-kernel@vger.kernel.org>, Sebastien Rannou <mxs@sbrk.org>, Arnaud Ebalard <arno@natisbad.org>, Stas Sergeev <stsp@users.sourceforge.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, netdev <netdev@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 9, 2015 at 4:47 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+10.07.2015 00:15, Florian Fainelli =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> On 09/07/15 13:43, Stas Sergeev wrote:
+>> 09.07.2015 21:24, Florian Fainelli =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>> (there is no such thing as linux-net@vger.kernel.org, please remove=
+ it
+>>> from your future submissions).
+>>>
+>>> On 09/07/15 10:38, Stas Sergeev wrote:
+>>>> Currently for fixed-link the link state is always set to UP.
+>>> Not quite true, this is always a driver decision to make.
+>> But what about this part of of_mdio.c:of_phy_register_fixed_link():
+>> ---
+>>
+>>       fixed_link_node =3D of_get_child_by_name(np, "fixed-link");
+>>       if (fixed_link_node) {
+>>          status.link =3D 1
+>>
+>> ---
+> This seems like a logical consequence of finding a "fixed-link" prope=
+rty
+> for the DT node of interest. If no such property exist, then we do no=
+t
+> set anything.
 >
-> On Monday 06 July 2015 16:28:43 Duc Dang wrote:
-> > On Tue, Jun 30, 2015 at 11:22 AM, Duc Dang <dhdang@apm.com> wrote:
-> > > This patch set adds 1 large (up to 64GB) memory window for each PCIe
-> > > controller nodes in X-Gene device tree and fix PCIe controller driver
-> > > to handle multiple memory ranges correctly. These changes are required
-> > > to support PCIe devices that has huge BAR.
-> > >
-> > > v2 changes:
-> > >         1. Separate device-tree changes and driver changes into different
-> > >         patches
-> > >         2. Explicitly define new large window as 64-bit prefetchable in dts
-> > >         3. Use IORESOURCE_PREFETCH flag to determine which PCIe controller
-> > >         register to be used to configure the memory ranges.
-> > >
-> > >  arch/arm64/boot/dts/apm/apm-storm.dtsi | 23 ++++++++++++++---------
-> > >  drivers/pci/host/pci-xgene.c           | 12 ++++++++++--
-> > >  2 files changed, 24 insertions(+), 11 deletions(-)
-> >
-> > Hi Arnd, Bjorn,
-> >
-> > Do you have additional comment on this v2 patch set?
-> >
-> >
->
-> The changes look ok to me now, but I'd mention in the changelog about
-> the fact that one of the windows is prefetchable and the other one
-> is not, and that only prefetchable BARs are now using the 64-bit
-> window.
+>>>> This patch introduces the new property 'link' that accepts the
+>>>> following string arguments: "up", "down" and "auto".
+>>>> "down" may be needed if the link is physically unconnected.
+>>> In which case you probably do not even care about inserting such a
+>>> property in the first place, do you? What would be the value of for=
+cibly
+>>> having a link permanently down (not counting loopback)?
+>> The DTs have a common parts that are included by other
+>> parts. So if you include the definition of your SoC that have
+>> all ethernets defined, and you only set up the external things
+>> like PHYs, then I would see a potential use for "down".
+> "down" is equivalent to using a status =3D "disabled", in fact the la=
+tter
+> is much better since you can even conserve energy and resources by no=
+t
+> enabling something which is not usable.
+OK, agree.
+So I'll probably go for something like
+autoneg =3D 1 | 0;
 
-Thanks, Arnd.
+>> This doesn't work.
+>> It appears even if the driver supports it and wants to use it, the
+>> PHY HW may simply not generate the inband status. This is actually
+>> the whole point why we have a regression now. It is _currently_
+>> a driver decision, and that doesn't work for some people.
+>> The point of this patch set is to make it a DT decision instead.
+> Then, if the in-band status indication is not reliable (which really
+> should be completely understood),
+Agree!
+But this is not something I can help with.
+Sebastien Rannou reports the problem, please ask him whatever
+you see fits to get a better understanding of a problem.
+The fact that his HW does not generate the inband status, is
+_my own guess_.
 
-I posted v3 patch to clarify each PCIe node will have 2 memory windows:
-1 non-prefetchable 32-bit memory window and
-1 prefetchable 64-bit window
-
->
->         Arnd
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
-
--- 
-Regards,
-Duc Dang.
+>   you can just ignore the in-band status
+> and use all the parameter in a 'fixed-link' property, should not we?
+I don't think there is any way at all to find out if the inband stat is
+usable or not. I think only the user (or manufacturer) can decide
+on that. If there is any way to do a guess-work, that would be an
+entirely different story.
