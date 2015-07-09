@@ -1,95 +1,157 @@
-From: <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v3 3/7] Document: dt: binding: imx: update document for imx6ul support
-Date: Fri, 10 Jul 2015 01:16:40 +0800
-Message-ID: <1436462204-32654-4-git-send-email-Frank.Li@freescale.com>
-References: <1436462204-32654-1-git-send-email-Frank.Li@freescale.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH 1/2] of_mdio: add new DT property 'link' for fixed-link
+Date: Thu, 09 Jul 2015 11:24:25 -0700
+Message-ID: <559EBC59.6020003@gmail.com>
+References: <559EB0A4.5080101@list.ru> <559EB1A6.1090008@list.ru>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1436462204-32654-1-git-send-email-Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lznuaa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <559EB1A6.1090008@list.ru>
+Sender: netdev-owner@vger.kernel.org
+To: Stas Sergeev <stsp@list.ru>
+Cc: Linux kernel <linux-kernel@vger.kernel.org>, Sebastien Rannou <mxs@sbrk.org>, Arnaud Ebalard <arno@natisbad.org>, Stas Sergeev <stsp@users.sourceforge.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, netdev <netdev@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+(there is no such thing as linux-net@vger.kernel.org, please remove it
+from your future submissions).
 
-This part just add necessary change to boot imx6ul.
-Update clock and pinctrl for imx6ul
+On 09/07/15 10:38, Stas Sergeev wrote:
+> 
+> Currently for fixed-link the link state is always set to UP.
 
-Signed-off-by: Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- .../devicetree/bindings/clock/imx6ul-clock.txt     | 13 ++++++++
- .../bindings/pinctrl/fsl,imx6ul-pinctrl.txt        | 36 ++++++++++++++++++++++
- 2 files changed, 49 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/imx6ul-clock.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx6ul-pinctrl.txt
+Not quite true, this is always a driver decision to make.
 
-diff --git a/Documentation/devicetree/bindings/clock/imx6ul-clock.txt b/Documentation/devicetree/bindings/clock/imx6ul-clock.txt
-new file mode 100644
-index 0000000..571d503
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/imx6ul-clock.txt
-@@ -0,0 +1,13 @@
-+* Clock bindings for Freescale i.MX6 UltraLite
-+
-+Required properties:
-+- compatible: Should be "fsl,imx6ul-ccm"
-+- reg: Address and length of the register set
-+- #clock-cells: Should be <1>
-+- clocks: list of clock specifiers, must contain an entry for each required
-+  entry in clock-names
-+- clock-names: should include entries "ckil", "osc", "ipp_di0" and "ipp_di1"
-+
-+The clock consumer should specify the desired clock by having the clock
-+ID in its "clocks" phandle cell.  See include/dt-bindings/clock/imx6ul-clock.h
-+for the full list of i.MX6 UltraLite clock IDs.
-diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx6ul-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx6ul-pinctrl.txt
-new file mode 100644
-index 0000000..a81bbf3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx6ul-pinctrl.txt
-@@ -0,0 +1,36 @@
-+* Freescale i.MX6 UltraLite IOMUX Controller
-+
-+Please refer to fsl,imx-pinctrl.txt in this directory for common binding part
-+and usage.
-+
-+Required properties:
-+- compatible: "fsl,imx6ul-iomuxc"
-+- fsl,pins: each entry consists of 6 integers and represents the mux and config
-+  setting for one pin.  The first 5 integers <mux_reg conf_reg input_reg mux_val
-+  input_val> are specified using a PIN_FUNC_ID macro, which can be found in
-+  imx6ul-pinfunc.h under device tree source folder.  The last integer CONFIG is
-+  the pad setting value like pull-up on this pin.  Please refer to i.MX6 UltraLite
-+  Reference Manual for detailed CONFIG settings.
-+
-+CONFIG bits definition:
-+PAD_CTL_HYS                     (1 << 16)
-+PAD_CTL_PUS_100K_DOWN           (0 << 14)
-+PAD_CTL_PUS_47K_UP              (1 << 14)
-+PAD_CTL_PUS_100K_UP             (2 << 14)
-+PAD_CTL_PUS_22K_UP              (3 << 14)
-+PAD_CTL_PUE                     (1 << 13)
-+PAD_CTL_PKE                     (1 << 12)
-+PAD_CTL_ODE                     (1 << 11)
-+PAD_CTL_SPEED_LOW               (0 << 6)
-+PAD_CTL_SPEED_MED               (1 << 6)
-+PAD_CTL_SPEED_HIGH              (3 << 6)
-+PAD_CTL_DSE_DISABLE             (0 << 3)
-+PAD_CTL_DSE_260ohm              (1 << 3)
-+PAD_CTL_DSE_130ohm              (2 << 3)
-+PAD_CTL_DSE_87ohm               (3 << 3)
-+PAD_CTL_DSE_65ohm               (4 << 3)
-+PAD_CTL_DSE_52ohm               (5 << 3)
-+PAD_CTL_DSE_43ohm               (6 << 3)
-+PAD_CTL_DSE_37ohm               (7 << 3)
-+PAD_CTL_SRE_FAST                (1 << 0)
-+PAD_CTL_SRE_SLOW                (0 << 0)
+> This patch introduces the new property 'link' that accepts the
+> following string arguments: "up", "down" and "auto".
+> "down" may be needed if the link is physically unconnected.
+
+In which case you probably do not even care about inserting such a
+property in the first place, do you? What would be the value of forcibly
+having a link permanently down (not counting loopback)?
+
+> "auto" is needed to enable the link paramaters auto-negotiation,
+> that is built into some MII protocols, namely SGMII.
+
+RGMII also has an in-band status FWIW.
+
+> The appropriate documentation is added and explicitly states that
+> "auto" is very specific (protocol, HW and driver-specific), and
+> is therefore should be used with care.
+
+And therefore probably be made a device (and driver) specific decision
+whether this is the right thing to do.
+
+I do no think this addition to the "fixed-link" property is desirable
+the way you have defined it.
+
+More comments below.
+
+> 
+> Signed-off-by: Stas Sergeev <stsp@users.sourceforge.net>
+> 
+> CC: Rob Herring <robh+dt@kernel.org>
+> CC: Pawel Moll <pawel.moll@arm.com>
+> CC: Mark Rutland <mark.rutland@arm.com>
+> CC: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> CC: Kumar Gala <galak@codeaurora.org>
+> CC: Florian Fainelli <f.fainelli@gmail.com>
+> CC: Grant Likely <grant.likely@linaro.org>
+> CC: devicetree@vger.kernel.org
+> CC: linux-kernel@vger.kernel.org
+> CC: netdev@vger.kernel.org
+> ---
+>  .../devicetree/bindings/net/fixed-link.txt         |  8 +++-
+>  drivers/of/of_mdio.c                               | 48 ++++++++++++++++++++--
+>  include/linux/of_mdio.h                            |  5 +++
+>  3 files changed, 57 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/fixed-link.txt b/Documentation/devicetree/bindings/net/fixed-link.txt
+> index 82bf7e0..070f554 100644
+> --- a/Documentation/devicetree/bindings/net/fixed-link.txt
+> +++ b/Documentation/devicetree/bindings/net/fixed-link.txt
+> @@ -9,8 +9,14 @@ Such a fixed link situation is described by creating a 'fixed-link'
+>  sub-node of the Ethernet MAC device node, with the following
+>  properties:
+> 
+> +* 'link' (string, optional), to indicate the link state. Accepted
+> +  values are "up", "down" and "auto". "auto" means auto-negotiation of
+> +  link parameters. Auto-negotiation is MII protocol, HW and driver-specific
+> +  and is not supported in many cases, so use it only when you know what
+> +  you do.
+>  * 'speed' (integer, mandatory), to indicate the link speed. Accepted
+> -  values are 10, 100 and 1000
+> +  values are 10, 100 and 1000. If the 'link' property is set to 'auto',
+> +  'speed' may not be set. It will then be auto-negotiated, if possible.
+>  * 'full-duplex' (boolean, optional), to indicate that full duplex is
+>    used. When absent, half duplex is assumed.
+>  * 'pause' (boolean, optional), to indicate that pause should be
+> diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+> index 1bd4305..2152cf8 100644
+> --- a/drivers/of/of_mdio.c
+> +++ b/drivers/of/of_mdio.c
+> @@ -280,6 +280,26 @@ bool of_phy_is_fixed_link(struct device_node *np)
+>  }
+>  EXPORT_SYMBOL(of_phy_is_fixed_link);
+> 
+> +bool of_phy_is_autoneg_link(struct device_node *np)
+> +{
+> +	struct device_node *dn;
+> +	const char *link_str;
+> +	int rc;
+> +	bool ret = false;
+> +
+> +	dn = of_get_child_by_name(np, "fixed-link");
+> +	if (!dn)
+> +		return false;
+> +
+> +	rc = of_property_read_string(dn, "link", &link_str);
+> +	if (rc == 0 && strcmp(link_str, "auto") == 0)
+> +		ret = true;
+> +
+> +	of_node_put(dn);
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL(of_phy_is_autoneg_link);
+> +
+>  int of_phy_register_fixed_link(struct device_node *np)
+>  {
+>  	struct fixed_phy_status status = {};
+> @@ -291,11 +311,33 @@ int of_phy_register_fixed_link(struct device_node *np)
+>  	/* New binding */
+>  	fixed_link_node = of_get_child_by_name(np, "fixed-link");
+>  	if (fixed_link_node) {
+> -		status.link = 1;
+> +		const char *link_str;
+> +		int ret;
+> +		bool link_auto = false;
+> +
+> +		ret = of_property_read_string(fixed_link_node, "link",
+> +					      &link_str);
+> +		if (ret == 0) {
+> +			if (strcmp(link_str, "up") == 0)
+> +				status.link = 1;
+> +			else
+> +				status.link = 0;
+> +			if (strcmp(link_str, "auto") == 0)
+> +				link_auto = true;
+> +		} else {
+> +			status.link = 1;
+> +		}
+>  		status.duplex = of_property_read_bool(fixed_link_node,
+>  						      "full-duplex");
+> -		if (of_property_read_u32(fixed_link_node, "speed", &status.speed))
+> -			return -EINVAL;
+> +		if (of_property_read_u32(fixed_link_node, "speed",
+> +					 &status.speed) != 0) {
+> +			/* in auto mode just set to some sane value:
+> +			 * it will be changed by MAC later */
+> +			if (link_auto)
+> +				status.speed = 1000;
+
+This is a completely arbitrary speed, that does not more or less sense
+than defaulting to 100 or anything else, a driver should be able to set
+the speed it wants, based on the parsing of a 'phy-mode' property for
+instance. 1000 does not make sense on e.g: MII links.
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Florian
