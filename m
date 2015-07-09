@@ -1,59 +1,83 @@
-From: Andy Gross <agross@codeaurora.org>
-Subject: Re: [PATCH v2 01/11] soc: qcom: Add device tree binding for SMEM
-Date: Wed, 8 Jul 2015 22:50:00 -0500
-Message-ID: <20150709035000.GA10151@qualcomm.com>
-References: <1435355419-23602-1-git-send-email-bjorn.andersson@sonymobile.com>
- <1435355419-23602-2-git-send-email-bjorn.andersson@sonymobile.com>
- <559DB8B2.2090202@codeaurora.org>
+From: Daniel Kurtz <djkurtz@chromium.org>
+Subject: Re: [PATCH v4 1/3] dt-bindings: pwm: add MediaTek display PWM bindings
+Date: Thu, 9 Jul 2015 12:47:46 +0800
+Message-ID: <CAGS+omAZismuEYXsUkHEAec4xF+KRWm62AuCUmrmso6p+DKQ4Q@mail.gmail.com>
+References: <1436189368-1826-1-git-send-email-yh.huang@mediatek.com>
+ <1436189368-1826-2-git-send-email-yh.huang@mediatek.com> <CAGS+omAWNwk_PRy-eeC4bgHQ-ZC2Kvh0sqpF47VD1sfJOhHWUw@mail.gmail.com>
+ <1436409944.4915.6.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <559DB8B2.2090202@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: bjorn@kryo.se, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jeffrey Hugo <jhugo@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <1436409944.4915.6.camel@mtksdaap41>
+Sender: linux-pwm-owner@vger.kernel.org
+To: YH Huang <yh.huang@mediatek.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, linux-pwm@vger.kernel.org, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, srv_heupstream <srv_heupstream@mediatek.com>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Yingjoe Chen <yingjoe.chen@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 08, 2015 at 04:56:34PM -0700, Stephen Boyd wrote:
-> On 06/26/2015 02:50 PM, bjorn@kryo.se wrote:
-> > += EXAMPLE
-> > +The following example shows the SMEM setup for MSM8974, with a main SMEM region
-> > +at 0xfa00000 and an auxiliary region at 0xfc428000:
-> > +
-> > +	reserved-memory {
-> > +		#address-cells = <1>;
-> > +		#size-cells = <1>;
-> > +		ranges;
-> > +
-> > +		smem_region: smem@fa00000 {
-> > +			reg = <0xfa00000 0x200000>;
-> > +			no-map;
-> > +		};
-> > +	};
-> > +
-> > +	smem@fa00000 {
-> 
-> This should be smem@fc428000 matching the first reg property. It's weird
-> though, because if smem is using a secondary region it will be under the
-> SoC node and have a reg property. Otherwise it would be directly under
-> the root node and only have a memory-region. It would be nice if we
-> could somehow move the rpm message ram (0xfc428000) into the
-> reserved-memory node so that we could use memory-region for both regions.
+On Thu, Jul 9, 2015 at 10:45 AM, YH Huang <yh.huang@mediatek.com> wrote:
+>
+> On Wed, 2015-07-08 at 20:11 +0800, Daniel Kurtz wrote:
+> > On Mon, Jul 6, 2015 at 9:29 PM, YH Huang <yh.huang@mediatek.com> wrote:
+> > > Document the device-tree binding of MediatTek display PWM.
+> > > The PWM has one channel to control the backlight brightness for display.
+> > > It supports MT8173 and MT6595.
+> > >
+> > > Signed-off-by: YH Huang <yh.huang@mediatek.com>
+> > > ---
+> > >  .../devicetree/bindings/pwm/pwm-mtk-disp.txt       | 24 ++++++++++++++++++++++
+> > >  1 file changed, 24 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt b/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
+> > > new file mode 100644
+> > > index 0000000..757b974
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
+> > > @@ -0,0 +1,24 @@
+> > > +MediaTek display PWM controller
+> > > +
+> > > +Required properties:
+> > > + - compatible: should be "mediatek,<name>-disp-pwm"
+> > > +   - "mediatek,mt8173-disp-pwm": found on mt8173 SoC
+> > > +   - "mediatek,mt6595-disp-pwm": found on mt6595 SoC
+> > > + - reg: physical base address and length of the controller's registers
+> > > + - #pwm-cells: must be 2. See pwm.txt in this directory for a description of
+> > > +   the cell format
+> > > + - clocks: phandle and clock specifier of the PWM reference clock
+> > > + - clock-names: must contain the following
+> > > +   - "main": clock used to generate PWM signals
+> > > +   - "mm": sync signals from the modules of mmsys
+> > > +
+> > > +Example:
+> > > +       pwm0: pwm@1401e000 {
+> > > +               compatible = "mediatek,mt8173-disp-pwm",
+> > > +                            "mediatek,mt6595-disp-pwm";
+> > > +               reg = <0 0x1401e000 0 0x1000>;
+> > > +               #pwm-cells = <2>;
+> > > +               clocks = <&mmsys CLK_MM_DISP_PWM026M>,
+> > > +                        <&mmsys CLK_MM_DISP_PWM0MM>;
+> > > +               clock-names = "main", "mm";
+> >
+> > Should we include the pinctrl settings here to enable the PWM output?
+> >
+>
+> Since we use pwm-backlight driver to control backlight, we should enable
+> PWM output in the backlight node.
+>
+> Ref:
+> https://www.kernel.org/doc/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
+>
 
-The memory-region is just used to describe 'real' memory.  The RPM message is IO
-memory and part of the SOC.  Thats my take at least.
+The pwm-backlight binding specifies which pwm the backlight driver
+should use, and how to use it.
 
-> 
-> > +		compatible = "qcom,smem";
-> > +
-> > +		memory-region = <&smem_region>;
-> > +		reg = <0xfc428000 0x4000>;
-> > +
-> > +		hwlocks = <&tcsr_mutex 3>;
-> > +	};
+I believe actually configuring the output pin for the pwm via pinctl
+belongs to the pwm binding.
 
--- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Regards,
+0Dan
+
+>
+> Regards,
+> YH Huang
+>
