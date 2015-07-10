@@ -1,76 +1,54 @@
-From: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v7 3/9] nvmem: Add nvmem_device based consumer apis.
-Date: Fri, 10 Jul 2015 03:49:25 -0700
-Message-ID: <1436525365.24866.36.camel@perches.com>
-References: <1436521427-10568-1-git-send-email-srinivas.kandagatla@linaro.org>
-	 <1436521505-10779-1-git-send-email-srinivas.kandagatla@linaro.org>
+From: Stas Sergeev <stsp-cmBhpYW9OiY@public.gmane.org>
+Subject: Re: [PATCH 1/2] of_mdio: add new DT property 'link' for fixed-link
+Date: Fri, 10 Jul 2015 14:20:17 +0300
+Message-ID: <559FAA71.2030209@list.ru>
+References: <559EB0A4.5080101@list.ru> <559EB1A6.1090008@list.ru> <559EBC59.6020003@gmail.com> <559EDD0C.7020907@list.ru> <559EE45C.4040408@gmail.com> <559EEAE9.4000806@list.ru> <alpine.LNX.2.02.1507100940530.15010@sbrk.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1436521505-10779-1-git-send-email-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, stefan.wahren-eS4NqCHxEME@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <alpine.LNX.2.02.1507100940530.15010-i6rsG8ix9II@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastien Rannou <mxs-i6rsG8ix9II@public.gmane.org>
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Stas Sergeev <stsp-Rn4VEauK+AKRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2015-07-10 at 10:45 +0100, Srinivas Kandagatla wrote:
-> This patch adds read/write apis which are based on nvmem_device.
+10.07.2015 11:46, Sebastien Rannou =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> On Fri, 10 Jul 2015, Stas Sergeev wrote:
+>=20
+>> 10.07.2015 00:15, Florian Fainelli =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>> Then, if the in-band status indication is not reliable (which reall=
+y
+>>> should be completely understood),
+>> Agree!
+>> But this is not something I can help with.
+>> Sebastien Rannou reports the problem, please ask him whatever
+>> you see fits to get a better understanding of a problem.
+>> The fact that his HW does not generate the inband status, is
+>> _my own guess_.
+>=20
+> Yes, I confirm that my HW does not generate an in-band status. AFAIK,=
+ it's
+> a PHY that aggregates 4xSGMIIs to 1xQSGMII ; the MAC side of the PHY =
+(with
+> inband status) is connected to the switch through QSGMII, and in this=
+ context
+> we are on the media side of the PHY.
+Hmm, interesting.
+So if I parse the above correctly, you have something like 88E1340S set
+up into a mode when SGMII is used as media interface and QSGMII as syst=
+em
+interface (terms are from datasheet page 5), then you connect the media
+interface to armada-xp and system interface to the switch.
 
-More trivia:
-
-> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-
-> +static struct nvmem_device *nvmem_find(const char *name)
-> +{
-> +	struct device *d;
-> +
-> +	d = bus_find_device(&nvmem_bus_type, NULL, (void *)name, nvmem_match);
-> +
-> +	return d ? to_nvmem_device(d) : NULL;
-
-Maybe:
-	d = bus_find_device(...);
-	if (!d)
-		return NULL;
-
-	return to_nvmem_device(d);
-
-> +struct nvmem_device *of_nvmem_device_get(struct device_node *np, const char *id)
-> +{
-[]
-> +	return __nvmem_device_get(nvmem_np, NULL, NULL);
-> +
-
-odd blank line
-> +}
-> +EXPORT_SYMBOL_GPL(of_nvmem_device_get);
-
-> +struct nvmem_device *nvmem_device_get(struct device *dev, const char *dev_name)
-> +{
-[]
-> +	return nvmem_find(dev_name);
-> +
-
-here too
-
-> +}
-> +EXPORT_SYMBOL_GPL(nvmem_device_get);
-
-[]
-
-> +void devm_nvmem_device_put(struct device *dev, struct nvmem_device *nvmem)
-> +{
-> +	int ret;
-> +
-> +	ret = devres_release(dev, devm_nvmem_device_release,
-> +			     devm_nvmem_device_match, nvmem);
-> +
-> +	WARN_ON(ret);
-> +
-
-Last unnecessary blank line I'll mention
-(it seems to be the last one anyway)
-
-> +}
-> +EXPORT_SYMBOL_GPL(devm_nvmem_device_put);
+I wonder if it is the right thing to do.
+AFAIK you could as well set up armada-xp into QSGMII mode and connect
+that to switch. The driver would then disable the use of inband status
+and everything would be fine.
+Either way, your use-case proves that only DT can decide the use of an
+inband status.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
