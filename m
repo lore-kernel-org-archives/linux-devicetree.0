@@ -1,93 +1,30 @@
-From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Subject: Re: [PATCH v2 01/12] device: property: delay device-driver matches
-Date: Fri, 10 Jul 2015 13:39:48 +0200
-Message-ID: <CAAObsKA_B38EaS4uNaFUmpQ+Kr0Jq3CqAegLpYX=vr9e6nNgBw@mail.gmail.com>
-References: <1435743667-11987-1-git-send-email-tomeu.vizoso@collabora.com>
- <1435743667-11987-2-git-send-email-tomeu.vizoso@collabora.com>
- <17310138.6IxCgARibq@vostro.rjw.lan>
+From: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] mfd: ax20x: Add axp152 support
+Date: Fri, 10 Jul 2015 13:50:40 +0200
+Message-ID: <CAOMqctRTgfvn9E9=dk5GR6Koy23wfRY4y5vqtSaZ+8vovTQ35w@mail.gmail.com>
+References: <1436527717-28062-1-git-send-email-hdegoede@redhat.com> <1436527717-28062-2-git-send-email-hdegoede@redhat.com>
+Reply-To: hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <17310138.6IxCgARibq@vostro.rjw.lan>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-fbdev@vger.kernel.org, alsa-devel@alsa-project.org, linux-gpio@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, linux-acpi@vger.kernel.org, Mark Brown <broonie@kernel.org>, Linux PWM List <linux-pwm@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCQMLUOX54MBBOHD72WAKGQEG7VMR6I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1436527717-28062-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMiBKdWx5IDIwMTUgYXQgMDE6MjksIFJhZmFlbCBKLiBXeXNvY2tpIDxyandAcmp3eXNvY2tp
-Lm5ldD4gd3JvdGU6Cj4gT24gV2VkbmVzZGF5LCBKdWx5IDAxLCAyMDE1IDExOjQwOjU2IEFNIFRv
-bWV1IFZpem9zbyB3cm90ZToKPj4gRGVsYXkgbWF0Y2hlcyBvZiBwbGF0Zm9ybSBkZXZpY2VzIHVu
-dGlsIGxhdGVfaW5pdGNhbGwsIHdoZW4gd2UgYXJlIHN1cmUKPj4gdGhhdCBhbGwgYnVpbHQtaW4g
-ZHJpdmVycyBoYXZlIGJlZW4gcmVnaXN0ZXJlZCBhbHJlYWR5LiBUaGlzIGlzIG5lZWRlZAo+PiB0
-byBwcmV2ZW50IGRlZmVycmVkIHByb2JlcyBiZWNhdXNlIG9mIHNvbWUgZGVwZW5kZW5jaWVzJyBk
-cml2ZXJzIG5vdAo+PiBoYXZpbmcgcmVnaXN0ZXJlZCB5ZXQuCj4+Cj4+IFRoaXMgcmVkdWNlcyB0
-aGUgdG90YWwgYW1vdW50IG9mIHdvcmsgdGhhdCB0aGUga2VybmVsIGRvZXMgZHVyaW5nIGJvb3QK
-Pj4gYmVjYXVzZSBpdCB3b24ndCB0cnkgdG8gbWF0Y2ggZGV2aWNlcyB0byBkcml2ZXJzIHdoZW4g
-YnVpbHQtaW4gZHJpdmVycwo+PiBhcmUgc3RpbGwgcmVnaXN0ZXJpbmcgYnV0IGFsc28gcmVkdWNl
-cyBzb21lIHBhcmFsbGVsaXNtLCBzbyB0b3RhbCBib290Cj4+IHRpbWUgbWlnaHQgc2xpZ2h0bHkg
-aW5jcmVhc2Ugb3IgZGVjcmVhc2UgZGVwZW5kaW5nIG9uIHRoZSBwbGF0Zm9ybSBhbmQKPj4ga2Vy
-bmVsIGNvbmZpZ3VyYXRpb24uCj4+Cj4+IFRoaXMgY2hhbmdlIHdpbGwgbWFrZSBtYWtlIHBvc3Np
-YmxlIHRvIHByZXZlbnQgYW55IGRlZmVycmVkIHByb2JlcyBvbmNlCj4+IGRldmljZXMgYXJlIHBy
-b2JlZCBpbiBkZXBlbmRlbmN5IG9yZGVyLgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBUb21ldSBWaXpv
-c28gPHRvbWV1LnZpem9zb0Bjb2xsYWJvcmEuY29tPgo+PiAtLS0KPj4KPj4gQ2hhbmdlcyBpbiB2
-MjoKPj4gLSBJbnN0ZWFkIG9mIGRlbGF5aW5nIGFsbCBwcm9iZXMgdW50aWwgbGF0ZV9pbml0Y2Fs
-bCwgb25seSBkZWxheSBtYXRjaGVzCj4+ICAgb2YgcGxhdGZvcm0gZGV2aWNlcyB0aGF0IGhhdmUg
-YSBmaXJtd2FyZSBub2RlIGF0dGFjaGVkLgo+Pgo+PiAgZHJpdmVycy9iYXNlL3Byb3BlcnR5LmMg
-fCAyOSArKysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+PiAgMSBmaWxlIGNoYW5nZWQsIDI5
-IGluc2VydGlvbnMoKykKPj4KPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvYmFzZS9wcm9wZXJ0eS5j
-IGIvZHJpdmVycy9iYXNlL3Byb3BlcnR5LmMKPj4gaW5kZXggODUyOGViOS4uOGVhZDFiYSAxMDA2
-NDQKPj4gLS0tIGEvZHJpdmVycy9iYXNlL3Byb3BlcnR5LmMKPj4gKysrIGIvZHJpdmVycy9iYXNl
-L3Byb3BlcnR5LmMKPj4gQEAgLTE2LDggKzE2LDExIEBACj4+ICAjaW5jbHVkZSA8bGludXgvb2Yu
-aD4KPj4gICNpbmNsdWRlIDxsaW51eC9vZl9hZGRyZXNzLmg+Cj4+ICAjaW5jbHVkZSA8bGludXgv
-b2ZfZGV2aWNlLmg+Cj4+ICsjaW5jbHVkZSA8bGludXgvcGxhdGZvcm1fZGV2aWNlLmg+Cj4+ICAj
-aW5jbHVkZSA8bGludXgvcHJvcGVydHkuaD4KPj4KPj4gK3N0YXRpYyBib29sIGZ3bm9kZV9tYXRj
-aF9lbmFibGUgPSBmYWxzZTsKPj4gKwo+PiAgLyoqCj4+ICAgKiBkZXZpY2VfYWRkX3Byb3BlcnR5
-X3NldCAtIEFkZCBhIGNvbGxlY3Rpb24gb2YgcHJvcGVydGllcyB0byBhIGRldmljZSBvYmplY3Qu
-Cj4+ICAgKiBAZGV2OiBEZXZpY2UgdG8gYWRkIHByb3BlcnRpZXMgdG8uCj4+IEBAIC02MDQsNiAr
-NjA3LDE1IEBAIEVYUE9SVF9TWU1CT0xfR1BMKGZ3bm9kZV9pc19jb21wYXRpYmxlKTsKPj4gIGJv
-b2wgZndub2RlX2RyaXZlcl9tYXRjaF9kZXZpY2Uoc3RydWN0IGRldmljZSAqZGV2LAo+PiAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICBjb25zdCBzdHJ1Y3QgZGV2aWNlX2RyaXZlciAqZHJ2
-KQo+PiAgewo+PiArICAgICAvKgo+PiArICAgICAgKiBEZWxheSBtYXRjaGVzIG9mIHBsYXRmb3Jt
-IGRldmljZXMgdW50aWwgbGF0ZV9pbml0Y2FsbCwgd2hlbiB3ZSBhcmUKPj4gKyAgICAgICogc3Vy
-ZSB0aGF0IGFsbCBidWlsdC1pbiBkcml2ZXJzIGhhdmUgYmVlbiByZWdpc3RlcmVkIGFscmVhZHku
-IFRoaXMKPj4gKyAgICAgICogaXMgbmVlZGVkIHRvIHByZXZlbnQgZGVmZXJyZWQgcHJvYmVzIGJl
-Y2F1c2Ugb2Ygc29tZSBkcml2ZXJzCj4+ICsgICAgICAqIG5vdCBoYXZpbmcgcmVnaXN0ZXJlZCB5
-ZXQuCj4+ICsgICAgICAqLwo+PiArICAgICBpZihkZXYtPmJ1cyA9PSAmcGxhdGZvcm1fYnVzX3R5
-cGUgJiYgIWZ3bm9kZV9tYXRjaF9lbmFibGUpCj4+ICsgICAgICAgICAgICAgcmV0dXJuIGZhbHNl
-Owo+Cj4gSSdtIG5vdCBwYXJ0aWN1bGFybHkgZW50aHVzaWFzdGljIGFib3V0IHJlZmVycmluZyB0
-byBzcGVjaWZpYyBidXMgdHlwZXMgaW4KPiBnZW5lcmljIGNvZGUgbGlrZSB0aGF0LgoKQWdyZWVk
-LgoKPiBXaGF0IGFib3V0IGhhdmluZyBhIHNwZWNpYWwgdmVyc2lvbiBvZiBmd25vZGVfZHJpdmVy
-X21hdGNoX2RldmljZSgpIHNwZWNpZmljYWxseQo+IGZvciB0aGUgcGxhdGZvcm0gYnVzIHR5cGUg
-dGhhdCB3aWxsIGRvIHRoZSBjaGVjaz8KCkhhdmUgbW92ZWQgYWxsIHRoaXMgY29kZSB0byBiYXNl
-L3BsYXRmb3JtLmMgaW5zdGVhZCwgYXMgSSBkb24ndCBzZWUKYW55IHJlYXNvbiB0byBoYXZlIGl0
-IGluIHByb3BlcnR5LmMuCgpUaGFua3MsCgpUb21ldQoKPj4gKwo+PiAgICAgICBpZiAoaXNfb2Zf
-bm9kZShkZXYtPmZ3bm9kZSkpCj4+ICAgICAgICAgICAgICAgcmV0dXJuIG9mX2RyaXZlcl9tYXRj
-aF9kZXZpY2UoZGV2LCBkcnYpOwo+PiAgICAgICBlbHNlIGlmIChpc19hY3BpX25vZGUoZGV2LT5m
-d25vZGUpKQo+PiBAQCAtNjEyLDMgKzYyNCwyMCBAQCBib29sIGZ3bm9kZV9kcml2ZXJfbWF0Y2hf
-ZGV2aWNlKHN0cnVjdCBkZXZpY2UgKmRldiwKPj4gICAgICAgcmV0dXJuIGZhbHNlOwo+PiAgfQo+
-PiAgRVhQT1JUX1NZTUJPTF9HUEwoZndub2RlX2RyaXZlcl9tYXRjaF9kZXZpY2UpOwo+PiArCj4+
-ICtzdGF0aWMgaW50IF9fZGV2aWNlX2F0dGFjaChzdHJ1Y3QgZGV2aWNlICpkZXYsIHZvaWQgKmRh
-dGEpCj4+ICt7Cj4+ICsgICAgIGRldmljZV9pbml0aWFsX3Byb2JlKGRldik7Cj4+ICsKPj4gKyAg
-ICAgcmV0dXJuIDA7Cj4+ICt9Cj4+ICsKPj4gK3N0YXRpYyBpbnQgZndub2RlX21hdGNoX2luaXRj
-YWxsKHZvaWQpCj4+ICt7Cj4+ICsgICAgIGZ3bm9kZV9tYXRjaF9lbmFibGUgPSB0cnVlOwo+PiAr
-Cj4+ICsgICAgIGJ1c19mb3JfZWFjaF9kZXYoJnBsYXRmb3JtX2J1c190eXBlLCBOVUxMLCBOVUxM
-LCBfX2RldmljZV9hdHRhY2gpOwo+PiArCj4+ICsgICAgIHJldHVybiAwOwo+PiArfQo+PiArbGF0
-ZV9pbml0Y2FsbChmd25vZGVfbWF0Y2hfaW5pdGNhbGwpOwo+Pgo+Cj4gLS0KPiBJIHNwZWFrIG9u
-bHkgZm9yIG15c2VsZi4KPiBSYWZhZWwgSi4gV3lzb2NraSwgSW50ZWwgT3BlbiBTb3VyY2UgVGVj
-aG5vbG9neSBDZW50ZXIuCj4gLS0KPiBUbyB1bnN1YnNjcmliZSBmcm9tIHRoaXMgbGlzdDogc2Vu
-ZCB0aGUgbGluZSAidW5zdWJzY3JpYmUgbGludXgta2VybmVsIiBpbgo+IHRoZSBib2R5IG9mIGEg
-bWVzc2FnZSB0byBtYWpvcmRvbW9Admdlci5rZXJuZWwub3JnCj4gTW9yZSBtYWpvcmRvbW8gaW5m
-byBhdCAgaHR0cDovL3ZnZXIua2VybmVsLm9yZy9tYWpvcmRvbW8taW5mby5odG1sCj4gUGxlYXNl
-IHJlYWQgdGhlIEZBUSBhdCAgaHR0cDovL3d3dy50dXgub3JnL2xrbWwvCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
-ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Hello,
+
+I see missing 'p' in axp20x in the subject u.u
+
+Please fix before merging this anywhere.
+
+Thanks
+
+Michal
