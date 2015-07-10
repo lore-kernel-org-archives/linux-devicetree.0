@@ -1,143 +1,108 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v7 4/9] nvmem: Add bindings for simple nvmem framework
-Date: Fri, 10 Jul 2015 14:04:29 -0500
-Message-ID: <CAL_JsqKYT-+T=D=TKCb1TcydOvBTE8_yc-EEe1cwdmhr1B0dHQ@mail.gmail.com>
-References: <1436521427-10568-1-git-send-email-srinivas.kandagatla@linaro.org> <1436521513-10838-1-git-send-email-srinivas.kandagatla@linaro.org>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] Store PCIe controllers address in struct of_pci_range
+Date: Fri, 10 Jul 2015 14:56:01 -0500
+Message-ID: <CAL_JsqJA9WEWK+ywv7ou+88U3cQ7z6GHDTDjxOxRC9X4_K88FQ@mail.gmail.com>
+References: <1436518099-98633-1-git-send-email-gabriele.paoloni@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1436521513-10838-1-git-send-email-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1436518099-98633-1-git-send-email-gabriele.paoloni@huawei.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Gabriele Paoloni <gabriele.paoloni@huawei.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, wangzhou1@hisilicon.com, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, james.morse@arm.com, Liviu Dudau <Liviu.Dudau@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, yuanzhichang@hisilicon.com, zhudacai@hisilicon.com, zhangjukuo@huawei.com, qiuzhenfa@hisilicon.com, liguozhu@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 10, 2015 at 4:45 AM, Srinivas Kandagatla
-<srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> This patch adds bindings for simple nvmem framework which allows nvmem
-> consumers to talk to nvmem providers to get access to nvmem cell data.
+On Fri, Jul 10, 2015 at 3:48 AM, Gabriele Paoloni
+<gabriele.paoloni@huawei.com> wrote:
+> From: gabriele paoloni <gabriele.paoloni@huawei.com>
 >
-> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> [Maxime Ripard: intial version of eeprom framework]
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> This patch is needed port PCIe designware to new DT parsing API
+> As discussed in
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-January/317743.html
+> in designware we have a problem as the PCI addresses in the PCIe controller
+> address space are required in order to perform correct HW operation.
+>
+> In order to solve this problem commit
+> f4c55c5a3f7f68c06cc559ed7af8b2d017cbb0a7 "PCI: designware:
+
+Please abbreviate hashs to 12 characters.
+
+> Program ATU with untranslated address" added code to read the PCIe
+> controller start address directly from the DT ranges.
+>
+> In the new DT parsing API of_pci_get_host_bridge_resources() hides the
+> DT parser from the host controller drivers, so it is not possible
+> for drivers to parse values directly from the DT.
+>
+> In http://www.spinics.net/lists/linux-pci/msg42540.html we already tried
+> to use the new DT parsing API but there is a bug (obviously) in setting
+> the <*>_mod_base addresses
+> Applying this patch we can easily set "<*>_mod_base = win->__res.start"
+>
+> This patch adds a new field in "struct of_pci_range" to store the
+> pci controller start address; it fills the field in of_pci_range_parser_one();
+> in of_pci_get_host_bridge_resources() it retrieve the resource entry
+> after it is created and added to the resource list and uses
+> entry->__res.start to store the pci controller address
+>
+> the patch is based on 4.2-rc1
+>
+> Signed-off-by: Gabriele Paoloni <gabriele.paoloni@huawei.com>
 > ---
->  Documentation/devicetree/bindings/nvmem/nvmem.txt | 85 +++++++++++++++++++++++
->  1 file changed, 85 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/nvmem/nvmem.txt
+>  drivers/of/address.c               | 1 +
+>  drivers/of/of_pci.c                | 4 ++++
+>  drivers/pci/host/pcie-designware.c | 9 +++------
+>  include/linux/of_address.h         | 1 +
+>  4 files changed, 9 insertions(+), 6 deletions(-)
 >
-> diff --git a/Documentation/devicetree/bindings/nvmem/nvmem.txt b/Documentation/devicetree/bindings/nvmem/nvmem.txt
-> new file mode 100644
-> index 0000000..849f1e1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/nvmem/nvmem.txt
-> @@ -0,0 +1,85 @@
-> += NVMEM(Non Volatile Memory) Data Device Tree Bindings =
-> +
-> +This binding is intended to represent the location of hardware
-> +configuration data stored in NVMEMs like eeprom, efuses and so on.
-> +
-> +On a significant proportion of boards, the manufacturer has stored
-> +some data on NVMEM, for the OS to be able to retrieve these information
-> +and act upon it. Obviously, the OS has to know about where to retrieve
-> +these data from, and where they are stored on the storage device.
-> +
-> +This document is here to document this.
-> +
-> += Data providers =
-> +Contains bindings specific to provider drivers and data cells as children
-> +of this node.
+> diff --git a/drivers/of/address.c b/drivers/of/address.c
+> index 8bfda6a..52f9321 100644
+> --- a/drivers/of/address.c
+> +++ b/drivers/of/address.c
+> @@ -265,6 +265,7 @@ struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
+>         range->pci_addr = of_read_number(parser->range + 1, ns);
+>         range->cpu_addr = of_translate_address(parser->node,
+>                                 parser->range + na);
+> +       range->pci_ctrl_addr = of_read_number(parser->range + na, ns);
 
-#address-cells and #size-cells are required here.
+This is wrong as the correct size to read is not "ns", but the parent
+bus #size-cells value.
 
-> +
-> +Optional properties:
-> + read-only: Mark the provider as read only.
+I think "bus_addr" would be a better name. It is not the PCI
+controller's address (i.e. what is in reg prop). No "pci" because it
+has nothing to do with PCI bus addresses.
 
-Couldn't this be per field rather than global?
+In general, this seems fragile as the dt address ranges/translation
+may not align with the h/w ranges. For example, what if you have 2
+levels of translations and you happen to need it translated with just
+1 level of translation. That said, I don't really have a better
+suggestion and I guess we can deal with that case if needed later.
 
-> +
-> += Data cells =
-> +These are the child nodes of the provider which contain data cell
-> +information like offset and size in nvmem provider.
-> +
-> +Required properties:
-> +reg:   specifies the offset in byte within that storage device, start bit
-> +       in the byte and the length in bytes of the data we care about.
-> +       There could be more than one offset-length pairs in this property.
-> +
-> +Optional properties:
-> +
-> +bit-offset: specifies the offset in bit within the address range specified
-> +       by reg property. Can take values from 0-7.
-> +nbits: specifies number of bits this cell occupies starting from bit-offset.
-
-How about just: "bits = <<offset> <size>>"
-
-Then the bit specification is more aligned with the byte location
-(i.e. reg property).
-
-You could also do this all in the reg property with 2 address cells
-for byte and bit position and then size can be in bits. reg doesn't
-have to match a memory mapped bus addressing meanings. If you wanted
-to handle ranges and address translation, then you would need custom
-functions like PCI does. I'm not sure you would need that.
-
-> +
-> +For example:
-> +
-> +       /* Provider */
-> +       qfprom: qfprom@00700000 {
-> +               ...
-> +
-> +               /* Data cells */
-> +               tsens_calibration: calib@404 {
-> +                       reg = <0x404 0x10>;
-> +               };
-> +
-> +               tsens_calibration_bckp: calib_bckp@504 {
-> +                       reg = <0x504 0x11>;
-> +                       bit-offset = 6;
-> +                       nbits = 128;
-> +               };
-> +
-> +               pvs_version: pvs-version@6 {
-> +                       reg = <0x6 0x2>
-> +                       bit-offset = 7;
-> +                       nbits = 2;
-> +               };
-> +
-> +               speed_bin: speed-bin@c{
-> +                       reg = <0xc 0x1>;
-> +                       bit-offset = 2;
-> +                       nbits   = 3;
-> +
-> +               };
-> +               ...
-> +       };
-> +
-> += Data consumers =
-> +Are device nodes which consume nvmem data cells/providers.
-> +
-> +Required-properties:
-> +nvmem-cells: list of phandle to the nvmem data cells.
-> +nvmem-cell-names: names for the each nvmem-cells specified. Required if
-> +       nvmem-cells is used.
-> +
-> +Optional-properties:
-> +nvmem  : list of phandles to nvmem providers.
-> +nvmem-names: names for the each nvmem provider. required if nvmem is used.
-> +
-> +For example:
-> +
-> +       tsens {
-> +               ...
-> +               nvmem-cells = <&tsens_calibration>;
-> +               nvmem-cell-names = "calibration";
-> +       };
-> --
-> 1.9.1
+>         range->size = of_read_number(parser->range + parser->pna + na, ns);
 >
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>         parser->range += parser->np;
+> diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
+> index 5751dc5..2ccc749 100644
+> --- a/drivers/of/of_pci.c
+> +++ b/drivers/of/of_pci.c
+> @@ -198,6 +198,7 @@ int of_pci_get_host_bridge_resources(struct device_node *dev,
+>
+>         pr_debug("Parsing ranges property...\n");
+>         for_each_of_pci_range(&parser, &range) {
+> +               struct resource_entry *entry;
+>                 /* Read next ranges element */
+>                 if ((range.flags & IORESOURCE_TYPE_BITS) == IORESOURCE_IO)
+>                         snprintf(range_type, 4, " IO");
+> @@ -240,6 +241,9 @@ int of_pci_get_host_bridge_resources(struct device_node *dev,
+>                 }
+>
+>                 pci_add_resource_offset(resources, res, res->start - range.pci_addr);
+> +               entry = list_last_entry(resources, struct resource_entry, node);
+> +               /*we are using __res for storing the PCI controller address*/
+> +               entry->__res.start = range.pci_ctrl_addr;
+
+You will use this in a follow-up patch? I'd like to see this just
+split into core changes and DW changes. This looks like you are making
+intermediate DW changes which will be removed in subsequent patches.
+
+Rob
