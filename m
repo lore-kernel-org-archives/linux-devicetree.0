@@ -1,48 +1,56 @@
-From: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH-v3 04/11] i2c: pxa: Remove compile warnning in 64bit mode
-Date: Fri, 10 Jul 2015 18:31:48 +0530
-Message-ID: <559FC23C.1040400@linaro.org>
-References: <1436210695-19159-1-git-send-email-vaibhav.hiremath@linaro.org> <1436210695-19159-5-git-send-email-vaibhav.hiremath@linaro.org> <20150710081327.GC1528@katana>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150710081327.GC1528@katana>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Yipeng Yao <ypyao-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH 1/5] [media] tc358743: register v4l2 asynchronous subdevice
+Date: Fri, 10 Jul 2015 15:11:33 +0200
+Message-ID: <1436533897-3060-1-git-send-email-p.zabel@pengutronix.de>
+Return-path: <linux-media-owner@vger.kernel.org>
+Sender: linux-media-owner@vger.kernel.org
+To: Mats Randgaard <matrandg@cisco.com>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, Philipp Zabel <p.zabel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
+Add support for registering the sensor subdevice using the v4l2-async API.
 
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+---
+ drivers/media/i2c/tc358743.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-On Friday 10 July 2015 01:43 PM, Wolfram Sang wrote:
-> On Tue, Jul 07, 2015 at 12:54:48AM +0530, Vaibhav Hiremath wrote:
->> From: Yipeng Yao <ypyao-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
->>
->> Fix below warning message, coming from 64 bit toolchain.
->>
->> drivers/i2c/busses/i2c-pxa.c:1237:15: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
->>
->> Signed-off-by: Yipeng Yao <ypyao-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
->> [vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org: Updated Changelog]
->> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
->> Acked-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
->
-> Huh? Why long? Shouldn't that be casted to enum pxa_i2c_types?
->
-
-My bad.
-Indeed it can be (and should be) enum pxa_i2c_types.
-
-Will wait to close on the discussion on slave mode patch PATCH [02/11]
-before pushing V4.
-
-
-Thanks,
-Vaibhav
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/media/i2c/tc358743.c b/drivers/media/i2c/tc358743.c
+index 34d4f32..48d1575 100644
+--- a/drivers/media/i2c/tc358743.c
++++ b/drivers/media/i2c/tc358743.c
+@@ -1710,6 +1710,16 @@ static int tc358743_probe(struct i2c_client *client,
+ 		goto err_hdl;
+ 	}
+ 
++	state->pad.flags = MEDIA_PAD_FL_SOURCE;
++	err = media_entity_init(&sd->entity, 1, &state->pad, 0);
++	if (err < 0)
++		goto err_hdl;
++
++	sd->dev = &client->dev;
++	err = v4l2_async_register_subdev(sd);
++	if (err < 0)
++		goto err_hdl;
++
+ 	mutex_init(&state->confctl_mutex);
+ 
+ 	INIT_DELAYED_WORK(&state->delayed_work_enable_hotplug,
+@@ -1740,6 +1750,7 @@ err_work_queues:
+ 	destroy_workqueue(state->work_queues);
+ 	mutex_destroy(&state->confctl_mutex);
+ err_hdl:
++	media_entity_cleanup(&sd->entity);
+ 	v4l2_ctrl_handler_free(&state->hdl);
+ 	return err;
+ }
+@@ -1751,6 +1762,7 @@ static int tc358743_remove(struct i2c_client *client)
+ 
+ 	cancel_delayed_work(&state->delayed_work_enable_hotplug);
+ 	destroy_workqueue(state->work_queues);
++	v4l2_async_unregister_subdev(sd);
+ 	v4l2_device_unregister_subdev(sd);
+ 	mutex_destroy(&state->confctl_mutex);
+ 	v4l2_ctrl_handler_free(&state->hdl);
+-- 
+2.1.4
