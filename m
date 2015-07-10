@@ -1,81 +1,48 @@
 From: Jianwei Wang <jianwei.wang@freescale.com>
-Subject: [PATCH v6 3/4] arm/dts/ls1021a: Add DCU dts node
-Date: Fri, 10 Jul 2015 15:26:54 +0800
-Message-ID: <1436513215-43423-3-git-send-email-jianwei.wang@freescale.com>
+Subject: [PATCH v6 4/4] arm/dts/ls1021a: Add a TFT LCD panel dts node
+Date: Fri, 10 Jul 2015 15:26:55 +0800
+Message-ID: <1436513215-43423-4-git-send-email-jianwei.wang@freescale.com>
 References: <1436513215-43423-1-git-send-email-jianwei.wang@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1436513215-43423-1-git-send-email-jianwei.wang@freescale.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: dri-devel@lists.freedesktop.org
-Cc: devicetree@vger.kernel.org, Xiubo Li <lixiubo@cmss.chinamobile.com>, daniel.vetter@ffwll.ch, Alison Wang <b18965@freescale.com>, linux-kernel@vger.kernel.org, scottwood@freescale.com, Jianwei Wang <jianwei.wang@freescale.com>, linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, airlied@linux.ie, daniel.vetter@ffwll.ch, mark.yao@rock-chips.com, scottwood@freescale.com, Jianwei Wang <jianwei.wang@freescale.com>, Alison Wang <b18965@freescale.com>, Xiubo Li <lixiubo@cmss.chinamobile.com>
 List-Id: devicetree@vger.kernel.org
 
-QWRkIERDVSBub2RlLCBEQ1UgaXMgYSBkaXNwbGF5IGNvbnRyb2xsZXIgb2YgRnJlZXNjYWxlCm5h
-bWVkIDJELUFDRS4KClNpZ25lZC1vZmYtYnk6IEFsaXNvbiBXYW5nIDxiMTg5NjVAZnJlZXNjYWxl
-LmNvbT4KU2lnbmVkLW9mZi1ieTogWGl1Ym8gTGkgPGxpeGl1Ym9AY21zcy5jaGluYW1vYmlsZS5j
-b20+ClNpZ25lZC1vZmYtYnk6IEppYW53ZWkgV2FuZyA8amlhbndlaS53YW5nQGZyZWVzY2FsZS5j
-b20+Ci0tLQogLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZHJtL2ZzbC1kY3UvZnNsLGRjdS50eHQg
-ICAgfCA0OSArKysrKysrKysrKysrKysrKysrKysrCiBNQUlOVEFJTkVSUyAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAxICsKIGFyY2gvYXJtL2Jvb3QvZHRzL2xzMTAy
-MWEuZHRzaSAgICAgICAgICAgICAgICAgICAgIHwgMTAgKysrKysKIDMgZmlsZXMgY2hhbmdlZCwg
-NjAgaW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9kcm0vZnNsLWRjdS9mc2wsZGN1LnR4dAoKZGlmZiAtLWdpdCBhL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0vZnNsLWRjdS9mc2wsZGN1LnR4dCBiL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0vZnNsLWRjdS9mc2wsZGN1LnR4dApu
-ZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwLi5kNjU2MzFkCi0tLSAvZGV2L251bGwK
-KysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RybS9mc2wtZGN1L2ZzbCxk
-Y3UudHh0CkBAIC0wLDAgKzEsNDkgQEAKK0RldmljZSBUcmVlIGJpbmRpbmdzIGZvciBGcmVlc2Nh
-bGUgRENVIERSTSBEcml2ZXIKKworUmVxdWlyZWQgcHJvcGVydGllczoKKy0gY29tcGF0aWJsZTog
-ICAgICAgICAgIFNob3VsZCBiZSBvbmUgb2YKKwkqICJmc2wsbHMxMDIxYS1kY3UiLgorCSogImZz
-bCx2ZjYxMC1kY3UiLgorLSByZWc6ICAgICAgICAgICAgICAgICAgQWRkcmVzcyBhbmQgbGVuZ3Ro
-IG9mIHRoZSByZWdpc3RlciBzZXQgZm9yIGRjdS4KKy0gY2xvY2tzOiAgICAgICAgICAgICAgIEZy
-b20gY29tbW9uIGNsb2NrIGJpbmRpbmc6IGhhbmRsZSB0byBkY3UgY2xvY2suCistIGNsb2NrLW5h
-bWVzOiAgICAgICAgICBGcm9tIGNvbW1vbiBjbG9jayBiaW5kaW5nOiBTaGFsbCBiZSAiZGN1Ii4K
-Ky0gZGlzcGxheTogICAgICAgICAgICAgIFRoZSBwaGFuZGxlIHRvIGRpc3BsYXkgbm9kZS4KKwor
-UmVxdWlyZWQgcHJvcGVydGllczoKKy0gYml0cy1wZXItcGl4ZWw6ICAgICAgIDwxNj4gZm9yIFJH
-QjU2NSwKKwkJCTwyND4gZm9yIFJHQjg4OCwKKwkJCTwzMj4gZm9yIFJHQjg4ODguCisKK1JlcXVp
-cmVkIHRpbWluZyBub2RlIGZvciBkaXNwcGxheSBzdWItbm9kZToKKy0gZGlzcGxheS10aW1pbmdz
-OiAgICAgIFJlZmVyIHRvIGJpbmRpbmcgZG9jIGRpc3BsYXktdGltaW5nLnR4dCBmb3IgZGV0YWls
-cy4KKworRXhhbXBsZXM6CitkY3U6IGRjdUAyY2UwMDAwIHsKKwljb21wYXRpYmxlID0gImZzbCxs
-czEwMjFhLWRjdSI7CisJcmVnID0gPDB4MCAweDJjZTAwMDAgMHgwIDB4MTAwMDA+OworCWNsb2Nr
-cyA9IDwmcGxhdGZvcm1fY2xrIDA+OworCWNsb2NrLW5hbWVzID0gImRjdSI7CisJYmlnLWVuZGlh
-bjsKKwlkaXNwbGF5ID0gPCZkaXNwbGF5PjsKKworCWRpc3BsYXk6IGRpc3BsYXlAMCB7CisJCWJp
-dHMtcGVyLXBpeGVsID0gPDI0PjsKKworCQlkaXNwbGF5LXRpbWluZ3MgeworCQkJbmF0aXZlLW1v
-ZGUgPSA8JnRpbWluZzA+OworCQkJdGltaW5nMDogbmw0ODI3aGMxOSB7CisJCQkJY2xvY2stZnJl
-cXVlbmN5ID0gPDEwODcwMDAwPjsKKwkJCQloYWN0aXZlID0gPDQ4MD47CisJCQkJdmFjdGl2ZSA9
-IDwyNzI+OworCQkJCWhiYWNrLXBvcmNoID0gPDI+OworCQkJCWhmcm9udC1wb3JjaCA9IDwyPjsK
-KwkJCQl2YmFjay1wb3JjaCA9IDwxPjsKKwkJCQl2ZnJvbnQtcG9yY2ggPSA8MT47CisJCQkJaHN5
-bmMtbGVuID0gPDQxPjsKKwkJCQl2c3luYy1sZW4gPSA8Mj47CisJCQkJaHN5bmMtYWN0aXZlID0g
-PDE+OworCQkJCXZzeW5jLWFjdGl2ZSA9IDwxPjsKKwkJCX07CisJCX07CisJfTsKK307CmRpZmYg
-LS1naXQgYS9NQUlOVEFJTkVSUyBiL01BSU5UQUlORVJTCmluZGV4IDkwNDdjMmIuLmI4ZDZlZjUg
-MTAwNjQ0Ci0tLSBhL01BSU5UQUlORVJTCisrKyBiL01BSU5UQUlORVJTCkBAIC0zNDEwLDYgKzM0
-MTAsNyBAQCBNOglBbGlzb24gV2FuZyA8YWxpc29uLndhbmdAZnJlZXNjYWxlLmNvbT4KIEw6CWRy
-aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKIFM6CVN1cHBvcnRlZAogRjoJZHJpdmVycy9n
-cHUvZHJtL2ZzbC1kY3UvCitGOglEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZHJt
-L2ZzbC1kY3UvCiBGOglEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGFuZWwvbmVj
-LG5sNDgyN2hjMTlfMDViLnR4dAogCiBEUk0gRFJJVkVSUyBGT1IgTlZJRElBIFRFR1JBCmRpZmYg
-LS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9sczEwMjFhLmR0c2kgYi9hcmNoL2FybS9ib290L2R0
-cy9sczEwMjFhLmR0c2kKaW5kZXggYzcwYmIyNy4uNmQ2ZTNlMiAxMDA2NDQKLS0tIGEvYXJjaC9h
-cm0vYm9vdC9kdHMvbHMxMDIxYS5kdHNpCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2xzMTAyMWEu
-ZHRzaQpAQCAtMzgzLDYgKzM4MywxNiBAQAogCQkJCSA8JnBsYXRmb3JtX2NsayAxPjsKIAkJfTsK
-IAorCQlkY3U6IGRjdUAyY2UwMDAwIHsKKwkJCWNvbXBhdGlibGUgPSAiZnNsLGxzMTAyMWEtZGN1
-IjsKKwkJCXJlZyA9IDwweDAgMHgyY2UwMDAwIDB4MCAweDEwMDAwPjsKKwkJCWludGVycnVwdHMg
-PSA8R0lDX1NQSSAxNzIgSVJRX1RZUEVfTEVWRUxfSElHSD47CisJCQljbG9ja3MgPSA8JnBsYXRm
-b3JtX2NsayAwPjsKKwkJCWNsb2NrLW5hbWVzID0gImRjdSI7CisJCQliaWctZW5kaWFuOworCQkJ
-c3RhdHVzID0gImRpc2FibGVkIjsKKwkJfTsKKwogCQltZGlvMDogbWRpb0AyZDI0MDAwIHsKIAkJ
-CWNvbXBhdGlibGUgPSAiZ2lhbmZhciI7CiAJCQlkZXZpY2VfdHlwZSA9ICJtZGlvIjsKLS0gCjIu
-MS4wLjI3Lmc5NmRiMzI0CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
-cC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
-ZXZlbAo=
+Add a TFT LCD panel node. the TFT LCD panel is
+WQVGA "480x272", and the bpp is 24.
+
+Signed-off-by: Alison Wang <b18965@freescale.com>
+Signed-off-by: Xiubo Li <lixiubo@cmss.chinamobile.com>
+Signed-off-by: Jianwei Wang <jianwei.wang@freescale.com>
+---
+ arch/arm/boot/dts/ls1021a-twr.dts | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/arch/arm/boot/dts/ls1021a-twr.dts b/arch/arm/boot/dts/ls1021a-twr.dts
+index a2c591e..f6ad7ba 100644
+--- a/arch/arm/boot/dts/ls1021a-twr.dts
++++ b/arch/arm/boot/dts/ls1021a-twr.dts
+@@ -56,6 +56,17 @@
+ 		enet0_sgmii_phy = &sgmii_phy2;
+ 		enet1_sgmii_phy = &sgmii_phy0;
+ 	};
++
++	panel: panel {
++		compatible = "nec,nl4827hc19_05b";
++	};
++
++};
++
++&dcu {
++	panel = <&panel>;
++	status = "okay";
++
+ };
+ 
+ &dspi1 {
+-- 
+2.1.0.27.g96db324
