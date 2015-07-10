@@ -1,117 +1,70 @@
-From: Gabriele Paoloni <gabriele.paoloni@huawei.com>
-Subject: RE: [PATCH v3 2/5] PCI: designware: Add ARM64 support
-Date: Fri, 10 Jul 2015 08:53:45 +0000
-Message-ID: <EE11001F9E5DDD47B7634E2F8A612F2E01D568F4@lhreml503-mbs>
-References: <1435743817-19083-1-git-send-email-wangzhou1@hisilicon.com>
- <1435743817-19083-3-git-send-email-wangzhou1@hisilicon.com>
- <EE11001F9E5DDD47B7634E2F8A612F2E01D4E4BB@lhreml503-mbs>
- <5593F899.6050306@arm.com> <559B4B0E.4060004@hisilicon.com>
+From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 2/2] clk: mediatek: Add clk_null to be the dummy root clock
+ for MT8173
+Date: Fri, 10 Jul 2015 17:16:03 +0800
+Message-ID: <1436519763-3195-3-git-send-email-jamesjj.liao@mediatek.com>
+References: <1436519763-3195-1-git-send-email-jamesjj.liao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <559B4B0E.4060004@hisilicon.com>
-Content-Language: en-US
-Sender: linux-pci-owner@vger.kernel.org
-To: "Wangzhou (B)" <wangzhou1@hisilicon.com>, James Morse <james.morse@arm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jg1.han@samsung.com>, Pratyush Anand <pratyush.anand@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Liviu Dudau <Liviu.Dudau@arm.com>, "kishon@ti.com" <kishon@ti.com>, "xobs@kosagi.com" <xobs@kosagi.com>, "m-karicheri2@ti.com" <m-karicheri2@ti.com>, "Minghuan.Lian@freescale.com" <Minghuan.Lian@freescale.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Yuanzhichang <yuanzhichang@hisilicon.com>, Zhudacai <zhudacai@hisilicon.com>, zhangjukuo <zhangjukuo@huawei.com>, qiuzhenfa <qiuzhenfa@hisilicon.com>, "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1436519763-3195-1-git-send-email-jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Heiko Stubner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SSBoYXZlIGp1c3Qgc2VudCB0aGlzIHBhdGNoICJbUEFUQ0hdIFN0b3JlIFBDSWUgY29udHJvbGxl
-cnMgYWRkcmVzcyBpbiBzdHJ1Y3Qgb2ZfcGNpX3JhbmdlIi4NCg0KSXQgd291bGQgYmUgbmVlZGVk
-IGJ5ICJwY2llX2Rlc2lnbndhcmUuYyIgdG8gcmV0cmlldmUgdGhlIFBDSSBjb250cm9sbGVyIGFk
-ZHJlc3NlcyBmcm9tICJ3aW4tPl9fcmVzLnN0YXJ0Ii4NCg0KU28gd2UgZG8gbm90IG5lZWQgdG8g
-cmV0cmlldmUgaW5mbyBmcm9tIHRoZSBEVCBwYXJzZXIgYW55bW9yZSBhbmQgd2UgY2FuIHVzZSB0
-aGUgbmV3IFBDSSBEVCBwYXJzaW5nIEFQSQ0KDQpUaGlzIHByb2JsZW0gd2FzIGFscmVhZHkgZGlz
-Y3Vzc2VkIGluIHRoaXMgdGhyZWFkOg0KaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvcGlwZXJt
-YWlsL2xpbnV4LWFybS1rZXJuZWwvMjAxNS1KYW51YXJ5LzMxNzc0My5odG1sDQoNCg0KPiAtLS0t
-LU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBXYW5nemhvdSAoQikNCj4gU2VudDogVHVl
-c2RheSwgSnVseSAwNywgMjAxNSA0OjQ0IEFNDQo+IFRvOiBKYW1lcyBNb3JzZQ0KPiBDYzogR2Fi
-cmllbGUgUGFvbG9uaTsgQmpvcm4gSGVsZ2FhczsgSmluZ29vIEhhbjsgUHJhdHl1c2ggQW5hbmQ7
-IEFybmQNCj4gQmVyZ21hbm47IExpdml1IER1ZGF1OyBraXNob25AdGkuY29tOyB4b2JzQGtvc2Fn
-aS5jb207IG0tDQo+IGthcmljaGVyaTJAdGkuY29tOyBNaW5naHVhbi5MaWFuQGZyZWVzY2FsZS5j
-b207IGxpbnV4LQ0KPiBwY2lAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3Rz
-LmluZnJhZGVhZC5vcmc7DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBZdWFuemhpY2hh
-bmc7IFpodWRhY2FpOyB6aGFuZ2p1a3VvOw0KPiBxaXV6aGVuZmE7IExpZ3Vvemh1IChLZW5uZXRo
-KQ0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYzIDIvNV0gUENJOiBkZXNpZ253YXJlOiBBZGQgQVJN
-NjQgc3VwcG9ydA0KPiANCj4gT24gMjAxNS83LzEgMjI6MjYsIEphbWVzIE1vcnNlIHdyb3RlOg0K
-PiA+IFpob3UgV2FuZyB3cm90ZToNCj4gPj4gSSB0ZXN0ZWQgdGhpcyBwYXRjaCBvbiBEMDIgYm9h
-cmQgb2YgSGlzaWxpY29uLiBJdCB3b3JrcyB3ZWxsLg0KPiA+PiBJIGhhdmUgY29tcGlsZWQgdGhl
-IGRyaXZlciB3aXRoIG11bHRpX3Y3X2RlZmNvbmZpZy4gSG93ZXZlciwgSSBkb24ndA0KPiA+PiBo
-YXZlDQo+ID4+IEFSTTMyIFBDSWUgcmVsYXRlZCBib2FyZCB0byBkbyB0ZXN0LiBJdCB3aWxsIGJl
-IGFwcHJlY2lhdGVkIGlmDQo+IHNvbWVvbmUNCj4gPj4gY291bGQNCj4gPj4gaGVscCB0byB0ZXN0
-IGl0Lg0KPiA+Pg0KPiA+PiBTaWduZWQtb2ZmLWJ5OiBaaG91IFdhbmcgPHdhbmd6aG91MUBoaXNp
-bGljb24uY29tPg0KPiA+PiBTaWduZWQtb2ZmLWJ5OiBBcm5kIEJlcmdtYW5uIDxhcm5kQGFybmRi
-LmRlPg0KPiA+PiBTaWduZWQtb2ZmLWJ5OiBHYWJyaWVsZSBQYW9sb25pIDxnYWJyaWVsZS5wYW9s
-b25pQGh1YXdlaS5jb20+DQo+ID4+IFRlc3RlZC1ieTogRmFicmljZSBHYXNuaWVyIDxmYWJyaWNl
-Lmdhc25pZXJAc3QuY29tPg0KPiA+PiBUZXN0ZWQtYnk6IEphbWVzIE1vcnNlIDxqYW1lcy5tb3Jz
-ZUBhcm0uY29tPg0KPiA+DQo+ID4gVGVzdHMgb24gdGhpcyBuZXcgc2VyaWVzLCB1c2luZyB0aGUg
-c2FtZSBpLk1YIDZRdWFkIGJvYXJkLCBhcmUgbm90DQo+IHdvcmtpbmcuDQo+ID4NCj4gPiBUaGUg
-bmV0d29yayBjYXJkIGlzIG5vIGxvbmdlciBkZXRlY3RlZCwgYW5kIEkgZ2V0IGEgbG9ja3VwIHdo
-ZW4NCj4gcmVtb3ZpbmcNCj4gPiB0aGUgcm9vdCBicmlkZ2UgYW5kIHJlc2Nhbm5pbmcuDQo+ID4N
-Cj4gPiBQYXJ0aWFsIGRtZXNnIG91dHB1dCBiZWxvdy4gU2lnbmlmaWNhbnRseSwgdGhlIGxpbmVz
-Og0KPiA+PiBbICAgIDAuMTUyMTI4XSBQQ0kgaG9zdCBicmlkZ2UgL3NvYy9wY2llQDB4MDEwMDAw
-MDAgcmFuZ2VzOg0KPiA+PiBbICAgIDAuMTUyMTQyXSAgIE5vIGJ1cyByYW5nZSBmb3VuZCBmb3Ig
-L3NvYy9wY2llQDB4MDEwMDAwMDAsIHVzaW5nDQo+IFtidXMNCj4gPiAwMC1mZl0NCj4gPiBhcmUg
-bmV3Lg0KPiA+DQo+ID4gQm90aCBzZXJpZXMgYXJlIGFwcGxpZWQgdG8gdjQuMSwgdXNlIHRoZSBz
-YW1lIC5jb25maWcgZmlsZSwgYW5kIHRoZQ0KPiBzYW1lIGR0Yi4NCj4gPiBJIHdpbGwgaW52ZXN0
-aWdhdGUgZnVydGhlci4NCj4gPg0KPiA+IChSZS10ZXN0aW5nIHYyIHdvcmtzLCBzbyB0aGlzIGlz
-bid0IGFuIGludGVyaW0gaGFyZHdhcmUgZmFpbHVyZSkNCj4gPg0KPiA+IFRoYW5rcywNCj4gPg0K
-PiA+IEphbWVzDQo+ID4NCj4gDQo+IEhpIEphbWVzLA0KPiANCj4gVGhlcmUgYXJlIHNvbWV0aGlu
-ZyB3cm9uZyB3aXRoIHYzIHBhdGNoLg0KPiANCj4gcHAtPmlvX21vZF9iYXNlID0gb2ZfcmVhZF9u
-dW1iZXIocGFyc2VyX3JhbmdlX2VuZCAtDQo+IAkJb2Zfbl9hZGRyX2NlbGxzKG5wKSAtIDUgKyBu
-YSwgbnMpOw0KPiBwcC0+bWVtX21vZF9iYXNlID0gb2ZfcmVhZF9udW1iZXIocGFyc2VyX3Jhbmdl
-X2VuZCAtDQo+IAkJb2Zfbl9hZGRyX2NlbGxzKG5wKSAtIDUgKyBuYSwgbnMpOw0KPiBwcC0+Y2Zn
-MF9tb2RfYmFzZSA9IG9mX3JlYWRfbnVtYmVyKHBhcnNlcl9yYW5nZV9lbmQgLQ0KPiAJCW9mX25f
-YWRkcl9jZWxscyhucCkgLSA1ICsgbmEsIG5zKTsNCj4gYXJlIHdyb25nLg0KPiANCj4gVGhlIHJh
-bmdlcyBpdGVtIGluIHlvdXIgZHRzIGlzOg0KPiByYW5nZXMgPSA8MHg4MDAgMHgwIDB4MWYwMDAw
-MCAweDFmMDAwMDAgMHgwIDB4ODAwMDANCj4gCSAgMHg4MTAwMDAwMCAweDAgMHgwICAweDFmODAw
-MDAgMHgwIDB4MTAwMDANCj4gCSAgMHg4MjAwMDAwMCAweDAgMHgxMDAwMDAwIDB4MTAwMDAwMCAw
-eDAgMHhmMDAwMDA+Ow0KPiBwYXJzZXJfcmFuZ2VfZW5kIHBvaW50cyB0byB0aGUgZW5kIG9mIHJh
-bmdlcygweGYwMDAwMCkgZGlyZWN0bHkuIEluIHYyDQo+IHBhdGNoLA0KPiBvZl9yZWFkX251bWJl
-ciBpcyBvZl9yZWFkX251bWJlcihwYXJzZXIucmFuZ2UgLSBwYXJzZXIubnAgKyBuYSwgbnMpOw0K
-PiBwYXJzZXIucmFuZ2UNCj4gcG9pbnRzIHRvIHRoZSBlbmQgb2YgZWFjaCBsaW5lIGluIHJhbmdl
-cyBpdGVtLg0KPiANCj4gV2hlbiBJIGRpZCB0ZXN0IG9uIEQwMiBib2FyZCB3aXRoIGludGVsODI1
-OTkgY2FyZCwgSSBzZXQgcmFuZ2VzIGl0ZW0gYXM6DQo+IHJhbmdlcyA9IDwweDAzMDAwMDAwIDAg
-MHhiMDAwMDAwMCAweDIyMCAweDAwMDAwMDAwIDAgMHhmMDAwMDAwPjsNCj4gSXQgaXMganVzdCBv
-bmUgbGluZS4gSW4gdGhpcyBjYXNlLCBwYXJzZXJfcmFuZ2VfZW5kIGlzIHNhbWUgd2l0aA0KPiBw
-YXJzZXIucmFuZ2UuDQo+IFRoYXQgaXMgd2h5IGl0IGhhcHBlbmVkIHRvIHdvcmsgd2VsbCBvbiBE
-MDIgYm9hcmQuDQo+IA0KPiB2ZXJ5IHNvcnJ5IHRvIGJvdGhlciB5b3UgYWJvdXQgdGhpcyBwcm9i
-bGVtLg0KPiANCj4gVGhhbmtzLA0KPiBaaG91DQo+IA0KPiA+DQo+ID4NCj4gPiByb290QGxvY2Fs
-aG9zdDp+IyBkbWVzZyB8IGdyZXAgLWkgcGNpDQo+ID4gWyAgICAwLjEyNjE4NF0gUENJOiBDTFMg
-MCBieXRlcywgZGVmYXVsdCA2NA0KPiA+IFsgICAgMC4xNTIxMjhdIFBDSSBob3N0IGJyaWRnZSAv
-c29jL3BjaWVAMHgwMTAwMDAwMCByYW5nZXM6DQo+ID4gWyAgICAwLjE1MjE0Ml0gICBObyBidXMg
-cmFuZ2UgZm91bmQgZm9yIC9zb2MvcGNpZUAweDAxMDAwMDAwLCB1c2luZw0KPiBbYnVzIDAwLWZm
-XQ0KPiA+IFsgICAgMC4xNTQxODNdIGlteDZxLXBjaWUgMWZmYzAwMC5wY2llOiBQQ0kgaG9zdCBi
-cmlkZ2UgdG8gYnVzDQo+IDAwMDA6MDANCj4gPiBbICAgIDAuMTU0MjAxXSBwY2lfYnVzIDAwMDA6
-MDA6IHJvb3QgYnVzIHJlc291cmNlIFtidXMgMDAtZmZdDQo+ID4gWyAgICAwLjE1NDIxNV0gcGNp
-X2J1cyAwMDAwOjAwOiByb290IGJ1cyByZXNvdXJjZSBbPz8/DQo+ID4gMHgwMWYwMDAwMC0weDAx
-ZjdmZmZmIGZsYWdzIDB4MF0NCj4gPiBbICAgIDAuMTU0MjI4XSBwY2lfYnVzIDAwMDA6MDA6IHJv
-b3QgYnVzIHJlc291cmNlIFtpbyAgMHgwMDAwLTB4ZmZmZl0NCj4gPiBbICAgIDAuMTU0MjcwXSBw
-Y2lfYnVzIDAwMDA6MDA6IHJvb3QgYnVzIHJlc291cmNlIFttZW0gMHgwMTAwMDAwMC0NCj4gMHgw
-MWVmZmZmZl0NCj4gPiBbICAgIDAuMTU0MzA2XSBwY2kgMDAwMDowMDowMC4wOiBbMTZjMzphYmNk
-XSB0eXBlIDAxIGNsYXNzIDB4MDYwNDAwDQo+ID4gWyAgICAwLjE1NDMzM10gcGNpIDAwMDA6MDA6
-MDAuMDogcmVnIDB4MTA6IFttZW0gMHgwMDAwMDAwMC0weDAwMGZmZmZmXQ0KPiA+IFsgICAgMC4x
-NTQzNTJdIHBjaSAwMDAwOjAwOjAwLjA6IHJlZyAweDM4OiBbbWVtIDB4MDAwMDAwMDAtMHgwMDAw
-ZmZmZg0KPiBwcmVmXQ0KPiA+IFsgICAgMC4xNTQzNzddIHBjaSAwMDAwOjAwOjAwLjA6IElPTU1V
-IGlzIGN1cnJlbnRseSBub3Qgc3VwcG9ydGVkIGZvcg0KPiBQQ0kNCj4gPiBbICAgIDAuMTU0NDI5
-XSBwY2kgMDAwMDowMDowMC4wOiBzdXBwb3J0cyBEMQ0KPiA+IFsgICAgMC4xNTQ0NDBdIHBjaSAw
-MDAwOjAwOjAwLjA6IFBNRSMgc3VwcG9ydGVkIGZyb20gRDAgRDEgRDNob3QNCj4gRDNjb2xkDQo+
-ID4gWyAgICAwLjE1NDY4M10gUENJOiBidXMwOiBGYXN0IGJhY2sgdG8gYmFjayB0cmFuc2ZlcnMg
-ZGlzYWJsZWQNCj4gPiBbICAgIDAuMTU0ODA2XSBQQ0k6IGJ1czE6IEZhc3QgYmFjayB0byBiYWNr
-IHRyYW5zZmVycyBlbmFibGVkDQo+ID4gWyAgICAwLjE1NDg4NF0gcGNpIDAwMDA6MDA6MDAuMDog
-QkFSIDA6IGFzc2lnbmVkIFttZW0gMHgwMTAwMDAwMC0NCj4gMHgwMTBmZmZmZl0NCj4gPiBbICAg
-IDAuMTU0OTAzXSBwY2kgMDAwMDowMDowMC4wOiBCQVIgNjogYXNzaWduZWQgW21lbSAweDAxMTAw
-MDAwLQ0KPiAweDAxMTBmZmZmDQo+ID4gcHJlZl0NCj4gPiBbICAgIDAuMTU0OTE3XSBwY2kgMDAw
-MDowMDowMC4wOiBQQ0kgYnJpZGdlIHRvIFtidXMgMDFdDQo+ID4gWyAgICAwLjE1NTE0NV0gcGNp
-ZXBvcnQgMDAwMDowMDowMC4wOiBTaWduYWxpbmcgUE1FIHRocm91Z2ggUENJZSBQTUUNCj4gaW50
-ZXJydXB0DQo+ID4gWyAgICAwLjE1NTE2MV0gcGNpZV9wbWUgMDAwMDowMDowMC4wOnBjaWUwMTog
-c2VydmljZSBkcml2ZXIgcGNpZV9wbWUNCj4gbG9hZGVkDQo+ID4gWyAgICAwLjE1NTI3OV0gYWVy
-IDAwMDA6MDA6MDAuMDpwY2llMDI6IHNlcnZpY2UgZHJpdmVyIGFlciBsb2FkZWQNCj4gPiBbICAg
-IDEuMTg4ODQwXSBlaGNpLXBjaTogRUhDSSBQQ0kgcGxhdGZvcm0gZHJpdmVyDQo+ID4gWyAgICAx
-LjIzMjUxOF0gb2hjaS1wY2k6IE9IQ0kgUENJIHBsYXRmb3JtIGRyaXZlcg0KPiA+DQo+ID4gLS0N
-Cj4gPiBUbyB1bnN1YnNjcmliZSBmcm9tIHRoaXMgbGlzdDogc2VuZCB0aGUgbGluZSAidW5zdWJz
-Y3JpYmUgbGludXgtcGNpIg0KPiBpbg0KPiA+IHRoZSBib2R5IG9mIGEgbWVzc2FnZSB0byBtYWpv
-cmRvbW9Admdlci5rZXJuZWwub3JnDQo+ID4gTW9yZSBtYWpvcmRvbW8gaW5mbyBhdCAgaHR0cDov
-L3ZnZXIua2VybmVsLm9yZy9tYWpvcmRvbW8taW5mby5odG1sDQo+ID4NCj4gPiAuDQo+ID4NCj4g
-DQoNCg==
+This patch add a dummy clock "clk_null" to be the root clock of
+clocks whose parents are not contained in CCF clock tree.
+
+Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+---
+ drivers/clk/mediatek/clk-mt8173.c      | 5 +++++
+ include/dt-bindings/clock/mt8173-clk.h | 1 +
+ 2 files changed, 6 insertions(+)
+
+diff --git a/drivers/clk/mediatek/clk-mt8173.c b/drivers/clk/mediatek/clk-mt8173.c
+index 4b9e04c..c81bd72 100644
+--- a/drivers/clk/mediatek/clk-mt8173.c
++++ b/drivers/clk/mediatek/clk-mt8173.c
+@@ -24,6 +24,10 @@
+ 
+ static DEFINE_SPINLOCK(mt8173_clk_lock);
+ 
++static const struct mtk_root_clk root_clks[] __initconst = {
++	ROOT_CLK(CLK_TOP_NULL, "clk_null", 0),
++};
++
+ static const struct mtk_fixed_factor root_clk_alias[] __initconst = {
+ 	FACTOR(CLK_TOP_CLKPH_MCK_O, "clkph_mck_o", "clk_null", 1, 1),
+ 	FACTOR(CLK_TOP_DPI, "dpi_ck", "clk_null", 1, 1),
+@@ -714,6 +718,7 @@ static void __init mtk_topckgen_init(struct device_node *node)
+ 
+ 	clk_data = mtk_alloc_clk_data(CLK_TOP_NR_CLK);
+ 
++	mtk_clk_register_root_clks(root_clks, ARRAY_SIZE(root_clks), clk_data);
+ 	mtk_clk_register_factors(root_clk_alias, ARRAY_SIZE(root_clk_alias), clk_data);
+ 	mtk_clk_register_factors(top_divs, ARRAY_SIZE(top_divs), clk_data);
+ 	mtk_clk_register_composites(top_muxes, ARRAY_SIZE(top_muxes), base,
+diff --git a/include/dt-bindings/clock/mt8173-clk.h b/include/dt-bindings/clock/mt8173-clk.h
+index 4ad76ed..e91e9b8 100644
+--- a/include/dt-bindings/clock/mt8173-clk.h
++++ b/include/dt-bindings/clock/mt8173-clk.h
+@@ -17,6 +17,7 @@
+ 
+ /* TOPCKGEN */
+ 
++#define CLK_TOP_NULL			0
+ #define CLK_TOP_CLKPH_MCK_O		1
+ #define CLK_TOP_DPI			2
+ #define CLK_TOP_USB_SYSPLL_125M		3
+-- 
+1.8.1.1.dirty
