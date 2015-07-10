@@ -1,98 +1,248 @@
-From: Adam YH Lee <adam.yh.lee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2] ARM: dts: configure regulators for Gumstix Pepper
-Date: Thu,  9 Jul 2015 15:37:57 -0700
-Message-ID: <1436481477-18002-1-git-send-email-adam.yh.lee@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: ashcharles-EiDWdcs9+yZBDgjK7y7TUQ@public.gmane.org, arun-EiDWdcs9+yZBDgjK7y7TUQ@public.gmane.org, Adam YH Lee <adam.yh.lee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH v2 3/3] ARM: dts: UniPhier: add USB EHCI device nodes
+Date: Fri, 10 Jul 2015 13:54:00 +0900
+Message-ID: <1436504040-16375-4-git-send-email-yamada.masahiro@socionext.com>
+References: <1436504040-16375-1-git-send-email-yamada.masahiro@socionext.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1436504040-16375-1-git-send-email-yamada.masahiro@socionext.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: arm@kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Boot process is halting in midway because some of the necessary voltage
-regulators are deemed unused and subsequently powered off, leading to
-a completely unresponsive system.
+No dedicated driver compatible with "socionext,uniphier-ehci" has
+been supported in the mainline yet, so it falls into "generic-ehci"
+and it works well enough with our USB 2.0 host controllers.
 
-Most of the device nodes had correct voltage regulator attachments.
-Yet these nodes had to set stricter enforcement on them through
-'regulator-boot-on' and 'regulator-always-on' to function correctly.
-
-The consumers of the regulators this commit affect are the followings:
-
-	DCDC1: vdd_1v8 system supply, USB-PHY, and ADC
-	DCDC2: Core domain
-	DCDC3: MPU core domain
-	 LDO1: RTC
-	 LDO2: 3v3 IO domain
-	 LDO3: USB-PHY; not a boot-time requirement
-	 LDO4: LCD [16:23]
-
-All but LDO3 need to be always-on for the system to be functional.
-
-Additionally regulator-name properties have been added for the kernel to
-display the name from the schematic. This will improve diagnostics.
-
-Signed-off-by: Adam YH Lee <adam.yh.lee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
- arch/arm/boot/dts/am335x-pepper.dts | 9 +++++++++
- 1 file changed, 9 insertions(+)
 
-diff --git a/arch/arm/boot/dts/am335x-pepper.dts b/arch/arm/boot/dts/am335x-pepper.dts
-index 0d35ab6..661f835 100644
---- a/arch/arm/boot/dts/am335x-pepper.dts
-+++ b/arch/arm/boot/dts/am335x-pepper.dts
-@@ -438,6 +438,7 @@
- 	regulators {
- 		dcdc1_reg: regulator@0 {
- 			/* VDD_1V8 system supply */
-+			regulator-always-on;
+Changes in v2:
+  - Add chip-specific compatible strings "socionext,uniphier-ehci"
+
+ arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts  |  8 ++++++++
+ arch/arm/boot/dts/uniphier-ph1-ld4.dtsi     | 21 +++++++++++++++++++++
+ arch/arm/boot/dts/uniphier-ph1-pro4-ref.dts |  8 ++++++++
+ arch/arm/boot/dts/uniphier-ph1-pro4.dtsi    | 14 ++++++++++++++
+ arch/arm/boot/dts/uniphier-ph1-sld3-ref.dts | 16 ++++++++++++++++
+ arch/arm/boot/dts/uniphier-ph1-sld3.dtsi    | 28 ++++++++++++++++++++++++++++
+ arch/arm/boot/dts/uniphier-ph1-sld8-ref.dts | 12 ++++++++++++
+ arch/arm/boot/dts/uniphier-ph1-sld8.dtsi    | 21 +++++++++++++++++++++
+ 8 files changed, 128 insertions(+)
+
+diff --git a/arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts b/arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts
+index 0cd385a9..7ac053d 100644
+--- a/arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts
++++ b/arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts
+@@ -92,3 +92,11 @@
+ &serial3 {
+ 	status = "okay";
+ };
++
++&usb0 {
++	status = "okay";
++};
++
++&usb1 {
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/uniphier-ph1-ld4.dtsi b/arch/arm/boot/dts/uniphier-ph1-ld4.dtsi
+index 1261e6d..600a473 100644
+--- a/arch/arm/boot/dts/uniphier-ph1-ld4.dtsi
++++ b/arch/arm/boot/dts/uniphier-ph1-ld4.dtsi
+@@ -127,6 +127,27 @@
+ 			reg = <0x59800000 0x2000>;
  		};
  
- 		dcdc2_reg: regulator@1 {
-@@ -446,6 +447,7 @@
- 			regulator-min-microvolt = <925000>;
- 			regulator-max-microvolt = <1325000>;
- 			regulator-boot-on;
-+			regulator-always-on;
++		usb0: usb@5a800100 {
++			compatible = "socionext,uniphier-ehci", "generic-ehci";
++			status = "disabled";
++			reg = <0x5a800100 0x100>;
++			interrupts = <0 80 4>;
++		};
++
++		usb1: usb@5a810100 {
++			compatible = "socionext,uniphier-ehci", "generic-ehci";
++			status = "disabled";
++			reg = <0x5a810100 0x100>;
++			interrupts = <0 81 4>;
++		};
++
++		usb2: usb@5a820100 {
++			compatible = "socionext,uniphier-ehci", "generic-ehci";
++			status = "disabled";
++			reg = <0x5a820100 0x100>;
++			interrupts = <0 82 4>;
++		};
++
+ 		timer@60000200 {
+ 			compatible = "arm,cortex-a9-global-timer";
+ 			reg = <0x60000200 0x20>;
+diff --git a/arch/arm/boot/dts/uniphier-ph1-pro4-ref.dts b/arch/arm/boot/dts/uniphier-ph1-pro4-ref.dts
+index 0951cbf..b669d32 100644
+--- a/arch/arm/boot/dts/uniphier-ph1-pro4-ref.dts
++++ b/arch/arm/boot/dts/uniphier-ph1-pro4-ref.dts
+@@ -92,3 +92,11 @@
+ &serial2 {
+ 	status = "okay";
+ };
++
++&usb2 {
++	status = "okay";
++};
++
++&usb3 {
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/uniphier-ph1-pro4.dtsi b/arch/arm/boot/dts/uniphier-ph1-pro4.dtsi
+index acd2c06..4598bb2 100644
+--- a/arch/arm/boot/dts/uniphier-ph1-pro4.dtsi
++++ b/arch/arm/boot/dts/uniphier-ph1-pro4.dtsi
+@@ -134,6 +134,20 @@
+ 			reg = <0x59800000 0x2000>;
  		};
  
- 		dcdc3_reg: regulator@2 {
-@@ -454,25 +456,32 @@
- 			regulator-min-microvolt = <925000>;
- 			regulator-max-microvolt = <1150000>;
- 			regulator-boot-on;
-+			regulator-always-on;
++		usb2: usb@5a800100 {
++			compatible = "socionext,uniphier-ehci", "generic-ehci";
++			status = "disabled";
++			reg = <0x5a800100 0x100>;
++			interrupts = <0 80 4>;
++		};
++
++		usb3: usb@5a810100 {
++			compatible = "socionext,uniphier-ehci", "generic-ehci";
++			status = "disabled";
++			reg = <0x5a810100 0x100>;
++			interrupts = <0 81 4>;
++		};
++
+ 		timer@60000200 {
+ 			compatible = "arm,cortex-a9-global-timer";
+ 			reg = <0x60000200 0x20>;
+diff --git a/arch/arm/boot/dts/uniphier-ph1-sld3-ref.dts b/arch/arm/boot/dts/uniphier-ph1-sld3-ref.dts
+index 47a44da..48f7361 100644
+--- a/arch/arm/boot/dts/uniphier-ph1-sld3-ref.dts
++++ b/arch/arm/boot/dts/uniphier-ph1-sld3-ref.dts
+@@ -92,3 +92,19 @@
+ &serial2 {
+ 	status = "okay";
+ };
++
++&usb0 {
++	status = "okay";
++};
++
++&usb1 {
++	status = "okay";
++};
++
++&usb2 {
++	status = "okay";
++};
++
++&usb3 {
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/uniphier-ph1-sld3.dtsi b/arch/arm/boot/dts/uniphier-ph1-sld3.dtsi
+index feb253b..db74457 100644
+--- a/arch/arm/boot/dts/uniphier-ph1-sld3.dtsi
++++ b/arch/arm/boot/dts/uniphier-ph1-sld3.dtsi
+@@ -146,5 +146,33 @@
+ 				     "syscon";
+ 			reg = <0x59800000 0x2000>;
  		};
- 
- 		ldo1_reg: regulator@3 {
- 			/* VRTC 1.8V always-on supply */
-+			regulator-name = "vrtc,vdds";
- 			regulator-always-on;
- 		};
- 
- 		ldo2_reg: regulator@4 {
- 			/* 3.3V rail */
-+			regulator-name = "vdd_3v3aux";
-+			regulator-always-on;
- 		};
- 
- 		ldo3_reg: regulator@5 {
- 			/* VDD_3V3A 3.3V rail */
-+			regulator-name = "vdd_3v3a";
- 			regulator-min-microvolt = <3300000>;
- 			regulator-max-microvolt = <3300000>;
- 		};
- 
- 		ldo4_reg: regulator@6 {
- 			/* VDD_3V3B 3.3V rail */
-+			regulator-name = "vdd_3v3b";
-+			regulator-always-on;
- 		};
++
++		usb0: usb@5a800100 {
++			compatible = "socionext,uniphier-ehci", "generic-ehci";
++			status = "disabled";
++			reg = <0x5a800100 0x100>;
++			interrupts = <0 80 4>;
++		};
++
++		usb1: usb@5a810100 {
++			compatible = "socionext,uniphier-ehci", "generic-ehci";
++			status = "disabled";
++			reg = <0x5a810100 0x100>;
++			interrupts = <0 81 4>;
++		};
++
++		usb2: usb@5a820100 {
++			compatible = "socionext,uniphier-ehci", "generic-ehci";
++			status = "disabled";
++			reg = <0x5a820100 0x100>;
++			interrupts = <0 82 4>;
++		};
++
++		usb3: usb@5a830100 {
++			compatible = "socionext,uniphier-ehci", "generic-ehci";
++			status = "disabled";
++			reg = <0x5a830100 0x100>;
++			interrupts = <0 83 4>;
++		};
  	};
  };
+diff --git a/arch/arm/boot/dts/uniphier-ph1-sld8-ref.dts b/arch/arm/boot/dts/uniphier-ph1-sld8-ref.dts
+index 07e93a9..9b5992a 100644
+--- a/arch/arm/boot/dts/uniphier-ph1-sld8-ref.dts
++++ b/arch/arm/boot/dts/uniphier-ph1-sld8-ref.dts
+@@ -92,3 +92,15 @@
+ &serial3 {
+ 	status = "okay";
+ };
++
++&usb0 {
++	status = "okay";
++};
++
++&usb1 {
++	status = "okay";
++};
++
++&usb2 {
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/uniphier-ph1-sld8.dtsi b/arch/arm/boot/dts/uniphier-ph1-sld8.dtsi
+index bf0c8c1..3255157 100644
+--- a/arch/arm/boot/dts/uniphier-ph1-sld8.dtsi
++++ b/arch/arm/boot/dts/uniphier-ph1-sld8.dtsi
+@@ -127,6 +127,27 @@
+ 			reg = <0x59800000 0x2000>;
+ 		};
+ 
++		usb0: usb@5a800100 {
++			compatible = "socionext,uniphier-ehci", "generic-ehci";
++			status = "disabled";
++			reg = <0x5a800100 0x100>;
++			interrupts = <0 80 4>;
++		};
++
++		usb1: usb@5a810100 {
++			compatible = "socionext,uniphier-ehci", "generic-ehci";
++			status = "disabled";
++			reg = <0x5a810100 0x100>;
++			interrupts = <0 81 4>;
++		};
++
++		usb2: usb@5a820100 {
++			compatible = "socionext,uniphier-ehci", "generic-ehci";
++			status = "disabled";
++			reg = <0x5a820100 0x100>;
++			interrupts = <0 82 4>;
++		};
++
+ 		timer@60000200 {
+ 			compatible = "arm,cortex-a9-global-timer";
+ 			reg = <0x60000200 0x20>;
 -- 
-2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
