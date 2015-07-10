@@ -1,54 +1,85 @@
-From: Stas Sergeev <stsp-cmBhpYW9OiY@public.gmane.org>
-Subject: Re: [PATCH 1/2] of_mdio: add new DT property 'link' for fixed-link
-Date: Fri, 10 Jul 2015 14:20:17 +0300
-Message-ID: <559FAA71.2030209@list.ru>
-References: <559EB0A4.5080101@list.ru> <559EB1A6.1090008@list.ru> <559EBC59.6020003@gmail.com> <559EDD0C.7020907@list.ru> <559EE45C.4040408@gmail.com> <559EEAE9.4000806@list.ru> <alpine.LNX.2.02.1507100940530.15010@sbrk.org>
+From: Jianwei Wang <jianwei.wang@freescale.com>
+Subject: [PATCH v7 2/4] drm/panel: simple: Add support for NEC NL4827HC19-05B
+ 480x272 panel
+Date: Fri, 10 Jul 2015 19:17:41 +0800
+Message-ID: <1436527063-44762-2-git-send-email-jianwei.wang@freescale.com>
+References: <1436527063-44762-1-git-send-email-jianwei.wang@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.LNX.2.02.1507100940530.15010-i6rsG8ix9II@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastien Rannou <mxs-i6rsG8ix9II@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Stas Sergeev <stsp-Rn4VEauK+AKRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1436527063-44762-1-git-send-email-jianwei.wang@freescale.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: devicetree@vger.kernel.org, daniel.vetter@ffwll.ch, linux-kernel@vger.kernel.org, scottwood@freescale.com, Jianwei Wang <jianwei.wang@freescale.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-10.07.2015 11:46, Sebastien Rannou =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> On Fri, 10 Jul 2015, Stas Sergeev wrote:
->=20
->> 10.07.2015 00:15, Florian Fainelli =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>> Then, if the in-band status indication is not reliable (which reall=
-y
->>> should be completely understood),
->> Agree!
->> But this is not something I can help with.
->> Sebastien Rannou reports the problem, please ask him whatever
->> you see fits to get a better understanding of a problem.
->> The fact that his HW does not generate the inband status, is
->> _my own guess_.
->=20
-> Yes, I confirm that my HW does not generate an in-band status. AFAIK,=
- it's
-> a PHY that aggregates 4xSGMIIs to 1xQSGMII ; the MAC side of the PHY =
-(with
-> inband status) is connected to the switch through QSGMII, and in this=
- context
-> we are on the media side of the PHY.
-Hmm, interesting.
-So if I parse the above correctly, you have something like 88E1340S set
-up into a mode when SGMII is used as media interface and QSGMII as syst=
-em
-interface (terms are from datasheet page 5), then you connect the media
-interface to armada-xp and system interface to the switch.
-
-I wonder if it is the right thing to do.
-AFAIK you could as well set up armada-xp into QSGMII mode and connect
-that to switch. The driver would then disable the use of inband status
-and everything would be fine.
-Either way, your use-case proves that only DT can decide the use of an
-inband status.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhpcyBhZGRzIHN1cHBvcnQgZm9yIHRoZSAgTkVDIE5MNDgyN0hDMTktMDVCIDQ4MHgyNzIgcGFu
+ZWwgdG8gdGhlIERSTQpzaW1wbGUgcGFuZWwgZHJpdmVyLgoKU2lnbmVkLW9mZi1ieTogSmlhbndl
+aSBXYW5nIDxqaWFud2VpLndhbmdAZnJlZXNjYWxlLmNvbT4KLS0tCiAuLi4vYmluZGluZ3MvcGFu
+ZWwvbmVjLG5sNDgyN2hjMTlfMDViLnR4dCAgICAgICAgICB8ICA3ICsrKysrKwogLi4uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvdmVuZG9yLXByZWZpeGVzLnR4dCAgICAgICAgfCAgMSArCiBNQUlOVEFJ
+TkVSUyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAxICsKIGRyaXZl
+cnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYyAgICAgICAgICAgICAgIHwgMjYgKysrKysr
+KysrKysrKysrKysrKysrKwogNCBmaWxlcyBjaGFuZ2VkLCAzNSBpbnNlcnRpb25zKCspCiBjcmVh
+dGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BhbmVsL25l
+YyxubDQ4MjdoYzE5XzA1Yi50eHQKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvcGFuZWwvbmVjLG5sNDgyN2hjMTlfMDViLnR4dCBiL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9wYW5lbC9uZWMsbmw0ODI3aGMxOV8wNWIudHh0Cm5ldyBmaWxl
+IG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAuLjIwZTk0NzMKLS0tIC9kZXYvbnVsbAorKysgYi9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGFuZWwvbmVjLG5sNDgyN2hjMTlfMDVi
+LnR4dApAQCAtMCwwICsxLDcgQEAKK05FQyBMQ0QgVGVjaG5vbG9naWVzLEx0ZC4gV1FWR0EgVEZU
+IExDRCBwYW5lbAorCitSZXF1aXJlZCBwcm9wZXJ0aWVzOgorLSBjb21wYXRpYmxlOiBzaG91bGQg
+YmUgIm5lYyxubDQ4MjdoYzE5XzA1YiIKKworVGhpcyBiaW5kaW5nIGlzIGNvbXBhdGlibGUgd2l0
+aCB0aGUgc2ltcGxlLXBhbmVsIGJpbmRpbmcsIHdoaWNoIGlzIHNwZWNpZmllZAoraW4gc2ltcGxl
+LXBhbmVsLnR4dCBpbiB0aGlzIGRpcmVjdG9yeS4KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0IGIvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy50eHQKaW5kZXggODAzMzkxOS4uOWYy
+MmIzZSAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZlbmRv
+ci1wcmVmaXhlcy50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Zl
+bmRvci1wcmVmaXhlcy50eHQKQEAgLTEzMSw2ICsxMzEsNyBAQCBtdW5kb3JlYWRlcglNdW5kbyBS
+ZWFkZXIgUy5MLgogbXVyYXRhCU11cmF0YSBNYW51ZmFjdHVyaW5nIENvLiwgTHRkLgogbXhpY3kJ
+TWFjcm9uaXggSW50ZXJuYXRpb25hbCBDby4sIEx0ZC4KIG5hdGlvbmFsCU5hdGlvbmFsIFNlbWlj
+b25kdWN0b3IKK25lYwlORUMgTENEIFRlY2hub2xvZ2llcywgTHRkLgogbmVvbm9kZQkJTmVvbm9k
+ZSBJbmMuCiBuZXRnZWFyCU5FVEdFQVIKIG5ldGxvZ2ljCUJyb2FkY29tIENvcnBvcmF0aW9uIChm
+b3JtZXJseSBOZXRMb2dpYyBNaWNyb3N5c3RlbXMpCmRpZmYgLS1naXQgYS9NQUlOVEFJTkVSUyBi
+L01BSU5UQUlORVJTCmluZGV4IGIyNWI5NDguLmUxOTFkZWQgMTAwNjQ0Ci0tLSBhL01BSU5UQUlO
+RVJTCisrKyBiL01BSU5UQUlORVJTCkBAIC0zNDEwLDYgKzM0MTAsNyBAQCBNOglBbGlzb24gV2Fu
+ZyA8YWxpc29uLndhbmdAZnJlZXNjYWxlLmNvbT4KIEw6CWRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
+a3RvcC5vcmcKIFM6CVN1cHBvcnRlZAogRjoJZHJpdmVycy9ncHUvZHJtL2ZzbC1kY3UvCitGOiAg
+ICAgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wYW5lbC9uZWMsbmw0ODI3aGMx
+OV8wNWIudHh0CiAKIERSTSBEUklWRVJTIEZPUiBOVklESUEgVEVHUkEKIE06CVRoaWVycnkgUmVk
+aW5nIDx0aGllcnJ5LnJlZGluZ0BnbWFpbC5jb20+CmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9k
+cm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMgYi9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2lt
+cGxlLmMKaW5kZXggZjk0MjAxYi4uZWVlOTVmNCAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJt
+L3BhbmVsL3BhbmVsLXNpbXBsZS5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1z
+aW1wbGUuYwpAQCAtMTAzNiw2ICsxMDM2LDI5IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgcGFuZWxf
+ZGVzYyBzaGVsbHlfc2NhMDcwMTBfYmZuX2xubiA9IHsKIAkuYnVzX2Zvcm1hdCA9IE1FRElBX0JV
+U19GTVRfUkdCNjY2XzFYMTgsCiB9OwogCitzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9kaXNwbGF5
+X21vZGUgbmVjX25sNDgyN2hjMTlfMDViX21vZGUgPSB7CisJLmNsb2NrID0gMTA4NzAsCisJLmhk
+aXNwbGF5ID0gNDgwLAorCS5oc3luY19zdGFydCA9IDQ4MCArIDIsCisJLmhzeW5jX2VuZCA9IDQ4
+MCArIDIgKyA0MSwKKwkuaHRvdGFsID0gNDgwICsgMiArIDQxICsgMiwKKwkudmRpc3BsYXkgPSAy
+NzIsCisJLnZzeW5jX3N0YXJ0ID0gMjcyICsgMiwKKwkudnN5bmNfZW5kID0gMjcyICsgMiArIDQs
+CisJLnZ0b3RhbCA9IDI3MiArIDIgKyA0ICsgMiwKKwkudnJlZnJlc2ggPSA3NCwKK307CisKK3N0
+YXRpYyBjb25zdCBzdHJ1Y3QgcGFuZWxfZGVzYyBuZWNfbmw0ODI3aGMxOV8wNWIgPSB7CisJLm1v
+ZGVzID0gJm5lY19ubDQ4MjdoYzE5XzA1Yl9tb2RlLAorCS5udW1fbW9kZXMgPSAxLAorCS5zaXpl
+ID0geworCQkud2lkdGggPSA0ODAsCisJCS5oZWlnaHQgPSAyNzIsCisJfSwKKwkuYnVzX2Zvcm1h
+dCA9IE1FRElBX0JVU19GTVRfUkdCODg4XzFYMjQKK307CisKIHN0YXRpYyBjb25zdCBzdHJ1Y3Qg
+b2ZfZGV2aWNlX2lkIHBsYXRmb3JtX29mX21hdGNoW10gPSB7CiAJewogCQkuY29tcGF0aWJsZSA9
+ICJhbXBpcmUsYW04MDA0ODByM3RtcXdhMWgiLApAQCAtMTEyNSw2ICsxMTQ4LDkgQEAgc3RhdGlj
+IGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgcGxhdGZvcm1fb2ZfbWF0Y2hbXSA9IHsKIAkJLmNv
+bXBhdGlibGUgPSAic2hlbGx5LHNjYTA3MDEwLWJmbi1sbm4iLAogCQkuZGF0YSA9ICZzaGVsbHlf
+c2NhMDcwMTBfYmZuX2xubiwKIAl9LCB7CisJCS5jb21wYXRpYmxlID0gIm5lYyxubDQ4MjdoYzE5
+XzA1YiIsCisJCS5kYXRhID0gJm5lY19ubDQ4MjdoYzE5XzA1YiwKKwl9LCB7CiAJCS8qIHNlbnRp
+bmVsICovCiAJfQogfTsKLS0gCjIuMS4wLjI3Lmc5NmRiMzI0CgpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
+ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
