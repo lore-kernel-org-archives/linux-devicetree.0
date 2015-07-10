@@ -1,65 +1,108 @@
-From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v7 7/9] nvmem: qfprom: Add bindings for qfprom
-Date: Fri, 10 Jul 2015 10:45:42 +0100
-Message-ID: <1436521542-10973-1-git-send-email-srinivas.kandagatla@linaro.org>
-References: <1436521427-10568-1-git-send-email-srinivas.kandagatla@linaro.org>
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1436521427-10568-1-git-send-email-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, stefan.wahren-eS4NqCHxEME@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v3 1/5] clk: mediatek: mt8173: Fix enabling of critical clocks
+Date: Fri, 10 Jul 2015 18:00:01 +0800
+Message-ID: <1436522405-13923-2-git-send-email-jamesjj.liao@mediatek.com>
+References: <1436522405-13923-1-git-send-email-jamesjj.liao@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1436522405-13923-1-git-send-email-jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Heiko Stubner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds bindings for qfprom found in QCOM SOCs. QFPROM driver
-is based on simple nvmem framework.
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-Reviewed-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On the MT8173 the clocks are provided by different units. To enable
+the critical clocks we must be sure that all parent clocks are already
+registered, otherwise the parents of the critical clocks end up being
+unused and get disabled later.
+
+On MT8173, for example, it is the CLK_TOP clocks that have CLK_APMIXED
+PLLs as their parents, so we cannot enable the CLK_TOP critical clocks
+until the CLK_APMIXED clocks have all been registered.
+
+To find a place where all parents are registered we try each time
+after we've registered some clocks if all known providers are present
+now and only then we enable the critical clocks.
+
+Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
- Documentation/devicetree/bindings/nvmem/qfprom.txt | 35 ++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/nvmem/qfprom.txt
+ drivers/clk/mediatek/clk-mt8173.c | 26 +++++++++++++++++++++-----
+ 1 file changed, 21 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/nvmem/qfprom.txt b/Documentation/devicetree/bindings/nvmem/qfprom.txt
-new file mode 100644
-index 0000000..4ad68b7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/nvmem/qfprom.txt
-@@ -0,0 +1,35 @@
-+= Qualcomm QFPROM device tree bindings =
+diff --git a/drivers/clk/mediatek/clk-mt8173.c b/drivers/clk/mediatek/clk-mt8173.c
+index 4b9e04c..b3d91ee 100644
+--- a/drivers/clk/mediatek/clk-mt8173.c
++++ b/drivers/clk/mediatek/clk-mt8173.c
+@@ -700,6 +700,22 @@ static const struct mtk_composite peri_clks[] __initconst = {
+ 	MUX(CLK_PERI_UART3_SEL, "uart3_ck_sel", uart_ck_sel_parents, 0x40c, 3, 1),
+ };
+ 
++static struct clk_onecell_data *mt8173_top_clk_data;
++static struct clk_onecell_data *mt8173_pll_clk_data;
 +
-+This binding is intended to represent QFPROM which is found in most QCOM SOCs.
++static void __init mtk_clk_enable_critical(void)
++{
++	if (!mt8173_top_clk_data || !mt8173_pll_clk_data)
++		return;
 +
-+Required properties:
-+- compatible: should be "qcom,qfprom"
-+- reg: Should contain registers location and length
++	clk_prepare_enable(mt8173_pll_clk_data->clks[CLK_APMIXED_ARMCA15PLL]);
++	clk_prepare_enable(mt8173_pll_clk_data->clks[CLK_APMIXED_ARMCA7PLL]);
++	clk_prepare_enable(mt8173_top_clk_data->clks[CLK_TOP_MEM_SEL]);
++	clk_prepare_enable(mt8173_top_clk_data->clks[CLK_TOP_DDRPHYCFG_SEL]);
++	clk_prepare_enable(mt8173_top_clk_data->clks[CLK_TOP_CCI400_SEL]);
++	clk_prepare_enable(mt8173_top_clk_data->clks[CLK_TOP_RTC_SEL]);
++}
 +
-+= Data cells =
-+Are child nodes of qfprom, bindings of which as described in
-+bindings/nvmem/nvmem.txt
+ static void __init mtk_topckgen_init(struct device_node *node)
+ {
+ 	struct clk_onecell_data *clk_data;
+@@ -712,19 +728,19 @@ static void __init mtk_topckgen_init(struct device_node *node)
+ 		return;
+ 	}
+ 
+-	clk_data = mtk_alloc_clk_data(CLK_TOP_NR_CLK);
++	mt8173_top_clk_data = clk_data = mtk_alloc_clk_data(CLK_TOP_NR_CLK);
+ 
+ 	mtk_clk_register_factors(root_clk_alias, ARRAY_SIZE(root_clk_alias), clk_data);
+ 	mtk_clk_register_factors(top_divs, ARRAY_SIZE(top_divs), clk_data);
+ 	mtk_clk_register_composites(top_muxes, ARRAY_SIZE(top_muxes), base,
+ 			&mt8173_clk_lock, clk_data);
+ 
+-	clk_prepare_enable(clk_data->clks[CLK_TOP_CCI400_SEL]);
+-
+ 	r = of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
+ 	if (r)
+ 		pr_err("%s(): could not register clock provider: %d\n",
+ 			__func__, r);
 +
-+Example:
-+
-+	qfprom: qfprom@00700000 {
-+		compatible 	= "qcom,qfprom";
-+		reg		= <0x00700000 0x8000>;
-+		...
-+		/* Data cells */
-+		tsens_calibration: calib@404 {
-+			reg = <0x4404 0x10>;
-+		};
-+	};
-+
-+
-+= Data consumers =
-+Are device nodes which consume nvmem data cells.
-+
-+For example:
-+
-+	tsens {
-+		...
-+		nvmem-cells = <&tsens_calibration>;
-+		nvmem-cell-names = "calibration";
-+	};
++	mtk_clk_enable_critical();
+ }
+ CLK_OF_DECLARE(mtk_topckgen, "mediatek,mt8173-topckgen", mtk_topckgen_init);
+ 
+@@ -818,13 +834,13 @@ static void __init mtk_apmixedsys_init(struct device_node *node)
+ {
+ 	struct clk_onecell_data *clk_data;
+ 
+-	clk_data = mtk_alloc_clk_data(CLK_APMIXED_NR_CLK);
++	mt8173_pll_clk_data = clk_data = mtk_alloc_clk_data(CLK_APMIXED_NR_CLK);
+ 	if (!clk_data)
+ 		return;
+ 
+ 	mtk_clk_register_plls(node, plls, ARRAY_SIZE(plls), clk_data);
+ 
+-	clk_prepare_enable(clk_data->clks[CLK_APMIXED_ARMCA15PLL]);
++	mtk_clk_enable_critical();
+ }
+ CLK_OF_DECLARE(mtk_apmixedsys, "mediatek,mt8173-apmixedsys",
+ 		mtk_apmixedsys_init);
 -- 
-1.9.1
+1.8.1.1.dirty
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
