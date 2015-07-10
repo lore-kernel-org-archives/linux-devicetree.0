@@ -1,96 +1,45 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v2] mmc: sunxi: Don't start commands while the card is busy
-Date: Fri, 10 Jul 2015 17:14:44 +0200
-Message-ID: <1436541284-11800-1-git-send-email-hdegoede@redhat.com>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Mike Turquette <mturquette@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Arend van Spriel <arend@broadcom.com>, Sascha Hauer <s.hauer@pengutronix.de>, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>, linux-sunxi@googlegroups.com, Hans de Goede <hdegoede@redhat.com>, Eugene K <sigintmailru@gmail.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v1 1/3] gpio: defer probe if pinctrl cannot be found
+Date: Fri, 10 Jul 2015 09:27:45 -0600
+Message-ID: <559FE471.1030408@wwwdotorg.org>
+References: <1435754753-31307-1-git-send-email-tomeu.vizoso@collabora.com> <1435754753-31307-2-git-send-email-tomeu.vizoso@collabora.com> <CAL_JsqKXODBk4FVB-kiWFHLGFLCwJDjXvpVqOTvuEJubApbVSg@mail.gmail.com> <CAAObsKBS0OOhPNEAEV5Bh_+WMVWYhuGtGLqaVdCbzxPuT8a_gA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CAAObsKBS0OOhPNEAEV5Bh_+WMVWYhuGtGLqaVdCbzxPuT8a_gA@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Tomeu Vizoso <tomeu.vizoso@collabora.com>, Rob Herring <robherring2@gmail.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Alexandre Courbot <gnurou@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Some sdio wifi modules have not been working reliable with the sunxi-mmc
-host code. This turns out to be caused by it starting new commands while
-the card signals that it is still busy processing a previous command.
+On 07/10/2015 03:29 AM, Tomeu Vizoso wrote:
+> On 1 July 2015 at 19:36, Rob Herring <robherring2@gmail.com> wrote:
+>> On Wed, Jul 1, 2015 at 7:45 AM, Tomeu Vizoso <tomeu.vizoso@collabora.com> wrote:
+>>> When an OF node has a pin range for its GPIOs, return -EPROBE_DEFER if
+>>> the pin controller isn't available.
+>>>
+>>> Otherwise, the GPIO range wouldn't be set at all unless the pin
+>>> controller probed always before the GPIO chip.
+>>>
+>>> With this change, the probe of the GPIO chip will be deferred and will
+>>> be retried at a later point, hopefully once the pin controller has been
+>>> registered and probed already.
+>>
+>> This will break cases where the pinctrl driver does not exist, but the
+>> DT contains pinctrl bindings. We can have similar problems already
+>> with clocks though. However, IMO this problem is a bit different in
+>> that pinctrl is more likely entirely optional while clocks are often
+>> required. You may do all pin setup in bootloader/firmware on some
+>> boards and not others. Of course then why put pinctrl in the DT in
+>> that case? They could be present just due to how chip vs. board dts
+>> files are structured.
+>
+> I see. My instinct tells me that it would be better if the gpio-ranges
+> property was set in the board dts, but I don't really know what each
+> mach does with its DTSs.
 
-This commit fixes this, thereby fixing the wifi reliability issues on
-the Cubietruck and other sunxi boards using sdio wifi.
+That doesn't make sense; the mapping between GPIO controller pins and 
+pin controller pins is a property of the SoC not the board.
 
-Reported-by: Eugene K <sigintmailru@gmail.com>
-Suggested-by: Eugene K <sigintmailru@gmail.com>
-Cc: Eugene K <sigintmailru@gmail.com>
-Cc: Arend van Spriel <arend@broadcom.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
-Changes in v2:
--Properly accredit Eugene K for coming up with the fix for this
----
- drivers/mmc/host/sunxi-mmc.c | 32 ++++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
-
-diff --git a/drivers/mmc/host/sunxi-mmc.c b/drivers/mmc/host/sunxi-mmc.c
-index 4d3e1ff..daa90b7 100644
---- a/drivers/mmc/host/sunxi-mmc.c
-+++ b/drivers/mmc/host/sunxi-mmc.c
-@@ -289,6 +289,24 @@ static int sunxi_mmc_init_host(struct mmc_host *mmc)
- 	return 0;
- }
- 
-+/* Wait for card to report ready before starting a new cmd */
-+static int sunxi_mmc_wait_card_ready(struct sunxi_mmc_host *host)
-+{
-+	unsigned long expire = jiffies + msecs_to_jiffies(500);
-+	u32 rval;
-+
-+	do {
-+		rval = mmc_readl(host, REG_STAS);
-+	} while (time_before(jiffies, expire) && (rval & SDXC_CARD_DATA_BUSY));
-+
-+	if (rval & SDXC_CARD_DATA_BUSY) {
-+		dev_err(mmc_dev(host->mmc), "Error R1 ready timeout\n");
-+		return -EIO;
-+	}
-+
-+	return 0;
-+}
-+
- static void sunxi_mmc_init_idma_des(struct sunxi_mmc_host *host,
- 				    struct mmc_data *data)
- {
-@@ -383,6 +401,8 @@ static void sunxi_mmc_send_manual_stop(struct sunxi_mmc_host *host,
- 	u32 arg, cmd_val, ri;
- 	unsigned long expire = jiffies + msecs_to_jiffies(1000);
- 
-+	sunxi_mmc_wait_card_ready(host);
-+
- 	cmd_val = SDXC_START | SDXC_RESP_EXPIRE |
- 		  SDXC_STOP_ABORT_CMD | SDXC_CHECK_RESPONSE_CRC;
- 
-@@ -597,6 +617,11 @@ static int sunxi_mmc_oclk_onoff(struct sunxi_mmc_host *host, u32 oclk_en)
- {
- 	unsigned long expire = jiffies + msecs_to_jiffies(250);
- 	u32 rval;
-+	int ret;
-+
-+	ret = sunxi_mmc_wait_card_ready(host);
-+	if (ret)
-+		return ret;
- 
- 	rval = mmc_readl(host, REG_CLKCR);
- 	rval &= ~(SDXC_CARD_CLOCK_ON | SDXC_LOW_POWER_ON);
-@@ -785,6 +810,13 @@ static void sunxi_mmc_request(struct mmc_host *mmc, struct mmc_request *mrq)
- 		return;
- 	}
- 
-+	ret = sunxi_mmc_wait_card_ready(host);
-+	if (ret) {
-+		mrq->cmd->error = ret;
-+		mmc_request_done(mmc, mrq);
-+		return;
-+	}
-+
- 	if (data) {
- 		ret = sunxi_mmc_map_dma(host, data);
- 		if (ret < 0) {
--- 
-2.4.3
 
