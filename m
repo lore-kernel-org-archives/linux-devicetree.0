@@ -1,84 +1,84 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 2/5] dt-bindings: Add a binding for Mediatek xHCI host
- controller
-Date: Fri, 10 Jul 2015 11:31:03 +0300
-Message-ID: <559F82C7.5010202@ti.com>
-References: <1436348468-4126-1-git-send-email-chunfeng.yun@mediatek.com>
- <1436348468-4126-3-git-send-email-chunfeng.yun@mediatek.com>
+From: Rameshwar Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
+Subject: Re: [PATCH] dmaengine: xgene-dma: Fix the resource map to handle overlapping
+Date: Fri, 10 Jul 2015 14:06:48 +0530
+Message-ID: <CAFd313y1YKrrrMrCLTJGNd7PWqoopLQ5aXEcxygVq1WTPJR=-g@mail.gmail.com>
+References: <1436263465-7677-1-git-send-email-rsahu@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1436348468-4126-3-git-send-email-chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1436263465-7677-1-git-send-email-rsahu-qTEPVZfXA3Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Vinod,
 
-On 08/07/15 12:41, Chunfeng Yun wrote:
-> add a DT binding documentation of xHCI host controller for the
-> MT8173 SoC from Mediatek.
-> 
-> Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+On Tue, Jul 7, 2015 at 3:34 PM, Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org> wrote:
+> There is an overlap in dma ring cmd csr region due to sharing of ethernet
+> ring cmd csr region. This patch fix the resource overlapping by mapping
+> the entire dma ring cmd csr region.
+>
+> Signed-off-by: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
 > ---
->  .../devicetree/bindings/usb/mt8173-xhci.txt        | 27 ++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/mt8173-xhci.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/mt8173-xhci.txt b/Documentation/devicetree/bindings/usb/mt8173-xhci.txt
-> new file mode 100644
-> index 0000000..94cec94
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/mt8173-xhci.txt
-> @@ -0,0 +1,27 @@
-> +MT65XX xhci
+>  Documentation/devicetree/bindings/dma/apm-xgene-dma.txt | 2 +-
+>  arch/arm64/boot/dts/apm/apm-storm.dtsi                  | 2 +-
+>  drivers/dma/xgene-dma.c                                 | 3 +++
+>  3 files changed, 5 insertions(+), 2 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/dma/apm-xgene-dma.txt b/Documentation/devicetree/bindings/dma/apm-xgene-dma.txt
+> index d305876..c53e0b0 100644
+> --- a/Documentation/devicetree/bindings/dma/apm-xgene-dma.txt
+> +++ b/Documentation/devicetree/bindings/dma/apm-xgene-dma.txt
+> @@ -35,7 +35,7 @@ Example:
+>                         device_type = "dma";
+>                         reg = <0x0 0x1f270000 0x0 0x10000>,
+>                               <0x0 0x1f200000 0x0 0x10000>,
+> -                             <0x0 0x1b008000 0x0 0x2000>,
+> +                             <0x0 0x1b000000 0x0 0x400000>,
+>                               <0x0 0x1054a000 0x0 0x100>;
+>                         interrupts = <0x0 0x82 0x4>,
+>                                      <0x0 0xb8 0x4>,
+> diff --git a/arch/arm64/boot/dts/apm/apm-storm.dtsi b/arch/arm64/boot/dts/apm/apm-storm.dtsi
+> index 0689c3f..58093ed 100644
+> --- a/arch/arm64/boot/dts/apm/apm-storm.dtsi
+> +++ b/arch/arm64/boot/dts/apm/apm-storm.dtsi
+> @@ -823,7 +823,7 @@
+>                         device_type = "dma";
+>                         reg = <0x0 0x1f270000 0x0 0x10000>,
+>                               <0x0 0x1f200000 0x0 0x10000>,
+> -                             <0x0 0x1b008000 0x0 0x2000>,
+> +                             <0x0 0x1b000000 0x0 0x400000>,
+>                               <0x0 0x1054a000 0x0 0x100>;
+>                         interrupts = <0x0 0x82 0x4>,
+>                                      <0x0 0xb8 0x4>,
+> diff --git a/drivers/dma/xgene-dma.c b/drivers/dma/xgene-dma.c
+> index 620fd55ec..dff22ab 100644
+> --- a/drivers/dma/xgene-dma.c
+> +++ b/drivers/dma/xgene-dma.c
+> @@ -111,6 +111,7 @@
+>  #define XGENE_DMA_MEM_RAM_SHUTDOWN             0xD070
+>  #define XGENE_DMA_BLK_MEM_RDY                  0xD074
+>  #define XGENE_DMA_BLK_MEM_RDY_VAL              0xFFFFFFFF
+> +#define XGENE_DMA_RING_CMD_SM_OFFSET           0x8000
+>
+>  /* X-Gene SoC EFUSE csr register and bit defination */
+>  #define XGENE_SOC_JTAG1_SHADOW                 0x18
+> @@ -1887,6 +1888,8 @@ static int xgene_dma_get_resources(struct platform_device *pdev,
+>                 return -ENOMEM;
+>         }
+>
+> +       pdma->csr_ring_cmd += XGENE_DMA_RING_CMD_SM_OFFSET;
 > +
-> +The device node for Mediatek SOC usb3.0 host controller
-> +
-> +Required properties:
-> + - compatible : supports "mediatek,mt8173-xhci"
-> + - reg        : Offset and length of registers
-> + - interrupts : Interrupt mode, number and trigger mode
-> + - reg-vusb33-supply:  regulator of usb avdd3.3v
-> + - reg-vbus-supply : regulator of vbus;
+>         /* Get efuse csr region */
+>         res = platform_get_resource(pdev, IORESOURCE_MEM, 3);
+>         if (!res) {
+> --
+> 1.8.2.1
+>
 
-General trend is to use <supply-name>-supply.
-We already know it is a regulator so no need to add "reg-"
-
-So those two can be
-
-vusb33-supply:
-vbus-supply:
-
-
-> + - usb-phy : the phy that xhci will bind
-> + - usb3-lpm-capable: supports USB3 LPM
-> + - clocks     : must support all clocks that xhci needs
-> + - clock-names: should be "sys_mac" for sys and mac clocks
-> +
-> +Example:
-> +usb: usb30@11270000 {
-> +	compatible = "mediatek,mt8173-xhci";
-> +	reg = <0 0x11270000 0 0x1000>;
-> +	interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_LOW>;
-> +	reg-vusb33-supply = <&mt6397_vusb_reg>;
-> +	reg-vbus-supply = <&usb_p1_vbus>;
-> +	usb-phy = <&u3phy>;
-> +	usb3-lpm-capable;
-> +	clocks = <&topckgen CLK_TOP_USB30_SEL>;
-> +	clock-names = "sys_mac";
-> +};
-> 
-
-cheers,
--roger
+Any comments on above patch ?
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
