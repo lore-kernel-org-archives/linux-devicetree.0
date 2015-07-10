@@ -1,63 +1,46 @@
-From: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: Re: [PATCH v1 1/3] gpio: defer probe if pinctrl cannot be found
-Date: Fri, 10 Jul 2015 18:21:10 +0200
-Message-ID: <CAAObsKAav-5-0bZA2XYW4m7eUd9F7yc+9kGvmt_hS-Z0ip=zKw@mail.gmail.com>
-References: <1435754753-31307-1-git-send-email-tomeu.vizoso@collabora.com>
- <1435754753-31307-2-git-send-email-tomeu.vizoso@collabora.com>
- <CAL_JsqKXODBk4FVB-kiWFHLGFLCwJDjXvpVqOTvuEJubApbVSg@mail.gmail.com>
- <CAAObsKBS0OOhPNEAEV5Bh_+WMVWYhuGtGLqaVdCbzxPuT8a_gA@mail.gmail.com> <559FE471.1030408@wwwdotorg.org>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3] phy: rcar-gen2 usb: Add Host/Function switching for
+ USB0
+Date: Fri, 10 Jul 2015 19:36:10 +0300
+Message-ID: <559FF47A.5000001@cogentembedded.com>
+References: <SG2PR06MB0919835888EBD162D4B86C24D8930@SG2PR06MB0919.apcprd06.prod.outlook.com> <1436270121-25924-1-git-send-email-phil.edworthy@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <559FE471.1030408-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1436270121-25924-1-git-send-email-phil.edworthy-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Phil Edworthy <phil.edworthy-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10 July 2015 at 17:27, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> On 07/10/2015 03:29 AM, Tomeu Vizoso wrote:
->>
->> On 1 July 2015 at 19:36, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>
->>> On Wed, Jul 1, 2015 at 7:45 AM, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
->>> wrote:
->>>>
->>>> When an OF node has a pin range for its GPIOs, return -EPROBE_DEFER if
->>>> the pin controller isn't available.
->>>>
->>>> Otherwise, the GPIO range wouldn't be set at all unless the pin
->>>> controller probed always before the GPIO chip.
->>>>
->>>> With this change, the probe of the GPIO chip will be deferred and will
->>>> be retried at a later point, hopefully once the pin controller has been
->>>> registered and probed already.
->>>
->>>
->>> This will break cases where the pinctrl driver does not exist, but the
->>> DT contains pinctrl bindings. We can have similar problems already
->>> with clocks though. However, IMO this problem is a bit different in
->>> that pinctrl is more likely entirely optional while clocks are often
->>> required. You may do all pin setup in bootloader/firmware on some
->>> boards and not others. Of course then why put pinctrl in the DT in
->>> that case? They could be present just due to how chip vs. board dts
->>> files are structured.
->>
->>
->> I see. My instinct tells me that it would be better if the gpio-ranges
->> property was set in the board dts, but I don't really know what each
->> mach does with its DTSs.
->
->
-> That doesn't make sense; the mapping between GPIO controller pins and pin
-> controller pins is a property of the SoC not the board.
+Hello.
 
->From what Rob said above, apparently some boards will rely on the pin
-setup done by the bootloader, and some other boards with the same soc
-will want to do it in the kernel. So it's not really a difference in
-the hw itself, but what expectations exist about the firmware on a
-specific board.
+On 07/07/2015 02:55 PM, Phil Edworthy wrote:
 
-Regards,
+> Instead of statically selecting the PHY connection to either the
+> USBHS (Function) or PCI0 (Host) IP blocks, this change allows the
+> dts to specifiy gpio pins for the vbus and id signals. Additional
 
-Tomeu
+    These GPIOs don't have anything to do with the PHY, they're interfacing 
+Maxim MAX3355 OTG chip for which I have submitted the extcon driver.
+
+> gpio pins are used to control power to an external OTG device and
+> an override to turn vbus on/off.
+
+> Note: the R-Car USB PHY only allows this Host/Function switching
+> on channel 0.
+
+> This has been tested on a r8a7791 based Koelsch board, which uses
+> a MAX3355 device to supply vbus power when needed.
+
+> Signed-off-by: Phil Edworthy <phil.edworthy-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+
+    I'm inclined to NAK this. You're modifying the wrong driver, I think.
+
+WBR, Sergei
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
