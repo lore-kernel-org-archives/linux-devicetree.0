@@ -1,78 +1,72 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 5/7] dt-binding: document the binding for mxc rtc
-Date: Fri, 10 Jul 2015 14:58:30 -0500
-Message-ID: <CAL_Jsq+4AbvtYiYXydKpq5y_tv_6OVoa-Q35XeePsND2zhPfkQ@mail.gmail.com>
-References: <1435965320-1478-1-git-send-email-tremyfr@gmail.com> <1435965320-1478-6-git-send-email-tremyfr@gmail.com>
+From: Stas Sergeev <stsp@list.ru>
+Subject: Re: [PATCH 2/3] of_mdio: add new DT property 'autoneg' for fixed-link
+Date: Fri, 10 Jul 2015 23:08:54 +0300
+Message-ID: <55A02656.7020508@list.ru>
+References: <559FF511.5080102@list.ru> <559FF63E.8020209@list.ru>
+ <55A010F9.7030808@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1435965320-1478-6-git-send-email-tremyfr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philippe Reynes <tremyfr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <55A010F9.7030808@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>, netdev <netdev@vger.kernel.org>
+Cc: Linux kernel <linux-kernel@vger.kernel.org>, Sebastien Rannou <mxs@sbrk.org>, Arnaud Ebalard <arno@natisbad.org>, Stas Sergeev <stsp@users.sourceforge.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 3, 2015 at 6:15 PM, Philippe Reynes <tremyfr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> This adds documentation of device tree bindings for the
-> mxc rtc.
+10.07.2015 21:37, Florian Fainelli =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> On 10/07/15 09:43, Stas Sergeev wrote:
+>> Currently for fixed-link the MAC driver decides whether to use the
+>> link status auto-negotiation or not.
+>> Unfortunately the auto-negotiation may not work when expected by
+>> the MAC driver. Sebastien Rannou explains:
+>> << Yes, I confirm that my HW does not generate an in-band status. AF=
+AIK, it's
+>> a PHY that aggregates 4xSGMIIs to 1xQSGMII ; the MAC side of the PHY=
+ (with
+>> inband status) is connected to the switch through QSGMII, and in thi=
+s context
+>> we are on the media side of the PHY. >>
+>> https://lkml.org/lkml/2015/7/10/206
+>>
+>> This patch introduces the new boolean property 'autoneg' that allows
+>> the user to request the auto-negotiation explicitly.
+> The implementation looks better, but the name might still be slightly
+> controversial. I would go with "use-in-band-status" which is more
+> strictly defined than "autoneg" which could mean anything and everyth=
+ing.
 >
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> What do you think?
+I actually think autoneg is a bit better.
 
-Ack.
+- Autonegotiation is a widely used and known term:
+https://en.wikipedia.org/wiki/Autonegotiation
+And who knows what in-band status is?
+And, more importantly, who knows what is it used for?
+Who even knows it is used for autonegotiation?
 
-One typo below.
+- When we set autoneg for fixed-link, we basically just
+say "no MDIO here, but please do autoneg by any other
+means, if possible".
 
-> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Philippe Reynes <tremyfr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/rtc/rtc-mxc.txt |   27 +++++++++++++++++++++
->  1 files changed, 27 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/rtc/rtc-mxc.txt
->
-> diff --git a/Documentation/devicetree/bindings/rtc/rtc-mxc.txt b/Documentation/devicetree/bindings/rtc/rtc-mxc.txt
-> new file mode 100644
-> index 0000000..5505493
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rtc/rtc-mxc.txt
-> @@ -0,0 +1,27 @@
-> +* Real Time Clock of the i.MX SoCs
-> +
-> +RTC controller for the i.MX SoCs
-> +
-> +Required properties:
-> +- compatible: Should be "fsl,imx1-rtc" or "fsl,imx21-rtc".
-> +- reg: physical base address of the controller and length of memory mapped
-> +  region.
-> +- interrupts: IRQ line for the RTC.
-> +- clocks: should contain two entries:
-> +  * one for the input reference
-> +  * one for the the SoC RTC
-> +- clock-names: should contain:
-> +  * "rtc" for the input reference clock
-> +  * "ipg" for the SoC RTC clock
-> +
-> +Example:
-> +
-> +rtc@10007000 {
-> +       compatible = "fsl,imx21-rtc";
-> +       reg = <0x10007000 0x1000>;
-> +       interrupts = <22>;
-> +       clocks = <&clks IMX27_CLK_CKIL>,
-> +                <&clks IMX27_CLK_RTC_IPG_GATE>;
-> +       clock-names = "rtc, "ipg";
+- in-band status is an implementation delail, and it is
+specific to a particular protocols. If you request the
+in-band status for some protocol that doesn't support
+it, perhaps you should get -EINVAL, because such a
+config makes no sense. With autonegotiation, the rules
+are not that strict: it can be "unimplemented", which doesn't
+necessary mean nonsense in the config.
 
-Missing ".
+- autonegotiation is a wider term, and may be implemented
+by some other means than the in-band status (which is
+probably impossible for a fixed-link though).
 
-> +       status = "disabled";
-> +};
-> --
-> 1.7.4.4
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+- In the terms that the driver uses, it is autonegotiation, eg
+MVNETA_GMAC_AUTONEG_CONFIG. And when you go down
+the implementation details, you see MVNETA_GMAC_INBAND_AN_ENABLE,
+which is just one AN bit of many.
+
+So I really would prefer to keep things as is.
+But if you insist, I can rename, but there will still be no
+-EINVAL checks for obviously wrong configs.
