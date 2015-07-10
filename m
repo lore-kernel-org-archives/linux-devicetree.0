@@ -1,62 +1,85 @@
-From: Anurag Kumar Vulisha <anurag.kumar.vulisha-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH] i2c: removed work arounds in i2c driver for Zynq
- Ultrascale+ MPSoC
-Date: Fri, 10 Jul 2015 07:29:39 +0000
-Message-ID: <3802E9A6666DF54886E2B9CBF743BA98011EFAFC@XAP-PVEXMBX01.xlnx.xilinx.com>
-References: <1434644382-11905-1-git-send-email-anuragku@xilinx.com>
- <20150709200913.GL4744@katana>
+From: Jianwei Wang <jianwei.wang@freescale.com>
+Subject: [PATCH v6 2/4] drm/panel: simple: Add support for NEC NL4827HC19-05B
+ 480x272 panel
+Date: Fri, 10 Jul 2015 15:26:53 +0800
+Message-ID: <1436513215-43423-2-git-send-email-jianwei.wang@freescale.com>
+References: <1436513215-43423-1-git-send-email-jianwei.wang@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150709200913.GL4744@katana>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Harini Katakam <harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Anirudha Sarangi <anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Srikanth Vemula <svemula-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1436513215-43423-1-git-send-email-jianwei.wang@freescale.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: devicetree@vger.kernel.org, daniel.vetter@ffwll.ch, linux-kernel@vger.kernel.org, scottwood@freescale.com, Jianwei Wang <jianwei.wang@freescale.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
-Hi,
-        Thanks for reviewing the code. I will make the changes as said and send the patch as v2.
-Thanks,
-Anurag Kumar V
-
-> -----Original Message-----
-> From: Wolfram Sang [mailto:wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org]
-> Sent: Friday, July 10, 2015 1:39 AM
-> To: Anurag Kumar Vulisha
-> Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; pawel.moll-5wv7dgnIgG8@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org;
-> ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org; galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org; Michal Simek; Soren
-> Brinkmann; linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-
-> kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; Punnaiah
-> Choudary Kalluri; Harini Katakam; Anirudha Sarangi; Srikanth Vemula; Anurag
-> Kumar Vulisha
-> Subject: Re: [PATCH] i2c: removed work arounds in i2c driver for Zynq
-> Ultrascale+ MPSoC
->
-> Hi,
->
-> thanks for the submission!
->
-> > +#define CDNS_I2C_BROKEN_HOLD_BIT   0x00000001
->
-> BIT(0) maybe?
->
-> > +static const struct cdns_platform_data r1p10_i2c_def = {
-> > +                           .quirks = CDNS_I2C_BROKEN_HOLD_BIT, };
->
-> Closing '}' should be on seperate line.
->
-> And what Mark said.
->
-> Other than that, looks okay I'd say.
-
-
-
-This email and any attachments are intended for the sole use of the named recipient(s) and contain(s) confidential information that may be proprietary, privileged or copyrighted under applicable law. If you are not the intended recipient, do not read, copy, or forward this email message or any attachments. Delete this email message and any attachments immediately.
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhpcyBhZGRzIHN1cHBvcnQgZm9yIHRoZSAgTkVDIE5MNDgyN0hDMTktMDVCIDQ4MHgyNzIgcGFu
+ZWwgdG8KdGhlIERSTSBzaW1wbGUgcGFuZWwgZHJpdmVyLgoKU2lnbmVkLW9mZi1ieTogSmlhbndl
+aSBXYW5nIDxqaWFud2VpLndhbmdAZnJlZXNjYWxlLmNvbT4KLS0tCiAuLi4vYmluZGluZ3MvcGFu
+ZWwvbmVjLG5sNDgyN2hjMTlfMDViLnR4dCAgICAgICAgICB8ICA4ICsrKysrKysKIC4uLi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy50eHQgICAgICAgIHwgIDEgKwogTUFJTlRB
+SU5FUlMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgMSArCiBkcml2
+ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMgICAgICAgICAgICAgICB8IDI2ICsrKysr
+KysrKysrKysrKysrKysrKysKIDQgZmlsZXMgY2hhbmdlZCwgMzYgaW5zZXJ0aW9ucygrKQogY3Jl
+YXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wYW5lbC9u
+ZWMsbmw0ODI3aGMxOV8wNWIudHh0CgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL3BhbmVsL25lYyxubDQ4MjdoYzE5XzA1Yi50eHQgYi9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvcGFuZWwvbmVjLG5sNDgyN2hjMTlfMDViLnR4dApuZXcgZmls
+ZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwLi42ZjZkYmRkCi0tLSAvZGV2L251bGwKKysrIGIv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BhbmVsL25lYyxubDQ4MjdoYzE5XzA1
+Yi50eHQKQEAgLTAsMCArMSw3IEBACitORUMgTENEIFRlY2hub2xvZ2llcyxMdGQuIFdRVkdBIFRG
+VCBMQ0QgcGFuZWwKKworUmVxdWlyZWQgcHJvcGVydGllczoKKy0gY29tcGF0aWJsZTogc2hvdWxk
+IGJlICJuZWMsbmw0ODI3aGMxOV8wNWIiCisKK1RoaXMgYmluZGluZyBpcyBjb21wYXRpYmxlIHdp
+dGggdGhlIHNpbXBsZS1wYW5lbCBiaW5kaW5nLCB3aGljaCBpcyBzcGVjaWZpZWQKK2luIHNpbXBs
+ZS1wYW5lbC50eHQgaW4gdGhpcyBkaXJlY3RvcnkuCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvdmVuZG9yLXByZWZpeGVzLnR4dCBiL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0CmluZGV4IDgwMzM5MTkuLjlm
+MjJiM2UgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5k
+b3ItcHJlZml4ZXMudHh0CisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92
+ZW5kb3ItcHJlZml4ZXMudHh0CkBAIC0xMzEsNiArMTMxLDcgQEAgbXVuZG9yZWFkZXIJTXVuZG8g
+UmVhZGVyIFMuTC4KIG11cmF0YQlNdXJhdGEgTWFudWZhY3R1cmluZyBDby4sIEx0ZC4KIG14aWN5
+CU1hY3Jvbml4IEludGVybmF0aW9uYWwgQ28uLCBMdGQuCiBuYXRpb25hbAlOYXRpb25hbCBTZW1p
+Y29uZHVjdG9yCituZWMJTkVDIExDRCBUZWNobm9sb2dpZXMsIEx0ZC4KIG5lb25vZGUJCU5lb25v
+ZGUgSW5jLgogbmV0Z2VhcglORVRHRUFSCiBuZXRsb2dpYwlCcm9hZGNvbSBDb3Jwb3JhdGlvbiAo
+Zm9ybWVybHkgTmV0TG9naWMgTWljcm9zeXN0ZW1zKQpkaWZmIC0tZ2l0IGEvTUFJTlRBSU5FUlMg
+Yi9NQUlOVEFJTkVSUwppbmRleCBiMjViOTQ4Li45MDQ3YzJiIDEwMDY0NAotLS0gYS9NQUlOVEFJ
+TkVSUworKysgYi9NQUlOVEFJTkVSUwpAQCAtMzQxMCw2ICszNDEwLDcgQEAgTToJQWxpc29uIFdh
+bmcgPGFsaXNvbi53YW5nQGZyZWVzY2FsZS5jb20+CiBMOglkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnCiBTOglTdXBwb3J0ZWQKIEY6CWRyaXZlcnMvZ3B1L2RybS9mc2wtZGN1LworRjoJ
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BhbmVsL25lYyxubDQ4MjdoYzE5XzA1
+Yi50eHQKIAogRFJNIERSSVZFUlMgRk9SIE5WSURJQSBURUdSQQogTToJVGhpZXJyeSBSZWRpbmcg
+PHRoaWVycnkucmVkaW5nQGdtYWlsLmNvbT4KZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9w
+YW5lbC9wYW5lbC1zaW1wbGUuYyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUu
+YwppbmRleCBmOTQyMDFiLi5lZWU5NWY0IDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vcGFu
+ZWwvcGFuZWwtc2ltcGxlLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBs
+ZS5jCkBAIC0xMDM2LDYgKzEwMzYsMjkgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBwYW5lbF9kZXNj
+IHNoZWxseV9zY2EwNzAxMF9iZm5fbG5uID0gewogCS5idXNfZm9ybWF0ID0gTUVESUFfQlVTX0ZN
+VF9SR0I2NjZfMVgxOCwKIH07CiAKK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9k
+ZSBuZWNfbmw0ODI3aGMxOV8wNWJfbW9kZSA9IHsKKwkuY2xvY2sgPSAxMDg3MCwKKwkuaGRpc3Bs
+YXkgPSA0ODAsCisJLmhzeW5jX3N0YXJ0ID0gNDgwICsgMiwKKwkuaHN5bmNfZW5kID0gNDgwICsg
+MiArIDQxLAorCS5odG90YWwgPSA0ODAgKyAyICsgNDEgKyAyLAorCS52ZGlzcGxheSA9IDI3MiwK
+KwkudnN5bmNfc3RhcnQgPSAyNzIgKyAyLAorCS52c3luY19lbmQgPSAyNzIgKyAyICsgNCwKKwku
+dnRvdGFsID0gMjcyICsgMiArIDQgKyAyLAorCS52cmVmcmVzaCA9IDc0LAorfTsKKworc3RhdGlj
+IGNvbnN0IHN0cnVjdCBwYW5lbF9kZXNjIG5lY19ubDQ4MjdoYzE5XzA1YiA9IHsKKwkubW9kZXMg
+PSAmbmVjX25sNDgyN2hjMTlfMDViX21vZGUsCisJLm51bV9tb2RlcyA9IDEsCisJLnNpemUgPSB7
+CisJCS53aWR0aCA9IDQ4MCwKKwkJLmhlaWdodCA9IDI3MiwKKwl9LAorCS5idXNfZm9ybWF0ID0g
+TUVESUFfQlVTX0ZNVF9SR0I4ODhfMVgyNAorfTsKKwogc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9k
+ZXZpY2VfaWQgcGxhdGZvcm1fb2ZfbWF0Y2hbXSA9IHsKIAl7CiAJCS5jb21wYXRpYmxlID0gImFt
+cGlyZSxhbTgwMDQ4MHIzdG1xd2ExaCIsCkBAIC0xMTI1LDYgKzExNDgsOSBAQCBzdGF0aWMgY29u
+c3Qgc3RydWN0IG9mX2RldmljZV9pZCBwbGF0Zm9ybV9vZl9tYXRjaFtdID0gewogCQkuY29tcGF0
+aWJsZSA9ICJzaGVsbHksc2NhMDcwMTAtYmZuLWxubiIsCiAJCS5kYXRhID0gJnNoZWxseV9zY2Ew
+NzAxMF9iZm5fbG5uLAogCX0sIHsKKwkJLmNvbXBhdGlibGUgPSAibmVjLG5sNDgyN2hjMTlfMDVi
+IiwKKwkJLmRhdGEgPSAmbmVjX25sNDgyN2hjMTlfMDViLAorCX0sIHsKIAkJLyogc2VudGluZWwg
+Ki8KIAl9CiB9OwotLQoyLjEuMC4yNy5nOTZkYjMyNAoKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9kcmktZGV2ZWwK
