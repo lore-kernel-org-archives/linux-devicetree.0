@@ -1,248 +1,438 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH v2 3/3] ARM: dts: UniPhier: add USB EHCI device nodes
-Date: Fri, 10 Jul 2015 13:54:00 +0900
-Message-ID: <1436504040-16375-4-git-send-email-yamada.masahiro@socionext.com>
+From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: [PATCH v2 2/3] ARM: dts: UniPhier: add on-chip UART device nodes
+Date: Fri, 10 Jul 2015 13:53:59 +0900
+Message-ID: <1436504040-16375-3-git-send-email-yamada.masahiro@socionext.com>
 References: <1436504040-16375-1-git-send-email-yamada.masahiro@socionext.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1436504040-16375-1-git-send-email-yamada.masahiro@socionext.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: arm@kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1436504040-16375-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-No dedicated driver compatible with "socionext,uniphier-ehci" has
-been supported in the mainline yet, so it falls into "generic-ehci"
-and it works well enough with our USB 2.0 host controllers.
+The UniPhier on-chip UART driver was merged into the mainline by
+commit 1a8d2903cb6a ("serial: 8250_uniphier: add UniPhier serial
+driver").
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Add device nodes to make it really available.
+
+We no longer have to depend on the on-board UART device (16550A),
+so let's change the chosen and aliases to point to the on-chip ones.
+Also, turn on the on-board Ethernet device.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
 ---
 
-Changes in v2:
-  - Add chip-specific compatible strings "socionext,uniphier-ehci"
+Changes in v2: None
 
- arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts  |  8 ++++++++
- arch/arm/boot/dts/uniphier-ph1-ld4.dtsi     | 21 +++++++++++++++++++++
- arch/arm/boot/dts/uniphier-ph1-pro4-ref.dts |  8 ++++++++
- arch/arm/boot/dts/uniphier-ph1-pro4.dtsi    | 14 ++++++++++++++
- arch/arm/boot/dts/uniphier-ph1-sld3-ref.dts | 16 ++++++++++++++++
- arch/arm/boot/dts/uniphier-ph1-sld3.dtsi    | 28 ++++++++++++++++++++++++++++
- arch/arm/boot/dts/uniphier-ph1-sld8-ref.dts | 12 ++++++++++++
- arch/arm/boot/dts/uniphier-ph1-sld8.dtsi    | 21 +++++++++++++++++++++
- 8 files changed, 128 insertions(+)
+ arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts  | 21 ++++++++++++---
+ arch/arm/boot/dts/uniphier-ph1-ld4.dtsi     | 42 +++++++++++++++++++++++++++++
+ arch/arm/boot/dts/uniphier-ph1-pro4-ref.dts | 21 ++++++++++++---
+ arch/arm/boot/dts/uniphier-ph1-pro4.dtsi    | 42 +++++++++++++++++++++++++++++
+ arch/arm/boot/dts/uniphier-ph1-sld3-ref.dts | 20 +++++++++++---
+ arch/arm/boot/dts/uniphier-ph1-sld3.dtsi    | 33 +++++++++++++++++++++++
+ arch/arm/boot/dts/uniphier-ph1-sld8-ref.dts | 21 ++++++++++++---
+ arch/arm/boot/dts/uniphier-ph1-sld8.dtsi    | 42 +++++++++++++++++++++++++++++
+ 8 files changed, 230 insertions(+), 12 deletions(-)
 
 diff --git a/arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts b/arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts
-index 0cd385a9..7ac053d 100644
+index 200b0c9..0cd385a9 100644
 --- a/arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts
 +++ b/arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts
-@@ -92,3 +92,11 @@
- &serial3 {
- 	status = "okay";
+@@ -57,11 +57,14 @@
+ 
+ 	chosen {
+ 		bootargs = "console=ttyS0,115200";
+-		stdout-path = &serialsc;
++		stdout-path = &serial0;
+ 	};
+ 
+ 	aliases {
+-		serial0 = &serialsc;
++		serial0 = &serial0;
++		serial1 = &serial1;
++		serial2 = &serial2;
++		serial3 = &serial3;
+ 	};
+ };
+ 
+@@ -74,6 +77,18 @@
+ 	ranges = <0x00000000 1 0x03f00000 0x00100000>;
+ };
+ 
+-&serialsc {
++&ethsc {
+ 	interrupts = <0 49 4>;
  };
 +
-+&usb0 {
++&serial0 {
 +	status = "okay";
 +};
 +
-+&usb1 {
++&serial2 {
++	status = "okay";
++};
++
++&serial3 {
 +	status = "okay";
 +};
 diff --git a/arch/arm/boot/dts/uniphier-ph1-ld4.dtsi b/arch/arm/boot/dts/uniphier-ph1-ld4.dtsi
-index 1261e6d..600a473 100644
+index 6a34c56..1261e6d 100644
 --- a/arch/arm/boot/dts/uniphier-ph1-ld4.dtsi
 +++ b/arch/arm/boot/dts/uniphier-ph1-ld4.dtsi
-@@ -127,6 +127,27 @@
- 			reg = <0x59800000 0x2000>;
+@@ -64,6 +64,12 @@
+ 			compatible = "fixed-clock";
+ 			clock-frequency = <50000000>;
+ 		};
++
++		uart_clk: uart_clk {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <36864000>;
++		};
+ 	};
+ 
+ 	soc {
+@@ -79,6 +85,42 @@
+ 			#size-cells = <1>;
  		};
  
-+		usb0: usb@5a800100 {
-+			compatible = "socionext,uniphier-ehci", "generic-ehci";
++		serial0: serial@54006800 {
++			compatible = "socionext,uniphier-uart";
 +			status = "disabled";
-+			reg = <0x5a800100 0x100>;
-+			interrupts = <0 80 4>;
++			reg = <0x54006800 0x40>;
++			interrupts = <0 33 4>;
++			clocks = <&uart_clk>;
++			fifo-size = <64>;
 +		};
 +
-+		usb1: usb@5a810100 {
-+			compatible = "socionext,uniphier-ehci", "generic-ehci";
++		serial1: serial@54006900 {
++			compatible = "socionext,uniphier-uart";
 +			status = "disabled";
-+			reg = <0x5a810100 0x100>;
-+			interrupts = <0 81 4>;
++			reg = <0x54006900 0x40>;
++			interrupts = <0 35 4>;
++			clocks = <&uart_clk>;
++			fifo-size = <64>;
 +		};
 +
-+		usb2: usb@5a820100 {
-+			compatible = "socionext,uniphier-ehci", "generic-ehci";
++		serial2: serial@54006a00 {
++			compatible = "socionext,uniphier-uart";
 +			status = "disabled";
-+			reg = <0x5a820100 0x100>;
-+			interrupts = <0 82 4>;
++			reg = <0x54006a00 0x40>;
++			interrupts = <0 37 4>;
++			clocks = <&uart_clk>;
++			fifo-size = <64>;
 +		};
 +
- 		timer@60000200 {
- 			compatible = "arm,cortex-a9-global-timer";
- 			reg = <0x60000200 0x20>;
++		serial3: serial@54006b00 {
++			compatible = "socionext,uniphier-uart";
++			status = "disabled";
++			reg = <0x54006b00 0x40>;
++			interrupts = <0 29 4>;
++			clocks = <&uart_clk>;
++			fifo-size = <64>;
++		};
++
+ 		system-bus-controller-misc@59800000 {
+ 			compatible = "socionext,uniphier-system-bus-controller-misc",
+ 				     "syscon";
 diff --git a/arch/arm/boot/dts/uniphier-ph1-pro4-ref.dts b/arch/arm/boot/dts/uniphier-ph1-pro4-ref.dts
-index 0951cbf..b669d32 100644
+index d891135..0951cbf 100644
 --- a/arch/arm/boot/dts/uniphier-ph1-pro4-ref.dts
 +++ b/arch/arm/boot/dts/uniphier-ph1-pro4-ref.dts
-@@ -92,3 +92,11 @@
- &serial2 {
- 	status = "okay";
+@@ -57,11 +57,14 @@
+ 
+ 	chosen {
+ 		bootargs = "console=ttyS0,115200";
+-		stdout-path = &serialsc;
++		stdout-path = &serial0;
+ 	};
+ 
+ 	aliases {
+-		serial0 = &serialsc;
++		serial0 = &serial0;
++		serial1 = &serial1;
++		serial2 = &serial2;
++		serial3 = &serial3;
+ 	};
+ };
+ 
+@@ -74,6 +77,18 @@
+ 	ranges = <0x00000000 1 0x03f00000 0x00100000>;
+ };
+ 
+-&serialsc {
++&ethsc {
+ 	interrupts = <0 50 4>;
  };
 +
-+&usb2 {
++&serial0 {
 +	status = "okay";
 +};
 +
-+&usb3 {
++&serial1 {
++	status = "okay";
++};
++
++&serial2 {
 +	status = "okay";
 +};
 diff --git a/arch/arm/boot/dts/uniphier-ph1-pro4.dtsi b/arch/arm/boot/dts/uniphier-ph1-pro4.dtsi
-index acd2c06..4598bb2 100644
+index dc63360..acd2c06 100644
 --- a/arch/arm/boot/dts/uniphier-ph1-pro4.dtsi
 +++ b/arch/arm/boot/dts/uniphier-ph1-pro4.dtsi
-@@ -134,6 +134,20 @@
- 			reg = <0x59800000 0x2000>;
+@@ -71,6 +71,12 @@
+ 			compatible = "fixed-clock";
+ 			clock-frequency = <50000000>;
+ 		};
++
++		uart_clk: uart_clk {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <73728000>;
++		};
+ 	};
+ 
+ 	soc {
+@@ -86,6 +92,42 @@
+ 			#size-cells = <1>;
  		};
  
-+		usb2: usb@5a800100 {
-+			compatible = "socionext,uniphier-ehci", "generic-ehci";
++		serial0: serial@54006800 {
++			compatible = "socionext,uniphier-uart";
 +			status = "disabled";
-+			reg = <0x5a800100 0x100>;
-+			interrupts = <0 80 4>;
++			reg = <0x54006800 0x40>;
++			interrupts = <0 33 4>;
++			clocks = <&uart_clk>;
++			fifo-size = <64>;
 +		};
 +
-+		usb3: usb@5a810100 {
-+			compatible = "socionext,uniphier-ehci", "generic-ehci";
++		serial1: serial@54006900 {
++			compatible = "socionext,uniphier-uart";
 +			status = "disabled";
-+			reg = <0x5a810100 0x100>;
-+			interrupts = <0 81 4>;
++			reg = <0x54006900 0x40>;
++			interrupts = <0 35 4>;
++			clocks = <&uart_clk>;
++			fifo-size = <64>;
 +		};
 +
- 		timer@60000200 {
- 			compatible = "arm,cortex-a9-global-timer";
- 			reg = <0x60000200 0x20>;
++		serial2: serial@54006a00 {
++			compatible = "socionext,uniphier-uart";
++			status = "disabled";
++			reg = <0x54006a00 0x40>;
++			interrupts = <0 37 4>;
++			clocks = <&uart_clk>;
++			fifo-size = <64>;
++		};
++
++		serial3: serial@54006b00 {
++			compatible = "socionext,uniphier-uart";
++			status = "disabled";
++			reg = <0x54006b00 0x40>;
++			interrupts = <0 29 4>;
++			clocks = <&uart_clk>;
++			fifo-size = <64>;
++		};
++
+ 		system-bus-controller-misc@59800000 {
+ 			compatible = "socionext,uniphier-system-bus-controller-misc",
+ 				     "syscon";
 diff --git a/arch/arm/boot/dts/uniphier-ph1-sld3-ref.dts b/arch/arm/boot/dts/uniphier-ph1-sld3-ref.dts
-index 47a44da..48f7361 100644
+index 3ea64ae..47a44da 100644
 --- a/arch/arm/boot/dts/uniphier-ph1-sld3-ref.dts
 +++ b/arch/arm/boot/dts/uniphier-ph1-sld3-ref.dts
-@@ -92,3 +92,19 @@
- &serial2 {
- 	status = "okay";
+@@ -58,11 +58,13 @@
+ 
+ 	chosen {
+ 		bootargs = "console=ttyS0,115200";
+-		stdout-path = &serialsc;
++		stdout-path = &serial0;
+ 	};
+ 
+ 	aliases {
+-		serial0 = &serialsc;
++		serial0 = &serial0;
++		serial1 = &serial1;
++		serial2 = &serial2;
+ 	};
+ };
+ 
+@@ -75,6 +77,18 @@
+ 	ranges = <0x00000000 1 0x03f00000 0x00100000>;
+ };
+ 
+-&serialsc {
++&ethsc {
+ 	interrupts = <0 49 4>;
  };
 +
-+&usb0 {
++&serial0 {
 +	status = "okay";
 +};
 +
-+&usb1 {
++&serial1 {
 +	status = "okay";
 +};
 +
-+&usb2 {
-+	status = "okay";
-+};
-+
-+&usb3 {
++&serial2 {
 +	status = "okay";
 +};
 diff --git a/arch/arm/boot/dts/uniphier-ph1-sld3.dtsi b/arch/arm/boot/dts/uniphier-ph1-sld3.dtsi
-index feb253b..db74457 100644
+index 248b188..feb253b 100644
 --- a/arch/arm/boot/dts/uniphier-ph1-sld3.dtsi
 +++ b/arch/arm/boot/dts/uniphier-ph1-sld3.dtsi
-@@ -146,5 +146,33 @@
- 				     "syscon";
- 			reg = <0x59800000 0x2000>;
+@@ -71,6 +71,12 @@
+ 			compatible = "fixed-clock";
+ 			clock-frequency = <50000000>;
  		};
 +
-+		usb0: usb@5a800100 {
-+			compatible = "socionext,uniphier-ehci", "generic-ehci";
-+			status = "disabled";
-+			reg = <0x5a800100 0x100>;
-+			interrupts = <0 80 4>;
-+		};
-+
-+		usb1: usb@5a810100 {
-+			compatible = "socionext,uniphier-ehci", "generic-ehci";
-+			status = "disabled";
-+			reg = <0x5a810100 0x100>;
-+			interrupts = <0 81 4>;
-+		};
-+
-+		usb2: usb@5a820100 {
-+			compatible = "socionext,uniphier-ehci", "generic-ehci";
-+			status = "disabled";
-+			reg = <0x5a820100 0x100>;
-+			interrupts = <0 82 4>;
-+		};
-+
-+		usb3: usb@5a830100 {
-+			compatible = "socionext,uniphier-ehci", "generic-ehci";
-+			status = "disabled";
-+			reg = <0x5a830100 0x100>;
-+			interrupts = <0 83 4>;
++		uart_clk: uart_clk {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <36864000>;
 +		};
  	};
- };
+ 
+ 	soc {
+@@ -108,6 +114,33 @@
+ 			      <0x20000100 0x100>;
+ 		};
+ 
++		serial0: serial@54006800 {
++			compatible = "socionext,uniphier-uart";
++			status = "disabled";
++			reg = <0x54006800 0x40>;
++			interrupts = <0 33 4>;
++			clocks = <&uart_clk>;
++			fifo-size = <64>;
++		};
++
++		serial1: serial@54006900 {
++			compatible = "socionext,uniphier-uart";
++			status = "disabled";
++			reg = <0x54006900 0x40>;
++			interrupts = <0 35 4>;
++			clocks = <&uart_clk>;
++			fifo-size = <64>;
++		};
++
++		serial2: serial@54006a00 {
++			compatible = "socionext,uniphier-uart";
++			status = "disabled";
++			reg = <0x54006a00 0x40>;
++			interrupts = <0 37 4>;
++			clocks = <&uart_clk>;
++			fifo-size = <64>;
++		};
++
+ 		system-bus-controller-misc@59800000 {
+ 			compatible = "socionext,uniphier-system-bus-controller-misc",
+ 				     "syscon";
 diff --git a/arch/arm/boot/dts/uniphier-ph1-sld8-ref.dts b/arch/arm/boot/dts/uniphier-ph1-sld8-ref.dts
-index 07e93a9..9b5992a 100644
+index dcdc4f7..07e93a9 100644
 --- a/arch/arm/boot/dts/uniphier-ph1-sld8-ref.dts
 +++ b/arch/arm/boot/dts/uniphier-ph1-sld8-ref.dts
-@@ -92,3 +92,15 @@
- &serial3 {
- 	status = "okay";
+@@ -57,11 +57,14 @@
+ 
+ 	chosen {
+ 		bootargs = "console=ttyS0,115200";
+-		stdout-path = &serialsc;
++		stdout-path = &serial0;
+ 	};
+ 
+ 	aliases {
+-		serial0 = &serialsc;
++		serial0 = &serial0;
++		serial1 = &serial1;
++		serial2 = &serial2;
++		serial3 = &serial3;
+ 	};
+ };
+ 
+@@ -74,6 +77,18 @@
+ 	ranges = <0x00000000 1 0x03f00000 0x00100000>;
+ };
+ 
+-&serialsc {
++&ethsc {
+ 	interrupts = <0 48 4>;
  };
 +
-+&usb0 {
++&serial0 {
 +	status = "okay";
 +};
 +
-+&usb1 {
++&serial2 {
 +	status = "okay";
 +};
 +
-+&usb2 {
++&serial3 {
 +	status = "okay";
 +};
 diff --git a/arch/arm/boot/dts/uniphier-ph1-sld8.dtsi b/arch/arm/boot/dts/uniphier-ph1-sld8.dtsi
-index bf0c8c1..3255157 100644
+index baa71e1..bf0c8c1 100644
 --- a/arch/arm/boot/dts/uniphier-ph1-sld8.dtsi
 +++ b/arch/arm/boot/dts/uniphier-ph1-sld8.dtsi
-@@ -127,6 +127,27 @@
- 			reg = <0x59800000 0x2000>;
+@@ -64,6 +64,12 @@
+ 			compatible = "fixed-clock";
+ 			clock-frequency = <50000000>;
+ 		};
++
++		uart_clk: uart_clk {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <80000000>;
++		};
+ 	};
+ 
+ 	soc {
+@@ -79,6 +85,42 @@
+ 			#size-cells = <1>;
  		};
  
-+		usb0: usb@5a800100 {
-+			compatible = "socionext,uniphier-ehci", "generic-ehci";
++		serial0: serial@54006800 {
++			compatible = "socionext,uniphier-uart";
 +			status = "disabled";
-+			reg = <0x5a800100 0x100>;
-+			interrupts = <0 80 4>;
++			reg = <0x54006800 0x40>;
++			interrupts = <0 33 4>;
++			clocks = <&uart_clk>;
++			fifo-size = <64>;
 +		};
 +
-+		usb1: usb@5a810100 {
-+			compatible = "socionext,uniphier-ehci", "generic-ehci";
++		serial1: serial@54006900 {
++			compatible = "socionext,uniphier-uart";
 +			status = "disabled";
-+			reg = <0x5a810100 0x100>;
-+			interrupts = <0 81 4>;
++			reg = <0x54006900 0x40>;
++			interrupts = <0 35 4>;
++			clocks = <&uart_clk>;
++			fifo-size = <64>;
 +		};
 +
-+		usb2: usb@5a820100 {
-+			compatible = "socionext,uniphier-ehci", "generic-ehci";
++		serial2: serial@54006a00 {
++			compatible = "socionext,uniphier-uart";
 +			status = "disabled";
-+			reg = <0x5a820100 0x100>;
-+			interrupts = <0 82 4>;
++			reg = <0x54006a00 0x40>;
++			interrupts = <0 37 4>;
++			clocks = <&uart_clk>;
++			fifo-size = <64>;
 +		};
 +
- 		timer@60000200 {
- 			compatible = "arm,cortex-a9-global-timer";
- 			reg = <0x60000200 0x20>;
++		serial3: serial@54006b00 {
++			compatible = "socionext,uniphier-uart";
++			status = "disabled";
++			reg = <0x54006b00 0x40>;
++			interrupts = <0 29 4>;
++			clocks = <&uart_clk>;
++			fifo-size = <64>;
++		};
++
+ 		system-bus-controller-misc@59800000 {
+ 			compatible = "socionext,uniphier-system-bus-controller-misc",
+ 				     "syscon";
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
