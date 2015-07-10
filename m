@@ -1,143 +1,66 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 2/3] of_mdio: add new DT property 'autoneg' for fixed-link
-Date: Fri, 10 Jul 2015 11:37:45 -0700
-Message-ID: <55A010F9.7030808@gmail.com>
-References: <559FF511.5080102@list.ru> <559FF63E.8020209@list.ru>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v1 1/3] gpio: defer probe if pinctrl cannot be found
+Date: Fri, 10 Jul 2015 13:40:58 -0500
+Message-ID: <CAL_JsqL1dofXxZ7wG3oeiq1M7BUBOse23PG2D20+YHBNvAKryA@mail.gmail.com>
+References: <1435754753-31307-1-git-send-email-tomeu.vizoso@collabora.com>
+ <1435754753-31307-2-git-send-email-tomeu.vizoso@collabora.com>
+ <CAL_JsqKXODBk4FVB-kiWFHLGFLCwJDjXvpVqOTvuEJubApbVSg@mail.gmail.com> <CAAObsKBS0OOhPNEAEV5Bh_+WMVWYhuGtGLqaVdCbzxPuT8a_gA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <559FF63E.8020209@list.ru>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stas Sergeev <stsp@list.ru>, netdev <netdev@vger.kernel.org>
-Cc: Linux kernel <linux-kernel@vger.kernel.org>, Sebastien Rannou <mxs@sbrk.org>, Arnaud Ebalard <arno@natisbad.org>, Stas Sergeev <stsp@users.sourceforge.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAAObsKBS0OOhPNEAEV5Bh_+WMVWYhuGtGLqaVdCbzxPuT8a_gA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/07/15 09:43, Stas Sergeev wrote:
-> 
-> Currently for fixed-link the MAC driver decides whether to use the
-> link status auto-negotiation or not.
-> Unfortunately the auto-negotiation may not work when expected by
-> the MAC driver. Sebastien Rannou explains:
-> << Yes, I confirm that my HW does not generate an in-band status. AFAIK, it's
-> a PHY that aggregates 4xSGMIIs to 1xQSGMII ; the MAC side of the PHY (with
-> inband status) is connected to the switch through QSGMII, and in this context
-> we are on the media side of the PHY. >>
-> https://lkml.org/lkml/2015/7/10/206
-> 
-> This patch introduces the new boolean property 'autoneg' that allows
-> the user to request the auto-negotiation explicitly.
+On Fri, Jul 10, 2015 at 4:29 AM, Tomeu Vizoso
+<tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org> wrote:
+> On 1 July 2015 at 19:36, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> On Wed, Jul 1, 2015 at 7:45 AM, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org> wrote:
+>>> When an OF node has a pin range for its GPIOs, return -EPROBE_DEFER if
+>>> the pin controller isn't available.
+>>>
+>>> Otherwise, the GPIO range wouldn't be set at all unless the pin
+>>> controller probed always before the GPIO chip.
+>>>
+>>> With this change, the probe of the GPIO chip will be deferred and will
+>>> be retried at a later point, hopefully once the pin controller has been
+>>> registered and probed already.
+>>
+>> This will break cases where the pinctrl driver does not exist, but the
+>> DT contains pinctrl bindings. We can have similar problems already
+>> with clocks though. However, IMO this problem is a bit different in
+>> that pinctrl is more likely entirely optional while clocks are often
+>> required. You may do all pin setup in bootloader/firmware on some
+>> boards and not others. Of course then why put pinctrl in the DT in
+>> that case? They could be present just due to how chip vs. board dts
+>> files are structured.
+>
+> I see. My instinct tells me that it would be better if the gpio-ranges
+> property was set in the board dts, but I don't really know what each
+> mach does with its DTSs.
+>
+>> We could address this by simply marking the pin controller node
+>> disabled. However, ...
+>>
+>>> @@ -361,7 +361,7 @@ static void of_gpiochip_add_pin_range(struct gpio_chip *chip)
+>>>
+>>>                 pctldev = of_pinctrl_get(pinspec.np);
+>>>                 if (!pctldev)
+>>> -                       break;
+>>> +                       return -EPROBE_DEFER;
+>>
+>> But you cannot distinguish that case here. I think of_pinctrl_get
+>> needs to set the error code appropriately.
+>
+> Why not? I was thinking of just doing this before we call of_pinctrl_get():
+>
+>         if (!of_device_is_available(pinspec.np))
+>             continue;
 
-The implementation looks better, but the name might still be slightly
-controversial. I would go with "use-in-band-status" which is more
-strictly defined than "autoneg" which could mean anything and everything.
+That is exactly what you need, but that should be of_pinctrl_get's
+responsibility to check, not the caller's. IIRC, this is the only user
+of of_pinctrl_get, so it should be just as easy to change.
 
-What do you think?
-
-> 
-> Signed-off-by: Stas Sergeev <stsp@users.sourceforge.net>
-> 
-> CC: Rob Herring <robh+dt@kernel.org>
-> CC: Pawel Moll <pawel.moll@arm.com>
-> CC: Mark Rutland <mark.rutland@arm.com>
-> CC: Ian Campbell <ijc+devicetree@hellion.org.uk>
-> CC: Kumar Gala <galak@codeaurora.org>
-> CC: Florian Fainelli <f.fainelli@gmail.com>
-> CC: Grant Likely <grant.likely@linaro.org>
-> CC: devicetree@vger.kernel.org
-> CC: linux-kernel@vger.kernel.org
-> CC: netdev@vger.kernel.org
-> ---
->  .../devicetree/bindings/net/fixed-link.txt         |  6 +++++-
->  drivers/of/of_mdio.c                               | 23 ++++++++++++++++++++--
->  include/linux/of_mdio.h                            |  5 +++++
->  3 files changed, 31 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/fixed-link.txt b/Documentation/devicetree/bindings/net/fixed-link.txt
-> index 82bf7e0..e2959a8 100644
-> --- a/Documentation/devicetree/bindings/net/fixed-link.txt
-> +++ b/Documentation/devicetree/bindings/net/fixed-link.txt
-> @@ -9,8 +9,12 @@ Such a fixed link situation is described by creating a 'fixed-link'
->  sub-node of the Ethernet MAC device node, with the following
->  properties:
-> 
-> +* 'autoneg' (boolean, optional), to enable the auto-negotiation of link
-> +  state. Auto-negotiation is MII protocol, HW and driver-specific and is
-> +  not supported in many cases, so use it only when you know what you do.
->  * 'speed' (integer, mandatory), to indicate the link speed. Accepted
-> -  values are 10, 100 and 1000
-> +  values are 10, 100 and 1000. If the auto-negotiation is enabled,
-> +  'speed' may not be set. It will then be auto-negotiated, if possible.
->  * 'full-duplex' (boolean, optional), to indicate that full duplex is
->    used. When absent, half duplex is assumed.
->  * 'pause' (boolean, optional), to indicate that pause should be
-> diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
-> index 1bd4305..12b2ede 100644
-> --- a/drivers/of/of_mdio.c
-> +++ b/drivers/of/of_mdio.c
-> @@ -280,6 +280,22 @@ bool of_phy_is_fixed_link(struct device_node *np)
->  }
->  EXPORT_SYMBOL(of_phy_is_fixed_link);
-> 
-> +bool of_phy_is_autoneg_link(struct device_node *np)
-> +{
-> +	struct device_node *dn;
-> +	bool ret;
-> +
-> +	dn = of_get_child_by_name(np, "fixed-link");
-> +	if (!dn)
-> +		return false;
-> +
-> +	ret = of_property_read_bool(dn, "autoneg");
-> +
-> +	of_node_put(dn);
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL(of_phy_is_autoneg_link);
-> +
->  int of_phy_register_fixed_link(struct device_node *np)
->  {
->  	struct fixed_phy_status status = {};
-> @@ -291,10 +307,13 @@ int of_phy_register_fixed_link(struct device_node *np)
->  	/* New binding */
->  	fixed_link_node = of_get_child_by_name(np, "fixed-link");
->  	if (fixed_link_node) {
-> -		status.link = 1;
-> +		bool autoneg = of_property_read_bool(fixed_link_node,
-> +						     "autoneg");
-> +		status.link = !autoneg;
->  		status.duplex = of_property_read_bool(fixed_link_node,
->  						      "full-duplex");
-> -		if (of_property_read_u32(fixed_link_node, "speed", &status.speed))
-> +		if (of_property_read_u32(fixed_link_node, "speed",
-> +					 &status.speed) != 0 && !autoneg)
->  			return -EINVAL;
->  		status.pause = of_property_read_bool(fixed_link_node, "pause");
->  		status.asym_pause = of_property_read_bool(fixed_link_node,
-> diff --git a/include/linux/of_mdio.h b/include/linux/of_mdio.h
-> index d449018..647f348 100644
-> --- a/include/linux/of_mdio.h
-> +++ b/include/linux/of_mdio.h
-> @@ -65,6 +65,7 @@ static inline struct mii_bus *of_mdio_find_bus(struct device_node *mdio_np)
->  #if defined(CONFIG_OF) && defined(CONFIG_FIXED_PHY)
->  extern int of_phy_register_fixed_link(struct device_node *np);
->  extern bool of_phy_is_fixed_link(struct device_node *np);
-> +extern bool of_phy_is_autoneg_link(struct device_node *np);
->  #else
->  static inline int of_phy_register_fixed_link(struct device_node *np)
->  {
-> @@ -74,6 +75,10 @@ static inline bool of_phy_is_fixed_link(struct device_node *np)
->  {
->  	return false;
->  }
-> +static inline bool of_phy_is_autoneg_link(struct device_node *np)
-> +{
-> +	return false;
-> +}
->  #endif
-> 
-> 
-
-
--- 
-Florian
+Rob
