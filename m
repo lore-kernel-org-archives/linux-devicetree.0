@@ -1,137 +1,72 @@
-From: Stas Sergeev <stsp-cmBhpYW9OiY@public.gmane.org>
-Subject: [PATCH 2/3] of_mdio: add new DT property 'autoneg' for fixed-link
-Date: Fri, 10 Jul 2015 19:43:42 +0300
-Message-ID: <559FF63E.8020209@list.ru>
-References: <559FF511.5080102@list.ru>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH v6 1/4] drm/layerscape: Add Freescale DCU DRM driver
+Date: Fri, 10 Jul 2015 18:59:49 +0200
+Message-ID: <20150710165949.GE3736@phenom.ffwll.local>
+References: <1436513215-43423-1-git-send-email-jianwei.wang@freescale.com>
+ <20150710075941.GB3736@phenom.ffwll.local>
+ <DM2PR0301MB1229FD0A506ABD3AE7A0C7DF9F9F0@DM2PR0301MB1229.namprd03.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <559FF511.5080102-cmBhpYW9OiY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Linux kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sebastien Rannou <mxs-i6rsG8ix9II@public.gmane.org>, Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Stas Sergeev <stsp-Rn4VEauK+AKRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <DM2PR0301MB1229FD0A506ABD3AE7A0C7DF9F9F0@DM2PR0301MB1229.namprd03.prod.outlook.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: "Wang J.W." <Jianwei.Wang@freescale.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Xiubo Li <lixiubo@cmss.chinamobile.com>, Huan Wang <alison.wang@freescale.com>, "daniel.vetter@ffwll.ch" <daniel.vetter@ffwll.ch>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Scott Wood <scottwood@freescale.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
-Currently for fixed-link the MAC driver decides whether to use the
-link status auto-negotiation or not.
-Unfortunately the auto-negotiation may not work when expected by
-the MAC driver. Sebastien Rannou explains:
-<< Yes, I confirm that my HW does not generate an in-band status. AFAIK, it's
-a PHY that aggregates 4xSGMIIs to 1xQSGMII ; the MAC side of the PHY (with
-inband status) is connected to the switch through QSGMII, and in this context
-we are on the media side of the PHY. >>
-https://lkml.org/lkml/2015/7/10/206
-
-This patch introduces the new boolean property 'autoneg' that allows
-the user to request the auto-negotiation explicitly.
-
-Signed-off-by: Stas Sergeev <stsp-Rn4VEauK+AKRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-
-CC: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-CC: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-CC: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-CC: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-CC: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-CC: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-CC: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-CC: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-CC: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-CC: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
----
- .../devicetree/bindings/net/fixed-link.txt         |  6 +++++-
- drivers/of/of_mdio.c                               | 23 ++++++++++++++++++++--
- include/linux/of_mdio.h                            |  5 +++++
- 3 files changed, 31 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/net/fixed-link.txt b/Documentation/devicetree/bindings/net/fixed-link.txt
-index 82bf7e0..e2959a8 100644
---- a/Documentation/devicetree/bindings/net/fixed-link.txt
-+++ b/Documentation/devicetree/bindings/net/fixed-link.txt
-@@ -9,8 +9,12 @@ Such a fixed link situation is described by creating a 'fixed-link'
- sub-node of the Ethernet MAC device node, with the following
- properties:
-
-+* 'autoneg' (boolean, optional), to enable the auto-negotiation of link
-+  state. Auto-negotiation is MII protocol, HW and driver-specific and is
-+  not supported in many cases, so use it only when you know what you do.
- * 'speed' (integer, mandatory), to indicate the link speed. Accepted
--  values are 10, 100 and 1000
-+  values are 10, 100 and 1000. If the auto-negotiation is enabled,
-+  'speed' may not be set. It will then be auto-negotiated, if possible.
- * 'full-duplex' (boolean, optional), to indicate that full duplex is
-   used. When absent, half duplex is assumed.
- * 'pause' (boolean, optional), to indicate that pause should be
-diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
-index 1bd4305..12b2ede 100644
---- a/drivers/of/of_mdio.c
-+++ b/drivers/of/of_mdio.c
-@@ -280,6 +280,22 @@ bool of_phy_is_fixed_link(struct device_node *np)
- }
- EXPORT_SYMBOL(of_phy_is_fixed_link);
-
-+bool of_phy_is_autoneg_link(struct device_node *np)
-+{
-+	struct device_node *dn;
-+	bool ret;
-+
-+	dn = of_get_child_by_name(np, "fixed-link");
-+	if (!dn)
-+		return false;
-+
-+	ret = of_property_read_bool(dn, "autoneg");
-+
-+	of_node_put(dn);
-+	return ret;
-+}
-+EXPORT_SYMBOL(of_phy_is_autoneg_link);
-+
- int of_phy_register_fixed_link(struct device_node *np)
- {
- 	struct fixed_phy_status status = {};
-@@ -291,10 +307,13 @@ int of_phy_register_fixed_link(struct device_node *np)
- 	/* New binding */
- 	fixed_link_node = of_get_child_by_name(np, "fixed-link");
- 	if (fixed_link_node) {
--		status.link = 1;
-+		bool autoneg = of_property_read_bool(fixed_link_node,
-+						     "autoneg");
-+		status.link = !autoneg;
- 		status.duplex = of_property_read_bool(fixed_link_node,
- 						      "full-duplex");
--		if (of_property_read_u32(fixed_link_node, "speed", &status.speed))
-+		if (of_property_read_u32(fixed_link_node, "speed",
-+					 &status.speed) != 0 && !autoneg)
- 			return -EINVAL;
- 		status.pause = of_property_read_bool(fixed_link_node, "pause");
- 		status.asym_pause = of_property_read_bool(fixed_link_node,
-diff --git a/include/linux/of_mdio.h b/include/linux/of_mdio.h
-index d449018..647f348 100644
---- a/include/linux/of_mdio.h
-+++ b/include/linux/of_mdio.h
-@@ -65,6 +65,7 @@ static inline struct mii_bus *of_mdio_find_bus(struct device_node *mdio_np)
- #if defined(CONFIG_OF) && defined(CONFIG_FIXED_PHY)
- extern int of_phy_register_fixed_link(struct device_node *np);
- extern bool of_phy_is_fixed_link(struct device_node *np);
-+extern bool of_phy_is_autoneg_link(struct device_node *np);
- #else
- static inline int of_phy_register_fixed_link(struct device_node *np)
- {
-@@ -74,6 +75,10 @@ static inline bool of_phy_is_fixed_link(struct device_node *np)
- {
- 	return false;
- }
-+static inline bool of_phy_is_autoneg_link(struct device_node *np)
-+{
-+	return false;
-+}
- #endif
-
-
--- 
-1.9.1
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gRnJpLCBKdWwgMTAsIDIwMTUgYXQgMTA6NDM6MTFBTSArMDAwMCwgV2FuZyBKLlcuIHdyb3Rl
+Ogo+IEhpIERhbmllbCwKPiAKPiBUaGFuayB5b3UgdmVyeSBtdWNoIGZvciB5b3VyIHJldmlldyEK
+PiBTZWUgYmVsb3cuLi4KPiAKPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tCj4gPiBGcm9t
+OiBEYW5pZWwgVmV0dGVyIFttYWlsdG86ZGFuaWVsLnZldHRlckBmZndsbC5jaF0gT24gQmVoYWxm
+IE9mIERhbmllbAo+ID4gVmV0dGVyCj4gPiBTZW50OiBGcmlkYXksIEp1bHkgMTAsIDIwMTUgNDow
+MCBQTQo+ID4gVG86IFdhbmcgSmlhbndlaS1CNTIyNjEKPiA+IENjOiBkcmktZGV2ZWxAbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC0KPiA+
+IGFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5v
+cmc7Cj4gPiBhaXJsaWVkQGxpbnV4LmllOyBkYW5pZWwudmV0dGVyQGZmd2xsLmNoOyBtYXJrLnlh
+b0Byb2NrLWNoaXBzLmNvbTsgV29vZAo+ID4gU2NvdHQtQjA3NDIxOyBXYW5nIEh1YW4tQjE4OTY1
+OyBYaXVibyBMaQo+ID4gU3ViamVjdDogUmU6IFtQQVRDSCB2NiAxLzRdIGRybS9sYXllcnNjYXBl
+OiBBZGQgRnJlZXNjYWxlIERDVSBEUk0gZHJpdmVyCj4gPiAKPiA+IE9uIEZyaSwgSnVsIDEwLCAy
+MDE1IGF0IDAzOjI2OjUyUE0gKzA4MDAsIEppYW53ZWkgV2FuZyB3cm90ZToKPiA+ID4gKwkuYXRv
+bWljX2NoZWNrID0gZnNsX2RjdV9kcm1fZW5jb2Rlcl9hdG9taWNfY2hlY2ssCj4gPiAKPiA+IC5h
+dG9taWNfY2hlY2sgaXMgb3B0aW9uYWwKPiA+IAo+IAo+IEkgdHJ5IHRvIHJlbW92ZSAuYXRvbWlj
+X2NoZWNrLCBidXQgaXQgd2lsbCBjYXVzZSBDUFUgaGFuZyB3aGVuIHN0YXJ0aW5nIHVwCj4gQW5k
+IEkgZmluZCB0aGlzIGluIGRyaXZlcnMvZ3B1L2RybS9kcm1fYXRvbWljX2hlbHBlci5jCj4gCj4g
+IDI5MyAgICAgICAgICAgICAgICAgaWYgKGZ1bmNzLT5hdG9taWNfY2hlY2spIHsKPiAgMjk0ICAg
+ICAgICAgICAgICAgICAgICAgICAgIHJldCA9IGZ1bmNzLT5hdG9taWNfY2hlY2soZW5jb2Rlciwg
+Y3J0Y19zdGF0ZSwKPiAgMjk1ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgY29ubl9zdGF0ZSk7Cj4gIDI5NiAgICAgICAgICAgICAgICAgICAgICAgICBp
+ZiAocmV0KSB7Cj4gIDI5NyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIERSTV9ERUJV
+R19BVE9NSUMoIltFTkNPREVSOiVkOiVzXSBjaGVjayBmYWlsZWRcbiIsCj4gIDI5OCAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZW5jb2Rlci0+YmFzZS5p
+ZCwgZW5jb2Rlci0+bmFtZSk7Cj4gIDI5OSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IHJldHVybiByZXQ7Cj4gIDMwMCAgICAgICAgICAgICAgICAgICAgICAgICB9Cj4gIDMwMSAgICAg
+ICAgICAgICAgICAgfSBlbHNlIHsKPiAgMzAyICAgICAgICAgICAgICAgICAgICAgICAgIHJldCA9
+IGZ1bmNzLT5tb2RlX2ZpeHVwKGVuY29kZXIsICZjcnRjX3N0YXRlLT5tb2RlLAo+ICAzMDMgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgJmNydGNfc3RhdGUt
+PmFkanVzdGVkX21vZGUpOwo+ICAzMDQgICAgICAgICAgICAgICAgICAgICAgICAgaWYgKCFyZXQp
+IHsKPiAgMzA1ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgRFJNX0RFQlVHX0FUT01J
+QygiW0VOQ09ERVI6JWQ6JXNdIGZpeHVwIGZhaWxlZFxuIiwKPiAgMzA2ICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBlbmNvZGVyLT5iYXNlLmlkLCBlbmNv
+ZGVyLT5uYW1lKTsKPiAgMzA3ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmV0dXJu
+IC1FSU5WQUw7Cj4gIDMwOCAgICAgICAgICAgICAgICAgICAgICAgICB9Cj4gIDMwOSAgICAgICAg
+ICAgICAgICAgfQo+IEl0IG1lYW5zIHRoYXQgSSBoYXZlIHRvIGltcGxlbWVudCBhdCBsZWFzdCBv
+bmUgb2YgYXRvbWljX2NoZWNrIGFuZCBtb2RlX2ZpeHVwLgo+IFNvIEkgcmVzZXJ2ZSBhdG9taWNf
+Y2hlY2suCj4gSXMgdGhlcmUgcHJvYmxlbT8gUGxlYXNlIGdpdmUgbWUgc29tZSBtb3JlIGNvbW1l
+bnRzIGlmIG5lY2Vzc2FyeS4gVGhhbmtzIQoKQWggc29ycnkgeW91IGFyZSByaWdodCwgYXRvbWlj
+IGNoZWNrIGlzIG5vdCBvcHRpb25hbC4gVW5mb3J0dW5hdGVseSB0aGUKb3B0aW9uYWwtb3Itbm90
+IHRoaW5nIGhhcyBncm93biBhIGJpdCBvcmdhbmljYWxseSBzbyB0aGVyZSdzIG5vIGNsZWFyCnJ1
+bGVzLgotRGFuaWVsCi0tIApEYW5pZWwgVmV0dGVyClNvZnR3YXJlIEVuZ2luZWVyLCBJbnRlbCBD
+b3Jwb3JhdGlvbgpodHRwOi8vYmxvZy5mZndsbC5jaApfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBs
+aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL2RyaS1kZXZlbAo=
