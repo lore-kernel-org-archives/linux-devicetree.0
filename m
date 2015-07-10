@@ -1,7 +1,7 @@
 From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH 4/5] [media] tc358743: add direct interrupt handling
-Date: Fri, 10 Jul 2015 15:11:36 +0200
-Message-ID: <1436533897-3060-4-git-send-email-p.zabel@pengutronix.de>
+Subject: [PATCH 5/5] [media] tc358743: allow event subscription
+Date: Fri, 10 Jul 2015 15:11:37 +0200
+Message-ID: <1436533897-3060-5-git-send-email-p.zabel@pengutronix.de>
 References: <1436533897-3060-1-git-send-email-p.zabel@pengutronix.de>
 Return-path: <linux-media-owner@vger.kernel.org>
 In-Reply-To: <1436533897-3060-1-git-send-email-p.zabel@pengutronix.de>
@@ -10,60 +10,34 @@ To: Mats Randgaard <matrandg@cisco.com>
 Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, Philipp Zabel <p.zabel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-When probed from device tree, the i2c client driver can handle the interrupt
-on its own.
+This is useful to subscribe to HDMI hotplug events via the
+V4L2_CID_DV_RX_POWER_PRESENT control.
 
 Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 ---
- drivers/media/i2c/tc358743.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ drivers/media/i2c/tc358743.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/drivers/media/i2c/tc358743.c b/drivers/media/i2c/tc358743.c
-index 02c60b3..4a889d4 100644
+index 4a889d4..91fffa8 100644
 --- a/drivers/media/i2c/tc358743.c
 +++ b/drivers/media/i2c/tc358743.c
-@@ -32,6 +32,7 @@
- #include <linux/clk.h>
- #include <linux/delay.h>
- #include <linux/gpio/consumer.h>
-+#include <linux/interrupt.h>
- #include <linux/videodev2.h>
- #include <linux/workqueue.h>
- #include <linux/v4l2-dv-timings.h>
-@@ -1306,6 +1307,16 @@ static int tc358743_isr(struct v4l2_subdev *sd, u32 status, bool *handled)
- 	return 0;
- }
+@@ -40,6 +40,7 @@
+ #include <media/v4l2-dv-timings.h>
+ #include <media/v4l2-device.h>
+ #include <media/v4l2-ctrls.h>
++#include <media/v4l2-event.h>
+ #include <media/v4l2-of.h>
+ #include <media/tc358743.h>
  
-+static irqreturn_t tc358743_irq_handler(int irq, void *dev_id)
-+{
-+	struct tc358743_state *state = dev_id;
-+	bool handled;
-+
-+	tc358743_isr(&state->sd, 0, &handled);
-+
-+	return handled ? IRQ_HANDLED : IRQ_NONE;
-+}
-+
- /* --------------- VIDEO OPS --------------- */
+@@ -1604,6 +1605,8 @@ static const struct v4l2_subdev_core_ops tc358743_core_ops = {
+ 	.s_register = tc358743_s_register,
+ #endif
+ 	.interrupt_service_routine = tc358743_isr,
++	.subscribe_event = v4l2_ctrl_subdev_subscribe_event,
++	.unsubscribe_event = v4l2_event_subdev_unsubscribe,
+ };
  
- static int tc358743_g_input_status(struct v4l2_subdev *sd, u32 *status)
-@@ -1874,6 +1885,17 @@ static int tc358743_probe(struct i2c_client *client,
- 	tc358743_set_csi_color_space(sd);
- 
- 	tc358743_init_interrupts(sd);
-+
-+	if (state->i2c_client->irq) {
-+		err = devm_request_threaded_irq(&client->dev,
-+						state->i2c_client->irq,
-+						NULL, tc358743_irq_handler,
-+						IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
-+						"tc358743", state);
-+		if (err)
-+			goto err_work_queues;
-+	}
-+
- 	tc358743_enable_interrupts(sd, tx_5v_power_present(sd));
- 	i2c_wr16(sd, INTMASK, ~(MASK_HDMI_MSK | MASK_CSI_MSK) & 0xffff);
- 
+ static const struct v4l2_subdev_video_ops tc358743_video_ops = {
 -- 
 2.1.4
