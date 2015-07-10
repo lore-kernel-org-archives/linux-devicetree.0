@@ -1,288 +1,93 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v2 2/2] mfd: ax20x: Add axp152 support
-Date: Fri, 10 Jul 2015 13:28:37 +0200
-Message-ID: <1436527717-28062-2-git-send-email-hdegoede@redhat.com>
-References: <1436527717-28062-1-git-send-email-hdegoede@redhat.com>
-Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Subject: Re: [PATCH v2 01/12] device: property: delay device-driver matches
+Date: Fri, 10 Jul 2015 13:39:48 +0200
+Message-ID: <CAAObsKA_B38EaS4uNaFUmpQ+Kr0Jq3CqAegLpYX=vr9e6nNgBw@mail.gmail.com>
+References: <1435743667-11987-1-git-send-email-tomeu.vizoso@collabora.com>
+ <1435743667-11987-2-git-send-email-tomeu.vizoso@collabora.com>
+ <17310138.6IxCgARibq@vostro.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORB26Y72WAKGQE5TRQJIA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1436527717-28062-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <17310138.6IxCgARibq@vostro.rjw.lan>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-fbdev@vger.kernel.org, alsa-devel@alsa-project.org, linux-gpio@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, linux-acpi@vger.kernel.org, Mark Brown <broonie@kernel.org>, Linux PWM List <linux-pwm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-
-The axp152 is a stripped down version of the axp202 pmic with the battery
-charging function removed as it is intended for top-set boxes.
-
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
-Changes in v2:
--Seperated out the devicetree binding documentation into a separate patch
--Use DEFINE_RES_IRQ_NAMED to define the irq resources
----
- drivers/mfd/axp20x.c       | 83 ++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/mfd/axp20x.h | 61 +++++++++++++++++++++++++++++++++-
- 2 files changed, 143 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
-index ca4a604..9027fc3 100644
---- a/drivers/mfd/axp20x.c
-+++ b/drivers/mfd/axp20x.c
-@@ -30,12 +30,34 @@
- #define AXP20X_OFF	0x80
- 
- static const char * const axp20x_model_names[] = {
-+	"AXP152",
- 	"AXP202",
- 	"AXP209",
- 	"AXP221",
- 	"AXP288",
- };
- 
-+static const struct regmap_range axp152_writeable_ranges[] = {
-+	regmap_reg_range(AXP152_LDO3456_DC1234_CTRL, AXP152_IRQ3_STATE),
-+	regmap_reg_range(AXP152_DCDC_MODE, AXP152_PWM1_DUTY_CYCLE),
-+};
-+
-+static const struct regmap_range axp152_volatile_ranges[] = {
-+	regmap_reg_range(AXP152_PWR_OP_MODE, AXP152_PWR_OP_MODE),
-+	regmap_reg_range(AXP152_IRQ1_EN, AXP152_IRQ3_STATE),
-+	regmap_reg_range(AXP152_GPIO_INPUT, AXP152_GPIO_INPUT),
-+};
-+
-+static const struct regmap_access_table axp152_writeable_table = {
-+	.yes_ranges	= axp152_writeable_ranges,
-+	.n_yes_ranges	= ARRAY_SIZE(axp152_writeable_ranges),
-+};
-+
-+static const struct regmap_access_table axp152_volatile_table = {
-+	.yes_ranges	= axp152_volatile_ranges,
-+	.n_yes_ranges	= ARRAY_SIZE(axp152_volatile_ranges),
-+};
-+
- static const struct regmap_range axp20x_writeable_ranges[] = {
- 	regmap_reg_range(AXP20X_DATACACHE(0), AXP20X_IRQ5_STATE),
- 	regmap_reg_range(AXP20X_DCDC_MODE, AXP20X_FG_RES),
-@@ -99,6 +121,11 @@ static const struct regmap_access_table axp288_volatile_table = {
- 	.n_yes_ranges	= ARRAY_SIZE(axp288_volatile_ranges),
- };
- 
-+static struct resource axp152_pek_resources[] = {
-+	DEFINE_RES_IRQ_NAMED(AXP152_IRQ_PEK_RIS_EDGE, "PEK_DBR"),
-+	DEFINE_RES_IRQ_NAMED(AXP152_IRQ_PEK_FAL_EDGE, "PEK_DBF"),
-+};
-+
- static struct resource axp20x_pek_resources[] = {
- 	{
- 		.name	= "PEK_DBR",
-@@ -167,6 +194,15 @@ static struct resource axp288_fuel_gauge_resources[] = {
- 	},
- };
- 
-+static const struct regmap_config axp152_regmap_config = {
-+	.reg_bits	= 8,
-+	.val_bits	= 8,
-+	.wr_table	= &axp152_writeable_table,
-+	.volatile_table	= &axp152_volatile_table,
-+	.max_register	= AXP152_PWM1_DUTY_CYCLE,
-+	.cache_type	= REGCACHE_RBTREE,
-+};
-+
- static const struct regmap_config axp20x_regmap_config = {
- 	.reg_bits	= 8,
- 	.val_bits	= 8,
-@@ -197,6 +233,26 @@ static const struct regmap_config axp288_regmap_config = {
- #define INIT_REGMAP_IRQ(_variant, _irq, _off, _mask)			\
- 	[_variant##_IRQ_##_irq] = { .reg_offset = (_off), .mask = BIT(_mask) }
- 
-+static const struct regmap_irq axp152_regmap_irqs[] = {
-+	INIT_REGMAP_IRQ(AXP152, LDO0IN_CONNECT,		0, 6),
-+	INIT_REGMAP_IRQ(AXP152, LDO0IN_REMOVAL,		0, 5),
-+	INIT_REGMAP_IRQ(AXP152, ALDO0IN_CONNECT,	0, 3),
-+	INIT_REGMAP_IRQ(AXP152, ALDO0IN_REMOVAL,	0, 2),
-+	INIT_REGMAP_IRQ(AXP152, DCDC1_V_LOW,		1, 5),
-+	INIT_REGMAP_IRQ(AXP152, DCDC2_V_LOW,		1, 4),
-+	INIT_REGMAP_IRQ(AXP152, DCDC3_V_LOW,		1, 3),
-+	INIT_REGMAP_IRQ(AXP152, DCDC4_V_LOW,		1, 2),
-+	INIT_REGMAP_IRQ(AXP152, PEK_SHORT,		1, 1),
-+	INIT_REGMAP_IRQ(AXP152, PEK_LONG,		1, 0),
-+	INIT_REGMAP_IRQ(AXP152, TIMER,			2, 7),
-+	INIT_REGMAP_IRQ(AXP152, PEK_RIS_EDGE,		2, 6),
-+	INIT_REGMAP_IRQ(AXP152, PEK_FAL_EDGE,		2, 5),
-+	INIT_REGMAP_IRQ(AXP152, GPIO3_INPUT,		2, 3),
-+	INIT_REGMAP_IRQ(AXP152, GPIO2_INPUT,		2, 2),
-+	INIT_REGMAP_IRQ(AXP152, GPIO1_INPUT,		2, 1),
-+	INIT_REGMAP_IRQ(AXP152, GPIO0_INPUT,		2, 0),
-+};
-+
- static const struct regmap_irq axp20x_regmap_irqs[] = {
- 	INIT_REGMAP_IRQ(AXP20X, ACIN_OVER_V,		0, 7),
- 	INIT_REGMAP_IRQ(AXP20X, ACIN_PLUGIN,		0, 6),
-@@ -306,6 +362,7 @@ static const struct regmap_irq axp288_regmap_irqs[] = {
- };
- 
- static const struct of_device_id axp20x_of_match[] = {
-+	{ .compatible = "x-powers,axp152", .data = (void *) AXP152_ID },
- 	{ .compatible = "x-powers,axp202", .data = (void *) AXP202_ID },
- 	{ .compatible = "x-powers,axp209", .data = (void *) AXP209_ID },
- 	{ .compatible = "x-powers,axp221", .data = (void *) AXP221_ID },
-@@ -330,6 +387,18 @@ static const struct acpi_device_id axp20x_acpi_match[] = {
- };
- MODULE_DEVICE_TABLE(acpi, axp20x_acpi_match);
- 
-+static const struct regmap_irq_chip axp152_regmap_irq_chip = {
-+	.name			= "axp152_irq_chip",
-+	.status_base		= AXP152_IRQ1_STATE,
-+	.ack_base		= AXP152_IRQ1_STATE,
-+	.mask_base		= AXP152_IRQ1_EN,
-+	.mask_invert		= true,
-+	.init_ack_masked	= true,
-+	.irqs			= axp152_regmap_irqs,
-+	.num_irqs		= ARRAY_SIZE(axp152_regmap_irqs),
-+	.num_regs		= 3,
-+};
-+
- static const struct regmap_irq_chip axp20x_regmap_irq_chip = {
- 	.name			= "axp20x_irq_chip",
- 	.status_base		= AXP20X_IRQ1_STATE,
-@@ -393,6 +462,14 @@ static struct mfd_cell axp22x_cells[] = {
- 	},
- };
- 
-+static struct mfd_cell axp152_cells[] = {
-+	{
-+		.name			= "axp20x-pek",
-+		.num_resources		= ARRAY_SIZE(axp152_pek_resources),
-+		.resources		= axp152_pek_resources,
-+	},
-+};
-+
- static struct resource axp288_adc_resources[] = {
- 	{
- 		.name  = "GPADC",
-@@ -531,6 +608,12 @@ static int axp20x_match_device(struct axp20x_dev *axp20x, struct device *dev)
- 	}
- 
- 	switch (axp20x->variant) {
-+	case AXP152_ID:
-+		axp20x->nr_cells = ARRAY_SIZE(axp152_cells);
-+		axp20x->cells = axp152_cells;
-+		axp20x->regmap_cfg = &axp152_regmap_config;
-+		axp20x->regmap_irq_chip = &axp152_regmap_irq_chip;
-+		break;
- 	case AXP202_ID:
- 	case AXP209_ID:
- 		axp20x->nr_cells = ARRAY_SIZE(axp20x_cells);
-diff --git a/include/linux/mfd/axp20x.h b/include/linux/mfd/axp20x.h
-index 650bd964..b24c771 100644
---- a/include/linux/mfd/axp20x.h
-+++ b/include/linux/mfd/axp20x.h
-@@ -14,7 +14,8 @@
- #include <linux/regmap.h>
- 
- enum {
--	AXP202_ID = 0,
-+	AXP152_ID = 0,
-+	AXP202_ID,
- 	AXP209_ID,
- 	AXP221_ID,
- 	AXP288_ID,
-@@ -24,6 +25,24 @@ enum {
- #define AXP20X_DATACACHE(m)		(0x04 + (m))
- 
- /* Power supply */
-+#define AXP152_PWR_OP_MODE		0x01
-+#define AXP152_LDO3456_DC1234_CTRL	0x12
-+#define AXP152_ALDO_OP_MODE		0x13
-+#define AXP152_LDO0_CTRL		0x15
-+#define AXP152_DCDC2_V_OUT		0x23
-+#define AXP152_DCDC2_V_SCAL		0x25
-+#define AXP152_DCDC1_V_OUT		0x26
-+#define AXP152_DCDC3_V_OUT		0x27
-+#define AXP152_ALDO12_V_OUT		0x28
-+#define AXP152_DLDO1_V_OUT		0x29
-+#define AXP152_DLDO2_V_OUT		0x2a
-+#define AXP152_DCDC4_V_OUT		0x2b
-+#define AXP152_V_OFF			0x31
-+#define AXP152_OFF_CTRL			0x32
-+#define AXP152_PEK_KEY			0x36
-+#define AXP152_DCDC_FREQ		0x37
-+#define AXP152_DCDC_MODE		0x80
-+
- #define AXP20X_PWR_INPUT_STATUS		0x00
- #define AXP20X_PWR_OP_MODE		0x01
- #define AXP20X_USB_OTG_STATUS		0x02
-@@ -71,6 +90,13 @@ enum {
- #define AXP22X_CHRG_CTRL3		0x35
- 
- /* Interrupt */
-+#define AXP152_IRQ1_EN			0x40
-+#define AXP152_IRQ2_EN			0x41
-+#define AXP152_IRQ3_EN			0x42
-+#define AXP152_IRQ1_STATE		0x48
-+#define AXP152_IRQ2_STATE		0x49
-+#define AXP152_IRQ3_STATE		0x4a
-+
- #define AXP20X_IRQ1_EN			0x40
- #define AXP20X_IRQ2_EN			0x41
- #define AXP20X_IRQ3_EN			0x42
-@@ -129,6 +155,19 @@ enum {
- #define AXP22X_PWREN_CTRL2		0x8d
- 
- /* GPIO */
-+#define AXP152_GPIO0_CTRL		0x90
-+#define AXP152_GPIO1_CTRL		0x91
-+#define AXP152_GPIO2_CTRL		0x92
-+#define AXP152_GPIO3_CTRL		0x93
-+#define AXP152_LDOGPIO2_V_OUT		0x96
-+#define AXP152_GPIO_INPUT		0x97
-+#define AXP152_PWM0_FREQ_X		0x98
-+#define AXP152_PWM0_FREQ_Y		0x99
-+#define AXP152_PWM0_DUTY_CYCLE		0x9a
-+#define AXP152_PWM1_FREQ_X		0x9b
-+#define AXP152_PWM1_FREQ_Y		0x9c
-+#define AXP152_PWM1_DUTY_CYCLE		0x9d
-+
- #define AXP20X_GPIO0_CTRL		0x90
- #define AXP20X_LDO5_V_OUT		0x91
- #define AXP20X_GPIO1_CTRL		0x92
-@@ -226,6 +265,26 @@ enum {
- 
- /* IRQs */
- enum {
-+	AXP152_IRQ_LDO0IN_CONNECT = 1,
-+	AXP152_IRQ_LDO0IN_REMOVAL,
-+	AXP152_IRQ_ALDO0IN_CONNECT,
-+	AXP152_IRQ_ALDO0IN_REMOVAL,
-+	AXP152_IRQ_DCDC1_V_LOW,
-+	AXP152_IRQ_DCDC2_V_LOW,
-+	AXP152_IRQ_DCDC3_V_LOW,
-+	AXP152_IRQ_DCDC4_V_LOW,
-+	AXP152_IRQ_PEK_SHORT,
-+	AXP152_IRQ_PEK_LONG,
-+	AXP152_IRQ_TIMER,
-+	AXP152_IRQ_PEK_RIS_EDGE,
-+	AXP152_IRQ_PEK_FAL_EDGE,
-+	AXP152_IRQ_GPIO3_INPUT,
-+	AXP152_IRQ_GPIO2_INPUT,
-+	AXP152_IRQ_GPIO1_INPUT,
-+	AXP152_IRQ_GPIO0_INPUT,
-+};
-+
-+enum {
- 	AXP20X_IRQ_ACIN_OVER_V = 1,
- 	AXP20X_IRQ_ACIN_PLUGIN,
- 	AXP20X_IRQ_ACIN_REMOVAL,
--- 
-2.4.3
+T24gMiBKdWx5IDIwMTUgYXQgMDE6MjksIFJhZmFlbCBKLiBXeXNvY2tpIDxyandAcmp3eXNvY2tp
+Lm5ldD4gd3JvdGU6Cj4gT24gV2VkbmVzZGF5LCBKdWx5IDAxLCAyMDE1IDExOjQwOjU2IEFNIFRv
+bWV1IFZpem9zbyB3cm90ZToKPj4gRGVsYXkgbWF0Y2hlcyBvZiBwbGF0Zm9ybSBkZXZpY2VzIHVu
+dGlsIGxhdGVfaW5pdGNhbGwsIHdoZW4gd2UgYXJlIHN1cmUKPj4gdGhhdCBhbGwgYnVpbHQtaW4g
+ZHJpdmVycyBoYXZlIGJlZW4gcmVnaXN0ZXJlZCBhbHJlYWR5LiBUaGlzIGlzIG5lZWRlZAo+PiB0
+byBwcmV2ZW50IGRlZmVycmVkIHByb2JlcyBiZWNhdXNlIG9mIHNvbWUgZGVwZW5kZW5jaWVzJyBk
+cml2ZXJzIG5vdAo+PiBoYXZpbmcgcmVnaXN0ZXJlZCB5ZXQuCj4+Cj4+IFRoaXMgcmVkdWNlcyB0
+aGUgdG90YWwgYW1vdW50IG9mIHdvcmsgdGhhdCB0aGUga2VybmVsIGRvZXMgZHVyaW5nIGJvb3QK
+Pj4gYmVjYXVzZSBpdCB3b24ndCB0cnkgdG8gbWF0Y2ggZGV2aWNlcyB0byBkcml2ZXJzIHdoZW4g
+YnVpbHQtaW4gZHJpdmVycwo+PiBhcmUgc3RpbGwgcmVnaXN0ZXJpbmcgYnV0IGFsc28gcmVkdWNl
+cyBzb21lIHBhcmFsbGVsaXNtLCBzbyB0b3RhbCBib290Cj4+IHRpbWUgbWlnaHQgc2xpZ2h0bHkg
+aW5jcmVhc2Ugb3IgZGVjcmVhc2UgZGVwZW5kaW5nIG9uIHRoZSBwbGF0Zm9ybSBhbmQKPj4ga2Vy
+bmVsIGNvbmZpZ3VyYXRpb24uCj4+Cj4+IFRoaXMgY2hhbmdlIHdpbGwgbWFrZSBtYWtlIHBvc3Np
+YmxlIHRvIHByZXZlbnQgYW55IGRlZmVycmVkIHByb2JlcyBvbmNlCj4+IGRldmljZXMgYXJlIHBy
+b2JlZCBpbiBkZXBlbmRlbmN5IG9yZGVyLgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBUb21ldSBWaXpv
+c28gPHRvbWV1LnZpem9zb0Bjb2xsYWJvcmEuY29tPgo+PiAtLS0KPj4KPj4gQ2hhbmdlcyBpbiB2
+MjoKPj4gLSBJbnN0ZWFkIG9mIGRlbGF5aW5nIGFsbCBwcm9iZXMgdW50aWwgbGF0ZV9pbml0Y2Fs
+bCwgb25seSBkZWxheSBtYXRjaGVzCj4+ICAgb2YgcGxhdGZvcm0gZGV2aWNlcyB0aGF0IGhhdmUg
+YSBmaXJtd2FyZSBub2RlIGF0dGFjaGVkLgo+Pgo+PiAgZHJpdmVycy9iYXNlL3Byb3BlcnR5LmMg
+fCAyOSArKysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+PiAgMSBmaWxlIGNoYW5nZWQsIDI5
+IGluc2VydGlvbnMoKykKPj4KPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvYmFzZS9wcm9wZXJ0eS5j
+IGIvZHJpdmVycy9iYXNlL3Byb3BlcnR5LmMKPj4gaW5kZXggODUyOGViOS4uOGVhZDFiYSAxMDA2
+NDQKPj4gLS0tIGEvZHJpdmVycy9iYXNlL3Byb3BlcnR5LmMKPj4gKysrIGIvZHJpdmVycy9iYXNl
+L3Byb3BlcnR5LmMKPj4gQEAgLTE2LDggKzE2LDExIEBACj4+ICAjaW5jbHVkZSA8bGludXgvb2Yu
+aD4KPj4gICNpbmNsdWRlIDxsaW51eC9vZl9hZGRyZXNzLmg+Cj4+ICAjaW5jbHVkZSA8bGludXgv
+b2ZfZGV2aWNlLmg+Cj4+ICsjaW5jbHVkZSA8bGludXgvcGxhdGZvcm1fZGV2aWNlLmg+Cj4+ICAj
+aW5jbHVkZSA8bGludXgvcHJvcGVydHkuaD4KPj4KPj4gK3N0YXRpYyBib29sIGZ3bm9kZV9tYXRj
+aF9lbmFibGUgPSBmYWxzZTsKPj4gKwo+PiAgLyoqCj4+ICAgKiBkZXZpY2VfYWRkX3Byb3BlcnR5
+X3NldCAtIEFkZCBhIGNvbGxlY3Rpb24gb2YgcHJvcGVydGllcyB0byBhIGRldmljZSBvYmplY3Qu
+Cj4+ICAgKiBAZGV2OiBEZXZpY2UgdG8gYWRkIHByb3BlcnRpZXMgdG8uCj4+IEBAIC02MDQsNiAr
+NjA3LDE1IEBAIEVYUE9SVF9TWU1CT0xfR1BMKGZ3bm9kZV9pc19jb21wYXRpYmxlKTsKPj4gIGJv
+b2wgZndub2RlX2RyaXZlcl9tYXRjaF9kZXZpY2Uoc3RydWN0IGRldmljZSAqZGV2LAo+PiAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICBjb25zdCBzdHJ1Y3QgZGV2aWNlX2RyaXZlciAqZHJ2
+KQo+PiAgewo+PiArICAgICAvKgo+PiArICAgICAgKiBEZWxheSBtYXRjaGVzIG9mIHBsYXRmb3Jt
+IGRldmljZXMgdW50aWwgbGF0ZV9pbml0Y2FsbCwgd2hlbiB3ZSBhcmUKPj4gKyAgICAgICogc3Vy
+ZSB0aGF0IGFsbCBidWlsdC1pbiBkcml2ZXJzIGhhdmUgYmVlbiByZWdpc3RlcmVkIGFscmVhZHku
+IFRoaXMKPj4gKyAgICAgICogaXMgbmVlZGVkIHRvIHByZXZlbnQgZGVmZXJyZWQgcHJvYmVzIGJl
+Y2F1c2Ugb2Ygc29tZSBkcml2ZXJzCj4+ICsgICAgICAqIG5vdCBoYXZpbmcgcmVnaXN0ZXJlZCB5
+ZXQuCj4+ICsgICAgICAqLwo+PiArICAgICBpZihkZXYtPmJ1cyA9PSAmcGxhdGZvcm1fYnVzX3R5
+cGUgJiYgIWZ3bm9kZV9tYXRjaF9lbmFibGUpCj4+ICsgICAgICAgICAgICAgcmV0dXJuIGZhbHNl
+Owo+Cj4gSSdtIG5vdCBwYXJ0aWN1bGFybHkgZW50aHVzaWFzdGljIGFib3V0IHJlZmVycmluZyB0
+byBzcGVjaWZpYyBidXMgdHlwZXMgaW4KPiBnZW5lcmljIGNvZGUgbGlrZSB0aGF0LgoKQWdyZWVk
+LgoKPiBXaGF0IGFib3V0IGhhdmluZyBhIHNwZWNpYWwgdmVyc2lvbiBvZiBmd25vZGVfZHJpdmVy
+X21hdGNoX2RldmljZSgpIHNwZWNpZmljYWxseQo+IGZvciB0aGUgcGxhdGZvcm0gYnVzIHR5cGUg
+dGhhdCB3aWxsIGRvIHRoZSBjaGVjaz8KCkhhdmUgbW92ZWQgYWxsIHRoaXMgY29kZSB0byBiYXNl
+L3BsYXRmb3JtLmMgaW5zdGVhZCwgYXMgSSBkb24ndCBzZWUKYW55IHJlYXNvbiB0byBoYXZlIGl0
+IGluIHByb3BlcnR5LmMuCgpUaGFua3MsCgpUb21ldQoKPj4gKwo+PiAgICAgICBpZiAoaXNfb2Zf
+bm9kZShkZXYtPmZ3bm9kZSkpCj4+ICAgICAgICAgICAgICAgcmV0dXJuIG9mX2RyaXZlcl9tYXRj
+aF9kZXZpY2UoZGV2LCBkcnYpOwo+PiAgICAgICBlbHNlIGlmIChpc19hY3BpX25vZGUoZGV2LT5m
+d25vZGUpKQo+PiBAQCAtNjEyLDMgKzYyNCwyMCBAQCBib29sIGZ3bm9kZV9kcml2ZXJfbWF0Y2hf
+ZGV2aWNlKHN0cnVjdCBkZXZpY2UgKmRldiwKPj4gICAgICAgcmV0dXJuIGZhbHNlOwo+PiAgfQo+
+PiAgRVhQT1JUX1NZTUJPTF9HUEwoZndub2RlX2RyaXZlcl9tYXRjaF9kZXZpY2UpOwo+PiArCj4+
+ICtzdGF0aWMgaW50IF9fZGV2aWNlX2F0dGFjaChzdHJ1Y3QgZGV2aWNlICpkZXYsIHZvaWQgKmRh
+dGEpCj4+ICt7Cj4+ICsgICAgIGRldmljZV9pbml0aWFsX3Byb2JlKGRldik7Cj4+ICsKPj4gKyAg
+ICAgcmV0dXJuIDA7Cj4+ICt9Cj4+ICsKPj4gK3N0YXRpYyBpbnQgZndub2RlX21hdGNoX2luaXRj
+YWxsKHZvaWQpCj4+ICt7Cj4+ICsgICAgIGZ3bm9kZV9tYXRjaF9lbmFibGUgPSB0cnVlOwo+PiAr
+Cj4+ICsgICAgIGJ1c19mb3JfZWFjaF9kZXYoJnBsYXRmb3JtX2J1c190eXBlLCBOVUxMLCBOVUxM
+LCBfX2RldmljZV9hdHRhY2gpOwo+PiArCj4+ICsgICAgIHJldHVybiAwOwo+PiArfQo+PiArbGF0
+ZV9pbml0Y2FsbChmd25vZGVfbWF0Y2hfaW5pdGNhbGwpOwo+Pgo+Cj4gLS0KPiBJIHNwZWFrIG9u
+bHkgZm9yIG15c2VsZi4KPiBSYWZhZWwgSi4gV3lzb2NraSwgSW50ZWwgT3BlbiBTb3VyY2UgVGVj
+aG5vbG9neSBDZW50ZXIuCj4gLS0KPiBUbyB1bnN1YnNjcmliZSBmcm9tIHRoaXMgbGlzdDogc2Vu
+ZCB0aGUgbGluZSAidW5zdWJzY3JpYmUgbGludXgta2VybmVsIiBpbgo+IHRoZSBib2R5IG9mIGEg
+bWVzc2FnZSB0byBtYWpvcmRvbW9Admdlci5rZXJuZWwub3JnCj4gTW9yZSBtYWpvcmRvbW8gaW5m
+byBhdCAgaHR0cDovL3ZnZXIua2VybmVsLm9yZy9tYWpvcmRvbW8taW5mby5odG1sCj4gUGxlYXNl
+IHJlYWQgdGhlIEZBUSBhdCAgaHR0cDovL3d3dy50dXgub3JnL2xrbWwvCl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
+ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
