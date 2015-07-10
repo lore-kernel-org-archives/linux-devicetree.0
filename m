@@ -1,51 +1,69 @@
 From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 0/2] Add MT8173 MMPLL change rate support
-Date: Fri, 10 Jul 2015 13:44:46 +0800
-Message-ID: <1436507086.3526.117.camel@mtksdaap41>
+Subject: Re: [PATCH v2 2/2] clk: mediatek: Add MT8173 MMPLL change rate
+ support
+Date: Fri, 10 Jul 2015 13:46:37 +0800
+Message-ID: <1436507197.3526.119.camel@mtksdaap41>
 References: <1436344666-25645-1-git-send-email-jamesjj.liao@mediatek.com>
-	 <559DC3EF.90401@codeaurora.org>
+	 <1436344666-25645-3-git-send-email-jamesjj.liao@mediatek.com>
+	 <559DC44A.1030900@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <559DC3EF.90401-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+In-Reply-To: <559DC44A.1030900-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Heiko Stubner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Heiko Stubner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 Hi Stephen,
 
-On Wed, 2015-07-08 at 17:44 -0700, Stephen Boyd wrote:
+On Wed, 2015-07-08 at 17:46 -0700, Stephen Boyd wrote:
 > On 07/08/2015 01:37 AM, James Liao wrote:
-> > MT8173 MMPLL frequency settings are different from common PLLs.
-> > It needs different post divider settings for some ranges of frequency.
-> > This patch add support for MT8173 MMPLL frequency setting, includes:
-> >
-> > 1. Add div-rate table for PLLs.
-> > 2. Increase the max ost divider setting from 3 (/8) to 4 (/16).
-> > 3. Write postdiv and pcw settings at the same time.
-> >
-> > James Liao (2):
-> >   clk: mediatek: Fix PLL registers setting flow
-> >   clk: mediatek: Add MT8173 MMPLL change rate support
+> > diff --git a/drivers/clk/mediatek/clk-pll.c b/drivers/clk/mediatek/clk-pll.c
+> > index 68af518..622e7b6 100644
+> > --- a/drivers/clk/mediatek/clk-pll.c
+> > +++ b/drivers/clk/mediatek/clk-pll.c
+> > @@ -138,16 +138,28 @@ static void mtk_pll_calc_values(struct mtk_clk_pll *pll, u32 *pcw, u32 *postdiv,
+> >  		u32 freq, u32 fin)
+> >  {
+> >  	unsigned long fmin = 1000 * MHZ;
+> > +	const struct mtk_pll_div_table *div_table = pll->data->div_table;
+> >  	u64 _pcw;
+> >  	u32 val;
+> >  
+> >  	if (freq > pll->data->fmax)
+> >  		freq = pll->data->fmax;
+> >  
+> > -	for (val = 0; val < 4; val++) {
+> > +	if (div_table) {
+> > +		if (freq > div_table[0].freq)
+> > +			freq = div_table[0].freq;
+> > +
+> > +		for (val = 0; div_table[val + 1].freq != 0; val++) {
+> > +			if (freq > div_table[val + 1].freq)
+> > +				break;
+> > +		}
+> >  		*postdiv = 1 << val;
+> > -		if (freq * *postdiv >= fmin)
+> > -			break;
+> > +	} else {
+> > +		for (val = 0; val < 5; val++) {
+> > +			*postdiv = 1 << val;
+> > +			if ((u64)freq * *postdiv >= fmin)
 > >
 > 
-> Are these fixing regressions in 4.2-rc1? I don't see any "Fixes:" tag so
-> it's not clear and makes me want to defer these until v4.3. Furthermore,
-> the subject starts with "Add" so it sounds like a new feature.
+> No mention of this cast in the commit text. Is this fixing a bug? If so,
+> please mention it and/or split this bug fix off of this patch.
+> 
 
-This patchset is based on 4.1-rc1 but it had been tested on 4.2-rc1.
-I'll send a new patch which based on 4.2-rc1.
-
-This patchset contains some general PLL fixes and MMPLL set rate
-support. We can say the last one is also a fix because changing some
-specific rate on MMPLL may fail in current implementation.
+Yes, this is a fix to avoid u32 overflow. I'll split it in next patch.
 
 
 Best regards,
 
 James
+
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
