@@ -1,66 +1,61 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v7 1/4] drm/layerscape: Add Freescale DCU DRM driver
-Date: Fri, 10 Jul 2015 19:02:07 +0200
-Message-ID: <20150710170207.GF3736@phenom.ffwll.local>
-References: <1436527063-44762-1-git-send-email-jianwei.wang@freescale.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v1 1/3] gpio: defer probe if pinctrl cannot be found
+Date: Fri, 10 Jul 2015 11:07:27 -0600
+Message-ID: <559FFBCF.4020906@wwwdotorg.org>
+References: <1435754753-31307-1-git-send-email-tomeu.vizoso@collabora.com> <1435754753-31307-2-git-send-email-tomeu.vizoso@collabora.com> <CAL_JsqKXODBk4FVB-kiWFHLGFLCwJDjXvpVqOTvuEJubApbVSg@mail.gmail.com> <CAAObsKBS0OOhPNEAEV5Bh_+WMVWYhuGtGLqaVdCbzxPuT8a_gA@mail.gmail.com> <559FE471.1030408@wwwdotorg.org> <CAAObsKAav-5-0bZA2XYW4m7eUd9F7yc+9kGvmt_hS-Z0ip=zKw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <1436527063-44762-1-git-send-email-jianwei.wang@freescale.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jianwei Wang <jianwei.wang@freescale.com>
-Cc: devicetree@vger.kernel.org, Xiubo Li <lixiubo@cmss.chinamobile.com>, daniel.vetter@ffwll.ch, Alison Wang <b18965@freescale.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, scottwood@freescale.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAAObsKAav-5-0bZA2XYW4m7eUd9F7yc+9kGvmt_hS-Z0ip=zKw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBKdWwgMTAsIDIwMTUgYXQgMDc6MTc6NDBQTSArMDgwMCwgSmlhbndlaSBXYW5nIHdy
-b3RlOgo+IFRoaXMgcGF0Y2ggYWRkIHN1cHBvcnQgZm9yIFR3byBEaW1lbnNpb25hbCBBbmltYXRp
-b24gYW5kIENvbXBvc2l0aW5nCj4gRW5naW5lICgyRC1BQ0UpIG9uIHRoZSBGcmVlc2NhbGUgU29D
-cy4KPiAKPiAyRC1BQ0UgaXMgYSBGcmVlc2NhbGUgZGlzcGxheSBjb250cm9sbGVyLiAyRC1BQ0Ug
-ZGVzY3JpYmVzCj4gdGhlIGZ1bmN0aW9uYWxpdHkgb2YgdGhlIG1vZHVsZSBleHRyZW1lbHkgd2Vs
-bCBpdHMgbmFtZSBpcyBhIHZhbHVlCj4gdGhhdCBjYW5ub3QgYmUgdXNlZCBhcyBhIHRva2VuIGlu
-IHByb2dyYW1taW5nIGxhbmd1YWdlcy4KPiBJbnN0ZWFkIHRoZSB2YWxpZCB0b2tlbiAiRENVIiBp
-cyB1c2VkIHRvIHRhZyB0aGUgcmVnaXN0ZXIgbmFtZXMgYW5kCj4gZnVuY3Rpb24gbmFtZXMuCj4g
-Cj4gVGhlIERpc3BsYXkgQ29udHJvbGxlciBVbml0IChEQ1UpIG1vZHVsZSBpcyBhIHN5c3RlbSBt
-YXN0ZXIgdGhhdAo+IGZldGNoZXMgZ3JhcGhpY3Mgc3RvcmVkIGluIGludGVybmFsIG9yIGV4dGVy
-bmFsIG1lbW9yeSBhbmQgZGlzcGxheXMKPiB0aGVtIG9uIGEgVEZUIExDRCBwYW5lbC4gQSB3aWRl
-IHJhbmdlIG9mIHBhbmVsIHNpemVzIGlzIHN1cHBvcnRlZAo+IGFuZCB0aGUgdGltaW5nIG9mIHRo
-ZSBpbnRlcmZhY2Ugc2lnbmFscyBpcyBoaWdobHkgY29uZmlndXJhYmxlLgo+IEdyYXBoaWNzIGFy
-ZSByZWFkIGRpcmVjdGx5IGZyb20gbWVtb3J5IGFuZCB0aGVuIGJsZW5kZWQgaW4gcmVhbC10aW1l
-LAo+IHdoaWNoIGFsbG93cyBmb3IgZHluYW1pYyBjb250ZW50IGNyZWF0aW9uIHdpdGggbWluaW1h
-bCBDUFUKPiBpbnRlcnZlbnRpb24uCj4gCj4gVGhlIGZlYXR1cmVzOgo+ICgxKSBGdWxsIFJHQjg4
-OCBvdXRwdXQgdG8gVEZUIExDRCBwYW5lbC4KPiAoMikgRm9yIHRoZSBjdXJyZW50IExDRCBwYW5l
-bCwgV1FWR0EgIjQ4MHgyNzIiIGlzIHN1cHBvcnRlZC4KPiAoMykgQmxlbmRpbmcgb2YgZWFjaCBw
-aXhlbCB1c2luZyB1cCB0byA0IHNvdXJjZSBsYXllcnMKPiBkZXBlbmRlbnQgb24gc2l6ZSBvZiBw
-YW5lbC4KPiAoNCkgRWFjaCBncmFwaGljIGxheWVyIGNhbiBiZSBwbGFjZWQgd2l0aCBvbmUgcGl4
-ZWwgcmVzb2x1dGlvbgo+IGluIGVpdGhlciBheGlzLgo+ICg1KSBFYWNoIGdyYXBoaWMgbGF5ZXIg
-c3VwcG9ydCBSR0I1NjUgYW5kIFJHQjg4OCBkaXJlY3QgY29sb3JzCj4gd2l0aG91dCBhbHBoYQo+
-IGNoYW5uZWwgYW5kIEJHUkE4ODg4IEJHUkE0NDQ0IEFSR0IxNTU1IGRpcmVjdCBjb2xvcnMgd2l0
-aCBhbgo+IGFscGhhIGNoYW5uZWwgYW5kCj4gWVVWNDIyIGZvcm1hdC4KPiAoNikgRWFjaCBncmFw
-aGljIGxheWVyIHN1cHBvcnQgYWxwaGEgYmxlbmRpbmcgd2l0aCA4LWJpdAo+IHJlc29sdXRpb24u
-Cj4gCj4gVGhpcyBpcyBhIHNpbXBsaWZpZWQgdmVyc2lvbiwgb25seSBvbmUgcHJpbWFyeSBwbGFu
-ZSwgb25lCj4gZnJhbWVidWZmZXIgY3JlYXRlZCBmb3IKPiBmYmRldiwgb25lIGNydGMsIG9uZSBj
-b25uZWN0b3IgZm9yIFRGVCBMQ0QgcGFuZWwsIGFuIGVuY29kZXIuCj4gCj4gU2lnbmVkLW9mZi1i
-eTogQWxpc29uIFdhbmcgPGIxODk2NUBmcmVlc2NhbGUuY29tPgo+IFNpZ25lZC1vZmYtYnk6IFhp
-dWJvIExpIDxsaXhpdWJvQGNtc3MuY2hpbmFtb2JpbGUuY29tPgo+IFNpZ25lZC1vZmYtYnk6IEpp
-YW53ZWkgV2FuZyA8amlhbndlaS53YW5nQGZyZWVzY2FsZS5jb20+CgpDYW4ndCBmaW5kIGFueSBv
-dGhlciB1c2Ugb2YgZGVwcmVjYXRlZCBmdW5jdGlvbnMgb3IgbGVnYWN5IGNvZGUgcGF0dGVybnMK
-b3IgYW55dGhpbmcgZWxzZSB0aGF0IHdlJ3ZlIHJlY2VudGx5IHN0YXJ0ZWQgY2xlYW5pbmcgdXAs
-IGxvb2tzIGdvb2QuIE5vCmRldGFpbGVkIHJldmlldyB0aG91Z2ggKGZvciBvbmUgSSBsYWNrIGh3
-IGRvY3MpLgoKQWNrZWQtYnk6IERhbmllbCBWZXR0ZXIgPGRhbmllbC52ZXR0ZXJAZmZ3bGwuY2g+
-CgpNaWdodCBiZSBnb29kIHRvIGdldCBzb21lIGNyb3NzLXJldmlldyBmcm9tIHNvbWUgb3RoZXIg
-YXJtIHNvYyBkcm0gZHJpdmVyCnRlYW0sIHRoZW4gc2VuZCBhIHB1bGwgcmVxdWVzdCB0byBEYXZl
-IGZvciA0LjMuCgpDaGVlcnMsIERhbmllbAotLSAKRGFuaWVsIFZldHRlcgpTb2Z0d2FyZSBFbmdp
-bmVlciwgSW50ZWwgQ29ycG9yYXRpb24KaHR0cDovL2Jsb2cuZmZ3bGwuY2gKX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlz
-dApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3Rv
-cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On 07/10/2015 10:21 AM, Tomeu Vizoso wrote:
+> On 10 July 2015 at 17:27, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+>> On 07/10/2015 03:29 AM, Tomeu Vizoso wrote:
+>>>
+>>> On 1 July 2015 at 19:36, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>>
+>>>> On Wed, Jul 1, 2015 at 7:45 AM, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+>>>> wrote:
+>>>>>
+>>>>> When an OF node has a pin range for its GPIOs, return -EPROBE_DEFER if
+>>>>> the pin controller isn't available.
+>>>>>
+>>>>> Otherwise, the GPIO range wouldn't be set at all unless the pin
+>>>>> controller probed always before the GPIO chip.
+>>>>>
+>>>>> With this change, the probe of the GPIO chip will be deferred and will
+>>>>> be retried at a later point, hopefully once the pin controller has been
+>>>>> registered and probed already.
+>>>>
+>>>>
+>>>> This will break cases where the pinctrl driver does not exist, but the
+>>>> DT contains pinctrl bindings. We can have similar problems already
+>>>> with clocks though. However, IMO this problem is a bit different in
+>>>> that pinctrl is more likely entirely optional while clocks are often
+>>>> required. You may do all pin setup in bootloader/firmware on some
+>>>> boards and not others. Of course then why put pinctrl in the DT in
+>>>> that case? They could be present just due to how chip vs. board dts
+>>>> files are structured.
+>>>
+>>>
+>>> I see. My instinct tells me that it would be better if the gpio-ranges
+>>> property was set in the board dts, but I don't really know what each
+>>> mach does with its DTSs.
+>>
+>>
+>> That doesn't make sense; the mapping between GPIO controller pins and pin
+>> controller pins is a property of the SoC not the board.
+>
+>  From what Rob said above, apparently some boards will rely on the pin
+> setup done by the bootloader, and some other boards with the same soc
+> will want to do it in the kernel. So it's not really a difference in
+> the hw itself, but what expectations exist about the firmware on a
+> specific board.
+
+Sure, but none of that changes the mapping between the GPIO and pin 
+controller pins.
