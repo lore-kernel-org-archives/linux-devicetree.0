@@ -1,49 +1,59 @@
-From: Scott Shu <scott.shu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 1/6] Document: bindings: DT: Add SMP enable method for
- MT6580 SoC platform
-Date: Fri, 10 Jul 2015 14:04:04 +0800
-Message-ID: <1436508249-49338-2-git-send-email-scott.shu@mediatek.com>
-References: <Scott Shu <scott.shu@gmail.com>
- <1436508249-49338-1-git-send-email-scott.shu@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1436508249-49338-1-git-send-email-scott.shu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Scott Shu <scott.shu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, scott.shu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, loda.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, wsd_upstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jades.shih-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH] of: Drop owner assignment from platform and i2c driver
+Date: Fri, 10 Jul 2015 15:26:12 +0900
+Message-ID: <1436509572-25266-1-git-send-email-k.kozlowski@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
+	DEVICE TREE" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-For MT6580 SoC platform, the secondary cores are in powered off state
-as default, so compared with MT65xx series SoC, one new enable method
-is needed. This method using the SPM (System Power Manager) inside
-the SCPSYS to control the CPU power.
+platform_driver and i2c_driver do not need to set an owner because core
+will set it.
 
-Signed-off-by: Scott Shu <scott.shu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+
 ---
- Documentation/devicetree/bindings/arm/cpus.txt | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-index be35054..eaee089 100644
---- a/Documentation/devicetree/bindings/arm/cpus.txt
-+++ b/Documentation/devicetree/bindings/arm/cpus.txt
-@@ -195,6 +195,7 @@ nodes to be present and contain the properties described below.
- 			    "marvell,armada-380-smp"
- 			    "marvell,armada-390-smp"
- 			    "marvell,armada-xp-smp"
-+			    "mediatek,mt6580-smp"
- 			    "mediatek,mt65xx-smp"
- 			    "mediatek,mt81xx-tz-smp"
- 			    "qcom,gcc-msm8660"
+The coccinelle script which generated the patch was sent here:
+http://www.spinics.net/lists/kernel/msg2029903.html
+---
+ drivers/of/unittest.c | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+index 18016341d5a9..9f71770b6226 100644
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -979,7 +979,6 @@ static struct platform_driver unittest_driver = {
+ 	.remove			= unittest_remove,
+ 	.driver = {
+ 		.name		= "unittest",
+-		.owner		= THIS_MODULE,
+ 		.of_match_table	= of_match_ptr(unittest_match),
+ 	},
+ };
+@@ -1666,7 +1665,6 @@ static const struct i2c_device_id unittest_i2c_dev_id[] = {
+ static struct i2c_driver unittest_i2c_dev_driver = {
+ 	.driver = {
+ 		.name = "unittest-i2c-dev",
+-		.owner = THIS_MODULE,
+ 	},
+ 	.probe = unittest_i2c_dev_probe,
+ 	.remove = unittest_i2c_dev_remove,
+@@ -1761,7 +1759,6 @@ static const struct i2c_device_id unittest_i2c_mux_id[] = {
+ static struct i2c_driver unittest_i2c_mux_driver = {
+ 	.driver = {
+ 		.name = "unittest-i2c-mux",
+-		.owner = THIS_MODULE,
+ 	},
+ 	.probe = unittest_i2c_mux_probe,
+ 	.remove = unittest_i2c_mux_remove,
 -- 
-1.8.1.1.dirty
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
