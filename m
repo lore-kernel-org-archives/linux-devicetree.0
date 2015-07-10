@@ -1,70 +1,52 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/5] dt-bindings: Add usb3.0 phy binding for MT65xx
- SoCs
-Date: Fri, 10 Jul 2015 07:10:18 +0200
-Message-ID: <20150710051018.GU18700@pengutronix.de>
-References: <1436348468-4126-1-git-send-email-chunfeng.yun@mediatek.com>
- <1436348468-4126-2-git-send-email-chunfeng.yun@mediatek.com>
+From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 0/2] Add MT8173 MMPLL change rate support
+Date: Fri, 10 Jul 2015 13:44:46 +0800
+Message-ID: <1436507086.3526.117.camel@mtksdaap41>
+References: <1436344666-25645-1-git-send-email-jamesjj.liao@mediatek.com>
+	 <559DC3EF.90401@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1436348468-4126-2-git-send-email-chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <559DC3EF.90401-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Heiko Stubner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 08, 2015 at 05:41:03PM +0800, Chunfeng Yun wrote:
-> add a DT binding documentation of usb3.0 phy for MT65xx
-> SoCs from Mediatek.
+Hi Stephen,
+
+On Wed, 2015-07-08 at 17:44 -0700, Stephen Boyd wrote:
+> On 07/08/2015 01:37 AM, James Liao wrote:
+> > MT8173 MMPLL frequency settings are different from common PLLs.
+> > It needs different post divider settings for some ranges of frequency.
+> > This patch add support for MT8173 MMPLL frequency setting, includes:
+> >
+> > 1. Add div-rate table for PLLs.
+> > 2. Increase the max ost divider setting from 3 (/8) to 4 (/16).
+> > 3. Write postdiv and pcw settings at the same time.
+> >
+> > James Liao (2):
+> >   clk: mediatek: Fix PLL registers setting flow
+> >   clk: mediatek: Add MT8173 MMPLL change rate support
+> >
 > 
-> Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->  .../devicetree/bindings/usb/mt65xx-u3phy.txt       | 34 ++++++++++++++++++++++
->  1 file changed, 34 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/mt65xx-u3phy.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/mt65xx-u3phy.txt b/Documentation/devicetree/bindings/usb/mt65xx-u3phy.txt
-> new file mode 100644
-> index 0000000..056b2aa
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/mt65xx-u3phy.txt
-> @@ -0,0 +1,34 @@
-> +MT65xx U3PHY
-> +
-> +The device node for Mediatek SOC usb3.0 phy
-> +
-> +Required properties:
-> + - compatible : Should be "mediatek,mt8173-u3phy"
-> + - reg        : Offset and length of registers, the first is for mac domain,
-> +	another for phy domain
-> + - power-domains: to enable usb's mtcmos
-> + - usb-wakeup-ctrl : to access usb wakeup control register
-> + - wakeup-src : 1: ip sleep wakeup mode; 2: line state wakeup mode; others
-> +	means don't enable wakeup source of usb
-> + - u2port-num : number of usb2.0 ports to support which should be 1 or 2
-> + - clocks     : must support all clocks that phy need
-> + - clock-names: should be "wakeup_deb_p0", "wakeup_deb_p1" for wakeup
-> +	debounce control clocks, and "u3phya_ref" for u3phya reference clock.
-> +
-> +Example:
-> +
-> +u3phy: usb-phy@11271000 {
-> +	compatible = "mediatek,mt8173-u3phy";
-> +	reg = <0 0x11271000 0 0x3000>,
-> +	      <0 0x11280000 0 0x20000>;
+> Are these fixing regressions in 4.2-rc1? I don't see any "Fixes:" tag so
+> it's not clear and makes me want to defer these until v4.3. Furthermore,
+> the subject starts with "Add" so it sounds like a new feature.
 
-0x11271000 is the register space the xhci controller takes. You should
-not expose the same register space to two different drivers.
+This patchset is based on 4.1-rc1 but it had been tested on 4.2-rc1.
+I'll send a new patch which based on 4.2-rc1.
 
-Sascha
+This patchset contains some general PLL fixes and MMPLL set rate
+support. We can say the last one is also a fix because changing some
+specific rate on MMPLL may fail in current implementation.
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+Best regards,
+
+James
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
