@@ -1,83 +1,143 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 1/2] of_mdio: add new DT property 'link' for fixed-link
-Date: Fri, 10 Jul 2015 11:22:52 -0700
-Message-ID: <55A00D7C.9090807@gmail.com>
-References: <559EB0A4.5080101@list.ru> <559EB1A6.1090008@list.ru> <559EBC59.6020003@gmail.com> <559EDD0C.7020907@list.ru> <559EE45C.4040408@gmail.com> <559EEAE9.4000806@list.ru> <alpine.LNX.2.02.1507100940530.15010@sbrk.org> <559FAA71.2030209@list.ru>
+Subject: Re: [PATCH 2/3] of_mdio: add new DT property 'autoneg' for fixed-link
+Date: Fri, 10 Jul 2015 11:37:45 -0700
+Message-ID: <55A010F9.7030808@gmail.com>
+References: <559FF511.5080102@list.ru> <559FF63E.8020209@list.ru>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <559FAA71.2030209@list.ru>
+In-Reply-To: <559FF63E.8020209@list.ru>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stas Sergeev <stsp@list.ru>, Sebastien Rannou <mxs@sbrk.org>
-Cc: Linux kernel <linux-kernel@vger.kernel.org>, Arnaud Ebalard <arno@natisbad.org>, Stas Sergeev <stsp@users.sourceforge.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, netdev <netdev@vger.kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+To: Stas Sergeev <stsp@list.ru>, netdev <netdev@vger.kernel.org>
+Cc: Linux kernel <linux-kernel@vger.kernel.org>, Sebastien Rannou <mxs@sbrk.org>, Arnaud Ebalard <arno@natisbad.org>, Stas Sergeev <stsp@users.sourceforge.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/07/15 04:20, Stas Sergeev wrote:
-> 10.07.2015 11:46, Sebastien Rannou =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> On Fri, 10 Jul 2015, Stas Sergeev wrote:
->>
->>> 10.07.2015 00:15, Florian Fainelli =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>> Then, if the in-band status indication is not reliable (which real=
-ly
->>>> should be completely understood),
->>> Agree!
->>> But this is not something I can help with.
->>> Sebastien Rannou reports the problem, please ask him whatever
->>> you see fits to get a better understanding of a problem.
->>> The fact that his HW does not generate the inband status, is
->>> _my own guess_.
->>
->> Yes, I confirm that my HW does not generate an in-band status. AFAIK=
-, it's
->> a PHY that aggregates 4xSGMIIs to 1xQSGMII ; the MAC side of the PHY=
- (with
->> inband status) is connected to the switch through QSGMII, and in thi=
-s context
->> we are on the media side of the PHY.
-> Hmm, interesting.
-> So if I parse the above correctly, you have something like 88E1340S s=
-et
-> up into a mode when SGMII is used as media interface and QSGMII as sy=
-stem
-> interface (terms are from datasheet page 5), then you connect the med=
-ia
-> interface to armada-xp and system interface to the switch.
->=20
-> I wonder if it is the right thing to do.
-> AFAIK you could as well set up armada-xp into QSGMII mode and connect
-> that to switch. The driver would then disable the use of inband statu=
-s
-> and everything would be fine.
-> Either way, your use-case proves that only DT can decide the use of a=
-n
-> inband status.
+On 10/07/15 09:43, Stas Sergeev wrote:
+> 
+> Currently for fixed-link the MAC driver decides whether to use the
+> link status auto-negotiation or not.
+> Unfortunately the auto-negotiation may not work when expected by
+> the MAC driver. Sebastien Rannou explains:
+> << Yes, I confirm that my HW does not generate an in-band status. AFAIK, it's
+> a PHY that aggregates 4xSGMIIs to 1xQSGMII ; the MAC side of the PHY (with
+> inband status) is connected to the switch through QSGMII, and in this context
+> we are on the media side of the PHY. >>
+> https://lkml.org/lkml/2015/7/10/206
+> 
+> This patch introduces the new boolean property 'autoneg' that allows
+> the user to request the auto-negotiation explicitly.
 
-I do not think there is any debate around the need for a property that
-defines whether in-band-status is both reliable and usable, the debate
-is about *where* to put it.
+The implementation looks better, but the name might still be slightly
+controversial. I would go with "use-in-band-status" which is more
+strictly defined than "autoneg" which could mean anything and everything.
 
-I still think this does not belong in the fixed-link property, but now
-that you have explained a bit more in the other patch what your
-understanding of "fixed-link" is, I can see the confusion.
+What do you think?
 
-Instead of having a link =3D "auto", property, how about just something
-like this:
+> 
+> Signed-off-by: Stas Sergeev <stsp@users.sourceforge.net>
+> 
+> CC: Rob Herring <robh+dt@kernel.org>
+> CC: Pawel Moll <pawel.moll@arm.com>
+> CC: Mark Rutland <mark.rutland@arm.com>
+> CC: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> CC: Kumar Gala <galak@codeaurora.org>
+> CC: Florian Fainelli <f.fainelli@gmail.com>
+> CC: Grant Likely <grant.likely@linaro.org>
+> CC: devicetree@vger.kernel.org
+> CC: linux-kernel@vger.kernel.org
+> CC: netdev@vger.kernel.org
+> ---
+>  .../devicetree/bindings/net/fixed-link.txt         |  6 +++++-
+>  drivers/of/of_mdio.c                               | 23 ++++++++++++++++++++--
+>  include/linux/of_mdio.h                            |  5 +++++
+>  3 files changed, 31 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/fixed-link.txt b/Documentation/devicetree/bindings/net/fixed-link.txt
+> index 82bf7e0..e2959a8 100644
+> --- a/Documentation/devicetree/bindings/net/fixed-link.txt
+> +++ b/Documentation/devicetree/bindings/net/fixed-link.txt
+> @@ -9,8 +9,12 @@ Such a fixed link situation is described by creating a 'fixed-link'
+>  sub-node of the Ethernet MAC device node, with the following
+>  properties:
+> 
+> +* 'autoneg' (boolean, optional), to enable the auto-negotiation of link
+> +  state. Auto-negotiation is MII protocol, HW and driver-specific and is
+> +  not supported in many cases, so use it only when you know what you do.
+>  * 'speed' (integer, mandatory), to indicate the link speed. Accepted
+> -  values are 10, 100 and 1000
+> +  values are 10, 100 and 1000. If the auto-negotiation is enabled,
+> +  'speed' may not be set. It will then be auto-negotiated, if possible.
+>  * 'full-duplex' (boolean, optional), to indicate that full duplex is
+>    used. When absent, half duplex is assumed.
+>  * 'pause' (boolean, optional), to indicate that pause should be
+> diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+> index 1bd4305..12b2ede 100644
+> --- a/drivers/of/of_mdio.c
+> +++ b/drivers/of/of_mdio.c
+> @@ -280,6 +280,22 @@ bool of_phy_is_fixed_link(struct device_node *np)
+>  }
+>  EXPORT_SYMBOL(of_phy_is_fixed_link);
+> 
+> +bool of_phy_is_autoneg_link(struct device_node *np)
+> +{
+> +	struct device_node *dn;
+> +	bool ret;
+> +
+> +	dn = of_get_child_by_name(np, "fixed-link");
+> +	if (!dn)
+> +		return false;
+> +
+> +	ret = of_property_read_bool(dn, "autoneg");
+> +
+> +	of_node_put(dn);
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL(of_phy_is_autoneg_link);
+> +
+>  int of_phy_register_fixed_link(struct device_node *np)
+>  {
+>  	struct fixed_phy_status status = {};
+> @@ -291,10 +307,13 @@ int of_phy_register_fixed_link(struct device_node *np)
+>  	/* New binding */
+>  	fixed_link_node = of_get_child_by_name(np, "fixed-link");
+>  	if (fixed_link_node) {
+> -		status.link = 1;
+> +		bool autoneg = of_property_read_bool(fixed_link_node,
+> +						     "autoneg");
+> +		status.link = !autoneg;
+>  		status.duplex = of_property_read_bool(fixed_link_node,
+>  						      "full-duplex");
+> -		if (of_property_read_u32(fixed_link_node, "speed", &status.speed))
+> +		if (of_property_read_u32(fixed_link_node, "speed",
+> +					 &status.speed) != 0 && !autoneg)
+>  			return -EINVAL;
+>  		status.pause = of_property_read_bool(fixed_link_node, "pause");
+>  		status.asym_pause = of_property_read_bool(fixed_link_node,
+> diff --git a/include/linux/of_mdio.h b/include/linux/of_mdio.h
+> index d449018..647f348 100644
+> --- a/include/linux/of_mdio.h
+> +++ b/include/linux/of_mdio.h
+> @@ -65,6 +65,7 @@ static inline struct mii_bus *of_mdio_find_bus(struct device_node *mdio_np)
+>  #if defined(CONFIG_OF) && defined(CONFIG_FIXED_PHY)
+>  extern int of_phy_register_fixed_link(struct device_node *np);
+>  extern bool of_phy_is_fixed_link(struct device_node *np);
+> +extern bool of_phy_is_autoneg_link(struct device_node *np);
+>  #else
+>  static inline int of_phy_register_fixed_link(struct device_node *np)
+>  {
+> @@ -74,6 +75,10 @@ static inline bool of_phy_is_fixed_link(struct device_node *np)
+>  {
+>  	return false;
+>  }
+> +static inline bool of_phy_is_autoneg_link(struct device_node *np)
+> +{
+> +	return false;
+> +}
+>  #endif
+> 
+> 
 
-fixed-link {
-	speed =3D <1000>;
-	full-duplex;
-	use-in-band-status;
-};
 
-or event this:
-
-fixed-link {
-	use-in-band-status;
-};
-
-If you parse the 'use-in-band-status' which means that it is reliable
-information, then you can override whatever was defined in the DT under
-the 'fixed-link' property?
---=20
-=46lorian
+-- 
+Florian
