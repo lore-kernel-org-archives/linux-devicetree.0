@@ -1,79 +1,63 @@
-From: Daniel Kurtz <djkurtz@chromium.org>
-Subject: Re: [PATCH 0/2] Add clk_null to be the dummy root of MT8173 clocks
-Date: Sat, 11 Jul 2015 00:03:10 +0800
-Message-ID: <CAGS+omDu7F8EaqRgFLQC79zzn5Pwt2-zzB_wKa-kK_grsxs1eg@mail.gmail.com>
-References: <1436519763-3195-1-git-send-email-jamesjj.liao@mediatek.com>
+From: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: Re: [PATCH v1 1/3] gpio: defer probe if pinctrl cannot be found
+Date: Fri, 10 Jul 2015 18:21:10 +0200
+Message-ID: <CAAObsKAav-5-0bZA2XYW4m7eUd9F7yc+9kGvmt_hS-Z0ip=zKw@mail.gmail.com>
+References: <1435754753-31307-1-git-send-email-tomeu.vizoso@collabora.com>
+ <1435754753-31307-2-git-send-email-tomeu.vizoso@collabora.com>
+ <CAL_JsqKXODBk4FVB-kiWFHLGFLCwJDjXvpVqOTvuEJubApbVSg@mail.gmail.com>
+ <CAAObsKBS0OOhPNEAEV5Bh_+WMVWYhuGtGLqaVdCbzxPuT8a_gA@mail.gmail.com> <559FE471.1030408@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1436519763-3195-1-git-send-email-jamesjj.liao@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: James Liao <jamesjj.liao@mediatek.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Heiko Stubner <heiko@sntech.de>, srv_heupstream <srv_heupstream@mediatek.com>, Ricky Liang <jcliang@chromium.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mediatek@lists.infradead.org
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <559FE471.1030408-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 10, 2015 at 5:16 PM, James Liao <jamesjj.liao@mediatek.com> wrote:
-> This patchset is based on 4.2-rc1 and adds a dummy clock "clk_null"
-> to be the root clock of clocks whose parents are not contained in
-> CCF clock tree.
+On 10 July 2015 at 17:27, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+> On 07/10/2015 03:29 AM, Tomeu Vizoso wrote:
+>>
+>> On 1 July 2015 at 19:36, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>
+>>> On Wed, Jul 1, 2015 at 7:45 AM, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+>>> wrote:
+>>>>
+>>>> When an OF node has a pin range for its GPIOs, return -EPROBE_DEFER if
+>>>> the pin controller isn't available.
+>>>>
+>>>> Otherwise, the GPIO range wouldn't be set at all unless the pin
+>>>> controller probed always before the GPIO chip.
+>>>>
+>>>> With this change, the probe of the GPIO chip will be deferred and will
+>>>> be retried at a later point, hopefully once the pin controller has been
+>>>> registered and probed already.
+>>>
+>>>
+>>> This will break cases where the pinctrl driver does not exist, but the
+>>> DT contains pinctrl bindings. We can have similar problems already
+>>> with clocks though. However, IMO this problem is a bit different in
+>>> that pinctrl is more likely entirely optional while clocks are often
+>>> required. You may do all pin setup in bootloader/firmware on some
+>>> boards and not others. Of course then why put pinctrl in the DT in
+>>> that case? They could be present just due to how chip vs. board dts
+>>> files are structured.
+>>
+>>
+>> I see. My instinct tells me that it would be better if the gpio-ranges
+>> property was set in the board dts, but I don't really know what each
+>> mach does with its DTSs.
 >
-> In previous patch [1], it seems not suitable to declare clk_null in
-> device tree because it's not a clock comes form outside of SoC. So we
-> move clk_null into clock driver.
-
-NAK.  I still do not see why we need to introduce clk_null.  Just
-model the real clock tree.
-
-Every clock listed with "clk_null" as its parent actually has a real
-parent clock.
-As mentioned elsewhere, it is not enough to just enable/disable a clock gate.
-Clock enables/disables propagate up to parent clocks, and ensure that
-parents themselves are enabled when any child is enabled, and disabled
-when all of its children are disabled.
-So, we must properly configure each clock's parent to ensure that its
-parent will be enabled when needed, and that it can be disabled to
-save power when no longer required.
-
-Creating a bogus clk_null breaks the clock tree model, potentially
-causing real issues when enabling/disabling clocks.
-
-Please ask your hardware team to specify the real parent clock for
-each of the clocks below so we can model the clock tree accurately.
-
-In addition, these four need not be defined at all.  We can just use
-their parent clocks directly.
-As Sascha eloquently put it: "There's no need to model pieces of wire in CCF."
-
-FACTOR(CLK_TOP_CLKPH_MCK_O, "clkph_mck_o", "clk_null", 1, 1),
-FACTOR(CLK_TOP_DPI, "dpi_ck", "clk_null", 1, 1),
-FACTOR(CLK_TOP_USB_SYSPLL_125M, "usb_syspll_125m", "clk_null", 1, 1),
-FACTOR(CLK_TOP_HDMITX_DIG_CTS, "hdmitx_dig_cts", "clk_null", 1, 1),
-
-
-For these "clk_null as parent" gate clocks, please specify their real
-parent clock:
-
-GATE_ICG(CLK_INFRA_CPUM, "infra_cpum", "clk_null", 15),
-GATE_MM1(CLK_MM_DSI0_DIGITAL, "mm_dsi0_digital", "clk_null", 5),
-GATE_MM1(CLK_MM_DSI1_DIGITAL, "mm_dsi1_digital", "clk_null", 7),
-GATE_MM1(CLK_MM_DPI1_PIXEL, "mm_dpi1_pixel", "clk_null", 10),
-GATE_MM1(CLK_MM_LVDS_PIXEL, "mm_lvds_pixel", "clk_null", 16),
-GATE_MM1(CLK_MM_LVDS_CTS, "mm_lvds_cts", "clk_null", 17),
-
-Thanks,
--Dan
-
-> [1] https://lkml.org/lkml/2015/6/18/24
 >
-> James Liao (2):
->   clk: mediatek: Add root clocks support for Mediatek SoC.
->   clk: mediatek: Add clk_null to be the dummy root clock for MT8173
->
->  drivers/clk/mediatek/clk-mt8173.c      |  5 +++++
->  drivers/clk/mediatek/clk-mtk.c         | 23 +++++++++++++++++++++++
->  drivers/clk/mediatek/clk-mtk.h         | 17 ++++++++++++++++-
->  include/dt-bindings/clock/mt8173-clk.h |  1 +
->  4 files changed, 45 insertions(+), 1 deletion(-)
->
-> --
-> 1.8.1.1.dirty
+> That doesn't make sense; the mapping between GPIO controller pins and pin
+> controller pins is a property of the SoC not the board.
+
+>From what Rob said above, apparently some boards will rely on the pin
+setup done by the bootloader, and some other boards with the same soc
+will want to do it in the kernel. So it's not really a difference in
+the hw itself, but what expectations exist about the firmware on a
+specific board.
+
+Regards,
+
+Tomeu
