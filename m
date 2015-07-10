@@ -1,49 +1,79 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v3 5/5] arm64: dts: mt8173: Add subsystem clock controller
- device nodes
-Date: Fri, 10 Jul 2015 17:58:02 +0200
-Message-ID: <CABuKBe+oLmRRHZKnBsfU8icf2r2f3+XrPNMVw_QaGPE9vVxGFw@mail.gmail.com>
-References: <1436522405-13923-1-git-send-email-jamesjj.liao@mediatek.com>
-	<1436522405-13923-6-git-send-email-jamesjj.liao@mediatek.com>
-	<CAGS+omC7274iPDdfXpKuM0HvCcEscUE5e5jrDH4DhW4j_Ykt2A@mail.gmail.com>
+From: Daniel Kurtz <djkurtz@chromium.org>
+Subject: Re: [PATCH 0/2] Add clk_null to be the dummy root of MT8173 clocks
+Date: Sat, 11 Jul 2015 00:03:10 +0800
+Message-ID: <CAGS+omDu7F8EaqRgFLQC79zzn5Pwt2-zzB_wKa-kK_grsxs1eg@mail.gmail.com>
+References: <1436519763-3195-1-git-send-email-jamesjj.liao@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGS+omC7274iPDdfXpKuM0HvCcEscUE5e5jrDH4DhW4j_Ykt2A@mail.gmail.com>
+In-Reply-To: <1436519763-3195-1-git-send-email-jamesjj.liao@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Kurtz <djkurtz@chromium.org>
-Cc: James Liao <jamesjj.liao@mediatek.com>, "moderated list:ARM/Mediatek SoC..." <linux-mediatek@lists.infradead.org>, Mike Turquette <mturquette@baylibre.com>, Heiko Stubner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, srv_heupstream <srv_heupstream@mediatek.com>, Stephen Boyd <sboyd@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Ricky Liang <jcliang@chromium.org>
+To: James Liao <jamesjj.liao@mediatek.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Heiko Stubner <heiko@sntech.de>, srv_heupstream <srv_heupstream@mediatek.com>, Ricky Liang <jcliang@chromium.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-2015-07-10 17:02 GMT+02:00 Daniel Kurtz <djkurtz@chromium.org>:
+On Fri, Jul 10, 2015 at 5:16 PM, James Liao <jamesjj.liao@mediatek.com> wrote:
+> This patchset is based on 4.2-rc1 and adds a dummy clock "clk_null"
+> to be the root clock of clocks whose parents are not contained in
+> CCF clock tree.
 >
-> On Jul 10, 2015 18:00, "James Liao" <jamesjj.liao@mediatek.com> wrote:
->>
->> This patch adds device nodes providing subsystem clocks on MT8173,
->> includes mmsys, imgsys, vdecsys, vencsys and vencltsys.
->>
->> Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
->> ---
->>  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 30
->> ++++++++++++++++++++++++++++++
->>  1 file changed, 30 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
->> b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
->> index a2f63e4..9d74ce5 100644
->> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
->> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
->> @@ -227,6 +227,36 @@
->>                         clocks = <&uart_clk>;
->>                         status = "disabled";
->>                 };
->> +
->> +               mmsys: mmsys@14000000 {
->
-> I think we agreed previously that these should all be clock-controller@.
->
+> In previous patch [1], it seems not suitable to declare clk_null in
+> device tree because it's not a clock comes form outside of SoC. So we
+> move clk_null into clock driver.
 
-I did understand the same.
-Please change that.
+NAK.  I still do not see why we need to introduce clk_null.  Just
+model the real clock tree.
 
-Thanks.
+Every clock listed with "clk_null" as its parent actually has a real
+parent clock.
+As mentioned elsewhere, it is not enough to just enable/disable a clock gate.
+Clock enables/disables propagate up to parent clocks, and ensure that
+parents themselves are enabled when any child is enabled, and disabled
+when all of its children are disabled.
+So, we must properly configure each clock's parent to ensure that its
+parent will be enabled when needed, and that it can be disabled to
+save power when no longer required.
+
+Creating a bogus clk_null breaks the clock tree model, potentially
+causing real issues when enabling/disabling clocks.
+
+Please ask your hardware team to specify the real parent clock for
+each of the clocks below so we can model the clock tree accurately.
+
+In addition, these four need not be defined at all.  We can just use
+their parent clocks directly.
+As Sascha eloquently put it: "There's no need to model pieces of wire in CCF."
+
+FACTOR(CLK_TOP_CLKPH_MCK_O, "clkph_mck_o", "clk_null", 1, 1),
+FACTOR(CLK_TOP_DPI, "dpi_ck", "clk_null", 1, 1),
+FACTOR(CLK_TOP_USB_SYSPLL_125M, "usb_syspll_125m", "clk_null", 1, 1),
+FACTOR(CLK_TOP_HDMITX_DIG_CTS, "hdmitx_dig_cts", "clk_null", 1, 1),
+
+
+For these "clk_null as parent" gate clocks, please specify their real
+parent clock:
+
+GATE_ICG(CLK_INFRA_CPUM, "infra_cpum", "clk_null", 15),
+GATE_MM1(CLK_MM_DSI0_DIGITAL, "mm_dsi0_digital", "clk_null", 5),
+GATE_MM1(CLK_MM_DSI1_DIGITAL, "mm_dsi1_digital", "clk_null", 7),
+GATE_MM1(CLK_MM_DPI1_PIXEL, "mm_dpi1_pixel", "clk_null", 10),
+GATE_MM1(CLK_MM_LVDS_PIXEL, "mm_lvds_pixel", "clk_null", 16),
+GATE_MM1(CLK_MM_LVDS_CTS, "mm_lvds_cts", "clk_null", 17),
+
+Thanks,
+-Dan
+
+> [1] https://lkml.org/lkml/2015/6/18/24
+>
+> James Liao (2):
+>   clk: mediatek: Add root clocks support for Mediatek SoC.
+>   clk: mediatek: Add clk_null to be the dummy root clock for MT8173
+>
+>  drivers/clk/mediatek/clk-mt8173.c      |  5 +++++
+>  drivers/clk/mediatek/clk-mtk.c         | 23 +++++++++++++++++++++++
+>  drivers/clk/mediatek/clk-mtk.h         | 17 ++++++++++++++++-
+>  include/dt-bindings/clock/mt8173-clk.h |  1 +
+>  4 files changed, 45 insertions(+), 1 deletion(-)
+>
+> --
+> 1.8.1.1.dirty
