@@ -1,68 +1,175 @@
-From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Subject: Re: [PATCH v1 1/3] gpio: defer probe if pinctrl cannot be found
-Date: Fri, 10 Jul 2015 11:29:25 +0200
-Message-ID: <CAAObsKBS0OOhPNEAEV5Bh_+WMVWYhuGtGLqaVdCbzxPuT8a_gA@mail.gmail.com>
-References: <1435754753-31307-1-git-send-email-tomeu.vizoso@collabora.com>
- <1435754753-31307-2-git-send-email-tomeu.vizoso@collabora.com> <CAL_JsqKXODBk4FVB-kiWFHLGFLCwJDjXvpVqOTvuEJubApbVSg@mail.gmail.com>
+From: Zhou Wang <wangzhou1@hisilicon.com>
+Subject: Re: [PATCH v3 2/5] PCI: designware: Add ARM64 support
+Date: Fri, 10 Jul 2015 17:36:49 +0800
+Message-ID: <559F9231.4080008@hisilicon.com>
+References: <1435743817-19083-1-git-send-email-wangzhou1@hisilicon.com> <1435743817-19083-3-git-send-email-wangzhou1@hisilicon.com> <EE11001F9E5DDD47B7634E2F8A612F2E01D4E4BB@lhreml503-mbs> <5593F899.6050306@arm.com> <559B4B0E.4060004@hisilicon.com> <EE11001F9E5DDD47B7634E2F8A612F2E01D568F4@lhreml503-mbs>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKXODBk4FVB-kiWFHLGFLCwJDjXvpVqOTvuEJubApbVSg@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Alexandre Courbot <gnurou@gmail.com>
+Content-Type: text/plain; charset="GB2312"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <EE11001F9E5DDD47B7634E2F8A612F2E01D568F4@lhreml503-mbs>
+Sender: linux-pci-owner@vger.kernel.org
+To: Gabriele Paoloni <gabriele.paoloni@huawei.com>
+Cc: James Morse <james.morse@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jg1.han@samsung.com>, Pratyush Anand <pratyush.anand@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Liviu Dudau <Liviu.Dudau@arm.com>, "kishon@ti.com" <kishon@ti.com>, "xobs@kosagi.com" <xobs@kosagi.com>, "m-karicheri2@ti.com" <m-karicheri2@ti.com>, "Minghuan.Lian@freescale.com" <Minghuan.Lian@freescale.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Yuanzhichang <yuanzhichang@hisilicon.com>, Zhudacai <zhudacai@hisilicon.com>, zhangjukuo <zhangjukuo@huawei.com>, qiuzhenfa <qiuzhenfa@hisilicon.com>, "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
-On 1 July 2015 at 19:36, Rob Herring <robherring2@gmail.com> wrote:
-> On Wed, Jul 1, 2015 at 7:45 AM, Tomeu Vizoso <tomeu.vizoso@collabora.com> wrote:
->> When an OF node has a pin range for its GPIOs, return -EPROBE_DEFER if
->> the pin controller isn't available.
+On 2015/7/10 16:53, Gabriele Paoloni wrote:
+> I have just sent this patch "[PATCH] Store PCIe controllers address in struct of_pci_range".
+> 
+> It would be needed by "pcie_designware.c" to retrieve the PCI controller addresses from "win->__res.start".
+> 
+> So we do not need to retrieve info from the DT parser anymore and we can use the new PCI DT parsing API
+> 
+> This problem was already discussed in this thread:
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-January/317743.html
+> 
+> 
+
+Hi Gab,
+
+Thanks for your patch.
+
+That means I can use something like: pp->io_mod_base = win->__res.start
+to get io_mod_base, mem_mod_base and cfg0_mod_base.
+
+will send my v4 series based on your patch.
+
+Best regards,
+Zhou
+
+>> -----Original Message-----
+>> From: Wangzhou (B)
+>> Sent: Tuesday, July 07, 2015 4:44 AM
+>> To: James Morse
+>> Cc: Gabriele Paoloni; Bjorn Helgaas; Jingoo Han; Pratyush Anand; Arnd
+>> Bergmann; Liviu Dudau; kishon@ti.com; xobs@kosagi.com; m-
+>> karicheri2@ti.com; Minghuan.Lian@freescale.com; linux-
+>> pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+>> devicetree@vger.kernel.org; Yuanzhichang; Zhudacai; zhangjukuo;
+>> qiuzhenfa; Liguozhu (Kenneth)
+>> Subject: Re: [PATCH v3 2/5] PCI: designware: Add ARM64 support
 >>
->> Otherwise, the GPIO range wouldn't be set at all unless the pin
->> controller probed always before the GPIO chip.
+>> On 2015/7/1 22:26, James Morse wrote:
+>>> Zhou Wang wrote:
+>>>> I tested this patch on D02 board of Hisilicon. It works well.
+>>>> I have compiled the driver with multi_v7_defconfig. However, I don't
+>>>> have
+>>>> ARM32 PCIe related board to do test. It will be appreciated if
+>> someone
+>>>> could
+>>>> help to test it.
+>>>>
+>>>> Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
+>>>> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>>>> Signed-off-by: Gabriele Paoloni <gabriele.paoloni@huawei.com>
+>>>> Tested-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+>>>> Tested-by: James Morse <james.morse@arm.com>
+>>>
+>>> Tests on this new series, using the same i.MX 6Quad board, are not
+>> working.
+>>>
+>>> The network card is no longer detected, and I get a lockup when
+>> removing
+>>> the root bridge and rescanning.
+>>>
+>>> Partial dmesg output below. Significantly, the lines:
+>>>> [    0.152128] PCI host bridge /soc/pcie@0x01000000 ranges:
+>>>> [    0.152142]   No bus range found for /soc/pcie@0x01000000, using
+>> [bus
+>>> 00-ff]
+>>> are new.
+>>>
+>>> Both series are applied to v4.1, use the same .config file, and the
+>> same dtb.
+>>> I will investigate further.
+>>>
+>>> (Re-testing v2 works, so this isn't an interim hardware failure)
+>>>
+>>> Thanks,
+>>>
+>>> James
+>>>
 >>
->> With this change, the probe of the GPIO chip will be deferred and will
->> be retried at a later point, hopefully once the pin controller has been
->> registered and probed already.
->
-> This will break cases where the pinctrl driver does not exist, but the
-> DT contains pinctrl bindings. We can have similar problems already
-> with clocks though. However, IMO this problem is a bit different in
-> that pinctrl is more likely entirely optional while clocks are often
-> required. You may do all pin setup in bootloader/firmware on some
-> boards and not others. Of course then why put pinctrl in the DT in
-> that case? They could be present just due to how chip vs. board dts
-> files are structured.
-
-I see. My instinct tells me that it would be better if the gpio-ranges
-property was set in the board dts, but I don't really know what each
-mach does with its DTSs.
-
-> We could address this by simply marking the pin controller node
-> disabled. However, ...
->
->> @@ -361,7 +361,7 @@ static void of_gpiochip_add_pin_range(struct gpio_chip *chip)
+>> Hi James,
 >>
->>                 pctldev = of_pinctrl_get(pinspec.np);
->>                 if (!pctldev)
->> -                       break;
->> +                       return -EPROBE_DEFER;
->
-> But you cannot distinguish that case here. I think of_pinctrl_get
-> needs to set the error code appropriately.
-
-Why not? I was thinking of just doing this before we call of_pinctrl_get():
-
-        if (!of_device_is_available(pinspec.np))
-            continue;
-
-Thanks,
-
-Tomeu
-
-> Rob
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+>> There are something wrong with v3 patch.
+>>
+>> pp->io_mod_base = of_read_number(parser_range_end -
+>> 		of_n_addr_cells(np) - 5 + na, ns);
+>> pp->mem_mod_base = of_read_number(parser_range_end -
+>> 		of_n_addr_cells(np) - 5 + na, ns);
+>> pp->cfg0_mod_base = of_read_number(parser_range_end -
+>> 		of_n_addr_cells(np) - 5 + na, ns);
+>> are wrong.
+>>
+>> The ranges item in your dts is:
+>> ranges = <0x800 0x0 0x1f00000 0x1f00000 0x0 0x80000
+>> 	  0x81000000 0x0 0x0  0x1f80000 0x0 0x10000
+>> 	  0x82000000 0x0 0x1000000 0x1000000 0x0 0xf00000>;
+>> parser_range_end points to the end of ranges(0xf00000) directly. In v2
+>> patch,
+>> of_read_number is of_read_number(parser.range - parser.np + na, ns);
+>> parser.range
+>> points to the end of each line in ranges item.
+>>
+>> When I did test on D02 board with intel82599 card, I set ranges item as:
+>> ranges = <0x03000000 0 0xb0000000 0x220 0x00000000 0 0xf000000>;
+>> It is just one line. In this case, parser_range_end is same with
+>> parser.range.
+>> That is why it happened to work well on D02 board.
+>>
+>> very sorry to bother you about this problem.
+>>
+>> Thanks,
+>> Zhou
+>>
+>>>
+>>>
+>>> root@localhost:~# dmesg | grep -i pci
+>>> [    0.126184] PCI: CLS 0 bytes, default 64
+>>> [    0.152128] PCI host bridge /soc/pcie@0x01000000 ranges:
+>>> [    0.152142]   No bus range found for /soc/pcie@0x01000000, using
+>> [bus 00-ff]
+>>> [    0.154183] imx6q-pcie 1ffc000.pcie: PCI host bridge to bus
+>> 0000:00
+>>> [    0.154201] pci_bus 0000:00: root bus resource [bus 00-ff]
+>>> [    0.154215] pci_bus 0000:00: root bus resource [???
+>>> 0x01f00000-0x01f7ffff flags 0x0]
+>>> [    0.154228] pci_bus 0000:00: root bus resource [io  0x0000-0xffff]
+>>> [    0.154270] pci_bus 0000:00: root bus resource [mem 0x01000000-
+>> 0x01efffff]
+>>> [    0.154306] pci 0000:00:00.0: [16c3:abcd] type 01 class 0x060400
+>>> [    0.154333] pci 0000:00:00.0: reg 0x10: [mem 0x00000000-0x000fffff]
+>>> [    0.154352] pci 0000:00:00.0: reg 0x38: [mem 0x00000000-0x0000ffff
+>> pref]
+>>> [    0.154377] pci 0000:00:00.0: IOMMU is currently not supported for
+>> PCI
+>>> [    0.154429] pci 0000:00:00.0: supports D1
+>>> [    0.154440] pci 0000:00:00.0: PME# supported from D0 D1 D3hot
+>> D3cold
+>>> [    0.154683] PCI: bus0: Fast back to back transfers disabled
+>>> [    0.154806] PCI: bus1: Fast back to back transfers enabled
+>>> [    0.154884] pci 0000:00:00.0: BAR 0: assigned [mem 0x01000000-
+>> 0x010fffff]
+>>> [    0.154903] pci 0000:00:00.0: BAR 6: assigned [mem 0x01100000-
+>> 0x0110ffff
+>>> pref]
+>>> [    0.154917] pci 0000:00:00.0: PCI bridge to [bus 01]
+>>> [    0.155145] pcieport 0000:00:00.0: Signaling PME through PCIe PME
+>> interrupt
+>>> [    0.155161] pcie_pme 0000:00:00.0:pcie01: service driver pcie_pme
+>> loaded
+>>> [    0.155279] aer 0000:00:00.0:pcie02: service driver aer loaded
+>>> [    1.188840] ehci-pci: EHCI PCI platform driver
+>>> [    1.232518] ohci-pci: OHCI PCI platform driver
+>>>
+>>> --
+>>> To unsubscribe from this list: send the line "unsubscribe linux-pci"
+>> in
+>>> the body of a message to majordomo@vger.kernel.org
+>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>>
+>>> .
+>>>
+>>
+> 
