@@ -1,41 +1,65 @@
-From: Sebastien Rannou <mxs@sbrk.org>
-Subject: Re: [PATCH 1/2] of_mdio: add new DT property 'link' for fixed-link
-Date: Fri, 10 Jul 2015 10:46:44 +0200 (CEST)
-Message-ID: <alpine.LNX.2.02.1507100940530.15010@sbrk.org>
-References: <559EB0A4.5080101@list.ru> <559EB1A6.1090008@list.ru> <559EBC59.6020003@gmail.com> <559EDD0C.7020907@list.ru> <559EE45C.4040408@gmail.com> <559EEAE9.4000806@list.ru>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 0/2] Implement sample time consideration for Vybrid's
+ ADC
+Date: Fri, 10 Jul 2015 16:47:04 +0800
+Message-ID: <20150710084704.GK23464@tiger>
+References: <cover.1435134626.git.maitysanchayan@gmail.com>
 Mime-Version: 1.0
-Content-Type: MULTIPART/MIXED; BOUNDARY="2036029021-454653936-1436518004=:15010"
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <559EEAE9.4000806@list.ru>
-Sender: netdev-owner@vger.kernel.org
-To: Stas Sergeev <stsp@list.ru>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Linux kernel <linux-kernel@vger.kernel.org>, Arnaud Ebalard <arno@natisbad.org>, Stas Sergeev <stsp@users.sourceforge.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, netdev <netdev@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <cover.1435134626.git.maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Wed, Jun 24, 2015 at 02:03:39PM +0530, Sanchayan Maity wrote:
+> Hello,
+> 
+> This patchset adds a dt binding for specifying sample time
+> for the vybrid adc driver and takes this into account for
+> sampling frequency calculation and related configuration in
+> the driver.
+> 
+> The patchset is based on top of Stefan's patches here
+> http://lkml.iu.edu/hypermail/linux/kernel/1505.3/02043.html
+> 
+> which got recently applied. Tested with shawn's for-next
+> branch.
+> 
+> Changes since v1:
+> 
+> Change from a vendor specific fsl,min-sample-time to non vendor
+> specific min-sample-time.
 
---2036029021-454653936-1436518004=:15010
-Content-Type: TEXT/PLAIN; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+What's the reason for that?  Property without vendor prefix would be
+the generic one, which should be defined by generic ADC bindings, not
+vf610-adc.txt.
 
-On Fri, 10 Jul 2015, Stas Sergeev wrote:
+Shawn
 
-> 10.07.2015 00:15, Florian Fainelli пишет:
-> > Then, if the in-band status indication is not reliable (which really
-> > should be completely understood),
-> Agree!
-> But this is not something I can help with.
-> Sebastien Rannou reports the problem, please ask him whatever
-> you see fits to get a better understanding of a problem.
-> The fact that his HW does not generate the inband status, is
-> _my own guess_.
-
-Yes, I confirm that my HW does not generate an in-band status. AFAIK, it's
-a PHY that aggregates 4xSGMIIs to 1xQSGMII ; the MAC side of the PHY (with
-inband status) is connected to the switch through QSGMII, and in this context
-we are on the media side of the PHY.
-
--- 
-Sébastien
---2036029021-454653936-1436518004=:15010--
+> 
+> Version 1 of the patchset can be found here
+> http://lkml.iu.edu/hypermail/linux/kernel/1506.1/00026.html
+> 
+> - Sanchayan.
+> 
+> Sanchayan Maity (2):
+>   iio: adc: Determine sampling frequencies by using minimum sample time
+>   ARM: dts: vfxxx: Add property for minimum sample time
+> 
+>  .../devicetree/bindings/iio/adc/vf610-adc.txt      |  6 ++
+>  arch/arm/boot/dts/vfxxx.dtsi                       |  2 +
+>  drivers/iio/adc/vf610_adc.c                        | 74 ++++++++++++++++++++--
+>  3 files changed, 78 insertions(+), 4 deletions(-)
+> 
+> -- 
+> 2.4.4
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
+> 
