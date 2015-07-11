@@ -1,58 +1,78 @@
-From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 0/2] RTC support for NXP LPC18xx family
-Date: Sat, 11 Jul 2015 19:28:48 +0200
-Message-ID: <1436635730-15617-1-git-send-email-manabian@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org
-Cc: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, joshc-acOepvfBmUk@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] ARM: dts: vfxxx: Add property for minimum sample
+ time
+Date: Sat, 11 Jul 2015 18:39:10 +0100
+Message-ID: <55A154BE.6000701@kernel.org>
+References: <cover.1435134626.git.maitysanchayan@gmail.com> <36fa3cef10b6a21b39e96283ea5d6961e9f6d972.1435134626.git.maitysanchayan@gmail.com> <20150710085324.GL23464@tiger> <20150710180640.GB8723@Sanchayan-Arch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150710180640.GB8723@Sanchayan-Arch>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch set adds support for the RTC found on many NXP devices
-including LPC178x/18xx/408x/43xx. The RTC provides calendar and
-clock functionality together with alarm interrupt support.
+On 10/07/15 19:06, maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> Hello Shawn,
+> 
+> On 15-07-10 16:53:24, Shawn Guo wrote:
+>> On Wed, Jun 24, 2015 at 02:03:41PM +0530, Sanchayan Maity wrote:
+>>> Add a device tree property which allows to specify the minimum sample
+>>> time which can be used to calculate the actual ADC cycles required
+>>> depending on the hardware.
+>>>
+>>> Signed-off-by: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>> ---
+>>>  arch/arm/boot/dts/vfxxx.dtsi | 2 ++
+>>>  1 file changed, 2 insertions(+)
+>>>
+>>> diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
+>>> index 90a03d5..71d9c08 100644
+>>> --- a/arch/arm/boot/dts/vfxxx.dtsi
+>>> +++ b/arch/arm/boot/dts/vfxxx.dtsi
+>>> @@ -229,6 +229,7 @@
+>>>  				status = "disabled";
+>>>  				fsl,adck-max-frequency = <30000000>, <40000000>,
+>>>  							<20000000>;
+>>> +				min-sample-time = <1000>;
+>>>  			};
+>>>  
+>>>  			wdoga5: wdog@4003e000 {
+>>> @@ -447,6 +448,7 @@
+>>>  				status = "disabled";
+>>>  				fsl,adck-max-frequency = <30000000>, <40000000>,
+>>>  							<20000000>;
+>>> +				min-sample-time = <1000>;
+>>
+>> Can we code 1000 as the default in kernel driver, so that only boards
+>> requiring different value need to have this property?  Doing so makes
+>> the property optional rather than required.
+>>
+> 
+> Not sure if hardcoding it in the driver is the right approach.
+If it is a true feature of the device (i.e. if in the case of perfect
+front end electronics) this is the right option, then a default makes
+a lot of sense.  If that isn't the case (I suspect not) then if we
+drop it be optional chances are no one will bother thinking about it
+or trying to tune this at all.
 
-The driver is a rework of an old driver by Kevin Wells. It has been
-modified to support modern resource allocation, device tree and
-generally cleaned up. Driver was originally written to support the
-LPC24xx platform but since this platform isn't upstream support has
-been removed. The LPC24xx name is still kept to preserve the origin
-of this hardware block.
+Hence seems wrong to put a fairly arbitrary default value on it.
+However, we do need to still work with old device trees and new kernels
+so need to cope without it.
 
-Been a while since the last version, but this version should address
-all comments from Josh and Alexandre on v2. There has also been some
-rework from my side. Please have a look.
-
-changes since v2:
- - rework hw init
- - update Kconfig text
- - remove unused registers defines
- - misc clean ups
- - rebase on 4.2-rc1
-
-changes since v1:
- - s/lpc2k/lpc24xx for better consistency
- - fix Kconfig entry
- - drop support for old versions for the ip block
-
-Patch set is based on Linux v4.2-rc1.
-
-Joachim Eastwood (2):
-  rtc: add rtc-lpc24xx driver
-  doc: dt: add documentation for nxp,lpc1788-rtc
-
- .../devicetree/bindings/rtc/nxp,lpc1788-rtc.txt    |  21 ++
- drivers/rtc/Kconfig                                |  12 +
- drivers/rtc/Makefile                               |   1 +
- drivers/rtc/rtc-lpc24xx.c                          | 310 +++++++++++++++++++++
- 4 files changed, 344 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/rtc/nxp,lpc1788-rtc.txt
- create mode 100644 drivers/rtc/rtc-lpc24xx.c
-
--- 
-1.8.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hence to my mind, if we had started out with this in the first driver
+version, then the default would be a bad idea.  As we didn't then we
+really need to cope with nothing specified (as best we can) and so
+we do need a sensible default (or perhaps even sensible worst
+case default) in there. 
+> 
+> However if the maintainers and others agree on doing this, I will do
+> the necessary change.
+> 
+> Thanks.
+> 
+> Regards,
+> Sanchayan.
+> 
