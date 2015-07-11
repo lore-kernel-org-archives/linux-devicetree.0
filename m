@@ -1,87 +1,34 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: Re: [PATCH 3/4] irqchip: Add documentation for the bcm2836 interrupt
- controller.
-Date: Fri, 10 Jul 2015 23:01:01 -0700
-Message-ID: <87io9r9qsi.fsf@eliezer.anholt.net>
-References: <1436303617-17185-1-git-send-email-eric@anholt.net>
- <1436303617-17185-4-git-send-email-eric@anholt.net>
- <55A0A251.1010301@wwwdotorg.org>
+From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] mfd: ax20x: Add axp152 support
+Date: Sat, 11 Jul 2015 15:45:15 +0900
+Message-ID: <CAJKOXPc=RGUrv74E9bh2g2SLi8+1w46c05xr5Lj=sutssvxwDA@mail.gmail.com>
+References: <1436527717-28062-1-git-send-email-hdegoede@redhat.com>
+	<1436527717-28062-2-git-send-email-hdegoede@redhat.com>
+	<CAOMqctRTgfvn9E9=dk5GR6Koy23wfRY4y5vqtSaZ+8vovTQ35w@mail.gmail.com>
+Reply-To: k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7550412885018942103=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <55A0A251.1010301@wwwdotorg.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Lee Jones <lee@kernel.org>, linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDKZNNNLXAHBB67WQKWQKGQEESPUOUY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAOMqctRTgfvn9E9=dk5GR6Koy23wfRY4y5vqtSaZ+8vovTQ35w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---===============7550412885018942103==
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
-
---=-=-=
-Content-Type: text/plain
-
-Stephen Warren <swarren@wwwdotorg.org> writes:
-
-> On 07/07/2015 03:13 PM, Eric Anholt wrote:
->> This is a new per-cpu root interrupt controller on the Raspberry Pi 2,
->> which will chain to the bcm2835 interrupt controller for peripheral
->> interrupts.
+2015-07-10 20:50 GMT+09:00 Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
+> Hello,
 >
->> diff --git a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2836-l1-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2836-l1-intc.txt
+> I see missing 'p' in axp20x in the subject u.u
 >
->> +local_intc: local_intc {
->
->> +	interrupt-parent = <&local_intc>;
->
-> I think that property shouldn't be there?
+> Please fix before merging this anywhere.
 
-If you don't have it there, the core finds the interrupt-parent in the
-parent node, and waits for that one before initializing (which is in
-turn waiting for us).  Note that for original 2835, you're finding the
-parent node as well.
+Shouldn't it contain also your signed-off-by?
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJVoLEdAAoJELXWKTbR/J7ohTwP/RlmPgFsUsmc6bTsBL6b+A70
-atiu0FQN0QHW0TkplPkuQPoUjpnnDaeaRcjtf3TTUWij5pjxm2KAIyloyAfmrnbi
-H8W4L6BeWI9KRx8oZLwpkfsyPhyW/rkWerSGdycNJ+nJbs42smGGOkRMkcW9QG/D
-4lOxhf+nKOYbmLNuWI6TUBsCwgOQHyg1FDhuRwk/IpHplSzeL376aGQjxMCsgfQV
-CmB9r79BLA1bGVv5R92hZtRt//Gp49D3d4MQJjHNxXfYjJdSzkJ4GSPvBl6Zzulw
-S0IDHGNuwfkVgn6+5v2i6jJi3lAQ7LpqCCDvwZJbJqnqEezwB6uU2PinCfK0GU1I
-HD3D4Bc48kJkmq+2etwMPPZoIFnUt3zR2kBVCJDB9auV+onZ5Fudv0W2Hdk9BRSf
-cwUk7q7m1wwtTJvkrETcRypX1CS1bmiezyUNLTiVUH2vMrHwZvY9DyxO/FBnkgfG
-qrn23zITenqLlRENYLndfN3M3OJR/lY8lQ4+CJkcv7Am1UemqCDgL6snDhnibJgC
-uRso14wMVarDT9ilAz7K70+5GpMSjs7JCmix65dhS5XZAjgznCwofa6AcyFGOTVA
-yHhy2tagBOMpB0LlaBFv+tRqetfgG5yVkQKQVHTGPETW4ul7DiAlFQut7ksS9VFS
-pKulzcjqiSZsW5ogNOL9
-=Kqco
------END PGP SIGNATURE-----
---=-=-=--
-
-
---===============7550412885018942103==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============7550412885018942103==--
+Best regards,
+Krzysztof
