@@ -1,15 +1,15 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 4/4] irqchip: Add bcm2836 interrupt controller for
- Raspberry Pi 2.
-Date: Fri, 10 Jul 2015 23:13:15 -0600
-Message-ID: <55A0A5EB.4090007@wwwdotorg.org>
+From: Eric Anholt <eric@anholt.net>
+Subject: Re: [PATCH 3/4] irqchip: Add documentation for the bcm2836 interrupt
+ controller.
+Date: Fri, 10 Jul 2015 23:01:01 -0700
+Message-ID: <87io9r9qsi.fsf@eliezer.anholt.net>
 References: <1436303617-17185-1-git-send-email-eric@anholt.net>
- <1436303617-17185-5-git-send-email-eric@anholt.net>
+ <1436303617-17185-4-git-send-email-eric@anholt.net>
+ <55A0A251.1010301@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============7550412885018942103=="
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1436303617-17185-5-git-send-email-eric@anholt.net>
+In-Reply-To: <55A0A251.1010301@wwwdotorg.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,76 +19,69 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Eric Anholt <eric@anholt.net>, linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrea Merello <andrea.merello@gmail.com>, Lee Jones <lee@kernel.org>, linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Lee Jones <lee@kernel.org>, linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/07/2015 03:13 PM, Eric Anholt wrote:
-> This interrupt controller is the new root interrupt controller with
-> the timer, PMU events, and IPIs, and the bcm2835's interrupt
-> controller is chained off of it to handle the peripherals.
-> 
-> SMP IPI support was mostly written by Andrea Merello, while I wrote
-> most of the rest of the IRQ handling.
-> 
-> Signed-off-by: Andrea Merello <andrea.merello@gmail.com>
-> Signed-off-by: Eric Anholt <eric@anholt.net>
+--===============7550412885018942103==
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
 
-I'd expect the git patch author to be Andrea if he wrote the original
-patch and you enhanced it.
+--=-=-=
+Content-Type: text/plain
 
-> diff --git a/drivers/irqchip/irq-bcm2836.c b/drivers/irqchip/irq-bcm2836.c
+Stephen Warren <swarren@wwwdotorg.org> writes:
 
-> +struct arm_local_intc {
-> +	struct irq_domain *domain;
-> +	void __iomem *base;
-> +};
-> +
-> +static struct arm_local_intc intc  __read_mostly;
+> On 07/07/2015 03:13 PM, Eric Anholt wrote:
+>> This is a new per-cpu root interrupt controller on the Raspberry Pi 2,
+>> which will chain to the bcm2835 interrupt controller for peripheral
+>> interrupts.
+>
+>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2836-l1-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2836-l1-intc.txt
+>
+>> +local_intc: local_intc {
+>
+>> +	interrupt-parent = <&local_intc>;
+>
+> I think that property shouldn't be there?
 
-It'd be nice to give everything (types, functions, variables) a
-consistent symbol prefix; bcm2836_arm_irqchip_ sounds like a good
-bikeshed to me, but perhaps just propagating the above arm_local_ to the
-functions too would be good, although that seems to risk symbol name
-collisions with other ARM SoCs.
+If you don't have it there, the core finds the interrupt-parent in the
+parent node, and waits for that one before initializing (which is in
+turn waiting for us).  Note that for original 2835, you're finding the
+parent node as well.
 
-> +static void bcm2836_mask_per_cpu_irq(unsigned int reg, unsigned int bit)
-> +{
-> +	void __iomem *reg_base = intc.base + reg;
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < 4; i++)
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Is "4" there the CPU count? Perhaps this should use one of the Linux
-APIs to query the CPU count rather than hard-coding it?
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-Should per-CPU IRQs automatically be masked on all CPUs at once, or only
-on the current CPU? A very quick look at the ARM GIC driver implies it
-doesn't iterate over all CPUs when masking per-CPU IRQs.
+iQIcBAEBCgAGBQJVoLEdAAoJELXWKTbR/J7ohTwP/RlmPgFsUsmc6bTsBL6b+A70
+atiu0FQN0QHW0TkplPkuQPoUjpnnDaeaRcjtf3TTUWij5pjxm2KAIyloyAfmrnbi
+H8W4L6BeWI9KRx8oZLwpkfsyPhyW/rkWerSGdycNJ+nJbs42smGGOkRMkcW9QG/D
+4lOxhf+nKOYbmLNuWI6TUBsCwgOQHyg1FDhuRwk/IpHplSzeL376aGQjxMCsgfQV
+CmB9r79BLA1bGVv5R92hZtRt//Gp49D3d4MQJjHNxXfYjJdSzkJ4GSPvBl6Zzulw
+S0IDHGNuwfkVgn6+5v2i6jJi3lAQ7LpqCCDvwZJbJqnqEezwB6uU2PinCfK0GU1I
+HD3D4Bc48kJkmq+2etwMPPZoIFnUt3zR2kBVCJDB9auV+onZ5Fudv0W2Hdk9BRSf
+cwUk7q7m1wwtTJvkrETcRypX1CS1bmiezyUNLTiVUH2vMrHwZvY9DyxO/FBnkgfG
+qrn23zITenqLlRENYLndfN3M3OJR/lY8lQ4+CJkcv7Am1UemqCDgL6snDhnibJgC
+uRso14wMVarDT9ilAz7K70+5GpMSjs7JCmix65dhS5XZAjgznCwofa6AcyFGOTVA
+yHhy2tagBOMpB0LlaBFv+tRqetfgG5yVkQKQVHTGPETW4ul7DiAlFQut7ksS9VFS
+pKulzcjqiSZsW5ogNOL9
+=Kqco
+-----END PGP SIGNATURE-----
+--=-=-=--
 
-> +static void bcm2836_mask_gpu_irq(struct irq_data *d)
-> +{
-> +}
-> +
-> +static void bcm2836_unmask_gpu_irq(struct irq_data *d)
-> +{
-> +}
 
-If the IRQs can't be masked, should these functions actually be implemented?
+--===============7550412885018942103==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-> +static void __exception_irq_entry bcm2836_handle_irq(struct pt_regs *regs)
-> +{
-> +	int cpu = smp_processor_id();
-> +	u32 stat;
-> +
-> +	stat = readl_relaxed(intc.base + LOCAL_IRQ_PENDING0 + 4 * cpu);
-> +	if (stat & 0x10) {
-> +		void __iomem *mailbox0 = (intc.base +
-> +					  LOCAL_MAILBOX0_CLR0 + 16 * cpu);
-> +		u32 mbox_val = readl(mailbox0);
-> +		u32 ipi = ffs(mbox_val) - 1;
-> +
-> +		writel(1 << ipi, mailbox0);
-> +		handle_IPI(ipi, regs);
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-Given that bcm2836_send_ipi() is #ifdef CONFIG_SMP, should this code be too?
+--===============7550412885018942103==--
