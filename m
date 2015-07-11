@@ -1,69 +1,98 @@
-From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: Re: [PATCH 4/4] irqchip: Add bcm2836 interrupt controller for
- Raspberry Pi 2.
-Date: Sat, 11 Jul 2015 09:51:08 +0200 (CEST)
-Message-ID: <alpine.DEB.2.11.1507110940420.17353@nanos>
-References: <1436303617-17185-1-git-send-email-eric@anholt.net> <1436303617-17185-5-git-send-email-eric@anholt.net> <55A0A5EB.4090007@wwwdotorg.org>
+From: Stas Sergeev <stsp@list.ru>
+Subject: Re: [PATCH 2/3] of_mdio: add new DT property 'autoneg' for fixed-link
+Date: Sat, 11 Jul 2015 12:15:24 +0300
+Message-ID: <55A0DEAC.3020801@list.ru>
+References: <559FF511.5080102@list.ru> <559FF63E.8020209@list.ru>
+ <55A010F9.7030808@gmail.com> <55A02656.7020508@list.ru>
+ <55A02D90.8090903@gmail.com> <55A032F5.8020801@list.ru>
+ <55A061CC.8060504@gmail.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55A0A5EB.4090007-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrea Merello <andrea.merello-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <55A061CC.8060504@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>, netdev <netdev@vger.kernel.org>
+Cc: Linux kernel <linux-kernel@vger.kernel.org>, Sebastien Rannou <mxs@sbrk.org>, Arnaud Ebalard <arno@natisbad.org>, Stas Sergeev <stsp@users.sourceforge.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 10 Jul 2015, Stephen Warren wrote:
-> On 07/07/2015 03:13 PM, Eric Anholt wrote:
-> > +static struct arm_local_intc intc  __read_mostly;
-> 
-> It'd be nice to give everything (types, functions, variables) a
-> consistent symbol prefix; bcm2836_arm_irqchip_ sounds like a good
-> bikeshed to me, but perhaps just propagating the above arm_local_ to the
-> functions too would be good, although that seems to risk symbol name
-> collisions with other ARM SoCs.
-
-Which is irrelevant because its static.
-
-> > +static void bcm2836_mask_per_cpu_irq(unsigned int reg, unsigned int bit)
-> > +{
-> > +	void __iomem *reg_base = intc.base + reg;
-> > +	unsigned int i;
-> > +
-> > +	for (i = 0; i < 4; i++)
-> 
-> Is "4" there the CPU count? Perhaps this should use one of the Linux
-> APIs to query the CPU count rather than hard-coding it?
-> 
-> Should per-CPU IRQs automatically be masked on all CPUs at once, or only
-> on the current CPU? A very quick look at the ARM GIC driver implies it
-> doesn't iterate over all CPUs when masking per-CPU IRQs.
-
-Usually per cpu interrupts are only masked on the cpu which is calling
-the function. The whole reason why per cpu interrupts exist is that
-you can share the same interrupt number for all cores.
-
-So masking all interrupts is not a good idea. In this case if a cpu is
-hot unplugged, then all other cpus would not longer get timer
-interrupts. Not what you really want, right?
- 
-> > +static void bcm2836_mask_gpu_irq(struct irq_data *d)
-> > +{
-> > +}
-> > +
-> > +static void bcm2836_unmask_gpu_irq(struct irq_data *d)
-> > +{
-> > +}
-> 
-> If the IRQs can't be masked, should these functions actually be implemented?
-
-We have a few places in the core which expect at least mask/unmask to
-be implemented.
- 
-Thanks,
-
-	tglx
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+11.07.2015 03:22, Florian Fainelli =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> On 10/07/15 14:02, Stas Sergeev wrote:
+>> 10.07.2015 23:39, Florian Fainelli =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>> - in-band status is an implementation delail, and it is
+>>>> specific to a particular protocols. If you request the
+>>>> in-band status for some protocol that doesn't support
+>>>> it, perhaps you should get -EINVAL, because such a
+>>>> config makes no sense. With autonegotiation, the rules
+>>>> are not that strict: it can be "unimplemented", which doesn't
+>>>> necessary mean nonsense in the config.
+>>> So by specifying "autoneg", you are not specific about the kind of
+>>> auto-negotiation protocol available, which is precisely my point: y=
+ou
+>>> need to go down to that level of detail for this to be useful. So m=
+aybe
+>>> something like:
+>>>
+>>> autoneg =3D "in-band-status" would actually be a better thing in te=
+rms of
+>>> description because then you would tell what can be made
+>>> available/working?
+>> I would agree with this if your argument below is true (see below).
+>>
+>>>> - autonegotiation is a wider term, and may be implemented
+>>>> by some other means than the in-band status (which is
+>>>> probably impossible for a fixed-link though).
+>>>>
+>>>> - In the terms that the driver uses, it is autonegotiation, eg
+>>>> MVNETA_GMAC_AUTONEG_CONFIG. And when you go down
+>>>> the implementation details, you see MVNETA_GMAC_INBAND_AN_ENABLE,
+>>>> which is just one AN bit of many.
+>>> But arguably, there could be another auto-negotiation method, which=
+ is
+>>> not in-band status related, which means that you would need a way t=
+o
+>>> distinguish between using in-band status, or using something else o=
+r
+>>> nothing, would not you?
+>> "something else" is a big question here.
+>> Can you think of _any_ other way that is both not an MDIO
+>> (suits to fixed-link) and not an in-band?
+> Yes, I could think about I2C or SPI PHYs that you could use alongside=
+ an
+> Ethernet controller that would qualify for out-of-band, not in-band, =
+yet
+> could still provide auto-negotiation. You may have special hardware w=
+ith
+> such a SPI or I2C controller which provides automatic decoding of the
+> auto-neg registers. Have not looked at e.g: SFP form factors or fiber
+> links, but they could also have additional out-of-band type of
+> auto-negotiation available.
+>
+>> If the answer is yes (even theoretically), then
+>> autoneg =3D "in-band" | "off"
+>> may make sense. Otherwise boolean just looks enough.
+> I think the answer is yes.
+>
+>> If we would implement autoneg outside of the fixed-link,
+>> then its semantic would likely be
+>> autoneg =3D "mdio" | "in-band" | "off"
+>> But the fact that we put it under fixed-link where only a
+>> single AN possibility exist, may probably be underlined by
+>> a semantic specific to fixed-link.
+> Right, if auto-negotiation was defined outside of fixed-link, that is
+> indeed how I would also specify this.
+Hmm, okey.
+But then this all doesn't fit into a fixed-link. The inband autoneg
+is a very small xtension, it only allows to notify MAC about some
+changes on the other end, but never control such changes, so
+from some POV it is still pretty much fixed. And it also built into
+the protocols that fixed-link already use, so that looked like a
+natural xtension to me. But if there are so many possible ways
+to abuse fixed-link making it _fully managed_, I am really starting
+to think about the possibility of defining the autoneg outside of it,
+and leave the poor fixed-link alone.
+The patch will be bigger, but... what do you think?
+This will of course first require defining the fixed-link in the
+docs more strictly, as currently it is (vaguely) defined as
+"non-MDIO", which leaves a lot to speculate and abuse.
