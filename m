@@ -1,59 +1,96 @@
-From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 5/6] mfd: devicetree: bindings: 88pm800: Add DT property
- for dual phase enable
-Date: Sat, 11 Jul 2015 16:16:27 +0900
-Message-ID: <55A0C2CB.6060209@samsung.com>
-References: <1436442431-3471-1-git-send-email-vaibhav.hiremath@linaro.org> <1436442431-3471-6-git-send-email-vaibhav.hiremath@linaro.org>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/3] of_mdio: add new DT property 'autoneg' for fixed-link
+Date: Fri, 10 Jul 2015 17:22:36 -0700
+Message-ID: <55A061CC.8060504@gmail.com>
+References: <559FF511.5080102@list.ru> <559FF63E.8020209@list.ru> <55A010F9.7030808@gmail.com> <55A02656.7020508@list.ru> <55A02D90.8090903@gmail.com> <55A032F5.8020801@list.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1436442431-3471-6-git-send-email-vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <55A032F5.8020801-cmBhpYW9OiY@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: Stas Sergeev <stsp-cmBhpYW9OiY@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Linux kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sebastien Rannou <mxs-i6rsG8ix9II@public.gmane.org>, Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Stas Sergeev <stsp-Rn4VEauK+AKRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-W dniu 09.07.2015 o 20:47, Vaibhav Hiremath pisze:
-> 88PM860 family of device supports dual phase mode on BUCK1 supply
-> providing total 6A capacity.
-> Note that by default they operate independently with 3A capacity.
-> 
-> This patch adds the devicetree binding to enable this
-> feature.
-> 
-> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/mfd/88pm800.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/88pm800.txt b/Documentation/devicetree/bindings/mfd/88pm800.txt
-> index ae1311c..c756b31 100644
-> --- a/Documentation/devicetree/bindings/mfd/88pm800.txt
-> +++ b/Documentation/devicetree/bindings/mfd/88pm800.txt
-> @@ -15,6 +15,12 @@ Optional properties :
->        CLK32K3 - for 88pm800
->        CLK32K2 - for 88pm860
->  
-> +   (Applicable only to PXA910 family):
-> +
-> + - marvell,88pm860-buck1-dualphase-en	: If set, enable dual phase on BUCK1,
-> +   providing 6A capacity.
-> +   Without this both BUCK1A and BUCK1B operates independently with 3A capacity.
-> +
+On 10/07/15 14:02, Stas Sergeev wrote:
+> 10.07.2015 23:39, Florian Fainelli =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>> - in-band status is an implementation delail, and it is
+>>> specific to a particular protocols. If you request the
+>>> in-band status for some protocol that doesn't support
+>>> it, perhaps you should get -EINVAL, because such a
+>>> config makes no sense. With autonegotiation, the rules
+>>> are not that strict: it can be "unimplemented", which doesn't
+>>> necessary mean nonsense in the config.
+>> So by specifying "autoneg", you are not specific about the kind of
+>> auto-negotiation protocol available, which is precisely my point: yo=
+u
+>> need to go down to that level of detail for this to be useful. So ma=
+ybe
+>> something like:
+>>
+>> autoneg =3D "in-band-status" would actually be a better thing in ter=
+ms of
+>> description because then you would tell what can be made
+>> available/working?
+> I would agree with this if your argument below is true (see below).
+>=20
+>>> - autonegotiation is a wider term, and may be implemented
+>>> by some other means than the in-band status (which is
+>>> probably impossible for a fixed-link though).
+>>>
+>>> - In the terms that the driver uses, it is autonegotiation, eg
+>>> MVNETA_GMAC_AUTONEG_CONFIG. And when you go down
+>>> the implementation details, you see MVNETA_GMAC_INBAND_AN_ENABLE,
+>>> which is just one AN bit of many.
+>> But arguably, there could be another auto-negotiation method, which =
+is
+>> not in-band status related, which means that you would need a way to
+>> distinguish between using in-band status, or using something else or
+>> nothing, would not you?
+> "something else" is a big question here.
+> Can you think of _any_ other way that is both not an MDIO
+> (suits to fixed-link) and not an in-band?
 
-1. How does this relates to regulator driver? The
-drivers/regulator/88pm800.c defines constraints for regulator which may
-be contradictory.
+Yes, I could think about I2C or SPI PHYs that you could use alongside a=
+n
+Ethernet controller that would qualify for out-of-band, not in-band, ye=
+t
+could still provide auto-negotiation. You may have special hardware wit=
+h
+such a SPI or I2C controller which provides automatic decoding of the
+auto-neg registers. Have not looked at e.g: SFP form factors or fiber
+links, but they could also have additional out-of-band type of
+auto-negotiation available.
 
-2. This looks like a job for regulator driver, not MFD. Then you could
-use standard regulator bindings (setting maximum current to 6A would
-change the regulator to different mode).
+> If the answer is yes (even theoretically), then
+> autoneg =3D "in-band" | "off"
+> may make sense. Otherwise boolean just looks enough.
 
-Best regards,
-Krzysztof
+I think the answer is yes.
 
+> If we would implement autoneg outside of the fixed-link,
+> then its semantic would likely be
+> autoneg =3D "mdio" | "in-band" | "off"
+> But the fact that we put it under fixed-link where only a
+> single AN possibility exist, may probably be underlined by
+> a semantic specific to fixed-link.
+
+Right, if auto-negotiation was defined outside of fixed-link, that is
+indeed how I would also specify this.
+
+>=20
+> One may also argue that
+> autoneg =3D "any-possible-autoneg-that-works" is better than
+> specifying it explicitly, which is exactly what the boolean does.
+
+I prefer excess of information rather than lack of information, because
+you can always choose what to do with it. Especially when it comes to
+Device Tree, plan carefully :)
+--=20
+=46lorian
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
