@@ -1,78 +1,221 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] ARM: dts: vfxxx: Add property for minimum sample
- time
-Date: Sat, 11 Jul 2015 18:39:10 +0100
-Message-ID: <55A154BE.6000701@kernel.org>
-References: <cover.1435134626.git.maitysanchayan@gmail.com> <36fa3cef10b6a21b39e96283ea5d6961e9f6d972.1435134626.git.maitysanchayan@gmail.com> <20150710085324.GL23464@tiger> <20150710180640.GB8723@Sanchayan-Arch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150710180640.GB8723@Sanchayan-Arch>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org
+From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 1/2] clk: add lpc18xx creg clk driver
+Date: Sat, 11 Jul 2015 23:48:26 +0200
+Message-ID: <1436651307-24098-2-git-send-email-manabian@gmail.com>
+References: <1436651307-24098-1-git-send-email-manabian@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1436651307-24098-1-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/07/15 19:06, maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> Hello Shawn,
-> 
-> On 15-07-10 16:53:24, Shawn Guo wrote:
->> On Wed, Jun 24, 2015 at 02:03:41PM +0530, Sanchayan Maity wrote:
->>> Add a device tree property which allows to specify the minimum sample
->>> time which can be used to calculate the actual ADC cycles required
->>> depending on the hardware.
->>>
->>> Signed-off-by: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> ---
->>>  arch/arm/boot/dts/vfxxx.dtsi | 2 ++
->>>  1 file changed, 2 insertions(+)
->>>
->>> diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
->>> index 90a03d5..71d9c08 100644
->>> --- a/arch/arm/boot/dts/vfxxx.dtsi
->>> +++ b/arch/arm/boot/dts/vfxxx.dtsi
->>> @@ -229,6 +229,7 @@
->>>  				status = "disabled";
->>>  				fsl,adck-max-frequency = <30000000>, <40000000>,
->>>  							<20000000>;
->>> +				min-sample-time = <1000>;
->>>  			};
->>>  
->>>  			wdoga5: wdog@4003e000 {
->>> @@ -447,6 +448,7 @@
->>>  				status = "disabled";
->>>  				fsl,adck-max-frequency = <30000000>, <40000000>,
->>>  							<20000000>;
->>> +				min-sample-time = <1000>;
->>
->> Can we code 1000 as the default in kernel driver, so that only boards
->> requiring different value need to have this property?  Doing so makes
->> the property optional rather than required.
->>
-> 
-> Not sure if hardcoding it in the driver is the right approach.
-If it is a true feature of the device (i.e. if in the case of perfect
-front end electronics) this is the right option, then a default makes
-a lot of sense.  If that isn't the case (I suspect not) then if we
-drop it be optional chances are no one will bother thinking about it
-or trying to tune this at all.
+The CREG block on lpc18xx contains configuration register
+for two low power clocks. Support enabling of these two
+clocks with a clk driver that access CREG trough the
+syscon regmap interface.
 
-Hence seems wrong to put a fairly arbitrary default value on it.
-However, we do need to still work with old device trees and new kernels
-so need to cope without it.
+These clocks are needed to support peripherals like the
+internal RTC on lpc18xx.
 
-Hence to my mind, if we had started out with this in the first driver
-version, then the default would be a bad idea.  As we didn't then we
-really need to cope with nothing specified (as best we can) and so
-we do need a sensible default (or perhaps even sensible worst
-case default) in there. 
-> 
-> However if the maintainers and others agree on doing this, I will do
-> the necessary change.
-> 
-> Thanks.
-> 
-> Regards,
-> Sanchayan.
-> 
+Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ drivers/clk/nxp/Makefile           |   1 +
+ drivers/clk/nxp/clk-lpc18xx-creg.c | 173 +++++++++++++++++++++++++++++++++++++
+ 2 files changed, 174 insertions(+)
+ create mode 100644 drivers/clk/nxp/clk-lpc18xx-creg.c
+
+diff --git a/drivers/clk/nxp/Makefile b/drivers/clk/nxp/Makefile
+index 7f608b0ad7b4..6f6b0f9aa320 100644
+--- a/drivers/clk/nxp/Makefile
++++ b/drivers/clk/nxp/Makefile
+@@ -1,2 +1,3 @@
+ obj-$(CONFIG_ARCH_LPC18XX)	+= clk-lpc18xx-cgu.o
+ obj-$(CONFIG_ARCH_LPC18XX)	+= clk-lpc18xx-ccu.o
++obj-$(CONFIG_ARCH_LPC18XX)	+= clk-lpc18xx-creg.o
+diff --git a/drivers/clk/nxp/clk-lpc18xx-creg.c b/drivers/clk/nxp/clk-lpc18xx-creg.c
+new file mode 100644
+index 000000000000..4bca11eca4a1
+--- /dev/null
++++ b/drivers/clk/nxp/clk-lpc18xx-creg.c
+@@ -0,0 +1,173 @@
++/*
++ * Clk driver for NXP LPC18xx/43xx Configuration Registers (CREG)
++ *
++ * Copyright (C) 2015 Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ *
++ * This file is licensed under the terms of the GNU General Public
++ * License version 2. This program is licensed "as is" without any
++ * warranty of any kind, whether express or implied.
++ */
++
++#include <linux/clk-provider.h>
++#include <linux/delay.h>
++#include <linux/kernel.h>
++#include <linux/mfd/syscon.h>
++#include <linux/of.h>
++#include <linux/regmap.h>
++
++#define LPC18XX_CREG_CREG0			0x004
++#define  LPC18XX_CREG_CREG0_EN1KHZ		BIT(0)
++#define  LPC18XX_CREG_CREG0_EN32KHZ		BIT(1)
++#define  LPC18XX_CREG_CREG0_RESET32KHZ		BIT(2)
++#define  LPC18XX_CREG_CREG0_PD32KHZ		BIT(3)
++
++#define to_clk_creg(_hw) container_of(_hw, struct clk_creg_data, hw)
++
++enum {
++	CREG_CLK_1KHZ,
++	CREG_CLK_32KHZ,
++	CREG_CLK_MAX,
++};
++
++struct clk_creg_data {
++	struct clk_hw hw;
++	const char *name;
++	struct regmap *reg;
++	unsigned int en_mask;
++	const struct clk_ops *ops;
++};
++
++#define CREG_CLK(_name, _emask, _ops)		\
++{						\
++	.name = _name,				\
++	.en_mask = LPC18XX_CREG_CREG0_##_emask,	\
++	.ops = &_ops,				\
++}
++
++static int clk_creg_32k_prepare(struct clk_hw *hw)
++{
++	struct clk_creg_data *creg = to_clk_creg(hw);
++	int ret;
++
++	ret = regmap_update_bits(creg->reg, LPC18XX_CREG_CREG0,
++				 LPC18XX_CREG_CREG0_PD32KHZ |
++				 LPC18XX_CREG_CREG0_RESET32KHZ, 0);
++
++	/*
++	 * Powering up the 32k oscillator takes a long while
++	 * and sadly there aren't any status bit to poll.
++	 */
++	msleep(2500);
++
++	return ret;
++}
++
++static void clk_creg_32k_unprepare(struct clk_hw *hw)
++{
++	struct clk_creg_data *creg = to_clk_creg(hw);
++
++	regmap_update_bits(creg->reg, LPC18XX_CREG_CREG0,
++			   LPC18XX_CREG_CREG0_PD32KHZ,
++			   LPC18XX_CREG_CREG0_PD32KHZ);
++}
++
++static int clk_creg_32k_is_prepared(struct clk_hw *hw)
++{
++	struct clk_creg_data *creg = to_clk_creg(hw);
++	u32 reg;
++
++	regmap_read(creg->reg, LPC18XX_CREG_CREG0, &reg);
++
++	return !(reg & LPC18XX_CREG_CREG0_PD32KHZ) &&
++	       !(reg & LPC18XX_CREG_CREG0_RESET32KHZ);
++}
++
++static unsigned long clk_creg_1k_recalc_rate(struct clk_hw *hw,
++					     unsigned long parent_rate)
++{
++	return parent_rate / 32;
++}
++
++static int clk_creg_enable(struct clk_hw *hw)
++{
++	struct clk_creg_data *creg = to_clk_creg(hw);
++
++	return regmap_update_bits(creg->reg, LPC18XX_CREG_CREG0,
++				  creg->en_mask, creg->en_mask);
++}
++
++static void clk_creg_disable(struct clk_hw *hw)
++{
++	struct clk_creg_data *creg = to_clk_creg(hw);
++
++	regmap_update_bits(creg->reg, LPC18XX_CREG_CREG0,
++			   creg->en_mask, 0);
++}
++
++static const struct clk_ops clk_creg_32k = {
++	.enable		= clk_creg_enable,
++	.disable	= clk_creg_disable,
++	.prepare	= clk_creg_32k_prepare,
++	.unprepare	= clk_creg_32k_unprepare,
++	.is_prepared	= clk_creg_32k_is_prepared,
++};
++
++static const struct clk_ops clk_creg_1k = {
++	.enable		= clk_creg_enable,
++	.disable	= clk_creg_disable,
++	.recalc_rate	= clk_creg_1k_recalc_rate,
++};
++
++static struct clk_creg_data clk_creg_clocks[] = {
++	[CREG_CLK_1KHZ]  = CREG_CLK("1khz_clk",  EN1KHZ,  clk_creg_1k),
++	[CREG_CLK_32KHZ] = CREG_CLK("32khz_clk", EN32KHZ, clk_creg_32k),
++};
++
++static struct clk *clk_register_creg_clk(struct clk_creg_data *creg_clk,
++					 const char **parent_name,
++					 struct regmap *syscon)
++{
++	struct clk_init_data init;
++
++	init.ops = creg_clk->ops;
++	init.name = creg_clk->name;
++	init.parent_names = parent_name;
++	init.num_parents = 1;
++
++	creg_clk->reg = syscon;
++	creg_clk->hw.init = &init;
++
++	return clk_register(NULL, &creg_clk->hw);
++}
++
++static struct clk *clk_creg[CREG_CLK_MAX];
++static struct clk_onecell_data clk_base_data = {
++	.clks = clk_creg,
++	.clk_num = CREG_CLK_MAX,
++};
++
++static void __init lpc18xx_creg_clk_init(struct device_node *np)
++{
++	const char *clk_32khz_parent;
++	struct regmap *syscon;
++
++	syscon = syscon_node_to_regmap(np->parent);
++	if (IS_ERR(syscon)) {
++		pr_err("%s: syscon lookup failed\n", __func__);
++		return;
++	}
++
++	clk_32khz_parent = of_clk_get_parent_name(np, 0);
++
++	clk_creg[CREG_CLK_32KHZ] =
++		clk_register_creg_clk(&clk_creg_clocks[CREG_CLK_32KHZ],
++				      &clk_32khz_parent, syscon);
++
++	clk_creg[CREG_CLK_1KHZ] =
++		clk_register_creg_clk(&clk_creg_clocks[CREG_CLK_1KHZ],
++				      &clk_creg_clocks[CREG_CLK_32KHZ].name,
++				      syscon);
++
++	of_clk_add_provider(np, of_clk_src_onecell_get, &clk_base_data);
++}
++CLK_OF_DECLARE(lpc18xx_creg_clk, "nxp,lpc1850-creg-clk", lpc18xx_creg_clk_init);
+-- 
+1.8.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
