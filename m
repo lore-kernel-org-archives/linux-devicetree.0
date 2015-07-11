@@ -1,65 +1,86 @@
-From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 4/9] clocksource: mediatek: Use GPT as sched clock
- source
-Date: Sat, 11 Jul 2015 18:32:37 +0800
-Message-ID: <1436610757.17661.1.camel@mtksdaap41>
-References: <1431763110-443-1-git-send-email-yingjoe.chen@mediatek.com>
-	 <CABuKBeJhdRBBw1v1kj8J0YFVWZ27vzx5W=XU8jiwePVgL_7g_g@mail.gmail.com>
-	 <CAGS+omDa4X7daAYD6SDuEM6bMQwojNUCnGMGiUwnJ6M_yBTRLg@mail.gmail.com>
-	 <1551938.VHQvCCENeg@ubix>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 4/4] doc: dt: dma: add bindings for lpc1850-dmamux
+Date: Sat, 11 Jul 2015 14:12:07 +0200
+Message-ID: <1436616727-4847-5-git-send-email-manabian@gmail.com>
+References: <1436616727-4847-1-git-send-email-manabian@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1551938.VHQvCCENeg@ubix>
+In-Reply-To: <1436616727-4847-1-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2015-07-03 at 17:51 +0200, Matthias Brugger wrote:
-> On Friday, July 03, 2015 09:48:42 PM Daniel Kurtz wrote:
+Add device tree bindings documentation for the
+lpc1850-dmamux DMA router.
 
-<...>
+Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ .../devicetree/bindings/dma/lpc1850-dmamux.txt     | 54 ++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/lpc1850-dmamux.txt
 
-> > >> @@ -243,6 +251,8 @@ static void __init mtk_timer_init(struct device_node
-> > >> *node)>> 
-> > >>         mtk_timer_setup(evt, GPT_CLK_SRC, TIMER_CTRL_OP_FREERUN, 1);
-> > >>         clocksource_mmio_init(evt->gpt_base + TIMER_CNT_REG(GPT_CLK_SRC),
-> > >>         
-> > >>                         node->name, rate, 300, 32,
-> > >>                         clocksource_mmio_readl_up);
-> > >> 
-> > >> +       gpt_base = evt->gpt_base;
-> > > 
-> > > This is really hacky. We should clean up the code and provide
-> > > mtk_clock_event_device globally.
-> > > Please add the patch below, which does exactly this.
-> > 
-> > I don't think this is so hacky.
-> > In light of Stephen's comment about the benefit of using
-> > container_of() to extract gpt_base from the passed in struct
-> > clock_event_device in the other routines, what is the benefit of
-> > making more of mtk_clock_event_device global?
-> > I think what Yingjoe has implemented is short and sweet.
-> > 
-> 
-> Huh, this patch got somehow forgotten.
-> Ok, just one comment. I would prefer to rename the global gpt_base to 
-> gpt_sched_base or something similar and set the pointer + offset directly 
-> mtk_timer_init.
-
-
-In next version, I will it change to:
-
-static void __iomem *gpt_sched_reg __read_mostly;
-
-and in mtk_timer_init:
-
-+       gpt_sched_reg = evt->gpt_base + TIMER_CNT_REG(GPT_CLK_SRC);
-
-Joe.C
-
+diff --git a/Documentation/devicetree/bindings/dma/lpc1850-dmamux.txt b/Documentation/devicetree/bindings/dma/lpc1850-dmamux.txt
+new file mode 100644
+index 000000000000..87740adb2995
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/lpc1850-dmamux.txt
+@@ -0,0 +1,54 @@
++NXP LPC18xx/43xx DMA MUX (DMA request router)
++
++Required properties:
++- compatible:	"nxp,lpc1850-dmamux"
++- reg:		Memory map for accessing module
++- #dma-cells:	Should be set to <3>.
++		* 1st cell contain the master dma request signal
++		* 2nd cell contain the mux value (0-3) for the peripheral
++		* 3rd cell contain either 1 or 2 depending on the AHB
++		  master used.
++- dma-requests:	Number of DMA requests for the mux
++- dma-masters:	phandle pointing to the DMA controller
++
++The DMA controller node need to have the following poroperties:
++- dma-requests:	Number of DMA requests the controller can handle
++
++Example:
++
++dmac: dma@40002000 {
++	compatible = "nxp,lpc1850-gpdma", "arm,pl080", "arm,primecell";
++	arm,primecell-periphid = <0x00041080>;
++	reg = <0x40002000 0x1000>;
++	interrupts = <2>;
++	clocks = <&ccu1 CLK_CPU_DMA>;
++	clock-names = "apb_pclk";
++	#dma-cells = <2>;
++	dma-channels = <8>;
++	dma-requests = <16>;
++	lli-bus-interface-ahb1;
++	lli-bus-interface-ahb2;
++	mem-bus-interface-ahb1;
++	mem-bus-interface-ahb2;
++	memcpy-burst-size = <256>;
++	memcpy-bus-width = <32>;
++};
++
++dmamux: dma-mux {
++	compatible = "nxp,lpc1850-dmamux";
++	#dma-cells = <3>;
++	dma-requests = <64>;
++	dma-masters = <&dmac>;
++};
++
++uart0: serial@40081000 {
++	compatible = "nxp,lpc1850-uart", "ns16550a";
++	reg = <0x40081000 0x1000>;
++	reg-shift = <2>;
++	interrupts = <24>;
++	clocks = <&ccu2 CLK_APB0_UART0>, <&ccu1 CLK_CPU_UART0>;
++	clock-names = "uartclk", "reg";
++	dmas = <&dmamux 1 1 2
++		&dmamux 2 1 2>;
++	dma-names = "tx", "rx";
++};
+-- 
+1.8.0
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
