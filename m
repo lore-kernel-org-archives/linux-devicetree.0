@@ -1,59 +1,107 @@
-From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Subject: Re: [PATCH 1/2] spi: bcm2835: add spi-bcm2835aux driver for the auxiliar spi1 and spi2
-Date: Sun, 12 Jul 2015 12:10:52 +1000
-Message-ID: <ECFBB7BF-1316-4565-B1F2-FB2651131882@martin.sperl.org>
-References: <1434980408-4086-1-git-send-email-kernel@martin.sperl.org> <55A0A150.3060809@wwwdotorg.org>
-Mime-Version: 1.0 (1.0)
-Content-Type: text/plain;
-	charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55A0A150.3060809-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: Re: [PATCH v2 2/2] ARM: dts: vfxxx: Add property for minimum sample
+ time
+Date: Sun, 12 Jul 2015 12:17:53 +0530
+Message-ID: <20150712064753.GA1199@Sanchayan-Arch>
+References: <cover.1435134626.git.maitysanchayan@gmail.com>
+ <36fa3cef10b6a21b39e96283ea5d6961e9f6d972.1435134626.git.maitysanchayan@gmail.com>
+ <20150710085324.GL23464@tiger>
+ <20150710180640.GB8723@Sanchayan-Arch>
+ <55A154BE.6000701@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <55A154BE.6000701-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-I am on a business-trip right now, so I can not check the mailing list
-that often and my access to a rpi to develop is also limited hence
-the V3 patch set took some time to get out of the door and crossed
-the responses you had sent.
+Hello Jonathan,
 
-> On 11.07.2015, at 14:53, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> Hopefully the license of that tar file allows for that. I didn't look.
-Well, I just took the values from the released video driver for those values
-where doe documentation is obviously wrong - essentially clarifying
-the SPI_STAT register on page 25.
+On 15-07-11 18:39:10, Jonathan Cameron wrote:
+> On 10/07/15 19:06, maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> > Hello Shawn,
+> > 
+> > On 15-07-10 16:53:24, Shawn Guo wrote:
+> >> On Wed, Jun 24, 2015 at 02:03:41PM +0530, Sanchayan Maity wrote:
+> >>> Add a device tree property which allows to specify the minimum sample
+> >>> time which can be used to calculate the actual ADC cycles required
+> >>> depending on the hardware.
+> >>>
+> >>> Signed-off-by: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >>> ---
+> >>>  arch/arm/boot/dts/vfxxx.dtsi | 2 ++
+> >>>  1 file changed, 2 insertions(+)
+> >>>
+> >>> diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
+> >>> index 90a03d5..71d9c08 100644
+> >>> --- a/arch/arm/boot/dts/vfxxx.dtsi
+> >>> +++ b/arch/arm/boot/dts/vfxxx.dtsi
+> >>> @@ -229,6 +229,7 @@
+> >>>  				status = "disabled";
+> >>>  				fsl,adck-max-frequency = <30000000>, <40000000>,
+> >>>  							<20000000>;
+> >>> +				min-sample-time = <1000>;
+> >>>  			};
+> >>>  
+> >>>  			wdoga5: wdog@4003e000 {
+> >>> @@ -447,6 +448,7 @@
+> >>>  				status = "disabled";
+> >>>  				fsl,adck-max-frequency = <30000000>, <40000000>,
+> >>>  							<20000000>;
+> >>> +				min-sample-time = <1000>;
+> >>
+> >> Can we code 1000 as the default in kernel driver, so that only boards
+> >> requiring different value need to have this property?  Doing so makes
+> >> the property optional rather than required.
+> >>
+> > 
+> > Not sure if hardcoding it in the driver is the right approach.
+> If it is a true feature of the device (i.e. if in the case of perfect
+> front end electronics) this is the right option, then a default makes
+> a lot of sense.  If that isn't the case (I suspect not) then if we
+> drop it be optional chances are no one will bother thinking about it
+> or trying to tune this at all.
+> 
+> Hence seems wrong to put a fairly arbitrary default value on it.
+> However, we do need to still work with old device trees and new kernels
+> so need to cope without it.
+> 
+> Hence to my mind, if we had started out with this in the first driver
+> version, then the default would be a bad idea.  As we didn't then we
+> really need to cope with nothing specified (as best we can) and so
+> we do need a sensible default (or perhaps even sensible worst
+> case default) in there.
 
-> As mentioned elsewhere, I'd hope all the shared aux register
-> manipulations can be pushed into a shared driver.
+Just to be sure, do I understand you correctly that you agree with the
+property being in device tree?
 
-I just found this email after having sent the latest version of the patch
-that makes use of syscon/regmap to serialize access to the
- bcm2835_AUX_ENABLE register - that is all that it is really needed for.
+If the device tree property is not specified the driver will just go on
+to use the value "3" which was hardcoded earlier. In my opinion it is
+better to allow users to change the sampling cycles by specifying or not
+specifying this in the device tree rather than have a default value coded
+in the driver. However this is just my opinion.
 
->From my perspective it seems that a new driver just would produce
-more code (to maintain) for something that the syscon driver already
-provides. If someone starts to enable aux-uart, then it could go with
-a new framework, but that is still more code that needs to get maintained
-than just using syscon as that "shared" driver.
+Also, some users might not need the somewhat worst case value of 1000. I
+guess we could keep the driver patch the way it is right now and migrate
+the property to be specified in our board dts file? So the property can
+be picked up from the vf-colibri.dtsi or vf500-colibri.dtsi in the adc
+node? Other boards can do the same?
 
-As for hardcoded ids, that may be the case, but I just wanted to keep
-Device tree as minimal as necessary...
-If we get to that situation then we can easily move that to some
-other logic...
+We came up with the change after noticing huge reading discrepancies where
+we had a 4 wire resistive touch screen connected to the ADC channels and
+the driver sampled these channels at an interval of 10-20ms[1]. Once the
+touchscreen came into picture, readings from temperature channel or others
+showed deviations between 40000-60000. Somehow the temperature channel
+seemed to be the most affected.
 
-Finally with regards to interrupts: these are shared anyway so I
-wonder why we would want to write an extra irq chip driver when
-it works as is anyway.
+For a while, I thought the ts driver logic was at a fault, but Stefan pointed
+out the discrepancies in the driver using a fixed clock cycle which was not
+correct along the sampling time also being hardcoded. Stefan's "respect ADC
+clocking limitations" and this patch are based on our above observations.
 
-If someone thinks that is of a performance advantage then this
-extra layer of indirection could get written and we would only need
-to change the device-tree to use the new irq vectors instead.
+[1] https://lkml.org/lkml/2015/6/30/103
 
-But we are really only talking about 2 drivers and 3 interrupt sources.
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+- Sanchayan.
