@@ -1,132 +1,35 @@
-From: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] ARM: dts: Add STM32429i-EVAL board support
-Date: Sun, 12 Jul 2015 11:39:17 +0200
-Message-ID: <1436693957-30855-1-git-send-email-mcoquelin.stm32@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kamil Lulko <rev13-5tc4TXWwyLM@public.gmane.org>, afaerber-l3A5Bk7waGM@public.gmane.org
+From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/2] I2C support for NXP LPC18xx family
+Date: Mon, 13 Jul 2015 00:47:20 +0200
+Message-ID: <1436741242-13489-1-git-send-email-manabian@gmail.com>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org
+Cc: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Main features of STM32429i-EVAL evaluation kit are:
- - STM32F429 Cortex-M4 MCU @180MHz
-   * 2MB internal Flash
-   * 256KB internal RAM
- - 32MB SDRAM
- - 16MB NOR Flash
- - 2MB SRAM
- - 4.3" TFT LCD with resistive touchscreen
- - SDCard connector (SDIO compatible)
- - 1x USB 2.0 OTG + 1x USB 1.1 OTG
- - Ethernet
+This patch set adds a I2C driver and documentation for the I2C
+peripheral found on many NXP LPC MCUs.
 
-Signed-off-by: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/Makefile           |  4 +-
- arch/arm/boot/dts/stm32429i-eval.dts | 75 ++++++++++++++++++++++++++++++++++++
- 2 files changed, 78 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/stm32429i-eval.dts
+The driver is a rework of an old driver by Kevin Wells. It has been
+modified to support modern resource allocation, device tree and
+generally cleaned up. Driver was originally written to support the
+LPC2xxx platforms.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 246473a..6ff9508 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -544,7 +544,9 @@ dtb-$(CONFIG_ARCH_STI) += \
- 	stih416-b2020.dtb \
- 	stih416-b2020e.dtb \
- 	stih418-b2199.dtb
--dtb-$(CONFIG_ARCH_STM32)+= stm32f429-disco.dtb
-+dtb-$(CONFIG_ARCH_STM32)+= \
-+	stm32f429-disco.dtb \
-+	stm32429i-eval.dtb
- dtb-$(CONFIG_MACH_SUN4I) += \
- 	sun4i-a10-a1000.dtb \
- 	sun4i-a10-ba10-tvbox.dtb \
-diff --git a/arch/arm/boot/dts/stm32429i-eval.dts b/arch/arm/boot/dts/stm32429i-eval.dts
-new file mode 100644
-index 0000000..3436c60
---- /dev/null
-+++ b/arch/arm/boot/dts/stm32429i-eval.dts
-@@ -0,0 +1,75 @@
-+/*
-+ * Copyright 2015 - Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ *     You should have received a copy of the GNU General Public
-+ *     License along with this file; if not, write to the Free
-+ *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
-+ *     MA 02110-1301 USA
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include "stm32f429.dtsi"
-+
-+/ {
-+	model = "STMicroelectronics STM32429i-EVAL board";
-+	compatible = "st,stm32429i-eval", "st,stm32f429";
-+
-+	chosen {
-+		bootargs = "console=ttyS0,115200 root=/dev/ram rdinit=/linuxrc";
-+		linux,stdout-path = &usart1;
-+	};
-+
-+	memory {
-+		reg = <0xc0000000 0x2000000>;
-+	};
-+
-+	aliases {
-+		serial0 = &usart1;
-+	};
-+};
-+
-+&clk_hse {
-+	clock-frequency = <25000000>;
-+};
-+
-+&usart1 {
-+	status = "okay";
-+};
+Patches based on v4.2-rc1 and tested on Embedded Artists' LPC4357
+Developer's Kit with several I2C devices.
+
+Joachim Eastwood (2):
+  i2c: add i2c-lpc2k driver
+  doc: dt: add documentation for i2c-lpc2k
+
+ .../devicetree/bindings/i2c/i2c-lpc2k.txt          |  33 ++
+ drivers/i2c/busses/Kconfig                         |  10 +
+ drivers/i2c/busses/Makefile                        |   1 +
+ drivers/i2c/busses/i2c-lpc2k.c                     | 551 +++++++++++++++++++++
+ 4 files changed, 595 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-lpc2k.txt
+ create mode 100644 drivers/i2c/busses/i2c-lpc2k.c
+
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.8.0
