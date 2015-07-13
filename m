@@ -1,63 +1,56 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] iio: light: DT binding docs for APDS9960 driver
-Date: Mon, 13 Jul 2015 10:42:50 +0100
-Message-ID: <73CF94B0-47DF-493D-8F2A-0BC26EB4DEBB@kernel.org>
-References: <1436754043-6232-1-git-send-email-mranostay@gmail.com> <1436754043-6232-2-git-send-email-mranostay@gmail.com>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 03/12] mtd: nand: omap: Move IRQ handling from GPMC to
+ NAND driver
+Date: Mon, 13 Jul 2015 13:04:30 +0300
+Message-ID: <55A38D2E.9010500@ti.com>
+References: <1436531019-18088-1-git-send-email-rogerq@ti.com> <1436531019-18088-4-git-send-email-rogerq@ti.com> <20150713071008.GC26485@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1436754043-6232-2-git-send-email-mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150713071008.GC26485-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Tony,
 
+On 13/07/15 10:10, Tony Lindgren wrote:
+> * Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [150710 05:26]:
+>> Since the Interrupt Events are used only by the NAND driver,
+>> there is no point in managing the Interrupt registers
+>> in the GPMC driver and complicating it with irqchip modeling.
+> 
+> I don't think it's a good idea to allow external drivers to
+> tinker directly with GPMC registers. How about just set up GPMC
+> as an irqchip for the edge detection interrupts?
+> 
+> I think we already have devices with multiple NAND chips. And
+> there's nothing stopping other drivers from using the edge
+> detection interrupts.
 
-On 13 July 2015 03:20:42 BST, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->Document compatible string, and required DT properties for APDS9960
->chipset driver.
->
->Reviewed-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
->Signed-off-by: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->---
->.../devicetree/bindings/iio/light/apds9960.txt        | 19
->+++++++++++++++++++
-> 1 file changed, 19 insertions(+)
->create mode 100644
->Documentation/devicetree/bindings/iio/light/apds9960.txt
->
->diff --git a/Documentation/devicetree/bindings/iio/light/apds9960.txt
->b/Documentation/devicetree/bindings/iio/light/apds9960.txt
->new file mode 100644
->index 0000000..7a47d28
->--- /dev/null
->+++ b/Documentation/devicetree/bindings/iio/light/apds9960.txt
->@@ -0,0 +1,19 @@
->+* Avago APDS9960 gesture/RGB/ALS/proximity sensor
->+
->+http://www.avagotech.com/docs/AV02-4191EN
->+
->+Required properties:
->+
->+  - compatible: must be "avago,apds9960"
->+  - reg: the I2c address of the sensor
->+  - interrupt-parent: should be the phandle for the interrupt
->controller
->+  - interrupts: interrupt mapping for GPIO IRQ
-Usual trick here is to cross reference the interrupt bindings doc to allow all the
- complexity without duplicating docs too much.
->+
->+Example:
->+
->+apds9960@39 {
->+	compatible = "avago,apds9960";
->+	reg = <0x39>;
->+	interrupt-parent = <&gpio1>;
->+	interrupts = <16 1>;
->+};
+OK. The GPMC_IRQ registers manage 2 NAND specific interrupts
+(terminalcount and fifo) and 'n' WAIT pin edge interrupts.
 
--- 
-Sent from my Android device with K-9 Mail. Please excuse my brevity.
+So we can model this as a irqchip with 'n + 2' interrupts.
+
+We need to take care that if a GPMC chip select needs a
+wait pin then it can't be used as a generic interrupt.
+
+We need to get rid of omap_dev_ready() in nand/omap2.c as
+it accesses the GPMC_STATUS register directly. Plus it is
+hard coded to only monitor wait0 pin.
+
+What is the best map we should use for irqchip?
+Some Socs have 4 WAIT pins, some have 3 and some have 2.
+
+Should we start with 0,1,2, for the wait pins and use the next
+available free one for the NAND?
+
+cheers,
+-roger
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
