@@ -1,66 +1,29 @@
-From: Zhi Li <lznuaa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 1/7] ARM: imx: add i.mx6ul msl support
-Date: Mon, 13 Jul 2015 10:19:23 -0500
-Message-ID: <CAHrpEqQywcFGk9YjStxuwjDeZjigeymqYiSq4RAaNcdePS9ptg@mail.gmail.com>
-References: <1436462204-32654-1-git-send-email-Frank.Li@freescale.com>
-	<1436462204-32654-2-git-send-email-Frank.Li@freescale.com>
-	<20150709183917.GK12326@tarshish>
-	<CAHrpEqTA4LeTdMFCb1jzbzDrUT2oE61uM7bmhKFgM7TKJmaDjA@mail.gmail.com>
-	<20150713151455.GC26642@tiger>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v6 0/8] Watchdog: introduce ARM SBSA watchdog driver
+Date: Mon, 13 Jul 2015 08:34:37 -0700
+Message-ID: <20150713153437.GA10688@roeck-us.net>
+References: <=fu.wei@linaro.org>
+ <1435068994-13526-1-git-send-email-fu.wei@linaro.org>
+ <CADyBb7vgfFTmqLMMDOjWxwk3B-he2hTYAGpB3diKf47eB=dc=A@mail.gmail.com>
+ <559199AB.8090106@roeck-us.net>
+ <CADyBb7thQYSRA+__t+oKFugipZ2PGr4qCGWV1iE4BTV5jjzV4w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150713151455.GC26642@tiger>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CADyBb7thQYSRA+__t+oKFugipZ2PGr4qCGWV1iE4BTV5jjzV4w@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Fu Wei <fu.wei@linaro.org>
+Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Wei Fu <tekkamanninja@gmail.com>, G Gregory <graeme.gregory@linaro.org>, Al Stone <al.stone@linaro.org>, Hanjun Guo <hanjun.guo@linaro.org>, Timur Tabi <timur@codeaurora.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Vipul Gandhi <vgandhi@codeaurora.org>, Wim Van Sebroeck <wim@iguana.be>, Jon Masters <jcm@redhat.com>, Leo Duran <leo.duran@amd.com>, Jon Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, rjw@rjwysocki.net, dyoung@redhat.com, panand@redhat.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 13, 2015 at 10:14 AM, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Thu, Jul 09, 2015 at 01:41:29PM -0500, Zhi Li wrote:
->> On Thu, Jul 9, 2015 at 1:39 PM, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org> wrote:
->> > Hi Frank,
->> >
->> > On Fri, Jul 10, 2015 at 01:16:38AM +0800, Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org wrote:
->> >> +DT_MACHINE_START(IMX7D, "Freescale i.MX6 Ultralite (Device Tree)")
->> >
->> > IMX7D?
->>
->> Good capture. I will update it.
->> Strange. why system can boot?
->
-> As long as the compatible string in imx6ul_dt_compat matches device
-> tree, system can boot.
+On Mon, Jul 13, 2015 at 05:09:57PM +0800, Fu Wei wrote:
+> Hi Guenter,
+> 
+> If you get some time, could you help me on this patchset again?
+> Great thanks for your help!
+> 
+I am on vacation this week. Hopefully next week or two weeks from now,
+depending on my work load.
 
-Thank you very much.
-I have fixed it at V3.
-
-best regards
-Frank Li
-
->
-> Shawn
->
->>
->> >
->> >> +     .init_irq       = imx6ul_init_irq,
->> >> +     .init_machine   = imx6ul_init_machine,
->> >> +     .dt_compat      = imx6ul_dt_compat,
->> >> +MACHINE_END
->> >
->> > baruch
->> >
->> > --
->> >      http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
->> > =}------------------------------------------------ooO--U--Ooo------------{=
->> >    - baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org - tel: +972.2.679.5364, http://www.tkos.co.il -
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Guenter
