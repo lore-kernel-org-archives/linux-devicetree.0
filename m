@@ -1,49 +1,32 @@
-From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Subject: Re: [alsa-devel] [PATCH v2 11/12] ASoC: tegra: register dependency
- parser for firmware nodes
-Date: Mon, 13 Jul 2015 14:10:45 +0200
-Message-ID: <CAAObsKDsEuDS46rW9CMuviDEDV-OVXe5q-kiWmw0D_n2D3Tf5A@mail.gmail.com>
-References: <1435743667-11987-1-git-send-email-tomeu.vizoso@collabora.com>
- <1435743667-11987-12-git-send-email-tomeu.vizoso@collabora.com>
- <20150701173802.GW11162@sirena.org.uk>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [RESEND PATCH 1/2] pinctrl: change function behavior for per pin
+ muxing controllers
+Date: Mon, 13 Jul 2015 14:13:36 +0200
+Message-ID: <CACRpkdaR1TP_cRY+oR91SijTungpFzmYACw5R-230yMbkPvmvg@mail.gmail.com>
+References: <1433948699-19800-1-git-send-email-ludovic.desroches@atmel.com>
+	<1433948699-19800-2-git-send-email-ludovic.desroches@atmel.com>
+	<557EF60D.8020007@wwwdotorg.org>
+	<20150617123816.GB12295@odux.rfo.atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20150701173802.GW11162@sirena.org.uk>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-fbdev@vger.kernel.org, linux-acpi@vger.kernel.org, alsa-devel@alsa-project.org, Stephen Warren <swarren@wwwdotorg.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Liam Girdwood <lgirdwood@gmail.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-gpio@vger.kernel.org, Linux PWM List <linux-pwm@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20150617123816.GB12295@odux.rfo.atmel.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Sascha Hauer <kernel@pengutronix.de>
+Cc: Ludovic Desroches <ludovic.desroches@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMSBKdWx5IDIwMTUgYXQgMTk6MzgsIE1hcmsgQnJvd24gPGJyb29uaWVAa2VybmVsLm9yZz4g
-d3JvdGU6Cj4gT24gV2VkLCBKdWwgMDEsIDIwMTUgYXQgMTE6NDE6MDZBTSArMDIwMCwgVG9tZXUg
-Vml6b3NvIHdyb3RlOgo+Cj4+ICtzdGF0aWMgdm9pZCB0ZWdyYV9tYXg5ODA5MF9nZXRfZGVwZW5k
-ZW5jaWVzKHN0cnVjdCBmd25vZGVfaGFuZGxlICpmd25vZGUsCj4+ICsgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgIHN0cnVjdCBsaXN0X2hlYWQgKmRlcHMpCj4+ICt7Cj4+
-ICsgICAgIGFkZF9kZXBlbmRlbmN5KGZ3bm9kZSwgIm52aWRpYSxpMnMtY29udHJvbGxlciIsIGRl
-cHMpOwo+PiArICAgICBhZGRfZGVwZW5kZW5jeShmd25vZGUsICJudmlkaWEsYXVkaW8tY29kZWMi
-LCBkZXBzKTsKPj4gK30KPgo+IFdoeSBpcyB0aGlzIGFsbCBiZWluZyBvcGVuIGNvZGVkIGluIGFu
-IGluZGl2aWR1YWwgZHJpdmVyICh3ZSBhbHJlYWR5Cj4ga25vdyBhYm91dCBhbmQgbWFuYWdlIGFs
-bCB0aGVzZSBkZXBlbmRlbmNpZXMgaW4gdGhlIGNvcmUuLi4pPyAgSWYgd2UncmUKPiBnb2luZyB0
-byBkbyB0aGlzIEknZCBleHBlY3QgdGhlIGludGVyZmFjZSBmb3Igc3BlY2lmeWluZyBEVCBub2Rl
-cyB0byB0aGUKPiBjb3JlIHRvIGJlIGNoYW5nZWQgdG8gc3VwcG9ydCB0aGlzLgoKQXJlIHlvdSB0
-aGlua2luZyBvZiBjaGFuZ2luZyBkcml2ZXJzIHRvIGFjcXVpcmUgdGhlaXIgcmVzb3VyY2VzCnRo
-cm91Z2ggQXJuZCdzIGRldm1fcHJvYmUgKG9ubHkgdGhhdCB0aGUgcmVzb3VyY2UgdGFibGUgd291
-bGQgaGF2ZSB0bwpiZSBpbiBzdHJ1Y3QgZGV2aWNlX2RyaXZlcik/CgpodHRwczovL2xrbWwua2Vy
-bmVsLm9yZy9nLzQ3NDIyNTguVEJpdEMzaFZ1T0B3dWVyZmVsCgpTb3VuZHMgbGlrZSBsb3RzIG9m
-IGZ1biwgYnV0IHRoYXQgbWVhbnMgdGhhdCBhbnkgZ2l2ZW4gbWFjaGluZSB3aWxsCmdldCBvcmRl
-cmVkIHByb2JlIG9ubHkgYWZ0ZXIgYWxsIHRoZSBkcml2ZXJzIGl0IHVzZXMgaGF2ZSBiZWVuIG1v
-dmVkCnRvIHRoZSBuZXcgZGVjbGFyYXRpdmUgQVBJLgoKVEJILCB0aGF0IHNlZW1zIHJlYWxseSBm
-YXIgYXdheS4KClJlZ2FyZHMsCgpUb21ldQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5m
-cmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2RyaS1kZXZlbAo=
+On Wed, Jun 17, 2015 at 2:38 PM, Ludovic Desroches
+<ludovic.desroches@atmel.com> wrote:
+
+> It is not the first time, there are discussions about it. Sascha sent a
+> patch which fits part of my needs:
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-January/318452.html
+
+It would be helpful to have Sascha's review of this patch set.
+
+If it also fixes his issues, we will have some partial consensus,
+as in "fixes more that AT91 problems".
+
+Yours,
+Linus Walleij
