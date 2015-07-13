@@ -1,113 +1,70 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v3] phy: rcar-gen2 usb: Add Host/Function switching for
- USB0
-Date: Mon, 13 Jul 2015 20:09:38 +0300
-Message-ID: <55A3F0D2.2080908@cogentembedded.com>
-References: <SG2PR06MB0919835888EBD162D4B86C24D8930@SG2PR06MB0919.apcprd06.prod.outlook.com> <1436270121-25924-1-git-send-email-phil.edworthy@renesas.com> <559FF47A.5000001@cogentembedded.com> <SIXPR06MB0639B9810214ACE6C7F91FB6F59C0@SIXPR06MB0639.apcprd06.prod.outlook.com> <55A39030.1030601@cogentembedded.com> <SIXPR06MB0639D6F8EC3D9091D139FC36F59C0@SIXPR06MB0639.apcprd06.prod.outlook.com> <55A3E937.2050804@cogentembedded.com> <SIXPR06MB063912FA28F435A8D46CE56CF59C0@SIXPR06MB0639.apcprd06.prod.outlook.com>
+From: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 0/3] ARM: OMAP2+: wkup_m3_rproc support patches
+Date: Mon, 13 Jul 2015 12:15:10 -0500
+Message-ID: <55A3F21E.6050301@ti.com>
+References: <1427917630-43961-1-git-send-email-d-gerlach@ti.com> <559ED0AB.4020703@ti.com> <20150713072529.GD26485@atomide.com> <20150713072750.GE26485@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <SIXPR06MB063912FA28F435A8D46CE56CF59C0@SIXPR06MB0639.apcprd06.prod.outlook.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Phil Edworthy <phil.edworthy@renesas.com>, Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150713072750.GE26485-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/13/2015 07:55 PM, Phil Edworthy wrote:
-
->>>>>>> Instead of statically selecting the PHY connection to either the
->>>>>>> USBHS (Function) or PCI0 (Host) IP blocks, this change allows the
->>>>>>> dts to specifiy gpio pins for the vbus and id signals. Additional
-
->>>>>>        These GPIOs don't have anything to do with the PHY, they're interfacing
-
->>>>       Perhaps that was too strong statement but nevertheless...
-
->>> Looking at your MAX3355 extcon driver, I can't see how it would work on it's
->>> own.
-
->>      I've added the 'extcon' support into the Renesas USBHS driver, so that it
->> should be able to sense the ID pin status.
-
->>> The system needs to sense vbus in order to determine that the board
->>> has been plugged into a USB Host.
+On 07/13/2015 02:27 AM, Tony Lindgren wrote:
+> * Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [150713 00:28]:
+>> * Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org> [150709 12:53]:
+>>> Tony,
+>>> On 04/01/2015 02:47 PM, Dave Gerlach wrote:
+>>>> This series adds the mach-omap2 code and DT nodes for v3 of the
+>>>> wkup_m3_rproc driver submitted here [1]. pdata-quirks patch requires
+>>>> the pdata added with patch 4 of the aforementioned series. Based on
+>>>> previous discussion here [2], the wkup_m3 DT node has been moved as a
+>>>> child of the l4_wkup as is done for l4_wkup components in Tero Kristo's
+>>>> series "PRCM+SCM cleanup against 4.0-rc1" found here [3]. Because of that,
+>>>> this series applies cleanly on top of that series in order to leverage the
+>>>> l4_wkup parent node introduced there.
+>>>>
+>>>> In addition to the move of the wkup_m3 node for am33xx, a new patch
+>>>> has been added to introduce the wkup_m3 node in the same fashion for
+>>>> am43xx as both SoCs use the same configuration. With this change
+>>>> support was also added to pdata-quirks for passing reset handlers to
+>>>> the driver for the am43xx binding as was already done for am33xx.
+>>>>
+>>>> I have pushed a branch containing all patches for am335x suspend
+>>>> here for a big picture view of how all patches fit together with
+>>>> these wkup_m3_rproc series [4].
+>>>>
+>>>> v2->v3:
+>>>> -Change ti,am3353-wkup-m3 compat to ti,am3352-wkup-m3 to reflect
+>>>>  binding documentation change
+>>>> -Add ti,am4372-wkup-m3 node to am4372 SoC dt file
+>>>> -Add am4372 support to pdata-quirks for reset handlers
+>>>
+>>> Now that Ohad has sent a pull request for the wkup_m3_rproc driver [1] and it
+>>> has been merged is it possible for this series with the DT nodes and pdata-quirk
+>>> to get picked up? Let me know and I can rebase and resend if you'd like.
 >>
->>> Since the MAX3355 device doesn't
->>> directly provide any vbus signals,  this shouldn't be part of the extcon driver,
->>> so where should it be?
->>
->>      Sure, MAX3355 does provide voltage on Vbus, controlled by -OFFVBUS input.
->> It's just that the driver has only ID sensing support.
->>      Do you have the MAX3355 datasheet at all?
-> Sorry, I meant that the max3355 device does not directly provide vbus signals
-> suitable for input as a gpio.
+>> Yes this series looks good to me now, will queue for v4.3.
+> 
+> Looks like you need to repost this series again against v4.2-rc2 
+> to apply though.
 
-    What about STATUS1/2? They are fed to GPIOs.
+Ok will do, thanks!
 
-> Though as it provides the vbus signal to the usb
-> connector, there is no reason this can't be used as a gpio input to rcar (just
-> a level shifter needed ala the Koelsch board).
+Regards,
+Dave
 
-    Well, STATUS1/2 provide better info about Vbus, OTG-wise.
+>  
+> Regards,
+> 
+> Tony
+>  
+>>> [1] https://lkml.org/lkml/2015/7/1/354
 
->>> On the other hand, the MAX3355 has a pair of status pins that can be used
->>> to get vbus instead.
-
->>      Sure, these bits reflect 4 OTG Vbus thresholds.
-
->>> If these pins aren't used for other functions, maybe
->>> it's better to use these in the extcon driver.
-
->>      They are not.
-
-> My comments were based on the view that vbus output from the max3355
-> device wasn't a signal that could be input to the rcar via gpio. Since it is, I agree
-> that we should use that!
-
-    I wasn't paying enough attention to the Koelsch scheme while replying, it 
-seems. Yes, USBHS can see Vbus (almost) directly when SW6 is set to 2-3.
-
->>> My intention is to make the USB PHY driver listen for extcon events instead
->>> of directly accessing the ID and VBUS signals, but otherwise behave in the
->>> same way it currently does.
-
->>      I'm not sure the PHY driver should be interested in that...
-
-> Then how is the PHY going to know when to switch between pci0 (host) and
-> hsusb (function)?
-
-    As I said, I planted the extcon hooks directly into USBHS (merged patch) 
-and USB HCD code (unmerged, low quality hack).
-
->>> After reading some other threads, I also intend to set up a fixed regulator
->>> for the MAX3355 device to setup the shutdown and vbus enable pins.  I know
->>> that the vbus enable should really be controlled some other way depending
->>> on the role, but for the moment I think it's ok just to enable it always.
-
->>      It's OK only in the host mode.
->>      I don't think we need regulators. SHDN- is already supported by the driver
->> (though it only drives it high at start-up time), in fact it was the only reason
->> not to use gpio.
-
->>> Do you think that is the correct way to progress this?
-
->>      I didn't have a clear picture how to implement the OTG support at the time
->> of writing the MAX3355 driver; actually, I was tasked to only support ID p[in
->> sensing.
-
-> Right, so the max3355 driver needs some changes to include vbus handling.
-> Are you working on this, or should I take it on?
-
-    No, not working yet, I have other things on my plate still...
-
->>      Note that there's some ongoing effort now on linux-usb to support OTG
->> functionality.
-
-> Yes, I need to spend some time reading that list!
-
-> Thanks
-> Phil
-
-WBR, Sergei
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
