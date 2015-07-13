@@ -1,86 +1,132 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3 3/4] gpio: brcmstb: Add interrupt and wakeup source support
-Date: Mon, 13 Jul 2015 14:58:22 +0200
-Message-ID: <CACRpkdYNGdWHk1kqhFWHziLPy3mZXTcUjYFBCVo5dRCh60bQ_A@mail.gmail.com>
-References: <1434589243-502-1-git-send-email-gregory.0xf0@gmail.com>
-	<1434589243-502-4-git-send-email-gregory.0xf0@gmail.com>
+From: Gabriele Paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH] Store PCIe controllers address in struct of_pci_range
+Date: Mon, 13 Jul 2015 12:59:28 +0000
+Message-ID: <EE11001F9E5DDD47B7634E2F8A612F2E01D5CDED@lhreml503-mbs>
+References: <1436518099-98633-1-git-send-email-gabriele.paoloni@huawei.com>
+ <CAL_JsqJA9WEWK+ywv7ou+88U3cQ7z6GHDTDjxOxRC9X4_K88FQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1434589243-502-4-git-send-email-gregory.0xf0@gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Gregory Fong <gregory.0xf0@gmail.com>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Brian Norris <computersforpeace@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gabriele Paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, "Wangzhou (B)" <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "james.morse-5wv7dgnIgG8@public.gmane.org" <james.morse-5wv7dgnIgG8@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Yuanzhichang <yuanzhichang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Zhudacai <zhudacai-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, zhangjukuo <zhangjukuo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, qiuzhenfa <qiuzhenfa-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "Liguozhu (Kenneth)" <liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 18, 2015 at 3:00 AM, Gregory Fong <gregory.0xf0@gmail.com> wrote:
-
-> Uses the gpiolib irqchip helpers.  For this to work, the irq setup
-> function is called once per bank instead of once per device.  Note
-> that all known uses of this block have a BCM7120 L2 interrupt
-> controller as a parent.  Supports interrupts for all GPIOs.
->
-> In the IRQ handler, we check for raised IRQs for invalid GPIOs and
-> warn (ratelimited) if they're encountered.
->
-> Also, several drivers (e.g. gpio-keys) allow for GPIOs to be
-> configured as wakeup sources, and this GPIO controller supports that
-> through a separate interrupt path.
->
-> The de-facto standard DT property "wakeup-source" is checked, since
-> that indicates whether the GPIO controller hardware can wake.  Uses
-> the IRQCHIP_MASK_ON_SUSPEND irq_chip flag because UPG GIO doesn't have
-> any of its own wakeup source configuration.
->
-> Aside regarding gpiolib irqchip helpers: It wasn't obvious (to me)
-> that you can have multiple chained irqchips and associated IRQ domains
-> for a single parent IRQ, and as long as the xlate function is written
-> correctly, a GPIO IRQ request end up checking the correct domain and
-> will get associated with the correct IRQ.  What helps make this clear
-> is to read
->   drivers/gpio/gpiolib-of.c:
->    - of_gpiochip_find_and_xlate()
->    - of_get_named_gpiod_flags()
->   drivers/gpio/gpiolib.c:
->    - gpiochip_find()
-
-Sorry for the unclarities, this is a bit hairy. Suggestions as to
-how we can make it easier and/or bring code for this into gpiolib
-are welcome. Right now I have a hard time seeing any way to
-make this more generic and helpful :/
-
-Overall this patch looks real nice. Some nitpicks below.
-
-> @@ -164,6 +398,16 @@ static int brcmstb_gpio_probe(struct platform_device *pdev)
->         priv->reg_base = reg_base;
->         priv->pdev = pdev;
->
-> +       if (of_property_read_bool(np, "interrupt-controller")) {
-> +               priv->parent_irq = platform_get_irq(pdev, 0);
-> +               if (priv->parent_irq < 0) {
-
-This should be <= 0 since 0 is NO_IRQ
-
-> +                       dev_err(dev, "Couldn't get IRQ");
-> +                       return -ENOENT;
-> +               }
-> +       } else {
-> +               priv->parent_irq = -ENOENT;
-> +       }
-
-Why should this code only execute if the node is marked
-"interrupt-controller"? It makes it seem like IRQs cannot arrive
-to it unless it is intended to serve other consumers.
-
-Maybe in practice this is true, but...
-
-> +               if (priv->parent_irq >= 0) {
-> +                       err = brcmstb_gpio_irq_setup(pdev, bank);
-> +                       if (err)
-> +                               goto fail;
-> +               }
-
-Again 0 is NO_IRQ so this should be > 0 not >= 0.
-
-Yours,
-Linus Walleij
+U29ycnkgSSBqdXN0IHJlYWxpemVkIEkgZm9yZ290IHRvIHJlcGx5IHRvIHRoZSBsYXN0IGl0ZW0N
+Cg0KR2FiDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogR2FicmllbGUg
+UGFvbG9uaQ0KPiBTZW50OiBNb25kYXksIEp1bHkgMTMsIDIwMTUgMTI6MDcgUE0NCj4gVG86ICdS
+b2IgSGVycmluZycNCj4gQ2M6IEFybmQgQmVyZ21hbm47IExvcmVuem8gUGllcmFsaXNpOyBXYW5n
+emhvdSAoQik7IEJqb3JuIEhlbGdhYXM7IFJvYg0KPiBIZXJyaW5nOyBqYW1lcy5tb3JzZUBhcm0u
+Y29tOyBMaXZpdSBEdWRhdTsgbGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsNCj4gbGludXgtYXJt
+LWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsN
+Cj4gWXVhbnpoaWNoYW5nOyBaaHVkYWNhaTsgemhhbmdqdWt1bzsgcWl1emhlbmZhOyBMaWd1b3po
+dSAoS2VubmV0aCkNCj4gU3ViamVjdDogUkU6IFtQQVRDSF0gU3RvcmUgUENJZSBjb250cm9sbGVy
+cyBhZGRyZXNzIGluIHN0cnVjdA0KPiBvZl9wY2lfcmFuZ2UNCj4gDQo+IEhpIFJvYg0KPiANCj4g
+TWFueSBUaGFua3MgZm9yIHlvdXIgcmV2aWV3DQo+IA0KPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2Fn
+ZS0tLS0tDQo+ID4gRnJvbTogUm9iIEhlcnJpbmcgW21haWx0bzpyb2JoZXJyaW5nMkBnbWFpbC5j
+b21dDQo+ID4gU2VudDogRnJpZGF5LCBKdWx5IDEwLCAyMDE1IDg6NTYgUE0NCj4gPiBUbzogR2Fi
+cmllbGUgUGFvbG9uaQ0KPiA+IENjOiBBcm5kIEJlcmdtYW5uOyBMb3JlbnpvIFBpZXJhbGlzaTsg
+V2FuZ3pob3UgKEIpOyBCam9ybiBIZWxnYWFzOw0KPiBSb2INCj4gPiBIZXJyaW5nOyBqYW1lcy5t
+b3JzZUBhcm0uY29tOyBMaXZpdSBEdWRhdTsgbGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsNCj4g
+PiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGRldmljZXRyZWVAdmdlci5r
+ZXJuZWwub3JnOw0KPiA+IFl1YW56aGljaGFuZzsgWmh1ZGFjYWk7IHpoYW5nanVrdW87IHFpdXpo
+ZW5mYTsgTGlndW96aHUgKEtlbm5ldGgpDQo+ID4gU3ViamVjdDogUmU6IFtQQVRDSF0gU3RvcmUg
+UENJZSBjb250cm9sbGVycyBhZGRyZXNzIGluIHN0cnVjdA0KPiA+IG9mX3BjaV9yYW5nZQ0KPiA+
+DQo+ID4gT24gRnJpLCBKdWwgMTAsIDIwMTUgYXQgMzo0OCBBTSwgR2FicmllbGUgUGFvbG9uaQ0K
+PiA+IDxnYWJyaWVsZS5wYW9sb25pQGh1YXdlaS5jb20+IHdyb3RlOg0KPiA+ID4gRnJvbTogZ2Fi
+cmllbGUgcGFvbG9uaSA8Z2FicmllbGUucGFvbG9uaUBodWF3ZWkuY29tPg0KPiA+ID4NCj4gPiA+
+IFRoaXMgcGF0Y2ggaXMgbmVlZGVkIHBvcnQgUENJZSBkZXNpZ253YXJlIHRvIG5ldyBEVCBwYXJz
+aW5nIEFQSQ0KPiA+ID4gQXMgZGlzY3Vzc2VkIGluDQo+ID4gPiBodHRwOi8vbGlzdHMuaW5mcmFk
+ZWFkLm9yZy9waXBlcm1haWwvbGludXgtYXJtLWtlcm5lbC8yMDE1LQ0KPiA+IEphbnVhcnkvMzE3
+NzQzLmh0bWwNCj4gPiA+IGluIGRlc2lnbndhcmUgd2UgaGF2ZSBhIHByb2JsZW0gYXMgdGhlIFBD
+SSBhZGRyZXNzZXMgaW4gdGhlIFBDSWUNCj4gPiBjb250cm9sbGVyDQo+ID4gPiBhZGRyZXNzIHNw
+YWNlIGFyZSByZXF1aXJlZCBpbiBvcmRlciB0byBwZXJmb3JtIGNvcnJlY3QgSFcgb3BlcmF0aW9u
+Lg0KPiA+ID4NCj4gPiA+IEluIG9yZGVyIHRvIHNvbHZlIHRoaXMgcHJvYmxlbSBjb21taXQNCj4g
+PiA+IGY0YzU1YzVhM2Y3ZjY4YzA2Y2M1NTllZDdhZjhiMmQwMTdjYmIwYTcgIlBDSTogZGVzaWdu
+d2FyZToNCj4gPg0KPiA+IFBsZWFzZSBhYmJyZXZpYXRlIGhhc2hzIHRvIDEyIGNoYXJhY3RlcnMu
+DQo+IA0KPiBTdXJlLCB3aWxsIGRvLg0KPiANCj4gPg0KPiA+ID4gUHJvZ3JhbSBBVFUgd2l0aCB1
+bnRyYW5zbGF0ZWQgYWRkcmVzcyIgYWRkZWQgY29kZSB0byByZWFkIHRoZSBQQ0llDQo+ID4gPiBj
+b250cm9sbGVyIHN0YXJ0IGFkZHJlc3MgZGlyZWN0bHkgZnJvbSB0aGUgRFQgcmFuZ2VzLg0KPiA+
+ID4NCj4gPiA+IEluIHRoZSBuZXcgRFQgcGFyc2luZyBBUEkgb2ZfcGNpX2dldF9ob3N0X2JyaWRn
+ZV9yZXNvdXJjZXMoKSBoaWRlcw0KPiA+IHRoZQ0KPiA+ID4gRFQgcGFyc2VyIGZyb20gdGhlIGhv
+c3QgY29udHJvbGxlciBkcml2ZXJzLCBzbyBpdCBpcyBub3QgcG9zc2libGUNCj4gPiA+IGZvciBk
+cml2ZXJzIHRvIHBhcnNlIHZhbHVlcyBkaXJlY3RseSBmcm9tIHRoZSBEVC4NCj4gPiA+DQo+ID4g
+PiBJbiBodHRwOi8vd3d3LnNwaW5pY3MubmV0L2xpc3RzL2xpbnV4LXBjaS9tc2c0MjU0MC5odG1s
+IHdlIGFscmVhZHkNCj4gPiB0cmllZA0KPiA+ID4gdG8gdXNlIHRoZSBuZXcgRFQgcGFyc2luZyBB
+UEkgYnV0IHRoZXJlIGlzIGEgYnVnIChvYnZpb3VzbHkpIGluDQo+ID4gc2V0dGluZw0KPiA+ID4g
+dGhlIDwqPl9tb2RfYmFzZSBhZGRyZXNzZXMNCj4gPiA+IEFwcGx5aW5nIHRoaXMgcGF0Y2ggd2Ug
+Y2FuIGVhc2lseSBzZXQgIjwqPl9tb2RfYmFzZSA9IHdpbi0NCj4gPiA+X19yZXMuc3RhcnQiDQo+
+ID4gPg0KPiA+ID4gVGhpcyBwYXRjaCBhZGRzIGEgbmV3IGZpZWxkIGluICJzdHJ1Y3Qgb2ZfcGNp
+X3JhbmdlIiB0byBzdG9yZSB0aGUNCj4gPiA+IHBjaSBjb250cm9sbGVyIHN0YXJ0IGFkZHJlc3M7
+IGl0IGZpbGxzIHRoZSBmaWVsZCBpbg0KPiA+IG9mX3BjaV9yYW5nZV9wYXJzZXJfb25lKCk7DQo+
+ID4gPiBpbiBvZl9wY2lfZ2V0X2hvc3RfYnJpZGdlX3Jlc291cmNlcygpIGl0IHJldHJpZXZlIHRo
+ZSByZXNvdXJjZQ0KPiBlbnRyeQ0KPiA+ID4gYWZ0ZXIgaXQgaXMgY3JlYXRlZCBhbmQgYWRkZWQg
+dG8gdGhlIHJlc291cmNlIGxpc3QgYW5kIHVzZXMNCj4gPiA+IGVudHJ5LT5fX3Jlcy5zdGFydCB0
+byBzdG9yZSB0aGUgcGNpIGNvbnRyb2xsZXIgYWRkcmVzcw0KPiA+ID4NCj4gPiA+IHRoZSBwYXRj
+aCBpcyBiYXNlZCBvbiA0LjItcmMxDQo+ID4gPg0KPiA+ID4gU2lnbmVkLW9mZi1ieTogR2Ficmll
+bGUgUGFvbG9uaSA8Z2FicmllbGUucGFvbG9uaUBodWF3ZWkuY29tPg0KPiA+ID4gLS0tDQo+ID4g
+PiAgZHJpdmVycy9vZi9hZGRyZXNzLmMgICAgICAgICAgICAgICB8IDEgKw0KPiA+ID4gIGRyaXZl
+cnMvb2Yvb2ZfcGNpLmMgICAgICAgICAgICAgICAgfCA0ICsrKysNCj4gPiA+ICBkcml2ZXJzL3Bj
+aS9ob3N0L3BjaWUtZGVzaWdud2FyZS5jIHwgOSArKystLS0tLS0NCj4gPiA+ICBpbmNsdWRlL2xp
+bnV4L29mX2FkZHJlc3MuaCAgICAgICAgIHwgMSArDQo+ID4gPiAgNCBmaWxlcyBjaGFuZ2VkLCA5
+IGluc2VydGlvbnMoKyksIDYgZGVsZXRpb25zKC0pDQo+ID4gPg0KPiA+ID4gZGlmZiAtLWdpdCBh
+L2RyaXZlcnMvb2YvYWRkcmVzcy5jIGIvZHJpdmVycy9vZi9hZGRyZXNzLmMNCj4gPiA+IGluZGV4
+IDhiZmRhNmEuLjUyZjkzMjEgMTAwNjQ0DQo+ID4gPiAtLS0gYS9kcml2ZXJzL29mL2FkZHJlc3Mu
+Yw0KPiA+ID4gKysrIGIvZHJpdmVycy9vZi9hZGRyZXNzLmMNCj4gPiA+IEBAIC0yNjUsNiArMjY1
+LDcgQEAgc3RydWN0IG9mX3BjaV9yYW5nZQ0KPiA+ICpvZl9wY2lfcmFuZ2VfcGFyc2VyX29uZShz
+dHJ1Y3Qgb2ZfcGNpX3JhbmdlX3BhcnNlciAqcGFyc2VyLA0KPiA+ID4gICAgICAgICByYW5nZS0+
+cGNpX2FkZHIgPSBvZl9yZWFkX251bWJlcihwYXJzZXItPnJhbmdlICsgMSwgbnMpOw0KPiA+ID4g
+ICAgICAgICByYW5nZS0+Y3B1X2FkZHIgPSBvZl90cmFuc2xhdGVfYWRkcmVzcyhwYXJzZXItPm5v
+ZGUsDQo+ID4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBhcnNlci0+cmFuZ2Ug
+KyBuYSk7DQo+ID4gPiArICAgICAgIHJhbmdlLT5wY2lfY3RybF9hZGRyID0gb2ZfcmVhZF9udW1i
+ZXIocGFyc2VyLT5yYW5nZSArIG5hLA0KPiBucykgOw0KPiA+DQo+ID4gVGhpcyBpcyB3cm9uZyBh
+cyB0aGUgY29ycmVjdCBzaXplIHRvIHJlYWQgaXMgbm90ICJucyIsIGJ1dCB0aGUgcGFyZW50DQo+
+ID4gYnVzICNzaXplLWNlbGxzIHZhbHVlLg0KPiANCj4gT2sgSSB3aWxsIHJlcGxhY2UgIm5zIiB3
+aXRoICJvZl9uX3NpemVfY2VsbHMocGFyc2VyLT5ub2RlKSINCj4gDQo+ID4NCj4gPiBJIHRoaW5r
+ICJidXNfYWRkciIgd291bGQgYmUgYSBiZXR0ZXIgbmFtZS4gSXQgaXMgbm90IHRoZSBQQ0kNCj4g
+PiBjb250cm9sbGVyJ3MgYWRkcmVzcyAoaS5lLiB3aGF0IGlzIGluIHJlZyBwcm9wKS4gTm8gInBj
+aSIgYmVjYXVzZSBpdA0KPiA+IGhhcyBub3RoaW5nIHRvIGRvIHdpdGggUENJIGJ1cyBhZGRyZXNz
+ZXMuDQo+IA0KPiBPayBJIHdpbGwgY2hhbmdlIHRoZSBuYW1lDQo+IA0KPiA+DQo+ID4gSW4gZ2Vu
+ZXJhbCwgdGhpcyBzZWVtcyBmcmFnaWxlIGFzIHRoZSBkdCBhZGRyZXNzIHJhbmdlcy90cmFuc2xh
+dGlvbg0KPiA+IG1heSBub3QgYWxpZ24gd2l0aCB0aGUgaC93IHJhbmdlcy4gRm9yIGV4YW1wbGUs
+IHdoYXQgaWYgeW91IGhhdmUgMg0KPiA+IGxldmVscyBvZiB0cmFuc2xhdGlvbnMgYW5kIHlvdSBo
+YXBwZW4gdG8gbmVlZCBpdCB0cmFuc2xhdGVkIHdpdGgganVzdA0KPiA+IDEgbGV2ZWwgb2YgdHJh
+bnNsYXRpb24uIFRoYXQgc2FpZCwgSSBkb24ndCByZWFsbHkgaGF2ZSBhIGJldHRlcg0KPiA+IHN1
+Z2dlc3Rpb24gYW5kIEkgZ3Vlc3Mgd2UgY2FuIGRlYWwgd2l0aCB0aGF0IGNhc2UgaWYgbmVlZGVk
+IGxhdGVyLg0KPiANCj4gT2sgc28sIHdlJ2xsIGxlYXZlIGl0IGxpa2UgdGhpcyBmb3Igbm93DQo+
+IA0KPiA+DQo+ID4gPiAgICAgICAgIHJhbmdlLT5zaXplID0gb2ZfcmVhZF9udW1iZXIocGFyc2Vy
+LT5yYW5nZSArIHBhcnNlci0+cG5hICsNCj4gbmEsDQo+ID4gbnMpOw0KPiA+ID4NCj4gPiA+ICAg
+ICAgICAgcGFyc2VyLT5yYW5nZSArPSBwYXJzZXItPm5wOw0KPiA+ID4gZGlmZiAtLWdpdCBhL2Ry
+aXZlcnMvb2Yvb2ZfcGNpLmMgYi9kcml2ZXJzL29mL29mX3BjaS5jDQo+ID4gPiBpbmRleCA1NzUx
+ZGM1Li4yY2NjNzQ5IDEwMDY0NA0KPiA+ID4gLS0tIGEvZHJpdmVycy9vZi9vZl9wY2kuYw0KPiA+
+ID4gKysrIGIvZHJpdmVycy9vZi9vZl9wY2kuYw0KPiA+ID4gQEAgLTE5OCw2ICsxOTgsNyBAQCBp
+bnQgb2ZfcGNpX2dldF9ob3N0X2JyaWRnZV9yZXNvdXJjZXMoc3RydWN0DQo+ID4gZGV2aWNlX25v
+ZGUgKmRldiwNCj4gPiA+DQo+ID4gPiAgICAgICAgIHByX2RlYnVnKCJQYXJzaW5nIHJhbmdlcyBw
+cm9wZXJ0eS4uLlxuIik7DQo+ID4gPiAgICAgICAgIGZvcl9lYWNoX29mX3BjaV9yYW5nZSgmcGFy
+c2VyLCAmcmFuZ2UpIHsNCj4gPiA+ICsgICAgICAgICAgICAgICBzdHJ1Y3QgcmVzb3VyY2VfZW50
+cnkgKmVudHJ5Ow0KPiA+ID4gICAgICAgICAgICAgICAgIC8qIFJlYWQgbmV4dCByYW5nZXMgZWxl
+bWVudCAqLw0KPiA+ID4gICAgICAgICAgICAgICAgIGlmICgocmFuZ2UuZmxhZ3MgJiBJT1JFU09V
+UkNFX1RZUEVfQklUUykgPT0NCj4gPiBJT1JFU09VUkNFX0lPKQ0KPiA+ID4gICAgICAgICAgICAg
+ICAgICAgICAgICAgc25wcmludGYocmFuZ2VfdHlwZSwgNCwgIiBJTyIpOw0KPiA+ID4gQEAgLTI0
+MCw2ICsyNDEsOSBAQCBpbnQgb2ZfcGNpX2dldF9ob3N0X2JyaWRnZV9yZXNvdXJjZXMoc3RydWN0
+DQo+ID4gZGV2aWNlX25vZGUgKmRldiwNCj4gPiA+ICAgICAgICAgICAgICAgICB9DQo+ID4gPg0K
+PiA+ID4gICAgICAgICAgICAgICAgIHBjaV9hZGRfcmVzb3VyY2Vfb2Zmc2V0KHJlc291cmNlcywg
+cmVzLCByZXMtPnN0YXJ0DQo+IC0NCj4gPiByYW5nZS5wY2lfYWRkcik7DQo+ID4gPiArICAgICAg
+ICAgICAgICAgZW50cnkgPSBsaXN0X2xhc3RfZW50cnkocmVzb3VyY2VzLCBzdHJ1Y3QNCj4gPiBy
+ZXNvdXJjZV9lbnRyeSwgbm9kZSk7DQo+ID4gPiArICAgICAgICAgICAgICAgLyp3ZSBhcmUgdXNp
+bmcgX19yZXMgZm9yIHN0b3JpbmcgdGhlIFBDSSBjb250cm9sbGVyDQo+ID4gYWRkcmVzcyovDQo+
+ID4gPiArICAgICAgICAgICAgICAgZW50cnktPl9fcmVzLnN0YXJ0ID0gcmFuZ2UucGNpX2N0cmxf
+YWRkcjsNCj4gPg0KPiA+IFlvdSB3aWxsIHVzZSB0aGlzIGluIGEgZm9sbG93LXVwIHBhdGNoPyBJ
+J2QgbGlrZSB0byBzZWUgdGhpcyBqdXN0DQo+ID4gc3BsaXQgaW50byBjb3JlIGNoYW5nZXMgYW5k
+IERXIGNoYW5nZXMuIFRoaXMgbG9va3MgbGlrZSB5b3UgYXJlDQo+IG1ha2luZw0KPiA+IGludGVy
+bWVkaWF0ZSBEVyBjaGFuZ2VzIHdoaWNoIHdpbGwgYmUgcmVtb3ZlZCBpbiBzdWJzZXF1ZW50IHBh
+dGNoZXMuDQoNCk9rIEkgd2lsbCBzcGxpdCBpdA0KDQpUaGUgY2hhbmdlcyBpbiAiZHJpdmVycy9w
+Y2kvaG9zdC9wY2llLWRlc2lnbndhcmUuYyIgY2FuIGJlIHJlbW92ZWQgZnJvbSB0aGlzIHBhdGNo
+OyB3ZSBjYW4gbW9kaWZ5IGRpcmVjdGx5IA0KIltQQVRDSCB2MiAyLzRdIFBDSTogZGVzaWdud2Fy
+ZTogQWRkIEFSTTY0IHN1cHBvcnQiIGluIHYzIHBhdGNoc2V0DQoNCj4gPg0KPiA+IFJvYg0K
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
