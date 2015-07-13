@@ -1,86 +1,52 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3] phy: rcar-gen2 usb: Add Host/Function switching for
- USB0
-Date: Mon, 13 Jul 2015 19:37:11 +0300
-Message-ID: <55A3E937.2050804@cogentembedded.com>
-References: <SG2PR06MB0919835888EBD162D4B86C24D8930@SG2PR06MB0919.apcprd06.prod.outlook.com> <1436270121-25924-1-git-send-email-phil.edworthy@renesas.com> <559FF47A.5000001@cogentembedded.com> <SIXPR06MB0639B9810214ACE6C7F91FB6F59C0@SIXPR06MB0639.apcprd06.prod.outlook.com> <55A39030.1030601@cogentembedded.com> <SIXPR06MB0639D6F8EC3D9091D139FC36F59C0@SIXPR06MB0639.apcprd06.prod.outlook.com>
+From: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH-v3 07/11] i2c: pxa: enable/disable i2c module across msg
+ xfer
+Date: Mon, 13 Jul 2015 22:11:07 +0530
+Message-ID: <55A3EA23.8070009@linaro.org>
+References: <1436210695-19159-1-git-send-email-vaibhav.hiremath@linaro.org> <1436210695-19159-8-git-send-email-vaibhav.hiremath@linaro.org> <20150710082419.GE1528@katana>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <SIXPR06MB0639D6F8EC3D9091D139FC36F59C0-ptTgG45MbEnxWRUYInhZt20DtJ1/0DrXvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Phil Edworthy <phil.edworthy-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150710082419.GE1528@katana>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Yi Zhang <yizhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/13/2015 06:02 PM, Phil Edworthy wrote:
 
->>>>> Instead of statically selecting the PHY connection to either the
->>>>> USBHS (Function) or PCI0 (Host) IP blocks, this change allows the
->>>>> dts to specifiy gpio pins for the vbus and id signals. Additional
 
->>>>       These GPIOs don't have anything to do with the PHY, they're interfacing
+On Friday 10 July 2015 01:54 PM, Wolfram Sang wrote:
+> On Tue, Jul 07, 2015 at 12:54:51AM +0530, Vaibhav Hiremath wrote:
+>> From: Yi Zhang <yizhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+>>
+>> Enable i2c module/unit before transmission and disable when it finishes.
+>>
+>> why?
+>> It's because the i2c bus may be distrubed if the slave device,
+>> typically a touch, powers on.
+>>
+>> As we do not want to break slave mode support, this patch introduces
+>> DT property to control disable of the I2C module after xfer in master mode
+>> of operation.
+>>
+>> i2c-disable-after-xfer : If set, driver will disable I2C module after msg xfer
+>
+> Hmm, I am not sure this property fits into the "describing hardware"
+> category. And we can't make the below behaviour default, because the
+> udelay(100) will cause quite some latency.
+>
+>>
 
->>      Perhaps that was too strong statement but nevertheless...
+Sorry for delayed response,
+I thought I responded to this, but when I was preparing for V4,
+realized it that I did not :)
 
-> Looking at your MAX3355 extcon driver, I can't see how it would work on it's
-> own.
+Yes, I agree that, this doesn't look like HW description. But I could
+not find any other mechanism to handle this.
+And also during V1 discussion, I did not get any objection to this
+approach.
 
-    I've added the 'extcon' support into the Renesas USBHS driver, so that it 
-should be able to sense the ID pin status.
 
-> The system needs to sense vbus in order to determine that the board
-> has been plugged into a USB Host.
-
-> Since the MAX3355 device doesn't
-> directly provide any vbus signals,  this shouldn't be part of the extcon driver,
-> so where should it be?
-
-    Sure, MAX3355 does provide voltage on Vbus, controlled by -OFFVBUS input.
-It's just that the driver has only ID sensing support.
-    Do you have the MAX3355 datasheet at all?
-
-> On the other hand, the MAX3355 has a pair of status pins that can be used
-> to get vbus instead.
-
-    Sure, these bits reflect 4 OTG Vbus thresholds.
-
-> If these pins aren't used for other functions, maybe
-> it's better to use these in the extcon driver.
-
-    They are not.
-
-> My intention is to make the USB PHY driver listen for extcon events instead
-> of directly accessing the ID and VBUS signals, but otherwise behave in the
-> same way it currently does.
-
-    I'm not sure the PHY driver should be interested in that...
-
-> After reading some other threads, I also intend to set up a fixed regulator
-> for the MAX3355 device to setup the shutdown and vbus enable pins.  I know
-> that the vbus enable should really be controlled some other way depending
-> on the role, but for the moment I think it's ok just to enable it always.
-
-    It's OK only in the host mode.
-    I don't think we need regulators. SHDN- is already supported by the driver
-(though it only drives it high at start-up time), in fact it was the only reason
-not to use gpio.
-
-> Do you think that is the correct way to progress this?
-
-    I didn't have a clear picture how to implement the OTG support at the time 
-of writing the MAX3355 driver; actually, I was tasked to only support ID p[in 
-sensing.
-    Note that there's some ongoing effort now on linux-usb to support OTG 
-functionality.
-
-> Thanks
-> Phil
-
-WBR, Sergei
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Vaibhav
