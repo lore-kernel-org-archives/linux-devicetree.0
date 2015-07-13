@@ -1,64 +1,33 @@
-From: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
-Subject: Re: [PATCH-v3 02/11] i2c: pxa: No need to set slave addr for i2c
- master mode reset
-Date: Mon, 13 Jul 2015 12:39:53 +0530
-Message-ID: <55A36441.2020206@linaro.org>
-References: <1436210695-19159-1-git-send-email-vaibhav.hiremath@linaro.org> <1436210695-19159-3-git-send-email-vaibhav.hiremath@linaro.org> <20150710081148.GB1528@katana> <559FBCD3.4050402@linaro.org> <20150710141440.GA6594@katana> <559FD5DB.9030308@linaro.org> <20150710145628.GB6594@katana>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 03/12] mtd: nand: omap: Move IRQ handling from GPMC to
+ NAND driver
+Date: Mon, 13 Jul 2015 00:10:09 -0700
+Message-ID: <20150713071008.GC26485@atomide.com>
+References: <1436531019-18088-1-git-send-email-rogerq@ti.com>
+ <1436531019-18088-4-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150710145628.GB6594@katana>
+Content-Disposition: inline
+In-Reply-To: <1436531019-18088-4-git-send-email-rogerq@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robert.jarzmik@free.fr, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, "Jett.Zhou" <jtzhou@marvell.com>
+To: Roger Quadros <rogerq@ti.com>
+Cc: dwmw2@infradead.org, computersforpeace@gmail.com, bcousson@baylibre.com, ezequiel@vanguardiasur.com.ar, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+* Roger Quadros <rogerq@ti.com> [150710 05:26]:
+> Since the Interrupt Events are used only by the NAND driver,
+> there is no point in managing the Interrupt registers
+> in the GPMC driver and complicating it with irqchip modeling.
 
+I don't think it's a good idea to allow external drivers to
+tinker directly with GPMC registers. How about just set up GPMC
+as an irqchip for the edge detection interrupts?
 
-On Friday 10 July 2015 08:26 PM, Wolfram Sang wrote:
-> On Fri, Jul 10, 2015 at 07:55:31PM +0530, Vaibhav Hiremath wrote:
->>
->>
->> On Friday 10 July 2015 07:44 PM, Wolfram Sang wrote:
->>> On Fri, Jul 10, 2015 at 06:08:43PM +0530, Vaibhav Hiremath wrote:
->>>>
->>>>
->>>> On Friday 10 July 2015 01:41 PM, Wolfram Sang wrote:
->>>>> On Tue, Jul 07, 2015 at 12:54:46AM +0530, Vaibhav Hiremath wrote:
->>>>>> Normally i2c controller works as master, so slave addr is not needed, or it
->>>>>> will impact some slave device (eg. ST NFC chip) i2c accesses, because it has
->>>>>> the same i2c address with controller.
->>>>>
->>>>> Just to make sure: Does it? As I read the code, slave interrupts are
->>>>> enabled later only when slave mode is selected? Is that a HW bug? And if
->>>>> so, can't the code just be moved into this #ifdef block later?
->>>>>
->>>>
->>>> Yes we could, infact I thought about it;
->>>> but I would break recommended sequence here.
->>>
->>> And did you set the "own slave address" to a value which one of your
->>> existing i2c slaves also has (without enabling slave mode)? Did it
->>> disturb communication?
->>>
->>
->> Since slave and master mode are mutual exclusive,
->> I did not try this.
->
-> Ehrm, what I meant was. Did you see the issue mentioned in the above
-> commit message? Can you reproduce it? You don't need to enable slave
-> mode for that, no?
->
+I think we already have devices with multiple NAND chips. And
+there's nothing stopping other drivers from using the edge
+detection interrupts.
 
-Ohh yes,
+Regards,
 
-I am able to reproduce this issue.
-
-I have pxa1928 based board, where I have only PMIC 88PM860 connected to
-I2C bus, and whenever I set slave address to 0x30 (PMIC slave address)
-all I2C transaction for PMIC goes for toss.
-
-
-Thanks,
-Vaibhav
+Tony
