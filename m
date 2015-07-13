@@ -1,82 +1,109 @@
-From: Daniel Kurtz <djkurtz@chromium.org>
-Subject: Re: [PATCH v5 1/3] dt-bindings: pwm: add MediaTek display PWM bindings
-Date: Mon, 13 Jul 2015 18:20:07 +0800
-Message-ID: <CAGS+omCdLbNu03c2DdiLEqNmGVkEoGu3972-YDp8ne5G9WZJ0g@mail.gmail.com>
-References: <1436778294-47635-1-git-send-email-yh.huang@mediatek.com> <1436778294-47635-2-git-send-email-yh.huang@mediatek.com>
+From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v7 4/9] nvmem: Add bindings for simple nvmem framework
+Date: Mon, 13 Jul 2015 11:21:58 +0100
+Message-ID: <55A39146.4080207@linaro.org>
+References: <1436521427-10568-1-git-send-email-srinivas.kandagatla@linaro.org> <1436521513-10838-1-git-send-email-srinivas.kandagatla@linaro.org> <CAL_JsqKYT-+T=D=TKCb1TcydOvBTE8_yc-EEe1cwdmhr1B0dHQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1436778294-47635-2-git-send-email-yh.huang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: YH Huang <yh.huang@mediatek.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, srv_heupstream <srv_heupstream@mediatek.com>, Pawel Moll <pawel.moll@arm.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Yingjoe Chen <yingjoe.chen@mediatek.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqKYT-+T=D=TKCb1TcydOvBTE8_yc-EEe1cwdmhr1B0dHQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 13, 2015 at 5:04 PM, YH Huang <yh.huang@mediatek.com> wrote:
-> Document the device-tree binding of MediatTek display PWM.
-> The PWM has one channel to control the backlight brightness for display.
-> It supports MT8173 and MT6595.
+
+Thanks Rob for quick review,
+
+On 10/07/15 20:04, Rob Herring wrote:
+> On Fri, Jul 10, 2015 at 4:45 AM, Srinivas Kandagatla
+> <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> This patch adds bindings for simple nvmem framework which allows nvmem
+>> consumers to talk to nvmem providers to get access to nvmem cell data.
+>>
+>> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>> [Maxime Ripard: intial version of eeprom framework]
+>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>>   Documentation/devicetree/bindings/nvmem/nvmem.txt | 85 +++++++++++++++++++++++
+>>   1 file changed, 85 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/nvmem/nvmem.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/nvmem/nvmem.txt b/Documentation/devicetree/bindings/nvmem/nvmem.txt
+>> new file mode 100644
+>> index 0000000..849f1e1
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/nvmem/nvmem.txt
+>> @@ -0,0 +1,85 @@
+>> += NVMEM(Non Volatile Memory) Data Device Tree Bindings =
+>> +
+>> +This binding is intended to represent the location of hardware
+>> +configuration data stored in NVMEMs like eeprom, efuses and so on.
+>> +
+>> +On a significant proportion of boards, the manufacturer has stored
+>> +some data on NVMEM, for the OS to be able to retrieve these information
+>> +and act upon it. Obviously, the OS has to know about where to retrieve
+>> +these data from, and where they are stored on the storage device.
+>> +
+>> +This document is here to document this.
+>> +
+>> += Data providers =
+>> +Contains bindings specific to provider drivers and data cells as children
+>> +of this node.
 >
-> Signed-off-by: YH Huang <yh.huang@mediatek.com>
-> ---
->  .../devicetree/bindings/pwm/pwm-mtk-disp.txt       | 29 ++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
+> #address-cells and #size-cells are required here.
 >
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt b/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
-> new file mode 100644
-> index 0000000..aac29dc
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
-> @@ -0,0 +1,29 @@
-> +MediaTek display PWM controller
-> +
-> +Required properties:
-> + - compatible: should be "mediatek,<name>-disp-pwm":
-> +   - "mediatek,mt8173-disp-pwm": found on mt8173 SoC.
-> +   - "mediatek,mt6595-disp-pwm": found on mt6595 SoC.
-> + - reg: physical base address and length of the controller's registers.
-> + - #pwm-cells: must be 2. See pwm.txt in this directory for a description of
-> +   the cell format.
-> + - clocks: phandle and clock specifier of the PWM reference clock.
-> + - clock-names: must contain the following:
-> +   - "main": clock used to generate PWM signals.
-> +   - "mm": sync signals from the modules of mmsys.
-> + - pinctrl-names: Must contain a "default" entry.
-> + - pinctrl-0: One property must exist for each entry in pinctrl-names.
-> +   See pinctrl/pinctrl-bindings.txt for details of the property values.
-> +
-> +Example:
-> +       pwm0: pwm@1401e000 {
-> +               compatible = "mediatek,mt8173-disp-pwm",
-> +                            "mediatek,mt6595-disp-pwm";
-> +               reg = <0 0x1401e000 0 0x1000>;
-> +               #pwm-cells = <2>;
-> +               clocks = <&mmsys CLK_MM_DISP_PWM026M>,
-> +                        <&mmsys CLK_MM_DISP_PWM0MM>;
-> +               clock-names = "main", "mm";
-> +               pinctrl-names = "default";
-> +               pinctrl-0 = <&disp_pwm0_pins>;
-> +       };
-
-Please show an example consumer of the pwm phandle to show how to set
-the two properties required by the #pwm-cells.
-Although the pwm-specifier typically encodes the chip-relative PWM
-number and the PWM period in nanoseconds, it is technically controller
-specific.
-
-In fact, since the mtk-disp-pwm does not have a chip-relative PWM
-number, could we in fact set #pwm-cells = <1>, and only specify the
-requested PWM period?
-
--Dan
-
-
-> --
-> 1.8.1.1.dirty
+>> +
+>> +Optional properties:
+>> + read-only: Mark the provider as read only.
 >
+> Couldn't this be per field rather than global?
 >
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+Not ATM, The reason for making this property global is to mark the 
+complete nvmem to be readonly/read-write. Which most of the use-cases 
+will have. Currently this property is used for setting permissions on 
+the sysfs binary file, also it would be impossible to apply per field 
+read-only property to such file.
+
+Am also planning to send few patches on top of these to expose fields in 
+sysfs which would then allow us to use per field read-only property.
+Again not sure how the direct access to nvmem would fit in with such 
+requirements. Need to evaluate this option in more detail though. :-)
+
+>> +
+>> += Data cells =
+>> +These are the child nodes of the provider which contain data cell
+>> +information like offset and size in nvmem provider.
+>> +
+>> +Required properties:
+>> +reg:   specifies the offset in byte within that storage device, start bit
+>> +       in the byte and the length in bytes of the data we care about.
+>> +       There could be more than one offset-length pairs in this property.
+>> +
+>> +Optional properties:
+>> +
+>> +bit-offset: specifies the offset in bit within the address range specified
+>> +       by reg property. Can take values from 0-7.
+>> +nbits: specifies number of bits this cell occupies starting from bit-offset.
+>
+> How about just: "bits = <<offset> <size>>"
+>
+Thats another possible way to specify the same info, Only reason I came 
+up with bit-offset and nbits is due to the fact that similar properties 
+were seen in other device DT bindings.
+
+I will try your suggestion and see how it looks before I send new version.
+
+> Then the bit specification is more aligned with the byte location
+> (i.e. reg property).
+>
+> You could also do this all in the reg property with 2 address cells
+> for byte and bit position and then size can be in bits. reg doesn't
+> have to match a memory mapped bus addressing meanings. If you wanted
+> to handle ranges and address translation, then you would need custom
+> functions like PCI does. I'm not sure you would need that.
+I wanted to keep things simple for this first version.
+>
+
+--srini
