@@ -1,41 +1,159 @@
-From: Zhi Li <lznuaa@gmail.com>
-Subject: Re: [PATCH v2 4/8] ARM: pinctrl: imx: add i.mx6ul pinctrl driver
-Date: Mon, 13 Jul 2015 15:52:21 -0500
-Message-ID: <CAHrpEqRaqUqrcPJmSXZ6iGUrU-8Bki-TWGsBt82kKMcw+QSjPQ@mail.gmail.com>
-References: <1434727951-4852-1-git-send-email-Frank.Li@freescale.com>
-	<1434727951-4852-5-git-send-email-Frank.Li@freescale.com>
-	<CACRpkdYszNKQqFuRrSqW0qmBp1ONO0vztG6e9LzKpG6f-_joJQ@mail.gmail.com>
-	<CAHrpEqTYfGR=jH-jZqfhkbaeOdzVWY=v65xMxb2rPE_5Ld3tGA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAHrpEqTYfGR=jH-jZqfhkbaeOdzVWY=v65xMxb2rPE_5Ld3tGA@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "Frank.Li@freescale.com" <Frank.Li@freescale.com>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Shawn Guo <shawn.guo@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Anson Huang <b20788@freescale.com>
+From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 2/2] doc: dt: add documentation for pl172 memory bindings
+Date: Mon, 13 Jul 2015 23:20:12 +0200
+Message-ID: <1436822412-20171-3-git-send-email-manabian@gmail.com>
+References: <1436822412-20171-1-git-send-email-manabian@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1436822412-20171-1-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: arnd-r2nGTMty4D4@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org
+Cc: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 13, 2015 at 3:50 PM, Zhi Li <lznuaa@gmail.com> wrote:
-> On Mon, Jul 13, 2015 at 3:38 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
->> On Fri, Jun 19, 2015 at 5:32 PM,  <Frank.Li@freescale.com> wrote:
->>
->>> From: Frank Li <Frank.Li@freescale.com>
->>>
->>> Add i.MX6UL pinctrl driver support.
->>>
->>> Signed-off-by: Anson Huang <b20788@freescale.com>
->>> Signed-off-by: Frank Li <Frank.Li@freescale.com>
->>
->> Can I get a review from Shawn and/or Sascha for this patch?
->>
->> Is it OK if I apply this to the pinctrl tree directly?
->
-> Shawn already Acked in version 1.
-> I forget added his ACK at version 2.
+Add documentation for configuration and timing setup of
+static memory devices on the ARM PL172 controller.
 
-See,  http://www.spinics.net/lists/devicetree/msg86160.html
+Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ .../bindings/memory-controllers/arm,pl172.txt      | 125 +++++++++++++++++++++
+ 1 file changed, 125 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/arm,pl172.txt
 
->
->>
->> Yours,
->> Linus Walleij
+diff --git a/Documentation/devicetree/bindings/memory-controllers/arm,pl172.txt b/Documentation/devicetree/bindings/memory-controllers/arm,pl172.txt
+new file mode 100644
+index 000000000000..e6df32f9986d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/memory-controllers/arm,pl172.txt
+@@ -0,0 +1,125 @@
++* Device tree bindings for ARM PL172 MultiPort Memory Controller
++
++Required properties:
++
++- compatible:		"arm,pl172", "arm,primecell"
++
++- reg:			Must contains offset/length value for controller.
++
++- #address-cells:	Must be 2. The partition number has to be encoded in the
++			first address cell and it may accept values 0..N-1
++			(N - total number of partitions). The second cell is the
++			offset into the partition.
++
++- #size-cells:		Must be set to 1.
++
++- ranges:		Must contain one or more chip select memory regions.
++
++- clocks:		Must contain references to controller clocks.
++
++- clock-names:		Must contain "mpmcclk" and "apb_pclk".
++
++- clock-ranges:		Empty property indicating that child nodes can inherit
++			named clocks. Required only if clock tree data present
++			in device tree.
++			See clock-bindings.txt
++
++Child chip-select (cs) nodes contain the memory devices nodes connected to
++such as NOR (e.g. cfi-flash) and NAND.
++
++Required child cs node properties:
++
++- #address-cells:	Must be 2.
++
++- #size-cells:		Must be 1.
++
++- ranges:		Empty property indicating that child nodes can inherit
++			memory layout.
++
++- clock-ranges:		Empty property indicating that child nodes can inherit
++			named clocks. Required only if clock tree data present
++			in device tree.
++
++- mpmc,cs:		Chip select number. Indicates to the pl0172 driver
++			which chipselect is used for accessing the memory.
++
++- mpmc,memory-width:	Width of the chip select memory. Must be equal to
++			either 8, 16 or 32.
++
++Optional child cs node config properties:
++
++- mpmc,async-page-mode:	Enable asynchronous page mode.
++
++- mpmc,cs-active-high:	Set chip select polarity to active high.
++
++- mpmc,byte-lane-low:	Set byte lane state to low.
++
++- mpmc,extended-wait:	Enable extended wait.
++
++- mpmc,buffer-enable:	Enable write buffer.
++
++- mpmc,write-protect:	Enable write protect.
++
++Optional child cs node timing properties:
++
++- mpmc,write-enable-delay:	Delay from chip select assertion to write
++				enable (WE signal) in nano seconds.
++
++- mpmc,output-enable-delay:	Delay from chip select assertion to output
++				enable (OE signal) in nano seconds.
++
++- mpmc,write-access-delay:	Delay from chip select assertion to write
++				access in nano seconds.
++
++- mpmc,read-access-delay:	Delay from chip select assertion to read
++				access in nano seconds.
++
++- mpmc,page-mode-read-delay:	Delay for asynchronous page mode sequential
++				accesses in nano seconds.
++
++- mpmc,turn-round-delay:	Delay between access to memory banks in nano
++				seconds.
++
++If any of the above timing parameters are absent, current parameter value will
++be taken from the corresponding HW reg.
++
++Example for pl172 with nor flash on chip select 0 shown below.
++
++emc: memory-controller@40005000 {
++	compatible = "arm,pl172", "arm,primecell";
++	reg = <0x40005000 0x1000>;
++	clocks = <&ccu1 CLK_CPU_EMCDIV>, <&ccu1 CLK_CPU_EMC>;
++	clock-names = "mpmcclk", "apb_pclk";
++	#address-cells = <2>;
++	#size-cells = <1>;
++	ranges = <0 0 0x1c000000 0x1000000
++		  1 0 0x1d000000 0x1000000
++		  2 0 0x1e000000 0x1000000
++		  3 0 0x1f000000 0x1000000>;
++
++	cs0 {
++		#address-cells = <2>;
++		#size-cells = <1>;
++		ranges;
++
++		mpmc,cs = <0>;
++		mpmc,memory-width = <16>;
++		mpmc,byte-lane-low;
++		mpmc,write-enable-delay = <0>;
++		mpmc,output-enable-delay = <0>;
++		mpmc,read-enable-delay = <70>;
++		mpmc,page-mode-read-delay = <70>;
++
++		flash@0,0 {
++			compatible = "sst,sst39vf320", "cfi-flash";
++			reg = <0 0 0x400000>;
++			bank-width = <2>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			partition@0 {
++				label = "data";
++				reg = <0 0x400000>;
++			};
++		};
++	};
++};
+-- 
+1.8.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
