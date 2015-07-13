@@ -1,82 +1,57 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [PATCH 3/3] mfd: max77686: Split out regulator part from the DT
- binding
-Date: Mon, 13 Jul 2015 10:20:24 +0200
-Message-ID: <55A374C8.8020103@osg.samsung.com>
-References: <1436773348-15316-1-git-send-email-javier@osg.samsung.com>
- <1436773348-15316-4-git-send-email-javier@osg.samsung.com>
- <55A370CE.6080904@samsung.com>
+From: Phil Edworthy <phil.edworthy-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH v3] phy: rcar-gen2 usb: Add Host/Function switching for
+ USB0
+Date: Mon, 13 Jul 2015 09:04:14 +0000
+Message-ID: <SIXPR06MB0639B9810214ACE6C7F91FB6F59C0@SIXPR06MB0639.apcprd06.prod.outlook.com>
+References: <SG2PR06MB0919835888EBD162D4B86C24D8930@SG2PR06MB0919.apcprd06.prod.outlook.com>
+ <1436270121-25924-1-git-send-email-phil.edworthy@renesas.com>
+ <559FF47A.5000001@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <55A370CE.6080904@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Lee Jones <lee.jones@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <559FF47A.5000001-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Content-Language: en-US
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Krzysztof,
+Hi Sergei,
 
-On 07/13/2015 10:03 AM, Krzysztof Kozlowski wrote:
-> On 13.07.2015 16:42, Javier Martinez Canillas wrote:
->> The Maxim MAX77686 PMIC is a multi-function device with regulators,
->> clocks and a RTC. The DT bindings for the clocks are in a separate
->> file but the bindings for the regulators are inside the mfd part.
->>
->> To make it consistent with the clocks portion of the binding and
->> because is more natural to look for regulator bindings under the
->> bindings/regulator sub-directory, split the regulator portion of
->> the DT binding and add it as a separate file.
->>
->> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
->>
->> ---
->>
->>  Documentation/devicetree/bindings/mfd/max77686.txt | 58 +-----------------
->>  .../devicetree/bindings/regulator/max77686.txt     | 71 ++++++++++++++++++++++
->>  2 files changed, 74 insertions(+), 55 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/regulator/max77686.txt
+On 10 July 2015 17:36, Sergei wrote:
+> Hello.
 > 
-> Actually I would prefer the opposite - merging everything into one file
-> (clocks, regulators -> mfd) because:
+> On 07/07/2015 02:55 PM, Phil Edworthy wrote:
 > 
-> 1. Separate files introduce some duplication (like introduction and
-> common part of example node).
+> > Instead of statically selecting the PHY connection to either the
+> > USBHS (Function) or PCI0 (Host) IP blocks, this change allows the
+> > dts to specifiy gpio pins for the vbus and id signals. Additional
 > 
-> 2. It is easier to track the changes and update them. For example when
-> adding a new chipset to the driver one may forgot about updating other
-> files. When moving files one may forgot to update hard-coded path in
-> some other file.
-> 
-> 3. When comparing existing DTS with documentation or when creating new
-> DTS for the device it is just faster to fetch everything (knowledge,
-> example node) from one file.
->
-
-Yes, I also wondered about going the opposite way but then thought
-that is more natural to look for clock bindings under bindings/clock
-and for regulators drivers under bindings/regulator...
+>     These GPIOs don't have anything to do with the PHY, they're interfacing
+> Maxim MAX3355 OTG chip for which I have submitted the extcon driver.
+Hmm, I see what you mean... could you post your latest version of that
+driver as it seems to have stalled 6 months ago?
  
-> However I understand that such opinion may be not suited for the idea of
-> MFD...
->
 
-...but I don't have a strong opinion and can do the other way if folks
-are more fond with that single file approach.
+> > gpio pins are used to control power to an external OTG device and
+> > an override to turn vbus on/off.
+> 
+> > Note: the R-Car USB PHY only allows this Host/Function switching
+> > on channel 0.
+> 
+> > This has been tested on a r8a7791 based Koelsch board, which uses
+> > a MAX3355 device to supply vbus power when needed.
+> 
+> > Signed-off-by: Phil Edworthy <phil.edworthy-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+> 
+>     I'm inclined to NAK this. You're modifying the wrong driver, I think.
+> 
+> WBR, Sergei
 
-What I think is that it should be consistent, either everything is in mfd
-for all PMICs or everything is split.
-
-The max77686 for example has a somehow arbitrary split since the clocks
-are in another file but the regulators are in the same mfd binding doc.
-
-> Best regards,
-> Krzysztof
->
-
-Best regards,
--- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+Thanks
+Phil
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
