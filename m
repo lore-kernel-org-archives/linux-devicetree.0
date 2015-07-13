@@ -1,68 +1,77 @@
-From: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Subject: Re: [PATCH v2 01/11] soc: qcom: Add device tree binding for SMEM
-Date: Mon, 13 Jul 2015 15:30:51 -0700
-Message-ID: <20150713223051.GD15178@usrtlx11787.corpusers.net>
-References: <1435355419-23602-1-git-send-email-bjorn.andersson@sonymobile.com>
- <1435355419-23602-2-git-send-email-bjorn.andersson@sonymobile.com>
- <559DB8B2.2090202@codeaurora.org>
+From: Tim Bird <tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Subject: [PATCH 1/3] ARM: dts: qcom: Add binding for the qcom coincell charger
+Date: Mon, 13 Jul 2015 16:39:30 -0700
+Message-ID: <1436830772-32632-1-git-send-email-tim.bird@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <559DB8B2.2090202-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: bjorn-UYDU3/A3LUY@public.gmane.org, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jeffrey Hugo <jhugo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: arnd-r2nGTMty4D4@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org, Tim Bird <tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed 08 Jul 16:56 PDT 2015, Stephen Boyd wrote:
+This binding is used to configure the driver for the coincell charger
+found in Qualcomm PMICs.
 
-> On 06/26/2015 02:50 PM, bjorn-UYDU3/A3LUY@public.gmane.org wrote:
-> > += EXAMPLE
-> > +The following example shows the SMEM setup for MSM8974, with a main SMEM region
-> > +at 0xfa00000 and an auxiliary region at 0xfc428000:
-> > +
-> > +	reserved-memory {
-> > +		#address-cells = <1>;
-> > +		#size-cells = <1>;
-> > +		ranges;
-> > +
-> > +		smem_region: smem@fa00000 {
-> > +			reg = <0xfa00000 0x200000>;
-> > +			no-map;
-> > +		};
-> > +	};
-> > +
-> > +	smem@fa00000 {
-> 
-> This should be smem@fc428000 matching the first reg property. It's weird
-> though, because if smem is using a secondary region it will be under the
-> SoC node and have a reg property. Otherwise it would be directly under
-> the root node and only have a memory-region. It would be nice if we
-> could somehow move the rpm message ram (0xfc428000) into the
-> reserved-memory node so that we could use memory-region for both regions.
-> 
+Signed-off-by: Tim Bird <tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+---
+ .../bindings/power/qcom,coincell-charger.txt       | 44 ++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/qcom,coincell-charger.txt
 
-I agree, the semantics here became a little bit odd.
+diff --git a/Documentation/devicetree/bindings/power/qcom,coincell-charger.txt b/Documentation/devicetree/bindings/power/qcom,coincell-charger.txt
+new file mode 100644
+index 0000000..bf39e2a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/qcom,coincell-charger.txt
+@@ -0,0 +1,44 @@
++Qualcomm Coincell Charger:
++
++The hardware block controls charging for a coincell or capacitor that is
++used to provide power backup for certain features of the power management
++IC (PMIC)
++
++- compatible:
++	Usage: required
++	Value type: <string>
++	Definition: must be: "qcom,pm8941-coincell"
++
++- reg:
++	Usage: required
++	Value type: <u32>
++	Definition: base address of the coincell charger registers
++
++- qcom,rset-ohms:
++	Usage: required
++	Value type: <u32>
++	Definition: resistance (in ohms) for current-limiting resistor
++		must be one of: 800, 1200, 1700, 2100
++
++- qcom,vset-millivolts:
++	Usage: required
++	Value type: <u32>
++	Definition: voltage (in millivolts) to apply for charging
++		must be one of: 2500, 3000, 3100, 3200
++
++- qcom,charge-enable:
++	Usage: optional
++	Value type: <u32> or <none>
++	Definition: definining this property, with an optional non-zero
++		value, enables charging
++
++Examples:
++
++	qcom,coincell@2800 {
++		compatible = "qcom,pm8941-coincell";
++		reg = <0x2800>;
++
++		qcom,rset-ohms = <2100>;
++		qcom,vset-millivolts = <3000>;
++		qcom,charge-enable;
++	};
+--
+1.8.2.2
 
-I do not think we should list the 0xfc428000 region as a memory-region,
-as it's "device memory" and I do like the fact that we don't repeat
-ourselves with listing the memory-region as a reg.
-
-Therefor I think this is the least ugly option, but the address in the
-name of the node should be updated.
-
-> > +		compatible = "qcom,smem";
-> > +
-> > +		memory-region = <&smem_region>;
-> > +		reg = <0xfc428000 0x4000>;
-> > +
-> > +		hwlocks = <&tcsr_mutex 3>;
-> > +	};
-> 
-
-Thanks,
-Bjorn
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
