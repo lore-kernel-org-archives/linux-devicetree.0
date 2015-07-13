@@ -1,89 +1,86 @@
-From: nick <xerofoify@gmail.com>
-Subject: Re: [PATCH 03/12] mtd: nand: omap: Move IRQ handling from GPMC to
- NAND driver
-Date: Mon, 13 Jul 2015 08:51:51 -0400
-Message-ID: <55A3B467.8030409@gmail.com>
-References: <1436531019-18088-1-git-send-email-rogerq@ti.com>
- <1436531019-18088-4-git-send-email-rogerq@ti.com>
- <20150713071008.GC26485@atomide.com> <55A38D2E.9010500@ti.com>
- <20150713124059.GF26485@atomide.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v3 3/4] gpio: brcmstb: Add interrupt and wakeup source support
+Date: Mon, 13 Jul 2015 14:58:22 +0200
+Message-ID: <CACRpkdYNGdWHk1kqhFWHziLPy3mZXTcUjYFBCVo5dRCh60bQ_A@mail.gmail.com>
+References: <1434589243-502-1-git-send-email-gregory.0xf0@gmail.com>
+	<1434589243-502-4-git-send-email-gregory.0xf0@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20150713124059.GF26485@atomide.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Tony Lindgren <tony@atomide.com>, Roger Quadros <rogerq@ti.com>
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, ezequiel@vanguardiasur.com.ar, bcousson@baylibre.com, computersforpeace@gmail.com, dwmw2@infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1434589243-502-4-git-send-email-gregory.0xf0@gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Gregory Fong <gregory.0xf0@gmail.com>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Brian Norris <computersforpeace@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Jun 18, 2015 at 3:00 AM, Gregory Fong <gregory.0xf0@gmail.com> wrote:
 
+> Uses the gpiolib irqchip helpers.  For this to work, the irq setup
+> function is called once per bank instead of once per device.  Note
+> that all known uses of this block have a BCM7120 L2 interrupt
+> controller as a parent.  Supports interrupts for all GPIOs.
+>
+> In the IRQ handler, we check for raised IRQs for invalid GPIOs and
+> warn (ratelimited) if they're encountered.
+>
+> Also, several drivers (e.g. gpio-keys) allow for GPIOs to be
+> configured as wakeup sources, and this GPIO controller supports that
+> through a separate interrupt path.
+>
+> The de-facto standard DT property "wakeup-source" is checked, since
+> that indicates whether the GPIO controller hardware can wake.  Uses
+> the IRQCHIP_MASK_ON_SUSPEND irq_chip flag because UPG GIO doesn't have
+> any of its own wakeup source configuration.
+>
+> Aside regarding gpiolib irqchip helpers: It wasn't obvious (to me)
+> that you can have multiple chained irqchips and associated IRQ domains
+> for a single parent IRQ, and as long as the xlate function is written
+> correctly, a GPIO IRQ request end up checking the correct domain and
+> will get associated with the correct IRQ.  What helps make this clear
+> is to read
+>   drivers/gpio/gpiolib-of.c:
+>    - of_gpiochip_find_and_xlate()
+>    - of_get_named_gpiod_flags()
+>   drivers/gpio/gpiolib.c:
+>    - gpiochip_find()
 
-On 2015-07-13 08:40 AM, Tony Lindgren wrote:
-> * Roger Quadros <rogerq@ti.com> [150713 03:07]:
->> Tony,
->>
->> On 13/07/15 10:10, Tony Lindgren wrote:
->>> * Roger Quadros <rogerq@ti.com> [150710 05:26]:
->>>> Since the Interrupt Events are used only by the NAND driver,
->>>> there is no point in managing the Interrupt registers
->>>> in the GPMC driver and complicating it with irqchip modeling.
->>>
->>> I don't think it's a good idea to allow external drivers to
->>> tinker directly with GPMC registers. How about just set up GPMC
->>> as an irqchip for the edge detection interrupts?
->>>
->>> I think we already have devices with multiple NAND chips. And
->>> there's nothing stopping other drivers from using the edge
->>> detection interrupts.
->>
->> OK. The GPMC_IRQ registers manage 2 NAND specific interrupts
->> (terminalcount and fifo) and 'n' WAIT pin edge interrupts.
->>
->>  So we can model this as a irqchip with 'n + 2' interrupts.
-> 
-> OK
->  
->> We need to take care that if a GPMC chip select needs a
->> wait pin then it can't be used as a generic interrupt.
->>
->> We need to get rid of omap_dev_ready() in nand/omap2.c as
->> it accesses the GPMC_STATUS register directly. Plus it is
->> hard coded to only monitor wait0 pin.
-> 
-> OK
->  
->> What is the best map we should use for irqchip?
->> Some Socs have 4 WAIT pins, some have 3 and some have 2.
->>
->> Should we start with 0,1,2, for the wait pins and use the next
->> available free one for the NAND?
-> 
-> Maybe we can just use the bits defined for each SoC in the
-> GPMC_IRQSTATUS register for the mapping?  
-> Regards,
-> 
-> Tony
-> 
-> ______________________________________________________
-> Linux MTD discussion mailing list
-> http://lists.infradead.org/mailman/listinfo/linux-mtd/
-> 
-Tony,
-Is that a good idea as to my knowledge of OMAP platforms that register is hardware
-dependent and therefore that may be an issue unless your idea is to create device
-tables like the way they do in the nand subsystems to support various vendor's 
-nand flash expect here for the pins on OMAP SOCs.
-Nick  
+Sorry for the unclarities, this is a bit hairy. Suggestions as to
+how we can make it easier and/or bring code for this into gpiolib
+are welcome. Right now I have a hard time seeing any way to
+make this more generic and helpful :/
 
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+Overall this patch looks real nice. Some nitpicks below.
+
+> @@ -164,6 +398,16 @@ static int brcmstb_gpio_probe(struct platform_device *pdev)
+>         priv->reg_base = reg_base;
+>         priv->pdev = pdev;
+>
+> +       if (of_property_read_bool(np, "interrupt-controller")) {
+> +               priv->parent_irq = platform_get_irq(pdev, 0);
+> +               if (priv->parent_irq < 0) {
+
+This should be <= 0 since 0 is NO_IRQ
+
+> +                       dev_err(dev, "Couldn't get IRQ");
+> +                       return -ENOENT;
+> +               }
+> +       } else {
+> +               priv->parent_irq = -ENOENT;
+> +       }
+
+Why should this code only execute if the node is marked
+"interrupt-controller"? It makes it seem like IRQs cannot arrive
+to it unless it is intended to serve other consumers.
+
+Maybe in practice this is true, but...
+
+> +               if (priv->parent_irq >= 0) {
+> +                       err = brcmstb_gpio_irq_setup(pdev, bank);
+> +                       if (err)
+> +                               goto fail;
+> +               }
+
+Again 0 is NO_IRQ so this should be > 0 not >= 0.
+
+Yours,
+Linus Walleij
