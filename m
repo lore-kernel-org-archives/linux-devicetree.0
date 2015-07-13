@@ -1,80 +1,116 @@
-From: Martin Kepplinger <martink@posteo.de>
-Subject: Re: [PATCH v4 0/8] iio:mma8452: improve driver and support more chips
-Date: Mon, 13 Jul 2015 10:07:55 +0200
-Message-ID: <55A371DB.1020105@posteo.de>
-References: <1436186062-5766-1-git-send-email-martink@posteo.de> <559E35F4.8010304@posteo.de>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH 5/6] mfd: devicetree: bindings: 88pm800: Add DT property
+ for dual phase enable
+Date: Mon, 13 Jul 2015 17:10:03 +0900
+Message-ID: <55A3725B.2040801@samsung.com>
+References: <1436442431-3471-1-git-send-email-vaibhav.hiremath@linaro.org>
+ <1436442431-3471-6-git-send-email-vaibhav.hiremath@linaro.org>
+ <55A0C2CB.6060209@samsung.com> <55A36DBF.5020100@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <559E35F4.8010304@posteo.de>
+In-reply-to: <55A36DBF.5020100@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mfuzzey@parkeon.com, roberta.dobrescu@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, christoph.muellner@theobroma-systems.com
+To: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>, linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, sameo@linux.intel.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, lee.jones@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Am 2015-07-09 um 10:51 schrieb Martin Kepplinger:
-> Am 2015-07-06 um 14:34 schrieb Martin Kepplinger:
->> This is version 4 of the mma8452 driver improvements. This version removes
->> one patch that changed the iio event type for existing users. It can be
->> dealt with seperately and this series applies without it.
->>
->> Also, changes according to Jonathan's review are applied and a few
->> devicetree maintainers are added as recipients.
->>
->>
->> These changes add support for motion interrupts and 3 more accelerometer
->> chips, two of which use them because they don't support the until now
->> included transient interrupt sources:
->>
->> MMA8453Q, MMA8652FC and MMA8653FC; datasheets are in the commit messages.
->>
->> The driver and module name remains the same, seperating it from the device
->> names it now supports.
->>
->> On top of this, there are minor documentation additions, and more notably,
->>  it allows to use the driver, no matter how the interrupt pins are wired
->> on your board.
->>
->> Please review and test if you can. For MMA8452Q, nothing should have
->> changed.
+On 13.07.2015 16:50, Vaibhav Hiremath wrote:
 > 
-> Any thoughts or reviewed-bys for these changes?
 > 
-> Since there are many more possible users of this driver after these
-> changes, see the devicetree bindings documentation file, maybe you are
-> among them and can quickly run it? ;)
+> On Saturday 11 July 2015 12:46 PM, Krzysztof Kozlowski wrote:
+>> W dniu 09.07.2015 o 20:47, Vaibhav Hiremath pisze:
+>>> 88PM860 family of device supports dual phase mode on BUCK1 supply
+>>> providing total 6A capacity.
+>>> Note that by default they operate independently with 3A capacity.
+>>>
+>>> This patch adds the devicetree binding to enable this
+>>> feature.
+>>>
+>>> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
+>>> ---
+>>>   Documentation/devicetree/bindings/mfd/88pm800.txt | 6 ++++++
+>>>   1 file changed, 6 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/mfd/88pm800.txt
+>>> b/Documentation/devicetree/bindings/mfd/88pm800.txt
+>>> index ae1311c..c756b31 100644
+>>> --- a/Documentation/devicetree/bindings/mfd/88pm800.txt
+>>> +++ b/Documentation/devicetree/bindings/mfd/88pm800.txt
+>>> @@ -15,6 +15,12 @@ Optional properties :
+>>>         CLK32K3 - for 88pm800
+>>>         CLK32K2 - for 88pm860
+>>>
+>>> +   (Applicable only to PXA910 family):
+>>> +
+>>> + - marvell,88pm860-buck1-dualphase-en    : If set, enable dual phase
+>>> on BUCK1,
+>>> +   providing 6A capacity.
+>>> +   Without this both BUCK1A and BUCK1B operates independently with
+>>> 3A capacity.
+>>> +
+>>
+>> 1. How does this relates to regulator driver? The
+>> drivers/regulator/88pm800.c defines constraints for regulator which may
+>> be contradictory.
+>>
+>> 2. This looks like a job for regulator driver, not MFD. Then you could
+>> use standard regulator bindings (setting maximum current to 6A would
+>> change the regulator to different mode).
 > 
-> thanks a lot,
+> Make sense. and even better.
 > 
->                      martin
+> I believe you are referring to,
+> 
+> regulator-min-microamp = <3000000>;
+> regulator-max-microamp = <6000000>;
+> 
+> And provide set_current_limit() callback, to set the dualphase.
+> 
+> Just to clarify more on this,
+> 
+> The DT property would look something like,
+> 
+> regulators {
+>     compatible = "marvell,88pm80x-regulator";
+> 
+>     buck1a: BUCK1A {
+>         regulator-compatible = "buck1";
+>         regulator-min-microvolt = <600000>;
+>         regulator-max-microvolt = <1800000>;
+> 
+>         regulator-min-microamp = <3000000>;
+>         regulator-max-microamp = <6000000>;
+> 
+>         regulator-boot-on;
+>         regulator-always-on;
+>     };
+> 
+>     buck1b: BUCK1B {
+>         regulator-compatible = "buck1b";
+>         regulator-min-microvolt = <600000>;
+>         regulator-max-microvolt = <1800000>;
+> 
+>         regulator-min-microamp = <3000000>;
+>         regulator-max-microamp = <6000000>;
+> 
+>         regulator-boot-on;
+>         regulator-always-on;
+>     };
+> };
+> 
+> 
+> And for the platforms, where dual phase is not required,
+> we can either choose not to set these properties or set it to
+> 
+> 
+>         regulator-min-microamp = <3000000>;
+>         regulator-max-microamp = <3000000>;
 
-Yes, no, maybe? Anyways. This series applies to the current -next.
+Yes, exactly. I only wonder if regulator core would support properly
+such bindings - setting current limit for a voltage regulator. I didn't
+tried this but it should work.
 
-thanks
-                           martin
-
-> 
->>
->> revision history
->> ----------------
->> v4   cleanup; one bugfix patch removed from series; DT people added
->> v3   adds one patch to allow all possible pin wirings; adds more email
->>      recipients
->> v2   splits the work into a series of smaller pieces
->> v1   initial post
->>
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->> Please read the FAQ at  http://www.tux.org/lkml/
->>
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
-> 
+Best regards,
+Krzysztof
