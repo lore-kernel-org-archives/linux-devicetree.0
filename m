@@ -1,91 +1,55 @@
-From: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 2/4] dt-bindings: soc: Add documentation for the MediaTek
- SCPSYS unit
-Date: Mon, 13 Jul 2015 12:51:50 +0800
-Message-ID: <CAGS+omBt+0+pQ4P2kRqVOB5XJFB2BxgCcPn=j4MNVMYLY4TvBg@mail.gmail.com>
-References: <1435126625-9634-1-git-send-email-s.hauer@pengutronix.de> <1435126625-9634-3-git-send-email-s.hauer@pengutronix.de>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v3 0/3] Fixes for MT8173 PLLs
+Date: Mon, 13 Jul 2015 07:45:49 +0200
+Message-ID: <20150713054549.GC18700@pengutronix.de>
+References: <1436517574-17895-1-git-send-email-jamesjj.liao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1435126625-9634-3-git-send-email-s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1436517574-17895-1-git-send-email-jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Heiko Stubner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 24, 2015 at 2:17 PM, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> This adds documentation for the MediaTek SCPSYS unit found in MT8173 SoCs.
->
-> Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
->  .../devicetree/bindings/soc/mediatek/scpsys.txt    | 41 ++++++++++++++++++++++
->  1 file changed, 41 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
->
-> diff --git a/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt b/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
-> new file mode 100644
-> index 0000000..c051114
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
-> @@ -0,0 +1,41 @@
-> +MediaTek SCPSYS
-> +===============
-> +
-> +The System Control Processor System (SCPSYS) has several power management
-> +related tasks in the system. The tasks include thermal measurement, dynamic
-> +voltage frequency scaling (DVFS), interrupt filter and lowlevel sleep control.
-> +The System Power Manager (SPM) inside the SCPSYS is for the MTCMOS power
-> +domain control.
-> +
-> +The driver implements the Generic PM domain bindings described in
-> +power/power_domain.txt. It provides the power domains defined in
-> +include/dt-bindings/power/mt8173-power.h.
-> +
-> +Required properties:
-> +- compatible: Must be "mediatek,mt8173-scpsys"
-> +- #power-domain-cells: Must be 1
-> +- reg: Address range of the SCPSYS unit
-> +- infracfg: must contain a phandle to the infracfg controller
-> +- clock, clock-names: clocks according to the common clock binding.
-> +                      The clocks needed "mm" and "mfg". These are the
-> +                     clocks which hardware needs to be enabled before
-> +                     enabling certain power domains.
-> +
-> +Example:
-> +
-> +       scpsys: scpsys@10006000 {
+On Fri, Jul 10, 2015 at 04:39:31PM +0800, James Liao wrote:
+> Title changed. Previous title is "Add MT8173 MMPLL change rate support"
+> and can be found in [1].
+> 
+> This patchset contains some fixes for changing rate of PLLs, especially
+> for MMPLL.
+> 
+> The first 2 patches are common fixes for PLLs, and the last patch is a
+> fix to support MT8173 MMPLL changing rate because its frequency setting
+> is different from other PLLs.
+> 
+> changes since v2:
+> - Rebase to 4.2-rc1.
+> - Split fixes of PLL setting calculation to a separeted patch.
+> 
+> changes since v1:
+> - Add a separated patch for mtk_pll_set_rate_regs().
+> - Use a structure array to describe a div_table.
+> - Limit max frequency to div_table[0].
+> - Minor changes such as static and comments.
+> 
+> [1] https://lkml.org/lkml/2015/7/8/265
+> 
+> James Liao (3):
+>   clk: mediatek: Fix PLL registers setting flow
+>   clk: mediatek: Fix calculation of PLL rate settings
+>   clk: mediatek: Add MT8173 MMPLL change rate support
 
-Perhaps it is too late, and/or too pedantic, but, since this node
-defines a PM domain provider as defined in [0], shouldn't its node
-have been the more generic:
+Acked-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-  scpsys: power-controller@10006000
+Sascha
 
-[0] /Documentation/devicetree/bindings/power/power_domain.txt
-
-> +               #power-domain-cells = <1>;
-> +               compatible = "mediatek,mt8173-scpsys";
-> +               reg = <0 0x10006000 0 0x1000>;
-> +               infracfg = <&infracfg>;
-> +               clocks = <&clk26m>,
-> +                        <&topckgen CLK_TOP_MM_SEL>;
-> +               clock-names = "mfg", "mm";
-> +       };
-> +
-> +Example consumer:
-> +
-> +       afe: mt8173-afe-pcm@11220000 {
-> +               compatible = "mediatek,mt8173-afe-pcm";
-> +               power-domains = <&scpsys MT8173_POWER_DOMAIN_AUDIO>;
-> +       };
-> --
-> 2.1.4
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
