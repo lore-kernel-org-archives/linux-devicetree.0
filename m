@@ -1,111 +1,64 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] ARM: dts: vfxxx: Add property for minimum sample
- time
-Date: Mon, 13 Jul 2015 08:44:26 +0200
-Message-ID: <8550db3f2a5db8ec68fc9360dc7173e3@agner.ch>
-References: <cover.1435134626.git.maitysanchayan@gmail.com>
- <36fa3cef10b6a21b39e96283ea5d6961e9f6d972.1435134626.git.maitysanchayan@gmail.com>
- <20150710085324.GL23464@tiger> <20150710180640.GB8723@Sanchayan-Arch>
- <55A154BE.6000701@kernel.org> <20150712064753.GA1199@Sanchayan-Arch>
+From: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
+Subject: Re: [PATCH-v3 02/11] i2c: pxa: No need to set slave addr for i2c
+ master mode reset
+Date: Mon, 13 Jul 2015 12:39:53 +0530
+Message-ID: <55A36441.2020206@linaro.org>
+References: <1436210695-19159-1-git-send-email-vaibhav.hiremath@linaro.org> <1436210695-19159-3-git-send-email-vaibhav.hiremath@linaro.org> <20150710081148.GB1528@katana> <559FBCD3.4050402@linaro.org> <20150710141440.GA6594@katana> <559FD5DB.9030308@linaro.org> <20150710145628.GB6594@katana>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150712064753.GA1199@Sanchayan-Arch>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150710145628.GB6594@katana>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robert.jarzmik@free.fr, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, "Jett.Zhou" <jtzhou@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2015-07-12 08:47, maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> Hello Jonathan,
-> 
-> On 15-07-11 18:39:10, Jonathan Cameron wrote:
->> On 10/07/15 19:06, maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
->> > Hello Shawn,
->> >
->> > On 15-07-10 16:53:24, Shawn Guo wrote:
->> >> On Wed, Jun 24, 2015 at 02:03:41PM +0530, Sanchayan Maity wrote:
->> >>> Add a device tree property which allows to specify the minimum sample
->> >>> time which can be used to calculate the actual ADC cycles required
->> >>> depending on the hardware.
->> >>>
->> >>> Signed-off-by: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> >>> ---
->> >>>  arch/arm/boot/dts/vfxxx.dtsi | 2 ++
->> >>>  1 file changed, 2 insertions(+)
->> >>>
->> >>> diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
->> >>> index 90a03d5..71d9c08 100644
->> >>> --- a/arch/arm/boot/dts/vfxxx.dtsi
->> >>> +++ b/arch/arm/boot/dts/vfxxx.dtsi
->> >>> @@ -229,6 +229,7 @@
->> >>>  				status = "disabled";
->> >>>  				fsl,adck-max-frequency = <30000000>, <40000000>,
->> >>>  							<20000000>;
->> >>> +				min-sample-time = <1000>;
->> >>>  			};
->> >>>
->> >>>  			wdoga5: wdog@4003e000 {
->> >>> @@ -447,6 +448,7 @@
->> >>>  				status = "disabled";
->> >>>  				fsl,adck-max-frequency = <30000000>, <40000000>,
->> >>>  							<20000000>;
->> >>> +				min-sample-time = <1000>;
->> >>
->> >> Can we code 1000 as the default in kernel driver, so that only boards
->> >> requiring different value need to have this property?  Doing so makes
->> >> the property optional rather than required.
->> >>
->> >
->> > Not sure if hardcoding it in the driver is the right approach.
->> If it is a true feature of the device (i.e. if in the case of perfect
->> front end electronics) this is the right option, then a default makes
->> a lot of sense.  If that isn't the case (I suspect not) then if we
->> drop it be optional chances are no one will bother thinking about it
->> or trying to tune this at all.
+
+
+On Friday 10 July 2015 08:26 PM, Wolfram Sang wrote:
+> On Fri, Jul 10, 2015 at 07:55:31PM +0530, Vaibhav Hiremath wrote:
 >>
->> Hence seems wrong to put a fairly arbitrary default value on it.
->> However, we do need to still work with old device trees and new kernels
->> so need to cope without it.
 >>
->> Hence to my mind, if we had started out with this in the first driver
->> version, then the default would be a bad idea.  As we didn't then we
->> really need to cope with nothing specified (as best we can) and so
->> we do need a sensible default (or perhaps even sensible worst
->> case default) in there.
+>> On Friday 10 July 2015 07:44 PM, Wolfram Sang wrote:
+>>> On Fri, Jul 10, 2015 at 06:08:43PM +0530, Vaibhav Hiremath wrote:
+>>>>
+>>>>
+>>>> On Friday 10 July 2015 01:41 PM, Wolfram Sang wrote:
+>>>>> On Tue, Jul 07, 2015 at 12:54:46AM +0530, Vaibhav Hiremath wrote:
+>>>>>> Normally i2c controller works as master, so slave addr is not needed, or it
+>>>>>> will impact some slave device (eg. ST NFC chip) i2c accesses, because it has
+>>>>>> the same i2c address with controller.
+>>>>>
+>>>>> Just to make sure: Does it? As I read the code, slave interrupts are
+>>>>> enabled later only when slave mode is selected? Is that a HW bug? And if
+>>>>> so, can't the code just be moved into this #ifdef block later?
+>>>>>
+>>>>
+>>>> Yes we could, infact I thought about it;
+>>>> but I would break recommended sequence here.
+>>>
+>>> And did you set the "own slave address" to a value which one of your
+>>> existing i2c slaves also has (without enabling slave mode)? Did it
+>>> disturb communication?
+>>>
+>>
+>> Since slave and master mode are mutual exclusive,
+>> I did not try this.
+>
+> Ehrm, what I meant was. Did you see the issue mentioned in the above
+> commit message? Can you reproduce it? You don't need to enable slave
+> mode for that, no?
+>
 
-I agree with Jonathan's argumentation, let's add a default if the dt
-propery is not there.
+Ohh yes,
 
-1000ns seems to be a good default value over a wide range of external
-resistance/capacity according to the diagrams of the data sheet, so I
-would vote for that value as default.
+I am able to reproduce this issue.
 
-> 
-> Just to be sure, do I understand you correctly that you agree with the
-> property being in device tree?
+I have pxa1928 based board, where I have only PMIC 88PM860 connected to
+I2C bus, and whenever I set slave address to 0x30 (PMIC slave address)
+all I2C transaction for PMIC goes for toss.
 
-I don't think that the device tree property is in discussion, it is just
-about whether to add a default value in the driver or not...
 
-> 
-> If the device tree property is not specified the driver will just go on
-> to use the value "3" which was hardcoded earlier. In my opinion it is
-> better to allow users to change the sampling cycles by specifying or not
-> specifying this in the device tree rather than have a default value coded
-> in the driver. However this is just my opinion.
-> 
-> Also, some users might not need the somewhat worst case value of 1000. I
-> guess we could keep the driver patch the way it is right now and migrate
-> the property to be specified in our board dts file? So the property can
-> be picked up from the vf-colibri.dtsi or vf500-colibri.dtsi in the adc
-> node? Other boards can do the same?
-
-I agree too, especially when we have a default value in the driver, the
-property belongs into the board file. I suggest to add the default value
-of 1000 to the vf-colibri.dtsi (even if this is the driver default, so
-we explicitly request that "verified" value..)
-
---
-Stefan
+Thanks,
+Vaibhav
