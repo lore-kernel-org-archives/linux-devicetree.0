@@ -1,71 +1,86 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: Re: [PATCH 4/4] irqchip: Add bcm2836 interrupt controller for Raspberry Pi 2.
-Date: Mon, 13 Jul 2015 09:06:10 -0700
-Message-ID: <878uakqbyl.fsf@eliezer.anholt.net>
-References: <1436303617-17185-1-git-send-email-eric@anholt.net> <1436303617-17185-5-git-send-email-eric@anholt.net> <55A0A5EB.4090007@wwwdotorg.org> <alpine.DEB.2.11.1507110940420.17353@nanos>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3] phy: rcar-gen2 usb: Add Host/Function switching for
+ USB0
+Date: Mon, 13 Jul 2015 19:37:11 +0300
+Message-ID: <55A3E937.2050804@cogentembedded.com>
+References: <SG2PR06MB0919835888EBD162D4B86C24D8930@SG2PR06MB0919.apcprd06.prod.outlook.com> <1436270121-25924-1-git-send-email-phil.edworthy@renesas.com> <559FF47A.5000001@cogentembedded.com> <SIXPR06MB0639B9810214ACE6C7F91FB6F59C0@SIXPR06MB0639.apcprd06.prod.outlook.com> <55A39030.1030601@cogentembedded.com> <SIXPR06MB0639D6F8EC3D9091D139FC36F59C0@SIXPR06MB0639.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.11.1507110940420.17353@nanos>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>, Stephen Warren <swarren@wwwdotorg.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Lee Jones <lee@kernel.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrea Merello <andrea.merello@gmail.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <SIXPR06MB0639D6F8EC3D9091D139FC36F59C0-ptTgG45MbEnxWRUYInhZt20DtJ1/0DrXvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Phil Edworthy <phil.edworthy-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+On 07/13/2015 06:02 PM, Phil Edworthy wrote:
 
-Thomas Gleixner <tglx@linutronix.de> writes:
+>>>>> Instead of statically selecting the PHY connection to either the
+>>>>> USBHS (Function) or PCI0 (Host) IP blocks, this change allows the
+>>>>> dts to specifiy gpio pins for the vbus and id signals. Additional
 
-> On Fri, 10 Jul 2015, Stephen Warren wrote:
->> On 07/07/2015 03:13 PM, Eric Anholt wrote:
->> > +static void bcm2836_mask_per_cpu_irq(unsigned int reg, unsigned int b=
-it)
->> > +{
->> > +	void __iomem *reg_base =3D intc.base + reg;
->> > +	unsigned int i;
->> > +
->> > +	for (i =3D 0; i < 4; i++)
->>=20
->> Is "4" there the CPU count? Perhaps this should use one of the Linux
->> APIs to query the CPU count rather than hard-coding it?
->>=20
->> Should per-CPU IRQs automatically be masked on all CPUs at once, or only
->> on the current CPU? A very quick look at the ARM GIC driver implies it
->> doesn't iterate over all CPUs when masking per-CPU IRQs.
->
-> Usually per cpu interrupts are only masked on the cpu which is calling
-> the function. The whole reason why per cpu interrupts exist is that
-> you can share the same interrupt number for all cores.
->
-> So masking all interrupts is not a good idea. In this case if a cpu is
-> hot unplugged, then all other cpus would not longer get timer
-> interrupts. Not what you really want, right?
+>>>>       These GPIOs don't have anything to do with the PHY, they're interfacing
 
-I was replicating the behavior of the downstream driver, but it seemed
-suspicious.  Converting to using smp_processor_id() to just mask/unmask
-this CPU's interrupts seems to have gone fine.
+>>      Perhaps that was too strong statement but nevertheless...
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+> Looking at your MAX3355 extcon driver, I can't see how it would work on it's
+> own.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+    I've added the 'extcon' support into the Renesas USBHS driver, so that it 
+should be able to sense the ID pin status.
 
-iQIcBAEBCgAGBQJVo+HzAAoJELXWKTbR/J7o0g8P/iJiJ5gr3R0ML3cxzE42iFO3
-kfuD/1jpkEt9tCywJ57OSVaXTUtAbNyQty1SQUwOe+o3GWmhbQdR/OZf8MFm9AOn
-F3NPDhLCrxTSdCRr/ZCkEP3fKmkhbjNZOF8TGBW3IfWNRq3fkUxoxPL21lBKI54V
-Yq3qjFttpw7GR/UfHtlYtnwegNGmYhGfiqKGvfy8zjng8w40I89EIdjbf8sYqwpf
-pELh2X6dqCSN/OQej1kKKRUO7GtOwzOBTYgi3jVOl3J4i5ww0jDJlOKgSoW/lQZ7
-+YAmkyjYzO5/wMNZVd/WOrl6q9H+jvg1ubqTQX1FUkeRhlMCkGn+EcVPRPNHC5AO
-fE7oaviUpXjj+Lf/WK6CP5sOMW+vI+hiSd3EaacndPY44SkyZgD1jz9bh4mHbVDw
-RM3vtLggaLM2PYoUpYdkYe/HelPsMiMi25QcWew5wwe9sglXuoC6PlYH/ZM45au5
-mtz8HVC8HnbJFas72axIcCDr8gqWvhUOr3freuA7EMNwmWb+h1VitubHBJMAzv8E
-Dnb3+TbRknCLKmx0ZQWJvmEfzhWF9azC5D6PHGX5lZ3iw5PC5UkFY+fdrJKqnJg+
-09n1hVO3RzdZrt7CHwp5839SsdhNQi/CrcPqMUi9AvznWAPdklRPnIGW/MppLJlz
-ZkldkbHW7XHVorI6Bbf7
-=VJo0
------END PGP SIGNATURE-----
---=-=-=--
+> The system needs to sense vbus in order to determine that the board
+> has been plugged into a USB Host.
+
+> Since the MAX3355 device doesn't
+> directly provide any vbus signals,  this shouldn't be part of the extcon driver,
+> so where should it be?
+
+    Sure, MAX3355 does provide voltage on Vbus, controlled by -OFFVBUS input.
+It's just that the driver has only ID sensing support.
+    Do you have the MAX3355 datasheet at all?
+
+> On the other hand, the MAX3355 has a pair of status pins that can be used
+> to get vbus instead.
+
+    Sure, these bits reflect 4 OTG Vbus thresholds.
+
+> If these pins aren't used for other functions, maybe
+> it's better to use these in the extcon driver.
+
+    They are not.
+
+> My intention is to make the USB PHY driver listen for extcon events instead
+> of directly accessing the ID and VBUS signals, but otherwise behave in the
+> same way it currently does.
+
+    I'm not sure the PHY driver should be interested in that...
+
+> After reading some other threads, I also intend to set up a fixed regulator
+> for the MAX3355 device to setup the shutdown and vbus enable pins.  I know
+> that the vbus enable should really be controlled some other way depending
+> on the role, but for the moment I think it's ok just to enable it always.
+
+    It's OK only in the host mode.
+    I don't think we need regulators. SHDN- is already supported by the driver
+(though it only drives it high at start-up time), in fact it was the only reason
+not to use gpio.
+
+> Do you think that is the correct way to progress this?
+
+    I didn't have a clear picture how to implement the OTG support at the time 
+of writing the MAX3355 driver; actually, I was tasked to only support ID p[in 
+sensing.
+    Note that there's some ongoing effort now on linux-usb to support OTG 
+functionality.
+
+> Thanks
+> Phil
+
+WBR, Sergei
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
