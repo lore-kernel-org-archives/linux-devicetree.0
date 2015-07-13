@@ -1,64 +1,98 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 0/3] ARM: OMAP2+: wkup_m3_rproc support patches
-Date: Mon, 13 Jul 2015 00:27:51 -0700
-Message-ID: <20150713072750.GE26485@atomide.com>
-References: <1427917630-43961-1-git-send-email-d-gerlach@ti.com>
- <559ED0AB.4020703@ti.com>
- <20150713072529.GD26485@atomide.com>
+From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 3/6] mfd: devicetree: bindings: 88pm800: Add DT property
+ for 32KHz output enable
+Date: Mon, 13 Jul 2015 16:31:05 +0900
+Message-ID: <55A36939.7070607@samsung.com>
+References: <1436442431-3471-1-git-send-email-vaibhav.hiremath@linaro.org>
+ <1436442431-3471-4-git-send-email-vaibhav.hiremath@linaro.org>
+ <55A0C1B8.4030402@samsung.com> <55A367BE.6040103@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150713072529.GD26485-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+In-reply-to: <55A367BE.6040103-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [150713 00:28]:
-> * Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org> [150709 12:53]:
-> > Tony,
-> > On 04/01/2015 02:47 PM, Dave Gerlach wrote:
-> > > This series adds the mach-omap2 code and DT nodes for v3 of the
-> > > wkup_m3_rproc driver submitted here [1]. pdata-quirks patch requires
-> > > the pdata added with patch 4 of the aforementioned series. Based on
-> > > previous discussion here [2], the wkup_m3 DT node has been moved as a
-> > > child of the l4_wkup as is done for l4_wkup components in Tero Kristo's
-> > > series "PRCM+SCM cleanup against 4.0-rc1" found here [3]. Because of that,
-> > > this series applies cleanly on top of that series in order to leverage the
-> > > l4_wkup parent node introduced there.
-> > > 
-> > > In addition to the move of the wkup_m3 node for am33xx, a new patch
-> > > has been added to introduce the wkup_m3 node in the same fashion for
-> > > am43xx as both SoCs use the same configuration. With this change
-> > > support was also added to pdata-quirks for passing reset handlers to
-> > > the driver for the am43xx binding as was already done for am33xx.
-> > > 
-> > > I have pushed a branch containing all patches for am335x suspend
-> > > here for a big picture view of how all patches fit together with
-> > > these wkup_m3_rproc series [4].
-> > > 
-> > > v2->v3:
-> > > -Change ti,am3353-wkup-m3 compat to ti,am3352-wkup-m3 to reflect
-> > >  binding documentation change
-> > > -Add ti,am4372-wkup-m3 node to am4372 SoC dt file
-> > > -Add am4372 support to pdata-quirks for reset handlers
-> > 
-> > Now that Ohad has sent a pull request for the wkup_m3_rproc driver [1] and it
-> > has been merged is it possible for this series with the DT nodes and pdata-quirk
-> > to get picked up? Let me know and I can rebase and resend if you'd like.
-> 
-> Yes this series looks good to me now, will queue for v4.3.
+On 13.07.2015 16:24, Vaibhav Hiremath wrote:
+>=20
+>=20
+> On Saturday 11 July 2015 12:41 PM, Krzysztof Kozlowski wrote:
+>> W dniu 09.07.2015 o 20:47, Vaibhav Hiremath pisze:
+>>> 88PM800 family of device supports output of 32KHz clock (low jitter=
+)
+>>> on CLK32K2/3 pin which can be supplied to other peripherals on the
+>>> board.
+>>>
+>>> This patch adds the devicetree binding to enable this feature.
+>>>
+>>> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>> ---
+>>>   Documentation/devicetree/bindings/mfd/88pm800.txt | 6 ++++++
+>>>   1 file changed, 6 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/mfd/88pm800.txt
+>>> b/Documentation/devicetree/bindings/mfd/88pm800.txt
+>>> index dec842f..ae1311c 100644
+>>> --- a/Documentation/devicetree/bindings/mfd/88pm800.txt
+>>> +++ b/Documentation/devicetree/bindings/mfd/88pm800.txt
+>>> @@ -9,6 +9,12 @@ Required parent device properties:
+>>>   - #interrupt-cells     : should be 1.
+>>>                 The cell is the 88pm80x local IRQ number
+>>>
+>>> +Optional properties :
+>>> + - marvell,88pm800-32khz-xolj-out-en    : If set, driver will enab=
+le
+>>> low jitter
+>>> +   version of 32Khz clock output on
+>>
+>> I am not sure if I understand it correctly. The hardware always has =
+such
+>> clocks and you only want to enable/disable it in DT? Any reasons why
+>> these should not be enabled always?
+>>
+>=20
+> Small amount of Power savings...
+> Although currently I do not have power numbers to justify this.
+>=20
+> As per spec, (it only talks about power consumption in power down sta=
+te)
+>=20
+> Power-down State =3D> VSYS > 2.8   =3D> 4.5 =CE=BCA
+>                     CLK32K2 =3D 0  =3D> 18 =CE=BCW
 
-Looks like you need to repost this series again against v4.2-rc2 
-to apply though.
- 
-Regards,
+This would be a power saving if it could be enabled/disabled runtime.
+But with DT you will either:
+1. enable it always so there won't be any power saving,
+2. disable it always so there won't be such clock.
 
-Tony
- 
-> > [1] https://lkml.org/lkml/2015/7/1/354
+I can find a use case - when on some boards the clock output is not
+wired to anything so it cannot be used. In other cases (there is some
+potential user) this should be triggered per-use (runtime enabled/disab=
+led).
+
+Do you have such case? I mean boards where this is not connected at all
+and boards where this is used?
+
+>> Enabling it in DT does not look like a job for DT. Maybe you there
+>> should be just a clock driver (clock provider)?
+>>
+>=20
+> It's init time (and one time) settings, wouldn't clock-provider
+> be overkill for this?
+
+The clock provider would be a proper way to do it and some PMICs I know
+do this. Examples are max77686 and s5m8767/s2mps11. These are PMICs use=
+d
+for Samsung SoCs. They have two or three 32kHz clocks.
+
+Best regards,
+Krzysztof
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
