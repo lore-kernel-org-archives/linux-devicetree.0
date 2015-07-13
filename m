@@ -1,82 +1,102 @@
-From: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/6] mfd: 88pm800: Add init time initial configuration
- support
-Date: Mon, 13 Jul 2015 12:40:57 +0530
-Message-ID: <55A36481.80206@linaro.org>
-References: <1436442431-3471-1-git-send-email-vaibhav.hiremath@linaro.org> <1436442431-3471-3-git-send-email-vaibhav.hiremath@linaro.org> <55A0BD78.8050005@samsung.com>
+From: Koro Chen <koro.chen@mediatek.com>
+Subject: Re: [PATCH v2] arm64: dts: mt8173: Add afe device node
+Date: Mon, 13 Jul 2015 15:19:29 +0800
+Message-ID: <1436771969.15768.6.camel@mtksdaap41>
+References: <1436412725-55129-1-git-send-email-koro.chen@mediatek.com>
+	 <CAGS+omBqO6Zcw9KuN6p9YDvRD=UfmOnokUPeRo-iv6ruTBChwg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55A0BD78.8050005-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAGS+omBqO6Zcw9KuN6p9YDvRD=UfmOnokUPeRo-iv6ruTBChwg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Kurtz <djkurtz@chromium.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, srv_heupstream <srv_heupstream@mediatek.com>, linux-mediatek@lists.infradead.org, Sascha Hauer <s.hauer@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, alsa-devel@alsa-project.org, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, 2015-07-09 at 18:45 +0800, Daniel Kurtz wrote:
+> On Thu, Jul 9, 2015 at 11:32 AM, Koro Chen <koro.chen@mediatek.com> wrote:
+> > This adds afe (audio front end) device node to the MT8173 dtsi file.
+> >
+> > Signed-off-by: Koro Chen <koro.chen@mediatek.com>
+> 
+> Reviewed-by: Daniel Kurtz <djkurtz@chromium.org>
+> 
+> I believe this patch depends on the fix in:
+> https://patchwork.kernel.org/patch/6752521/  
+> 
+> If so, I think it would have been better to upload them together and
+> mention the dependency in the cover letter.
+> However, now that they are both on the list, we just need to ensure
+> they are merged together.
 
-
-On Saturday 11 July 2015 12:23 PM, Krzysztof Kozlowski wrote:
-> W dniu 09.07.2015 o 20:47, Vaibhav Hiremath pisze:
->> This patch adds init time configuration of 88PM800/805 and
->> 88PM860. It includes,
->>
->>    - Enable BUCK clock gating in low power mode
->>    - Full mode support for BUCK2 and 4
->>    - Enable voltage change (LPF, DVC) in PMIC
->>
->> Note that both 88PM800 and 88PM860 do share common configurations,
->> but since I can not validate the configuration on 88PM800,
->> restricting myself only to 88PM860.
->> If anyone can validate on 88PM800, we can move common code accordingly.
->>
->> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->
-> Although I am not familiar with the device and driver, patch looks good
-> to me, except one idea below. Anyway feel free to add:
->
-> Reviewed-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->
-
-Thanks for your review.
-
->
->> ---
->>   drivers/mfd/88pm800.c       | 64 +++++++++++++++++++++++++++++++++++++++++++++
->>   include/linux/mfd/88pm80x.h | 13 +++++++++
->>   2 files changed, 77 insertions(+)
->>
->> diff --git a/drivers/mfd/88pm800.c b/drivers/mfd/88pm800.c
->> index 95c8ad4..80a1bc1 100644
->> --- a/drivers/mfd/88pm800.c
->> +++ b/drivers/mfd/88pm800.c
->> @@ -521,6 +521,63 @@ out:
->>   	return ret;
->>   }
->>
->> +static int pm800_init_config(struct pm80x_chip *chip, struct device_node *np)
->> +{
->> +	int ret;
->> +	unsigned int val;
->> +
->> +	switch (chip->type) {
->> +	case CHIP_PM800:
->> +	case CHIP_PM805:
->> +		break;
->
-> It may be useful for future generations to put short notice here why
-> there is no init for these devices? I saw the explanation in commit
-> message but still someone in the future may look at the code and wonder
-> why only 88PM860 is initialized and the others are not?
->
-
-Yeup, Agreed.
-
-I will incorporate it in V2.
-
-Thanks,
-Vaibhav
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The above patch was already merged, so now it is OK to merge this one
+(If there is no problem for this patch, of course)
+> 
+> -Dan
+> 
+> 
+> > ---
+> > This patch is based on Matthias's tree:
+> > https://github.com/mbgg/linux-mediatek
+> > branch: v4.2-next/arm64
+> >
+> > Changes since v1:
+> > - change node name to afe: audio-controller@11220000
+> > ---
+> >  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 32 ++++++++++++++++++++++++++++++++
+> >  1 file changed, 32 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> > index 0696f8f..ce9255a 100644
+> > --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> > +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> > @@ -14,6 +14,7 @@
+> >  #include <dt-bindings/clock/mt8173-clk.h>
+> >  #include <dt-bindings/interrupt-controller/irq.h>
+> >  #include <dt-bindings/interrupt-controller/arm-gic.h>
+> > +#include <dt-bindings/power/mt8173-power.h>
+> >  #include <dt-bindings/reset-controller/mt8173-resets.h>
+> >  #include "mt8173-pinfunc.h"
+> >
+> > @@ -393,6 +394,37 @@
+> >                         #size-cells = <0>;
+> >                         status = "disabled";
+> >                 };
+> > +
+> > +               afe: audio-controller@11220000  {
+> > +                       compatible = "mediatek,mt8173-afe-pcm";
+> > +                       reg = <0 0x11220000 0 0x1000>;
+> > +                       interrupts = <GIC_SPI 134 IRQ_TYPE_EDGE_FALLING>;
+> > +                       power-domains = <&scpsys MT8173_POWER_DOMAIN_AUDIO>;
+> > +                       clocks = <&infracfg CLK_INFRA_AUDIO>,
+> > +                                <&topckgen CLK_TOP_AUDIO_SEL>,
+> > +                                <&topckgen CLK_TOP_AUD_INTBUS_SEL>,
+> > +                                <&topckgen CLK_TOP_APLL1_DIV0>,
+> > +                                <&topckgen CLK_TOP_APLL2_DIV0>,
+> > +                                <&topckgen CLK_TOP_I2S0_M_SEL>,
+> > +                                <&topckgen CLK_TOP_I2S1_M_SEL>,
+> > +                                <&topckgen CLK_TOP_I2S2_M_SEL>,
+> > +                                <&topckgen CLK_TOP_I2S3_M_SEL>,
+> > +                                <&topckgen CLK_TOP_I2S3_B_SEL>;
+> > +                       clock-names = "infra_sys_audio_clk",
+> > +                                     "top_pdn_audio",
+> > +                                     "top_pdn_aud_intbus",
+> > +                                     "bck0",
+> > +                                     "bck1",
+> > +                                     "i2s0_m",
+> > +                                     "i2s1_m",
+> > +                                     "i2s2_m",
+> > +                                     "i2s3_m",
+> > +                                     "i2s3_b";
+> > +                       assigned-clocks = <&topckgen CLK_TOP_AUD_1_SEL>,
+> > +                                         <&topckgen CLK_TOP_AUD_2_SEL>;
+> > +                       assigned-clock-parents = <&topckgen CLK_TOP_APLL1>,
+> > +                                                <&topckgen CLK_TOP_APLL2>;
+> > +               };
+> >         };
+> >  };
+> >
+> > --
+> > 1.8.1.1.dirty
+> >
