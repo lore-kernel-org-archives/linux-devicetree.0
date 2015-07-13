@@ -1,60 +1,116 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] dts: ls1021a: Add dts nodes for eTSEC0, eTSEC1 and eTSEC2
-Date: Mon, 13 Jul 2015 21:31:38 +0800
-Message-ID: <20150713133138.GO23464@tiger>
-References: <1435213498-21025-1-git-send-email-b18965@freescale.com>
- <20150712065101.GA14354@localhost>
- <DM2PR03MB414BBD64BBDEB22DB0981619C9C0@DM2PR03MB414.namprd03.prod.outlook.com>
+From: nick <xerofoify@gmail.com>
+Subject: Re: [PATCH 03/12] mtd: nand: omap: Move IRQ handling from GPMC to
+ NAND driver
+Date: Mon, 13 Jul 2015 09:32:19 -0400
+Message-ID: <55A3BDE3.2080004@gmail.com>
+References: <1436531019-18088-1-git-send-email-rogerq@ti.com>
+ <1436531019-18088-4-git-send-email-rogerq@ti.com>
+ <20150713071008.GC26485@atomide.com> <55A38D2E.9010500@ti.com>
+ <20150713124059.GF26485@atomide.com> <55A3B467.8030409@gmail.com>
+ <20150713130109.GG26485@atomide.com> <55A3B73C.9040604@gmail.com>
+ <55A3B931.1050706@ti.com> <55A3B9DD.60705@gmail.com>
+ <55A3BB4D.3080003@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <DM2PR03MB414BBD64BBDEB22DB0981619C9C0-ufbTtyGzTTRE33Ug05/nCOO6mTEJWrR4XA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Manoil Claudiu <claudiu.manoil-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Huan Wang <alison.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <55A3BB4D.3080003@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Roger Quadros <rogerq@ti.com>, Tony Lindgren <tony@atomide.com>
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, ezequiel@vanguardiasur.com.ar, bcousson@baylibre.com, computersforpeace@gmail.com, dwmw2@infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 13, 2015 at 10:47:49AM +0000, Manoil Claudiu wrote:
-> > -----Original Message-----
-> > From: Shawn Guo [mailto:shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
-> > Sent: Sunday, July 12, 2015 9:51 AM
-> > To: Wang Huan-B18965
-> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; linux-
-> > kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; Manoil Claudiu-B08782;
-> > Wang Huan-B18965
-> > Subject: Re: [PATCH] dts: ls1021a: Add dts nodes for eTSEC0, eTSEC1 and
-> > eTSEC2
-> > 
-> > On Thu, Jun 25, 2015 at 02:24:58PM +0800, Alison Wang wrote:
-> > > @@ -391,6 +394,85 @@
-> > >  			reg = <0x0 0x2d24000 0x0 0x4000>;
-> > >  		};
-> > >
-> > > +		enet0: ethernet@2d10000 {
-> > 
-> > Most of the vendor specific properties below are undocumented bindings.
-> > 
-> > Shawn
-> > 
-> 
-> Hi Shawn,
-> 
-> Please note that these properties (with only one exception) were accepted long time ago
-> and are in use for the upstream powerpc platforms, eg:
-> $ git grep fsl,num_rx_queues
-> arch/powerpc/boot/dts/fsl/pq3-etsec2-0.dtsi:    fsl,num_rx_queues = <0x8>;
-> arch/powerpc/boot/dts/fsl/pq3-etsec2-1.dtsi:    fsl,num_rx_queues = <0x8>;
-> arch/powerpc/boot/dts/fsl/pq3-etsec2-2.dtsi:    fsl,num_rx_queues = <0x8>;
-> drivers/net/ethernet/freescale/gianfar.c:                       ret = of_property_read_u32(np, "fsl,num_rx_queues",
-> 
-> So, I think the bindings documentation could be added in a separate, follow-up, patch.
 
-I would like to see patch for bindings documentation before I apply this
-one.
 
-Shawn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 2015-07-13 09:21 AM, Roger Quadros wrote:
+> On 13/07/15 16:15, nick wrote:
+>>
+>>
+>> On 2015-07-13 09:12 AM, Roger Quadros wrote:
+>>> On 13/07/15 16:03, nick wrote:
+>>>>
+>>>>
+>>>> On 2015-07-13 09:01 AM, Tony Lindgren wrote:
+>>>>> * nick <xerofoify@gmail.com> [150713 05:54]:
+>>>>>> On 2015-07-13 08:40 AM, Tony Lindgren wrote:
+>>>>>>> * Roger Quadros <rogerq@ti.com> [150713 03:07]:
+>>>>>>>  
+>>>>>>>> What is the best map we should use for irqchip?
+>>>>>>>> Some Socs have 4 WAIT pins, some have 3 and some have 2.
+>>>>>>>>
+>>>>>>>> Should we start with 0,1,2, for the wait pins and use the next
+>>>>>>>> available free one for the NAND?
+>>>>>>>
+>>>>>>> Maybe we can just use the bits defined for each SoC in the
+>>>>>>> GPMC_IRQSTATUS register for the mapping?  
+>>>>>>> Regards,
+>>>>>>
+>>>>>> Is that a good idea as to my knowledge of OMAP platforms that register is hardware
+>>>>>> dependent and therefore that may be an issue unless your idea is to create device
+>>>>>> tables like the way they do in the nand subsystems to support various vendor's 
+>>>>>> nand flash expect here for the pins on OMAP SOCs.
+>>>>>
+>>>>> Do you mean mapping irqs based on the GPMC_IRQSTATUS register
+>>>>> bits? If so, that's pretty much how all the GPIO drivers
+>>>>> handle them. We can have a SoC specific irqmask of the valid
+>>>>> bits passed from the dts files, and if necessary we can also
+>>>>> add custom SoC specific IRQ handlers to the GPMC driver if
+>>>>> needed.
+>>>>>
+>>>>> The idea is that the NAND driver can just request the irq
+>>>>> from the GPMC driver and do whatever it wants with the
+>>>>> interrupt.
+>>>>>
+>>>>> Regards,
+>>>>>
+>>>>> Tony
+>>>>>
+>>>> Tony,
+>>>> That is what I was hoping the code was doing. So what appears to be the problem with the 
+>>>> patches related to irq requesting from the GPMC driver.
+>>>> Cheers,
+>>>> Nick 
+>>>>
+>>>
+>>> The problem with this patch is that it expects GPMC_IRQ registers
+>>> to be accessible by the NAND driver and looses the 2 to 4 pins
+>>> of WAIT pin edge detection interrupt capability if it is needed
+>>> for generic use. (not NAND/GPMC memory specific)
+>>>
+>>> cheers,
+>>> -roger
+>>>
+>> I am not sure if this is possible with OMAP boards but can we split the pins
+>> into 1 or 2 for NAND/GPMC memory specific and use the others for WAIT interrupt
+>> capability.
+>> Nick
+>>
+> Yes if the wait pins are not used for NAND/GPMC memory then they can be used
+> as generic edge detect interrupt or probably even a GPI.
+> I don't see what would prevent it.
+> 
+> I'm not sure if anyone will dare to use them though as they weren't originally meant
+> for that use and none of the existing kernels support that. So it is really a
+> chicken and egg situation here. :)
+> 
+> But I see value in doing it the way Tony says cause it is much cleaner to specify
+> which interrupt (or wait pin) you want for NAND use.
+> 
+> cheers,
+> -roger
+> 
+I would also have to agree with Tony about this issue and feel his solution 
+seems fine. However why don't recent kernel's support this feature?
+Nick 
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
