@@ -1,68 +1,88 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH 1/5] [media] tc358743: register v4l2 asynchronous subdevice
-Date: Mon, 13 Jul 2015 12:47:21 +0200
-Message-ID: <55A39739.5030408@xs4all.nl>
-References: <1436533897-3060-1-git-send-email-p.zabel@pengutronix.de>
+From: Jianwei Wang <jianwei.wang@freescale.com>
+Subject: [PATCH v9 2/4] drm/panel: simple: Add support for NEC NL4827HC19-05B
+ 480x272 panel
+Date: Mon, 13 Jul 2015 18:51:30 +0800
+Message-ID: <1436784692-40560-2-git-send-email-jianwei.wang@freescale.com>
+References: <1436784692-40560-1-git-send-email-jianwei.wang@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1436533897-3060-1-git-send-email-p.zabel@pengutronix.de>
-Sender: linux-media-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>, Mats Randgaard <matrandg@cisco.com>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1436784692-40560-1-git-send-email-jianwei.wang@freescale.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: devicetree@vger.kernel.org, Xiubo Li <lixiubo@cmss.chinamobile.com>, daniel.vetter@ffwll.ch, Alison Wang <b18965@freescale.com>, linux-kernel@vger.kernel.org, scottwood@freescale.com, Jianwei Wang <jianwei.wang@freescale.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/10/2015 03:11 PM, Philipp Zabel wrote:
-> Add support for registering the sensor subdevice using the v4l2-async API.
-> 
-> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-> ---
->  drivers/media/i2c/tc358743.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/drivers/media/i2c/tc358743.c b/drivers/media/i2c/tc358743.c
-> index 34d4f32..48d1575 100644
-> --- a/drivers/media/i2c/tc358743.c
-> +++ b/drivers/media/i2c/tc358743.c
-> @@ -1710,6 +1710,16 @@ static int tc358743_probe(struct i2c_client *client,
->  		goto err_hdl;
->  	}
->  
-> +	state->pad.flags = MEDIA_PAD_FL_SOURCE;
-> +	err = media_entity_init(&sd->entity, 1, &state->pad, 0);
-> +	if (err < 0)
-> +		goto err_hdl;
-> +
-> +	sd->dev = &client->dev;
-> +	err = v4l2_async_register_subdev(sd);
-> +	if (err < 0)
-> +		goto err_hdl;
-> +
->  	mutex_init(&state->confctl_mutex);
->  
->  	INIT_DELAYED_WORK(&state->delayed_work_enable_hotplug,
-> @@ -1740,6 +1750,7 @@ err_work_queues:
->  	destroy_workqueue(state->work_queues);
->  	mutex_destroy(&state->confctl_mutex);
->  err_hdl:
-> +	media_entity_cleanup(&sd->entity);
->  	v4l2_ctrl_handler_free(&state->hdl);
->  	return err;
->  }
-> @@ -1751,6 +1762,7 @@ static int tc358743_remove(struct i2c_client *client)
->  
->  	cancel_delayed_work(&state->delayed_work_enable_hotplug);
->  	destroy_workqueue(state->work_queues);
-> +	v4l2_async_unregister_subdev(sd);
-
-Shouldn't there be a media_entity_cleanup() call in tc358743_remove() as well?
-
-Regards,
-
-	Hans
-
->  	v4l2_device_unregister_subdev(sd);
->  	mutex_destroy(&state->confctl_mutex);
->  	v4l2_ctrl_handler_free(&state->hdl);
-> 
+VGhpcyBhZGRzIHN1cHBvcnQgZm9yIHRoZSBORUMgTkw0ODI3SEMxOS0wNUIgNDgweDI3MiBwYW5l
+bCB0byB0aGUgRFJNCnNpbXBsZSBwYW5lbCBkcml2ZXIuCgpTaWduZWQtb2ZmLWJ5OiBBbGlzb24g
+V2FuZyA8YjE4OTY1QGZyZWVzY2FsZS5jb20+ClNpZ25lZC1vZmYtYnk6IFhpdWJvIExpIDxsaXhp
+dWJvQGNtc3MuY2hpbmFtb2JpbGUuY29tPgpTaWduZWQtb2ZmLWJ5OiBKaWFud2VpIFdhbmcgPGpp
+YW53ZWkud2FuZ0BmcmVlc2NhbGUuY29tPgpBY2tlZC1ieTogRGFuaWVsIFZldHRlciA8ZGFuaWVs
+LnZldHRlckBmZndsbC5jaD4KLS0tCiAuLi4vYmluZGluZ3MvcGFuZWwvbmVjLG5sNDgyN2hjMTlf
+MDViLnR4dCAgICAgICAgICB8ICA3ICsrKysrKwogLi4uL2RldmljZXRyZWUvYmluZGluZ3MvdmVu
+ZG9yLXByZWZpeGVzLnR4dCAgICAgICAgfCAgMSArCiBNQUlOVEFJTkVSUyAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAxIC0KIGRyaXZlcnMvZ3B1L2RybS9wYW5lbC9w
+YW5lbC1zaW1wbGUuYyAgICAgICAgICAgICAgIHwgMjYgKysrKysrKysrKysrKysrKysrKysrKwog
+NCBmaWxlcyBjaGFuZ2VkLCAzNCBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCiBjcmVhdGUg
+bW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BhbmVsL25lYyxu
+bDQ4MjdoYzE5XzA1Yi50eHQKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvcGFuZWwvbmVjLG5sNDgyN2hjMTlfMDViLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9wYW5lbC9uZWMsbmw0ODI3aGMxOV8wNWIudHh0Cm5ldyBmaWxlIG1v
+ZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAuLjIwZTk0NzMKLS0tIC9kZXYvbnVsbAorKysgYi9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGFuZWwvbmVjLG5sNDgyN2hjMTlfMDViLnR4
+dApAQCAtMCwwICsxLDcgQEAKK05FQyBMQ0QgVGVjaG5vbG9naWVzLEx0ZC4gV1FWR0EgVEZUIExD
+RCBwYW5lbAorCitSZXF1aXJlZCBwcm9wZXJ0aWVzOgorLSBjb21wYXRpYmxlOiBzaG91bGQgYmUg
+Im5lYyxubDQ4MjdoYzE5XzA1YiIKKworVGhpcyBiaW5kaW5nIGlzIGNvbXBhdGlibGUgd2l0aCB0
+aGUgc2ltcGxlLXBhbmVsIGJpbmRpbmcsIHdoaWNoIGlzIHNwZWNpZmllZAoraW4gc2ltcGxlLXBh
+bmVsLnR4dCBpbiB0aGlzIGRpcmVjdG9yeS4KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy50eHQKaW5kZXggODAzMzkxOS4uOWYyMmIz
+ZSAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1w
+cmVmaXhlcy50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZlbmRv
+ci1wcmVmaXhlcy50eHQKQEAgLTEzMSw2ICsxMzEsNyBAQCBtdW5kb3JlYWRlcglNdW5kbyBSZWFk
+ZXIgUy5MLgogbXVyYXRhCU11cmF0YSBNYW51ZmFjdHVyaW5nIENvLiwgTHRkLgogbXhpY3kJTWFj
+cm9uaXggSW50ZXJuYXRpb25hbCBDby4sIEx0ZC4KIG5hdGlvbmFsCU5hdGlvbmFsIFNlbWljb25k
+dWN0b3IKK25lYwlORUMgTENEIFRlY2hub2xvZ2llcywgTHRkLgogbmVvbm9kZQkJTmVvbm9kZSBJ
+bmMuCiBuZXRnZWFyCU5FVEdFQVIKIG5ldGxvZ2ljCUJyb2FkY29tIENvcnBvcmF0aW9uIChmb3Jt
+ZXJseSBOZXRMb2dpYyBNaWNyb3N5c3RlbXMpCmRpZmYgLS1naXQgYS9NQUlOVEFJTkVSUyBiL01B
+SU5UQUlORVJTCmluZGV4IGZmZmI4YzkuLmUxOTFkZWQgMTAwNjQ0Ci0tLSBhL01BSU5UQUlORVJT
+CisrKyBiL01BSU5UQUlORVJTCkBAIC0zNDEwLDcgKzM0MTAsNiBAQCBNOglBbGlzb24gV2FuZyA8
+YWxpc29uLndhbmdAZnJlZXNjYWxlLmNvbT4KIEw6CWRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
+cC5vcmcKIFM6CVN1cHBvcnRlZAogRjoJZHJpdmVycy9ncHUvZHJtL2ZzbC1kY3UvCi1GOiAgICAg
+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0vZnNsLWRjdS8KIEY6ICAgICAg
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BhbmVsL25lYyxubDQ4MjdoYzE5XzA1
+Yi50eHQKIAogRFJNIERSSVZFUlMgRk9SIE5WSURJQSBURUdSQQpkaWZmIC0tZ2l0IGEvZHJpdmVy
+cy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jIGIvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3Bh
+bmVsLXNpbXBsZS5jCmluZGV4IGY5NDIwMWIuLmViMTJmZTQgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMv
+Z3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vcGFuZWwv
+cGFuZWwtc2ltcGxlLmMKQEAgLTEwMzYsNiArMTAzNiwyOSBAQCBzdGF0aWMgY29uc3Qgc3RydWN0
+IHBhbmVsX2Rlc2Mgc2hlbGx5X3NjYTA3MDEwX2Jmbl9sbm4gPSB7CiAJLmJ1c19mb3JtYXQgPSBN
+RURJQV9CVVNfRk1UX1JHQjY2Nl8xWDE4LAogfTsKIAorc3RhdGljIGNvbnN0IHN0cnVjdCBkcm1f
+ZGlzcGxheV9tb2RlIG5lY19ubDQ4MjdoYzE5XzA1Yl9tb2RlID0geworCS5jbG9jayA9IDEwODcw
+LAorCS5oZGlzcGxheSA9IDQ4MCwKKwkuaHN5bmNfc3RhcnQgPSA0ODAgKyAyLAorCS5oc3luY19l
+bmQgPSA0ODAgKyAyICsgNDEsCisJLmh0b3RhbCA9IDQ4MCArIDIgKyA0MSArIDIsCisJLnZkaXNw
+bGF5ID0gMjcyLAorCS52c3luY19zdGFydCA9IDI3MiArIDIsCisJLnZzeW5jX2VuZCA9IDI3MiAr
+IDIgKyA0LAorCS52dG90YWwgPSAyNzIgKyAyICsgNCArIDIsCisJLnZyZWZyZXNoID0gNzQsCit9
+OworCitzdGF0aWMgY29uc3Qgc3RydWN0IHBhbmVsX2Rlc2MgbmVjX25sNDgyN2hjMTlfMDViID0g
+eworCS5tb2RlcyA9ICZuZWNfbmw0ODI3aGMxOV8wNWJfbW9kZSwKKwkubnVtX21vZGVzID0gMSwK
+Kwkuc2l6ZSA9IHsKKwkJLndpZHRoID0gOTUsCisJCS5oZWlnaHQgPSA1NCwKKwl9LAorCS5idXNf
+Zm9ybWF0ID0gTUVESUFfQlVTX0ZNVF9SR0I4ODhfMVgyNAorfTsKKwogc3RhdGljIGNvbnN0IHN0
+cnVjdCBvZl9kZXZpY2VfaWQgcGxhdGZvcm1fb2ZfbWF0Y2hbXSA9IHsKIAl7CiAJCS5jb21wYXRp
+YmxlID0gImFtcGlyZSxhbTgwMDQ4MHIzdG1xd2ExaCIsCkBAIC0xMTI1LDYgKzExNDgsOSBAQCBz
+dGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBwbGF0Zm9ybV9vZl9tYXRjaFtdID0gewog
+CQkuY29tcGF0aWJsZSA9ICJzaGVsbHksc2NhMDcwMTAtYmZuLWxubiIsCiAJCS5kYXRhID0gJnNo
+ZWxseV9zY2EwNzAxMF9iZm5fbG5uLAogCX0sIHsKKwkJLmNvbXBhdGlibGUgPSAibmVjLG5sNDgy
+N2hjMTlfMDViIiwKKwkJLmRhdGEgPSAmbmVjX25sNDgyN2hjMTlfMDViLAorCX0sIHsKIAkJLyog
+c2VudGluZWwgKi8KIAl9CiB9OwotLSAKMi4xLjAuMjcuZzk2ZGIzMjQKCl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
+ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
