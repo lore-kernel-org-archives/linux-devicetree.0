@@ -1,213 +1,259 @@
-From: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 5/6] mfd: devicetree: bindings: 88pm800: Add DT property
- for dual phase enable
-Date: Mon, 13 Jul 2015 19:57:39 +0530
-Message-ID: <55A3CADB.7080701@linaro.org>
-References: <1436442431-3471-1-git-send-email-vaibhav.hiremath@linaro.org> <1436442431-3471-6-git-send-email-vaibhav.hiremath@linaro.org> <55A0C2CB.6060209@samsung.com> <55A36DBF.5020100@linaro.org> <55A3725B.2040801@samsung.com>
+From: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v3 4/5] clk: mediatek: Add USB clock support in MT8173 APMIXEDSYS
+Date: Mon, 13 Jul 2015 22:46:22 +0800
+Message-ID: <CAGS+omBryA6f6gYje5RvF2XcJiebogYCHpyWNeN9K4B-MiHf1Q@mail.gmail.com>
+References: <1436522405-13923-1-git-send-email-jamesjj.liao@mediatek.com> <1436522405-13923-5-git-send-email-jamesjj.liao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55A3725B.2040801-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1436522405-13923-5-git-send-email-jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Heiko Stubner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi James,
 
 
-On Monday 13 July 2015 01:40 PM, Krzysztof Kozlowski wrote:
-> On 13.07.2015 16:50, Vaibhav Hiremath wrote:
->>
->>
->> On Saturday 11 July 2015 12:46 PM, Krzysztof Kozlowski wrote:
->>> W dniu 09.07.2015 o 20:47, Vaibhav Hiremath pisze:
->>>> 88PM860 family of device supports dual phase mode on BUCK1 supply
->>>> providing total 6A capacity.
->>>> Note that by default they operate independently with 3A capacity.
->>>>
->>>> This patch adds the devicetree binding to enable this
->>>> feature.
->>>>
->>>> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>>> ---
->>>>    Documentation/devicetree/bindings/mfd/88pm800.txt | 6 ++++++
->>>>    1 file changed, 6 insertions(+)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/mfd/88pm800.txt
->>>> b/Documentation/devicetree/bindings/mfd/88pm800.txt
->>>> index ae1311c..c756b31 100644
->>>> --- a/Documentation/devicetree/bindings/mfd/88pm800.txt
->>>> +++ b/Documentation/devicetree/bindings/mfd/88pm800.txt
->>>> @@ -15,6 +15,12 @@ Optional properties :
->>>>          CLK32K3 - for 88pm800
->>>>          CLK32K2 - for 88pm860
->>>>
->>>> +   (Applicable only to PXA910 family):
->>>> +
->>>> + - marvell,88pm860-buck1-dualphase-en    : If set, enable dual phase
->>>> on BUCK1,
->>>> +   providing 6A capacity.
->>>> +   Without this both BUCK1A and BUCK1B operates independently with
->>>> 3A capacity.
->>>> +
->>>
->>> 1. How does this relates to regulator driver? The
->>> drivers/regulator/88pm800.c defines constraints for regulator which may
->>> be contradictory.
->>>
->>> 2. This looks like a job for regulator driver, not MFD. Then you could
->>> use standard regulator bindings (setting maximum current to 6A would
->>> change the regulator to different mode).
->>
->> Make sense. and even better.
->>
->> I believe you are referring to,
->>
->> regulator-min-microamp = <3000000>;
->> regulator-max-microamp = <6000000>;
->>
->> And provide set_current_limit() callback, to set the dualphase.
->>
->> Just to clarify more on this,
->>
->> The DT property would look something like,
->>
->> regulators {
->>      compatible = "marvell,88pm80x-regulator";
->>
->>      buck1a: BUCK1A {
->>          regulator-compatible = "buck1";
->>          regulator-min-microvolt = <600000>;
->>          regulator-max-microvolt = <1800000>;
->>
->>          regulator-min-microamp = <3000000>;
->>          regulator-max-microamp = <6000000>;
->>
->>          regulator-boot-on;
->>          regulator-always-on;
->>      };
->>
->>      buck1b: BUCK1B {
->>          regulator-compatible = "buck1b";
->>          regulator-min-microvolt = <600000>;
->>          regulator-max-microvolt = <1800000>;
->>
->>          regulator-min-microamp = <3000000>;
->>          regulator-max-microamp = <6000000>;
->>
->>          regulator-boot-on;
->>          regulator-always-on;
->>      };
->> };
->>
->>
->> And for the platforms, where dual phase is not required,
->> we can either choose not to set these properties or set it to
->>
->>
->>          regulator-min-microamp = <3000000>;
->>          regulator-max-microamp = <3000000>;
+On Fri, Jul 10, 2015 at 6:00 PM, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> Add REF2USB_TX clock support into MT8173 APMIXEDSYS. This clock
+> is needed by USB 3.0.
 >
-> Yes, exactly. I only wonder if regulator core would support properly
-> such bindings - setting current limit for a voltage regulator. I didn't
-> tried this but it should work.
+> Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>  drivers/clk/mediatek/clk-mt8173.c      | 143 +++++++++++++++++++++++++++++++++
+>  drivers/clk/mediatek/clk-pll.c         |   7 +-
+>  include/dt-bindings/clock/mt8173-clk.h |   3 +-
+>  3 files changed, 146 insertions(+), 7 deletions(-)
 >
+> diff --git a/drivers/clk/mediatek/clk-mt8173.c b/drivers/clk/mediatek/clk-mt8173.c
+> index 1d21e26..11f82cb 100644
+> --- a/drivers/clk/mediatek/clk-mt8173.c
+> +++ b/drivers/clk/mediatek/clk-mt8173.c
+> @@ -12,6 +12,7 @@
+>   * GNU General Public License for more details.
+>   */
+>
+> +#include <linux/delay.h>
+>  #include <linux/of.h>
+>  #include <linux/of_address.h>
+>  #include <linux/slab.h>
+> @@ -968,6 +969,141 @@ static void __init mtk_pericfg_init(struct device_node *node)
+>  }
+>  CLK_OF_DECLARE(mtk_pericfg, "mediatek,mt8173-pericfg", mtk_pericfg_init);
+>
+> +#define REF2USB_TX_EN          BIT(0)
+> +#define REF2USB_TX_LPF_EN      BIT(1)
+> +#define REF2USB_TX_OUT_EN      BIT(2)
+> +#define REF2USB_EN_MASK                (REF2USB_TX_EN | REF2USB_TX_LPF_EN | \
+> +                                REF2USB_TX_OUT_EN)
+> +
+> +struct mtk_ref2usb_tx {
+> +       struct clk_hw   hw;
+> +       void __iomem    *base_addr;
+> +};
+> +
+> +static inline struct mtk_ref2usb_tx *to_mtk_ref2usb_tx(struct clk_hw *hw)
+> +{
+> +       return container_of(hw, struct mtk_ref2usb_tx, hw);
+> +}
+> +
+> +static int mtk_ref2usb_tx_is_prepared(struct clk_hw *hw)
+> +{
+> +       struct mtk_ref2usb_tx *tx = to_mtk_ref2usb_tx(hw);
+> +
+> +       return (readl(tx->base_addr) & REF2USB_EN_MASK) == REF2USB_EN_MASK;
+> +}
+> +
+> +static int mtk_ref2usb_tx_prepare(struct clk_hw *hw)
+> +{
+> +       struct mtk_ref2usb_tx *tx = to_mtk_ref2usb_tx(hw);
+> +       u32 val;
+> +
+> +       val = readl(tx->base_addr);
+> +
+> +       val |= REF2USB_TX_EN;
+> +       writel(val, tx->base_addr);
+> +       udelay(100);
+> +
+> +       val |= REF2USB_TX_LPF_EN;
+> +       writel(val, tx->base_addr);
+> +
+> +       val |= REF2USB_TX_OUT_EN;
+> +       writel(val, tx->base_addr);
+> +
+> +       return 0;
+> +}
+> +
+> +static void mtk_ref2usb_tx_unprepare(struct clk_hw *hw)
+> +{
+> +       struct mtk_ref2usb_tx *tx = to_mtk_ref2usb_tx(hw);
+> +       u32 val;
+> +
+> +       val = readl(tx->base_addr);
+> +       val &= ~REF2USB_EN_MASK;
+> +       writel(val, tx->base_addr);
+> +}
+> +
+> +static const struct clk_ops mtk_ref2usb_tx_ops = {
+> +       .is_prepared    = mtk_ref2usb_tx_is_prepared,
+> +       .prepare        = mtk_ref2usb_tx_prepare,
+> +       .unprepare      = mtk_ref2usb_tx_unprepare,
+> +};
 
-Quickly I created a patch (pasted below) for review,
+Burying the implementation of this special "mtk_ref2usb" clock in
+clk-mt8173,c seems a bit awkward.
+Can you please move it to its own file, like mediatek/clk-usb.c?
 
 
-commit 22e846837d425ff6f98b087b8f93989dd0cfc666
-Author: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Date:   Mon Jul 13 19:48:40 2015 +0530
+> +
+> +static struct clk *mtk_clk_register_ref2usb_tx(const char *name,
+> +                       const char *parent_name, void __iomem *reg)
+> +{
+> +       struct mtk_ref2usb_tx *tx;
+> +       struct clk_init_data init = {};
+> +       struct clk *clk;
+> +
+> +       tx = kzalloc(sizeof(*tx), GFP_KERNEL);
+> +       if (!tx)
+> +               return ERR_PTR(-ENOMEM);
+> +
+> +       tx->base_addr = reg;
+> +       tx->hw.init = &init;
+> +
+> +       init.name = name;
+> +       init.ops = &mtk_ref2usb_tx_ops;
+> +       init.parent_names = &parent_name;
+> +       init.num_parents = 1;
+> +
+> +       clk = clk_register(NULL, &tx->hw);
+> +
+> +       if (IS_ERR(clk)) {
+> +               pr_err("Failed to register clk %s: %ld\n", name, PTR_ERR(clk));
+> +               kfree(tx);
+> +       }
+> +
+> +       return clk;
+> +}
+> +
+> +struct mtk_apmixed_ex {
+> +       int id;
+> +       const char *name;
+> +       const char *parent;
+> +       u32 reg_ofs;
+> +};
+> +
+> +#define APMIXED_EX(_id, _name, _parent, _reg_ofs) {                    \
+> +               .id = _id,                                              \
+> +               .name = _name,                                          \
+> +               .parent = _parent,                                      \
+> +               .reg_ofs = _reg_ofs,                                    \
+> +       }
+> +
+> +static const struct mtk_apmixed_ex apmixed_ex[] = {
 
-     regulator: 88pm800: Add support for configuration of dual phase on 
-BUCK1
+__initconst
 
-     88PM860 device supports dual phase mode on BUCK1 output.
-     In normal usecase, BUCK1A and BUCK1B operates independently with 3A
-     capacity. And they both can work as a dual phase providing 6A capacity.
+> +       APMIXED_EX(CLK_APMIXED_REF2USB_TX, "ref2usb_tx", "clk26m", 0x8),
+> +};
+> +
+> +static void __init mtk_clk_register_apmixedsys_special(struct device_node *node,
+> +                       struct clk_onecell_data *clk_data)
+> +{
+> +       void __iomem *base;
+> +       struct clk *clk;
+> +       int i;
+> +
+> +       base = of_iomap(node, 0);
+> +       if (!base) {
+> +               pr_err("%s(): ioremap failed\n", __func__);
+> +               return;
+> +       }
+> +
+> +       for (i = 0; i < ARRAY_SIZE(apmixed_ex); i++) {
+> +               const struct mtk_apmixed_ex *ape = &apmixed_ex[i];
+> +
+> +               clk = mtk_clk_register_ref2usb_tx(ape->name, ape->parent,
+> +                                                       base + ape->reg_ofs);
+> +
+> +               if (IS_ERR(clk)) {
+> +                       pr_err("Failed to register clk %s: %ld\n", ape->name,
+> +                                       PTR_ERR(clk));
+> +                       continue;
+> +               }
+> +
+> +               clk_data->clks[CLK_APMIXED_REF2USB_TX] = clk;
 
-     This patch adds support for regulator_ops.set_current_limit() 
-callback fn,
-     in turn enabling support for current min and max supply constraint 
-on BUCK1
-     (and optionally on BUCK1B). Based on that driver enables dual-phase 
-mode.
+This works assuming ARRAY_SIZE(apmixed_ex) == 1.
+Either remove the loop since it is unnecessary, or do:
+  clk_data->clks[ape->id] = clk;
 
-     (and optionally on BUCK1B). Based on that driver enables dual-phase 
-mode.
-
-     Note that, if max current supply constraint is > 3A on BUCK1(A) 
-then driver
-     enables the dual-phase mode, irrespective of BUCK1B constraint.
-
-     Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-diff --git a/drivers/regulator/88pm800.c b/drivers/regulator/88pm800.c
-index ee4b370..7596210 100644
---- a/drivers/regulator/88pm800.c
-+++ b/drivers/regulator/88pm800.c
-@@ -196,6 +196,42 @@ static int pm800_get_current_limit(struct 
-regulator_dev *rdev)
-         return info->max_ua;
-  }
-
-+/*
-+ * 88pm860 device supports dual-phase mode on BUCK1, where BUCK1A and 
-BUCK1B can
-+ * be used together to supply 6A current.  Note that, independently, 
-they can
-+ * source 3A each.
-+ *
-+ * So, this function checks for max_uA for BUCK1 (only), and if it is 
-more than
-+ * 3A, then enable dual-phase mode.
-+ */
-+static int pm800_set_current_limit(struct regulator_dev *rdev,
-+                               int min_uA, int max_uA)
-+{
-+       struct pm800_regulators *pm800_data = 
-dev_get_drvdata(rdev_get_dev(rdev)->parent);
-+       struct pm80x_chip *chip = pm800_data->chip;
-+       int ret;
-+
-+       /* Currently only supported on 88pm860 device */
-+       if (chip->type != CHIP_PM860)
-+               return 0;
-+
-+       if (rdev->desc->id == PM800_ID_BUCK1) {
-+               /* If max_uA is greater that 3A, enable dual-phase on 
-BUCK1 */
-+               if (max_uA > 3000000) {
-+                       ret = 
-regmap_update_bits(chip->subchip->regmap_power,
-+                                       PM860_BUCK1_MISC,
-+                                       BUCK1_DUAL_PHASE_SEL,
-+                                       BUCK1_DUAL_PHASE_SEL);
-+                       if (ret) {
-+                               dev_err(chip->dev, "failed to access 
-registers\n");
-+                               return ret;
-+                       }
-+               }
-+       }
-+
-+       return 0;
-+}
-+
-  static struct regulator_ops pm800_volt_range_ops = {
-         .list_voltage = regulator_list_voltage_linear_range,
-         .map_voltage = regulator_map_voltage_linear_range,
-@@ -205,6 +241,7 @@ static struct regulator_ops pm800_volt_range_ops = {
-         .disable = regulator_disable_regmap,
-         .is_enabled = regulator_is_enabled_regmap,
-         .get_current_limit = pm800_get_current_limit,
-+       .set_current_limit = pm800_set_current_limit,
-  };
-
-  static struct regulator_ops pm800_volt_table_ops = {
-
+> +       }
+> +}
+> +
+>  #define MT8173_PLL_FMAX                (3000UL * MHZ)
+>
+>  #define CON0_MT8173_RST_BAR    BIT(24)
+> @@ -1010,12 +1146,19 @@ static const struct mtk_pll_data plls[] = {
+>  static void __init mtk_apmixedsys_init(struct device_node *node)
+>  {
+>         struct clk_onecell_data *clk_data;
+> +       int r;
+>
+>         mt8173_pll_clk_data = clk_data = mtk_alloc_clk_data(CLK_APMIXED_NR_CLK);
+>         if (!clk_data)
+>                 return;
+>
+>         mtk_clk_register_plls(node, plls, ARRAY_SIZE(plls), clk_data);
+> +       mtk_clk_register_apmixedsys_special(node, clk_data);
+> +
+> +       r = of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
+> +       if (r)
+> +               pr_err("%s(): could not register clock provider: %d\n",
+> +                       __func__, r);
+>
+>         mtk_clk_enable_critical();
+>  }
+> diff --git a/drivers/clk/mediatek/clk-pll.c b/drivers/clk/mediatek/clk-pll.c
+> index 44409e9..813f0c7 100644
+> --- a/drivers/clk/mediatek/clk-pll.c
+> +++ b/drivers/clk/mediatek/clk-pll.c
+> @@ -302,7 +302,7 @@ void __init mtk_clk_register_plls(struct device_node *node,
+>                 const struct mtk_pll_data *plls, int num_plls, struct clk_onecell_data *clk_data)
+>  {
+>         void __iomem *base;
+> -       int r, i;
+> +       int i;
+>         struct clk *clk;
+>
+>         base = of_iomap(node, 0);
+> @@ -324,9 +324,4 @@ void __init mtk_clk_register_plls(struct device_node *node,
+>
+>                 clk_data->clks[pll->id] = clk;
+>         }
+> -
+> -       r = of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
+> -       if (r)
+> -               pr_err("%s(): could not register clock provider: %d\n",
+> -                       __func__, r);
+>  }
+> diff --git a/include/dt-bindings/clock/mt8173-clk.h b/include/dt-bindings/clock/mt8173-clk.h
+> index 6ce88bf..7b7c555 100644
+> --- a/include/dt-bindings/clock/mt8173-clk.h
+> +++ b/include/dt-bindings/clock/mt8173-clk.h
+> @@ -172,7 +172,8 @@
+>  #define CLK_APMIXED_APLL2              12
+>  #define CLK_APMIXED_LVDSPLL            13
+>  #define CLK_APMIXED_MSDCPLL2           14
+> -#define CLK_APMIXED_NR_CLK             15
+> +#define CLK_APMIXED_REF2USB_TX         15
+> +#define CLK_APMIXED_NR_CLK             16
+>
+>  /* INFRA_SYS */
+>
+> --
+> 1.8.1.1.dirty
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
