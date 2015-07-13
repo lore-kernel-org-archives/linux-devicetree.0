@@ -1,110 +1,154 @@
-From: Phil Edworthy <phil.edworthy-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH v3] phy: rcar-gen2 usb: Add Host/Function switching for
- USB0
-Date: Mon, 13 Jul 2015 17:44:09 +0000
-Message-ID: <SIXPR06MB0639F265BF54B92FE5940139F59C0@SIXPR06MB0639.apcprd06.prod.outlook.com>
-References: <SG2PR06MB0919835888EBD162D4B86C24D8930@SG2PR06MB0919.apcprd06.prod.outlook.com>
- <1436270121-25924-1-git-send-email-phil.edworthy@renesas.com>
- <559FF47A.5000001@cogentembedded.com>
- <SIXPR06MB0639B9810214ACE6C7F91FB6F59C0@SIXPR06MB0639.apcprd06.prod.outlook.com>
- <55A39030.1030601@cogentembedded.com>
- <SIXPR06MB0639D6F8EC3D9091D139FC36F59C0@SIXPR06MB0639.apcprd06.prod.outlook.com>
- <55A3E937.2050804@cogentembedded.com>
- <SIXPR06MB063912FA28F435A8D46CE56CF59C0@SIXPR06MB0639.apcprd06.prod.outlook.com>
- <55A3F0D2.2080908@cogentembedded.com>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [PATCH v7 0/9] Add simple NVMEM Framework via regmap.
+Date: Mon, 13 Jul 2015 20:54:25 +0200 (CEST)
+Message-ID: <1984575203.163267.1436813665815.JavaMail.open-xchange@oxbsltgw06.schlund.de>
+References: <1436521427-10568-1-git-send-email-srinivas.kandagatla@linaro.org>
+Reply-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55A3F0D2.2080908-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Content-Language: en-US
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1436521427-10568-1-git-send-email-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
+Hi Srinivas,
 
-On 13 July 2015 18:10, Sergei wrote:
-> On 07/13/2015 07:55 PM, Phil Edworthy wrote:
-> 
-> >>>>>>> Instead of statically selecting the PHY connection to either the
-> >>>>>>> USBHS (Function) or PCI0 (Host) IP blocks, this change allows the
-> >>>>>>> dts to specifiy gpio pins for the vbus and id signals. Additional
-> 
-> >>>>>>        These GPIOs don't have anything to do with the PHY, they're
-> interfacing
-> 
-> >>>>       Perhaps that was too strong statement but nevertheless...
-> 
-> >>> Looking at your MAX3355 extcon driver, I can't see how it would work on it's
-> >>> own.
-> 
-> >>      I've added the 'extcon' support into the Renesas USBHS driver, so that it
-> >> should be able to sense the ID pin status.
-> 
-> >>> The system needs to sense vbus in order to determine that the board
-> >>> has been plugged into a USB Host.
-<snip>
-Ok, so in summary, the max3355 device has two ways to communicate vbus
-back to a processor. You can either use the vbus signal or the status1/2 signals
-connected as gpios. The status1/2 signals give HNP information for OTG and
-are preferred, but depending on the board, they might not be available.
+[add Ezequiel Garcia to CC]
 
- 
-> >>> My intention is to make the USB PHY driver listen for extcon events instead
-> >>> of directly accessing the ID and VBUS signals, but otherwise behave in the
-> >>> same way it currently does.
-> 
-> >>      I'm not sure the PHY driver should be interested in that...
-> 
-> > Then how is the PHY going to know when to switch between pci0 (host) and
-> > hsusb (function)?
-> 
->     As I said, I planted the extcon hooks directly into USBHS (merged patch)
-> and USB HCD code (unmerged, low quality hack).
-Unless I am missing something, the problem I see with this is that it will not
-dynamically switch between Host and Gadget, hence my suggestion that the
-USB PHY driver be interested in the extcon events.
+> Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> hat am 10. Juli 2015 um
+> 11:43 geschrieben:
+>
+>
+> Hi Greg,
+>
+> This patchset adds a new simple NVMEM framework to kernel, and it is tested
+> with various drivers like "QCOM thermal sensors", "QCOM cpr driver",
+> "begal bone cape manager" and few more on the way.
+>
+> Thankyou all for providing inputs and comments on previous versions of this
+> patchset. Here is the v7 of the patchset addressing all the issues raised as
+> part of previous versions review.
+>
+> Up until now, NVMEM drivers like eeprom were stored in drivers/misc, where
+> they
+> all had to duplicate pretty much the same code to register a sysfs file, allow
+> in-kernel users to access the content of the devices they were driving, etc.
+> This was also a problem as far as other in-kernel users were involved, since
+> the solutions used were pretty much different from on driver to another, there
+> was a rather big abstraction leak.
 
+i only want to mention that there are more places of NVMEM drivers like:
 
-> >>> After reading some other threads, I also intend to set up a fixed regulator
-> >>> for the MAX3355 device to setup the shutdown and vbus enable pins.  I
-> know
-> >>> that the vbus enable should really be controlled some other way depending
-> >>> on the role, but for the moment I think it's ok just to enable it always.
-> 
-> >>      It's OK only in the host mode.
-> >>      I don't think we need regulators. SHDN- is already supported by the driver
-> >> (though it only drives it high at start-up time), in fact it was the only reason
-> >> not to use gpio.
-> 
-> >>> Do you think that is the correct way to progress this?
-> 
-> >>      I didn't have a clear picture how to implement the OTG support at the time
-> >> of writing the MAX3355 driver; actually, I was tasked to only support ID p[in
-> >> sensing.
-> 
-> > Right, so the max3355 driver needs some changes to include vbus handling.
-> > Are you working on this, or should I take it on?
-> 
->     No, not working yet, I have other things on my plate still...
-Ok, thanks for your comments! Hopefully I'll find the time to have a stab at this.
+drivers/mfd/ab3100-otp.c
+drivers/soc/tegra/fuse/*.c
 
+>
+> Introduction of this framework aims at solving this. It also introduces DT
+> representation for consumer devices to go get the data they require (MAC
+> Addresses, SoC/Revision ID, part numbers, and so on) from the NVMEMs.
+>
+> After learning few things about QCOM qfprom and other eeprom/efuses, which
+> has packed fields at bit level. Which makes it important to add support to
+> such memories. This version adds support to this type of non volatile
+> memories by adding support to bit level nvmem-cells.
+>
+> Having regmap interface to this framework would give much better
+> abstraction for nvmems on different buses.
+>
+> patch 1-4 Introduces the NVMEM framework.
+> Patch 5-6 Adds Qualcomm specific qfprom driver.
+> Patch 7 migrates an existing driver to nvmem framework.
+> Patch 8 adds entry in MAINTAINERS.
+>
+> Its also possible to migrate other nvmem drivers to this framework, and I
+> think
+> some of them already posted patches based on this framework.
+>
+> Providers APIs:
+> nvmem_register/unregister();
 
-> >>      Note that there's some ongoing effort now on linux-usb to support OTG
-> >> functionality.
-> 
-> > Yes, I need to spend some time reading that list!
-> 
-> > Thanks
-> > Phil
-> 
-> WBR, Sergei
+How do i get the cell info from the devicetree into the nvmem_config?
 
-Thanks
-Phil
+I expected a function something like of_nvmem_cell_info_get() in the Providers
+API.
+
+>
+> Consumers APIs:
+> Cell based apis for both DT/Non-DT:
+> nvmem_cell_get()/nvmem_cell_put();
+> devm_nvmem_cell_get()/devm_nvmem_cell_put();
+> of_nvmem_cell_get()
+> nvmem_cell_read()/nvmem_cell_write();
+>
+> Raw byte access apis for both DT/non-DT.
+> nvmem_device_get()/nvmem_device_put()
+> devm_nvmem_device_get()/nvmem_device_put()
+> of_nvmem_device_get()
+>
+> nvmem_device_read()/nvmem_device_write();
+> nvmem_device_cell_read()/nvmem_device_cell_write();
+>
+> Device Tree:
+>
+> /* Provider */
+> qfprom: qfprom@00700000 {
+> ...
+>
+> /* Data cells */
+> tsens_calibration: calib@404 {
+> reg = <0x404 0x10>;
+> };
+>
+> tsens_calibration_bckp: calib_bckp@504 {
+> reg = <0x504 0x11>;
+> bit-offset = 6;
+> nbits = 128;
+> };
+>
+> pvs_version: pvs-version@6 {
+> reg = <0x6 0x2>
+> bit-offset = 7;
+> nbits = 2;
+> };
+>
+> speed_bin: speed-bin@c{
+> reg = <0xc 0x1>;
+> bit-offset = 2;
+> nbits = 3;
+>
+> };
+> ...
+> };
+> /* Consumer */
+> tsens {
+> ...
+> nvmem-cells = <&tsens_calibration>;
+> nvmem-cell-names = "calibration";
+> };
+>
+> userspace interface: binary file in /sys/bus/nvmem/devices/*/nvmem
+>
+> ex:
+> hexdump /sys/bus/nvmem/devices/qfprom0/nvmem
+>
+> 0000000 0000 0000 0000 0000 0000 0000 0000 0000
+> *
+> 00000a0 db10 2240 0000 e000 0c00 0c00 0000 0c00
+> 0000000 0000 0000 0000 0000 0000 0000 0000 0000
+> ...
+> *
+> 0001000
+
+Since we're entering userspace the behavior should be clear.
+
+How do we treat register gaps? Fill them with zero?
+
+Best regards
+Stefan
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
