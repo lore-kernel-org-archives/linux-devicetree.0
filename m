@@ -1,93 +1,110 @@
-From: Josh Cartwright <joshc-acOepvfBmUk@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] rtc: add rtc-lpc24xx driver
-Date: Mon, 13 Jul 2015 12:37:39 -0500
-Message-ID: <20150713173739.GF25028@jcartwri.amer.corp.natinst.com>
-References: <1436635730-15617-1-git-send-email-manabian@gmail.com>
- <1436635730-15617-2-git-send-email-manabian@gmail.com>
+From: Phil Edworthy <phil.edworthy-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH v3] phy: rcar-gen2 usb: Add Host/Function switching for
+ USB0
+Date: Mon, 13 Jul 2015 17:44:09 +0000
+Message-ID: <SIXPR06MB0639F265BF54B92FE5940139F59C0@SIXPR06MB0639.apcprd06.prod.outlook.com>
+References: <SG2PR06MB0919835888EBD162D4B86C24D8930@SG2PR06MB0919.apcprd06.prod.outlook.com>
+ <1436270121-25924-1-git-send-email-phil.edworthy@renesas.com>
+ <559FF47A.5000001@cogentembedded.com>
+ <SIXPR06MB0639B9810214ACE6C7F91FB6F59C0@SIXPR06MB0639.apcprd06.prod.outlook.com>
+ <55A39030.1030601@cogentembedded.com>
+ <SIXPR06MB0639D6F8EC3D9091D139FC36F59C0@SIXPR06MB0639.apcprd06.prod.outlook.com>
+ <55A3E937.2050804@cogentembedded.com>
+ <SIXPR06MB063912FA28F435A8D46CE56CF59C0@SIXPR06MB0639.apcprd06.prod.outlook.com>
+ <55A3F0D2.2080908@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="sdOeJE8sLwpQaOMV"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1436635730-15617-2-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55A3F0D2.2080908-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Content-Language: en-US
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Sergei,
 
---sdOeJE8sLwpQaOMV
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 13 July 2015 18:10, Sergei wrote:
+> On 07/13/2015 07:55 PM, Phil Edworthy wrote:
+> 
+> >>>>>>> Instead of statically selecting the PHY connection to either the
+> >>>>>>> USBHS (Function) or PCI0 (Host) IP blocks, this change allows the
+> >>>>>>> dts to specifiy gpio pins for the vbus and id signals. Additional
+> 
+> >>>>>>        These GPIOs don't have anything to do with the PHY, they're
+> interfacing
+> 
+> >>>>       Perhaps that was too strong statement but nevertheless...
+> 
+> >>> Looking at your MAX3355 extcon driver, I can't see how it would work on it's
+> >>> own.
+> 
+> >>      I've added the 'extcon' support into the Renesas USBHS driver, so that it
+> >> should be able to sense the ID pin status.
+> 
+> >>> The system needs to sense vbus in order to determine that the board
+> >>> has been plugged into a USB Host.
+<snip>
+Ok, so in summary, the max3355 device has two ways to communicate vbus
+back to a processor. You can either use the vbus signal or the status1/2 signals
+connected as gpios. The status1/2 signals give HNP information for OTG and
+are preferred, but depending on the board, they might not be available.
 
-On Sat, Jul 11, 2015 at 07:28:49PM +0200, Joachim Eastwood wrote:
-> Add driver for the RTC found on NXP LPC178x/18xx/408x/43xx devices.
-> The RTC provides calendar and clock functionality together with
-> alarm interrupt support.
->=20
-> Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
-[..]
-> +static int lpc24xx_rtc_remove(struct platform_device *pdev)
-> +{
-> +	struct lpc24xx_rtc *rtc =3D platform_get_drvdata(pdev);
-> +
-> +	/* Ensure all interrupt sources are masked */
-> +	rtc_writel(rtc, LPC24XX_AMR, LPC24XX_ALARM_DISABLE);
-> +	rtc_writel(rtc, LPC24XX_CIIR, 0);
-> +
-> +	rtc_writel(rtc, LPC24XX_CCR, LPC178X_CCALEN);
-> +
-> +	clk_disable_unprepare(rtc->clk_rtc);
-> +	clk_disable_unprepare(rtc->clk_reg);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id lpc24xx_rtc_match[] =3D {
-> +	{ .compatible =3D "nxp,lpc1788-rtc" },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, lpc24xx_rtc_match);
-> +
-> +static struct platform_driver lpc24xx_rtc_driver =3D {
-> +	.probe	=3D lpc24xx_rtc_probe,
-> +	.remove	=3D lpc24xx_rtc_remove,
-> +	.driver	=3D {
-> +		.name =3D "lpc24xx-rtc",
-> +		.of_match_table	=3D lpc24xx_rtc_match,
-> +	},
-> +};
-> +module_platform_driver(lpc24xx_rtc_driver);
-> +
-> +MODULE_AUTHOR("Kevin Wells <wellsk40-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org");
+ 
+> >>> My intention is to make the USB PHY driver listen for extcon events instead
+> >>> of directly accessing the ID and VBUS signals, but otherwise behave in the
+> >>> same way it currently does.
+> 
+> >>      I'm not sure the PHY driver should be interested in that...
+> 
+> > Then how is the PHY going to know when to switch between pci0 (host) and
+> > hsusb (function)?
+> 
+>     As I said, I planted the extcon hooks directly into USBHS (merged patch)
+> and USB HCD code (unmerged, low quality hack).
+Unless I am missing something, the problem I see with this is that it will not
+dynamically switch between Host and Gadget, hence my suggestion that the
+USB PHY driver be interested in the extcon events.
 
-Missing closing '>'.
 
-Otherwise,
+> >>> After reading some other threads, I also intend to set up a fixed regulator
+> >>> for the MAX3355 device to setup the shutdown and vbus enable pins.  I
+> know
+> >>> that the vbus enable should really be controlled some other way depending
+> >>> on the role, but for the moment I think it's ok just to enable it always.
+> 
+> >>      It's OK only in the host mode.
+> >>      I don't think we need regulators. SHDN- is already supported by the driver
+> >> (though it only drives it high at start-up time), in fact it was the only reason
+> >> not to use gpio.
+> 
+> >>> Do you think that is the correct way to progress this?
+> 
+> >>      I didn't have a clear picture how to implement the OTG support at the time
+> >> of writing the MAX3355 driver; actually, I was tasked to only support ID p[in
+> >> sensing.
+> 
+> > Right, so the max3355 driver needs some changes to include vbus handling.
+> > Are you working on this, or should I take it on?
+> 
+>     No, not working yet, I have other things on my plate still...
+Ok, thanks for your comments! Hopefully I'll find the time to have a stab at this.
 
-Reviewed-by: Josh Cartwright <joshc-acOepvfBmUk@public.gmane.org>
 
-  Josh
+> >>      Note that there's some ongoing effort now on linux-usb to support OTG
+> >> functionality.
+> 
+> > Yes, I need to spend some time reading that list!
+> 
+> > Thanks
+> > Phil
+> 
+> WBR, Sergei
 
---sdOeJE8sLwpQaOMV
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAABCAAGBQJVo/dgAAoJEKp7ZBKwQFAr4BkH/jxWe3K1eCx9B1luX1iyiMnL
-Nw6HK2BjU4bIxVwXE2fv0fp1Jvd/uzOwttpOyHyuFRsOR9X+saRuGpOImeAjHwMl
-5g3I0NxC0zT7Y7f9+iNV9V7X/Vl7slFXoHQSNiPwrRevFsHAK4HXDeXYRBHQKjhT
-byLCwDL6OErJcEmhzVXUBRQkKTqKOgaNKPN6HNE1ScNsNED+gj+eay/9Wkob0dj/
-NHlAvDeR+cK0T4/1C/iw5ru/sV5qinFQtYVUor7q3AJCLuX0IDf9dC5FIDU1f8yY
-yutmb6pVrS8UscIKMZ6rKo83oQIOT5YbPpnTJuzmHg7SWe3zByGwC6bc/AsHwyY=
-=SzwP
------END PGP SIGNATURE-----
-
---sdOeJE8sLwpQaOMV--
+Thanks
+Phil
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
