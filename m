@@ -1,71 +1,71 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH v2 11/12] ASoC: tegra: register dependency
- parser for firmware nodes
-Date: Mon, 13 Jul 2015 16:42:55 +0100
-Message-ID: <20150713154254.GH11162@sirena.org.uk>
-References: <1435743667-11987-1-git-send-email-tomeu.vizoso@collabora.com>
- <1435743667-11987-12-git-send-email-tomeu.vizoso@collabora.com>
- <20150701173802.GW11162@sirena.org.uk>
- <CAAObsKDsEuDS46rW9CMuviDEDV-OVXe5q-kiWmw0D_n2D3Tf5A@mail.gmail.com>
+From: Eric Anholt <eric@anholt.net>
+Subject: Re: [PATCH 4/4] irqchip: Add bcm2836 interrupt controller for Raspberry Pi 2.
+Date: Mon, 13 Jul 2015 09:06:10 -0700
+Message-ID: <878uakqbyl.fsf@eliezer.anholt.net>
+References: <1436303617-17185-1-git-send-email-eric@anholt.net> <1436303617-17185-5-git-send-email-eric@anholt.net> <55A0A5EB.4090007@wwwdotorg.org> <alpine.DEB.2.11.1507110940420.17353@nanos>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="xZKIQynyWHxCFrdv"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAAObsKDsEuDS46rW9CMuviDEDV-OVXe5q-kiWmw0D_n2D3Tf5A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux PWM List <linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.11.1507110940420.17353@nanos>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>, Stephen Warren <swarren@wwwdotorg.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Lee Jones <lee@kernel.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrea Merello <andrea.merello@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
---xZKIQynyWHxCFrdv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thomas Gleixner <tglx@linutronix.de> writes:
 
-On Mon, Jul 13, 2015 at 02:10:45PM +0200, Tomeu Vizoso wrote:
-> On 1 July 2015 at 19:38, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> > On Wed, Jul 01, 2015 at 11:41:06AM +0200, Tomeu Vizoso wrote:
+> On Fri, 10 Jul 2015, Stephen Warren wrote:
+>> On 07/07/2015 03:13 PM, Eric Anholt wrote:
+>> > +static void bcm2836_mask_per_cpu_irq(unsigned int reg, unsigned int b=
+it)
+>> > +{
+>> > +	void __iomem *reg_base =3D intc.base + reg;
+>> > +	unsigned int i;
+>> > +
+>> > +	for (i =3D 0; i < 4; i++)
+>>=20
+>> Is "4" there the CPU count? Perhaps this should use one of the Linux
+>> APIs to query the CPU count rather than hard-coding it?
+>>=20
+>> Should per-CPU IRQs automatically be masked on all CPUs at once, or only
+>> on the current CPU? A very quick look at the ARM GIC driver implies it
+>> doesn't iterate over all CPUs when masking per-CPU IRQs.
+>
+> Usually per cpu interrupts are only masked on the cpu which is calling
+> the function. The whole reason why per cpu interrupts exist is that
+> you can share the same interrupt number for all cores.
+>
+> So masking all interrupts is not a good idea. In this case if a cpu is
+> hot unplugged, then all other cpus would not longer get timer
+> interrupts. Not what you really want, right?
 
-> >> +static void tegra_max98090_get_dependencies(struct fwnode_handle *fwnode,
-> >> +                                         struct list_head *deps)
-> >> +{
-> >> +     add_dependency(fwnode, "nvidia,i2s-controller", deps);
-> >> +     add_dependency(fwnode, "nvidia,audio-codec", deps);
-> >> +}
+I was replicating the behavior of the downstream driver, but it seemed
+suspicious.  Converting to using smp_processor_id() to just mask/unmask
+this CPU's interrupts seems to have gone fine.
 
-> > Why is this all being open coded in an individual driver (we already
-> > know about and manage all these dependencies in the core...)?  If we're
-> > going to do this I'd expect the interface for specifying DT nodes to the
-> > core to be changed to support this.
-
-> Are you thinking of changing drivers to acquire their resources
-> through Arnd's devm_probe (only that the resource table would have to
-> be in struct device_driver)?
-
-> https://lkml.kernel.org/g/4742258.TBitC3hVuO@wuerfel
-
-No, I'm looking at how we already have all the "did all my dependencies
-appear" logic in the core based on data provided by the drivers.
-
---xZKIQynyWHxCFrdv
+--=-=-=
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Version: GnuPG v1
 
-iQEcBAEBCAAGBQJVo9x+AAoJECTWi3JdVIfQCtwH/iR0OWw9MmX0rTpPvdi+DKPm
-GHa0Sy8ieGKrBj60HzGLfLWerctXgSsB/dFWytfnpg4ebqe3Yc4TIcvADmbcA84L
-4nq+I73X1bB9XrAd6+DEAAZ3pWdInbgw+P+VBdZJAmFHaY7pg7SeQmZr4xs3vaPh
-6awa7eHWto27IT7zrOLHy12bBcFwmWZTQ/qh4XMWUPMc30/mfUoGBFzw+YokJGnw
-sFv3JkWM7bXEDdv2y1Vd39730mDC3K8dCMadzDBIcgfECKUR2/Gmh0vxttkhyy6d
-jTa4et1Urk1BsEoVSTT70QFvrvMveGGfFO7tXOD9qWE96pV7B6yIYEhjEne0Eg4=
-=Q8CS
+iQIcBAEBCgAGBQJVo+HzAAoJELXWKTbR/J7o0g8P/iJiJ5gr3R0ML3cxzE42iFO3
+kfuD/1jpkEt9tCywJ57OSVaXTUtAbNyQty1SQUwOe+o3GWmhbQdR/OZf8MFm9AOn
+F3NPDhLCrxTSdCRr/ZCkEP3fKmkhbjNZOF8TGBW3IfWNRq3fkUxoxPL21lBKI54V
+Yq3qjFttpw7GR/UfHtlYtnwegNGmYhGfiqKGvfy8zjng8w40I89EIdjbf8sYqwpf
+pELh2X6dqCSN/OQej1kKKRUO7GtOwzOBTYgi3jVOl3J4i5ww0jDJlOKgSoW/lQZ7
++YAmkyjYzO5/wMNZVd/WOrl6q9H+jvg1ubqTQX1FUkeRhlMCkGn+EcVPRPNHC5AO
+fE7oaviUpXjj+Lf/WK6CP5sOMW+vI+hiSd3EaacndPY44SkyZgD1jz9bh4mHbVDw
+RM3vtLggaLM2PYoUpYdkYe/HelPsMiMi25QcWew5wwe9sglXuoC6PlYH/ZM45au5
+mtz8HVC8HnbJFas72axIcCDr8gqWvhUOr3freuA7EMNwmWb+h1VitubHBJMAzv8E
+Dnb3+TbRknCLKmx0ZQWJvmEfzhWF9azC5D6PHGX5lZ3iw5PC5UkFY+fdrJKqnJg+
+09n1hVO3RzdZrt7CHwp5839SsdhNQi/CrcPqMUi9AvznWAPdklRPnIGW/MppLJlz
+ZkldkbHW7XHVorI6Bbf7
+=VJo0
 -----END PGP SIGNATURE-----
-
---xZKIQynyWHxCFrdv--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=-=-=--
