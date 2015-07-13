@@ -1,187 +1,63 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: [PATCH V3 10/19] drm/tegra: dc: Prepare for generic PM domains
-Date: Mon, 13 Jul 2015 13:39:48 +0100
-Message-ID: <1436791197-32358-11-git-send-email-jonathanh@nvidia.com>
-References: <1436791197-32358-1-git-send-email-jonathanh@nvidia.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 03/12] mtd: nand: omap: Move IRQ handling from GPMC to
+ NAND driver
+Date: Mon, 13 Jul 2015 05:40:59 -0700
+Message-ID: <20150713124059.GF26485@atomide.com>
+References: <1436531019-18088-1-git-send-email-rogerq@ti.com>
+ <1436531019-18088-4-git-send-email-rogerq@ti.com>
+ <20150713071008.GC26485@atomide.com>
+ <55A38D2E.9010500@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1436791197-32358-1-git-send-email-jonathanh@nvidia.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, =?UTF-8?q?Terje=20Bergstr=C3=B6m?= <tbergstrom@nvidia.com>, Hans de Goede <hdegoede@redhat.com>, Tejun Heo <tj@kernel.org>
-Cc: Vince Hsu <vinceh@nvidia.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <55A38D2E.9010500@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: dwmw2@infradead.org, computersforpeace@gmail.com, bcousson@baylibre.com, ezequiel@vanguardiasur.com.ar, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add support to the tegra dc driver for generic PM domains. However,
-to ensure backward compatibility with older device tree blobs ensure
-that the driver can work with or without generic PM domains. In order
-to migrate to generic PM domain infrastructure the necessary changes
-are:
+* Roger Quadros <rogerq@ti.com> [150713 03:07]:
+> Tony,
+> 
+> On 13/07/15 10:10, Tony Lindgren wrote:
+> > * Roger Quadros <rogerq@ti.com> [150710 05:26]:
+> >> Since the Interrupt Events are used only by the NAND driver,
+> >> there is no point in managing the Interrupt registers
+> >> in the GPMC driver and complicating it with irqchip modeling.
+> > 
+> > I don't think it's a good idea to allow external drivers to
+> > tinker directly with GPMC registers. How about just set up GPMC
+> > as an irqchip for the edge detection interrupts?
+> > 
+> > I think we already have devices with multiple NAND chips. And
+> > there's nothing stopping other drivers from using the edge
+> > detection interrupts.
+> 
+> OK. The GPMC_IRQ registers manage 2 NAND specific interrupts
+> (terminalcount and fifo) and 'n' WAIT pin edge interrupts.
+> 
+>  So we can model this as a irqchip with 'n + 2' interrupts.
 
-1. If the "power-domains" property is present in the DT device node then
-   generic PM domains is supported and pm_runtime_enable() should be
-   called for the device. Furthermore, the enabling and disabling of the
-   power-domain is handled via calling pm_runtime_get/put, respectively.
-
-2. To ensure that clocks are managed consistently when generic PM domains
-   are used and are not used, drivers should be migrated to use the
-   tegra_powergate_power_on_legacy() and tegra_powergate_power_off_legacy()
-   functions instead of the current tegra_powergate_sequence_power_up()
-   and tegra_powergate_power_off(). The purpose of the
-   tegra_powergate_power_on_legacy() and tegra_powergate_power_off_legacy()
-   APIs is to mimick the behaviour of the tegra generic power-domain code,
-   such that if generic power domains are not supported the functionality
-   is the same.
-
-3. The main difference between the tegra_powergate_sequence_power_up() API
-   and the tegra_powergate_power_on_legacy() is that the clock used to
-   enable the powergate is not kept enabled when using the
-   tegra_powergate_power_on_legacy() API. Therefore, drivers must enable
-   the clocks they need after calling tegra_powergate_power_on_legacy()
-   and disable these clocks before calling
-   tegra_powergate_power_off_legacy().
-
-Helper functions have been added to the dc driver for handling power on
-and off the power-domains with and without generic PM domain support.
-
-Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
----
- drivers/gpu/drm/tegra/dc.c | 94 +++++++++++++++++++++++++++++-----------------
- 1 file changed, 59 insertions(+), 35 deletions(-)
-
-diff --git a/drivers/gpu/drm/tegra/dc.c b/drivers/gpu/drm/tegra/dc.c
-index a287e4fec865..a5b2475a7b9c 100644
---- a/drivers/gpu/drm/tegra/dc.c
-+++ b/drivers/gpu/drm/tegra/dc.c
-@@ -10,6 +10,7 @@
- #include <linux/clk.h>
- #include <linux/debugfs.h>
- #include <linux/iommu.h>
-+#include <linux/pm_runtime.h>
- #include <linux/reset.h>
+OK
  
- #include <soc/tegra/pmc.h>
-@@ -1880,6 +1881,49 @@ static int tegra_dc_parse_dt(struct tegra_dc *dc)
- 	return 0;
- }
- 
-+static void tegra_dc_power_off(struct tegra_dc *dc)
-+{
-+	if (!dc->soc->has_powergate)
-+		reset_control_assert(dc->rst);
-+
-+	clk_disable_unprepare(dc->clk);
-+
-+	if (dc->soc->has_powergate) {
-+		if (pm_runtime_enabled(dc->dev))
-+			pm_runtime_put_sync(dc->dev);
-+		else
-+			tegra_powergate_power_off_legacy(dc->powergate,
-+							 dc->clk, dc->rst);
-+	}
-+}
-+
-+static int tegra_dc_power_on(struct tegra_dc *dc)
-+{
-+	int err;
-+
-+	if (dc->soc->has_powergate) {
-+		if (pm_runtime_enabled(dc->dev))
-+			err = pm_runtime_get_sync(dc->dev);
-+		else
-+			err = tegra_powergate_power_on_legacy(dc->powergate,
-+							      dc->clk, dc->rst);
-+		if (err < 0) {
-+			dev_err(dc->dev, "failed to power partition: %d\n",
-+				err);
-+			return err;
-+		}
-+	}
-+
-+	err = clk_prepare_enable(dc->clk);
-+	if (err < 0)
-+		dev_err(dc->dev, "failed to enable clock: %d\n", err);
-+
-+	if (!dc->soc->has_powergate)
-+		reset_control_deassert(dc->rst);
-+
-+	return err;
-+}
-+
- static int tegra_dc_probe(struct platform_device *pdev)
- {
- 	unsigned long flags = HOST1X_SYNCPT_CLIENT_MANAGED;
-@@ -1917,35 +1961,6 @@ static int tegra_dc_probe(struct platform_device *pdev)
- 		return PTR_ERR(dc->rst);
- 	}
- 
--	if (dc->soc->has_powergate) {
--		if (dc->pipe == 0)
--			dc->powergate = TEGRA_POWERGATE_DIS;
--		else
--			dc->powergate = TEGRA_POWERGATE_DISB;
--
--		err = tegra_powergate_sequence_power_up(dc->powergate, dc->clk,
--							dc->rst);
--		if (err < 0) {
--			dev_err(&pdev->dev, "failed to power partition: %d\n",
--				err);
--			return err;
--		}
--	} else {
--		err = clk_prepare_enable(dc->clk);
--		if (err < 0) {
--			dev_err(&pdev->dev, "failed to enable clock: %d\n",
--				err);
--			return err;
--		}
--
--		err = reset_control_deassert(dc->rst);
--		if (err < 0) {
--			dev_err(&pdev->dev, "failed to deassert reset: %d\n",
--				err);
--			return err;
--		}
--	}
--
- 	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	dc->regs = devm_ioremap_resource(&pdev->dev, regs);
- 	if (IS_ERR(dc->regs))
-@@ -1961,6 +1976,20 @@ static int tegra_dc_probe(struct platform_device *pdev)
- 	dc->client.ops = &dc_client_ops;
- 	dc->client.dev = &pdev->dev;
- 
-+	if (dc->soc->has_powergate) {
-+		if (dc->pipe == 0)
-+			dc->powergate = TEGRA_POWERGATE_DIS;
-+		else
-+			dc->powergate = TEGRA_POWERGATE_DISB;
-+
-+		if (of_property_read_bool(pdev->dev.of_node, "power-domains"))
-+			pm_runtime_enable(&pdev->dev);
-+	}
-+
-+	err = tegra_dc_power_on(dc);
-+	if (err < 0)
-+		return err;
-+
- 	err = tegra_dc_rgb_probe(dc);
- 	if (err < 0 && err != -ENODEV) {
- 		dev_err(&pdev->dev, "failed to probe RGB output: %d\n", err);
-@@ -2003,12 +2032,7 @@ static int tegra_dc_remove(struct platform_device *pdev)
- 		return err;
- 	}
- 
--	reset_control_assert(dc->rst);
--
--	if (dc->soc->has_powergate)
--		tegra_powergate_power_off(dc->powergate);
--
--	clk_disable_unprepare(dc->clk);
-+	tegra_dc_power_off(dc);
- 
- 	return 0;
- }
--- 
-2.1.4
+> We need to take care that if a GPMC chip select needs a
+> wait pin then it can't be used as a generic interrupt.
+> 
+> We need to get rid of omap_dev_ready() in nand/omap2.c as
+> it accesses the GPMC_STATUS register directly. Plus it is
+> hard coded to only monitor wait0 pin.
 
+OK
+ 
+> What is the best map we should use for irqchip?
+> Some Socs have 4 WAIT pins, some have 3 and some have 2.
+> 
+> Should we start with 0,1,2, for the wait pins and use the next
+> available free one for the NAND?
+
+Maybe we can just use the bits defined for each SoC in the
+GPMC_IRQSTATUS register for the mapping?  
+Regards,
+
+Tony
