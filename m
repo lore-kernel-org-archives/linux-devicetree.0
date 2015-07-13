@@ -1,68 +1,75 @@
-From: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 0/3] ARM: OMAP2+: wkup_m3_rproc support patches
-Date: Mon, 13 Jul 2015 12:15:10 -0500
-Message-ID: <55A3F21E.6050301@ti.com>
-References: <1427917630-43961-1-git-send-email-d-gerlach@ti.com> <559ED0AB.4020703@ti.com> <20150713072529.GD26485@atomide.com> <20150713072750.GE26485@atomide.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+From: Kyle Huey <me-OhBmq/TcCDJWk0Htik3J/w@public.gmane.org>
+Subject: [RESEND PATCH v3] ARM: tegra124: pmu support
+Date: Mon, 13 Jul 2015 10:35:45 -0700
+Message-ID: <1436808945-14524-1-git-send-email-khuey@kylehuey.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150713072750.GE26485-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:TEGRA ARCHITECTUR..." <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Kyle Huey <khuey-OhBmq/TcCDJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/13/2015 02:27 AM, Tony Lindgren wrote:
-> * Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [150713 00:28]:
->> * Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org> [150709 12:53]:
->>> Tony,
->>> On 04/01/2015 02:47 PM, Dave Gerlach wrote:
->>>> This series adds the mach-omap2 code and DT nodes for v3 of the
->>>> wkup_m3_rproc driver submitted here [1]. pdata-quirks patch requires
->>>> the pdata added with patch 4 of the aforementioned series. Based on
->>>> previous discussion here [2], the wkup_m3 DT node has been moved as a
->>>> child of the l4_wkup as is done for l4_wkup components in Tero Kristo's
->>>> series "PRCM+SCM cleanup against 4.0-rc1" found here [3]. Because of that,
->>>> this series applies cleanly on top of that series in order to leverage the
->>>> l4_wkup parent node introduced there.
->>>>
->>>> In addition to the move of the wkup_m3 node for am33xx, a new patch
->>>> has been added to introduce the wkup_m3 node in the same fashion for
->>>> am43xx as both SoCs use the same configuration. With this change
->>>> support was also added to pdata-quirks for passing reset handlers to
->>>> the driver for the am43xx binding as was already done for am33xx.
->>>>
->>>> I have pushed a branch containing all patches for am335x suspend
->>>> here for a big picture view of how all patches fit together with
->>>> these wkup_m3_rproc series [4].
->>>>
->>>> v2->v3:
->>>> -Change ti,am3353-wkup-m3 compat to ti,am3352-wkup-m3 to reflect
->>>>  binding documentation change
->>>> -Add ti,am4372-wkup-m3 node to am4372 SoC dt file
->>>> -Add am4372 support to pdata-quirks for reset handlers
->>>
->>> Now that Ohad has sent a pull request for the wkup_m3_rproc driver [1] and it
->>> has been merged is it possible for this series with the DT nodes and pdata-quirk
->>> to get picked up? Let me know and I can rebase and resend if you'd like.
->>
->> Yes this series looks good to me now, will queue for v4.3.
-> 
-> Looks like you need to repost this series again against v4.2-rc2 
-> to apply though.
+This patch modifies the device tree for tegra124 based devices to enable
+the Cortex A15 PMU.  The interrupt numbers are taken from NVIDIA TRM
+DP-06905-001_v03p.  This patch was tested on a Jetson TK1.
 
-Ok will do, thanks!
+Updated for proper ordering and to add interrupt-affinity values.
 
-Regards,
-Dave
+Signed-off-by: Kyle Huey <khuey-OhBmq/TcCDJWk0Htik3J/w@public.gmane.org>
+---
+ arch/arm/boot/dts/tegra124.dtsi | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
->  
-> Regards,
-> 
-> Tony
->  
->>> [1] https://lkml.org/lkml/2015/7/1/354
+diff --git a/arch/arm/boot/dts/tegra124.dtsi b/arch/arm/boot/dts/tegra124.dtsi
+index 13cc7ca..de07d7e 100644
+--- a/arch/arm/boot/dts/tegra124.dtsi
++++ b/arch/arm/boot/dts/tegra124.dtsi
+@@ -918,31 +918,40 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 
+-		cpu@0 {
++		A15_0: cpu@0 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a15";
+ 			reg = <0>;
+ 		};
+ 
+-		cpu@1 {
++		A15_1: cpu@1 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a15";
+ 			reg = <1>;
+ 		};
+ 
+-		cpu@2 {
++		A15_2: cpu@2 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a15";
+ 			reg = <2>;
+ 		};
+ 
+-		cpu@3 {
++		A15_3: cpu@3 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a15";
+ 			reg = <3>;
+ 		};
+ 	};
+ 
++	pmu {
++		compatible = "arm,cortex-a15-pmu";
++		interrupts = <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-affinity = <&A15_0>, <&A15_1>, <&A15_2>, <&A15_3>;
++	};
++
+ 	thermal-zones {
+ 		cpu {
+ 			polling-delay-passive = <1000>;
+-- 
+1.9.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
