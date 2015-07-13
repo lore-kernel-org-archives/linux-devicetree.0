@@ -1,33 +1,82 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 03/12] mtd: nand: omap: Move IRQ handling from GPMC to
- NAND driver
-Date: Mon, 13 Jul 2015 00:10:09 -0700
-Message-ID: <20150713071008.GC26485@atomide.com>
-References: <1436531019-18088-1-git-send-email-rogerq@ti.com>
- <1436531019-18088-4-git-send-email-rogerq@ti.com>
+From: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/6] mfd: 88pm800: Add init time initial configuration
+ support
+Date: Mon, 13 Jul 2015 12:40:57 +0530
+Message-ID: <55A36481.80206@linaro.org>
+References: <1436442431-3471-1-git-send-email-vaibhav.hiremath@linaro.org> <1436442431-3471-3-git-send-email-vaibhav.hiremath@linaro.org> <55A0BD78.8050005@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1436531019-18088-4-git-send-email-rogerq@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: dwmw2@infradead.org, computersforpeace@gmail.com, bcousson@baylibre.com, ezequiel@vanguardiasur.com.ar, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55A0BD78.8050005-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Roger Quadros <rogerq@ti.com> [150710 05:26]:
-> Since the Interrupt Events are used only by the NAND driver,
-> there is no point in managing the Interrupt registers
-> in the GPMC driver and complicating it with irqchip modeling.
 
-I don't think it's a good idea to allow external drivers to
-tinker directly with GPMC registers. How about just set up GPMC
-as an irqchip for the edge detection interrupts?
 
-I think we already have devices with multiple NAND chips. And
-there's nothing stopping other drivers from using the edge
-detection interrupts.
+On Saturday 11 July 2015 12:23 PM, Krzysztof Kozlowski wrote:
+> W dniu 09.07.2015 o 20:47, Vaibhav Hiremath pisze:
+>> This patch adds init time configuration of 88PM800/805 and
+>> 88PM860. It includes,
+>>
+>>    - Enable BUCK clock gating in low power mode
+>>    - Full mode support for BUCK2 and 4
+>>    - Enable voltage change (LPF, DVC) in PMIC
+>>
+>> Note that both 88PM800 and 88PM860 do share common configurations,
+>> but since I can not validate the configuration on 88PM800,
+>> restricting myself only to 88PM860.
+>> If anyone can validate on 88PM800, we can move common code accordingly.
+>>
+>> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>
+> Although I am not familiar with the device and driver, patch looks good
+> to me, except one idea below. Anyway feel free to add:
+>
+> Reviewed-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>
 
-Regards,
+Thanks for your review.
 
-Tony
+>
+>> ---
+>>   drivers/mfd/88pm800.c       | 64 +++++++++++++++++++++++++++++++++++++++++++++
+>>   include/linux/mfd/88pm80x.h | 13 +++++++++
+>>   2 files changed, 77 insertions(+)
+>>
+>> diff --git a/drivers/mfd/88pm800.c b/drivers/mfd/88pm800.c
+>> index 95c8ad4..80a1bc1 100644
+>> --- a/drivers/mfd/88pm800.c
+>> +++ b/drivers/mfd/88pm800.c
+>> @@ -521,6 +521,63 @@ out:
+>>   	return ret;
+>>   }
+>>
+>> +static int pm800_init_config(struct pm80x_chip *chip, struct device_node *np)
+>> +{
+>> +	int ret;
+>> +	unsigned int val;
+>> +
+>> +	switch (chip->type) {
+>> +	case CHIP_PM800:
+>> +	case CHIP_PM805:
+>> +		break;
+>
+> It may be useful for future generations to put short notice here why
+> there is no init for these devices? I saw the explanation in commit
+> message but still someone in the future may look at the code and wonder
+> why only 88PM860 is initialized and the others are not?
+>
+
+Yeup, Agreed.
+
+I will incorporate it in V2.
+
+Thanks,
+Vaibhav
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
