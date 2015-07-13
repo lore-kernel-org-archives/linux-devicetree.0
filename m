@@ -1,57 +1,64 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 03/12] mtd: nand: omap: Move IRQ handling from GPMC to
- NAND driver
-Date: Mon, 13 Jul 2015 06:01:10 -0700
-Message-ID: <20150713130109.GG26485@atomide.com>
-References: <1436531019-18088-1-git-send-email-rogerq@ti.com>
- <1436531019-18088-4-git-send-email-rogerq@ti.com>
- <20150713071008.GC26485@atomide.com>
- <55A38D2E.9010500@ti.com>
- <20150713124059.GF26485@atomide.com>
- <55A3B467.8030409@gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 4/4] gpio: brcmstb: support wakeup from S5 cold boot
+Date: Mon, 13 Jul 2015 15:03:10 +0200
+Message-ID: <CACRpkdZSUUk-giwckxSyV8ZvAZcQUD7KaCnjq=_hiO7k9=jVMQ@mail.gmail.com>
+References: <1434589243-502-1-git-send-email-gregory.0xf0@gmail.com>
+	<1434589243-502-5-git-send-email-gregory.0xf0@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <55A3B467.8030409-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1434589243-502-5-git-send-email-gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: nick <xerofoify-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org
+To: Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* nick <xerofoify-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [150713 05:54]:
-> On 2015-07-13 08:40 AM, Tony Lindgren wrote:
-> > * Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [150713 03:07]:
-> >  
-> >> What is the best map we should use for irqchip?
-> >> Some Socs have 4 WAIT pins, some have 3 and some have 2.
-> >>
-> >> Should we start with 0,1,2, for the wait pins and use the next
-> >> available free one for the NAND?
-> > 
-> > Maybe we can just use the bits defined for each SoC in the
-> > GPMC_IRQSTATUS register for the mapping?  
-> > Regards,
+On Thu, Jun 18, 2015 at 3:00 AM, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+
+> For wake from S5, we need to:
+> - register a reboot handler
+> - set wakeup capability before requesting IRQ so wakeup count is
+>   incremented
+> - mask all GPIO IRQs and clear any pending interrupts during driver
+>   probe to since no driver will yet be registered to handle any IRQs
+>   carried over from boot at that time, and it's possible that the
+>   booted kernel does not request the same IRQ anyway.
 >
-> Is that a good idea as to my knowledge of OMAP platforms that register is hardware
-> dependent and therefore that may be an issue unless your idea is to create device
-> tables like the way they do in the nand subsystems to support various vendor's 
-> nand flash expect here for the pins on OMAP SOCs.
+> This means that /sys/.../power/wakeup_count is valid at boot time, and
+> we can properly account for S5 wakeup stats. e.g.:
+>
+>   ### After waking from S5 from a GPIO key
+>   # cat /sys/bus/platform/drivers/brcmstb-gpio/f04172c0.gpio/power/wakeup
+>   enabled
+>   # cat /sys/bus/platform/drivers/brcmstb-gpio/f04172c0.gpio/power/wakeup_count
+>   1
+>
+> Signed-off-by: Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Do you mean mapping irqs based on the GPMC_IRQSTATUS register
-bits? If so, that's pretty much how all the GPIO drivers
-handle them. We can have a SoC specific irqmask of the valid
-bits passed from the dts files, and if necessary we can also
-add custom SoC specific IRQ handlers to the GPMC driver if
-needed.
+(...)
+> -static int brcmstb_gpio_irq_set_wake(struct irq_data *d, unsigned int enable)
+> +static int __brcmstb_gpio_irq_set_wake(struct brcmstb_gpio_priv *priv,
+> +               unsigned int enable)
+>  {
+> -       struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+> -       struct brcmstb_gpio_priv *priv = brcmstb_gpio_gc_to_priv(gc);
+>         int ret = 0;
 
-The idea is that the NAND driver can just request the irq
-from the GPMC driver and do whatever it wants with the
-interrupt.
+I don't usually like to refactor code with __foo wrapper functions with
+underscores or double underscores in front of them.
 
-Regards,
+Is it possible to give this a more unique name?
 
-Tony
+> +               /*
+> +                * Mask all interrupts by default, since wakeup interrupts may
+> +                * be retained from S5 cold boot
+> +                */
+> +               bank->bgc.write_reg(reg_base + GIO_MASK(bank->id), 0);
+
+Aha I see, that's some clever code, nice.
+
+Yours,
+Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
