@@ -1,109 +1,89 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v4 0/8] iio:mma8452: improve driver and support more chips
-Date: Mon, 13 Jul 2015 10:22:32 +0100
-Message-ID: <A17CB9B2-D4D4-42EC-B51A-A5C7D864EDC4@kernel.org>
-References: <1436186062-5766-1-git-send-email-martink@posteo.de> <559E35F4.8010304@posteo.de> <55A371DB.1020105@posteo.de>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <55A371DB.1020105@posteo.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Kepplinger <martink@posteo.de>, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mfuzzey@parkeon.com, roberta.dobrescu@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, christoph.muellner@theobroma-systems.com
+From: Barry Song <21cnbao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 1/3] ARM: dts: atlas7: set right memory range and hwspinlock for IPC stuff
+Date: Mon, 13 Jul 2015 09:28:48 +0000
+Message-ID: <1436779729-3052-1-git-send-email-21cnbao@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, workgroup.linux-kQvG35nSl+M@public.gmane.org, Wei Chen <Wei.Chen-kQvG35nSl+M@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Barry Song <Baohua.Song-kQvG35nSl+M@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+From: Wei Chen <Wei.Chen-kQvG35nSl+M@public.gmane.org>
 
+this patch sets memory range for IPC stuff according to register layout.
+there is no memory overlap for all components.
 
-On 13 July 2015 09:07:55 BST, Martin Kepplinger <martink@posteo.de> wrote:
->Am 2015-07-09 um 10:51 schrieb Martin Kepplinger:
->> Am 2015-07-06 um 14:34 schrieb Martin Kepplinger:
->>> This is version 4 of the mma8452 driver improvements. This version
->removes
->>> one patch that changed the iio event type for existing users. It can
->be
->>> dealt with seperately and this series applies without it.
->>>
->>> Also, changes according to Jonathan's review are applied and a few
->>> devicetree maintainers are added as recipients.
->>>
->>>
->>> These changes add support for motion interrupts and 3 more
->accelerometer
->>> chips, two of which use them because they don't support the until
->now
->>> included transient interrupt sources:
->>>
->>> MMA8453Q, MMA8652FC and MMA8653FC; datasheets are in the commit
->messages.
->>>
->>> The driver and module name remains the same, seperating it from the
->device
->>> names it now supports.
->>>
->>> On top of this, there are minor documentation additions, and more
->notably,
->>>  it allows to use the driver, no matter how the interrupt pins are
->wired
->>> on your board.
->>>
->>> Please review and test if you can. For MMA8452Q, nothing should have
->>> changed.
->> 
->> Any thoughts or reviewed-bys for these changes?
->> 
->> Since there are many more possible users of this driver after these
->> changes, see the devicetree bindings documentation file, maybe you
->are
->> among them and can quickly run it? ;)
->> 
->> thanks a lot,
->> 
->>                      martin
->
->Yes, no, maybe? Anyways. This series applies to the current -next.
->
->thanks
->                           martin
-Sorry Martin
+it also sets the right hwspinlock for these components.
 
-Combination of stupid day job week last week. (Of the jump on a plane and 18
- hour days variety) also a rather large IKEA build (more fun!) have given me a
- fair backlog.  Will hopefully catch up during this week.
+Cc: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Cc: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Signed-off-by: Wei Chen <Wei.Chen-kQvG35nSl+M@public.gmane.org>
+Signed-off-by: Barry Song <Baohua.Song-kQvG35nSl+M@public.gmane.org>
+---
+ arch/arm/boot/dts/atlas7.dtsi | 22 +++++++++++++---------
+ 1 file changed, 13 insertions(+), 9 deletions(-)
 
-Initial work though will be getting pull requests out for stuff that has been in
- tree for ages so may be later in the week.
-
-Jonathan
->
->> 
->>>
->>> revision history
->>> ----------------
->>> v4   cleanup; one bugfix patch removed from series; DT people added
->>> v3   adds one patch to allow all possible pin wirings; adds more
->email
->>>      recipients
->>> v2   splits the work into a series of smaller pieces
->>> v1   initial post
->>>
->>>
->>> --
->>> To unsubscribe from this list: send the line "unsubscribe
->linux-kernel" in
->>> the body of a message to majordomo@vger.kernel.org
->>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>> Please read the FAQ at  http://www.tux.org/lkml/
->>>
->> 
->> --
->> To unsubscribe from this list: send the line "unsubscribe
->linux-kernel" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->> Please read the FAQ at  http://www.tux.org/lkml/
->> 
-
+diff --git a/arch/arm/boot/dts/atlas7.dtsi b/arch/arm/boot/dts/atlas7.dtsi
+index 5dfd3a4..01ae884 100644
+--- a/arch/arm/boot/dts/atlas7.dtsi
++++ b/arch/arm/boot/dts/atlas7.dtsi
+@@ -94,39 +94,43 @@
+ 		};
+ 
+ 		ipc@13240000 {
+-			compatible = "sirf,atlas7-ipc";
++			compatible = "sirf,atlas7-ipc", "simple-bus";
+ 			ranges = <0x13240000 0x13240000 0x00010000>;
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 
+-			hwspinlock {
++			hwlock: hwlock@0 {
+ 				compatible = "sirf,hwspinlock";
+-				reg = <0x13240000 0x00010000>;
+-
+-				num-spinlocks = <30>;
++				reg = <0x13240400 0x0100>;
++				#hwlock-cells = <1>;
+ 			};
+ 
+ 			ns_m3_rproc@0 {
+ 				compatible = "sirf,ns2m30-rproc";
+-				reg = <0x13240000 0x00010000>;
++				reg = <0x13240108 0x4>,
++					<0x13240208 0x4>;
+ 				interrupts = <0 123 0>;
++				hwlocks = <&hwlock 0>, <&hwlock 1>;
+ 			};
+ 
+ 			ns_m3_rproc@1 {
+ 				compatible = "sirf,ns2m31-rproc";
+-				reg = <0x13240000 0x00010000>;
++				reg = <0x1324010C 0x4>,
++					<0x1324020C 0x4>;
+ 				interrupts = <0 126 0>;
+ 			};
+ 
+ 			ns_kal_rproc@0 {
+ 				compatible = "sirf,ns2kal0-rproc";
+-				reg = <0x13240000 0x00010000>;
++				reg = <0x13240110 0x4>,
++					<0x13240308 0x4>;
+ 				interrupts = <0 124 0>;
+ 			};
+ 
+ 			ns_kal_rproc@1 {
+ 				compatible = "sirf,ns2kal1-rproc";
+-				reg = <0x13240000 0x00010000>;
++				reg = <0x13240114 0x4>,
++					<0x1324030C 0x4>;
+ 				interrupts = <0 127 0>;
+ 			};
+ 		};
 -- 
-Sent from my Android device with K-9 Mail. Please excuse my brevity.
+2.3.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
