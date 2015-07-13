@@ -1,74 +1,68 @@
-From: nick <xerofoify@gmail.com>
-Subject: Re: [PATCH 03/12] mtd: nand: omap: Move IRQ handling from GPMC to
- NAND driver
-Date: Mon, 13 Jul 2015 09:03:56 -0400
-Message-ID: <55A3B73C.9040604@gmail.com>
-References: <1436531019-18088-1-git-send-email-rogerq@ti.com>
- <1436531019-18088-4-git-send-email-rogerq@ti.com>
- <20150713071008.GC26485@atomide.com> <55A38D2E.9010500@ti.com>
- <20150713124059.GF26485@atomide.com> <55A3B467.8030409@gmail.com>
- <20150713130109.GG26485@atomide.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 2/3] mfd: Add DT binding for Maxim MAX77802 IC
+Date: Mon, 13 Jul 2015 16:11:44 +0300
+Message-ID: <55A3B910.9040009@cogentembedded.com>
+References: <1436773348-15316-1-git-send-email-javier@osg.samsung.com>
+ <1436773348-15316-3-git-send-email-javier@osg.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20150713130109.GG26485@atomide.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, ezequiel@vanguardiasur.com.ar, bcousson@baylibre.com, computersforpeace@gmail.com, dwmw2@infradead.org, Roger Quadros <rogerq@ti.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1436773348-15316-3-git-send-email-javier@osg.samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier@osg.samsung.com>, Lee Jones <lee.jones@linaro.org>
+Cc: devicetree@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Hello.
 
+On 7/13/2015 10:42 AM, Javier Martinez Canillas wrote:
 
-On 2015-07-13 09:01 AM, Tony Lindgren wrote:
-> * nick <xerofoify@gmail.com> [150713 05:54]:
->> On 2015-07-13 08:40 AM, Tony Lindgren wrote:
->>> * Roger Quadros <rogerq@ti.com> [150713 03:07]:
->>>  
->>>> What is the best map we should use for irqchip?
->>>> Some Socs have 4 WAIT pins, some have 3 and some have 2.
->>>>
->>>> Should we start with 0,1,2, for the wait pins and use the next
->>>> available free one for the NAND?
->>>
->>> Maybe we can just use the bits defined for each SoC in the
->>> GPMC_IRQSTATUS register for the mapping?  
->>> Regards,
->>
->> Is that a good idea as to my knowledge of OMAP platforms that register is hardware
->> dependent and therefore that may be an issue unless your idea is to create device
->> tables like the way they do in the nand subsystems to support various vendor's 
->> nand flash expect here for the pins on OMAP SOCs.
-> 
-> Do you mean mapping irqs based on the GPMC_IRQSTATUS register
-> bits? If so, that's pretty much how all the GPIO drivers
-> handle them. We can have a SoC specific irqmask of the valid
-> bits passed from the dts files, and if necessary we can also
-> add custom SoC specific IRQ handlers to the GPMC driver if
-> needed.
-> 
-> The idea is that the NAND driver can just request the irq
-> from the GPMC driver and do whatever it wants with the
-> interrupt.
-> 
-> Regards,
-> 
-> Tony
-> 
-Tony,
-That is what I was hoping the code was doing. So what appears to be the problem with the 
-patches related to irq requesting from the GPMC driver.
-Cheers,
-Nick 
+> The MAX77802 is a chip that contains regulators, 2 32kHz clocks,
+> a RTC and an I2C interface to program the individual components.
 
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+> The are already DT bindings for the regulators and clocks and
+> these reference to a bindings/mfd/max77802.txt file, that didn't
+> exist, for the details about the PMIC.
+
+> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+> ---
+>
+>   Documentation/devicetree/bindings/mfd/max77802.txt | 26 ++++++++++++++++++++++
+>   1 file changed, 26 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/mfd/max77802.txt
+
+> diff --git a/Documentation/devicetree/bindings/mfd/max77802.txt b/Documentation/devicetree/bindings/mfd/max77802.txt
+> new file mode 100644
+> index 000000000000..875ebebbc5b0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/max77802.txt
+> @@ -0,0 +1,26 @@
+> +Maxim MAX77802 multi-function device
+> +
+> +The Maxim MAX77802 is a power management chip (PMIC) that contains 10 high
+> +efficiency Buck regulators, 32 Low-dropout (LDO) regulators used to power
+> +up application processors and peripherals, a 2-channel 32kHz clock outputs,
+> +a Real-Time-Clock (RTC) and a I2C interface to program the individual
+> +regulators, clocks outputs and the RTC.
+> +
+> +Binding for the built-in 32k clock generator block is defined separately
+> +in the bindings/clk/maxim,max77802.txt file and binding for the regulators
+> +is defined in the bindings/regulator/max77802.txt file.
+> +
+> +Required properties:
+> +- compatible : Must be "maxim,max77686";
+> +- reg : Specifies the i2c slave address of PMIC block.
+> +- interrupts : This i2c device has an IRQ line connected to the main SoC.
+> +- interrupt-parent : The parent interrupt controller.
+> +
+> +Example:
+> +
+> +	max77802@09 {
+
+    Sigh, I'm tired of saying this over and over again: please don't name the 
+nodes with teh chip names. The ePAPR standard says: "The name of a node should 
+be somewhat generic, reflecting the function of the device and not its 3 
+precise programming model."
+
+WBR, Sergei
