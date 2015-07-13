@@ -1,70 +1,111 @@
-From: Jianwei Wang <jianwei.wang@freescale.com>
-Subject: [PATCH v8 3/4] arm/dts/ls1021a: Add DCU dts node
-Date: Mon, 13 Jul 2015 14:00:10 +0800
-Message-ID: <1436767211-38571-3-git-send-email-jianwei.wang@freescale.com>
-References: <1436767211-38571-1-git-send-email-jianwei.wang@freescale.com>
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] ARM: dts: vfxxx: Add property for minimum sample
+ time
+Date: Mon, 13 Jul 2015 08:44:26 +0200
+Message-ID: <8550db3f2a5db8ec68fc9360dc7173e3@agner.ch>
+References: <cover.1435134626.git.maitysanchayan@gmail.com>
+ <36fa3cef10b6a21b39e96283ea5d6961e9f6d972.1435134626.git.maitysanchayan@gmail.com>
+ <20150710085324.GL23464@tiger> <20150710180640.GB8723@Sanchayan-Arch>
+ <55A154BE.6000701@kernel.org> <20150712064753.GA1199@Sanchayan-Arch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1436767211-38571-1-git-send-email-jianwei.wang@freescale.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org
-Cc: devicetree@vger.kernel.org, Xiubo Li <lixiubo@cmss.chinamobile.com>, daniel.vetter@ffwll.ch, Alison Wang <b18965@freescale.com>, linux-kernel@vger.kernel.org, scottwood@freescale.com, Jianwei Wang <jianwei.wang@freescale.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150712064753.GA1199@Sanchayan-Arch>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-QWRkIERDVSBub2RlLCBEQ1UgaXMgYSBkaXNwbGF5IGNvbnRyb2xsZXIgb2YgRnJlZXNjYWxlCm5h
-bWVkIDJELUFDRS4KClNpZ25lZC1vZmYtYnk6IEFsaXNvbiBXYW5nIDxiMTg5NjVAZnJlZXNjYWxl
-LmNvbT4KU2lnbmVkLW9mZi1ieTogWGl1Ym8gTGkgPGxpeGl1Ym9AY21zcy5jaGluYW1vYmlsZS5j
-b20+ClNpZ25lZC1vZmYtYnk6IEppYW53ZWkgV2FuZyA8amlhbndlaS53YW5nQGZyZWVzY2FsZS5j
-b20+ClJldmlld2VkLWJ5OiBBbGlzb24gV2FuZyA8YWxpc29uLndhbmdAZnJlZXNjYWxlLmNvbT4K
-LS0tCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0vZnNsLWRjdS9mc2wsZGN1LnR4dCAgICAg
-IHwgMjAgKysrKysrKysrKysrKysrKysrKysKIE1BSU5UQUlORVJTICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgfCAgMSArCiBhcmNoL2FybS9ib290L2R0cy9sczEwMjFh
-LmR0c2kgICAgICAgICAgICAgICAgICAgICAgIHwgMTAgKysrKysrKysrKwogMyBmaWxlcyBjaGFu
-Z2VkLCAzMSBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2RybS9mc2wtZGN1L2ZzbCxkY3UudHh0CgpkaWZmIC0tZ2l0IGEv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RybS9mc2wtZGN1L2ZzbCxkY3UudHh0
-IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RybS9mc2wtZGN1L2ZzbCxkY3Uu
-dHh0Cm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAuLmViNjFlYTUKLS0tIC9kZXYv
-bnVsbAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZHJtL2ZzbC1kY3Uv
-ZnNsLGRjdS50eHQKQEAgLTAsMCArMSwyMCBAQAorRGV2aWNlIFRyZWUgYmluZGluZ3MgZm9yIEZy
-ZWVzY2FsZSBEQ1UgRFJNIERyaXZlcgorCitSZXF1aXJlZCBwcm9wZXJ0aWVzOgorLSBjb21wYXRp
-YmxlOiAgICAgICAgICAgU2hvdWxkIGJlIG9uZSBvZgorCSogImZzbCxsczEwMjFhLWRjdSIuCisJ
-KiAiZnNsLHZmNjEwLWRjdSIuCistIHJlZzogICAgICAgICAgICAgICAgICBBZGRyZXNzIGFuZCBs
-ZW5ndGggb2YgdGhlIHJlZ2lzdGVyIHNldCBmb3IgZGN1LgorLSBjbG9ja3M6ICAgICAgICAgICAg
-ICAgRnJvbSBjb21tb24gY2xvY2sgYmluZGluZzogaGFuZGxlIHRvIGRjdSBjbG9jay4KKy0gY2xv
-Y2stbmFtZXM6ICAgICAgICAgIEZyb20gY29tbW9uIGNsb2NrIGJpbmRpbmc6IFNoYWxsIGJlICJk
-Y3UiLgorLSBwYW5lbDoJCVRoZSBwaGFuZGxlIHRvIHBhbmVsIG5vZGUuCisKK0V4YW1wbGVzOgor
-ZGN1OiBkY3VAMmNlMDAwMCB7CisJY29tcGF0aWJsZSA9ICJmc2wsbHMxMDIxYS1kY3UiOworCXJl
-ZyA9IDwweDAgMHgyY2UwMDAwIDB4MCAweDEwMDAwPjsKKwljbG9ja3MgPSA8JnBsYXRmb3JtX2Ns
-ayAwPjsKKwljbG9jay1uYW1lcyA9ICJkY3UiOworCWJpZy1lbmRpYW47CisJcGFuZWwgPSA8JnBh
-bmVsPjsKK307CmRpZmYgLS1naXQgYS9NQUlOVEFJTkVSUyBiL01BSU5UQUlORVJTCmluZGV4IGUx
-OTFkZWQuLmZmZmI4YzkgMTAwNjQ0Ci0tLSBhL01BSU5UQUlORVJTCisrKyBiL01BSU5UQUlORVJT
-CkBAIC0zNDEwLDYgKzM0MTAsNyBAQCBNOglBbGlzb24gV2FuZyA8YWxpc29uLndhbmdAZnJlZXNj
-YWxlLmNvbT4KIEw6CWRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKIFM6CVN1cHBvcnRl
-ZAogRjoJZHJpdmVycy9ncHUvZHJtL2ZzbC1kY3UvCitGOiAgICAgIERvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9kcm0vZnNsLWRjdS8KIEY6ICAgICAgRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL3BhbmVsL25lYyxubDQ4MjdoYzE5XzA1Yi50eHQKIAogRFJNIERSSVZF
-UlMgRk9SIE5WSURJQSBURUdSQQpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvbHMxMDIx
-YS5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvbHMxMDIxYS5kdHNpCmluZGV4IGM3MGJiMjcuLjZk
-NmUzZTIgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2xzMTAyMWEuZHRzaQorKysgYi9h
-cmNoL2FybS9ib290L2R0cy9sczEwMjFhLmR0c2kKQEAgLTM4Myw2ICszODMsMTYgQEAKIAkJCQkg
-PCZwbGF0Zm9ybV9jbGsgMT47CiAJCX07CiAKKwkJZGN1OiBkY3VAMmNlMDAwMCB7CisJCQljb21w
-YXRpYmxlID0gImZzbCxsczEwMjFhLWRjdSI7CisJCQlyZWcgPSA8MHgwIDB4MmNlMDAwMCAweDAg
-MHgxMDAwMD47CisJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMTcyIElSUV9UWVBFX0xFVkVMX0hJ
-R0g+OworCQkJY2xvY2tzID0gPCZwbGF0Zm9ybV9jbGsgMD47CisJCQljbG9jay1uYW1lcyA9ICJk
-Y3UiOworCQkJYmlnLWVuZGlhbjsKKwkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7CisJCX07CisKIAkJ
-bWRpbzA6IG1kaW9AMmQyNDAwMCB7CiAJCQljb21wYXRpYmxlID0gImdpYW5mYXIiOwogCQkJZGV2
-aWNlX3R5cGUgPSAibWRpbyI7Ci0tIAoyLjEuMC4yNy5nOTZkYjMyNAoKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
-cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On 2015-07-12 08:47, maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> Hello Jonathan,
+> 
+> On 15-07-11 18:39:10, Jonathan Cameron wrote:
+>> On 10/07/15 19:06, maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+>> > Hello Shawn,
+>> >
+>> > On 15-07-10 16:53:24, Shawn Guo wrote:
+>> >> On Wed, Jun 24, 2015 at 02:03:41PM +0530, Sanchayan Maity wrote:
+>> >>> Add a device tree property which allows to specify the minimum sample
+>> >>> time which can be used to calculate the actual ADC cycles required
+>> >>> depending on the hardware.
+>> >>>
+>> >>> Signed-off-by: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> >>> ---
+>> >>>  arch/arm/boot/dts/vfxxx.dtsi | 2 ++
+>> >>>  1 file changed, 2 insertions(+)
+>> >>>
+>> >>> diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
+>> >>> index 90a03d5..71d9c08 100644
+>> >>> --- a/arch/arm/boot/dts/vfxxx.dtsi
+>> >>> +++ b/arch/arm/boot/dts/vfxxx.dtsi
+>> >>> @@ -229,6 +229,7 @@
+>> >>>  				status = "disabled";
+>> >>>  				fsl,adck-max-frequency = <30000000>, <40000000>,
+>> >>>  							<20000000>;
+>> >>> +				min-sample-time = <1000>;
+>> >>>  			};
+>> >>>
+>> >>>  			wdoga5: wdog@4003e000 {
+>> >>> @@ -447,6 +448,7 @@
+>> >>>  				status = "disabled";
+>> >>>  				fsl,adck-max-frequency = <30000000>, <40000000>,
+>> >>>  							<20000000>;
+>> >>> +				min-sample-time = <1000>;
+>> >>
+>> >> Can we code 1000 as the default in kernel driver, so that only boards
+>> >> requiring different value need to have this property?  Doing so makes
+>> >> the property optional rather than required.
+>> >>
+>> >
+>> > Not sure if hardcoding it in the driver is the right approach.
+>> If it is a true feature of the device (i.e. if in the case of perfect
+>> front end electronics) this is the right option, then a default makes
+>> a lot of sense.  If that isn't the case (I suspect not) then if we
+>> drop it be optional chances are no one will bother thinking about it
+>> or trying to tune this at all.
+>>
+>> Hence seems wrong to put a fairly arbitrary default value on it.
+>> However, we do need to still work with old device trees and new kernels
+>> so need to cope without it.
+>>
+>> Hence to my mind, if we had started out with this in the first driver
+>> version, then the default would be a bad idea.  As we didn't then we
+>> really need to cope with nothing specified (as best we can) and so
+>> we do need a sensible default (or perhaps even sensible worst
+>> case default) in there.
+
+I agree with Jonathan's argumentation, let's add a default if the dt
+propery is not there.
+
+1000ns seems to be a good default value over a wide range of external
+resistance/capacity according to the diagrams of the data sheet, so I
+would vote for that value as default.
+
+> 
+> Just to be sure, do I understand you correctly that you agree with the
+> property being in device tree?
+
+I don't think that the device tree property is in discussion, it is just
+about whether to add a default value in the driver or not...
+
+> 
+> If the device tree property is not specified the driver will just go on
+> to use the value "3" which was hardcoded earlier. In my opinion it is
+> better to allow users to change the sampling cycles by specifying or not
+> specifying this in the device tree rather than have a default value coded
+> in the driver. However this is just my opinion.
+> 
+> Also, some users might not need the somewhat worst case value of 1000. I
+> guess we could keep the driver patch the way it is right now and migrate
+> the property to be specified in our board dts file? So the property can
+> be picked up from the vf-colibri.dtsi or vf500-colibri.dtsi in the adc
+> node? Other boards can do the same?
+
+I agree too, especially when we have a default value in the driver, the
+property belongs into the board file. I suggest to add the default value
+of 1000 to the vf-colibri.dtsi (even if this is the driver default, so
+we explicitly request that "verified" value..)
+
+--
+Stefan
