@@ -1,56 +1,86 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v3 0/3] Fixes for MT8173 PLLs
-Date: Mon, 13 Jul 2015 07:45:49 +0200
-Message-ID: <20150713054549.GC18700@pengutronix.de>
-References: <1436517574-17895-1-git-send-email-jamesjj.liao@mediatek.com>
+From: Jianwei Wang <jianwei.wang@freescale.com>
+Subject: [PATCH v8 2/4] drm/panel: simple: Add support for NEC NL4827HC19-05B
+ 480x272 panel
+Date: Mon, 13 Jul 2015 14:00:09 +0800
+Message-ID: <1436767211-38571-2-git-send-email-jianwei.wang@freescale.com>
+References: <1436767211-38571-1-git-send-email-jianwei.wang@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1436517574-17895-1-git-send-email-jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Heiko Stubner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1436767211-38571-1-git-send-email-jianwei.wang@freescale.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: devicetree@vger.kernel.org, daniel.vetter@ffwll.ch, linux-kernel@vger.kernel.org, scottwood@freescale.com, Jianwei Wang <jianwei.wang@freescale.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 10, 2015 at 04:39:31PM +0800, James Liao wrote:
-> Title changed. Previous title is "Add MT8173 MMPLL change rate support"
-> and can be found in [1].
-> 
-> This patchset contains some fixes for changing rate of PLLs, especially
-> for MMPLL.
-> 
-> The first 2 patches are common fixes for PLLs, and the last patch is a
-> fix to support MT8173 MMPLL changing rate because its frequency setting
-> is different from other PLLs.
-> 
-> changes since v2:
-> - Rebase to 4.2-rc1.
-> - Split fixes of PLL setting calculation to a separeted patch.
-> 
-> changes since v1:
-> - Add a separated patch for mtk_pll_set_rate_regs().
-> - Use a structure array to describe a div_table.
-> - Limit max frequency to div_table[0].
-> - Minor changes such as static and comments.
-> 
-> [1] https://lkml.org/lkml/2015/7/8/265
-> 
-> James Liao (3):
->   clk: mediatek: Fix PLL registers setting flow
->   clk: mediatek: Fix calculation of PLL rate settings
->   clk: mediatek: Add MT8173 MMPLL change rate support
-
-Acked-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-
-Sascha
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhpcyBhZGRzIHN1cHBvcnQgZm9yIHRoZSBORUMgTkw0ODI3SEMxOS0wNUIgNDgweDI3MiBwYW5l
+bCB0byB0aGUgRFJNCnNpbXBsZSBwYW5lbCBkcml2ZXIuCgpTaWduZWQtb2ZmLWJ5OiBKaWFud2Vp
+IFdhbmcgPGppYW53ZWkud2FuZ0BmcmVlc2NhbGUuY29tPgpBY2tlZC1ieTogRGFuaWVsIFZldHRl
+ciA8ZGFuaWVsLnZldHRlckBmZndsbC5jaD4KLS0tCiAuLi4vYmluZGluZ3MvcGFuZWwvbmVjLG5s
+NDgyN2hjMTlfMDViLnR4dCAgICAgICAgICB8ICA3ICsrKysrKwogLi4uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvdmVuZG9yLXByZWZpeGVzLnR4dCAgICAgICAgfCAgMSArCiBNQUlOVEFJTkVSUyAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAxICsKIGRyaXZlcnMvZ3B1L2Ry
+bS9wYW5lbC9wYW5lbC1zaW1wbGUuYyAgICAgICAgICAgICAgIHwgMjYgKysrKysrKysrKysrKysr
+KysrKysrKwogNCBmaWxlcyBjaGFuZ2VkLCAzNSBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAx
+MDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BhbmVsL25lYyxubDQ4Mjdo
+YzE5XzA1Yi50eHQKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvcGFuZWwvbmVjLG5sNDgyN2hjMTlfMDViLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9wYW5lbC9uZWMsbmw0ODI3aGMxOV8wNWIudHh0Cm5ldyBmaWxlIG1vZGUgMTAw
+NjQ0CmluZGV4IDAwMDAwMDAuLjIwZTk0NzMKLS0tIC9kZXYvbnVsbAorKysgYi9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGFuZWwvbmVjLG5sNDgyN2hjMTlfMDViLnR4dApAQCAt
+MCwwICsxLDcgQEAKK05FQyBMQ0QgVGVjaG5vbG9naWVzLEx0ZC4gV1FWR0EgVEZUIExDRCBwYW5l
+bAorCitSZXF1aXJlZCBwcm9wZXJ0aWVzOgorLSBjb21wYXRpYmxlOiBzaG91bGQgYmUgIm5lYyxu
+bDQ4MjdoYzE5XzA1YiIKKworVGhpcyBiaW5kaW5nIGlzIGNvbXBhdGlibGUgd2l0aCB0aGUgc2lt
+cGxlLXBhbmVsIGJpbmRpbmcsIHdoaWNoIGlzIHNwZWNpZmllZAoraW4gc2ltcGxlLXBhbmVsLnR4
+dCBpbiB0aGlzIGRpcmVjdG9yeS4KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy50eHQKaW5kZXggODAzMzkxOS4uOWYyMmIzZSAxMDA2
+NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhl
+cy50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVm
+aXhlcy50eHQKQEAgLTEzMSw2ICsxMzEsNyBAQCBtdW5kb3JlYWRlcglNdW5kbyBSZWFkZXIgUy5M
+LgogbXVyYXRhCU11cmF0YSBNYW51ZmFjdHVyaW5nIENvLiwgTHRkLgogbXhpY3kJTWFjcm9uaXgg
+SW50ZXJuYXRpb25hbCBDby4sIEx0ZC4KIG5hdGlvbmFsCU5hdGlvbmFsIFNlbWljb25kdWN0b3IK
+K25lYwlORUMgTENEIFRlY2hub2xvZ2llcywgTHRkLgogbmVvbm9kZQkJTmVvbm9kZSBJbmMuCiBu
+ZXRnZWFyCU5FVEdFQVIKIG5ldGxvZ2ljCUJyb2FkY29tIENvcnBvcmF0aW9uIChmb3JtZXJseSBO
+ZXRMb2dpYyBNaWNyb3N5c3RlbXMpCmRpZmYgLS1naXQgYS9NQUlOVEFJTkVSUyBiL01BSU5UQUlO
+RVJTCmluZGV4IGIyNWI5NDguLmUxOTFkZWQgMTAwNjQ0Ci0tLSBhL01BSU5UQUlORVJTCisrKyBi
+L01BSU5UQUlORVJTCkBAIC0zNDEwLDYgKzM0MTAsNyBAQCBNOglBbGlzb24gV2FuZyA8YWxpc29u
+LndhbmdAZnJlZXNjYWxlLmNvbT4KIEw6CWRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
+IFM6CVN1cHBvcnRlZAogRjoJZHJpdmVycy9ncHUvZHJtL2ZzbC1kY3UvCitGOiAgICAgIERvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wYW5lbC9uZWMsbmw0ODI3aGMxOV8wNWIudHh0
+CiAKIERSTSBEUklWRVJTIEZPUiBOVklESUEgVEVHUkEKIE06CVRoaWVycnkgUmVkaW5nIDx0aGll
+cnJ5LnJlZGluZ0BnbWFpbC5jb20+CmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vcGFuZWwv
+cGFuZWwtc2ltcGxlLmMgYi9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMKaW5k
+ZXggZjk0MjAxYi4uZWIxMmZlNCAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3Bh
+bmVsLXNpbXBsZS5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYwpA
+QCAtMTAzNiw2ICsxMDM2LDI5IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgcGFuZWxfZGVzYyBzaGVs
+bHlfc2NhMDcwMTBfYmZuX2xubiA9IHsKIAkuYnVzX2Zvcm1hdCA9IE1FRElBX0JVU19GTVRfUkdC
+NjY2XzFYMTgsCiB9OwogCitzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9kaXNwbGF5X21vZGUgbmVj
+X25sNDgyN2hjMTlfMDViX21vZGUgPSB7CisJLmNsb2NrID0gMTA4NzAsCisJLmhkaXNwbGF5ID0g
+NDgwLAorCS5oc3luY19zdGFydCA9IDQ4MCArIDIsCisJLmhzeW5jX2VuZCA9IDQ4MCArIDIgKyA0
+MSwKKwkuaHRvdGFsID0gNDgwICsgMiArIDQxICsgMiwKKwkudmRpc3BsYXkgPSAyNzIsCisJLnZz
+eW5jX3N0YXJ0ID0gMjcyICsgMiwKKwkudnN5bmNfZW5kID0gMjcyICsgMiArIDQsCisJLnZ0b3Rh
+bCA9IDI3MiArIDIgKyA0ICsgMiwKKwkudnJlZnJlc2ggPSA3NCwKK307CisKK3N0YXRpYyBjb25z
+dCBzdHJ1Y3QgcGFuZWxfZGVzYyBuZWNfbmw0ODI3aGMxOV8wNWIgPSB7CisJLm1vZGVzID0gJm5l
+Y19ubDQ4MjdoYzE5XzA1Yl9tb2RlLAorCS5udW1fbW9kZXMgPSAxLAorCS5zaXplID0geworCQku
+d2lkdGggPSA5NSwKKwkJLmhlaWdodCA9IDU0LAorCX0sCisJLmJ1c19mb3JtYXQgPSBNRURJQV9C
+VVNfRk1UX1JHQjg4OF8xWDI0Cit9OworCiBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9p
+ZCBwbGF0Zm9ybV9vZl9tYXRjaFtdID0gewogCXsKIAkJLmNvbXBhdGlibGUgPSAiYW1waXJlLGFt
+ODAwNDgwcjN0bXF3YTFoIiwKQEAgLTExMjUsNiArMTE0OCw5IEBAIHN0YXRpYyBjb25zdCBzdHJ1
+Y3Qgb2ZfZGV2aWNlX2lkIHBsYXRmb3JtX29mX21hdGNoW10gPSB7CiAJCS5jb21wYXRpYmxlID0g
+InNoZWxseSxzY2EwNzAxMC1iZm4tbG5uIiwKIAkJLmRhdGEgPSAmc2hlbGx5X3NjYTA3MDEwX2Jm
+bl9sbm4sCiAJfSwgeworCQkuY29tcGF0aWJsZSA9ICJuZWMsbmw0ODI3aGMxOV8wNWIiLAorCQku
+ZGF0YSA9ICZuZWNfbmw0ODI3aGMxOV8wNWIsCisJfSwgewogCQkvKiBzZW50aW5lbCAqLwogCX0K
+IH07Ci0tIAoyLjEuMC4yNy5nOTZkYjMyNAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
+aW5mby9kcmktZGV2ZWwK
