@@ -1,55 +1,46 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 03/12] mtd: nand: omap: Move IRQ handling from GPMC to
- NAND driver
-Date: Mon, 13 Jul 2015 13:04:30 +0300
-Message-ID: <55A38D2E.9010500@ti.com>
-References: <1436531019-18088-1-git-send-email-rogerq@ti.com> <1436531019-18088-4-git-send-email-rogerq@ti.com> <20150713071008.GC26485@atomide.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3] phy: rcar-gen2 usb: Add Host/Function switching for
+ USB0
+Date: Mon, 13 Jul 2015 13:17:20 +0300
+Message-ID: <55A39030.1030601@cogentembedded.com>
+References: <SG2PR06MB0919835888EBD162D4B86C24D8930@SG2PR06MB0919.apcprd06.prod.outlook.com>
+ <1436270121-25924-1-git-send-email-phil.edworthy@renesas.com>
+ <559FF47A.5000001@cogentembedded.com>
+ <SIXPR06MB0639B9810214ACE6C7F91FB6F59C0@SIXPR06MB0639.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150713071008.GC26485-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <SIXPR06MB0639B9810214ACE6C7F91FB6F59C0-ptTgG45MbEnxWRUYInhZt20DtJ1/0DrXvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Phil Edworthy <phil.edworthy-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Tony,
+Hello.
 
-On 13/07/15 10:10, Tony Lindgren wrote:
-> * Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [150710 05:26]:
->> Since the Interrupt Events are used only by the NAND driver,
->> there is no point in managing the Interrupt registers
->> in the GPMC driver and complicating it with irqchip modeling.
-> 
-> I don't think it's a good idea to allow external drivers to
-> tinker directly with GPMC registers. How about just set up GPMC
-> as an irqchip for the edge detection interrupts?
-> 
-> I think we already have devices with multiple NAND chips. And
-> there's nothing stopping other drivers from using the edge
-> detection interrupts.
+On 7/13/2015 12:04 PM, Phil Edworthy wrote:
 
-OK. The GPMC_IRQ registers manage 2 NAND specific interrupts
-(terminalcount and fifo) and 'n' WAIT pin edge interrupts.
+>>> Instead of statically selecting the PHY connection to either the
+>>> USBHS (Function) or PCI0 (Host) IP blocks, this change allows the
+>>> dts to specifiy gpio pins for the vbus and id signals. Additional
 
-So we can model this as a irqchip with 'n + 2' interrupts.
+>>      These GPIOs don't have anything to do with the PHY, they're interfacing
 
-We need to take care that if a GPMC chip select needs a
-wait pin then it can't be used as a generic interrupt.
+    Perhaps that was too strong statement but nevertheless...
 
-We need to get rid of omap_dev_ready() in nand/omap2.c as
-it accesses the GPMC_STATUS register directly. Plus it is
-hard coded to only monitor wait0 pin.
+>> Maxim MAX3355 OTG chip for which I have submitted the extcon driver.
 
-What is the best map we should use for irqchip?
-Some Socs have 4 WAIT pins, some have 3 and some have 2.
+> Hmm, I see what you mean... could you post your latest version of that
+> driver as it seems to have stalled 6 months ago?
 
-Should we start with 0,1,2, for the wait pins and use the next
-available free one for the NAND?
+    I haven't worked on that driver since then.
 
-cheers,
--roger
+> Thanks
+> Phil
+
+WBR, Sergei
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
