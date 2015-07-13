@@ -1,79 +1,134 @@
-From: Barry Song <21cnbao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 2/3] hwspinlock: sirf: fix the memory base and move to devm_ioremap
-Date: Mon, 13 Jul 2015 09:28:49 +0000
-Message-ID: <1436779729-3052-2-git-send-email-21cnbao@gmail.com>
-References: <1436779729-3052-1-git-send-email-21cnbao@gmail.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] ARM: dts: vfxxx: Add property for minimum sample time
+Date: Mon, 13 Jul 2015 10:26:57 +0100
+Message-ID: <A9520B2A-9581-49C9-A891-96AFEC0E440A@kernel.org>
+References: <cover.1435134626.git.maitysanchayan@gmail.com> <36fa3cef10b6a21b39e96283ea5d6961e9f6d972.1435134626.git.maitysanchayan@gmail.com> <20150710085324.GL23464@tiger> <20150710180640.GB8723@Sanchayan-Arch> <55A154BE.6000701@kernel.org> <20150712064753.GA1199@Sanchayan-Arch>
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1436779729-3052-1-git-send-email-21cnbao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20150712064753.GA1199@Sanchayan-Arch>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, workgroup.linux-kQvG35nSl+M@public.gmane.org, Wei Chen <Wei.Chen-kQvG35nSl+M@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Barry Song <Baohua.Song-kQvG35nSl+M@public.gmane.org>
+To: maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Wei Chen <Wei.Chen-kQvG35nSl+M@public.gmane.org>
 
-this patch moves to the right base since we fix the dts, then
-we can use devm_ioremap now.
 
-Cc: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Cc: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Signed-off-by: Wei Chen <Wei.Chen-kQvG35nSl+M@public.gmane.org>
-Signed-off-by: Barry Song <Baohua.Song-kQvG35nSl+M@public.gmane.org>
----
- drivers/hwspinlock/sirf_hwspinlock.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+On 12 July 2015 07:47:53 BST, maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+>Hello Jonathan,
+>
+>On 15-07-11 18:39:10, Jonathan Cameron wrote:
+>> On 10/07/15 19:06, maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+>> > Hello Shawn,
+>> > 
+>> > On 15-07-10 16:53:24, Shawn Guo wrote:
+>> >> On Wed, Jun 24, 2015 at 02:03:41PM +0530, Sanchayan Maity wrote:
+>> >>> Add a device tree property which allows to specify the minimum
+>sample
+>> >>> time which can be used to calculate the actual ADC cycles
+>required
+>> >>> depending on the hardware.
+>> >>>
+>> >>> Signed-off-by: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> >>> ---
+>> >>>  arch/arm/boot/dts/vfxxx.dtsi | 2 ++
+>> >>>  1 file changed, 2 insertions(+)
+>> >>>
+>> >>> diff --git a/arch/arm/boot/dts/vfxxx.dtsi
+>b/arch/arm/boot/dts/vfxxx.dtsi
+>> >>> index 90a03d5..71d9c08 100644
+>> >>> --- a/arch/arm/boot/dts/vfxxx.dtsi
+>> >>> +++ b/arch/arm/boot/dts/vfxxx.dtsi
+>> >>> @@ -229,6 +229,7 @@
+>> >>>  				status = "disabled";
+>> >>>  				fsl,adck-max-frequency = <30000000>, <40000000>,
+>> >>>  							<20000000>;
+>> >>> +				min-sample-time = <1000>;
+>> >>>  			};
+>> >>>  
+>> >>>  			wdoga5: wdog@4003e000 {
+>> >>> @@ -447,6 +448,7 @@
+>> >>>  				status = "disabled";
+>> >>>  				fsl,adck-max-frequency = <30000000>, <40000000>,
+>> >>>  							<20000000>;
+>> >>> +				min-sample-time = <1000>;
+>> >>
+>> >> Can we code 1000 as the default in kernel driver, so that only
+>boards
+>> >> requiring different value need to have this property?  Doing so
+>makes
+>> >> the property optional rather than required.
+>> >>
+>> > 
+>> > Not sure if hardcoding it in the driver is the right approach.
+>> If it is a true feature of the device (i.e. if in the case of perfect
+>> front end electronics) this is the right option, then a default makes
+>> a lot of sense.  If that isn't the case (I suspect not) then if we
+>> drop it be optional chances are no one will bother thinking about it
+>> or trying to tune this at all.
+>> 
+>> Hence seems wrong to put a fairly arbitrary default value on it.
+>> However, we do need to still work with old device trees and new
+>kernels
+>> so need to cope without it.
+>> 
+>> Hence to my mind, if we had started out with this in the first driver
+>> version, then the default would be a bad idea.  As we didn't then we
+>> really need to cope with nothing specified (as best we can) and so
+>> we do need a sensible default (or perhaps even sensible worst
+>> case default) in there.
+>
+>Just to be sure, do I understand you correctly that you agree with the
+>property being in device tree?
+Absolutely. I wish it had been there from the start!
+>
+>If the device tree property is not specified the driver will just go on
+>to use the value "3" which was hardcoded earlier. In my opinion it is
+>better to allow users to change the sampling cycles by specifying or
+>not
+>specifying this in the device tree rather than have a default value
+>coded
+>in the driver. However this is just my opinion.
+>
+>Also, some users might not need the somewhat worst case value of 1000.
+>I
+>guess we could keep the driver patch the way it is right now and
+>migrate
+>the property to be specified in our board dts file? So the property can
+>be picked up from the vf-colibri.dtsi or vf500-colibri.dtsi in the adc
+>node? Other boards can do the same?
+The issue is device trees that don't get updated on devices. Those need a default and the property to be optional.
+>
+>We came up with the change after noticing huge reading discrepancies
+>where
+>we had a 4 wire resistive touch screen connected to the ADC channels
+>and
+>the driver sampled these channels at an interval of 10-20ms[1]. Once
+>the
+>touchscreen came into picture, readings from temperature channel or
+>others
+>showed deviations between 40000-60000. Somehow the temperature channel
+>seemed to be the most affected.
+Yikes
+>
+>For a while, I thought the ts driver logic was at a fault, but Stefan
+>pointed
+>out the discrepancies in the driver using a fixed clock cycle which was
+>not
+>correct along the sampling time also being hardcoded. Stefan's "respect
+>ADC
+>clocking limitations" and this patch are based on our above
+>observations.
+Fair enough. Can see how this was missed in the first place.  Good to see it fixed.
+>
+>[1] https://lkml.org/lkml/2015/6/30/103
+>
+>- Sanchayan.
 
-diff --git a/drivers/hwspinlock/sirf_hwspinlock.c b/drivers/hwspinlock/sirf_hwspinlock.c
-index 1601854..692ac41 100644
---- a/drivers/hwspinlock/sirf_hwspinlock.c
-+++ b/drivers/hwspinlock/sirf_hwspinlock.c
-@@ -29,7 +29,7 @@ struct sirf_hwspinlock {
- #define	HW_SPINLOCK_NUMBER	30
- 
- /* Hardware spinlock register offsets */
--#define HW_SPINLOCK_BASE	0x404
-+#define HW_SPINLOCK_BASE	0x04
- #define HW_SPINLOCK_OFFSET(x)	(HW_SPINLOCK_BASE + 0x4 * (x))
- 
- static int sirf_hwspinlock_trylock(struct hwspinlock *lock)
-@@ -57,6 +57,7 @@ static int sirf_hwspinlock_probe(struct platform_device *pdev)
- {
- 	struct sirf_hwspinlock *hwspin;
- 	struct hwspinlock *hwlock;
-+	struct resource *res;
- 	int idx, ret;
- 
- 	if (!pdev->dev.of_node)
-@@ -68,7 +69,8 @@ static int sirf_hwspinlock_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	/* retrieve io base */
--	hwspin->io_base = of_iomap(pdev->dev.of_node, 0);
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	hwspin->io_base = devm_ioremap_resource(&pdev->dev, res);
- 	if (!hwspin->io_base)
- 		return -ENOMEM;
- 
-@@ -91,7 +93,6 @@ static int sirf_hwspinlock_probe(struct platform_device *pdev)
- 
- reg_failed:
- 	pm_runtime_disable(&pdev->dev);
--	iounmap(hwspin->io_base);
- 
- 	return ret;
- }
-@@ -109,8 +110,6 @@ static int sirf_hwspinlock_remove(struct platform_device *pdev)
- 
- 	pm_runtime_disable(&pdev->dev);
- 
--	iounmap(hwspin->io_base);
--
- 	return 0;
- }
- 
 -- 
-2.3.5
-
+Sent from my Android device with K-9 Mail. Please excuse my brevity.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
