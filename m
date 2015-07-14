@@ -1,114 +1,61 @@
 From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH 3/5] [media] tc358743: support probe from device tree
-Date: Tue, 14 Jul 2015 12:10:05 +0200
-Message-ID: <1436868605.3793.24.camel@pengutronix.de>
+Subject: Re: [PATCH 5/5] [media] tc358743: allow event subscription
+Date: Tue, 14 Jul 2015 12:10:09 +0200
+Message-ID: <1436868609.3793.25.camel@pengutronix.de>
 References: <1436533897-3060-1-git-send-email-p.zabel@pengutronix.de>
-	 <1436533897-3060-3-git-send-email-p.zabel@pengutronix.de>
-	 <55A39982.3030006@xs4all.nl>
+	 <1436533897-3060-5-git-send-email-p.zabel@pengutronix.de>
+	 <55A39BE3.2070905@xs4all.nl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <55A39982.3030006@xs4all.nl>
+In-Reply-To: <55A39BE3.2070905@xs4all.nl>
 Sender: linux-media-owner@vger.kernel.org
 To: Hans Verkuil <hverkuil@xs4all.nl>
 Cc: Mats Randgaard <matrandg@cisco.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
-
-Am Montag, den 13.07.2015, 12:57 +0200 schrieb Hans Verkuil:
-[...]
-> > @@ -69,6 +72,7 @@ static const struct v4l2_dv_timings_cap tc358743_timings_cap = {
+Am Montag, den 13.07.2015, 13:07 +0200 schrieb Hans Verkuil:
+> On 07/10/2015 03:11 PM, Philipp Zabel wrote:
+> > This is useful to subscribe to HDMI hotplug events via the
+> > V4L2_CID_DV_RX_POWER_PRESENT control.
+> > 
+> > Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> > ---
+> >  drivers/media/i2c/tc358743.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> > 
+> > diff --git a/drivers/media/i2c/tc358743.c b/drivers/media/i2c/tc358743.c
+> > index 4a889d4..91fffa8 100644
+> > --- a/drivers/media/i2c/tc358743.c
+> > +++ b/drivers/media/i2c/tc358743.c
+> > @@ -40,6 +40,7 @@
+> >  #include <media/v4l2-dv-timings.h>
+> >  #include <media/v4l2-device.h>
+> >  #include <media/v4l2-ctrls.h>
+> > +#include <media/v4l2-event.h>
+> >  #include <media/v4l2-of.h>
+> >  #include <media/tc358743.h>
 > >  
-> >  struct tc358743_state {
-> >  	struct tc358743_platform_data pdata;
-> > +	struct v4l2_of_bus_mipi_csi2 bus;
+> > @@ -1604,6 +1605,8 @@ static const struct v4l2_subdev_core_ops tc358743_core_ops = {
+> >  	.s_register = tc358743_s_register,
+> >  #endif
+> >  	.interrupt_service_routine = tc358743_isr,
+> > +	.subscribe_event = v4l2_ctrl_subdev_subscribe_event,
 > 
-> Where is this bus struct set?
-
-Uh-oh, I have accidentally dropped setting the bus struct when switching
-to v4l2_of_alloc_parse_endpoint.
-
-[...]
-> > @@ -700,7 +706,8 @@ static void tc358743_set_csi(struct v4l2_subdev *sd)
-> >  			((lanes > 2) ? MASK_D2M_HSTXVREGEN : 0x0) |
-> >  			((lanes > 3) ? MASK_D3M_HSTXVREGEN : 0x0));
-> >  
-> > -	i2c_wr32(sd, TXOPTIONCNTRL, MASK_CONTCLKMODE);
-> > +	i2c_wr32(sd, TXOPTIONCNTRL, (state->bus.flags &
-> > +		 V4L2_MBUS_CSI2_CONTINUOUS_CLOCK) ? MASK_CONTCLKMODE : 0);
+> Ah, they are set here.
 > 
-> It's used here.
+> But note that v4l2_ctrl_subdev_subscribe_event is not enough, since this driver
+> also issues the V4L2_EVENT_SOURCE_CHANGE event.
 > 
-> BTW, since I don't see state->bus being set, that means bus.flags == 0 and
-> so this register is now set to 0 instead of MASK_CONTCLKMODE.
+> See this patch on how to do that:
 > 
-> When using platform data I guess bus.flags should be set to
-> V4L2_MBUS_CSI2_CONTINUOUS_CLOCK to prevent breakage.
-
-Ok.
-
-[..]
-> > +	/*
-> > +	 * The CSI bps per lane must be between 62.5 Mbps and 1 Gbps.
-> > +	 * The default is 594 Mbps for 4-lane 1080p60 or 2-lane 720p60.
-> > +	 */
-> > +	bps_pr_lane = 2 * endpoint->link_frequencies[0];
-> > +	if (bps_pr_lane < 62500000U || bps_pr_lane > 1000000000U) {
-> > +		dev_err(dev, "unsupported bps per lane: %u bps\n", bps_pr_lane);
-> > +		goto disable_clk;
-> > +	}
-> > +
-> > +	/* The CSI speed per lane is refclk / pll_prd * pll_fbd */
-> > +	state->pdata.pll_fbd = bps_pr_lane /
-> > +			       state->pdata.refclk_hz * state->pdata.pll_prd;
-> > +
-> > +	/*
-> > +	 * FIXME: These timings are from REF_02 for 594 Mbps per lane (297 MHz
-> > +	 * link frequency). In principle it should be possible to calculate
-> > +	 * them based on link frequency and resolution.
-> > +	 */
-> > +	if (bps_pr_lane != 594000000U)
-> > +		dev_warn(dev, "untested bps per lane: %u bps\n", bps_pr_lane);
-> > +	state->pdata.lineinitcnt = 0xe80;
-> > +	state->pdata.lptxtimecnt = 0x003;
-> > +	/* tclk-preparecnt: 3, tclk-zerocnt: 20 */
-> > +	state->pdata.tclk_headercnt = 0x1403;
-> > +	state->pdata.tclk_trailcnt = 0x00;
-> > +	/* ths-preparecnt: 3, ths-zerocnt: 1 */
-> > +	state->pdata.ths_headercnt = 0x0103;
-> > +	state->pdata.twakeup = 0x4882;
-> > +	state->pdata.tclk_postcnt = 0x008;
-> > +	state->pdata.ths_trailcnt = 0x2;
-> > +	state->pdata.hstxvregcnt = 0;
-
-Do you have any suggestion how to handle this? AFAIK REF_02 is not
-public, and I do not know the formulas it uses internally to calculate
-these timings. I wouldn't want to add all the timing parameters to the
-device tree just because of that.
-
-[...]
-> > @@ -1658,14 +1794,19 @@ static int tc358743_probe(struct i2c_client *client,
-> >  	if (!state)
-> >  		return -ENOMEM;
-> >  
-> > +	state->i2c_client = client;
-> > +
-> >  	/* platform data */
-> > -	if (!pdata) {
-> > -		v4l_err(client, "No platform data!\n");
-> > -		return -ENODEV;
-> > +	if (pdata) {
-> > +		state->pdata = *pdata;
-> > +	} else {
-> > +		err = tc358743_probe_of(state);
-> > +		if (err == -ENODEV)
-> > +			v4l_err(client, "No platform data!\n");
+> http://git.linuxtv.org/cgit.cgi/hverkuil/media_tree.git/commit/?h=for-v4.3a&id=85c9b0b83795dac3d27043619a727af5c7313fe7
 > 
-> I'd replace this with "No device tree data!" or something like that.
+> Note: requires the new v4l2_subdev_notify_event function that's not yet
+> merged (just posted the pull request for that).
 
-I'll do that, thank you.
+Ok, I think I'll split this up and send patch 5 separately, then.
 
 regards
 Philipp
