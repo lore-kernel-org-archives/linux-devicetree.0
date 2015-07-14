@@ -1,81 +1,81 @@
-From: Stas Sergeev <stsp@list.ru>
-Subject: Re: [PATCH 2/3] of_mdio: add new DT property 'managed' to specify the
- PHY management type
-Date: Tue, 14 Jul 2015 23:26:10 +0300
-Message-ID: <55A57062.80703@list.ru>
-References: <55A5424D.4030809@list.ru> <55A5432C.1080609@list.ru>
- <55A54C3A.1040403@gmail.com>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v7 6/9] nvmem: qfprom: Add Qualcomm QFPROM support.
+Date: Tue, 14 Jul 2015 14:18:31 -0700
+Message-ID: <20150714211831.GN30412@codeaurora.org>
+References: <1436521427-10568-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1436521529-10931-1-git-send-email-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <55A54C3A.1040403@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, netdev <netdev@vger.kernel.org>
-Cc: Linux kernel <linux-kernel@vger.kernel.org>, Sebastien Rannou <mxs@sbrk.org>, Arnaud Ebalard <arno@natisbad.org>, Stas Sergeev <stsp@users.sourceforge.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1436521529-10931-1-git-send-email-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, stefan.wahren-eS4NqCHxEME@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-14.07.2015 20:51, Florian Fainelli =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> On 14/07/15 10:13, Stas Sergeev wrote:
->> Currently the PHY management type is selected by the MAC driver arbi=
-trary.
->> The decision is based on the presence of the "fixed-link" node and o=
-n a
->> will of the driver's authors.
->> This caused a regression recently, when mvneta driver suddenly start=
-ed
->> to use the in-band status for auto-negotiation on fixed links.
->> It appears the auto-negotiation may not work when expected by the MA=
-C driver.
->> Sebastien Rannou explains:
->> << Yes, I confirm that my HW does not generate an in-band status. AF=
-AIK, it's
->> a PHY that aggregates 4xSGMIIs to 1xQSGMII ; the MAC side of the PHY=
- (with
->> inband status) is connected to the switch through QSGMII, and in thi=
-s context
->> we are on the media side of the PHY. >>
->> https://lkml.org/lkml/2015/7/10/206
->>
->> This patch introduces the new string property 'managed' that allows
->> the user to set the management type explicitly.
->> The supported values are:
->> "auto" - default. Uses either MDIO or nothing, depending on the pres=
-ence
->> of the fixed-link node
->> "mdio" - use MDIO
->> "in-band-status" - use in-band status
->> "none" - use fixed-link description
-> I thought we agreed in the last thread that "mdio" was implied whenev=
-er
-> a proper PHY phandle to a device sitting on MDIO bus is used and that
-> "auto" did not make much sense unless we were also describing how to =
-do
-> this auto-negotiation completely?
-Exactly not:
----
-> If we would implement autoneg outside of the fixed-link,
-> then its semantic would likely be
-> autoneg =3D "mdio" | "in-band" | "off"
+On 07/10, Srinivas Kandagatla wrote:
+> This patch adds QFPROM support driver which is used by other drivers
+> like thermal sensor and cpufreq.
+> 
+> On MSM parts there are some efuses (called qfprom) these fuses store
+> things like calibration data, speed bins.. etc. Drivers like cpufreq,
+> thermal sensors would read out this data for configuring the driver.
+> 
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
 
-Right, if auto-negotiation was defined outside of fixed-link, that is
-indeed how I would also specify this.
----
+I didn't see any reply on v6, but at least delay.h was removed.
+Same comments from v6 below.
 
-That's why I implemented it the way you see.
-But as you changed your mind, I'll remove "mdio".
+> diff --git a/drivers/nvmem/qfprom.c b/drivers/nvmem/qfprom.c
+> new file mode 100644
+> index 0000000..0e22a03
+> --- /dev/null
+> +++ b/drivers/nvmem/qfprom.c
+> @@ -0,0 +1,87 @@
+> +/*
+> + * Copyright (C) 2015 Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 and
+> + * only version 2 as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/device.h>
+> +#include <linux/io.h>
 
-> As mentioned below, "mdio" is redundant with finding a "phy-handle",=20
-> and "auto" is not specific enough to be useful to a consumer of this=20
-> information.=20
-I prefer to keep "auto", as otherwise we'll have the default
-value (when the option is not specified) never achievable
-when the option _is_ specified, which is probably not very
-good. But I can remove "none" instead, leaving only
-"in-band-status" and "auto". Ok?
-Of course one can propose to completely ignore that option
-in presence of MDIO, but I wonder why not to allow for
-example to opt for in-band status even if you have MDIO?
-So if we want this option to play nicely with MDIO, as opposed
-to being entirely overridden, then "auto" still makes sense IMO.
+Is this include used?
+
+> +#include <linux/module.h>
+> +#include <linux/nvmem-provider.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/slab.h>
+> +
+> +static struct regmap_config qfprom_regmap_config = {
+
+Can this be const?
+
+> +	.reg_bits = 32,
+> +	.val_bits = 8,
+> +	.reg_stride = 1,
+> +};
+> +
+> +static struct nvmem_config econfig = {
+
+Can this be const?
+
+> +	.name = "qfprom",
+> +	.owner = THIS_MODULE,
+> +};
+> +
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
