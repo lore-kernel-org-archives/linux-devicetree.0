@@ -1,115 +1,40 @@
-From: Alexander Stein <alexander.stein@systec-electronic.com>
-Subject: Re: [PATCH v1 3/7] mtd: fsl-quadspi: Support both 24- and 32-bit addressed commands.
-Date: Tue, 14 Jul 2015 16:11:19 +0200
-Message-ID: <1991808.GxeN5ENdEz@ws-stein>
-References: <1436386881-28088-1-git-send-email-cory.tusar@pid1solutions.com> <1436386881-28088-4-git-send-email-cory.tusar@pid1solutions.com>
+From: Nathan Lynch <Nathan_Lynch@mentor.com>
+Subject: Re: [PATCH v3 4/5] ARM: dts: mt8135: enable basic SMP bringup for
+ mt8135
+Date: Tue, 14 Jul 2015 09:19:00 -0500
+Message-ID: <55A51A54.7000208@mentor.com>
+References: <1436851111-2369-1-git-send-email-yingjoe.chen@mediatek.com> <1436851111-2369-5-git-send-email-yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1436386881-28088-4-git-send-email-cory.tusar@pid1solutions.com>
+In-Reply-To: <1436851111-2369-5-git-send-email-yingjoe.chen@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Cory Tusar <cory.tusar@pid1solutions.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, shawnguo@kernel.org, kernel@pengutronix.de, han.xu@freescale.com, dwmw2@infradead.org, computersforpeace@gmail.com, stefan@agner.ch, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, andrew@lunn.ch
+To: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, Arnd Bergmann <arnd@arndb.de>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Cory,
+On 07/14/2015 12:18 AM, Yingjoe Chen wrote:
+> Add arch timer node to enable arch-timer support. MT8135 firmware
+> doesn't correctly setup arch-timer frequency and CNTVOFF, add
+> properties to workaround this.
 
-On Wednesday 08 July 2015 16:21:17, Cory Tusar wrote:
-> The current fsl-quadspi implementation assumes that all connected
-> devices are of the same size and type.  This commit adds lookup table
-> entries for both 24- and 32-bit addressed variants of the read, sector
-> erase, and page program operations as a precursor to later changes which
-> generalize the flash layout parsing logic and allow for non-contiguous
-> and non-homogeneous chip combinations.
-> 
-> Signed-off-by: Cory Tusar <cory.tusar@pid1solutions.com>
-> 
-> [...]
->  /* Get the SEQID for the command */
-> -static int fsl_qspi_get_seqid(struct fsl_qspi *q, u8 cmd)
-> +static int fsl_qspi_get_seqid(struct fsl_qspi *q, u8 cmd, u8 addr_width)
->  {
->  	switch (cmd) {
->  	case SPINOR_OP_READ_1_1_4:
-> -		return SEQID_QUAD_READ;
-> +		if (addr_width == 3)
-> +			return SEQID_QUAD_READ_24;
-> +		if (addr_width == 4)
-> +			return SEQID_QUAD_READ_32;
-> +		dev_err(q->dev, "Unsupported addr_width (%d) for cmd 0x%.2x\n",
-> +			addr_width, cmd);
-> +		break;
+[...]
 
-Does this actually work? What if q->nor[0].read_opcode is SPINOR_OP_READ4_1_1_4 (set in spi-nor.c for flashes using 4 byte address commands)?
-
->  	case SPINOR_OP_WREN:
->  		return SEQID_WREN;
->  	case SPINOR_OP_WRDI:
-> @@ -403,11 +394,23 @@ static int fsl_qspi_get_seqid(struct fsl_qspi *q, u8 cmd)
->  	case SPINOR_OP_RDSR:
->  		return SEQID_RDSR;
->  	case SPINOR_OP_SE:
-> -		return SEQID_SE;
-> +		if (addr_width == 3)
-> +			return SEQID_SE_24;
-> +		if (addr_width == 4)
-> +			return SEQID_SE_32;
-> +		dev_err(q->dev, "Unsupported addr_width (%d) for cmd 0x%.2x\n",
-> +			addr_width, cmd);
-> +		break;
-
-Same as for read command.
-
->  	case SPINOR_OP_CHIP_ERASE:
->  		return SEQID_CHIP_ERASE;
->  	case SPINOR_OP_PP:
-> -		return SEQID_PP;
-> +		if (addr_width == 3)
-> +			return SEQID_PP_24;
-> +		if (addr_width == 4)
-> +			return SEQID_PP_32;
-> +		dev_err(q->dev, "Unsupported addr_width (%d) for cmd 0x%.2x\n",
-> +			addr_width, cmd);
-> +		break;
-
-See above too.
-
->  	case SPINOR_OP_RDID:
->  		return SEQID_RDID;
->  	case SPINOR_OP_WRSR:
-> @@ -456,7 +459,7 @@ fsl_qspi_runcmd(struct fsl_qspi *q, u8 cmd, unsigned int addr, int len)
->  	} while (1);
 >  
->  	/* trigger the LUT now */
-> -	seqid = fsl_qspi_get_seqid(q, cmd);
-> +	seqid = fsl_qspi_get_seqid(q, cmd, q->nor[0].addr_width);
->  	writel((seqid << QUADSPI_IPCR_SEQID_SHIFT) | len, base + QUADSPI_IPCR);
->  
->  	/* Wait for the interrupt. */
-> @@ -601,9 +604,10 @@ static void fsl_qspi_init_abh_read(struct fsl_qspi *q)
->  	writel(0, base + QUADSPI_BUF2IND);
->  
->  	/* Set the default lut sequence for AHB Read. */
-> -	seqid = fsl_qspi_get_seqid(q, q->nor[0].read_opcode);
-> +	seqid = fsl_qspi_get_seqid(q, q->nor[0].read_opcode,
-> +			q->nor[0].addr_width);
->  	writel(seqid << QUADSPI_BFGENCR_SEQID_SHIFT,
+> +	timer {
+> +		compatible = "arm,armv7-timer";
+> +		interrupt-parent = <&gic>;
+> +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) |
+> +					  IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) |
+> +					  IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) |
+> +					  IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) |
+> +					  IRQ_TYPE_LEVEL_LOW)>;
+> +		clock-frequency = <13000000>;
+> +		arm,cpu-registers-not-fw-configured;
 
-Those changes can then be skipped you explicitly do switch/case for 4 byte address commands.
-
-Best reagrds,
-Alexander
--- 
-Dipl.-Inf. Alexander Stein
-
-SYS TEC electronic GmbH
-Am Windrad 2
-08468 Heinsdorfergrund
-Tel.: 03765 38600-1156
-Fax: 03765 38600-4100
-Email: alexander.stein@systec-electronic.com
-Website: www.systec-electronic.com
- 
-Managing Director: Dipl.-Phys. Siegmar Schmidt
-Commercial registry: Amtsgericht Chemnitz, HRB 28082
+It's disappointing to see this property in new DTS submissions.  It
+prevents taking advantage of the VDSO for gettimeofday/clock_gettime.
