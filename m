@@ -1,34 +1,30 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 2/5] omap3: dts: Add DTS for Gumstix TobiDuo expansion
- board
-Date: Tue, 14 Jul 2015 04:01:46 -0700
-Message-ID: <20150714110146.GP17550@atomide.com>
-References: <1434141446-11568-1-git-send-email-ashcharles@gmail.com>
- <1434141446-11568-3-git-send-email-ashcharles@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 5/8] pinctrl: qcom: spmi-mpp: Add support for setting
+ analog output level
+Date: Tue, 14 Jul 2015 13:04:00 +0200
+Message-ID: <CACRpkdZ+8Ct1sfi2yh1uBM1Q5vonkm8M5Aw4rL70OGqcCBDKqw@mail.gmail.com>
+References: <1434610052-602-1-git-send-email-bjorn.andersson@sonymobile.com>
+	<1434610052-602-6-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1434141446-11568-3-git-send-email-ashcharles-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ash Charles <ashcharles-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1434610052-602-6-git-send-email-bjorn.andersson@sonymobile.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "Ivan T. Ivanov" <ivan.ivanov@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-* Ash Charles <ashcharles-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [150612 13:39]:
-> The Gumstix "Tobi-Duo" expansion board [1] can be used with either
-> OMAP3 Overo or Overo Storm COMs.  It provides two NICs using LAN9221
-> chips.
-> It is necessary to duplicate the interface information for the
-> second SMSC9221 chip as discussed [2].
-> 
-> [1] https://store.gumstix.com/index.php/products/241/
-> [2] http://www.spinics.net/lists/linux-omap/msg115282.html
+On Thu, Jun 18, 2015 at 8:47 AM, Bjorn Andersson
+<bjorn.andersson@sonymobile.com> wrote:
 
-Applying patches 2 - 5 into omap-for-v4.3/dt thanks.
+> When the MPP is configured for analog output the output level is selected by
+> the AOUT_CTL register, this patch makes it possible to control this.
+>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Holding the application of patches here until Ivan's
+comment is addressed, its OK to resend just the patches that need
+alterations, just preserve the 5/8 please so I don't get too confused...
+
+Yours,
+Linus Walleij
