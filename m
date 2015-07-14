@@ -1,141 +1,67 @@
-From: Daniel Kurtz <djkurtz@chromium.org>
-Subject: Re: [PATCH v2 5/5] arm64: dts: mediatek: add xHCI & usb phy for mt8173
-Date: Tue, 14 Jul 2015 18:12:22 +0800
-Message-ID: <CAGS+omDfUv0KW8K45rLoN8qUV2Q_vgWFK_X4Ojb6K55G9tiehA@mail.gmail.com>
-References: <1436348468-4126-1-git-send-email-chunfeng.yun@mediatek.com> <1436348468-4126-6-git-send-email-chunfeng.yun@mediatek.com>
+From: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v3 4/5] clk: mediatek: Add USB clock support in MT8173 APMIXEDSYS
+Date: Tue, 14 Jul 2015 18:15:58 +0800
+Message-ID: <CAGS+omB=Fbdpr0jc0oXxbPP1pePOXzaAZi4yKAd_=HnpQDbacA@mail.gmail.com>
+References: <1436522405-13923-1-git-send-email-jamesjj.liao@mediatek.com>
+ <1436522405-13923-5-git-send-email-jamesjj.liao@mediatek.com>
+ <CAGS+omBryA6f6gYje5RvF2XcJiebogYCHpyWNeN9K4B-MiHf1Q@mail.gmail.com>
+ <1436841935.9416.10.camel@mtksdaap41> <CAGS+omAb8t0sLP1DHoa6z1-XweWUwOJQhqydofWZ+YiyPXzxhA@mail.gmail.com>
+ <1436867199.9416.16.camel@mtksdaap41>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1436348468-4126-6-git-send-email-chunfeng.yun@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: Mathias Nyman <mathias.nyman@intel.com>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, linux-usb@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Roger Quadros <rogerq@ti.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1436867199.9416.16.camel@mtksdaap41>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Heiko Stubner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Chunfeng,
-
-On Wed, Jul 8, 2015 at 5:41 PM, Chunfeng Yun <chunfeng.yun@mediatek.com> wrote:
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> ---
->  arch/arm64/boot/dts/mediatek/mt8173-evb.dts | 15 +++++++++++++++
->  arch/arm64/boot/dts/mediatek/mt8173.dtsi    | 27 +++++++++++++++++++++++++++
->  2 files changed, 42 insertions(+)
+On Tue, Jul 14, 2015 at 5:46 PM, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> Hi Daniel,
 >
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-> index f433c21..cb63dc3 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-> +++ b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-> @@ -13,6 +13,7 @@
->   */
+> On Tue, 2015-07-14 at 11:23 +0800, Daniel Kurtz wrote:
+>> On Tue, Jul 14, 2015 at 10:45 AM, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+>> > On Mon, 2015-07-13 at 22:46 +0800, Daniel Kurtz wrote:
+>> >> > +static const struct clk_ops mtk_ref2usb_tx_ops = {
+>> >> > +       .is_prepared    = mtk_ref2usb_tx_is_prepared,
+>> >> > +       .prepare        = mtk_ref2usb_tx_prepare,
+>> >> > +       .unprepare      = mtk_ref2usb_tx_unprepare,
+>> >> > +};
+>> >>
+>> >> Burying the implementation of this special "mtk_ref2usb" clock in
+>> >> clk-mt8173,c seems a bit awkward.
+>> >> Can you please move it to its own file, like mediatek/clk-usb.c?
+>> >
+>> > Do you mean clk/mediatek/clk-usb.c?
+>> >
+>> > This clock is a MT8173 specific clock, which may not be reused by other
+>> > SoCs. So I think it's not necessary to move it to a separated file.
+>>
+>> Yes, this is a wrapper for a type of clock.  I think it would be
+>> better in its own file, rather than embedded in clk-mt8173.c, which is
+>> more about enumerating and initializing the clock tree.
+>>
+>> Perhaps today it is only used for mt8173, but that may not be the case
+>> in the future.
 >
->  /dts-v1/;
-> +#include <dt-bindings/gpio/gpio.h>
->  #include "mt8173.dtsi"
+> OK, I'll separate it from clk-mt8173.c.
 >
->  / {
-> @@ -32,6 +33,15 @@
->         };
->
->         chosen { };
-> +
-> +       usb_p1_vbus: fixedregulator@0 {
+> Ref2usb_tx's control register is located in APMIXEDSYS, which contains
+> most of PLL controlling. Is this clock suitable to implemented
+> mtk-pll.c? Or it's proper to be a separated file such as clk-usb.c?
 
-Why @0 ?
-
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "usb_vbus";
-> +               regulator-min-microvolt = <5000000>;
-> +               regulator-max-microvolt = <5000000>;
-> +               gpio = <&pio 130 GPIO_ACTIVE_HIGH>;
-> +               enable-active-high;
-> +       };
->  };
->
->  &pwrap {
-> @@ -211,3 +221,8 @@
->  &uart0 {
->         status = "okay";
->  };
-> +
-> +&usb {
-> +       reg-vusb33-supply = <&mt6397_vusb_reg>;
-> +       reg-vbus-supply = <&usb_p1_vbus>;
-> +};
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> index 0696f8f..452bd0a 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> @@ -15,6 +15,7 @@
->  #include <dt-bindings/interrupt-controller/irq.h>
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
->  #include <dt-bindings/reset-controller/mt8173-resets.h>
-> +#include <dt-bindings/power/mt8173-power.h>
-
-Sort alphabetically, so:
-power before reset
-
->  #include "mt8173-pinfunc.h"
->
->  / {
-> @@ -393,6 +394,32 @@
->                         #size-cells = <0>;
->                         status = "disabled";
->                 };
-> +
-> +               usb: usb30@11270000 {
-> +                       compatible = "mediatek,mt8173-xhci";
-> +                       reg = <0 0x11270000 0 0x1000>;
-> +                       interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_LOW>;
-> +                       usb-phy = <&u3phy>;
-> +                       usb3-lpm-capable;
-> +                       clocks = <&topckgen CLK_TOP_USB30_SEL>;
-> +                       clock-names = "sys_mac";
-> +               };
-> +
-> +               u3phy: usb-phy@11271000 {
-> +                       compatible = "mediatek,mt8173-u3phy";
-> +                       reg = <0 0x11271000 0 0x3000>,
-> +                             <0 0x11280000 0 0x20000>;
-> +                       power-domains = <&scpsys MT8173_POWER_DOMAIN_USB>;
-> +                       usb-wakeup-ctrl = <&pericfg>;
-> +                       wakeup-src = <1>;
-> +                       u2port-num = <2>;
-
-Mediatek specific properties should be prefixed with "mediatek,".
-I also find it nicer if you put the standard properties first:
-  (compatible, reg, clocks, clock-names, power-domains)
-then device specific properties:
-  (usb-wakeup-ctrl, wakeup-src, u2port-num)
-and then the final:
-  status="disabled";
-
-This last is currently missing, so please add it, too.
-
-Also, is there some pinctrl settings that must be set for USB?
-
-Lastly, I could not quite figure out which patch this set was based on.
-Patch [0] mentions v4.2-rc1, however, the .dts changes in this patch
-did not apply cleanly.
-Perhaps it was based on a particular patch of Matthias tree?
+I think a separate clk-usb.c might be better since the driver is very
+different than what is used for the PLLs.
 
 Thanks!
 -Dan
 
-> +                       clocks = <&pericfg CLK_PERI_USB0>,
-> +                                <&pericfg CLK_PERI_USB1>,
-> +                                <&apmixedsys CLK_APMIXED_REF2USB_TX>;
-> +                       clock-names = "wakeup_deb_p0",
-> +                                     "wakeup_deb_p1",
-> +                                     "u3phya_ref";
-> +               };
->         };
->  };
+> Best regards,
 >
-> --
-> 1.8.1.1.dirty
+> James
 >
 >
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
