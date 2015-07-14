@@ -1,159 +1,81 @@
-From: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 2/4] spi: davinci: Choose correct pre-scaler limit based on SOC
-Date: Tue, 14 Jul 2015 14:45:25 -0500
-Message-ID: <1436903127-6777-3-git-send-email-fcooper@ti.com>
-References: <1436903127-6777-1-git-send-email-fcooper@ti.com>
+From: Stas Sergeev <stsp@list.ru>
+Subject: Re: [PATCH 2/3] of_mdio: add new DT property 'managed' to specify the
+ PHY management type
+Date: Tue, 14 Jul 2015 23:26:10 +0300
+Message-ID: <55A57062.80703@list.ru>
+References: <55A5424D.4030809@list.ru> <55A5432C.1080609@list.ru>
+ <55A54C3A.1040403@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1436903127-6777-1-git-send-email-fcooper-l0cyMroinI0@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <55A54C3A.1040403@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>, netdev <netdev@vger.kernel.org>
+Cc: Linux kernel <linux-kernel@vger.kernel.org>, Sebastien Rannou <mxs@sbrk.org>, Arnaud Ebalard <arno@natisbad.org>, Stas Sergeev <stsp@users.sourceforge.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Currently the pre-scaler limit is incorrect. The value differs slightly
-for various devices so a single value can't be used. Using the compatible
-field select the correct pre-scaler limit.
-
-Add new compatible field value for Keystone devices to support their
-unique pre-scaler limit value.
-
-Signed-off-by: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
+14.07.2015 20:51, Florian Fainelli =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> On 14/07/15 10:13, Stas Sergeev wrote:
+>> Currently the PHY management type is selected by the MAC driver arbi=
+trary.
+>> The decision is based on the presence of the "fixed-link" node and o=
+n a
+>> will of the driver's authors.
+>> This caused a regression recently, when mvneta driver suddenly start=
+ed
+>> to use the in-band status for auto-negotiation on fixed links.
+>> It appears the auto-negotiation may not work when expected by the MA=
+C driver.
+>> Sebastien Rannou explains:
+>> << Yes, I confirm that my HW does not generate an in-band status. AF=
+AIK, it's
+>> a PHY that aggregates 4xSGMIIs to 1xQSGMII ; the MAC side of the PHY=
+ (with
+>> inband status) is connected to the switch through QSGMII, and in thi=
+s context
+>> we are on the media side of the PHY. >>
+>> https://lkml.org/lkml/2015/7/10/206
+>>
+>> This patch introduces the new string property 'managed' that allows
+>> the user to set the management type explicitly.
+>> The supported values are:
+>> "auto" - default. Uses either MDIO or nothing, depending on the pres=
+ence
+>> of the fixed-link node
+>> "mdio" - use MDIO
+>> "in-band-status" - use in-band status
+>> "none" - use fixed-link description
+> I thought we agreed in the last thread that "mdio" was implied whenev=
+er
+> a proper PHY phandle to a device sitting on MDIO bus is used and that
+> "auto" did not make much sense unless we were also describing how to =
+do
+> this auto-negotiation completely?
+Exactly not:
 ---
- .../devicetree/bindings/spi/spi-davinci.txt        |  2 +
- drivers/spi/spi-davinci.c                          | 43 ++++++++++++++++++----
- include/linux/platform_data/spi-davinci.h          |  1 +
- 3 files changed, 39 insertions(+), 7 deletions(-)
+> If we would implement autoneg outside of the fixed-link,
+> then its semantic would likely be
+> autoneg =3D "mdio" | "in-band" | "off"
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-davinci.txt b/Documentation/devicetree/bindings/spi/spi-davinci.txt
-index 12ecfe9..d1e914a 100644
---- a/Documentation/devicetree/bindings/spi/spi-davinci.txt
-+++ b/Documentation/devicetree/bindings/spi/spi-davinci.txt
-@@ -12,6 +12,8 @@ Required properties:
- - compatible:
- 	- "ti,dm6441-spi" for SPI used similar to that on DM644x SoC family
- 	- "ti,da830-spi" for SPI used similar to that on DA8xx SoC family
-+	- "ti,keystone-spi" for SPI used similar to that on Keystone2 SoC
-+		family
- - reg: Offset and length of SPI controller register space
- - num-cs: Number of chip selects. This includes internal as well as
- 	GPIO chip selects.
-diff --git a/drivers/spi/spi-davinci.c b/drivers/spi/spi-davinci.c
-index b4605c4..3cf9faa 100644
---- a/drivers/spi/spi-davinci.c
-+++ b/drivers/spi/spi-davinci.c
-@@ -139,6 +139,8 @@ struct davinci_spi {
- 	u32			(*get_tx)(struct davinci_spi *);
- 
- 	u8			*bytes_per_word;
-+
-+	u8			prescaler_limit;
- };
- 
- static struct davinci_spi_config davinci_spi_default_cfg;
-@@ -266,7 +268,7 @@ static inline int davinci_spi_get_prescale(struct davinci_spi *dspi,
- 	/* Subtract 1 to match what will be programmed into SPI register. */
- 	ret = DIV_ROUND_UP(clk_get_rate(dspi->clk), max_speed_hz) - 1;
- 
--	if (ret < 0 || ret > 255)
-+	if (ret < dspi->prescaler_limit || ret > 255)
- 		return -EINVAL;
- 
- 	return ret;
-@@ -833,13 +835,40 @@ rx_dma_failed:
- }
- 
- #if defined(CONFIG_OF)
-+
-+/* OF SPI data structure */
-+struct davinci_spi_of_data {
-+	u8	version;
-+	u8	prescaler_limit;
-+};
-+
-+static const struct davinci_spi_of_data dm6441_spi_data = {
-+	.version = SPI_VERSION_1,
-+	.prescaler_limit = 2,
-+};
-+
-+static const struct davinci_spi_of_data da830_spi_data = {
-+	.version = SPI_VERSION_2,
-+	.prescaler_limit = 2,
-+};
-+
-+static const struct davinci_spi_of_data keystone_spi_data = {
-+	.version = SPI_VERSION_1,
-+	.prescaler_limit = 0,
-+};
-+
- static const struct of_device_id davinci_spi_of_match[] = {
- 	{
- 		.compatible = "ti,dm6441-spi",
-+		.data = &dm6441_spi_data,
- 	},
- 	{
- 		.compatible = "ti,da830-spi",
--		.data = (void *)SPI_VERSION_2,
-+		.data = &da830_spi_data,
-+	},
-+	{
-+		.compatible = "ti,keystone-spi",
-+		.data = &keystone_spi_data,
- 	},
- 	{ },
- };
-@@ -858,21 +887,21 @@ static int spi_davinci_get_pdata(struct platform_device *pdev,
- 			struct davinci_spi *dspi)
- {
- 	struct device_node *node = pdev->dev.of_node;
-+	struct davinci_spi_of_data *spi_data;
- 	struct davinci_spi_platform_data *pdata;
- 	unsigned int num_cs, intr_line = 0;
- 	const struct of_device_id *match;
- 
- 	pdata = &dspi->pdata;
- 
--	pdata->version = SPI_VERSION_1;
- 	match = of_match_device(davinci_spi_of_match, &pdev->dev);
- 	if (!match)
- 		return -ENODEV;
- 
--	/* match data has the SPI version number for SPI_VERSION_2 */
--	if (match->data == (void *)SPI_VERSION_2)
--		pdata->version = SPI_VERSION_2;
-+	spi_data = (struct davinci_spi_of_data *)match->data;
- 
-+	pdata->version = spi_data->version;
-+	pdata->prescaler_limit = spi_data->prescaler_limit;
- 	/*
- 	 * default num_cs is 1 and all chipsel are internal to the chip
- 	 * indicated by chip_sel being NULL or cs_gpios being NULL or
-@@ -992,7 +1021,7 @@ static int davinci_spi_probe(struct platform_device *pdev)
- 
- 	dspi->bitbang.chipselect = davinci_spi_chipselect;
- 	dspi->bitbang.setup_transfer = davinci_spi_setup_transfer;
--
-+	dspi->prescaler_limit = pdata->prescaler_limit;
- 	dspi->version = pdata->version;
- 
- 	dspi->bitbang.flags = SPI_NO_CS | SPI_LSB_FIRST | SPI_LOOP;
-diff --git a/include/linux/platform_data/spi-davinci.h b/include/linux/platform_data/spi-davinci.h
-index 8dc2fa47..f4edcb0 100644
---- a/include/linux/platform_data/spi-davinci.h
-+++ b/include/linux/platform_data/spi-davinci.h
-@@ -49,6 +49,7 @@ struct davinci_spi_platform_data {
- 	u8			num_chipselect;
- 	u8			intr_line;
- 	u8			*chip_sel;
-+	u8			prescaler_limit;
- 	bool			cshold_bug;
- 	enum dma_event_q	dma_event_q;
- };
--- 
-1.9.1
+Right, if auto-negotiation was defined outside of fixed-link, that is
+indeed how I would also specify this.
+---
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+That's why I implemented it the way you see.
+But as you changed your mind, I'll remove "mdio".
+
+> As mentioned below, "mdio" is redundant with finding a "phy-handle",=20
+> and "auto" is not specific enough to be useful to a consumer of this=20
+> information.=20
+I prefer to keep "auto", as otherwise we'll have the default
+value (when the option is not specified) never achievable
+when the option _is_ specified, which is probably not very
+good. But I can remove "none" instead, leaving only
+"in-band-status" and "auto". Ok?
+Of course one can propose to completely ignore that option
+in presence of MDIO, but I wonder why not to allow for
+example to opt for in-band status even if you have MDIO?
+So if we want this option to play nicely with MDIO, as opposed
+to being entirely overridden, then "auto" still makes sense IMO.
