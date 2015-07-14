@@ -1,65 +1,132 @@
-From: Gregory Fong <gregory.0xf0@gmail.com>
-Subject: Re: [PATCH v3 4/4] gpio: brcmstb: support wakeup from S5 cold boot
-Date: Mon, 13 Jul 2015 19:31:01 -0700
-Message-ID: <CADtm3G5sokwoKcHd3fXBmreKfuUstNWcqeVRScHObxhBeG28LA@mail.gmail.com>
-References: <1434589243-502-1-git-send-email-gregory.0xf0@gmail.com>
- <1434589243-502-5-git-send-email-gregory.0xf0@gmail.com> <CACRpkdZSUUk-giwckxSyV8ZvAZcQUD7KaCnjq=_hiO7k9=jVMQ@mail.gmail.com>
+From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v3 4/5] clk: mediatek: Add USB clock support in MT8173
+ APMIXEDSYS
+Date: Tue, 14 Jul 2015 10:45:35 +0800
+Message-ID: <1436841935.9416.10.camel@mtksdaap41>
+References: <1436522405-13923-1-git-send-email-jamesjj.liao@mediatek.com>
+	 <1436522405-13923-5-git-send-email-jamesjj.liao@mediatek.com>
+	 <CAGS+omBryA6f6gYje5RvF2XcJiebogYCHpyWNeN9K4B-MiHf1Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZSUUk-giwckxSyV8ZvAZcQUD7KaCnjq=_hiO7k9=jVMQ@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Brian Norris <computersforpeace@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAGS+omBryA6f6gYje5RvF2XcJiebogYCHpyWNeN9K4B-MiHf1Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Heiko Stubner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 13, 2015 at 6:03 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Thu, Jun 18, 2015 at 3:00 AM, Gregory Fong <gregory.0xf0@gmail.com> wrote:
->
->> For wake from S5, we need to:
->> - register a reboot handler
->> - set wakeup capability before requesting IRQ so wakeup count is
->>   incremented
->> - mask all GPIO IRQs and clear any pending interrupts during driver
->>   probe to since no driver will yet be registered to handle any IRQs
->>   carried over from boot at that time, and it's possible that the
->>   booted kernel does not request the same IRQ anyway.
->>
->> This means that /sys/.../power/wakeup_count is valid at boot time, and
->> we can properly account for S5 wakeup stats. e.g.:
->>
->>   ### After waking from S5 from a GPIO key
->>   # cat /sys/bus/platform/drivers/brcmstb-gpio/f04172c0.gpio/power/wakeup
->>   enabled
->>   # cat /sys/bus/platform/drivers/brcmstb-gpio/f04172c0.gpio/power/wakeup_count
->>   1
->>
->> Signed-off-by: Gregory Fong <gregory.0xf0@gmail.com>
->
-> (...)
->> -static int brcmstb_gpio_irq_set_wake(struct irq_data *d, unsigned int enable)
->> +static int __brcmstb_gpio_irq_set_wake(struct brcmstb_gpio_priv *priv,
->> +               unsigned int enable)
->>  {
->> -       struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
->> -       struct brcmstb_gpio_priv *priv = brcmstb_gpio_gc_to_priv(gc);
->>         int ret = 0;
->
-> I don't usually like to refactor code with __foo wrapper functions with
-> underscores or double underscores in front of them.
->
-> Is it possible to give this a more unique name?
+Hi Daniel,
 
-Sure, just have to come up with a good one :-).
+On Mon, 2015-07-13 at 22:46 +0800, Daniel Kurtz wrote:
 
->
->> +               /*
->> +                * Mask all interrupts by default, since wakeup interrupts may
->> +                * be retained from S5 cold boot
->> +                */
->> +               bank->bgc.write_reg(reg_base + GIO_MASK(bank->id), 0);
->
-> Aha I see, that's some clever code, nice.
->
-> Yours,
-> Linus Walleij
+> > +static const struct clk_ops mtk_ref2usb_tx_ops = {
+> > +       .is_prepared    = mtk_ref2usb_tx_is_prepared,
+> > +       .prepare        = mtk_ref2usb_tx_prepare,
+> > +       .unprepare      = mtk_ref2usb_tx_unprepare,
+> > +};
+> 
+> Burying the implementation of this special "mtk_ref2usb" clock in
+> clk-mt8173,c seems a bit awkward.
+> Can you please move it to its own file, like mediatek/clk-usb.c?
+
+Do you mean clk/mediatek/clk-usb.c?
+
+This clock is a MT8173 specific clock, which may not be reused by other
+SoCs. So I think it's not necessary to move it to a separated file.
+
+> > +
+> > +static struct clk *mtk_clk_register_ref2usb_tx(const char *name,
+> > +                       const char *parent_name, void __iomem *reg)
+> > +{
+> > +       struct mtk_ref2usb_tx *tx;
+> > +       struct clk_init_data init = {};
+> > +       struct clk *clk;
+> > +
+> > +       tx = kzalloc(sizeof(*tx), GFP_KERNEL);
+> > +       if (!tx)
+> > +               return ERR_PTR(-ENOMEM);
+> > +
+> > +       tx->base_addr = reg;
+> > +       tx->hw.init = &init;
+> > +
+> > +       init.name = name;
+> > +       init.ops = &mtk_ref2usb_tx_ops;
+> > +       init.parent_names = &parent_name;
+> > +       init.num_parents = 1;
+> > +
+> > +       clk = clk_register(NULL, &tx->hw);
+> > +
+> > +       if (IS_ERR(clk)) {
+> > +               pr_err("Failed to register clk %s: %ld\n", name, PTR_ERR(clk));
+> > +               kfree(tx);
+> > +       }
+> > +
+> > +       return clk;
+> > +}
+> > +
+> > +struct mtk_apmixed_ex {
+> > +       int id;
+> > +       const char *name;
+> > +       const char *parent;
+> > +       u32 reg_ofs;
+> > +};
+> > +
+> > +#define APMIXED_EX(_id, _name, _parent, _reg_ofs) {                    \
+> > +               .id = _id,                                              \
+> > +               .name = _name,                                          \
+> > +               .parent = _parent,                                      \
+> > +               .reg_ofs = _reg_ofs,                                    \
+> > +       }
+> > +
+> > +static const struct mtk_apmixed_ex apmixed_ex[] = {
+> 
+> __initconst
+
+OK. I'll fix it in next patch.
+
+> > +       APMIXED_EX(CLK_APMIXED_REF2USB_TX, "ref2usb_tx", "clk26m", 0x8),
+> > +};
+> > +
+> > +static void __init mtk_clk_register_apmixedsys_special(struct device_node *node,
+> > +                       struct clk_onecell_data *clk_data)
+> > +{
+> > +       void __iomem *base;
+> > +       struct clk *clk;
+> > +       int i;
+> > +
+> > +       base = of_iomap(node, 0);
+> > +       if (!base) {
+> > +               pr_err("%s(): ioremap failed\n", __func__);
+> > +               return;
+> > +       }
+> > +
+> > +       for (i = 0; i < ARRAY_SIZE(apmixed_ex); i++) {
+> > +               const struct mtk_apmixed_ex *ape = &apmixed_ex[i];
+> > +
+> > +               clk = mtk_clk_register_ref2usb_tx(ape->name, ape->parent,
+> > +                                                       base + ape->reg_ofs);
+> > +
+> > +               if (IS_ERR(clk)) {
+> > +                       pr_err("Failed to register clk %s: %ld\n", ape->name,
+> > +                                       PTR_ERR(clk));
+> > +                       continue;
+> > +               }
+> > +
+> > +               clk_data->clks[CLK_APMIXED_REF2USB_TX] = clk;
+> 
+> This works assuming ARRAY_SIZE(apmixed_ex) == 1.
+> Either remove the loop since it is unnecessary, or do:
+>   clk_data->clks[ape->id] = clk;
+
+It should be "clk_data->clks[ape->id] = clk". I'll fix it in next patch.
+
+
+Best regards,
+
+James
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
