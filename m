@@ -1,75 +1,61 @@
-From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v3 1/5] ARM: mediatek: enable gpt6 on boot up to make arch timer working
-Date: Tue, 14 Jul 2015 13:18:27 +0800
-Message-ID: <1436851111-2369-2-git-send-email-yingjoe.chen@mediatek.com>
+From: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Subject: [PATCH v3 5/5] ARM: dts: mt8127: enable basic SMP bringup for mt8127
+Date: Tue, 14 Jul 2015 13:18:31 +0800
+Message-ID: <1436851111-2369-6-git-send-email-yingjoe.chen@mediatek.com>
 References: <1436851111-2369-1-git-send-email-yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1436851111-2369-1-git-send-email-yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1436851111-2369-1-git-send-email-yingjoe.chen@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Olof Johansson <olof@lixom.net>, Yingjoe Chen <yingjoe.chen@mediatek.com>, srv_heupstream@mediatek.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Add arch timer node to enable arch-timer support. MT8127 firmware
+doesn't correctly setup arch-timer frequency and CNTVOFF, add
+properties to workaround this.
 
-We enable GTP6 which ungates the arch timer clock.
-In the future this should be done in the bootloader.
+This also set cpu enable-method to enable SMP.
 
-Signed-off-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Signed-off-by: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
 ---
- arch/arm/mach-mediatek/mediatek.c | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ arch/arm/boot/dts/mt8127.dtsi | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/arch/arm/mach-mediatek/mediatek.c b/arch/arm/mach-mediatek/mediatek.c
-index a954900..19dc738 100644
---- a/arch/arm/mach-mediatek/mediatek.c
-+++ b/arch/arm/mach-mediatek/mediatek.c
-@@ -16,6 +16,32 @@
-  */
- #include <linux/init.h>
- #include <asm/mach/arch.h>
-+#include <linux/of.h>
-+#include <linux/clk-provider.h>
-+#include <linux/clocksource.h>
-+
-+
-+#define GPT6_CON_MT65xx 0x10008060
-+#define GPT_ENABLE      0x31
-+
-+static void __init mediatek_timer_init(void)
-+{
-+	void __iomem *gpt_base;
-+
-+	if (of_machine_is_compatible("mediatek,mt6589") ||
-+	    of_machine_is_compatible("mediatek,mt8135") ||
-+	    of_machine_is_compatible("mediatek,mt8127")) {
-+		/* turn on GPT6 which ungates arch timer clocks */
-+		gpt_base = ioremap(GPT6_CON_MT65xx, 0x04);
-+
-+		/* enable clock and set to free-run */
-+		writel(GPT_ENABLE, gpt_base);
-+		iounmap(gpt_base);
-+	}
-+
-+	of_clk_init(NULL);
-+	clocksource_of_init();
-+};
+diff --git a/arch/arm/boot/dts/mt8127.dtsi b/arch/arm/boot/dts/mt8127.dtsi
+index ca3402e..fae84ee 100644
+--- a/arch/arm/boot/dts/mt8127.dtsi
++++ b/arch/arm/boot/dts/mt8127.dtsi
+@@ -23,6 +23,7 @@
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
++		enable-method = "mediatek,mt81xx-tz-smp";
  
- static const char * const mediatek_board_dt_compat[] = {
- 	"mediatek,mt6589",
-@@ -27,4 +53,5 @@ static const char * const mediatek_board_dt_compat[] = {
+ 		cpu@0 {
+ 			device_type = "cpu";
+@@ -72,6 +73,21 @@
+                 };
+ 	};
  
- DT_MACHINE_START(MEDIATEK_DT, "Mediatek Cortex-A7 (Device Tree)")
- 	.dt_compat	= mediatek_board_dt_compat,
-+	.init_time	= mediatek_timer_init,
- MACHINE_END
++	timer {
++		compatible = "arm,armv7-timer";
++		interrupt-parent = <&gic>;
++		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) |
++					  IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) |
++					  IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) |
++					  IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) |
++					  IRQ_TYPE_LEVEL_LOW)>;
++		clock-frequency = <13000000>;
++		arm,cpu-registers-not-fw-configured;
++	};
++
+ 	soc {
+ 		#address-cells = <2>;
+ 		#size-cells = <2>;
 -- 
 1.8.1.1.dirty
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
