@@ -1,46 +1,65 @@
-From: Yinghai Lu <yinghai@kernel.org>
-Subject: [PATCH v2 41/49] of/PCI: Add IORESOURCE_MEM_64 for 64-bit resource
-Date: Tue, 14 Jul 2015 15:47:12 -0700
-Message-ID: <1436914040-13206-42-git-send-email-yinghai@kernel.org>
-References: <1436914040-13206-1-git-send-email-yinghai@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1436914040-13206-1-git-send-email-yinghai@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>, David Miller <davem@davemloft.net>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Wei Yang <weiyang@linux.vnet.ibm.com>, TJ <linux@iam.tj>, Yijing Wang <wangyijing@huawei.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Yinghai Lu <yinghai@kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+From: Tim Bird <tim.bird@sonymobile.com>
+Subject: [PATCH v2 3/3] ARM: dts: qcom: Add dts changes for qcom coincell charger
+Date: Tue, 14 Jul 2015 16:26:20 -0700
+Message-ID: <1436916380-3599-3-git-send-email-tim.bird@sonymobile.com>
+References: <1436916380-3599-1-git-send-email-tim.bird@sonymobile.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1436916380-3599-1-git-send-email-tim.bird@sonymobile.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: arnd@arndb.de, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, bjorn.andersson@sonymobile.com
 List-Id: devicetree@vger.kernel.org
 
-For device resource PREF bit setting under bridge 64-bit pref resource,
-we need to make sure only set PREF for 64bit resource, so set
-IORESOUCE_MEM_64 for 64bit resource during of device resource flags
-parsing.
+Add framework for the coincell charger DT block in pm8941 file, and
+actual values for honami battery in the honami dts file.
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=96261
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=96241
-Signed-off-by: Yinghai Lu <yinghai@kernel.org>
-Cc: Grant Likely <grant.likely@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
+Signed-off-by: Tim Bird <tim.bird@sonymobile.com>
 ---
- drivers/of/address.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index 8bfda6a..073125f 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -128,9 +128,11 @@ static unsigned int of_bus_pci_get_flags(const __be32 *addr)
- 		flags |= IORESOURCE_IO;
- 		break;
- 	case 0x02: /* 32 bits */
--	case 0x03: /* 64 bits */
- 		flags |= IORESOURCE_MEM;
- 		break;
-+	case 0x03: /* 64 bits */
-+		flags |= IORESOURCE_MEM | IORESOURCE_MEM_64;
-+		break;
- 	}
- 	if (w & 0x40000000)
- 		flags |= IORESOURCE_PREFETCH;
+Changes in v2:
+ - change coincell node name to remove 'qcom,' prefix
+
+ arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts | 11 +++++++++++
+ arch/arm/boot/dts/qcom-pm8941.dtsi                    |  6 ++++++
+ 2 files changed, 17 insertions(+)
+
+diff --git a/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts b/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
+index bd35b06..3705f34 100644
+--- a/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
++++ b/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
+@@ -17,3 +17,14 @@
+ 		status = "ok";
+ 	};
+ };
++
++&spmi_bus {
++	pm8941@0 {
++		coincell@2800 {
++			status = "ok";
++			qcom,rset-ohms = <2100>;
++			qcom,vset-millivolts = <3000>;
++			qcom,charge-enable;
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/qcom-pm8941.dtsi b/arch/arm/boot/dts/qcom-pm8941.dtsi
+index aa774e6..968f104 100644
+--- a/arch/arm/boot/dts/qcom-pm8941.dtsi
++++ b/arch/arm/boot/dts/qcom-pm8941.dtsi
+@@ -125,6 +125,12 @@
+ 			interrupts = <0x0 0x36 0x0 IRQ_TYPE_EDGE_RISING>;
+ 			qcom,external-resistor-micro-ohms = <10000>;
+ 		};
++
++		coincell@2800 {
++			compatible = "qcom,pm8941-coincell";
++			reg = <0x2800>;
++			status = "disabled";
++		};
+ 	};
+ 
+ 	usid1: pm8941@1 {
 -- 
-1.8.4.5
+1.8.2.2
