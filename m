@@ -1,54 +1,36 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 3/3] arm64: dts: add device tree for ARM SMM-A53x2 on
- LogicTile Express 20MG
-Date: Tue, 14 Jul 2015 12:13:55 +0100
-Message-ID: <55A4EEF3.50801@arm.com>
-References: <1435754163-17929-1-git-send-email-sudeep.holla@arm.com>	 <1435754163-17929-4-git-send-email-sudeep.holla@arm.com> <1436863074.25044.30.camel@hellion.org.uk>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH - resend for 4.2-rc2] ARM: DTS: dra7x: Integrate sDMA
+ crossbar
+Date: Tue, 14 Jul 2015 04:15:57 -0700
+Message-ID: <20150714111557.GT17550@atomide.com>
+References: <1435755149-10328-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1436863074.25044.30.camel-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1435755149-10328-1-git-send-email-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Kristina Martsenko <Kristina.Martsenko-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+* Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org> [150701 05:54]:
+> The sDMA requests are routed through the DMA crossbar and without the
+> crossbar only peripherals using DMA request 0-127 can be used.
+> 
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+> ---
+> Hi Tony,
+> 
+> as you have suggested: http://permalink.gmane.org/gmane.linux.ports.arm.omap/125999
+> the DTS change has not been taken by Vinod.
+> Now that the dmaengine pull request is in for 4.2 it would be great if you could
+> pick up the DTS part of the series and send it for -rc2.
 
+Thanks, looks like I also had the original patch still tagged.
+Applying this one instead although they look the same.
 
-On 14/07/15 09:37, Ian Campbell wrote:
-> On Wed, 2015-07-01 at 13:36 +0100, Sudeep Holla wrote:
->
->> diff --git a/arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts b/arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts
->> new file mode 100644
->> index 000000000000..5b1d0181023b
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts
-> [...]
->> +		/include/ "../../../../arm/boot/dts/vexpress-v2m-rs1.dtsi"
->
-> Unfortunately this causes some issues for the split device tree
-> repository[0], since things get moved around there.
->
-> This new file ends up at src/arm64/arm/vexpress-v2f-1xv7-ca53x2.dts
-> while the include is at src/arm/vexpress-v2m-rs1.dtsi.
->
-
-Ah sorry, wasn't aware of such a effort to move DTS files out.
-
-> Any ideas how best to deal with this?
->
-
-Honestly no idea. We did discuss this internally with 2 options:
-
-1. Specifying the relative path as done in this patch
-2. Creating symlink, something like how kvm manages files today
-
-I agree both are not elegant but (1) was chosen to be better of the two.
-We are open for any suggestions.
-
-Regards,
-Sudeep
+Tony
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
