@@ -1,170 +1,68 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v2 5/7] serial: 8250_omap: workaround errata around idling UART after using DMA
-Date: Tue, 14 Jul 2015 13:32:07 +0530
-Message-ID: <d2ad0e4e6206fd670f1a73509a99c60d7001a91e.1436855647.git.nsekhar@ti.com>
-References: <cover.1436855646.git.nsekhar@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1436855646.git.nsekhar-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, John Ogness <john.ogness-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Subject: [PATCH v2 2/3] pinctrl: tegra: Only set the gpio range if needed
+Date: Tue, 14 Jul 2015 10:29:55 +0200
+Message-ID: <1436862596-27730-3-git-send-email-tomeu.vizoso@collabora.com>
+References: <1436862596-27730-1-git-send-email-tomeu.vizoso@collabora.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1436862596-27730-1-git-send-email-tomeu.vizoso@collabora.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Thierry Reding <thierry.reding@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Alexandre Courbot <gnurou@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-AM335x, AM437x and DRA7x SoCs have an errata[1] due to which UART
-cannot be idled after it has been used with DMA.
+If the gpio DT node has the gpio-ranges property, the range will be
+added by the gpio core and doesn't need to be added by the pinctrl
+driver.
 
-OMAP3 has a similar sounding errata which has been worked around
-in a2fc36613ac1af2e9 ("ARM: OMAP3: Use manual idle for UARTs
-because of DMA errata"). But the workaround used there does not
-apply to AM335x, AM437x SoCs.
+By having the gpio-ranges property, we have an explicit dependency from
+the gpio node to the pinctrl node and we can stop using the deprecated
+pinctrl_add_gpio_range() function.
 
-After using DMA, the UART module on these SoCs must be soft reset
-to go to idle.
-
-This patch implements that errata workaround. It is expected that
-UART will be used with DMA so no explicit check for DMA usage
-has been added for errata applicability.
-
-MDR1 register needs to be restored right after soft-reset because
-"UART mode" must be set in that register for module wake-up on AM335x
-to work. As a result, SCR register is now used to determine if
-context was lost during sleep.
-
-[1] See Advisory 21 in AM437x errata SPRZ408B, updated April 2015.
-    http://www.ti.com/lit/er/sprz408b/sprz408b.pdf
-
-Signed-off-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Acked-by: Stephen Warren <swarren@nvidia.com>
 ---
-v2:
-- introduce a new function to do the UART softreset
-- restore MDR1 unconditionally
-- update subject line and description according to comments received.
 
- drivers/tty/serial/8250/8250_omap.c | 65 +++++++++++++++++++++++++++++++++----
- 1 file changed, 59 insertions(+), 6 deletions(-)
+Changes in v2: None
 
-diff --git a/drivers/tty/serial/8250/8250_omap.c b/drivers/tty/serial/8250/8250_omap.c
-index fff026f3d0bb..a2ee75dee070 100644
---- a/drivers/tty/serial/8250/8250_omap.c
-+++ b/drivers/tty/serial/8250/8250_omap.c
-@@ -33,6 +33,11 @@
- #define UART_ERRATA_i202_MDR1_ACCESS	(1 << 0)
- #define OMAP_UART_WER_HAS_TX_WAKEUP	(1 << 1)
- #define OMAP_DMA_TX_KICK		(1 << 2)
-+/*
-+ * See Advisory 21 in AM437x errata SPRZ408B, updated April 2015.
-+ * The same errata is applicable to AM335x and DRA7x processors too.
-+ */
-+#define UART_ERRATA_CLOCK_DISABLE	(1 << 3)
- 
- #define OMAP_UART_FCR_RX_TRIG		6
- #define OMAP_UART_FCR_TX_TRIG		4
-@@ -54,6 +59,12 @@
- #define OMAP_UART_MVR_MAJ_SHIFT		8
- #define OMAP_UART_MVR_MIN_MASK		0x3f
- 
-+/* SYSC register bitmasks */
-+#define OMAP_UART_SYSC_SOFTRESET	(1 << 1)
-+
-+/* SYSS register bitmasks */
-+#define OMAP_UART_SYSS_RESETDONE	(1 << 0)
-+
- #define UART_TI752_TLR_TX	0
- #define UART_TI752_TLR_RX	4
- 
-@@ -1062,13 +1073,15 @@ static int omap8250_no_handle_irq(struct uart_port *port)
- 	return 0;
- }
- 
--static const u8 am3352_habit = OMAP_DMA_TX_KICK;
-+static const u8 am3352_habit = OMAP_DMA_TX_KICK | UART_ERRATA_CLOCK_DISABLE;
-+static const u8 am4372_habit = UART_ERRATA_CLOCK_DISABLE;
- 
- static const struct of_device_id omap8250_dt_ids[] = {
- 	{ .compatible = "ti,omap2-uart" },
- 	{ .compatible = "ti,omap3-uart" },
- 	{ .compatible = "ti,omap4-uart" },
- 	{ .compatible = "ti,am3352-uart", .data = &am3352_habit, },
-+	{ .compatible = "ti,am4372-uart", .data = &am4372_habit, },
- 	{},
+ drivers/pinctrl/pinctrl-tegra.c | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pinctrl/pinctrl-tegra.c b/drivers/pinctrl/pinctrl-tegra.c
+index 0f982b829be1..0fd7fd2b0f72 100644
+--- a/drivers/pinctrl/pinctrl-tegra.c
++++ b/drivers/pinctrl/pinctrl-tegra.c
+@@ -624,6 +624,22 @@ static struct pinctrl_desc tegra_pinctrl_desc = {
+ 	.owner = THIS_MODULE,
  };
- MODULE_DEVICE_TABLE(of, omap8250_dt_ids);
-@@ -1282,17 +1295,46 @@ static int omap8250_lost_context(struct uart_8250_port *up)
- {
- 	u32 val;
  
--	val = serial_in(up, UART_OMAP_MDR1);
-+	val = serial_in(up, UART_OMAP_SCR);
- 	/*
--	 * If we lose context, then MDR1 is set to its reset value which is
--	 * UART_OMAP_MDR1_DISABLE. After set_termios() we set it either to 13x
--	 * or 16x but never to disable again.
-+	 * If we lose context, then SCR is set to its reset value of zero.
-+	 * After set_termios() we set bit 3 of SCR (TX_EMPTY_CTL_IT) to 1,
-+	 * among other bits, to never set the register back to zero again.
- 	 */
--	if (val == UART_OMAP_MDR1_DISABLE)
-+	if (!val)
- 		return 1;
- 	return 0;
- }
- 
-+/* TODO: in future, this should happen via API in drivers/reset/ */
-+static int omap8250_soft_reset(struct device *dev)
++static bool gpio_node_has_range(void)
 +{
-+	struct omap8250_priv *priv = dev_get_drvdata(dev);
-+	struct uart_8250_port *up = serial8250_get_port(priv->line);
-+	int timeout = 100;
-+	int sysc;
-+	int syss;
++	struct device_node *np;
++	bool has_prop = false;
 +
-+	sysc = serial_in(up, UART_OMAP_SYSC);
++	np = of_find_compatible_node(NULL, NULL, "nvidia,tegra30-gpio");
++	if (!np)
++		return has_prop;
 +
-+	/* softreset the UART */
-+	sysc |= OMAP_UART_SYSC_SOFTRESET;
-+	serial_out(up, UART_OMAP_SYSC, sysc);
++	has_prop = of_find_property(np, "gpio-ranges", NULL);
 +
-+	/* By experiments, 1us enough for reset complete on AM335x */
-+	do {
-+		udelay(1);
-+		syss = serial_in(up, UART_OMAP_SYSS);
-+	} while (--timeout && !(syss & OMAP_UART_SYSS_RESETDONE));
++	of_node_put(np);
 +
-+	if (!timeout) {
-+		dev_err(dev, "timed out waiting for reset done\n");
-+		return -ETIMEDOUT;
-+	}
-+
-+	return 0;
++	return has_prop;
 +}
 +
- static int omap8250_runtime_suspend(struct device *dev)
+ int tegra_pinctrl_probe(struct platform_device *pdev,
+ 			const struct tegra_pinctrl_soc_data *soc_data)
  {
- 	struct omap8250_priv *priv = dev_get_drvdata(dev);
-@@ -1310,6 +1352,17 @@ static int omap8250_runtime_suspend(struct device *dev)
- 			return -EBUSY;
+@@ -708,7 +724,8 @@ int tegra_pinctrl_probe(struct platform_device *pdev,
+ 		return PTR_ERR(pmx->pctl);
  	}
  
-+	if (priv->habit & UART_ERRATA_CLOCK_DISABLE) {
-+		int ret;
-+
-+		ret = omap8250_soft_reset(dev);
-+		if (ret)
-+			return ret;
-+
-+		/* Restore to UART mode after reset (for wakeup) */
-+		omap8250_update_mdr1(up, priv);
-+	}
-+
- 	if (up->dma && up->dma->rxchan)
- 		omap_8250_rx_dma(up, UART_IIR_RX_TIMEOUT);
+-	pinctrl_add_gpio_range(pmx->pctl, &tegra_pinctrl_gpio_range);
++	if (!gpio_node_has_range())
++		pinctrl_add_gpio_range(pmx->pctl, &tegra_pinctrl_gpio_range);
+ 
+ 	platform_set_drvdata(pdev, pmx);
  
 -- 
-2.4.4.408.g16da57c
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.4.3
