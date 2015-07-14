@@ -1,55 +1,46 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 0/2] Add MT8173 MMPLL change rate support
-Date: Tue, 14 Jul 2015 15:13:19 -0700
-Message-ID: <20150714221319.GQ30412@codeaurora.org>
-References: <1436344666-25645-1-git-send-email-jamesjj.liao@mediatek.com>
- <559DC3EF.90401@codeaurora.org>
- <1436507086.3526.117.camel@mtksdaap41>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Yinghai Lu <yinghai@kernel.org>
+Subject: [PATCH v2 41/49] of/PCI: Add IORESOURCE_MEM_64 for 64-bit resource
+Date: Tue, 14 Jul 2015 15:47:12 -0700
+Message-ID: <1436914040-13206-42-git-send-email-yinghai@kernel.org>
+References: <1436914040-13206-1-git-send-email-yinghai@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1436507086.3526.117.camel@mtksdaap41>
+In-Reply-To: <1436914040-13206-1-git-send-email-yinghai@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: James Liao <jamesjj.liao@mediatek.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mike Turquette <mturquette@baylibre.com>, Heiko Stubner <heiko@sntech.de>, srv_heupstream@mediatek.com, Daniel Kurtz <djkurtz@chromium.org>, Ricky Liang <jcliang@chromium.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
+To: Bjorn Helgaas <bhelgaas@google.com>, David Miller <davem@davemloft.net>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Wei Yang <weiyang@linux.vnet.ibm.com>, TJ <linux@iam.tj>, Yijing Wang <wangyijing@huawei.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Yinghai Lu <yinghai@kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/10, James Liao wrote:
-> Hi Stephen,
-> 
-> On Wed, 2015-07-08 at 17:44 -0700, Stephen Boyd wrote:
-> > On 07/08/2015 01:37 AM, James Liao wrote:
-> > > MT8173 MMPLL frequency settings are different from common PLLs.
-> > > It needs different post divider settings for some ranges of frequency.
-> > > This patch add support for MT8173 MMPLL frequency setting, includes:
-> > >
-> > > 1. Add div-rate table for PLLs.
-> > > 2. Increase the max ost divider setting from 3 (/8) to 4 (/16).
-> > > 3. Write postdiv and pcw settings at the same time.
-> > >
-> > > James Liao (2):
-> > >   clk: mediatek: Fix PLL registers setting flow
-> > >   clk: mediatek: Add MT8173 MMPLL change rate support
-> > >
-> > 
-> > Are these fixing regressions in 4.2-rc1? I don't see any "Fixes:" tag so
-> > it's not clear and makes me want to defer these until v4.3. Furthermore,
-> > the subject starts with "Add" so it sounds like a new feature.
-> 
-> This patchset is based on 4.1-rc1 but it had been tested on 4.2-rc1.
-> I'll send a new patch which based on 4.2-rc1.
-> 
-> This patchset contains some general PLL fixes and MMPLL set rate
-> support. We can say the last one is also a fix because changing some
-> specific rate on MMPLL may fail in current implementation.
-> 
-> 
+For device resource PREF bit setting under bridge 64-bit pref resource,
+we need to make sure only set PREF for 64bit resource, so set
+IORESOUCE_MEM_64 for 64bit resource during of device resource flags
+parsing.
 
-I'm seriously confused. The files these patches touch were never
-in v4.1, so they can't be based on v4.1-rc1 unless you're saying
-they were on top of clk-next when it was based on 4.1-rc1?
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=96261
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=96241
+Signed-off-by: Yinghai Lu <yinghai@kernel.org>
+Cc: Grant Likely <grant.likely@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org
+---
+ drivers/of/address.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index 8bfda6a..073125f 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -128,9 +128,11 @@ static unsigned int of_bus_pci_get_flags(const __be32 *addr)
+ 		flags |= IORESOURCE_IO;
+ 		break;
+ 	case 0x02: /* 32 bits */
+-	case 0x03: /* 64 bits */
+ 		flags |= IORESOURCE_MEM;
+ 		break;
++	case 0x03: /* 64 bits */
++		flags |= IORESOURCE_MEM | IORESOURCE_MEM_64;
++		break;
+ 	}
+ 	if (w & 0x40000000)
+ 		flags |= IORESOURCE_PREFETCH;
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+1.8.4.5
