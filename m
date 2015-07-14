@@ -1,137 +1,92 @@
-From: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
-Subject: [PATCH-v4 09/11] i2c: pxa: Add support for pxa910/988 & new configuration features
-Date: Tue, 14 Jul 2015 13:06:48 +0530
-Message-ID: <1436859410-28878-10-git-send-email-vaibhav.hiremath@linaro.org>
-References: <1436859410-28878-1-git-send-email-vaibhav.hiremath@linaro.org>
+From: Daniel Kurtz <djkurtz@chromium.org>
+Subject: Re: [PATCH 1/5] clocksource: mediatek: do not enable GPT_CLK_EVT when setup
+Date: Tue, 14 Jul 2015 15:39:47 +0800
+Message-ID: <CAGS+omD8k_Cfxv3bYyjmjtLbiavo-WmJPn0Z-CBhN_nnv65Tag@mail.gmail.com>
+References: <1436779969-18610-1-git-send-email-yingjoe.chen@mediatek.com> <1436779969-18610-2-git-send-email-yingjoe.chen@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1436859410-28878-1-git-send-email-vaibhav.hiremath@linaro.org>
+In-Reply-To: <1436779969-18610-2-git-send-email-yingjoe.chen@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-i2c@vger.kernel.org
-Cc: wsa@the-dreams.de, robh+dt@kernel.org, robert.jarzmik@free.fr, yizhang@marvell.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vaibhav Hiremath <vaibhav.hiremath@linaro.org>, "Jett.Zhou" <jtzhou@marvell.com>
+To: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, James Liao <jamesjj.liao@mediatek.com>, Russell King <linux@arm.linux.org.uk>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Olof Johansson <olof@lixom.net>, srv_heupstream <srv_heupstream@mediatek.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-TWSI_ILCR & TWSI_IWCR registers are used to adjust clock rate
-of standard & fast mode in pxa910/988; so this patch adds these two new
-entries to "struct pxa_reg_layout" and "struct pxa_i2c".
+Hi Yingjoe,
 
-As discussed in the previous patch-series, the idea here is to add standard
-DT properties for ilcr and iwcr configuration fields.
-In case of Master ilcr is used for low/high time and in case of slave mode
-of operation iwcr is used for setup/hold time.
+On Mon, Jul 13, 2015 at 5:32 PM, Yingjoe Chen <yingjoe.chen@mediatek.com> wrote:
+> Spurious mtk timer interrupt is noticed at boot and cause kernel
+> crash. It seems if GPT is enabled, it will latch irq status even
+> when its IRQ is disabled. When irq is enabled afterward, we see
+> spurious interrupt.
+> Change init flow to only enable GPT_CLK_SRC at mtk_timer_init.
+>
+> Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
+> ---
+>  drivers/clocksource/mtk_timer.c | 16 ++++++++++------
+>  1 file changed, 10 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/clocksource/mtk_timer.c b/drivers/clocksource/mtk_timer.c
+> index 68ab423..237c20b 100644
+> --- a/drivers/clocksource/mtk_timer.c
+> +++ b/drivers/clocksource/mtk_timer.c
+> @@ -156,9 +156,11 @@ static void mtk_timer_global_reset(struct mtk_clock_event_device *evt)
+>         writel(0x3f, evt->gpt_base + GPT_IRQ_ACK_REG);
+>  }
+>
+> -static void
+> -mtk_timer_setup(struct mtk_clock_event_device *evt, u8 timer, u8 option)
+> +static void mtk_timer_setup(struct mtk_clock_event_device *evt, u8 timer,
+> +                           u8 option, bool enable)
 
-Signed-off-by: Jett.Zhou <jtzhou@marvell.com>
-Signed-off-by: Yi Zhang <yizhang@marvell.com>
-Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
----
- drivers/i2c/busses/i2c-pxa.c | 42 +++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 41 insertions(+), 1 deletion(-)
+This function can be: __init
 
-diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
-index abf04f2..8d76197 100644
---- a/drivers/i2c/busses/i2c-pxa.c
-+++ b/drivers/i2c/busses/i2c-pxa.c
-@@ -46,12 +46,15 @@ struct pxa_reg_layout {
- 	u32 icr;
- 	u32 isr;
- 	u32 isar;
-+	u32 ilcr;
-+	u32 iwcr;
- };
- 
- enum pxa_i2c_types {
- 	REGS_PXA2XX,
- 	REGS_PXA3XX,
- 	REGS_CE4100,
-+	REGS_PXA910,
- };
- 
- /*
-@@ -79,12 +82,22 @@ static struct pxa_reg_layout pxa_reg_layout[] = {
- 		.isr =	0x04,
- 		/* no isar register */
- 	},
-+	[REGS_PXA910] = {
-+		.ibmr = 0x00,
-+		.idbr = 0x08,
-+		.icr =	0x10,
-+		.isr =	0x18,
-+		.isar = 0x20,
-+		.ilcr = 0x28,
-+		.iwcr = 0x30,
-+	},
- };
- 
- static const struct platform_device_id i2c_pxa_id_table[] = {
- 	{ "pxa2xx-i2c",		REGS_PXA2XX },
- 	{ "pxa3xx-pwri2c",	REGS_PXA3XX },
- 	{ "ce4100-i2c",		REGS_CE4100 },
-+	{ "pxa910-i2c",		REGS_PXA910 },
- 	{ },
- };
- MODULE_DEVICE_TABLE(platform, i2c_pxa_id_table);
-@@ -124,6 +137,24 @@ MODULE_DEVICE_TABLE(platform, i2c_pxa_id_table);
- #define ISR_SAD		(1 << 9)	   /* slave address detected */
- #define ISR_BED		(1 << 10)	   /* bus error no ACK/NAK */
- 
-+/* bit field shift & mask */
-+#define ILCR_SLV_SHIFT		0
-+#define ILCR_SLV_MASK		(0x1FF << ILCR_SLV_SHIFT)
-+#define ILCR_FLV_SHIFT		9
-+#define ILCR_FLV_MASK		(0x1FF << ILCR_FLV_SHIFT)
-+#define ILCR_HLVL_SHIFT		18
-+#define ILCR_HLVL_MASK		(0x1FF << ILCR_HLVL_SHIFT)
-+#define ILCR_HLVH_SHIFT		27
-+#define ILCR_HLVH_MASK		(0x1F << ILCR_HLVH_SHIFT)
-+
-+#define IWCR_CNT_SHIFT		0
-+#define IWCR_CNT_MASK		(0x1F << IWCR_CNT_SHIFT)
-+#define IWCR_HS_CNT1_SHIFT	5
-+#define IWCR_HS_CNT1_MASK	(0x1F << IWCR_HS_CNT1_SHIFT)
-+#define IWCR_HS_CNT2_SHIFT	10
-+#define IWCR_HS_CNT2_MASK	(0x1F << IWCR_HS_CNT2_SHIFT)
-+
-+
- struct pxa_i2c {
- 	spinlock_t		lock;
- 	wait_queue_head_t	wait;
-@@ -150,6 +181,8 @@ struct pxa_i2c {
- 	void __iomem		*reg_icr;
- 	void __iomem		*reg_isr;
- 	void __iomem		*reg_isar;
-+	void __iomem		*reg_ilcr;
-+	void __iomem		*reg_iwcr;
- 
- 	unsigned long		iobase;
- 	unsigned long		iosize;
-@@ -169,6 +202,8 @@ struct pxa_i2c {
- #define _ICR(i2c)	((i2c)->reg_icr)
- #define _ISR(i2c)	((i2c)->reg_isr)
- #define _ISAR(i2c)	((i2c)->reg_isar)
-+#define _ILCR(i2c)	((i2c)->reg_ilcr)
-+#define _IWCR(i2c)	((i2c)->reg_iwcr)
- 
- /*
-  * I2C Slave mode address
-@@ -1135,7 +1170,7 @@ static const struct i2c_algorithm i2c_pxa_pio_algorithm = {
- static const struct of_device_id i2c_pxa_dt_ids[] = {
- 	{ .compatible = "mrvl,pxa-i2c", .data = (void *)REGS_PXA2XX },
- 	{ .compatible = "mrvl,pwri2c", .data = (void *)REGS_PXA3XX },
--	{ .compatible = "mrvl,mmp-twsi", .data = (void *)REGS_PXA2XX },
-+	{ .compatible = "mrvl,mmp-twsi", .data = (void *)REGS_PXA910 },
- 	{}
- };
- MODULE_DEVICE_TABLE(of, i2c_pxa_dt_ids);
-@@ -1243,6 +1278,11 @@ static int i2c_pxa_probe(struct platform_device *dev)
- 	if (i2c_type != REGS_CE4100)
- 		i2c->reg_isar = i2c->reg_base + pxa_reg_layout[i2c_type].isar;
- 
-+	if (i2c_type == REGS_PXA910) {
-+		i2c->reg_ilcr = i2c->reg_base + pxa_reg_layout[i2c_type].ilcr;
-+		i2c->reg_iwcr = i2c->reg_base + pxa_reg_layout[i2c_type].iwcr;
-+	}
-+
- 	i2c->iobase = res->start;
- 	i2c->iosize = resource_size(res);
- 
--- 
-1.9.1
+Other than this tiny nit, and the small potential conflict in patch 4,
+this whole series is:
+
+Reviewed-by: Daniel Kurtz <djkurtz@chromium.org>
+
+(I do think it is a bit strange that the mediatek,mt6577-timer binding
+does not use "clock-names", but that is independent of this patch
+set).
+
+Thanks!
+
+
+>  {
+> +       u32 val;
+> +
+>         writel(TIMER_CTRL_CLEAR | TIMER_CTRL_DISABLE,
+>                 evt->gpt_base + TIMER_CTRL_REG(timer));
+>
+> @@ -167,8 +169,10 @@ mtk_timer_setup(struct mtk_clock_event_device *evt, u8 timer, u8 option)
+>
+>         writel(0x0, evt->gpt_base + TIMER_CMP_REG(timer));
+>
+> -       writel(TIMER_CTRL_OP(option) | TIMER_CTRL_ENABLE,
+> -                       evt->gpt_base + TIMER_CTRL_REG(timer));
+> +       val = TIMER_CTRL_OP(option);
+> +       if (enable)
+> +               val |= TIMER_CTRL_ENABLE;
+> +       writel(val, evt->gpt_base + TIMER_CTRL_REG(timer));
+>  }
+>
+>  static void mtk_timer_enable_irq(struct mtk_clock_event_device *evt, u8 timer)
+> @@ -235,12 +239,12 @@ static void __init mtk_timer_init(struct device_node *node)
+>         evt->ticks_per_jiffy = DIV_ROUND_UP(rate, HZ);
+>
+>         /* Configure clock source */
+> -       mtk_timer_setup(evt, GPT_CLK_SRC, TIMER_CTRL_OP_FREERUN);
+> +       mtk_timer_setup(evt, GPT_CLK_SRC, TIMER_CTRL_OP_FREERUN, true);
+>         clocksource_mmio_init(evt->gpt_base + TIMER_CNT_REG(GPT_CLK_SRC),
+>                         node->name, rate, 300, 32, clocksource_mmio_readl_up);
+>
+>         /* Configure clock event */
+> -       mtk_timer_setup(evt, GPT_CLK_EVT, TIMER_CTRL_OP_REPEAT);
+> +       mtk_timer_setup(evt, GPT_CLK_EVT, TIMER_CTRL_OP_REPEAT, false);
+>         clockevents_config_and_register(&evt->dev, rate, 0x3,
+>                                         0xffffffff);
+>
+> --
+> 1.8.1.1.dirty
+>
