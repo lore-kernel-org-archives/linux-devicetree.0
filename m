@@ -1,51 +1,22 @@
-From: Adam YH Lee <adam.yh.lee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH V2] arm:DTS Correct audio input route & set mic bias
-Date: Tue, 14 Jul 2015 11:17:24 -0700
-Message-ID: <1436897844-6908-1-git-send-email-adam.yh.lee@gmail.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: add vendor prefix for Netxeon Technology
+Date: Tue, 14 Jul 2015 20:26:52 +0200
+Message-ID: <4840625.mAlaQlrqhn@diego>
+References: <19362183.0Io0nOHtsp@phil>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <19362183.0Io0nOHtsp@phil>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Adam YH Lee <adam.yh.lee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Audio-in was incorrectly routed to Line In. It should be Mic3L as per
-schematic.
+Am Dienstag, 26. Mai 2015, 21:49:05 schrieb Heiko Stuebner:
+> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 
-Using mic-bias voltage at 2.0v (<0x1>) does not work for some reason. There
-is no voltage seen on micbias (R127). Mic-bias voltage of 2.5v (<0x2>) works.
-I see voltage of 2.475v across GND and micbias.
-
-With these changes, I can record audio with a pair of proliferate TRRS earbuds.
-
-Signed-off-by: Adam YH Lee <adam.yh.lee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/am335x-pepper.dts | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/am335x-pepper.dts b/arch/arm/boot/dts/am335x-pepper.dts
-index d627dc6..73b4cc3 100644
---- a/arch/arm/boot/dts/am335x-pepper.dts
-+++ b/arch/arm/boot/dts/am335x-pepper.dts
-@@ -74,6 +74,7 @@
- 	audio_codec: tlv320aic3106@1b {
- 		compatible = "ti,tlv320aic3106";
- 		reg = <0x1b>;
-+		ai3x-micbias-vg = <0x2>;
- 	};
- 
- 	accel: lis331dlh@1d {
-@@ -152,7 +153,7 @@
- 	ti,audio-routing =
- 		"Headphone Jack",	"HPLOUT",
- 		"Headphone Jack",	"HPROUT",
--		"LINE1L",		"Line In";
-+		"MIC3L",		"Mic3L Switch";
- };
- 
- &mcasp0 {
--- 
-2.1.4
-
+applied both patches to my dts branch for 4.3
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
