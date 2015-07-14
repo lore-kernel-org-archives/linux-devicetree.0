@@ -1,75 +1,54 @@
-From: S Twiss <stwiss.opensource@diasemi.com>
-Subject: [PATCH RFC V1 0/3]  da9062: Add DA9062 OnKey support using the existing DA9063 OnKey driver
-Date: Tue, 14 Jul 2015 14:07:50 +0100
-Message-ID: <cover.1436879270.git.stwiss.opensource@diasemi.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: DEVICETREE <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, LINUXINPUT <linux-input@vger.kernel.org>, LINUXKERNEL <linux-kernel@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, RTCLINUX <rtc-linux@googlegroups.com>, Rob Herring <robh+dt@kernel.org>, S Twiss <stwiss.opensource@diasemi.com>, Samuel Ortiz <sameo@linux.intel.com>
-Cc: David Dajun Chen <david.chen@diasemi.com>, Support Opensource <support.opensource@diasemi.com>
+From: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3 0/2] Implement sample time consideration for Vybrid's ADC
+Date: Tue, 14 Jul 2015 19:23:21 +0530
+Message-ID: <cover.1436880513.git.maitysanchayan@gmail.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org, Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: S Twiss <stwiss.opensource@diasemi.com>
+Hello,
 
-This patch set adds OnKey support for the Dialog DA9062 Power Management IC.
-Changes are made to the existing DA9063 OnKey component so that functionality
-in this device driver can be re-used to support the DA9062 OnKey.
+This patchset adds a dt binding for specifying sample time
+for the vybrid adc driver and takes this into account for
+sampling frequency calculation and related configuration in
+the driver.
 
-This following patch set is the proposed method for re-using the existing
-kernel OnKey drivers for chips whose OnKey blocks are functionally similar
-to the DA9063 OnKey.
+The patchset is based on top of Stefan's patches here
+http://lkml.iu.edu/hypermail/linux/kernel/1505.3/02043.html
 
-The main points for the MFD core and device tree changes are as follows.
+which got recently applied.
 
-- Alteration of the DA9063 OnKey Kconfig needs to be updated to depend on
-  both MFD_DA9063 "or" MFD_DA9062. There is no explicit DA9062 OnKey Kconfig.
-- The DA9062 MFD core should add a new OnKey resource as usual and an entry
-  in the mfd_cell to support a component name and of_compatible for
-  "da9062-onkey" and "dlg,da9062-onkey".
-- The device tree binding support should include a compatible string for
-  "dlg,da9062-onkey"
+Changes since v2:
 
-The main points for the OnKey changes are as follows:
+- Use a default value of 1000ns for sample time in the driver
+  if the property is not specified in the device tree.
+- Specify the min-sample-time property in the board device tree
+  file instead of the top level vfxxx.dtsi file for Vybrid
 
-A generic structure is used (called da9063_compatible_onkey_regmap) to hold
-all generic registers and bitmasks for use with this type of OnKey component.
+Changes since v1:
 
-Functions in the DA9063 OnKey will be refactored to use this compatibility
-struct and all accesses to generic registers/masks will be made through
-this table look-up instead of using defines from the register header files
-directly
+Change from a vendor specific fsl,min-sample-time to non vendor
+specific min-sample-time.
 
-Linkage between the DA9062 MFD and the DA9063 OnKey driver is created through
-the use of an of_match_table entry in the platform_driver structure.
-A re-work of da9063_onkey_probe() is necessary to use the of_match_node() and
-dev_get_regmap() functions: this will provide initialisation of the generic
-registers and masks and allow access to the regmap according to the correct
-device tree specification.
+Version 2 of the patchset can be found here
+https://lkml.org/lkml/2015/6/24/97
 
-The addition of a of_device_id table for DA9063 and DA9062 default data
-is created. 
+Version 1 of the patchset can be found here
+http://lkml.iu.edu/hypermail/linux/kernel/1506.1/00026.html
 
-In this patch set the following is provided:
- - [PATCH V1 1/3]: MFD changes in DA9062 to support OnKey
- - [PATCH V1 2/3]: Update existing DA9063 OnKey to add DA9062 support
- - [PATCH V1 3/3]: Device tree bindings for DA9062 OnKey component
+- Sanchayan.
 
-This patch applies against linux-next and next-20150708 
+Sanchayan Maity (2):
+  iio: adc: vf610: Determine sampling frequencies by using minimum
+    sample time
+  ARM: dts: vf-colibri: Add property for minimum sample time
 
-Thank you,
-Steve Twiss, Dialog Semiconductor Ltd.
-
-S Twiss (3):
-  mfd: da9062: Support for the DA9063 OnKey in the DA9062 core
-  onkey: da9063: Add DA9062 OnKey capability to DA9063 OnKey driver
-  devicetree: da9062: Add device tree bindings for DA9062 OnKey
-
- Documentation/devicetree/bindings/mfd/da9062.txt |  18 +++
- drivers/input/misc/Kconfig                       |   6 +-
- drivers/input/misc/da9063_onkey.c                | 139 ++++++++++++++++++-----
- drivers/mfd/da9062-core.c                        |  11 ++
- 4 files changed, 141 insertions(+), 33 deletions(-)
+ .../devicetree/bindings/iio/adc/vf610-adc.txt      |  5 ++
+ arch/arm/boot/dts/vf-colibri.dtsi                  |  2 +
+ drivers/iio/adc/vf610_adc.c                        | 79 ++++++++++++++++++++--
+ 3 files changed, 82 insertions(+), 4 deletions(-)
 
 -- 
-end-of-patch for PATCH RFC V1
+2.4.5
