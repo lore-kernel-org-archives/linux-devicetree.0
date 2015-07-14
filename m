@@ -1,92 +1,155 @@
-From: Daniel Kurtz <djkurtz@chromium.org>
-Subject: Re: [PATCH 1/5] clocksource: mediatek: do not enable GPT_CLK_EVT when setup
-Date: Tue, 14 Jul 2015 15:39:47 +0800
-Message-ID: <CAGS+omD8k_Cfxv3bYyjmjtLbiavo-WmJPn0Z-CBhN_nnv65Tag@mail.gmail.com>
-References: <1436779969-18610-1-git-send-email-yingjoe.chen@mediatek.com> <1436779969-18610-2-git-send-email-yingjoe.chen@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1436779969-18610-2-git-send-email-yingjoe.chen@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, James Liao <jamesjj.liao@mediatek.com>, Russell King <linux@arm.linux.org.uk>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Olof Johansson <olof@lixom.net>, srv_heupstream <srv_heupstream@mediatek.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-clk@vger.kernel.org
+From: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH-v4 10/11] i2c: pxa: Add ILCR (tLow & tHigh) configuration support
+Date: Tue, 14 Jul 2015 13:06:49 +0530
+Message-ID: <1436859410-28878-11-git-send-email-vaibhav.hiremath@linaro.org>
+References: <1436859410-28878-1-git-send-email-vaibhav.hiremath@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1436859410-28878-1-git-send-email-vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, yizhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Jett.Zhou" <jtzhou-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Yingjoe,
+With addition of PXA910 family of devices, the TWSI module supports
+SCL clock adjustment using ILCR register.
 
-On Mon, Jul 13, 2015 at 5:32 PM, Yingjoe Chen <yingjoe.chen@mediatek.com> wrote:
-> Spurious mtk timer interrupt is noticed at boot and cause kernel
-> crash. It seems if GPT is enabled, it will latch irq status even
-> when its IRQ is disabled. When irq is enabled afterward, we see
-> spurious interrupt.
-> Change init flow to only enable GPT_CLK_SRC at mtk_timer_init.
->
-> Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
-> ---
->  drivers/clocksource/mtk_timer.c | 16 ++++++++++------
->  1 file changed, 10 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/clocksource/mtk_timer.c b/drivers/clocksource/mtk_timer.c
-> index 68ab423..237c20b 100644
-> --- a/drivers/clocksource/mtk_timer.c
-> +++ b/drivers/clocksource/mtk_timer.c
-> @@ -156,9 +156,11 @@ static void mtk_timer_global_reset(struct mtk_clock_event_device *evt)
->         writel(0x3f, evt->gpt_base + GPT_IRQ_ACK_REG);
->  }
->
-> -static void
-> -mtk_timer_setup(struct mtk_clock_event_device *evt, u8 timer, u8 option)
-> +static void mtk_timer_setup(struct mtk_clock_event_device *evt, u8 timer,
-> +                           u8 option, bool enable)
+This patch enables the control and configuration of ICLR through DT
+properties,
 
-This function can be: __init
+i2c-sclk-high-time-ns:
+  SCLK high time (tHigh), for standard/fast/high speed mode
+i2c-sclk-low-time-ns:
+  SCLK low time (tLow), for standard/fast/high speed mode
 
-Other than this tiny nit, and the small potential conflict in patch 4,
-this whole series is:
+Note that in case of standard and fast mod, the tLow and tHigh counters
+are same, and software will use tLow value.
 
-Reviewed-by: Daniel Kurtz <djkurtz@chromium.org>
+Also, brought up devm_clk_get() fn above i2c_pxa_probe_dt(), as it
+uses clk rate for timing calculations.
 
-(I do think it is a bit strange that the mediatek,mt6577-timer binding
-does not use "clock-names", but that is independent of this patch
-set).
+Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Jett.Zhou <jtzhou-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Yi Zhang <yizhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+---
+ drivers/i2c/busses/i2c-pxa.c | 66 ++++++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 60 insertions(+), 6 deletions(-)
 
-Thanks!
+diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
+index 8d76197..ee79599 100644
+--- a/drivers/i2c/busses/i2c-pxa.c
++++ b/drivers/i2c/busses/i2c-pxa.c
+@@ -195,6 +195,9 @@ struct pxa_i2c {
+ 	unsigned long		rate;
+ 	bool			highmode_enter;
+ 	bool			disable_after_xfer;
++
++	unsigned int		sclk_thigh_load_cnt;
++	unsigned int		sclk_tlow_load_cnt;
+ };
+ 
+ #define _IBMR(i2c)	((i2c)->reg_ibmr)
+@@ -507,6 +510,33 @@ static void i2c_pxa_set_slave(struct pxa_i2c *i2c, int errcode)
+ #define i2c_pxa_set_slave(i2c, err)	do { } while (0)
+ #endif
+ 
++static void i2c_pxa_do_sclk_adj(struct pxa_i2c *i2c)
++{
++	unsigned int reg_ilcr;
++
++	reg_ilcr = readl(_ILCR(i2c));
++
++	/* For standard/fast mode tlow and thigh counters are same */
++	if (i2c->sclk_tlow_load_cnt) {
++		unsigned int mask, shift;
++
++		mask = i2c->high_mode ? ILCR_HLVL_MASK :
++			i2c->fast_mode ? ILCR_FLV_MASK : ILCR_SLV_MASK;
++		shift = i2c->high_mode ? ILCR_HLVL_SHIFT :
++			i2c->fast_mode ? ILCR_FLV_SHIFT : ILCR_SLV_SHIFT;
++
++		reg_ilcr &= ~mask;
++		reg_ilcr |= i2c->sclk_tlow_load_cnt << shift;
++	}
++
++	if (i2c->high_mode && i2c->sclk_thigh_load_cnt) {
++		reg_ilcr &= ~ILCR_HLVH_MASK;
++		reg_ilcr |= i2c->sclk_thigh_load_cnt << ILCR_HLVH_SHIFT;
++	}
++
++	writel(reg_ilcr, _ILCR(i2c));
++}
++
+ static void i2c_pxa_reset(struct pxa_i2c *i2c)
+ {
+ 	pr_debug("Resetting I2C Controller Unit\n");
+@@ -526,6 +556,8 @@ static void i2c_pxa_reset(struct pxa_i2c *i2c)
+ 	writel(I2C_ICR_INIT | (i2c->fast_mode ? ICR_FM : 0), _ICR(i2c));
+ 	writel(readl(_ICR(i2c)) | (i2c->high_mode ? ICR_HS : 0), _ICR(i2c));
+ 
++	i2c_pxa_do_sclk_adj(i2c);
++
+ #ifdef CONFIG_I2C_PXA_SLAVE
+ 	dev_info(&i2c->adap.dev, "Enabling slave mode\n");
+ 	writel(readl(_ICR(i2c)) | ICR_SADIE | ICR_ALDIE | ICR_SSDIE, _ICR(i2c));
+@@ -1198,6 +1230,26 @@ static int i2c_pxa_probe_dt(struct platform_device *pdev, struct pxa_i2c *i2c,
+ 
+ 	*i2c_types = (enum pxa_i2c_types)(of_id->data);
+ 
++	/* optional properties */
++	if (of_device_is_compatible(np, "mrvl,mmp-twsi")) {
++		unsigned int tlow = 0, thigh = 0;
++		unsigned int clk_ns;
++
++		/* clock time in nsec */
++		clk_ns = 1000000 / (i2c->rate / 1000);
++
++		of_property_read_u32(np, "i2c-sclk-high-time-ns", &thigh);
++		i2c->sclk_thigh_load_cnt = thigh / clk_ns;
++
++		of_property_read_u32(np, "i2c-sclk-low-time-ns", &tlow);
++		i2c->sclk_tlow_load_cnt = tlow / clk_ns;
++
++		/* For std/fast mode tlow & thigh have same bit-fields */
++		if (!i2c->high_mode &&
++			(i2c->sclk_tlow_load_cnt != i2c->sclk_thigh_load_cnt))
++			dev_warn(&i2c->adap.dev,
++				"mismatch of tLow & tHigh values, using tLow\n");
++	}
+ 	return 0;
+ }
+ 
+@@ -1248,6 +1300,14 @@ static int i2c_pxa_probe(struct platform_device *dev)
+ 		return irq;
+ 	}
+ 
++	i2c->clk = devm_clk_get(&dev->dev, NULL);
++	if (IS_ERR(i2c->clk)) {
++		dev_err(&dev->dev, "failed to get the clk: %ld\n", PTR_ERR(i2c->clk));
++		return PTR_ERR(i2c->clk);
++	}
++
++	i2c->rate = clk_get_rate(i2c->clk);
++
+ 	/* Default adapter num to device id; i2c_pxa_probe_dt can override. */
+ 	i2c->adap.nr = dev->id;
+ 
+@@ -1265,12 +1325,6 @@ static int i2c_pxa_probe(struct platform_device *dev)
+ 
+ 	strlcpy(i2c->adap.name, "pxa_i2c-i2c", sizeof(i2c->adap.name));
+ 
+-	i2c->clk = devm_clk_get(&dev->dev, NULL);
+-	if (IS_ERR(i2c->clk)) {
+-		dev_err(&dev->dev, "failed to get the clk: %ld\n", PTR_ERR(i2c->clk));
+-		return PTR_ERR(i2c->clk);
+-	}
+-
+ 	i2c->reg_ibmr = i2c->reg_base + pxa_reg_layout[i2c_type].ibmr;
+ 	i2c->reg_idbr = i2c->reg_base + pxa_reg_layout[i2c_type].idbr;
+ 	i2c->reg_icr = i2c->reg_base + pxa_reg_layout[i2c_type].icr;
+-- 
+1.9.1
 
-
->  {
-> +       u32 val;
-> +
->         writel(TIMER_CTRL_CLEAR | TIMER_CTRL_DISABLE,
->                 evt->gpt_base + TIMER_CTRL_REG(timer));
->
-> @@ -167,8 +169,10 @@ mtk_timer_setup(struct mtk_clock_event_device *evt, u8 timer, u8 option)
->
->         writel(0x0, evt->gpt_base + TIMER_CMP_REG(timer));
->
-> -       writel(TIMER_CTRL_OP(option) | TIMER_CTRL_ENABLE,
-> -                       evt->gpt_base + TIMER_CTRL_REG(timer));
-> +       val = TIMER_CTRL_OP(option);
-> +       if (enable)
-> +               val |= TIMER_CTRL_ENABLE;
-> +       writel(val, evt->gpt_base + TIMER_CTRL_REG(timer));
->  }
->
->  static void mtk_timer_enable_irq(struct mtk_clock_event_device *evt, u8 timer)
-> @@ -235,12 +239,12 @@ static void __init mtk_timer_init(struct device_node *node)
->         evt->ticks_per_jiffy = DIV_ROUND_UP(rate, HZ);
->
->         /* Configure clock source */
-> -       mtk_timer_setup(evt, GPT_CLK_SRC, TIMER_CTRL_OP_FREERUN);
-> +       mtk_timer_setup(evt, GPT_CLK_SRC, TIMER_CTRL_OP_FREERUN, true);
->         clocksource_mmio_init(evt->gpt_base + TIMER_CNT_REG(GPT_CLK_SRC),
->                         node->name, rate, 300, 32, clocksource_mmio_readl_up);
->
->         /* Configure clock event */
-> -       mtk_timer_setup(evt, GPT_CLK_EVT, TIMER_CTRL_OP_REPEAT);
-> +       mtk_timer_setup(evt, GPT_CLK_EVT, TIMER_CTRL_OP_REPEAT, false);
->         clockevents_config_and_register(&evt->dev, rate, 0x3,
->                                         0xffffffff);
->
-> --
-> 1.8.1.1.dirty
->
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
