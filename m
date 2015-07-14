@@ -1,61 +1,31 @@
-From: Tim Bird <tim.bird@sonymobile.com>
-Subject: [PATCH 3/3] ARM: dts: qcom: Add dts changes for qcom coincell charger
-Date: Mon, 13 Jul 2015 16:39:32 -0700
-Message-ID: <1436830772-32632-3-git-send-email-tim.bird@sonymobile.com>
-References: <1436830772-32632-1-git-send-email-tim.bird@sonymobile.com>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 4/5] clk: mediatek: add 13mhz clock for MT8173
+Date: Mon, 13 Jul 2015 17:40:23 -0700
+Message-ID: <20150714004023.GL30412@codeaurora.org>
+References: <1436779969-18610-1-git-send-email-yingjoe.chen@mediatek.com>
+ <1436779969-18610-5-git-send-email-yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1436830772-32632-1-git-send-email-tim.bird@sonymobile.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: arnd@arndb.de, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, bjorn.andersson@sonymobile.com, Tim Bird <tim.bird@sonymobile.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1436779969-18610-5-git-send-email-yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add framework for the coincell charger DT block in pm8941 file, and
-actual values for honami battery in the honami dts file.
+On 07/13, Yingjoe Chen wrote:
+> Add 13mhz clock used by GPT timer in infracfg.
+> 
+> Signed-off-by: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
 
-Signed-off-by: Tim Bird <tim.bird@sonymobile.com>
----
- arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts | 11 +++++++++++
- arch/arm/boot/dts/qcom-pm8941.dtsi                    |  6 ++++++
- 2 files changed, 17 insertions(+)
+Acked-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 
-diff --git a/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts b/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
-index bd35b06..a7440fd 100644
---- a/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
-+++ b/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
-@@ -17,3 +17,14 @@
- 		status = "ok";
- 	};
- };
-+
-+&spmi_bus {
-+	pm8941@0 {
-+		qcom,coincell@2800 {
-+			status = "ok";
-+			qcom,rset-ohms = <2100>;
-+			qcom,vset-millivolts = <3000>;
-+			qcom,charge-enable;
-+		};
-+	};
-+};
-diff --git a/arch/arm/boot/dts/qcom-pm8941.dtsi b/arch/arm/boot/dts/qcom-pm8941.dtsi
-index aa774e6..a7d9c4b 100644
---- a/arch/arm/boot/dts/qcom-pm8941.dtsi
-+++ b/arch/arm/boot/dts/qcom-pm8941.dtsi
-@@ -125,6 +125,12 @@
- 			interrupts = <0x0 0x36 0x0 IRQ_TYPE_EDGE_RISING>;
- 			qcom,external-resistor-micro-ohms = <10000>;
- 		};
-+
-+		qcom,coincell@2800 {
-+			compatible = "qcom,pm8941-coincell";
-+			reg = <0x2800>;
-+			status = "disabled";
-+		};
- 	};
- 
- 	usid1: pm8941@1 {
 -- 
-1.8.2.2
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
