@@ -1,130 +1,217 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH 3/5] [media] tc358743: support probe from device tree
-Date: Tue, 14 Jul 2015 12:15:48 +0200
-Message-ID: <55A4E154.8020309@xs4all.nl>
-References: <1436533897-3060-1-git-send-email-p.zabel@pengutronix.de>	 <1436533897-3060-3-git-send-email-p.zabel@pengutronix.de>	 <55A39982.3030006@xs4all.nl> <1436868605.3793.24.camel@pengutronix.de>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [RFC PATCH v2 1/1] drivers: cpuidle: cpuidle-arm: heterogeneous
+ systems extension
+Date: Tue, 14 Jul 2015 11:23:29 +0100
+Message-ID: <20150714102329.GB16165@red-moon>
+References: <1429200617-9546-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1429200617-9546-2-git-send-email-lorenzo.pieralisi@arm.com>
+ <554771D3.5010701@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1436868605.3793.24.camel@pengutronix.de>
-Sender: linux-media-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Mats Randgaard <matrandg@cisco.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <554771D3.5010701@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Howard Chen <howard.chen@linaro.org>, Rob Herring <robh+dt@kernel.org>, Kevin Hilman <khilman@linaro.org>, Sudeep Holla <Sudeep.Holla@arm.com>, Lina Iyer <lina.iyer@linaro.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Mark Rutland <Mark.Rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 07/14/15 12:10, Philipp Zabel wrote:
-> Hi Hans,
-> 
-> Am Montag, den 13.07.2015, 12:57 +0200 schrieb Hans Verkuil:
-> [...]
->>> @@ -69,6 +72,7 @@ static const struct v4l2_dv_timings_cap tc358743_timings_cap = {
->>>  
->>>  struct tc358743_state {
->>>  	struct tc358743_platform_data pdata;
->>> +	struct v4l2_of_bus_mipi_csi2 bus;
->>
->> Where is this bus struct set?
-> 
-> Uh-oh, I have accidentally dropped setting the bus struct when switching
-> to v4l2_of_alloc_parse_endpoint.
-> 
-> [...]
->>> @@ -700,7 +706,8 @@ static void tc358743_set_csi(struct v4l2_subdev *sd)
->>>  			((lanes > 2) ? MASK_D2M_HSTXVREGEN : 0x0) |
->>>  			((lanes > 3) ? MASK_D3M_HSTXVREGEN : 0x0));
->>>  
->>> -	i2c_wr32(sd, TXOPTIONCNTRL, MASK_CONTCLKMODE);
->>> +	i2c_wr32(sd, TXOPTIONCNTRL, (state->bus.flags &
->>> +		 V4L2_MBUS_CSI2_CONTINUOUS_CLOCK) ? MASK_CONTCLKMODE : 0);
->>
->> It's used here.
->>
->> BTW, since I don't see state->bus being set, that means bus.flags == 0 and
->> so this register is now set to 0 instead of MASK_CONTCLKMODE.
->>
->> When using platform data I guess bus.flags should be set to
->> V4L2_MBUS_CSI2_CONTINUOUS_CLOCK to prevent breakage.
-> 
-> Ok.
-> 
-> [..]
->>> +	/*
->>> +	 * The CSI bps per lane must be between 62.5 Mbps and 1 Gbps.
->>> +	 * The default is 594 Mbps for 4-lane 1080p60 or 2-lane 720p60.
->>> +	 */
->>> +	bps_pr_lane = 2 * endpoint->link_frequencies[0];
->>> +	if (bps_pr_lane < 62500000U || bps_pr_lane > 1000000000U) {
->>> +		dev_err(dev, "unsupported bps per lane: %u bps\n", bps_pr_lane);
->>> +		goto disable_clk;
->>> +	}
->>> +
->>> +	/* The CSI speed per lane is refclk / pll_prd * pll_fbd */
->>> +	state->pdata.pll_fbd = bps_pr_lane /
->>> +			       state->pdata.refclk_hz * state->pdata.pll_prd;
->>> +
->>> +	/*
->>> +	 * FIXME: These timings are from REF_02 for 594 Mbps per lane (297 MHz
->>> +	 * link frequency). In principle it should be possible to calculate
->>> +	 * them based on link frequency and resolution.
->>> +	 */
->>> +	if (bps_pr_lane != 594000000U)
->>> +		dev_warn(dev, "untested bps per lane: %u bps\n", bps_pr_lane);
->>> +	state->pdata.lineinitcnt = 0xe80;
->>> +	state->pdata.lptxtimecnt = 0x003;
->>> +	/* tclk-preparecnt: 3, tclk-zerocnt: 20 */
->>> +	state->pdata.tclk_headercnt = 0x1403;
->>> +	state->pdata.tclk_trailcnt = 0x00;
->>> +	/* ths-preparecnt: 3, ths-zerocnt: 1 */
->>> +	state->pdata.ths_headercnt = 0x0103;
->>> +	state->pdata.twakeup = 0x4882;
->>> +	state->pdata.tclk_postcnt = 0x008;
->>> +	state->pdata.ths_trailcnt = 0x2;
->>> +	state->pdata.hstxvregcnt = 0;
-> 
-> Do you have any suggestion how to handle this? AFAIK REF_02 is not
-> public, and I do not know the formulas it uses internally to calculate
-> these timings. I wouldn't want to add all the timing parameters to the
-> device tree just because of that.
+Hi Daniel,
 
-As you said, it's not public and without the formulas there is nothing you
-can do but hardcode it.
+On Mon, May 04, 2015 at 02:19:15PM +0100, Daniel Lezcano wrote:
+> On 04/16/2015 06:10 PM, Lorenzo Pieralisi wrote:
 
-If I understand this correctly these values depend on the link frequency,
-so the DT should contain the link frequency and the driver can hardcode the
-values based on that. Which means that if someone needs to support a new
-link frequency the driver needs to be extended for that frequency.
+[...]
 
-As long as Toshiba keeps the formulas under NDA there isn't much else you can
-do.
-
-Regards,
-
-	Hans
-
+> >   /*
+> > - * arm_idle_init
+> > + * Compare idle states phandle properties
+> >    *
+> > - * Registers the arm specific cpuidle driver with the cpuidle
+> > - * framework. It relies on core code to parse the idle states
+> > - * and initialize them using driver data structures accordingly.
+> > + * Return true if properties are valid and equal, false otherwise
 > 
-> [...]
->>> @@ -1658,14 +1794,19 @@ static int tc358743_probe(struct i2c_client *client,
->>>  	if (!state)
->>>  		return -ENOMEM;
->>>  
->>> +	state->i2c_client = client;
->>> +
->>>  	/* platform data */
->>> -	if (!pdata) {
->>> -		v4l_err(client, "No platform data!\n");
->>> -		return -ENODEV;
->>> +	if (pdata) {
->>> +		state->pdata = *pdata;
->>> +	} else {
->>> +		err = tc358743_probe_of(state);
->>> +		if (err == -ENODEV)
->>> +			v4l_err(client, "No platform data!\n");
->>
->> I'd replace this with "No device tree data!" or something like that.
+> Just a detail. Would be more consistent to return zero when valid and
+> equal ?
+
+It is a detail but I think it is clearer as it is (ie what would it
+return on failure ? After all it is just used as a predicate, there
+is no use for a return value other than a boolean), so unless you
+have a strong feeling against it I would leave it as it is.
+
+Thanks,
+Lorenzo
+
+> >    */
+> > -static int __init arm_idle_init(void)
+> > +static bool __init idle_states_cmp(struct property *states1,
+> > +                                struct property *states2)
+> > +{
+> > +     /*
+> > +      * NB: Implemented through code from drivers/of/unittest.c
+> > +      *     Function is generic and can be moved to generic OF code
+> > +      *     if needed
+> > +      */
+> > +     return states1 && states2 &&
+> > +            (states1->length == states2->length) &&
+> > +            states1->value && states2->value &&
+> > +            !memcmp(states1->value, states2->value, states1->length);
+> > +}
+> > +
+> > +static int __init arm_idle_init_driver(struct cpuidle_driver *drv)
+> >   {
+> > -     int cpu, ret;
+> > -     struct cpuidle_driver *drv = &arm_idle_driver;
+> > +     int ret, cpu;
+> >       struct cpuidle_device *dev;
+> > +     struct property *curr_idle_states, *idle_states = NULL;
+> > +     struct device_node *cpu_node;
+> > +
+> > +     for_each_cpu(cpu, drv->cpumask) {
+> > +             cpu_node = of_cpu_device_node_get(cpu);
+> > +             curr_idle_states = of_find_property(cpu_node,
+> > +                                                 "cpu-idle-states", NULL);
+> > +             of_node_put(cpu_node);
+> > +
+> > +             /*
+> > +              * Stash the first valid idle states phandle in the cpumask.
+> > +              * If curr_idle_states is NULL assigning it to idle_states
+> > +              * is harmless and it is managed by idle states comparison
+> > +              * code. Keep track of first valid phandle so that
+> > +              * subsequent cpus can compare against it.
+> > +              */
+> > +             if (!idle_states)
+> > +                     idle_states = curr_idle_states;
+> > +
+> > +             /*
+> > +              * If idle states phandles are not equal, remove the
+> > +              * cpu from the driver mask since a CPUidle driver
+> > +              * is only capable of managing uniform idle states.
+> > +              *
+> > +              * Comparison works also when idle_states and
+> > +              * curr_idle_states are the same property, since
+> > +              * they can be == NULL so the cpu must be removed from
+> > +              * the driver mask in that case too (ie cpu has no idle
+> > +              * states).
+> > +              */
+> > +             if (!idle_states_cmp(idle_states, curr_idle_states))
+> > +                     cpumask_clear_cpu(cpu, drv->cpumask);
+> > +     }
+> > +
+> > +     /*
+> > +      *  If there are no valid states for this driver we rely on arch
+> > +      *  default idle behaviour, bail out
+> > +      */
+> > +     if (!idle_states)
+> > +             return -ENODEV;
+> >
+> >       /*
+> >        * Initialize idle states data, starting at index 1.
+> > @@ -117,7 +173,7 @@ static int __init arm_idle_init(void)
+> >        * Call arch CPU operations in order to initialize
+> >        * idle states suspend back-end specific data
+> >        */
+> > -     for_each_possible_cpu(cpu) {
+> > +     for_each_cpu(cpu, drv->cpumask) {
+> >               ret = arm_cpuidle_init(cpu);
+> >
+> >               /*
+> > @@ -157,7 +213,77 @@ out_fail:
+> >       }
+> >
+> >       cpuidle_unregister_driver(drv);
+> > +     return ret;
+> > +}
+> > +
+> > +/*
+> > + * arm_idle_init
+> > + *
+> > + * Registers the arm specific cpuidle driver(s) with the cpuidle
+> > + * framework. It relies on core code to parse the idle states
+> > + * and initialize them using driver data structures accordingly.
+> > + */
+> > +static int __init arm_idle_init(void)
+> > +{
+> > +     int i, ret = -ENODEV;
+> > +     struct cpuidle_driver *drv;
+> > +     cpumask_var_t tmpmask;
+> > +
+> > +     /*
+> > +      * These drivers require DT idle states to be present.
+> > +      * If no idle states are detected there is no reason to
+> > +      * proceed any further hence we return early.
+> > +      */
+> > +     if (!of_find_node_by_name(NULL, "idle-states"))
+> > +             return -ENODEV;
+> > +
+> > +     if (!alloc_cpumask_var(&tmpmask, GFP_KERNEL))
+> > +             return -ENOMEM;
+> > +
+> > +     /*
+> > +      * We need to vet idle states to create CPUidle drivers
+> > +      * that share a common set of them. Create a tmp mask
+> > +      * that we use to keep track of initialized cpus.
+> > +      * Start off by initializing the mask with all possible
+> > +      * cpus, we clear it as we go, till either all cpus
+> > +      * have a CPUidle driver initialized or there are some
+> > +      * CPUs that have no idle states or a parsing error
+> > +      * occurs.
+> > +      */
+> > +     cpumask_copy(tmpmask, cpu_possible_mask);
+> > +
+> > +     for (i = 0; !cpumask_empty(tmpmask); i++) {
+> > +             if (i == ARM_CPUIDLE_MAX_DRIVERS) {
+> > +                     pr_warn("number of drivers exceeding static allocation\n");
+> > +                     break;
+> > +             }
+> > +
+> > +             drv = &arm_idle_drivers[i];
+> > +             drv->cpumask = kzalloc(cpumask_size(), GFP_KERNEL);
+> > +             if (!drv->cpumask) {
+> > +                     ret = -ENOMEM;
+> > +                     break;
+> > +             }
+> > +             /*
+> > +              * Force driver mask, arm_idle_init_driver()
+> > +              * will tweak it by vetting idle states.
+> > +              */
+> > +             cpumask_copy(drv->cpumask, tmpmask);
 > 
-> I'll do that, thank you.
+> Why do you need to copy tmpmask ? Isn't simpler to have a zero-ed
+> cpumask and let the arm_idle_init_driver function to set a bit instead
+> of clearing it ?
 > 
-> regards
-> Philipp
+> > +             ret = arm_idle_init_driver(drv);
+> > +             if (ret) {
+> > +                     kfree(drv->cpumask);
+> > +                     break;
+> > +             }
+> > +             /*
+> > +              * Remove the cpus that were part of the registered
+> > +              * driver from the mask of cpus to be initialized
+> > +              * and restart.
+> > +              */
+> > +             cpumask_andnot(tmpmask, tmpmask, drv->cpumask);
+> 
+> If there is a DT definition with just a cluster with the cpuidle driver
+> set and another one without any idle state, we will have always a
+> pr_warn because i == ARM_CPUIDLE_MAX_DRIVERS due to tmpmask being never
+> equal to a zero mask. Is it the purpose to detect such cases ?
+> 
+> > +     }
+> >
+> > +     free_cpumask_var(tmpmask);
+> >       return ret;
+> >   }
+> >   device_initcall(arm_idle_init);
+> >
+> 
+> 
+> --
+>   <http://www.linaro.org/> Linaro.org ??? Open source software for ARM SoCs
+> 
+> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+> <http://twitter.com/#!/linaroorg> Twitter |
+> <http://www.linaro.org/linaro-blog/> Blog
 > 
