@@ -1,37 +1,58 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH v2 0/3] ARM: add UART and EHCI support for UniPhier DTS
- and enable them.
-Date: Tue, 14 Jul 2015 11:22:07 +0200
-Message-ID: <20150714092207.GF20686@localhost>
-References: <1436504040-16375-1-git-send-email-yamada.masahiro@socionext.com>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH 0/2 RESEND] power: reset: Add syscon reboot/poweroff
+ device nodes for APM X-Gene platform
+Date: Tue, 14 Jul 2015 10:40:04 +0200
+Message-ID: <20150714084004.GA14593@localhost>
+References: <1433272747-27114-1-git-send-email-ttnguyen@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1436504040-16375-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1433272747-27114-1-git-send-email-ttnguyen@apm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tai Nguyen <ttnguyen@apm.com>
+Cc: devicetree@vger.kernel.org, jcm@redhat.com, patches@apm.com, linux-kernel@vger.kernel.org, arm@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 10, 2015 at 01:53:57PM +0900, Masahiro Yamada wrote:
-> The basic support for UniPhier SoC family (arch/arm/mach-uniphier)
-> was mainlined at Linux 4.2-rc1.
-> I am now tackling some drivers to support them in the mainline.
+On Tue, Jun 02, 2015 at 12:19:05PM -0700, Tai Nguyen wrote:
+> This patch set adds syscon reboot/poweroff device nodes to support reboot and
+> poweroff features on X-Gene platform. 
 > 
-> I've got UART and EHCI done, so I'd like to enable them from
-> the ARM-SOC subsystem.
+> Tai Nguyen (2):
+>   power: reset: Add syscon reboot device node for APM X-Gene platform
+>   power: reset: Add syscon poweroff device node for APM X-Gene Mustang platform
 > 
-> 
-> Changes in v2:
->   - Add chip-specific compatible strings "socionext,uniphier-ehci"
-> 
+>  arch/arm64/boot/dts/apm/apm-mustang.dts |   12 ++++++++++++
+>  arch/arm64/boot/dts/apm/apm-storm.dtsi  |   12 ++++++++++++
+>  2 files changed, 24 insertions(+)
 
-Applied 1-3 to next/dt and next/defconfig. Thanks!
+Hi,
 
+It's unclear to me what you want to happen to these patches. They are
+sent to a long list of to-recipients, one of which is arm@kernel.org. In
+general, specify the person you want to take action on the patch in to
+with the rest on cc.
+
+We generally ask that patches first go to the subarch maintainers,
+and they in turn send it on to us (either through a pull request or
+by sending the patches to be applied). In the case of X-Gene, there is
+no general platform maintainer so we keep getting patches from various
+engineers at APM and it's unclear to us what your intentions are.
+
+I'd prefer to see one (to start with) person in charge of these (i.e. one
+maintainer from the APM side). Please add that person to the MAINTAINERS
+file as well.
+
+
+Thanks!
 
 -Olof
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
