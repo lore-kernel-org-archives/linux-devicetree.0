@@ -1,93 +1,74 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [RESEND PATCH 2/2] pinctrl: introduce complex pin description
-Date: Tue, 14 Jul 2015 08:13:59 +0200
-Message-ID: <20150714061359.GC5161@pengutronix.de>
-References: <1433948699-19800-1-git-send-email-ludovic.desroches@atmel.com>
- <1433948699-19800-3-git-send-email-ludovic.desroches@atmel.com>
+From: chunfeng yun <chunfeng.yun@mediatek.com>
+Subject: Re: [PATCH v2 1/5] dt-bindings: Add usb3.0 phy binding for MT65xx
+ SoCs
+Date: Tue, 14 Jul 2015 14:19:51 +0800
+Message-ID: <1436854791.11289.11.camel@mhfsdcap03>
+References: <1436348468-4126-1-git-send-email-chunfeng.yun@mediatek.com>
+	 <1436348468-4126-2-git-send-email-chunfeng.yun@mediatek.com>
+	 <20150710051018.GU18700@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1433948699-19800-3-git-send-email-ludovic.desroches@atmel.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Ludovic Desroches <ludovic.desroches@atmel.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, swarren@wwwdotorg.org, linus.walleij@linaro.org, nicolas.ferre@atmel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150710051018.GU18700@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Mathias Nyman <mathias.nyman@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Felipe Balbi <balbi@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 10, 2015 at 05:04:57PM +0200, Ludovic Desroches wrote:
-> Using a string to describe a pin in the device tree can be not enough.
-> Some controllers may need extra information to fully describe a pin. It
-> concerns mainly controllers which have a per pin muxing approach which
-> don't fit well the notions of groups and functions.
-> Instead of using a pin name, a 32 bit value is used. The 16 least
-> significant bits are used for the pin number. Other 16 bits can be used to
-> store extra parameters.
+hi,
+On Fri, 2015-07-10 at 07:10 +0200, Sascha Hauer wrote:
+> On Wed, Jul 08, 2015 at 05:41:03PM +0800, Chunfeng Yun wrote:
+> > add a DT binding documentation of usb3.0 phy for MT65xx
+> > SoCs from Mediatek.
+> > 
+> > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> > ---
+> >  .../devicetree/bindings/usb/mt65xx-u3phy.txt       | 34 ++++++++++++++++++++++
+> >  1 file changed, 34 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/usb/mt65xx-u3phy.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/usb/mt65xx-u3phy.txt b/Documentation/devicetree/bindings/usb/mt65xx-u3phy.txt
+> > new file mode 100644
+> > index 0000000..056b2aa
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/usb/mt65xx-u3phy.txt
+> > @@ -0,0 +1,34 @@
+> > +MT65xx U3PHY
+> > +
+> > +The device node for Mediatek SOC usb3.0 phy
+> > +
+> > +Required properties:
+> > + - compatible : Should be "mediatek,mt8173-u3phy"
+> > + - reg        : Offset and length of registers, the first is for mac domain,
+> > +	another for phy domain
+> > + - power-domains: to enable usb's mtcmos
+> > + - usb-wakeup-ctrl : to access usb wakeup control register
+> > + - wakeup-src : 1: ip sleep wakeup mode; 2: line state wakeup mode; others
+> > +	means don't enable wakeup source of usb
+> > + - u2port-num : number of usb2.0 ports to support which should be 1 or 2
+> > + - clocks     : must support all clocks that phy need
+> > + - clock-names: should be "wakeup_deb_p0", "wakeup_deb_p1" for wakeup
+> > +	debounce control clocks, and "u3phya_ref" for u3phya reference clock.
+> > +
+> > +Example:
+> > +
+> > +u3phy: usb-phy@11271000 {
+> > +	compatible = "mediatek,mt8173-u3phy";
+> > +	reg = <0 0x11271000 0 0x3000>,
+> > +	      <0 0x11280000 0 0x20000>;
+> 
+> 0x11271000 is the register space the xhci controller takes. You should
+> not expose the same register space to two different drivers.
+> 
 
-In the Mediatek driver we use 'pinmux' as name for the property
-containing the combined pin number / mux value defines. 'pinmux' better
-describes what it is...
+usb: usb30@11270000 {
+   compatible = "mediatek,mt8173-xhci";
+   reg = <0 0x11270000 0 0x1000>;
 
-> +
-> +	if (pctldesc->complex_pin_desc)
-> +		ret = of_property_count_u32_elems(np, "pins");
-> +	else
-> +		ret = of_property_count_strings(np, "pins");
+the size of xhci register space is 0x1000, and the range is
+[0x11270000, 0x11271000 - 1], so the address of 0x11271000 is not
+included.
 
-... and has the advantage that you don't have to pass in a
-complex_pin_desc variable from the driver as the different property
-name inherently carries this information. 'pins' can then stay a
-property containing only strings.
-
->  	if (ret < 0) {
->  		ret = of_property_count_strings(np, "groups");
->  		if (ret < 0)
-> @@ -297,11 +305,12 @@ int pinconf_generic_dt_subnode_to_map(struct pinctrl_dev *pctldev,
->  		if (type == PIN_MAP_TYPE_INVALID)
->  			type = PIN_MAP_TYPE_CONFIGS_GROUP;
->  		subnode_target_type = "groups";
-> +		pins_prop = false;
->  	} else {
->  		if (type == PIN_MAP_TYPE_INVALID)
->  			type = PIN_MAP_TYPE_CONFIGS_PIN;
->  	}
-> -	strings_count = ret;
-> +	items_count = ret;
->  
->  	ret = of_property_read_string(np, "function", &function);
->  	if (ret < 0) {
-> @@ -326,17 +335,31 @@ int pinconf_generic_dt_subnode_to_map(struct pinctrl_dev *pctldev,
->  	if (num_configs)
->  		reserve++;
->  
-> -	reserve *= strings_count;
-> +	reserve *= items_count;
->  
->  	ret = pinctrl_utils_reserve_map(pctldev, map, reserved_maps,
->  			num_maps, reserve);
->  	if (ret < 0)
->  		goto exit;
->  
-> -	of_property_for_each_string(np, subnode_target_type, prop, group) {
-> +	items_name = kmalloc_array(items_count, sizeof(char *), GFP_KERNEL);
-> +	if (!items_name)
-> +		goto exit;
-> +	if (pctldesc->complex_pin_desc && pins_prop) {
-> +		of_property_for_each_u32(np, subnode_target_type, prop, cur, val) {
-> +			pin_id = val & PINCTRL_PIN_MASK;
-> +			items_name[i++] = pctldesc->pins[pin_id].name;
-> +		}
-
-I don't like that even though pins have numbers here they are converted
-to strings which the driver later has to search in a list just to
-convert it back into the number. This is quite inefficient.
-
-I guess this could be optimized later, but it would be nice to have the
-pin number directly in the driver.
-
-Sascha
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> Sascha
+> 
