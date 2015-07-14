@@ -1,185 +1,61 @@
 From: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Subject: [PATCH v3 3/5] ARM: mediatek: add smp bringup code
-Date: Tue, 14 Jul 2015 13:18:29 +0800
-Message-ID: <1436851111-2369-4-git-send-email-yingjoe.chen@mediatek.com>
-References: <1436851111-2369-1-git-send-email-yingjoe.chen@mediatek.com>
+Subject: [PATCH v3 0/5] Add SMP bringup support for mt65xx socs
+Date: Tue, 14 Jul 2015 13:18:26 +0800
+Message-ID: <1436851111-2369-1-git-send-email-yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1436851111-2369-1-git-send-email-yingjoe.chen@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Matthias Brugger <matthias.bgg@gmail.com>
 Cc: Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Olof Johansson <olof@lixom.net>, Yingjoe Chen <yingjoe.chen@mediatek.com>, srv_heupstream@mediatek.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for booting secondary CPUs on mt6589, mt8127
-and mt8135.
+This series add SMP brinup support for MediaTek SoCs. This is based
+on v4.2-rc1 and Matthias' next branch (for dts parts).
 
-Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
----
- arch/arm/mach-mediatek/Makefile  |   3 +
- arch/arm/mach-mediatek/platsmp.c | 144 +++++++++++++++++++++++++++++++++++++++
- 2 files changed, 147 insertions(+)
+There are similar but different SMP bringup up methods on MediaTek
+mt65xx and mt81xx. On MT8135 & MT8127, system boots with a trustzone
+firmware. Others, like MT6589, doesn't have trustzone, and run kernel
+directly in secure world.
+
+Patch 1 enable arch timer support.
+Patch 2,3 add support for cpu enable-method "mediatek,mt6589-smp" and
+"mediatek,mt81xx-tz-smp", which support Mediatek SMP bringup for non-TZ
+and TZ platform.
+Patch 4,5 finally enable SMP bringup for mt8135 and mt8127.
+
+Changes in v3:
+- The first 2 patches in v2 are merged in v4.2-rc1.
+- Patch 3~4 in v2 are moved to another series [1]
+- platsmp.c changes based on Stephen's suggestion
+- Change cpu enable-method name to "mediatek,mt6589-smp"
+
+Changes in v2:
+- Fix boot issue for THUMB2 kernel.
+- Not enable GPT_CLK_EVT when setup to fix GPT spurious interrupt issue
+- Change platsmp.c according to Matthias' suggestion
+http://lists.infradead.org/pipermail/linux-mediatek/2015-May/000714.html
+
+v1:
+http://lists.infradead.org/pipermail/linux-mediatek/2015-May/000528.html
+
+[1]
+http://lists.infradead.org/pipermail/linux-mediatek/2015-July/001544.html
+
+Matthias Brugger (1):
+  ARM: mediatek: enable gpt6 on boot up to make arch timer working
+
+Yingjoe Chen (4):
+  devicetree: bindings: add new SMP enable method Mediatek SoC
+  ARM: mediatek: add smp bringup code
+  ARM: dts: mt8135: enable basic SMP bringup for mt8135
+  ARM: dts: mt8127: enable basic SMP bringup for mt8127
+
+ Documentation/devicetree/bindings/arm/cpus.txt |   2 +
+ arch/arm/boot/dts/mt8127.dtsi                  |  16 +++
+ arch/arm/boot/dts/mt8135.dtsi                  |  16 +++
+ arch/arm/mach-mediatek/Makefile                |   3 +
+ arch/arm/mach-mediatek/mediatek.c              |  27 +++++
+ arch/arm/mach-mediatek/platsmp.c               | 144 +++++++++++++++++++++++++
+ 6 files changed, 208 insertions(+)
  create mode 100644 arch/arm/mach-mediatek/platsmp.c
-
-diff --git a/arch/arm/mach-mediatek/Makefile b/arch/arm/mach-mediatek/Makefile
-index 43e619f..2116460 100644
---- a/arch/arm/mach-mediatek/Makefile
-+++ b/arch/arm/mach-mediatek/Makefile
-@@ -1 +1,4 @@
-+ifeq ($(CONFIG_SMP),y)
-+obj-$(CONFIG_ARCH_MEDIATEK) += platsmp.o
-+endif
- obj-$(CONFIG_ARCH_MEDIATEK) += mediatek.o
-diff --git a/arch/arm/mach-mediatek/platsmp.c b/arch/arm/mach-mediatek/platsmp.c
-new file mode 100644
-index 0000000..a5bc108
---- /dev/null
-+++ b/arch/arm/mach-mediatek/platsmp.c
-@@ -0,0 +1,144 @@
-+/*
-+ * arch/arm/mach-mediatek/platsmp.c
-+ *
-+ * Copyright (c) 2014 Mediatek Inc.
-+ * Author: Shunli Wang <shunli.wang@mediatek.com>
-+ *         Yingjoe Chen <yingjoe.chen@mediatek.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ */
-+#include <linux/io.h>
-+#include <linux/memblock.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/string.h>
-+#include <linux/threads.h>
-+
-+#define MTK_MAX_CPU		8
-+#define MTK_SMP_REG_SIZE	0x1000
-+
-+struct mtk_smp_boot_info {
-+	unsigned long smp_base;
-+	unsigned int jump_reg;
-+	unsigned int core_keys[MTK_MAX_CPU - 1];
-+	unsigned int core_regs[MTK_MAX_CPU - 1];
-+};
-+
-+static const struct mtk_smp_boot_info mtk_mt8135_tz_boot = {
-+	0x80002000, 0x3fc,
-+	{ 0x534c4131, 0x4c415332, 0x41534c33 },
-+	{ 0x3f8, 0x3f8, 0x3f8 },
-+};
-+
-+static const struct mtk_smp_boot_info mtk_mt6589_boot = {
-+	0x10002000, 0x34,
-+	{ 0x534c4131, 0x4c415332, 0x41534c33 },
-+	{ 0x38, 0x3c, 0x40 },
-+};
-+
-+static const struct of_device_id mtk_tz_smp_boot_infos[] __initconst = {
-+	{ .compatible   = "mediatek,mt8135", .data = &mtk_mt8135_tz_boot },
-+	{ .compatible   = "mediatek,mt8127", .data = &mtk_mt8135_tz_boot },
-+};
-+
-+static const struct of_device_id mtk_smp_boot_infos[] __initconst = {
-+	{ .compatible   = "mediatek,mt6589", .data = &mtk_mt6589_boot },
-+};
-+
-+static void __iomem *mtk_smp_base;
-+static const struct mtk_smp_boot_info *mtk_smp_info;
-+
-+static int mtk_boot_secondary(unsigned int cpu, struct task_struct *idle)
-+{
-+	if (!mtk_smp_base)
-+		return -EINVAL;
-+
-+	if (!mtk_smp_info->core_keys[cpu-1])
-+		return -EINVAL;
-+
-+	writel_relaxed(mtk_smp_info->core_keys[cpu-1],
-+		mtk_smp_base + mtk_smp_info->core_regs[cpu-1]);
-+
-+	arch_send_wakeup_ipi_mask(cpumask_of(cpu));
-+
-+	return 0;
-+}
-+
-+static void __init __mtk_smp_prepare_cpus(unsigned int max_cpus, int trustzone)
-+{
-+	int i, num;
-+	const struct of_device_id *infos;
-+
-+	if (trustzone) {
-+		num = ARRAY_SIZE(mtk_tz_smp_boot_infos);
-+		infos = mtk_tz_smp_boot_infos;
-+	} else {
-+		num = ARRAY_SIZE(mtk_smp_boot_infos);
-+		infos = mtk_smp_boot_infos;
-+	}
-+
-+	/* Find smp boot info for this SoC */
-+	for (i = 0; i < num; i++) {
-+		if (of_machine_is_compatible(infos[i].compatible)) {
-+			mtk_smp_info = infos[i].data;
-+			break;
-+		}
-+	}
-+
-+	if (!mtk_smp_info) {
-+		pr_err("%s: Device is not supported\n", __func__);
-+		return;
-+	}
-+
-+	if (trustzone) {
-+		if (memblock_reserve(mtk_smp_info->smp_base, MTK_SMP_REG_SIZE)) {
-+			pr_err("%s: Can't reserve smp memory\n", __func__);
-+			return;
-+		}
-+		mtk_smp_base = phys_to_virt(mtk_smp_info->smp_base);
-+	} else {
-+		mtk_smp_base = ioremap(mtk_smp_info->smp_base, MTK_SMP_REG_SIZE);
-+		if (!mtk_smp_base) {
-+			pr_err("%s: Can't remap %lx\n", __func__,
-+				mtk_smp_info->smp_base);
-+			return;
-+		}
-+	}
-+
-+	/*
-+	 * write the address of slave startup address into the system-wide
-+	 * jump register
-+	 */
-+	writel_relaxed(virt_to_phys(secondary_startup_arm),
-+			mtk_smp_base + mtk_smp_info->jump_reg);
-+}
-+
-+static void __init mtk_tz_smp_prepare_cpus(unsigned int max_cpus)
-+{
-+	__mtk_smp_prepare_cpus(max_cpus, 1);
-+}
-+
-+static void __init mtk_smp_prepare_cpus(unsigned int max_cpus)
-+{
-+	__mtk_smp_prepare_cpus(max_cpus, 0);
-+}
-+
-+static struct smp_operations mt81xx_tz_smp_ops __initdata = {
-+	.smp_prepare_cpus = mtk_tz_smp_prepare_cpus,
-+	.smp_boot_secondary = mtk_boot_secondary,
-+};
-+CPU_METHOD_OF_DECLARE(mt81xx_tz_smp, "mediatek,mt81xx-tz-smp", &mt81xx_tz_smp_ops);
-+
-+static struct smp_operations mt6589_smp_ops __initdata = {
-+	.smp_prepare_cpus = mtk_smp_prepare_cpus,
-+	.smp_boot_secondary = mtk_boot_secondary,
-+};
-+CPU_METHOD_OF_DECLARE(mt6589_smp, "mediatek,mt6589-smp", &mt6589_smp_ops);
--- 
-1.8.1.1.dirty
