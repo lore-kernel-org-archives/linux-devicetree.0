@@ -1,8 +1,8 @@
 From: chunfeng yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Subject: Re: [PATCH v2 2/5] dt-bindings: Add a binding for Mediatek xHCI
  host controller
-Date: Tue, 14 Jul 2015 10:36:18 +0800
-Message-ID: <1436841378.9516.4.camel@mhfsdcap03>
+Date: Tue, 14 Jul 2015 10:50:13 +0800
+Message-ID: <1436842213.11289.0.camel@mhfsdcap03>
 References: <1436348468-4126-1-git-send-email-chunfeng.yun@mediatek.com>
  <1436348468-4126-3-git-send-email-chunfeng.yun@mediatek.com>
  <559F82C7.5010202@ti.com>
@@ -65,7 +65,6 @@ On Fri, 2015-07-10 at 11:31 +0300, Roger Quadros wrote:
 > vbus-supply:
 > 
 I will adjust it later, thanks a lot
-
 > 
 > > + - usb-phy : the phy that xhci will bind
 > > + - usb3-lpm-capable: supports USB3 LPM
