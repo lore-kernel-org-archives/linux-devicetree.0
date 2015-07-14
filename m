@@ -1,29 +1,129 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2] dts: ls1021a: Add dts nodes for eTSEC0, eTSEC1 and eTSEC2
-Date: Tue, 14 Jul 2015 13:17:44 -0300
-Message-ID: <CAOMZO5D8VrZePgdQiwanA34nTMK9dxDBmhzHVmYHFZLnhRZZQw@mail.gmail.com>
-References: <20150713133138.GO23464@tiger>
-	<1436888777-29742-1-git-send-email-claudiu.manoil@freescale.com>
-	<CAOMZO5A2ftfUhioXpSnbGMxiV-fTePgHqk6zj2ysHe2wUY7JFg@mail.gmail.com>
-	<BY2PR03MB409415EF1E3F398DBF096E49C9B0@BY2PR03MB409.namprd03.prod.outlook.com>
+From: Stas Sergeev <stsp@list.ru>
+Subject: [PATCH 2/3] of_mdio: add new DT property 'managed' to specify the
+ PHY management type
+Date: Tue, 14 Jul 2015 20:13:16 +0300
+Message-ID: <55A5432C.1080609@list.ru>
+References: <55A5424D.4030809@list.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <BY2PR03MB409415EF1E3F398DBF096E49C9B0-+7O3WWA3DPt3CFubsgdMQ+O6mTEJWrR4XA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Manoil Claudiu <claudiu.manoil-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Huan Wang <alison.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <55A5424D.4030809@list.ru>
+Sender: linux-kernel-owner@vger.kernel.org
+To: netdev <netdev@vger.kernel.org>
+Cc: Linux kernel <linux-kernel@vger.kernel.org>, Sebastien Rannou <mxs@sbrk.org>, Arnaud Ebalard <arno@natisbad.org>, Stas Sergeev <stsp@users.sourceforge.net>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>Florian Fainelli <f.fainelli@gmail.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 14, 2015 at 1:13 PM, Manoil Claudiu
-<claudiu.manoil-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
 
->> You should also put his Signed-off-by tag just before yours.
->
-> Is this a rule invented by you?  Last time I checked this was a
+Currently the PHY management type is selected by the MAC driver arbitrary.
+The decision is based on the presence of the "fixed-link" node and on a
+will of the driver's authors.
+This caused a regression recently, when mvneta driver suddenly started
+to use the in-band status for auto-negotiation on fixed links.
+It appears the auto-negotiation may not work when expected by the MAC driver.
+Sebastien Rannou explains:
+<< Yes, I confirm that my HW does not generate an in-band status. AFAIK, it's
+a PHY that aggregates 4xSGMIIs to 1xQSGMII ; the MAC side of the PHY (with
+inband status) is connected to the switch through QSGMII, and in this context
+we are on the media side of the PHY. >>
+https://lkml.org/lkml/2015/7/10/206
 
-No, just usual practice.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This patch introduces the new string property 'managed' that allows
+the user to set the management type explicitly.
+The supported values are:
+"auto" - default. Uses either MDIO or nothing, depending on the presence
+of the fixed-link node
+"mdio" - use MDIO
+"in-band-status" - use in-band status
+"none" - use fixed-link description
+
+Signed-off-by: Stas Sergeev <stsp@users.sourceforge.net>
+
+CC: Rob Herring <robh+dt@kernel.org>
+CC: Pawel Moll <pawel.moll@arm.com>
+CC: Mark Rutland <mark.rutland@arm.com>
+CC: Ian Campbell <ijc+devicetree@hellion.org.uk>
+CC: Kumar Gala <galak@codeaurora.org>
+CC: Florian Fainelli <f.fainelli@gmail.com>
+CC: Grant Likely <grant.likely@linaro.org>
+CC: devicetree@vger.kernel.org
+CC: linux-kernel@vger.kernel.org
+CC: netdev@vger.kernel.org
+---
+ Documentation/devicetree/bindings/net/ethernet.txt |  5 ++++
+ drivers/of/of_mdio.c                               | 28 ++++++++++++++++++++--
+ 2 files changed, 31 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/net/ethernet.txt b/Documentation/devicetree/bindings/net/ethernet.txt
+index 3fc3605..23743e9 100644
+--- a/Documentation/devicetree/bindings/net/ethernet.txt
++++ b/Documentation/devicetree/bindings/net/ethernet.txt
+@@ -19,7 +19,12 @@ The following properties are common to the Ethernet controllers:
+ - phy: the same as "phy-handle" property, not recommended for new bindings.
+ - phy-device: the same as "phy-handle" property, not recommended for new
+   bindings.
++- managed: string, specifies the PHY management type. Supported values are:
++  "auto", "mdio", "in-band-status", "none". "auto" is the default, and it
++  sets the management type to either "mdio" or "none", depending on the
++  presence of the "fixed-link" child node.
+
+ Child nodes of the Ethernet controller are typically the individual PHY devices
+ connected via the MDIO bus (sometimes the MDIO bus controller is separate).
+ They are described in the phy.txt file in this same directory.
++For non-MDIO PHY management see fixed-link.txt.
+diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+index 1bd4305..a460812 100644
+--- a/drivers/of/of_mdio.c
++++ b/drivers/of/of_mdio.c
+@@ -262,7 +262,16 @@ EXPORT_SYMBOL(of_phy_attach);
+ bool of_phy_is_fixed_link(struct device_node *np)
+ {
+ 	struct device_node *dn;
+-	int len;
++	int len, m_err;
++	const char *managed;
++
++	m_err = of_property_read_string(np, "managed", &managed);
++	if (m_err == 0) {
++		if (strcmp(managed, "none") == 0)
++			return true;
++		if (strcmp(managed, "mdio") == 0)
++			return false;
++	}
+
+ 	/* New binding */
+ 	dn = of_get_child_by_name(np, "fixed-link");
+@@ -271,6 +280,9 @@ bool of_phy_is_fixed_link(struct device_node *np)
+ 		return true;
+ 	}
+
++	if (m_err == 0 && strcmp(managed, "auto") != 0)
++		return true;
++
+ 	/* Old binding */
+ 	if (of_get_property(np, "fixed-link", &len) &&
+ 	    len == (5 * sizeof(__be32)))
+@@ -285,8 +297,20 @@ int of_phy_register_fixed_link(struct device_node *np)
+ 	struct fixed_phy_status status = {};
+ 	struct device_node *fixed_link_node;
+ 	const __be32 *fixed_link_prop;
+-	int len;
++	int len, err;
+ 	struct phy_device *phy;
++	const char *managed;
++
++	err = of_property_read_string(np, "managed", &managed);
++	if (err == 0) {
++		if (strcmp(managed, "mdio") == 0)
++			return -EINVAL;
++		if (strcmp(managed, "in-band-status") == 0) {
++			status.link = 0;
++			phy = fixed_phy_register(PHY_POLL, &status, np);
++			return IS_ERR(phy) ? PTR_ERR(phy) : 0;
++		}
++	}
+
+ 	/* New binding */
+ 	fixed_link_node = of_get_child_by_name(np, "fixed-link");
+-- 
+1.9.1
