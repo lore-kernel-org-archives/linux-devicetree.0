@@ -1,41 +1,70 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 0/7] serial: 8250_omap: workaround for IP errata
-Date: Tue, 14 Jul 2015 05:49:08 -0700
-Message-ID: <20150714124908.GE10928@atomide.com>
-References: <cover.1436855646.git.nsekhar@ti.com>
- <55A4FEEC.3080101@hurleysoftware.com>
+From: S Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH RFC V1 1/3] mfd: da9062: Support for the DA9063 OnKey in the
+ DA9062 core
+Date: Tue, 14 Jul 2015 14:07:50 +0100
+Message-ID: <70bb99452b0b38623ab1c25b2912eafa92d1826d.1436879270.git.stwiss.opensource@diasemi.com>
+References: <cover.1436879270.git.stwiss.opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <55A4FEEC.3080101-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <cover.1436879270.git.stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
-Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, John Ogness <john.ogness-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+To: DEVICETREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUXINPUT <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUXKERNEL <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, RTCLINUX <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, S Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: David Dajun Chen <david.chen-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Support Opensource <support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org> [150714 05:24]:
-> On 07/14/2015 04:02 AM, Sekhar Nori wrote:
-> > This series works around "Advisory 21" as documented in
-> > AM437x SoC errata[1]. This errata prevents UART module
-> > from idling after DMA is used. AM335x and DRA7x also suffer
-> > from the same errata and chip design team is in the process
-> > of updating the errata documents of those devices as well.
-> > 
-> > Patch 1/7 fixes a related bug but can be applied independently.
-> 
-> Looks good. Thanks Sekhar!
-> 
-> For series,
-> 
-> Reviewed-by: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+From: S Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
 
-Also things still work for me, and the dts changes should
-not cause merge conflicts during v4.3 merge window based on
-what I have queued. So please feel free to queue these
-all via the tty tree and add:
+Add MFD core driver support for a OnKey component
 
-Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> 
+- MFD core adds the resource da9062_onkey_resources[] for the OnKey
+- An appropriate value has been added into mfd_cell da9062_devs[] to
+  support component .name = "da9062-onkey" and
+  .of_compatible  = "dlg,da9062-onkey"
+
+Signed-off-by: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+
+---
+Checks performed with linux-next/next-20150708/scripts/checkpatch.pl
+ da9062-core.c             total: 0 errors, 0 warnings, 523 lines checked
+This patch applies against linux-next and next-20150708 
+
+
+ drivers/mfd/da9062-core.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/drivers/mfd/da9062-core.c b/drivers/mfd/da9062-core.c
+index 4cf0643..0732977 100644
+--- a/drivers/mfd/da9062-core.c
++++ b/drivers/mfd/da9062-core.c
+@@ -118,6 +118,10 @@ static struct resource da9062_wdt_resources[] = {
+ 	DEFINE_RES_NAMED(DA9062_IRQ_WDG_WARN, 1, "WD_WARN", IORESOURCE_IRQ),
+ };
+ 
++static struct resource da9062_onkey_resources[] = {
++	DEFINE_RES_NAMED(DA9062_IRQ_ONKEY, 1, "ONKEY", IORESOURCE_IRQ),
++};
++
+ static const struct mfd_cell da9062_devs[] = {
+ 	{
+ 		.name		= "da9062-core",
+@@ -141,6 +145,13 @@ static const struct mfd_cell da9062_devs[] = {
+ 		.resources	= da9062_thermal_resources,
+ 		.of_compatible  = "dlg,da9062-thermal",
+ 	},
++	{
++		.name		= "da9062-onkey",
++		.num_resources	= ARRAY_SIZE(da9062_onkey_resources),
++		.resources	= da9062_onkey_resources,
++		.of_compatible = "dlg,da9062-onkey",
++	},
++
+ };
+ 
+ static int da9062_clear_fault_log(struct da9062 *chip)
+-- 
+end-of-patch for PATCH RFC V1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
