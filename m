@@ -1,39 +1,34 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 4/8] pinctrl: qcom: spmi-mpp: Implement support for sink mode
-Date: Tue, 14 Jul 2015 13:01:31 +0200
-Message-ID: <CACRpkdZKWhf6=iDNN3-9=LY6H2EC52NgQJgj2yLJYDPEPpdsRg@mail.gmail.com>
-References: <1434610052-602-1-git-send-email-bjorn.andersson@sonymobile.com>
-	<1434610052-602-5-git-send-email-bjorn.andersson@sonymobile.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 2/5] omap3: dts: Add DTS for Gumstix TobiDuo expansion
+ board
+Date: Tue, 14 Jul 2015 04:01:46 -0700
+Message-ID: <20150714110146.GP17550@atomide.com>
+References: <1434141446-11568-1-git-send-email-ashcharles@gmail.com>
+ <1434141446-11568-3-git-send-email-ashcharles@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1434610052-602-5-git-send-email-bjorn.andersson@sonymobile.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "Ivan T. Ivanov" <ivan.ivanov@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1434141446-11568-3-git-send-email-ashcharles-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ash Charles <ashcharles-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 18, 2015 at 8:47 AM, Bjorn Andersson
-<bjorn.andersson@sonymobile.com> wrote:
+* Ash Charles <ashcharles-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [150612 13:39]:
+> The Gumstix "Tobi-Duo" expansion board [1] can be used with either
+> OMAP3 Overo or Overo Storm COMs.  It provides two NICs using LAN9221
+> chips.
+> It is necessary to duplicate the interface information for the
+> second SMSC9221 chip as discussed [2].
+> 
+> [1] https://store.gumstix.com/index.php/products/241/
+> [2] http://www.spinics.net/lists/linux-omap/msg115282.html
 
-> The MPP supports three modes; digital, analog and sink mode. This patch
-> implements support for the latter.
->
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-(...)
-> +- qcom,sink-mode:
-> +       Usage: optional
-> +       Value type: <u32> or <none>
-> +       Definition: Selects sink mode of operation
+Applying patches 2 - 5 into omap-for-v4.3/dt thanks.
 
-Do we have some idea of what this actually means?
-
-Just thinking whether it should be something generic "sink-mode" or
-not.
-
-Do we know?
-
-Patch tentatively applied, anyways.
-
-Yours,
-Linus Walleij
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
