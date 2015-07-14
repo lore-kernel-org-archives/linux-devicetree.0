@@ -1,35 +1,72 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v2 5/8] ARM: dts: add i.mx6ul pin function include file
-Date: Tue, 14 Jul 2015 09:16:17 +0800
-Message-ID: <20150714011617.GA3264@tiger>
-References: <1434727951-4852-1-git-send-email-Frank.Li@freescale.com>
- <1434727951-4852-6-git-send-email-Frank.Li@freescale.com>
- <CACRpkdbgKhXgcnncrHKDPC1hC1QEdhTyxFH61J4vG8ftoasHPQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdbgKhXgcnncrHKDPC1hC1QEdhTyxFH61J4vG8ftoasHPQ@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Frank.Li@freescale.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bai Ping <b51503@freescale.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, =?utf-8?B?5p2O5pm6?= <lznuaa@gmail.com>, Anson Huang <b20788@freescale.com>, Shawn Guo <shawn.guo@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: [PATCH v2 3/4] irqchip: Add documentation for the bcm2836 interrupt controller.
+Date: Mon, 13 Jul 2015 18:35:17 -0700
+Message-ID: <1436837718-956-4-git-send-email-eric@anholt.net>
+References: <1436837718-956-1-git-send-email-eric@anholt.net>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1436837718-956-1-git-send-email-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 13, 2015 at 10:40:57PM +0200, Linus Walleij wrote:
-> On Fri, Jun 19, 2015 at 5:32 PM,  <Frank.Li@freescale.com> wrote:
-> 
-> > From: Frank Li <Frank.Li@freescale.com>
-> >
-> > add pin mux define file
-> >
-> > Signed-off-by: Bai Ping <b51503@freescale.com>
-> > Signed-off-by: Anson Huang <b20788@freescale.com>
-> > Signed-off-by: Frank Li <Frank.Li@freescale.com>
-> 
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> 
-> Are you taking this through the ARM SoC tree?
+This is a new per-cpu root interrupt controller on the Raspberry Pi 2,
+which will chain to the bcm2835 interrupt controller for peripheral
+interrupts.
 
-Yes, I plan to take it via IMX tree.
+Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+---
+ .../interrupt-controller/brcm,bcm2836-l1-intc.txt  | 37 ++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2836-l1-intc.txt
 
-Shawn
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2836-l1-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2836-l1-intc.txt
+new file mode 100644
+index 0000000..f320dcd
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2836-l1-intc.txt
+@@ -0,0 +1,37 @@
++BCM2836 per-CPU interrupt controller
++
++The BCM2836 has a per-cpu interrupt controller for the timer, PMU
++events, and SMP IPIs.  One of the CPUs may receive interrupts for the
++peripheral (GPU) events, which chain to the BCM2835-style interrupt
++controller.
++
++Required properties:
++
++- compatible:	 	Should be "brcm,bcm2836-l1-intc"
++- reg:			Specifies base physical address and size of the
++			  registers
++- interrupt-controller:	Identifies the node as an interrupt controller
++- #interrupt-cells:	Specifies the number of cells needed to encode an
++			  interrupt source. The value shall be 1
++
++Please refer to interrupts.txt in this directory for details of the common
++Interrupt Controllers bindings used by client devices.
++
++The interrupt sources are as follows:
++
++0: CNTPSIRQ
++1: CNTPNSIRQ
++2: CNTHPIRQ
++3: CNTVIRQ
++8: GPU_FAST
++9: PMU_FAST
++
++Example:
++
++local_intc: local_intc {
++	compatible = "brcm,bcm2836-l1-intc";
++	reg = <0x40000000 0x100>;
++	interrupt-controller;
++	#interrupt-cells = <1>;
++	interrupt-parent = <&local_intc>;
++};
+-- 
+2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
