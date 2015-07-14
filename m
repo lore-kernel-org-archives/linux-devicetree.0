@@ -1,67 +1,130 @@
-From: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v3 4/5] clk: mediatek: Add USB clock support in MT8173 APMIXEDSYS
-Date: Tue, 14 Jul 2015 18:15:58 +0800
-Message-ID: <CAGS+omB=Fbdpr0jc0oXxbPP1pePOXzaAZi4yKAd_=HnpQDbacA@mail.gmail.com>
-References: <1436522405-13923-1-git-send-email-jamesjj.liao@mediatek.com>
- <1436522405-13923-5-git-send-email-jamesjj.liao@mediatek.com>
- <CAGS+omBryA6f6gYje5RvF2XcJiebogYCHpyWNeN9K4B-MiHf1Q@mail.gmail.com>
- <1436841935.9416.10.camel@mtksdaap41> <CAGS+omAb8t0sLP1DHoa6z1-XweWUwOJQhqydofWZ+YiyPXzxhA@mail.gmail.com>
- <1436867199.9416.16.camel@mtksdaap41>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH 3/5] [media] tc358743: support probe from device tree
+Date: Tue, 14 Jul 2015 12:15:48 +0200
+Message-ID: <55A4E154.8020309@xs4all.nl>
+References: <1436533897-3060-1-git-send-email-p.zabel@pengutronix.de>	 <1436533897-3060-3-git-send-email-p.zabel@pengutronix.de>	 <55A39982.3030006@xs4all.nl> <1436868605.3793.24.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1436867199.9416.16.camel@mtksdaap41>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Heiko Stubner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1436868605.3793.24.camel@pengutronix.de>
+Sender: linux-media-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Mats Randgaard <matrandg@cisco.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 14, 2015 at 5:46 PM, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> Hi Daniel,
->
-> On Tue, 2015-07-14 at 11:23 +0800, Daniel Kurtz wrote:
->> On Tue, Jul 14, 2015 at 10:45 AM, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
->> > On Mon, 2015-07-13 at 22:46 +0800, Daniel Kurtz wrote:
->> >> > +static const struct clk_ops mtk_ref2usb_tx_ops = {
->> >> > +       .is_prepared    = mtk_ref2usb_tx_is_prepared,
->> >> > +       .prepare        = mtk_ref2usb_tx_prepare,
->> >> > +       .unprepare      = mtk_ref2usb_tx_unprepare,
->> >> > +};
->> >>
->> >> Burying the implementation of this special "mtk_ref2usb" clock in
->> >> clk-mt8173,c seems a bit awkward.
->> >> Can you please move it to its own file, like mediatek/clk-usb.c?
->> >
->> > Do you mean clk/mediatek/clk-usb.c?
->> >
->> > This clock is a MT8173 specific clock, which may not be reused by other
->> > SoCs. So I think it's not necessary to move it to a separated file.
+On 07/14/15 12:10, Philipp Zabel wrote:
+> Hi Hans,
+> 
+> Am Montag, den 13.07.2015, 12:57 +0200 schrieb Hans Verkuil:
+> [...]
+>>> @@ -69,6 +72,7 @@ static const struct v4l2_dv_timings_cap tc358743_timings_cap = {
+>>>  
+>>>  struct tc358743_state {
+>>>  	struct tc358743_platform_data pdata;
+>>> +	struct v4l2_of_bus_mipi_csi2 bus;
 >>
->> Yes, this is a wrapper for a type of clock.  I think it would be
->> better in its own file, rather than embedded in clk-mt8173.c, which is
->> more about enumerating and initializing the clock tree.
+>> Where is this bus struct set?
+> 
+> Uh-oh, I have accidentally dropped setting the bus struct when switching
+> to v4l2_of_alloc_parse_endpoint.
+> 
+> [...]
+>>> @@ -700,7 +706,8 @@ static void tc358743_set_csi(struct v4l2_subdev *sd)
+>>>  			((lanes > 2) ? MASK_D2M_HSTXVREGEN : 0x0) |
+>>>  			((lanes > 3) ? MASK_D3M_HSTXVREGEN : 0x0));
+>>>  
+>>> -	i2c_wr32(sd, TXOPTIONCNTRL, MASK_CONTCLKMODE);
+>>> +	i2c_wr32(sd, TXOPTIONCNTRL, (state->bus.flags &
+>>> +		 V4L2_MBUS_CSI2_CONTINUOUS_CLOCK) ? MASK_CONTCLKMODE : 0);
 >>
->> Perhaps today it is only used for mt8173, but that may not be the case
->> in the future.
->
-> OK, I'll separate it from clk-mt8173.c.
->
-> Ref2usb_tx's control register is located in APMIXEDSYS, which contains
-> most of PLL controlling. Is this clock suitable to implemented
-> mtk-pll.c? Or it's proper to be a separated file such as clk-usb.c?
+>> It's used here.
+>>
+>> BTW, since I don't see state->bus being set, that means bus.flags == 0 and
+>> so this register is now set to 0 instead of MASK_CONTCLKMODE.
+>>
+>> When using platform data I guess bus.flags should be set to
+>> V4L2_MBUS_CSI2_CONTINUOUS_CLOCK to prevent breakage.
+> 
+> Ok.
+> 
+> [..]
+>>> +	/*
+>>> +	 * The CSI bps per lane must be between 62.5 Mbps and 1 Gbps.
+>>> +	 * The default is 594 Mbps for 4-lane 1080p60 or 2-lane 720p60.
+>>> +	 */
+>>> +	bps_pr_lane = 2 * endpoint->link_frequencies[0];
+>>> +	if (bps_pr_lane < 62500000U || bps_pr_lane > 1000000000U) {
+>>> +		dev_err(dev, "unsupported bps per lane: %u bps\n", bps_pr_lane);
+>>> +		goto disable_clk;
+>>> +	}
+>>> +
+>>> +	/* The CSI speed per lane is refclk / pll_prd * pll_fbd */
+>>> +	state->pdata.pll_fbd = bps_pr_lane /
+>>> +			       state->pdata.refclk_hz * state->pdata.pll_prd;
+>>> +
+>>> +	/*
+>>> +	 * FIXME: These timings are from REF_02 for 594 Mbps per lane (297 MHz
+>>> +	 * link frequency). In principle it should be possible to calculate
+>>> +	 * them based on link frequency and resolution.
+>>> +	 */
+>>> +	if (bps_pr_lane != 594000000U)
+>>> +		dev_warn(dev, "untested bps per lane: %u bps\n", bps_pr_lane);
+>>> +	state->pdata.lineinitcnt = 0xe80;
+>>> +	state->pdata.lptxtimecnt = 0x003;
+>>> +	/* tclk-preparecnt: 3, tclk-zerocnt: 20 */
+>>> +	state->pdata.tclk_headercnt = 0x1403;
+>>> +	state->pdata.tclk_trailcnt = 0x00;
+>>> +	/* ths-preparecnt: 3, ths-zerocnt: 1 */
+>>> +	state->pdata.ths_headercnt = 0x0103;
+>>> +	state->pdata.twakeup = 0x4882;
+>>> +	state->pdata.tclk_postcnt = 0x008;
+>>> +	state->pdata.ths_trailcnt = 0x2;
+>>> +	state->pdata.hstxvregcnt = 0;
+> 
+> Do you have any suggestion how to handle this? AFAIK REF_02 is not
+> public, and I do not know the formulas it uses internally to calculate
+> these timings. I wouldn't want to add all the timing parameters to the
+> device tree just because of that.
 
-I think a separate clk-usb.c might be better since the driver is very
-different than what is used for the PLLs.
+As you said, it's not public and without the formulas there is nothing you
+can do but hardcode it.
 
-Thanks!
--Dan
+If I understand this correctly these values depend on the link frequency,
+so the DT should contain the link frequency and the driver can hardcode the
+values based on that. Which means that if someone needs to support a new
+link frequency the driver needs to be extended for that frequency.
 
-> Best regards,
->
-> James
->
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+As long as Toshiba keeps the formulas under NDA there isn't much else you can
+do.
+
+Regards,
+
+	Hans
+
+> 
+> [...]
+>>> @@ -1658,14 +1794,19 @@ static int tc358743_probe(struct i2c_client *client,
+>>>  	if (!state)
+>>>  		return -ENOMEM;
+>>>  
+>>> +	state->i2c_client = client;
+>>> +
+>>>  	/* platform data */
+>>> -	if (!pdata) {
+>>> -		v4l_err(client, "No platform data!\n");
+>>> -		return -ENODEV;
+>>> +	if (pdata) {
+>>> +		state->pdata = *pdata;
+>>> +	} else {
+>>> +		err = tc358743_probe_of(state);
+>>> +		if (err == -ENODEV)
+>>> +			v4l_err(client, "No platform data!\n");
+>>
+>> I'd replace this with "No device tree data!" or something like that.
+> 
+> I'll do that, thank you.
+> 
+> regards
+> Philipp
+> 
