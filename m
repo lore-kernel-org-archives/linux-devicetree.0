@@ -1,161 +1,50 @@
-From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Subject: [PATCH v2 1/3] gpio: defer probe if pinctrl cannot be found
-Date: Tue, 14 Jul 2015 10:29:54 +0200
-Message-ID: <1436862596-27730-2-git-send-email-tomeu.vizoso@collabora.com>
-References: <1436862596-27730-1-git-send-email-tomeu.vizoso@collabora.com>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1436862596-27730-1-git-send-email-tomeu.vizoso@collabora.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Alexandre Courbot <gnurou@gmail.com>
+From: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Subject: Re: [PATCH 3/3] arm64: dts: add device tree for ARM SMM-A53x2 on
+ LogicTile Express 20MG
+Date: Tue, 14 Jul 2015 09:37:54 +0100
+Message-ID: <1436863074.25044.30.camel@hellion.org.uk>
+References: <1435754163-17929-1-git-send-email-sudeep.holla@arm.com>
+	 <1435754163-17929-4-git-send-email-sudeep.holla@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1435754163-17929-4-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Kristina Martsenko <kristina.martsenko-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-When an OF node has a pin range for its GPIOs, return -EPROBE_DEFER if
-the pin controller isn't available.
+On Wed, 2015-07-01 at 13:36 +0100, Sudeep Holla wrote:
 
-Otherwise, the GPIO range wouldn't be set at all unless the pin
-controller probed always before the GPIO chip.
+> diff --git a/arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts b/arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts
+> new file mode 100644
+> index 000000000000..5b1d0181023b
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts
+[...]
+> +		/include/ "../../../../arm/boot/dts/vexpress-v2m-rs1.dtsi"
 
-With this change, the probe of the GPIO chip will be deferred and will
-be retried at a later point, hopefully once the pin controller has been
-registered and probed already.
+Unfortunately this causes some issues for the split device tree
+repository[0], since things get moved around there.
 
-Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
----
+This new file ends up at src/arm64/arm/vexpress-v2f-1xv7-ca53x2.dts
+while the include is at src/arm/vexpress-v2m-rs1.dtsi.
 
-Changes in v2:
-- Don't defer probe if the pinctrl node is disabled
+Any ideas how best to deal with this?
 
- drivers/gpio/gpiolib-of.c | 27 ++++++++++++++++++---------
- drivers/gpio/gpiolib.c    |  5 ++++-
- include/linux/of_gpio.h   |  4 ++--
- 3 files changed, 24 insertions(+), 12 deletions(-)
+I'm willing to try and work around in the conversion scripts but while
+rewriting the paths to things on conversion is easy, rewriting the
+contents of the files themselves is much less so (or at least would be
+prohibitively expensive on input the size of Linux).
 
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index 9a0ec48a4737..4e1f73b9136a 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -338,7 +338,7 @@ void of_mm_gpiochip_remove(struct of_mm_gpio_chip *mm_gc)
- EXPORT_SYMBOL(of_mm_gpiochip_remove);
- 
- #ifdef CONFIG_PINCTRL
--static void of_gpiochip_add_pin_range(struct gpio_chip *chip)
-+static int of_gpiochip_add_pin_range(struct gpio_chip *chip)
- {
- 	struct device_node *np = chip->of_node;
- 	struct of_phandle_args pinspec;
-@@ -349,7 +349,7 @@ static void of_gpiochip_add_pin_range(struct gpio_chip *chip)
- 	struct property *group_names;
- 
- 	if (!np)
--		return;
-+		return 0;
- 
- 	group_names = of_find_property(np, group_names_propname, NULL);
- 
-@@ -361,7 +361,7 @@ static void of_gpiochip_add_pin_range(struct gpio_chip *chip)
- 
- 		pctldev = of_pinctrl_get(pinspec.np);
- 		if (!pctldev)
--			break;
-+			return -EPROBE_DEFER;
- 
- 		if (pinspec.args[2]) {
- 			if (group_names) {
-@@ -381,7 +381,7 @@ static void of_gpiochip_add_pin_range(struct gpio_chip *chip)
- 					pinspec.args[1],
- 					pinspec.args[2]);
- 			if (ret)
--				break;
-+				return ret;
- 		} else {
- 			/* npins == 0: special range */
- 			if (pinspec.args[1]) {
-@@ -411,32 +411,41 @@ static void of_gpiochip_add_pin_range(struct gpio_chip *chip)
- 			ret = gpiochip_add_pingroup_range(chip, pctldev,
- 						pinspec.args[0], name);
- 			if (ret)
--				break;
-+				return ret;
- 		}
- 	}
-+
-+	return 0;
- }
- 
- #else
--static void of_gpiochip_add_pin_range(struct gpio_chip *chip) {}
-+static int of_gpiochip_add_pin_range(struct gpio_chip *chip) { return 0; }
- #endif
- 
--void of_gpiochip_add(struct gpio_chip *chip)
-+int of_gpiochip_add(struct gpio_chip *chip)
- {
-+	int status;
-+
- 	if ((!chip->of_node) && (chip->dev))
- 		chip->of_node = chip->dev->of_node;
- 
- 	if (!chip->of_node)
--		return;
-+		return 0;
- 
- 	if (!chip->of_xlate) {
- 		chip->of_gpio_n_cells = 2;
- 		chip->of_xlate = of_gpio_simple_xlate;
- 	}
- 
--	of_gpiochip_add_pin_range(chip);
-+	status = of_gpiochip_add_pin_range(chip);
-+	if (status)
-+		return status;
-+
- 	of_node_get(chip->of_node);
- 
- 	of_gpiochip_scan_hogs(chip);
-+
-+	return 0;
- }
- 
- void of_gpiochip_remove(struct gpio_chip *chip)
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index bf4bd1d120c3..a8cab335c0cc 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -287,7 +287,10 @@ int gpiochip_add(struct gpio_chip *chip)
- 	INIT_LIST_HEAD(&chip->pin_ranges);
- #endif
- 
--	of_gpiochip_add(chip);
-+	status = of_gpiochip_add(chip);
-+	if (status)
-+		goto err_remove_chip;
-+
- 	acpi_gpiochip_add(chip);
- 
- 	status = gpiochip_sysfs_register(chip);
-diff --git a/include/linux/of_gpio.h b/include/linux/of_gpio.h
-index 69dbe312b11b..f3191828f037 100644
---- a/include/linux/of_gpio.h
-+++ b/include/linux/of_gpio.h
-@@ -54,7 +54,7 @@ extern int of_mm_gpiochip_add(struct device_node *np,
- 			      struct of_mm_gpio_chip *mm_gc);
- extern void of_mm_gpiochip_remove(struct of_mm_gpio_chip *mm_gc);
- 
--extern void of_gpiochip_add(struct gpio_chip *gc);
-+extern int of_gpiochip_add(struct gpio_chip *gc);
- extern void of_gpiochip_remove(struct gpio_chip *gc);
- extern int of_gpio_simple_xlate(struct gpio_chip *gc,
- 				const struct of_phandle_args *gpiospec,
-@@ -76,7 +76,7 @@ static inline int of_gpio_simple_xlate(struct gpio_chip *gc,
- 	return -ENOSYS;
- }
- 
--static inline void of_gpiochip_add(struct gpio_chip *gc) { }
-+static inline int of_gpiochip_add(struct gpio_chip *gc) { return 0; }
- static inline void of_gpiochip_remove(struct gpio_chip *gc) { }
- 
- #endif /* CONFIG_OF_GPIO */
--- 
-2.4.3
+Cheers,
+Ian.
 
+[0]
+https://git.kernel.org/cgit/linux/kernel/git/devicetree/devicetree-rebasing.git/
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
