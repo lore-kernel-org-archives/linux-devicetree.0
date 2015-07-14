@@ -1,37 +1,51 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: drm/imx: parallel-display: fix drm_panel support
-Date: Tue, 14 Jul 2015 11:53:27 +0200
-Message-ID: <1436867607.3793.10.camel@pengutronix.de>
-References: <1432045692-2458-1-git-send-email-p.zabel@pengutronix.de>
- <20150709182248.GA20862@t450s.lan>
+From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC PATCH v2 1/1] drivers: cpuidle: cpuidle-arm: heterogeneous
+ systems extension
+Date: Tue, 14 Jul 2015 11:04:51 +0100
+Message-ID: <20150714100451.GA16165@red-moon>
+References: <1429200617-9546-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1429200617-9546-2-git-send-email-lorenzo.pieralisi@arm.com>
+ <554771D3.5010701@linaro.org>
+ <20150505155615.GA23106@red-moon>
+ <20150512130339.GB15131@red-moon>
+ <CAGS+omBtraNBH43qsFn_YgO3ePbFav9VtwgqDUinbOBMPwOGXA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20150709182248.GA20862@t450s.lan>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Gary Bisson <gary.bisson@boundarydevices.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAGS+omBtraNBH43qsFn_YgO3ePbFav9VtwgqDUinbOBMPwOGXA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Howard Chen <howard.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "Eddie Huang (?????????)" <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Benson Leung <bleung-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2FyeSwKCkFtIERvbm5lcnN0YWcsIGRlbiAwOS4wNy4yMDE1LCAyMDoyMiArMDIwMCBzY2hy
-aWViIEdhcnkgQmlzc29uOgpbLi4uXQo+IFRlc3RlZCBvbiBOaXRyb2dlbjZ4IGFuZCBTYWJyZWxp
-dGUgdXNpbmcgYSBPa2F5YSBSUzgwMDQ4MFQtN1gwR1AKPiBkaXNwbGF5LiBCZWxvdyBhcmUgdGhl
-IGRpZmZlcmVudCBwYXRjaGVzIHN1Ym1pdHRlZCB0aGF0IG1ha2UgdXNlIG9mIHRoaXMKPiBjaGFu
-Z2U6Cj4gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC82NTg1NTQxLwo+IGh0dHBz
-Oi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvNjU4NTU1MS8KPiBodHRwczovL3BhdGNod29y
-ay5rZXJuZWwub3JnL3BhdGNoLzY1MDQ3MTEvCj4gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9y
-Zy9wYXRjaC82NTA0NzMxLwo+IAo+IFRlc3RlZC1ieTogR2FyeSBCaXNzb24gPGdhcnkuYmlzc29u
-QGJvdW5kYXJ5ZGV2aWNlcy5jb20+CgpUaGFuayB5b3UgZm9yIHRlc3RpbmcsIEkgaGF2ZSBzZW50
-IGEgcHVsbCByZXF1ZXN0IHRoYXQgaW5jbHVkZXMgdGhpcwpwYXRjaC4KCnJlZ2FyZHMKUGhpbGlw
-cAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRl
-dmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9s
-aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Hi Daniel,
+
+On Tue, Jul 14, 2015 at 05:52:48AM +0100, Daniel Kurtz wrote:
+
+[...]
+
+> > Any further comments ? I can post a v2 with an updated idle_states_cmp()
+> > return value, if we think the multiple drivers approach is valid.
+> 
+> Can you post v2?
+> From the silence on the list, I guess there is no strong objection to
+> your approach.
+
+I just wanted to make sure this patch is strictly required before asking
+for a merge in the mainline, it adds to the code complexity so it should
+not be taken lightly.
+
+> So, perhaps it is time to remove the "RFC" as well so this can get on
+> track to be merged.
+
+I will drop the RFC status and add a simple configuration to define
+a config entry to configure the max number of drivers statically so
+that we do not waste memory for nothing.
+
+Thanks,
+Lorenzo
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
