@@ -1,72 +1,95 @@
-From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Subject: Re: [alsa-devel] [PATCH v2 11/12] ASoC: tegra: register dependency
- parser for firmware nodes
-Date: Tue, 14 Jul 2015 09:34:22 +0200
-Message-ID: <CAAObsKAVY7-QpcRyT4juc2RyB+vqibvzKO7wFCT2VsL9R8bzPw@mail.gmail.com>
-References: <1435743667-11987-1-git-send-email-tomeu.vizoso@collabora.com>
- <1435743667-11987-12-git-send-email-tomeu.vizoso@collabora.com>
- <20150701173802.GW11162@sirena.org.uk>
- <CAAObsKDsEuDS46rW9CMuviDEDV-OVXe5q-kiWmw0D_n2D3Tf5A@mail.gmail.com>
- <20150713154254.GH11162@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20150713154254.GH11162@sirena.org.uk>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-fbdev@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-gpio@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, alsa-devel@alsa-project.org, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Liam Girdwood <lgirdwood@gmail.com>, linux-acpi@vger.kernel.org, Linux PWM List <linux-pwm@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>
+From: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH-v4 00/11] i2c: pxa: Fixes, cleanup and support for pxa910 family
+Date: Tue, 14 Jul 2015 13:06:39 +0530
+Message-ID: <1436859410-28878-1-git-send-email-vaibhav.hiremath@linaro.org>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, yizhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTMgSnVseSAyMDE1IGF0IDE3OjQyLCBNYXJrIEJyb3duIDxicm9vbmllQGtlcm5lbC5vcmc+
-IHdyb3RlOgo+IE9uIE1vbiwgSnVsIDEzLCAyMDE1IGF0IDAyOjEwOjQ1UE0gKzAyMDAsIFRvbWV1
-IFZpem9zbyB3cm90ZToKPj4gT24gMSBKdWx5IDIwMTUgYXQgMTk6MzgsIE1hcmsgQnJvd24gPGJy
-b29uaWVAa2VybmVsLm9yZz4gd3JvdGU6Cj4+ID4gT24gV2VkLCBKdWwgMDEsIDIwMTUgYXQgMTE6
-NDE6MDZBTSArMDIwMCwgVG9tZXUgVml6b3NvIHdyb3RlOgo+Cj4+ID4+ICtzdGF0aWMgdm9pZCB0
-ZWdyYV9tYXg5ODA5MF9nZXRfZGVwZW5kZW5jaWVzKHN0cnVjdCBmd25vZGVfaGFuZGxlICpmd25v
-ZGUsCj4+ID4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0cnVj
-dCBsaXN0X2hlYWQgKmRlcHMpCj4+ID4+ICt7Cj4+ID4+ICsgICAgIGFkZF9kZXBlbmRlbmN5KGZ3
-bm9kZSwgIm52aWRpYSxpMnMtY29udHJvbGxlciIsIGRlcHMpOwo+PiA+PiArICAgICBhZGRfZGVw
-ZW5kZW5jeShmd25vZGUsICJudmlkaWEsYXVkaW8tY29kZWMiLCBkZXBzKTsKPj4gPj4gK30KPgo+
-PiA+IFdoeSBpcyB0aGlzIGFsbCBiZWluZyBvcGVuIGNvZGVkIGluIGFuIGluZGl2aWR1YWwgZHJp
-dmVyICh3ZSBhbHJlYWR5Cj4+ID4ga25vdyBhYm91dCBhbmQgbWFuYWdlIGFsbCB0aGVzZSBkZXBl
-bmRlbmNpZXMgaW4gdGhlIGNvcmUuLi4pPyAgSWYgd2UncmUKPj4gPiBnb2luZyB0byBkbyB0aGlz
-IEknZCBleHBlY3QgdGhlIGludGVyZmFjZSBmb3Igc3BlY2lmeWluZyBEVCBub2RlcyB0byB0aGUK
-Pj4gPiBjb3JlIHRvIGJlIGNoYW5nZWQgdG8gc3VwcG9ydCB0aGlzLgo+Cj4+IEFyZSB5b3UgdGhp
-bmtpbmcgb2YgY2hhbmdpbmcgZHJpdmVycyB0byBhY3F1aXJlIHRoZWlyIHJlc291cmNlcwo+PiB0
-aHJvdWdoIEFybmQncyBkZXZtX3Byb2JlIChvbmx5IHRoYXQgdGhlIHJlc291cmNlIHRhYmxlIHdv
-dWxkIGhhdmUgdG8KPj4gYmUgaW4gc3RydWN0IGRldmljZV9kcml2ZXIpPwo+Cj4+IGh0dHBzOi8v
-bGttbC5rZXJuZWwub3JnL2cvNDc0MjI1OC5UQml0QzNoVnVPQHd1ZXJmZWwKPgo+IE5vLCBJJ20g
-bG9va2luZyBhdCBob3cgd2UgYWxyZWFkeSBoYXZlIGFsbCB0aGUgImRpZCBhbGwgbXkgZGVwZW5k
-ZW5jaWVzCj4gYXBwZWFyIiBsb2dpYyBpbiB0aGUgY29yZSBiYXNlZCBvbiBkYXRhIHByb3ZpZGVk
-IGJ5IHRoZSBkcml2ZXJzLgoKU29ycnksIGJ1dCBJIHN0aWxsIGRvbid0IGdldCB3aGF0IHlvdSBt
-ZWFuLgoKSW5mb3JtYXRpb24gYWJvdXQgZGVwZW5kZW5jaWVzIGlzIGN1cnJlbnRseSBhdmFpbGFi
-bGUgb25seSBhZnRlcgpwcm9iZSgpIHN0YXJ0cyBleGVjdXRpbmcsIGFuZCB1c2VkIHRvIGRlY2lk
-ZSB3aGV0aGVyIHdlIHdhbnQgdG8gZGVmZXIKdGhlIHByb2JlLgoKVGhlIGdvYWwgb2YgdGhpcyBz
-ZXJpZXMgaXMgdG8gZWxpbWluYXRlIG1vc3Qgb3IgYWxsIG9mIHRoZSBkZWZlcnJlZApwcm9iZXMg
-YnkgY2hlY2tpbmcgdGhhdCBhbGwgZGVwZW5kZW5jaWVzIGFyZSBhdmFpbGFibGUgYmVmb3JlIHBy
-b2JlKCkKaXMgY2FsbGVkLgoKQmVjYXVzZSBjdXJyZW50bHkgd2Ugb25seSBoYXZlIGRlcGVuZGVu
-Y3kgaW5mb3JtYXRpb24gYWZ0ZXIgcHJvYmUoKQpzdGFydHMgZXhlY3V0aW5nLCB3ZSBoYXZlIHRv
-IG1ha2UgaXQgYXZhaWxhYmxlIGVhcmxpZXIuIEluIHRoaXMKcGFydGljdWxhciB2ZXJzaW9uLCBp
-biBjYWxsYmFja3MgdGhhdCBhcmUgcmVnaXN0ZXJlZCBmcm9tIHRoZQppbml0Y2FsbHMgdGhhdCBy
-ZWdpc3RlciBzdWJzeXN0ZW1zLCBjbGFzc2VzLCBkcml2ZXJzLCBldGMuIFdoYXRldmVyCmtub3dz
-IGhvdyB0aGVzZSBkZXBlbmRlbmNpZXMgYXJlIGV4cHJlc3NlZCBpbiB0aGUgZmlybXdhcmUgZGF0
-YS4KCkkgdGhvdWdodCB5b3Ugd2VyZSBwb2ludGluZyBvdXQgdGhhdCB0aGUgcHJvcGVydHkgbmFt
-ZXMgd291bGQgYmUKZHVwbGljYXRlZCwgb25jZSBpbiB0aGUgcHJvYmUoKSBpbXBsZW1lbnRhdGlv
-biBhbmQgYWxzbyBpbiB0aGUKaW1wbGVtZW50YXRpb24gb2YgdGhlIGdldF9kZXBlbmRlbmNpZXMg
-Y2FsbGJhY2suCgpBIHdheSB0byBjb25zb2xpZGF0ZSB0aGUgY29kZSBhbmQgcmVtb3ZlIHRoYXQg
-ZHVwbGljYXRpb24gd291bGQgYmUKaGF2aW5nIGEgZGVjbGFyYXRpdmUgQVBJIGZvciBleHByZXNz
-aW5nIGRlcGVuZGVuY2llcywgd2hpY2ggY291bGQgYmUKdXNlZCBmb3IgYm90aCBmZXRjaGluZyBk
-ZXBlbmRlbmNpZXMgYW5kIGZvciBwcmV2ZW50aW5nIGRlZmVycmVkCnByb2Jlcy4gVGhhdCdzIHdo
-eSBJIG1lbnRpb25lZCBkZXZtX3Byb2JlLgoKVGhhbmtzLAoKVG9tZXUKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
-cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+This patch series fixes bugs/warnings, cleans up the code and adds
+support for PXA910 family of devices to PXA I2C bus driver.
+
+There has been one attempt made sometime back in 2012 to upstream
+some of the patches from below list, but did not get follow up later.
+I have consolidated all the patches, cleaned them up, splited into
+logical changes, added new patches and submitting it now.
+
+I tried to maintain authorship & Signoff except where I did some
+significant changes to the code/logic.
+
+
+Link to previous post:
+http://permalink.gmane.org/gmane.linux.drivers.i2c/13557
+
+Testing:
+  - Basic testing on PMIC device on I2C-0 interface
+  - Boot tested on platform based on PXA1928
+  - Probe is successfully passing
+  - Read few registers of PMIC (RTC, ID, etc...) during boot
+
+V3 => V4
+=======
+Link to V3: http://www.spinics.net/lists/devicetree/msg85904.html
+
+  - [PATCH 06/11] Removed unnecessary dev_err on devm_kzalloc() check
+  - [PATCH 06/11] Removed return check on platform_get_resource(), as 
+    devm_ioremap_resource() does it for us.
+    Also, brought up the devm_ioremap_resource() function call in the execution
+    sequence, as no point in delaying it if we do not have resource.
+    It make sense, after this change.
+  - [PATCH 04/11] Typecast changed to 'enum pxa_i2c_types'
+    Also updated the subject line "Removed ==> Fix"
+
+V2 => V3
+=======
+Link to V2: http://www.spinics.net/lists/linux-i2c/msg20059.html
+
+  - Removed PATCH [4/12] related to reset of I2C module.
+    Suggested by "Robert Jarzmik"
+  - Updated commit description for,
+      PATCH [11/12]: Mentioned reasoning about moment of clk_get code.
+      PATCH [12/12]: for DT property node.
+  - Added Acked by "Robert Jarzmik" to patched which he acked.
+
+V1 => V2:
+========
+Link to V1 - http://lists.infradead.org/pipermail/linux-arm-kernel/2015-May/347012.html
+
+  - Fixed all comments from "Robert Jarzmik" and "Wolfram Sang"
+  - Dropped Patch
+	05/12: using core bus reset implementation - under work.
+               Will submit shortly.
+       	08/12: NAKed and dropped
+  - Separated DT binding patch from driver changes, for easy merge
+
+
+Leilei Shang (1):
+  i2c: pxa: keep i2c irq ON in suspend
+
+Shouming Wang (1):
+  i2c: pxa: Return I2C_RETRY when timeout in pio mode
+
+Vaibhav Hiremath (7):
+  i2c: pxa: No need to set slave addr for i2c master mode reset
+  i2c: pxa: Update debug function to dump more info on error
+  i2c:pxa: Use devm_ variants in probe function
+  Documentation: binding: add new property 'disable_after_xfer' to
+    i2c-pxa
+  i2c: pxa: Add support for pxa910/988 & new configuration features
+  i2c: pxa: Add ILCR (tLow & tHigh) configuration support
+  Documentation: binding: add sclk adjustment properties to i2c-pxa
+
+Yi Zhang (1):
+  i2c: pxa: enable/disable i2c module across msg xfer
+
+Yipeng Yao (1):
+  i2c: pxa: Fix compile warning in 64bit mode
+
+ Documentation/devicetree/bindings/i2c/i2c-pxa.txt |  18 ++
+ drivers/i2c/busses/i2c-pxa.c                      | 261 ++++++++++++++++------
+ 2 files changed, 211 insertions(+), 68 deletions(-)
+
+-- 
+1.9.1
