@@ -1,34 +1,40 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2] dts: ls1021a: Add dts nodes for eTSEC0, eTSEC1 and eTSEC2
-Date: Tue, 14 Jul 2015 12:57:21 -0300
-Message-ID: <CAOMZO5A2ftfUhioXpSnbGMxiV-fTePgHqk6zj2ysHe2wUY7JFg@mail.gmail.com>
+From: Manoil Claudiu <claudiu.manoil@freescale.com>
+Subject: RE: [PATCH v2] dts: ls1021a: Add dts nodes for eTSEC0, eTSEC1 and
+ eTSEC2
+Date: Tue, 14 Jul 2015 16:13:12 +0000
+Message-ID: <BY2PR03MB409415EF1E3F398DBF096E49C9B0@BY2PR03MB409.namprd03.prod.outlook.com>
 References: <20150713133138.GO23464@tiger>
 	<1436888777-29742-1-git-send-email-claudiu.manoil@freescale.com>
+ <CAOMZO5A2ftfUhioXpSnbGMxiV-fTePgHqk6zj2ysHe2wUY7JFg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1436888777-29742-1-git-send-email-claudiu.manoil-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Claudiu Manoil <claudiu.manoil-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alison Wang <alison.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAOMZO5A2ftfUhioXpSnbGMxiV-fTePgHqk6zj2ysHe2wUY7JFg@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, Shawn Guo <shawn.guo@linaro.org>, Huan Wang <alison.wang@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 14, 2015 at 12:46 PM, Claudiu Manoil
-<claudiu.manoil-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> This patch adds generic dts nodes for eTSEC0, eTSEC1 and eTSEC2.
->
-> Signed-off-by: Alison Wang <alison.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->
-> Enable support for the second interrupt group register block
-> and the corresponding Rx/Tx/Err interrupt sources, for each
-> eTSEC node.  DT binding documentation updates.
->
-> Signed-off-by: Claudiu Manoil <claudiu.manoil-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-
-It seems you missed to put Alison in the From field.
-
-You should also put his Signed-off-by tag just before yours.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBGYWJpbyBFc3RldmFtIFttYWls
+dG86ZmVzdGV2YW1AZ21haWwuY29tXQ0KPiBTZW50OiBUdWVzZGF5LCBKdWx5IDE0LCAyMDE1IDY6
+NTcgUE0NCj4gVG86IE1hbm9pbCBDbGF1ZGl1LUIwODc4Mg0KPiBDYzogZGV2aWNldHJlZUB2Z2Vy
+Lmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXgt
+DQo+IGtlcm5lbDsgU2hhd24gR3VvOyBXYW5nIEh1YW4tQjE4OTY1DQo+IFN1YmplY3Q6IFJlOiBb
+UEFUQ0ggdjJdIGR0czogbHMxMDIxYTogQWRkIGR0cyBub2RlcyBmb3IgZVRTRUMwLCBlVFNFQzEg
+YW5kDQo+IGVUU0VDMg0KPiANCj4gT24gVHVlLCBKdWwgMTQsIDIwMTUgYXQgMTI6NDYgUE0sIENs
+YXVkaXUgTWFub2lsDQo+IDxjbGF1ZGl1Lm1hbm9pbEBmcmVlc2NhbGUuY29tPiB3cm90ZToNCj4g
+PiBUaGlzIHBhdGNoIGFkZHMgZ2VuZXJpYyBkdHMgbm9kZXMgZm9yIGVUU0VDMCwgZVRTRUMxIGFu
+ZCBlVFNFQzIuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBBbGlzb24gV2FuZyA8YWxpc29uLndh
+bmdAZnJlZXNjYWxlLmNvbT4NCj4gPg0KPiA+IEVuYWJsZSBzdXBwb3J0IGZvciB0aGUgc2Vjb25k
+IGludGVycnVwdCBncm91cCByZWdpc3RlciBibG9jaw0KPiA+IGFuZCB0aGUgY29ycmVzcG9uZGlu
+ZyBSeC9UeC9FcnIgaW50ZXJydXB0IHNvdXJjZXMsIGZvciBlYWNoDQo+ID4gZVRTRUMgbm9kZS4g
+IERUIGJpbmRpbmcgZG9jdW1lbnRhdGlvbiB1cGRhdGVzLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1i
+eTogQ2xhdWRpdSBNYW5vaWwgPGNsYXVkaXUubWFub2lsQGZyZWVzY2FsZS5jb20+DQo+IA0KPiBJ
+dCBzZWVtcyB5b3UgbWlzc2VkIHRvIHB1dCBBbGlzb24gaW4gdGhlIEZyb20gZmllbGQuDQo+IA0K
+PiBZb3Ugc2hvdWxkIGFsc28gcHV0IGhpcyBTaWduZWQtb2ZmLWJ5IHRhZyBqdXN0IGJlZm9yZSB5
+b3Vycy4NCg0KSXMgdGhpcyBhIHJ1bGUgaW52ZW50ZWQgYnkgeW91PyAgTGFzdCB0aW1lIEkgY2hl
+Y2tlZCB0aGlzIHdhcyBhDQp2YWxpZCBwYXRjaCBmb3JtYXQuICBBbHNvLCB0aGlzIHRpbWUgSSBz
+ZW50IHRoZSAodXBkYXRlZCkgcGF0Y2gsDQpub3QgQWxpc29uLCB3aGljaCBzaG91bGQgZXhwbGFp
+biB0aGUgIkZyb20iIHBhcnQuIFRoYW5rcy4NCg0K
