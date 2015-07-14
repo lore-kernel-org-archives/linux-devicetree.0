@@ -1,81 +1,162 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v7 6/9] nvmem: qfprom: Add Qualcomm QFPROM support.
-Date: Tue, 14 Jul 2015 14:18:31 -0700
-Message-ID: <20150714211831.GN30412@codeaurora.org>
-References: <1436521427-10568-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1436521529-10931-1-git-send-email-srinivas.kandagatla@linaro.org>
+From: <dinguyen@opensource.altera.com>
+Subject: [PATCH] ARM: dts: socfpga: Add support of Terasic DE0 Atlas board
+Date: Tue, 14 Jul 2015 16:23:07 -0500
+Message-ID: <1436908987-16038-1-git-send-email-dinguyen@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1436521529-10931-1-git-send-email-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, stefan.wahren-eS4NqCHxEME@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mark.rutland@arm.com, pawel.moll@arm.com
+Cc: devicetree@vger.kernel.org, Dalon Westergreen <dwesterg@gmail.com>, dinh.linux@gmail.com, Dinh Nguyen <dinguyen@opensource.altera.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/10, Srinivas Kandagatla wrote:
-> This patch adds QFPROM support driver which is used by other drivers
-> like thermal sensor and cpufreq.
-> 
-> On MSM parts there are some efuses (called qfprom) these fuses store
-> things like calibration data, speed bins.. etc. Drivers like cpufreq,
-> thermal sensors would read out this data for configuring the driver.
-> 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
+From: Dalon Westergreen <dwesterg@gmail.com>
 
-I didn't see any reply on v6, but at least delay.h was removed.
-Same comments from v6 below.
+The Terasic DE0 Atlas board is also known as the DE0-Nano board.
 
-> diff --git a/drivers/nvmem/qfprom.c b/drivers/nvmem/qfprom.c
-> new file mode 100644
-> index 0000000..0e22a03
-> --- /dev/null
-> +++ b/drivers/nvmem/qfprom.c
-> @@ -0,0 +1,87 @@
-> +/*
-> + * Copyright (C) 2015 Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 and
-> + * only version 2 as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/device.h>
-> +#include <linux/io.h>
+Signed-off-by: Dalon Westergreen <dwesterg@gmail.com>
+Signed-off-by: Dinh Nguyen <dinguyen@opensource.altera.com>
+---
+ arch/arm/boot/dts/Makefile                        |    1 +
+ arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts |  109 +++++++++++++++++++++
+ 2 files changed, 110 insertions(+)
+ create mode 100644 arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
 
-Is this include used?
-
-> +#include <linux/module.h>
-> +#include <linux/nvmem-provider.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/slab.h>
-> +
-> +static struct regmap_config qfprom_regmap_config = {
-
-Can this be const?
-
-> +	.reg_bits = 32,
-> +	.val_bits = 8,
-> +	.reg_stride = 1,
-> +};
-> +
-> +static struct nvmem_config econfig = {
-
-Can this be const?
-
-> +	.name = "qfprom",
-> +	.owner = THIS_MODULE,
-> +};
-> +
-
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 246473a..29e33aa 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -522,6 +522,7 @@ dtb-$(CONFIG_ARCH_SOCFPGA) += \
+ 	socfpga_arria5_socdk.dtb \
+ 	socfpga_arria10_socdk_sdmmc.dtb \
+ 	socfpga_cyclone5_socdk.dtb \
++	socfpga_cyclone5_de0_sockit.dtb \
+ 	socfpga_cyclone5_sockit.dtb \
+ 	socfpga_cyclone5_socrates.dtb \
+ 	socfpga_vt.dtb
+diff --git a/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts b/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
+new file mode 100644
+index 0000000..3172c82
+--- /dev/null
++++ b/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
+@@ -0,0 +1,109 @@
++/*
++ * Copyright Altera Corporation (C) 2015. All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License along with
++ * this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++
++#include "socfpga_cyclone5.dtsi"
++
++/ {
++	model = "Terasic DE-0(Atlas)";
++	compatible = "altr,socfpga-cyclone5", "altr,socfpga";
++
++	chosen {
++		bootargs = "console=ttyS0,115200";
++	};
++
++	memory {
++		name = "memory";
++		device_type = "memory";
++		reg = <0x0 0x40000000>; /* 1GB */
++	};
++
++	aliases {
++		/* this allow the ethaddr uboot environmnet variable contents
++		 * to be added to the gmac1 device tree blob.
++		 */
++		ethernet0 = &gmac1;
++	};
++
++	regulator_3_3v: 3-3-v-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "3.3V";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		hps0 {
++			label = "hps_led0";
++			gpios = <&portb 24 0>;
++			linux,default-trigger = "heartbeat";
++		};
++	};
++};
++
++&gmac1 {
++	status = "okay";
++	phy-mode = "rgmii";
++
++	rxd0-skew-ps = <0>;
++	rxd1-skew-ps = <0>;
++	rxd2-skew-ps = <0>;
++	rxd3-skew-ps = <0>;
++	txen-skew-ps = <0>;
++	txc-skew-ps = <2600>;
++	rxdv-skew-ps = <0>;
++	rxc-skew-ps = <2000>;
++	max-frame-size = <3800>;
++};
++
++&gpio0 {
++	status = "okay";
++};
++
++&gpio1 {
++	status = "okay";
++};
++
++&gpio2 {
++	status = "okay";
++};
++
++&i2c0 {
++	status = "okay";
++	speed-mode = <0>;
++
++	adxl345: adxl345@0 {
++		compatible = "adi,adxl345";
++		reg = <0x53>;
++
++		interrupt-parent = <&portc>;
++		interrupts = <3 2>;
++	};
++	
++};
++
++&mmc0 {
++	vmmc-supply = <&regulator_3_3v>;
++	vqmmc-supply = <&regulator_3_3v>;
++};
++
++&uart0 {
++	status = "okay";
++};
++
++&usb1 {
++	status = "okay";
++};
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+1.7.9.5
