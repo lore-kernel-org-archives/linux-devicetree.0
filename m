@@ -1,64 +1,34 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH V3 19/19] ARM: tegra: select PM_GENERIC_DOMAINS
-Date: Tue, 14 Jul 2015 12:59:50 +0100
-Message-ID: <55A4F9B6.1070904@nvidia.com>
-References: <1436791197-32358-1-git-send-email-jonathanh@nvidia.com> <1436791197-32358-20-git-send-email-jonathanh@nvidia.com> <20150713135047.GR6287@tbergstrom-lnx.Nvidia.com> <55A3C53F.8090003@nvidia.com>
+From: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 0/7] serial: 8250_omap: workaround for IP errata
+Date: Tue, 14 Jul 2015 08:22:04 -0400
+Message-ID: <55A4FEEC.3080101@hurleysoftware.com>
+References: <cover.1436855646.git.nsekhar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <55A3C53F.8090003@nvidia.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Prashant Gaikwad <pgaikwad@nvidia.com>, =?windows-1252?Q?Terje_Bergstr?= =?windows-1252?Q?=F6m?= <tbergstrom@nvidia.com>, Hans de Goede <hdegoede@redhat.com>, Tejun Heo <tj@kernel.org>, Vince Hsu <vinceh@nvidia.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1436855646.git.nsekhar-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, John Ogness <john.ogness-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 13/07/15 15:03, Jon Hunter wrote:
+On 07/14/2015 04:02 AM, Sekhar Nori wrote:
+> This series works around "Advisory 21" as documented in
+> AM437x SoC errata[1]. This errata prevents UART module
+> from idling after DMA is used. AM335x and DRA7x also suffer
+> from the same errata and chip design team is in the process
+> of updating the errata documents of those devices as well.
 > 
-> 
-> On 13/07/15 14:50, Peter De Schrijver wrote:
->> On Mon, Jul 13, 2015 at 01:39:57PM +0100, Jon Hunter wrote:
->>> From: Vince Hsu <vinceh@nvidia.com>
->>>
->>> We have added generic power domain support for Tegra SoCs. So now the
->>> option M_GENERIC_DOMAINS must be enabled by default to have proper power
->>
->> Missing P :)
-> 
-> Ooops. I think introduced that error. Will fix.
+> Patch 1/7 fixes a related bug but can be applied independently.
 
-Updated version ...
+Looks good. Thanks Sekhar!
 
+For series,
 
->From f7b951cd05973d74fc25e33a1aaec5a6e77bfdc0 Mon Sep 17 00:00:00 2001
-From: Vince Hsu <vinceh@nvidia.com>
-Date: Wed, 11 Mar 2015 13:40:46 +0800
-Subject: [PATCH 19/19] ARM: tegra: select PM_GENERIC_DOMAINS
+Reviewed-by: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
 
-We have added generic power domain support for Tegra SoCs. So now the
-option PM_GENERIC_DOMAINS must be enabled by default to have proper power
-sequence.
-
-Signed-off-by: Vince Hsu <vinceh@nvidia.com>
-Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
----
- arch/arm/mach-tegra/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm/mach-tegra/Kconfig b/arch/arm/mach-tegra/Kconfig
-index 0fa4c5f8b1be..fdf86cae3b32 100644
---- a/arch/arm/mach-tegra/Kconfig
-+++ b/arch/arm/mach-tegra/Kconfig
-@@ -9,6 +9,7 @@ menuconfig ARCH_TEGRA
- 	select HAVE_ARM_TWD if SMP
- 	select PINCTRL
- 	select PM_OPP
-+	select PM_GENERIC_DOMAINS if PM
- 	select ARCH_HAS_RESET_CONTROLLER
- 	select RESET_CONTROLLER
- 	select SOC_BUS
--- 
-2.1.4
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
