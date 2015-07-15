@@ -1,59 +1,101 @@
-From: Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v4] media: am437x-vpfe: Fix a race condition during release
-Date: Wed, 15 Jul 2015 16:00:06 -0500
-Message-ID: <1436994006-10120-1-git-send-email-bparrot@ti.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: dts: qcom: Add binding for the qcom coincell charger
+Date: Wed, 15 Jul 2015 16:22:45 -0500
+Message-ID: <CAL_Jsq+U7q1=BbRY47b077ys2NWMCTVE5SvgnWW4N2yKUAm95w@mail.gmail.com>
+References: <1436830772-32632-1-git-send-email-tim.bird@sonymobile.com>
+ <CAL_JsqJ4poHe_644aOooAXJqwSvTW-3NPCFJ7LmaBj=wAQQp1w@mail.gmail.com>
+ <55A58221.7040004@sonymobile.com> <CAL_Jsq+FUCvQgicWkJLQOVTSijWxqDyWDKwJgFr85KAvtC=bkg@mail.gmail.com>
+ <55A6A55D.8000209@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: Prabhakar Lad <prabhakar.csengg@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benoit Parrot <bparrot@ti.com>, stable@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55A6A55D.8000209-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tim Bird <tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?Q?Andersson=2C_Bj=C3=B6rn?= <Bjorn.Andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-There was a race condition where during cleanup/release operation
-on-going streaming would cause a kernel panic because the hardware
-module was disabled prematurely with IRQ still pending.
+On Wed, Jul 15, 2015 at 1:24 PM, Tim Bird <tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org> wrote:
+> On 07/14/2015 06:07 PM, Rob Herring wrote:
+>> On Tue, Jul 14, 2015 at 4:41 PM, Tim Bird <tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org> wrote:
+>>> On 07/13/2015 08:59 PM, Rob Herring wrote:
+>>>> On Mon, Jul 13, 2015 at 6:39 PM, Tim Bird <tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org> wrote:
+>>>>> This binding is used to configure the driver for the coincell charger
+>>>>> found in Qualcomm PMICs.
 
-Fixes: 417d2e507edc ("[media] media: platform: add VPFE capture driver support for AM437X")
-Cc: <stable@vger.kernel.org> # v4.0+
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
----
-Changes since v3:
-- fix review comment to protect v4l2_fh_is_singular_file()
+[...]
 
- drivers/media/platform/am437x/am437x-vpfe.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+>>>>> +- qcom,charge-enable:
+>>>>> +       Usage: optional
+>>>>> +       Value type: <u32> or <none>
+>>>>> +       Definition: definining this property, with an optional non-zero
+>>>>> +               value, enables charging
+>>>>
+>>>> I'm not sure that this belongs in DT. Don't you want to enable
+>>>> charging when plugged in perhaps or at some voltage threshold?
+>>>
+>>> In practice this is never changed at runtime. It's only set at kernel boot.
+>>> The main use of this is to override (either on or off) whatever the firmware
+>>> did.
+>>
+>> If your firmware and dtb are separate from your kernel, then ... (well
+>> you know where I'm headed :) ).
+>
+> Sorry, I have no idea how the sentence would end, so I think I'm missing
+> where you are headed.
 
-diff --git a/drivers/media/platform/am437x/am437x-vpfe.c b/drivers/media/platform/am437x/am437x-vpfe.c
-index a30cc2f7e4f1..5ab50c6babe2 100644
---- a/drivers/media/platform/am437x/am437x-vpfe.c
-+++ b/drivers/media/platform/am437x/am437x-vpfe.c
-@@ -1185,14 +1185,24 @@ static int vpfe_initialize_device(struct vpfe_device *vpfe)
- static int vpfe_release(struct file *file)
- {
- 	struct vpfe_device *vpfe = video_drvdata(file);
-+	bool fh_singular;
- 	int ret;
- 
- 	mutex_lock(&vpfe->lock);
- 
--	if (v4l2_fh_is_singular_file(file))
--		vpfe_ccdc_close(&vpfe->ccdc, vpfe->pdev);
-+	/* Save the singular status before we call the clean-up helper */
-+	fh_singular = v4l2_fh_is_singular_file(file);
-+
-+	/* the release helper will cleanup any on-going streaming */
- 	ret = _vb2_fop_release(file, NULL);
- 
-+	/*
-+	 * If this was the last open file.
-+	 * Then de-initialize hw module.
-+	 */
-+	if (fh_singular)
-+		vpfe_ccdc_close(&vpfe->ccdc, vpfe->pdev);
-+
- 	mutex_unlock(&vpfe->lock);
- 
- 	return ret;
--- 
-1.8.5.1
+dtbs should be separate from the kernel and part of the firmware. I'm
+certain you recall those discussions or have sucessfully blocked them
+from memory. If the dtb is part of the firmware, then changing the dtb
+to change the kernel's handling of this would not make a lot of sense.
+
+I was going to say if you want to change what firmware did, then you
+could just do it from userspace. A delay from kernel boot to userspace
+init would not matter here. However, if you have no other reason for
+having a userspace interface, that probably isn't worth it and it is
+fine as is.
+
+>
+>> If we do keep this, I think it should be a disable property with not
+>> present being the default and enabling charging. Also, it only needs
+>> to be bool (i.e. no value).
+>
+> Are you suggesting something like this, then?
+>
+>   - qcom,charger-disable:
+>        Usage: optional
+>        Value type: <none>
+
+s/<none>/boolean/
+
+But otherwise, yes this looks fine.
+
+>        Definition: defining this property disables charging
+>
+> The logic would be as follows:
+>  - if the developer wants to just use the firmware settings, then
+>   the kernel would just not define this dts node at all, and nothing
+>   would change on kernel boot
+
+Well, the kernel doesn't decide dts settings, but yes I agree that
+removing or disabling the node would disable any kernel control.
+
+>  - if the developers want to change the settings, either turning off
+>   the charger, or specifying desired settings, then they define
+>   the appropriate attributes.
+>
+> I'm OK with that.
+
+I am too.
+
+> It would make no sense to define rset and vset values when this
+> is defined.  Should I note that somewhere in the binding doc?
+
+They are somewhat don't care unless changing them has some side
+effect. I'll leave it up to you.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
