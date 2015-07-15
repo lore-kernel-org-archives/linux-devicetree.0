@@ -1,51 +1,67 @@
-From: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 08/11] MTD: m25p80: Add option to limit SPI transfer size.
-Date: Wed, 15 Jul 2015 11:45:07 +0200
-Message-ID: <CAOMqctSCL9E-kCBryeaMvtssSP12RY=kyfPuwSYx9wc=Lv9kGQ@mail.gmail.com>
-References: <cover.1433364398.git.hramrach@gmail.com> <8fc4b9f5291a509c4c35782a1337bf536f1019af.1433364398.git.hramrach@gmail.com>
- <CAMuHMdVT2M7pPHDDHmoNF_zVXhz1PUm5PiYxDKcAjSAcfSDiZg@mail.gmail.com>
- <CAOMqctS6KNrTATB6MYCZLBnZUQmX=e0qQvGf78YtLaF8pkibhQ@mail.gmail.com> <20150604171547.GA1530@localhost.localdomain>
+From: James Liao <jamesjj.liao@mediatek.com>
+Subject: Re: [PATCH 0/2] Add MT8173 MMPLL change rate support
+Date: Wed, 15 Jul 2015 17:51:03 +0800
+Message-ID: <1436953863.9416.23.camel@mtksdaap41>
+References: <1436344666-25645-1-git-send-email-jamesjj.liao@mediatek.com>
+	 <559DC3EF.90401@codeaurora.org> <1436507086.3526.117.camel@mtksdaap41>
+	 <20150714221319.GQ30412@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150604171547.GA1530-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Alison Chaiken <alison_chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, =?UTF-8?B?QmVhbiBIdW8g6ZyN5paM5paMIChiZWFuaHVvKQ==?= <beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ben Hutchings <ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dan Williams <dan.j.williams@i>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150714221319.GQ30412@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: devicetree@vger.kernel.org, Heiko Stubner <heiko@sntech.de>, srv_heupstream@mediatek.com, Mike Turquette <mturquette@baylibre.com>, linux-kernel@vger.kernel.org, Ricky Liang <jcliang@chromium.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 4 June 2015 at 19:15, Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Thu, Jun 04, 2015 at 10:31:45AM +0200, Michal Suchanek wrote:
->> You might want to try to run the bus at 60MHz or 80MHz and then the
->> values would probably again be different.
->>
->> The first two values are set in DT so the logical place for setting
->> the third is also in DT.
->>
->> Otherwise you would need some in-kernel table of these settings.
->
-> Or a formula.
->
+Hi Stephen,
 
-This formula probably needs to take into account
+On Tue, 2015-07-14 at 15:13 -0700, Stephen Boyd wrote:
+> On 07/10, James Liao wrote:
+> > On Wed, 2015-07-08 at 17:44 -0700, Stephen Boyd wrote:
+> > > On 07/08/2015 01:37 AM, James Liao wrote:
+> > > > MT8173 MMPLL frequency settings are different from common PLLs.
+> > > > It needs different post divider settings for some ranges of frequency.
+> > > > This patch add support for MT8173 MMPLL frequency setting, includes:
+> > > >
+> > > > 1. Add div-rate table for PLLs.
+> > > > 2. Increase the max ost divider setting from 3 (/8) to 4 (/16).
+> > > > 3. Write postdiv and pcw settings at the same time.
+> > > >
+> > > > James Liao (2):
+> > > >   clk: mediatek: Fix PLL registers setting flow
+> > > >   clk: mediatek: Add MT8173 MMPLL change rate support
+> > > >
+> > > 
+> > > Are these fixing regressions in 4.2-rc1? I don't see any "Fixes:" tag so
+> > > it's not clear and makes me want to defer these until v4.3. Furthermore,
+> > > the subject starts with "Add" so it sounds like a new feature.
+> > 
+> > This patchset is based on 4.1-rc1 but it had been tested on 4.2-rc1.
+> > I'll send a new patch which based on 4.2-rc1.
+> > 
+> > This patchset contains some general PLL fixes and MMPLL set rate
+> > support. We can say the last one is also a fix because changing some
+> > specific rate on MMPLL may fail in current implementation.
+> > 
+> > 
+> 
+> I'm seriously confused. The files these patches touch were never
+> in v4.1, so they can't be based on v4.1-rc1 unless you're saying
+> they were on top of clk-next when it was based on 4.1-rc1?
+> 
 
- - the unknown reason for the pl330 to fail transfer
- - the device transfer speed and transfer phase as set in DT
- - possibly device-specific latency and board-specific trace design
-and assembly tolerances
+This is an old patch which based on 4.1-rc1 and basic clocks support
+[1].
 
-Seriously, until I have at least a vague idea why the transfer fails I
-am not comfortable pulling some formula out of thin air and pretending
-I have a working patch.
+Please refer to the newer patch [2] and ignore this one.
 
-On the other hand, a parameter you can set in the DT and which comes
-with a suggested value which can be tuned depending on the system
-seems more viable.
 
-Thanks
+[1] https://lkml.org/lkml/2015/4/23/92
+[2] https://lkml.org/lkml/2015/7/10/198
 
-Michal
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Best regards,
+
+James
