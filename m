@@ -1,181 +1,91 @@
-From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: socfpga: Add support of Terasic DE0 Atlas board
-Date: Wed, 15 Jul 2015 10:02:58 +0200
-Message-ID: <20150715080258.GA29885@pengutronix.de>
-References: <1436908987-16038-1-git-send-email-dinguyen@opensource.altera.com>
+From: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH V3 06/19] clk: tegra: remove TEGRA_PLL_USE_LOCK for
+ PLLD/PLLD2
+Date: Wed, 15 Jul 2015 11:16:44 +0300
+Message-ID: <20150715081644.GZ6287@tbergstrom-lnx.Nvidia.com>
+References: <1436791197-32358-1-git-send-email-jonathanh@nvidia.com>
+ <1436791197-32358-7-git-send-email-jonathanh@nvidia.com>
+ <20150713134151.GQ6287@tbergstrom-lnx.Nvidia.com>
+ <55A3C50E.7060706@nvidia.com>
+ <55A4F985.7010503@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1436908987-16038-1-git-send-email-dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dalon Westergreen <dwesterg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <55A4F985.7010503-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Terje =?iso-8859-1?Q?Bergstr=F6m?= <tbergstrom-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vince Hsu <vinceh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+On Tue, Jul 14, 2015 at 12:59:01PM +0100, Jon Hunter wrote:
+> 
+> On 13/07/15 15:02, Jon Hunter wrote:
+> > 
+> > 
+> > On 13/07/15 14:41, Peter De Schrijver wrote:
+> >> On Mon, Jul 13, 2015 at 01:39:44PM +0100, Jon Hunter wrote:
+> >>> From: Vince Hsu <vinceh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> >>>
+> >>> Tegra114 has a HW bug that the PLLD/PLLD2 lock bit cannot be asserted when
+> >>> the DIS power domain is during up-powergating process but the clamp to this
+> >>
+> >> I think there is missing 'off' in this sentence?
+> >>
+> >> ie. ... 'the DIS power domain is off during up-powergating process'
+> >>
+> >> Also 'un-powergating sequence' would be nicer.
+> > 
+> > Yes agree. I will re-word that.
+> 
+> Updated version ...
+> 
+> 
+> From d5cbecd4e97332cd8373b9c4893731eb8e063660 Mon Sep 17 00:00:00 2001
+> From: Vince Hsu <vinceh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> Date: Wed, 11 Mar 2015 16:46:04 +0800
+> Subject: [PATCH 06/19] clk: tegra: remove TEGRA_PLL_USE_LOCK for PLLD/PLLD2
+> 
+> Tegra114 has a HW bug where the PLLD/PLLD2 lock bit cannot be asserted
+> while turning on the Display power domain and before the clamp to this
+> domain has been removed. This issue causes a timeout and aborts the power
+> up sequence, even though the PLLD/PLLD2 has already locked. To avoid this,
+> don't use the lock for PLLD/PLLD2, just wait 1ms and treat the clocks as
+> locked.
+> 
+> Signed-off-by: Vince Hsu <vinceh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> [jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org: Updated the changelog description]
+> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-On Tue, Jul 14, 2015 at 04:23:07PM -0500, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
-> From: Dalon Westergreen <dwesterg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 
-> The Terasic DE0 Atlas board is also known as the DE0-Nano board.
-> 
-> Signed-off-by: Dalon Westergreen <dwesterg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Acked-By: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 > ---
->  arch/arm/boot/dts/Makefile                        |    1 +
->  arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts |  109 +++++++++++++++++++++
->  2 files changed, 110 insertions(+)
->  create mode 100644 arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
+>  drivers/clk/tegra/clk-tegra114.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
 > 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 246473a..29e33aa 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -522,6 +522,7 @@ dtb-$(CONFIG_ARCH_SOCFPGA) += \
->  	socfpga_arria5_socdk.dtb \
->  	socfpga_arria10_socdk_sdmmc.dtb \
->  	socfpga_cyclone5_socdk.dtb \
-> +	socfpga_cyclone5_de0_sockit.dtb \
-                             ^^^^^^
-
-Is that intentional? Terasic doesn't mention sockit at all in the name
-of the board.
-
->  	socfpga_cyclone5_sockit.dtb \
->  	socfpga_cyclone5_socrates.dtb \
->  	socfpga_vt.dtb
-> diff --git a/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts b/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
-> new file mode 100644
-> index 0000000..3172c82
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
-> @@ -0,0 +1,109 @@
-> +/*
-> + * Copyright Altera Corporation (C) 2015. All rights reserved.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms and conditions of the GNU General Public License,
-> + * version 2, as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope it will be useful, but WITHOUT
-> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-> + * more details.
-> + *
-> + * You should have received a copy of the GNU General Public License along with
-> + * this program.  If not, see <http://www.gnu.org/licenses/>.
-> + */
-> +
-> +#include "socfpga_cyclone5.dtsi"
-> +
-> +/ {
-> +	model = "Terasic DE-0(Atlas)";
-> +	compatible = "altr,socfpga-cyclone5", "altr,socfpga";
-> +
-> +	chosen {
-> +		bootargs = "console=ttyS0,115200";
-> +	};
-> +
-> +	memory {
-> +		name = "memory";
-> +		device_type = "memory";
-> +		reg = <0x0 0x40000000>; /* 1GB */
-> +	};
-> +
-> +	aliases {
-> +		/* this allow the ethaddr uboot environmnet variable contents
-> +		 * to be added to the gmac1 device tree blob.
-> +		 */
-
-I'd personally like to get rid of these types of comments in the dts.
-It doesn't matter what uboot needs or does IMHO.
-
-> +		ethernet0 = &gmac1;
-> +	};
-> +
-> +	regulator_3_3v: 3-3-v-regulator {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "3.3V";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +	};
-> +
-> +	leds {
-> +		compatible = "gpio-leds";
-> +		hps0 {
-> +			label = "hps_led0";
-> +			gpios = <&portb 24 0>;
-> +			linux,default-trigger = "heartbeat";
-> +		};
-> +	};
-> +};
-> +
-> +&gmac1 {
-> +	status = "okay";
-> +	phy-mode = "rgmii";
-> +
-> +	rxd0-skew-ps = <0>;
-> +	rxd1-skew-ps = <0>;
-> +	rxd2-skew-ps = <0>;
-> +	rxd3-skew-ps = <0>;
-> +	txen-skew-ps = <0>;
-> +	txc-skew-ps = <2600>;
-> +	rxdv-skew-ps = <0>;
-> +	rxc-skew-ps = <2000>;
-> +	max-frame-size = <3800>;
-> +};
-> +
-> +&gpio0 {
-> +	status = "okay";
-> +};
-> +
-> +&gpio1 {
-> +	status = "okay";
-> +};
-> +
-> +&gpio2 {
-> +	status = "okay";
-> +};
-> +
-> +&i2c0 {
-> +	status = "okay";
-> +	speed-mode = <0>;
-> +
-> +	adxl345: adxl345@0 {
-> +		compatible = "adi,adxl345";
-> +		reg = <0x53>;
-> +
-> +		interrupt-parent = <&portc>;
-> +		interrupts = <3 2>;
-> +	};
-> +	
-> +};
-> +
-> +&mmc0 {
-> +	vmmc-supply = <&regulator_3_3v>;
-> +	vqmmc-supply = <&regulator_3_3v>;
-> +};
-> +
-> +&uart0 {
-> +	status = "okay";
-> +};
-> +
-> +&usb1 {
-> +	status = "okay";
-> +};
-
-Rest looks okay to me.
-
-Regards,
-Steffen
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> diff --git a/drivers/clk/tegra/clk-tegra114.c b/drivers/clk/tegra/clk-tegra114.c
+> index 8237d16b4075..2e5c20c7c088 100644
+> --- a/drivers/clk/tegra/clk-tegra114.c
+> +++ b/drivers/clk/tegra/clk-tegra114.c
+> @@ -456,8 +456,7 @@ static struct tegra_clk_pll_params pll_d_params = {
+>  	.lock_delay = 1000,
+>  	.div_nmp = &pllp_nmp,
+>  	.freq_table = pll_d_freq_table,
+> -	.flags = TEGRA_PLL_HAS_CPCON | TEGRA_PLL_SET_LFCON |
+> -		 TEGRA_PLL_USE_LOCK,
+> +	.flags = TEGRA_PLL_HAS_CPCON | TEGRA_PLL_SET_LFCON,
+>  };
+>  
+>  static struct tegra_clk_pll_params pll_d2_params = {
+> @@ -474,8 +473,7 @@ static struct tegra_clk_pll_params pll_d2_params = {
+>  	.lock_delay = 1000,
+>  	.div_nmp = &pllp_nmp,
+>  	.freq_table = pll_d_freq_table,
+> -	.flags = TEGRA_PLL_HAS_CPCON | TEGRA_PLL_SET_LFCON |
+> -		 TEGRA_PLL_USE_LOCK,
+> +	.flags = TEGRA_PLL_HAS_CPCON | TEGRA_PLL_SET_LFCON,
+>  };
+>  
+>  static struct pdiv_map pllu_p[] = {
+> -- 
+> 2.1.4
+> 
