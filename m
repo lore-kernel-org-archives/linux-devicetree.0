@@ -1,151 +1,167 @@
-From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Subject: [PATCH v2 5/8] pinctrl: qcom: spmi-mpp: Add support for setting analog output level
-Date: Tue, 14 Jul 2015 23:40:33 -0700
-Message-ID: <1436942435-25611-1-git-send-email-bjorn.andersson@sonymobile.com>
-References: <1434610052-602-6-git-send-email-bjorn.andersson@sonymobile.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1434610052-602-6-git-send-email-bjorn.andersson@sonymobile.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, "Ivan T. Ivanov" <ivan.ivanov@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+From: Chunyan Zhang <zhang.chunyan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] arm64: dts: sprd: adding ETM entries to Spreadtrum SC9836
+Date: Wed, 15 Jul 2015 15:05:48 +0800
+Message-ID: <1436943948-14489-1-git-send-email-zhang.chunyan@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-When the MPP is configured for analog output the output level is selected by
-the AOUT_CTL register, this patch makes it possible to control this.
+Since ETMv4 driver has been merged, this patch adds ETM nodes for SC9836,
+and four funnel input ports to connect with ETM output ports.
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Signed-off-by: Chunyan Zhang <zhang.chunyan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
+ arch/arm64/boot/dts/sprd/sc9836.dtsi | 99 ++++++++++++++++++++++++++++++++++--
+ 1 file changed, 94 insertions(+), 5 deletions(-)
 
-Changes since v1:
-- Assign aout_level in pmic_mpp_populate()
-
- .../devicetree/bindings/pinctrl/qcom,pmic-mpp.txt  |  7 +++++++
- drivers/pinctrl/qcom/pinctrl-spmi-mpp.c            | 23 ++++++++++++++++++++++
- 2 files changed, 30 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.txt b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.txt
-index d29fb96a57d3..0e4d4e62e220 100644
---- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.txt
-@@ -127,6 +127,13 @@ to specify in a pin configuration subnode:
- 	Definition: Selects the power source for the specified pins. Valid power
- 		    sources are defined in <dt-bindings/pinctrl/qcom,pmic-mpp.h>
+diff --git a/arch/arm64/boot/dts/sprd/sc9836.dtsi b/arch/arm64/boot/dts/sprd/sc9836.dtsi
+index ee34e1a..63894c4 100644
+--- a/arch/arm64/boot/dts/sprd/sc9836.dtsi
++++ b/arch/arm64/boot/dts/sprd/sc9836.dtsi
+@@ -16,28 +16,28 @@
+ 		#address-cells = <2>;
+ 		#size-cells = <0>;
  
-+- qcom,analog-level:
-+	Usage: optional
-+	Value type: <u32>
-+	Definition: Selects the source for analog output. Valued values are
-+		    defined in <dt-binding/pinctrl/qcom,pmic-mpp.h>
-+		    PMIC_MPP_AOUT_LVL_*
+-		cpu@0 {
++		cpu0: cpu@0 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a53", "arm,armv8";
+ 			reg = <0x0 0x0>;
+ 			enable-method = "psci";
+ 		};
+ 
+-		cpu@1 {
++		cpu1: cpu@1 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a53", "arm,armv8";
+ 			reg = <0x0 0x1>;
+ 			enable-method = "psci";
+ 		};
+ 
+-		cpu@2 {
++		cpu2: cpu@2 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a53", "arm,armv8";
+ 			reg = <0x0 0x2>;
+ 			enable-method = "psci";
+ 		};
+ 
+-		cpu@3 {
++		cpu3: cpu@3 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a53", "arm,armv8";
+ 			reg = <0x0 0x3>;
+@@ -75,14 +75,103 @@
+ 				};
+ 			};
+ 
+-			/* funnel input port 0~3 is reserved for ETMs */
++			/* funnel input port 0-4 */
+ 			port@1 {
++				reg = <0>;
++				funnel_in_port0: endpoint {
++					slave-mode;
++					remote-endpoint = <&etm0_out>;
++				};
++			};
 +
- - qcom,analog-mode:
- 	Usage: optional
- 	Value type: <none>
-diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-mpp.c b/drivers/pinctrl/qcom/pinctrl-spmi-mpp.c
-index 9dde023640ba..e52a72348a67 100644
---- a/drivers/pinctrl/qcom/pinctrl-spmi-mpp.c
-+++ b/drivers/pinctrl/qcom/pinctrl-spmi-mpp.c
-@@ -61,6 +61,7 @@
- #define PMIC_MPP_REG_DIG_PULL_CTL		0x42
- #define PMIC_MPP_REG_DIG_IN_CTL			0x43
- #define PMIC_MPP_REG_EN_CTL			0x46
-+#define PMIC_MPP_REG_AOUT_CTL			0x48
- #define PMIC_MPP_REG_AIN_CTL			0x4a
- #define PMIC_MPP_REG_SINK_CTL			0x4c
- 
-@@ -100,6 +101,7 @@
- #define PMIC_MPP_CONF_AMUX_ROUTE		(PIN_CONFIG_END + 1)
- #define PMIC_MPP_CONF_ANALOG_MODE		(PIN_CONFIG_END + 2)
- #define PMIC_MPP_CONF_SINK_MODE			(PIN_CONFIG_END + 3)
-+#define PMIC_MPP_CONF_ANALOG_LEVEL		(PIN_CONFIG_END + 4)
- 
- /**
-  * struct pmic_mpp_pad - keep current MPP settings
-@@ -115,6 +117,7 @@
-  * @num_sources: Number of power-sources supported by this MPP.
-  * @power_source: Current power-source used.
-  * @amux_input: Set the source for analog input.
-+ * @aout_level: Analog output level
-  * @pullup: Pullup resistor value. Valid in Bidirectional mode only.
-  * @function: See pmic_mpp_functions[].
-  * @drive_strength: Amount of current in sink mode
-@@ -131,6 +134,7 @@ struct pmic_mpp_pad {
- 	unsigned int	num_sources;
- 	unsigned int	power_source;
- 	unsigned int	amux_input;
-+	unsigned int	aout_level;
- 	unsigned int	pullup;
- 	unsigned int	function;
- 	unsigned int	drive_strength;
-@@ -145,6 +149,7 @@ struct pmic_mpp_state {
- 
- static const struct pinconf_generic_params pmic_mpp_bindings[] = {
- 	{"qcom,amux-route",	PMIC_MPP_CONF_AMUX_ROUTE,	0},
-+	{"qcom,analog-level",	PMIC_MPP_CONF_ANALOG_LEVEL,	0},
- 	{"qcom,analog-mode",	PMIC_MPP_CONF_ANALOG_MODE,	0},
- 	{"qcom,sink-mode",	PMIC_MPP_CONF_SINK_MODE,	0},
- };
-@@ -152,6 +157,7 @@ static const struct pinconf_generic_params pmic_mpp_bindings[] = {
- #ifdef CONFIG_DEBUG_FS
- static const struct pin_config_item pmic_conf_items[] = {
- 	PCONFDUMP(PMIC_MPP_CONF_AMUX_ROUTE, "analog mux", NULL, true),
-+	PCONFDUMP(PMIC_MPP_CONF_ANALOG_LEVEL, "analog level", NULL, true),
- 	PCONFDUMP(PMIC_MPP_CONF_ANALOG_MODE, "analog output", NULL, false),
- 	PCONFDUMP(PMIC_MPP_CONF_SINK_MODE, "sink mode", NULL, false),
- };
-@@ -358,6 +364,9 @@ static int pmic_mpp_config_get(struct pinctrl_dev *pctldev,
- 	case PIN_CONFIG_DRIVE_STRENGTH:
- 		arg = pad->drive_strength;
- 		break;
-+	case PMIC_MPP_CONF_ANALOG_LEVEL:
-+		arg = pad->aout_level;
-+		break;
- 	case PMIC_MPP_CONF_ANALOG_MODE:
- 		arg = pad->analog_mode;
- 		break;
-@@ -433,6 +442,9 @@ static int pmic_mpp_config_set(struct pinctrl_dev *pctldev, unsigned int pin,
- 				return -EINVAL;
- 			pad->amux_input = arg;
- 			break;
-+		case PMIC_MPP_CONF_ANALOG_LEVEL:
-+			pad->aout_level = arg;
-+			break;
- 		case PMIC_MPP_CONF_ANALOG_MODE:
- 			pad->analog_mode = !!arg;
- 			break;
-@@ -462,6 +474,10 @@ static int pmic_mpp_config_set(struct pinctrl_dev *pctldev, unsigned int pin,
- 	if (ret < 0)
- 		return ret;
- 
-+	ret = pmic_mpp_write(state, pad, PMIC_MPP_REG_AOUT_CTL, pad->aout_level);
-+	if (ret < 0)
-+		return ret;
++			port@2 {
++				reg = <1>;
++				funnel_in_port1: endpoint {
++					slave-mode;
++					remote-endpoint = <&etm1_out>;
++				};
++			};
 +
- 	ret = pmic_mpp_write_mode_ctl(state, pad);
- 	if (ret < 0)
- 		return ret;
-@@ -507,6 +523,7 @@ static void pmic_mpp_config_dbg_show(struct pinctrl_dev *pctldev,
- 		seq_printf(s, " %-7s", modes[pad->analog_mode ? 1 : (pad->sink_mode ? 2 : 0)]);
- 		seq_printf(s, " %-7s", pmic_mpp_functions[pad->function]);
- 		seq_printf(s, " vin-%d", pad->power_source);
-+		seq_printf(s, " %d", pad->aout_level);
- 		seq_printf(s, " %-8s", biases[pad->pullup]);
- 		seq_printf(s, " %-4s", pad->out_value ? "high" : "low");
- 	}
-@@ -748,6 +765,12 @@ static int pmic_mpp_populate(struct pmic_mpp_state *state,
- 
- 	pad->drive_strength = val;
- 
-+	val = pmic_mpp_read(state, pad, PMIC_MPP_REG_AOUT_CTL);
-+	if (val < 0)
-+		return val;
++			port@3 {
++				reg = <2>;
++				funnel_in_port2: endpoint {
++					slave-mode;
++					remote-endpoint = <&etm2_out>;
++				};
++			};
 +
-+	pad->aout_level = val;
++			port@4 {
++				reg = <3>;
++				funnel_in_port3: endpoint {
++					slave-mode;
++					remote-endpoint = <&etm3_out>;
++				};
++			};
 +
- 	val = pmic_mpp_read(state, pad, PMIC_MPP_REG_EN_CTL);
- 	if (val < 0)
- 		return val;
++			port@5 {
+ 				reg = <4>;
+ 				funnel_in_port4: endpoint {
+ 					slave-mode;
+ 					remote-endpoint = <&stm_out>;
+ 				};
+ 			};
++			/* Other input ports aren't connected to anyone */
++		};
++	};
++
++	etm@10440000 {
++		compatible = "arm,coresight-etm4x", "arm,primecell";
++		reg = <0 0x10440000 0 0x1000>;
++
++		cpu = <&cpu0>;
++		clocks = <&clk26mhz>;
++		clock-names = "apb_pclk";
++		port {
++			etm0_out: endpoint {
++				remote-endpoint = <&funnel_in_port0>;
++			};
++		};
++	};
++
++	etm@10540000 {
++		compatible = "arm,coresight-etm4x", "arm,primecell";
++		reg = <0 0x10540000 0 0x1000>;
++
++		cpu = <&cpu1>;
++		clocks = <&clk26mhz>;
++		clock-names = "apb_pclk";
++		port {
++			etm1_out: endpoint {
++				remote-endpoint = <&funnel_in_port1>;
++			};
++		};
++	};
++
++	etm@10640000 {
++		compatible = "arm,coresight-etm4x", "arm,primecell";
++		reg = <0 0x10640000 0 0x1000>;
++
++		cpu = <&cpu2>;
++		clocks = <&clk26mhz>;
++		clock-names = "apb_pclk";
++		port {
++			etm2_out: endpoint {
++				remote-endpoint = <&funnel_in_port2>;
++			};
++		};
++	};
++
++	etm@10740000 {
++		compatible = "arm,coresight-etm4x", "arm,primecell";
++		reg = <0 0x10740000 0 0x1000>;
++
++		cpu = <&cpu3>;
++		clocks = <&clk26mhz>;
++		clock-names = "apb_pclk";
++		port {
++			etm3_out: endpoint {
++				remote-endpoint = <&funnel_in_port3>;
++			};
+ 		};
+ 	};
+ 
 -- 
-1.8.2.2
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
