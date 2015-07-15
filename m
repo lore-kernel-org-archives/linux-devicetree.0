@@ -1,50 +1,55 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v6 1/4] phy-sun4i-usb: Add missing
- EXPORT_SYMBOL for sun4i_usb_phy_set_squelch_detect
-Date: Wed, 15 Jul 2015 18:05:59 +0530
-Message-ID: <55A653AF.608@ti.com>
-References: <1436366500-12555-1-git-send-email-hdegoede@redhat.com> <1436366500-12555-2-git-send-email-hdegoede@redhat.com>
-Reply-To: kishon-l0cyMroinI0@public.gmane.org
+From: Marek Vasut <marex@denx.de>
+Subject: Re: [PATCH 08/11] MTD: m25p80: Add option to limit SPI transfer size.
+Date: Wed, 15 Jul 2015 13:52:27 +0200
+Message-ID: <201507151352.27689.marex@denx.de>
+References: <cover.1433364398.git.hramrach@gmail.com> <20150604171547.GA1530@localhost.localdomain> <CAOMqctSCL9E-kCBryeaMvtssSP12RY=kyfPuwSYx9wc=Lv9kGQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCOOP4VF5IDRBQNHTGWQKGQE4EFLIPY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1436366500-12555-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Cc: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: Text/Plain;
+  charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAOMqctSCL9E-kCBryeaMvtssSP12RY=kyfPuwSYx9wc=Lv9kGQ@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Michal Suchanek <hramrach@gmail.com>
+Cc: Richard Cochran <richardcochran@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Mark Rutland <mark.rutland@arm.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Geert Uytterhoeven <geert+renesas@glider.be>, MTD Maling List <linux-mtd@lists.infradead.org>, Alison Chaiken <alison_chaiken@mentor.com>, "Bean Huo =?utf-8?q?=E9=9C=8D=E6=96=8C=E6=96=8C?= (beanhuo)" <beanhuo@micron.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Vinod Koul <vinod.koul@intel.com>, =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <zajec5@gmail.com>, Kukjin Kim <kgene@kernel.org>, Ben Hutchings <ben@decadent.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Brown <broonie@kernel.org>, Dan
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Wednesday 08 July 2015 08:11 PM, Hans de Goede wrote:
-> sun4i_usb_phy_set_squelch_detect is used by other code, which may be built
-> as a module, so it should be exported.
+On Wednesday, July 15, 2015 at 11:45:07 AM, Michal Suchanek wrote:
+> On 4 June 2015 at 19:15, Richard Cochran <richardcochran@gmail.com> wrote:
+> > On Thu, Jun 04, 2015 at 10:31:45AM +0200, Michal Suchanek wrote:
+> >> You might want to try to run the bus at 60MHz or 80MHz and then the
+> >> values would probably again be different.
+> >> 
+> >> The first two values are set in DT so the logical place for setting
+> >> the third is also in DT.
+> >> 
+> >> Otherwise you would need some in-kernel table of these settings.
+> > 
+> > Or a formula.
 > 
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> ---
-> Changes in v6:
-> -New patch in v6 of the sunxi musb support series
-> ---
->  drivers/phy/phy-sun4i-usb.c | 1 +
->  1 file changed, 1 insertion(+)
+> This formula probably needs to take into account
 > 
-> diff --git a/drivers/phy/phy-sun4i-usb.c b/drivers/phy/phy-sun4i-usb.c
-> index e17c539..b82aa26 100644
-> --- a/drivers/phy/phy-sun4i-usb.c
-> +++ b/drivers/phy/phy-sun4i-usb.c
-> @@ -212,6 +212,7 @@ void sun4i_usb_phy_set_squelch_detect(struct phy *_phy, bool enabled)
->  
->  	sun4i_usb_phy_write(phy, PHY_SQUELCH_DETECT, enabled ? 0 : 2, 2);
->  }
-> +EXPORT_SYMBOL(sun4i_usb_phy_set_squelch_detect);
+>  - the unknown reason for the pl330 to fail transfer
 
-EXPORT_SYMBOL_GPL?
+Shouldn't that be fixed at the PL330 level ? This looks like fixing
+a problem at the wrong place :)
 
-Thanks
-Kishon
+>  - the device transfer speed and transfer phase as set in DT
+>  - possibly device-specific latency and board-specific trace design
+> and assembly tolerances
+
+If the design is broken, then cap the speed as for normal SPI device.
+
+> Seriously, until I have at least a vague idea why the transfer fails I
+> am not comfortable pulling some formula out of thin air and pretending
+> I have a working patch.
+> 
+> On the other hand, a parameter you can set in the DT and which comes
+> with a suggested value which can be tuned depending on the system
+> seems more viable.
+
+The problem is, if you add a new DT binding, you'd have to support it
+forever, no matter how bad idea that binding turned out to be.
+
+Best regards,
+Marek Vasut
