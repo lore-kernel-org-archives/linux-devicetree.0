@@ -1,60 +1,97 @@
-From: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/5] ARM: OMAP2+: DRA7: clockdomain: change l4per2_7xx_clkdm
- to SW_WKUP
-Date: Wed, 15 Jul 2015 20:27:16 +0000 (UTC)
-Message-ID: <alpine.DEB.2.02.1507152020240.32764@utopia.booyaka.com>
-References: <1433332284-10766-1-git-send-email-vigneshr@ti.com> <1433332284-10766-2-git-send-email-vigneshr@ti.com> <alpine.DEB.2.02.1507151955330.32764@utopia.booyaka.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/7] dt-bindings: add Marvell PMU documentation
+Date: Wed, 15 Jul 2015 15:39:19 -0500
+Message-ID: <CAL_JsqJRyasT49x6JLhy-X0psfT=cUom_RMkFQScqqLzeggUzQ@mail.gmail.com>
+References: <20150715185859.GC7557@n2100.arm.linux.org.uk> <E1ZFRtu-0003lu-Ft@rmk-PC.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.DEB.2.02.1507151955330.32764-rwI8Ez+7Ko+d5PgPZx9QOdBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <E1ZFRtu-0003lu-Ft-eh5Bv4kxaXIANfyc6IWni62ZND6+EDdj@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
-Cc: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 15 Jul 2015, Paul Walmsley wrote:
+On Wed, Jul 15, 2015 at 1:59 PM, Russell King
+<rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
+> Add the required DT binding documentation for the Marvell PMU driver.
 
-> On Wed, 3 Jun 2015, Vignesh R wrote:
-> 
-> > Legacy IPs like PWMSS, present under l4per2_7xx_clkdm, cannot support
-> > smart-idle when its clock domain is in HW_AUTO on DRA7 SoCs. Hence,
-> > program clock domain to SW_WKUP.
-> > 
-> > Signed-off-by: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
-> > ---
-> >  arch/arm/mach-omap2/clockdomains7xx_data.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/arm/mach-omap2/clockdomains7xx_data.c b/arch/arm/mach-omap2/clockdomains7xx_data.c
-> > index 57d5df0c1fbd..7581e036bda6 100644
-> > --- a/arch/arm/mach-omap2/clockdomains7xx_data.c
-> > +++ b/arch/arm/mach-omap2/clockdomains7xx_data.c
-> > @@ -331,7 +331,7 @@ static struct clockdomain l4per2_7xx_clkdm = {
-> >  	.dep_bit	  = DRA7XX_L4PER2_STATDEP_SHIFT,
-> >  	.wkdep_srcs	  = l4per2_wkup_sleep_deps,
-> >  	.sleepdep_srcs	  = l4per2_wkup_sleep_deps,
-> > -	.flags		  = CLKDM_CAN_HWSUP_SWSUP,
-> > +	.flags		  = CLKDM_CAN_SWSUP,
-> >  };
-> >  
-> >  static struct clockdomain mpu0_7xx_clkdm = {
-> 
-> Thanks, queued for v4.2-rc fixes.  Note that I cannot test this, since I 
-> don't have a DRA7xx board.
+Looks mostly fine to me.
 
-You know, upon further thought, this doesn't make sense.  If the bug
-is with the PWMSS IP block specifically, why not just set 
-HWMOD_SWSUP_SIDLE on all the IP blocks where the hardware folks didn't 
-implement hardware smart-idle?  At least that way, if those legacy IP 
-blocks aren't in use, the clockdomain can still enter hardware-supervised 
-idle?
+> Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/soc/dove/pmu.txt | 56 ++++++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/dove/pmu.txt
+>
+> diff --git a/Documentation/devicetree/bindings/soc/dove/pmu.txt b/Documentation/devicetree/bindings/soc/dove/pmu.txt
+> new file mode 100644
+> index 000000000000..edd40b796b74
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/dove/pmu.txt
+> @@ -0,0 +1,56 @@
+> +Device Tree bindings for Marvell PMU
+> +
+> +Required properties:
+> + - compatible: value should be "marvell,dove-pmu".
+> +    May also include "simple-bus" if there are child devices, in which
+> +    case the ranges node is required.
+> + - reg: two base addresses and sizes of the PM controller and PMU.
+> + - interrupts: single interrupt number for the PMU interrupt
+> + - interrupt-controller: must be specified as the PMU itself is an
+> +    interrupt controller.
+> + - #interrupt-cells: must be 1.
+> + - #reset-cells: must be 1.
+> + - domains: sub-node containing domain descriptions
+> +
+> +Optional properties:
+> + - ranges: defines the address mapping for child devices, as per the
+> +   standard property of this name.  Required when compatible includes
+> +   "simple-bus".
 
-This patch basically disables hardware-supervised/smart idle for all of 
-the IP blocks in that clockdomain?
+When would this be used? Your example has child devices, but not this.
 
-
-- Paul
+> +
+> +Power domain descriptions are listed as child nodes of the "domains"
+> +sub-node.  Each domain has the following properties:
+> +
+> +Required properties:
+> + - #power-domain-cells: must be 0.
+> +
+> +Optional properties:
+> + - marvell,pmu_pwr_mask: specifies the mask value for PMU power register
+> + - marvell,pmu_iso_mask: specifies the mask value for PMU isolation register
+> + - resets: points to the reset manager (PMU node) and reset index.
+> +
+> +Example:
+> +
+> +       pmu: power-management@d0000 {
+> +               compatible = "marvell,dove-pmu";
+> +               reg = <0xd0000 0x8000>, <0xd8000 0x8000>;
+> +               interrupts = <33>;
+> +               interrupt-controller;
+> +               #interrupt-cells = <1>;
+> +               #reset-cells = <1>;
+> +
+> +               domains {
+> +                       vpu_domain: vpu-domain {
+> +                               #power-domain-cells = <0>;
+> +                               marvell,pmu_pwr_mask = <0x00000008>;
+> +                               marvell,pmu_iso_mask = <0x00000001>;
+> +                               resets = <&pmu 16>;
+> +                       };
+> +
+> +                       gpu_domain: gpu-domain {
+> +                               #power-domain-cells = <0>;
+> +                               marvell,pmu_pwr_mask = <0x00000004>;
+> +                               marvell,pmu_iso_mask = <0x00000002>;
+> +                               resets = <&pmu 18>;
+> +                       };
+> +               };
+> +       };
+> --
+> 2.1.0
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
