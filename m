@@ -1,93 +1,49 @@
-From: Alonso Adrian <aalonso@freescale.com>
-Subject: RE: [PATCH][v3] ARM: imx: pinctrl-imx: imx7d: add support for iomuxc
- lpsr
-Date: Wed, 15 Jul 2015 15:55:59 +0000
-Message-ID: <BN3PR03MB1509DFB6A1513A23C48476CFA89A0@BN3PR03MB1509.namprd03.prod.outlook.com>
-References: <1436295725-19011-1-git-send-email-aalonso@freescale.com>
- <20150715072307.GM4119@tiger>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 08/11] MTD: m25p80: Add option to limit SPI transfer size.
+Date: Wed, 15 Jul 2015 08:59:46 -0700
+Message-ID: <20150715155946.GB21362@localhost>
+References: <cover.1433364398.git.hramrach@gmail.com>
+ <20150604171547.GA1530@localhost.localdomain>
+ <CAOMqctSCL9E-kCBryeaMvtssSP12RY=kyfPuwSYx9wc=Lv9kGQ@mail.gmail.com>
+ <201507151352.27689.marex@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20150715072307.GM4119@tiger>
-Content-Language: en-US
-Sender: linux-gpio-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Li Frank <Frank.Li@freescale.com>, Nitin Garg <nitin.garg@freescale.com>, Huang Anson <Anson.Huang@freescale.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Yibin Gong <yibin.gong@freescale.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <201507151352.27689.marex-ynQEQJNshbs@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Cc: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Alison Chaiken <alison_chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Bean Huo =?utf-8?B?6ZyN5paM5paMIChiZWFuaHVvKQ==?= <beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ben Hutchings <ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Shawn,
+Hi Michal,
 
-Comments inline, thanks for reviewing :)
+On Wed, Jul 15, 2015 at 01:52:27PM +0200, Marek Vasut wrote:
+> The problem is, if you add a new DT binding, you'd have to support it
+> forever, no matter how bad idea that binding turned out to be.
 
-Regards
-Adrian
+Agreed, and a solid NAK to this patch. I could have sworn I gave such a
+response when this was originally being discussed a month ago.
 
------Original Message-----
-From: Shawn Guo [mailto:shawnguo@kernel.org] 
-Sent: Wednesday, July 15, 2015 2:23 AM
-To: Alonso Lazcano Adrian-B38018
-Cc: linux-arm-kernel@lists.infradead.org; shawn.guo@linaro.org; linus.walleij@linaro.org; lznuaa@gmail.com; devicetree@vger.kernel.org; Li Frank-B20596; Garg Nitin-B37173; Huang Yongcai-B20788; linux-gpio@vger.kernel.org; robh+dt@kernel.org; Gong Yibin-B38343
-Subject: Re: [PATCH][v3] ARM: imx: pinctrl-imx: imx7d: add support for iomuxc lpsr
+AFAICT, you have one of two general approaches available to you:
 
-On Tue, Jul 07, 2015 at 02:02:05PM -0500, Adrian Alonso wrote:
-> * Extend pinctrl-imx driver to support iomux lpsr conntroller,
-> * iMX7D has two iomuxc controllers, iomuxc controller similar as
->   previous iMX SoC generation and iomuxc-lpsr which provides
->   low power state rentetion capabilities on gpios that are part of
->   iomuxc-lpsr (GPIO1_IO7..GPIO1_IO0).
-> * Use IOMUXC_LPSR_SUPPORT and iput_val most significant bits to
->   properly configure iomuxc/iomuxc-lpsr settings.
-> 
-> Signed-off-by: Adrian Alonso <aalonso@freescale.com>
+1. Fix up the SPI driver so that it knows how to break large SPI
+transfers up into smaller segments that its constituent hardware (DMA
+controllers, fast clocks, etc.) can handle.
 
-It took me quite some time to understand what the patch does.  Before I gave specific comments on your implementation, I would discuss if there is a better solution, as I do not like the idea of encoding these artificial pin id of LPSR pads in the input_val.
+2. Utilize/create a parameter within the SPI subsystem to communicate
+that the SPI master has a limited max transfer size (notably: NOT a
+per-device DT property, but a SPI API property), and modify SPI device
+drivers (like m25p80) to honor it. Mark Brown seemed open to this, and I
+thought he suggested it somewhere.
 
-Ideally, the LPSR controller should be implemented as a second instance of IOMUXC.  But the problem seems to be the select input register is shared between these two instances.  Is my understanding correct?
+It is most definitely wrong to put this information solely in the slave
+device DT (i.e., for the flash), when it is not a property of the flash
+device at all. It's a property of the SPI master and/or its clocks and
+DMA controllers.
 
-[Adrian] Yes that's the case SELECT_INPUT register is shared between IOMUXC and IOMUXC-LPSR controllers.
-
-How select input register is shared?  With different bits in a single register which is only laid on normal IOMUXC controller?
-
-[Adrian] IOMUXC and IOMUXC-LPSR are in different base address; each controller provides SW_PAD_CTL  (CONF_REG) and SW_MUX_CTL (MUX_REG) but only IOMUXC provides SELECT_INPUT registers for pad daisy chain configuration, so pads from IOMUXC-LPSR that need daisy chain settings need to access the IOMUXC register space address to access SELECT_INPUT.
-
-[Adrian] One disadvantage that we found if we created two driver instances for IOMUXC and IOMUXC-LPSR controllers is that in the device tree machine files "end-users" could be creating pinctrl nodes mixing pads from different IOMUXC controllers resulting that pad that doesn't belong to that domain controller it will not be configured properly.
-
-For example a valid pad configuration for I2C1 could use pads as shown below: 
-&iomuxc {
-	pinctrl_i2c1_1: i2c1grp-1 {
-		fsl,pins = <
-			MX7D_PAD_GPIO1_IO04__I2C1_SCL  	/* IOMUXC-LPSR domain */
-			MX7D_PAD_I2C1_SDA__I2C1_SDA   	/* IOMUXC domain */
-		>;
-	};
-};
-
-By extending pinctrl-imx to support both controllers the above configuration is supported,
-Otherwise using two driver instances "end-users" will need to do something like:
-
-&iomuxc {
-	pinctrl_i2c1_1: i2c1grp-1 {
-		fsl,pins = <
-			MX7D_PAD_I2C1_SDA__I2C1_SDA   	/* IOMUXC domain */
-		>;
-	};
-};
-
-&iomuxc_lpsr {
-	pinctrl_i2c1_1: i2c1grp-1 {
-		fsl,pins = <
-			MX7D_PAD_GPIO1_IO04__I2C1_SCL  	/* IOMUXC-LPSR domain */
-		>;
-	};
-};
-
-And this is something that we will like to avoid so "end-user" don't have to worry about and configure pads as they are used to.
-
-[Adrian] For the artificial encoding of pad group id's for IOMUXC-LPSR, I think there is no other way to do it (limited imagination here :P);
-Pad group id's are extracted from MUX_REG offset address (pad_id = mux_reg / 4) but when combining both IOMUXC and IOMUXC-LPSR
-Pad group ID's overlap so end up encoding the pad_id for IOMUXC-LPSR to resolve the proper pad group ID.
-
-I need more details to understand the problem.
-
-Shawn
+Brian
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
