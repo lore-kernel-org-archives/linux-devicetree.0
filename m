@@ -1,111 +1,50 @@
-From: chunfeng yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 1/5] dt-bindings: Add usb3.0 phy binding for MT65xx
- SoCs
-Date: Wed, 15 Jul 2015 20:33:22 +0800
-Message-ID: <1436963602.11289.17.camel@mhfsdcap03>
-References: <1436348468-4126-1-git-send-email-chunfeng.yun@mediatek.com>
-	 <1436348468-4126-2-git-send-email-chunfeng.yun@mediatek.com>
-	 <20150710051018.GU18700@pengutronix.de>
-	 <1436854791.11289.11.camel@mhfsdcap03>
-	 <20150714074555.GR18700@pengutronix.de>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v6 1/4] phy-sun4i-usb: Add missing
+ EXPORT_SYMBOL for sun4i_usb_phy_set_squelch_detect
+Date: Wed, 15 Jul 2015 18:05:59 +0530
+Message-ID: <55A653AF.608@ti.com>
+References: <1436366500-12555-1-git-send-email-hdegoede@redhat.com> <1436366500-12555-2-git-send-email-hdegoede@redhat.com>
+Reply-To: kishon-l0cyMroinI0@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150714074555.GR18700-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCOOP4VF5IDRBQNHTGWQKGQE4EFLIPY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1436366500-12555-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Cc: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-07-14 at 09:45 +0200, Sascha Hauer wrote:
-> On Tue, Jul 14, 2015 at 02:19:51PM +0800, chunfeng yun wrote:
-> > hi,
-> > On Fri, 2015-07-10 at 07:10 +0200, Sascha Hauer wrote:
-> > > On Wed, Jul 08, 2015 at 05:41:03PM +0800, Chunfeng Yun wrote:
-> > > > add a DT binding documentation of usb3.0 phy for MT65xx
-> > > > SoCs from Mediatek.
-> > > > 
-> > > > Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > > > ---
-> > > >  .../devicetree/bindings/usb/mt65xx-u3phy.txt       | 34 ++++++++++++++++++++++
-> > > >  1 file changed, 34 insertions(+)
-> > > >  create mode 100644 Documentation/devicetree/bindings/usb/mt65xx-u3phy.txt
-> > > > 
-> > > > diff --git a/Documentation/devicetree/bindings/usb/mt65xx-u3phy.txt b/Documentation/devicetree/bindings/usb/mt65xx-u3phy.txt
-> > > > new file mode 100644
-> > > > index 0000000..056b2aa
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/usb/mt65xx-u3phy.txt
-> > > > @@ -0,0 +1,34 @@
-> > > > +MT65xx U3PHY
-> > > > +
-> > > > +The device node for Mediatek SOC usb3.0 phy
-> > > > +
-> > > > +Required properties:
-> > > > + - compatible : Should be "mediatek,mt8173-u3phy"
-> > > > + - reg        : Offset and length of registers, the first is for mac domain,
-> > > > +	another for phy domain
-> > > > + - power-domains: to enable usb's mtcmos
-> > > > + - usb-wakeup-ctrl : to access usb wakeup control register
-> > > > + - wakeup-src : 1: ip sleep wakeup mode; 2: line state wakeup mode; others
-> > > > +	means don't enable wakeup source of usb
-> > > > + - u2port-num : number of usb2.0 ports to support which should be 1 or 2
-> > > > + - clocks     : must support all clocks that phy need
-> > > > + - clock-names: should be "wakeup_deb_p0", "wakeup_deb_p1" for wakeup
-> > > > +	debounce control clocks, and "u3phya_ref" for u3phya reference clock.
-> > > > +
-> > > > +Example:
-> > > > +
-> > > > +u3phy: usb-phy@11271000 {
-> > > > +	compatible = "mediatek,mt8173-u3phy";
-> > > > +	reg = <0 0x11271000 0 0x3000>,
-> > > > +	      <0 0x11280000 0 0x20000>;
-> > > 
-> > > 0x11271000 is the register space the xhci controller takes. You should
-> > > not expose the same register space to two different drivers.
-> > > 
-> > 
-> > usb: usb30@11270000 {
-> >    compatible = "mediatek,mt8173-xhci";
-> >    reg = <0 0x11270000 0 0x1000>;
-> > 
-> > the size of xhci register space is 0x1000, and the range is
-> > [0x11270000, 0x11271000 - 1], so the address of 0x11271000 is not
-> > included.
-> 
-> Indeed, you are right. Nevertheless my datasheet lists these resources:
-> 
-> 0x11270000 - 0x1127ffff: SSUSB CSR
-> 0x11280000 - 0x1128ffff: SSUSB SIF
-> 0x11290000 - 0x1129ffff: SSUSB
-> 
-> It seems that with the current binding you are not modelling the
-> hardware but something that reflects your current implementation. This
-> is not a good sign. Normally I would expect device nodes that match the
-> above resources, but your USB phy spans most of the SSUSB CSR register
-> space and both the SSUSB SIF and SSUSB regster space. I think it would
-> be good if you could give an overview over the USB hardware and explain
-> why you have to violate the above resources.
-> 
-> Also something to consider: Is your binding suitable for adding OTG
-> support later? You don't have to add OTG support to the Kernel now,
-> but your binding should be suitable to add it later.
-> 
-> Sascha
-> 
+Hi,
 
-I agree with you, but timing parameter settings of super speed port are
-put in [0x11272400 - 0x11272800], which is not included by xhci register
-space. SSUSB SIF includes some control and status registers of each
-ports and also OTG etc. It is better to put them into the node of gadget
-device node which is not supported now, so put them into phy device
-node.
+On Wednesday 08 July 2015 08:11 PM, Hans de Goede wrote:
+> sun4i_usb_phy_set_squelch_detect is used by other code, which may be built
+> as a module, so it should be exported.
+> 
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> ---
+> Changes in v6:
+> -New patch in v6 of the sunxi musb support series
+> ---
+>  drivers/phy/phy-sun4i-usb.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/phy/phy-sun4i-usb.c b/drivers/phy/phy-sun4i-usb.c
+> index e17c539..b82aa26 100644
+> --- a/drivers/phy/phy-sun4i-usb.c
+> +++ b/drivers/phy/phy-sun4i-usb.c
+> @@ -212,6 +212,7 @@ void sun4i_usb_phy_set_squelch_detect(struct phy *_phy, bool enabled)
+>  
+>  	sun4i_usb_phy_write(phy, PHY_SQUELCH_DETECT, enabled ? 0 : 2, 2);
+>  }
+> +EXPORT_SYMBOL(sun4i_usb_phy_set_squelch_detect);
 
-Do you have any good idea to deal with the special case?
+EXPORT_SYMBOL_GPL?
 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
+Kishon
