@@ -1,117 +1,117 @@
 From: Tim Bird <tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Subject: Re: [PATCH 1/3] ARM: dts: qcom: Add binding for the qcom coincell
- charger
-Date: Wed, 15 Jul 2015 15:27:40 -0700
-Message-ID: <55A6DE5C.7020005@sonymobile.com>
-References: <1436830772-32632-1-git-send-email-tim.bird@sonymobile.com> <CAL_JsqJ4poHe_644aOooAXJqwSvTW-3NPCFJ7LmaBj=wAQQp1w@mail.gmail.com> <55A58221.7040004@sonymobile.com> <CAL_Jsq+FUCvQgicWkJLQOVTSijWxqDyWDKwJgFr85KAvtC=bkg@mail.gmail.com> <55A6A55D.8000209@sonymobile.com> <CAL_Jsq+U7q1=BbRY47b077ys2NWMCTVE5SvgnWW4N2yKUAm95w@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] ARM: qcom: Add coincell charger driver
+Date: Wed, 15 Jul 2015 15:45:47 -0700
+Message-ID: <55A6E29B.3070700@sonymobile.com>
+References: <1436916380-3599-1-git-send-email-tim.bird@sonymobile.com> <1436916380-3599-2-git-send-email-tim.bird@sonymobile.com> <55A5B33A.3070303@codeaurora.org> <55A6AFA1.6080703@sonymobile.com> <55A6B826.7060304@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_Jsq+U7q1=BbRY47b077ys2NWMCTVE5SvgnWW4N2yKUAm95w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <55A6B826.7060304-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?B?IkFuZGVyc3NvbiwgQmrDtnJuIg==?= <Bjorn.Andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?windows-1252?Q?=22Andersson=2C_Bj=F6rn=22?= <Bjorn.Andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 07/15/2015 02:22 PM, Rob Herring wrote:
-> On Wed, Jul 15, 2015 at 1:24 PM, Tim Bird <tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org> wrote:
->> On 07/14/2015 06:07 PM, Rob Herring wrote:
->>> On Tue, Jul 14, 2015 at 4:41 PM, Tim Bird <tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org> wrote:
->>>> On 07/13/2015 08:59 PM, Rob Herring wrote:
->>>>> On Mon, Jul 13, 2015 at 6:39 PM, Tim Bird <tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org> wrote:
->>>>>> This binding is used to configure the driver for the coincell charger
->>>>>> found in Qualcomm PMICs.
-> 
-> [...]
-> 
->>>>>> +- qcom,charge-enable:
->>>>>> +       Usage: optional
->>>>>> +       Value type: <u32> or <none>
->>>>>> +       Definition: definining this property, with an optional non-zero
->>>>>> +               value, enables charging
->>>>>
->>>>> I'm not sure that this belongs in DT. Don't you want to enable
->>>>> charging when plugged in perhaps or at some voltage threshold?
->>>>
->>>> In practice this is never changed at runtime. It's only set at kernel boot.
->>>> The main use of this is to override (either on or off) whatever the firmware
->>>> did.
+On 07/15/2015 12:44 PM, Stephen Boyd wrote:
+> On 07/15/2015 12:08 PM, Tim Bird wrote:
+>>
+>> On 07/14/2015 06:11 PM, Stephen Boyd wrote:
+>>> On 07/14/2015 04:26 PM, Tim Bird wrote:
 >>>
->>> If your firmware and dtb are separate from your kernel, then ... (well
->>> you know where I'm headed :) ).
+>>>>    3 files changed, 166 insertions(+)
+>>>>    create mode 100644 drivers/misc/qcom-coincell.c
+>>>>
+>>>> diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+>>>> index 42c3852..0909869 100644
+>>>> --- a/drivers/misc/Kconfig
+>>>> +++ b/drivers/misc/Kconfig
+>>>> @@ -271,6 +271,17 @@ config HP_ILO
+>>>>    	  To compile this driver as a module, choose M here: the
+>>>>    	  module will be called hpilo.
+>>>>    
+>>>> +config QCOM_COINCELL
+>>>> +	tristate "Qualcomm coincell charger support"
+>>>> +	depends on OF
+>>> It looks like it would compile fine without OF, so can we drop this
+>>> dependency? Or make it into
+>>>
+>>>    depends on MFD_SPMI_PMIC || COMPILE_TEST
+>>>
+>>> ?
+>> I think I had CONFIG_OF off one time, and I spent the better
+>> part of the afternoon trying to figure out why the driver wasn't
+>> loading.  So it compiles but doesn't actually work.
+>> But I think a dependency on MFD_SPMI_PMIC solves this issue.
+>> So, OK on the second suggestion.
 >>
->> Sorry, I have no idea how the sentence would end, so I think I'm missing
->> where you are headed.
+>>>> +	select REGMAP
 > 
-> dtbs should be separate from the kernel and part of the firmware. I'm
-> certain you recall those discussions or have sucessfully blocked them
-> from memory.
+> This config wouldn't be necessary either then because it would be 
+> selected implicitly by the SPMI parent driver.
 
-Ah yes, those discussions. :-)
+OK.  I seem to recall having problems with this with an earlier kernel
+version, but it looks like the parent does indeed have a "select REMAP_SPMI"
+now.  So I'll get rid of this here.
 
-Having dtbs come from firmware is not on the horizon yet
-for projects I'm working on, so I haven't really considered
-the ramifications.
-
-> If the dtb is part of the firmware, then changing the dtb
-> to change the kernel's handling of this would not make a lot of sense.
-
-Indeed.
-
-> I was going to say if you want to change what firmware did, then you
-> could just do it from userspace. A delay from kernel boot to userspace
-> init would not matter here. However, if you have no other reason for
-> having a userspace interface, that probably isn't worth it and it is
-> fine as is.
+[...]
+>>>> +	return rc;
+>>>> +}
+>>>> +
+>>>> +static int qcom_coincell_probe(struct platform_device *pdev)
+>>>> +{
+>>>> +	struct device_node *node = pdev->dev.of_node;
+>>>> +	struct qcom_coincell *chgr;
+>>>> +	u32 rset, vset, enable;
+>>>> +	int rc;
+>>>> +
+>>>> +	if (!node) {
+>>>> +		dev_err(&pdev->dev, "%s: device node missing\n", __func__);
+>>>> +		return -ENODEV;
+>>>> +	}
+>>> Does this happen?
+>> Probably not any more.  The only way this device gets initialized now
+>> is via OF operations.  This code was forward-ported from when this driver
+>> also operated as a platform device.  In the current situation, I don't
+>> know of a way for the kernel to get here if of_node is missing
+>> (but I'm not an OF expert, and I didn't want to start using
+>> a NULL of_node.)
+>>
+>> What does of_property_read...() do with a NULL node?
+> 
+> I'm pretty sure it returns success or nothing when the node is NULL.
 > 
 >>
->>> If we do keep this, I think it should be a disable property with not
->>> present being the default and enabling charging. Also, it only needs
->>> to be bool (i.e. no value).
->>
->> Are you suggesting something like this, then?
->>
->>   - qcom,charger-disable:
->>        Usage: optional
->>        Value type: <none>
+>> I'm a little leery of taking this check out, but if you think it's
+>> OK I'm fine doing it.
 > 
-> s/<none>/boolean/
-> 
-> But otherwise, yes this looks fine.
-> 
->>        Definition: defining this property disables charging
->>
->> The logic would be as follows:
->>  - if the developer wants to just use the firmware settings, then
->>   the kernel would just not define this dts node at all, and nothing
->>   would change on kernel boot
-> 
-> Well, the kernel doesn't decide dts settings, but yes I agree that
-> removing or disabling the node would disable any kernel control.
-> 
->>  - if the developers want to change the settings, either turning off
->>   the charger, or specifying desired settings, then they define
->>   the appropriate attributes.
->>
->> I'm OK with that.
-> 
-> I am too.
-> 
->> It would make no sense to define rset and vset values when this
->> is defined.  Should I note that somewhere in the binding doc?
-> 
-> They are somewhat don't care unless changing them has some side
-> effect. I'll leave it up to you.
+> I'll fix any problems with the removal of the check :)
 
-OK - these are indeed "don't care" in that case.
-I probably don't have to explain in the binding doc that
-adjusting settings for disabled hardware doesn't make sense.
+LOL. It's a deal! :-)
 
-Thanks again for the quick feedback.
+[...]
+>>>> +	if (rc)
+>>>> +		enable = 0;
+>>>> +
+>>>> +	rc = qcom_coincell_chgr_config(chgr, rset, vset, enable);
+>>>> +
+>>>> +	return rc;
+> 
+> This could be simplified to a return qcom_coincell_chrg_config() too.
+
+OK
+
+> Also, do we even need the chgr structure allocated anywhere besides on 
+> the stack? It seems that it will be memory that's just lying around for 
+> no use after probe.
+
+Nope. And Agreed.  I'll change this.
+
+Thanks for the help!
  -- Tim
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
