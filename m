@@ -1,111 +1,108 @@
-From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: socfpga: Add support of Terasic DE0 Atlas board
-Date: Wed, 15 Jul 2015 15:46:31 -0500
-Message-ID: <55A6C6A7.5040100@opensource.altera.com>
-References: <1436908987-16038-1-git-send-email-dinguyen@opensource.altera.com> <20150715080258.GA29885@pengutronix.de>
+From: <dinguyen@opensource.altera.com>
+Subject: [PATCH] ARM: dts: socfpga: use stdout-path for chosen node
+Date: Wed, 15 Jul 2015 15:48:58 -0500
+Message-ID: <1436993338-32172-1-git-send-email-dinguyen@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150715080258.GA29885-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dalon Westergreen <dwesterg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mark.rutland@arm.com, pawel.moll@arm.com
+Cc: devicetree@vger.kernel.org, Dinh Nguyen <dinguyen@opensource.altera.com>, dinh.linux@gmail.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/15/2015 03:02 AM, Steffen Trumtrar wrote:
-> Hi!
-> 
-> On Tue, Jul 14, 2015 at 04:23:07PM -0500, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
->> From: Dalon Westergreen <dwesterg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>
->> The Terasic DE0 Atlas board is also known as the DE0-Nano board.
->>
->> Signed-off-by: Dalon Westergreen <dwesterg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> Signed-off-by: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/Makefile                        |    1 +
->>  arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts |  109 +++++++++++++++++++++
->>  2 files changed, 110 insertions(+)
->>  create mode 100644 arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
->>
->> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
->> index 246473a..29e33aa 100644
->> --- a/arch/arm/boot/dts/Makefile
->> +++ b/arch/arm/boot/dts/Makefile
->> @@ -522,6 +522,7 @@ dtb-$(CONFIG_ARCH_SOCFPGA) += \
->>  	socfpga_arria5_socdk.dtb \
->>  	socfpga_arria10_socdk_sdmmc.dtb \
->>  	socfpga_cyclone5_socdk.dtb \
->> +	socfpga_cyclone5_de0_sockit.dtb \
->                              ^^^^^^
-> 
-> Is that intentional? Terasic doesn't mention sockit at all in the name
-> of the board.
-> 
+From: Dinh Nguyen <dinguyen@opensource.altera.com>
 
-Yes. From the Terasic website[1], they name it DE0-Nano-SoCKit/Atlas-SoCKit.
+Use stdout-path dts property for kernel console.
 
->>  	socfpga_cyclone5_sockit.dtb \
->>  	socfpga_cyclone5_socrates.dtb \
->>  	socfpga_vt.dtb
->> diff --git a/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts b/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
->> new file mode 100644
->> index 0000000..3172c82
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
->> @@ -0,0 +1,109 @@
->> +/*
->> + * Copyright Altera Corporation (C) 2015. All rights reserved.
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms and conditions of the GNU General Public License,
->> + * version 2, as published by the Free Software Foundation.
->> + *
->> + * This program is distributed in the hope it will be useful, but WITHOUT
->> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
->> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
->> + * more details.
->> + *
->> + * You should have received a copy of the GNU General Public License along with
->> + * this program.  If not, see <http://www.gnu.org/licenses/>.
->> + */
->> +
->> +#include "socfpga_cyclone5.dtsi"
->> +
->> +/ {
->> +	model = "Terasic DE-0(Atlas)";
->> +	compatible = "altr,socfpga-cyclone5", "altr,socfpga";
->> +
->> +	chosen {
->> +		bootargs = "console=ttyS0,115200";
+Signed-off-by: Dinh Nguyen <dinguyen@opensource.altera.com>
+---
+ arch/arm/boot/dts/socfpga_arria10.dtsi        | 5 +++++
+ arch/arm/boot/dts/socfpga_arria10_socdk.dtsi  | 3 ++-
+ arch/arm/boot/dts/socfpga_arria5_socdk.dts    | 3 ++-
+ arch/arm/boot/dts/socfpga_cyclone5_socdk.dts  | 3 ++-
+ arch/arm/boot/dts/socfpga_cyclone5_sockit.dts | 3 ++-
+ 5 files changed, 13 insertions(+), 4 deletions(-)
 
-Use stdpath-out here.
-
->> +	};
->> +
->> +	memory {
->> +		name = "memory";
->> +		device_type = "memory";
->> +		reg = <0x0 0x40000000>; /* 1GB */
->> +	};
->> +
->> +	aliases {
->> +		/* this allow the ethaddr uboot environmnet variable contents
->> +		 * to be added to the gmac1 device tree blob.
->> +		 */
-> 
-> I'd personally like to get rid of these types of comments in the dts.
-> It doesn't matter what uboot needs or does IMHO.
-> 
-
-Thats fine, I can remove the comment.
-
-Dinh
-
-[1]
-http://www.terasic.com.tw/cgi-bin/page/archive.pl?Language=English&CategoryNo=165&No=941
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/socfpga_arria10.dtsi b/arch/arm/boot/dts/socfpga_arria10.dtsi
+index 4779b07..a252905 100644
+--- a/arch/arm/boot/dts/socfpga_arria10.dtsi
++++ b/arch/arm/boot/dts/socfpga_arria10.dtsi
+@@ -21,6 +21,11 @@
+ 	#address-cells = <1>;
+ 	#size-cells = <1>;
+ 
++	aliases {
++		serial0 = &uart0;
++		serial1 = &uart1;
++	};
++
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+diff --git a/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi b/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi
+index 94a0709..99aa9a1 100644
+--- a/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi
++++ b/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi
+@@ -21,7 +21,8 @@
+ 	compatible = "altr,socfpga-arria10", "altr,socfpga";
+ 
+ 	chosen {
+-		bootargs = "console=ttyS0,115200 rootwait";
++		bootargs = "earlyprintk";
++		stdout-path = "serial1:115200n8";
+ 	};
+ 
+ 	memory {
+diff --git a/arch/arm/boot/dts/socfpga_arria5_socdk.dts b/arch/arm/boot/dts/socfpga_arria5_socdk.dts
+index ccaf417..a75a666 100644
+--- a/arch/arm/boot/dts/socfpga_arria5_socdk.dts
++++ b/arch/arm/boot/dts/socfpga_arria5_socdk.dts
+@@ -22,7 +22,8 @@
+ 	compatible = "altr,socfpga-arria5", "altr,socfpga";
+ 
+ 	chosen {
+-		bootargs = "console=ttyS0,115200";
++		bootargs = "earlyprintk";
++		stdout-path = "serial0:115200n8";
+ 	};
+ 
+ 	memory {
+diff --git a/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts b/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
+index 258865d..d4d0a28 100644
+--- a/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
++++ b/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
+@@ -22,7 +22,8 @@
+ 	compatible = "altr,socfpga-cyclone5", "altr,socfpga";
+ 
+ 	chosen {
+-		bootargs = "console=ttyS0,115200";
++		bootargs = "earlyprintk";
++		stdout-path = "serial0:115200n8";
+ 	};
+ 
+ 	memory {
+diff --git a/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts b/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
+index 71468a7..42d6092 100644
+--- a/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
++++ b/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
+@@ -22,7 +22,8 @@
+ 	compatible = "altr,socfpga-cyclone5", "altr,socfpga";
+ 
+ 	chosen {
+-		bootargs = "console=ttyS0,115200";
++		bootargs = "earlyprintk";
++		stdout-path = "serial0:115200n8";
+ 	};
+ 
+ 	memory {
+-- 
+2.4.5
