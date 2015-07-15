@@ -1,55 +1,146 @@
-From: Marek Vasut <marex@denx.de>
-Subject: Re: [PATCH 08/11] MTD: m25p80: Add option to limit SPI transfer size.
-Date: Wed, 15 Jul 2015 13:52:27 +0200
-Message-ID: <201507151352.27689.marex@denx.de>
-References: <cover.1433364398.git.hramrach@gmail.com> <20150604171547.GA1530@localhost.localdomain> <CAOMqctSCL9E-kCBryeaMvtssSP12RY=kyfPuwSYx9wc=Lv9kGQ@mail.gmail.com>
+From: Fu Wei <fu.wei@linaro.org>
+Subject: Re: [PATCH v6 1/8] Documentation: add sbsa-gwdt.txt documentation
+Date: Wed, 15 Jul 2015 20:52:22 +0800
+Message-ID: <CADyBb7vVYn9a76G0awuYfGj4KY=oSTsrizNbhDKbCeLmsC=44Q@mail.gmail.com>
+References: <=fu.wei@linaro.org>
+	<1435068994-13526-1-git-send-email-fu.wei@linaro.org>
+	<1435068994-13526-2-git-send-email-fu.wei@linaro.org>
+	<CAL_JsqJA4FNs4QSjep-sX-Oe=bGX087ZHcHOpASas5dKq0jZVQ@mail.gmail.com>
+	<CADyBb7s7MAkotnS7Gi0n5D79wngeuxMdtrAeEZpWjeARQ4E3mw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAOMqctSCL9E-kCBryeaMvtssSP12RY=kyfPuwSYx9wc=Lv9kGQ@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Michal Suchanek <hramrach@gmail.com>
-Cc: Richard Cochran <richardcochran@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Mark Rutland <mark.rutland@arm.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Geert Uytterhoeven <geert+renesas@glider.be>, MTD Maling List <linux-mtd@lists.infradead.org>, Alison Chaiken <alison_chaiken@mentor.com>, "Bean Huo =?utf-8?q?=E9=9C=8D=E6=96=8C=E6=96=8C?= (beanhuo)" <beanhuo@micron.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Vinod Koul <vinod.koul@intel.com>, =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <zajec5@gmail.com>, Kukjin Kim <kgene@kernel.org>, Ben Hutchings <ben@decadent.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Brown <broonie@kernel.org>, Dan
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CADyBb7s7MAkotnS7Gi0n5D79wngeuxMdtrAeEZpWjeARQ4E3mw@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Suravee Suthikulanit <Suravee.Suthikulpanit@amd.com>, "linaro-acpi@lists.linaro.org" <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Wei Fu <tekkamanninja@gmail.com>, G Gregory <graeme.gregory@linaro.org>, Al Stone <al.stone@linaro.org>, Hanjun Guo <hanjun.guo@linaro.org>, Timur Tabi <timur@codeaurora.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Guenter Roeck <linux@roeck-us.net>, Vipul Gandhi <vgandhi@codeaurora.org>, Wim Van Sebroeck <wim@iguana.be>, "jcm@redhat.com" <jcm@redhat.com>, Leo Duran <leo.duran@amd.com>, Jonathan Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, July 15, 2015 at 11:45:07 AM, Michal Suchanek wrote:
-> On 4 June 2015 at 19:15, Richard Cochran <richardcochran@gmail.com> wrote:
-> > On Thu, Jun 04, 2015 at 10:31:45AM +0200, Michal Suchanek wrote:
-> >> You might want to try to run the bus at 60MHz or 80MHz and then the
-> >> values would probably again be different.
-> >> 
-> >> The first two values are set in DT so the logical place for setting
-> >> the third is also in DT.
-> >> 
-> >> Otherwise you would need some in-kernel table of these settings.
-> > 
-> > Or a formula.
-> 
-> This formula probably needs to take into account
-> 
->  - the unknown reason for the pl330 to fail transfer
+Hi Rob,
 
-Shouldn't that be fixed at the PL330 level ? This looks like fixing
-a problem at the wrong place :)
+I have got your point by chatting with you though IRC,
+I will improve my patch according to your suggestion.
 
->  - the device transfer speed and transfer phase as set in DT
->  - possibly device-specific latency and board-specific trace design
-> and assembly tolerances
+Thanks for your help.
 
-If the design is broken, then cap the speed as for normal SPI device.
+On 14 July 2015 at 23:48, Fu Wei <fu.wei@linaro.org> wrote:
+> Hi Rob,
+>
+> Great thanks for your review :-)
+>
+> On 14 July 2015 at 22:49, Rob Herring <robherring2@gmail.com> wrote:
+>> On Tue, Jun 23, 2015 at 9:16 AM,  <fu.wei@linaro.org> wrote:
+>>> From: Fu Wei <fu.wei@linaro.org>
+>>>
+>>> The sbsa-gwdt.txt documentation in devicetree/bindings/watchdog is for
+>>> introducing SBSA(Server Base System Architecture) Generic Watchdog
+>>> device node info into FDT.
+>>>
+>>> Acked-by: Arnd Bergmann <arnd@arndb.de>
+>>> Signed-off-by: Fu Wei <fu.wei@linaro.org>
+>>> ---
+>>>  .../devicetree/bindings/watchdog/sbsa-gwdt.txt     | 36 ++++++++++++++++++++++
+>>>  1 file changed, 36 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/watchdog/sbsa-gwdt.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/watchdog/sbsa-gwdt.txt b/Documentation/devicetree/bindings/watchdog/sbsa-gwdt.txt
+>>> new file mode 100644
+>>> index 0000000..010e5c4
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/watchdog/sbsa-gwdt.txt
+>>> @@ -0,0 +1,36 @@
+>>> +* SBSA(Server Base System Architecture) Generic Watchdog
+>>> +
+>>> +The SBSA Generic Watchdog Timer is used for resetting the system after
+>>> +two stages of timeout.
+>>> +More details: ARM-DEN-0029 - Server Base System Architecture (SBSA)
+>>> +
+>>> +Required properties:
+>>> +- compatible : Should at least contain "arm,sbsa-gwdt".
+>>> +
+>>> +- reg : base physical address of the frames and length of memory mapped region.
+>>
+>> This needs to specify the ordering of refresh and control.
+>
+> In the FDT binding, Do we have to use ordering? Is the name always optional?
+> Sorry for questioning this, I just want to confirm that is a rule in
+> the FDT binding.
+> If that is a rule, would you let me know : where is it?
+>
+> In my driver, I get these resource by name, but not ordering, for now
+>
+> Thanks for your help :-)
+>
+>>
+>>> +
+>>> +- reg-names : Should contain the resource reg names to show the order of
+>>> +  the values in "reg".
+>>> +  Must include the following entries : "refresh", "control".
+>>
+>> This should be optional.
+>>
+>>> +- interrupts : Should at least contain WS0 interrupt,
+>>> +  the WS1 Signal is optional.
+>>
+>> s/Signal/interrupt/ ?
+>
+> yes, thanks,  will fix it.
+>
+>>
+>>> +
+>>> +- interrupt-names : Should contain the resource interrupt names.
+>>> +  Must include the following entries : "ws0". "ws1" is optional.
+>>
+>> This should be optional.
+>>
+>>> +
+>>> +Optional properties
+>>> +- timeout-sec : Watchdog pre-timeout and timeout values (in seconds).
+>>> +       The first is timeout values, then pre-timeout.
+>>> +
+>>> +Example for FVP Foundation Model v8:
+>>> +
+>>> +watchdog@2a440000 {
+>>> +       compatible = "arm,sbsa-gwdt";
+>>> +       reg = <0x0 0x2a440000 0 0x1000>,
+>>> +             <0x0 0x2a450000 0 0x1000>;
+>>> +       reg-names = "control", "refresh";
+>>> +       interrupts = <0 27 4>;
+>>> +       interrupt-names = "ws0";
+>>> +       timeout-sec = <10 5>;
+>>> +};
+>>> --
+>>> 1.9.1
+>>>
+>>> --
+>>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+>>> the body of a message to majordomo@vger.kernel.org
+>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>
+>
+> --
+> Best regards,
+>
+> Fu Wei
+> Software Engineer
+> Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
+> Ph: +86 21 61221326(direct)
+> Ph: +86 186 2020 4684 (mobile)
+> Room 1512, Regus One Corporate Avenue,Level 15,
+> One Corporate Avenue,222 Hubin Road,Huangpu District,
+> Shanghai,China 200021
 
-> Seriously, until I have at least a vague idea why the transfer fails I
-> am not comfortable pulling some formula out of thin air and pretending
-> I have a working patch.
-> 
-> On the other hand, a parameter you can set in the DT and which comes
-> with a suggested value which can be tuned depending on the system
-> seems more viable.
 
-The problem is, if you add a new DT binding, you'd have to support it
-forever, no matter how bad idea that binding turned out to be.
 
+-- 
 Best regards,
-Marek Vasut
+
+Fu Wei
+Software Engineer
+Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
+Ph: +86 21 61221326(direct)
+Ph: +86 186 2020 4684 (mobile)
+Room 1512, Regus One Corporate Avenue,Level 15,
+One Corporate Avenue,222 Hubin Road,Huangpu District,
+Shanghai,China 200021
