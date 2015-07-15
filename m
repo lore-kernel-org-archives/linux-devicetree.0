@@ -1,170 +1,247 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/3] ARM: dts: qcom: Add binding for the qcom coincell charger
-Date: Tue, 14 Jul 2015 20:07:04 -0500
-Message-ID: <CAL_Jsq+FUCvQgicWkJLQOVTSijWxqDyWDKwJgFr85KAvtC=bkg@mail.gmail.com>
-References: <1436830772-32632-1-git-send-email-tim.bird@sonymobile.com>
- <CAL_JsqJ4poHe_644aOooAXJqwSvTW-3NPCFJ7LmaBj=wAQQp1w@mail.gmail.com> <55A58221.7040004@sonymobile.com>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] ARM: qcom: Add coincell charger driver
+Date: Tue, 14 Jul 2015 18:11:22 -0700
+Message-ID: <55A5B33A.3070303@codeaurora.org>
+References: <1436916380-3599-1-git-send-email-tim.bird@sonymobile.com> <1436916380-3599-2-git-send-email-tim.bird@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55A58221.7040004-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+In-Reply-To: <1436916380-3599-2-git-send-email-tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Tim Bird <tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: arnd-r2nGTMty4D4@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 14, 2015 at 4:41 PM, Tim Bird <tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org> wrote:
-> Rob,
->
-> Thanks for the quick feedback.  You responded off-list.  I don't know if
-> you meant to do this or not.  My response is off-list as well, but let me
-> know if I should have responded on-list, or set something differently in
-> my original e-mail.
+On 07/14/2015 04:26 PM, Tim Bird wrote:
 
-Didn't mean to do that. Added back now.
+>   3 files changed, 166 insertions(+)
+>   create mode 100644 drivers/misc/qcom-coincell.c
+>
+> diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+> index 42c3852..0909869 100644
+> --- a/drivers/misc/Kconfig
+> +++ b/drivers/misc/Kconfig
+> @@ -271,6 +271,17 @@ config HP_ILO
+>   	  To compile this driver as a module, choose M here: the
+>   	  module will be called hpilo.
+>   
+> +config QCOM_COINCELL
+> +	tristate "Qualcomm coincell charger support"
+> +	depends on OF
 
-Also adding Mark B in case he has any comments with respect to regulators.
+It looks like it would compile fine without OF, so can we drop this 
+dependency? Or make it into
 
->
-> On 07/13/2015 08:59 PM, Rob Herring wrote:
->> On Mon, Jul 13, 2015 at 6:39 PM, Tim Bird <tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org> wrote:
->>> This binding is used to configure the driver for the coincell charger
->>> found in Qualcomm PMICs.
->>>
->>> Signed-off-by: Tim Bird <tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
->>> ---
->>>  .../bindings/power/qcom,coincell-charger.txt       | 44 ++++++++++++++++++++++
->>>  1 file changed, 44 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/power/qcom,coincell-charger.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/power/qcom,coincell-charger.txt b/Documentation/devicetree/bindings/power/qcom,coincell-charger.txt
->>> new file mode 100644
->>> index 0000000..bf39e2a
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/power/qcom,coincell-charger.txt
->>> @@ -0,0 +1,44 @@
->>> +Qualcomm Coincell Charger:
->>> +
->>> +The hardware block controls charging for a coincell or capacitor that is
->>> +used to provide power backup for certain features of the power management
->>> +IC (PMIC)
->>> +
->>
->> Would the regulator binding work for this? I ask mainly because that
->> is what FSL mc13892 coincell charger already uses.
->
-> I could use the regulator binding, but I think it would imply
-> more functionality than the driver supports.  The regulator
-> binding docs list lots of (admittedly optional) attributes that
-> don't really apply.
->
-> I looked at the mc13892 binding, and I didn't like it too much,
-> because it doesn't really indicate what the allowed values are
-> for the regulator -- but it's possible on that hardware that it's
-> acting like a normal regulator with a fine-grained range of
-> voltage outputs and other configurable attributes.
->
-> This is really just 2 values and an enable bit and I think
-> the mapping from the regulator attributes to this is not a
-> good fit.
+  depends on MFD_SPMI_PMIC || COMPILE_TEST
 
-Okay.
+?
 
->>
->>> +- compatible:
->>> +       Usage: required
->>> +       Value type: <string>
->>> +       Definition: must be: "qcom,pm8941-coincell"
->>> +
->>> +- reg:
->>> +       Usage: required
->>> +       Value type: <u32>
->>> +       Definition: base address of the coincell charger registers
->>> +
->>> +- qcom,rset-ohms:
->>> +       Usage: required
->>> +       Value type: <u32>
->>> +       Definition: resistance (in ohms) for current-limiting resistor
->>> +               must be one of: 800, 1200, 1700, 2100
->>
->> Can you define the current limit and then calculate the resistor value
->> to use in the driver? Current is ultimately what the battery is
->> spec'ed to.
->
-> It's possible, but not very useful.  The resistor is one of 4 values,
-> and specifies exactly what the hardware is doing.  Specifying the current
-> limit is imprecise, and would have to be mapped onto the correct
-> resistor value (depending on the voltage) by the driver.
->
-> Besides being imprecise, however, it's not how these things are usually
-> specified.  The SoC specification, system configuration and schematics
-> list the resistor value, and the data sheet for the coincell itself
-> usually specifies a recommended voltage and resistor value.
+> +	select REGMAP
+> +	help
+> +	  This driver supports the coincell block found inside of
+> +	  Qualcomm PMICs.  The coincell charger provides a means to
+> +	  charge a coincell battery or backup capacitor which is used
+> +	  to maintain PMIC register and RTC state in the absence of
+> +	  external power.
+> +
+>   config SGI_GRU
+>   	tristate "SGI GRU driver"
+>   	depends on X86_UV && SMP
+> diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
+> index d056fb7..537d7f3 100644
+> --- a/drivers/misc/Makefile
+> +++ b/drivers/misc/Makefile
+> @@ -18,6 +18,7 @@ obj-$(CONFIG_LKDTM)		+= lkdtm.o
+>   obj-$(CONFIG_TIFM_CORE)       	+= tifm_core.o
+>   obj-$(CONFIG_TIFM_7XX1)       	+= tifm_7xx1.o
+>   obj-$(CONFIG_PHANTOM)		+= phantom.o
+> +obj-$(CONFIG_QCOM_COINCELL)	+= qcom-coincell.o
+>   obj-$(CONFIG_SENSORS_BH1780)	+= bh1780gli.o
+>   obj-$(CONFIG_SENSORS_BH1770)	+= bh1770glc.o
+>   obj-$(CONFIG_SENSORS_APDS990X)	+= apds990x.o
+> diff --git a/drivers/misc/qcom-coincell.c b/drivers/misc/qcom-coincell.c
+> new file mode 100644
+> index 0000000..9c019e4
+> --- /dev/null
+> +++ b/drivers/misc/qcom-coincell.c
+> @@ -0,0 +1,154 @@
+> +/* Copyright (c) 2013, The Linux Foundation. All rights reserved.
+> + * Copyright (c) 2015, Sony Mobile Communications Inc.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 and
+> + * only version 2 as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/slab.h>
+> +#include <linux/of.h>
+> +#include <linux/regmap.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+> +
+> +struct qcom_coincell {
+> +	struct device	*dev;
+> +	struct regmap	*regmap;
+> +	u32		base_addr;
+> +};
+> +
+> +#define QCOM_COINCELL_REG_RSET		0x44
+> +#define QCOM_COINCELL_REG_VSET		0x45
+> +#define QCOM_COINCELL_REG_ENABLE	0x46
+> +
+> +#define QCOM_COINCELL_ENABLE		BIT(7)
+> +
+> +static const int qcom_rset_map[] = {2100, 1700, 1200, 800};
+> +static const int qcom_vset_map[] = {2500, 3200, 3100, 3000};
 
-Okay, if that is how things are spec'ed with batteries then I'm okay with it.
+Nitpick: put spaces around those braces.
 
-> So if we specify the max current then developers setting this
-> would need to translate the numbers to what the dt expects, so
-> that the driver can reverse that math and fit it to one of the
-> supported values.
->
->>
->>> +- qcom,vset-millivolts:
->>> +       Usage: required
->>> +       Value type: <u32>
->>> +       Definition: voltage (in millivolts) to apply for charging
->>> +               must be one of: 2500, 3000, 3100, 3200
->>> +
->>> +- qcom,charge-enable:
->>> +       Usage: optional
->>> +       Value type: <u32> or <none>
->>> +       Definition: definining this property, with an optional non-zero
->>> +               value, enables charging
->>
->> I'm not sure that this belongs in DT. Don't you want to enable
->> charging when plugged in perhaps or at some voltage threshold?
->
-> In practice this is never changed at runtime. It's only set at kernel boot.
-> The main use of this is to override (either on or off) whatever the firmware
-> did.
+> +/* NOTE: for pm8921 and others, voltage of 2500 is 16 (10000b), not 0 */
+> +
+> +static int qcom_coincell_chgr_config(struct qcom_coincell *chgr, int rset,
+> +				     int vset, int enable)
 
-If your firmware and dtb are separate from your kernel, then ... (well
-you know where I'm headed :) ).
+bool enable?
 
-If we do keep this, I think is should be a disable property with not
-present being the default and enabling charging. Also, it only needs
-to be bool (i.e. no value).
+> +{
+> +	int i, rc;
+> +	unsigned int value;
+> +
+> +	/* select current-limiting resistor */
+> +	for (i = 0; i < ARRAY_SIZE(qcom_rset_map); i++)
+> +		if (rset == qcom_rset_map[i])
+> +			break;
+> +
+> +	if (i >= ARRAY_SIZE(qcom_rset_map)) {
+> +		dev_err(chgr->dev, "invalid rset-ohms value %d\n", rset);
+> +		return -EINVAL;
+> +	}
+> +
+> +	rc = regmap_write(chgr->regmap,
+> +			  chgr->base_addr + QCOM_COINCELL_REG_RSET, i);
+> +	if (rc)
+> +		dev_err(chgr->dev, "could not write to RSET register\n");
+> +		return rc;
 
-Rob
+Missing braces?
 
->
->>> +
->>> +Examples:
->>> +
->>> +       qcom,coincell@2800 {
->>
->> This should be a sub node of the PMIC, right. Please show in the
->> example and refer to the relevant PMIC binding doc.
-> OK.
->
->>
->> Also, drop the "qcom," from the node name.
-> OK.
-> Will do these in the next patch rev.
->
->>> +               compatible = "qcom,pm8941-coincell";
->>> +               reg = <0x2800>;
->>> +
->>> +               qcom,rset-ohms = <2100>;
->>> +               qcom,vset-millivolts = <3000>;
->>> +               qcom,charge-enable;
->>> +       };
->>> --
->>> 1.8.2.2
->
-> Thanks!
->  -- Tim
->
+> +
+> +	/* select charge voltage */
+> +	for (i = 0; i < ARRAY_SIZE(qcom_vset_map); i++)
+> +		if (vset == qcom_vset_map[i])
+> +			break;
+> +
+> +	if (i >= ARRAY_SIZE(qcom_vset_map)) {
+> +		dev_err(chgr->dev, "invalid vset-millivolts value %d\n", vset);
+> +		return -EINVAL;
+> +	}
+> +
+> +	rc = regmap_write(chgr->regmap,
+> +		chgr->base_addr + QCOM_COINCELL_REG_VSET, i);
+> +	if (rc)
+> +		dev_err(chgr->dev, "could not write to VSET register\n");
+> +		return rc;
+
+Missing braces? I guess this hardware just works out of the bootloader 
+after the resistor is configured?
+
+> +
+> +	/* set 'enable' register */
+> +	value = enable ? QCOM_COINCELL_ENABLE : 0;
+> +	rc = regmap_write(chgr->regmap,
+> +			  chgr->base_addr + QCOM_COINCELL_REG_ENABLE, value);
+> +	if (rc)
+> +		dev_err(chgr->dev, "could not write to ENABLE register\n");
+> +
+
+Honestly these printks seems pretty useless and could probably be left out.
+
+> +	return rc;
+> +}
+> +
+> +static int qcom_coincell_probe(struct platform_device *pdev)
+> +{
+> +	struct device_node *node = pdev->dev.of_node;
+> +	struct qcom_coincell *chgr;
+> +	u32 rset, vset, enable;
+> +	int rc;
+> +
+> +	if (!node) {
+> +		dev_err(&pdev->dev, "%s: device node missing\n", __func__);
+> +		return -ENODEV;
+> +	}
+
+Does this happen?
+
+> +
+> +	chgr = devm_kzalloc(&pdev->dev, sizeof(*chgr), GFP_KERNEL);
+> +	if (!chgr)
+> +		return -ENOMEM;
+> +
+> +	chgr->dev = &pdev->dev;
+> +
+> +	chgr->regmap = dev_get_regmap(pdev->dev.parent, NULL);
+> +	if (!chgr->regmap) {
+> +		dev_err(chgr->dev, "Unable to get regmap\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	rc = of_property_read_u32(node, "reg", &chgr->base_addr);
+> +	if (rc)
+> +		return rc;
+> +
+> +	rc = of_property_read_u32(node, "qcom,rset-ohms", &rset);
+> +	if (rc) {
+> +		dev_err(chgr->dev, "can't find 'qcom,rset-ohms' in DT block");
+> +		return rc;
+> +	}
+> +
+> +	rc = of_property_read_u32(node, "qcom,vset-millivolts", &vset);
+> +	if (rc) {
+> +		dev_err(chgr->dev,
+> +			"can't find 'qcom,vset-millivolts' in DT block");
+> +		return rc;
+> +	}
+> +
+> +	rc = of_property_read_u32(node, "qcom,charge-enable", &enable);
+
+This should be a bool:
+
+     enable = of_property_read_bool(node, "qcom,charge-enable");
+
+> +	if (rc)
+> +		enable = 0;
+> +
+> +	rc = qcom_coincell_chgr_config(chgr, rset, vset, enable);
+> +
+> +	return rc;
+> +}
+> +
+> +static const struct of_device_id qcom_coincell_match_table[] = {
+> +	{ .compatible = "qcom,pm8941-coincell", },
+> +	{}
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, qcom_coincell_match_table);
+> +
+> +static struct platform_driver qcom_coincell_driver = {
+> +	.driver	= {
+> +		.name		= "qcom,pm8941-coincell",
+
+Maybe a better driver name would be qcom-spmi-coincell?
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
