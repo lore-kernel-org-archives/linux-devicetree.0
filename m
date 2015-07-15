@@ -1,94 +1,42 @@
-From: Paul Osmialowski <pawelo@king.net.pl>
-Subject: Re: [PATCH v2 3/9] arm: twr-k70f120m: clock driver for Kinetis SoC
-Date: Wed, 15 Jul 2015 19:34:09 +0200 (CEST)
-Message-ID: <alpine.LNX.2.00.1507151931200.7048@localhost.localdomain>
-References: <1435667250-28299-1-git-send-email-pawelo@king.net.pl> <1435667250-28299-4-git-send-email-pawelo@king.net.pl> <CACRpkdasMqFCwy=ZEvMLeG2Z-xV01dbf8cXaPACP1=RSz2gdjw@mail.gmail.com> <alpine.LNX.2.00.1507150917470.32721@localhost.localdomain>
+From: Marek Vasut <marex@denx.de>
+Subject: Re: [PATCH 08/11] MTD: m25p80: Add option to limit SPI transfer size.
+Date: Wed, 15 Jul 2015 19:15:50 +0200
+Message-ID: <201507151915.50677.marex@denx.de>
+References: <cover.1433364398.git.hramrach@gmail.com> <201507151352.27689.marex@denx.de> <20150715155946.GB21362@localhost>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <alpine.LNX.2.00.1507150917470.32721@localhost.localdomain>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Paul Osmialowski <pawelo@king.net.pl>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jiri Slaby <jslaby@suse.cz>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Stephen Boyd <sboyd@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-clk@vger.kernel.org, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dmaengine@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Geert
+Content-Type: Text/Plain;
+  charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20150715155946.GB21362@localhost>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Brian Norris <computersforpeace@gmail.com>
+Cc: hramrach@gmail.com, Richard Cochran <richardcochran@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Mark Rutland <mark.rutland@arm.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Geert Uytterhoeven <geert+renesas@glider.be>, MTD Maling List <linux-mtd@lists.infradead.org>, Alison Chaiken <alison_chaiken@mentor.com>, "Bean Huo =?utf-8?q?=E9=9C=8D=E6=96=8C=E6=96=8C?= (beanhuo)" <beanhuo@micron.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Vinod Koul <vinod.koul@intel.com>, =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <zajec5@gmail.com>, Kukjin Kim <kgene@kernel.org>, Ben Hutchings <ben@decadent.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Brown <broon>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+On Wednesday, July 15, 2015 at 05:59:46 PM, Brian Norris wrote:
+> Hi Michal,
 
-I had some discussion with an expert here and now I see drawbacks of using 
-struct for regs, I'll turn it into defines as you suggested.
+Hi all,
 
-On Wed, 15 Jul 2015, Paul Osmialowski wrote:
+> On Wed, Jul 15, 2015 at 01:52:27PM +0200, Marek Vasut wrote:
+> > The problem is, if you add a new DT binding, you'd have to support it
+> > forever, no matter how bad idea that binding turned out to be.
+> 
+> Agreed, and a solid NAK to this patch. I could have sworn I gave such a
+> response when this was originally being discussed a month ago.
+> 
+> AFAICT, you have one of two general approaches available to you:
+> 
+> 1. Fix up the SPI driver so that it knows how to break large SPI
+> transfers up into smaller segments that its constituent hardware (DMA
+> controllers, fast clocks, etc.) can handle.
 
-> Hi Linus,
-> 
-> Thanks for all of your comments, I'll consider them during my works on the 
-> next iteration. However, I have doubts about this one:
-> 
-> On Tue, 14 Jul 2015, Linus Walleij wrote:
-> 
-> > On Tue, Jun 30, 2015 at 2:27 PM, Paul Osmialowski <pawelo@king.net.pl> wrote:
-> > 
-> > > Based on K70P256M150SF3RM.pdf K70 Sub-Family Reference Manual, Rev. 3.
-> > >
-> > > Signed-off-by: Paul Osmialowski <pawelo@king.net.pl>
-> > (...)
-> > > +struct kinetis_sim_regs {
-> > > +       u32 sopt1;      /* System Options Register 1 */
-> > > +       u32 rsv0[1024];
-> > > +       u32 sopt2;      /* System Options Register 2 */
-> > > +       u32 rsv1;
-> > > +       u32 sopt4;      /* System Options Register 4 */
-> > > +       u32 sopt5;      /* System Options Register 5 */
-> > > +       u32 sopt6;      /* System Options Register 6 */
-> > > +       u32 sopt7;      /* System Options Register 7 */
-> > > +       u32 rsv2[2];
-> > > +       u32 sdid;       /* System Device Identification Register */
-> > > +       u32 scgc[KINETIS_SIM_CG_NUMREGS];       /* Clock Gating Regs 1...7 */
-> > > +       u32 clkdiv1;    /* System Clock Divider Register 1 */
-> > > +       u32 clkdiv2;    /* System Clock Divider Register 2 */
-> > > +       u32 fcfg1;      /* Flash Configuration Register 1 */
-> > > +       u32 fcfg2;      /* Flash Configuration Register 2 */
-> > > +       u32 uidh;       /* Unique Identification Register High */
-> > > +       u32 uidmh;      /* Unique Identification Register Mid-High */
-> > > +       u32 uidml;      /* Unique Identification Register Mid Low */
-> > > +       u32 uidl;       /* Unique Identification Register Low */
-> > > +       u32 clkdiv3;    /* System Clock Divider Register 3 */
-> > > +       u32 clkdiv4;    /* System Clock Divider Register 4 */
-> > > +       u32 mcr;        /* Misc Control Register */
-> > > +};
-> > 
-> > Now there is this design pattern where you copy the datasheet
-> > register map to a struct again.
-> > 
-> > This is not good if there is a second revision of the hardware and some
-> > registers are shuffled around. IMO it is better to just use #defines
-> > for register
-> > offsets, so you can do exceptions later. Else a new hardware revision
-> > leads to a new struct with new accessor functions etc etc.
-> > 
-> 
-> I don't see how replacing this structure with bunch of defines could make 
-> anyones life easier. As registers are shuffled around due to updated 
-> hardware revision they could be shuffled in this structure too. Doing 
-> this with buch of defines would require eager and careful adaptation of 
-> all the defines. I don't see how this could be easier.
-> 
-> Note that I'm not making any instances of the structure (it is used only 
-> for casting), so shuffling its fields around should not affect the code 
-> that follows.
-> 
-> After recent purge it is only used within this macro:
-> 
-> #define KINETIS_SIM_PTR(base, reg) \
->         (&(((struct kinetis_sim_regs *)(base))->reg))
-> 
-> ...and used like this:
-> 
->         ioread32(KINETIS_SIM_PTR(sim, clkdiv1));
-> 
-> IMHO changing the struct internals does not require subsequent changes in 
-> any of those.
-> 
-> Thanks,
-> Paul
-> 
+I think this might actually be easier -- just do a transfer where you
+don't toggle CS and just stops the clock at the last bit, then do another
+(multiple) transfers which don't toggle CS at all, then finally do a
+transfer which toggles a CS at the end. This should be pretty trivial
+to do and I think for example spi-mxs.c does this.
+
+Best regards,
+Marek Vasut
