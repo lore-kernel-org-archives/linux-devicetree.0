@@ -1,86 +1,105 @@
-From: Paul Osmialowski <pawelo@king.net.pl>
-Subject: Re: [PATCH v2 3/9] arm: twr-k70f120m: clock driver for Kinetis SoC
-Date: Wed, 15 Jul 2015 09:31:17 +0200 (CEST)
-Message-ID: <alpine.LNX.2.00.1507150917470.32721@localhost.localdomain>
-References: <1435667250-28299-1-git-send-email-pawelo@king.net.pl> <1435667250-28299-4-git-send-email-pawelo@king.net.pl> <CACRpkdasMqFCwy=ZEvMLeG2Z-xV01dbf8cXaPACP1=RSz2gdjw@mail.gmail.com>
+From: Ludovic Desroches <ludovic.desroches@atmel.com>
+Subject: Re: [RESEND PATCH 2/2] pinctrl: introduce complex pin description
+Date: Wed, 15 Jul 2015 10:45:42 +0200
+Message-ID: <20150715084542.GC14886@odux.rfo.atmel.com>
+References: <1433948699-19800-1-git-send-email-ludovic.desroches@atmel.com>
+ <1433948699-19800-3-git-send-email-ludovic.desroches@atmel.com>
+ <20150714061359.GC5161@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdasMqFCwy=ZEvMLeG2Z-xV01dbf8cXaPACP1=RSz2gdjw@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20150714061359.GC5161@pengutronix.de>
 Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Paul Osmialowski <pawelo@king.net.pl>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jiri Slaby <jslaby@suse.cz>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Stephen Boyd <sboyd@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-clk@vger.kernel.org, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dmaengine@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Geert
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Ludovic Desroches <ludovic.desroches@atmel.com>, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, swarren@wwwdotorg.org, linus.walleij@linaro.org, nicolas.ferre@atmel.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
-
-Thanks for all of your comments, I'll consider them during my works on the 
-next iteration. However, I have doubts about this one:
-
-On Tue, 14 Jul 2015, Linus Walleij wrote:
-
-> On Tue, Jun 30, 2015 at 2:27 PM, Paul Osmialowski <pawelo@king.net.pl> wrote:
+On Tue, Jul 14, 2015 at 08:13:59AM +0200, Sascha Hauer wrote:
+> On Wed, Jun 10, 2015 at 05:04:57PM +0200, Ludovic Desroches wrote:
+> > Using a string to describe a pin in the device tree can be not enough.
+> > Some controllers may need extra information to fully describe a pin. It
+> > concerns mainly controllers which have a per pin muxing approach which
+> > don't fit well the notions of groups and functions.
+> > Instead of using a pin name, a 32 bit value is used. The 16 least
+> > significant bits are used for the pin number. Other 16 bits can be used to
+> > store extra parameters.
 > 
-> > Based on K70P256M150SF3RM.pdf K70 Sub-Family Reference Manual, Rev. 3.
-> >
-> > Signed-off-by: Paul Osmialowski <pawelo@king.net.pl>
-> (...)
-> > +struct kinetis_sim_regs {
-> > +       u32 sopt1;      /* System Options Register 1 */
-> > +       u32 rsv0[1024];
-> > +       u32 sopt2;      /* System Options Register 2 */
-> > +       u32 rsv1;
-> > +       u32 sopt4;      /* System Options Register 4 */
-> > +       u32 sopt5;      /* System Options Register 5 */
-> > +       u32 sopt6;      /* System Options Register 6 */
-> > +       u32 sopt7;      /* System Options Register 7 */
-> > +       u32 rsv2[2];
-> > +       u32 sdid;       /* System Device Identification Register */
-> > +       u32 scgc[KINETIS_SIM_CG_NUMREGS];       /* Clock Gating Regs 1...7 */
-> > +       u32 clkdiv1;    /* System Clock Divider Register 1 */
-> > +       u32 clkdiv2;    /* System Clock Divider Register 2 */
-> > +       u32 fcfg1;      /* Flash Configuration Register 1 */
-> > +       u32 fcfg2;      /* Flash Configuration Register 2 */
-> > +       u32 uidh;       /* Unique Identification Register High */
-> > +       u32 uidmh;      /* Unique Identification Register Mid-High */
-> > +       u32 uidml;      /* Unique Identification Register Mid Low */
-> > +       u32 uidl;       /* Unique Identification Register Low */
-> > +       u32 clkdiv3;    /* System Clock Divider Register 3 */
-> > +       u32 clkdiv4;    /* System Clock Divider Register 4 */
-> > +       u32 mcr;        /* Misc Control Register */
-> > +};
-> 
-> Now there is this design pattern where you copy the datasheet
-> register map to a struct again.
-> 
-> This is not good if there is a second revision of the hardware and some
-> registers are shuffled around. IMO it is better to just use #defines
-> for register
-> offsets, so you can do exceptions later. Else a new hardware revision
-> leads to a new struct with new accessor functions etc etc.
+> In the Mediatek driver we use 'pinmux' as name for the property
+> containing the combined pin number / mux value defines. 'pinmux' better
+> describes what it is...
 > 
 
-I don't see how replacing this structure with bunch of defines could make 
-anyones life easier. As registers are shuffled around due to updated 
-hardware revision they could be shuffled in this structure too. Doing 
-this with buch of defines would require eager and careful adaptation of 
-all the defines. I don't see how this could be easier.
+At the moment, I don't mix pin number and pin mux. I mix pin number and
+ioset. It allows to check that all the pins belong to the same ioset.
 
-Note that I'm not making any instances of the structure (it is used only 
-for casting), so shuffling its fields around should not affect the code 
-that follows.
+As said previously, I didn't want to mix pin mux and pin conf in the
+same node (but it is something I can do, it's not a problem on my side).
+If I do it I will have to mux three values: pin number, pin mux value
+and pin ioset.
 
-After recent purge it is only used within this macro:
+So assuming I do this change, your advice is to add a 'pinmux' property in
+addition of 'pins' instead of trying to use it?
 
-#define KINETIS_SIM_PTR(base, reg) \
-        (&(((struct kinetis_sim_regs *)(base))->reg))
+> > +
+> > +	if (pctldesc->complex_pin_desc)
+> > +		ret = of_property_count_u32_elems(np, "pins");
+> > +	else
+> > +		ret = of_property_count_strings(np, "pins");
+> 
+> ... and has the advantage that you don't have to pass in a
+> complex_pin_desc variable from the driver as the different property
+> name inherently carries this information. 'pins' can then stay a
+> property containing only strings.
+> 
+> >  	if (ret < 0) {
+> >  		ret = of_property_count_strings(np, "groups");
+> >  		if (ret < 0)
+> > @@ -297,11 +305,12 @@ int pinconf_generic_dt_subnode_to_map(struct pinctrl_dev *pctldev,
+> >  		if (type == PIN_MAP_TYPE_INVALID)
+> >  			type = PIN_MAP_TYPE_CONFIGS_GROUP;
+> >  		subnode_target_type = "groups";
+> > +		pins_prop = false;
+> >  	} else {
+> >  		if (type == PIN_MAP_TYPE_INVALID)
+> >  			type = PIN_MAP_TYPE_CONFIGS_PIN;
+> >  	}
+> > -	strings_count = ret;
+> > +	items_count = ret;
+> >  
+> >  	ret = of_property_read_string(np, "function", &function);
+> >  	if (ret < 0) {
+> > @@ -326,17 +335,31 @@ int pinconf_generic_dt_subnode_to_map(struct pinctrl_dev *pctldev,
+> >  	if (num_configs)
+> >  		reserve++;
+> >  
+> > -	reserve *= strings_count;
+> > +	reserve *= items_count;
+> >  
+> >  	ret = pinctrl_utils_reserve_map(pctldev, map, reserved_maps,
+> >  			num_maps, reserve);
+> >  	if (ret < 0)
+> >  		goto exit;
+> >  
+> > -	of_property_for_each_string(np, subnode_target_type, prop, group) {
+> > +	items_name = kmalloc_array(items_count, sizeof(char *), GFP_KERNEL);
+> > +	if (!items_name)
+> > +		goto exit;
+> > +	if (pctldesc->complex_pin_desc && pins_prop) {
+> > +		of_property_for_each_u32(np, subnode_target_type, prop, cur, val) {
+> > +			pin_id = val & PINCTRL_PIN_MASK;
+> > +			items_name[i++] = pctldesc->pins[pin_id].name;
+> > +		}
+> 
+> I don't like that even though pins have numbers here they are converted
+> to strings which the driver later has to search in a list just to
+> convert it back into the number. This is quite inefficient.
+> 
+> I guess this could be optimized later, but it would be nice to have the
+> pin number directly in the driver.
 
-...and used like this:
+I know that is something you don't like but, at the moment, I need a string for
+pinctrl_utils_add_map_mux and pinctrl_utils_add_map_configs.
 
-        ioread32(KINETIS_SIM_PTR(sim, clkdiv1));
 
-IMHO changing the struct internals does not require subsequent changes in 
-any of those.
-
-Thanks,
-Paul
+Ludovic
