@@ -1,69 +1,50 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 11/20] dm: serial: Update binding for PL01x serial UART
-Date: Wed, 15 Jul 2015 11:38:33 +0200
-Message-ID: <1510062.S45KkZCs96@wuerfel>
-References: <1436324032-17931-1-git-send-email-sjg@chromium.org> <1436324032-17931-12-git-send-email-sjg@chromium.org> <CACRpkdb=t21=qpqar5VXd4mtqTWrq6MvoX1OsVgmWpkyFqhj3w@mail.gmail.com>
+From: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 08/11] MTD: m25p80: Add option to limit SPI transfer size.
+Date: Wed, 15 Jul 2015 11:45:07 +0200
+Message-ID: <CAOMqctSCL9E-kCBryeaMvtssSP12RY=kyfPuwSYx9wc=Lv9kGQ@mail.gmail.com>
+References: <cover.1433364398.git.hramrach@gmail.com> <8fc4b9f5291a509c4c35782a1337bf536f1019af.1433364398.git.hramrach@gmail.com>
+ <CAMuHMdVT2M7pPHDDHmoNF_zVXhz1PUm5PiYxDKcAjSAcfSDiZg@mail.gmail.com>
+ <CAOMqctS6KNrTATB6MYCZLBnZUQmX=e0qQvGf78YtLaF8pkibhQ@mail.gmail.com> <20150604171547.GA1530@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdb=t21=qpqar5VXd4mtqTWrq6MvoX1OsVgmWpkyFqhj3w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20150604171547.GA1530-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Joe Hershberger <joe.hershberger-acOepvfBmUk@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Masahiro Yamada <yamada.m-NAum8xwdG0+S7A1Ibl2khg@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Albert Aribaud <albert.u.boot-LhW3hqR2+23R7s880joybQ@public.gmane.org>, Vikas Manocha <vikas.manocha-qxv4g6HH51o@public.gmane.org>, Pavel Herrmann <morpheus.ibis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Alison Chaiken <alison_chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, =?UTF-8?B?QmVhbiBIdW8g6ZyN5paM5paMIChiZWFuaHVvKQ==?= <beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ben Hutchings <ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dan Williams <dan.j.williams@i>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 15 July 2015 11:00:59 Linus Walleij wrote:
-> On Wed, Jul 8, 2015 at 4:53 AM, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
-> 
-> > This binding differs from that of Linux. Update it and change existing
-> > users.
-> >
-> > Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> 
-> I'm confused by this. Isn't devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org the place to discuss
-> device tree bindings? This is sent only to the U-Boot list, does this mean
-> that there will now be *two* ontologies for DT bindings? That sounds like
-> a recepie for ... something not good.
-> 
-> > +- clock-frequency:
-> > +          Input clock frequency for UART.
-> 
-> This is the real trick is it not?
-> 
-> Is the real commit blurb for this patch something like:
-> 
-> "we want a simple way to look up the clock frequency for our serial
-> ports during early boot, and following clocks = <&...> phandles
-> is too much trouble and might imply having to implement a whole
-> clock framework in U-Boot so we just see a lot of trouble, instead
-> provide a default frequency here"
-> 
-> I suggest in that case, instead do this:
-> 
-> - boot-frequency:
->     input clock frequency at boot time, to be used by boot loaders
->     and other early access.
-> 
-> This would be good for early Linux stuff as well I believe and I
-> do not think it's very controversial.
+On 4 June 2015 at 19:15, Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Thu, Jun 04, 2015 at 10:31:45AM +0200, Michal Suchanek wrote:
+>> You might want to try to run the bus at 60MHz or 80MHz and then the
+>> values would probably again be different.
+>>
+>> The first two values are set in DT so the logical place for setting
+>> the third is also in DT.
+>>
+>> Otherwise you would need some in-kernel table of these settings.
+>
+> Or a formula.
+>
 
-The CHRP ISA binding defines that a 8250 compatible UART must have this
-property:
+This formula probably needs to take into account
 
-  "clock-frequency" S
+ - the unknown reason for the pl330 to fail transfer
+ - the device transfer speed and transfer phase as set in DT
+ - possibly device-specific latency and board-specific trace design
+and assembly tolerances
 
-  Standard property, encoded as with encode-int, that shall be the baud-rate
-  generator's clock input frequency (in hertz).
-  Typically, the clock frequency is nominally 1,843,200 Hz. Some devices
-  generate the baud rate input clock by dividing a higher-frequency clock 
-  source that is not an exact multiple of 1,843,200 Hz, resulting in a
-  small but acceptable error in the nominal clock frequency. In such cases,
-  the "clock-frequency" shall report the actual nominal frequency. For
-  example, if the baud rate input clock is generated by dividing a 24
-  MHz clock by 13, the value of the "clock-frequency" property shall be 1846153.
-	
-	Arnd
+Seriously, until I have at least a vague idea why the transfer fails I
+am not comfortable pulling some formula out of thin air and pretending
+I have a working patch.
+
+On the other hand, a parameter you can set in the DT and which comes
+with a suggested value which can be tuned depending on the system
+seems more viable.
+
+Thanks
+
+Michal
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
