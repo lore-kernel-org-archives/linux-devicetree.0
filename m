@@ -1,88 +1,50 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] pinctrl: sh-pfc: Convert to platform_get_*()
-Date: Thu, 16 Jul 2015 11:00:56 +0200
-Message-ID: <CAMuHMdVoC9iR0PTZ5TD9w8H8DbnuLxNyUAu6gHObFPx=oKhB7Q@mail.gmail.com>
-References: <1435225193-10078-1-git-send-email-geert+renesas@glider.be>
-	<1971413.ULIg8n17Hy@avalon>
+From: Andrey Danin <danindrey@mail.ru>
+Subject: Re: How to encode being an I2C slave in DT?
+Date: Thu, 16 Jul 2015 12:03:43 +0300
+Message-ID: <55A7736F.5090802@mail.ru>
+References: <1427745615-5428-1-git-send-email-danindrey@mail.ru>
+ <20150403194635.GC2016@katana> <1549160.njMIY2NVTi@fb07-iapwap2>
+ <20150505105513.GA1841@katana> <554922EF.3050906@wwwdotorg.org>
+ <20150506161712.GA4003@katana>
+ <CAL_Jsq+iyeK-bV3ggcJv8Cw3EU71fkBo1wqYZnhCoh2-b_tO-Q@mail.gmail.com>
+ <20150519061619.GA4448@schokonusskuchen.bad>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1971413.ULIg8n17Hy@avalon>
-Sender: linux-sh-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20150519061619.GA4448@schokonusskuchen.bad>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Marc Dietrich <marvin24@gmx.de>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
+Hello Wolfram,
 
-On Thu, Jul 16, 2015 at 10:41 AM, Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
->>  drivers/pinctrl/sh-pfc/core.c | 46 ++++++++++++++++++----------------------
->>  1 file changed, 21 insertions(+), 25 deletions(-)
+On 19.05.2015 9:16, Wolfram Sang wrote:
+>
+>>> I give in to the flag idea. I also noticed that we'd need another flag
+>>> anyhow to mark 10 bit addresses. I am still thinking between using two
+>>> address-cells in that case (clean seperation between address and flags)
+>>> or to encode the flags as MSB in the current address (all busses will
+>>> have same address-cells and child description, less code paths and no
+>>> overhead in dtbs).
 >>
->> diff --git a/drivers/pinctrl/sh-pfc/core.c b/drivers/pinctrl/sh-pfc/core.c
->> index 865d235612c5200a..9796238959047508 100644
->> --- a/drivers/pinctrl/sh-pfc/core.c
->> +++ b/drivers/pinctrl/sh-pfc/core.c
->> @@ -29,24 +29,25 @@
->>  static int sh_pfc_map_resources(struct sh_pfc *pfc,
->>                               struct platform_device *pdev)
->>  {
->> -     unsigned int num_windows = 0;
->> -     unsigned int num_irqs = 0;
->> +     unsigned int num_windows, num_irqs;
->>       struct sh_pfc_window *windows;
->>       unsigned int *irqs = NULL;
->>       struct resource *res;
->>       unsigned int i;
->> +     int irq;
->>
->>       /* Count the MEM and IRQ resources. */
->> -     for (i = 0; i < pdev->num_resources; ++i) {
->> -             switch (resource_type(&pdev->resource[i])) {
->> -             case IORESOURCE_MEM:
->> -                     num_windows++;
->> +     for (num_windows = 0;; num_windows++) {
+>> Reading thru the thread, this seems good to me. I would go with adding
+>> flags in the MSB of the reg cell rather than adding a cell.
 >
-> Just a bit of nit-picking, I'd add a space between the two ; (same for the
-> next loop).
-
-I had done my research ;-)
-
-$ git grep 'for.*;;' | wc -l
-1410
-$ git grep 'for.*; ;' | wc -l
-190
-$
-
->> +             res = platform_get_resource(pdev, IORESOURCE_MEM, num_windows);
->> +             if (!res)
->>                       break;
->> -
->> -             case IORESOURCE_IRQ:
->> -                     num_irqs++;
->> +     }
+> Thanks. I was leaning to the MSB idea, too, and am currently checking
+> how the code would look like. Feels much better to do knowing that it is
+> basically upstream compatible ;)
 >
-> And a blank line here.
+Did you have enough time to check this ?
+(sorry for the noise, if I missed patch(es) in the ml)
 
-I didn't add one, to make clear the block falls under the "Count the MEM
-and IRQ resources. " comment, too.
-
-Let's leave this to Linus to decide...
-
-> The rest looks fine to me.
->
-> Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Thanks.
