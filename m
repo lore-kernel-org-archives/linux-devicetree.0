@@ -1,39 +1,50 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH] backlight: pm8941-wled: Move PM8941 WLED driver to
- backlight
-Date: Thu, 16 Jul 2015 10:01:09 +0200
-Message-ID: <55A764C5.5060205@samsung.com>
-References: <1436990540-23354-1-git-send-email-bjorn.andersson@sonymobile.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <1436990540-23354-1-git-send-email-bjorn.andersson@sonymobile.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jingoo Han <jingoohan1@gmail.com>, Lee Jones <lee.jones@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Rob Clark <robdclark@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-arm-msm@vger.kernel.org
+From: Michael van der Westhuizen <michael@smart-africa.com>
+Subject: Re: [PATCH 1/2] gpio: dwapb: Use human understandable gpio numbering.
+Date: Thu, 16 Jul 2015 10:16:46 +0200
+Message-ID: <60651945-976B-42B3-AD64-769AB10990C2@smart-africa.com>
+References: <cover.1435777856.git.rcochran@linutronix.de> <d6b5ce85a17164970d454583560e07f7aed7b8ca.1435777856.git.rcochran@linutronix.de> <267A46E7-C5C5-4696-90CC-D44F4130B3EF@smart-africa.com> <CACRpkdavWungUrU02dxObW1BUK5uELFHgDQMXmQwqdzzem2zuA@mail.gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2102\))
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdavWungUrU02dxObW1BUK5uELFHgDQMXmQwqdzzem2zuA@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Richard Cochran <richardcochran@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Alexandre Courbot <gnurou@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Alan Tull <atull@altera.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Dinh Nguyen <dinguyen@altera.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
 
-On 07/15/2015 10:02 PM, Bjorn Andersson wrote:
-> The Qualcomm PM8941 WLED block is used for backlight and should therefor
-> be in the backlight framework and not in the LED framework. This moves
-> the driver and adapts to the backlight api instead.
->
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-> ---
->   .../devicetree/bindings/leds/leds-pm8941-wled.txt  |  5 +-
->   drivers/leds/Kconfig                               |  8 ---
->   drivers/leds/Makefile                              |  1 -
->   drivers/video/backlight/Kconfig                    |  8 +++
->   drivers/video/backlight/Makefile                   |  1 +
->   .../backlight/pm8941-wled.c}                       | 59 ++++++++++------------
->   6 files changed, 36 insertions(+), 46 deletions(-)
->   rename drivers/{leds/leds-pm8941-wled.c => video/backlight/pm8941-wled.c} (90%)
+> On 16 Jul 2015, at 9:52 AM, Linus Walleij <linus.walleij@linaro.org> =
+wrote:
+>=20
+> On Thu, Jul 2, 2015 at 9:05 AM, Michael van der Westhuizen
+> <michael@smart-africa.com> wrote:
+>=20
+>> In my case, I have quite a lot of vendor-supplied code that needs th=
+e numbers to
+>> be stable and backward compatible.  This quickly devolves into a dis=
+cussion of
+>> GPIOs in sysfs as an ABI, which is not a discussion I want to have :=
+)
+>=20
+> That is impossible to avoid.
+>=20
+> What you're saying is you just want to drill a hole in the boat and n=
+ot
+> have a discussion whether the boat is going to float after this or
+> not.
 
-Acked-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+Not at all.  I was just noting that this patch will touch on this topic=
+, and it=E2=80=99s not a
+topic that I would weigh in on as my opinions are irrelevant in this di=
+scussion.
 
--- 
-Best Regards,
-Jacek Anaszewski
+No incendiary topic intended :-)
+
+Michael
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
