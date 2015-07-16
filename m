@@ -1,67 +1,181 @@
-From: "R, Vignesh" <vigneshr@ti.com>
-Subject: Re: [PATCH v2 1/5] ARM: OMAP2+: DRA7: clockdomain: change l4per2_7xx_clkdm
- to SW_WKUP
-Date: Thu, 16 Jul 2015 20:56:54 +0530
-Message-ID: <55A7CD3E.3030803@ti.com>
-References: <1433332284-10766-1-git-send-email-vigneshr@ti.com> <1433332284-10766-2-git-send-email-vigneshr@ti.com> <alpine.DEB.2.02.1507151955330.32764@utopia.booyaka.com> <alpine.DEB.2.02.1507152020240.32764@utopia.booyaka.com>
+From: Cyrille Pitchen <cyrille.pitchen@atmel.com>
+Subject: [PATCH 3/7] mtd: spi-nor: allow to tune the number of dummy cycles
+Date: Thu, 16 Jul 2015 17:27:50 +0200
+Message-ID: <f6a401a01c555f428b4d8da1cb30e69f7c1377b2.1437059658.git.cyrille.pitchen@atmel.com>
+References: <cover.1437059658.git.cyrille.pitchen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.02.1507152020240.32764@utopia.booyaka.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Walmsley <paul@pwsan.com>
-Cc: Tero Kristo <t-kristo@ti.com>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <cover.1437059658.git.cyrille.pitchen@atmel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: nicolas.ferre@atmel.com, broonie@kernel.org, linux-spi@vger.kernel.org, dwmw2@infradead.org, computersforpeace@gmail.com, zajec5@gmail.com, beanhuo@micron.com, juhosg@openwrt.org, marex@denx.de, shijie.huang@intel.com, ben@decadent.org.uk
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-mtd@lists.infradead.org, galak@codeaurora.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+The number of dummy cycles used during Fast Read commands can be reduced
+to improve transfer performances. Each manufacturer has a dedicated set of
+registers to provide the memory with the exact number of dummy cycles it
+should expect. Both the memory and the (Q)SPI controller must agree on
+this number of dummy cycles.
 
-On 07/16/2015 01:57 AM, Paul Walmsley wrote:
-> On Wed, 15 Jul 2015, Paul Walmsley wrote:
-> 
->> On Wed, 3 Jun 2015, Vignesh R wrote:
->>
->>> Legacy IPs like PWMSS, present under l4per2_7xx_clkdm, cannot support
->>> smart-idle when its clock domain is in HW_AUTO on DRA7 SoCs. Hence,
->>> program clock domain to SW_WKUP.
->>>
->>> Signed-off-by: Vignesh R <vigneshr@ti.com>
->>> ---
->>>  arch/arm/mach-omap2/clockdomains7xx_data.c | 2 +-
->>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/arch/arm/mach-omap2/clockdomains7xx_data.c b/arch/arm/mach-omap2/clockdomains7xx_data.c
->>> index 57d5df0c1fbd..7581e036bda6 100644
->>> --- a/arch/arm/mach-omap2/clockdomains7xx_data.c
->>> +++ b/arch/arm/mach-omap2/clockdomains7xx_data.c
->>> @@ -331,7 +331,7 @@ static struct clockdomain l4per2_7xx_clkdm = {
->>>  	.dep_bit	  = DRA7XX_L4PER2_STATDEP_SHIFT,
->>>  	.wkdep_srcs	  = l4per2_wkup_sleep_deps,
->>>  	.sleepdep_srcs	  = l4per2_wkup_sleep_deps,
->>> -	.flags		  = CLKDM_CAN_HWSUP_SWSUP,
->>> +	.flags		  = CLKDM_CAN_SWSUP,
->>>  };
->>>  
->>>  static struct clockdomain mpu0_7xx_clkdm = {
->>
->> Thanks, queued for v4.2-rc fixes.  Note that I cannot test this, since I 
->> don't have a DRA7xx board.
-> 
-> You know, upon further thought, this doesn't make sense.  If the bug
-> is with the PWMSS IP block specifically, why not just set 
-> HWMOD_SWSUP_SIDLE on all the IP blocks where the hardware folks didn't 
-> implement hardware smart-idle?  At least that way, if those legacy IP 
-> blocks aren't in use, the clockdomain can still enter hardware-supervised 
-> idle?
+The number of dummy cycles can be found into the memory datasheet and
+mostly depends on the SPI clock frequency, the Fast Read op code and the
+Single/Dual Data Rate mode.
 
-According to hardware folks, HW_AUTO (for clockdomain) and
-HWMOD_SWSUP_SIDLE (PWMSS in NO-IDLE) for PWMSS *is not* a good
-combination. If clockdomain is in HW_AUTO and PWMSS is put in NO-IDLE,
-then IDLEST of PWMSSx_CLKCTRL reads "stuck in wakeup/ sleep transition"
-which is not a consistent state (this is because of problems with PWM
-IP). Hence, it is recommended to program the clock domain to SW_WKUP and
-leave the PWMSS idlemode as smart-idle.
+Probing JEDEC Serial Flash Discoverable Parameters (SFDP) tables would
+only provide the driver with a high enough number of dummy cycles for each
+Fast Read command to be used for all clock frequencies: this solution
+would not be optimized.
 
+Signed-off-by: Cyrille Pitchen <cyrille.pitchen@atmel.com>
+---
+ drivers/mtd/spi-nor/spi-nor.c | 97 ++++++++++++++++++++++++++++++++++---------
+ include/linux/mtd/spi-nor.h   |  2 +
+ 2 files changed, 80 insertions(+), 19 deletions(-)
+
+diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+index 93627d4e6be8..5df6e4712a9e 100644
+--- a/drivers/mtd/spi-nor/spi-nor.c
++++ b/drivers/mtd/spi-nor/spi-nor.c
+@@ -119,24 +119,6 @@ static int read_cr(struct spi_nor *nor)
+ }
+ 
+ /*
+- * Dummy Cycle calculation for different type of read.
+- * It can be used to support more commands with
+- * different dummy cycle requirements.
+- */
+-static inline int spi_nor_read_dummy_cycles(struct spi_nor *nor)
+-{
+-	switch (nor->flash_read) {
+-	case SPI_NOR_FAST:
+-	case SPI_NOR_DUAL:
+-	case SPI_NOR_QUAD:
+-		return 8;
+-	case SPI_NOR_NORMAL:
+-		return 0;
+-	}
+-	return 0;
+-}
+-
+-/*
+  * Write status register 1 byte
+  * Returns negative if error occurred.
+  */
+@@ -1007,6 +989,81 @@ static int set_quad_mode(struct spi_nor *nor, struct flash_info *info)
+ 	}
+ }
+ 
++static int micron_set_dummy_cycles(struct spi_nor *nor)
++{
++	int ret;
++	u8 val, mask;
++
++	/* read the Volatile Configuration Register (VCR) */
++	ret = nor->read_reg(nor, SPINOR_OP_RD_VCR, &val, 1);
++	if (ret < 0) {
++		dev_err(nor->dev, "error %d reading VCR\n", ret);
++		return ret;
++	}
++
++	write_enable(nor);
++
++	/* update the number of dummy into the VCR */
++	mask = GENMASK(7, 4);
++	val &= ~mask;
++	val |= (nor->read_dummy << 4) & mask;
++	ret = nor->write_reg(nor, SPINOR_OP_WR_VCR, &val, 1, 0);
++	if (ret < 0) {
++		dev_err(nor->dev, "error while writing VCR register\n");
++		return ret;
++	}
++
++	ret = spi_nor_wait_till_ready(nor);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
++/*
++ * Dummy Cycle calculation for different type of read.
++ * It can be used to support more commands with
++ * different dummy cycle requirements.
++ */
++static int spi_nor_read_dummy_cycles(struct spi_nor *nor,
++				     const struct flash_info *info)
++{
++	struct device_node *np = nor->dev->of_node;
++	u32 num_dummy_cycles;
++
++	if (np && !of_property_read_u32(np, "m25p,num-dummy-cycles",
++					&num_dummy_cycles)) {
++		nor->read_dummy = num_dummy_cycles;
++
++		/*
++		 * This switch block might be moved after the if...then...else
++		 * statement but it was not tested with all Spansion or Micron
++		 * memories.
++		 * Now the "m25p,num-dummy-cycles" property needs to be
++		 * explicitly set in the device tree so the switch statement is
++		 * executed. This should avoid unwanted side effects and keep
++		 * backward compatibility.
++		 */
++		switch (JEDEC_MFR(info)) {
++		case CFI_MFR_ST:
++			return micron_set_dummy_cycles(nor);
++		default:
++			break;
++		}
++	} else {
++		switch (nor->flash_read) {
++		case SPI_NOR_FAST:
++		case SPI_NOR_DUAL:
++		case SPI_NOR_QUAD:
++			nor->read_dummy = 8;
++		case SPI_NOR_NORMAL:
++			nor->read_dummy = 0;
++		}
++	}
++
++	return 0;
++}
++
+ static int spi_nor_check(struct spi_nor *nor)
+ {
+ 	if (!nor->dev || !nor->read || !nor->write ||
+@@ -1211,7 +1268,9 @@ int spi_nor_scan(struct spi_nor *nor, const char *name, enum read_mode mode)
+ 		nor->addr_width = 3;
+ 	}
+ 
+-	nor->read_dummy = spi_nor_read_dummy_cycles(nor);
++	ret = spi_nor_read_dummy_cycles(nor, info);
++	if (ret)
++		return ret;
+ 
+ 	dev_info(dev, "%s (%lld Kbytes)\n", id->name,
+ 			(long long)mtd->size >> 10);
+diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
+index 1bf6f11310ef..e03a4c4053d3 100644
+--- a/include/linux/mtd/spi-nor.h
++++ b/include/linux/mtd/spi-nor.h
+@@ -59,6 +59,8 @@
+ /* Used for Micron flashes only. */
+ #define SPINOR_OP_RD_EVCR      0x65    /* Read EVCR register */
+ #define SPINOR_OP_WD_EVCR      0x61    /* Write EVCR register */
++#define SPINOR_OP_RD_VCR	0x85	/* Read VCR register */
++#define SPINOR_OP_WR_VCR	0x81	/* Write VCR register */
+ 
+ /* Status Register bits. */
+ #define SR_WIP			1	/* Write in progress */
 -- 
-Regards
-Vignesh
+1.8.2.2
