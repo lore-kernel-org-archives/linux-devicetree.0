@@ -1,103 +1,264 @@
-From: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 2/2] arm/smmu: Make use of of_parse_phandle_with_var_args
-Date: Thu, 16 Jul 2015 10:30:44 +0200
-Message-ID: <1437035444-13867-3-git-send-email-joro@8bytes.org>
-References: <1437035444-13867-1-git-send-email-joro@8bytes.org>
+From: Teresa Remmet <t.remmet@phytec.de>
+Subject: [PATCH 2/2] ARM: dts: Add phyBOARD-WEGA-AM335x rdk
+Date: Thu, 16 Jul 2015 10:30:49 +0200
+Message-ID: <1437035449-26956-2-git-send-email-t.remmet@phytec.de>
+References: <1437035449-26956-1-git-send-email-t.remmet@phytec.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1437035444-13867-1-git-send-email-joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Joerg Roedel <jroedel-l3A5Bk7waGM@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1437035449-26956-1-git-send-email-t.remmet@phytec.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Joerg Roedel <jroedel-l3A5Bk7waGM@public.gmane.org>
+phyBOARD-WEGA-AM335x represents a direct soldered
+combination of a phyCORE-AM335x SoM and carrier board.
 
-The function of_parse_phandle_with_args() can only handle 16
-args, but there are systems that require more (25 in my
-case). So use the newly introduced function
-of_parse_phandle_with_var_args() instead.
+Different kind of SoM options can be connected to
+the wega carrier board. So we created a separate
+wega dtsi file. The final dts contains the actual
+SoM on the carrier board.
 
-Signed-off-by: Joerg Roedel <jroedel-l3A5Bk7waGM@public.gmane.org>
+WEGA carrier board features:
+* ETH phy on carrier board: 1x MII
+* 1x CAN
+* 2x UART
+* USB0 (device)
+* USB1 (host)
+* mSD slot
+
+Signed-off-by: Teresa Remmet <t.remmet@phytec.de>
 ---
- drivers/iommu/arm-smmu.c | 23 ++++++++++++++++-------
- 1 file changed, 16 insertions(+), 7 deletions(-)
+ .../devicetree/bindings/arm/omap/omap.txt          |   3 +
+ arch/arm/boot/dts/Makefile                         |   3 +-
+ arch/arm/boot/dts/am335x-wega-rdk.dts              |  22 +++
+ arch/arm/boot/dts/am335x-wega.dtsi                 | 151 +++++++++++++++++++++
+ 4 files changed, 178 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/am335x-wega-rdk.dts
+ create mode 100644 arch/arm/boot/dts/am335x-wega.dtsi
 
-diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-index 4cd0c29..1fe7f35 100644
---- a/drivers/iommu/arm-smmu.c
-+++ b/drivers/iommu/arm-smmu.c
-@@ -47,7 +47,7 @@
- #include "io-pgtable.h"
+diff --git a/Documentation/devicetree/bindings/arm/omap/omap.txt b/Documentation/devicetree/bindings/arm/omap/omap.txt
+index 4f6a82c..9f4e513 100644
+--- a/Documentation/devicetree/bindings/arm/omap/omap.txt
++++ b/Documentation/devicetree/bindings/arm/omap/omap.txt
+@@ -135,6 +135,9 @@ Boards:
+ - AM335X OrionLXm : Substation Automation Platform
+   compatible = "novatech,am335x-lxm", "ti,am33xx"
  
- /* Maximum number of stream IDs assigned to a single device */
--#define MAX_MASTER_STREAMIDS		MAX_PHANDLE_ARGS
-+#define MAX_MASTER_STREAMIDS		128
- 
- /* Maximum number of context banks per SMMU */
- #define ARM_SMMU_MAX_CBS		128
-@@ -1698,7 +1698,7 @@ static int arm_smmu_device_dt_probe(struct platform_device *pdev)
- 	struct arm_smmu_device *smmu;
- 	struct device *dev = &pdev->dev;
- 	struct rb_node *node;
--	struct of_phandle_args masterspec;
-+	struct of_phandle_args *masterspec;
- 	int num_irqs, i, err;
- 
- 	smmu = devm_kzalloc(dev, sizeof(*smmu), GFP_KERNEL);
-@@ -1757,15 +1757,19 @@ static int arm_smmu_device_dt_probe(struct platform_device *pdev)
- 	if (err)
- 		return err;
- 
-+	masterspec = of_alloc_phandle_args(MAX_MASTER_STREAMIDS);
-+	if (!masterspec)
-+		return -ENOMEM;
++- AM335X phyBOARD-WEGA: Single Board Computer dev kit
++  compatible = "phytec,am335x-wega", "phytec,am335x-phycore-som", "ti,am33xx"
 +
- 	i = 0;
- 	smmu->masters = RB_ROOT;
--	while (!of_parse_phandle_with_args(dev->of_node, "mmu-masters",
--					   "#stream-id-cells", i,
--					   &masterspec)) {
--		err = register_smmu_master(smmu, dev, &masterspec);
-+	while (!of_parse_phandle_with_var_args(dev->of_node, "mmu-masters",
-+					   "#stream-id-cells", i, masterspec,
-+					   MAX_MASTER_STREAMIDS)) {
-+		err = register_smmu_master(smmu, dev, masterspec);
- 		if (err) {
- 			dev_err(dev, "failed to add master %s\n",
--				masterspec.np->name);
-+				masterspec->np->name);
- 			goto out_put_masters;
- 		}
+ - OMAP5 EVM : Evaluation Module
+   compatible = "ti,omap5-evm", "ti,omap5"
  
-@@ -1797,6 +1801,8 @@ static int arm_smmu_device_dt_probe(struct platform_device *pdev)
- 		}
- 	}
- 
-+	of_free_phandle_args(masterspec);
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 246473a..b6393df 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -438,7 +438,8 @@ dtb-$(CONFIG_SOC_AM33XX) += \
+ 	am335x-nano.dtb \
+ 	am335x-pepper.dtb \
+ 	am335x-lxm.dtb \
+-	am335x-chiliboard.dtb
++	am335x-chiliboard.dtb \
++	am335x-wega-rdk.dtb
+ dtb-$(CONFIG_ARCH_OMAP4) += \
+ 	omap4-duovero-parlor.dtb \
+ 	omap4-panda.dtb \
+diff --git a/arch/arm/boot/dts/am335x-wega-rdk.dts b/arch/arm/boot/dts/am335x-wega-rdk.dts
+new file mode 100644
+index 0000000..6431b7d
+--- /dev/null
++++ b/arch/arm/boot/dts/am335x-wega-rdk.dts
+@@ -0,0 +1,22 @@
++/*
++ * Copyright (C) 2015 Phytec Messtechnik GmbH
++ * Author: Teresa Remmet <t.remmet@phytec.de>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
 +
- 	INIT_LIST_HEAD(&smmu->list);
- 	spin_lock(&arm_smmu_devices_lock);
- 	list_add(&smmu->list, &arm_smmu_devices);
-@@ -1810,6 +1816,9 @@ out_free_irqs:
- 		free_irq(smmu->irqs[i], smmu);
- 
- out_put_masters:
++/dts-v1/;
 +
-+	of_free_phandle_args(masterspec);
++#include "am335x-phycore-som.dtsi"
++#include "am335x-wega.dtsi"
 +
- 	for (node = rb_first(&smmu->masters); node; node = rb_next(node)) {
- 		struct arm_smmu_master *master
- 			= container_of(node, struct arm_smmu_master, node);
++/* SoM */
++&i2c_eeprom {
++	status = "okay";
++};
++
++&i2c_rtc {
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/am335x-wega.dtsi b/arch/arm/boot/dts/am335x-wega.dtsi
+new file mode 100644
+index 0000000..5e541bd
+--- /dev/null
++++ b/arch/arm/boot/dts/am335x-wega.dtsi
+@@ -0,0 +1,151 @@
++/*
++ * Copyright (C) 2015 Phytec Messtechnik GmbH
++ * Author: Teresa Remmet <t.remmet@phytec.de>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++/ {
++	model = "Phytec AM335x phyBOARD-WEGA";
++	compatible = "phytec,am335x-wega", "phytec,am335x-phycore-som", "ti,am33xx";
++
++};
++
++/* CAN Busses */
++&am33xx_pinmux {
++	dcan1_pins: pinmux_dcan1 {
++		pinctrl-single,pins = <
++			0x168 (PIN_OUTPUT_PULLUP | MUX_MODE2) /* uart0_ctsn.d_can1_tx */
++			0x16c (PIN_INPUT_PULLUP | MUX_MODE2) /* uart0_rtsn.d_can1_rx */
++		>;
++	};
++};
++
++&dcan1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&dcan1_pins>;
++	status = "okay";
++};
++
++/* Ethernet */
++&am33xx_pinmux {
++	ethernet1_pins: pinmux_ethernet1 {
++		pinctrl-single,pins = <
++			0x40 (PIN_OUTPUT | MUX_MODE1)		/* gpmc_a0.mii2_txen */
++			0x44 (PIN_INPUT_PULLDOWN | MUX_MODE1)	/* gpmc_a1.mii2_rxdv */
++			0x48 (PIN_OUTPUT | MUX_MODE1)		/* gpmc_a2.mii2_txd3 */
++			0x4c (PIN_OUTPUT | MUX_MODE1)		/* gpmc_a3.mii2_txd2 */
++			0x50 (PIN_OUTPUT | MUX_MODE1)		/* gpmc_a4.mii2_txd1 */
++			0x54 (PIN_OUTPUT | MUX_MODE1)		/* gpmc_a5.mii2_txd0 */
++			0x58 (PIN_INPUT_PULLDOWN | MUX_MODE1)	/* gpmc_a6.mii2_txclk */
++			0x5c (PIN_INPUT_PULLDOWN | MUX_MODE1)	/* gpmc_a7.mii2_rxclk */
++			0x60 (PIN_INPUT_PULLDOWN | MUX_MODE1)	/* gpmc_a8.mii2_rxd3 */
++			0x64 (PIN_INPUT_PULLDOWN | MUX_MODE1)	/* gpmc_a9.mii2_rxd2 */
++			0x68 (PIN_INPUT_PULLDOWN | MUX_MODE1)	/* gpmc_a10.mii2_rxd1 */
++			0x6c (PIN_INPUT_PULLDOWN | MUX_MODE1)	/* gpmc_a11.mii2_rxd0 */
++			0x74 (PIN_INPUT_PULLDOWN | MUX_MODE1)	/* gpmc_wpn.mii2_rxerr */
++			0x78 (PIN_INPUT_PULLDOWN | MUX_MODE1)	/* gpmc_ben1.mii2_col */
++		>;
++	};
++};
++
++&cpsw_emac1 {
++	phy_id = <&davinci_mdio>, <1>;
++	phy-mode = "mii";
++	dual_emac_res_vlan = <2>;
++};
++
++&mac {
++	slaves = <2>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&ethernet0_pins &ethernet1_pins>;
++	dual_emac = <1>;
++};
++
++/* MMC */
++&am33xx_pinmux {
++	mmc1_pins: pinmux_mmc1 {
++		pinctrl-single,pins = <
++			0x0F0 (PIN_INPUT_PULLUP | MUX_MODE0)	/* mmc0_dat3.mmc0_dat3 */
++			0x0F4 (PIN_INPUT_PULLUP | MUX_MODE0)	/* mmc0_dat2.mmc0_dat2 */
++			0x0F8 (PIN_INPUT_PULLUP | MUX_MODE0)	/* mmc0_dat1.mmc0_dat1 */
++			0x0FC (PIN_INPUT_PULLUP | MUX_MODE0)	/* mmc0_dat0.mmc0_dat0 */
++			0x100 (PIN_INPUT_PULLUP | MUX_MODE0)	/* mmc0_clk.mmc0_clk */
++			0x104 (PIN_INPUT_PULLUP | MUX_MODE0)	/* mmc0_cmd.mmc0_cmd */
++			0x160 (PIN_INPUT_PULLUP | MUX_MODE7)	/* spi0_cs1.mmc0_sdcd */
++		>;
++	};
++};
++
++&mmc1 {
++	vmmc-supply = <&vmmc_reg>;
++	bus-width = <4>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc1_pins>;
++	cd-gpios = <&gpio0 6 GPIO_ACTIVE_HIGH>;
++	status = "okay";
++};
++
++/* UARTs */
++&am33xx_pinmux {
++	uart0_pins: pinmux_uart0 {
++		pinctrl-single,pins = <
++			0x170 (PIN_INPUT_PULLUP | MUX_MODE0)    /* uart0_rxd.uart0_rxd */
++			0x174 (PIN_OUTPUT_PULLDOWN | MUX_MODE0) /* uart0_txd.uart0_txd */
++		>;
++	};
++
++	uart1_pins: pinmux_uart1_pins {
++		pinctrl-single,pins = <
++			0x180 (PIN_INPUT_PULLUP | MUX_MODE0)	/* uart1_rxd.uart1_rxd */
++			0x184 (PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* uart1_txd.uart1_txd */
++			0x178 (PIN_INPUT | MUX_MODE0)		/* uart1_ctsn.uart1_ctsn */
++			0x17c (PIN_OUTPUT_PULLDOWN | MUX_MODE0)		/* uart1_rtsn.uart1_rtsn */
++		>;
++	};
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_pins>;
++	status = "okay";
++};
++
++&uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart1_pins>;
++	status = "okay";
++};
++
++/* USB */
++&cppi41dma {
++	status = "okay";
++};
++
++&usb_ctrl_mod {
++	status = "okay";
++};
++
++&usb {
++	status = "okay";
++};
++
++&usb0 {
++	dr_mode = "peripheral";
++	status = "okay";
++};
++
++&usb0_phy {
++	status = "okay";
++};
++
++&usb1 {
++	dr_mode = "host";
++	status = "okay";
++};
++
++&usb1_phy {
++	status = "okay";
++};
 -- 
 1.9.1
