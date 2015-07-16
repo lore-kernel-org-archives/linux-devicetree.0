@@ -1,60 +1,53 @@
-From: Michael van der Westhuizen <michael@smart-africa.com>
-Subject: Re: [PATCH 1/2] gpio: dwapb: Use human understandable gpio numbering.
-Date: Thu, 16 Jul 2015 10:18:38 +0200
-Message-ID: <C83A636F-4C5C-4C11-A3CA-B4C4624B5375@smart-africa.com>
-References: <cover.1435777856.git.rcochran@linutronix.de> <d6b5ce85a17164970d454583560e07f7aed7b8ca.1435777856.git.rcochran@linutronix.de> <267A46E7-C5C5-4696-90CC-D44F4130B3EF@smart-africa.com> <20150702142058.GA9349@localhost.localdomain> <CACRpkdb_3B8749X-p_XEPGvZPEQ56-gMdLBcPrgjXkqWCiz1PQ@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2102\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdb_3B8749X-p_XEPGvZPEQ56-gMdLBcPrgjXkqWCiz1PQ@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Richard Cochran <richardcochran@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Alexandre Courbot <gnurou@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Alan Tull <atull@altera.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Dinh Nguyen <dinguyen@altera.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v3 1/3] leds: netxbig: add device tree binding
+Date: Thu, 16 Jul 2015 10:25:37 +0200
+Message-ID: <CACRpkdZvbgZWjCOPsPeojBpsPjt+WF_rgQWG_biEqphuErR1dQ@mail.gmail.com>
+References: <1434639590-27389-1-git-send-email-simon.guinot@sequanux.org>
+	<1434639590-27389-2-git-send-email-simon.guinot@sequanux.org>
+	<55894D0A.8000306@samsung.com>
+	<20150623211711.GF4853@kw.sim.vm.gnt>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <20150623211711.GF4853@kw.sim.vm.gnt>
+Sender: linux-leds-owner@vger.kernel.org
+To: Simon Guinot <simon.guinot@sequanux.org>
+Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Dan Carpenter <dan.carpenter@oracle.com>, Vincent Donnefort <vdonnefort@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Jun 23, 2015 at 11:17 PM, Simon Guinot
+<simon.guinot@sequanux.org> wrote:
+> On Tue, Jun 23, 2015 at 02:11:54PM +0200, Jacek Anaszewski wrote:
 
-> On 16 Jul 2015, at 9:57 AM, Linus Walleij <linus.walleij@linaro.org> =
-wrote:
->=20
-> On Thu, Jul 2, 2015 at 4:20 PM, Richard Cochran
-> <richardcochran@gmail.com> wrote:
->> On Thu, Jul 02, 2015 at 08:05:26AM +0100, Michael van der Westhuizen=
- wrote:
->=20
->> Anyhow, the whole point is, when the data sheet says that the SoC ha=
-s
->> GPIO0 to GPION, then those numbers should be exposed to user space.
->=20
-> The gpio_chip has this:
->=20
-> struct gpio_chip {
->        const char              *label;
->        struct device           *dev;
-> (...)
->        const char              *const *names;
-> (...)
->=20
-> If you want to help the users, provide string names for all the GPIO =
-lines
-> and suggest them to do code in userspace that use these names instead
-> of GPIO numbers.
->=20
-> Also the string names "gpio0", "gpio1" etc are much better than just =
-using
-> the Linux-specific numbers.
->=20
-> So what about making a patch to drivers/gpio/gpio-dwapb.c that adds t=
-he
-> .names property to its GPIO chip?
+>> >+Binding for the GPIO extension bus found on some LaCie/Seagate boards
+>> >+(Example: 2Big/5Big Network v2, 2Big NAS).
+>> >+
+>> >+Required properties:
+>> >+- compatible: "lacie,netxbig-gpio-ext".
+>> >+- addr-gpios: GPIOs representing the address register.
+>> >+- data-gpios: GPIOs representing the data register.
+>> >+- enable-gpio: GPIO used to enable the new configuration (address, data).
+(...)
+>> >+Example:
+>> >+
+>> >+netxbig_gpio_ext: netxbig-gpio-ext {
+>> >+    compatible = "lacie,netxbig-gpio-ext";
+>> >+
+>> >+    addr-gpios = <&gpio1 15 GPIO_ACTIVE_HIGH
+>> >+                  &gpio1 16 GPIO_ACTIVE_HIGH
+>> >+                  &gpio1 17 GPIO_ACTIVE_HIGH>;
+>> >+    data-gpios = <&gpio1 12 GPIO_ACTIVE_HIGH
+>> >+                  &gpio1 13 GPIO_ACTIVE_HIGH
+>> >+                  &gpio1 14 GPIO_ACTIVE_HIGH>;
+(..)
+>> >+    enable-gpio = <&gpio0 29 GPIO_ACTIVE_HIGH>;
+>> >+};
+>>
+>> This needs gpio maintainer ack. Adding Linus and Alexandre.
 
-That would meet my needs.  I=E2=80=99ll start putting something togethe=
-r.
+Looks pretty straight-forward, a lot of GPIOs for LEDs, well such is life.
 
-Michael
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yours,
+Linus Walleij
