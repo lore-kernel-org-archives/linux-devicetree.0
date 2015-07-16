@@ -1,165 +1,133 @@
-From: Adrian Alonso <aalonso@freescale.com>
-Subject: [PATCH 1/4][v4] ARM: imx: imx7d-pinfunc: add gpio pad iomuxc settings
-Date: Thu, 16 Jul 2015 15:34:44 -0500
-Message-ID: <1437078887-2524-1-git-send-email-aalonso@freescale.com>
+From: Alonso Adrian <aalonso@freescale.com>
+Subject: RE: [PATCH][v3] ARM: imx: pinctrl-imx: imx7d: add support for iomuxc
+ lpsr
+Date: Thu, 16 Jul 2015 20:39:33 +0000
+Message-ID: <BN3PR03MB15095AD84AD5738B142F6F8CA8990@BN3PR03MB1509.namprd03.prod.outlook.com>
+References: <1436295725-19011-1-git-send-email-aalonso@freescale.com>
+	<20150715072307.GM4119@tiger>
+	<BN3PR03MB1509DFB6A1513A23C48476CFA89A0@BN3PR03MB1509.namprd03.prod.outlook.com>
+	<20150716155034.GN4119@tiger>
+ <CAHrpEqQv4uzQ7+EnFV7rwnhAzaSnEfwoo+_SFRsvMh-nR3PdBw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, shawn.guo@linaro.org, shawnguo@kernel.org, linus.walleij@linaro.org, lznuaa@gmail.com
-Cc: devicetree@vger.kernel.org, Frank.Li@freescale.com, nitin.garg@freescale.com, Anson.Huang@freescale.com, linux-gpio@vger.kernel.org, robh+dt@kernel.org, yibin.gong@freescale.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CAHrpEqQv4uzQ7+EnFV7rwnhAzaSnEfwoo+_SFRsvMh-nR3PdBw@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-gpio-owner@vger.kernel.org
+To: Zhi Li <lznuaa@gmail.com>, Shawn Guo <shawnguo@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Li Frank <Frank.Li@freescale.com>, Nitin Garg <nitin.garg@freescale.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, Huang Anson <Anson.Huang@freescale.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Yibin Gong <yibin.gong@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-* Add iMX7D SoC imx7d-pinfunc gpio pad settings
-  <mux_reg conf_reg input_reg mux_mode input_val>
-* iMX7D GPIO1_IO7 to GPIO1_IO0 encode the pad group id in the most
-  significant bits of input_val to avoid group id overlap bweeten
-  iomuxc and iomuxc-lpsr.
-
-Signed-off-by: Adrian Alonso <aalonso@freescale.com>
----
-- Version 2: Use input_val upper 16 bits to represent pad group id
-- Version 3: Resend
-- Version 4: Resend
-
- arch/arm/boot/dts/imx7d-pinfunc.h | 116 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 116 insertions(+)
-
-diff --git a/arch/arm/boot/dts/imx7d-pinfunc.h b/arch/arm/boot/dts/imx7d-pinfunc.h
-index a8d8149..9460d5c 100644
---- a/arch/arm/boot/dts/imx7d-pinfunc.h
-+++ b/arch/arm/boot/dts/imx7d-pinfunc.h
-@@ -15,6 +15,122 @@
-  * <mux_reg conf_reg input_reg mux_mode input_val>
-  */
- 
-+#define MX7D_PAD_GPIO1_IO00__GPIO1_IO0				  0x0000 0x0030 0x0000 0x0 0x009B0000
-+#define MX7D_PAD_GPIO1_IO00__PWM4_OUT				  0x0000 0x0030 0x0000 0x1 0x009B0000
-+#define MX7D_PAD_GPIO1_IO00__WDOD1_WDOG_ANY			  0x0000 0x0030 0x0000 0x2 0x009B0000
-+#define MX7D_PAD_GPIO1_IO00__WDOD1_WDOG_B			  0x0000 0x0030 0x0000 0x3 0x009B0000
-+#define MX7D_PAD_GPIO1_IO00__WDOD1_WDOG__RST_B_DEB		  0x0000 0x0030 0x0000 0x4 0x009B0000
-+#define MX7D_PAD_GPIO1_IO01__GPIO1_IO1				  0x0004 0x0034 0x0000 0x0 0x009C0000
-+#define MX7D_PAD_GPIO1_IO01__PWM1_OUT				  0x0004 0x0034 0x0000 0x1 0x009C0000
-+#define MX7D_PAD_GPIO1_IO01__CCM_ENET_REF_CLK3			  0x0004 0x0034 0x0000 0x2 0x009C0000
-+#define MX7D_PAD_GPIO1_IO01__SAI1_MCLK				  0x0004 0x0034 0x0000 0x3 0x009C0000
-+#define MX7D_PAD_GPIO1_IO01__ANATOP_24M_OUT			  0x0004 0x0034 0x0000 0x4 0x009C0000
-+#define MX7D_PAD_GPIO1_IO01__OBSERVE0_OUT			  0x0004 0x0034 0x0000 0x6 0x009C0000
-+#define MX7D_PAD_GPIO1_IO02__GPIO1_IO2				  0x0008 0x0038 0x0000 0x0 0x009D0000
-+#define MX7D_PAD_GPIO1_IO02__PWM2_OUT				  0x0008 0x0038 0x0000 0x1 0x009D0000
-+#define MX7D_PAD_GPIO1_IO02__CCM_ENET_REF_CLK1			  0x0008 0x0038 0x0564 0x2 0x009D0003
-+#define MX7D_PAD_GPIO1_IO02__SAI2_MCLK				  0x0008 0x0038 0x0000 0x3 0x009D0000
-+#define MX7D_PAD_GPIO1_IO02__CCM_CLKO1				  0x0008 0x0038 0x0000 0x5 0x009D0000
-+#define MX7D_PAD_GPIO1_IO02__OBSERVE1_OUT			  0x0008 0x0038 0x0000 0x6 0x009D0000
-+#define MX7D_PAD_GPIO1_IO02__USB_OTG1_ID			  0x0008 0x0038 0x0734 0x7 0x009D0003
-+#define MX7D_PAD_GPIO1_IO03__GPIO1_IO3				  0x000C 0x003C 0x0000 0x0 0x009E0000
-+#define MX7D_PAD_GPIO1_IO03__PWM3_OUT				  0x000C 0x003C 0x0000 0x1 0x009E0000
-+#define MX7D_PAD_GPIO1_IO03__CCM_ENET_REF_CLK2			  0x000C 0x003C 0x0570 0x2 0x009E0003
-+#define MX7D_PAD_GPIO1_IO03__SAI3_MCLK				  0x000C 0x003C 0x0000 0x3 0x009E0000
-+#define MX7D_PAD_GPIO1_IO03__CCM_CLKO2				  0x000C 0x003C 0x0000 0x5 0x009E0000
-+#define MX7D_PAD_GPIO1_IO03__OBSERVE2_OUT			  0x000C 0x003C 0x0000 0x6 0x009E0000
-+#define MX7D_PAD_GPIO1_IO03__USB_OTG2_ID			  0x000C 0x003C 0x0730 0x7 0x009E0003
-+#define MX7D_PAD_GPIO1_IO04__GPIO1_IO4				  0x0010 0x0040 0x0000 0x0 0x009F0000
-+#define MX7D_PAD_GPIO1_IO04__USB_OTG1_OC			  0x0010 0x0040 0x072C 0x1 0x009F0001
-+#define MX7D_PAD_GPIO1_IO04__FLEXTIMER1_CH4			  0x0010 0x0040 0x0594 0x2 0x009F0001
-+#define MX7D_PAD_GPIO1_IO04__UART5_CTS_B			  0x0010 0x0040 0x0710 0x3 0x009F0004
-+#define MX7D_PAD_GPIO1_IO04__I2C1_SCL				  0x0010 0x0040 0x05D4 0x4 0x009F0002
-+#define MX7D_PAD_GPIO1_IO04__OBSERVE3_OUT			  0x0010 0x0040 0x0000 0x6 0x009F0000
-+#define MX7D_PAD_GPIO1_IO05__GPIO1_IO5				  0x0014 0x0044 0x0000 0x0 0x00A00000
-+#define MX7D_PAD_GPIO1_IO05__USB_OTG1_PWR			  0x0014 0x0044 0x0000 0x1 0x00A00000
-+#define MX7D_PAD_GPIO1_IO05__FLEXTIMER1_CH5			  0x0014 0x0044 0x0598 0x2 0x00A00001
-+#define MX7D_PAD_GPIO1_IO05__UART5_RTS_B			  0x0014 0x0044 0x0710 0x3 0x00A00005
-+#define MX7D_PAD_GPIO1_IO05__I2C1_SDA				  0x0014 0x0044 0x05D8 0x4 0x00A00002
-+#define MX7D_PAD_GPIO1_IO05__OBSERVE4_OUT			  0x0014 0x0044 0x0000 0x6 0x00A00000
-+#define MX7D_PAD_GPIO1_IO06__GPIO1_IO6				  0x0018 0x0048 0x0000 0x0 0x00A10000
-+#define MX7D_PAD_GPIO1_IO06__USB_OTG2_OC			  0x0018 0x0048 0x0728 0x1 0x00A10001
-+#define MX7D_PAD_GPIO1_IO06__FLEXTIMER1_CH6			  0x0018 0x0048 0x059C 0x2 0x00A10001
-+#define MX7D_PAD_GPIO1_IO06__UART5_RX_DATA			  0x0018 0x0048 0x0714 0x3 0x00A10004
-+#define MX7D_PAD_GPIO1_IO06__I2C2_SCL				  0x0018 0x0048 0x05DC 0x4 0x00A10002
-+#define MX7D_PAD_GPIO1_IO06__CCM_WAIT				  0x0018 0x0048 0x0000 0x5 0x00A10000
-+#define MX7D_PAD_GPIO1_IO06__KPP_ROW4				  0x0018 0x0048 0x0624 0x6 0x00A10001
-+#define MX7D_PAD_GPIO1_IO07__GPIO1_IO7				  0x001C 0x004C 0x0000 0x0 0x00A20000
-+#define MX7D_PAD_GPIO1_IO07__USB_OTG2_PWR			  0x001C 0x004C 0x0000 0x1 0x00A20000
-+#define MX7D_PAD_GPIO1_IO07__FLEXTIMER1_CH7			  0x001C 0x004C 0x05A0 0x2 0x00A20001
-+#define MX7D_PAD_GPIO1_IO07__UART5_TX_DATA			  0x001C 0x004C 0x0714 0x3 0x00A20005
-+#define MX7D_PAD_GPIO1_IO07__I2C2_SDA				  0x001C 0x004C 0x05E0 0x4 0x00A20002
-+#define MX7D_PAD_GPIO1_IO07__CCM_STOP				  0x001C 0x004C 0x0000 0x5 0x00A20000
-+#define MX7D_PAD_GPIO1_IO07__KPP_COL4				  0x001C 0x004C 0x0604 0x6 0x00A20001
-+#define MX7D_PAD_GPIO1_IO08__GPIO1_IO8                            0x0014 0x026C 0x0000 0x0 0x0
-+#define MX7D_PAD_GPIO1_IO08__SD1_VSELECT                          0x0014 0x026C 0x0000 0x1 0x0
-+#define MX7D_PAD_GPIO1_IO08__WDOG1_WDOG_B                         0x0014 0x026C 0x0000 0x2 0x0
-+#define MX7D_PAD_GPIO1_IO08__UART3_DCE_RX                         0x0014 0x026C 0x0704 0x3 0x0
-+#define MX7D_PAD_GPIO1_IO08__UART3_DTE_TX                         0x0014 0x026C 0x0000 0x3 0x0
-+#define MX7D_PAD_GPIO1_IO08__I2C3_SCL                             0x0014 0x026C 0x05E4 0x4 0x0
-+#define MX7D_PAD_GPIO1_IO08__KPP_COL5                             0x0014 0x026C 0x0608 0x6 0x0
-+#define MX7D_PAD_GPIO1_IO08__PWM1_OUT                             0x0014 0x026C 0x0000 0x7 0x0
-+#define MX7D_PAD_GPIO1_IO09__GPIO1_IO9                            0x0018 0x0270 0x0000 0x0 0x0
-+#define MX7D_PAD_GPIO1_IO09__SD1_LCTL                             0x0018 0x0270 0x0000 0x1 0x0
-+#define MX7D_PAD_GPIO1_IO09__CCM_ENET_REF_CLK3                    0x0018 0x0270 0x0000 0x2 0x0
-+#define MX7D_PAD_GPIO1_IO09__UART3_DCE_TX                         0x0018 0x0270 0x0000 0x3 0x0
-+#define MX7D_PAD_GPIO1_IO09__UART3_DTE_RX                         0x0018 0x0270 0x0704 0x3 0x1
-+#define MX7D_PAD_GPIO1_IO09__I2C3_SDA                             0x0018 0x0270 0x05E8 0x4 0x0
-+#define MX7D_PAD_GPIO1_IO09__CCM_PMIC_READY                       0x0018 0x0270 0x04F4 0x5 0x0
-+#define MX7D_PAD_GPIO1_IO09__KPP_ROW5                             0x0018 0x0270 0x0628 0x6 0x0
-+#define MX7D_PAD_GPIO1_IO09__PWM2_OUT                             0x0018 0x0270 0x0000 0x7 0x0
-+#define MX7D_PAD_GPIO1_IO10__GPIO1_IO10                           0x001C 0x0274 0x0000 0x0 0x0
-+#define MX7D_PAD_GPIO1_IO10__SD2_LCTL                             0x001C 0x0274 0x0000 0x1 0x0
-+#define MX7D_PAD_GPIO1_IO10__ENET1_MDIO                           0x001C 0x0274 0x0568 0x2 0x0
-+#define MX7D_PAD_GPIO1_IO10__UART3_DCE_RTS                        0x001C 0x0274 0x0700 0x3 0x0
-+#define MX7D_PAD_GPIO1_IO10__UART3_DTE_CTS                        0x001C 0x0274 0x0000 0x3 0x0
-+#define MX7D_PAD_GPIO1_IO10__I2C4_SCL                             0x001C 0x0274 0x05EC 0x4 0x0
-+#define MX7D_PAD_GPIO1_IO10__FLEXTIMER1_PHA                       0x001C 0x0274 0x05A4 0x5 0x0
-+#define MX7D_PAD_GPIO1_IO10__KPP_COL6                             0x001C 0x0274 0x060C 0x6 0x0
-+#define MX7D_PAD_GPIO1_IO10__PWM3_OUT                             0x001C 0x0274 0x0000 0x7 0x0
-+#define MX7D_PAD_GPIO1_IO11__GPIO1_IO11                           0x0020 0x0278 0x0000 0x0 0x0
-+#define MX7D_PAD_GPIO1_IO11__SD3_LCTL                             0x0020 0x0278 0x0000 0x1 0x0
-+#define MX7D_PAD_GPIO1_IO11__ENET1_MDC                            0x0020 0x0278 0x0000 0x2 0x0
-+#define MX7D_PAD_GPIO1_IO11__UART3_DCE_CTS                        0x0020 0x0278 0x0000 0x3 0x0
-+#define MX7D_PAD_GPIO1_IO11__UART3_DTE_RTS                        0x0020 0x0278 0x0700 0x3 0x1
-+#define MX7D_PAD_GPIO1_IO11__I2C4_SDA                             0x0020 0x0278 0x05F0 0x4 0x0
-+#define MX7D_PAD_GPIO1_IO11__FLEXTIMER1_PHB                       0x0020 0x0278 0x05A8 0x5 0x0
-+#define MX7D_PAD_GPIO1_IO11__KPP_ROW6                             0x0020 0x0278 0x062C 0x6 0x0
-+#define MX7D_PAD_GPIO1_IO11__PWM4_OUT                             0x0020 0x0278 0x0000 0x7 0x0
-+#define MX7D_PAD_GPIO1_IO12__GPIO1_IO12                           0x0024 0x027C 0x0000 0x0 0x0
-+#define MX7D_PAD_GPIO1_IO12__SD2_VSELECT                          0x0024 0x027C 0x0000 0x1 0x0
-+#define MX7D_PAD_GPIO1_IO12__CCM_ENET_REF_CLK1                    0x0024 0x027C 0x0564 0x2 0x0
-+#define MX7D_PAD_GPIO1_IO12__FLEXCAN1_RX                          0x0024 0x027C 0x04DC 0x3 0x0
-+#define MX7D_PAD_GPIO1_IO12__CM4_NMI                              0x0024 0x027C 0x0000 0x4 0x0
-+#define MX7D_PAD_GPIO1_IO12__CCM_EXT_CLK1                         0x0024 0x027C 0x04E4 0x5 0x0
-+#define MX7D_PAD_GPIO1_IO12__SNVS_VIO_5                           0x0024 0x027C 0x0000 0x6 0x0
-+#define MX7D_PAD_GPIO1_IO12__USB_OTG1_ID                          0x0024 0x027C 0x0734 0x7 0x0
-+#define MX7D_PAD_GPIO1_IO13__GPIO1_IO13                           0x0028 0x0280 0x0000 0x0 0x0
-+#define MX7D_PAD_GPIO1_IO13__SD3_VSELECT                          0x0028 0x0280 0x0000 0x1 0x0
-+#define MX7D_PAD_GPIO1_IO13__CCM_ENET_REF_CLK2                    0x0028 0x0280 0x0570 0x2 0x0
-+#define MX7D_PAD_GPIO1_IO13__FLEXCAN1_TX                          0x0028 0x0280 0x0000 0x3 0x0
-+#define MX7D_PAD_GPIO1_IO13__CCM_PMIC_READY                       0x0028 0x0280 0x04F4 0x4 0x1
-+#define MX7D_PAD_GPIO1_IO13__CCM_EXT_CLK2                         0x0028 0x0280 0x04E8 0x5 0x0
-+#define MX7D_PAD_GPIO1_IO13__SNVS_VIO_5_CTL                       0x0028 0x0280 0x0000 0x6 0x0
-+#define MX7D_PAD_GPIO1_IO13__USB_OTG2_ID                          0x0028 0x0280 0x0730 0x7 0x0
-+#define MX7D_PAD_GPIO1_IO14__GPIO1_IO14                           0x002C 0x0284 0x0000 0x0 0x0
-+#define MX7D_PAD_GPIO1_IO14__SD3_CD_B                             0x002C 0x0284 0x0738 0x1 0x0
-+#define MX7D_PAD_GPIO1_IO14__ENET2_MDIO                           0x002C 0x0284 0x0574 0x2 0x0
-+#define MX7D_PAD_GPIO1_IO14__FLEXCAN2_RX                          0x002C 0x0284 0x04E0 0x3 0x0
-+#define MX7D_PAD_GPIO1_IO14__WDOG3_WDOG_B                         0x002C 0x0284 0x0000 0x4 0x0
-+#define MX7D_PAD_GPIO1_IO14__CCM_EXT_CLK3                         0x002C 0x0284 0x04EC 0x5 0x0
-+#define MX7D_PAD_GPIO1_IO14__SDMA_EXT_EVENT0                      0x002C 0x0284 0x06D8 0x6 0x0
-+#define MX7D_PAD_GPIO1_IO15__GPIO1_IO15                           0x0030 0x0288 0x0000 0x0 0x0
-+#define MX7D_PAD_GPIO1_IO15__SD3_WP                               0x0030 0x0288 0x073C 0x1 0x0
-+#define MX7D_PAD_GPIO1_IO15__ENET2_MDC                            0x0030 0x0288 0x0000 0x2 0x0
-+#define MX7D_PAD_GPIO1_IO15__FLEXCAN2_TX                          0x0030 0x0288 0x0000 0x3 0x0
-+#define MX7D_PAD_GPIO1_IO15__WDOG4_WDOG_B                         0x0030 0x0288 0x0000 0x4 0x0
-+#define MX7D_PAD_GPIO1_IO15__CCM_EXT_CLK4                         0x0030 0x0288 0x04F0 0x5 0x0
-+#define MX7D_PAD_GPIO1_IO15__SDMA_EXT_EVENT1                      0x0030 0x0288 0x06DC 0x6 0x0
- #define MX7D_PAD_EPDC_DATA00__EPDC_DATA0                          0x0034 0x02A4 0x0000 0x0 0x0
- #define MX7D_PAD_EPDC_DATA00__SIM1_PORT2_TRXD                     0x0034 0x02A4 0x0000 0x1 0x0
- #define MX7D_PAD_EPDC_DATA00__QSPI_A_DATA0                        0x0034 0x02A4 0x0000 0x2 0x0
--- 
-2.1.4
+SGkgQWxsLA0KDQpJIHdpbGwgc2VudCBhIG5ldyBwYXRjaCBzZXJpZXMgaW5jbHVkaW5nIGRvY3Vt
+ZW50YXRpb24gZm9yIHBhZCBncm91cCBpZCBlbmNvZGluZyBpbg0KRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL3BpbmN0cmwvZnNsLGlteDdkLXBpbmN0cmwudHh0DQoNClRoYW5rcyBm
+b3IgeW91ciBjb21tZW50cyA6KQ0KLQ0KQWRyaWFuDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdl
+LS0tLS0NCj4gRnJvbTogWmhpIExpIFttYWlsdG86bHpudWFhQGdtYWlsLmNvbV0NCj4gU2VudDog
+VGh1cnNkYXksIEp1bHkgMTYsIDIwMTUgMTE6MjIgQU0NCj4gVG86IFNoYXduIEd1bw0KPiBDYzog
+QWxvbnNvIExhemNhbm8gQWRyaWFuLUIzODAxODsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7
+IExpIEZyYW5rLQ0KPiBCMjA1OTY7IEdhcmcgTml0aW4tQjM3MTczOyBsaW51cy53YWxsZWlqQGxp
+bmFyby5vcmc7IGxpbnV4LQ0KPiBncGlvQHZnZXIua2VybmVsLm9yZzsgcm9iaCtkdEBrZXJuZWwu
+b3JnOyBzaGF3bi5ndW9AbGluYXJvLm9yZzsgSHVhbmcNCj4gWW9uZ2NhaS1CMjA3ODg7IGxpbnV4
+LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgR29uZyBZaWJpbi1CMzgzNDMNCj4gU3Vi
+amVjdDogUmU6IFtQQVRDSF1bdjNdIEFSTTogaW14OiBwaW5jdHJsLWlteDogaW14N2Q6IGFkZCBz
+dXBwb3J0IGZvciBpb211eGMNCj4gbHBzcg0KPiANCj4gT24gVGh1LCBKdWwgMTYsIDIwMTUgYXQg
+MTA6NTAgQU0sIFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz4gd3JvdGU6DQo+ID4gQWRy
+aWFuLA0KPiA+DQo+ID4gUGxlYXNlIGNvbmZpZ3VyZSB5b3VyIGVtYWlsIGNsaWVudCB0byB1c2Ug
+Ym90dG9tLXBvc3RpbmcgcmF0aGVyIHRoYW4NCj4gPiB0b3AtcG9zdGluZy4NCj4gPg0KPiA+IE9u
+IFdlZCwgSnVsIDE1LCAyMDE1IGF0IDAzOjU1OjU5UE0gKzAwMDAsIEFsb25zbyBBZHJpYW4gd3Jv
+dGU6DQo+ID4+IFtBZHJpYW5dIElPTVVYQyBhbmQgSU9NVVhDLUxQU1IgYXJlIGluIGRpZmZlcmVu
+dCBiYXNlIGFkZHJlc3M7IGVhY2gNCj4gY29udHJvbGxlciBwcm92aWRlcyBTV19QQURfQ1RMICAo
+Q09ORl9SRUcpIGFuZCBTV19NVVhfQ1RMIChNVVhfUkVHKQ0KPiBidXQgb25seSBJT01VWEMgcHJv
+dmlkZXMgU0VMRUNUX0lOUFVUIHJlZ2lzdGVycyBmb3IgcGFkIGRhaXN5IGNoYWluDQo+IGNvbmZp
+Z3VyYXRpb24sIHNvIHBhZHMgZnJvbSBJT01VWEMtTFBTUiB0aGF0IG5lZWQgZGFpc3kgY2hhaW4g
+c2V0dGluZ3MgbmVlZA0KPiB0byBhY2Nlc3MgdGhlIElPTVVYQyByZWdpc3RlciBzcGFjZSBhZGRy
+ZXNzIHRvIGFjY2VzcyBTRUxFQ1RfSU5QVVQuDQo+ID4+DQo+ID4NCj4gPiBUaGFua3MgZm9yIHRo
+ZSBleHBsYW5hdGlvbi4NCj4gPg0KPiA+PiBbQWRyaWFuXSBPbmUgZGlzYWR2YW50YWdlIHRoYXQg
+d2UgZm91bmQgaWYgd2UgY3JlYXRlZCB0d28gZHJpdmVyIGluc3RhbmNlcw0KPiBmb3IgSU9NVVhD
+IGFuZCBJT01VWEMtTFBTUiBjb250cm9sbGVycyBpcyB0aGF0IGluIHRoZSBkZXZpY2UgdHJlZSBt
+YWNoaW5lDQo+IGZpbGVzICJlbmQtdXNlcnMiIGNvdWxkIGJlIGNyZWF0aW5nIHBpbmN0cmwgbm9k
+ZXMgbWl4aW5nIHBhZHMgZnJvbSBkaWZmZXJlbnQNCj4gSU9NVVhDIGNvbnRyb2xsZXJzIHJlc3Vs
+dGluZyB0aGF0IHBhZCB0aGF0IGRvZXNuJ3QgYmVsb25nIHRvIHRoYXQgZG9tYWluDQo+IGNvbnRy
+b2xsZXIgaXQgd2lsbCBub3QgYmUgY29uZmlndXJlZCBwcm9wZXJseS4NCj4gPj4NCj4gPj4gRm9y
+IGV4YW1wbGUgYSB2YWxpZCBwYWQgY29uZmlndXJhdGlvbiBmb3IgSTJDMSBjb3VsZCB1c2UgcGFk
+cyBhcyBzaG93bg0KPiBiZWxvdzoNCj4gPj4gJmlvbXV4YyB7DQo+ID4+ICAgICAgIHBpbmN0cmxf
+aTJjMV8xOiBpMmMxZ3JwLTEgew0KPiA+PiAgICAgICAgICAgICAgIGZzbCxwaW5zID0gPA0KPiA+
+PiAgICAgICAgICAgICAgICAgICAgICAgTVg3RF9QQURfR1BJTzFfSU8wNF9fSTJDMV9TQ0wgICAv
+KiBJT01VWEMtTFBTUiBkb21haW4NCj4gKi8NCj4gPj4gICAgICAgICAgICAgICAgICAgICAgIE1Y
+N0RfUEFEX0kyQzFfU0RBX19JMkMxX1NEQSAgICAgLyogSU9NVVhDIGRvbWFpbiAqLw0KPiA+PiAg
+ICAgICAgICAgICAgID47DQo+ID4+ICAgICAgIH07DQo+ID4+IH07DQo+ID4+DQo+ID4+IEJ5IGV4
+dGVuZGluZyBwaW5jdHJsLWlteCB0byBzdXBwb3J0IGJvdGggY29udHJvbGxlcnMgdGhlIGFib3Zl
+DQo+ID4+IGNvbmZpZ3VyYXRpb24gaXMgc3VwcG9ydGVkLCBPdGhlcndpc2UgdXNpbmcgdHdvIGRy
+aXZlciBpbnN0YW5jZXMgImVuZC0NCj4gdXNlcnMiIHdpbGwgbmVlZCB0byBkbyBzb21ldGhpbmcg
+bGlrZToNCj4gPj4NCj4gPj4gJmlvbXV4YyB7DQo+ID4+ICAgICAgIHBpbmN0cmxfaTJjMV8xOiBp
+MmMxZ3JwLTEgew0KPiA+PiAgICAgICAgICAgICAgIGZzbCxwaW5zID0gPA0KPiA+PiAgICAgICAg
+ICAgICAgICAgICAgICAgTVg3RF9QQURfSTJDMV9TREFfX0kyQzFfU0RBICAgICAvKiBJT01VWEMg
+ZG9tYWluICovDQo+ID4+ICAgICAgICAgICAgICAgPjsNCj4gPj4gICAgICAgfTsNCj4gPj4gfTsN
+Cj4gPj4NCj4gPj4gJmlvbXV4Y19scHNyIHsNCj4gPj4gICAgICAgcGluY3RybF9pMmMxXzE6IGky
+YzFncnAtMSB7DQo+ID4+ICAgICAgICAgICAgICAgZnNsLHBpbnMgPSA8DQo+ID4+ICAgICAgICAg
+ICAgICAgICAgICAgICBNWDdEX1BBRF9HUElPMV9JTzA0X19JMkMxX1NDTCAgIC8qIElPTVVYQy1M
+UFNSIGRvbWFpbg0KPiAqLw0KPiA+PiAgICAgICAgICAgICAgID47DQo+ID4+ICAgICAgIH07DQo+
+ID4+IH07DQo+ID4+DQo+ID4+IEFuZCB0aGlzIGlzIHNvbWV0aGluZyB0aGF0IHdlIHdpbGwgbGlr
+ZSB0byBhdm9pZCBzbyAiZW5kLXVzZXIiIGRvbid0IGhhdmUgdG8NCj4gd29ycnkgYWJvdXQgYW5k
+IGNvbmZpZ3VyZSBwYWRzIGFzIHRoZXkgYXJlIHVzZWQgdG8uDQo+ID4+DQo+ID4NCj4gPiBUaGlz
+IGlzIGV4YWN0bHkgaG93IGhhcmR3YXJlIGlzIGRlc2lnbmVkLCBhbmQgaGF2aW5nIGRldmljZSB0
+cmVlDQo+ID4gZGVzY3JpYmUgaG93IGhhcmR3YXJlIGlzIGxhaWQgb3V0IGlzIHRoZSByaWdodCB0
+aGluZyB0byBkby4gIEluIHRoYXQNCj4gPiBjYXNlLCB3aGVuIHBlb3BsZSBjaGVjayB0aGUgZGV2
+aWNlIHRyZWUgc291cmNlIHdpdGggYSBpLk1YN0QgUmVmZXJlbmNlDQo+ID4gTWFudWFsIG9uIGhh
+bmRzLCB0aGV5IGNhbiBlYXNpbHkgdW5kZXJzdGFuZCBob3cgaGFyZHdhcmUgaXMNCj4gPiByZXBy
+ZXNlbnRlZCBpbiBkZXZpY2UgdHJlZS4NCj4gPg0KPiA+IEFsc28sIHlvdXIgZXhhbXBsZSB3aXRo
+IHBpbnMgZm9yIGEgc2luZ2xlIGRldmljZSBhY3Jvc3MgSU9NVVhDIGFuZA0KPiA+IElPTVVYQy1M
+UFNSIHNob3VsZCBiZSB0aGUgcmFyZSBjYXNlIGV4Y2VwdCBHUElPIHBpbnMuDQo+IA0KPiBBbHRo
+b3VnaCBjcm9zcyBJT01VWCBhbmQgSU9NVVhDLUxQU1IgaXMgcmFyZSwgIGl0IHdpbGwgYmUgaGVh
+ZGFjaGUgaWYgdGhlcmUNCj4gYXJlIG9uZSBib2FyZHMuDQo+IA0KPiBTb21lIFNEIGNhcmQsIEVO
+RVQgaGF2ZSByZXNldFx3cFxjZCBwaW4uDQo+IA0KPiBwaW5jdHJsX3VzZGhjMTogdXNkaGMxZ3Jw
+IHsNCj4gICAgICAgICAgICAgICAgICAgICAgICAgZnNsLHBpbnMgPSA8DQo+ICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgTVg3RF9QQURfU0QxX0NNRF9fU0QxX0NNRCAgICAgICAgICAg
+ICAgIDB4NTkNCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBNWDdEX1BBRF9TRDFf
+Q0xLX19TRDFfQ0xLICAgICAgICAgICAgICAgMHgxOQ0KPiAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIE1YN0RfUEFEX1NEMV9EQVRBMF9fU0QxX0RBVEEwICAgICAgICAgICAweDU5DQo+
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgTVg3RF9QQURfU0QxX0RBVEExX19TRDFf
+REFUQTEgICAgICAgICAgIDB4NTkNCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBN
+WDdEX1BBRF9TRDFfREFUQTJfX1NEMV9EQVRBMiAgICAgICAgICAgMHg1OQ0KPiAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIE1YN0RfUEFEX1NEMV9EQVRBM19fU0QxX0RBVEEzICAgICAg
+ICAgICAweDU5DQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgTVg3RF9QQURfU0Qx
+X0NEX0JfX0dQSU81X0lPMA0KPiAgMHg1OSAvKiBDRCAqLw0KPiAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIE1YN0RfUEFEX1NEMV9XUF9fR1BJTzVfSU8xDQo+ICAweDU5IC8qIFdQICov
+DQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgTVg3RF9QQURfU0QxX1JFU0VUX0Jf
+X0dQSU81X0lPMg0KPiAgMHg1OSAvKiB2bW1jICovDQo+ICAgICAgICAgICAgICAgICAgICAgICAg
+ID47DQo+IA0KPiBDdXN0b21lciBtYXkgY2hvb3NlIGJlbG93IHBpbiB0byBJT01VWC1sUFNSLg0K
+PiANCj4gTVg3RF9QQURfU0QxX0NEX0JfX0dQSU81X0lPMA0KPiBNWDdEX1BBRF9TRDFfV1BfX0dQ
+SU81X0lPMQ0KPiBNWDdEX1BBRF9TRDFfUkVTRVRfQl9fR1BJTzVfSU8yDQo+IA0KPiBGRUMgaGF2
+ZSBQaHkgUmVzZXQgR1BJTywgd2hpY2ggcG9zc2libHkgY2hvb3NlIElPTVVYLWxQU1IuDQo+IA0K
+PiANCj4gDQo+ID4gRm9yIHlvdXIgSTJDMQ0KPiA+IGV4YW1wbGUsIGEgc2FuZSBoYXJkd2FyZSBk
+ZXNpZ24gd291bGQgY2hvc2Ugb25lIGdyb3VwIGFtb25nIHRoZQ0KPiA+IGZvbGxvd2luZyBpbnN0
+ZWFkIG9mIHRoZSBvbmUgeW91IHB1dCBhYm92ZS4NCj4gPg0KPiA+ICAgTVg3RF9QQURfSTJDMV9T
+Q0xfX0kyQzFfU0NMDQo+ID4gICBNWDdEX1BBRF9JMkMxX1NEQV9fSTJDMV9TREENCj4gPg0KPiA+
+ICAgTVg3RF9QQURfVUFSVDFfUlhfREFUQV9fSTJDMV9TQ0wNCj4gPiAgIE1YN0RfUEFEX1VBUlQx
+X1RYX0RBVEFfX0kyQzFfU0RBDQo+ID4NCj4gPiAgIE1YN0RfUEFEX0dQSU8xX0lPMDRfX0kyQzFf
+U0NMDQo+ID4gICBNWDdEX1BBRF9HUElPMV9JTzA1X19JMkMxX1NEQQ0KPiA+DQo+ID4gU28gdGhp
+cyBpcyBub3QgcmVhbGx5IGEgcHJvYmxlbSBmb3IgdXMgdG8gaW1wbGVtZW50IHR3byBJT01VWEMg
+aW5zdGFuY2VzLg0KPiA+IFRoZSBvbmx5IHByb2JsZW0gd2UgbmVlZCB0byBzb2x2ZSBpcyB0aGUg
+c2VsZWN0IGlucHV0IHJlZ2lzdGVyIGFjY2Vzcw0KPiA+IGZvciBJT01VWEMtTFBTUiBkcml2ZXIu
+ICBJIGhhdmUgc29tZSBpZGVhIGZvciB0aGF0LCBpLmUuIGhvbmVzdGx5DQo+ID4gcmVwcmVzZW50
+IGhvdyBoYXJkd2FyZSBpcyBsYWlkIG91dC4gIEkgd2lsbCBnaXZlIG1vcmUgZGV0YWlscyBvbiB0
+aGF0DQo+ID4gdG9tb3Jyb3cuDQo+IA0KPiBJdCBpcyB2ZXJ5IGVhc3kgdG8gbWFrZSBtaXN0YWtl
+Lg0KPiBBY2NvcmRpbmcgdG8gcGluIE5BTUUgbWFjcm8sIGl0IGlzIG5vdCBlYXN5IHRvIGRpc3Rp
+bmd1aXNoIGJldHdlZW4gSU9NVVggYW5kDQo+IElPTVVYLUxQU1IuDQo+IA0KPiBJbnRlcm5hbCBr
+ZXJuZWwgdHJlZSB1c2UgdHdvIHBpbmN0cmwgaW5zdGFuY2UuDQo+IA0KPiBJdCB3aWxsIGJlIHNp
+bXBsZSBpZiB3ZSB0aGluayBJT01VWCBhbmQgSU9NVVgtTFBTUiB0b2dldGhlciwgYW5kIG9uZSBt
+b2R1bGUNCj4gaGF2ZSB0d28gZ3JvdXAgcmVnaXN0ZXJzLg0KPiANCj4gYmVzdCByZWdhcmRzDQo+
+IEZyYW5rIExpDQo+IA0KPiA+DQo+ID4+IFtBZHJpYW5dIEZvciB0aGUgYXJ0aWZpY2lhbCBlbmNv
+ZGluZyBvZiBwYWQgZ3JvdXAgaWQncyBmb3INCj4gPj4gSU9NVVhDLUxQU1IsIEkgdGhpbmsgdGhl
+cmUgaXMgbm8gb3RoZXIgd2F5IHRvIGRvIGl0IChsaW1pdGVkDQo+ID4+IGltYWdpbmF0aW9uIGhl
+cmUgOlApOyBQYWQgZ3JvdXAgaWQncyBhcmUgZXh0cmFjdGVkIGZyb20gTVVYX1JFRyBvZmZzZXQN
+Cj4gYWRkcmVzcyAocGFkX2lkID0gbXV4X3JlZyAvIDQpIGJ1dCB3aGVuIGNvbWJpbmluZyBib3Ro
+IElPTVVYQyBhbmQNCj4gSU9NVVhDLUxQU1IgUGFkIGdyb3VwIElEJ3Mgb3ZlcmxhcCBzbyBlbmQg
+dXAgZW5jb2RpbmcgdGhlIHBhZF9pZCBmb3INCj4gSU9NVVhDLUxQU1IgdG8gcmVzb2x2ZSB0aGUg
+cHJvcGVyIHBhZCBncm91cCBJRC4NCj4gPg0KPiA+IE9uZSBiaWcgbWlzc2luZyBwaWVjZSBmcm9t
+IHlvdXIgcGF0Y2ggaXMgdGhlIHVwZGF0ZSB0byBiaW5kaW5ncw0KPiA+IGRvY3VtZW50DQo+ID4g
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BpbmN0cmwvZnNsLGlteC1waW5jdHJs
+LnR4dC4gIEhhdmUNCj4gPiB5b3UgdGhvdWdodCBhYm91dCBob3cgeW91IHdpbGwgZG9jdW1lbnQg
+YWxsIHRoZXNlIG1hZ2ljcyBhbmQgaGFja3MgeW91DQo+IGhhdmUgZG9uZSBoZXJlPw0KPiA+DQo+
+ID4gU2hhd24NCg==
