@@ -1,149 +1,98 @@
-From: Zhi Li <lznuaa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH][v3] ARM: imx: pinctrl-imx: imx7d: add support for iomuxc lpsr
-Date: Thu, 16 Jul 2015 11:22:27 -0500
-Message-ID: <CAHrpEqQv4uzQ7+EnFV7rwnhAzaSnEfwoo+_SFRsvMh-nR3PdBw@mail.gmail.com>
-References: <1436295725-19011-1-git-send-email-aalonso@freescale.com>
-	<20150715072307.GM4119@tiger>
-	<BN3PR03MB1509DFB6A1513A23C48476CFA89A0@BN3PR03MB1509.namprd03.prod.outlook.com>
-	<20150716155034.GN4119@tiger>
+From: YH Huang <yh.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v5 2/3] pwm: add MediaTek display PWM driver support
+Date: Fri, 17 Jul 2015 00:44:10 +0800
+Message-ID: <1437065050.11063.26.camel@mtksdaap41>
+References: <1436778294-47635-1-git-send-email-yh.huang@mediatek.com>
+	 <1436778294-47635-3-git-send-email-yh.huang@mediatek.com>
+	 <CAGS+omCx4mDAN+F315x+8FeCABcKDoMn1gm_nHzF6VXnF_xm8Q@mail.gmail.com>
+	 <1436975995.15774.27.camel@mtksdaap41>
+	 <1437025108.18175.13.camel@mtksdaap41>
+	 <CAGS+omB1FCX12-KvU7ODywseFKgsAbzNtqNyYZ+PqvO5ZeEn-A@mail.gmail.com>
+	 <1437031079.8107.13.camel@mtksdaap41>
+	 <CAGS+omAzPqDFzsJCiBV3=Zite2FS2no-P1F8EOSHu7w9LrN3cg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150716155034.GN4119@tiger>
+In-Reply-To: <CAGS+omAzPqDFzsJCiBV3=Zite2FS2no-P1F8EOSHu7w9LrN3cg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Alonso Adrian <aalonso-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Li Frank <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Nitin Garg <nitin.garg-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Huang Anson <Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Yibin Gong <yibin.gong-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, yh.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 16, 2015 at 10:50 AM, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> Adrian,
->
-> Please configure your email client to use bottom-posting rather than
-> top-posting.
->
-> On Wed, Jul 15, 2015 at 03:55:59PM +0000, Alonso Adrian wrote:
->> [Adrian] IOMUXC and IOMUXC-LPSR are in different base address; each controller provides SW_PAD_CTL  (CONF_REG) and SW_MUX_CTL (MUX_REG) but only IOMUXC provides SELECT_INPUT registers for pad daisy chain configuration, so pads from IOMUXC-LPSR that need daisy chain settings need to access the IOMUXC register space address to access SELECT_INPUT.
->>
->
-> Thanks for the explanation.
->
->> [Adrian] One disadvantage that we found if we created two driver instances for IOMUXC and IOMUXC-LPSR controllers is that in the device tree machine files "end-users" could be creating pinctrl nodes mixing pads from different IOMUXC controllers resulting that pad that doesn't belong to that domain controller it will not be configured properly.
->>
->> For example a valid pad configuration for I2C1 could use pads as shown below:
->> &iomuxc {
->>       pinctrl_i2c1_1: i2c1grp-1 {
->>               fsl,pins = <
->>                       MX7D_PAD_GPIO1_IO04__I2C1_SCL   /* IOMUXC-LPSR domain */
->>                       MX7D_PAD_I2C1_SDA__I2C1_SDA     /* IOMUXC domain */
->>               >;
->>       };
->> };
->>
->> By extending pinctrl-imx to support both controllers the above configuration is supported,
->> Otherwise using two driver instances "end-users" will need to do something like:
->>
->> &iomuxc {
->>       pinctrl_i2c1_1: i2c1grp-1 {
->>               fsl,pins = <
->>                       MX7D_PAD_I2C1_SDA__I2C1_SDA     /* IOMUXC domain */
->>               >;
->>       };
->> };
->>
->> &iomuxc_lpsr {
->>       pinctrl_i2c1_1: i2c1grp-1 {
->>               fsl,pins = <
->>                       MX7D_PAD_GPIO1_IO04__I2C1_SCL   /* IOMUXC-LPSR domain */
->>               >;
->>       };
->> };
->>
->> And this is something that we will like to avoid so "end-user" don't have to worry about and configure pads as they are used to.
->>
->
-> This is exactly how hardware is designed, and having device tree
-> describe how hardware is laid out is the right thing to do.  In that
-> case, when people check the device tree source with a i.MX7D Reference
-> Manual on hands, they can easily understand how hardware is represented
-> in device tree.
->
-> Also, your example with pins for a single device across IOMUXC and
-> IOMUXC-LPSR should be the rare case except GPIO pins.
+On Thu, 2015-07-16 at 23:21 +0800, Daniel Kurtz wrote:
+> On Thu, Jul 16, 2015 at 3:17 PM, YH Huang <yh.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> > On Thu, 2015-07-16 at 14:54 +0800, Daniel Kurtz wrote:
+> >> On Thu, Jul 16, 2015 at 1:38 PM, YH Huang <yh.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> >> > On Wed, 2015-07-15 at 23:59 +0800, YH Huang wrote:
+> >> >> On Mon, 2015-07-13 at 18:19 +0800, Daniel Kurtz wrote:
+> >> >> > On Mon, Jul 13, 2015 at 5:04 PM, YH Huang <yh.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> >> >> > > +#ifdef CONFIG_PM_SLEEP
+> >> >> > > +static int mtk_disp_pwm_suspend(struct device *dev)
+> >> >> > > +{
+> >> >> > > +       struct mtk_disp_pwm *mdp = dev_get_drvdata(dev);
+> >> >> > > +
+> >> >> > > +       clk_disable_unprepare(mdp->clk_main);
+> >> >> > > +       clk_disable_unprepare(mdp->clk_mm);
+> >> >> > > +
+> >> >> > > +       return 0;
+> >> >> > > +}
+> >> >> > > +
+> >> >> > > +static int mtk_disp_pwm_resume(struct device *dev)
+> >> >> > > +{
+> >> >> > > +       struct mtk_disp_pwm *mdp = dev_get_drvdata(dev);
+> >> >> > > +       int ret;
+> >> >> > > +
+> >> >> > > +       ret = clk_prepare_enable(mdp->clk_main);
+> >> >> > > +       if (ret < 0)
+> >> >> > > +               return ret;
+> >> >> > > +
+> >> >> > > +       ret = clk_prepare_enable(mdp->clk_mm);
+> >> >> > > +       if (ret < 0) {
+> >> >> > > +               clk_disable_unprepare(mdp->clk_main);
+> >> >> > > +               return ret;
+> >> >> > > +       }
+> >> >> > > +
+> >> >> >
+> >> >> > Don't you also have to restore the PWM rate and frequency?
+> >> >> >
+> >> >> > Is it possible to save power at runtime by leaving mdp->clk_mm enabled
+> >> >> > (to generate the PWM signal), but disable mdp->clk_main (clock
+> >> >> > required to access PWM registers)?
+> >> >>
+> >> >> The pwm-backlight driver will restore the data.
+> >> >>
+> >> >> After I try to disable anyone of the two clocks at runtime, the
+> >> >> backlight doesn't work well(no immediate update or losing backlight).
+> >> >> So we need to keep both clock enabled.
+> 
+> Do you mean you see backlight glitch because the clocks / backlight
+> were *already on* during the first config (Perhaps left on by the
+> bootloader)?
+> I don't know how to solve that problem.
+> Maybe Thierry does.
+> 
+> In any case, this is a minor issue; we really shouldn't hold up
+> landing the driver to optimize when the clocks are enabled/disabled
+> :-). I'm happy enough with what you have in this patch.
 
-Although cross IOMUX and IOMUXC-LPSR is rare,  it will be headache if there are
-one boards.
+Sorry for my terrible expression. Let me try again.
+1. We want to disable unnecessary clock at runtime. 
+But, I get backlight glitch when I disable clk_main or clk_mm in
+mtk_disp_pwm_config(). So both clocks are necessary and we don't disable
+them at runtime. 
 
-Some SD card, ENET have reset\wp\cd pin.
+2. Because pwm-backlight driver calls mtk_disp_pwm_config() before
+mtk_disp_pwm_enable(), we will lose the first config if clocks are
+enabled in mtk_disp_pwm_enable(). I prefer to enable clocks in probe
+function. Samsung did the same way in their pwm driver.
 
-pinctrl_usdhc1: usdhc1grp {
-                        fsl,pins = <
-                                MX7D_PAD_SD1_CMD__SD1_CMD               0x59
-                                MX7D_PAD_SD1_CLK__SD1_CLK               0x19
-                                MX7D_PAD_SD1_DATA0__SD1_DATA0           0x59
-                                MX7D_PAD_SD1_DATA1__SD1_DATA1           0x59
-                                MX7D_PAD_SD1_DATA2__SD1_DATA2           0x59
-                                MX7D_PAD_SD1_DATA3__SD1_DATA3           0x59
-                                MX7D_PAD_SD1_CD_B__GPIO5_IO0
- 0x59 /* CD */
-                                MX7D_PAD_SD1_WP__GPIO5_IO1
- 0x59 /* WP */
-                                MX7D_PAD_SD1_RESET_B__GPIO5_IO2
- 0x59 /* vmmc */
-                        >;
+Thanks for your kindly suggestions. I will update the patch soon.
 
-Customer may choose below pin to IOMUX-lPSR.
-
-MX7D_PAD_SD1_CD_B__GPIO5_IO0
-MX7D_PAD_SD1_WP__GPIO5_IO1
-MX7D_PAD_SD1_RESET_B__GPIO5_IO2
-
-FEC have Phy Reset GPIO, which possibly choose IOMUX-lPSR.
+Regards,
+YH Huang
 
 
-
-> For your I2C1
-> example, a sane hardware design would chose one group among the
-> following instead of the one you put above.
->
->   MX7D_PAD_I2C1_SCL__I2C1_SCL
->   MX7D_PAD_I2C1_SDA__I2C1_SDA
->
->   MX7D_PAD_UART1_RX_DATA__I2C1_SCL
->   MX7D_PAD_UART1_TX_DATA__I2C1_SDA
->
->   MX7D_PAD_GPIO1_IO04__I2C1_SCL
->   MX7D_PAD_GPIO1_IO05__I2C1_SDA
->
-> So this is not really a problem for us to implement two IOMUXC instances.
-> The only problem we need to solve is the select input register access
-> for IOMUXC-LPSR driver.  I have some idea for that, i.e. honestly
-> represent how hardware is laid out.  I will give more details on that
-> tomorrow.
-
-It is very easy to make mistake.
-According to pin NAME macro, it is not easy to distinguish between
-IOMUX and IOMUX-LPSR.
-
-Internal kernel tree use two pinctrl instance.
-
-It will be simple if we think IOMUX and IOMUX-LPSR together, and one
-module have two group registers.
-
-best regards
-Frank Li
-
->
->> [Adrian] For the artificial encoding of pad group id's for IOMUXC-LPSR, I think there is no other way to do it (limited imagination here :P);
->> Pad group id's are extracted from MUX_REG offset address (pad_id = mux_reg / 4) but when combining both IOMUXC and IOMUXC-LPSR
->> Pad group ID's overlap so end up encoding the pad_id for IOMUXC-LPSR to resolve the proper pad group ID.
->
-> One big missing piece from your patch is the update to bindings document
-> Documentation/devicetree/bindings/pinctrl/fsl,imx-pinctrl.txt.  Have you
-> thought about how you will document all these magics and hacks you have
-> done here?
->
-> Shawn
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
