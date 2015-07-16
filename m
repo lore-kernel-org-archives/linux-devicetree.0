@@ -1,52 +1,47 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 01/12] device: property: delay device-driver matches
-Date: Thu, 16 Jul 2015 21:23:12 +0100
-Message-ID: <20150716202312.GD11162@sirena.org.uk>
-References: <1435743667-11987-1-git-send-email-tomeu.vizoso@collabora.com>
- <1435743667-11987-2-git-send-email-tomeu.vizoso@collabora.com>
+From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+Subject: Re: [PATCH 2/2] drivercore: Fix unregistration path of platform devices
+Date: Thu, 16 Jul 2015 22:33:14 +0200
+Message-ID: <CAPybu_0dYgQ_vKnXhZyOf-m5Z7DOnRKD4bB91dWk41pepmqDDA@mail.gmail.com>
+References: <1433686811-12303-1-git-send-email-grant.likely@linaro.org>
+ <1433686811-12303-3-git-send-email-grant.likely@linaro.org>
+ <20150615164630.GC1583@katana> <CAPybu_0S2b+xo3UJKbgpu39rtPT2x89+nEZ_hahLXiGbcCmeEA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ec3vSN46Jxtc8xEl"
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1435743667-11987-2-git-send-email-tomeu.vizoso@collabora.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc: linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, alsa-devel@alsa-project.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAPybu_0S2b+xo3UJKbgpu39rtPT2x89+nEZ_hahLXiGbcCmeEA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
+ping?
 
---ec3vSN46Jxtc8xEl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Hello Grant, Hello Greg
 
-On Wed, Jul 01, 2015 at 11:40:56AM +0200, Tomeu Vizoso wrote:
+Is there any planned timeframe for applying this patch into someones tree?
 
-> Delay matches of platform devices until late_initcall, when we are sure
-> that all built-in drivers have been registered already. This is needed
-> to prevent deferred probes because of some dependencies' drivers not
-> having registered yet.
 
-I have to say I'm still not 100% clear that special casing platform
-devices makes sense here - I can see that platform devices are usually
-the first devices to instantiate but there are other kinds of devices
-and it's not obvious what the benefit of specifically picking out
-platform devices as opposed to just deferring all devices is.
+Thanks!
 
---ec3vSN46Jxtc8xEl
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+On Tue, Jun 23, 2015 at 7:12 PM, Ricardo Ribalda Delgado
+<ricardo.ribalda@gmail.com> wrote:
+> Hello
+>
+>> Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+>
+> This patch now have a bunch of tested-by and without it, the current
+> version of linux-next crash.
+>
+> Who will take it? Grant,  Greg? Please make sure to notify
+> linux-stable since at least 4.1
+>
+> Thanks!
+>
+>
+> --
+> Ricardo Ribalda
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
 
-iQEcBAEBCAAGBQJVqBKvAAoJECTWi3JdVIfQlTsH/RXV9XfaZAGK0pNr9p/kND/R
-uXvreuA2aWGY2yegWXN1tE6pZoLjM18lOibs3dQes0xY7JmZ3QgWwDq46ZdT8wCD
-mXlcO6E5d5QFKWa2bRcaXn02uROZmSH7X/XDk4hPVw1mh/sSxvYrj6Y0Ro0n/7Q6
-RRbg1kCfVPmuBJl10kMhwC9XalK5q2g4U2xC76edvSu2kRe2TXB/J89iq9LKg+Li
-LqQr20pwmwu6oIhI5YQPNa+bXNDEq5gdbq/j3hK5RRF9iXUbsuSdRDAQxTM8+5ri
-/qHqGpBhW3umrDgLMBfp36F+aWy+gk1rwUFBwOB5VyG426LWzgdc7AIGPwT7i+I=
-=OTlG
------END PGP SIGNATURE-----
 
---ec3vSN46Jxtc8xEl--
+-- 
+Ricardo Ribalda
