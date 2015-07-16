@@ -1,47 +1,43 @@
-From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-Subject: Re: [PATCH 2/2] drivercore: Fix unregistration path of platform devices
-Date: Thu, 16 Jul 2015 22:33:14 +0200
-Message-ID: <CAPybu_0dYgQ_vKnXhZyOf-m5Z7DOnRKD4bB91dWk41pepmqDDA@mail.gmail.com>
-References: <1433686811-12303-1-git-send-email-grant.likely@linaro.org>
- <1433686811-12303-3-git-send-email-grant.likely@linaro.org>
- <20150615164630.GC1583@katana> <CAPybu_0S2b+xo3UJKbgpu39rtPT2x89+nEZ_hahLXiGbcCmeEA@mail.gmail.com>
+From: Adrian Alonso <aalonso@freescale.com>
+Subject: [PATCH 2/4][v4] ARM: dts: imx: imx7d add iomuxc lpsr register base address
+Date: Thu, 16 Jul 2015 15:34:45 -0500
+Message-ID: <1437078887-2524-2-git-send-email-aalonso@freescale.com>
+References: <1437078887-2524-1-git-send-email-aalonso@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPybu_0S2b+xo3UJKbgpu39rtPT2x89+nEZ_hahLXiGbcCmeEA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1437078887-2524-1-git-send-email-aalonso@freescale.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, shawn.guo@linaro.org, shawnguo@kernel.org, linus.walleij@linaro.org, lznuaa@gmail.com
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, Anson.Huang@freescale.com, Frank.Li@freescale.com, yibin.gong@freescale.com, nitin.garg@freescale.com
 List-Id: devicetree@vger.kernel.org
 
-ping?
+* Add iomuxc lpsr register base address to extend
+  pinctrl-imx driver to support the iomux settings for pins
+  that support LPSR operation mode.
 
-Hello Grant, Hello Greg
+Signed-off-by: Adrian Alonso <aalonso@freescale.com>
+---
+- Version 2: Resend
+- Version 3: Resend
+- Version 4: Resend
 
-Is there any planned timeframe for applying this patch into someones tree?
+ arch/arm/boot/dts/imx7d.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
-Thanks!
-
-On Tue, Jun 23, 2015 at 7:12 PM, Ricardo Ribalda Delgado
-<ricardo.ribalda@gmail.com> wrote:
-> Hello
->
->> Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
->
-> This patch now have a bunch of tested-by and without it, the current
-> version of linux-next crash.
->
-> Who will take it? Grant,  Greg? Please make sure to notify
-> linux-stable since at least 4.1
->
-> Thanks!
->
->
-> --
-> Ricardo Ribalda
-
-
-
+diff --git a/arch/arm/boot/dts/imx7d.dtsi b/arch/arm/boot/dts/imx7d.dtsi
+index 9014b80..7edfa42 100644
+--- a/arch/arm/boot/dts/imx7d.dtsi
++++ b/arch/arm/boot/dts/imx7d.dtsi
+@@ -487,7 +487,7 @@
+ 
+ 			iomuxc: iomuxc@30330000 {
+ 				compatible = "fsl,imx7d-iomuxc";
+-				reg = <0x30330000 0x10000>;
++				reg = <0x30330000 0x10000>, <0x302c0000 0x10000>;
+ 			};
+ 
+ 			gpr: iomuxc-gpr@30340000 {
 -- 
-Ricardo Ribalda
+2.1.4
+
