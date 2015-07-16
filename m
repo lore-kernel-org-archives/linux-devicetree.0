@@ -1,99 +1,150 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH][v3] ARM: imx: pinctrl-imx: imx7d: add support for iomuxc
- lpsr
-Date: Thu, 16 Jul 2015 23:50:34 +0800
-Message-ID: <20150716155034.GN4119@tiger>
+From: Zhi Li <lznuaa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH][v3] ARM: imx: pinctrl-imx: imx7d: add support for iomuxc lpsr
+Date: Thu, 16 Jul 2015 11:22:27 -0500
+Message-ID: <CAHrpEqQv4uzQ7+EnFV7rwnhAzaSnEfwoo+_SFRsvMh-nR3PdBw@mail.gmail.com>
 References: <1436295725-19011-1-git-send-email-aalonso@freescale.com>
- <20150715072307.GM4119@tiger>
- <BN3PR03MB1509DFB6A1513A23C48476CFA89A0@BN3PR03MB1509.namprd03.prod.outlook.com>
+	<20150715072307.GM4119@tiger>
+	<BN3PR03MB1509DFB6A1513A23C48476CFA89A0@BN3PR03MB1509.namprd03.prod.outlook.com>
+	<20150716155034.GN4119@tiger>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <BN3PR03MB1509DFB6A1513A23C48476CFA89A0@BN3PR03MB1509.namprd03.prod.outlook.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Alonso Adrian <aalonso@freescale.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Li Frank <Frank.Li@freescale.com>, Nitin Garg <nitin.garg@freescale.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, Huang Anson <Anson.Huang@freescale.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Yibin Gong <yibin.gong@freescale.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150716155034.GN4119@tiger>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Alonso Adrian <aalonso-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Li Frank <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Nitin Garg <nitin.garg-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Huang Anson <Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Yibin Gong <yibin.gong-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Adrian,
+On Thu, Jul 16, 2015 at 10:50 AM, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> Adrian,
+>
+> Please configure your email client to use bottom-posting rather than
+> top-posting.
+>
+> On Wed, Jul 15, 2015 at 03:55:59PM +0000, Alonso Adrian wrote:
+>> [Adrian] IOMUXC and IOMUXC-LPSR are in different base address; each controller provides SW_PAD_CTL  (CONF_REG) and SW_MUX_CTL (MUX_REG) but only IOMUXC provides SELECT_INPUT registers for pad daisy chain configuration, so pads from IOMUXC-LPSR that need daisy chain settings need to access the IOMUXC register space address to access SELECT_INPUT.
+>>
+>
+> Thanks for the explanation.
+>
+>> [Adrian] One disadvantage that we found if we created two driver instances for IOMUXC and IOMUXC-LPSR controllers is that in the device tree machine files "end-users" could be creating pinctrl nodes mixing pads from different IOMUXC controllers resulting that pad that doesn't belong to that domain controller it will not be configured properly.
+>>
+>> For example a valid pad configuration for I2C1 could use pads as shown below:
+>> &iomuxc {
+>>       pinctrl_i2c1_1: i2c1grp-1 {
+>>               fsl,pins = <
+>>                       MX7D_PAD_GPIO1_IO04__I2C1_SCL   /* IOMUXC-LPSR domain */
+>>                       MX7D_PAD_I2C1_SDA__I2C1_SDA     /* IOMUXC domain */
+>>               >;
+>>       };
+>> };
+>>
+>> By extending pinctrl-imx to support both controllers the above configuration is supported,
+>> Otherwise using two driver instances "end-users" will need to do something like:
+>>
+>> &iomuxc {
+>>       pinctrl_i2c1_1: i2c1grp-1 {
+>>               fsl,pins = <
+>>                       MX7D_PAD_I2C1_SDA__I2C1_SDA     /* IOMUXC domain */
+>>               >;
+>>       };
+>> };
+>>
+>> &iomuxc_lpsr {
+>>       pinctrl_i2c1_1: i2c1grp-1 {
+>>               fsl,pins = <
+>>                       MX7D_PAD_GPIO1_IO04__I2C1_SCL   /* IOMUXC-LPSR domain */
+>>               >;
+>>       };
+>> };
+>>
+>> And this is something that we will like to avoid so "end-user" don't have to worry about and configure pads as they are used to.
+>>
+>
+> This is exactly how hardware is designed, and having device tree
+> describe how hardware is laid out is the right thing to do.  In that
+> case, when people check the device tree source with a i.MX7D Reference
+> Manual on hands, they can easily understand how hardware is represented
+> in device tree.
+>
+> Also, your example with pins for a single device across IOMUXC and
+> IOMUXC-LPSR should be the rare case except GPIO pins.
 
-Please configure your email client to use bottom-posting rather than
-top-posting.
+Although cross IOMUX and IOMUXC-LPSR is rare,  it will be headache if there are
+one boards.
 
-On Wed, Jul 15, 2015 at 03:55:59PM +0000, Alonso Adrian wrote:
-> [Adrian] IOMUXC and IOMUXC-LPSR are in different base address; each controller provides SW_PAD_CTL  (CONF_REG) and SW_MUX_CTL (MUX_REG) but only IOMUXC provides SELECT_INPUT registers for pad daisy chain configuration, so pads from IOMUXC-LPSR that need daisy chain settings need to access the IOMUXC register space address to access SELECT_INPUT.
-> 
+Some SD card, ENET have reset\wp\cd pin.
 
-Thanks for the explanation.
+pinctrl_usdhc1: usdhc1grp {
+                        fsl,pins = <
+                                MX7D_PAD_SD1_CMD__SD1_CMD               0x59
+                                MX7D_PAD_SD1_CLK__SD1_CLK               0x19
+                                MX7D_PAD_SD1_DATA0__SD1_DATA0           0x59
+                                MX7D_PAD_SD1_DATA1__SD1_DATA1           0x59
+                                MX7D_PAD_SD1_DATA2__SD1_DATA2           0x59
+                                MX7D_PAD_SD1_DATA3__SD1_DATA3           0x59
+                                MX7D_PAD_SD1_CD_B__GPIO5_IO0
+ 0x59 /* CD */
+                                MX7D_PAD_SD1_WP__GPIO5_IO1
+ 0x59 /* WP */
+                                MX7D_PAD_SD1_RESET_B__GPIO5_IO2
+ 0x59 /* vmmc */
+                        >;
 
-> [Adrian] One disadvantage that we found if we created two driver instances for IOMUXC and IOMUXC-LPSR controllers is that in the device tree machine files "end-users" could be creating pinctrl nodes mixing pads from different IOMUXC controllers resulting that pad that doesn't belong to that domain controller it will not be configured properly.
-> 
-> For example a valid pad configuration for I2C1 could use pads as shown below: 
-> &iomuxc {
-> 	pinctrl_i2c1_1: i2c1grp-1 {
-> 		fsl,pins = <
-> 			MX7D_PAD_GPIO1_IO04__I2C1_SCL  	/* IOMUXC-LPSR domain */
-> 			MX7D_PAD_I2C1_SDA__I2C1_SDA   	/* IOMUXC domain */
-> 		>;
-> 	};
-> };
-> 
-> By extending pinctrl-imx to support both controllers the above configuration is supported,
-> Otherwise using two driver instances "end-users" will need to do something like:
-> 
-> &iomuxc {
-> 	pinctrl_i2c1_1: i2c1grp-1 {
-> 		fsl,pins = <
-> 			MX7D_PAD_I2C1_SDA__I2C1_SDA   	/* IOMUXC domain */
-> 		>;
-> 	};
-> };
-> 
-> &iomuxc_lpsr {
-> 	pinctrl_i2c1_1: i2c1grp-1 {
-> 		fsl,pins = <
-> 			MX7D_PAD_GPIO1_IO04__I2C1_SCL  	/* IOMUXC-LPSR domain */
-> 		>;
-> 	};
-> };
-> 
-> And this is something that we will like to avoid so "end-user" don't have to worry about and configure pads as they are used to.
-> 
+Customer may choose below pin to IOMUX-lPSR.
 
-This is exactly how hardware is designed, and having device tree
-describe how hardware is laid out is the right thing to do.  In that
-case, when people check the device tree source with a i.MX7D Reference
-Manual on hands, they can easily understand how hardware is represented
-in device tree.
+MX7D_PAD_SD1_CD_B__GPIO5_IO0
+MX7D_PAD_SD1_WP__GPIO5_IO1
+MX7D_PAD_SD1_RESET_B__GPIO5_IO2
 
-Also, your example with pins for a single device across IOMUXC and
-IOMUXC-LPSR should be the rare case except GPIO pins.  For your I2C1
-example, a sane hardware design would chose one group among the
-following instead of the one you put above.
+FEC have Phy Reset GPIO, which possibly choose IOMUX-lPSR.
 
-  MX7D_PAD_I2C1_SCL__I2C1_SCL
-  MX7D_PAD_I2C1_SDA__I2C1_SDA
 
-  MX7D_PAD_UART1_RX_DATA__I2C1_SCL
-  MX7D_PAD_UART1_TX_DATA__I2C1_SDA
 
-  MX7D_PAD_GPIO1_IO04__I2C1_SCL
-  MX7D_PAD_GPIO1_IO05__I2C1_SDA
+> For your I2C1
+> example, a sane hardware design would chose one group among the
+> following instead of the one you put above.
+>
+>   MX7D_PAD_I2C1_SCL__I2C1_SCL
+>   MX7D_PAD_I2C1_SDA__I2C1_SDA
+>
+>   MX7D_PAD_UART1_RX_DATA__I2C1_SCL
+>   MX7D_PAD_UART1_TX_DATA__I2C1_SDA
+>
+>   MX7D_PAD_GPIO1_IO04__I2C1_SCL
+>   MX7D_PAD_GPIO1_IO05__I2C1_SDA
+>
+> So this is not really a problem for us to implement two IOMUXC instances.
+> The only problem we need to solve is the select input register access
+> for IOMUXC-LPSR driver.  I have some idea for that, i.e. honestly
+> represent how hardware is laid out.  I will give more details on that
+> tomorrow.
 
-So this is not really a problem for us to implement two IOMUXC instances.
-The only problem we need to solve is the select input register access
-for IOMUXC-LPSR driver.  I have some idea for that, i.e. honestly
-represent how hardware is laid out.  I will give more details on that
-tomorrow.
+It is very easy to make mistake.
+According to pin NAME macro, it is not easy to distinguish between
+IOMUX and IOMUX-LPSR.
 
-> [Adrian] For the artificial encoding of pad group id's for IOMUXC-LPSR, I think there is no other way to do it (limited imagination here :P);
-> Pad group id's are extracted from MUX_REG offset address (pad_id = mux_reg / 4) but when combining both IOMUXC and IOMUXC-LPSR
-> Pad group ID's overlap so end up encoding the pad_id for IOMUXC-LPSR to resolve the proper pad group ID.
+Internal kernel tree use two pinctrl instance.
 
-One big missing piece from your patch is the update to bindings document
-Documentation/devicetree/bindings/pinctrl/fsl,imx-pinctrl.txt.  Have you
-thought about how you will document all these magics and hacks you have
-done here?
+It will be simple if we think IOMUX and IOMUX-LPSR together, and one
+module have two group registers.
 
-Shawn
+best regards
+Frank Li
+
+>
+>> [Adrian] For the artificial encoding of pad group id's for IOMUXC-LPSR, I think there is no other way to do it (limited imagination here :P);
+>> Pad group id's are extracted from MUX_REG offset address (pad_id = mux_reg / 4) but when combining both IOMUXC and IOMUXC-LPSR
+>> Pad group ID's overlap so end up encoding the pad_id for IOMUXC-LPSR to resolve the proper pad group ID.
+>
+> One big missing piece from your patch is the update to bindings document
+> Documentation/devicetree/bindings/pinctrl/fsl,imx-pinctrl.txt.  Have you
+> thought about how you will document all these magics and hacks you have
+> done here?
+>
+> Shawn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
