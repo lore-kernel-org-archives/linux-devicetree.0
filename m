@@ -1,65 +1,67 @@
-From: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 6/7] Documentation: atmel-quadspi: add binding file for Atmel QSPI driver
-Date: Thu, 16 Jul 2015 17:27:53 +0200
-Message-ID: <f4bb1c68fcc19b3642110ab0ef9850d6eeca3112.1437059658.git.cyrille.pitchen@atmel.com>
-References: <cover.1437059658.git.cyrille.pitchen@atmel.com>
+From: "R, Vignesh" <vigneshr@ti.com>
+Subject: Re: [PATCH v2 1/5] ARM: OMAP2+: DRA7: clockdomain: change l4per2_7xx_clkdm
+ to SW_WKUP
+Date: Thu, 16 Jul 2015 20:56:54 +0530
+Message-ID: <55A7CD3E.3030803@ti.com>
+References: <1433332284-10766-1-git-send-email-vigneshr@ti.com> <1433332284-10766-2-git-send-email-vigneshr@ti.com> <alpine.DEB.2.02.1507151955330.32764@utopia.booyaka.com> <alpine.DEB.2.02.1507152020240.32764@utopia.booyaka.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1437059658.git.cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org, juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shijie.huang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.02.1507152020240.32764@utopia.booyaka.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Walmsley <paul@pwsan.com>
+Cc: Tero Kristo <t-kristo@ti.com>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch documents the DT bindings for the driver of the Atmel QSPI
-controller embedded inside sama5d2x SoCs.
+Hi,
 
-Signed-off-by: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
----
- .../devicetree/bindings/mtd/atmel-quadspi.txt      | 29 ++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/atmel-quadspi.txt
+On 07/16/2015 01:57 AM, Paul Walmsley wrote:
+> On Wed, 15 Jul 2015, Paul Walmsley wrote:
+> 
+>> On Wed, 3 Jun 2015, Vignesh R wrote:
+>>
+>>> Legacy IPs like PWMSS, present under l4per2_7xx_clkdm, cannot support
+>>> smart-idle when its clock domain is in HW_AUTO on DRA7 SoCs. Hence,
+>>> program clock domain to SW_WKUP.
+>>>
+>>> Signed-off-by: Vignesh R <vigneshr@ti.com>
+>>> ---
+>>>  arch/arm/mach-omap2/clockdomains7xx_data.c | 2 +-
+>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/arch/arm/mach-omap2/clockdomains7xx_data.c b/arch/arm/mach-omap2/clockdomains7xx_data.c
+>>> index 57d5df0c1fbd..7581e036bda6 100644
+>>> --- a/arch/arm/mach-omap2/clockdomains7xx_data.c
+>>> +++ b/arch/arm/mach-omap2/clockdomains7xx_data.c
+>>> @@ -331,7 +331,7 @@ static struct clockdomain l4per2_7xx_clkdm = {
+>>>  	.dep_bit	  = DRA7XX_L4PER2_STATDEP_SHIFT,
+>>>  	.wkdep_srcs	  = l4per2_wkup_sleep_deps,
+>>>  	.sleepdep_srcs	  = l4per2_wkup_sleep_deps,
+>>> -	.flags		  = CLKDM_CAN_HWSUP_SWSUP,
+>>> +	.flags		  = CLKDM_CAN_SWSUP,
+>>>  };
+>>>  
+>>>  static struct clockdomain mpu0_7xx_clkdm = {
+>>
+>> Thanks, queued for v4.2-rc fixes.  Note that I cannot test this, since I 
+>> don't have a DRA7xx board.
+> 
+> You know, upon further thought, this doesn't make sense.  If the bug
+> is with the PWMSS IP block specifically, why not just set 
+> HWMOD_SWSUP_SIDLE on all the IP blocks where the hardware folks didn't 
+> implement hardware smart-idle?  At least that way, if those legacy IP 
+> blocks aren't in use, the clockdomain can still enter hardware-supervised 
+> idle?
 
-diff --git a/Documentation/devicetree/bindings/mtd/atmel-quadspi.txt b/Documentation/devicetree/bindings/mtd/atmel-quadspi.txt
-new file mode 100644
-index 000000000000..a0d60ac7ae10
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/atmel-quadspi.txt
-@@ -0,0 +1,29 @@
-+* Atmel Quad Serial Peripheral Interface (QSPI)
-+
-+Required properties:
-+  - compatible : Should be "atmel,sama5d2-qspi"
-+  - reg : the first contains the register location and length,
-+          the second contains the memory mapping address and length
-+  - interrupts : Should contain the interrupt for the device
-+  - clocks : The clock needed by the QSPI controller
-+  - #address-cells : should be 1
-+  - #size-cells : should be 0
-+
-+Example:
-+
-+qspi0: qspi@f0020000 {
-+	compatible = "atmel,sama5d2-qspi";
-+	reg = <0xf0020000 0x100>,
-+	      <0xd0000000 0x08000000>;
-+	interrupts = <52 IRQ_TYPE_LEVEL_HIGH 7>;
-+	clocks = <&qspi0_clk>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_qspi0_default>;
-+	status = "okay";
-+
-+	m25p80@0 {
-+		...
-+	};
-+};
+According to hardware folks, HW_AUTO (for clockdomain) and
+HWMOD_SWSUP_SIDLE (PWMSS in NO-IDLE) for PWMSS *is not* a good
+combination. If clockdomain is in HW_AUTO and PWMSS is put in NO-IDLE,
+then IDLEST of PWMSSx_CLKCTRL reads "stuck in wakeup/ sleep transition"
+which is not a consistent state (this is because of problems with PWM
+IP). Hence, it is recommended to program the clock domain to SW_WKUP and
+leave the PWMSS idlemode as smart-idle.
+
 -- 
-1.8.2.2
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards
+Vignesh
