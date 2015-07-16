@@ -1,72 +1,159 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH] input: snvs_pwrkey: add linux prefix for wakeup property
-Date: Thu, 16 Jul 2015 11:34:08 -0700
-Message-ID: <20150716183408.GD32571@dtor-ws>
-References: <1436930409-6536-1-git-send-email-shawnguo@kernel.org>
- <CAHrpEqS2o6_B6dNrnWJ06ASWaB0SGxur1o3VuN2A-QywWhbWVA@mail.gmail.com>
+From: <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: [PATCHv2] ARM: dts: socfpga: Add support of Terasic DE0 Atlas board
+Date: Thu, 16 Jul 2015 14:14:53 -0500
+Message-ID: <1437074093-12894-1-git-send-email-dinguyen@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CAHrpEqS2o6_B6dNrnWJ06ASWaB0SGxur1o3VuN2A-QywWhbWVA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Zhi Li <lznuaa@gmail.com>
-Cc: Frank Li <Frank.Li@freescale.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-input@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org
+Cc: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Dalon Westergreen <dwesterg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 15, 2015 at 09:00:12AM -0500, Zhi Li wrote:
-> On Tue, Jul 14, 2015 at 10:20 PM, Shawn Guo <shawnguo@kernel.org> wrote:
-> > The wakeup capability is somehow linux specific, and all existing
-> > bindings name the property "linux,wakeup" to reflect that, e.g.
-> > Documentation/devicetree/bindings/input/gpio-matrix-keypad.txt.  Let's
-> > follow the convention.
+From: Dalon Westergreen <dwesterg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-I do not believe it is Linux specific, it describes desired behavior of
-hardware regardless of OS. I mean you want your device to wake up if you
-press power button whether it runes Linux, Windows, FreeBSD or whatever.
+The Terasic DE0 Atlas board is also known as the DE0-Nano board.
+This patch adds the DTS board file for the DE0-Nano Sockit board, and not
+the DE0 Nano "Development Board".
 
-> >
-> > Signed-off-by: Shawn Guo <shawnguo@kernel.org>
-> > ---
-> > This is a fixup for Frank's patch which is queued on i.MX tree, so I
-> > will apply it to the same branch.
-> >
-> > Shawn
-> >
-> >  Documentation/devicetree/bindings/crypto/fsl-sec4.txt | 2 +-
-> >  drivers/input/keyboard/snvs_pwrkey.c                  | 2 +-
-> >  2 files changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
-> > index 71a39c5bd486..fa821c6a0b5b 100644
-> > --- a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
-> > +++ b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
-> > @@ -408,7 +408,7 @@ System ON/OFF key driver
-> >        Value type: <int>
-> >        Definition: Keycode to emit, KEY_POWER by default.
-> >
-> > -  - wakeup:
-> > +  - linux,wakeup:
-> 
-> I remember Dmitry Torokhov said use wakeup, instead of linux, wakeup
-> when I sent patch to review.
+Signed-off-by: Dalon Westergreen <dwesterg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+---
+v2: use stdpath-out for console and remove comment regarding u-boot ethaddr
+---
+ arch/arm/boot/dts/Makefile                        |   1 +
+ arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts | 106 ++++++++++++++++++++++
+ 2 files changed, 107 insertions(+)
+ create mode 100644 arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
 
-I should have said to use "wakeup-source", not simply "wakeup" so that
-we'd match with I2C annotation.
-
-I think I'll go over input driver and convert them (keeping old names
-for compatibility reasons).
-
-Thanks.
-
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 246473a..29e33aa 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -522,6 +522,7 @@ dtb-$(CONFIG_ARCH_SOCFPGA) += \
+ 	socfpga_arria5_socdk.dtb \
+ 	socfpga_arria10_socdk_sdmmc.dtb \
+ 	socfpga_cyclone5_socdk.dtb \
++	socfpga_cyclone5_de0_sockit.dtb \
+ 	socfpga_cyclone5_sockit.dtb \
+ 	socfpga_cyclone5_socrates.dtb \
+ 	socfpga_vt.dtb
+diff --git a/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts b/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
+new file mode 100644
+index 0000000..ceb4058
+--- /dev/null
++++ b/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
+@@ -0,0 +1,106 @@
++/*
++ * Copyright Altera Corporation (C) 2015. All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License along with
++ * this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++
++#include "socfpga_cyclone5.dtsi"
++
++/ {
++	model = "Terasic DE-0(Atlas)";
++	compatible = "altr,socfpga-cyclone5", "altr,socfpga";
++
++	chosen {
++		bootargs = "earlyprintk";
++		stdout-path = "serial0:115200n8";
++	};
++
++	memory {
++		name = "memory";
++		device_type = "memory";
++		reg = <0x0 0x40000000>; /* 1GB */
++	};
++
++	aliases {
++		ethernet0 = &gmac1;
++	};
++
++	regulator_3_3v: 3-3-v-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "3.3V";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		hps0 {
++			label = "hps_led0";
++			gpios = <&portb 24 0>;
++			linux,default-trigger = "heartbeat";
++		};
++	};
++};
++
++&gmac1 {
++	status = "okay";
++	phy-mode = "rgmii";
++
++	rxd0-skew-ps = <0>;
++	rxd1-skew-ps = <0>;
++	rxd2-skew-ps = <0>;
++	rxd3-skew-ps = <0>;
++	txen-skew-ps = <0>;
++	txc-skew-ps = <2600>;
++	rxdv-skew-ps = <0>;
++	rxc-skew-ps = <2000>;
++	max-frame-size = <3800>;
++};
++
++&gpio0 {
++	status = "okay";
++};
++
++&gpio1 {
++	status = "okay";
++};
++
++&gpio2 {
++	status = "okay";
++};
++
++&i2c0 {
++	status = "okay";
++	speed-mode = <0>;
++
++	adxl345: adxl345@0 {
++		compatible = "adi,adxl345";
++		reg = <0x53>;
++
++		interrupt-parent = <&portc>;
++		interrupts = <3 2>;
++	};
++};
++
++&mmc0 {
++	vmmc-supply = <&regulator_3_3v>;
++	vqmmc-supply = <&regulator_3_3v>;
++};
++
++&uart0 {
++	status = "okay";
++};
++
++&usb1 {
++	status = "okay";
++};
 -- 
-Dmitry
+2.4.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
