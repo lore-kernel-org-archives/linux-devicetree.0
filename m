@@ -1,43 +1,88 @@
-From: "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 01/12] device: property: delay device-driver matches
-Date: Fri, 17 Jul 2015 01:41:16 +0200
-Message-ID: <CAJZ5v0gMx=DA0f8i9wdMvkYTyOhr0WKh-T6L7rjcxeaAjNMW3g@mail.gmail.com>
-References: <1435743667-11987-1-git-send-email-tomeu.vizoso@collabora.com>
-	<1435743667-11987-2-git-send-email-tomeu.vizoso@collabora.com>
-	<20150716202312.GD11162@sirena.org.uk>
+From: Tim Bird <tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Subject: [PATCH v3 1/3] ARM: dts: qcom: Add binding for the qcom coincell charger
+Date: Thu, 16 Jul 2015 16:55:31 -0700
+Message-ID: <1437090933-1232-1-git-send-email-tim.bird@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150716202312.GD11162-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ACPI Devel Maling List <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+To: arnd-r2nGTMty4D4@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+This binding is used to configure the driver for the coincell charger
+found in Qualcomm PMICs.
 
-On Thu, Jul 16, 2015 at 10:23 PM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Wed, Jul 01, 2015 at 11:40:56AM +0200, Tomeu Vizoso wrote:
->
->> Delay matches of platform devices until late_initcall, when we are sure
->> that all built-in drivers have been registered already. This is needed
->> to prevent deferred probes because of some dependencies' drivers not
->> having registered yet.
->
-> I have to say I'm still not 100% clear that special casing platform
-> devices makes sense here - I can see that platform devices are usually
-> the first devices to instantiate but there are other kinds of devices
-> and it's not obvious what the benefit of specifically picking out
-> platform devices as opposed to just deferring all devices is.
+Signed-off-by: Tim Bird <tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+---
 
-Some existing devices cannot be deferred without redesigning things quite a bit.
+Changes in v3:
+ - change charge-enable property to charger-disable
+Changes in v2:
+ - remove 'qcom,' from example node name
+ - Added reference to parent node pm8941@0 and binding doc for it
 
-What I was talking about, though, was to use an opt-in mechanism for
-that which could be set for all platform devices, for example, by
-default, but it might be set for other bus types too if that's useful.
+ .../bindings/power/qcom,coincell-charger.txt       | 48 ++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/qcom,coincell-charger.txt
 
-Thanks,
-Rafael
+diff --git a/Documentation/devicetree/bindings/power/qcom,coincell-charger.txt b/Documentation/devicetree/bindings/power/qcom,coincell-charger.txt
+new file mode 100644
+index 0000000..0e6d875
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/qcom,coincell-charger.txt
+@@ -0,0 +1,48 @@
++Qualcomm Coincell Charger:
++
++The hardware block controls charging for a coincell or capacitor that is
++used to provide power backup for certain features of the power management
++IC (PMIC)
++
++- compatible:
++	Usage: required
++	Value type: <string>
++	Definition: must be: "qcom,pm8941-coincell"
++
++- reg:
++	Usage: required
++	Value type: <u32>
++	Definition: base address of the coincell charger registers
++
++- qcom,rset-ohms:
++	Usage: required
++	Value type: <u32>
++	Definition: resistance (in ohms) for current-limiting resistor
++		must be one of: 800, 1200, 1700, 2100
++
++- qcom,vset-millivolts:
++	Usage: required
++	Value type: <u32>
++	Definition: voltage (in millivolts) to apply for charging
++		must be one of: 2500, 3000, 3100, 3200
++
++- qcom,charger-disable:
++	Usage: optional
++	Value type: <boolean>
++	Definition: definining this property disables charging
++
++This charger is a sub-node of one of the 8941 PMIC blocks, and is specified
++as a child node in DTS of that node.  See ../mfd/qcom,spmi-pmic.txt and
++../mfd/qcom-pm8xxx.txt
++
++Example:
++
++	pm8941@0 {
++		coincell@2800 {
++			compatible = "qcom,pm8941-coincell";
++			reg = <0x2800>;
++
++			qcom,rset-ohms = <2100>;
++			qcom,vset-millivolts = <3000>;
++		};
++	};
+-- 
+1.8.2.2
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
