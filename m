@@ -1,47 +1,49 @@
-From: <dinguyen@opensource.altera.com>
-Subject: [PATCH] ARM: dts: socfpga: enable the data and instruction prefetch
- for the l2 cache
-Date: Thu, 16 Jul 2015 16:14:28 -0500
-Message-ID: <1437081268-19225-1-git-send-email-dinguyen@opensource.altera.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 09/12] regulator: register dependency parser for
+ firmware nodes
+Date: Thu, 16 Jul 2015 22:38:23 +0100
+Message-ID: <20150716213823.GF1602@sirena.org.uk>
+References: <1435743667-11987-1-git-send-email-tomeu.vizoso@collabora.com>
+ <1435743667-11987-10-git-send-email-tomeu.vizoso@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mark.rutland@arm.com, pawel.moll@arm.com
-Cc: devicetree@vger.kernel.org, Dinh Nguyen <dinguyen@opensource.altera.com>, s.trumtrar@pengutronix.de, dinh.linux@gmail.com, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="AH+kv8CCoFf6qPuz"
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1435743667-11987-10-git-send-email-tomeu.vizoso@collabora.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc: linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Dinh Nguyen <dinguyen@opensource.altera.com>
 
-Just in case the firmware did not enable data and instruction prefetch in
-the L2 cache controller, we enable it in the kernel.
+--AH+kv8CCoFf6qPuz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Dinh Nguyen <dinguyen@opensource.altera.com>
----
- arch/arm/boot/dts/socfpga.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+On Wed, Jul 01, 2015 at 11:41:04AM +0200, Tomeu Vizoso wrote:
+> So others can find out what depends on regulators, as specified
+> in bindings/regulator/regulator.txt.
 
-diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-index 80f924d..1e3c833 100644
---- a/arch/arm/boot/dts/socfpga.dtsi
-+++ b/arch/arm/boot/dts/socfpga.dtsi
-@@ -639,6 +639,8 @@
- 			cache-level = <2>;
- 			arm,tag-latency = <1 1 1>;
- 			arm,data-latency = <2 1 1>;
-+			prefetch-data = <1>;
-+			prefetch-instr = <1>;
- 		};
- 
- 		mmc: dwmmc0@ff704000 {
--- 
-2.4.5
+Reviewed-by: Mark Brown <broonie@kernel.org>
+
+=66rom a regulator point of view.
+
+--AH+kv8CCoFf6qPuz
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJVqCROAAoJECTWi3JdVIfQ+AwH/04Bu5SZtx2282qv6iBescZI
+U/Yb79sUSK+1iDsmHnzCBj1PzWhv+HA2OO7bDXFxr16NrQWy2f8Dth/O+UszLXR6
+b8ij8CKmEF+H4AVYO0rRl2w5bdZl6G9L5Q3gmUI/xlB8GDzZ4h4qeftkXHUhZBi0
+8EROjAqfZbyfHycme3lPO0+lJ+iNCihGEHYGEqEuNruCjNSCmNrZnCDL3LclEjId
+ppJtILExl9QYqIiprBxWvtT2DYUXXDsNA9ADOq80kpuSsShPXgNwmhDjYG4sofLs
+nDRRUWDhL4eOOsS68mLjHLN0MfParQccjJOu1KRp2+7I1Jgg4tAC+ddRCJq35BA=
+=8p4T
+-----END PGP SIGNATURE-----
+
+--AH+kv8CCoFf6qPuz--
