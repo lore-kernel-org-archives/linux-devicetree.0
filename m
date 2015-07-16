@@ -1,89 +1,236 @@
-From: Tim Bird <tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Subject: [PATCH v3 1/3] ARM: dts: qcom: Add binding for the qcom coincell charger
-Date: Thu, 16 Jul 2015 16:55:31 -0700
-Message-ID: <1437090933-1232-1-git-send-email-tim.bird@sonymobile.com>
+From: Tim Bird <tim.bird@sonymobile.com>
+Subject: [PATCH v3 2/3] ARM: qcom: Add coincell charger driver
+Date: Thu, 16 Jul 2015 16:55:32 -0700
+Message-ID: <1437090933-1232-2-git-send-email-tim.bird@sonymobile.com>
+References: <1437090933-1232-1-git-send-email-tim.bird@sonymobile.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: arnd-r2nGTMty4D4@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1437090933-1232-1-git-send-email-tim.bird@sonymobile.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: arnd@arndb.de, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, bjorn.andersson@sonymobile.com
 List-Id: devicetree@vger.kernel.org
 
-This binding is used to configure the driver for the coincell charger
-found in Qualcomm PMICs.
+This driver is used to configure the coincell charger found in
+Qualcomm PMICs.
 
-Signed-off-by: Tim Bird <tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+The driver allows configuring the current-limiting resistor for
+the charger, as well as the voltage to apply to the coincell
+(or capacitor) when charging.
+
+Signed-off-by: Tim Bird <tim.bird@sonymobile.com>
 ---
 
 Changes in v3:
- - change charge-enable property to charger-disable
-Changes in v2:
- - remove 'qcom,' from example node name
- - Added reference to parent node pm8941@0 and binding doc for it
+ - change 'depends on' in Kconfig 
+ - remove 'select REGMAP' in Kconfig
+ - put spaces in map lists
+ - use 'bool' type for enable variable
+ - remove some printks
+ - add missing braces in error handling in qcom_coincell_chgr_config
+ - eliminate of_node NULL check in probe routine
+ - rename driver to qcom-spmi-coincell
+ - put struct qcom_coincell on stack, instead of allocating it
+ - return the result of a function directly (in a few places)
+ - reorder operations to avoid partial register update
 
- .../bindings/power/qcom,coincell-charger.txt       | 48 ++++++++++++++++++++++
- 1 file changed, 48 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/qcom,coincell-charger.txt
+ drivers/misc/Kconfig         |  10 +++
+ drivers/misc/Makefile        |   1 +
+ drivers/misc/qcom-coincell.c | 152 +++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 163 insertions(+)
+ create mode 100644 drivers/misc/qcom-coincell.c
 
-diff --git a/Documentation/devicetree/bindings/power/qcom,coincell-charger.txt b/Documentation/devicetree/bindings/power/qcom,coincell-charger.txt
+diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+index 42c3852..ccccc29 100644
+--- a/drivers/misc/Kconfig
++++ b/drivers/misc/Kconfig
+@@ -271,6 +271,16 @@ config HP_ILO
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called hpilo.
+ 
++config QCOM_COINCELL
++	tristate "Qualcomm coincell charger support"
++	depends on MFD_SPMI_PMIC || COMPILE_TEST
++	help
++	  This driver supports the coincell block found inside of
++	  Qualcomm PMICs.  The coincell charger provides a means to
++	  charge a coincell battery or backup capacitor which is used
++	  to maintain PMIC register and RTC state in the absence of
++	  external power.
++
+ config SGI_GRU
+ 	tristate "SGI GRU driver"
+ 	depends on X86_UV && SMP
+diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
+index d056fb7..537d7f3 100644
+--- a/drivers/misc/Makefile
++++ b/drivers/misc/Makefile
+@@ -18,6 +18,7 @@ obj-$(CONFIG_LKDTM)		+= lkdtm.o
+ obj-$(CONFIG_TIFM_CORE)       	+= tifm_core.o
+ obj-$(CONFIG_TIFM_7XX1)       	+= tifm_7xx1.o
+ obj-$(CONFIG_PHANTOM)		+= phantom.o
++obj-$(CONFIG_QCOM_COINCELL)	+= qcom-coincell.o
+ obj-$(CONFIG_SENSORS_BH1780)	+= bh1780gli.o
+ obj-$(CONFIG_SENSORS_BH1770)	+= bh1770glc.o
+ obj-$(CONFIG_SENSORS_APDS990X)	+= apds990x.o
+diff --git a/drivers/misc/qcom-coincell.c b/drivers/misc/qcom-coincell.c
 new file mode 100644
-index 0000000..0e6d875
+index 0000000..7b4a2da
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/power/qcom,coincell-charger.txt
-@@ -0,0 +1,48 @@
-+Qualcomm Coincell Charger:
++++ b/drivers/misc/qcom-coincell.c
+@@ -0,0 +1,152 @@
++/* Copyright (c) 2013, The Linux Foundation. All rights reserved.
++ * Copyright (c) 2015, Sony Mobile Communications Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 and
++ * only version 2 as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
 +
-+The hardware block controls charging for a coincell or capacitor that is
-+used to provide power backup for certain features of the power management
-+IC (PMIC)
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/slab.h>
++#include <linux/of.h>
++#include <linux/regmap.h>
++#include <linux/of_device.h>
++#include <linux/platform_device.h>
 +
-+- compatible:
-+	Usage: required
-+	Value type: <string>
-+	Definition: must be: "qcom,pm8941-coincell"
++struct qcom_coincell {
++	struct device	*dev;
++	struct regmap	*regmap;
++	u32		base_addr;
++};
 +
-+- reg:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: base address of the coincell charger registers
++#define QCOM_COINCELL_REG_RSET		0x44
++#define QCOM_COINCELL_REG_VSET		0x45
++#define QCOM_COINCELL_REG_ENABLE	0x46
 +
-+- qcom,rset-ohms:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: resistance (in ohms) for current-limiting resistor
-+		must be one of: 800, 1200, 1700, 2100
++#define QCOM_COINCELL_ENABLE		BIT(7)
 +
-+- qcom,vset-millivolts:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: voltage (in millivolts) to apply for charging
-+		must be one of: 2500, 3000, 3100, 3200
++static const int qcom_rset_map[] = { 2100, 1700, 1200, 800 };
++static const int qcom_vset_map[] = { 2500, 3200, 3100, 3000 };
++/* NOTE: for pm8921 and others, voltage of 2500 is 16 (10000b), not 0 */
 +
-+- qcom,charger-disable:
-+	Usage: optional
-+	Value type: <boolean>
-+	Definition: definining this property disables charging
++/* if enable==0, rset and vset are ignored */
++static int qcom_coincell_chgr_config(struct qcom_coincell *chgr, int rset,
++				     int vset, bool enable)
++{
++	int i, j, rc;
 +
-+This charger is a sub-node of one of the 8941 PMIC blocks, and is specified
-+as a child node in DTS of that node.  See ../mfd/qcom,spmi-pmic.txt and
-+../mfd/qcom-pm8xxx.txt
++	/* if disabling, just do that and skip other operations */
++	if (!enable)
++		return regmap_write(chgr->regmap,
++			  chgr->base_addr + QCOM_COINCELL_REG_ENABLE, 0);
 +
-+Example:
++	/* find index for current-limiting resistor */
++	for (i = 0; i < ARRAY_SIZE(qcom_rset_map); i++)
++		if (rset == qcom_rset_map[i])
++			break;
 +
-+	pm8941@0 {
-+		coincell@2800 {
-+			compatible = "qcom,pm8941-coincell";
-+			reg = <0x2800>;
++	if (i >= ARRAY_SIZE(qcom_rset_map)) {
++		dev_err(chgr->dev, "invalid rset-ohms value %d\n", rset);
++		return -EINVAL;
++	}
 +
-+			qcom,rset-ohms = <2100>;
-+			qcom,vset-millivolts = <3000>;
-+		};
-+	};
++	/* find index for charge voltage */
++	for (j = 0; j < ARRAY_SIZE(qcom_vset_map); j++)
++		if (vset == qcom_vset_map[j])
++			break;
++
++	if (j >= ARRAY_SIZE(qcom_vset_map)) {
++		dev_err(chgr->dev, "invalid vset-millivolts value %d\n", vset);
++		return -EINVAL;
++	}
++
++	rc = regmap_write(chgr->regmap,
++			  chgr->base_addr + QCOM_COINCELL_REG_RSET, i);
++	if (rc) {
++		/*
++		 * This is mainly to flag a bad base_addr (reg) from dts.
++		 * Other failures writing to the registers should be
++		 * extremely rare, or indicative of problems that
++		 * should be reported elsewhere (eg. spmi failure).
++		 */
++		dev_err(chgr->dev, "could not write to RSET register\n");
++		return rc;
++	}
++
++	rc = regmap_write(chgr->regmap,
++		chgr->base_addr + QCOM_COINCELL_REG_VSET, j);
++	if (rc)
++		return rc;
++
++	/* set 'enable' register */
++	return regmap_write(chgr->regmap,
++			    chgr->base_addr + QCOM_COINCELL_REG_ENABLE,
++			    QCOM_COINCELL_ENABLE);
++}
++
++static int qcom_coincell_probe(struct platform_device *pdev)
++{
++	struct device_node *node = pdev->dev.of_node;
++	struct qcom_coincell chgr;
++	u32 rset, vset;
++	bool enable;
++	int rc;
++
++	chgr.dev = &pdev->dev;
++
++	chgr.regmap = dev_get_regmap(pdev->dev.parent, NULL);
++	if (!chgr.regmap) {
++		dev_err(chgr.dev, "Unable to get regmap\n");
++		return -EINVAL;
++	}
++
++	rc = of_property_read_u32(node, "reg", &chgr.base_addr);
++	if (rc)
++		return rc;
++
++	enable = !of_property_read_bool(node, "qcom,charger-disable");
++
++	if (enable) {
++		rc = of_property_read_u32(node, "qcom,rset-ohms", &rset);
++		if (rc) {
++			dev_err(chgr.dev,
++				"can't find 'qcom,rset-ohms' in DT block");
++			return rc;
++		}
++
++		rc = of_property_read_u32(node, "qcom,vset-millivolts", &vset);
++		if (rc) {
++			dev_err(chgr.dev,
++			    "can't find 'qcom,vset-millivolts' in DT block");
++			return rc;
++		}
++	}
++
++	return qcom_coincell_chgr_config(&chgr, rset, vset, enable);
++}
++
++static const struct of_device_id qcom_coincell_match_table[] = {
++	{ .compatible = "qcom,pm8941-coincell", },
++	{}
++};
++
++MODULE_DEVICE_TABLE(of, qcom_coincell_match_table);
++
++static struct platform_driver qcom_coincell_driver = {
++	.driver	= {
++		.name		= "qcom-spmi-coincell",
++		.of_match_table	= qcom_coincell_match_table,
++	},
++	.probe		= qcom_coincell_probe,
++};
++
++module_platform_driver(qcom_coincell_driver);
++
++MODULE_DESCRIPTION("Qualcomm PMIC coincell charger driver");
++MODULE_LICENSE("GPL v2");
 -- 
 1.8.2.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
