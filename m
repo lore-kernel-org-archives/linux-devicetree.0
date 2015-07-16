@@ -1,67 +1,401 @@
-From: Marek Vasut <marex@denx.de>
-Subject: Re: [PATCH 08/11] MTD: m25p80: Add option to limit SPI transfer size.
-Date: Thu, 16 Jul 2015 03:44:56 +0200
-Message-ID: <201507160344.56393.marex@denx.de>
-References: <cover.1433364398.git.hramrach@gmail.com> <201507151915.50677.marex@denx.de> <20150716011935.GB9033@localhost>
+From: YH Huang <yh.huang@mediatek.com>
+Subject: Re: [PATCH v5 2/3] pwm: add MediaTek display PWM driver support
+Date: Thu, 16 Jul 2015 13:38:28 +0800
+Message-ID: <1437025108.18175.13.camel@mtksdaap41>
+References: <1436778294-47635-1-git-send-email-yh.huang@mediatek.com>
+	 <1436778294-47635-3-git-send-email-yh.huang@mediatek.com>
+	 <CAGS+omCx4mDAN+F315x+8FeCABcKDoMn1gm_nHzF6VXnF_xm8Q@mail.gmail.com>
+	 <1436975995.15774.27.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150716011935.GB9033@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <computersforpeace@gmail.com>
-Cc: hramrach@gmail.com, Richard Cochran <richardcochran@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Mark Rutland <mark.rutland@arm.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Geert Uytterhoeven <geert+renesas@glider.be>, MTD Maling List <linux-mtd@lists.infradead.org>, Alison Chaiken <alison_chaiken@mentor.com>, "Bean Huo =?utf-8?q?=E9=9C=8D=E6=96=8C=E6=96=8C?= (beanhuo)" <beanhuo@micron.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Vinod Koul <vinod.koul@intel.com>, =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <zajec5@gmail.com>, Kukjin Kim <kgene@kernel.org>, Ben Hutchings <ben@decadent.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Brown <broon>
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <1436975995.15774.27.camel@mtksdaap41>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Daniel Kurtz <djkurtz@chromium.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, linux-pwm@vger.kernel.org, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, srv_heupstream <srv_heupstream@mediatek.com>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Yingjoe Chen <yingjoe.chen@mediatek.com>, yh.huang@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, July 16, 2015 at 03:19:35 AM, Brian Norris wrote:
-> On Wed, Jul 15, 2015 at 07:15:50PM +0200, Marek Vasut wrote:
-> > On Wednesday, July 15, 2015 at 05:59:46 PM, Brian Norris wrote:
-> > > 1. Fix up the SPI driver so that it knows how to break large SPI
-> > > transfers up into smaller segments that its constituent hardware (DMA
-> > > controllers, fast clocks, etc.) can handle.
+On Wed, 2015-07-15 at 23:59 +0800, YH Huang wrote:
+> On Mon, 2015-07-13 at 18:19 +0800, Daniel Kurtz wrote:
+> > On Mon, Jul 13, 2015 at 5:04 PM, YH Huang <yh.huang@mediatek.com> wrote:
+> > > Add display PWM driver support to modify backlight for MT8173 and MT6595.
+> > > The PWM has one channel to control the brightness of the display.
+> > > When the (high_width / period) is closer to 1, the screen is brighter;
+> > > otherwise, it is darker.
+> > >
+> > > Signed-off-by: YH Huang <yh.huang@mediatek.com>
+> > > ---
+> > >  drivers/pwm/Kconfig        |  10 ++
+> > >  drivers/pwm/Makefile       |   1 +
+> > >  drivers/pwm/pwm-mtk-disp.c | 256 +++++++++++++++++++++++++++++++++++++++++++++
+> > >  3 files changed, 267 insertions(+)
+> > >  create mode 100644 drivers/pwm/pwm-mtk-disp.c
+> > >
+> > > diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> > > index b1541f4..f5b03a4 100644
+> > > --- a/drivers/pwm/Kconfig
+> > > +++ b/drivers/pwm/Kconfig
+> > > @@ -211,6 +211,16 @@ config PWM_LPSS_PLATFORM
+> > >           To compile this driver as a module, choose M here: the module
+> > >           will be called pwm-lpss-platform.
+> > >
+> > > +config PWM_MTK_DISP
+> > > +       tristate "MediaTek display PWM driver"
+> > > +       depends on ARCH_MEDIATEK || COMPILE_TEST
+> > > +       help
+> > > +         Generic PWM framework driver for MediaTek disp-pwm device.
+> > > +         The PWM is used to control the backlight brightness for display.
+> > > +
+> > > +         To compile this driver as a module, choose M here: the module
+> > > +         will be called pwm-mtk-disp.
+> > > +
+> > >  config PWM_MXS
+> > >         tristate "Freescale MXS PWM support"
+> > >         depends on ARCH_MXS && OF
+> > > diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+> > > index ec50eb5..99c9e75 100644
+> > > --- a/drivers/pwm/Makefile
+> > > +++ b/drivers/pwm/Makefile
+> > > @@ -18,6 +18,7 @@ obj-$(CONFIG_PWM_LPC32XX)     += pwm-lpc32xx.o
+> > >  obj-$(CONFIG_PWM_LPSS)         += pwm-lpss.o
+> > >  obj-$(CONFIG_PWM_LPSS_PCI)     += pwm-lpss-pci.o
+> > >  obj-$(CONFIG_PWM_LPSS_PLATFORM)        += pwm-lpss-platform.o
+> > > +obj-$(CONFIG_PWM_MTK_DISP)     += pwm-mtk-disp.o
+> > >  obj-$(CONFIG_PWM_MXS)          += pwm-mxs.o
+> > >  obj-$(CONFIG_PWM_PCA9685)      += pwm-pca9685.o
+> > >  obj-$(CONFIG_PWM_PUV3)         += pwm-puv3.o
+> > > diff --git a/drivers/pwm/pwm-mtk-disp.c b/drivers/pwm/pwm-mtk-disp.c
+> > > new file mode 100644
+> > > index 0000000..1f17cee
+> > > --- /dev/null
+> > > +++ b/drivers/pwm/pwm-mtk-disp.c
+> > > @@ -0,0 +1,256 @@
+> > > +/*
+> > > + * MediaTek display pulse-width-modulation controller driver.
+> > > + * Copyright (c) 2015 MediaTek Inc.
+> > > + * Author: YH Huang <yh.huang@mediatek.com>
+> > > + *
+> > > + * This program is free software; you can redistribute it and/or modify
+> > > + * it under the terms of the GNU General Public License version 2 as
+> > > + * published by the Free Software Foundation.
+> > > + *
+> > > + * This program is distributed in the hope that it will be useful,
+> > > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > > + * GNU General Public License for more details.
+> > > + */
+> > > +
+> > > +#include <linux/clk.h>
+> > > +#include <linux/err.h>
+> > > +#include <linux/io.h>
+> > > +#include <linux/module.h>
+> > > +#include <linux/of.h>
+> > > +#include <linux/pwm.h>
+> > > +#include <linux/platform_device.h>
+> > > +#include <linux/slab.h>
+> > > +
+> > > +#define DISP_PWM_EN            0
+> > 
+> > The "DISP_PWM_*" are register offsets, so use a hex value, like this:
+> > 
+> > #define DISP_PWM_EN                      0x00
+> > 
+> > Use BIT() for register *fields*, that is, the individual bits of a register.
+> > 
 > 
-> BTW, Mark Brown already commented on this approach:
+> Got it!
 > 
-> http://lists.infradead.org/pipermail/linux-mtd/2015-May/059364.html
+> > > +#define PWM_ENABLE_MASK                BIT(0)
+> > > +
+> > > +#define DISP_PWM_COMMIT                BIT(3)
+> > 
+> > #define DISP_PWM_COMMIT            0x08
+> > 
+> > > +#define PWM_COMMIT_MASK                BIT(0)
+> > > +
+> > > +#define DISP_PWM_CON_0         BIT(4)
+> > 
+> > #define DISP_PWM_COMMIT            0x10
+> > 
+> > > +#define PWM_CLKDIV_SHIFT       16
+> > > +#define PWM_CLKDIV_MAX         0x3ff
+> > > +#define PWM_CLKDIV_MASK                (PWM_CLKDIV_MAX << PWM_CLKDIV_SHIFT)
+> > > +
+> > > +#define DISP_PWM_CON_1         0x14
+> > > +#define PWM_PERIOD_MASK                0xfff
+> > > +/* Shift log2(PWM_PERIOD_MASK + 1) as divisor */
+> > > +#define PWM_PERIOD_BIT_SHIFT   12
+> > > +
+> > > +#define PWM_HIGH_WIDTH_SHIFT   16
+> > > +#define PWM_HIGH_WIDTH_MASK    (0x1fff << PWM_HIGH_WIDTH_SHIFT)
+> > > +
+> > > +struct mtk_disp_pwm {
+> > > +       struct pwm_chip chip;
+> > > +       struct device *dev;
+> > 
+> > I don't think "dev" is actually used.  And, if needed, it can be
+> > extracted from "chip".
+> > 
 > 
-> I quote:
-> | With modern drivers using transfer_one() where we have control of the
-> | chip select we do also have the ability to add support to the core for
-> | chopping large transfers up into smaller ones that the hardware can
-> | handle transparently.  That won't for everything though since it depends
-> | on us being able to manually control the chip select which not all
-> | hardware can do.
-> | 
-> > I think this might actually be easier -- just do a transfer where you
-> > don't toggle CS and just stops the clock at the last bit, then do another
-> > (multiple) transfers which don't toggle CS at all, then finally do a
-> > transfer which toggles a CS at the end.
+> I will drop it.
 > 
-> Sounds OK to me. And as Mark noted, this could probably be done in the
-> core. I suppose Mark could suggest whether the most expedient path is to
-> hack the buggy driver to do this, or whether reworking the SPI core to
-> have the appropriate spi_master field(s) (and caveats) to support this.
-
-Yep, agreed.
-
-> > This should be pretty trivial
-> > to do and I think for example spi-mxs.c does this.
+> > > +       struct clk *clk_main;
+> > > +       struct clk *clk_mm;
+> > > +       void __iomem *base;
+> > > +};
+> > > +
+> > > +static inline struct mtk_disp_pwm *to_mtk_disp_pwm(struct pwm_chip *chip)
+> > > +{
+> > > +       return container_of(chip, struct mtk_disp_pwm, chip);
+> > > +}
+> > > +
+> > > +static void mtk_disp_pwm_update_bits(void __iomem *address, u32 mask, u32 value)
+> > 
+> > Take "struct mtk_disp_pwm *mdp" as a param and extract mdp->base,
+> > rather than pass the raw iomem address.
+> > 
 > 
-> I don't think spi-mxs.c really does this; it chooses between PIO and DMA
-> based on length, but with either option, it runs through each SPI
-> transfer in one go. You might be confused by the fact that this driver
-> implements ->transfer_one_message instead of ->transfer_one, so it has
-> to loop through all transfers in the message.
+> I will revise it like this.
+> 
+> static void mtk_disp_pwm_update_bits(struct mtk_disp_pwm *mdp,
+> 			       u32 reg, u32 mask, u32 value)
+> {
+> 	void __iomem *address;
+> 	u32 val;
+> 
+> 	address = mdp->base + reg;
+> 	val = readl(address);
+> 	val &= ~mask;
+> 	val |= value;
+> 	writel(val, address);
+> }
+> 
+> > > +{
+> > > +       u32 val;
+> > > +
+> > > +       val = readl(address);
+> > > +       val &= ~mask;
+> > > +       val |= value;
+> > > +       writel(val, address);
+> > > +}
+> > > +
+> > > +static int mtk_disp_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+> > > +                              int duty_ns, int period_ns)
+> > > +{
+> > > +       struct mtk_disp_pwm *mdp = to_mtk_disp_pwm(chip);
+> > > +       u64 div, rate;
+> > > +       u32 clk_div, period, high_width, value;
+> > > +
+> > > +       /*
+> > > +        * Find period, high_width and clk_div to suit duty_ns and period_ns.
+> > > +        * Calculate proper div value to keep period value in the bound.
+> > > +        *
+> > > +        * period_ns = 10^9 * (clk_div + 1) * (period + 1) / PWM_CLK_RATE
+> > > +        * duty_ns = 10^9 * (clk_div + 1) * high_width / PWM_CLK_RATE
+> > > +        *
+> > > +        * period = (PWM_CLK_RATE * period_ns) / (10^9 * (clk_div + 1)) - 1
+> > > +        * high_width = (PWM_CLK_RATE * duty_ns) / (10^9 * (clk_div + 1))
+> > > +        */
+> > > +       rate = clk_get_rate(mdp->clk_main);
+> > > +       clk_div = div_u64(rate * period_ns, NSEC_PER_SEC) >>
+> > > +                         PWM_PERIOD_BIT_SHIFT;
+> > > +       if (clk_div > PWM_CLKDIV_MAX)
+> > > +               return -EINVAL;
+> > > +
+> > > +       div = NSEC_PER_SEC * (clk_div + 1);
+> > > +       period = div64_u64(rate * period_ns, div);
+> > > +       if (period > 0)
+> > > +               period--;
+> > > +
+> > > +       high_width = div64_u64(rate * duty_ns, div);
+> > > +
+> > > +       mtk_disp_pwm_update_bits(mdp->base + DISP_PWM_CON_0,
+> > > +                                PWM_CLKDIV_MASK, clk_div << PWM_CLKDIV_SHIFT);
+> > > +
+> > > +       value = period | (high_width << PWM_HIGH_WIDTH_SHIFT);
+> > > +       mtk_disp_pwm_update_bits(mdp->base + DISP_PWM_CON_1,
+> > > +                                PWM_PERIOD_MASK | PWM_HIGH_WIDTH_MASK, value);
+> > > +
+> > > +       mtk_disp_pwm_update_bits(mdp->base + DISP_PWM_COMMIT,
+> > > +                                PWM_COMMIT_MASK, 1);
+> > > +       mtk_disp_pwm_update_bits(mdp->base + DISP_PWM_COMMIT,
+> > > +                                PWM_COMMIT_MASK, 0);
+> > > +
+> > > +       return 0;
+> > > +}
+> > > +
+> > > +static int mtk_disp_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
+> > > +{
+> > > +       struct mtk_disp_pwm *mdp = to_mtk_disp_pwm(chip);
+> > > +
+> > > +       mtk_disp_pwm_update_bits(mdp->base + DISP_PWM_EN,
+> > > +                                PWM_ENABLE_MASK, 1);
+> > > +
+> > > +       return 0;
+> > > +}
+> > > +
+> > > +static void mtk_disp_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+> > > +{
+> > > +       struct mtk_disp_pwm *mdp = to_mtk_disp_pwm(chip);
+> > > +
+> > > +       mtk_disp_pwm_update_bits(mdp->base + DISP_PWM_EN,
+> > > +                                PWM_ENABLE_MASK, 0);
+> > > +}
+> > > +
+> > > +static const struct pwm_ops mtk_disp_pwm_ops = {
+> > > +       .config = mtk_disp_pwm_config,
+> > > +       .enable = mtk_disp_pwm_enable,
+> > > +       .disable = mtk_disp_pwm_disable,
+> > > +       .owner = THIS_MODULE,
+> > > +};
+> > > +
+> > > +static int mtk_disp_pwm_probe(struct platform_device *pdev)
+> > > +{
+> > > +       struct mtk_disp_pwm *mdp;
+> > > +       struct resource *r;
+> > > +       int ret;
+> > > +
+> > > +       mdp = devm_kzalloc(&pdev->dev, sizeof(*mdp), GFP_KERNEL);
+> > > +       if (!mdp)
+> > > +               return -ENOMEM;
+> > > +
+> > > +       mdp->dev = &pdev->dev;
+> > > +
+> > > +       r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > > +       mdp->base = devm_ioremap_resource(&pdev->dev, r);
+> > > +       if (IS_ERR(mdp->base))
+> > > +               return PTR_ERR(mdp->base);
+> > > +
+> > > +       mdp->clk_main = devm_clk_get(&pdev->dev, "main");
+> > > +       if (IS_ERR(mdp->clk_main))
+> > > +               return PTR_ERR(mdp->clk_main);
+> > > +
+> > > +       mdp->clk_mm = devm_clk_get(&pdev->dev, "mm");
+> > > +       if (IS_ERR(mdp->clk_mm))
+> > > +               return PTR_ERR(mdp->clk_mm);
+> > > +
+> > > +       ret = clk_prepare_enable(mdp->clk_main);
+> > 
+> > Delay turning on the PWM clock until it is actually needed (pwm_enable)...
+> > Just be careful to ensure that the "main" clock is enabled when
+> > writing registers during mtk_disp_pwm_config.
 
-It does chop up the DMA transfers between multiple runs of the DMA engine
-IIRC. But it does so within the driver, which apparently is not the way
-to go :)
+Since pwm-backlight driver configures PWM before enable PWM, I enable
+clocks at the probe function.
+Turning on the PWM clock in pwm_enable will lose the first configuration
+of PWM. It won't affect a lot since the system configures PWM many times
+at boot time.
+So should I delay or keep the original way?
 
-> (IIUC, spi-mxs.c could easily be rewritten to use ->transfer, and some
-> of that not-too-complicated boilerplate could be killed off.)
-
-Most likely, yes.
-
-Best regards,
-Marek Vasut
+> > By the way, is the pwm in a power domain that must also be enabled
+> > when enabling the pwm?
+> 
+> It is in the display power domain which must also be enabled.
+> 
+> > 
+> > > +       if (ret < 0)
+> > > +               return ret;
+> > > +
+> > > +       ret = clk_prepare_enable(mdp->clk_mm);
+> > > +       if (ret < 0)
+> > > +               goto disable_clk_main;
+> > > +
+> > > +       platform_set_drvdata(pdev, mdp);
+> > 
+> > Set this only after pwmchip_add() succeeds.
+> 
+> OK.
+> 
+> > 
+> > > +
+> > > +       mdp->chip.dev = &pdev->dev;
+> > > +       mdp->chip.ops = &mtk_disp_pwm_ops;
+> > > +       mdp->chip.base = -1;
+> > > +       mdp->chip.npwm = 1;
+> > > +
+> > > +       ret = pwmchip_add(&mdp->chip);
+> > > +       if (ret < 0) {
+> > > +               dev_err(&pdev->dev, "pwmchip_add() failed: %d\n", ret);
+> > > +               goto disable_clk_mm;
+> > > +       }
+> > > +
+> > > +       return 0;
+> > > +
+> > > +disable_clk_mm:
+> > > +       clk_disable_unprepare(mdp->clk_mm);
+> > > +disable_clk_main:
+> > > +       clk_disable_unprepare(mdp->clk_main);
+> > > +       return ret;
+> > > +}
+> > > +
+> > > +static int mtk_disp_pwm_remove(struct platform_device *pdev)
+> > > +{
+> > > +       struct mtk_disp_pwm *mdp = platform_get_drvdata(pdev);
+> > > +       int ret = pwmchip_remove(&mdp->chip);
+> > > +
+> > > +       clk_disable_unprepare(mdp->clk_main);
+> > > +       clk_disable_unprepare(mdp->clk_mm);
+> > 
+> > Nit: it is more traditional to disable clocks in the opposite order to
+> > which they are enabled, so:
+> > 
+> >        clk_disable_unprepare(mdp->clk_mm);
+> >        clk_disable_unprepare(mdp->clk_main);
+> > 
+> 
+> OK.
+> 
+> > > +
+> > > +       return ret;
+> > > +}
+> > > +
+> > > +static const struct of_device_id mtk_disp_pwm_of_match[] = {
+> > > +       { .compatible = "mediatek,mt8173-disp-pwm" },
+> > > +       { .compatible = "mediatek,mt6595-disp-pwm" },
+> > > +       { }
+> > > +};
+> > > +MODULE_DEVICE_TABLE(of, mtk_disp_pwm_of_match);
+> > > +
+> > > +#ifdef CONFIG_PM_SLEEP
+> > > +static int mtk_disp_pwm_suspend(struct device *dev)
+> > > +{
+> > > +       struct mtk_disp_pwm *mdp = dev_get_drvdata(dev);
+> > > +
+> > > +       clk_disable_unprepare(mdp->clk_main);
+> > > +       clk_disable_unprepare(mdp->clk_mm);
+> > > +
+> > > +       return 0;
+> > > +}
+> > > +
+> > > +static int mtk_disp_pwm_resume(struct device *dev)
+> > > +{
+> > > +       struct mtk_disp_pwm *mdp = dev_get_drvdata(dev);
+> > > +       int ret;
+> > > +
+> > > +       ret = clk_prepare_enable(mdp->clk_main);
+> > > +       if (ret < 0)
+> > > +               return ret;
+> > > +
+> > > +       ret = clk_prepare_enable(mdp->clk_mm);
+> > > +       if (ret < 0) {
+> > > +               clk_disable_unprepare(mdp->clk_main);
+> > > +               return ret;
+> > > +       }
+> > > +
+> > 
+> > Don't you also have to restore the PWM rate and frequency?
+> > 
+> > Is it possible to save power at runtime by leaving mdp->clk_mm enabled
+> > (to generate the PWM signal), but disable mdp->clk_main (clock
+> > required to access PWM registers)?
+> 
+> The pwm-backlight driver will restore the data.
+> 
+> After I try to disable anyone of the two clocks at runtime, the
+> backlight doesn't work well(no immediate update or losing backlight).
+> So we need to keep both clock enabled.
+> 
+> Regards,
+> YH Huang
+> 
