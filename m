@@ -1,173 +1,36 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] dma: Add Xilinx zynqmp dma engine driver support
-Date: Thu, 16 Jul 2015 18:05:48 +0530
-Message-ID: <20150716123548.GO5086@localhost>
-References: <1434422083-8653-1-git-send-email-punnaia@xilinx.com>
- <1434422083-8653-2-git-send-email-punnaia@xilinx.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [RFC PATCH] pinctrl-single: Use of pinctrl-single for external
+ device over I2C
+Date: Thu, 16 Jul 2015 14:58:13 +0200
+Message-ID: <CACRpkdZwucqETn3OkX1GPO43JpwWL67OB1FExHFD5CzWTA3D5g@mail.gmail.com>
+References: <1435855992-10312-1-git-send-email-vaibhav.hiremath@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1434422083-8653-2-git-send-email-punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kalluripunnaiahchoudary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kpc528-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1435855992-10312-1-git-send-email-vaibhav.hiremath@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, Will Deacon <will.deacon@arm.com>, Tony Lindgren <tony@atomide.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 16, 2015 at 08:04:43AM +0530, Punnaiah Choudary Kalluri wrote:
-> +/* Register Offsets */
-> +#define ISR				0x100
-> +#define IMR				0x104
-> +#define IER				0x108
-> +#define IDS				0x10C
-> +#define CTRL0				0x110
-> +#define CTRL1				0x114
-> +#define STATUS				0x11C
-> +#define DATA_ATTR			0x120
-> +#define DSCR_ATTR			0x124
-> +#define SRC_DSCR_WRD0			0x128
-> +#define SRC_DSCR_WRD1			0x12C
-> +#define SRC_DSCR_WRD2			0x130
-> +#define SRC_DSCR_WRD3			0x134
-> +#define DST_DSCR_WRD0			0x138
-> +#define DST_DSCR_WRD1			0x13C
-> +#define DST_DSCR_WRD2			0x140
-> +#define DST_DSCR_WRD3			0x144
-> +#define SRC_START_LSB			0x158
-> +#define SRC_START_MSB			0x15C
-> +#define DST_START_LSB			0x160
-> +#define DST_START_MSB			0x164
-> +#define TOTAL_BYTE			0x188
-> +#define RATE_CTRL			0x18C
-> +#define IRQ_SRC_ACCT			0x190
-> +#define IRQ_DST_ACCT			0x194
-> +#define CTRL2				0x200
-Can you namespace these and other defines
+On Thu, Jul 2, 2015 at 6:53 PM, Vaibhav Hiremath
+<vaibhav.hiremath@linaro.org> wrote:
 
-> +struct zynqmp_dma_chan {
-> +	struct zynqmp_dma_device *xdev;
-xdev seems an odd name, i suspect copy paste error!
+> In some usecases, the external device (in my case it PMIC over I2C)
+> does support pin in multiple configuration, we may need to control/configure them
+> during boot or runtime.
 
-> +	void __iomem *regs;
-> +	spinlock_t lock;
-> +	struct list_head pending_list;
-> +	struct list_head free_list;
-> +	struct list_head active_list;
-> +	struct zynqmp_dma_desc_sw *sw_desc_pool;
-> +	struct list_head done_list;
-> +	struct dma_chan common;
-> +	void *desc_pool_v;
-> +	dma_addr_t desc_pool_p;
-why two pools and one void *?
+What is missing from this patch is an explanation why pinctrl-single should
+be used for this PMIC.
 
-> +/**
-> + * zynqmp_dma_alloc_chan_resources - Allocate channel resources
-> + * @dchan: DMA channel
-> + *
-> + * Return: '0' on success and failure value on error
-wrong, its number of descriptors which maybe 0
+Repeat: pinctrl-single: when you have exactly one register per pin, and
+the description of the pins is delivered in an opaque ASIC-specific format
+without developers knowing much about how the hardware actually works,
+just "set these magic values".
 
-> + */
-> +static int zynqmp_dma_alloc_chan_resources(struct dma_chan *dchan)
-> +{
-> +	struct zynqmp_dma_chan *chan = to_chan(dchan);
-> +	struct zynqmp_dma_desc_sw *desc;
-> +	int i;
-> +
-> +	chan->sw_desc_pool = kzalloc(sizeof(*desc) * ZYNQMP_DMA_NUM_DESCS,
-> +				     GFP_KERNEL);
-and you are allocating the number so pls return that
+I strongly prefer that this PMIC has its own pin controller using standard
+bindings with groups and functions, see eg. drivers/pinctrl/nomadik/pinctrl-ab*
+for a PMIC pinctrl driver.
 
-Btw is ZYNQMP_DMA_NUM_DESCS sw or HW limit
-
-> +static void zynqmp_dma_start_transfer(struct zynqmp_dma_chan *chan)
-> +{
-> +	struct zynqmp_dma_desc_sw *desc;
-> +
-> +	if (!zynqmp_dma_chan_is_idle(chan))
-> +		return;
-> +
-> +	desc = list_first_entry_or_null(&chan->pending_list,
-> +					struct zynqmp_dma_desc_sw, node);
-> +	if (!desc)
-> +		return;
-> +
-> +	if (chan->has_sg)
-> +		list_splice_tail_init(&chan->pending_list, &chan->active_list);
-> +	else
-> +		list_move_tail(&desc->node, &chan->active_list);
-> +
-> +	if (chan->has_sg)
-> +		zynqmp_dma_update_desc_to_ctrlr(chan, desc);
-> +	else
-> +		zynqmp_dma_config_simple_desc(chan, desc->src, desc->dst,
-> +					      desc->len);
-> +	zynqmp_dma_start(chan);
-> +}
-Lots of the list management will get simplified if you use the vchan to do
-so
-
-> +
-> +
-> +/**
-> + * zynqmp_dma_chan_desc_cleanup - Cleanup the completed descriptors
-> + * @chan: ZynqMP DMA channel
-> + */
-> +static void zynqmp_dma_chan_desc_cleanup(struct zynqmp_dma_chan *chan)
-> +{
-> +	struct zynqmp_dma_desc_sw *desc, *next;
-> +
-> +	list_for_each_entry_safe(desc, next, &chan->done_list, node) {
-> +		dma_async_tx_callback callback;
-> +		void *callback_param;
-> +
-> +		list_del(&desc->node);
-> +
-> +		callback = desc->async_tx.callback;
-> +		callback_param = desc->async_tx.callback_param;
-> +		if (callback)
-> +			callback(callback_param);
-> +
-and you are calling the callback with lock held and user can do further
-submissions so this is wrong!
-
-> +static enum dma_status zynqmp_dma_tx_status(struct dma_chan *dchan,
-> +				      dma_cookie_t cookie,
-> +				      struct dma_tx_state *txstate)
-> +{
-> +	return dma_cookie_status(dchan, cookie, txstate);
-
-no residue calculation?
-
-> +static struct dma_async_tx_descriptor *zynqmp_dma_prep_memcpy(
-> +				struct dma_chan *dchan, dma_addr_t dma_dst,
-> +				dma_addr_t dma_src, size_t len, ulong flags)
-> +{
-> +	struct zynqmp_dma_chan *chan;
-> +	struct zynqmp_dma_desc_sw *new, *first = NULL;
-> +	void *desc = NULL, *prev = NULL;
-> +	size_t copy;
-> +	u32 desc_cnt;
-> +
-> +	chan = to_chan(dchan);
-> +
-> +	if ((len > ZYNQMP_DMA_MAX_TRANS_LEN) && !chan->has_sg)
-why sg?
-
-> +static int zynqmp_dma_remove(struct platform_device *pdev)
-> +{
-> +	struct zynqmp_dma_device *xdev = platform_get_drvdata(pdev);
-> +
-> +	of_dma_controller_free(pdev->dev.of_node);
-> +	dma_async_device_unregister(&xdev->common);
-> +
-> +	zynqmp_dma_chan_remove(xdev->chan);
-Please free up irq here explictly and also ensure tasklet is not running
-
--- 
-~Vinod
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yours,
+Linus Walleij
