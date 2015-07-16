@@ -1,48 +1,51 @@
-From: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
-Subject: Re: [RFC PATCH] pinctrl-single: Use of pinctrl-single for external
- device over I2C
-Date: Thu, 16 Jul 2015 19:46:03 +0530
-Message-ID: <55A7BCA3.2010607@linaro.org>
-References: <1435855992-10312-1-git-send-email-vaibhav.hiremath@linaro.org> <CACRpkdZwucqETn3OkX1GPO43JpwWL67OB1FExHFD5CzWTA3D5g@mail.gmail.com>
+From: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Subject: Re: [PATCH v3 4/5] ARM: dts: mt8135: enable basic SMP bringup for
+ mt8135
+Date: Thu, 16 Jul 2015 22:44:11 +0800
+Message-ID: <1437057851.19585.2.camel@mtksdaap41>
+References: <1436851111-2369-1-git-send-email-yingjoe.chen@mediatek.com>
+	 <1436851111-2369-5-git-send-email-yingjoe.chen@mediatek.com>
+	 <55A51A54.7000208@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZwucqETn3OkX1GPO43JpwWL67OB1FExHFD5CzWTA3D5g@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, Will Deacon <will.deacon@arm.com>, Tony Lindgren <tony@atomide.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <55A51A54.7000208@mentor.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nathan Lynch <Nathan_Lynch@mentor.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, Arnd Bergmann <arnd@arndb.de>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, 2015-07-14 at 09:19 -0500, Nathan Lynch wrote:
+> On 07/14/2015 12:18 AM, Yingjoe Chen wrote:
+> > Add arch timer node to enable arch-timer support. MT8135 firmware
+> > doesn't correctly setup arch-timer frequency and CNTVOFF, add
+> > properties to workaround this.
+> 
+> [...]
+> 
+> >  
+> > +	timer {
+> > +		compatible = "arm,armv7-timer";
+> > +		interrupt-parent = <&gic>;
+> > +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) |
+> > +					  IRQ_TYPE_LEVEL_LOW)>,
+> > +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) |
+> > +					  IRQ_TYPE_LEVEL_LOW)>,
+> > +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) |
+> > +					  IRQ_TYPE_LEVEL_LOW)>,
+> > +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) |
+> > +					  IRQ_TYPE_LEVEL_LOW)>;
+> > +		clock-frequency = <13000000>;
+> > +		arm,cpu-registers-not-fw-configured;
+> 
+> It's disappointing to see this property in new DTS submissions.  It
+> prevents taking advantage of the VDSO for gettimeofday/clock_gettime.
+> 
 
+Hi,
 
-On Thursday 16 July 2015 06:28 PM, Linus Walleij wrote:
-> On Thu, Jul 2, 2015 at 6:53 PM, Vaibhav Hiremath
-> <vaibhav.hiremath@linaro.org> wrote:
->
->> In some usecases, the external device (in my case it PMIC over I2C)
->> does support pin in multiple configuration, we may need to control/configure them
->> during boot or runtime.
->
-> What is missing from this patch is an explanation why pinctrl-single should
-> be used for this PMIC.
->
-> Repeat: pinctrl-single: when you have exactly one register per pin, and
-> the description of the pins is delivered in an opaque ASIC-specific format
-> without developers knowing much about how the hardware actually works,
-> just "set these magic values".
->
-> I strongly prefer that this PMIC has its own pin controller using standard
-> bindings with groups and functions, see eg. drivers/pinctrl/nomadik/pinctrl-ab*
-> for a PMIC pinctrl driver.
->
+I know. But unfortunately this is a more then 1 year SoC, so I can't do
+anything to change this :(
 
-Thanks for the reference, good to know this.
-Let me check this driver before commenting anything further on this.
-
-Thanks,
-Vaibhav
-
-> Yours,
-> Linus Walleij
->
+Joe.C
