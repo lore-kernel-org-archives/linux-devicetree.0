@@ -1,47 +1,37 @@
-From: Richard Cochran <richardcochran@gmail.com>
-Subject: Re: [PATCH 1/2] gpio: dwapb: Use human understandable gpio numbering.
-Date: Thu, 16 Jul 2015 19:19:30 +0200
-Message-ID: <20150716171930.GB27060@localhost.localdomain>
-References: <cover.1435777856.git.rcochran@linutronix.de>
- <d6b5ce85a17164970d454583560e07f7aed7b8ca.1435777856.git.rcochran@linutronix.de>
- <CACRpkdY+prqSeohT5BEoOKS6sfXdFTA6ZzuKzH4GSPX5jcjgzA@mail.gmail.com>
+From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH 4/7] Documentation: mtd: add a DT property to set the latency code of Spansion memory
+Date: Thu, 16 Jul 2015 19:44:20 +0200
+Message-ID: <201507161944.20523.marex@denx.de>
+References: <cover.1437059658.git.cyrille.pitchen@atmel.com> <398ca9f17bda638e05e97f258fb4e6d27ac828db.1437059658.git.cyrille.pitchen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdY+prqSeohT5BEoOKS6sfXdFTA6ZzuKzH4GSPX5jcjgzA@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alan Tull <atull@altera.com>, Alexandre Courbot <gnurou@gmail.com>, Dinh Nguyen <dinguyen@altera.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Content-Type: Text/Plain;
+  charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <398ca9f17bda638e05e97f258fb4e6d27ac828db.1437059658.git.cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org, juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, shijie.huang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 16, 2015 at 09:50:44AM +0200, Linus Walleij wrote:
-> NACK. And it has been NACKed before again and again, search
-> the mailinglist for repetitive answers.
+On Thursday, July 16, 2015 at 05:27:51 PM, Cyrille Pitchen wrote:
 
-Yeah, ok, I give up.
+Hi!
 
-This happens with every DT discussion that tries to make things
-logical for the end user.
+> Both the SPI controller and the NOR flash memory need to agree on the
+> number of dummy cycles to use for Fast Read commands. For Spansion
+> memories, this number of dummy cycles is not given directly but through a
+> so called "latency code".
+> The latency code can be found into the memory datasheet and depends on the
+> SPI clock frequency, the Fast Read op code and the Single/Dual Data Rate
+> mode.
 
-> The GPIO numbers inside the Linux kernel are Linux specific and
-> have nothing to do with the hardware numbers. If they sometimes
-> match it is a lucky coincidence.
+Shouldn't you be able to derive the latency code from the above information,
+which you already know then ?
 
-Someone should tell the users that.
-
-> The same goes for IRQ numbers
-> in the kernel FWIW.
-
-Isn't there a mapping interface for irq numbers?
- 
-> So this "binding" has nothing to do with describing the hardware,
-> which device tree is for. If it ever comes to exist it needs to be
-> a "linux-*" property. But I doubt it will.
-
-How can you say that the GPIO numbers associated with the pins and
-appearing in published data sheets (and used in every schematic) are
-not part of the hardware?
-
-Thanks,
-Richard
+Best regards,
+Marek Vasut
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
