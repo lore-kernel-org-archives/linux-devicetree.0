@@ -1,149 +1,99 @@
-From: "R, Vignesh" <vigneshr@ti.com>
-Subject: Re: [PATCH v2 2/5] ARM: OMAP2+: DRA7: Add hwmod entries for PWMSS
-Date: Thu, 16 Jul 2015 21:01:37 +0530
-Message-ID: <55A7CE59.6010600@ti.com>
-References: <1433332284-10766-1-git-send-email-vigneshr@ti.com> <1433332284-10766-3-git-send-email-vigneshr@ti.com> <alpine.DEB.2.02.1507152029460.32764@utopia.booyaka.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH][v3] ARM: imx: pinctrl-imx: imx7d: add support for iomuxc
+ lpsr
+Date: Thu, 16 Jul 2015 23:50:34 +0800
+Message-ID: <20150716155034.GN4119@tiger>
+References: <1436295725-19011-1-git-send-email-aalonso@freescale.com>
+ <20150715072307.GM4119@tiger>
+ <BN3PR03MB1509DFB6A1513A23C48476CFA89A0@BN3PR03MB1509.namprd03.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.02.1507152029460.32764@utopia.booyaka.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Paul Walmsley <paul@pwsan.com>
-Cc: Tero Kristo <t-kristo@ti.com>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <BN3PR03MB1509DFB6A1513A23C48476CFA89A0@BN3PR03MB1509.namprd03.prod.outlook.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Alonso Adrian <aalonso@freescale.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Li Frank <Frank.Li@freescale.com>, Nitin Garg <nitin.garg@freescale.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, Huang Anson <Anson.Huang@freescale.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Yibin Gong <yibin.gong@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Adrian,
 
-On 07/16/2015 03:24 AM, Paul Walmsley wrote:
-> Hi,
-> 
-> some comments.
-> 
-> On Wed, 3 Jun 2015, Vignesh R wrote:
-> 
->> Add hwmod entries for the PWMSS on DRA7.
->>
->> Set l4_root_clk_div as the main_clk of PWMSS. It is fixed-factored clock
->> equal to L4PER2_L3_GICLK/2(l3_iclk_div/2).
->> As per AM57x TRM SPRUHZ6[1], October 2014, Section 29.1.3 Table 29-4,
->> clock source to PWMSS is L4PER2_L3_GICLK. But it is actually
->> L4PER2_L3_GICLK/2. The TRM does not show the division by 2.
-> 
-> Is the divide-by-two coming from PWMSS_EPWM.EPWM_TBCTL[HSPCLKDIV]?  Or is 
-> HSPCLKDIV a separate divider after the divide-by-2 you mention above?
+Please configure your email client to use bottom-posting rather than
+top-posting.
 
-No, it not related to HSPCLKDIV. The TRM wrongly states L4PER2_L3_GICLK
-as clock input for PWMSS. But actually  L4PER2_L4_GICLK(=L3_GICLK/2) is
-the clock input for PWMSS. This will be updated in TRM soon.
-
-> 
->> [1] www.ti.com/lit/ug/spruhz6/spruhz6.pdf
->>
->> Signed-off-by: Vignesh R <vigneshr@ti.com>
->> ---
->>
->> v2:
->>  * add TRM references.
->>
->>  arch/arm/mach-omap2/omap_hwmod_7xx_data.c | 239 ++++++++++++++++++++++++++++++
->>  1 file changed, 239 insertions(+)
->>
->> diff --git a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
->> index 0e64c2fac0b5..86a7ac9a3138 100644
->> --- a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
->> +++ b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
->> @@ -362,6 +362,149 @@ static struct omap_hwmod dra7xx_dcan2_hwmod = {
->>  	},
->>  };
->>  
->> +/* pwmss  */
->> +static struct omap_hwmod_class_sysconfig dra7xx_epwmss_sysc = {
->> +	.rev_offs	= 0x0,
->> +	.sysc_offs	= 0x4,
->> +	.sysc_flags	= SYSC_HAS_SIDLEMODE | SYSC_HAS_RESET_STATUS,
-> 
-> This doesn't match SPRUHZ6 Table 29-13 "PWMSS_SYSCONFIG".  There's no 
-> RESETSTATUS bit.  There is a SOFTRESET bit. 
-> 
-> Could you please confirm whether this is intentional?
-
-sorry my bad... I will change this in v3.
-
-> 
->> +	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART),
->> +	.sysc_fields	= &omap_hwmod_sysc_type2,
->> +};
->> +
->> +struct omap_hwmod_class dra7xx_epwmss_hwmod_class = {
->> +	.name		= "epwmss",
->> +	.sysc		= &dra7xx_epwmss_sysc,
->> +};
->> +
->> +static struct omap_hwmod_class dra7xx_ecap_hwmod_class = {
->> +	.name		= "ecap",
->> +};
->> +
->> +static struct omap_hwmod_class dra7xx_eqep_hwmod_class = {
->> +	.name		= "eqep",
->> +};
->> +
->> +struct omap_hwmod_class dra7xx_ehrpwm_hwmod_class = {
->> +	.name		= "ehrpwm",
->> +};
->> +
->> +/* epwmss0 */
->> +struct omap_hwmod dra7xx_epwmss0_hwmod = {
->> +	.name		= "epwmss0",
->> +	.class		= &dra7xx_epwmss_hwmod_class,
->> +	.clkdm_name	= "l4per2_clkdm",
->> +	.main_clk	= "l4_root_clk_div",
->> +	.prcm		= {
->> +		.omap4	= {
->> +			.modulemode	= MODULEMODE_SWCTRL,
->> +			.clkctrl_offs	= DRA7XX_CM_L4PER2_PWMSS1_CLKCTRL_OFFSET,
->> +			.context_offs	= DRA7XX_RM_L4PER2_PWMSS1_CONTEXT_OFFSET,
->> +		},
->> +	},
-> 
-> Per my comment on the previous patch, sounds like it might be better to 
-> mark this as HWMOD_SWSUP_SIDLE?  Then again, see the next comment below 
-> re: main_clk.
-> 
->> +};
->> +
->> +/* ecap0 */
->> +struct omap_hwmod dra7xx_ecap0_hwmod = {
->> +	.name		= "ecap0",
->> +	.class		= &dra7xx_ecap_hwmod_class,
->> +	.clkdm_name	= "l4per2_clkdm",
->> +	.main_clk	= "l4_root_clk_div",
-> 
-> Looking at SPRUHZ6 Section 29.1.4.2 "PWMSS Modules Local Clock Gating", 
-> there appears to be a local "mini-PRCM" for the PWMSS which implements 
-> clock gating and reports back on the status of what I'd guess is the local 
-> clock gating FSM.
-> 
-> So from that point of view, you should probably create a clock driver that 
-> manages both the clock gate request bit and the FSM status bit.  It should 
-> be something that can be reused for the other PWMSS IP blocks.  Then 
-> you'd create per-IP block clock nodes and set the main_clk to point to 
-> that node.
+On Wed, Jul 15, 2015 at 03:55:59PM +0000, Alonso Adrian wrote:
+> [Adrian] IOMUXC and IOMUXC-LPSR are in different base address; each controller provides SW_PAD_CTL  (CONF_REG) and SW_MUX_CTL (MUX_REG) but only IOMUXC provides SELECT_INPUT registers for pad daisy chain configuration, so pads from IOMUXC-LPSR that need daisy chain settings need to access the IOMUXC register space address to access SELECT_INPUT.
 > 
 
-Since, this register is within the config space of PWMSS, the individual
-gating and reporting for the modules within PWMSS
-(PWMSS_CLKCONFIG) is currently being taken care by pwm-tipwmss.c(almost
-the sole function this driver is doing). It has been the same since
-am335x. Adding new clock nodes will result in driver changes and also
-changes to am335x, am437x (and other platforms) hwmod files. It also
-involves adding new nodes to clocks.dtsi and it will be difficult to
-maintain backward compatibility for older platforms. Is it not better to
-keep this as is, in order to maintain consistency (with am335x, am437x
-etc) and also that these clock bits are within IP's config space?
+Thanks for the explanation.
 
+> [Adrian] One disadvantage that we found if we created two driver instances for IOMUXC and IOMUXC-LPSR controllers is that in the device tree machine files "end-users" could be creating pinctrl nodes mixing pads from different IOMUXC controllers resulting that pad that doesn't belong to that domain controller it will not be configured properly.
+> 
+> For example a valid pad configuration for I2C1 could use pads as shown below: 
+> &iomuxc {
+> 	pinctrl_i2c1_1: i2c1grp-1 {
+> 		fsl,pins = <
+> 			MX7D_PAD_GPIO1_IO04__I2C1_SCL  	/* IOMUXC-LPSR domain */
+> 			MX7D_PAD_I2C1_SDA__I2C1_SDA   	/* IOMUXC domain */
+> 		>;
+> 	};
+> };
+> 
+> By extending pinctrl-imx to support both controllers the above configuration is supported,
+> Otherwise using two driver instances "end-users" will need to do something like:
+> 
+> &iomuxc {
+> 	pinctrl_i2c1_1: i2c1grp-1 {
+> 		fsl,pins = <
+> 			MX7D_PAD_I2C1_SDA__I2C1_SDA   	/* IOMUXC domain */
+> 		>;
+> 	};
+> };
+> 
+> &iomuxc_lpsr {
+> 	pinctrl_i2c1_1: i2c1grp-1 {
+> 		fsl,pins = <
+> 			MX7D_PAD_GPIO1_IO04__I2C1_SCL  	/* IOMUXC-LPSR domain */
+> 		>;
+> 	};
+> };
+> 
+> And this is something that we will like to avoid so "end-user" don't have to worry about and configure pads as they are used to.
+> 
 
+This is exactly how hardware is designed, and having device tree
+describe how hardware is laid out is the right thing to do.  In that
+case, when people check the device tree source with a i.MX7D Reference
+Manual on hands, they can easily understand how hardware is represented
+in device tree.
 
--- 
-Regards
-Vignesh
+Also, your example with pins for a single device across IOMUXC and
+IOMUXC-LPSR should be the rare case except GPIO pins.  For your I2C1
+example, a sane hardware design would chose one group among the
+following instead of the one you put above.
+
+  MX7D_PAD_I2C1_SCL__I2C1_SCL
+  MX7D_PAD_I2C1_SDA__I2C1_SDA
+
+  MX7D_PAD_UART1_RX_DATA__I2C1_SCL
+  MX7D_PAD_UART1_TX_DATA__I2C1_SDA
+
+  MX7D_PAD_GPIO1_IO04__I2C1_SCL
+  MX7D_PAD_GPIO1_IO05__I2C1_SDA
+
+So this is not really a problem for us to implement two IOMUXC instances.
+The only problem we need to solve is the select input register access
+for IOMUXC-LPSR driver.  I have some idea for that, i.e. honestly
+represent how hardware is laid out.  I will give more details on that
+tomorrow.
+
+> [Adrian] For the artificial encoding of pad group id's for IOMUXC-LPSR, I think there is no other way to do it (limited imagination here :P);
+> Pad group id's are extracted from MUX_REG offset address (pad_id = mux_reg / 4) but when combining both IOMUXC and IOMUXC-LPSR
+> Pad group ID's overlap so end up encoding the pad_id for IOMUXC-LPSR to resolve the proper pad group ID.
+
+One big missing piece from your patch is the update to bindings document
+Documentation/devicetree/bindings/pinctrl/fsl,imx-pinctrl.txt.  Have you
+thought about how you will document all these magics and hacks you have
+done here?
+
+Shawn
