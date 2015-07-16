@@ -1,159 +1,108 @@
-From: <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: [PATCHv2] ARM: dts: socfpga: Add support of Terasic DE0 Atlas board
-Date: Thu, 16 Jul 2015 14:14:53 -0500
-Message-ID: <1437074093-12894-1-git-send-email-dinguyen@opensource.altera.com>
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=
+	<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH] dt-bindings: powerpc: adapt mpc5121-psc document to reality
+Date: Thu, 16 Jul 2015 21:35:28 +0200
+Message-ID: <1437075328-2574-1-git-send-email-u.kleine-koenig@pengutronix.de>
+References: <20150716133259.GI4039@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org
-Cc: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Dalon Westergreen <dwesterg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150716133259.GI4039-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Dalon Westergreen <dwesterg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+The drivers support MPC5125 additionally to MPC5121, and there is an sp=
+i
+mode that is also supported. Additionally some minor corrections are
+done.
 
-The Terasic DE0 Atlas board is also known as the DE0-Nano board.
-This patch adds the DTS board file for the DE0-Nano Sockit board, and not
-the DE0 Nano "Development Board".
-
-Signed-off-by: Dalon Westergreen <dwesterg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Signed-off-by: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 ---
-v2: use stdpath-out for console and remove comment regarding u-boot ethaddr
----
- arch/arm/boot/dts/Makefile                        |   1 +
- arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts | 106 ++++++++++++++++++++++
- 2 files changed, 107 insertions(+)
- create mode 100644 arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
+Hello,
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 246473a..29e33aa 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -522,6 +522,7 @@ dtb-$(CONFIG_ARCH_SOCFPGA) += \
- 	socfpga_arria5_socdk.dtb \
- 	socfpga_arria10_socdk_sdmmc.dtb \
- 	socfpga_cyclone5_socdk.dtb \
-+	socfpga_cyclone5_de0_sockit.dtb \
- 	socfpga_cyclone5_sockit.dtb \
- 	socfpga_cyclone5_socrates.dtb \
- 	socfpga_vt.dtb
-diff --git a/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts b/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
-new file mode 100644
-index 0000000..ceb4058
---- /dev/null
-+++ b/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
-@@ -0,0 +1,106 @@
-+/*
-+ * Copyright Altera Corporation (C) 2015. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along with
-+ * this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
+I sent a patch adding mpc5125 support to the mpc512x driver and Mark
+requested the new compatible to be documented. While at it I updated th=
+e
+document a bit more, and obviously the spi support for mpc5125 depends
+on my patch that isn't mainline yet.
+
+Best regards
+Uwe
+
+ .../bindings/powerpc/fsl/mpc5121-psc.txt           | 24 ++++++++++++++=
+++------
+ 1 file changed, 18 insertions(+), 6 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/powerpc/fsl/mpc5121-psc.=
+txt b/Documentation/devicetree/bindings/powerpc/fsl/mpc5121-psc.txt
+index 8832e8798912..647817527c88 100644
+--- a/Documentation/devicetree/bindings/powerpc/fsl/mpc5121-psc.txt
++++ b/Documentation/devicetree/bindings/powerpc/fsl/mpc5121-psc.txt
+@@ -6,14 +6,14 @@ PSC in UART mode
+ For PSC in UART mode the needed PSC serial devices
+ are specified by fsl,mpc5121-psc-uart nodes in the
+ fsl,mpc5121-immr SoC node. Additionally the PSC FIFO
+-Controller node fsl,mpc5121-psc-fifo is requered there:
++Controller node fsl,mpc5121-psc-fifo is required there:
+=20
+-fsl,mpc5121-psc-uart nodes
++fsl,mpc512x-psc-uart nodes
+ --------------------------
+=20
+ Required properties :
+- - compatible : Should contain "fsl,mpc5121-psc-uart" and "fsl,mpc5121=
+-psc"
+- - cell-index : Index of the PSC in hardware
++ - compatible : Should contain "fsl,<soc>-psc-uart" and "fsl,<soc>-psc=
+"
++   Supported <soc>s: mpc5121, mpc5125
+  - reg : Offset and length of the register set for the PSC device
+  - interrupts : <a b> where a is the interrupt number of the
+    PSC FIFO Controller and b is a field that represents an
+@@ -25,12 +25,21 @@ Recommended properties :
+  - fsl,rx-fifo-size : the size of the RX fifo slice (a multiple of 4)
+  - fsl,tx-fifo-size : the size of the TX fifo slice (a multiple of 4)
+=20
++PSC in SPI mode
++---------------
+=20
+-fsl,mpc5121-psc-fifo node
++Similar to the UART mode a PSC can be operated in SPI mode. The compat=
+ible used
++for that is fsl,mpc5121-psc-spi. It requires a fsl,mpc5121-psc-fifo as=
+ well.
++The required and recommended properties are identical to the
++fsl,mpc5121-psc-uart nodes, just use spi instead of uart in the compat=
+ible
++string.
 +
-+#include "socfpga_cyclone5.dtsi"
-+
-+/ {
-+	model = "Terasic DE-0(Atlas)";
-+	compatible = "altr,socfpga-cyclone5", "altr,socfpga";
-+
-+	chosen {
-+		bootargs = "earlyprintk";
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory {
-+		name = "memory";
-+		device_type = "memory";
-+		reg = <0x0 0x40000000>; /* 1GB */
-+	};
-+
-+	aliases {
-+		ethernet0 = &gmac1;
-+	};
-+
-+	regulator_3_3v: 3-3-v-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "3.3V";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		hps0 {
-+			label = "hps_led0";
-+			gpios = <&portb 24 0>;
-+			linux,default-trigger = "heartbeat";
-+		};
-+	};
-+};
-+
-+&gmac1 {
-+	status = "okay";
-+	phy-mode = "rgmii";
-+
-+	rxd0-skew-ps = <0>;
-+	rxd1-skew-ps = <0>;
-+	rxd2-skew-ps = <0>;
-+	rxd3-skew-ps = <0>;
-+	txen-skew-ps = <0>;
-+	txc-skew-ps = <2600>;
-+	rxdv-skew-ps = <0>;
-+	rxc-skew-ps = <2000>;
-+	max-frame-size = <3800>;
-+};
-+
-+&gpio0 {
-+	status = "okay";
-+};
-+
-+&gpio1 {
-+	status = "okay";
-+};
-+
-+&gpio2 {
-+	status = "okay";
-+};
-+
-+&i2c0 {
-+	status = "okay";
-+	speed-mode = <0>;
-+
-+	adxl345: adxl345@0 {
-+		compatible = "adi,adxl345";
-+		reg = <0x53>;
-+
-+		interrupt-parent = <&portc>;
-+		interrupts = <3 2>;
-+	};
-+};
-+
-+&mmc0 {
-+	vmmc-supply = <&regulator_3_3v>;
-+	vqmmc-supply = <&regulator_3_3v>;
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-+
-+&usb1 {
-+	status = "okay";
-+};
--- 
-2.4.5
++fsl,mpc512x-psc-fifo node
+ -------------------------
+=20
+ Required properties :
+- - compatible : Should be "fsl,mpc5121-psc-fifo"
++ - compatible : Should be "fsl,<soc>-psc-fifo"
++   Supported <soc>s: mpc5121, mpc5125
+  - reg : Offset and length of the register set for the PSC
+          FIFO Controller
+  - interrupts : <a b> where a is the interrupt number of the
+@@ -39,6 +48,9 @@ Required properties :
+  - interrupt-parent : the phandle for the interrupt controller that
+    services interrupts for this device.
+=20
++Recommended properties :
++ - clocks : specifies the clock needed to operate the fifo controller
++ - clock-names : name(s) for the clock(s) listed in clocks
+=20
+ Example for a board using PSC0 and PSC1 devices in serial mode:
+=20
+--=20
+2.1.4
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
