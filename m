@@ -1,225 +1,128 @@
-From: Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH] arm64: dts: mediatek: Add MT8173 MMC dts
-Date: Thu, 16 Jul 2015 19:36:20 +0800
-Message-ID: <1437046580-10809-1-git-send-email-chaotian.jing@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, HenryC Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: [RFC PATCH 1/2] PM: devfreq: Add the prototype of update_devfreq() to
+ export
+Date: Thu, 16 Jul 2015 21:02:52 +0900
+Message-ID: <1437048173-23744-2-git-send-email-cw00.choi@samsung.com>
+References: <1437048173-23744-1-git-send-email-cw00.choi@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1437048173-23744-1-git-send-email-cw00.choi@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: edubezval@gmail.com, rui.zhang@intel.com, myungjoo.ham@samsung.com, kyungmin.park@samsung.com
+Cc: ulf.hansson@linaro.org, khilman@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, inki.dae@samsung.com, l.majewski@samsung.com, cw00.choi@samsung.com, kgene.kim@samsung.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+This patch add simply the protoptye of update_devfreq() to devfreq.h header
+file to export it. The some device driver (e.g., thermal cooling device) may
+use the update_devfreq() to update the range of supported frequency of devfreq
+device.
 
-Add node mmc0 ~ mmc3 for mt8173.dtsi
-Add node mmc0, mmc1 for mt8173-evb.dts
-
-Signed-off-by: Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>
+Cc: Kyungmin Park <kyungmin.park@samsung.com>
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
 ---
-Remove clk_null
-Base on 4.2-rc1, and  https://github.com/mbgg/linux-mediatek/tree/v4.2-next/arm64 commit 16ea61fc  arm64: dts: mt8173-evb: Add PMIC support 
- arch/arm64/boot/dts/mediatek/mt8173-evb.dts | 126 ++++++++++++++++++++++++++++
- arch/arm64/boot/dts/mediatek/mt8173.dtsi    |  44 ++++++++++
- 2 files changed, 170 insertions(+)
+ drivers/devfreq/devfreq.c | 22 +++++++++++-----------
+ include/linux/devfreq.h   |  7 +++++++
+ 2 files changed, 18 insertions(+), 11 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-index 986f25f..f76c99b 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-@@ -64,6 +64,132 @@
- 	};
- };
+diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+index ca1b362d77e2..2aa5e4e9df36 100644
+--- a/drivers/devfreq/devfreq.c
++++ b/drivers/devfreq/devfreq.c
+@@ -163,18 +163,17 @@ int update_devfreq(struct devfreq *devfreq)
+ 	int err = 0;
+ 	u32 flags = 0;
  
-+&mmc0 {
-+	status = "okay";
-+	pinctrl-names = "default", "state_uhs";
-+	pinctrl-0 = <&mmc0_pins_default>;
-+	pinctrl-1 = <&mmc0_pins_uhs>;
-+	bus-width = <8>;
-+	max-frequency = <50000000>;
-+	cap-mmc-highspeed;
-+	vmmc-supply = <&mt6397_vemc_3v3_reg>;
-+	vqmmc-supply = <&mt6397_vio18_reg>;
-+	non-removable;
-+};
-+
-+&mmc1 {
-+	status = "okay";
-+	pinctrl-names = "default", "state_uhs";
-+	pinctrl-0 = <&mmc1_pins_default>;
-+	pinctrl-1 = <&mmc1_pins_uhs>;
-+	bus-width = <4>;
-+	max-frequency = <50000000>;
-+	cap-sd-highspeed;
-+	sd-uhs-sdr25;
-+	cd-gpios = <&pio 132 0>;
-+	vmmc-supply = <&mt6397_vmch_reg>;
-+	vqmmc-supply = <&mt6397_vmc_reg>;
-+};
-+
-+&pio {
-+	mmc0_pins_default: mmc0default {
-+		pins_cmd_dat {
-+			pinmux = <MT8173_PIN_57_MSDC0_DAT0__FUNC_MSDC0_DAT0>,
-+				 <MT8173_PIN_58_MSDC0_DAT1__FUNC_MSDC0_DAT1>,
-+				 <MT8173_PIN_59_MSDC0_DAT2__FUNC_MSDC0_DAT2>,
-+				 <MT8173_PIN_60_MSDC0_DAT3__FUNC_MSDC0_DAT3>,
-+				 <MT8173_PIN_61_MSDC0_DAT4__FUNC_MSDC0_DAT4>,
-+				 <MT8173_PIN_62_MSDC0_DAT5__FUNC_MSDC0_DAT5>,
-+				 <MT8173_PIN_63_MSDC0_DAT6__FUNC_MSDC0_DAT6>,
-+				 <MT8173_PIN_64_MSDC0_DAT7__FUNC_MSDC0_DAT7>,
-+				 <MT8173_PIN_66_MSDC0_CMD__FUNC_MSDC0_CMD>;
-+			input-enable;
-+			bias-pull-up;
-+		};
-+
-+		pins_clk {
-+			pinmux = <MT8173_PIN_65_MSDC0_CLK__FUNC_MSDC0_CLK>;
-+			bias-pull-down;
-+		};
-+
-+		pins_rst {
-+			pinmux = <MT8173_PIN_68_MSDC0_RST___FUNC_MSDC0_RSTB>;
-+			bias-pull-up;
-+		};
-+	};
-+
-+	mmc1_pins_default: mmc1default {
-+		pins_cmd_dat {
-+			pinmux = <MT8173_PIN_73_MSDC1_DAT0__FUNC_MSDC1_DAT0>,
-+				 <MT8173_PIN_74_MSDC1_DAT1__FUNC_MSDC1_DAT1>,
-+				 <MT8173_PIN_75_MSDC1_DAT2__FUNC_MSDC1_DAT2>,
-+				 <MT8173_PIN_76_MSDC1_DAT3__FUNC_MSDC1_DAT3>,
-+				 <MT8173_PIN_78_MSDC1_CMD__FUNC_MSDC1_CMD>;
-+			input-enable;
-+			drive-strength = <MTK_DRIVE_4mA>;
-+			bias-pull-up = <MTK_PUPD_SET_R1R0_10>;
-+		};
-+
-+		pins_clk {
-+			pinmux = <MT8173_PIN_77_MSDC1_CLK__FUNC_MSDC1_CLK>;
-+			bias-pull-down;
-+			drive-strength = <MTK_DRIVE_4mA>;
-+		};
-+
-+		pins_insert {
-+			pinmux = <MT8173_PIN_132_I2S0_DATA1__FUNC_GPIO132>;
-+			bias-pull-up;
-+		};
-+	};
-+
-+	mmc0_pins_uhs: mmc0@0{
-+		pins_cmd_dat {
-+			pinmux = <MT8173_PIN_57_MSDC0_DAT0__FUNC_MSDC0_DAT0>,
-+				 <MT8173_PIN_58_MSDC0_DAT1__FUNC_MSDC0_DAT1>,
-+				 <MT8173_PIN_59_MSDC0_DAT2__FUNC_MSDC0_DAT2>,
-+				 <MT8173_PIN_60_MSDC0_DAT3__FUNC_MSDC0_DAT3>,
-+				 <MT8173_PIN_61_MSDC0_DAT4__FUNC_MSDC0_DAT4>,
-+				 <MT8173_PIN_62_MSDC0_DAT5__FUNC_MSDC0_DAT5>,
-+				 <MT8173_PIN_63_MSDC0_DAT6__FUNC_MSDC0_DAT6>,
-+				 <MT8173_PIN_64_MSDC0_DAT7__FUNC_MSDC0_DAT7>,
-+				 <MT8173_PIN_66_MSDC0_CMD__FUNC_MSDC0_CMD>;
-+			input-enable;
-+			drive-strength = <MTK_DRIVE_2mA>;
-+			bias-pull-up = <MTK_PUPD_SET_R1R0_01>;
-+		};
-+
-+		pins_clk {
-+			pinmux = <MT8173_PIN_65_MSDC0_CLK__FUNC_MSDC0_CLK>;
-+			drive-strength = <MTK_DRIVE_2mA>;
-+			bias-pull-down = <MTK_PUPD_SET_R1R0_01>;
-+		};
-+
-+		pins_rst {
-+			pinmux = <MT8173_PIN_68_MSDC0_RST___FUNC_MSDC0_RSTB>;
-+			bias-pull-up;
-+		};
-+	};
-+
-+	mmc1_pins_uhs: mmc1@0 {
-+		pins_cmd_dat {
-+			pinmux = <MT8173_PIN_73_MSDC1_DAT0__FUNC_MSDC1_DAT0>,
-+				 <MT8173_PIN_74_MSDC1_DAT1__FUNC_MSDC1_DAT1>,
-+				 <MT8173_PIN_75_MSDC1_DAT2__FUNC_MSDC1_DAT2>,
-+				 <MT8173_PIN_76_MSDC1_DAT3__FUNC_MSDC1_DAT3>,
-+				 <MT8173_PIN_78_MSDC1_CMD__FUNC_MSDC1_CMD>;
-+			input-enable;
-+			drive-strength = <MTK_DRIVE_4mA>;
-+			bias-pull-up = <MTK_PUPD_SET_R1R0_10>;
-+		};
-+
-+		pins_clk {
-+			pinmux = <MT8173_PIN_77_MSDC1_CLK__FUNC_MSDC1_CLK>;
-+			drive-strength = <MTK_DRIVE_4mA>;
-+			bias-pull-down = <MTK_PUPD_SET_R1R0_10>;
-+		};
-+	};
-+};
-+
- &pwrap {
- 	pmic: mt6397 {
- 		compatible = "mediatek,mt6397";
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index 359b8b6..9d36931 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -411,6 +411,50 @@
- 			#size-cells = <0>;
- 			status = "disabled";
- 		};
-+
-+		mmc0: mmc@11230000 {
-+			compatible = "mediatek,mt8173-mmc",
-+				     "mediatek,mt8135-mmc";
-+			reg = <0 0x11230000 0 0x1000>;
-+			interrupts = <GIC_SPI 71 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&pericfg CLK_PERI_MSDC30_0>,
-+				 <&topckgen CLK_TOP_MSDC50_0_H_SEL>;
-+			clock-names = "source", "hclk";
-+			status = "disabled";
-+		};
-+
-+		mmc1: mmc@11240000 {
-+			compatible = "mediatek,mt8173-mmc",
-+				     "mediatek,mt8135-mmc";
-+			reg = <0 0x11240000 0 0x1000>;
-+			interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&pericfg CLK_PERI_MSDC30_1>,
-+				 <&topckgen CLK_TOP_AXI_SEL>;
-+			clock-names = "source", "hclk";
-+			status = "disabled";
-+		};
-+
-+		mmc2: mmc@11250000 {
-+			compatible = "mediatek,mt8173-mmc",
-+				     "mediatek,mt8135-mmc";
-+			reg = <0 0x11250000 0 0x1000>;
-+			interrupts = <GIC_SPI 73 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&pericfg CLK_PERI_MSDC30_2>,
-+				 <&topckgen CLK_TOP_AXI_SEL>;
-+			clock-names = "source", "hclk";
-+			status = "disabled";
-+		};
-+
-+		mmc3: mmc@11260000 {
-+			compatible = "mediatek,mt8173-mmc",
-+				     "mediatek,mt8135-mmc";
-+			reg = <0 0x11260000 0 0x1000>;
-+			interrupts = <GIC_SPI 74 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&pericfg CLK_PERI_MSDC30_3>,
-+				 <&topckgen CLK_TOP_MSDC50_2_H_SEL>;
-+			clock-names = "source", "hclk";
-+			status = "disabled";
-+		};
- 	};
- };
+-	if (!mutex_is_locked(&devfreq->lock)) {
+-		WARN(true, "devfreq->lock must be locked by the caller.\n");
+-		return -EINVAL;
+-	}
+-
+ 	if (!devfreq->governor)
+ 		return -EINVAL;
  
++	mutex_lock(&devfreq->lock);
++
+ 	/* Reevaluate the proper frequency */
+ 	err = devfreq->governor->get_target_freq(devfreq, &freq);
+-	if (err)
++	if (err) {
++		mutex_unlock(&devfreq->lock);
+ 		return err;
++	}
+ 
+ 	/*
+ 	 * Adjust the freuqency with user freq and QoS.
+@@ -194,8 +193,10 @@ int update_devfreq(struct devfreq *devfreq)
+ 	}
+ 
+ 	err = devfreq->profile->target(devfreq->dev.parent, &freq, flags);
+-	if (err)
++	if (err) {
++		mutex_unlock(&devfreq->lock);
+ 		return err;
++	}
+ 
+ 	if (devfreq->profile->freq_table)
+ 		if (devfreq_update_status(devfreq, freq))
+@@ -203,6 +204,9 @@ int update_devfreq(struct devfreq *devfreq)
+ 				"Couldn't update frequency transition information.\n");
+ 
+ 	devfreq->previous_freq = freq;
++
++	mutex_unlock(&devfreq->lock);
++
+ 	return err;
+ }
+ EXPORT_SYMBOL(update_devfreq);
+@@ -218,14 +222,12 @@ static void devfreq_monitor(struct work_struct *work)
+ 	struct devfreq *devfreq = container_of(work,
+ 					struct devfreq, work.work);
+ 
+-	mutex_lock(&devfreq->lock);
+ 	err = update_devfreq(devfreq);
+ 	if (err)
+ 		dev_err(&devfreq->dev, "dvfs failed with (%d) error\n", err);
+ 
+ 	queue_delayed_work(devfreq_wq, &devfreq->work,
+ 				msecs_to_jiffies(devfreq->profile->polling_ms));
+-	mutex_unlock(&devfreq->lock);
+ }
+ 
+ /**
+@@ -382,9 +384,7 @@ static int devfreq_notifier_call(struct notifier_block *nb, unsigned long type,
+ 	struct devfreq *devfreq = container_of(nb, struct devfreq, nb);
+ 	int ret;
+ 
+-	mutex_lock(&devfreq->lock);
+ 	ret = update_devfreq(devfreq);
+-	mutex_unlock(&devfreq->lock);
+ 
+ 	return ret;
+ }
+diff --git a/include/linux/devfreq.h b/include/linux/devfreq.h
+index ce447f0f1bad..07da551f2709 100644
+--- a/include/linux/devfreq.h
++++ b/include/linux/devfreq.h
+@@ -204,6 +204,8 @@ extern int devm_devfreq_register_opp_notifier(struct device *dev,
+ extern void devm_devfreq_unregister_opp_notifier(struct device *dev,
+ 						struct devfreq *devfreq);
+ 
++extern int update_devfreq(struct devfreq *devfreq);
++
+ #if IS_ENABLED(CONFIG_DEVFREQ_GOV_SIMPLE_ONDEMAND)
+ /**
+  * struct devfreq_simple_ondemand_data - void *data fed to struct devfreq
+@@ -289,6 +291,11 @@ static inline void devm_devfreq_unregister_opp_notifier(struct device *dev,
+ 							struct devfreq *devfreq)
+ {
+ }
++
++static inline int update_devfreq(struct devfreq *devfreq)
++{
++	return 0;
++}
+ #endif /* CONFIG_PM_DEVFREQ */
+ 
+ #endif /* __LINUX_DEVFREQ_H__ */
 -- 
-1.8.1.1.dirty
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.8.5.5
