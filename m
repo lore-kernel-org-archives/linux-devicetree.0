@@ -1,181 +1,149 @@
-From: Cyrille Pitchen <cyrille.pitchen@atmel.com>
-Subject: [PATCH 3/7] mtd: spi-nor: allow to tune the number of dummy cycles
-Date: Thu, 16 Jul 2015 17:27:50 +0200
-Message-ID: <f6a401a01c555f428b4d8da1cb30e69f7c1377b2.1437059658.git.cyrille.pitchen@atmel.com>
-References: <cover.1437059658.git.cyrille.pitchen@atmel.com>
+From: "R, Vignesh" <vigneshr@ti.com>
+Subject: Re: [PATCH v2 2/5] ARM: OMAP2+: DRA7: Add hwmod entries for PWMSS
+Date: Thu, 16 Jul 2015 21:01:37 +0530
+Message-ID: <55A7CE59.6010600@ti.com>
+References: <1433332284-10766-1-git-send-email-vigneshr@ti.com> <1433332284-10766-3-git-send-email-vigneshr@ti.com> <alpine.DEB.2.02.1507152029460.32764@utopia.booyaka.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <cover.1437059658.git.cyrille.pitchen@atmel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: nicolas.ferre@atmel.com, broonie@kernel.org, linux-spi@vger.kernel.org, dwmw2@infradead.org, computersforpeace@gmail.com, zajec5@gmail.com, beanhuo@micron.com, juhosg@openwrt.org, marex@denx.de, shijie.huang@intel.com, ben@decadent.org.uk
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-mtd@lists.infradead.org, galak@codeaurora.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.02.1507152029460.32764@utopia.booyaka.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Paul Walmsley <paul@pwsan.com>
+Cc: Tero Kristo <t-kristo@ti.com>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The number of dummy cycles used during Fast Read commands can be reduced
-to improve transfer performances. Each manufacturer has a dedicated set of
-registers to provide the memory with the exact number of dummy cycles it
-should expect. Both the memory and the (Q)SPI controller must agree on
-this number of dummy cycles.
+Hi,
 
-The number of dummy cycles can be found into the memory datasheet and
-mostly depends on the SPI clock frequency, the Fast Read op code and the
-Single/Dual Data Rate mode.
+On 07/16/2015 03:24 AM, Paul Walmsley wrote:
+> Hi,
+> 
+> some comments.
+> 
+> On Wed, 3 Jun 2015, Vignesh R wrote:
+> 
+>> Add hwmod entries for the PWMSS on DRA7.
+>>
+>> Set l4_root_clk_div as the main_clk of PWMSS. It is fixed-factored clock
+>> equal to L4PER2_L3_GICLK/2(l3_iclk_div/2).
+>> As per AM57x TRM SPRUHZ6[1], October 2014, Section 29.1.3 Table 29-4,
+>> clock source to PWMSS is L4PER2_L3_GICLK. But it is actually
+>> L4PER2_L3_GICLK/2. The TRM does not show the division by 2.
+> 
+> Is the divide-by-two coming from PWMSS_EPWM.EPWM_TBCTL[HSPCLKDIV]?  Or is 
+> HSPCLKDIV a separate divider after the divide-by-2 you mention above?
 
-Probing JEDEC Serial Flash Discoverable Parameters (SFDP) tables would
-only provide the driver with a high enough number of dummy cycles for each
-Fast Read command to be used for all clock frequencies: this solution
-would not be optimized.
+No, it not related to HSPCLKDIV. The TRM wrongly states L4PER2_L3_GICLK
+as clock input for PWMSS. But actually  L4PER2_L4_GICLK(=L3_GICLK/2) is
+the clock input for PWMSS. This will be updated in TRM soon.
 
-Signed-off-by: Cyrille Pitchen <cyrille.pitchen@atmel.com>
----
- drivers/mtd/spi-nor/spi-nor.c | 97 ++++++++++++++++++++++++++++++++++---------
- include/linux/mtd/spi-nor.h   |  2 +
- 2 files changed, 80 insertions(+), 19 deletions(-)
+> 
+>> [1] www.ti.com/lit/ug/spruhz6/spruhz6.pdf
+>>
+>> Signed-off-by: Vignesh R <vigneshr@ti.com>
+>> ---
+>>
+>> v2:
+>>  * add TRM references.
+>>
+>>  arch/arm/mach-omap2/omap_hwmod_7xx_data.c | 239 ++++++++++++++++++++++++++++++
+>>  1 file changed, 239 insertions(+)
+>>
+>> diff --git a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+>> index 0e64c2fac0b5..86a7ac9a3138 100644
+>> --- a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+>> +++ b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+>> @@ -362,6 +362,149 @@ static struct omap_hwmod dra7xx_dcan2_hwmod = {
+>>  	},
+>>  };
+>>  
+>> +/* pwmss  */
+>> +static struct omap_hwmod_class_sysconfig dra7xx_epwmss_sysc = {
+>> +	.rev_offs	= 0x0,
+>> +	.sysc_offs	= 0x4,
+>> +	.sysc_flags	= SYSC_HAS_SIDLEMODE | SYSC_HAS_RESET_STATUS,
+> 
+> This doesn't match SPRUHZ6 Table 29-13 "PWMSS_SYSCONFIG".  There's no 
+> RESETSTATUS bit.  There is a SOFTRESET bit. 
+> 
+> Could you please confirm whether this is intentional?
 
-diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-index 93627d4e6be8..5df6e4712a9e 100644
---- a/drivers/mtd/spi-nor/spi-nor.c
-+++ b/drivers/mtd/spi-nor/spi-nor.c
-@@ -119,24 +119,6 @@ static int read_cr(struct spi_nor *nor)
- }
- 
- /*
-- * Dummy Cycle calculation for different type of read.
-- * It can be used to support more commands with
-- * different dummy cycle requirements.
-- */
--static inline int spi_nor_read_dummy_cycles(struct spi_nor *nor)
--{
--	switch (nor->flash_read) {
--	case SPI_NOR_FAST:
--	case SPI_NOR_DUAL:
--	case SPI_NOR_QUAD:
--		return 8;
--	case SPI_NOR_NORMAL:
--		return 0;
--	}
--	return 0;
--}
--
--/*
-  * Write status register 1 byte
-  * Returns negative if error occurred.
-  */
-@@ -1007,6 +989,81 @@ static int set_quad_mode(struct spi_nor *nor, struct flash_info *info)
- 	}
- }
- 
-+static int micron_set_dummy_cycles(struct spi_nor *nor)
-+{
-+	int ret;
-+	u8 val, mask;
-+
-+	/* read the Volatile Configuration Register (VCR) */
-+	ret = nor->read_reg(nor, SPINOR_OP_RD_VCR, &val, 1);
-+	if (ret < 0) {
-+		dev_err(nor->dev, "error %d reading VCR\n", ret);
-+		return ret;
-+	}
-+
-+	write_enable(nor);
-+
-+	/* update the number of dummy into the VCR */
-+	mask = GENMASK(7, 4);
-+	val &= ~mask;
-+	val |= (nor->read_dummy << 4) & mask;
-+	ret = nor->write_reg(nor, SPINOR_OP_WR_VCR, &val, 1, 0);
-+	if (ret < 0) {
-+		dev_err(nor->dev, "error while writing VCR register\n");
-+		return ret;
-+	}
-+
-+	ret = spi_nor_wait_till_ready(nor);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+/*
-+ * Dummy Cycle calculation for different type of read.
-+ * It can be used to support more commands with
-+ * different dummy cycle requirements.
-+ */
-+static int spi_nor_read_dummy_cycles(struct spi_nor *nor,
-+				     const struct flash_info *info)
-+{
-+	struct device_node *np = nor->dev->of_node;
-+	u32 num_dummy_cycles;
-+
-+	if (np && !of_property_read_u32(np, "m25p,num-dummy-cycles",
-+					&num_dummy_cycles)) {
-+		nor->read_dummy = num_dummy_cycles;
-+
-+		/*
-+		 * This switch block might be moved after the if...then...else
-+		 * statement but it was not tested with all Spansion or Micron
-+		 * memories.
-+		 * Now the "m25p,num-dummy-cycles" property needs to be
-+		 * explicitly set in the device tree so the switch statement is
-+		 * executed. This should avoid unwanted side effects and keep
-+		 * backward compatibility.
-+		 */
-+		switch (JEDEC_MFR(info)) {
-+		case CFI_MFR_ST:
-+			return micron_set_dummy_cycles(nor);
-+		default:
-+			break;
-+		}
-+	} else {
-+		switch (nor->flash_read) {
-+		case SPI_NOR_FAST:
-+		case SPI_NOR_DUAL:
-+		case SPI_NOR_QUAD:
-+			nor->read_dummy = 8;
-+		case SPI_NOR_NORMAL:
-+			nor->read_dummy = 0;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- static int spi_nor_check(struct spi_nor *nor)
- {
- 	if (!nor->dev || !nor->read || !nor->write ||
-@@ -1211,7 +1268,9 @@ int spi_nor_scan(struct spi_nor *nor, const char *name, enum read_mode mode)
- 		nor->addr_width = 3;
- 	}
- 
--	nor->read_dummy = spi_nor_read_dummy_cycles(nor);
-+	ret = spi_nor_read_dummy_cycles(nor, info);
-+	if (ret)
-+		return ret;
- 
- 	dev_info(dev, "%s (%lld Kbytes)\n", id->name,
- 			(long long)mtd->size >> 10);
-diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
-index 1bf6f11310ef..e03a4c4053d3 100644
---- a/include/linux/mtd/spi-nor.h
-+++ b/include/linux/mtd/spi-nor.h
-@@ -59,6 +59,8 @@
- /* Used for Micron flashes only. */
- #define SPINOR_OP_RD_EVCR      0x65    /* Read EVCR register */
- #define SPINOR_OP_WD_EVCR      0x61    /* Write EVCR register */
-+#define SPINOR_OP_RD_VCR	0x85	/* Read VCR register */
-+#define SPINOR_OP_WR_VCR	0x81	/* Write VCR register */
- 
- /* Status Register bits. */
- #define SR_WIP			1	/* Write in progress */
+sorry my bad... I will change this in v3.
+
+> 
+>> +	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART),
+>> +	.sysc_fields	= &omap_hwmod_sysc_type2,
+>> +};
+>> +
+>> +struct omap_hwmod_class dra7xx_epwmss_hwmod_class = {
+>> +	.name		= "epwmss",
+>> +	.sysc		= &dra7xx_epwmss_sysc,
+>> +};
+>> +
+>> +static struct omap_hwmod_class dra7xx_ecap_hwmod_class = {
+>> +	.name		= "ecap",
+>> +};
+>> +
+>> +static struct omap_hwmod_class dra7xx_eqep_hwmod_class = {
+>> +	.name		= "eqep",
+>> +};
+>> +
+>> +struct omap_hwmod_class dra7xx_ehrpwm_hwmod_class = {
+>> +	.name		= "ehrpwm",
+>> +};
+>> +
+>> +/* epwmss0 */
+>> +struct omap_hwmod dra7xx_epwmss0_hwmod = {
+>> +	.name		= "epwmss0",
+>> +	.class		= &dra7xx_epwmss_hwmod_class,
+>> +	.clkdm_name	= "l4per2_clkdm",
+>> +	.main_clk	= "l4_root_clk_div",
+>> +	.prcm		= {
+>> +		.omap4	= {
+>> +			.modulemode	= MODULEMODE_SWCTRL,
+>> +			.clkctrl_offs	= DRA7XX_CM_L4PER2_PWMSS1_CLKCTRL_OFFSET,
+>> +			.context_offs	= DRA7XX_RM_L4PER2_PWMSS1_CONTEXT_OFFSET,
+>> +		},
+>> +	},
+> 
+> Per my comment on the previous patch, sounds like it might be better to 
+> mark this as HWMOD_SWSUP_SIDLE?  Then again, see the next comment below 
+> re: main_clk.
+> 
+>> +};
+>> +
+>> +/* ecap0 */
+>> +struct omap_hwmod dra7xx_ecap0_hwmod = {
+>> +	.name		= "ecap0",
+>> +	.class		= &dra7xx_ecap_hwmod_class,
+>> +	.clkdm_name	= "l4per2_clkdm",
+>> +	.main_clk	= "l4_root_clk_div",
+> 
+> Looking at SPRUHZ6 Section 29.1.4.2 "PWMSS Modules Local Clock Gating", 
+> there appears to be a local "mini-PRCM" for the PWMSS which implements 
+> clock gating and reports back on the status of what I'd guess is the local 
+> clock gating FSM.
+> 
+> So from that point of view, you should probably create a clock driver that 
+> manages both the clock gate request bit and the FSM status bit.  It should 
+> be something that can be reused for the other PWMSS IP blocks.  Then 
+> you'd create per-IP block clock nodes and set the main_clk to point to 
+> that node.
+> 
+
+Since, this register is within the config space of PWMSS, the individual
+gating and reporting for the modules within PWMSS
+(PWMSS_CLKCONFIG) is currently being taken care by pwm-tipwmss.c(almost
+the sole function this driver is doing). It has been the same since
+am335x. Adding new clock nodes will result in driver changes and also
+changes to am335x, am437x (and other platforms) hwmod files. It also
+involves adding new nodes to clocks.dtsi and it will be difficult to
+maintain backward compatibility for older platforms. Is it not better to
+keep this as is, in order to maintain consistency (with am335x, am437x
+etc) and also that these clock bits are within IP's config space?
+
+
+
 -- 
-1.8.2.2
+Regards
+Vignesh
