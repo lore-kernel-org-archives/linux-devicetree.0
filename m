@@ -1,29 +1,72 @@
-From: Richard Cochran <richardcochran@gmail.com>
-Subject: Re: [PATCH 1/2] gpio: dwapb: Use human understandable gpio numbering.
-Date: Thu, 16 Jul 2015 20:19:08 +0200
-Message-ID: <20150716181908.GA27856@localhost.localdomain>
-References: <cover.1435777856.git.rcochran@linutronix.de>
- <d6b5ce85a17164970d454583560e07f7aed7b8ca.1435777856.git.rcochran@linutronix.de>
- <267A46E7-C5C5-4696-90CC-D44F4130B3EF@smart-africa.com>
- <20150702142058.GA9349@localhost.localdomain>
- <CACRpkdb_3B8749X-p_XEPGvZPEQ56-gMdLBcPrgjXkqWCiz1PQ@mail.gmail.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH] input: snvs_pwrkey: add linux prefix for wakeup property
+Date: Thu, 16 Jul 2015 11:34:08 -0700
+Message-ID: <20150716183408.GD32571@dtor-ws>
+References: <1436930409-6536-1-git-send-email-shawnguo@kernel.org>
+ <CAHrpEqS2o6_B6dNrnWJ06ASWaB0SGxur1o3VuN2A-QywWhbWVA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <CACRpkdb_3B8749X-p_XEPGvZPEQ56-gMdLBcPrgjXkqWCiz1PQ@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Michael van der Westhuizen <michael@smart-africa.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Alexandre Courbot <gnurou@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Alan Tull <atull@altera.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Dinh Nguyen <dinguyen@altera.com>
+In-Reply-To: <CAHrpEqS2o6_B6dNrnWJ06ASWaB0SGxur1o3VuN2A-QywWhbWVA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Zhi Li <lznuaa@gmail.com>
+Cc: Frank Li <Frank.Li@freescale.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 16, 2015 at 09:57:23AM +0200, Linus Walleij wrote:
-> So what about making a patch to drivers/gpio/gpio-dwapb.c that adds the
-> .names property to its GPIO chip?
+On Wed, Jul 15, 2015 at 09:00:12AM -0500, Zhi Li wrote:
+> On Tue, Jul 14, 2015 at 10:20 PM, Shawn Guo <shawnguo@kernel.org> wrote:
+> > The wakeup capability is somehow linux specific, and all existing
+> > bindings name the property "linux,wakeup" to reflect that, e.g.
+> > Documentation/devicetree/bindings/input/gpio-matrix-keypad.txt.  Let's
+> > follow the convention.
 
-OK, so the user knows that he wants the instance with .name = "gpio0".
+I do not believe it is Linux specific, it describes desired behavior of
+hardware regardless of OS. I mean you want your device to wake up if you
+press power button whether it runes Linux, Windows, FreeBSD or whatever.
 
-What should he write into /sys/class/gpio/export?
+> >
+> > Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+> > ---
+> > This is a fixup for Frank's patch which is queued on i.MX tree, so I
+> > will apply it to the same branch.
+> >
+> > Shawn
+> >
+> >  Documentation/devicetree/bindings/crypto/fsl-sec4.txt | 2 +-
+> >  drivers/input/keyboard/snvs_pwrkey.c                  | 2 +-
+> >  2 files changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
+> > index 71a39c5bd486..fa821c6a0b5b 100644
+> > --- a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
+> > +++ b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
+> > @@ -408,7 +408,7 @@ System ON/OFF key driver
+> >        Value type: <int>
+> >        Definition: Keycode to emit, KEY_POWER by default.
+> >
+> > -  - wakeup:
+> > +  - linux,wakeup:
+> 
+> I remember Dmitry Torokhov said use wakeup, instead of linux, wakeup
+> when I sent patch to review.
 
-Thanks,
-Richard
+I should have said to use "wakeup-source", not simply "wakeup" so that
+we'd match with I2C annotation.
+
+I think I'll go over input driver and convert them (keeping old names
+for compatibility reasons).
+
+Thanks.
+
+-- 
+Dmitry
