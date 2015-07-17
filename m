@@ -1,239 +1,66 @@
-From: punnaiah choudary kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] dma: Add Xilinx zynqmp dma engine driver support
-Date: Fri, 17 Jul 2015 06:22:42 +0530
-Message-ID: <CAGnW=BbUBOzm5V_LP_YcCfJ9X+Yw8qGp6PE2xSM13E=qUXxUsw@mail.gmail.com>
-References: <1434422083-8653-1-git-send-email-punnaia@xilinx.com>
-	<1434422083-8653-2-git-send-email-punnaia@xilinx.com>
-	<20150716123548.GO5086@localhost>
+From: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] iio: light: DT binding docs for APDS9960 driver
+Date: Thu, 16 Jul 2015 19:55:52 -0700
+Message-ID: <CAKzfze8w6PDT9oWGCSbSK70K+e3ciijdJv+AwKxwbc=uQ-iHvg@mail.gmail.com>
+References: <1436754043-6232-1-git-send-email-mranostay@gmail.com>
+	<1436754043-6232-2-git-send-email-mranostay@gmail.com>
+	<73CF94B0-47DF-493D-8F2A-0BC26EB4DEBB@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150716123548.GO5086@localhost>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Punnaiah Choudary <kpc528-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <73CF94B0-47DF-493D-8F2A-0BC26EB4DEBB-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marex-ynQEQJNshbs@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 16, 2015 at 6:05 PM, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
-> On Tue, Jun 16, 2015 at 08:04:43AM +0530, Punnaiah Choudary Kalluri wrote:
->> +/* Register Offsets */
->> +#define ISR                          0x100
->> +#define IMR                          0x104
->> +#define IER                          0x108
->> +#define IDS                          0x10C
->> +#define CTRL0                                0x110
->> +#define CTRL1                                0x114
->> +#define STATUS                               0x11C
->> +#define DATA_ATTR                    0x120
->> +#define DSCR_ATTR                    0x124
->> +#define SRC_DSCR_WRD0                        0x128
->> +#define SRC_DSCR_WRD1                        0x12C
->> +#define SRC_DSCR_WRD2                        0x130
->> +#define SRC_DSCR_WRD3                        0x134
->> +#define DST_DSCR_WRD0                        0x138
->> +#define DST_DSCR_WRD1                        0x13C
->> +#define DST_DSCR_WRD2                        0x140
->> +#define DST_DSCR_WRD3                        0x144
->> +#define SRC_START_LSB                        0x158
->> +#define SRC_START_MSB                        0x15C
->> +#define DST_START_LSB                        0x160
->> +#define DST_START_MSB                        0x164
->> +#define TOTAL_BYTE                   0x188
->> +#define RATE_CTRL                    0x18C
->> +#define IRQ_SRC_ACCT                 0x190
->> +#define IRQ_DST_ACCT                 0x194
->> +#define CTRL2                                0x200
-> Can you namespace these and other defines
+Ok will fix in v4. Please review the 2/2 patch when you get a chance :)
 
-Ok. just to be clear, you want to me to prefix ZYNQMP_DMA?
-or you want me to add comments ?
-I have defined the exact register names as per the zynqmp dma
-spec,
-
-
+On Mon, Jul 13, 2015 at 2:42 AM, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
 >
->> +struct zynqmp_dma_chan {
->> +     struct zynqmp_dma_device *xdev;
-> xdev seems an odd name, i suspect copy paste error!
-
-I will change the name.
-
 >
->> +     void __iomem *regs;
->> +     spinlock_t lock;
->> +     struct list_head pending_list;
->> +     struct list_head free_list;
->> +     struct list_head active_list;
->> +     struct zynqmp_dma_desc_sw *sw_desc_pool;
->> +     struct list_head done_list;
->> +     struct dma_chan common;
->> +     void *desc_pool_v;
->> +     dma_addr_t desc_pool_p;
-> why two pools and one void *?
->
->> +/**
->> + * zynqmp_dma_alloc_chan_resources - Allocate channel resources
->> + * @dchan: DMA channel
->> + *
->> + * Return: '0' on success and failure value on error
-> wrong, its number of descriptors which maybe 0
-
-Correct. I Will modify this.
-
->
->> + */
->> +static int zynqmp_dma_alloc_chan_resources(struct dma_chan *dchan)
->> +{
->> +     struct zynqmp_dma_chan *chan = to_chan(dchan);
->> +     struct zynqmp_dma_desc_sw *desc;
->> +     int i;
->> +
->> +     chan->sw_desc_pool = kzalloc(sizeof(*desc) * ZYNQMP_DMA_NUM_DESCS,
->> +                                  GFP_KERNEL);
-> and you are allocating the number so pls return that
-
-Ok.
-
->
-> Btw is ZYNQMP_DMA_NUM_DESCS sw or HW limit
-
-Sw limit.
-
->
->> +static void zynqmp_dma_start_transfer(struct zynqmp_dma_chan *chan)
->> +{
->> +     struct zynqmp_dma_desc_sw *desc;
->> +
->> +     if (!zynqmp_dma_chan_is_idle(chan))
->> +             return;
->> +
->> +     desc = list_first_entry_or_null(&chan->pending_list,
->> +                                     struct zynqmp_dma_desc_sw, node);
->> +     if (!desc)
->> +             return;
->> +
->> +     if (chan->has_sg)
->> +             list_splice_tail_init(&chan->pending_list, &chan->active_list);
->> +     else
->> +             list_move_tail(&desc->node, &chan->active_list);
->> +
->> +     if (chan->has_sg)
->> +             zynqmp_dma_update_desc_to_ctrlr(chan, desc);
->> +     else
->> +             zynqmp_dma_config_simple_desc(chan, desc->src, desc->dst,
->> +                                           desc->len);
->> +     zynqmp_dma_start(chan);
->> +}
-> Lots of the list management will get simplified if you use the vchan to do
-> so
-
-I have explored using the virt-dma to reduce the common list processing, But
-in this driver descriptor processing and cleaning is happening inside
-the tasklet
-context and virt-dma assumes it is happening in interrupt context and using the
-spin locks accordingly. So, added code for the list management in side
-the driver.
-
->
->> +
->> +
->> +/**
->> + * zynqmp_dma_chan_desc_cleanup - Cleanup the completed descriptors
->> + * @chan: ZynqMP DMA channel
->> + */
->> +static void zynqmp_dma_chan_desc_cleanup(struct zynqmp_dma_chan *chan)
->> +{
->> +     struct zynqmp_dma_desc_sw *desc, *next;
->> +
->> +     list_for_each_entry_safe(desc, next, &chan->done_list, node) {
->> +             dma_async_tx_callback callback;
->> +             void *callback_param;
->> +
->> +             list_del(&desc->node);
->> +
->> +             callback = desc->async_tx.callback;
->> +             callback_param = desc->async_tx.callback_param;
->> +             if (callback)
->> +                     callback(callback_param);
->> +
-> and you are calling the callback with lock held and user can do further
-> submissions so this is wrong!
-
-is it that driver should have separate temp list and fill this list
-with the descriptors in
-done_list and process them with out lock held ?
-
-please suggest.
-
->
->> +static enum dma_status zynqmp_dma_tx_status(struct dma_chan *dchan,
->> +                                   dma_cookie_t cookie,
->> +                                   struct dma_tx_state *txstate)
->> +{
->> +     return dma_cookie_status(dchan, cookie, txstate);
->
-> no residue calculation?
-
-Controller has total byte count register that Indicates total number of bytes
-transferred since last clear. But since we implemented the Hw queuing it
-is difficult to get residue calculation by relying on the above register value.
-
-So, at least for this version of the driver no residue calculation.
-
->
->> +static struct dma_async_tx_descriptor *zynqmp_dma_prep_memcpy(
->> +                             struct dma_chan *dchan, dma_addr_t dma_dst,
->> +                             dma_addr_t dma_src, size_t len, ulong flags)
->> +{
->> +     struct zynqmp_dma_chan *chan;
->> +     struct zynqmp_dma_desc_sw *new, *first = NULL;
->> +     void *desc = NULL, *prev = NULL;
->> +     size_t copy;
->> +     u32 desc_cnt;
->> +
->> +     chan = to_chan(dchan);
->> +
->> +     if ((len > ZYNQMP_DMA_MAX_TRANS_LEN) && !chan->has_sg)
-> why sg?
-
-Controller supports two types of modes.
-
-Simple dma mode:
-   In this mode, DMA transfer parameters are specified in APB registers
-   So, queuing the new request in hw is not possible when the channel
-is busy with
-   previous transfer and also it doesn't have SG support.
-   Max transfer size per transfer is 1GB.
-
-Scatter gather dma mode:
-   Transfer parameters are specified in the buffer descriptors (BD).
-   Max transfer size per BD is 1GB and Dma transaction can have multiple BDs
-
-The above condition is to ensure that when the controller is
-configured for Simple
-Dma mode, allow the transfers that are with in 1GB size if not it return error.
-
->
->> +static int zynqmp_dma_remove(struct platform_device *pdev)
->> +{
->> +     struct zynqmp_dma_device *xdev = platform_get_drvdata(pdev);
->> +
->> +     of_dma_controller_free(pdev->dev.of_node);
->> +     dma_async_device_unregister(&xdev->common);
->> +
->> +     zynqmp_dma_chan_remove(xdev->chan);
-> Please free up irq here explictly and also ensure tasklet is not running
-
-irq free is not required as cleaning will be taken care by the devm framework.
-tasklet cleaning is happening inside the zynqmp_chan_remove function.
-
-Regards,
-Punnaiah
+> On 13 July 2015 03:20:42 BST, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>Document compatible string, and required DT properties for APDS9960
+>>chipset driver.
+>>
+>>Reviewed-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+>>Signed-off-by: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>---
+>>.../devicetree/bindings/iio/light/apds9960.txt        | 19
+>>+++++++++++++++++++
+>> 1 file changed, 19 insertions(+)
+>>create mode 100644
+>>Documentation/devicetree/bindings/iio/light/apds9960.txt
+>>
+>>diff --git a/Documentation/devicetree/bindings/iio/light/apds9960.txt
+>>b/Documentation/devicetree/bindings/iio/light/apds9960.txt
+>>new file mode 100644
+>>index 0000000..7a47d28
+>>--- /dev/null
+>>+++ b/Documentation/devicetree/bindings/iio/light/apds9960.txt
+>>@@ -0,0 +1,19 @@
+>>+* Avago APDS9960 gesture/RGB/ALS/proximity sensor
+>>+
+>>+http://www.avagotech.com/docs/AV02-4191EN
+>>+
+>>+Required properties:
+>>+
+>>+  - compatible: must be "avago,apds9960"
+>>+  - reg: the I2c address of the sensor
+>>+  - interrupt-parent: should be the phandle for the interrupt
+>>controller
+>>+  - interrupts: interrupt mapping for GPIO IRQ
+> Usual trick here is to cross reference the interrupt bindings doc to allow all the
+>  complexity without duplicating docs too much.
+>>+
+>>+Example:
+>>+
+>>+apds9960@39 {
+>>+      compatible = "avago,apds9960";
+>>+      reg = <0x39>;
+>>+      interrupt-parent = <&gpio1>;
+>>+      interrupts = <16 1>;
+>>+};
 >
 > --
-> ~Vinod
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Sent from my Android device with K-9 Mail. Please excuse my brevity.
