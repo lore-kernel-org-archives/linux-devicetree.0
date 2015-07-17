@@ -1,45 +1,55 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v4 0/2] Add mt6580 basic chip support
-Date: Sat, 18 Jul 2015 00:01:01 +0200
-Message-ID: <1668730.VCkj7kaOSH@ubix>
-References: <1436854029-16599-1-git-send-email-mars.cheng@mediatek.com>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH v2 0/2] Add support for PL172 memory-controller
+Date: Fri, 17 Jul 2015 10:44:10 -0700
+Message-ID: <20150717174410.GO21691@localhost>
+References: <1436822412-20171-1-git-send-email-manabian@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1436854029-16599-1-git-send-email-mars.cheng@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mars Cheng <mars.cheng@mediatek.com>
-Cc: CC Hwang <cc.hwang@mediatek.com>, Loda Choui <loda.chou@mediatek.com>, Miles Chen <miles.chen@mediatek.com>, Scott Shu <scott.shu@mediatek.com>, Jades Shih <jades.shih@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, My Chuang <my.chuang@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1436822412-20171-1-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: arnd-r2nGTMty4D4@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, July 14, 2015 02:07:07 PM Mars Cheng wrote:
-> Changes in v4:
-> 1. Remove clocks node
-> 2. Remove bootargs
-> 3. Refine stdout-path setting
+On Mon, Jul 13, 2015 at 11:20:10PM +0200, Joachim Eastwood wrote:
+> This patch set adds a memory driver and documentation for the ARM
+> PL172. This driver  makes it possible to configure the static
+> memory chip selects on the ARM PL172 MultiPort Memory Controller
+> from a set of properties in DT. Configuration of dynamic memory
+> (SDRAM) is not supported and is left to the boot loader. The
+> intended usage is to setup timing and configuration for static
+> memory devices like NAND and NOR Flash before they are probed by
+> a driver. Pretty much what like all the other memory drivers do.
 > 
-> Changes in v3:
-> 1. Remove useless Change-Id
-> 2. Add complete device tree binding in Documentation
+> As drivers/memory doesn't seem to have a maintainer of it's own
+> I hope this patch set can go through the armsoc-drivers branch.
 > 
-> Changes in v2:
-> 1. Use stdout-path in device tree to indicate console
-> 2. Remove board-specific bootargs
+> The previous version of the patch set didn't recive recivce much
+> feedback and the cover letter can be found here:
+> http://marc.info/?l=devicetree&m=143024189625522&w=2
 > 
-> Mars Cheng (2):
->   Document: DT: Add bindings for mediatek MT6580 SoC Platform
->   ARM: dts: mediatek: add mt6580 basic support
+> DT bindings for PL172 is based on the bindings for the TI AEMIF
+> memory controller. PL172 can be found on a number of NXP devices
+> like the LPC18xx family.
 > 
->  Documentation/devicetree/bindings/arm/mediatek.txt |   4 +
->  .../bindings/arm/mediatek/mediatek,sysirq.txt      |   1 +
->  .../devicetree/bindings/serial/mtk-uart.txt        |   3 +-
->  .../bindings/timer/mediatek,mtk-timer.txt          |   6 +-
->  arch/arm/boot/dts/Makefile                         |   1 +
->  arch/arm/boot/dts/mt6580-evbp1.dts                 |  39 +++++++
->  arch/arm/boot/dts/mt6580.dtsi                      | 116
-> +++++++++++++++++++++ 7 files changed, 168 insertions(+), 2 deletions(-)
+> Tested on Embedded Artists' LPC4357 Developer's Kit with NOR Flash
+> (SST39VF320) and 74LCV16374 (gpio-74x164) on MPMC.
+> 
+> Changes since v1:
+>  - Add proper commit messages
+>  - Misc clean ups
+> 
+> Joachim Eastwood (2):
+>   memory: add ARM PL172 MultiPort Memory Controller driver
+>   doc: dt: add documentation for pl172 memory bindings
 
-Whole series applied to v4.2-next/dts
+Thanks, I've applied both patches to next/drivers.
 
-Thanks a lot.
+
+-Olof
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
