@@ -1,223 +1,223 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH V3 08/19] soc: tegra: pmc: Clean-up PMC helper functions
-Date: Fri, 17 Jul 2015 12:25:47 +0200
-Message-ID: <20150717102546.GL3057@ulmo>
-References: <1436791197-32358-1-git-send-email-jonathanh@nvidia.com>
- <1436791197-32358-9-git-send-email-jonathanh@nvidia.com>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: Master-aware devices and sideband ID data
+Date: Fri, 17 Jul 2015 11:36:09 +0100
+Message-ID: <20150717103609.GJ18994@arm.com>
+References: <26BE36EF-2C5B-4DA6-8950-8FEBB031ED1B@caviumnetworks.com>
+ <20150527173953.GC23176@leverpostej>
+ <E342D737-5DD5-48C7-BB01-B83C29CB6E31@caviumnetworks.com>
+ <20150601102208.GD22406@leverpostej>
+ <158EFC9F-FCAF-44D3-AD40-804EDFE0CE25@caviumnetworks.com>
+ <20150605090534.GC1198@arm.com>
+ <20150609101515.GA28474@leverpostej>
+ <20150708133049.GD7025@leverpostej>
+ <20150708160227.GJ9283@arm.com>
+ <20150716133441.GC28631@leverpostej>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="EEx6GiKZGZ1wKUra"
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1436791197-32358-9-git-send-email-jonathanh@nvidia.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Jon Hunter <jonathanh@nvidia.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Alexandre Courbot <gnurou@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Terje =?utf-8?Q?Bergstr=C3=B6m?= <tbergstrom@nvidia.com>, Hans de Goede <hdegoede@redhat.com>, Tejun Heo <tj@kernel.org>, Vince Hsu <vinceh@nvidia.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+In-Reply-To: <20150716133441.GC28631@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "Chalamarla, Tirumalesh" <Tirumalesh.Chalamarla-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, "joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org" <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org" <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org" <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Jul 16, 2015 at 02:34:41PM +0100, Mark Rutland wrote:
+> Hi Will,
 
---EEx6GiKZGZ1wKUra
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Mark,
 
-On Mon, Jul 13, 2015 at 01:39:46PM +0100, Jon Hunter wrote:
-> The following clean-ups have been made to the PMC code:
->=20
-> 1. Add a macro for determining the state of a PMC powergate
-> 2. Use the readx_poll_timeout() function instead of implementing a local
->    polling loop with a timeout.
-> 3. Use a case-statement in the function that removes the powergate clamp
->    instead of multiple if-statements to improve readability.
->=20
-> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+[adding David, since he's working on PCI/ITS stuff atm]
+
+> The below is an attempt at an MSI binding, derived from my original
+> example. It extends msi-parent inoto a phandle+(optional args) style
+> property.
+> 
+> I haven't yet managed to come up with a sane way of describing
+> the Bus-ID/BDF -> {iommu,msi}-cells translation, but this should
+> hopefully cover the platform device case.
+> 
+> For the Bus-ID translation case I'm not sure it's sane to attempt to use
+> msi-parent, given that the transformation description will necessarily
+> have to describe the parents anyway.
+
+We probably want a separate property on the RC node describing the
+transformation (i.e. offsetting) in a similar way to ranges or
+interrupt-map (potentially replacing msi-parent altogether). Maybe you
+could propose something so that David could have a crack at describing
+his RequesterID -> DeviceID mapping, which seems to map nicely onto a
+per-RC offset IIUC.
+
+David -- does that sound ok to you?
+
+Will
+
+> ---->8----
+> From 429dca4bba98732c492e95bdf395aa2ccc634e69 Mon Sep 17 00:00:00 2001
+> From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Date: Thu, 9 Jul 2015 17:53:00 +0100
+> Subject: [PATCH] Documentation: dt: add generic MSI bindings
+> 
+> Currently msi-parent is in use in a couple of drviers despite being
+> fairly underspecified. This patch adds a generic binding for MSIs
+> (including the existing msi-parent property) enabling the description of
+> platform devices capable of using MSIs.
+> 
+> This binding does not yet cover the general case. Currently the binding
+> does not cover the relationship between bus IDs (e.g. PCIe BDF) and
+> sideband data.
+> 
+> Signed-off-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 > ---
->  drivers/soc/tegra/pmc.c | 72 ++++++++++++++++++++++++-------------------=
-------
->  1 file changed, 35 insertions(+), 37 deletions(-)
->=20
-> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
-> index c0635bdd4ee3..180d434deec5 100644
-> --- a/drivers/soc/tegra/pmc.c
-> +++ b/drivers/soc/tegra/pmc.c
-> @@ -28,6 +28,7 @@
->  #include <linux/export.h>
->  #include <linux/init.h>
->  #include <linux/io.h>
-> +#include <linux/iopoll.h>
->  #include <linux/of.h>
->  #include <linux/of_address.h>
->  #include <linux/platform_device.h>
-> @@ -56,6 +57,8 @@
->  #define  PWRGATE_TOGGLE_START		(1 << 8)
-> =20
->  #define REMOVE_CLAMPING			0x34
-> +#define  REMOVE_CLAMPING_VDEC		(1 << 3)
-> +#define  REMOVE_CLAMPING_PCIE		(1 << 4)
-> =20
->  #define PWRGATE_STATUS			0x38
-> =20
-> @@ -101,6 +104,8 @@
-> =20
->  #define GPU_RG_CNTRL			0x2d4
-> =20
-> +#define PMC_PWRGATE_STATE(val, id)	(!!(val & BIT(id)))
-
-I find double-negations very difficult to read. ((value & BIT(id)) !=3D 0)
-is clearer in my opinion. Also I'd suggest status or value as the first
-parameter name, for consistency with other parts of the driver.
-
+>  .../bindings/interrupt-controller/msi.txt          | 135 +++++++++++++++++++++
+>  1 file changed, 135 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/msi.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/msi.txt b/Documentation/devicetree/bindings/interrupt-controller/msi.txt
+> new file mode 100644
+> index 0000000..c60c034
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/msi.txt
+> @@ -0,0 +1,135 @@
+> +This document describes the generic device tree binding for MSI controllers and
+> +their master(s).
 > +
->  struct tegra_pmc_soc {
->  	unsigned int num_powergates;
->  	const char *const *powergates;
-> @@ -177,15 +182,14 @@ static void tegra_pmc_writel(u32 value, unsigned lo=
-ng offset)
->   */
->  static int tegra_powergate_set(int id, bool new_state, bool wait)
->  {
-> -	unsigned long timeout;
-> -	bool status;
->  	int ret =3D 0;
-> +	u32 val;
-> =20
->  	mutex_lock(&pmc->powergates_lock);
-> =20
-> -	status =3D tegra_pmc_readl(PWRGATE_STATUS) & (1 << id);
-> +	val =3D tegra_pmc_readl(PWRGATE_STATUS);
-> =20
-> -	if (status =3D=3D new_state) {
-> +	if (PMC_PWRGATE_STATE(val, id) =3D=3D new_state) {
->  		mutex_unlock(&pmc->powergates_lock);
->  		return 0;
->  	}
-> @@ -193,17 +197,9 @@ static int tegra_powergate_set(int id, bool new_stat=
-e, bool wait)
->  	tegra_pmc_writel(PWRGATE_TOGGLE_START | id, PWRGATE_TOGGLE);
-> =20
->  	if (wait) {
-> -		timeout =3D jiffies + msecs_to_jiffies(100);
-> -		ret =3D -ETIMEDOUT;
-> -
-> -		while (time_before(jiffies, timeout)) {
-> -			status =3D !!(tegra_pmc_readl(PWRGATE_STATUS) & BIT(id));
-> -			if (status =3D=3D new_state) {
-> -				ret =3D 0;
-> -				break;
-> -			}
-> -			udelay(10);
-> -		}
-> +		ret =3D readx_poll_timeout(tegra_pmc_readl, PWRGATE_STATUS,
-> +				val, PMC_PWRGATE_STATE(val, id) =3D=3D new_state,
-> +				10, 100000);
->  	}
-> =20
->  	mutex_unlock(&pmc->powergates_lock);
-> @@ -242,13 +238,10 @@ EXPORT_SYMBOL(tegra_powergate_power_off);
->   */
->  int tegra_powergate_is_powered(int id)
->  {
-> -	u32 status;
-> -
->  	if (!pmc->soc || id < 0 || id >=3D pmc->soc->num_powergates)
->  		return -EINVAL;
-> =20
-> -	status =3D tegra_pmc_readl(PWRGATE_STATUS) & (1 << id);
-> -	return !!status;
-> +	return PMC_PWRGATE_STATE(tegra_pmc_readl(PWRGATE_STATUS), id);
-
-I'd prefer to keep the two steps here. As a general rule I try never to
-mix reading or writing a register with other code on the same line.
-
->  }
-> =20
->  /**
-> @@ -257,34 +250,39 @@ int tegra_powergate_is_powered(int id)
->   */
->  int tegra_powergate_remove_clamping(int id)
->  {
-> -	u32 mask;
-> +	u32 val, reg;
-
-Side note: Please use value instead of val since that's the form used
-elsewhere in the driver. Also reg would be more appropriately called
-offset or similar because that's what it really is. It would also be
-more naturally an unsized type, such as unsigned int. But...
-
-> =20
->  	if (!pmc->soc || id < 0 || id >=3D pmc->soc->num_powergates)
->  		return -EINVAL;
-> =20
->  	/*
-> -	 * On Tegra124 and later, the clamps for the GPU are controlled by a
-> -	 * separate register (with different semantics).
-> +	 * In most cases the bit for removing the IO clamping is the same as
-> +	 * the powergate partition ID, however, this is not always the case.
-> +	 * Furthermore, on Tegra124 and later, the clamps for the GPU are
-> +	 * controlled by a separate register (with different semantics). The
-> +	 * following case-statement handles these exceptions.
->  	 */
-> -	if (id =3D=3D TEGRA_POWERGATE_3D) {
-> +	val =3D 1 << id;
-> +	reg =3D REMOVE_CLAMPING;
+> +Message Signaled Interrupts (MSIs) are a class of interrupts generated by a
+> +write to an MMIO address.
 > +
-> +	switch (id) {
-> +	case TEGRA_POWERGATE_3D:
->  		if (pmc->soc->has_gpu_clamps) {
-> -			tegra_pmc_writel(0, GPU_RG_CNTRL);
-> -			return 0;
-> +			val =3D 0;
-> +			reg  =3D GPU_RG_CNTRL;
->  		}
-> +		break;
-> +	case TEGRA_POWERGATE_VDEC:
-> +		val =3D REMOVE_CLAMPING_VDEC;
-> +		break;
-> +	case TEGRA_POWERGATE_PCIE:
-> +		val =3D REMOVE_CLAMPING_PCIE;
-> +		break;
-> +	default:
-> +		break;
->  	}
-> =20
-> -	/*
-> -	 * Tegra 2 has a bug where PCIE and VDE clamping masks are
-> -	 * swapped relatively to the partition ids
-> -	 */
-> -	if (id =3D=3D TEGRA_POWERGATE_VDEC)
-> -		mask =3D (1 << TEGRA_POWERGATE_PCIE);
-> -	else if (id =3D=3D TEGRA_POWERGATE_PCIE)
-> -		mask =3D (1 << TEGRA_POWERGATE_VDEC);
-> -	else
-> -		mask =3D (1 << id);
-> -
-> -	tegra_pmc_writel(mask, REMOVE_CLAMPING);
-> +	tegra_pmc_writel(val, reg);
-
-=2E.. to be honest, I think the previous code was more straightforward, so
-I'd prefer if you dropped this particular hunk.
-
-Thierry
-
---EEx6GiKZGZ1wKUra
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJVqNgqAAoJEN0jrNd/PrOh2IIQAKJoPVGUOCTakDDbcxEY+Dn3
-0q7FlWfmMMeU5Vqa62ilpEAXQmak4jB4+DIVq5c9+aSypq4d7HN+5LVL2u/vrILk
-GT0WsbzV3MgKXTAGFXtyFdwgj3hfV+2xKXbJAIVx1qgT6rTYdboW1wtkiSyzG6QK
-zh3Upae/lpYhK8XlZMTfcddZ5Pmq24UuAU9SDiRD4Y6t6Woogp26E4F1FYl/AbXG
-rh91EdCnxWXWYdDv2BgZonbmjhdMqLFmVAK6WZ9uxVYmBI9Lsnily/VQuhg8fMMK
-XyZeryhdXHAZ4ISMyFvJ2wmC7ZmBb/OVUgohePaKz1DcJZCSuyHoS4hhzLCXoZTA
-szFxRnNflVZR7DFPaeb92jQe71J6a5n9h0MMvU0apnf9uo7CmFmW/8+NbHxXusxl
-6R79wHSN+6LeKnZNrck0GXB1xyNotjZF51jBXG72zHOMi8QrdPMfSEjNjZbjSzK+
-nq+i/UBQjBro2lZ7OjJyhIDACLuZvVl3pZ+9YBptjjw/z3IO8Y0uBIGyTxwa5t/I
-4zlDG2fysPphBEnFcvUmSjSNynEY2OfO32pz2DM62Mju0X1XAfbAuO4iwRRYbiwP
-GLURD0X2KZg7nBDEu35dJLeP+78wT3QpypVRHvzwgl2KDgnBB7GGKe81KEH2MlLl
-Tuv0PPgCyjW6jZq2dCZ0
-=fGzw
------END PGP SIGNATURE-----
-
---EEx6GiKZGZ1wKUra--
+> +MSIs were originally specified by PCI (and are used with PCIe), but may also be
+> +used with other busses, and hence a mechanism is required to relate devices on
+> +those busses to the MSI controllers which they are capable of using,
+> +potentially including additional information.
+> +
+> +MSIs are distinguished by some combination of:
+> +
+> +- The doorbell (the MMIO address written to).
+> +  
+> +  Devices may be configured by software to write to arbitrary doorbells which
+> +  they can address. An MSI controller may feature a number of doorbells.
+> +
+> +- The payload (the value written to the doorbell).
+> +  
+> +  Devices may be configured to write an arbitrary payload chosen by software.
+> +  MSI controllers may have restrictions on permitted payloads.
+> +
+> +- Sideband information accompanying the write.
+> +  
+> +  Typically this is neither configurable nor probeable, and depends on the path
+> +  taken through the memory system (i.e. it is a property of the combination of
+> +  MSI controller and device rather than a property of either in isolation).
+> +
+> +
+> +MSI controllers:
+> +================
+> +
+> +An MSI controller signals interrupts to a CPU when a write is made to an MMIO
+> +address by some master. An MSI controller may feature a number of doorbells.
+> +
+> +Required properties:
+> +--------------------
+> +
+> +- msi-controller: Identifies the node as an MSI controller.
+> +
+> +Optional properties:
+> +--------------------
+> +
+> +- #msi-cells: The number of cells in an msi-specifier, required if not zero.
+> +
+> +  Typically this will encode information related to sideband data, and will
+> +  not encode doorbells or payloads as these can be configured dynamically.
+> +
+> +  The meaning of the msi-specifier is defined by the device tree binding of
+> +  the specific MSI controller. 
+> +
+> +
+> +MSI clients
+> +===========
+> +
+> +MSI clients are devices which generate MSIs. For each MSI they wish to
+> +generate, the doorbell and payload may be configured, though sideband
+> +information may not be configurable.
+> +
+> +Required properties:
+> +--------------------
+> +
+> +- msi-parent: A list of phandle + msi-specifier pairs, one for each MSI
+> +  controller which the device is capable of using.
+> +
+> +  This property is unordered, and MSIs may be allocated from any combination of
+> +  MSI controllers listed in the msi-parent property.
+> +
+> +  If a device has restrictions on the allocation of MSIs, these restrictions
+> +  must be described with additional properties.
+> +
+> +  When #msi-cells is non-zero, busses with an msi-parent will require
+> +  additional properties to describe the relationship between devices on the bus
+> +  and the set of MSIs they can potentially generate.
+> +
+> +
+> +Example
+> +=======
+> +
+> +/ {
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +
+> +	msi_a: msi-controller@a {
+> +		reg = <0xa 0xf00>;
+> +		compatible = "vendor-a,some-controller";
+> +		msi-controller;
+> +		/* No sideband data, so #msi-cells omitted */
+> +	};
+> +
+> +	msi_b: msi-controller@b {
+> +		reg = <0xb 0xf00>;
+> +		compatible = "vendor-b,another-controller";
+> +		msi-controller;
+> +		/* Each device has some unique ID */
+> +		#msi-cells = <1>;
+> +	};
+> +
+> +	msi_c: msi-controller@c {
+> +		reg = <0xb 0xf00>;
+> +		compatible = "vendor-b,another-controller";
+> +		msi-controller;
+> +		/* Each device has some unique ID */
+> +		#msi-cells = <1>;
+> +	};
+> +
+> +	dev@0 {
+> +		reg = <0x0 0xf00>;
+> +		compatible = "vendor-c,some-device";
+> +
+> +		/* Can only generate MSIs to msi_a */
+> +		msi-parent = <&msi_a>;
+> +	};
+> +
+> +	dev@1 {
+> +		reg = <0x1 0xf00>;
+> +		compatible = "vendor-c,some-device";
+> +
+> +		/* 
+> +		 * Can generate MSIs to either A or B.
+> +		 */
+> +		msi-parent = <&msi_a>, <&msi_b 0x17>;
+> +	};
+> +
+> +	dev@2 {
+> +		reg = <0x2 0xf00>;
+> +		compatible = "vendor-c,some-device";
+> +		/*
+> +		 * Has different IDs at each MSI controller.
+> +		 * Can generate MSIs to all of the MSI controllers.
+> +		 */
+> +		msi-parent = <&msi_a>, <&msi_b 0x17>, <&msi_c 0x53>;
+> +	};
+> +};
+> -- 
+> 1.9.1
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
