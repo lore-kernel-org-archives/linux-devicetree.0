@@ -1,77 +1,200 @@
-From: Jianwei Wang <jianwei.wang@freescale.com>
-Subject: [PATCH v10 3/5] drm/panel: simple: Add support for NEC NL4827HC19-05B
- 480x272 panel
-Date: Fri, 17 Jul 2015 18:39:01 +0800
-Message-ID: <1437129543-8037-3-git-send-email-jianwei.wang@freescale.com>
-References: <1437129543-8037-1-git-send-email-jianwei.wang@freescale.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH V3 11/19] PCI: tegra: Add support for generic PM domains
+Date: Fri, 17 Jul 2015 12:45:48 +0200
+Message-ID: <20150717104547.GN3057@ulmo>
+References: <1436791197-32358-1-git-send-email-jonathanh@nvidia.com>
+ <1436791197-32358-12-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1437129543-8037-1-git-send-email-jianwei.wang@freescale.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org
-Cc: devicetree@vger.kernel.org, Xiubo Li <lixiubo@cmss.chinamobile.com>, daniel.vetter@ffwll.ch, Alison Wang <b18965@freescale.com>, linux-kernel@vger.kernel.org, scottwood@freescale.com, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="rPgHZmYkQ+bUEpVC"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1436791197-32358-12-git-send-email-jonathanh@nvidia.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Jon Hunter <jonathanh@nvidia.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Alexandre Courbot <gnurou@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Terje =?utf-8?Q?Bergstr=C3=B6m?= <tbergstrom@nvidia.com>, Hans de Goede <hdegoede@redhat.com>, Tejun Heo <tj@kernel.org>, Vince Hsu <vinceh@nvidia.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogSmlhbndlaSBXYW5nIDxqaWFud2VpLndhbmcuY2huQGdtYWlsLmNvbT4KClRoaXMgYWRk
-cyBzdXBwb3J0IGZvciB0aGUgTkVDIE5MNDgyN0hDMTktMDVCIDQ4MHgyNzIgcGFuZWwgdG8gdGhl
-IERSTQpzaW1wbGUgcGFuZWwgZHJpdmVyLgoKU2lnbmVkLW9mZi1ieTogQWxpc29uIFdhbmcgPGIx
-ODk2NUBmcmVlc2NhbGUuY29tPgpTaWduZWQtb2ZmLWJ5OiBYaXVibyBMaSA8bGl4aXVib0BjbXNz
-LmNoaW5hbW9iaWxlLmNvbT4KU2lnbmVkLW9mZi1ieTogSmlhbndlaSBXYW5nIDxqaWFud2VpLndh
-bmcuY2huQGdtYWlsLmNvbT4KQWNrZWQtYnk6IERhbmllbCBWZXR0ZXIgPGRhbmllbC52ZXR0ZXJA
-ZmZ3bGwuY2g+Ci0tLQogLi4uL2JpbmRpbmdzL3BhbmVsL25lYyxubDQ4MjdoYzE5XzA1Yi50eHQg
-ICAgICAgICAgfCAgNyArKysrKysKIE1BSU5UQUlORVJTICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIHwgIDEgKwogZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBs
-ZS5jICAgICAgICAgICAgICAgfCAyNiArKysrKysrKysrKysrKysrKysrKysrCiAzIGZpbGVzIGNo
-YW5nZWQsIDM0IGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvcGFuZWwvbmVjLG5sNDgyN2hjMTlfMDViLnR4dAoKZGlmZiAt
-LWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wYW5lbC9uZWMsbmw0ODI3
-aGMxOV8wNWIudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BhbmVsL25l
-YyxubDQ4MjdoYzE5XzA1Yi50eHQKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMC4u
-MjBlOTQ3MwotLS0gL2Rldi9udWxsCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9wYW5lbC9uZWMsbmw0ODI3aGMxOV8wNWIudHh0CkBAIC0wLDAgKzEsNyBAQAorTkVDIExD
-RCBUZWNobm9sb2dpZXMsTHRkLiBXUVZHQSBURlQgTENEIHBhbmVsCisKK1JlcXVpcmVkIHByb3Bl
-cnRpZXM6CistIGNvbXBhdGlibGU6IHNob3VsZCBiZSAibmVjLG5sNDgyN2hjMTlfMDViIgorCitU
-aGlzIGJpbmRpbmcgaXMgY29tcGF0aWJsZSB3aXRoIHRoZSBzaW1wbGUtcGFuZWwgYmluZGluZywg
-d2hpY2ggaXMgc3BlY2lmaWVkCitpbiBzaW1wbGUtcGFuZWwudHh0IGluIHRoaXMgZGlyZWN0b3J5
-LgpkaWZmIC0tZ2l0IGEvTUFJTlRBSU5FUlMgYi9NQUlOVEFJTkVSUwppbmRleCBkNGRmZTE0Li4z
-ODdhODRhIDEwMDY0NAotLS0gYS9NQUlOVEFJTkVSUworKysgYi9NQUlOVEFJTkVSUwpAQCAtMzQw
-NCw2ICszNDA0LDcgQEAgTDoJZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwogUzoJU3Vw
-cG9ydGVkCiBGOglkcml2ZXJzL2dwdS9kcm0vZnNsLWRjdS8KIEY6CURvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy92aWRlby9mc2wsZGN1LnR4dAorRjoJRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL3BhbmVsL25lYyxubDQ4MjdoYzE5XzA1Yi50eHQKIAogRFJNIERSSVZF
-UlMgRk9SIEZSRUVTQ0FMRSBJTVgKIE06CVBoaWxpcHAgWmFiZWwgPHAuemFiZWxAcGVuZ3V0cm9u
-aXguZGU+CmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMg
-Yi9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMKaW5kZXggZjk0MjAxYi4uZGI2
-MWRkMSAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jCisr
-KyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYwpAQCAtOTQzLDYgKzk0Mywy
-OSBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IHBhbmVsX2Rlc2MgbGdfbHAxMjlxZSA9IHsKIAl9LAog
-fTsKIAorc3RhdGljIGNvbnN0IHN0cnVjdCBkcm1fZGlzcGxheV9tb2RlIG5lY19ubDQ4MjdoYzE5
-XzA1Yl9tb2RlID0geworCS5jbG9jayA9IDEwODcwLAorCS5oZGlzcGxheSA9IDQ4MCwKKwkuaHN5
-bmNfc3RhcnQgPSA0ODAgKyAyLAorCS5oc3luY19lbmQgPSA0ODAgKyAyICsgNDEsCisJLmh0b3Rh
-bCA9IDQ4MCArIDIgKyA0MSArIDIsCisJLnZkaXNwbGF5ID0gMjcyLAorCS52c3luY19zdGFydCA9
-IDI3MiArIDIsCisJLnZzeW5jX2VuZCA9IDI3MiArIDIgKyA0LAorCS52dG90YWwgPSAyNzIgKyAy
-ICsgNCArIDIsCisJLnZyZWZyZXNoID0gNzQsCit9OworCitzdGF0aWMgY29uc3Qgc3RydWN0IHBh
-bmVsX2Rlc2MgbmVjX25sNDgyN2hjMTlfMDViID0geworCS5tb2RlcyA9ICZuZWNfbmw0ODI3aGMx
-OV8wNWJfbW9kZSwKKwkubnVtX21vZGVzID0gMSwKKwkuc2l6ZSA9IHsKKwkJLndpZHRoID0gOTUs
-CisJCS5oZWlnaHQgPSA1NCwKKwl9LAorCS5idXNfZm9ybWF0ID0gTUVESUFfQlVTX0ZNVF9SR0I4
-ODhfMVgyNAorfTsKKwogc3RhdGljIGNvbnN0IHN0cnVjdCBkcm1fZGlzcGxheV9tb2RlIG9ydHVz
-dGVjaF9jb200M2g0bTg1dWxjX21vZGUgID0gewogCS5jbG9jayA9IDI1MDAwLAogCS5oZGlzcGxh
-eSA9IDQ4MCwKQEAgLTExMTMsNiArMTEzNiw5IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2
-aWNlX2lkIHBsYXRmb3JtX29mX21hdGNoW10gPSB7CiAJCS5jb21wYXRpYmxlID0gImxnLGxwMTI5
-cWUiLAogCQkuZGF0YSA9ICZsZ19scDEyOXFlLAogCX0sIHsKKwkJLmNvbXBhdGlibGUgPSAibmVj
-LG5sNDgyN2hjMTlfMDViIiwKKwkJLmRhdGEgPSAmbmVjX25sNDgyN2hjMTlfMDViLAorCX0sIHsK
-IAkJLmNvbXBhdGlibGUgPSAib3J0dXN0ZWNoLGNvbTQzaDRtODV1bGMiLAogCQkuZGF0YSA9ICZv
-cnR1c3RlY2hfY29tNDNoNG04NXVsYywKIAl9LCB7Ci0tIAoyLjEuMC4yNy5nOTZkYjMyNAoKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
-aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5m
-cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+
+--rPgHZmYkQ+bUEpVC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Jul 13, 2015 at 01:39:49PM +0100, Jon Hunter wrote:
+> Add support to the tegra PCI driver for generic PM domains. However,
+> to ensure backward compatibility with older device tree blobs ensure
+> that the driver can work with or without generic PM domains. In order
+> to migrate to generic PM domain infrastructure the necessary changes
+> are:
+>=20
+> 1. If the "power-domains" property is present in the DT device node then
+>    generic PM domains is supported and pm_runtime_enable() should be
+>    called for the device. Furthermore, the enabling and disabling of the
+>    power-domain is handled via calling pm_runtime_get/put, respectively.
+>=20
+> 2. To ensure that clocks are managed consistently when generic PM domains
+>    are used and are not used, drivers should be migrated to use the
+>    tegra_powergate_power_on_legacy() and tegra_powergate_power_off_legacy=
+()
+>    functions instead of the current tegra_powergate_sequence_power_up()
+>    and tegra_powergate_power_off(). The purpose of the
+>    tegra_powergate_power_on_legacy() and tegra_powergate_power_off_legacy=
+()
+>    APIs is to mimick the behaviour of the tegra generic power-domain code,
+>    such that if generic power domains are not supported the functionality
+>    is the same.
+>=20
+> 3. The main difference between the tegra_powergate_sequence_power_up() API
+>    and the tegra_powergate_power_on_legacy() is that the clock used to
+>    enable the powergate is not kept enabled when using the
+>    tegra_powergate_power_on_legacy() API. Therefore, drivers must enable
+>    the clocks they need after calling tegra_powergate_power_on_legacy()
+>    and disable these clocks before calling
+>    tegra_powergate_power_off_legacy().
+
+This is the same comment as in the DRM patch, and it applies to all
+devices that use powergating, so it should move into the preparatory
+patch rather than be repeated in all patches.
+
+>=20
+> The helper functions for handling the powering on and off of the PCI
+> controller have been updated to support generic PM domains. The
+> tegra_pcie_power_off() was missing code to disable the clocks enabled in
+> the tegra_pcie_power_on() function and so this has been added.
+>=20
+> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+> ---
+>  drivers/pci/host/pci-tegra.c | 49 +++++++++++++++++++++++++++++++++-----=
+------
+>  1 file changed, 37 insertions(+), 12 deletions(-)
+>=20
+> diff --git a/drivers/pci/host/pci-tegra.c b/drivers/pci/host/pci-tegra.c
+> index 10c05718dbfd..acd1f311eee5 100644
+> --- a/drivers/pci/host/pci-tegra.c
+> +++ b/drivers/pci/host/pci-tegra.c
+> @@ -40,6 +40,7 @@
+>  #include <linux/pci.h>
+>  #include <linux/phy/phy.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/pm_runtime.h>
+>  #include <linux/reset.h>
+>  #include <linux/sizes.h>
+>  #include <linux/slab.h>
+> @@ -908,19 +909,32 @@ static int tegra_pcie_enable_controller(struct tegr=
+a_pcie *pcie)
+> =20
+>  static void tegra_pcie_power_off(struct tegra_pcie *pcie)
+>  {
+> +	const struct tegra_pcie_soc_data *soc =3D pcie->soc_data;
+>  	int err;
+> =20
+> -	/* TODO: disable and unprepare clocks? */
+> -
+>  	err =3D phy_power_off(pcie->phy);
+>  	if (err < 0)
+>  		dev_warn(pcie->dev, "failed to power off PHY: %d\n", err);
+> =20
+>  	reset_control_assert(pcie->pcie_xrst);
+>  	reset_control_assert(pcie->afi_rst);
+> -	reset_control_assert(pcie->pex_rst);
+> =20
+> -	tegra_powergate_power_off(TEGRA_POWERGATE_PCIE);
+> +	clk_disable_unprepare(pcie->pll_e);
+> +	if (soc->has_cml_clk)
+> +		clk_disable_unprepare(pcie->cml_clk);
+> +	clk_disable_unprepare(pcie->afi_clk);
+> +	clk_disable_unprepare(pcie->pex_clk);
+> +
+> +	if (pm_runtime_enabled(pcie->dev)) {
+> +		err =3D pm_runtime_put_sync(pcie->dev);
+> +	} else {
+> +		err =3D tegra_powergate_power_off_legacy(TEGRA_POWERGATE_PCIE,
+> +						       pcie->pex_clk,
+> +						       pcie->pex_rst);
+> +	}
+> +
+> +	if (err < 0)
+> +		dev_warn(pcie->dev, "powergate power-down failed: %d\n", err);
+> =20
+>  	err =3D regulator_bulk_disable(pcie->num_supplies, pcie->supplies);
+>  	if (err < 0)
+> @@ -934,20 +948,28 @@ static int tegra_pcie_power_on(struct tegra_pcie *p=
+cie)
+> =20
+>  	reset_control_assert(pcie->pcie_xrst);
+>  	reset_control_assert(pcie->afi_rst);
+> -	reset_control_assert(pcie->pex_rst);
+> -
+> -	tegra_powergate_power_off(TEGRA_POWERGATE_PCIE);
+> =20
+>  	/* enable regulators */
+>  	err =3D regulator_bulk_enable(pcie->num_supplies, pcie->supplies);
+>  	if (err < 0)
+>  		dev_err(pcie->dev, "failed to enable regulators: %d\n", err);
+> =20
+> -	err =3D tegra_powergate_sequence_power_up(TEGRA_POWERGATE_PCIE,
+> -						pcie->pex_clk,
+> -						pcie->pex_rst);
+> -	if (err) {
+> -		dev_err(pcie->dev, "powerup sequence failed: %d\n", err);
+> +	if (pm_runtime_enabled(pcie->dev)) {
+> +		err =3D pm_runtime_get_sync(pcie->dev);
+> +	} else {
+> +		err =3D tegra_powergate_power_on_legacy(TEGRA_POWERGATE_PCIE,
+> +						      pcie->pex_clk,
+> +						      pcie->pex_rst);
+> +	}
+> +
+> +	if (err < 0) {
+> +		dev_err(pcie->dev, "powergate power-up failed: %d\n", err);
+> +		return err;
+> +	}
+> +
+> +	err =3D clk_prepare_enable(pcie->pex_clk);
+> +	if (err < 0) {
+> +		dev_err(pcie->dev, "failed to enable PEX clock: %d\n", err);
+>  		return err;
+>  	}
+> =20
+
+Couldn't we simply move the above code into suspend/resume functions and
+then call pm_runtime_get() and pm_runtime_put() instead of
+tegra_pcie_power_on() and tegra_pcie_power_off()?
+
+> @@ -2001,6 +2023,9 @@ static int tegra_pcie_probe(struct platform_device =
+*pdev)
+> =20
+>  	pcibios_min_mem =3D 0;
+> =20
+> +	if (of_property_read_bool(pdev->dev.of_node, "power-domains"))
+> +		pm_runtime_enable(&pdev->dev);
+
+Then of course we'd have to call pm_runtime_enable() irrespective of the
+property and check for the presence of power domain support via another
+method (like the dev->pm_domain field).
+
+Thierry
+
+--rPgHZmYkQ+bUEpVC
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCAAGBQJVqNzbAAoJEN0jrNd/PrOhDewP/AwlT+9yDNXe45bfw1qjDdUi
+JzWgkkcJeCmIvsAIMsnckPe/ww+6+HNyE86qRN1voXGlEtVHx6bqGrabdIP/HM6f
+SvQKFto4q/bPtsVC6EbyoyMqs78VZA6o/FY9bfXLpUUwaJCA8IC4sl9wOxti5VEB
+3eHGw89OSbeZ11OIeEUJbJL+N66vSivTpXGX3NKr8seEzbUzN8ea4L7K6jae/i3t
+23DiWCG2dr1zk+h5WgH77MkPMv+OeuUhXCGpdQjUEgB77KlBpBsVibZwzFViZJkA
+DpVSEV0cRnkYZ3ZHxhSjYG6kprFhWrGXKNnlEwdS+oLqOjMxDROYZRT4PV2cwR6f
+B6znA6vSbJSTYsIfrPEGzrxB2FYrkUrDyB4SCmYSazWFOZZSbUG/0naJY0LcSmY/
+BBLw10p6vPCM000om9xqBKOhqDdzbm5XLMgJLG0xa5JjILI4FcHEH0oHj5cOncZd
+EgfwAsxhOGI3KXI7NigttapoJ0vBAU78Z14D1R5iSQdIA9TXEBVQVtWfg2YwTqtN
+Pp+LtRifP83GaZsilx1qnkvciMhM6DibgGAm9Qa+KLcusP6uFr6O+rMe3lL2iNbj
+NCx7VqcYGyBgAyJhtxarrU8XXIPqF6PL6lwxCoVsC/wjaqfr+eATyzdST0JdqBFg
+EcOnAD14CJh0C9fcjGKT
+=YqwP
+-----END PGP SIGNATURE-----
+
+--rPgHZmYkQ+bUEpVC--
