@@ -1,91 +1,83 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v3 1/3] ARM: dts: qcom: Add binding for the qcom coincell charger
-Date: Fri, 17 Jul 2015 10:42:00 -0500
-Message-ID: <CAL_Jsq+5zzw1+gper6uwac-3P9zVN=rjjPb7Za27t=RbPU2-1w@mail.gmail.com>
-References: <1437090933-1232-1-git-send-email-tim.bird@sonymobile.com>
+From: <atull@opensource.altera.com>
+Subject: [PATCH v9 0/7] FPGA Manager Framework and Simple FPGA Bus
+Date: Fri, 17 Jul 2015 10:51:10 -0500
+Message-ID: <1437148277-5405-1-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1437090933-1232-1-git-send-email-tim.bird@sonymobile.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Tim Bird <tim.bird@sonymobile.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: gregkh@linuxfoundation.org, jgunthorpe@obsidianresearch.com, hpa@zytor.com, monstr@monstr.eu, michal.simek@xilinx.com, rdunlap@infradead.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, pantelis.antoniou@konsulko.com, robh+dt@kernel.org, grant.likely@linaro.org, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, pavel@denx.de, broonie@kernel.org, philip@balister.org, rubini@gnudd.com, s.trumtrar@pengutronix.de, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devel@driverdev.osuosl.org, Petr Cvek <petr.cvek@tul.cz>, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com, Alan Tull <atull@opensource.altera.co>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 16, 2015 at 6:55 PM, Tim Bird <tim.bird@sonymobile.com> wrote:
-> This binding is used to configure the driver for the coincell charger
-> found in Qualcomm PMICs.
->
-> Signed-off-by: Tim Bird <tim.bird@sonymobile.com>
+From: Alan Tull <atull@opensource.altera.com>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+This patchset adds two chunks plus documentation:
+ * fpga manager core: exports ABI functions that write an image to a FPGA
+ * DT Overlay support: simple-fpga-bus to handle FPGA from a DT overlay
 
-> ---
->
-> Changes in v3:
->  - change charge-enable property to charger-disable
-> Changes in v2:
->  - remove 'qcom,' from example node name
->  - Added reference to parent node pm8941@0 and binding doc for it
->
->  .../bindings/power/qcom,coincell-charger.txt       | 48 ++++++++++++++++++++++
->  1 file changed, 48 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/qcom,coincell-charger.txt
->
-> diff --git a/Documentation/devicetree/bindings/power/qcom,coincell-charger.txt b/Documentation/devicetree/bindings/power/qcom,coincell-charger.txt
-> new file mode 100644
-> index 0000000..0e6d875
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/qcom,coincell-charger.txt
-> @@ -0,0 +1,48 @@
-> +Qualcomm Coincell Charger:
-> +
-> +The hardware block controls charging for a coincell or capacitor that is
-> +used to provide power backup for certain features of the power management
-> +IC (PMIC)
-> +
-> +- compatible:
-> +       Usage: required
-> +       Value type: <string>
-> +       Definition: must be: "qcom,pm8941-coincell"
-> +
-> +- reg:
-> +       Usage: required
-> +       Value type: <u32>
-> +       Definition: base address of the coincell charger registers
-> +
-> +- qcom,rset-ohms:
-> +       Usage: required
-> +       Value type: <u32>
-> +       Definition: resistance (in ohms) for current-limiting resistor
-> +               must be one of: 800, 1200, 1700, 2100
-> +
-> +- qcom,vset-millivolts:
-> +       Usage: required
-> +       Value type: <u32>
-> +       Definition: voltage (in millivolts) to apply for charging
-> +               must be one of: 2500, 3000, 3100, 3200
-> +
-> +- qcom,charger-disable:
-> +       Usage: optional
-> +       Value type: <boolean>
-> +       Definition: definining this property disables charging
-> +
-> +This charger is a sub-node of one of the 8941 PMIC blocks, and is specified
-> +as a child node in DTS of that node.  See ../mfd/qcom,spmi-pmic.txt and
-> +../mfd/qcom-pm8xxx.txt
-> +
-> +Example:
-> +
-> +       pm8941@0 {
-> +               coincell@2800 {
-> +                       compatible = "qcom,pm8941-coincell";
-> +                       reg = <0x2800>;
-> +
-> +                       qcom,rset-ohms = <2100>;
-> +                       qcom,vset-millivolts = <3000>;
-> +               };
-> +       };
-> --
-> 1.8.2.2
->
+The core's ABI is minimal to start with: only 6 functions.  This gives a
+common interface for programming various FPGA such that any higher level
+interfaces such as the DT Overlays or anything else that is added can be
+shared and not be manufacturor-specific.
+
+The DT Overlays support exists for the usage where the FPGA will contain
+some "hardware" that will need drivers.  Where that use model is not
+appealing, the core ABI can be used to add a different use model such as
+using an FPGA as acceleration as has been discussed.
+
+This patchset gets rid of the sysfs controls that allowed direct
+control of a FPGA from userspace.
+
+This patchset is under drivers/staging as the interface could change.
+
+The bindings for the socpfga fpga manager already are upstreamed as
+1b4e119 Alan Tull : doc: add bindings document for altera fpga manager
+
+The DT Support is dependent on Pantelis's dtc overlay patches from
+https://github.com/pantoniou/dtc.git
+and his DT overlays configfs interface patches and fixes from
+https://github.com/pantoniou/linux-beagle-track-mainline
+
+efb0c04 Pantelis Antoniou : gcl: Fix resource linking
+85e785e Pantelis Antoniou : ARM: DT: Enable symbols when CONFIG_OF_OVERLAY is used
+af0321f Pantelis Antoniou : OF: DT-Overlay configfs interface (v5)
+4c1c675 Pantelis Antoniou : configfs: Implement binary attributes (v4)
+
+
+Alan Tull (7):
+  staging: usage documentation for FPGA manager core
+  staging: usage documentation for simple fpga bus
+  staging: add bindings document for simple fpga bus
+  staging: fpga manager: add sysfs interface document
+  staging: fpga manager core
+  staging: add simple-fpga-bus
+  staging: fpga manager: add driver for socfpga fpga manager
+
+ drivers/staging/Kconfig                            |    2 +
+ drivers/staging/Makefile                           |    1 +
+ .../Documentation/ABI/sysfs-class-fpga-manager     |   26 +
+ .../Documentation/bindings/simple-fpga-bus.txt     |   61 ++
+ drivers/staging/fpga/Documentation/fpga-mgr.txt    |  117 ++++
+ .../staging/fpga/Documentation/simple-fpga-bus.txt |   48 ++
+ drivers/staging/fpga/Kconfig                       |   31 +
+ drivers/staging/fpga/Makefile                      |   10 +
+ drivers/staging/fpga/fpga-mgr.c                    |  373 ++++++++++++
+ drivers/staging/fpga/simple-fpga-bus.c             |  323 ++++++++++
+ drivers/staging/fpga/socfpga.c                     |  616 ++++++++++++++++++++
+ include/linux/fpga/fpga-mgr.h                      |  127 ++++
+ 12 files changed, 1735 insertions(+)
+ create mode 100644 drivers/staging/fpga/Documentation/ABI/sysfs-class-fpga-manager
+ create mode 100644 drivers/staging/fpga/Documentation/bindings/simple-fpga-bus.txt
+ create mode 100644 drivers/staging/fpga/Documentation/fpga-mgr.txt
+ create mode 100644 drivers/staging/fpga/Documentation/simple-fpga-bus.txt
+ create mode 100644 drivers/staging/fpga/Kconfig
+ create mode 100644 drivers/staging/fpga/Makefile
+ create mode 100644 drivers/staging/fpga/fpga-mgr.c
+ create mode 100644 drivers/staging/fpga/simple-fpga-bus.c
+ create mode 100644 drivers/staging/fpga/socfpga.c
+ create mode 100644 include/linux/fpga/fpga-mgr.h
+
+-- 
+1.7.9.5
+
