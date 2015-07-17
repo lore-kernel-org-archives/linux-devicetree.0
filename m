@@ -1,27 +1,34 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] input: snvs_pwrkey: add linux prefix for wakeup property
-Date: Fri, 17 Jul 2015 11:46:25 +0800
-Message-ID: <20150717034625.GD12927@tiger>
-References: <1436930409-6536-1-git-send-email-shawnguo@kernel.org>
- <CAHrpEqS2o6_B6dNrnWJ06ASWaB0SGxur1o3VuN2A-QywWhbWVA@mail.gmail.com>
- <20150716183408.GD32571@dtor-ws>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/4][v4] ARM: imx: imx7d-pinfunc: add gpio pad iomuxc
+ settings
+Date: Fri, 17 Jul 2015 11:51:15 +0800
+Message-ID: <20150717035115.GE12927@tiger>
+References: <1437078887-2524-1-git-send-email-aalonso@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20150716183408.GD32571@dtor-ws>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Zhi Li <lznuaa@gmail.com>, Frank Li <Frank.Li@freescale.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-input@vger.kernel.org
+In-Reply-To: <1437078887-2524-1-git-send-email-aalonso-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Adrian Alonso <aalonso-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lznuaa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, nitin.garg-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, yibin.gong-KZfg59tc24xl57MIdRCFDg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 16, 2015 at 11:34:08AM -0700, Dmitry Torokhov wrote:
-> I should have said to use "wakeup-source", not simply "wakeup" so that
-> we'd match with I2C annotation.
+On Thu, Jul 16, 2015 at 03:34:44PM -0500, Adrian Alonso wrote:
+> * Add iMX7D SoC imx7d-pinfunc gpio pad settings
+>   <mux_reg conf_reg input_reg mux_mode input_val>
+> * iMX7D GPIO1_IO7 to GPIO1_IO0 encode the pad group id in the most
+>   significant bits of input_val to avoid group id overlap bweeten
+>   iomuxc and iomuxc-lpsr.
+> 
+> Signed-off-by: Adrian Alonso <aalonso-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-Yeah, consistency is the real motivation of this patch.  I do not
-like that different properties are invented for the same purpose.  As it
-seems that subsystems are all moving to "wakeup-source", I would be
-happy to get it consistent with that.  V2 will be coming soon.
+Unless you can convince me that this approach which hacks select input
+value is better than two instances one, it's an NACK for me on the whole
+patch series.
 
 Shawn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
