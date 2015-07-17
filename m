@@ -1,234 +1,168 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V3 07/19] soc: tegra: pmc: Wait for powergate state to
- change
-Date: Fri, 17 Jul 2015 12:17:00 +0200
-Message-ID: <20150717101658.GK3057@ulmo>
-References: <1436791197-32358-1-git-send-email-jonathanh@nvidia.com>
- <1436791197-32358-8-git-send-email-jonathanh@nvidia.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="XjbSsFHOHxvQpKib"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1436791197-32358-8-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Terje =?utf-8?Q?Bergstr=C3=B6m?= <tbergstrom-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vince Hsu <vinceh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Subject: Re: Duplicated device tree and Dynamic symbols
+Date: Fri, 17 Jul 2015 13:19:56 +0300
+Message-ID: <891F3666-9DC9-493D-8D87-AE0E7813E197@konsulko.com>
+References: <CAPybu_3CQ0vD=uj_gKwdcsQ_W7u-SRKzKDWOYaXvU83V8iYOqw@mail.gmail.com> <9E8352D3-3925-4362-95D0-F2284993FB0F@konsulko.com> <CAPybu_23vDtL5xxnUCUoNxwGTwVFGsNcGiS5Mg2M+u4jaQF1Sg@mail.gmail.com> <F843F38C-8990-40DD-AF7B-879213FA865C@konsulko.com> <CAPybu_1LX6swWfd4cgfRxeS00uOEvoZWV3cb1Ppz=XQs69JbUw@mail.gmail.com> <CAPybu_2N3tek5vHoZ768pwEeLj5cPfEVQh0pHXAaZzveTtoo1g@mail.gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2102\))
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAPybu_2N3tek5vHoZ768pwEeLj5cPfEVQh0pHXAaZzveTtoo1g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Ricardo,
 
---XjbSsFHOHxvQpKib
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Jul 13, 2015 at 01:39:45PM +0100, Jon Hunter wrote:
-> Currently, the function tegra_powergate_set() simply sets the desired
-> powergate state but does not wait for the state to change. In some
-> circumstances this can be desirable. However, in most cases we should
-> wait for the state to change before proceeding. Therefore, add a
-> parameter to tegra_powergate_set() to indicate whether we should wait
-> for the state to change.
+> On Jul 16, 2015, at 23:11 , Ricardo Ribalda Delgado <ricardo.ribalda@=
+gmail.com> wrote:
 >=20
-> By adding this feature, we can also eliminate the polling loop from
-> tegra30_boot_secondary().
+> Ping?
 >=20
-> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
->  arch/arm/mach-tegra/platsmp.c | 18 ++++--------------
->  drivers/soc/tegra/pmc.c       | 29 +++++++++++++++++++++++------
->  include/soc/tegra/pmc.h       |  2 +-
->  3 files changed, 28 insertions(+), 21 deletions(-)
+
+On vacations, but take a look at:
+
+https://github.com/pantoniou/dtc
+
+Regards
+
+=E2=80=94 Pantelis
+
+> On Fri, Jun 12, 2015 at 11:53 PM, Ricardo Ribalda Delgado
+> <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> Hello Pantelis
+>>=20
+>> Thanks for your patches, I will try to test it during the next week.
+>> Just one question.
+>>=20
+>> Where can I find the dtc with support for __fixup__ and __local_fixu=
+ps__ ?
+>>=20
+>> Seems that is its not part of /scripts/dtc or
+>> https://git.kernel.org/cgit/utils/dtc/dtc.git/log/
+>>=20
+>> Thanks!
+>>=20
+>> On Fri, Jun 12, 2015 at 10:06 PM, Pantelis Antoniou
+>> <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+>>> Hi Ricardo,
+>>>=20
+>>>> On Jun 8, 2015, at 23:14 , Ricardo Ribalda Delgado <ricardo.ribald=
+a@gmail.com> wrote:
+>>>>=20
+>>>> Hello Pantelis
+>>>>=20
+>>>> Any progress here?
+>>>>=20
+>>>=20
+>>> I just posted a bunch of patches that make possible using PCI with =
+device tree.
+>>> Perhaps you=E2=80=99d like to take a look.
+>>>=20
+>>>> Thanks
+>>>>=20
+>>>=20
+>>> Regards
+>>>=20
+>>> =E2=80=94 Pantelis
+>>>=20
+>>>> On Tue, Apr 28, 2015 at 10:36 AM, Pantelis Antoniou
+>>>> <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+>>>>> Hi Ricardo,
+>>>>>=20
+>>>>>> On Apr 28, 2015, at 11:16 , Ricardo Ribalda Delgado <ricardo.rib=
+alda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>>>>=20
+>>>>>> Hello
+>>>>>>=20
+>>>>>> I have an X86 platform with device tree support. It has multiple=
+ pci
+>>>>>> slots with a custom board that is described with a device tree.
+>>>>>>=20
+>>>>>> When the pci device is probed, the driver fetches a device tree =
+from
+>>>>>> the firmware infrastructure, patches the range property based on=
+ the
+>>>>>> bar address and adds the device to the main device tree.
+>>>>>>=20
+>>>>>> This works perfectly fine with only one card, but when the secon=
+d card
+>>>>>> is connected: Here be dragons :)
+>>>>>>=20
+>>>>>> The main issue is that of_find_node_by_phandle always resolves t=
+o the
+>>>>>> first connected card. I fixed this by creating a new function.
+>>>>>> of_find_node_by_phandle_family() that chooses the closest phandl=
+e on
+>>>>>> the tree, not just the first one.
+>>>>>>=20
+>>>>>> By reading the "Dynamic Symbols support and fixup support"
+>>>>>> here:
+>>>>>> http://events.linuxfoundation.org/sites/events/files/slides/dyna=
+mic-dt-elce14.pdf
+>>>>>> and here
+>>>>>> https://lwn.net/Articles/616859/
+>>>>>>=20
+>>>>>> It seemed that the patch would fix my issue and it would be alre=
+ady
+>>>>>> merged, but I cannot find the patch here
+>>>>>> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git
+>>>>>> or here
+>>>>>> https://git.kernel.org/cgit/linux/kernel/git/jdl/dtc.git
+>>>>>>=20
+>>>>>> So I am wondering some stuff:
+>>>>>>=20
+>>>>>> Would a patch adding my of_find_node_by_phandle_family() would b=
+e accepted.?
+>>>>>>=20
+>>>>>> Will Dynamic symbols fix my issue?
+>>>>>>=20
+>>>>>> What is the status of Dynamic symbol support?
+>>>>>>=20
+>>>>>> Thanks!
+>>>>>>=20
+>>>>>>=20
+>>>>>=20
+>>>>> You=E2=80=99ll find it hard to believe but there=E2=80=99s someon=
+e using something similar.
+>>>>>=20
+>>>>> I=E2=80=99m trying to figure out how to make it work; hang on to =
+your horses. I=E2=80=99ll CC you
+>>>>> when I post the patches.
+>>>>>=20
+>>>>>=20
+>>>>>> --
+>>>>>> Ricardo Ribalda
+>>>>>=20
+>>>>> Regards
+>>>>>=20
+>>>>> =E2=80=94 Pantelis
+>>>>>=20
+>>>>=20
+>>>>=20
+>>>>=20
+>>>> --
+>>>> Ricardo Ribalda
+>>>=20
+>>=20
+>>=20
+>>=20
+>> --
+>> Ricardo Ribalda
 >=20
-> diff --git a/arch/arm/mach-tegra/platsmp.c b/arch/arm/mach-tegra/platsmp.c
-> index b45086666648..13982b5936c0 100644
-> --- a/arch/arm/mach-tegra/platsmp.c
-> +++ b/arch/arm/mach-tegra/platsmp.c
-> @@ -108,19 +108,9 @@ static int tegra30_boot_secondary(unsigned int cpu, =
-struct task_struct *idle)
->  	 * be un-gated by un-toggling the power gate register
->  	 * manually.
->  	 */
-> -	if (!tegra_pmc_cpu_is_powered(cpu)) {
-> -		ret =3D tegra_pmc_cpu_power_on(cpu);
-> -		if (ret)
-> -			return ret;
-> -
-> -		/* Wait for the power to come up. */
-> -		timeout =3D jiffies + msecs_to_jiffies(100);
-> -		while (!tegra_pmc_cpu_is_powered(cpu)) {
-> -			if (time_after(jiffies, timeout))
-> -				return -ETIMEDOUT;
-> -			udelay(10);
-> -		}
-> -	}
-> +	ret =3D tegra_pmc_cpu_power_on(cpu, true);
-> +	if (ret)
-> +		return ret;
-> =20
->  remove_clamps:
->  	/* CPU partition is powered. Enable the CPU clock. */
-> @@ -162,7 +152,7 @@ static int tegra114_boot_secondary(unsigned int cpu, =
-struct task_struct *idle)
->  		 * also initial power state in flow controller. After that,
->  		 * the CPU's power state is maintained by flow controller.
->  		 */
-> -		ret =3D tegra_pmc_cpu_power_on(cpu);
-> +		ret =3D tegra_pmc_cpu_power_on(cpu, false);
->  	}
-> =20
->  	return ret;
-> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
-> index 300f11e0c3bb..c0635bdd4ee3 100644
-> --- a/drivers/soc/tegra/pmc.c
-> +++ b/drivers/soc/tegra/pmc.c
-> @@ -175,9 +175,11 @@ static void tegra_pmc_writel(u32 value, unsigned lon=
-g offset)
->   * @id: partition ID
->   * @new_state: new state of the partition
+>=20
+>=20
+> --=20
+> Ricardo Ribalda
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree"=
+ in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-The comment here isn't updated.
-
->   */
-> -static int tegra_powergate_set(int id, bool new_state)
-> +static int tegra_powergate_set(int id, bool new_state, bool wait)
-
-Can we please not chain boolean parameters, it makes the call sites
-impossible to parse for humans. Instead, can we simply leave
-tegra_powergate_set() as it is and add another function, such as
-tegra_powergate_set_sync() or tegra_powergate_set_and_wait(), to achieve
-the same? You may have to split out a tegra_powergate_set_unlocked() or
-similar to make sure you get to keep the lock across both operations:
-
-	static int tegra_powergate_set_unlocked(int id, bool new_state)
-	{
-		...
-	}
-
-	static int tegra_powergate_set(int id, bool new_state)
-	{
-		int err;
-
-		mutex_lock(&pmc->powergates_lock);
-		err =3D tegra_powergate_set_unlocked(id, new_state);
-		mutex_unlock(&pmc->powergates_lock);
-
-		return err;
-	}
-
-	/*
-	 * Must be called with pmc->powergates_lock mutex held.
-	 */
-	static int tegra_powergate_wait(int id, bool new_state)
-	{
-		...
-	}
-
-	static int tegra_powergate_set_and_wait(int id, bool new_state)
-	{
-		int err;
-
-		mutex_lock(&pmc->powergates_lock);
-
-		err =3D tegra_powergate_set_unlocked(id, new_state);
-		if (err < 0)
-			goto unlock;
-
-		err =3D tegra_powergate_wait(id, new_state);
-		if (err < 0)
-			goto unlock;
-
-	unlock:
-		mutex_unlock(&pmc->powergates_lock);
-		return err;
-	}
-
->  {
-> +	unsigned long timeout;
->  	bool status;
-> +	int ret =3D 0;
-> =20
->  	mutex_lock(&pmc->powergates_lock);
-> =20
-> @@ -190,9 +192,23 @@ static int tegra_powergate_set(int id, bool new_stat=
-e)
-> =20
->  	tegra_pmc_writel(PWRGATE_TOGGLE_START | id, PWRGATE_TOGGLE);
-> =20
-> +	if (wait) {
-> +		timeout =3D jiffies + msecs_to_jiffies(100);
-> +		ret =3D -ETIMEDOUT;
-> +
-> +		while (time_before(jiffies, timeout)) {
-> +			status =3D !!(tegra_pmc_readl(PWRGATE_STATUS) & BIT(id));
-> +			if (status =3D=3D new_state) {
-> +				ret =3D 0;
-> +				break;
-> +			}
-> +			udelay(10);
-> +		}
-> +	}
-> +
->  	mutex_unlock(&pmc->powergates_lock);
-> =20
-> -	return 0;
-> +	return ret;
->  }
-> =20
->  /**
-> @@ -204,7 +220,7 @@ int tegra_powergate_power_on(int id)
->  	if (!pmc->soc || id < 0 || id >=3D pmc->soc->num_powergates)
->  		return -EINVAL;
-> =20
-> -	return tegra_powergate_set(id, true);
-> +	return tegra_powergate_set(id, true, true);
->  }
-> =20
->  /**
-> @@ -216,7 +232,7 @@ int tegra_powergate_power_off(int id)
->  	if (!pmc->soc || id < 0 || id >=3D pmc->soc->num_powergates)
->  		return -EINVAL;
-> =20
-> -	return tegra_powergate_set(id, false);
-> +	return tegra_powergate_set(id, false, true);
->  }
->  EXPORT_SYMBOL(tegra_powergate_power_off);
-> =20
-> @@ -351,8 +367,9 @@ bool tegra_pmc_cpu_is_powered(int cpuid)
->  /**
->   * tegra_pmc_cpu_power_on() - power on CPU partition
->   * @cpuid: CPU partition ID
-> + * @wait:  Wait for CPU state to transition
->   */
-> -int tegra_pmc_cpu_power_on(int cpuid)
-> +int tegra_pmc_cpu_power_on(int cpuid, bool wait)
-
-This one is probably fine since it's the only boolean parameter so far.
-That said, I see that we call this exactly twice, so I wonder if there'd
-be any harm in having the second occurrence wait as well and hence get
-rid of the parameter.
-
-Thierry
-
---XjbSsFHOHxvQpKib
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJVqNYYAAoJEN0jrNd/PrOh5yEQAJawpQAEf1AJrpNe4nwDsbvB
-9sOvK6uty880b1IOUoZprZ6NJYKKaIXBMHX40MrXeW66W2MF73s8QG2O8kbX/n4Y
-2dHxsm7lGJ+NTZBOHBpEw2SomQVu2t8vYPqAbQC4UxTiNgmNTftt+7B8HQvcJ/2q
-OMic2rm8GMxiVEYZsCqUkBSlyo6aTvetZIBZHlF0YFrq3MKD0DqM7nPFIFxu1msL
-4P+mfIEjJt4phh5j5NC7VXvO4I0LJEjgIvCrNFyoB2Gfz+fz08j0A0REbZUota+4
-xpU50wXN0BFI4prdtY4izG/W/2h344VNs8r7eHVZfY9tA1xDU6zlaX0Nk+SlEqGN
-93GulrjXoc6JocDSbDpTLEi+kzxhc4KhQyTEgPTp4oeB2ELF9yJTW0hzmI85XXFK
-IC37DOjkXWW0ryxRkUVQQ/16u4qQ1KSyX3BNPHUP2JNhzaKt4EHueA9nEWoa17pD
-lwTKL3rIvNmd2Q8kKt5WZTJEMW7E46UQTORf2yQ/y2gYoWBGmLnRT0PzT8jyDSb/
-wN37lUuCPUwWHmYHBliUVxso/6mUQaIg1utZ3vTlMVml1TKhV8qp/zM8KcQ9CK0Y
-5jRZHwbYWdpFX8hqMTnxC6azbMlj9lrqOWmz3EIWsjPP+rzToJKtD97Bt/ZqPq4y
-kfI9oT3MKmVlCjJj0g7N
-=Gndd
------END PGP SIGNATURE-----
-
---XjbSsFHOHxvQpKib--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
