@@ -1,7 +1,7 @@
 From: <atull@opensource.altera.com>
-Subject: [PATCH v9 2/7] staging: usage documentation for simple fpga bus
-Date: Fri, 17 Jul 2015 10:51:12 -0500
-Message-ID: <1437148277-5405-3-git-send-email-atull@opensource.altera.com>
+Subject: [PATCH v9 1/7] staging: usage documentation for FPGA manager core
+Date: Fri, 17 Jul 2015 10:51:11 -0500
+Message-ID: <1437148277-5405-2-git-send-email-atull@opensource.altera.com>
 References: <1437148277-5405-1-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,67 +23,136 @@ List-Id: devicetree@vger.kernel.org
 
 From: Alan Tull <atull@opensource.altera.com>
 
-Add a document spelling out usage of the simple fpga bus.
+Add a document on the new FPGA manager core.
 
 Signed-off-by: Alan Tull <atull@opensource.altera.com>
 ---
- .../staging/fpga/Documentation/simple-fpga-bus.txt |   48 ++++++++++++++++++++
- 1 file changed, 48 insertions(+)
- create mode 100644 drivers/staging/fpga/Documentation/simple-fpga-bus.txt
+ drivers/staging/fpga/Documentation/fpga-mgr.txt |  117 +++++++++++++++++++++++
+ 1 file changed, 117 insertions(+)
+ create mode 100644 drivers/staging/fpga/Documentation/fpga-mgr.txt
 
-diff --git a/drivers/staging/fpga/Documentation/simple-fpga-bus.txt b/drivers/staging/fpga/Documentation/simple-fpga-bus.txt
+diff --git a/drivers/staging/fpga/Documentation/fpga-mgr.txt b/drivers/staging/fpga/Documentation/fpga-mgr.txt
 new file mode 100644
-index 0000000..9df519f
+index 0000000..b5b6ed4
 --- /dev/null
-+++ b/drivers/staging/fpga/Documentation/simple-fpga-bus.txt
-@@ -0,0 +1,48 @@
-+   Simple FPGA Bus
++++ b/drivers/staging/fpga/Documentation/fpga-mgr.txt
+@@ -0,0 +1,117 @@
++  FPGA Manager Core
 +
-+   Alan Tull 2015
++  Alan Tull 2015
 +
-+   Overview
-+   --------
-+The simple FPGA bus adds device tree overlay support for FPGA's.  Loading a
-+DT overlay will result in the FGPA getting an image loaded, its bridges will
-+be released, and the DT populated for nodes below the simple-fpga-bus.  This
-+results in drivers getting probed for the hardware that just got added.  This
-+is intended to support the FPGA usage where the FPGA has hardware that
-+requires drivers.  Removing the overlay will result in the drivers getting
-+removed and the bridges being disabled.
++  Overview
++  --------
++The FPGA manager core exports a set of functions for programming an image to a
++FPGA.  All manufacturor specifics are hidden away in a low level driver.  The
++API is manufacturor agnostic.  Of course the FPGA image data itself is very
++manufacturor specific but for our purposes it's just data in a buffer or file
++or something.  The FPGA manager core won't parse it or know anything about it.
 +
 +
-+   Requirements
-+   ------------
-+ 1. An FPGA image that has a hardware block or blocks that use drivers that are
-+    supported in the kernel.
-+ 2. A device tree overlay.
-+ 3. A FPGA manager driver supporting writing the FPGA.
-+ 4. FPGA bridge resets supported as reset controllers.
-+
-+The DT overlay includes bindings (documented in bindings/simple-fpga-bus.txt)
-+that specify:
-+ * Which fpga manager to use
-+ * Which image file to load
-+ * Flags indicating whether this this image is for full reconfiguration or
-+   partial.
-+ * a list of resets that should be released.  These enable the FPGA bridges.
-+ * child nodes specifying the devices that will be added with appropriate
-+   compatible strings, etc.
-+
-+Since this code uses the firmware interface to get the image and DT overlay,
-+they currently have to be files on the filesystem.  It doesn't have to be that
-+way forever as DT bindings could be added to point to other sources for the
-+image.
++  Files
++  -----
++drivers/staging/fpga/fpga-mgr.c
++include/linux/fpga/fpga-mgr.h
 +
 +
-+   Sequence
-+   --------
-+ 1. Load the DT overlay.  One convenient way to do that is to use Pantelis'
-+    handy configfs interface (more below).
-+ 2. The simple FPGA bus gets probed and will do the following:
-+    a. call the fpga manager core to program the FPGA
-+    b. release the FPGA bridges
-+    c. call of_platform_populate resulting in device drivers getting probed.
++  The API Functions
++  ----------------
++The API that is exported is currently 6 functions:
 +
++   int fpga_mgr_buf_load(struct fpga_manager *mgr,
++                         u32 flags,
++                         const char *buf,
++                         size_t count);
++
++An FPGA image exists as a buffer in memory.  Load it into the FPGA.  The FPGA
++ends up in operating mode or return a negative error code.
++
++   int fpga_mgr_firmware_load(struct fpga_manager *mgr,
++                              u32 flags,
++                              const char *image_name);
++
++An FPGA image exists as a file that is on the firmware search path (see the
++firmware class documentation).  Load as above.
++
++   struct fpga_manager *of_fpga_mgr_get(struct device_node *node);
++
++Given a DT node, get a reference to a fpga manager.
++
++   void fpga_mgr_put(struct fpga_manager *mgr);
++
++Release the reference to the fpga manager.
++
++   int fpga_mgr_register(struct device *dev,
++                         const char *name,
++                         const struct fpga_manager_ops *mops,
++                         void *priv);
++   void fpga_mgr_unregister(struct device *dev);
++
++Register/unregister the lower level device specific driver.
++
++
++  How To Write an Image Buffer to a supported FPGA
++  ------------------------------------------------
++/* device node that specifies the fpga manager to use */
++struct device_node *mgr_node;
++
++/* FPGA image is in this buffer.  count is size of buf. */
++char *buf;
++int count;
++int ret;
++
++struct fpga_manager *mgr = of_fpga_mgr_get(mgr_node);
++ret = fpga_mgr_buf_load(mgr, flags, buf, count);
++fpga_mgr_put(mgr);
++
++
++  How To Write an Image File to a supported FPGA
++  ------------------------------------------------
++/* device node that specifies the fpga manager to use */
++struct device_node *mgr_node;
++
++/* FPGA image is in this buffer.  count is size of buf. */
++const char *path = "fpga-image-9.rbf"
++int ret;
++
++struct fpga_manager *mgr = of_fpga_mgr_get(mgr_node);
++ret = fpga_mgr_firmware_load(mgr, flags, path);
++fpga_mgr_put(mgr);
++
++
++  How To Support a new FPGA device
++  --------------------------------
++To add another fpga manager, look at the bottom part of socfpga.c for an
++example, starting with the declaration of socfpga_fpga_ops.
++
++static const struct fpga_manager_ops socfpga_fpga_ops = {
++       .write_init = socfpga_fpga_ops_configure_init,
++       .write = socfpga_fpga_ops_configure_write,
++       .write_complete = socfpga_fpga_ops_configure_complete,
++       .state = socfpga_fpga_ops_state,
++};
++
++You will want to create a platform driver that has a set of ops like that
++and then register it with fpga_mgr_register in your probe function.  Your
++ops will implement whatever device specific register writes needed and
++will return negative error codes if things don't go well.
++
++The programming seqence is:
++ 1. .write_init
++ 2. .write (may be called once or multiple times)
++ 3. .write_complete
++
++The .write_init function will prepare the FPGA to receive the image data.
++
++The .write function receives an image buffer or a chunk of the image and
++writes it the FPGA.  The buffer may arrive as one chunk or a bunck of
++small chunks through this function being called multiple times.
++
++The .write_complete function is called after all the image has been written
++to put the FPGA into operating mode.
++
++The .state function will read your hardware and return a code of type
++"enum fpga_mgr_states".  It doesn't result in a change in hardware state.
 -- 
 1.7.9.5
