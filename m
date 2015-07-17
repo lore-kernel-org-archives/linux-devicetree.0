@@ -1,113 +1,54 @@
-From: Wang J.W. <Jianwei.Wang@freescale.com>
-Subject: RE: [PATCH v9 3/4] arm/dts/ls1021a: Add DCU dts node
-Date: Fri, 17 Jul 2015 05:06:38 +0000
-Message-ID: <DM2PR0301MB1229157FE50EAAC002143E479F980@DM2PR0301MB1229.namprd03.prod.outlook.com>
-References: <1436784692-40560-1-git-send-email-jianwei.wang@freescale.com>
- <1436784692-40560-3-git-send-email-jianwei.wang@freescale.com>
- <20150714105952.GK12465@ulmo.nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20150714105952.GK12465@ulmo.nvidia.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Xiubo Li <lixiubo@cmss.chinamobile.com>, Huan Wang <alison.wang@freescale.com>, "daniel.vetter@ffwll.ch" <daniel.vetter@ffwll.ch>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Scott Wood <scottwood@freescale.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: [PATCH v2 0/4] mfd: Improve DT binding docs for max77686 and max77802
+Date: Fri, 17 Jul 2015 08:29:23 +0200
+Message-ID: <1437114567-17629-1-git-send-email-javier@osg.samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-arm-kernel@lists.infradead.org, Javier Martinez Canillas <javier@osg.samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Cgo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tCj4gRnJvbTogVGhpZXJyeSBSZWRpbmcgW21h
-aWx0bzp0aGllcnJ5LnJlZGluZ0BnbWFpbC5jb21dCj4gU2VudDogVHVlc2RheSwgSnVseSAxNCwg
-MjAxNSA3OjAwIFBNCj4gVG86IFdhbmcgSmlhbndlaS1CNTIyNjEKPiBDYzogZHJpLWRldmVsQGxp
-c3RzLmZyZWVkZXNrdG9wLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgt
-Cj4gYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVs
-Lm9yZzsKPiBhaXJsaWVkQGxpbnV4LmllOyBkYW5pZWwudmV0dGVyQGZmd2xsLmNoOyBtYXJrLnlh
-b0Byb2NrLWNoaXBzLmNvbTsgV29vZAo+IFNjb3R0LUIwNzQyMTsgV2FuZyBIdWFuLUIxODk2NTsg
-WGl1Ym8gTGk7IFdhbmcgSmlhbndlaS1CNTIyNjEKPiBTdWJqZWN0OiBSZTogW1BBVENIIHY5IDMv
-NF0gYXJtL2R0cy9sczEwMjFhOiBBZGQgRENVIGR0cyBub2RlCj4gCj4gT24gTW9uLCBKdWwgMTMs
-IDIwMTUgYXQgMDY6NTE6MzFQTSArMDgwMCwgSmlhbndlaSBXYW5nIHdyb3RlOgo+ID4gQWRkIERD
-VSBub2RlLCBEQ1UgaXMgYSBkaXNwbGF5IGNvbnRyb2xsZXIgb2YgRnJlZXNjYWxlIG5hbWVkIDJE
-LUFDRS4KPiA+Cj4gPiBTaWduZWQtb2ZmLWJ5OiBBbGlzb24gV2FuZyA8YjE4OTY1QGZyZWVzY2Fs
-ZS5jb20+Cj4gPiBTaWduZWQtb2ZmLWJ5OiBYaXVibyBMaSA8bGl4aXVib0BjbXNzLmNoaW5hbW9i
-aWxlLmNvbT4KPiA+IFNpZ25lZC1vZmYtYnk6IEppYW53ZWkgV2FuZyA8YjUyMjYxQGZyZWVzY2Fs
-ZS5jb20+Cj4gPiBSZXZpZXdlZC1ieTogQWxpc29uIFdhbmcgPGFsaXNvbi53YW5nQGZyZWVzY2Fs
-ZS5jb20+Cj4gPiAtLS0KPiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0vZnNsLWRjdS9m
-c2wsZGN1LnR4dCAgICAgIHwgMjAKPiArKysrKysrKysrKysrKysrKysrKwo+ID4gIE1BSU5UQUlO
-RVJTICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgMSArCj4gPiAg
-YXJjaC9hcm0vYm9vdC9kdHMvbHMxMDIxYS5kdHNpICAgICAgICAgICAgICAgICAgICAgICB8IDEw
-ICsrKysrKysrKysKPiA+ICAzIGZpbGVzIGNoYW5nZWQsIDMxIGluc2VydGlvbnMoKykKPiA+ICBj
-cmVhdGUgbW9kZSAxMDA2NDQKPiA+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
-cm0vZnNsLWRjdS9mc2wsZGN1LnR4dAo+ID4KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvZHJtL2ZzbC1kY3UvZnNsLGRjdS50eHQKPiA+IGIvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RybS9mc2wtZGN1L2ZzbCxkY3UudHh0Cj4gPiBu
-ZXcgZmlsZSBtb2RlIDEwMDY0NAo+ID4gaW5kZXggMDAwMDAwMC4uZWI2MWVhNQo+ID4gLS0tIC9k
-ZXYvbnVsbAo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RybS9m
-c2wtZGN1L2ZzbCxkY3UudHh0Cj4gCj4gVGhhdCdzIG5vdCB0aGUgcHJvcGVyIGxvY2F0aW9uIGZv
-ciB0aGlzIGZpbGUuIERSTSBpcyBhIExpbnV4LXNwZWNpZmljCj4gc3Vic3lzdGVtIGFuZCBoZW5j
-ZSBzaG91bGRuJ3QgYmUgdXNlZCBpbiBhbnl0aGluZyBkZXZpY2V0cmVlLXJlbGF0ZWQuCj4gRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVvIHdvdWxkIGJlIGEgYmV0dGVyIGxv
-Y2F0aW9uLgo+IAo+IFllcywgSSBrbm93IG90aGVyIERSTSBkcml2ZXJzIHB1dCB0aGVpciBiaW5k
-aW5nIGluIHRoZSBkcm0gc3ViZGlyZWN0b3J5Cj4gYnV0IHRoYXQganVzdCBtYWtlcyB0aGVtIGVx
-dWFsbHkgd3JvbmcuIEknbGwgbWFrZSBhIG5vdGUgdG8gbW92ZSB0aGVzZQo+IGFyb3VuZCBhdCBz
-b21lIHBvaW50Lgo+IAoKT2shCgo+IEFsc28gdGhlIGJpbmRpbmcgcmVhbGx5IGJlbG9uZ3MgaW4g
-dGhlIHNhbWUgcGF0Y2ggYXMgdGhlIGRyaXZlciwgb3IgYQo+IHNlcGFyYXRlIHBhdGNoIGFsdG9n
-ZXRoZXIuCj4gCiAKT2shCgoKPiBBbmQsIG5vIG5lZWQgZm9yIHRoZSBleHRyYSBmc2wtZGN1IHN1
-YmRpcmVjdG9yeSBpZiB5b3UgaGF2ZSBvbmx5IGEgc2luZ2xlCj4gZG9jdW1lbnQgaW4gaXQuCj4g
-CiAKT2sKCgo+ID4gQEAgLTAsMCArMSwyMCBAQAo+ID4gK0RldmljZSBUcmVlIGJpbmRpbmdzIGZv
-ciBGcmVlc2NhbGUgRENVIERSTSBEcml2ZXIKPiA+ICsKPiA+ICtSZXF1aXJlZCBwcm9wZXJ0aWVz
-Ogo+ID4gKy0gY29tcGF0aWJsZTogICAgICAgICAgIFNob3VsZCBiZSBvbmUgb2YKPiA+ICsJKiAi
-ZnNsLGxzMTAyMWEtZGN1Ii4KPiA+ICsJKiAiZnNsLHZmNjEwLWRjdSIuCj4gPiArLSByZWc6ICAg
-ICAgICAgICAgICAgICAgQWRkcmVzcyBhbmQgbGVuZ3RoIG9mIHRoZSByZWdpc3RlciBzZXQgZm9y
-IGRjdS4KPiA+ICstIGNsb2NrczogICAgICAgICAgICAgICBGcm9tIGNvbW1vbiBjbG9jayBiaW5k
-aW5nOiBoYW5kbGUgdG8gZGN1IGNsb2NrLgo+ID4gKy0gY2xvY2stbmFtZXM6ICAgICAgICAgIEZy
-b20gY29tbW9uIGNsb2NrIGJpbmRpbmc6IFNoYWxsIGJlICJkY3UiLgo+ID4gKy0gcGFuZWw6CQlU
-aGUgcGhhbmRsZSB0byBwYW5lbCBub2RlLgo+IAo+IFRoaXMgaXNuJ3QgYSBzdGFuZGFyZCBwcm9w
-ZXJ0eSBhbmQgaGVuY2Ugc2hvdWxkIGJlIHByZWZpeGVkIGJ5IHRoZSB2ZW5kb3IKPiBwcmVmaXgu
-IFRoYXQgaXM6ICJmc2wscGFuZWwiLgo+IAo+IEFsc28gdGhlIGFib3ZlIHVzZXMgYSB3ZWlyZCBt
-aXggb2Ygc3BhY2VzIGFuZCB0YWJzIGZvciBwYWRkaW5nLiBQbGVhc2UgYmUKPiBtb3JlIGNvbnNp
-c3RlbnQuCj4gCiAKT2sKCgo+ID4gKwo+ID4gK0V4YW1wbGVzOgo+ID4gK2RjdTogZGN1QDJjZTAw
-MDAgewo+ID4gKwljb21wYXRpYmxlID0gImZzbCxsczEwMjFhLWRjdSI7Cj4gPiArCXJlZyA9IDww
-eDAgMHgyY2UwMDAwIDB4MCAweDEwMDAwPjsKPiA+ICsJY2xvY2tzID0gPCZwbGF0Zm9ybV9jbGsg
-MD47Cj4gPiArCWNsb2NrLW5hbWVzID0gImRjdSI7Cj4gPiArCWJpZy1lbmRpYW47Cj4gCj4gVGhp
-cyBwcm9wZXJ0eSBpc24ndCBtZW50aW9uZWQgYWJvdmUuIEkga25vdyBpdCdzIHByZXR0eSBvYnZp
-b3VzIHdoYXQgaXQKPiBkb2VzLCBidXQgbWlnaHQgc3RpbGwgYmUgd29ydGggYnJpZWZseSBkZXNj
-cmliaW5nIHdoYXQgaXQgaXMuIEknbSBhbHNvCj4gd29uZGVyaW5nIGlmIHRoYXQncyBub3Qgc29t
-ZXRoaW5nIHRoYXQgY291bGQgYmUgaW5mZXJyZWQgZnJvbSB0aGUKPiBjb21wYXRpYmxlIHN0cmlu
-Zy4KPiAKIApPSyEKRGlmZmVyZW50IFNvQ3MgbWF5YmUgZGlmZmVyZW50IGVuZGlhbi4KRm9yIGV4
-YW1wbGUsIG9uIHNvbWUgcG93ZXJwYyBTb0MsIERDVSBpcyBsaXR0bGUgZW5kaWFuCgpUaGFua3MK
-SmlhbndlaQoKPiA+ICsJcGFuZWwgPSA8JnBhbmVsPjsKPiA+ICt9Owo+ID4gZGlmZiAtLWdpdCBh
-L01BSU5UQUlORVJTIGIvTUFJTlRBSU5FUlMgaW5kZXggZTE5MWRlZC4uZmZmYjhjOSAxMDA2NDQK
-PiA+IC0tLSBhL01BSU5UQUlORVJTCj4gPiArKysgYi9NQUlOVEFJTkVSUwo+ID4gQEAgLTM0MTAs
-NiArMzQxMCw3IEBAIE06CUFsaXNvbiBXYW5nIDxhbGlzb24ud2FuZ0BmcmVlc2NhbGUuY29tPgo+
-ID4gIEw6CWRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKPiA+ICBTOglTdXBwb3J0ZWQK
-PiA+ICBGOglkcml2ZXJzL2dwdS9kcm0vZnNsLWRjdS8KPiA+ICtGOiAgICAgIERvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0vZnNsLWRjdS8KPiAKPiBZb3UgbWlnaHQgd2FudCB0
-byBzaHVmZmxlIGFyb3VuZCBzb21lIG9mIHRoZXNlIGh1bmtzLCBzbyB0aGF0IHRoaXMKPiBwYXJ0
-aWN1bGFyIGh1bmsgaXMgaW5jbHVkZWQgaW4gdGhlIGRyaXZlciBwYXRjaCBhbG9uZyB3aXRoIHRo
-ZSBiaW5kaW5nIGFuZAo+IHRoZSBwYW5lbCBwYXRjaCBkb2Vzbid0IHJlbW92ZSBpdCBvbmx5IGZv
-ciBpdCB0byBiZSByZWFkZGVkIGhlcmUuCj4gCj4gVGhpZXJyeQo+IAo+ID4gIEY6ICAgICAgRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BhbmVsL25lYyxubDQ4MjdoYzE5XzA1Yi50
-eHQKPiA+Cj4gPiAgRFJNIERSSVZFUlMgRk9SIE5WSURJQSBURUdSQQo+ID4gZGlmZiAtLWdpdCBh
-L2FyY2gvYXJtL2Jvb3QvZHRzL2xzMTAyMWEuZHRzaQo+ID4gYi9hcmNoL2FybS9ib290L2R0cy9s
-czEwMjFhLmR0c2kgaW5kZXggYzcwYmIyNy4uNmQ2ZTNlMiAxMDA2NDQKPiA+IC0tLSBhL2FyY2gv
-YXJtL2Jvb3QvZHRzL2xzMTAyMWEuZHRzaQo+ID4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvbHMx
-MDIxYS5kdHNpCj4gPiBAQCAtMzgzLDYgKzM4MywxNiBAQAo+ID4gIAkJCQkgPCZwbGF0Zm9ybV9j
-bGsgMT47Cj4gPiAgCQl9Owo+ID4KPiA+ICsJCWRjdTogZGN1QDJjZTAwMDAgewo+ID4gKwkJCWNv
-bXBhdGlibGUgPSAiZnNsLGxzMTAyMWEtZGN1IjsKPiA+ICsJCQlyZWcgPSA8MHgwIDB4MmNlMDAw
-MCAweDAgMHgxMDAwMD47Cj4gPiArCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDE3MiBJUlFfVFlQ
-RV9MRVZFTF9ISUdIPjsKPiA+ICsJCQljbG9ja3MgPSA8JnBsYXRmb3JtX2NsayAwPjsKPiA+ICsJ
-CQljbG9jay1uYW1lcyA9ICJkY3UiOwo+ID4gKwkJCWJpZy1lbmRpYW47Cj4gPiArCQkJc3RhdHVz
-ID0gImRpc2FibGVkIjsKPiA+ICsJCX07Cj4gPiArCj4gPiAgCQltZGlvMDogbWRpb0AyZDI0MDAw
-IHsKPiA+ICAJCQljb21wYXRpYmxlID0gImdpYW5mYXIiOwo+ID4gIAkJCWRldmljZV90eXBlID0g
-Im1kaW8iOwo+ID4gLS0KPiA+IDIuMS4wLjI3Lmc5NmRiMzI0Cj4gPgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRy
-aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hello Lee,
+
+This series contains some improvements for the Device Tree bindings of
+the Maxim MAX77686 and MAX77802 multi-function devices.
+
+This is the second version of the series that addresses issues pointed
+out by Krzysztof Kozlowski and Sergei Shtylyov.
+
+Patch #1 changes the max77686 binding to not suggest using a deprecated
+property of the regulator DT binding.
+
+Patch #2 changes the max77686 example to use a generic node name instead
+of the chip's name.
+
+Patch #3 adds a DT binding for the mfd portion of the max77802 that was
+missing.
+
+Patch #4 moves the regulator portion of the max77686 to the regulator's
+DT binding sub-directory since it is a better fit for this information.
+This fourth patch needs an ack from the regulator sub-system maintainer.
+
+Changes in v2:
+- Add Krzysztof Kozlowski Reviewed-by tag in patch #1.
+- Use the correct "maxim,max77802" compatible string.
+  Suggested by Krzysztof Kozlowski
+- Use a pmic generic node name for the max77802 node example.
+  Suggested by Sergei Shtylyov.
+- Use a generic name for the max77686 node in the regulator example.
+
+Javier Martinez Canillas (4):
+  mfd: max77686: Don't suggest in binding to use a deprecated property
+  mfd: max77686: Use a generic name for the PMIC node in the example
+  mfd: Add DT binding for Maxim MAX77802 IC
+  mfd: max77686: Split out regulator part from the DT binding
+
+ Documentation/devicetree/bindings/mfd/max77686.txt | 63 ++-----------------
+ Documentation/devicetree/bindings/mfd/max77802.txt | 26 ++++++++
+ .../devicetree/bindings/regulator/max77686.txt     | 71 ++++++++++++++++++++++
+ 3 files changed, 101 insertions(+), 59 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/max77802.txt
+ create mode 100644 Documentation/devicetree/bindings/regulator/max77686.txt
+
+-- 
+2.4.3
