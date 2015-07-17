@@ -1,81 +1,93 @@
 From: <atull@opensource.altera.com>
-Subject: [PATCH v9 4/7] staging: fpga manager: add sysfs interface document
-Date: Fri, 17 Jul 2015 10:51:14 -0500
-Message-ID: <1437148277-5405-5-git-send-email-atull@opensource.altera.com>
+Subject: [PATCH v9 3/7] staging: add bindings document for simple fpga bus
+Date: Fri, 17 Jul 2015 10:51:13 -0500
+Message-ID: <1437148277-5405-4-git-send-email-atull@opensource.altera.com>
 References: <1437148277-5405-1-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1437148277-5405-1-git-send-email-atull@opensource.altera.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: gregkh@linuxfoundation.org, jgunthorpe@obsidianresearch.com, hpa@zytor.com, monstr@monstr.eu, michal.simek@xilinx.com, rdunlap@infradead.org
-Cc: mark.rutland@arm.com, linux-doc@vger.kernel.org, rubini@gnudd.com, pantelis.antoniou@konsulko.com, s.trumtrar@pengutronix.de, devel@driverdev.osuosl.org, sameo@linux.intel.com, nico@linaro.org, ijc+devicetree@hellion.org.uk, kyle.teske@ni.com, grant.likely@linaro.org, davidb@codeaurora.org, linus.walleij@linaro.org, cesarb@cesarb.net, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, iws@ovro.caltech.edu, Alan Tull <atull@opensource.altera.com>, broonie@kernel.org, philip@balister.org, Petr Cvek <petr.cvek@tul.cz>, dinguyen@opensource.altera.com, pavel@denx.de, yvanderv@opensource.altera.com, linux-kernel@vger.kernel.org, balbi@ti.com, delicious.quinoa@gmail.com, robh+dt@kernel.org, rob@landley.net, galak@codeaurora.org, akpm@linux-foundation.org, davem@davemloft.net, m.chehab@samsung.com
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, pantelis.antoniou@konsulko.com, robh+dt@kernel.org, grant.likely@linaro.org, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, pavel@denx.de, broonie@kernel.org, philip@balister.org, rubini@gnudd.com, s.trumtrar@pengutronix.de, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devel@driverdev.osuosl.org, Petr Cvek <petr.cvek@tul.cz>, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com, Alan Tull <atull@opensource.altera.co>
 List-Id: devicetree@vger.kernel.org
 
 From: Alan Tull <atull@opensource.altera.com>
 
-Add documentation under drivers/staging for new fpga manager's
-sysfs interface.
+New bindings document for simple fpga bus.
 
 Signed-off-by: Alan Tull <atull@opensource.altera.com>
 ---
-v5  : (actually second version, but keeping version numbers
-      aligned with rest of patch series)
-      Move document to drivers/staging/fpga/Documentation/ABI
+ .../Documentation/bindings/simple-fpga-bus.txt     |   61 ++++++++++++++++++++
+ 1 file changed, 61 insertions(+)
+ create mode 100644 drivers/staging/fpga/Documentation/bindings/simple-fpga-bus.txt
 
-v6  : No change in this patch for v6 of the patch set
-
-v7  : No change in this patch for v7 of the patch set
-
-v8  : No change in this patch for v8 of the patch set
-
-v9  : Remove 'firmware' and 'reset' files
-      Update state strings
----
- .../Documentation/ABI/sysfs-class-fpga-manager     |   26 ++++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 drivers/staging/fpga/Documentation/ABI/sysfs-class-fpga-manager
-
-diff --git a/drivers/staging/fpga/Documentation/ABI/sysfs-class-fpga-manager b/drivers/staging/fpga/Documentation/ABI/sysfs-class-fpga-manager
+diff --git a/drivers/staging/fpga/Documentation/bindings/simple-fpga-bus.txt b/drivers/staging/fpga/Documentation/bindings/simple-fpga-bus.txt
 new file mode 100644
-index 0000000..470905e
+index 0000000..221e781
 --- /dev/null
-+++ b/drivers/staging/fpga/Documentation/ABI/sysfs-class-fpga-manager
-@@ -0,0 +1,26 @@
-+What:		/sys/class/fpga_manager/<fpga>/name
-+Date:		July 2015
-+KernelVersion:	4.2
-+Contact:	Alan Tull <atull@opensource.altera.com>
-+Description:	Name of low level fpga manager driver.
++++ b/drivers/staging/fpga/Documentation/bindings/simple-fpga-bus.txt
+@@ -0,0 +1,61 @@
++Simple FPGA Bus
++===============
 +
-+What:		/sys/class/fpga_manager/<fpga>/state
-+Date:		July 2015
-+KernelVersion:	4.2
-+Contact:	Alan Tull <atull@opensource.altera.com>
-+Description:	Read fpga manager state as a string.
-+		Valid states may vary by manufacturer; superset is:
-+		* unknown		= can't determine state
-+		* power off		= FPGA power is off
-+		* power up		= FPGA reports power is up
-+		* reset			= FPGA held in reset state
-+		* firmware request	= firmware class request in progress
-+		* firmware request error = firmware request failed
-+		* write init		= FPGA being prepared for programming
-+		* write init error	= Error while preparing FPGA for
-+					  programming
-+		* write			= FPGA ready to receive image data
-+		* write error		= Error while programming
-+		* write complete	= Doing post programming steps
-+		* write complete error	= Error while doing post programming
-+		* operating		= FPGA is programmed and operating
++A Simple FPGA Bus is a bus that handles configuring an FPGA and its bridges
++before populating the devices below its node.
++
++Required properties:
++- compatible : should contain "simple-fpga-bus"
++- #address-cells, #size-cells, ranges: must be present to handle address space
++  mapping for children.
++
++Optional properties:
++- fpga-mgr : should contain a phandle to a fpga manager.
++- fpga-firmware : should contain the name of a fpga image file located on the
++  firmware search path.
++- partial-reconfig : boolean property should be defined if partial
++  reconfiguration is to be done.
++- resets : should contain a list of resets that should be released after the
++  fpga has been programmed i.e. fpga bridges.
++- reset-names : should contain a list of the names of the resets.
++
++Example:
++
++/dts-v1/;
++/plugin/;
++/ {
++	fragment@0 {
++		target-path="/soc";
++		__overlay__ {
++			#address-cells = <1>;
++	                #size-cells = <1>;
++
++			bridge@0xff200000 {
++				compatible = "simple-fpga-bus";
++				#address-cells = <0x2>;
++				#size-cells = <0x1>;
++				ranges = <0x1 0x10040 0xff210040 0x20>;
++
++				clocks = <0x2 0x2>;
++				clock-names = "h2f_lw_axi_clock", "f2h_sdram0_clock";
++
++				fpga-mgr = <&hps_0_fpgamgr>;
++				fpga-firmware = "soc_system.rbf";
++
++				resets = <&hps_fpgabridge0 0>, <&hps_fpgabridge1 0>, <&hps_fpgabridge2 0>;
++				reset-names = "hps2fpga", "lwhps2fpga", "fpga2hps";
++
++				gpio@0x100010040 {
++					compatible = "altr,pio-14.0", "altr,pio-1.0";
++					reg = <0x1 0x10040 0x20>;
++					clocks = <0x2>;
++					altr,gpio-bank-width = <0x4>;
++					resetvalue = <0x0>;
++					#gpio-cells = <0x2>;
++					gpio-controller;
++				};
++			};
++		};
++	};
++};
++
 -- 
 1.7.9.5
