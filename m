@@ -1,54 +1,150 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH v2 0/2] Add support for PL172 memory-controller
-Date: Fri, 17 Jul 2015 10:44:10 -0700
-Message-ID: <20150717174410.GO21691@localhost>
-References: <1436822412-20171-1-git-send-email-manabian@gmail.com>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: mediatek: Add MT8173 MMC dts
+Date: Sat, 18 Jul 2015 00:16:26 +0200
+Message-ID: <2095363.Eo4NFi8jHO@ubix>
+References: <1437046580-10809-1-git-send-email-chaotian.jing@mediatek.com> <CAGS+omBxP5LBMZuayRUDYW3bBrRe17up2E559YJFL6Sq4tx5Jg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1436822412-20171-1-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <CAGS+omBxP5LBMZuayRUDYW3bBrRe17up2E559YJFL6Sq4tx5Jg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: arnd-r2nGTMty4D4@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, HenryC Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 13, 2015 at 11:20:10PM +0200, Joachim Eastwood wrote:
-> This patch set adds a memory driver and documentation for the ARM
-> PL172. This driver  makes it possible to configure the static
-> memory chip selects on the ARM PL172 MultiPort Memory Controller
-> from a set of properties in DT. Configuration of dynamic memory
-> (SDRAM) is not supported and is left to the boot loader. The
-> intended usage is to setup timing and configuration for static
-> memory devices like NAND and NOR Flash before they are probed by
-> a driver. Pretty much what like all the other memory drivers do.
+On Thursday, July 16, 2015 11:16:59 PM Daniel Kurtz wrote:
+> Hi Chaotian,
 > 
-> As drivers/memory doesn't seem to have a maintainer of it's own
-> I hope this patch set can go through the armsoc-drivers branch.
+> On Thu, Jul 16, 2015 at 7:36 PM, Chaotian Jing
 > 
-> The previous version of the patch set didn't recive recivce much
-> feedback and the cover letter can be found here:
-> http://marc.info/?l=devicetree&m=143024189625522&w=2
+> <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> > From: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > 
+> > Add node mmc0 ~ mmc3 for mt8173.dtsi
+> > Add node mmc0, mmc1 for mt8173-evb.dts
+> > 
+> > Signed-off-by: Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > Signed-off-by: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > ---
+> > Remove clk_null
+> > Base on 4.2-rc1, and 
+> > https://github.com/mbgg/linux-mediatek/tree/v4.2-next/arm64 commit
+> > 16ea61fc  arm64: dts: mt8173-evb: Add PMIC support> 
+> >  arch/arm64/boot/dts/mediatek/mt8173-evb.dts | 126
+> >  ++++++++++++++++++++++++++++ arch/arm64/boot/dts/mediatek/mt8173.dtsi   
+> >  |  44 ++++++++++
+> >  2 files changed, 170 insertions(+)
+> > 
+> > diff --git a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
+> > b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts index 986f25f..f76c99b
+> > 100644
+> > --- a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
+> > +++ b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
+> > @@ -64,6 +64,132 @@
+> > 
+> >         };
+> >  
+> >  };
+> > 
+> > +&mmc0 {
+> > +       status = "okay";
+> > +       pinctrl-names = "default", "state_uhs";
+> > +       pinctrl-0 = <&mmc0_pins_default>;
+> > +       pinctrl-1 = <&mmc0_pins_uhs>;
+> > +       bus-width = <8>;
+> > +       max-frequency = <50000000>;
+> > +       cap-mmc-highspeed;
+> > +       vmmc-supply = <&mt6397_vemc_3v3_reg>;
+> > +       vqmmc-supply = <&mt6397_vio18_reg>;
+> > +       non-removable;
+> > +};
+> > +
+> > +&mmc1 {
+> > +       status = "okay";
+> > +       pinctrl-names = "default", "state_uhs";
+> > +       pinctrl-0 = <&mmc1_pins_default>;
+> > +       pinctrl-1 = <&mmc1_pins_uhs>;
+> > +       bus-width = <4>;
+> > +       max-frequency = <50000000>;
+> > +       cap-sd-highspeed;
+> > +       sd-uhs-sdr25;
+> > +       cd-gpios = <&pio 132 0>;
+> > +       vmmc-supply = <&mt6397_vmch_reg>;
+> > +       vqmmc-supply = <&mt6397_vmc_reg>;
+> > +};
+> > +
+> > +&pio {
+> > +       mmc0_pins_default: mmc0default {
+> > +               pins_cmd_dat {
+> > +                       pinmux =
+> > <MT8173_PIN_57_MSDC0_DAT0__FUNC_MSDC0_DAT0>, +                           
+> >     <MT8173_PIN_58_MSDC0_DAT1__FUNC_MSDC0_DAT1>, +                       
+> >         <MT8173_PIN_59_MSDC0_DAT2__FUNC_MSDC0_DAT2>, +                   
+> >             <MT8173_PIN_60_MSDC0_DAT3__FUNC_MSDC0_DAT3>, +               
+> >                 <MT8173_PIN_61_MSDC0_DAT4__FUNC_MSDC0_DAT4>, +           
+> >                     <MT8173_PIN_62_MSDC0_DAT5__FUNC_MSDC0_DAT5>, +       
+> >                         <MT8173_PIN_63_MSDC0_DAT6__FUNC_MSDC0_DAT6>, +   
+> >                             <MT8173_PIN_64_MSDC0_DAT7__FUNC_MSDC0_DAT7>,
+> > +                               
+> > <MT8173_PIN_66_MSDC0_CMD__FUNC_MSDC0_CMD>; +                      
+> > input-enable;
+> > +                       bias-pull-up;
+> > +               };
+> > +
+> > +               pins_clk {
+> > +                       pinmux =
+> > <MT8173_PIN_65_MSDC0_CLK__FUNC_MSDC0_CLK>;
+> > +                       bias-pull-down;
+> > +               };
+> > +
+> > +               pins_rst {
+> > +                       pinmux =
+> > <MT8173_PIN_68_MSDC0_RST___FUNC_MSDC0_RSTB>; +                      
+> > bias-pull-up;
+> > +               };
+> > +       };
+> > +
+> > +       mmc1_pins_default: mmc1default {
+> > +               pins_cmd_dat {
+> > +                       pinmux =
+> > <MT8173_PIN_73_MSDC1_DAT0__FUNC_MSDC1_DAT0>, +                           
+> >     <MT8173_PIN_74_MSDC1_DAT1__FUNC_MSDC1_DAT1>, +                       
+> >         <MT8173_PIN_75_MSDC1_DAT2__FUNC_MSDC1_DAT2>, +                   
+> >             <MT8173_PIN_76_MSDC1_DAT3__FUNC_MSDC1_DAT3>, +               
+> >                 <MT8173_PIN_78_MSDC1_CMD__FUNC_MSDC1_CMD>; +             
+> >          input-enable;
+> > +                       drive-strength = <MTK_DRIVE_4mA>;
+> > +                       bias-pull-up = <MTK_PUPD_SET_R1R0_10>;
+> > +               };
+> > +
+> > +               pins_clk {
+> > +                       pinmux =
+> > <MT8173_PIN_77_MSDC1_CLK__FUNC_MSDC1_CLK>;
+> > +                       bias-pull-down;
+> > +                       drive-strength = <MTK_DRIVE_4mA>;
+> > +               };
+> > +
+> > +               pins_insert {
+> > +                       pinmux =
+> > <MT8173_PIN_132_I2S0_DATA1__FUNC_GPIO132>;
+> > +                       bias-pull-up;
+> > +               };
+> > +       };
+> > +
+> > +       mmc0_pins_uhs: mmc0@0{
 > 
-> DT bindings for PL172 is based on the bindings for the TI AEMIF
-> memory controller. PL172 can be found on a number of NXP devices
-> like the LPC18xx family.
+> (1) I don't think these "@0" are needed (here and for mmc1_pins_uhs)
+> (2) A space before the '{' would be nice.
 > 
-> Tested on Embedded Artists' LPC4357 Developer's Kit with NOR Flash
-> (SST39VF320) and 74LCV16374 (gpio-74x164) on MPMC.
+> Other than these tiny nits, this one is:
 > 
-> Changes since v1:
->  - Add proper commit messages
->  - Misc clean ups
+> Reviewed-by: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 > 
-> Joachim Eastwood (2):
->   memory: add ARM PL172 MultiPort Memory Controller driver
->   doc: dt: add documentation for pl172 memory bindings
 
-Thanks, I've applied both patches to next/drivers.
+I fixed the nits mentioned by Dan and applied the patch to v4.2-next/arm64
 
-
--Olof
+Thanks
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
