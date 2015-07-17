@@ -1,185 +1,164 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] dma: Add Xilinx zynqmp dma engine driver support
-Date: Fri, 17 Jul 2015 08:35:45 +0530
-Message-ID: <20150717030545.GB5086@localhost>
-References: <CAHLkNH+VLccurDfxEnwSEbr9YFv8ymZuibci7TW=WPutL7qbAQ@mail.gmail.com>
+From: Wang J.W. <Jianwei.Wang@freescale.com>
+Subject: RE: [PATCH v9 1/4] drm/layerscape: Add Freescale DCU DRM driver
+Date: Fri, 17 Jul 2015 03:17:21 +0000
+Message-ID: <DM2PR0301MB1229816732FEF8BD31343F1C9F980@DM2PR0301MB1229.namprd03.prod.outlook.com>
+References: <1436784692-40560-1-git-send-email-jianwei.wang@freescale.com>
+ <20150714104913.GI12465@ulmo.nvidia.com>
+ <DM2PR0301MB12297B66D33EE9E26F011D9E9F990@DM2PR0301MB1229.namprd03.prod.outlook.com>
+ <20150716113106.GB4635@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAHLkNH+VLccurDfxEnwSEbr9YFv8ymZuibci7TW=WPutL7qbAQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
- <CAGnW=BbUBOzm5V_LP_YcCfJ9X+Yw8qGp6PE2xSM13E=qUXxUsw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: punnaiah choudary kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Punnaiah Choudary <kpc528-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, =?iso-8859-1?Q?S=F6ren?= Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, punnaia <kalluripunnaiahchoudary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20150716113106.GB4635@ulmo>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Xiubo Li <lixiubo@cmss.chinamobile.com>, Huan Wang <alison.wang@freescale.com>, "daniel.vetter@ffwll.ch" <daniel.vetter@ffwll.ch>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Scott Wood <scottwood@freescale.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 17, 2015 at 06:22:42AM +0530, punnaiah choudary kalluri wrote:
-> On Thu, Jul 16, 2015 at 6:05 PM, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
-> > On Tue, Jun 16, 2015 at 08:04:43AM +0530, Punnaiah Choudary Kalluri wrote:
-> >> +/* Register Offsets */
-> >> +#define ISR                          0x100
-> >> +#define IMR                          0x104
-> >> +#define IER                          0x108
-> >> +#define IDS                          0x10C
-> >> +#define CTRL0                                0x110
-> >> +#define CTRL1                                0x114
-> >> +#define STATUS                               0x11C
-> >> +#define DATA_ATTR                    0x120
-> >> +#define DSCR_ATTR                    0x124
-> >> +#define SRC_DSCR_WRD0                        0x128
-> >> +#define SRC_DSCR_WRD1                        0x12C
-> >> +#define SRC_DSCR_WRD2                        0x130
-> >> +#define SRC_DSCR_WRD3                        0x134
-> >> +#define DST_DSCR_WRD0                        0x138
-> >> +#define DST_DSCR_WRD1                        0x13C
-> >> +#define DST_DSCR_WRD2                        0x140
-> >> +#define DST_DSCR_WRD3                        0x144
-> >> +#define SRC_START_LSB                        0x158
-> >> +#define SRC_START_MSB                        0x15C
-> >> +#define DST_START_LSB                        0x160
-> >> +#define DST_START_MSB                        0x164
-> >> +#define TOTAL_BYTE                   0x188
-> >> +#define RATE_CTRL                    0x18C
-> >> +#define IRQ_SRC_ACCT                 0x190
-> >> +#define IRQ_DST_ACCT                 0x194
-> >> +#define CTRL2                                0x200
-> > Can you namespace these and other defines
-> 
-> Ok. just to be clear, you want to me to prefix ZYNQMP_DMA?
-> or you want me to add comments ?
-> I have defined the exact register names as per the zynqmp dma
-> spec,
-
-former please
-
-> > Btw is ZYNQMP_DMA_NUM_DESCS sw or HW limit
-> 
-> Sw limit.
-so why put the limit then?
-
-> >> +static void zynqmp_dma_start_transfer(struct zynqmp_dma_chan *chan)
-> >> +{
-> >> +     struct zynqmp_dma_desc_sw *desc;
-> >> +
-> >> +     if (!zynqmp_dma_chan_is_idle(chan))
-> >> +             return;
-> >> +
-> >> +     desc = list_first_entry_or_null(&chan->pending_list,
-> >> +                                     struct zynqmp_dma_desc_sw, node);
-> >> +     if (!desc)
-> >> +             return;
-> >> +
-> >> +     if (chan->has_sg)
-> >> +             list_splice_tail_init(&chan->pending_list, &chan->active_list);
-> >> +     else
-> >> +             list_move_tail(&desc->node, &chan->active_list);
-> >> +
-> >> +     if (chan->has_sg)
-> >> +             zynqmp_dma_update_desc_to_ctrlr(chan, desc);
-> >> +     else
-> >> +             zynqmp_dma_config_simple_desc(chan, desc->src, desc->dst,
-> >> +                                           desc->len);
-> >> +     zynqmp_dma_start(chan);
-> >> +}
-> > Lots of the list management will get simplified if you use the vchan to do
-> > so
-> 
-> I have explored using the virt-dma to reduce the common list processing, But
-> in this driver descriptor processing and cleaning is happening inside
-> the tasklet
-> context and virt-dma assumes it is happening in interrupt context and using the
-> spin locks accordingly. So, added code for the list management in side
-> the driver.
-And why would it bother you. There is a reson for that, it tries to submit
-next txn as soon as possible, which is the right thing
-
-> >> +/**
-> >> + * zynqmp_dma_chan_desc_cleanup - Cleanup the completed descriptors
-> >> + * @chan: ZynqMP DMA channel
-> >> + */
-> >> +static void zynqmp_dma_chan_desc_cleanup(struct zynqmp_dma_chan *chan)
-> >> +{
-> >> +     struct zynqmp_dma_desc_sw *desc, *next;
-> >> +
-> >> +     list_for_each_entry_safe(desc, next, &chan->done_list, node) {
-> >> +             dma_async_tx_callback callback;
-> >> +             void *callback_param;
-> >> +
-> >> +             list_del(&desc->node);
-> >> +
-> >> +             callback = desc->async_tx.callback;
-> >> +             callback_param = desc->async_tx.callback_param;
-> >> +             if (callback)
-> >> +                     callback(callback_param);
-> >> +
-> > and you are calling the callback with lock held and user can do further
-> > submissions so this is wrong!
-> 
-> is it that driver should have separate temp list and fill this list
-> with the descriptors in
-> done_list and process them with out lock held ?
-> 
-> please suggest.
-Nope, you need to drop locks while invoking callback
-
-> >> +static struct dma_async_tx_descriptor *zynqmp_dma_prep_memcpy(
-> >> +                             struct dma_chan *dchan, dma_addr_t dma_dst,
-> >> +                             dma_addr_t dma_src, size_t len, ulong flags)
-> >> +{
-> >> +     struct zynqmp_dma_chan *chan;
-> >> +     struct zynqmp_dma_desc_sw *new, *first = NULL;
-> >> +     void *desc = NULL, *prev = NULL;
-> >> +     size_t copy;
-> >> +     u32 desc_cnt;
-> >> +
-> >> +     chan = to_chan(dchan);
-> >> +
-> >> +     if ((len > ZYNQMP_DMA_MAX_TRANS_LEN) && !chan->has_sg)
-> > why sg?
-> 
-> Controller supports two types of modes.
-> 
-> Simple dma mode:
->    In this mode, DMA transfer parameters are specified in APB registers
->    So, queuing the new request in hw is not possible when the channel
-> is busy with
->    previous transfer and also it doesn't have SG support.
->    Max transfer size per transfer is 1GB.
-> 
-> Scatter gather dma mode:
->    Transfer parameters are specified in the buffer descriptors (BD).
->    Max transfer size per BD is 1GB and Dma transaction can have multiple BDs
-> 
-> The above condition is to ensure that when the controller is
-> configured for Simple
-> Dma mode, allow the transfers that are with in 1GB size if not it return error.
-But then you can "queue" up in SW and switch from sg to simple mode and
-vice-versa right?
-
-> >> +static int zynqmp_dma_remove(struct platform_device *pdev)
-> >> +{
-> >> +     struct zynqmp_dma_device *xdev = platform_get_drvdata(pdev);
-> >> +
-> >> +     of_dma_controller_free(pdev->dev.of_node);
-> >> +     dma_async_device_unregister(&xdev->common);
-> >> +
-> >> +     zynqmp_dma_chan_remove(xdev->chan);
-> > Please free up irq here explictly and also ensure tasklet is not running
-> 
-> irq free is not required as cleaning will be taken care by the devm framework.
-> tasklet cleaning is happening inside the zynqmp_chan_remove function.
-Wrong on two counts
-- did you ensure tasklet would not be traoggered again after cleanup, i
-  think no
-- did you ensure irq will not be triggered again before you return remove, i
-  think no.
-devm_irq_free should be invoked explictly here to ensure this
-
--- 
-~Vinod
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogVGhpZXJyeSBSZWRpbmcg
+W21haWx0bzp0aGllcnJ5LnJlZGluZ0BnbWFpbC5jb21dDQo+IFNlbnQ6IFRodXJzZGF5LCBKdWx5
+IDE2LCAyMDE1IDc6MzEgUE0NCj4gVG86IFdhbmcgSmlhbndlaS1CNTIyNjENCj4gQ2M6IGRyaS1k
+ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7
+IGxpbnV4LQ0KPiBhcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGRldmljZXRyZWVAdmdl
+ci5rZXJuZWwub3JnOw0KPiBhaXJsaWVkQGxpbnV4LmllOyBkYW5pZWwudmV0dGVyQGZmd2xsLmNo
+OyBtYXJrLnlhb0Byb2NrLWNoaXBzLmNvbTsgV29vZA0KPiBTY290dC1CMDc0MjE7IFdhbmcgSHVh
+bi1CMTg5NjU7IFhpdWJvIExpDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjkgMS80XSBkcm0vbGF5
+ZXJzY2FwZTogQWRkIEZyZWVzY2FsZSBEQ1UgRFJNIGRyaXZlcg0KPiANCj4gT24gVGh1LCBKdWwg
+MTYsIDIwMTUgYXQgMTE6MTA6MjlBTSArMDAwMCwgV2FuZyBKLlcuIHdyb3RlOg0KPiBbLi4uXQ0K
+PiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+IEZyb206IFRoaWVycnkgUmVk
+aW5nIFttYWlsdG86dGhpZXJyeS5yZWRpbmdAZ21haWwuY29tXQ0KPiBbLi4uXQ0KPiA+ID4gT24g
+TW9uLCBKdWwgMTMsIDIwMTUgYXQgMDY6NTE6MjlQTSArMDgwMCwgSmlhbndlaSBXYW5nIHdyb3Rl
+Og0KPiBbLi4uXQ0KPiA+ID4gPiAgRFJNIERSSVZFUlMgRk9SIE5WSURJQSBURUdSQQ0KPiA+ID4g
+PiAgTToJVGhpZXJyeSBSZWRpbmcgPHRoaWVycnkucmVkaW5nQGdtYWlsLmNvbT4NCj4gPiA+ID4g
+IE06CVRlcmplIEJlcmdzdHLDtm0gPHRiZXJnc3Ryb21AbnZpZGlhLmNvbT4NCj4gPiA+ID4gZGlm
+ZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9LY29uZmlnIGIvZHJpdmVycy9ncHUvZHJtL0tjb25m
+aWcNCj4gPiA+ID4gaW5kZXggYzQ2Y2EzMS4uOWNmZDE0ZSAxMDA2NDQNCj4gPiA+ID4gLS0tIGEv
+ZHJpdmVycy9ncHUvZHJtL0tjb25maWcNCj4gPiA+ID4gKysrIGIvZHJpdmVycy9ncHUvZHJtL0tj
+b25maWcNCj4gPiA+ID4gQEAgLTIzMSw2ICsyMzEsOCBAQCBzb3VyY2UgImRyaXZlcnMvZ3B1L2Ry
+bS92aXJ0aW8vS2NvbmZpZyINCj4gPiA+ID4NCj4gPiA+ID4gIHNvdXJjZSAiZHJpdmVycy9ncHUv
+ZHJtL21zbS9LY29uZmlnIg0KPiA+ID4gPg0KPiA+ID4gPiArc291cmNlICJkcml2ZXJzL2dwdS9k
+cm0vZnNsLWRjdS9LY29uZmlnIg0KPiA+ID4gPiArDQo+ID4gPg0KPiA+ID4gQXMgbWVudGlvbmVk
+IGluIGEgZGlmZmVyZW50IGVtYWlsLCBJJ20gc29tZXdoYXQgYW5ub3llZCBieSB0aGUNCj4gPiA+
+IHJhbmRvbSBwbGFjZW1lbnQgb2YgdGhlc2Ugc291cmNlIHN0YXRlbWVudHMuIEJ1dCB3ZSBjYW4g
+cHJvYmFibHkNCj4gPiA+IGNsZWFuIHRoYXQgdXAgaW4gb25lIGdvIGFuZCBpbnNpc3Qgb24gcHJv
+cGVyIG9yZGVyaW5nIHdoZW4gdGhlcmUgaXMNCj4gb25lLg0KPiA+ID4NCj4gPg0KPiA+IE9rLCBJ
+IHBsYW4gdG8gbW92ZSBpdCB0byB0aGUgbGFzdCBsaW5lLiBJcyBpdCBvaz8NCj4gDQo+IEl0IGRv
+ZXNuJ3QgcmVhbGx5IG1hdHRlciwgaXQgd2lsbCBiZSBpbmNvbnNpc3RlbnQgbm8gbWF0dGVyIHdo
+YXQgYmVjYXVzZQ0KPiB0aGUgY3VycmVudCBvcmRlcmluZyBpc24ndCBjb25zaXN0ZW50LiBLZWVw
+IGl0IHdoZXJlIGl0IGlzIGZvciBub3cuIEknbGwNCj4gcHJlcGFyZSBhIHNldCBvZiBwYXRjaGVz
+IHRvIGdldCBzb21lIGNvbnNpc3RlbmN5IGludG8gdGhpcyBmaWxlLg0KPiANCj4gPiA+ID4gK2lu
+dCBmc2xfZGN1X2RybV9jb25uZWN0b3JfY3JlYXRlKHN0cnVjdCBmc2xfZGN1X2RybV9kZXZpY2Ug
+KmZzbF9kZXYsDQo+ID4gPiA+ICsJCQkJIHN0cnVjdCBkcm1fZW5jb2RlciAqZW5jb2Rlcikgew0K
+PiA+ID4gPiArCXN0cnVjdCBkcm1fY29ubmVjdG9yICpjb25uZWN0b3IgPSAmZnNsX2Rldi0NCj4g
+PmNvbm5lY3Rvci5jb25uZWN0b3I7DQo+ID4gPiA+ICsJc3RydWN0IGRldmljZV9ub2RlICpwYW5l
+bF9ub2RlOw0KPiA+ID4gPiArCWludCByZXQ7DQo+ID4gPiA+ICsNCj4gPiA+ID4gKwlmc2xfZGV2
+LT5jb25uZWN0b3IuZW5jb2RlciA9IGVuY29kZXI7DQo+ID4gPg0KPiA+ID4gV2h5IGRvIHlvdSBu
+ZWVkIHRoaXM/IFRoZSBEUk0gY29yZSBzaG91bGQgc2V0IHRoaXMgZm9yIHlvdSB3aGVuDQo+ID4g
+PiBzZXR0aW5nIHRoZSBpbml0aWFsIGNvbmZpZ3VyYXRpb24uDQo+ID4gPg0KPiA+DQo+ID4gVGhp
+cyBjb25uZWN0b3IgaXMgYSBwcml2YXRlIHN0cnVjdHVyZSBmc2xfZGN1X2RybV9jb25uZWN0b3Iu
+IEkgc2V0IGl0DQo+ID4gZm9yIHNlbGVjdCBiZXN0IGVuY29kZXIuDQo+IA0KPiBUaGF0IGRvZXNu
+J3Qgc291bmQgcmlnaHQuIFRlY2huaWNhbGx5IHRoZSBEUk0gY29yZSBvciB1c2Vyc3BhY2UgaXMg
+Z29pbmcNCj4gdG8gc2VsZWN0IHRoZSBlbmNvZGVyIGZvciB5b3VyIGNvbm5lY3Rvciwgc28gaXQn
+ZCBiZSBiZXR0ZXIgdG8gZGVyaXZlIHRoZQ0KPiBwb2ludGVyIHRvIHlvdXIgZHJpdmVyLXByaXZh
+dGUgc3RydWN0dXJlIGZyb20gc3RydWN0IGRybV9lbmNvZGVyICosDQo+IG90aGVyd2lzZSB5b3Un
+bGwgZW5kIHVwIGdldHRpbmcgeW91IHByaXZhdGUgY29weSBvZiB0aGUgYXNzaWdubWVudCBvdXQg
+b2YNCj4gc3luYyB3aXRoIHdoYXQgdGhlIERSTSBjb3JlIGFuZC9vciB1c2Vyc3BhY2Ugc2V0IHVw
+Lg0KPiANCg0KTWF5YmUgdGhpcyBpcyBhIG1pc3VuZGVyc3RhbmRpbmcuDQoNCmZzbF9kZXYtPmNv
+bm5lY3Rvci5lbmNvZGVyID0gZW5jb2RlcjsNCkluIHRoaXMgc2VudGVuY2UgZnNsX2RldiBhbmQg
+Y29ubmVjdG9yIGFyZSBhbGwgZHJpdmVyLXByaXZhdGUgc3RydWN0dXJlcw0KDQpGc2xfZGV2IGRl
+ZmluZToNCjE3NyBzdHJ1Y3QgZnNsX2RjdV9kcm1fZGV2aWNlIHsNCjE3OCAgICAgICAgIHN0cnVj
+dCBkZXZpY2UgKmRldjsNCjE3OSAgICAgICAgIHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnA7DQoxODAg
+ICAgICAgICBzdHJ1Y3QgcmVnbWFwICpyZWdtYXA7DQoxODEgICAgICAgICBpbnQgaXJxOw0KMTgy
+ICAgICAgICAgc3RydWN0IGNsayAqY2xrOw0KMTgzICAgICAgICAgLypwcm90ZWN0cyBoYXJkd2Fy
+ZSByZWdpc3RlciovDQoxODQgICAgICAgICBzcGlubG9ja190IGlycV9sb2NrOw0KMTg1ICAgICAg
+ICAgc3RydWN0IGRybV9kZXZpY2UgKmRybTsNCjE4NiAgICAgICAgIHN0cnVjdCBkcm1fZmJkZXZf
+Y21hICpmYmRldjsNCjE4NyAgICAgICAgIHN0cnVjdCBkcm1fY3J0YyBjcnRjOw0KMTg4ICAgICAg
+ICAgc3RydWN0IGRybV9lbmNvZGVyIGVuY29kZXI7DQoxODkgICAgICAgICBzdHJ1Y3QgZnNsX2Rj
+dV9kcm1fY29ubmVjdG9yIGNvbm5lY3RvcjsgIGNvbm5lY3RvciBpcyBoZXJlDQoxOTAgfTsNCg0K
+ZnNsX2RjdV9kcm1fY29ubmVjdG9yIGRlZmluZToNCjE1IHN0cnVjdCBmc2xfZGN1X2RybV9jb25u
+ZWN0b3Igew0KMTYgICAgICAgICBzdHJ1Y3QgZHJtX2Nvbm5lY3RvciBiYXNlOw0KMTcgICAgICAg
+ICBzdHJ1Y3QgZHJtX2VuY29kZXIgKmVuY29kZXI7DQoxOCAgICAgICAgIHN0cnVjdCBkcm1fcGFu
+ZWwgKnBhbmVsOw0KMTkgfTsNCiANCkFuZCB0aGlzIHdpbGwgYmUgdXNlZCBpbiAuYmVzdF9lbmNv
+ZGVyIGhvb2tlcg0KDQo5MSBzdGF0aWMgc3RydWN0IGRybV9lbmNvZGVyICoNCjkyIGZzbF9kY3Vf
+ZHJtX2Nvbm5lY3Rvcl9iZXN0X2VuY29kZXIoc3RydWN0IGRybV9jb25uZWN0b3IgKmNvbm5lY3Rv
+cikNCjkzIHsNCjk0ICAgICAgICAgc3RydWN0IGZzbF9kY3VfZHJtX2Nvbm5lY3RvciAqZnNsX2Nv
+biA9IHRvX2ZzbF9kY3VfY29ubmVjdG9yKGNvbm5lY3Rvcik7DQo5NQ0KOTYgICAgICAgICByZXR1
+cm4gZnNsX2Nvbi0+ZW5jb2RlcjsNCjk3IH0NCg0KSSBzZWUgc29tZSBvdGhlciBhbHNvIGRvIGl0
+IGxpa2UgdGhpcy4gSXMgaXQgb2s/DQoNCg0KDQo+IE5vdGUgdGhhdCB5b3UgbWlnaHQgbm90IHJ1
+biBpbnRvIHByb2JsZW1zIG5vdyBiZWNhdXNlIHlvdSBvbmx5IGhhdmUgYQ0KPiBzaW5nbGUgZW5j
+b2Rlci4gQnV0IGlmIHlvdSBldmVyIGFkZCBzdXBwb3J0IGZvciBhbm90aGVyIHlvdSdyZSBnb2lu
+ZyB0bw0KPiBydW4gaW50byBwcm9ibGVtcyB3aXRoIHRoaXMga2luZCBvZiBzdGF0aWMgYXNzaWdu
+bWVudC4NCj4gDQo+ID4gPiA+ICsJZGV2LT5pcnFfZW5hYmxlZCA9IHRydWU7DQo+ID4gPiA+ICsJ
+ZGV2LT52YmxhbmtfZGlzYWJsZV9hbGxvd2VkID0gdHJ1ZTsNCj4gPiA+ID4gKw0KPiA+ID4gPiAr
+CXJldCA9IHJlZ21hcF93cml0ZShmc2xfZGV2LT5yZWdtYXAsIERDVV9JTlRfU1RBVFVTLCAwKTsN
+Cj4gPiA+ID4gKwlpZiAocmV0KQ0KPiA+ID4gPiArCQlkZXZfZXJyKCZwZGV2LT5kZXYsICJzZXQg
+RENVX0lOVF9TVEFUVVMgZmFpbGVkXG4iKTsNCj4gPiA+ID4gKwlyZXQgPSByZWdtYXBfcmVhZChm
+c2xfZGV2LT5yZWdtYXAsIERDVV9JTlRfTUFTSywgJmludF9tYXNrKTsNCj4gPiA+ID4gKwlpZiAo
+cmV0KQ0KPiA+ID4gPiArCQlkZXZfZXJyKCZwZGV2LT5kZXYsICJyZWFkIERDVV9JTlRfTUFTSyBm
+YWlsZWRcbiIpOw0KPiA+ID4gPiArCXJldCA9IHJlZ21hcF93cml0ZShmc2xfZGV2LT5yZWdtYXAs
+IERDVV9JTlRfTUFTSywgaW50X21hc2sgJg0KPiA+ID4gPiArCQkJICAgfkRDVV9JTlRfTUFTS19W
+QkxBTkspOw0KPiA+ID4gPiArCWlmIChyZXQpDQo+ID4gPiA+ICsJCWRldl9lcnIoJnBkZXYtPmRl
+diwgInNldCBEQ1VfSU5UX01BU0sgZmFpbGVkXG4iKTsNCj4gPiA+ID4gKwlyZXQgPSByZWdtYXBf
+d3JpdGUoZnNsX2Rldi0+cmVnbWFwLCBEQ1VfVVBEQVRFX01PREUsDQo+ID4gPiA+ICsJCQkgICBE
+Q1VfVVBEQVRFX01PREVfUkVBRFJFRyk7DQo+ID4gPg0KPiA+ID4gV2hhdCdzIHRoaXMgRENVX1VQ
+REFURV9NT0RFX1JFQURSRUcgYml0Pw0KPiA+ID4NCj4gPg0KPiA+IEluIGZhY3QsIE9ubHkgd2hl
+biBzZXR0aW5nIERDVV9VUERBVEVfTU9ERV9SRUFEUkVHIGJpdCwgaXQgYmVnaW4gdG8NCj4gPiB0
+cmFuc2ZlciByZWdpc3RlciB2YWx1ZXMuIFNvIHNldHRpbmcgRENVX1VQREFURV9NT0RFX1JFQURS
+RUcgYml0IGlzIGENCj4gPiBtdXN0IGFmdGVyIHJlZ2lzdGVycyB1cGRhdGluZy4NCj4gDQo+IE9r
+YXksIEkgc2VlLiBUaGF0J3MgZ29pbmcgdG8gYmUgY29udmVuaWVudCBmb3IgYXRvbWljIHVwZGF0
+ZXMuDQo+IA0KPiA+ID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2ZzbC1kY3UvZnNs
+X2RjdV9kcm1fZHJ2LmgNCj4gPiA+ID4gYi9kcml2ZXJzL2dwdS9kcm0vZnNsLWRjdS9mc2xfZGN1
+X2RybV9kcnYuaA0KPiA+ID4gWy4uLl0NCj4gPiA+ID4gKyNkZWZpbmUgRENVX0RJU1BfU0laRQkJ
+CTB4MDAxOA0KPiA+ID4gPiArI2RlZmluZSBEQ1VfRElTUF9TSVpFX0RFTFRBX1koeCkJKCh4KSA8
+PCAxNikNCj4gPiA+ID4gKy8qUmVnaXNpdGVyIHZhbHVlIDEvMTYgb2YgaG9yaXpvbnRhbCByZXNv
+bHV0aW9uKi8NCj4gPiA+ID4gKyNkZWZpbmUgRENVX0RJU1BfU0laRV9ERUxUQV9YKHgpCSgoeCkg
+Pj4gNCkNCj4gPiA+DQo+ID4gPiBEb2VzIHRoaXMgbWVhbiB0aGUgZGlzcGxheSBjb250cm9sbGVy
+IG9ubHkgc3VwcG9ydHMgaG9yaXpvbnRhbA0KPiA+ID4gcmVzb2x1dGlvbnMgdGhhdCBhcmUgYSBt
+dWx0aXBsZSBvZiAxNj8NCj4gPiA+DQo+ID4NCj4gPiBZZXMuDQo+IA0KPiBZb3UgbWF5IHdhbnQg
+dG8gY2hlY2sgZm9yIHRoaXMgZXhwbGljaXRseSBpbiB0aGUgZHJpdmVyIGFuZCBmaWx0ZXIgb3V0
+DQo+IG1vZGVzIHRoYXQgeW91IGRvbid0IHN1cHBvcnQuDQogDQoNCk9rLCBJJ2xsIGFkZCBtb2Rl
+IGNoZWNrIGluIGNvbm5lY3Rvcl9oZWxwZXJfZnVuY3MubW9kZV92YWxpZA0KDQoNCj4gDQo+ID4g
+PiA+ICsjaWZkZWYgQ09ORklHX1NPQ19WRjYxMA0KPiA+ID4gPiArI2RlZmluZSBEQ1VfVE9UQUxf
+TEFZRVJfTlVNICAgICAgICAgICAgIDY0DQo+ID4gPiA+ICsjZGVmaW5lIERDVV9MQVlFUl9OVU1f
+TUFYICAgICAgICAgICAgICAgNg0KPiA+ID4gPiArI2Vsc2UNCj4gPiA+ID4gKyNkZWZpbmUgRENV
+X1RPVEFMX0xBWUVSX05VTSAgICAgICAgICAgICAxNg0KPiA+ID4gPiArI2RlZmluZSBEQ1VfTEFZ
+RVJfTlVNX01BWCAgICAgICAgICAgICAgIDQNCj4gPiA+ID4gKyNlbmRpZg0KPiA+ID4NCj4gPiA+
+IFNob3VsZCB0aGlzIG5vdCBiZSBhIHJ1bnRpbWUgZGVjaXNpb24gc28gdGhhdCB0aGUgc2FtZSBk
+cml2ZXIgY2FuDQo+ID4gPiBydW4gb24NCj4gPiA+IFZGNjEwIGFuZCBMUzEwMjFBIHBsYXRmb3Jt
+cz8NCj4gPiA+DQo+ID4NCj4gPiBZZXMsIEJvdGggVkY2MTAgYW5kIExTMTAyMUEgdXNlIERDVSBh
+cyB2aWRlbyBJUCBtb2R1bGUuDQo+ID4gQW5kIHRoZXJlIGFyZSBhIGJpdCBvZiBkaWZmZXJlbmNl
+cyBvbiBlYWNoIFNvQ3MuDQo+IA0KPiBZZXMsIEkgdW5kZXJzdGFuZC4gVGhpcyBzaG91bGQgYmUg
+Y292ZXJlZCBieSBTb0Mtc3BlY2lmaWMgcGFyYW1ldGVycyAodmlhDQo+IHRoZSBvZl9kZXZpY2Vf
+aWQgdGFibGUpIHNvIHRoYXQgeW91IGNhbiBydW4gdGhlIHNhbWUga2VybmVsIG9uIGJvdGgNCj4g
+VkY2MTAgYW5kIExTMTAyMUEgU29Dcy4NCj4gDQo+IEFzIGl0IGlzLCBpZiB5b3UgYnVpbGQgdGhp
+cyBvbiBhIGNvbmZpZ3VyYXRpb24gd2hlcmUgYm90aCBWRjYxMCBhbmQNCj4gTFMxMDIxQSBhcmUg
+ZW5hYmxlZCB5b3UncmUgZ29pbmcgdG8gcGljayB1cCB0aGUgdmFsdWVzIGZvciBWRjYxMCBhbmQg
+Y2F1c2UNCj4gTFMxMDIxQSB0byBub3Qgd29yay4NCiANCg0KVmVyeSBnb29kIGlkZWEsIEknbGwg
+ZG8gaXQNCg0KDQoNCj4gDQo+ID4gPiA+ICt2b2lkIGZzbF9kY3VfZHJtX3BsYW5lX2Rlc3Ryb3ko
+c3RydWN0IGRybV9wbGFuZSAqcGxhbmUpIHsNCj4gPiA+ID4gKwlmc2xfZGN1X2RybV9wbGFuZV9k
+aXNhYmxlKHBsYW5lKTsNCj4gPiA+DQo+ID4gPiBIbW0/IFRoaXMgZnVuY3Rpb24gZG9lc24ndCBk
+byBhbnl0aGluZywgc28gd2h5IG5vdCBqdXN0IGRyb3AgaXQ/DQo+ID4gPg0KPiA+DQo+ID4NCj4g
+PiBJJ2xsIGltcGxlbWVudCBmc2xfZGN1X2RybV9wbGFuZV9kaXNhYmxlKHBsYW5lKQ0KPiA+DQo+
+ID4NCj4gPg0KPiA+ID4gPiArCWRybV9wbGFuZV9jbGVhbnVwKHBsYW5lKTsNCj4gPiA+ID4gK30N
+Cj4gPiA+DQo+ID4gPiBBbHNvIHRoaXMgZnVuY3Rpb24gYW5kIC0+YXRvbWljX3VwZGF0ZSgpIHNo
+b3VsZCBiZSBzdGF0aWMuIFBlcmhhcHMNCj4gPiA+IG1ha2UgaXQgYSBoYWJpdCBvZiBydW5uaW5n
+IHlvdXIgYnVpbGQgdGVzdHMgd2l0aCBDPTEgb2NjYXNpb25hbGx5IHRvDQo+ID4gPiBnZXQgbm90
+aWZpZWQgb2YgdGhpcyBraW5kIG9mIGVycm9yLg0KPiA+ID4NCj4gPiA+IFRoaWVycnkNCj4gPg0K
+PiA+DQo+ID4NCj4gPiBPbmUgcXVlc3Rpb246IEhvdyBjYW4gSSBzZXQgQz0xPw0KPiANCj4gSnVz
+dCBhZGQgaXQgdG8gdGhlIG1ha2UgY29tbWFuZC1saW5lIGFsb25nIHdpdGggYW55IG90aGVyIHBh
+cmFtZXRlcnMsIGxpa2UNCj4gdGhpcyBmb3IgZXhhbXBsZToNCj4gDQo+IAkkIG1ha2UgQVJDSD1h
+cm0gQ1JPU1NfQ09NUElMRT1hcm12N2wtdW5rbm93bi1saW51eC1nbnVlYWJpaGYtIFwNCj4gCQlP
+PWJ1aWxkL3ZmNjEwIEM9MQ0KPiANCj4gVGhpZXJyeQ0KIA0KDQpUaGFua3MNCg0KSmlhbndlaQ0K
+DQoNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1k
+ZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8v
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
