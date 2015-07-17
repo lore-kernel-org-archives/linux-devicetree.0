@@ -1,68 +1,239 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 01/12] device: property: delay device-driver matches
-Date: Fri, 17 Jul 2015 01:06:22 +0100
-Message-ID: <20150717000622.GH1602@sirena.org.uk>
-References: <1435743667-11987-1-git-send-email-tomeu.vizoso@collabora.com>
- <1435743667-11987-2-git-send-email-tomeu.vizoso@collabora.com>
- <20150716202312.GD11162@sirena.org.uk>
- <CAJZ5v0gMx=DA0f8i9wdMvkYTyOhr0WKh-T6L7rjcxeaAjNMW3g@mail.gmail.com>
+From: punnaiah choudary kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] dma: Add Xilinx zynqmp dma engine driver support
+Date: Fri, 17 Jul 2015 06:22:42 +0530
+Message-ID: <CAGnW=BbUBOzm5V_LP_YcCfJ9X+Yw8qGp6PE2xSM13E=qUXxUsw@mail.gmail.com>
+References: <1434422083-8653-1-git-send-email-punnaia@xilinx.com>
+	<1434422083-8653-2-git-send-email-punnaia@xilinx.com>
+	<20150716123548.GO5086@localhost>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="CNfT9TXqV7nd4cfk"
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0gMx=DA0f8i9wdMvkYTyOhr0WKh-T6L7rjcxeaAjNMW3g@mail.gmail.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Tomeu Vizoso <tomeu.vizoso@collabora.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org, linux-gpio@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-pwm@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, alsa-devel@alsa-project.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150716123548.GO5086@localhost>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Punnaiah Choudary <kpc528-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Jul 16, 2015 at 6:05 PM, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
+> On Tue, Jun 16, 2015 at 08:04:43AM +0530, Punnaiah Choudary Kalluri wrote:
+>> +/* Register Offsets */
+>> +#define ISR                          0x100
+>> +#define IMR                          0x104
+>> +#define IER                          0x108
+>> +#define IDS                          0x10C
+>> +#define CTRL0                                0x110
+>> +#define CTRL1                                0x114
+>> +#define STATUS                               0x11C
+>> +#define DATA_ATTR                    0x120
+>> +#define DSCR_ATTR                    0x124
+>> +#define SRC_DSCR_WRD0                        0x128
+>> +#define SRC_DSCR_WRD1                        0x12C
+>> +#define SRC_DSCR_WRD2                        0x130
+>> +#define SRC_DSCR_WRD3                        0x134
+>> +#define DST_DSCR_WRD0                        0x138
+>> +#define DST_DSCR_WRD1                        0x13C
+>> +#define DST_DSCR_WRD2                        0x140
+>> +#define DST_DSCR_WRD3                        0x144
+>> +#define SRC_START_LSB                        0x158
+>> +#define SRC_START_MSB                        0x15C
+>> +#define DST_START_LSB                        0x160
+>> +#define DST_START_MSB                        0x164
+>> +#define TOTAL_BYTE                   0x188
+>> +#define RATE_CTRL                    0x18C
+>> +#define IRQ_SRC_ACCT                 0x190
+>> +#define IRQ_DST_ACCT                 0x194
+>> +#define CTRL2                                0x200
+> Can you namespace these and other defines
 
---CNfT9TXqV7nd4cfk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Ok. just to be clear, you want to me to prefix ZYNQMP_DMA?
+or you want me to add comments ?
+I have defined the exact register names as per the zynqmp dma
+spec,
 
-On Fri, Jul 17, 2015 at 01:41:16AM +0200, Rafael J. Wysocki wrote:
-> On Thu, Jul 16, 2015 at 10:23 PM, Mark Brown <broonie@kernel.org> wrote:
-> > On Wed, Jul 01, 2015 at 11:40:56AM +0200, Tomeu Vizoso wrote:
 
-> > I have to say I'm still not 100% clear that special casing platform
-> > devices makes sense here - I can see that platform devices are usually
-> > the first devices to instantiate but there are other kinds of devices
-> > and it's not obvious what the benefit of specifically picking out
-> > platform devices as opposed to just deferring all devices is.
+>
+>> +struct zynqmp_dma_chan {
+>> +     struct zynqmp_dma_device *xdev;
+> xdev seems an odd name, i suspect copy paste error!
 
-> Some existing devices cannot be deferred without redesigning things quite a bit.
+I will change the name.
 
-OK, that should go in the changelog then - right now it's just a bit
-obtuse why we're doing this (and as you say it's a bit awkward).  Now
-you mention this I'm thinking that some of the affected devices might be
-platform devices on some systems, IOMMUs spring to mind for example...
-they're one of the main bits of the system I'm aware of that still rely
-on probe ordering and they do tend to be platform devices.
+>
+>> +     void __iomem *regs;
+>> +     spinlock_t lock;
+>> +     struct list_head pending_list;
+>> +     struct list_head free_list;
+>> +     struct list_head active_list;
+>> +     struct zynqmp_dma_desc_sw *sw_desc_pool;
+>> +     struct list_head done_list;
+>> +     struct dma_chan common;
+>> +     void *desc_pool_v;
+>> +     dma_addr_t desc_pool_p;
+> why two pools and one void *?
+>
+>> +/**
+>> + * zynqmp_dma_alloc_chan_resources - Allocate channel resources
+>> + * @dchan: DMA channel
+>> + *
+>> + * Return: '0' on success and failure value on error
+> wrong, its number of descriptors which maybe 0
 
-> What I was talking about, though, was to use an opt-in mechanism for
-> that which could be set for all platform devices, for example, by
-> default, but it might be set for other bus types too if that's useful.
+Correct. I Will modify this.
 
-Sure, I got that and do agree with you that a mechanism like you suggest
-would be good.  I just wasn't clear why we were targetting platform
-devices in the first place.
+>
+>> + */
+>> +static int zynqmp_dma_alloc_chan_resources(struct dma_chan *dchan)
+>> +{
+>> +     struct zynqmp_dma_chan *chan = to_chan(dchan);
+>> +     struct zynqmp_dma_desc_sw *desc;
+>> +     int i;
+>> +
+>> +     chan->sw_desc_pool = kzalloc(sizeof(*desc) * ZYNQMP_DMA_NUM_DESCS,
+>> +                                  GFP_KERNEL);
+> and you are allocating the number so pls return that
 
---CNfT9TXqV7nd4cfk
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Ok.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+>
+> Btw is ZYNQMP_DMA_NUM_DESCS sw or HW limit
 
-iQEcBAEBCAAGBQJVqEb6AAoJECTWi3JdVIfQ6igH/1lfzgngw+QMPD3PzShllj57
-i/HPqcOa7NFybef7ZM2t00i3/PCAPOhg2EsaPaV34euzZ57FZX0DvS89+1K1q3sw
-h+u95jS4c8GMJnO9gAnQZ1u5S6OM40j/livOl/HaVb0qUSIFwEeRHbJfW3uJ/wZf
-3phgAXmVjPQRqJS054a/CGEyU2lwZW+4enxtBs49TbY1EHE8TbQIG9EM5kqAu23I
-t4Y5+RDaft1SNXacAjjc0cwYIFY9xh5UnYDLDhNc1mabklu9selE0PKhgS8PUkl5
-X+D87P00jPDUd99qbILBZhRqIw+72BKECQ/ddJCQXIW2u0pjJc1W81iYl/LF2bw=
-=w0V2
------END PGP SIGNATURE-----
+Sw limit.
 
---CNfT9TXqV7nd4cfk--
+>
+>> +static void zynqmp_dma_start_transfer(struct zynqmp_dma_chan *chan)
+>> +{
+>> +     struct zynqmp_dma_desc_sw *desc;
+>> +
+>> +     if (!zynqmp_dma_chan_is_idle(chan))
+>> +             return;
+>> +
+>> +     desc = list_first_entry_or_null(&chan->pending_list,
+>> +                                     struct zynqmp_dma_desc_sw, node);
+>> +     if (!desc)
+>> +             return;
+>> +
+>> +     if (chan->has_sg)
+>> +             list_splice_tail_init(&chan->pending_list, &chan->active_list);
+>> +     else
+>> +             list_move_tail(&desc->node, &chan->active_list);
+>> +
+>> +     if (chan->has_sg)
+>> +             zynqmp_dma_update_desc_to_ctrlr(chan, desc);
+>> +     else
+>> +             zynqmp_dma_config_simple_desc(chan, desc->src, desc->dst,
+>> +                                           desc->len);
+>> +     zynqmp_dma_start(chan);
+>> +}
+> Lots of the list management will get simplified if you use the vchan to do
+> so
+
+I have explored using the virt-dma to reduce the common list processing, But
+in this driver descriptor processing and cleaning is happening inside
+the tasklet
+context and virt-dma assumes it is happening in interrupt context and using the
+spin locks accordingly. So, added code for the list management in side
+the driver.
+
+>
+>> +
+>> +
+>> +/**
+>> + * zynqmp_dma_chan_desc_cleanup - Cleanup the completed descriptors
+>> + * @chan: ZynqMP DMA channel
+>> + */
+>> +static void zynqmp_dma_chan_desc_cleanup(struct zynqmp_dma_chan *chan)
+>> +{
+>> +     struct zynqmp_dma_desc_sw *desc, *next;
+>> +
+>> +     list_for_each_entry_safe(desc, next, &chan->done_list, node) {
+>> +             dma_async_tx_callback callback;
+>> +             void *callback_param;
+>> +
+>> +             list_del(&desc->node);
+>> +
+>> +             callback = desc->async_tx.callback;
+>> +             callback_param = desc->async_tx.callback_param;
+>> +             if (callback)
+>> +                     callback(callback_param);
+>> +
+> and you are calling the callback with lock held and user can do further
+> submissions so this is wrong!
+
+is it that driver should have separate temp list and fill this list
+with the descriptors in
+done_list and process them with out lock held ?
+
+please suggest.
+
+>
+>> +static enum dma_status zynqmp_dma_tx_status(struct dma_chan *dchan,
+>> +                                   dma_cookie_t cookie,
+>> +                                   struct dma_tx_state *txstate)
+>> +{
+>> +     return dma_cookie_status(dchan, cookie, txstate);
+>
+> no residue calculation?
+
+Controller has total byte count register that Indicates total number of bytes
+transferred since last clear. But since we implemented the Hw queuing it
+is difficult to get residue calculation by relying on the above register value.
+
+So, at least for this version of the driver no residue calculation.
+
+>
+>> +static struct dma_async_tx_descriptor *zynqmp_dma_prep_memcpy(
+>> +                             struct dma_chan *dchan, dma_addr_t dma_dst,
+>> +                             dma_addr_t dma_src, size_t len, ulong flags)
+>> +{
+>> +     struct zynqmp_dma_chan *chan;
+>> +     struct zynqmp_dma_desc_sw *new, *first = NULL;
+>> +     void *desc = NULL, *prev = NULL;
+>> +     size_t copy;
+>> +     u32 desc_cnt;
+>> +
+>> +     chan = to_chan(dchan);
+>> +
+>> +     if ((len > ZYNQMP_DMA_MAX_TRANS_LEN) && !chan->has_sg)
+> why sg?
+
+Controller supports two types of modes.
+
+Simple dma mode:
+   In this mode, DMA transfer parameters are specified in APB registers
+   So, queuing the new request in hw is not possible when the channel
+is busy with
+   previous transfer and also it doesn't have SG support.
+   Max transfer size per transfer is 1GB.
+
+Scatter gather dma mode:
+   Transfer parameters are specified in the buffer descriptors (BD).
+   Max transfer size per BD is 1GB and Dma transaction can have multiple BDs
+
+The above condition is to ensure that when the controller is
+configured for Simple
+Dma mode, allow the transfers that are with in 1GB size if not it return error.
+
+>
+>> +static int zynqmp_dma_remove(struct platform_device *pdev)
+>> +{
+>> +     struct zynqmp_dma_device *xdev = platform_get_drvdata(pdev);
+>> +
+>> +     of_dma_controller_free(pdev->dev.of_node);
+>> +     dma_async_device_unregister(&xdev->common);
+>> +
+>> +     zynqmp_dma_chan_remove(xdev->chan);
+> Please free up irq here explictly and also ensure tasklet is not running
+
+irq free is not required as cleaning will be taken care by the devm framework.
+tasklet cleaning is happening inside the zynqmp_chan_remove function.
+
+Regards,
+Punnaiah
+>
+> --
+> ~Vinod
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
