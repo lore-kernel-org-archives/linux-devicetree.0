@@ -1,34 +1,56 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/4][v4] ARM: imx: imx7d-pinfunc: add gpio pad iomuxc
- settings
-Date: Fri, 17 Jul 2015 11:51:15 +0800
-Message-ID: <20150717035115.GE12927@tiger>
-References: <1437078887-2524-1-git-send-email-aalonso@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1437078887-2524-1-git-send-email-aalonso-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Adrian Alonso <aalonso-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lznuaa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, nitin.garg-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, yibin.gong-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: [PATCH v2] input: snvs_pwrkey: use "wakeup-source" as deivce tree property name
+Date: Fri, 17 Jul 2015 12:02:17 +0800
+Message-ID: <1437105737-16899-1-git-send-email-shawnguo@kernel.org>
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, linux-input@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Frank Li <Frank.Li@freescale.com>, Shawn Guo <shawnguo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 16, 2015 at 03:34:44PM -0500, Adrian Alonso wrote:
-> * Add iMX7D SoC imx7d-pinfunc gpio pad settings
->   <mux_reg conf_reg input_reg mux_mode input_val>
-> * iMX7D GPIO1_IO7 to GPIO1_IO0 encode the pad group id in the most
->   significant bits of input_val to avoid group id overlap bweeten
->   iomuxc and iomuxc-lpsr.
-> 
-> Signed-off-by: Adrian Alonso <aalonso-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Instead of inventing a new property name, let's use "wakeup-source" to
+be consistent with other driver and subsystem bindings.
 
-Unless you can convince me that this approach which hacks select input
-value is better than two instances one, it's an NACK for me on the whole
-patch series.
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+---
+Changes since v1:
+ - Use "wakeup-source" rather than "linux,wakeup"
+
+This is a fixup for Frank's patch which is queued on i.MX tree, so I
+will apply it to the same branch.
 
 Shawn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+ Documentation/devicetree/bindings/crypto/fsl-sec4.txt | 2 +-
+ drivers/input/keyboard/snvs_pwrkey.c                  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
+index 71a39c5bd486..f16bbd6644b8 100644
+--- a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
++++ b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
+@@ -408,7 +408,7 @@ System ON/OFF key driver
+       Value type: <int>
+       Definition: Keycode to emit, KEY_POWER by default.
+ 
+-  - wakeup:
++  - wakeup-source:
+       Usage: option
+       Value type: <boo>
+       Definition: Button can wake-up the system.
+diff --git a/drivers/input/keyboard/snvs_pwrkey.c b/drivers/input/keyboard/snvs_pwrkey.c
+index 512a1fc2a864..78fd24ca3813 100644
+--- a/drivers/input/keyboard/snvs_pwrkey.c
++++ b/drivers/input/keyboard/snvs_pwrkey.c
+@@ -122,7 +122,7 @@ static int imx_snvs_pwrkey_probe(struct platform_device *pdev)
+ 		dev_warn(&pdev->dev, "KEY_POWER without setting in dts\n");
+ 	}
+ 
+-	pdata->wakeup = of_property_read_bool(np, "wakeup");
++	pdata->wakeup = of_property_read_bool(np, "wakeup-source");
+ 
+ 	pdata->irq = platform_get_irq(pdev, 0);
+ 	if (pdata->irq < 0) {
+-- 
+1.9.1
+
