@@ -1,14 +1,14 @@
-From: Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH v9 5/7] staging: fpga manager core
-Date: Fri, 17 Jul 2015 10:27:29 -0700
-Message-ID: <55A93B01.4080009@infradead.org>
+From: atull <atull@opensource.altera.com>
+Subject: Re: [PATCH v9 0/7] FPGA Manager Framework and Simple FPGA Bus
+Date: Fri, 17 Jul 2015 13:09:12 -0500
+Message-ID: <alpine.DEB.2.02.1507171301430.6516@linuxheads99>
 References: <1437148277-5405-1-git-send-email-atull@opensource.altera.com>
- <1437148277-5405-6-git-send-email-atull@opensource.altera.com>
+ <20150717172558.GB15808@obsidianresearch.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1437148277-5405-6-git-send-email-atull@opensource.altera.com>
+In-Reply-To: <20150717172558.GB15808@obsidianresearch.com>
 List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
  <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
 List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
@@ -18,51 +18,41 @@ List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driver
  <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
 Errors-To: driverdev-devel-bounces@linuxdriverproject.org
 Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: atull@opensource.altera.com, gregkh@linuxfoundation.org, jgunthorpe@obsidianresearch.com, hpa@zytor.com, monstr@monstr.eu, michal.simek@xilinx.com
-Cc: mark.rutland@arm.com, linux-doc@vger.kernel.org, rubini@gnudd.com, pantelis.antoniou@konsulko.com, s.trumtrar@pengutronix.de, devel@driverdev.osuosl.org, sameo@linux.intel.com, nico@linaro.org, ijc+devicetree@hellion.org.uk, kyle.teske@ni.com, grant.likely@linaro.org, davidb@codeaurora.org, linus.walleij@linaro.org, cesarb@cesarb.net, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, iws@ovro.caltech.edu, broonie@kernel.org, philip@balister.org, Petr Cvek <petr.cvek@tul.cz>, dinguyen@opensource.altera.com, pavel@denx.de, yvanderv@opensource.altera.com, linux-kernel@vger.kernel.org, balbi@ti.com, delicious.quinoa@gmail.com, robh+dt@kernel.org, rob@landley.net, galak@codeaurora.org, akpm@linux-foundation.org, davem@davemloft.net, m.chehab@samsung.com
+To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Cc: mark.rutland@arm.com, linux-doc@vger.kernel.org, rubini@gnudd.com, pantelis.antoniou@konsulko.com, hpa@zytor.com, s.trumtrar@pengutronix.de, devel@driverdev.osuosl.org, sameo@linux.intel.com, nico@linaro.org, ijc+devicetree@hellion.org.uk, michal.simek@xilinx.com, kyle.teske@ni.com, grant.likely@linaro.org, davidb@codeaurora.org, linus.walleij@linaro.org, cesarb@cesarb.net, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, iws@ovro.caltech.edu, galak@codeaurora.org, broonie@kernel.org, philip@balister.org, Petr Cvek <petr.cvek@tul.cz>, dinguyen@opensource.altera.com, monstr@monstr.eu, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, balbi@ti.com, delicious.quinoa@gmail.com, robh+dt@kernel.org, rob@landley.net, pavel@denx.de, akpm@linux-foundation.org, davem@davemloft.net, m.chehab@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 07/17/15 08:51, atull@opensource.altera.com wrote:
-> From: Alan Tull <atull@opensource.altera.com>
+On Fri, 17 Jul 2015, Jason Gunthorpe wrote:
+
+> On Fri, Jul 17, 2015 at 10:51:10AM -0500, atull@opensource.altera.com wrote:
+> > From: Alan Tull <atull@opensource.altera.com>
+> > 
+> > This patchset adds two chunks plus documentation:
+> >  * fpga manager core: exports ABI functions that write an image to a FPGA
+> >  * DT Overlay support: simple-fpga-bus to handle FPGA from a DT overlay
 > 
-> ---
->  drivers/staging/Kconfig         |    2 +
->  drivers/staging/Makefile        |    1 +
->  drivers/staging/fpga/Kconfig    |   14 ++
->  drivers/staging/fpga/Makefile   |    8 +
->  drivers/staging/fpga/fpga-mgr.c |  373 +++++++++++++++++++++++++++++++++++++++
->  include/linux/fpga/fpga-mgr.h   |  127 +++++++++++++
->  6 files changed, 525 insertions(+)
->  create mode 100644 drivers/staging/fpga/Kconfig
->  create mode 100644 drivers/staging/fpga/Makefile
->  create mode 100644 drivers/staging/fpga/fpga-mgr.c
->  create mode 100644 include/linux/fpga/fpga-mgr.h
+> I didn't read super closely, but overall it makes sense to me..
+> 
+> Providing an in-kernel API will let someone else figure out how to
+> expose that to user space. The DT based scheme seems pretty nice.
+> 
 
-> diff --git a/drivers/staging/fpga/Kconfig b/drivers/staging/fpga/Kconfig
-> new file mode 100644
-> index 0000000..8254ca0
-> --- /dev/null
-> +++ b/drivers/staging/fpga/Kconfig
-> @@ -0,0 +1,14 @@
-> +#
-> +# FPGA framework configuration
-> +#
-> +
-> +menu "FPGA Configuration Support"
-> +
-> +config FPGA
-> +	bool "FPGA Configuration Framework"
-> +	help
-> +	  Say Y here if you want support for configuring FPGAs from the
-> +	  kernel.  The FPGA framework adds a FPGA manager class and FPGA
-> +	  manager drivers.
-> +
-> +endmenu
+Thanks!
 
-Is there some good reason why this is 'bool' instead of 'tristate'?
-I.e., why can't it be built as a loadable module?
+> Can you use this without DT overlay? Ie if I provide the FGPA
+> description as part of my boot time DT will it just work?
 
-Thanks.
+The simple fpga bus would need to defer probing until after the fpga 
+manager driver and bridge drivers are probed (that's easy).  Since it is 
+using firmware, it will also have to defer until the filesystem is 
+available so it can get the fpga image to load.  I'll work on it.
 
--- 
-~Randy
+Alan
+
+> 
+> Jason
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
