@@ -1,108 +1,99 @@
-From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Subject: Re: [PATCH v2 4/4] mfd: max77686: Split out regulator part from the
- DT binding
-Date: Fri, 17 Jul 2015 09:26:40 +0200
-Message-ID: <55A8AE30.6040908@osg.samsung.com>
-References: <1437114567-17629-1-git-send-email-javier@osg.samsung.com>
- <1437114567-17629-5-git-send-email-javier@osg.samsung.com>
- <CAJKOXPe8rDLCt+Za+Qzkkd4JnFoyKtsFTmMbJL6+3Ark8qFYiQ@mail.gmail.com>
- <55A8A4BE.1030904@osg.samsung.com>
- <CAJKOXPdih+qqGnEZub-hqeVF6POSuSGN-OWnLCgN9cW_5sYb+A@mail.gmail.com>
- <55A8A7E2.7020201@osg.samsung.com>
- <CAJKOXPdTKP21eO0dcD_Ec0YA8H5Jhy2YAFjS8hnQLgVe5cCNrA@mail.gmail.com>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [RESEND PATCH v3] ARM: tegra124: pmu support
+Date: Fri, 17 Jul 2015 08:58:03 +0100
+Message-ID: <55A8B58B.3040104@nvidia.com>
+References: <1436808945-14524-1-git-send-email-khuey@kylehuey.com> <20150715093511.GA10239@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAJKOXPdTKP21eO0dcD_Ec0YA8H5Jhy2YAFjS8hnQLgVe5cCNrA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150715093511.GA10239@leverpostej>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kyle Huey <me-OhBmq/TcCDJWk0Htik3J/w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ARM PORT <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:TEGRA ARCHITECTUR..." <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kyle Huey <khuey-OhBmq/TcCDJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Krzysztof,
 
-On 07/17/2015 09:11 AM, Krzysztof Kozlowski wrote:
-> 2015-07-17 15:59 GMT+09:00 Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>:
->> Hello Krzysztof,
+
+On 15/07/15 10:35, Mark Rutland wrote:
+> On Mon, Jul 13, 2015 at 06:35:45PM +0100, Kyle Huey wrote:
+>> This patch modifies the device tree for tegra124 based devices to enable
+>> the Cortex A15 PMU.  The interrupt numbers are taken from NVIDIA TRM
+>> DP-06905-001_v03p.  This patch was tested on a Jetson TK1.
 >>
->> On 07/17/2015 08:49 AM, Krzysztof Kozlowski wrote:
->>> 2015-07-17 15:46 GMT+09:00 Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>:
->>>> Hello Krzysztof,
->>>>
->>>> On 07/17/2015 08:42 AM, Krzysztof Kozlowski wrote:
->>>>> 2015-07-17 15:29 GMT+09:00 Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>:
->>>>>> The Maxim MAX77686 PMIC is a multi-function device with regulators,
->>>>>> clocks and a RTC. The DT bindings for the clocks are in a separate
->>>>>> file but the bindings for the regulators are inside the mfd part.
->>>>>>
->>>>>> To make it consistent with the clocks portion of the binding and
->>>>>> because is more natural to look for regulator bindings under the
->>>>>> bindings/regulator sub-directory, split the regulator portion of
->>>>>> the DT binding and add it as a separate file.
->>>>>>
->>>>>> Signed-off-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
->>>>>>
->>>>>> ---
->>>>>>
->>>>>> Changes in v2:
->>>>>> - Use a generic name for the max77686 node in the regulator example.
->>>>>>
->>>>>>  Documentation/devicetree/bindings/mfd/max77686.txt | 58 +-----------------
->>>>>>  .../devicetree/bindings/regulator/max77686.txt     | 71 ++++++++++++++++++++++
->>>>>>  2 files changed, 74 insertions(+), 55 deletions(-)
->>>>>>  create mode 100644 Documentation/devicetree/bindings/regulator/max77686.txt
->>>>>
->>>>> Putting regulator bindings under regulator directory seems logical so
->>>>> I am fine with it.
->>>>>
->>>>> Reviewed-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>>>>
->>>>
->>>> Thanks a lot for your review. For completeness, I talked with Lee Jones
->>>> over IRC yesterday asking him his opinion on whether MFD DT binding doc
->>>> should contain all the info or if it should be split across different
->>>> subsystems and he prefers the later. That's why I re-spun this series.
->>>
->>> Okay, this sounds good.
->>>
->>> One more thing - can you update the maintainers file? The bindings
->>> documentation is mentioned there for max77686.
->>>
+>> Updated for proper ordering and to add interrupt-affinity values.
 >>
->> Sure, I see that also the max77802 files are missing in that section.
->> I'll included that as well.
+>> Signed-off-by: Kyle Huey <khuey-OhBmq/TcCDJWk0Htik3J/w@public.gmane.org>
 > 
-> The max717802 are not there because they are not part of this
-> maintainership :) . I wasn't involved in development of them (except
-> reviewing) so I did not put myself as their maintainer.
->
-
-Fair enough, I guess I should add an entry for max77802 then and
-volunteer myself as maintainer since after all I added the driver.
- 
->> But I'll wait to see if Lee pick this
->> series before posting the patch for MAINTAINERS.
+> This looks sane to me, and as you've tested it the values seem to be
+> valid:
 > 
-> I think the maintainers should be updated in the same patchset (or
-> even patch) to keep the state consistent.
->
+> Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 
-Ok, I'll post a patch then to be applied on top of this series. I
-could re-spin the whole series and add it to $subject but I'm not
-sure if is worth it since it's only documentation and I prefer to
-avoid spaming Lee and Mark with yet another revision.
+FWIW ...
 
-> Best regards,
-> Krzysztof
->
+Acked-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-Best regards,
--- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Stephen, Thierry, Alex,
+
+Can we pick this up now?
+
+Jon
+
+>> ---
+>>  arch/arm/boot/dts/tegra124.dtsi | 17 +++++++++++++----
+>>  1 file changed, 13 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/tegra124.dtsi b/arch/arm/boot/dts/tegra124.dtsi
+>> index 13cc7ca..de07d7e 100644
+>> --- a/arch/arm/boot/dts/tegra124.dtsi
+>> +++ b/arch/arm/boot/dts/tegra124.dtsi
+>> @@ -918,31 +918,40 @@
+>>  		#address-cells = <1>;
+>>  		#size-cells = <0>;
+>>  
+>> -		cpu@0 {
+>> +		A15_0: cpu@0 {
+>>  			device_type = "cpu";
+>>  			compatible = "arm,cortex-a15";
+>>  			reg = <0>;
+>>  		};
+>>  
+>> -		cpu@1 {
+>> +		A15_1: cpu@1 {
+>>  			device_type = "cpu";
+>>  			compatible = "arm,cortex-a15";
+>>  			reg = <1>;
+>>  		};
+>>  
+>> -		cpu@2 {
+>> +		A15_2: cpu@2 {
+>>  			device_type = "cpu";
+>>  			compatible = "arm,cortex-a15";
+>>  			reg = <2>;
+>>  		};
+>>  
+>> -		cpu@3 {
+>> +		A15_3: cpu@3 {
+>>  			device_type = "cpu";
+>>  			compatible = "arm,cortex-a15";
+>>  			reg = <3>;
+>>  		};
+>>  	};
+>>  
+>> +	pmu {
+>> +		compatible = "arm,cortex-a15-pmu";
+>> +		interrupts = <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>,
+>> +			     <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>,
+>> +			     <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>,
+>> +			     <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
+>> +		interrupt-affinity = <&A15_0>, <&A15_1>, <&A15_2>, <&A15_3>;
+>> +	};
+>> +
+>>  	thermal-zones {
+>>  		cpu {
+>>  			polling-delay-passive = <1000>;
+>> -- 
+>> 1.9.1
+>>
