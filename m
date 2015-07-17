@@ -1,82 +1,45 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v2 4/4] mfd: max77686: Split out regulator part from the
- DT binding
-Date: Fri, 17 Jul 2015 16:11:11 +0900
-Message-ID: <CAJKOXPdTKP21eO0dcD_Ec0YA8H5Jhy2YAFjS8hnQLgVe5cCNrA@mail.gmail.com>
-References: <1437114567-17629-1-git-send-email-javier@osg.samsung.com>
-	<1437114567-17629-5-git-send-email-javier@osg.samsung.com>
-	<CAJKOXPe8rDLCt+Za+Qzkkd4JnFoyKtsFTmMbJL6+3Ark8qFYiQ@mail.gmail.com>
-	<55A8A4BE.1030904@osg.samsung.com>
-	<CAJKOXPdih+qqGnEZub-hqeVF6POSuSGN-OWnLCgN9cW_5sYb+A@mail.gmail.com>
-	<55A8A7E2.7020201@osg.samsung.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [RFC PATCH 0/2] thermal: Add generic devfreq cooling device
+Date: Fri, 17 Jul 2015 16:16:40 +0900
+Message-ID: <55A8ABD8.7000705@samsung.com>
+References: <921188645.36001437115238708.JavaMail.weblogic@epmlwas08c>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <55A8A7E2.7020201@osg.samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@osg.samsung.com>
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-reply-to: <921188645.36001437115238708.JavaMail.weblogic@epmlwas08c>
+Sender: linux-pm-owner@vger.kernel.org
+To: myungjoo.ham@samsung.com
+Cc: "edubezval@gmail.com" <edubezval@gmail.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, =?UTF-8?B?67CV6rK966+8?= <kyungmin.park@samsung.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "khilman@linaro.org" <khilman@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, =?UTF-8?B?64yA7J246riw?= <inki.dae@samsung.com>, Lukasz Majewski <l.majewski@samsung.com>, =?UTF-8?B?6rmA6rWt7KeE?= <kgene.kim@samsung.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-2015-07-17 15:59 GMT+09:00 Javier Martinez Canillas <javier@osg.samsung.com>:
-> Hello Krzysztof,
->
-> On 07/17/2015 08:49 AM, Krzysztof Kozlowski wrote:
->> 2015-07-17 15:46 GMT+09:00 Javier Martinez Canillas <javier@osg.samsung.com>:
->>> Hello Krzysztof,
->>>
->>> On 07/17/2015 08:42 AM, Krzysztof Kozlowski wrote:
->>>> 2015-07-17 15:29 GMT+09:00 Javier Martinez Canillas <javier@osg.samsung.com>:
->>>>> The Maxim MAX77686 PMIC is a multi-function device with regulators,
->>>>> clocks and a RTC. The DT bindings for the clocks are in a separate
->>>>> file but the bindings for the regulators are inside the mfd part.
->>>>>
->>>>> To make it consistent with the clocks portion of the binding and
->>>>> because is more natural to look for regulator bindings under the
->>>>> bindings/regulator sub-directory, split the regulator portion of
->>>>> the DT binding and add it as a separate file.
->>>>>
->>>>> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
->>>>>
->>>>> ---
->>>>>
->>>>> Changes in v2:
->>>>> - Use a generic name for the max77686 node in the regulator example.
->>>>>
->>>>>  Documentation/devicetree/bindings/mfd/max77686.txt | 58 +-----------------
->>>>>  .../devicetree/bindings/regulator/max77686.txt     | 71 ++++++++++++++++++++++
->>>>>  2 files changed, 74 insertions(+), 55 deletions(-)
->>>>>  create mode 100644 Documentation/devicetree/bindings/regulator/max77686.txt
->>>>
->>>> Putting regulator bindings under regulator directory seems logical so
->>>> I am fine with it.
->>>>
->>>> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
->>>>
->>>
->>> Thanks a lot for your review. For completeness, I talked with Lee Jones
->>> over IRC yesterday asking him his opinion on whether MFD DT binding doc
->>> should contain all the info or if it should be split across different
->>> subsystems and he prefers the later. That's why I re-spun this series.
->>
->> Okay, this sounds good.
->>
->> One more thing - can you update the maintainers file? The bindings
->> documentation is mentioned there for max77686.
->>
->
-> Sure, I see that also the max77802 files are missing in that section.
-> I'll included that as well.
+Dear Myungjoo,
 
-The max717802 are not there because they are not part of this
-maintainership :) . I wasn't involved in development of them (except
-reviewing) so I did not put myself as their maintainer.
+On 07/17/2015 03:40 PM, MyungJoo Ham wrote:
+>>   
+>>  This patchset introduce the generic devfreq cooling device for generic thermal
+>> framework. The devfreq devices are used ad cooling device to reduce the
+>> overheating temperature. This patch is based on drivers/thermal/cpu_cooling.c.
+>> The devfreq cooling device can change the ragne of the frequency table of
+>> devfreq device according to cooling level in device tree file.
+> 
+> Hi,
+> 
+> 
+> 1. You've exported "update_devfreq()" in 1/2 and didn't use it anywhere.
+> 2. If you've added "update_devfreq()" to notify devfreq driver when a new
+>  max/min is defined, you'll need to add it at set_state, OR
+>    You may do it with opp_enable()/opp_disable() function and let opp
+>  notifiers do the homework for you. (no need to update_devfreq().
 
-> But I'll wait to see if Lee pick this
-> series before posting the patch for MAINTAINERS.
+It is my mistake. The devfreq_set_cur_state() in patch2 use the update_devfreq()
+to change the maximum frequency of devfreq device as following:
 
-I think the maintainers should be updated in the same patchset (or
-even patch) to keep the state consistent.
++       /* Set the limited frequency to maximum frequency of devfreq */
++       devfreq_dev->devfreq->max_freq = limited_freq;
++       update_devfreq(devfreq_dev->devfreq);
 
-Best regards,
-Krzysztof
+I'll resent v2 patch-set.
+
+Thanks,
+Chanwoo Choi
