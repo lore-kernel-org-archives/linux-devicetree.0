@@ -1,31 +1,45 @@
-From: MyungJoo Ham <myungjoo.ham@samsung.com>
-Subject: Re: [RFC PATCH 0/2] thermal: Add generic devfreq cooling device
-Date: Fri, 17 Jul 2015 06:40:43 +0000 (GMT)
-Message-ID: <921188645.36001437115238708.JavaMail.weblogic@epmlwas08c>
-Reply-To: myungjoo.ham@samsung.com
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v2 4/4] mfd: max77686: Split out regulator part from the
+ DT binding
+Date: Fri, 17 Jul 2015 15:42:00 +0900
+Message-ID: <CAJKOXPe8rDLCt+Za+Qzkkd4JnFoyKtsFTmMbJL6+3Ark8qFYiQ@mail.gmail.com>
+References: <1437114567-17629-1-git-send-email-javier@osg.samsung.com>
+	<1437114567-17629-5-git-send-email-javier@osg.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
-Return-path: <linux-pm-owner@vger.kernel.org>
-MIME-version: 1.0
-Sender: linux-pm-owner@vger.kernel.org
-To: =?utf-8?Q?=EC=B5=9C=EC=B0=AC=EC=9A=B0?= <cw00.choi@samsung.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, =?utf-8?Q?=EB=B0=95=EA=B2=BD=EB=AF=BC?= <kyungmin.park@samsung.com>
-Cc: "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "khilman@linaro.org" <khilman@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, =?utf-8?Q?=EB=8C=80=EC=9D=B8=EA=B8=B0?= <inki.dae@samsung.com>, Lukasz Majewski <l.majewski@samsung.com>, =?utf-8?Q?=EA=B9=80=EA=B5=AD=EC=A7=84?= <kgene.kim@samsung.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1437114567-17629-5-git-send-email-javier@osg.samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier@osg.samsung.com>
+Cc: Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-PiAgIA0KPiAgVGhpcyBwYXRjaHNldCBpbnRyb2R1Y2UgdGhlIGdlbmVyaWMgZGV2ZnJlcSBjb29s
-aW5nIGRldmljZSBmb3IgZ2VuZXJpYyB0aGVybWFsDQo+IGZyYW1ld29yay4gVGhlIGRldmZyZXEg
-ZGV2aWNlcyBhcmUgdXNlZCBhZCBjb29saW5nIGRldmljZSB0byByZWR1Y2UgdGhlDQo+IG92ZXJo
-ZWF0aW5nIHRlbXBlcmF0dXJlLiBUaGlzIHBhdGNoIGlzIGJhc2VkIG9uIGRyaXZlcnMvdGhlcm1h
-bC9jcHVfY29vbGluZy5jLg0KPiBUaGUgZGV2ZnJlcSBjb29saW5nIGRldmljZSBjYW4gY2hhbmdl
-IHRoZSByYWduZSBvZiB0aGUgZnJlcXVlbmN5IHRhYmxlIG9mDQo+IGRldmZyZXEgZGV2aWNlIGFj
-Y29yZGluZyB0byBjb29saW5nIGxldmVsIGluIGRldmljZSB0cmVlIGZpbGUuDQoNCkhpLA0KDQoN
-CjEuIFlvdSd2ZSBleHBvcnRlZCAidXBkYXRlX2RldmZyZXEoKSIgaW4gMS8yIGFuZCBkaWRuJ3Qg
-dXNlIGl0IGFueXdoZXJlLg0KMi4gSWYgeW91J3ZlIGFkZGVkICJ1cGRhdGVfZGV2ZnJlcSgpIiB0
-byBub3RpZnkgZGV2ZnJlcSBkcml2ZXIgd2hlbiBhIG5ldw0KIG1heC9taW4gaXMgZGVmaW5lZCwg
-eW91J2xsIG5lZWQgdG8gYWRkIGl0IGF0IHNldF9zdGF0ZSwgT1INCiAgIFlvdSBtYXkgZG8gaXQg
-d2l0aCBvcHBfZW5hYmxlKCkvb3BwX2Rpc2FibGUoKSBmdW5jdGlvbiBhbmQgbGV0IG9wcA0KIG5v
-dGlmaWVycyBkbyB0aGUgaG9tZXdvcmsgZm9yIHlvdS4gKG5vIG5lZWQgdG8gdXBkYXRlX2RldmZy
-ZXEoKS4NCg0KQ2hlZXJzLA0KTXl1bmdKb28NCg0K
+2015-07-17 15:29 GMT+09:00 Javier Martinez Canillas <javier@osg.samsung.com>:
+> The Maxim MAX77686 PMIC is a multi-function device with regulators,
+> clocks and a RTC. The DT bindings for the clocks are in a separate
+> file but the bindings for the regulators are inside the mfd part.
+>
+> To make it consistent with the clocks portion of the binding and
+> because is more natural to look for regulator bindings under the
+> bindings/regulator sub-directory, split the regulator portion of
+> the DT binding and add it as a separate file.
+>
+> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+>
+> ---
+>
+> Changes in v2:
+> - Use a generic name for the max77686 node in the regulator example.
+>
+>  Documentation/devicetree/bindings/mfd/max77686.txt | 58 +-----------------
+>  .../devicetree/bindings/regulator/max77686.txt     | 71 ++++++++++++++++++++++
+>  2 files changed, 74 insertions(+), 55 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/regulator/max77686.txt
 
+Putting regulator bindings under regulator directory seems logical so
+I am fine with it.
 
+Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+
+Best regards,
+Krzysztof
