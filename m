@@ -1,76 +1,574 @@
 From: <atull@opensource.altera.com>
-Subject: [PATCH v9 6/7] staging: add simple-fpga-bus
-Date: Fri, 17 Jul 2015 10:51:16 -0500
-Message-ID: <1437148277-5405-7-git-send-email-atull@opensource.altera.com>
+Subject: [PATCH v9 5/7] staging: fpga manager core
+Date: Fri, 17 Jul 2015 10:51:15 -0500
+Message-ID: <1437148277-5405-6-git-send-email-atull@opensource.altera.com>
 References: <1437148277-5405-1-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
 In-Reply-To: <1437148277-5405-1-git-send-email-atull@opensource.altera.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
 To: gregkh@linuxfoundation.org, jgunthorpe@obsidianresearch.com, hpa@zytor.com, monstr@monstr.eu, michal.simek@xilinx.com, rdunlap@infradead.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, pantelis.antoniou@konsulko.com, robh+dt@kernel.org, grant.likely@linaro.org, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, pavel@denx.de, broonie@kernel.org, philip@balister.org, rubini@gnudd.com, s.trumtrar@pengutronix.de, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devel@driverdev.osuosl.org, Petr Cvek <petr.cvek@tul.cz>, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com, Alan Tull <atull@opensource.altera.co>
+Cc: mark.rutland@arm.com, linux-doc@vger.kernel.org, rubini@gnudd.com, pantelis.antoniou@konsulko.com, s.trumtrar@pengutronix.de, devel@driverdev.osuosl.org, sameo@linux.intel.com, nico@linaro.org, ijc+devicetree@hellion.org.uk, kyle.teske@ni.com, grant.likely@linaro.org, davidb@codeaurora.org, linus.walleij@linaro.org, cesarb@cesarb.net, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, iws@ovro.caltech.edu, Alan Tull <atull@opensource.altera.com>, broonie@kernel.org, philip@balister.org, Petr Cvek <petr.cvek@tul.cz>, dinguyen@opensource.altera.com, pavel@denx.de, yvanderv@opensource.altera.com, linux-kernel@vger.kernel.org, balbi@ti.com, delicious.quinoa@gmail.com, robh+dt@kernel.org, rob@landley.net, galak@codeaurora.org, akpm@linux-foundation.org, davem@davemloft.net, m.chehab@samsung.com
 List-Id: devicetree@vger.kernel.org
 
 From: Alan Tull <atull@opensource.altera.com>
 
-Add simple fpga bus.  This is a bus that configures an fpga and its
-bridges before populating the devices below it.  This is intended
-for use with device tree overlays.
+API to support programming FPGA.
 
-Note that FPGA bridges are seen as reset controllers so no special
-framework for FPGA bridges will need to be added.
+The following functions are exported as GPL:
+* fpga_mgr_buf_load
+   Load fpga from image in buffer
 
-This supports fpga use where hardware blocks on a fpga will need
-drivers (as opposed to fpga used as an acceleration without drivers.)
+* fpga_mgr_firmware_load
+   Request firmware and load it to the FPGA.
+
+* fpga_mgr_register
+* fpga_mgr_unregister
+   FPGA device drivers can be added by calling
+   fpga_mgr_register() to register a set of
+   fpga_manager_ops to do device specific stuff.
+
+* of_fpga_mgr_get
+* fpga_mgr_put
+   Get/put a reference to a fpga manager.
+
+The following sysfs files are created:
+* /sys/class/fpga_manager/<fpga>/name
+  Name of low level driver.
+
+* /sys/class/fpga_manager/<fpga>/state
+  State of fpga manager
 
 Signed-off-by: Alan Tull <atull@opensource.altera.com>
+Acked-by: Michal Simek <michal.simek@xilinx.com>
 ---
- drivers/staging/fpga/Kconfig           |   11 ++
- drivers/staging/fpga/Makefile          |    1 +
- drivers/staging/fpga/simple-fpga-bus.c |  323 ++++++++++++++++++++++++++++++++
- 3 files changed, 335 insertions(+)
- create mode 100644 drivers/staging/fpga/simple-fpga-bus.c
+v2: s/mangager/manager/
+    check for invalid request_nr
+    add fpga reset interface
+    rework the state code
+    remove FPGA_MGR_FAIL flag
+    add _ERR states to fpga manager states enum
+    low level state op now returns a state enum value
+    initialize framework state from driver state op
+    remove unused fpga read stuff
+    merge sysfs.c into fpga-mgr.c
+    move suspend/resume from bus.c to fpga-mgr.c
 
+v3: Add struct device to fpga_manager (not as a pointer)
+    Add to_fpga_manager
+    Don't get irq in fpga-mgr.c (let low level driver do it)
+    remove from struct fpga_manager: nr, np, parent
+    get rid of fpga_mgr_get_new_minor()
+    simplify fpga_manager_register:
+      reorder parameters
+      use dev instead of pdev
+    get rid of code that used to make more sense when this
+      was a char driver, don't alloc_chrdev_region
+    use a mutex instead of flags
+
+v4: Move to drivers/staging
+
+v5: Make some things be static
+    Kconfig: add 'if FPGA'
+    Makefile: s/fpga-mgr-core.o/fpga-mgr.o/
+    clean up includes
+    use enum fpga_mgr_states instead of int
+    static const char *state_str
+    use DEVICE_ATTR_RO/RW/WO and ATTRIBUTE_GROUPS
+    return -EINVAL instead of BUG_ON
+    move ida_simple_get after kzalloc
+    clean up fpga_mgr_remove
+    fpga-mgr.h: remove '#if IS_ENABLED(CONFIG_FPGA)'
+    add kernel-doc documentation
+    Move header to new include/linux/fpga folder
+    static const struct fpga_mgr_ops
+    dev_info msg simplified
+
+v6: no statically allocated string for image_name
+    kernel doc fixes
+    changes regarding enabling SYSFS for fpga mgr
+    Makefile cleanup
+
+v7: no change in this patch for v7 of the patchset
+
+v8: no change in this patch for v8 of the patchset
+
+v9: remove writable attributes 'firmware' and 'reset'
+    remove suspend/resume support for now
+    remove list of fpga managers; use class device iterators instead
+    simplify locking by giving out only one ref exclusively
+    add device tree support
+    add flags
+    par down API into fewer functions
+    update copyright year
+    rename some functions for clarity
+    clean up unnecessary #includes
+    add some error messages
+    write_init may need to look at buffer header, so add to params
+---
+ drivers/staging/Kconfig         |    2 +
+ drivers/staging/Makefile        |    1 +
+ drivers/staging/fpga/Kconfig    |   14 ++
+ drivers/staging/fpga/Makefile   |    8 +
+ drivers/staging/fpga/fpga-mgr.c |  373 +++++++++++++++++++++++++++++++++++++++
+ include/linux/fpga/fpga-mgr.h   |  127 +++++++++++++
+ 6 files changed, 525 insertions(+)
+ create mode 100644 drivers/staging/fpga/Kconfig
+ create mode 100644 drivers/staging/fpga/Makefile
+ create mode 100644 drivers/staging/fpga/fpga-mgr.c
+ create mode 100644 include/linux/fpga/fpga-mgr.h
+
+diff --git a/drivers/staging/Kconfig b/drivers/staging/Kconfig
+index 7f6cae5..89c089c 100644
+--- a/drivers/staging/Kconfig
++++ b/drivers/staging/Kconfig
+@@ -112,4 +112,6 @@ source "drivers/staging/fsl-mc/Kconfig"
+ 
+ source "drivers/staging/wilc1000/Kconfig"
+ 
++source "drivers/staging/fpga/Kconfig"
++
+ endif # STAGING
+diff --git a/drivers/staging/Makefile b/drivers/staging/Makefile
+index 347f647..e129940 100644
+--- a/drivers/staging/Makefile
++++ b/drivers/staging/Makefile
+@@ -48,3 +48,4 @@ obj-$(CONFIG_COMMON_CLK_XLNX_CLKWZRD)	+= clocking-wizard/
+ obj-$(CONFIG_FB_TFT)		+= fbtft/
+ obj-$(CONFIG_FSL_MC_BUS)	+= fsl-mc/
+ obj-$(CONFIG_WILC1000)		+= wilc1000/
++obj-$(CONFIG_FPGA)		+= fpga/
 diff --git a/drivers/staging/fpga/Kconfig b/drivers/staging/fpga/Kconfig
-index 8254ca0..8d003e3 100644
---- a/drivers/staging/fpga/Kconfig
-+++ b/drivers/staging/fpga/Kconfig
-@@ -11,4 +11,15 @@ config FPGA
- 	  kernel.  The FPGA framework adds a FPGA manager class and FPGA
- 	  manager drivers.
- 
-+if FPGA
-+
-+config SIMPLE_FPGA_BUS
-+       bool "Simple FPGA Bus"
-+       depends on OF
-+       help
-+         Simple FPGA Bus allows loading FPGA images under control of
-+	 Device Tree.
-+
-+endif # FPGA
-+
- endmenu
-diff --git a/drivers/staging/fpga/Makefile b/drivers/staging/fpga/Makefile
-index 3313c52..6115213 100644
---- a/drivers/staging/fpga/Makefile
-+++ b/drivers/staging/fpga/Makefile
-@@ -4,5 +4,6 @@
- 
- # Core FPGA Manager Framework
- obj-$(CONFIG_FPGA)			+= fpga-mgr.o
-+obj-$(CONFIG_SIMPLE_FPGA_BUS)		+= simple-fpga-bus.o
- 
- # FPGA Manager Drivers
-diff --git a/drivers/staging/fpga/simple-fpga-bus.c b/drivers/staging/fpga/simple-fpga-bus.c
 new file mode 100644
-index 0000000..bf178d8
+index 0000000..8254ca0
 --- /dev/null
-+++ b/drivers/staging/fpga/simple-fpga-bus.c
-@@ -0,0 +1,323 @@
++++ b/drivers/staging/fpga/Kconfig
+@@ -0,0 +1,14 @@
++#
++# FPGA framework configuration
++#
++
++menu "FPGA Configuration Support"
++
++config FPGA
++	bool "FPGA Configuration Framework"
++	help
++	  Say Y here if you want support for configuring FPGAs from the
++	  kernel.  The FPGA framework adds a FPGA manager class and FPGA
++	  manager drivers.
++
++endmenu
+diff --git a/drivers/staging/fpga/Makefile b/drivers/staging/fpga/Makefile
+new file mode 100644
+index 0000000..3313c52
+--- /dev/null
++++ b/drivers/staging/fpga/Makefile
+@@ -0,0 +1,8 @@
++#
++# Makefile for the fpga framework and fpga manager drivers.
++#
++
++# Core FPGA Manager Framework
++obj-$(CONFIG_FPGA)			+= fpga-mgr.o
++
++# FPGA Manager Drivers
+diff --git a/drivers/staging/fpga/fpga-mgr.c b/drivers/staging/fpga/fpga-mgr.c
+new file mode 100644
+index 0000000..1363f8f
+--- /dev/null
++++ b/drivers/staging/fpga/fpga-mgr.c
+@@ -0,0 +1,373 @@
 +/*
-+ * Simple FPGA Bus
++ * FPGA Manager Core
++ *
++ *  Copyright (C) 2013-2015 Altera Corporation
++ *
++ * With code from the mailing list:
++ * Copyright (C) 2013 Xilinx, Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License along with
++ * this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++#include <linux/firmware.h>
++#include <linux/fpga/fpga-mgr.h>
++#include <linux/idr.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/mutex.h>
++#include <linux/slab.h>
++
++static DEFINE_IDA(fpga_mgr_ida);
++static struct class *fpga_mgr_class;
++
++/**
++ * fpga_mgr_buf_load - load fpga from image in buffer
++ * @mgr:	fpga manager
++ * @flags:	flags setting fpga confuration modes
++ * @buf:	buffer contain fpga image
++ * @count:	byte count of buf
++ *
++ * Step the low level fpga manager through the device-specific steps of getting
++ * an FPGA ready to be configured, writing the image to it, then doing whatever
++ * post-configuration steps necessary.
++ *
++ * Return: 0 on success, negative error code otherwise.
++ */
++int fpga_mgr_buf_load(struct fpga_manager *mgr, u32 flags, const char *buf,
++		      size_t count)
++{
++	struct device *dev = &mgr->dev;
++	int ret;
++
++	if (!mgr)
++		return -ENODEV;
++
++	/*
++	 * Call the low level driver's write_init function.  This will do the
++	 * device-specific things to get the FPGA into the state where it is
++	 * ready to receive an FPGA image.
++	 */
++	mgr->state = FPGA_MGR_STATE_WRITE_INIT;
++	ret = mgr->mops->write_init(mgr, flags, buf, count);
++	if (ret) {
++		dev_err(dev, "Error preparing FPGA for writing\n");
++		mgr->state = FPGA_MGR_STATE_WRITE_INIT_ERR;
++		return ret;
++	}
++
++	/*
++	 * Write the FPGA image to the FPGA.
++	 */
++	mgr->state = FPGA_MGR_STATE_WRITE;
++	ret = mgr->mops->write(mgr, buf, count);
++	if (ret) {
++		dev_err(dev, "Error while writing image data to FPGA\n");
++		mgr->state = FPGA_MGR_STATE_WRITE_ERR;
++		return ret;
++	}
++
++	/*
++	 * After all the FPGA image has been written, do the device specific
++	 * steps to finish and set the FPGA into operating mode.
++	 */
++	mgr->state = FPGA_MGR_STATE_WRITE_COMPLETE;
++	ret = mgr->mops->write_complete(mgr);
++	if (ret) {
++		dev_err(dev, "Error after writing image data to FPGA\n");
++		mgr->state = FPGA_MGR_STATE_WRITE_COMPLETE_ERR;
++		return ret;
++	}
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(fpga_mgr_buf_load);
++
++/**
++ * fpga_mgr_firmware_load - request firmware and load to fpga
++ * @mgr:	fpga manager
++ * @flags:	flags setting fpga confuration modes
++ * @image_name:	name of image file on the firmware search path
++ *
++ * Request an FPGA image using the firmware class, then write out to the FPGA.
++ * Update the state before each step to provide info on what step failed if
++ * there is a failure.
++ *
++ * Return: 0 on success, negative error code otherwise.
++ */
++int fpga_mgr_firmware_load(struct fpga_manager *mgr, u32 flags,
++			   const char *image_name)
++{
++	struct device *dev = &mgr->dev;
++	const struct firmware *fw;
++	int ret;
++
++	if (!mgr)
++		return -ENODEV;
++
++	dev_info(dev, "writing %s to %s\n", image_name, mgr->name);
++
++	mgr->state = FPGA_MGR_STATE_FIRMWARE_REQ;
++
++	ret = request_firmware(&fw, image_name, dev);
++	if (ret) {
++		mgr->state = FPGA_MGR_STATE_FIRMWARE_REQ_ERR;
++		dev_err(dev, "Error requesting firmware %s\n", image_name);
++		return ret;
++	}
++
++	ret = fpga_mgr_buf_load(mgr, flags, fw->data, fw->size);
++	if (ret)
++		return ret;
++
++	release_firmware(fw);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(fpga_mgr_firmware_load);
++
++static const char * const state_str[] = {
++	[FPGA_MGR_STATE_UNKNOWN] =		"unknown",
++	[FPGA_MGR_STATE_POWER_OFF] =		"power off",
++	[FPGA_MGR_STATE_POWER_UP] =		"power up",
++	[FPGA_MGR_STATE_RESET] =		"reset",
++
++	/* requesting FPGA image from firmware */
++	[FPGA_MGR_STATE_FIRMWARE_REQ] =		"firmware request",
++	[FPGA_MGR_STATE_FIRMWARE_REQ_ERR] =	"firmware request error",
++
++	/* Preparing FPGA to receive image */
++	[FPGA_MGR_STATE_WRITE_INIT] =		"write init",
++	[FPGA_MGR_STATE_WRITE_INIT_ERR] =	"write init error",
++
++	/* Writing image to FPGA */
++	[FPGA_MGR_STATE_WRITE] =		"write",
++	[FPGA_MGR_STATE_WRITE_ERR] =		"write error",
++
++	/* Finishing configuration after image has been written */
++	[FPGA_MGR_STATE_WRITE_COMPLETE] =	"write complete",
++	[FPGA_MGR_STATE_WRITE_COMPLETE_ERR] =	"write complete error",
++
++	/* FPGA reports to be in normal operating mode */
++	[FPGA_MGR_STATE_OPERATING] =		"operating",
++};
++
++static ssize_t name_show(struct device *dev,
++			 struct device_attribute *attr, char *buf)
++{
++	struct fpga_manager *mgr = to_fpga_manager(dev);
++
++	return sprintf(buf, "%s\n", mgr->name);
++}
++
++static ssize_t state_show(struct device *dev,
++			  struct device_attribute *attr, char *buf)
++{
++	struct fpga_manager *mgr = to_fpga_manager(dev);
++
++	return sprintf(buf, "%s\n", state_str[mgr->state]);
++}
++
++static DEVICE_ATTR_RO(name);
++static DEVICE_ATTR_RO(state);
++
++static struct attribute *fpga_mgr_attrs[] = {
++	&dev_attr_name.attr,
++	&dev_attr_state.attr,
++	NULL,
++};
++ATTRIBUTE_GROUPS(fpga_mgr);
++
++static int fpga_mgr_of_node_match(struct device *dev, const void *data)
++{
++	return dev->of_node == data;
++}
++
++/**
++ * of_fpga_mgr_get - get an exclusive reference to a fpga mgr
++ * @node:	device node
++ *
++ * Given a device node, get an exclusive reference to a fpga mgr.
++ *
++ * Return: fpga manager struct or IS_ERR() condition containing error code.
++ */
++struct fpga_manager *of_fpga_mgr_get(struct device_node *node)
++{
++	struct fpga_manager *mgr;
++	struct device *dev;
++
++	if (!node)
++		return ERR_PTR(-EINVAL);
++
++	dev = class_find_device(fpga_mgr_class, NULL, node,
++				fpga_mgr_of_node_match);
++	if (!dev)
++		return ERR_PTR(-ENODEV);
++
++	mgr = to_fpga_manager(dev);
++	put_device(dev);
++	if (!mgr)
++		return ERR_PTR(-ENODEV);
++
++	if (!mutex_trylock(&mgr->ref_mutex))
++		return ERR_PTR(-EBUSY);
++
++	return mgr;
++}
++EXPORT_SYMBOL_GPL(of_fpga_mgr_get);
++
++/**
++ * fpga_mgr_put - release a reference to a fpga manager
++ * @mgr:	fpga manager structure
++ */
++void fpga_mgr_put(struct fpga_manager *mgr)
++{
++	if (mgr)
++		mutex_unlock(&mgr->ref_mutex);
++}
++EXPORT_SYMBOL_GPL(fpga_mgr_put);
++
++/**
++ * fpga_mgr_register - register a low level fpga manager driver
++ * @dev:	fpga manager device from pdev
++ * @name:	fpga manager name
++ * @mops:	pointer to structure of fpga manager ops
++ * @priv:	fpga manager private data
++ *
++ * Return: 0 on success, negative error code otherwise.
++ */
++int fpga_mgr_register(struct device *dev, const char *name,
++		      const struct fpga_manager_ops *mops,
++		      void *priv)
++{
++	struct fpga_manager *mgr;
++	const char *dt_label;
++	int id, ret;
++
++	if (!mops || !mops->write_init || !mops->write ||
++	    !mops->write_complete || !mops->state) {
++		dev_err(dev, "Attempt to register without fpga_manager_ops\n");
++		return -EINVAL;
++	}
++
++	if (!name || !strlen(name)) {
++		dev_err(dev, "Attempt to register with no name!\n");
++		return -EINVAL;
++	}
++
++	mgr = kzalloc(sizeof(*mgr), GFP_KERNEL);
++	if (!mgr)
++		return -ENOMEM;
++
++	id = ida_simple_get(&fpga_mgr_ida, 0, 0, GFP_KERNEL);
++	if (id < 0) {
++		ret = id;
++		goto error_kfree;
++	}
++
++	mutex_init(&mgr->ref_mutex);
++
++	mgr->name = name;
++	mgr->mops = mops;
++	mgr->priv = priv;
++
++	/*
++	 * Initialize framework state by requesting low level driver read state
++	 * from device.  FPGA may be in reset mode or may have been programmed
++	 * by bootloader or EEPROM.
++	 */
++	mgr->state = mgr->mops->state(mgr);
++
++	device_initialize(&mgr->dev);
++	mgr->dev.class = fpga_mgr_class;
++	mgr->dev.parent = dev;
++	mgr->dev.of_node = dev->of_node;
++	mgr->dev.id = id;
++	dev_set_drvdata(dev, mgr);
++
++	dt_label = of_get_property(mgr->dev.of_node, "label", NULL);
++	if (dt_label)
++		ret = dev_set_name(&mgr->dev, "%s", dt_label);
++	else
++		ret = dev_set_name(&mgr->dev, "fpga%d", id);
++
++	ret = device_add(&mgr->dev);
++	if (ret)
++		goto error_device;
++
++	dev_info(&mgr->dev, "%s registered\n", mgr->name);
++
++	return 0;
++
++error_device:
++	ida_simple_remove(&fpga_mgr_ida, id);
++error_kfree:
++	kfree(mgr);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(fpga_mgr_register);
++
++/**
++ * fpga_mgr_unregister - unregister a low level fpga manager driver
++ * @dev:	fpga manager device from pdev
++ */
++void fpga_mgr_unregister(struct device *dev)
++{
++	struct fpga_manager *mgr = dev_get_drvdata(dev);
++
++	dev_info(&mgr->dev, "%s %s\n", __func__, mgr->name);
++
++	/*
++	 * If the low level driver provides a method for putting fpga into
++	 * a desired state upon unregister, do it.
++	 */
++	if (mgr->mops->fpga_remove)
++		mgr->mops->fpga_remove(mgr);
++
++	device_unregister(&mgr->dev);
++}
++EXPORT_SYMBOL_GPL(fpga_mgr_unregister);
++
++static void fpga_mgr_dev_release(struct device *dev)
++{
++	struct fpga_manager *mgr = to_fpga_manager(dev);
++
++	ida_simple_remove(&fpga_mgr_ida, mgr->dev.id);
++	kfree(mgr);
++}
++
++static int __init fpga_mgr_class_init(void)
++{
++	pr_info("FPGA manager framework\n");
++
++	fpga_mgr_class = class_create(THIS_MODULE, "fpga_manager");
++	if (IS_ERR(fpga_mgr_class))
++		return PTR_ERR(fpga_mgr_class);
++
++	fpga_mgr_class->dev_groups = fpga_mgr_groups;
++	fpga_mgr_class->dev_release = fpga_mgr_dev_release;
++
++	return 0;
++}
++
++static void __exit fpga_mgr_class_exit(void)
++{
++	class_destroy(fpga_mgr_class);
++	ida_destroy(&fpga_mgr_ida);
++}
++
++MODULE_AUTHOR("Alan Tull <atull@opensource.altera.com>");
++MODULE_DESCRIPTION("FPGA manager framework");
++MODULE_LICENSE("GPL v2");
++
++subsys_initcall(fpga_mgr_class_init);
++module_exit(fpga_mgr_class_exit);
+diff --git a/include/linux/fpga/fpga-mgr.h b/include/linux/fpga/fpga-mgr.h
+new file mode 100644
+index 0000000..14a2ca6
+--- /dev/null
++++ b/include/linux/fpga/fpga-mgr.h
+@@ -0,0 +1,127 @@
++/*
++ * FPGA Framework
 + *
 + *  Copyright (C) 2013-2015 Altera Corporation
 + *
@@ -86,311 +584,115 @@ index 0000000..bf178d8
 + * You should have received a copy of the GNU General Public License along with
 + * this program.  If not, see <http://www.gnu.org/licenses/>.
 + */
++#include <linux/mutex.h>
++#include <linux/platform_device.h>
 +
-+#include <linux/fpga/fpga-mgr.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of_platform.h>
-+#include <linux/reset.h>
-+#include <linux/slab.h>
++#ifndef _LINUX_FPGA_MGR_H
++#define _LINUX_FPGA_MGR_H
++
++struct fpga_manager;
 +
 +/**
-+ * struct simple_fpga_bus - simple fpga bus private data
-+ * @dev:	device from pdev
-+ * @mgr:	the fpga manager associated with this bus
-+ * @bridges:	an array of reset controls for controlling FPGA bridges
-+ *		associated with this bus
-+ * @num_bridges: size of the bridges array
++ * enum fpga_mgr_states - fpga framework states
++ * @FPGA_MGR_STATE_UNKNOWN: can't determine state
++ * @FPGA_MGR_STATE_POWER_OFF: FPGA power is off
++ * @FPGA_MGR_STATE_POWER_UP: FPGA reports power is up
++ * @FPGA_MGR_STATE_RESET: FPGA in reset state
++ * @FPGA_MGR_STATE_FIRMWARE_REQ: firmware request in progress
++ * @FPGA_MGR_STATE_FIRMWARE_REQ_ERR: firmware request failed
++ * @FPGA_MGR_STATE_WRITE_INIT: preparing FPGA for programming
++ * @FPGA_MGR_STATE_WRITE_INIT_ERR: Error during WRITE_INIT stage
++ * @FPGA_MGR_STATE_WRITE: writing image to FPGA
++ * @FPGA_MGR_STATE_WRITE_ERR: Error while writing FPGA
++ * @FPGA_MGR_STATE_WRITE_COMPLETE: Doing post programming steps
++ * @FPGA_MGR_STATE_WRITE_COMPLETE_ERR: Error during WRITE_COMPLETE
++ * @FPGA_MGR_STATE_OPERATING: FPGA is programmed and operating
 + */
-+struct simple_fpga_bus {
-+	struct device *dev;
-+	struct fpga_manager *mgr;
-+	struct reset_control **bridges;
-+	int num_bridges;
++enum fpga_mgr_states {
++	/* default FPGA states */
++	FPGA_MGR_STATE_UNKNOWN,
++	FPGA_MGR_STATE_POWER_OFF,
++	FPGA_MGR_STATE_POWER_UP,
++	FPGA_MGR_STATE_RESET,
++
++	/* getting an image for loading */
++	FPGA_MGR_STATE_FIRMWARE_REQ,
++	FPGA_MGR_STATE_FIRMWARE_REQ_ERR,
++
++	/* write sequence: init, write, complete */
++	FPGA_MGR_STATE_WRITE_INIT,
++	FPGA_MGR_STATE_WRITE_INIT_ERR,
++	FPGA_MGR_STATE_WRITE,
++	FPGA_MGR_STATE_WRITE_ERR,
++	FPGA_MGR_STATE_WRITE_COMPLETE,
++	FPGA_MGR_STATE_WRITE_COMPLETE_ERR,
++
++	/* fpga is programmed and operating */
++	FPGA_MGR_STATE_OPERATING,
++};
++
++/*
++ * FPGA Manager flags
++ * FPGA_MGR_PARTIAL_RECONFIG: do partial reconfiguration if supported
++ */
++#define FPGA_MGR_PARTIAL_RECONFIG (1)
++
++/**
++ * struct fpga_manager_ops - ops for low level fpga manager drivers
++ * @state: returns an enum value of the FPGA's state
++ * @write_init: prepare the FPGA to receive confuration data
++ * @write: write count bytes of configuration data to the FPGA
++ * @write_complete: set FPGA to operating state after writing is done
++ * @fpga_remove: optional: Set FPGA into a specific state during driver remove
++ *
++ * fpga_manager_ops are the low level functions implemented by a specific
++ * fpga manager driver.  The optional ones are tested for NULL before being
++ * called, so leaving them out is fine.
++ */
++struct fpga_manager_ops {
++	enum fpga_mgr_states (*state)(struct fpga_manager *mgr);
++	int (*write_init)(struct fpga_manager *mgr, u32 flags,
++			  const char *buf, size_t count);
++	int (*write)(struct fpga_manager *mgr, const char *buf, size_t count);
++	int (*write_complete)(struct fpga_manager *mgr);
++	void (*fpga_remove)(struct fpga_manager *mgr);
 +};
 +
 +/**
-+ * simple_fpga_bus_get_mgr - get associated fpga manager
-+ * @priv: simple fpga bus private data
-+ * pointer to fpga manager in priv->mgr on success
-+ *
-+ * Given a simple fpga bus, get a reference to its the fpga manager specified
-+ * by its "fpga-mgr" device tree property.
-+ *
-+ * Return: 0 if success or if the fpga manager is not specified.
-+ *         Negative error code otherwise.
++ * struct fpga_manager - fpga manager structure
++ * @name: name of low level fpga manager
++ * @dev: fpga manager device
++ * @ref_mutex: only allows one reference to fpga manager
++ * @state: state of fpga manager
++ * @mops: pointer to struct of fpga manager ops
++ * @priv: low level driver private date
 + */
-+static int simple_fpga_bus_get_mgr(struct simple_fpga_bus *priv)
-+{
-+	struct device *dev = priv->dev;
-+	struct device_node *np = dev->of_node;
-+	struct fpga_manager *mgr;
-+	struct device_node *mgr_node;
-+
-+	/*
-+	 * Return 0 (not an error) if fpga manager is not specified.
-+	 * This supports the case where fpga was already configured.
-+	 */
-+	mgr_node = of_parse_phandle(np, "fpga-mgr", 0);
-+	if (!mgr_node) {
-+		dev_dbg(dev, "could not find fpga-mgr DT property\n");
-+		return 0;
-+	}
-+
-+	mgr = of_fpga_mgr_get(mgr_node);
-+	if (IS_ERR(mgr))
-+		return PTR_ERR(mgr);
-+
-+	priv->mgr = mgr;
-+
-+	return 0;
-+}
-+
-+/**
-+ * simple_fpga_bus_load_image - load an fpga image under device tree control
-+ * @priv: simple fpga bus private data
-+ *
-+ * Given a simple fpga bus, load the fpga image specified in its device
-+ * tree node.
-+ *
-+ * Return: 0 on success, negative error code otherwise.
-+ */
-+static int simple_fpga_bus_load_image(struct simple_fpga_bus *priv)
-+{
-+	struct device *dev = priv->dev;
-+	struct device_node *np = dev->of_node;
-+	struct fpga_manager *mgr = priv->mgr;
-+	u32 flags = 0;
-+	const char *path;
-+
-+	if (of_property_read_bool(np, "partial-reconfig"))
-+		flags |= FPGA_MGR_PARTIAL_RECONFIG;
-+
-+	/* If firmware image is specified in the DT, load it */
-+	if (!of_property_read_string(np, "fpga-firmware", &path))
-+		return fpga_mgr_firmware_load(mgr, flags, path);
-+
-+	/*
-+	 * Here we can add other methods of getting ahold of a fpga image
-+	 * specified in the device tree and programming it.
-+	 */
-+
-+	dev_info(dev, "No FPGA image to load.\n");
-+
-+	/* Status is that we have a fpga manager but no image specified. */
-+	return -EINVAL;
-+}
-+
-+/**
-+ * simple_fpga_bus_bridge_enable - enable the fpga bridges
-+ * @priv: simple fpga bus private data
-+ *
-+ * Return: 0 on success, negative error code otherwise.
-+ */
-+static int simple_fpga_bus_bridge_enable(struct simple_fpga_bus *priv)
-+{
-+	int i, ret;
-+
-+	for (i = 0; i < priv->num_bridges; i++) {
-+		ret = reset_control_deassert(priv->bridges[i]);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * simple_fpga_bus_bridge_disable - disable the bridges
-+ * @priv: simple fpga bus private data
-+ *
-+ * Return: 0 on success, negative error code otherwise.
-+ */
-+static int simple_fpga_bus_bridge_disable(struct simple_fpga_bus *priv)
-+{
-+	int i, ret;
-+
-+	for (i = 0; i < priv->num_bridges; i++) {
-+		ret = reset_control_assert(priv->bridges[i]);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * simple_fpga_bus_get_bridges - get references for fpga bridges
-+ * @priv: simple fpga bus private data
-+ *
-+ * Given a simple fpga bus, get references for its associated fpga bridges so
-+ * that it can enable/disable the bridges.  These are specified by "resets"
-+ * and "reset-names" device tree properties.
-+ *
-+ * Return: 0 on success, negative error code otherwise.
-+ */
-+static int simple_fpga_bus_get_bridges(struct simple_fpga_bus *priv)
-+{
-+	struct device *dev = priv->dev;
-+	struct device_node *np = dev->of_node;
-+	const char *reset_name;
-+	struct reset_control **bridges;
-+	int i, num_resets, num_names, ret;
-+
-+	num_resets = of_count_phandle_with_args(np, "resets", "#reset-cells");
-+	num_names = of_property_count_strings(np, "reset-names");
-+	if (num_resets <= 0 || num_names <= 0) {
-+		dev_info(dev, "No fpga bridge resets found\n");
-+		return -EINVAL;
-+	}
-+	if (num_resets != num_names) {
-+		dev_dbg(dev, "Number of resets and reset-names differ.");
-+		return -EINVAL;
-+	}
-+
-+	bridges = kcalloc(num_resets, sizeof(struct reset_control *),
-+			  GFP_KERNEL);
-+	if (!bridges)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < num_resets; i++) {
-+		ret = of_property_read_string_index(np, "reset-names", i,
-+						    &reset_name);
-+		if (ret)
-+			return ret;
-+
-+		bridges[i] = of_reset_control_get(np, reset_name);
-+		if (IS_ERR(bridges[i])) {
-+			ret = PTR_ERR(bridges[i]);
-+			goto err_free_bridges;
-+		}
-+	}
-+
-+	priv->bridges = bridges;
-+	priv->num_bridges = num_resets;
-+
-+	return 0;
-+
-+err_free_bridges:
-+	for (i = 0; i < num_resets; i++)
-+		reset_control_put(priv->bridges[i]);
-+
-+	kfree(bridges);
-+	return ret;
-+}
-+
-+/**
-+ * simple_fpga_bus_put_bridges - release references for the fpga bridges
-+ * @priv: simple fpga bus private data
-+ */
-+static void simple_fpga_bus_put_bridges(struct simple_fpga_bus *priv)
-+{
-+	int i;
-+
-+	for (i = 0; i < priv->num_bridges; i++)
-+		reset_control_put(priv->bridges[i]);
-+
-+	kfree(priv->bridges);
-+	priv->num_bridges = 0;
-+}
-+
-+/**
-+ * simple_fpga_bus_probe - Probe function for simple fpga bus.
-+ * @pdev: platform device
-+ *
-+ * Do the necessary steps to program the FPGA and enable associated bridges.
-+ * Then populate the device tree below this bus to get drivers probed for the
-+ * hardware that is on the FPGA.
-+ *
-+ * Return: 0 on success, negative error code otherwise.
-+ */
-+static int simple_fpga_bus_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
-+	struct simple_fpga_bus *priv;
-+	int ret;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->dev = dev;
-+
-+	ret = simple_fpga_bus_get_mgr(priv);
-+	if (ret)
-+		return ret;
-+
-+	if (priv->mgr) {
-+		ret = simple_fpga_bus_get_bridges(priv);
-+		if (ret)
-+			goto err_release_mgr;
-+
-+		ret = simple_fpga_bus_load_image(priv);
-+		if (ret)
-+			goto err_release_br;
-+
-+		ret = simple_fpga_bus_bridge_enable(priv);
-+		if (ret)
-+			goto err_release_br;
-+	}
-+
-+	of_platform_populate(np, of_default_bus_match_table, NULL, dev);
-+
-+	platform_set_drvdata(pdev, priv);
-+
-+	return 0;
-+
-+err_release_br:
-+	simple_fpga_bus_put_bridges(priv);
-+err_release_mgr:
-+	fpga_mgr_put(priv->mgr);
-+
-+	return ret;
-+}
-+
-+static int simple_fpga_bus_remove(struct platform_device *pdev)
-+{
-+	struct simple_fpga_bus *priv = platform_get_drvdata(pdev);
-+
-+	simple_fpga_bus_bridge_disable(priv);
-+	simple_fpga_bus_put_bridges(priv);
-+	fpga_mgr_put(priv->mgr);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id simple_fpga_bus_of_match[] = {
-+	{ .compatible = "simple-fpga-bus", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, simple_fpga_bus_of_match);
-+
-+static struct platform_driver simple_fpga_bus_driver = {
-+	.probe = simple_fpga_bus_probe,
-+	.remove = simple_fpga_bus_remove,
-+	.driver = {
-+		.name	= "simple-fpga-bus",
-+		.owner	= THIS_MODULE,
-+		.of_match_table = of_match_ptr(simple_fpga_bus_of_match),
-+	},
++struct fpga_manager {
++	const char *name;
++	struct device dev;
++	struct mutex ref_mutex;
++	enum fpga_mgr_states state;
++	const struct fpga_manager_ops *mops;
++	void *priv;
 +};
 +
-+static int __init simple_fpga_bus_init(void)
-+{
-+	return platform_driver_register(&simple_fpga_bus_driver);
-+}
++#define to_fpga_manager(d) container_of(d, struct fpga_manager, dev)
 +
-+static void __exit simple_fpga_bus_exit(void)
-+{
-+	platform_driver_unregister(&simple_fpga_bus_driver);
-+}
++int fpga_mgr_buf_load(struct fpga_manager *mgr, u32 flags,
++		      const char *buf, size_t count);
 +
-+module_init(simple_fpga_bus_init);
-+module_exit(simple_fpga_bus_exit);
++int fpga_mgr_firmware_load(struct fpga_manager *mgr, u32 flags,
++			   const char *image_name);
 +
-+MODULE_DESCRIPTION("Simple FPGA Bus");
-+MODULE_AUTHOR("Alan Tull <atull@opensource.altera.com>");
-+MODULE_LICENSE("GPL v2");
++struct fpga_manager *of_fpga_mgr_get(struct device_node *node);
++
++void fpga_mgr_put(struct fpga_manager *mgr);
++
++int fpga_mgr_register(struct device *dev, const char *name,
++		      const struct fpga_manager_ops *mops, void *priv);
++
++void fpga_mgr_unregister(struct device *dev);
++
++#endif /*_LINUX_FPGA_MGR_H */
 -- 
 1.7.9.5
