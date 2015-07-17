@@ -1,63 +1,91 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH 5/5] [media] tc358743: allow event subscription
-Date: Fri, 17 Jul 2015 16:58:53 +0200
-Message-ID: <55A9182D.2020800@xs4all.nl>
-References: <1436533897-3060-1-git-send-email-p.zabel@pengutronix.de>	 <1436533897-3060-5-git-send-email-p.zabel@pengutronix.de>	 <55A39BE3.2070905@xs4all.nl> <1436868609.3793.25.camel@pengutronix.de>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v3 1/3] ARM: dts: qcom: Add binding for the qcom coincell charger
+Date: Fri, 17 Jul 2015 10:42:00 -0500
+Message-ID: <CAL_Jsq+5zzw1+gper6uwac-3P9zVN=rjjPb7Za27t=RbPU2-1w@mail.gmail.com>
+References: <1437090933-1232-1-git-send-email-tim.bird@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1436868609.3793.25.camel@pengutronix.de>
-Sender: linux-media-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Mats Randgaard <matrandg@cisco.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1437090933-1232-1-git-send-email-tim.bird@sonymobile.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Tim Bird <tim.bird@sonymobile.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>
 List-Id: devicetree@vger.kernel.org
 
-On 07/14/2015 12:10 PM, Philipp Zabel wrote:
-> Am Montag, den 13.07.2015, 13:07 +0200 schrieb Hans Verkuil:
->> On 07/10/2015 03:11 PM, Philipp Zabel wrote:
->>> This is useful to subscribe to HDMI hotplug events via the
->>> V4L2_CID_DV_RX_POWER_PRESENT control.
->>>
->>> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
->>> ---
->>>  drivers/media/i2c/tc358743.c | 3 +++
->>>  1 file changed, 3 insertions(+)
->>>
->>> diff --git a/drivers/media/i2c/tc358743.c b/drivers/media/i2c/tc358743.c
->>> index 4a889d4..91fffa8 100644
->>> --- a/drivers/media/i2c/tc358743.c
->>> +++ b/drivers/media/i2c/tc358743.c
->>> @@ -40,6 +40,7 @@
->>>  #include <media/v4l2-dv-timings.h>
->>>  #include <media/v4l2-device.h>
->>>  #include <media/v4l2-ctrls.h>
->>> +#include <media/v4l2-event.h>
->>>  #include <media/v4l2-of.h>
->>>  #include <media/tc358743.h>
->>>  
->>> @@ -1604,6 +1605,8 @@ static const struct v4l2_subdev_core_ops tc358743_core_ops = {
->>>  	.s_register = tc358743_s_register,
->>>  #endif
->>>  	.interrupt_service_routine = tc358743_isr,
->>> +	.subscribe_event = v4l2_ctrl_subdev_subscribe_event,
->>
->> Ah, they are set here.
->>
->> But note that v4l2_ctrl_subdev_subscribe_event is not enough, since this driver
->> also issues the V4L2_EVENT_SOURCE_CHANGE event.
->>
->> See this patch on how to do that:
->>
->> http://git.linuxtv.org/cgit.cgi/hverkuil/media_tree.git/commit/?h=for-v4.3a&id=85c9b0b83795dac3d27043619a727af5c7313fe7
->>
->> Note: requires the new v4l2_subdev_notify_event function that's not yet
->> merged (just posted the pull request for that).
-> 
-> Ok, I think I'll split this up and send patch 5 separately, then.
+On Thu, Jul 16, 2015 at 6:55 PM, Tim Bird <tim.bird@sonymobile.com> wrote:
+> This binding is used to configure the driver for the coincell charger
+> found in Qualcomm PMICs.
+>
+> Signed-off-by: Tim Bird <tim.bird@sonymobile.com>
 
-FYI: the v4l2_subdev_notify_event was just merged today.
+Reviewed-by: Rob Herring <robh@kernel.org>
 
-Regards,
-
-	Hans
+> ---
+>
+> Changes in v3:
+>  - change charge-enable property to charger-disable
+> Changes in v2:
+>  - remove 'qcom,' from example node name
+>  - Added reference to parent node pm8941@0 and binding doc for it
+>
+>  .../bindings/power/qcom,coincell-charger.txt       | 48 ++++++++++++++++++++++
+>  1 file changed, 48 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/qcom,coincell-charger.txt
+>
+> diff --git a/Documentation/devicetree/bindings/power/qcom,coincell-charger.txt b/Documentation/devicetree/bindings/power/qcom,coincell-charger.txt
+> new file mode 100644
+> index 0000000..0e6d875
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/qcom,coincell-charger.txt
+> @@ -0,0 +1,48 @@
+> +Qualcomm Coincell Charger:
+> +
+> +The hardware block controls charging for a coincell or capacitor that is
+> +used to provide power backup for certain features of the power management
+> +IC (PMIC)
+> +
+> +- compatible:
+> +       Usage: required
+> +       Value type: <string>
+> +       Definition: must be: "qcom,pm8941-coincell"
+> +
+> +- reg:
+> +       Usage: required
+> +       Value type: <u32>
+> +       Definition: base address of the coincell charger registers
+> +
+> +- qcom,rset-ohms:
+> +       Usage: required
+> +       Value type: <u32>
+> +       Definition: resistance (in ohms) for current-limiting resistor
+> +               must be one of: 800, 1200, 1700, 2100
+> +
+> +- qcom,vset-millivolts:
+> +       Usage: required
+> +       Value type: <u32>
+> +       Definition: voltage (in millivolts) to apply for charging
+> +               must be one of: 2500, 3000, 3100, 3200
+> +
+> +- qcom,charger-disable:
+> +       Usage: optional
+> +       Value type: <boolean>
+> +       Definition: definining this property disables charging
+> +
+> +This charger is a sub-node of one of the 8941 PMIC blocks, and is specified
+> +as a child node in DTS of that node.  See ../mfd/qcom,spmi-pmic.txt and
+> +../mfd/qcom-pm8xxx.txt
+> +
+> +Example:
+> +
+> +       pm8941@0 {
+> +               coincell@2800 {
+> +                       compatible = "qcom,pm8941-coincell";
+> +                       reg = <0x2800>;
+> +
+> +                       qcom,rset-ohms = <2100>;
+> +                       qcom,vset-millivolts = <3000>;
+> +               };
+> +       };
+> --
+> 1.8.2.2
+>
