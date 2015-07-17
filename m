@@ -1,74 +1,75 @@
-From: punnaiah choudary kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] dma: Add Xilinx zynqmp dma engine driver support
-Date: Fri, 17 Jul 2015 15:15:11 +0530
-Message-ID: <CAGnW=BaodbKpngg_ZSYz6-esuMZK6nrc4Q3c34MfaXDMi3Bg2A@mail.gmail.com>
-References: <CAHLkNH+VLccurDfxEnwSEbr9YFv8ymZuibci7TW=WPutL7qbAQ@mail.gmail.com>
-	<CAGnW=BbUBOzm5V_LP_YcCfJ9X+Yw8qGp6PE2xSM13E=qUXxUsw@mail.gmail.com>
-	<20150717030545.GB5086@localhost>
-	<CAGnW=BYbBnngujcMuEf3=jvra6DiBmN1xhM9DBPmXoa83xLSJw@mail.gmail.com>
-	<20150717090824.GF5086@localhost>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH V3 02/19] memory: tegra: Add MC flush support
+Date: Fri, 17 Jul 2015 11:57:55 +0200
+Message-ID: <20150717095754.GG3057@ulmo>
+References: <1436791197-32358-1-git-send-email-jonathanh@nvidia.com>
+ <1436791197-32358-3-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150717090824.GF5086@localhost>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Punnaiah Choudary <kpc528-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="hcut4fGOf7Kh6EdG"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1436791197-32358-3-git-send-email-jonathanh@nvidia.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Jon Hunter <jonathanh@nvidia.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Alexandre Courbot <gnurou@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Terje =?utf-8?Q?Bergstr=C3=B6m?= <tbergstrom@nvidia.com>, Hans de Goede <hdegoede@redhat.com>, Tejun Heo <tj@kernel.org>, Vince Hsu <vinceh@nvidia.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 17, 2015 at 2:38 PM, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
-> On Fri, Jul 17, 2015 at 09:54:48AM +0530, punnaiah choudary kalluri wrote:
-> your MUA is wrapping lines funny, please fix it
->
->> >> I have explored using the virt-dma to reduce the common list processing, But
->> >> in this driver descriptor processing and cleaning is happening inside
->> >> the tasklet
->> >> context and virt-dma assumes it is happening in interrupt context and using the
->> >> spin locks accordingly. So, added code for the list management in side
->> >> the driver.
->> > And why would it bother you. There is a reson for that, it tries to submit
->> > next txn as soon as possible, which is the right thing
->> We have implemented hw descriptor queuing in tx_submit function, so
->> controller can process descriptors with out interruption. We want to
->> minimize disabling all the interrupts for the purpose of submitting new
->> req or cleaning the descriptors.  Also if we adopt virt-dma, need to
->> override the  tx_submit function So, decided to go with any one cleaner
->> approach.
-> okay this doesnt seem right, tx_submit is supposed to submit the descriptor
-> to pending queue fo the driver (sw) and then issue pending will push it.
-> The is the flow as expected and documented by dmanegine API, please follow
-> that
 
-Correct and this is what implemented in the driver. Sorry for the confusion.
+--hcut4fGOf7Kh6EdG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-What I am trying to say is in tx_submit we will be linking the new
-request/descriptor
-to the tail descriptor of the pending list so that it becomes a single
-request to the hw
-and once this request is pushed to Hw in the issue_pending, driver
-need not to update
-this request to Hw in ISR. Since our controller supports interrupt
-accounting, we will
-come to know how many requests are processed by the hw in tasklet and free them.
+On Mon, Jul 13, 2015 at 01:39:40PM +0100, Jon Hunter wrote:
+> The Tegra memory controller implements a flush feature to flush pending
+> accesses and prevent further accesses from occurring. This feature is
+> used when powering down IP blocks to ensure the IP block is in a good
+> state. The flushes are organised by software groups and IP blocks are
+> assigned in hardware to the different software groups. Add helper
+> functions for requesting a handle to an MC flush for a given
+> software group and enabling/disabling the MC flush itself.
+>=20
+> This is based upon a change by Vince Hsu <vinceh@nvidia.com>.
+>=20
+> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+> ---
+>  drivers/memory/tegra/mc.c | 110 ++++++++++++++++++++++++++++++++++++++++=
+++++++
+>  drivers/memory/tegra/mc.h |   2 +
+>  include/soc/tegra/mc.h    |  34 ++++++++++++++
+>  3 files changed, 146 insertions(+)
 
-I understand that with virt-dma, list management and descriptor clean
-up will be offloaded
-but for the above reason i am not using the same.
+Do we know if this is actually necessary? I remember having a discussion
+with Arnd Bergmann a while ago, and the Linux driver model kind of
+assumes that by the time a device is disabled all outstanding accesses
+will have stopped.
 
-Regards,
-Punnaiah
+Do we have a way to determine that this even makes a difference? Can we
+trigger a case where not doing this would cause breakage and see that
+adding this fixes that particular issue?
 
->
-> And to follow you will get a tons of help from vchan
->
-> --
-> ~Vinod
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thierry
+
+--hcut4fGOf7Kh6EdG
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCAAGBQJVqNGfAAoJEN0jrNd/PrOhfSIP/2GokJxt6q4xhScox9PHM2+H
+vX8uyfBHo4U3jx494uJ+AWvl0TORJ8/0J8PmLIbdi6TIeH5+cLG88qbaQslP6fpv
+rnxf+4Ci8Vnidd2jZ4+an2dP9u+EyDeXgf9P/fRmbHaeMJf6rvJRuDRIqcsQ5HnL
+0mzjEDn3J5S9yZTKC0EQPX4vYuRzVMdVkh0GXEi3sAkH6IFDpBMde/or9jJyqOHO
+H4ulIIrLQBsoERbwabguASDcFPejmx68/6HwDY3m21BNy37OkTRW6DyCMki0x/Un
+lzJfIdrCo/QZMjn3vzR/eQBZjdJeCobzNkHmC3jm/Ed8cH2MlcBViqrE9Gmn+SGT
+IpSgxE7Cj468yt5erBctRz0aWVehtBirTPGWwJnUSnhYDgDVfAhS9kPqHucb/miA
+sNKqYCPm55ZqnYxXU7wwNITPYs4lUMgXvkl1shsmSIqxAA0z7DSrnbLZ3lukYlw1
+LGxr7N6mLW9tCSes1cC7HyZ7bfTdxCDqVdfdLH1Q7QHrX0+mfnumSaUyjNEW9JTG
+G0w4l9O9Pgs/6eGyBAY+JQU+PH0Ogm579A1HSTg238CdkPZoDHat0SBYZKbh4PND
+eutu5UPrhNh1NzlO5zGRyUO+bV/DwE4THYkXBGVcDyvoe/5VJEPJEsDujGzQlCgW
+yG8aFjXm2sYu83htqlxj
+=4TS/
+-----END PGP SIGNATURE-----
+
+--hcut4fGOf7Kh6EdG--
