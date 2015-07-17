@@ -1,44 +1,49 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 3/6] clk: sunxi: Add A33 clock for compilation
-Date: Fri, 17 Jul 2015 17:13:36 +0800
-Message-ID: <CAGb2v659_zRJ70Ee573s-V1-nAfuaiEY2VcYBKH6gUijqGhuPQ@mail.gmail.com>
-References: <1431240383-12763-1-git-send-email-vishnupatekar0510@gmail.com>
- <1431240383-12763-4-git-send-email-vishnupatekar0510@gmail.com>
- <20150510101750.GC11057@lukather> <CAEzqOZv5pDPJgBfvNKk7vZuTr5H9hLdEOweyxStRFtarNxtFhQ@mail.gmail.com>
- <CAGb2v67NjfNjS_FQoYmEs2=OhKYRszgzuqiNPyww3UtiWCq--Q@mail.gmail.com> <20150717090958.GM28632@lukather>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [PATCH v2 2/4] mfd: max77686: Use a generic name for the PMIC
+ node in the example
+Date: Fri, 17 Jul 2015 11:19:26 +0200
+Message-ID: <55A8C89E.8010606@osg.samsung.com>
+References: <1437114567-17629-1-git-send-email-javier@osg.samsung.com>
+ <1437114567-17629-3-git-send-email-javier@osg.samsung.com>
+ <55A8C6B2.5020109@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBWMOUOWQKGQEM7YJ2JI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20150717090958.GM28632@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <55A8C6B2.5020109@cogentembedded.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Lee Jones <lee.jones@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 17, 2015 at 5:09 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> Hi,
+Hello Sergei,
+
+On 07/17/2015 11:11 AM, Sergei Shtylyov wrote:
+> Hello.
+> 
+> On 7/17/2015 9:29 AM, Javier Martinez Canillas wrote:
+> 
+>> The ePAR standard says that: "the name of a node should be somewhat
+> 
+>    ePAPR.
 >
-> On Fri, Jul 17, 2015 at 04:57:11PM +0800, Chen-Yu Tsai wrote:
->> Hi Vishnu,
->>
->> This patch did not make v4.2-rc1.
->>
->> A33 support requires this patch. Otherwise the clock tree
->> is absent and nothing works.
->
-> It got delayed and is in v4.2-rc2.
 
-Ah, it's in the A33 machine support patch.
-Not where I was expecting it.
+Thanks for pointing it out. I guess that Lee can fix the typo when applying?
 
-Thanks.
+>> generic, reflecting the function of the device and not its precise
+>> programming model."
+> 
+>> So, change the max77686 binding document example to use a generic
+>> node name instead of using the chip's name.
+> 
+>> Suggested-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+> 
+> MBR, Sergei
+> 
 
-ChenYu
+Best regards,
+-- 
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
