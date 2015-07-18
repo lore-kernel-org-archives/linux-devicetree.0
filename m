@@ -1,30 +1,59 @@
-From: david.wei-NQqDYL4TTn4@public.gmane.org
-Subject: Letter of Intent.
-Date: Fri, 17 Jul 2015 22:47:24 +0200
-Message-ID: <20150717212610.A1597552B2@mail-iae.iae.cta.br>
-Reply-To: david.wei-NQqDYL4TTn4@public.gmane.org
+From: Xing Zheng <zhengxing@rock-chips.com>
+Subject: [PATCH v2 0/2] Add codec machine driver for rockchip
+	platform
+Date: Sat, 18 Jul 2015 13:08:42 +0800
+Message-ID: <1437196124-32655-1-git-send-email-zhengxing@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Description: Mail message body
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Recipients <david.wei-NQqDYL4TTn4@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: dgreid@chromium.org, dianders@chromium.org, heiko@sntech.de, sonnyrao@chromium.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Pawel Moll <pawel.moll@arm.com>, zhengxing <zhengxing@rock-chips.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Takashi Iwai <tiwai@suse.de>, linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-rockchip@lists.infradead.org, Mark Brown <broonie@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-I am David Wei .I am involved with the Guiyang Intellectual property bureau which is in the Guizhou province of mainland China. I am getting in touch with you regarding property investment that was facilitated by myself and my colleagues a few years ago.
+From: zhengxing <zhengxing@rock-chips.com>
 
 
-We had started this process with a gentleman by the name of Mr. Norman Gerr a while back but had to suspend same due to unfortunate events concerning Mr. Norman . I would respectfully request that you keep the contents of this mail confidential and respect the integrity of the information you come by as a result of this mail. I contact you independently and no one is informed of this communication.
+Hi,
+  The simple-card is not common at present, soc maybe need own machine
+driver for jack detection.
+  Add drivers for two families of rockchip-bases chromebooks. These
+machine drives don't use simplecard because we need custom jack
+detection plumbing.
+
+- use ts3a227e for ext jack detection with max98090
+- call rt5645_set_jack_detect function via rt5645 codec driver
+
+Thanks.
 
 
-We contact you however because you share a similar surname with Norman, please get back to me once you get this letter regardless of being related to Mr. Norman in anyway as this can be very beneficial for all involved.
+Changes in v2:
+Signed-off-by: zhengxing <zhengxing@rock-chips.com>
 
-I  await your response.
+zhengxing (2):
+  ASoC: rockchip: Add machine driver for max98090 codec
+  ASoC: rockchip: Add machine driver for rt5645/rt5650 codec
 
-David Wei.
-david.wei-NQqDYL4TTn4@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ .../bindings/sound/rockchip-max98090.txt           |   19 ++
+ .../devicetree/bindings/sound/rockchip-rt5645.txt  |   17 ++
+ sound/soc/rockchip/Kconfig                         |   19 ++
+ sound/soc/rockchip/Makefile                        |    6 +
+ sound/soc/rockchip/rockchip_max98090.c             |  247 ++++++++++++++++++++
+ sound/soc/rockchip/rockchip_rt5645.c               |  236 +++++++++++++++++++
+ 6 files changed, 544 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/rockchip-max98090.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/rockchip-rt5645.txt
+ create mode 100644 sound/soc/rockchip/rockchip_max98090.c
+ create mode 100644 sound/soc/rockchip/rockchip_rt5645.c
+
+-- 
+1.7.9.5
