@@ -1,114 +1,111 @@
-From: Kyle Huey <me@kylehuey.com>
-Subject: Re: [RESEND PATCH v3] ARM: tegra124: pmu support
-Date: Sat, 18 Jul 2015 21:54:11 +0800
-Message-ID: <CAP045ArZ0PUcpiWYeXsHbjo6BR3YD-ZzTRsBskZzUaQXfOohrg@mail.gmail.com>
-References: <1436808945-14524-1-git-send-email-khuey@kylehuey.com>
-	<20150717085946.GB3057@ulmo>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Rabin Vincent <rabin@rab.in>
+Subject: [PATCH] hwmon: (lm70) add device tree support
+Date: Sun, 19 Jul 2015 00:29:14 +0200
+Message-ID: <1437258554-29358-1-git-send-email-rabin@rab.in>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150717085946.GB3057@ulmo>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Alexandre Courbot <gnurou@gmail.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, "open list:TEGRA ARCHITECTUR..." <linux-tegra@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Jon Hunter <jonathanh@nvidia.com>
+To: linux@roeck-us.net, jdelvare@suse.de
+Cc: lm-sensors@lm-sensors.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rabin Vincent <rabin@rab.in>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 17, 2015 at 4:59 PM, Thierry Reding
-<thierry.reding@gmail.com> wrote:
-> On Mon, Jul 13, 2015 at 10:35:45AM -0700, Kyle Huey wrote:
->> This patch modifies the device tree for tegra124 based devices to enable
->> the Cortex A15 PMU.  The interrupt numbers are taken from NVIDIA TRM
->> DP-06905-001_v03p.  This patch was tested on a Jetson TK1.
->>
->> Updated for proper ordering and to add interrupt-affinity values.
->>
->> Signed-off-by: Kyle Huey <khuey@kylehuey.com>
->> ---
->>  arch/arm/boot/dts/tegra124.dtsi | 17 +++++++++++++----
->>  1 file changed, 13 insertions(+), 4 deletions(-)
->
-> Is there any way to test this? What are the effects of adding this?
+Allow the lm70 to be probed from a device tree.
 
-Yes.  This enables the ARM PMU driver for the Cortex A15, which allows
-one to use hardware performance counters via the perf_event_open API.
-For a simple test program, see
-https://github.com/khuey/perf-counter-test/.  Without this patch, the
-perf_event_open syscall will fail.  With this patch, the program will
-print out the performance counter value for each iteration of the
-loop. (IIRC on the A15 the branch counter was removed, so you may want
-to replace 0xD with 0x8 which counts instructions executed if you want
-to see a non-zero number there).  You also will see a message about
-the PMU in the kernel log at startup after applying this patch.
+Signed-off-by: Rabin Vincent <rabin@rab.in>
+---
+ Documentation/devicetree/bindings/hwmon/lm70.txt | 21 +++++++++++++++
+ drivers/hwmon/lm70.c                             | 34 +++++++++++++++++++++++-
+ 2 files changed, 54 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/lm70.txt
 
-I have also tested this extensively (including the interrupt features
-of the PMU) on a more complex program.
-
-> Does it enable using perf for profiling?
-
-I have not tested it, but I believe you can use perf without this
-patch if you do not use features that require hardware performance
-counter support.  This patch would enable those features.
-
->> diff --git a/arch/arm/boot/dts/tegra124.dtsi b/arch/arm/boot/dts/tegra124.dtsi
->> index 13cc7ca..de07d7e 100644
->> --- a/arch/arm/boot/dts/tegra124.dtsi
->> +++ b/arch/arm/boot/dts/tegra124.dtsi
->> @@ -918,31 +918,40 @@
->>               #address-cells = <1>;
->>               #size-cells = <0>;
->>
->> -             cpu@0 {
->> +             A15_0: cpu@0 {
->>                       device_type = "cpu";
->>                       compatible = "arm,cortex-a15";
->>                       reg = <0>;
->>               };
->>
->> -             cpu@1 {
->> +             A15_1: cpu@1 {
->>                       device_type = "cpu";
->>                       compatible = "arm,cortex-a15";
->>                       reg = <1>;
->>               };
->>
->> -             cpu@2 {
->> +             A15_2: cpu@2 {
->>                       device_type = "cpu";
->>                       compatible = "arm,cortex-a15";
->>                       reg = <2>;
->>               };
->>
->> -             cpu@3 {
->> +             A15_3: cpu@3 {
->>                       device_type = "cpu";
->>                       compatible = "arm,cortex-a15";
->>                       reg = <3>;
->>               };
->>       };
->>
->> +     pmu {
->> +             compatible = "arm,cortex-a15-pmu";
->> +             interrupts = <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>,
->> +                          <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>,
->> +                          <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>,
->> +                          <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
->> +             interrupt-affinity = <&A15_0>, <&A15_1>, <&A15_2>, <&A15_3>;
->
-> These labels look somewhat artificial to me, perhaps we could do
-> something like the following instead?
->
->         interrupt-affinity = <&{/cpus/cpu@0}>, ...;
->
-> That's slightly more obvious and avoids the need to "invent" labels for
-> the CPUs.
->
-> No need to respin, I can fix that up when applying if nobody objects to
-> using the alternative notation.
->
-> Thierry
-
-I have no objections.  I was not aware that the device tree syntax
-supported that.  FWIW I cargo-culted my way to victory from
-vexpress-v2p-ca9.dts here.
-
-- Kyle
+diff --git a/Documentation/devicetree/bindings/hwmon/lm70.txt b/Documentation/devicetree/bindings/hwmon/lm70.txt
+new file mode 100644
+index 0000000..e7fd921
+--- /dev/null
++++ b/Documentation/devicetree/bindings/hwmon/lm70.txt
+@@ -0,0 +1,21 @@
++* LM70/TMP121/LM71/LM74 thermometer.
++
++Required properties:
++- compatible: one of
++		"ti,lm70"
++		"ti,tmp121"
++		"ti,lm71"
++		"ti,lm74"
++
++See Documentation/devicetree/bindings/spi/spi-bus.txt for more required and
++optional properties.
++
++Example:
++
++spi_master {
++	temperature-sensor@0 {
++		compatible = "ti,lm70";
++		reg = <0>;
++		spi-max-frequency = <1000000>;
++	};
++};
+diff --git a/drivers/hwmon/lm70.c b/drivers/hwmon/lm70.c
+index 97204dc..9296e9d 100644
+--- a/drivers/hwmon/lm70.c
++++ b/drivers/hwmon/lm70.c
+@@ -37,6 +37,7 @@
+ #include <linux/mod_devicetable.h>
+ #include <linux/spi/spi.h>
+ #include <linux/slab.h>
++#include <linux/of_device.h>
+ 
+ 
+ #define DRVNAME		"lm70"
+@@ -130,11 +131,41 @@ ATTRIBUTE_GROUPS(lm70);
+ 
+ /*----------------------------------------------------------------------*/
+ 
++#ifdef CONFIG_OF
++static const struct of_device_id lm70_of_ids[] = {
++	{
++		.compatible = "ti,lm70",
++		.data = (void *) LM70_CHIP_LM70,
++	},
++	{
++		.compatible = "ti,tmp121",
++		.data = (void *) LM70_CHIP_TMP121,
++	},
++	{
++		.compatible = "ti,lm71",
++		.data = (void *) LM70_CHIP_LM71,
++	},
++	{
++		.compatible = "ti,lm74",
++		.data = (void *) LM70_CHIP_LM74,
++	},
++	{},
++};
++MODULE_DEVICE_TABLE(of, lm70_of_ids);
++#endif
++
+ static int lm70_probe(struct spi_device *spi)
+ {
+-	int chip = spi_get_device_id(spi)->driver_data;
++	const struct of_device_id *match;
+ 	struct device *hwmon_dev;
+ 	struct lm70 *p_lm70;
++	int chip;
++
++	match = of_match_device(lm70_of_ids, &spi->dev);
++	if (match)
++		chip = (int)(uintptr_t)match->data;
++	else
++		chip = spi_get_device_id(spi)->driver_data;
+ 
+ 	/* signaling is SPI_MODE_0 */
+ 	if (spi->mode & (SPI_CPOL | SPI_CPHA))
+@@ -169,6 +200,7 @@ static struct spi_driver lm70_driver = {
+ 	.driver = {
+ 		.name	= "lm70",
+ 		.owner	= THIS_MODULE,
++		.of_match_table	= of_match_ptr(lm70_of_ids),
+ 	},
+ 	.id_table = lm70_ids,
+ 	.probe	= lm70_probe,
+-- 
+2.1.4
