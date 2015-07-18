@@ -1,30 +1,34 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 3/6] Input: pmic8xxx-keypad - change name of wakeup property
-Date: Fri, 17 Jul 2015 17:42:18 -0700
-Message-ID: <55A9A0EA.4040802@codeaurora.org>
-References: <1437179781-21124-1-git-send-email-dmitry.torokhov@gmail.com> <1437179781-21124-4-git-send-email-dmitry.torokhov@gmail.com>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] clk: mediatek: Fix PLL registers setting flow
+Date: Fri, 17 Jul 2015 17:47:49 -0700
+Message-ID: <20150718004749.GV30412@codeaurora.org>
+References: <1436517574-17895-1-git-send-email-jamesjj.liao@mediatek.com>
+ <1436517574-17895-2-git-send-email-jamesjj.liao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1437179781-21124-4-git-send-email-dmitry.torokhov@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1436517574-17895-2-git-send-email-jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Heiko Stubner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/17/2015 05:36 PM, Dmitry Torokhov wrote:
-> Wakeup property of device is not Linux-specific, it describes intended
-> system behavior regardless of the OS being used. Therefore let's drop
-> "linux," prefix, and, while at it, use the same name as I2C bus does:
-> "wakeup-source".
->
-> We keep parsing old name to keep compatibility with old DTSes.
->
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+On 07/10, James Liao wrote:
+> Write postdiv and pcw settings at the same time for PLLs if postdiv
+> and pcw settings are on the same register.
+> 
+> This is need by PLLs such as MT8173 MMPLL and ARM*PLL.
+> 
+> Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
 
-Acked-by: Stephen Boyd <sboyd@codeaurora.org>
+Applied to clk-next
 
 -- 
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
 a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
