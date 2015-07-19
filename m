@@ -1,54 +1,52 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v6 1/4] phy-sun4i-usb: Add missing EXPORT_SYMBOL for
- sun4i_usb_phy_set_squelch_detect
-Date: Sun, 19 Jul 2015 12:58:52 +0200
-Message-ID: <55AB82EC.7050309@redhat.com>
-References: <1436366500-12555-1-git-send-email-hdegoede@redhat.com>
- <1436366500-12555-2-git-send-email-hdegoede@redhat.com> <55A653AF.608@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v3 0/2] Add codec machine driver for rockchip platform
+Date: Sun, 19 Jul 2015 19:33:47 +0800
+Message-ID: <1437305629-24133-1-git-send-email-zhengxing@rock-chips.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55A653AF.608-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Cc: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+To: dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, zhengxing <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+From: zhengxing <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+
+
 Hi,
+  The simple-card is not common at present, soc maybe need own machine
+driver for jack detection.
+  Add drivers for two families of rockchip-bases chromebooks. These
+machine drives don't use simplecard because we need custom jack
+detection plumbing.
 
-On 15-07-15 14:35, Kishon Vijay Abraham I wrote:
-> Hi,
->
-> On Wednesday 08 July 2015 08:11 PM, Hans de Goede wrote:
->> sun4i_usb_phy_set_squelch_detect is used by other code, which may be built
->> as a module, so it should be exported.
->>
->> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> ---
->> Changes in v6:
->> -New patch in v6 of the sunxi musb support series
->> ---
->>   drivers/phy/phy-sun4i-usb.c | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/drivers/phy/phy-sun4i-usb.c b/drivers/phy/phy-sun4i-usb.c
->> index e17c539..b82aa26 100644
->> --- a/drivers/phy/phy-sun4i-usb.c
->> +++ b/drivers/phy/phy-sun4i-usb.c
->> @@ -212,6 +212,7 @@ void sun4i_usb_phy_set_squelch_detect(struct phy *_phy, bool enabled)
->>
->>   	sun4i_usb_phy_write(phy, PHY_SQUELCH_DETECT, enabled ? 0 : 2, 2);
->>   }
->> +EXPORT_SYMBOL(sun4i_usb_phy_set_squelch_detect);
->
-> EXPORT_SYMBOL_GPL?
+- use ts3a227e for ext jack detection with max98090
+- call rt5645_set_jack_detect function via rt5645 codec driver
 
-Both work for me, feel free to fix this up if you prefer _GPL.
+Thanks.
 
-Regards,
 
-Hans
+Changes in v3:
+Signed-off-by: zhengxing <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+
+zhengxing (2):
+  ASoC: rockchip: Add machine driver for max98090 codec
+  ASoC: rockchip: Add machine driver for rt5645/rt5650 codec
+
+ .../bindings/sound/rockchip-max98090.txt           |   19 ++
+ .../devicetree/bindings/sound/rockchip-rt5645.txt  |   17 ++
+ sound/soc/rockchip/Kconfig                         |   19 ++
+ sound/soc/rockchip/Makefile                        |    6 +
+ sound/soc/rockchip/rockchip_max98090.c             |  236 ++++++++++++++++++++
+ sound/soc/rockchip/rockchip_rt5645.c               |  225 +++++++++++++++++++
+ 6 files changed, 522 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/rockchip-max98090.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/rockchip-rt5645.txt
+ create mode 100644 sound/soc/rockchip/rockchip_max98090.c
+ create mode 100644 sound/soc/rockchip/rockchip_rt5645.c
+
+-- 
+1.7.9.5
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
