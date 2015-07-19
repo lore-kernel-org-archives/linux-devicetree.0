@@ -1,48 +1,62 @@
-From: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Subject: [PATCH] MIPS: fix build with CONFIG_OF=y for non OF-enabled targets
-Date: Sun, 19 Jul 2015 14:42:49 +0200
-Message-ID: <1437309769-8382-1-git-send-email-jogo@openwrt.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] ARM: dts: vf-colibri: Add property for minimum
+ sample time
+Date: Sun, 19 Jul 2015 13:44:55 +0100
+Message-ID: <55AB9BC7.9040408@kernel.org>
+References: <cover.1436880513.git.maitysanchayan@gmail.com> <20e2cfad3fbb1a45332e9936ea493ddc8bfaf51d.1436880513.git.maitysanchayan@gmail.com> <20150715015725.GK4119@tiger> <c84f141e3e222a48b6adf52e686df7e9@agner.ch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <c84f141e3e222a48b6adf52e686df7e9-XLVq0VzYD2Y@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Commit 01306aeadd75 ("MIPS: prepare for user enabling of CONFIG_OF")
-changed the guards in asm/prom.h from CONFIG_OF to CONFIG_USE_OF, but
-missed the actual function declarations in kernel/prom.c, which have
-additional dependencies.
-
-Fixes the following build error:
-
-  CC      arch/mips/kernel/prom.o
-arch/mips/kernel/prom.c: In function '__dt_setup_arch':
-arch/mips/kernel/prom.c:54:2: error: implicit declaration of function 'early_init_dt_scan' [-Werror=implicit-function-declaration]
-  if (!early_init_dt_scan(bph))
-  ^
-
-Fixes: 01306aeadd75 ("MIPS: prepare for user enabling of CONFIG_OF")
-Signed-off-by: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
----
- arch/mips/kernel/prom.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/mips/kernel/prom.c b/arch/mips/kernel/prom.c
-index b130033..5fcec30 100644
---- a/arch/mips/kernel/prom.c
-+++ b/arch/mips/kernel/prom.c
-@@ -38,7 +38,7 @@ char *mips_get_machine_name(void)
- 	return mips_machine_name;
- }
- 
--#ifdef CONFIG_OF
-+#ifdef CONFIG_USE_OF
- void __init early_init_dt_add_memory_arch(u64 base, u64 size)
- {
- 	return add_memory_region(base, size, BOOT_MEM_RAM);
--- 
-2.1.4
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 15/07/15 14:02, Stefan Agner wrote:
+> On 2015-07-15 03:57, Shawn Guo wrote:
+>> On Tue, Jul 14, 2015 at 07:23:23PM +0530, Sanchayan Maity wrote:
+>>> Add a device tree property which allows to specify the minimum sample
+>>> time which can be used to calculate the actual ADC cycles required
+>>> depending on the hardware.
+>>>
+>>> Signed-off-by: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>> ---
+>>>  arch/arm/boot/dts/vf-colibri.dtsi | 2 ++
+>>>  1 file changed, 2 insertions(+)
+>>>
+>>> diff --git a/arch/arm/boot/dts/vf-colibri.dtsi b/arch/arm/boot/dts/vf-colibri.dtsi
+>>> index ab10d2e..59f5deb 100644
+>>> --- a/arch/arm/boot/dts/vf-colibri.dtsi
+>>> +++ b/arch/arm/boot/dts/vf-colibri.dtsi
+>>> @@ -16,10 +16,12 @@
+>>>  };
+>>>
+>>>  &adc0 {
+>>> +	min-sample-time = <1000>;
+>>>  	status = "okay";
+>>>  };
+>>>
+>>>  &adc1 {
+>>> +	min-sample-time = <1000>;
+>>
+>> Since this is the default value anyway, we can just save the patch,
+>> right?
+> 
+> I thought it would be nice to be explicit here and define this value
+> which we verified internally.
+> 
+> On the other hand, we did not derived the minimum value from the DS
+> (using the capacity/resistance of the actual analog source connected) to
+> maximize the sampling frequency, hence I'm also ok with not explicitly
+> defining a value.
+I'll drop this patch then and we are all happy (I think)
+> 
+> --
+> Stefan
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
