@@ -1,52 +1,106 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/2] iio: temperature: add mcp98xx driver support
-Date: Sun, 19 Jul 2015 16:35:43 +0100
-Message-ID: <55ABC3CF.8050603@kernel.org>
-References: <1437275053-16211-1-git-send-email-mranostay@gmail.com> <55AB6CE5.8050505@kernel.org> <20150719152429.GA3729@roeck-us.net>
+From: Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+Subject: Re: [PATCH 8/8] iio: mma8452: add devicetree property to allow all
+ pin wirings
+Date: Sun, 19 Jul 2015 20:42:05 +0200
+Message-ID: <55ABEF7D.50606@theobroma-systems.com>
+References: <1436186062-5766-1-git-send-email-martink@posteo.de> <1436186062-5766-9-git-send-email-martink@posteo.de> <55ABAA8B.3080706@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150719152429.GA3729-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+In-Reply-To: <55ABAA8B.3080706-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org, roberta.dobrescu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 19/07/15 16:24, Guenter Roeck wrote:
-> On Sun, Jul 19, 2015 at 10:24:53AM +0100, Jonathan Cameron wrote:
->> On 19/07/15 04:04, Matt Ranostay wrote:
->>> This changeset adds driver support for the Microchip mcp98xx series of
->>> temperature sensors.
->>>
-> 
-> MCP98xx is pretty a pretty far reaching claim. This could also be MCP9804
-> or MCP9843, which are JC42 compatible sensor chips and supported by the jc42
-> driver. Does the new driver claim to support those as well ?
-Indeed.  Generic driver names are almost always a bad idea!
-> 
-> Guenter
-> 
->>> This includes temperature reading, and rising/falling threshold events.
->> Why an IIO driver?  These parts already look to be supported in hwmon by
->> the lm75 driver.  We need a pretty strong reason to contemplate having
->> support in both subsystems...
->>>
->>> Matt Ranostay (2):
->>>   iio: temperature: DT binding doc for mcp98xx
->>>   iio: temperature: add support for mcp98xx sensors
->>>
->>>  .../bindings/iio/temperature/mcp98xx.txt           |  22 +
->>>  drivers/iio/temperature/Kconfig                    |  10 +
->>>  drivers/iio/temperature/Makefile                   |   1 +
->>>  drivers/iio/temperature/mcp98xx.c                  | 588 +++++++++++++++++++++
->>>  4 files changed, 621 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/iio/temperature/mcp98xx.txt
->>>  create mode 100644 drivers/iio/temperature/mcp98xx.c
->>>
+Am 2015-07-19 um 15:47 schrieb Jonathan Cameron:
+> On 06/07/15 13:34, Martin Kepplinger wrote:
+>> For the devices supported by the mma8452 driver, two interrupt pins are
+>> available to route the interrupt signals to. By default INT1 is assumed.
 >>
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> This adds a simple boolean DT property, for users to configure it for
+>> INT2, if that is the wired interrupt pin for them.
+>>
+>> This is important for everyone to be able to use this driver, no matter
+>> how their chip is wired.
+>>
+>> Since this doesn't change the default behaviour, it doesn't break anything
+>> for existing users.
+>>
+>> Signed-off-by: Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+>> Signed-off-by: Christoph Muellner <christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+> The whole series looks good to me.  Just want those acks from Peter and / or
+> Martin before I apply it.
+> 
+> Thanks,
+> 
+> Jonathan
+
+Peter at least replied to the first version of these patches, so he
+should be around. I suspect that holidays get in the way now.
+
+While I'm at it: I'll be on holidays pretty much all of august. In
+general I could maintain the driver and have more improvements planned
+on top of this patchset. Maybe I'll include a maintainers file entry
+with those (later this year).
+
+And: It shouldn't apply cleanly at least on your fixes-togreg branch of
+iio.git. I don't know if this is in -next but in case you don't want to
+resolve the diff, please feel free to ask for a clean version of the
+whole patchset against -next at any time.
+
+thanks,
+
+                  martin
+
+>> ---
+>>  Documentation/devicetree/bindings/iio/accel/mma8452.txt |  2 ++
+>>  drivers/iio/accel/mma8452.c                             | 14 ++++++++------
+>>  2 files changed, 10 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/iio/accel/mma8452.txt b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
+>> index 8d98e05..9bad1fc 100644
+>> --- a/Documentation/devicetree/bindings/iio/accel/mma8452.txt
+>> +++ b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
+>> @@ -10,6 +10,7 @@ Optional properties:
+>>  
+>>    - interrupt-parent: should be the phandle for the interrupt controller
+>>    - interrupts: interrupt mapping for GPIO IRQ
+>> +  - use_int2: assume interrupt pin wired to INT2 instead of INT1
+>>  
+>>  Example:
+>>  
+>> @@ -18,4 +19,5 @@ Example:
+>>  		reg = <0x1d>;
+>>  		interrupt-parent = <&gpio1>;
+>>  		interrupts = <5 0>;
+>> +		use_int2;
+>>  	};
+>> diff --git a/drivers/iio/accel/mma8452.c b/drivers/iio/accel/mma8452.c
+>> index 2b8ed67..f8ba146 100644
+>> --- a/drivers/iio/accel/mma8452.c
+>> +++ b/drivers/iio/accel/mma8452.c
+>> @@ -1105,12 +1105,14 @@ static int mma8452_probe(struct i2c_client *client,
+>>  		int enabled_interrupts = MMA8452_INT_TRANS |
+>>  					 MMA8452_INT_FF_MT;
+>>  
+>> -		/* Assume wired to INT1 pin */
+>> -		ret = i2c_smbus_write_byte_data(client,
+>> -						MMA8452_CTRL_REG5,
+>> -						supported_interrupts);
+>> -		if (ret < 0)
+>> -			return ret;
+>> +		/* Assume wired to INT1 pin, except "use_int2" is found in DT */
+>> +		if (!of_property_read_bool(client->dev.of_node, "use_int2")) {
+>> +			ret = i2c_smbus_write_byte_data(client,
+>> +							MMA8452_CTRL_REG5,
+>> +							supported_interrupts);
+>> +			if (ret < 0)
+>> +				return ret;
+>> +		}
+>>  
+>>  		ret = i2c_smbus_write_byte_data(client,
+>>  						MMA8452_CTRL_REG4,
+>>
 > 
