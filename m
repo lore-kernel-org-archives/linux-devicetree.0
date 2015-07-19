@@ -1,257 +1,46 @@
-From: Josef Gajdusek <atx@atx.name>
-Subject: [PATCH] ARM: dts: sun4i: Add Iteaduino Plus A10
-Date: Sun, 19 Jul 2015 15:45:03 +0200
-Message-ID: <20150719134501.GA19235@maud>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH 0/2] iio: temperature: add mcp98xx driver support
+Date: Sun, 19 Jul 2015 08:24:29 -0700
+Message-ID: <20150719152429.GA3729@roeck-us.net>
+References: <1437275053-16211-1-git-send-email-mranostay@gmail.com>
+ <55AB6CE5.8050505@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org
-Cc: mark.rutland@arm.com, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, robh+dt@kernel.org, galak@codeaurora.org, maxime.ripard@free-electrons.com, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <55AB6CE5.8050505-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Iteaduino Plus A10 is a breakout board + Itead Core A10. It features 1GB RAM,
-has most of the A10 pins on a .1" header, 2 USB ports, 1 OTG USB port,
-Ethernet, HDMI, SATA, Speaker/Microphone 3.5mm jacks and an SD card slot.
+On Sun, Jul 19, 2015 at 10:24:53AM +0100, Jonathan Cameron wrote:
+> On 19/07/15 04:04, Matt Ranostay wrote:
+> > This changeset adds driver support for the Microchip mcp98xx series of
+> > temperature sensors.
+> > 
 
-Link to manufacturer wiki: http://wiki.iteadstudio.com/Iteaduino_Plus_A10/A20
+MCP98xx is pretty a pretty far reaching claim. This could also be MCP9804
+or MCP9843, which are JC42 compatible sensor chips and supported by the jc42
+driver. Does the new driver claim to support those as well ?
 
-Signed-off-by: Josef Gajdusek <atx@atx.name>
----
- arch/arm/boot/dts/Makefile                     |   1 +
- arch/arm/boot/dts/sun4i-a10-iteaduino-plus.dts | 202 +++++++++++++++++++++++++
- 2 files changed, 203 insertions(+)
- create mode 100644 arch/arm/boot/dts/sun4i-a10-iteaduino-plus.dts
+Guenter
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index adb1826..6104ed1 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -529,6 +529,7 @@ dtb-$(CONFIG_MACH_SUN4I) += \
- 	sun4i-a10-hackberry.dtb \
- 	sun4i-a10-hyundai-a7hd.dtb \
- 	sun4i-a10-inet97fv2.dtb \
-+	sun4i-a10-iteaduino-plus.dts \
- 	sun4i-a10-jesurun-q5.dtb \
- 	sun4i-a10-marsboard.dtb \
- 	sun4i-a10-mini-xplus.dtb \
-diff --git a/arch/arm/boot/dts/sun4i-a10-iteaduino-plus.dts b/arch/arm/boot/dts/sun4i-a10-iteaduino-plus.dts
-new file mode 100644
-index 0000000..985e155
---- /dev/null
-+++ b/arch/arm/boot/dts/sun4i-a10-iteaduino-plus.dts
-@@ -0,0 +1,202 @@
-+/*
-+ * Copyright 2015 Josef Gajdusek <atx@atx.name>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include "sun4i-a10.dtsi"
-+#include "sunxi-common-regulators.dtsi"
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/pinctrl/sun4i-a10.h>
-+
-+/ {
-+	model = "Iteaduino Plus A10";
-+	compatible = "itead,iteaduino-plus-a10", "allwinner,sun4i-a10";
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+};
-+
-+&ahci {
-+	target-supply = <&reg_ahci_5v>;
-+	status = "okay";
-+};
-+
-+&cpu0 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
-+&ehci0 {
-+	status = "okay";
-+};
-+
-+&ehci1 {
-+	status = "okay";
-+};
-+
-+&emac {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&emac_pins_a>;
-+	phy = <&phy1>;
-+	status = "okay";
-+};
-+
-+&emac_sram {
-+	status = "okay";
-+};
-+
-+&i2c0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c0_pins_a>;
-+	status = "okay";
-+
-+	axp209: pmic@34 {
-+		reg = <0x34>;
-+		interrupts = <0>;
-+	};
-+};
-+
-+&i2c1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c1_pins_a>;
-+	status = "okay";
-+};
-+
-+&i2c2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c2_pins_a>;
-+	status = "okay";
-+};
-+
-+&ir0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&ir0_rx_pins_a>;
-+	status = "okay";
-+};
-+
-+&mdio {
-+	status = "okay";
-+
-+	phy1: ethernet-phy@1 {
-+		reg = <1>;
-+	};
-+};
-+
-+&mmc0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
-+	vmmc-supply = <&reg_vcc3v3>;
-+	bus-width = <4>;
-+	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
-+	cd-inverted;
-+	status = "okay";
-+};
-+
-+&ohci0 {
-+	status = "okay";
-+};
-+
-+&ohci1 {
-+	status = "okay";
-+};
-+
-+&reg_ahci_5v {
-+	status = "okay";
-+};
-+
-+#include "axp209.dtsi"
-+
-+&reg_dcdc2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1000000>;
-+	regulator-max-microvolt = <1450000>;
-+	regulator-name = "vdd-cpu";
-+};
-+
-+&reg_dcdc3 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1000000>;
-+	regulator-max-microvolt = <1400000>;
-+	regulator-name = "vdd-int-dll";
-+};
-+
-+&reg_ldo1 {
-+	regulator-name = "vdd-rtc";
-+};
-+
-+&reg_ldo2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <3000000>;
-+	regulator-max-microvolt = <3000000>;
-+	regulator-name = "avcc";
-+};
-+
-+&reg_usb1_vbus {
-+	status = "okay";
-+};
-+
-+&reg_usb2_vbus {
-+	status = "okay";
-+};
-+
-+&spi0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spi0_pins_a>,
-+		    <&spi0_cs0_pins_a>;
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pins_a>;
-+	status = "okay";
-+};
-+
-+&usbphy {
-+	usb1_vbus-supply = <&reg_usb1_vbus>;
-+	usb2_vbus-supply = <&reg_usb2_vbus>;
-+	status = "okay";
-+};
--- 
-2.3.6
+> > This includes temperature reading, and rising/falling threshold events.
+> Why an IIO driver?  These parts already look to be supported in hwmon by
+> the lm75 driver.  We need a pretty strong reason to contemplate having
+> support in both subsystems...
+> > 
+> > Matt Ranostay (2):
+> >   iio: temperature: DT binding doc for mcp98xx
+> >   iio: temperature: add support for mcp98xx sensors
+> > 
+> >  .../bindings/iio/temperature/mcp98xx.txt           |  22 +
+> >  drivers/iio/temperature/Kconfig                    |  10 +
+> >  drivers/iio/temperature/Makefile                   |   1 +
+> >  drivers/iio/temperature/mcp98xx.c                  | 588 +++++++++++++++++++++
+> >  4 files changed, 621 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/iio/temperature/mcp98xx.txt
+> >  create mode 100644 drivers/iio/temperature/mcp98xx.c
+> > 
+> 
