@@ -1,106 +1,81 @@
-From: Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
-Subject: Re: [PATCH 8/8] iio: mma8452: add devicetree property to allow all
- pin wirings
-Date: Sun, 19 Jul 2015 20:42:05 +0200
-Message-ID: <55ABEF7D.50606@theobroma-systems.com>
-References: <1436186062-5766-1-git-send-email-martink@posteo.de> <1436186062-5766-9-git-send-email-martink@posteo.de> <55ABAA8B.3080706@kernel.org>
+From: Michal Suchanek <hramrach@gmail.com>
+Subject: Re: [PATCH 08/11] MTD: m25p80: Add option to limit SPI transfer size.
+Date: Sun, 19 Jul 2015 21:01:34 +0200
+Message-ID: <CAOMqctTJEg7EauKfrqW-6rUQ-QOmtkTfkgOyz0rCuyh_-XrW5w@mail.gmail.com>
+References: <cover.1433364398.git.hramrach@gmail.com> <20150604171547.GA1530@localhost.localdomain>
+ <CAOMqctSCL9E-kCBryeaMvtssSP12RY=kyfPuwSYx9wc=Lv9kGQ@mail.gmail.com>
+ <201507151352.27689.marex@denx.de> <20150715155946.GB21362@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55ABAA8B.3080706-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org, roberta.dobrescu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20150715155946.GB21362@localhost>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Brian Norris <computersforpeace@gmail.com>
+Cc: Marek Vasut <marex@denx.de>, Richard Cochran <richardcochran@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Mark Rutland <mark.rutland@arm.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Geert Uytterhoeven <geert+renesas@glider.be>, MTD Maling List <linux-mtd@lists.infradead.org>, Alison Chaiken <alison_chaiken@mentor.com>, =?UTF-8?B?QmVhbiBIdW8g6ZyN5paM5paMIChiZWFuaHVvKQ==?= <beanhuo@micron.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Vinod Koul <vinod.koul@intel.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Kukjin Kim <kgene@kernel.org>, Ben Hutchings <ben@decadent.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Brown <brooni>
 List-Id: devicetree@vger.kernel.org
 
-Am 2015-07-19 um 15:47 schrieb Jonathan Cameron:
-> On 06/07/15 13:34, Martin Kepplinger wrote:
->> For the devices supported by the mma8452 driver, two interrupt pins are
->> available to route the interrupt signals to. By default INT1 is assumed.
->>
->> This adds a simple boolean DT property, for users to configure it for
->> INT2, if that is the wired interrupt pin for them.
->>
->> This is important for everyone to be able to use this driver, no matter
->> how their chip is wired.
->>
->> Since this doesn't change the default behaviour, it doesn't break anything
->> for existing users.
->>
->> Signed-off-by: Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
->> Signed-off-by: Christoph Muellner <christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
-> The whole series looks good to me.  Just want those acks from Peter and / or
-> Martin before I apply it.
-> 
-> Thanks,
-> 
-> Jonathan
+Hello,
 
-Peter at least replied to the first version of these patches, so he
-should be around. I suspect that holidays get in the way now.
+On 15 July 2015 at 17:59, Brian Norris <computersforpeace@gmail.com> wrote:
+> Hi Michal,
+>
+> On Wed, Jul 15, 2015 at 01:52:27PM +0200, Marek Vasut wrote:
+>> The problem is, if you add a new DT binding, you'd have to support it
+>> forever, no matter how bad idea that binding turned out to be.
+>
+> Agreed, and a solid NAK to this patch. I could have sworn I gave such a
+> response when this was originally being discussed a month ago.
+>
+> AFAICT, you have one of two general approaches available to you:
+>
+> 1. Fix up the SPI driver so that it knows how to break large SPI
+> transfers up into smaller segments that its constituent hardware (DMA
+> controllers, fast clocks, etc.) can handle.
+>
+> 2. Utilize/create a parameter within the SPI subsystem to communicate
+> that the SPI master has a limited max transfer size (notably: NOT a
+> per-device DT property, but a SPI API property), and modify SPI device
+> drivers (like m25p80) to honor it. Mark Brown seemed open to this, and I
+> thought he suggested it somewhere.
 
-While I'm at it: I'll be on holidays pretty much all of august. In
-general I could maintain the driver and have more improvements planned
-on top of this patchset. Maybe I'll include a maintainers file entry
-with those (later this year).
+It is not known what exactly is limited here.
 
-And: It shouldn't apply cleanly at least on your fixes-togreg branch of
-iio.git. I don't know if this is in -next but in case you don't want to
-resolve the diff, please feel free to ask for a clean version of the
-whole patchset against -next at any time.
+It seems that the pl330 fails but it is not possible to transfer that
+much data over the spi bus in one go without the help of the pl330.
 
-thanks,
+With either approach the limit depends on the SPI transfer settings
+which are known the the SPI driver. The pl330 driver is oblivious to
+these because it just transfers data from one port to another port and
+has no idea that the port is wired to SPI in the SoC.
 
-                  martin
+On the other hand, AFAICT the SPI driver only allocates a DMA channel
+which it receives through DT binding and is oblivious to the fact the
+DMA channel lives on a pl330. It could probably determine that the
+channel is indeed driven by a pl330. I don't think it's a great idea
+to add device-specific handling to a generic dmaengine driver or a
+dmaengine-spiecific handling to a SPI driver.
 
->> ---
->>  Documentation/devicetree/bindings/iio/accel/mma8452.txt |  2 ++
->>  drivers/iio/accel/mma8452.c                             | 14 ++++++++------
->>  2 files changed, 10 insertions(+), 6 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/iio/accel/mma8452.txt b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
->> index 8d98e05..9bad1fc 100644
->> --- a/Documentation/devicetree/bindings/iio/accel/mma8452.txt
->> +++ b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
->> @@ -10,6 +10,7 @@ Optional properties:
->>  
->>    - interrupt-parent: should be the phandle for the interrupt controller
->>    - interrupts: interrupt mapping for GPIO IRQ
->> +  - use_int2: assume interrupt pin wired to INT2 instead of INT1
->>  
->>  Example:
->>  
->> @@ -18,4 +19,5 @@ Example:
->>  		reg = <0x1d>;
->>  		interrupt-parent = <&gpio1>;
->>  		interrupts = <5 0>;
->> +		use_int2;
->>  	};
->> diff --git a/drivers/iio/accel/mma8452.c b/drivers/iio/accel/mma8452.c
->> index 2b8ed67..f8ba146 100644
->> --- a/drivers/iio/accel/mma8452.c
->> +++ b/drivers/iio/accel/mma8452.c
->> @@ -1105,12 +1105,14 @@ static int mma8452_probe(struct i2c_client *client,
->>  		int enabled_interrupts = MMA8452_INT_TRANS |
->>  					 MMA8452_INT_FF_MT;
->>  
->> -		/* Assume wired to INT1 pin */
->> -		ret = i2c_smbus_write_byte_data(client,
->> -						MMA8452_CTRL_REG5,
->> -						supported_interrupts);
->> -		if (ret < 0)
->> -			return ret;
->> +		/* Assume wired to INT1 pin, except "use_int2" is found in DT */
->> +		if (!of_property_read_bool(client->dev.of_node, "use_int2")) {
->> +			ret = i2c_smbus_write_byte_data(client,
->> +							MMA8452_CTRL_REG5,
->> +							supported_interrupts);
->> +			if (ret < 0)
->> +				return ret;
->> +		}
->>  
->>  		ret = i2c_smbus_write_byte_data(client,
->>  						MMA8452_CTRL_REG4,
->>
-> 
+It's technically possible to pass SPI transfer parameters to the
+dmaengine driver prior to transfer and the dmaengine could impose some
+limitation based on those parameters. However, generalising this to
+drivers other than SPI might be problematic. Should this interface
+also handle i2c parameters, VE parameters, audio parameters, ethernet
+parameters, etc?
+
+In the DT you have the information that this particular device is
+connected to a Samsung SPI controller connected to a pl330 dma engine.
+
+>
+> It is most definitely wrong to put this information solely in the slave
+> device DT (i.e., for the flash), when it is not a property of the flash
+> device at all. It's a property of the SPI master and/or its clocks and
+> DMA controllers.
+
+However, the clocks are set by the parameters of the device, not the
+parameters of the master. So the limitation applies for the master
+with the settings of the particular slave device. Different slave
+settings do impose different master limitations.
+
+Thanks
+
+Michal
