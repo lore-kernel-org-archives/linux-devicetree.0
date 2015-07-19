@@ -1,36 +1,27 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/2] iio: temperature: add mcp98xx driver support
-Date: Sun, 19 Jul 2015 10:24:53 +0100
-Message-ID: <55AB6CE5.8050505@kernel.org>
-References: <1437275053-16211-1-git-send-email-mranostay@gmail.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH 1/2] iio: magnetometer: mmc35240: Add DT binding
+Date: Sun, 19 Jul 2015 10:56:14 +0100
+Message-ID: <55AB743E.9040006@kernel.org>
+References: <1437122076-29816-1-git-send-email-qingsong.gou@ck-telecom.com>	<1437122076-29816-2-git-send-email-qingsong.gou@ck-telecom.com> <CAEnQRZA=gYJCS+UJ1f7edGPGSGKw5uc=zFOFshuzupzVfGjR+g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1437275053-16211-1-git-send-email-mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAEnQRZA=gYJCS+UJ1f7edGPGSGKw5uc=zFOFshuzupzVfGjR+g@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Baluta <daniel.baluta@intel.com>, Jandy Gou <qingsong.gou@ck-telecom.com>
+Cc: viorel.suman@intel.com, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 19/07/15 04:04, Matt Ranostay wrote:
-> This changeset adds driver support for the Microchip mcp98xx series of
-> temperature sensors.
+On 17/07/15 11:38, Daniel Baluta wrote:
+> On Fri, Jul 17, 2015 at 11:34 AM, Jandy Gou <qingsong.gou@ck-telecom.com> wrote:
+>> Signed-off-by: Jandy Gou <qingsong.gou@ck-telecom.com>
 > 
-> This includes temperature reading, and rising/falling threshold events.
-Why an IIO driver?  These parts already look to be supported in hwmon by
-the lm75 driver.  We need a pretty strong reason to contemplate having
-support in both subsystems...
+> Acked-by: Daniel Baluta <daniel.baluta@intel.com>
 > 
-> Matt Ranostay (2):
->   iio: temperature: DT binding doc for mcp98xx
->   iio: temperature: add support for mcp98xx sensors
-> 
->  .../bindings/iio/temperature/mcp98xx.txt           |  22 +
->  drivers/iio/temperature/Kconfig                    |  10 +
->  drivers/iio/temperature/Makefile                   |   1 +
->  drivers/iio/temperature/mcp98xx.c                  | 588 +++++++++++++++++++++
->  4 files changed, 621 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/temperature/mcp98xx.txt
->  create mode 100644 drivers/iio/temperature/mcp98xx.c
-> 
+Applied to the togreg branch of iio.git - initially pushed out as testing for the
+autobuilders to play with it.
+
+Thanks,
+
+Jonathan
