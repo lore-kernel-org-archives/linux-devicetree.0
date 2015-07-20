@@ -1,48 +1,51 @@
-From: Zhao Qiang <qiang.zhao@freescale.com>
-Subject: [PATCH] powerpc/p1010rdb:update dts for pcie interrupt-map
-Date: Mon, 20 Jul 2015 15:32:19 +0800
-Message-ID: <1437377539-15911-1-git-send-email-qiang.zhao@freescale.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2] mmc: sunxi: Don't start commands while
+ the card is busy
+Date: Mon, 20 Jul 2015 10:00:07 +0200
+Message-ID: <20150720080007.GR28632@lukather>
+References: <1436541284-11800-1-git-send-email-hdegoede@redhat.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: robh+dt@kernel.org, devicetree@vger.kernel.org
-Cc: Zhao Qiang <B45475@freescale.com>, linuxppc-dev@lists.ozlabs.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="F1UMmCLUB5xxGl5w"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBLWXWKWQKGQECZ7W47Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1436541284-11800-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Eugene K <sigintmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogWmhhbyBRaWFuZyA8QjQ1NDc1QGZyZWVzY2FsZS5jb20+CgpwMTAxMHJkYi1wYiB1c2Ug
-dGhlIGlycVs0OjVdIGZvciBpbnRhIGFuZCBpbnRiIHRvIHBjaWUsCml0IGlzIGFjdGl2ZS1oaWdo
-LCBzbyBzZXQgaXQuCgpTaWduZWQtb2ZmLWJ5OiBaaGFvIFFpYW5nIDxCNDU0NzVAZnJlZXNjYWxl
-LmNvbT4KQ2hhbmdlLUlkOiBJMjlkYjQxYjRhOGI1YTY3YzE4MTUxMDk5ODg0ZWRkYTZkZTRkOWQx
-YQpSZXZpZXdlZC1vbjogaHR0cDovL2dpdC5hbS5mcmVlc2NhbGUubmV0OjgxODEvOTkxNQpUZXN0
-ZWQtYnk6IFJldmlldyBDb2RlLUNEUkVWSUVXIDxDRFJFVklFV0BmcmVlc2NhbGUuY29tPgpSZXZp
-ZXdlZC1ieTogWGlhb2JvIFhpZSA8WC5YaWVAZnJlZXNjYWxlLmNvbT4KUmV2aWV3ZWQtYnk6IEpv
-c2UgUml2ZXJhIDxHZXJtYW4uUml2ZXJhQGZyZWVzY2FsZS5jb20+Ci0tLQogYXJjaC9wb3dlcnBj
-L2Jvb3QvZHRzL2ZzbC9wMTAxMHNpLXBvc3QuZHRzaSB8IDggKysrKysrLS0KIDEgZmlsZSBjaGFu
-Z2VkLCA2IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvYXJjaC9w
-b3dlcnBjL2Jvb3QvZHRzL2ZzbC9wMTAxMHNpLXBvc3QuZHRzaSBiL2FyY2gvcG93ZXJwYy9ib290
-L2R0cy9mc2wvcDEwMTBzaS1wb3N0LmR0c2kKaW5kZXggMTgwNGVkNy4uNDMxM2ZmNiAxMDA2NDQK
-LS0tIGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wMTAxMHNpLXBvc3QuZHRzaQorKysgYi9h
-cmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3AxMDEwc2ktcG9zdC5kdHNpCkBAIC01OSw4ICs1OSwx
-MiBAQAogCQlpbnRlcnJ1cHQtbWFwLW1hc2sgPSA8MHhmODAwIDAgMCA3PjsKIAkJaW50ZXJydXB0
-LW1hcCA9IDwKIAkJCS8qIElEU0VMIDB4MCAqLwotCQkJMDAwMCAweDAgMHgwIDB4MSAmbXBpYyAw
-eDQgMHgxIDB4MCAweDAKLQkJCTAwMDAgMHgwIDB4MCAweDIgJm1waWMgMHg1IDB4MSAweDAgMHgw
-CisJCQkvKgorCQkJICppcnFbNDo1XSBvbmx5IGZvciBQQ0llIGluIGR0cywgc2V0IHRvIGFjdGl2
-ZS1oaWdoCisJCQkgKmlycVs2OjddIGlzIHB1bGxlZCB1cCBvbiBib2FyZCwgc2V0IHRvIGFjdGl2
-ZS1sb3cKKwkJCSAqLworCQkJMDAwMCAweDAgMHgwIDB4MSAmbXBpYyAweDQgMHgyIDB4MCAweDAK
-KwkJCTAwMDAgMHgwIDB4MCAweDIgJm1waWMgMHg1IDB4MiAweDAgMHgwCiAJCQkwMDAwIDB4MCAw
-eDAgMHgzICZtcGljIDB4NiAweDEgMHgwIDB4MAogCQkJMDAwMCAweDAgMHgwIDB4NCAmbXBpYyAw
-eDcgMHgxIDB4MCAweDAKIAkJCT47Ci0tIAoyLjEuMC4yNy5nOTZkYjMyNAoKX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXhwcGMtZGV2IG1haWxpbmcg
-bGlzdApMaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5v
-cmcvbGlzdGluZm8vbGludXhwcGMtZGV2
+--F1UMmCLUB5xxGl5w
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+
+Hi,
+
+On Fri, Jul 10, 2015 at 05:14:44PM +0200, Hans de Goede wrote:
+> Some sdio wifi modules have not been working reliable with the sunxi-mmc
+> host code. This turns out to be caused by it starting new commands while
+> the card signals that it is still busy processing a previous command.
+> 
+> This commit fixes this, thereby fixing the wifi reliability issues on
+> the Cubietruck and other sunxi boards using sdio wifi.
+> 
+> Reported-by: Eugene K <sigintmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Suggested-by: Eugene K <sigintmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Eugene K <sigintmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+
+You should use the "real" name here, and not some shortening.
+
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--F1UMmCLUB5xxGl5w--
