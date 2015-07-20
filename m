@@ -1,83 +1,109 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] ARM: at91: sama5/dt: update rstc to correct compatible
- string
-Date: Mon, 20 Jul 2015 14:37:47 +0200
-Message-ID: <55ACEB9B.70901@atmel.com>
-References: <1437384726-24927-1-git-send-email-josh.wu@atmel.com> <1437384726-24927-2-git-send-email-josh.wu@atmel.com>
+From: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
+Subject: RE: [PATCH RFC V1 2/3] onkey: da9063: Add DA9062 OnKey capability
+ to DA9063 OnKey driver
+Date: Mon, 20 Jul 2015 13:05:43 +0000
+Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7014B251D0A@SW-EX-MBX02.diasemi.com>
+References: <cover.1436879270.git.stwiss.opensource@diasemi.com>
+ <37d843a776028807e94e513a34847a34d821bf81.1436879270.git.stwiss.opensource@diasemi.com>
+ <20150717225042.GF39282@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1437384726-24927-2-git-send-email-josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20150717225042.GF39282@dtor-ws>
+Content-Language: en-US
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: DEVICETREE <devicetree@vger.kernel.org>, LINUXINPUT <linux-input@vger.kernel.org>, LINUXKERNEL <linux-kernel@vger.kernel.org>, RTCLINUX <rtc-linux@googlegroups.com>, David Dajun Chen <david.chen@diasemi.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Support Opensource <Support.Opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
-Le 20/07/2015 11:32, Josh Wu a =E9crit :
-> They'll use "atmel,sama5d3-rstc" for reset function.
->=20
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+On 17 July 2015 23:51, Dmitry Torokhov wrote:
 
-Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> Hi Steve,
+> On Tue, Jul 14, 2015 at 02:07:50PM +0100, S Twiss wrote:
+> > From: S Twiss <stwiss.opensource@diasemi.com>
+> > Add DA9062 OnKey support into the existing DA9063 OnKey driver component by
+> > using generic access tables for common register and bit mask definitions.
+> >
+> > The following change will add generic register and bit mask support to the
+> > DA9063 OnKey.
+> >
+> > The following alterations have been made to the DA9063 OnKey:
+> >
+> > - Addition of a da9063_compatible_onkey_regmap structure to hold all
+> >   generic registers and bitmasks for this type of OnKey component.
+> > - Addition of an struct of_device_id table for DA9063 and DA9062
+> >   defaults
+> > - Refactoring functions to use struct da9063_compatible_onkey accesses
+> >   to generic registers/masks instead of using defines from registers.h
+> > - Re-work of da9063_onkey_probe() to use of_match_node() and
+> >   dev_get_regmap() to provide initialisation of generic registers and
+> >   masks and access to regmap
+> >
+> > Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
+> 
+> Looks generally good, just a few comments.
+> 
 
-And we'll have to synchronize with the other patches. The best way to
-deal with that can be to take both of them with us through arm-soc.
+Hi Dmitry,
 
-Sebastian,
+Thanks for taking the time to review this.
 
-1/ as you weren't in the CC list of the original patch, do you want me
-to re-send the whole series?
+[...]
 
-2/ can we take these driver's changes with use through the arm-soc git
-tree so that we can manage the synchronization better?
+> > diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
+> > index d4f0a81..42860f9 100644
+> > --- a/drivers/input/misc/Kconfig
+> > +++ b/drivers/input/misc/Kconfig
+> > @@ -612,10 +612,10 @@ config INPUT_DA9055_ONKEY
+> >
+> >  config INPUT_DA9063_ONKEY
+> >  	tristate "Dialog DA9063 OnKey"
+> 
+> "Dialog DA9062/63 OnKey" maybe?
 
-Thanks, bye,
+Yep.
+I can do that.
 
-> ---
->=20
-> Changes in v2: None
->=20
->  arch/arm/boot/dts/sama5d3.dtsi | 2 +-
->  arch/arm/boot/dts/sama5d4.dtsi | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5=
-d3.dtsi
-> index 9e2444b..280255b 100644
-> --- a/arch/arm/boot/dts/sama5d3.dtsi
-> +++ b/arch/arm/boot/dts/sama5d3.dtsi
-> @@ -1259,7 +1259,7 @@
->  			};
-> =20
->  			rstc@fffffe00 {
-> -				compatible =3D "atmel,at91sam9g45-rstc";
-> +				compatible =3D "atmel,sama5d3-rstc";
->  				reg =3D <0xfffffe00 0x10>;
->  			};
-> =20
-> diff --git a/arch/arm/boot/dts/sama5d4.dtsi b/arch/arm/boot/dts/sama5=
-d4.dtsi
-> index 3ee22ee..481196c 100644
-> --- a/arch/arm/boot/dts/sama5d4.dtsi
-> +++ b/arch/arm/boot/dts/sama5d4.dtsi
-> @@ -1277,7 +1277,7 @@
->  			};
-> =20
->  			rstc@fc068600 {
-> -				compatible =3D "atmel,at91sam9g45-rstc";
-> +				compatible =3D "atmel,sama5d3-rstc";
->  				reg =3D <0xfc068600 0x10>;
->  			};
-> =20
->=20
+[...]
+> >
+> > -struct da9063_onkey {
+> > -	struct da9063 *hw;
+> > +struct da9063_compatible_onkey_regmap {
+> 
+> Maybe call it da906x_chip_config?
 
+I will do this.
 
---=20
-Nicolas Ferre
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > +	/* REGS */
+> > +	int onkey_status;
+> > +	int onkey_pwr_signalling;
+> > +	int onkey_fault_log;
+> > +	int onkey_shutdown;
+> > +	/* MASKS */
+> > +	int onkey_nonkey_mask;
+> > +	int onkey_nonkey_lock_mask;
+> > +	int onkey_key_reset_mask;
+> > +	int onkey_shutdown_mask;
+> > +	/* NAMES */
+> > +	char *name;
+> 
+> const char *?
+> 
+
+Sure -- I'll change that.
+
+> > +};
+> > +
+> > +struct da9063_compatible_onkey {
+> 
+> If you did not rename the structure your diff would be smaller.
+
+Yep. I can rename this back to what it was previously.
+[...]
+
+I'll submit a PATCH V2 with those changes.
+
+Regards,
+Steve
+
