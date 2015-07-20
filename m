@@ -1,65 +1,48 @@
-From: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
-Subject: Re: [PATCH v10 1/5] drm/layerscape: Add Freescale DCU DRM driver
-Date: Mon, 20 Jul 2015 09:18:16 +0200
-Message-ID: <2160582.6fH0nmeH2v@ws-stein>
-References: <1437129543-8037-1-git-send-email-jianwei.wang@freescale.com>
+From: Zhao Qiang <qiang.zhao@freescale.com>
+Subject: [PATCH] powerpc/p1010rdb:update dts for pcie interrupt-map
+Date: Mon, 20 Jul 2015 15:32:19 +0800
+Message-ID: <1437377539-15911-1-git-send-email-qiang.zhao@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1437129543-8037-1-git-send-email-jianwei.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jianwei Wang <jianwei.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, daniel.vetter-/w4YWyX8dFk@public.gmane.org, mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Jianwei Wang <jianwei.wang.chn-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alison Wang <b18965-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Xiubo Li <lixiubo-0p4V/sDNsUmm0O/7XYngnFaTQe2KTcn/@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: robh+dt@kernel.org, devicetree@vger.kernel.org
+Cc: Zhao Qiang <B45475@freescale.com>, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 17 July 2015 18:38:59, Jianwei Wang wrote:
-> [...]
-> +static const struct regmap_config fsl_dcu_regmap_config = {
-> +	.reg_bits = 32,
-> +	.reg_stride = 4,
-> +	.val_bits = 32,
-> +};
-
-This defaults to REGCACHE_NONE which in the end sets regmap.cache_only = true.
-
-> [...]
-> +#ifdef CONFIG_PM_SLEEP
-> +static int fsl_dcu_drm_pm_suspend(struct device *dev)
-> +{
-> +	struct fsl_dcu_drm_device *fsl_dev = dev_get_drvdata(dev);
-> +
-> +	if (!fsl_dev)
-> +		return 0;
-> +
-> +	drm_kms_helper_poll_disable(fsl_dev->drm);
-> +	regcache_cache_only(fsl_dev->regmap, true);
-
-This should raise a warning (see http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/drivers/base/regmap/regcache.c#n472) as map->cache_bypass is set because of REGCACHE_NONE.
-I think you set the cache_type to REGCACHE_FLAT, but neither _LZO or _RBTREE (see https://lkml.org/lkml/2015/7/16/552 for that)
-
-Best regards,
-Alexander
--- 
-Dipl.-Inf. Alexander Stein
-SYS TEC electronic GmbH
-alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org
-
-Legal and Commercial Address:
-Am Windrad 2
-08468 Heinsdorfergrund
-Germany
-
-Office: +49 (0) 3765 38600-11xx
-Fax:    +49 (0) 0) 3765 38600-41xx
- 
-Managing Directors:
-	Director Technology/CEO: Dipl.-Phys. Siegmar Schmidt;
-	Director Commercial Affairs/COO: Dipl. Ing. (FH) Armin von Collrepp
-Commercial Registry:
-	Amtsgericht Chemnitz, HRB 28082; USt.-Id Nr. DE150534010
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+RnJvbTogWmhhbyBRaWFuZyA8QjQ1NDc1QGZyZWVzY2FsZS5jb20+CgpwMTAxMHJkYi1wYiB1c2Ug
+dGhlIGlycVs0OjVdIGZvciBpbnRhIGFuZCBpbnRiIHRvIHBjaWUsCml0IGlzIGFjdGl2ZS1oaWdo
+LCBzbyBzZXQgaXQuCgpTaWduZWQtb2ZmLWJ5OiBaaGFvIFFpYW5nIDxCNDU0NzVAZnJlZXNjYWxl
+LmNvbT4KQ2hhbmdlLUlkOiBJMjlkYjQxYjRhOGI1YTY3YzE4MTUxMDk5ODg0ZWRkYTZkZTRkOWQx
+YQpSZXZpZXdlZC1vbjogaHR0cDovL2dpdC5hbS5mcmVlc2NhbGUubmV0OjgxODEvOTkxNQpUZXN0
+ZWQtYnk6IFJldmlldyBDb2RlLUNEUkVWSUVXIDxDRFJFVklFV0BmcmVlc2NhbGUuY29tPgpSZXZp
+ZXdlZC1ieTogWGlhb2JvIFhpZSA8WC5YaWVAZnJlZXNjYWxlLmNvbT4KUmV2aWV3ZWQtYnk6IEpv
+c2UgUml2ZXJhIDxHZXJtYW4uUml2ZXJhQGZyZWVzY2FsZS5jb20+Ci0tLQogYXJjaC9wb3dlcnBj
+L2Jvb3QvZHRzL2ZzbC9wMTAxMHNpLXBvc3QuZHRzaSB8IDggKysrKysrLS0KIDEgZmlsZSBjaGFu
+Z2VkLCA2IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvYXJjaC9w
+b3dlcnBjL2Jvb3QvZHRzL2ZzbC9wMTAxMHNpLXBvc3QuZHRzaSBiL2FyY2gvcG93ZXJwYy9ib290
+L2R0cy9mc2wvcDEwMTBzaS1wb3N0LmR0c2kKaW5kZXggMTgwNGVkNy4uNDMxM2ZmNiAxMDA2NDQK
+LS0tIGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wMTAxMHNpLXBvc3QuZHRzaQorKysgYi9h
+cmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3AxMDEwc2ktcG9zdC5kdHNpCkBAIC01OSw4ICs1OSwx
+MiBAQAogCQlpbnRlcnJ1cHQtbWFwLW1hc2sgPSA8MHhmODAwIDAgMCA3PjsKIAkJaW50ZXJydXB0
+LW1hcCA9IDwKIAkJCS8qIElEU0VMIDB4MCAqLwotCQkJMDAwMCAweDAgMHgwIDB4MSAmbXBpYyAw
+eDQgMHgxIDB4MCAweDAKLQkJCTAwMDAgMHgwIDB4MCAweDIgJm1waWMgMHg1IDB4MSAweDAgMHgw
+CisJCQkvKgorCQkJICppcnFbNDo1XSBvbmx5IGZvciBQQ0llIGluIGR0cywgc2V0IHRvIGFjdGl2
+ZS1oaWdoCisJCQkgKmlycVs2OjddIGlzIHB1bGxlZCB1cCBvbiBib2FyZCwgc2V0IHRvIGFjdGl2
+ZS1sb3cKKwkJCSAqLworCQkJMDAwMCAweDAgMHgwIDB4MSAmbXBpYyAweDQgMHgyIDB4MCAweDAK
+KwkJCTAwMDAgMHgwIDB4MCAweDIgJm1waWMgMHg1IDB4MiAweDAgMHgwCiAJCQkwMDAwIDB4MCAw
+eDAgMHgzICZtcGljIDB4NiAweDEgMHgwIDB4MAogCQkJMDAwMCAweDAgMHgwIDB4NCAmbXBpYyAw
+eDcgMHgxIDB4MCAweDAKIAkJCT47Ci0tIAoyLjEuMC4yNy5nOTZkYjMyNAoKX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXhwcGMtZGV2IG1haWxpbmcg
+bGlzdApMaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5v
+cmcvbGlzdGluZm8vbGludXhwcGMtZGV2
