@@ -1,56 +1,42 @@
-From: jianwei wang <jianwei.wang.chn@gmail.com>
-Subject: Re: [PATCH v10 1/5] drm/layerscape: Add Freescale DCU DRM driver
-Date: Mon, 20 Jul 2015 17:58:10 +0800
-Message-ID: <CANk3uyDZG613j0KjikHQZ-39XyhOfC1bCe9h4ngiXNDLrEDrEw@mail.gmail.com>
-References: <1437129543-8037-1-git-send-email-jianwei.wang@freescale.com>
- <2160582.6fH0nmeH2v@ws-stein>
+From: Jianwei Wang <jianwei.wang.chn-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v11 2/5] devicetree: Add NEC to the vendor-prefix list
+Date: Mon, 20 Jul 2015 17:53:59 +0800
+Message-ID: <1437386042-34825-2-git-send-email-jianwei.wang.chn@gmail.com>
+References: <1437386042-34825-1-git-send-email-jianwei.wang.chn@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <2160582.6fH0nmeH2v@ws-stein>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Alexander Stein <alexander.stein@systec-electronic.com>
-Cc: devicetree@vger.kernel.org, Xiubo Li <lixiubo@cmss.chinamobile.com>, daniel.vetter@ffwll.ch, Alison Wang <b18965@freescale.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, scottwood@freescale.com, Jianwei Wang <jianwei.wang@freescale.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1437386042-34825-1-git-send-email-jianwei.wang.chn-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, daniel.vetter-/w4YWyX8dFk@public.gmane.org, mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Jianwei Wang <jianwei.wang.chn-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alison Wang <b18965-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Xiubo Li <lixiubo-0p4V/sDNsUmm0O/7XYngnFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQWxleGFuZGVyLAoKVGhhbmsgeW91IGZvciB5b3VyIHJldmlldy4KCk9uIE1vbiwgSnVsIDIw
-LCAyMDE1IGF0IDM6MTggUE0sIEFsZXhhbmRlciBTdGVpbgo8YWxleGFuZGVyLnN0ZWluQHN5c3Rl
-Yy1lbGVjdHJvbmljLmNvbT4gd3JvdGU6Cj4gT24gRnJpZGF5IDE3IEp1bHkgMjAxNSAxODozODo1
-OSwgSmlhbndlaSBXYW5nIHdyb3RlOgo+PiBbLi4uXQo+PiArc3RhdGljIGNvbnN0IHN0cnVjdCBy
-ZWdtYXBfY29uZmlnIGZzbF9kY3VfcmVnbWFwX2NvbmZpZyA9IHsKPj4gKyAgICAgLnJlZ19iaXRz
-ID0gMzIsCj4+ICsgICAgIC5yZWdfc3RyaWRlID0gNCwKPj4gKyAgICAgLnZhbF9iaXRzID0gMzIs
-Cj4+ICt9Owo+Cj4gVGhpcyBkZWZhdWx0cyB0byBSRUdDQUNIRV9OT05FIHdoaWNoIGluIHRoZSBl
-bmQgc2V0cyByZWdtYXAuY2FjaGVfb25seSA9IHRydWUuCj4KPj4gWy4uLl0KPj4gKyNpZmRlZiBD
-T05GSUdfUE1fU0xFRVAKPj4gK3N0YXRpYyBpbnQgZnNsX2RjdV9kcm1fcG1fc3VzcGVuZChzdHJ1
-Y3QgZGV2aWNlICpkZXYpCj4+ICt7Cj4+ICsgICAgIHN0cnVjdCBmc2xfZGN1X2RybV9kZXZpY2Ug
-KmZzbF9kZXYgPSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsKPj4gKwo+PiArICAgICBpZiAoIWZzbF9k
-ZXYpCj4+ICsgICAgICAgICAgICAgcmV0dXJuIDA7Cj4+ICsKPj4gKyAgICAgZHJtX2ttc19oZWxw
-ZXJfcG9sbF9kaXNhYmxlKGZzbF9kZXYtPmRybSk7Cj4+ICsgICAgIHJlZ2NhY2hlX2NhY2hlX29u
-bHkoZnNsX2Rldi0+cmVnbWFwLCB0cnVlKTsKPgo+IFRoaXMgc2hvdWxkIHJhaXNlIGEgd2Fybmlu
-ZyAoc2VlIGh0dHA6Ly9naXQua2VybmVsLm9yZy9jZ2l0L2xpbnV4L2tlcm5lbC9naXQvdG9ydmFs
-ZHMvbGludXguZ2l0L3RyZWUvZHJpdmVycy9iYXNlL3JlZ21hcC9yZWdjYWNoZS5jI240NzIpIGFz
-IG1hcC0+Y2FjaGVfYnlwYXNzIGlzIHNldCBiZWNhdXNlIG9mIFJFR0NBQ0hFX05PTkUuCj4gSSB0
-aGluayB5b3Ugc2V0IHRoZSBjYWNoZV90eXBlIHRvIFJFR0NBQ0hFX0ZMQVQsIGJ1dCBuZWl0aGVy
-IF9MWk8gb3IgX1JCVFJFRSAoc2VlIGh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDE1LzcvMTYvNTUy
-IGZvciB0aGF0KQo+Cgpva2F5CgpCUi4KSmlhbndlaQoKCj4gQmVzdCByZWdhcmRzLAo+IEFsZXhh
-bmRlcgo+IC0tCj4gRGlwbC4tSW5mLiBBbGV4YW5kZXIgU3RlaW4KPiBTWVMgVEVDIGVsZWN0cm9u
-aWMgR21iSAo+IGFsZXhhbmRlci5zdGVpbkBzeXN0ZWMtZWxlY3Ryb25pYy5jb20KPgo+IExlZ2Fs
-IGFuZCBDb21tZXJjaWFsIEFkZHJlc3M6Cj4gQW0gV2luZHJhZCAyCj4gMDg0NjggSGVpbnNkb3Jm
-ZXJncnVuZAo+IEdlcm1hbnkKPgo+IE9mZmljZTogKzQ5ICgwKSAzNzY1IDM4NjAwLTExeHgKPiBG
-YXg6ICAgICs0OSAoMCkgMCkgMzc2NSAzODYwMC00MXh4Cj4KPiBNYW5hZ2luZyBEaXJlY3RvcnM6
-Cj4gICAgICAgICBEaXJlY3RvciBUZWNobm9sb2d5L0NFTzogRGlwbC4tUGh5cy4gU2llZ21hciBT
-Y2htaWR0Owo+ICAgICAgICAgRGlyZWN0b3IgQ29tbWVyY2lhbCBBZmZhaXJzL0NPTzogRGlwbC4g
-SW5nLiAoRkgpIEFybWluIHZvbiBDb2xscmVwcAo+IENvbW1lcmNpYWwgUmVnaXN0cnk6Cj4gICAg
-ICAgICBBbXRzZ2VyaWNodCBDaGVtbml0eiwgSFJCIDI4MDgyOyBVU3QuLUlkIE5yLiBERTE1MDUz
-NDAxMAo+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRy
-aS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
-Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+NEC represent NEC LCD Technologies, Ltd.
+
+Signed-off-by: Alison Wang <b18965-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Xiubo Li <lixiubo-0p4V/sDNsUmm0O/7XYngnFaTQe2KTcn/@public.gmane.org>
+Signed-off-by: Jianwei Wang <jianwei.wang.chn-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index d444757..42ca6bc 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -140,6 +140,7 @@ mundoreader	Mundo Reader S.L.
+ murata	Murata Manufacturing Co., Ltd.
+ mxicy	Macronix International Co., Ltd.
+ national	National Semiconductor
++nec	NEC LCD Technologies, Ltd.
+ neonode		Neonode Inc.
+ netgear	NETGEAR
+ netlogic	Broadcom Corporation (formerly NetLogic Microsystems)
+-- 
+2.1.0.27.g96db324
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
