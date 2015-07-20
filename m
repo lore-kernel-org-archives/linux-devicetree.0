@@ -1,82 +1,87 @@
-From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH 4/7] Documentation: mtd: add a DT property to set the latency code of Spansion memory
-Date: Mon, 20 Jul 2015 21:29:41 +0200
-Message-ID: <201507202129.42105.marex@denx.de>
-References: <cover.1437059658.git.cyrille.pitchen@atmel.com> <201507161944.20523.marex@denx.de> <55ACBE1B.6050507@atmel.com>
+From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Subject: Re: [PATCH-v4 00/11] i2c: pxa: Fixes, cleanup and support for pxa910 family
+Date: Mon, 20 Jul 2015 22:30:55 +0200
+Message-ID: <87si8ifu68.fsf@belgarion.home>
+References: <1436859410-28878-1-git-send-email-vaibhav.hiremath@linaro.org>
+	<20150714113436.GD1517@katana> <55A4F434.9080407@linaro.org>
+	<87d1zqimyc.fsf@belgarion.home> <55AC9E05.7040308@linaro.org>
+	<55AC9E8E.8080708@linaro.org> <55AC9F61.3090207@linaro.org>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55ACBE1B.6050507-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org, juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, shijie.huang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55AC9F61.3090207-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> (Vaibhav Hiremath's message of
+	"Mon, 20 Jul 2015 12:42:33 +0530")
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, yizhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday, July 20, 2015 at 11:23:39 AM, Cyrille Pitchen wrote:
-> Hi Marek,
+Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> writes:
 
-Hi!
+> On Monday 20 July 2015 12:39 PM, Vaibhav Hiremath wrote:
+>>
+>>
+>> On Monday 20 July 2015 12:36 PM, Vaibhav Hiremath wrote:
+>>>
+>>>
+>>> On Saturday 18 July 2015 01:19 AM, Robert Jarzmik wrote:
+>>>> Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> writes:
+>>>>
+>>>>>> So, I applied patches 1-6 to for-next to make some progress.
+>>>>>>
+>>>>>> The others need more thought because of the bindings which shall be
+>>>>>> discussed replying to the patches in question.
+>>>>>>
+>>>>>> Thanks for the updated work with lots of proper references.
+>>>>>>
+>>>>>
+>>>>> OK, Thanks and no issues.
+>>>>>
+>>>>> Lets discuss more on the bindings.
+>>>>
+>>>> I made a simple try on my reference platform with the whole patchset.
+>>>> It oopses on a NULL dereference.
+>>>>
+>>>> The stack is in [1].
+>>>> I think it boils down to :
+>>>>   - i2c_pxa_do_sclk_adj()
+>>>>     - reg_ilcr = readl(_ILCR(i2c));
+>>>>
+>>>> I also think the faulty patch is :
+>>>>   - i2c: pxa: Add ILCR (tLow & tHigh) configuration support
+>>>>
+>>>> My case, an I2C master case, I'd like you to find the issue and fix it.
+>>>>
+>>>
+>>> Which is this reference platform?
+>>> Can you share few details -
+>>>
+>>>   - reference Platform?
+Mitac Mio A701, pxa270.
 
-> Le 16/07/2015 19:44, Marek Vasut a =E9crit :
-> > On Thursday, July 16, 2015 at 05:27:51 PM, Cyrille Pitchen wrote:
-> >=20
-> > Hi!
-> >=20
-> >> Both the SPI controller and the NOR flash memory need to agree on =
-the
-> >> number of dummy cycles to use for Fast Read commands. For Spansion
-> >> memories, this number of dummy cycles is not given directly but th=
-rough
-> >> a so called "latency code".
-> >> The latency code can be found into the memory datasheet and depend=
-s on
-> >> the SPI clock frequency, the Fast Read op code and the Single/Dual=
- Data
-> >> Rate mode.
-> >=20
-> > Shouldn't you be able to derive the latency code from the above
-> > information, which you already know then ?
->=20
-> Yes I agree with you; this could have been done adding static tables =
-inside
-> the driver instead of creating a new DT property dedicated to Spansio=
-n
-> memories.
+>>>   - DT file if you could
+None, ran in platform_data mode.
 
-OK, I see now. The latency code can not be calculed from "SPI clock fre=
-quency,=20
-the Fast Read op code and the Single/Dual Data Rate mode" easily, you n=
-eed to
-index into some table to obtain some ad-hoc value. Got it. Sorry for th=
-e noise!
+>>>   - Boot log (if you could)
+You already found the issue, no need for that anymore.
 
-> When I wrote this patch, I had a close look at the s25fl512s datashee=
-t but
-> only overviewed few datasheets for other Spansion QSPI flash memories=
-=2E So
-> I don't know whether a single latency code table could be shared amon=
-g all
-> Spansion memories or many tables should be added to support different
-> memory models.
->=20
-> That's why I've chosen to add a dedicated DT property to support Span=
-sion
-> memories as it avoids to add tables to guess the proper latency code =
-to be
-> used. I thought it would be more flexible.
->=20
-> Maybe I will remove the support of Spansion QSPI memories from this s=
-eries
-> for now. Their support can still be implemented later.
->=20
-> Anyway, thanks for your review :)
+>>> I am using pxa1928 based platform, and I do not see any issues.
 
-Let's wait for more comments :)
+>> Having said that,
+>> I see issues in the patch for non PXA910 platform, where
+>> i2c_pxa_do_sclk_adj() will be called unconditionally and obviously
+>> reg_ilcr and reg_wcr are not set.
+Yep.
 
-Best regards,
-Marek Vasut
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> I will fix this and send the patch.
+>
+> This should fix the issue -
+Most probably yes.
+
+> If you are ok, I will re-spin the patch and submit.
+Yes, I'm ok, let's try the next iteration.
+
+Cheers.
+
+-- 
+Robert
