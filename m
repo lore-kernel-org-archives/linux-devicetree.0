@@ -1,309 +1,53 @@
-From: YH Huang <yh.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v6 2/3] pwm: add MediaTek display PWM driver support
-Date: Mon, 20 Jul 2015 16:17:16 +0800
-Message-ID: <1437380237-28961-3-git-send-email-yh.huang@mediatek.com>
-References: <1437380237-28961-1-git-send-email-yh.huang@mediatek.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v11] crypto: Add Allwinner Security System
+ crypto accelerator
+Date: Mon, 20 Jul 2015 10:18:36 +0200
+Message-ID: <20150720081836.GT28632@lukather>
+References: <1437143983-4479-1-git-send-email-clabbe.montjoie@gmail.com>
+ <20150720081050.GB12908@gondor.apana.org.au>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1437380237-28961-1-git-send-email-yh.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, YH Huang <yh.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="xtcA6s3naMKOsC7S"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBMW6WKWQKGQECHSSPZI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150720081050.GB12908-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
+Cc: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add display PWM driver support to modify backlight for MT8173 and MT6595.
-The PWM has one channel to control the brightness of the display.
-When the (high_width / period) is closer to 1, the screen is brighter;
-otherwise, it is darker.
+--xtcA6s3naMKOsC7S
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Signed-off-by: YH Huang <yh.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- drivers/pwm/Kconfig        |  10 ++
- drivers/pwm/Makefile       |   1 +
- drivers/pwm/pwm-mtk-disp.c | 232 +++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 243 insertions(+)
- create mode 100644 drivers/pwm/pwm-mtk-disp.c
+On Mon, Jul 20, 2015 at 04:10:50PM +0800, Herbert Xu wrote:
+> On Fri, Jul 17, 2015 at 04:39:37PM +0200, LABBE Corentin wrote:
+> > Hello
+> > 
+> > This is the driver for the Security System included in Allwinner SoC A20.
+> > The Security System (SS for short) is a hardware cryptographic accelerator that
+> > support AES/MD5/SHA1/DES/3DES/PRNG algorithms.
+> > It could be found on others Allwinner SoC: 
+> > - A10, A10s, A13, A31 and A33 manual give the same datasheet for SS than A20
+> > - A23 speak about a security system but without precisions
+> > - A80 and A83T datasheet speak about a security system with more functions
+> >   (SHA224/SHA256/RSA/CRC), they will be supported in a separate driver.
+> 
+> All applied.  Thanks a lot!
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index b1541f4..f5b03a4 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -211,6 +211,16 @@ config PWM_LPSS_PLATFORM
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-lpss-platform.
- 
-+config PWM_MTK_DISP
-+	tristate "MediaTek display PWM driver"
-+	depends on ARCH_MEDIATEK || COMPILE_TEST
-+	help
-+	  Generic PWM framework driver for MediaTek disp-pwm device.
-+	  The PWM is used to control the backlight brightness for display.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called pwm-mtk-disp.
-+
- config PWM_MXS
- 	tristate "Freescale MXS PWM support"
- 	depends on ARCH_MXS && OF
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index ec50eb5..99c9e75 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -18,6 +18,7 @@ obj-$(CONFIG_PWM_LPC32XX)	+= pwm-lpc32xx.o
- obj-$(CONFIG_PWM_LPSS)		+= pwm-lpss.o
- obj-$(CONFIG_PWM_LPSS_PCI)	+= pwm-lpss-pci.o
- obj-$(CONFIG_PWM_LPSS_PLATFORM)	+= pwm-lpss-platform.o
-+obj-$(CONFIG_PWM_MTK_DISP)	+= pwm-mtk-disp.o
- obj-$(CONFIG_PWM_MXS)		+= pwm-mxs.o
- obj-$(CONFIG_PWM_PCA9685)	+= pwm-pca9685.o
- obj-$(CONFIG_PWM_PUV3)		+= pwm-puv3.o
-diff --git a/drivers/pwm/pwm-mtk-disp.c b/drivers/pwm/pwm-mtk-disp.c
-new file mode 100644
-index 0000000..69682a0
---- /dev/null
-+++ b/drivers/pwm/pwm-mtk-disp.c
-@@ -0,0 +1,232 @@
-+/*
-+ * MediaTek display pulse-width-modulation controller driver.
-+ * Copyright (c) 2015 MediaTek Inc.
-+ * Author: YH Huang <yh.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/pwm.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+
-+#define DISP_PWM_EN		0x00
-+#define PWM_ENABLE_MASK		BIT(0)
-+
-+#define DISP_PWM_COMMIT		0x08
-+#define PWM_COMMIT_MASK		BIT(0)
-+
-+#define DISP_PWM_CON_0		0x10
-+#define PWM_CLKDIV_SHIFT	16
-+#define PWM_CLKDIV_MAX		0x3ff
-+#define PWM_CLKDIV_MASK		(PWM_CLKDIV_MAX << PWM_CLKDIV_SHIFT)
-+
-+#define DISP_PWM_CON_1		0x14
-+#define PWM_PERIOD_MASK		0xfff
-+/* Shift log2(PWM_PERIOD_MASK + 1) as divisor */
-+#define PWM_PERIOD_BIT_SHIFT	12
-+
-+#define PWM_HIGH_WIDTH_SHIFT	16
-+#define PWM_HIGH_WIDTH_MASK	(0x1fff << PWM_HIGH_WIDTH_SHIFT)
-+
-+struct mtk_disp_pwm {
-+	struct pwm_chip chip;
-+	struct clk *clk_main;
-+	struct clk *clk_mm;
-+	void __iomem *base;
-+};
-+
-+static inline struct mtk_disp_pwm *to_mtk_disp_pwm(struct pwm_chip *chip)
-+{
-+	return container_of(chip, struct mtk_disp_pwm, chip);
-+}
-+
-+static void mtk_disp_pwm_update_bits(struct mtk_disp_pwm *mdp, u32 offset,
-+				     u32 mask, u32 value)
-+{
-+	void __iomem *address;
-+	u32 val;
-+
-+	address = mdp->base + offset;
-+	val = readl(address);
-+	val &= ~mask;
-+	val |= value;
-+	writel(val, address);
-+}
-+
-+static int mtk_disp_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
-+			       int duty_ns, int period_ns)
-+{
-+	struct mtk_disp_pwm *mdp = to_mtk_disp_pwm(chip);
-+	u64 div, rate;
-+	u32 clk_div, period, high_width, value;
-+
-+	/*
-+	 * Find period, high_width and clk_div to suit duty_ns and period_ns.
-+	 * Calculate proper div value to keep period value in the bound.
-+	 *
-+	 * period_ns = 10^9 * (clk_div + 1) * (period + 1) / PWM_CLK_RATE
-+	 * duty_ns = 10^9 * (clk_div + 1) * high_width / PWM_CLK_RATE
-+	 *
-+	 * period = (PWM_CLK_RATE * period_ns) / (10^9 * (clk_div + 1)) - 1
-+	 * high_width = (PWM_CLK_RATE * duty_ns) / (10^9 * (clk_div + 1))
-+	 */
-+	rate = clk_get_rate(mdp->clk_main);
-+	clk_div = div_u64(rate * period_ns, NSEC_PER_SEC) >>
-+			  PWM_PERIOD_BIT_SHIFT;
-+	if (clk_div > PWM_CLKDIV_MAX)
-+		return -EINVAL;
-+
-+	div = NSEC_PER_SEC * (clk_div + 1);
-+	period = div64_u64(rate * period_ns, div);
-+	if (period > 0)
-+		period--;
-+
-+	high_width = div64_u64(rate * duty_ns, div);
-+	value = period | (high_width << PWM_HIGH_WIDTH_SHIFT);
-+
-+	clk_enable(mdp->clk_main);
-+	clk_enable(mdp->clk_mm);
-+
-+	mtk_disp_pwm_update_bits(mdp, DISP_PWM_CON_0,
-+				 PWM_CLKDIV_MASK, clk_div << PWM_CLKDIV_SHIFT);
-+	mtk_disp_pwm_update_bits(mdp, DISP_PWM_CON_1,
-+				 PWM_PERIOD_MASK | PWM_HIGH_WIDTH_MASK, value);
-+	mtk_disp_pwm_update_bits(mdp, DISP_PWM_COMMIT,
-+				 PWM_COMMIT_MASK, 1);
-+	mtk_disp_pwm_update_bits(mdp, DISP_PWM_COMMIT,
-+				 PWM_COMMIT_MASK, 0);
-+
-+	clk_disable(mdp->clk_mm);
-+	clk_disable(mdp->clk_main);
-+
-+	return 0;
-+}
-+
-+static int mtk_disp_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	struct mtk_disp_pwm *mdp = to_mtk_disp_pwm(chip);
-+
-+	clk_enable(mdp->clk_main);
-+	clk_enable(mdp->clk_mm);
-+
-+	mtk_disp_pwm_update_bits(mdp, DISP_PWM_EN,
-+				 PWM_ENABLE_MASK, 1);
-+
-+	return 0;
-+}
-+
-+static void mtk_disp_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	struct mtk_disp_pwm *mdp = to_mtk_disp_pwm(chip);
-+
-+	mtk_disp_pwm_update_bits(mdp, DISP_PWM_EN,
-+				 PWM_ENABLE_MASK, 0);
-+
-+	clk_disable(mdp->clk_mm);
-+	clk_disable(mdp->clk_main);
-+}
-+
-+static const struct pwm_ops mtk_disp_pwm_ops = {
-+	.config = mtk_disp_pwm_config,
-+	.enable = mtk_disp_pwm_enable,
-+	.disable = mtk_disp_pwm_disable,
-+	.owner = THIS_MODULE,
-+};
-+
-+static int mtk_disp_pwm_probe(struct platform_device *pdev)
-+{
-+	struct mtk_disp_pwm *mdp;
-+	struct resource *r;
-+	int ret;
-+
-+	mdp = devm_kzalloc(&pdev->dev, sizeof(*mdp), GFP_KERNEL);
-+	if (!mdp)
-+		return -ENOMEM;
-+
-+	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	mdp->base = devm_ioremap_resource(&pdev->dev, r);
-+	if (IS_ERR(mdp->base))
-+		return PTR_ERR(mdp->base);
-+
-+	mdp->clk_main = devm_clk_get(&pdev->dev, "main");
-+	if (IS_ERR(mdp->clk_main))
-+		return PTR_ERR(mdp->clk_main);
-+
-+	mdp->clk_mm = devm_clk_get(&pdev->dev, "mm");
-+	if (IS_ERR(mdp->clk_mm))
-+		return PTR_ERR(mdp->clk_mm);
-+
-+	ret = clk_prepare(mdp->clk_main);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = clk_prepare(mdp->clk_mm);
-+	if (ret < 0)
-+		goto disable_clk_main;
-+
-+	mdp->chip.dev = &pdev->dev;
-+	mdp->chip.ops = &mtk_disp_pwm_ops;
-+	mdp->chip.base = -1;
-+	mdp->chip.npwm = 1;
-+
-+	ret = pwmchip_add(&mdp->chip);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "pwmchip_add() failed: %d\n", ret);
-+		goto disable_clk_mm;
-+	}
-+
-+	platform_set_drvdata(pdev, mdp);
-+
-+	return 0;
-+
-+disable_clk_mm:
-+	clk_unprepare(mdp->clk_mm);
-+disable_clk_main:
-+	clk_unprepare(mdp->clk_main);
-+	return ret;
-+}
-+
-+static int mtk_disp_pwm_remove(struct platform_device *pdev)
-+{
-+	struct mtk_disp_pwm *mdp = platform_get_drvdata(pdev);
-+	int ret = pwmchip_remove(&mdp->chip);
-+
-+	clk_unprepare(mdp->clk_mm);
-+	clk_unprepare(mdp->clk_main);
-+
-+	return ret;
-+}
-+
-+static const struct of_device_id mtk_disp_pwm_of_match[] = {
-+	{ .compatible = "mediatek,mt8173-disp-pwm" },
-+	{ .compatible = "mediatek,mt6595-disp-pwm" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, mtk_disp_pwm_of_match);
-+
-+static struct platform_driver mtk_disp_pwm_driver = {
-+	.driver = {
-+		.name = "mediatek-disp-pwm",
-+		.of_match_table = mtk_disp_pwm_of_match,
-+	},
-+	.probe = mtk_disp_pwm_probe,
-+	.remove = mtk_disp_pwm_remove,
-+};
-+module_platform_driver(mtk_disp_pwm_driver);
-+
-+MODULE_AUTHOR("YH Huang <yh.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>");
-+MODULE_DESCRIPTION("MediaTek SoC display PWM driver");
-+MODULE_LICENSE("GPL v2");
+All applied, DT bits included?
+
+Maxime
+
 -- 
-1.8.1.1.dirty
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--xtcA6s3naMKOsC7S--
