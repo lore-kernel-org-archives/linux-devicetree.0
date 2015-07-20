@@ -1,157 +1,241 @@
-From: chunfeng yun <chunfeng.yun@mediatek.com>
-Subject: Re: [PATCH v2 5/5] arm64: dts: mediatek: add xHCI & usb phy for
- mt8173
-Date: Mon, 20 Jul 2015 22:39:39 +0800
-Message-ID: <1437403179.11518.10.camel@mhfsdcap03>
-References: <1436348468-4126-1-git-send-email-chunfeng.yun@mediatek.com>
-	 <1436348468-4126-6-git-send-email-chunfeng.yun@mediatek.com>
-	 <CAGS+omDfUv0KW8K45rLoN8qUV2Q_vgWFK_X4Ojb6K55G9tiehA@mail.gmail.com>
+From: Punit Agrawal <punit.agrawal@arm.com>
+Subject: Re: [RFC PATCH 0/2] thermal: Add generic devfreq cooling device
+Date: Mon, 20 Jul 2015 15:43:57 +0100
+Message-ID: <9hhr3o2evo2.fsf@e105922-lin.cambridge.arm.com>
+References: <1437048173-23744-1-git-send-email-cw00.choi@samsung.com>
+	<9hhh9p3caxm.fsf@e105922-lin.cambridge.arm.com>
+	<55A8FA48.4030304@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGS+omDfUv0KW8K45rLoN8qUV2Q_vgWFK_X4Ojb6K55G9tiehA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Kurtz <djkurtz@chromium.org>
-Cc: Mathias Nyman <mathias.nyman@intel.com>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, linux-usb@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Roger Quadros <rogerq@ti.com>
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <55A8FA48.4030304@samsung.com> (Chanwoo Choi's message of "Fri,
+	17 Jul 2015 21:51:20 +0900")
+Sender: linux-pm-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: edubezval@gmail.com, rui.zhang@intel.com, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, ulf.hansson@linaro.org, khilman@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, inki.dae@samsung.com, l.majewski@samsung.com, kgene.kim@samsung.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Chanwoo,
 
-On Tue, 2015-07-14 at 18:12 +0800, Daniel Kurtz wrote:
-> Hi Chunfeng,
-> 
-> On Wed, Jul 8, 2015 at 5:41 PM, Chunfeng Yun <chunfeng.yun@mediatek.com> wrote:
-> > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> > ---
-> >  arch/arm64/boot/dts/mediatek/mt8173-evb.dts | 15 +++++++++++++++
-> >  arch/arm64/boot/dts/mediatek/mt8173.dtsi    | 27 +++++++++++++++++++++++++++
-> >  2 files changed, 42 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-> > index f433c21..cb63dc3 100644
-> > --- a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-> > +++ b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-> > @@ -13,6 +13,7 @@
-> >   */
-> >
-> >  /dts-v1/;
-> > +#include <dt-bindings/gpio/gpio.h>
-> >  #include "mt8173.dtsi"
-> >
-> >  / {
-> > @@ -32,6 +33,15 @@
-> >         };
-> >
-> >         chosen { };
-> > +
-> > +       usb_p1_vbus: fixedregulator@0 {
-> 
-> Why @0 ?
-It is the first fixed regulator, so set it to 0 as a index.
-I will remove it later
-> 
-> > +               compatible = "regulator-fixed";
-> > +               regulator-name = "usb_vbus";
-> > +               regulator-min-microvolt = <5000000>;
-> > +               regulator-max-microvolt = <5000000>;
-> > +               gpio = <&pio 130 GPIO_ACTIVE_HIGH>;
-> > +               enable-active-high;
-> > +       };
-> >  };
-> >
-> >  &pwrap {
-> > @@ -211,3 +221,8 @@
-> >  &uart0 {
-> >         status = "okay";
-> >  };
-> > +
-> > +&usb {
-> > +       reg-vusb33-supply = <&mt6397_vusb_reg>;
-> > +       reg-vbus-supply = <&usb_p1_vbus>;
-> > +};
-> > diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> > index 0696f8f..452bd0a 100644
-> > --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> > +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> > @@ -15,6 +15,7 @@
-> >  #include <dt-bindings/interrupt-controller/irq.h>
-> >  #include <dt-bindings/interrupt-controller/arm-gic.h>
-> >  #include <dt-bindings/reset-controller/mt8173-resets.h>
-> > +#include <dt-bindings/power/mt8173-power.h>
-> 
-> Sort alphabetically, so:
-> power before reset
-> 
-Ok
-> >  #include "mt8173-pinfunc.h"
-> >
-> >  / {
-> > @@ -393,6 +394,32 @@
-> >                         #size-cells = <0>;
-> >                         status = "disabled";
-> >                 };
-> > +
-> > +               usb: usb30@11270000 {
-> > +                       compatible = "mediatek,mt8173-xhci";
-> > +                       reg = <0 0x11270000 0 0x1000>;
-> > +                       interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_LOW>;
-> > +                       usb-phy = <&u3phy>;
-> > +                       usb3-lpm-capable;
-> > +                       clocks = <&topckgen CLK_TOP_USB30_SEL>;
-> > +                       clock-names = "sys_mac";
-> > +               };
-> > +
-> > +               u3phy: usb-phy@11271000 {
-> > +                       compatible = "mediatek,mt8173-u3phy";
-> > +                       reg = <0 0x11271000 0 0x3000>,
-> > +                             <0 0x11280000 0 0x20000>;
-> > +                       power-domains = <&scpsys MT8173_POWER_DOMAIN_USB>;
-> > +                       usb-wakeup-ctrl = <&pericfg>;
-> > +                       wakeup-src = <1>;
-> > +                       u2port-num = <2>;
-> 
-> Mediatek specific properties should be prefixed with "mediatek,".
-> I also find it nicer if you put the standard properties first:
->   (compatible, reg, clocks, clock-names, power-domains)
-> then device specific properties:
->   (usb-wakeup-ctrl, wakeup-src, u2port-num)
-> and then the final:
->   status="disabled";
-> 
-> This last is currently missing, so please add it, too.
-> 
-I will revise it. Thanks a lot.
+Chanwoo Choi <cw00.choi@samsung.com> writes:
 
-> Also, is there some pinctrl settings that must be set for USB?
-> 
-There is no special pinctrl setting for USB on EVB board on which driver
-is tested.
+> Hi Punit,
+>
+> On 07/17/2015 07:53 PM, Punit Agrawal wrote:
+>> Hi Chanwoo,
+>> 
+>> Chanwoo Choi <cw00.choi@samsung.com> writes:
+>> 
+>>> This patchset introduce the generic devfreq cooling device for generic thermal
+>>> framework. The devfreq devices are used ad cooling device to reduce the
+>>> overheating temperature. This patch is based on drivers/thermal/cpu_cooling.c.
+>>> The devfreq cooling device can change the ragne of the frequency table of
+>>> devfreq device according to cooling level in device tree file.
+>>>
+>> 
+>> Have you had a look at the devfreq cooling patches from Javi[0][1]? How
+>> is the current patchset different?
+>
+> I didn't see Javi's patchset before. Thanks for your information.
+>
+> I reviewed ths Javi's patchset. Both Javi's patchset and my patchset 
+> has same concept except for applying the power allocator thermal governor
+> as you below comment.
+>
+> But, there are some difference.
+>
+> First,
+> I don't add new devfreq API (devfreq_set_max() / devfreq_set_min()).
+> The my patchset used existing update_devfreq() to update the
+> maximum frequency of devfreq device.
+>
 
-> Lastly, I could not quite figure out which patch this set was based on.
-> Patch [0] mentions v4.2-rc1, however, the .dts changes in this patch
-> did not apply cleanly.
-> Perhaps it was based on a particular patch of Matthias tree?
-> 
-Yes, it is.
-> Thanks!
-> -Dan
-> 
-> > +                       clocks = <&pericfg CLK_PERI_USB0>,
-> > +                                <&pericfg CLK_PERI_USB1>,
-> > +                                <&apmixedsys CLK_APMIXED_REF2USB_TX>;
-> > +                       clock-names = "wakeup_deb_p0",
-> > +                                     "wakeup_deb_p1",
-> > +                                     "u3phya_ref";
-> > +               };
-> >         };
-> >  };
-> >
-> > --
-> > 1.8.1.1.dirty
-> >
-> >
-> > _______________________________________________
-> > Linux-mediatek mailing list
-> > Linux-mediatek@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-mediatek
+Ok.
+
+> Second,
+> In my patchset, the devfreq cooling device will be operated
+> as existing cpu cooling device. If sensor measure the overheating
+> temperature, devfreq cooling device will limit the maximum frequency
+> of devfreq device.
+
+Javi's patchset behaves exactly as you describe here.
+
+> As below example, the devicetree file includes
+> the overheating temperature information of each trip-point.
+> - Javi's patchset used the static power value calculated by
+> devfreq_cooling_gen_power_table() instead of temperature.
+>
+
+You've got this wrong.
+
+The power table is used to model device power consumption which allows
+the device to be used with the power_allocator governor. Refer to the
+power_allocator documentation[2] to understand how it is used.
+
+This doesn't change the behaviour when used with other governors.
+
+[2] https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Documentation/thermal/power_allocator.txt?id=refs/tags/v4.2-rc3
+
+> Third,
+> Javi's patchset used the same string of type when calling
+> the thermal_of_cooling_device_register()
+> - Javi's patchset used always the same "devfreq" string.
+> - My patchset used the different "thermal-devfreq-%d" string
+> according to each devfreq cooling device.
+>
+
+Except for this difference (which needs to be fixed), the current
+patchset is a subset of the functionality proposed in [1].
+
+With the merging of the power_allocator governor in v4.2, it makes sense
+for the devfreq cooling device to also include support for it -
+especially when the functionality is already under discussion on the
+list.
+
+As such, it would be great if you could provide feedback on that thread.
+
+Thanks,
+Punit
+
+> In my patchset, devfreq cooling device uses the same method
+> to determine the throttling situation as existing cpu cooling
+> device. It is just my opinion.
+>
+>> 
+>> At first glance, it seems that you are not implementing the extensions
+>> that allow devfreq cooling devices to be used with power_allocator
+>> thermal governor that got merged in v4.2-rc1.
+>> 
+>> Thanks,
+>> Punit
+>> 
+>> [0] http://article.gmane.org/gmane.linux.power-management.general/61936
+>> [1] http://article.gmane.org/gmane.linux.power-management.general/62417
+>
+> Thanks,
+> Chanwoo Choi
+>
+>> 
+>> 
+>>> To verify the devfreq cooling device driver, I testd it with following platform:
+>>>
+>>> For example,
+>>> - The Mali GPU of Exynos5433 SoC uses the devfreq framework to support the DVFS
+>>> feature and Exynos5433 contains the G3D (GPU) thermal sensor. Following example
+>>> explain the correlation between mali dt node and thermal sensor/zone.
+>>> : thermal sensor : G3D sensor of Samsung Exynos5433 [1][2]
+>>> : devfreq cooling device : Mali GPU [3]
+>>>
+>>> According to the temperature of g3d thermal sensor inclued in Exynos5433,
+>>> devfreq cooling device can change the maximum frequency of Mali GPU.
+>>>
+>>> 1. In Exynos5433-based board dts file, Mali GPU dt node uses the devfreq
+>>> framework to suppot the DVFS feature. Following dt node includes the
+>>> both 'cooling-cells' and 'operating-points' which means the supported
+>>> frequency entries:
+>>>
+>>> 	mali: mali@14AC0000 {
+>>> 		compatible = "arm,mali-midgard";
+>>> 		reg = <0x14AC0000 0x5000>;
+>>> 		interrupts = <0 282 0>, <0 283 0>, <0 281 0>;
+>>> 		interrupt-names = "JOB", "MMU", "GPU";
+>>> 		clocks = <&cmu_g3d CLK_ACLK_G3D>;
+>>> 		clock-names = "clk_mali";
+>>> 		power-domains = <&pd_g3d>;
+>>> 		status = "disabled";
+>>>
+>>> 		#cooling-cells = <2>;
+>>>
+>>> 		operating-points = <
+>>> 			700000 1150000
+>>> 			600000 1150000
+>>> 			550000 1125000
+>>> 			500000 1075000
+>>> 			420000 1025000
+>>> 			350000 1025000
+>>> 			266000 1000000
+>>> 			160000 1000000
+>>> 		>;
+>>> 	};
+>>>
+>>> 2. In exynos5433.dtsi, G3D thermal sensor measure the temperature of Mali GPU:
+>>>
+>>> 	tmu_g3d: tmu@10070000 {
+>>> 		compatible = "samsung,exynos5433-tmu";
+>>> 		reg = <0x10070000 0x200>;
+>>> 		interrupts = <0 99 0>;
+>>> 		clocks = <&cmu_peris CLK_PCLK_TMU1_APBIF>,
+>>> 			 <&cmu_peris CLK_SCLK_TMU1>;
+>>> 		clock-names = "tmu_apbif", "tmu_sclk";
+>>> 		#include "exynos5433-tmu-sensor-conf.dtsi"
+>>> 		status = "disabled";
+>>> 	};
+>>>
+>>> 3. In exynos5433-tmu.dtsi, thermal-zones includes both trip points and
+>>> cooling-maps of g3d thermal sensor. Following cooling-maps show the match
+>>> between each trip point and each cooling device (devfreq device of mali):
+>>>
+>>> 	thermal-zones {
+>>> 		/* ...... */
+>>> 		g3d_thermal: g3d-thermal {
+>>> 			thermal-sensors = <&tmu_g3d>;
+>>> 			polling-delay-passive = <0>;
+>>> 			polling-delay = <0>;
+>>> 			trips {
+>>> 				g3d_alert_0: g3d-alert-0 {
+>>> 					temperature = <30000>;	/* millicelsius */
+>>> 					hysteresis = <10000>;	/* millicelsius */
+>>> 					type = "active";
+>>> 				};
+>>> 				g3d_alert_1: g3d-alert-1 {
+>>> 					temperature = <40000>;	/* millicelsius */
+>>> 					hysteresis = <10000>;	/* millicelsius */
+>>> 					type = "active";
+>>> 				};
+>>>
+>>> 				/* ...... */
+>>> 			};
+>>>
+>>> 			cooling-maps {
+>>> 				map0 {
+>>> 					/* Set maximum frequency as 550MHz  */
+>>> 					trip = <&g3d_alert_0>;
+>>> 					cooling-device = <&mali 2 2>;
+>>> 				};
+>>> 				map1 {
+>>> 					/* Set maximum frequency as 420MHz  */
+>>> 					trip = <&g3d_alert_1>;
+>>> 					cooling-device = <&mali 4 4>;
+>>> 				};
+>>>
+>>> 				/* ...... */
+>>> 			};
+>>> 		};
+>>>
+>>> 		......
+>>> 	};
+>>>
+>>> [1] https://git.kernel.org/cgit/linux/kernel/git/kgene/linux-samsung.git/commit/?h=v4.3-next/dt64-samsung&id=ac008f6b537703bb9a6fcc3882ca4af3331aa24f
+>>> [2] https://git.kernel.org/cgit/linux/kernel/git/kgene/linux-samsung.git/commit/?h=v4.3-next/dt64-samsung&id=bcddc3a84e49ca1c646cf2081687a544a15f9218
+>>> [3] malideveloper.arm.com/downloads/drivers/TX041/r5p0-06rel0/TX041-SW-99002-r5p0-06rel0.tgz
+>>>
+>>> Chanwoo Choi (2):
+>>>   PM: devfreq: Add the prototype of update_devfreq() to export
+>>>   thermal: devfreq_cooling: Add generic devfreq cooling device implementaion
+>>>
+>>>  .../devicetree/bindings/thermal/thermal.txt        |   8 +-
+>>>  drivers/devfreq/devfreq.c                          |  22 +-
+>>>  drivers/thermal/Kconfig                            |  11 +
+>>>  drivers/thermal/Makefile                           |   3 +
+>>>  drivers/thermal/devfreq-cooling.c                  | 309 +++++++++++++++++++++
+>>>  include/linux/devfreq-cooling.h                    |  80 ++++++
+>>>  include/linux/devfreq.h                            |   7 +
+>>>  7 files changed, 425 insertions(+), 15 deletions(-)
+>>>  create mode 100644 drivers/thermal/devfreq-cooling.c
+>>>  create mode 100644 include/linux/devfreq-cooling.h
+>> 
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pm" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
