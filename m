@@ -1,98 +1,65 @@
-From: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH-v4 00/11] i2c: pxa: Fixes, cleanup and support for pxa910
- family
-Date: Mon, 20 Jul 2015 12:42:33 +0530
-Message-ID: <55AC9F61.3090207@linaro.org>
-References: <1436859410-28878-1-git-send-email-vaibhav.hiremath@linaro.org>	<20150714113436.GD1517@katana> <55A4F434.9080407@linaro.org> <87d1zqimyc.fsf@belgarion.home> <55AC9E05.7040308@linaro.org> <55AC9E8E.8080708@linaro.org>
+From: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
+Subject: Re: [PATCH v10 1/5] drm/layerscape: Add Freescale DCU DRM driver
+Date: Mon, 20 Jul 2015 09:18:16 +0200
+Message-ID: <2160582.6fH0nmeH2v@ws-stein>
+References: <1437129543-8037-1-git-send-email-jianwei.wang@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55AC9E8E.8080708-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, yizhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1437129543-8037-1-git-send-email-jianwei.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jianwei Wang <jianwei.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, daniel.vetter-/w4YWyX8dFk@public.gmane.org, mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Jianwei Wang <jianwei.wang.chn-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alison Wang <b18965-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Xiubo Li <lixiubo-0p4V/sDNsUmm0O/7XYngnFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Friday 17 July 2015 18:38:59, Jianwei Wang wrote:
+> [...]
+> +static const struct regmap_config fsl_dcu_regmap_config = {
+> +	.reg_bits = 32,
+> +	.reg_stride = 4,
+> +	.val_bits = 32,
+> +};
 
+This defaults to REGCACHE_NONE which in the end sets regmap.cache_only = true.
 
-On Monday 20 July 2015 12:39 PM, Vaibhav Hiremath wrote:
->
->
-> On Monday 20 July 2015 12:36 PM, Vaibhav Hiremath wrote:
->>
->>
->> On Saturday 18 July 2015 01:19 AM, Robert Jarzmik wrote:
->>> Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> writes:
->>>
->>>>> So, I applied patches 1-6 to for-next to make some progress.
->>>>>
->>>>> The others need more thought because of the bindings which shall be
->>>>> discussed replying to the patches in question.
->>>>>
->>>>> Thanks for the updated work with lots of proper references.
->>>>>
->>>>
->>>> OK, Thanks and no issues.
->>>>
->>>> Lets discuss more on the bindings.
->>>
->>> I made a simple try on my reference platform with the whole patchset.
->>> It oopses on a NULL dereference.
->>>
->>> The stack is in [1].
->>> I think it boils down to :
->>>   - i2c_pxa_do_sclk_adj()
->>>     - reg_ilcr = readl(_ILCR(i2c));
->>>
->>> I also think the faulty patch is :
->>>   - i2c: pxa: Add ILCR (tLow & tHigh) configuration support
->>>
->>> My case, an I2C master case, I'd like you to find the issue and fix it.
->>>
->>
->> Which is this reference platform?
->> Can you share few details -
->>
->>   - reference Platform?
->>   - DT file if you could
->>   - Boot log (if you could)
->>
->>
->> I am using pxa1928 based platform, and I do not see any issues.
->>
->
-> Having said that,
-> I see issues in the patch for non PXA910 platform, where
-> i2c_pxa_do_sclk_adj() will be called unconditionally and obviously
-> reg_ilcr and reg_wcr are not set.
->
-> I will fix this and send the patch.
->
+> [...]
+> +#ifdef CONFIG_PM_SLEEP
+> +static int fsl_dcu_drm_pm_suspend(struct device *dev)
+> +{
+> +	struct fsl_dcu_drm_device *fsl_dev = dev_get_drvdata(dev);
+> +
+> +	if (!fsl_dev)
+> +		return 0;
+> +
+> +	drm_kms_helper_poll_disable(fsl_dev->drm);
+> +	regcache_cache_only(fsl_dev->regmap, true);
 
-This should fix the issue -
+This should raise a warning (see http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/drivers/base/regmap/regcache.c#n472) as map->cache_bypass is set because of REGCACHE_NONE.
+I think you set the cache_type to REGCACHE_FLAT, but neither _LZO or _RBTREE (see https://lkml.org/lkml/2015/7/16/552 for that)
 
+Best regards,
+Alexander
+-- 
+Dipl.-Inf. Alexander Stein
+SYS TEC electronic GmbH
+alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org
 
-hvaibhav@hvaibhav-ThinkPad-T440p:~/projects/mainline/linux$ git diff 
-drivers/i2c/busses/i2c-pxa.c
-diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
-index e0aa087..9e372fc 100644
---- a/drivers/i2c/busses/i2c-pxa.c
-+++ b/drivers/i2c/busses/i2c-pxa.c
-@@ -590,6 +590,9 @@ static void i2c_pxa_do_sclk_adj(struct pxa_i2c *i2c)
-  {
-         unsigned int reg_ilcr;
+Legal and Commercial Address:
+Am Windrad 2
+08468 Heinsdorfergrund
+Germany
 
-+       if (!i2c->reg_ilcr)
-+               return;
-+
-         reg_ilcr = readl(_ILCR(i2c));
+Office: +49 (0) 3765 38600-11xx
+Fax:    +49 (0) 0) 3765 38600-41xx
+ 
+Managing Directors:
+	Director Technology/CEO: Dipl.-Phys. Siegmar Schmidt;
+	Director Commercial Affairs/COO: Dipl. Ing. (FH) Armin von Collrepp
+Commercial Registry:
+	Amtsgericht Chemnitz, HRB 28082; USt.-Id Nr. DE150534010
 
-         /* For standard/fast mode tlow and thigh counters are same */
-
-
-
-If you are ok, I will re-spin the patch and submit.
-
-Thanks,
-Vaibhav
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
