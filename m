@@ -1,73 +1,61 @@
-From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] power: reset: at91: add sama5d3 reset function
-Date: Mon, 20 Jul 2015 18:42:42 +0200
-Message-ID: <20150720164241.GA5930@earth>
-References: <1437384726-24927-1-git-send-email-josh.wu@atmel.com>
+From: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
+Subject: RE: [PATCH RFC V1 3/3] devicetree: da9062: Add device tree bindings
+ for DA9062 RTC
+Date: Mon, 20 Jul 2015 17:08:00 +0000
+Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7014B253DAD@SW-EX-MBX02.diasemi.com>
+References: <cover.1436427954.git.stwiss.opensource@diasemi.com>
+ <b47f52abd6a574e5f95760a07a59f445031baefc.1436427954.git.stwiss.opensource@diasemi.com>
+ <20150717234737.GJ3487@piout.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="HlL+5n6rz5pIUxbD"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1437384726-24927-1-git-send-email-josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski.k-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>, Fabian Frederick <fabf-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20150717234737.GJ3487@piout.net>
+Content-Language: en-US
+Sender: linux-input-owner@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: DEVICETREE <devicetree@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, LINUXINPUT <linux-input@vger.kernel.org>, LINUXKERNEL <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, RTCLINUX <rtc-linux@googlegroups.com>, Rob Herring <robh+dt@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, David Dajun Chen <david.chen@diasemi.com>, Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Support Opensource <Support.Opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
+On 18 July 2015 00:48, Alexandre Belloni wrote:
 
---HlL+5n6rz5pIUxbD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On 09/07/2015 at 08:45:54 +0100, S Twiss wrote :
+> > From: S Twiss <stwiss.opensource@diasemi.com>
+> >
+> > Add device tree bindings for the DA9062 RTC driver component
+> >
+> > Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
 
-Hi,
+[...]
 
-On Mon, Jul 20, 2015 at 05:32:05PM +0800, Josh Wu wrote:
-> This patch introduces a new compatible string: "atmel,sama5d3-rstc" and
-> new reset function for sama5d3 and later chips.
->=20
-> As in sama5d3 or later chips, we don't have to shutdown the DDR
-> controller before reset. Shutdown the DDR controller before reset is a
-> workaround to avoid DDR signal driving the bus, but since sama5d3 and
-> later chips there is no such a conflict.
->=20
-> So in this patch:
->    1. the sama5d3 reset function only need to write the rstc register
-> and return.
->    2. we can remove the code related with sama5d3 DDR controller as
-> we don't use it at all.
->=20
-> Signed-off-by: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> > +- rtc : This node defines settings required for the Real-Time Clock associated
+> > +  with the DA9062. There are currently no entries in this binding, however
+> > +  compatible = "dlg,da9062-rtc" should be added if a node is created.
 
-queued.
+[...]
 
--- Sebastian
+> > @@ -55,6 +60,10 @@ Example:
+> >  		interrupts = <11 IRQ_TYPE_LEVEL_LOW>;
+> >  		interrupt-controller;
+> >
+> > +		rtc {
+> > +			compatible = "dlg,da9062-rtc";
+> > +		};
+> > +
+> 
+> Are those subnodes even parsed? As the parent node is not compatible
+> with "simple-bus" or "simple-mfd", I guess not. You driver is probed
+> from the mfd_cells in da9063-core.c
 
---HlL+5n6rz5pIUxbD
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Hi Alexandre,
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+If I miss out the compatible line for the RTC in the DTSI for DA9062, or is I alter it
+so it does not match the string specified in the DA9063 RTC driver, the DA9063 RTC
+driver will not be probed for the DA9062 compatibility.
+The RTC compatible = "dlg,da9062-rtc"  is essential in this case.
 
-iQIcBAEBCgAGBQJVrST+AAoJENju1/PIO/qaDNIP/jmCqEJsY/NuiFaVK/nCyIyy
-Wu+Dh5Ow9SnvGIyLlNMdmhdyqQYtgWuPeepTqjzbEFIFsun/yFmnBMrs8EAg9fm6
-JjQy2DuzAJO0s0GmvtbrzZ4/EMcyh6DeH136EW4ZrJkBsnQRDqXS2wmbpRmJK34l
-yck+CMZunNjKfT+Wxn/blV0ora+Avf7Sz+ZvqXX3XM1ki/tJACme5vuxkZBhImYH
-mNkBRIe7QUI/+12HkwZukn0Ij38k6Vrjr5wCheaBajNxMUCu/CpfU4kwKjFUls4S
-7WevKaNLzGA1taFzK8jz9Qrd02gPqMi3H9C0ELLTa9+soeQau2pvQcZAjNGEpvTG
-NbnoIBPa9m4bgAkxLbS2BKbqugsJqL/sRdxdOhcyzlYPZn/EsCQJD3IXaFM3hiwX
-Z4L9FwaCAUtMD3029BdFzk3Od9W+3BIfXrOExnw6hfddNIMW1i+kCoqpuS6XTVmb
-+JFGN4ITCp5YZz6Arsq0KASPbD+C8TUY7S2IPY8cjxpEdhor4fiVAB+gB3gu2k7U
-PRp7d1gzlDYFOMW/o56qDg0kUzf+ZHF8NrqXr+odI+JEVEHSPdNNY30HB4v7yevr
-gwcLHIfA6dZjUIkM1TDAsW/Y2WGwXeBJXkhKkZHu19zy73E8s7YuSvIBA/v2e4n7
-ruqhGIT0eClbrGVrF66v
-=onF8
------END PGP SIGNATURE-----
+[...]
 
---HlL+5n6rz5pIUxbD--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Stephen
+
