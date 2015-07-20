@@ -1,57 +1,59 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH V4 RFC 2/3] nvmem: add driver for ocotp in i.MX23 and
- i.MX28
-Date: Mon, 20 Jul 2015 08:45:21 +0200
-Message-ID: <55AC9901.1040402@i2se.com>
-References: <1437343499-16422-1-git-send-email-stefan.wahren@i2se.com>
- <1437343499-16422-3-git-send-email-stefan.wahren@i2se.com>
- <201507200012.13608.marex@denx.de>
+From: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH-v4 00/11] i2c: pxa: Fixes, cleanup and support for pxa910
+ family
+Date: Mon, 20 Jul 2015 12:36:45 +0530
+Message-ID: <55AC9E05.7040308@linaro.org>
+References: <1436859410-28878-1-git-send-email-vaibhav.hiremath@linaro.org>	<20150714113436.GD1517@katana> <55A4F434.9080407@linaro.org> <87d1zqimyc.fsf@belgarion.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201507200012.13608.marex-ynQEQJNshbs@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87d1zqimyc.fsf-4ty26DBLk+jEm7gnYqmdkQ@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, yizhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Marek,
 
-Am 20.07.2015 um 00:12 schrieb Marek Vasut:
-> On Monday, July 20, 2015 at 12:04:58 AM, Stefan Wahren wrote:
->> This patch brings read-only support for the On-Chip OTP cells
->> in the i.MX23 and i.MX28 processor. The driver implements the
->> new NVMEM provider API.
+
+On Saturday 18 July 2015 01:19 AM, Robert Jarzmik wrote:
+> Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> writes:
+>
+>>> So, I applied patches 1-6 to for-next to make some progress.
+>>>
+>>> The others need more thought because of the bindings which shall be
+>>> discussed replying to the patches in question.
+>>>
+>>> Thanks for the updated work with lots of proper references.
+>>>
 >>
->> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-> How come this driver isn't doing any manipulation with the VDDIO
-> voltage -- or did I miss that? I seem to remember that the VDDIO
-> had to be lowered to 2.8V before the fuses could be programmed
-> and restored to 3.3V afterward. See for example recent mainline
-> u-boot, drivers/misc/mxs_ocotp.c .
-
-Why should the driver implement VDDIO manipulation when there is only
-read-only support for the OTP bits? There is no ambition to implement
-write support. Maybe i should clarify that in the comments.
-
-Btw i'm on your side that because programming the OTP from userspace is
-to dangerous.
-
-Best regards
-Stefan
-
+>> OK, Thanks and no issues.
+>>
+>> Lets discuss more on the bindings.
 >
-> Best regards,
-> Marek Vasut
+> I made a simple try on my reference platform with the whole patchset.
+> It oopses on a NULL dereference.
 >
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> The stack is in [1].
+> I think it boils down to :
+>   - i2c_pxa_do_sclk_adj()
+>     - reg_ilcr = readl(_ILCR(i2c));
+>
+> I also think the faulty patch is :
+>   - i2c: pxa: Add ILCR (tLow & tHigh) configuration support
+>
+> My case, an I2C master case, I'd like you to find the issue and fix it.
+>
+
+Which is this reference platform?
+Can you share few details -
+
+  - reference Platform?
+  - DT file if you could
+  - Boot log (if you could)
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I am using pxa1928 based platform, and I do not see any issues.
+
+Thanks,
+Vaibhav
