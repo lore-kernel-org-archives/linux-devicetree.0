@@ -1,89 +1,40 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 1/4] mfd: max77686: Don't suggest in binding to use a
- deprecated property
-Date: Mon, 20 Jul 2015 09:10:20 +0100
-Message-ID: <20150720081020.GD3061@x1>
-References: <1437114567-17629-1-git-send-email-javier@osg.samsung.com>
- <1437114567-17629-2-git-send-email-javier@osg.samsung.com>
+From: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
+Subject: Re: [PATCH v11] crypto: Add Allwinner Security System
+ crypto accelerator
+Date: Mon, 20 Jul 2015 16:10:50 +0800
+Message-ID: <20150720081050.GB12908@gondor.apana.org.au>
+References: <1437143983-4479-1-git-send-email-clabbe.montjoie@gmail.com>
+Reply-To: herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDTY5EWUQMEBBTO2WKWQKGQEF7XLTZI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1437114567-17629-2-git-send-email-javier@osg.samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@osg.samsung.com>
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1437143983-4479-1-git-send-email-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 17 Jul 2015, Javier Martinez Canillas wrote:
+On Fri, Jul 17, 2015 at 04:39:37PM +0200, LABBE Corentin wrote:
+> Hello
+> 
+> This is the driver for the Security System included in Allwinner SoC A20.
+> The Security System (SS for short) is a hardware cryptographic accelerator that
+> support AES/MD5/SHA1/DES/3DES/PRNG algorithms.
+> It could be found on others Allwinner SoC: 
+> - A10, A10s, A13, A31 and A33 manual give the same datasheet for SS than A20
+> - A23 speak about a security system but without precisions
+> - A80 and A83T datasheet speak about a security system with more functions
+>   (SHA224/SHA256/RSA/CRC), they will be supported in a separate driver.
 
-> The regulator-compatible property from the regulator DT binding was
-> deprecated. But the max77686 DT binding doc still suggest to use it
-> instead of the regulator node name's which is the correct approach.
->=20
-> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
-> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-
-By convention shouldn't this be buck@1, or something?
-
-Need Mark to look at this.
-
-> ---
->=20
-> Changes in v2:
-> - Add Krzysztof Kozlowski Reviewed-by tag in patch #1.
->=20
->  Documentation/devicetree/bindings/mfd/max77686.txt | 11 ++++-------
->  1 file changed, 4 insertions(+), 7 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/mfd/max77686.txt b/Doc=
-umentation/devicetree/bindings/mfd/max77686.txt
-> index 163bd81a4607..8221102d3fc2 100644
-> --- a/Documentation/devicetree/bindings/mfd/max77686.txt
-> +++ b/Documentation/devicetree/bindings/mfd/max77686.txt
-> @@ -26,7 +26,7 @@ Optional node:
->  	};
->  	refer Documentation/devicetree/bindings/regulator/regulator.txt
-> =20
-> -  The regulator-compatible property of regulator should initialized =
-with string
-> +  The regulator node's name should be initialized with a string
->  to get matched with their hardware counterparts as follow:
-> =20
->  	-LDOn 	:	for LDOs, where n can lie in range 1 to 26.
-> @@ -55,16 +55,14 @@ Example:
->  		reg =3D <0x09>;
-> =20
->  		voltage-regulators {
-> -			ldo11_reg {
-> -				regulator-compatible =3D "LDO11";
-> +			ldo11_reg: LDO11 {
->  				regulator-name =3D "vdd_ldo11";
->  				regulator-min-microvolt =3D <1900000>;
->  				regulator-max-microvolt =3D <1900000>;
->  				regulator-always-on;
->  			};
-> =20
-> -			buck1_reg {
-> -				regulator-compatible =3D "BUCK1";
-> +			buck1_reg: BUCK1 {
->  				regulator-name =3D "vdd_mif";
->  				regulator-min-microvolt =3D <950000>;
->  				regulator-max-microvolt =3D <1300000>;
-> @@ -72,8 +70,7 @@ Example:
->  				regulator-boot-on;
->  			};
-> =20
-> -			buck9_reg {
-> -				regulator-compatible =3D "BUCK9";
-> +			buck9_reg: BUCK9 {
->  				regulator-name =3D "CAM_ISP_CORE_1.2V";
->  				regulator-min-microvolt =3D <1000000>;
->  				regulator-max-microvolt =3D <1200000>;
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+All applied.  Thanks a lot!
+-- 
+Email: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
