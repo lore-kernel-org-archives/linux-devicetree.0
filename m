@@ -1,58 +1,90 @@
-From: Jianwei Wang <jianwei.wang.chn@gmail.com>
-Subject: [PATCH v11 5/5] arm/dts/ls1021a: Add a TFT LCD panel dts node
-Date: Mon, 20 Jul 2015 17:54:02 +0800
-Message-ID: <1437386042-34825-5-git-send-email-jianwei.wang.chn@gmail.com>
-References: <1437386042-34825-1-git-send-email-jianwei.wang.chn@gmail.com>
+From: Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+Subject: Re: [PATCH 8/8] iio: mma8452: add devicetree property to allow all
+ pin wirings
+Date: Mon, 20 Jul 2015 12:01:41 +0200
+Message-ID: <55ACC705.40602@theobroma-systems.com>
+References: <1436186062-5766-1-git-send-email-martink@posteo.de> <1436186062-5766-9-git-send-email-martink@posteo.de> <55ABAA8B.3080706@kernel.org> <55ACB393.8000603@parkeon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1437386042-34825-1-git-send-email-jianwei.wang.chn@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: dri-devel@lists.freedesktop.org
-Cc: Jianwei Wang <jianwei.wang.chn@gmail.com>, devicetree@vger.kernel.org, Xiubo Li <lixiubo@cmss.chinamobile.com>, airlied@linux.ie, daniel.vetter@ffwll.ch, Alison Wang <b18965@freescale.com>, linux-kernel@vger.kernel.org, thierry.reding@gmail.com, scottwood@freescale.com, linux-arm-kernel@lists.infradead.org, mark.yao@rock-chips.com
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55ACB393.8000603-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, roberta.dobrescu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add a TFT LCD panel. the TFT LCD panel is WQVGA "480x272",
-and the bpp is 24.
 
-Signed-off-by: Alison Wang <b18965@freescale.com>
-Signed-off-by: Xiubo Li <lixiubo@cmss.chinamobile.com>
-Signed-off-by: Jianwei Wang <jianwei.wang.chn@gmail.com>
-Reviewed-by: Alison Wang <alison.wang@freescale.com>
----
- arch/arm/boot/dts/ls1021a-twr.dts | 11 +++++++++++
- 1 file changed, 11 insertions(+)
 
-diff --git a/arch/arm/boot/dts/ls1021a-twr.dts b/arch/arm/boot/dts/ls1021a-twr.dts
-index a2c591e..2443329 100644
---- a/arch/arm/boot/dts/ls1021a-twr.dts
-+++ b/arch/arm/boot/dts/ls1021a-twr.dts
-@@ -56,6 +56,17 @@
- 		enet0_sgmii_phy = &sgmii_phy2;
- 		enet1_sgmii_phy = &sgmii_phy0;
- 	};
-+
-+	panel: panel {
-+		compatible = "nec,nl4827hc19_05b";
-+	};
-+
-+};
-+
-+&dcu {
-+	fsl,panel = <&panel>;
-+	status = "okay";
-+
- };
- 
- &dspi1 {
--- 
-2.1.0.27.g96db324
+On 2015-07-20 10:38, Martin Fuzzey wrote:
+> On 19/07/15 15:47, Jonathan Cameron wrote:
+>> On 06/07/15 13:34, Martin Kepplinger wrote:
+>>> For the devices supported by the mma8452 driver, two interrupt pins are
+>>> available to route the interrupt signals to. By default INT1 is assumed.
+>>>
+>>> This adds a simple boolean DT property, for users to configure it for
+>>> INT2, if that is the wired interrupt pin for them.
+>>>
+>>> This is important for everyone to be able to use this driver, no matter
+>>> how their chip is wired.
+>>>
+>>> Since this doesn't change the default behaviour, it doesn't break
+>>> anything
+>>> for existing users.
+> A remark about this.
+> 
+> The hardware allows each of the interrupt sources (threshold, freefall,
+> data available, wakeup, ...) to be individiually mapped to one of the
+> two available interrupt pins.
+> This patch only allows one pin or the other one to be selected for all
+> the sources.
+> 
+> Granted this will certainly cover 99% of use cases (even if both are
+> wired that means we can use either).
+> However there is one possible case not covered which is when one of the
+> interrupt signals is connected to some other circuitry (alarm,
+> power,...) in addition to being used as an interrupt to the CPU.
+> 
+> Normally for code I'd just say let's cross that bridge when we come to
+> it given that it's pretty unlikely.
+> However since this affects the DT binding and they can be awkward to
+> change while keeping compatibility maybe it would be better to use a
+> bitmask DT property rather than a boolean to actually describe the full
+> hardware capabilities and keep that door open?
+> 
+> Of course, actually supporting arbitary mappings would be a bit more
+> work in the driver (both irqs would need to requested...).
+> However it would be possible to use a bitmask in the DT but, for the
+> moment, only accept all zeros or all ones, leaving the rest for a future
+> driver update if and when it is needed.
+> 
+> I don't have a strong objection to doing it the current way, it's
+> certainly the simplest way and it's likely to be all we ever need just
+> pointing out a possible shortcoming.
+> 
+> I think It would be good to have the DT maintainers view on this.
+
+Your're right. I thought about it, and maybe the gain in simplicity is
+not worth losing the theoretical option of supporting "weird" users.
+
+I'll probably do another version after your or Peter's review and will
+change this.
+
+> 
+>>> Signed-off-by: Martin Kepplinger
+>>> <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+>>> Signed-off-by: Christoph Muellner
+>>> <christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+>> The whole series looks good to me.  Just want those acks from Peter
+>> and / or
+>> Martin before I apply it.
+> I'll try to give it a spin this week. Can't promise though
+> 
+
+Thanks so far. It *really* won't take you long to review ;)
+
+> 
+> Regards,
+> 
+> Martin
+> 
