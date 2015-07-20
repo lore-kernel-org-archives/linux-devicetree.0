@@ -1,72 +1,70 @@
-From: Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 8/8] iio: mma8452: add devicetree property to allow all
- pin wirings
-Date: Mon, 20 Jul 2015 10:38:43 +0200
-Message-ID: <55ACB393.8000603@parkeon.com>
-References: <1436186062-5766-1-git-send-email-martink@posteo.de> <1436186062-5766-9-git-send-email-martink@posteo.de> <55ABAA8B.3080706@kernel.org>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH V3 02/19] memory: tegra: Add MC flush support
+Date: Mon, 20 Jul 2015 09:46:02 +0100
+Message-ID: <55ACB54A.4080103@nvidia.com>
+References: <1436791197-32358-1-git-send-email-jonathanh@nvidia.com> <1436791197-32358-3-git-send-email-jonathanh@nvidia.com> <20150717095754.GG3057@ulmo> <20150717102049.GQ6287@tbergstrom-lnx.Nvidia.com> <20150717113124.GP3057@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55ABAA8B.3080706-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, roberta.dobrescu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org, Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20150717113124.GP3057@ulmo>
+Sender: linux-pm-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Alexandre Courbot <gnurou@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Prashant Gaikwad <pgaikwad@nvidia.com>, =?windows-1252?Q?Terje_Bergstr=F6m?= <tbergstrom@nvidia.com>, Hans de Goede <hdegoede@redhat.com>, Tejun Heo <tj@kernel.org>, Vince Hsu <vinceh@nvidia.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 19/07/15 15:47, Jonathan Cameron wrote:
-> On 06/07/15 13:34, Martin Kepplinger wrote:
->> For the devices supported by the mma8452 driver, two interrupt pins are
->> available to route the interrupt signals to. By default INT1 is assumed.
+
+On 17/07/15 12:31, Thierry Reding wrote:
+> * PGP Signed by an unknown key
+> 
+> On Fri, Jul 17, 2015 at 01:20:49PM +0300, Peter De Schrijver wrote:
+>> On Fri, Jul 17, 2015 at 11:57:55AM +0200, Thierry Reding wrote:
+>>>> Old Signed by an unknown key
+>>>
+>>> On Mon, Jul 13, 2015 at 01:39:40PM +0100, Jon Hunter wrote:
+>>>> The Tegra memory controller implements a flush feature to flush pending
+>>>> accesses and prevent further accesses from occurring. This feature is
+>>>> used when powering down IP blocks to ensure the IP block is in a good
+>>>> state. The flushes are organised by software groups and IP blocks are
+>>>> assigned in hardware to the different software groups. Add helper
+>>>> functions for requesting a handle to an MC flush for a given
+>>>> software group and enabling/disabling the MC flush itself.
+>>>>
+>>>> This is based upon a change by Vince Hsu <vinceh@nvidia.com>.
+>>>>
+>>>> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+>>>> ---
+>>>>  drivers/memory/tegra/mc.c | 110 ++++++++++++++++++++++++++++++++++++++++++++++
+>>>>  drivers/memory/tegra/mc.h |   2 +
+>>>>  include/soc/tegra/mc.h    |  34 ++++++++++++++
+>>>>  3 files changed, 146 insertions(+)
+>>>
+>>> Do we know if this is actually necessary? I remember having a discussion
+>>> with Arnd Bergmann a while ago, and the Linux driver model kind of
+>>> assumes that by the time a device is disabled all outstanding accesses
+>>> will have stopped.
+>>>
+>>> Do we have a way to determine that this even makes a difference? Can we
+>>> trigger a case where not doing this would cause breakage and see that
+>>> adding this fixes that particular issue?
+>>>
 >>
->> This adds a simple boolean DT property, for users to configure it for
->> INT2, if that is the wired interrupt pin for them.
->>
->> This is important for everyone to be able to use this driver, no matter
->> how their chip is wired.
->>
->> Since this doesn't change the default behaviour, it doesn't break anything
->> for existing users.
-A remark about this.
+>> Most likely it is. The memory controller can still be processing requests
+>> when the peripheral domain is powergated. This would mean the response cannot
+>> be delivered in that case. So we need to be sure there are no outstanding
+>> requests before shutting down the domain.
+> 
+> My point is that that's the driver's responsibility anyway, hence making
+> the explicit flush unnecessary.
 
-The hardware allows each of the interrupt sources (threshold, freefall, 
-data available, wakeup, ...) to be individiually mapped to one of the 
-two available interrupt pins.
-This patch only allows one pin or the other one to be selected for all 
-the sources.
+I see your point and it is interesting. The trouble is that we would
+need to test every memory client in every power domain to prove this. So
+I don't think that is a trivial thing to do. Furthermore, looking at
+what we have done in kernel used for android products (which probably
+stress PM the most) this is done and so I don't know of any shipping
+product that stresses PM that does not do this. May be someone else
+might. I personally would not be comfortable removing this without
+testing, but as I mentioned it is not a trivial thing to test correctly.
+However, I will let you and the other maintainers decide what's best here.
 
-Granted this will certainly cover 99% of use cases (even if both are 
-wired that means we can use either).
-However there is one possible case not covered which is when one of the 
-interrupt signals is connected to some other circuitry (alarm, 
-power,...) in addition to being used as an interrupt to the CPU.
-
-Normally for code I'd just say let's cross that bridge when we come to 
-it given that it's pretty unlikely.
-However since this affects the DT binding and they can be awkward to 
-change while keeping compatibility maybe it would be better to use a 
-bitmask DT property rather than a boolean to actually describe the full 
-hardware capabilities and keep that door open?
-
-Of course, actually supporting arbitary mappings would be a bit more 
-work in the driver (both irqs would need to requested...).
-However it would be possible to use a bitmask in the DT but, for the 
-moment, only accept all zeros or all ones, leaving the rest for a future 
-driver update if and when it is needed.
-
-I don't have a strong objection to doing it the current way, it's 
-certainly the simplest way and it's likely to be all we ever need just 
-pointing out a possible shortcoming.
-
-I think It would be good to have the DT maintainers view on this.
-
->> Signed-off-by: Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
->> Signed-off-by: Christoph Muellner <christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
-> The whole series looks good to me.  Just want those acks from Peter and / or
-> Martin before I apply it.
-I'll try to give it a spin this week. Can't promise though
-
-
-Regards,
-
-Martin
+Jon
