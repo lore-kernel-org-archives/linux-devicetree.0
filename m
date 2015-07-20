@@ -1,241 +1,236 @@
-From: Punit Agrawal <punit.agrawal@arm.com>
-Subject: Re: [RFC PATCH 0/2] thermal: Add generic devfreq cooling device
-Date: Mon, 20 Jul 2015 15:43:57 +0100
-Message-ID: <9hhr3o2evo2.fsf@e105922-lin.cambridge.arm.com>
-References: <1437048173-23744-1-git-send-email-cw00.choi@samsung.com>
-	<9hhh9p3caxm.fsf@e105922-lin.cambridge.arm.com>
-	<55A8FA48.4030304@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <55A8FA48.4030304@samsung.com> (Chanwoo Choi's message of "Fri,
-	17 Jul 2015 21:51:20 +0900")
-Sender: linux-pm-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: edubezval@gmail.com, rui.zhang@intel.com, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, ulf.hansson@linaro.org, khilman@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, inki.dae@samsung.com, l.majewski@samsung.com, kgene.kim@samsung.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v8 0/9] Add simple NVMEM Framework via regmap.
+Date: Mon, 20 Jul 2015 15:42:32 +0100
+Message-ID: <1437403352-4091-1-git-send-email-srinivas.kandagatla@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, s.hauer@pengutronix.de, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, arnd@arndb.de, sboyd@codeaurora.org, pantelis.antoniou@konsulko.com, mporter@konsulko.com, stefan.wahren@i2se.com, wxt@rock-chips.com, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Chanwoo,
+Hi Greg,
 
-Chanwoo Choi <cw00.choi@samsung.com> writes:
+ This patchset adds a new simple NVMEM framework to kernel, and it is tested
+with various drivers like "QCOM thermal sensors", "QCOM cpr driver",
+"begal bone cape manager" and few more on the way.
 
-> Hi Punit,
->
-> On 07/17/2015 07:53 PM, Punit Agrawal wrote:
->> Hi Chanwoo,
->> 
->> Chanwoo Choi <cw00.choi@samsung.com> writes:
->> 
->>> This patchset introduce the generic devfreq cooling device for generic thermal
->>> framework. The devfreq devices are used ad cooling device to reduce the
->>> overheating temperature. This patch is based on drivers/thermal/cpu_cooling.c.
->>> The devfreq cooling device can change the ragne of the frequency table of
->>> devfreq device according to cooling level in device tree file.
->>>
->> 
->> Have you had a look at the devfreq cooling patches from Javi[0][1]? How
->> is the current patchset different?
->
-> I didn't see Javi's patchset before. Thanks for your information.
->
-> I reviewed ths Javi's patchset. Both Javi's patchset and my patchset 
-> has same concept except for applying the power allocator thermal governor
-> as you below comment.
->
-> But, there are some difference.
->
-> First,
-> I don't add new devfreq API (devfreq_set_max() / devfreq_set_min()).
-> The my patchset used existing update_devfreq() to update the
-> maximum frequency of devfreq device.
->
+Thankyou all for providing inputs and comments on previous versions of this
+patchset. Here is the v8 of the patchset addressing all the issues raised as
+part of previous versions review.
 
-Ok.
+Up until now, NVMEM drivers like eeprom were stored in drivers/misc, where they
+all had to duplicate pretty much the same code to register a sysfs file, allow
+in-kernel users to access the content of the devices they were driving, etc.
+This was also a problem as far as other in-kernel users were involved, since
+the solutions used were pretty much different from on driver to another, there
+was a rather big abstraction leak.
+    
+Introduction of this framework aims at solving this. It also introduces DT
+representation for consumer devices to go get the data they require (MAC
+Addresses, SoC/Revision ID, part numbers, and so on) from the NVMEMs.
+    
+After learning few things about QCOM qfprom and other eeprom/efuses, which
+has packed fields at bit level. Which makes it important to add support to
+such memories. This version adds support to this type of non volatile
+memories by adding support to bit level nvmem-cells.
 
-> Second,
-> In my patchset, the devfreq cooling device will be operated
-> as existing cpu cooling device. If sensor measure the overheating
-> temperature, devfreq cooling device will limit the maximum frequency
-> of devfreq device.
+Having regmap interface to this framework would give much better
+abstraction for nvmems on different buses.
 
-Javi's patchset behaves exactly as you describe here.
+patch 1-4 Introduces the NVMEM framework.
+Patch 5-6 Adds Qualcomm specific qfprom driver.
+Patch 7 migrates an existing driver to nvmem framework.
+Patch 8 adds entry in MAINTAINERS.
 
-> As below example, the devicetree file includes
-> the overheating temperature information of each trip-point.
-> - Javi's patchset used the static power value calculated by
-> devfreq_cooling_gen_power_table() instead of temperature.
->
+Its also possible to migrate other nvmem drivers to this framework, and I think
+some of them already posted patches based on this framework.
 
-You've got this wrong.
+Providers APIs:
+	nvmem_register/unregister();
 
-The power table is used to model device power consumption which allows
-the device to be used with the power_allocator governor. Refer to the
-power_allocator documentation[2] to understand how it is used.
+Consumers APIs:
+Cell based apis for both DT/Non-DT:
+	nvmem_cell_get()/nvmem_cell_put();
+	devm_nvmem_cell_get()/devm_nvmem_cell_put();
+	of_nvmem_cell_get()
+	nvmem_cell_read()/nvmem_cell_write();
 
-This doesn't change the behaviour when used with other governors.
+Raw byte access apis for both DT/non-DT.
+	nvmem_device_get()/nvmem_device_put()
+	devm_nvmem_device_get()/nvmem_device_put()
+	of_nvmem_device_get()
 
-[2] https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Documentation/thermal/power_allocator.txt?id=refs/tags/v4.2-rc3
+	nvmem_device_read()/nvmem_device_write();
+	nvmem_device_cell_read()/nvmem_device_cell_write();
 
-> Third,
-> Javi's patchset used the same string of type when calling
-> the thermal_of_cooling_device_register()
-> - Javi's patchset used always the same "devfreq" string.
-> - My patchset used the different "thermal-devfreq-%d" string
-> according to each devfreq cooling device.
->
+Device Tree:
 
-Except for this difference (which needs to be fixed), the current
-patchset is a subset of the functionality proposed in [1].
+	/* Provider */
+	qfprom: qfprom@00700000 {
+		...
 
-With the merging of the power_allocator governor in v4.2, it makes sense
-for the devfreq cooling device to also include support for it -
-especially when the functionality is already under discussion on the
-list.
+		/* Data cells */
+		tsens_calibration: calib@404 {
+			reg = <0x404 0x10>;
+		};
 
-As such, it would be great if you could provide feedback on that thread.
+		tsens_calibration_bckp: calib_bckp@504 {
+			reg = <0x504 0x11>;
+			bits = <6 128>
+		};
+
+		pvs_version: pvs-version@6 {
+			reg = <0x6 0x2>
+			bit-offset = 7;
+			bits = <7 2>
+		};
+
+		speed_bin: speed-bin@c{
+			reg = <0xc 0x1>;
+			bits = <2 3>;
+
+		};
+		...
+	};
+/* Consumer */
+	tsens {
+		...
+		nvmem-cells = <&tsens_calibration>;
+		nvmem-cell-names = "calibration";
+	};
+
+userspace interface: binary file in /sys/bus/nvmem/devices/*/nvmem
+
+ex:
+hexdump /sys/bus/nvmem/devices/qfprom0/nvmem
+                                                                                                                                                                                                                  
+0000000 0000 0000 0000 0000 0000 0000 0000 0000
+*
+00000a0 db10 2240 0000 e000 0c00 0c00 0000 0c00
+0000000 0000 0000 0000 0000 0000 0000 0000 0000
+...
+*
+0001000
+
+Changes since v7 (https://lwn.net/Articles/650734/)
+ * Fixed various style and documentation reated comments
+ from Stephen Boyd, Stephen Wahren and Joe Perches.
+ * Fixed read-only flag as suggested by Philipp Zabel
+ * Changed bit level bindings as suggesed by Rob Herring.
+
+Changes since v6 (https://lkml.org/lkml/2015/6/24/325)
+ * Replaced class usage with bus, suggested by Stephen Boyd.
+ * various cosmetic and header cleanups suggested by Stefan Wahren
+ * changed nvmem-cell property to nvmem-cells spotted by Rajendra Nayak
+
+Changes since v5(https://lkml.org/lkml/2015/5/21/643)
+ * skipped regmap patches which are already merged by Mark.
+ * Fixed lot of style related comments by Stephen.
+ * Fixed sunxi driver.
+ * added devm_* variants requested by Stephen.
+ * added of_* variants requested by Pantelis Antoniou
+ * added read_only options for non-dt drivers.
+ * added basic how-to doc.
+
+Changes since v4(https://lkml.org/lkml/2015/3/30/725)
+ * rename eeprom to nvmem suggested by Matt Porter
+ * added bit level support to nvmem cells, if not framework is
+ 	not usable for qcom platforms.
+ * removed ternary operator shortcut suggested by Mark B.
+ * unified consumer/provider apis for both DT and non-DT.
+ * added name support for cell.
+ * added bit level bindings.
+ * added read-only support suggested by Matt Porter and others.
+ * added new nvmem_device based consumer apis.
+
+Changes since v3(https://lkml.org/lkml/2015/3/24/1066)
+ * simplified logic in bin_attr_eeprom_read/write spotted by Mark Brown.
+ * moved from using regmap_bulk_read/write to regmap_raw_read/write
+ spotted by Mark Brown
+ * Fixed return error codes for the dummy wrappers spotted by Sascha Hauer
+ * Fixed various error code checks in core spotted by Sascha Hauer.
+ * Simplified consumer bindings suggested by Sascha Hauer.
+ * Added eeprom-mmio helper functions.
+
+Changes since v2(https://lkml.org/lkml/2015/3/13/168)
+ * Fixed error handling in eeprom_register spotted by Mark Brown
+ * Added new regmap_get_max_register() and regmap_get_reg_stride().
+ * Fixed module build errors reported by kbuild robot.
+ * recycle the ids when eeprom provider is released.
+
+Changes since v1(https://lkml.org/lkml/2015/3/5/153)
+ * Fix various Licencing issues spotted by Paul Bolle and Mark Brown
+ * Allow eeprom core to build as module spotted by Paul Bolle.
+ * Fix various kconfig issues spotted by Paul Bolle.
+ * remove unessary atomic varible spotted by Mark Brown.
+ * Few cleanups and common up some of the code in core.
+ * Add qfprom bindings.
+
+Changes since RFC(https://lkml.org/lkml/2015/2/19/307)
+ * Fix documentation and error checks in read/write spotted by Andrew Lunn
+ * Kconfig fix suggested by Stephen Boyd.
+ * Add module owner suggested by Stephen Boyd and others.
+ * Fix unsafe handling of eeprom in unregister spotted by Russell and Mark Brown.
+ * seperate bindings patch as suggested by Rob.
+ * Add MAINTAINERS as suggested by Rob.
+ * Added support to allow reading eeprom for things like serial number which
+ * canbe scatters across.
+ * Added eeprom data using reg property suggested by Sascha and Stephen.
+ * Added non-DT support.
+ * Move kerneldoc to the src files spotted by Mark Brown.
+ * Remove local list and do eeprom lookup by using class_find_device()
+
 
 Thanks,
-Punit
+srini
 
-> In my patchset, devfreq cooling device uses the same method
-> to determine the throttling situation as existing cpu cooling
-> device. It is just my opinion.
->
->> 
->> At first glance, it seems that you are not implementing the extensions
->> that allow devfreq cooling devices to be used with power_allocator
->> thermal governor that got merged in v4.2-rc1.
->> 
->> Thanks,
->> Punit
->> 
->> [0] http://article.gmane.org/gmane.linux.power-management.general/61936
->> [1] http://article.gmane.org/gmane.linux.power-management.general/62417
->
-> Thanks,
-> Chanwoo Choi
->
->> 
->> 
->>> To verify the devfreq cooling device driver, I testd it with following platform:
->>>
->>> For example,
->>> - The Mali GPU of Exynos5433 SoC uses the devfreq framework to support the DVFS
->>> feature and Exynos5433 contains the G3D (GPU) thermal sensor. Following example
->>> explain the correlation between mali dt node and thermal sensor/zone.
->>> : thermal sensor : G3D sensor of Samsung Exynos5433 [1][2]
->>> : devfreq cooling device : Mali GPU [3]
->>>
->>> According to the temperature of g3d thermal sensor inclued in Exynos5433,
->>> devfreq cooling device can change the maximum frequency of Mali GPU.
->>>
->>> 1. In Exynos5433-based board dts file, Mali GPU dt node uses the devfreq
->>> framework to suppot the DVFS feature. Following dt node includes the
->>> both 'cooling-cells' and 'operating-points' which means the supported
->>> frequency entries:
->>>
->>> 	mali: mali@14AC0000 {
->>> 		compatible = "arm,mali-midgard";
->>> 		reg = <0x14AC0000 0x5000>;
->>> 		interrupts = <0 282 0>, <0 283 0>, <0 281 0>;
->>> 		interrupt-names = "JOB", "MMU", "GPU";
->>> 		clocks = <&cmu_g3d CLK_ACLK_G3D>;
->>> 		clock-names = "clk_mali";
->>> 		power-domains = <&pd_g3d>;
->>> 		status = "disabled";
->>>
->>> 		#cooling-cells = <2>;
->>>
->>> 		operating-points = <
->>> 			700000 1150000
->>> 			600000 1150000
->>> 			550000 1125000
->>> 			500000 1075000
->>> 			420000 1025000
->>> 			350000 1025000
->>> 			266000 1000000
->>> 			160000 1000000
->>> 		>;
->>> 	};
->>>
->>> 2. In exynos5433.dtsi, G3D thermal sensor measure the temperature of Mali GPU:
->>>
->>> 	tmu_g3d: tmu@10070000 {
->>> 		compatible = "samsung,exynos5433-tmu";
->>> 		reg = <0x10070000 0x200>;
->>> 		interrupts = <0 99 0>;
->>> 		clocks = <&cmu_peris CLK_PCLK_TMU1_APBIF>,
->>> 			 <&cmu_peris CLK_SCLK_TMU1>;
->>> 		clock-names = "tmu_apbif", "tmu_sclk";
->>> 		#include "exynos5433-tmu-sensor-conf.dtsi"
->>> 		status = "disabled";
->>> 	};
->>>
->>> 3. In exynos5433-tmu.dtsi, thermal-zones includes both trip points and
->>> cooling-maps of g3d thermal sensor. Following cooling-maps show the match
->>> between each trip point and each cooling device (devfreq device of mali):
->>>
->>> 	thermal-zones {
->>> 		/* ...... */
->>> 		g3d_thermal: g3d-thermal {
->>> 			thermal-sensors = <&tmu_g3d>;
->>> 			polling-delay-passive = <0>;
->>> 			polling-delay = <0>;
->>> 			trips {
->>> 				g3d_alert_0: g3d-alert-0 {
->>> 					temperature = <30000>;	/* millicelsius */
->>> 					hysteresis = <10000>;	/* millicelsius */
->>> 					type = "active";
->>> 				};
->>> 				g3d_alert_1: g3d-alert-1 {
->>> 					temperature = <40000>;	/* millicelsius */
->>> 					hysteresis = <10000>;	/* millicelsius */
->>> 					type = "active";
->>> 				};
->>>
->>> 				/* ...... */
->>> 			};
->>>
->>> 			cooling-maps {
->>> 				map0 {
->>> 					/* Set maximum frequency as 550MHz  */
->>> 					trip = <&g3d_alert_0>;
->>> 					cooling-device = <&mali 2 2>;
->>> 				};
->>> 				map1 {
->>> 					/* Set maximum frequency as 420MHz  */
->>> 					trip = <&g3d_alert_1>;
->>> 					cooling-device = <&mali 4 4>;
->>> 				};
->>>
->>> 				/* ...... */
->>> 			};
->>> 		};
->>>
->>> 		......
->>> 	};
->>>
->>> [1] https://git.kernel.org/cgit/linux/kernel/git/kgene/linux-samsung.git/commit/?h=v4.3-next/dt64-samsung&id=ac008f6b537703bb9a6fcc3882ca4af3331aa24f
->>> [2] https://git.kernel.org/cgit/linux/kernel/git/kgene/linux-samsung.git/commit/?h=v4.3-next/dt64-samsung&id=bcddc3a84e49ca1c646cf2081687a544a15f9218
->>> [3] malideveloper.arm.com/downloads/drivers/TX041/r5p0-06rel0/TX041-SW-99002-r5p0-06rel0.tgz
->>>
->>> Chanwoo Choi (2):
->>>   PM: devfreq: Add the prototype of update_devfreq() to export
->>>   thermal: devfreq_cooling: Add generic devfreq cooling device implementaion
->>>
->>>  .../devicetree/bindings/thermal/thermal.txt        |   8 +-
->>>  drivers/devfreq/devfreq.c                          |  22 +-
->>>  drivers/thermal/Kconfig                            |  11 +
->>>  drivers/thermal/Makefile                           |   3 +
->>>  drivers/thermal/devfreq-cooling.c                  | 309 +++++++++++++++++++++
->>>  include/linux/devfreq-cooling.h                    |  80 ++++++
->>>  include/linux/devfreq.h                            |   7 +
->>>  7 files changed, 425 insertions(+), 15 deletions(-)
->>>  create mode 100644 drivers/thermal/devfreq-cooling.c
->>>  create mode 100644 include/linux/devfreq-cooling.h
->> 
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pm" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Maxime Ripard (1):
+  nvmem: sunxi: Move the SID driver to the nvmem framework
+
+Srinivas Kandagatla (8):
+  nvmem: Add a simple NVMEM framework for nvmem providers
+  nvmem: Add a simple NVMEM framework for consumers
+  nvmem: Add nvmem_device based consumer apis.
+  nvmem: Add bindings for simple nvmem framework
+  Documentation: nvmem: add nvmem api level and how-to doc
+  nvmem: qfprom: Add Qualcomm QFPROM support.
+  nvmem: qfprom: Add bindings for qfprom
+  nvmem: Add to MAINTAINERS for nvmem framework
+
+ Documentation/ABI/testing/sysfs-driver-sunxi-sid   |   22 -
+ .../bindings/misc/allwinner,sunxi-sid.txt          |   17 -
+ .../bindings/nvmem/allwinner,sunxi-sid.txt         |   21 +
+ Documentation/devicetree/bindings/nvmem/nvmem.txt  |   80 ++
+ Documentation/devicetree/bindings/nvmem/qfprom.txt |   35 +
+ Documentation/nvmem/nvmem.txt                      |  152 +++
+ MAINTAINERS                                        |    9 +
+ drivers/Kconfig                                    |    2 +
+ drivers/Makefile                                   |    1 +
+ drivers/misc/eeprom/Kconfig                        |   13 -
+ drivers/misc/eeprom/Makefile                       |    1 -
+ drivers/misc/eeprom/sunxi_sid.c                    |  156 ---
+ drivers/nvmem/Kconfig                              |   39 +
+ drivers/nvmem/Makefile                             |   12 +
+ drivers/nvmem/core.c                               | 1057 ++++++++++++++++++++
+ drivers/nvmem/qfprom.c                             |   86 ++
+ drivers/nvmem/sunxi_sid.c                          |  159 +++
+ include/linux/nvmem-consumer.h                     |  157 +++
+ include/linux/nvmem-provider.h                     |   47 +
+ 19 files changed, 1857 insertions(+), 209 deletions(-)
+ delete mode 100644 Documentation/ABI/testing/sysfs-driver-sunxi-sid
+ delete mode 100644 Documentation/devicetree/bindings/misc/allwinner,sunxi-sid.txt
+ create mode 100644 Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt
+ create mode 100644 Documentation/devicetree/bindings/nvmem/nvmem.txt
+ create mode 100644 Documentation/devicetree/bindings/nvmem/qfprom.txt
+ create mode 100644 Documentation/nvmem/nvmem.txt
+ delete mode 100644 drivers/misc/eeprom/sunxi_sid.c
+ create mode 100644 drivers/nvmem/Kconfig
+ create mode 100644 drivers/nvmem/Makefile
+ create mode 100644 drivers/nvmem/core.c
+ create mode 100644 drivers/nvmem/qfprom.c
+ create mode 100644 drivers/nvmem/sunxi_sid.c
+ create mode 100644 include/linux/nvmem-consumer.h
+ create mode 100644 include/linux/nvmem-provider.h
+
+-- 
+1.9.1
