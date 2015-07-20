@@ -1,90 +1,64 @@
-From: Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
-Subject: Re: [PATCH 8/8] iio: mma8452: add devicetree property to allow all
- pin wirings
-Date: Mon, 20 Jul 2015 12:01:41 +0200
-Message-ID: <55ACC705.40602@theobroma-systems.com>
-References: <1436186062-5766-1-git-send-email-martink@posteo.de> <1436186062-5766-9-git-send-email-martink@posteo.de> <55ABAA8B.3080706@kernel.org> <55ACB393.8000603@parkeon.com>
+From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] mfd: max77686: Don't suggest in binding to use a
+ deprecated property
+Date: Mon, 20 Jul 2015 12:12:22 +0200
+Message-ID: <55ACC986.5040408@osg.samsung.com>
+References: <1437114567-17629-1-git-send-email-javier@osg.samsung.com>
+ <1437114567-17629-2-git-send-email-javier@osg.samsung.com>
+ <20150720081020.GD3061@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55ACB393.8000603-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, roberta.dobrescu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150720081020.GD3061@x1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hello Lee,
 
+Thanks a lot for your feedback.
 
-On 2015-07-20 10:38, Martin Fuzzey wrote:
-> On 19/07/15 15:47, Jonathan Cameron wrote:
->> On 06/07/15 13:34, Martin Kepplinger wrote:
->>> For the devices supported by the mma8452 driver, two interrupt pins are
->>> available to route the interrupt signals to. By default INT1 is assumed.
->>>
->>> This adds a simple boolean DT property, for users to configure it for
->>> INT2, if that is the wired interrupt pin for them.
->>>
->>> This is important for everyone to be able to use this driver, no matter
->>> how their chip is wired.
->>>
->>> Since this doesn't change the default behaviour, it doesn't break
->>> anything
->>> for existing users.
-> A remark about this.
+On 07/20/2015 10:10 AM, Lee Jones wrote:
+> On Fri, 17 Jul 2015, Javier Martinez Canillas wrote:
 > 
-> The hardware allows each of the interrupt sources (threshold, freefall,
-> data available, wakeup, ...) to be individiually mapped to one of the
-> two available interrupt pins.
-> This patch only allows one pin or the other one to be selected for all
-> the sources.
+>> The regulator-compatible property from the regulator DT binding was
+>> deprecated. But the max77686 DT binding doc still suggest to use it
+>> instead of the regulator node name's which is the correct approach.
+>>
+>> Signed-off-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+>> Reviewed-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 > 
-> Granted this will certainly cover 99% of use cases (even if both are
-> wired that means we can use either).
-> However there is one possible case not covered which is when one of the
-> interrupt signals is connected to some other circuitry (alarm,
-> power,...) in addition to being used as an interrupt to the CPU.
-> 
-> Normally for code I'd just say let's cross that bridge when we come to
-> it given that it's pretty unlikely.
-> However since this affects the DT binding and they can be awkward to
-> change while keeping compatibility maybe it would be better to use a
-> bitmask DT property rather than a boolean to actually describe the full
-> hardware capabilities and keep that door open?
-> 
-> Of course, actually supporting arbitary mappings would be a bit more
-> work in the driver (both irqs would need to requested...).
-> However it would be possible to use a bitmask in the DT but, for the
-> moment, only accept all zeros or all ones, leaving the rest for a future
-> driver update if and when it is needed.
-> 
-> I don't have a strong objection to doing it the current way, it's
-> certainly the simplest way and it's likely to be all we ever need just
-> pointing out a possible shortcoming.
-> 
-> I think It would be good to have the DT maintainers view on this.
+> By convention shouldn't this be buck@1, or something?
+>
+> Need Mark to look at this.
+>
 
-Your're right. I thought about it, and maybe the gain in simplicity is
-not worth losing the theoretical option of supporting "weird" users.
+That's a very good question, the ePAPR doc says:
 
-I'll probably do another version after your or Peter's review and will
-change this.
+"The unit-address must match the first address specified in the reg property
+of the node. If the node has no reg property, the @ and unit-address must be
+omitted and the node-name alone differentiates the node from other nodes at
+the same level in the tree"
 
-> 
->>> Signed-off-by: Martin Kepplinger
->>> <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
->>> Signed-off-by: Christoph Muellner
->>> <christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
->> The whole series looks good to me.  Just want those acks from Peter
->> and / or
->> Martin before I apply it.
-> I'll try to give it a spin this week. Can't promise though
-> 
+This PMIC uses a single I2C address for all the regulators and these are
+controlled by writing to different I2C register addresses. So the regulator
+nodes don't have a reg property in this case.
 
-Thanks so far. It *really* won't take you long to review ;)
+By looking at other regulators bindings, besides the generic regulator.txt
+and fixed-regulator.txt DT bindings, there are only 5 (out of 40) that use
+the node-name@unit-address convention mentioned in the ePAPR document.
 
-> 
-> Regards,
-> 
-> Martin
-> 
+AFAICT all these are for regulators that are actually in different addresses
+but I could be wrong so let's see what Mark says.
+
+Best regards,
+-- 
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
