@@ -1,94 +1,56 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] i2c: tegra: implement slave mode
-Date: Mon, 20 Jul 2015 11:50:49 +0200
-Message-ID: <20150720095049.GD2551@katana>
-References: <1427745615-5428-1-git-send-email-danindrey@mail.ru>
- <1427745615-5428-2-git-send-email-danindrey@mail.ru>
- <20150403194626.GB2016@katana>
+From: jianwei wang <jianwei.wang.chn@gmail.com>
+Subject: Re: [PATCH v10 1/5] drm/layerscape: Add Freescale DCU DRM driver
+Date: Mon, 20 Jul 2015 17:58:10 +0800
+Message-ID: <CANk3uyDZG613j0KjikHQZ-39XyhOfC1bCe9h4ngiXNDLrEDrEw@mail.gmail.com>
+References: <1437129543-8037-1-git-send-email-jianwei.wang@freescale.com>
+ <2160582.6fH0nmeH2v@ws-stein>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="11Y7aswkeuHtSBEs"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150403194626.GB2016@katana>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrey Danin <danindrey-JGs/UdohzUI@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ac100-oU9gvf+ajcQ97yFScArB1dHuzzzSOjJt@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Julian Andres Klode <jak-4HMq4SXA452hPH1hqNUYSQ@public.gmane.org>, Marc Dietrich <marvin24-Mmb7MZpHnFY@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <2160582.6fH0nmeH2v@ws-stein>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Alexander Stein <alexander.stein@systec-electronic.com>
+Cc: devicetree@vger.kernel.org, Xiubo Li <lixiubo@cmss.chinamobile.com>, daniel.vetter@ffwll.ch, Alison Wang <b18965@freescale.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, scottwood@freescale.com, Jianwei Wang <jianwei.wang@freescale.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
---11Y7aswkeuHtSBEs
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Apr 03, 2015 at 09:46:26PM +0200, Wolfram Sang wrote:
-> > +static void tegra_i2c_slave_write(struct tegra_i2c_dev *i2c_dev, u32 v=
-al)
-> > +{
-> > +	i2c_writel(i2c_dev, val, I2C_SL_RCVD);
-> > +
-> > +	/*
-> > +	 * TODO: A correct fix needs to be found for this.
-> > +	 *
-> > +	 * We experience less incomplete messages with this delay than without
-> > +	 * it, but we don't know why. Help is appreciated.
-> > +	 */
->=20
-> Uh oh. So I assume this is another reason for staging?
-
-I think we can live with this upstream, no need for staging.
-
-> > +	if (!i2c_dev->slave || !i2c_dev->slave->slave_cb)
-> > +		return -EINVAL;
->=20
-> The core checks for slave_cb being valid.
->=20
-> > +		i2c_slave_event(i2c_dev->slave, I2C_SLAVE_STOP, &dummy);
->=20
-> You could use value here, too, or?
->=20
-> > +	if (!tegra_i2c_slave_isr(irq, i2c_dev))
-> > +		return IRQ_HANDLED;
->=20
-> Minor nit: I'd prefer =3D=3D 0 here, since it reads "if not slave_isr ret=
-urn
-> handled".
->=20
-> > +	if (slave->addr > 0x7F)
-> > +		addr2 =3D (slave->addr >> 7) | I2C_SL_ADDR2_TEN_BIT_MODE;
->=20
-> Nope. There are 10 bit encodings of addresses 0x000-0x07f, too. So, you
-> need to check for the flag (slave->flags & I2C_CLIENT_TEN).
-
-If you'd fix up these and resend, I'll happily include this patch for 4.3
-already.
-
-Thanks,
-
-   Wolfram
-
-
---11Y7aswkeuHtSBEs
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJVrMR5AAoJEBQN5MwUoCm29gYP/jk9qWhTjLu3Vyfixpw19nJp
-Wu3I2+mYowNVxjD27rIihYYAc2NBhxaD/0tXld/vGdDTba0fnfxw+y2APLigsqhh
-arH/05ae2VVQMVHgOWuA5Ux4Jt/LHbJ2VTY2NXM92iDZgP7pqRBc/qA43YxBYgdA
-+2PWyf/TAotud+xMZyn3SQjA+Q8LIpLHOYo/txigeQ+irT6AplL9OfWKq3smI3W7
-5wyUR9zoYJJu+6OCERU7PXU0IWE4Mw8EXs6STobkd4XIzeBB9stGqyNruGeoK42F
-3encICz8cdW7sO9DXEJOJUcag0tyQ0sQE5klwd8QwBjdN4ZJry9v1LVpyYWBdLQ+
-vIL0xVPv/lpmoVIONN7pp7EIZbzN6glHDRg6H+MfstWTRfyUIGoNGFicoryCPDsK
-SvzDlV+4qP65+zhlWbI1u816dhvtKsz9C4T3rFOtva3dZK4Dm3DxJaHzulo5HBzG
-hXMUZrqNtFu9KPq3oJHIRk4Sm8Fioq0gWAdlvT3XSc4a9G3NEfzhmXiEP0H8ldkm
-GxWHviF1mPFqjbu5akmV2su531TXvpw3A2nXyC4c7lchyIRCP0T5+9RFOV9gPXVI
-u39lFNk9hcfqEwdBQX3WKa6uHVZMZOql9Iweb3VE86fNHaJbfapBnHfr+Na4X5QO
-LT/RMWeGywvHgNh04b6g
-=2IuQ
------END PGP SIGNATURE-----
-
---11Y7aswkeuHtSBEs--
+SGkgQWxleGFuZGVyLAoKVGhhbmsgeW91IGZvciB5b3VyIHJldmlldy4KCk9uIE1vbiwgSnVsIDIw
+LCAyMDE1IGF0IDM6MTggUE0sIEFsZXhhbmRlciBTdGVpbgo8YWxleGFuZGVyLnN0ZWluQHN5c3Rl
+Yy1lbGVjdHJvbmljLmNvbT4gd3JvdGU6Cj4gT24gRnJpZGF5IDE3IEp1bHkgMjAxNSAxODozODo1
+OSwgSmlhbndlaSBXYW5nIHdyb3RlOgo+PiBbLi4uXQo+PiArc3RhdGljIGNvbnN0IHN0cnVjdCBy
+ZWdtYXBfY29uZmlnIGZzbF9kY3VfcmVnbWFwX2NvbmZpZyA9IHsKPj4gKyAgICAgLnJlZ19iaXRz
+ID0gMzIsCj4+ICsgICAgIC5yZWdfc3RyaWRlID0gNCwKPj4gKyAgICAgLnZhbF9iaXRzID0gMzIs
+Cj4+ICt9Owo+Cj4gVGhpcyBkZWZhdWx0cyB0byBSRUdDQUNIRV9OT05FIHdoaWNoIGluIHRoZSBl
+bmQgc2V0cyByZWdtYXAuY2FjaGVfb25seSA9IHRydWUuCj4KPj4gWy4uLl0KPj4gKyNpZmRlZiBD
+T05GSUdfUE1fU0xFRVAKPj4gK3N0YXRpYyBpbnQgZnNsX2RjdV9kcm1fcG1fc3VzcGVuZChzdHJ1
+Y3QgZGV2aWNlICpkZXYpCj4+ICt7Cj4+ICsgICAgIHN0cnVjdCBmc2xfZGN1X2RybV9kZXZpY2Ug
+KmZzbF9kZXYgPSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsKPj4gKwo+PiArICAgICBpZiAoIWZzbF9k
+ZXYpCj4+ICsgICAgICAgICAgICAgcmV0dXJuIDA7Cj4+ICsKPj4gKyAgICAgZHJtX2ttc19oZWxw
+ZXJfcG9sbF9kaXNhYmxlKGZzbF9kZXYtPmRybSk7Cj4+ICsgICAgIHJlZ2NhY2hlX2NhY2hlX29u
+bHkoZnNsX2Rldi0+cmVnbWFwLCB0cnVlKTsKPgo+IFRoaXMgc2hvdWxkIHJhaXNlIGEgd2Fybmlu
+ZyAoc2VlIGh0dHA6Ly9naXQua2VybmVsLm9yZy9jZ2l0L2xpbnV4L2tlcm5lbC9naXQvdG9ydmFs
+ZHMvbGludXguZ2l0L3RyZWUvZHJpdmVycy9iYXNlL3JlZ21hcC9yZWdjYWNoZS5jI240NzIpIGFz
+IG1hcC0+Y2FjaGVfYnlwYXNzIGlzIHNldCBiZWNhdXNlIG9mIFJFR0NBQ0hFX05PTkUuCj4gSSB0
+aGluayB5b3Ugc2V0IHRoZSBjYWNoZV90eXBlIHRvIFJFR0NBQ0hFX0ZMQVQsIGJ1dCBuZWl0aGVy
+IF9MWk8gb3IgX1JCVFJFRSAoc2VlIGh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDE1LzcvMTYvNTUy
+IGZvciB0aGF0KQo+Cgpva2F5CgpCUi4KSmlhbndlaQoKCj4gQmVzdCByZWdhcmRzLAo+IEFsZXhh
+bmRlcgo+IC0tCj4gRGlwbC4tSW5mLiBBbGV4YW5kZXIgU3RlaW4KPiBTWVMgVEVDIGVsZWN0cm9u
+aWMgR21iSAo+IGFsZXhhbmRlci5zdGVpbkBzeXN0ZWMtZWxlY3Ryb25pYy5jb20KPgo+IExlZ2Fs
+IGFuZCBDb21tZXJjaWFsIEFkZHJlc3M6Cj4gQW0gV2luZHJhZCAyCj4gMDg0NjggSGVpbnNkb3Jm
+ZXJncnVuZAo+IEdlcm1hbnkKPgo+IE9mZmljZTogKzQ5ICgwKSAzNzY1IDM4NjAwLTExeHgKPiBG
+YXg6ICAgICs0OSAoMCkgMCkgMzc2NSAzODYwMC00MXh4Cj4KPiBNYW5hZ2luZyBEaXJlY3RvcnM6
+Cj4gICAgICAgICBEaXJlY3RvciBUZWNobm9sb2d5L0NFTzogRGlwbC4tUGh5cy4gU2llZ21hciBT
+Y2htaWR0Owo+ICAgICAgICAgRGlyZWN0b3IgQ29tbWVyY2lhbCBBZmZhaXJzL0NPTzogRGlwbC4g
+SW5nLiAoRkgpIEFybWluIHZvbiBDb2xscmVwcAo+IENvbW1lcmNpYWwgUmVnaXN0cnk6Cj4gICAg
+ICAgICBBbXRzZ2VyaWNodCBDaGVtbml0eiwgSFJCIDI4MDgyOyBVU3QuLUlkIE5yLiBERTE1MDUz
+NDAxMAo+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRy
+aS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
+Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
