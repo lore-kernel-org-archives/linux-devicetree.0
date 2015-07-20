@@ -1,82 +1,169 @@
-From: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Subject: Re: [PATCH] backlight: pm8941-wled: Move PM8941 WLED driver to
- backlight
-Date: Mon, 20 Jul 2015 10:45:32 -0700
-Message-ID: <20150720174532.GA4753@usrtlx11787.corpusers.net>
-References: <1436990540-23354-1-git-send-email-bjorn.andersson@sonymobile.com>
- <004501d0c2f7$7ee51f40$7caf5dc0$@com>
+From: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
+Subject: RE: [PATCH RFC V1 2/3] rtc: da9063: Add DA9062 RTC capability to
+ DA9063 RTC driver
+Date: Mon, 20 Jul 2015 17:57:50 +0000
+Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7014B253DC9@SW-EX-MBX02.diasemi.com>
+References: <cover.1436427954.git.stwiss.opensource@diasemi.com>
+ <e2de6b382e8e81b40c0eb466f7b19364c13ba5a9.1436427954.git.stwiss.opensource@diasemi.com>
+ <20150717234525.GI3487@piout.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <004501d0c2f7$7ee51f40$7caf5dc0$@com>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: 'Rob Herring' <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, 'Pawel Moll' <pawel.moll-5wv7dgnIgG8@public.gmane.org>, 'Mark Rutland' <mark.rutland-5wv7dgnIgG8@public.gmane.org>, 'Ian Campbell' <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, 'Kumar Gala' <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, 'Bryan Wu' <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, 'Richard Purdie' <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, 'Jacek Anaszewski' <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Lee Jones' <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, 'Jean-Christophe Plagniol-Villard' <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, 'Tomi Valkeinen' <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, 'Rob Clark' <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150717234525.GI3487@piout.net>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: Alessandro Zummo <a.zummo@towertech.it>, Lee Jones <lee.jones@linaro.org>, DEVICETREE <devicetree@vger.kernel.org>, LINUXINPUT <linux-input@vger.kernel.org>, LINUXKERNEL <linux-kernel@vger.kernel.org>, RTCLINUX <rtc-linux@googlegroups.com>, David Dajun Chen <david.chen@diasemi.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Support Opensource <Support.Opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon 20 Jul 07:22 PDT 2015, Jingoo Han wrote:
+On 18 July 2015 00:45, Alexandre Belloni wrote:
 
-> On Thursday, July 16, 2015 5:02 AM, Bjorn Andersson wrote:
-> > 
-> > The Qualcomm PM8941 WLED block is used for backlight and should therefor
-> > be in the backlight framework and not in the LED framework. This moves
-> > the driver and adapts to the backlight api instead.
-> > 
-> > Signed-off-by: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/leds/leds-pm8941-wled.txt  |  5 +-
-> >  drivers/leds/Kconfig                               |  8 ---
-> >  drivers/leds/Makefile                              |  1 -
-> >  drivers/video/backlight/Kconfig                    |  8 +++
-> >  drivers/video/backlight/Makefile                   |  1 +
-> >  .../backlight/pm8941-wled.c}                       | 59 ++++++++++------------
-> >  6 files changed, 36 insertions(+), 46 deletions(-)
-> >  rename drivers/{leds/leds-pm8941-wled.c => video/backlight/pm8941-wled.c} (90%)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/leds/leds-pm8941-wled.txt
-> > b/Documentation/devicetree/bindings/leds/leds-pm8941-wled.txt
-> > index a85a964d61f5..424f8444a6cd 100644
-> > --- a/Documentation/devicetree/bindings/leds/leds-pm8941-wled.txt
-> > +++ b/Documentation/devicetree/bindings/leds/leds-pm8941-wled.txt
+> On 09/07/2015 at 08:45:53 +0100, S Twiss wrote :
+> > From: S Twiss <stwiss.opensource@diasemi.com>
+> >
+> > Add DA9062 RTC support into the existing DA9063 RTC driver component by
+> > using generic access tables for common register and bit mask definitions.
+> >
+> > The following change will add generic register and bit mask support to the
+> > DA9063 RTC. The changes are slightly complicated by requiring support for
+> > three register sets: DA9063-AD, DA9063-BB and DA9062-AA.
+> >
+> > The following alterations have been made to the DA9063 RTC:
+
+[...]
+
+> > - Addition of a re-try when reading the RTC inside da9063_rtc_read_time()
 > 
-> Please move this txt file to 'backlight' directory.
+> Can you separate that change in another patch as it is a change in the
+> behaviour of the driver? And maybe give a word or two on why this is
+> needed.
+
+Sure.
+
+I will separate this into a new patch and add it at a later date. It is a recommendation
+to have this in for both DA9062/3 now, although I have not seen this happen during
+my testing -- it should be added.
+Something similar happened with the RTC previously -- everything tested fine 
+with earlier kernels until the RTC core functions were improved and I picked up a
+synchronisation problem with my testing:
+
+http://lxr.free-electrons.com/source/drivers/rtc/rtc-da9063.c#L129
+
+[...]
+
+> > Checks performed with linux-next/next-20150708/scripts/checkpatch.pl
+> >  Kconfig                   total: 0 errors, 15 warnings, 1600 lines checked
+> >  rtc-da9063.c              total: 0 errors, 0 warnings, 531 lines checked
+> 
+> This is not true, there is a warning:
+> WARNING: DT compatible string "dlg,da9062-rtc" appears un-documented
+> -- check /home/alex/M/linux/Documentation/devicetree/bindings/
+> #275: FILE: drivers/rtc/rtc-da9063.c:171:
+> +     { .compatible = "dlg,da9062-rtc", .data = &da9062_aa_regs },
+> 
+> patch 3/3 should come before 2/3 if you want to avoid that.
+
+I will re-order the patches accordingly.
+
+[...]
+
+> > diff --git a/drivers/rtc/rtc-da9063.c b/drivers/rtc/rtc-da9063.c
+> > index 7ffc570..e94fb6d 100644
+> > --- a/drivers/rtc/rtc-da9063.c
+> > +++ b/drivers/rtc/rtc-da9063.c
+> > @@ -1,127 +1,274 @@
+> > -/* rtc-da9063.c - Real time clock device driver for DA9063
+> > - * Copyright (C) 2013-14  Dialog Semiconductor Ltd.
+> > +/*
+> > + * Real time clock device driver for DA9063/DA9062
+> > + * Copyright (C) 2013-15  Dialog Semiconductor Ltd.
+> >   *
+> > - * This library is free software; you can redistribute it and/or
+> > - * modify it under the terms of the GNU Library General Public
+> > - * License as published by the Free Software Foundation; either
+> > - * version 2 of the License, or (at your option) any later version.
+> > + * This program is free software; you can redistribute it and/or
+> > + * modify it under the terms of the GNU General Public License
+> > + * as published by the Free Software Foundation; either version 2
+> > + * of the License, or (at your option) any later version.
+> >   *
+> > - * This library is distributed in the hope that it will be useful,
+> > + * This program is distributed in the hope that it will be useful,
+> >   * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > - * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+> > - * Library General Public License for more details.
+> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > + * GNU General Public License for more details.
+> >   */
+> >
+> 
+> Please also list that license change in the commit log. It should also
+> probably be separated in another patch.
 > 
 
-Of course
+I can add this to a different patch and change it at a later date.
+It is to fix a minor wording problem with the GPL header so it matches the correct
+MODULE_LICENSE(""); macro. 
 
-[..]
+https://lkml.org/lkml/2015/4/18/19
 
-> > diff --git a/drivers/video/backlight/Kconfig b/drivers/video/backlight/Kconfig
-> > index 0505b796d743..6c67c5430933 100644
-> > --- a/drivers/video/backlight/Kconfig
-> > +++ b/drivers/video/backlight/Kconfig
-> > @@ -299,6 +299,14 @@ config BACKLIGHT_TOSA
-> >  	  If you have an Sharp SL-6000 Zaurus say Y to enable a driver
-> >  	  for its backlight
-> > 
-> > +config BACKLIGHT_PM8941_WLED
-> > +	tristate "Qualcomm PM8941 WLED Driver"
-> > +	depends on LEDS_CLASS
+The info at the top of the file needs to remove the LGPL worded text where appropriate:
+words such as "Library" from the line "GNU Library General Public License"; and replace
+the word "library" with "program" in several places
+
+> [...]
 > 
-> LEDS_CLASS?
-> Please check your patch carefully.
+> >  static int da9063_rtc_probe(struct platform_device *pdev)
+> >  {
+> > -	struct da9063 *da9063 = dev_get_drvdata(pdev->dev.parent);
+> > -	struct da9063_rtc *rtc;
+> > +	struct da9063_compatible_rtc *rtc;
+> > +	const struct da9063_compatible_rtc_regmap *config;
+> > +	const struct of_device_id *match;
+> >  	int irq_alarm;
+> >  	u8 data[RTC_DATA_LEN];
+> >  	int ret;
+> >
+> > -	ret = regmap_update_bits(da9063->regmap, DA9063_REG_CONTROL_E,
+> > -				 DA9063_RTC_EN, DA9063_RTC_EN);
+> > +	match = of_match_node(da9063_compatible_reg_id_table,
+> > +			      pdev->dev.of_node);
+> > +	if (!match)
 > 
+> This will never happen if you are only probed from DT and this is waht
+> you expect now.
 
-Sorry about that.
+Yes, I will change this.
 
-> One more thing,
-> Did you test this patch with the board?
-> If not, I will not accept this patch, unless other people send 'Tested-by'.
+> > +		return -ENXIO;
+> > +
+> > +	rtc = devm_kzalloc(&pdev->dev, sizeof(*rtc), GFP_KERNEL);
+> > +	if (!rtc)
+> > +		return -ENOMEM;
+> > +
+> > +	if (strncmp(match->name, "dlg,da9063-rtc", 14) == 0) {
+> 
+> You must not do that.
+> You should add a new compatible and change the of_compatible string of
+> the mfd_cell in drivers/mfd/da9063-core.c onc you know the variant.
 
-I've tested the driver on the Sony Xperia Z3 and it visually behaves as
-expected.
+I can check for a binary comparison against the address of the 
+static const struct of_device_id da9063_compatible_reg_id_table[] = {}
+entry for DA9063.
 
-I'll send you an updated patch shortly.
+The DA9063 driver already associates "dlg,da9063-rtc" with both BB and AD
+register maps. I think that altering the string at this point would break backwards
+compatibility in the device tree for the DA9063.
 
-Thank you,
-Bjorn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The DA9063 core dynamically checks for the chip variant at run-time and then saves
+it in the "variant_code". This comes from the original submission of the driver.
+Distinguishing DT compatible strings was suggested, but the method conflicted with the
+automatic variant detection of the DA9063 chip, and so it was decided against.
+
+https://lkml.org/lkml/2015/1/19/144
+
+[...]
+
+Regards,
+Steve
