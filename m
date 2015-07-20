@@ -1,70 +1,140 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] ARM: at91: sama5/dt: update rstc to correct
- compatible string
-Date: Mon, 20 Jul 2015 11:34:00 +0200
-Message-ID: <20150720093400.GG15539@piout.net>
-References: <1437384726-24927-1-git-send-email-josh.wu@atmel.com>
- <1437384726-24927-2-git-send-email-josh.wu@atmel.com>
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Subject: Re: [PATCH V4 3/7] i2c: qup: Add V2 tags support
+Date: Mon, 20 Jul 2015 12:44:03 +0300
+Message-ID: <1437385443.6267.5.camel@mm-sol.com>
+References: <1436412350-19519-1-git-send-email-sricharan@codeaurora.org>
+	 <1436412350-19519-4-git-send-email-sricharan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1437384726-24927-2-git-send-email-josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1436412350-19519-4-git-send-email-sricharan@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Sricharan R <sricharan@codeaurora.org>
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, galak@codeaurora.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, agross@codeaurora.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 20/07/2015 at 17:32:06 +0800, Josh Wu wrote :
-> They'll use "atmel,sama5d3-rstc" for reset function.
-> 
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Acked-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-> ---
-> 
-> Changes in v2: None
-> 
->  arch/arm/boot/dts/sama5d3.dtsi | 2 +-
->  arch/arm/boot/dts/sama5d4.dtsi | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5d3.dtsi
-> index 9e2444b..280255b 100644
-> --- a/arch/arm/boot/dts/sama5d3.dtsi
-> +++ b/arch/arm/boot/dts/sama5d3.dtsi
-> @@ -1259,7 +1259,7 @@
->  			};
->  
->  			rstc@fffffe00 {
-> -				compatible = "atmel,at91sam9g45-rstc";
-> +				compatible = "atmel,sama5d3-rstc";
->  				reg = <0xfffffe00 0x10>;
->  			};
->  
-> diff --git a/arch/arm/boot/dts/sama5d4.dtsi b/arch/arm/boot/dts/sama5d4.dtsi
-> index 3ee22ee..481196c 100644
-> --- a/arch/arm/boot/dts/sama5d4.dtsi
-> +++ b/arch/arm/boot/dts/sama5d4.dtsi
-> @@ -1277,7 +1277,7 @@
->  			};
->  
->  			rstc@fc068600 {
-> -				compatible = "atmel,at91sam9g45-rstc";
-> +				compatible = "atmel,sama5d3-rstc";
->  				reg = <0xfc068600 0x10>;
->  			};
->  
-> -- 
-> 1.9.1
-> 
+Hi Sricharan,
 
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Thu, 2015-07-09 at 08:55 +0530, Sricharan R wrote:
+> QUP from version 2.1.1 onwards, supports a new format of
+> i2c command tags. Tag codes instructs the controller to
+> perform a operation like read/write. This new tagging version
+> supports bam dma and transfers of more than 256 bytes without 'stop'
+> in between. Adding the support for the same.
+
+IIRC, more than 256 bytes in message is supported only in BAM(DMA)
+mode, if this is true, please be more explicit in commit message.
+
+You haven't tried to read more than 256 bytes with this
+patch, right? See qup_i2c_quirks ;-) 
+
+> 
+> 
+>  struct qup_i2c_dev {
+>         struct device*dev;
+>         void __iomem*base;
+> @@ -117,6 +138,7 @@ struct qup_i2c_dev {
+>         int     in_blk_sz;
+> 
+>         unsigned longone_byte_t;
+> +       struct qup_i2c_blockblk;
+> 
+>         struct i2c_msg*msg;
+>         /* Current posion in user message buffer */
+> @@ -126,6 +148,14 @@ struct qup_i2c_dev {
+>         /* QUP core errors */
+>         u32     qup_err;
+> 
+> +       int     use_v2_tags;
+> +
+> +       int (*qup_i2c_write_one)(struct qup_i2c_dev *qup,
+> +                                       struct i2c_msg *msg);
+> +
+> +       int (*qup_i2c_read_one)(struct qup_i2c_dev *qup,
+> +                               struct i2c_msg *msg);
+> +
+
+Do we really need additional level of indirection?
+
+We have separate struct i2c_algorithm, then we have common 
+qup_i2c_read/write methods and then we have different 
+read/write sub functions. I don't think 3-4 lines code reuse
+deserve increased complexity.
+
+<snip>
+
+> +static void qup_i2c_get_blk_data(struct qup_i2c_dev *qup,
+> +                                       struct i2c_msg *msg)
+> +{
+
+This is more like "set_blk_metadata". Second argument could fit line above.
+
+> +       memset(&qup->blk, 0, sizeof(qup->blk));
+> +
+> +       if (!qup->use_v2_tags) {
+> +               if (!(msg->flags & I2C_M_RD))
+> +                       qup->blk.tx_tag_len = 1;
+> +               return;
+> +       }
+> +
+> +       qup->blk.data_len = msg->len;
+> +       qup->blk.count = (msg->len + QUP_READ_LIMIT - 1) / QUP_READ_LIMIT;
+> +
+> +       /* 4 bytes for first block and 2 writes for rest */
+> +       qup->blk.tx_tag_len = 4 + (qup->blk.count - 1) * 2;
+> +
+> +       /* There are 2 tag bytes that are read in to fifo for every block */
+> +       if (msg->flags & I2C_M_RD)
+> +               qup->blk.rx_tag_len = qup->blk.count * 2;
+> +}
+> +
+
+<snip>
+
+> +static int qup_i2c_get_tags(u8 *tags, struct qup_i2c_dev *qup,
+> +                                                       struct i2c_msg *msg)
+> +{
+
+This is more like "set_tags".
+
+> +       u16 addr = (msg->addr << 1) | ((msg->flags & I2C_M_RD) == I2C_M_RD);
+> +       int len = 0;
+> +       int data_len;
+> +
+> +       if (qup->blk.pos == 0) {
+> +               tags[len++] = QUP_TAG_V2_START;
+> +               tags[len++] = addr & 0xff;
+> +
+> +               if (msg->flags & I2C_M_TEN)
+> +                       tags[len++] = addr >> 8;
+> +       }
+> +
+> +       /* Send _STOP commands for the last block */
+> +       if (qup->blk.pos == (qup->blk.count - 1)) {
+> +               if (msg->flags & I2C_M_RD)
+> +                       tags[len++] = QUP_TAG_V2_DATARD_STOP;
+> +               else
+> +                       tags[len++] = QUP_TAG_V2_DATAWR_STOP;
+> +       } else {
+> +               if (msg->flags & I2C_M_RD)
+> +                       tags[len++] = QUP_TAG_V2_DATARD;
+> +               else
+> +                       tags[len++] = QUP_TAG_V2_DATAWR;
+> +       }
+> +
+> +       data_len = qup_i2c_get_data_len(qup);
+> +
+> +       /* 0 implies 256 bytes */
+> +       if (data_len == QUP_READ_LIMIT)
+> +               tags[len++] = 0;
+> +       else
+> +               tags[len++] = data_len;
+> +
+> +       return len;
+> +}
+> +
+
+Regards,
+Ivan
