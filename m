@@ -1,65 +1,169 @@
-From: "Sricharan" <sricharan@codeaurora.org>
-Subject: RE: [PATCH V4 2/7] qup: i2c: factor out common code for reuse
-Date: Tue, 21 Jul 2015 12:24:38 +0530
-Message-ID: <000001d0c382$2061ceb0$61256c10$@codeaurora.org>
-References: <1436412350-19519-1-git-send-email-sricharan@codeaurora.org>	 <1436412350-19519-3-git-send-email-sricharan@codeaurora.org> <1437380700.6267.1.camel@mm-sol.com>
+From: "Sricharan" <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: RE: [PATCH V4 3/7] i2c: qup: Add V2 tags support
+Date: Tue, 21 Jul 2015 12:41:37 +0530
+Message-ID: <000301d0c384$7fe8d890$7fba89b0$@codeaurora.org>
+References: <1436412350-19519-1-git-send-email-sricharan@codeaurora.org>	 <1436412350-19519-4-git-send-email-sricharan@codeaurora.org> <1437385443.6267.5.camel@mm-sol.com>
 Mime-Version: 1.0
 Content-Type: text/plain;
 	charset="utf-8"
 Content-Transfer-Encoding: 8BIT
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1437380700.6267.1.camel@mm-sol.com>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1437385443.6267.5.camel-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
 Content-language: en-us
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: "'Ivan T. Ivanov'" <iivanov@mm-sol.com>
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, galak@codeaurora.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, agross@codeaurora.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "'Ivan T. Ivanov'" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 Hi Ivan,
-  Thnaks for all the reviews.
 
 > -----Original Message-----
-> From: linux-arm-msm-owner@vger.kernel.org [mailto:linux-arm-msm-
-> owner@vger.kernel.org] On Behalf Of Ivan T. Ivanov
-> Sent: Monday, July 20, 2015 1:55 PM
+> From: Ivan T. Ivanov [mailto:iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org]
+> Sent: Monday, July 20, 2015 3:14 PM
 > To: Sricharan R
-> Cc: devicetree@vger.kernel.org; linux-arm-msm@vger.kernel.org;
-> galak@codeaurora.org; linux-kernel@vger.kernel.org; linux-
-> i2c@vger.kernel.org; agross@codeaurora.org; dmaengine@vger.kernel.org;
-> linux-arm-kernel@lists.infradead.org
-> Subject: Re: [PATCH V4 2/7] qup: i2c: factor out common code for reuse
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-
+> i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org; dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Subject: Re: [PATCH V4 3/7] i2c: qup: Add V2 tags support
 > 
 > 
 > Hi Sricharan,
 > 
 > On Thu, 2015-07-09 at 08:55 +0530, Sricharan R wrote:
-> >
+> > QUP from version 2.1.1 onwards, supports a new format of i2c command
+> > tags. Tag codes instructs the controller to perform a operation like
+> > read/write. This new tagging version supports bam dma and transfers of
+> > more than 256 bytes without 'stop'
+> > in between. Adding the support for the same.
 > 
-> >  static int qup_i2c_read_one(struct qup_i2c_dev *qup, struct i2c_msg
-> > *msg)  {
-> > -       unsigned long left;
-> > -       int ret;
-> > +       int ret = 0;
+> IIRC, more than 256 bytes in message is supported only in BAM(DMA) mode,
+> if this is true, please be more explicit in commit message.
+
+   More than 256 byte read transfers are possible in V2 mode and not possible only
+   in V1 mode.  So qup_i2c_quirks should be populated only for V1 mode and V2 mode
+   during probe.
+
+> 
+> You haven't tried to read more than 256 bytes with this patch, right? See
+> qup_i2c_quirks ;-)
+     Ya I have tested for 256 bytes transfer in my previous series, not on
+     this one. My bad. Should have error'ed out with qup_i2c_quirks in place.
+     Anyways will not populate qup_i2c_quirks for v2 mode.
+
+> 
 > >
-> > -       qup->msg = msg;
-> > -       qup->pos  = 0;
-> > +       /*
-> > +               * The QUP block will issue a NACK and STOP on the bus when
-> reaching
-> > +               * the end of the read, the length of the read is specified as one
-> byte
-> > +               * which limits the possible read to 256 (QUP_READ_LIMIT) bytes.
-> > +               */
-> > +       if (msg->len > QUP_READ_LIMIT) {
-> > +               dev_err(qup->dev, "HW not capable of reads over %d bytes\n",
-> > +                       QUP_READ_LIMIT);
-> > +               return -EINVAL;
+> >
+> >  struct qup_i2c_dev {
+> >         struct device*dev;
+> >         void __iomem*base;
+> > @@ -117,6 +138,7 @@ struct qup_i2c_dev {
+> >         int     in_blk_sz;
+> >
+> >         unsigned longone_byte_t;
+> > +       struct qup_i2c_blockblk;
+> >
+> >         struct i2c_msg*msg;
+> >         /* Current posion in user message buffer */ @@ -126,6 +148,14
+> > @@ struct qup_i2c_dev {
+> >         /* QUP core errors */
+> >         u32     qup_err;
+> >
+> > +       int     use_v2_tags;
+> > +
+> > +       int (*qup_i2c_write_one)(struct qup_i2c_dev *qup,
+> > +                                       struct i2c_msg *msg);
+> > +
+> > +       int (*qup_i2c_read_one)(struct qup_i2c_dev *qup,
+> > +                               struct i2c_msg *msg);
+> > +
+> 
+> Do we really need additional level of indirection?
+> 
+> We have separate struct i2c_algorithm, then we have common
+> qup_i2c_read/write methods and then we have different read/write sub
+> functions. I don't think 3-4 lines code reuse deserve increased complexity.
+
+   Infact I was thinking this way as well. But anyways wanted to get reviewed
+   and see which was better. Will change this.
+
+> 
+> <snip>
+> 
+> > +static void qup_i2c_get_blk_data(struct qup_i2c_dev *qup,
+> > +                                       struct i2c_msg *msg) {
+> 
+> This is more like "set_blk_metadata". Second argument could fit line above.
+> 
+ Ok. Will change name and indentation.
+
+> > +       memset(&qup->blk, 0, sizeof(qup->blk));
+> > +
+> > +       if (!qup->use_v2_tags) {
+> > +               if (!(msg->flags & I2C_M_RD))
+> > +                       qup->blk.tx_tag_len = 1;
+> > +               return;
 > > +       }
-> >
+> > +
+> > +       qup->blk.data_len = msg->len;
+> > +       qup->blk.count = (msg->len + QUP_READ_LIMIT - 1) /
+> > + QUP_READ_LIMIT;
+> > +
+> > +       /* 4 bytes for first block and 2 writes for rest */
+> > +       qup->blk.tx_tag_len = 4 + (qup->blk.count - 1) * 2;
+> > +
+> > +       /* There are 2 tag bytes that are read in to fifo for every block */
+> > +       if (msg->flags & I2C_M_RD)
+> > +               qup->blk.rx_tag_len = qup->blk.count * 2; }
+> > +
 > 
-> This should be removed. Please see qup_i2c_quirks.
+> <snip>
 > 
-  Ok get it, will remove this.
+> > +static int qup_i2c_get_tags(u8 *tags, struct qup_i2c_dev *qup,
+> > +                                                       struct i2c_msg
+> > +*msg) {
+> 
+> This is more like "set_tags".
+
+ Ok, will change.
+> 
+> > +       u16 addr = (msg->addr << 1) | ((msg->flags & I2C_M_RD) ==
+> I2C_M_RD);
+> > +       int len = 0;
+> > +       int data_len;
+> > +
+> > +       if (qup->blk.pos == 0) {
+> > +               tags[len++] = QUP_TAG_V2_START;
+> > +               tags[len++] = addr & 0xff;
+> > +
+> > +               if (msg->flags & I2C_M_TEN)
+> > +                       tags[len++] = addr >> 8;
+> > +       }
+> > +
+> > +       /* Send _STOP commands for the last block */
+> > +       if (qup->blk.pos == (qup->blk.count - 1)) {
+> > +               if (msg->flags & I2C_M_RD)
+> > +                       tags[len++] = QUP_TAG_V2_DATARD_STOP;
+> > +               else
+> > +                       tags[len++] = QUP_TAG_V2_DATAWR_STOP;
+> > +       } else {
+> > +               if (msg->flags & I2C_M_RD)
+> > +                       tags[len++] = QUP_TAG_V2_DATARD;
+> > +               else
+> > +                       tags[len++] = QUP_TAG_V2_DATAWR;
+> > +       }
+> > +
+> > +       data_len = qup_i2c_get_data_len(qup);
+> > +
+> > +       /* 0 implies 256 bytes */
+> > +       if (data_len == QUP_READ_LIMIT)
+> > +               tags[len++] = 0;
+> > +       else
+> > +               tags[len++] = data_len;
+> > +
+> > +       return len;
+> > +}
+> > +
 
 Regards,
- Sricharan
+  Sricharan
