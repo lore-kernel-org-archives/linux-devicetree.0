@@ -1,117 +1,60 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 3/4] clk: 88pm800: Add clk provider driver for 88pm800
- family of devices
-Date: Tue, 21 Jul 2015 13:52:19 -0700
-Message-ID: <55AEB103.9010205@codeaurora.org>
-References: <1437476823-3358-1-git-send-email-vaibhav.hiremath@linaro.org> <1437476823-3358-4-git-send-email-vaibhav.hiremath@linaro.org> <55AE990E.2040004@codeaurora.org> <55AE9F48.20600@linaro.org>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH v3 4/4] dt: paz00: define nvec as child of i2c bus
+Date: Tue, 21 Jul 2015 22:52:50 +0200
+Message-ID: <20150721205250.GA1521@katana>
+References: <1437424546-30405-1-git-send-email-danindrey@mail.ru>
+ <4778199.vGjAP5lpOS@fb07-iapwap2>
+ <55AE0803.10603@mail.ru>
+ <2107735.0gMPOtIgYc@fb07-iapwap2>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <55AE9F48.20600@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, mturquette@baylibre.com, lee.jones@linaro.org, k.kozlowski@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="lrZ03NoBR/3+SXJZ"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <2107735.0gMPOtIgYc@fb07-iapwap2>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Dietrich <marvin24-Mmb7MZpHnFY@public.gmane.org>
+Cc: Andrey Danin <danindrey-JGs/UdohzUI@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-tBiZLqfeLfOHmIFyCCdPziST3g8Odh+X@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Julian Andres Klode <jak-4HMq4SXA452hPH1hqNUYSQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/21/2015 12:36 PM, Vaibhav Hiremath wrote:
->
-> On Wednesday 22 July 2015 12:40 AM, Stephen Boyd wrote:
->> On 07/21/2015 04:07 AM, Vaibhav Hiremath wrote:
->>> +
->>> +    pm800_clks = devm_kzalloc(&pdev->dev,
->>> +                sizeof(*pm800_clks) * PM800_CLKS_NUM,
->>> +                GFP_KERNEL);
->>
->> devm_kcalloc()
->>
->>> +    if (!pm800_clks)
->>> +        return -ENOMEM;
->>> +
->>> +    clk_table = devm_kzalloc(&pdev->dev,
->>> +                sizeof(struct clk *) * PM800_CLKS_NUM,
->>> +                GFP_KERNEL);
->>
->> devm_kcalloc()
->>
->
-> why kcalloc?
-> Is it because it take another argument for to allocate array?
->
 
-Yes. See Chapter 14 of Documentation/CodingStyle for why devm_kcalloc() 
-is preferred.
+--lrZ03NoBR/3+SXJZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->
->>> +    if (!clk_table)
->>> +        return -ENOMEM;
->>> +
->
->
-> < snip >
->
->>> +            of_clk_data);
->>> +    if (ret) {
->>> +        dev_err(&pdev->dev, "Fail to add OF clk provider : %d\n", 
->>> ret);
->>> +        goto err;
->>> +    }
->>> +
->>> +    /* Common for all 32KHz clock output */
->>> +    ret = pm800_init_clk(&pm800_clks[0]);
->>
->> Shouldn't we do this before registering the clocks with the framework?
->>
->
-> Actually I thought of this, but moved it at the end because, I feel
-> this init should happen only when we are sure that clock is ready for
-> consumption. This is HW initialization where we will be setting
-> FREERUNNIG mode (and similar stuffs), so thought it would be bad idea
-> to set it first and then on error (later in probe) clear it. Not sure
-> whether it has any impact on HW behaviour.
-> Also, specially internal reference counter is changing in the init.
-> Just tried to avoid back-n-forth set-n-clear of this.
 
-Ok.
+> It's up to you. I think if the NV guys are ok with the tegra i2c change,=
+=20
+> Wolfram can merge it right away for 4.3.
 
->
->>> +    if (ret) {
->>> +        dev_err(&pdev->dev, "Failed to initialize clk : %d\n", ret);
->>> +        goto err;
->>> +    }
->>> +
->>> +    platform_set_drvdata(pdev, pm800_clks);
->>> +
->>> +    return 0;
->>> +
->>> +err:
->>> +    for (i = 0; i < PM800_CLKS_NUM; i++) {
->>> +        if (pm800_clks[i].lookup)
->>> +            clkdev_drop(pm800_clks[i].lookup);
->>> +    }
->>> +
->>> +    return ret;
->>> +}
->>> +
->>> +static int pm800_clk_remove(struct platform_device *pdev)
->>> +{
->>> +    struct pm800_clk *pm800_clks = platform_get_drvdata(pdev);
->>> +    int i;
->>> +
->>> +    of_clk_del_provider(pm800_clks[0].clk_np);
->>> +    /* Drop the reference obtained in pm800_clk_parse_dt */
->>> +    of_node_put(pm800_clks[0].clk_np);
->>
->> This is odd. Why are we keeping the reference in the driver?
->>
->
-> Honestly I do not have any good answer here. I have to admit that it is
-> getting carry forwarded from legacy driver.
->
+I asked him to resend, because I *want* to merge it for 4.3 :) Only the
+slave-mode enablement for i2c, of course. The other patches need to go
+via some other tree (when they are done).
 
-Well we shouldn't do things if we don't know why we're doing them. 
-Krzysztof?
+So, V4 with only this one patch is a good idea in my book.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+
+--lrZ03NoBR/3+SXJZ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJVrrEiAAoJEBQN5MwUoCm2gGAP/2bVp+X9GDE2skRGIHa+60b0
+MvW2DZnF+j5yC7URzx9LxlZ/udynSga7Ndr7nGDybOg92yOwbK4o42oKElgRmXCG
+lzEaGfN2627r7l5DQUxuqxVWxMSpy4dVdcUPLinpudmme5hpgmXE+5gWHlxR2sl6
+b2vhogzjQVCEU4NdMOVkeVUtUXWDqAKfKrDRe+v8N31829zh62gRmVPE4EwhtNZZ
+0XxQ9COoRPErU8U6UmBgZAL+NaV0YXyxX/iwKiM0JW6HpHX24rneyzygDA5Y2uQg
+YrOt6BDD5K7kzw2abPlTSSTOpOtuY5zIkuEharO/ASR3FtPoSGL31VHv6+93jPGc
+lB65rn6MfCEAHdMhQnFeA+/X/bkwh1xTZz6SYn7vRtcQws6GTQQjSEwlrYthOiyw
+nvW4EB8DFoOlTPp9to8/veAFVeO5pe/g5yomJS4sm7/wHA3VVMqL0lCnf640Unww
+icBfY7SYT9Y1nHafmGpwrpNeC5X7inscQwjucZIsvdCrnaOEdcWlYice+qBJ/lqK
+j702gMewIT5S+Sk7DGBm4hGFhRPiLw2DFpMSALLsuxsvB31x2lIWCg+dgk8Rt8uF
+KVfbgJTczmS2Vc8XYpULNnf59g301wP5o+8qmjKKGPohZHXVh/vdpcics04J18+A
+cCv/JBx918p9nIDPEPlR
+=mCbX
+-----END PGP SIGNATURE-----
+
+--lrZ03NoBR/3+SXJZ--
