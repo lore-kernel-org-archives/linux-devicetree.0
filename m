@@ -1,7 +1,7 @@
 From: Zhou Wang <wangzhou1@hisilicon.com>
 Subject: [PATCH v4 0/5] PCI: hisi: Add PCIe host support for Hisilicon Soc Hip05
-Date: Tue, 21 Jul 2015 14:42:22 +0800
-Message-ID: <1437460947-2328-1-git-send-email-wangzhou1@hisilicon.com>
+Date: Tue, 21 Jul 2015 14:48:38 +0800
+Message-ID: <1437461323-3531-1-git-send-email-wangzhou1@hisilicon.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-pci-owner@vger.kernel.org>
