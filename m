@@ -1,72 +1,30 @@
-From: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
-Subject: [PATCH 4/4] mfd: 88pm800: Add support for clk subdevice
-Date: Tue, 21 Jul 2015 16:37:03 +0530
-Message-ID: <1437476823-3358-5-git-send-email-vaibhav.hiremath@linaro.org>
-References: <1437476823-3358-1-git-send-email-vaibhav.hiremath@linaro.org>
+From: Stas Sergeev <stsp@list.ru>
+Subject: Re: [PATCH net v5 0/4] net: enable inband link state negotiation only
+ when explicitly requested
+Date: Tue, 21 Jul 2015 14:17:40 +0300
+Message-ID: <55AE2A54.3010701@list.ru>
+References: <1437439798-12622-1-git-send-email-f.fainelli@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1437476823-3358-1-git-send-email-vaibhav.hiremath@linaro.org>
+In-Reply-To: <1437439798-12622-1-git-send-email-f.fainelli@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: robh+dt@kernel.org, mturquette@baylibre.com, lee.jones@linaro.org, k.kozlowski@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
+To: Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org
+Cc: davem@davemloft.net, linux-kernel@vger.kernel.org, mxs@sbrk.org, arno@natisbad.org, stsp@users.sourceforge.net, devicetree@vger.kernel.org, thomas.petazzoni@free-electrons.com
 List-Id: devicetree@vger.kernel.org
 
-This patch adds mfd_cell/clk-subdevice for 88PM800 MFD
-(and family of devices).
-
-Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
----
- drivers/mfd/88pm800.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
-
-diff --git a/drivers/mfd/88pm800.c b/drivers/mfd/88pm800.c
-index f104a32..9723eac 100644
---- a/drivers/mfd/88pm800.c
-+++ b/drivers/mfd/88pm800.c
-@@ -173,6 +173,14 @@ static const struct mfd_cell regulator_devs[] = {
- 	},
- };
- 
-+static struct mfd_cell clk_devs[] = {
-+	{
-+	 .name = "88pm80x-clk",
-+	 .of_compatible = "marvell,88pm800-clk",
-+	 .id = -1,
-+	},
-+};
-+
- static const struct regmap_irq pm800_irqs[] = {
- 	/* INT0 */
- 	[PM800_IRQ_ONKEY] = {
-@@ -344,6 +352,17 @@ static int device_regulator_init(struct pm80x_chip *chip)
- 			      ARRAY_SIZE(regulator_devs), NULL, 0, NULL);
- }
- 
-+static int device_clk_init(struct pm80x_chip *chip)
-+{
-+	if (chip->type == CHIP_PM800)
-+		clk_devs[0].name = "88pm800-clk";
-+	else if (chip->type == CHIP_PM860)
-+		clk_devs[0].name = "88pm860-clk";
-+
-+	return mfd_add_devices(chip->dev, 0, &clk_devs[0],
-+			      ARRAY_SIZE(clk_devs), NULL, 0, NULL);
-+}
-+
- static int device_irq_init_800(struct pm80x_chip *chip)
- {
- 	struct regmap *map = chip->regmap;
-@@ -513,6 +532,12 @@ static int device_800_init(struct pm80x_chip *chip)
- 		goto out;
- 	}
- 
-+	ret = device_clk_init(chip);
-+	if (ret) {
-+		dev_err(chip->dev, "Failed to add clk subdev\n");
-+		goto out;
-+	}
-+
- 	return 0;
- out_dev:
- 	mfd_remove_devices(chip->dev);
--- 
-1.9.1
+21.07.2015 03:49, Florian Fainelli =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> Hi all,
+>
+> Changes in v5:
+>
+> - removed an invalid use of the link_update callback in the SF2 drive=
+r
+>    was appeared after merging "net: phy: fixed_phy: handle link-down =
+case"
+Thanks for bringing this forward!
+=46or the future, perhaps it will make sense to also
+teach phylib to never read link status (including speed)
+when link is down. Will help to narrow more of such problems.
