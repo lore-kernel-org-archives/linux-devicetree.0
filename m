@@ -1,55 +1,34 @@
-From: Jisheng Zhang <jszhang@marvell.com>
-Subject: [PATCH 1/3] arm64: hugetlb: remove paragraph about writing to FSF
-Date: Tue, 21 Jul 2015 22:43:58 +0800
-Message-ID: <1437489840-2368-2-git-send-email-jszhang@marvell.com>
-References: <1437489840-2368-1-git-send-email-jszhang@marvell.com>
+From: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 0/3] arm64: remove paragraph about writing to FSF
+Date: Tue, 21 Jul 2015 22:43:57 +0800
+Message-ID: <1437489840-2368-1-git-send-email-jszhang@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1437489840-2368-1-git-send-email-jszhang@marvell.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jisheng Zhang <jszhang@marvell.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Remove paragraph about writing to the Free Software Foundation's
-mailing address from GPL notice.
+These patches remove paragraph about writing to FSF in arch/arm64 dir.
 
-Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
----
- arch/arm64/include/asm/hugetlb.h | 4 ----
- arch/arm64/mm/hugetlbpage.c      | 4 ----
- 2 files changed, 8 deletions(-)
+Jisheng Zhang (3):
+  arm64: hugetlb: remove paragraph about writing to FSF
+  arm64: dts: cavium: remove paragraph about writing to FSF
+  arm64: dts: freescale: remove paragraph about writing to FSF
 
-diff --git a/arch/arm64/include/asm/hugetlb.h b/arch/arm64/include/asm/hugetlb.h
-index 2fd9b14..bb4052e 100644
---- a/arch/arm64/include/asm/hugetlb.h
-+++ b/arch/arm64/include/asm/hugetlb.h
-@@ -13,10 +13,6 @@
-  * but WITHOUT ANY WARRANTY; without even the implied warranty of
-  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  * GNU General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program; if not, write to the Free Software
-- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-  */
- 
- #ifndef __ASM_HUGETLB_H
-diff --git a/arch/arm64/mm/hugetlbpage.c b/arch/arm64/mm/hugetlbpage.c
-index 831ec53..383b03f 100644
---- a/arch/arm64/mm/hugetlbpage.c
-+++ b/arch/arm64/mm/hugetlbpage.c
-@@ -13,10 +13,6 @@
-  * but WITHOUT ANY WARRANTY; without even the implied warranty of
-  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  * GNU General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program; if not, write to the Free Software
-- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-  */
- 
- #include <linux/init.h>
+ arch/arm64/boot/dts/cavium/thunder-88xx.dts        | 5 -----
+ arch/arm64/boot/dts/cavium/thunder-88xx.dtsi       | 5 -----
+ arch/arm64/boot/dts/freescale/fsl-ls2085a-simu.dts | 5 -----
+ arch/arm64/boot/dts/freescale/fsl-ls2085a.dtsi     | 5 -----
+ arch/arm64/include/asm/hugetlb.h                   | 4 ----
+ arch/arm64/mm/hugetlbpage.c                        | 4 ----
+ 6 files changed, 28 deletions(-)
+
 -- 
 2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
