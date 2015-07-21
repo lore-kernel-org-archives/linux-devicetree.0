@@ -1,72 +1,81 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH net v5 1/4] net: dsa: bcm_sf2: Do not override speed settings
-Date: Mon, 20 Jul 2015 17:49:55 -0700
-Message-ID: <1437439798-12622-2-git-send-email-f.fainelli@gmail.com>
-References: <1437439798-12622-1-git-send-email-f.fainelli@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1437439798-12622-1-git-send-email-f.fainelli@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: netdev@vger.kernel.org
-Cc: davem@davemloft.net, linux-kernel@vger.kernel.org, mxs@sbrk.org, arno@natisbad.org, stsp@users.sourceforge.net, devicetree@vger.kernel.org, thomas.petazzoni@free-electrons.com, Florian Fainelli <f.fainelli@gmail.com>
+From: Grazvydas Ignotas <notasas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 2/4] ARM: dts: omap3-pandora: add support for usb host and 32k buffer
+Date: Tue, 21 Jul 2015 04:11:59 +0300
+Message-ID: <1437441121-31658-2-git-send-email-notasas@gmail.com>
+References: <1437441121-31658-1-git-send-email-notasas@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1437441121-31658-1-git-send-email-notasas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Grazvydas Ignotas <notasas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The SF2 driver currently overrides speed settings for its port
-configured using a fixed PHY, this is both unnecessary and incorrect,
-because we keep feedback to the hardware parameters that we read from
-the PHY device, which in the case of a fixed PHY cannot possibly change
-speed.
+This adds missing bits for EHCI HS USB host support and 32k clock
+buffer control for the wg7210 bt+wifi module.
 
-This is a required change to allow the fixed PHY code to allow
-registering a PHY with a link configured as DOWN by default and avoid
-some sort of circular dependency where we require the link_update
-callback to run to program the hardware, and we then utilize the fixed
-PHY parameters to program the hardware with the same settings.
-
-Fixes: 246d7f773c13 ("net: dsa: add Broadcom SF2 switch driver")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Grazvydas Ignotas <notasas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- drivers/net/dsa/bcm_sf2.c | 18 +-----------------
- 1 file changed, 1 insertion(+), 17 deletions(-)
+ arch/arm/boot/dts/omap3-pandora-common.dtsi | 36 +++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
-diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
-index 972982f8bea7..3297604f8216 100644
---- a/drivers/net/dsa/bcm_sf2.c
-+++ b/drivers/net/dsa/bcm_sf2.c
-@@ -890,15 +890,11 @@ static void bcm_sf2_sw_fixed_link_update(struct dsa_switch *ds, int port,
- 					 struct fixed_phy_status *status)
- {
- 	struct bcm_sf2_priv *priv = ds_to_priv(ds);
--	u32 duplex, pause, speed;
-+	u32 duplex, pause;
- 	u32 reg;
+diff --git a/arch/arm/boot/dts/omap3-pandora-common.dtsi b/arch/arm/boot/dts/omap3-pandora-common.dtsi
+index f6363bc..6e82c4a 100644
+--- a/arch/arm/boot/dts/omap3-pandora-common.dtsi
++++ b/arch/arm/boot/dts/omap3-pandora-common.dtsi
+@@ -199,6 +199,38 @@
+ 			gpios = <&gpio4 12 GPIO_ACTIVE_HIGH>;   /* GPIO_108 */
+ 		};
+ 	};
++
++	/* HS USB Host PHY on PORT 2 */
++	hsusb2_phy: hsusb2_phy {
++		compatible = "usb-nop-xceiv";
++		reset-gpios = <&gpio1 16 GPIO_ACTIVE_LOW>; /* GPIO_16 */
++		vcc-supply = <&vaux2>;
++	};
++
++	/* HS USB Host VBUS supply
++	 * disabling this regulator causes current leakage, and LCD flicker
++	 * on earlier (CC) board revisions, so keep it always on */
++	usb_host_5v: fixed-regulator-usb_host_5v {
++		compatible = "regulator-fixed";
++		regulator-name = "usb_host_5v";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		regulator-always-on;
++		regulator-boot-on;
++		enable-active-high;
++		gpio = <&gpio6 4 0>;	/* GPIO_164 */
++	};
++
++	/* wg7210 (wifi+bt module) 32k clock buffer */
++	wg7210_32k: fixed-regulator-wg7210_32k {
++		compatible = "regulator-fixed";
++		regulator-name = "wg7210_32k";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		regulator-always-on;
++		enable-active-high;
++		gpio = <&twl_gpio 13 GPIO_ACTIVE_HIGH>;
++	};
+ };
  
- 	duplex = core_readl(priv, CORE_DUPSTS);
- 	pause = core_readl(priv, CORE_PAUSESTS);
--	speed = core_readl(priv, CORE_SPDSTS);
--
--	speed >>= (port * SPDSTS_SHIFT);
--	speed &= SPDSTS_MASK;
+ &omap3_pmx_core {
+@@ -501,6 +533,10 @@
+ 	port2-mode = "ehci-phy";
+ };
  
- 	status->link = 0;
++&usbhsehci {
++	phys = <0 &hsusb2_phy>;
++};
++
+ &gpmc {
+ 	ranges = <0 0 0x30000000 0x1000000>; /* CS0: 16MB for NAND */
  
-@@ -933,18 +929,6 @@ static void bcm_sf2_sw_fixed_link_update(struct dsa_switch *ds, int port,
- 		reg &= ~LINK_STS;
- 	core_writel(priv, reg, CORE_STS_OVERRIDE_GMIIP_PORT(port));
- 
--	switch (speed) {
--	case SPDSTS_10:
--		status->speed = SPEED_10;
--		break;
--	case SPDSTS_100:
--		status->speed = SPEED_100;
--		break;
--	case SPDSTS_1000:
--		status->speed = SPEED_1000;
--		break;
--	}
--
- 	if ((pause & (1 << port)) &&
- 	    (pause & (1 << (port + PAUSESTS_TX_PAUSE_SHIFT)))) {
- 		status->asym_pause = 1;
 -- 
-2.1.0
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
