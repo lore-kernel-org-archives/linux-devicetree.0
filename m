@@ -1,224 +1,139 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 3/6] mailbox: Add support for ST's Mailbox IP
-Date: Tue, 21 Jul 2015 16:06:29 +0100
-Message-ID: <20150721150629.GJ3061@x1>
-References: <1437134647-28298-1-git-send-email-lee.jones@linaro.org>
- <1437134647-28298-4-git-send-email-lee.jones@linaro.org>
- <CABb+yY2nAT6V4Q8suAXRtPXrXkArGWVTAW28ts4Z3C_ybuJovA@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] mfd: devicetree: add bindings for Atmel Flexcom
+Date: Tue, 21 Jul 2015 16:10:35 +0100
+Message-ID: <20150721151035.GK3061@x1>
+References: <cover.1434967670.git.cyrille.pitchen@atmel.com>
+ <337ab4936bd6ec2f24c42e2f8f363df21f491a02.1434967670.git.cyrille.pitchen@atmel.com>
+ <20150721090910.GG3061@x1>
+ <55AE53F2.5080904@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CABb+yY2nAT6V4Q8suAXRtPXrXkArGWVTAW28ts4Z3C_ybuJovA@mail.gmail.com>
+In-Reply-To: <55AE53F2.5080904@atmel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, kernel@stlinux.com, Devicetree List <devicetree@vger.kernel.org>
+To: Cyrille Pitchen <cyrille.pitchen@atmel.com>
+Cc: nicolas.ferre@atmel.com, boris.brezillon@free-electrons.com, alexandre.belloni@free-electrons.com, sameo@linux.intel.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 21 Jul 2015, Jassi Brar wrote:
+On Tue, 21 Jul 2015, Cyrille Pitchen wrote:
 
-> On Fri, Jul 17, 2015 at 5:34 PM, Lee Jones <lee.jones@linaro.org> wro=
-te:
-> > ST's platforms currently support a maximum of 5 Mailboxes, one for
-> > each of the supported co-processors situated on the platform.  Each
-> > Mailbox is divided up into 4 instances which consist of 32 channels=
-=2E
-> > Messages are passed between the application and co-processors using
-> > shared memory areas.  It is the Client's responsibility to manage
-> > these areas.
-> >
-> Thanks. It's a lot better than the old driver. However a few nits as =
-usual :)
-
-Never a problem. :)
-
-> > +
-> > +#define STI_MBOX_INST_MAX      4      /* RAM saving: Max supported=
- instances */
-> >
-> Above you say 5 instances. Another u32 doesn't cost much.
-
-4 instances, 5 mailboxes.
-
-> > +#define STI_MBOX_CHAN_MAX      20     /* RAM saving: Max supported=
- channels  */
-> > +
-> This assumption is reasonable.
+> Hi Lee,
 >=20
-> > +
-> > +static void sti_mbox_enable_channel(struct mbox_chan *chan)
-> > +{
-> > +       struct sti_channel *chan_info =3D chan->con_priv;
-> > +       struct sti_mbox_device *mdev =3D chan_info->mdev;
-> > +       struct sti_mbox_pdata *pdata =3D dev_get_platdata(mdev->dev=
-);
-> > +       unsigned int instance =3D chan_info->instance;
-> > +       unsigned int channel =3D chan_info->channel;
-> > +       unsigned long flags;
-> > +       void __iomem *base;
-> > +
-> > +       base =3D mdev->base + (instance * sizeof(u32));
-> > +
-> Maybe have something simpler like MBOX_BASE(instance)? Or some inline
-> function to avoid this 5-lines ritual?
+> Le 21/07/2015 11:09, Lee Jones a =C3=A9crit :
+> > On Mon, 22 Jun 2015, Cyrille Pitchen wrote:
+> ...
+> >> +- atmel,flexcom-mode: shall be a string among { "spi", "usart", "=
+i2c", "twi" }.
+> >> +  "i2c" and "twi" are synonymous.
+> >=20
+> > Please use a numerical value instead.  You can then define it in
+> > include/dt-bindings/*
+> >=20
+> > This is only required if you supply more than one child node.  Is t=
+hat
+> > the plan?  I ask because you only have one child node in the exampl=
+e
+> > below.
+> >=20
+> The "atmel,flexcom-mode" property is always required. The reset value=
+ of the
+> Operating Mode bit field inside the Flexcom Mode Register is 0 for "n=
+o serial
+> device". So none of the 3 embedded serial devices is clocked and all =
+of their
+> registers are inaccessible (read as zero).
+> Before using any of the 3 serial devices, the Operating Mode must be =
+set
+> accordingly by updating the Mode Register. Once done, only the select=
+ed serial
+> device is clocked. Also the external I/O lines of the Flexcom are mux=
+ed to
+> reach the selected serial device.
+>=20
+> The muxing is given by the following table:
+>=20
+> Flexcom pin    USART pin    SPI pin    I2C pin
+>         IO0          TXD       MOSI        TWD
+>         IO1          RXD       MISO       TWCK
+>         IO2          SCK       SPCK          -
+>         IO3          CTS      NPCS0          -=20
+>         IO4          RTS      NPCS1          -
+>=20
+>=20
+> Bus conflicting configuration:
+>  ______________________________________
+> |               Flexcom                |
+> |  _____         _____         _____   |
+> | |     |__CLK__| SPI |__I/O__|     |  |    ___________       _______=
+____
+> | |     |       |_____|       |     |  |   | SPI Slave |     | I2C Sl=
+ave |
+> | | CLK |                     | I/O |  |   |___________|     |_______=
+____|
+> |_| MUX |        _____        | MUX |__|_________|________________|
+> | |     |__CLK__| I2C |__I/O__|     |  |             shared bus
+> | |_____|       |_____|       |_____|  |
+> |______________________________________|
+>=20
+>=20
+> For instance, it is very unlikely to connect both I2C and SPI slaves =
+to
+> the very same Flexcom because I/O lines are shared. The operating mod=
+e is
+> selected once for all during the boot and will never change during ru=
+ntime.
+> That's why the Flexcom DT node should have exactly one child.
 
-I think some of the functions also make use of the intermediary
-pointers, but I'll look into it.
+You have contradicted your self here.  Firstly you say that the
+"atmel,flexcom-mode" property is always required, then you say that
+the DT node should only ever have one child.  If the latter is true,
+then you can infer which mode Flexcom needs to be in by which node is
+present.
 
-> > +       spin_lock_irqsave(&sti_mbox_chan_lock, flags);
-> > +       mdev->enabled[instance] |=3D BIT(channel);
-> > +       writel_relaxed(BIT(channel), base + pdata->ena_set);
-> > +       spin_unlock_irqrestore(&sti_mbox_chan_lock, flags);
-> >
-> You don't need locking for SET/CLR type registers which are meant for
-> when they could be accessed by processors that can not share a lock.
-> So maybe drop the lock here and elsewhere.
-
-Okay.
-
-> However, you need some mechanism to check if you succeeded 'owning'
-> the channel by reading back what you write to own the channel (not
-> sure which is that register here). Usually we need that action and
-> verification when we assign a channel to some user.
-
-I don't think there is a technical reason why it wouldn't succeed.  We
-don't normally read back every register change me make.  Why is this
-IP different?
-
-> > +static int sti_mbox_send_data(struct mbox_chan *chan, void *data)
-> > +{
-> > +       struct sti_channel *chan_info =3D chan->con_priv;
-> > +       struct sti_mbox_device *mdev =3D chan_info->mdev;
-> > +       struct sti_mbox_pdata *pdata =3D dev_get_platdata(mdev->dev=
-);
-> > +       unsigned int instance =3D chan_info->instance;
-> > +       unsigned int channel =3D chan_info->channel;
-> > +       void __iomem *base;
-> > +
-> > +       if (!sti_mbox_tx_is_ready(chan))
-> > +               return -EBUSY;
-> This is the first thing I look out for in every new driver :)  this
-> check is unnecessary.
-
-In what way?  What if the channel is disabled or there is an IRQ
-already pending?
-
-> > +static void sti_mbox_shutdown_chan(struct mbox_chan *chan)
-> > +{
-> > +       struct sti_channel *chan_info =3D chan->con_priv;
-> > +       struct mbox_controller *mbox =3D chan_info->mdev->mbox;
-> > +       int i;
-> > +
-> > +       for (i =3D 0; i < mbox->num_chans; i++)
-> > +               if (chan =3D=3D &mbox->chans[i])
-> > +                       break;
-> > +
-> > +       if (mbox->num_chans =3D=3D i) {
-> > +               dev_warn(mbox->dev, "Request to free non-existent c=
-hannel\n");
-> > +               return;
-> > +       }
-> > +
-> > +       sti_mbox_disable_channel(chan);
-> > +       sti_mbox_clear_irq(chan);
-> > +
-> > +       /* Reset channel */
-> > +       memset(chan, 0, sizeof(*chan));
-> > +       chan->mbox =3D mbox;
-> > +       chan->txdone_method =3D TXDONE_BY_POLL;
-> >
-> No please. mbox_chan is owned by the API. At most you could clear con=
-_priv.
-
-I will look for the API call to reset the channel then.
-
-> > +static struct mbox_chan *sti_mbox_xlate(struct mbox_controller *mb=
-ox,
-> > +                                       const struct of_phandle_arg=
-s *spec)
-> > +{
-> > +       struct sti_mbox_device *mdev =3D dev_get_drvdata(mbox->dev)=
-;
-> > +       struct sti_mbox_pdata *pdata =3D dev_get_platdata(mdev->dev=
-);
-> > +       struct sti_channel *chan_info;
-> > +       struct mbox_chan *chan =3D NULL;
-> > +       unsigned int instance  =3D spec->args[0];
-> > +       unsigned int channel   =3D spec->args[1];
-> > +       unsigned int direction =3D spec->args[2];
-> > +       int i;
-> > +
-> > +       /* Bounds checking */
-> > +       if (instance >=3D pdata->num_inst || channel  >=3D pdata->n=
-um_chan) {
-> > +               dev_err(mbox->dev,
-> > +                       "Invalid channel requested instance: %d cha=
-nnel: %d\n",
-> > +                       instance, channel);
-> > +               return NULL;
-> > +       }
-> > +
-> > +       for (i =3D 0; i < mbox->num_chans; i++) {
-> > +               chan_info =3D mbox->chans[i].con_priv;
-> > +
-> > +               /* Is requested channel free? */
-> > +               if (direction !=3D MBOX_LOOPBACK &&
-> > +                   chan_info &&
-> > +                   mbox->dev =3D=3D chan_info->mdev->dev &&
-> > +                   instance =3D=3D chan_info->instance &&
-> > +                   channel =3D=3D chan_info->channel) {
-> > +                       dev_err(mbox->dev, "Channel in use\n");
-> > +                       return NULL;
-> > +               }
-> > +
-> > +               /* Find the first free slot */
-> > +               if (!chan && !chan_info)
-> > +                       chan =3D &mbox->chans[i];
->         shouldn't it break out of loop here?
-
-Yes, I guess it should.  Good spot.
-
-> > +       }
-> > +
-> Doesn't mbox->chans[i].con_priv need some locking here?
-
-I can add some.
-
-> > +static const struct sti_mbox_pdata mbox_stih407_pdata =3D {
-> > +       .num_inst       =3D 4,
-> > +       .num_chan       =3D 32,
-> > +       .irq_val        =3D 0x04,
-> > +       .irq_set        =3D 0x24,
-> > +       .irq_clr        =3D 0x44,
-> > +       .ena_val        =3D 0x64,
-> > +       .ena_set        =3D 0x84,
-> > +       .ena_clr        =3D 0xa4,
-> >
-> Register offsets are parameters of the controller
-
-And this is a controller driver?  Not sure I get the point.
-
-> and also these look ugly. Please make these #define's
-
-Sure.
-
-> > +static int __init sti_mbox_init(void)
-> > +{
-> > +       return platform_driver_register(&sti_mbox_driver);
-> > +}
-> > +
-> > +static void __exit sti_mbox_exit(void)
-> > +{
-> > +       platform_driver_unregister(&sti_mbox_driver);
-> > +}
-> > +
-> > +postcore_initcall(sti_mbox_init);
-> >
-> This seems fragile. Shouldn't the users defer probe if they don't get=
- a channel?
-
-I'm not sure why we have to be early.  I will investigate.
+> >> +Example:
+> >> +
+> >> +flx0: flexcom@f8034000 {
+> >=20
+> > What references this node?  If nothing, then you can remove the lab=
+el.
+> OK, I will remove the label in the next series.
+> >=20
+> >> +	compatible =3D "atmel,sama5d2-flexcom";
+> >> +	reg =3D <0xf8034000 0x200>;
+> >> +	clocks =3D <&flx0_clk>;
+> >> +	#address-cells =3D <1>;
+> >> +	#size-cells =3D <1>;
+> >> +	ranges =3D <0x0 0xf8034000 0x800>;
+> >> +	atmel,flexcom-mode =3D "spi";
+> >> +
+> >> +	spi@f8034400 {
+> >> +		compatible =3D "atmel,at91rm9200-spi";
+> >> +		reg =3D <0x400 0x200>;
+> >> +		interrupts =3D <19 IRQ_TYPE_LEVEL_HIGH 7>;
+> >> +		pinctrl-names =3D "default";
+> >> +		pinctrl-0 =3D <&pinctrl_flx0_ioset1>;
+> >> +		#address-cells =3D <1>;
+> >> +		#size-cells =3D <0>;
+> >> +		clocks =3D <&flx0_clk>;
+> >> +		clock-names =3D "spi_clk";
+> >> +		atmel,fifo-size =3D <32>;
+> >> +
+> >> +		mtd_dataflash@0 {
+> >> +			compatible =3D "atmel,at25f512b";
+> >> +			reg =3D <0>;
+> >> +			spi-max-frequency =3D <20000000>;
+> >> +		};
+> >> +	};
+> >> +};
+> >=20
+>=20
+> Thanks for your review :)
+>=20
+> Best Regards,
+>=20
+> Cyrille
 
 --=20
 Lee Jones
