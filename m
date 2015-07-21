@@ -1,518 +1,170 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 3/6] iommu: add ARM short descriptor page table
-	allocator.
-Date: Tue, 21 Jul 2015 18:11:01 +0100
-Message-ID: <20150721171101.GN31095@arm.com>
-References: <1437037475-9065-1-git-send-email-yong.wu@mediatek.com>
-	<1437037475-9065-4-git-send-email-yong.wu@mediatek.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v2 3/4] touchscreen: colibri-vf50-ts: Add touchscreen
+ support for Colibri VF50
+Date: Tue, 21 Jul 2015 10:20:44 -0700
+Message-ID: <20150721172044.GC39076@dtor-ws>
+References: <cover.1437058481.git.maitysanchayan@gmail.com>
+ <26748bd9a7bde7c2304b6b971f1150bb575e4938.1437058481.git.maitysanchayan@gmail.com>
+ <20150717234242.GJ39282@dtor-ws>
+ <40d7c372e64c7f25b7df3e48930386de@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1437037475-9065-4-git-send-email-yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "cloud.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <cloud.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org" <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Sasha Hauer <kernel@pen>
+In-Reply-To: <40d7c372e64c7f25b7df3e48930386de@agner.ch>
+Sender: linux-input-owner@vger.kernel.org
+To: Stefan Agner <stefan@agner.ch>
+Cc: Sanchayan Maity <maitysanchayan@gmail.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, kernel@pengutronix.de, galak@codeaurora.org, shawn.guo@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Hi Stefan,
 
-This is looking better, but I still have some concerns.
-
-On Thu, Jul 16, 2015 at 10:04:32AM +0100, Yong Wu wrote:
-> This patch is for ARM Short Descriptor Format.
+On Tue, Jul 21, 2015 at 04:43:36PM +0200, Stefan Agner wrote:
+> Hi Dmitry,
 > 
-> Signed-off-by: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->  drivers/iommu/Kconfig                |   18 +
->  drivers/iommu/Makefile               |    1 +
->  drivers/iommu/io-pgtable-arm-short.c |  742 ++++++++++++++++++++++++++++++++++
->  drivers/iommu/io-pgtable-arm.c       |    3 -
->  drivers/iommu/io-pgtable.c           |    4 +
->  drivers/iommu/io-pgtable.h           |   13 +
->  6 files changed, 778 insertions(+), 3 deletions(-)
->  create mode 100644 drivers/iommu/io-pgtable-arm-short.c
+> As the original author of the driver I have some remarks to your review
+> 
+> On 2015-07-18 01:42, Dmitry Torokhov wrote:
+> >> +		/*
+> >> +		 * If touch pressure is too low, stop measuring and reenable
+> >> +		 * touch detection
+> >> +		 */
+> >> +		if (val_p < min_pressure || val_p > 2000)
+> >> +			break;
+> 
+> This is where the modules touch pressure is used to stop the measurement
+> process and switch back to interrupt mode. See my remarks at the end.
+> 
+> >> +
+> >> +		/*
+> >> +		 * The pressure may not be enough for the first x and the
+> >> +		 * second y measurement, but, the pressure is ok when the
+> >> +		 * driver is doing the third and fourth measurement. To
+> >> +		 * take care of this, we drop the first measurement always.
+> >> +		 */
+> >> +		if (discard_val_on_start) {
+> >> +			discard_val_on_start = false;
+> >> +		} else {
+> >> +			/*
+> >> +			 * Report touch position and sleep for
+> >> +			 * next measurement
+> >> +			 */
+> >> +			input_report_abs(vf50_ts->ts_input,
+> >> +					ABS_X, VF_ADC_MAX - val_x);
+> >> +			input_report_abs(vf50_ts->ts_input,
+> >> +					ABS_Y, VF_ADC_MAX - val_y);
+> >> +			input_report_abs(vf50_ts->ts_input,
+> >> +					ABS_PRESSURE, val_p);
+> >> +			input_report_key(vf50_ts->ts_input, BTN_TOUCH, 1);
+> >> +			input_sync(vf50_ts->ts_input);
+> >> +		}
+> >> +
+> >> +		msleep(10);
+> >> +	}
+> >> +
+> >> +	/* Report no more touch, reenable touch detection */
+> >> +	input_report_abs(vf50_ts->ts_input, ABS_PRESSURE, 0);
+> >> +	input_report_key(vf50_ts->ts_input, BTN_TOUCH, 0);
+> >> +	input_sync(vf50_ts->ts_input);
+> >> +
+> >> +	vf50_ts_enable_touch_detection(vf50_ts);
+> >> +
+> >> +	/* Wait for the pull-up to be stable on high */
+> >> +	msleep(10);
+> >> +
+> >> +	/* Reenable IRQ to detect touch */
+> >> +	enable_irq(vf50_ts->pen_irq);
+> >> +
+> >> +	dev_dbg(dev, "Reenabled touch detection interrupt\n");
+> >> +}
+> >> +
+> >> +static irqreturn_t vf50_ts_touched(int irq, void *dev_id)
+> >> +{
+> >> +	struct vf50_touch_device *vf50_ts = (struct vf50_touch_device *)dev_id;
+> >> +	struct device *dev = &vf50_ts->pdev->dev;
+> >> +
+> >> +	dev_dbg(dev, "Touch detected, start worker thread\n");
+> >> +
+> >> +	disable_irq_nosync(irq);
+> >> +
+> >> +	/* Disable the touch detection plates */
+> >> +	gpiod_set_value(vf50_ts->gpio_ym, 0);
+> >> +
+> >> +	/* Let the platform mux to default state in order to mux as ADC */
+> >> +	pinctrl_pm_select_default_state(dev);
+> >> +
+> >> +	queue_work(vf50_ts->ts_workqueue, &vf50_ts->ts_work);
+> > 
+> > If you convert this to a threaded interrupt you won't need to
+> > disable/reenable interrupt or queue work. You should also be able to use
+> > gpiod_set_value_cansleep() extending the range of ways the controller
+> > could be connected to systems.
+> > 
+> 
+> I'm not sure if a threaded interrupt is the right thing here. While the
+> pen is on the touchscreen (which can be for several seconds)
+> measurements have to be made in a continuous loop. Is it ok for a
+> threaded interrupt to run that long?
 
-[...]
+Yes, why not? Threaded interrupt is simply a kernel thread that is woken
+when hard interrupt handler tells it to wake up. Very similar to
+interrupt + work queue, except that the kernel manages interactions
+properly for you. There are several drivers in kernel that do that, for
+example auo-pixcir-ts.c or tsc2007.c
 
-> +#define ARM_SHORT_PGDIR_SHIFT                  20
-> +#define ARM_SHORT_PAGE_SHIFT                   12
-> +#define ARM_SHORT_PTRS_PER_PTE                 \
-> +       (1 << (ARM_SHORT_PGDIR_SHIFT - ARM_SHORT_PAGE_SHIFT))
-> +#define ARM_SHORT_BYTES_PER_PTE                        \
-> +       (ARM_SHORT_PTRS_PER_PTE * sizeof(arm_short_iopte))
-> +
-> +/* level 1 pagetable */
-> +#define ARM_SHORT_PGD_TYPE_PGTABLE             BIT(0)
-> +#define ARM_SHORT_PGD_SECTION_XN               (BIT(0) | BIT(4))
-> +#define ARM_SHORT_PGD_TYPE_SECTION             BIT(1)
-> +#define ARM_SHORT_PGD_PGTABLE_XN               BIT(2)
+> 
+> I'm also not sure if it is really safe to _not_ disable the pen down
+> GPIO interrupt. If we get a interrupt while measuring, we should ignore
+> that interrupt.
 
-This should be PXN, but I'm not even sure why we care for a table at
-level 1.
+The interrupt management core (you'll have to annotate it as
+IRQF_ONESHOT) will make sure it stays masked properly until the threaded
+handler completes so you do not need to disable it explicitly.
 
-> +#define ARM_SHORT_PGD_B                                BIT(2)
-> +#define ARM_SHORT_PGD_C                                BIT(3)
-> +#define ARM_SHORT_PGD_PGTABLE_NS               BIT(3)
-> +#define ARM_SHORT_PGD_IMPLE                    BIT(9)
-> +#define ARM_SHORT_PGD_TEX0                     BIT(12)
-> +#define ARM_SHORT_PGD_S                                BIT(16)
-> +#define ARM_SHORT_PGD_nG                       BIT(17)
-> +#define ARM_SHORT_PGD_SUPERSECTION             BIT(18)
-> +#define ARM_SHORT_PGD_SECTION_NS               BIT(19)
-> +
-> +#define ARM_SHORT_PGD_TYPE_SUPERSECTION                \
-> +       (ARM_SHORT_PGD_TYPE_SECTION | ARM_SHORT_PGD_SUPERSECTION)
-> +#define ARM_SHORT_PGD_SECTION_TYPE_MSK         \
-> +       (ARM_SHORT_PGD_TYPE_SECTION | ARM_SHORT_PGD_SUPERSECTION)
-> +#define ARM_SHORT_PGD_PGTABLE_TYPE_MSK         \
-> +       (ARM_SHORT_PGD_TYPE_SECTION | ARM_SHORT_PGD_TYPE_PGTABLE)
-> +#define ARM_SHORT_PGD_TYPE_IS_PGTABLE(pgd)     \
-> +       (((pgd) & ARM_SHORT_PGD_PGTABLE_TYPE_MSK) == ARM_SHORT_PGD_TYPE_PGTABLE)
-> +#define ARM_SHORT_PGD_TYPE_IS_SECTION(pgd)     \
-> +       (((pgd) & ARM_SHORT_PGD_SECTION_TYPE_MSK) == ARM_SHORT_PGD_TYPE_SECTION)
-> +#define ARM_SHORT_PGD_TYPE_IS_SUPERSECTION(pgd)        \
-> +       (((pgd) & ARM_SHORT_PGD_SECTION_TYPE_MSK) == \
-> +       ARM_SHORT_PGD_TYPE_SUPERSECTION)
-> +#define ARM_SHORT_PGD_PGTABLE_MSK              0xfffffc00
-> +#define ARM_SHORT_PGD_SECTION_MSK              (~(SZ_1M - 1))
-> +#define ARM_SHORT_PGD_SUPERSECTION_MSK         (~(SZ_16M - 1))
-> +
-> +/* level 2 pagetable */
-> +#define ARM_SHORT_PTE_TYPE_LARGE               BIT(0)
-> +#define ARM_SHORT_PTE_SMALL_XN                 BIT(0)
-> +#define ARM_SHORT_PTE_TYPE_SMALL               BIT(1)
-> +#define ARM_SHORT_PTE_B                                BIT(2)
-> +#define ARM_SHORT_PTE_C                                BIT(3)
-> +#define ARM_SHORT_PTE_SMALL_TEX0               BIT(6)
-> +#define ARM_SHORT_PTE_IMPLE                    BIT(9)
+> 
+> On resistive touch screens the pen down works by relying on the high
+> resistance between the two plates while not being touched. The X-Plate
+> will be pulled high, the Y-Plate is strong GND. We measure on the
+> X-Plate (XM) which is high too. As soon as the plate is touched, XM will
+> be GND (since the resistance over the two plates is way lower then the
+> pull-up resistance). An interrupt on falling edge will trigger.
+> 
+> Now the measuring takes place, X, Y and pressure by using different
+> measuring methods.
+> 
+> While Y-Plate measurement the same GPIO interupt pin is used for ADC
+> measurement! The voltage on that pin will at that point depend on the
+> Y-Position of the pen position... Is it guaranteed that the GPIO
+> interrupt is not fired? I guess because we muxed to ADC at that point,
+> it won't lead to a second (spurious) interrupt... However this is a
+> thing which needs to be checked before removing interrupt enable/disable
+> calls.
+> 
+> >> +};
+> >> +
+> >> +module_platform_driver(vf50_touch_driver);
+> >> +
+> >> +module_param(min_pressure, int, 0600);
+> >> +MODULE_PARM_DESC(min_pressure, "Minimum pressure for touch detection");
+> > 
+> > I'd rather let userspace figure out what it recognizes as valid touch.
+> > 
+> 
+> This is value is used as the termination condition for the measurement
+> loop. It essentially defines at which pressure level we stop measuring
+> X/Y values. Depending on the size and resistance of the plates. However,
+> it is not safe to measure even at low/no pressure, since then we would
+> only get maximum X/Y values. Hence it is crucial that this value is
+> choosen properly, otherwise the driver will report "wrong" X/Y values.
+> 
+> Since we use the value for measurement termination, we need it in kernel
+> space. As far as I know we do not get such a value from user space.
 
-This is AP[2] for small pages.
+If this value is device model-specific and not user preference then we
+probably should pass it via device tree data instead of module parameter
+then.
 
-> +#define ARM_SHORT_PTE_S                                BIT(10)
-> +#define ARM_SHORT_PTE_nG                       BIT(11)
-> +#define ARM_SHORT_PTE_LARGE_TEX0               BIT(12)
-> +#define ARM_SHORT_PTE_LARGE_XN                 BIT(15)
-> +#define ARM_SHORT_PTE_LARGE_MSK                        (~(SZ_64K - 1))
-> +#define ARM_SHORT_PTE_SMALL_MSK                        (~(SZ_4K - 1))
-> +#define ARM_SHORT_PTE_TYPE_MSK                 \
-> +       (ARM_SHORT_PTE_TYPE_LARGE | ARM_SHORT_PTE_TYPE_SMALL)
-> +#define ARM_SHORT_PTE_TYPE_IS_SMALLPAGE(pte)   \
-> +       (((((pte) & ARM_SHORT_PTE_TYPE_MSK) >> 1) << 1)\
-> +       == ARM_SHORT_PTE_TYPE_SMALL)
+Thanks.
 
-I see what you're trying to do here, but the shifting is confusing. I
-think it's better doing something like:
-
-	((pte) & ARM_SHORT_PTE_TYPE_SMALL) == ARM_SHORT_PTE_TYPE_SMALL
-
-or even just:
-
-	(pte) & ARM_SHORT_PTE_TYPE_SMALL
-
-> +#define ARM_SHORT_PTE_TYPE_IS_LARGEPAGE(pte)   \
-> +       (((pte) & ARM_SHORT_PTE_TYPE_MSK) == ARM_SHORT_PTE_TYPE_LARGE)
-> +
-> +#define ARM_SHORT_PGD_IDX(a)                   ((a) >> ARM_SHORT_PGDIR_SHIFT)
-> +#define ARM_SHORT_PTE_IDX(a)                   \
-> +       (((a) >> ARM_SHORT_PAGE_SHIFT) & (ARM_SHORT_PTRS_PER_PTE - 1))
-> +
-> +#define ARM_SHORT_GET_PTE_VA(pgd)              \
-> +       (phys_to_virt((unsigned long)pgd & ARM_SHORT_PGD_PGTABLE_MSK))
-
-Maybe better named as ARM_SHORT_GET_PGTABLE_VA ?
-
-> +
-> +#define ARM_SHORT_PTE_LARGE_GET_PROT(pte)      \
-> +       (((pte) & (~ARM_SHORT_PTE_LARGE_MSK)) & ~ARM_SHORT_PTE_TYPE_MSK)
-> +
-> +#define ARM_SHORT_PGD_GET_PROT(pgd)            \
-> +       (((pgd) & (~ARM_SHORT_PGD_SECTION_MSK)) & ~ARM_SHORT_PGD_SUPERSECTION)
-> +
-> +static bool selftest_running;
-> +
-> +static arm_short_iopte *
-> +arm_short_get_pte_in_pgd(arm_short_iopte pgd, unsigned int iova)
-> +{
-> +       arm_short_iopte *pte;
-> +
-> +       pte = ARM_SHORT_GET_PTE_VA(pgd);
-> +       pte += ARM_SHORT_PTE_IDX(iova);
-> +       return pte;
-> +}
-> +
-> +static void _arm_short_free_pgtable(struct arm_short_io_pgtable *data,
-> +                                   arm_short_iopte *pgd)
-> +{
-> +       const struct iommu_gather_ops *tlb = data->iop.cfg.tlb;
-> +       arm_short_iopte *pte;
-> +       int i;
-> +
-> +       pte = ARM_SHORT_GET_PTE_VA(*pgd);
-> +       for (i = 0; i < ARM_SHORT_PTRS_PER_PTE; i++) {
-> +               if (pte[i] != 0)
-> +                       return;
-> +       }
-
-Do you actually need this loop if you're not warning or returning an error?
-
-> +
-> +       /* Free whole pte and set pgd to zero while all pte is unmap */
-> +       kmem_cache_free(data->ptekmem, pte);
-> +       *pgd = 0;
-
-I still don't think this is safe. What stops the page table walker from
-speculatively walking freed memory?
-
-> +       tlb->flush_pgtable(pgd, sizeof(*pgd), data->iop.cookie);
-> +}
-> +
-> +static arm_short_iopte
-> +__arm_short_pte_prot(struct arm_short_io_pgtable *data, int prot, bool large)
-> +{
-> +       arm_short_iopte pteprot;
-> +
-> +       pteprot = ARM_SHORT_PTE_S | ARM_SHORT_PTE_nG;
-> +       pteprot |= large ? ARM_SHORT_PTE_TYPE_LARGE :
-> +                               ARM_SHORT_PTE_TYPE_SMALL;
-> +       if (prot & IOMMU_CACHE)
-> +               pteprot |=  ARM_SHORT_PTE_B | ARM_SHORT_PTE_C;
-> +       if (prot & IOMMU_WRITE)
-> +               pteprot |= large ? ARM_SHORT_PTE_LARGE_TEX0 :
-> +                               ARM_SHORT_PTE_SMALL_TEX0;
-
-This doesn't make any sense. TEX[2:0] is all about memory attributes, not
-permissions, so you're making the mapping write-back, write-allocate but
-that's not what the IOMMU_* values are about.
-
-> +       if (prot & IOMMU_NOEXEC)
-> +               pteprot |= large ? ARM_SHORT_PTE_LARGE_XN :
-> +                       ARM_SHORT_PTE_SMALL_XN;
-> +       return pteprot;
-> +}
-> +
-> +static arm_short_iopte
-> +__arm_short_pgd_prot(struct arm_short_io_pgtable *data, int prot, bool super)
-> +{
-> +       arm_short_iopte pgdprot;
-> +
-> +       pgdprot = ARM_SHORT_PGD_S | ARM_SHORT_PGD_nG;
-> +       pgdprot |= super ? ARM_SHORT_PGD_TYPE_SUPERSECTION :
-> +                               ARM_SHORT_PGD_TYPE_SECTION;
-> +       if (prot & IOMMU_CACHE)
-> +               pgdprot |= ARM_SHORT_PGD_C | ARM_SHORT_PGD_B;
-> +       if (prot & IOMMU_WRITE)
-> +               pgdprot |= ARM_SHORT_PGD_TEX0;
-
-Likewise.
-
-> +       if (prot & IOMMU_NOEXEC)
-> +               pgdprot |= ARM_SHORT_PGD_SECTION_XN;
-> +       if (data->iop.cfg.quirks & IO_PGTABLE_QUIRK_ARM_NS)
-> +               pgdprot |= ARM_SHORT_PGD_SECTION_NS;
-> +       return pgdprot;
-> +}
-> +
-> +static arm_short_iopte
-> +__arm_short_pte_prot_split(struct arm_short_io_pgtable *data,
-> +                          arm_short_iopte pgdprot,
-> +                          arm_short_iopte pteprot_large,
-> +                          bool large)
-> +{
-> +       arm_short_iopte pteprot = 0;
-> +
-> +       pteprot = ARM_SHORT_PTE_S | ARM_SHORT_PTE_nG;
-> +       pteprot |= large ? ARM_SHORT_PTE_TYPE_LARGE :
-> +                               ARM_SHORT_PTE_TYPE_SMALL;
-> +       /* section to pte prot */
-> +       if (pgdprot & ARM_SHORT_PGD_C)
-> +               pteprot |= ARM_SHORT_PTE_C;
-> +       if (pgdprot & ARM_SHORT_PGD_B)
-> +               pteprot |= ARM_SHORT_PTE_B;
-> +       if (pgdprot & ARM_SHORT_PGD_TEX0)
-> +               pteprot |= large ? ARM_SHORT_PTE_LARGE_TEX0 :
-> +                               ARM_SHORT_PTE_SMALL_TEX0;
-> +       if (pgdprot & ARM_SHORT_PGD_nG)
-> +               pteprot |= ARM_SHORT_PTE_nG;
-> +       if (pgdprot & ARM_SHORT_PGD_SECTION_XN)
-> +               pteprot |= large ? ARM_SHORT_PTE_LARGE_XN :
-> +                               ARM_SHORT_PTE_SMALL_XN;
-> +
-> +       /* large page to small page pte prot. Only large page may split */
-> +       if (pteprot_large && !large) {
-> +               if (pteprot_large & ARM_SHORT_PTE_LARGE_TEX0)
-> +                       pteprot |= ARM_SHORT_PTE_SMALL_TEX0;
-> +               if (pteprot_large & ARM_SHORT_PTE_LARGE_XN)
-> +                       pteprot |= ARM_SHORT_PTE_SMALL_XN;
-> +       }
-> +       return pteprot;
-> +}
-> +
-> +static arm_short_iopte
-> +__arm_short_pgtable_prot(struct arm_short_io_pgtable *data, bool noexec)
-> +{
-> +       arm_short_iopte pgdprot = 0;
-> +
-> +       pgdprot = ARM_SHORT_PGD_TYPE_PGTABLE;
-> +       if (data->iop.cfg.quirks & IO_PGTABLE_QUIRK_ARM_NS)
-> +               pgdprot |= ARM_SHORT_PGD_PGTABLE_NS;
-> +       if (noexec)
-> +               pgdprot |= ARM_SHORT_PGD_PGTABLE_XN;
-
-I don't think you need to worry about XN bits for PGTABLEs.
-
-> +       return pgdprot;
-> +}
-> +
-> +static int
-> +_arm_short_map(struct arm_short_io_pgtable *data,
-> +              unsigned int iova, phys_addr_t paddr,
-> +              arm_short_iopte pgdprot, arm_short_iopte pteprot,
-> +              bool large)
-> +{
-> +       const struct iommu_gather_ops *tlb = data->iop.cfg.tlb;
-> +       arm_short_iopte *pgd = data->pgd, *pte;
-> +       void *cookie = data->iop.cookie, *pte_va;
-> +       unsigned int ptenr = large ? 16 : 1;
-> +       int i, quirk = data->iop.cfg.quirks;
-> +       bool ptenew = false;
-> +
-> +       pgd += ARM_SHORT_PGD_IDX(iova);
-> +
-> +       if (!pteprot) { /* section or supersection */
-> +               if (quirk & IO_PGTABLE_QUIRK_SHORT_MTK)
-> +                       pgdprot &= ~ARM_SHORT_PGD_SECTION_XN;
-> +               pte = pgd;
-> +               pteprot = pgdprot;
-> +       } else {        /* page or largepage */
-> +               if (quirk & IO_PGTABLE_QUIRK_SHORT_MTK) {
-> +                       if (large) { /* special Bit */
-
-This definitely needs a better comment! What exactly are you doing here
-and what is that quirk all about?
-
-> +                               if (pteprot & ARM_SHORT_PTE_LARGE_TEX0) {
-> +                                       pteprot &= ~ARM_SHORT_PTE_LARGE_TEX0;
-> +                                       pteprot |= ARM_SHORT_PTE_SMALL_TEX0;
-> +                               }
-> +                               pteprot &= ~ARM_SHORT_PTE_LARGE_XN;
-> +                       } else {
-> +                               pteprot &= ~ARM_SHORT_PTE_SMALL_XN;
-> +                       }
-> +               }
-> +
-> +               if (!(*pgd)) {
-> +                       pte_va = kmem_cache_zalloc(data->ptekmem, GFP_ATOMIC);
-> +                       if (unlikely(!pte_va))
-> +                               return -ENOMEM;
-> +                       ptenew = true;
-> +                       *pgd = virt_to_phys(pte_va) | pgdprot;
-> +                       kmemleak_ignore(pte_va);
-> +                       tlb->flush_pgtable(pgd, sizeof(*pgd), cookie);
-
-I think you need to flush this before it becomes visible to the walker.
-
-> +               }
-> +               pte = arm_short_get_pte_in_pgd(*pgd, iova);
-> +       }
-> +
-> +       pteprot |= (arm_short_iopte)paddr;
-> +       for (i = 0; i < ptenr; i++) {
-> +               if (pte[i]) {/* Someone else may have allocated for this pte */
-> +                       WARN_ON(!selftest_running);
-> +                       goto err_exist_pte;
-> +               }
-> +               pte[i] = pteprot;
-> +       }
-> +       tlb->flush_pgtable(pte, ptenr * sizeof(*pte), cookie);
-> +
-> +       return 0;
-> +
-> +err_exist_pte:
-> +       while (i--)
-> +               pte[i] = 0;
-> +       if (ptenew)
-> +               kmem_cache_free(data->ptekmem, pte_va);
-> +       return -EEXIST;
-> +}
-> +
-> +static int arm_short_map(struct io_pgtable_ops *ops, unsigned long iova,
-> +                        phys_addr_t paddr, size_t size, int prot)
-> +{
-> +       struct arm_short_io_pgtable *data = io_pgtable_ops_to_data(ops);
-> +       const struct iommu_gather_ops *tlb = data->iop.cfg.tlb;
-> +       int ret;
-> +       arm_short_iopte pgdprot = 0, pteprot = 0;
-> +       bool large;
-> +
-> +       /* If no access, then nothing to do */
-> +       if (!(prot & (IOMMU_READ | IOMMU_WRITE)))
-> +               return 0;
-> +
-> +       switch (size) {
-> +       case SZ_4K:
-> +       case SZ_64K:
-> +               large = (size == SZ_64K) ? true : false;
-> +               pteprot = __arm_short_pte_prot(data, prot, large);
-> +               pgdprot = __arm_short_pgtable_prot(data, prot & IOMMU_NOEXEC);
-> +               break;
-> +
-> +       case SZ_1M:
-> +       case SZ_16M:
-> +               large = (size == SZ_16M) ? true : false;
-> +               pgdprot = __arm_short_pgd_prot(data, prot, large);
-> +               break;
-> +       default:
-> +               return -EINVAL;
-> +       }
-> +
-> +       if (WARN_ON((iova | paddr) & (size - 1)))
-> +               return -EINVAL;
-> +
-> +       ret = _arm_short_map(data, iova, paddr, pgdprot, pteprot, large);
-> +
-> +       tlb->tlb_add_flush(iova, size, true, data->iop.cookie);
-> +       tlb->tlb_sync(data->iop.cookie);
-
-In _arm_short_map, it looks like you can only go from invalid -> valid,
-so why do you need to flush the TLB here?
-
-> +       return ret;
-> +}
-> +
-> +static phys_addr_t arm_short_iova_to_phys(struct io_pgtable_ops *ops,
-> +                                         unsigned long iova)
-> +{
-> +       struct arm_short_io_pgtable *data = io_pgtable_ops_to_data(ops);
-> +       arm_short_iopte *pte, *pgd = data->pgd;
-> +       phys_addr_t pa = 0;
-> +
-> +       pgd += ARM_SHORT_PGD_IDX(iova);
-> +
-> +       if (ARM_SHORT_PGD_TYPE_IS_PGTABLE(*pgd)) {
-> +               pte = arm_short_get_pte_in_pgd(*pgd, iova);
-> +
-> +               if (ARM_SHORT_PTE_TYPE_IS_LARGEPAGE(*pte)) {
-> +                       pa = (*pte) & ARM_SHORT_PTE_LARGE_MSK;
-> +                       pa |= iova & ~ARM_SHORT_PTE_LARGE_MSK;
-> +               } else if (ARM_SHORT_PTE_TYPE_IS_SMALLPAGE(*pte)) {
-> +                       pa = (*pte) & ARM_SHORT_PTE_SMALL_MSK;
-> +                       pa |= iova & ~ARM_SHORT_PTE_SMALL_MSK;
-> +               }
-> +       } else if (ARM_SHORT_PGD_TYPE_IS_SECTION(*pgd)) {
-> +               pa = (*pgd) & ARM_SHORT_PGD_SECTION_MSK;
-> +               pa |= iova & ~ARM_SHORT_PGD_SECTION_MSK;
-> +       } else if (ARM_SHORT_PGD_TYPE_IS_SUPERSECTION(*pgd)) {
-> +               pa = (*pgd) & ARM_SHORT_PGD_SUPERSECTION_MSK;
-> +               pa |= iova & ~ARM_SHORT_PGD_SUPERSECTION_MSK;
-> +       }
-> +
-> +       return pa;
-> +}
-> +
-> +static int
-> +arm_short_split_blk_unmap(struct io_pgtable_ops *ops, unsigned int iova,
-> +                         phys_addr_t paddr, size_t size,
-> +                         arm_short_iopte pgdprotup, arm_short_iopte pteprotup,
-> +                         size_t blk_size)
-> +{
-> +       struct arm_short_io_pgtable *data = io_pgtable_ops_to_data(ops);
-> +       const struct iommu_gather_ops *tlb = data->iop.cfg.tlb;
-> +       struct io_pgtable_cfg *cfg = &data->iop.cfg;
-> +       unsigned long *pgbitmap = &cfg->pgsize_bitmap;
-> +       unsigned int blk_base, blk_start, blk_end;
-> +       arm_short_iopte pgdprot, pteprot;
-> +       size_t mapsize = 0, nextmapsize;
-> +       phys_addr_t blk_paddr;
-> +       int ret;
-> +       unsigned int i;
-> +
-> +       /* find the nearest mapsize */
-> +       for (i = find_first_bit(pgbitmap, BITS_PER_LONG);
-> +            i < BITS_PER_LONG && ((1 << i) < blk_size) &&
-> +            IS_ALIGNED(size, 1 << i);
-> +            i = find_next_bit(pgbitmap, BITS_PER_LONG, i + 1))
-> +               mapsize = 1 << i;
-> +
-> +       if (WARN_ON(!mapsize))
-> +               return 0; /* Bytes unmapped */
-> +       nextmapsize = 1 << i;
-> +
-> +       blk_base = iova & ~(blk_size - 1);
-> +       blk_start = blk_base;
-> +       blk_end = blk_start + blk_size;
-> +       blk_paddr = paddr;
-> +
-> +       for (; blk_start < blk_end;
-> +            blk_start += mapsize, blk_paddr += mapsize) {
-> +               /* Unmap! */
-> +               if (blk_start == iova)
-> +                       continue;
-> +
-> +               /* Try to upper map */
-> +               if (blk_base != blk_start &&
-> +                   IS_ALIGNED(blk_start | blk_paddr, nextmapsize) &&
-> +                   mapsize != nextmapsize) {
-> +                       mapsize = nextmapsize;
-> +                       i = find_next_bit(pgbitmap, BITS_PER_LONG, i + 1);
-> +                       if (i < BITS_PER_LONG)
-> +                               nextmapsize = 1 << i;
-> +               }
-> +
-> +               if (mapsize == SZ_1M) {
-> +                       pgdprot = pgdprotup;
-> +                       pgdprot |= __arm_short_pgd_prot(data, 0, false);
-> +                       pteprot = 0;
-> +               } else { /* small or large page */
-> +                       bool noexec = (blk_size == SZ_64K) ?
-> +                               (pteprotup & ARM_SHORT_PTE_LARGE_XN) :
-> +                               (pgdprotup & ARM_SHORT_PGD_SECTION_XN);
-> +
-> +                       pteprot = __arm_short_pte_prot_split(
-> +                                               data, pgdprotup, pteprotup,
-> +                                               mapsize == SZ_64K);
-> +                       pgdprot = __arm_short_pgtable_prot(data, noexec);
-> +               }
-> +
-> +               ret = _arm_short_map(data, blk_start, blk_paddr, pgdprot,
-> +                                    pteprot, mapsize == SZ_64K);
-> +               if (ret < 0) {
-> +                       /* Free the table we allocated */
-> +                       arm_short_iopte *pgd = data->pgd, *pte;
-> +
-> +                       pgd += ARM_SHORT_PGD_IDX(blk_base);
-> +                       if (*pgd) {
-> +                               pte = ARM_SHORT_GET_PTE_VA(*pgd);
-> +                               kmem_cache_free(data->ptekmem, pte);
-> +                               *pgd = 0;
-> +                               tlb->flush_pgtable(pgd, sizeof(*pgd),
-> +                                                  data->iop.cookie);
-
-Again, the ordering looks totally wrong here. You need to:
-
-  (1) Zero the pgd pointer
-  (2) Flush the pointer, so the walker can no longer follow the page table
-  (3) Invalidate the TLB, so we don't have any cached intermediate walks
-  (4) Sync the TLB
-  (5) Free the memory
-
-That said, I don't fully follow the logic here.
-
-> +                       }
-> +                       return 0;/* Bytes unmapped */
-> +               }
-> +               tlb->tlb_add_flush(blk_start, mapsize, true, data->iop.cookie);
-> +               tlb->tlb_sync(data->iop.cookie);
-
-Why are you doing this here for every iteration?
-
-Will
+-- 
+Dmitry
