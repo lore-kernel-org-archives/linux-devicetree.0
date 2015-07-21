@@ -1,65 +1,121 @@
-From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 0/2] RTC support for NXP LPC18xx family
-Date: Tue, 21 Jul 2015 18:46:11 +0200
-Message-ID: <CAGhQ9VwJvs8qwhDrUd8P0Fz3v-MtQOq+Nfd5YegZZEVbDYNgqg@mail.gmail.com>
-References: <1436635730-15617-1-git-send-email-manabian@gmail.com>
-	<20150721162850.GE2853@piout.net>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] Documentation: dt: mtd: replace "nor-jedec" binding with
+ "jedec,spi-nor"
+Date: Tue, 21 Jul 2015 09:57:21 -0700
+Message-ID: <20150721165721.GJ24125@google.com>
+References: <1431624773-4165-1-git-send-email-computersforpeace@gmail.com>
+ <20150515195541.GL11598@ld-irv-0074>
+ <20150518104501.GD3551@leverpostej>
+ <20150518183442.GR11598@ld-irv-0074>
+ <CAMuHMdUCj2AXk_0mAgRfAStrveHPi=Rp2g-b177zO_ode8NaCw@mail.gmail.com>
+ <20150519013415.GV11598@ld-irv-0074>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150721162850.GE2853-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150519013415.GV11598@ld-irv-0074>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Josh Cartwright <joshc-acOepvfBmUk@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 21 July 2015 at 18:28, Alexandre Belloni
-<alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> Hi,
->
-> On 11/07/2015 at 19:28:48 +0200, Joachim Eastwood wrote :
->> This patch set adds support for the RTC found on many NXP devices
->> including LPC178x/18xx/408x/43xx. The RTC provides calendar and
->> clock functionality together with alarm interrupt support.
->>
->> The driver is a rework of an old driver by Kevin Wells. It has been
->> modified to support modern resource allocation, device tree and
->> generally cleaned up. Driver was originally written to support the
->> LPC24xx platform but since this platform isn't upstream support has
->> been removed. The LPC24xx name is still kept to preserve the origin
->> of this hardware block.
->>
->> Been a while since the last version, but this version should address
->> all comments from Josh and Alexandre on v2. There has also been some
->> rework from my side. Please have a look.
->>
->> changes since v2:
->>  - rework hw init
->>  - update Kconfig text
->>  - remove unused registers defines
->>  - misc clean ups
->>  - rebase on 4.2-rc1
->>
->> changes since v1:
->>  - s/lpc2k/lpc24xx for better consistency
->>  - fix Kconfig entry
->>  - drop support for old versions for the ip block
->>
->> Patch set is based on Linux v4.2-rc1.
->>
->> Joachim Eastwood (2):
->>   rtc: add rtc-lpc24xx driver
->>   doc: dt: add documentation for nxp,lpc1788-rtc
->>
->
-> Applied both after adding a proper commit log to the second patch,
-> reordering to avoid a checkpatch warning and fixing the typo in kevin's
-> mail address.
+On Mon, May 18, 2015 at 06:34:15PM -0700, Brian Norris wrote:
+> So how about the following patch? It seems like we'll need to be able to
+> ignore useless 'modalias' values in cases like this:
+> 
+> 	// modalias = "shinynewdevice"
+> 	compatible = "myvendor,shinynewdevice", "jedec,spi-nor";
+> 
+> and also if somebody leaves off the entire shinynewdevice string:
+> 
+> 	// modalias = "spi-nor"
+> 	compatible = "jedec,spi-nor";
+> 
+> So we rework the spi-nor library to not reject "bad" names, and just
+> fall back to autodetection, and we add the .of_match_table to properly
+> catch all "jedec,spi-nor".
+> 
+> Signed-off-by: Brian Norris <computerfsorpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Thanks for fixing up and applying, Alexandre.
+I realized this conversation ended in essentially an ack from Rafal,
+with no other comments. So I've pushed this (with some extra commentary)
+to l2-mtd.git. Holler if there are objections.
 
-regards,
-Joachim Eastwood
+Thanks,
+Brian
+
+> ---
+>  drivers/mtd/devices/m25p80.c  | 18 +++++++++++-------
+>  drivers/mtd/spi-nor/spi-nor.c |  8 ++++----
+>  2 files changed, 15 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/mtd/devices/m25p80.c b/drivers/mtd/devices/m25p80.c
+> index 3af137f49ac9..30d608775f5a 100644
+> --- a/drivers/mtd/devices/m25p80.c
+> +++ b/drivers/mtd/devices/m25p80.c
+> @@ -223,8 +223,6 @@ static int m25p_probe(struct spi_device *spi)
+>  	 */
+>  	if (data && data->type)
+>  		flash_name = data->type;
+> -	else if (!strcmp(spi->modalias, "spi-nor"))
+> -		flash_name = NULL; /* auto-detect */
+>  	else
+>  		flash_name = spi->modalias;
+>  
+> @@ -301,19 +299,25 @@ static const struct spi_device_id m25p_ids[] = {
+>  	{"w25q128"},	{"w25q256"},	{"cat25c11"},
+>  	{"cat25c03"},	{"cat25c09"},	{"cat25c17"},	{"cat25128"},
+>  
+> -	/*
+> -	 * Generic support for SPI NOR that can be identified by the JEDEC READ
+> -	 * ID opcode (0x9F). Use this, if possible.
+> -	 */
+> -	{"spi-nor"},
+>  	{ },
+>  };
+>  MODULE_DEVICE_TABLE(spi, m25p_ids);
+>  
+> +static const struct of_device_id m25p_of_table[] = {
+> +	/*
+> +	 * Generic compatibility for SPI NOR that can be identified by the
+> +	 * JEDEC READ ID opcode (0x9F). Use this, if possible.
+> +	 */
+> +	{ .compatible = "jedec,spi-nor" },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, m25p_of_table);
+> +
+>  static struct spi_driver m25p80_driver = {
+>  	.driver = {
+>  		.name	= "m25p80",
+>  		.owner	= THIS_MODULE,
+> +		.of_match_table = m25p_of_table,
+>  	},
+>  	.id_table	= m25p_ids,
+>  	.probe	= m25p_probe,
+> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+> index 14a5d2325dac..390d6fa0a53f 100644
+> --- a/drivers/mtd/spi-nor/spi-nor.c
+> +++ b/drivers/mtd/spi-nor/spi-nor.c
+> @@ -1003,11 +1003,11 @@ int spi_nor_scan(struct spi_nor *nor, const char *name, enum read_mode mode)
+>  	if (ret)
+>  		return ret;
+>  
+> -	/* Try to auto-detect if chip name wasn't specified */
+> -	if (!name)
+> -		id = spi_nor_read_id(nor);
+> -	else
+> +	if (name)
+>  		id = spi_nor_match_id(name);
+> +	/* Try to auto-detect if chip name wasn't specified or not found */
+> +	if (!id)
+> +		id = spi_nor_read_id(nor);
+>  	if (IS_ERR_OR_NULL(id))
+>  		return -ENOENT;
+>  
+> -- 
+> 1.9.1
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
