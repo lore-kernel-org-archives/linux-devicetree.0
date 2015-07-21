@@ -1,151 +1,77 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Jassi Brar <jassisinghbrar@gmail.com>
 Subject: Re: [PATCH 3/6] mailbox: Add support for ST's Mailbox IP
-Date: Tue, 21 Jul 2015 16:52:53 +0100
-Message-ID: <20150721155253.GN3061@x1>
+Date: Tue, 21 Jul 2015 21:39:04 +0530
+Message-ID: <CABb+yY1oKJKJGnn345uzE1mnVk5kCaGTO0b4zzqojN39m2OMyg@mail.gmail.com>
 References: <1437134647-28298-1-git-send-email-lee.jones@linaro.org>
- <1437134647-28298-4-git-send-email-lee.jones@linaro.org>
- <CABb+yY2nAT6V4Q8suAXRtPXrXkArGWVTAW28ts4Z3C_ybuJovA@mail.gmail.com>
- <20150721150629.GJ3061@x1>
- <CABb+yY25DC_hmuUhbEVvdEqdUnM6bJxCjBcamZBL97o=jR83Ug@mail.gmail.com>
+	<1437134647-28298-4-git-send-email-lee.jones@linaro.org>
+	<CABb+yY2nAT6V4Q8suAXRtPXrXkArGWVTAW28ts4Z3C_ybuJovA@mail.gmail.com>
+	<20150721150629.GJ3061@x1>
+	<CABb+yY25DC_hmuUhbEVvdEqdUnM6bJxCjBcamZBL97o=jR83Ug@mail.gmail.com>
+	<20150721155253.GN3061@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CABb+yY25DC_hmuUhbEVvdEqdUnM6bJxCjBcamZBL97o=jR83Ug-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150721155253.GN3061@x1>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, kernel@stlinux.com, Devicetree List <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 21 Jul 2015, Jassi Brar wrote:
+On Tue, Jul 21, 2015 at 9:22 PM, Lee Jones <lee.jones@linaro.org> wrote:
+> On Tue, 21 Jul 2015, Jassi Brar wrote:
+>
+>> >
+>> >> > +static int sti_mbox_send_data(struct mbox_chan *chan, void *data)
+>> >> > +{
+>> >> > +       struct sti_channel *chan_info = chan->con_priv;
+>> >> > +       struct sti_mbox_device *mdev = chan_info->mdev;
+>> >> > +       struct sti_mbox_pdata *pdata = dev_get_platdata(mdev->dev);
+>> >> > +       unsigned int instance = chan_info->instance;
+>> >> > +       unsigned int channel = chan_info->channel;
+>> >> > +       void __iomem *base;
+>> >> > +
+>> >> > +       if (!sti_mbox_tx_is_ready(chan))
+>> >> > +               return -EBUSY;
+>> >> This is the first thing I look out for in every new driver :)  this
+>> >> check is unnecessary.
+>> >
+>> > In what way?  What if the channel is disabled or there is an IRQ
+>> > already pending?
+>> >
+>> API calls send_data() only if last_tx_done() returned true.
+>
+> I know for a fact that the 'catchers' in sti_mbox_tx_is_ready() to
+> fire, because I have triggered them.  I'd really rather keep this
+> harmless check in.
+>
+If you put some printk in send_data() and last_tx_done() you'll see
+what I mean :)
 
-> On Tue, Jul 21, 2015 at 8:36 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wro=
-te:
-> > On Tue, 21 Jul 2015, Jassi Brar wrote:
-> >
-> >> However, you need some mechanism to check if you succeeded 'owning=
-'
-> >> the channel by reading back what you write to own the channel (not
-> >> sure which is that register here). Usually we need that action and
-> >> verification when we assign a channel to some user.
-> >
-> > I don't think there is a technical reason why it wouldn't succeed. =
- We
-> > don't normally read back every register change me make.  Why is thi=
-s
-> > IP different?
-> >
-> Not the IP, but register access. SET and CLR type registers work on
-> individual bits because the processors don't share a lock that
-> protects register read->modify->write.
->=20
-> Usually there is also some flag that is set to some unique value to
-> claim ownership of the resource, and if two processors try to claim
-> simultaneously we need to check if the flag reads back the value we
-> set to assert claim. There should be some such flag/register but as I
-> said I don't know if/which. Is there?
+>> >> > +static const struct sti_mbox_pdata mbox_stih407_pdata = {
+>> >> > +       .num_inst       = 4,
+>> >> > +       .num_chan       = 32,
+>> >> > +       .irq_val        = 0x04,
+>> >> > +       .irq_set        = 0x24,
+>> >> > +       .irq_clr        = 0x44,
+>> >> > +       .ena_val        = 0x64,
+>> >> > +       .ena_set        = 0x84,
+>> >> > +       .ena_clr        = 0xa4,
+>> >> >
+>> >> Register offsets are parameters of the controller
+>> >
+>> > And this is a controller driver?  Not sure I get the point.
+>> >
+>> Platform_data usually carries board/platform specific parameters.
+>> Register offset "properties" are as fixed as the behavior of the
+>> controller, so they should stay inside the code, not come via
+>> platform_data.
+>
+> That's not the case for this controller.  There is nothing preventing
+> these values from changing on a new board revisions.
+>
+Hmm ... interesting! Can't see how enable/disable channel and irq
+set/clear could be effected by writing to random, but agreed upon,
+location between two processors. There ought to be some controller
+listening there?  Now I am more interested in knowing this IP :)
 
-The only registers we have available are; read_irq_value,
-set_irq_value, clear_irq_value, read_enable_value, set_enable_value
-and clear_enable_values.
-
-This controller doesn't claim ownership of anything.  It essentially
-just turns IRQs on and off.
-
-> >> > +static int sti_mbox_send_data(struct mbox_chan *chan, void *dat=
-a)
-> >> > +{
-> >> > +       struct sti_channel *chan_info =3D chan->con_priv;
-> >> > +       struct sti_mbox_device *mdev =3D chan_info->mdev;
-> >> > +       struct sti_mbox_pdata *pdata =3D dev_get_platdata(mdev->=
-dev);
-> >> > +       unsigned int instance =3D chan_info->instance;
-> >> > +       unsigned int channel =3D chan_info->channel;
-> >> > +       void __iomem *base;
-> >> > +
-> >> > +       if (!sti_mbox_tx_is_ready(chan))
-> >> > +               return -EBUSY;
-> >> This is the first thing I look out for in every new driver :)  thi=
-s
-> >> check is unnecessary.
-> >
-> > In what way?  What if the channel is disabled or there is an IRQ
-> > already pending?
-> >
-> API calls send_data() only if last_tx_done() returned true.
-
-I know for a fact that the 'catchers' in sti_mbox_tx_is_ready() to
-fire, because I have triggered them.  I'd really rather keep this
-harmless check in.
-
-> >> > +static void sti_mbox_shutdown_chan(struct mbox_chan *chan)
-> >> > +{
-> >> > +       struct sti_channel *chan_info =3D chan->con_priv;
-> >> > +       struct mbox_controller *mbox =3D chan_info->mdev->mbox;
-> >> > +       int i;
-> >> > +
-> >> > +       for (i =3D 0; i < mbox->num_chans; i++)
-> >> > +               if (chan =3D=3D &mbox->chans[i])
-> >> > +                       break;
-> >> > +
-> >> > +       if (mbox->num_chans =3D=3D i) {
-> >> > +               dev_warn(mbox->dev, "Request to free non-existen=
-t channel\n");
-> >> > +               return;
-> >> > +       }
-> >> > +
-> >> > +       sti_mbox_disable_channel(chan);
-> >> > +       sti_mbox_clear_irq(chan);
-> >> > +
-> >> > +       /* Reset channel */
-> >> > +       memset(chan, 0, sizeof(*chan));
-> >> > +       chan->mbox =3D mbox;
-> >> > +       chan->txdone_method =3D TXDONE_BY_POLL;
-> >> >
-> >> No please. mbox_chan is owned by the API. At most you could clear =
-con_priv.
-> >
-> > I will look for the API call to reset the channel then.
-> >
-> API internally does any needed reset.
-
-Okay, thanks for the clarification, I will remove these lines.
-
-> >> > +static const struct sti_mbox_pdata mbox_stih407_pdata =3D {
-> >> > +       .num_inst       =3D 4,
-> >> > +       .num_chan       =3D 32,
-> >> > +       .irq_val        =3D 0x04,
-> >> > +       .irq_set        =3D 0x24,
-> >> > +       .irq_clr        =3D 0x44,
-> >> > +       .ena_val        =3D 0x64,
-> >> > +       .ena_set        =3D 0x84,
-> >> > +       .ena_clr        =3D 0xa4,
-> >> >
-> >> Register offsets are parameters of the controller
-> >
-> > And this is a controller driver?  Not sure I get the point.
-> >
-> Platform_data usually carries board/platform specific parameters.
-> Register offset "properties" are as fixed as the behavior of the
-> controller, so they should stay inside the code, not come via
-> platform_data.
-
-That's not the case for this controller.  There is nothing preventing
-these values from changing on a new board revisions.  After all, this
-isn't really a Controller IP per-say.
-
-AFAIK, all current platforms do use this mapping, so I can change it
-with a view to changing it back if a different set of offsets appear
-in subsequent incarnations.  But again, I think it's pretty harmless.
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+thnx.
