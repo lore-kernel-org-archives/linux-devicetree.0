@@ -1,174 +1,116 @@
-From: Dudley Du <dudl-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH v1 6/7] input: cyapa: add of match device support and
- description document
-Date: Tue, 21 Jul 2015 02:15:33 +0000
-Message-ID: <CY1PR06MB181702B549DC46FC53D20A88D1840@CY1PR06MB1817.namprd06.prod.outlook.com>
-References: <1434358897-24668-1-git-send-email-dudl@cypress.com>
- <1434358897-24668-7-git-send-email-dudl@cypress.com>
- <20150721001529.GF15528@dtor-ws>
+From: Zhou Wang <wangzhou1@hisilicon.com>
+Subject: Re: [PATCH v3 1/5] ARM/PCI: remove align_resource callback in pcibios_align_resource
+Date: Tue, 21 Jul 2015 11:26:27 +0800
+Message-ID: <55ADBBE3.70204@hisilicon.com>
+References: <1435743817-19083-1-git-send-email-wangzhou1@hisilicon.com> <1435743817-19083-2-git-send-email-wangzhou1@hisilicon.com> <20150702175056.GX944@e106497-lin.cambridge.arm.com> <559B6721.4080305@hisilicon.com> <20150707092220.GA980@e106497-lin.cambridge.arm.com> <EE11001F9E5DDD47B7634E2F8A612F2E01D5F503@lhreml503-mbs>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150721001529.GF15528@dtor-ws>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "rydberg-Hk7bIW8heu4wFerOooGFRg@public.gmane.org" <rydberg-Hk7bIW8heu4wFerOooGFRg@public.gmane.org>, "bleung-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bleung-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "jmmahler-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jmmahler-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <EE11001F9E5DDD47B7634E2F8A612F2E01D5F503@lhreml503-mbs>
+Sender: linux-pci-owner@vger.kernel.org
+To: Gabriele Paoloni <gabriele.paoloni@huawei.com>
+Cc: Liviu Dudau <Liviu.Dudau@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jg1.han@samsung.com>, Pratyush Anand <pratyush.anand@gmail.com>, Arnd Bergmann <arnd@arndb.de>, James Morse <James.Morse@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Yuanzhichang <yuanzhichang@hisilicon.com>, Zhudacai <zhudacai@hisilicon.com>, zhangjukuo <zhangjukuo@huawei.com>, qiuzhenfa <qiuzhenfa@hisilicon.com>, "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Dmitry Torokhov [mailto:dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org]
-> Sent: 2015?7?21? 8:15
-> To: Dudley Du
-> Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org; robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; rydberg-Hk7bIW8heu4wFerOooGFRg@public.gmane.org;
-> bleung-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org; jmmahler-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
-> linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Subject: Re: [PATCH v1 6/7] input: cyapa: add of match device support and
-> description document
+On 2015/7/17 18:02, Gabriele Paoloni wrote:
+> The following patch is maybe a better solution
+>=20
+> Gab
 >
-> On Mon, Jun 15, 2015 at 05:01:36PM +0800, Dudley Du wrote:
-> > Add of_match_device mechanism support for Cypress trackpad device, and
-> > add the sample description document of adding the trackpad device node in
-> > device tree.
-> > TEST=test on Chromebook.
-> >
-> > Signed-off-by: Dudley Du <dudl-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/input/cypress,cyapa.txt    | 44
-> ++++++++++++++++++++++
-> >  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
-> >  drivers/input/mouse/cyapa.c                        | 10 +++++
-> >  3 files changed, 55 insertions(+)
-> >  create mode 100644
-> Documentation/devicetree/bindings/input/cypress,cyapa.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/input/cypress,cyapa.txt
-> b/Documentation/devicetree/bindings/input/cypress,cyapa.txt
-> > new file mode 100644
-> > index 0000000..9be2b44
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/input/cypress,cyapa.txt
-> > @@ -0,0 +1,44 @@
-> > +Cypress I2C Touchpad
-> > +
-> > +Required properties:
-> > +- compatible: must be "cypress,cyapa".
-> > +- reg: I2C address of the chip.
-> > +- interrupt-parent: a phandle for the interrupt controller (see interrupt
-> > +  binding[0]).
-> > +- interrupts: interrupt to which the chip is connected (see interrupt
-> > +  binding[0]).
-> > +
-> > +Optional properties:
-> > +- wakeup-source: touchpad can be used as a wakeup source.
-> > +- pinctrl-names: should be "default" (see pinctrl binding [1]).
-> > +- pinctrl-0: a phandle pointing to the pin settings for the device (see
-> > +  pinctrl binding [1]).
-> > +- vcc-supply: a phandle for the regulator supplying 3.3V power.
->
-> I do not see it being used in the driver?
 
-Thanks, I will add the vcc-supply code in the cyapa_probe routine.
-And resubmit this patch.
+Hi Gab,
 
+Many thanks for your patch, I think this patch is cleaner than 1/4 in v=
+2 patchset.
+I will merge this one in my new series.
 
->
-> > +
-> > +[0]: Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-> > +[1]: Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-> > +
-> > +Example:
-> > +&i2c0 {
-> > +/* ... */
-> > +
-> > +/* Cypress Gen3 touchpad */
-> > +touchpad@67 {
-> > +compatible = "cypress,cyapa";
-> > +reg = <0x24>;
-> > +interrupt-parent = <&gpio>;
-> > +interrupts = <2 IRQ_TYPE_EDGE_FALLING>;/* GPIO 2 */
-> > +wakeup-source;
-> > +};
-> > +
-> > +/* Cypress Gen5 and later touchpad */
-> > +touchpad@24 {
-> > +compatible = "cypress,cyapa";
-> > +reg = <0x24>;
-> > +interrupt-parent = <&gpio>;
-> > +interrupts = <2 IRQ_TYPE_EDGE_FALLING>;/* GPIO 2 */
-> > +wakeup-source;
-> > +};
-> > +
-> > +/* ... */
-> > +};
-> > diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> > index ee2ce7b..e43d532 100644
-> > --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> > +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> > @@ -54,6 +54,7 @@ cortinaCortina Systems, Inc.
-> >  cosmicCosmic Circuits
-> >  crystalfontzCrystalfontz America, Inc.
-> >  cubietechCubietech, Ltd.
-> > +cypressCypress Semiconductor Corporation
-> >  dallasMaxim Integrated Products (formerly Dallas Semiconductor)
-> >  davicomDAVICOM Semiconductor, Inc.
-> >  deltaDelta Electronics, Inc.
-> > diff --git a/drivers/input/mouse/cyapa.c b/drivers/input/mouse/cyapa.c
-> > index 4e69594..7b6d6d4 100644
-> > --- a/drivers/input/mouse/cyapa.c
-> > +++ b/drivers/input/mouse/cyapa.c
-> > @@ -25,6 +25,7 @@
-> >  #include <linux/uaccess.h>
-> >  #include <linux/pm_runtime.h>
-> >  #include <linux/acpi.h>
-> > +#include <linux/of.h>
-> >  #include "cyapa.h"
-> >
-> >
-> > @@ -1562,12 +1563,21 @@ static const struct acpi_device_id cyapa_acpi_id[] =
-> {
-> >  MODULE_DEVICE_TABLE(acpi, cyapa_acpi_id);
-> >  #endif
-> >
-> > +#ifdef CONFIG_OF
-> > +static const struct of_device_id cyapa_of_match[] = {
-> > +{ .compatible = "cypress,cyapa" },
-> > +{ /* sentinel */ }
-> > +};
-> > +MODULE_DEVICE_TABLE(of, cyapa_of_match);
-> > +#endif
-> > +
-> >  static struct i2c_driver cyapa_driver = {
-> >  .driver = {
-> >  .name = "cyapa",
-> >  .owner = THIS_MODULE,
-> >  .pm = &cyapa_pm_ops,
-> >  .acpi_match_table = ACPI_PTR(cyapa_acpi_id),
-> > +.of_match_table = of_match_ptr(cyapa_of_match),
-> >  },
-> >
-> >  .probe = cyapa_probe,
-> > --
-> > 1.9.1
-> >
-> >
-> > ---------------------------------------------------------------
-> > This message and any attachments may contain Cypress (or its
-> > subsidiaries) confidential information. If it has been received
-> > in error, please advise the sender and immediately delete this
-> > message.
-> > ---------------------------------------------------------------
-> >
->
-> --
-> Dmitry
+Thanks=EF=BC=8C
+Zhou
 
-This message and any attachments may contain Cypress (or its subsidiaries) confidential information. If it has been received in error, please advise the sender and immediately delete this message.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> -----------------------
+> This patch is needed in order to unify the PCIe designware
+> framework for ARM and ARM64 architectures.
+> In the PCIe designware unification process we are calling
+> pci_create_root_bus() passing a "sysdata" parameter
+> that is the same for both ARM and ARM64 and is of type
+> "struct pcie_port*". In the ARM case this will cause
+> a problem with the function pcibios_align_resource();
+> in fact this will cast "dev->sysdata" to "struct pci_sys_data*",
+> whereas designware had passed a "struct pcie_port*" pointer.
+>=20
+> This patch solves the issue by removing "align_resource" from
+> "pci_sys_data" struct and defining a static global function pointer
+> in "bios32.c"
+>=20
+> Signed-off-by: Gabriele Paoloni <gabriele.paoloni at huawei.com>
+> ---
+>  arch/arm/include/asm/mach/pci.h |  5 -----
+>  arch/arm/kernel/bios32.c        | 12 ++++++++----
+>  2 files changed, 8 insertions(+), 9 deletions(-)
+>=20
+> diff --git a/arch/arm/include/asm/mach/pci.h b/arch/arm/include/asm/m=
+ach/pci.h
+> index 28b9bb3..8a4e4de 100644
+> --- a/arch/arm/include/asm/mach/pci.h
+> +++ b/arch/arm/include/asm/mach/pci.h
+> @@ -58,11 +58,6 @@ struct pci_sys_data {
+>  					/* IRQ mapping				*/
+>  	int		(*map_irq)(const struct pci_dev *, u8, u8);
+>  					/* Resource alignement requirements	*/
+> -	resource_size_t (*align_resource)(struct pci_dev *dev,
+> -					  const struct resource *res,
+> -					  resource_size_t start,
+> -					  resource_size_t size,
+> -					  resource_size_t align);
+>  	void		*private_data;	/* platform controller private data	*/
+>  };
+> =20
+> diff --git a/arch/arm/kernel/bios32.c b/arch/arm/kernel/bios32.c
+> index fcbbbb1..4cdc64d 100644
+> --- a/arch/arm/kernel/bios32.c
+> +++ b/arch/arm/kernel/bios32.c
+> @@ -17,6 +17,11 @@
+>  #include <asm/mach/pci.h>
+> =20
+>  static int debug_pci;
+> +static resource_size_t (*align_resource)(struct pci_dev *dev,
+> +		  const struct resource *res,
+> +		  resource_size_t start,
+> +		  resource_size_t size,
+> +		  resource_size_t align) =3D NULL;
+> =20
+>  #ifdef CONFIG_PCI_MSI
+>  struct msi_controller *pcibios_msi_controller(struct pci_dev *dev)
+> @@ -468,7 +473,7 @@ static void pcibios_init_hw(struct device *parent=
+, struct hw_pci *hw,
+>  		sys->busnr   =3D busnr;
+>  		sys->swizzle =3D hw->swizzle;
+>  		sys->map_irq =3D hw->map_irq;
+> -		sys->align_resource =3D hw->align_resource;
+> +		align_resource =3D hw->align_resource;
+>  		INIT_LIST_HEAD(&sys->resources);
+> =20
+>  		if (hw->private_data)
+> @@ -589,7 +594,6 @@ resource_size_t pcibios_align_resource(void *data=
+, const struct resource *res,
+>  				resource_size_t size, resource_size_t align)
+>  {
+>  	struct pci_dev *dev =3D data;
+> -	struct pci_sys_data *sys =3D dev->sysdata;
+>  	resource_size_t start =3D res->start;
+> =20
+>  	if (res->flags & IORESOURCE_IO && start & 0x300)
+> @@ -597,8 +601,8 @@ resource_size_t pcibios_align_resource(void *data=
+, const struct resource *res,
+> =20
+>  	start =3D (start + align - 1) & ~(align - 1);
+> =20
+> -	if (sys->align_resource)
+> -		return sys->align_resource(dev, res, start, size, align);
+> +	if (align_resource)
+> +		return align_resource(dev, res, start, size, align);
+> =20
+>  	return start;
+>  }
+>=20
