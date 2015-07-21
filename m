@@ -1,63 +1,66 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v8 6/9] nvmem: qfprom: Add Qualcomm QFPROM support.
-Date: Tue, 21 Jul 2015 10:42:52 +0100
-Message-ID: <55AE141C.8000802@linaro.org>
-References: <1437403352-4091-1-git-send-email-srinivas.kandagatla@linaro.org> <1437403445-4348-1-git-send-email-srinivas.kandagatla@linaro.org> <55AD6636.4050302@codeaurora.org>
+From: S Twiss <stwiss.opensource@diasemi.com>
+Subject: [PATCH V2 2/3] devicetree: da9062: Add device tree bindings for
+ DA9062 RTC
+Date: Tue, 21 Jul 2015 10:43:09 +0100
+Message-ID: <4e56d79b368e5ba3a15ad32ef08bc5095d8f7217.1437471790.git.stwiss.opensource@diasemi.com>
+References: <cover.1437471790.git.stwiss.opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <55AD6636.4050302@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: linux-arm-kernel@lists.infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, s.hauer@pengutronix.de, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, arnd@arndb.de, pantelis.antoniou@konsulko.com, mporter@konsulko.com, stefan.wahren@i2se.com, wxt@rock-chips.com
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1437471790.git.stwiss.opensource@diasemi.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: DEVICETREE <devicetree@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, LINUXINPUT <linux-input@vger.kernel.org>, LINUXKERNEL <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, RTCLINUX <rtc-linux@googlegroups.com>, Rob Herring <robh+dt@kernel.org>, S Twiss <stwiss.opensource@diasemi.com>
+Cc: Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, David Dajun Chen <david.chen@diasemi.com>, Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Support Opensource <support.opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
+From: S Twiss <stwiss.opensource@diasemi.com>
+
+Add device tree bindings for the DA9062 RTC driver component
+
+Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
+
+---
+Checks performed with linux-next/next-20150708/scripts/checkpatch.pl
+ da9062.txt                total: 0 errors, 0 warnings, 88 lines checked
+This patch applies against linux-next and next-20150708 
 
 
-On 20/07/15 22:20, Stephen Boyd wrote:
-> On 07/20/2015 07:44 AM, Srinivas Kandagatla wrote:
->> This patch adds QFPROM support driver which is used by other drivers
->> like thermal sensor and cpufreq.
->>
->> On MSM parts there are some efuses (called qfprom) these fuses store
->> things like calibration data, speed bins.. etc. Drivers like cpufreq,
->> thermal sensors would read out this data for configuring the driver.
->>
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->
-> One comment below, otherwise
->
-> Reviewed-by: Stephen Boyd <sboyd@codeaurora.org>
->
-Thanks for review,  I will send v9 by removing slab.h.
+ Documentation/devicetree/bindings/mfd/da9062.txt | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
->> diff --git a/drivers/nvmem/qfprom.c b/drivers/nvmem/qfprom.c
->> new file mode 100644
->> index 0000000..ba5e2b4
->> --- /dev/null
->> +++ b/drivers/nvmem/qfprom.c
->> @@ -0,0 +1,86 @@
->> +/*
->> + * Copyright (C) 2015 Srinivas Kandagatla
->> <srinivas.kandagatla@linaro.org>
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 and
->> + * only version 2 as published by the Free Software Foundation.
->> + *
->> + * This program is distributed in the hope that it will be useful,
->> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + * GNU General Public License for more details.
->> + */
->> +
->> +#include <linux/device.h>
->> +#include <linux/module.h>
->> +#include <linux/nvmem-provider.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/regmap.h>
->> +#include <linux/slab.h>
->
-> This include is used?
->
+diff --git a/Documentation/devicetree/bindings/mfd/da9062.txt b/Documentation/devicetree/bindings/mfd/da9062.txt
+index 5765ed9..38802b5 100644
+--- a/Documentation/devicetree/bindings/mfd/da9062.txt
++++ b/Documentation/devicetree/bindings/mfd/da9062.txt
+@@ -5,6 +5,7 @@ DA9062 consists of a large and varied group of sub-devices:
+ Device                   Supply Names    Description
+ ------                   ------------    -----------
+ da9062-regulator        :               : LDOs & BUCKs
++da9062-rtc              :               : Real-Time Clock
+ da9062-watchdog         :               : Watchdog Timer
+ 
+ ======
+@@ -41,6 +42,10 @@ Sub-nodes:
+   Documentation/devicetree/bindings/regulator/regulator.txt
+ 
+ 
++- rtc : This node defines settings required for the Real-Time Clock associated
++  with the DA9062. There are currently no entries in this binding, however
++  compatible = "dlg,da9062-rtc" should be added if a node is created.
++
+ - watchdog: This node defines the settings for the watchdog driver associated
+   with the DA9062 PMIC. The compatible = "dlg,da9062-watchdog" should be added
+   if a node is created.
+@@ -55,6 +60,10 @@ Example:
+ 		interrupts = <11 IRQ_TYPE_LEVEL_LOW>;
+ 		interrupt-controller;
+ 
++		rtc {
++			compatible = "dlg,da9062-rtc";
++		};
++
+ 		watchdog {
+ 			compatible = "dlg,da9062-watchdog";
+ 		};
+-- 
+end-of-patch for PATCH V2
