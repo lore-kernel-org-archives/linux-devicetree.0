@@ -1,139 +1,65 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 3/6] mailbox: Add support for ST's Mailbox IP
-Date: Tue, 21 Jul 2015 18:48:51 +0100
-Message-ID: <20150721174851.GP3061@x1>
-References: <1437134647-28298-1-git-send-email-lee.jones@linaro.org>
- <1437134647-28298-4-git-send-email-lee.jones@linaro.org>
- <CABb+yY2nAT6V4Q8suAXRtPXrXkArGWVTAW28ts4Z3C_ybuJovA@mail.gmail.com>
- <20150721150629.GJ3061@x1>
- <CABb+yY25DC_hmuUhbEVvdEqdUnM6bJxCjBcamZBL97o=jR83Ug@mail.gmail.com>
- <20150721155253.GN3061@x1>
- <CABb+yY1oKJKJGnn345uzE1mnVk5kCaGTO0b4zzqojN39m2OMyg@mail.gmail.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v8 1/9] nvmem: Add a simple NVMEM framework for nvmem
+ providers
+Date: Tue, 21 Jul 2015 10:59:00 -0700
+Message-ID: <55AE8864.6020608@codeaurora.org>
+References: <1437403352-4091-1-git-send-email-srinivas.kandagatla@linaro.org> <1437403392-4136-1-git-send-email-srinivas.kandagatla@linaro.org> <55AD6412.9070205@codeaurora.org> <55AE13D8.6020301@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CABb+yY1oKJKJGnn345uzE1mnVk5kCaGTO0b4zzqojN39m2OMyg@mail.gmail.com>
+In-Reply-To: <55AE13D8.6020301@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, kernel@stlinux.com, Devicetree List <devicetree@vger.kernel.org>
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, s.hauer@pengutronix.de, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, arnd@arndb.de, pantelis.antoniou@konsulko.com, mporter@konsulko.com, stefan.wahren@i2se.com, wxt@rock-chips.com, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 21 Jul 2015, Jassi Brar wrote:
+On 07/21/2015 02:41 AM, Srinivas Kandagatla wrote:
+> Thanks Stephen for review,
+>
+> On 20/07/15 22:11, Stephen Boyd wrote:
+>> On 07/20/2015 07:43 AM, Srinivas Kandagatla wrote:
+>>> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+>>> new file mode 100644
+>>> index 0000000..bde5528
+>>> --- /dev/null
+>>> +++ b/drivers/nvmem/core.c
+>>> @@ -0,0 +1,384 @@
+>>>
+>>> +
+>>> +static int nvmem_add_cells(struct nvmem_device *nvmem,
+>>> +               const struct nvmem_config *cfg)
+>>> +{
+>>> +    struct nvmem_cell **cells;
+>>> +    const struct nvmem_cell_info *info = cfg->cells;
+>>> +    int i, rval;
+>>> +
+>>> +    cells = kzalloc(sizeof(*cells) * cfg->ncells, GFP_KERNEL);
+>>
+>> kcalloc?
+>
+> Only reason for using kzalloc is to give the code more flexibility to 
+> free any pointer in the array in case of errors.
 
-> On Tue, Jul 21, 2015 at 9:22 PM, Lee Jones <lee.jones@linaro.org> wro=
-te:
-> > On Tue, 21 Jul 2015, Jassi Brar wrote:
-> >
-> >> >
-> >> >> > +static int sti_mbox_send_data(struct mbox_chan *chan, void *=
-data)
-> >> >> > +{
-> >> >> > +       struct sti_channel *chan_info =3D chan->con_priv;
-> >> >> > +       struct sti_mbox_device *mdev =3D chan_info->mdev;
-> >> >> > +       struct sti_mbox_pdata *pdata =3D dev_get_platdata(mde=
-v->dev);
-> >> >> > +       unsigned int instance =3D chan_info->instance;
-> >> >> > +       unsigned int channel =3D chan_info->channel;
-> >> >> > +       void __iomem *base;
-> >> >> > +
-> >> >> > +       if (!sti_mbox_tx_is_ready(chan))
-> >> >> > +               return -EBUSY;
-> >> >> This is the first thing I look out for in every new driver :)  =
-this
-> >> >> check is unnecessary.
-> >> >
-> >> > In what way?  What if the channel is disabled or there is an IRQ
-> >> > already pending?
-> >> >
-> >> API calls send_data() only if last_tx_done() returned true.
-> >
-> > I know for a fact that the 'catchers' in sti_mbox_tx_is_ready() to
-> > fire, because I have triggered them.  I'd really rather keep this
-> > harmless check in.
-> >
-> If you put some printk in send_data() and last_tx_done() you'll see
-> what I mean :)
->=20
-> >> >> > +static const struct sti_mbox_pdata mbox_stih407_pdata =3D {
-> >> >> > +       .num_inst       =3D 4,
-> >> >> > +       .num_chan       =3D 32,
-> >> >> > +       .irq_val        =3D 0x04,
-> >> >> > +       .irq_set        =3D 0x24,
-> >> >> > +       .irq_clr        =3D 0x44,
-> >> >> > +       .ena_val        =3D 0x64,
-> >> >> > +       .ena_set        =3D 0x84,
-> >> >> > +       .ena_clr        =3D 0xa4,
-> >> >> >
-> >> >> Register offsets are parameters of the controller
-> >> >
-> >> > And this is a controller driver?  Not sure I get the point.
-> >> >
-> >> Platform_data usually carries board/platform specific parameters.
-> >> Register offset "properties" are as fixed as the behavior of the
-> >> controller, so they should stay inside the code, not come via
-> >> platform_data.
-> >
-> > That's not the case for this controller.  There is nothing preventi=
-ng
-> > these values from changing on a new board revisions.
-> >
-> Hmm ... interesting! Can't see how enable/disable channel and irq
-> set/clear could be effected by writing to random, but agreed upon,
-> location between two processors. There ought to be some controller
-> listening there?  Now I am more interested in knowing this IP :)
+Still lost. The arrays are allocated down below in the for loop. This is 
+allocating a bunch of pointers so using kcalloc() here avoids problems 
+with overflows causing kzalloc() to allocate fewer pointers than 
+requested. I'm not suggesting we replace the for loop with a kcalloc, 
+just this single line.
 
-High level
-----------
+>
+>>
+>>> +    if (!cells)
+>>> +        return -ENOMEM;
+>>> +
+>>> +    for (i = 0; i < cfg->ncells; i++) {
+>>> +        cells[i] = kzalloc(sizeof(**cells), GFP_KERNEL);
+>>> +        if (!cells[i]) {
+>>> +            rval = -ENOMEM;
+>>> +            goto err;
+>>> +        }
+>>> +
 
-          MB0       MB1       MB2       MB3       MB4
-      +---------+---------+---------+---------+---------+
-INST0 |         |         |         |         |         |
-      +---------+---------+---------+---------+---------+
-INST1 |         |         |         |         |         |
-      +---------+---------+---------+---------+---------+
-INST2 |         |         |         |         |         |
-      +---------+---------+---------+---------+---------+
-INST3 |         |         |         |         |         |
-      +---------+---------+---------+---------+---------+
-
-Low level [each box above looks like this)
-------------------------------------------
-
-         1                                                             =
-32       =20
-        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+=
--+
-IRQ_VAL | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | |=
- |
-        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+=
--+
-IRQ_SET | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | |=
- |
-        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+=
--+
-IRQ_CLR | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | |=
- |
-        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+=
--+
-ENB_VAL | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | |=
- |
-        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+=
--+
-ENB_SET | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | |=
- |
-        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+=
--+
-ENB_CLR | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | |=
- |
-        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+=
--+
-
-That's it.  That's the entirety of the "IP".
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
