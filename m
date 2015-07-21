@@ -1,48 +1,61 @@
-From: Jingoo Han <jingoohan1@gmail.com>
-Subject: Re: [PATCH] backlight: pm8941-wled: Move PM8941 WLED driver to backlight
-Date: Tue, 21 Jul 2015 09:47:39 +0900
-Message-ID: <9F0858DA-62D4-4511-A515-6CE38A680969@gmail.com>
-References: <1436990540-23354-1-git-send-email-bjorn.andersson@sonymobile.com> <55A764C5.5060205@samsung.com> <004401d0c2f6$9b73b820$d25b2860$@com> <55AD63FF.8090408@gmail.com>
-Mime-Version: 1.0 (1.0)
-Content-Type: text/plain;
-	charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <55AD63FF.8090408@gmail.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Jacek Anaszewski <j.anaszewski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Lee Jones <lee.jones@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Rob Clark <robdclark@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, jingoohan1@gmail.com
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH net v5 0/4] net: enable inband link state negotiation only when explicitly requested
+Date: Mon, 20 Jul 2015 17:49:54 -0700
+Message-ID: <1437439798-12622-1-git-send-email-f.fainelli@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mxs-i6rsG8ix9II@public.gmane.org, arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org, stsp-Rn4VEauK+AKRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi all,
 
-On 2015. 7. 21., at AM 6:11, Jacek Anaszewski <jacek.anaszewski@gmail.com> wrote:
->> On 20.07.2015 16:15, Jingoo Han wrote:
->>> On Thursday, July 16, 2015 5:01 PM, Jacek Anaszewski wrote:
->>>> On 07/15/2015 10:02 PM, Bjorn Andersson wrote:
->>>> The Qualcomm PM8941 WLED block is used for backlight and should therefor
->>>> be in the backlight framework and not in the LED framework. This moves
->>>> the driver and adapts to the backlight api instead.
->>>> 
->>>> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
->>>> ---
->>>>   .../devicetree/bindings/leds/leds-pm8941-wled.txt  |  5 +-
->>>>   drivers/leds/Kconfig                               |  8 ---
->>>>   drivers/leds/Makefile                              |  1 -
->>>>   drivers/video/backlight/Kconfig |  8 +++
->>>>   drivers/video/backlight/Makefile                   |  1 +
->>>>   .../backlight/pm8941-wled.c}                       | 59 ++++++++++------------
->>>>   6 files changed, 36 insertions(+), 46 deletions(-)
->>>>   rename drivers/{leds/leds-pm8941-wled.c => video/backlight/pm8941-wled.c} (90%)
->>> 
->>> Acked-by: Jacek Anaszewski <j.anaszewski@samsung.com>
->> 
->> If you are not an author of this driver or a maintainer affected by this patch,
->> Just 'Reviewed-by' looks good.
-> 
-> I am a LED subsystem maintainer.
+Changes in v5:
 
-OK, I see.
-I didn't notice that you were added as the maintainer 2 months ago.
+- removed an invalid use of the link_update callback in the SF2 driver
+  was appeared after merging "net: phy: fixed_phy: handle link-down case"
 
-Best regards,
-Jingoo Han
+- reworded the commit message for patch 2 to make it clear what it fixes and
+  why this is required
+
+Initial cover letter from Stas:
+
+Hello.
+
+Currently the link status auto-negotiation is enabled
+for any SGMII link with fixed-link DT binding.
+The regression was reported:
+https://lkml.org/lkml/2015/7/8/865
+Apparently not all HW that implements SGMII protocol, generates the
+inband status for the auto-negotiation to work.
+More details here:
+https://lkml.org/lkml/2015/7/10/206
+
+The following patches reverts to the old behavior by default,
+which is to not enable the auto-negotiation for fixed-link.
+The new DT property is added that allows to explicitly request
+the auto-negotiation.
+
+Florian Fainelli (1):
+  net: dsa: bcm_sf2: Do not override speed settings
+
+Stas Sergeev (3):
+  net: phy: fixed_phy: handle link-down case
+  of_mdio: add new DT property 'managed' to specify the PHY management
+    type
+  mvneta: use inband status only when explicitly enabled
+
+ Documentation/devicetree/bindings/net/ethernet.txt |  4 ++++
+ drivers/net/dsa/bcm_sf2.c                          | 18 +-----------------
+ drivers/net/ethernet/marvell/mvneta.c              |  9 +++++----
+ drivers/net/phy/fixed_phy.c                        |  8 +++++---
+ drivers/of/of_mdio.c                               | 19 +++++++++++++++++--
+ 5 files changed, 32 insertions(+), 26 deletions(-)
+
+-- 
+2.1.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
