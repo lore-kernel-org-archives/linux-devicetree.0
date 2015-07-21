@@ -1,145 +1,96 @@
-From: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH] dtb: Create a common home for cross-architecture dtsi files.
-Date: Tue, 21 Jul 2015 17:30:04 +0100
-Message-ID: <1437496204-5438-1-git-send-email-ian.campbell@citrix.com>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [PATCH v8 8/9] nvmem: sunxi: Move the SID driver to the nvmem
+ framework
+Date: Tue, 21 Jul 2015 18:38:44 +0200 (CEST)
+Message-ID: <2114639619.71276.1437496724946.JavaMail.open-xchange@oxbsltgw08.schlund.de>
+References: <1437403352-4091-1-git-send-email-srinivas.kandagatla@linaro.org> <1437403462-4432-1-git-send-email-srinivas.kandagatla@linaro.org>
+Reply-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Kristina Martsenko <kristina.martsenko-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1437403462-4432-1-git-send-email-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Commit 9ccd608070b6 "arm64: dts: add device tree for ARM SMM-A53x2 on
-LogicTile Express 20MG" added a new dts file to arch/arm64 which
-included "../../../../arm/boot/dts/vexpress-v2m-rs1.dtsi", i.e. a
-.dtsi supplied by arch/arm.
+Hi Srinivas,
 
-Unfortunately this causes some issues for the split device tree
-repository[0], since things get moved around there. In that context
-the new .dts ends up at src/arm64/arm/vexpress-v2f-1xv7-ca53x2.dts
-while the include is at src/arm/vexpress-v2m-rs1.dtsi.
+> Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> hat am 20. Juli 2015 um
+> 16:44 geschrieben:
+>
+>
+> From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>
+> Now that we have the nvmem framework, we can consolidate the common
+> driver code. Move the driver to the framework, and hopefully, it will
+> fix the sysfs file creation race.
+>
+> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> [srinivas.kandagatla: Moved to regmap based EEPROM framework]
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+> Documentation/ABI/testing/sysfs-driver-sunxi-sid | 22 ---
+> .../bindings/misc/allwinner,sunxi-sid.txt | 17 ---
+> .../bindings/nvmem/allwinner,sunxi-sid.txt | 21 +++
+> drivers/misc/eeprom/Kconfig | 13 --
+> drivers/misc/eeprom/Makefile | 1 -
+> drivers/misc/eeprom/sunxi_sid.c | 156 --------------------
+> drivers/nvmem/Kconfig | 11 ++
+> drivers/nvmem/Makefile | 2 +
+> drivers/nvmem/sunxi_sid.c | 159 +++++++++++++++++++++
+> 9 files changed, 193 insertions(+), 209 deletions(-)
+> delete mode 100644 Documentation/ABI/testing/sysfs-driver-sunxi-sid
+> delete mode 100644
+> Documentation/devicetree/bindings/misc/allwinner,sunxi-sid.txt
+> create mode 100644
+> Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt
+> delete mode 100644 drivers/misc/eeprom/sunxi_sid.c
+> create mode 100644 drivers/nvmem/sunxi_sid.c
+>
+> [...]
+> -static int sunxi_sid_probe(struct platform_device *pdev)
+> -{
+> - struct sunxi_sid_data *sid_data;
+> - struct resource *res;
+> - const struct of_device_id *of_dev_id;
+> - u8 *entropy;
+> - unsigned int i;
+> -
+> - sid_data = devm_kzalloc(&pdev->dev, sizeof(struct sunxi_sid_data),
+> - GFP_KERNEL);
+> - if (!sid_data)
+> - return -ENOMEM;
+> -
+> - res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> - sid_data->reg_base = devm_ioremap_resource(&pdev->dev, res);
+> - if (IS_ERR(sid_data->reg_base))
+> - return PTR_ERR(sid_data->reg_base);
+> -
+> - of_dev_id = of_match_device(sunxi_sid_of_match, &pdev->dev);
+> - if (!of_dev_id)
+> - return -ENODEV;
+> - sid_data->keysize = (int)of_dev_id->data;
+> -
+> - platform_set_drvdata(pdev, sid_data);
+> -
+> - sid_bin_attr.size = sid_data->keysize;
+> - if (device_create_bin_file(&pdev->dev, &sid_bin_attr))
+> - return -ENODEV;
+> -
+> - entropy = kzalloc(sizeof(u8) * sid_data->keysize, GFP_KERNEL);
+> - for (i = 0; i < sid_data->keysize; i++)
+> - entropy[i] = sunxi_sid_read_byte(sid_data, i);
+> - add_device_randomness(entropy, sid_data->keysize);
+> - kfree(entropy);
+> -
 
-The sharing of the .dtsi is legitimate since the baseboard is the same
-for various vexpress systems whatever processor they use.
+in case of porting a driver to a new framework, i would expect the same
+features.
+The ported driver do not add the Security ID to the device randomness.
 
-Rather than using ../../ tricks to pickup .dtsi files from another
-arch this patch creates a new directory include/dt-bindings/dtsi as a
-home for such cross-arch .dtsi files, arranges for it to be in the
-include path when the .dts files are processed by cpp and switches the
-.dts files to use cpp #include instead of /include/.
+What's the reason for this difference?
 
-[0] https://git.kernel.org/cgit/linux/kernel/git/devicetree/devicetree-rebasing.git/
-
-Signed-off-by: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: Kristina Martsenko <kristina.martsenko-5wv7dgnIgG8@public.gmane.org>
-Cc: Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
----
- Documentation/devicetree/bindings/arm/vexpress.txt                    | 2 +-
- arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts                           | 2 +-
- arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts                            | 2 +-
- arch/arm/boot/dts/vexpress-v2p-ca5s.dts                               | 2 +-
- arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts                  | 2 +-
- {arch/arm/boot/dts => include/dt-bindings/dtsi}/vexpress-v2m-rs1.dtsi | 0
- scripts/Makefile.lib                                                  | 1 +
- 7 files changed, 6 insertions(+), 5 deletions(-)
- rename {arch/arm/boot/dts => include/dt-bindings/dtsi}/vexpress-v2m-rs1.dtsi (100%)
-
-diff --git a/Documentation/devicetree/bindings/arm/vexpress.txt b/Documentation/devicetree/bindings/arm/vexpress.txt
-index 39844cd..46c6b04 100644
---- a/Documentation/devicetree/bindings/arm/vexpress.txt
-+++ b/Documentation/devicetree/bindings/arm/vexpress.txt
-@@ -223,7 +223,7 @@ Example of a VE tile description (simplified)
- 		/* Active high IRQ 0 is connected to GIC's SPI0 */
- 		interrupt-map = <0 0 0 &gic 0 0 4>;
- 
--		/include/ "vexpress-v2m-rs1.dtsi"
-+		#include <vexpress-v2m-rs1.dtsi>
- 	};
- };
- 
-diff --git a/arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts b/arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts
-index 9420053..85b201e 100644
---- a/arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts
-+++ b/arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts
-@@ -278,6 +278,6 @@
- 				<0 0 41 &gic 0 41 4>,
- 				<0 0 42 &gic 0 42 4>;
- 
--		/include/ "vexpress-v2m-rs1.dtsi"
-+		#include <vexpress-v2m-rs1.dtsi>
- 	};
- };
-diff --git a/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts b/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts
-index 17f63f7..fe5091d 100644
---- a/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts
-+++ b/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts
-@@ -636,6 +636,6 @@
- 				<0 0 41 &gic 0 41 4>,
- 				<0 0 42 &gic 0 42 4>;
- 
--		/include/ "vexpress-v2m-rs1.dtsi"
-+		#include <vexpress-v2m-rs1.dtsi>
- 	};
- };
-diff --git a/arch/arm/boot/dts/vexpress-v2p-ca5s.dts b/arch/arm/boot/dts/vexpress-v2p-ca5s.dts
-index d2709b7..a028d59 100644
---- a/arch/arm/boot/dts/vexpress-v2p-ca5s.dts
-+++ b/arch/arm/boot/dts/vexpress-v2p-ca5s.dts
-@@ -248,6 +248,6 @@
- 				<0 0 41 &gic 0 41 4>,
- 				<0 0 42 &gic 0 42 4>;
- 
--		/include/ "vexpress-v2m-rs1.dtsi"
-+		#include <vexpress-v2m-rs1.dtsi>
- 	};
- };
-diff --git a/arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts b/arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts
-index 5b1d018..b4257ee 100644
---- a/arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts
-+++ b/arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts
-@@ -186,6 +186,6 @@
- 				<0 0 41 &gic GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>,
- 				<0 0 42 &gic GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
- 
--		/include/ "../../../../arm/boot/dts/vexpress-v2m-rs1.dtsi"
-+		#include <vexpress-v2m-rs1.dtsi>
- 	};
- };
-diff --git a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi b/include/dt-bindings/dtsi/vexpress-v2m-rs1.dtsi
-similarity index 100%
-rename from arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
-rename to include/dt-bindings/dtsi/vexpress-v2m-rs1.dtsi
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index 79e8661..bb10128 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -163,6 +163,7 @@ dtc_cpp_flags  = -Wp,-MD,$(depfile).pre.tmp -nostdinc                    \
- 		 -I$(srctree)/arch/$(SRCARCH)/boot/dts                   \
- 		 -I$(srctree)/arch/$(SRCARCH)/boot/dts/include           \
- 		 -I$(srctree)/drivers/of/testcase-data                   \
-+		 -I$(srctree)/include/dt-bindings/dtsi                   \
- 		 -undef -D__DTS__
- 
- # Finds the multi-part object the current object will be linked into
--- 
-2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards
+Stefan
