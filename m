@@ -1,34 +1,54 @@
-From: Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [PATCH v11] crypto: Add Allwinner Security System crypto
- accelerator
-Date: Tue, 21 Jul 2015 20:50:14 +0800
-Message-ID: <20150721125014.GA25272@gondor.apana.org.au>
-References: <1437143983-4479-1-git-send-email-clabbe.montjoie@gmail.com>
- <20150720081050.GB12908@gondor.apana.org.au>
- <20150720081836.GT28632@lukather>
- <20150720082057.GA13098@gondor.apana.org.au>
- <20150721123847.GD2373@lukather>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v8 2/2] mmc: host: sdhci: Disable 1.8V signaling for
+ arasan 4.9a version of SDHCI controller.
+Date: Tue, 21 Jul 2015 15:13:58 +0200
+Message-ID: <CAPDyKFqozGkHRSFYm=P61XnYj4F-kpoYG2CmVDc1tSkT_zQJ5w@mail.gmail.com>
+References: <1434715227-27399-1-git-send-email-stripathi@apm.com>
+	<1434715227-27399-3-git-send-email-stripathi@apm.com>
+	<CAOHikRBkDinUfcOR3Dg12e2Xy_P5TABOpHSnkSpZhRyhLRWGFA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150721123847.GD2373@lukather>
-Sender: linux-doc-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: LABBE Corentin <clabbe.montjoie@gmail.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, davem@davemloft.net, akpm@linux-foundation.org, gregkh@linuxfoundation.org, mchehab@osg.samsung.com, arnd@arndb.de, joe@perches.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, linux-sunxi@googlegroups.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAOHikRBkDinUfcOR3Dg12e2Xy_P5TABOpHSnkSpZhRyhLRWGFA@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Suman Tripathi <stripathi@apm.com>
+Cc: Chris Ball <chris@printf.net>, Anton Vorontsov <anton@enomsg.org>, Arnd Bergmann <arnd@arndb.de>, Michal Simek <michal.simek@xilinx.com>, Kevin Hilman <khilman@deeprootsystems.com>, Olof Johansson <olof@lixom.net>, linux-mmc <linux-mmc@vger.kernel.org>, "arm@kernel.org" <arm@kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Don Dutile <ddutile@redhat.com>, Jon Masters <jcm@redhat.com>, Mark Langsdorf <mlangsdo@redhat.com>, patches <patches@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 21, 2015 at 02:38:47PM +0200, Maxime Ripard wrote:
-> I thought you needed at least my Acked-by for that, but
-> whatever... How are we supposed to handle subsequent DT patches that
-> should be merged through arm-soc then?
+On 19 June 2015 at 14:28, Suman Tripathi <stripathi@apm.com> wrote:
+> Hi ,
+>
+> On Fri, Jun 19, 2015 at 5:30 PM, Suman Tripathi <stripathi@apm.com> wrote:
+>> This patch disables the 1.8V signaling for arasan 4.9a version
+>> of SDHCI controller with the help SDHCI_QUIRK2_NO_1_8_V quirk.
+>>
+>> Signed-off-by: Suman Tripathi <stripathi@apm.com>
+>> ---
+>> ---
+>>  drivers/mmc/host/sdhci-of-arasan.c | 3 ++-
+>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
+>> index 21c0c08..4c99ea4 100644
+>> --- a/drivers/mmc/host/sdhci-of-arasan.c
+>> +++ b/drivers/mmc/host/sdhci-of-arasan.c
+>> @@ -171,7 +171,8 @@ static int sdhci_arasan_probe(struct platform_device *pdev)
+>>
+>>         if (of_device_is_compatible(pdev->dev.of_node, "arasan,sdhci-4.9a")) {
+>>                 host->quirks |= SDHCI_QUIRK_NO_HISPD_BIT;
+>> -               host->quirks2 |= SDHCI_QUIRK2_HOST_NO_CMD23;
+>> +               host->quirks2 |= SDHCI_QUIRK2_HOST_NO_CMD23 |
+>> +                                SDHCI_QUIRK2_NO_1_8_V;
+>>         }
+>
+>
+> I think I am  wrong here. No-1.8v is something related to board
+> regulator circuitry not related to IP version. So it should be dts
+> driven.
 
-What subsequent patches are you referring to? The changes in
-this series are fairly self-contained so it should be unlikely
-to cause serious merge conflicts.
+Agree!
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+So I guess that will change patch1 and this one can be completely dropped?
+
+Kind regards
+Uffe
