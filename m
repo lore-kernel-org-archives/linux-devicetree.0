@@ -1,245 +1,131 @@
-From: Rob Clark <robdclark@gmail.com>
-Subject: Re: [PATCH] backlight: pm8941-wled: Move PM8941 WLED driver to backlight
-Date: Tue, 21 Jul 2015 14:22:06 -0400
-Message-ID: <CAF6AEGv401WG_yynK6aRRRHynPu79i+U_uJb3mB+JvK200f3Pw@mail.gmail.com>
-References: <1436990540-23354-1-git-send-email-bjorn.andersson@sonymobile.com>
+From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/6] mailbox: Add support for ST's Mailbox IP
+Date: Wed, 22 Jul 2015 00:06:58 +0530
+Message-ID: <CABb+yY3==_XJYs=Q8v3fAQbh0SLrgMNP0t048OJroUCcJw0Bgg@mail.gmail.com>
+References: <1437134647-28298-1-git-send-email-lee.jones@linaro.org>
+	<1437134647-28298-4-git-send-email-lee.jones@linaro.org>
+	<CABb+yY2nAT6V4Q8suAXRtPXrXkArGWVTAW28ts4Z3C_ybuJovA@mail.gmail.com>
+	<20150721150629.GJ3061@x1>
+	<CABb+yY25DC_hmuUhbEVvdEqdUnM6bJxCjBcamZBL97o=jR83Ug@mail.gmail.com>
+	<20150721155253.GN3061@x1>
+	<CABb+yY1oKJKJGnn345uzE1mnVk5kCaGTO0b4zzqojN39m2OMyg@mail.gmail.com>
+	<20150721174851.GP3061@x1>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1436990540-23354-1-git-send-email-bjorn.andersson@sonymobile.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, Lee Jones <lee.jones@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-leds@vger.kernel.org, Linux Fbdev development list <linux-fbdev@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150721174851.GP3061@x1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 15, 2015 at 4:02 PM, Bjorn Andersson
-<bjorn.andersson@sonymobile.com> wrote:
-> The Qualcomm PM8941 WLED block is used for backlight and should therefor
-> be in the backlight framework and not in the LED framework. This moves
-> the driver and adapts to the backlight api instead.
+On Tue, Jul 21, 2015 at 11:18 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Tue, 21 Jul 2015, Jassi Brar wrote:
 >
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+>> On Tue, Jul 21, 2015 at 9:22 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> > On Tue, 21 Jul 2015, Jassi Brar wrote:
+>> >
+>> >> >
+>> >> >> > +static int sti_mbox_send_data(struct mbox_chan *chan, void *data)
+>> >> >> > +{
+>> >> >> > +       struct sti_channel *chan_info = chan->con_priv;
+>> >> >> > +       struct sti_mbox_device *mdev = chan_info->mdev;
+>> >> >> > +       struct sti_mbox_pdata *pdata = dev_get_platdata(mdev->dev);
+>> >> >> > +       unsigned int instance = chan_info->instance;
+>> >> >> > +       unsigned int channel = chan_info->channel;
+>> >> >> > +       void __iomem *base;
+>> >> >> > +
+>> >> >> > +       if (!sti_mbox_tx_is_ready(chan))
+>> >> >> > +               return -EBUSY;
+>> >> >> This is the first thing I look out for in every new driver :)  this
+>> >> >> check is unnecessary.
+>> >> >
+>> >> > In what way?  What if the channel is disabled or there is an IRQ
+>> >> > already pending?
+>> >> >
+>> >> API calls send_data() only if last_tx_done() returned true.
+>> >
+>> > I know for a fact that the 'catchers' in sti_mbox_tx_is_ready() to
+>> > fire, because I have triggered them.  I'd really rather keep this
+>> > harmless check in.
+>> >
+>> If you put some printk in send_data() and last_tx_done() you'll see
+>> what I mean :)
+>>
+>> >> >> > +static const struct sti_mbox_pdata mbox_stih407_pdata = {
+>> >> >> > +       .num_inst       = 4,
+>> >> >> > +       .num_chan       = 32,
+>> >> >> > +       .irq_val        = 0x04,
+>> >> >> > +       .irq_set        = 0x24,
+>> >> >> > +       .irq_clr        = 0x44,
+>> >> >> > +       .ena_val        = 0x64,
+>> >> >> > +       .ena_set        = 0x84,
+>> >> >> > +       .ena_clr        = 0xa4,
+>> >> >> >
+>> >> >> Register offsets are parameters of the controller
+>> >> >
+>> >> > And this is a controller driver?  Not sure I get the point.
+>> >> >
+>> >> Platform_data usually carries board/platform specific parameters.
+>> >> Register offset "properties" are as fixed as the behavior of the
+>> >> controller, so they should stay inside the code, not come via
+>> >> platform_data.
+>> >
+>> > That's not the case for this controller.  There is nothing preventing
+>> > these values from changing on a new board revisions.
+>> >
+>> Hmm ... interesting! Can't see how enable/disable channel and irq
+>> set/clear could be effected by writing to random, but agreed upon,
+>> location between two processors. There ought to be some controller
+>> listening there?  Now I am more interested in knowing this IP :)
+>
+> High level
+> ----------
+>
+>           MB0       MB1       MB2       MB3       MB4
+>       +---------+---------+---------+---------+---------+
+> INST0 |         |         |         |         |         |
+>       +---------+---------+---------+---------+---------+
+> INST1 |         |         |         |         |         |
+>       +---------+---------+---------+---------+---------+
+> INST2 |         |         |         |         |         |
+>       +---------+---------+---------+---------+---------+
+> INST3 |         |         |         |         |         |
+>       +---------+---------+---------+---------+---------+
+>
+> Low level [each box above looks like this)
+> ------------------------------------------
+>
+>          1                                                             32
+>         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+> IRQ_VAL | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | |
+>         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+> IRQ_SET | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | |
+>         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+> IRQ_CLR | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | |
+>         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+> ENB_VAL | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | |
+>         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+> ENB_SET | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | |
+>         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+> ENB_CLR | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | |
+>         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+>
+> That's it.  That's the entirety of the "IP".
+>
+Thanks for taking time out to draw it. Reading code I did get the idea
+that mailbox registers are interleaved rather than usual separate
+regions. But that doesn't change anything.
+   Regardless of the organisation, the registers do have to be at a
+particular address... I mean when you set some bit in ENB_SET
+'register' there has to be "something" beneath it that triggers the
+interrupt. That "something" is the controller, which can't see such
+writes to other locations. Right?  I mean this is just like any other
+device controller which may have register space at different offsets
+but relative addresses of registers won't change across platforms.
 
-Tested-by: Rob Clark <robdclark@gmail.com>
-
-(also on a z3, with work-in-progress panel driver for the AUO panel + drm/msm)
-
-BR,
--R
-
-> ---
->  .../devicetree/bindings/leds/leds-pm8941-wled.txt  |  5 +-
->  drivers/leds/Kconfig                               |  8 ---
->  drivers/leds/Makefile                              |  1 -
->  drivers/video/backlight/Kconfig                    |  8 +++
->  drivers/video/backlight/Makefile                   |  1 +
->  .../backlight/pm8941-wled.c}                       | 59 ++++++++++------------
->  6 files changed, 36 insertions(+), 46 deletions(-)
->  rename drivers/{leds/leds-pm8941-wled.c => video/backlight/pm8941-wled.c} (90%)
->
-> diff --git a/Documentation/devicetree/bindings/leds/leds-pm8941-wled.txt b/Documentation/devicetree/bindings/leds/leds-pm8941-wled.txt
-> index a85a964d61f5..424f8444a6cd 100644
-> --- a/Documentation/devicetree/bindings/leds/leds-pm8941-wled.txt
-> +++ b/Documentation/devicetree/bindings/leds/leds-pm8941-wled.txt
-> @@ -5,10 +5,7 @@ Required properties:
->  - reg: slave address
->
->  Optional properties:
-> -- label: The label for this led
-> -  See Documentation/devicetree/bindings/leds/common.txt
-> -- linux,default-trigger: Default trigger assigned to the LED
-> -  See Documentation/devicetree/bindings/leds/common.txt
-> +- label: The name of the backlight device
->  - qcom,cs-out: bool; enable current sink output
->  - qcom,cabc: bool; enable content adaptive backlight control
->  - qcom,ext-gen: bool; use externally generated modulator signal to dim
-> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-> index 9ad35f72ab4c..b8d4b965ca2a 100644
-> --- a/drivers/leds/Kconfig
-> +++ b/drivers/leds/Kconfig
-> @@ -578,14 +578,6 @@ config LEDS_VERSATILE
->           This option enabled support for the LEDs on the ARM Versatile
->           and RealView boards. Say Y to enabled these.
->
-> -config LEDS_PM8941_WLED
-> -       tristate "LED support for the Qualcomm PM8941 WLED block"
-> -       depends on LEDS_CLASS
-> -       select REGMAP
-> -       help
-> -         This option enables support for the 'White' LED block
-> -         on Qualcomm PM8941 PMICs.
-> -
->  comment "LED Triggers"
->  source "drivers/leds/trigger/Kconfig"
->
-> diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-> index 8d6a24a2f513..abe96d960ebe 100644
-> --- a/drivers/leds/Makefile
-> +++ b/drivers/leds/Makefile
-> @@ -63,7 +63,6 @@ obj-$(CONFIG_LEDS_BLINKM)             += leds-blinkm.o
->  obj-$(CONFIG_LEDS_SYSCON)              += leds-syscon.o
->  obj-$(CONFIG_LEDS_VERSATILE)           += leds-versatile.o
->  obj-$(CONFIG_LEDS_MENF21BMC)           += leds-menf21bmc.o
-> -obj-$(CONFIG_LEDS_PM8941_WLED)         += leds-pm8941-wled.o
->  obj-$(CONFIG_LEDS_KTD2692)             += leds-ktd2692.o
->
->  # LED SPI Drivers
-> diff --git a/drivers/video/backlight/Kconfig b/drivers/video/backlight/Kconfig
-> index 0505b796d743..6c67c5430933 100644
-> --- a/drivers/video/backlight/Kconfig
-> +++ b/drivers/video/backlight/Kconfig
-> @@ -299,6 +299,14 @@ config BACKLIGHT_TOSA
->           If you have an Sharp SL-6000 Zaurus say Y to enable a driver
->           for its backlight
->
-> +config BACKLIGHT_PM8941_WLED
-> +       tristate "Qualcomm PM8941 WLED Driver"
-> +       depends on LEDS_CLASS
-> +       select REGMAP
-> +       help
-> +         If you have the Qualcomm PM8941, say Y to enable a driver for the
-> +         WLED block.
-> +
->  config BACKLIGHT_SAHARA
->         tristate "Tabletkiosk Sahara Touch-iT Backlight Driver"
->         depends on X86
-> diff --git a/drivers/video/backlight/Makefile b/drivers/video/backlight/Makefile
-> index d67073f9d421..16ec534cff30 100644
-> --- a/drivers/video/backlight/Makefile
-> +++ b/drivers/video/backlight/Makefile
-> @@ -48,6 +48,7 @@ obj-$(CONFIG_BACKLIGHT_OMAP1)         += omap1_bl.o
->  obj-$(CONFIG_BACKLIGHT_OT200)          += ot200_bl.o
->  obj-$(CONFIG_BACKLIGHT_PANDORA)                += pandora_bl.o
->  obj-$(CONFIG_BACKLIGHT_PCF50633)       += pcf50633-backlight.o
-> +obj-$(CONFIG_BACKLIGHT_PM8941_WLED)    += pm8941-wled.o
->  obj-$(CONFIG_BACKLIGHT_PWM)            += pwm_bl.o
->  obj-$(CONFIG_BACKLIGHT_SAHARA)         += kb3886_bl.o
->  obj-$(CONFIG_BACKLIGHT_SKY81452)       += sky81452-backlight.o
-> diff --git a/drivers/leds/leds-pm8941-wled.c b/drivers/video/backlight/pm8941-wled.c
-> similarity index 90%
-> rename from drivers/leds/leds-pm8941-wled.c
-> rename to drivers/video/backlight/pm8941-wled.c
-> index bf64a593fbf1..4f5ae95331a1 100644
-> --- a/drivers/leds/leds-pm8941-wled.c
-> +++ b/drivers/video/backlight/pm8941-wled.c
-> @@ -11,7 +11,7 @@
->   */
->
->  #include <linux/kernel.h>
-> -#include <linux/leds.h>
-> +#include <linux/backlight.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
->  #include <linux/of_device.h>
-> @@ -76,30 +76,29 @@ struct pm8941_wled_config {
->  };
->
->  struct pm8941_wled {
-> +       const char *name;
->         struct regmap *regmap;
->         u16 addr;
->
-> -       struct led_classdev cdev;
-> -
->         struct pm8941_wled_config cfg;
->  };
->
-> -static int pm8941_wled_set(struct led_classdev *cdev,
-> -                          enum led_brightness value)
-> +static int pm8941_wled_update_status(struct backlight_device *bl)
->  {
-> -       struct pm8941_wled *wled;
-> +       struct pm8941_wled *wled = bl_get_data(bl);
-> +       u16 val = bl->props.brightness;
->         u8 ctrl = 0;
-> -       u16 val;
->         int rc;
->         int i;
->
-> -       wled = container_of(cdev, struct pm8941_wled, cdev);
-> +       if (bl->props.power != FB_BLANK_UNBLANK ||
-> +           bl->props.fb_blank != FB_BLANK_UNBLANK ||
-> +           bl->props.state & BL_CORE_FBBLANK)
-> +               val = 0;
->
-> -       if (value != 0)
-> +       if (val != 0)
->                 ctrl = PM8941_WLED_REG_MOD_EN_BIT;
->
-> -       val = value * PM8941_WLED_REG_VAL_MAX / LED_FULL;
-> -
->         rc = regmap_update_bits(wled->regmap,
->                         wled->addr + PM8941_WLED_REG_MOD_EN,
->                         PM8941_WLED_REG_MOD_EN_MASK, ctrl);
-> @@ -128,16 +127,6 @@ static int pm8941_wled_set(struct led_classdev *cdev,
->         return rc;
->  }
->
-> -static void pm8941_wled_set_brightness(struct led_classdev *cdev,
-> -                                      enum led_brightness value)
-> -{
-> -       if (pm8941_wled_set(cdev, value)) {
-> -               dev_err(cdev->dev, "Unable to set brightness\n");
-> -               return;
-> -       }
-> -       cdev->brightness = value;
-> -}
-> -
->  static int pm8941_wled_setup(struct pm8941_wled *wled)
->  {
->         int rc;
-> @@ -336,12 +325,9 @@ static int pm8941_wled_configure(struct pm8941_wled *wled, struct device *dev)
->         }
->         wled->addr = val;
->
-> -       rc = of_property_read_string(dev->of_node, "label", &wled->cdev.name);
-> +       rc = of_property_read_string(dev->of_node, "label", &wled->name);
->         if (rc)
-> -               wled->cdev.name = dev->of_node->name;
-> -
-> -       wled->cdev.default_trigger = of_get_property(dev->of_node,
-> -                       "linux,default-trigger", NULL);
-> +               wled->name = dev->of_node->name;
->
->         *cfg = pm8941_wled_config_defaults;
->         for (i = 0; i < ARRAY_SIZE(u32_opts); ++i) {
-> @@ -377,8 +363,14 @@ static int pm8941_wled_configure(struct pm8941_wled *wled, struct device *dev)
->         return 0;
->  }
->
-> +static const struct backlight_ops pm8941_wled_ops = {
-> +       .update_status = pm8941_wled_update_status,
-> +};
-> +
->  static int pm8941_wled_probe(struct platform_device *pdev)
->  {
-> +       struct backlight_properties props;
-> +       struct backlight_device *bl;
->         struct pm8941_wled *wled;
->         struct regmap *regmap;
->         int rc;
-> @@ -403,13 +395,14 @@ static int pm8941_wled_probe(struct platform_device *pdev)
->         if (rc)
->                 return rc;
->
-> -       wled->cdev.brightness_set = pm8941_wled_set_brightness;
-> -
-> -       rc = devm_led_classdev_register(&pdev->dev, &wled->cdev);
-> -       if (rc)
-> -               return rc;
-> -
-> -       platform_set_drvdata(pdev, wled);
-> +       memset(&props, 0, sizeof(struct backlight_properties));
-> +       props.type = BACKLIGHT_RAW;
-> +       props.max_brightness = PM8941_WLED_REG_VAL_MAX;
-> +       bl = devm_backlight_device_register(&pdev->dev, wled->name,
-> +                                           &pdev->dev, wled,
-> +                                           &pm8941_wled_ops, &props);
-> +       if (IS_ERR(bl))
-> +               return PTR_ERR(bl);
->
->         return 0;
->  };
-> --
-> 1.8.2.2
->
+thanks.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
