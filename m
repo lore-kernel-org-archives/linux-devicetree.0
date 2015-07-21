@@ -1,32 +1,63 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH v8 1/9] nvmem: Add a simple NVMEM framework for nvmem
- providers
-Date: Tue, 21 Jul 2015 11:54:03 +0200
-Message-ID: <55AE16BB.9090201@i2se.com>
-References: <1437403352-4091-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1437403392-4136-1-git-send-email-srinivas.kandagatla@linaro.org>
- <55AD6412.9070205@codeaurora.org> <55AE13D8.6020301@linaro.org>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH V2 3/3] rtc: da9063: Add DA9062 RTC capability to DA9063
+ RTC driver
+Date: Tue, 21 Jul 2015 12:01:51 +0200
+Message-ID: <20150721100151.GC2853@piout.net>
+References: <cover.1437471790.git.stwiss.opensource@diasemi.com>
+ <93f0906ed7db18b893385b60a43b02f248dfe9a6.1437471790.git.stwiss.opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55AE13D8.6020301-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <93f0906ed7db18b893385b60a43b02f248dfe9a6.1437471790.git.stwiss.opensource@diasemi.com>
+Sender: linux-input-owner@vger.kernel.org
+To: S Twiss <stwiss.opensource@diasemi.com>
+Cc: Alessandro Zummo <a.zummo@towertech.it>, DEVICETREE <devicetree@vger.kernel.org>, LINUXINPUT <linux-input@vger.kernel.org>, LINUXKERNEL <linux-kernel@vger.kernel.org>, RTCLINUX <rtc-linux@googlegroups.com>, David Dajun Chen <david.chen@diasemi.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Support Opensource <support.opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Srinivas,
+Hi Steve,
 
-Am 21.07.2015 um 11:41 schrieb Srinivas Kandagatla:
-> Ok, make sense. I moved this too.
-> I have v9 ready will send it.
->
-> --srini
->
+it looks mostly good, a few more comments:
 
-this is not a race. Please give the other (including me :-) ) some time
-for testing and reviewing v8.
+On 21/07/2015 at 10:43:10 +0100, S Twiss wrote :
+> -	if (val & (DA9063_E_ALARM))
+> +	if (val & (config->rtc_event_alarm_mask))
+unneeded parenthesis here
 
-Thanks
-Stefan
+> +	if (of_device_is_compatible(pdev->dev.of_node, "dlg,da9063-rtc")) {
+> +		struct da9063 *chip = dev_get_drvdata(pdev->dev.parent);
+> +
+> +		if (chip->variant_code == PMIC_DA9063_AD)
+> +			rtc->config = &da9063_ad_regs;
+> +	} else
+> +		rtc->config = match->data;
+
+Both arms of the if should use braces.
+
+Also, what happens if it is a da9063, BB variant? I guess rtc->config
+will not be set.
+
+maybe you should write:
+
+rtc->config = match->data;
+if (of_device_is_compatible(pdev->dev.of_node, "dlg,da9063-rtc")) {
+     struct da9063 *chip = dev_get_drvdata(pdev->dev.parent);
+
+     if (chip->variant_code == PMIC_DA9063_AD)
+         rtc->config = &da9063_ad_regs;
+}
+
+
+> @@ -348,5 +515,5 @@ module_platform_driver(da9063_rtc_driver);
+>  
+>  MODULE_AUTHOR("S Twiss <stwiss.opensource@diasemi.com>");
+>  MODULE_DESCRIPTION("Real time clock device driver for Dialog DA9063");
+> -MODULE_LICENSE("GPL v2");
+> +MODULE_LICENSE("GPL");
+
+This should be part of the license change.
+
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
