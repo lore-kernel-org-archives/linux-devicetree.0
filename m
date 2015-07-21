@@ -1,59 +1,48 @@
-From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v1 7/7] input: cyapa: add CYAP0002 Gen6 device for ACPI
- configuration
-Date: Mon, 20 Jul 2015 17:17:17 -0700
-Message-ID: <20150721001717.GG15528@dtor-ws>
-References: <1434358897-24668-1-git-send-email-dudl@cypress.com>
- <1434358897-24668-8-git-send-email-dudl@cypress.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1434358897-24668-8-git-send-email-dudl-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dudley Du <dudl-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rydberg-Hk7bIW8heu4wFerOooGFRg@public.gmane.org, bleung-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, jmmahler-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Jingoo Han <jingoohan1@gmail.com>
+Subject: Re: [PATCH] backlight: pm8941-wled: Move PM8941 WLED driver to backlight
+Date: Tue, 21 Jul 2015 09:47:39 +0900
+Message-ID: <9F0858DA-62D4-4511-A515-6CE38A680969@gmail.com>
+References: <1436990540-23354-1-git-send-email-bjorn.andersson@sonymobile.com> <55A764C5.5060205@samsung.com> <004401d0c2f6$9b73b820$d25b2860$@com> <55AD63FF.8090408@gmail.com>
+Mime-Version: 1.0 (1.0)
+Content-Type: text/plain;
+	charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <55AD63FF.8090408@gmail.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Jacek Anaszewski <j.anaszewski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Lee Jones <lee.jones@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Rob Clark <robdclark@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, jingoohan1@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 15, 2015 at 05:01:37PM +0800, Dudley Du wrote:
-> Add CYTP0002 name for Gen6 device for ACPI configuration
-> TEST=test on Chromebook.
-> 
-> Signed-off-by: Dudley Du <dudl-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>
 
-Applied, thank you.
+On 2015. 7. 21., at AM 6:11, Jacek Anaszewski <jacek.anaszewski@gmail.com> wrote:
+>> On 20.07.2015 16:15, Jingoo Han wrote:
+>>> On Thursday, July 16, 2015 5:01 PM, Jacek Anaszewski wrote:
+>>>> On 07/15/2015 10:02 PM, Bjorn Andersson wrote:
+>>>> The Qualcomm PM8941 WLED block is used for backlight and should therefor
+>>>> be in the backlight framework and not in the LED framework. This moves
+>>>> the driver and adapts to the backlight api instead.
+>>>> 
+>>>> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+>>>> ---
+>>>>   .../devicetree/bindings/leds/leds-pm8941-wled.txt  |  5 +-
+>>>>   drivers/leds/Kconfig                               |  8 ---
+>>>>   drivers/leds/Makefile                              |  1 -
+>>>>   drivers/video/backlight/Kconfig |  8 +++
+>>>>   drivers/video/backlight/Makefile                   |  1 +
+>>>>   .../backlight/pm8941-wled.c}                       | 59 ++++++++++------------
+>>>>   6 files changed, 36 insertions(+), 46 deletions(-)
+>>>>   rename drivers/{leds/leds-pm8941-wled.c => video/backlight/pm8941-wled.c} (90%)
+>>> 
+>>> Acked-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+>> 
+>> If you are not an author of this driver or a maintainer affected by this patch,
+>> Just 'Reviewed-by' looks good.
+> 
+> I am a LED subsystem maintainer.
 
-> ---
->  drivers/input/mouse/cyapa.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/input/mouse/cyapa.c b/drivers/input/mouse/cyapa.c
-> index 7b6d6d4..7f674aa 100644
-> --- a/drivers/input/mouse/cyapa.c
-> +++ b/drivers/input/mouse/cyapa.c
-> @@ -1558,6 +1558,7 @@ MODULE_DEVICE_TABLE(i2c, cyapa_id_table);
->  static const struct acpi_device_id cyapa_acpi_id[] = {
->  	{ "CYAP0000", 0 },  /* Gen3 trackpad with 0x67 I2C address. */
->  	{ "CYAP0001", 0 },  /* Gen5 trackpad with 0x24 I2C address. */
-> +	{ "CYAP0002", 0 },  /* Gen6 trackpad with 0x24 I2C address. */
->  	{ }
->  };
->  MODULE_DEVICE_TABLE(acpi, cyapa_acpi_id);
-> -- 
-> 1.9.1
-> 
-> 
-> ---------------------------------------------------------------
-> This message and any attachments may contain Cypress (or its
-> subsidiaries) confidential information. If it has been received
-> in error, please advise the sender and immediately delete this
-> message.
-> ---------------------------------------------------------------
-> 
+OK, I see.
+I didn't notice that you were added as the maintainer 2 months ago.
 
--- 
-Dmitry
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Jingoo Han
