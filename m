@@ -1,128 +1,301 @@
-From: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] mfd: devicetree: add bindings for Atmel Flexcom
-Date: Tue, 21 Jul 2015 16:15:14 +0200
-Message-ID: <55AE53F2.5080904@atmel.com>
-References: <cover.1434967670.git.cyrille.pitchen@atmel.com> <337ab4936bd6ec2f24c42e2f8f363df21f491a02.1434967670.git.cyrille.pitchen@atmel.com> <20150721090910.GG3061@x1>
+From: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 1/2] arm64: dts: Add dts files for Marvell Berlin4CT SoC
+Date: Tue, 21 Jul 2015 22:17:58 +0800
+Message-ID: <1437488279-2088-2-git-send-email-jszhang@marvell.com>
+References: <1437488279-2088-1-git-send-email-jszhang@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150721090910.GG3061@x1>
+In-Reply-To: <1437488279-2088-1-git-send-email-jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee,
+Add initial dtsi file to support Marvell Berlin4CT SoC with
+support of quad Cortex-A53 CPUs.
 
-Le 21/07/2015 11:09, Lee Jones a =C3=A9crit :
-> On Mon, 22 Jun 2015, Cyrille Pitchen wrote:
-=2E..
->> +- atmel,flexcom-mode: shall be a string among { "spi", "usart", "i2=
-c", "twi" }.
->> +  "i2c" and "twi" are synonymous.
->=20
-> Please use a numerical value instead.  You can then define it in
-> include/dt-bindings/*
->=20
-> This is only required if you supply more than one child node.  Is tha=
-t
-> the plan?  I ask because you only have one child node in the example
-> below.
->=20
-The "atmel,flexcom-mode" property is always required. The reset value o=
-f the
-Operating Mode bit field inside the Flexcom Mode Register is 0 for "no =
-serial
-device". So none of the 3 embedded serial devices is clocked and all of=
- their
-registers are inaccessible (read as zero).
-Before using any of the 3 serial devices, the Operating Mode must be se=
-t
-accordingly by updating the Mode Register. Once done, only the selected=
- serial
-device is clocked. Also the external I/O lines of the Flexcom are muxed=
- to
-reach the selected serial device.
+It also adds dts file for Marvell Berlin4CT DMP board which is
+based on Berlin4CT SoC.
 
-The muxing is given by the following table:
+Signed-off-by: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+---
+ arch/arm64/boot/dts/Makefile                  |   1 +
+ arch/arm64/boot/dts/marvell/Makefile          |   5 +
+ arch/arm64/boot/dts/marvell/berlin4ct-dmp.dts |  68 +++++++++++
+ arch/arm64/boot/dts/marvell/berlin4ct.dtsi    | 160 ++++++++++++++++++++++++++
+ 4 files changed, 234 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/marvell/Makefile
+ create mode 100644 arch/arm64/boot/dts/marvell/berlin4ct-dmp.dts
+ create mode 100644 arch/arm64/boot/dts/marvell/berlin4ct.dtsi
 
-=46lexcom pin    USART pin    SPI pin    I2C pin
-        IO0          TXD       MOSI        TWD
-        IO1          RXD       MISO       TWCK
-        IO2          SCK       SPCK          -
-        IO3          CTS      NPCS0          -=20
-        IO4          RTS      NPCS1          -
+diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
+index 0c57290..41e348b 100644
+--- a/arch/arm64/boot/dts/Makefile
++++ b/arch/arm64/boot/dts/Makefile
+@@ -1,6 +1,7 @@
+ dts-dirs += amd
+ dts-dirs += apm
+ dts-dirs += arm
++dts-dirs += marvell
+ dts-dirs += cavium
+ dts-dirs += exynos
+ dts-dirs += freescale
+diff --git a/arch/arm64/boot/dts/marvell/Makefile b/arch/arm64/boot/dts/marvell/Makefile
+new file mode 100644
+index 0000000..e2f6afa
+--- /dev/null
++++ b/arch/arm64/boot/dts/marvell/Makefile
+@@ -0,0 +1,5 @@
++dtb-$(CONFIG_ARCH_BERLIN) += berlin4ct-dmp.dtb
++
++always		:= $(dtb-y)
++subdir-y	:= $(dts-dirs)
++clean-files	:= *.dtb
+diff --git a/arch/arm64/boot/dts/marvell/berlin4ct-dmp.dts b/arch/arm64/boot/dts/marvell/berlin4ct-dmp.dts
+new file mode 100644
+index 0000000..a990c8d
+--- /dev/null
++++ b/arch/arm64/boot/dts/marvell/berlin4ct-dmp.dts
+@@ -0,0 +1,68 @@
++/*
++ * Copyright (C) 2015 Marvell Technology Group Ltd.
++ *
++ * Author: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPLv2 or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This library is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This library is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++
++/memreserve/ 0x00000000 0x01000000;
++
++#include "berlin4ct.dtsi"
++
++/ {
++	model = "MARVELL BG4CT DMP BOARD";
++	compatible = "marvell,berlin4ct-dmp", "marvell,berlin4ct", "marvell,berlin";
++
++	chosen {
++		bootargs = "earlyprintk";
++		stdout-path = "serial0:115200n8";
++	};
++
++	memory {
++		device_type = "memory";
++		reg = <0 0x0 0 0x80000000>;
++	};
++};
++
++&uart0 {
++	status = "okay";
++};
+diff --git a/arch/arm64/boot/dts/marvell/berlin4ct.dtsi b/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
+new file mode 100644
+index 0000000..0b667f2
+--- /dev/null
++++ b/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
+@@ -0,0 +1,160 @@
++/*
++ * Copyright (C) 2015 Marvell Technology Group Ltd.
++ *
++ * Author: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPLv2 or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This library is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This library is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++
++/ {
++	compatible = "marvell,berlin";
++	interrupt-parent = <&gic>;
++	#address-cells = <2>;
++	#size-cells = <2>;
++
++	aliases {
++		serial0 = &uart0;
++	};
++
++	psci {
++		compatible = "arm,psci-0.2";
++		method = "smc";
++	};
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu@0 {
++			compatible = "arm,cortex-a53", "arm,armv8";
++			device_type = "cpu";
++			reg = <0x0>;
++			enable-method = "psci";
++		};
++
++		cpu@1 {
++			compatible = "arm,cortex-a53", "arm,armv8";
++			device_type = "cpu";
++			reg = <0x1>;
++			enable-method = "psci";
++		};
++
++		cpu@2 {
++			compatible = "arm,cortex-a53", "arm,armv8";
++			device_type = "cpu";
++			reg = <0x2>;
++			enable-method = "psci";
++		};
++
++		cpu@3 {
++			compatible = "arm,cortex-a53", "arm,armv8";
++			device_type = "cpu";
++			reg = <0x3>;
++			enable-method = "psci";
++		};
++	};
++
++	pmu {
++		compatible = "arm,armv8-pmuv3";
++		interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
++	};
++
++	timer {
++		compatible = "arm,armv8-timer";
++		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
++	};
++
++	soc {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0 0xf7000000 0x1000000>;
++
++		osc: osc {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <25000000>;
++		};
++
++		gic: interrupt-controller@901000 {
++			compatible = "arm,gic-400";
++			#interrupt-cells = <3>;
++			interrupt-controller;
++			reg = <0x901000 0x1000>,
++			      <0x902000 0x1000>,
++			      <0x904000 0x2000>,
++			      <0x906000 0x2000>;
++			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
++		};
++
++		apb@fc0000 {
++			compatible = "simple-bus";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0 0xfc0000 0x10000>;
++			interrupt-parent = <&sic>;
++
++			sic: interrupt-controller@1000 {
++				compatible = "snps,dw-apb-ictl";
++				reg = <0x1000 0x30>;
++				interrupt-controller;
++				#interrupt-cells = <1>;
++				interrupt-parent = <&gic>;
++				interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
++			};
++
++			uart0: uart@d000 {
++				compatible = "snps,dw-apb-uart";
++				reg = <0xd000 0x100>;
++				interrupts = <8>;
++				clocks = <&osc>;
++				reg-shift = <2>;
++				status = "disabled";
++			};
++		};
++	};
++};
+-- 
+2.1.4
 
-
-Bus conflicting configuration:
- ______________________________________
-|               Flexcom                |
-|  _____         _____         _____   |
-| |     |__CLK__| SPI |__I/O__|     |  |    ___________       _________=
-__
-| |     |       |_____|       |     |  |   | SPI Slave |     | I2C Slav=
-e |
-| | CLK |                     | I/O |  |   |___________|     |_________=
-__|
-|_| MUX |        _____        | MUX |__|_________|________________|
-| |     |__CLK__| I2C |__I/O__|     |  |             shared bus
-| |_____|       |_____|       |_____|  |
-|______________________________________|
-
-
-=46or instance, it is very unlikely to connect both I2C and SPI slaves =
-to
-the very same Flexcom because I/O lines are shared. The operating mode =
-is
-selected once for all during the boot and will never change during runt=
-ime.
-That's why the Flexcom DT node should have exactly one child.
-
->> +Example:
->> +
->> +flx0: flexcom@f8034000 {
->=20
-> What references this node?  If nothing, then you can remove the label=
-=2E
-OK, I will remove the label in the next series.
->=20
->> +	compatible =3D "atmel,sama5d2-flexcom";
->> +	reg =3D <0xf8034000 0x200>;
->> +	clocks =3D <&flx0_clk>;
->> +	#address-cells =3D <1>;
->> +	#size-cells =3D <1>;
->> +	ranges =3D <0x0 0xf8034000 0x800>;
->> +	atmel,flexcom-mode =3D "spi";
->> +
->> +	spi@f8034400 {
->> +		compatible =3D "atmel,at91rm9200-spi";
->> +		reg =3D <0x400 0x200>;
->> +		interrupts =3D <19 IRQ_TYPE_LEVEL_HIGH 7>;
->> +		pinctrl-names =3D "default";
->> +		pinctrl-0 =3D <&pinctrl_flx0_ioset1>;
->> +		#address-cells =3D <1>;
->> +		#size-cells =3D <0>;
->> +		clocks =3D <&flx0_clk>;
->> +		clock-names =3D "spi_clk";
->> +		atmel,fifo-size =3D <32>;
->> +
->> +		mtd_dataflash@0 {
->> +			compatible =3D "atmel,at25f512b";
->> +			reg =3D <0>;
->> +			spi-max-frequency =3D <20000000>;
->> +		};
->> +	};
->> +};
->=20
-
-Thanks for your review :)
-
-Best Regards,
-
-Cyrille
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
