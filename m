@@ -1,63 +1,81 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v11] crypto: Add Allwinner Security System
- crypto accelerator
-Date: Tue, 21 Jul 2015 14:38:47 +0200
-Message-ID: <20150721123847.GD2373@lukather>
-References: <1437143983-4479-1-git-send-email-clabbe.montjoie@gmail.com>
- <20150720081050.GB12908@gondor.apana.org.au>
- <20150720081836.GT28632@lukather>
- <20150720082057.GA13098@gondor.apana.org.au>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="LTeJQqWS0MN7I/qa"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBI73XCWQKGQED4SO2RI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150720082057.GA13098-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
-Cc: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH-v5 0/5] i2c: pxa: Add support for PXA910 family of device
+Date: Tue, 21 Jul 2015 18:11:01 +0530
+Message-ID: <1437482466-16126-1-git-send-email-vaibhav.hiremath@linaro.org>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: robert.jarzmik-GANU6spQydw@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---LTeJQqWS0MN7I/qa
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+This patch-series is subset of the original patch-series, submitted
+on 14 Jul 2015.
+Link to Original Patch-series - https://lkml.org/lkml/2015/7/14/80
 
-On Mon, Jul 20, 2015 at 04:20:57PM +0800, Herbert Xu wrote:
-> On Mon, Jul 20, 2015 at 10:18:36AM +0200, Maxime Ripard wrote:
-> > On Mon, Jul 20, 2015 at 04:10:50PM +0800, Herbert Xu wrote:
-> > > On Fri, Jul 17, 2015 at 04:39:37PM +0200, LABBE Corentin wrote:
-> > > > Hello
-> > > > 
-> > > > This is the driver for the Security System included in Allwinner SoC A20.
-> > > > The Security System (SS for short) is a hardware cryptographic accelerator that
-> > > > support AES/MD5/SHA1/DES/3DES/PRNG algorithms.
-> > > > It could be found on others Allwinner SoC: 
-> > > > - A10, A10s, A13, A31 and A33 manual give the same datasheet for SS than A20
-> > > > - A23 speak about a security system but without precisions
-> > > > - A80 and A83T datasheet speak about a security system with more functions
-> > > >   (SHA224/SHA256/RSA/CRC), they will be supported in a separate driver.
-> > > 
-> > > All applied.  Thanks a lot!
-> > 
-> > All applied, DT bits included?
-> 
-> Yes.
+The first six patches have been already queued up for upstream. So this
+patch-series is respin of remaining 5 patches.
 
-I thought you needed at least my Acked-by for that, but
-whatever... How are we supposed to handle subsequent DT patches that
-should be merged through arm-soc then?
+Testing:
+  - Basic testing on PMIC device on I2C-0 interface
+  - Boot tested on platform based on PXA1928
+  - Read few registers of PMIC (RTC, ID, etc...) during boot
 
-Maxime
+V4 => V5
+=======
+Link to V3: https://lkml.org/lkml/2015/7/14/80
+  - Dropped First 6 patches as they are already accepted, queued for upstream
+  - Fixed a bug in PATCH [5/5], where for non PXA910 devices it as resulting into
+    NULL pointer dereference.
+
+
+For the record, pasting all the details from original patch-series -
+
+V3 => V4
+=======
+Link to V3: http://www.spinics.net/lists/devicetree/msg85904.html
+ - [PATCH 06/11] Removed unnecessary dev_err on devm_kzalloc() check
+ - [PATCH 06/11] Removed return check on platform_get_resource(), as 
+   devm_ioremap_resource() does it for us.
+   Also, brought up the devm_ioremap_resource() function call in the execution
+   sequence, as no point in delaying it if we do not have resource.
+   It make sense, after this change.
+ - [PATCH 04/11] Typecast changed to 'enum pxa_i2c_types'
+   Also updated the subject line "Removed ==> Fix"
+
+V2 => V3
+=======
+Link to V2: http://www.spinics.net/lists/linux-i2c/msg20059.html
+ - Removed PATCH [4/12] related to reset of I2C module.
+   Suggested by "Robert Jarzmik"
+ - Updated commit description for,
+    PATCH [11/12]: Mentioned reasoning about moment of clk_get code.
+    PATCH [12/12]: for DT property node.
+ - Added Acked by "Robert Jarzmik" to patched which he acked.
+
+V1 => V2:
+========
+Link to V1 - http://lists.infradead.org/pipermail/linux-arm-kernel/2015-May/347012.html
+ - Fixed all comments from "Robert Jarzmik" and "Wolfram Sang"
+ - Dropped Patch
+    05/12: using core bus reset implementation - under work.
+    Will submit shortly.
+    08/12: NAKed and dropped
+ - Separated DT binding patch from driver changes, for easy merge
+
+
+Vaibhav Hiremath (4):
+  Documentation: binding: add new property 'disable_after_xfer' to
+    i2c-pxa
+  i2c: pxa: Add support for pxa910/988 & new configuration features
+  Documentation: binding: add sclk adjustment properties to i2c-pxa
+  i2c: pxa: Add ILCR (tLow & tHigh) configuration support
+
+Yi Zhang (1):
+  i2c: pxa: enable/disable i2c module across msg xfer
+
+ Documentation/devicetree/bindings/i2c/i2c-pxa.txt |  18 +++
+ drivers/i2c/busses/i2c-pxa.c                      | 154 ++++++++++++++++++++--
+ 2 files changed, 163 insertions(+), 9 deletions(-)
 
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---LTeJQqWS0MN7I/qa--
+1.9.1
