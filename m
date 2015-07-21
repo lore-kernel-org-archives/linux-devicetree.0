@@ -1,71 +1,74 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH RFC V1 2/3] rtc: da9063: Add DA9062 RTC capability to
- DA9063 RTC driver
-Date: Tue, 21 Jul 2015 10:39:05 +0200
-Message-ID: <20150721083905.GB2853@piout.net>
-References: <cover.1436427954.git.stwiss.opensource@diasemi.com>
- <e2de6b382e8e81b40c0eb466f7b19364c13ba5a9.1436427954.git.stwiss.opensource@diasemi.com>
- <20150717234525.GI3487@piout.net>
- <6ED8E3B22081A4459DAC7699F3695FB7014B253DC9@SW-EX-MBX02.diasemi.com>
- <20150720215045.GO15539@piout.net>
- <6ED8E3B22081A4459DAC7699F3695FB7014B253FD1@SW-EX-MBX02.diasemi.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH] backlight: pm8941-wled: Move PM8941 WLED driver to
+ backlight
+Date: Tue, 21 Jul 2015 09:50:36 +0100
+Message-ID: <20150721085036.GF3061@x1>
+References: <1436990540-23354-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <55A764C5.5060205@samsung.com>
+ <004401d0c2f6$9b73b820$d25b2860$@com>
+ <55AD63FF.8090408@gmail.com>
+ <9F0858DA-62D4-4511-A515-6CE38A680969@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-leds-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <6ED8E3B22081A4459DAC7699F3695FB7014B253FD1@SW-EX-MBX02.diasemi.com>
-Sender: linux-input-owner@vger.kernel.org
-To: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Alessandro Zummo <a.zummo@towertech.it>, DEVICETREE <devicetree@vger.kernel.org>, LINUXINPUT <linux-input@vger.kernel.org>, LINUXKERNEL <linux-kernel@vger.kernel.org>, RTCLINUX <rtc-linux@googlegroups.com>, David Dajun Chen <david.chen@diasemi.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Support Opensource <Support.Opensource@diasemi.com>
+In-Reply-To: <9F0858DA-62D4-4511-A515-6CE38A680969@gmail.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jingoo Han <jingoohan1@gmail.com>
+Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Jacek Anaszewski <j.anaszewski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Rob Clark <robdclark@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tue, 21 Jul 2015, Jingoo Han wrote:
 
-On 21/07/2015 at 08:05:32 +0000, Opensource [Steve Twiss] wrote :
-> > > > > +
-> > > > > +	rtc = devm_kzalloc(&pdev->dev, sizeof(*rtc), GFP_KERNEL);
-> > > > > +	if (!rtc)
-> > > > > +		return -ENOMEM;
-> > > > > +
-> > > > > +	if (strncmp(match->name, "dlg,da9063-rtc", 14) == 0) {
-> > > > > +		struct da9063 *chip = dev_get_drvdata(pdev->dev.parent);
-> > > > > +
-> > > > > +		if (chip->variant_code == PMIC_DA9063_AD)
-> > > > > +			rtc->config = &da9063_ad_regs;
-> > > > > +	} else
-> > > > > +		rtc->config = match->data;
-> > > >
-> > > > You must not do that.
-> > > > You should add a new compatible and change the of_compatible string of
-> > > > the mfd_cell in drivers/mfd/da9063-core.c onc you know the variant.
-> > >
-> > > I can check for a binary comparison against the address of the
-> > > static const struct of_device_id da9063_compatible_reg_id_table[] = {}
-> > > entry for DA9063.
-> > 
-> > You also must not compare pointers that way. You can use
-> > of_device_is_compatible().
-> > 
-> > > The DA9063 driver already associates "dlg,da9063-rtc" with both BB and AD
-> > > register maps. I think that altering the string at this point would break backwards
-> > > compatibility in the device tree for the DA9063.
-> > 
-> > I'm not fond of the backward compatibility exactly for that kind of
-> > issue. The proper way to handle it is to have tow different compatible
-> > strings because obviously, the BB and AD variants are not compatible.
-> 
-> I think I understand what you are saying about modifying the mfd_cell in the
-> DA9063 core driver at run-time so that it changes the of_compatible string to [something like]
-> "dlg,da9063-ad-rtc". That way the RTC driver can be probed using the correct
-> string.
-> 
-> Ok, I think I see now .. I'll make a patch v2 and send it soon.
-> 
+>=20
+> On 2015. 7. 21., at AM 6:11, Jacek Anaszewski <jacek.anaszewski@gmail=
+=2Ecom> wrote:
+> >> On 20.07.2015 16:15, Jingoo Han wrote:
+> >>> On Thursday, July 16, 2015 5:01 PM, Jacek Anaszewski wrote:
+> >>>> On 07/15/2015 10:02 PM, Bjorn Andersson wrote:
+> >>>> The Qualcomm PM8941 WLED block is used for backlight and should =
+therefor
+> >>>> be in the backlight framework and not in the LED framework. This=
+ moves
+> >>>> the driver and adapts to the backlight api instead.
+> >>>>=20
+> >>>> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+> >>>> ---
+> >>>>   .../devicetree/bindings/leds/leds-pm8941-wled.txt  |  5 +-
+> >>>>   drivers/leds/Kconfig                               |  8 ---
+> >>>>   drivers/leds/Makefile                              |  1 -
+> >>>>   drivers/video/backlight/Kconfig |  8 +++
+> >>>>   drivers/video/backlight/Makefile                   |  1 +
+> >>>>   .../backlight/pm8941-wled.c}                       | 59 ++++++=
+++++------------
+> >>>>   6 files changed, 36 insertions(+), 46 deletions(-)
+> >>>>   rename drivers/{leds/leds-pm8941-wled.c =3D> video/backlight/p=
+m8941-wled.c} (90%)
+> >>>=20
+> >>> Acked-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+> >>=20
+> >> If you are not an author of this driver or a maintainer affected b=
+y this patch,
+> >> Just 'Reviewed-by' looks good.
+> >=20
+> > I am a LED subsystem maintainer.
+>=20
+> OK, I see.
+> I didn't notice that you were added as the maintainer 2 months ago.
 
-This is not needed if you simply change your strncmp with
-of_device_is_compatible
+Please read: Sections 12 and 13 of Documentation/SubmittingPatches.
 
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Granted, Acked-bys are used by Maintainers when reviewing changes in
+subsystems they are responsible for.  However, that's not the sole use
+of them.  Anyone can provide an Ack for code they have reviewed, but
+are not an expert in.  Reviewed-bys have much stronger meaning and
+should only be used if the supplier knows the code and the subsystem
+well.  Please see SubmittingPatches for a full meaning of the
+Reviewed-by tag.
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
