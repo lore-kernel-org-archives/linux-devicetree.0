@@ -1,116 +1,86 @@
-From: Zhou Wang <wangzhou1@hisilicon.com>
-Subject: Re: [PATCH v3 1/5] ARM/PCI: remove align_resource callback in pcibios_align_resource
-Date: Tue, 21 Jul 2015 11:26:27 +0800
-Message-ID: <55ADBBE3.70204@hisilicon.com>
-References: <1435743817-19083-1-git-send-email-wangzhou1@hisilicon.com> <1435743817-19083-2-git-send-email-wangzhou1@hisilicon.com> <20150702175056.GX944@e106497-lin.cambridge.arm.com> <559B6721.4080305@hisilicon.com> <20150707092220.GA980@e106497-lin.cambridge.arm.com> <EE11001F9E5DDD47B7634E2F8A612F2E01D5F503@lhreml503-mbs>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH 08/11] MTD: m25p80: Add option to limit SPI transfer size.
+Date: Tue, 21 Jul 2015 09:59:32 +0530
+Message-ID: <20150721042932.GF23525@localhost>
+References: <cover.1433364398.git.hramrach@gmail.com>
+ <20150604171547.GA1530@localhost.localdomain>
+ <CAOMqctSCL9E-kCBryeaMvtssSP12RY=kyfPuwSYx9wc=Lv9kGQ@mail.gmail.com>
+ <201507151352.27689.marex@denx.de>
+ <20150715155946.GB21362@localhost>
+ <CAOMqctTJEg7EauKfrqW-6rUQ-QOmtkTfkgOyz0rCuyh_-XrW5w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <EE11001F9E5DDD47B7634E2F8A612F2E01D5F503@lhreml503-mbs>
-Sender: linux-pci-owner@vger.kernel.org
-To: Gabriele Paoloni <gabriele.paoloni@huawei.com>
-Cc: Liviu Dudau <Liviu.Dudau@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jg1.han@samsung.com>, Pratyush Anand <pratyush.anand@gmail.com>, Arnd Bergmann <arnd@arndb.de>, James Morse <James.Morse@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Yuanzhichang <yuanzhichang@hisilicon.com>, Zhudacai <zhudacai@hisilicon.com>, zhangjukuo <zhangjukuo@huawei.com>, qiuzhenfa <qiuzhenfa@hisilicon.com>, "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAOMqctTJEg7EauKfrqW-6rUQ-QOmtkTfkgOyz0rCuyh_-XrW5w@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michal Suchanek <hramrach@gmail.com>
+Cc: Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marex@denx.de>, Richard Cochran <richardcochran@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Mark Rutland <mark.rutland@arm.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Geert Uytterhoeven <geert+renesas@glider.be>, MTD Maling List <linux-mtd@lists.infradead.org>, Alison Chaiken <alison_chaiken@mentor.com>, Bean Huo =?utf-8?B?6ZyN5paM5paMIChiZWFuaHVvKQ==?= <beanhuo@micron.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Kukjin Kim <kgene@kernel.org>, Ben Hutchings <ben@decadent.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2015/7/17 18:02, Gabriele Paoloni wrote:
-> The following patch is maybe a better solution
->=20
-> Gab
->
+On Sun, Jul 19, 2015 at 09:01:34PM +0200, Michal Suchanek wrote:
+> Hello,
+> 
+> On 15 July 2015 at 17:59, Brian Norris <computersforpeace@gmail.com> wrote:
+> > Hi Michal,
+> >
+> > On Wed, Jul 15, 2015 at 01:52:27PM +0200, Marek Vasut wrote:
+> >> The problem is, if you add a new DT binding, you'd have to support it
+> >> forever, no matter how bad idea that binding turned out to be.
+> >
+> > Agreed, and a solid NAK to this patch. I could have sworn I gave such a
+> > response when this was originally being discussed a month ago.
+> >
+> > AFAICT, you have one of two general approaches available to you:
+> >
+> > 1. Fix up the SPI driver so that it knows how to break large SPI
+> > transfers up into smaller segments that its constituent hardware (DMA
+> > controllers, fast clocks, etc.) can handle.
+> >
+> > 2. Utilize/create a parameter within the SPI subsystem to communicate
+> > that the SPI master has a limited max transfer size (notably: NOT a
+> > per-device DT property, but a SPI API property), and modify SPI device
+> > drivers (like m25p80) to honor it. Mark Brown seemed open to this, and I
+> > thought he suggested it somewhere.
+> 
+> It is not known what exactly is limited here.
+> 
+> It seems that the pl330 fails but it is not possible to transfer that
+> much data over the spi bus in one go without the help of the pl330.
+> 
+> With either approach the limit depends on the SPI transfer settings
+> which are known the the SPI driver. The pl330 driver is oblivious to
+> these because it just transfers data from one port to another port and
+> has no idea that the port is wired to SPI in the SoC.
+> 
+> On the other hand, AFAICT the SPI driver only allocates a DMA channel
+> which it receives through DT binding and is oblivious to the fact the
+> DMA channel lives on a pl330. It could probably determine that the
+> channel is indeed driven by a pl330. I don't think it's a great idea
+> to add device-specific handling to a generic dmaengine driver or a
+> dmaengine-spiecific handling to a SPI driver.
+> 
+> It's technically possible to pass SPI transfer parameters to the
+> dmaengine driver prior to transfer and the dmaengine could impose some
+> limitation based on those parameters. However, generalising this to
+> drivers other than SPI might be problematic. Should this interface
+> also handle i2c parameters, VE parameters, audio parameters, ethernet
+> parameters, etc?
+Or alternatively we could publish the limitations of the channel using
+capabilities so SPI knows I have a dmaengine channel and it can transfer max N
+length transfers so would be able to break rather than guessing it or coding
+in DT. Yes it may come from DT but that should be dmaengine driver rather
+than client driver :)
 
-Hi Gab,
+This can be done by dma_get_slave_caps(chan, &caps)
 
-Many thanks for your patch, I think this patch is cleaner than 1/4 in v=
-2 patchset.
-I will merge this one in my new series.
+And we add max_length as one more parameter to existing set
 
-Thanks=EF=BC=8C
-Zhou
+Also all this could be handled in generic SPI-dmaengine layer so that
+individual drivers don't have to code it in
 
-> -----------------------
-> This patch is needed in order to unify the PCIe designware
-> framework for ARM and ARM64 architectures.
-> In the PCIe designware unification process we are calling
-> pci_create_root_bus() passing a "sysdata" parameter
-> that is the same for both ARM and ARM64 and is of type
-> "struct pcie_port*". In the ARM case this will cause
-> a problem with the function pcibios_align_resource();
-> in fact this will cast "dev->sysdata" to "struct pci_sys_data*",
-> whereas designware had passed a "struct pcie_port*" pointer.
->=20
-> This patch solves the issue by removing "align_resource" from
-> "pci_sys_data" struct and defining a static global function pointer
-> in "bios32.c"
->=20
-> Signed-off-by: Gabriele Paoloni <gabriele.paoloni at huawei.com>
-> ---
->  arch/arm/include/asm/mach/pci.h |  5 -----
->  arch/arm/kernel/bios32.c        | 12 ++++++++----
->  2 files changed, 8 insertions(+), 9 deletions(-)
->=20
-> diff --git a/arch/arm/include/asm/mach/pci.h b/arch/arm/include/asm/m=
-ach/pci.h
-> index 28b9bb3..8a4e4de 100644
-> --- a/arch/arm/include/asm/mach/pci.h
-> +++ b/arch/arm/include/asm/mach/pci.h
-> @@ -58,11 +58,6 @@ struct pci_sys_data {
->  					/* IRQ mapping				*/
->  	int		(*map_irq)(const struct pci_dev *, u8, u8);
->  					/* Resource alignement requirements	*/
-> -	resource_size_t (*align_resource)(struct pci_dev *dev,
-> -					  const struct resource *res,
-> -					  resource_size_t start,
-> -					  resource_size_t size,
-> -					  resource_size_t align);
->  	void		*private_data;	/* platform controller private data	*/
->  };
-> =20
-> diff --git a/arch/arm/kernel/bios32.c b/arch/arm/kernel/bios32.c
-> index fcbbbb1..4cdc64d 100644
-> --- a/arch/arm/kernel/bios32.c
-> +++ b/arch/arm/kernel/bios32.c
-> @@ -17,6 +17,11 @@
->  #include <asm/mach/pci.h>
-> =20
->  static int debug_pci;
-> +static resource_size_t (*align_resource)(struct pci_dev *dev,
-> +		  const struct resource *res,
-> +		  resource_size_t start,
-> +		  resource_size_t size,
-> +		  resource_size_t align) =3D NULL;
-> =20
->  #ifdef CONFIG_PCI_MSI
->  struct msi_controller *pcibios_msi_controller(struct pci_dev *dev)
-> @@ -468,7 +473,7 @@ static void pcibios_init_hw(struct device *parent=
-, struct hw_pci *hw,
->  		sys->busnr   =3D busnr;
->  		sys->swizzle =3D hw->swizzle;
->  		sys->map_irq =3D hw->map_irq;
-> -		sys->align_resource =3D hw->align_resource;
-> +		align_resource =3D hw->align_resource;
->  		INIT_LIST_HEAD(&sys->resources);
-> =20
->  		if (hw->private_data)
-> @@ -589,7 +594,6 @@ resource_size_t pcibios_align_resource(void *data=
-, const struct resource *res,
->  				resource_size_t size, resource_size_t align)
->  {
->  	struct pci_dev *dev =3D data;
-> -	struct pci_sys_data *sys =3D dev->sysdata;
->  	resource_size_t start =3D res->start;
-> =20
->  	if (res->flags & IORESOURCE_IO && start & 0x300)
-> @@ -597,8 +601,8 @@ resource_size_t pcibios_align_resource(void *data=
-, const struct resource *res,
-> =20
->  	start =3D (start + align - 1) & ~(align - 1);
-> =20
-> -	if (sys->align_resource)
-> -		return sys->align_resource(dev, res, start, size, align);
-> +	if (align_resource)
-> +		return align_resource(dev, res, start, size, align);
-> =20
->  	return start;
->  }
->=20
+Let me know if this idea is okay, I can push the dmaengine bits...
+
+Thanks
+-- 
+~Vinod
