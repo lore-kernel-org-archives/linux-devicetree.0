@@ -1,175 +1,48 @@
-From: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/4] clk: 88pm800: Add clk provider driver for 88pm800
- family of devices
-Date: Wed, 22 Jul 2015 01:06:40 +0530
-Message-ID: <55AE9F48.20600@linaro.org>
-References: <1437476823-3358-1-git-send-email-vaibhav.hiremath@linaro.org> <1437476823-3358-4-git-send-email-vaibhav.hiremath@linaro.org> <55AE990E.2040004@codeaurora.org>
+From: arno@natisbad.org (Arnaud Ebalard)
+Subject: Re: [PATCH net v5 0/4] net: enable inband link state negotiation only when explicitly requested
+Date: Tue, 21 Jul 2015 22:18:00 +0200
+Message-ID: <87vbddmfif.fsf@natisbad.org>
+References: <1437439798-12622-1-git-send-email-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55AE990E.2040004-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>, stsp@users.sourceforge.net
+Cc: netdev@vger.kernel.org, davem@davemloft.net, linux-kernel@vger.kernel.org, mxs@sbrk.org, devicetree@vger.kernel.org, thomas.petazzoni@free-electrons.com
 List-Id: devicetree@vger.kernel.org
 
+Hi guys,
 
+Florian Fainelli <f.fainelli@gmail.com> writes:
 
-On Wednesday 22 July 2015 12:40 AM, Stephen Boyd wrote:
-> On 07/21/2015 04:07 AM, Vaibhav Hiremath wrote:
->> diff --git a/drivers/clk/clk-88pm800.c b/drivers/clk/clk-88pm800.c
->> new file mode 100644
->> index 0000000..cf1c162
->> --- /dev/null
->> +++ b/drivers/clk/clk-88pm800.c
->> @@ -0,0 +1,345 @@
->> +/*
->> + * clk-88pm800.c - Clock driver for 88PM800 family of devices
->> + *
->> + * This driver is created based on clk-s2mps11.c
->> + *
->> + * Copyright (C) 2015 Linaro Ltd.
->> + *
->> + * This program is free software; you can redistribute  it and/or
->> modify it
->> + * under  the terms of  the GNU General  Public License as published
->> by the
->> + * Free Software Foundation;  either version 2 of the  License, or
->> (at your
->> + * option) any later version.
->> + *
->> + * This program is distributed in the hope that it will be useful,
->> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + * GNU General Public License for more details.
->> + *
->> + */
->> +
-
-<snip>
-
->> +    struct pm80x_chip *chip = dev_get_drvdata(pdev->dev.parent);
->> +    struct pm800_clk *pm800_clks;
->> +    struct clk_init_data *clks_init;
->> +    static struct clk **clk_table;
->> +    static struct clk_onecell_data *of_clk_data;
->> +    int i, ret = 0;
+> Changes in v5:
 >
-> Drop assignment to ret please.
+> - removed an invalid use of the link_update callback in the SF2 driver
+>   was appeared after merging "net: phy: fixed_phy: handle link-down case"
 >
-
-Agreed to this and all above comments.
-
->> +
->> +    pm800_clks = devm_kzalloc(&pdev->dev,
->> +                sizeof(*pm800_clks) * PM800_CLKS_NUM,
->> +                GFP_KERNEL);
+> - reworded the commit message for patch 2 to make it clear what it fixes and
+>   why this is required
 >
-> devm_kcalloc()
+> Initial cover letter from Stas:
 >
->> +    if (!pm800_clks)
->> +        return -ENOMEM;
->> +
->> +    clk_table = devm_kzalloc(&pdev->dev,
->> +                sizeof(struct clk *) * PM800_CLKS_NUM,
->> +                GFP_KERNEL);
+> Hello.
 >
-> devm_kcalloc()
+> Currently the link status auto-negotiation is enabled
+> for any SGMII link with fixed-link DT binding.
+> The regression was reported:
+> https://lkml.org/lkml/2015/7/8/865
+> Apparently not all HW that implements SGMII protocol, generates the
+> inband status for the auto-negotiation to work.
+> More details here:
+> https://lkml.org/lkml/2015/7/10/206
 >
+> The following patches reverts to the old behavior by default,
+> which is to not enable the auto-negotiation for fixed-link.
+> The new DT property is added that allows to explicitly request
+> the auto-negotiation.
 
-why kcalloc?
-Is it because it take another argument for to allocate array?
+FWIW, I tested this v5 series on mirabox (2 mvneta interfaces using
+RGMII); both interfaces still work as expected, i.e. no regression
+on my side.
 
-
->> +    if (!clk_table)
->> +        return -ENOMEM;
->> +
-
-
-< snip >
-
->> +            of_clk_data);
->> +    if (ret) {
->> +        dev_err(&pdev->dev, "Fail to add OF clk provider : %d\n", ret);
->> +        goto err;
->> +    }
->> +
->> +    /* Common for all 32KHz clock output */
->> +    ret = pm800_init_clk(&pm800_clks[0]);
->
-> Shouldn't we do this before registering the clocks with the framework?
->
-
-Actually I thought of this, but moved it at the end because, I feel
-this init should happen only when we are sure that clock is ready for
-consumption. This is HW initialization where we will be setting
-FREERUNNIG mode (and similar stuffs), so thought it would be bad idea
-to set it first and then on error (later in probe) clear it. Not sure
-whether it has any impact on HW behaviour.
-Also, specially internal reference counter is changing in the init.
-Just tried to avoid back-n-forth set-n-clear of this.
-
->> +    if (ret) {
->> +        dev_err(&pdev->dev, "Failed to initialize clk : %d\n", ret);
->> +        goto err;
->> +    }
->> +
->> +    platform_set_drvdata(pdev, pm800_clks);
->> +
->> +    return 0;
->> +
->> +err:
->> +    for (i = 0; i < PM800_CLKS_NUM; i++) {
->> +        if (pm800_clks[i].lookup)
->> +            clkdev_drop(pm800_clks[i].lookup);
->> +    }
->> +
->> +    return ret;
->> +}
->> +
->> +static int pm800_clk_remove(struct platform_device *pdev)
->> +{
->> +    struct pm800_clk *pm800_clks = platform_get_drvdata(pdev);
->> +    int i;
->> +
->> +    of_clk_del_provider(pm800_clks[0].clk_np);
->> +    /* Drop the reference obtained in pm800_clk_parse_dt */
->> +    of_node_put(pm800_clks[0].clk_np);
->
-> This is odd. Why are we keeping the reference in the driver?
->
-
-Honestly I do not have any good answer here. I have to admit that it is
-getting carry forwarded from legacy driver.
-
->> +
->> +    for (i = 0; i < PM800_CLKS_NUM; i++) {
->> +        if (pm800_clks[i].lookup)
->> +            clkdev_drop(pm800_clks[i].lookup);
->> +    }
->> +
->> +    return 0;
->> +}
->> +
->> [..]
->> +
->> +static int __init pm800_clk_init(void)
->> +{
->> +    return platform_driver_register(&pm800_clk_driver);
->> +}
->> +subsys_initcall(pm800_clk_init);
->> +
->> +static void __init pm800_clk_cleanup(void)
->
-> s/__init/__exit/
->
-
-I will all other comments.  Thanks for your review.
-
-Thanks,
-Vaibhav
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+a+
