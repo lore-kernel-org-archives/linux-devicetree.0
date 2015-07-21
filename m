@@ -1,56 +1,65 @@
-From: Grazvydas Ignotas <notasas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 3/4] ARM: OMAP2+: omap3-pandora: add backlight support
-Date: Tue, 21 Jul 2015 04:12:00 +0300
-Message-ID: <1437441121-31658-3-git-send-email-notasas@gmail.com>
-References: <1437441121-31658-1-git-send-email-notasas@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1437441121-31658-1-git-send-email-notasas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Grazvydas Ignotas <notasas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Dudley Du <dudl@cypress.com>
+Subject: RE: [PATCH v1 3/7] input: cyapa: add proximity function support for
+ gen5 and gen6 modules
+Date: Tue, 21 Jul 2015 01:43:13 +0000
+Message-ID: <CY1PR06MB1817C8EF17F1C4099509B025D1840@CY1PR06MB1817.namprd06.prod.outlook.com>
+References: <1434358897-24668-1-git-send-email-dudl@cypress.com>
+ <1434358897-24668-4-git-send-email-dudl@cypress.com>
+ <20150721000658.GD15528@dtor-ws>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20150721000658.GD15528@dtor-ws>
+Content-Language: en-US
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "rydberg@euromail.se" <rydberg@euromail.se>, "bleung@google.com" <bleung@google.com>, "jmmahler@gmail.com" <jmmahler@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add backlight support via pdata-quirks as it's driver lacks DT support.
+Dmitry,
 
-Signed-off-by: Grazvydas Ignotas <notasas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/mach-omap2/pdata-quirks.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Yes, It cannot report the distance per-contact.
+Thanks for the update.
 
-diff --git a/arch/arm/mach-omap2/pdata-quirks.c b/arch/arm/mach-omap2/pdata-quirks.c
-index 821171c..3c97aa49 100644
---- a/arch/arm/mach-omap2/pdata-quirks.c
-+++ b/arch/arm/mach-omap2/pdata-quirks.c
-@@ -268,6 +268,16 @@ static void __init omap3_tao3530_legacy_init(void)
- {
- 	hsmmc2_internal_input_clk();
- }
-+
-+static struct platform_device pandora_backlight = {
-+	.name	= "pandora-backlight",
-+	.id	= -1,
-+};
-+
-+static void __init omap3_pandora_legacy_init(void)
-+{
-+	platform_device_register(&pandora_backlight);
-+}
- #endif /* CONFIG_ARCH_OMAP3 */
- 
- #if defined(CONFIG_ARCH_OMAP4) || defined(CONFIG_SOC_OMAP5)
-@@ -381,6 +391,8 @@ static struct pdata_init pdata_quirks[] __initdata = {
- 	{ "ti,omap3-evm-37xx", omap3_evm_legacy_init, },
- 	{ "ti,am3517-evm", am3517_evm_legacy_init, },
- 	{ "technexion,omap3-tao3530", omap3_tao3530_legacy_init, },
-+	{ "openpandora,omap3-pandora-600mhz", omap3_pandora_legacy_init, },
-+	{ "openpandora,omap3-pandora-1ghz", omap3_pandora_legacy_init, },
- #endif
- #ifdef CONFIG_SOC_OMAP5
- 	{ "ti,omap5-uevm", omap5_uevm_legacy_init, },
--- 
-1.9.1
+Thanks,
+Dudley
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> -----Original Message-----
+> From: Dmitry Torokhov [mailto:dmitry.torokhov@gmail.com]
+> Sent: 2015?7?21? 8:07
+> To: Dudley Du
+> Cc: mark.rutland@arm.com; robh+dt@kernel.org; rydberg@euromail.se;
+> bleung@google.com; jmmahler@gmail.com; devicetree@vger.kernel.org;
+> linux-input@vger.kernel.org; linux-kernel@vger.kernel.org
+> Subject: Re: [PATCH v1 3/7] input: cyapa: add proximity function support for gen5
+> and gen6 modules
+>
+> Hi Dudley,
+>
+> On Mon, Jun 15, 2015 at 05:01:33PM +0800, Dudley Du wrote:
+> >
+> > +static void cyapa_pip_report_proximity(struct cyapa *cyapa,
+> > +const struct cyapa_pip_report_data *report_data)
+> > +{
+> > +struct input_dev *input = cyapa->input;
+> > +u8 distance = report_data->report_head[PIP_PROXIMITY_DISTANCE_OFFSET]
+> &
+> > +PIP_PROXIMITY_DISTANCE_MASK;
+> > +
+> > +input_report_abs(input, ABS_MT_DISTANCE, distance);
+> > +input_sync(input);
+>
+> It looks like the distance reported by the hardware is not per-contact
+> (i.e. it can not tell that we had 2 fingers on surface and the 2nd one
+> was lifted and is now hovering over the surface), so we should be using
+> ABS_DISTANCE, not ABS_MT_DISTANCE.
+>
+> I can adjust it here, no need to resend.
+>
+> Thanks.
+>
+> --
+> Dmitry
+
+This message and any attachments may contain Cypress (or its subsidiaries) confidential information. If it has been received in error, please advise the sender and immediately delete this message.
