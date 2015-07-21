@@ -1,131 +1,67 @@
-From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/6] mailbox: Add support for ST's Mailbox IP
-Date: Wed, 22 Jul 2015 00:06:58 +0530
-Message-ID: <CABb+yY3==_XJYs=Q8v3fAQbh0SLrgMNP0t048OJroUCcJw0Bgg@mail.gmail.com>
-References: <1437134647-28298-1-git-send-email-lee.jones@linaro.org>
-	<1437134647-28298-4-git-send-email-lee.jones@linaro.org>
-	<CABb+yY2nAT6V4Q8suAXRtPXrXkArGWVTAW28ts4Z3C_ybuJovA@mail.gmail.com>
-	<20150721150629.GJ3061@x1>
-	<CABb+yY25DC_hmuUhbEVvdEqdUnM6bJxCjBcamZBL97o=jR83Ug@mail.gmail.com>
-	<20150721155253.GN3061@x1>
-	<CABb+yY1oKJKJGnn345uzE1mnVk5kCaGTO0b4zzqojN39m2OMyg@mail.gmail.com>
-	<20150721174851.GP3061@x1>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH] usb: phy: msm: Add D+/D- lines route control
+Date: Tue, 21 Jul 2015 13:39:59 -0500
+Message-ID: <20150721183959.GK25385@saruman.tx.rr.com>
+References: <1436348754-6728-1-git-send-email-ivan.ivanov@linaro.org>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150721174851.GP3061@x1>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="g4MvFqI7wmANiPDo"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1436348754-6728-1-git-send-email-ivan.ivanov@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: "Ivan T. Ivanov" <ivan.ivanov@linaro.org>
+Cc: Felipe Balbi <balbi@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 21, 2015 at 11:18 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Tue, 21 Jul 2015, Jassi Brar wrote:
->
->> On Tue, Jul 21, 2015 at 9:22 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> > On Tue, 21 Jul 2015, Jassi Brar wrote:
->> >
->> >> >
->> >> >> > +static int sti_mbox_send_data(struct mbox_chan *chan, void *data)
->> >> >> > +{
->> >> >> > +       struct sti_channel *chan_info = chan->con_priv;
->> >> >> > +       struct sti_mbox_device *mdev = chan_info->mdev;
->> >> >> > +       struct sti_mbox_pdata *pdata = dev_get_platdata(mdev->dev);
->> >> >> > +       unsigned int instance = chan_info->instance;
->> >> >> > +       unsigned int channel = chan_info->channel;
->> >> >> > +       void __iomem *base;
->> >> >> > +
->> >> >> > +       if (!sti_mbox_tx_is_ready(chan))
->> >> >> > +               return -EBUSY;
->> >> >> This is the first thing I look out for in every new driver :)  this
->> >> >> check is unnecessary.
->> >> >
->> >> > In what way?  What if the channel is disabled or there is an IRQ
->> >> > already pending?
->> >> >
->> >> API calls send_data() only if last_tx_done() returned true.
->> >
->> > I know for a fact that the 'catchers' in sti_mbox_tx_is_ready() to
->> > fire, because I have triggered them.  I'd really rather keep this
->> > harmless check in.
->> >
->> If you put some printk in send_data() and last_tx_done() you'll see
->> what I mean :)
->>
->> >> >> > +static const struct sti_mbox_pdata mbox_stih407_pdata = {
->> >> >> > +       .num_inst       = 4,
->> >> >> > +       .num_chan       = 32,
->> >> >> > +       .irq_val        = 0x04,
->> >> >> > +       .irq_set        = 0x24,
->> >> >> > +       .irq_clr        = 0x44,
->> >> >> > +       .ena_val        = 0x64,
->> >> >> > +       .ena_set        = 0x84,
->> >> >> > +       .ena_clr        = 0xa4,
->> >> >> >
->> >> >> Register offsets are parameters of the controller
->> >> >
->> >> > And this is a controller driver?  Not sure I get the point.
->> >> >
->> >> Platform_data usually carries board/platform specific parameters.
->> >> Register offset "properties" are as fixed as the behavior of the
->> >> controller, so they should stay inside the code, not come via
->> >> platform_data.
->> >
->> > That's not the case for this controller.  There is nothing preventing
->> > these values from changing on a new board revisions.
->> >
->> Hmm ... interesting! Can't see how enable/disable channel and irq
->> set/clear could be effected by writing to random, but agreed upon,
->> location between two processors. There ought to be some controller
->> listening there?  Now I am more interested in knowing this IP :)
->
-> High level
-> ----------
->
->           MB0       MB1       MB2       MB3       MB4
->       +---------+---------+---------+---------+---------+
-> INST0 |         |         |         |         |         |
->       +---------+---------+---------+---------+---------+
-> INST1 |         |         |         |         |         |
->       +---------+---------+---------+---------+---------+
-> INST2 |         |         |         |         |         |
->       +---------+---------+---------+---------+---------+
-> INST3 |         |         |         |         |         |
->       +---------+---------+---------+---------+---------+
->
-> Low level [each box above looks like this)
-> ------------------------------------------
->
->          1                                                             32
->         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-> IRQ_VAL | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | |
->         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-> IRQ_SET | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | |
->         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-> IRQ_CLR | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | |
->         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-> ENB_VAL | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | |
->         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-> ENB_SET | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | |
->         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-> ENB_CLR | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | |
->         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
->
-> That's it.  That's the entirety of the "IP".
->
-Thanks for taking time out to draw it. Reading code I did get the idea
-that mailbox registers are interleaved rather than usual separate
-regions. But that doesn't change anything.
-   Regardless of the organisation, the registers do have to be at a
-particular address... I mean when you set some bit in ENB_SET
-'register' there has to be "something" beneath it that triggers the
-interrupt. That "something" is the controller, which can't see such
-writes to other locations. Right?  I mean this is just like any other
-device controller which may have register space at different offsets
-but relative addresses of registers won't change across platforms.
+--g4MvFqI7wmANiPDo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-thanks.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Wed, Jul 08, 2015 at 12:45:54PM +0300, Ivan T. Ivanov wrote:
+> apq8016-sbc board is using Dual SPDT USB Switch (TC7USB40MU),
+> witch is controlled by GPIO to de/multiplex D+/D- USB lines to
+> USB2513B Hub and uB connector. Add support for this.
+>=20
+> Signed-off-by: Ivan T. Ivanov <ivan.ivanov@linaro.org>
+
+doesn't apply:
+
+checking file Documentation/devicetree/bindings/usb/msm-hsusb.txt
+checking file drivers/usb/phy/phy-msm-usb.c
+Hunk #5 succeeded at 1632 (offset 2 lines).
+Hunk #6 succeeded at 1809 (offset 2 lines).
+Hunk #7 FAILED at 1844.
+1 out of 7 hunks FAILED
+checking file include/linux/usb/msm_hsusb.h
+
+Please rebase on my testing/next
+
+--=20
+balbi
+
+--g4MvFqI7wmANiPDo
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJVrpH/AAoJEIaOsuA1yqREj0oP/3APuWxPbFvH6gwyoAkZ9kAl
+JD/F1oJJpGLqerS2s6TWtByZmnCUn22Cuv4TKtP9/kGp1tINmGmBUclmL+3J82A0
+U1Hp70WiOYNWhs5X2/d4QhGXxjYh5RcG/crXfKq/+uUuJLD7fBrya+OI/gwhh/Kb
+Ir0UOgrdFrb1zb/TdFYpNzKtwfFVyh0ZNWApRGlmpObN2v2VS/YxvR0Xn/uIhDNl
+mNv6eRehFbKUzfPMVdeJlZLPaegzheAQcSbd+E45hnP4BXlIEm0C0obImirLCkLx
+ihiM8hwRxqH845QAWle4qIG48zR5Qfck9vqT83q9nweszINXvz9IvpVy7quSJjAz
+as/LB781eH1LKgnBhNYVekghJNsiGiIpZAGsyErIT5YDW0WQhn6CYYeKHtnmdugA
+PyQ51nr7mUX4oIrL/1TkcId7y8hqKMDZx92MRJrgHt58qA8DMrQK59FM9iEf5bMN
+IctRFTQz9nlG6raDvMhrW6woBYK7jhLhbhHwnfWRKP1BEu4SFw79txyR1fThKx8F
+mGOjUv00bo4GcbSlrMKou3KdQ5IEBXMc0fKlSL5BcmlwHyfdpIYvHQgN8XKOV8nG
+qGD4ZeQlOhVjXasLbxhoQz5AgRlLQTD5ULnHR2xbC8J3/JceXDHIB+kqRl0XBksx
+72IUOJHeqXDv8bnNMZ+C
+=Ao67
+-----END PGP SIGNATURE-----
+
+--g4MvFqI7wmANiPDo--
