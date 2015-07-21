@@ -1,85 +1,227 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 1/2] arm64: dts: Add dts files for Marvell Berlin4CT SoC
-Date: Tue, 21 Jul 2015 16:03:49 +0100
-Message-ID: <55AE5F55.2020007@arm.com>
-References: <1437488279-2088-1-git-send-email-jszhang@marvell.com> <1437488279-2088-2-git-send-email-jszhang@marvell.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 3/6] mailbox: Add support for ST's Mailbox IP
+Date: Tue, 21 Jul 2015 16:06:29 +0100
+Message-ID: <20150721150629.GJ3061@x1>
+References: <1437134647-28298-1-git-send-email-lee.jones@linaro.org>
+ <1437134647-28298-4-git-send-email-lee.jones@linaro.org>
+ <CABb+yY2nAT6V4Q8suAXRtPXrXkArGWVTAW28ts4Z3C_ybuJovA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1437488279-2088-2-git-send-email-jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CABb+yY2nAT6V4Q8suAXRtPXrXkArGWVTAW28ts4Z3C_ybuJovA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jassi Brar <jassisinghbrar@gmail.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, kernel@stlinux.com, Devicetree List <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, 21 Jul 2015, Jassi Brar wrote:
 
+> On Fri, Jul 17, 2015 at 5:34 PM, Lee Jones <lee.jones@linaro.org> wro=
+te:
+> > ST's platforms currently support a maximum of 5 Mailboxes, one for
+> > each of the supported co-processors situated on the platform.  Each
+> > Mailbox is divided up into 4 instances which consist of 32 channels=
+=2E
+> > Messages are passed between the application and co-processors using
+> > shared memory areas.  It is the Client's responsibility to manage
+> > these areas.
+> >
+> Thanks. It's a lot better than the old driver. However a few nits as =
+usual :)
 
-On 21/07/15 15:17, Jisheng Zhang wrote:
-> Add initial dtsi file to support Marvell Berlin4CT SoC with
-> support of quad Cortex-A53 CPUs.
->
-> It also adds dts file for Marvell Berlin4CT DMP board which is
-> based on Berlin4CT SoC.
->
-> Signed-off-by: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-> ---
->   arch/arm64/boot/dts/Makefile                  |   1 +
->   arch/arm64/boot/dts/marvell/Makefile          |   5 +
->   arch/arm64/boot/dts/marvell/berlin4ct-dmp.dts |  68 +++++++++++
->   arch/arm64/boot/dts/marvell/berlin4ct.dtsi    | 160 ++++++++++++++++++++++++++
->   4 files changed, 234 insertions(+)
->   create mode 100644 arch/arm64/boot/dts/marvell/Makefile
->   create mode 100644 arch/arm64/boot/dts/marvell/berlin4ct-dmp.dts
->   create mode 100644 arch/arm64/boot/dts/marvell/berlin4ct.dtsi
->
+Never a problem. :)
 
-[..]
+> > +
+> > +#define STI_MBOX_INST_MAX      4      /* RAM saving: Max supported=
+ instances */
+> >
+> Above you say 5 instances. Another u32 doesn't cost much.
 
-> diff --git a/arch/arm64/boot/dts/marvell/berlin4ct-dmp.dts b/arch/arm64/boot/dts/marvell/berlin4ct-dmp.dts
-> new file mode 100644
-> index 0000000..a990c8d
+4 instances, 5 mailboxes.
 
-[..]
+> > +#define STI_MBOX_CHAN_MAX      20     /* RAM saving: Max supported=
+ channels  */
+> > +
+> This assumption is reasonable.
+>=20
+> > +
+> > +static void sti_mbox_enable_channel(struct mbox_chan *chan)
+> > +{
+> > +       struct sti_channel *chan_info =3D chan->con_priv;
+> > +       struct sti_mbox_device *mdev =3D chan_info->mdev;
+> > +       struct sti_mbox_pdata *pdata =3D dev_get_platdata(mdev->dev=
+);
+> > +       unsigned int instance =3D chan_info->instance;
+> > +       unsigned int channel =3D chan_info->channel;
+> > +       unsigned long flags;
+> > +       void __iomem *base;
+> > +
+> > +       base =3D mdev->base + (instance * sizeof(u32));
+> > +
+> Maybe have something simpler like MBOX_BASE(instance)? Or some inline
+> function to avoid this 5-lines ritual?
 
-> +/dts-v1/;
-> +
-> +/memreserve/ 0x00000000 0x01000000;
-> +
-> +#include "berlin4ct.dtsi"
-> +
-> +/ {
-> +	model = "MARVELL BG4CT DMP BOARD";
-> +	compatible = "marvell,berlin4ct-dmp", "marvell,berlin4ct", "marvell,berlin";
-> +
-> +	chosen {
-> +		bootargs = "earlyprintk";
+I think some of the functions also make use of the intermediary
+pointers, but I'll look into it.
 
-I think you need to use earlycon instead ?
+> > +       spin_lock_irqsave(&sti_mbox_chan_lock, flags);
+> > +       mdev->enabled[instance] |=3D BIT(channel);
+> > +       writel_relaxed(BIT(channel), base + pdata->ena_set);
+> > +       spin_unlock_irqrestore(&sti_mbox_chan_lock, flags);
+> >
+> You don't need locking for SET/CLR type registers which are meant for
+> when they could be accessed by processors that can not share a lock.
+> So maybe drop the lock here and elsewhere.
 
-> diff --git a/arch/arm64/boot/dts/marvell/berlin4ct.dtsi b/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
-> new file mode 100644
-> index 0000000..0b667f2
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
+Okay.
 
-[..]
+> However, you need some mechanism to check if you succeeded 'owning'
+> the channel by reading back what you write to own the channel (not
+> sure which is that register here). Usually we need that action and
+> verification when we assign a channel to some user.
 
-> +
-> +	pmu {
-> +		compatible = "arm,armv8-pmuv3";
-> +		interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
+I don't think there is a technical reason why it wouldn't succeed.  We
+don't normally read back every register change me make.  Why is this
+IP different?
 
-Better to add interrupt-affinity as per pmu bindings[1]
+> > +static int sti_mbox_send_data(struct mbox_chan *chan, void *data)
+> > +{
+> > +       struct sti_channel *chan_info =3D chan->con_priv;
+> > +       struct sti_mbox_device *mdev =3D chan_info->mdev;
+> > +       struct sti_mbox_pdata *pdata =3D dev_get_platdata(mdev->dev=
+);
+> > +       unsigned int instance =3D chan_info->instance;
+> > +       unsigned int channel =3D chan_info->channel;
+> > +       void __iomem *base;
+> > +
+> > +       if (!sti_mbox_tx_is_ready(chan))
+> > +               return -EBUSY;
+> This is the first thing I look out for in every new driver :)  this
+> check is unnecessary.
 
-Regards,
-Sudeep
+In what way?  What if the channel is disabled or there is an IRQ
+already pending?
 
-[1] Documentation/devicetree/bindings/arm/pmu.txt
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > +static void sti_mbox_shutdown_chan(struct mbox_chan *chan)
+> > +{
+> > +       struct sti_channel *chan_info =3D chan->con_priv;
+> > +       struct mbox_controller *mbox =3D chan_info->mdev->mbox;
+> > +       int i;
+> > +
+> > +       for (i =3D 0; i < mbox->num_chans; i++)
+> > +               if (chan =3D=3D &mbox->chans[i])
+> > +                       break;
+> > +
+> > +       if (mbox->num_chans =3D=3D i) {
+> > +               dev_warn(mbox->dev, "Request to free non-existent c=
+hannel\n");
+> > +               return;
+> > +       }
+> > +
+> > +       sti_mbox_disable_channel(chan);
+> > +       sti_mbox_clear_irq(chan);
+> > +
+> > +       /* Reset channel */
+> > +       memset(chan, 0, sizeof(*chan));
+> > +       chan->mbox =3D mbox;
+> > +       chan->txdone_method =3D TXDONE_BY_POLL;
+> >
+> No please. mbox_chan is owned by the API. At most you could clear con=
+_priv.
+
+I will look for the API call to reset the channel then.
+
+> > +static struct mbox_chan *sti_mbox_xlate(struct mbox_controller *mb=
+ox,
+> > +                                       const struct of_phandle_arg=
+s *spec)
+> > +{
+> > +       struct sti_mbox_device *mdev =3D dev_get_drvdata(mbox->dev)=
+;
+> > +       struct sti_mbox_pdata *pdata =3D dev_get_platdata(mdev->dev=
+);
+> > +       struct sti_channel *chan_info;
+> > +       struct mbox_chan *chan =3D NULL;
+> > +       unsigned int instance  =3D spec->args[0];
+> > +       unsigned int channel   =3D spec->args[1];
+> > +       unsigned int direction =3D spec->args[2];
+> > +       int i;
+> > +
+> > +       /* Bounds checking */
+> > +       if (instance >=3D pdata->num_inst || channel  >=3D pdata->n=
+um_chan) {
+> > +               dev_err(mbox->dev,
+> > +                       "Invalid channel requested instance: %d cha=
+nnel: %d\n",
+> > +                       instance, channel);
+> > +               return NULL;
+> > +       }
+> > +
+> > +       for (i =3D 0; i < mbox->num_chans; i++) {
+> > +               chan_info =3D mbox->chans[i].con_priv;
+> > +
+> > +               /* Is requested channel free? */
+> > +               if (direction !=3D MBOX_LOOPBACK &&
+> > +                   chan_info &&
+> > +                   mbox->dev =3D=3D chan_info->mdev->dev &&
+> > +                   instance =3D=3D chan_info->instance &&
+> > +                   channel =3D=3D chan_info->channel) {
+> > +                       dev_err(mbox->dev, "Channel in use\n");
+> > +                       return NULL;
+> > +               }
+> > +
+> > +               /* Find the first free slot */
+> > +               if (!chan && !chan_info)
+> > +                       chan =3D &mbox->chans[i];
+>         shouldn't it break out of loop here?
+
+Yes, I guess it should.  Good spot.
+
+> > +       }
+> > +
+> Doesn't mbox->chans[i].con_priv need some locking here?
+
+I can add some.
+
+> > +static const struct sti_mbox_pdata mbox_stih407_pdata =3D {
+> > +       .num_inst       =3D 4,
+> > +       .num_chan       =3D 32,
+> > +       .irq_val        =3D 0x04,
+> > +       .irq_set        =3D 0x24,
+> > +       .irq_clr        =3D 0x44,
+> > +       .ena_val        =3D 0x64,
+> > +       .ena_set        =3D 0x84,
+> > +       .ena_clr        =3D 0xa4,
+> >
+> Register offsets are parameters of the controller
+
+And this is a controller driver?  Not sure I get the point.
+
+> and also these look ugly. Please make these #define's
+
+Sure.
+
+> > +static int __init sti_mbox_init(void)
+> > +{
+> > +       return platform_driver_register(&sti_mbox_driver);
+> > +}
+> > +
+> > +static void __exit sti_mbox_exit(void)
+> > +{
+> > +       platform_driver_unregister(&sti_mbox_driver);
+> > +}
+> > +
+> > +postcore_initcall(sti_mbox_init);
+> >
+> This seems fragile. Shouldn't the users defer probe if they don't get=
+ a channel?
+
+I'm not sure why we have to be early.  I will investigate.
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
