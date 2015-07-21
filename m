@@ -1,111 +1,58 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v3 1/1] dt: cpufreq: st: Provide bindings for ST's CPUFreq implementation
-Date: Tue, 21 Jul 2015 12:33:40 +0100
-Message-ID: <1437478420-26419-1-git-send-email-lee.jones@linaro.org>
-Return-path: <linux-pm-owner@vger.kernel.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, rjw@rjwysocki.net, viresh.kumar@linaro.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, ajitpal.singh@st.com
-Cc: kernel@stlinux.com, Lee Jones <lee.jones@linaro.org>
+From: Marc Dietrich <marvin24-Mmb7MZpHnFY@public.gmane.org>
+Subject: Re: [PATCH v3 4/4] dt: paz00: define nvec as child of i2c bus
+Date: Tue, 21 Jul 2015 13:57:32 +0200
+Message-ID: <2107735.0gMPOtIgYc@fb07-iapwap2>
+References: <1437424546-30405-1-git-send-email-danindrey@mail.ru> <4778199.vGjAP5lpOS@fb07-iapwap2> <55AE0803.10603@mail.ru>
+Mime-Version: 1.0
+Content-Type: multipart/signed; boundary="nextPart2479813.gKgmJeHZXj"; micalg="pgp-sha256"; protocol="application/pgp-signature"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55AE0803.10603-JGs/UdohzUI@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrey Danin <danindrey-JGs/UdohzUI@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-tBiZLqfeLfOHmIFyCCdPziST3g8Odh+X@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Julian Andres Klode <jak-4HMq4SXA452hPH1hqNUYSQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
+--nextPart2479813.gKgmJeHZXj
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="windows-1252"
 
-Only submitting the binding document as requested by Viresh.
+Am Dienstag, 21. Juli 2015, 11:51:15 schrieb Andrey Danin:
+> On 21.07.2015 11:25, Marc Dietrich wrote:
+> > I think in this case it would be better to leave nvec and dt as it is for
+> > now, and just add the slave function to tegra-i2c. Otherwise we will
+> > again have two different "nvidia,nvec-slave" bindings (one for the
+> > intermediate hack and one for the final representation). As an
+> > alternative, you could also add slave function and port nvec in the same
+> > series.
+> 
+> First patch only adds slave functionality to tegra-i2c driver. I sent v3
+> to fix only tegra-i2c as Wolfram suggested.
+> 
+> Unfortunately I haven't fixed all defects and I will resend patch(es).
+> I can resend only first patch (for tegra-i2c) if it is more obvious for
+> everyone.
 
-v2 => v3:
- - Using OPP v2
- - Moved OPPs out of the CPU node into their own one
- - Using generic 'opp-hz' property
+It's up to you. I think if the NV guys are ok with the tegra i2c change, 
+Wolfram can merge it right away for 4.3. Not sure about the state of the nvec 
+changes though and if they can be ready soon.
 
- .../devicetree/bindings/cpufreq/cpufreq-st.txt     | 77 ++++++++++++++++++++++
- 1 file changed, 77 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-st.txt
+Marc
 
-diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-st.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-st.txt
-new file mode 100644
-index 0000000..a478eec
---- /dev/null
-+++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-st.txt
-@@ -0,0 +1,77 @@
-+Binding for ST's CPUFreq driver
-+===============================
-+
-+Required properties [for working voltage scaling]:
-+-------------------------------------------------
-+
-+Located in CPU's node:
-+
-+- st,syscfg		: Phandle to Major number register
-+				First cell: offset to major number
-+- st,syscfg-eng		: Phandle to Minor number and Pcode registers
-+				First cell: offset to process code
-+				Second cell: offset to minor number
-+
-+Located in 'cpu0-opp-list' node [to be provided ONLY by the bootloader]:
-+
-+ - opp{1..N} 		: Each 'oppX' subnode will contain the following properties:
-+  - opp-hz		: CPU frequency [Hz] for this OPP
-+  - st,avs		: List of available voltages [uV] indexed by process code
-+  - st,cuts		: Cut version this OPP is suitable for [0xFF means ALL]
-+  - st,substrate	: Substrate version this OPP is suitable for [0xFF means ALL]
-+
-+WARNING: The cpu0-opp-list will be provided by the bootloader.  Do not attempt to
-+	 artificially synthesise the cpu0-opp-list node or any of its descendants.
-+	 They are very platform specific and may damage the hardware if created
-+	 incorrectly.
-+
-+Required properties [if voltage scaling properties are missing]:
-+-------------------------------------------------------------------
-+
-+Located in CPU's node:
-+
-+- operating-points	: [See: ../power/opp.txt]
-+
-+Example [safe]:
-+--------------
-+
-+cpus {
-+	cpu@0 {
-+				 /* kHz     uV   */
-+		operating-points = <1500000 0
-+				    1200000 0
-+				    800000  0
-+				    500000  0>;
-+	};
-+};
-+
-+Example [unsafe]:
-+----------------
-+
-+cpus {
-+	cpu@0 {
-+		st,syscfg		= <&syscfg [major_offset]>;
-+		st,syscfg-eng   	= <&syscfg_eng [pcode_offset] [minor_offset]>;
-+		operating-points-v2	= <&cpu0_opp_list>;
-+	};
-+};
-+
-+/* ############################################################ */
-+/* # WARNING: Do not attempt to copy/replicate this node,     # */
-+/* #          it is only to be supplied by the bootloader !!! # */
-+/* ############################################################ */
-+cpu0-opp-list {
-+	compatible = "operating-points-v2-sti";
-+	opp0 {
-+		opp-hz		= <1200000000>;
-+		st,avs		= <1110 1150 1100 1080 1040 1020 980 930>;
-+		st,substrate	= <0xff>;
-+		st,cuts		= <0xff>;
-+	};
-+	opp1 {
-+		opp-hz		= <1500000000>;
-+		st,avs		= <1200 1200 1200 1200 1170 1140 1100 1070>;
-+		st,substrate	= <0xff>;
-+		st,cuts		= <0x2>;
-+	};
-+};
--- 
-1.9.1
+--nextPart2479813.gKgmJeHZXj
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAABCAAGBQJVrjOsAAoJEKyeR39HFBtohkgH/1WloHUL92tUyyfOYnbzs+WU
+3Ctr8pBydk9P6Ky8iu0NXlvFan0qoH6hOjFygQIX/RisoIptWRa+9P4ReSy49v+3
+oo/fIHZuT4NXAODD9g5DvxAl+3mt01Nc0JbVlnpSoeRwyEPq05OQ3hBzwmqrEkhu
+KALP4TlsQtt5XPRUBXXHzlZ9TLMiNTxGam+koMad1YRzy3l1rWDQ1d9fp7La+Rrr
+3ZGyGFw4R6KnluIVRPdIpke9yIub0QdqKHtZSDCRcyl4jX8esI6ssLszvaNSItWn
+/SSWuOb9/1DELwPFgFm5OsjvLEiVIMFBJttyrH2bgJrXy7lzofFq8iP8qbK8Tj8=
+=MzjV
+-----END PGP SIGNATURE-----
+
+--nextPart2479813.gKgmJeHZXj--
