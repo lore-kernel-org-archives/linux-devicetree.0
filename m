@@ -1,34 +1,89 @@
-From: Andrey Danin <danindrey-JGs/UdohzUI@public.gmane.org>
-Subject: Re: [PATCH v3 4/4] dt: paz00: define nvec as child of i2c bus
-Date: Tue, 21 Jul 2015 09:35:21 +0300
-Message-ID: <55ADE829.4030108@mail.ru>
-References: <1437424546-30405-1-git-send-email-danindrey@mail.ru> <1437424546-30405-5-git-send-email-danindrey@mail.ru> <55AD73F4.2050502@wwwdotorg.org>
+From: Zhou Wang <wangzhou1@hisilicon.com>
+Subject: [PATCH v4 0/5] PCI: hisi: Add PCIe host support for Hisilicon Soc Hip05
+Date: Tue, 21 Jul 2015 14:42:22 +0800
+Message-ID: <1437460947-2328-1-git-send-email-wangzhou1@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55AD73F4.2050502-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-tBiZLqfeLfOHmIFyCCdPziST3g8Odh+X@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ac100-oU9gvf+ajcQ97yFScArB1dHuzzzSOjJt@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Julian Andres Klode <jak-4HMq4SXA452hPH1hqNUYSQ@public.gmane.org>, Marc Dietrich <marvin24-Mmb7MZpHnFY@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-pci-owner@vger.kernel.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jg1.han@samsung.com>, Pratyush Anand <pratyush.anand@gmail.com>, Arnd Bergmann <arnd@arndb.de>, gabriele.paoloni@huawei.com, lorenzo.pieralisi@arm.com, James Morse <james.morse@arm.com>, Liviu.Dudau@arm.com
+Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, yuanzhichang@hisilicon.com, zhudacai@hisilicon.com, zhangjukuo@huawei.com, qiuzhenfa@hisilicon.com, liudongdong3@huawei.com, qiujiang@huawei.com, kangfenglong@huawei.com, liguozhu@hisilicon.com, Zhou Wang <wangzhou1@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
-On 21.07.2015 1:19, Stephen Warren wrote:
-> On 07/20/2015 02:35 PM, Andrey Danin wrote:
->> NVEC driver was reimplemented to use tegra i2c. Use common i2c bindings
->> for NVEC node.
->
->> diff --git a/arch/arm/boot/dts/tegra20-paz00.dts
->> b/arch/arm/boot/dts/tegra20-paz00.dts
->
->> +        nvec: nvec@45 {
->> +            compatible = "nvidia,nvec-slave";
->> +            reg = <0x45>;
->
-> I think you need to or in I2C_OWN_SLAVE_ADDRESS from
-> <dt-bindings/i2c/i2c.h> here?
+This patchset adds PCIe host support for Hisilicon Soc Hip05. The PCIe hosts
+use PCIe IP core from Synopsys, So this driver is base on designware PCIe driver.
 
-Sorry, I mentioned it in letter 0 only.
-I will rework nvec driver and device tree according to i2c core slave 
-implementation later. v3 of this patchset is for fixing tegra i2c driver 
-only.
+Hip05 is an ARMv8 architecture Soc. It should be able to use ARM64 PCIe API in
+designeware PCIe driver. So this patch also adds ARM64 support for designware
+pcie.
+
+This patchset is based on v4.2-rc1 and Gabriele's patch about of_pci_range
+fix[1].
+
+Change from v3:
+- Change 1/5 to what Gabriele suggested.
+- Use win->__res.start to get *_mod_base in 2/5, this fix a bug in v3 series.
+
+Change from v2:
+- Move struct pci_dev *dev and struct pci_sys_data *sys in
+  pcibios_align_resource in 1/5.
+- Add Gabriele's codes in 2/5 which delete unnecessary information parse and
+  use of_pci_get_host_bridge_resources for both ARM32 and ARM64.
+- Add maintainer patch 5/5.
+
+Change from RFC v1:
+- Add 1/4 patch by Arnd which removes align_resource callback in ARM
+  pcibios_align_resource.
+- Change head file in pcie-designware from asm/hardirq.h to linux/hardirq.h.
+- Set pp->root_bus_nr = 0 in dra7xx, exynos, imx6, keystone, layerscape,
+  spear13xx.
+- Remove unnecessary parentheses of some macros in pcie-hisi.
+- Use macro to replace some magic values.
+- Merge two loops together and add some comments about it in context_config
+  function in pcie-hisi.
+- Modify some value of items in pcie node example in binding document. 
+
+Change from RFC:
+- delete dw_pcie_setup, dw_pcie_scan_bus, dw_pcie_map_irq and struct hw_pci,
+  merge related operations into dw_pcie_host_init.
+
+Link of v3:
+- http://www.spinics.net/lists/linux-pci/msg42539.html
+Link of v2:
+- http://www.spinics.net/lists/linux-pci/msg41844.html
+Link of RFC v1:
+- http://www.spinics.net/lists/linux-pci/msg41305.html
+Link of RFC:
+- http://www.spinics.net/lists/linux-pci/msg40434.html
+
+[1] https://patchwork.ozlabs.org/patch/495018/
+
+Zhou Wang (5):
+  ARM/PCI: remove align_resource in pci_sys_data
+  PCI: designware: Add ARM64 support
+  PCI: hisi: Add PCIe host support for Hisilicon Soc Hip05
+  Documentation: DT: Add Hisilicon PCIe host binding
+  MAINTAINERS: Add pcie-hisi maintainer
+
+ .../devicetree/bindings/pci/hisilicon-pcie.txt     |  46 ++++
+ MAINTAINERS                                        |   7 +
+ arch/arm/include/asm/mach/pci.h                    |   5 -
+ arch/arm/kernel/bios32.c                           |  12 +-
+ drivers/pci/host/Kconfig                           |   5 +
+ drivers/pci/host/Makefile                          |   1 +
+ drivers/pci/host/pci-dra7xx.c                      |   1 +
+ drivers/pci/host/pci-exynos.c                      |   2 +-
+ drivers/pci/host/pci-imx6.c                        |   2 +-
+ drivers/pci/host/pci-keystone-dw.c                 |   2 +-
+ drivers/pci/host/pci-keystone.c                    |   2 +-
+ drivers/pci/host/pci-layerscape.c                  |   2 +-
+ drivers/pci/host/pcie-designware.c                 | 217 ++++++-----------
+ drivers/pci/host/pcie-designware.h                 |  10 +-
+ drivers/pci/host/pcie-hisi.c                       | 257 +++++++++++++++++++++
+ drivers/pci/host/pcie-spear13xx.c                  |   2 +-
+ 16 files changed, 410 insertions(+), 163 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
+ create mode 100644 drivers/pci/host/pcie-hisi.c
+
+-- 
+1.9.1
