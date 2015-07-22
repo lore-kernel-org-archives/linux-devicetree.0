@@ -1,59 +1,38 @@
-From: Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>
-Subject: [PATCH v3 2/3] devicetree: bindings: Document Renesas R-Car JPEG  Processing Unit
-Date: Wed, 22 Jul 2015 14:23:04 +0300
-Message-ID: <1437564185-13593-3-git-send-email-mikhail.ulyanov@cogentembedded.com>
-References: <1437564185-13593-1-git-send-email-mikhail.ulyanov@cogentembedded.com>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1437564185-13593-1-git-send-email-mikhail.ulyanov@cogentembedded.com>
-Sender: linux-media-owner@vger.kernel.org
-To: hverkuil@xs4all.nl, horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, mchehab@osg.samsung.com
-Cc: laurent.pinchart@ideasonboard.com, j.anaszewski@samsung.com, kamil@wypas.org, sergei.shtylyov@cogentembedded.com, devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>
+From: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
+Subject: [RESEND][PATCH 0/4] spi: davinci: Improve prescaler limit support
+Date: Wed, 22 Jul 2015 07:32:20 -0500
+Message-ID: <1437568344-18889-1-git-send-email-fcooper@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-xBCQruHUn5ppWr+L1FloEB2eb7JE58TQ@public.gmane.org, Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add Renesas R-Car JPEG processing unit driver device tree bindings 
-documentation.
+Currently the prescale limit is treated as one size fits all value even
+though there are differences depending on the SOC. This patchset insures
+that the proper prescale limit is used for each platform/SoC.
 
-Signed-off-by: Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>
----
-Changes since v2:
- - remove generic "renesas,jpu-gen2" descriptor
+Franklin S Cooper Jr (4):
+  spi: davinci: Set prescale value based on register value
+  spi: davinci: Choose correct pre-scaler limit based on SOC
+  ARM: davinci: Set proper SPI prescale limit value
+  ARM: dts: keystone: Add ti,keystone-spi for SPI
 
-Changes since v1:
- - Fix typos
+ .../devicetree/bindings/spi/spi-davinci.txt        |  2 +
+ arch/arm/boot/dts/keystone.dtsi                    |  6 +--
+ arch/arm/mach-davinci/devices-da8xx.c              |  2 +
+ arch/arm/mach-davinci/dm355.c                      |  1 +
+ arch/arm/mach-davinci/dm365.c                      |  1 +
+ drivers/spi/spi-davinci.c                          | 50 +++++++++++++++++-----
+ include/linux/platform_data/spi-davinci.h          |  1 +
+ 7 files changed, 50 insertions(+), 13 deletions(-)
 
- .../devicetree/bindings/media/renesas,jpu.txt      | 24 ++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/renesas,jpu.txt
-
-diff --git a/Documentation/devicetree/bindings/media/renesas,jpu.txt b/Documentation/devicetree/bindings/media/renesas,jpu.txt
-new file mode 100644
-index 0000000..0cb9420
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/renesas,jpu.txt
-@@ -0,0 +1,24 @@
-+* Renesas JPEG Processing Unit
-+
-+The JPEG processing unit (JPU) incorporates the JPEG codec with an encoding
-+and decoding function conforming to the JPEG baseline process, so that the JPU
-+can encode image data and decode JPEG data quickly.
-+
-+Required properties:
-+  - compatible: should containg one of the following:
-+			- "renesas,jpu-r8a7790" for R-Car H2
-+			- "renesas,jpu-r8a7791" for R-Car M2-W
-+			- "renesas,jpu-r8a7792" for R-Car V2H
-+			- "renesas,jpu-r8a7793" for R-Car M2-N
-+
-+  - reg: Base address and length of the registers block for the JPU.
-+  - interrupts: JPU interrupt specifier.
-+  - clocks: A phandle + clock-specifier pair for the JPU functional clock.
-+
-+Example: R8A7790 (R-Car H2) JPU node
-+	jpeg-codec@fe980000 {
-+		compatible = "renesas,jpu-r8a7790";
-+		reg = <0 0xfe980000 0 0x10300>;
-+		interrupts = <0 272 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp1_clks R8A7790_CLK_JPU>;
-+	};
 -- 
-2.1.4
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
