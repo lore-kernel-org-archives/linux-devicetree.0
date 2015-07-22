@@ -1,53 +1,53 @@
-From: Jisheng Zhang <jszhang@marvell.com>
-Subject: [PATCH v4 2/2] arm64: Enable Marvell Berlin SoC family in Kconfig and defconfig
-Date: Wed, 22 Jul 2015 17:39:52 +0800
-Message-ID: <1437557992-7111-3-git-send-email-jszhang@marvell.com>
-References: <1437557992-7111-1-git-send-email-jszhang@marvell.com>
+From: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v4 0/2] arm64: Add basic support for Marvell Berlin4CT SoC
+Date: Wed, 22 Jul 2015 17:39:50 +0800
+Message-ID: <1437557992-7111-1-git-send-email-jszhang@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1437557992-7111-1-git-send-email-jszhang@marvell.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: catalin.marinas@arm.com, will.deacon@arm.com, khilman@linaro.org, arnd@arndb.de, olof@lixom.net, mark.rutland@arm.com, sudeep.holla@arm.com, robh+dt@kernel.org, galak@codeaurora.org, pawel.moll@arm.com
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jisheng Zhang <jszhang@marvell.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch introduces ARCH_BERLIN to enable Marvell Berlin SoC family in
-Kconfig and defconfig.
+Marvell Berlin4CT is a SoC based on 64bit ARMv8 architecture. It contains
+quad CA53 cores.
 
-Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
----
- arch/arm64/Kconfig.platforms | 6 ++++++
- arch/arm64/configs/defconfig | 1 +
- 2 files changed, 7 insertions(+)
+This SoC shares many HW IP with BG2Q and other berlin series. This patchset
+was tested on Berlin4CT DMP board, and boot to shell ok.
 
-diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-index f7e4327..37b8fc5 100644
---- a/arch/arm64/Kconfig.platforms
-+++ b/arch/arm64/Kconfig.platforms
-@@ -1,5 +1,11 @@
- menu "Platform selection"
- 
-+config ARCH_BERLIN
-+	bool "Marvell Berlin SoC Family"
-+	select DW_APB_ICTL
-+	help
-+	  This enables support for Marvell Berlin SoC Family
-+
- config ARCH_EXYNOS
- 	bool
- 	help
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 506b466..83843f9 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -31,6 +31,7 @@ CONFIG_MODULES=y
- CONFIG_MODULE_UNLOAD=y
- # CONFIG_BLK_DEV_BSG is not set
- # CONFIG_IOSCHED_DEADLINE is not set
-+CONFIG_ARCH_BERLIN=y
- CONFIG_ARCH_EXYNOS7=y
- CONFIG_ARCH_FSL_LS2085A=y
- CONFIG_ARCH_HISI=y
+Since v3:
+ - remove bootargs. follow the same behavior as other arm64 SoCs.
+
+Since v2:
+ - remove the memreserve which isn't removed by mistake
+ - add earlycon to enable earlyconsole, inspired by Sudeep
+
+Since v1:
+ - remove "earlyprintk" bootargs which doesn't work on arm64
+ - fix GICC_DIR size as pointed out by Mark
+ - define memory start address instead of memory reservation as suggested by Mark
+ - add interrupt-affinity to pmu node as pointed out by Sudeep
+
+Jisheng Zhang (2):
+  arm64: dts: Add dts files for Marvell Berlin4CT SoC
+  arm64: Enable Marvell Berlin SoC family in Kconfig and defconfig
+
+ arch/arm64/Kconfig.platforms                  |   6 +
+ arch/arm64/boot/dts/Makefile                  |   1 +
+ arch/arm64/boot/dts/marvell/Makefile          |   5 +
+ arch/arm64/boot/dts/marvell/berlin4ct-dmp.dts |  66 +++++++++++
+ arch/arm64/boot/dts/marvell/berlin4ct.dtsi    | 164 ++++++++++++++++++++++++++
+ arch/arm64/configs/defconfig                  |   1 +
+ 6 files changed, 243 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/marvell/Makefile
+ create mode 100644 arch/arm64/boot/dts/marvell/berlin4ct-dmp.dts
+ create mode 100644 arch/arm64/boot/dts/marvell/berlin4ct.dtsi
+
 -- 
 2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
