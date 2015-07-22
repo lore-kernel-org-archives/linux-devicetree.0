@@ -1,66 +1,122 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 1/2] spi: bcm2835: add spi-bcm2835aux driver for the auxiliar
- spi1 and spi2
-Date: Tue, 21 Jul 2015 19:55:52 -0600
-Message-ID: <55AEF828.20908@wwwdotorg.org>
-References: <1434980408-4086-1-git-send-email-kernel@martin.sperl.org> <55A0A150.3060809@wwwdotorg.org> <ECFBB7BF-1316-4565-B1F2-FB2651131882@martin.sperl.org> <55A49662.3000706@wwwdotorg.org> <2768BFA9-7FE9-4EDC-8692-AC3F070BD874@martin.sperl.org>
+From: Zhou Wang <wangzhou1@hisilicon.com>
+Subject: Re: [PATCH v4 1/5] ARM/PCI: remove align_resource in pci_sys_data
+Date: Wed, 22 Jul 2015 10:00:30 +0800
+Message-ID: <55AEF93E.9040508@hisilicon.com>
+References: <1437461323-3531-1-git-send-email-wangzhou1@hisilicon.com> <1437461323-3531-2-git-send-email-wangzhou1@hisilicon.com> <20150721224406.GM21967@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2768BFA9-7FE9-4EDC-8692-AC3F070BD874-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20150721224406.GM21967@google.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Jingoo Han <jg1.han@samsung.com>, Pratyush Anand <pratyush.anand@gmail.com>, Arnd Bergmann <arnd@arndb.de>, gabriele.paoloni@huawei.com, lorenzo.pieralisi@arm.com, James Morse <james.morse@arm.com>, Liviu.Dudau@arm.com, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, yuanzhichang@hisilicon.com, zhudacai@hisilicon.com, zhangjukuo@huawei.com, qiuzhenfa@hisilicon.com, liudongdong3@huawei.com, qiujiang@huawei.com, kangfenglong@huawei.com, liguozhu@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-On 07/14/2015 06:39 AM, Martin Sperl wrote:
+On 2015/7/22 6:44, Bjorn Helgaas wrote:
+> Hi Zhou & Gabriele,
 > 
->> On 14.07.2015, at 14:56, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+> On Tue, Jul 21, 2015 at 02:48:39PM +0800, Zhou Wang wrote:
+>> This patch is needed in order to unify the PCIe designware framework for ARM and
+>> ARM64 architectures. In the PCIe designware unification process we are calling
+>> pci_create_root_bus() passing a "sysdata" parameter that is the same for both
+>> ARM and ARM64 and is of type "struct pcie_port*". In the ARM case this will
+>> cause a problem with the function pcibios_align_resource(); in fact this will
+>> cast "dev->sysdata" to "struct pci_sys_data*", whereas designware had passed a
+>> "struct pcie_port*" pointer.
 >>
->> I don't care so much about the internal code details; anything there can
->> be trivially changed. But please do make sure the DT correctly
->> represents the HW by:
+>> This patch solves the issue by removing "align_resource" from "pci_sys_data"
+>> struct and defining a static global function pointer in "bios32.c"
 >>
->> * Having a separate DT node for each HW block (SPI controller, UART, and
->> any shared interrupt mux/demux/controller/...)
+>> Signed-off-by: Gabriele Paoloni <gabriele.paoloni at huawei.com>
+>> Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
 > 
-> That is what we have with the v3 patch:
-> * spi1
-> * spi2
-> * syscon controlling the aux-enable register
->   (only used to enable/disable the hw block)
+> Can you fix up Gabriele's email address above (currently contains " at ")
+> and verify that this sign-off chain is accurate per section 11 of
+> Documentation/SubmittingPatches?  The above suggests to me that Gabriele
+> originally wrote this patch and Zhou is passing it along.  That might well
+> be true; I haven't followed the development, so I'm just double-checking.
+>
 
-OK, having separate nodes is great.
+Hi Bjorn,
 
-However, I'd like to see a "semantic" driver for the shared register
-region rather than a "syscon". IIUC, "syscon" simply provides a stylized
-way for one driver to touch some shared registers directly without any
-semantics. I'd strongly prefer to see a real driver inside Linux rather
-than something that just lets drivers fiddle with the shared registers
-willy nilly. Still, this aspect is an internal implementation detail
-inside the kernel that we can change without external impact later if we
-need.
+Sorry about above mistake. Will change it in next version.
 
-More concerning: The bcm283x HW doesn't implement a "syscon" module, but
-some semantic IP block. The DT should contain a real compatible value
-that describes what the HW block really is, not just "syscon". We could
-bind the syscon driver to this compatible value if we have to for now.
+Thanks for your reminding,
+Zhou
 
->> * If e.g. the SPI controller driver is going to need to manipulate the
->> "shared interrupt mux/demux/controller/...", there should be a phandle
->> from the SPI controller node to the "shared interrupt
->> mux/demux/controller/..." node, rather than listing the shared registers
->> in each "client"'s reg property.
-> That is not what is in the v3 release of the patch any longer.
+>> ---
+>>  arch/arm/include/asm/mach/pci.h |  5 -----
+>>  arch/arm/kernel/bios32.c        | 12 ++++++++----
+>>  2 files changed, 8 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/arch/arm/include/asm/mach/pci.h b/arch/arm/include/asm/mach/pci.h
+>> index 28b9bb3..8a4e4de 100644
+>> --- a/arch/arm/include/asm/mach/pci.h
+>> +++ b/arch/arm/include/asm/mach/pci.h
+>> @@ -58,11 +58,6 @@ struct pci_sys_data {
+>>  					/* IRQ mapping				*/
+>>  	int		(*map_irq)(const struct pci_dev *, u8, u8);
+>>  					/* Resource alignement requirements	*/
+>> -	resource_size_t (*align_resource)(struct pci_dev *dev,
+>> -					  const struct resource *res,
+>> -					  resource_size_t start,
+>> -					  resource_size_t size,
+>> -					  resource_size_t align);
+>>  	void		*private_data;	/* platform controller private data	*/
+>>  };
+>>  
+>> diff --git a/arch/arm/kernel/bios32.c b/arch/arm/kernel/bios32.c
+>> index fcbbbb1..4cdc64d 100644
+>> --- a/arch/arm/kernel/bios32.c
+>> +++ b/arch/arm/kernel/bios32.c
+>> @@ -17,6 +17,11 @@
+>>  #include <asm/mach/pci.h>
+>>  
+>>  static int debug_pci;
+>> +static resource_size_t (*align_resource)(struct pci_dev *dev,
+>> +		  const struct resource *res,
+>> +		  resource_size_t start,
+>> +		  resource_size_t size,
+>> +		  resource_size_t align) = NULL;
+>>  
+>>  #ifdef CONFIG_PCI_MSI
+>>  struct msi_controller *pcibios_msi_controller(struct pci_dev *dev)
+>> @@ -468,7 +473,7 @@ static void pcibios_init_hw(struct device *parent, struct hw_pci *hw,
+>>  		sys->busnr   = busnr;
+>>  		sys->swizzle = hw->swizzle;
+>>  		sys->map_irq = hw->map_irq;
+>> -		sys->align_resource = hw->align_resource;
+>> +		align_resource = hw->align_resource;
+>>  		INIT_LIST_HEAD(&sys->resources);
+>>  
+>>  		if (hw->private_data)
+>> @@ -589,7 +594,6 @@ resource_size_t pcibios_align_resource(void *data, const struct resource *res,
+>>  				resource_size_t size, resource_size_t align)
+>>  {
+>>  	struct pci_dev *dev = data;
+>> -	struct pci_sys_data *sys = dev->sysdata;
+>>  	resource_size_t start = res->start;
+>>  
+>>  	if (res->flags & IORESOURCE_IO && start & 0x300)
+>> @@ -597,8 +601,8 @@ resource_size_t pcibios_align_resource(void *data, const struct resource *res,
+>>  
+>>  	start = (start + align - 1) & ~(align - 1);
+>>  
+>> -	if (sys->align_resource)
+>> -		return sys->align_resource(dev, res, start, size, align);
+>> +	if (align_resource)
+>> +		return align_resource(dev, res, start, size, align);
+>>  
+>>  	return start;
+>>  }
+>> -- 
+>> 1.9.1
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 > 
-> Each of the above dt-nodes has their own (non-overlapping) register
-> ranges and interrupts are enabled/disabled in the respective ranges
-> for spi1/spi2. Also the status register of spi1/2 contain the
-> corresponding flags for the reason of an interrupt - so no need
-> to access any of the shared aux registers for that - hence the use
-> of IRQF_SHARED.
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> .
+> 
