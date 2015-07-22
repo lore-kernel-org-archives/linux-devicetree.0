@@ -1,29 +1,60 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH] hwmon: (lm70) add device tree support
-Date: Tue, 21 Jul 2015 17:00:54 -0700
-Message-ID: <55AEDD36.8090408@roeck-us.net>
-References: <1437258554-29358-1-git-send-email-rabin@rab.in>
+From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 1/4] ARM: dts: DRA7: Add dsp1_system syscon node
+Date: Tue, 21 Jul 2015 19:01:31 -0500
+Message-ID: <1437523294-20058-2-git-send-email-s-anna@ti.com>
+References: <1437523294-20058-1-git-send-email-s-anna@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1437258554-29358-1-git-send-email-rabin-66gdRtMMWGc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rabin Vincent <rabin-66gdRtMMWGc@public.gmane.org>, jdelvare-l3A5Bk7waGM@public.gmane.org
-Cc: lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <1437523294-20058-1-git-send-email-s-anna-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/18/2015 03:29 PM, Rabin Vincent wrote:
-> Allow the lm70 to be probed from a device tree.
->
-> Signed-off-by: Rabin Vincent <rabin-66gdRtMMWGc@public.gmane.org>
+The DSP_SYSTEM sub-module is a dedicated system control logic
+module present within a DRA7 DSP processor sub-system. This
+module is responsible for power management, clock generation
+and connection to the device PRCM module.
 
-Applied to -next.
+Add a syscon node for this module for the DSP1 processor
+sub-system. This is added as a syscon node as it is a common
+configuration module that can be used by the different IOMMU
+instances and the corresponding remoteproc device.
 
-Thanks,
-Guenter
+The node is added to the common dra7.dtsi file, as the DSP1
+processor sub-system is mostly common across all the variants
+of the DRA7 SoC family.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+---
+ arch/arm/boot/dts/dra7.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+index 8f1e25bcecbd..1c96729641b6 100644
+--- a/arch/arm/boot/dts/dra7.dtsi
++++ b/arch/arm/boot/dts/dra7.dtsi
+@@ -296,6 +296,11 @@
+ 			reg = <0x4a002e00 0x7c>;
+ 		};
+ 
++		dsp1_system: dsp_system@40d00000 {
++			compatible = "syscon";
++			reg = <0x40d00000 0x100>;
++		};
++
+ 		sdma: dma-controller@4a056000 {
+ 			compatible = "ti,omap4430-sdma";
+ 			reg = <0x4a056000 0x1000>;
+-- 
+2.4.4
