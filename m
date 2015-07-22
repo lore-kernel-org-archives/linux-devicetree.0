@@ -1,96 +1,34 @@
-From: Gabriele Paoloni <gabriele.paoloni@huawei.com>
-Subject: RE: [PATCH v2]   PCI: Store PCIe bus address in struct of_pci_range
-Date: Wed, 22 Jul 2015 09:45:22 +0000
-Message-ID: <EE11001F9E5DDD47B7634E2F8A612F2E01D664BC@lhreml503-mbx>
-References: <1436870799-207766-1-git-send-email-gabriele.paoloni@huawei.com>
+From: Ian Campbell <ian.campbell@citrix.com>
+Subject: Re: [PATCH] dtb: Create a common home for cross-architecture dtsi
+ files.
+Date: Wed, 22 Jul 2015 10:47:18 +0100
+Message-ID: <1437558438.8383.72.camel@citrix.com>
+References: <1437496204-5438-1-git-send-email-ian.campbell@citrix.com>
+	 <20150722084753.GC14923@e106497-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1436870799-207766-1-git-send-email-gabriele.paoloni@huawei.com>
-Content-Language: en-US
-Sender: linux-pci-owner@vger.kernel.org
-To: Gabriele Paoloni <gabriele.paoloni@huawei.com>, "arnd@arndb.de" <arnd@arndb.de>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "Wangzhou (B)" <wangzhou1@hisilicon.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "james.morse@arm.com" <james.morse@arm.com>, "Liviu.Dudau@arm.com" <Liviu.Dudau@arm.com>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Yuanzhichang <yuanzhichang@hisilicon.com>, Zhudacai <zhudacai@hisilicon.com>, zhangjukuo <zhangjukuo@huawei.com>, qiuzhenfa <qiuzhenfa@hisilicon.com>, "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+In-Reply-To: <20150722084753.GC14923@e106497-lin.cambridge.arm.com>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Sudeep Holla <Sudeep.Holla@arm.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Russell King <linux@arm.linux.org.uk>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Kristina Martsenko <Kristina.Martsenko@arm.com>, Kevin Hilman <khilman@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-QW55IGNvbW1lbnQgb24gdGhpcyBwYXRjaD8NCg0KVGhpcyBpcyBuZWVkZWQgYnkgIltQQVRDSCB2
-NCAyLzVdIFBDSTogZGVzaWdud2FyZTogQWRkIEFSTTY0IHN1cHBvcnQiDQoNClRoYW5rcw0KDQpH
-YWINCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBHYWJyaWVsZSBQYW9s
-b25pDQo+IFNlbnQ6IFR1ZXNkYXksIEp1bHkgMTQsIDIwMTUgMTE6NDcgQU0NCj4gVG86IEdhYnJp
-ZWxlIFBhb2xvbmk7IGFybmRAYXJuZGIuZGU7IGxvcmVuem8ucGllcmFsaXNpQGFybS5jb207DQo+
-IFdhbmd6aG91IChCKTsgYmhlbGdhYXNAZ29vZ2xlLmNvbTsgcm9iaCtkdEBrZXJuZWwub3JnOw0K
-PiBqYW1lcy5tb3JzZUBhcm0uY29tOyBMaXZpdS5EdWRhdUBhcm0uY29tDQo+IENjOiBsaW51eC1w
-Y2lAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7
-DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBZdWFuemhpY2hhbmc7IFpodWRhY2FpOyB6
-aGFuZ2p1a3VvOw0KPiBxaXV6aGVuZmE7IExpZ3Vvemh1IChLZW5uZXRoKQ0KPiBTdWJqZWN0OiBb
-UEFUQ0ggdjJdIFBDSTogU3RvcmUgUENJZSBidXMgYWRkcmVzcyBpbiBzdHJ1Y3Qgb2ZfcGNpX3Jh
-bmdlDQo+IA0KPiBGcm9tOiBnYWJyaWVsZSBwYW9sb25pIDxnYWJyaWVsZS5wYW9sb25pQGh1YXdl
-aS5jb20+DQo+IA0KPiAgICAgVGhpcyBwYXRjaCBpcyBuZWVkZWQgcG9ydCBQQ0llIGRlc2lnbndh
-cmUgdG8gbmV3IERUIHBhcnNpbmcgQVBJDQo+ICAgICBBcyBkaXNjdXNzZWQgaW4NCj4gICAgIGh0
-dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL3BpcGVybWFpbC9saW51eC1hcm0ta2VybmVsLzIwMTUt
-DQo+IEphbnVhcnkvMzE3NzQzLmh0bWwNCj4gICAgIGluIGRlc2lnbndhcmUgd2UgaGF2ZSBhIHBy
-b2JsZW0gYXMgdGhlIFBDSSBhZGRyZXNzZXMgaW4gdGhlIFBDSWUNCj4gY29udHJvbGxlcg0KPiAg
-ICAgYWRkcmVzcyBzcGFjZSBhcmUgcmVxdWlyZWQgaW4gb3JkZXIgdG8gcGVyZm9ybSBjb3JyZWN0
-IEhXIG9wZXJhdGlvbi4NCj4gDQo+ICAgICBJbiBvcmRlciB0byBzb2x2ZSB0aGlzIHByb2JsZW0g
-Y29tbWl0DQo+ICAgICBmNGM1NWM1YTMgIlBDSTogZGVzaWdud2FyZTogUHJvZ3JhbSBBVFUgd2l0
-aCB1bnRyYW5zbGF0ZWQgYWRkcmVzcyINCj4gICAgIGFkZGVkIGNvZGUgdG8gcmVhZCB0aGUgUENJ
-ZSBjb250cm9sbGVyIHN0YXJ0IGFkZHJlc3MgZGlyZWN0bHkgZnJvbQ0KPiB0aGUNCj4gICAgIERU
-IHJhbmdlcy4NCj4gDQo+ICAgICBJbiB0aGUgbmV3IERUIHBhcnNpbmcgQVBJIG9mX3BjaV9nZXRf
-aG9zdF9icmlkZ2VfcmVzb3VyY2VzKCkgaGlkZXMNCj4gdGhlDQo+ICAgICBEVCBwYXJzZXIgZnJv
-bSB0aGUgaG9zdCBjb250cm9sbGVyIGRyaXZlcnMsIHNvIGl0IGlzIG5vdCBwb3NzaWJsZQ0KPiAg
-ICAgZm9yIGRyaXZlcnMgdG8gcGFyc2UgdmFsdWVzIGRpcmVjdGx5IGZyb20gdGhlIERULg0KPiAN
-Cj4gICAgIEluIGh0dHA6Ly93d3cuc3Bpbmljcy5uZXQvbGlzdHMvbGludXgtcGNpL21zZzQyNTQw
-Lmh0bWwgd2UgYWxyZWFkeQ0KPiB0cmllZA0KPiAgICAgdG8gdXNlIHRoZSBuZXcgRFQgcGFyc2lu
-ZyBBUEkgYnV0IHRoZXJlIGlzIGEgYnVnIChvYnZpb3VzbHkpIGluDQo+IHNldHRpbmcNCj4gICAg
-IHRoZSA8Kj5fbW9kX2Jhc2UgYWRkcmVzc2VzDQo+ICAgICBBcHBseWluZyB0aGlzIHBhdGNoIHdl
-IGNhbiBlYXNpbHkgc2V0ICI8Kj5fbW9kX2Jhc2UgPSB3aW4tDQo+ID5fX3Jlcy5zdGFydCINCj4g
-DQo+ICAgICBUaGlzIHBhdGNoIGFkZHMgYSBuZXcgZmllbGQgaW4gInN0cnVjdCBvZl9wY2lfcmFu
-Z2UiIHRvIHN0b3JlIHRoZQ0KPiAgICAgcGNpIGJ1cyBzdGFydCBhZGRyZXNzOyBpdCBmaWxscyB0
-aGUgZmllbGQgaW4NCj4gb2ZfcGNpX3JhbmdlX3BhcnNlcl9vbmUoKTsNCj4gICAgIGluIG9mX3Bj
-aV9nZXRfaG9zdF9icmlkZ2VfcmVzb3VyY2VzKCkgaXQgcmV0cmlldmVzIHRoZSByZXNvdXJjZQ0K
-PiBlbnRyeQ0KPiAgICAgYWZ0ZXIgaXQgaXMgY3JlYXRlZCBhbmQgYWRkZWQgdG8gdGhlIHJlc291
-cmNlIGxpc3QgYW5kIHVzZXMNCj4gICAgIGVudHJ5LT5fX3Jlcy5zdGFydCB0byBzdG9yZSB0aGUg
-cGNpIGNvbnRyb2xsZXIgYWRkcmVzcw0KPiANCj4gICAgIHRoZSBwYXRjaCBpcyBiYXNlZCBvbiA0
-LjItcmMxDQo+IA0KPiAgICAgU2lnbmVkLW9mZi1ieTogR2FicmllbGUgUGFvbG9uaSA8Z2Ficmll
-bGUucGFvbG9uaUBodWF3ZWkuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvb2YvYWRkcmVzcy5jICAg
-ICAgIHwgMiArKw0KPiAgZHJpdmVycy9vZi9vZl9wY2kuYyAgICAgICAgfCA0ICsrKysNCj4gIGlu
-Y2x1ZGUvbGludXgvb2ZfYWRkcmVzcy5oIHwgMSArDQo+ICAzIGZpbGVzIGNoYW5nZWQsIDcgaW5z
-ZXJ0aW9ucygrKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvb2YvYWRkcmVzcy5jIGIvZHJp
-dmVycy9vZi9hZGRyZXNzLmMNCj4gaW5kZXggOGJmZGE2YS4uMjNhNTc5MyAxMDA2NDQNCj4gLS0t
-IGEvZHJpdmVycy9vZi9hZGRyZXNzLmMNCj4gKysrIGIvZHJpdmVycy9vZi9hZGRyZXNzLmMNCj4g
-QEAgLTI1Myw2ICsyNTMsNyBAQCBzdHJ1Y3Qgb2ZfcGNpX3JhbmdlICpvZl9wY2lfcmFuZ2VfcGFy
-c2VyX29uZShzdHJ1Y3QNCj4gb2ZfcGNpX3JhbmdlX3BhcnNlciAqcGFyc2VyLA0KPiAgCQkJCQkJ
-c3RydWN0IG9mX3BjaV9yYW5nZSAqcmFuZ2UpDQo+ICB7DQo+ICAJY29uc3QgaW50IG5hID0gMywg
-bnMgPSAyOw0KPiArCWNvbnN0IGludCBwX25zID0gb2Zfbl9zaXplX2NlbGxzKHBhcnNlci0+bm9k
-ZSk7DQo+IA0KPiAgCWlmICghcmFuZ2UpDQo+ICAJCXJldHVybiBOVUxMOw0KPiBAQCAtMjY1LDYg
-KzI2Niw3IEBAIHN0cnVjdCBvZl9wY2lfcmFuZ2UgKm9mX3BjaV9yYW5nZV9wYXJzZXJfb25lKHN0
-cnVjdA0KPiBvZl9wY2lfcmFuZ2VfcGFyc2VyICpwYXJzZXIsDQo+ICAJcmFuZ2UtPnBjaV9hZGRy
-ID0gb2ZfcmVhZF9udW1iZXIocGFyc2VyLT5yYW5nZSArIDEsIG5zKTsNCj4gIAlyYW5nZS0+Y3B1
-X2FkZHIgPSBvZl90cmFuc2xhdGVfYWRkcmVzcyhwYXJzZXItPm5vZGUsDQo+ICAJCQkJcGFyc2Vy
-LT5yYW5nZSArIG5hKTsNCj4gKwlyYW5nZS0+YnVzX2FkZHIgPSBvZl9yZWFkX251bWJlcihwYXJz
-ZXItPnJhbmdlICsgbmEsIHBfbnMpOw0KPiAgCXJhbmdlLT5zaXplID0gb2ZfcmVhZF9udW1iZXIo
-cGFyc2VyLT5yYW5nZSArIHBhcnNlci0+cG5hICsgbmEsDQo+IG5zKTsNCj4gDQo+ICAJcGFyc2Vy
-LT5yYW5nZSArPSBwYXJzZXItPm5wOw0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9vZi9vZl9wY2ku
-YyBiL2RyaXZlcnMvb2Yvb2ZfcGNpLmMNCj4gaW5kZXggNTc1MWRjNS4uYjE3MWQwMiAxMDA2NDQN
-Cj4gLS0tIGEvZHJpdmVycy9vZi9vZl9wY2kuYw0KPiArKysgYi9kcml2ZXJzL29mL29mX3BjaS5j
-DQo+IEBAIC0xOTgsNiArMTk4LDcgQEAgaW50IG9mX3BjaV9nZXRfaG9zdF9icmlkZ2VfcmVzb3Vy
-Y2VzKHN0cnVjdA0KPiBkZXZpY2Vfbm9kZSAqZGV2LA0KPiANCj4gIAlwcl9kZWJ1ZygiUGFyc2lu
-ZyByYW5nZXMgcHJvcGVydHkuLi5cbiIpOw0KPiAgCWZvcl9lYWNoX29mX3BjaV9yYW5nZSgmcGFy
-c2VyLCAmcmFuZ2UpIHsNCj4gKwkJc3RydWN0IHJlc291cmNlX2VudHJ5ICplbnRyeTsNCj4gIAkJ
-LyogUmVhZCBuZXh0IHJhbmdlcyBlbGVtZW50ICovDQo+ICAJCWlmICgocmFuZ2UuZmxhZ3MgJiBJ
-T1JFU09VUkNFX1RZUEVfQklUUykgPT0gSU9SRVNPVVJDRV9JTykNCj4gIAkJCXNucHJpbnRmKHJh
-bmdlX3R5cGUsIDQsICIgSU8iKTsNCj4gQEAgLTI0MCw2ICsyNDEsOSBAQCBpbnQgb2ZfcGNpX2dl
-dF9ob3N0X2JyaWRnZV9yZXNvdXJjZXMoc3RydWN0DQo+IGRldmljZV9ub2RlICpkZXYsDQo+ICAJ
-CX0NCj4gDQo+ICAJCXBjaV9hZGRfcmVzb3VyY2Vfb2Zmc2V0KHJlc291cmNlcywgcmVzLAlyZXMt
-PnN0YXJ0IC0NCj4gcmFuZ2UucGNpX2FkZHIpOw0KPiArCQllbnRyeSA9IGxpc3RfbGFzdF9lbnRy
-eShyZXNvdXJjZXMsIHN0cnVjdCByZXNvdXJjZV9lbnRyeSwNCj4gbm9kZSk7DQo+ICsJCS8qd2Ug
-YXJlIHVzaW5nIF9fcmVzIGZvciBzdG9yaW5nIHRoZSBQQ0kgY29udHJvbGxlcg0KPiBhZGRyZXNz
-Ki8NCj4gKwkJZW50cnktPl9fcmVzLnN0YXJ0ID0gcmFuZ2UuYnVzX2FkZHI7DQo+ICAJfQ0KPiAN
-Cj4gIAlyZXR1cm4gMDsNCj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvb2ZfYWRkcmVzcy5o
-IGIvaW5jbHVkZS9saW51eC9vZl9hZGRyZXNzLmgNCj4gaW5kZXggZDg4ZTgxYi4uODY1Zjk2ZSAx
-MDA2NDQNCj4gLS0tIGEvaW5jbHVkZS9saW51eC9vZl9hZGRyZXNzLmgNCj4gKysrIGIvaW5jbHVk
-ZS9saW51eC9vZl9hZGRyZXNzLmgNCj4gQEAgLTE2LDYgKzE2LDcgQEAgc3RydWN0IG9mX3BjaV9y
-YW5nZSB7DQo+ICAJdTMyIHBjaV9zcGFjZTsNCj4gIAl1NjQgcGNpX2FkZHI7DQo+ICAJdTY0IGNw
-dV9hZGRyOw0KPiArCXU2NCBidXNfYWRkcjsNCj4gIAl1NjQgc2l6ZTsNCj4gIAl1MzIgZmxhZ3M7
-DQo+ICB9Ow0KPiAtLQ0KPiAxLjkuMQ0KDQo=
+On Wed, 2015-07-22 at 09:47 +0100, Liviu Dudau wrote:
+> 
+> Acked-by: Liviu Dudau <Liviu.Dudau@arm.com>
+
+Thanks.
+
+> Picking your brains here: would it be worth to have some vendor directories in
+> this shared area or we can hope that there will be very few files living here?
+
+I'm honestly not sure.
+
+I don't expect there will be very many files under here, and I would
+expect the norm would be that common .dtsi files used by multiple
+arches would be things from the same vendor, but I don't think we can
+guarantee that.
+
+Ian.
