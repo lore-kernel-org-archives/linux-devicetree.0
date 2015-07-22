@@ -1,207 +1,151 @@
-From: Cyrille Pitchen <cyrille.pitchen@atmel.com>
-Subject: [PATCH v6 2/2] mfd: atmel-flexcom: add a driver for Atmel Flexible Serial Communication Unit
-Date: Wed, 22 Jul 2015 12:23:57 +0200
-Message-ID: <7639e02fc2b16dc20b19fbe3bbbb986b0f3b9887.1437558598.git.cyrille.pitchen@atmel.com>
-References: <cover.1437558598.git.cyrille.pitchen@atmel.com>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: Re: [PATCH v2]   PCI: Store PCIe bus address in struct of_pci_range
+Date: Wed, 22 Jul 2015 11:46:19 +0100
+Message-ID: <20150722104619.GE14923@e106497-lin.cambridge.arm.com>
+References: <1436870799-207766-1-git-send-email-gabriele.paoloni@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1437558598.git.cyrille.pitchen@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: nicolas.ferre@atmel.com, boris.brezillon@free-electrons.com, alexandre.belloni@free-electrons.com, sameo@linux.intel.com, lee.jones@linaro.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1436870799-207766-1-git-send-email-gabriele.paoloni@huawei.com>
+Content-Disposition: inline
+Sender: linux-pci-owner@vger.kernel.org
+To: Gabriele Paoloni <gabriele.paoloni@huawei.com>
+Cc: "arnd@arndb.de" <arnd@arndb.de>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, "wangzhou1@hisilicon.com" <wangzhou1@hisilicon.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, James Morse <James.Morse@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "yuanzhichang@hisilicon.com" <yuanzhichang@hisilicon.com>, "zhudacai@hisilicon.com" <zhudacai@hisilicon.com>, "zhangjukuo@huawei.com" <zhangjukuo@huawei.com>, "qiuzhenfa@hisilicon.com" <qiuzhenfa@hisilicon.com>, "liguozhu@hisilicon.com" <liguozhu@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
-This driver supports the new Atmel Flexcom. The Flexcom is a wrapper which
-integrates one SPI controller, one I2C controller and one USART. Only one
-function can be enabled at a time. This driver selects the function once
-for all, when the Flexcom is probed, finding the first (should be unique)
-available DT child node which compatible property contains one of the
-following strings:
-- "-usart"
-- "-spi"
-- "-i2c"
+Hi Gabriele,
 
-This driver has chosen to present the Flexcom to the system as a MFD so
-the implementation is seamless for the existing Atmel SPI, I2C and USART
-drivers.
+On Tue, Jul 14, 2015 at 11:46:39AM +0100, Gabriele Paoloni wrote:
+> From: gabriele paoloni <gabriele.paoloni@huawei.com>
+>=20
+>     This patch is needed port PCIe designware to new DT parsing API
+>     As discussed in
+>     http://lists.infradead.org/pipermail/linux-arm-kernel/2015-Januar=
+y/317743.html
+>     in designware we have a problem as the PCI addresses in the PCIe =
+controller
+>     address space are required in order to perform correct HW operati=
+on.
+>=20
+>     In order to solve this problem commit
+>     f4c55c5a3 "PCI: designware: Program ATU with untranslated address=
+"
+>     added code to read the PCIe controller start address directly fro=
+m the
+>     DT ranges.
+>=20
+>     In the new DT parsing API of_pci_get_host_bridge_resources() hide=
+s the
+>     DT parser from the host controller drivers, so it is not possible
+>     for drivers to parse values directly from the DT.
+>=20
+>     In http://www.spinics.net/lists/linux-pci/msg42540.html we alread=
+y tried
+>     to use the new DT parsing API but there is a bug (obviously) in s=
+etting
+>     the <*>_mod_base addresses
+>     Applying this patch we can easily set "<*>_mod_base =3D win->__re=
+s.start"
+>=20
+>     This patch adds a new field in "struct of_pci_range" to store the
+>     pci bus start address; it fills the field in of_pci_range_parser_=
+one();
+>     in of_pci_get_host_bridge_resources() it retrieves the resource e=
+ntry
+>     after it is created and added to the resource list and uses
+>     entry->__res.start to store the pci controller address
+>=20
+>     the patch is based on 4.2-rc1
+>=20
+>     Signed-off-by: Gabriele Paoloni <gabriele.paoloni@huawei.com>
+> ---
+>  drivers/of/address.c       | 2 ++
+>  drivers/of/of_pci.c        | 4 ++++
+>  include/linux/of_address.h | 1 +
+>  3 files changed, 7 insertions(+)
+>=20
+> diff --git a/drivers/of/address.c b/drivers/of/address.c
+> index 8bfda6a..23a5793 100644
+> --- a/drivers/of/address.c
+> +++ b/drivers/of/address.c
+> @@ -253,6 +253,7 @@ struct of_pci_range *of_pci_range_parser_one(stru=
+ct of_pci_range_parser *parser,
+>  						struct of_pci_range *range)
+>  {
+>  	const int na =3D 3, ns =3D 2;
+> +	const int p_ns =3D of_n_size_cells(parser->node);
+> =20
+>  	if (!range)
+>  		return NULL;
+> @@ -265,6 +266,7 @@ struct of_pci_range *of_pci_range_parser_one(stru=
+ct of_pci_range_parser *parser,
+>  	range->pci_addr =3D of_read_number(parser->range + 1, ns);
+>  	range->cpu_addr =3D of_translate_address(parser->node,
+>  				parser->range + na);
+> +	range->bus_addr =3D of_read_number(parser->range + na, p_ns);
+>  	range->size =3D of_read_number(parser->range + parser->pna + na, ns=
+);
+> =20
+>  	parser->range +=3D parser->np;
+> diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
+> index 5751dc5..b171d02 100644
+> --- a/drivers/of/of_pci.c
+> +++ b/drivers/of/of_pci.c
+> @@ -198,6 +198,7 @@ int of_pci_get_host_bridge_resources(struct devic=
+e_node *dev,
+> =20
+>  	pr_debug("Parsing ranges property...\n");
+>  	for_each_of_pci_range(&parser, &range) {
+> +		struct resource_entry *entry;
+>  		/* Read next ranges element */
+>  		if ((range.flags & IORESOURCE_TYPE_BITS) =3D=3D IORESOURCE_IO)
+>  			snprintf(range_type, 4, " IO");
+> @@ -240,6 +241,9 @@ int of_pci_get_host_bridge_resources(struct devic=
+e_node *dev,
+>  		}
+> =20
+>  		pci_add_resource_offset(resources, res,	res->start - range.pci_add=
+r);
+> +		entry =3D list_last_entry(resources, struct resource_entry, node);
+> +		/*we are using __res for storing the PCI controller address*/
 
-Also the Flexcom embeds FIFOs: the latest patches of the SPI, I2C and
-USART drivers take advantage of this new feature.
+Minor nit, please add spaces around the beginning and end of comment ma=
+rkers.
 
-Signed-off-by: Cyrille Pitchen <cyrille.pitchen@atmel.com>
----
- drivers/mfd/Kconfig         |  11 ++++
- drivers/mfd/Makefile        |   1 +
- drivers/mfd/atmel-flexcom.c | 126 ++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 138 insertions(+)
- create mode 100644 drivers/mfd/atmel-flexcom.c
+> +		entry->__res.start =3D range.bus_addr;
+>  	}
+> =20
+>  	return 0;
+> diff --git a/include/linux/of_address.h b/include/linux/of_address.h
+> index d88e81b..865f96e 100644
+> --- a/include/linux/of_address.h
+> +++ b/include/linux/of_address.h
+> @@ -16,6 +16,7 @@ struct of_pci_range {
+>  	u32 pci_space;
+>  	u64 pci_addr;
+>  	u64 cpu_addr;
+> +	u64 bus_addr;
+>  	u64 size;
+>  	u32 flags;
+>  };
+> --=20
+> 1.9.1
+>=20
 
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index d5ad04dad081..9b33ad0653d1 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -59,6 +59,17 @@ config MFD_AAT2870_CORE
- 	  additional drivers must be enabled in order to use the
- 	  functionality of the device.
- 
-+config MFD_ATMEL_FLEXCOM
-+	tristate "Atmel Flexcom (Flexible Serial Communication Unit)"
-+	select MFD_CORE
-+	depends on OF
-+	help
-+	  Select this to get support for Atmel Flexcom. This is a wrapper
-+	  which embeds a SPI controller, a I2C controller and a USART. Only
-+	  one function can be used at a time. The choice is done at boot time
-+	  by the probe function of this MFD driver according to a device tree
-+	  property.
-+
- config MFD_ATMEL_HLCDC
- 	tristate "Atmel HLCDC (High-end LCD Controller)"
- 	select MFD_CORE
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index 0e5cfeba107c..c666bf51abf3 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -160,6 +160,7 @@ obj-$(CONFIG_MFD_SPMI_PMIC)	+= qcom-spmi-pmic.o
- obj-$(CONFIG_TPS65911_COMPARATOR)	+= tps65911-comparator.o
- obj-$(CONFIG_MFD_TPS65090)	+= tps65090.o
- obj-$(CONFIG_MFD_AAT2870_CORE)	+= aat2870-core.o
-+obj-$(CONFIG_MFD_ATMEL_FLEXCOM)	+= atmel-flexcom.o
- obj-$(CONFIG_MFD_ATMEL_HLCDC)	+= atmel-hlcdc.o
- obj-$(CONFIG_MFD_INTEL_MSIC)	+= intel_msic.o
- obj-$(CONFIG_MFD_PALMAS)	+= palmas.o
-diff --git a/drivers/mfd/atmel-flexcom.c b/drivers/mfd/atmel-flexcom.c
-new file mode 100644
-index 000000000000..8ba1862fbb74
---- /dev/null
-+++ b/drivers/mfd/atmel-flexcom.c
-@@ -0,0 +1,126 @@
-+/*
-+ * Driver for Atmel Flexcom
-+ *
-+ * Copyright (C) 2015 Atmel Corporation
-+ *
-+ * Author: Cyrille Pitchen <cyrille.pitchen@atmel.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along with
-+ * this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/types.h>
-+#include <linux/kernel.h>
-+#include <linux/platform_device.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/clk.h>
-+
-+/* I/O register offsets */
-+#define FLEX_MR		0x0	/* Mode Register */
-+#define FLEX_VERSION	0xfc	/* Version Register */
-+
-+/* Mode Register bit fields */
-+#define FLEX_MR_OPMODE_MASK	0x3
-+#define FLEX_MR_OPMODE_NO_COM	0x0
-+#define FLEX_MR_OPMODE_USART	0x1
-+#define FLEX_MR_OPMODE_SPI	0x2
-+#define FLEX_MR_OPMODE_TWI	0x3
-+
-+
-+static int atmel_flexcom_probe(struct platform_device *pdev)
-+{
-+	struct device_node *child, *np = pdev->dev.of_node;
-+	struct clk *clk;
-+	struct resource *res;
-+	void __iomem *base;
-+	u32 opmode = FLEX_MR_OPMODE_NO_COM;
-+	int err;
-+
-+	for_each_child_of_node(np, child) {
-+		const char *compatible;
-+		int cplen;
-+
-+		if (!of_device_is_available(child))
-+			continue;
-+
-+		compatible = of_get_property(child, "compatible", &cplen);
-+		if (!compatible || strlen(compatible) > cplen)
-+			continue;
-+
-+		if (strstr(compatible, "-usart")) {
-+			opmode = FLEX_MR_OPMODE_USART;
-+			break;
-+		}
-+
-+		if (strstr(compatible, "-spi")) {
-+			opmode = FLEX_MR_OPMODE_SPI;
-+			break;
-+		}
-+
-+		if (strstr(compatible, "-i2c")) {
-+			opmode = FLEX_MR_OPMODE_TWI;
-+			break;
-+		}
-+	}
-+
-+	if (opmode == FLEX_MR_OPMODE_NO_COM)
-+		return -EINVAL;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(base))
-+		return PTR_ERR(base);
-+
-+	clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(clk))
-+		return PTR_ERR(clk);
-+
-+	err = clk_prepare_enable(clk);
-+	if (err)
-+		return err;
-+
-+	/*
-+	 * Set the Operating Mode in the Mode Register: only the selected device
-+	 * is clocked. Hence, registers of the other serial devices remain
-+	 * inaccessible and are read as zero. Also the external I/O lines of the
-+	 * Flexcom are muxed to reach the selected device.
-+	 */
-+	writel(opmode, base + FLEX_MR);
-+
-+	clk_disable_unprepare(clk);
-+
-+	return of_platform_populate(np, NULL, NULL, &pdev->dev);
-+}
-+
-+static const struct of_device_id atmel_flexcom_of_match[] = {
-+	{ .compatible = "atmel,sama5d2-flexcom" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, atmel_flexcom_of_match);
-+
-+static struct platform_driver atmel_flexcom_driver = {
-+	.driver		= {
-+		.name	= "atmel_flexcom",
-+		.of_match_table = atmel_flexcom_of_match,
-+	},
-+	.probe		= atmel_flexcom_probe,
-+};
-+
-+module_platform_driver(atmel_flexcom_driver);
-+
-+MODULE_AUTHOR("Cyrille Pitchen <cyrille.pitchen@atmel.com>");
-+MODULE_DESCRIPTION("Atmel Flexcom MFD driver");
-+MODULE_LICENSE("GPL v2");
--- 
-1.8.2.2
+This touches code I have previously added, so I guess you need:
+
+Acked-by: Liviu Dudau <Liviu.Dudau@arm.com>
+
+Best regards,
+Liviu
+
+--=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
