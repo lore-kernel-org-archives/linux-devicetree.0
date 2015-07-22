@@ -1,39 +1,59 @@
 From: Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>
-Subject: [PATCH 3/3] MAINTAINERS: V4L2: PLATFORM: Add entry for Renesas JPEG Processing Unit driver
-Date: Wed, 22 Jul 2015 14:23:05 +0300
-Message-ID: <1437564185-13593-4-git-send-email-mikhail.ulyanov@cogentembedded.com>
+Subject: [PATCH v3 2/3] devicetree: bindings: Document Renesas R-Car JPEG  Processing Unit
+Date: Wed, 22 Jul 2015 14:23:04 +0300
+Message-ID: <1437564185-13593-3-git-send-email-mikhail.ulyanov@cogentembedded.com>
 References: <1437564185-13593-1-git-send-email-mikhail.ulyanov@cogentembedded.com>
-Return-path: <linux-sh-owner@vger.kernel.org>
+Return-path: <linux-media-owner@vger.kernel.org>
 In-Reply-To: <1437564185-13593-1-git-send-email-mikhail.ulyanov@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
+Sender: linux-media-owner@vger.kernel.org
 To: hverkuil@xs4all.nl, horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, mchehab@osg.samsung.com
 Cc: laurent.pinchart@ideasonboard.com, j.anaszewski@samsung.com, kamil@wypas.org, sergei.shtylyov@cogentembedded.com, devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
-Update RENESAS JPU driver maintainer in MAINTAINERS file.
+Add Renesas R-Car JPEG processing unit driver device tree bindings 
+documentation.
 
 Signed-off-by: Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>
 ---
- MAINTAINERS | 6 ++++++
- 1 file changed, 6 insertions(+)
+Changes since v2:
+ - remove generic "renesas,jpu-gen2" descriptor
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index b65b22b..da57ec1 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5381,6 +5381,12 @@ S:	Maintained
- F:	fs/jbd2/
- F:	include/linux/jbd2.h
- 
-+JPU V4L2 MEM2MEM DRIVER FOR RENESAS
-+M:	Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>
-+L:	linux-media@vger.kernel.org
-+S:	Maintained
-+F:	drivers/media/platform/rcar_jpu.c
+Changes since v1:
+ - Fix typos
+
+ .../devicetree/bindings/media/renesas,jpu.txt      | 24 ++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/renesas,jpu.txt
+
+diff --git a/Documentation/devicetree/bindings/media/renesas,jpu.txt b/Documentation/devicetree/bindings/media/renesas,jpu.txt
+new file mode 100644
+index 0000000..0cb9420
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/renesas,jpu.txt
+@@ -0,0 +1,24 @@
++* Renesas JPEG Processing Unit
 +
- JSM Neo PCI based serial card
- M:	Thadeu Lima de Souza Cascardo <cascardo@linux.vnet.ibm.com>
- L:	linux-serial@vger.kernel.org
++The JPEG processing unit (JPU) incorporates the JPEG codec with an encoding
++and decoding function conforming to the JPEG baseline process, so that the JPU
++can encode image data and decode JPEG data quickly.
++
++Required properties:
++  - compatible: should containg one of the following:
++			- "renesas,jpu-r8a7790" for R-Car H2
++			- "renesas,jpu-r8a7791" for R-Car M2-W
++			- "renesas,jpu-r8a7792" for R-Car V2H
++			- "renesas,jpu-r8a7793" for R-Car M2-N
++
++  - reg: Base address and length of the registers block for the JPU.
++  - interrupts: JPU interrupt specifier.
++  - clocks: A phandle + clock-specifier pair for the JPU functional clock.
++
++Example: R8A7790 (R-Car H2) JPU node
++	jpeg-codec@fe980000 {
++		compatible = "renesas,jpu-r8a7790";
++		reg = <0 0xfe980000 0 0x10300>;
++		interrupts = <0 272 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp1_clks R8A7790_CLK_JPU>;
++	};
 -- 
 2.1.4
-
