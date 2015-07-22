@@ -1,126 +1,154 @@
 From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v7 00/23] usb gadget update for OTG 2.0
-Date: Wed, 22 Jul 2015 10:13:08 -0500
-Message-ID: <20150722151308.GE10467@saruman.tx.rr.com>
+Subject: Re: [PATCH v7 08/23] usb: chipidea: set usb otg capabilities
+Date: Wed, 22 Jul 2015 10:19:55 -0500
+Message-ID: <20150722151955.GF10467@saruman.tx.rr.com>
 References: <1436426340-18477-1-git-send-email-jun.li@freescale.com>
+ <1436426340-18477-9-git-send-email-jun.li@freescale.com>
+ <559E3783.9010908@ti.com>
+ <20150709132207.GA10197@shlinux2>
+ <20150713010313.GB19248@shlinux2>
 Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="cYtjc4pxslFTELvY"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="fwqqG+mf3f7vyBCB"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1436426340-18477-1-git-send-email-jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+d-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org
+In-Reply-To: <20150713010313.GB19248@shlinux2>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, robh+d-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---cYtjc4pxslFTELvY
+--fwqqG+mf3f7vyBCB
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jul 09, 2015 at 03:18:37PM +0800, Li Jun wrote:
-> Change for v7:
-> - Free otg descriptor when failure of bind in patch 21, 22, 23.
->   add Roger's Reviewed-by for patch 10~20.
-> - Choose the lesser otg-rev if otg-rev has been set before update by DT,
->   remove 0x0300 in supported otg-rev list, and add code comments in case
->   otg-rev is not passed in DT in patch 7.
-> - Fail chipidea usb initilization if DT pass an unsupported otg-rev in pa=
-tch 8.
->=20
-> Change for v6:
-> - Change of_usb_set_otg_caps to be of_usb_update_otg_caps, and add
->   sanity check of otg-rev.
-> - Add chipidea otg-rev ability to be 0x0200, which will be updated
->   in DT, if not passed, will be reset to be 0.
-> - Remove unnecessary change: move config's descriptor and bmAttributes
->   init from xxxi_config() to xxx_bind() in leagcy gadget drivers.
->=20
-> This is a follow-up of Macpaul Lin's previous patchset to resolve usb
-> gadget driver working with OTG 2.0, and set otg features by not only
-> usb driver config but also usb hardware property in DT, main changes:
-> 1. Add usb_otg20_descriptor definition for OTG 2.0 which introduces bcdOTG
->    field for otg revision, bcdOTG can be passed via device tree.
-> 2. OTG features(SRP/HNP/ADP) can be decided by combination of usb HW
->    properties and usb driver config.
-> 3. Change the chipidea usb driver to use the updated mechanism.
-> 4. Remove static usb otg descriptor definition, but allocate and init it
->    according to otg capabilities in each gadget driver, if otg capabiliti=
+On Mon, Jul 13, 2015 at 09:03:14AM +0800, Peter Chen wrote:
+> On Thu, Jul 09, 2015 at 09:22:09PM +0800, Li Jun wrote:
+> > On Thu, Jul 09, 2015 at 11:57:39AM +0300, Roger Quadros wrote:
+> > > Hi,
+> > >=20
+> > > On 09/07/15 10:18, Li Jun wrote:
+> > > > Init and update otg capabilities by DT, set gadget's otg capabiliti=
 es
->    is not defined for legacy platforms, the usb otg descriptor content is
->    kept the same as current static definition.
+> > > > accordingly.
+> > > >=20
+> > > > Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > > > ---
+> > > >  drivers/usb/chipidea/core.c  | 15 +++++++++++++++
+> > > >  drivers/usb/chipidea/udc.c   |  7 ++++++-
+> > > >  include/linux/usb/chipidea.h |  1 +
+> > > >  3 files changed, 22 insertions(+), 1 deletion(-)
+> > > >=20
+> > > > diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/cor=
+e.c
+> > > > index 74fea4f..1e6d5f0 100644
+> > > > --- a/drivers/usb/chipidea/core.c
+> > > > +++ b/drivers/usb/chipidea/core.c
+> > > > @@ -560,6 +560,8 @@ static irqreturn_t ci_irq(int irq, void *data)
+> > > >  static int ci_get_platdata(struct device *dev,
+> > > >  		struct ci_hdrc_platform_data *platdata)
+> > > >  {
+> > > > +	int ret;
+> > > > +
+> > > >  	if (!platdata->phy_mode)
+> > > >  		platdata->phy_mode =3D of_usb_get_phy_mode(dev->of_node);
+> > > > =20
+> > > > @@ -588,6 +590,19 @@ static int ci_get_platdata(struct device *dev,
+> > > >  				of_usb_host_tpl_support(dev->of_node);
+> > > >  	}
+> > > > =20
+> > > > +	if (platdata->dr_mode =3D=3D USB_DR_MODE_OTG) {
+> > > > +		/* We can support HNP and SRP of OTG 2.0 */
+> > > > +		platdata->ci_otg_caps.otg_rev =3D 0x0200;
+> > > > +		platdata->ci_otg_caps.hnp_support =3D true;
+> > > > +		platdata->ci_otg_caps.srp_support =3D true;
+> > > > +
+> > > > +		/* Update otg capabilities by DT properties */
+> > > > +		ret =3D of_usb_update_otg_caps(dev->of_node,
+> > > > +					&platdata->ci_otg_caps);
+> > > > +		if (ret)
+> > > > +			return ret;
+> > > > +	}
+> > > > +
+> > > >  	if (of_usb_get_maximum_speed(dev->of_node) =3D=3D USB_SPEED_FULL)
+> > > >  		platdata->flags |=3D CI_HDRC_FORCE_FULLSPEED;
+> > > > =20
+> > > > diff --git a/drivers/usb/chipidea/udc.c b/drivers/usb/chipidea/udc.c
+> > > > index 764f668..b7cca3e 100644
+> > > > --- a/drivers/usb/chipidea/udc.c
+> > > > +++ b/drivers/usb/chipidea/udc.c
+> > > > @@ -1827,6 +1827,7 @@ static irqreturn_t udc_irq(struct ci_hdrc *ci)
+> > > >  static int udc_start(struct ci_hdrc *ci)
+> > > >  {
+> > > >  	struct device *dev =3D ci->dev;
+> > > > +	struct usb_otg_caps *otg_caps =3D &ci->platdata->ci_otg_caps;
+> > > >  	int retval =3D 0;
+> > > > =20
+> > > >  	spin_lock_init(&ci->lock);
+> > > > @@ -1834,8 +1835,12 @@ static int udc_start(struct ci_hdrc *ci)
+> > > >  	ci->gadget.ops          =3D &usb_gadget_ops;
+> > > >  	ci->gadget.speed        =3D USB_SPEED_UNKNOWN;
+> > > >  	ci->gadget.max_speed    =3D USB_SPEED_HIGH;
+> > > > -	ci->gadget.is_otg       =3D ci->is_otg ? 1 : 0;
+> > > >  	ci->gadget.name         =3D ci->platdata->name;
+> > > > +	ci->gadget.otg_caps	=3D otg_caps;
+> > > > +
+> > > > +	if (otg_caps->hnp_support || otg_caps->srp_support ||
+> > > > +					otg_caps->adp_support)
+> > > > +		ci->gadget.is_otg =3D 1;
+> > >=20
+> > > It seems there are non OTG capable dual-role only ci controllers as w=
+ell
+> > > looking at ci_get_otg_capable() code.
+> > >=20
+> > > If so then this should be
+> > > 	if (ci->is_otg && (otg_caps->hnp_support || otg_caps->srp_support ||
+> > > 			   otg_caps->adp_support))
+> > > 		ci->gadget.is_otg =3D 1
+> > >=20
+> > > cheers,
+> > > -roger
+> > >=20
+> > Seems it was in my previous version but dropped it by mistake later,
+> > I will add it.
+> >=20
 >=20
-> Li Jun (19):
->   usb: otg: add usb_otg_caps structure for otg capabilities
->   doc: dt-binding: usb: add otg related properties
->   usb: common: add API to update usb otg capabilities by device tree
->   usb: chipidea: set usb otg capabilities
->   usb: chipidea: update ci_otg_is_fsm_mode conditions
->   usb: gadget: add usb otg descriptor allocate and init interface
->   usb: gadget: configfs: allocate and init otg descriptor by otg
->     capabilities
->   usb: gadget: ether: allocate and init otg descriptor by otg
->     capabilities
->   usb: gadget: acm_ms: allocate and init otg descriptor by otg
->     capabilities
->   usb: gadget: audio: allocate and init otg descriptor by otg
->     capabilities
->   usb: gadget: cdc2: allocate and init otg descriptor by otg
->     capabilities
->   usb: gadget: g_ffs: allocate and init otg descriptor by otg
->     capabilities
->   usb: gadget: hid: allocate and init otg descriptor by otg capabilities
->   usb: gadget: mass_storage: allocate and init otg descriptor by otg
->     capabilities
->   usb: gadget: multi: allocate and init otg descriptor by otg
->     capabilities
->   usb: gadget: ncm: allocate and init otg descriptor by otg capabilities
->   usb: gadget: printer: allocate and init otg descriptor by otg
->     capabilities
->   usb: gadget: serial: allocate and init otg descriptor by otg
->     capabilities
->   usb: gadget: zero: allocate and init otg descriptor by otg
->     capabilities
 >=20
-> Macpaul Lin (4):
->   usb: add usb_otg20_descriptor for OTG 2.0 and above
->   usb: add USB_OTG_ADP definition
->   usb: add usb_otg_caps to usb_gadget structure.
->   usb: gadget: composite: add USB_DT_OTG request handling
+> After you adding roger's comments, add my ack.
+>=20
+> Acked-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-ok, so how you guys want to handle this series ? Should I take
-everything through my tree ? I'd need Acked-by for all chipidea drivers
-if that's the case.
+am I getting a new version for this patch ?
 
 --=20
 balbi
 
---cYtjc4pxslFTELvY
+--fwqqG+mf3f7vyBCB
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJVr7MEAAoJEIaOsuA1yqREWeQP/i7m6F/rM3BApeRajWYH9Fb5
-fb8QDlQ30eDQxGZ4vpyHvunnjM/BBrZoTdJKlYuBi5mGa9D+xCZPrxHA1k0fc036
-dlhDieArn6By1wvXUD3BLjrPTlA9UTiktgSKfv6AYdJ2Va+wYKfnbH8ItCSuUgQI
-mYfBGe6dXGNizF9KCblw+3n5ta9WEk3tr2J//rR3EVLxWg5I8RPez4lq8TUft6zc
-iVHfTQoL5DVr3jbisCA61mPEiCjUqMU3mMgn3hI46FAFD5EXOcxiMJ1poxTGFM46
-NfVlD4D8eAjqmpgl4jok3jOx8y5HqejSqr+DYtEzaQrQYuTPDkfkKhHXh5zzq1sq
-VzRQ1H3WqaAhOL5mWcwQcfpZjaX82Dcm6rdMomqVRjolvJh/kpofPin2m7Bx2xwP
-CWtw76jPVrB4fBJgvxQDWrilNNziWmQgB1s1xpEnsamMqXWVlIkVD9nPRBL9sXq0
-YwEG7hsTlRkFY+vGXFZNC64gUG7mvvPwEAUvIgAHV1XMQkVkprcsw9T6u7FfhBqJ
-e+lxQQDYSvt3ev5mgehfWV3ZVgBbo+z9YLZnYHFtHqB/n2O++gD+lwsGdbUkIn5m
-TljsEOhYAP02dU/fWie/Y5pG46HO3Q9PTqEfLCllEXEE3me9u538yz6VdspbUui6
-XtAzrmLUAkfcG1Bw81j5
-=SwIr
+iQIcBAEBAgAGBQJVr7SbAAoJEIaOsuA1yqREJ/0P/2gFuZXc++t7kxRD5he2I7np
+1YiI6x+hYP0S/J6sXjNc1aOZzvH6Iu6BqVd84phN5W14tVRQi2FT+phXzhTT/f5Z
+X8vhUsu7WhKvZKJGv5Ksgc3gbwBp+3kOoHP51yG8J3gAndujZUiNvvr2MlgJi9jW
+PC5DE0iBd9B1ctdg6nQSoIm4FSkBypf+Gvx/MvAweqRQ894BTXDTgWAS+qK/IclO
+kHlmnFcIZTAC+ONFfZpgkckmDO90ib1rzgCUia0va9SXNWqLLAzPtpdtaIHHhl6V
+/01f9/6bgFrCk3d0wMqClBjW180M0SbZ6ZRKjZOW/sIDGG6/i2SDPbbJC65RS37p
+Acdge6woxvN/pfHMksPunmwCdIIwdYoaj31OOlI0ze8S/+wMY8FJyxogIqTG+Sqc
+n0D3xR5fVX6NqdjTkiVVwjPCYHgHJk/69cb/keATEDopOp4FZcKeQGM+Obt5RQof
+u9aWL33u8WuKVmShAb3fbGXgW5wKS97q1dajQxq1vU9vWpq5ixp60XfSNO3e/nHk
+ab/IcZUhVafbAV9D2r4lPCsrEcasRGfNRNIRQbZ5OvgiVzD9rT7QuAjQRcZSlay6
+Nxlzc0p8pfz2/KqZ1BndD2ZL6dQBPiTkUdnkV6XgeFPVb3F91FxiSZfzcL2uEHf/
+ZzjSbBpw4IyP0xYu/vDu
+=3eJ5
 -----END PGP SIGNATURE-----
 
---cYtjc4pxslFTELvY--
+--fwqqG+mf3f7vyBCB--
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
