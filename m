@@ -1,10 +1,10 @@
 From: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Subject: [PATCH 1/2] ARM: dts: rockchip: Use correct dts properties for tsadc node
-Date: Wed, 22 Jul 2015 07:43:27 +0200
-Message-ID: <1437543807-19852-2-git-send-email-romain.perier@gmail.com>
-References: <1437543807-19852-1-git-send-email-romain.perier@gmail.com>
+Date: Wed, 22 Jul 2015 07:44:06 +0200
+Message-ID: <1437543846-19897-2-git-send-email-romain.perier@gmail.com>
+References: <1437543846-19897-1-git-send-email-romain.perier@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1437543807-19852-1-git-send-email-romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1437543846-19897-1-git-send-email-romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
