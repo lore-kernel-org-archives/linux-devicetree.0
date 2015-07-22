@@ -1,320 +1,53 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: [PATCH v3 4/4] irqchip: Add bcm2836 interrupt controller for
- Raspberry Pi 2.
-Date: Wed, 22 Jul 2015 15:06:59 -0700
-Message-ID: <1437602819-17343-5-git-send-email-eric@anholt.net>
-References: <1437602819-17343-1-git-send-email-eric@anholt.net>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [Patch v3 1/5] mtd: nand: tegra: add devicetree binding
+Date: Wed, 22 Jul 2015 15:32:33 -0700
+Message-ID: <20150722223233.GA8876@google.com>
+References: <1431282602-7137-1-git-send-email-dev@lynxeye.de>
+ <1431282602-7137-2-git-send-email-dev@lynxeye.de>
+ <20150721210537.GL24125@google.com>
+ <1437596129.2289.2.camel@lynxeye.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1437602819-17343-1-git-send-email-eric@anholt.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Stephen Warren <swarren@wwwdotorg.org>, Andrea Merello <andrea.merello@gmail.com>, Lee Jones <lee@kernel.org>, linux-kernel@vger.kernel.org, Eric Anholt <eric@anholt.net>, linux-rpi-kernel@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1437596129.2289.2.camel-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Marcel Ziswiler <marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This interrupt controller is the new root interrupt controller with
-the timer, PMU events, and IPIs, and the bcm2835's interrupt
-controller is chained off of it to handle the peripherals.
+On Wed, Jul 22, 2015 at 10:15:29PM +0200, Lucas Stach wrote:
+> Am Dienstag, den 21.07.2015, 14:05 -0700 schrieb Brian Norris:
+> > > +Optional properties:
+> > > +- nvidia,wp-gpios: GPIO used to disable write protection of the flash
+> > 
+> > I think write-protect is a pretty common function, so we might want to
+> > just remove the 'nvidia,' prefix, so we can eventually move your code to
+> > the core nand_base.c library (BTW, I noticed you grab the GPIO, but you
+> > don't do anything with it; is that intentional?). In fact, I've seen
+> > requests for that very feature on the mailing list.
+> > 
+> 
+> Actually I request and activate the GPIO in the driver, so the chip is
+> permanently unprotected.
 
-I wrote the interrupt chip support, while Andrea Merello wrote the IPI
-code.
+Whoops, I missed that part. I'm not too familiar with the GPIO API.
+Thanks for clearing that up.
 
-Signed-off-by: Eric Anholt <eric@anholt.net>
-Signed-off-by: Andrea Merello <andrea.merello@gmail.com>
-Acked-by: Stephen Warren <swarren@wwwdotorg.org>
----
+> I agree that it would be nice to integrate this better into the NAND
+> core. If it's okay for you I'll drop the nvidia prefix and follow up
+> with patches to move this to the core after this driver is in. I don't
+> really want this driver get blocked on more dependencies.
 
-v2: Rename functions/globals to bcm2836_arm_local.  Treat per-cpu
-    interrupts as per-cpu in mask/unmask.  Add comments about how
-    registers work.
-v3: Drop debug printfs from PMU interrupt masking.
+Perfect. Yes, sorry for the delays, and I think most things look really
+good, actually.
 
- drivers/irqchip/Makefile      |   1 +
- drivers/irqchip/irq-bcm2836.c | 254 ++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 255 insertions(+)
- create mode 100644 drivers/irqchip/irq-bcm2836.c
+And I guess I wasn't clear: I'd only ask you to change the binding name
+now, since we can't change that later; the code can be moved at a later
+time, once the DT ABI is set. FWIW, there are other features that might
+be useful alongside common NAND write-protect support. For instance, a
+user might want to gain a little extra safety by having MTD bring WP#
+low only when erasing/writing, so that most of the time, the flash is
+protected. 
 
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index b8d4e96..9727681 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -1,6 +1,7 @@
- obj-$(CONFIG_IRQCHIP)			+= irqchip.o
- 
- obj-$(CONFIG_ARCH_BCM2835)		+= irq-bcm2835.o
-+obj-$(CONFIG_ARCH_BCM2835)		+= irq-bcm2836.o
- obj-$(CONFIG_ARCH_EXYNOS)		+= exynos-combiner.o
- obj-$(CONFIG_ARCH_HIP04)		+= irq-hip04.o
- obj-$(CONFIG_ARCH_MMP)			+= irq-mmp.o
-diff --git a/drivers/irqchip/irq-bcm2836.c b/drivers/irqchip/irq-bcm2836.c
-new file mode 100644
-index 0000000..87340b0
---- /dev/null
-+++ b/drivers/irqchip/irq-bcm2836.c
-@@ -0,0 +1,254 @@
-+/*
-+ * Root interrupt controller for the BCM2836 (Raspberry Pi 2).
-+ *
-+ * Copyright 2015 Broadcom
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/irqchip.h>
-+#include <linux/irqdomain.h>
-+#include <asm/exception.h>
-+
-+/*
-+ * The low 2 bits identify the CPU that the GPU IRQ goes to, and the
-+ * next 2 bits identify the CPU that the GPU FIQ goes to.
-+ */
-+#define LOCAL_GPU_ROUTING		0x00c
-+/* When setting bits 0-3, enables PMU interrupts on that CPU. */
-+#define LOCAL_PM_ROUTING_SET		0x010
-+/* When setting bits 0-3, disables PMU interrupts on that CPU. */
-+#define LOCAL_PM_ROUTING_CLR		0x014
-+/*
-+ * The low 4 bits of this are the CPU's timer IRQ enables, and the
-+ * next 4 bits are the CPU's timer FIQ enables (which override the IRQ
-+ * bits).
-+ */
-+#define LOCAL_TIMER_INT_CONTROL0	0x040
-+/*
-+ * The low 4 bits of this are the CPU's per-mailbox IRQ enables, and
-+ * the next 4 bits are the CPU's per-mailbox FIQ enables (which
-+ * override the IRQ bits).
-+ */
-+#define LOCAL_MAILBOX_INT_CONTROL0	0x050
-+/*
-+ * The CPU's interrupt status register.  Bits are defined by the the
-+ * LOCAL_IRQ_* bits below.
-+ */
-+#define LOCAL_IRQ_PENDING0		0x060
-+/* Same status bits as above, but for FIQ. */
-+#define LOCAL_FIQ_PENDING0		0x070
-+/*
-+ * Mailbox0 write-to-set bits.  There are 16 mailboxes, 4 per CPU, and
-+ * these bits are organized by mailbox number and then CPU number.  We
-+ * use mailbox 0 for IPIs.  The mailbox's interrupt is raised while
-+ * any bit is set.
-+ */
-+#define LOCAL_MAILBOX0_SET0		0x080
-+/* Mailbox0 write-to-clear bits. */
-+#define LOCAL_MAILBOX0_CLR0		0x0c0
-+
-+#define LOCAL_IRQ_CNTPSIRQ	0
-+#define LOCAL_IRQ_CNTPNSIRQ	1
-+#define LOCAL_IRQ_CNTHPIRQ	2
-+#define LOCAL_IRQ_CNTVIRQ	3
-+#define LOCAL_IRQ_MAILBOX0	4
-+#define LOCAL_IRQ_MAILBOX1	5
-+#define LOCAL_IRQ_MAILBOX2	6
-+#define LOCAL_IRQ_MAILBOX3	7
-+#define LOCAL_IRQ_GPU_FAST	8
-+#define LOCAL_IRQ_PMU_FAST	9
-+#define LAST_IRQ		LOCAL_IRQ_PMU_FAST
-+
-+struct bcm2836_arm_irqchip_intc {
-+	struct irq_domain *domain;
-+	void __iomem *base;
-+};
-+
-+static struct bcm2836_arm_irqchip_intc intc  __read_mostly;
-+
-+static void bcm2836_arm_irqchip_mask_per_cpu_irq(unsigned int reg_offset,
-+						 unsigned int bit,
-+						 int cpu)
-+{
-+	void __iomem *reg = intc.base + reg_offset + 4 * cpu;
-+
-+	writel(readl(reg) & ~BIT(bit), reg);
-+}
-+
-+static void bcm2836_arm_irqchip_unmask_per_cpu_irq(unsigned int reg_offset,
-+						   unsigned int bit,
-+						 int cpu)
-+{
-+	void __iomem *reg = intc.base + reg_offset + 4 * cpu;
-+
-+	writel(readl(reg) | BIT(bit), reg);
-+}
-+
-+static void bcm2836_arm_irqchip_mask_timer_irq(struct irq_data *d)
-+{
-+	bcm2836_arm_irqchip_mask_per_cpu_irq(LOCAL_TIMER_INT_CONTROL0,
-+					     d->hwirq - LOCAL_IRQ_CNTPSIRQ,
-+					     smp_processor_id());
-+}
-+
-+static void bcm2836_arm_irqchip_unmask_timer_irq(struct irq_data *d)
-+{
-+	bcm2836_arm_irqchip_unmask_per_cpu_irq(LOCAL_TIMER_INT_CONTROL0,
-+					       d->hwirq - LOCAL_IRQ_CNTPSIRQ,
-+					       smp_processor_id());
-+}
-+
-+static struct irq_chip bcm2836_arm_irqchip_timer = {
-+	.name = "bcm2836-timer",
-+	.irq_mask = bcm2836_arm_irqchip_mask_timer_irq,
-+	.irq_unmask = bcm2836_arm_irqchip_unmask_timer_irq
-+};
-+
-+static void bcm2836_arm_irqchip_mask_pmu_irq(struct irq_data *d)
-+{
-+	writel(1 << smp_processor_id(), intc.base + LOCAL_PM_ROUTING_CLR);
-+}
-+
-+static void bcm2836_arm_irqchip_unmask_pmu_irq(struct irq_data *d)
-+{
-+	writel(1 << smp_processor_id(), intc.base + LOCAL_PM_ROUTING_SET);
-+}
-+
-+static struct irq_chip bcm2836_arm_irqchip_pmu = {
-+	.name = "bcm2836-pmu",
-+	.irq_mask = bcm2836_arm_irqchip_mask_pmu_irq,
-+	.irq_unmask = bcm2836_arm_irqchip_unmask_pmu_irq
-+};
-+
-+static void bcm2836_arm_irqchip_mask_gpu_irq(struct irq_data *d)
-+{
-+}
-+
-+static void bcm2836_arm_irqchip_unmask_gpu_irq(struct irq_data *d)
-+{
-+}
-+
-+static struct irq_chip bcm2836_arm_irqchip_gpu = {
-+	.name = "bcm2836-gpu",
-+	.irq_mask = bcm2836_arm_irqchip_mask_gpu_irq,
-+	.irq_unmask = bcm2836_arm_irqchip_unmask_gpu_irq
-+};
-+
-+static void bcm2836_arm_irqchip_register_irq(int hwirq, struct irq_chip *chip)
-+{
-+	int irq = irq_create_mapping(intc.domain, hwirq);
-+
-+	irq_set_percpu_devid(irq);
-+	irq_set_chip_and_handler(irq, chip, handle_percpu_devid_irq);
-+	irq_set_status_flags(irq, IRQ_NOAUTOEN);
-+}
-+
-+static void __exception_irq_entry bcm2836_arm_irqchip_handle_irq(
-+	struct pt_regs *regs)
-+{
-+	int cpu = smp_processor_id();
-+	u32 stat;
-+
-+	stat = readl_relaxed(intc.base + LOCAL_IRQ_PENDING0 + 4 * cpu);
-+	if (stat & 0x10) {
-+#ifdef CONFIG_SMP
-+		void __iomem *mailbox0 = (intc.base +
-+					  LOCAL_MAILBOX0_CLR0 + 16 * cpu);
-+		u32 mbox_val = readl(mailbox0);
-+		u32 ipi = ffs(mbox_val) - 1;
-+
-+		writel(1 << ipi, mailbox0);
-+		handle_IPI(ipi, regs);
-+#endif
-+	} else {
-+		u32 hwirq = ffs(stat) - 1;
-+
-+		handle_IRQ(irq_linear_revmap(intc.domain, hwirq), regs);
-+	}
-+}
-+
-+#ifdef CONFIG_SMP
-+static void bcm2836_arm_irqchip_send_ipi(const struct cpumask *mask,
-+					 unsigned int ipi)
-+{
-+	int cpu;
-+	void __iomem *mailbox0_base = intc.base + LOCAL_MAILBOX0_SET0;
-+
-+	/*
-+	 * Ensure that stores to normal memory are visible to the
-+	 * other CPUs before issuing the IPI.
-+	 */
-+	dsb();
-+
-+	for_each_cpu(cpu, mask)	{
-+		writel(1 << ipi, mailbox0_base + 16 * cpu);
-+	}
-+}
-+#endif
-+
-+static const struct irq_domain_ops bcm2836_arm_irqchip_intc_ops = {
-+	.xlate = irq_domain_xlate_onecell
-+};
-+
-+static void
-+bcm2836_arm_irqchip_smp_init(void)
-+{
-+#ifdef CONFIG_SMP
-+	int i;
-+
-+	/* unmask IPIs */
-+	for_each_possible_cpu(i) {
-+		bcm2836_arm_irqchip_unmask_per_cpu_irq(
-+			LOCAL_MAILBOX_INT_CONTROL0, 0, i);
-+	}
-+	set_smp_cross_call(bcm2836_arm_irqchip_send_ipi);
-+#endif
-+}
-+
-+static int __init bcm2836_arm_irqchip_l1_intc_of_init(struct device_node *node,
-+						      struct device_node *parent)
-+{
-+	intc.base = of_iomap(node, 0);
-+	if (!intc.base) {
-+		panic("%s: unable to map local interrupt registers\n",
-+			node->full_name);
-+	}
-+
-+	intc.domain = irq_domain_add_linear(node, LAST_IRQ + 1,
-+					    &bcm2836_arm_irqchip_intc_ops,
-+					    NULL);
-+	if (!intc.domain)
-+		panic("%s: unable to create IRQ domain\n", node->full_name);
-+
-+	bcm2836_arm_irqchip_register_irq(LOCAL_IRQ_CNTPSIRQ,
-+					 &bcm2836_arm_irqchip_timer);
-+	bcm2836_arm_irqchip_register_irq(LOCAL_IRQ_CNTPNSIRQ,
-+					 &bcm2836_arm_irqchip_timer);
-+	bcm2836_arm_irqchip_register_irq(LOCAL_IRQ_CNTHPIRQ,
-+					 &bcm2836_arm_irqchip_timer);
-+	bcm2836_arm_irqchip_register_irq(LOCAL_IRQ_CNTVIRQ,
-+					 &bcm2836_arm_irqchip_timer);
-+	bcm2836_arm_irqchip_register_irq(LOCAL_IRQ_GPU_FAST,
-+					 &bcm2836_arm_irqchip_gpu);
-+	bcm2836_arm_irqchip_register_irq(LOCAL_IRQ_PMU_FAST,
-+					 &bcm2836_arm_irqchip_pmu);
-+
-+	bcm2836_arm_irqchip_smp_init();
-+
-+	set_handle_irq(bcm2836_arm_irqchip_handle_irq);
-+	return 0;
-+}
-+
-+IRQCHIP_DECLARE(bcm2836_arm_irqchip_l1_intc, "brcm,bcm2836-l1-intc",
-+		bcm2836_arm_irqchip_l1_intc_of_init);
--- 
-2.1.4
+Brian
