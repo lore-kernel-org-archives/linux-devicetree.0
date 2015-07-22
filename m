@@ -1,40 +1,33 @@
-From: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Subject: Re: [PATCH v2] backlight: pm8941-wled: Move PM8941 WLED driver to
- backlight
-Date: Tue, 21 Jul 2015 17:49:27 -0700
-Message-ID: <20150722004927.GC4753@usrtlx11787.corpusers.net>
-References: <1436990540-23354-1-git-send-email-bjorn.andersson@sonymobile.com>
- <1437525889-24928-1-git-send-email-bjorn.andersson@sonymobile.com>
+From: Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>
+Subject: Re: [PATCH 0/3] R-Car JPEG Processing Unit
+Date: Wed, 22 Jul 2015 04:19:53 +0300
+Message-ID: <CALi4nhrJcDV6gLKVOtt8Y9CBqstAmg=HL5-60EQaem6gC4qhYA@mail.gmail.com>
+References: <1437444022-28916-1-git-send-email-mikhail.ulyanov@cogentembedded.com>
+	<20150722004105.GD25644@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1437525889-24928-1-git-send-email-bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20150722004105.GD25644@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, Magnus Damm <magnus.damm@gmail.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, mchehab <mchehab@osg.samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "j.anaszewski" <j.anaszewski@samsung.com>, Kamil Debski <kamil@wypas.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue 21 Jul 17:44 PDT 2015, Bjorn Andersson wrote:
+Hi Simon,
 
-> The Qualcomm PM8941 WLED block is used for backlight and should therefor
-> be in the backlight framework and not in the LED framework. This moves
-> the driver and adapts to the backlight api instead.
-> 
-> Acked-by: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Tested-by: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-> ---
+2015-07-22 3:41 GMT+03:00 Simon Horman <horms@verge.net.au>:
+> Hi Mikhail,
+>
+> On Tue, Jul 21, 2015 at 05:00:19AM +0300, Mikhail Ulyanov wrote:
+>> This series of patches contains a driver for the JPEG codec integrated
+>> peripheral found in the Renesas R-Car SoCs and associated DT documentation.
+>
+> I am wondering if you have any plans to post patches to integrate this
+> change on any Reneas boards - by which I mean patches to update dts and/or
+> dtsi files. I would be very happy to see such patches submitted for review.
+Yes, i have such plans. I suppose it was already (partially)reviewed.
+https://www.marc.info/?l=linux-sh&m=140867246726948&w=4
+As soon as driver patches will be accepted i will resubmit this patches.
 
-Sorry, forgot the changelog.
-
-Changed since v1:
-- Moved dt binding document to backlight
-- Dropped LED_CLASS as dependency
-
-Regards,
-Bjorn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+W.B.R, Mikhail.
