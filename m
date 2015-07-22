@@ -1,82 +1,79 @@
-From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH 0/2 RESEND] power: reset: Add syscon reboot/poweroff
- device nodes for APM X-Gene platform
-Date: Wed, 22 Jul 2015 11:10:03 -0700
-Message-ID: <CAPw-ZTnk8cZyFyMnBMUYXuxs9=2ydqxOzm+dYsg-=9_Suq+q7A@mail.gmail.com>
-References: <1433272747-27114-1-git-send-email-ttnguyen@apm.com>
-	<20150714084004.GA14593@localhost>
-	<CAPw-ZT=d2=dh-Hjugo9BStCuhTp82MMapUa1EGrD01EoTOG-nA@mail.gmail.com>
-	<CAOesGMhKRxUtr6XXsZgCJVUFTFL3eHySP8y-SmEzi=R53MxLRw@mail.gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v3 5/5] arm64: dts: mediatek: add xHCI & usb phy for
+ mt8173
+Date: Wed, 22 Jul 2015 21:11:50 +0300
+Message-ID: <55AFDCE6.2060608@cogentembedded.com>
+References: <1437573945-31586-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1437573945-31586-6-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOesGMhKRxUtr6XXsZgCJVUFTFL3eHySP8y-SmEzi=R53MxLRw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Tai Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1437573945-31586-6-git-send-email-chunfeng.yun@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chunfeng Yun <chunfeng.yun@mediatek.com>, Mathias Nyman <mathias.nyman@intel.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Felipe Balbi <balbi@ti.com>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, John Crispin <blogic@openwrt.org>, Daniel Kurtz <djkurtz@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Olof,,
+Hello.
 
->>
->>>> This patch set adds syscon reboot/poweroff device nodes to support reboot and
->>>> poweroff features on X-Gene platform.
->>>>
->>>> Tai Nguyen (2):
->>>>   power: reset: Add syscon reboot device node for APM X-Gene platform
->>>>   power: reset: Add syscon poweroff device node for APM X-Gene Mustang platform
->>>>
->>>>  arch/arm64/boot/dts/apm/apm-mustang.dts |   12 ++++++++++++
->>>>  arch/arm64/boot/dts/apm/apm-storm.dtsi  |   12 ++++++++++++
->>>>  2 files changed, 24 insertions(+)
->>>
->>> Hi,
->>>
->>> It's unclear to me what you want to happen to these patches. They are
->>> sent to a long list of to-recipients, one of which is arm-DgEjT+Ai2yi4UlQgPVntAg@public.gmane.org In
->>> general, specify the person you want to take action on the patch in to
->>> with the rest on cc.
->>
->> Is there an owner for all DT node files? Is that Catalina as he is
->> owner for ARM64 arch folder?
+On 07/22/2015 05:05 PM, Chunfeng Yun wrote:
+
+> add xHCI and phy drivers for MT8173-EVB
+
+> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> ---
+>   arch/arm64/boot/dts/mediatek/mt8173-evb.dts | 15 ++++++++++++++
+>   arch/arm64/boot/dts/mediatek/mt8173.dtsi    | 31 +++++++++++++++++++++++++++++
+>   2 files changed, 46 insertions(+)
+
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
+> index f433c21..202b2b9 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
+> +++ b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
+> @@ -13,6 +13,7 @@
+>    */
 >
-> The ARM64 DT changes get merged through arm-soc, i.e. they get sent to
-> arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org by the platform maintainers and picked up by us from
-> there (Arnd, Kevin or myself).
+>   /dts-v1/;
+> +#include <dt-bindings/gpio/gpio.h>
+>   #include "mt8173.dtsi"
 >
->>> We generally ask that patches first go to the subarch maintainers,
->>> and they in turn send it on to us (either through a pull request or
->>> by sending the patches to be applied). In the case of X-Gene, there is
->>> no general platform maintainer so we keep getting patches from various
->>> engineers at APM and it's unclear to us what your intentions are.
->>>
->>> I'd prefer to see one (to start with) person in charge of these (i.e. one
->>> maintainer from the APM side). Please add that person to the MAINTAINERS
->>> file as well.
->>
->> Are you suggesting that we have one person to start an GIT with
->> kernel.org to keep all these misc ack'ed patches for X-Gene (APM) that
->> don't seems to have an maintainer/home. Then request an pull by you?
+>   / {
+> @@ -32,6 +33,15 @@
+>   	};
 >
-> Pull requests are convenient for us, but if it's just a patch or two,
-> sending them directly in email is fine as well.
+>   	chosen { };
+> +
+> +	usb_p1_vbus: fixedregulator@0 {
 
-If there is an chance in pulling this power off/reset patches for
-4.2-rc4, can you pull in as patches? Otherwise, we will go the GIT
-pull request.
+    Just "regulator@0" please. This is more in line with what ePAPR requires 
+from the node names.
 
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "usb_vbus";
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +		gpio = <&pio 130 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +	};
+>   };
 >
-> What I want to avoid is a large number of people sending us patches
-> directly, which is why we ask for platform maintainers to coordinate
-> and aggregate patches to send on to us. That way we have one person
-> down the chain that we knows how we want the code delivered, and that
-> can do a round of reviews before we get it.
+>   &pwrap {
+[...]
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> index 0696f8f..aa1ecc7 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+[...]
+> @@ -393,6 +394,36 @@
+>   			#size-cells = <0>;
+>   			status = "disabled";
+>   		};
+> +
+> +		usb: usb30@11270000 {
 
-We will get an GIT setup up for this and Duc Dang will contact you for
-pull request when ready.
+    ePAPR standardizes the name "usb" for such nodes, please fix.
 
--Loc
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[...]
+
+MBR, Sergei
