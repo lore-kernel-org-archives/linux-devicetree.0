@@ -1,70 +1,81 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH v2 4/4] irqchip: Add bcm2836 interrupt controller for Raspberry Pi 2.
-Date: Wed, 22 Jul 2015 11:02:44 -0700
-Message-ID: <87egk0gjej.fsf@eliezer.anholt.net>
-References: <1436837718-956-1-git-send-email-eric@anholt.net> <1436837718-956-5-git-send-email-eric@anholt.net> <55AEFB57.6030902@wwwdotorg.org>
+From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+Subject: Re: [PATCH 0/2 RESEND] power: reset: Add syscon reboot/poweroff
+ device nodes for APM X-Gene platform
+Date: Wed, 22 Jul 2015 11:10:03 -0700
+Message-ID: <CAPw-ZTnk8cZyFyMnBMUYXuxs9=2ydqxOzm+dYsg-=9_Suq+q7A@mail.gmail.com>
+References: <1433272747-27114-1-git-send-email-ttnguyen@apm.com>
+	<20150714084004.GA14593@localhost>
+	<CAPw-ZT=d2=dh-Hjugo9BStCuhTp82MMapUa1EGrD01EoTOG-nA@mail.gmail.com>
+	<CAOesGMhKRxUtr6XXsZgCJVUFTFL3eHySP8y-SmEzi=R53MxLRw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55AEFB57.6030902-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+In-Reply-To: <CAOesGMhKRxUtr6XXsZgCJVUFTFL3eHySP8y-SmEzi=R53MxLRw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrea Merello <andrea.merello-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Tai Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+Hi Olof,,
 
-Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> writes:
-
-> On 07/13/2015 07:35 PM, Eric Anholt wrote:
->> This interrupt controller is the new root interrupt controller with
->> the timer, PMU events, and IPIs, and the bcm2835's interrupt
->> controller is chained off of it to handle the peripherals.
+>>
+>>>> This patch set adds syscon reboot/poweroff device nodes to support reboot and
+>>>> poweroff features on X-Gene platform.
+>>>>
+>>>> Tai Nguyen (2):
+>>>>   power: reset: Add syscon reboot device node for APM X-Gene platform
+>>>>   power: reset: Add syscon poweroff device node for APM X-Gene Mustang platform
+>>>>
+>>>>  arch/arm64/boot/dts/apm/apm-mustang.dts |   12 ++++++++++++
+>>>>  arch/arm64/boot/dts/apm/apm-storm.dtsi  |   12 ++++++++++++
+>>>>  2 files changed, 24 insertions(+)
+>>>
+>>> Hi,
+>>>
+>>> It's unclear to me what you want to happen to these patches. They are
+>>> sent to a long list of to-recipients, one of which is arm-DgEjT+Ai2yi4UlQgPVntAg@public.gmane.org In
+>>> general, specify the person you want to take action on the patch in to
+>>> with the rest on cc.
+>>
+>> Is there an owner for all DT node files? Is that Catalina as he is
+>> owner for ARM64 arch folder?
 >
->> diff --git a/drivers/irqchip/irq-bcm2836.c b/drivers/irqchip/irq-bcm2836.c
+> The ARM64 DT changes get merged through arm-soc, i.e. they get sent to
+> arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org by the platform maintainers and picked up by us from
+> there (Arnd, Kevin or myself).
 >
->> +static void bcm2836_arm_irqchip_mask_pmu_irq(struct irq_data *d)
->> +{
->> +	pr_err("%d: mask PMU\n", smp_processor_id());
->> +	writel(1 << smp_processor_id(), intc.base + LOCAL_PM_ROUTING_CLR);
->> +}
->> +
->> +static void bcm2836_arm_irqchip_unmask_pmu_irq(struct irq_data *d)
->> +{
->> +	pr_err("%d: unmask PMU\n", smp_processor_id());
->> +	writel(1 << smp_processor_id(), intc.base + LOCAL_PM_ROUTING_SET);
->> +}
+>>> We generally ask that patches first go to the subarch maintainers,
+>>> and they in turn send it on to us (either through a pull request or
+>>> by sending the patches to be applied). In the case of X-Gene, there is
+>>> no general platform maintainer so we keep getting patches from various
+>>> engineers at APM and it's unclear to us what your intentions are.
+>>>
+>>> I'd prefer to see one (to start with) person in charge of these (i.e. one
+>>> maintainer from the APM side). Please add that person to the MAINTAINERS
+>>> file as well.
+>>
+>> Are you suggesting that we have one person to start an GIT with
+>> kernel.org to keep all these misc ack'ed patches for X-Gene (APM) that
+>> don't seems to have an maintainer/home. Then request an pull by you?
 >
-> Are those pr_err() calls left-over debug, or is there some reason it's
-> an error to call those functions?
+> Pull requests are convenient for us, but if it's just a patch or two,
+> sending them directly in email is fine as well.
 
-Yeah, I was trying to figure out whether the PMU bits worked.  We're
-failing before the point of IRQ probe, though (I don't see anything that
-would set arm_pmu->supported_cpus for us).
+If there is an chance in pulling this power off/reset patches for
+4.2-rc4, can you pull in as patches? Otherwise, we will go the GIT
+pull request.
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+>
+> What I want to avoid is a large number of people sending us patches
+> directly, which is why we ask for platform maintainers to coordinate
+> and aggregate patches to send on to us. That way we have one person
+> down the chain that we knows how we want the code delivered, and that
+> can do a round of reviews before we get it.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+We will get an GIT setup up for this and Duc Dang will contact you for
+pull request when ready.
 
-iQIcBAEBCgAGBQJVr9rEAAoJELXWKTbR/J7oOEkP/3kXJu6Y62LxSBkO06Ueq8IO
-DuWUXABSvN3FqTFEWYlFMyGdfAI14E2tnJvoR4kfzbz/j9aULYXKhAX+aI8cqDt7
-yGT5Kl0MwohYZc14whQRMOIY5KvaV7pJmte4errtI2OJJvysWbuSJRLQfJtiw8fi
-P6LHSIltXhgnY1wXZWqe7FxVReb6lE0dkYLyJNEfxot011BnLiRYMMcxo6R7MqoR
-Fd9ofmj7lET8bhXdWvIvHwguB5PUnSm2kSLm+iB1BrFdeJhzL7eOyQ4ogtW+HuHl
-YnpMe0QxdE0902wz8RSOT6hQ/ADQR6/jC76tO2sfPmsTM7Gw2RpAevabHykCxxzO
-4OtgoxoaO9HmHoQa49P9KD9hN9yBJlnOaC5UpFaAYbuJ14EFGqNEYjFOV5EQxx6u
-ziDzW5e0GYuuJQ2obt7jN82JAjuVtLhrqXN+Oxjtv5z14sb/DeS8xIPJ2CO+jPlp
-TrDL2NnoTcMvVz8FIPkrKk1KIZ03C3gajPxpV15/uN7G8zZdwkJBkA+Dq3U+e4yI
-tBJs1u6LiyAZEKwhL6zeFSpBAFja9IovyZeXg4v7c8chfEsDJw+BYwL/zifzZtEh
-mrqhgdGrSrHYaO3ZNFWpOkmMPZwbo07yDBvEuMu2HfgxDBD/d11qomEKZSlx24YU
-aJ/zC8YqYHVHWAs8w1wk
-=9uZq
------END PGP SIGNATURE-----
---=-=-=--
+-Loc
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
