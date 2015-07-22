@@ -1,392 +1,266 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 6/9] hwmon: Support sensors exported via ARM SCP interface
-Date: Wed, 22 Jul 2015 08:33:16 -0700
-Message-ID: <55AFB7BC.6090802@roeck-us.net>
-References: <1437573763-6525-1-git-send-email-punit.agrawal@arm.com> <1437573763-6525-7-git-send-email-punit.agrawal@arm.com>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v4 1/8] Documentation: add DT binding for ARM System Control
+ and Power Interface(SCPI) protocol
+Date: Wed, 22 Jul 2015 16:56:20 +0100
+Message-ID: <55AFBD24.8020903@arm.com>
+References: <1433760002-24120-1-git-send-email-sudeep.holla@arm.com> <1433760002-24120-2-git-send-email-sudeep.holla@arm.com> <20150722095501.GA15809@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1437573763-6525-7-git-send-email-punit.agrawal@arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Punit Agrawal <punit.agrawal@arm.com>, linux-pm@vger.kernel.org
-Cc: lm-sensors@lm-sensors.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jean Delvare <jdelvare@suse.de>, Sudeep Holla <sudeep.holla@arm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150722095501.GA15809@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, "Jon Medhurst (Tixy)" <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/22/2015 07:02 AM, Punit Agrawal wrote:
-> Create a driver to add support for SoC sensors exported by the System
-> Control Processor (SCP) via the System Control and Power Interface
-> (SCPI). The supported sensor types is one of voltage, temperature,
-> current, and power.
+Hi Mark,
+
+On 22/07/15 10:55, Mark Rutland wrote:
+> Hi,
 >
-> The sensor labels and values provided by the SCP are exported via the
-> hwmon sysfs interface.
->
-> Signed-off-by: Punit Agrawal <punit.agrawal@arm.com>
-> Cc: Jean Delvare <jdelvare@suse.de>
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> Cc: Sudeep Holla <sudeep.holla@arm.com>
-> ---
->   drivers/hwmon/Kconfig      |   8 ++
->   drivers/hwmon/Makefile     |   1 +
->   drivers/hwmon/scpi-hwmon.c | 212 +++++++++++++++++++++++++++++++++++++++++++++
-
-Please also provide Documentation/hwmon/scpi-hwmon.
-
->   3 files changed, 221 insertions(+)
->   create mode 100644 drivers/hwmon/scpi-hwmon.c
->
-> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-> index 4943c3c..f5e0862 100644
-> --- a/drivers/hwmon/Kconfig
-> +++ b/drivers/hwmon/Kconfig
-> @@ -1551,6 +1551,14 @@ config SENSORS_VEXPRESS
->   	  the ARM Ltd's Versatile Express platform. It can provide wide
->   	  range of information like temperature, power, energy.
->
-> +config SENSORS_ARM_SCPI
-> +	tristate "ARM SCPI Sensors"
-> +	depends on ARM_SCPI_PROTOCOL
-> +	help
-> +	  This driver provides support for hardware sensors available on
-> +	  the ARM Ltd's SCP based platforms. It can provide temperature
-
-can provide or provides ?
-> +	  and voltage for range of devices on the SoC.
-
-current, power ?
-
-> +
->   config SENSORS_VIA_CPUTEMP
->   	tristate "VIA CPU temperature sensor"
->   	depends on X86
-> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
-> index 8aba87f..4961710 100644
-> --- a/drivers/hwmon/Makefile
-> +++ b/drivers/hwmon/Makefile
-> @@ -150,6 +150,7 @@ obj-$(CONFIG_SENSORS_TMP421)	+= tmp421.o
->   obj-$(CONFIG_SENSORS_TWL4030_MADC)+= twl4030-madc-hwmon.o
->   obj-$(CONFIG_SENSORS_V2M_JUNO)	+= v2m-juno.o
->   obj-$(CONFIG_SENSORS_VEXPRESS)	+= vexpress.o
-> +obj-$(CONFIG_SENSORS_ARM_SCPI)	+= scpi-hwmon.o
->   obj-$(CONFIG_SENSORS_VIA_CPUTEMP)+= via-cputemp.o
->   obj-$(CONFIG_SENSORS_VIA686A)	+= via686a.o
->   obj-$(CONFIG_SENSORS_VT1211)	+= vt1211.o
-> diff --git a/drivers/hwmon/scpi-hwmon.c b/drivers/hwmon/scpi-hwmon.c
-> new file mode 100644
-> index 0000000..dd0a6f1
-> --- /dev/null
-> +++ b/drivers/hwmon/scpi-hwmon.c
-> @@ -0,0 +1,212 @@
-> +/*
-> + * System Control and Power Interface(SCPI) based hwmon sensor driver
-> + *
-> + * Copyright (C) 2015 ARM Ltd.
-> + * Punit Agrawal <punit.agrawal@arm.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-> + * kind, whether express or implied; without even the implied warranty
-> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-
-Not needed since there are no pr_xxx() messages in this driver.
-
-> +
-> +#include <linux/hwmon.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/scpi_protocol.h>
-> +#include <linux/slab.h>
-> +#include <linux/sysfs.h>
-> +
-> +static struct scpi_ops *scpi_ops;
-> +
-This variable should be kept in a local data structure (scpi_sensors).
-
-> +struct sensor_dev {
-> +	struct scpi_sensor_info info;
-> +	struct device_attribute dev_attr_input;
-> +	struct device_attribute dev_attr_label;
-> +	char input[20];
-> +	char label[20];
-> +};
-> +
-> +struct scpi_sensors {
-> +	int num_volt;
-> +	int num_temp;
-> +	int num_current;
-> +	int num_power;
-
-num_volt, num_temp, num_current, and num_power are not used
-outside the probe function and are thus not needed in this structure.
-
-> +	struct sensor_dev *device;
-
-'device' is a bit misleading here. It might be better to use
-something like sensor_data (and maybe struct sensor_data),
-or just 'data'.
-
-> +	struct device *hwdev;
-
-hwdev is not used and thus not needed in this structure.
-
-> +};
-> +struct scpi_sensors scpi_sensors;
-
-This variable should be allocated in the probe function (and either case not be global).
-
-> +
-> +static int scpi_read_sensor(struct sensor_dev *sensor, u32 *value)
-> +{
-> +	int ret;
-> +
-> +	ret = scpi_ops->sensor_get_value(sensor->info.sensor_id, value);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return 0;
-
-This can be reduced to
-	return scpi_ops->sensor_get_value(sensor->info.sensor_id, value);
-
-which makes me wonder if the function is that useful to start with,
-but I leave that up to you.
-
-> +}
-> +
-> +/* hwmon callback functions */
-> +static ssize_t
-> +scpi_hwmon_show_sensor(struct device *dev,
-> +		       struct device_attribute *attr, char *buf)
-
-_hwmon in the function names do not really add value.
-
-> +{
-> +	struct sensor_dev *sensor;
-> +	u32 value;
-> +	int ret;
-> +
-> +	sensor = container_of(attr, struct sensor_dev, dev_attr_input);
-> +
-> +	ret = scpi_read_sensor(sensor, &value);
-> +	if (ret) {
-> +		dev_warn(dev, "error (ret=%d) reading sensor (id=%u) value\n",
-> +			 ret, sensor->info.sensor_id);
-> +		return 0;
-
-Please no error message (it can get noisy), and return the error.
-
-> +	}
-> +
-> +	return sprintf(buf, "%u\n", value);
-> +}
-> +
-> +static ssize_t
-> +scpi_hwmon_show_label(struct device *dev,
-> +		      struct device_attribute *attr, char *buf)
-> +{
-> +	struct sensor_dev *sensor;
-> +
-> +	sensor = container_of(attr, struct sensor_dev, dev_attr_label);
-> +
-> +	return sprintf(buf, "%s\n", sensor->info.name);
-> +}
-> +
-> +struct attribute *scpi_attrs[24] = { 0 };
-
-This creates an unnecessary (hard) limit on the number of supported
-sensors (12). I would suggest to allocate the array based on the number
-of reported sensors.
-
-> +struct attribute_group scpi_group;
-> +const struct attribute_group *scpi_groups[2] = { 0 };
-
-Please move those variables into struct scpi_sensors.
-
-Note that you don't have to initialize globale variables with 0,
-and that globale variables should be static. It does not matter here
-since you should not have those variables to start with (they should
-be in struct scpi_sensors and be allocated), just mentioning it.
-
-> +
-> +static int scpi_hwmon_probe(struct platform_device *pdev)
-> +{
-> +	u16 sensors, i;
-> +	int ret;
-> +
-> +	scpi_ops = get_scpi_ops();
-> +	if (!scpi_ops)
-> +		return -EPROBE_DEFER;
-> +
-Is this appropriate ? I am a bit concerned that we might get a lot
-of "requests probe deferral" if the underlying infrastructure is
-not there at all.
-
-> +	ret = scpi_ops->sensor_get_capability(&sensors);
-> +	if (ret)
-> +		return ret;
-> +
-> +	scpi_sensors.device = devm_kcalloc(&pdev->dev, sensors,
-> +				   sizeof(*scpi_sensors.device), GFP_KERNEL);
-
-What if sensors == 0 ?
-
-It might be useful to introduce a local variable
-	struct device *dev = &pdev->dev;
-and use it in this function.
-
-> +	if (!scpi_sensors.device)
-> +		return -ENOMEM;
-> +
-> +	dev_info(&pdev->dev, "Found %d sensors\n", sensors);
-
-Please drop this message and the other info messages below (too noisy).
-If you think you need those messages for debugging, make it dev_dbg().
-
-> +	for (i = 0; i < sensors; i++) {
-> +		struct sensor_dev *dev = &scpi_sensors.device[i];
-> +
-> +		ret = scpi_ops->sensor_get_info(i, &dev->info);
-> +		if (ret) {
-> +			dev_info(&pdev->dev,
-> +				 "Error ret=%d when querying for sensor %d\n",
-> +				 ret, i);
-
-If this is an error, it should be dev_err().
-
-> +			return ret;
-> +		}
-> +
-> +		dev_info(&pdev->dev, "Probed \'%s\' sensor.\n",
-> +			 dev->info.name);
-> +
-> +		switch (dev->info.class) {
-> +		case TEMPERATURE:
-> +			snprintf(dev->input, 20,
-
-Can you use sizeof() to determine the string length ?
-
-> +				 "temp%d_input", scpi_sensors.num_temp);
-> +			snprintf(dev->label, 20,
-> +				 "temp%d_label", scpi_sensors.num_temp);
-> +			scpi_sensors.num_temp++;
-
-temp sensor numbering starts with 1.
-
-> +			break;
-> +		case VOLTAGE:
-> +			snprintf(dev->input, 20,
-> +				 "in%d_input", scpi_sensors.num_volt);
-> +			snprintf(dev->label, 20,
-> +				 "in%d_label", scpi_sensors.num_volt);
-> +			scpi_sensors.num_volt++;
-> +			break;
-> +		case CURRENT:
-> +			snprintf(dev->input, 20,
-> +				 "curr%d_input", scpi_sensors.num_current);
-> +			snprintf(dev->label, 20,
-> +				 "curr%d_label", scpi_sensors.num_current);
-> +			scpi_sensors.num_current++;
-
-current sensor numbering starts with 1.
-
-> +			break;
-> +		case POWER:
-> +			snprintf(dev->input, 20,
-> +				 "power%d_input", scpi_sensors.num_power);
-> +			snprintf(dev->label, 20,
-> +				 "power%d_label", scpi_sensors.num_power);
-> +			scpi_sensors.num_power++;
-
-power sensor numbering starts with 1.
-
-> +			break;
-> +		default:
-> +			break;
-> +		}
-> +
-> +		dev->dev_attr_input.attr.mode = S_IRUGO;
-> +		dev->dev_attr_input.store = NULL;
-
-kcalloc() initializes the allocated memory, so this assignment is unnecessary.
-
-> +		dev->dev_attr_input.show = scpi_hwmon_show_sensor;
-> +		dev->dev_attr_input.attr.name = dev->input;
-> +
-> +		dev->dev_attr_label.attr.mode = S_IRUGO;
-> +		dev->dev_attr_label.store = NULL;
-
-Same as above.
-
-> +		dev->dev_attr_label.show = scpi_hwmon_show_label;
-> +		dev->dev_attr_label.attr.name = dev->label;
-> +
-> +		scpi_attrs[i << 1] = &dev->dev_attr_input.attr;
-> +		scpi_attrs[(i << 1) + 1] = &dev->dev_attr_label.attr;
-
-You need to call sysfs_attr_init() for each of the attributes.
-
-> +	}
-> +
-> +	scpi_group.attrs = scpi_attrs;
-> +	scpi_groups[0] = &scpi_group;
-> +
-> +	scpi_sensors.hwdev = devm_hwmon_device_register_with_groups(&pdev->dev,
-> +				    "scpi_sensors", &scpi_sensors, scpi_groups);
-
-Please allocate scpi_sensors and pass a pointer to it.
-All local variables should be kept in scpi_sensors (and can then be accessed
-with dev_get_drvdata).
-
-> +
-> +	if (IS_ERR(scpi_sensors.hwdev)) {
-> +		dev_err(&pdev->dev, "Error registering scpi_sensors hwmon device\n");
-> +		return PTR_ERR(scpi_sensors.hwdev);
-> +	}
-> +
-> +	dev_info(&pdev->dev, "SCPI hwmon driver initialised.\n");
-
-Please consider just returning
-	return PTR_ERR_OR_ZERO(hwdev);
-without the noise.
-
-> +	return 0;
-> +}
-> +
-> +static int scpi_hwmon_remove(struct platform_device *pdev)
-> +{
-> +	scpi_ops = NULL;
-> +	return 0;
-> +}
-
-Not needed.
-
-> +
-> +static const struct of_device_id scpi_of_match[] = {
-> +	{.compatible = "arm,scpi-sensors"},
-> +	{},
-> +};
-> +
-> +static struct platform_driver scpi_hwmon_platdrv = {
-> +	.driver = {
-> +		.name	= "scpi-hwmon",
-> +		.owner	= THIS_MODULE,
-> +		.of_match_table = scpi_of_match,
-> +	},
-> +	.probe		= scpi_hwmon_probe,
-> +	.remove	= scpi_hwmon_remove,
-> +};
-> +module_platform_driver(scpi_hwmon_platdrv);
-> +
-> +MODULE_AUTHOR("Punit Agrawal <punit.agrawal@arm.com>");
-> +MODULE_DESCRIPTION("ARM SCPI HWMON interface driver");
-> +MODULE_LICENSE("GPL v2");
+> This generally looks fine, but I believe you've misunderstood the usage
+> of clock-indices, and I think that your usage of clock-specifiers is
+> somewhat confusing.
 >
 
+Thanks for the review.
+
+> More on that below.
+>
+> On Mon, Jun 08, 2015 at 11:39:55AM +0100, Sudeep Holla wrote:
+>> This patch adds devicetree binding for System Control and Power
+>> Interface (SCPI) Message Protocol used between the Application Cores(AP)
+>> and the System Control Processor(SCP). The MHU peripheral provides a
+>> mechanism for inter-processor communication between SCP's M3 processor
+>> and AP.
+>>
+>> SCP offers control and management of the core/cluster power states,
+>> various power domain DVFS including the core/cluster, certain system
+>> clocks configuration, thermal sensors and many others.
+>>
+>> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+>> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+>> CC: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Cc: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+>> Cc: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+>> Cc: Jon Medhurst (Tixy) <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> ---
+>>   Documentation/devicetree/bindings/arm/arm,scpi.txt | 156 +++++++++++++++++++++
+>>   1 file changed, 156 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/arm/arm,scpi.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/arm,scpi.txt b/Documentation/devicetree/bindings/arm/arm,scpi.txt
+>> new file mode 100644
+>> index 000000000000..f5f9684e23b3
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/arm/arm,scpi.txt
+>> @@ -0,0 +1,156 @@
+>> +System Control and Power Interface (SCPI) Message Protocol
+>> +----------------------------------------------------------
+>> +
+>> +Firmware implementing the SCPI described in ARM document number ARM DUI 0922B
+>> +("ARM Compute Subsystem SCP: Message Interface Protocols")[0] can be used
+>> +by Linux to initiate various system control and power operations.
+>> +
+>> +Required properties:
+>> +
+>> +- compatible : should be "arm,scpi"
+>> +- mboxes: List of phandle and mailbox channel specifiers
+>> +	  All the channels reserved by remote SCP firmware for use by
+>> +	  SCPI message protocol should be specified in any order
+>> +- shmem : List of phandle pointing to the shared memory(SHM) area between the
+>> +	  processors using these mailboxes for IPC, one for each mailbox
+>> +	  SHM can be any memory reserved for the purpose of this communication
+>> +	  between the processors.
+>> +
+>> +See Documentation/devicetree/bindings/mailbox/mailbox.txt
+>> +for more details about the generic mailbox controller and
+>> +client driver bindings.
+>> +
+>> +Clock bindings for the clocks based on SCPI Message Protocol
+>> +------------------------------------------------------------
+>> +
+>> +This binding uses the common clock binding[1].
+>> +
+>> +Container Node
+>> +==============
+>> +Required properties:
+>> +- compatible : should be "arm,scpi-clocks"
+>> +	       All the clocks provided by SCP firmware via SCPI message
+>> +	       protocol much be listed as sub-nodes under this node.
+>> +
+>> +Sub-nodes
+>> +=========
+>> +Required properties:
+>> +- compatible : shall include one of the following
+>> +	"arm,scpi-dvfs-clocks" - all the clocks that are variable and index based.
+>> +		These clocks don't provide the full range between the limits
+>> +		but only discrete points within the range. The firmware
+>> +		provides the mapping for each such operating frequency and the
+>> +		index associated with it. The firmware also manages the
+>> +		voltage scaling appropriately with the clock scaling.
+>> +	"arm,scpi-variable-clocks" - all the clocks that are variable and provide full
+>> +		range within the specified range. The firmware provides the
+>> +		supported range for each clock.
+>> +
+>> +Other required properties for all clocks(all from common clock binding):
+>> +- #clock-cells : should be set to 1 as each of the SCPI clocks have multiple
+>> +	outputs. The clock specifier will be the index to an entry in the list
+>> +	of output clocks.
+>
+> Huh? That's somewhat a circular definition.
+>
+> What does that number correspond to in the HW? If it's just the number
+> that the FW expects, that's a reasonable definition.
+>
+
+Not exactly. The clock specifier are used by the consumers and they just
+indicate the index into the list of clock outputs provided by the clock
+provider. The consumers need not know the exact identifier used by the
+provider to identify the clock(either via H/W or F/W)
+
+Also since we are using standard definition and method 
+(of_clk_src_onecell_get) to decode the clock specifier, it's fine IMO.
+
+>> +- clock-output-names : shall be the corresponding names of the outputs.
+>
+> This is mandatory? What is it used for?
+>
+
+Yes it is used while registering the clocks. I can make it optional and
+register the clock name may be using compatible and index. I thought it
+would be good to mandate meaning full names.
+
+>> +- clock-indices: The identifyng number for the clocks(clock_id) in the node as
+>
+> s/identifyng/identifying/
+>
+>> +	expected by the firmware. It can be non linear and hence provide the
+>> +	mapping	of identifiers into the clock-output-names array.
+>> +
+>> +SRAM and Shared Memory for SCPI
+>> +-------------------------------
+>> +
+>> +A small area of SRAM is reserved for SCPI communication between application
+>> +processors and SCP.
+>> +
+>> +Required properties:
+>> +- compatible : should be "arm,juno-sram-ns" for Non-secure SRAM on Juno
+>> +
+>> +The rest of the properties should follow the generic mmio-sram discription
+>> +found in ../../misc/sysram.txt
+>> +
+>> +Each sub-node represents the reserved area for SCPI.
+>> +
+>> +Required sub-node properties:
+>> +- reg : The base offset and size of the reserved area with the SRAM
+>> +- compatible : should be "arm,juno-scp-shmem" for Non-secure SRAM based
+>> +	       shared memory on Juno platforms
+>> +
+>> +[0] http://community.arm.com/servlet/JiveServlet/download/8401-45-18326/DUI0922B_scp_message_interface.pdf
+>> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+>> +
+>> +Example:
+>> +
+>> +sram: sram@50000000 {
+>> +	compatible = "arm,juno-sram-ns", "mmio-sram";
+>> +	reg = <0x0 0x50000000 0x0 0x10000>;
+>> +
+>> +	#address-cells = <1>;
+>> +	#size-cells = <1>;
+>> +	ranges = <0 0x0 0x50000000 0x10000>;
+>> +
+>> +	cpu_scp_lpri: scp-shmem@0 {
+>> +		compatible = "arm,juno-scp-shmem";
+>> +		reg = <0x0 0x200>;
+>> +	};
+>> +
+>> +	cpu_scp_hpri: scp-shmem@200 {
+>> +		compatible = "arm,juno-scp-shmem";
+>> +		reg = <0x200 0x200>;
+>> +	};
+>> +};
+>> +
+>> +mailbox: mailbox0@40000000 {
+>> +	....
+>> +	#mbox-cells = <1>;
+>> +};
+>> +
+>> +scpi_protocol: scpi@2e000000 {
+>> +	compatible = "arm,scpi";
+>> +	mboxes = <&mailbox 0 &mailbox 1>;
+>> +	shmem = <&cpu_scp_lpri &cpu_scp_hpri>;
+>> +
+>> +	clocks {
+>> +		compatible = "arm,scpi-clocks";
+>> +
+>> +		scpi_dvfs: scpi_clocks@0 {
+>> +			compatible = "arm,scpi-dvfs-clocks";
+>> +			#clock-cells = <1>;
+>> +			clock-indices = <0>, <1>, <2>;
+>> +			clock-output-names = "vbig", "vlittle", "vgpu";
+>> +		};
+>> +		scpi_clk: scpi_clocks@3 {
+>> +			compatible = "arm,scpi-variable-clocks";
+>> +			#clock-cells = <1>;
+>> +			clock-indices = <3>, <4>;
+>> +			clock-output-names = "pxlclk0", "pxlclk1";
+>> +		};
+>> +	};
+>> +};
+>> +
+>> +cpu@0 {
+>> +	...
+>> +	reg = <0 0>;
+>> +	clocks = <&scpi_dvfs 0>;
+>> +	clock-names = "vbig";
+>> +};
+>> +
+>> +hdlcd@7ff60000 {
+>> +	...
+>> +	reg = <0 0x7ff60000 0 0x1000>;
+>> +	clocks = <&scpi_clk 1>;
+>> +	clock-names = "pxlclk";
+>> +};
+>> +
+>> +In the above example, the #clock-cells is set to 1 as required.
+>> +scpi_dvfs has 3 output clocks namely: vbig, vlittle and vgpu with 0, 1
+>> +and 2 as clock-indices. scpi_clk has 2 output clocks namely: pxlclk0 and
+>> +pxlclk1 with 3 and 4 as clock-indices.
+>> +
+>> +The first consumer in the example is cpu@0 and it has vbig as input clock.
+>> +The index '0' in the clock specifier here points to the first entry in the
+>> +output clocks of scpi_dvfs for which clock_id asrequired by the firmware
+>> +is 0.
+>> +
+>> +Similarly the second example is hdlcd@7ff60000 and it has pxlclk0 as input
+>> +clock. The index '1' in the clock specifier here points to the second entry
+>> +in the output clocks of scpi_clocks for which clock_id as required by the
+>> +firmware is 4.
+>
+> To the best of my knowledge, this is wrong. Per the example in
+> Documentation/devicetree/bindings/clock/clock-bindings.txt, the
+> clock-indices apply to the logical value in the clock-specifier.
+>
+> So <&scpi_clk 3>, <&scpi_clk 4> exist, (and are named "pxlclk0",
+> "pxlclk1" respectively), but <&scpi_clk 0>, <&scpi_clk 1> do not (or at
+> least don't have names).
+>
+
+That depends, if your clock provider provides a callback for decoding
+clock and does this translation, then they can exist. Since SCPI is
+using standard/default callback(of_clk_src_onecell_get), only
+<&scpi_clk 0>, <&scpi_clk 1> in above example. For any value >=2,
+of_clk_src_onecell_get will bail out as we have only 2 clocks registered
+from that provider.
+
+Regards,
+Sudeep
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
