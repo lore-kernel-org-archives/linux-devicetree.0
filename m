@@ -1,80 +1,140 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v7 5/5] clk: dt: Introduce binding for critical clock support
-Date: Wed, 22 Jul 2015 14:04:15 +0100
-Message-ID: <1437570255-21049-6-git-send-email-lee.jones@linaro.org>
-References: <1437570255-21049-1-git-send-email-lee.jones@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1437570255-21049-1-git-send-email-lee.jones@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, mturquette@linaro.org, kernel@stlinux.com, s.hauer@pengutronix.de, sboyd@codeaurora.org, geert@linux-m68k.org, maxime.ripard@free-electrons.com, Lee Jones <lee.jones@linaro.org>
+From: Rabin Vincent <rabin@rab.in>
+Subject: [PATCH 3/3] gpio: etraxfs: add support for ARTPEC-3
+Date: Wed, 22 Jul 2015 15:05:19 +0200
+Message-ID: <1437570319-25297-3-git-send-email-rabin@rab.in>
+References: <1437570319-25297-1-git-send-email-rabin@rab.in>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1437570319-25297-1-git-send-email-rabin@rab.in>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linus.walleij@linaro.org, gnurou@gmail.com
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Rabin Vincent <rabin@rab.in>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- .../devicetree/bindings/clock/clock-bindings.txt   | 39 ++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+Add support for the GIO block in the ARTPEC-3 SoC.  The basic
+functionality is essentialy the same as the version in the ETRAX FS,
+except for a different set of ports, including a read-only port.
 
-diff --git a/Documentation/devicetree/bindings/clock/clock-bindings.txt b/Documentation/devicetree/bindings/clock/clock-bindings.txt
-index 06fc6d5..4137034 100644
---- a/Documentation/devicetree/bindings/clock/clock-bindings.txt
-+++ b/Documentation/devicetree/bindings/clock/clock-bindings.txt
-@@ -44,6 +44,45 @@ For example:
-   clocks by index. The names should reflect the clock output signal
-   names for the device.
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Rabin Vincent <rabin@rab.in>
+---
+ .../devicetree/bindings/gpio/gpio-etraxfs.txt      |  3 +-
+ drivers/gpio/gpio-etraxfs.c                        | 66 ++++++++++++++++++++--
+ 2 files changed, 62 insertions(+), 7 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-etraxfs.txt b/Documentation/devicetree/bindings/gpio/gpio-etraxfs.txt
+index abf4db7..170194a 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-etraxfs.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio-etraxfs.txt
+@@ -2,8 +2,9 @@ Axis ETRAX FS General I/O controller bindings
  
-+critical-clock:	Some hardware contains bunches of clocks which, in normal
-+		circumstances, must never be turned off.  If drivers a) fail to
-+		obtain a reference to any of these or b) give up a previously
-+		obtained reference during suspend, it is possible that some
-+		Operating Systems might attempt to disable them to save power.
-+		If this happens a platform can fail irrecoverably as a result.
-+		Usually the only way to recover from these failures is to
-+		reboot.
+ Required properties:
+ 
+-- compatible:
++- compatible: one of:
+   - "axis,etraxfs-gio"
++  - "axis,artpec3-gio"
+ - reg: Physical base address and length of the controller's registers.
+ - #gpio-cells: Should be 3
+   - The first cell is the gpio offset number.
+diff --git a/drivers/gpio/gpio-etraxfs.c b/drivers/gpio/gpio-etraxfs.c
+index c1ce80d..7276891 100644
+--- a/drivers/gpio/gpio-etraxfs.c
++++ b/drivers/gpio/gpio-etraxfs.c
+@@ -26,6 +26,17 @@
+ #define ETRAX_FS_r_pe_din	84
+ #define ETRAX_FS_rw_pe_oe	88
+ 
++#define ARTPEC3_r_pa_din	0
++#define ARTPEC3_rw_pa_dout	4
++#define ARTPEC3_rw_pa_oe	8
++#define ARTPEC3_r_pb_din	44
++#define ARTPEC3_rw_pb_dout	48
++#define ARTPEC3_rw_pb_oe	52
++#define ARTPEC3_r_pc_din	88
++#define ARTPEC3_rw_pc_dout	92
++#define ARTPEC3_rw_pc_oe	96
++#define ARTPEC3_r_pd_din	116
 +
-+		To avoid either of these two scenarios from catastrophically
-+		disabling an otherwise perfectly healthy running system,
-+		clocks can be identified as 'critical' using this property from
-+		inside a clocksource's node.
+ struct etraxfs_gpio_port {
+ 	const char *label;
+ 	unsigned int oe;
+@@ -82,6 +93,40 @@ static const struct etraxfs_gpio_info etraxfs_gpio_etraxfs = {
+ 	.ports = etraxfs_gpio_etraxfs_ports,
+ };
+ 
++static const struct etraxfs_gpio_port etraxfs_gpio_artpec3_ports[] = {
++	{
++		.label	= "A",
++		.ngpio	= 32,
++		.oe	= ARTPEC3_rw_pa_oe,
++		.dout	= ARTPEC3_rw_pa_dout,
++		.din	= ARTPEC3_r_pa_din,
++	},
++	{
++		.label	= "B",
++		.ngpio	= 32,
++		.oe	= ARTPEC3_rw_pb_oe,
++		.dout	= ARTPEC3_rw_pb_dout,
++		.din	= ARTPEC3_r_pb_din,
++	},
++	{
++		.label	= "C",
++		.ngpio	= 16,
++		.oe	= ARTPEC3_rw_pc_oe,
++		.dout	= ARTPEC3_rw_pc_dout,
++		.din	= ARTPEC3_r_pc_din,
++	},
++	{
++		.label	= "D",
++		.ngpio	= 32,
++		.din	= ARTPEC3_r_pd_din,
++	},
++};
 +
-+		This property is not to be abused.  It is only to be used to
-+		protect platforms from being crippled by gated clocks, NOT as a
-+		convenience function to avoid using the framework correctly
-+		inside device drivers.
++static const struct etraxfs_gpio_info etraxfs_gpio_artpec3 = {
++	.num_ports = ARRAY_SIZE(etraxfs_gpio_artpec3_ports),
++	.ports = etraxfs_gpio_artpec3_ports,
++};
 +
-+		Expected values are hardware clock indices.  If the
-+		clock-indices property (see below) is used, then supplied
-+		values must correspond to one of the listed identifiers.
-+		Using the clock-indices example below, hardware clock <2>
-+		is missing, therefore it is considered invalid to then
-+		list clock <2> as a critical clock.
+ static int etraxfs_gpio_of_xlate(struct gpio_chip *gc,
+ 			       const struct of_phandle_args *gpiospec,
+ 			       u32 *flags)
+@@ -101,6 +146,10 @@ static const struct of_device_id etraxfs_gpio_of_table[] = {
+ 		.compatible = "axis,etraxfs-gio",
+ 		.data = &etraxfs_gpio_etraxfs,
+ 	},
++	{
++		.compatible = "axis,artpec3-gio",
++		.data = &etraxfs_gpio_artpec3,
++	},
+ 	{},
+ };
+ 
+@@ -133,14 +182,19 @@ static int etraxfs_gpio_probe(struct platform_device *pdev)
+ 	for (i = 0; i < info->num_ports; i++) {
+ 		struct bgpio_chip *bgc = &chips[i];
+ 		const struct etraxfs_gpio_port *port = &info->ports[i];
++		unsigned long flags = BGPIOF_READ_OUTPUT_REG_SET;
++		void __iomem *dat = regs + port->din;
++		void __iomem *set = regs + port->dout;
++		void __iomem *dirout = regs + port->oe;
 +
-+For example:
-+
-+    oscillator {
-+	#clock-cells = <1>;
-+	clock-output-names = "ckil", "ckih";
-+	critical-clock = <0>, <1>;
-+    };
-+
-+- this node defines a device with two clock outputs, just as in the
-+  example above.  The only difference being that 'ckil' and 'ckih'
-+  are now identified as an critical clocks, so an OS will know to
-+  never attempt to gate them.
-+
- clock-indices:	   If the identifying number for the clocks in the node
- 		   is not linear from zero, then this allows the mapping of
- 		   identifiers into the clock-output-names array.
++		if (dirout == set) {
++			dirout = set = NULL;
++			flags = BGPIOF_NO_OUTPUT;
++		}
+ 
+ 		ret = bgpio_init(bgc, dev, 4,
+-				 regs + port->din,	/* dat */
+-				 regs + port->dout,	/* set */
+-				 NULL,			/* clr */
+-				 regs + port->oe,	/* dirout */
+-				 NULL,			/* dirin */
+-				 BGPIOF_READ_OUTPUT_REG_SET);
++				 dat, set, NULL, dirout, NULL,
++				 flags);
+ 		if (ret)
+ 			return ret;
+ 
 -- 
-1.9.1
+2.1.4
