@@ -1,227 +1,148 @@
-From: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 2/2] ARM: dts: rockchip: Add veyron-speedy board
-Date: Wed, 22 Jul 2015 07:44:05 +0200
-Message-ID: <1437543846-19897-1-git-send-email-romain.perier@gmail.com>
+From: maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: Re: [PATCH v2 3/4] touchscreen: colibri-vf50-ts: Add touchscreen
+ support for Colibri VF50
+Date: Wed, 22 Jul 2015 11:20:16 +0530
+Message-ID: <20150722055016.GA6495@Sanchayan-Arch.toradex.int>
+References: <cover.1437058481.git.maitysanchayan@gmail.com>
+ <26748bd9a7bde7c2304b6b971f1150bb575e4938.1437058481.git.maitysanchayan@gmail.com>
+ <20150717234242.GJ39282@dtor-ws>
+ <40d7c372e64c7f25b7df3e48930386de@agner.ch>
+ <20150721172044.GC39076@dtor-ws>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150721172044.GC39076@dtor-ws>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Which is formally known as The Asus C201 chromebook
+On 15-07-21 10:20:44, Dmitry Torokhov wrote:
+> Hi Stefan,
+> 
+> On Tue, Jul 21, 2015 at 04:43:36PM +0200, Stefan Agner wrote:
+> > Hi Dmitry,
+> > 
+> > As the original author of the driver I have some remarks to your review
+> > 
+> > On 2015-07-18 01:42, Dmitry Torokhov wrote:
+> > >> +		/*
+> > >> +		 * If touch pressure is too low, stop measuring and reenable
+> > >> +		 * touch detection
+> > >> +		 */
+> > >> +		if (val_p < min_pressure || val_p > 2000)
+> > >> +			break;
+> > 
+> > This is where the modules touch pressure is used to stop the measurement
+> > process and switch back to interrupt mode. See my remarks at the end.
+> > 
+> > >> +
+> > >> +		/*
+> > >> +		 * The pressure may not be enough for the first x and the
+> > >> +		 * second y measurement, but, the pressure is ok when the
+> > >> +		 * driver is doing the third and fourth measurement. To
+> > >> +		 * take care of this, we drop the first measurement always.
+> > >> +		 */
+> > >> +		if (discard_val_on_start) {
+> > >> +			discard_val_on_start = false;
+> > >> +		} else {
+> > >> +			/*
+> > >> +			 * Report touch position and sleep for
+> > >> +			 * next measurement
+> > >> +			 */
+> > >> +			input_report_abs(vf50_ts->ts_input,
+> > >> +					ABS_X, VF_ADC_MAX - val_x);
+> > >> +			input_report_abs(vf50_ts->ts_input,
+> > >> +					ABS_Y, VF_ADC_MAX - val_y);
+> > >> +			input_report_abs(vf50_ts->ts_input,
+> > >> +					ABS_PRESSURE, val_p);
+> > >> +			input_report_key(vf50_ts->ts_input, BTN_TOUCH, 1);
+> > >> +			input_sync(vf50_ts->ts_input);
+> > >> +		}
+> > >> +
+> > >> +		msleep(10);
+> > >> +	}
+> > >> +
+> > >> +	/* Report no more touch, reenable touch detection */
+> > >> +	input_report_abs(vf50_ts->ts_input, ABS_PRESSURE, 0);
+> > >> +	input_report_key(vf50_ts->ts_input, BTN_TOUCH, 0);
+> > >> +	input_sync(vf50_ts->ts_input);
+> > >> +
+> > >> +	vf50_ts_enable_touch_detection(vf50_ts);
+> > >> +
+> > >> +	/* Wait for the pull-up to be stable on high */
+> > >> +	msleep(10);
+> > >> +
+> > >> +	/* Reenable IRQ to detect touch */
+> > >> +	enable_irq(vf50_ts->pen_irq);
+> > >> +
+> > >> +	dev_dbg(dev, "Reenabled touch detection interrupt\n");
+> > >> +}
+> > >> +
+> > >> +static irqreturn_t vf50_ts_touched(int irq, void *dev_id)
+> > >> +{
+> > >> +	struct vf50_touch_device *vf50_ts = (struct vf50_touch_device *)dev_id;
+> > >> +	struct device *dev = &vf50_ts->pdev->dev;
+> > >> +
+> > >> +	dev_dbg(dev, "Touch detected, start worker thread\n");
+> > >> +
+> > >> +	disable_irq_nosync(irq);
+> > >> +
+> > >> +	/* Disable the touch detection plates */
+> > >> +	gpiod_set_value(vf50_ts->gpio_ym, 0);
+> > >> +
+> > >> +	/* Let the platform mux to default state in order to mux as ADC */
+> > >> +	pinctrl_pm_select_default_state(dev);
+> > >> +
+> > >> +	queue_work(vf50_ts->ts_workqueue, &vf50_ts->ts_work);
+> > > 
+> > > If you convert this to a threaded interrupt you won't need to
+> > > disable/reenable interrupt or queue work. You should also be able to use
+> > > gpiod_set_value_cansleep() extending the range of ways the controller
+> > > could be connected to systems.
+> > > 
+> > 
+> > I'm not sure if a threaded interrupt is the right thing here. While the
+> > pen is on the touchscreen (which can be for several seconds)
+> > measurements have to be made in a continuous loop. Is it ok for a
+> > threaded interrupt to run that long?
+> 
+> Yes, why not? Threaded interrupt is simply a kernel thread that is woken
+> when hard interrupt handler tells it to wake up. Very similar to
+> interrupt + work queue, except that the kernel manages interactions
+> properly for you. There are several drivers in kernel that do that, for
+> example auo-pixcir-ts.c or tsc2007.c
+> 
+> > 
+> > I'm also not sure if it is really safe to _not_ disable the pen down
+> > GPIO interrupt. If we get a interrupt while measuring, we should ignore
+> > that interrupt.
+> 
+> The interrupt management core (you'll have to annotate it as
+> IRQF_ONESHOT) will make sure it stays masked properly until the threaded
+> handler completes so you do not need to disable it explicitly.
 
-Signed-off-by: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- Documentation/devicetree/bindings/arm/rockchip.txt |  10 +-
- arch/arm/boot/dts/Makefile                         |   3 +-
- arch/arm/boot/dts/rk3288-veyron-speedy.dts         | 163 +++++++++++++++++++++
- 3 files changed, 174 insertions(+), 2 deletions(-)
- create mode 100644 arch/arm/boot/dts/rk3288-veyron-speedy.dts
+(snip)
 
-diff --git a/Documentation/devicetree/bindings/arm/rockchip.txt b/Documentation/devicetree/bindings/arm/rockchip.txt
-index 6de18bd2..da02022 100644
---- a/Documentation/devicetree/bindings/arm/rockchip.txt
-+++ b/Documentation/devicetree/bindings/arm/rockchip.txt
-@@ -37,4 +37,12 @@ Rockchip platforms device tree bindings
- - Google Pinky (dev-board):
-     Required root node properties:
-       - compatible = "google,veyron-pinky-rev2", "google,veyron-pinky",
--		     "google,veyron", "rockchip,rk3288";
-\ No newline at end of file
-+		     "google,veyron", "rockchip,rk3288";
-+
-+- Google Speedy (Asus C201 Chromebook):
-+    Required root node properties:
-+      - compatible = "google,veyron-speedy-rev9", "google,veyron-speedy-rev8",
-+		     "google,veyron-speedy-rev7", "google,veyron-speedy-rev6",
-+		     "google,veyron-speedy-rev5", "google,veyron-speedy-rev4",
-+		     "google,veyron-speedy-rev3", "google,veyron-speedy-rev2",
-+		     "google,veyron-speedy", "google,veyron", "rockchip,rk3288";
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 653ede7..bfa7c86 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -498,7 +498,8 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += \
- 	rk3288-firefly-beta.dtb \
- 	rk3288-firefly.dtb \
- 	rk3288-veyron-jerry.dtb \
--	rk3288-veyron-pinky.dtb
-+	rk3288-veyron-pinky.dtb \
-+	rk3288-veyron-speedy.dtb
- dtb-$(CONFIG_ARCH_S3C24XX) += \
- 	s3c2416-smdk2416.dtb
- dtb-$(CONFIG_ARCH_S3C64XX) += \
-diff --git a/arch/arm/boot/dts/rk3288-veyron-speedy.dts b/arch/arm/boot/dts/rk3288-veyron-speedy.dts
-new file mode 100644
-index 0000000..6578e2a
---- /dev/null
-+++ b/arch/arm/boot/dts/rk3288-veyron-speedy.dts
-@@ -0,0 +1,163 @@
-+/*
-+ * Google Veyron Speedy Rev 1+ board device tree source
-+ *
-+ * Copyright 2015 Google, Inc
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ *  Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include "rk3288-veyron-chromebook.dtsi"
-+#include "cros-ec-sbs.dtsi"
-+
-+/ {
-+	model = "Google Speedy";
-+	compatible = "google,veyron-speedy-rev9", "google,veyron-speedy-rev8",
-+		     "google,veyron-speedy-rev7", "google,veyron-speedy-rev6",
-+		     "google,veyron-speedy-rev5", "google,veyron-speedy-rev4",
-+		     "google,veyron-speedy-rev3", "google,veyron-speedy-rev2",
-+		     "google,veyron-speedy", "google,veyron", "rockchip,rk3288";
-+
-+	panel_regulator: panel-regulator {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpio7 14 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&lcd_enable_h>;
-+		regulator-name = "panel_regulator";
-+		vin-supply = <&vcc33_sys>;
-+	};
-+
-+	vcc18_lcd: vcc18-lcd {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpio2 13 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&avdd_1v8_disp_en>;
-+		regulator-name = "vcc18_lcd";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		vin-supply = <&vcc18_wl>;
-+	};
-+
-+	backlight_regulator: backlight-regulator {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpio2 12 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&bl_pwr_en>;
-+		regulator-name = "backlight_regulator";
-+		vin-supply = <&vcc33_sys>;
-+		startup-delay-us = <15000>;
-+	};
-+};
-+
-+&rk808 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pmic_int_l &dvs_1 &dvs_2>;
-+	dvs-gpios = <&gpio7 12 GPIO_ACTIVE_HIGH>,
-+		    <&gpio7 15 GPIO_ACTIVE_HIGH>;
-+};
-+
-+&sdmmc {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_cd_disabled &sdmmc_cd_gpio
-+			&sdmmc_bus4>;
-+	disable-wp;
-+};
-+
-+&vcc_5v {
-+	enable-active-high;
-+	gpio = <&gpio7 21 GPIO_ACTIVE_HIGH>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&drv_5v>;
-+};
-+
-+&vcc50_hdmi {
-+	enable-active-high;
-+	gpio = <&gpio5 19 GPIO_ACTIVE_HIGH>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&vcc50_hdmi_en>;
-+};
-+
-+&pinctrl {
-+	backlight {
-+		bl_pwr_en: bl_pwr_en {
-+			rockchip,pins = <2 12 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
-+	buck-5v {
-+		drv_5v: drv-5v {
-+			rockchip,pins = <7 21 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
-+	edp {
-+		edp_hpd: edp_hpd {
-+			rockchip,pins = <7 11 RK_FUNC_2 &pcfg_pull_down>;
-+		};
-+	};
-+
-+	hdmi {
-+		vcc50_hdmi_en: vcc50-hdmi-en {
-+			rockchip,pins = <5 19 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
-+	lcd {
-+		lcd_enable_h: lcd-en {
-+			rockchip,pins = <7 14 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+
-+		avdd_1v8_disp_en: avdd-1v8-disp-en {
-+			rockchip,pins = <2 13 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
-+	pmic {
-+		dvs_1: dvs-1 {
-+			rockchip,pins = <7 12 RK_FUNC_GPIO &pcfg_pull_down>;
-+		};
-+
-+		dvs_2: dvs-2 {
-+			rockchip,pins = <7 15 RK_FUNC_GPIO &pcfg_pull_down>;
-+		};
-+	};
-+};
--- 
-2.1.4
+I tried the IRQ threaded implementation. From your reply, I can see my first
+implementation was wrong in the sense that I did not use the IRQF_ONESHOT flag.
+The touch response time was not good in this case, however thats to be expected
+in this case from what I understand now.
+
+With the IRQF_ONESHOT specified the response time is much better compared to
+what I was seeing above, but, I still feel it is not the same as with IRQ handler
+plus workqueue approach. However I have no idea how to quantify this.
+
+So I tried explicit enabling/disabling of IRQ and to me it seems the response
+slightly improves compared to IRQF_ONESHOT and the touch handling is better
+compared to the IRQF_ONESHOT approach. Again however I have no idea how to
+quantify it.
+
+Perhaps we go for a request threaded irq but keep the explicit enabling/disabling
+of IRQ? Will that be acceptable?
+
+- Sanchayan.
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
