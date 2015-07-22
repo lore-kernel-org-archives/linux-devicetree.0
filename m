@@ -1,35 +1,98 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] Revert "ti-st: add device tree support"
-Date: Wed, 22 Jul 2015 13:58:26 -0500
-Message-ID: <CAL_JsqK1WNPQ6vnO=YBfc1b6k6TEF+XXStFJ=WNMLGb81bO+4A@mail.gmail.com>
-References: <1437589035-14178-1-git-send-email-robh@kernel.org> <20150722183244.GB32421@kroah.com>
+From: Lucas Stach <dev@lynxeye.de>
+Subject: Re: [Patch v3 1/5] mtd: nand: tegra: add devicetree binding
+Date: Wed, 22 Jul 2015 22:15:29 +0200
+Message-ID: <1437596129.2289.2.camel@lynxeye.de>
+References: <1431282602-7137-1-git-send-email-dev@lynxeye.de>
+ <1431282602-7137-2-git-send-email-dev@lynxeye.de>
+ <20150721210537.GL24125@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150722183244.GB32421-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Gigi Joseph <gigi.joseph-l0cyMroinI0@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20150721210537.GL24125@google.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Brian Norris <computersforpeace@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Stefan Agner <stefan@agner.ch>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, linux-mtd@lists.infradead.org, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, linux-tegra@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org, Marcel Ziswiler <marcel@ziswiler.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 22, 2015 at 1:32 PM, Greg Kroah-Hartman
-<gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org> wrote:
-> On Wed, Jul 22, 2015 at 01:17:15PM -0500, Rob Herring wrote:
->> This reverts commit 46d0d33350e9b32642d745a8b46a954910196b4d.
->>
->> This binding is horrible and never should have been merged. It is not
->> documented nor are there any in tree users, so reverting it will not
->> break anything we care about. Lets revert it before we do have users.
->
-> This went into the 4.0 kernel, should this revert get into 4.2-final or
-> can it wait for 4.3?
+Am Dienstag, den 21.07.2015, 14:05 -0700 schrieb Brian Norris:
+> On Sun, May 10, 2015 at 08:29:58PM +0200, Lucas Stach wrote:
+> > This adds the devicetree binding for the Tegra 2 NAND flash
+> > controller.
+> > 
+> > Signed-off-by: Lucas Stach <dev@lynxeye.de>
+> > ---
+> >  .../bindings/mtd/nvidia,tegra20-nand.txt           | 29 ++++++++++++++++++++++
+> >  1 file changed, 29 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/mtd/nvidia,tegra20-nand.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mtd/nvidia,tegra20-nand.txt b/Documentation/devicetree/bindings/mtd/nvidia,tegra20-nand.txt
+> > new file mode 100644
+> > index 0000000..522d442
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mtd/nvidia,tegra20-nand.txt
+> > @@ -0,0 +1,29 @@
+> > +NVIDIA Tegra NAND Flash controller
+> > +
+> > +Required properties:
+> > +- compatible: Must be one of:
+> > +  - "nvidia,tegra20-nand"
+> > +- reg: MMIO address range
+> > +- interrupts: interrupt output of the NFC controller
+> > +- clocks: Must contain an entry for each entry in clock-names.
+> > +  See ../clocks/clock-bindings.txt for details.
+> > +- clock-names: Must include the following entries:
+> > +  - nand
+> > +- resets: Must contain an entry for each entry in reset-names.
+> > +  See ../reset/reset.txt for details.
+> > +- reset-names: Must include the following entries:
+> > +  - nand
+> > +
+> > +Optional properties:
+> > +- nvidia,wp-gpios: GPIO used to disable write protection of the flash
+> 
+> I think write-protect is a pretty common function, so we might want to
+> just remove the 'nvidia,' prefix, so we can eventually move your code to
+> the core nand_base.c library (BTW, I noticed you grab the GPIO, but you
+> don't do anything with it; is that intentional?). In fact, I've seen
+> requests for that very feature on the mailing list.
+> 
 
-It can wait to 4.3. It's just more to bisect over for people wondering
-why their out of tree stuff breaks. Give some time for comment though
-first. I'd rather see a fixed binding get done.
+Actually I request and activate the GPIO in the driver, so the chip is
+permanently unprotected.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I agree that it would be nice to integrate this better into the NAND
+core. If it's okay for you I'll drop the nvidia prefix and follow up
+with patches to move this to the core after this driver is in. I don't
+really want this driver get blocked on more dependencies.
+
+> > +
+> > +  Example:
+> > +	nand@70008000 {
+> > +		compatible = "nvidia,tegra20-nand";
+> > +		reg = <0x70008000 0x100>;
+> > +		interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
+> > +		clocks = <&tegra_car TEGRA20_CLK_NDFLASH>;
+> > +		clock-names = "nand";
+> > +		resets = <&tegra_car 13>;
+> > +		reset-names = "nand";
+> > +	};
+> 
+> Otherwise, looks good.
+> 
+> Reviewed-by: Brian Norris <computersforpeace@gmail.com>
+> 
+> I have a few comments on the NAND driver, too.
+> 
+Thanks for the review.
+
+Regards,
+Lucas
