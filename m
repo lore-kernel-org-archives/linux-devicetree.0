@@ -1,111 +1,107 @@
-From: Gabriele Paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v4] PCI: Store PCIe bus address in struct of_pci_range
-Date: Wed, 22 Jul 2015 22:22:17 +0800
-Message-ID: <1437574937-135566-1-git-send-email-gabriele.paoloni@huawei.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v3 2/5] dt-bindings: Add a binding for Mediatek xHCI host
+ controller
+Date: Wed, 22 Jul 2015 15:22:08 +0100
+Message-ID: <20150722142208.GC15809@leverpostej>
+References: <1437573945-31586-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1437573945-31586-3-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, james.morse-5wv7dgnIgG8@public.gmane.org, Liviu.Dudau-5wv7dgnIgG8@public.gmane.org
-Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yuanzhichang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhudacai-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhangjukuo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, qiuzhenfa-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1437573945-31586-3-git-send-email-chunfeng.yun@mediatek.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: Mathias Nyman <mathias.nyman@intel.com>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Felipe Balbi <balbi@ti.com>, Sascha Hauer <s.hauer@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Roger Quadros <rogerq@ti.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, John Crispin <blogic@openwrt.org>, Daniel Kurtz <djkurtz@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-From: gabriele paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+On Wed, Jul 22, 2015 at 03:05:42PM +0100, Chunfeng Yun wrote:
+> add a DT binding documentation of xHCI host controller for the
+> MT8173 SoC from Mediatek.
+> 
+> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> ---
+>  .../devicetree/bindings/usb/mt8173-xhci.txt        | 50 ++++++++++++++++++++++
+>  1 file changed, 50 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/mt8173-xhci.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/mt8173-xhci.txt b/Documentation/devicetree/bindings/usb/mt8173-xhci.txt
+> new file mode 100644
+> index 0000000..444494d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/mt8173-xhci.txt
+> @@ -0,0 +1,50 @@
+> +MT65XX xhci
+> +
+> +The device node for Mediatek SOC usb3.0 host controller
+> +
+> +Required properties:
+> + - compatible : supports "mediatek,mt8173-xhci"
+> + - reg        : Offset and length of registers
 
-    This patch is needed port PCIe designware to new DT parsing API
-    As discussed in
-    http://lists.infradead.org/pipermail/linux-arm-kernel/2015-January/317743.html
-    in designware we have a problem as the PCI addresses in the PCIe controller
-    address space are required in order to perform correct HW operation.
+Your example has multiple reg entries.
 
-    In order to solve this problem commit
-    f4c55c5a3 "PCI: designware: Program ATU with untranslated address"
-    added code to read the PCIe controller start address directly from the
-    DT ranges.
+Please list what each entry is, and the order you expect them in.
 
-    In the new DT parsing API of_pci_get_host_bridge_resources() hides the
-    DT parser from the host controller drivers, so it is not possible
-    for drivers to parse values directly from the DT.
+> + - interrupts : Interrupt mode, number and trigger mode
+> + - power-domains: to enable usb's mtcmos
+> + - vusb33-supply:  regulator of usb avdd3.3v
+> + - clocks     : must support all clocks that xhci needs
+> + - clock-names: should be "sys_mac" for sys and mac clocks, and
+> +	"wakeup_deb_p0", "wakeup_deb_p1" for wakeup debounce control
+> +	clocks
+> + - phys	: the phys that xhci will bind, currently supports up to two
+> +	phys, so phy index should not greater than one.
+> + - phy-names : should be "phy-X" format, X equals to 0 or 1
 
-    In http://www.spinics.net/lists/linux-pci/msg42540.html we already tried
-    to use the new DT parsing API but there is a bug (obviously) in setting
-    the <*>_mod_base addresses
-    Applying this patch we can easily set "<*>_mod_base = win->__res.start"
+This seems somewhat pointless.
 
-    This patch adds a new field in "struct of_pci_range" to store the
-    pci bus start address; it fills the field in of_pci_range_parser_one();
-    in of_pci_get_host_bridge_resources() it retrieves the resource entry
-    after it is created and added to the resource list and uses
-    entry->__res.start to store the pci controller address
+> + - usb3-lpm-capable: supports USB3 LPM
+> + - mediatek,usb-wakeup: to access usb wakeup control register
 
-    the patch is based on 4.2-rc1
+What exactly does this property imply?
 
-    Signed-off-by: Gabriele Paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-    Acked-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
----
- drivers/of/address.c       | 2 ++
- drivers/of/of_pci.c        | 4 ++++
- include/linux/of_address.h | 1 +
- 3 files changed, 7 insertions(+)
+> + - mediatek,wakeup-src: 1: ip sleep wakeup mode; 2: line state wakeup
+> +	mode; others means don't enable wakeup source of usb
 
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index 8bfda6a..23a5793 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -253,6 +253,7 @@ struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
- 						struct of_pci_range *range)
- {
- 	const int na = 3, ns = 2;
-+	const int p_ns = of_n_size_cells(parser->node);
- 
- 	if (!range)
- 		return NULL;
-@@ -265,6 +266,7 @@ struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
- 	range->pci_addr = of_read_number(parser->range + 1, ns);
- 	range->cpu_addr = of_translate_address(parser->node,
- 				parser->range + na);
-+	range->bus_addr = of_read_number(parser->range + na, p_ns);
- 	range->size = of_read_number(parser->range + parser->pna + na, ns);
- 
- 	parser->range += parser->np;
-diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
-index 5751dc5..fe57030 100644
---- a/drivers/of/of_pci.c
-+++ b/drivers/of/of_pci.c
-@@ -198,6 +198,7 @@ int of_pci_get_host_bridge_resources(struct device_node *dev,
- 
- 	pr_debug("Parsing ranges property...\n");
- 	for_each_of_pci_range(&parser, &range) {
-+		struct resource_entry *entry;
- 		/* Read next ranges element */
- 		if ((range.flags & IORESOURCE_TYPE_BITS) == IORESOURCE_IO)
- 			snprintf(range_type, 4, " IO");
-@@ -240,6 +241,9 @@ int of_pci_get_host_bridge_resources(struct device_node *dev,
- 		}
- 
- 		pci_add_resource_offset(resources, res,	res->start - range.pci_addr);
-+		entry = list_last_entry(resources, struct resource_entry, node);
-+		/* we are using __res for storing the PCI controller address */
-+		entry->__res.start = range.bus_addr;
- 	}
- 
- 	return 0;
-diff --git a/include/linux/of_address.h b/include/linux/of_address.h
-index d88e81b..865f96e 100644
---- a/include/linux/of_address.h
-+++ b/include/linux/of_address.h
-@@ -16,6 +16,7 @@ struct of_pci_range {
- 	u32 pci_space;
- 	u64 pci_addr;
- 	u64 cpu_addr;
-+	u64 bus_addr;
- 	u64 size;
- 	u32 flags;
- };
--- 
-1.9.1
+This sounds like configuration rather than a hardware property. Why do
+you think this needs to be in the DT?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> + - mediatek,u2port-num: the number should not greater than the number
+> +	of phys
+
+What exactly does this property imply?
+
+Mark.
+
+> +
+> +Optional properties:
+> + - vbus-supply : reference to the VBUS regulator;
+> +
+> +Example:
+> +usb: usb30@11270000 {
+> +	compatible = "mediatek,mt8173-xhci";
+> +	reg = <0 0x11270000 0 0x4000>,
+> +	      <0 0x11280000 0 0x0800>;
+> +	interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_LOW>;
+> +	power-domains = <&scpsys MT8173_POWER_DOMAIN_USB>;
+> +	clocks = <&topckgen CLK_TOP_USB30_SEL>,
+> +		 <&pericfg CLK_PERI_USB0>,
+> +		 <&pericfg CLK_PERI_USB1>;
+> +	clock-names = "sys_mac",
+> +		      "wakeup_deb_p0",
+> +		      "wakeup_deb_p1";
+> +	phys = <&u3phy 0>, <&u3phy 1>;
+> +	phy-names = "phy-0", "phy-1";
+> +	vusb33-supply = <&mt6397_vusb_reg>;
+> +	vbus-supply = <&usb_p1_vbus>;
+> +	usb3-lpm-capable;
+> +	mediatek,usb-wakeup = <&pericfg>;
+> +	mediatek,wakeup-src = <1>;
+> +	mediatek,u2port-num = <2>;
+> +	status = "okay";
+> +};
+> -- 
+> 1.8.1.1.dirty
+> 
