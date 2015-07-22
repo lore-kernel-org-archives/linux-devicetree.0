@@ -1,125 +1,258 @@
-From: Marek Vasut <marex@denx.de>
-Subject: Re: [PATCH 08/11] MTD: m25p80: Add option to limit SPI transfer size.
-Date: Wed, 22 Jul 2015 11:01:56 +0200
-Message-ID: <201507221101.56441.marex@denx.de>
-References: <cover.1433364398.git.hramrach@gmail.com> <201507221024.05496.marex@denx.de> <CAOMqctTyHF1ciN3-0yg1smYJ5kbuwfT_kmavTL8ARuZ69wSgAg@mail.gmail.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: rockchip: Add veyron-speedy board
+Date: Wed, 22 Jul 2015 11:04:09 +0200
+Message-ID: <1896579.c6dBjMIaQx@diego>
+References: <1437543846-19897-1-git-send-email-romain.perier@gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAOMqctTyHF1ciN3-0yg1smYJ5kbuwfT_kmavTL8ARuZ69wSgAg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Michal Suchanek <hramrach@gmail.com>
-Cc: Vinod Koul <vinod.koul@intel.com>, Brian Norris <computersforpeace@gmail.com>, Richard Cochran <richardcochran@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Mark Rutland <mark.rutland@arm.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Geert Uytterhoeven <geert+renesas@glider.be>, MTD Maling List <linux-mtd@lists.infradead.org>, Alison Chaiken <alison_chaiken@mentor.com>, "Bean Huo =?utf-8?q?=E9=9C=8D=E6=96=8C=E6=96=8C?= (beanhuo)" <beanhuo@micron.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <zajec5@gmail.com>, Kukjin Kim <kgene@kernel.org>, Ben Hutchings <ben@decadent.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1437543846-19897-1-git-send-email-romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, July 22, 2015 at 10:38:14 AM, Michal Suchanek wrote:
-> On 22 July 2015 at 10:24, Marek Vasut <marex@denx.de> wrote:
-> > On Wednesday, July 22, 2015 at 10:18:04 AM, Michal Suchanek wrote:
-> >> On 22 July 2015 at 09:58, Marek Vasut <marex@denx.de> wrote:
-> >> > On Wednesday, July 22, 2015 at 09:45:27 AM, Michal Suchanek wrote:
-> >> >> On 22 July 2015 at 09:33, Marek Vasut <marex@denx.de> wrote:
-> >> >> > On Wednesday, July 22, 2015 at 09:30:54 AM, Michal Suchanek wrote:
-> >> >> >> On 22 July 2015 at 06:49, Vinod Koul <vinod.koul@intel.com> wrote:
-> >> >> >> > On Tue, Jul 21, 2015 at 10:14:11AM +0200, Michal Suchanek wrote:
-> >> >> >> >> > Or alternatively we could publish the limitations of the
-> >> >> >> >> > channel using capabilities so SPI knows I have a dmaengine
-> >> >> >> >> > channel and it can transfer max N length transfers so would
-> >> >> >> >> > be able to break rather than guessing it or coding in DT.
-> >> >> >> >> > Yes it may come from DT but that should be dmaengine driver
-> >> >> >> >> > rather than client driver :)
-> >> >> >> >> > 
-> >> >> >> >> > This can be done by dma_get_slave_caps(chan, &caps)
-> >> >> >> >> > 
-> >> >> >> >> > And we add max_length as one more parameter to existing set
-> >> >> >> >> > 
-> >> >> >> >> > Also all this could be handled in generic SPI-dmaengine layer
-> >> >> >> >> > so that individual drivers don't have to code it in
-> >> >> >> >> > 
-> >> >> >> >> > Let me know if this idea is okay, I can push the dmaengine
-> >> >> >> >> > bits...
-> >> >> >> >> 
-> >> >> >> >> It would be ok if there was a fixed limit. However, the limit
-> >> >> >> >> depends on SPI slave settings. Presumably for other buses using
-> >> >> >> >> the dmaengine the limit would depend on the bus or slave
-> >> >> >> >> settings as well. I do not see a sane way of passing this all
-> >> >> >> >> the way to the dmaengine driver.
-> >> >> >> > 
-> >> >> >> > I don't see why this should be client (SPI) dependent. The max
-> >> >> >> > length supported is a dmaengine constraint, typically flowing
-> >> >> >> > from max blocks/length it can transfer. Know this limit can
-> >> >> >> > allow clients to split transfers.
-> >> >> >> 
-> >> >> >> In practice on the board I have the maximum transfer length before
-> >> >> >> it fails depends on SPI bus speed which is set up per slave. I
-> >> >> >> did not try searching the space of possible settings thorougly
-> >> >> >> and settled for a setting that gives reasonable speed and
-> >> >> >> transfer length.
-> >> >> > 
-> >> >> > This looks more like a signal integrity issue though.
-> >> >> 
-> >> >> It certainly does on the surface. However, when wrong data is
-> >> >> delivered over the SPI bus (such as when I use wrong phase setting)
-> >> >> the SPI controller happily delivers wrong data over PIO.
-> >> >> 
-> >> >> The failure I am seeing is that the pl330 DMA program which
-> >> >> repeatedly waits for data from the SPI controller never finishes the
-> >> >> read loop and does not signal the interrupt. It seems it also leaves
-> >> >> some data in a FIFO somewhere so next command on the flash returns
-> >> >> garbage and fails.
-> >> > 
-> >> > I observed something similar on MXS (mx28) SPI block. Do you use mixed
-> >> > PIO/DMA mode perhaps ?
-> >> 
-> >> The SPI driver uses PIO for short transfers and DMA for transfers
-> >> longer than the controller FIFO. This seems to be the standard way to
-> >> do things.It works flawlessly so long as submitting overly long DMA
-> >> programs is avoided.
-> > 
-> > Can you try doing JUST DMA, no PIO ? I remember seeing some bus
-> > synchronisation issues when I did mixed PIO/DMA on the MXS and it was
-> > nasty to track down. Just give pure DMA a go to see if the thing
-> > stabilizes somehow.
-> 
-> It's probably slower to set up DMA for 2-byte commands but it might
-> work nonetheless.
+Hi Romain,
 
-It is, the overhead will be considerable. It might help the stability
-though. I'm really looking forward to the results!
+could you include Doug (dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org) and Alex (amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org) 
+when touching Chromebook related stuff please?
 
-> I will give it a go.
-> 
-> >> > Do you have the option to connect a bus analyzer?
-> >> > I can probably offer you some tools, I'm in Prague ...
-> >> 
-> >> The flash chip is accessible when removing the bottom cover. It is
-> >> VSOP8 package slightly lower than SOP8 so attaching clips to it might
-> >> be a bit problematic. That's the only accessible part. Everything
-> >> other than SPI is inside the SoC.
-> > 
-> > That might be doable, though you might want to try the above thing first.
-> > 
-> >> Since SPI has no verification whatsoever the chip might be completely
-> >> dead and you can still read fine all zeroes or all ones when
-> >> attempting a read from it. I observed this behaviour when I used a
-> >> flash chip in a socket and it was not firmly seated. It was with a
-> >> different SPI controller, though.
-> > 
-> > You should run into issues as soon as the SPI NOR framework tries to read
-> > status register, no ?
-> 
-> Yes, when the DMA transfer fails the next command fails due to garbage
-> lying around. However, you can unload the SPI NOR driver, load spidev
-> driver, and read enough garbage to empty the fifos. Then the flash
-> identifies as normal again and you can access it.
+Especially the new dts probably needs an Ack from Doug, as this is the 
+chromeos one with changed license header.
 
-Yikes :(
+And two nits below:
 
-> When the flash is not seated properly and acts autistic you get all
-> 0xff or all 0 back whatever you send to it, obvously. The
-> identification by the SPI NOR driver fails then.
+
+Am Mittwoch, 22. Juli 2015, 07:44:05 schrieb Romain Perier:
+> Which is formally known as The Asus C201 chromebook
 > 
-> Thanks
+> Signed-off-by: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/arm/rockchip.txt |  10 +-
+>  arch/arm/boot/dts/Makefile                         |   3 +-
+>  arch/arm/boot/dts/rk3288-veyron-speedy.dts         | 163
+> +++++++++++++++++++++ 3 files changed, 174 insertions(+), 2 deletions(-)
+>  create mode 100644 arch/arm/boot/dts/rk3288-veyron-speedy.dts
 > 
-> Michal
+> diff --git a/Documentation/devicetree/bindings/arm/rockchip.txt
+> b/Documentation/devicetree/bindings/arm/rockchip.txt index
+> 6de18bd2..da02022 100644
+> --- a/Documentation/devicetree/bindings/arm/rockchip.txt
+> +++ b/Documentation/devicetree/bindings/arm/rockchip.txt
+> @@ -37,4 +37,12 @@ Rockchip platforms device tree bindings
+>  - Google Pinky (dev-board):
+>      Required root node properties:
+>        - compatible = "google,veyron-pinky-rev2", "google,veyron-pinky",
+> -		     "google,veyron", "rockchip,rk3288";
+> \ No newline at end of file
+
+I think I caught that missing newline when applying my board patch :-)
+
+
+> +		     "google,veyron", "rockchip,rk3288";
+> +
+> +- Google Speedy (Asus C201 Chromebook):
+> +    Required root node properties:
+> +      - compatible = "google,veyron-speedy-rev9",
+> "google,veyron-speedy-rev8", +		     "google,veyron-speedy-rev7",
+> "google,veyron-speedy-rev6",
+> +		     "google,veyron-speedy-rev5", "google,veyron-speedy-rev4",
+> +		     "google,veyron-speedy-rev3", "google,veyron-speedy-rev2",
+> +		     "google,veyron-speedy", "google,veyron", "rockchip,rk3288";
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 653ede7..bfa7c86 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -498,7 +498,8 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += \
+>  	rk3288-firefly-beta.dtb \
+>  	rk3288-firefly.dtb \
+>  	rk3288-veyron-jerry.dtb \
+> -	rk3288-veyron-pinky.dtb
+> +	rk3288-veyron-pinky.dtb \
+> +	rk3288-veyron-speedy.dtb
+>  dtb-$(CONFIG_ARCH_S3C24XX) += \
+>  	s3c2416-smdk2416.dtb
+>  dtb-$(CONFIG_ARCH_S3C64XX) += \
+> diff --git a/arch/arm/boot/dts/rk3288-veyron-speedy.dts
+> b/arch/arm/boot/dts/rk3288-veyron-speedy.dts new file mode 100644
+> index 0000000..6578e2a
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/rk3288-veyron-speedy.dts
+> @@ -0,0 +1,163 @@
+> +/*
+> + * Google Veyron Speedy Rev 1+ board device tree source
+> + *
+> + * Copyright 2015 Google, Inc
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This file is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + *  Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +/dts-v1/;
+> +#include "rk3288-veyron-chromebook.dtsi"
+> +#include "cros-ec-sbs.dtsi"
+> +
+> +/ {
+> +	model = "Google Speedy";
+> +	compatible = "google,veyron-speedy-rev9", "google,veyron-speedy-rev8",
+> +		     "google,veyron-speedy-rev7", "google,veyron-speedy-rev6",
+> +		     "google,veyron-speedy-rev5", "google,veyron-speedy-rev4",
+> +		     "google,veyron-speedy-rev3", "google,veyron-speedy-rev2",
+> +		     "google,veyron-speedy", "google,veyron", "rockchip,rk3288";
+> +
+> +	panel_regulator: panel-regulator {
+> +		compatible = "regulator-fixed";
+> +		enable-active-high;
+> +		gpio = <&gpio7 14 GPIO_ACTIVE_HIGH>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&lcd_enable_h>;
+> +		regulator-name = "panel_regulator";
+> +		vin-supply = <&vcc33_sys>;
+> +	};
+> +
+> +	vcc18_lcd: vcc18-lcd {
+> +		compatible = "regulator-fixed";
+> +		enable-active-high;
+> +		gpio = <&gpio2 13 GPIO_ACTIVE_HIGH>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&avdd_1v8_disp_en>;
+> +		regulator-name = "vcc18_lcd";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		vin-supply = <&vcc18_wl>;
+> +	};
+> +
+> +	backlight_regulator: backlight-regulator {
+> +		compatible = "regulator-fixed";
+> +		enable-active-high;
+> +		gpio = <&gpio2 12 GPIO_ACTIVE_HIGH>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&bl_pwr_en>;
+> +		regulator-name = "backlight_regulator";
+> +		vin-supply = <&vcc33_sys>;
+> +		startup-delay-us = <15000>;
+> +	};
+> +};
+> +
+> +&rk808 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pmic_int_l &dvs_1 &dvs_2>;
+> +	dvs-gpios = <&gpio7 12 GPIO_ACTIVE_HIGH>,
+> +		    <&gpio7 15 GPIO_ACTIVE_HIGH>;
+
+as with the other boards, dvs-gpios is not yet defined (see series from Chris 
+Zhong from some days ago), so better leave this out for now.
+
+
+Thanks
+Heiko
+
+> +};
+> +
+> +&sdmmc {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_cd_disabled &sdmmc_cd_gpio
+> +			&sdmmc_bus4>;
+> +	disable-wp;
+> +};
+> +
+> +&vcc_5v {
+> +	enable-active-high;
+> +	gpio = <&gpio7 21 GPIO_ACTIVE_HIGH>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&drv_5v>;
+> +};
+> +
+> +&vcc50_hdmi {
+> +	enable-active-high;
+> +	gpio = <&gpio5 19 GPIO_ACTIVE_HIGH>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&vcc50_hdmi_en>;
+> +};
+> +
+> +&pinctrl {
+> +	backlight {
+> +		bl_pwr_en: bl_pwr_en {
+> +			rockchip,pins = <2 12 RK_FUNC_GPIO &pcfg_pull_none>;
+> +		};
+> +	};
+> +
+> +	buck-5v {
+> +		drv_5v: drv-5v {
+> +			rockchip,pins = <7 21 RK_FUNC_GPIO &pcfg_pull_none>;
+> +		};
+> +	};
+> +
+> +	edp {
+> +		edp_hpd: edp_hpd {
+> +			rockchip,pins = <7 11 RK_FUNC_2 &pcfg_pull_down>;
+> +		};
+> +	};
+> +
+> +	hdmi {
+> +		vcc50_hdmi_en: vcc50-hdmi-en {
+> +			rockchip,pins = <5 19 RK_FUNC_GPIO &pcfg_pull_none>;
+> +		};
+> +	};
+> +
+> +	lcd {
+> +		lcd_enable_h: lcd-en {
+> +			rockchip,pins = <7 14 RK_FUNC_GPIO &pcfg_pull_none>;
+> +		};
+> +
+> +		avdd_1v8_disp_en: avdd-1v8-disp-en {
+> +			rockchip,pins = <2 13 RK_FUNC_GPIO &pcfg_pull_none>;
+> +		};
+> +	};
+> +
+> +	pmic {
+> +		dvs_1: dvs-1 {
+> +			rockchip,pins = <7 12 RK_FUNC_GPIO &pcfg_pull_down>;
+> +		};
+> +
+> +		dvs_2: dvs-2 {
+> +			rockchip,pins = <7 15 RK_FUNC_GPIO &pcfg_pull_down>;
+> +		};
+> +	};
+> +};
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
