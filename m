@@ -1,79 +1,80 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v3 5/5] arm64: dts: mediatek: add xHCI & usb phy for
- mt8173
-Date: Wed, 22 Jul 2015 21:11:50 +0300
-Message-ID: <55AFDCE6.2060608@cogentembedded.com>
-References: <1437573945-31586-1-git-send-email-chunfeng.yun@mediatek.com>
- <1437573945-31586-6-git-send-email-chunfeng.yun@mediatek.com>
+From: Zhi Li <lznuaa@gmail.com>
+Subject: Re: [PATCH v2 03/10] mtd: spi-nor: add DDR quad read support
+Date: Wed, 22 Jul 2015 13:15:16 -0500
+Message-ID: <CAHrpEqQNSgkakXN8kAT1FwPv7Ou_ERkOTJrX-4Vmb=TogzsF2A@mail.gmail.com>
+References: <1398657227-20721-1-git-send-email-b32955@freescale.com>
+	<1398657227-20721-4-git-send-email-b32955@freescale.com>
+	<20140730050843.GE11952@brian-ubuntu>
+	<20140730064413.GA15547@shldeISGChi005.sh.intel.com>
+	<20140730074500.GF11952@brian-ubuntu>
+	<20140730104607.GQ17528@sirena.org.uk>
+	<20140802020617.GS3711@ld-irv-0074>
+	<CAMuHMdWxzKG1TTUVgYqfRP0Prp85HPwVxH7NQp7S-pNeLfFqjA@mail.gmail.com>
+	<20140804142507.GP30458@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1437573945-31586-6-git-send-email-chunfeng.yun@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chunfeng Yun <chunfeng.yun@mediatek.com>, Mathias Nyman <mathias.nyman@intel.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Felipe Balbi <balbi@ti.com>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, John Crispin <blogic@openwrt.org>, Daniel Kurtz <djkurtz@chromium.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140804142507.GP30458@sirena.org.uk>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marex@denx.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Huang Shijie <b32955@freescale.com>, MTD Maling List <linux-mtd@lists.infradead.org>, Huang Shijie <shijie.huang@intel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
-
-On 07/22/2015 05:05 PM, Chunfeng Yun wrote:
-
-> add xHCI and phy drivers for MT8173-EVB
-
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> ---
->   arch/arm64/boot/dts/mediatek/mt8173-evb.dts | 15 ++++++++++++++
->   arch/arm64/boot/dts/mediatek/mt8173.dtsi    | 31 +++++++++++++++++++++++++++++
->   2 files changed, 46 insertions(+)
-
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-> index f433c21..202b2b9 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-> +++ b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-> @@ -13,6 +13,7 @@
->    */
+On Mon, Aug 4, 2014 at 9:25 AM, Mark Brown <broonie@kernel.org> wrote:
+> On Sat, Aug 02, 2014 at 11:09:09AM +0200, Geert Uytterhoeven wrote:
+>> On Sat, Aug 2, 2014 at 4:06 AM, Brian Norris
+>> > On Wed, Jul 30, 2014 at 11:46:07AM +0100, Mark Brown wrote:
 >
->   /dts-v1/;
-> +#include <dt-bindings/gpio/gpio.h>
->   #include "mt8173.dtsi"
+>> >> I don't know what DDR is in this context, sorry.
 >
->   / {
-> @@ -32,6 +33,15 @@
->   	};
+>> > I think it's just the ability to latch data on both the rising and
+>> > falling edges of the SPI clock. For SPI flash, it seems to be used for
+>> > the data portion of the opcode/address/data sequence.
 >
->   	chosen { };
-> +
-> +	usb_p1_vbus: fixedregulator@0 {
-
-    Just "regulator@0" please. This is more in line with what ePAPR requires 
-from the node names.
-
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "usb_vbus";
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +		gpio = <&pio 130 GPIO_ACTIVE_HIGH>;
-> +		enable-active-high;
-> +	};
->   };
+>> > Yeah, I suppose it could be wedged in later if drivers/spi/ ever adopts
+>> > a solution.
 >
->   &pwrap {
-[...]
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> index 0696f8f..aa1ecc7 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-[...]
-> @@ -393,6 +394,36 @@
->   			#size-cells = <0>;
->   			status = "disabled";
->   		};
-> +
-> +		usb: usb30@11270000 {
+>> I think this can just be another SPI_* spi_device.mode flag.
+>
+> Sounds like it yes - I was wondering if this might be one of the modes
+> with extra clock cycles that I've heard mentioned before which might be
+> a little more fun.
+>
+>> Do we need bindings for this in
+>> Documentation/devicetree/bindings/spi/spi-bus.txt?
+>> Unlike Quad SPI transfer support, this doesn't need special wiring, so DDR
+>> capability is an intrinsic property of the SPI slave, and the mode bit can just
+>> be set in the SPI slave driver, without any DT magic?
+>
+> Right, unless we run into things like board design issues causing
+> constraints this is something that can be enabled by the two drivers
+> without needing DT configuration.
 
-    ePAPR standardizes the name "usb" for such nodes, please fix.
+All:
 
-[...]
+we plan resume this work.
+I need direction how go ahead further.
 
-MBR, Sergei
+I go through this email thread.
+
+The discussion focus on how to get dummy cycle information.
+
+Shijie get it from DT.
+
+Brain suggest get from CFI or map id table if I understand correct.
+
+Accodring to spec
+http://www.spansion.com/Support/Datasheets/S25FL128S_256S_00.pdf
+
+Table 8.10
+
+Dummy cycle depend on frequency, read command.
+
+if information saved in driver, it will be huge table.
+
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>
