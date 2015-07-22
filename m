@@ -1,46 +1,190 @@
-From: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: Add STM32429i-EVAL board support
-Date: Wed, 22 Jul 2015 19:02:03 +0200
-Message-ID: <55AFCC8B.4090209@gmail.com>
-References: <1436693957-30855-1-git-send-email-mcoquelin.stm32@gmail.com>
+From: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
+Subject: Re: [PATCH 02/12] [media] dvb-pll: Add support for THOMSON DTT7546X
+ tuner.
+Date: Wed, 22 Jul 2015 14:10:40 -0300
+Message-ID: <20150722141040.2be3ca98@recife.lan>
+References: <1435158670-7195-1-git-send-email-peter.griffin@linaro.org>
+	<1435158670-7195-3-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1436693957-30855-1-git-send-email-mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kamil Lulko <rev13-5tc4TXWwyLM@public.gmane.org>, afaerber-l3A5Bk7waGM@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1435158670-7195-3-git-send-email-peter.griffin@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Griffin <peter.griffin@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, lee.jones@linaro.org, hugues.fruchet@st.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Em Wed, 24 Jun 2015 16:11:00 +0100
+Peter Griffin <peter.griffin@linaro.org> escreveu:
 
-
-On 07/12/2015 11:39 AM, Maxime Coquelin wrote:
-> Main features of STM32429i-EVAL evaluation kit are:
->   - STM32F429 Cortex-M4 MCU @180MHz
->     * 2MB internal Flash
->     * 256KB internal RAM
->   - 32MB SDRAM
->   - 16MB NOR Flash
->   - 2MB SRAM
->   - 4.3" TFT LCD with resistive touchscreen
->   - SDCard connector (SDIO compatible)
->   - 1x USB 2.0 OTG + 1x USB 1.1 OTG
->   - Ethernet
->
-> Signed-off-by: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> This is used in conjunction with the STV0367 demodulator on
+> the STV0367-NIM-V1.0 NIM card which can be used with the STi
+> STB SoC's.
+> 
+> This tuner has a fifth register, so some changes have been made
+> to accommodate this.
+> 
+> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
 > ---
->   arch/arm/boot/dts/Makefile           |  4 +-
->   arch/arm/boot/dts/stm32429i-eval.dts | 75 ++++++++++++++++++++++++++++++++++++
->   2 files changed, 78 insertions(+), 1 deletion(-)
->   create mode 100644 arch/arm/boot/dts/stm32429i-eval.dts
->
->
-Applied to next/dt-for-v4.3.
+>  drivers/media/dvb-frontends/dvb-pll.c | 74 +++++++++++++++++++++++++++++------
+>  drivers/media/dvb-frontends/dvb-pll.h |  1 +
+>  2 files changed, 64 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/media/dvb-frontends/dvb-pll.c b/drivers/media/dvb-frontends/dvb-pll.c
+> index 6d8fe88..f7381c7 100644
+> --- a/drivers/media/dvb-frontends/dvb-pll.c
+> +++ b/drivers/media/dvb-frontends/dvb-pll.c
+> @@ -141,6 +141,35 @@ static struct dvb_pll_desc dvb_pll_thomson_dtt7520x = {
+>  	},
+>  };
+>  
+> +static void thomson_dtt7546x_bw(struct dvb_frontend *fe, u8 *buf)
+> +{
+> +	/* set CB2 reg - set ATC, XTO */
+> +	buf[4] = 0xc3;
+> +}
+> +
+> +static struct dvb_pll_desc dvb_pll_thomson_dtt7546x = {
+> +	.name  = "Thomson dtt7546x",
+> +	.min   = 44250000,
+> +	.max   = 863250000,
+> +	.set   = thomson_dtt7546x_bw,
+> +	.iffreq= 36166667,
 
-Best regards,
-Maxime
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Whitespace is missing. Please check the patchs with scripts/checkpatch.pl.
+
+> +	.count = 12,
+> +	.entries = {
+> +		{  121000000, 166667, 0x88, 0x01 },
+> +		{  141000000, 166667, 0x88, 0x41 },
+> +		{  166000000, 166667, 0x88, 0x81 },
+> +		{  182000000, 166667, 0x88, 0xc1 },
+> +		{  286000000, 166667, 0x88, 0x02 },
+> +		{  386000000, 166667, 0x88, 0x42 },
+> +		{  446000000, 166667, 0x88, 0x82 },
+> +		{  466000000, 166667, 0x88, 0xc2 },
+> +		{  506000000, 166667, 0x88, 0x08 },
+> +		{  761000000, 166667, 0x88, 0x48 },
+> +		{  846000000, 166667, 0x88, 0x88 },
+> +		{  905000000, 166667, 0x88, 0xc8 },
+> +	},
+> +};
+> +
+>  static struct dvb_pll_desc dvb_pll_lg_z201 = {
+>  	.name  = "LG z201",
+>  	.min   = 174000000,
+> @@ -537,6 +566,7 @@ static struct dvb_pll_desc dvb_pll_alps_tdee4 = {
+>  static struct dvb_pll_desc *pll_list[] = {
+>  	[DVB_PLL_UNDEFINED]              = NULL,
+>  	[DVB_PLL_THOMSON_DTT7579]        = &dvb_pll_thomson_dtt7579,
+> +	[DVB_PLL_THOMSON_DTT7546X]       = &dvb_pll_thomson_dtt7546x,
+>  	[DVB_PLL_THOMSON_DTT759X]        = &dvb_pll_thomson_dtt759x,
+>  	[DVB_PLL_THOMSON_DTT7520X]       = &dvb_pll_thomson_dtt7520x,
+>  	[DVB_PLL_LG_Z201]                = &dvb_pll_lg_z201,
+> @@ -561,7 +591,7 @@ static struct dvb_pll_desc *pll_list[] = {
+>  /* code                                                        */
+>  
+>  static int dvb_pll_configure(struct dvb_frontend *fe, u8 *buf,
+> -			     const u32 frequency)
+> +			const u32 frequency, const u32 len)
+>  {
+>  	struct dvb_pll_priv *priv = fe->tuner_priv;
+>  	struct dvb_pll_desc *desc = priv->pll_desc;
+> @@ -593,11 +623,15 @@ static int dvb_pll_configure(struct dvb_frontend *fe, u8 *buf,
+>  	if (desc->set)
+>  		desc->set(fe, buf);
+>  
+> -	if (debug)
+> -		printk("pll: %s: div=%d | buf=0x%02x,0x%02x,0x%02x,0x%02x\n",
+> -		       desc->name, div, buf[0], buf[1], buf[2], buf[3]);
+> +	if (debug) {
+> +		printk(KERN_DEBUG "pll: %s: div=%d | buf=", desc->name, div);
+> +		for (i = 0; i < len; i++)
+> +			printk(KERN_DEBUG "0x%02x,", buf[i]);
+>  
+> -	// calculate the frequency we set it to
+> +		printk(KERN_DEBUG "\n");
+> +	}
+
+Please use, instead, the Documentation/printk-formats.txt macros to
+print an hex buffer:
+
+	"Raw buffer as a hex string:
+		%*ph	00 01 02  ...  3f
+		%*phC	00:01:02: ... :3f
+		%*phD	00-01-02- ... -3f
+		%*phN	000102 ... 3f"
+
+
+> +
+> +	/* calculate the frequency we set it to */
+>  	return (div * desc->entries[i].stepsize) - desc->iffreq;
+>  }
+>  
+> @@ -634,21 +668,39 @@ static int dvb_pll_sleep(struct dvb_frontend *fe)
+>  	return -EINVAL;
+>  }
+>  
+> +static int dvb_pll_get_num_regs(struct dvb_pll_priv *priv)
+> +{
+> +	int num_regs = 4;
+> +
+> +	if (strncmp(priv->pll_desc->name, "Thomson dtt7546x", 16) == 0)
+> +		num_regs = 5;
+> +
+> +	return num_regs;
+> +}
+> +
+>  static int dvb_pll_set_params(struct dvb_frontend *fe)
+>  {
+>  	struct dtv_frontend_properties *c = &fe->dtv_property_cache;
+>  	struct dvb_pll_priv *priv = fe->tuner_priv;
+> -	u8 buf[4];
+> -	struct i2c_msg msg =
+> -		{ .addr = priv->pll_i2c_address, .flags = 0,
+> -		  .buf = buf, .len = sizeof(buf) };
+> +	struct i2c_msg msg;
+> +	u8 *bufp;
+>  	int result;
+>  	u32 frequency = 0;
+>  
+> +	bufp = kzalloc(dvb_pll_get_num_regs(priv), GFP_KERNEL);
+> +
+> +	if (!bufp)
+> +		return -ENOMEM;
+> +
+> +	msg.addr = priv->pll_i2c_address;
+> +	msg.flags = 0;
+> +	msg.buf = bufp;
+> +	msg.len = dvb_pll_get_num_regs(priv);
+> +
+>  	if (priv->i2c == NULL)
+>  		return -EINVAL;
+>  
+> -	result = dvb_pll_configure(fe, buf, c->frequency);
+> +	result = dvb_pll_configure(fe, bufp, c->frequency, msg.len);
+>  	if (result < 0)
+>  		return result;
+>  	else
+> @@ -677,7 +729,7 @@ static int dvb_pll_calc_regs(struct dvb_frontend *fe,
+>  	if (buf_len < 5)
+>  		return -EINVAL;
+>  
+> -	result = dvb_pll_configure(fe, buf + 1, c->frequency);
+> +	result = dvb_pll_configure(fe, buf + 1, c->frequency, buf_len - 1);
+>  	if (result < 0)
+>  		return result;
+>  	else
+> diff --git a/drivers/media/dvb-frontends/dvb-pll.h b/drivers/media/dvb-frontends/dvb-pll.h
+> index bf9602a..f523f42 100644
+> --- a/drivers/media/dvb-frontends/dvb-pll.h
+> +++ b/drivers/media/dvb-frontends/dvb-pll.h
+> @@ -28,6 +28,7 @@
+>  #define DVB_PLL_SAMSUNG_TBMU24112      17
+>  #define DVB_PLL_TDEE4		       18
+>  #define DVB_PLL_THOMSON_DTT7520X       19
+> +#define DVB_PLL_THOMSON_DTT7546X       20
+>  
+>  /**
+>   * Attach a dvb-pll to the supplied frontend structure.
