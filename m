@@ -1,190 +1,47 @@
-From: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
-Subject: Re: [PATCH 02/12] [media] dvb-pll: Add support for THOMSON DTT7546X
- tuner.
-Date: Wed, 22 Jul 2015 14:10:40 -0300
-Message-ID: <20150722141040.2be3ca98@recife.lan>
-References: <1435158670-7195-1-git-send-email-peter.griffin@linaro.org>
-	<1435158670-7195-3-git-send-email-peter.griffin@linaro.org>
+From: Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>
+Subject: Re: [PATCH 1/4] iio: adc: mcp320x: Fix NULL pointer.
+Date: Wed, 22 Jul 2015 12:18:19 -0500
+Message-ID: <20150722171819.GA18251@deathstar>
+References: <1437581064-9733-1-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1435158670-7195-3-git-send-email-peter.griffin@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Griffin <peter.griffin@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, lee.jones@linaro.org, hugues.fruchet@st.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1437581064-9733-1-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric =?iso-8859-1?Q?B=E9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Em Wed, 24 Jun 2015 16:11:00 +0100
-Peter Griffin <peter.griffin@linaro.org> escreveu:
-
-> This is used in conjunction with the STV0367 demodulator on
-> the STV0367-NIM-V1.0 NIM card which can be used with the STi
-> STB SoC's.
+On Wed, Jul 22, 2015 at 06:04:21PM +0200, Denis Carikli wrote:
+> Without that fix, adc->chip_info is NULL in mcp320x_read_raw
 > 
-> This tuner has a fifth register, so some changes have been made
-> to accommodate this.
-> 
-> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 > ---
->  drivers/media/dvb-frontends/dvb-pll.c | 74 +++++++++++++++++++++++++++++------
->  drivers/media/dvb-frontends/dvb-pll.h |  1 +
->  2 files changed, 64 insertions(+), 11 deletions(-)
+>  drivers/iio/adc/mcp320x.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/media/dvb-frontends/dvb-pll.c b/drivers/media/dvb-frontends/dvb-pll.c
-> index 6d8fe88..f7381c7 100644
-> --- a/drivers/media/dvb-frontends/dvb-pll.c
-> +++ b/drivers/media/dvb-frontends/dvb-pll.c
-> @@ -141,6 +141,35 @@ static struct dvb_pll_desc dvb_pll_thomson_dtt7520x = {
->  	},
->  };
+> diff --git a/drivers/iio/adc/mcp320x.c b/drivers/iio/adc/mcp320x.c
+> index 8d9c9b9..fccb2dc 100644
+> --- a/drivers/iio/adc/mcp320x.c
+> +++ b/drivers/iio/adc/mcp320x.c
+> @@ -299,6 +299,7 @@ static int mcp320x_probe(struct spi_device *spi)
+>  	indio_dev->channels = chip_info->channels;
+>  	indio_dev->num_channels = chip_info->num_channels;
 >  
-> +static void thomson_dtt7546x_bw(struct dvb_frontend *fe, u8 *buf)
-> +{
-> +	/* set CB2 reg - set ATC, XTO */
-> +	buf[4] = 0xc3;
-> +}
-> +
-> +static struct dvb_pll_desc dvb_pll_thomson_dtt7546x = {
-> +	.name  = "Thomson dtt7546x",
-> +	.min   = 44250000,
-> +	.max   = 863250000,
-> +	.set   = thomson_dtt7546x_bw,
-> +	.iffreq= 36166667,
+> +	adc->chip_info = chip_info;
+>  	adc->transfer[0].tx_buf = &adc->tx_buf;
+>  	adc->transfer[0].len = sizeof(adc->tx_buf);
+>  	adc->transfer[1].rx_buf = adc->rx_buf;
 
-Whitespace is missing. Please check the patchs with scripts/checkpatch.pl.
+This issue has already been dealt with.
 
-> +	.count = 12,
-> +	.entries = {
-> +		{  121000000, 166667, 0x88, 0x01 },
-> +		{  141000000, 166667, 0x88, 0x41 },
-> +		{  166000000, 166667, 0x88, 0x81 },
-> +		{  182000000, 166667, 0x88, 0xc1 },
-> +		{  286000000, 166667, 0x88, 0x02 },
-> +		{  386000000, 166667, 0x88, 0x42 },
-> +		{  446000000, 166667, 0x88, 0x82 },
-> +		{  466000000, 166667, 0x88, 0xc2 },
-> +		{  506000000, 166667, 0x88, 0x08 },
-> +		{  761000000, 166667, 0x88, 0x48 },
-> +		{  846000000, 166667, 0x88, 0x88 },
-> +		{  905000000, 166667, 0x88, 0xc8 },
-> +	},
-> +};
-> +
->  static struct dvb_pll_desc dvb_pll_lg_z201 = {
->  	.name  = "LG z201",
->  	.min   = 174000000,
-> @@ -537,6 +566,7 @@ static struct dvb_pll_desc dvb_pll_alps_tdee4 = {
->  static struct dvb_pll_desc *pll_list[] = {
->  	[DVB_PLL_UNDEFINED]              = NULL,
->  	[DVB_PLL_THOMSON_DTT7579]        = &dvb_pll_thomson_dtt7579,
-> +	[DVB_PLL_THOMSON_DTT7546X]       = &dvb_pll_thomson_dtt7546x,
->  	[DVB_PLL_THOMSON_DTT759X]        = &dvb_pll_thomson_dtt759x,
->  	[DVB_PLL_THOMSON_DTT7520X]       = &dvb_pll_thomson_dtt7520x,
->  	[DVB_PLL_LG_Z201]                = &dvb_pll_lg_z201,
-> @@ -561,7 +591,7 @@ static struct dvb_pll_desc *pll_list[] = {
->  /* code                                                        */
->  
->  static int dvb_pll_configure(struct dvb_frontend *fe, u8 *buf,
-> -			     const u32 frequency)
-> +			const u32 frequency, const u32 len)
->  {
->  	struct dvb_pll_priv *priv = fe->tuner_priv;
->  	struct dvb_pll_desc *desc = priv->pll_desc;
-> @@ -593,11 +623,15 @@ static int dvb_pll_configure(struct dvb_frontend *fe, u8 *buf,
->  	if (desc->set)
->  		desc->set(fe, buf);
->  
-> -	if (debug)
-> -		printk("pll: %s: div=%d | buf=0x%02x,0x%02x,0x%02x,0x%02x\n",
-> -		       desc->name, div, buf[0], buf[1], buf[2], buf[3]);
-> +	if (debug) {
-> +		printk(KERN_DEBUG "pll: %s: div=%d | buf=", desc->name, div);
-> +		for (i = 0; i < len; i++)
-> +			printk(KERN_DEBUG "0x%02x,", buf[i]);
->  
-> -	// calculate the frequency we set it to
-> +		printk(KERN_DEBUG "\n");
-> +	}
+http://www.gossamer-threads.com/lists/linux/kernel/2214469
 
-Please use, instead, the Documentation/printk-formats.txt macros to
-print an hex buffer:
-
-	"Raw buffer as a hex string:
-		%*ph	00 01 02  ...  3f
-		%*phC	00:01:02: ... :3f
-		%*phD	00-01-02- ... -3f
-		%*phN	000102 ... 3f"
-
-
-> +
-> +	/* calculate the frequency we set it to */
->  	return (div * desc->entries[i].stepsize) - desc->iffreq;
->  }
->  
-> @@ -634,21 +668,39 @@ static int dvb_pll_sleep(struct dvb_frontend *fe)
->  	return -EINVAL;
->  }
->  
-> +static int dvb_pll_get_num_regs(struct dvb_pll_priv *priv)
-> +{
-> +	int num_regs = 4;
-> +
-> +	if (strncmp(priv->pll_desc->name, "Thomson dtt7546x", 16) == 0)
-> +		num_regs = 5;
-> +
-> +	return num_regs;
-> +}
-> +
->  static int dvb_pll_set_params(struct dvb_frontend *fe)
->  {
->  	struct dtv_frontend_properties *c = &fe->dtv_property_cache;
->  	struct dvb_pll_priv *priv = fe->tuner_priv;
-> -	u8 buf[4];
-> -	struct i2c_msg msg =
-> -		{ .addr = priv->pll_i2c_address, .flags = 0,
-> -		  .buf = buf, .len = sizeof(buf) };
-> +	struct i2c_msg msg;
-> +	u8 *bufp;
->  	int result;
->  	u32 frequency = 0;
->  
-> +	bufp = kzalloc(dvb_pll_get_num_regs(priv), GFP_KERNEL);
-> +
-> +	if (!bufp)
-> +		return -ENOMEM;
-> +
-> +	msg.addr = priv->pll_i2c_address;
-> +	msg.flags = 0;
-> +	msg.buf = bufp;
-> +	msg.len = dvb_pll_get_num_regs(priv);
-> +
->  	if (priv->i2c == NULL)
->  		return -EINVAL;
->  
-> -	result = dvb_pll_configure(fe, buf, c->frequency);
-> +	result = dvb_pll_configure(fe, bufp, c->frequency, msg.len);
->  	if (result < 0)
->  		return result;
->  	else
-> @@ -677,7 +729,7 @@ static int dvb_pll_calc_regs(struct dvb_frontend *fe,
->  	if (buf_len < 5)
->  		return -EINVAL;
->  
-> -	result = dvb_pll_configure(fe, buf + 1, c->frequency);
-> +	result = dvb_pll_configure(fe, buf + 1, c->frequency, buf_len - 1);
->  	if (result < 0)
->  		return result;
->  	else
-> diff --git a/drivers/media/dvb-frontends/dvb-pll.h b/drivers/media/dvb-frontends/dvb-pll.h
-> index bf9602a..f523f42 100644
-> --- a/drivers/media/dvb-frontends/dvb-pll.h
-> +++ b/drivers/media/dvb-frontends/dvb-pll.h
-> @@ -28,6 +28,7 @@
->  #define DVB_PLL_SAMSUNG_TBMU24112      17
->  #define DVB_PLL_TDEE4		       18
->  #define DVB_PLL_THOMSON_DTT7520X       19
-> +#define DVB_PLL_THOMSON_DTT7546X       20
->  
->  /**
->   * Attach a dvb-pll to the supplied frontend structure.
+> -- 
+> 2.4.5
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
