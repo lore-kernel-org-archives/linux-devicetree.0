@@ -1,55 +1,62 @@
-From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH v2 2/5] Documentation: mtd: add a DT property to set the number of dummy cycles
-Date: Wed, 22 Jul 2015 15:43:54 +0200
-Message-ID: <201507221543.54761.marex@denx.de>
-References: <cover.1437569902.git.cyrille.pitchen@atmel.com> <8119e3b46b91e43c10466b2400c6938a113b1c02.1437569902.git.cyrille.pitchen@atmel.com>
-Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <8119e3b46b91e43c10466b2400c6938a113b1c02.1437569902.git.cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org, juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, shijie.huang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH 1/9] devicetree: bindings: Add optional dynamic-power-coefficient property
+Date: Wed, 22 Jul 2015 15:02:35 +0100
+Message-ID: <1437573763-6525-2-git-send-email-punit.agrawal@arm.com>
+References: <1437573763-6525-1-git-send-email-punit.agrawal@arm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1437573763-6525-1-git-send-email-punit.agrawal-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org>, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, July 22, 2015 at 03:17:07 PM, Cyrille Pitchen wrote:
-> Depending on the SPI clock frequency, the Fast Read op code and the
-> Single/Dual Data Rate mode, the number of dummy cycles can be tuned to
-> improve transfer speed.
-> The actual number of dummy cycles is specific for each memory model and is
-> provided by the manufacturer thanks to the memory datasheet.
-> 
-> Signed-off-by: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
-> b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt index
-> 2bee68103b01..4387567d8024 100644
-> --- a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
-> +++ b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
-> @@ -19,6 +19,11 @@ Optional properties:
->                     all chips and support for it can not be detected at
-> runtime. Refer to your chips' datasheet to check if this is supported by
-> your chip.
-> +- m25p,num-dummy-cycles : Set the number of dummy cycles for Fast Read
-> commands. +                          Depending on the manufacturer
-> additional dedicated +                          commands are sent to the
-> flash memory so the +                          controller and the memory
-> can agree on the number of +                          dummy cycles to use.
+The dynamic power consumption of a device is proportional to the
+square of voltage (V) and the clock frequency (f). It can be expressed as
 
-Can't you just try negotiating this value at probe time, starting with some
-high value and see how low you can get with the negotiations ? This way, you'd 
-be able to effectively auto-detect this value at probe-time.
+Pdyn = dynamic-power-coefficient * V^2 * f.
 
-I might be wrong though :)
+The dynamic-power-coefficient property represents an indicative
+running time dynamic power coefficient in fundamental units of
+mw/MHz/uVolt^2 and can be used in the above formula to calculate the
+dynamic power in mW.
 
-Best regards,
-Marek Vasut
+Signed-off-by: Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+---
+ Documentation/devicetree/bindings/arm/cpus.txt | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+index d6b794c..c32bfac 100644
+--- a/Documentation/devicetree/bindings/arm/cpus.txt
++++ b/Documentation/devicetree/bindings/arm/cpus.txt
+@@ -239,6 +239,21 @@ nodes to be present and contain the properties described below.
+ 		Definition: Specifies the syscon node controlling the cpu core
+ 			    power domains.
+ 
++	- dynamic-power-coefficient
++		Usage: optional
++		Value type: <prop-encoded-array>
++		Definition: A u32 value that represents an indicative
++			    running time dynamic power coefficient in
++			    fundamental units of mW/MHz/uVolt^2.
++
++			    The dynamic energy consumption of the CPU
++			    is proportional to the square of the
++			    Voltage (V) and the clock frequency (f).
++
++			    Pdyn = dynamic-power-coefficient * V^2 * f
++
++			    where voltage is in uV, frequency is in MHz.
++
+ Example 1 (dual-cluster big.LITTLE system 32-bit):
+ 
+ 	cpus {
+-- 
+2.1.4
+
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
