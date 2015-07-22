@@ -1,94 +1,24 @@
-From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 3/4] ARM: dts: DRA7: Add common IOMMU nodes
-Date: Tue, 21 Jul 2015 19:01:33 -0500
-Message-ID: <1437523294-20058-4-git-send-email-s-anna@ti.com>
-References: <1437523294-20058-1-git-send-email-s-anna@ti.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 0/3] R-Car JPEG Processing Unit
+Date: Wed, 22 Jul 2015 09:41:05 +0900
+Message-ID: <20150722004105.GD25644@verge.net.au>
+References: <1437444022-28916-1-git-send-email-mikhail.ulyanov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1437523294-20058-1-git-send-email-s-anna-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1437444022-28916-1-git-send-email-mikhail.ulyanov@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>
+Cc: hverkuil@xs4all.nl, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, mchehab@osg.samsung.com, laurent.pinchart@ideasonboard.com, j.anaszewski@samsung.com, kamil@wypas.org, sergei.shtylyov@cogentembedded.com, devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The DRA7xx family of SOCs have two IPUs and one DSP processor
-subsystems in common. The IOMMU DT nodes have been added for
-these processor subsystems, and have been disabled by default.
+Hi Mikhail,
 
-These MMUs are very similar to those on OMAP4 and OMAP5, with
-the only difference being the presence of a second MMU within
-the DSP subsystem for the EDMA port. The DSP IOMMUs also need
-an additional 'ti,syscon-mmuconfig' property compared to the
-IPU IOMMUs.
+On Tue, Jul 21, 2015 at 05:00:19AM +0300, Mikhail Ulyanov wrote:
+> This series of patches contains a driver for the JPEG codec integrated
+> peripheral found in the Renesas R-Car SoCs and associated DT documentation.
 
-NOTE: The enabling of these nodes is left to the respective
-board dts files.
-
-Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
----
- arch/arm/boot/dts/dra7.dtsi | 40 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
-
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index 1c96729641b6..0754df4ca59c 100644
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -911,6 +911,46 @@
- 			status = "disabled";
- 		};
- 
-+		mmu0_dsp1: mmu@40d01000 {
-+			compatible = "ti,dra7-dsp-iommu";
-+			reg = <0x40d01000 0x100>;
-+			interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
-+			ti,hwmods = "mmu0_dsp1";
-+			#iommu-cells = <0>;
-+			ti,syscon-mmuconfig = <&dsp1_system 0x0>;
-+			status = "disabled";
-+		};
-+
-+		mmu1_dsp1: mmu@40d02000 {
-+			compatible = "ti,dra7-dsp-iommu";
-+			reg = <0x40d02000 0x100>;
-+			interrupts = <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>;
-+			ti,hwmods = "mmu1_dsp1";
-+			#iommu-cells = <0>;
-+			ti,syscon-mmuconfig = <&dsp1_system 0x1>;
-+			status = "disabled";
-+		};
-+
-+		mmu_ipu1: mmu@58882000 {
-+			compatible = "ti,dra7-iommu";
-+			reg = <0x58882000 0x100>;
-+			interrupts = <GIC_SPI 395 IRQ_TYPE_LEVEL_HIGH>;
-+			ti,hwmods = "mmu_ipu1";
-+			#iommu-cells = <0>;
-+			ti,iommu-bus-err-back;
-+			status = "disabled";
-+		};
-+
-+		mmu_ipu2: mmu@55082000 {
-+			compatible = "ti,dra7-iommu";
-+			reg = <0x55082000 0x100>;
-+			interrupts = <GIC_SPI 396 IRQ_TYPE_LEVEL_HIGH>;
-+			ti,hwmods = "mmu_ipu2";
-+			#iommu-cells = <0>;
-+			ti,iommu-bus-err-back;
-+			status = "disabled";
-+		};
-+
- 		abb_mpu: regulator-abb-mpu {
- 			compatible = "ti,abb-v3";
- 			regulator-name = "abb_mpu";
--- 
-2.4.4
+I am wondering if you have any plans to post patches to integrate this
+change on any Reneas boards - by which I mean patches to update dts and/or
+dtsi files. I would be very happy to see such patches submitted for review.
