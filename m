@@ -1,67 +1,55 @@
-From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH 08/11] MTD: m25p80: Add option to limit SPI transfer size.
-Date: Wed, 22 Jul 2015 09:33:19 +0200
-Message-ID: <201507220933.19752.marex@denx.de>
-References: <cover.1433364398.git.hramrach@gmail.com> <20150722044925.GN23525@localhost> <CAOMqctQH4MnKMthOnuPgB-A5k6PCOAmhwHzJfn7gE3R4w8bufg@mail.gmail.com>
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: Re: [PATCH 11/12] [media] tsin: c8sectpfe: Add Kconfig and Makefile
+ for the driver.
+Date: Wed, 22 Jul 2015 08:38:56 +0100
+Message-ID: <20150722073856.GA32601@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <1435158670-7195-1-git-send-email-peter.griffin@linaro.org>
+ <1435158670-7195-12-git-send-email-peter.griffin@linaro.org>
+ <1435216998.4528.100.camel@tiscali.nl>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOMqctQH4MnKMthOnuPgB-A5k6PCOAmhwHzJfn7gE3R4w8bufg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Alison Chaiken <alison_chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, "Bean Huo =?utf-8?q?=E9=9C=8D=E6=96=8C=E6=96=8C?= (beanhuo)" <beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ben Hutchings <ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak@codeaurora>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1435216998.4528.100.camel@tiscali.nl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Bolle <pebolle@tiscali.nl>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, mchehab@osg.samsung.com, lee.jones@linaro.org, hugues.fruchet@st.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, July 22, 2015 at 09:30:54 AM, Michal Suchanek wrote:
-> On 22 July 2015 at 06:49, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
-> > On Tue, Jul 21, 2015 at 10:14:11AM +0200, Michal Suchanek wrote:
-> >> > Or alternatively we could publish the limitations of the channel using
-> >> > capabilities so SPI knows I have a dmaengine channel and it can
-> >> > transfer max N length transfers so would be able to break rather than
-> >> > guessing it or coding in DT. Yes it may come from DT but that should
-> >> > be dmaengine driver rather than client driver :)
-> >> > 
-> >> > This can be done by dma_get_slave_caps(chan, &caps)
-> >> > 
-> >> > And we add max_length as one more parameter to existing set
-> >> > 
-> >> > Also all this could be handled in generic SPI-dmaengine layer so that
-> >> > individual drivers don't have to code it in
-> >> > 
-> >> > Let me know if this idea is okay, I can push the dmaengine bits...
-> >> 
-> >> It would be ok if there was a fixed limit. However, the limit depends
-> >> on SPI slave settings. Presumably for other buses using the dmaengine
-> >> the limit would depend on the bus or slave settings as well. I do not
-> >> see a sane way of passing this all the way to the dmaengine driver.
-> > 
-> > I don't see why this should be client (SPI) dependent. The max length
-> > supported is a dmaengine constraint, typically flowing from max
-> > blocks/length it can transfer. Know this limit can allow clients to split
-> > transfers.
-> 
-> In practice on the board I have the maximum transfer length before it
-> fails depends on SPI bus speed which is set up per slave. I did not
-> try searching the space of possible settings thorougly and settled for
-> a setting that gives reasonable speed and transfer length.
+Hi Paul,
 
-This looks more like a signal integrity issue though.
+Thanks for reviewing.
 
-> However, if this was not tied to the particular slave setting picked
-> in the current DT a formula would be needed that translates arbitrary
-> client settings to transfer size limit and there would be need to
-> somehow get the client settings to the formula in the dmaengine
-> driver.
-> 
-> Thanks
-> 
-> Michal
+On Thu, 25 Jun 2015, Paul Bolle wrote:
 
-Best regards,
-Marek Vasut
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> On Wed, 2015-06-24 at 16:11 +0100, Peter Griffin wrote:
+> > --- /dev/null
+> > +++ b/drivers/media/tsin/c8sectpfe/Makefile
+> 
+> > +c8sectpfe-y += c8sectpfe-core.o c8sectpfe-common.o c8sectpfe-dvb.o
+> > +
+> > +obj-$(CONFIG_DVB_C8SECTPFE) += c8sectpfe.o
+> > +
+> > +ifneq ($(CONFIG_DVB_C8SECTPFE),)
+> > +	c8sectpfe-y += c8sectpfe-debugfs.o
+> > +endif
+> 
+> Isn't the above equivalent to
+>     c8sectpfe-y += c8sectpfe-core.o c8sectpfe-common.o c8sectpfe-dvb.o c8sectpfe-debugfs.o
+> 
+>     obj-$(CONFIG_DVB_C8SECTPFE) += c8sectpfe.o
+> 
+> Or am I missing something subtle here?
+
+No I think I just messed up. Will fix in v2.
+
+I suspect what happened  was I was starting to add a CONFIG_DVB_C8SECTPFE_DEBUGFS
+Kconfig option, and then forgot ;)
+
+In v2 I have added a "select DEBUG_FS" to Kconfig for the driver, and put it all on one
+line. Also at the same time fixing some other Kconfig dependencies I noticed so
+it now has 'select LIBELF_32' and 'select FW_LOADER'.
+
+regards,
+
+Peter.
