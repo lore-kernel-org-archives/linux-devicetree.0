@@ -1,53 +1,52 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 08/11] MTD: m25p80: Add option to limit SPI transfer size.
-Date: Wed, 22 Jul 2015 10:19:25 +0530
-Message-ID: <20150722044925.GN23525@localhost>
-References: <cover.1433364398.git.hramrach@gmail.com>
- <20150604171547.GA1530@localhost.localdomain>
- <CAOMqctSCL9E-kCBryeaMvtssSP12RY=kyfPuwSYx9wc=Lv9kGQ@mail.gmail.com>
- <201507151352.27689.marex@denx.de>
- <20150715155946.GB21362@localhost>
- <CAOMqctTJEg7EauKfrqW-6rUQ-QOmtkTfkgOyz0rCuyh_-XrW5w@mail.gmail.com>
- <20150721042932.GF23525@localhost>
- <CAOMqctSzzUV1J8Vj03XJ3Y70R9ynVErP4RZVtbjarDcZ9JLnaw@mail.gmail.com>
+From: Vignesh R <vigneshr@ti.com>
+Subject: Re: [PATCH v2 1/2] input: touchscreen: pixcir_i2c_ts: Add support
+ for optional wakeup interrupt
+Date: Wed, 22 Jul 2015 10:54:25 +0530
+Message-ID: <55AF2909.5090609@ti.com>
+References: <1437367814-27785-1-git-send-email-vigneshr@ti.com> <1437367814-27785-2-git-send-email-vigneshr@ti.com> <20150720060929.GW17550@atomide.com> <20150720062407.GA13092@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAOMqctSzzUV1J8Vj03XJ3Y70R9ynVErP4RZVtbjarDcZ9JLnaw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Alison Chaiken <alison_chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Bean Huo =?utf-8?B?6ZyN5paM5paMIChiZWFuaHVvKQ==?= <beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ben Hutchings <ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20150720062407.GA13092@dtor-ws>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Tony Lindgren <tony@atomide.com>
+Cc: Benoit Cousson <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Roger Quadros <rogerq@ti.com>, Henrik Rydberg <rydberg@bitmath.org>, Frodo Lai <frodo.lai@gmail.com>, Jingoo Han <jg1.han@samsung.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 21, 2015 at 10:14:11AM +0200, Michal Suchanek wrote:
-> > Or alternatively we could publish the limitations of the channel using
-> > capabilities so SPI knows I have a dmaengine channel and it can transfer max N
-> > length transfers so would be able to break rather than guessing it or coding
-> > in DT. Yes it may come from DT but that should be dmaengine driver rather
-> > than client driver :)
-> >
-> > This can be done by dma_get_slave_caps(chan, &caps)
-> >
-> > And we add max_length as one more parameter to existing set
-> >
-> > Also all this could be handled in generic SPI-dmaengine layer so that
-> > individual drivers don't have to code it in
-> >
-> > Let me know if this idea is okay, I can push the dmaengine bits...
+Hi Dmitry,
+
+On 07/20/2015 11:54 AM, Dmitry Torokhov wrote:
+> On Sun, Jul 19, 2015 at 11:09:30PM -0700, Tony Lindgren wrote:
+>> * Vignesh R <vigneshr@ti.com> [150719 21:53]:
+>>> @@ -445,6 +443,8 @@ static struct pixcir_ts_platform_data *pixcir_parse_dt(struct device *dev)
+>>>  	dev_dbg(dev, "%s: x %d, y %d, gpio %d\n", __func__,
+>>>  		pdata->x_max + 1, pdata->y_max + 1, pdata->gpio_attb);
+>>>  
+>>> +	pdata->wakeirq = of_irq_get_byname(dev->of_node, "wakeupirq");
+>>> +
+>>>  	return pdata;
+>>
+>> What about handling -EPROVE_DEFER here? At least pinctrl-single can be
+>> be a loadable module for the dedicated wakeirqs.
 > 
-> It would be ok if there was a fixed limit. However, the limit depends
-> on SPI slave settings. Presumably for other buses using the dmaengine
-> the limit would depend on the bus or slave settings as well. I do not
-> see a sane way of passing this all the way to the dmaengine driver.
-I don't see why this should be client (SPI) dependent. The max length
-supported is a dmaengine constraint, typically flowing from max
-blocks/length it can transfer. Know this limit can allow clients to split
-transfers.
+> Right. I think we should only allow -ENODATA to continue and return
+> error in all other cases.
+
+-EINVAL will be returned if "interrupt-names" is not specified. I will
+make execption for -ENODATA & -EINVAL, and return error in all other cases?
+
+> 
+> Also, I think "irq" suffix on name is redundant.
+
+Ok, will drop "irq" suffix:
+
++		interrupt-names = "tsc", "wakeup";
+
+> 
+> Thanks.
+> 
 
 -- 
-~Vinod
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards
+Vignesh
