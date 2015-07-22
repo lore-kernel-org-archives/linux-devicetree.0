@@ -1,33 +1,36 @@
-From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 3/4] iio: ti-adc128s052: Documentation: Add adc108s022 ID
-Date: Wed, 22 Jul 2015 18:04:23 +0200
-Message-ID: <1437581064-9733-3-git-send-email-denis@eukrea.com>
-References: <1437581064-9733-1-git-send-email-denis@eukrea.com>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1437581064-9733-1-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+From: santosh shilimkar <santosh.shilimkar@oracle.com>
+Subject: Re: [RESEND][PATCH 4/4] ARM: dts: keystone: Add ti,keystone-spi for
+ SPI
+Date: Wed, 22 Jul 2015 09:17:11 -0700
+Message-ID: <55AFC207.3050100@oracle.com>
+References: <1437568344-18889-1-git-send-email-fcooper@ti.com>
+ <1437568344-18889-5-git-send-email-fcooper@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1437568344-18889-5-git-send-email-fcooper@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Franklin S Cooper Jr <fcooper@ti.com>, broonie@kernel.org, nsekhar@ti.com, ssantosh@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, khilman@deeprootsystems.com, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, linux-arm-kernel@list.infradead.org, robh+dt@kernel.org, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
----
- Documentation/devicetree/bindings/iio/adc/ti-adc128s052.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On 7/22/2015 5:32 AM, Franklin S Cooper Jr wrote:
+> Add ti,keystone-spi to the compatible field for the SPI node. This new
+> entry insures that the proper prescaler limit is used for keystone devices
+>
+> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
+> ---
+Once the binding and driver makes it, I can pick this up.
+Keep me posted. Thanks !!
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/ti-adc128s052.txt b/Documentation/devicetree/bindings/iio/adc/ti-adc128s052.txt
-index 15ca6b4..c8a958d 100644
---- a/Documentation/devicetree/bindings/iio/adc/ti-adc128s052.txt
-+++ b/Documentation/devicetree/bindings/iio/adc/ti-adc128s052.txt
-@@ -1,7 +1,7 @@
--* Texas Instruments' ADC128S052 and ADC122S021 ADC chip
-+* Texas Instruments' ADC128S052, ADC122S021 and ADC108S022 ADC chips
- 
- Required properties:
-- - compatible: Should be "ti,adc128s052" or "ti,adc122s021"
-+ - compatible: Should be "ti,adc128s052", "ti,adc122s021" or "ti,adc108s022"
-  - reg: spi chip select number for the device
-  - vref-supply: The regulator supply for ADC reference voltage
- 
--- 
-2.4.5
+Regards,
+Santosh
