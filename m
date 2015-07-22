@@ -1,98 +1,148 @@
-From: Lucas Stach <dev@lynxeye.de>
-Subject: Re: [Patch v3 1/5] mtd: nand: tegra: add devicetree binding
-Date: Wed, 22 Jul 2015 22:15:29 +0200
-Message-ID: <1437596129.2289.2.camel@lynxeye.de>
-References: <1431282602-7137-1-git-send-email-dev@lynxeye.de>
- <1431282602-7137-2-git-send-email-dev@lynxeye.de>
- <20150721210537.GL24125@google.com>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: rockchip: Add veyron-speedy board
+Date: Wed, 22 Jul 2015 13:35:20 -0700
+Message-ID: <CAD=FV=Vz3FZCqhhamiWnQ7Zk-zKY4qSZbjWebPQJ-x1xQa+5MQ@mail.gmail.com>
+References: <1437543846-19897-1-git-send-email-romain.perier@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20150721210537.GL24125@google.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Brian Norris <computersforpeace@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Stefan Agner <stefan@agner.ch>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, linux-mtd@lists.infradead.org, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, linux-tegra@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org, Marcel Ziswiler <marcel@ziswiler.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1437543846-19897-1-git-send-email-romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, den 21.07.2015, 14:05 -0700 schrieb Brian Norris:
-> On Sun, May 10, 2015 at 08:29:58PM +0200, Lucas Stach wrote:
-> > This adds the devicetree binding for the Tegra 2 NAND flash
-> > controller.
-> > 
-> > Signed-off-by: Lucas Stach <dev@lynxeye.de>
-> > ---
-> >  .../bindings/mtd/nvidia,tegra20-nand.txt           | 29 ++++++++++++++++++++++
-> >  1 file changed, 29 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/mtd/nvidia,tegra20-nand.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mtd/nvidia,tegra20-nand.txt b/Documentation/devicetree/bindings/mtd/nvidia,tegra20-nand.txt
-> > new file mode 100644
-> > index 0000000..522d442
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mtd/nvidia,tegra20-nand.txt
-> > @@ -0,0 +1,29 @@
-> > +NVIDIA Tegra NAND Flash controller
-> > +
-> > +Required properties:
-> > +- compatible: Must be one of:
-> > +  - "nvidia,tegra20-nand"
-> > +- reg: MMIO address range
-> > +- interrupts: interrupt output of the NFC controller
-> > +- clocks: Must contain an entry for each entry in clock-names.
-> > +  See ../clocks/clock-bindings.txt for details.
-> > +- clock-names: Must include the following entries:
-> > +  - nand
-> > +- resets: Must contain an entry for each entry in reset-names.
-> > +  See ../reset/reset.txt for details.
-> > +- reset-names: Must include the following entries:
-> > +  - nand
-> > +
-> > +Optional properties:
-> > +- nvidia,wp-gpios: GPIO used to disable write protection of the flash
-> 
-> I think write-protect is a pretty common function, so we might want to
-> just remove the 'nvidia,' prefix, so we can eventually move your code to
-> the core nand_base.c library (BTW, I noticed you grab the GPIO, but you
-> don't do anything with it; is that intentional?). In fact, I've seen
-> requests for that very feature on the mailing list.
-> 
+Hi,
 
-Actually I request and activate the GPIO in the driver, so the chip is
-permanently unprotected.
+On Tue, Jul 21, 2015 at 10:44 PM, Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Which is formally known as The Asus C201 chromebook
+>
+> Signed-off-by: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/arm/rockchip.txt |  10 +-
+>  arch/arm/boot/dts/Makefile                         |   3 +-
+>  arch/arm/boot/dts/rk3288-veyron-speedy.dts         | 163 +++++++++++++++++++++
+>  3 files changed, 174 insertions(+), 2 deletions(-)
+>  create mode 100644 arch/arm/boot/dts/rk3288-veyron-speedy.dts
+>
+> diff --git a/Documentation/devicetree/bindings/arm/rockchip.txt b/Documentation/devicetree/bindings/arm/rockchip.txt
+> index 6de18bd2..da02022 100644
+> --- a/Documentation/devicetree/bindings/arm/rockchip.txt
+> +++ b/Documentation/devicetree/bindings/arm/rockchip.txt
+> @@ -37,4 +37,12 @@ Rockchip platforms device tree bindings
+>  - Google Pinky (dev-board):
+>      Required root node properties:
+>        - compatible = "google,veyron-pinky-rev2", "google,veyron-pinky",
+> -                    "google,veyron", "rockchip,rk3288";
+> \ No newline at end of file
+> +                    "google,veyron", "rockchip,rk3288";
+> +
+> +- Google Speedy (Asus C201 Chromebook):
+> +    Required root node properties:
+> +      - compatible = "google,veyron-speedy-rev9", "google,veyron-speedy-rev8",
+> +                    "google,veyron-speedy-rev7", "google,veyron-speedy-rev6",
+> +                    "google,veyron-speedy-rev5", "google,veyron-speedy-rev4",
+> +                    "google,veyron-speedy-rev3", "google,veyron-speedy-rev2",
+> +                    "google,veyron-speedy", "google,veyron", "rockchip,rk3288";
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 653ede7..bfa7c86 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -498,7 +498,8 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += \
+>         rk3288-firefly-beta.dtb \
+>         rk3288-firefly.dtb \
+>         rk3288-veyron-jerry.dtb \
+> -       rk3288-veyron-pinky.dtb
+> +       rk3288-veyron-pinky.dtb \
+> +       rk3288-veyron-speedy.dtb
+>  dtb-$(CONFIG_ARCH_S3C24XX) += \
+>         s3c2416-smdk2416.dtb
+>  dtb-$(CONFIG_ARCH_S3C64XX) += \
+> diff --git a/arch/arm/boot/dts/rk3288-veyron-speedy.dts b/arch/arm/boot/dts/rk3288-veyron-speedy.dts
+> new file mode 100644
+> index 0000000..6578e2a
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/rk3288-veyron-speedy.dts
+> @@ -0,0 +1,163 @@
+> +/*
+> + * Google Veyron Speedy Rev 1+ board device tree source
+> + *
+> + * Copyright 2015 Google, Inc
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This file is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + *  Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
 
-I agree that it would be nice to integrate this better into the NAND
-core. If it's okay for you I'll drop the nvidia prefix and follow up
-with patches to move this to the core after this driver is in. I don't
-really want this driver get blocked on more dependencies.
+License change is fine.
 
-> > +
-> > +  Example:
-> > +	nand@70008000 {
-> > +		compatible = "nvidia,tegra20-nand";
-> > +		reg = <0x70008000 0x100>;
-> > +		interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
-> > +		clocks = <&tegra_car TEGRA20_CLK_NDFLASH>;
-> > +		clock-names = "nand";
-> > +		resets = <&tegra_car 13>;
-> > +		reset-names = "nand";
-> > +	};
-> 
-> Otherwise, looks good.
-> 
-> Reviewed-by: Brian Norris <computersforpeace@gmail.com>
-> 
-> I have a few comments on the NAND driver, too.
-> 
-Thanks for the review.
 
-Regards,
-Lucas
+> +&rk808 {
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pmic_int_l &dvs_1 &dvs_2>;
+> +       dvs-gpios = <&gpio7 12 GPIO_ACTIVE_HIGH>,
+> +                   <&gpio7 15 GPIO_ACTIVE_HIGH>;
+> +};
+
+As Heiko said, dvs GPIOs aren't accepted yet.
+
+Also a nit that you changed the sort ordering of "disable-wp" compared
+to the jerry DTS.  Please make it match.
+
+> +       edp {
+> +               edp_hpd: edp_hpd {
+> +                       rockchip,pins = <7 11 RK_FUNC_2 &pcfg_pull_down>;
+> +               };
+> +       };
+
+Nothing uses this yet.  No huge objection to having it listed here
+anyway but I notice it's not in jerry's dts (even though it is the
+same value there).  It would be nice to add them at the same time.
+
+Also a nit that (I think) usually node names have a "-" in them and
+the alias has the "_".  Doesn't matter hugely, but makes it match
+everything else...
+
+
+Other than that you can add my Reviewed-by...
+
+
+-Doug
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
