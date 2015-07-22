@@ -1,102 +1,77 @@
-From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH 08/11] MTD: m25p80: Add option to limit SPI transfer size.
-Date: Wed, 22 Jul 2015 10:24:05 +0200
-Message-ID: <201507221024.05496.marex@denx.de>
-References: <cover.1433364398.git.hramrach@gmail.com> <201507220958.00231.marex@denx.de> <CAOMqctQ13JE+GHyj+hU4XL3Uz4+Yt_X6BFU=NO8jXcpRtzMyzQ@mail.gmail.com>
+From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 1/5] clocksource: mediatek: do not enable GPT_CLK_EVT
+ when setup
+Date: Wed, 22 Jul 2015 16:24:49 +0800
+Message-ID: <1437553489.22203.6.camel@mtksdaap41>
+References: <1436779969-18610-1-git-send-email-yingjoe.chen@mediatek.com>
+	 <1436779969-18610-2-git-send-email-yingjoe.chen@mediatek.com>
+	 <CAGS+omD8k_Cfxv3bYyjmjtLbiavo-WmJPn0Z-CBhN_nnv65Tag@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOMqctQ13JE+GHyj+hU4XL3Uz4+Yt_X6BFU=NO8jXcpRtzMyzQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Alison Chaiken <alison_chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, "Bean Huo =?utf-8?q?=E9=9C=8D=E6=96=8C=E6=96=8C?= (beanhuo)" <beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ben Hutchings <ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak@codeaurora>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAGS+omD8k_Cfxv3bYyjmjtLbiavo-WmJPn0Z-CBhN_nnv65Tag-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, July 22, 2015 at 10:18:04 AM, Michal Suchanek wrote:
-> On 22 July 2015 at 09:58, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org> wrote:
-> > On Wednesday, July 22, 2015 at 09:45:27 AM, Michal Suchanek wrote:
-> >> On 22 July 2015 at 09:33, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org> wrote:
-> >> > On Wednesday, July 22, 2015 at 09:30:54 AM, Michal Suchanek wrote:
-> >> >> On 22 July 2015 at 06:49, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
-> >> >> > On Tue, Jul 21, 2015 at 10:14:11AM +0200, Michal Suchanek wrote:
-> >> >> >> > Or alternatively we could publish the limitations of the channel
-> >> >> >> > using capabilities so SPI knows I have a dmaengine channel and
-> >> >> >> > it can transfer max N length transfers so would be able to
-> >> >> >> > break rather than guessing it or coding in DT. Yes it may come
-> >> >> >> > from DT but that should be dmaengine driver rather than client
-> >> >> >> > driver :)
-> >> >> >> > 
-> >> >> >> > This can be done by dma_get_slave_caps(chan, &caps)
-> >> >> >> > 
-> >> >> >> > And we add max_length as one more parameter to existing set
-> >> >> >> > 
-> >> >> >> > Also all this could be handled in generic SPI-dmaengine layer so
-> >> >> >> > that individual drivers don't have to code it in
-> >> >> >> > 
-> >> >> >> > Let me know if this idea is okay, I can push the dmaengine
-> >> >> >> > bits...
-> >> >> >> 
-> >> >> >> It would be ok if there was a fixed limit. However, the limit
-> >> >> >> depends on SPI slave settings. Presumably for other buses using
-> >> >> >> the dmaengine the limit would depend on the bus or slave settings
-> >> >> >> as well. I do not see a sane way of passing this all the way to
-> >> >> >> the dmaengine driver.
-> >> >> > 
-> >> >> > I don't see why this should be client (SPI) dependent. The max
-> >> >> > length supported is a dmaengine constraint, typically flowing from
-> >> >> > max blocks/length it can transfer. Know this limit can allow
-> >> >> > clients to split transfers.
-> >> >> 
-> >> >> In practice on the board I have the maximum transfer length before it
-> >> >> fails depends on SPI bus speed which is set up per slave. I did not
-> >> >> try searching the space of possible settings thorougly and settled
-> >> >> for a setting that gives reasonable speed and transfer length.
-> >> > 
-> >> > This looks more like a signal integrity issue though.
-> >> 
-> >> It certainly does on the surface. However, when wrong data is
-> >> delivered over the SPI bus (such as when I use wrong phase setting)
-> >> the SPI controller happily delivers wrong data over PIO.
-> >> 
-> >> The failure I am seeing is that the pl330 DMA program which repeatedly
-> >> waits for data from the SPI controller never finishes the read loop
-> >> and does not signal the interrupt. It seems it also leaves some data
-> >> in a FIFO somewhere so next command on the flash returns garbage and
-> >> fails.
-> > 
-> > I observed something similar on MXS (mx28) SPI block. Do you use mixed
-> > PIO/DMA mode perhaps ?
+On Tue, 2015-07-14 at 15:39 +0800, Daniel Kurtz wrote:
+> Hi Yingjoe,
 > 
-> The SPI driver uses PIO for short transfers and DMA for transfers
-> longer than the controller FIFO. This seems to be the standard way to
-> do things.It works flawlessly so long as submitting overly long DMA
-> programs is avoided.
-
-Can you try doing JUST DMA, no PIO ? I remember seeing some bus synchronisation
-issues when I did mixed PIO/DMA on the MXS and it was nasty to track down. Just
-give pure DMA a go to see if the thing stabilizes somehow.
-
-> > Do you have the option to connect a bus analyzer?
-> > I can probably offer you some tools, I'm in Prague ...
+> On Mon, Jul 13, 2015 at 5:32 PM, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> > Spurious mtk timer interrupt is noticed at boot and cause kernel
+> > crash. It seems if GPT is enabled, it will latch irq status even
+> > when its IRQ is disabled. When irq is enabled afterward, we see
+> > spurious interrupt.
+> > Change init flow to only enable GPT_CLK_SRC at mtk_timer_init.
+> >
+> > Signed-off-by: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > ---
+> >  drivers/clocksource/mtk_timer.c | 16 ++++++++++------
+> >  1 file changed, 10 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/drivers/clocksource/mtk_timer.c b/drivers/clocksource/mtk_timer.c
+> > index 68ab423..237c20b 100644
+> > --- a/drivers/clocksource/mtk_timer.c
+> > +++ b/drivers/clocksource/mtk_timer.c
+> > @@ -156,9 +156,11 @@ static void mtk_timer_global_reset(struct mtk_clock_event_device *evt)
+> >         writel(0x3f, evt->gpt_base + GPT_IRQ_ACK_REG);
+> >  }
+> >
+> > -static void
+> > -mtk_timer_setup(struct mtk_clock_event_device *evt, u8 timer, u8 option)
+> > +static void mtk_timer_setup(struct mtk_clock_event_device *evt, u8 timer,
+> > +                           u8 option, bool enable)
 > 
-> The flash chip is accessible when removing the bottom cover. It is
-> VSOP8 package slightly lower than SOP8 so attaching clips to it might
-> be a bit problematic. That's the only accessible part. Everything
-> other than SPI is inside the SoC.
+> This function can be: __init
+> 
+> Other than this tiny nit, and the small potential conflict in patch 4,
+> this whole series is:
+> 
+> Reviewed-by: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> 
+> (I do think it is a bit strange that the mediatek,mt6577-timer binding
+> does not use "clock-names", but that is independent of this patch
+> set).
+> 
 
-That might be doable, though you might want to try the above thing first.
 
-> Since SPI has no verification whatsoever the chip might be completely
-> dead and you can still read fine all zeroes or all ones when
-> attempting a read from it. I observed this behaviour when I used a
-> flash chip in a socket and it was not firmly seated. It was with a
-> different SPI controller, though.
+Hi Daniel,
 
-You should run into issues as soon as the SPI NOR framework tries to read
-status register, no ?
+Thanks for your review.
+
+I added __init as you suggested, and Pi-Cheng already sent an updated
+version of his patch to resolve the conflict[1].
+
+Joe.C
+
+[1]
+http://lists.infradead.org/pipermail/linux-mediatek/2015-July/001592.html
+
+
+
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
