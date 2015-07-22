@@ -1,10 +1,8 @@
 From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 2/3] hwmon: ads7828: Add devicetree support
-Date: Wed, 22 Jul 2015 18:30:19 +0200
-Message-ID: <1437582620-2294-2-git-send-email-denis@eukrea.com>
-References: <1437582620-2294-1-git-send-email-denis@eukrea.com>
+Subject: [PATCH 1/3] hwmon: lm92: Add devicetree support
+Date: Wed, 22 Jul 2015 18:30:18 +0200
+Message-ID: <1437582620-2294-1-git-send-email-denis@eukrea.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1437582620-2294-1-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Cc: =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
@@ -12,45 +10,43 @@ List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 ---
- drivers/hwmon/ads7828.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/hwmon/lm92.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/hwmon/ads7828.c b/drivers/hwmon/ads7828.c
-index 6c99ee7..a2d297f 100644
---- a/drivers/hwmon/ads7828.c
-+++ b/drivers/hwmon/ads7828.c
-@@ -31,6 +31,7 @@
- #include <linux/i2c.h>
- #include <linux/init.h>
- #include <linux/module.h>
+diff --git a/drivers/hwmon/lm92.c b/drivers/hwmon/lm92.c
+index cfaf70b..a1e10cd 100644
+--- a/drivers/hwmon/lm92.c
++++ b/drivers/hwmon/lm92.c
+@@ -44,6 +44,7 @@
+ #include <linux/hwmon-sysfs.h>
+ #include <linux/err.h>
+ #include <linux/mutex.h>
 +#include <linux/of.h>
- #include <linux/platform_data/ads7828.h>
- #include <linux/regmap.h>
- #include <linux/slab.h>
-@@ -160,6 +161,15 @@ static int ads7828_probe(struct i2c_client *client,
- 	return PTR_ERR_OR_ZERO(hwmon_dev);
- }
+ #include <linux/jiffies.h>
+ 
+ /*
+@@ -386,6 +387,13 @@ static int lm92_probe(struct i2c_client *new_client,
+  * Module and driver stuff
+  */
  
 +#ifdef CONFIG_OF
-+static const struct of_device_id ads7828_of_match[] = {
-+	{ .compatible = "ti,ads7828", .data = (void *) ads7828, },
-+	{ .compatible = "ti,ads7830", .data = (void *) ads7830, },
-+
++static const struct of_device_id lm92_of_match[] = {
++	{ .compatible = "national,lm92", },
 +};
-+MODULE_DEVICE_TABLE(of, ads7828_of_match);
++MODULE_DEVICE_TABLE(of, lm92_of_match);
 +#endif
 +
- static const struct i2c_device_id ads7828_device_ids[] = {
- 	{ "ads7828", ads7828 },
- 	{ "ads7830", ads7830 },
-@@ -170,6 +180,7 @@ MODULE_DEVICE_TABLE(i2c, ads7828_device_ids);
- static struct i2c_driver ads7828_driver = {
+ static const struct i2c_device_id lm92_id[] = {
+ 	{ "lm92", 0 },
+ 	/* max6635 could be added here */
+@@ -397,6 +405,7 @@ static struct i2c_driver lm92_driver = {
+ 	.class		= I2C_CLASS_HWMON,
  	.driver = {
- 		.name = "ads7828",
-+		.of_match_table = of_match_ptr(ads7828_of_match),
+ 		.name	= "lm92",
++		.of_match_table = of_match_ptr(lm92_of_match),
  	},
- 
- 	.id_table = ads7828_device_ids,
+ 	.probe		= lm92_probe,
+ 	.id_table	= lm92_id,
 -- 
 2.4.5
 
