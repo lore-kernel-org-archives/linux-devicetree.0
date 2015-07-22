@@ -1,74 +1,60 @@
-From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Subject: Re: [PATCH 1/2] spi: bcm2835: add spi-bcm2835aux driver for the auxiliar spi1 and spi2
-Date: Wed, 22 Jul 2015 18:28:33 +0200
-Message-ID: <0125992E-40F4-4702-8404-2943FF9A8788@martin.sperl.org>
-References: <1434980408-4086-1-git-send-email-kernel@martin.sperl.org> <55A0A150.3060809@wwwdotorg.org> <ECFBB7BF-1316-4565-B1F2-FB2651131882@martin.sperl.org> <55A49662.3000706@wwwdotorg.org> <2768BFA9-7FE9-4EDC-8692-AC3F070BD874@martin.sperl.org> <55AEF828.20908@wwwdotorg.org>
-Mime-Version: 1.0 (1.0)
-Content-Type: text/plain;
-	charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55AEF828.20908-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 2/3] hwmon: ads7828: Add devicetree support
+Date: Wed, 22 Jul 2015 18:30:19 +0200
+Message-ID: <1437582620-2294-2-git-send-email-denis@eukrea.com>
+References: <1437582620-2294-1-git-send-email-denis@eukrea.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1437582620-2294-1-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+---
+ drivers/hwmon/ads7828.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-
-> On 22.07.2015, at 03:55, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> 
-> However, I'd like to see a "semantic" driver for the shared register
-> region rather than a "syscon". IIUC, "syscon" simply provides a stylized
-> way for one driver to touch some shared registers directly without any
-> semantics. I'd strongly prefer to see a real driver inside Linux rather
-> than something that just lets drivers fiddle with the shared registers
-> willy nilly. Still, this aspect is an internal implementation detail
-> inside the kernel that we can change without external impact later if we
-> need.
-> 
-> More concerning: The bcm283x HW doesn't implement a "syscon" module, but
-> some semantic IP block. The DT should contain a real compatible value
-> that describes what the HW block really is, not just "syscon". We could
-> bind the syscon driver to this compatible value if we have to for
-
-So, do I understand you correctly that if we would call the node 
-bcm2835aux_enable as syscon with only the enable bit field register in it 
-and add a enable_reg (pointing to the above) and enable_reg_mask=2 or 4
-to the spi1/2 nodes then it would be acceptable? 
-
-Would look like this:
-spi2@7e2150c0 {
-+    compatible = "brcm,bcm2835-aux-spi";
-+    reg = <0x7e2150c0 0x40>;
-+    interrupts = <1 29>;
-+    clocks = <&clk_spi>;
-+    #address-cells = <1>;
-+    #size-cells = <0>;
-+    cs-gpios = <&gpio 43>, <&gpio 44>, <&gpio 45>;
-+    enable_reg = <&bcm2835aux_enable>;
-+    enable_reg_mask = 4;
-+};
+diff --git a/drivers/hwmon/ads7828.c b/drivers/hwmon/ads7828.c
+index 6c99ee7..a2d297f 100644
+--- a/drivers/hwmon/ads7828.c
++++ b/drivers/hwmon/ads7828.c
+@@ -31,6 +31,7 @@
+ #include <linux/i2c.h>
+ #include <linux/init.h>
+ #include <linux/module.h>
++#include <linux/of.h>
+ #include <linux/platform_data/ads7828.h>
+ #include <linux/regmap.h>
+ #include <linux/slab.h>
+@@ -160,6 +161,15 @@ static int ads7828_probe(struct i2c_client *client,
+ 	return PTR_ERR_OR_ZERO(hwmon_dev);
+ }
+ 
++#ifdef CONFIG_OF
++static const struct of_device_id ads7828_of_match[] = {
++	{ .compatible = "ti,ads7828", .data = (void *) ads7828, },
++	{ .compatible = "ti,ads7830", .data = (void *) ads7830, },
 +
-+/* the necessary syscon config referenced above */
-+bcm2835aux_enable: bcm2835aux_enable@0x7e215004 {
-+    compatible = "syscon";
-+    reg = <0x7e215004 0x04>;
 +};
-
-
-The uart aux driver would use:
-+    enable_reg = <&bcm2835aux_enable>;
-+    enable_reg_mask = 1;
-
-Or maybe you would prefer a different naming?
-
-The only use-case would be using:
-regmap_update_bits(enable_reg, 0, enable_reg_mask, enable_reg_mask); /*enable */
-regmap_update_bits(enable_reg, 0, enable_reg_mask, 0); /* disable */
-
++MODULE_DEVICE_TABLE(of, ads7828_of_match);
++#endif
++
+ static const struct i2c_device_id ads7828_device_ids[] = {
+ 	{ "ads7828", ads7828 },
+ 	{ "ads7830", ads7830 },
+@@ -170,6 +180,7 @@ MODULE_DEVICE_TABLE(i2c, ads7828_device_ids);
+ static struct i2c_driver ads7828_driver = {
+ 	.driver = {
+ 		.name = "ads7828",
++		.of_match_table = of_match_ptr(ads7828_of_match),
+ 	},
+ 
+ 	.id_table = ads7828_device_ids,
+-- 
+2.4.5
 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
