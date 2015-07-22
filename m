@@ -1,73 +1,81 @@
-From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH 08/11] MTD: m25p80: Add option to limit SPI transfer size.
-Date: Wed, 22 Jul 2015 09:58:00 +0200
-Message-ID: <201507220958.00231.marex@denx.de>
-References: <cover.1433364398.git.hramrach@gmail.com> <201507220933.19752.marex@denx.de> <CAOMqctTmRy0gOchdUQ+VnoV-oJz0v9NpUPLi1pxO_O9QrLXsZA@mail.gmail.com>
+From: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Subject: [PATCH v2 1/5] clocksource: mediatek: do not enable GPT_CLK_EVT when setup
+Date: Wed, 22 Jul 2015 16:14:38 +0800
+Message-ID: <1437552878-3684-1-git-send-email-yingjoe.chen@mediatek.com>
+References: <CAGS+omD8k_Cfxv3bYyjmjtLbiavo-WmJPn0Z-CBhN_nnv65Tag@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOMqctTmRy0gOchdUQ+VnoV-oJz0v9NpUPLi1pxO_O9QrLXsZA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Alison Chaiken <alison_chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, "Bean Huo =?utf-8?q?=E9=9C=8D=E6=96=8C=E6=96=8C?= (beanhuo)" <beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ben Hutchings <ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak@codeaurora>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAGS+omD8k_Cfxv3bYyjmjtLbiavo-WmJPn0Z-CBhN_nnv65Tag@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Kurtz <djkurtz@chromium.org>, Stephen Boyd <sboyd@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>
+Cc: James Liao <jamesjj.liao@mediatek.com>, Russell King <linux@arm.linux.org.uk>, srv_heupstream <srv_heupstream@mediatek.com>, Arnd Bergmann <arnd@arndb.de>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Michael Turquette <mturquette@baylibre.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, " linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>, linux-clk@vger.kernel.org, " linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Yingjoe Chen <yingjoe.chen@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, July 22, 2015 at 09:45:27 AM, Michal Suchanek wrote:
-> On 22 July 2015 at 09:33, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org> wrote:
-> > On Wednesday, July 22, 2015 at 09:30:54 AM, Michal Suchanek wrote:
-> >> On 22 July 2015 at 06:49, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
-> >> > On Tue, Jul 21, 2015 at 10:14:11AM +0200, Michal Suchanek wrote:
-> >> >> > Or alternatively we could publish the limitations of the channel
-> >> >> > using capabilities so SPI knows I have a dmaengine channel and it
-> >> >> > can transfer max N length transfers so would be able to break
-> >> >> > rather than guessing it or coding in DT. Yes it may come from DT
-> >> >> > but that should be dmaengine driver rather than client driver :)
-> >> >> > 
-> >> >> > This can be done by dma_get_slave_caps(chan, &caps)
-> >> >> > 
-> >> >> > And we add max_length as one more parameter to existing set
-> >> >> > 
-> >> >> > Also all this could be handled in generic SPI-dmaengine layer so
-> >> >> > that individual drivers don't have to code it in
-> >> >> > 
-> >> >> > Let me know if this idea is okay, I can push the dmaengine bits...
-> >> >> 
-> >> >> It would be ok if there was a fixed limit. However, the limit depends
-> >> >> on SPI slave settings. Presumably for other buses using the dmaengine
-> >> >> the limit would depend on the bus or slave settings as well. I do not
-> >> >> see a sane way of passing this all the way to the dmaengine driver.
-> >> > 
-> >> > I don't see why this should be client (SPI) dependent. The max length
-> >> > supported is a dmaengine constraint, typically flowing from max
-> >> > blocks/length it can transfer. Know this limit can allow clients to
-> >> > split transfers.
-> >> 
-> >> In practice on the board I have the maximum transfer length before it
-> >> fails depends on SPI bus speed which is set up per slave. I did not
-> >> try searching the space of possible settings thorougly and settled for
-> >> a setting that gives reasonable speed and transfer length.
-> > 
-> > This looks more like a signal integrity issue though.
-> 
-> It certainly does on the surface. However, when wrong data is
-> delivered over the SPI bus (such as when I use wrong phase setting)
-> the SPI controller happily delivers wrong data over PIO.
-> 
-> The failure I am seeing is that the pl330 DMA program which repeatedly
-> waits for data from the SPI controller never finishes the read loop
-> and does not signal the interrupt. It seems it also leaves some data
-> in a FIFO somewhere so next command on the flash returns garbage and
-> fails.
+Spurious mtk timer interrupt is noticed at boot and cause kernel
+crash. It seems if GPT is enabled, it will latch irq status even
+when its IRQ is disabled. When irq is enabled afterward, we see
+spurious interrupt.
+Change init flow to only enable GPT_CLK_SRC at mtk_timer_init.
 
-I observed something similar on MXS (mx28) SPI block. Do you use mixed
-PIO/DMA mode perhaps ? Do you have the option to connect a bus analyzer?
-I can probably offer you some tools, I'm in Prague ...
+Acked-by: Matthias Brugger <matthias.bgg@gmail.com>
+Reviewed-by: Daniel Kurtz <djkurtz@chromium.org>
+Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
+---
 
-Best regards,
-Marek Vasut
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Update to my patch [1], added __init as Daniel suggest. This is the
+only patch that need to change in that series, so I only sent this one.
+
+http://lists.infradead.org/pipermail/linux-mediatek/2015-July/001545.html
+
+ drivers/clocksource/mtk_timer.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/clocksource/mtk_timer.c b/drivers/clocksource/mtk_timer.c
+index 68ab423..2ba5b66 100644
+--- a/drivers/clocksource/mtk_timer.c
++++ b/drivers/clocksource/mtk_timer.c
+@@ -156,9 +156,11 @@ static void mtk_timer_global_reset(struct mtk_clock_event_device *evt)
+ 	writel(0x3f, evt->gpt_base + GPT_IRQ_ACK_REG);
+ }
+ 
+-static void
+-mtk_timer_setup(struct mtk_clock_event_device *evt, u8 timer, u8 option)
++static void __init mtk_timer_setup(struct mtk_clock_event_device *evt,
++				   u8 timer, u8 option, bool enable)
+ {
++	u32 val;
++
+ 	writel(TIMER_CTRL_CLEAR | TIMER_CTRL_DISABLE,
+ 		evt->gpt_base + TIMER_CTRL_REG(timer));
+ 
+@@ -167,8 +169,10 @@ mtk_timer_setup(struct mtk_clock_event_device *evt, u8 timer, u8 option)
+ 
+ 	writel(0x0, evt->gpt_base + TIMER_CMP_REG(timer));
+ 
+-	writel(TIMER_CTRL_OP(option) | TIMER_CTRL_ENABLE,
+-			evt->gpt_base + TIMER_CTRL_REG(timer));
++	val = TIMER_CTRL_OP(option);
++	if (enable)
++		val |= TIMER_CTRL_ENABLE;
++	writel(val, evt->gpt_base + TIMER_CTRL_REG(timer));
+ }
+ 
+ static void mtk_timer_enable_irq(struct mtk_clock_event_device *evt, u8 timer)
+@@ -235,12 +239,12 @@ static void __init mtk_timer_init(struct device_node *node)
+ 	evt->ticks_per_jiffy = DIV_ROUND_UP(rate, HZ);
+ 
+ 	/* Configure clock source */
+-	mtk_timer_setup(evt, GPT_CLK_SRC, TIMER_CTRL_OP_FREERUN);
++	mtk_timer_setup(evt, GPT_CLK_SRC, TIMER_CTRL_OP_FREERUN, true);
+ 	clocksource_mmio_init(evt->gpt_base + TIMER_CNT_REG(GPT_CLK_SRC),
+ 			node->name, rate, 300, 32, clocksource_mmio_readl_up);
+ 
+ 	/* Configure clock event */
+-	mtk_timer_setup(evt, GPT_CLK_EVT, TIMER_CTRL_OP_REPEAT);
++	mtk_timer_setup(evt, GPT_CLK_EVT, TIMER_CTRL_OP_REPEAT, false);
+ 	clockevents_config_and_register(&evt->dev, rate, 0x3,
+ 					0xffffffff);
+ 
+-- 
+1.8.1.1.dirty
