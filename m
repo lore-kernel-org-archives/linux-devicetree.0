@@ -1,121 +1,71 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH 0/3] R-Car JPEG Processing Unit
-Date: Wed, 22 Jul 2015 08:08:39 +0200
-Message-ID: <55AF3367.5040503@xs4all.nl>
-References: <1437444022-28916-1-git-send-email-mikhail.ulyanov@cogentembedded.com>
+From: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/4] clk: 88pm800: Add clk provider driver for 88pm800
+ family of devices
+Date: Wed, 22 Jul 2015 11:57:37 +0530
+Message-ID: <55AF37D9.3000006@linaro.org>
+References: <1437476823-3358-1-git-send-email-vaibhav.hiremath@linaro.org> <1437476823-3358-4-git-send-email-vaibhav.hiremath@linaro.org> <55AE990E.2040004@codeaurora.org> <55AE9F48.20600@linaro.org> <55AEB103.9010205@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1437444022-28916-1-git-send-email-mikhail.ulyanov@cogentembedded.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>, horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, mchehab@osg.samsung.com
-Cc: laurent.pinchart@ideasonboard.com, j.anaszewski@samsung.com, kamil@wypas.org, sergei.shtylyov@cogentembedded.com, devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55AEB103.9010205-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mikhail,
 
-Just one small thing, see below...
 
-On 07/21/2015 04:00 AM, Mikhail Ulyanov wrote:
-> This series of patches contains a driver for the JPEG codec integrated
-> peripheral found in the Renesas R-Car SoCs and associated DT documentation.
-> 
-> This series of patches is against the 'master' branch of
-> linuxtv.org/media_tree.git
-> 
-> v4l2-compliance -s
-> 
-> Driver Info:
->         Driver name   : rcar_jpu
->         Card type     : rcar_jpu encoder
->         Bus info      : platform:fe980000.jpu
->         Driver version: 4.2.0
->         Capabilities  : 0x84204000
->                 Video Memory-to-Memory Multiplanar
->                 Streaming
->                 Extended Pix Format
->                 Device Capabilities
->         Device Caps   : 0x04204000
->                 Video Memory-to-Memory Multiplanar
->                 Streaming
->                 Extended Pix Format
-> 
-> Compliance test for device /dev/video0 (not using libv4l2):
-> 
-> Required ioctls:
->         test VIDIOC_QUERYCAP: OK
-> 
-> Allow for multiple opens:
->         test second video open: OK
->         test VIDIOC_QUERYCAP: OK
->         test VIDIOC_G/S_PRIORITY: OK
-> 
-> Debug ioctls:
->         test VIDIOC_DBG_G/S_REGISTER: OK
->         test VIDIOC_LOG_STATUS: OK (Not Supported)
-> 
-> Input ioctls:
->         test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
->         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
->         test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
->         test VIDIOC_ENUMAUDIO: OK (Not Supported)
->         test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
->         test VIDIOC_G/S_AUDIO: OK (Not Supported)
->         Inputs: 0 Audio Inputs: 0 Tuners: 0
-> 
-> Output ioctls:
->         test VIDIOC_G/S_MODULATOR: OK (Not Supported)
->         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
->         test VIDIOC_ENUMAUDOUT: OK (Not Supported)
->         test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
->         test VIDIOC_G/S_AUDOUT: OK (Not Supported)
->         Outputs: 0 Audio Outputs: 0 Modulators: 0
-> 
-> Input/Output configuration ioctls:
->         test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
->         test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
->         test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
->         test VIDIOC_G/S_EDID: OK (Not Supported)
-> 
->         Control ioctls:
->                 test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
->                 test VIDIOC_QUERYCTRL: OK
->                 test VIDIOC_G/S_CTRL: OK
->                 test VIDIOC_G/S/TRY_EXT_CTRLS: OK
->                 test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
->                 test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
->                 Standard Controls: 2 Private Controls: 0
-> 
->         Format ioctls:
->                 test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
->                 test VIDIOC_G/S_PARM: OK (Not Supported)
->                 test VIDIOC_G_FBUF: OK (Not Supported)
->                 test VIDIOC_G_FMT: OK
->                 test VIDIOC_TRY_FMT: OK
->                 test VIDIOC_S_FMT: OK
->                 test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
->                 test Cropping: OK (Not Supported)
->                 test Composing: OK (Not Supported)
->                 test Scaling: OK
-> 
->         Codec ioctls:
->                 test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
->                 test VIDIOC_G_ENC_INDEX: OK (Not Supported)
->                 test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-> 
->         Buffer ioctls:
->                 warn: v4l2-test-buffers.cpp(542): VIDIOC_CREATE_BUFS not supported
->                 warn: v4l2-test-buffers.cpp(542): VIDIOC_CREATE_BUFS not supported
+On Wednesday 22 July 2015 02:22 AM, Stephen Boyd wrote:
+> On 07/21/2015 12:36 PM, Vaibhav Hiremath wrote:
+>>
+>> On Wednesday 22 July 2015 12:40 AM, Stephen Boyd wrote:
+>>> On 07/21/2015 04:07 AM, Vaibhav Hiremath wrote:
+>>>> +
 
-Can you add support for this? There is a v4l2_m2m_ioctl_create_bufs helper function,
-so all you need to do is stick in that helper and have jpu_queue_setup verify and
-user fmt->fmt.imagesize as the size if fmt is non-NULL.
+<snip>
 
-Please run v4l2-compliance again after it's been added.
+>>>> +static int pm800_clk_remove(struct platform_device *pdev)
+>>>> +{
+>>>> +    struct pm800_clk *pm800_clks = platform_get_drvdata(pdev);
+>>>> +    int i;
+>>>> +
+>>>> +    of_clk_del_provider(pm800_clks[0].clk_np);
+>>>> +    /* Drop the reference obtained in pm800_clk_parse_dt */
+>>>> +    of_node_put(pm800_clks[0].clk_np);
+>>>
+>>> This is odd. Why are we keeping the reference in the driver?
+>>>
+>>
+>> Honestly I do not have any good answer here. I have to admit that it is
+>> getting carry forwarded from legacy driver.
+>>
+>
+> Well we shouldn't do things if we don't know why we're doing them.
+> Krzysztof?
+>
 
-I plan on reviewing and hopefully making a pull request for this on Friday.
+Hold on,
+After looking more in to this, it seems we really do not need it.
+It is already taken care by
 
-Regards,
+of_clk_add_provider() and
+of_clk_del_provider()
 
-	Hans
+Sorry for not investigating this before. Just left out from my eyes
+somehow.
+
+
+Actually I can cleanup clk-s2mps11.c driver as well, but only thing is
+I can validate it, as I do not have platform to test it.
+It should be trivial changes.
+
+If somebody can help me out in validation I can submit the patch for
+clk-s2mps11.c driver as well.
+
+Thanks,
+Vaibhav
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
