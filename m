@@ -1,35 +1,80 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v4 1/8] Documentation: add DT binding for ARM System Control
- and Power Interface(SCPI) protocol
-Date: Wed, 22 Jul 2015 10:25:10 +0100
-Message-ID: <55AF6176.5010405@arm.com>
-References: <1433760002-24120-1-git-send-email-sudeep.holla@arm.com> <1433760002-24120-2-git-send-email-sudeep.holla@arm.com> <20150722084312.GB14923@e106497-lin.cambridge.arm.com>
+From: Jisheng Zhang <jszhang@marvell.com>
+Subject: Re: [PATCH v3 1/2] arm64: dts: Add dts files for Marvell Berlin4CT
+ SoC
+Date: Wed, 22 Jul 2015 17:35:30 +0800
+Message-ID: <20150722173530.5b7b6621@xhacker>
+References: <1437555470-6283-1-git-send-email-jszhang@marvell.com>
+	<1437555470-6283-2-git-send-email-jszhang@marvell.com>
+	<55AF6017.6040407@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20150722084312.GB14923@e106497-lin.cambridge.arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Liviu Dudau <Liviu.Dudau@arm.com>, Mark Rutland <Mark.Rutland@arm.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, "Jon Medhurst (Tixy)" <tixy@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@kernel.org>, Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <55AF6017.6040407@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "khilman@linaro.org" <khilman@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>, "olof@lixom.net" <olof@lixom.net>, Mark Rutland <Mark.Rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "galak@codeaurora.org" <galak@codeaurora.org>, Pawel Moll <Pawel.Moll@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Liviu,
+Dear Sudeep,
 
-On 22/07/15 09:43, Liviu Dudau wrote:
-> Hi Sudeep,
->
-> Minor spelling/phrasing corrections:
->
+On Wed, 22 Jul 2015 10:19:19 +0100
+Sudeep Holla <sudeep.holla@arm.com> wrote:
 
-Thanks for the review, all fixed locally now. I will soon post new
-version. Can you provide ACKs on the Juno DTS files if you are happy
-with it ?
+> 
+> 
+> On 22/07/15 09:57, Jisheng Zhang wrote:
+> > Add initial dtsi file to support Marvell Berlin4CT SoC with
+> > quad Cortex-A53 CPUs.
+> >
+> > It also adds dts file for Marvell Berlin4CT DMP board which is
+> > based on Berlin4CT SoC.
+> >
+> > Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
+> > ---
+> >   arch/arm64/boot/dts/Makefile                  |   1 +
+> >   arch/arm64/boot/dts/marvell/Makefile          |   5 +
+> >   arch/arm64/boot/dts/marvell/berlin4ct-dmp.dts |  67 +++++++++++
+> >   arch/arm64/boot/dts/marvell/berlin4ct.dtsi    | 164 ++++++++++++++++++++++++++
+> >   4 files changed, 237 insertions(+)
+> >   create mode 100644 arch/arm64/boot/dts/marvell/Makefile
+> >   create mode 100644 arch/arm64/boot/dts/marvell/berlin4ct-dmp.dts
+> >   create mode 100644 arch/arm64/boot/dts/marvell/berlin4ct.dtsi
+> >
+> 
+> [..]
+> 
+> > diff --git a/arch/arm64/boot/dts/marvell/berlin4ct-dmp.dts b/arch/arm64/boot/dts/marvell/berlin4ct-dmp.dts
+> > new file mode 100644
+> > index 0000000..58ed7f1
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/marvell/berlin4ct-dmp.dts
+> > @@ -0,0 +1,67 @@
+> 
+> [..]
+> 
+> > +/dts-v1/;
+> > +
+> > +#include "berlin4ct.dtsi"
+> > +
+> > +/ {
+> > +	model = "MARVELL BG4CT DMP BOARD";
+> > +	compatible = "marvell,berlin4ct-dmp", "marvell,berlin4ct", "marvell,berlin";
+> > +
+> > +	chosen {
+> > +		bootargs = "earlycon=uart8250,mmio32,0xf7fcd000";
+> > +		stdout-path = "serial0:115200n8";
+> 
+> Just earlycon without any parameters will suffice. Currently earlycon
+> parsing code has issues and it's being worked out[1]. The serial port
+> details specified in stdout-path will be used by earlycon.
+> 
+> Regards,
+> Sudeep
+> 
+> [1] https://lkml.org/lkml/2015/4/8/604
 
-Hi Mark,
+I just found all arm64 ports don't have bootargs, so neither earlycon, I will
+follow this behavior. Will send out v4 later.
 
-Sorry for the nag, but I would like to get feedback(if any) before I
-post new version.
-
-Regards,
-Sudeep
+Thanks
