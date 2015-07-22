@@ -1,56 +1,53 @@
-From: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH 0/9]  Add STiH407 fanmily pinctrl DT for tsin, tsout and
- mtsin channels
-Date: Wed, 22 Jul 2015 11:03:47 +0200
-Message-ID: <55AF5C73.3010509@st.com>
-References: <1433945046-19855-1-git-send-email-peter.griffin@linaro.org>
+From: Maxime Coquelin <maxime.coquelin@st.com>
+Subject: Re: [PATCH v2 2/3] ARM: STi: DT: STiH407: Add cpu-release-addr dt
+ property.
+Date: Wed, 22 Jul 2015 11:11:45 +0200
+Message-ID: <55AF5E51.8010006@st.com>
+References: <1433856824-30689-1-git-send-email-peter.griffin@linaro.org> <1433856824-30689-3-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1433945046-19855-1-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hugues.fruchet-qxv4g6HH51o@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1433856824-30689-3-git-send-email-peter.griffin@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Griffin <peter.griffin@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, patrice.chotard@st.com, khilman@kernel.org, arnd@arndb.de, olof@lixom.net
+Cc: lee.jones@linaro.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Peter,
+HI Peter,
 
-On 06/10/2015 04:03 PM, Peter Griffin wrote:
-> Hi folks,
+On 06/09/2015 03:33 PM, Peter Griffin wrote:
+> To enable SMP when booting via u-boot we need to specify the
+> newly implemented cpu-release-addr DT property.
 >
-> This set adds in the necessary DT pinctrl configuration for the transport stream
-> input channels, transport stream output channels and merged transport stream input
-> channels for STiH407 family silicon.
+> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> Acked-by: Maxime Coquelin <maxime.coquelin@st.com>
+> ---
+>   arch/arm/boot/dts/stih407-family.dtsi | 4 ++++
+>   1 file changed, 4 insertions(+)
 >
-> Some of these channels have alternate pinctrl configurations depending on the board
-> design. These pinctrl groups will be used by the LinuxDVB c8sectpfe driver which
-> will be upstreamed in due course, which allows LDVB tuners and demodulators to be
-> used with an upstream kernel to get transport stream data into the SoC.
->
-> regards,
->
-> Peter.
->
-> Peter Griffin (9):
->    ARM: STi: DT: Add STiH407 family tsin0 pinctrl configuration
->    ARM: STi: DT: Add STiH407 family tsin1 pinctrl configuration
->    ARM: STi: DT: Add STiH407 family tsin2 pinctrl configuration
->    ARM: STi: DT: Add STiH407 family tsin3 pinctrl configuration
->    ARM: STi: DT: Add STiH407 family tsin4 pinctrl configuration
->    ARM: STi: DT: Add STiH407 family tsin5 pinctrl configuration
->    ARM: STi: DT: Add STiH407 family tsout0 pinctrl configuration
->    ARM: STi: DT: Add STiH407 family tsout1 pinctrl configuration
->    ARM: STi: DT: Add STiH407 family mtsin0 pinctrl configuration
->
->   arch/arm/boot/dts/stih407-pinctrl.dtsi | 200 +++++++++++++++++++++++++++++++++
->   1 file changed, 200 insertions(+)
->
-Series applied for v4.3.
+> diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
+> index c06a546..3c90227 100644
+> --- a/arch/arm/boot/dts/stih407-family.dtsi
+> +++ b/arch/arm/boot/dts/stih407-family.dtsi
+> @@ -19,11 +19,15 @@
+>   			device_type = "cpu";
+>   			compatible = "arm,cortex-a9";
+>   			reg = <0>;
+> +			/* u-boot puts hpen in SBC dmem at 0xa4 offset */
+> +			cpu-release-addr = <0x94100A4>;
+>   		};
+>   		cpu@1 {
+>   			device_type = "cpu";
+>   			compatible = "arm,cortex-a9";
+>   			reg = <1>;
+> +			/* u-boot puts hpen in SBC dmem at 0xa4 offset */
+> +			cpu-release-addr = <0x94100A4>;
+>   		};
+>   	};
+>   
+
+Patch applied for v4.3.
 
 Thanks,
 Maxime
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
