@@ -1,48 +1,31 @@
-From: BOVINA FINANCIAL SERVICES <atwi-oddTSyGn4aM@public.gmane.org>
-Subject: We will Loan you Money regardless your Credit under 3Days
-Date: Wed, 22 Jul 2015 17:03:40 +0100
-Message-ID: <20150722180756.B61C010BB119E@webmail.ut.ac.id>
-Reply-To: financiersworldwid01-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH] Revert "ti-st: add device tree support"
+Date: Wed, 22 Jul 2015 11:32:44 -0700
+Message-ID: <20150722183244.GB32421@kroah.com>
+References: <1437589035-14178-1-git-send-email-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Description: Mail message body
+Content-Disposition: inline
+In-Reply-To: <1437589035-14178-1-git-send-email-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Recipients <atwi-oddTSyGn4aM@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Gigi Joseph <gigi.joseph-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-We are certified, trustworthy, reliable, efficient, fast and dynamic. and a co-operate financier. We give out long term loan for 5-50Yrs maximum @ 0.2% interest rate,
+On Wed, Jul 22, 2015 at 01:17:15PM -0500, Rob Herring wrote:
+> This reverts commit 46d0d33350e9b32642d745a8b46a954910196b4d.
+> 
+> This binding is horrible and never should have been merged. It is not
+> documented nor are there any in tree users, so reverting it will not
+> break anything we care about. Lets revert it before we do have users.
 
-For a Personal Loan
-- Choose Between $2,000 and $900,000
-- Choose Between 1 and 30 years to payback.
-- Accept a Low APR of 0.2%
+This went into the 4.0 kernel, should this revert get into 4.2-final or
+can it wait for 4.3?
 
-For a Business Loan
-- Choose Between $10,000 and $100,000,000.00
-- Choose Between 1 and 45 years to payback.
-- Accept a Low APR of 0.2%
+thanks,
 
-If you are interested do get back us with these information,
-
-Your Name:
-Address:
-City:
-Country:
-Phone:
-Amount Needed:
-Loan Duration:
-
-
-Best Regards
-(CEO/MD)
-
----
-This email has been checked for viruses by Avast antivirus software.
-https://www.avast.com/antivirus
-
-
+greg k-h
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
