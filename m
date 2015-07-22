@@ -1,161 +1,81 @@
-From: Punit Agrawal <punit.agrawal@arm.com>
-Subject: [PATCH 7/9] hwmon: Support registration of thermal
-	zones for SCP temperature sensors
-Date: Wed, 22 Jul 2015 15:02:41 +0100
-Message-ID: <1437573763-6525-8-git-send-email-punit.agrawal@arm.com>
-References: <1437573763-6525-1-git-send-email-punit.agrawal@arm.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: [PATCH v3 2/5] dt-bindings: Add a binding for Mediatek xHCI host controller
+Date: Wed, 22 Jul 2015 22:05:42 +0800
+Message-ID: <1437573945-31586-3-git-send-email-chunfeng.yun@mediatek.com>
+References: <1437573945-31586-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <lm-sensors-bounces@lm-sensors.org>
-In-Reply-To: <1437573763-6525-1-git-send-email-punit.agrawal@arm.com>
-List-Unsubscribe: <http://lists.lm-sensors.org/mailman/options/lm-sensors>,
-	<mailto:lm-sensors-request@lm-sensors.org?subject=unsubscribe>
-List-Archive: <http://lists.lm-sensors.org/pipermail/lm-sensors/>
-List-Post: <mailto:lm-sensors@lm-sensors.org>
-List-Help: <mailto:lm-sensors-request@lm-sensors.org?subject=help>
-List-Subscribe: <http://lists.lm-sensors.org/mailman/listinfo/lm-sensors>,
-	<mailto:lm-sensors-request@lm-sensors.org?subject=subscribe>
-Sender: lm-sensors-bounces@lm-sensors.org
-Errors-To: lm-sensors-bounces@lm-sensors.org
-To: linux-pm@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Punit Agrawal <punit.agrawal@arm.com>, linux-kernel@vger.kernel.org, lm-sensors@lm-sensors.org, Eduardo Valentin <edubezval@gmail.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1437573945-31586-1-git-send-email-chunfeng.yun@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mathias Nyman <mathias.nyman@intel.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Felipe Balbi <balbi@ti.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, John Crispin <blogic@openwrt.org>, Daniel Kurtz <djkurtz@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support to create thermal zones based on the temperature sensors
-provided by the SCP. The thermal zones can be defined using the
-thermal DT bindings and should refer to the SCP sensor id to select
-the sensor.
+add a DT binding documentation of xHCI host controller for the
+MT8173 SoC from Mediatek.
 
-Signed-off-by: Punit Agrawal <punit.agrawal@arm.com>
-Cc: Jean Delvare <jdelvare@suse.de>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Cc: Eduardo Valentin <edubezval@gmail.com>
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
- drivers/hwmon/scpi-hwmon.c | 53 ++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 53 insertions(+)
+ .../devicetree/bindings/usb/mt8173-xhci.txt        | 50 ++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/mt8173-xhci.txt
 
-diff --git a/drivers/hwmon/scpi-hwmon.c b/drivers/hwmon/scpi-hwmon.c
-index dd0a6f1..1e52ced 100644
---- a/drivers/hwmon/scpi-hwmon.c
-+++ b/drivers/hwmon/scpi-hwmon.c
-@@ -22,6 +22,7 @@
- #include <linux/scpi_protocol.h>
- #include <linux/slab.h>
- #include <linux/sysfs.h>
-+#include <linux/thermal.h>
- 
- static struct scpi_ops *scpi_ops;
- 
-@@ -33,12 +34,18 @@ struct sensor_dev {
- 	char label[20];
- };
- 
-+struct scpi_thermal_zone {
-+	struct list_head list;
-+	struct thermal_zone_device *tzd;
+diff --git a/Documentation/devicetree/bindings/usb/mt8173-xhci.txt b/Documentation/devicetree/bindings/usb/mt8173-xhci.txt
+new file mode 100644
+index 0000000..444494d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/mt8173-xhci.txt
+@@ -0,0 +1,50 @@
++MT65XX xhci
++
++The device node for Mediatek SOC usb3.0 host controller
++
++Required properties:
++ - compatible : supports "mediatek,mt8173-xhci"
++ - reg        : Offset and length of registers
++ - interrupts : Interrupt mode, number and trigger mode
++ - power-domains: to enable usb's mtcmos
++ - vusb33-supply:  regulator of usb avdd3.3v
++ - clocks     : must support all clocks that xhci needs
++ - clock-names: should be "sys_mac" for sys and mac clocks, and
++	"wakeup_deb_p0", "wakeup_deb_p1" for wakeup debounce control
++	clocks
++ - phys	: the phys that xhci will bind, currently supports up to two
++	phys, so phy index should not greater than one.
++ - phy-names : should be "phy-X" format, X equals to 0 or 1
++ - usb3-lpm-capable: supports USB3 LPM
++ - mediatek,usb-wakeup: to access usb wakeup control register
++ - mediatek,wakeup-src: 1: ip sleep wakeup mode; 2: line state wakeup
++	mode; others means don't enable wakeup source of usb
++ - mediatek,u2port-num: the number should not greater than the number
++	of phys
++
++Optional properties:
++ - vbus-supply : reference to the VBUS regulator;
++
++Example:
++usb: usb30@11270000 {
++	compatible = "mediatek,mt8173-xhci";
++	reg = <0 0x11270000 0 0x4000>,
++	      <0 0x11280000 0 0x0800>;
++	interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_LOW>;
++	power-domains = <&scpsys MT8173_POWER_DOMAIN_USB>;
++	clocks = <&topckgen CLK_TOP_USB30_SEL>,
++		 <&pericfg CLK_PERI_USB0>,
++		 <&pericfg CLK_PERI_USB1>;
++	clock-names = "sys_mac",
++		      "wakeup_deb_p0",
++		      "wakeup_deb_p1";
++	phys = <&u3phy 0>, <&u3phy 1>;
++	phy-names = "phy-0", "phy-1";
++	vusb33-supply = <&mt6397_vusb_reg>;
++	vbus-supply = <&usb_p1_vbus>;
++	usb3-lpm-capable;
++	mediatek,usb-wakeup = <&pericfg>;
++	mediatek,wakeup-src = <1>;
++	mediatek,u2port-num = <2>;
++	status = "okay";
 +};
-+
- struct scpi_sensors {
- 	int num_volt;
- 	int num_temp;
- 	int num_current;
- 	int num_power;
- 	struct sensor_dev *device;
-+	struct list_head thermal_zones;
- 	struct device *hwdev;
- };
- struct scpi_sensors scpi_sensors;
-@@ -54,6 +61,20 @@ static int scpi_read_sensor(struct sensor_dev *sensor, u32 *value)
- 	return 0;
- }
- 
-+static int scpi_read_temp(void *dev, long *temp)
-+{
-+	struct sensor_dev *sensor = dev;
-+	u32 value;
-+	int ret;
-+
-+	ret = scpi_read_sensor(sensor, &value);
-+	if (ret)
-+		return ret;
-+
-+	*temp = value;
-+	return 0;
-+}
-+
- /* hwmon callback functions */
- static ssize_t
- scpi_hwmon_show_sensor(struct device *dev,
-@@ -90,6 +111,10 @@ struct attribute *scpi_attrs[24] = { 0 };
- struct attribute_group scpi_group;
- const struct attribute_group *scpi_groups[2] = { 0 };
- 
-+struct thermal_zone_of_device_ops scpi_sensor_ops = {
-+	.get_temp = scpi_read_temp,
-+};
-+
- static int scpi_hwmon_probe(struct platform_device *pdev)
- {
- 	u16 sensors, i;
-@@ -108,9 +133,12 @@ static int scpi_hwmon_probe(struct platform_device *pdev)
- 	if (!scpi_sensors.device)
- 		return -ENOMEM;
- 
-+	INIT_LIST_HEAD(&scpi_sensors.thermal_zones);
-+
- 	dev_info(&pdev->dev, "Found %d sensors\n", sensors);
- 	for (i = 0; i < sensors; i++) {
- 		struct sensor_dev *dev = &scpi_sensors.device[i];
-+		struct scpi_thermal_zone *zone;
- 
- 		ret = scpi_ops->sensor_get_info(i, &dev->info);
- 		if (ret) {
-@@ -130,6 +158,20 @@ static int scpi_hwmon_probe(struct platform_device *pdev)
- 			snprintf(dev->label, 20,
- 				 "temp%d_label", scpi_sensors.num_temp);
- 			scpi_sensors.num_temp++;
-+
-+			zone = devm_kmalloc(&pdev->dev, sizeof(*zone),
-+					    GFP_KERNEL);
-+			if (!zone)
-+				return -ENOMEM;
-+
-+			zone->tzd = thermal_zone_of_sensor_register(&pdev->dev,
-+						    i, dev, &scpi_sensor_ops);
-+			if (!IS_ERR(zone->tzd))
-+				list_add(&zone->list,
-+					 &scpi_sensors.thermal_zones);
-+			else
-+				devm_kfree(&pdev->dev, zone);
-+
- 			break;
- 		case VOLTAGE:
- 			snprintf(dev->input, 20,
-@@ -187,7 +229,18 @@ static int scpi_hwmon_probe(struct platform_device *pdev)
- 
- static int scpi_hwmon_remove(struct platform_device *pdev)
- {
-+	struct list_head *pos;
-+
- 	scpi_ops = NULL;
-+
-+	list_for_each(pos, &scpi_sensors.thermal_zones) {
-+		struct scpi_thermal_zone *zone;
-+
-+		zone = list_entry(pos, struct scpi_thermal_zone, list);
-+		thermal_zone_of_sensor_unregister(scpi_sensors.hwdev,
-+						  zone->tzd);
-+	}
-+
- 	return 0;
- }
- 
 -- 
-2.1.4
-
-
-_______________________________________________
-lm-sensors mailing list
-lm-sensors@lm-sensors.org
-http://lists.lm-sensors.org/mailman/listinfo/lm-sensors
+1.8.1.1.dirty
