@@ -1,43 +1,46 @@
 From: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] ARM: dts: Use stdout-path in STM32F429 Discovery board
-Date: Thu, 23 Jul 2015 07:09:33 +0200
-Message-ID: <1437628173-9447-1-git-send-email-mcoquelin.stm32@gmail.com>
+Subject: Re: [PATCH] ARM: dts: Add STM32429i-EVAL board support
+Date: Thu, 23 Jul 2015 07:16:22 +0200
+Message-ID: <CALszF6ALmeVv+T_TkL9AKu_XqDe2=5REpyOriKsq_rgA1ww51g@mail.gmail.com>
+References: <1436693957-30855-1-git-send-email-mcoquelin.stm32@gmail.com>
+	<CAOesGMjLBwQgfm=nP+qTD9J8mfdoDb1PYCJ5cv2rT10+QY539Q@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOesGMjLBwQgfm=nP+qTD9J8mfdoDb1PYCJ5cv2rT10+QY539Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kamil Lulko <rev13-5tc4TXWwyLM@public.gmane.org>, afaerber-l3A5Bk7waGM@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kamil Lulko <rev13-5tc4TXWwyLM@public.gmane.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch replaces use of linux,stdout-path by stdout-path as per
-"chosen" DT bindings documentation.
+Hi Olof,
 
-Doing that, the "console" argument is no more needed in kernel command
-line.
+2015-07-23 1:42 GMT+02:00 Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>:
+> Hi,
+>
+> On Sun, Jul 12, 2015 at 2:39 AM, Maxime Coquelin
+> <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>
+>> +/ {
+>> +       model = "STMicroelectronics STM32429i-EVAL board";
+>> +       compatible = "st,stm32429i-eval", "st,stm32f429";
+>> +
+>> +       chosen {
+>> +               bootargs = "console=ttyS0,115200 root=/dev/ram rdinit=/linuxrc";
+>> +               linux,stdout-path = &usart1;
+>
+> You should use stdout-path here instead, and with that you'll no
+> longer need the console arg in the bootargs.
+>
+> See: https://www.kernel.org/doc/Documentation/devicetree/bindings/chosen.txt
 
-Reported-by: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Signed-off-by: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/stm32f429-disco.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Thanks for the hint! I was not aware of that.
 
-diff --git a/arch/arm/boot/dts/stm32f429-disco.dts b/arch/arm/boot/dts/stm32f429-disco.dts
-index 8bd3de5..f0b731d 100644
---- a/arch/arm/boot/dts/stm32f429-disco.dts
-+++ b/arch/arm/boot/dts/stm32f429-disco.dts
-@@ -53,8 +53,8 @@
- 	compatible = "st,stm32f429i-disco", "st,stm32f429";
- 
- 	chosen {
--		bootargs = "console=ttyS0,115200 root=/dev/ram rdinit=/linuxrc";
--		linux,stdout-path = &usart1;
-+		bootargs = "root=/dev/ram rdinit=/linuxrc";
-+		stdout-path = "serial0:115200n8";
- 	};
- 
- 	memory {
--- 
-1.9.1
+I will send the new pull request fixing this, and also fixing
+STM32F429 Discovery board shortly.
 
+Thanks,
+Maxime
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
