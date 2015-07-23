@@ -1,143 +1,54 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v3 1/1] dt: cpufreq: st: Provide bindings for ST's
- CPUFreq implementation
-Date: Thu, 23 Jul 2015 15:22:54 +0530
-Message-ID: <20150723095254.GN5322@linux>
-References: <1437478420-26419-1-git-send-email-lee.jones@linaro.org>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 1/3] Documentation: dt: dwc3: Add snps,configure-fladj
+ property
+Date: Thu, 23 Jul 2015 10:56:35 +0100
+Message-ID: <20150723095635.GA12330@leverpostej>
+References: <1437646161-1764-1-git-send-email-nikhil.badola@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1437478420-26419-1-git-send-email-lee.jones@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, rob.herring@linaro.org, nm@ti.com, arnd.bergmann@linaro.org, sboyd@codeaurora.org, Sudeep.Holla@arm.com
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, rjw@rjwysocki.net, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, ajitpal.singh@st.com, kernel@stlinux.com
+In-Reply-To: <1437646161-1764-1-git-send-email-nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nikhil Badola <nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Cc'ing few more people who were involved in opp-v2 discussions.
-
-Guys, please take a closer look as this is the first user platform
-that wants to extend opp-v2 bindings with platform specific stuff.
-
-On 21-07-15, 12:33, Lee Jones wrote:
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+On Thu, Jul 23, 2015 at 11:09:21AM +0100, Nikhil Badola wrote:
+> Add property snps,configure-fladj for enabling post silicon
+> frame length adjustment
+> 
+> Signed-off-by: Nikhil Badola <nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 > ---
+>  Documentation/devicetree/bindings/usb/dwc3.txt | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> Only submitting the binding document as requested by Viresh.
+> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+> index 0815eac..90c3972 100644
+> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
+> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+> @@ -40,6 +40,7 @@ Optional properties:
+>   - snps,hird-threshold: HIRD threshold
+>   - snps,hsphy_interface: High-Speed PHY interface selection between "utmi" for
+>     UTMI+ and "ulpi" for ULPI when the DWC_USB3_HSPHY_INTERFACE has value 3.
+> + - snps,configure-fladj: enables post-silicon frame length adjustment
+
+Could you elaborate on what this means and why you think it's necessary?
+
+Mark.
+
+>  
+>  This is usually a subnode to DWC3 glue to which it is connected.
+>  
+> -- 
+> 2.1.0
 > 
-> v2 => v3:
->  - Using OPP v2
->  - Moved OPPs out of the CPU node into their own one
->  - Using generic 'opp-hz' property
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 > 
->  .../devicetree/bindings/cpufreq/cpufreq-st.txt     | 77 ++++++++++++++++++++++
->  1 file changed, 77 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-st.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-st.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-st.txt
-> new file mode 100644
-> index 0000000..a478eec
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-st.txt
-
-These are used by cpufreq, but they aren't really cpufreq bindings.
-
-These are opp bindings and must present at:
-Documentation/devicetree/bindings/power/opp/st.txt and we should move
-opp.txt in that folder as well..
-
-> @@ -0,0 +1,77 @@
-> +Binding for ST's CPUFreq driver
-> +===============================
-> +
-> +Required properties [for working voltage scaling]:
-> +-------------------------------------------------
-> +
-> +Located in CPU's node:
-
-I hope below registers are used to define which OPPs are valid for the
-CPU and so shouldn't these be present under opp node instead of CPU?
-
-> +- st,syscfg		: Phandle to Major number register
-> +				First cell: offset to major number
-> +- st,syscfg-eng		: Phandle to Minor number and Pcode registers
-> +				First cell: offset to process code
-> +				Second cell: offset to minor number
-> +
-> +Located in 'cpu0-opp-list' node [to be provided ONLY by the bootloader]:
-> +
-> + - opp{1..N} 		: Each 'oppX' subnode will contain the following properties:
-> +  - opp-hz		: CPU frequency [Hz] for this OPP
-
-Not sure if you are required to re define it. In case you want to, the
-please add a link here to the bindings that define it. So that we
-don't think they are newer bindings.
-
-> +  - st,avs		: List of available voltages [uV] indexed by process code
-> +  - st,cuts		: Cut version this OPP is suitable for [0xFF means ALL]
-> +  - st,substrate	: Substrate version this OPP is suitable for [0xFF means ALL]
-
-@Stephen: Any idea if these can be relevant for other platforms and we
-can move them to generic bindings?
-
-> +WARNING: The cpu0-opp-list will be provided by the bootloader.  Do not attempt to
-> +	 artificially synthesise the cpu0-opp-list node or any of its descendants.
-> +	 They are very platform specific and may damage the hardware if created
-> +	 incorrectly.
-> +
-> +Required properties [if voltage scaling properties are missing]:
-> +-------------------------------------------------------------------
-> +
-> +Located in CPU's node:
-> +
-> +- operating-points	: [See: ../power/opp.txt]
-> +
-> +Example [safe]:
-> +--------------
-> +
-> +cpus {
-> +	cpu@0 {
-> +				 /* kHz     uV   */
-> +		operating-points = <1500000 0
-> +				    1200000 0
-> +				    800000  0
-> +				    500000  0>;
-> +	};
-> +};
-
-Why do you want to keep these as well?
-
-> +Example [unsafe]:
-> +----------------
-> +
-> +cpus {
-> +	cpu@0 {
-> +		st,syscfg		= <&syscfg [major_offset]>;
-> +		st,syscfg-eng   	= <&syscfg_eng [pcode_offset] [minor_offset]>;
-> +		operating-points-v2	= <&cpu0_opp_list>;
-> +	};
-> +};
-> +
-> +/* ############################################################ */
-> +/* # WARNING: Do not attempt to copy/replicate this node,     # */
-> +/* #          it is only to be supplied by the bootloader !!! # */
-> +/* ############################################################ */
-> +cpu0-opp-list {
-> +	compatible = "operating-points-v2-sti";
-> +	opp0 {
-> +		opp-hz		= <1200000000>;
-> +		st,avs		= <1110 1150 1100 1080 1040 1020 980 930>;
-> +		st,substrate	= <0xff>;
-> +		st,cuts		= <0xff>;
-> +	};
-> +	opp1 {
-> +		opp-hz		= <1500000000>;
-> +		st,avs		= <1200 1200 1200 1200 1170 1140 1100 1070>;
-> +		st,substrate	= <0xff>;
-> +		st,cuts		= <0x2>;
-> +	};
-> +};
-
--- 
-viresh
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
