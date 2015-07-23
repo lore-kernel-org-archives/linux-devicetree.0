@@ -1,66 +1,90 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH v8 1/9] nvmem: Add a simple NVMEM framework for nvmem
- providers
-Date: Thu, 23 Jul 2015 17:26:40 +0200
-Message-ID: <55B107B0.5010706@i2se.com>
-References: <1437403352-4091-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1437403392-4136-1-git-send-email-srinivas.kandagatla@linaro.org>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V3 2/3] devicetree: da9062: Add device tree bindings for
+ DA9062 RTC
+Date: Thu, 23 Jul 2015 16:27:34 +0100
+Message-ID: <20150723152734.GO3436@x1>
+References: <cover.1437474547.git.stwiss.opensource@diasemi.com>
+ <f899992aaa9b5ea54cb2e27c1cabf626d5969c07.1437474547.git.stwiss.opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1437403392-4136-1-git-send-email-srinivas.kandagatla@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-arm-kernel@lists.infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, s.hauer@pengutronix.de, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, arnd@arndb.de, sboyd@codeaurora.org, pantelis.antoniou@konsulko.com, mporter@konsulko.com, wxt@rock-chips.com, Maxime Ripard <maxime.ripard@free-electrons.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <f899992aaa9b5ea54cb2e27c1cabf626d5969c07.1437474547.git.stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: S Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Cc: DEVICETREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, LINUXINPUT <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUXKERNEL <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, RTCLINUX <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Dajun Chen <david.chen-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Support Opensource <support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Srinivas,
+On Tue, 21 Jul 2015, S Twiss wrote:
 
-Am 20.07.2015 um 16:43 schrieb Srinivas Kandagatla:
-> This patch adds just providers part of the framework just to enable easy
-> review.
->
-> Up until now, NVMEM drivers like eeprom were stored in drivers/misc,
-> where they all had to duplicate pretty much the same code to register
-> a sysfs file, allow in-kernel users to access the content of the devices
-> they were driving, etc.
->
-> This was also a problem as far as other in-kernel users were involved,
-> since the solutions used were pretty much different from on driver to
-> another, there was a rather big abstraction leak.
->
-> This introduction of this framework aims at solving this. It also
-> introduces DT representation for consumer devices to go get the data
-> they require (MAC Addresses, SoC/Revision ID, part numbers, and so on)
-> from the nvmems.
->
-> Having regmap interface to this framework would give much better
-> abstraction for nvmems on different buses.
->
-> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-> [Maxime Ripard: intial version of eeprom framework]
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> From: S Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+>=20
+> Add device tree bindings for the DA9062 RTC driver component
+>=20
+> Signed-off-by: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+>=20
 > ---
->  drivers/Kconfig                |   2 +
->  drivers/Makefile               |   1 +
->  drivers/nvmem/Kconfig          |  13 ++
->  drivers/nvmem/Makefile         |   6 +
->  drivers/nvmem/core.c           | 384 +++++++++++++++++++++++++++++++++++++++++
->  include/linux/nvmem-consumer.h |  23 +++
->  include/linux/nvmem-provider.h |  47 +++++
->  7 files changed, 476 insertions(+)
->  create mode 100644 drivers/nvmem/Kconfig
->  create mode 100644 drivers/nvmem/Makefile
->  create mode 100644 drivers/nvmem/core.c
->  create mode 100644 include/linux/nvmem-consumer.h
->  create mode 100644 include/linux/nvmem-provider.h
+> Checks performed with linux-next/next-20150708/scripts/checkpatch.pl
+>  da9062.txt                total: 0 errors, 0 warnings, 88 lines chec=
+ked
+> This patch applies against linux-next and next-20150708=20
+>=20
+>=20
+>  Documentation/devicetree/bindings/mfd/da9062.txt | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 
-i've tested this patch with my mxs-ocotp driver [1].
+Applied, thanks.
 
-So you can add
+> diff --git a/Documentation/devicetree/bindings/mfd/da9062.txt b/Docum=
+entation/devicetree/bindings/mfd/da9062.txt
+> index 5765ed9..38802b5 100644
+> --- a/Documentation/devicetree/bindings/mfd/da9062.txt
+> +++ b/Documentation/devicetree/bindings/mfd/da9062.txt
+> @@ -5,6 +5,7 @@ DA9062 consists of a large and varied group of sub-de=
+vices:
+>  Device                   Supply Names    Description
+>  ------                   ------------    -----------
+>  da9062-regulator        :               : LDOs & BUCKs
+> +da9062-rtc              :               : Real-Time Clock
+>  da9062-watchdog         :               : Watchdog Timer
+> =20
+>  =3D=3D=3D=3D=3D=3D
+> @@ -41,6 +42,10 @@ Sub-nodes:
+>    Documentation/devicetree/bindings/regulator/regulator.txt
+> =20
+> =20
+> +- rtc : This node defines settings required for the Real-Time Clock =
+associated
+> +  with the DA9062. There are currently no entries in this binding, h=
+owever
+> +  compatible =3D "dlg,da9062-rtc" should be added if a node is creat=
+ed.
+> +
+>  - watchdog: This node defines the settings for the watchdog driver a=
+ssociated
+>    with the DA9062 PMIC. The compatible =3D "dlg,da9062-watchdog" sho=
+uld be added
+>    if a node is created.
+> @@ -55,6 +60,10 @@ Example:
+>  		interrupts =3D <11 IRQ_TYPE_LEVEL_LOW>;
+>  		interrupt-controller;
+> =20
+> +		rtc {
+> +			compatible =3D "dlg,da9062-rtc";
+> +		};
+> +
+>  		watchdog {
+>  			compatible =3D "dlg,da9062-watchdog";
+>  		};
 
-Tested-by: Stefan Wahren <stefan.wahren@i2se.com>
-
-Regards
-Stefan
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
