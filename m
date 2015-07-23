@@ -1,16 +1,16 @@
 From: Harini Katakam <harini.katakam@xilinx.com>
-Subject: [NET-NEXT PATCH] net: macb: Change capability mask for jumbo support
-Date: Thu, 23 Jul 2015 15:44:25 +0530
-Message-ID: <1437646465-6462-1-git-send-email-harinik@xilinx.com>
+Subject: [NET-NEXT PATCH] net: macb: Change capability mask of jumbo support
+Date: Thu, 23 Jul 2015 15:31:26 +0530
+Message-ID: <1437645686-5146-1-git-send-email-harinik@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <netdev-owner@vger.kernel.org>
-Sender: netdev-owner@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: nicolas.ferre@atmel.com, davem@davemloft.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, boris.brezillon@free-electrons.com, alexandre.belloni@free-electrons.com, harinikatakamlinux@gmail.com
 Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, harinik@xilinx.com, punnaia@xilinx.com, michals@xilinx.com
 List-Id: devicetree@vger.kernel.org
 
-JUMBO and NO_GIGABIT_HALF have the same capability masks.
+Capability mask for jumbo and no gigabit half duplex is the same.
 Change one of them.
 
 Signed-off-by: Harini Katakam <harinik@xilinx.com>
@@ -19,17 +19,17 @@ Signed-off-by: Harini Katakam <harinik@xilinx.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/net/ethernet/cadence/macb.h b/drivers/net/ethernet/cadence/macb.h
-index d746559..8fb80b2 100644
+index 15fd6e3..8b3087b 100644
 --- a/drivers/net/ethernet/cadence/macb.h
 +++ b/drivers/net/ethernet/cadence/macb.h
-@@ -399,7 +399,7 @@
+@@ -449,7 +449,7 @@
  #define MACB_CAPS_GIGABIT_MODE_AVAILABLE	0x20000000
  #define MACB_CAPS_SG_DISABLED			0x40000000
  #define MACB_CAPS_MACB_IS_GEM			0x80000000
 -#define MACB_CAPS_JUMBO				0x00000008
 +#define MACB_CAPS_JUMBO				0x00000010
+ #define NS_PER_SEC				1000000000ULL
  
  /* Bit manipulation macros */
- #define MACB_BIT(name)					\
 -- 
 1.7.9.5
