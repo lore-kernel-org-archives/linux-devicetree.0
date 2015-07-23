@@ -1,76 +1,80 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v8 1/9] nvmem: Add a simple NVMEM framework for nvmem
- providers
-Date: Thu, 23 Jul 2015 16:50:26 +0100
-Message-ID: <55B10D42.1020803@linaro.org>
-References: <1437403352-4091-1-git-send-email-srinivas.kandagatla@linaro.org> <1437403392-4136-1-git-send-email-srinivas.kandagatla@linaro.org> <55B107B0.5010706@i2se.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/4] mfd: 88pm800: Update the header file with 32K clk
+ related macros
+Date: Thu, 23 Jul 2015 16:52:33 +0100
+Message-ID: <20150723155233.GT3436@x1>
+References: <1437476823-3358-1-git-send-email-vaibhav.hiremath@linaro.org>
+ <1437476823-3358-2-git-send-email-vaibhav.hiremath@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <55B107B0.5010706@i2se.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stefan Wahren <stefan.wahren@i2se.com>, linux-arm-kernel@lists.infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, s.hauer@pengutronix.de, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, arnd@arndb.de, sboyd@codeaurora.org, pantelis.antoniou@konsulko.com, mporter@konsulko.com, wxt@rock-chips.com, Maxime Ripard <maxime.ripard@free-electrons.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1437476823-3358-2-git-send-email-vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, 21 Jul 2015, Vaibhav Hiremath wrote:
 
+> Update header file with required macros for 32KHz buffered clock
+> output of 88PM800 family of device.
+> These macros will be used in clk provider driver.
+>=20
+> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  include/linux/mfd/88pm80x.h | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+>=20
+> diff --git a/include/linux/mfd/88pm80x.h b/include/linux/mfd/88pm80x.=
+h
+> index 05d9bad..680e4eb 100644
+> --- a/include/linux/mfd/88pm80x.h
+> +++ b/include/linux/mfd/88pm80x.h
+> @@ -91,6 +91,7 @@ enum {
+>  /* Referance and low power registers */
+>  #define PM800_LOW_POWER1		(0x20)
+>  #define PM800_LOW_POWER2		(0x21)
+> +#define PM800_LOW_POWER2_XO_LJ_EN	BIT(5)
+> =20
+>  #define PM800_LOW_POWER_CONFIG3		(0x22)
+>  #define PM800_LDOBK_FREEZE		BIT(7)
+> @@ -138,6 +139,13 @@ enum {
+>  #define PM800_ALARM			BIT(5)
+>  #define PM800_RTC1_USE_XO		BIT(7)
+> =20
+> +#define PM800_32K_OUTX_SEL_MASK		(0x3)
+> +/* 32KHz clk output sel mode */
+> +#define PM800_32K_OUTX_SEL_ZERO		(0x0)
+> +#define PM800_32K_OUTX_SEL_INT_32KHZ	(0x1)
+> +#define PM800_32K_OUTX_SEL_XO_32KHZ	(0x2)
+> +#define PM800_32K_OUTX_SEL_HIZ		(0x3)
 
-On 23/07/15 16:26, Stefan Wahren wrote:
-> Hi Srinivas,
->
-> Am 20.07.2015 um 16:43 schrieb Srinivas Kandagatla:
->> This patch adds just providers part of the framework just to enable easy
->> review.
->>
->> Up until now, NVMEM drivers like eeprom were stored in drivers/misc,
->> where they all had to duplicate pretty much the same code to register
->> a sysfs file, allow in-kernel users to access the content of the devices
->> they were driving, etc.
->>
->> This was also a problem as far as other in-kernel users were involved,
->> since the solutions used were pretty much different from on driver to
->> another, there was a rather big abstraction leak.
->>
->> This introduction of this framework aims at solving this. It also
->> introduces DT representation for consumer devices to go get the data
->> they require (MAC Addresses, SoC/Revision ID, part numbers, and so on)
->> from the nvmems.
->>
->> Having regmap interface to this framework would give much better
->> abstraction for nvmems on different buses.
->>
->> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
->> [Maxime Ripard: intial version of eeprom framework]
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->> ---
->>   drivers/Kconfig                |   2 +
->>   drivers/Makefile               |   1 +
->>   drivers/nvmem/Kconfig          |  13 ++
->>   drivers/nvmem/Makefile         |   6 +
->>   drivers/nvmem/core.c           | 384 +++++++++++++++++++++++++++++++++++++++++
->>   include/linux/nvmem-consumer.h |  23 +++
->>   include/linux/nvmem-provider.h |  47 +++++
->>   7 files changed, 476 insertions(+)
->>   create mode 100644 drivers/nvmem/Kconfig
->>   create mode 100644 drivers/nvmem/Makefile
->>   create mode 100644 drivers/nvmem/core.c
->>   create mode 100644 include/linux/nvmem-consumer.h
->>   create mode 100644 include/linux/nvmem-provider.h
->
-> i've tested this patch with my mxs-ocotp driver [1].
->
-> So you can add
->
-> Tested-by: Stefan Wahren <stefan.wahren@i2se.com>
->
-Thanks for tested-by, That helps.
+Why do these need to be in brackets?
 
---srini
+>  /* Regulator Control Registers: BUCK1,BUCK5,LDO1 have DVC */
+> =20
+>  /* buck registers */
+> @@ -208,6 +216,10 @@ enum {
+>  #define PM800_PMOD_MEAS1		0x52
+>  #define PM800_PMOD_MEAS2		0x53
+> =20
+> +/* Oscillator control */
+> +#define PM800_OSC_CNTRL1		(0x50)
+> +#define PM800_OSC_CNTRL1_OSC_FREERUN_EN	BIT(1)
+> +
+>  #define PM800_GPADC0_MEAS1		0x54
+>  #define PM800_GPADC0_MEAS2		0x55
+>  #define PM800_GPADC1_MEAS1		0x56
 
-
-
-
-> Regards
-> Stefan
->
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
