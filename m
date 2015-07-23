@@ -1,86 +1,49 @@
-From: Badola Nikhil <nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH 3/3] arm: dts: ls1021a: Add snps,configure-gfladj property
- to USB3 node
-Date: Thu, 23 Jul 2015 11:26:19 +0000
-Message-ID: <SN1PR0301MB16290E4A5E871BCAEC4E06FCF3820@SN1PR0301MB1629.namprd03.prod.outlook.com>
-References: <1437646378-1910-1-git-send-email-nikhil.badola@freescale.com>
- <1564365.o2o69FAsZI@ws-stein>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: Use stdout-path in STM32F429 Discovery board
+Date: Thu, 23 Jul 2015 13:40:18 +0200
+Message-ID: <55B0D2A2.9080604@suse.de>
+References: <1437628173-9447-1-git-send-email-mcoquelin.stm32@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=iso-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1564365.o2o69FAsZI@ws-stein>
-Content-Language: en-US
+In-Reply-To: <1437628173-9447-1-git-send-email-mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kamil Lulko <rev13-5tc4TXWwyLM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: Alexander Stein [mailto:alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org]
-> Sent: Thursday, July 23, 2015 3:41 PM
-> To: Badola Nikhil-B46172
-> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org;
-> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Subject: Re: [PATCH 3/3] arm: dts: ls1021a: Add snps,configure-gfladj
-> property to USB3 node
-> 
-> On Thursday 23 July 2015 15:42:58, Nikhil Badola wrote:
-> > Add "snps,configure-gfladj" boolean property to USB3 node. This
-> > property
->                       ^^^^^^
-> This does not match...
-> 
-> > is used to determine if frame length adjustment is required
-> >
-> > Signed-off-by: Nikhil Badola <nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > ---
-> >  arch/arm/boot/dts/ls1021a.dtsi | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/arch/arm/boot/dts/ls1021a.dtsi
-> > b/arch/arm/boot/dts/ls1021a.dtsi index c70bb27..f03f842 100644
-> > --- a/arch/arm/boot/dts/ls1021a.dtsi
-> > +++ b/arch/arm/boot/dts/ls1021a.dtsi
-> > @@ -404,6 +404,7 @@
-> >  			reg = <0x0 0x3100000 0x0 0x10000>;
-> >  			interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>;
-> >  			dr_mode = "host";
-> > +			snps,configure-fladj = <0x20>;
->                              ^^^^^
-> ...that. The same is for the subject. I guess these "gfladj" are just leftovers as
-> patch 1 & 2 talk about "fladj"
+Am 23.07.2015 um 07:09 schrieb Maxime Coquelin:
+> This patch replaces use of linux,stdout-path by stdout-path as per
 
-Fladj stands for Frame Length ADJustment whereas the register used for this is gfladj.
-Yes we intend to override fladj, hence using fladj in patch 1 and 2. I will remove gladj from 
-subject and description.
-Further, I will be changing the property to "snps,fladj-override" as suggested by Mark in patch 1
-and send next patch version.
-Please let me know if there are any other comments. 
+s/by/with/
 
-> 
-> Best regards,
-> Alexander
-> --
-> Dipl.-Inf. Alexander Stein
-> SYS TEC electronic GmbH
-> alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org
-> 
-> Legal and Commercial Address:
-> Am Windrad 2
-> 08468 Heinsdorfergrund
-> Germany
-> 
-> Office: +49 (0) 3765 38600-0
-> Fax:    +49 (0) 3765 38600-4100
-> 
-> Managing Directors:
-> 	Director Technology/CEO: Dipl.-Phys. Siegmar Schmidt;
-> 	Director Commercial Affairs/COO: Dipl. Ing. (FH) Armin von Collrepp
-> Commercial Registry:
-> 	Amtsgericht Chemnitz, HRB 28082; USt.-Id Nr. DE150534010
+> "chosen" DT bindings documentation.
+>=20
+> Doing that, the "console" argument is no more needed in kernel comman=
+d
+> line.
+>=20
+> Reported-by: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+> Signed-off-by: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/stm32f429-disco.dts | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
+Other than that,
+
+Reviewed-by: Andreas F=E4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
+
+Regards,
+Andreas
+
+--=20
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
+GF: Felix Imend=F6rffer, Jane Smithard, Dilip Upmanyu, Graham Norton; H=
+RB
+21284 (AG N=FCrnberg)
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
