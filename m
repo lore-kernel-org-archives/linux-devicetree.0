@@ -1,28 +1,118 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [NET-NEXT PATCH] net: macb: Change capability mask for jumbo
- support
-Date: Thu, 23 Jul 2015 14:42:31 +0200
-Message-ID: <20150723124231.GS2853@piout.net>
-References: <1437646465-6462-1-git-send-email-harinik@xilinx.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v6 2/2] mfd: atmel-flexcom: add a driver for Atmel
+ Flexible Serial Communication Unit
+Date: Thu, 23 Jul 2015 14:50:07 +0200
+Message-ID: <20150723145007.099d01c2@bbrezillon>
+References: <cover.1437558598.git.cyrille.pitchen@atmel.com>
+	<7639e02fc2b16dc20b19fbe3bbbb986b0f3b9887.1437558598.git.cyrille.pitchen@atmel.com>
+	<20150723073217.GT3061@x1>
+	<20150723100101.7290242b@bbrezillon>
+	<20150723091311.GX3061@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1437646465-6462-1-git-send-email-harinik@xilinx.com>
-Sender: netdev-owner@vger.kernel.org
-To: Harini Katakam <harini.katakam@xilinx.com>
-Cc: nicolas.ferre@atmel.com, davem@davemloft.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, boris.brezillon@free-electrons.com, harinikatakamlinux@gmail.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, harinik@xilinx.com, punnaia@xilinx.com, michals@xilinx.com
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150723091311.GX3061@x1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 23/07/2015 at 15:44:25 +0530, Harini Katakam wrote :
-> JUMBO and NO_GIGABIT_HALF have the same capability masks.
-> Change one of them.
-> 
-> Signed-off-by: Harini Katakam <harinik@xilinx.com>
-Acked-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+On Thu, 23 Jul 2015 10:13:11 +0100
+Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
 
+> On Thu, 23 Jul 2015, Boris Brezillon wrote:
+> 
+> > Hi Lee,
+> > 
+> > On Thu, 23 Jul 2015 08:32:17 +0100
+> > Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> > 
+> > > On Wed, 22 Jul 2015, Cyrille Pitchen wrote:
+> > > > +	for_each_child_of_node(np, child) {
+> > > > +		const char *compatible;
+> > > > +		int cplen;
+> > > > +
+> > > > +		if (!of_device_is_available(child))
+> > > > +			continue;
+> > > > +
+> > > > +		compatible = of_get_property(child, "compatible", &cplen);
+> > > > +		if (!compatible || strlen(compatible) > cplen)
+> > > > +			continue;
+> > > > +
+> > > > +		if (strstr(compatible, "-usart")) {
+> > > > +			opmode = FLEX_MR_OPMODE_USART;
+> > > > +			break;
+> > > > +		}
+> > > > +
+> > > > +		if (strstr(compatible, "-spi")) {
+> > > > +			opmode = FLEX_MR_OPMODE_SPI;
+> > > > +			break;
+> > > > +		}
+> > > > +
+> > > > +		if (strstr(compatible, "-i2c")) {
+> > > > +			opmode = FLEX_MR_OPMODE_TWI;
+> > > > +			break;
+> > > > +		}
+> > > > +	}
+> > > 
+> > > From what I understand Flexcom is a wrapper which can sit above any
+> > > number of SPI, I2C and/or UART devices.  Devices which you don't
+> > > really have any control over (source code wise).  So wouldn't it be
+> > > better to match on the details you do have control over i.e. the node
+> > > name, rather than the compatible string?
+> > > 
+> > > I would personally match on of_find_node_by_name() to future-proof
+> > > your implementation.
+> > 
+> > Actually, I think using compatible strings is more future-proof than
+> > using the node names, because nothing in the DT bindings doc enforce the
+> > node name, and usually what we use to attach a node to a specific
+> > driver is the compatible string (this one is specified in the bindings
+> > doc).
+> 
+> I know what you're saying, but what if someone uses the Flexcom driver
+> to wrap a different type of SPI driver where (for instance) the
+> compatible string used is "<name>-<newtype>".  Then we'd have to keep
+> adding more lines here to accommodate.
+> 
+> Whereas if we used the child node name which only pertains to _this_
+> driver, we would then have full control and know that (unless it
+> Flexcom is used for a completely different type of serial controller)
+> we wouldn't have to keep expanding the code to accommodate.
+
+You're right about the complexity implied by the compat string
+maintenance, but I still think using node names to detect the mode is
+a bad idea.
+
+Let's take another example making both solution unsuitable: what if
+the flexcom-v2 exposes 2 devices of the same type, they will both have
+the same name and the same compatible string, and we'll have no way to
+detect the appropriate mode. That's why I think none of our suggestion
+is future-proof.
+
+> 
+> > Regarding the implementation itself, I would match the child node with
+> > an of_device_id table rather than trying to find a specific substring
+> > in the compatible string, but I think that's only a matter of taste.
+> 
+> You mean duplicate each of the supported device's compatible strings
+> in this driver, then fetch the attributed of_match_device()->data
+> value?
+> 
+
+Yes, and that's definitely not a good idea, but I think Cyrille has
+found a better approach (I'll let him explain).
+
+Best Regards,
+
+Boris
 
 -- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
 http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
