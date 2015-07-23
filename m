@@ -1,83 +1,116 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] mfd: dt-bindings: add the description about dvs
- gpio for rk808
-Date: Thu, 23 Jul 2015 15:49:15 +0100
-Message-ID: <20150723144915.GH3436@x1>
-References: <1437384233-26169-1-git-send-email-zyw@rock-chips.com>
- <1437384233-26169-2-git-send-email-zyw@rock-chips.com>
+From: Vignesh R <vigneshr@ti.com>
+Subject: [PATCH v3 1/2] input: touchscreen: pixcir_i2c_ts: Add support for optional wakeup interrupt
+Date: Thu, 23 Jul 2015 20:24:05 +0530
+Message-ID: <1437663246-16049-2-git-send-email-vigneshr@ti.com>
+References: <1437663246-16049-1-git-send-email-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1437384233-26169-2-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, amstan-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Zhang Qing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1437663246-16049-1-git-send-email-vigneshr@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Tony Lindgren <tony@atomide.com>, Benoit Cousson <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>
+Cc: Roger Quadros <rogerq@ti.com>, Henrik Rydberg <rydberg@bitmath.org>, Frodo Lai <frodo.lai@gmail.com>, Jingoo Han <jg1.han@samsung.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, Vignesh R <vigneshr@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 20 Jul 2015, Chris Zhong wrote:
+On am437x-gp-evm, pixcir touchscreen can wake the system from low power
+state by generating wake-up interrupt via pinctrl and IO daisy chain.
+Add support for optional wakeup interrupt source by regsitering to
+automated wake IRQ framework introduced by commit 4990d4fe327b ("PM /
+Wakeirq: Add automated device wake IRQ handling").
+This is similar in approach to commit 2a0b965cfb6e ("serial: omap: Add
+support for optional wake-up")
 
-> add the description about dvs1, dvs2, and add the example.
->=20
-> Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> Reviewed-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->=20
-> ---
->=20
-> Changes in v4:
-> - Remove the description about dvs-ok
->=20
-> Changes in v3:
-> - Modify the syntax error
->=20
-> Changes in v2:
-> - increase description about dvs pins
->=20
->  Documentation/devicetree/bindings/mfd/rk808.txt | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
+Signed-off-by: Vignesh R <vigneshr@ti.com>
+---
 
-Applied, thanks.
+v3:
+ * handle error code returned by of_irq_get_byname()
 
-> diff --git a/Documentation/devicetree/bindings/mfd/rk808.txt b/Docume=
-ntation/devicetree/bindings/mfd/rk808.txt
-> index 9e6e259..4ca6aab 100644
-> --- a/Documentation/devicetree/bindings/mfd/rk808.txt
-> +++ b/Documentation/devicetree/bindings/mfd/rk808.txt
-> @@ -24,6 +24,10 @@ Optional properties:
->  - vcc10-supply: The input supply for LDO_REG6
->  - vcc11-supply: The input supply for LDO_REG8
->  - vcc12-supply: The input supply for SWITCH_REG2
-> +- dvs-gpios:  buck1/2 can be controlled by gpio dvs, this is GPIO sp=
-ecifiers
-> +  for 2 host gpio's used for dvs. The format of the gpio specifier d=
-epends in
-> +  the gpio controller. If DVS GPIOs aren't present, voltage changes =
-will happen
-> +  very quickly with no slow ramp time.
-> =20
->  Regulators: All the regulators of RK808 to be instantiated shall be
->  listed in a child node named 'regulators'. Each regulator is represe=
-nted
-> @@ -55,7 +59,9 @@ Example:
->  		interrupt-parent =3D <&gpio0>;
->  		interrupts =3D <4 IRQ_TYPE_LEVEL_LOW>;
->  		pinctrl-names =3D "default";
-> -		pinctrl-0 =3D <&pmic_int>;
-> +		pinctrl-0 =3D <&pmic_int &dvs_1 &dvs_2>;
-> +		dvs-gpios =3D <&gpio7 11 GPIO_ACTIVE_HIGH>,
-> +			    <&gpio7 15 GPIO_ACTIVE_HIGH>;
->  		reg =3D <0x1b>;
->  		rockchip,system-power-controller;
->  		wakeup-source;
+v2:
+ * use of_irq_get_byname()
+ * remove enable/disable_wake_irq()
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ drivers/input/touchscreen/pixcir_i2c_ts.c | 22 ++++++++++++++++++----
+ include/linux/input/pixcir_ts.h           |  1 +
+ 2 files changed, 19 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/input/touchscreen/pixcir_i2c_ts.c b/drivers/input/touchscreen/pixcir_i2c_ts.c
+index 8f3e243a62bf..3a4ab358bf52 100644
+--- a/drivers/input/touchscreen/pixcir_i2c_ts.c
++++ b/drivers/input/touchscreen/pixcir_i2c_ts.c
+@@ -29,6 +29,8 @@
+ #include <linux/of.h>
+ #include <linux/of_gpio.h>
+ #include <linux/of_device.h>
++#include <linux/of_irq.h>
++#include <linux/pm_wakeirq.h>
+ 
+ #define PIXCIR_MAX_SLOTS       5 /* Max fingers supported by driver */
+ 
+@@ -364,8 +366,6 @@ static int __maybe_unused pixcir_i2c_ts_suspend(struct device *dev)
+ 				goto unlock;
+ 			}
+ 		}
+-
+-		enable_irq_wake(client->irq);
+ 	} else if (input->users) {
+ 		ret = pixcir_stop(ts);
+ 	}
+@@ -386,8 +386,6 @@ static int __maybe_unused pixcir_i2c_ts_resume(struct device *dev)
+ 	mutex_lock(&input->mutex);
+ 
+ 	if (device_may_wakeup(&client->dev)) {
+-		disable_irq_wake(client->irq);
+-
+ 		if (!input->users) {
+ 			ret = pixcir_stop(ts);
+ 			if (ret) {
+@@ -445,6 +443,13 @@ static struct pixcir_ts_platform_data *pixcir_parse_dt(struct device *dev)
+ 	dev_dbg(dev, "%s: x %d, y %d, gpio %d\n", __func__,
+ 		pdata->x_max + 1, pdata->y_max + 1, pdata->gpio_attb);
+ 
++	pdata->wakeirq = of_irq_get_byname(dev->of_node, "wakeup");
++	if (pdata->wakeirq < 0 && pdata->wakeirq != -ENODATA &&
++	    pdata->wakeirq != -EINVAL) {
++		dev_err(dev, "Failed to get wakeirq\n");
++		return ERR_PTR(pdata->wakeirq);
++	}
++
+ 	return pdata;
+ }
+ #else
+@@ -564,11 +569,20 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
+ 	i2c_set_clientdata(client, tsdata);
+ 	device_init_wakeup(&client->dev, 1);
+ 
++	/* Register wakeirq */
++	error = (pdata->wakeirq > 0) ?
++		dev_pm_set_dedicated_wake_irq(dev, pdata->wakeirq) :
++		dev_pm_set_wake_irq(dev, client->irq);
++	if (error)
++		dev_info(dev, "unable to setup wakeirq %d\n",
++			 error);
++
+ 	return 0;
+ }
+ 
+ static int pixcir_i2c_ts_remove(struct i2c_client *client)
+ {
++	dev_pm_clear_wake_irq(&client->dev);
+ 	device_init_wakeup(&client->dev, 0);
+ 
+ 	return 0;
+diff --git a/include/linux/input/pixcir_ts.h b/include/linux/input/pixcir_ts.h
+index 7bae83b7c396..da573de5a5ee 100644
+--- a/include/linux/input/pixcir_ts.h
++++ b/include/linux/input/pixcir_ts.h
+@@ -58,6 +58,7 @@ struct pixcir_ts_platform_data {
+ 	int x_max;
+ 	int y_max;
+ 	int gpio_attb;		/* GPIO connected to ATTB line */
++	int wakeirq;
+ 	struct pixcir_i2c_chip_data chip;
+ };
+ 
+-- 
+2.4.5
