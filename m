@@ -1,90 +1,154 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V3 2/3] devicetree: da9062: Add device tree bindings for
- DA9062 RTC
-Date: Thu, 23 Jul 2015 16:27:34 +0100
-Message-ID: <20150723152734.GO3436@x1>
-References: <cover.1437474547.git.stwiss.opensource@diasemi.com>
- <f899992aaa9b5ea54cb2e27c1cabf626d5969c07.1437474547.git.stwiss.opensource@diasemi.com>
+From: "R, Vignesh" <vigneshr@ti.com>
+Subject: Re: [PATCH v2 2/5] ARM: OMAP2+: DRA7: Add hwmod entries for PWMSS
+Date: Thu, 23 Jul 2015 21:05:29 +0530
+Message-ID: <55B109C1.80901@ti.com>
+References: <1433332284-10766-1-git-send-email-vigneshr@ti.com>
+ <1433332284-10766-3-git-send-email-vigneshr@ti.com>
+ <alpine.DEB.2.02.1507152029460.32764@utopia.booyaka.com>
+ <55A7CE59.6010600@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <f899992aaa9b5ea54cb2e27c1cabf626d5969c07.1437474547.git.stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: S Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Cc: DEVICETREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, LINUXINPUT <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUXKERNEL <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, RTCLINUX <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Dajun Chen <david.chen-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Support Opensource <support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <55A7CE59.6010600@ti.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Paul Walmsley <paul@pwsan.com>
+Cc: Tero Kristo <t-kristo@ti.com>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 21 Jul 2015, S Twiss wrote:
 
-> From: S Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
->=20
-> Add device tree bindings for the DA9062 RTC driver component
->=20
-> Signed-off-by: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
->=20
-> ---
-> Checks performed with linux-next/next-20150708/scripts/checkpatch.pl
->  da9062.txt                total: 0 errors, 0 warnings, 88 lines chec=
-ked
-> This patch applies against linux-next and next-20150708=20
->=20
->=20
->  Documentation/devicetree/bindings/mfd/da9062.txt | 9 +++++++++
->  1 file changed, 9 insertions(+)
 
-Applied, thanks.
+On 7/16/2015 9:01 PM, R, Vignesh wrote:
+> Hi,
+> 
+> On 07/16/2015 03:24 AM, Paul Walmsley wrote:
+>> Hi,
+>>
+>> some comments.
+>>
+>> On Wed, 3 Jun 2015, Vignesh R wrote:
+>>
+>>> Add hwmod entries for the PWMSS on DRA7.
+>>>
+>>> Set l4_root_clk_div as the main_clk of PWMSS. It is fixed-factored clock
+>>> equal to L4PER2_L3_GICLK/2(l3_iclk_div/2).
+>>> As per AM57x TRM SPRUHZ6[1], October 2014, Section 29.1.3 Table 29-4,
+>>> clock source to PWMSS is L4PER2_L3_GICLK. But it is actually
+>>> L4PER2_L3_GICLK/2. The TRM does not show the division by 2.
+>>
+>> Is the divide-by-two coming from PWMSS_EPWM.EPWM_TBCTL[HSPCLKDIV]?  Or is 
+>> HSPCLKDIV a separate divider after the divide-by-2 you mention above?
+> 
+> No, it not related to HSPCLKDIV. The TRM wrongly states L4PER2_L3_GICLK
+> as clock input for PWMSS. But actually  L4PER2_L4_GICLK(=L3_GICLK/2) is
+> the clock input for PWMSS. This will be updated in TRM soon.
+> 
+>>
+>>> [1] www.ti.com/lit/ug/spruhz6/spruhz6.pdf
+>>>
+>>> Signed-off-by: Vignesh R <vigneshr@ti.com>
+>>> ---
+>>>
+>>> v2:
+>>>  * add TRM references.
+>>>
+>>>  arch/arm/mach-omap2/omap_hwmod_7xx_data.c | 239 ++++++++++++++++++++++++++++++
+>>>  1 file changed, 239 insertions(+)
+>>>
+>>> diff --git a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+>>> index 0e64c2fac0b5..86a7ac9a3138 100644
+>>> --- a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+>>> +++ b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+>>> @@ -362,6 +362,149 @@ static struct omap_hwmod dra7xx_dcan2_hwmod = {
+>>>  	},
+>>>  };
+>>>  
+>>> +/* pwmss  */
+>>> +static struct omap_hwmod_class_sysconfig dra7xx_epwmss_sysc = {
+>>> +	.rev_offs	= 0x0,
+>>> +	.sysc_offs	= 0x4,
+>>> +	.sysc_flags	= SYSC_HAS_SIDLEMODE | SYSC_HAS_RESET_STATUS,
+>>
+>> This doesn't match SPRUHZ6 Table 29-13 "PWMSS_SYSCONFIG".  There's no 
+>> RESETSTATUS bit.  There is a SOFTRESET bit. 
+>>
+>> Could you please confirm whether this is intentional?
+> 
+> sorry my bad... I will change this in v3.
+> 
+>>
+>>> +	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART),
+>>> +	.sysc_fields	= &omap_hwmod_sysc_type2,
+>>> +};
+>>> +
+>>> +struct omap_hwmod_class dra7xx_epwmss_hwmod_class = {
+>>> +	.name		= "epwmss",
+>>> +	.sysc		= &dra7xx_epwmss_sysc,
+>>> +};
+>>> +
+>>> +static struct omap_hwmod_class dra7xx_ecap_hwmod_class = {
+>>> +	.name		= "ecap",
+>>> +};
+>>> +
+>>> +static struct omap_hwmod_class dra7xx_eqep_hwmod_class = {
+>>> +	.name		= "eqep",
+>>> +};
+>>> +
+>>> +struct omap_hwmod_class dra7xx_ehrpwm_hwmod_class = {
+>>> +	.name		= "ehrpwm",
+>>> +};
+>>> +
+>>> +/* epwmss0 */
+>>> +struct omap_hwmod dra7xx_epwmss0_hwmod = {
+>>> +	.name		= "epwmss0",
+>>> +	.class		= &dra7xx_epwmss_hwmod_class,
+>>> +	.clkdm_name	= "l4per2_clkdm",
+>>> +	.main_clk	= "l4_root_clk_div",
+>>> +	.prcm		= {
+>>> +		.omap4	= {
+>>> +			.modulemode	= MODULEMODE_SWCTRL,
+>>> +			.clkctrl_offs	= DRA7XX_CM_L4PER2_PWMSS1_CLKCTRL_OFFSET,
+>>> +			.context_offs	= DRA7XX_RM_L4PER2_PWMSS1_CONTEXT_OFFSET,
+>>> +		},
+>>> +	},
+>>
+>> Per my comment on the previous patch, sounds like it might be better to 
+>> mark this as HWMOD_SWSUP_SIDLE?  Then again, see the next comment below 
+>> re: main_clk.
+>>
+>>> +};
+>>> +
+>>> +/* ecap0 */
+>>> +struct omap_hwmod dra7xx_ecap0_hwmod = {
+>>> +	.name		= "ecap0",
+>>> +	.class		= &dra7xx_ecap_hwmod_class,
+>>> +	.clkdm_name	= "l4per2_clkdm",
+>>> +	.main_clk	= "l4_root_clk_div",
+>>
+>> Looking at SPRUHZ6 Section 29.1.4.2 "PWMSS Modules Local Clock Gating", 
+>> there appears to be a local "mini-PRCM" for the PWMSS which implements 
+>> clock gating and reports back on the status of what I'd guess is the local 
+>> clock gating FSM.
+>>
+>> So from that point of view, you should probably create a clock driver that 
+>> manages both the clock gate request bit and the FSM status bit.  It should 
+>> be something that can be reused for the other PWMSS IP blocks.  Then 
+>> you'd create per-IP block clock nodes and set the main_clk to point to 
+>> that node.
+>>
+> 
+> Since, this register is within the config space of PWMSS, the individual
+> gating and reporting for the modules within PWMSS
+> (PWMSS_CLKCONFIG) is currently being taken care by pwm-tipwmss.c(almost
+> the sole function this driver is doing). It has been the same since
+> am335x. Adding new clock nodes will result in driver changes and also
+> changes to am335x, am437x (and other platforms) hwmod files. It also
+> involves adding new nodes to clocks.dtsi and it will be difficult to
+> maintain backward compatibility for older platforms. Is it not better to
+> keep this as is, in order to maintain consistency (with am335x, am437x
+> etc) and also that these clock bits are within IP's config space?
+> 
+ping...
 
-> diff --git a/Documentation/devicetree/bindings/mfd/da9062.txt b/Docum=
-entation/devicetree/bindings/mfd/da9062.txt
-> index 5765ed9..38802b5 100644
-> --- a/Documentation/devicetree/bindings/mfd/da9062.txt
-> +++ b/Documentation/devicetree/bindings/mfd/da9062.txt
-> @@ -5,6 +5,7 @@ DA9062 consists of a large and varied group of sub-de=
-vices:
->  Device                   Supply Names    Description
->  ------                   ------------    -----------
->  da9062-regulator        :               : LDOs & BUCKs
-> +da9062-rtc              :               : Real-Time Clock
->  da9062-watchdog         :               : Watchdog Timer
-> =20
->  =3D=3D=3D=3D=3D=3D
-> @@ -41,6 +42,10 @@ Sub-nodes:
->    Documentation/devicetree/bindings/regulator/regulator.txt
-> =20
-> =20
-> +- rtc : This node defines settings required for the Real-Time Clock =
-associated
-> +  with the DA9062. There are currently no entries in this binding, h=
-owever
-> +  compatible =3D "dlg,da9062-rtc" should be added if a node is creat=
-ed.
-> +
->  - watchdog: This node defines the settings for the watchdog driver a=
-ssociated
->    with the DA9062 PMIC. The compatible =3D "dlg,da9062-watchdog" sho=
-uld be added
->    if a node is created.
-> @@ -55,6 +60,10 @@ Example:
->  		interrupts =3D <11 IRQ_TYPE_LEVEL_LOW>;
->  		interrupt-controller;
-> =20
-> +		rtc {
-> +			compatible =3D "dlg,da9062-rtc";
-> +		};
-> +
->  		watchdog {
->  			compatible =3D "dlg,da9062-watchdog";
->  		};
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards
+Vignesh
