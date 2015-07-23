@@ -1,115 +1,105 @@
-From: atull <atull@opensource.altera.com>
-Subject: Re: [PATCH v9 0/7] FPGA Manager Framework and Simple FPGA Bus
-Date: Thu, 23 Jul 2015 11:37:45 -0500
-Message-ID: <alpine.DEB.2.02.1507231107420.7582@linuxheads99>
-References: <1437148277-5405-1-git-send-email-atull@opensource.altera.com>
- <20150723041218.GA6978@kroah.com>
+From: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v7 1/2] mfd: devicetree: add bindings for Atmel Flexcom
+Date: Thu, 23 Jul 2015 18:42:55 +0200
+Message-ID: <60057bbf7d39ec63d391d26271747cf0228a3ed1.1437669004.git.cyrille.pitchen@atmel.com>
+References: <cover.1437669004.git.cyrille.pitchen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20150723041218.GA6978@kroah.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: mark.rutland@arm.com, linux-doc@vger.kernel.org, rubini@gnudd.com, pantelis.antoniou@konsulko.com, hpa@zytor.com, s.trumtrar@pengutronix.de, devel@driverdev.osuosl.org, sameo@linux.intel.com, nico@linaro.org, iws@ovro.caltech.edu, michal.simek@xilinx.com, kyle.teske@ni.com, jgunthorpe@obsidianresearch.com, grant.likely@linaro.org, davidb@codeaurora.org, linus.walleij@linaro.org, cesarb@cesarb.net, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, broonie@kernel.org, philip@balister.org, Petr Cvek <petr.cvek@tul.cz>, akpm@linux-foundation.org, monstr@monstr.eu, pavel@denx.de, linux-kernel@vger.kernel.org, balbi@ti.com, davem@davemloft.net, robh+dt@kernel.org, rob@landley.net, galak@codeaurora.org, dinguyen@opensource.altera.com, delicious.quinoa@gmail.com, m.chehab@samsung.com
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1437669004.git.cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 23 Jul 2015, Greg KH wrote:
+This patch documents the DT bindings for the Atmel Flexcom which will be
+introduced by sama5d2x SoCs. These bindings will be used by the actual
+Flexcom driver to be sent in another patch.
 
-> On Fri, Jul 17, 2015 at 10:51:10AM -0500, atull@opensource.altera.com wrote:
-> > From: Alan Tull <atull@opensource.altera.com>
-> > 
-> > This patchset adds two chunks plus documentation:
-> >  * fpga manager core: exports ABI functions that write an image to a FPGA
-> >  * DT Overlay support: simple-fpga-bus to handle FPGA from a DT overlay
-> > 
-> > The core's ABI is minimal to start with: only 6 functions.  This gives a
-> > common interface for programming various FPGA such that any higher level
-> > interfaces such as the DT Overlays or anything else that is added can be
-> > shared and not be manufacturor-specific.
-> > 
-> > The DT Overlays support exists for the usage where the FPGA will contain
-> > some "hardware" that will need drivers.  Where that use model is not
-> > appealing, the core ABI can be used to add a different use model such as
-> > using an FPGA as acceleration as has been discussed.
-> > 
-> > This patchset gets rid of the sysfs controls that allowed direct
-> > control of a FPGA from userspace.
-> > 
-> > This patchset is under drivers/staging as the interface could change.
-> > 
-> > The bindings for the socpfga fpga manager already are upstreamed as
-> > 1b4e119 Alan Tull : doc: add bindings document for altera fpga manager
-> > 
-> > The DT Support is dependent on Pantelis's dtc overlay patches from
-> > https://github.com/pantoniou/dtc.git
-> > and his DT overlays configfs interface patches and fixes from
-> > https://github.com/pantoniou/linux-beagle-track-mainline
-> > 
-> > efb0c04 Pantelis Antoniou : gcl: Fix resource linking
-> > 85e785e Pantelis Antoniou : ARM: DT: Enable symbols when CONFIG_OF_OVERLAY is used
-> > af0321f Pantelis Antoniou : OF: DT-Overlay configfs interface (v5)
-> > 4c1c675 Pantelis Antoniou : configfs: Implement binary attributes (v4)
-> > 
-> > 
-> > Alan Tull (7):
-> >   staging: usage documentation for FPGA manager core
-> >   staging: usage documentation for simple fpga bus
-> >   staging: add bindings document for simple fpga bus
-> >   staging: fpga manager: add sysfs interface document
-> >   staging: fpga manager core
-> >   staging: add simple-fpga-bus
-> >   staging: fpga manager: add driver for socfpga fpga manager
-> > 
-> >  drivers/staging/Kconfig                            |    2 +
-> >  drivers/staging/Makefile                           |    1 +
-> >  .../Documentation/ABI/sysfs-class-fpga-manager     |   26 +
-> >  .../Documentation/bindings/simple-fpga-bus.txt     |   61 ++
-> >  drivers/staging/fpga/Documentation/fpga-mgr.txt    |  117 ++++
-> >  .../staging/fpga/Documentation/simple-fpga-bus.txt |   48 ++
-> >  drivers/staging/fpga/Kconfig                       |   31 +
-> >  drivers/staging/fpga/Makefile                      |   10 +
-> >  drivers/staging/fpga/fpga-mgr.c                    |  373 ++++++++++++
-> >  drivers/staging/fpga/simple-fpga-bus.c             |  323 ++++++++++
-> >  drivers/staging/fpga/socfpga.c                     |  616 ++++++++++++++++++++
-> 
-> All drivers/staging/*/ directories need a TODO file that lists what
-> needs to be done to it in order to get the code out of staging.  Please
-> redo the series and add that.
-> 
-> >  include/linux/fpga/fpga-mgr.h                      |  127 ++++
-> 
-> This should be within drivers/staging/ all staging code should be
-> self-contained.
-> 
-> Why isn't this going into the "real" part of the kernel?  Why staging?
-> 
+Signed-off-by: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+---
+ .../devicetree/bindings/mfd/atmel-flexcom.txt      | 68 ++++++++++++++++++++++
+ 1 file changed, 68 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/atmel-flexcom.txt
 
-Hi Greg,
+diff --git a/Documentation/devicetree/bindings/mfd/atmel-flexcom.txt b/Documentation/devicetree/bindings/mfd/atmel-flexcom.txt
+new file mode 100644
+index 000000000000..a63226b7a9cb
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/atmel-flexcom.txt
+@@ -0,0 +1,68 @@
++* Device tree bindings for Atmel Flexcom (Flexible Serial Communication Unit)
++
++The Atmel Flexcom is just a wrapper which embeds a SPI controller, an I2C
++controller and an USART. Only one function can be used at a time and is chosen
++at boot time according to the device tree.
++
++Required properties:
++- compatible:		Should be "atmel,sama5d2-flexcom"
++- reg:			Should be the pair (offset, size) for the Flexcom
++			dedicated I/O registers (without USART, TWI or SPI
++			registers).
++- clocks:		Should be the Flexcom peripheral clock from PMC.
++- #address-cells:	Should be <2>
++- #size-cells:		Should be <1>
++- ranges:		Should be a list of ranges.
++			One range per peripheral wrapped by the Flexcom. So each
++			range is a triplet (child_addr, parent_addr, size). The
++			first u32 of "child_addr" is the value to be set in the
++			Operating Mode bitfield of the Flexcom Mode Register.
++			Then "parent_addr" stores the base address of the
++			corresponding peripheral in the system memory. Finally,
++			"size" if the size of the memory region of this
++			peripheral.
++
++Required child:
++A single available child for the serial controller to enable.
++
++Required properties of this child:
++- reg:			Should be a pair (child_addr, size) with child_addr
++			matching one of the parent ranges.
++- clocks:		Should be the very same phandle as for the parent's one.
++
++Other properties remain unchanged. See documentation of the respective device:
++- ../serial/atmel-usart.txt
++- ../spi/spi_atmel.txt
++- ../i2c/i2c-at91.txt
++
++Example:
++
++flexcom@f8034000 {
++	compatible = "atmel,sama5d2-flexcom";
++	reg = <0xf8034000 0x200>;
++	clocks = <&flx0_clk>;
++	#address-cells = <2>;
++	#size-cells = <1>;
++	ranges = <1 0 0xf8034200 0x200		/* opmode 1: USART */
++		  2 0 0xf8034400 0x200		/* opmode 2: SPI */
++		  3 0 0xf8034600 0x200>;	/* opmode 3: I2C */
++
++	spi@f8034400 {
++		compatible = "atmel,at91rm9200-spi";
++		reg = <2 0 0x200>;
++		interrupts = <19 IRQ_TYPE_LEVEL_HIGH 7>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_flx0_default>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		clocks = <&flx0_clk>;
++		clock-names = "spi_clk";
++		atmel,fifo-size = <32>;
++
++		mtd_dataflash@0 {
++			compatible = "atmel,at25f512b";
++			reg = <0>;
++			spi-max-frequency = <20000000>;
++		};
++	};
++};
+-- 
+1.8.2.2
 
-For v10 next week, I will likely break this into two patchsets, one for the
-real kernel (drivers/fpga) and one for staging.
-
-fpga-mgr.c can go into drivers/fpga since both Xilinx and Altera have
-already been using this code.  It's not likely to change much.
-
-The part that should go into staging is whatever interface is
-controversial, that may change.  That's simple-fpga-bus.c and any
-other interfaces that get added that use the functions exported by
-fpga-mgr.c.  Maybe this 2nd patch set should be a RFC since it is still
-dependent on some of Pantelis' stuff that's not in yet.
-
-Alan Tull
-
-> thanks,
-> 
-> greg k-h
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
