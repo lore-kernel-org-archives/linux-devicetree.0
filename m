@@ -1,86 +1,121 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v9 0/7] FPGA Manager Framework and Simple FPGA Bus
-Date: Wed, 22 Jul 2015 21:12:18 -0700
-Message-ID: <20150723041218.GA6978@kroah.com>
-References: <1437148277-5405-1-git-send-email-atull@opensource.altera.com>
+From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH-v2 2/2] regulator: 88pm800: Add support for configuration
+ of dual phase on BUCK1
+Date: Thu, 23 Jul 2015 13:51:26 +0900
+Message-ID: <CAJKOXPcMd9VvfA48kaBa0BYeHAfHTu6MzAbQv0HuRy9wbgz0wg@mail.gmail.com>
+References: <1437495782-15767-1-git-send-email-vaibhav.hiremath@linaro.org>
+	<1437495782-15767-3-git-send-email-vaibhav.hiremath@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1437148277-5405-1-git-send-email-atull@opensource.altera.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: atull@opensource.altera.com
-Cc: jgunthorpe@obsidianresearch.com, hpa@zytor.com, monstr@monstr.eu, michal.simek@xilinx.com, rdunlap@infradead.org, mark.rutland@arm.com, linux-doc@vger.kernel.org, rubini@gnudd.com, pantelis.antoniou@konsulko.com, s.trumtrar@pengutronix.de, devel@driverdev.osuosl.org, sameo@linux.intel.com, nico@linaro.org, ijc+devicetree@hellion.org.uk, kyle.teske@ni.com, grant.likely@linaro.org, davidb@codeaurora.org, linus.walleij@linaro.org, cesarb@cesarb.net, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, iws@ovro.caltech.edu, broonie@kernel.org, philip@balister.org, Petr Cvek <petr.cvek@tul.cz>, dinguyen@opensource.altera.com, pavel@denx.de, yvanderv@opensource.altera.com, linux-kernel@vger.kernel.org, balbi@ti.com, delicious.quinoa@gmail.com, robh+dt@kernel.org, rob@landley.net, galak@codeaurora.org, akpm@linux-foundation.org, davem@davemloft.net, m.chehab@
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1437495782-15767-3-git-send-email-vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 17, 2015 at 10:51:10AM -0500, atull@opensource.altera.com wrote:
-> From: Alan Tull <atull@opensource.altera.com>
-> 
-> This patchset adds two chunks plus documentation:
->  * fpga manager core: exports ABI functions that write an image to a FPGA
->  * DT Overlay support: simple-fpga-bus to handle FPGA from a DT overlay
-> 
-> The core's ABI is minimal to start with: only 6 functions.  This gives a
-> common interface for programming various FPGA such that any higher level
-> interfaces such as the DT Overlays or anything else that is added can be
-> shared and not be manufacturor-specific.
-> 
-> The DT Overlays support exists for the usage where the FPGA will contain
-> some "hardware" that will need drivers.  Where that use model is not
-> appealing, the core ABI can be used to add a different use model such as
-> using an FPGA as acceleration as has been discussed.
-> 
-> This patchset gets rid of the sysfs controls that allowed direct
-> control of a FPGA from userspace.
-> 
-> This patchset is under drivers/staging as the interface could change.
-> 
-> The bindings for the socpfga fpga manager already are upstreamed as
-> 1b4e119 Alan Tull : doc: add bindings document for altera fpga manager
-> 
-> The DT Support is dependent on Pantelis's dtc overlay patches from
-> https://github.com/pantoniou/dtc.git
-> and his DT overlays configfs interface patches and fixes from
-> https://github.com/pantoniou/linux-beagle-track-mainline
-> 
-> efb0c04 Pantelis Antoniou : gcl: Fix resource linking
-> 85e785e Pantelis Antoniou : ARM: DT: Enable symbols when CONFIG_OF_OVERLAY is used
-> af0321f Pantelis Antoniou : OF: DT-Overlay configfs interface (v5)
-> 4c1c675 Pantelis Antoniou : configfs: Implement binary attributes (v4)
-> 
-> 
-> Alan Tull (7):
->   staging: usage documentation for FPGA manager core
->   staging: usage documentation for simple fpga bus
->   staging: add bindings document for simple fpga bus
->   staging: fpga manager: add sysfs interface document
->   staging: fpga manager core
->   staging: add simple-fpga-bus
->   staging: fpga manager: add driver for socfpga fpga manager
-> 
->  drivers/staging/Kconfig                            |    2 +
->  drivers/staging/Makefile                           |    1 +
->  .../Documentation/ABI/sysfs-class-fpga-manager     |   26 +
->  .../Documentation/bindings/simple-fpga-bus.txt     |   61 ++
->  drivers/staging/fpga/Documentation/fpga-mgr.txt    |  117 ++++
->  .../staging/fpga/Documentation/simple-fpga-bus.txt |   48 ++
->  drivers/staging/fpga/Kconfig                       |   31 +
->  drivers/staging/fpga/Makefile                      |   10 +
->  drivers/staging/fpga/fpga-mgr.c                    |  373 ++++++++++++
->  drivers/staging/fpga/simple-fpga-bus.c             |  323 ++++++++++
->  drivers/staging/fpga/socfpga.c                     |  616 ++++++++++++++++++++
+2015-07-22 1:23 GMT+09:00 Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
+> 88PM860 device supports dual phase mode on BUCK1 output.
+> In normal usecase, BUCK1A and BUCK1B operates independently with 3A
+> capacity. And they both can work as a dual phase providing 6A capacity.
+>
+> This patch updates the regulator driver to read the respective
+> DT property and enable dual-phase mode on BUCK1.
+>
+> Note that, this is init time (one time) initialization.
+>
+> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  drivers/regulator/88pm800.c | 31 +++++++++++++++++++++++++++++++
+>  include/linux/mfd/88pm80x.h |  3 +++
+>  2 files changed, 34 insertions(+)
 
-All drivers/staging/*/ directories need a TODO file that lists what
-needs to be done to it in order to get the code out of staging.  Please
-redo the series and add that.
+Don't you need to update the constraints also? I think the BUCK1
+regulator has fixed constraint of 3 A:
+  PM800_BUCK(buck1, BUCK1, BUCK_ENA, 0, 3000000, buck1_volt_range, 0x55),
+and now it can handle 6 A.
 
->  include/linux/fpga/fpga-mgr.h                      |  127 ++++
+>
+> diff --git a/drivers/regulator/88pm800.c b/drivers/regulator/88pm800.c
+> index e846e4c..1bf2b35 100644
+> --- a/drivers/regulator/88pm800.c
+> +++ b/drivers/regulator/88pm800.c
+> @@ -267,6 +267,31 @@ static struct pm800_regulator_info pm860_regulator_info[] = {
+>         PM800_LDO(ldo20, LDO20, LDO_ENA1_3, 3, 10000, ldo_volt_table2),
+>  };
+>
+> +static int pm800_regulator_init(struct platform_device *pdev)
+> +{
+> +       struct pm800_regulators *pm800_data = platform_get_drvdata(pdev);
+> +       struct pm80x_chip *chip = pm800_data->chip;
+> +       int ret;
 
-This should be within drivers/staging/ all staging code should be
-self-contained.
+'ret' is used only in if statement below. I don't have strong feelings
+but can you move it there to limit its scope or always return 'ret'
+(after initializing to '0'). To me this would be more readable.
 
-Why isn't this going into the "real" part of the kernel?  Why staging?
+Best regards,
+Krzysztof
 
-thanks,
-
-greg k-h
+> +
+> +       /* Currently only supported on 88pm860 device */
+> +       if (chip->type != CHIP_PM860)
+> +               return 0;
+> +
+> +       if (of_property_read_bool(pdev->dev.of_node,
+> +                               "marvell,88pm860-buck1-dualphase-en")) {
+> +               ret = regmap_update_bits(chip->subchip->regmap_power,
+> +                                       PM860_BUCK1_MISC,
+> +                                       BUCK1_DUAL_PHASE_SEL,
+> +                                       BUCK1_DUAL_PHASE_SEL);
+> +               if (ret) {
+> +                       dev_err(chip->dev, "failed to set dual-pase mode %d\n", ret);
+> +                       return ret;
+> +               }
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+>  static int pm800_regulator_probe(struct platform_device *pdev)
+>  {
+>         struct pm80x_chip *chip = dev_get_drvdata(pdev->dev.parent);
+> @@ -336,6 +361,12 @@ static int pm800_regulator_probe(struct platform_device *pdev)
+>                 }
+>         }
+>
+> +       ret = pm800_regulator_init(pdev);
+> +       if (ret) {
+> +               dev_err(&pdev->dev, "failed to init 88pm800 regulator device\n");
+> +               return ret;
+> +       }
+> +
+>         return 0;
+>  }
+>
+> diff --git a/include/linux/mfd/88pm80x.h b/include/linux/mfd/88pm80x.h
+> index a92d173..05d9bad 100644
+> --- a/include/linux/mfd/88pm80x.h
+> +++ b/include/linux/mfd/88pm80x.h
+> @@ -295,6 +295,9 @@ enum {
+>  #define PM860_BUCK4_MISC2              (0x82)
+>  #define PM860_BUCK4_FULL_DRV           BIT(2)
+>
+> +#define PM860_BUCK1_MISC               (0x8E)
+> +#define BUCK1_DUAL_PHASE_SEL           BIT(2)
+> +
+>  struct pm80x_rtc_pdata {
+>         int             vrtc;
+>         int             rtc_wakeup;
+> --
+> 1.9.1
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
