@@ -1,81 +1,102 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH V2 1/3] mfd: da9062: Support for the DA9063 OnKey in the
- DA9062 core
-Date: Thu, 23 Jul 2015 16:07:35 +0100
-Message-ID: <20150723150735.GJ3436@x1>
-References: <cover.1437399438.git.stwiss.opensource@diasemi.com>
- <9c56142bcfae19a370da54e558f4f70e068d9529.1437399438.git.stwiss.opensource@diasemi.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 3/4] mfd: Add DT binding for Maxim MAX77802 IC
+Date: Thu, 23 Jul 2015 16:16:52 +0100
+Message-ID: <20150723151652.GK3436@x1>
+References: <1437114567-17629-1-git-send-email-javier@osg.samsung.com>
+ <1437114567-17629-4-git-send-email-javier@osg.samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-input-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <9c56142bcfae19a370da54e558f4f70e068d9529.1437399438.git.stwiss.opensource@diasemi.com>
-Sender: linux-input-owner@vger.kernel.org
-To: S Twiss <stwiss.opensource@diasemi.com>
-Cc: DEVICETREE <devicetree@vger.kernel.org>, LINUXINPUT <linux-input@vger.kernel.org>, LINUXKERNEL <linux-kernel@vger.kernel.org>, RTCLINUX <rtc-linux@googlegroups.com>, Samuel Ortiz <sameo@linux.intel.com>, David Dajun Chen <david.chen@diasemi.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <support.opensource@diasemi.com>
+In-Reply-To: <1437114567-17629-4-git-send-email-javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 20 Jul 2015, S Twiss wrote:
+On Fri, 17 Jul 2015, Javier Martinez Canillas wrote:
 
-> From: S Twiss <stwiss.opensource@diasemi.com>
+> The MAX77802 is a chip that contains regulators, 2 32kHz clocks,
+> a RTC and an I2C interface to program the individual components.
 >=20
-> Add MFD core driver support for a OnKey component
+> The are already DT bindings for the regulators and clocks and
+> these reference to a bindings/mfd/max77802.txt file, that didn't
+> exist, for the details about the PMIC.
 >=20
-> - MFD core adds the resource da9062_onkey_resources[] for the OnKey
-> - An appropriate value has been added into mfd_cell da9062_devs[] to
->   support component .name =3D "da9062-onkey" and
->   .of_compatible  =3D "dlg,da9062-onkey"
->=20
-> Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
+> Signed-off-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
 >=20
 > ---
-> Checks performed with linux-next/next-20150708/scripts/checkpatch.pl
->  da9062-core.c             total: 0 errors, 0 warnings, 523 lines che=
-cked
-> Changes in V2:
->  - No change
 >=20
-> This patch applies against linux-next and next-20150708=20
+> Changes in v2:
+> - Use the correct "maxim,max77802" compatible string.
+>   Suggested by Krzysztof Kozlowski
+> - Use a pmic generic node name for the max77802 node example.
+>   Suggested by Sergei Shtylyov.
 >=20
+>  Documentation/devicetree/bindings/mfd/max77802.txt | 26 ++++++++++++=
+++++++++++
+>  1 file changed, 26 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/max77802.tx=
+t
 >=20
->  drivers/mfd/da9062-core.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-
-=46or my own reference:
-  Acked-by: Lee Jones <lee.jones@linaro.org>
-
-> diff --git a/drivers/mfd/da9062-core.c b/drivers/mfd/da9062-core.c
-> index 4cf0643..0732977 100644
-> --- a/drivers/mfd/da9062-core.c
-> +++ b/drivers/mfd/da9062-core.c
-> @@ -118,6 +118,10 @@ static struct resource da9062_wdt_resources[] =3D=
- {
->  	DEFINE_RES_NAMED(DA9062_IRQ_WDG_WARN, 1, "WD_WARN", IORESOURCE_IRQ)=
-,
->  };
-> =20
-> +static struct resource da9062_onkey_resources[] =3D {
-> +	DEFINE_RES_NAMED(DA9062_IRQ_ONKEY, 1, "ONKEY", IORESOURCE_IRQ),
-> +};
+> diff --git a/Documentation/devicetree/bindings/mfd/max77802.txt b/Doc=
+umentation/devicetree/bindings/mfd/max77802.txt
+> new file mode 100644
+> index 000000000000..c60cdec50d36
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/max77802.txt
+> @@ -0,0 +1,26 @@
+> +Maxim MAX77802 multi-function device
 > +
->  static const struct mfd_cell da9062_devs[] =3D {
->  	{
->  		.name		=3D "da9062-core",
-> @@ -141,6 +145,13 @@ static const struct mfd_cell da9062_devs[] =3D {
->  		.resources	=3D da9062_thermal_resources,
->  		.of_compatible  =3D "dlg,da9062-thermal",
->  	},
-> +	{
-> +		.name		=3D "da9062-onkey",
-> +		.num_resources	=3D ARRAY_SIZE(da9062_onkey_resources),
-> +		.resources	=3D da9062_onkey_resources,
-> +		.of_compatible =3D "dlg,da9062-onkey",
-> +	},
+> +The Maxim MAX77802 is a power management chip (PMIC) that contains 1=
+0 high
+> +efficiency Buck regulators, 32 Low-dropout (LDO) regulators used to =
+power
+
+Would be good to capitalise the works in the acronyms, so
+"Low-DropOut" and "Power Management IC".
+
+> +up application processors and peripherals, a 2-channel 32kHz clock o=
+utputs,
+> +a Real-Time-Clock (RTC) and a I2C interface to program the individua=
+l
+> +regulators, clocks outputs and the RTC.
 > +
->  };
-> =20
->  static int da9062_clear_fault_log(struct da9062 *chip)
+> +Binding for the built-in 32k clock generator block is defined separa=
+tely
+> +in the bindings/clk/maxim,max77802.txt file and binding for the regu=
+lators
+
+s/bindings/../
+
+> +is defined in the bindings/regulator/max77802.txt file.
+> +
+> +Required properties:
+> +- compatible : Must be "maxim,max77802";
+> +- reg : Specifies the i2c slave address of PMIC block.
+
+s/i2c/I2C/
+
+> +- interrupts : This i2c device has an IRQ line connected to the main=
+ SoC.
+
+As above.
+
+> +- interrupt-parent : The parent interrupt controller.
+> +
+> +Example:
+> +
+> +	max77802: pmic@09 {
+> +		compatible =3D "maxim,max77802";
+> +		interrupt-parent =3D <&intc>;
+> +		interrupts =3D <26 0>;
+
+Is there a define in include/dt-bindings/interrupt-controller to
+replace 0?  IRQ_TYPE_NONE perhaps.
+
+> +		reg =3D <0x09>;
+> +	};
 
 --=20
 Lee Jones
@@ -83,7 +104,7 @@ Linaro STMicroelectronics Landing Team Lead
 Linaro.org =E2=94=82 Open source software for ARM SoCs
 =46ollow Linaro: Facebook | Twitter | Blog
 --
-To unsubscribe from this list: send the line "unsubscribe linux-input" =
-in
-the body of a message to majordomo@vger.kernel.org
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
