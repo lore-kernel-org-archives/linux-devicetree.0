@@ -1,34 +1,44 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH 2/4] mfd: devicetree: bindings: Add clock subdevice node information
-Date: Thu, 23 Jul 2015 14:08:03 +0900
-Message-ID: <CAJKOXPeUJ-7je67q+9X1_FcFiczoQ6rqwMAoPLswapFEmqGGVg@mail.gmail.com>
-References: <1437476823-3358-1-git-send-email-vaibhav.hiremath@linaro.org>
-	<1437476823-3358-3-git-send-email-vaibhav.hiremath@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1437476823-3358-3-git-send-email-vaibhav.hiremath@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>, mturquette@baylibre.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, lee.jones@linaro.org, linux-clk@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>
+From: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] ARM: dts: Use stdout-path in STM32F429 Discovery board
+Date: Thu, 23 Jul 2015 07:09:33 +0200
+Message-ID: <1437628173-9447-1-git-send-email-mcoquelin.stm32@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kamil Lulko <rev13-5tc4TXWwyLM@public.gmane.org>, afaerber-l3A5Bk7waGM@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2015-07-21 20:07 GMT+09:00 Vaibhav Hiremath <vaibhav.hiremath@linaro.org>:
-> This patch updates the binding documentation for optional
-> clocks node and related information for buffered 32KHz clock.
->
-> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
-> ---
->  Documentation/devicetree/bindings/mfd/88pm800.txt | 28 +++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
+This patch replaces use of linux,stdout-path by stdout-path as per
+"chosen" DT bindings documentation.
 
-+Cc Stephen Boyd (clocks)
+Doing that, the "console" argument is no more needed in kernel command
+line.
 
-We had a discussion whether clock bindings should be put in MFD
-bindings documentation or into separate file in bindings/clock but
-either way is fine for me:
+Reported-by: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Signed-off-by: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/stm32f429-disco.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+diff --git a/arch/arm/boot/dts/stm32f429-disco.dts b/arch/arm/boot/dts/stm32f429-disco.dts
+index 8bd3de5..f0b731d 100644
+--- a/arch/arm/boot/dts/stm32f429-disco.dts
++++ b/arch/arm/boot/dts/stm32f429-disco.dts
+@@ -53,8 +53,8 @@
+ 	compatible = "st,stm32f429i-disco", "st,stm32f429";
+ 
+ 	chosen {
+-		bootargs = "console=ttyS0,115200 root=/dev/ram rdinit=/linuxrc";
+-		linux,stdout-path = &usart1;
++		bootargs = "root=/dev/ram rdinit=/linuxrc";
++		stdout-path = "serial0:115200n8";
+ 	};
+ 
+ 	memory {
+-- 
+1.9.1
 
-Best regards,
-Krzysztof
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
