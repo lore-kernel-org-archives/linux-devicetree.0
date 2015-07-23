@@ -1,39 +1,86 @@
-From: Zidan Wang <zidan.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH] ARM: dts: imx6sx: fix sdma peripheral type for SAI
-Date: Thu, 23 Jul 2015 11:38:14 +0800
-Message-ID: <9e7fea0435f92f7c3301544591806b348c495a32.1437622392.git.zidan.wang@freescale.com>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v9 0/7] FPGA Manager Framework and Simple FPGA Bus
+Date: Wed, 22 Jul 2015 21:12:18 -0700
+Message-ID: <20150723041218.GA6978@kroah.com>
+References: <1437148277-5405-1-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zidan Wang <zidan.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1437148277-5405-1-git-send-email-atull@opensource.altera.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: atull@opensource.altera.com
+Cc: jgunthorpe@obsidianresearch.com, hpa@zytor.com, monstr@monstr.eu, michal.simek@xilinx.com, rdunlap@infradead.org, mark.rutland@arm.com, linux-doc@vger.kernel.org, rubini@gnudd.com, pantelis.antoniou@konsulko.com, s.trumtrar@pengutronix.de, devel@driverdev.osuosl.org, sameo@linux.intel.com, nico@linaro.org, ijc+devicetree@hellion.org.uk, kyle.teske@ni.com, grant.likely@linaro.org, davidb@codeaurora.org, linus.walleij@linaro.org, cesarb@cesarb.net, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, iws@ovro.caltech.edu, broonie@kernel.org, philip@balister.org, Petr Cvek <petr.cvek@tul.cz>, dinguyen@opensource.altera.com, pavel@denx.de, yvanderv@opensource.altera.com, linux-kernel@vger.kernel.org, balbi@ti.com, delicious.quinoa@gmail.com, robh+dt@kernel.org, rob@landley.net, galak@codeaurora.org, akpm@linux-foundation.org, davem@davemloft.net, m.chehab@
 List-Id: devicetree@vger.kernel.org
 
-SAI sdma peripheral type is IMX_DMATYPE_SAI, which represent for 24.
+On Fri, Jul 17, 2015 at 10:51:10AM -0500, atull@opensource.altera.com wrote:
+> From: Alan Tull <atull@opensource.altera.com>
+> 
+> This patchset adds two chunks plus documentation:
+>  * fpga manager core: exports ABI functions that write an image to a FPGA
+>  * DT Overlay support: simple-fpga-bus to handle FPGA from a DT overlay
+> 
+> The core's ABI is minimal to start with: only 6 functions.  This gives a
+> common interface for programming various FPGA such that any higher level
+> interfaces such as the DT Overlays or anything else that is added can be
+> shared and not be manufacturor-specific.
+> 
+> The DT Overlays support exists for the usage where the FPGA will contain
+> some "hardware" that will need drivers.  Where that use model is not
+> appealing, the core ABI can be used to add a different use model such as
+> using an FPGA as acceleration as has been discussed.
+> 
+> This patchset gets rid of the sysfs controls that allowed direct
+> control of a FPGA from userspace.
+> 
+> This patchset is under drivers/staging as the interface could change.
+> 
+> The bindings for the socpfga fpga manager already are upstreamed as
+> 1b4e119 Alan Tull : doc: add bindings document for altera fpga manager
+> 
+> The DT Support is dependent on Pantelis's dtc overlay patches from
+> https://github.com/pantoniou/dtc.git
+> and his DT overlays configfs interface patches and fixes from
+> https://github.com/pantoniou/linux-beagle-track-mainline
+> 
+> efb0c04 Pantelis Antoniou : gcl: Fix resource linking
+> 85e785e Pantelis Antoniou : ARM: DT: Enable symbols when CONFIG_OF_OVERLAY is used
+> af0321f Pantelis Antoniou : OF: DT-Overlay configfs interface (v5)
+> 4c1c675 Pantelis Antoniou : configfs: Implement binary attributes (v4)
+> 
+> 
+> Alan Tull (7):
+>   staging: usage documentation for FPGA manager core
+>   staging: usage documentation for simple fpga bus
+>   staging: add bindings document for simple fpga bus
+>   staging: fpga manager: add sysfs interface document
+>   staging: fpga manager core
+>   staging: add simple-fpga-bus
+>   staging: fpga manager: add driver for socfpga fpga manager
+> 
+>  drivers/staging/Kconfig                            |    2 +
+>  drivers/staging/Makefile                           |    1 +
+>  .../Documentation/ABI/sysfs-class-fpga-manager     |   26 +
+>  .../Documentation/bindings/simple-fpga-bus.txt     |   61 ++
+>  drivers/staging/fpga/Documentation/fpga-mgr.txt    |  117 ++++
+>  .../staging/fpga/Documentation/simple-fpga-bus.txt |   48 ++
+>  drivers/staging/fpga/Kconfig                       |   31 +
+>  drivers/staging/fpga/Makefile                      |   10 +
+>  drivers/staging/fpga/fpga-mgr.c                    |  373 ++++++++++++
+>  drivers/staging/fpga/simple-fpga-bus.c             |  323 ++++++++++
+>  drivers/staging/fpga/socfpga.c                     |  616 ++++++++++++++++++++
 
-Signed-off-by: Zidan Wang <zidan.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- arch/arm/boot/dts/imx6sx.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+All drivers/staging/*/ directories need a TODO file that lists what
+needs to be done to it in order to get the code out of staging.  Please
+redo the series and add that.
 
-diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
-index 708175d..8ef8fd2 100644
---- a/arch/arm/boot/dts/imx6sx.dtsi
-+++ b/arch/arm/boot/dts/imx6sx.dtsi
-@@ -924,7 +924,7 @@
- 					 <&clks 0>, <&clks 0>;
- 				clock-names = "bus", "mclk1", "mclk2", "mclk3";
- 				dma-names = "rx", "tx";
--				dmas = <&sdma 31 23 0>, <&sdma 32 23 0>;
-+				dmas = <&sdma 31 24 0>, <&sdma 32 24 0>;
- 				dma-source = <&gpr 0 15 0 16>;
- 				status = "disabled";
- 			};
--- 
-1.9.1
+>  include/linux/fpga/fpga-mgr.h                      |  127 ++++
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This should be within drivers/staging/ all staging code should be
+self-contained.
+
+Why isn't this going into the "real" part of the kernel?  Why staging?
+
+thanks,
+
+greg k-h
