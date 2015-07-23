@@ -1,7 +1,7 @@
 From: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v8 14/23] usb: gadget: audio: allocate and init otg descriptor by otg capabilities
-Date: Thu, 23 Jul 2015 11:37:38 +0800
-Message-ID: <1437622667-6735-15-git-send-email-jun.li@freescale.com>
+Subject: [PATCH v8 17/23] usb: gadget: hid: allocate and init otg descriptor by otg capabilities
+Date: Thu, 23 Jul 2015 11:37:41 +0800
+Message-ID: <1437622667-6735-18-git-send-email-jun.li@freescale.com>
 References: <1437622667-6735-1-git-send-email-jun.li@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -19,14 +19,14 @@ is not defined, keep its original otg descriptor unchanged.
 Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Reviewed-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
 ---
- drivers/usb/gadget/legacy/audio.c | 34 +++++++++++++++++++---------------
- 1 file changed, 19 insertions(+), 15 deletions(-)
+ drivers/usb/gadget/legacy/hid.c | 36 ++++++++++++++++++++----------------
+ 1 file changed, 20 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/usb/gadget/legacy/audio.c b/drivers/usb/gadget/legacy/audio.c
-index f289caf..51a2380 100644
---- a/drivers/usb/gadget/legacy/audio.c
-+++ b/drivers/usb/gadget/legacy/audio.c
-@@ -150,20 +150,7 @@ static struct usb_device_descriptor device_desc = {
+diff --git a/drivers/usb/gadget/legacy/hid.c b/drivers/usb/gadget/legacy/hid.c
+index 2baa572..e4874d3 100644
+--- a/drivers/usb/gadget/legacy/hid.c
++++ b/drivers/usb/gadget/legacy/hid.c
+@@ -68,21 +68,7 @@ static struct usb_device_descriptor device_desc = {
  	.bNumConfigurations =	1,
  };
  
@@ -44,44 +44,48 @@ index f289caf..51a2380 100644
 -	(struct usb_descriptor_header *) &otg_descriptor,
 -	NULL,
 -};
+-
 +static const struct usb_descriptor_header *otg_desc[2];
  
- /*-------------------------------------------------------------------------*/
- 
-@@ -259,14 +246,28 @@ static int audio_bind(struct usb_composite_dev *cdev)
+ /* string IDs are assigned dynamically */
+ static struct usb_string strings_dev[] = {
+@@ -186,16 +172,30 @@ static int hid_bind(struct usb_composite_dev *cdev)
  	device_desc.iManufacturer = strings_dev[USB_GADGET_MANUFACTURER_IDX].id;
  	device_desc.iProduct = strings_dev[USB_GADGET_PRODUCT_IDX].id;
  
-+	if (gadget_is_otg(cdev->gadget) && !otg_desc[0]) {
++	if (gadget_is_otg(gadget) && !otg_desc[0]) {
 +		struct usb_descriptor_header *usb_desc;
 +
-+		usb_desc = usb_otg_descriptor_alloc(cdev->gadget);
++		usb_desc = usb_otg_descriptor_alloc(gadget);
 +		if (!usb_desc)
-+			goto fail;
-+		usb_otg_descriptor_init(cdev->gadget, usb_desc);
++			goto put;
++		usb_otg_descriptor_init(gadget, usb_desc);
 +		otg_desc[0] = usb_desc;
 +		otg_desc[1] = NULL;
 +	}
 +
- 	status = usb_add_config(cdev, &audio_config_driver, audio_do_config);
+ 	/* register our configuration */
+ 	status = usb_add_config(cdev, &config_driver, do_config);
  	if (status < 0)
--		goto fail;
-+		goto fail_otg_desc;
- 	usb_composite_overwrite_options(cdev, &coverwrite);
+-		goto put;
++		goto free_otg_desc;
  
- 	INFO(cdev, "%s, version: %s\n", DRIVER_DESC, DRIVER_VERSION);
+ 	usb_composite_overwrite_options(cdev, &coverwrite);
+ 	dev_info(&gadget->dev, DRIVER_DESC ", version: " DRIVER_VERSION "\n");
+ 
  	return 0;
  
-+fail_otg_desc:
++free_otg_desc:
 +	kfree(otg_desc[0]);
 +	otg_desc[0] = NULL;
- fail:
- #ifndef CONFIG_GADGET_UAC1
- 	usb_put_function_instance(fi_uac2);
-@@ -289,6 +290,9 @@ static int audio_unbind(struct usb_composite_dev *cdev)
- 	if (!IS_ERR_OR_NULL(fi_uac2))
- 		usb_put_function_instance(fi_uac2);
- #endif
+ put:
+ 	list_for_each_entry(m, &hidg_func_list, node) {
+ 		if (m == n)
+@@ -213,6 +213,10 @@ static int hid_unbind(struct usb_composite_dev *cdev)
+ 		usb_put_function(n->f);
+ 		usb_put_function_instance(n->fi);
+ 	}
++
 +	kfree(otg_desc[0]);
 +	otg_desc[0] = NULL;
 +
