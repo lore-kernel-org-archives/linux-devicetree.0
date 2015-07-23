@@ -1,115 +1,65 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v7 1/2] mfd: devicetree: add bindings for Atmel Flexcom
-Date: Thu, 23 Jul 2015 21:48:57 +0200
-Message-ID: <20150723214857.4322c758@bbrezillon>
-References: <cover.1437669004.git.cyrille.pitchen@atmel.com>
-	<60057bbf7d39ec63d391d26271747cf0228a3ed1.1437669004.git.cyrille.pitchen@atmel.com>
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: [PATCH] backlight: pm8941-wled: Add default-brightness property
+Date: Thu, 23 Jul 2015 12:52:07 -0700
+Message-ID: <1437681127-15760-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <60057bbf7d39ec63d391d26271747cf0228a3ed1.1437669004.git.cyrille.pitchen@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Cyrille Pitchen <cyrille.pitchen@atmel.com>
-Cc: nicolas.ferre@atmel.com, alexandre.belloni@free-electrons.com, sameo@linux.intel.com, lee.jones@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jingoo Han <jingoohan1@gmail.com>, Lee Jones <lee.jones@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Rob Clark <robdclark@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 23 Jul 2015 18:42:55 +0200
-Cyrille Pitchen <cyrille.pitchen@atmel.com> wrote:
+Add the possibility of specifying the default brightness in DT.
 
-> This patch documents the DT bindings for the Atmel Flexcom which will be
-> introduced by sama5d2x SoCs. These bindings will be used by the actual
-> Flexcom driver to be sent in another patch.
-> 
-> Signed-off-by: Cyrille Pitchen <cyrille.pitchen@atmel.com>
-> ---
->  .../devicetree/bindings/mfd/atmel-flexcom.txt      | 68 ++++++++++++++++++++++
->  1 file changed, 68 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/atmel-flexcom.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/atmel-flexcom.txt b/Documentation/devicetree/bindings/mfd/atmel-flexcom.txt
-> new file mode 100644
-> index 000000000000..a63226b7a9cb
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/atmel-flexcom.txt
-> @@ -0,0 +1,68 @@
-> +* Device tree bindings for Atmel Flexcom (Flexible Serial Communication Unit)
-> +
-> +The Atmel Flexcom is just a wrapper which embeds a SPI controller, an I2C
-> +controller and an USART. Only one function can be used at a time and is chosen
-> +at boot time according to the device tree.
-> +
-> +Required properties:
-> +- compatible:		Should be "atmel,sama5d2-flexcom"
-> +- reg:			Should be the pair (offset, size) for the Flexcom
-> +			dedicated I/O registers (without USART, TWI or SPI
-> +			registers).
-> +- clocks:		Should be the Flexcom peripheral clock from PMC.
-> +- #address-cells:	Should be <2>
-> +- #size-cells:		Should be <1>
-> +- ranges:		Should be a list of ranges.
-> +			One range per peripheral wrapped by the Flexcom. So each
-> +			range is a triplet (child_addr, parent_addr, size). The
-> +			first u32 of "child_addr" is the value to be set in the
-> +			Operating Mode bitfield of the Flexcom Mode Register.
-> +			Then "parent_addr" stores the base address of the
-> +			corresponding peripheral in the system memory. Finally,
-> +			"size" if the size of the memory region of this
-> +			peripheral.
-> +
-> +Required child:
-> +A single available child for the serial controller to enable.
-> +
-> +Required properties of this child:
-> +- reg:			Should be a pair (child_addr, size) with child_addr
-> +			matching one of the parent ranges.
-> +- clocks:		Should be the very same phandle as for the parent's one.
-> +
-> +Other properties remain unchanged. See documentation of the respective device:
-> +- ../serial/atmel-usart.txt
-> +- ../spi/spi_atmel.txt
-> +- ../i2c/i2c-at91.txt
-> +
-> +Example:
-> +
-> +flexcom@f8034000 {
-> +	compatible = "atmel,sama5d2-flexcom";
-> +	reg = <0xf8034000 0x200>;
-> +	clocks = <&flx0_clk>;
-> +	#address-cells = <2>;
-> +	#size-cells = <1>;
-> +	ranges = <1 0 0xf8034200 0x200		/* opmode 1: USART */
-> +		  2 0 0xf8034400 0x200		/* opmode 2: SPI */
-> +		  3 0 0xf8034600 0x200>;	/* opmode 3: I2C */
-> +
-> +	spi@f8034400 {
+Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+---
 
-Should be:
+This depends on the patch moving pm8941-wled to backlight [1]. The dt property
+is used by several other backlight drivers, so I considered this to be a
+"common" property and it's hence not prefixed with "qcom,".
 
-	spi@2,0 {
+[1] https://lkml.org/lkml/2015/7/21/906
 
-> +		compatible = "atmel,at91rm9200-spi";
-> +		reg = <2 0 0x200>;
-> +		interrupts = <19 IRQ_TYPE_LEVEL_HIGH 7>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_flx0_default>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		clocks = <&flx0_clk>;
-> +		clock-names = "spi_clk";
-> +		atmel,fifo-size = <32>;
-> +
-> +		mtd_dataflash@0 {
-> +			compatible = "atmel,at25f512b";
-> +			reg = <0>;
-> +			spi-max-frequency = <20000000>;
-> +		};
-> +	};
-> +};
+ Documentation/devicetree/bindings/video/backlight/pm8941-wled.txt | 1 +
+ drivers/video/backlight/pm8941-wled.c                             | 4 ++++
+ 2 files changed, 5 insertions(+)
 
-
-
+diff --git a/Documentation/devicetree/bindings/video/backlight/pm8941-wled.txt b/Documentation/devicetree/bindings/video/backlight/pm8941-wled.txt
+index 424f8444a6cd..37503f8c3620 100644
+--- a/Documentation/devicetree/bindings/video/backlight/pm8941-wled.txt
++++ b/Documentation/devicetree/bindings/video/backlight/pm8941-wled.txt
+@@ -5,6 +5,7 @@ Required properties:
+ - reg: slave address
+ 
+ Optional properties:
++- default-brightness: value from: 0-4095
+ - label: The name of the backlight device
+ - qcom,cs-out: bool; enable current sink output
+ - qcom,cabc: bool; enable content adaptive backlight control
+diff --git a/drivers/video/backlight/pm8941-wled.c b/drivers/video/backlight/pm8941-wled.c
+index c704c3236034..b875e58df0fc 100644
+--- a/drivers/video/backlight/pm8941-wled.c
++++ b/drivers/video/backlight/pm8941-wled.c
+@@ -373,6 +373,7 @@ static int pm8941_wled_probe(struct platform_device *pdev)
+ 	struct backlight_device *bl;
+ 	struct pm8941_wled *wled;
+ 	struct regmap *regmap;
++	u32 val = 0;
+ 	int rc;
+ 
+ 	regmap = dev_get_regmap(pdev->dev.parent, NULL);
+@@ -395,8 +396,11 @@ static int pm8941_wled_probe(struct platform_device *pdev)
+ 	if (rc)
+ 		return rc;
+ 
++	of_property_read_u32(pdev->dev.of_node, "default-brightness", &val);
++
+ 	memset(&props, 0, sizeof(struct backlight_properties));
+ 	props.type = BACKLIGHT_RAW;
++	props.brightness = val;
+ 	props.max_brightness = PM8941_WLED_REG_VAL_MAX;
+ 	bl = devm_backlight_device_register(&pdev->dev, wled->name,
+ 					    &pdev->dev, wled,
 -- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+1.8.2.2
