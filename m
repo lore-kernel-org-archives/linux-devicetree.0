@@ -1,236 +1,263 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/6] mailbox: Add support for ST's Mailbox IP
-Date: Thu, 23 Jul 2015 09:29:34 +0100
-Message-ID: <20150723082934.GW3061@x1>
-References: <1437134647-28298-1-git-send-email-lee.jones@linaro.org>
- <1437134647-28298-4-git-send-email-lee.jones@linaro.org>
- <CABb+yY2nAT6V4Q8suAXRtPXrXkArGWVTAW28ts4Z3C_ybuJovA@mail.gmail.com>
+From: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 6/8] ACPI: add GTDT table parse driver into ACPI driver
+Date: Thu, 23 Jul 2015 16:32:39 +0800
+Message-ID: <CADyBb7vu5VYjWqQjg4w+C86F9HxRJz8jabSBLwYrK9xfU3dqGw@mail.gmail.com>
+References: <=fu.wei@linaro.org>
+	<1435075182-20182-1-git-send-email-fu.wei@linaro.org>
+	<1435075182-20182-2-git-send-email-fu.wei@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CABb+yY2nAT6V4Q8suAXRtPXrXkArGWVTAW28ts4Z3C_ybuJovA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1435075182-20182-2-git-send-email-fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linaro ACPI Mailman List <linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, G Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Vipul Gandhi <vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Leo Duran <leo.duran-5C7GfCeVMHo@public.gmane.org>, Jon Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, panand-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Let's carry on the conversation here, rather than submitting my fixed
-up patch.  Once agreed, I will re-send.
+Hi Rafael,
 
-> On Fri, Jul 17, 2015 at 5:34 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wro=
-te:
-> > ST's platforms currently support a maximum of 5 Mailboxes, one for
-> > each of the supported co-processors situated on the platform.  Each
-> > Mailbox is divided up into 4 instances which consist of 32 channels=
-=2E
-> > Messages are passed between the application and co-processors using
-> > shared memory areas.  It is the Client's responsibility to manage
-> > these areas.
-> >
-> Thanks. It's a lot better than the old driver. However a few nits as =
-usual :)
->=20
-> > +
-> > +#define STI_MBOX_INST_MAX      4      /* RAM saving: Max supported=
- instances */
-> >
-> Above you say 5 instances. Another u32 doesn't cost much.
+Any suggestion on the  GTDT patch of this patch set?
+Please let me know if I can do anything to improve it.
+If it is OK for you, could you add a "Acked-by:"?
 
-This should stay the same.  There are 4 instances.
+Great thanks for your time! :-)
 
-> > +#define STI_MBOX_CHAN_MAX      20     /* RAM saving: Max supported=
- channels  */
-> > +
-> This assumption is reasonable.
->=20
-> > +
-> > +static void sti_mbox_enable_channel(struct mbox_chan *chan)
-> > +{
-> > +       struct sti_channel *chan_info =3D chan->con_priv;
-> > +       struct sti_mbox_device *mdev =3D chan_info->mdev;
-> > +       struct sti_mbox_pdata *pdata =3D dev_get_platdata(mdev->dev=
-);
-> > +       unsigned int instance =3D chan_info->instance;
-> > +       unsigned int channel =3D chan_info->channel;
-> > +       unsigned long flags;
-> > +       void __iomem *base;
-> > +
-> > +       base =3D mdev->base + (instance * sizeof(u32));
-> > +
-> Maybe have something simpler like MBOX_BASE(instance)? Or some inline
-> function to avoid this 5-lines ritual?
 
-I've checked and we can't do this, as the we need most (all?) of the
-intermediary variables too.  No ritual just to get the final variable
-for instance.
+On 23 June 2015 at 23:59,  <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> From: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>
+> This driver adds support for parsing SBSA Generic Watchdog
+> Structure in GTDT, and creating a platform device with that
+> information. This allows the operating system to obtain device
+> data from the resource of platform device.
+>
+> The platform device named "sbsa-gwdt" can be used by the
+> ARM SBSA Generic Watchdog driver.
+>
+> Signed-off-by: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  drivers/acpi/Kconfig  |   9 ++++
+>  drivers/acpi/Makefile |   1 +
+>  drivers/acpi/gtdt.c   | 137 ++++++++++++++++++++++++++++++++++++++++=
+++++++++++
+>  3 files changed, 147 insertions(+)
+>  create mode 100644 drivers/acpi/gtdt.c
+>
+> diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
+> index 1bbaa3d..e125698 100644
+> --- a/drivers/acpi/Kconfig
+> +++ b/drivers/acpi/Kconfig
+> @@ -433,4 +433,13 @@ config XPOWER_PMIC_OPREGION
+>
+>  endif
+>
+> +config ACPI_GTDT
+> +       bool "ACPI GTDT Support"
+> +       depends on ARM64
+> +       help
+> +         GTDT (Generic Timer Description Table) provides information
+> +         for per-processor timers and Platform (memory-mapped) timer=
+s
+> +         for ARM platforms. Select this option to provide informatio=
+n
+> +         needed for the timers init.
+> +
+>  endif  # ACPI
+> diff --git a/drivers/acpi/Makefile b/drivers/acpi/Makefile
+> index 431e587..2c5a194 100644
+> --- a/drivers/acpi/Makefile
+> +++ b/drivers/acpi/Makefile
+> @@ -96,3 +96,4 @@ obj-$(CONFIG_ACPI_EXTLOG)     +=3D acpi_extlog.o
+>  obj-$(CONFIG_PMIC_OPREGION)    +=3D pmic/intel_pmic.o
+>  obj-$(CONFIG_CRC_PMIC_OPREGION) +=3D pmic/intel_pmic_crc.o
+>  obj-$(CONFIG_XPOWER_PMIC_OPREGION) +=3D pmic/intel_pmic_xpower.o
+> +obj-$(CONFIG_ACPI_GTDT)                +=3D gtdt.o
+> diff --git a/drivers/acpi/gtdt.c b/drivers/acpi/gtdt.c
+> new file mode 100644
+> index 0000000..a92abf2
+> --- /dev/null
+> +++ b/drivers/acpi/gtdt.c
+> @@ -0,0 +1,137 @@
+> +/*
+> + * ARM Specific GTDT table Support
+> + *
+> + * Copyright (C) 2015, Linaro Ltd.
+> + * Author: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> + *         Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or mod=
+ify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/device.h>
+> +#include <linux/init.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +
+> +static int __init map_generic_timer_interrupt(u32 interrupt, u32 fla=
+gs)
+> +{
+> +       int trigger, polarity;
+> +
+> +       if (!interrupt)
+> +               return 0;
+> +
+> +       trigger =3D (flags & ACPI_GTDT_INTERRUPT_MODE) ? ACPI_EDGE_SE=
+NSITIVE
+> +                       : ACPI_LEVEL_SENSITIVE;
+> +
+> +       polarity =3D (flags & ACPI_GTDT_INTERRUPT_POLARITY) ? ACPI_AC=
+TIVE_LOW
+> +                       : ACPI_ACTIVE_HIGH;
+> +
+> +       return acpi_register_gsi(NULL, interrupt, trigger, polarity);
+> +}
+> +
+> +/*
+> + * Initialize a SBSA generic Watchdog platform device info from GTDT
+> + * According to SBSA specification the size of refresh and control
+> + * frames of SBSA Generic Watchdog is SZ_4K(Offset 0x000 =E2=80=93 0=
+xFFF).
+> + */
+> +static int __init gtdt_import_sbsa_gwdt(struct acpi_gtdt_watchdog *w=
+d,
+> +                                       int index)
+> +{
+> +       struct platform_device *pdev;
+> +       int irq =3D map_generic_timer_interrupt(wd->timer_interrupt,
+> +                                             wd->timer_flags);
+> +       struct resource res[] =3D {
+> +               DEFINE_RES_IRQ_NAMED(irq, "ws0"),
+> +               DEFINE_RES_MEM_NAMED(wd->refresh_frame_address, SZ_4K=
+,
+> +                                    "refresh"),
+> +               DEFINE_RES_MEM_NAMED(wd->control_frame_address, SZ_4K=
+,
+> +                                    "control"),
+> +       };
+> +
+> +       pr_debug("GTDT: a Watchdog GT(0x%llx/0x%llx gsi:%u flags:0x%x=
+)\n",
+> +                wd->refresh_frame_address, wd->control_frame_address=
+,
+> +                wd->timer_interrupt, wd->timer_flags);
+> +
+> +       if (!(wd->refresh_frame_address &&
+> +             wd->control_frame_address &&
+> +             wd->timer_interrupt)) {
+> +               pr_err("GTDT: failed geting the device info.\n");
+> +               return -EINVAL;
+> +       }
+> +
+> +       if (irq < 0) {
+> +               pr_err("GTDT: failed to register GSI of the Watchdog =
+GT.\n");
+> +               return -EINVAL;
+> +       }
+> +
+> +       /*
+> +        * Add a platform device named "sbsa-gwdt" to match the platf=
+orm driver.
+> +        * "sbsa-gwdt": SBSA(Server Base System Architecture) Generic=
+ Watchdog
+> +        * The platform driver (like drivers/watchdog/sbsa_gwdt.c)can=
+ get device
+> +        * info below by matching this name.
+> +        */
+> +       pdev =3D platform_device_register_simple("sbsa-gwdt", index, =
+res,
+> +                                              ARRAY_SIZE(res));
+> +       if (IS_ERR(pdev)) {
+> +               acpi_unregister_gsi(wd->timer_interrupt);
+> +               return PTR_ERR(pdev);
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int __init gtdt_platform_timer_parse(struct acpi_table_header=
+ *table)
+> +{
+> +       struct acpi_gtdt_header *header;
+> +       struct acpi_table_gtdt *gtdt;
+> +       void *gtdt_subtable;
+> +       int i, gwdt_index;
+> +       int ret =3D 0;
+> +
+> +       if (table->revision < 2) {
+> +               pr_warn("GTDT: Revision:%d doesn't support Platform T=
+imers.\n",
+> +                       table->revision);
+> +               return 0;
+> +       }
+> +
+> +       gtdt =3D container_of(table, struct acpi_table_gtdt, header);
+> +       if (!gtdt->platform_timer_count) {
+> +               pr_info("GTDT: No Platform Timer structures.\n");
+> +               return 0;
+> +       }
+> +
+> +       gtdt_subtable =3D (void *)gtdt + gtdt->platform_timer_offset;
+> +
+> +       for (i =3D 0, gwdt_index =3D 0; i < gtdt->platform_timer_coun=
+t; i++) {
+> +               if (gtdt_subtable > (void *)table + table->length) {
+> +                       pr_err("GTDT: subtable pointer overflows, bad=
+ table\n");
+> +                       return -EINVAL;
+> +               }
+> +               header =3D (struct acpi_gtdt_header *)gtdt_subtable;
+> +               if (header->type =3D=3D ACPI_GTDT_TYPE_WATCHDOG) {
+> +                       ret =3D gtdt_import_sbsa_gwdt(gtdt_subtable, =
+gwdt_index);
+> +                       if (ret)
+> +                               pr_err("GTDT: failed to import subtab=
+le %d\n",
+> +                                      i);
+> +                       else
+> +                               gwdt_index++;
+> +               }
+> +               gtdt_subtable +=3D header->length;
+> +       }
+> +
+> +       return ret;
+> +}
+> +
+> +static int __init gtdt_platform_timer_init(void)
+> +{
+> +       if (acpi_disabled)
+> +               return 0;
+> +
+> +       return acpi_table_parse(ACPI_SIG_GTDT, gtdt_platform_timer_pa=
+rse);
+> +}
+> +
+> +device_initcall(gtdt_platform_timer_init);
+> --
+> 1.9.1
+>
 
-> > +       spin_lock_irqsave(&sti_mbox_chan_lock, flags);
-> > +       mdev->enabled[instance] |=3D BIT(channel);
-> > +       writel_relaxed(BIT(channel), base + pdata->ena_set);
-> > +       spin_unlock_irqrestore(&sti_mbox_chan_lock, flags);
-> >
-> You don't need locking for SET/CLR type registers which are meant for
-> when they could be accessed by processors that can not share a lock.
-> So maybe drop the lock here and elsewhere.
 
-=46rom what I can gather, I think we need this locking.  What happens i=
-f
-we get scheduled between setting the enabled bit in our cache and
-actually setting the ena_set bit?  We would be out of sync.
-
-> However, you need some mechanism to check if you succeeded 'owning'
-> the channel by reading back what you write to own the channel (not
-> sure which is that register here). Usually we need that action and
-> verification when we assign a channel to some user.
-
-I don't think we need to do that with this driver.  All of the
-allocation is controlled from within this code base.  The channels are
-pre-allocated and written into the co-proc's Firmware.
-
-> > +static int sti_mbox_send_data(struct mbox_chan *chan, void *data)
-> > +{
-> > +       struct sti_channel *chan_info =3D chan->con_priv;
-> > +       struct sti_mbox_device *mdev =3D chan_info->mdev;
-> > +       struct sti_mbox_pdata *pdata =3D dev_get_platdata(mdev->dev=
-);
-> > +       unsigned int instance =3D chan_info->instance;
-> > +       unsigned int channel =3D chan_info->channel;
-> > +       void __iomem *base;
-> > +
-> > +       if (!sti_mbox_tx_is_ready(chan))
-> > +               return -EBUSY;
-> This is the first thing I look out for in every new driver :)  this
-> check is unnecessary.
-
-I see what you mean now.  I will remove this check.
-
-> > +static void sti_mbox_shutdown_chan(struct mbox_chan *chan)
-> > +{
-> > +       struct sti_channel *chan_info =3D chan->con_priv;
-> > +       struct mbox_controller *mbox =3D chan_info->mdev->mbox;
-> > +       int i;
-> > +
-> > +       for (i =3D 0; i < mbox->num_chans; i++)
-> > +               if (chan =3D=3D &mbox->chans[i])
-> > +                       break;
-> > +
-> > +       if (mbox->num_chans =3D=3D i) {
-> > +               dev_warn(mbox->dev, "Request to free non-existent c=
-hannel\n");
-> > +               return;
-> > +       }
-> > +
-> > +       sti_mbox_disable_channel(chan);
-> > +       sti_mbox_clear_irq(chan);
-> > +
-> > +       /* Reset channel */
-> > +       memset(chan, 0, sizeof(*chan));
-> > +       chan->mbox =3D mbox;
-> > +       chan->txdone_method =3D TXDONE_BY_POLL;
-> >
-> No please. mbox_chan is owned by the API. At most you could clear con=
-_priv.
-
-Removed.
-
-> > +static struct mbox_chan *sti_mbox_xlate(struct mbox_controller *mb=
-ox,
-> > +                                       const struct of_phandle_arg=
-s *spec)
-> > +{
-> > +       struct sti_mbox_device *mdev =3D dev_get_drvdata(mbox->dev)=
-;
-> > +       struct sti_mbox_pdata *pdata =3D dev_get_platdata(mdev->dev=
-);
-> > +       struct sti_channel *chan_info;
-> > +       struct mbox_chan *chan =3D NULL;
-> > +       unsigned int instance  =3D spec->args[0];
-> > +       unsigned int channel   =3D spec->args[1];
-> > +       unsigned int direction =3D spec->args[2];
-> > +       int i;
-> > +
-> > +       /* Bounds checking */
-> > +       if (instance >=3D pdata->num_inst || channel  >=3D pdata->n=
-um_chan) {
-> > +               dev_err(mbox->dev,
-> > +                       "Invalid channel requested instance: %d cha=
-nnel: %d\n",
-> > +                       instance, channel);
-> > +               return NULL;
-> > +       }
-> > +
-> > +       for (i =3D 0; i < mbox->num_chans; i++) {
-> > +               chan_info =3D mbox->chans[i].con_priv;
-> > +
-> > +               /* Is requested channel free? */
-> > +               if (direction !=3D MBOX_LOOPBACK &&
-> > +                   chan_info &&
-> > +                   mbox->dev =3D=3D chan_info->mdev->dev &&
-> > +                   instance =3D=3D chan_info->instance &&
-> > +                   channel =3D=3D chan_info->channel) {
-> > +                       dev_err(mbox->dev, "Channel in use\n");
-> > +                       return NULL;
-> > +               }
-> > +
-> > +               /* Find the first free slot */
-> > +               if (!chan && !chan_info)
-> > +                       chan =3D &mbox->chans[i];
->         shouldn't it break out of loop here?
-
-I checked that and we don't.  We need to check all of the channels do
-wee if we have double allocated.  If we have, NULL is returned from
-above.
-
-I have; however, updated the comment above for clarity.
-
-> > +       }
-> > +
-> Doesn't mbox->chans[i].con_priv need some locking here?
-
-Not that I can see.  Would you mind explaining further please?
-
-> > +static const struct sti_mbox_pdata mbox_stih407_pdata =3D {
-> > +       .num_inst       =3D 4,
-> > +       .num_chan       =3D 32,
-> > +       .irq_val        =3D 0x04,
-> > +       .irq_set        =3D 0x24,
-> > +       .irq_clr        =3D 0x44,
-> > +       .ena_val        =3D 0x64,
-> > +       .ena_set        =3D 0x84,
-> > +       .ena_clr        =3D 0xa4,
-> >
-> Register offsets are parameters of the controller, and also these loo=
-k
-> ugly. Please make these #define's
-
-These are now #defined.
-
-> > +static int __init sti_mbox_init(void)
-> > +{
-> > +       return platform_driver_register(&sti_mbox_driver);
-> > +}
-> > +
-> > +static void __exit sti_mbox_exit(void)
-> > +{
-> > +       platform_driver_unregister(&sti_mbox_driver);
-> > +}
-> > +
-> > +postcore_initcall(sti_mbox_init);
-> >
-> This seems fragile. Shouldn't the users defer probe if they don't get=
- a channel?
-
-This has been converted to module_platform_driver()
 
 --=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Best regards,
+
+=46u Wei
+Software Engineer
+Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
+Ph: +86 21 61221326(direct)
+Ph: +86 186 2020 4684 (mobile)
+Room 1512, Regus One Corporate Avenue,Level 15,
+One Corporate Avenue,222 Hubin Road,Huangpu District,
+Shanghai,China 200021
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe linux-watchdo=
+g" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
