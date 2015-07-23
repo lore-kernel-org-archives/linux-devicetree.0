@@ -1,45 +1,64 @@
-From: Harini Katakam <harinikatakamlinux@gmail.com>
-Subject: Re: [NET-NEXT PATCH] net: macb: Change capability mask of jumbo support
-Date: Thu, 23 Jul 2015 15:35:08 +0530
-Message-ID: <CAFcVECJ1egvteE6DazZg-1enAmhY5Opv9TYyHEsjS_YuXaZGYA@mail.gmail.com>
-References: <1437645686-5146-1-git-send-email-harinik@xilinx.com>
+From: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
+Subject: Re: [PATCH 3/3] arm: dts: ls1021a: Add snps,configure-gfladj property to USB3 node
+Date: Thu, 23 Jul 2015 12:11:28 +0200
+Message-ID: <1564365.o2o69FAsZI@ws-stein>
+References: <1437646378-1910-1-git-send-email-nikhil.badola@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1437645686-5146-1-git-send-email-harinik@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Harini Katakam <harini.katakam@xilinx.com>
-Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, davem@davemloft.net, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, boris.brezillon@free-electrons.com, alexandre.belloni@free-electrons.com, netdev@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Punnaiah Choudary Kalluri <punnaia@xilinx.com>, "michals@xilinx.com" <michals@xilinx.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1437646378-1910-1-git-send-email-nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nikhil Badola <nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Please ignore this patch. This is not on the right base, i'll resend it.
+On Thursday 23 July 2015 15:42:58, Nikhil Badola wrote:
+> Add "snps,configure-gfladj" boolean property to USB3 node. This property
+                      ^^^^^^
+This does not match...
 
-Regards,
-Harini
-
-On Thu, Jul 23, 2015 at 3:31 PM, Harini Katakam
-<harini.katakam@xilinx.com> wrote:
-> Capability mask for jumbo and no gigabit half duplex is the same.
-> Change one of them.
->
-> Signed-off-by: Harini Katakam <harinik@xilinx.com>
+> is used to determine if frame length adjustment is required
+> 
+> Signed-off-by: Nikhil Badola <nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 > ---
->  drivers/net/ethernet/cadence/macb.h |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/net/ethernet/cadence/macb.h b/drivers/net/ethernet/cadence/macb.h
-> index 15fd6e3..8b3087b 100644
-> --- a/drivers/net/ethernet/cadence/macb.h
-> +++ b/drivers/net/ethernet/cadence/macb.h
-> @@ -449,7 +449,7 @@
->  #define MACB_CAPS_GIGABIT_MODE_AVAILABLE       0x20000000
->  #define MACB_CAPS_SG_DISABLED                  0x40000000
->  #define MACB_CAPS_MACB_IS_GEM                  0x80000000
-> -#define MACB_CAPS_JUMBO                                0x00000008
-> +#define MACB_CAPS_JUMBO                                0x00000010
->  #define NS_PER_SEC                             1000000000ULL
->
->  /* Bit manipulation macros */
-> --
-> 1.7.9.5
->
+>  arch/arm/boot/dts/ls1021a.dtsi | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
+> index c70bb27..f03f842 100644
+> --- a/arch/arm/boot/dts/ls1021a.dtsi
+> +++ b/arch/arm/boot/dts/ls1021a.dtsi
+> @@ -404,6 +404,7 @@
+>  			reg = <0x0 0x3100000 0x0 0x10000>;
+>  			interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>;
+>  			dr_mode = "host";
+> +			snps,configure-fladj = <0x20>;
+                             ^^^^^
+...that. The same is for the subject. I guess these "gfladj" are just leftovers as patch 1 & 2 talk about "fladj"
+
+Best regards,
+Alexander
+-- 
+Dipl.-Inf. Alexander Stein
+SYS TEC electronic GmbH
+alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org
+
+Legal and Commercial Address:
+Am Windrad 2
+08468 Heinsdorfergrund
+Germany
+
+Office: +49 (0) 3765 38600-0
+Fax:    +49 (0) 3765 38600-4100
+ 
+Managing Directors:
+	Director Technology/CEO: Dipl.-Phys. Siegmar Schmidt;
+	Director Commercial Affairs/COO: Dipl. Ing. (FH) Armin von Collrepp
+Commercial Registry:
+	Amtsgericht Chemnitz, HRB 28082; USt.-Id Nr. DE150534010
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
