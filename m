@@ -1,102 +1,85 @@
-From: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v7 00/23] usb gadget update for OTG 2.0
-Date: Thu, 23 Jul 2015 07:57:48 +0800
-Message-ID: <20150722235746.GA8453@shlinux2>
-References: <1436426340-18477-1-git-send-email-jun.li@freescale.com>
- <20150722151308.GE10467@saruman.tx.rr.com>
+From: chunfeng yun <chunfeng.yun@mediatek.com>
+Subject: Re: [PATCH v3 0/5] Mediatek xHCI support
+Date: Thu, 23 Jul 2015 09:18:35 +0800
+Message-ID: <1437614315.3040.3.camel@mhfsdcap03>
+References: <1437573945-31586-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150722151308.GE10467-HgARHv6XitJaoMGHk7MhZQC/G2K4zDHf@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Cc: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+d-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1437573945-31586-1-git-send-email-chunfeng.yun@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mathias Nyman <mathias.nyman@intel.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Felipe Balbi <balbi@ti.com>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, John Crispin <blogic@openwrt.org>, Daniel Kurtz <djkurtz@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 22, 2015 at 10:13:08AM -0500, Felipe Balbi wrote:
-> On Thu, Jul 09, 2015 at 03:18:37PM +0800, Li Jun wrote:
-> > Change for v7:
-> > - Free otg descriptor when failure of bind in patch 21, 22, 23.
-> >   add Roger's Reviewed-by for patch 10~20.
-> > - Choose the lesser otg-rev if otg-rev has been set before update by DT,
-> >   remove 0x0300 in supported otg-rev list, and add code comments in case
-> >   otg-rev is not passed in DT in patch 7.
-> > - Fail chipidea usb initilization if DT pass an unsupported otg-rev in patch 8.
-> > 
-> > Change for v6:
-> > - Change of_usb_set_otg_caps to be of_usb_update_otg_caps, and add
-> >   sanity check of otg-rev.
-> > - Add chipidea otg-rev ability to be 0x0200, which will be updated
-> >   in DT, if not passed, will be reset to be 0.
-> > - Remove unnecessary change: move config's descriptor and bmAttributes
-> >   init from xxxi_config() to xxx_bind() in leagcy gadget drivers.
-> > 
-> > This is a follow-up of Macpaul Lin's previous patchset to resolve usb
-> > gadget driver working with OTG 2.0, and set otg features by not only
-> > usb driver config but also usb hardware property in DT, main changes:
-> > 1. Add usb_otg20_descriptor definition for OTG 2.0 which introduces bcdOTG
-> >    field for otg revision, bcdOTG can be passed via device tree.
-> > 2. OTG features(SRP/HNP/ADP) can be decided by combination of usb HW
-> >    properties and usb driver config.
-> > 3. Change the chipidea usb driver to use the updated mechanism.
-> > 4. Remove static usb otg descriptor definition, but allocate and init it
-> >    according to otg capabilities in each gadget driver, if otg capabilities
-> >    is not defined for legacy platforms, the usb otg descriptor content is
-> >    kept the same as current static definition.
-> > 
-> > Li Jun (19):
-> >   usb: otg: add usb_otg_caps structure for otg capabilities
-> >   doc: dt-binding: usb: add otg related properties
-> >   usb: common: add API to update usb otg capabilities by device tree
-> >   usb: chipidea: set usb otg capabilities
-> >   usb: chipidea: update ci_otg_is_fsm_mode conditions
-> >   usb: gadget: add usb otg descriptor allocate and init interface
-> >   usb: gadget: configfs: allocate and init otg descriptor by otg
-> >     capabilities
-> >   usb: gadget: ether: allocate and init otg descriptor by otg
-> >     capabilities
-> >   usb: gadget: acm_ms: allocate and init otg descriptor by otg
-> >     capabilities
-> >   usb: gadget: audio: allocate and init otg descriptor by otg
-> >     capabilities
-> >   usb: gadget: cdc2: allocate and init otg descriptor by otg
-> >     capabilities
-> >   usb: gadget: g_ffs: allocate and init otg descriptor by otg
-> >     capabilities
-> >   usb: gadget: hid: allocate and init otg descriptor by otg capabilities
-> >   usb: gadget: mass_storage: allocate and init otg descriptor by otg
-> >     capabilities
-> >   usb: gadget: multi: allocate and init otg descriptor by otg
-> >     capabilities
-> >   usb: gadget: ncm: allocate and init otg descriptor by otg capabilities
-> >   usb: gadget: printer: allocate and init otg descriptor by otg
-> >     capabilities
-> >   usb: gadget: serial: allocate and init otg descriptor by otg
-> >     capabilities
-> >   usb: gadget: zero: allocate and init otg descriptor by otg
-> >     capabilities
-> > 
-> > Macpaul Lin (4):
-> >   usb: add usb_otg20_descriptor for OTG 2.0 and above
-> >   usb: add USB_OTG_ADP definition
-> >   usb: add usb_otg_caps to usb_gadget structure.
-> >   usb: gadget: composite: add USB_DT_OTG request handling
+Sorry, add a title
+
+On Wed, 2015-07-22 at 22:05 +0800, Chunfeng Yun wrote:
+> From ac1e8724bfa47494223bad0af450c1a63cd2fe0c Mon Sep 17 00:00:00 2001
+> From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> Date: Wed, 22 Jul 2015 21:15:15 +0800
+> Subject: [PATCH 0/5] *** SUBJECT HERE ***
 > 
-> ok, so how you guys want to handle this series ? Should I take
-> everything through my tree ? I'd need Acked-by for all chipidea drivers
-> if that's the case.
+> The patch supports MediaTek's xHCI controller.
 > 
-> -- 
-> balbi
-
-I will resend the whole series with a small fix and Peter's ACK for
-chipidea part.
-
-Li Jun
-
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> There are some differences from xHCI spec:
+> 1. The interval is specified in 250 * 8ns increments for Interrupt Moderation
+> Interval(IMODI) of the Interrupter Moderation(IMOD) register, it is 8 times as
+> much as that defined in xHCI spec.
+> 
+> 2. For the value of TD Size in Normal TRB, MTK's xHCI controller defines a
+> number of packets that remain to be transferred for a TD after processing all
+> Max packets in all previous TRBs,that means don't include the current TRB's,
+> but in xHCI spec it includes the current ones.
+> 
+> 3. To minimize the scheduling effort for synchronous endpoints in xHC, the MTK
+> architecture defines some extra SW scheduling parameters for HW. According to
+> these parameters provided by SW, the xHC can easily decide whether a
+> synchronous endpoint should be scheduled in a specific uFrame. The extra SW
+> scheduling parameters are put into reserved DWs in Slot and Endpoint Context.
+> And a bandwidth scheduler algorithm is added to support such feature.
+> 
+> A usb3.0 phy driver is also added which used by mt65xx SoCs platform, it
+> supports two usb2.0 ports and one usb3.0 port.
+> 
+> Change in v3:
+> 1. implement generic phy
+> 2. move opperations for IPPC and wakeup from phy driver to xHCI driver
+> 3. seperate quirk functions into a single C file to fix up dependence issue
+> 
+> Chunfeng Yun (5):
+>   dt-bindings: Add usb3.0 phy binding for MT65xx SoCs
+>   dt-bindings: Add a binding for Mediatek xHCI host controller
+>   usb: phy: add usb3.0 phy driver for mt65xx SoCs
+>   xhci: mediatek: support MTK xHCI host controller
+>   arm64: dts: mediatek: add xHCI & usb phy for mt8173
+> 
+>  .../devicetree/bindings/phy/phy-mt65xx-u3.txt      |  21 +
+>  .../devicetree/bindings/usb/mt8173-xhci.txt        |  50 ++
+>  arch/arm64/boot/dts/mediatek/mt8173-evb.dts        |  15 +
+>  arch/arm64/boot/dts/mediatek/mt8173.dtsi           |  31 +
+>  drivers/phy/Kconfig                                |   9 +
+>  drivers/phy/Makefile                               |   1 +
+>  drivers/phy/phy-mt65xx-usb3.c                      | 426 +++++++++++
+>  drivers/usb/host/Kconfig                           |   9 +
+>  drivers/usb/host/Makefile                          |   4 +
+>  drivers/usb/host/xhci-mtk-sch.c                    | 436 +++++++++++
+>  drivers/usb/host/xhci-mtk.c                        | 836 +++++++++++++++++++++
+>  drivers/usb/host/xhci-mtk.h                        | 135 ++++
+>  drivers/usb/host/xhci-ring.c                       |  35 +-
+>  drivers/usb/host/xhci.c                            |  19 +-
+>  drivers/usb/host/xhci.h                            |   1 +
+>  15 files changed, 2021 insertions(+), 7 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/phy/phy-mt65xx-u3.txt
+>  create mode 100644 Documentation/devicetree/bindings/usb/mt8173-xhci.txt
+>  create mode 100644 drivers/phy/phy-mt65xx-usb3.c
+>  create mode 100644 drivers/usb/host/xhci-mtk-sch.c
+>  create mode 100644 drivers/usb/host/xhci-mtk.c
+>  create mode 100644 drivers/usb/host/xhci-mtk.h
+> 
+> --
+> 1.8.1.1.dirty
+> 
+> In-Reply-To: 
+> 
