@@ -1,151 +1,115 @@
-From: Cyrille Pitchen <cyrille.pitchen@atmel.com>
-Subject: Re: [PATCH v6 2/2] mfd: atmel-flexcom: add a driver for Atmel Flexible
- Serial Communication Unit
-Date: Thu, 23 Jul 2015 18:42:07 +0200
-Message-ID: <55B1195F.4000104@atmel.com>
-References: <cover.1437558598.git.cyrille.pitchen@atmel.com>	<7639e02fc2b16dc20b19fbe3bbbb986b0f3b9887.1437558598.git.cyrille.pitchen@atmel.com>	<20150723073217.GT3061@x1>	<20150723100101.7290242b@bbrezillon>	<20150723091311.GX3061@x1> <20150723145007.099d01c2@bbrezillon>
+From: atull <atull@opensource.altera.com>
+Subject: Re: [PATCH v9 0/7] FPGA Manager Framework and Simple FPGA Bus
+Date: Thu, 23 Jul 2015 11:37:45 -0500
+Message-ID: <alpine.DEB.2.02.1507231107420.7582@linuxheads99>
+References: <1437148277-5405-1-git-send-email-atull@opensource.altera.com>
+ <20150723041218.GA6978@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150723145007.099d01c2@bbrezillon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>, Lee Jones <lee.jones@linaro.org>
-Cc: nicolas.ferre@atmel.com, alexandre.belloni@free-electrons.com, sameo@linux.intel.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20150723041218.GA6978@kroah.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: mark.rutland@arm.com, linux-doc@vger.kernel.org, rubini@gnudd.com, pantelis.antoniou@konsulko.com, hpa@zytor.com, s.trumtrar@pengutronix.de, devel@driverdev.osuosl.org, sameo@linux.intel.com, nico@linaro.org, iws@ovro.caltech.edu, michal.simek@xilinx.com, kyle.teske@ni.com, jgunthorpe@obsidianresearch.com, grant.likely@linaro.org, davidb@codeaurora.org, linus.walleij@linaro.org, cesarb@cesarb.net, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, broonie@kernel.org, philip@balister.org, Petr Cvek <petr.cvek@tul.cz>, akpm@linux-foundation.org, monstr@monstr.eu, pavel@denx.de, linux-kernel@vger.kernel.org, balbi@ti.com, davem@davemloft.net, robh+dt@kernel.org, rob@landley.net, galak@codeaurora.org, dinguyen@opensource.altera.com, delicious.quinoa@gmail.com, m.chehab@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+On Thu, 23 Jul 2015, Greg KH wrote:
 
-Le 23/07/2015 14:50, Boris Brezillon a =E9crit :
-> On Thu, 23 Jul 2015 10:13:11 +0100
-> Lee Jones <lee.jones@linaro.org> wrote:
->=20
->> On Thu, 23 Jul 2015, Boris Brezillon wrote:
->>
->>> Hi Lee,
->>>
->>> On Thu, 23 Jul 2015 08:32:17 +0100
->>> Lee Jones <lee.jones@linaro.org> wrote:
->>>
->>>> On Wed, 22 Jul 2015, Cyrille Pitchen wrote:
->>>>> +	for_each_child_of_node(np, child) {
->>>>> +		const char *compatible;
->>>>> +		int cplen;
->>>>> +
->>>>> +		if (!of_device_is_available(child))
->>>>> +			continue;
->>>>> +
->>>>> +		compatible =3D of_get_property(child, "compatible", &cplen);
->>>>> +		if (!compatible || strlen(compatible) > cplen)
->>>>> +			continue;
->>>>> +
->>>>> +		if (strstr(compatible, "-usart")) {
->>>>> +			opmode =3D FLEX_MR_OPMODE_USART;
->>>>> +			break;
->>>>> +		}
->>>>> +
->>>>> +		if (strstr(compatible, "-spi")) {
->>>>> +			opmode =3D FLEX_MR_OPMODE_SPI;
->>>>> +			break;
->>>>> +		}
->>>>> +
->>>>> +		if (strstr(compatible, "-i2c")) {
->>>>> +			opmode =3D FLEX_MR_OPMODE_TWI;
->>>>> +			break;
->>>>> +		}
->>>>> +	}
->>>>
->>>> From what I understand Flexcom is a wrapper which can sit above an=
-y
->>>> number of SPI, I2C and/or UART devices.  Devices which you don't
->>>> really have any control over (source code wise).  So wouldn't it b=
-e
->>>> better to match on the details you do have control over i.e. the n=
-ode
->>>> name, rather than the compatible string?
->>>>
->>>> I would personally match on of_find_node_by_name() to future-proof
->>>> your implementation.
->>>
->>> Actually, I think using compatible strings is more future-proof tha=
-n
->>> using the node names, because nothing in the DT bindings doc enforc=
-e the
->>> node name, and usually what we use to attach a node to a specific
->>> driver is the compatible string (this one is specified in the bindi=
-ngs
->>> doc).
->>
->> I know what you're saying, but what if someone uses the Flexcom driv=
-er
->> to wrap a different type of SPI driver where (for instance) the
->> compatible string used is "<name>-<newtype>".  Then we'd have to kee=
-p
->> adding more lines here to accommodate.
->>
->> Whereas if we used the child node name which only pertains to _this_
->> driver, we would then have full control and know that (unless it
->> Flexcom is used for a completely different type of serial controller=
-)
->> we wouldn't have to keep expanding the code to accommodate.
->=20
-> You're right about the complexity implied by the compat string
-> maintenance, but I still think using node names to detect the mode is
-> a bad idea.
->=20
-> Let's take another example making both solution unsuitable: what if
-> the flexcom-v2 exposes 2 devices of the same type, they will both hav=
-e
-> the same name and the same compatible string, and we'll have no way t=
-o
-> detect the appropriate mode. That's why I think none of our suggestio=
-n
-> is future-proof.
->=20
->>
->>> Regarding the implementation itself, I would match the child node w=
-ith
->>> an of_device_id table rather than trying to find a specific substri=
-ng
->>> in the compatible string, but I think that's only a matter of taste=
-=2E
->>
->> You mean duplicate each of the supported device's compatible strings
->> in this driver, then fetch the attributed of_match_device()->data
->> value?
->>
->=20
-> Yes, and that's definitely not a good idea, but I think Cyrille has
-> found a better approach (I'll let him explain).
+> On Fri, Jul 17, 2015 at 10:51:10AM -0500, atull@opensource.altera.com wrote:
+> > From: Alan Tull <atull@opensource.altera.com>
+> > 
+> > This patchset adds two chunks plus documentation:
+> >  * fpga manager core: exports ABI functions that write an image to a FPGA
+> >  * DT Overlay support: simple-fpga-bus to handle FPGA from a DT overlay
+> > 
+> > The core's ABI is minimal to start with: only 6 functions.  This gives a
+> > common interface for programming various FPGA such that any higher level
+> > interfaces such as the DT Overlays or anything else that is added can be
+> > shared and not be manufacturor-specific.
+> > 
+> > The DT Overlays support exists for the usage where the FPGA will contain
+> > some "hardware" that will need drivers.  Where that use model is not
+> > appealing, the core ABI can be used to add a different use model such as
+> > using an FPGA as acceleration as has been discussed.
+> > 
+> > This patchset gets rid of the sysfs controls that allowed direct
+> > control of a FPGA from userspace.
+> > 
+> > This patchset is under drivers/staging as the interface could change.
+> > 
+> > The bindings for the socpfga fpga manager already are upstreamed as
+> > 1b4e119 Alan Tull : doc: add bindings document for altera fpga manager
+> > 
+> > The DT Support is dependent on Pantelis's dtc overlay patches from
+> > https://github.com/pantoniou/dtc.git
+> > and his DT overlays configfs interface patches and fixes from
+> > https://github.com/pantoniou/linux-beagle-track-mainline
+> > 
+> > efb0c04 Pantelis Antoniou : gcl: Fix resource linking
+> > 85e785e Pantelis Antoniou : ARM: DT: Enable symbols when CONFIG_OF_OVERLAY is used
+> > af0321f Pantelis Antoniou : OF: DT-Overlay configfs interface (v5)
+> > 4c1c675 Pantelis Antoniou : configfs: Implement binary attributes (v4)
+> > 
+> > 
+> > Alan Tull (7):
+> >   staging: usage documentation for FPGA manager core
+> >   staging: usage documentation for simple fpga bus
+> >   staging: add bindings document for simple fpga bus
+> >   staging: fpga manager: add sysfs interface document
+> >   staging: fpga manager core
+> >   staging: add simple-fpga-bus
+> >   staging: fpga manager: add driver for socfpga fpga manager
+> > 
+> >  drivers/staging/Kconfig                            |    2 +
+> >  drivers/staging/Makefile                           |    1 +
+> >  .../Documentation/ABI/sysfs-class-fpga-manager     |   26 +
+> >  .../Documentation/bindings/simple-fpga-bus.txt     |   61 ++
+> >  drivers/staging/fpga/Documentation/fpga-mgr.txt    |  117 ++++
+> >  .../staging/fpga/Documentation/simple-fpga-bus.txt |   48 ++
+> >  drivers/staging/fpga/Kconfig                       |   31 +
+> >  drivers/staging/fpga/Makefile                      |   10 +
+> >  drivers/staging/fpga/fpga-mgr.c                    |  373 ++++++++++++
+> >  drivers/staging/fpga/simple-fpga-bus.c             |  323 ++++++++++
+> >  drivers/staging/fpga/socfpga.c                     |  616 ++++++++++++++++++++
+> 
+> All drivers/staging/*/ directories need a TODO file that lists what
+> needs to be done to it in order to get the code out of staging.  Please
+> redo the series and add that.
+> 
+> >  include/linux/fpga/fpga-mgr.h                      |  127 ++++
+> 
+> This should be within drivers/staging/ all staging code should be
+> self-contained.
+> 
+> Why isn't this going into the "real" part of the kernel?  Why staging?
+> 
 
-Indeed, what about taking advantage of the "ranges" property?
+Hi Greg,
 
-=46or the Flexcom:
-#address-cells =3D <2>;
-#size-cells =3D <1>;
-ranges =3D <1 0 0xf8034200 0x200    /* opmode 1: USART */
-          2 0 0xf8034400 0x200    /* opmode 2: SPI */
-          3 0 0xf8034600 0x200>;  /* opmode 3: I2C */
+For v10 next week, I will likely break this into two patchsets, one for the
+real kernel (drivers/fpga) and one for staging.
 
-Then for the single available child (for instance the SPI controller):
-reg =3D <2 0 0x200>;
+fpga-mgr.c can go into drivers/fpga since both Xilinx and Altera have
+already been using this code.  It's not likely to change much.
 
-So the Operating Mode to be set into the Flexcom Mode Register is read =
-from
-the very first u32 of the "reg" property of the child.
+The part that should go into staging is whatever interface is
+controversial, that may change.  That's simple-fpga-bus.c and any
+other interfaces that get added that use the functions exported by
+fpga-mgr.c.  Maybe this 2nd patch set should be a RFC since it is still
+dependent on some of Pantelis' stuff that's not in yet.
 
-No need to introduce any new DT property and the mapping remains easy t=
-o
-maintain to follow hardware upgrades.
+Alan Tull
 
-More details in v7 series.
-
->=20
-> Best Regards,
->=20
-> Boris
->=20
-
-Best Regards,
-
-Cyrille
+> thanks,
+> 
+> greg k-h
+> 
