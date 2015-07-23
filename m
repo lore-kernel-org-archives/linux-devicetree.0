@@ -1,62 +1,113 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH-v2 2/2] regulator: 88pm800: Add support for configuration
- of dual phase on BUCK1
-Date: Thu, 23 Jul 2015 16:54:32 +0100
-Message-ID: <20150723155432.GV3436@x1>
-References: <1437495782-15767-1-git-send-email-vaibhav.hiremath@linaro.org>
- <1437495782-15767-3-git-send-email-vaibhav.hiremath@linaro.org>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [PATCH v2 3/4] mfd: Add DT binding for Maxim MAX77802 IC
+Date: Thu, 23 Jul 2015 18:09:20 +0200
+Message-ID: <55B111B0.7000803@osg.samsung.com>
+References: <1437114567-17629-1-git-send-email-javier@osg.samsung.com>
+ <1437114567-17629-4-git-send-email-javier@osg.samsung.com>
+ <20150723151652.GK3436@x1>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1437495782-15767-3-git-send-email-vaibhav.hiremath@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, devicetree@vger.kernel.org, broonie@kernel.org, k.kozlowski@samsung.com, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20150723151652.GK3436@x1>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 21 Jul 2015, Vaibhav Hiremath wrote:
+Hello Lee,
 
-> 88PM860 device supports dual phase mode on BUCK1 output.
-> In normal usecase, BUCK1A and BUCK1B operates independently with 3A
-> capacity. And they both can work as a dual phase providing 6A capacit=
-y.
->=20
-> This patch updates the regulator driver to read the respective
-> DT property and enable dual-phase mode on BUCK1.
->=20
-> Note that, this is init time (one time) initialization.
->=20
-> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
-> ---
->  drivers/regulator/88pm800.c | 31 +++++++++++++++++++++++++++++++
->  include/linux/mfd/88pm80x.h |  3 +++
->  2 files changed, 34 insertions(+)
+Thanks for your feedback.
 
-[...]
+On 07/23/2015 05:16 PM, Lee Jones wrote:
+> On Fri, 17 Jul 2015, Javier Martinez Canillas wrote:
+> 
+>> The MAX77802 is a chip that contains regulators, 2 32kHz clocks,
+>> a RTC and an I2C interface to program the individual components.
+>>
+>> The are already DT bindings for the regulators and clocks and
+>> these reference to a bindings/mfd/max77802.txt file, that didn't
+>> exist, for the details about the PMIC.
+>>
+>> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+>>
+>> ---
+>>
+>> Changes in v2:
+>> - Use the correct "maxim,max77802" compatible string.
+>>   Suggested by Krzysztof Kozlowski
+>> - Use a pmic generic node name for the max77802 node example.
+>>   Suggested by Sergei Shtylyov.
+>>
+>>  Documentation/devicetree/bindings/mfd/max77802.txt | 26 ++++++++++++++++++++++
+>>  1 file changed, 26 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/mfd/max77802.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/mfd/max77802.txt b/Documentation/devicetree/bindings/mfd/max77802.txt
+>> new file mode 100644
+>> index 000000000000..c60cdec50d36
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mfd/max77802.txt
+>> @@ -0,0 +1,26 @@
+>> +Maxim MAX77802 multi-function device
+>> +
+>> +The Maxim MAX77802 is a power management chip (PMIC) that contains 10 high
+>> +efficiency Buck regulators, 32 Low-dropout (LDO) regulators used to power
+> 
+> Would be good to capitalise the works in the acronyms, so
+> "Low-DropOut" and "Power Management IC".
+>
 
-> diff --git a/include/linux/mfd/88pm80x.h b/include/linux/mfd/88pm80x.=
-h
-> index a92d173..05d9bad 100644
-> --- a/include/linux/mfd/88pm80x.h
-> +++ b/include/linux/mfd/88pm80x.h
-> @@ -295,6 +295,9 @@ enum {
->  #define PM860_BUCK4_MISC2		(0x82)
->  #define PM860_BUCK4_FULL_DRV		BIT(2)
-> =20
-> +#define PM860_BUCK1_MISC		(0x8E)
+Ok.
+ 
+>> +up application processors and peripherals, a 2-channel 32kHz clock outputs,
+>> +a Real-Time-Clock (RTC) and a I2C interface to program the individual
+>> +regulators, clocks outputs and the RTC.
+>> +
+>> +Binding for the built-in 32k clock generator block is defined separately
+>> +in the bindings/clk/maxim,max77802.txt file and binding for the regulators
+> 
+> s/bindings/../
+>
 
-Why the over-bracketing?
+Ok.
+ 
+>> +is defined in the bindings/regulator/max77802.txt file.
+>> +
+>> +Required properties:
+>> +- compatible : Must be "maxim,max77802";
+>> +- reg : Specifies the i2c slave address of PMIC block.
+> 
+> s/i2c/I2C/
+> 
+>> +- interrupts : This i2c device has an IRQ line connected to the main SoC.
+> 
+> As above.
+>
 
-> +#define BUCK1_DUAL_PHASE_SEL		BIT(2)
-> +
->  struct pm80x_rtc_pdata {
->  	int		vrtc;
->  	int		rtc_wakeup;
+Ok. I'll change it.
+ 
+>> +- interrupt-parent : The parent interrupt controller.
+>> +
+>> +Example:
+>> +
+>> +	max77802: pmic@09 {
+>> +		compatible = "maxim,max77802";
+>> +		interrupt-parent = <&intc>;
+>> +		interrupts = <26 0>;
+> 
+> Is there a define in include/dt-bindings/interrupt-controller to
+> replace 0?  IRQ_TYPE_NONE perhaps.
+>
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Yes, I'll change that as well.
+ 
+>> +		reg = <0x09>;
+>> +	};
+> 
+
+Best regards,
+-- 
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
