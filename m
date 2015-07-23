@@ -1,273 +1,58 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH 2/3] Docs: dt: Add PCI MSI map bindings
-Date: Thu, 23 Jul 2015 17:52:44 +0100
-Message-ID: <1437670365-20704-3-git-send-email-mark.rutland@arm.com>
-References: <1437670365-20704-1-git-send-email-mark.rutland@arm.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 05/11] mfd: devicetree: bindings: Add Qualcomm SMD
+ based RPM DT binding
+Date: Thu, 23 Jul 2015 18:16:38 +0100
+Message-ID: <20150723171638.GE11162@sirena.org.uk>
+References: <1435355419-23602-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <1435355419-23602-6-git-send-email-bjorn.andersson@sonymobile.com>
+ <20150707121609.GZ3182@x1>
+ <20150713214836.GA15178@usrtlx11787.corpusers.net>
+ <20150723133133.GB3436@x1>
+ <20150723164128.GD4753@usrtlx11787.corpusers.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1437670365-20704-1-git-send-email-mark.rutland-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, tirumalesh.chalamarla-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, majun258-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="6JpNyHZcz5HoP3tQ"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150723164128.GD4753-P9SbAA3LsXe39TS3lRcy0mP6iJigPa5YXqFh9Ls21Oc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "bjorn-UYDU3/A3LUY@public.gmane.org" <bjorn-UYDU3/A3LUY@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Currently msi-parent is used by a few bindings to describe the
-relationship between a PCI root complex and a single MSI controller, but
-this property does not have a generic binding document.
 
-Additionally, msi-parent is insufficient to describe more complex
-relationships between MSI controllers and devices under a root complex,
-where devices may be able to target multiple MSI controllers, or where
-MSI controllers use (non-probeable) sideband information to distinguish
-devices.
+--6JpNyHZcz5HoP3tQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-This patch adds a generic binding for mapping PCI devices to MSI
-controllers. This document covers msi-parent, and a new msi-map property
-(specific to PCI*) which may be used to map devices (identified by their
-Requester ID) to sideband data for each MSI controller that they may
-target.
+On Thu, Jul 23, 2015 at 09:41:28AM -0700, Bjorn Andersson wrote:
 
-Signed-off-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
----
- Documentation/devicetree/bindings/pci/pci-msi.txt | 220 ++++++++++++++++++++++
- 1 file changed, 220 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/pci-msi.txt
+> > We still need Mark to look at this.
 
-diff --git a/Documentation/devicetree/bindings/pci/pci-msi.txt b/Documentation/devicetree/bindings/pci/pci-msi.txt
-new file mode 100644
-index 0000000..9b3cc81
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/pci-msi.txt
-@@ -0,0 +1,220 @@
-+This document describes the generic device tree binding for describing the
-+relationship between PCI devices and MSI controllers.
-+
-+Each PCI device under a root complex is uniquely identified by its Requester ID
-+(AKA RID). A Requester ID is a triplet of a Bus number, Device number, and
-+Function number.
-+
-+For the purpose of this document, when treated as a numeric value, a RID is
-+formatted such that:
-+
-+* Bits [15:8] are the Bus number.
-+* Bits [7:3] are the Device number.
-+* Bits [2:0] are the Function number.
-+* Any other bits required for padding must be zero.
-+
-+MSIs may be distinguished in part through the use of sideband data accompanying
-+writes. In the case of PCI devices, this sideband data may be derived from the
-+Requester ID. A mechanism is required to associate a device with both the MSI
-+controllers it can address, and the sideband data that will be associated with
-+its writes to those controllers.
-+
-+For generic MSI bindings, see
-+Documentation/devicetree/bindings/interrupt-controller/msi.txt.
-+
-+
-+PCI root complex
-+================
-+
-+Optional properties
-+-------------------
-+
-+- msi-map: Maps a Requester ID to an MSI controller and associated
-+  msi-specifier data. The property is an arbitrary number of tuples of
-+  (rid-base,msi-controller,msi-base,length), where:
-+
-+  * rid-base is a single cell describing the first RID matched by the entry.
-+
-+  * msi-controller is a single phandle to an MSI controller
-+
-+  * msi-base is an msi-specifier describing the msi-specifier produced for the
-+    first RID matched by the entry.
-+
-+  * length is a single cell describing how many consecutive RIDs are matched
-+    following the rid-base.
-+
-+  Any RID r in the interval [rid-base, rid-base + length) is associated with
-+  the listed msi-controller, with the msi-specifier (r - rid-base + msi-base).
-+
-+- msi-map-mask: A mask to be applied to each Requester ID prior to being mapped
-+  to an msi-specifier per the msi-map property.
-+
-+- msi-parent: Describes the MSI parent of the root complex itself. Where
-+  the root complex and MSI controller do not pass sideband data with MSI
-+  writes, this property may be used to describe the MSI controller(s)
-+  used by PCI devices under the root complex, if defined as such in the
-+  binding for the root complex.
-+
-+
-+Example (1)
-+===========
-+
-+/ {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+
-+	msi: msi-controller@a {
-+		reg = <0xa 0x1>;
-+		compatible = "vendor,some-controller";
-+		msi-controller;
-+		#msi-cells = <1>;
-+	};
-+
-+	pci: pci@f {
-+		reg = <0xf 0x1>;
-+		compatible = "vendor,pcie-root-complex";
-+		device_type = "pci";
-+
-+		/*
-+		 * The sideband data provided to the MSI controller is
-+		 * the RID, identity-mapped.
-+		 */
-+		msi-map = <0x0 &msi_a 0x0 0x10000>,
-+	};
-+};
-+
-+
-+Example (2)
-+===========
-+
-+/ {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+
-+	msi: msi-controller@a {
-+		reg = <0xa 0x1>;
-+		compatible = "vendor,some-controller";
-+		msi-controller;
-+		#msi-cells = <1>;
-+	};
-+
-+	pci: pci@f {
-+		reg = <0xf 0x1>;
-+		compatible = "vendor,pcie-root-complex";
-+		device_type = "pci";
-+
-+		/*
-+		 * The sideband data provided to the MSI controller is
-+		 * the RID, masked to only the device and function bits.
-+		 */
-+		msi-map = <0x0 &msi_a 0x0 0x100>,
-+		msi-map-mask = <0xff>
-+	};
-+};
-+
-+
-+Example (3)
-+===========
-+
-+/ {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+
-+	msi: msi-controller@a {
-+		reg = <0xa 0x1>;
-+		compatible = "vendor,some-controller";
-+		msi-controller;
-+		#msi-cells = <1>;
-+	};
-+
-+	pci: pci@f {
-+		reg = <0xf 0x1>;
-+		compatible = "vendor,pcie-root-complex";
-+		device_type = "pci";
-+
-+		/*
-+		 * The sideband data provided to the MSI controller is
-+		 * the RID, but the high bit of the bus number is
-+		 * ignored.
-+		 */
-+		msi-map = <0x0000 &msi 0x0000 0x8000>,
-+			  <0x8000 &msi 0x0000 0x8000>;
-+	};
-+};
-+
-+
-+Example (4)
-+===========
-+
-+/ {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+
-+	msi: msi-controller@a {
-+		reg = <0xa 0x1>;
-+		compatible = "vendor,some-controller";
-+		msi-controller;
-+		#msi-cells = <1>;
-+	};
-+
-+	pci: pci@f {
-+		reg = <0xf 0x1>;
-+		compatible = "vendor,pcie-root-complex";
-+		device_type = "pci";
-+
-+		/*
-+		 * The sideband data provided to the MSI controller is
-+		 * the RID, but the high bit of the bus number is
-+		 * negated.
-+		 */
-+		msi-map = <0x0000 &msi 0x8000 0x8000>,
-+			  <0x8000 &msi 0x0000 0x8000>;
-+	};
-+};
-+
-+
-+Example (5)
-+===========
-+
-+/ {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+
-+	msi_a: msi-controller@a {
-+		reg = <0xa 0x1>;
-+		compatible = "vendor,some-controller";
-+		msi-controller;
-+		#msi-cells = <1>;
-+	};
-+
-+	msi_b: msi-controller@b {
-+		reg = <0xb 0x1>;
-+		compatible = "vendor,some-controller";
-+		msi-controller;
-+		#msi-cells = <1>;
-+	};
-+
-+	msi_c: msi-controller@c {
-+		reg = <0xc 0x1>;
-+		compatible = "vendor,some-controller";
-+		msi-controller;
-+		#msi-cells = <1>;
-+	};
-+
-+	pci: pci@c {
-+		reg = <0xf 0x1>;
-+		compatible = "vendor,pcie-root-complex";
-+		device_type = "pci";
-+
-+		/*
-+		 * The sideband data provided to MSI controller a is the
-+		 * RID, but the high bit of the bus number is negated.
-+		 * The sideband data provided to MSI controller b is the
-+		 * RID, identity-mapped.
-+		 * MSI controller c is not addressable.
-+		 */
-+		msi-map = <0x0000 &msi_a 0x8000 0x08000>,
-+			  <0x8000 &msi_a 0x0000 0x08000>,
-+			  <0x0000 &msi_b 0x0000 0x10000>;
-+	};
-+};
--- 
-1.9.1
+> Mark, would you mind giving us a statement on the regulator subnode of
+> this binding?
+
+I have no idea what's going on here, sorry.  I've not been reading this
+thread.
+
+--6JpNyHZcz5HoP3tQ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJVsSF2AAoJECTWi3JdVIfQjpwH+wTIIqLSfPbzxmkoCr5w2BWF
+NwoJ7F/TSzuKU9EMW4XE7N6nDWcscaqUhI8Rs0IfmVMIGxIZHVujZEk2WtqxxWF2
+rkkRqbzZUTXrLugVxQk2L2mPFcxoydZiXOVnHm8DkGHAS0pOuJFjLlvEjGUJdlKY
+cxNCd2+cHNVYIw+GHspwMEjnRcF4iao3JZdusHTwqriSk6ZHFQYkxlZGkGxPNX82
+fKKlg9bxK/dMfNuuAsbVDuEEqZPILkmSUMvQfkS1fgCaFf8IeMDIcXMaFT11UOJE
+N1qPhluliCdfAJkjog0ibJdCrNi3t+0aQEeWB+rKpKM28Ew+VktDi2oyg/x1caY=
+=q94v
+-----END PGP SIGNATURE-----
+
+--6JpNyHZcz5HoP3tQ--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
