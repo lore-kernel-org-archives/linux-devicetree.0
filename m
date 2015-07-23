@@ -1,7 +1,7 @@
 From: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v8 06/23] doc: dt-binding: usb: add otg related properties
-Date: Thu, 23 Jul 2015 11:37:30 +0800
-Message-ID: <1437622667-6735-7-git-send-email-jun.li@freescale.com>
+Subject: [PATCH v8 07/23] usb: common: add API to update usb otg capabilities by device tree
+Date: Thu, 23 Jul 2015 11:37:31 +0800
+Message-ID: <1437622667-6735-8-git-send-email-jun.li@freescale.com>
 References: <1437622667-6735-1-git-send-email-jun.li@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,46 +12,108 @@ To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@
 Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org, jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add otg version, srp, hnp and adp support for usb OTG port, then those OTG
-features don't have to be decided by usb gadget drivers.
+Check property of usb hardware to update otg version and disable SRP, HNP
+and ADP if its disable flag is present.
 
 Signed-off-by: Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Reviewed-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
 ---
- Documentation/devicetree/bindings/usb/generic.txt | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ drivers/usb/common/common.c | 56 +++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/usb/of.h      |  7 ++++++
+ 2 files changed, 63 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/generic.txt b/Documentation/devicetree/bindings/usb/generic.txt
-index 477d5bb..bba8257 100644
---- a/Documentation/devicetree/bindings/usb/generic.txt
-+++ b/Documentation/devicetree/bindings/usb/generic.txt
-@@ -11,6 +11,19 @@ Optional properties:
- 			"peripheral" and "otg". In case this attribute isn't
- 			passed via DT, USB DRD controllers should default to
- 			OTG.
-+ - otg-rev: tells usb driver the release number of the OTG and EH supplement
-+			with which the device and its descriptors are compliant,
-+			in binary-coded decimal (i.e. 2.0 is 0200H). This
-+			property is used if any real OTG features(HNP/SRP/ADP)
-+			is enabled, if ADP is required, otg-rev should be
-+			0x0200 or above.
-+ - hnp-disable: tells OTG controllers we want to disable OTG HNP, normally HNP
-+			is the basic function of real OTG except you want it
-+			to be a srp-capable only B device.
-+ - srp-disable: tells OTG controllers we want to disable OTG SRP, SRP is
-+			optional for OTG device.
-+ - adp-disable: tells OTG controllers we want to disable OTG ADP, ADP is
-+			optional for OTG device.
+diff --git a/drivers/usb/common/common.c b/drivers/usb/common/common.c
+index b530fd4..9e39286 100644
+--- a/drivers/usb/common/common.c
++++ b/drivers/usb/common/common.c
+@@ -154,6 +154,62 @@ bool of_usb_host_tpl_support(struct device_node *np)
+ 	return false;
+ }
+ EXPORT_SYMBOL_GPL(of_usb_host_tpl_support);
++
++/**
++ * of_usb_update_otg_caps - to update usb otg capabilities according to
++ * the passed properties in DT.
++ * @np: Pointer to the given device_node
++ * @otg_caps: Pointer to the target usb_otg_caps to be set
++ *
++ * The function updates the otg capabilities
++ */
++int of_usb_update_otg_caps(struct device_node *np,
++			struct usb_otg_caps *otg_caps)
++{
++	u32 otg_rev;
++
++	if (!otg_caps)
++		return -EINVAL;
++
++	if (!of_property_read_u32(np, "otg-rev", &otg_rev)) {
++		switch (otg_rev) {
++		case 0x0100:
++		case 0x0120:
++		case 0x0130:
++		case 0x0200:
++			/* Choose the lesser one if it's already been set */
++			if (otg_caps->otg_rev)
++				otg_caps->otg_rev = min_t(u16, otg_rev,
++							otg_caps->otg_rev);
++			else
++				otg_caps->otg_rev = otg_rev;
++			break;
++		default:
++			pr_err("%s: unsupported otg-rev: 0x%x\n",
++						np->full_name, otg_rev);
++			return -EINVAL;
++		}
++	} else {
++		/*
++		 * otg-rev is mandatory for otg properties, if not passed
++		 * we set it to be 0 and assume it's a legacy otg device.
++		 * Non-dt platform can set it afterwards.
++		 */
++		otg_caps->otg_rev = 0;
++	}
++
++	if (of_find_property(np, "hnp-disable", NULL))
++		otg_caps->hnp_support = false;
++	if (of_find_property(np, "srp-disable", NULL))
++		otg_caps->srp_support = false;
++	if (of_find_property(np, "adp-disable", NULL) ||
++				(otg_caps->otg_rev < 0x0200))
++		otg_caps->adp_support = false;
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(of_usb_update_otg_caps);
++
+ #endif
  
- This is an attribute to a USB controller such as:
+ MODULE_LICENSE("GPL");
+diff --git a/include/linux/usb/of.h b/include/linux/usb/of.h
+index cfe0528..8c5a818 100644
+--- a/include/linux/usb/of.h
++++ b/include/linux/usb/of.h
+@@ -15,6 +15,8 @@
+ enum usb_dr_mode of_usb_get_dr_mode(struct device_node *np);
+ enum usb_device_speed of_usb_get_maximum_speed(struct device_node *np);
+ bool of_usb_host_tpl_support(struct device_node *np);
++int of_usb_update_otg_caps(struct device_node *np,
++			struct usb_otg_caps *otg_caps);
+ #else
+ static inline enum usb_dr_mode of_usb_get_dr_mode(struct device_node *np)
+ {
+@@ -30,6 +32,11 @@ static inline bool of_usb_host_tpl_support(struct device_node *np)
+ {
+ 	return false;
+ }
++static inline int of_usb_update_otg_caps(struct device_node *np,
++				struct usb_otg_caps *otg_caps)
++{
++	return 0;
++}
+ #endif
  
-@@ -21,4 +34,6 @@ dwc3@4a030000 {
- 	usb-phy = <&usb2_phy>, <&usb3,phy>;
- 	maximum-speed = "super-speed";
- 	dr_mode = "otg";
-+	otg-rev = <0x0200>;
-+	adp-disable;
- };
+ #if IS_ENABLED(CONFIG_OF) && IS_ENABLED(CONFIG_USB_SUPPORT)
 -- 
 1.9.1
 
