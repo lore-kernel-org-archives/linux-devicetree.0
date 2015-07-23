@@ -1,98 +1,86 @@
-From: Badola Nikhil <nikhil.badola@freescale.com>
-Subject: RE: [PATCH 1/3] Documentation: dt: dwc3: Add snps,configure-fladj
- property
-Date: Thu, 23 Jul 2015 11:07:09 +0000
-Message-ID: <SN1PR0301MB162957FD79F00321A42243F3F3820@SN1PR0301MB1629.namprd03.prod.outlook.com>
-References: <1437646161-1764-1-git-send-email-nikhil.badola@freescale.com>
- <20150723095635.GA12330@leverpostej>
- <SN1PR0301MB1629C9F2083C8C4F5CE8CE4EF3820@SN1PR0301MB1629.namprd03.prod.outlook.com>
- <20150723105729.GB12330@leverpostej>
+From: Badola Nikhil <nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH 3/3] arm: dts: ls1021a: Add snps,configure-gfladj property
+ to USB3 node
+Date: Thu, 23 Jul 2015 11:26:19 +0000
+Message-ID: <SN1PR0301MB16290E4A5E871BCAEC4E06FCF3820@SN1PR0301MB1629.namprd03.prod.outlook.com>
+References: <1437646378-1910-1-git-send-email-nikhil.badola@freescale.com>
+ <1564365.o2o69FAsZI@ws-stein>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150723105729.GB12330@leverpostej>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1564365.o2o69FAsZI@ws-stein>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "balbi@ti.com" <balbi@ti.com>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 > -----Original Message-----
-> From: Mark Rutland [mailto:mark.rutland@arm.com]
-> Sent: Thursday, July 23, 2015 4:27 PM
+> From: Alexander Stein [mailto:alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org]
+> Sent: Thursday, July 23, 2015 3:41 PM
 > To: Badola Nikhil-B46172
-> Cc: linux-kernel@vger.kernel.org; devicetree@vger.kernel.org; balbi@ti.com
-> Subject: Re: [PATCH 1/3] Documentation: dt: dwc3: Add snps,configure-fladj
-> property
+> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org;
+> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Subject: Re: [PATCH 3/3] arm: dts: ls1021a: Add snps,configure-gfladj
+> property to USB3 node
 > 
-> On Thu, Jul 23, 2015 at 11:52:19AM +0100, Badola Nikhil wrote:
-> > > -----Original Message-----
-> > > From: Mark Rutland [mailto:mark.rutland@arm.com]
-> > > Sent: Thursday, July 23, 2015 3:27 PM
-> > > To: Badola Nikhil-B46172
-> > > Cc: linux-kernel@vger.kernel.org; devicetree@vger.kernel.org;
-> > > balbi@ti.com
-> > > Subject: Re: [PATCH 1/3] Documentation: dt: dwc3: Add
-> > > snps,configure-fladj property
-> > >
-> > > On Thu, Jul 23, 2015 at 11:09:21AM +0100, Nikhil Badola wrote:
-> > > > Add property snps,configure-fladj for enabling post silicon frame
-> > > > length adjustment
-> > > >
-> > > > Signed-off-by: Nikhil Badola <nikhil.badola@freescale.com>
-> > > > ---
-> > > >  Documentation/devicetree/bindings/usb/dwc3.txt | 1 +
-> > > >  1 file changed, 1 insertion(+)
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt
-> > > > b/Documentation/devicetree/bindings/usb/dwc3.txt
-> > > > index 0815eac..90c3972 100644
-> > > > --- a/Documentation/devicetree/bindings/usb/dwc3.txt
-> > > > +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-> > > > @@ -40,6 +40,7 @@ Optional properties:
-> > > >   - snps,hird-threshold: HIRD threshold
-> > > >   - snps,hsphy_interface: High-Speed PHY interface selection
-> > > > between
-> > > "utmi" for
-> > > >     UTMI+ and "ulpi" for ULPI when the DWC_USB3_HSPHY_INTERFACE
-> > > > has
-> > > value 3.
-> > > > + - snps,configure-fladj: enables post-silicon frame length
-> > > > + adjustment
-> > >
-> > > Could you elaborate on what this means and why you think it's
-> necessary?
+> On Thursday 23 July 2015 15:42:58, Nikhil Badola wrote:
+> > Add "snps,configure-gfladj" boolean property to USB3 node. This
+> > property
+>                       ^^^^^^
+> This does not match...
+> 
+> > is used to determine if frame length adjustment is required
 > >
-> > This property enables the use of GFLADJ_30MHZ field value of gfladj
-> > register for frame length adjustment instead of considering from the
-> sideband input signal fladj_30mhz_reg from SOC.
-> > This is required when signal fladj_30mhz_reg is connected to a wrong
-> > value or is not valid as in our case, hence post-silicon.
-> 
-> Ok, so this is basically an override for the GFLADJ_30MHZ field of the gfladj
-> register when there was a problem at integration time.
->
+> > Signed-off-by: Nikhil Badola <nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/ls1021a.dtsi | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/arch/arm/boot/dts/ls1021a.dtsi
+> > b/arch/arm/boot/dts/ls1021a.dtsi index c70bb27..f03f842 100644
+> > --- a/arch/arm/boot/dts/ls1021a.dtsi
+> > +++ b/arch/arm/boot/dts/ls1021a.dtsi
+> > @@ -404,6 +404,7 @@
+> >  			reg = <0x0 0x3100000 0x0 0x10000>;
+> >  			interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>;
+> >  			dr_mode = "host";
+> > +			snps,configure-fladj = <0x20>;
+>                              ^^^^^
+> ...that. The same is for the subject. I guess these "gfladj" are just leftovers as
+> patch 1 & 2 talk about "fladj"
 
-That's right. 
- 
-> > However this field can be used to adjust any offset ranging from 00h
-> > to 3Fh, from the clock source generating SOF(start of frame) packets.
-> > Thus, this property can be added to device tree with appropriate
-> adjustment value.
-> 
-> It takes a value? The description above makes it sound like a boolean
-> property.
-> 
-> I'd expect a description more like:
-> 
-> - snps,fladj-override: Value for GFLADJ_30MHZ when the fladj_30mhz_reg
->   signal is invalid or incorrect.
-> 
-> Which makes it clear what the value is and when it should be set.
-
-Agreed. Will change and send a new version of the patch-set.
+Fladj stands for Frame Length ADJustment whereas the register used for this is gfladj.
+Yes we intend to override fladj, hence using fladj in patch 1 and 2. I will remove gladj from 
+subject and description.
+Further, I will be changing the property to "snps,fladj-override" as suggested by Mark in patch 1
+and send next patch version.
+Please let me know if there are any other comments. 
 
 > 
-> Thanks,
-> Mark.
+> Best regards,
+> Alexander
+> --
+> Dipl.-Inf. Alexander Stein
+> SYS TEC electronic GmbH
+> alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org
+> 
+> Legal and Commercial Address:
+> Am Windrad 2
+> 08468 Heinsdorfergrund
+> Germany
+> 
+> Office: +49 (0) 3765 38600-0
+> Fax:    +49 (0) 3765 38600-4100
+> 
+> Managing Directors:
+> 	Director Technology/CEO: Dipl.-Phys. Siegmar Schmidt;
+> 	Director Commercial Affairs/COO: Dipl. Ing. (FH) Armin von Collrepp
+> Commercial Registry:
+> 	Amtsgericht Chemnitz, HRB 28082; USt.-Id Nr. DE150534010
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
