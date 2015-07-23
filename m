@@ -1,138 +1,187 @@
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 1/3] Documentation: dt: dwc3: Add snps,configure-fladj
- property
-Date: Thu, 23 Jul 2015 09:34:56 -0500
-Message-ID: <20150723143456.GA21984@saruman.tx.rr.com>
-References: <1437646161-1764-1-git-send-email-nikhil.badola@freescale.com>
- <20150723095635.GA12330@leverpostej>
- <SN1PR0301MB1629C9F2083C8C4F5CE8CE4EF3820@SN1PR0301MB1629.namprd03.prod.outlook.com>
- <20150723105729.GB12330@leverpostej>
- <SN1PR0301MB162957FD79F00321A42243F3F3820@SN1PR0301MB1629.namprd03.prod.outlook.com>
-Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
+From: Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v3 6/6] dts: mt8173: Add iommu/smi nodes for mt8173
+Date: Thu, 23 Jul 2015 22:40:38 +0800
+Message-ID: <CAGS+omB5xS8LoQR9-S8iqhdsRb4OWQ_B656dJSincLZ9nby1ZA@mail.gmail.com>
+References: <1437037475-9065-1-git-send-email-yong.wu@mediatek.com> <1437037475-9065-7-git-send-email-yong.wu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="+QahgC5+KEYLbs62"
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <SN1PR0301MB162957FD79F00321A42243F3F3820-VLIetriUNoaGKSHTzYJB25wN6zqB+hSMnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
+In-Reply-To: <1437037475-9065-7-git-send-email-yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Badola Nikhil <nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>
+To: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:IOMMU DRIVERS" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, cloud.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, frederi
 List-Id: devicetree@vger.kernel.org
 
---+QahgC5+KEYLbs62
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Yong,
 
-On Thu, Jul 23, 2015 at 11:07:09AM +0000, Badola Nikhil wrote:
-> > -----Original Message-----
-> > From: Mark Rutland [mailto:mark.rutland-5wv7dgnIgG8@public.gmane.org]
-> > Sent: Thursday, July 23, 2015 4:27 PM
-> > To: Badola Nikhil-B46172
-> > Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; balbi@ti.=
-com
-> > Subject: Re: [PATCH 1/3] Documentation: dt: dwc3: Add snps,configure-fl=
-adj
-> > property
-> >=20
-> > On Thu, Jul 23, 2015 at 11:52:19AM +0100, Badola Nikhil wrote:
-> > > > -----Original Message-----
-> > > > From: Mark Rutland [mailto:mark.rutland-5wv7dgnIgG8@public.gmane.org]
-> > > > Sent: Thursday, July 23, 2015 3:27 PM
-> > > > To: Badola Nikhil-B46172
-> > > > Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
-> > > > balbi-l0cyMroinI0@public.gmane.org
-> > > > Subject: Re: [PATCH 1/3] Documentation: dt: dwc3: Add
-> > > > snps,configure-fladj property
-> > > >
-> > > > On Thu, Jul 23, 2015 at 11:09:21AM +0100, Nikhil Badola wrote:
-> > > > > Add property snps,configure-fladj for enabling post silicon frame
-> > > > > length adjustment
-> > > > >
-> > > > > Signed-off-by: Nikhil Badola <nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > > > > ---
-> > > > >  Documentation/devicetree/bindings/usb/dwc3.txt | 1 +
-> > > > >  1 file changed, 1 insertion(+)
-> > > > >
-> > > > > diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt
-> > > > > b/Documentation/devicetree/bindings/usb/dwc3.txt
-> > > > > index 0815eac..90c3972 100644
-> > > > > --- a/Documentation/devicetree/bindings/usb/dwc3.txt
-> > > > > +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-> > > > > @@ -40,6 +40,7 @@ Optional properties:
-> > > > >   - snps,hird-threshold: HIRD threshold
-> > > > >   - snps,hsphy_interface: High-Speed PHY interface selection
-> > > > > between
-> > > > "utmi" for
-> > > > >     UTMI+ and "ulpi" for ULPI when the DWC_USB3_HSPHY_INTERFACE
-> > > > > has
-> > > > value 3.
-> > > > > + - snps,configure-fladj: enables post-silicon frame length
-> > > > > + adjustment
-> > > >
-> > > > Could you elaborate on what this means and why you think it's
-> > necessary?
-> > >
-> > > This property enables the use of GFLADJ_30MHZ field value of gfladj
-> > > register for frame length adjustment instead of considering from the
-> > sideband input signal fladj_30mhz_reg from SOC.
-> > > This is required when signal fladj_30mhz_reg is connected to a wrong
-> > > value or is not valid as in our case, hence post-silicon.
-> >=20
-> > Ok, so this is basically an override for the GFLADJ_30MHZ field of the =
-gfladj
-> > register when there was a problem at integration time.
-> >
->=20
-> That's right.=20
-> =20
-> > > However this field can be used to adjust any offset ranging from 00h
-> > > to 3Fh, from the clock source generating SOF(start of frame) packets.
-> > > Thus, this property can be added to device tree with appropriate
-> > adjustment value.
-> >=20
-> > It takes a value? The description above makes it sound like a boolean
-> > property.
-> >=20
-> > I'd expect a description more like:
-> >=20
-> > - snps,fladj-override: Value for GFLADJ_30MHZ when the fladj_30mhz_reg
-> >   signal is invalid or incorrect.
-> >=20
-> > Which makes it clear what the value is and when it should be set.
->=20
-> Agreed. Will change and send a new version of the patch-set.
+On Thu, Jul 16, 2015 at 5:04 PM, Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+>
+> This patch add the iommu/larbs nodes for mt8173
 
-BTW, I'm not going to accept this without a glue layer making use of it.
-Also, this patch needs to go to linux-usb as well, please resend.
+To what tree does this apply?
+Please rebase these patches (especially this one) on an Matthias'
+current v4.2-next/for-next.
 
---=20
-balbi
 
---+QahgC5+KEYLbs62
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+>
+> Signed-off-by: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/mediatek/mt8173.dtsi |   81 ++++++++++++++++++++++++++++++
+>  1 file changed, 81 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> index e81ac1f..7b8e73c 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> @@ -14,6 +14,7 @@
+>  #include <dt-bindings/clock/mt8173-clk.h>
+>  #include <dt-bindings/interrupt-controller/irq.h>
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include <dt-bindings/memory/mt8173-larb-port.h>
+>  #include <dt-bindings/power/mt8173-power.h>
+>  #include <dt-bindings/reset-controller/mt8173-resets.h>
+>  #include "mt8173-pinfunc.h"
+> @@ -240,6 +241,17 @@
+>                         reg = <0 0x10200620 0 0x20>;
+>                 };
+>
+> +               iommu: mmsys_iommu@10205000 {
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+This name should be generic, like this (this comment really applies to
+the binding patch):
 
-iQIcBAEBAgAGBQJVsPuQAAoJEIaOsuA1yqRE14wP/RXDFJ0FshI8eOpMzaIlc4r5
-M+RLTyMHVM2d8Oova5R9TQSr4FNVTEFIeDHN3zthQn4wTrIREzlGc4+upLwww5Fa
-PwFySd9u3SG+OmWC/ENI8c4mWi6Au9N4Ea5jqBYnpmPvP1VJyPZczgKRtRhGhmZv
-pV+MKpPNFou3rDstNpLQ0gp9mRJUZKwjk7IyyoyQdLnja8gyN4qTisS5LyJHllWm
-fw0rrHuC2DNdNSPz2JUO9fVqZF2Y9t7WvH5GAQ8ZKLCg6gOSkzsShmM2LkROVM0W
-O6M3yfL1N8Eeh2QVhgmisxavXn4pzLboJR925t2PXVSY6qbYIimVHk8UK+YkmaR+
-IQtCe2U8ExrC7PeOq8hsqLP98q36IaoMLaVZ+JyUD41UtfKtOKjT1ODrJQjEhAoG
-txazP3c73teqJq3fcxuyPNm84EK1dqHNc8ivNbopusJTFb0f281SKmuoKl8teB0f
-G5/cfYpDeBHxM5h2m5SDr2Pj8QdhP0ditkVxU9bTuJAuA3abT5nRKxu3GvyMui5Y
-JH9u/CJO0Gxg4i2F67LpvtgPmvtH1Vdg8F72mVGcTHw9Y1afDiCuNbw1qIINC4Gm
-8cmo3ZiPSaLOQoL/fB0GrG66YjP5rYEF7DgiPW3Co7YZHctFrGHWpEBkIdg67S4A
-Z9PxoTSLOAsMod9kzyEs
-=kCVR
------END PGP SIGNATURE-----
+   iommu: iommu@10205000
 
---+QahgC5+KEYLbs62--
+> +                       compatible = "mediatek,mt8173-m4u";
+> +                       reg = <0 0x10205000 0 0x1000>;
+> +                       interrupts = <GIC_SPI 139 IRQ_TYPE_LEVEL_LOW>;
+> +                       clocks = <&infracfg CLK_INFRA_M4U>;
+> +                       clock-names = "bclk";
+> +                       mediatek,larb = <&larb0 &larb1 &larb2
+> +                                       &larb3 &larb4 &larb5>;
+
+Tiny nit... please align the "&".
+
+Otherwise, this one is:
+
+Reviewed-by: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+
+Thanks!
+-Dan
+
+> +                       #iommu-cells = <2>;
+> +               };
+> +
+>                 apmixedsys: clock-controller@10209000 {
+>                         compatible = "mediatek,mt8173-apmixedsys";
+>                         reg = <0 0x10209000 0 0x1000>;
+> @@ -401,29 +413,98 @@
+>                         #clock-cells = <1>;
+>                 };
+>
+> +               larb0: larb@14021000 {
+> +                       compatible = "mediatek,mt8173-smi-larb";
+> +                       reg = <0 0x14021000 0 0x1000>;
+> +                       mediatek,smi = <&smi_common>;
+> +                       power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
+> +                       clocks = <&mmsys CLK_MM_SMI_LARB0>,
+> +                                <&mmsys CLK_MM_SMI_LARB0>;
+> +                       clock-names = "apb", "smi";
+> +               };
+> +
+> +               smi_common: smi@14022000 {
+> +                       compatible = "mediatek,mt8173-smi";
+> +                       reg = <0 0x14022000 0 0x1000>;
+> +                       power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
+> +                       clocks = <&mmsys CLK_MM_SMI_COMMON>,
+> +                                <&mmsys CLK_MM_SMI_COMMON>;
+> +                       clock-names = "apb", "smi";
+> +               };
+> +
+> +               larb4: larb@14027000 {
+> +                       compatible = "mediatek,mt8173-smi-larb";
+> +                       reg = <0 0x14027000 0 0x1000>;
+> +                       mediatek,smi = <&smi_common>;
+> +                       power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
+> +                       clocks = <&mmsys CLK_MM_SMI_LARB4>,
+> +                                <&mmsys CLK_MM_SMI_LARB4>;
+> +                       clock-names = "apb", "smi";
+> +               };
+> +
+>                 imgsys: imgsys@15000000 {
+>                         compatible = "mediatek,mt8173-imgsys", "syscon";
+>                         reg = <0 0x15000000 0 0x1000>;
+>                         #clock-cells = <1>;
+>                 };
+>
+> +               larb2: larb@15001000 {
+> +                       compatible = "mediatek,mt8173-smi-larb";
+> +                       reg = <0 0x15001000 0 0x1000>;
+> +                       mediatek,smi = <&smi_common>;
+> +                       power-domains = <&scpsys MT8173_POWER_DOMAIN_ISP>;
+> +                       clocks = <&imgsys CLK_IMG_LARB2_SMI>,
+> +                                <&imgsys CLK_IMG_LARB2_SMI>;
+> +                       clock-names = "apb", "smi";
+> +               };
+> +
+>                 vdecsys: vdecsys@16000000 {
+>                         compatible = "mediatek,mt8173-vdecsys", "syscon";
+>                         reg = <0 0x16000000 0 0x1000>;
+>                         #clock-cells = <1>;
+>                 };
+>
+> +               larb1: larb@16010000 {
+> +                       compatible = "mediatek,mt8173-smi-larb";
+> +                       reg = <0 0x16010000 0 0x1000>;
+> +                       mediatek,smi = <&smi_common>;
+> +                       power-domains = <&scpsys MT8173_POWER_DOMAIN_VDEC>;
+> +                       clocks = <&vdecsys CLK_VDEC_CKEN>,
+> +                                <&vdecsys CLK_VDEC_LARB_CKEN>;
+> +                       clock-names = "apb", "smi";
+> +               };
+> +
+>                 vencsys: vencsys@18000000 {
+>                         compatible = "mediatek,mt8173-vencsys", "syscon";
+>                         reg = <0 0x18000000 0 0x1000>;
+>                         #clock-cells = <1>;
+>                 };
+>
+> +               larb3: larb@18001000 {
+> +                       compatible = "mediatek,mt8173-smi-larb";
+> +                       reg = <0 0x18001000 0 0x1000>;
+> +                       mediatek,smi = <&smi_common>;
+> +                       power-domains = <&scpsys MT8173_POWER_DOMAIN_VENC>;
+> +                       clocks = <&vencsys CLK_VENC_CKE1>,
+> +                                <&vencsys CLK_VENC_CKE0>;
+> +                       clock-names = "apb", "smi";
+> +               };
+> +
+>                 vencltsys: vencltsys@19000000 {
+>                         compatible = "mediatek,mt8173-vencltsys", "syscon";
+>                         reg = <0 0x19000000 0 0x1000>;
+>                         #clock-cells = <1>;
+>                 };
+> +
+> +               larb5: larb@19001000 {
+> +                       compatible = "mediatek,mt8173-smi-larb";
+> +                       reg = <0 0x19001000 0 0x1000>;
+> +                       mediatek,smi = <&smi_common>;
+> +                       power-domains = <&scpsys MT8173_POWER_DOMAIN_VENC_LT>;
+> +                       clocks = <&vencltsys CLK_VENCLT_CKE1>,
+> +                                <&vencltsys CLK_VENCLT_CKE0>;
+> +                       clock-names = "apb", "smi";
+> +               };
+>         };
+>  };
+>
+> --
+> 1.7.9.5
+>
+
+
+
+-- 
+Daniel Kurtz | Software Engineer | djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org | 650.204.0722
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
