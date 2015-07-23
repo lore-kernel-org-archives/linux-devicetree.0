@@ -1,34 +1,79 @@
-From: Pavel Machek <pavel@denx.de>
-Subject: Re: [PATCH v9 3/7] staging: add bindings document for simple fpga bus
-Date: Thu, 23 Jul 2015 08:46:10 +0200
-Message-ID: <20150723064610.GC23318@amd>
-References: <1437148277-5405-1-git-send-email-atull@opensource.altera.com>
- <1437148277-5405-4-git-send-email-atull@opensource.altera.com>
+From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH v2 1/5] mtd: spi-nor: notify (Q)SPI controller about protocol change
+Date: Thu, 23 Jul 2015 09:00:50 +0200
+Message-ID: <201507230900.50570.marex@denx.de>
+References: <cover.1437569902.git.cyrille.pitchen@atmel.com> <201507221541.46135.marex@denx.de> <55AFC3F0.5050002@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <1437148277-5405-4-git-send-email-atull@opensource.altera.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: atull@opensource.altera.com
-Cc: mark.rutland@arm.com, linux-doc@vger.kernel.org, rubini@gnudd.com, pantelis.antoniou@konsulko.com, hpa@zytor.com, s.trumtrar@pengutronix.de, devel@driverdev.osuosl.org, sameo@linux.intel.com, nico@linaro.org, ijc+devicetree@hellion.org.uk, michal.simek@xilinx.com, kyle.teske@ni.com, jgunthorpe@obsidianresearch.com, grant.likely@linaro.org, davidb@codeaurora.org, linus.walleij@linaro.org, cesarb@cesarb.net, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, iws@ovro.caltech.edu, broonie@kernel.org, philip@balister.org, Petr Cvek <petr.cvek@tul.cz>, dinguyen@opensource.altera.com, monstr@monstr.eu, gregkh@linuxfoundation.org, yvanderv@opensource.altera.com, linux-kernel@vger.kernel.org, balbi@ti.com, delicious.quinoa@gmail.com, robh+dt@kernel.org, rob@landley.net, galak@codeaurora.org, akpm@linux-foundation.org, davem@davemloft.net, m.chehab@samsung.com
+Content-Type: Text/Plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55AFC3F0.5050002-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org, juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, shijie.huang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Wednesday, July 22, 2015 at 06:25:20 PM, Cyrille Pitchen wrote:
+> Hi Marek,
+>=20
+> Le 22/07/2015 15:41, Marek Vasut a =E9crit :
+> > On Wednesday, July 22, 2015 at 03:17:06 PM, Cyrille Pitchen wrote:
+> >> Once the Quad SPI mode has been enabled on a Micron flash memory, =
+this
+> >> device expects ALL the following commands to use the SPI 4-4-4 pro=
+tocol.
+> >> The (Q)SPI controller needs to be notified about the protocol chan=
+ge so
+> >> it can adapt and keep on dialoging with the Micron memory.
+> >>=20
+> >> Signed-off-by: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> >> ---
+> >>=20
+> >>  drivers/mtd/spi-nor/spi-nor.c | 17 +++++++++++++++++
+> >>  include/linux/mtd/spi-nor.h   | 13 +++++++++++++
+> >>  2 files changed, 30 insertions(+)
+> >>=20
+> >> diff --git a/drivers/mtd/spi-nor/spi-nor.c
+> >> b/drivers/mtd/spi-nor/spi-nor.c index d78831b4422b..93627d4e6be8 1=
+00644
+> >> --- a/drivers/mtd/spi-nor/spi-nor.c
+> >> +++ b/drivers/mtd/spi-nor/spi-nor.c
+> >> @@ -163,6 +163,18 @@ static inline int write_disable(struct spi_no=
+r
+> >> *nor)
+> >>=20
+> >>  	return nor->write_reg(nor, SPINOR_OP_WRDI, NULL, 0, 0);
+> >> =20
+> >>  }
+> >>=20
+> >> +/*
+> >> + * Notify the (Q)SPI controller about the new protocol to be used=
+=2E
+> >=20
+> > Hi!
+> >=20
+> > Can you please just reword this a little, so that it is absolutelly=
+ clear
+> > even to the less bright of us (like me) that this is a notification
+> > coming from the upper layers (ie. the spi-nor framework) toward the
+> > hardware ?
+>=20
+> Sure, no problem! what about the following?
+>=20
+> /*
+>  * Let the spi-nor framework notify lower layers, especially the driv=
+er of
+> the * (Q)SPI controller, about the new protocol to be used. Indeed, o=
+nce
+> the * spi-nor framework has sent manufacturer specific commands to a
+> memory to * enable its Quad SPI mode, it should immediately after tel=
+l the
+> QSPI * controller to use the very same Quad SPI protocol as expected =
+by
+> the memory. */
 
-> +Optional properties:
-> +- fpga-mgr : should contain a phandle to a fpga manager.
-
-fpga->FPGA, globally.
-
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+Sure, excellent, thanks ! :-)
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
