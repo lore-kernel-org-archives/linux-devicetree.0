@@ -1,248 +1,230 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v6 2/2] mfd: atmel-flexcom: add a driver for Atmel
- Flexible Serial Communication Unit
-Date: Thu, 23 Jul 2015 08:32:17 +0100
-Message-ID: <20150723073217.GT3061@x1>
-References: <cover.1437558598.git.cyrille.pitchen@atmel.com>
- <7639e02fc2b16dc20b19fbe3bbbb986b0f3b9887.1437558598.git.cyrille.pitchen@atmel.com>
+From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v9 3/7] staging: add bindings document for simple fpga bus
+Date: Thu, 23 Jul 2015 09:31:48 +0200
+Message-ID: <20150723073148.GA1762@pengutronix.de>
+References: <1437148277-5405-1-git-send-email-atull@opensource.altera.com>
+ <1437148277-5405-4-git-send-email-atull@opensource.altera.com>
+ <20150717194913.GD20836@pengutronix.de>
+ <alpine.DEB.2.02.1507171550200.17004@linuxheads99>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <7639e02fc2b16dc20b19fbe3bbbb986b0f3b9887.1437558598.git.cyrille.pitchen@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Cyrille Pitchen <cyrille.pitchen@atmel.com>
-Cc: nicolas.ferre@atmel.com, boris.brezillon@free-electrons.com, alexandre.belloni@free-electrons.com, sameo@linux.intel.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+In-Reply-To: <alpine.DEB.2.02.1507171550200.17004@linuxheads99>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: atull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org, hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org, monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, iws-lulEs6mt1IksTUYHLfqkUA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-ynQEQJNshbs@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, philip-6RQC9ztksjxg9hUCZPvPmw@public.gmane.org, rubini-kaDoWcXyVrEAvxtiuMwx3w@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, kyle.teske-acOepvfBmUk@public.gmane.org, nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, cesarb-PWySMVKUnqmsTnJN9+BGXg@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Petr Cvek <petr.cvek-qphu/3gb4gc@public.gmane.org>, delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 22 Jul 2015, Cyrille Pitchen wrote:
+Hi!
 
-> This driver supports the new Atmel Flexcom. The Flexcom is a wrapper =
-which
-> integrates one SPI controller, one I2C controller and one USART. Only=
- one
-> function can be enabled at a time. This driver selects the function o=
-nce
-> for all, when the Flexcom is probed, finding the first (should be uni=
-que)
-> available DT child node which compatible property contains one of the
-> following strings:
-> - "-usart"
-> - "-spi"
-> - "-i2c"
->=20
-> This driver has chosen to present the Flexcom to the system as a MFD =
-so
-> the implementation is seamless for the existing Atmel SPI, I2C and US=
-ART
-> drivers.
->=20
-> Also the Flexcom embeds FIFOs: the latest patches of the SPI, I2C and
-> USART drivers take advantage of this new feature.
->=20
-> Signed-off-by: Cyrille Pitchen <cyrille.pitchen@atmel.com>
-> ---
->  drivers/mfd/Kconfig         |  11 ++++
->  drivers/mfd/Makefile        |   1 +
->  drivers/mfd/atmel-flexcom.c | 126 ++++++++++++++++++++++++++++++++++=
-++++++++++
->  3 files changed, 138 insertions(+)
->  create mode 100644 drivers/mfd/atmel-flexcom.c
->=20
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index d5ad04dad081..9b33ad0653d1 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -59,6 +59,17 @@ config MFD_AAT2870_CORE
->  	  additional drivers must be enabled in order to use the
->  	  functionality of the device.
-> =20
-> +config MFD_ATMEL_FLEXCOM
-> +	tristate "Atmel Flexcom (Flexible Serial Communication Unit)"
-> +	select MFD_CORE
-> +	depends on OF
-> +	help
-> +	  Select this to get support for Atmel Flexcom. This is a wrapper
-> +	  which embeds a SPI controller, a I2C controller and a USART. Only
-> +	  one function can be used at a time. The choice is done at boot ti=
-me
-> +	  by the probe function of this MFD driver according to a device tr=
-ee
-> +	  property.
-> +
->  config MFD_ATMEL_HLCDC
->  	tristate "Atmel HLCDC (High-end LCD Controller)"
->  	select MFD_CORE
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index 0e5cfeba107c..c666bf51abf3 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -160,6 +160,7 @@ obj-$(CONFIG_MFD_SPMI_PMIC)	+=3D qcom-spmi-pmic.o
->  obj-$(CONFIG_TPS65911_COMPARATOR)	+=3D tps65911-comparator.o
->  obj-$(CONFIG_MFD_TPS65090)	+=3D tps65090.o
->  obj-$(CONFIG_MFD_AAT2870_CORE)	+=3D aat2870-core.o
-> +obj-$(CONFIG_MFD_ATMEL_FLEXCOM)	+=3D atmel-flexcom.o
->  obj-$(CONFIG_MFD_ATMEL_HLCDC)	+=3D atmel-hlcdc.o
->  obj-$(CONFIG_MFD_INTEL_MSIC)	+=3D intel_msic.o
->  obj-$(CONFIG_MFD_PALMAS)	+=3D palmas.o
-> diff --git a/drivers/mfd/atmel-flexcom.c b/drivers/mfd/atmel-flexcom.=
-c
-> new file mode 100644
-> index 000000000000..8ba1862fbb74
-> --- /dev/null
-> +++ b/drivers/mfd/atmel-flexcom.c
-> @@ -0,0 +1,126 @@
-> +/*
-> + * Driver for Atmel Flexcom
-> + *
-> + * Copyright (C) 2015 Atmel Corporation
-> + *
-> + * Author: Cyrille Pitchen <cyrille.pitchen@atmel.com>
-> + *
-> + * This program is free software; you can redistribute it and/or mod=
-ify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful, b=
-ut WITHOUT
-> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILIT=
-Y or
-> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public Lic=
-ense for
-> + * more details.
-> + *
-> + * You should have received a copy of the GNU General Public License=
- along with
-> + * this program.  If not, see <http://www.gnu.org/licenses/>.
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/types.h>
-> +#include <linux/kernel.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/of.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-> +#include <linux/clk.h>
-> +
-> +/* I/O register offsets */
-> +#define FLEX_MR		0x0	/* Mode Register */
-> +#define FLEX_VERSION	0xfc	/* Version Register */
-> +
-> +/* Mode Register bit fields */
-> +#define FLEX_MR_OPMODE_MASK	0x3
-> +#define FLEX_MR_OPMODE_NO_COM	0x0
-> +#define FLEX_MR_OPMODE_USART	0x1
-> +#define FLEX_MR_OPMODE_SPI	0x2
-> +#define FLEX_MR_OPMODE_TWI	0x3
-> +
-> +
-> +static int atmel_flexcom_probe(struct platform_device *pdev)
-> +{
-> +	struct device_node *child, *np =3D pdev->dev.of_node;
-> +	struct clk *clk;
-> +	struct resource *res;
-> +	void __iomem *base;
-> +	u32 opmode =3D FLEX_MR_OPMODE_NO_COM;
-> +	int err;
-> +
-> +	for_each_child_of_node(np, child) {
-> +		const char *compatible;
-> +		int cplen;
-> +
-> +		if (!of_device_is_available(child))
-> +			continue;
-> +
-> +		compatible =3D of_get_property(child, "compatible", &cplen);
-> +		if (!compatible || strlen(compatible) > cplen)
-> +			continue;
-> +
-> +		if (strstr(compatible, "-usart")) {
-> +			opmode =3D FLEX_MR_OPMODE_USART;
-> +			break;
-> +		}
-> +
-> +		if (strstr(compatible, "-spi")) {
-> +			opmode =3D FLEX_MR_OPMODE_SPI;
-> +			break;
-> +		}
-> +
-> +		if (strstr(compatible, "-i2c")) {
-> +			opmode =3D FLEX_MR_OPMODE_TWI;
-> +			break;
-> +		}
-> +	}
+On Fri, Jul 17, 2015 at 04:22:07PM -0500, atull wrote:
+> On Fri, 17 Jul 2015, Steffen Trumtrar wrote:
+> 
+> > Hi!
+> > 
+> > On Fri, Jul 17, 2015 at 10:51:13AM -0500, atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
+> > > From: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> > > 
+> > > New bindings document for simple fpga bus.
+> > > 
+> > > Signed-off-by: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> > > ---
+> > >  .../Documentation/bindings/simple-fpga-bus.txt     |   61 ++++++++++++++++++++
+> > >  1 file changed, 61 insertions(+)
+> > >  create mode 100644 drivers/staging/fpga/Documentation/bindings/simple-fpga-bus.txt
+> > > 
+> > > diff --git a/drivers/staging/fpga/Documentation/bindings/simple-fpga-bus.txt b/drivers/staging/fpga/Documentation/bindings/simple-fpga-bus.txt
+> > > new file mode 100644
+> > > index 0000000..221e781
+> > > --- /dev/null
+> > > +++ b/drivers/staging/fpga/Documentation/bindings/simple-fpga-bus.txt
+> > > @@ -0,0 +1,61 @@
+> > > +Simple FPGA Bus
+> > > +===============
+> > > +
+> > > +A Simple FPGA Bus is a bus that handles configuring an FPGA and its bridges
+> > > +before populating the devices below its node.
+> > > +
+> > > +Required properties:
+> > > +- compatible : should contain "simple-fpga-bus"
+> > > +- #address-cells, #size-cells, ranges: must be present to handle address space
+> > > +  mapping for children.
+> > > +
+> > > +Optional properties:
+> > > +- fpga-mgr : should contain a phandle to a fpga manager.
+> > > +- fpga-firmware : should contain the name of a fpga image file located on the
+> > > +  firmware search path.
+> > > +- partial-reconfig : boolean property should be defined if partial
+> > > +  reconfiguration is to be done.
+> > > +- resets : should contain a list of resets that should be released after the
+> > > +  fpga has been programmed i.e. fpga bridges.
+> > > +- reset-names : should contain a list of the names of the resets.
+> > > +
+> > > +Example:
+> > > +
+> > > +/dts-v1/;
+> > > +/plugin/;
+> > > +/ {
+> > > +	fragment@0 {
+> > > +		target-path="/soc";
+> > > +		__overlay__ {
+> > > +			#address-cells = <1>;
+> > > +	                #size-cells = <1>;
+> > > +
+> > > +			bridge@0xff200000 {
+> > > +				compatible = "simple-fpga-bus";
+> > > +				#address-cells = <0x2>;
+> > > +				#size-cells = <0x1>;
+> > > +				ranges = <0x1 0x10040 0xff210040 0x20>;
+> > > +
+> > > +				clocks = <0x2 0x2>;
+> > > +				clock-names = "h2f_lw_axi_clock", "f2h_sdram0_clock";
+> > > +
+> > > +				fpga-mgr = <&hps_0_fpgamgr>;
+> > > +				fpga-firmware = "soc_system.rbf";
+> > > +
+> > > +				resets = <&hps_fpgabridge0 0>, <&hps_fpgabridge1 0>, <&hps_fpgabridge2 0>;
+> > > +				reset-names = "hps2fpga", "lwhps2fpga", "fpga2hps";
+> > > +
+> > > +				gpio@0x100010040 {
+> > > +					compatible = "altr,pio-14.0", "altr,pio-1.0";
+> > > +					reg = <0x1 0x10040 0x20>;
+> > > +					clocks = <0x2>;
+> > > +					altr,gpio-bank-width = <0x4>;
+> > > +					resetvalue = <0x0>;
+> > > +					#gpio-cells = <0x2>;
+> > > +					gpio-controller;
+> > > +				};
+> > > +			};
+> > > +		};
+> > > +	};
+> > > +};
+> > > +
+> > 
+> > Just some quick thougths for the Socfpga case:
+> > 
+> > What you are describing here is a virtual bus, that is not existing on
+> > at least the Socfpga, right? I don't like this.
+> > You are mixing different independent busses/devices into one and I don't
+> > see why.
+> 
 
-=46rom what I understand Flexcom is a wrapper which can sit above any
-number of SPI, I2C and/or UART devices.  Devices which you don't
-really have any control over (source code wise).  So wouldn't it be
-better to match on the details you do have control over i.e. the node
-name, rather than the compatible string?
+Just to be clear: all in all I like this approach and I would prefer it to
+go in the mainline kernel sooner than later. The thing is AFAIK we still
+don't have a way to mark DT bindings as staging or in flux even if we do
+have a staging area for drivers. That's why I want to be convinced that this
+binding is "correct" from a binding perspective and not some linux driver
+implementation. It's much easier to change a driver than breaking old dts files
+with binding changes.
 
-I would personally match on of_find_node_by_name() to future-proof
-your implementation.
+> It is a multi-interface bridge.  It is likely that a device will use more than
+> one at a time.  This is normal in the kernel and the device tree supports it.
+> My example is too simplistic.  It is common for a device to use the lwh2f
+> bridge for register access and the h2f bridge for data.  So you'd have
+> 
+>    reg = <0xc0000000 0x20000000>,
+>          <0xff200000 0x00200000>;
+> 
+> and ranges that map from those areas.
+> 
 
-> +	if (opmode =3D=3D FLEX_MR_OPMODE_NO_COM)
-> +		return -EINVAL;
-> +
-> +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	base =3D devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(base))
-> +		return PTR_ERR(base);
-> +
-> +	clk =3D devm_clk_get(&pdev->dev, NULL);
-> +	if (IS_ERR(clk))
-> +		return PTR_ERR(clk);
-> +
-> +	err =3D clk_prepare_enable(clk);
-> +	if (err)
-> +		return err;
-> +
-> +	/*
-> +	 * Set the Operating Mode in the Mode Register: only the selected d=
-evice
-> +	 * is clocked. Hence, registers of the other serial devices remain
-> +	 * inaccessible and are read as zero. Also the external I/O lines o=
-f the
-> +	 * Flexcom are muxed to reach the selected device.
-> +	 */
-> +	writel(opmode, base + FLEX_MR);
-> +
-> +	clk_disable_unprepare(clk);
-> +
-> +	return of_platform_populate(np, NULL, NULL, &pdev->dev);
-> +}
-> +
-> +static const struct of_device_id atmel_flexcom_of_match[] =3D {
-> +	{ .compatible =3D "atmel,sama5d2-flexcom" },
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, atmel_flexcom_of_match);
-> +
-> +static struct platform_driver atmel_flexcom_driver =3D {
-> +	.driver		=3D {
-> +		.name	=3D "atmel_flexcom",
-> +		.of_match_table =3D atmel_flexcom_of_match,
-> +	},
-> +	.probe		=3D atmel_flexcom_probe,
-> +};
+Yeah, sure. I used that, too. Where is the problem with
 
-This way of lining code up looks weird.  I do like straight lines when
-code has the same indentation, but you're attempting to match lines at
-different levels (and not matching on lines that are on the same
-level).
+	&hps2fpga {
+		status = "okay";
+		my-ip-core {
+			config = <&lwhps2fpga>;
+			...
+		};
+	};
 
-> +module_platform_driver(atmel_flexcom_driver);
-> +
-> +MODULE_AUTHOR("Cyrille Pitchen <cyrille.pitchen@atmel.com>");
-> +MODULE_DESCRIPTION("Atmel Flexcom MFD driver");
-> +MODULE_LICENSE("GPL v2");
+	&lwhps2fpga {
+		status = "okay";
+	};
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+The typical "let's use syscon" case, no?!
+
+> > I see that this is just an example, but why
+> >   a) isn't the fpga-mgr the one knowing about the bitstream ?
+> 
+> The fpga-mgr doesn't know much.  Someone has to tell it what to load.  I think
+> that is a good thing.
+> 
+> >      You can't have two of these busses with different bitstreams anyway
+> >      And if you have multipe FPGAs you have multiple fpga-mgrs, no?
+> 
+> You would have one fpga-mgr and a separate set of bridges per fpga.
+> 
+
+Is that because of the framework or the hardware implementation?
+What do I do, if I have a Socfpga+Bitstream and a Stratix that I program
+via SPI/PCIe/whatever? Don't I have two different Managers now, hardware-wise?
+System is done, dts is fixed. I would expect to provide two bitstreams in the
+chosen-node and let the FPGA managers grep theirs.
+But I can see, that it is not unreasonable to have this information in the bridge,
+to have it describe what devices hang from it.
+
+> >   b) shouldn't the h2f/lwh2f/f2h bridges be the "simple-bus devices" instead of
+> >      just reset-controllers ?
+> 
+> That's an artificial division of things.  These aren't really separate busses.
+> You would have a device that needs to be the child of two separate bridges then.
+> 
+
+phandle? Not an uncommon pattern, is it?!
+The thing is: What level of hardware does a binding actually describe?
+When I look into the TRM of the Socfpga, I see two seperate devices for HPS2FPGA
+bridge and LWHPS2FPGA bridge. Both have their own address space, one port is connected
+to the L3 main switch the other to the L3 Slave peripheral switch, both have different
+AXI clocks and different bus width. This doesn't look like they are artificially
+divided, but like they actually are divided. The TRM is the only thing I can use as
+reference as a normal developer.
+
+> > What about e.g. the bus width of the bridges?
+> >      It can change depending on the bitstream. When I have an IP core that does
+> >      DMA I might want my driver to be able to configure the bus width accordingly.
+> >      There are other settings in the bridges that I can not set when they are just
+> >      reset controllers.
+> 
+> I was hoping to avoid adding another framework to the kernel.  Looks like a
+> bus framework will be necessary that can be controlled by the simple fpga bus.
+> I'd add simple fpga bus DT bindings like
+> 
+>     bridges = <&hps_fpgabridge0>, <&hps_fpgabridge1>;
+> 
+> The bindings for the bridges have already been proposed (you didn't like them)
+> and could be used in the overlay here to change bus width.
+> 
+>     https://lkml.org/lkml/2014/10/23/681
+>
+
+Still don't, sorry. That binding looks like it is backwards: it looks like it
+starts from the use-case in linux and describes everything you need for that.
+Instead of the other way around.
+
+> I'll revive those patches, but tear out the sysfs interface and just export
+> API's for enabling/disabling bridges that I could call from simple-fpga-bus.c
+> 
+
+I also posted an RFC for the bridges
+
+http://lists.infradead.org/pipermail/linux-arm-kernel/2014-December/310181.html
+
+and no, I'm not trying to pimp my driver ;-)
+
+Regards,
+Steffen
+
+PS: Thanks for still working on this and trying to get a mainlineable solution
+instead of just dumping something into some vendor tree.
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
