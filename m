@@ -1,27 +1,36 @@
-From: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v2 08/11] ARM: dts: msm8974: Add tcsr mutex node
-Date: Thu, 23 Jul 2015 15:42:40 -0500
-Message-ID: <20150723204240.GA13658@qualcomm.com>
+From: Andy Gross <agross@codeaurora.org>
+Subject: Re: [PATCH v2 01/11] soc: qcom: Add device tree binding for SMEM
+Date: Thu, 23 Jul 2015 15:49:03 -0500
+Message-ID: <20150723204903.GC13658@qualcomm.com>
 References: <1435355419-23602-1-git-send-email-bjorn.andersson@sonymobile.com>
- <1435355419-23602-9-git-send-email-bjorn.andersson@sonymobile.com>
+ <1435355419-23602-2-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1435355419-23602-9-git-send-email-bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: bjorn-UYDU3/A3LUY@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1435355419-23602-2-git-send-email-bjorn.andersson@sonymobile.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: bjorn@kryo.se
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jeffrey Hugo <jhugo@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 26, 2015 at 02:50:16PM -0700, bjorn-UYDU3/A3LUY@public.gmane.org wrote:
-> From: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+On Fri, Jun 26, 2015 at 02:50:09PM -0700, bjorn@kryo.se wrote:
+> From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
 > 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-> ---
->  arch/arm/boot/dts/qcom-msm8974.dtsi | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
+> Add device tree binding documentation for the Qualcom Shared Memory
+> Manager.
 > 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+
+<snip>
+
+> +	smem@fa00000 {
+> +		compatible = "qcom,smem";
+> +
+> +		memory-region = <&smem_region>;
+> +		reg = <0xfc428000 0x4000>;
+
+I'll fixup the address here before applying.
 
 Applied, thanks!
 
@@ -29,8 +38,3 @@ Applied, thanks!
 Qualcomm Innovation Center, Inc.
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
