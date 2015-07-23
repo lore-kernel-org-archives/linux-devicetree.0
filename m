@@ -1,87 +1,52 @@
-From: Jassi Brar <jassisinghbrar@gmail.com>
-Subject: Re: [PATCH 3/6] mailbox: Add support for ST's Mailbox IP
-Date: Thu, 23 Jul 2015 22:01:06 +0530
-Message-ID: <CABb+yY0iKAU6aa99muVrkHyp-Ywpf1BoMRna91L6fbR7e89XZQ@mail.gmail.com>
-References: <1437134647-28298-1-git-send-email-lee.jones@linaro.org>
-	<1437134647-28298-4-git-send-email-lee.jones@linaro.org>
-	<CABb+yY2nAT6V4Q8suAXRtPXrXkArGWVTAW28ts4Z3C_ybuJovA@mail.gmail.com>
-	<20150723082934.GW3061@x1>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 0/2] Add mt6795 basic chip support
+Date: Thu, 23 Jul 2015 20:00:49 +0200
+Message-ID: <13192995.x2vh6tuCOD@ubix>
+References: <1436857093-18637-1-git-send-email-mars.cheng@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150723082934.GW3061@x1>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, kernel@stlinux.com, Devicetree List <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1436857093-18637-1-git-send-email-mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: CC Hwang <cc.hwang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Loda Choui <loda.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Miles Chen <miles.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Scott Shu <scott.shu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jades Shih <jades.shih-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, My Chuang <my.chuang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 23, 2015 at 1:59 PM, Lee Jones <lee.jones@linaro.org> wrote:
->> On Fri, Jul 17, 2015 at 5:34 PM, Lee Jones <lee.jones@linaro.org> wrote:
+On Tuesday, July 14, 2015 02:58:11 PM Mars Cheng wrote:
+> This patch adds basic chip support for Mediatek 8-core chip, mt6795.
+> It is also named as Helio X10. It is based on:
+> 1. 4.2-rc1
+> 2. [PATCH v4 0/2] Add mt6580 basic chip support
+> 
+> The second one has added some device tree binding documentation for
+> mt6580. mt6795 has some device tree binding modifications too.
+> To cleanly apply this patch, please apply mt6580 patch set first.
+> 
+> Changes in v2
+> 1. Remove clocks node & bootargs
+> 2. Refine stdout-path setting
+> 3. Use correct mask value in device tree for arm local timer
+> 
+> Mars Cheng (2):
+>   Document: DT: Add bindings for mediatek MT6795 SoC Platform
+>   arm64: dts: mediatek: add mt6795 support
+> 
+>  Documentation/devicetree/bindings/arm/mediatek.txt |   9 +-
+>  .../bindings/arm/mediatek/mediatek,sysirq.txt      |   3 +-
+>  .../devicetree/bindings/serial/mtk-uart.txt        |   5 +-
+>  arch/arm64/boot/dts/mediatek/Makefile              |   1 +
+>  arch/arm64/boot/dts/mediatek/mt6795-evb.dts        |  37 +++++
+>  arch/arm64/boot/dts/mediatek/mt6795.dtsi           | 162
+> +++++++++++++++++++++ 6 files changed, 212 insertions(+), 5 deletions(-)
+>  create mode 100644 arch/arm64/boot/dts/mediatek/mt6795-evb.dts
+>  create mode 100644 arch/arm64/boot/dts/mediatek/mt6795.dtsi
 
->> > +static void sti_mbox_enable_channel(struct mbox_chan *chan)
->> > +{
->> > +       struct sti_channel *chan_info = chan->con_priv;
->> > +       struct sti_mbox_device *mdev = chan_info->mdev;
->> > +       struct sti_mbox_pdata *pdata = dev_get_platdata(mdev->dev);
->> > +       unsigned int instance = chan_info->instance;
->> > +       unsigned int channel = chan_info->channel;
->> > +       unsigned long flags;
->> > +       void __iomem *base;
->> > +
->> > +       base = mdev->base + (instance * sizeof(u32));
->> > +
->> Maybe have something simpler like MBOX_BASE(instance)? Or some inline
->> function to avoid this 5-lines ritual?
->
-> I've checked and we can't do this, as the we need most (all?) of the
-> intermediary variables too.  No ritual just to get the final variable
-> for instance.
->
-OK. How about ?
-  #define MBOX_BASE(m, n)   ((m)->base + (n) * 4)
-  void __iomem *base = MBOX_BASE(mdev, instance);
+Your series is not based on v4.2-rc1, anyway I fixed it and applied to v4.2-
+next/arm64
 
-
->> > +       spin_lock_irqsave(&sti_mbox_chan_lock, flags);
->> > +       mdev->enabled[instance] |= BIT(channel);
->> > +       writel_relaxed(BIT(channel), base + pdata->ena_set);
->> > +       spin_unlock_irqrestore(&sti_mbox_chan_lock, flags);
->> >
->> You don't need locking for SET/CLR type registers which are meant for
->> when they could be accessed by processors that can not share a lock.
->> So maybe drop the lock here and elsewhere.
->
-> From what I can gather, I think we need this locking.  What happens if
-> we get scheduled between setting the enabled bit in our cache and
-> actually setting the ena_set bit?  We would be out of sync.
->
-IIU what you mean... can't that still happen because of the  _relaxed()?
-Anyways my point was about set/clr type regs. And you may look at if
-channel really needs disabling while interrupts are handled? I think
-it shouldn't because either it is going to be a to-fro communication
-or random broadcasts without any guarantee of reception. But of course
-you would know better your platform.
-BTW  sti_mbox_channel_is_enabled() also needs to have locking around
-enabled[] if you want to keep it.  And maybe embed sti_mbox_chan_lock
-inside sti_mbox_device.
-
->> However, you need some mechanism to check if you succeeded 'owning'
->> the channel by reading back what you write to own the channel (not
->> sure which is that register here). Usually we need that action and
->> verification when we assign a channel to some user.
->
-> I don't think we need to do that with this driver.  All of the
-> allocation is controlled from within this code base.  The channels are
-> pre-allocated and written into the co-proc's Firmware.
->
-OK
-
->> > +       }
->> > +
->> Doesn't mbox->chans[i].con_priv need some locking here?
->
-> Not that I can see.  Would you mind explaining further please?
->
-Not anymore, after the clarification that we don't need a 'break' statement.
-
-cheers.
+Thanks.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
