@@ -1,66 +1,87 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH v8 8/9] nvmem: sunxi: Move the SID driver to the nvmem
- framework
-Date: Thu, 23 Jul 2015 17:18:14 +0200
-Message-ID: <55B105B6.7000502@i2se.com>
-References: <1437403352-4091-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1437403462-4432-1-git-send-email-srinivas.kandagatla@linaro.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH V3 1/3] mfd: da9062: Support for the DA9063 RTC in the
+ DA9062 core
+Date: Thu, 23 Jul 2015 16:27:01 +0100
+Message-ID: <20150723152701.GN3436@x1>
+References: <cover.1437474547.git.stwiss.opensource@diasemi.com>
+ <7abaa10f4089b1adec4970d9c581a9f35992ee02.1437474547.git.stwiss.opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1437403462-4432-1-git-send-email-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <7abaa10f4089b1adec4970d9c581a9f35992ee02.1437474547.git.stwiss.opensource@diasemi.com>
+Sender: linux-input-owner@vger.kernel.org
+To: S Twiss <stwiss.opensource@diasemi.com>
+Cc: DEVICETREE <devicetree@vger.kernel.org>, LINUXINPUT <linux-input@vger.kernel.org>, LINUXKERNEL <linux-kernel@vger.kernel.org>, RTCLINUX <rtc-linux@googlegroups.com>, Samuel Ortiz <sameo@linux.intel.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, David Dajun Chen <david.chen@diasemi.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <support.opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Srinivas,
+On Tue, 21 Jul 2015, S Twiss wrote:
 
-Am 20.07.2015 um 16:44 schrieb Srinivas Kandagatla:
-> From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->
-> Now that we have the nvmem framework, we can consolidate the common
-> driver code. Move the driver to the framework, and hopefully, it will
-> fix the sysfs file creation race.
->
-> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> [srinivas.kandagatla: Moved to regmap based EEPROM framework]
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> From: S Twiss <stwiss.opensource@diasemi.com>
+>=20
+> Add MFD core driver support for a RTC component
+>=20
+> - MFD core adds the RTC resources da9062_rtc_resources[] for the RTC
+>   alarm and tick timer IRQ
+> - An appropriate mfd_cell has been added into da9062_devs[] to suppor=
+t
+>   a component .name =3D "da9062-rtc" and .of_compatible  =3D "dlg,da9=
+062-rtc"
+>=20
+> Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
+>=20
 > ---
->  Documentation/ABI/testing/sysfs-driver-sunxi-sid   |  22 ---
->  .../bindings/misc/allwinner,sunxi-sid.txt          |  17 ---
->  .../bindings/nvmem/allwinner,sunxi-sid.txt         |  21 +++
->  drivers/misc/eeprom/Kconfig                        |  13 --
->  drivers/misc/eeprom/Makefile                       |   1 -
->  drivers/misc/eeprom/sunxi_sid.c                    | 156 --------------------
->  drivers/nvmem/Kconfig                              |  11 ++
->  drivers/nvmem/Makefile                             |   2 +
->  drivers/nvmem/sunxi_sid.c                          | 159 +++++++++++++++++++++
->  9 files changed, 193 insertions(+), 209 deletions(-)
->  delete mode 100644 Documentation/ABI/testing/sysfs-driver-sunxi-sid
->  delete mode 100644 Documentation/devicetree/bindings/misc/allwinner,sunxi-sid.txt
->  create mode 100644 Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt
->  delete mode 100644 drivers/misc/eeprom/sunxi_sid.c
->  create mode 100644 drivers/nvmem/sunxi_sid.c
->
-> [...]
-> diff --git a/drivers/nvmem/Makefile b/drivers/nvmem/Makefile
-> index ff44fe9..4328b93 100644
-> --- a/drivers/nvmem/Makefile
-> +++ b/drivers/nvmem/Makefile
-> @@ -8,3 +8,5 @@ nvmem_core-y			:= core.o
->  # Devices
->  obj-$(CONFIG_QCOM_QFPROM)	+= nvmem_qfprom.o
->  nvmem_qfprom-y			:= qfprom.o
-> +obj-$(CONFIG_NVMEM_SUNXI_SID)	+= nvmem_sunxi_sid.o
-> +nvmem_sunxi_sid-y		:= sunxi_sid.o
+> Checks performed with linux-next/next-20150708/scripts/checkpatch.pl
+>  da9062-core.c             total: 0 errors, 0 warnings, 523 lines che=
+cked
+> This patch applies against linux-next and next-20150708=20
+>=20
+>=20
+>  drivers/mfd/da9062-core.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
 
-is it really necessary to have 2 lines for a single driver?
+Applied, thanks.
 
-Why not the following line?
+> diff --git a/drivers/mfd/da9062-core.c b/drivers/mfd/da9062-core.c
+> index 4cf0643..b43cd24 100644
+> --- a/drivers/mfd/da9062-core.c
+> +++ b/drivers/mfd/da9062-core.c
+> @@ -118,6 +118,11 @@ static struct resource da9062_wdt_resources[] =3D=
+ {
+>  	DEFINE_RES_NAMED(DA9062_IRQ_WDG_WARN, 1, "WD_WARN", IORESOURCE_IRQ)=
+,
+>  };
+> =20
+> +static struct resource da9062_rtc_resources[] =3D {
+> +	DEFINE_RES_NAMED(DA9062_IRQ_ALARM, 1, "ALARM", IORESOURCE_IRQ),
+> +	DEFINE_RES_NAMED(DA9062_IRQ_TICK, 1, "TICK", IORESOURCE_IRQ),
+> +};
+> +
+>  static const struct mfd_cell da9062_devs[] =3D {
+>  	{
+>  		.name		=3D "da9062-core",
+> @@ -141,6 +146,12 @@ static const struct mfd_cell da9062_devs[] =3D {
+>  		.resources	=3D da9062_thermal_resources,
+>  		.of_compatible  =3D "dlg,da9062-thermal",
+>  	},
+> +	{
+> +		.name		=3D "da9062-rtc",
+> +		.num_resources	=3D ARRAY_SIZE(da9062_rtc_resources),
+> +		.resources	=3D da9062_rtc_resources,
+> +		.of_compatible  =3D "dlg,da9062-rtc",
+> +	},
+>  };
+> =20
+>  static int da9062_clear_fault_log(struct da9062 *chip)
 
-obj-$(CONFIG_NVMEM_SUNXI_SID)	+= sunxi_sid.o
-
-Regards
-Stefan
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
