@@ -1,57 +1,108 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 05/11] mfd: devicetree: bindings: Add Qualcomm SMD
- based RPM DT binding
-Date: Thu, 23 Jul 2015 18:16:38 +0100
-Message-ID: <20150723171638.GE11162@sirena.org.uk>
-References: <1435355419-23602-1-git-send-email-bjorn.andersson@sonymobile.com>
- <1435355419-23602-6-git-send-email-bjorn.andersson@sonymobile.com>
- <20150707121609.GZ3182@x1>
- <20150713214836.GA15178@usrtlx11787.corpusers.net>
- <20150723133133.GB3436@x1>
- <20150723164128.GD4753@usrtlx11787.corpusers.net>
+From: Alexey Klimov <klimov.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/6] mailbox: Add support for ST's Mailbox IP
+Date: Thu, 23 Jul 2015 20:23:26 +0300
+Message-ID: <CALW4P+K5PqVxPehWcSX2-t_rENpsV_RB7TNeJ9sN-EdZUOXm4Q@mail.gmail.com>
+References: <1437134647-28298-1-git-send-email-lee.jones@linaro.org>
+	<1437134647-28298-4-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="6JpNyHZcz5HoP3tQ"
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150723164128.GD4753-P9SbAA3LsXe39TS3lRcy0mP6iJigPa5YXqFh9Ls21Oc@public.gmane.org>
+In-Reply-To: <1437134647-28298-4-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "bjorn-UYDU3/A3LUY@public.gmane.org" <bjorn-UYDU3/A3LUY@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Lee,
 
---6JpNyHZcz5HoP3tQ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Fri, Jul 17, 2015 at 3:04 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> ST's platforms currently support a maximum of 5 Mailboxes, one for
+> each of the supported co-processors situated on the platform.  Each
+> Mailbox is divided up into 4 instances which consist of 32 channels.
+> Messages are passed between the application and co-processors using
+> shared memory areas.  It is the Client's responsibility to manage
+> these areas.
+>
+> Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  drivers/mailbox/Kconfig       |   7 +
+>  drivers/mailbox/Makefile      |   2 +
+>  drivers/mailbox/mailbox-sti.c | 562 ++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 571 insertions(+)
+>  create mode 100644 drivers/mailbox/mailbox-sti.c
 
-On Thu, Jul 23, 2015 at 09:41:28AM -0700, Bjorn Andersson wrote:
+[..]
 
-> > We still need Mark to look at this.
+> +static irqreturn_t sti_mbox_thread_handler(int irq, void *data)
+> +{
+> +       struct sti_mbox_device *mdev = data;
+> +       struct sti_mbox_pdata *pdata = dev_get_platdata(mdev->dev);
+> +       struct mbox_chan *chan;
+> +       unsigned int instance;
+> +
+> +       for (instance = 0; instance < pdata->num_inst; instance++) {
+> +keep_looking:
+> +               chan = sti_mbox_irq_to_channel(mdev, instance);
+> +               if (!chan)
+> +                       continue;
+> +
+> +               mbox_chan_received_data(chan, NULL);
+> +               sti_mbox_clear_irq(chan);
+> +               sti_mbox_enable_channel(chan);
+> +               goto keep_looking;
+> +       }
+> +
+> +       return IRQ_HANDLED;
+> +}
+> +
+> +static irqreturn_t sti_mbox_irq_handler(int irq, void *data)
+> +{
+> +       struct sti_mbox_device *mdev = data;
+> +       struct sti_mbox_pdata *pdata = dev_get_platdata(mdev->dev);
+> +       struct sti_channel *chan_info;
+> +       struct mbox_chan *chan;
+> +       unsigned int instance;
+> +       int ret = IRQ_NONE;
+> +
+> +       for (instance = 0; instance < pdata->num_inst; instance++) {
+> +               chan = sti_mbox_irq_to_channel(mdev, instance);
+> +               if (!chan)
+> +                       continue;
+> +               chan_info = chan->con_priv;
+> +
+> +               if (!sti_mbox_channel_is_enabled(chan)) {
+> +                       dev_warn(mdev->dev,
+> +                                "Unexpected IRQ: %s\n"
+> +                                "  instance: %d: channel: %d [enabled: %x]\n",
+> +                                mdev->name, chan_info->instance,
+> +                                chan_info->channel, mdev->enabled[instance]);
+> +                       ret = IRQ_HANDLED;
+> +                       continue;
+> +               }
+> +
+> +               sti_mbox_disable_channel(chan);
+> +               ret = IRQ_WAKE_THREAD;
+> +       }
+> +
+> +       if (ret == IRQ_NONE)
+> +               dev_err(mdev->dev, "Spurious IRQ - was a channel requested?\n");
+> +
+> +       return ret;
+> +}
 
-> Mark, would you mind giving us a statement on the regulator subnode of
-> this binding?
+With such usage of ret variable can it happen that handling of last
+but one channel/instance will set ret to IRQ_WAKE_THREAD and at the
+same time handling of last channel/instance will set ret to
+IRQ_HANDLED during iteration loop and finally generic subsystem will
+not wake up thread handler because it will receive IRQ_HANDLED?
+Just checking.
 
-I have no idea what's going on here, sorry.  I've not been reading this
-thread.
 
---6JpNyHZcz5HoP3tQ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+[..]
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVsSF2AAoJECTWi3JdVIfQjpwH+wTIIqLSfPbzxmkoCr5w2BWF
-NwoJ7F/TSzuKU9EMW4XE7N6nDWcscaqUhI8Rs0IfmVMIGxIZHVujZEk2WtqxxWF2
-rkkRqbzZUTXrLugVxQk2L2mPFcxoydZiXOVnHm8DkGHAS0pOuJFjLlvEjGUJdlKY
-cxNCd2+cHNVYIw+GHspwMEjnRcF4iao3JZdusHTwqriSk6ZHFQYkxlZGkGxPNX82
-fKKlg9bxK/dMfNuuAsbVDuEEqZPILkmSUMvQfkS1fgCaFf8IeMDIcXMaFT11UOJE
-N1qPhluliCdfAJkjog0ibJdCrNi3t+0aQEeWB+rKpKM28Ew+VktDi2oyg/x1caY=
-=q94v
------END PGP SIGNATURE-----
-
---6JpNyHZcz5HoP3tQ--
+-- 
+Thanks,
+Alexey Klimov
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
