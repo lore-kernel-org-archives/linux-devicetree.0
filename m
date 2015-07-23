@@ -1,64 +1,115 @@
-From: Alonso Adrian <aalonso@freescale.com>
-Subject: RE: [PATCH][v3] ARM: imx: pinctrl-imx: imx7d: add support for iomuxc
- lpsr
-Date: Thu, 23 Jul 2015 19:34:56 +0000
-Message-ID: <BN3PR03MB150926F2FABADED18630B27CA8820@BN3PR03MB1509.namprd03.prod.outlook.com>
-References: <1436295725-19011-1-git-send-email-aalonso@freescale.com>
- <20150715072307.GM4119@tiger>
- <BN3PR03MB1509DFB6A1513A23C48476CFA89A0@BN3PR03MB1509.namprd03.prod.outlook.com>
- <20150716155034.GN4119@tiger>
- <CAHrpEqQv4uzQ7+EnFV7rwnhAzaSnEfwoo+_SFRsvMh-nR3PdBw@mail.gmail.com>
- <BN3PR03MB15095AD84AD5738B142F6F8CA8990@BN3PR03MB1509.namprd03.prod.outlook.com>
- <20150717033429.GC12927@tiger>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v7 1/2] mfd: devicetree: add bindings for Atmel Flexcom
+Date: Thu, 23 Jul 2015 21:48:57 +0200
+Message-ID: <20150723214857.4322c758@bbrezillon>
+References: <cover.1437669004.git.cyrille.pitchen@atmel.com>
+	<60057bbf7d39ec63d391d26271747cf0228a3ed1.1437669004.git.cyrille.pitchen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20150717033429.GC12927@tiger>
-Content-Language: en-US
-Sender: linux-gpio-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Zhi Li <lznuaa@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Li Frank <Frank.Li@freescale.com>, Nitin Garg <nitin.garg@freescale.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, Huang Anson <Anson.Huang@freescale.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Yibin Gong <yibin.gong@freescale.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <60057bbf7d39ec63d391d26271747cf0228a3ed1.1437669004.git.cyrille.pitchen@atmel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Cyrille Pitchen <cyrille.pitchen@atmel.com>
+Cc: nicolas.ferre@atmel.com, alexandre.belloni@free-electrons.com, sameo@linux.intel.com, lee.jones@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Shawn,
+On Thu, 23 Jul 2015 18:42:55 +0200
+Cyrille Pitchen <cyrille.pitchen@atmel.com> wrote:
 
-The approach you mention is already supported in FSL kernel tree see
-http://git.freescale.com/git/cgit.cgi/imx/linux-2.6-imx.git/commit/?h=imx_3.14.38_6ul7d_beta&id=a37ea06ddccbefb8660af0ac259c30d98540bdc2
-
-I will rework and proposed a new patch series soon.
-
-Thanks for your reviews :)
-
-Regards
-Adrian
-
-> -----Original Message-----
-> From: linux-gpio-owner@vger.kernel.org [mailto:linux-gpio-
-> owner@vger.kernel.org] On Behalf Of Shawn Guo
-> Sent: Thursday, July 16, 2015 10:34 PM
-> To: Alonso Lazcano Adrian-B38018
-> Cc: Zhi Li; devicetree@vger.kernel.org; Li Frank-B20596; Garg Nitin-B37173;
-> linus.walleij@linaro.org; linux-gpio@vger.kernel.org; robh+dt@kernel.org;
-> shawn.guo@linaro.org; Huang Yongcai-B20788; linux-arm-
-> kernel@lists.infradead.org; Gong Yibin-B38343
-> Subject: Re: [PATCH][v3] ARM: imx: pinctrl-imx: imx7d: add support for iomuxc
-> lpsr
+> This patch documents the DT bindings for the Atmel Flexcom which will be
+> introduced by sama5d2x SoCs. These bindings will be used by the actual
+> Flexcom driver to be sent in another patch.
 > 
-> On Thu, Jul 16, 2015 at 08:39:33PM +0000, Alonso Adrian wrote:
-> > Hi All,
-> >
-> > I will sent a new patch series including documentation for pad group
-> > id encoding in
-> > Documentation/devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.txt
-> >
-> > Thanks for your comments :)
+> Signed-off-by: Cyrille Pitchen <cyrille.pitchen@atmel.com>
+> ---
+>  .../devicetree/bindings/mfd/atmel-flexcom.txt      | 68 ++++++++++++++++++++++
+>  1 file changed, 68 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/atmel-flexcom.txt
 > 
-> Do not get me wrong.  The problem with the patch is not merely missing the
-> document update.
-> 
-> Shawn
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-gpio" in the body
-> of a message to majordomo@vger.kernel.org More majordomo info at
-> http://vger.kernel.org/majordomo-info.html
+> diff --git a/Documentation/devicetree/bindings/mfd/atmel-flexcom.txt b/Documentation/devicetree/bindings/mfd/atmel-flexcom.txt
+> new file mode 100644
+> index 000000000000..a63226b7a9cb
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/atmel-flexcom.txt
+> @@ -0,0 +1,68 @@
+> +* Device tree bindings for Atmel Flexcom (Flexible Serial Communication Unit)
+> +
+> +The Atmel Flexcom is just a wrapper which embeds a SPI controller, an I2C
+> +controller and an USART. Only one function can be used at a time and is chosen
+> +at boot time according to the device tree.
+> +
+> +Required properties:
+> +- compatible:		Should be "atmel,sama5d2-flexcom"
+> +- reg:			Should be the pair (offset, size) for the Flexcom
+> +			dedicated I/O registers (without USART, TWI or SPI
+> +			registers).
+> +- clocks:		Should be the Flexcom peripheral clock from PMC.
+> +- #address-cells:	Should be <2>
+> +- #size-cells:		Should be <1>
+> +- ranges:		Should be a list of ranges.
+> +			One range per peripheral wrapped by the Flexcom. So each
+> +			range is a triplet (child_addr, parent_addr, size). The
+> +			first u32 of "child_addr" is the value to be set in the
+> +			Operating Mode bitfield of the Flexcom Mode Register.
+> +			Then "parent_addr" stores the base address of the
+> +			corresponding peripheral in the system memory. Finally,
+> +			"size" if the size of the memory region of this
+> +			peripheral.
+> +
+> +Required child:
+> +A single available child for the serial controller to enable.
+> +
+> +Required properties of this child:
+> +- reg:			Should be a pair (child_addr, size) with child_addr
+> +			matching one of the parent ranges.
+> +- clocks:		Should be the very same phandle as for the parent's one.
+> +
+> +Other properties remain unchanged. See documentation of the respective device:
+> +- ../serial/atmel-usart.txt
+> +- ../spi/spi_atmel.txt
+> +- ../i2c/i2c-at91.txt
+> +
+> +Example:
+> +
+> +flexcom@f8034000 {
+> +	compatible = "atmel,sama5d2-flexcom";
+> +	reg = <0xf8034000 0x200>;
+> +	clocks = <&flx0_clk>;
+> +	#address-cells = <2>;
+> +	#size-cells = <1>;
+> +	ranges = <1 0 0xf8034200 0x200		/* opmode 1: USART */
+> +		  2 0 0xf8034400 0x200		/* opmode 2: SPI */
+> +		  3 0 0xf8034600 0x200>;	/* opmode 3: I2C */
+> +
+> +	spi@f8034400 {
+
+Should be:
+
+	spi@2,0 {
+
+> +		compatible = "atmel,at91rm9200-spi";
+> +		reg = <2 0 0x200>;
+> +		interrupts = <19 IRQ_TYPE_LEVEL_HIGH 7>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_flx0_default>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		clocks = <&flx0_clk>;
+> +		clock-names = "spi_clk";
+> +		atmel,fifo-size = <32>;
+> +
+> +		mtd_dataflash@0 {
+> +			compatible = "atmel,at25f512b";
+> +			reg = <0>;
+> +			spi-max-frequency = <20000000>;
+> +		};
+> +	};
+> +};
+
+
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
