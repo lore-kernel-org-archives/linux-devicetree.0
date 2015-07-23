@@ -1,87 +1,66 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH V3 1/3] mfd: da9062: Support for the DA9063 RTC in the
- DA9062 core
-Date: Thu, 23 Jul 2015 16:27:01 +0100
-Message-ID: <20150723152701.GN3436@x1>
-References: <cover.1437474547.git.stwiss.opensource@diasemi.com>
- <7abaa10f4089b1adec4970d9c581a9f35992ee02.1437474547.git.stwiss.opensource@diasemi.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH v8 1/9] nvmem: Add a simple NVMEM framework for nvmem
+ providers
+Date: Thu, 23 Jul 2015 17:26:40 +0200
+Message-ID: <55B107B0.5010706@i2se.com>
+References: <1437403352-4091-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1437403392-4136-1-git-send-email-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <7abaa10f4089b1adec4970d9c581a9f35992ee02.1437474547.git.stwiss.opensource@diasemi.com>
-Sender: linux-input-owner@vger.kernel.org
-To: S Twiss <stwiss.opensource@diasemi.com>
-Cc: DEVICETREE <devicetree@vger.kernel.org>, LINUXINPUT <linux-input@vger.kernel.org>, LINUXKERNEL <linux-kernel@vger.kernel.org>, RTCLINUX <rtc-linux@googlegroups.com>, Samuel Ortiz <sameo@linux.intel.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, David Dajun Chen <david.chen@diasemi.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <support.opensource@diasemi.com>
+Content-Type: text/plain; charset=iso-8859-15
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1437403392-4136-1-git-send-email-srinivas.kandagatla@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-arm-kernel@lists.infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, s.hauer@pengutronix.de, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, arnd@arndb.de, sboyd@codeaurora.org, pantelis.antoniou@konsulko.com, mporter@konsulko.com, wxt@rock-chips.com, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 21 Jul 2015, S Twiss wrote:
+Hi Srinivas,
 
-> From: S Twiss <stwiss.opensource@diasemi.com>
->=20
-> Add MFD core driver support for a RTC component
->=20
-> - MFD core adds the RTC resources da9062_rtc_resources[] for the RTC
->   alarm and tick timer IRQ
-> - An appropriate mfd_cell has been added into da9062_devs[] to suppor=
-t
->   a component .name =3D "da9062-rtc" and .of_compatible  =3D "dlg,da9=
-062-rtc"
->=20
-> Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
->=20
+Am 20.07.2015 um 16:43 schrieb Srinivas Kandagatla:
+> This patch adds just providers part of the framework just to enable easy
+> review.
+>
+> Up until now, NVMEM drivers like eeprom were stored in drivers/misc,
+> where they all had to duplicate pretty much the same code to register
+> a sysfs file, allow in-kernel users to access the content of the devices
+> they were driving, etc.
+>
+> This was also a problem as far as other in-kernel users were involved,
+> since the solutions used were pretty much different from on driver to
+> another, there was a rather big abstraction leak.
+>
+> This introduction of this framework aims at solving this. It also
+> introduces DT representation for consumer devices to go get the data
+> they require (MAC Addresses, SoC/Revision ID, part numbers, and so on)
+> from the nvmems.
+>
+> Having regmap interface to this framework would give much better
+> abstraction for nvmems on different buses.
+>
+> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+> [Maxime Ripard: intial version of eeprom framework]
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 > ---
-> Checks performed with linux-next/next-20150708/scripts/checkpatch.pl
->  da9062-core.c             total: 0 errors, 0 warnings, 523 lines che=
-cked
-> This patch applies against linux-next and next-20150708=20
->=20
->=20
->  drivers/mfd/da9062-core.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
+>  drivers/Kconfig                |   2 +
+>  drivers/Makefile               |   1 +
+>  drivers/nvmem/Kconfig          |  13 ++
+>  drivers/nvmem/Makefile         |   6 +
+>  drivers/nvmem/core.c           | 384 +++++++++++++++++++++++++++++++++++++++++
+>  include/linux/nvmem-consumer.h |  23 +++
+>  include/linux/nvmem-provider.h |  47 +++++
+>  7 files changed, 476 insertions(+)
+>  create mode 100644 drivers/nvmem/Kconfig
+>  create mode 100644 drivers/nvmem/Makefile
+>  create mode 100644 drivers/nvmem/core.c
+>  create mode 100644 include/linux/nvmem-consumer.h
+>  create mode 100644 include/linux/nvmem-provider.h
 
-Applied, thanks.
+i've tested this patch with my mxs-ocotp driver [1].
 
-> diff --git a/drivers/mfd/da9062-core.c b/drivers/mfd/da9062-core.c
-> index 4cf0643..b43cd24 100644
-> --- a/drivers/mfd/da9062-core.c
-> +++ b/drivers/mfd/da9062-core.c
-> @@ -118,6 +118,11 @@ static struct resource da9062_wdt_resources[] =3D=
- {
->  	DEFINE_RES_NAMED(DA9062_IRQ_WDG_WARN, 1, "WD_WARN", IORESOURCE_IRQ)=
-,
->  };
-> =20
-> +static struct resource da9062_rtc_resources[] =3D {
-> +	DEFINE_RES_NAMED(DA9062_IRQ_ALARM, 1, "ALARM", IORESOURCE_IRQ),
-> +	DEFINE_RES_NAMED(DA9062_IRQ_TICK, 1, "TICK", IORESOURCE_IRQ),
-> +};
-> +
->  static const struct mfd_cell da9062_devs[] =3D {
->  	{
->  		.name		=3D "da9062-core",
-> @@ -141,6 +146,12 @@ static const struct mfd_cell da9062_devs[] =3D {
->  		.resources	=3D da9062_thermal_resources,
->  		.of_compatible  =3D "dlg,da9062-thermal",
->  	},
-> +	{
-> +		.name		=3D "da9062-rtc",
-> +		.num_resources	=3D ARRAY_SIZE(da9062_rtc_resources),
-> +		.resources	=3D da9062_rtc_resources,
-> +		.of_compatible  =3D "dlg,da9062-rtc",
-> +	},
->  };
-> =20
->  static int da9062_clear_fault_log(struct da9062 *chip)
+So you can add
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe linux-input" =
-in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Tested-by: Stefan Wahren <stefan.wahren@i2se.com>
+
+Regards
+Stefan
