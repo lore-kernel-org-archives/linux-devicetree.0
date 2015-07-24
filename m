@@ -1,123 +1,117 @@
 From: Lee Jones <lee.jones@linaro.org>
 Subject: Re: [PATCH 3/6] mailbox: Add support for ST's Mailbox IP
-Date: Fri, 24 Jul 2015 10:36:38 +0100
-Message-ID: <20150724093638.GA3436@x1>
+Date: Fri, 24 Jul 2015 10:52:49 +0100
+Message-ID: <20150724095249.GB3436@x1>
 References: <1437134647-28298-1-git-send-email-lee.jones@linaro.org>
  <1437134647-28298-4-git-send-email-lee.jones@linaro.org>
- <CABb+yY2nAT6V4Q8suAXRtPXrXkArGWVTAW28ts4Z3C_ybuJovA@mail.gmail.com>
- <20150723082934.GW3061@x1>
- <CABb+yY0iKAU6aa99muVrkHyp-Ywpf1BoMRna91L6fbR7e89XZQ@mail.gmail.com>
+ <CALW4P+K5PqVxPehWcSX2-t_rENpsV_RB7TNeJ9sN-EdZUOXm4Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CABb+yY0iKAU6aa99muVrkHyp-Ywpf1BoMRna91L6fbR7e89XZQ@mail.gmail.com>
+In-Reply-To: <CALW4P+K5PqVxPehWcSX2-t_rENpsV_RB7TNeJ9sN-EdZUOXm4Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, kernel@stlinux.com, Devicetree List <devicetree@vger.kernel.org>
+To: Alexey Klimov <klimov.linux@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, jassisinghbrar@gmail.com, kernel@stlinux.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 23 Jul 2015, Jassi Brar wrote:
-
-> On Thu, Jul 23, 2015 at 1:59 PM, Lee Jones <lee.jones@linaro.org> wro=
+On Thu, 23 Jul 2015, Alexey Klimov wrote:
+> On Fri, Jul 17, 2015 at 3:04 PM, Lee Jones <lee.jones@linaro.org> wro=
 te:
-> >> On Fri, Jul 17, 2015 at 5:34 PM, Lee Jones <lee.jones@linaro.org> =
-wrote:
+> > ST's platforms currently support a maximum of 5 Mailboxes, one for
+> > each of the supported co-processors situated on the platform.  Each
+> > Mailbox is divided up into 4 instances which consist of 32 channels=
+=2E
+> > Messages are passed between the application and co-processors using
+> > shared memory areas.  It is the Client's responsibility to manage
+> > these areas.
+> >
+> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > ---
+> >  drivers/mailbox/Kconfig       |   7 +
+> >  drivers/mailbox/Makefile      |   2 +
+> >  drivers/mailbox/mailbox-sti.c | 562 ++++++++++++++++++++++++++++++=
+++++++++++++
+> >  3 files changed, 571 insertions(+)
+> >  create mode 100644 drivers/mailbox/mailbox-sti.c
 >=20
-> >> > +static void sti_mbox_enable_channel(struct mbox_chan *chan)
-> >> > +{
-> >> > +       struct sti_channel *chan_info =3D chan->con_priv;
-> >> > +       struct sti_mbox_device *mdev =3D chan_info->mdev;
-> >> > +       struct sti_mbox_pdata *pdata =3D dev_get_platdata(mdev->=
-dev);
-> >> > +       unsigned int instance =3D chan_info->instance;
-> >> > +       unsigned int channel =3D chan_info->channel;
-> >> > +       unsigned long flags;
-> >> > +       void __iomem *base;
-> >> > +
-> >> > +       base =3D mdev->base + (instance * sizeof(u32));
-> >> > +
-> >> Maybe have something simpler like MBOX_BASE(instance)? Or some inl=
-ine
-> >> function to avoid this 5-lines ritual?
-> >
-> > I've checked and we can't do this, as the we need most (all?) of th=
-e
-> > intermediary variables too.  No ritual just to get the final variab=
-le
-> > for instance.
-> >
-> OK. How about ?
->   #define MBOX_BASE(m, n)   ((m)->base + (n) * 4)
->   void __iomem *base =3D MBOX_BASE(mdev, instance);
+> [..]
+>=20
+> > +static irqreturn_t sti_mbox_thread_handler(int irq, void *data)
+> > +{
+> > +       struct sti_mbox_device *mdev =3D data;
+> > +       struct sti_mbox_pdata *pdata =3D dev_get_platdata(mdev->dev=
+);
+> > +       struct mbox_chan *chan;
+> > +       unsigned int instance;
+> > +
+> > +       for (instance =3D 0; instance < pdata->num_inst; instance++=
+) {
+> > +keep_looking:
+> > +               chan =3D sti_mbox_irq_to_channel(mdev, instance);
+> > +               if (!chan)
+> > +                       continue;
+> > +
+> > +               mbox_chan_received_data(chan, NULL);
+> > +               sti_mbox_clear_irq(chan);
+> > +               sti_mbox_enable_channel(chan);
+> > +               goto keep_looking;
+> > +       }
+> > +
+> > +       return IRQ_HANDLED;
+> > +}
+> > +
+> > +static irqreturn_t sti_mbox_irq_handler(int irq, void *data)
+> > +{
+> > +       struct sti_mbox_device *mdev =3D data;
+> > +       struct sti_mbox_pdata *pdata =3D dev_get_platdata(mdev->dev=
+);
+> > +       struct sti_channel *chan_info;
+> > +       struct mbox_chan *chan;
+> > +       unsigned int instance;
+> > +       int ret =3D IRQ_NONE;
+> > +
+> > +       for (instance =3D 0; instance < pdata->num_inst; instance++=
+) {
+> > +               chan =3D sti_mbox_irq_to_channel(mdev, instance);
+> > +               if (!chan)
+> > +                       continue;
+> > +               chan_info =3D chan->con_priv;
+> > +
+> > +               if (!sti_mbox_channel_is_enabled(chan)) {
+> > +                       dev_warn(mdev->dev,
+> > +                                "Unexpected IRQ: %s\n"
+> > +                                "  instance: %d: channel: %d [enab=
+led: %x]\n",
+> > +                                mdev->name, chan_info->instance,
+> > +                                chan_info->channel, mdev->enabled[=
+instance]);
+> > +                       ret =3D IRQ_HANDLED;
+> > +                       continue;
+> > +               }
+> > +
+> > +               sti_mbox_disable_channel(chan);
+> > +               ret =3D IRQ_WAKE_THREAD;
+> > +       }
+> > +
+> > +       if (ret =3D=3D IRQ_NONE)
+> > +               dev_err(mdev->dev, "Spurious IRQ - was a channel re=
+quested?\n");
+> > +
+> > +       return ret;
+> > +}
+>=20
+> With such usage of ret variable can it happen that handling of last
+> but one channel/instance will set ret to IRQ_WAKE_THREAD and at the
+> same time handling of last channel/instance will set ret to
+> IRQ_HANDLED during iteration loop and finally generic subsystem will
+> not wake up thread handler because it will receive IRQ_HANDLED?
+> Just checking.
 
-Oh, those 5 lines.  I thought you meant:
+Yes, I guess that it theoretically possible.  Now fixed.
 
-       struct sti_channel *chan_info =3D chan->con_priv;
-       struct sti_mbox_device *mdev =3D chan_info->mdev;
-       unsigned int instance =3D chan_info->instance;
-       base =3D mdev->base + (instance * sizeof(u32));
-
-=2E.. which is why I said that the intermediary variables are required.
-
-Well, I 'can' do that, but it seems to be unnecessarily obfuscating
-what's going on and doesn't actually save any lines.
-
-It's not a point that I consider arguing over though, so if you want
-me to do it, I will.  You have the final say here.
-=20
-> >> > +       spin_lock_irqsave(&sti_mbox_chan_lock, flags);
-> >> > +       mdev->enabled[instance] |=3D BIT(channel);
-> >> > +       writel_relaxed(BIT(channel), base + pdata->ena_set);
-> >> > +       spin_unlock_irqrestore(&sti_mbox_chan_lock, flags);
-> >> >
-> >> You don't need locking for SET/CLR type registers which are meant =
-for
-> >> when they could be accessed by processors that can not share a loc=
-k.
-> >> So maybe drop the lock here and elsewhere.
-> >
-> > From what I can gather, I think we need this locking.  What happens=
- if
-> > we get scheduled between setting the enabled bit in our cache and
-> > actually setting the ena_set bit?  We would be out of sync.
-> >
-> IIU what you mean... can't that still happen because of the  _relaxed=
-()?
-
-Not sure what you mean.  The _relaxed variant merely omit some IO
-barriers.
-
-> Anyways my point was about set/clr type regs. And you may look at if
-> channel really needs disabling while interrupts are handled? I think
-> it shouldn't because either it is going to be a to-fro communication
-> or random broadcasts without any guarantee of reception. But of cours=
-e
-> you would know better your platform.
-
-I'd certainly feel more comfortable if we kept this part of the
-semantics, as it's how the platform experts at ST originally wrote the
-driver, and they know a lot more about the protocols used than I.
-
-> BTW  sti_mbox_channel_is_enabled() also needs to have locking around
-> enabled[] if you want to keep it.
-
-Done.
-
-> And maybe embed sti_mbox_chan_lock inside sti_mbox_device.
-
-Not sure this is required.  I can find >600 instances of others using
-spinlocks as static globals.
-
-> >> Doesn't mbox->chans[i].con_priv need some locking here?
-> >
-> > Not that I can see.  Would you mind explaining further please?
-> >
-> Not anymore, after the clarification that we don't need a 'break' sta=
-tement.
-
-Great, thanks.
+Thanks for the spot.
 
 --=20
 Lee Jones
