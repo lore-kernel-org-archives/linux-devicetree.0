@@ -1,71 +1,32 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] drivers/of/fdt.c: replace pr_warning by pr_warn
-Date: Fri, 24 Jul 2015 14:00:57 -0500
-Message-ID: <CAL_JsqKY7hTurOdR4kgXZBT922-s-paM-CgU5rv_fB4qinfxSA@mail.gmail.com>
-References: <1437465693-143982-1-git-send-email-long.wanglong@huawei.com>
+From: Andy Gross <agross@codeaurora.org>
+Subject: Re: [PATCH v2 4/5] arm: qcom: dts: Add NAND controller node for
+ ipq806x
+Date: Fri, 24 Jul 2015 14:01:53 -0500
+Message-ID: <20150724190153.GE24646@qualcomm.com>
+References: <1421419702-17812-1-git-send-email-architt@codeaurora.org>
+ <1437474886-6209-1-git-send-email-architt@codeaurora.org>
+ <1437474886-6209-5-git-send-email-architt@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1437465693-143982-1-git-send-email-long.wanglong@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wang Long <long.wanglong@huawei.com>
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, peifeiyue@huawei.com, wanglong@laoqinren.net
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1437474886-6209-5-git-send-email-architt@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Archit Taneja <architt@codeaurora.org>
+Cc: linux-mtd@lists.infradead.org, dehrenberg@google.com, cernekee@gmail.com, computersforpeace@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 21, 2015 at 3:01 AM, Wang Long <long.wanglong@huawei.com> wrote:
-> Update the last pr_warning callsite in drivers/of.
-
-That is obvious in the diff, but can you tell me why?
-
-Rob
-
-> Signed-off-by: Wang Long <long.wanglong@huawei.com>
+On Tue, Jul 21, 2015 at 04:04:45PM +0530, Archit Taneja wrote:
+> The nand controller in IPQ806x is of the 'EBI2 type'. Use the corresponding
+> compatible string.
+> 
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Archit Taneja <architt@codeaurora.org>
 > ---
->  drivers/of/fdt.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index 0749656..e1f61b8 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -425,7 +425,7 @@ static void __unflatten_device_tree(const void *blob,
->         start = 0;
->         unflatten_dt_node(blob, mem, &start, NULL, mynodes, 0, false);
->         if (be32_to_cpup(mem + size) != 0xdeadbeef)
-> -               pr_warning("End of tree marker overwritten: %08x\n",
-> +               pr_warn("End of tree marker overwritten: %08x\n",
->                            be32_to_cpup(mem + size));
->
->         pr_debug(" <- unflatten_device_tree()\n");
-> @@ -985,24 +985,24 @@ void __init __weak early_init_dt_add_memory_arch(u64 base, u64 size)
->         size &= PAGE_MASK;
->
->         if (base > MAX_PHYS_ADDR) {
-> -               pr_warning("Ignoring memory block 0x%llx - 0x%llx\n",
-> +               pr_warn("Ignoring memory block 0x%llx - 0x%llx\n",
->                                 base, base + size);
->                 return;
->         }
->
->         if (base + size - 1 > MAX_PHYS_ADDR) {
-> -               pr_warning("Ignoring memory range 0x%llx - 0x%llx\n",
-> +               pr_warn("Ignoring memory range 0x%llx - 0x%llx\n",
->                                 ((u64)MAX_PHYS_ADDR) + 1, base + size);
->                 size = MAX_PHYS_ADDR - base + 1;
->         }
->
->         if (base + size < phys_offset) {
-> -               pr_warning("Ignoring memory block 0x%llx - 0x%llx\n",
-> +               pr_warn("Ignoring memory block 0x%llx - 0x%llx\n",
->                            base, base + size);
->                 return;
->         }
->         if (base < phys_offset) {
-> -               pr_warning("Ignoring memory range 0x%llx - 0x%llx\n",
-> +               pr_warn("Ignoring memory range 0x%llx - 0x%llx\n",
->                            base, phys_offset);
->                 size -= phys_offset - base;
->                 base = phys_offset;
-> --
-> 1.8.3.4
->
+
+Reviewed-by: Andy Gross <agross@codeaurora.org>
+
+-- 
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
