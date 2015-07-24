@@ -1,78 +1,204 @@
-From: atull <atull@opensource.altera.com>
-Subject: Re: [PATCH v9 6/7] staging: add simple-fpga-bus
-Date: Thu, 23 Jul 2015 22:42:05 -0500
-Message-ID: <alpine.DEB.2.02.1507232229580.5634@linuxheads99>
-References: <1437148277-5405-1-git-send-email-atull@opensource.altera.com>
- <1437148277-5405-7-git-send-email-atull@opensource.altera.com>
- <CAAtXAHd_Dz2bWhZu4Bf5c-meQZTCFiUPX0i-gWZnLVc644wARw@mail.gmail.com>
- <20150723221510.GA16971@obsidianresearch.com>
+From: Kukjin Kim <kgene@kernel.org>
+Subject: Re: [PATCH v6 1/3] clk: samsung: exynos3250: Add cpu clock configuration
+ data and instaniate cpu clock
+Date: Fri, 24 Jul 2015 12:51:05 +0900
+Message-ID: <55B1B629.6000800@kernel.org>
+References: <1435797761-3339-1-git-send-email-cw00.choi@samsung.com> <1435797761-3339-2-git-send-email-cw00.choi@samsung.com> <CAJKOXPczs6OL-JH0hfQg7QtONzJKVRq=e_3JQ8bs7S+OiMOr-w@mail.gmail.com> <55AC3F78.3050108@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20150723221510.GA16971@obsidianresearch.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Cc: mark.rutland@arm.com, linux-doc@vger.kernel.org, rubini@gnudd.com, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, hpa@zytor.com, s.trumtrar@pengutronix.de, devel@driverdev.osuosl.org, sameo@linux.intel.com, Nicolas Pitre <nico@linaro.org>, iws@ovro.caltech.edu, Michal Simek <michal.simek@xilinx.com>, kyle.teske@ni.com, Grant Likely <grant.likely@linaro.org>, David Brown <davidb@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, cesarb@cesarb.net, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, broonie@kernel.org, Philip Balister <philip@balister.org>, Petr Cvek <petr.cvek@tul.cz>, akpm@linux-foundation.org, Michal Simek <monstr@monstr.eu>, Greg KH <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, balbi@ti.com, davem@davemloft.net, robh+dt@kernel.org, Rob
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <55AC3F78.3050108@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, tomasz.figa@gmail.com, mturquette@baylibre.com, sboyd@codeaurora.org, kgene@kernel.org, thomas.ab@samsung.com, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYI=?= =?UTF-8?B?bmllcmtpZXdpY3o=?= <b.zolnierkie@samsung.com>, kyungmin.park@samsung.com, linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 23 Jul 2015, Jason Gunthorpe wrote:
+On 07/20/15 09:23, Chanwoo Choi wrote:
+> Hi Sylwester,
+> 
+Hi Chanwoo,
 
-> On Thu, Jul 23, 2015 at 02:55:52PM -0700, Moritz Fischer wrote:
-> > Hi Alan,
-> > 
-> > I saw that your socfpga driver doesn't support the partial reconfig
-> > use case (not a big deal).
-> > What I currently do for Zynq is if I'm doing a non-partial reconfig is
-> > that I disable input
-> > level shifters and assert *all* resets while reprogramming in my FPGA
-> > manager .write_init() and .write_complete().
+> Please review this patch.
 > 
-> I do this as well, but it is a bit more complex.. FPGA specific code
-> has to run around and ensure all DMA is shut off, then we need to make
-> sure no CPU issued AXI transactions can happen, then we can tear down
-> the FPGA side.
-> 
-> If the FPGA is torn down while an AXI op is inprogress things go
-> sideways, we have to work to prevent that :)
-> 
-> This happens almost for free, I use DT and the device model to
-> disconnect the drivers. The drivers are careful to synchronously fence
-> off in-progress DMA. Then drop the DT nodes associated with the
-> FPGA, finally the actual FPGA cells can be reset.
+Applied with Mike's ack BTW please make sure your patch has no problem
+with checkpatch before submitting....I've fixed them when I applied.
 
-Yes, the kernel gives us this almost for free.  That's what I like
-about using DT overlays to control FPGA programming.
+Thanks,
+Kukjin
 
-> 
-> > In a partial reconfiguration situation, would I have separate
-> > simple-fpga buses for each of the parts that I swap out, each with
-> > it's own reset and bitfile attached?
-> 
-> I'd think of partial reconfiguration as another nested FPGA. The
-> resets and so forth could be attached to soft controllers in the
-> unswappable part of the FPGA.
-> 
-> DT nodes have to surround it in some way...
-> 
-> Jason
-> 
+ERROR: code indent should use tabs where possible
+#49: FILE: drivers/clk/samsung/clk-exynos3250.c:779:
++               (((apll) << 24) | ((pclk_dbg) << 20) | ((atb) << 16) |  \$
 
-Yes, in this way each PR chunk will need its own reset so it
-won't wiggle busses and affect the rest of the system during PR.
+WARNING: please, no spaces at the start of a line
+#49: FILE: drivers/clk/samsung/clk-exynos3250.c:779:
++               (((apll) << 24) | ((pclk_dbg) << 20) | ((atb) << 16) |  \$
 
-I noticed that currently simple-fpga-bus.c holds an exclusive
-ref of the fpga manager.  This would keep a 2nd pr from being
-able to access the same fpga manager, so I'll have to change
-it so that simple-fpga-bus.c will  put the ref before exiting
-probe.
+ERROR: code indent should use tabs where possible
+#50: FILE: drivers/clk/samsung/clk-exynos3250.c:780:
++               ((corem) << 4))$
 
-Alan
+WARNING: please, no spaces at the start of a line
+#50: FILE: drivers/clk/samsung/clk-exynos3250.c:780:
++               ((corem) << 4))$
+
+WARNING: please, no spaces at the start of a line
+#55: FILE: drivers/clk/samsung/clk-exynos3250.c:785:
++       { 1000000, E3250_CPU_DIV0(1, 7, 4, 1), E3250_CPU_DIV1(7, 7), },$
+
+WARNING: please, no spaces at the start of a line
+#56: FILE: drivers/clk/samsung/clk-exynos3250.c:786:
++       {  900000, E3250_CPU_DIV0(1, 7, 3, 1), E3250_CPU_DIV1(7, 7), },$
+
+WARNING: please, no spaces at the start of a line
+#57: FILE: drivers/clk/samsung/clk-exynos3250.c:787:
++       {  800000, E3250_CPU_DIV0(1, 7, 3, 1), E3250_CPU_DIV1(7, 7), },$
+
+WARNING: please, no spaces at the start of a line
+#58: FILE: drivers/clk/samsung/clk-exynos3250.c:788:
++       {  700000, E3250_CPU_DIV0(1, 7, 3, 1), E3250_CPU_DIV1(7, 7), },$
+
+WARNING: please, no spaces at the start of a line
+#59: FILE: drivers/clk/samsung/clk-exynos3250.c:789:
++       {  600000, E3250_CPU_DIV0(1, 7, 3, 1), E3250_CPU_DIV1(7, 7), },$
+
+WARNING: please, no spaces at the start of a line
+#60: FILE: drivers/clk/samsung/clk-exynos3250.c:790:
++       {  500000, E3250_CPU_DIV0(1, 7, 3, 1), E3250_CPU_DIV1(7, 7), },$
+
+WARNING: please, no spaces at the start of a line
+#61: FILE: drivers/clk/samsung/clk-exynos3250.c:791:
++       {  400000, E3250_CPU_DIV0(1, 7, 3, 1), E3250_CPU_DIV1(7, 7), },$
+
+WARNING: please, no spaces at the start of a line
+#62: FILE: drivers/clk/samsung/clk-exynos3250.c:792:
++       {  300000, E3250_CPU_DIV0(1, 5, 3, 1), E3250_CPU_DIV1(7, 7), },$
+
+WARNING: please, no spaces at the start of a line
+#63: FILE: drivers/clk/samsung/clk-exynos3250.c:793:
++       {  200000, E3250_CPU_DIV0(1, 3, 3, 1), E3250_CPU_DIV1(7, 7), },$
+
+WARNING: please, no spaces at the start of a line
+#64: FILE: drivers/clk/samsung/clk-exynos3250.c:794:
++       {  100000, E3250_CPU_DIV0(1, 1, 1, 1), E3250_CPU_DIV1(7, 7), },$
+
+WARNING: please, no spaces at the start of a line
+#65: FILE: drivers/clk/samsung/clk-exynos3250.c:795:
++       {  0 },$
+
+total: 2 errors, 13 warnings, 63 lines checked
+
+NOTE: Whitespace errors detected.
+      You may wish to use scripts/cleanpatch or scripts/cleanfile
+
+[PATCH v6 1_3] clk: samsung: exynos3250: Add cpu clock configuration
+data and instaniate cpu clock.eml has style problems, please review.
+
+
+> Best Regards,
+> Chanwoo Choi
+> 
+> On 07/16/2015 04:46 PM, Krzysztof Kozlowski wrote:
+>> 2015-07-02 9:42 GMT+09:00 Chanwoo Choi <cw00.choi@samsung.com>:
+>>> This patch add CPU clock configuration data and instantiate the CPU clock type
+>>> for Exynos3250 to support Samsung specific cpu-clock type.
+>>>
+>>> Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+>>> Cc: Tomasz Figa <tomasz.figa@gmail.com>
+>>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+>>> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+>>> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+>>> ---
+>>>  drivers/clk/samsung/clk-exynos3250.c   | 32 ++++++++++++++++++++++++++++++--
+>>>  include/dt-bindings/clock/exynos3250.h |  1 +
+>>
+>> Sylwester,
+>>
+>> I think this patch also waits for your review or ack.
+>> The patchset is rebased on Bartlomiej's series for Exynos5250 cpufreq
+>> so the easiest way would be to take it through samsung-soc tree.
+>>
+>> Best regards,
+>> Krzysztof
+>>
+>>
+>>>  2 files changed, 31 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/clk/samsung/clk-exynos3250.c b/drivers/clk/samsung/clk-exynos3250.c
+>>> index 538de66a759e..378ad5ad3492 100644
+>>> --- a/drivers/clk/samsung/clk-exynos3250.c
+>>> +++ b/drivers/clk/samsung/clk-exynos3250.c
+>>> @@ -19,6 +19,7 @@
+>>>  #include <dt-bindings/clock/exynos3250.h>
+>>>
+>>>  #include "clk.h"
+>>> +#include "clk-cpu.h"
+>>>  #include "clk-pll.h"
+>>>
+>>>  #define SRC_LEFTBUS            0x4200
+>>> @@ -319,8 +320,10 @@ static struct samsung_mux_clock mux_clks[] __initdata = {
+>>>         MUX(CLK_MOUT_MPLL_USER_C, "mout_mpll_user_c", mout_mpll_user_p,
+>>>             SRC_CPU, 24, 1),
+>>>         MUX(CLK_MOUT_HPM, "mout_hpm", mout_hpm_p, SRC_CPU, 20, 1),
+>>> -       MUX(CLK_MOUT_CORE, "mout_core", mout_core_p, SRC_CPU, 16, 1),
+>>> -       MUX(CLK_MOUT_APLL, "mout_apll", mout_apll_p, SRC_CPU, 0, 1),
+>>> +       MUX_F(CLK_MOUT_CORE, "mout_core", mout_core_p, SRC_CPU, 16, 1,
+>>> +                       CLK_SET_RATE_PARENT, 0),
+>>> +       MUX_F(CLK_MOUT_APLL, "mout_apll", mout_apll_p, SRC_CPU, 0, 1,
+>>> +                       CLK_SET_RATE_PARENT, 0),
+>>>  };
+>>>
+>>>  static struct samsung_div_clock div_clks[] __initdata = {
+>>> @@ -772,6 +775,26 @@ static struct samsung_cmu_info cmu_info __initdata = {
+>>>         .nr_clk_regs            = ARRAY_SIZE(exynos3250_cmu_clk_regs),
+>>>  };
+>>>
+>>> +#define E3250_CPU_DIV0(apll, pclk_dbg, atb, corem)                     \
+>>> +               (((apll) << 24) | ((pclk_dbg) << 20) | ((atb) << 16) |  \
+>>> +               ((corem) << 4))
+>>> +#define E3250_CPU_DIV1(hpm, copy)                                      \
+>>> +               (((hpm) << 4) | ((copy) << 0))
+>>> +
+>>> +static const struct exynos_cpuclk_cfg_data e3250_armclk_d[] __initconst = {
+>>> +       { 1000000, E3250_CPU_DIV0(1, 7, 4, 1), E3250_CPU_DIV1(7, 7), },
+>>> +       {  900000, E3250_CPU_DIV0(1, 7, 3, 1), E3250_CPU_DIV1(7, 7), },
+>>> +       {  800000, E3250_CPU_DIV0(1, 7, 3, 1), E3250_CPU_DIV1(7, 7), },
+>>> +       {  700000, E3250_CPU_DIV0(1, 7, 3, 1), E3250_CPU_DIV1(7, 7), },
+>>> +       {  600000, E3250_CPU_DIV0(1, 7, 3, 1), E3250_CPU_DIV1(7, 7), },
+>>> +       {  500000, E3250_CPU_DIV0(1, 7, 3, 1), E3250_CPU_DIV1(7, 7), },
+>>> +       {  400000, E3250_CPU_DIV0(1, 7, 3, 1), E3250_CPU_DIV1(7, 7), },
+>>> +       {  300000, E3250_CPU_DIV0(1, 5, 3, 1), E3250_CPU_DIV1(7, 7), },
+>>> +       {  200000, E3250_CPU_DIV0(1, 3, 3, 1), E3250_CPU_DIV1(7, 7), },
+>>> +       {  100000, E3250_CPU_DIV0(1, 1, 1, 1), E3250_CPU_DIV1(7, 7), },
+>>> +       {  0 },
+>>> +};
+>>> +
+>>>  static void __init exynos3250_cmu_init(struct device_node *np)
+>>>  {
+>>>         struct samsung_clk_provider *ctx;
+>>> @@ -780,6 +803,11 @@ static void __init exynos3250_cmu_init(struct device_node *np)
+>>>         if (!ctx)
+>>>                 return;
+>>>
+>>> +       exynos_register_cpu_clock(ctx, CLK_ARM_CLK, "armclk",
+>>> +                       mout_core_p[0], mout_core_p[1], 0x14200,
+>>> +                       e3250_armclk_d, ARRAY_SIZE(e3250_armclk_d),
+>>> +                       CLK_CPU_HAS_DIV1);
+>>> +
+>>>         exynos3_core_down_clock(ctx->reg_base);
+>>>  }
+>>>  CLK_OF_DECLARE(exynos3250_cmu, "samsung,exynos3250-cmu", exynos3250_cmu_init);
+>>> diff --git a/include/dt-bindings/clock/exynos3250.h b/include/dt-bindings/clock/exynos3250.h
+>>> index aab088d30199..63d01c15d2b3 100644
+>>> --- a/include/dt-bindings/clock/exynos3250.h
+>>> +++ b/include/dt-bindings/clock/exynos3250.h
+>>> @@ -31,6 +31,7 @@
+>>>  #define CLK_FOUT_VPLL                  4
+>>>  #define CLK_FOUT_UPLL                  5
+>>>  #define CLK_FOUT_MPLL                  6
+>>> +#define CLK_ARM_CLK                    7
+>>>
+>>>  /* Muxes */
+>>>  #define CLK_MOUT_MPLL_USER_L           16
+>>> --
