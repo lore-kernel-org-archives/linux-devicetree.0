@@ -1,62 +1,88 @@
-From: Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 0/3] cpufreq: Use cpufreq-dt driver for Exynos3250
-Date: Fri, 24 Jul 2015 13:08:27 +0900
-Message-ID: <55B1BA3B.3080906@kernel.org>
-References: <1435797761-3339-1-git-send-email-cw00.choi@samsung.com> <4464631.oZyVO4Z0Ov@amdc1976> <093101d0b8c3$4b5d3ec0$e217bc40$@kernel.org> <20150724003005.642.21781@quantum> <55B1B3B0.8090106@kernel.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 1/2] spi: bcm2835: add spi-bcm2835aux driver for the auxiliar
+ spi1 and spi2
+Date: Thu, 23 Jul 2015 22:09:30 -0600
+Message-ID: <55B1BA7A.1090104@wwwdotorg.org>
+References: <1434980408-4086-1-git-send-email-kernel@martin.sperl.org> <55A0A150.3060809@wwwdotorg.org> <ECFBB7BF-1316-4565-B1F2-FB2651131882@martin.sperl.org> <55A49662.3000706@wwwdotorg.org> <2768BFA9-7FE9-4EDC-8692-AC3F070BD874@martin.sperl.org> <55AEF828.20908@wwwdotorg.org> <0125992E-40F4-4702-8404-2943FF9A8788@martin.sperl.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55B1B3B0.8090106-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, 'Bartlomiej Zolnierkiewicz' <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Chanwoo Choi' <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <0125992E-40F4-4702-8404-2943FF9A8788-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/24/15 12:40, Kukjin Kim wrote:
-> On 07/24/15 09:30, Michael Turquette wrote:
->> Quoting Kukjin Kim (2015-07-07 07:43:31)
->>> Bartlomiej Zolnierkiewicz wrote:
+On 07/22/2015 10:28 AM, Martin Sperl wrote:
 > 
-> [...]
 > 
->>>>> Chanwoo Choi (3):
->>>>>   clk: samsung: exynos3250: Add cpu clock configuration data and instaniate cpu clock
->>>>>   ARM: dts: Add CPU OPP and regulator supply property for Exynos3250
->>>>>   ARM: exynos: Add exynos3250 compatible to use generic cpufreq driver
->>>>>
->>>>>  arch/arm/boot/dts/exynos3250-monk.dts   |  4 ++++
->>>>>  arch/arm/boot/dts/exynos3250-rinato.dts |  4 ++++
->>>>>  arch/arm/boot/dts/exynos3250.dtsi       | 15 +++++++++++++++
->>>>>  arch/arm/mach-exynos/exynos.c           |  1 +
->>>>>  drivers/clk/samsung/clk-exynos3250.c    | 32 ++++++++++++++++++++++++++++++--
->>>>>  include/dt-bindings/clock/exynos3250.h  |  1 +
->>>>>  6 files changed, 55 insertions(+), 2 deletions(-)
->>>>
->>>> Reviewed-by: Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>>>
->>>> Thank you for working on this.
->>>>
->>> +1 Thanks.
->>>
->>> Mike and Sylwester, if you're OK on this series, I'd like to pick up in Samsung
->>> tree together. And if you want, I could provide topic branch for clk tree.
+>> On 22.07.2015, at 03:55, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
 >>
->> Kukjin,
+>> However, I'd like to see a "semantic" driver for the shared register
+>> region rather than a "syscon". IIUC, "syscon" simply provides a stylized
+>> way for one driver to touch some shared registers directly without any
+>> semantics. I'd strongly prefer to see a real driver inside Linux rather
+>> than something that just lets drivers fiddle with the shared registers
+>> willy nilly. Still, this aspect is an internal implementation detail
+>> inside the kernel that we can change without external impact later if we
+>> need.
 >>
->> A topic branch would be great.
->>
-> Sure, BTW it means you did 'ack' on this clk change? If not, please let
-> em know ;-) I'll let you know once the topic branch is ready.
+>> More concerning: The bcm283x HW doesn't implement a "syscon" module, but
+>> some semantic IP block. The DT should contain a real compatible value
+>> that describes what the HW block really is, not just "syscon". We could
+>> bind the syscon driver to this compatible value if we have to for
 > 
-Mike,
+> So, do I understand you correctly that if we would call the node 
+> bcm2835aux_enable as syscon with only the enable bit field register in it 
+> and add a enable_reg (pointing to the above) and enable_reg_mask=2 or 4
+> to the spi1/2 nodes then it would be acceptable? 
+> 
+> Would look like this:
+> spi2@7e2150c0 {
+> +    compatible = "brcm,bcm2835-aux-spi";
+> +    reg = <0x7e2150c0 0x40>;
+> +    interrupts = <1 29>;
+> +    clocks = <&clk_spi>;
+> +    #address-cells = <1>;
+> +    #size-cells = <0>;
+> +    cs-gpios = <&gpio 43>, <&gpio 44>, <&gpio 45>;
+> +    enable_reg = <&bcm2835aux_enable>;
+> +    enable_reg_mask = 4;
+> +};
+> +
+> +/* the necessary syscon config referenced above */
+> +bcm2835aux_enable: bcm2835aux_enable@0x7e215004 {
+> +    compatible = "syscon";
+> +    reg = <0x7e215004 0x04>;
+> +};
+> 
+> 
+> The uart aux driver would use:
+> +    enable_reg = <&bcm2835aux_enable>;
+> +    enable_reg_mask = 1;
 
-Done, the topic branch 'v4.3-topic/clk-samsung' in samsung tree is for
-your clk tree.
+I think I'd expect the shared registers to be:
 
-Thanks,
-Kukjin
+bcm2835aux: misc@0x7e215000 {
+    compatible = "brcm,bcm2835-aux";
+    reg = <0x7e215000 0x08>;
+};
+
+There are two 4-byte registers outside the UART/SPI blocks, and the
+compatible value should reflect what the block is, not that Linux may
+use a syscon driver to implement the driver for it.
+
+In the client, I'd expect a more semantic naming for the reference;
+something like:
+
+	brcm,aux = <&bcm2835aux 4>;
+
+brcm, since it's a custom/vendor-specific property. aux is the name of
+the object that's referenced. Packing the phandle and data together into
+a single property reduces the number of separate properties, and is a
+typical thing to do in a client of a service in DT.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
