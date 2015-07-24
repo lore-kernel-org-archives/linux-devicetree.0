@@ -1,93 +1,51 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH] backlight: pm8941-wled: Add default-brightness property
-Date: Fri, 24 Jul 2015 09:22:04 +0100
-Message-ID: <20150724082204.GX3436@x1>
-References: <1437681127-15760-1-git-send-email-bjorn.andersson@sonymobile.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v11] crypto: Add Allwinner Security System
+ crypto accelerator
+Date: Fri, 24 Jul 2015 10:27:51 +0200
+Message-ID: <20150724082751.GC2564@lukather>
+References: <1437143983-4479-1-git-send-email-clabbe.montjoie@gmail.com>
+ <20150720081050.GB12908@gondor.apana.org.au>
+ <20150720081836.GT28632@lukather>
+ <20150720082057.GA13098@gondor.apana.org.au>
+ <20150721123847.GD2373@lukather>
+ <20150721125014.GA25272@gondor.apana.org.au>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="raC6veAxrt5nqIoY"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBC7PY6WQKGQECLAI5GQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1437681127-15760-1-git-send-email-bjorn.andersson@sonymobile.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jingoo Han <jingoohan1@gmail.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Rob Clark <robdclark@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-arm-msm@vger.kernel.org
+In-Reply-To: <20150721125014.GA25272-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
+Cc: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 23 Jul 2015, Bjorn Andersson wrote:
+--raC6veAxrt5nqIoY
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-> Add the possibility of specifying the default brightness in DT.
->=20
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-> ---
->=20
-> This depends on the patch moving pm8941-wled to backlight [1]. The dt=
- property
-> is used by several other backlight drivers, so I considered this to b=
-e a
-> "common" property and it's hence not prefixed with "qcom,".
->=20
-> [1] https://lkml.org/lkml/2015/7/21/906
->=20
->  Documentation/devicetree/bindings/video/backlight/pm8941-wled.txt | =
-1 +
+On Tue, Jul 21, 2015 at 08:50:14PM +0800, Herbert Xu wrote:
+> On Tue, Jul 21, 2015 at 02:38:47PM +0200, Maxime Ripard wrote:
+> > I thought you needed at least my Acked-by for that, but
+> > whatever... How are we supposed to handle subsequent DT patches that
+> > should be merged through arm-soc then?
+> 
+> What subsequent patches are you referring to? The changes in
+> this series are fairly self-contained so it should be unlikely
+> to cause serious merge conflicts.
 
-This needs to be in a seperate patch.
+Enabling it in other boards / SoCs, and/or any change that might
+conflict with this one.
 
->  drivers/video/backlight/pm8941-wled.c                             | =
-4 ++++
-
-You can't send patches on top of non-existent drivers.
-
->  2 files changed, 5 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/video/backlight/pm8941=
--wled.txt b/Documentation/devicetree/bindings/video/backlight/pm8941-wl=
-ed.txt
-> index 424f8444a6cd..37503f8c3620 100644
-> --- a/Documentation/devicetree/bindings/video/backlight/pm8941-wled.t=
-xt
-> +++ b/Documentation/devicetree/bindings/video/backlight/pm8941-wled.t=
-xt
-> @@ -5,6 +5,7 @@ Required properties:
->  - reg: slave address
-> =20
->  Optional properties:
-> +- default-brightness: value from: 0-4095
->  - label: The name of the backlight device
->  - qcom,cs-out: bool; enable current sink output
->  - qcom,cabc: bool; enable content adaptive backlight control
-> diff --git a/drivers/video/backlight/pm8941-wled.c b/drivers/video/ba=
-cklight/pm8941-wled.c
-> index c704c3236034..b875e58df0fc 100644
-> --- a/drivers/video/backlight/pm8941-wled.c
-> +++ b/drivers/video/backlight/pm8941-wled.c
-> @@ -373,6 +373,7 @@ static int pm8941_wled_probe(struct platform_devi=
-ce *pdev)
->  	struct backlight_device *bl;
->  	struct pm8941_wled *wled;
->  	struct regmap *regmap;
-> +	u32 val =3D 0;
->  	int rc;
-> =20
->  	regmap =3D dev_get_regmap(pdev->dev.parent, NULL);
-> @@ -395,8 +396,11 @@ static int pm8941_wled_probe(struct platform_dev=
-ice *pdev)
->  	if (rc)
->  		return rc;
-> =20
-> +	of_property_read_u32(pdev->dev.of_node, "default-brightness", &val)=
-;
-> +
->  	memset(&props, 0, sizeof(struct backlight_properties));
->  	props.type =3D BACKLIGHT_RAW;
-> +	props.brightness =3D val;
->  	props.max_brightness =3D PM8941_WLED_REG_VAL_MAX;
->  	bl =3D devm_backlight_device_register(&pdev->dev, wled->name,
->  					    &pdev->dev, wled,
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--raC6veAxrt5nqIoY--
