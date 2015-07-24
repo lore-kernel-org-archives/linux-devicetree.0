@@ -1,191 +1,170 @@
-From: Cyrille Pitchen <cyrille.pitchen@atmel.com>
-Subject: [PATCH v8 2/2] mfd: atmel-flexcom: add a driver for Atmel Flexible Serial Communication Unit
-Date: Fri, 24 Jul 2015 12:01:51 +0200
-Message-ID: <cfa89adf3da1975b9eb2185c3961a09889e124bc.1437731428.git.cyrille.pitchen@atmel.com>
-References: <cover.1437731428.git.cyrille.pitchen@atmel.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v6 2/2] mfd: atmel-flexcom: add a driver for Atmel
+ Flexible Serial Communication Unit
+Date: Fri, 24 Jul 2015 11:16:20 +0100
+Message-ID: <20150724101620.GE3436@x1>
+References: <cover.1437558598.git.cyrille.pitchen@atmel.com>
+ <7639e02fc2b16dc20b19fbe3bbbb986b0f3b9887.1437558598.git.cyrille.pitchen@atmel.com>
+ <20150723073217.GT3061@x1>
+ <20150723100101.7290242b@bbrezillon>
+ <20150723091311.GX3061@x1>
+ <20150723145007.099d01c2@bbrezillon>
+ <55B1195F.4000104@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1437731428.git.cyrille.pitchen@atmel.com>
+Content-Disposition: inline
+In-Reply-To: <55B1195F.4000104@atmel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: nicolas.ferre@atmel.com, boris.brezillon@free-electrons.com, alexandre.belloni@free-electrons.com, sameo@linux.intel.com, lee.jones@linaro.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>
+To: Cyrille Pitchen <cyrille.pitchen@atmel.com>
+Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, nicolas.ferre@atmel.com, alexandre.belloni@free-electrons.com, sameo@linux.intel.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This driver supports the new Atmel Flexcom. The Flexcom is a wrapper which
-integrates one SPI controller, one I2C controller and one USART. Only one
-function can be enabled at a time. This driver selects the function once
-for all, when the Flexcom is probed, using the "reg" property of the first
-(should be unique) available DT child node.
+On Thu, 23 Jul 2015, Cyrille Pitchen wrote:
 
-This driver has chosen to present the Flexcom to the system as a MFD so
-the implementation is seamless for the existing Atmel SPI, I2C and USART
-drivers.
+> Hi all,
+>=20
+> Le 23/07/2015 14:50, Boris Brezillon a =C3=A9crit :
+> > On Thu, 23 Jul 2015 10:13:11 +0100
+> > Lee Jones <lee.jones@linaro.org> wrote:
+> >=20
+> >> On Thu, 23 Jul 2015, Boris Brezillon wrote:
+> >>
+> >>> Hi Lee,
+> >>>
+> >>> On Thu, 23 Jul 2015 08:32:17 +0100
+> >>> Lee Jones <lee.jones@linaro.org> wrote:
+> >>>
+> >>>> On Wed, 22 Jul 2015, Cyrille Pitchen wrote:
+> >>>>> +	for_each_child_of_node(np, child) {
+> >>>>> +		const char *compatible;
+> >>>>> +		int cplen;
+> >>>>> +
+> >>>>> +		if (!of_device_is_available(child))
+> >>>>> +			continue;
+> >>>>> +
+> >>>>> +		compatible =3D of_get_property(child, "compatible", &cplen);
+> >>>>> +		if (!compatible || strlen(compatible) > cplen)
+> >>>>> +			continue;
+> >>>>> +
+> >>>>> +		if (strstr(compatible, "-usart")) {
+> >>>>> +			opmode =3D FLEX_MR_OPMODE_USART;
+> >>>>> +			break;
+> >>>>> +		}
+> >>>>> +
+> >>>>> +		if (strstr(compatible, "-spi")) {
+> >>>>> +			opmode =3D FLEX_MR_OPMODE_SPI;
+> >>>>> +			break;
+> >>>>> +		}
+> >>>>> +
+> >>>>> +		if (strstr(compatible, "-i2c")) {
+> >>>>> +			opmode =3D FLEX_MR_OPMODE_TWI;
+> >>>>> +			break;
+> >>>>> +		}
+> >>>>> +	}
+> >>>>
+> >>>> From what I understand Flexcom is a wrapper which can sit above =
+any
+> >>>> number of SPI, I2C and/or UART devices.  Devices which you don't
+> >>>> really have any control over (source code wise).  So wouldn't it=
+ be
+> >>>> better to match on the details you do have control over i.e. the=
+ node
+> >>>> name, rather than the compatible string?
+> >>>>
+> >>>> I would personally match on of_find_node_by_name() to future-pro=
+of
+> >>>> your implementation.
+> >>>
+> >>> Actually, I think using compatible strings is more future-proof t=
+han
+> >>> using the node names, because nothing in the DT bindings doc enfo=
+rce the
+> >>> node name, and usually what we use to attach a node to a specific
+> >>> driver is the compatible string (this one is specified in the bin=
+dings
+> >>> doc).
+> >>
+> >> I know what you're saying, but what if someone uses the Flexcom dr=
+iver
+> >> to wrap a different type of SPI driver where (for instance) the
+> >> compatible string used is "<name>-<newtype>".  Then we'd have to k=
+eep
+> >> adding more lines here to accommodate.
+> >>
+> >> Whereas if we used the child node name which only pertains to _thi=
+s_
+> >> driver, we would then have full control and know that (unless it
+> >> Flexcom is used for a completely different type of serial controll=
+er)
+> >> we wouldn't have to keep expanding the code to accommodate.
+> >=20
+> > You're right about the complexity implied by the compat string
+> > maintenance, but I still think using node names to detect the mode =
+is
+> > a bad idea.
+> >=20
+> > Let's take another example making both solution unsuitable: what if
+> > the flexcom-v2 exposes 2 devices of the same type, they will both h=
+ave
+> > the same name and the same compatible string, and we'll have no way=
+ to
+> > detect the appropriate mode. That's why I think none of our suggest=
+ion
+> > is future-proof.
+> >=20
+> >>
+> >>> Regarding the implementation itself, I would match the child node=
+ with
+> >>> an of_device_id table rather than trying to find a specific subst=
+ring
+> >>> in the compatible string, but I think that's only a matter of tas=
+te.
+> >>
+> >> You mean duplicate each of the supported device's compatible strin=
+gs
+> >> in this driver, then fetch the attributed of_match_device()->data
+> >> value?
+> >>
+> >=20
+> > Yes, and that's definitely not a good idea, but I think Cyrille has
+> > found a better approach (I'll let him explain).
+>=20
+> Indeed, what about taking advantage of the "ranges" property?
+>=20
+> For the Flexcom:
+> #address-cells =3D <2>;
+> #size-cells =3D <1>;
+> ranges =3D <1 0 0xf8034200 0x200    /* opmode 1: USART */
+>           2 0 0xf8034400 0x200    /* opmode 2: SPI */
+>           3 0 0xf8034600 0x200>;  /* opmode 3: I2C */
+>=20
+> Then for the single available child (for instance the SPI controller)=
+:
+> reg =3D <2 0 0x200>;
+>=20
+> So the Operating Mode to be set into the Flexcom Mode Register is rea=
+d from
+> the very first u32 of the "reg" property of the child.
+>=20
+> No need to introduce any new DT property and the mapping remains easy=
+ to
+> maintain to follow hardware upgrades.
 
-Also the Flexcom embeds FIFOs: the latest patches of the SPI, I2C and
-USART drivers take advantage of this new feature.
+When we do things like this we normally do:
 
-Signed-off-by: Cyrille Pitchen <cyrille.pitchen@atmel.com>
-Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
----
- drivers/mfd/Kconfig         |  11 +++++
- drivers/mfd/Makefile        |   1 +
- drivers/mfd/atmel-flexcom.c | 113 ++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 125 insertions(+)
- create mode 100644 drivers/mfd/atmel-flexcom.c
+    reg <base base_size>, <mode mode_size>;
+    reg-names "base", "mode";
 
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 653815950aa2..2c75472c679c 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -60,6 +60,17 @@ config MFD_AAT2870_CORE
- 	  additional drivers must be enabled in order to use the
- 	  functionality of the device.
- 
-+config MFD_ATMEL_FLEXCOM
-+	tristate "Atmel Flexcom (Flexible Serial Communication Unit)"
-+	select MFD_CORE
-+	depends on OF
-+	help
-+	  Select this to get support for Atmel Flexcom. This is a wrapper
-+	  which embeds a SPI controller, a I2C controller and a USART. Only
-+	  one function can be used at a time. The choice is done at boot time
-+	  by the probe function of this MFD driver according to a device tree
-+	  property.
-+
- config MFD_ATMEL_HLCDC
- 	tristate "Atmel HLCDC (High-end LCD Controller)"
- 	select MFD_CORE
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index ea40e076cb61..0705eb2d873d 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -160,6 +160,7 @@ obj-$(CONFIG_MFD_SPMI_PMIC)	+= qcom-spmi-pmic.o
- obj-$(CONFIG_TPS65911_COMPARATOR)	+= tps65911-comparator.o
- obj-$(CONFIG_MFD_TPS65090)	+= tps65090.o
- obj-$(CONFIG_MFD_AAT2870_CORE)	+= aat2870-core.o
-+obj-$(CONFIG_MFD_ATMEL_FLEXCOM)	+= atmel-flexcom.o
- obj-$(CONFIG_MFD_ATMEL_HLCDC)	+= atmel-hlcdc.o
- obj-$(CONFIG_MFD_INTEL_MSIC)	+= intel_msic.o
- obj-$(CONFIG_MFD_PALMAS)	+= palmas.o
-diff --git a/drivers/mfd/atmel-flexcom.c b/drivers/mfd/atmel-flexcom.c
-new file mode 100644
-index 000000000000..b0c6f5556b17
---- /dev/null
-+++ b/drivers/mfd/atmel-flexcom.c
-@@ -0,0 +1,113 @@
-+/*
-+ * Driver for Atmel Flexcom
-+ *
-+ * Copyright (C) 2015 Atmel Corporation
-+ *
-+ * Author: Cyrille Pitchen <cyrille.pitchen@atmel.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along with
-+ * this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/types.h>
-+#include <linux/kernel.h>
-+#include <linux/platform_device.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/clk.h>
-+
-+/* I/O register offsets */
-+#define FLEX_MR		0x0	/* Mode Register */
-+#define FLEX_VERSION	0xfc	/* Version Register */
-+
-+/* Mode Register bit fields */
-+#define FLEX_MR_OPMODE_MASK	0x3
-+#define FLEX_MR_OPMODE_NO_COM	0x0
-+#define FLEX_MR_OPMODE_USART	0x1
-+#define FLEX_MR_OPMODE_SPI	0x2
-+#define FLEX_MR_OPMODE_TWI	0x3
-+
-+
-+static int atmel_flexcom_probe(struct platform_device *pdev)
-+{
-+	struct device_node *child, *np = pdev->dev.of_node;
-+	struct clk *clk;
-+	struct resource *res;
-+	void __iomem *base;
-+	u32 opmode;
-+	int err;
-+
-+	child = of_get_next_available_child(np, NULL);
-+	if (!child)
-+		return -ENODEV;
-+
-+	/*
-+	 * The Operating Mode is stored into the first u32 of the reg property
-+	 * of the child.
-+	 */
-+	err = of_property_read_u32_index(child, "reg", 0, &opmode);
-+	of_node_put(child);
-+	if (err)
-+		return err;
-+
-+	if ((opmode == FLEX_MR_OPMODE_NO_COM) ||
-+	    (opmode & ~FLEX_MR_OPMODE_MASK))
-+		return -EINVAL;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(base))
-+		return PTR_ERR(base);
-+
-+	clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(clk))
-+		return PTR_ERR(clk);
-+
-+	err = clk_prepare_enable(clk);
-+	if (err)
-+		return err;
-+
-+	/*
-+	 * Set the Operating Mode in the Mode Register: only the selected device
-+	 * is clocked. Hence, registers of the other serial devices remain
-+	 * inaccessible and are read as zero. Also the external I/O lines of the
-+	 * Flexcom are muxed to reach the selected device.
-+	 */
-+	writel(opmode, base + FLEX_MR);
-+
-+	clk_disable_unprepare(clk);
-+
-+	return of_platform_populate(np, NULL, NULL, &pdev->dev);
-+}
-+
-+static const struct of_device_id atmel_flexcom_of_match[] = {
-+	{ .compatible = "atmel,sama5d2-flexcom" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, atmel_flexcom_of_match);
-+
-+static struct platform_driver atmel_flexcom_driver = {
-+	.probe	= atmel_flexcom_probe,
-+	.driver	= {
-+		.name		= "atmel_flexcom",
-+		.of_match_table	= atmel_flexcom_of_match,
-+	},
-+};
-+
-+module_platform_driver(atmel_flexcom_driver);
-+
-+MODULE_AUTHOR("Cyrille Pitchen <cyrille.pitchen@atmel.com>");
-+MODULE_DESCRIPTION("Atmel Flexcom MFD driver");
-+MODULE_LICENSE("GPL v2");
--- 
-1.8.2.2
+Then use:
+
+     platform_get_resource_byname()
+
+=2E... to fetch them.
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
