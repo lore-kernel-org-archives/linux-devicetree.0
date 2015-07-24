@@ -1,113 +1,106 @@
 From: Jianwei Wang <jianwei.wang.chn@gmail.com>
 Subject: [PATCH v12 0/6] drm/layerscape: Add Freescale DCU DRM driver
-Date: Fri, 24 Jul 2015 18:12:12 +0800
-Message-ID: <1437732738-4960-1-git-send-email-jianwei.wang.chn@gmail.com>
+Date: Fri, 24 Jul 2015 18:34:08 +0800
+Message-ID: <1437734054-36163-1-git-send-email-jianwei.wang.chn@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: dri-devel@lists.freedesktop.org
-Cc: devicetree@vger.kernel.org, airlied@linux.ie, daniel.vetter@ffwll.ch, linux-kernel@vger.kernel.org, thierry.reding@gmail.com, scottwood@freescale.com, shawn.guo@linaro.org, linux-arm-kernel@lists.infradead.org, mark.yao@rock-chips.com
+Cc: devicetree@vger.kernel.org, daniel.vetter@ffwll.ch, linux-kernel@vger.kernel.org, scottwood@freescale.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patchset add support for Two Dimensional Animation and Compositing
-Engine (2D-ACE) on the Freescale LS102x SoCs.
-
-Changed in v12
-
--Add one patch for MAINTAINER entry for drm/layerscape
-Adviced by Daniel Vetter
--Add #include <drm/drm_crtc_helper.h> in fsl_dcu_drm_drv.c
-
-Changed in V11
--set regmap_config.cache_type to REGCACHE_FLAT
-Advanced by Alexander Stein
-
-Changed in V10
--adjust commit log, remove meaningless statement
--cleanup code for it's format and style.
--remove platform related code out, including of tcon(vf610) and scfg(ls1021a)
--remove useless sentences: encoder->crtc = crtc; and connector->encoder = encoder; and so on
--add vendor prefix for panel pandle
--make a DCU_CTRLDESCLN(x, y)  to avoid high repetition
--introduce per-SoC capability structure to avoid check on the OF node's compatible string
--Implement some functions: crtc enable and disable, enable and disable VBLANK, plane atomic_disable and atomic_enable -atomic_check and so on
--move DCU config sentence to the right place
--move get resources functions to  ->probe()
--move fsl,dcu.txt to video/ folder
--add big-endian describe
-All advaced by Thierry Reding
-
-Changed in V9
-
-put node after calling of_drm_find_panel
-split clk_prepare_enable() to clk_prepare() and clk_enable(), just call clk_prepare once, and check return value
-check regmap_write/regmap_read return return value
-remove useless ".owner    = THIS_MODULE,"
-All advanced by Mark Yao
-
-Changed in V8
-
-- Remove useless code
-#define DRIVER_NAME     "fsl-dcu-drm"
-MODULE_ALIAS("platform:fsl-dcu-drm");
-Adviced by Paul Bolle
-
-Changed in V7
-
-- Remove redundant functions and replace deprecated hooker
-Adviced by Daniel Vetter
-- Replace drm_platform_init with drm_dev_alloc/register
-Adviced by Daniel Vetter
-
-Changed in V6
-
-- Add NEC nl4827hc19_05b panel to panel-simple.c
-Adviced by Mark Yao
-- Add DRIVER_ATOMIC for driver_features
-Adviced by Mark Yao
-- check fsl_dev if it's NULL at PM suspend/resume
-Adviced by Mark Yao
-
-Changed in V5
-
-- Update commit message
-- Add layer registers initialization
-- Remove unused functions
-- Rename driver folder
-Adviced by Stefan Agner
-- Move pixel clock control functions to fsl_dcu_drm_drv.c
-- remove redundant enable the clock implicitly using regmap
-- Add maintainer message
-
-Changed in V4:
-
--This version doesn't have functionality changed
-Just a minor adjustment.
-
-Changed in V3:
-
-- Test driver on Vybrid board and add compatible string
-- Remove unused functions
-- set default crtc for encoder
-- replace legacy functions with atomic help functions
-Adviced by Daniel Vetter
-- Set the unique name of the DRM device
-- Implement irq handle function for vblank interrupt
-
-Changed in v2:
-- Add atomic support
-Adviced by Daniel Vetter
-- Modify bindings file
-- Rename node for compatibility
-- Move platform related code out for compatibility
-Adviced by Stefan Agner
+UmVzZW5kIHYxMiBmb3IgbGFjayBvZiBwYXRjaCAwLzYKClRoaXMgcGF0Y2hzZXQgYWRkIHN1cHBv
+cnQgZm9yIFR3byBEaW1lbnNpb25hbCBBbmltYXRpb24gYW5kIENvbXBvc2l0aW5nCkVuZ2luZSAo
+MkQtQUNFKSBvbiB0aGUgRnJlZXNjYWxlIExTMTAyeCBTb0NzLgoKQ2hhbmdlZCBpbiB2MTIKCi1B
+ZGQgb25lIHBhdGNoIGZvciBNQUlOVEFJTkVSIGVudHJ5IGZvciBkcm0vbGF5ZXJzY2FwZQpBZHZp
+Y2VkIGJ5IERhbmllbCBWZXR0ZXIKLUFkZCAjaW5jbHVkZSA8ZHJtL2RybV9jcnRjX2hlbHBlci5o
+PgoKQ2hhbmdlZCBpbiBWMTEKLXNldCByZWdtYXBfY29uZmlnLmNhY2hlX3R5cGUgdG8gUkVHQ0FD
+SEVfRkxBVApBZHZhbmNlZCBieSBBbGV4YW5kZXIgU3RlaW4KCkNoYW5nZWQgaW4gVjEwCi1hZGp1
+c3QgY29tbWl0IGxvZywgcmVtb3ZlIG1lYW5pbmdsZXNzIHN0YXRlbWVudAotY2xlYW51cCBjb2Rl
+IGZvciBpdCdzIGZvcm1hdCBhbmQgc3R5bGUuCi1yZW1vdmUgcGxhdGZvcm0gcmVsYXRlZCBjb2Rl
+IG91dCwgaW5jbHVkaW5nIG9mIHRjb24odmY2MTApIGFuZCBzY2ZnKGxzMTAyMWEpCi1yZW1vdmUg
+dXNlbGVzcyBzZW50ZW5jZXM6IGVuY29kZXItPmNydGMgPSBjcnRjOyBhbmQgY29ubmVjdG9yLT5l
+bmNvZGVyID0gZW5jb2RlcjsgYW5kIHNvIG9uCi1hZGQgdmVuZG9yIHByZWZpeCBmb3IgcGFuZWwg
+cGFuZGxlCi1tYWtlIGEgRENVX0NUUkxERVNDTE4oeCwgeSkgIHRvIGF2b2lkIGhpZ2ggcmVwZXRp
+dGlvbgotaW50cm9kdWNlIHBlci1Tb0MgY2FwYWJpbGl0eSBzdHJ1Y3R1cmUgdG8gYXZvaWQgY2hl
+Y2sgb24gdGhlIE9GIG5vZGUncyBjb21wYXRpYmxlIHN0cmluZwotSW1wbGVtZW50IHNvbWUgZnVu
+Y3Rpb25zOiBjcnRjIGVuYWJsZSBhbmQgZGlzYWJsZSwgZW5hYmxlIGFuZCBkaXNhYmxlIFZCTEFO
+SywgcGxhbmUgYXRvbWljX2Rpc2FibGUgYW5kIGF0b21pY19lbmFibGUgLWF0b21pY19jaGVjayBh
+bmQgc28gb24KLW1vdmUgRENVIGNvbmZpZyBzZW50ZW5jZSB0byB0aGUgcmlnaHQgcGxhY2UKLW1v
+dmUgZ2V0IHJlc291cmNlcyBmdW5jdGlvbnMgdG8gIC0+cHJvYmUoKQotbW92ZSBmc2wsZGN1LnR4
+dCB0byB2aWRlby8gZm9sZGVyCi1hZGQgYmlnLWVuZGlhbiBkZXNjcmliZQpBbGwgYWR2YWNlZCBi
+eSBUaGllcnJ5IFJlZGluZwoKQ2hhbmdlZCBpbiBWOQoKcHV0IG5vZGUgYWZ0ZXIgY2FsbGluZyBv
+Zl9kcm1fZmluZF9wYW5lbApzcGxpdCBjbGtfcHJlcGFyZV9lbmFibGUoKSB0byBjbGtfcHJlcGFy
+ZSgpIGFuZCBjbGtfZW5hYmxlKCksIGp1c3QgY2FsbCBjbGtfcHJlcGFyZSBvbmNlLCBhbmQgY2hl
+Y2sgcmV0dXJuIHZhbHVlCmNoZWNrIHJlZ21hcF93cml0ZS9yZWdtYXBfcmVhZCByZXR1cm4gcmV0
+dXJuIHZhbHVlCnJlbW92ZSB1c2VsZXNzICIub3duZXIgICAgPSBUSElTX01PRFVMRSwiCkFsbCBh
+ZHZhbmNlZCBieSBNYXJrIFlhbwoKQ2hhbmdlZCBpbiBWOAoKLSBSZW1vdmUgdXNlbGVzcyBjb2Rl
+CiAgICAjZGVmaW5lIERSSVZFUl9OQU1FICAgICAiZnNsLWRjdS1kcm0iCiAgICBNT0RVTEVfQUxJ
+QVMoInBsYXRmb3JtOmZzbC1kY3UtZHJtIik7CkFkdmljZWQgYnkgUGF1bCBCb2xsZQoKQ2hhbmdl
+ZCBpbiBWNwoKLSBSZW1vdmUgcmVkdW5kYW50IGZ1bmN0aW9ucyBhbmQgcmVwbGFjZSBkZXByZWNh
+dGVkIGhvb2tlcgpBZHZpY2VkIGJ5IERhbmllbCBWZXR0ZXIKLSBSZXBsYWNlIGRybV9wbGF0Zm9y
+bV9pbml0IHdpdGggZHJtX2Rldl9hbGxvYy9yZWdpc3RlcgpBZHZpY2VkIGJ5IERhbmllbCBWZXR0
+ZXIKCkNoYW5nZWQgaW4gVjYKCi0gQWRkIE5FQyBubDQ4MjdoYzE5XzA1YiBwYW5lbCB0byBwYW5l
+bC1zaW1wbGUuYwpBZHZpY2VkIGJ5IE1hcmsgWWFvCi0gQWRkIERSSVZFUl9BVE9NSUMgZm9yIGRy
+aXZlcl9mZWF0dXJlcwpBZHZpY2VkIGJ5IE1hcmsgWWFvCi0gY2hlY2sgZnNsX2RldiBpZiBpdCdz
+IE5VTEwgYXQgUE0gc3VzcGVuZC9yZXN1bWUKQWR2aWNlZCBieSBNYXJrIFlhbwoKQ2hhbmdlZCBp
+biBWNQoKLSBVcGRhdGUgY29tbWl0IG1lc3NhZ2UKLSBBZGQgbGF5ZXIgcmVnaXN0ZXJzIGluaXRp
+YWxpemF0aW9uCi0gUmVtb3ZlIHVudXNlZCBmdW5jdGlvbnMKLSBSZW5hbWUgZHJpdmVyIGZvbGRl
+cgpBZHZpY2VkIGJ5IFN0ZWZhbiBBZ25lcgotIE1vdmUgcGl4ZWwgY2xvY2sgY29udHJvbCBmdW5j
+dGlvbnMgdG8gZnNsX2RjdV9kcm1fZHJ2LmMKLSByZW1vdmUgcmVkdW5kYW50IGVuYWJsZSB0aGUg
+Y2xvY2sgaW1wbGljaXRseSB1c2luZyByZWdtYXAKLSBBZGQgbWFpbnRhaW5lciBtZXNzYWdlCgpD
+aGFuZ2VkIGluIFY0OgoKLVRoaXMgdmVyc2lvbiBkb2Vzbid0IGhhdmUgZnVuY3Rpb25hbGl0eSBj
+aGFuZ2VkCiBKdXN0IGEgbWlub3IgYWRqdXN0bWVudC4KCkNoYW5nZWQgaW4gVjM6CgotIFRlc3Qg
+ZHJpdmVyIG9uIFZ5YnJpZCBib2FyZCBhbmQgYWRkIGNvbXBhdGlibGUgc3RyaW5nCi0gUmVtb3Zl
+IHVudXNlZCBmdW5jdGlvbnMKLSBzZXQgZGVmYXVsdCBjcnRjIGZvciBlbmNvZGVyCi0gcmVwbGFj
+ZSBsZWdhY3kgZnVuY3Rpb25zIHdpdGggYXRvbWljIGhlbHAgZnVuY3Rpb25zCkFkdmljZWQgYnkg
+RGFuaWVsIFZldHRlcgotIFNldCB0aGUgdW5pcXVlIG5hbWUgb2YgdGhlIERSTSBkZXZpY2UKLSBJ
+bXBsZW1lbnQgaXJxIGhhbmRsZSBmdW5jdGlvbiBmb3IgdmJsYW5rIGludGVycnVwdAoKQ2hhbmdl
+ZCBpbiB2MjoKLSBBZGQgYXRvbWljIHN1cHBvcnQKQWR2aWNlZCBieSBEYW5pZWwgVmV0dGVyCi0g
+TW9kaWZ5IGJpbmRpbmdzIGZpbGUKLSBSZW5hbWUgbm9kZSBmb3IgY29tcGF0aWJpbGl0eQotIE1v
+dmUgcGxhdGZvcm0gcmVsYXRlZCBjb2RlIG91dCBmb3IgY29tcGF0aWJpbGl0eQpBZHZpY2VkIGJ5
+IFN0ZWZhbiBBZ25lcgoKLi4uL2RldmljZXRyZWUvYmluZGluZ3MvdmlkZW8vZnNsLGRjdS50eHQg
+ICAgICAgICAgfCAgMjIgKysKZHJpdmVycy9ncHUvZHJtL0tjb25maWcgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgfCAgIDIgKwpkcml2ZXJzL2dwdS9kcm0vTWFrZWZpbGUgICAgICAgICAgICAg
+ICAgICAgICAgICAgICB8ICAgMSArCmRyaXZlcnMvZ3B1L2RybS9mc2wtZGN1L0tjb25maWcgICAg
+ICAgICAgICAgICAgICAgIHwgIDE4ICsKZHJpdmVycy9ncHUvZHJtL2ZzbC1kY3UvTWFrZWZpbGUg
+ICAgICAgICAgICAgICAgICAgfCAgIDcgKwpkcml2ZXJzL2dwdS9kcm0vZnNsLWRjdS9mc2xfZGN1
+X2RybV9jcnRjLmMgICAgICAgICB8IDIwOCArKysrKysrKysrKwpkcml2ZXJzL2dwdS9kcm0vZnNs
+LWRjdS9mc2xfZGN1X2RybV9jcnRjLmggICAgICAgICB8ICAxOSArCmRyaXZlcnMvZ3B1L2RybS9m
+c2wtZGN1L2ZzbF9kY3VfZHJtX2Rydi5jICAgICAgICAgIHwgNDA0ICsrKysrKysrKysrKysrKysr
+KysrKwpkcml2ZXJzL2dwdS9kcm0vZnNsLWRjdS9mc2xfZGN1X2RybV9kcnYuaCAgICAgICAgICB8
+IDE5NyArKysrKysrKysrCmRyaXZlcnMvZ3B1L2RybS9mc2wtZGN1L2ZzbF9kY3VfZHJtX2ZiZGV2
+LmMgICAgICAgIHwgIDIzICsrCmRyaXZlcnMvZ3B1L2RybS9mc2wtZGN1L2ZzbF9kY3VfZHJtX2tt
+cy5jICAgICAgICAgIHwgIDQzICsrKwpkcml2ZXJzL2dwdS9kcm0vZnNsLWRjdS9mc2xfZGN1X2Ry
+bV9vdXRwdXQuaCAgICAgICB8ICAzMyArKwpkcml2ZXJzL2dwdS9kcm0vZnNsLWRjdS9mc2xfZGN1
+X2RybV9wbGFuZS5jICAgICAgICB8IDI2MSArKysrKysrKysrKysrCmRyaXZlcnMvZ3B1L2RybS9m
+c2wtZGN1L2ZzbF9kY3VfZHJtX3BsYW5lLmggICAgICAgIHwgIDE3ICsKZHJpdmVycy9ncHUvZHJt
+L2ZzbC1kY3UvZnNsX2RjdV9kcm1fcmdiLmMgICAgICAgICAgfCAxODIgKysrKysrKysrKwoxNSBm
+aWxlcyBjaGFuZ2VkLCAxNDM3IGluc2VydGlvbnMoKykKY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92aWRlby9mc2wsZGN1LnR4dApjcmVhdGUgbW9k
+ZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2ZzbC1kY3UvS2NvbmZpZwpjcmVhdGUgbW9kZSAxMDA2
+NDQgZHJpdmVycy9ncHUvZHJtL2ZzbC1kY3UvTWFrZWZpbGUKY3JlYXRlIG1vZGUgMTAwNjQ0IGRy
+aXZlcnMvZ3B1L2RybS9mc2wtZGN1L2ZzbF9kY3VfZHJtX2NydGMuYwpjcmVhdGUgbW9kZSAxMDA2
+NDQgZHJpdmVycy9ncHUvZHJtL2ZzbC1kY3UvZnNsX2RjdV9kcm1fY3J0Yy5oCmNyZWF0ZSBtb2Rl
+IDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vZnNsLWRjdS9mc2xfZGN1X2RybV9kcnYuYwpjcmVhdGUg
+bW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2ZzbC1kY3UvZnNsX2RjdV9kcm1fZHJ2LmgKY3Jl
+YXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9mc2wtZGN1L2ZzbF9kY3VfZHJtX2ZiZGV2
+LmMKY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9mc2wtZGN1L2ZzbF9kY3VfZHJt
+X2ttcy5jCmNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vZnNsLWRjdS9mc2xfZGN1
+X2RybV9vdXRwdXQuaApjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2ZzbC1kY3Uv
+ZnNsX2RjdV9kcm1fcGxhbmUuYwpjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2Zz
+bC1kY3UvZnNsX2RjdV9kcm1fcGxhbmUuaApjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUv
+ZHJtL2ZzbC1kY3UvZnNsX2RjdV9kcm1fcmdiLmMKIAoKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9kcmktZGV2ZWwK
