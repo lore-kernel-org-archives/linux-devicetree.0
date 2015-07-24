@@ -1,95 +1,56 @@
 From: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v4 2/7] clk: mediatek: Fix rate and dependency of MT8173 clocks
-Date: Fri, 24 Jul 2015 19:10:14 +0800
-Message-ID: <CAGS+omC=84oWFcv1Eumsj6FHzSQc+Ba9zVOn6USS9ymQS3mTSQ@mail.gmail.com>
-References: <1437706925-3222-1-git-send-email-jamesjj.liao@mediatek.com> <1437706925-3222-3-git-send-email-jamesjj.liao@mediatek.com>
+Subject: Re: [PATCH v4 5/7] clk: mediatek: Add subsystem clocks of MT8173
+Date: Fri, 24 Jul 2015 19:18:43 +0800
+Message-ID: <CAGS+omB6LpttP_67iJsGrgLv6=B28FHq7RGbcRw_LaOd4LzCLQ@mail.gmail.com>
+References: <1437706925-3222-1-git-send-email-jamesjj.liao@mediatek.com> <1437706925-3222-6-git-send-email-jamesjj.liao@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1437706925-3222-3-git-send-email-jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1437706925-3222-6-git-send-email-jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Heiko Stubner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 On Fri, Jul 24, 2015 at 11:02 AM, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> Remove the dependency from clk_null, and give all root clocks a
-> typical rate, include clkph_mck_o, usb_syspll_125m and hdmitx_dig_cts.
->
-> dpi_ck was removed due to no clock reference to it.
->
-> Replace parent clock of infra_cpum with cpum_ck, which is an external
-> clock and can be defined in the deivce tree.
+> Most multimedia subsystem clocks will be accessed by multiple
+> drivers, so it's a better way to manage these clocks in CCF.
+> This patch adds clock support for MM, IMG, VDEC, VENC and VENC_LT
+> subsystems.
 >
 > Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 > ---
->  drivers/clk/mediatek/clk-mt8173.c      | 13 ++++++-------
->  include/dt-bindings/clock/mt8173-clk.h |  1 -
->  2 files changed, 6 insertions(+), 8 deletions(-)
+>  drivers/clk/mediatek/clk-mt8173.c      | 267 +++++++++++++++++++++++++++++++++
+>  include/dt-bindings/clock/mt8173-clk.h |  97 +++++++++++-
+>  2 files changed, 361 insertions(+), 3 deletions(-)
 >
 > diff --git a/drivers/clk/mediatek/clk-mt8173.c b/drivers/clk/mediatek/clk-mt8173.c
-> index 4b9e04c..50b3266 100644
+> index a72ce82..2cf6620 100644
 > --- a/drivers/clk/mediatek/clk-mt8173.c
 > +++ b/drivers/clk/mediatek/clk-mt8173.c
-> @@ -24,11 +24,9 @@
->
->  static DEFINE_SPINLOCK(mt8173_clk_lock);
->
-> -static const struct mtk_fixed_factor root_clk_alias[] __initconst = {
-> -       FACTOR(CLK_TOP_CLKPH_MCK_O, "clkph_mck_o", "clk_null", 1, 1),
-> -       FACTOR(CLK_TOP_DPI, "dpi_ck", "clk_null", 1, 1),
-> -       FACTOR(CLK_TOP_USB_SYSPLL_125M, "usb_syspll_125m", "clk_null", 1, 1),
-> -       FACTOR(CLK_TOP_HDMITX_DIG_CTS, "hdmitx_dig_cts", "clk_null", 1, 1),
-> +static const struct mtk_fixed_clk fixed_clks[] __initconst = {
-> +       FIXED_CLK(CLK_TOP_CLKPH_MCK_O, "clkph_mck_o", "clk26m", 400 * MHZ),
-> +       FIXED_CLK(CLK_TOP_USB_SYSPLL_125M, "usb_syspll_125m", "clk26m", 125 * MHZ),
+> @@ -27,6 +27,10 @@ static DEFINE_SPINLOCK(mt8173_clk_lock);
+>  static const struct mtk_fixed_clk fixed_clks[] __initconst = {
+>         FIXED_CLK(CLK_TOP_CLKPH_MCK_O, "clkph_mck_o", "clk26m", 400 * MHZ),
+>         FIXED_CLK(CLK_TOP_USB_SYSPLL_125M, "usb_syspll_125m", "clk26m", 125 * MHZ),
+> +       FIXED_CLK(CLK_TOP_DSI0_DIG, "dsi0_dig", "clk26m", 130 * MHZ),
+> +       FIXED_CLK(CLK_TOP_DSI1_DIG, "dsi1_dig", "clk26m", 130 * MHZ),
+> +       FIXED_CLK(CLK_TOP_LVDS_PXL, "lvds_pxl", "lvdspll", 148.5 * MHZ),
+> +       FIXED_CLK(CLK_TOP_LVDS_CTS, "lvds_cts", "lvdspll", 51.975 * MHZ),
 >  };
 >
 >  static const struct mtk_fixed_factor top_divs[] __initconst = {
-> @@ -53,6 +51,7 @@ static const struct mtk_fixed_factor top_divs[] __initconst = {
->         FACTOR(CLK_TOP_CLKRTC_INT, "clkrtc_int", "clk26m", 1, 793),
->         FACTOR(CLK_TOP_FPC, "fpc_ck", "clk26m", 1, 1),
+> @@ -699,6 +703,183 @@ static const struct mtk_composite peri_clks[] __initconst = {
+>         MUX(CLK_PERI_UART3_SEL, "uart3_ck_sel", uart_ck_sel_parents, 0x40c, 3, 1),
+>  };
 >
-> +       FACTOR(CLK_TOP_HDMITX_DIG_CTS, "hdmitx_dig_cts", "tvdpll_445p5m", 1, 3),
->         FACTOR(CLK_TOP_HDMITXPLL_D2, "hdmitxpll_d2", "hdmitx_dig_cts", 1, 2),
->         FACTOR(CLK_TOP_HDMITXPLL_D3, "hdmitxpll_d3", "hdmitx_dig_cts", 1, 3),
->
-> @@ -611,7 +610,7 @@ static const struct mtk_gate infra_clks[] __initconst = {
->         GATE_ICG(CLK_INFRA_GCE, "infra_gce", "axi_sel", 6),
->         GATE_ICG(CLK_INFRA_L2C_SRAM, "infra_l2c_sram", "axi_sel", 7),
->         GATE_ICG(CLK_INFRA_M4U, "infra_m4u", "mem_sel", 8),
-> -       GATE_ICG(CLK_INFRA_CPUM, "infra_cpum", "clk_null", 15),
-> +       GATE_ICG(CLK_INFRA_CPUM, "infra_cpum", "cpum_ck", 15),
->         GATE_ICG(CLK_INFRA_KP, "infra_kp", "axi_sel", 16),
->         GATE_ICG(CLK_INFRA_CEC, "infra_cec", "clk26m", 18),
->         GATE_ICG(CLK_INFRA_PMICSPI, "infra_pmicspi", "pmicspi_sel", 22),
-> @@ -714,7 +713,7 @@ static void __init mtk_topckgen_init(struct device_node *node)
->
->         clk_data = mtk_alloc_clk_data(CLK_TOP_NR_CLK);
->
-> -       mtk_clk_register_factors(root_clk_alias, ARRAY_SIZE(root_clk_alias), clk_data);
-> +       mtk_clk_register_fixed_clks(fixed_clks, ARRAY_SIZE(fixed_clks), clk_data);
->         mtk_clk_register_factors(top_divs, ARRAY_SIZE(top_divs), clk_data);
->         mtk_clk_register_composites(top_muxes, ARRAY_SIZE(top_muxes), base,
->                         &mt8173_clk_lock, clk_data);
-> diff --git a/include/dt-bindings/clock/mt8173-clk.h b/include/dt-bindings/clock/mt8173-clk.h
-> index 4ad76ed..7230c38 100644
-> --- a/include/dt-bindings/clock/mt8173-clk.h
-> +++ b/include/dt-bindings/clock/mt8173-clk.h
-> @@ -18,7 +18,6 @@
->  /* TOPCKGEN */
->
->  #define CLK_TOP_CLKPH_MCK_O            1
-> -#define CLK_TOP_DPI                    2
->  #define CLK_TOP_USB_SYSPLL_125M                3
+> +static const struct mtk_gate_regs cg_regs_4_8_0 = {
 
-I think we should renumber the rest of the CLK_TOP_*
+All of these regs tables can be __initconst.
 
->  #define CLK_TOP_HDMITX_DIG_CTS         4
->  #define CLK_TOP_ARMCA7PLL_754M         5
-> --
-> 1.8.1.1.dirty
->
+Otherwise:
+Reviewed-by: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+
+-Dan
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
