@@ -1,93 +1,105 @@
-From: Rob Clark <robdclark@gmail.com>
-Subject: Re: [PATCH] backlight: pm8941-wled: Add default-brightness property
-Date: Fri, 24 Jul 2015 13:41:13 -0400
-Message-ID: <CAF6AEGs+knSa9TvZ8fR5-_zqC4TaHuBN8+GU5_6j33Pnr16Faw@mail.gmail.com>
-References: <1437681127-15760-1-git-send-email-bjorn.andersson@sonymobile.com>
-	<CAF6AEGsJdLYzCA_=M8hf1XfhRxFAaY6VFdSBRP+y56uKsnQHiA@mail.gmail.com>
-	<CAL_JsqKcNjsLJPxQiWsjVtwsX2nsYGLSzjmX0cwo1QsZ+JE4Hg@mail.gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 3/4] spi: mediatek: Add spi bus for Mediatek MT8173
+Date: Fri, 24 Jul 2015 18:49:22 +0100
+Message-ID: <20150724174922.GT11162@sirena.org.uk>
+References: <1437642643-11966-1-git-send-email-leilk.liu@mediatek.com>
+ <1437642643-11966-4-git-send-email-leilk.liu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKcNjsLJPxQiWsjVtwsX2nsYGLSzjmX0cwo1QsZ+JE4Hg@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jingoo Han <jingoohan1@gmail.com>, Lee Jones <lee.jones@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Fbdev development list <linux-fbdev@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="fNOZNvBbfUx8KYZM"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1437642643-11966-4-git-send-email-leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 24, 2015 at 11:39 AM, Rob Herring <robherring2@gmail.com> wrote:
-> On Fri, Jul 24, 2015 at 8:10 AM, Rob Clark <robdclark@gmail.com> wrote:
->> On Thu, Jul 23, 2015 at 3:52 PM, Bjorn Andersson
->> <bjorn.andersson@sonymobile.com> wrote:
->>> Add the possibility of specifying the default brightness in DT.
->>>
->>> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
->>> ---
->>>
->>> This depends on the patch moving pm8941-wled to backlight [1]. The dt property
->>> is used by several other backlight drivers, so I considered this to be a
->>> "common" property and it's hence not prefixed with "qcom,".
->>>
->>> [1] https://lkml.org/lkml/2015/7/21/906
->>>
->>>  Documentation/devicetree/bindings/video/backlight/pm8941-wled.txt | 1 +
->>>  drivers/video/backlight/pm8941-wled.c                             | 4 ++++
->>>  2 files changed, 5 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/video/backlight/pm8941-wled.txt b/Documentation/devicetree/bindings/video/backlight/pm8941-wled.txt
->>> index 424f8444a6cd..37503f8c3620 100644
->>> --- a/Documentation/devicetree/bindings/video/backlight/pm8941-wled.txt
->>> +++ b/Documentation/devicetree/bindings/video/backlight/pm8941-wled.txt
->>> @@ -5,6 +5,7 @@ Required properties:
->>>  - reg: slave address
->>>
->>>  Optional properties:
->>> +- default-brightness: value from: 0-4095
->>>  - label: The name of the backlight device
->>>  - qcom,cs-out: bool; enable current sink output
->>>  - qcom,cabc: bool; enable content adaptive backlight control
->>> diff --git a/drivers/video/backlight/pm8941-wled.c b/drivers/video/backlight/pm8941-wled.c
->>> index c704c3236034..b875e58df0fc 100644
->>> --- a/drivers/video/backlight/pm8941-wled.c
->>> +++ b/drivers/video/backlight/pm8941-wled.c
->>> @@ -373,6 +373,7 @@ static int pm8941_wled_probe(struct platform_device *pdev)
->>>         struct backlight_device *bl;
->>>         struct pm8941_wled *wled;
->>>         struct regmap *regmap;
->>> +       u32 val = 0;
->>>         int rc;
->>
->> as discussed on IRC, it would be better if the default read back the
->> current settings (so-as to inherit bootloader splash smoothly..
->> drm/msm supports a memory-region phandle, for example, so it can take
->> over the bootloader splash-screen as stolen-mem)
->>
->> and it would I think be useful to have a comment in the bindings file
->> explaining that you *should* use the default-brightness property to
->> set a sane default if bootloader isn't putting up a splash, and you
->> should *not* use the property if it is..
->
-> +1
->
-> What if you have neither? Set to max brightness? 75%?
 
-I did chat w/ Bjorn a bit about that on irc..  his concern was some
-arbitrary percentage (like 50%) might be more or less bright depending
-on the device (although that implies to me that maybe we should have
-min and max bindings as well, rather than just assuming hw limits?
-idk)
+--fNOZNvBbfUx8KYZM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-my preference is the default is somehow at least not 0%.. possibly
-motivated by the expectation that when people see a dark screen at
-boot they assume the display driver is broken :-P
+On Thu, Jul 23, 2015 at 05:10:42PM +0800, Leilk Liu wrote:
 
-BR,
--R
+This basically seems fine but there's a couple of issues that should be
+relatively easy to fix:
 
-> This could also be used for the bootloader to communicate to the
-> kernel what the current level is if it is not readable. I've seen one
-> backlight recently which you change the level by doing some number of
-> pulses on a gpio and a long pulse to turn off. So there is no way to
-> know current level without turning off the backlight (unless you
-> hardcode the bootloader's level in the kernel like the vendor did).
->
-> Rob
+> +	mdata->cur_transfer =3D xfer;
+> +	mtk_spi_prepare_transfer(master, xfer);
+> +	mtk_spi_setup_packet(master, xfer);
+> +
+> +	cnt =3D (xfer->len % 4) ? (xfer->len / 4 + 1) : (xfer->len / 4);
+
+Please write this as an if statement for legibility.
+
+> +static bool mtk_spi_can_dma(struct spi_master *master,
+> +			    struct spi_device *spi,
+> +			    struct spi_transfer *xfer)
+> +{
+> +	struct mtk_spi *mdata =3D spi_master_get_devdata(master);
+> +
+> +	if (xfer->len > MTK_SPI_MAX_FIFO_SIZE)
+> +		mdata->use_dma =3D true;
+> +	else
+> +		mdata->use_dma =3D false;
+> +
+> +	return mdata->use_dma;
+> +}
+
+This is broken since can_dma() can be called multiple transfers before
+actually doing a transfer (the current implementation loops over all
+transfers in a message before starting the message) - you can't store
+any local data.  The transfer_one() function should do another can_dma()
+check to decide if it can DMA, it shouldn't rely on driver global data. =20
+
+> +	if (!mdata->use_dma) {
+> +		if (trans->rx_buf) {
+
+This should be a variable set when doing the transfer (or perhaps based
+on checking spi->cur_xfer with can_dma()).=20
+
+> +			for (i =3D 0; i < trans->len; i++) {
+> +				if (i % 4 =3D=3D 0)
+> +					reg_val =3D
+> +					readl(mdata->base + SPI_RX_DATA_REG);
+> +				*((u8 *)(trans->rx_buf + i)) =3D
+> +					(reg_val >> ((i % 4) * 8)) & 0xff;
+
+This isn't the clearest code ever...  a comment would help.
+
+> +	if (mdata->tx_sgl && (mdata->tx_sgl_len =3D=3D 0)) {
+> +		mdata->tx_sgl =3D sg_next(mdata->tx_sgl);
+> +		if (mdata->tx_sgl) {
+> +			trans->tx_dma =3D sg_dma_address(mdata->tx_sgl);
+> +			mdata->tx_sgl_len =3D sg_dma_len(mdata->tx_sgl);
+> +		}
+> +	}
+
+There's a *lot* of code in this interrupt handler, and a lot of it looks
+an awful lot like the contents of mtk_spi_dma_transfer() has been
+cut'n'pasted in.  The shared code should all be factored out into a
+function called from both places.
+
+--fNOZNvBbfUx8KYZM
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJVsnqhAAoJECTWi3JdVIfQCl8H/01bnBwUdNC9G0XaTE5e8keW
+tsObBdeG5x98z0txYDA8RKCn5h7kNUYJOnRtI+zd9nK+xLk5Ibyh4PIK17m3/RaI
+mZJtpkZPyY32l1KRgR1akNTBC1+y7moll1co4gdyHvkVAv2c13nugzj3TDK6ZYmt
+Km2NM9QJUWXljxVRvFCUaA5/nSJWJ4EPCgIlTG6pczq0VtzdcqBFiUhMOtFNB8C5
+1VTaNLnF2JwgIZH4Z+gZX/4PNnZSj3VeWAvFK/7aidGBaACzAOKwHOpwvtsuTOPt
+s5Z00bJlY0CzIrh00G9v4FdJqmcJMSs34z21iUIL/NoxltnE351dFqlX/cb2ah0=
+=c+JI
+-----END PGP SIGNATURE-----
+
+--fNOZNvBbfUx8KYZM--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
