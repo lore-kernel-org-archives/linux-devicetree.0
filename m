@@ -1,83 +1,96 @@
-From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v4 0/7] Add Mediatek MT8173 subsystem clocks support
-Date: Fri, 24 Jul 2015 11:01:58 +0800
-Message-ID: <1437706925-3222-1-git-send-email-jamesjj.liao@mediatek.com>
+From: James Liao <jamesjj.liao@mediatek.com>
+Subject: [PATCH v4 1/7] clk: mediatek: Add fixed clocks support for Mediatek SoC.
+Date: Fri, 24 Jul 2015 11:01:59 +0800
+Message-ID: <1437706925-3222-2-git-send-email-jamesjj.liao@mediatek.com>
+References: <1437706925-3222-1-git-send-email-jamesjj.liao@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Heiko Stubner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1437706925-3222-1-git-send-email-jamesjj.liao@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Heiko Stubner <heiko@sntech.de>
+Cc: srv_heupstream@mediatek.com, Daniel Kurtz <djkurtz@chromium.org>, Ricky Liang <jcliang@chromium.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, James Liao <jamesjj.liao@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-This patchset is based on 4.2-rc1 and [1], and contains subsystem
-clocks support for Mediatek MT8173.
+This patch adds fixed clocks support by using CCF fixed-rate
+clock implementation.
 
-Previous reviews can be found in [2][3]. This patchset merge the 2
-patchsets because of the dependency.
+Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
+---
+ drivers/clk/mediatek/clk-mtk.c | 23 +++++++++++++++++++++++
+ drivers/clk/mediatek/clk-mtk.h | 19 ++++++++++++++++++-
+ 2 files changed, 41 insertions(+), 1 deletion(-)
 
-The most different from previous patchset are removing clk_null and
-split usb clock support into a separated source file.
-
-changes since v3:
-- Remove clk_null dependency from root clocks.
-- Use fixed-rate clocks with typical rate to replace clk_null.
-- Add clk-apmixed.c to implement ref2usb_tx.
-- Use clock-controller as the name of clock providers.
-
-changes since v2:
-- Rebase to 4.2-rc1.
-- Add device tree nodes for subsystem clocks.
-- Fine tune comments of patches.
-- Add __init, __initconst and const to init data and functions.
-- Removed unused code from init functions of subsystem clocks.
-
-changes since v1:
-- Add CA7PLL and CA15PLL as critical clocks.
-- Use the same register descriptor for imgsys, vensys and vencltsys.
-- Generalize apmixedsys special clocks registration.
-
-[1] https://patchwork.kernel.org/patch/6446341/
-[2] https://lkml.org/lkml/2015/7/10/254
-[3] https://lkml.org/lkml/2015/7/10/230
-
-James Liao (6):
-  clk: mediatek: Add fixed clocks support for Mediatek SoC.
-  clk: mediatek: Fix rate and dependency of MT8173 clocks
-  dt-bindings: ARM: Mediatek: Document devicetree bindings for clock
-    controllers
-  clk: mediatek: Add subsystem clocks of MT8173
-  clk: mediatek: Add USB clock support in MT8173 APMIXEDSYS
-  arm64: dts: mt8173: Add subsystem clock controller device nodes
-
-Sascha Hauer (1):
-  clk: mediatek: mt8173: Fix enabling of critical clocks
-
- .../bindings/arm/mediatek/mediatek,imgsys.txt      |  22 ++
- .../bindings/arm/mediatek/mediatek,mmsys.txt       |  22 ++
- .../bindings/arm/mediatek/mediatek,vdecsys.txt     |  22 ++
- .../bindings/arm/mediatek/mediatek,vencltsys.txt   |  22 ++
- .../bindings/arm/mediatek/mediatek,vencsys.txt     |  22 ++
- arch/arm64/boot/dts/mediatek/mt8173.dtsi           |  37 +++
- drivers/clk/mediatek/Makefile                      |   2 +-
- drivers/clk/mediatek/clk-apmixed.c                 | 137 +++++++++
- drivers/clk/mediatek/clk-mt8173.c                  | 321 ++++++++++++++++++++-
- drivers/clk/mediatek/clk-mtk.c                     |  23 ++
- drivers/clk/mediatek/clk-mtk.h                     |  45 ++-
- drivers/clk/mediatek/clk-pll.c                     |   7 +-
- include/dt-bindings/clock/mt8173-clk.h             | 101 ++++++-
- 13 files changed, 756 insertions(+), 27 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,imgsys.txt
- create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.txt
- create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,vdecsys.txt
- create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,vencltsys.txt
- create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,vencsys.txt
- create mode 100644 drivers/clk/mediatek/clk-apmixed.c
-
---
+diff --git a/drivers/clk/mediatek/clk-mtk.c b/drivers/clk/mediatek/clk-mtk.c
+index 18444ae..f8307c3 100644
+--- a/drivers/clk/mediatek/clk-mtk.c
++++ b/drivers/clk/mediatek/clk-mtk.c
+@@ -49,6 +49,29 @@ err_out:
+ 	return NULL;
+ }
+ 
++void mtk_clk_register_fixed_clks(const struct mtk_fixed_clk *clks, int num,
++		struct clk_onecell_data *clk_data)
++{
++	int i;
++	struct clk *clk;
++
++	for (i = 0; i < num; i++) {
++		const struct mtk_fixed_clk *rc = &clks[i];
++
++		clk = clk_register_fixed_rate(NULL, rc->name, rc->parent,
++				rc->parent ? 0 : CLK_IS_ROOT, rc->rate);
++
++		if (IS_ERR(clk)) {
++			pr_err("Failed to register clk %s: %ld\n",
++					rc->name, PTR_ERR(clk));
++			continue;
++		}
++
++		if (clk_data)
++			clk_data->clks[rc->id] = clk;
++	}
++}
++
+ void mtk_clk_register_factors(const struct mtk_fixed_factor *clks, int num,
+ 		struct clk_onecell_data *clk_data)
+ {
+diff --git a/drivers/clk/mediatek/clk-mtk.h b/drivers/clk/mediatek/clk-mtk.h
+index 9dda9d8..f083dfc 100644
+--- a/drivers/clk/mediatek/clk-mtk.h
++++ b/drivers/clk/mediatek/clk-mtk.h
+@@ -25,6 +25,23 @@
+ 
+ #define MHZ (1000 * 1000)
+ 
++struct mtk_fixed_clk {
++	int id;
++	const char *name;
++	const char *parent;
++	unsigned long rate;
++};
++
++#define FIXED_CLK(_id, _name, _parent, _rate) {		\
++		.id = _id,				\
++		.name = _name,				\
++		.parent = _parent,			\
++		.rate = _rate,				\
++	}
++
++void mtk_clk_register_fixed_clks(const struct mtk_fixed_clk *clks,
++		int num, struct clk_onecell_data *clk_data);
++
+ struct mtk_fixed_factor {
+ 	int id;
+ 	const char *name;
+@@ -41,7 +58,7 @@ struct mtk_fixed_factor {
+ 		.div = _div,				\
+ 	}
+ 
+-extern void mtk_clk_register_factors(const struct mtk_fixed_factor *clks,
++void mtk_clk_register_factors(const struct mtk_fixed_factor *clks,
+ 		int num, struct clk_onecell_data *clk_data);
+ 
+ struct mtk_composite {
+-- 
 1.8.1.1.dirty
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
