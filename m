@@ -1,79 +1,95 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH v3 1/4] i2c: tegra: implement slave mode
-Date: Fri, 24 Jul 2015 12:52:51 +0200
-Message-ID: <20150724105251.GA22787@katana>
-References: <1437424546-30405-1-git-send-email-danindrey@mail.ru>
- <1437424546-30405-2-git-send-email-danindrey@mail.ru>
- <20150724092720.GA1597@katana>
- <55B210F4.6030700@mail.ru>
+From: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v4 2/7] clk: mediatek: Fix rate and dependency of MT8173 clocks
+Date: Fri, 24 Jul 2015 19:10:14 +0800
+Message-ID: <CAGS+omC=84oWFcv1Eumsj6FHzSQc+Ba9zVOn6USS9ymQS3mTSQ@mail.gmail.com>
+References: <1437706925-3222-1-git-send-email-jamesjj.liao@mediatek.com> <1437706925-3222-3-git-send-email-jamesjj.liao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="LQksG6bCIzRHxTLp"
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <55B210F4.6030700-JGs/UdohzUI@public.gmane.org>
+In-Reply-To: <1437706925-3222-3-git-send-email-jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrey Danin <danindrey-JGs/UdohzUI@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-tBiZLqfeLfOHmIFyCCdPziST3g8Odh+X@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ac100-oU9gvf+ajcQ97yFScArB1dHuzzzSOjJt@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Julian Andres Klode <jak-4HMq4SXA452hPH1hqNUYSQ@public.gmane.org>, Marc Dietrich <marvin24-Mmb7MZpHnFY@public.gmane.org>
+To: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Heiko Stubner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Jul 24, 2015 at 11:02 AM, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> Remove the dependency from clk_null, and give all root clocks a
+> typical rate, include clkph_mck_o, usb_syspll_125m and hdmitx_dig_cts.
+>
+> dpi_ck was removed due to no clock reference to it.
+>
+> Replace parent clock of infra_cpum with cpum_ck, which is an external
+> clock and can be defined in the deivce tree.
+>
+> Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>  drivers/clk/mediatek/clk-mt8173.c      | 13 ++++++-------
+>  include/dt-bindings/clock/mt8173-clk.h |  1 -
+>  2 files changed, 6 insertions(+), 8 deletions(-)
+>
+> diff --git a/drivers/clk/mediatek/clk-mt8173.c b/drivers/clk/mediatek/clk-mt8173.c
+> index 4b9e04c..50b3266 100644
+> --- a/drivers/clk/mediatek/clk-mt8173.c
+> +++ b/drivers/clk/mediatek/clk-mt8173.c
+> @@ -24,11 +24,9 @@
+>
+>  static DEFINE_SPINLOCK(mt8173_clk_lock);
+>
+> -static const struct mtk_fixed_factor root_clk_alias[] __initconst = {
+> -       FACTOR(CLK_TOP_CLKPH_MCK_O, "clkph_mck_o", "clk_null", 1, 1),
+> -       FACTOR(CLK_TOP_DPI, "dpi_ck", "clk_null", 1, 1),
+> -       FACTOR(CLK_TOP_USB_SYSPLL_125M, "usb_syspll_125m", "clk_null", 1, 1),
+> -       FACTOR(CLK_TOP_HDMITX_DIG_CTS, "hdmitx_dig_cts", "clk_null", 1, 1),
+> +static const struct mtk_fixed_clk fixed_clks[] __initconst = {
+> +       FIXED_CLK(CLK_TOP_CLKPH_MCK_O, "clkph_mck_o", "clk26m", 400 * MHZ),
+> +       FIXED_CLK(CLK_TOP_USB_SYSPLL_125M, "usb_syspll_125m", "clk26m", 125 * MHZ),
+>  };
+>
+>  static const struct mtk_fixed_factor top_divs[] __initconst = {
+> @@ -53,6 +51,7 @@ static const struct mtk_fixed_factor top_divs[] __initconst = {
+>         FACTOR(CLK_TOP_CLKRTC_INT, "clkrtc_int", "clk26m", 1, 793),
+>         FACTOR(CLK_TOP_FPC, "fpc_ck", "clk26m", 1, 1),
+>
+> +       FACTOR(CLK_TOP_HDMITX_DIG_CTS, "hdmitx_dig_cts", "tvdpll_445p5m", 1, 3),
+>         FACTOR(CLK_TOP_HDMITXPLL_D2, "hdmitxpll_d2", "hdmitx_dig_cts", 1, 2),
+>         FACTOR(CLK_TOP_HDMITXPLL_D3, "hdmitxpll_d3", "hdmitx_dig_cts", 1, 3),
+>
+> @@ -611,7 +610,7 @@ static const struct mtk_gate infra_clks[] __initconst = {
+>         GATE_ICG(CLK_INFRA_GCE, "infra_gce", "axi_sel", 6),
+>         GATE_ICG(CLK_INFRA_L2C_SRAM, "infra_l2c_sram", "axi_sel", 7),
+>         GATE_ICG(CLK_INFRA_M4U, "infra_m4u", "mem_sel", 8),
+> -       GATE_ICG(CLK_INFRA_CPUM, "infra_cpum", "clk_null", 15),
+> +       GATE_ICG(CLK_INFRA_CPUM, "infra_cpum", "cpum_ck", 15),
+>         GATE_ICG(CLK_INFRA_KP, "infra_kp", "axi_sel", 16),
+>         GATE_ICG(CLK_INFRA_CEC, "infra_cec", "clk26m", 18),
+>         GATE_ICG(CLK_INFRA_PMICSPI, "infra_pmicspi", "pmicspi_sel", 22),
+> @@ -714,7 +713,7 @@ static void __init mtk_topckgen_init(struct device_node *node)
+>
+>         clk_data = mtk_alloc_clk_data(CLK_TOP_NR_CLK);
+>
+> -       mtk_clk_register_factors(root_clk_alias, ARRAY_SIZE(root_clk_alias), clk_data);
+> +       mtk_clk_register_fixed_clks(fixed_clks, ARRAY_SIZE(fixed_clks), clk_data);
+>         mtk_clk_register_factors(top_divs, ARRAY_SIZE(top_divs), clk_data);
+>         mtk_clk_register_composites(top_muxes, ARRAY_SIZE(top_muxes), base,
+>                         &mt8173_clk_lock, clk_data);
+> diff --git a/include/dt-bindings/clock/mt8173-clk.h b/include/dt-bindings/clock/mt8173-clk.h
+> index 4ad76ed..7230c38 100644
+> --- a/include/dt-bindings/clock/mt8173-clk.h
+> +++ b/include/dt-bindings/clock/mt8173-clk.h
+> @@ -18,7 +18,6 @@
+>  /* TOPCKGEN */
+>
+>  #define CLK_TOP_CLKPH_MCK_O            1
+> -#define CLK_TOP_DPI                    2
+>  #define CLK_TOP_USB_SYSPLL_125M                3
 
---LQksG6bCIzRHxTLp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I think we should renumber the rest of the CLK_TOP_*
 
-
-> At the begin of my work on this patchset I even denied clock disable call if
-> slave is registered (to minimize code that can affect transfer).
-
-I hacked something like this, but it seems it was not enough.
-
-> If only slave mode is used, then this logic is not needed.
-
-This is not sufficent. We shouldn't break being a master only because we
-also listen to a slave address (as long as the HW supports that of
-course).
-
-> tegra_i2c_init is called on probe and resume. Also it is called in case of
-> xfer fail. If xfer is ok, then I think slave addr must be kept unchanged.
-
-This is fragile. Try scanning the bus with i2cdetect and slave setup
-will be gone.
-
-> As far as I understand it is a loopback mode. Probably it will not work
-> (Stephen Warren already mentioned this).
-
-Just to make clear: I am not saying we should support talking to our own
-slave address. But it should still be possible to communicate with other
-remote devices on the bus.
-
-Thanks,
-
-   Wolfram
-
---LQksG6bCIzRHxTLp
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJVshkDAAoJEBQN5MwUoCm2vmMP/RZUx8/DLXE5UMuaB99DvRhL
-1cNi9OIlisLyDHWccWXM2bXnfEaaKwQsCYXeL9q30mM6kcjqvEnjcDwuLYexVNf6
-NrSe2XgxfN9b48KmVpxCsRcedpZvG5diSn/EUlyAL8hoi6FJIwRKopCeG2HwEsGN
-TNgOw3NRxPlgv4rfzMWg/+2b7sYK+CbIcUjh51o36Iz3L4xuWmOFj2M4ic7d9qZi
-F/mj9NGsgP9Jkwgp+ebOErNuol7oK/64t3jyYdjhhoHZhU71xh8AyvY8EG0jNUBm
-v/EpCby1pPUTjxgzDAe3t317s5J78qn71S++FHaRU31QhOmyfcZctgbOBEJTfjrf
-PvKNb07srcZ4KEmSVQTVv1XLxTdnHz6pqIqCoX+41XFxcUMzMUVaLkQpL3gbjCqN
-wp2OSCfRepKMg8mTo2tNq95Z8iV7/BpWlB/i36gdJEOL7l9QnKq+9YVhpweKMSH+
-ylaOBkyT+7hdEsn+R2V8dfGPWnPzWEi2Y8fIBhWZjgL5fE08AxEHmWCc+k5QK6/D
-fARcLI+rPhV2fR9KjE0tT5oeCI9NTpkd/5TXFXxGHxKrvVp61+WBot2W2076V/Ur
-h4Vs9xIk99nZbnfRX0P3UXVPOEmZib0KNQyHFMiFtFp7DVe6Qjjf27NLB7dwNfxx
-RCnffRehdQBjd8yU0cc/
-=NVew
------END PGP SIGNATURE-----
-
---LQksG6bCIzRHxTLp--
+>  #define CLK_TOP_HDMITX_DIG_CTS         4
+>  #define CLK_TOP_ARMCA7PLL_754M         5
+> --
+> 1.8.1.1.dirty
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
