@@ -1,98 +1,47 @@
-From: Jassi Brar <jassisinghbrar@gmail.com>
-Subject: Re: [PATCH 3/6] mailbox: Add support for ST's Mailbox IP
-Date: Fri, 24 Jul 2015 23:04:52 +0530
-Message-ID: <CABb+yY0Er-FBPoxx0E134bz49JzE=wxOUuoSRNuPCqV1TSE7Mg@mail.gmail.com>
-References: <1437134647-28298-1-git-send-email-lee.jones@linaro.org>
-	<1437134647-28298-4-git-send-email-lee.jones@linaro.org>
-	<CABb+yY2nAT6V4Q8suAXRtPXrXkArGWVTAW28ts4Z3C_ybuJovA@mail.gmail.com>
-	<20150723082934.GW3061@x1>
-	<CABb+yY0iKAU6aa99muVrkHyp-Ywpf1BoMRna91L6fbR7e89XZQ@mail.gmail.com>
-	<20150724093638.GA3436@x1>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 2/4] dt-bindings: ARM: Mediatek: Document devicetree
+ bindings for spi bus
+Date: Fri, 24 Jul 2015 18:34:46 +0100
+Message-ID: <20150724173446.GS11162@sirena.org.uk>
+References: <1437642643-11966-1-git-send-email-leilk.liu@mediatek.com>
+ <1437642643-11966-3-git-send-email-leilk.liu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="tEhStdZb4uHHcvbt"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150724093638.GA3436@x1>
+Content-Disposition: inline
+In-Reply-To: <1437642643-11966-3-git-send-email-leilk.liu@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, kernel@stlinux.com, Devicetree List <devicetree@vger.kernel.org>
+To: Leilk Liu <leilk.liu@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 24, 2015 at 3:06 PM, Lee Jones <lee.jones@linaro.org> wrote:
-> On Thu, 23 Jul 2015, Jassi Brar wrote:
->
->> >> > +static void sti_mbox_enable_channel(struct mbox_chan *chan)
->> >> > +{
->> >> > +       struct sti_channel *chan_info = chan->con_priv;
->> >> > +       struct sti_mbox_device *mdev = chan_info->mdev;
->> >> > +       struct sti_mbox_pdata *pdata = dev_get_platdata(mdev->dev);
->> >> > +       unsigned int instance = chan_info->instance;
->> >> > +       unsigned int channel = chan_info->channel;
->> >> > +       unsigned long flags;
->> >> > +       void __iomem *base;
->> >> > +
->> >> > +       base = mdev->base + (instance * sizeof(u32));
->> >> > +
->> >> Maybe have something simpler like MBOX_BASE(instance)? Or some inline
->> >> function to avoid this 5-lines ritual?
->> >
->> > I've checked and we can't do this, as the we need most (all?) of the
->> > intermediary variables too.  No ritual just to get the final variable
->> > for instance.
->> >
->> OK. How about ?
->>   #define MBOX_BASE(m, n)   ((m)->base + (n) * 4)
->>   void __iomem *base = MBOX_BASE(mdev, instance);
->
-> Oh, those 5 lines.  I thought you meant:
->
->        struct sti_channel *chan_info = chan->con_priv;
->        struct sti_mbox_device *mdev = chan_info->mdev;
->        unsigned int instance = chan_info->instance;
->        base = mdev->base + (instance * sizeof(u32));
->
-> ... which is why I said that the intermediary variables are required.
->
-> Well, I 'can' do that, but it seems to be unnecessarily obfuscating
-> what's going on and doesn't actually save any lines.
->
-> It's not a point that I consider arguing over though, so if you want
-> me to do it, I will.  You have the final say here.
->
-The macro seems tidier. Just a nit.
 
->> >> > +       spin_lock_irqsave(&sti_mbox_chan_lock, flags);
->> >> > +       mdev->enabled[instance] |= BIT(channel);
->> >> > +       writel_relaxed(BIT(channel), base + pdata->ena_set);
->> >> > +       spin_unlock_irqrestore(&sti_mbox_chan_lock, flags);
->> >> >
->> >> You don't need locking for SET/CLR type registers which are meant for
->> >> when they could be accessed by processors that can not share a lock.
->> >> So maybe drop the lock here and elsewhere.
->> >
->> > From what I can gather, I think we need this locking.  What happens if
->> > we get scheduled between setting the enabled bit in our cache and
->> > actually setting the ena_set bit?  We would be out of sync.
->> >
->> IIU what you mean... can't that still happen because of the  _relaxed()?
->
-> Not sure what you mean.  The _relaxed variant merely omit some IO
-> barriers.
->
-By the time you exit the spinlock the write may still haven't been
-effected. Maybe use writel() there.
+--tEhStdZb4uHHcvbt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->> And maybe embed sti_mbox_chan_lock inside sti_mbox_device.
->
-> Not sure this is required.  I can find >600 instances of others using
-> spinlocks as static globals.
->
-And there should be >600 instances of *static* globals that are
-protected by some static spinlock  ;)
+On Thu, Jul 23, 2015 at 05:10:41PM +0800, Leilk Liu wrote:
+> Change-Id: I6cadbf2e51d2cc4eacd518a24d5a9a1da93d4db5
+> Signed-off-by: Leilk Liu <leilk.liu@mediatek.com>
 
-Here the static sti_mbox_chan_lock protects sti_mbox_device which is
-allocated during probe. I hope you agree that the standard practice is
-to make the lock a member of the same structure that it protects.
-Otherwise it gives the wrong impression that the same lock will be
-used for any number of allocated mailbox instances.
+Please don't include noise like Change-Id in upstream commits and please
+use subject lines reflecting the style for the subsystem.
 
-cheers.
+--tEhStdZb4uHHcvbt
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJVsnc1AAoJECTWi3JdVIfQcS4H/RtCqCU+j0B8j6piCFxox3A8
+44uznNQzA0AChxWYSwxFPA3Hs49AB+iO2jY+UVH6ZYFAKXEVHHLy7hi62pjpiskA
+74MTNEKvb75BqE9q8bYDTN5yLFtJKC7OOyXiiziQ9n4mcbHgBL/p4s1DVaBiOHJj
+j1PpYOGlfjUegxkJVOUnbDxM4yDb3w05/vTMdoF1v2imrnr7ei1la7pNgcFVm+2Y
+I5S6FfQr/2+AyRk/zaLIkpf/GnFHAywr7y5nQCd0Z1DpKtvzqUz+pFiieTgtqHNx
+li1k/zhOX504p4X002TaIMqJUfb7qYxMBgdYxg1oTaE7X9vrk4MbAbCzryXsJUA=
+=bG3V
+-----END PGP SIGNATURE-----
+
+--tEhStdZb4uHHcvbt--
