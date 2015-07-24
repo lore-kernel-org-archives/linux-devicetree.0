@@ -1,67 +1,58 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v3 4/4] power: Add an axp20x-usb-power driver
-Date: Fri, 24 Jul 2015 17:10:21 +0200
-Message-ID: <20150724151020.GH27569@earth>
-References: <1435316357-26606-1-git-send-email-hdegoede@redhat.com>
- <1435316357-26606-4-git-send-email-hdegoede@redhat.com>
+From: Lee Jones <lee@kernel.org>
+Subject: Re: [PATCH v7 1/3] dt/bindings: Add binding for the Raspberry Pi
+ firmware driver
+Date: Fri, 24 Jul 2015 16:24:36 +0100
+Message-ID: <20150724152436.GQ3436@x1>
+References: <1437198880-8467-1-git-send-email-eric@anholt.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="+Z7/5fzWRHDJ0o7Q"
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1435316357-26606-4-git-send-email-hdegoede@redhat.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Bruno =?iso-8859-1?Q?Pr=E9mont?= <bonbons@linux-vserver.org>, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>, linux-sunxi@googlegroups.com
+In-Reply-To: <1437198880-8467-1-git-send-email-eric@anholt.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eric Anholt <eric@anholt.net>
+Cc: linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, 17 Jul 2015, Eric Anholt wrote:
 
---+Z7/5fzWRHDJ0o7Q
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> This driver will provide support for calls into the firmware that will
+> be used by other drivers like cpufreq and vc4.
+> 
+> Signed-off-by: Eric Anholt <eric@anholt.net>
+> Acked-by: Stephen Warren <swarren@wwwdotorg.org>
+> ---
+> 
+> v2: Improve commit message, point to mailbox.txt for how mboxes work.
+> v3: Use Lee's suggestion for mailbox phandle docs, fix spelling of
+>     "raspberry".
+> v4: Change the compatible string to "raspberrypi,bcm2835-firmware"
+>     (requested by Lee, agreed by Stephen)
+> v5: Add missing s-o-b, fix spelling.
+> 
+>  .../bindings/arm/bcm/raspberrypi,bcm2835-firmware.txt      | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.txt
 
-Hi,
+Acked-by: Lee Jones <lee@kernel.org>
 
-On Fri, Jun 26, 2015 at 12:59:17PM +0200, Hans de Goede wrote:
-> This adds a driver for the usb power_supply bits of the axp20x PMICs.
->=20
-> I initially started writing my own driver, before coming aware of
-> Bruno Pr=E9mont's excellent earlier RFC with a driver for this.
->=20
-> My driver was lacking CURRENT_MAX and VOLTAGE_MIN support Bruno's
-> drvier has, so I've copied the code for those from his driver.
->=20
-> Note that the AC-power-supply and battery charger bits will need separate
-> drivers. Each one needs its own devictree child-node so that other
-> devicetree nodes can reference the right power-supply, and thus each one
-> will get its own mfd-cell / platform_device and platform-driver.
-
-Once the other comments have been taken care of, the driver looks ok
-to me.
-
--- Sebastian
-
---+Z7/5fzWRHDJ0o7Q
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJVslVTAAoJENju1/PIO/qaJ1IQAKWE5Sktm+FAJrTEDBQIAshE
-yqRApCLufkp34pqxHrKbbieO0e0MXq/f/42QcBTRs5Oqznsz8SnjzDsAxteGa+SO
-XsdFG1fVqsdgJNYFAfFBPWxrh8tM8nbROv5S2EQrqd7jaAkiQC921QRYo9FrER4e
-TFpPLJ4HJG7AmpHDwyxz3+YaGtVPsRNM5oI9FdWftOycrSzCA22sUQ9MRFojzVIm
-CHg9aJ0YCBhNSE1jlFLxn65mpCiUW0y3SiwYKao3p2q6UiUOnxiSfCL6oSwwsTlS
-HaCXXYVgzIAX8nZIbK8f9TVu+0fds9AI5alXfNbx9BBFM3SiOjlm8fnFIXE4F6AU
-zyHFda8KZjUdGLjFRUS03fr6VDxJk44Qq3VFJnu7MyUk02pqBVjid9gvm8TPwRlz
-8voK1dErGh6R0p4phfoMhNVZIZVves+x21MpAzwq7q52UFf3yEfYZDqOHRWYnPpz
-Ly3hbistz+zXGthFiF8C9rluepp5V6orKBAsLJuhoA4Tggk3wJsl/+B2GePiHy5Z
-WOwWdrsFXG1B69azQuTYMKrfWPh+IPHLT8IXTUE1FPVKDtuCEmicCivhmuscnybH
-eCLQCNOC//52vSrccQ2juRSINAe+1AiDSWFof3XsV1KOWfXB3MWSjZ78LSeRmAOg
-5neoIdN8AgU9/gOOu/IO
-=ALq0
------END PGP SIGNATURE-----
-
---+Z7/5fzWRHDJ0o7Q--
+> diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.txt b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.txt
+> new file mode 100644
+> index 0000000..6824b31
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.txt
+> @@ -0,0 +1,14 @@
+> +Raspberry Pi VideoCore firmware driver
+> +
+> +Required properties:
+> +
+> +- compatible:		Should be "raspberrypi,bcm2835-firmware"
+> +- mboxes:		Phandle to the firmware device's Mailbox.
+> +			  (See: ../mailbox/mailbox.txt for more information)
+> +
+> +Example:
+> +
+> +firmware {
+> +	compatible = "raspberrypi,bcm2835-firmware";
+> +	mboxes = <&mailbox>;
+> +};
