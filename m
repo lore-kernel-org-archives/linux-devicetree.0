@@ -1,86 +1,199 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH] of/irq: introduce of_has_named_irqs helper
-Date: Fri, 24 Jul 2015 14:22:56 -0700
-Message-ID: <20150724212256.GC33241@dtor-ws>
-References: <20150724182655.GA22007@dtor-ws>
- <CAL_Jsq+JGpNBwS3HF1fF4HdefRCwhniaYCm5G4_WAnio7t-1og@mail.gmail.com>
- <20150724192619.GA33241@dtor-ws>
- <CAL_JsqKRat-OH=z3c0bCYEKCUrKDKHJPHaDCw977mfUYaKPSTA@mail.gmail.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] of: base: Allow more args than MAX_PHANDLE_ARGS if
+	required
+Date: Fri, 24 Jul 2015 16:27:18 -0500
+Message-ID: <55B2ADB6.3040307@gmail.com>
+References: <1437035444-13867-1-git-send-email-joro@8bytes.org>
+	<1437035444-13867-2-git-send-email-joro@8bytes.org>
+	<20150716102325.GC26390@arm.com> <20150716110900.GA30130@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqKRat-OH=z3c0bCYEKCUrKDKHJPHaDCw977mfUYaKPSTA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20150716110900.GA30130-l3A5Bk7waGM@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Joerg Roedel <jroedel-l3A5Bk7waGM@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 24, 2015 at 03:59:39PM -0500, Rob Herring wrote:
-> On Fri, Jul 24, 2015 at 2:26 PM, Dmitry Torokhov
-> <dmitry.torokhov@gmail.com> wrote:
-> > On Fri, Jul 24, 2015 at 02:14:57PM -0500, Rob Herring wrote:
-> >> On Fri, Jul 24, 2015 at 1:26 PM, Dmitry Torokhov
-> >> <dmitry.torokhov@gmail.com> wrote:
-> >> > Sometimes drivers might wish to transition from index-based to named
-> >> > interrupt descriptions. To aid in decision-making when parsing device
-> >> > tree data let's provide a helper that will indicate the scheme that is
-> >> > being used.
-> >>
-> >> Generally, IRQs are retrieved by platform_get_irq or
-> >> platform_get_irq_byname. Drivers should not call the of_irq_*
-> >> functions directly in most cases.
-> >
-> > That would be true for platform drivers, but not all devices are
-> > platform devices.
-> 
-> I should say for drivers, IRQs are retrieved by a bus specific method,
-> not DT functions. There are 3 cases of drivers using them:
-> 
-> arch/arm/mach-omap2/prm3xxx.c:                  irq_num = of_irq_get(np, 0);
-> arch/arm/mach-omap2/prm44xx.c:  irq_num = of_irq_get(prm_init_data->np, 0);
-> drivers/pinctrl/sirf/pinctrl-atlas7.c:          ret = of_irq_get(np, idx);
+On Thu, Jul 16, 2015 at 6:09 AM, Joerg Roedel <jroedel-l3A5Bk7waGM@public.gmane.org> wrote:
+> Hi Will,
+>
+> On Thu, Jul 16, 2015 at 11:23:26AM +0100, Will Deacon wrote:
+>> On Thu, Jul 16, 2015 at 09:30:43AM +0100, Joerg Roedel wrote:
+>> > +struct of_phandle_args *of_alloc_phandle_args(int size)
+>> > +{
+>> > +   struct of_phandle_args *args;
+>> > +   int e = max(0, size - MAX_PHANDLE_ARGS);
+>> > +
+>> > +   args =  kzalloc(sizeof(struct of_phandle_args) + e * sizeof(uint32_t),
+>> > +                   GFP_KERNEL);
+>>
+>> Should you also update args->args_count to reflect the extended array?
+>
+> The args_count member just tells us how many of the array elements are
+> used and not how many there are. So it doesn't need to be updated here.
+>
+>> That said, extending the fixed-size array member like this feels a bit
+>> fragile. Does GCC not complain about out-of-bounds accesses if you
+>> statically address args->args[MAX_PHANDLE_ARGS]? Admittedly, I can't
+>> think *why* this would be break (things like additional padding will be
+>> harmless), but I'm not intimate with the C standard.
+>
+> Yeah, I agree, it is not the best possible solution. But this way I
+> don't need to update all callers, and thus it works better with our
+> development model.
 
-Right, but I think with the newer wakeirq infrastructure we may start
-seeing them for non-platform devices unless we push it into bus code (as
-I've attempted to do in the patch I sent in the other email). 
+Our development model is not to work-around kernel APIs last time I checked.
 
-> 
-> >> > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> >> > ---
-> >> >
-> >> > The intent is to it like this:
-> >> >
-> >> >         if (of_has_named_irqs(np) {
-> >> >                 /* Wake IRQ is optional */
-> >> >                 dev->wakeirq = of_irq_get_byname(np, "wakeup");
-> >> >                 if (dev->wakeirq < 0 && dev->wakeirq != -ENODATA)
-> >> >                         return dev->wakeirq;
-> >> >         }
-> >>
-> >> of_irq_get_byname will already return an error if the property is not
-> >> present. Use that.
-> >
-> > I do not like that it returns -EINVAL when property is missing, can we
-> > change it to return -ENODATA (so it is the same as when the property is
-> > defined but such name is missing)?
-> 
-> It may be useful to distinguish between those cases. If you want audit
-> all the callers we could possibly change it though.
+> But I am open for suggestions on how to solve this problem better. In
+> fact, my main motivation in sending this was to get the discussion about
+> an upstreamable solution started :)
+>
+> Lets see what the device-tree maintainers have to say.
 
-It looks like the only user of of_irq_get_byname() is
-platform_get_irq_byname() and it doe snot care about anything but
--EPROBE_DEFER, so my audit effort is complete ;)
+A good number of callers and all iommu callers loop thru the list of 
+phandles which are just open coded ATM. So we should do loop iterators 
+here. With iterators, we can do the allocation within the iterators. 
+This can be much more efficient as we don't iterate thru the list from 
+the start every time. Normally, the list is not big enough to matter, 
+but in your case it may be.
 
-> 
-> Really, I don't understand why you would care about any error code
-> other than EPROBE_DEFER. If it is optional, then you would want to
-> continue no matter what is returned.
+I'm thinking something like this untested and not yet compiling patch. It 
+still has the abuse of adding onto the end of the of_phandle_args 
+struct which I don't really like. We could do a new struct, but I'd like 
+to keep this code common.
 
-No, I only want to proceed if it is not there. If there are errors (in
-DTS, elsewhere in the kernel) I want to let the user know and abort.
+I also need to refactor the existing code to use 
+__of_parse_one_phandle_with_args.
 
-Thanks.
+Rob
 
--- 
-Dmitry
+8<--------------------------------------------------------------------------------------------
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 8b5a187..c1c5a43 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -1442,6 +1442,96 @@ void of_print_phandle_args(const char *msg, const struct of_phandle_args *args)
+ 	printk("\n");
+ }
+ 
++
++static int __of_parse_one_phandle_with_args(const __be32 **list,
++					const char *cells_name,
++					int cell_count,
++					struct of_phandle_args **out_args)
++{
++	struct device_node *node;
++	phandle phandle;
++	struct of_phandle_args *args = *out_args;
++	const __be32 *start_list = *list;
++	u32 i, count = 0;
++	int ret;
++
++	/*
++	 * If phandle is 0, then it is an empty entry with no
++	 * arguments.  Skip forward to the next entry.
++	 */
++	phandle = be32_to_cpup(*list++);
++	if (phandle) {
++		/*
++		 * Find the provider node and parse the #*-cells
++		 * property to determine the argument length.
++		 *
++		 * This is not needed if the cell count is hard-coded
++		 * (i.e. cells_name not set, but cell_count is set),
++		 * except when we're going to return the found node
++		 * below.
++		 */
++		node = of_find_node_by_phandle(phandle);
++		if (!node)
++			return -ENOENT;
++
++		if (cells_name) {
++			ret = of_property_read_u32(node, cells_name, &count);
++			if (ret) {
++				pr_err("could not get %s for %s\n",
++				       cells_name, node->full_name);
++				return ret;
++			}
++		} else {
++			count = cell_count;
++		}
++	}
++
++	if (args && WARN_ON(count > MAX_PHANDLE_ARGS))
++		count = MAX_PHANDLE_ARGS;
++
++	if (!args) {
++		args = kzalloc(sizeof(*args) + (count * sizeof(uint32_t))), GFP_KERNEL);
++		*out_args = args;
++	}
++	if (!args)
++		return -ENOMEM;
++
++	if (!phandle) {
++		memset(args, 0, sizeof(*args));
++		return -ENOENT;
++	}
++
++	args->np = node;
++	args->val = start_list;
++	args->args_count = count;
++	for (i = 0; i < count; i++)
++		args->args[i] = be32_to_cpup(*list++);
++
++	return 0;
++}
++
++of_phandle_args *of_prop_next_phandle_args(struct property *prop,
++						const char *cells_name,
++						int cell_count,
++						struct of_phandle_args *last)
++{
++	struct of_phandle_args *args = NULL;
++	const __be32 *start_list;
++
++	if (!prop)
++		return NULL;
++
++	if (!last) {
++		start_list = prop->value;
++	} else {
++		start_list = last->val;
++		kfree(last);
++	}
++	__of_parse_one_phandle_with_args(list, cells_name, cell_count, &args);
++	return args;
++}
++EXPORT_SYMBOL_GPL(of_prop_next_phandle_args);
++
+ static int __of_parse_phandle_with_args(const struct device_node *np,
+ 					const char *list_name,
+ 					const char *cells_name,
+diff --git a/include/linux/of.h b/include/linux/of.h
+index edc068d..a0f432c 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -879,6 +879,13 @@ static inline int of_property_read_s32(const struct device_node *np,
+ 		s;						\
+ 		s = of_prop_next_string(prop, s))
+ 
++#define of_property_for_each_phandle_with_args(np, propname, cells_name, cell_count, prop, arg)	\
++	for (prop = of_find_property(np, propname, NULL),	\
++		arg = of_prop_next_phandle_args(prop, NULL);	\
++		arg;						\
++		arg = of_prop_next_phandle_args(prop, arg))
++
++
+ #define for_each_node_by_name(dn, name) \
+ 	for (dn = of_find_node_by_name(NULL, name); dn; \
+ 	     dn = of_find_node_by_name(dn, name))
