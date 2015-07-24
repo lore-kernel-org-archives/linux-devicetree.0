@@ -1,58 +1,58 @@
-From: Lee Jones <lee@kernel.org>
-Subject: Re: [PATCH v7 1/3] dt/bindings: Add binding for the Raspberry Pi
- firmware driver
-Date: Fri, 24 Jul 2015 16:24:36 +0100
-Message-ID: <20150724152436.GQ3436@x1>
+From: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v7 3/3] ARM: bcm2835: Add the firmware driver information
+ to the RPi DT
+Date: Fri, 24 Jul 2015 16:25:17 +0100
+Message-ID: <20150724152517.GR3436@x1>
 References: <1437198880-8467-1-git-send-email-eric@anholt.net>
+ <1437198880-8467-3-git-send-email-eric@anholt.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1437198880-8467-1-git-send-email-eric@anholt.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eric Anholt <eric@anholt.net>
-Cc: linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, devicetree@vger.kernel.org
+In-Reply-To: <1437198880-8467-3-git-send-email-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 On Fri, 17 Jul 2015, Eric Anholt wrote:
 
-> This driver will provide support for calls into the firmware that will
-> be used by other drivers like cpufreq and vc4.
-> 
-> Signed-off-by: Eric Anholt <eric@anholt.net>
-> Acked-by: Stephen Warren <swarren@wwwdotorg.org>
+> Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+> Acked-by: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> (previous version with pm-domains)
+
+For this version:
+  Acked-by: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+> Acked-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 > ---
 > 
-> v2: Improve commit message, point to mailbox.txt for how mboxes work.
-> v3: Use Lee's suggestion for mailbox phandle docs, fix spelling of
->     "raspberry".
-> v4: Change the compatible string to "raspberrypi,bcm2835-firmware"
->     (requested by Lee, agreed by Stephen)
-> v5: Add missing s-o-b, fix spelling.
+> v2: Drop pm-domains stuff since I've dropped it from the firmware
+>     driver for now, until we get drivers/base fixed.
 > 
->  .../bindings/arm/bcm/raspberrypi,bcm2835-firmware.txt      | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.txt
-
-Acked-by: Lee Jones <lee@kernel.org>
-
-> diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.txt b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.txt
-> new file mode 100644
-> index 0000000..6824b31
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.txt
-> @@ -0,0 +1,14 @@
-> +Raspberry Pi VideoCore firmware driver
+> v3: Rename the compatible to "raspberrypi,bcm2835-firmware"
+> 
+>  arch/arm/boot/dts/bcm2835-rpi.dtsi | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/bcm2835-rpi.dtsi b/arch/arm/boot/dts/bcm2835-rpi.dtsi
+> index 46780bb..ab5474e 100644
+> --- a/arch/arm/boot/dts/bcm2835-rpi.dtsi
+> +++ b/arch/arm/boot/dts/bcm2835-rpi.dtsi
+> @@ -14,6 +14,13 @@
+>  			linux,default-trigger = "heartbeat";
+>  		};
+>  	};
 > +
-> +Required properties:
-> +
-> +- compatible:		Should be "raspberrypi,bcm2835-firmware"
-> +- mboxes:		Phandle to the firmware device's Mailbox.
-> +			  (See: ../mailbox/mailbox.txt for more information)
-> +
-> +Example:
-> +
-> +firmware {
-> +	compatible = "raspberrypi,bcm2835-firmware";
-> +	mboxes = <&mailbox>;
-> +};
+> +	soc {
+> +		firmware: firmware {
+> +			compatible = "raspberrypi,bcm2835-firmware";
+> +			mboxes = <&mailbox>;
+> +		};
+> +	};
+>  };
+>  
+>  &gpio {
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
