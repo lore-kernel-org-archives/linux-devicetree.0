@@ -1,84 +1,113 @@
-From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Subject: Re: [PATCH 1/2] spi: bcm2835: add spi-bcm2835aux driver for the auxiliar spi1 and spi2
-Date: Fri, 24 Jul 2015 08:47:08 +0200
-Message-ID: <9005ABEC-C60A-4814-AD60-AD5BB09808F2@martin.sperl.org>
-References: <1434980408-4086-1-git-send-email-kernel@martin.sperl.org> <55A0A150.3060809@wwwdotorg.org> <ECFBB7BF-1316-4565-B1F2-FB2651131882@martin.sperl.org> <55A49662.3000706@wwwdotorg.org> <2768BFA9-7FE9-4EDC-8692-AC3F070BD874@martin.sperl.org> <55AEF828.20908@wwwdotorg.org> <0125992E-40F4-4702-8404-2943FF9A8788@martin.sperl.org> <55B1BA7A.1090104@wwwdotorg.org>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2102\))
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55B1BA7A.1090104-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH 1/3] Docs: dt: add generic MSI bindings
+Date: Fri, 24 Jul 2015 08:04:22 +0100
+Message-ID: <20150724080422.48cb64e2@why.wild-wind.fr.eu.org>
+References: <1437670365-20704-1-git-send-email-mark.rutland@arm.com>
+	<1437670365-20704-2-git-send-email-mark.rutland@arm.com>
+	<55B131C3.8050009@caviumnetworks.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <55B131C3.8050009@caviumnetworks.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Daney <ddaney@caviumnetworks.com>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Will Deacon <Will.Deacon@arm.com>, Robin Murphy <Robin.Murphy@arm.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, "arnd@arndb.de" <arnd@arndb.de>, "treding@nvidia.com" <treding@nvidia.com>, "majun258@huawei.com" <majun258@huawei.com>, "thunder.leizhen@huawei.com" <thunder.leizhen@huawei.com>, "tirumalesh.chalamarla@caviumnetworks.com" <tirumalesh.chalamarla@caviumnetworks.com>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, 23 Jul 2015 19:26:11 +0100
+David Daney <ddaney@caviumnetworks.com> wrote:
 
-> On 24.07.2015, at 06:09, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote=
-:
->=20
-> I think I'd expect the shared registers to be:
->=20
-> bcm2835aux: misc@0x7e215000 {
->    compatible =3D "brcm,bcm2835-aux";
->    reg =3D <0x7e215000 0x08>;
-> };
->=20
-> There are two 4-byte registers outside the UART/SPI blocks, and the
-> compatible value should reflect what the block is, not that Linux may
-> use a syscon driver to implement the driver for it.
->=20
-> In the client, I'd expect a more semantic naming for the reference;
-> something like:
->=20
-> 	brcm,aux =3D <&bcm2835aux 4>;
->=20
-> brcm, since it's a custom/vendor-specific property. aux is the name o=
-f
-> the object that's referenced. Packing the phandle and data together i=
-nto
-> a single property reduces the number of separate properties, and is a
-> typical thing to do in a client of a service in DT.
+> On 07/23/2015 09:52 AM, Mark Rutland wrote:
+> [...]
+> > +MSI clients
+> > +===========
+> > +
+> > +MSI clients are devices which generate MSIs. For each MSI they wish to
+> > +generate, the doorbell and payload may be configured, though sideband
+> > +information may not be configurable.
+> > +
+> > +Required properties:
+> > +--------------------
+> > +
+> > +- msi-parent: A list of phandle + msi-specifier pairs, one for each MSI
+> > +  controller which the device is capable of using.
+> > +
+> 
+> We say here that "msi-parent" consists of pairs ...
+> 
+> > +  This property is unordered, and MSIs may be allocated from any combination of
+> > +  MSI controllers listed in the msi-parent property.
+> > +
+> > +  If a device has restrictions on the allocation of MSIs, these restrictions
+> > +  must be described with additional properties.
+> > +
+> > +  When #msi-cells is non-zero, busses with an msi-parent will require
+> > +  additional properties to describe the relationship between devices on the bus
+> > +  and the set of MSIs they can potentially generate.
+> > +
+> > +
+> > +Example
+> > +=======
+> > +
+> > +/ {
+> > +	#address-cells = <1>;
+> > +	#size-cells = <1>;
+> > +
+> > +	msi_a: msi-controller@a {
+> > +		reg = <0xa 0xf00>;
+> > +		compatible = "vendor-a,some-controller";
+> > +		msi-controller;
+> > +		/* No sideband data, so #msi-cells omitted */
+> > +	};
+> > +
+> > +	msi_b: msi-controller@b {
+> > +		reg = <0xb 0xf00>;
+> > +		compatible = "vendor-b,another-controller";
+> > +		msi-controller;
+> > +		/* Each device has some unique ID */
+> > +		#msi-cells = <1>;
+> > +	};
+> > +
+> > +	msi_c: msi-controller@c {
+> > +		reg = <0xb 0xf00>;
+> > +		compatible = "vendor-b,another-controller";
+> > +		msi-controller;
+> > +		/* Each device has some unique ID */
+> > +		#msi-cells = <1>;
+> > +	};
+> > +
+> > +	dev@0 {
+> > +		reg = <0x0 0xf00>;
+> > +		compatible = "vendor-c,some-device";
+> > +
+> > +		/* Can only generate MSIs to msi_a */
+> > +		msi-parent = <&msi_a>;
+> 
+> 
+> My device-tree syntax foo is a little rusty, but doesn't "msi-parent" 
+> need a pair of elements?  This has only the phandle.
 
-So in the end you are saying we need a separate driver to get written
-(because of =91compatible =3D "brcm,bcm2835-aux=94;=92)
+This is a pair in the sense of (phandle, msi-specifier).
 
-That is unless you would allow:
-compatible =3D compatible =3D "brcm,bcm2835-aux=94, =93syscon=94;
+msi_a doesn't have a #msi-cells, so its msi-specifier is of size 0. In
+that case, the pair is (phandle, empty-set).
 
-If this is not acceptable, then where should such a driver go in the
-kernel tree?
+You could also have something like:
 
-It would essentially implement the following:
-bcm2835aux_enable(dev, device-id);
-bcm2835aux_disable(dev, device-id);
+	msi_d: msi-controller@d {
+		#msi-cells = <2>;
+	};
 
-Which would just set/clean the bits in the register while holding a loc=
-k.
+	dev@f {
+		msi-parent = <&msi_d 0x1 0x2>;
+	};
 
-As an alternative: maybe we could implement it as an IRQ driver
-and when the irq is requested for that device, then the HW-block gets
-enabled automatically (and disabled when released).
+and msi-parent in this case would still be a pair, with an
+msi-specifier of size 2.
 
-That way we may not need to have a separate driver that would enable
-the uart1, but it would be sufficient to configure it as follows:
+Hope this helps,
 
-uart1: uart@7e215040 {
-	compatible =3D "brcm,bcm2835-aux-uart", "ns16550";
-	reg =3D <0x7e215040 0x40>;
-	interrupts =3D <X 0>;
-	clock-frequency =3D <500000000>;
-	reg-shift =3D <2>;
-	no-loopback-test;
-	status =3D "disabled";
-};
-
-(taken from the foundation device-tree)
-
-Please clarify
-
-Thanks,
-Martin--
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	M.
+-- 
+Without deviation from the norm, progress is not possible.
