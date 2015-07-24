@@ -1,32 +1,55 @@
-From: Andy Gross <agross@codeaurora.org>
-Subject: Re: [PATCH v2 5/5] arm: qcom: dts: Enale NAND node on IPQ8064 AP148
- platform
-Date: Fri, 24 Jul 2015 13:59:17 -0500
-Message-ID: <20150724185917.GC24646@qualcomm.com>
-References: <1421419702-17812-1-git-send-email-architt@codeaurora.org>
- <1437474886-6209-1-git-send-email-architt@codeaurora.org>
- <1437474886-6209-6-git-send-email-architt@codeaurora.org>
+From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v2 0/7] serial: 8250_omap: workaround for IP errata
+Date: Fri, 24 Jul 2015 11:59:50 -0700
+Message-ID: <20150724185950.GA21552@kroah.com>
+References: <cover.1436855646.git.nsekhar@ti.com>
+ <55A4FEEC.3080101@hurleysoftware.com>
+ <20150714124908.GE10928@atomide.com>
+ <55B1DE10.60408@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1437474886-6209-6-git-send-email-architt@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Archit Taneja <architt@codeaurora.org>
-Cc: linux-mtd@lists.infradead.org, dehrenberg@google.com, cernekee@gmail.com, computersforpeace@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <55B1DE10.60408-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, John Ogness <john.ogness-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 21, 2015 at 04:04:46PM +0530, Archit Taneja wrote:
-> Enable the NAND controller node on the AP148 platform. Provide pinmux
-> information.
+On Fri, Jul 24, 2015 at 12:11:20PM +0530, Sekhar Nori wrote:
+> Hi Greg,
 > 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Archit Taneja <architt@codeaurora.org>
-> ---
+> On Tuesday 14 July 2015 06:19 PM, Tony Lindgren wrote:
+> > * Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org> [150714 05:24]:
+> >> On 07/14/2015 04:02 AM, Sekhar Nori wrote:
+> >>> This series works around "Advisory 21" as documented in
+> >>> AM437x SoC errata[1]. This errata prevents UART module
+> >>> from idling after DMA is used. AM335x and DRA7x also suffer
+> >>> from the same errata and chip design team is in the process
+> >>> of updating the errata documents of those devices as well.
+> >>>
+> >>> Patch 1/7 fixes a related bug but can be applied independently.
+> >>
+> >> Looks good. Thanks Sekhar!
+> >>
+> >> For series,
+> >>
+> >> Reviewed-by: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+> > 
+> > Also things still work for me, and the dts changes should
+> > not cause merge conflicts during v4.3 merge window based on
+> > what I have queued. So please feel free to queue these
+> > all via the tty tree and add:
+> > 
+> > Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> 
+> 
+> Looks like you have queued the first 6 patches of this series but left
+> out 7/7 which is a DTS update. Based on above, Tony is okay with you
+> going ahead and queuing that DTS patch too. Can you please go ahead and
+> queue 7/7 as well?
 
-One nit though.  The subject mispells Enable.
-
--- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Can you please resend it?  My queue is now empty.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
