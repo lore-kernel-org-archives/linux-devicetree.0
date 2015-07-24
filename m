@@ -1,8 +1,8 @@
 From: Andy Gross <agross@codeaurora.org>
 Subject: Re: [PATCH v2 5/5] arm: qcom: dts: Enale NAND node on IPQ8064 AP148
  platform
-Date: Fri, 24 Jul 2015 13:58:17 -0500
-Message-ID: <20150724185817.GB24646@qualcomm.com>
+Date: Fri, 24 Jul 2015 13:59:17 -0500
+Message-ID: <20150724185917.GC24646@qualcomm.com>
 References: <1421419702-17812-1-git-send-email-architt@codeaurora.org>
  <1437474886-6209-1-git-send-email-architt@codeaurora.org>
  <1437474886-6209-6-git-send-email-architt@codeaurora.org>
@@ -24,10 +24,7 @@ On Tue, Jul 21, 2015 at 04:04:46PM +0530, Archit Taneja wrote:
 > Signed-off-by: Archit Taneja <architt@codeaurora.org>
 > ---
 
-Looks fine.
-
-Reviewed-by: Andy Gross <agross@codeaurora.org>
-
+One nit though.  The subject mispells Enable.
 
 -- 
 Qualcomm Innovation Center, Inc.
