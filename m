@@ -1,77 +1,151 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] backlight: pm8941-wled: Add default-brightness property
-Date: Fri, 24 Jul 2015 10:39:06 -0500
-Message-ID: <CAL_JsqKcNjsLJPxQiWsjVtwsX2nsYGLSzjmX0cwo1QsZ+JE4Hg@mail.gmail.com>
-References: <1437681127-15760-1-git-send-email-bjorn.andersson@sonymobile.com> <CAF6AEGsJdLYzCA_=M8hf1XfhRxFAaY6VFdSBRP+y56uKsnQHiA@mail.gmail.com>
+From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 2/2] iommu/omap: Add support for configuring dsp iommus
+	on DRA7xx
+Date: Fri, 24 Jul 2015 11:24:46 -0500
+Message-ID: <55B266CE.9070202@ti.com>
+References: <1437522936-19758-1-git-send-email-s-anna@ti.com>
+	<1437522936-19758-3-git-send-email-s-anna@ti.com>
+	<20150722052600.GF17550@atomide.com> <55AFC34E.4000603@ti.com>
+	<20150723072455.GC16878@atomide.com> <55B114DF.8070800@ti.com>
+	<20150724043056.GG16878@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <CAF6AEGsJdLYzCA_=M8hf1XfhRxFAaY6VFdSBRP+y56uKsnQHiA@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rob Clark <robdclark@gmail.com>
-Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jingoo Han <jingoohan1@gmail.com>, Lee Jones <lee.jones@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Fbdev development list <linux-fbdev@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20150724043056.GG16878-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 24, 2015 at 8:10 AM, Rob Clark <robdclark@gmail.com> wrote:
-> On Thu, Jul 23, 2015 at 3:52 PM, Bjorn Andersson
-> <bjorn.andersson@sonymobile.com> wrote:
->> Add the possibility of specifying the default brightness in DT.
->>
->> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
->> ---
->>
->> This depends on the patch moving pm8941-wled to backlight [1]. The dt property
->> is used by several other backlight drivers, so I considered this to be a
->> "common" property and it's hence not prefixed with "qcom,".
->>
->> [1] https://lkml.org/lkml/2015/7/21/906
->>
->>  Documentation/devicetree/bindings/video/backlight/pm8941-wled.txt | 1 +
->>  drivers/video/backlight/pm8941-wled.c                             | 4 ++++
->>  2 files changed, 5 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/video/backlight/pm8941-wled.txt b/Documentation/devicetree/bindings/video/backlight/pm8941-wled.txt
->> index 424f8444a6cd..37503f8c3620 100644
->> --- a/Documentation/devicetree/bindings/video/backlight/pm8941-wled.txt
->> +++ b/Documentation/devicetree/bindings/video/backlight/pm8941-wled.txt
->> @@ -5,6 +5,7 @@ Required properties:
->>  - reg: slave address
->>
->>  Optional properties:
->> +- default-brightness: value from: 0-4095
->>  - label: The name of the backlight device
->>  - qcom,cs-out: bool; enable current sink output
->>  - qcom,cabc: bool; enable content adaptive backlight control
->> diff --git a/drivers/video/backlight/pm8941-wled.c b/drivers/video/backlight/pm8941-wled.c
->> index c704c3236034..b875e58df0fc 100644
->> --- a/drivers/video/backlight/pm8941-wled.c
->> +++ b/drivers/video/backlight/pm8941-wled.c
->> @@ -373,6 +373,7 @@ static int pm8941_wled_probe(struct platform_device *pdev)
->>         struct backlight_device *bl;
->>         struct pm8941_wled *wled;
->>         struct regmap *regmap;
->> +       u32 val = 0;
->>         int rc;
->
-> as discussed on IRC, it would be better if the default read back the
-> current settings (so-as to inherit bootloader splash smoothly..
-> drm/msm supports a memory-region phandle, for example, so it can take
-> over the bootloader splash-screen as stolen-mem)
->
-> and it would I think be useful to have a comment in the bindings file
-> explaining that you *should* use the default-brightness property to
-> set a sane default if bootloader isn't putting up a splash, and you
-> should *not* use the property if it is..
+Hi Tony,
 
-+1
+On 07/23/2015 11:30 PM, Tony Lindgren wrote:
+> * Suman Anna <s-anna-l0cyMroinI0@public.gmane.org> [150723 09:25]:
+>> Hi Tony,
+>>
+>> On 07/23/2015 02:24 AM, Tony Lindgren wrote:
+>>> * Suman Anna <s-anna-l0cyMroinI0@public.gmane.org> [150722 09:25]:
+>>>> On 07/22/2015 12:26 AM, Tony Lindgren wrote:
+>>>>>
+>>>>> I don't like using syscon for tinkering directly with SoC registers.
+>>>>
+>>>> This is not a SoC-level register, but a register within a sub-module of
+>>>> the DSP processor sub-system. The DSP_SYSTEM sub-module in general is
+>>>> described in Section 5.3.3 of the TRM [1], and it implements different
+>>>> functionalities like the PRCM handshaking, wakeup logic and DSP
+>>>> subsystem top-level configuration. It is a module present within the DSP
+>>>> processor sub-system, so can only be accessed when the sub-system is
+>>>> clocked and the appropriate reset is released.
+>>>
+>>> OK so if it's specific to the DSP driver along the lines of sysc and
+>>> syss registers.
+>>
+>> There will be those registers too within the MMU config register space,
+>> even for DRA7xx MMUs. This is different, think of it like a register in
+>> the Control module except that it is present within the DSP sub-system
+>> instead of at the SoC level.
+> 
+> And what is taking care of pm_runtime_get here to ensure the module
+> is powered and clocked?
 
-What if you have neither? Set to max brightness? 75%?
+pm_runtime_get_sync is indeed getting invoked, its just the current
+patch doesn't include the code block that invokes it. The function that
+invokes omap2_iommu_enable does so after a call to the
+pm_runtime_get_sync() call.
 
-This could also be used for the bootloader to communicate to the
-kernel what the current level is if it is not readable. I've seen one
-backlight recently which you change the level by doing some number of
-pulses on a gpio and a long pulse to turn off. So there is no way to
-know current level without turning off the backlight (unless you
-hardcode the bootloader's level in the kernel like the vendor did).
+> 
+> I think you are missing a layer here and it's the Linux kernel side
+> device driver for DSP that initializes things.
 
-Rob
+We already have separate drivers for MMUs (omap-iommu) and the processor
+management (omap-rproc). The former manages all the low-level
+programming sequences for the MMUs, while the latter manages the
+low-level reset etc, and is a client user of the respective IOMMU
+device. Both integrate into the respective frameworks. The IOMMU API
+invocations are handled in the remoteproc core, with the OMAP remoteproc
+driver publishing itself as having an MMU with the remoteproc core. The
+IOMMU API invoke the appropriate iommu_ops.
+
+You can lookup the functions rproc_enable_iommu()/rproc_disable_iommu()
+in the remoteproc core. The IOMMU enabling sequences happen within the
+iommu_attach_device() API. The call flow is
+iommu_attach_device()->omap_iommu_attach_dev()->omap_iommu_attach()->
+iommu_enable()->
+   omap_device_deassert_hardreset, pm_runtime_get_sync, omap2_iommu_enable.
+
+>  
+>>> Typically we handle these registers by mapping them to the PM runtime
+>>> functions for the interconnect so we can reset and idle the hardware
+>>> modules even if there is no driver, see for example
+>>> omap54xx_mmu_dsp_hwmod.
+>>
+>> I haven't yet submitted the DRA7xx hwmods, but they will look almost
+>> exactly like the OMAP5 ones. The reset and idle on these are in general
+>> not effective at boot time since these are also controlled by a
+>> hard-reset line, so that's left to the drivers to deal with it through
+>> the omap_device_deassert_hardreset API.
+> 
+> If the MMU configuration is one time init, it may make sense to add
+> it to the hwmod reset function. However, if the Linux kernel side
+> driver needs to configure things depending on the DSP firmware, it
+> should be done in the kernel side device driver.
+
+The MMU configuration comes into picture whenever the remoteproc driver
+is being booted and shut down, and also during suspend (no support for
+this yet in mainline on OMAP rproc). Today, the hwmod
+_enable/_idle/reset functions alone are not enough to power on the OMAP
+remoteproc/iommus. We need sequencing calls to both
+omap_device_assert/_deassert_hardreset (done through pdata-quirks) and
+pm_runtime API to achieve this.
+
+
+>  
+>>>>> We should use some Linux generic framework for configuring these
+>>>>> bits to avoid nasty dependencies between various hardware modules
+>>>>> on the SoC.
+>>>>>
+>>>>> What does DSP_SYS_MMU_CONFIG register do? It seems it's probably
+>>>>> a regulator or a gate clock? If so, it should be set up as a
+>>>>> regulator or a clock and then the omap-iommu driver can just
+>>>>> use regulator or clcok framework to request the resource.
+>>>>
+>>>> No, its neither. It is a control bit that dictates whether the
+>>>> processor/EDMA addresses go through the respective MMU or not. The
+>>>> register currently has 4 bits (bit 0 in each nibble), one each for
+>>>> enabling each MMU and requesting an MMU abort on each. The MMU
+>>>> integration and enablement notes are detailed in Section 5.3.6 of the
+>>>> TRM [1], and the DSP_SYS_MMU_CONFIG register layout is in Table 5-28
+>>>> (Page 1641).
+>>>
+>>> OK yeah seems like it should be handled by the DSP driver during
+>>> probe after doing pm_runtime_get. Then the driver can configure
+>>> things like IOMMU and load firmware. Or am I missing something here?
+>>
+>> The DSP (remoteproc) driver uses the generic IOMMU API, and all the
+>> IOMMU enabling sequence is transparent to the DSP driver. So, any
+>> configuration/enabling sequence specific to the IOMMU has to be handled
+>> within the respective IOMMU platform driver that gets integrated into
+>> the IOMMU API.
+> 
+> To me it seems you still need a DSP kernel driver to manage the
+> DSP hardware for PM runtime. I don't see how iommu and remoteproc
+> alone would be sufficient here. You end up sprinkling DSP driver
+> specific code to the iommu and remoteproc layers.
+
+I am not sure what you envision to be in this DSP kernel driver, because
+all the needed functionality is already handled by existing drivers. The
+OMAP remoteproc driver is the kernel driver to deal with the device
+management for both IPUs and DSPs on OMAP4, OMAP5 and DRA7 (DT support
+to be added).
+
+regards
+Suman
