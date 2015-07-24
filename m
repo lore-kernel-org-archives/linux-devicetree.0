@@ -1,167 +1,93 @@
-From: Jianwei Wang <jianwei.wang.chn@gmail.com>
-Subject: Re: [PATCH v11 1/5] drm/layerscape: Add Freescale DCU DRM driver
-Date: Fri, 24 Jul 2015 16:18:22 +0800
-Message-ID: <CANk3uyDVj-UHpxpEkvtC+DrKERS5MsLbxdBCCJGPiA+VQoP0Tw@mail.gmail.com>
-References: <1437386042-34825-1-git-send-email-jianwei.wang.chn@gmail.com>
- <CANk3uyCOCALEjH7Sk4pJtvowyL4qnAiPmUzcrFha3GbuCTAP9Q@mail.gmail.com>
- <20150724074859.GJ16722@phenom.ffwll.local>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH] backlight: pm8941-wled: Add default-brightness property
+Date: Fri, 24 Jul 2015 09:22:04 +0100
+Message-ID: <20150724082204.GX3436@x1>
+References: <1437681127-15760-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20150724074859.GJ16722@phenom.ffwll.local>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: jianwei wang <jianwei.wang.chn@gmail.com>, dri-devel@lists.freedesktop.org, airlied@linux.ie, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, =?UTF-8?B?5aea5pm65oOF?= <mark.yao@rock-chips.com>, scottwood@freescale.com, Thierry Reding <thierry.reding@gmail.com>, Alison Wang <b18965@freescale.com>, Xiubo Li <lixiubo@cmss.chinamobile.com>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1437681127-15760-1-git-send-email-bjorn.andersson@sonymobile.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jingoo Han <jingoohan1@gmail.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Rob Clark <robdclark@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBKdWwgMjQsIDIwMTUgYXQgMzo0OCBQTSwgRGFuaWVsIFZldHRlciA8ZGFuaWVsQGZm
-d2xsLmNoPiB3cm90ZToKPiBPbiBGcmksIEp1bCAyNCwgMjAxNSBhdCAxMToyMTo1N0FNICswODAw
-LCBqaWFud2VpIHdhbmcgd3JvdGU6Cj4+IEhpIERhdmUsCj4+Cj4+IEkgdGhpbmsgRnJlZXNjYWxl
-IERDVSBEUk0gZHJpdmVyIGlzIHJlYWR5IG5vdywgY2FuIGl0IGxhbmQ/Cj4+Cj4+IEkgaGF2ZSB3
-b3JrZWQgb24gdGhpcyBkcml2ZXIgZm9yIGFib3V0IG5pbmUgbW9udGguIERhbmllbCBWZXR0ZXIs
-Cj4+IFRoaWVycnkgUmVkaW5nLCBNYXJrIHlhbywKPj4gQWxleGFuZGVyIFN0ZWluLCBQYXVsIEJv
-bGxlLCBBbGlzb24gV2FuZywgU3RlZmFuIEFnbmVyIHJldmlld2VkIHRoaXMKPj4gcGF0aHNldC4g
-VGhlIGxhdGVzdAo+PiB2ZXJzaW9uIHYxMSBoYXMgYmVlbiBzZW5kIG91dCBhYm91dCBhbiB3ZWVr
-LCBhbmQgbm8gbW9yZSBjb21tZW50cyBhbnkgbW9yZS4KPgo+IE9uIGEgcXVpY2sgbG9vayBhYm91
-dCBvdmVyYWxsIHByb2Nlc3MgdGhlcmUncyBhIGZldyBiaXRzIG1pc3Npbmcgc3RpbGw6Cj4gLSBy
-ZXZpZXcgZnJvbSBkdCBtYWludGFpbmVyIGZvciB0aGUgZGV2aWNlLXRyZWUgcGllY2VzIChyZXZp
-ZXcgZnJvbSBhbgo+ICAgb3JpZ2luYWwgYXV0aG9yIGxpa2UgQWxpY2UgV2FuZyBkb2Vzbid0IGNv
-dW50KS4KPiAtIG5lZWRzIG9uZSBwYXRjaCBmb3IgTUFJTlRBSU5FUiBlbnRyeSBmb3IgZHJtL2xh
-eWVyc2NhcGUuCj4gLSBqdXN0IHNlbmQgYSBwdWxsIHJlcXVlc3QgdG8gRGF2ZSBvbmNlIHlvdSBo
-YXZlIHRoaXMgYWxsLgo+Cj4gQ2hlZXJzLCBEYW5pZWwKCk9rYXksIFRoYW5rcyEKCkJSLgpKaWFu
-d2VpCgo+Pgo+PiBCUi4KPj4gSmlhbndlaQo+Pgo+PiBPbiBNb24sIEp1bCAyMCwgMjAxNSBhdCA1
-OjUzIFBNLCBKaWFud2VpIFdhbmcKPj4gPGppYW53ZWkud2FuZy5jaG5AZ21haWwuY29tPiB3cm90
-ZToKPj4gPiBUaGlzIHBhdGNoIGFkZCBzdXBwb3J0IGZvciBUd28gRGltZW5zaW9uYWwgQW5pbWF0
-aW9uIGFuZCBDb21wb3NpdGluZwo+PiA+IEVuZ2luZSAoMkQtQUNFKSBvbiB0aGUgRnJlZXNjYWxl
-IFNvQ3MuCj4+ID4KPj4gPiAyRC1BQ0UgaXMgYSBGcmVlc2NhbGUgZGlzcGxheSBjb250cm9sbGVy
-LiAyRC1BQ0UgZGVzY3JpYmVzCj4+ID4gdGhlIGZ1bmN0aW9uYWxpdHkgb2YgdGhlIG1vZHVsZSBl
-eHRyZW1lbHkgd2VsbCBpdHMgbmFtZSBpcyBhIHZhbHVlCj4+ID4gdGhhdCBjYW5ub3QgYmUgdXNl
-ZCBhcyBhIHRva2VuIGluIHByb2dyYW1taW5nIGxhbmd1YWdlcy4KPj4gPiBJbnN0ZWFkIHRoZSB2
-YWxpZCB0b2tlbiAiRENVIiBpcyB1c2VkIHRvIHRhZyB0aGUgcmVnaXN0ZXIgbmFtZXMgYW5kCj4+
-ID4gZnVuY3Rpb24gbmFtZXMuCj4+ID4KPj4gPiBUaGUgRGlzcGxheSBDb250cm9sbGVyIFVuaXQg
-KERDVSkgbW9kdWxlIGlzIGEgc3lzdGVtIG1hc3RlciB0aGF0Cj4+ID4gZmV0Y2hlcyBncmFwaGlj
-cyBzdG9yZWQgaW4gaW50ZXJuYWwgb3IgZXh0ZXJuYWwgbWVtb3J5IGFuZCBkaXNwbGF5cwo+PiA+
-IHRoZW0gb24gYSBURlQgTENEIHBhbmVsLiBBIHdpZGUgcmFuZ2Ugb2YgcGFuZWwgc2l6ZXMgaXMg
-c3VwcG9ydGVkCj4+ID4gYW5kIHRoZSB0aW1pbmcgb2YgdGhlIGludGVyZmFjZSBzaWduYWxzIGlz
-IGhpZ2hseSBjb25maWd1cmFibGUuCj4+ID4gR3JhcGhpY3MgYXJlIHJlYWQgZGlyZWN0bHkgZnJv
-bSBtZW1vcnkgYW5kIHRoZW4gYmxlbmRlZCBpbiByZWFsLXRpbWUsCj4+ID4gd2hpY2ggYWxsb3dz
-IGZvciBkeW5hbWljIGNvbnRlbnQgY3JlYXRpb24gd2l0aCBtaW5pbWFsIENQVQo+PiA+IGludGVy
-dmVudGlvbi4KPj4gPgo+PiA+IFRoZSBmZWF0dXJlczoKPj4gPiAoMSkgRnVsbCBSR0I4ODggb3V0
-cHV0IHRvIFRGVCBMQ0QgcGFuZWwuCj4+ID4gKDIpIEJsZW5kaW5nIG9mIGVhY2ggcGl4ZWwgdXNp
-bmcgdXAgdG8gNCBzb3VyY2UgbGF5ZXJzCj4+ID4gZGVwZW5kZW50Cj4+ID4gb24gc2l6ZSBvZiBw
-YW5lbC4KPj4gPiAoMykgRWFjaCBncmFwaGljIGxheWVyIGNhbiBiZSBwbGFjZWQgd2l0aCBvbmUg
-cGl4ZWwgcmVzb2x1dGlvbgo+PiA+IGluIGVpdGhlciBheGlzLgo+PiA+ICg0KSBFYWNoIGdyYXBo
-aWMgbGF5ZXIgc3VwcG9ydCBSR0I1NjUgYW5kIFJHQjg4OCBkaXJlY3QgY29sb3JzCj4+ID4gd2l0
-aG91dCBhbHBoYSBjaGFubmVsIGFuZCBCR1JBODg4OCBCR1JBNDQ0NCBBUkdCMTU1NSBkaXJlY3QK
-Pj4gPiBjb2xvcnMKPj4gPiB3aXRoIGFuIGFscGhhIGNoYW5uZWwgYW5kIFlVVjQyMiBmb3JtYXQu
-Cj4+ID4gKDUpIEVhY2ggZ3JhcGhpYyBsYXllciBzdXBwb3J0IGFscGhhIGJsZW5kaW5nIHdpdGgg
-OC1iaXQKPj4gPiByZXNvbHV0aW9uLgo+PiA+Cj4+ID4gVGhpcyBpcyBhIHNpbXBsaWZpZWQgdmVy
-c2lvbiwgb25seSBvbmUgcHJpbWFyeSBwbGFuZSwgb25lCj4+ID4gZnJhbWVidWZmZXIsIG9uZSBj
-cnRjLCBvbmUgY29ubmVjdG9yIGFuZCBvbmUgZW5jb2RlciBmb3IgVEZUCj4+ID4gTENEIHBhbmVs
-Lgo+PiA+Cj4+ID4gU2lnbmVkLW9mZi1ieTogQWxpc29uIFdhbmcgPGIxODk2NUBmcmVlc2NhbGUu
-Y29tPgo+PiA+IFNpZ25lZC1vZmYtYnk6IFhpdWJvIExpIDxsaXhpdWJvQGNtc3MuY2hpbmFtb2Jp
-bGUuY29tPgo+PiA+IFNpZ25lZC1vZmYtYnk6IEppYW53ZWkgV2FuZyA8amlhbndlaS53YW5nLmNo
-bkBnbWFpbC5jb20+Cj4+ID4gQWNrZWQtYnk6IERhbmllbCBWZXR0ZXIgPGRhbmllbC52ZXR0ZXJA
-ZmZ3bGwuY2g+Cj4+ID4gUmV2aWV3ZWQtYnk6IEFsaXNvbiBXYW5nIDxhbGlzb24ud2FuZ0BmcmVl
-c2NhbGUuY29tPgo+PiA+IC0tLQo+PiA+Cj4+ID4KPj4gPiBDaGFuZ2VkIGluIFYxMQo+PiA+IC1z
-ZXQgcmVnbWFwX2NvbmZpZy5jYWNoZV90eXBlIHRvIFJFR0NBQ0hFX0ZMQVQKPj4gPiBBZHZhbmNl
-ZCBieSBBbGV4YW5kZXIgU3RlaW4KPj4gPgo+PiA+IENoYW5nZWQgaW4gVjEwCj4+ID4gLWFkanVz
-dCBjb21taXQgbG9nLCByZW1vdmUgbWVhbmluZ2xlc3Mgc3RhdGVtZW50Cj4+ID4gLWNsZWFudXAg
-Y29kZSBmb3IgaXQncyBmb3JtYXQgYW5kIHN0eWxlLgo+PiA+IC1yZW1vdmUgcGxhdGZvcm0gcmVs
-YXRlZCBjb2RlIG91dCwgaW5jbHVkaW5nIG9mIHRjb24odmY2MTApIGFuZCBzY2ZnKGxzMTAyMWEp
-Cj4+ID4gLXJlbW92ZSB1c2VsZXNzIHNlbnRlbmNlczogZW5jb2Rlci0+Y3J0YyA9IGNydGM7IGFu
-ZCBjb25uZWN0b3ItPmVuY29kZXIgPSBlbmNvZGVyOyBhbmQgc28gb24KPj4gPiAtYWRkIHZlbmRv
-ciBwcmVmaXggZm9yIHBhbmVsIHBhbmRsZQo+PiA+IC1tYWtlIGEgRENVX0NUUkxERVNDTE4oeCwg
-eSkgIHRvIGF2b2lkIGhpZ2ggcmVwZXRpdGlvbgo+PiA+IC1pbnRyb2R1Y2UgcGVyLVNvQyBjYXBh
-YmlsaXR5IHN0cnVjdHVyZSB0byBhdm9pZCBjaGVjayBvbiB0aGUgT0Ygbm9kZSdzIGNvbXBhdGli
-bGUgc3RyaW5nCj4+ID4gLUltcGxlbWVudCBzb21lIGZ1bmN0aW9uczogY3J0YyBlbmFibGUgYW5k
-IGRpc2FibGUsIGVuYWJsZSBhbmQgZGlzYWJsZSBWQkxBTkssIHBsYW5lIGF0b21pY19kaXNhYmxl
-IGFuZCBhdG9taWNfZW5hYmxlIC1hdG9taWNfY2hlY2sgYW5kIHNvIG9uCj4+ID4gLW1vdmUgRENV
-IGNvbmZpZyBzZW50ZW5jZSB0byB0aGUgcmlnaHQgcGxhY2UKPj4gPiAtbW92ZSBnZXQgcmVzb3Vy
-Y2VzIGZ1bmN0aW9ucyB0byAgLT5wcm9iZSgpCj4+ID4gLW1vdmUgZnNsLGRjdS50eHQgdG8gdmlk
-ZW8vIGZvbGRlcgo+PiA+IC1hZGQgYmlnLWVuZGlhbiBkZXNjcmliZQo+PiA+IEFsbCBhZHZhY2Vk
-IGJ5IFRoaWVycnkgUmVkaW5nCj4+ID4KPj4gPiBDaGFuZ2VkIGluIFY5Cj4+ID4KPj4gPiAtcHV0
-IG5vZGUgYWZ0ZXIgY2FsbGluZyBvZl9kcm1fZmluZF9wYW5lbAo+PiA+IC1zcGxpdCBjbGtfcHJl
-cGFyZV9lbmFibGUoKSB0byBjbGtfcHJlcGFyZSgpIGFuZCBjbGtfZW5hYmxlKCksIGp1c3QgY2Fs
-bCBjbGtfcHJlcGFyZSBvbmNlLCBhbmQgY2hlY2sgcmV0dXJuIHZhbHVlCj4+ID4gLWNoZWNrIHJl
-Z21hcF93cml0ZS9yZWdtYXBfcmVhZCByZXR1cm4gcmV0dXJuIHZhbHVlCj4+ID4gLXJlbW92ZSB1
-c2VsZXNzICIub3duZXIgICAgPSBUSElTX01PRFVMRSwiCj4+ID4gQWxsIGFkdmFuY2VkIGJ5IE1h
-cmsgWWFvCj4+ID4KPj4gPiBDaGFuZ2VkIGluIFY4Cj4+ID4KPj4gPiAtIFJlbW92ZSB1c2VsZXNz
-IGNvZGUKPj4gPiAgI2RlZmluZSBEUklWRVJfTkFNRSAgICAgImZzbC1kY3UtZHJtIgo+PiA+ICBN
-T0RVTEVfQUxJQVMoInBsYXRmb3JtOmZzbC1kY3UtZHJtIik7Cj4+ID4gQWR2aWNlZCBieSBQYXVs
-IEJvbGxlCj4+ID4KPj4gPiBDaGFuZ2VkIGluIFY3Cj4+ID4KPj4gPiAtIFJlbW92ZSByZWR1bmRh
-bnQgZnVuY3Rpb25zIGFuZCByZXBsYWNlIGRlcHJlY2F0ZWQgaG9va2VyCj4+ID4gQWR2aWNlZCBi
-eSBEYW5pZWwgVmV0dGVyCj4+ID4gLSBSZXBsYWNlIGRybV9wbGF0Zm9ybV9pbml0IHdpdGggZHJt
-X2Rldl9hbGxvYy9yZWdpc3Rlcgo+PiA+IEFkdmljZWQgYnkgRGFuaWVsIFZldHRlcgo+PiA+Cj4+
-ID4gQ2hhbmdlZCBpbiBWNgo+PiA+Cj4+ID4gLSBBZGQgTkVDIG5sNDgyN2hjMTlfMDViIHBhbmVs
-IHRvIHBhbmVsLXNpbXBsZS5jCj4+ID4gQWR2aWNlZCBieSBNYXJrIFlhbwo+PiA+IC0gQWRkIERS
-SVZFUl9BVE9NSUMgZm9yIGRyaXZlcl9mZWF0dXJlcwo+PiA+IEFkdmljZWQgYnkgTWFyayBZYW8K
-Pj4gPiAtIGNoZWNrIGZzbF9kZXYgaWYgaXQncyBOVUxMIGF0IFBNIHN1c3BlbmQvcmVzdW1lCj4+
-ID4gQWR2aWNlZCBieSBNYXJrIFlhbwo+PiA+Cj4+ID4gQ2hhbmdlZCBpbiBWNQo+PiA+Cj4+ID4g
-LSBVcGRhdGUgY29tbWl0IG1lc3NhZ2UKPj4gPiAtIEFkZCBsYXllciByZWdpc3RlcnMgaW5pdGlh
-bGl6YXRpb24KPj4gPiAtIFJlbW92ZSB1bnVzZWQgZnVuY3Rpb25zCj4+ID4gLSBSZW5hbWUgZHJp
-dmVyIGZvbGRlcgo+PiA+IEFkdmljZWQgYnkgU3RlZmFuIEFnbmVyCj4+ID4gLSBNb3ZlIHBpeGVs
-IGNsb2NrIGNvbnRyb2wgZnVuY3Rpb25zIHRvIGZzbF9kY3VfZHJtX2Rydi5jCj4+ID4gLSByZW1v
-dmUgcmVkdW5kYW50IGVuYWJsZSB0aGUgY2xvY2sgaW1wbGljaXRseSB1c2luZyByZWdtYXAKPj4g
-PiAtIEFkZCBtYWludGFpbmVyIG1lc3NhZ2UKPj4gPgo+PiA+IENoYW5nZWQgaW4gVjQ6Cj4+ID4K
-Pj4gPiAtVGhpcyB2ZXJzaW9uIGRvZXNuJ3QgaGF2ZSBmdW5jdGlvbmFsaXR5IGNoYW5nZWQKPj4g
-PiBKdXN0IGEgbWlub3IgYWRqdXN0bWVudC4KPj4gPgo+PiA+IENoYW5nZWQgaW4gVjM6Cj4+ID4K
-Pj4gPiAtIFRlc3QgZHJpdmVyIG9uIFZ5YnJpZCBib2FyZCBhbmQgYWRkIGNvbXBhdGlibGUgc3Ry
-aW5nCj4+ID4gLSBSZW1vdmUgdW51c2VkIGZ1bmN0aW9ucwo+PiA+IC0gc2V0IGRlZmF1bHQgY3J0
-YyBmb3IgZW5jb2Rlcgo+PiA+IC0gcmVwbGFjZSBsZWdhY3kgZnVuY3Rpb25zIHdpdGggYXRvbWlj
-IGhlbHAgZnVuY3Rpb25zCj4+ID4gQWR2aWNlZCBieSBEYW5pZWwgVmV0dGVyCj4+ID4gLSBTZXQg
-dGhlIHVuaXF1ZSBuYW1lIG9mIHRoZSBEUk0gZGV2aWNlCj4+ID4gLSBJbXBsZW1lbnQgaXJxIGhh
-bmRsZSBmdW5jdGlvbiBmb3IgdmJsYW5rIGludGVycnVwdAo+PiA+Cj4+ID4gQ2hhbmdlZCBpbiB2
-MjoKPj4gPiAtIEFkZCBhdG9taWMgc3VwcG9ydAo+PiA+IEFkdmljZWQgYnkgRGFuaWVsIFZldHRl
-cgo+PiA+IC0gTW9kaWZ5IGJpbmRpbmdzIGZpbGUKPj4gPiAtIFJlbmFtZSBub2RlIGZvciBjb21w
-YXRpYmlsaXR5Cj4+ID4gLSBNb3ZlIHBsYXRmb3JtIHJlbGF0ZWQgY29kZSBvdXQgZm9yIGNvbXBh
-dGliaWxpdHkKPj4gPiBBZHZpY2VkIGJ5IFN0ZWZhbiBBZ25lcgo+PiA+Cj4+ID4KPj4gPiAgLi4u
-L2RldmljZXRyZWUvYmluZGluZ3MvdmlkZW8vZnNsLGRjdS50eHQgICAgICAgICAgfCAgMjIgKysK
-Pj4gPiAgTUFJTlRBSU5FUlMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-fCAgIDggKwo+PiA+ICBkcml2ZXJzL2dwdS9kcm0vS2NvbmZpZyAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICB8ICAgMiArCj4+ID4gIGRyaXZlcnMvZ3B1L2RybS9NYWtlZmlsZSAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIHwgICAxICsKPj4gPiAgZHJpdmVycy9ncHUvZHJtL2ZzbC1kY3UvS2Nv
-bmZpZyAgICAgICAgICAgICAgICAgICAgfCAgMTggKwo+PiA+ICBkcml2ZXJzL2dwdS9kcm0vZnNs
-LWRjdS9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICB8ICAgNyArCj4+ID4gIGRyaXZlcnMvZ3B1
-L2RybS9mc2wtZGN1L2ZzbF9kY3VfZHJtX2NydGMuYyAgICAgICAgIHwgMjA4ICsrKysrKysrKysr
-Cj4+ID4gIGRyaXZlcnMvZ3B1L2RybS9mc2wtZGN1L2ZzbF9kY3VfZHJtX2NydGMuaCAgICAgICAg
-IHwgIDE5ICsKPj4gPiAgZHJpdmVycy9ncHUvZHJtL2ZzbC1kY3UvZnNsX2RjdV9kcm1fZHJ2LmMg
-ICAgICAgICAgfCA0MDMgKysrKysrKysrKysrKysrKysrKysrCj4+ID4gIGRyaXZlcnMvZ3B1L2Ry
-bS9mc2wtZGN1L2ZzbF9kY3VfZHJtX2Rydi5oICAgICAgICAgIHwgMTk3ICsrKysrKysrKysKPj4g
-PiAgZHJpdmVycy9ncHUvZHJtL2ZzbC1kY3UvZnNsX2RjdV9kcm1fZmJkZXYuYyAgICAgICAgfCAg
-MjMgKysKPj4gPiAgZHJpdmVycy9ncHUvZHJtL2ZzbC1kY3UvZnNsX2RjdV9kcm1fa21zLmMgICAg
-ICAgICAgfCAgNDMgKysrCj4+ID4gIGRyaXZlcnMvZ3B1L2RybS9mc2wtZGN1L2ZzbF9kY3VfZHJt
-X291dHB1dC5oICAgICAgIHwgIDMzICsrCj4+ID4gIGRyaXZlcnMvZ3B1L2RybS9mc2wtZGN1L2Zz
-bF9kY3VfZHJtX3BsYW5lLmMgICAgICAgIHwgMjYxICsrKysrKysrKysrKysKPj4gPiAgZHJpdmVy
-cy9ncHUvZHJtL2ZzbC1kY3UvZnNsX2RjdV9kcm1fcGxhbmUuaCAgICAgICAgfCAgMTcgKwo+PiA+
-ICBkcml2ZXJzL2dwdS9kcm0vZnNsLWRjdS9mc2xfZGN1X2RybV9yZ2IuYyAgICAgICAgICB8IDE4
-MiArKysrKysrKysrCj4+ID4gIDE2IGZpbGVzIGNoYW5nZWQsIDE0NDQgaW5zZXJ0aW9ucygrKQo+
-PiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L3ZpZGVvL2ZzbCxkY3UudHh0Cj4+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9k
-cm0vZnNsLWRjdS9LY29uZmlnCj4+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9k
-cm0vZnNsLWRjdS9NYWtlZmlsZQo+PiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUv
-ZHJtL2ZzbC1kY3UvZnNsX2RjdV9kcm1fY3J0Yy5jCj4+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBk
-cml2ZXJzL2dwdS9kcm0vZnNsLWRjdS9mc2xfZGN1X2RybV9jcnRjLmgKPj4gPiAgY3JlYXRlIG1v
-ZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9mc2wtZGN1L2ZzbF9kY3VfZHJtX2Rydi5jCj4+ID4g
-IGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vZnNsLWRjdS9mc2xfZGN1X2RybV9k
-cnYuaAo+PiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2ZzbC1kY3UvZnNs
-X2RjdV9kcm1fZmJkZXYuYwo+PiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJt
-L2ZzbC1kY3UvZnNsX2RjdV9kcm1fa21zLmMKPj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZl
-cnMvZ3B1L2RybS9mc2wtZGN1L2ZzbF9kY3VfZHJtX291dHB1dC5oCj4+ID4gIGNyZWF0ZSBtb2Rl
-IDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vZnNsLWRjdS9mc2xfZGN1X2RybV9wbGFuZS5jCj4+ID4g
-IGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vZnNsLWRjdS9mc2xfZGN1X2RybV9w
-bGFuZS5oCj4+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vZnNsLWRjdS9m
-c2xfZGN1X2RybV9yZ2IuYwo+PiA+Cj4KPiAtLQo+IERhbmllbCBWZXR0ZXIKPiBTb2Z0d2FyZSBF
-bmdpbmVlciwgSW50ZWwgQ29ycG9yYXRpb24KPiBodHRwOi8vYmxvZy5mZndsbC5jaApfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGlu
-ZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVk
-ZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Thu, 23 Jul 2015, Bjorn Andersson wrote:
+
+> Add the possibility of specifying the default brightness in DT.
+>=20
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+> ---
+>=20
+> This depends on the patch moving pm8941-wled to backlight [1]. The dt=
+ property
+> is used by several other backlight drivers, so I considered this to b=
+e a
+> "common" property and it's hence not prefixed with "qcom,".
+>=20
+> [1] https://lkml.org/lkml/2015/7/21/906
+>=20
+>  Documentation/devicetree/bindings/video/backlight/pm8941-wled.txt | =
+1 +
+
+This needs to be in a seperate patch.
+
+>  drivers/video/backlight/pm8941-wled.c                             | =
+4 ++++
+
+You can't send patches on top of non-existent drivers.
+
+>  2 files changed, 5 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/video/backlight/pm8941=
+-wled.txt b/Documentation/devicetree/bindings/video/backlight/pm8941-wl=
+ed.txt
+> index 424f8444a6cd..37503f8c3620 100644
+> --- a/Documentation/devicetree/bindings/video/backlight/pm8941-wled.t=
+xt
+> +++ b/Documentation/devicetree/bindings/video/backlight/pm8941-wled.t=
+xt
+> @@ -5,6 +5,7 @@ Required properties:
+>  - reg: slave address
+> =20
+>  Optional properties:
+> +- default-brightness: value from: 0-4095
+>  - label: The name of the backlight device
+>  - qcom,cs-out: bool; enable current sink output
+>  - qcom,cabc: bool; enable content adaptive backlight control
+> diff --git a/drivers/video/backlight/pm8941-wled.c b/drivers/video/ba=
+cklight/pm8941-wled.c
+> index c704c3236034..b875e58df0fc 100644
+> --- a/drivers/video/backlight/pm8941-wled.c
+> +++ b/drivers/video/backlight/pm8941-wled.c
+> @@ -373,6 +373,7 @@ static int pm8941_wled_probe(struct platform_devi=
+ce *pdev)
+>  	struct backlight_device *bl;
+>  	struct pm8941_wled *wled;
+>  	struct regmap *regmap;
+> +	u32 val =3D 0;
+>  	int rc;
+> =20
+>  	regmap =3D dev_get_regmap(pdev->dev.parent, NULL);
+> @@ -395,8 +396,11 @@ static int pm8941_wled_probe(struct platform_dev=
+ice *pdev)
+>  	if (rc)
+>  		return rc;
+> =20
+> +	of_property_read_u32(pdev->dev.of_node, "default-brightness", &val)=
+;
+> +
+>  	memset(&props, 0, sizeof(struct backlight_properties));
+>  	props.type =3D BACKLIGHT_RAW;
+> +	props.brightness =3D val;
+>  	props.max_brightness =3D PM8941_WLED_REG_VAL_MAX;
+>  	bl =3D devm_backlight_device_register(&pdev->dev, wled->name,
+>  					    &pdev->dev, wled,
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
