@@ -1,64 +1,51 @@
-From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v6 0/3] cpufreq: Use cpufreq-dt driver for Exynos3250
-Date: Fri, 24 Jul 2015 15:22:27 +0900
-Message-ID: <55B1D9A3.8060301@samsung.com>
-References: <1435797761-3339-1-git-send-email-cw00.choi@samsung.com>
- <4464631.oZyVO4Z0Ov@amdc1976> <093101d0b8c3$4b5d3ec0$e217bc40$@kernel.org>
- <20150724003005.642.21781@quantum> <55B1B3B0.8090106@kernel.org>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 0/7] serial: 8250_omap: workaround for IP errata
+Date: Fri, 24 Jul 2015 12:11:20 +0530
+Message-ID: <55B1DE10.60408@ti.com>
+References: <cover.1436855646.git.nsekhar@ti.com> <55A4FEEC.3080101@hurleysoftware.com> <20150714124908.GE10928@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <55B1B3B0.8090106-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20150714124908.GE10928-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, 'Bartlomiej Zolnierkiewicz' <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Chanwoo Choi' <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, John Ogness <john.ogness-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 24.07.2015 12:40, Kukjin Kim wrote:
-> On 07/24/15 09:30, Michael Turquette wrote:
->> Quoting Kukjin Kim (2015-07-07 07:43:31)
->>> Bartlomiej Zolnierkiewicz wrote:
-> 
-> [...]
-> 
->>>>> Chanwoo Choi (3):
->>>>>   clk: samsung: exynos3250: Add cpu clock configuration data and instaniate cpu clock
->>>>>   ARM: dts: Add CPU OPP and regulator supply property for Exynos3250
->>>>>   ARM: exynos: Add exynos3250 compatible to use generic cpufreq driver
->>>>>
->>>>>  arch/arm/boot/dts/exynos3250-monk.dts   |  4 ++++
->>>>>  arch/arm/boot/dts/exynos3250-rinato.dts |  4 ++++
->>>>>  arch/arm/boot/dts/exynos3250.dtsi       | 15 +++++++++++++++
->>>>>  arch/arm/mach-exynos/exynos.c           |  1 +
->>>>>  drivers/clk/samsung/clk-exynos3250.c    | 32 ++++++++++++++++++++++++++++++--
->>>>>  include/dt-bindings/clock/exynos3250.h  |  1 +
->>>>>  6 files changed, 55 insertions(+), 2 deletions(-)
->>>>
->>>> Reviewed-by: Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>>>
->>>> Thank you for working on this.
->>>>
->>> +1 Thanks.
+Hi Greg,
+
+On Tuesday 14 July 2015 06:19 PM, Tony Lindgren wrote:
+> * Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org> [150714 05:24]:
+>> On 07/14/2015 04:02 AM, Sekhar Nori wrote:
+>>> This series works around "Advisory 21" as documented in
+>>> AM437x SoC errata[1]. This errata prevents UART module
+>>> from idling after DMA is used. AM335x and DRA7x also suffer
+>>> from the same errata and chip design team is in the process
+>>> of updating the errata documents of those devices as well.
 >>>
->>> Mike and Sylwester, if you're OK on this series, I'd like to pick up in Samsung
->>> tree together. And if you want, I could provide topic branch for clk tree.
+>>> Patch 1/7 fixes a related bug but can be applied independently.
 >>
->> Kukjin,
+>> Looks good. Thanks Sekhar!
 >>
->> A topic branch would be great.
+>> For series,
 >>
-> Sure, BTW it means you did 'ack' on this clk change? If not, please let
-> em know ;-) I'll let you know once the topic branch is ready.
+>> Reviewed-by: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+> 
+> Also things still work for me, and the dts changes should
+> not cause merge conflicts during v4.3 merge window based on
+> what I have queued. So please feel free to queue these
+> all via the tty tree and add:
+> 
+> Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> 
 
-Dear Kukjin,
+Looks like you have queued the first 6 patches of this series but left
+out 7/7 which is a DTS update. Based on above, Tony is okay with you
+going ahead and queuing that DTS patch too. Can you please go ahead and
+queue 7/7 as well?
 
-Will you handle this patchset and dependants (ARM: dts: Add CPU cooling
-binding for Exynos3250-based Rinato/Monk board) for v4.3?
-
-Best regards,
-Krzysztof
-
+Thanks,
+Sekhar
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
