@@ -1,20 +1,23 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v7 2/2] mfd: atmel-flexcom: add a driver for Atmel Flexible
- Serial Communication Unit
-Date: Fri, 24 Jul 2015 10:42:37 +0200
-Message-ID: <55B1FA7D.9080306@atmel.com>
-References: <cover.1437669004.git.cyrille.pitchen@atmel.com> <55921f08b2d5d14256141edbe12287fba55860c4.1437669004.git.cyrille.pitchen@atmel.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v7 2/2] mfd: atmel-flexcom: add a driver for Atmel
+ Flexible Serial Communication Unit
+Date: Fri, 24 Jul 2015 09:43:55 +0100
+Message-ID: <20150724084355.GY3436@x1>
+References: <cover.1437669004.git.cyrille.pitchen@atmel.com>
+ <55921f08b2d5d14256141edbe12287fba55860c4.1437669004.git.cyrille.pitchen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
 In-Reply-To: <55921f08b2d5d14256141edbe12287fba55860c4.1437669004.git.cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Le 23/07/2015 18:42, Cyrille Pitchen a =E9crit :
+On Thu, 23 Jul 2015, Cyrille Pitchen wrote:
+
 > This driver supports the new Atmel Flexcom. The Flexcom is a wrapper =
 which
 > integrates one SPI controller, one I2C controller and one USART. Only=
@@ -33,13 +36,7 @@ ART
 >=20
 > Also the Flexcom embeds FIFOs: the latest patches of the SPI, I2C and
 > USART drivers take advantage of this new feature.
-
-Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Thank you.
-
-Bye,
-
-
+>=20
 > Signed-off-by: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 > ---
 >  drivers/mfd/Kconfig         |  11 +++++
@@ -69,7 +66,13 @@ me
 > +	  by the probe function of this MFD driver according to a device tr=
 ee
 > +	  property.
-> +
+
+Please grep for QCOM_GSBI in drivers/soc/qcom/*
+
+Similar right?
+
+Perhaps this should live in drivers/soc/atmel/* instead?
+
 >  config MFD_ATMEL_HLCDC
 >  	tristate "Atmel HLCDC (High-end LCD Controller)"
 >  	select MFD_CORE
@@ -159,9 +162,16 @@ rty
 > +	 */
 > +	err =3D of_property_read_u32_index(child, "reg", 0, &opmode);
 > +	of_node_put(child);
+
+Don't think you need to of_node_put() after a u32 read.
+
 > +	if (err)
 > +		return -EINVAL;
-> +
+
+Why are you making up your own return value.
+
+Just return err.
+
 > +	if ((opmode =3D=3D FLEX_MR_OPMODE_NO_COM) ||
 > +	    (opmode & ~FLEX_MR_OPMODE_MASK))
 > +		return -EINVAL;
@@ -213,11 +223,12 @@ f the
 > +MODULE_AUTHOR("Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>");
 > +MODULE_DESCRIPTION("Atmel Flexcom MFD driver");
 > +MODULE_LICENSE("GPL v2");
->=20
-
 
 --=20
-Nicolas Ferre
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" i=
 n
