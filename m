@@ -1,32 +1,42 @@
-From: Andy Gross <agross@codeaurora.org>
-Subject: Re: [PATCH v2 4/5] arm: qcom: dts: Add NAND controller node for
- ipq806x
-Date: Fri, 24 Jul 2015 14:01:53 -0500
-Message-ID: <20150724190153.GE24646@qualcomm.com>
-References: <1421419702-17812-1-git-send-email-architt@codeaurora.org>
- <1437474886-6209-1-git-send-email-architt@codeaurora.org>
- <1437474886-6209-5-git-send-email-architt@codeaurora.org>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] of/irq: introduce of_has_named_irqs helper
+Date: Fri, 24 Jul 2015 14:14:57 -0500
+Message-ID: <CAL_Jsq+JGpNBwS3HF1fF4HdefRCwhniaYCm5G4_WAnio7t-1og@mail.gmail.com>
+References: <20150724182655.GA22007@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1437474886-6209-5-git-send-email-architt@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Archit Taneja <architt@codeaurora.org>
-Cc: linux-mtd@lists.infradead.org, dehrenberg@google.com, cernekee@gmail.com, computersforpeace@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150724182655.GA22007@dtor-ws>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 21, 2015 at 04:04:45PM +0530, Archit Taneja wrote:
-> The nand controller in IPQ806x is of the 'EBI2 type'. Use the corresponding
-> compatible string.
-> 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Archit Taneja <architt@codeaurora.org>
+On Fri, Jul 24, 2015 at 1:26 PM, Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
+> Sometimes drivers might wish to transition from index-based to named
+> interrupt descriptions. To aid in decision-making when parsing device
+> tree data let's provide a helper that will indicate the scheme that is
+> being used.
+
+Generally, IRQs are retrieved by platform_get_irq or
+platform_get_irq_byname. Drivers should not call the of_irq_*
+functions directly in most cases.
+
+>
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 > ---
+>
+> The intent is to it like this:
+>
+>         if (of_has_named_irqs(np) {
+>                 /* Wake IRQ is optional */
+>                 dev->wakeirq = of_irq_get_byname(np, "wakeup");
+>                 if (dev->wakeirq < 0 && dev->wakeirq != -ENODATA)
+>                         return dev->wakeirq;
+>         }
 
-Reviewed-by: Andy Gross <agross@codeaurora.org>
+of_irq_get_byname will already return an error if the property is not
+present. Use that.
 
--- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Rob
