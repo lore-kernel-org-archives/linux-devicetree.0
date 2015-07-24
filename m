@@ -1,55 +1,71 @@
-From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH v2 0/7] serial: 8250_omap: workaround for IP errata
-Date: Fri, 24 Jul 2015 11:59:50 -0700
-Message-ID: <20150724185950.GA21552@kroah.com>
-References: <cover.1436855646.git.nsekhar@ti.com>
- <55A4FEEC.3080101@hurleysoftware.com>
- <20150714124908.GE10928@atomide.com>
- <55B1DE10.60408@ti.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] drivers/of/fdt.c: replace pr_warning by pr_warn
+Date: Fri, 24 Jul 2015 14:00:57 -0500
+Message-ID: <CAL_JsqKY7hTurOdR4kgXZBT922-s-paM-CgU5rv_fB4qinfxSA@mail.gmail.com>
+References: <1437465693-143982-1-git-send-email-long.wanglong@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <55B1DE10.60408-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, John Ogness <john.ogness-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1437465693-143982-1-git-send-email-long.wanglong@huawei.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wang Long <long.wanglong@huawei.com>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, peifeiyue@huawei.com, wanglong@laoqinren.net
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 24, 2015 at 12:11:20PM +0530, Sekhar Nori wrote:
-> Hi Greg,
-> 
-> On Tuesday 14 July 2015 06:19 PM, Tony Lindgren wrote:
-> > * Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org> [150714 05:24]:
-> >> On 07/14/2015 04:02 AM, Sekhar Nori wrote:
-> >>> This series works around "Advisory 21" as documented in
-> >>> AM437x SoC errata[1]. This errata prevents UART module
-> >>> from idling after DMA is used. AM335x and DRA7x also suffer
-> >>> from the same errata and chip design team is in the process
-> >>> of updating the errata documents of those devices as well.
-> >>>
-> >>> Patch 1/7 fixes a related bug but can be applied independently.
-> >>
-> >> Looks good. Thanks Sekhar!
-> >>
-> >> For series,
-> >>
-> >> Reviewed-by: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
-> > 
-> > Also things still work for me, and the dts changes should
-> > not cause merge conflicts during v4.3 merge window based on
-> > what I have queued. So please feel free to queue these
-> > all via the tty tree and add:
-> > 
-> > Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> 
-> 
-> Looks like you have queued the first 6 patches of this series but left
-> out 7/7 which is a DTS update. Based on above, Tony is okay with you
-> going ahead and queuing that DTS patch too. Can you please go ahead and
-> queue 7/7 as well?
+On Tue, Jul 21, 2015 at 3:01 AM, Wang Long <long.wanglong@huawei.com> wrote:
+> Update the last pr_warning callsite in drivers/of.
 
-Can you please resend it?  My queue is now empty.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+That is obvious in the diff, but can you tell me why?
+
+Rob
+
+> Signed-off-by: Wang Long <long.wanglong@huawei.com>
+> ---
+>  drivers/of/fdt.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index 0749656..e1f61b8 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -425,7 +425,7 @@ static void __unflatten_device_tree(const void *blob,
+>         start = 0;
+>         unflatten_dt_node(blob, mem, &start, NULL, mynodes, 0, false);
+>         if (be32_to_cpup(mem + size) != 0xdeadbeef)
+> -               pr_warning("End of tree marker overwritten: %08x\n",
+> +               pr_warn("End of tree marker overwritten: %08x\n",
+>                            be32_to_cpup(mem + size));
+>
+>         pr_debug(" <- unflatten_device_tree()\n");
+> @@ -985,24 +985,24 @@ void __init __weak early_init_dt_add_memory_arch(u64 base, u64 size)
+>         size &= PAGE_MASK;
+>
+>         if (base > MAX_PHYS_ADDR) {
+> -               pr_warning("Ignoring memory block 0x%llx - 0x%llx\n",
+> +               pr_warn("Ignoring memory block 0x%llx - 0x%llx\n",
+>                                 base, base + size);
+>                 return;
+>         }
+>
+>         if (base + size - 1 > MAX_PHYS_ADDR) {
+> -               pr_warning("Ignoring memory range 0x%llx - 0x%llx\n",
+> +               pr_warn("Ignoring memory range 0x%llx - 0x%llx\n",
+>                                 ((u64)MAX_PHYS_ADDR) + 1, base + size);
+>                 size = MAX_PHYS_ADDR - base + 1;
+>         }
+>
+>         if (base + size < phys_offset) {
+> -               pr_warning("Ignoring memory block 0x%llx - 0x%llx\n",
+> +               pr_warn("Ignoring memory block 0x%llx - 0x%llx\n",
+>                            base, base + size);
+>                 return;
+>         }
+>         if (base < phys_offset) {
+> -               pr_warning("Ignoring memory range 0x%llx - 0x%llx\n",
+> +               pr_warn("Ignoring memory range 0x%llx - 0x%llx\n",
+>                            base, phys_offset);
+>                 size -= phys_offset - base;
+>                 base = phys_offset;
+> --
+> 1.8.3.4
+>
