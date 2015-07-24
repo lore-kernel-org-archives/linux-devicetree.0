@@ -1,43 +1,58 @@
-From: Jianwei Wang <jianwei.wang.chn@gmail.com>
-Subject: [PATCH v12 6/6] MAINTAINERS: add Freescale DCU DRM driver maintainer
-Date: Fri, 24 Jul 2015 18:12:18 +0800
-Message-ID: <1437732738-4960-7-git-send-email-jianwei.wang.chn@gmail.com>
-References: <1437732738-4960-1-git-send-email-jianwei.wang.chn@gmail.com>
+From: Andrey Danin <danindrey@mail.ru>
+Subject: Re: [PATCH v3 1/4] i2c: tegra: implement slave mode
+Date: Fri, 24 Jul 2015 13:18:28 +0300
+Message-ID: <55B210F4.6030700@mail.ru>
+References: <1437424546-30405-1-git-send-email-danindrey@mail.ru>
+ <1437424546-30405-2-git-send-email-danindrey@mail.ru>
+ <20150724092720.GA1597@katana>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1437732738-4960-1-git-send-email-jianwei.wang.chn@gmail.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org
-Cc: devicetree@vger.kernel.org, Xiubo Li <lixiubo@cmss.chinamobile.com>, daniel.vetter@ffwll.ch, Alison Wang <b18965@freescale.com>, linux-kernel@vger.kernel.org, scottwood@freescale.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150724092720.GA1597@katana>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>, Stephen Warren <swarren@wwwdotorg.org>
+Cc: devicetree@vger.kernel.org, devel@linuxdriverproject.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, ac100@lists.launchpad.net, Laxman Dewangan <ldewangan@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Julian Andres Klode <jak@jak-linux.org>, Marc Dietrich <marvin24@gmx.de>
 List-Id: devicetree@vger.kernel.org
 
-QWRkIEFsaXNvbiBhbmQgbXlzZWxmIGFzIG1haW50YWluZXJzIG9mIHRoZSBGcmVlc2NhbGUgRENV
-IERSTSBkcml2ZXIuCgpTaWduZWQtb2ZmLWJ5OiBBbGlzb24gV2FuZyA8YjE4OTY1QGZyZWVzY2Fs
-ZS5jb20+ClNpZ25lZC1vZmYtYnk6IFhpdWJvIExpIDxsaXhpdWJvQGNtc3MuY2hpbmFtb2JpbGUu
-Y29tPgpTaWduZWQtb2ZmLWJ5OiBKaWFud2VpIFdhbmcgPGppYW53ZWkud2FuZy5jaG5AZ21haWwu
-Y29tPgotLS0KIE1BSU5UQUlORVJTIHwgOSArKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCA5IGlu
-c2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9NQUlOVEFJTkVSUyBiL01BSU5UQUlORVJTCmluZGV4
-IDY3NjEzMTguLjM4N2E4NGEgMTAwNjQ0Ci0tLSBhL01BSU5UQUlORVJTCisrKyBiL01BSU5UQUlO
-RVJTCkBAIC0zMzk3LDYgKzMzOTcsMTUgQEAgRjoJZHJpdmVycy9ncHUvZHJtL2V4eW5vcy8KIEY6
-CWluY2x1ZGUvZHJtL2V4eW5vcyoKIEY6CWluY2x1ZGUvdWFwaS9kcm0vZXh5bm9zKgogCitEUk0g
-RFJJVkVSUyBGT1IgRlJFRVNDQUxFIERDVQorTToJSmlhbndlaSBXYW5nIDxqaWFud2VpLndhbmcu
-Y2huQGdtYWlsLmNvbT4KK006CUFsaXNvbiBXYW5nIDxhbGlzb24ud2FuZ0BmcmVlc2NhbGUuY29t
-PgorTDoJZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZworUzoJU3VwcG9ydGVkCitGOglk
-cml2ZXJzL2dwdS9kcm0vZnNsLWRjdS8KK0Y6CURvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy92aWRlby9mc2wsZGN1LnR4dAorRjoJRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL3BhbmVsL25lYyxubDQ4MjdoYzE5XzA1Yi50eHQKKwogRFJNIERSSVZFUlMgRk9SIEZSRUVT
-Q0FMRSBJTVgKIE06CVBoaWxpcHAgWmFiZWwgPHAuemFiZWxAcGVuZ3V0cm9uaXguZGU+CiBMOglk
-cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCi0tIAoyLjEuMC4yNy5nOTZkYjMyNAoKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
-aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5m
-cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On 24.07.2015 12:27, Wolfram Sang wrote:
+> Still doesn't work for me and I think I understand why. Do you run your
+> I2C controller in slave mode only?
+
+Yes.
+
+> That might work, but using it in
+> master/slave mode simultanously won't work yet as I see it:
+>
+> * After every transfer (as master), clocks get disabled. I assume the IP
+>    core won't be able to detect its own address then.
+
+At the begin of my work on this patchset I even denied clock disable 
+call if slave is registered (to minimize code that can affect transfer). 
+If only slave mode is used, then this logic is not needed.
+
+>
+> * There is this code in tegra_i2c_init():
+>
+> 	if (!i2c_dev->is_dvc) {
+> 		u32 sl_cfg = i2c_readl(i2c_dev, I2C_SL_CNFG);
+> 		sl_cfg |= I2C_SL_CNFG_NACK | I2C_SL_CNFG_NEWSL;
+> 		i2c_writel(i2c_dev, sl_cfg, I2C_SL_CNFG);
+> 		i2c_writel(i2c_dev, 0xfc, I2C_SL_ADDR1);
+> 		i2c_writel(i2c_dev, 0x00, I2C_SL_ADDR2);
+>
+> 	}
+>
+>    It probably messes up the slave initialization in tegra_reg_slave().
+>    At least I see that the slave address gets overwritten when I peek
+>    the register after boot.
+>
+
+tegra_i2c_init is called on probe and resume. Also it is called in case 
+of xfer fail. If xfer is ok, then I think slave addr must be kept unchanged.
+
+> Does that make sense to you?
+
+As far as I understand it is a loopback mode. Probably it will not work 
+(Stephen Warren already mentioned this).
+But we can try to run it.
