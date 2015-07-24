@@ -1,91 +1,287 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v3 4/6] power: da9150: Add DT bindings documentation for
- Fuel-Gauge
-Date: Sat, 25 Jul 2015 00:00:53 +0200
-Message-ID: <20150724220053.GA24362@earth>
-References: <cover.1436284659.git.Adam.Thomson.Opensource@diasemi.com>
- <3f9095a583c26cdb4a6dd7b749d7f6b33c87b8f7.1436284659.git.Adam.Thomson.Opensource@diasemi.com>
+From: "Chalamarla, Tirumalesh" <Tirumalesh.Chalamarla-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 2/3] Docs: dt: Add PCI MSI map bindings
+Date: Fri, 24 Jul 2015 23:27:17 +0000
+Message-ID: <FD9C4916-6BDC-40F2-A273-91BFBD3B0075@caviumnetworks.com>
+References: <1437670365-20704-1-git-send-email-mark.rutland@arm.com>
+	<1437670365-20704-3-git-send-email-mark.rutland@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="AqsLC8rIMeq19msA"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <3f9095a583c26cdb4a6dd7b749d7f6b33c87b8f7.1436284659.git.Adam.Thomson.Opensource@diasemi.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Support Opensource <support.opensource@diasemi.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <1437670365-20704-3-git-send-email-mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Language: en-US
+Content-ID: <5660608F853E9B45AF76AE9C96581B64-Tk6F3M/euE6cE4WynfumptQqCkab/8FMAL8bYrjMMd8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org" <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Daney, David" <David.Daney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "Chalamarla, Tirumalesh" <Tirumalesh.Chalamarla-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org" <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org" <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "majun258-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <majun258-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---AqsLC8rIMeq19msA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hi,
-
-On Tue, Jul 07, 2015 at 05:34:21PM +0100, Adam Thomson wrote:
-> diff --git a/Documentation/devicetree/bindings/power/da9150-fg.txt b/Documentation/devicetree/bindings/power/da9150-fg.txt
+looks good. possible to describe the chip we have.
+> On Jul 23, 2015, at 9:52 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> 
+> Currently msi-parent is used by a few bindings to describe the
+> relationship between a PCI root complex and a single MSI controller, but
+> this property does not have a generic binding document.
+> 
+> Additionally, msi-parent is insufficient to describe more complex
+> relationships between MSI controllers and devices under a root complex,
+> where devices may be able to target multiple MSI controllers, or where
+> MSI controllers use (non-probeable) sideband information to distinguish
+> devices.
+> 
+> This patch adds a generic binding for mapping PCI devices to MSI
+> controllers. This document covers msi-parent, and a new msi-map property
+> (specific to PCI*) which may be used to map devices (identified by their
+> Requester ID) to sideband data for each MSI controller that they may
+> target.
+> 
+> Signed-off-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> ---
+> Documentation/devicetree/bindings/pci/pci-msi.txt | 220 ++++++++++++++++++++++
+> 1 file changed, 220 insertions(+)
+> create mode 100644 Documentation/devicetree/bindings/pci/pci-msi.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/pci-msi.txt b/Documentation/devicetree/bindings/pci/pci-msi.txt
 > new file mode 100644
-> index 0000000..c3c76eb
+> index 0000000..9b3cc81
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/da9150-fg.txt
-> @@ -0,0 +1,23 @@
-> +Dialog Semiconductor DA9150 Fuel-Gauge Power Supply bindings
+> +++ b/Documentation/devicetree/bindings/pci/pci-msi.txt
+> @@ -0,0 +1,220 @@
+> +This document describes the generic device tree binding for describing the
+> +relationship between PCI devices and MSI controllers.
 > +
-> +Required properties:
-> +- compatible: "dlg,da9150-fg" for DA9150 Fuel-Gauge Power Supply
-                  ^^^^^^^^^^^^^
-
-s/dlg,da9150-fg/dlg,da9150-fuel-gauge/g
-
-> +Optional properties:
-> +- dlg,update-interval: Interval time (milliseconds) between battery level checks.
-> +- dlg,warn-soc-level: Battery discharge level (%) where warning event raised.
-> +      [1 - 100]
-> +- dlg,crit-soc-level: Battery discharge level (%) where critical event raised.
-> +  This value should be lower than the warning level.
-> +      [1 - 100]
+> +Each PCI device under a root complex is uniquely identified by its Requester ID
+> +(AKA RID). A Requester ID is a triplet of a Bus number, Device number, and
+> +Function number.
+> +
+> +For the purpose of this document, when treated as a numeric value, a RID is
+> +formatted such that:
+> +
+> +* Bits [15:8] are the Bus number.
+> +* Bits [7:3] are the Device number.
+> +* Bits [2:0] are the Function number.
+> +* Any other bits required for padding must be zero.
+> +
+> +MSIs may be distinguished in part through the use of sideband data accompanying
+> +writes. In the case of PCI devices, this sideband data may be derived from the
+> +Requester ID. A mechanism is required to associate a device with both the MSI
+> +controllers it can address, and the sideband data that will be associated with
+> +its writes to those controllers.
+> +
+> +For generic MSI bindings, see
+> +Documentation/devicetree/bindings/interrupt-controller/msi.txt.
 > +
 > +
-> +Example:
+> +PCI root complex
+> +================
 > +
-> +	da9150-fg {
-
-Make this just "fuel-gauge".
-
-> +		compatible = "dlg,da9150-fg";
-                      ^^^^^^^^^^^^^
-
-here too ;)
-
+> +Optional properties
+> +-------------------
 > +
-> +		dlg,update-interval = <10000>;
-> +		dlg,warn-soc-level = /bits/ 8 <15>;
-> +		dlg,crit-soc-level = /bits/ 8 <5>;
+> +- msi-map: Maps a Requester ID to an MSI controller and associated
+> +  msi-specifier data. The property is an arbitrary number of tuples of
+> +  (rid-base,msi-controller,msi-base,length), where:
+> +
+> +  * rid-base is a single cell describing the first RID matched by the entry.
+> +
+> +  * msi-controller is a single phandle to an MSI controller
+> +
+> +  * msi-base is an msi-specifier describing the msi-specifier produced for the
+> +    first RID matched by the entry.
+> +
+> +  * length is a single cell describing how many consecutive RIDs are matched
+> +    following the rid-base.
+> +
+> +  Any RID r in the interval [rid-base, rid-base + length) is associated with
+> +  the listed msi-controller, with the msi-specifier (r - rid-base + msi-base).
+> +
+> +- msi-map-mask: A mask to be applied to each Requester ID prior to being mapped
+> +  to an msi-specifier per the msi-map property.
+> +
+> +- msi-parent: Describes the MSI parent of the root complex itself. Where
+> +  the root complex and MSI controller do not pass sideband data with MSI
+> +  writes, this property may be used to describe the MSI controller(s)
+> +  used by PCI devices under the root complex, if defined as such in the
+> +  binding for the root complex.
+> +
+> +
+> +Example (1)
+> +===========
+> +
+> +/ {
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +
+> +	msi: msi-controller@a {
+> +		reg = <0xa 0x1>;
+> +		compatible = "vendor,some-controller";
+> +		msi-controller;
+> +		#msi-cells = <1>;
+> +	};
+> +
+> +	pci: pci@f {
+> +		reg = <0xf 0x1>;
+> +		compatible = "vendor,pcie-root-complex";
+> +		device_type = "pci";
+> +
+> +		/*
+> +		 * The sideband data provided to the MSI controller is
+> +		 * the RID, identity-mapped.
+> +		 */
+> +		msi-map = <0x0 &msi_a 0x0 0x10000>,
+> +	};
+> +};
+> +
+> +
+> +Example (2)
+> +===========
+> +
+> +/ {
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +
+> +	msi: msi-controller@a {
+> +		reg = <0xa 0x1>;
+> +		compatible = "vendor,some-controller";
+> +		msi-controller;
+> +		#msi-cells = <1>;
+> +	};
+> +
+> +	pci: pci@f {
+> +		reg = <0xf 0x1>;
+> +		compatible = "vendor,pcie-root-complex";
+> +		device_type = "pci";
+> +
+> +		/*
+> +		 * The sideband data provided to the MSI controller is
+> +		 * the RID, masked to only the device and function bits.
+> +		 */
+> +		msi-map = <0x0 &msi_a 0x0 0x100>,
+> +		msi-map-mask = <0xff>
+> +	};
+> +};
+> +
+> +
+> +Example (3)
+> +===========
+> +
+> +/ {
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +
+> +	msi: msi-controller@a {
+> +		reg = <0xa 0x1>;
+> +		compatible = "vendor,some-controller";
+> +		msi-controller;
+> +		#msi-cells = <1>;
+> +	};
+> +
+> +	pci: pci@f {
+> +		reg = <0xf 0x1>;
+> +		compatible = "vendor,pcie-root-complex";
+> +		device_type = "pci";
+> +
+> +		/*
+> +		 * The sideband data provided to the MSI controller is
+> +		 * the RID, but the high bit of the bus number is
+> +		 * ignored.
+> +		 */
+> +		msi-map = <0x0000 &msi 0x0000 0x8000>,
+> +			  <0x8000 &msi 0x0000 0x8000>;
+> +	};
+> +};
+> +
+> +
+> +Example (4)
+> +===========
+> +
+> +/ {
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +
+> +	msi: msi-controller@a {
+> +		reg = <0xa 0x1>;
+> +		compatible = "vendor,some-controller";
+> +		msi-controller;
+> +		#msi-cells = <1>;
+> +	};
+> +
+> +	pci: pci@f {
+> +		reg = <0xf 0x1>;
+> +		compatible = "vendor,pcie-root-complex";
+> +		device_type = "pci";
+> +
+> +		/*
+> +		 * The sideband data provided to the MSI controller is
+> +		 * the RID, but the high bit of the bus number is
+> +		 * negated.
+> +		 */
+> +		msi-map = <0x0000 &msi 0x8000 0x8000>,
+> +			  <0x8000 &msi 0x0000 0x8000>;
+> +	};
+> +};
+> +
+> +
+> +Example (5)
+> +===========
+> +
+> +/ {
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +
+> +	msi_a: msi-controller@a {
+> +		reg = <0xa 0x1>;
+> +		compatible = "vendor,some-controller";
+> +		msi-controller;
+> +		#msi-cells = <1>;
+> +	};
+> +
+> +	msi_b: msi-controller@b {
+> +		reg = <0xb 0x1>;
+> +		compatible = "vendor,some-controller";
+> +		msi-controller;
+> +		#msi-cells = <1>;
+> +	};
+> +
+> +	msi_c: msi-controller@c {
+> +		reg = <0xc 0x1>;
+> +		compatible = "vendor,some-controller";
+> +		msi-controller;
+> +		#msi-cells = <1>;
+> +	};
+> +
+> +	pci: pci@c {
+> +		reg = <0xf 0x1>;
+> +		compatible = "vendor,pcie-root-complex";
+> +		device_type = "pci";
+> +
+> +		/*
+> +		 * The sideband data provided to MSI controller a is the
+> +		 * RID, but the high bit of the bus number is negated.
+> +		 * The sideband data provided to MSI controller b is the
+> +		 * RID, identity-mapped.
+> +		 * MSI controller c is not addressable.
+> +		 */
+> +		msi-map = <0x0000 &msi_a 0x8000 0x08000>,
+> +			  <0x8000 &msi_a 0x0000 0x08000>,
+> +			  <0x0000 &msi_b 0x0000 0x10000>;
 > +	};
 
--- Sebastian
+they can be identical right? like
+	<0x8000 &msi_a 0x0000 0x08000>,
+ 	<0x8000 &msi_b 0x0000 0x08000>;
 
---AqsLC8rIMeq19msA
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJVsrWSAAoJENju1/PIO/qaf/AP/A6TIswbIMR+x9zkFyeRYXNt
-v772UA+fRwr8aLGnGRnOPZ3KBjcwvtIRsAf8F1V3KXoUSsFetkJoHYq0hVNOVV0k
-vb7yyhs2C+LPsnt3bM+r9iCcTCP0VcWcTTrZa97gAvQ2/6PMFF8cu5G3cmXAXkLL
-YcsUX5ehITR99Tu0xAlCDqX/abBP3L5YRlu8OuiPzQLKw1Z9T7Iw72901+FyRMAM
-nEFk8xis4U+y8SR5JZgie2k0sGHkObVh1dUPWL4YGu4t2NcBoZBAREL0D9cfi03V
-E4JZgUAuPT6sSftWLT3mYf9Jo6s0/pyHl/yZ3P/i49BxSu0UdvzBU2YordBAElBD
-ORfbcsQSZD5NJY3pR2qg+HMe7F6/u7mKepHhxXmt//dxKRa82w5ZAECtXVLUDD3O
-2H+uiBmW/SVQAeyhexgEyrCAh8LpKBWtsI8rTSIuwpwzyjXsWewhmtP1bZ9ca9Uc
-Vcgdx/y/kQqQ2L14bqLjPRsp9DTdb9QjJ9c9SLkVuir7eq0YwPaPh8mXyqjWQHfh
-Gbwg437ITzXUWh9rCN0+Tb0nQ4O5j6aJaAK1vwSotsuYCIiai1NX46bVTm7qVuLu
-VYgl+XJlG4K2izSz0grf3umY8jyFczam/zw7RVPPerl5NSeekU/sb3FZdQTeu8Zx
-Q8JnEMK2Kjmyh2zwCqPN
-=TNkJ
------END PGP SIGNATURE-----
-
---AqsLC8rIMeq19msA--
+Thanks,
+Tirumalesh.
+> +};
+> -- 
+> 1.9.1
+> 
