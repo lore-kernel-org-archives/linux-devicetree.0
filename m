@@ -1,56 +1,77 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 0/2] spi: dw: Reintroduce optional 16 bit data
- register I/O
-Date: Fri, 24 Jul 2015 16:37:04 +0100
-Message-ID: <20150724153704.GM11162@sirena.org.uk>
-References: <1434703435-25198-1-git-send-email-michael@smart-africa.com>
- <1435163696-14767-1-git-send-email-michael@smart-africa.com>
- <1437751812.29746.74.camel@linux.intel.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] backlight: pm8941-wled: Add default-brightness property
+Date: Fri, 24 Jul 2015 10:39:06 -0500
+Message-ID: <CAL_JsqKcNjsLJPxQiWsjVtwsX2nsYGLSzjmX0cwo1QsZ+JE4Hg@mail.gmail.com>
+References: <1437681127-15760-1-git-send-email-bjorn.andersson@sonymobile.com> <CAF6AEGsJdLYzCA_=M8hf1XfhRxFAaY6VFdSBRP+y56uKsnQHiA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="UvsY/zkrzYLy0cwT"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1437751812.29746.74.camel-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Michael van der Westhuizen <michael-XrNoQAPr3WXM9gW82pYGhQ@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <CAF6AEGsJdLYzCA_=M8hf1XfhRxFAaY6VFdSBRP+y56uKsnQHiA@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Clark <robdclark@gmail.com>
+Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jingoo Han <jingoohan1@gmail.com>, Lee Jones <lee.jones@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Fbdev development list <linux-fbdev@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Jul 24, 2015 at 8:10 AM, Rob Clark <robdclark@gmail.com> wrote:
+> On Thu, Jul 23, 2015 at 3:52 PM, Bjorn Andersson
+> <bjorn.andersson@sonymobile.com> wrote:
+>> Add the possibility of specifying the default brightness in DT.
+>>
+>> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+>> ---
+>>
+>> This depends on the patch moving pm8941-wled to backlight [1]. The dt property
+>> is used by several other backlight drivers, so I considered this to be a
+>> "common" property and it's hence not prefixed with "qcom,".
+>>
+>> [1] https://lkml.org/lkml/2015/7/21/906
+>>
+>>  Documentation/devicetree/bindings/video/backlight/pm8941-wled.txt | 1 +
+>>  drivers/video/backlight/pm8941-wled.c                             | 4 ++++
+>>  2 files changed, 5 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/video/backlight/pm8941-wled.txt b/Documentation/devicetree/bindings/video/backlight/pm8941-wled.txt
+>> index 424f8444a6cd..37503f8c3620 100644
+>> --- a/Documentation/devicetree/bindings/video/backlight/pm8941-wled.txt
+>> +++ b/Documentation/devicetree/bindings/video/backlight/pm8941-wled.txt
+>> @@ -5,6 +5,7 @@ Required properties:
+>>  - reg: slave address
+>>
+>>  Optional properties:
+>> +- default-brightness: value from: 0-4095
+>>  - label: The name of the backlight device
+>>  - qcom,cs-out: bool; enable current sink output
+>>  - qcom,cabc: bool; enable content adaptive backlight control
+>> diff --git a/drivers/video/backlight/pm8941-wled.c b/drivers/video/backlight/pm8941-wled.c
+>> index c704c3236034..b875e58df0fc 100644
+>> --- a/drivers/video/backlight/pm8941-wled.c
+>> +++ b/drivers/video/backlight/pm8941-wled.c
+>> @@ -373,6 +373,7 @@ static int pm8941_wled_probe(struct platform_device *pdev)
+>>         struct backlight_device *bl;
+>>         struct pm8941_wled *wled;
+>>         struct regmap *regmap;
+>> +       u32 val = 0;
+>>         int rc;
+>
+> as discussed on IRC, it would be better if the default read back the
+> current settings (so-as to inherit bootloader splash smoothly..
+> drm/msm supports a memory-region phandle, for example, so it can take
+> over the bootloader splash-screen as stolen-mem)
+>
+> and it would I think be useful to have a comment in the bindings file
+> explaining that you *should* use the default-brightness property to
+> set a sane default if bootloader isn't putting up a splash, and you
+> should *not* use the property if it is..
 
---UvsY/zkrzYLy0cwT
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
++1
 
-On Fri, Jul 24, 2015 at 06:30:12PM +0300, Andy Shevchenko wrote:
-> On Wed, 2015-06-24 at 18:34 +0200, Michael van der Westhuizen wrote:
+What if you have neither? Set to max brightness? 75%?
 
-> > With this series applied:
-> >   m25p80 spi32766.0: m25p40 (512 Kbytes)
+This could also be used for the bootloader to communicate to the
+kernel what the current level is if it is not readable. I've seen one
+backlight recently which you change the level by doing some number of
+pulses on a gpio and a long pulse to turn off. So there is no way to
+know current level without turning off the backlight (unless you
+hardcode the bootloader's level in the kernel like the vendor did).
 
-> Mark, what do you think about this? For me it looks okay.
-
-Please don't send content free pings, if you want me to review a patch
-please send me the patch.
-
---UvsY/zkrzYLy0cwT
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVslufAAoJECTWi3JdVIfQggYH/Rf1VBwWpETM1yQrY7hs+i4r
-L9xDtWm9pTqcPhqxCUr2OQZ2bvCdZyBx7SzNYOWuFGF1bSdGQjNjDiu5hi/r0yeC
-5rzCDHkMcV4JGwD4JpUCTrvRhpsiGldZUZl8jJBdLJiifDd6HNoUiVMvSck6kWiY
-mCwCu6yw9GEzrJzYW4Zwial6iKvdBDXAI3EzWcKHt8DhQZRzsiCZ4ZoLTikN6sTZ
-x/akdakDmMCO0SWG8mxbcyvUZGcvK5axPLESsTEiBhkJSgHRzxhLYyjoGyVZCMir
-2vOgo6bepHVxXwb51POSPPFsEPYuPHO5HaWICvNlbV+wW4IzxTp4W+A0EBUkBuY=
-=uK2k
------END PGP SIGNATURE-----
-
---UvsY/zkrzYLy0cwT--
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
