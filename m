@@ -1,95 +1,72 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH] of/irq: introduce of_has_named_irqs helper
-Date: Fri, 24 Jul 2015 11:26:55 -0700
-Message-ID: <20150724182655.GA22007@dtor-ws>
+From: Michael Turquette <mturquette@baylibre.com>
+Subject: Re: [PATCH v6 0/3] cpufreq: Use cpufreq-dt driver for Exynos3250
+Date: Fri, 24 Jul 2015 11:30:20 -0700
+Message-ID: <20150724183020.642.56856@quantum>
+References: <1435797761-3339-1-git-send-email-cw00.choi@samsung.com>
+ <4464631.oZyVO4Z0Ov@amdc1976> <093101d0b8c3$4b5d3ec0$e217bc40$@kernel.org>
+ <20150724003005.642.21781@quantum> <55B1B3B0.8090106@kernel.org>
+ <55B1BA3B.3080906@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
+In-Reply-To: <55B1BA3B.3080906@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Kukjin Kim <kgene@kernel.org>Kukjin Kim <kgene@kernel.org>
+Cc: 'Bartlomiej Zolnierkiewicz' <b.zolnierkie@samsung.com>, 'Chanwoo Choi' <cw00.choi@samsung.com>, s.nawrocki@samsung.com, tomasz.figa@gmail.com, sboyd@codeaurora.org, k.kozlowski@samsung.com, thomas.ab@samsung.com, kyungmin.park@samsung.com, linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Sometimes drivers might wish to transition from index-based to named
-interrupt descriptions. To aid in decision-making when parsing device
-tree data let's provide a helper that will indicate the scheme that is
-being used.
+Quoting Kukjin Kim (2015-07-23 21:08:27)
+> On 07/24/15 12:40, Kukjin Kim wrote:
+> > On 07/24/15 09:30, Michael Turquette wrote:
+> >> Quoting Kukjin Kim (2015-07-07 07:43:31)
+> >>> Bartlomiej Zolnierkiewicz wrote:
+> > 
+> > [...]
+> > 
+> >>>>> Chanwoo Choi (3):
+> >>>>>   clk: samsung: exynos3250: Add cpu clock configuration data and instaniate cpu clock
+> >>>>>   ARM: dts: Add CPU OPP and regulator supply property for Exynos3250
+> >>>>>   ARM: exynos: Add exynos3250 compatible to use generic cpufreq driver
+> >>>>>
+> >>>>>  arch/arm/boot/dts/exynos3250-monk.dts   |  4 ++++
+> >>>>>  arch/arm/boot/dts/exynos3250-rinato.dts |  4 ++++
+> >>>>>  arch/arm/boot/dts/exynos3250.dtsi       | 15 +++++++++++++++
+> >>>>>  arch/arm/mach-exynos/exynos.c           |  1 +
+> >>>>>  drivers/clk/samsung/clk-exynos3250.c    | 32 ++++++++++++++++++++++++++++++--
+> >>>>>  include/dt-bindings/clock/exynos3250.h  |  1 +
+> >>>>>  6 files changed, 55 insertions(+), 2 deletions(-)
+> >>>>
+> >>>> Reviewed-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> >>>>
+> >>>> Thank you for working on this.
+> >>>>
+> >>> +1 Thanks.
+> >>>
+> >>> Mike and Sylwester, if you're OK on this series, I'd like to pick up in Samsung
+> >>> tree together. And if you want, I could provide topic branch for clk tree.
+> >>
+> >> Kukjin,
+> >>
+> >> A topic branch would be great.
+> >>
+> > Sure, BTW it means you did 'ack' on this clk change? If not, please let
+> > em know ;-) I'll let you know once the topic branch is ready.
+> > 
+> Mike,
+> 
+> Done, the topic branch 'v4.3-topic/clk-samsung' in samsung tree is for
+> your clk tree.
 
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
----
+Thanks!
 
-The intent is to it like this:
+Mike
 
-	if (of_has_named_irqs(np) {
-		/* Wake IRQ is optional */
-		dev->wakeirq = of_irq_get_byname(np, "wakeup");
-		if (dev->wakeirq < 0 && dev->wakeirq != -ENODATA)
-			return dev->wakeirq;
-	}
-
- drivers/of/irq.c       | 14 ++++++++++++++
- include/linux/of_irq.h |  5 +++++
- 2 files changed, 19 insertions(+)
-
-diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-index 3cf7a01..e02c43e 100644
---- a/drivers/of/irq.c
-+++ b/drivers/of/irq.c
-@@ -384,6 +384,19 @@ int of_irq_to_resource(struct device_node *dev, int index, struct resource *r)
- EXPORT_SYMBOL_GPL(of_irq_to_resource);
- 
- /**
-+ * of_has_named_irq - Check if given node contains named interrupts
-+ * @dev: pointer to device tree node
-+ *
-+ * Returns %true if node contains non-empty "interrupt-names" property.
-+ */
-+bool of_has_named_irqs(struct device_node *dev)
-+{
-+	struct property *prop = of_find_property(dev, "interrupt-names", NULL);
-+
-+	return prop && prop->value;
-+}
-+
-+/**
-  * of_irq_get - Decode a node's IRQ and return it as a Linux irq number
-  * @dev: pointer to device tree node
-  * @index: zero-based index of the irq
-@@ -410,6 +423,7 @@ int of_irq_get(struct device_node *dev, int index)
- }
- EXPORT_SYMBOL_GPL(of_irq_get);
- 
-+
- /**
-  * of_irq_get_byname - Decode a node's IRQ and return it as a Linux irq number
-  * @dev: pointer to device tree node
-diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
-index d884929..fed6ccc 100644
---- a/include/linux/of_irq.h
-+++ b/include/linux/of_irq.h
-@@ -46,6 +46,7 @@ extern int of_irq_get(struct device_node *dev, int index);
- extern int of_irq_get_byname(struct device_node *dev, const char *name);
- extern int of_irq_to_resource_table(struct device_node *dev,
- 		struct resource *res, int nr_irqs);
-+extern bool of_has_named_irqs(struct device_node *dev);
- #else
- static inline int of_irq_count(struct device_node *dev)
- {
-@@ -64,6 +65,10 @@ static inline int of_irq_to_resource_table(struct device_node *dev,
- {
- 	return 0;
- }
-+static inline bool of_has_named_irqs(struct device_node *dev)
-+{
-+	return false;
-+}
- #endif
- 
- #if defined(CONFIG_OF)
--- 
-2.5.0.rc2.392.g76e840b
-
-
--- 
-Dmitry
+> 
+> Thanks,
+> Kukjin
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
