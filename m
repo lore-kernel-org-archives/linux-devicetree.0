@@ -1,83 +1,72 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] backlight: pm8941-wled: Add default-brightness property
-Date: Fri, 24 Jul 2015 10:29:03 -0500
-Message-ID: <CAL_JsqKxdF5sj=edURFLDCk1OyCJR-w6+STL4r3zM6+be3tjhg@mail.gmail.com>
-References: <1437681127-15760-1-git-send-email-bjorn.andersson@sonymobile.com>
+From: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH v2 0/2] spi: dw: Reintroduce optional 16 bit data
+ register I/O
+Date: Fri, 24 Jul 2015 18:30:12 +0300
+Message-ID: <1437751812.29746.74.camel@linux.intel.com>
+References: <1434703435-25198-1-git-send-email-michael@smart-africa.com>
+	 <1435163696-14767-1-git-send-email-michael@smart-africa.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1437681127-15760-1-git-send-email-bjorn.andersson@sonymobile.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jingoo Han <jingoohan1@gmail.com>, Lee Jones <lee.jones@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Rob Clark <robdclark@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1435163696-14767-1-git-send-email-michael-XrNoQAPr3WXM9gW82pYGhQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael van der Westhuizen <michael-XrNoQAPr3WXM9gW82pYGhQ@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 23, 2015 at 2:52 PM, Bjorn Andersson
-<bjorn.andersson@sonymobile.com> wrote:
-> Add the possibility of specifying the default brightness in DT.
->
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-> ---
->
-> This depends on the patch moving pm8941-wled to backlight [1]. The dt property
-> is used by several other backlight drivers, so I considered this to be a
-> "common" property and it's hence not prefixed with "qcom,".
+On Wed, 2015-06-24 at 18:34 +0200, Michael van der Westhuizen wrote:
+> The commit dd11444327ce ("spi: dw-spi: Convert 16bit accesses to 
+> 32bit
+> accesses") globally changed all register access in the dw_apb_ssi 
+> driver
+> to 32 bit access, which breaks data register (FIFO) access on 
+> picoXcell
+> platforms.
+> 
+> This series introduces a boolean to the core spi-dw driver to 
+> indicate
+> to the core that 16 bit data register access is appropriate, 
+> implements
+> the code that respects that flag and updates the dw-spi-mmio driver 
+> to
+> allow setting this boolean from the device tree.
+> 
+> A binding documentation fix is included in this series.
+> 
+> Prior to applying this change the following error presents on
+> a picoCell pc3x3 platform:
+>   spi_master spi32766: interrupt_transfer: fifo overrun/underrun
+>   m25p80 spi32766.0: error -5 reading 9f
+>   m25p80: probe of spi32766.0 failed with error -5
+> 
+> With this series applied:
+>   m25p80 spi32766.0: m25p40 (512 Kbytes)
 
-Well, we have "default-brightness" and "default-brightness-level" used
-by 1 driver each. But default-brightness-level is much more commonly
-used (in dts files) since it is in the pwm backlight binding, so we
-should go with it. I'd like to see this moved to a common backlight
-doc.
+Mark, what do you think about this? For me it looks okay.
 
-Really, I think all the backlight documentation should be merged with
-LEDs docs. Things like "default-on" are common. But I won't ask to do
-that here.
+> 
+> Changes in v2:
+>   - Incorporate review feedback from Andy Shevchenko, reworking the
+>     bindings to reflect common practice and adjusting the driver
+>     to suit.
+>   - Add a wrapper inline function for accessing the data register
+>     using the configured with.
+> 
+> Michael van der Westhuizen (2):
+>   dt: snps,dw-apb-ssi: Document new I/O data register width property
+>   spi: dw: Allow interface drivers to limit data I/O to word sizes
+> 
+>  drivers/spi/spi-dw-mmio.c |  4 ++++
+>  drivers/spi/spi-dw.c      |  4 ++--
+>  drivers/spi/spi-dw.h      | 35 +++++++++++++++++++++++++++++++++++
+>  3 files changed, 41 insertions(+), 2 deletions(-)
+> 
 
-Rob
-
->
-> [1] https://lkml.org/lkml/2015/7/21/906
->
->  Documentation/devicetree/bindings/video/backlight/pm8941-wled.txt | 1 +
->  drivers/video/backlight/pm8941-wled.c                             | 4 ++++
->  2 files changed, 5 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/video/backlight/pm8941-wled.txt b/Documentation/devicetree/bindings/video/backlight/pm8941-wled.txt
-> index 424f8444a6cd..37503f8c3620 100644
-> --- a/Documentation/devicetree/bindings/video/backlight/pm8941-wled.txt
-> +++ b/Documentation/devicetree/bindings/video/backlight/pm8941-wled.txt
-> @@ -5,6 +5,7 @@ Required properties:
->  - reg: slave address
->
->  Optional properties:
-> +- default-brightness: value from: 0-4095
->  - label: The name of the backlight device
->  - qcom,cs-out: bool; enable current sink output
->  - qcom,cabc: bool; enable content adaptive backlight control
-> diff --git a/drivers/video/backlight/pm8941-wled.c b/drivers/video/backlight/pm8941-wled.c
-> index c704c3236034..b875e58df0fc 100644
-> --- a/drivers/video/backlight/pm8941-wled.c
-> +++ b/drivers/video/backlight/pm8941-wled.c
-> @@ -373,6 +373,7 @@ static int pm8941_wled_probe(struct platform_device *pdev)
->         struct backlight_device *bl;
->         struct pm8941_wled *wled;
->         struct regmap *regmap;
-> +       u32 val = 0;
->         int rc;
->
->         regmap = dev_get_regmap(pdev->dev.parent, NULL);
-> @@ -395,8 +396,11 @@ static int pm8941_wled_probe(struct platform_device *pdev)
->         if (rc)
->                 return rc;
->
-> +       of_property_read_u32(pdev->dev.of_node, "default-brightness", &val);
-> +
->         memset(&props, 0, sizeof(struct backlight_properties));
->         props.type = BACKLIGHT_RAW;
-> +       props.brightness = val;
->         props.max_brightness = PM8941_WLED_REG_VAL_MAX;
->         bl = devm_backlight_device_register(&pdev->dev, wled->name,
->                                             &pdev->dev, wled,
-> --
-> 1.8.2.2
->
+-- 
+Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Intel Finland Oy
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
