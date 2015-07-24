@@ -1,68 +1,113 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 05/11] mfd: devicetree: bindings: Add Qualcomm SMD
- based RPM DT binding
-Date: Fri, 24 Jul 2015 11:24:34 +0100
-Message-ID: <20150724102434.GF11162@sirena.org.uk>
-References: <1435355419-23602-1-git-send-email-bjorn.andersson@sonymobile.com>
- <1435355419-23602-6-git-send-email-bjorn.andersson@sonymobile.com>
- <20150707121609.GZ3182@x1>
- <20150713214836.GA15178@usrtlx11787.corpusers.net>
- <20150723133133.GB3436@x1>
- <20150723164128.GD4753@usrtlx11787.corpusers.net>
- <20150723171638.GE11162@sirena.org.uk>
- <20150724095847.GC3436@x1>
+From: Jianwei Wang <jianwei.wang.chn@gmail.com>
+Subject: [PATCH v12 0/6] drm/layerscape: Add Freescale DCU DRM driver
+Date: Fri, 24 Jul 2015 18:12:12 +0800
+Message-ID: <1437732738-4960-1-git-send-email-jianwei.wang.chn@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="hgi6aZyfp1b/Gxi2"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150724095847.GC3436@x1>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, "bjorn-UYDU3/A3LUY@public.gmane.org" <bjorn-UYDU3/A3LUY@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: dri-devel@lists.freedesktop.org
+Cc: devicetree@vger.kernel.org, airlied@linux.ie, daniel.vetter@ffwll.ch, linux-kernel@vger.kernel.org, thierry.reding@gmail.com, scottwood@freescale.com, shawn.guo@linaro.org, linux-arm-kernel@lists.infradead.org, mark.yao@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
+This patchset add support for Two Dimensional Animation and Compositing
+Engine (2D-ACE) on the Freescale LS102x SoCs.
 
---hgi6aZyfp1b/Gxi2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Changed in v12
 
-On Fri, Jul 24, 2015 at 10:58:47AM +0100, Lee Jones wrote:
-> On Thu, 23 Jul 2015, Mark Brown wrote:
-> > On Thu, Jul 23, 2015 at 09:41:28AM -0700, Bjorn Andersson wrote:
+-Add one patch for MAINTAINER entry for drm/layerscape
+Adviced by Daniel Vetter
+-Add #include <drm/drm_crtc_helper.h> in fsl_dcu_drm_drv.c
 
-> > > > We still need Mark to look at this.
+Changed in V11
+-set regmap_config.cache_type to REGCACHE_FLAT
+Advanced by Alexander Stein
 
-> > > Mark, would you mind giving us a statement on the regulator subnode of
-> > > this binding?
+Changed in V10
+-adjust commit log, remove meaningless statement
+-cleanup code for it's format and style.
+-remove platform related code out, including of tcon(vf610) and scfg(ls1021a)
+-remove useless sentences: encoder->crtc = crtc; and connector->encoder = encoder; and so on
+-add vendor prefix for panel pandle
+-make a DCU_CTRLDESCLN(x, y)  to avoid high repetition
+-introduce per-SoC capability structure to avoid check on the OF node's compatible string
+-Implement some functions: crtc enable and disable, enable and disable VBLANK, plane atomic_disable and atomic_enable -atomic_check and so on
+-move DCU config sentence to the right place
+-move get resources functions to  ->probe()
+-move fsl,dcu.txt to video/ folder
+-add big-endian describe
+All advaced by Thierry Reding
 
-> > I have no idea what's going on here, sorry.  I've not been reading this
-> > thread.
+Changed in V9
 
-> All of the information you need is in the email you replied to.
+put node after calling of_drm_find_panel
+split clk_prepare_enable() to clk_prepare() and clk_enable(), just call clk_prepare once, and check return value
+check regmap_write/regmap_read return return value
+remove useless ".owner    = THIS_MODULE,"
+All advanced by Mark Yao
 
-The mail appears to have an edited down section of what looks like an
-example rather than the actual binding.  I haven't seen the binding so I
-can't really comment on it.
+Changed in V8
 
---hgi6aZyfp1b/Gxi2
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+- Remove useless code
+#define DRIVER_NAME     "fsl-dcu-drm"
+MODULE_ALIAS("platform:fsl-dcu-drm");
+Adviced by Paul Bolle
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Changed in V7
 
-iQEcBAEBCAAGBQJVshJhAAoJECTWi3JdVIfQh3IH/i2KmzQMMo0eWJ1Np42IdmOO
-J1vmnBXR9fJRcOo2LPJJ8WpzEnCj7Ex+HuQkrUqAG2fSGPLm/vy2k79jUazn/tY1
-T0sP9/XiF4i8gcSy7bKXO8wvy/VVPYIQrUsv5Gr9GioM7I5v06QYLMyb+6Ti79Zt
-qo2rsyPiKNrRRM+mineB4GAneIdc6V1Luqj/kpzgt7vUxGIHd8fs4xMDOQI1zbqa
-IFI0tveKU3Owj0hk+YBtQOIqpG7jIziv8vm1+A0U/mtrCvfMtqPiSYwJdk3MNyt/
-m6iQplDv7t22vkr2oJKiucX5vGa5n6LAJwdPmSiicIlRVlnMm6xZmZR3pMS3PDM=
-=s5K9
------END PGP SIGNATURE-----
+- Remove redundant functions and replace deprecated hooker
+Adviced by Daniel Vetter
+- Replace drm_platform_init with drm_dev_alloc/register
+Adviced by Daniel Vetter
 
---hgi6aZyfp1b/Gxi2--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Changed in V6
+
+- Add NEC nl4827hc19_05b panel to panel-simple.c
+Adviced by Mark Yao
+- Add DRIVER_ATOMIC for driver_features
+Adviced by Mark Yao
+- check fsl_dev if it's NULL at PM suspend/resume
+Adviced by Mark Yao
+
+Changed in V5
+
+- Update commit message
+- Add layer registers initialization
+- Remove unused functions
+- Rename driver folder
+Adviced by Stefan Agner
+- Move pixel clock control functions to fsl_dcu_drm_drv.c
+- remove redundant enable the clock implicitly using regmap
+- Add maintainer message
+
+Changed in V4:
+
+-This version doesn't have functionality changed
+Just a minor adjustment.
+
+Changed in V3:
+
+- Test driver on Vybrid board and add compatible string
+- Remove unused functions
+- set default crtc for encoder
+- replace legacy functions with atomic help functions
+Adviced by Daniel Vetter
+- Set the unique name of the DRM device
+- Implement irq handle function for vblank interrupt
+
+Changed in v2:
+- Add atomic support
+Adviced by Daniel Vetter
+- Modify bindings file
+- Rename node for compatibility
+- Move platform related code out for compatibility
+Adviced by Stefan Agner
