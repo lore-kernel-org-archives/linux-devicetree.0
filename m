@@ -1,399 +1,98 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Applied "regulator: qcom-spmi: Add vendor specific configuration" to the regulator tree
-Date: Fri, 24 Jul 2015 18:32:08 +0100
-Message-ID: <E1ZIgpM-0001r7-NH@debutante>
-References: <1437169315-31530-3-git-send-email-sboyd@codeaurora.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1437169315-31530-3-git-send-email-sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Subject: Re: [PATCH 3/6] mailbox: Add support for ST's Mailbox IP
+Date: Fri, 24 Jul 2015 23:04:52 +0530
+Message-ID: <CABb+yY0Er-FBPoxx0E134bz49JzE=wxOUuoSRNuPCqV1TSE7Mg@mail.gmail.com>
+References: <1437134647-28298-1-git-send-email-lee.jones@linaro.org>
+	<1437134647-28298-4-git-send-email-lee.jones@linaro.org>
+	<CABb+yY2nAT6V4Q8suAXRtPXrXkArGWVTAW28ts4Z3C_ybuJovA@mail.gmail.com>
+	<20150723082934.GW3061@x1>
+	<CABb+yY0iKAU6aa99muVrkHyp-Ywpf1BoMRna91L6fbR7e89XZQ@mail.gmail.com>
+	<20150724093638.GA3436@x1>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150724093638.GA3436@x1>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, kernel@stlinux.com, Devicetree List <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The patch
+On Fri, Jul 24, 2015 at 3:06 PM, Lee Jones <lee.jones@linaro.org> wrote:
+> On Thu, 23 Jul 2015, Jassi Brar wrote:
+>
+>> >> > +static void sti_mbox_enable_channel(struct mbox_chan *chan)
+>> >> > +{
+>> >> > +       struct sti_channel *chan_info = chan->con_priv;
+>> >> > +       struct sti_mbox_device *mdev = chan_info->mdev;
+>> >> > +       struct sti_mbox_pdata *pdata = dev_get_platdata(mdev->dev);
+>> >> > +       unsigned int instance = chan_info->instance;
+>> >> > +       unsigned int channel = chan_info->channel;
+>> >> > +       unsigned long flags;
+>> >> > +       void __iomem *base;
+>> >> > +
+>> >> > +       base = mdev->base + (instance * sizeof(u32));
+>> >> > +
+>> >> Maybe have something simpler like MBOX_BASE(instance)? Or some inline
+>> >> function to avoid this 5-lines ritual?
+>> >
+>> > I've checked and we can't do this, as the we need most (all?) of the
+>> > intermediary variables too.  No ritual just to get the final variable
+>> > for instance.
+>> >
+>> OK. How about ?
+>>   #define MBOX_BASE(m, n)   ((m)->base + (n) * 4)
+>>   void __iomem *base = MBOX_BASE(mdev, instance);
+>
+> Oh, those 5 lines.  I thought you meant:
+>
+>        struct sti_channel *chan_info = chan->con_priv;
+>        struct sti_mbox_device *mdev = chan_info->mdev;
+>        unsigned int instance = chan_info->instance;
+>        base = mdev->base + (instance * sizeof(u32));
+>
+> ... which is why I said that the intermediary variables are required.
+>
+> Well, I 'can' do that, but it seems to be unnecessarily obfuscating
+> what's going on and doesn't actually save any lines.
+>
+> It's not a point that I consider arguing over though, so if you want
+> me to do it, I will.  You have the final say here.
+>
+The macro seems tidier. Just a nit.
 
-   regulator: qcom-spmi: Add vendor specific configuration
+>> >> > +       spin_lock_irqsave(&sti_mbox_chan_lock, flags);
+>> >> > +       mdev->enabled[instance] |= BIT(channel);
+>> >> > +       writel_relaxed(BIT(channel), base + pdata->ena_set);
+>> >> > +       spin_unlock_irqrestore(&sti_mbox_chan_lock, flags);
+>> >> >
+>> >> You don't need locking for SET/CLR type registers which are meant for
+>> >> when they could be accessed by processors that can not share a lock.
+>> >> So maybe drop the lock here and elsewhere.
+>> >
+>> > From what I can gather, I think we need this locking.  What happens if
+>> > we get scheduled between setting the enabled bit in our cache and
+>> > actually setting the ena_set bit?  We would be out of sync.
+>> >
+>> IIU what you mean... can't that still happen because of the  _relaxed()?
+>
+> Not sure what you mean.  The _relaxed variant merely omit some IO
+> barriers.
+>
+By the time you exit the spinlock the write may still haven't been
+effected. Maybe use writel() there.
 
-has been applied to the regulator tree at
+>> And maybe embed sti_mbox_chan_lock inside sti_mbox_device.
+>
+> Not sure this is required.  I can find >600 instances of others using
+> spinlocks as static globals.
+>
+And there should be >600 instances of *static* globals that are
+protected by some static spinlock  ;)
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
+Here the static sti_mbox_chan_lock protects sti_mbox_device which is
+allocated during probe. I hope you agree that the standard practice is
+to make the lock a member of the same structure that it protects.
+Otherwise it gives the wrong impression that the same lock will be
+used for any number of allocated mailbox instances.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From e2adfacde619d8e39dc8c02919bd2524d3c39588 Mon Sep 17 00:00:00 2001
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Date: Fri, 17 Jul 2015 14:41:55 -0700
-Subject: [PATCH] regulator: qcom-spmi: Add vendor specific configuration
-
-Add support for over current protection (OCP), pin control
-selection, soft start strength, and auto-mode.
-
-Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Signed-off-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- .../bindings/regulator/qcom,spmi-regulator.txt     |  60 ++++++-
- drivers/regulator/qcom_spmi-regulator.c            | 200 ++++++++++++++++++++-
- 2 files changed, 251 insertions(+), 9 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/regulator/qcom,spmi-regulator.txt b/Documentation/devicetree/bindings/regulator/qcom,spmi-regulator.txt
-index 75b4604bad07..d00bfd8624a5 100644
---- a/Documentation/devicetree/bindings/regulator/qcom,spmi-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/qcom,spmi-regulator.txt
-@@ -91,13 +91,65 @@ see regulator.txt - with additional custom properties described below:
- - regulator-initial-mode:
- 	Usage: optional
- 	Value type: <u32>
--	Descrption: 1 = Set initial mode to high power mode (HPM), also referred
--		    to as NPM.  HPM consumes more ground current than LPM, but
-+	Description: 2 = Set initial mode to auto mode (automatically select
-+		    between HPM and LPM); not available on boost type
-+		    regulators.
-+
-+		    1 = Set initial mode to high power mode (HPM), also referred
-+		    to as NPM. HPM consumes more ground current than LPM, but
- 		    it can source significantly higher load current. HPM is not
- 		    available on boost type regulators. For voltage switch type
- 		    regulators, HPM implies that over current protection and
--		    soft start are active all the time. 0 = Set initial mode to
--		    low power mode (LPM).
-+		    soft start are active all the time.
-+
-+		    0 = Set initial mode to low power mode (LPM).
-+
-+- qcom,ocp-max-retries:
-+	Usage: optional
-+	Value type: <u32>
-+	Description: Maximum number of times to try toggling a voltage switch
-+		     off and back on as a result of consecutive over current
-+		     events.
-+
-+- qcom,ocp-retry-delay:
-+	Usage: optional
-+	Value type: <u32>
-+	Description: Time to delay in milliseconds between each voltage switch
-+		     toggle after an over current event takes place.
-+
-+- qcom,pin-ctrl-enable:
-+	Usage: optional
-+	Value type: <u32>
-+	Description: Bit mask specifying which hardware pins should be used to
-+		     enable the regulator, if any; supported bits are:
-+			0 = ignore all hardware enable signals
-+			BIT(0) = follow HW0_EN signal
-+			BIT(1) = follow HW1_EN signal
-+			BIT(2) = follow HW2_EN signal
-+			BIT(3) = follow HW3_EN signal
-+
-+- qcom,pin-ctrl-hpm:
-+	Usage: optional
-+	Value type: <u32>
-+	Description: Bit mask specifying which hardware pins should be used to
-+		     force the regulator into high power mode, if any;
-+		     supported bits are:
-+			0 = ignore all hardware enable signals
-+			BIT(0) = follow HW0_EN signal
-+			BIT(1) = follow HW1_EN signal
-+			BIT(2) = follow HW2_EN signal
-+			BIT(3) = follow HW3_EN signal
-+			BIT(4) = follow PMIC awake state
-+
-+- qcom,vs-soft-start-strength:
-+	Usage: optional
-+	Value type: <u32>
-+	Description: This property sets the soft start strength for voltage
-+		     switch type regulators; supported values are:
-+			0 = 0.05 uA
-+			1 = 0.25 uA
-+			2 = 0.55 uA
-+			3 = 0.75 uA
- 
- Example:
- 
-diff --git a/drivers/regulator/qcom_spmi-regulator.c b/drivers/regulator/qcom_spmi-regulator.c
-index 9ef0e2f28ec4..88a5dc88badc 100644
---- a/drivers/regulator/qcom_spmi-regulator.c
-+++ b/drivers/regulator/qcom_spmi-regulator.c
-@@ -26,6 +26,70 @@
- #include <linux/regmap.h>
- #include <linux/list.h>
- 
-+/* Pin control enable input pins. */
-+#define SPMI_REGULATOR_PIN_CTRL_ENABLE_NONE		0x00
-+#define SPMI_REGULATOR_PIN_CTRL_ENABLE_EN0		0x01
-+#define SPMI_REGULATOR_PIN_CTRL_ENABLE_EN1		0x02
-+#define SPMI_REGULATOR_PIN_CTRL_ENABLE_EN2		0x04
-+#define SPMI_REGULATOR_PIN_CTRL_ENABLE_EN3		0x08
-+#define SPMI_REGULATOR_PIN_CTRL_ENABLE_HW_DEFAULT	0x10
-+
-+/* Pin control high power mode input pins. */
-+#define SPMI_REGULATOR_PIN_CTRL_HPM_NONE		0x00
-+#define SPMI_REGULATOR_PIN_CTRL_HPM_EN0			0x01
-+#define SPMI_REGULATOR_PIN_CTRL_HPM_EN1			0x02
-+#define SPMI_REGULATOR_PIN_CTRL_HPM_EN2			0x04
-+#define SPMI_REGULATOR_PIN_CTRL_HPM_EN3			0x08
-+#define SPMI_REGULATOR_PIN_CTRL_HPM_SLEEP_B		0x10
-+#define SPMI_REGULATOR_PIN_CTRL_HPM_HW_DEFAULT		0x20
-+
-+/*
-+ * Used with enable parameters to specify that hardware default register values
-+ * should be left unaltered.
-+ */
-+#define SPMI_REGULATOR_USE_HW_DEFAULT			2
-+
-+/* Soft start strength of a voltage switch type regulator */
-+enum spmi_vs_soft_start_str {
-+	SPMI_VS_SOFT_START_STR_0P05_UA = 0,
-+	SPMI_VS_SOFT_START_STR_0P25_UA,
-+	SPMI_VS_SOFT_START_STR_0P55_UA,
-+	SPMI_VS_SOFT_START_STR_0P75_UA,
-+	SPMI_VS_SOFT_START_STR_HW_DEFAULT,
-+};
-+
-+/**
-+ * struct spmi_regulator_init_data - spmi-regulator initialization data
-+ * @pin_ctrl_enable:        Bit mask specifying which hardware pins should be
-+ *				used to enable the regulator, if any
-+ *			    Value should be an ORing of
-+ *				SPMI_REGULATOR_PIN_CTRL_ENABLE_* constants.  If
-+ *				the bit specified by
-+ *				SPMI_REGULATOR_PIN_CTRL_ENABLE_HW_DEFAULT is
-+ *				set, then pin control enable hardware registers
-+ *				will not be modified.
-+ * @pin_ctrl_hpm:           Bit mask specifying which hardware pins should be
-+ *				used to force the regulator into high power
-+ *				mode, if any
-+ *			    Value should be an ORing of
-+ *				SPMI_REGULATOR_PIN_CTRL_HPM_* constants.  If
-+ *				the bit specified by
-+ *				SPMI_REGULATOR_PIN_CTRL_HPM_HW_DEFAULT is
-+ *				set, then pin control mode hardware registers
-+ *				will not be modified.
-+ * @vs_soft_start_strength: This parameter sets the soft start strength for
-+ *				voltage switch type regulators.  Its value
-+ *				should be one of SPMI_VS_SOFT_START_STR_*.  If
-+ *				its value is SPMI_VS_SOFT_START_STR_HW_DEFAULT,
-+ *				then the soft start strength will be left at its
-+ *				default hardware value.
-+ */
-+struct spmi_regulator_init_data {
-+	unsigned				pin_ctrl_enable;
-+	unsigned				pin_ctrl_hpm;
-+	enum spmi_vs_soft_start_str		vs_soft_start_strength;
-+};
-+
- /* These types correspond to unique register layouts. */
- enum spmi_regulator_logical_type {
- 	SPMI_REGULATOR_LOGICAL_TYPE_SMPS,
-@@ -458,6 +522,14 @@ static int spmi_regulator_vs_enable(struct regulator_dev *rdev)
- 	return spmi_regulator_common_enable(rdev);
- }
- 
-+static int spmi_regulator_vs_ocp(struct regulator_dev *rdev)
-+{
-+	struct spmi_regulator *vreg = rdev_get_drvdata(rdev);
-+	u8 reg = SPMI_VS_OCP_OVERRIDE;
-+
-+	return spmi_vreg_write(vreg, SPMI_VS_REG_OCP, &reg, 1);
-+}
-+
- static int spmi_regulator_common_disable(struct regulator_dev *rdev)
- {
- 	struct spmi_regulator *vreg = rdev_get_drvdata(rdev);
-@@ -791,6 +863,9 @@ static unsigned int spmi_regulator_common_get_mode(struct regulator_dev *rdev)
- 	if (reg & SPMI_COMMON_MODE_HPM_MASK)
- 		return REGULATOR_MODE_NORMAL;
- 
-+	if (reg & SPMI_COMMON_MODE_AUTO_MASK)
-+		return REGULATOR_MODE_FAST;
-+
- 	return REGULATOR_MODE_IDLE;
- }
- 
-@@ -798,11 +873,13 @@ static int
- spmi_regulator_common_set_mode(struct regulator_dev *rdev, unsigned int mode)
- {
- 	struct spmi_regulator *vreg = rdev_get_drvdata(rdev);
--	u8 mask = SPMI_COMMON_MODE_HPM_MASK;
-+	u8 mask = SPMI_COMMON_MODE_HPM_MASK | SPMI_COMMON_MODE_AUTO_MASK;
- 	u8 val = 0;
- 
- 	if (mode == REGULATOR_MODE_NORMAL)
--		val = mask;
-+		val = SPMI_COMMON_MODE_HPM_MASK;
-+	else if (mode == REGULATOR_MODE_FAST)
-+		val = SPMI_COMMON_MODE_AUTO_MASK;
- 
- 	return spmi_vreg_update_bits(vreg, SPMI_COMMON_REG_MODE, val, mask);
- }
-@@ -972,6 +1049,7 @@ static struct regulator_ops spmi_vs_ops = {
- 	.is_enabled		= spmi_regulator_common_is_enabled,
- 	.set_pull_down		= spmi_regulator_common_set_pull_down,
- 	.set_soft_start		= spmi_regulator_common_set_soft_start,
-+	.set_over_current_protection = spmi_regulator_vs_ocp,
- };
- 
- static struct regulator_ops spmi_boost_ops = {
-@@ -1202,10 +1280,111 @@ static int spmi_regulator_ftsmps_init_slew_rate(struct spmi_regulator *vreg)
- 	return ret;
- }
- 
-+static int spmi_regulator_init_registers(struct spmi_regulator *vreg,
-+				const struct spmi_regulator_init_data *data)
-+{
-+	int ret;
-+	enum spmi_regulator_logical_type type;
-+	u8 ctrl_reg[8], reg, mask;
-+
-+	type = vreg->logical_type;
-+
-+	ret = spmi_vreg_read(vreg, SPMI_COMMON_REG_VOLTAGE_RANGE, ctrl_reg, 8);
-+	if (ret)
-+		return ret;
-+
-+	/* Set up enable pin control. */
-+	if ((type == SPMI_REGULATOR_LOGICAL_TYPE_SMPS
-+	     || type == SPMI_REGULATOR_LOGICAL_TYPE_LDO
-+	     || type == SPMI_REGULATOR_LOGICAL_TYPE_VS)
-+	    && !(data->pin_ctrl_enable
-+			& SPMI_REGULATOR_PIN_CTRL_ENABLE_HW_DEFAULT)) {
-+		ctrl_reg[SPMI_COMMON_IDX_ENABLE] &=
-+			~SPMI_COMMON_ENABLE_FOLLOW_ALL_MASK;
-+		ctrl_reg[SPMI_COMMON_IDX_ENABLE] |=
-+		    data->pin_ctrl_enable & SPMI_COMMON_ENABLE_FOLLOW_ALL_MASK;
-+	}
-+
-+	/* Set up mode pin control. */
-+	if ((type == SPMI_REGULATOR_LOGICAL_TYPE_SMPS
-+	    || type == SPMI_REGULATOR_LOGICAL_TYPE_LDO)
-+		&& !(data->pin_ctrl_hpm
-+			& SPMI_REGULATOR_PIN_CTRL_HPM_HW_DEFAULT)) {
-+		ctrl_reg[SPMI_COMMON_IDX_MODE] &=
-+			~SPMI_COMMON_MODE_FOLLOW_ALL_MASK;
-+		ctrl_reg[SPMI_COMMON_IDX_MODE] |=
-+			data->pin_ctrl_hpm & SPMI_COMMON_MODE_FOLLOW_ALL_MASK;
-+	}
-+
-+	if (type == SPMI_REGULATOR_LOGICAL_TYPE_VS
-+	   && !(data->pin_ctrl_hpm & SPMI_REGULATOR_PIN_CTRL_HPM_HW_DEFAULT)) {
-+		ctrl_reg[SPMI_COMMON_IDX_MODE] &=
-+			~SPMI_COMMON_MODE_FOLLOW_AWAKE_MASK;
-+		ctrl_reg[SPMI_COMMON_IDX_MODE] |=
-+		       data->pin_ctrl_hpm & SPMI_COMMON_MODE_FOLLOW_AWAKE_MASK;
-+	}
-+
-+	if ((type == SPMI_REGULATOR_LOGICAL_TYPE_ULT_LO_SMPS
-+		|| type == SPMI_REGULATOR_LOGICAL_TYPE_ULT_HO_SMPS
-+		|| type == SPMI_REGULATOR_LOGICAL_TYPE_ULT_LDO)
-+		&& !(data->pin_ctrl_hpm
-+			& SPMI_REGULATOR_PIN_CTRL_HPM_HW_DEFAULT)) {
-+		ctrl_reg[SPMI_COMMON_IDX_MODE] &=
-+			~SPMI_COMMON_MODE_FOLLOW_AWAKE_MASK;
-+		ctrl_reg[SPMI_COMMON_IDX_MODE] |=
-+		       data->pin_ctrl_hpm & SPMI_COMMON_MODE_FOLLOW_AWAKE_MASK;
-+	}
-+
-+	/* Write back any control register values that were modified. */
-+	ret = spmi_vreg_write(vreg, SPMI_COMMON_REG_VOLTAGE_RANGE, ctrl_reg, 8);
-+	if (ret)
-+		return ret;
-+
-+	/* Set soft start strength and over current protection for VS. */
-+	if (type == SPMI_REGULATOR_LOGICAL_TYPE_VS) {
-+		if (data->vs_soft_start_strength
-+				!= SPMI_VS_SOFT_START_STR_HW_DEFAULT) {
-+			reg = data->vs_soft_start_strength
-+				& SPMI_VS_SOFT_START_SEL_MASK;
-+			mask = SPMI_VS_SOFT_START_SEL_MASK;
-+			return spmi_vreg_update_bits(vreg,
-+						     SPMI_VS_REG_SOFT_START,
-+						     reg, mask);
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static void spmi_regulator_get_dt_config(struct spmi_regulator *vreg,
-+		struct device_node *node, struct spmi_regulator_init_data *data)
-+{
-+	/*
-+	 * Initialize configuration parameters to use hardware default in case
-+	 * no value is specified via device tree.
-+	 */
-+	data->pin_ctrl_enable	    = SPMI_REGULATOR_PIN_CTRL_ENABLE_HW_DEFAULT;
-+	data->pin_ctrl_hpm	    = SPMI_REGULATOR_PIN_CTRL_HPM_HW_DEFAULT;
-+	data->vs_soft_start_strength	= SPMI_VS_SOFT_START_STR_HW_DEFAULT;
-+
-+	/* These bindings are optional, so it is okay if they aren't found. */
-+	of_property_read_u32(node, "qcom,ocp-max-retries",
-+		&vreg->ocp_max_retries);
-+	of_property_read_u32(node, "qcom,ocp-retry-delay",
-+		&vreg->ocp_retry_delay_ms);
-+	of_property_read_u32(node, "qcom,pin-ctrl-enable",
-+		&data->pin_ctrl_enable);
-+	of_property_read_u32(node, "qcom,pin-ctrl-hpm", &data->pin_ctrl_hpm);
-+	of_property_read_u32(node, "qcom,vs-soft-start-strength",
-+		&data->vs_soft_start_strength);
-+}
-+
- static unsigned int spmi_regulator_of_map_mode(unsigned int mode)
- {
--	if (mode)
-+	if (mode == 1)
- 		return REGULATOR_MODE_NORMAL;
-+	if (mode == 2)
-+		return REGULATOR_MODE_FAST;
- 
- 	return REGULATOR_MODE_IDLE;
- }
-@@ -1214,12 +1393,23 @@ static int spmi_regulator_of_parse(struct device_node *node,
- 			    const struct regulator_desc *desc,
- 			    struct regulator_config *config)
- {
-+	struct spmi_regulator_init_data data = { };
- 	struct spmi_regulator *vreg = config->driver_data;
- 	struct device *dev = config->dev;
- 	int ret;
- 
--	vreg->ocp_max_retries = SPMI_VS_OCP_DEFAULT_MAX_RETRIES;
--	vreg->ocp_retry_delay_ms = SPMI_VS_OCP_DEFAULT_RETRY_DELAY_MS;
-+	spmi_regulator_get_dt_config(vreg, node, &data);
-+
-+	if (!vreg->ocp_max_retries)
-+		vreg->ocp_max_retries = SPMI_VS_OCP_DEFAULT_MAX_RETRIES;
-+	if (!vreg->ocp_retry_delay_ms)
-+		vreg->ocp_retry_delay_ms = SPMI_VS_OCP_DEFAULT_RETRY_DELAY_MS;
-+
-+	ret = spmi_regulator_init_registers(vreg, &data);
-+	if (ret) {
-+		dev_err(dev, "common initialization failed, ret=%d\n", ret);
-+		return ret;
-+	}
- 
- 	if (vreg->logical_type == SPMI_REGULATOR_LOGICAL_TYPE_FTSMPS) {
- 		ret = spmi_regulator_ftsmps_init_slew_rate(vreg);
--- 
-2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+cheers.
