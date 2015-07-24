@@ -1,50 +1,68 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 5/6] iommu/mediatek: Add mt8173 IOMMU driver
-Date: Fri, 24 Jul 2015 17:55:10 +0100
-Message-ID: <20150724165509.GD21177@arm.com>
-References: <1437037475-9065-1-git-send-email-yong.wu@mediatek.com>
-	<1437037475-9065-6-git-send-email-yong.wu@mediatek.com>
-	<20150721145910.GG31095@arm.com>
-	<1437716593.23932.73.camel@mhfsdcap03>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 05/11] mfd: devicetree: bindings: Add Qualcomm SMD
+ based RPM DT binding
+Date: Fri, 24 Jul 2015 18:23:16 +0100
+Message-ID: <20150724172316.GR11162@sirena.org.uk>
+References: <1435355419-23602-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <1435355419-23602-6-git-send-email-bjorn.andersson@sonymobile.com>
+ <20150707121609.GZ3182@x1>
+ <20150713214836.GA15178@usrtlx11787.corpusers.net>
+ <20150723133133.GB3436@x1>
+ <20150723164128.GD4753@usrtlx11787.corpusers.net>
+ <20150723171638.GE11162@sirena.org.uk>
+ <20150724095847.GC3436@x1>
+ <20150724102434.GF11162@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="D0zqYiDVpAd59AEU"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1437716593.23932.73.camel@mhfsdcap03>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "cloud.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <cloud.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org" <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Sasha Hauer <kernel@pen>
+In-Reply-To: <20150724102434.GF11162-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, "bjorn-UYDU3/A3LUY@public.gmane.org" <bjorn-UYDU3/A3LUY@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 24, 2015 at 06:43:13AM +0100, Yong Wu wrote:
-> On Tue, 2015-07-21 at 15:59 +0100, Will Deacon wrote:
-> > On Thu, Jul 16, 2015 at 10:04:34AM +0100, Yong Wu wrote:
-> > > +static void mtk_iommu_tlb_flush_all(void *cookie)
-> > > +{
-> > > +       struct mtk_iommu_domain *domain = cookie;
-> > > +       void __iomem *base;
-> > > +
-> > > +       base = domain->data->base;
-> > > +       writel(F_INVLD_EN1 | F_INVLD_EN0, base + REG_MMU_INV_SEL);
-> > > +       writel(F_ALL_INVLD, base + REG_MMU_INVALIDATE);
-> > 
-> > This needs to be synchronous, so you probably want to call
-> > mtk_iommu_tlb_sync at the end.
-> 
-> From our spec, we have to wait until HW done after tlb flush range.
-> But it don't need wait after tlb flush all.
-> so It isn't necessary to add mtk_iommu_tlb_sync in tlb_flush_all here.
 
-Okey doke, but I'm surprised you don't need a subsequent DSB or read-back.
-What if the writel is buffered on the way to the IOMMU?
+--D0zqYiDVpAd59AEU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Will
+On Fri, Jul 24, 2015 at 11:24:34AM +0100, Mark Brown wrote:
+> On Fri, Jul 24, 2015 at 10:58:47AM +0100, Lee Jones wrote:
+> > On Thu, 23 Jul 2015, Mark Brown wrote:
+
+> > > I have no idea what's going on here, sorry.  I've not been reading this
+> > > thread.
+
+> > All of the information you need is in the email you replied to.
+
+> The mail appears to have an edited down section of what looks like an
+> example rather than the actual binding.  I haven't seen the binding so I
+> can't really comment on it.
+
+I managed to find the binding but I'm afraid I'm still not sure what the
+concern here is - can someone please be specific about the question(s)
+you're looking for an answer on?
+
+--D0zqYiDVpAd59AEU
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJVsnSEAAoJECTWi3JdVIfQPyoH/3HusznTEIrNki/48w+QGgtU
+Th4cJ5M0BRgk314heduf6vZJmLHlDLwi7Fwm+xjhGL62X0Fzuc7kdmKJbWiT6i3z
+tbEfndf049mbvYGKF6ZG0BBpx8wBMNZoHMCg71J6T8TudSAjzIHEiiof8hcgfhKm
+SFiQgsK0o9N1wDz8YvlZiMsDOoYhzGcy5qn9klnvGTNfS0Z/zaREsXqyu8qOC8MV
+Xj7OLHDYj6NnUbN37O9CWNsWbcSM3eOA22mJxWmjZph0j3pGCwFIeJT1t+fXPIp/
+ENb9oQzXvTBjA49c1g5Zc9aqvwUuDRU7sexZ0xhzdRHN2uguMUHANY2hwWrIBi8=
+=cK4n
+-----END PGP SIGNATURE-----
+
+--D0zqYiDVpAd59AEU--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
