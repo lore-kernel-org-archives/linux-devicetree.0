@@ -1,86 +1,98 @@
-From: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] backlight: pm8941-wled: Add default-brightness property
-Date: Fri, 24 Jul 2015 09:10:21 -0400
-Message-ID: <CAF6AEGsJdLYzCA_=M8hf1XfhRxFAaY6VFdSBRP+y56uKsnQHiA@mail.gmail.com>
-References: <1437681127-15760-1-git-send-email-bjorn.andersson@sonymobile.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: [PATCH v7 0/5] mtd: nand: vf610_nfc: Freescale NFC for VF610
+Date: Fri, 24 Jul 2015 15:16:19 +0200
+Message-ID: <1437743784-30163-1-git-send-email-stefan@agner.ch>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1437681127-15760-1-git-send-email-bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Fbdev development list <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: sebastian-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marb-Z4QKGCRq86k@public.gmane.org, aaron-yuhzfaV+M/Wz3Dx2OeFgIA@public.gmane.org, bpringlemeir-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 23, 2015 at 3:52 PM, Bjorn Andersson
-<bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org> wrote:
-> Add the possibility of specifying the default brightness in DT.
->
-> Signed-off-by: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-> ---
->
-> This depends on the patch moving pm8941-wled to backlight [1]. The dt property
-> is used by several other backlight drivers, so I considered this to be a
-> "common" property and it's hence not prefixed with "qcom,".
->
-> [1] https://lkml.org/lkml/2015/7/21/906
->
->  Documentation/devicetree/bindings/video/backlight/pm8941-wled.txt | 1 +
->  drivers/video/backlight/pm8941-wled.c                             | 4 ++++
->  2 files changed, 5 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/video/backlight/pm8941-wled.txt b/Documentation/devicetree/bindings/video/backlight/pm8941-wled.txt
-> index 424f8444a6cd..37503f8c3620 100644
-> --- a/Documentation/devicetree/bindings/video/backlight/pm8941-wled.txt
-> +++ b/Documentation/devicetree/bindings/video/backlight/pm8941-wled.txt
-> @@ -5,6 +5,7 @@ Required properties:
->  - reg: slave address
->
->  Optional properties:
-> +- default-brightness: value from: 0-4095
->  - label: The name of the backlight device
->  - qcom,cs-out: bool; enable current sink output
->  - qcom,cabc: bool; enable content adaptive backlight control
-> diff --git a/drivers/video/backlight/pm8941-wled.c b/drivers/video/backlight/pm8941-wled.c
-> index c704c3236034..b875e58df0fc 100644
-> --- a/drivers/video/backlight/pm8941-wled.c
-> +++ b/drivers/video/backlight/pm8941-wled.c
-> @@ -373,6 +373,7 @@ static int pm8941_wled_probe(struct platform_device *pdev)
->         struct backlight_device *bl;
->         struct pm8941_wled *wled;
->         struct regmap *regmap;
-> +       u32 val = 0;
->         int rc;
+This seventh revision simplifies the config symbols somewhat, but
+is otherwise just a rebase version on current l2-mtd/master.
 
-as discussed on IRC, it would be better if the default read back the
-current settings (so-as to inherit bootloader splash smoothly..
-drm/msm supports a memory-region phandle, for example, so it can take
-over the bootloader splash-screen as stolen-mem)
+I reran the MTD tests, they still all succeed.
 
-and it would I think be useful to have a comment in the bindings file
-explaining that you *should* use the default-brightness property to
-set a sane default if bootloader isn't putting up a splash, and you
-should *not* use the property if it is..
+Some more information and the full test log can be found in the
+cover letter of the last revision v6:
+http://thread.gmane.org/gmane.linux.kernel/1979868
 
-BR,
--R
+Changes since v6:
+- Rebased ontop of l2-mtd/master (v4.2-rc1 based)
+- Removed HAVE_NAND_VF610_NFC and use depends on. This made
+  "[PATCH v6 4/6] ARM: vf610: enable NAND Flash Controller" unnecessary
 
->         regmap = dev_get_regmap(pdev->dev.parent, NULL);
-> @@ -395,8 +396,11 @@ static int pm8941_wled_probe(struct platform_device *pdev)
->         if (rc)
->                 return rc;
->
-> +       of_property_read_u32(pdev->dev.of_node, "default-brightness", &val);
-> +
->         memset(&props, 0, sizeof(struct backlight_properties));
->         props.type = BACKLIGHT_RAW;
-> +       props.brightness = val;
->         props.max_brightness = PM8941_WLED_REG_VAL_MAX;
->         bl = devm_backlight_device_register(&pdev->dev, wled->name,
->                                             &pdev->dev, wled,
-> --
-> 1.8.2.2
->
+Changes since v5:
+- Removed fsl,mpc5125-nfc compatible string
+- Removed readl/writel_relaxed
+- Change interface of vf610_nfc_transfer_size to match other accessors
+
+Changes since v4:
+- Rebased ontop of l2-mtd/master (v4.1-rc4 based)
+- Eliminate unnecessary page read (NAND_CMD_SEQIN) since the driver does
+  not support sub-page writes anyway (improves write performance)
+- Support ONFI by enabling READID command with offset and parameter page
+  reads (CMD_PARAM)
+- Change to dedicated read_page/write_page function, enables raw writes
+- Use __LITTLE_ENDIAN to distingush between LE/BE relevant statements
+- Eliminated vf610_nfc_probe_dt in favor of common DT init code
+- Use wait_for_completion_timeout
+- Some style fixes (spaces, etc.)
+
+Changes since v3:
+- Make the driver selectable when COMPILE_TEST is set
+- Fix compile error due to superfluous ECC_STATUS configuration in initial
+  patch (without ECC correction ECC_STATUS does not need to be configured)
+- Remove custom BBT pattern and switch to in-band BBT in the initial patch
+- Include two bug fixes, for details see the corresponding U-Boot patches:
+  http://thread.gmane.org/gmane.comp.boot-loaders.u-boot/215802
+
+Changes since v2:
+- Updated binding documentation
+
+Changes since v1:
+- Nest nfc_config struct within the main nfc struct
+- Use assigned clock binding to specify NFC clock
+- Rebased ontop of MSCM IR patchset (driver parts have been merged)
+- Split out arch Kconfig in a separate config
+- Fix module license
+- Updated MAINTAINERS
+
+Changes since RFC (Bill Pringlemeir):
+- Renamed driver from fsl_nfc to vf610_nfc
+- Use readl/writel for all register in accessor functions
+- Optimized field accessor functions
+- Implemented PM (suspend/resume) functions
+- Implemented basic support for ECC strength/ECC step size from dt
+- Improved performance of count_written_bits by using hweight32
+- Support ECC with 60-bytes to correct up to 32 bit errors
+- Changed to in-band BBT (NAND_BBT_NO_OOB) which also allows ECC modes
+  which uses up to 60 bytes on 64 byte OOB
+- Removed custom (downstream) BBT pattern since BBT table won't be
+  compatible anyway (due to the change above)
+
+Stefan Agner (5):
+  mtd: nand: vf610_nfc: Freescale NFC for VF610, MPC5125 and others
+  mtd: nand: vf610_nfc: add hardware BCH-ECC support
+  mtd: nand: vf610_nfc: add device tree bindings
+  ARM: dts: vf610twr: add NAND flash controller peripherial
+  ARM: dts: vf-colibri: enable NAND flash controller
+
+ .../devicetree/bindings/mtd/vf610-nfc.txt          |  45 ++
+ MAINTAINERS                                        |   6 +
+ arch/arm/boot/dts/vf-colibri.dtsi                  |  32 +
+ arch/arm/boot/dts/vf610-twr.dts                    |  44 ++
+ arch/arm/boot/dts/vfxxx.dtsi                       |   8 +
+ drivers/mtd/nand/Kconfig                           |  11 +
+ drivers/mtd/nand/Makefile                          |   1 +
+ drivers/mtd/nand/vf610_nfc.c                       | 839 +++++++++++++++++++++
+ 8 files changed, 986 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/vf610-nfc.txt
+ create mode 100644 drivers/mtd/nand/vf610_nfc.c
+
+-- 
+2.4.5
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
