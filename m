@@ -1,246 +1,115 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v3 3/6] power: Add support for DA9150 Fuel-Gauge
-Date: Sat, 25 Jul 2015 19:27:15 +0200
-Message-ID: <20150725172715.GA1697@earth>
-References: <cover.1436284659.git.Adam.Thomson.Opensource@diasemi.com>
- <d122a6ffc20fca836847016895e5181f5d2248e7.1436284659.git.Adam.Thomson.Opensource@diasemi.com>
+From: Duc Dang <dhdang-qTEPVZfXA3Y@public.gmane.org>
+Subject: Re: [PATCH 0/2 RESEND] power: reset: Add syscon reboot/poweroff
+ device nodes for APM X-Gene platform
+Date: Sat, 25 Jul 2015 11:34:42 -0700
+Message-ID: <CADaLNDmPqb73UrOaVphkywZh8mfd4sPdA6i25USLt53sZ3hFuw@mail.gmail.com>
+References: <1433272747-27114-1-git-send-email-ttnguyen@apm.com>
+ <20150714084004.GA14593@localhost> <CAPw-ZT=d2=dh-Hjugo9BStCuhTp82MMapUa1EGrD01EoTOG-nA@mail.gmail.com>
+ <CAOesGMhKRxUtr6XXsZgCJVUFTFL3eHySP8y-SmEzi=R53MxLRw@mail.gmail.com>
+ <CAPw-ZTnk8cZyFyMnBMUYXuxs9=2ydqxOzm+dYsg-=9_Suq+q7A@mail.gmail.com> <CAOesGMimzcUDW4e1etxZNerEusWmEtT_um8XZoT0MkFpCnTf5w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="jI8keyz6grp/JLjh"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <d122a6ffc20fca836847016895e5181f5d2248e7.1436284659.git.Adam.Thomson.Opensource@diasemi.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Support Opensource <support.opensource@diasemi.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOesGMimzcUDW4e1etxZNerEusWmEtT_um8XZoT0MkFpCnTf5w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Tai Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Olof,
 
---jI8keyz6grp/JLjh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi Adam,
-
-The driver looks mostly fine. I have a few comments, though:
-
-On Tue, Jul 07, 2015 at 05:34:19PM +0100, Adam Thomson wrote:
-> Signed-off-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-
-Please add a short description to the commit message.
-
-> [...]=20
+On Wed, Jul 22, 2015 at 11:20 AM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
+> On Wed, Jul 22, 2015 at 11:10 AM, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org> wrote:
+>> Hi Olof,,
+>>
+>>>>
+>>>>>> This patch set adds syscon reboot/poweroff device nodes to support reboot and
+>>>>>> poweroff features on X-Gene platform.
+>>>>>>
+>>>>>> Tai Nguyen (2):
+>>>>>>   power: reset: Add syscon reboot device node for APM X-Gene platform
+>>>>>>   power: reset: Add syscon poweroff device node for APM X-Gene Mustang platform
+>>>>>>
+>>>>>>  arch/arm64/boot/dts/apm/apm-mustang.dts |   12 ++++++++++++
+>>>>>>  arch/arm64/boot/dts/apm/apm-storm.dtsi  |   12 ++++++++++++
+>>>>>>  2 files changed, 24 insertions(+)
+>>>>>
+>>>>> Hi,
+>>>>>
+>>>>> It's unclear to me what you want to happen to these patches. They are
+>>>>> sent to a long list of to-recipients, one of which is arm-DgEjT+Ai2yi4UlQgPVntAg@public.gmane.org In
+>>>>> general, specify the person you want to take action on the patch in to
+>>>>> with the rest on cc.
+>>>>
+>>>> Is there an owner for all DT node files? Is that Catalina as he is
+>>>> owner for ARM64 arch folder?
+>>>
+>>> The ARM64 DT changes get merged through arm-soc, i.e. they get sent to
+>>> arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org by the platform maintainers and picked up by us from
+>>> there (Arnd, Kevin or myself).
+>>>
+>>>>> We generally ask that patches first go to the subarch maintainers,
+>>>>> and they in turn send it on to us (either through a pull request or
+>>>>> by sending the patches to be applied). In the case of X-Gene, there is
+>>>>> no general platform maintainer so we keep getting patches from various
+>>>>> engineers at APM and it's unclear to us what your intentions are.
+>>>>>
+>>>>> I'd prefer to see one (to start with) person in charge of these (i.e. one
+>>>>> maintainer from the APM side). Please add that person to the MAINTAINERS
+>>>>> file as well.
+>>>>
+>>>> Are you suggesting that we have one person to start an GIT with
+>>>> kernel.org to keep all these misc ack'ed patches for X-Gene (APM) that
+>>>> don't seems to have an maintainer/home. Then request an pull by you?
+>>>
+>>> Pull requests are convenient for us, but if it's just a patch or two,
+>>> sending them directly in email is fine as well.
+>>
+>> If there is an chance in pulling this power off/reset patches for
+>> 4.2-rc4, can you pull in as patches? Otherwise, we will go the GIT
+>> pull request.
 >
-> +config FG_DA9150
-
-Please name the config entry BATTERY_DA9150 to be consistent with
-the other fuel gauges.
-
-> [...]
+> We can definitely pick them up and queue them for 4.3 (see below). We
+> normally want the bulk of patches before -rc4/5, but we take smaller
+> updates closer to the merge window as well.
 >
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/of.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/slab.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/delay.h>
-> +#include <linux/power_supply.h>
-> +#include <linux/list.h>
-> +#include <asm/div64.h>
-> +#include <linux/mfd/da9150/core.h>
-> +#include <linux/mfd/da9150/registers.h>
+>>> What I want to avoid is a large number of people sending us patches
+>>> directly, which is why we ask for platform maintainers to coordinate
+>>> and aggregate patches to send on to us. That way we have one person
+>>> down the chain that we knows how we want the code delivered, and that
+>>> can do a round of reviews before we get it.
+>>
+>> We will get an GIT setup up for this and Duc Dang will contact you for
+>> pull request when ready.
 
-I wonder if the "depends CHARGER_DA9150" in Kconfig should be
-"depends MFD_DA9150" instead.
+We are debating whether we should setup a company server (where we can
+have full control about storage, user permissions, backup, ...) or
+just use github.com to host our X-Gene kernel tree.
 
-> [...]
-> +
-> +/* Power Supply attributes */
-> +static int da9150_fg_capacity(struct da9150_fg *fg,
-> +			      union power_supply_propval *val)
-> +{
-> +	da9150_fg_read_sync_start(fg);
-> +	val->intval =3D da9150_fg_read_attr(fg, DA9150_QIF_SOC_PCT,
-> +					  DA9150_QIF_SOC_PCT_SIZE);
-> +	da9150_fg_read_sync_end(fg);
+Github seems already provide everything we need for a public source
+tree. Per your experience, what is your (and probably other
+maintainers) reference in git hosting server? Is there any
+inconvenience or difficulty for the maintainers to pull/merge code
+from Github versus from a company server?
 
-Create a wrapper function for this. Reading a single value
-with sync guards is done multiple times.
-
-da9150_fg_read_attr_sync(fg, ...) {
-    da9150_fg_read_sync_start(fg);
-    da9150_fg_read_attr(fg, ...);
-    da9150_fg_read_sync_end(fg);
-}
-
-> +	if (val->intval > 100)
-> +		val->intval =3D 100;
-> +
-> +	return 0;
-> +}
-> +
+Thanks!
 >
-> [...]
-> +					  DA9150_QIF_E_FG_STATUS_SIZE);
-> +
-> +	/* Handle warning/critical threhold events */
-> +	if ((DA9150_FG_IRQ_LOW_SOC_MASK | DA9150_FG_IRQ_HIGH_SOC_MASK) &
-> +	    e_fg_status)
-
-Please make this (e_fg_status & CONSTANT_MASK).
-
-> +		da9150_fg_soc_event_config(fg);
-> +
-> +	/* Clear any FG IRQs */
-> +	da9150_fg_write_attr(fg, DA9150_QIF_E_FG_STATUS,
-> +			     DA9150_QIF_E_FG_STATUS_SIZE, e_fg_status);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
+> Ok, sounds good. If you have people in the bay area that need PGP keys
+> signed for this, I'd be happy to help.
 >
-> [...]
+> As far as the current DT patches, there's been several sent by
+> different people. Please aggregate them into one patch series and send
+> that (as git send-email is fine) to us to queue for 4.3.
 >
-> +static int da9150_fg_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev =3D &pdev->dev;
-> +	struct da9150 *da9150 =3D dev_get_drvdata(dev->parent);
-> +	struct da9150_fg_pdata *fg_pdata =3D dev_get_platdata(dev);
-> +	struct da9150_fg *fg;
-> +	int ver, irq, ret;
-> +
-> +	fg =3D devm_kzalloc(dev, sizeof(*fg), GFP_KERNEL);
-> +	if (fg =3D=3D NULL)
-> +		return -ENOMEM;
-> +
-> +	platform_set_drvdata(pdev, fg);
-> +	fg->da9150 =3D da9150;
-> +	fg->dev =3D dev;
-> +
-> +	mutex_init(&fg->io_lock);
-> +
-> +	/* Enable QIF */
-> +	da9150_set_bits(da9150, DA9150_CORE2WIRE_CTRL_A, DA9150_FG_QIF_EN_MASK,
-> +			DA9150_FG_QIF_EN_MASK);
-> +
-> +	fg->battery =3D power_supply_register(dev, &fg_desc, NULL);
-> +	if (IS_ERR(fg->battery)) {
-> +		ret =3D PTR_ERR(fg->battery);
-> +		return ret;
-> +	}
-
-Please use devm_power_supply_register(...) to simplify the driver.
-
-> +	ver =3D da9150_fg_read_attr(fg, DA9150_QIF_FW_MAIN_VER,
-> +				  DA9150_QIF_FW_MAIN_VER_SIZE);
-> +	dev_info(dev, "Version: 0x%x\n", ver);
-> +
-> +	/* Handle DT data if provided */
-> +	if (dev->of_node) {
-> +		fg_pdata =3D da9150_fg_dt_pdata(dev);
-> +		dev->platform_data =3D fg_pdata;
-> +	}
-> +
-> +	/* Handle any pdata provided */
-> +	if (fg_pdata) {
-> +		fg->interval =3D fg_pdata->update_interval;
-> +
-> +		if (fg_pdata->warn_soc_lvl > 100)
-> +			dev_warn(dev, "Invalid SOC warning level provided, Ignoring");
-> +		else
-> +			fg->warn_soc =3D fg_pdata->warn_soc_lvl;
-> +
-> +		if ((fg_pdata->crit_soc_lvl > 100) ||
-> +		    (fg_pdata->crit_soc_lvl >=3D fg_pdata->warn_soc_lvl))
-> +			dev_warn(dev, "Invalid SOC critical level provided, Ignoring");
-> +		else
-> +			fg->crit_soc =3D fg_pdata->crit_soc_lvl;
-> +
-> +
-> +	}
-> +
-> +	/* Configure initial SOC level events */
-> +	da9150_fg_soc_event_config(fg);
-> +
-> +	/*
-> +	 * If an interval period has been provided then setup repeating
-> +	 * work for reporting data updates.
-> +	 */
-> +	if (fg->interval) {
-> +		INIT_DELAYED_WORK(&fg->work, da9150_fg_work);
-> +		schedule_delayed_work(&fg->work,
-> +				      msecs_to_jiffies(fg->interval));
-> +	}
-> +
-> +	/* Register IRQ */
-> +	irq =3D platform_get_irq_byname(pdev, "FG");
-> +	ret =3D request_threaded_irq(irq, NULL, da9150_fg_irq, IRQF_ONESHOT, "F=
-G",
-> +				   fg);
-> +	if (ret)
-> +		goto irq_fail;
-> +
-> +	return ret;
-> +
-> +irq_fail:
-> +	cancel_delayed_work(&fg->work);
-> +	power_supply_unregister(fg->battery);
-> +
-> +	return ret;
-> +}
-> +
-> +static int da9150_fg_remove(struct platform_device *pdev)
-> +{
-> +	struct da9150_fg *fg =3D platform_get_drvdata(pdev);
-> +	int irq;
-> +
-> +	irq =3D platform_get_irq_byname(pdev, "FG");
-> +	free_irq(irq, fg);
-> +
-> +	if (fg->interval)
-> +		cancel_delayed_work(&fg->work);
-
-It looks like the order of irq freeing and canceling of the
-delayed work is not important. In that case I suggest switching
-to devm_request_threaded_irq(...).
-
-> +	power_supply_unregister(fg->battery);
-> +
-> +	return 0;
-> +}
->=20
-> [...]
 >
-> +
-> +MODULE_DESCRIPTION("Fuel-Gauge Driver for DA9150");
-> +MODULE_AUTHOR("Adam Thomson <Adam.Thomson.Opensource@diasemi.com>");
-> +MODULE_LICENSE("GPL");
+> Thanks!
+>
+>
+> -Olof
 
-MODULE_LICENSE("GPL v2");
-
---jI8keyz6grp/JLjh
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJVs8bvAAoJENju1/PIO/qaSlsP/RCw3u4dweX+lTdHgcW4DyTS
-6qBQ69zY1ikR+3cr3Lu38pZzPtvojN2f9nyPput1Ij5nMtv/A4ZUkiyrZuiWFKUe
-TQprKeUbxl15u+TbBZJl4gGdJ12t/rFLvOMH2QQ6h8DQPk5d9V9YyG6Z9nNRCq9x
-jwvimntZ7LU5OJp4c2oyyF6TdqYEDZnJ3RPZ0cT46c5R5faubiaZzw+A3TBXfEKK
-d8SY5P1lr+WNWHDUlhSp/ReFj6AUbEAjXBb1W3gIvaxn7uyHMhPV5Rhl/xaPljM6
-5HWwY6jQjUv1M83a+gJKMEbspHa1V8/sBPy3pPrA/QtmQJYGuEya5xJXi8HggNBH
-Qv/gtp0CRb4UPz05GjleCuM6BA7zLejIC3aHUbNSOJX+Inr/8kjPBsnml8R7D1nj
-FVTHYaARQqols1otbQ+PSrwhB4qbPeexdLlrj/TqQ89wj2+rtD+VbERTuZpNzUZd
-q4s2TYB6FUEgE696/dSRdLGomppq9FggbqPO+kfhWxZpEj9jYX4gt6BoPcDIPxXA
-lTuL/53wC/QMYm3gqWgyC5IZnfYywSkXyfxhakEDoJxSVA/Oa0jhGoCcMuDBHuE5
-T0nJYW1KM9WjYrAwVfG31ddPYfNhZzy6SfpHSB4PXp+6J1p0INNZUacrwLDXiENi
-3DB5kLEf9PxaIp+AANT8
-=VwbL
------END PGP SIGNATURE-----
-
---jI8keyz6grp/JLjh--
+-- 
+Duc Dang.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
