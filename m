@@ -1,115 +1,84 @@
-From: Duc Dang <dhdang-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH 0/2 RESEND] power: reset: Add syscon reboot/poweroff
- device nodes for APM X-Gene platform
-Date: Sat, 25 Jul 2015 11:34:42 -0700
-Message-ID: <CADaLNDmPqb73UrOaVphkywZh8mfd4sPdA6i25USLt53sZ3hFuw@mail.gmail.com>
-References: <1433272747-27114-1-git-send-email-ttnguyen@apm.com>
- <20150714084004.GA14593@localhost> <CAPw-ZT=d2=dh-Hjugo9BStCuhTp82MMapUa1EGrD01EoTOG-nA@mail.gmail.com>
- <CAOesGMhKRxUtr6XXsZgCJVUFTFL3eHySP8y-SmEzi=R53MxLRw@mail.gmail.com>
- <CAPw-ZTnk8cZyFyMnBMUYXuxs9=2ydqxOzm+dYsg-=9_Suq+q7A@mail.gmail.com> <CAOesGMimzcUDW4e1etxZNerEusWmEtT_um8XZoT0MkFpCnTf5w@mail.gmail.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH 0/7] Another posting of the Dove PMU series
+Date: Sat, 25 Jul 2015 22:17:23 +0200
+Message-ID: <20150725201723.GD604@lunn.ch>
+References: <20150715185859.GC7557@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOesGMimzcUDW4e1etxZNerEusWmEtT_um8XZoT0MkFpCnTf5w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150715185859.GC7557-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Tai Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Olof,
+On Wed, Jul 15, 2015 at 07:58:59PM +0100, Russell King - ARM Linux wrot=
+e:
+> What it says in the subject.  Not hopeful of a successful outcome, so=
+ I'm
+> not going to bother wasting time writing stuff here.
 
-On Wed, Jul 22, 2015 at 11:20 AM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
-> On Wed, Jul 22, 2015 at 11:10 AM, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org> wrote:
->> Hi Olof,,
->>
->>>>
->>>>>> This patch set adds syscon reboot/poweroff device nodes to support reboot and
->>>>>> poweroff features on X-Gene platform.
->>>>>>
->>>>>> Tai Nguyen (2):
->>>>>>   power: reset: Add syscon reboot device node for APM X-Gene platform
->>>>>>   power: reset: Add syscon poweroff device node for APM X-Gene Mustang platform
->>>>>>
->>>>>>  arch/arm64/boot/dts/apm/apm-mustang.dts |   12 ++++++++++++
->>>>>>  arch/arm64/boot/dts/apm/apm-storm.dtsi  |   12 ++++++++++++
->>>>>>  2 files changed, 24 insertions(+)
->>>>>
->>>>> Hi,
->>>>>
->>>>> It's unclear to me what you want to happen to these patches. They are
->>>>> sent to a long list of to-recipients, one of which is arm-DgEjT+Ai2yi4UlQgPVntAg@public.gmane.org In
->>>>> general, specify the person you want to take action on the patch in to
->>>>> with the rest on cc.
->>>>
->>>> Is there an owner for all DT node files? Is that Catalina as he is
->>>> owner for ARM64 arch folder?
->>>
->>> The ARM64 DT changes get merged through arm-soc, i.e. they get sent to
->>> arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org by the platform maintainers and picked up by us from
->>> there (Arnd, Kevin or myself).
->>>
->>>>> We generally ask that patches first go to the subarch maintainers,
->>>>> and they in turn send it on to us (either through a pull request or
->>>>> by sending the patches to be applied). In the case of X-Gene, there is
->>>>> no general platform maintainer so we keep getting patches from various
->>>>> engineers at APM and it's unclear to us what your intentions are.
->>>>>
->>>>> I'd prefer to see one (to start with) person in charge of these (i.e. one
->>>>> maintainer from the APM side). Please add that person to the MAINTAINERS
->>>>> file as well.
->>>>
->>>> Are you suggesting that we have one person to start an GIT with
->>>> kernel.org to keep all these misc ack'ed patches for X-Gene (APM) that
->>>> don't seems to have an maintainer/home. Then request an pull by you?
->>>
->>> Pull requests are convenient for us, but if it's just a patch or two,
->>> sending them directly in email is fine as well.
->>
->> If there is an chance in pulling this power off/reset patches for
->> 4.2-rc4, can you pull in as patches? Otherwise, we will go the GIT
->> pull request.
->
-> We can definitely pick them up and queue them for 4.3 (see below). We
-> normally want the bulk of patches before -rc4/5, but we take smaller
-> updates closer to the merge window as well.
->
->>> What I want to avoid is a large number of people sending us patches
->>> directly, which is why we ask for platform maintainers to coordinate
->>> and aggregate patches to send on to us. That way we have one person
->>> down the chain that we knows how we want the code delivered, and that
->>> can do a round of reviews before we get it.
->>
->> We will get an GIT setup up for this and Duc Dang will contact you for
->> pull request when ready.
+Hi Gregory
 
-We are debating whether we should setup a company server (where we can
-have full control about storage, user permissions, backup, ...) or
-just use github.com to host our X-Gene kernel tree.
+I took at look at Russell's patches. I rebased them onto -rc1. There
+were a few minor merge problems, all easy to fix. I added
+Signed-off-by: since i did make changes, but 99.9% of the credit for
+these patches is definitely to Russell.
 
-Github seems already provide everything we need for a public source
-tree. Per your experience, what is your (and probably other
-maintainers) reference in git hosting server? Is there any
-inconvenience or difficulty for the maintainers to pull/merge code
-from Github versus from a company server?
+The last patch, which is converting mach-dove to use the new PMU
+driver however does not build. With mvebu_v7_defconfig i get:
 
-Thanks!
->
-> Ok, sounds good. If you have people in the bay area that need PGP keys
-> signed for this, I'd be happy to help.
->
-> As far as the current DT patches, there's been several sent by
-> different people. Please aggregate them into one patch series and send
-> that (as git send-email is fine) to us to queue for 4.3.
->
->
-> Thanks!
->
->
-> -Olof
+  CC      drivers/soc/dove/pmu.o
+drivers/soc/dove/pmu.c: In function dove_init_pmu_legacy=E2:
+drivers/soc/dove/pmu.c:400:46: error: IRQ_DOVE_PMU_START undeclared (fi=
+rst use in this function)
+   irq_domain_associate_many(pmu->irq_domain, IRQ_DOVE_PMU_START,
+                                              ^
+drivers/soc/dove/pmu.c:400:46: note: each undeclared identifier is repo=
+rted only once for each function it appears in
 
--- 
-Duc Dang.
+and dove_defconfig:
+
+  CC      arch/arm/mach-dove/common.o
+arch/arm/mach-dove/common.c:381:15: error: PWR_VPU_PWR_DWN_MASK undecla=
+red here (not in a function)
+   .pwr_mask =3D PMU_PWR_VPU_PWR_DWN_MASK,
+               ^
+arch/arm/mach-dove/common.c:382:15: error: PMU_SW_RST_VIDEO_MASK undecl=
+ared here (not in a function)
+   .rst_mask =3D PMU_SW_RST_VIDEO_MASK,
+               ^
+arch/arm/mach-dove/common.c:383:15: error: PMU_ISO_VIDEO_MASK undeclare=
+d here (not in a function)
+   .iso_mask =3D PMU_ISO_VIDEO_MASK,
+               ^
+arch/arm/mach-dove/common.c:386:15: error: PMU_PWR_GPU_PWR_DWN_MASK und=
+eclared here (not in a function)
+   .pwr_mask =3D PMU_PWR_GPU_PWR_DWN_MASK,
+               ^
+arch/arm/mach-dove/common.c:387:15: error: PMU_SW_RST_GPU_MASK undeclar=
+ed here (not in a function)
+   .rst_mask =3D PMU_SW_RST_GPU_MASK,
+               ^
+arch/arm/mach-dove/common.c:388:15: error: PMU_ISO_GPU_MASK undeclared =
+here (not in a function)
+   .iso_mask =3D PMU_ISO_GPU_MASK,
+
+So i've dropped the last patch.
+
+I boot tested mvebu_v7_defconfig with these patches, and ran the
+rtctest, which shows the RTC interrupt it working. The vpu and gpu
+power domains are in /sys, but i don't have anything connected to the
+HDMI port in order to test them.
+
+You can find the patches here:
+
+https://github.com/lunn/linux.git v4.2-rc1-dove-pmu
+
+	  Andrew
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
