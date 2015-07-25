@@ -1,65 +1,100 @@
-From: Kukjin Kim <kgene@kernel.org>
-Subject: RE: [PATCH v6 0/3] cpufreq: Use cpufreq-dt driver for Exynos3250
-Date: Sat, 25 Jul 2015 11:11:32 +0900
-Message-ID: <060201d0c67f$3a0cfba0$ae26f2e0$@kernel.org>
-References: <1435797761-3339-1-git-send-email-cw00.choi@samsung.com>
- <4464631.oZyVO4Z0Ov@amdc1976> <093101d0b8c3$4b5d3ec0$e217bc40$@kernel.org>
- <20150724003005.642.21781@quantum> <55B1B3B0.8090106@kernel.org>
- <55B1D9A3.8060301@samsung.com>
+From: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: [PATCH v5 1/5] ARM/PCI: remove align_resource in pci_sys_data
+Date: Sat, 25 Jul 2015 11:21:22 +0800
+Message-ID: <1437794486-21134-2-git-send-email-wangzhou1@hisilicon.com>
+References: <1437794486-21134-1-git-send-email-wangzhou1@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <55B1D9A3.8060301@samsung.com>
-Content-language: ko
-Sender: linux-kernel-owner@vger.kernel.org
-To: 'Krzysztof Kozlowski' <k.kozlowski@samsung.com>, 'Kukjin Kim' <kgene@kernel.org>
-Cc: 'Michael Turquette' <mturquette@baylibre.com>, 'Bartlomiej Zolnierkiewicz' <b.zolnierkie@samsung.com>, 'Chanwoo Choi' <cw00.choi@samsung.com>, s.nawrocki@samsung.com, tomasz.figa@gmail.com, sboyd@codeaurora.org, thomas.ab@samsung.com, kyungmin.park@samsung.com, linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1437794486-21134-1-git-send-email-wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Pratyush Anand <pratyush.anand-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>, Liviu.Dudau-5wv7dgnIgG8@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yuanzhichang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhudacai-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhangjukuo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, qiuzhenfa-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, liudongdong3-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, qiujiang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, kangfenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Krzysztof Kozlowski wrote:
-> 
-> On 24.07.2015 12:40, Kukjin Kim wrote:
-> > On 07/24/15 09:30, Michael Turquette wrote:
-> >> Quoting Kukjin Kim (2015-07-07 07:43:31)
-> >>> Bartlomiej Zolnierkiewicz wrote:
-> >
-> > [...]
-> >
-> >>>>> Chanwoo Choi (3):
-> >>>>>   clk: samsung: exynos3250: Add cpu clock configuration data and instaniate cpu clock
-> >>>>>   ARM: dts: Add CPU OPP and regulator supply property for Exynos3250
-> >>>>>   ARM: exynos: Add exynos3250 compatible to use generic cpufreq driver
-> >>>>>
-> >>>>>  arch/arm/boot/dts/exynos3250-monk.dts   |  4 ++++
-> >>>>>  arch/arm/boot/dts/exynos3250-rinato.dts |  4 ++++
-> >>>>>  arch/arm/boot/dts/exynos3250.dtsi       | 15 +++++++++++++++
-> >>>>>  arch/arm/mach-exynos/exynos.c           |  1 +
-> >>>>>  drivers/clk/samsung/clk-exynos3250.c    | 32 ++++++++++++++++++++++++++++++--
-> >>>>>  include/dt-bindings/clock/exynos3250.h  |  1 +
-> >>>>>  6 files changed, 55 insertions(+), 2 deletions(-)
-> >>>>
-> >>>> Reviewed-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-> >>>>
-> >>>> Thank you for working on this.
-> >>>>
-> >>> +1 Thanks.
-> >>>
-> >>> Mike and Sylwester, if you're OK on this series, I'd like to pick up in Samsung
-> >>> tree together. And if you want, I could provide topic branch for clk tree.
-> >>
-> >> Kukjin,
-> >>
-> >> A topic branch would be great.
-> >>
-> > Sure, BTW it means you did 'ack' on this clk change? If not, please let
-> > em know ;-) I'll let you know once the topic branch is ready.
-> 
-> Dear Kukjin,
-> 
-> Will you handle this patchset and dependants (ARM: dts: Add CPU cooling
-> binding for Exynos3250-based Rinato/Monk board) for v4.3?
-> 
-You mean Chanwoo's patch. Yes, I'll. Thanks for your gentle reminder.
+From: Gabriele Paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 
-- Kukjin
+This patch is needed in order to unify the PCIe designware framework for ARM and
+ARM64 architectures. In the PCIe designware unification process we are calling
+pci_create_root_bus() passing a "sysdata" parameter that is the same for both
+ARM and ARM64 and is of type "struct pcie_port*". In the ARM case this will
+cause a problem with the function pcibios_align_resource(); in fact this will
+cast "dev->sysdata" to "struct pci_sys_data*", whereas designware had passed a
+"struct pcie_port*" pointer.
+
+This patch solves the issue by removing "align_resource" from "pci_sys_data"
+struct and defining a static global function pointer in "bios32.c"
+
+Signed-off-by: Gabriele Paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+---
+ arch/arm/include/asm/mach/pci.h |  5 -----
+ arch/arm/kernel/bios32.c        | 12 ++++++++----
+ 2 files changed, 8 insertions(+), 9 deletions(-)
+
+diff --git a/arch/arm/include/asm/mach/pci.h b/arch/arm/include/asm/mach/pci.h
+index 28b9bb3..8a4e4de 100644
+--- a/arch/arm/include/asm/mach/pci.h
++++ b/arch/arm/include/asm/mach/pci.h
+@@ -58,11 +58,6 @@ struct pci_sys_data {
+ 					/* IRQ mapping				*/
+ 	int		(*map_irq)(const struct pci_dev *, u8, u8);
+ 					/* Resource alignement requirements	*/
+-	resource_size_t (*align_resource)(struct pci_dev *dev,
+-					  const struct resource *res,
+-					  resource_size_t start,
+-					  resource_size_t size,
+-					  resource_size_t align);
+ 	void		*private_data;	/* platform controller private data	*/
+ };
+ 
+diff --git a/arch/arm/kernel/bios32.c b/arch/arm/kernel/bios32.c
+index fcbbbb1..4cdc64d 100644
+--- a/arch/arm/kernel/bios32.c
++++ b/arch/arm/kernel/bios32.c
+@@ -17,6 +17,11 @@
+ #include <asm/mach/pci.h>
+ 
+ static int debug_pci;
++static resource_size_t (*align_resource)(struct pci_dev *dev,
++		  const struct resource *res,
++		  resource_size_t start,
++		  resource_size_t size,
++		  resource_size_t align) = NULL;
+ 
+ #ifdef CONFIG_PCI_MSI
+ struct msi_controller *pcibios_msi_controller(struct pci_dev *dev)
+@@ -468,7 +473,7 @@ static void pcibios_init_hw(struct device *parent, struct hw_pci *hw,
+ 		sys->busnr   = busnr;
+ 		sys->swizzle = hw->swizzle;
+ 		sys->map_irq = hw->map_irq;
+-		sys->align_resource = hw->align_resource;
++		align_resource = hw->align_resource;
+ 		INIT_LIST_HEAD(&sys->resources);
+ 
+ 		if (hw->private_data)
+@@ -589,7 +594,6 @@ resource_size_t pcibios_align_resource(void *data, const struct resource *res,
+ 				resource_size_t size, resource_size_t align)
+ {
+ 	struct pci_dev *dev = data;
+-	struct pci_sys_data *sys = dev->sysdata;
+ 	resource_size_t start = res->start;
+ 
+ 	if (res->flags & IORESOURCE_IO && start & 0x300)
+@@ -597,8 +601,8 @@ resource_size_t pcibios_align_resource(void *data, const struct resource *res,
+ 
+ 	start = (start + align - 1) & ~(align - 1);
+ 
+-	if (sys->align_resource)
+-		return sys->align_resource(dev, res, start, size, align);
++	if (align_resource)
++		return align_resource(dev, res, start, size, align);
+ 
+ 	return start;
+ }
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
