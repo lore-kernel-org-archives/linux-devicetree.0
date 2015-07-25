@@ -1,329 +1,168 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH 2/3] ARM: dts: UniPhier: add UART and USB pinmux nodes
-Date: Sat, 25 Jul 2015 16:23:23 +0900
-Message-ID: <1437809004-16806-3-git-send-email-yamada.masahiro@socionext.com>
-References: <1437809004-16806-1-git-send-email-yamada.masahiro@socionext.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1437809004-16806-1-git-send-email-yamada.masahiro@socionext.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: arm@kernel.org
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH v2 2/4] ARM: Kirkwood: add modes-map property to ns2-leds
+ nodes
+Date: Sat, 25 Jul 2015 16:42:15 +0200
+Message-ID: <55B3A047.70905@free-electrons.com>
+References: <1435859803-19583-1-git-send-email-simon.guinot@sequanux.org> <1435859803-19583-3-git-send-email-simon.guinot@sequanux.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <1435859803-19583-3-git-send-email-simon.guinot@sequanux.org>
+Sender: linux-leds-owner@vger.kernel.org
+To: Simon Guinot <simon.guinot@sequanux.org>, Jacek Anaszewski <j.anaszewski@samsung.com>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, linux-leds@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Vincent Donnefort <vdonnefort@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The DT nodes in uniphier-pinctrl.dtsi provide the default pinctrl
-settings that would be suitable for most boards.  You can still
-override them in your board DTS file if necessary.
+Hi Simon, Jacek, Bryan, Richard,
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+On 02/07/2015 19:56, Simon Guinot wrote:
+> From: Vincent Donnefort <vdonnefort@gmail.com>
+> 
+> Since the LED modes mapping is no longer hardcoded inside the leds-ns2
+> driver, then it must be provided through the modes-map property in the
+> ns2-leds nodes.
+> 
+> Signed-off-by: Vincent Donnefort <vdonnefort@gmail.com>
 
- arch/arm/boot/dts/uniphier-ph1-ld4.dtsi  | 16 ++++++
- arch/arm/boot/dts/uniphier-ph1-pro4.dtsi | 14 ++++++
- arch/arm/boot/dts/uniphier-ph1-sld8.dtsi | 16 ++++++
- arch/arm/boot/dts/uniphier-pinctrl.dtsi  | 85 ++++++++++++++++++++++++++++++++
- 4 files changed, 131 insertions(+)
- create mode 100644 arch/arm/boot/dts/uniphier-pinctrl.dtsi
+As the other patch of the series seem to be merged in the led branch,
+then I can apply this patch on mvebu/dt.
 
-diff --git a/arch/arm/boot/dts/uniphier-ph1-ld4.dtsi b/arch/arm/boot/dts/uniphier-ph1-ld4.dtsi
-index 518eab7..4add90b 100644
---- a/arch/arm/boot/dts/uniphier-ph1-ld4.dtsi
-+++ b/arch/arm/boot/dts/uniphier-ph1-ld4.dtsi
-@@ -89,6 +89,8 @@
- 			compatible = "socionext,uniphier-uart";
- 			status = "disabled";
- 			reg = <0x54006800 0x40>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_uart0>;
- 			interrupts = <0 33 4>;
- 			clocks = <&uart_clk>;
- 			fifo-size = <64>;
-@@ -98,6 +100,8 @@
- 			compatible = "socionext,uniphier-uart";
- 			status = "disabled";
- 			reg = <0x54006900 0x40>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_uart1>;
- 			interrupts = <0 35 4>;
- 			clocks = <&uart_clk>;
- 			fifo-size = <64>;
-@@ -107,6 +111,8 @@
- 			compatible = "socionext,uniphier-uart";
- 			status = "disabled";
- 			reg = <0x54006a00 0x40>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_uart2>;
- 			interrupts = <0 37 4>;
- 			clocks = <&uart_clk>;
- 			fifo-size = <64>;
-@@ -116,6 +122,8 @@
- 			compatible = "socionext,uniphier-uart";
- 			status = "disabled";
- 			reg = <0x54006b00 0x40>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_uart3>;
- 			interrupts = <0 29 4>;
- 			clocks = <&uart_clk>;
- 			fifo-size = <64>;
-@@ -131,6 +139,8 @@
- 			compatible = "socionext,uniphier-ehci", "generic-ehci";
- 			status = "disabled";
- 			reg = <0x5a800100 0x100>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_usb0>;
- 			interrupts = <0 80 4>;
- 		};
- 
-@@ -138,6 +148,8 @@
- 			compatible = "socionext,uniphier-ehci", "generic-ehci";
- 			status = "disabled";
- 			reg = <0x5a810100 0x100>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_usb1>;
- 			interrupts = <0 81 4>;
- 		};
- 
-@@ -145,6 +157,8 @@
- 			compatible = "socionext,uniphier-ehci", "generic-ehci";
- 			status = "disabled";
- 			reg = <0x5a820100 0x100>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_usb2>;
- 			interrupts = <0 82 4>;
- 		};
- 
-@@ -177,3 +191,5 @@
- 		};
- 	};
- };
-+
-+/include/ "uniphier-pinctrl.dtsi"
-diff --git a/arch/arm/boot/dts/uniphier-ph1-pro4.dtsi b/arch/arm/boot/dts/uniphier-ph1-pro4.dtsi
-index 789bd48..d0ca4c8 100644
---- a/arch/arm/boot/dts/uniphier-ph1-pro4.dtsi
-+++ b/arch/arm/boot/dts/uniphier-ph1-pro4.dtsi
-@@ -96,6 +96,8 @@
- 			compatible = "socionext,uniphier-uart";
- 			status = "disabled";
- 			reg = <0x54006800 0x40>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_uart0>;
- 			interrupts = <0 33 4>;
- 			clocks = <&uart_clk>;
- 			fifo-size = <64>;
-@@ -105,6 +107,8 @@
- 			compatible = "socionext,uniphier-uart";
- 			status = "disabled";
- 			reg = <0x54006900 0x40>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_uart1>;
- 			interrupts = <0 35 4>;
- 			clocks = <&uart_clk>;
- 			fifo-size = <64>;
-@@ -114,6 +118,8 @@
- 			compatible = "socionext,uniphier-uart";
- 			status = "disabled";
- 			reg = <0x54006a00 0x40>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_uart2>;
- 			interrupts = <0 37 4>;
- 			clocks = <&uart_clk>;
- 			fifo-size = <64>;
-@@ -123,6 +129,8 @@
- 			compatible = "socionext,uniphier-uart";
- 			status = "disabled";
- 			reg = <0x54006b00 0x40>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_uart3>;
- 			interrupts = <0 29 4>;
- 			clocks = <&uart_clk>;
- 			fifo-size = <64>;
-@@ -138,6 +146,8 @@
- 			compatible = "socionext,uniphier-ehci", "generic-ehci";
- 			status = "disabled";
- 			reg = <0x5a800100 0x100>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_usb2>;
- 			interrupts = <0 80 4>;
- 		};
- 
-@@ -145,6 +155,8 @@
- 			compatible = "socionext,uniphier-ehci", "generic-ehci";
- 			status = "disabled";
- 			reg = <0x5a810100 0x100>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_usb3>;
- 			interrupts = <0 81 4>;
- 		};
- 
-@@ -177,3 +189,5 @@
- 		};
- 	};
- };
-+
-+/include/ "uniphier-pinctrl.dtsi"
-diff --git a/arch/arm/boot/dts/uniphier-ph1-sld8.dtsi b/arch/arm/boot/dts/uniphier-ph1-sld8.dtsi
-index 8dff3c4..3ead910 100644
---- a/arch/arm/boot/dts/uniphier-ph1-sld8.dtsi
-+++ b/arch/arm/boot/dts/uniphier-ph1-sld8.dtsi
-@@ -89,6 +89,8 @@
- 			compatible = "socionext,uniphier-uart";
- 			status = "disabled";
- 			reg = <0x54006800 0x40>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_uart0>;
- 			interrupts = <0 33 4>;
- 			clocks = <&uart_clk>;
- 			fifo-size = <64>;
-@@ -98,6 +100,8 @@
- 			compatible = "socionext,uniphier-uart";
- 			status = "disabled";
- 			reg = <0x54006900 0x40>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_uart1>;
- 			interrupts = <0 35 4>;
- 			clocks = <&uart_clk>;
- 			fifo-size = <64>;
-@@ -107,6 +111,8 @@
- 			compatible = "socionext,uniphier-uart";
- 			status = "disabled";
- 			reg = <0x54006a00 0x40>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_uart2>;
- 			interrupts = <0 37 4>;
- 			clocks = <&uart_clk>;
- 			fifo-size = <64>;
-@@ -116,6 +122,8 @@
- 			compatible = "socionext,uniphier-uart";
- 			status = "disabled";
- 			reg = <0x54006b00 0x40>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_uart3>;
- 			interrupts = <0 29 4>;
- 			clocks = <&uart_clk>;
- 			fifo-size = <64>;
-@@ -131,6 +139,8 @@
- 			compatible = "socionext,uniphier-ehci", "generic-ehci";
- 			status = "disabled";
- 			reg = <0x5a800100 0x100>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_usb0>;
- 			interrupts = <0 80 4>;
- 		};
- 
-@@ -138,6 +148,8 @@
- 			compatible = "socionext,uniphier-ehci", "generic-ehci";
- 			status = "disabled";
- 			reg = <0x5a810100 0x100>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_usb1>;
- 			interrupts = <0 81 4>;
- 		};
- 
-@@ -145,6 +157,8 @@
- 			compatible = "socionext,uniphier-ehci", "generic-ehci";
- 			status = "disabled";
- 			reg = <0x5a820100 0x100>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_usb2>;
- 			interrupts = <0 82 4>;
- 		};
- 
-@@ -177,3 +191,5 @@
- 		};
- 	};
- };
-+
-+/include/ "uniphier-pinctrl.dtsi"
-diff --git a/arch/arm/boot/dts/uniphier-pinctrl.dtsi b/arch/arm/boot/dts/uniphier-pinctrl.dtsi
-new file mode 100644
-index 0000000..1b5b4fe
---- /dev/null
-+++ b/arch/arm/boot/dts/uniphier-pinctrl.dtsi
-@@ -0,0 +1,85 @@
-+/*
-+ * Device Tree Source for UniPhier SoCs default pinctrl settings
-+ *
-+ * Copyright (C) 2015 Masahiro Yamada <yamada.masahiro@socionext.com>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+&pinctrl {
-+	pinctrl_uart0: uart0_grp {
-+		groups = "uart0";
-+		function = "uart0";
-+	};
-+
-+	pinctrl_uart1: uart1_grp {
-+		groups = "uart1";
-+		function = "uart1";
-+	};
-+
-+	pinctrl_uart2: uart2_grp {
-+		groups = "uart2";
-+		function = "uart2";
-+	};
-+
-+	pinctrl_uart3: uart3_grp {
-+		groups = "uart3";
-+		function = "uart3";
-+	};
-+
-+	pinctrl_usb0: usb0_grp {
-+		groups = "usb0";
-+		function = "usb0";
-+	};
-+
-+	pinctrl_usb1: usb1_grp {
-+		groups = "usb1";
-+		function = "usb1";
-+	};
-+
-+	pinctrl_usb2: usb2_grp {
-+		groups = "usb2";
-+		function = "usb2";
-+	};
-+
-+	pinctrl_usb3: usb3_grp {
-+		groups = "usb3";
-+		function = "usb3";
-+	};
-+};
+It is OK for being in linux-next, however this patch depend on "leds:
+leds-ns2: move LED modes mapping outside of the driver", so I will need
+to find a way to express this dependency when I will do the pull request
+to arm-soc.
+
+
+Thanks,
+
+Gregory
+
+
+> ---
+>  arch/arm/boot/dts/kirkwood-d2net.dts   | 5 +++++
+>  arch/arm/boot/dts/kirkwood-is2.dts     | 5 +++++
+>  arch/arm/boot/dts/kirkwood-ns2.dts     | 5 +++++
+>  arch/arm/boot/dts/kirkwood-ns2max.dts  | 5 +++++
+>  arch/arm/boot/dts/kirkwood-ns2mini.dts | 5 +++++
+>  5 files changed, 25 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/kirkwood-d2net.dts b/arch/arm/boot/dts/kirkwood-d2net.dts
+> index 6b7856025001..e1c25c35e9ce 100644
+> --- a/arch/arm/boot/dts/kirkwood-d2net.dts
+> +++ b/arch/arm/boot/dts/kirkwood-d2net.dts
+> @@ -10,6 +10,7 @@
+>  
+>  /dts-v1/;
+>  
+> +#include <dt-bindings/leds/leds-ns2.h>
+>  #include "kirkwood-netxbig.dtsi"
+>  
+>  / {
+> @@ -28,6 +29,10 @@
+>  			label = "d2net_v2:blue:sata";
+>  			slow-gpio = <&gpio0 29 GPIO_ACTIVE_HIGH>;
+>  			cmd-gpio = <&gpio0 30 GPIO_ACTIVE_HIGH>;
+> +			modes-map = <NS_V2_LED_OFF  1 0
+> +				     NS_V2_LED_ON   0 1
+> +				     NS_V2_LED_ON   1 1
+> +				     NS_V2_LED_SATA 0 0>;
+>  		};
+>  	};
+>  
+> diff --git a/arch/arm/boot/dts/kirkwood-is2.dts b/arch/arm/boot/dts/kirkwood-is2.dts
+> index da674bbd49a8..4121674abd1c 100644
+> --- a/arch/arm/boot/dts/kirkwood-is2.dts
+> +++ b/arch/arm/boot/dts/kirkwood-is2.dts
+> @@ -1,5 +1,6 @@
+>  /dts-v1/;
+>  
+> +#include <dt-bindings/leds/leds-ns2.h>
+>  #include "kirkwood-ns2-common.dtsi"
+>  
+>  / {
+> @@ -27,6 +28,10 @@
+>  			label = "ns2:blue:sata";
+>  			slow-gpio = <&gpio0 29 0>;
+>  			cmd-gpio = <&gpio0 30 0>;
+> +			modes-map = <NS_V2_LED_OFF  1 0
+> +				     NS_V2_LED_ON   0 1
+> +				     NS_V2_LED_ON   1 1
+> +				     NS_V2_LED_SATA 0 0>;
+>  		};
+>  	};
+>  };
+> diff --git a/arch/arm/boot/dts/kirkwood-ns2.dts b/arch/arm/boot/dts/kirkwood-ns2.dts
+> index 53368d1022cc..190189d235e6 100644
+> --- a/arch/arm/boot/dts/kirkwood-ns2.dts
+> +++ b/arch/arm/boot/dts/kirkwood-ns2.dts
+> @@ -1,5 +1,6 @@
+>  /dts-v1/;
+>  
+> +#include <dt-bindings/leds/leds-ns2.h>
+>  #include "kirkwood-ns2-common.dtsi"
+>  
+>  / {
+> @@ -27,6 +28,10 @@
+>  			label = "ns2:blue:sata";
+>  			slow-gpio = <&gpio0 29 0>;
+>  			cmd-gpio = <&gpio0 30 0>;
+> +			modes-map = <NS_V2_LED_OFF  1 0
+> +				     NS_V2_LED_ON   0 1
+> +				     NS_V2_LED_ON   1 1
+> +				     NS_V2_LED_SATA 0 0>;
+>  		};
+>  	};
+>  };
+> diff --git a/arch/arm/boot/dts/kirkwood-ns2max.dts b/arch/arm/boot/dts/kirkwood-ns2max.dts
+> index 72c78d0b1116..55cc41d9c80c 100644
+> --- a/arch/arm/boot/dts/kirkwood-ns2max.dts
+> +++ b/arch/arm/boot/dts/kirkwood-ns2max.dts
+> @@ -1,5 +1,6 @@
+>  /dts-v1/;
+>  
+> +#include <dt-bindings/leds/leds-ns2.h>
+>  #include "kirkwood-ns2-common.dtsi"
+>  
+>  / {
+> @@ -46,6 +47,10 @@
+>  			label = "ns2:blue:sata";
+>  			slow-gpio = <&gpio0 29 0>;
+>  			cmd-gpio = <&gpio0 30 0>;
+> +			modes-map = <NS_V2_LED_OFF  1 0
+> +				     NS_V2_LED_ON   0 1
+> +				     NS_V2_LED_ON   1 1
+> +				     NS_V2_LED_SATA 0 0>;
+>  		};
+>  	};
+>  };
+> diff --git a/arch/arm/boot/dts/kirkwood-ns2mini.dts b/arch/arm/boot/dts/kirkwood-ns2mini.dts
+> index c441bf62c09f..9935f3ec29b4 100644
+> --- a/arch/arm/boot/dts/kirkwood-ns2mini.dts
+> +++ b/arch/arm/boot/dts/kirkwood-ns2mini.dts
+> @@ -1,5 +1,6 @@
+>  /dts-v1/;
+>  
+> +#include <dt-bindings/leds/leds-ns2.h>
+>  #include "kirkwood-ns2-common.dtsi"
+>  
+>  / {
+> @@ -47,6 +48,10 @@
+>  			label = "ns2:blue:sata";
+>  			slow-gpio = <&gpio0 29 0>;
+>  			cmd-gpio = <&gpio0 30 0>;
+> +			modes-map = <NS_V2_LED_OFF  1 0
+> +				     NS_V2_LED_ON   0 1
+> +				     NS_V2_LED_ON   1 1
+> +				     NS_V2_LED_SATA 0 0>;
+>  		};
+>  	};
+>  };
+> 
+
+
 -- 
-1.9.1
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
