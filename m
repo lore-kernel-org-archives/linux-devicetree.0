@@ -1,363 +1,139 @@
-From: Moritz Fischer <moritz.fischer@ettus.com>
-Subject: [RFCv2 2/3] dts: zynq: Add devicetree entry for Xilinx Zynq reset controller.
-Date: Fri, 24 Jul 2015 17:21:21 -0700
-Message-ID: <1437783682-13632-3-git-send-email-moritz.fischer@ettus.com>
-References: <1437783682-13632-1-git-send-email-moritz.fischer@ettus.com>
+From: Niklas Cassel <nks@flawful.org>
+Subject: [PATCH] serial: etraxfs-uart: use mctrl_gpio helpers for handling modem signals
+Date: Sat, 25 Jul 2015 02:02:46 +0200
+Message-ID: <1437782566-11528-1-git-send-email-nks@flawful.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1437783682-13632-1-git-send-email-moritz.fischer@ettus.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: p.zabel@pengutronix.de
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Moritz Fischer <moritz.fischer@ettus.com>
+To: gregkh@linuxfoundation.org
+Cc: jslaby@suse.com, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Niklas Cassel <nks@flawful.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Moritz Fischer <moritz.fischer@ettus.com>
----
- arch/arm/boot/dts/zynq-7000.dtsi            | 43 ++++++++++++-
- arch/arm/boot/dts/zynq-parallella.dts       |  2 +-
- arch/arm/boot/dts/zynq-zc702.dts            |  2 +-
- arch/arm/boot/dts/zynq-zc706.dts            |  2 +-
- arch/arm/boot/dts/zynq-zed.dts              |  2 +-
- arch/arm/boot/dts/zynq-zybo.dts             |  2 +-
- include/dt-bindings/reset/xlnx,zynq-reset.h | 94 +++++++++++++++++++++++++++++
- 7 files changed, 141 insertions(+), 6 deletions(-)
- create mode 100644 include/dt-bindings/reset/xlnx,zynq-reset.h
+In order to use the mctrl_gpio helpers, we change the DT bindings:
+ri-gpios renamed to rng-gpios. cd-gpios renamed to dcd-gpios.
+However, no in-tree dts/dtsi specifies these, so no worries.
 
-diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
-index b429e1d..1d4faa2 100644
---- a/arch/arm/boot/dts/zynq-7000.dtsi
-+++ b/arch/arm/boot/dts/zynq-7000.dtsi
-@@ -1,5 +1,6 @@
- /*
-  *  Copyright (C) 2011 - 2014 Xilinx
-+ *  Copyright (C) 2015 National Instruments Corp.
-  *
-  * This software is licensed under the terms of the GNU General Public
-  * License version 2, as published by the Free Software Foundation, and
-@@ -10,7 +11,8 @@
-  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  * GNU General Public License for more details.
-  */
--/include/ "skeleton.dtsi"
-+#include "skeleton.dtsi"
-+#include <dt-bindings/reset/xlnx,zynq-reset.h>
+Signed-off-by: Niklas Cassel <nks@flawful.org>
+---
+ .../bindings/serial/axis,etraxfs-uart.txt          |  6 +++-
+ drivers/tty/serial/Kconfig                         |  1 +
+ drivers/tty/serial/etraxfs-uart.c                  | 40 ++++++----------------
+ 3 files changed, 16 insertions(+), 31 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/serial/axis,etraxfs-uart.txt b/Documentation/devicetree/bindings/serial/axis,etraxfs-uart.txt
+index ebcbb62..51b3c9e 100644
+--- a/Documentation/devicetree/bindings/serial/axis,etraxfs-uart.txt
++++ b/Documentation/devicetree/bindings/serial/axis,etraxfs-uart.txt
+@@ -6,7 +6,7 @@ Required properties:
+ - interrupts: device interrupt
  
- / {
- 	compatible = "xlnx,zynq-7000";
-@@ -77,6 +79,8 @@
- 			status = "disabled";
- 			clocks = <&clkc 19>, <&clkc 36>;
- 			clock-names = "can_clk", "pclk";
-+			resets = <&rstc CAN0_RESET>, <&rstc CAN0_REF_RESET>;
-+			reset-names = "reset", "ref_reset";
- 			reg = <0xe0008000 0x1000>;
- 			interrupts = <0 28 4>;
- 			interrupt-parent = <&intc>;
-@@ -89,6 +93,8 @@
- 			status = "disabled";
- 			clocks = <&clkc 20>, <&clkc 37>;
- 			clock-names = "can_clk", "pclk";
-+			resets = <&rstc CAN1_RESET>, <&rstc CAN1_REF_RESET>;
-+			reset-names = "reset", "ref_reset";
- 			reg = <0xe0009000 0x1000>;
- 			interrupts = <0 51 4>;
- 			interrupt-parent = <&intc>;
-@@ -100,6 +106,8 @@
- 			compatible = "xlnx,zynq-gpio-1.0";
- 			#gpio-cells = <2>;
- 			clocks = <&clkc 42>;
-+			resets = <&rstc GPIO_RESET>;
-+			reset-names = "reset";
- 			gpio-controller;
- 			interrupt-parent = <&intc>;
- 			interrupts = <0 20 4>;
-@@ -110,6 +118,8 @@
- 			compatible = "cdns,i2c-r1p10";
- 			status = "disabled";
- 			clocks = <&clkc 38>;
-+			reset = <&rstc I2C0_RESET>;
-+			reset-names = "reset";
- 			interrupt-parent = <&intc>;
- 			interrupts = <0 25 4>;
- 			reg = <0xe0004000 0x1000>;
-@@ -121,6 +131,8 @@
- 			compatible = "cdns,i2c-r1p10";
- 			status = "disabled";
- 			clocks = <&clkc 39>;
-+			resets = <&rstc I2C1_RESET>;
-+			reset-names = "reset";
- 			interrupt-parent = <&intc>;
- 			interrupts = <0 48 4>;
- 			reg = <0xe0005000 0x1000>;
-@@ -148,6 +160,8 @@
- 		mc: memory-controller@f8006000 {
- 			compatible = "xlnx,zynq-ddrc-a05";
- 			reg = <0xf8006000 0x1000>;
-+			resets = <&rstc DDR_RESET>;
-+			reset-names = "reset";
- 		};
+ Optional properties:
+-- {dtr,dsr,ri,cd}-gpios: specify a GPIO for DTR/DSR/RI/CD
++- {dtr,dsr,rng,dcd}-gpios: specify a GPIO for DTR/DSR/RI/DCD
+   line respectively.
  
- 		uart0: serial@e0000000 {
-@@ -155,6 +169,8 @@
- 			status = "disabled";
- 			clocks = <&clkc 23>, <&clkc 40>;
- 			clock-names = "uart_clk", "pclk";
-+			resets = <&rstc UART0_RESET>, <&rstc UART0_REF_RESET>;
-+			reset-names = "reset", "ref_reset";
- 			reg = <0xE0000000 0x1000>;
- 			interrupts = <0 27 4>;
- 		};
-@@ -164,6 +180,8 @@
- 			status = "disabled";
- 			clocks = <&clkc 24>, <&clkc 41>;
- 			clock-names = "uart_clk", "pclk";
-+			resets = <&rstc UART1_RESET>, <&rstc UART1_REF_RESET>;
-+			reset-names = "reset", "ref_reset";
- 			reg = <0xE0001000 0x1000>;
- 			interrupts = <0 50 4>;
- 		};
-@@ -176,6 +194,8 @@
- 			interrupts = <0 26 4>;
- 			clocks = <&clkc 25>, <&clkc 34>;
- 			clock-names = "ref_clk", "pclk";
-+			resets = <&rstc SPI0_RESET>, <&rstc SPI0_REF_RESET>;
-+			reset-names = "reset", "ref_reset";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 		};
-@@ -188,6 +208,8 @@
- 			interrupts = <0 49 4>;
- 			clocks = <&clkc 26>, <&clkc 35>;
- 			clock-names = "ref_clk", "pclk";
-+			resets = <&rstc SPI1_RESET>, <&rstc SPI1_REF_RESET>;
-+			reset-names = "reset", "ref_reset";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 		};
-@@ -199,6 +221,9 @@
- 			interrupts = <0 22 4>;
- 			clocks = <&clkc 30>, <&clkc 30>, <&clkc 13>;
- 			clock-names = "pclk", "hclk", "tx_clk";
-+			resets = <&rstc GEM0_RESET>, <&rstc GEM0_REF_RESET>,
-+				<&rstc GEM0_RX_RESET>;
-+			reset-names = "reset", "ref_reset", "rx_reset";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 		};
-@@ -210,6 +235,9 @@
- 			interrupts = <0 45 4>;
- 			clocks = <&clkc 31>, <&clkc 31>, <&clkc 14>;
- 			clock-names = "pclk", "hclk", "tx_clk";
-+			resets = <&rstc GEM1_RESET>, <&rstc GEM1_REF_RESET>,
-+				<&rstc GEM1_RX_RESET>;
-+			reset-names = "reset", "ref_reset", "rx_reset";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 		};
-@@ -258,6 +286,13 @@
- 				reg = <0x100 0x100>;
- 			};
+ Example:
+@@ -16,4 +16,8 @@ serial@b00260000 {
+ 	reg = <0xb0026000 0x1000>;
+ 	interrupts = <68>;
+ 	status = "disabled";
++	dtr-gpios = <&sysgpio 0 GPIO_ACTIVE_LOW>;
++	dsr-gpios = <&sysgpio 1 GPIO_ACTIVE_LOW>;
++	rng-gpios = <&sysgpio 2 GPIO_ACTIVE_LOW>;
++	dcd-gpios = <&sysgpio 3 GPIO_ACTIVE_LOW>;
+ };
+diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+index 15b4079..8a4b62e 100644
+--- a/drivers/tty/serial/Kconfig
++++ b/drivers/tty/serial/Kconfig
+@@ -1067,6 +1067,7 @@ config SERIAL_ETRAXFS
+ 	bool "ETRAX FS serial port support"
+ 	depends on ETRAX_ARCH_V32 && OF
+ 	select SERIAL_CORE
++	select SERIAL_MCTRL_GPIO if GPIOLIB
  
-+			rstc: rstc@200 {
-+				compatible = "xlnx,zynq-reset";
-+				reg = <0x200 0x50>;
-+				#reset-cells = <1>;
-+				syscon = <&slcr>;
-+			};
-+
- 			pinctrl0: pinctrl@700 {
- 				compatible = "xlnx,pinctrl-zynq";
- 				reg = <0x700 0x200>;
-@@ -281,6 +316,8 @@
- 			#dma-requests = <4>;
- 			clocks = <&clkc 27>;
- 			clock-names = "apb_pclk";
-+			resets = <&rstc DMAC_RESET>;
-+			reset-names = "dmac_reset";
- 		};
+ config SERIAL_ETRAXFS_CONSOLE
+ 	bool "ETRAX FS serial console support"
+diff --git a/drivers/tty/serial/etraxfs-uart.c b/drivers/tty/serial/etraxfs-uart.c
+index a647605..382d434 100644
+--- a/drivers/tty/serial/etraxfs-uart.c
++++ b/drivers/tty/serial/etraxfs-uart.c
+@@ -10,6 +10,8 @@
+ #include <linux/of_address.h>
+ #include <hwregs/ser_defs.h>
  
- 		devcfg: devcfg@f8007000 {
-@@ -333,6 +370,8 @@
- 			interrupts = <0 21 4>;
- 			reg = <0xe0002000 0x1000>;
- 			phy_type = "ulpi";
-+			resets = <&rstc USB0_RESET>;
-+			reset-names = "usb_reset";
- 		};
++#include "serial_mctrl_gpio.h"
++
+ #define DRV_NAME "etraxfs-uart"
+ #define UART_NR CONFIG_ETRAX_SERIAL_PORTS
  
- 		usb1: usb@e0003000 {
-@@ -343,6 +382,8 @@
- 			interrupts = <0 44 4>;
- 			reg = <0xe0003000 0x1000>;
- 			phy_type = "ulpi";
-+			resets = <&rstc USB1_RESET>;
-+			reset-names = "usb_reset";
- 		};
+@@ -28,10 +30,7 @@ struct uart_cris_port {
  
- 		watchdog0: watchdog@f8005000 {
-diff --git a/arch/arm/boot/dts/zynq-parallella.dts b/arch/arm/boot/dts/zynq-parallella.dts
-index 9efd16c..adb0f6e 100644
---- a/arch/arm/boot/dts/zynq-parallella.dts
-+++ b/arch/arm/boot/dts/zynq-parallella.dts
-@@ -17,7 +17,7 @@
-  * GNU General Public License for more details.
-  */
- /dts-v1/;
--/include/ "zynq-7000.dtsi"
-+#include "zynq-7000.dtsi"
+ 	void __iomem *regi_ser;
  
- / {
- 	model = "Adapteva Parallella Board";
-diff --git a/arch/arm/boot/dts/zynq-zc702.dts b/arch/arm/boot/dts/zynq-zc702.dts
-index fb59d34..3a08b47 100644
---- a/arch/arm/boot/dts/zynq-zc702.dts
-+++ b/arch/arm/boot/dts/zynq-zc702.dts
-@@ -12,7 +12,7 @@
-  * GNU General Public License for more details.
-  */
- /dts-v1/;
--/include/ "zynq-7000.dtsi"
-+#include "zynq-7000.dtsi"
+-	struct gpio_desc *dtr_pin;
+-	struct gpio_desc *dsr_pin;
+-	struct gpio_desc *ri_pin;
+-	struct gpio_desc *cd_pin;
++	struct mctrl_gpios *gpios;
  
- / {
- 	model = "Zynq ZC702 Development Board";
-diff --git a/arch/arm/boot/dts/zynq-zc706.dts b/arch/arm/boot/dts/zynq-zc706.dts
-index abf5d23..b238be3 100644
---- a/arch/arm/boot/dts/zynq-zc706.dts
-+++ b/arch/arm/boot/dts/zynq-zc706.dts
-@@ -12,7 +12,7 @@
-  * GNU General Public License for more details.
-  */
- /dts-v1/;
--/include/ "zynq-7000.dtsi"
-+#include "zynq-7000.dtsi"
+ 	int write_ongoing;
+ };
+@@ -396,21 +395,9 @@ static unsigned int etraxfs_uart_get_mctrl(struct uart_port *port)
+ 	ret = 0;
+ 	if (crisv32_serial_get_rts(up))
+ 		ret |= TIOCM_RTS;
+-	/* DTR is active low */
+-	if (up->dtr_pin && !gpiod_get_raw_value(up->dtr_pin))
+-		ret |= TIOCM_DTR;
+-	/* CD is active low */
+-	if (up->cd_pin && !gpiod_get_raw_value(up->cd_pin))
+-		ret |= TIOCM_CD;
+-	/* RI is active low */
+-	if (up->ri_pin && !gpiod_get_raw_value(up->ri_pin))
+-		ret |= TIOCM_RI;
+-	/* DSR is active low */
+-	if (up->dsr_pin && !gpiod_get_raw_value(up->dsr_pin))
+-		ret |= TIOCM_DSR;
+ 	if (crisv32_serial_get_cts(up))
+ 		ret |= TIOCM_CTS;
+-	return ret;
++	return mctrl_gpio_get(up->gpios, &ret);
+ }
  
- / {
- 	model = "Zynq ZC706 Development Board";
-diff --git a/arch/arm/boot/dts/zynq-zed.dts b/arch/arm/boot/dts/zynq-zed.dts
-index b9f2522..38c15ca 100644
---- a/arch/arm/boot/dts/zynq-zed.dts
-+++ b/arch/arm/boot/dts/zynq-zed.dts
-@@ -12,7 +12,7 @@
-  * GNU General Public License for more details.
-  */
- /dts-v1/;
--/include/ "zynq-7000.dtsi"
-+#include "zynq-7000.dtsi"
+ static void etraxfs_uart_set_mctrl(struct uart_port *port, unsigned int mctrl)
+@@ -418,15 +405,7 @@ static void etraxfs_uart_set_mctrl(struct uart_port *port, unsigned int mctrl)
+ 	struct uart_cris_port *up = (struct uart_cris_port *)port;
  
- / {
- 	model = "Zynq Zed Development Board";
-diff --git a/arch/arm/boot/dts/zynq-zybo.dts b/arch/arm/boot/dts/zynq-zybo.dts
-index 16c9cac..5192e41 100644
---- a/arch/arm/boot/dts/zynq-zybo.dts
-+++ b/arch/arm/boot/dts/zynq-zybo.dts
-@@ -12,7 +12,7 @@
-  * GNU General Public License for more details.
-  */
- /dts-v1/;
--/include/ "zynq-7000.dtsi"
-+#include "zynq-7000.dtsi"
+ 	crisv32_serial_set_rts(up, mctrl & TIOCM_RTS ? 1 : 0, 0);
+-	/* DTR is active low */
+-	if (up->dtr_pin)
+-		gpiod_set_raw_value(up->dtr_pin, mctrl & TIOCM_DTR ? 0 : 1);
+-	/* RI is active low */
+-	if (up->ri_pin)
+-		gpiod_set_raw_value(up->ri_pin, mctrl & TIOCM_RNG ? 0 : 1);
+-	/* CD is active low */
+-	if (up->cd_pin)
+-		gpiod_set_raw_value(up->cd_pin, mctrl & TIOCM_CD ? 0 : 1);
++	mctrl_gpio_set(up->gpios, mctrl);
+ }
  
- / {
- 	model = "Zynq ZYBO Development Board";
-diff --git a/include/dt-bindings/reset/xlnx,zynq-reset.h b/include/dt-bindings/reset/xlnx,zynq-reset.h
-new file mode 100644
-index 0000000..09bdcef
---- /dev/null
-+++ b/include/dt-bindings/reset/xlnx,zynq-reset.h
-@@ -0,0 +1,94 @@
-+/*
-+ * Copyright (c) 2015, National Instruments Corp.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; version 2 of the License.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-+ * GNU General Public License for more details.
-+ */
+ static void etraxfs_uart_break_ctl(struct uart_port *port, int break_state)
+@@ -920,11 +899,12 @@ static int etraxfs_uart_probe(struct platform_device *pdev)
+ 
+ 	up->irq = irq_of_parse_and_map(np, 0);
+ 	up->regi_ser = of_iomap(np, 0);
+-	up->dtr_pin = devm_gpiod_get_optional(&pdev->dev, "dtr");
+-	up->dsr_pin = devm_gpiod_get_optional(&pdev->dev, "dsr");
+-	up->ri_pin = devm_gpiod_get_optional(&pdev->dev, "ri");
+-	up->cd_pin = devm_gpiod_get_optional(&pdev->dev, "cd");
+ 	up->port.dev = &pdev->dev;
 +
-+#ifndef _DT_BINDINGS_RESET_XLNX_RST_H
-+#define _DT_BINDINGS_RESET_XLNX_RST_H
++	up->gpios = mctrl_gpio_init(&pdev->dev, 0);
++	if (IS_ERR(up->gpios))
++		return PTR_ERR(up->gpios);
 +
-+/* PSS_RST_CTRL */
-+#define SOFT_RESET		0
-+
-+/* DDR_RST_CTRL */
-+#define DDR_RESET		32
-+
-+/* TOPSW_RST_CTRL */
-+#define TOPSW_RESET		64
-+
-+/* DMAC_RST_CTRL */
-+#define DMAC_RESET		96
-+
-+/* USB_RST_CTRL */
-+#define USB0_RESET	128
-+#define USB1_RESET	129
-+
-+/* GEM_RST_CTRL */
-+#define GEM0_RESET	160
-+#define GEM1_RESET	161
-+#define GEM0_RX_RESET		164
-+#define GEM1_RX_RESET		165
-+#define GEM0_REF_RESET		166
-+#define GEM1_REF_RESET		167
-+
-+/* SDIO_RST_CTRL */
-+#define SDIO0_RESET	192
-+#define SDIO1_RESET	193
-+#define SDIO0_REF_RESET		196
-+#define SDIO1_REF_RESET		197
-+
-+/* SPI_RST_CTRL */
-+#define SPI0_RESET	224
-+#define SPI1_RESET	225
-+#define SPI0_REF_RESET		226
-+#define SPI1_REF_RESET		227
-+
-+/* CAN_RST_CTRL */
-+#define CAN0_RESET	256
-+#define CAN1_RESET	257
-+#define CAN0_REF_RESET		258
-+#define CAN1_REF_RESET		259
-+
-+/* I2C_RST_CTRL */
-+#define I2C0_RESET	288
-+#define I2C1_RESET	289
-+
-+/* UART_RST_CTRL */
-+#define UART0_RESET	320
-+#define UART1_RESET	321
-+#define UART0_REF_RESET		322
-+#define UART1_REF_RESET		323
-+
-+/* GPIO_RST_CTRL */
-+#define GPIO_RESET	352
-+
-+/* LQSPI_RST_CTRL */
-+#define LQSPI_RESET	384
-+#define QSPI_REF_RESET		385
-+
-+/* SMC_RST_CTRL */
-+#define SMC_RESET		416
-+#define SMC_REF_RESET		417
-+
-+/* OCM_RST_CTRL */
-+#define OCM_RESET		448
-+
-+/* FPGA_RST_CTRL */
-+#define FPGA0_OUT_RESET		512
-+#define FPGA1_OUT_RESET		513
-+#define FPGA2_OUT_RESET		514
-+#define FPGA3_OUT_RESET		515
-+
-+/* A9_CPU_RST_CTRL */
-+#define A9_RESET0		544
-+#define A9_RESET1		545
-+#define PERI_RESET		552
-+
-+#endif
+ 	cris_serial_port_init(&up->port, dev_id);
+ 
+ 	etraxfs_uart_ports[dev_id] = up;
 -- 
-2.4.3
+2.4.6
