@@ -1,84 +1,75 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH 0/7] Another posting of the Dove PMU series
-Date: Sat, 25 Jul 2015 22:17:23 +0200
-Message-ID: <20150725201723.GD604@lunn.ch>
-References: <20150715185859.GC7557@n2100.arm.linux.org.uk>
+From: Chanwoo Choi <cwchoi00@gmail.com>
+Subject: Re: [PATCH v6 0/3] cpufreq: Use cpufreq-dt driver for Exynos3250
+Date: Sun, 26 Jul 2015 11:41:16 +0900
+Message-ID: <CAGTfZH1_4tgU6Sk2hfZoe8mjbwh7LdNt=41Pc=7PAQAZ=t9Usg@mail.gmail.com>
+References: <1435797761-3339-1-git-send-email-cw00.choi@samsung.com>
+	<4464631.oZyVO4Z0Ov@amdc1976>
+	<093101d0b8c3$4b5d3ec0$e217bc40$@kernel.org>
+	<20150724003005.642.21781@quantum>
+	<55B1B3B0.8090106@kernel.org>
+	<55B1D9A3.8060301@samsung.com>
+	<060201d0c67f$3a0cfba0$ae26f2e0$@kernel.org>
+Reply-To: cw00.choi@samsung.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150715185859.GC7557-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <060201d0c67f$3a0cfba0$ae26f2e0$@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kukjin Kim <kgene@kernel.org>
+Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, devicetree <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Tomasz Figa <tomasz.figa@gmail.com>, linux-kernel <linux-kernel@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, thomas.ab@samsung.com, Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-clk@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 15, 2015 at 07:58:59PM +0100, Russell King - ARM Linux wrot=
-e:
-> What it says in the subject.  Not hopeful of a successful outcome, so=
- I'm
-> not going to bother wasting time writing stuff here.
+Dear Kukjin,
 
-Hi Gregory
+On Sat, Jul 25, 2015 at 11:11 AM, Kukjin Kim <kgene@kernel.org> wrote:
+> Krzysztof Kozlowski wrote:
+>>
+>> On 24.07.2015 12:40, Kukjin Kim wrote:
+>> > On 07/24/15 09:30, Michael Turquette wrote:
+>> >> Quoting Kukjin Kim (2015-07-07 07:43:31)
+>> >>> Bartlomiej Zolnierkiewicz wrote:
+>> >
+>> > [...]
+>> >
+>> >>>>> Chanwoo Choi (3):
+>> >>>>>   clk: samsung: exynos3250: Add cpu clock configuration data and instaniate cpu clock
+>> >>>>>   ARM: dts: Add CPU OPP and regulator supply property for Exynos3250
+>> >>>>>   ARM: exynos: Add exynos3250 compatible to use generic cpufreq driver
+>> >>>>>
+>> >>>>>  arch/arm/boot/dts/exynos3250-monk.dts   |  4 ++++
+>> >>>>>  arch/arm/boot/dts/exynos3250-rinato.dts |  4 ++++
+>> >>>>>  arch/arm/boot/dts/exynos3250.dtsi       | 15 +++++++++++++++
+>> >>>>>  arch/arm/mach-exynos/exynos.c           |  1 +
+>> >>>>>  drivers/clk/samsung/clk-exynos3250.c    | 32 ++++++++++++++++++++++++++++++--
+>> >>>>>  include/dt-bindings/clock/exynos3250.h  |  1 +
+>> >>>>>  6 files changed, 55 insertions(+), 2 deletions(-)
+>> >>>>
+>> >>>> Reviewed-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+>> >>>>
+>> >>>> Thank you for working on this.
+>> >>>>
+>> >>> +1 Thanks.
+>> >>>
+>> >>> Mike and Sylwester, if you're OK on this series, I'd like to pick up in Samsung
+>> >>> tree together. And if you want, I could provide topic branch for clk tree.
+>> >>
+>> >> Kukjin,
+>> >>
+>> >> A topic branch would be great.
+>> >>
+>> > Sure, BTW it means you did 'ack' on this clk change? If not, please let
+>> > em know ;-) I'll let you know once the topic branch is ready.
+>>
+>> Dear Kukjin,
+>>
+>> Will you handle this patchset and dependants (ARM: dts: Add CPU cooling
+>> binding for Exynos3250-based Rinato/Monk board) for v4.3?
+>>
+> You mean Chanwoo's patch. Yes, I'll. Thanks for your gentle reminder.
 
-I took at look at Russell's patches. I rebased them onto -rc1. There
-were a few minor merge problems, all easy to fix. I added
-Signed-off-by: since i did make changes, but 99.9% of the credit for
-these patches is definitely to Russell.
+Please pick following patch[1] kindly. Following patch is about cooling device
+for Exynos3250-based Rinato/Monk board.
+[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-July/354693.html
 
-The last patch, which is converting mach-dove to use the new PMU
-driver however does not build. With mvebu_v7_defconfig i get:
-
-  CC      drivers/soc/dove/pmu.o
-drivers/soc/dove/pmu.c: In function dove_init_pmu_legacy=E2:
-drivers/soc/dove/pmu.c:400:46: error: IRQ_DOVE_PMU_START undeclared (fi=
-rst use in this function)
-   irq_domain_associate_many(pmu->irq_domain, IRQ_DOVE_PMU_START,
-                                              ^
-drivers/soc/dove/pmu.c:400:46: note: each undeclared identifier is repo=
-rted only once for each function it appears in
-
-and dove_defconfig:
-
-  CC      arch/arm/mach-dove/common.o
-arch/arm/mach-dove/common.c:381:15: error: PWR_VPU_PWR_DWN_MASK undecla=
-red here (not in a function)
-   .pwr_mask =3D PMU_PWR_VPU_PWR_DWN_MASK,
-               ^
-arch/arm/mach-dove/common.c:382:15: error: PMU_SW_RST_VIDEO_MASK undecl=
-ared here (not in a function)
-   .rst_mask =3D PMU_SW_RST_VIDEO_MASK,
-               ^
-arch/arm/mach-dove/common.c:383:15: error: PMU_ISO_VIDEO_MASK undeclare=
-d here (not in a function)
-   .iso_mask =3D PMU_ISO_VIDEO_MASK,
-               ^
-arch/arm/mach-dove/common.c:386:15: error: PMU_PWR_GPU_PWR_DWN_MASK und=
-eclared here (not in a function)
-   .pwr_mask =3D PMU_PWR_GPU_PWR_DWN_MASK,
-               ^
-arch/arm/mach-dove/common.c:387:15: error: PMU_SW_RST_GPU_MASK undeclar=
-ed here (not in a function)
-   .rst_mask =3D PMU_SW_RST_GPU_MASK,
-               ^
-arch/arm/mach-dove/common.c:388:15: error: PMU_ISO_GPU_MASK undeclared =
-here (not in a function)
-   .iso_mask =3D PMU_ISO_GPU_MASK,
-
-So i've dropped the last patch.
-
-I boot tested mvebu_v7_defconfig with these patches, and ran the
-rtctest, which shows the RTC interrupt it working. The vpu and gpu
-power domains are in /sys, but i don't have anything connected to the
-HDMI port in order to test them.
-
-You can find the patches here:
-
-https://github.com/lunn/linux.git v4.2-rc1-dove-pmu
-
-	  Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best Regards,
+Chanwoo Choi
