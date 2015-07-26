@@ -1,75 +1,91 @@
-From: Chanwoo Choi <cwchoi00@gmail.com>
-Subject: Re: [PATCH v6 0/3] cpufreq: Use cpufreq-dt driver for Exynos3250
-Date: Sun, 26 Jul 2015 11:41:16 +0900
-Message-ID: <CAGTfZH1_4tgU6Sk2hfZoe8mjbwh7LdNt=41Pc=7PAQAZ=t9Usg@mail.gmail.com>
-References: <1435797761-3339-1-git-send-email-cw00.choi@samsung.com>
-	<4464631.oZyVO4Z0Ov@amdc1976>
-	<093101d0b8c3$4b5d3ec0$e217bc40$@kernel.org>
-	<20150724003005.642.21781@quantum>
-	<55B1B3B0.8090106@kernel.org>
-	<55B1D9A3.8060301@samsung.com>
-	<060201d0c67f$3a0cfba0$ae26f2e0$@kernel.org>
-Reply-To: cw00.choi@samsung.com
+From: chunfeng yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v3 5/5] arm64: dts: mediatek: add xHCI & usb phy for
+ mt8173
+Date: Sun, 26 Jul 2015 10:41:22 +0800
+Message-ID: <1437878482.3040.6.camel@mhfsdcap03>
+References: <1437573945-31586-1-git-send-email-chunfeng.yun@mediatek.com>
+	 <1437573945-31586-6-git-send-email-chunfeng.yun@mediatek.com>
+	 <55AFDCE6.2060608@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <060201d0c67f$3a0cfba0$ae26f2e0$@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kukjin Kim <kgene@kernel.org>
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, devicetree <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Tomasz Figa <tomasz.figa@gmail.com>, linux-kernel <linux-kernel@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, thomas.ab@samsung.com, Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-clk@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55AFDCE6.2060608-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Kukjin,
+hi
+On Wed, 2015-07-22 at 21:11 +0300, Sergei Shtylyov wrote:
+> Hello.
+> 
+> On 07/22/2015 05:05 PM, Chunfeng Yun wrote:
+> 
+> > add xHCI and phy drivers for MT8173-EVB
+> 
+> > Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > ---
+> >   arch/arm64/boot/dts/mediatek/mt8173-evb.dts | 15 ++++++++++++++
+> >   arch/arm64/boot/dts/mediatek/mt8173.dtsi    | 31 +++++++++++++++++++++++++++++
+> >   2 files changed, 46 insertions(+)
+> 
+> > diff --git a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
+> > index f433c21..202b2b9 100644
+> > --- a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
+> > +++ b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
+> > @@ -13,6 +13,7 @@
+> >    */
+> >
+> >   /dts-v1/;
+> > +#include <dt-bindings/gpio/gpio.h>
+> >   #include "mt8173.dtsi"
+> >
+> >   / {
+> > @@ -32,6 +33,15 @@
+> >   	};
+> >
+> >   	chosen { };
+> > +
+> > +	usb_p1_vbus: fixedregulator@0 {
+> 
+>     Just "regulator@0" please. This is more in line with what ePAPR requires 
+> from the node names.
+> 
+> > +		compatible = "regulator-fixed";
+> > +		regulator-name = "usb_vbus";
+> > +		regulator-min-microvolt = <5000000>;
+> > +		regulator-max-microvolt = <5000000>;
+> > +		gpio = <&pio 130 GPIO_ACTIVE_HIGH>;
+> > +		enable-active-high;
+> > +	};
+> >   };
+> >
+> >   &pwrap {
+> [...]
+> > diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> > index 0696f8f..aa1ecc7 100644
+> > --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> > +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> [...]
+> > @@ -393,6 +394,36 @@
+> >   			#size-cells = <0>;
+> >   			status = "disabled";
+> >   		};
+> > +
+> > +		usb: usb30@11270000 {
+> 
+>     ePAPR standardizes the name "usb" for such nodes, please fix.
+> 
+> [...]
+> 
+ok, I'll revise it, thanks a lot
 
-On Sat, Jul 25, 2015 at 11:11 AM, Kukjin Kim <kgene@kernel.org> wrote:
-> Krzysztof Kozlowski wrote:
->>
->> On 24.07.2015 12:40, Kukjin Kim wrote:
->> > On 07/24/15 09:30, Michael Turquette wrote:
->> >> Quoting Kukjin Kim (2015-07-07 07:43:31)
->> >>> Bartlomiej Zolnierkiewicz wrote:
->> >
->> > [...]
->> >
->> >>>>> Chanwoo Choi (3):
->> >>>>>   clk: samsung: exynos3250: Add cpu clock configuration data and instaniate cpu clock
->> >>>>>   ARM: dts: Add CPU OPP and regulator supply property for Exynos3250
->> >>>>>   ARM: exynos: Add exynos3250 compatible to use generic cpufreq driver
->> >>>>>
->> >>>>>  arch/arm/boot/dts/exynos3250-monk.dts   |  4 ++++
->> >>>>>  arch/arm/boot/dts/exynos3250-rinato.dts |  4 ++++
->> >>>>>  arch/arm/boot/dts/exynos3250.dtsi       | 15 +++++++++++++++
->> >>>>>  arch/arm/mach-exynos/exynos.c           |  1 +
->> >>>>>  drivers/clk/samsung/clk-exynos3250.c    | 32 ++++++++++++++++++++++++++++++--
->> >>>>>  include/dt-bindings/clock/exynos3250.h  |  1 +
->> >>>>>  6 files changed, 55 insertions(+), 2 deletions(-)
->> >>>>
->> >>>> Reviewed-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
->> >>>>
->> >>>> Thank you for working on this.
->> >>>>
->> >>> +1 Thanks.
->> >>>
->> >>> Mike and Sylwester, if you're OK on this series, I'd like to pick up in Samsung
->> >>> tree together. And if you want, I could provide topic branch for clk tree.
->> >>
->> >> Kukjin,
->> >>
->> >> A topic branch would be great.
->> >>
->> > Sure, BTW it means you did 'ack' on this clk change? If not, please let
->> > em know ;-) I'll let you know once the topic branch is ready.
->>
->> Dear Kukjin,
->>
->> Will you handle this patchset and dependants (ARM: dts: Add CPU cooling
->> binding for Exynos3250-based Rinato/Monk board) for v4.3?
->>
-> You mean Chanwoo's patch. Yes, I'll. Thanks for your gentle reminder.
+> MBR, Sergei
+> 
 
-Please pick following patch[1] kindly. Following patch is about cooling device
-for Exynos3250-based Rinato/Monk board.
-[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-July/354693.html
 
-Best Regards,
-Chanwoo Choi
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
