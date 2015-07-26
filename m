@@ -1,40 +1,61 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] drivers/of/fdt.c: replace pr_warning by pr_warn
-Date: Sun, 26 Jul 2015 15:39:36 -0500
-Message-ID: <CAL_JsqKQ5y_iNezoTOty3ogC9Gmv4728Vf-BfoufN58u10vW7Q@mail.gmail.com>
-References: <1437465693-143982-1-git-send-email-long.wanglong@huawei.com>
- <CAL_JsqKY7hTurOdR4kgXZBT922-s-paM-CgU5rv_fB4qinfxSA@mail.gmail.com> <55B2DEE2.8080509@huawei.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55B2DEE2.8080509-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "long.wanglong" <long.wanglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, peifeiyue-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, wanglong-m92B/FuLcaEcWVvVuXF20w@public.gmane.org
+From: Philippe Reynes <tremyfr@gmail.com>
+Subject: [PATCH v5 4/6] dt-binding: document the binding for mxc rtc
+Date: Sun, 26 Jul 2015 23:37:51 +0200
+Message-ID: <1437946673-7402-5-git-send-email-tremyfr@gmail.com>
+References: <1437946673-7402-1-git-send-email-tremyfr@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1437946673-7402-1-git-send-email-tremyfr@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: a.zummo@towertech.it, alexandre.belloni@free-electrons.com, shawn.guo@linaro.org, kernel@pengutronix.de, linux@arm.linux.org.uk
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, rtc-linux@googlegroups.com, Philippe Reynes <tremyfr@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 24, 2015 at 7:57 PM, long.wanglong <long.wanglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
-> On 2015/7/25 3:00, Rob Herring wrote:
->> On Tue, Jul 21, 2015 at 3:01 AM, Wang Long <long.wanglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
->>> Update the last pr_warning callsite in drivers/of.
->>
->> That is obvious in the diff, but can you tell me why?
->
-> Hi Rob,
->
-> When we use script "./scripts/checkpatch.pl" to check a patch, using pr_warning
-> will produce WARNING:
->
->         WARNING: Prefer pr_warn(... to pr_warning(...
->         #22: FILE: drivers/of/fdt.c:428:
->         +               pr_warning("End of tree marker overwritten: %08x\n",
->
-> So,we should convert pr_warning to pr_warn.
+This adds documentation of device tree bindings for the
+mxc rtc.
 
-Okay, but don't explain to me. Explain this in the commit message.
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Philippe Reynes <tremyfr@gmail.com>
+---
+ Documentation/devicetree/bindings/rtc/rtc-mxc.txt |   26 +++++++++++++++++++++
+ 1 files changed, 26 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/rtc/rtc-mxc.txt
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/rtc/rtc-mxc.txt b/Documentation/devicetree/bindings/rtc/rtc-mxc.txt
+new file mode 100644
+index 0000000..49aa550
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/rtc-mxc.txt
+@@ -0,0 +1,26 @@
++* Real Time Clock of the i.MX SoCs
++
++RTC controller for the i.MX SoCs
++
++Required properties:
++- compatible: Should be "fsl,imx1-rtc" or "fsl,imx21-rtc".
++- reg: physical base address of the controller and length of memory mapped
++  region.
++- interrupts: IRQ line for the RTC.
++- clocks: should contain two entries:
++  * one for the input reference
++  * one for the the SoC RTC
++- clock-names: should contain:
++  * "ref" for the input reference clock
++  * "ipg" for the SoC RTC clock
++
++Example:
++
++rtc@10007000 {
++	compatible = "fsl,imx21-rtc";
++	reg = <0x10007000 0x1000>;
++	interrupts = <22>;
++	clocks = <&clks IMX27_CLK_CKIL>,
++	       	 <&clks IMX27_CLK_RTC_IPG_GATE>;
++	clock-names = "ref", "ipg";
++};
+-- 
+1.7.4.4
