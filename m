@@ -1,27 +1,62 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] serial: etraxfs-uart: use mctrl_gpio helpers for handling
- modem signals
-Date: Mon, 27 Jul 2015 16:09:06 +0200
-Message-ID: <CACRpkdYE8R5nqtZJV+Ko7o-Fkyd6SA4ew69VNYLb113+pNRSzA@mail.gmail.com>
-References: <1437782566-11528-1-git-send-email-nks@flawful.org>
+From: Matt Porter <mporter@konsulko.com>
+Subject: Re: [PATCH-v5 1/5] Documentation: binding: add new property
+ 'disable_after_xfer' to i2c-pxa
+Date: Mon, 27 Jul 2015 10:09:11 -0400
+Message-ID: <20150727140911.GB15004@beef>
+References: <1437482466-16126-1-git-send-email-vaibhav.hiremath@linaro.org>
+ <1437482466-16126-2-git-send-email-vaibhav.hiremath@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1437782566-11528-1-git-send-email-nks@flawful.org>
+Content-Disposition: inline
+In-Reply-To: <1437482466-16126-2-git-send-email-vaibhav.hiremath@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Niklas Cassel <nks@flawful.org>
-Cc: Greg KH <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, wsa@the-dreams.de, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, robert.jarzmik@free.fr
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 25, 2015 at 2:02 AM, Niklas Cassel <nks@flawful.org> wrote:
+On Tue, Jul 21, 2015 at 06:11:02PM +0530, Vaibhav Hiremath wrote:
+> Driver will now supports enable/disable across msg xfer, which user
+> can control it by new DT property -
+> 
+> i2c-disable-after-xfer : If set, driver will disable I2C module after msg
+>  xfer and enable it back before xfer.
 
-> In order to use the mctrl_gpio helpers, we change the DT bindings:
-> ri-gpios renamed to rng-gpios. cd-gpios renamed to dcd-gpios.
-> However, no in-tree dts/dtsi specifies these, so no worries.
->
-> Signed-off-by: Niklas Cassel <nks@flawful.org>
+If this is a new property specific to this Marvell part, it needs
+the vendor prefix as in mrvl,i2c-disable-after-xfer
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Or, it couldn't hurt to start an i2c.txt for generic i2c bindings
+and store it there as this and others later in this series would
+reasonably apply to other controllers.
 
-Yours,
-Linus Walleij
+-Matt
+
+> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/i2c/i2c-pxa.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-pxa.txt b/Documentation/devicetree/bindings/i2c/i2c-pxa.txt
+> index 12b78ac..9657db5 100644
+> --- a/Documentation/devicetree/bindings/i2c/i2c-pxa.txt
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-pxa.txt
+> @@ -18,6 +18,11 @@ Recommended properties :
+>     status register of i2c controller instead.
+>   - mrvl,i2c-fast-mode : Enable fast mode of i2c controller.
+>  
+> +Optional properties :
+> +
+> + - i2c-disable-after-xfer : If set, driver will disable I2C module
+> +   after msg xfer and enable it again before xfer.
+> +
+>  Examples:
+>  	twsi1: i2c@d4011000 {
+>  		compatible = "mrvl,mmp-twsi";
+> -- 
+> 1.9.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
