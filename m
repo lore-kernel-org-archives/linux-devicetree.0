@@ -1,36 +1,84 @@
-From: Martin Kepplinger <martink@posteo.de>
-Subject: [PATCH 7/8] iio: mma8452: leave sysfs namings to the iio core
-Date: Mon, 27 Jul 2015 16:08:14 +0200
-Message-ID: <1438006095-26920-8-git-send-email-martink@posteo.de>
-References: <1438006095-26920-1-git-send-email-martink@posteo.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1438006095-26920-1-git-send-email-martink@posteo.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mfuzzey@parkeon.com, roberta.dobrescu@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, christoph.muellner@theobroma-systems.com, Martin Kepplinger <martink@posteo.de>, Martin Kepplinger <martin.kepplinger@theobroma-systems.com>
+From: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH-v5 4/5] Documentation: binding: add sclk adjustment
+ properties to i2c-pxa
+Date: Mon, 27 Jul 2015 10:11:52 -0400
+Message-ID: <20150727141152.GC15004@beef>
+References: <1437482466-16126-1-git-send-email-vaibhav.hiremath@linaro.org>
+ <1437482466-16126-5-git-send-email-vaibhav.hiremath@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1437482466-16126-5-git-send-email-vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This doesn't actually change anything since the core names the sysfs folder
-for the iio event attributes "events" anyways. It only leaves the job to the
-core.
+On Tue, Jul 21, 2015 at 06:11:05PM +0530, Vaibhav Hiremath wrote:
+> With addition of PXA910 family of devices, the TWSI module supports
+> new feature which allows us to adjust SCLK. i2c-pxa driver takes input
+> configuration in nsec and converts it to respective bit-fields,
+> 
+>  - i2c-sclk-low-time-ns : SCLK low time (tlow)
+>    This property is used along with mode selection.
+>  - i2c-sclk-high-time-ns : SCLK high time (thigh)
+>  - i2c-start-hold-time-ns : Used in case of high speed mode for start bit
+>    hold/setup wait counter.
+>  - i2c-stop-hold-time-ns : Used in case of high speed mode for stop bit
+>    hold/setup wait counter.
+>  - i2c-sda-hold-time-ns : Used to calculate hold/setup wait counter for
+>    standard and fast mode.
 
-Signed-off-by: Martin Kepplinger <martin.kepplinger@theobroma-systems.com>
-Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
----
- drivers/iio/accel/mma8452.c | 1 -
- 1 file changed, 1 deletion(-)
+Again, these should have a mrvl prefix..very specific to this PXA
+controller.
 
-diff --git a/drivers/iio/accel/mma8452.c b/drivers/iio/accel/mma8452.c
-index dc66815..918ab59 100644
---- a/drivers/iio/accel/mma8452.c
-+++ b/drivers/iio/accel/mma8452.c
-@@ -747,7 +747,6 @@ static struct attribute *mma8452_event_attributes[] = {
- 
- static struct attribute_group mma8452_event_attribute_group = {
- 	.attrs = mma8452_event_attributes,
--	.name = "events",
- };
- 
- #define MMA8452_CHANNEL(axis, idx, bits) { \
--- 
-2.1.4
+-Matt
+
+> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/i2c/i2c-pxa.txt | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-pxa.txt b/Documentation/devicetree/bindings/i2c/i2c-pxa.txt
+> index 9657db5..bb4df60 100644
+> --- a/Documentation/devicetree/bindings/i2c/i2c-pxa.txt
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-pxa.txt
+> @@ -23,12 +23,25 @@ Optional properties :
+>   - i2c-disable-after-xfer : If set, driver will disable I2C module
+>     after msg xfer and enable it again before xfer.
+>  
+> +   (Applicable to PXA910 family):
+> +
+> + - i2c-sclk-low-time-ns : SCLK low time (tlow), for standard/fast/high
+> +   speed mode.
+> +   This property is used along with mode selection. Driver uses this property
+> +   to set low/high time for standard and fast speed mode, as HW counter
+> +   bit-field is same for both.
+> + - i2c-sclk-high-time-ns : SCLK high time (thigh), Used in case of high speed
+> +   mode only.
+> +
+>  Examples:
+>  	twsi1: i2c@d4011000 {
+>  		compatible = "mrvl,mmp-twsi";
+>  		reg = <0xd4011000 0x1000>;
+>  		interrupts = <7>;
+>  		mrvl,i2c-fast-mode;
+> +
+> +		i2c-sclk-low-time-ns = <988>;
+> +		i2c-sclk-high-time-ns = <988>;
+>  	};
+>  	
+>  	twsi2: i2c@d4025000 {
+> -- 
+> 1.9.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
