@@ -1,46 +1,41 @@
-From: Michal Suchanek <hramrach@gmail.com>
-Subject: [PATCH v2] ARM: dts: Add SPI CS on exynos5250-snow
-Date: 27 Jul 2015 20:11:31 -0000
-Message-ID: <a5054dfad3d48c582b062b0536125c9bcff41f31.1438027526.git.hramrach@gmail.com>
+From: Andy Gross <agross@codeaurora.org>
+Subject: Re: [PATCH v1 2/7] ARM: dts: ifc6410: add real regulators for sdcc
+ nodes.
+Date: Mon, 27 Jul 2015 15:32:54 -0500
+Message-ID: <20150727203254.GB12739@qualcomm.com>
+References: <1438004945-16175-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1438005012-16263-1-git-send-email-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1438005012-16263-1-git-send-email-srinivas.kandagatla@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Although there is only one choice of chipselect it is necessary to
-specify it. The driver cannot claim the gpio otherwise.
+On Mon, Jul 27, 2015 at 02:50:12PM +0100, Srinivas Kandagatla wrote:
 
-Signed-off-by: Michal Suchanek <hramrach@gmail.com>
+<snip>
 
---
-v2
- - don't move unrelated line
----
- arch/arm/boot/dts/exynos5250-snow.dts | 1 +
- 1 file changed, 1 insertion(+)
+>  			sdcc3: sdcc@12180000 {
+>  				status = "okay";
+> +				vmmc-supply = <&pm8921_l6>;
+>  				pinctrl-names	= "default";
+>  				pinctrl-0	= <&card_detect>;
+>  				cd-gpios	= <&tlmm_pinmux 26 GPIO_ACTIVE_LOW>;
+> @@ -187,6 +200,8 @@
+>  			/* WLAN */
+>  			sdcc4: sdcc@121c0000 {
+>  				status = "okay";
+> +				vmmc-supply = <&ext_3p3v>;
 
-diff --git a/arch/arm/boot/dts/exynos5250-snow.dts b/arch/arm/boot/dts/exynos5250-snow.dts
-index b7f4122..62be08a 100644
---- a/arch/arm/boot/dts/exynos5250-snow.dts
-+++ b/arch/arm/boot/dts/exynos5250-snow.dts
-@@ -688,6 +688,7 @@
- 	status = "okay";
- 	samsung,spi-src-clk = <0>;
- 	num-cs = <1>;
-+	cs-gpios = <&gpa2 5 0>;
- };
- 
- &usbdrd_dwc3 {
+Where is ext_3p3v defined?
+
+> +				vqmmc-supply = <&pm8921_lvs1>;
+
 -- 
-2.1.4
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
