@@ -1,7 +1,7 @@
 From: Martin Kepplinger <martink@posteo.de>
-Subject: [PATCH 5/8] iio: mma8452: add devicetree binding document
-Date: Mon, 27 Jul 2015 16:08:12 +0200
-Message-ID: <1438006095-26920-6-git-send-email-martink@posteo.de>
+Subject: [PATCH 6/8] iio: mma8452: add copyright notice comment
+Date: Mon, 27 Jul 2015 16:08:13 +0200
+Message-ID: <1438006095-26920-7-git-send-email-martink@posteo.de>
 References: <1438006095-26920-1-git-send-email-martink@posteo.de>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1438006095-26920-1-git-send-email-martink@posteo.de>
@@ -10,57 +10,23 @@ To: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mfuzz
 Cc: devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, christoph.muellner@theobroma-systems.com, Martin Kepplinger <martink@posteo.de>, Martin Kepplinger <martin.kepplinger@theobroma-systems.com>
 List-Id: devicetree@vger.kernel.org
 
-As we support more chips now, add a binding document and remove it from
-i2c trivial-devices.txt list.
-
-The binding document is further extended in a later patch of this series.
-
 Signed-off-by: Martin Kepplinger <martin.kepplinger@theobroma-systems.com>
 Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
 ---
- .../devicetree/bindings/i2c/trivial-devices.txt     |  1 -
- .../devicetree/bindings/iio/accel/mma8452.txt       | 21 +++++++++++++++++++++
- 2 files changed, 21 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/iio/accel/mma8452.txt
+ drivers/iio/accel/mma8452.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-index 00f8652..094238a 100644
---- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-+++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-@@ -54,7 +54,6 @@ epson,rx8581		I2C-BUS INTERFACE REAL TIME CLOCK MODULE
- fsl,mag3110		MAG3110: Xtrinsic High Accuracy, 3D Magnetometer
- fsl,mc13892		MC13892: Power Management Integrated Circuit (PMIC) for i.MX35/51
- fsl,mma8450		MMA8450Q: Xtrinsic Low-power, 3-axis Xtrinsic Accelerometer
--fsl,mma8452		MMA8452Q: 3-axis 12-bit / 8-bit Digital Accelerometer
- fsl,mpr121		MPR121: Proximity Capacitive Touch Sensor Controller
- fsl,sgtl5000		SGTL5000: Ultra Low-Power Audio Codec
- gmt,g751		G751: Digital Temperature Sensor and Thermal Watchdog with Two-Wire Interface
-diff --git a/Documentation/devicetree/bindings/iio/accel/mma8452.txt b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
-new file mode 100644
-index 0000000..8d98e05
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
-@@ -0,0 +1,21 @@
-+Freescale MMA8452Q, MMA8453Q, MMA8652FC or MMA8653FC triaxial accelerometer
-+
-+Required properties:
-+
-+  - compatible: should be "fsl,mma8653", "fsl,mma8652", "fsl,mma8453" or
-+    "fsl,mma8452" respectively.
-+  - reg: the I2C address of the chip
-+
-+Optional properties:
-+
-+  - interrupt-parent: should be the phandle for the interrupt controller
-+  - interrupts: interrupt mapping for GPIO IRQ
-+
-+Example:
-+
-+	mma8653fc@1d {
-+		compatible = "fsl,mma8653";
-+		reg = <0x1d>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <5 0>;
-+	};
+diff --git a/drivers/iio/accel/mma8452.c b/drivers/iio/accel/mma8452.c
+index 5a8c738..dc66815 100644
+--- a/drivers/iio/accel/mma8452.c
++++ b/drivers/iio/accel/mma8452.c
+@@ -6,6 +6,7 @@
+  *	MMA8652FC
+  *	MMA8653FC
+  *
++ * Copyright 2015 Martin Kepplinger <martin.kepplinger@theobroma-systems.com>
+  * Copyright 2014 Peter Meerwald <pmeerw@pmeerw.net>
+  *
+  * This file is subject to the terms and conditions of version 2 of
 -- 
 2.1.4
