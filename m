@@ -1,65 +1,50 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: [PATCH] ARM64: zynqmp: Enable spi flashes on ep108
-Date: Mon, 27 Jul 2015 11:50:26 +0200
-Message-ID: <1ab9d1360f86aec30fcecf49ac0b52b10766f3fc.1437990621.git.michal.simek@xilinx.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>, devicetree@vger.kernel.org, monstr@monstr.eu, Suneel Garapati <suneel.garapati@xilinx.com>, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>
+From: Mark Damion <markdamion46-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Attention: Email ID Owner RE: 2000 - 2015 SCAM VICTIM'S COMPENSATION
+ FROM THE IMF BENIN.
+Date: Mon, 27 Jul 2015 02:52:42 -0700
+Message-ID: <CAJR2zgUEmeFsZqCKcmki8UEzi5JA0nc=NkPsqJrL8uh5G1LsNQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Enable spi flashes on ep108.
+Attention: Email ID Owner RE: 2000 - 2015 SCAM VICTIM'S COMPENSATION
+=46ROM THE IMF BENIN.
 
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
----
+The International Monetary Fund (IMF) is compensating all the scam
+victims and your email address was found in the scam victim's list.
+This Western Union office has been fully mandated by the IMF to
+transfer your compensation to you via Western Union=C2=AE Money Transfe=
+r.
+However, we have concluded to affect your own payment through Western
+Union=C2=AE Money Transfer, $5,000 twice daily until the total sum of
+$1.800.000 Million is completely transferred to you. We can not be
+able to send the payment with your email address alone; thereby we
+need your information as to where we will be sending the funds, such
+as;
 
- arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts | 34 +++++++++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
+Receiver=E2=80=99s name:................... (Your Full Name)
+Address:......................
+Country:..................&
+Phone  number:...................
+Copy of your ID ..................
+Sex ....................
+Age ......................
 
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts b/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
-index 47debdcbefbf..279a992ce70e 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
-@@ -81,6 +81,40 @@
- 	status = "okay";
- };
- 
-+&spi0 {
-+	status = "okay";
-+	num-cs = <1>;
-+	spi0_flash0: spi0_flash0@0 {
-+		compatible = "m25p80";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		spi-max-frequency = <50000000>;
-+		reg = <0>;
-+
-+		spi0_flash0@00000000 {
-+			label = "spi0_flash0";
-+			reg = <0x0 0x100000>;
-+		};
-+	};
-+};
-+
-+&spi1 {
-+	status = "okay";
-+	num-cs = <1>;
-+	spi1_flash0: spi1_flash0@0 {
-+		compatible = "m25p80";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		spi-max-frequency = <50000000>;
-+		reg = <0>;
-+
-+		spi1_flash0@00000000 {
-+			label = "spi1_flash0";
-+			reg = <0x0 0x100000>;
-+		};
-+	};
-+};
-+
- &uart0 {
- 	status = "okay";
- };
--- 
-2.3.5
+Reply back to this E-mail: (markdamion46-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org) with your full
+information. Note that your payment files will be returned to the IMF
+within 72 hours if we did not hear from you, this instruction was
+given by general official of IMF Benin. We will start the transfer as
+soon as we received your information.
+
+Much Oblige,
+Mr.Mark Damion
+Director Western Union=C2=AE
+Tel; +229-98889902
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
