@@ -1,123 +1,108 @@
-From: Kyle Huey <me-OhBmq/TcCDJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [RESEND PATCH v3] ARM: tegra124: pmu support
-Date: Mon, 27 Jul 2015 09:46:27 -0700
-Message-ID: <CAP045Aoz4hzBSiZfbuE9jjbFggt=_ZBY4t6TVGL6ELwpi3Ue2Q@mail.gmail.com>
-References: <1436808945-14524-1-git-send-email-khuey@kylehuey.com>
-	<20150717085946.GB3057@ulmo>
-	<CAP045ArZ0PUcpiWYeXsHbjo6BR3YD-ZzTRsBskZzUaQXfOohrg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: [PATCH v8 4/5] ARM: dts: vf610twr: add NAND flash controller peripherial
+Date: Mon, 27 Jul 2015 18:42:44 +0200
+Message-ID: <1438015365-15685-5-git-send-email-stefan@agner.ch>
+References: <1438015365-15685-1-git-send-email-stefan@agner.ch>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAP045ArZ0PUcpiWYeXsHbjo6BR3YD-ZzTRsBskZzUaQXfOohrg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1438015365-15685-1-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:TEGRA ARCHITECTUR..." <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+To: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: sebastian-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marb-Z4QKGCRq86k@public.gmane.org, aaron-yuhzfaV+M/Wz3Dx2OeFgIA@public.gmane.org, bpringlemeir-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Bill Pringlemeir <bpringlemeir-ygJ1pmMJ17cAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 18, 2015 at 6:54 AM, Kyle Huey <me-OhBmq/TcCDJWk0Htik3J/w@public.gmane.org> wrote:
-> On Fri, Jul 17, 2015 at 4:59 PM, Thierry Reding
-> <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Mon, Jul 13, 2015 at 10:35:45AM -0700, Kyle Huey wrote:
->>> This patch modifies the device tree for tegra124 based devices to enable
->>> the Cortex A15 PMU.  The interrupt numbers are taken from NVIDIA TRM
->>> DP-06905-001_v03p.  This patch was tested on a Jetson TK1.
->>>
->>> Updated for proper ordering and to add interrupt-affinity values.
->>>
->>> Signed-off-by: Kyle Huey <khuey-OhBmq/TcCDJWk0Htik3J/w@public.gmane.org>
->>> ---
->>>  arch/arm/boot/dts/tegra124.dtsi | 17 +++++++++++++----
->>>  1 file changed, 13 insertions(+), 4 deletions(-)
->>
->> Is there any way to test this? What are the effects of adding this?
->
-> Yes.  This enables the ARM PMU driver for the Cortex A15, which allows
-> one to use hardware performance counters via the perf_event_open API.
-> For a simple test program, see
-> https://github.com/khuey/perf-counter-test/.  Without this patch, the
-> perf_event_open syscall will fail.  With this patch, the program will
-> print out the performance counter value for each iteration of the
-> loop. (IIRC on the A15 the branch counter was removed, so you may want
-> to replace 0xD with 0x8 which counts instructions executed if you want
-> to see a non-zero number there).  You also will see a message about
-> the PMU in the kernel log at startup after applying this patch.
->
-> I have also tested this extensively (including the interrupt features
-> of the PMU) on a more complex program.
->
->> Does it enable using perf for profiling?
->
-> I have not tested it, but I believe you can use perf without this
-> patch if you do not use features that require hardware performance
-> counter support.  This patch would enable those features.
->
->>> diff --git a/arch/arm/boot/dts/tegra124.dtsi b/arch/arm/boot/dts/tegra124.dtsi
->>> index 13cc7ca..de07d7e 100644
->>> --- a/arch/arm/boot/dts/tegra124.dtsi
->>> +++ b/arch/arm/boot/dts/tegra124.dtsi
->>> @@ -918,31 +918,40 @@
->>>               #address-cells = <1>;
->>>               #size-cells = <0>;
->>>
->>> -             cpu@0 {
->>> +             A15_0: cpu@0 {
->>>                       device_type = "cpu";
->>>                       compatible = "arm,cortex-a15";
->>>                       reg = <0>;
->>>               };
->>>
->>> -             cpu@1 {
->>> +             A15_1: cpu@1 {
->>>                       device_type = "cpu";
->>>                       compatible = "arm,cortex-a15";
->>>                       reg = <1>;
->>>               };
->>>
->>> -             cpu@2 {
->>> +             A15_2: cpu@2 {
->>>                       device_type = "cpu";
->>>                       compatible = "arm,cortex-a15";
->>>                       reg = <2>;
->>>               };
->>>
->>> -             cpu@3 {
->>> +             A15_3: cpu@3 {
->>>                       device_type = "cpu";
->>>                       compatible = "arm,cortex-a15";
->>>                       reg = <3>;
->>>               };
->>>       };
->>>
->>> +     pmu {
->>> +             compatible = "arm,cortex-a15-pmu";
->>> +             interrupts = <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>,
->>> +                          <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>,
->>> +                          <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>,
->>> +                          <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
->>> +             interrupt-affinity = <&A15_0>, <&A15_1>, <&A15_2>, <&A15_3>;
->>
->> These labels look somewhat artificial to me, perhaps we could do
->> something like the following instead?
->>
->>         interrupt-affinity = <&{/cpus/cpu@0}>, ...;
->>
->> That's slightly more obvious and avoids the need to "invent" labels for
->> the CPUs.
->>
->> No need to respin, I can fix that up when applying if nobody objects to
->> using the alternative notation.
->>
->> Thierry
->
-> I have no objections.  I was not aware that the device tree syntax
-> supported that.  FWIW I cargo-culted my way to victory from
-> vexpress-v2p-ca9.dts here.
->
-> - Kyle
+This adds the NAND flash controller (NFC) peripherial. The driver
+supports the SLC NAND chips found on Freescale's Vybrid Tower System
+Module. The Micron NAND chip on the module needs 4-bit ECC per 512
+byte page. Use 24-bit ECC per 2k page, which is supported by the
+driver.
 
-Anything else I can do to help move this along?
+Signed-off-by: Bill Pringlemeir <bpringlemeir-ygJ1pmMJ17cAvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+---
+ arch/arm/boot/dts/vf610-twr.dts | 40 ++++++++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/vfxxx.dtsi    |  8 ++++++++
+ 2 files changed, 48 insertions(+)
 
-- Kyle
+diff --git a/arch/arm/boot/dts/vf610-twr.dts b/arch/arm/boot/dts/vf610-twr.dts
+index 375ab23..2a278a2 100644
+--- a/arch/arm/boot/dts/vf610-twr.dts
++++ b/arch/arm/boot/dts/vf610-twr.dts
+@@ -237,6 +237,33 @@
+ 			>;
+ 		};
+ 
++		pinctrl_nfc: nfcgrp {
++			fsl,pins = <
++			VF610_PAD_PTD31__NF_IO15	0x28df
++			VF610_PAD_PTD30__NF_IO14	0x28df
++			VF610_PAD_PTD29__NF_IO13	0x28df
++			VF610_PAD_PTD28__NF_IO12	0x28df
++			VF610_PAD_PTD27__NF_IO11	0x28df
++			VF610_PAD_PTD26__NF_IO10	0x28df
++			VF610_PAD_PTD25__NF_IO9		0x28df
++			VF610_PAD_PTD24__NF_IO8		0x28df
++			VF610_PAD_PTD23__NF_IO7		0x28df
++			VF610_PAD_PTD22__NF_IO6		0x28df
++			VF610_PAD_PTD21__NF_IO5		0x28df
++			VF610_PAD_PTD20__NF_IO4		0x28df
++			VF610_PAD_PTD19__NF_IO3		0x28df
++			VF610_PAD_PTD18__NF_IO2		0x28df
++			VF610_PAD_PTD17__NF_IO1		0x28df
++			VF610_PAD_PTD16__NF_IO0		0x28df
++			VF610_PAD_PTB24__NF_WE_B	0x28c2
++			VF610_PAD_PTB25__NF_CE0_B	0x28c2
++			VF610_PAD_PTB27__NF_RE_B	0x28c2
++			VF610_PAD_PTC26__NF_RB_B	0x283d
++			VF610_PAD_PTC27__NF_ALE		0x28c2
++			VF610_PAD_PTC28__NF_CLE		0x28c2
++			>;
++		};
++
+ 		pinctrl_pwm0: pwm0grp {
+ 			fsl,pins = <
+ 				VF610_PAD_PTB0__FTM0_CH0		0x1582
+@@ -274,6 +301,19 @@
+ 	};
+ };
+ 
++&nfc {
++	assigned-clocks = <&clks VF610_CLK_NFC>;
++	assigned-clock-rates = <33000000>;
++	nand-bus-width = <16>;
++	nand-ecc-mode = "hw";
++	nand-ecc-step-size = <2048>;
++	nand-ecc-strength = <24>;
++	nand-on-flash-bbt;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_nfc>;
++	status = "okay";
++};
++
+ &pwm0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_pwm0>;
+diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
+index 4aa3351..2f4b04d 100644
+--- a/arch/arm/boot/dts/vfxxx.dtsi
++++ b/arch/arm/boot/dts/vfxxx.dtsi
+@@ -520,6 +520,14 @@
+ 				status = "disabled";
+ 			};
+ 
++			nfc: nand@400e0000 {
++				compatible = "fsl,vf610-nfc";
++				reg = <0x400e0000 0x4000>;
++				interrupts = <83 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clks VF610_CLK_NFC>;
++				clock-names = "nfc";
++				status = "disabled";
++			};
+ 		};
+ 	};
+ };
+-- 
+2.4.5
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
