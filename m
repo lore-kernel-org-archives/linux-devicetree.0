@@ -1,71 +1,118 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 0/2] spi: dw: Reintroduce optional 16 bit data
- register I/O
-Date: Mon, 27 Jul 2015 12:19:44 +0100
-Message-ID: <20150727111944.GW11162@sirena.org.uk>
-References: <1434703435-25198-1-git-send-email-michael@smart-africa.com>
- <1435163696-14767-1-git-send-email-michael@smart-africa.com>
- <1437751812.29746.74.camel@linux.intel.com>
- <20150724153704.GM11162@sirena.org.uk>
- <1437994691.29746.80.camel@linux.intel.com>
+From: Vignesh R <vigneshr@ti.com>
+Subject: Re: [PATCH v3 1/2] input: touchscreen: pixcir_i2c_ts: Add support
+ for optional wakeup interrupt
+Date: Mon, 27 Jul 2015 16:49:22 +0530
+Message-ID: <55B613BA.3070402@ti.com>
+References: <1437663246-16049-1-git-send-email-vigneshr@ti.com> <1437663246-16049-2-git-send-email-vigneshr@ti.com> <55B60CA1.3090800@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="MTX7jVBcmGa87v7U"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1437994691.29746.80.camel-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Michael van der Westhuizen <michael-XrNoQAPr3WXM9gW82pYGhQ@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <55B60CA1.3090800@ti.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Tony Lindgren <tony@atomide.com>, Benoit Cousson <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>
+Cc: Henrik Rydberg <rydberg@bitmath.org>, Frodo Lai <frodo.lai@gmail.com>, Jingoo Han <jg1.han@samsung.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---MTX7jVBcmGa87v7U
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jul 27, 2015 at 01:58:11PM +0300, Andy Shevchenko wrote:
-> On Fri, 2015-07-24 at 16:37 +0100, Mark Brown wrote:
+On 07/27/2015 04:19 PM, Roger Quadros wrote:
+> Hi,
+> 
+> On 23/07/15 17:54, Vignesh R wrote:
+>> On am437x-gp-evm, pixcir touchscreen can wake the system from low power
+>> state by generating wake-up interrupt via pinctrl and IO daisy chain.
+>> Add support for optional wakeup interrupt source by regsitering to
+>> automated wake IRQ framework introduced by commit 4990d4fe327b ("PM /
+>> Wakeirq: Add automated device wake IRQ handling").
+>> This is similar in approach to commit 2a0b965cfb6e ("serial: omap: Add
+>> support for optional wake-up")
+>>
+>> Signed-off-by: Vignesh R <vigneshr@ti.com>
+>> ---
+>>
+>> v3:
+>>  * handle error code returned by of_irq_get_byname()
+>>
+>> v2:
+>>  * use of_irq_get_byname()
+>>  * remove enable/disable_wake_irq()
+>>
+>>  drivers/input/touchscreen/pixcir_i2c_ts.c | 22 ++++++++++++++++++----
+>>  include/linux/input/pixcir_ts.h           |  1 +
+>>  2 files changed, 19 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/input/touchscreen/pixcir_i2c_ts.c b/drivers/input/touchscreen/pixcir_i2c_ts.c
+>> index 8f3e243a62bf..3a4ab358bf52 100644
+>> --- a/drivers/input/touchscreen/pixcir_i2c_ts.c
+>> +++ b/drivers/input/touchscreen/pixcir_i2c_ts.c
+>> @@ -29,6 +29,8 @@
+>>  #include <linux/of.h>
+>>  #include <linux/of_gpio.h>
+>>  #include <linux/of_device.h>
+>> +#include <linux/of_irq.h>
+>> +#include <linux/pm_wakeirq.h>
+>>  
+>>  #define PIXCIR_MAX_SLOTS       5 /* Max fingers supported by driver */
+>>  
+>> @@ -364,8 +366,6 @@ static int __maybe_unused pixcir_i2c_ts_suspend(struct device *dev)
+>>  				goto unlock;
+>>  			}
+>>  		}
+>> -
+>> -		enable_irq_wake(client->irq);
+>>  	} else if (input->users) {
+>>  		ret = pixcir_stop(ts);
+>>  	}
+>> @@ -386,8 +386,6 @@ static int __maybe_unused pixcir_i2c_ts_resume(struct device *dev)
+>>  	mutex_lock(&input->mutex);
+>>  
+>>  	if (device_may_wakeup(&client->dev)) {
+>> -		disable_irq_wake(client->irq);
+>> -
+>>  		if (!input->users) {
+>>  			ret = pixcir_stop(ts);
+>>  			if (ret) {
+>> @@ -445,6 +443,13 @@ static struct pixcir_ts_platform_data *pixcir_parse_dt(struct device *dev)
+>>  	dev_dbg(dev, "%s: x %d, y %d, gpio %d\n", __func__,
+>>  		pdata->x_max + 1, pdata->y_max + 1, pdata->gpio_attb);
+>>  
+>> +	pdata->wakeirq = of_irq_get_byname(dev->of_node, "wakeup");
+>> +	if (pdata->wakeirq < 0 && pdata->wakeirq != -ENODATA &&
+>> +	    pdata->wakeirq != -EINVAL) {
+>> +		dev_err(dev, "Failed to get wakeirq\n");
+>> +		return ERR_PTR(pdata->wakeirq);
+>> +	}
+>> +
+>>  	return pdata;
+>>  }
+>>  #else
+>> @@ -564,11 +569,20 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
+>>  	i2c_set_clientdata(client, tsdata);
+>>  	device_init_wakeup(&client->dev, 1);
+>>  
+>> +	/* Register wakeirq */
+>> +	error = (pdata->wakeirq > 0) ?
+>> +		dev_pm_set_dedicated_wake_irq(dev, pdata->wakeirq) :
+>> +		dev_pm_set_wake_irq(dev, client->irq);
+> 
+> Can 0 be a valid wakeirq or client->irq?
+> If yes then this logic is broken.
+> 
 
-> > Please don't send content free pings, if you want me to review a=20
-> > patch
-> > please send me the patch.
+AFAIK, IRQ 0 is always assigned to system timer interrupt (cannot find
+reliable source to quote).
 
-> Hmm=E2=80=A6 It's strange since patch series was sent to mailing list (Cc=
-'ed to
-> you) on 24.06 [1].
+> I would set wakeirq to -EINVAL or something if it is not available
+> during probe and check for that condition.
+> 
 
-> [1]=20
-> https://www.mail-archive.com/linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg05530.html
+Not sure, if I understand you correctly
+pdata->wakeirq will have -ENODATA or -EINVAL(as returned by
+of_irq_get_byname()), if wakeirq is not available. Do you want me to
+check for these two conditions specifically rather than
+(pdata->wakeirq > 0) ?
 
-> P.S. It has not mine authorship, though I can resend the series if
-> needed.
-
-It's possible there was some discussion of the patch that made
-it look it needed a resubmit, or that it was buried as reply in the
-middle of discussion of some other patches (eg, a previous version).
-Either way to repeat what I said if you want me to review a patch please
-send me the patch.
-
---MTX7jVBcmGa87v7U
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVthPPAAoJECTWi3JdVIfQ3MQH/2H/cwnDWWibABlqk1ABp0r5
-esadJhchaqQka5W9Gb+yWgQQA0fDG/Ri1E/AE6gNQ1bD6f4ZUsCHO2YYMBtv50Yc
-W6ROaFc1qOJY74t2uZQXB2qTv2QdJoJ3FjPF8Sr9owlm0UVSI7Iu/dKffl5lRsBW
-l/QQRXYrPlheXF6jSFNROxx+Yo2svLAzcDULrwgvEKbj1DBvDFOnAqjkE9kTSf5j
-Mm4WFPZIuSK8aMgNXdzyJkyjpExCVpWgMZjR3vRt5zb4pJ9KTUNLysT+fyp3Sszx
-odeWoF49DJeIT+9OmHh1WQOYV1X6c2zIREy3lhL0wmSyWsMc+evpLve84g5CGXk=
-=YPsL
------END PGP SIGNATURE-----
-
---MTX7jVBcmGa87v7U--
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Regards
+Vignesh
