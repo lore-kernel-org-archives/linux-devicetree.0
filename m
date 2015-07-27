@@ -1,65 +1,60 @@
-From: Govindraj Raja <govindraj.raja-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v4 5/7] clocksource: Add Pistachio SoC general purpose timer binding document
-Date: Mon, 27 Jul 2015 15:02:33 +0100
-Message-ID: <1438005755-27051-1-git-send-email-govindraj.raja@imgtec.com>
+From: Govindraj Raja <govindraj.raja@imgtec.com>
+Subject: [PATCH v4 7/7] mips: pistachio: Allow to enable the external timer based clocksource
+Date: Mon, 27 Jul 2015 15:02:35 +0100
+Message-ID: <1438005755-27051-3-git-send-email-govindraj.raja@imgtec.com>
+References: <1438005755-27051-1-git-send-email-govindraj.raja@imgtec.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, James Hartley <James.Hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Govindraj Raja <Govindraj.Raja-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Damien Horsley <Damien.Horsley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hogan <James.Hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1438005755-27051-1-git-send-email-govindraj.raja@imgtec.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>, Andrew Bresticker <abrestic@chromium.org>, James Hartley <James.Hartley@imgtec.com>, Govindraj Raja <Govindraj.Raja@imgtec.com>, Damien Horsley <Damien.Horsley@imgtec.com>, James Hogan <James.Hogan@imgtec.com>, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, Ezequiel Garcia <ezequiel.garcia@imgtec.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+From: Ezequiel Garcia <ezequiel.garcia@imgtec.com>
 
-Add a device-tree binding document for the clocksource driver provided
-by Pistachio SoC general purpose timers.
+This commit introduces a new config, so the user can choose to enable
+the General Purpose Timer based clocksource. This option is required
+to have CPUFreq support.
 
-Reviewed-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Signed-off-by: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Ezequiel Garcia <ezequiel.garcia@imgtec.com>
 ---
- .../bindings/timer/img,pistachio-gptimer.txt       | 28 ++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/timer/img,pistachio-gptimer.txt
+ arch/mips/Kconfig           |  1 +
+ arch/mips/pistachio/Kconfig | 13 +++++++++++++
+ 2 files changed, 14 insertions(+)
+ create mode 100644 arch/mips/pistachio/Kconfig
 
-diff --git a/Documentation/devicetree/bindings/timer/img,pistachio-gptimer.txt b/Documentation/devicetree/bindings/timer/img,pistachio-gptimer.txt
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index cee5f93..c0cc9e4 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -948,6 +948,7 @@ source "arch/mips/jazz/Kconfig"
+ source "arch/mips/jz4740/Kconfig"
+ source "arch/mips/lantiq/Kconfig"
+ source "arch/mips/lasat/Kconfig"
++source "arch/mips/pistachio/Kconfig"
+ source "arch/mips/pmcs-msp71xx/Kconfig"
+ source "arch/mips/ralink/Kconfig"
+ source "arch/mips/sgi-ip27/Kconfig"
+diff --git a/arch/mips/pistachio/Kconfig b/arch/mips/pistachio/Kconfig
 new file mode 100644
-index 0000000..7afce80
+index 0000000..97731ea
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/img,pistachio-gptimer.txt
-@@ -0,0 +1,28 @@
-+* Pistachio general-purpose timer based clocksource
++++ b/arch/mips/pistachio/Kconfig
+@@ -0,0 +1,13 @@
++config PISTACHIO_GPTIMER_CLKSRC
++	bool "Enable General Purpose Timer based clocksource"
++	depends on MACH_PISTACHIO
++	select CLKSRC_PISTACHIO
++	select MIPS_EXTERNAL_TIMER
++	help
++	  This option enables a clocksource driver based on a Pistachio
++	  SoC General Purpose external timer.
 +
-+Required properties:
-+ - compatible: "img,pistachio-gptimer".
-+ - reg: Address range of the timer registers.
-+ - interrupts: An interrupt for each of the four timers
-+ - clocks: Should contain a clock specifier for each entry in clock-names
-+ - clock-names: Should contain the following entries:
-+                "sys", interface clock
-+                "slow", slow counter clock
-+                "fast", fast counter clock
-+ - img,cr-periph: Must contain a phandle to the peripheral control
-+		  syscon node.
++	  If you want to enable the CPUFreq, you need to enable
++	  this option.
 +
-+Example:
-+	timer: timer@18102000 {
-+		compatible = "img,pistachio-gptimer";
-+		reg = <0x18102000 0x100>;
-+		interrupts = <GIC_SHARED 60 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SHARED 61 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SHARED 62 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SHARED 63 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&clk_periph PERIPH_CLK_COUNTER_FAST>,
-+		         <&clk_periph PERIPH_CLK_COUNTER_SLOW>,
-+			 <&cr_periph SYS_CLK_TIMER>;
-+		clock-names = "fast", "slow", "sys";
-+		img,cr-periph = <&cr_periph>;
-+	};
++	  If you don't want to enable CPUFreq, you can leave this disabled.
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
