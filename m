@@ -1,105 +1,258 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v7 5/5] clk: dt: Introduce binding for critical clock
- support
-Date: Mon, 27 Jul 2015 09:10:13 +0200
-Message-ID: <20150727071013.GO2564@lukather>
-References: <1437570255-21049-1-git-send-email-lee.jones@linaro.org>
- <1437570255-21049-6-git-send-email-lee.jones@linaro.org>
+From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Subject: Re: [RFCv2 3/3] reset: reset-zynq: Adding support for Xilinx Zynq
+ reset controller.
+Date: Mon, 27 Jul 2015 09:12:02 +0200
+Message-ID: <55B5D9C2.60509@monstr.eu>
+References: <1437783682-13632-1-git-send-email-moritz.fischer@ettus.com>
+ <1437783682-13632-4-git-send-email-moritz.fischer@ettus.com>
+Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="vNrHrykRFvLVX6W3"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1437570255-21049-6-git-send-email-lee.jones@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, mturquette@linaro.org, sboyd@codeaurora.org, devicetree@vger.kernel.org, geert@linux-m68k.org, s.hauer@pengutronix.de
+ protocol="application/pgp-signature";
+ boundary="x58VohoXORRA3Fgu5380LleaNTh748PBL"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1437783682-13632-4-git-send-email-moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
---vNrHrykRFvLVX6W3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--x58VohoXORRA3Fgu5380LleaNTh748PBL
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: quoted-printable
 
-Hi Lee,
-
-On Wed, Jul 22, 2015 at 02:04:15PM +0100, Lee Jones wrote:
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
->  .../devicetree/bindings/clock/clock-bindings.txt   | 39 ++++++++++++++++=
-++++++
->  1 file changed, 39 insertions(+)
+On 07/25/2015 02:21 AM, Moritz Fischer wrote:
+> This adds a reset controller driver to control the Xilinx Zynq
+> SoC's various resets.
 >=20
-> diff --git a/Documentation/devicetree/bindings/clock/clock-bindings.txt b=
-/Documentation/devicetree/bindings/clock/clock-bindings.txt
-> index 06fc6d5..4137034 100644
-> --- a/Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +++ b/Documentation/devicetree/bindings/clock/clock-bindings.txt
-> @@ -44,6 +44,45 @@ For example:
->    clocks by index. The names should reflect the clock output signal
->    names for the device.
-> =20
-> +critical-clock:	Some hardware contains bunches of clocks which, in normal
-> +		circumstances, must never be turned off.  If drivers a) fail to
-> +		obtain a reference to any of these or b) give up a previously
-> +		obtained reference during suspend, it is possible that some
-> +		Operating Systems might attempt to disable them to save power.
-> +		If this happens a platform can fail irrecoverably as a result.
-> +		Usually the only way to recover from these failures is to
-> +		reboot.
+> Signed-off-by: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+> ---
+>  drivers/reset/Makefile     |   1 +
+>  drivers/reset/reset-zynq.c | 142 +++++++++++++++++++++++++++++++++++++=
+++++++++
+>  2 files changed, 143 insertions(+)
+>  create mode 100644 drivers/reset/reset-zynq.c
+>=20
+> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+> index 157d421..3fe50e7 100644
+> --- a/drivers/reset/Makefile
+> +++ b/drivers/reset/Makefile
+> @@ -3,3 +3,4 @@ obj-$(CONFIG_ARCH_SOCFPGA) +=3D reset-socfpga.o
+>  obj-$(CONFIG_ARCH_BERLIN) +=3D reset-berlin.o
+>  obj-$(CONFIG_ARCH_SUNXI) +=3D reset-sunxi.o
+>  obj-$(CONFIG_ARCH_STI) +=3D sti/
+> +obj-$(CONFIG_ARCH_ZYNQ) +=3D reset-zynq.o
+> diff --git a/drivers/reset/reset-zynq.c b/drivers/reset/reset-zynq.c
+> new file mode 100644
+> index 0000000..05e37f8
+> --- /dev/null
+> +++ b/drivers/reset/reset-zynq.c
+> @@ -0,0 +1,142 @@
+> +/*
+> + * Copyright (c) 2015, National Instruments Corp.
+> + *
+> + * Xilinx Zynq Reset controller driver
+> + *
+> + * This program is free software; you can redistribute it and/or modif=
+y
+> + * it under the terms of the GNU General Public License as published b=
+y
+> + * the Free Software Foundation; version 2 of the License.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+> + * GNU General Public License for more details.
+> + */
 > +
-> +		To avoid either of these two scenarios from catastrophically
-> +		disabling an otherwise perfectly healthy running system,
-> +		clocks can be identified as 'critical' using this property from
-> +		inside a clocksource's node.
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/reset-controller.h>
+> +#include <linux/regmap.h>
+> +#include <linux/types.h>
 > +
-> +		This property is not to be abused.  It is only to be used to
-> +		protect platforms from being crippled by gated clocks, NOT as a
-> +		convenience function to avoid using the framework correctly
-> +		inside device drivers.
+> +/* Offsets into SLCR regmap */
+> +#define SLCR_RST_CTRL_OFFSET	0x200 /* FPGA Software Reset Control */
 > +
-> +		Expected values are hardware clock indices.  If the
-> +		clock-indices property (see below) is used, then supplied
-> +		values must correspond to one of the listed identifiers.
-> +		Using the clock-indices example below, hardware clock <2>
-> +		is missing, therefore it is considered invalid to then
-> +		list clock <2> as a critical clock.
+> +#define NBANKS	18
+> +
+> +struct zynq_reset_data {
+> +	struct regmap *slcr;
+> +	struct reset_controller_dev rcdev;
+> +};
+> +
+> +#define to_zynq_reset_data(p)		\
+> +	container_of((p), struct zynq_reset_data, rcdev)
+> +
+> +static int zynq_reset_assert(struct reset_controller_dev *rcdev,
+> +			     unsigned long id)
+> +{
+> +	struct zynq_reset_data *priv =3D to_zynq_reset_data(rcdev);
+> +
+> +	int bank =3D id / BITS_PER_LONG;
+> +	int offset =3D id % BITS_PER_LONG;
+> +
 
-I think we should also consider having it simply as a boolean. Using
-indices for clocks that don't have any (for example because it only
-provides a single clock) seem to not really make much sense.
+Personally me I would also add debug message here to be simply enabled
+for easier tracking.
 
-Also, since you can have a bunch of them, using critical-clocks seem
-more appropriate.
+> +	regmap_update_bits(priv->slcr,
+> +			   SLCR_RST_CTRL_OFFSET + (bank * 4),
+> +			   BIT(offset),
+> +			   BIT(offset));
+> +
+> +	return 0;
+> +}
+> +
+> +static int zynq_reset_deassert(struct reset_controller_dev *rcdev,
+> +			       unsigned long id)
+> +{
+> +	struct zynq_reset_data *priv =3D to_zynq_reset_data(rcdev);
+> +
+> +	int bank =3D id / BITS_PER_LONG;
+> +	int offset =3D id % BITS_PER_LONG;
+> +
 
-Maxime
+debug message here too.
+
+> +	regmap_update_bits(priv->slcr,
+> +			   SLCR_RST_CTRL_OFFSET + (bank * 4),
+> +			   BIT(offset),
+> +			   ~BIT(offset));
+> +
+> +	return 0;
+> +}
+> +
+> +static int zynq_reset_status(struct reset_controller_dev *rcdev,
+> +			     unsigned long id)
+> +{
+> +	struct zynq_reset_data *priv =3D to_zynq_reset_data(rcdev);
+> +
+> +	int bank =3D id / BITS_PER_LONG;
+> +	int offset =3D id % BITS_PER_LONG;
+> +	u32 reg;
+> +
+> +	regmap_read(priv->slcr, SLCR_RST_CTRL_OFFSET + (bank * 4), &reg);
+
+debug message here too.
+
+> +
+> +	return !(reg & BIT(offset));
+> +}
+> +
+> +static const struct reset_control_ops zynq_reset_ops =3D {
+
+Remove const here - there is sparse warning.
+
+> +	.assert		=3D zynq_reset_assert,
+> +	.deassert	=3D zynq_reset_deassert,
+> +	.status		=3D zynq_reset_status,
+> +};
+> +
+> +static int zynq_reset_probe(struct platform_device *pdev)
+> +{
+> +	struct zynq_reset_data *priv;
+> +
+> +	priv =3D devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +	platform_set_drvdata(pdev, priv);
+> +
+> +	priv->slcr =3D syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
+> +		"syscon");
+> +	if (IS_ERR(priv->slcr)) {
+> +		dev_err(&pdev->dev, "unable to get zynq-slcr regmap");
+> +		return PTR_ERR(priv->slcr);
+> +	}
+> +
+> +	priv->rcdev.owner =3D THIS_MODULE;
+> +	priv->rcdev.nr_resets =3D NBANKS * BITS_PER_LONG;
+> +	priv->rcdev.ops =3D &zynq_reset_ops;
+> +	priv->rcdev.of_node =3D pdev->dev.of_node;
+> +	reset_controller_register(&priv->rcdev);
+> +
+> +	return 0;
+> +}
+> +
+> +static int zynq_reset_remove(struct platform_device *pdev)
+> +{
+> +	struct zynq_reset_data *priv =3D platform_get_drvdata(pdev);
+> +
+> +	reset_controller_unregister(&priv->rcdev);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id zynq_reset_dt_ids[] =3D {
+> +	{ .compatible =3D "xlnx,zynq-reset", },
+> +	{ /* sentinel */ },
+> +};
+> +
+> +static struct platform_driver zynq_reset_driver =3D {
+> +	.probe	=3D zynq_reset_probe,
+> +	.remove	=3D zynq_reset_remove,
+> +	.driver =3D {
+> +		.name		=3D "zynq-pl-reset",
+> +		.of_match_table	=3D zynq_reset_dt_ids,
+> +	},
+> +};
+> +module_platform_driver(zynq_reset_driver);
+> +
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_AUTHOR("Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>");
+> +MODULE_DESCRIPTION("Zynq Reset Controller Driver");
+>=20
+
+Also I am missing enabling reset controller in the arch.
+
+
+diff --git a/arch/arm/mach-zynq/Kconfig b/arch/arm/mach-zynq/Kconfig
+index 78e5e007f52d..02a84fdee1bd 100644
+--- a/arch/arm/mach-zynq/Kconfig
++++ b/arch/arm/mach-zynq/Kconfig
+@@ -1,6 +1,7 @@
+ config ARCH_ZYNQ
+        bool "Xilinx Zynq ARM Cortex A9 Platform" if ARCH_MULTI_V7
+        select ARCH_SUPPORTS_BIG_ENDIAN
++       select ARCH_HAS_RESET_CONTROLLER
+        select ARM_AMBA
+        select ARM_GIC
+        select ARM_GLOBAL_TIMER if !CPU_FREQ
+
+Thanks,
+Michal
+
+
 
 --=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
 
---vNrHrykRFvLVX6W3
+
+
+--x58VohoXORRA3Fgu5380LleaNTh748PBL
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Version: GnuPG v2.0.14 (GNU/Linux)
 
-iQIcBAEBAgAGBQJVtdlVAAoJEBx+YmzsjxAgoGYP/1dayeBYiTB9SkuBAt0ARSG4
-h1Hr2h2nGUTqK8Dy43L3rZUN685yg1bl1iC7n51GaHwz/t3H0SCmKVsqry6OfWCg
-s0MlKY7D3K16zC6zHTnv4HvuIeJqF76reoQRUwwrk0rW0aEo4m0srnej5XWB8TG/
-AR+n30VTzFGT6qKejyu4KPigvwKNnNvWbS6K3ycLD+5Vo+P9qUcPV2ZqS67dxyQd
-3iCj7XZX4pkGixUZdO/OuqZuQMa/7ulA7CEsWoq8qrpy2RCKGGKnZxrTXo6l6zdA
-9H9JQTMRnbD0aqz2UhxV9GpfZn78W4qZud18GBFE8ab7rTnxxcHM/VM60HpNa5AH
-sYixRLbjijveGWjvINXpDYDM8DXQBBflYPs1kg5xqqimDx2EVSVoPd7NZkcHAvG4
-HuqW5Kmi53XpNQyeBxeV2mhnFcEq7xqv4B2kZ0UOQhYC/ehd61YDKfLqC7dhS9KK
-mdYIgySRrVnn5edrzIH+SXSXq+bgOn7X7U1igDrYHRg+jGkBzfT8xUR+eBMEqotv
-VFNiAot5JSNUFyQJhnmpTIroUbnVC1HRNhoUB4ho4vJtwj3ErD6ZRP5s/HbOCoTM
-eNPTVMa+Bkk4JDE2/vhqxz5LXDs77x9v8xzKztkxDTbfBMSuDD1Ru8aQ6otG9bjr
-HqmdR25OM08qk+3dZH/F
-=wjtS
+iEYEARECAAYFAlW12cIACgkQykllyylKDCGhkgCePkPSjXtPdzQRIS62snSJqGcy
+/tgAnAjgQfmxl1P+hhRmywVm+n2FygMr
+=7ULW
 -----END PGP SIGNATURE-----
 
---vNrHrykRFvLVX6W3--
+--x58VohoXORRA3Fgu5380LleaNTh748PBL--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
