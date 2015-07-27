@@ -1,53 +1,59 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RESEND PATCH v2 1/2] dt: snps,dw-apb-ssi: Document new I/O data
- register width property
-Date: Mon, 27 Jul 2015 08:35:53 -0500
-Message-ID: <CAL_JsqKwO0__jT_c8dYsp-LoreoTdC+_qmjj_s-UqGPfSrxdzg@mail.gmail.com>
-References: <1435163696-14767-1-git-send-email-michael@smart-africa.com>
- <1437997035-3046-1-git-send-email-michael@smart-africa.com> <1437997035-3046-2-git-send-email-michael@smart-africa.com>
+From: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] doc: dt: add documentation for nxp,lpc1788-rtc
+Date: Mon, 27 Jul 2015 09:37:20 -0400
+Message-ID: <20150727133720.GA15004@beef>
+References: <1436635730-15617-1-git-send-email-manabian@gmail.com>
+ <1436635730-15617-3-git-send-email-manabian@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1437997035-3046-2-git-send-email-michael-XrNoQAPr3WXM9gW82pYGhQ@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael van der Westhuizen <michael-XrNoQAPr3WXM9gW82pYGhQ@public.gmane.org>
-Cc: "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1436635730-15617-3-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, joshc-acOepvfBmUk@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 27, 2015 at 6:37 AM, Michael van der Westhuizen
-<michael-XrNoQAPr3WXM9gW82pYGhQ@public.gmane.org> wrote:
-> This change documents a new property for the snps,dw-apb-ssi device,
-> allowing an implementer to specify either four byte or two bytes
-> access to the SPI controller data register.
->
-> This supports a change that unbreaks this driver on picoXcell
-> platforms.
->
-> Signed-off-by: Michael van der Westhuizen <michael-XrNoQAPr3WXM9gW82pYGhQ@public.gmane.org>
+On Sat, Jul 11, 2015 at 07:28:50PM +0200, Joachim Eastwood wrote:
+> Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
->
-> Changes in v2:
->   - Incorporate review feedback from Andy Shevchenko, reworking the
->     bindings to reflect common practice.
->
->  Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
-> index bd99193..b4f1086 100644
-> --- a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
-> +++ b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
-> @@ -10,6 +10,8 @@ Required properties:
->  Optional properties:
->  - cs-gpios : Specifies the gpio pis to be used for chipselects.
->  - num-cs : The number of chipselects. If omitted, this will default to 4.
-> +- snps,reg-io-width : The I/O register width (in bytes) implemented by
-> +  this device.  Supported values are 2 or 4 (the default).
+>  .../devicetree/bindings/rtc/nxp,lpc1788-rtc.txt     | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/rtc/nxp,lpc1788-rtc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/rtc/nxp,lpc1788-rtc.txt b/Documentation/devicetree/bindings/rtc/nxp,lpc1788-rtc.txt
+> new file mode 100644
+> index 000000000000..ad41a040432c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/rtc/nxp,lpc1788-rtc.txt
+> @@ -0,0 +1,21 @@
+> +NXP LPC1788 real-time clock
+> +
+> +The LPC1788 RTC provides calendar and clock functionality
+> +together with periodic tick and alarm interrupt support.
+> +
+> +Required properties:
+> +- compatible	: must contain "nxp,lpc1788-rtc"
+> +- reg		: Specifies base physical address and size of the registers.
+> +- interrupts	: A single interrupt specifier.
+> +- clocks	: Must contain entries for rtc and register clock
 
-Drop the snps as this is already a common property (at least for UARTs).
+"Must contain clock specifiers for rtc and register clock" ?
 
-Rob
+-Matt
+
+> +- clock-names	: Must contain "rtc" and "reg"
+> +  See ../clocks/clock-bindings.txt for details.
+> +
+> +Example:
+> +rtc: rtc@40046000 {
+> +	compatible = "nxp,lpc1788-rtc";
+> +	reg = <0x40046000 0x1000>;
+> +	interrupts = <47>;
+> +	clocks = <&creg_clk 0>, <&ccu1 CLK_CPU_BUS>;
+> +	clock-names = "rtc", "reg";
+> +};
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
