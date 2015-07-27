@@ -1,74 +1,106 @@
-From: Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCHv2 5/8] iio: mma8452: add devicetree binding document
-Date: Mon, 27 Jul 2015 16:59:56 +0200
-Message-ID: <1438009196-28766-1-git-send-email-martink@posteo.de>
-References: <20150727142005.GA10821@leverpostej>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150727142005.GA10821@leverpostej>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org, roberta.dobrescu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org, Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>, Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+From: Gabriele Paoloni <gabriele.paoloni@huawei.com>
+Subject: [PATCH v6] PCI: Store PCIe bus address in struct of_pci_range
+Date: Mon, 27 Jul 2015 23:17:03 +0800
+Message-ID: <1438010223-124422-1-git-send-email-gabriele.paoloni@huawei.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-pci-owner@vger.kernel.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: gabriele.paoloni@huawei.com, arnd@arndb.de, lorenzo.pieralisi@arm.com, wangzhou1@hisilicon.com, bhelgaas@google.com, robh+dt@kernel.org, james.morse@arm.com, Liviu.Dudau@arm.com
+Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, yuanzhichang@hisilicon.com, zhudacai@hisilicon.com, zhangjukuo@huawei.com, qiuzhenfa@hisilicon.com, liguozhu@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-As we support more chips now, add a binding document and remove it from
-i2c trivial-devices.txt list.
+From: gabriele paoloni <gabriele.paoloni@huawei.com>
 
-The binding document is further extended in a later patch of this series.
+    This patch is needed port PCIe designware to new DT parsing API
+    As discussed in
+    http://lists.infradead.org/pipermail/linux-arm-kernel/2015-January/317743.html
+    in designware we have a problem as the PCI addresses in the PCIe controller
+    address space are required in order to perform correct HW operation.
 
-Signed-off-by: Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
-Signed-off-by: Christoph Muellner <christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+    In order to solve this problem commit f4c55c5a3 "PCI: designware:
+    Program ATU with untranslated address" added code to read the PCIe
+    controller start address directly from the DT ranges.
+
+    In the new DT parsing API of_pci_get_host_bridge_resources() hides the
+    DT parser from the host controller drivers, so it is not possible
+    for drivers to parse values directly from the DT.
+
+    In http://www.spinics.net/lists/linux-pci/msg42540.html we already tried
+    to use the new DT parsing API but there is a bug (obviously) in setting
+    the <*>_mod_base addresses
+    Applying this patch we can easily set "<*>_mod_base = win->__res.start"
+
+    This patch adds a new field in "struct of_pci_range" to store the
+    pci bus start address; it fills the field in of_pci_range_parser_one();
+    in of_pci_get_host_bridge_resources() it retrieves the resource entry
+    after it is created and added to the resource list and uses
+    entry->__res.start to store the pci controller address
+
+    the patch is based on 4.2-rc1
+
+    Signed-off-by: Gabriele Paoloni <gabriele.paoloni@huawei.com>
+    Acked-by: Liviu Dudau <Liviu.Dudau@arm.com>
+    Acked-by: Rob Herring <robh@kernel.org>
 ---
-builds a nice list of supported compatible strings.
+ drivers/of/address.c       | 2 ++
+ drivers/of/of_pci.c        | 4 ++++
+ include/linux/of_address.h | 1 +
+ 3 files changed, 7 insertions(+)
 
-thanks!
-
-
- .../devicetree/bindings/i2c/trivial-devices.txt    |  1 -
- .../devicetree/bindings/iio/accel/mma8452.txt      | 24 ++++++++++++++++++++++
- 2 files changed, 24 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/iio/accel/mma8452.txt
-
-diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-index 00f8652..094238a 100644
---- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-+++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-@@ -54,7 +54,6 @@ epson,rx8581		I2C-BUS INTERFACE REAL TIME CLOCK MODULE
- fsl,mag3110		MAG3110: Xtrinsic High Accuracy, 3D Magnetometer
- fsl,mc13892		MC13892: Power Management Integrated Circuit (PMIC) for i.MX35/51
- fsl,mma8450		MMA8450Q: Xtrinsic Low-power, 3-axis Xtrinsic Accelerometer
--fsl,mma8452		MMA8452Q: 3-axis 12-bit / 8-bit Digital Accelerometer
- fsl,mpr121		MPR121: Proximity Capacitive Touch Sensor Controller
- fsl,sgtl5000		SGTL5000: Ultra Low-Power Audio Codec
- gmt,g751		G751: Digital Temperature Sensor and Thermal Watchdog with Two-Wire Interface
-diff --git a/Documentation/devicetree/bindings/iio/accel/mma8452.txt b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
-new file mode 100644
-index 0000000..57feb16
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
-@@ -0,0 +1,24 @@
-+Freescale MMA8452Q, MMA8453Q, MMA8652FC or MMA8653FC triaxial accelerometer
-+
-+Required properties:
-+
-+  - compatible: should contain one of
-+    * "fsl,mma8653"
-+    * "fsl,mma8652"
-+    * "fsl,mma8453"
-+    * "fsl,mma8452"
-+  - reg: the I2C address of the chip
-+
-+Optional properties:
-+
-+  - interrupt-parent: should be the phandle for the interrupt controller
-+  - interrupts: interrupt mapping for GPIO IRQ
-+
-+Example:
-+
-+	mma8653fc@1d {
-+		compatible = "fsl,mma8653";
-+		reg = <0x1d>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <5 0>;
-+	};
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index 8bfda6a..23a5793 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -253,6 +253,7 @@ struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
+ 						struct of_pci_range *range)
+ {
+ 	const int na = 3, ns = 2;
++	const int p_ns = of_n_size_cells(parser->node);
+ 
+ 	if (!range)
+ 		return NULL;
+@@ -265,6 +266,7 @@ struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
+ 	range->pci_addr = of_read_number(parser->range + 1, ns);
+ 	range->cpu_addr = of_translate_address(parser->node,
+ 				parser->range + na);
++	range->bus_addr = of_read_number(parser->range + na, p_ns);
+ 	range->size = of_read_number(parser->range + parser->pna + na, ns);
+ 
+ 	parser->range += parser->np;
+diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
+index 5751dc5..fe57030 100644
+--- a/drivers/of/of_pci.c
++++ b/drivers/of/of_pci.c
+@@ -198,6 +198,7 @@ int of_pci_get_host_bridge_resources(struct device_node *dev,
+ 
+ 	pr_debug("Parsing ranges property...\n");
+ 	for_each_of_pci_range(&parser, &range) {
++		struct resource_entry *entry;
+ 		/* Read next ranges element */
+ 		if ((range.flags & IORESOURCE_TYPE_BITS) == IORESOURCE_IO)
+ 			snprintf(range_type, 4, " IO");
+@@ -240,6 +241,9 @@ int of_pci_get_host_bridge_resources(struct device_node *dev,
+ 		}
+ 
+ 		pci_add_resource_offset(resources, res,	res->start - range.pci_addr);
++		entry = list_last_entry(resources, struct resource_entry, node);
++		/* we are using __res for storing the PCI controller address */
++		entry->__res.start = range.bus_addr;
+ 	}
+ 
+ 	return 0;
+diff --git a/include/linux/of_address.h b/include/linux/of_address.h
+index d88e81b..865f96e 100644
+--- a/include/linux/of_address.h
++++ b/include/linux/of_address.h
+@@ -16,6 +16,7 @@ struct of_pci_range {
+ 	u32 pci_space;
+ 	u64 pci_addr;
+ 	u64 cpu_addr;
++	u64 bus_addr;
+ 	u64 size;
+ 	u32 flags;
+ };
 -- 
-2.1.4
+1.9.1
