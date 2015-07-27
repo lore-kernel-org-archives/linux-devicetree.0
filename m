@@ -1,430 +1,134 @@
-From: Matt Porter <mporter@konsulko.com>
-Subject: Re: [PATCH 1/2] ARM: dts: Add support for phyCORE-AM335x SoM
-Date: Mon, 27 Jul 2015 10:34:44 -0400
-Message-ID: <20150727143444.GD15004@beef>
-References: <1437035449-26956-1-git-send-email-t.remmet@phytec.de>
+From: Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 8/8] iio: mma8452: add devicetree property to allow all
+ pin wirings
+Date: Mon, 27 Jul 2015 16:37:48 +0200
+Message-ID: <55B6423C.7030301@posteo.de>
+References: <1438006095-26920-1-git-send-email-martink@posteo.de> <1438006095-26920-9-git-send-email-martink@posteo.de> <20150727142336.GB10821@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1437035449-26956-1-git-send-email-t.remmet@phytec.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Teresa Remmet <t.remmet@phytec.de>
-Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150727142336.GB10821@leverpostej>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "knaack.h-Mmb7MZpHnFY@public.gmane.org" <knaack.h-Mmb7MZpHnFY@public.gmane.org>, "lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org" <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, "pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org" <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, "mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org" <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>, "roberta.dobrescu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <roberta.dobrescu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org" <christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>, Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 16, 2015 at 10:30:48AM +0200, Teresa Remmet wrote:
-> phyCORE-AM335x is a SoM (System on Module) containing
-> a AM335x SOC. The module can be connected to different
-> carrier boards.
+Am 2015-07-27 um 16:23 schrieb Mark Rutland:
+> On Mon, Jul 27, 2015 at 03:08:15PM +0100, Martin Kepplinger wrote:
+>> For the devices supported by the mma8452 driver, two interrupt pins are
+>> available to route the interrupt signals to. By default INT1 is assumed.
+>>
+>> This adds a bitmask DT property for users to configure interrupt sources
+>> for INT2, if that is the wired interrupt pin for them.
 > 
-> Some hardware parts are configurable on the phyCORE-AM335x.
-> So they are disabled on default in this som dtsi file.
-> They will be enabled in the board dts files, when populated.
-> 
-> * RAM up to 1GiB
-> * PMIC
-> * NAND flash up to 1GiB
-> * Eth PHY on SOM: 1x RMII
-> * SPI NOR flash 8MiB (optional)
-> * i2c RTC (optional)
-> * i2c EEPROM 4kiB (optional)
-> 
-> Signed-off-by: Teresa Remmet <t.remmet@phytec.de>
-> ---
->  arch/arm/boot/dts/am335x-phycore-som.dtsi | 368 ++++++++++++++++++++++++++++++
->  1 file changed, 368 insertions(+)
->  create mode 100644 arch/arm/boot/dts/am335x-phycore-som.dtsi
-> 
-> diff --git a/arch/arm/boot/dts/am335x-phycore-som.dtsi b/arch/arm/boot/dts/am335x-phycore-som.dtsi
-> new file mode 100644
-> index 0000000..4d28fc3
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/am335x-phycore-som.dtsi
-> @@ -0,0 +1,368 @@
-> +/*
-> + * Copyright (C) 2015 Phytec Messtechnik GmbH
-> + * Author: Teresa Remmet <t.remmet@phytec.de>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +#include "am33xx.dtsi"
-> +
-> +/ {
-> +	model = "Phytec AM335x phyCORE";
-> +	compatible = "phytec,am335x-phycore-som", "ti,am33xx";
+> This sounds like configureation rather than a HW property. Why does this
+> need to be in the DT?
 
-One minor thing here...wildcards in compatible strings aren't permitted.
-However, family compatibles like "ti,am33xx" that came in before this
-was enforced are grandfathered. Ideally, the newly introced board/som
-specific strings should not propagate that wildcard. i.e. something
-like "phytec,am3352-phycore-som" or whatever is the base family part
-on these SOMs.
+It's a hardware property of the board that uses the device. There might
+be boards that connect just one of them at random, which is the reason
+for this DT property. There also might be exotic users who will want
+to use both pins to route different interrupt sources to (not yet
+supported, but no problem with such a bitmask).
 
--Matt
+> 
+>> This is important for everyone to be able to use this driver, no matter
+>> how their chip is wired. At the moment, only 0xff for using INT2 for all
+>> available interrupt sources is supported. See the devicetree documentation
+>> file for more details.
+>>
+>> Since this doesn't change the default behaviour, it doesn't break anything
+>> for existing users.
+>>
+>> Signed-off-by: Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+>> Signed-off-by: Christoph Muellner <christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/iio/accel/mma8452.txt        |  4 ++++
+>>  drivers/iio/accel/mma8452.c                          | 20 +++++++++++++-------
+>>  2 files changed, 17 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/iio/accel/mma8452.txt b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
+>> index 8d98e05..738a430 100644
+>> --- a/Documentation/devicetree/bindings/iio/accel/mma8452.txt
+>> +++ b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
+>> @@ -10,6 +10,9 @@ Optional properties:
+>>  
+>>    - interrupt-parent: should be the phandle for the interrupt controller
+>>    - interrupts: interrupt mapping for GPIO IRQ
+>> +  - use_int2: bitmask to choose interrupt sources assumed to be wired to
+>> +    interrupt pin INT2 instead of INT1. Only 0xff (INT2 for every interrupt
+>> +    source) is supported at the moment.
+> 
+> s/_/-/ in property names, please.
 
-> +
-> +	aliases {
-> +		rtc0 = &i2c_rtc;
-> +		rtc1 = &rtc;
-> +	};
-> +
-> +	cpus {
-> +		cpu@0 {
-> +			cpu0-supply = <&vdd1_reg>;
-> +		};
-> +	};
-> +
-> +	memory {
-> +		device_type = "memory";
-> +		reg = <0x80000000 0x10000000>; /* 256 MB */
-> +	};
-> +
-> +	vbat: fixedregulator@0 {
-> +		compatible = "regulator-fixed";
-> +	};
-> +};
-> +
-> +/* Crypto Module */
-> +&aes {
-> +	status = "okay";
-> +};
-> +
-> +&sham {
-> +	status = "okay";
-> +};
-> +
-> +/* Ethernet */
-> +&am33xx_pinmux {
-> +	ethernet0_pins: pinmux_ethernet0 {
-> +		pinctrl-single,pins = <
-> +			0x10c (PIN_INPUT_PULLDOWN | MUX_MODE1)	/* mii1_crs.rmii1_crs_dv */
-> +			0x110 (PIN_INPUT_PULLDOWN | MUX_MODE1)	/* mii1_rxerr.rmii1_rxerr */
-> +			0x114 (PIN_OUTPUT | MUX_MODE1)		/* mii1_txen.rmii1_txen */
-> +			0x124 (PIN_OUTPUT | MUX_MODE1)		/* mii1_txd1.rmii1_txd1 */
-> +			0x128 (PIN_OUTPUT | MUX_MODE1)		/* mii1_txd0.rmii1_txd0 */
-> +			0x13c (PIN_INPUT_PULLDOWN | MUX_MODE1)	/* mii1_rxd1.rmii1_rxd1 */
-> +			0x140 (PIN_INPUT_PULLDOWN | MUX_MODE1)	/* mii1_rxd0.rmii1_rxd0 */
-> +			0x144 (PIN_INPUT_PULLDOWN | MUX_MODE0)	/* rmii1_refclk.rmii1_refclk */
-> +		>;
-> +	};
-> +
-> +	mdio_pins: pinmux_mdio {
-> +		pinctrl-single,pins = <
-> +			/* MDIO */
-> +			0x148 (PIN_INPUT_PULLUP | SLEWCTRL_FAST | MUX_MODE0)	/* mdio_data.mdio_data */
-> +			0x14c (PIN_OUTPUT_PULLUP | MUX_MODE0)			/* mdio_clk.mdio_clk */
-> +		>;
-> +	};
-> +};
-> +
-> +&cpsw_emac0 {
-> +	phy_id = <&davinci_mdio>, <0>;
-> +	phy-mode = "rmii";
-> +	dual_emac_res_vlan = <1>;
-> +};
-> +
-> +&davinci_mdio {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&mdio_pins>;
-> +	status = "okay";
-> +};
-> +
-> +&mac {
-> +	slaves = <1>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&ethernet0_pins>;
-> +	status = "okay";
-> +};
-> +
-> +&phy_sel {
-> +	rmii-clock-ext;
-> +};
-> +
-> +/* I2C Busses */
-> +&am33xx_pinmux {
-> +	i2c0_pins: pinmux_i2c0 {
-> +		pinctrl-single,pins = <
-> +			0x188 (PIN_INPUT | MUX_MODE0)	/* i2c0_sda.i2c0_sda */
-> +			0x18c (PIN_INPUT | MUX_MODE0)	/* i2c0_scl.i2c0_scl */
-> +		>;
-> +	};
-> +};
-> +
-> +&i2c0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&i2c0_pins>;
-> +	clock-frequency = <400000>;
-> +	status = "okay";
-> +
-> +	tps: pmic@2d {
-> +		reg = <0x2d>;
-> +	};
-> +
-> +	i2c_eeprom: eeprom@52 {
-> +		compatible = "atmel,24c32";
-> +		pagesize = <32>;
-> +		reg = <0x52>;
-> +		status = "disabled";
-> +	};
-> +
-> +	i2c_rtc: rtc@68 {
-> +		compatible = "rv4162";
-> +		reg = <0x68>;
-> +		status = "disabled";
-> +	};
-> +};
-> +
-> +/* NAND memory */
-> +&am33xx_pinmux {
-> +		nandflash_pins: pinmux_nandflash {
-> +			pinctrl-single,pins = <
-> +			0x0 (PIN_INPUT_PULLUP | MUX_MODE0)	/* gpmc_ad0.gpmc_ad0 */
-> +			0x4 (PIN_INPUT_PULLUP | MUX_MODE0)	/* gpmc_ad1.gpmc_ad1 */
-> +			0x8 (PIN_INPUT_PULLUP | MUX_MODE0)	/* gpmc_ad2.gpmc_ad2 */
-> +			0xc (PIN_INPUT_PULLUP | MUX_MODE0)	/* gpmc_ad3.gpmc_ad3 */
-> +			0x10 (PIN_INPUT_PULLUP | MUX_MODE0)	/* gpmc_ad4.gpmc_ad4 */
-> +			0x14 (PIN_INPUT_PULLUP | MUX_MODE0)	/* gpmc_ad5.gpmc_ad5 */
-> +			0x18 (PIN_INPUT_PULLUP | MUX_MODE0)	/* gpmc_ad6.gpmc_ad6 */
-> +			0x1c (PIN_INPUT_PULLUP | MUX_MODE0)	/* gpmc_ad7.gpmc_ad7 */
-> +			0x70 (PIN_INPUT_PULLUP | MUX_MODE0)	/* gpmc_wait0.gpmc_wait0 */
-> +			0x7c (PIN_OUTPUT | MUX_MODE0)		/* gpmc_csn0.gpmc_csn0 */
-> +			0x90 (PIN_OUTPUT | MUX_MODE0)		/* gpmc_advn_ale.gpmc_advn_ale */
-> +			0x94 (PIN_OUTPUT | MUX_MODE0)		/* gpmc_oen_ren.gpmc_oen_ren */
-> +			0x98 (PIN_OUTPUT | MUX_MODE0)		/* gpmc_wen.gpmc_wen */
-> +			0x9c (PIN_OUTPUT | MUX_MODE0)		/* gpmc_be0n_cle.gpmc_be0n_cle */
-> +		>;
-> +	};
-> +};
-> +
-> +&elm {
-> +	status = "okay";
-> +};
-> +
-> +&gpmc {
-> +	status = "okay";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&nandflash_pins>;
-> +	ranges = <0 0 0x08000000 0x1000000>;   /* CS0: NAND */
-> +	nandflash: nand@0,0 {
-> +		reg = <0 0 4>; /* CS0, offset 0, IO size 4 */
-> +		nand-bus-width = <8>;
-> +		ti,nand-ecc-opt = "bch8";
-> +		gpmc,device-nand = "true";
-> +		gpmc,device-width = <1>;
-> +		gpmc,sync-clk-ps = <0>;
-> +		gpmc,cs-on-ns = <0>;
-> +		gpmc,cs-rd-off-ns = <30>;
-> +		gpmc,cs-wr-off-ns = <30>;
-> +		gpmc,adv-on-ns = <0>;
-> +		gpmc,adv-rd-off-ns = <30>;
-> +		gpmc,adv-wr-off-ns = <30>;
-> +		gpmc,we-on-ns = <0>;
-> +		gpmc,we-off-ns = <20>;
-> +		gpmc,oe-on-ns = <10>;
-> +		gpmc,oe-off-ns = <30>;
-> +		gpmc,access-ns = <30>;
-> +		gpmc,rd-cycle-ns = <30>;
-> +		gpmc,wr-cycle-ns = <30>;
-> +		gpmc,wait-on-read = "true";
-> +		gpmc,wait-on-write = "true";
-> +		gpmc,bus-turnaround-ns = <0>;
-> +		gpmc,cycle2cycle-delay-ns = <50>;
-> +		gpmc,cycle2cycle-diffcsen;
-> +		gpmc,clk-activation-ns = <0>;
-> +		gpmc,wait-monitoring-ns = <0>;
-> +		gpmc,wr-access-ns = <30>;
-> +		gpmc,wr-data-mux-bus-ns = <0>;
-> +
-> +		elm_id = <&elm>;
-> +
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +
-> +		partition@0 {
-> +			label = "xload";
-> +			reg = <0x0 0x20000>;
-> +		};
-> +		partition@1 {
-> +			label = "xload_backup1";
-> +			reg = <0x20000 0x20000>;
-> +		};
-> +		partition@2 {
-> +			label = "xload_backup2";
-> +			reg = <0x40000 0x20000>;
-> +		};
-> +		partition@3 {
-> +			label = "xload_backup3";
-> +			reg = <0x60000 0x20000>;
-> +		};
-> +		partition@4 {
-> +			label = "barebox";
-> +			reg = <0x80000 0x80000>;
-> +		};
-> +		partition@5 {
-> +			label = "bareboxenv";
-> +			reg = <0x100000 0x40000>;
-> +		};
-> +		partition@6 {
-> +			label = "oftree";
-> +			reg = <0x140000 0x40000>;
-> +		};
-> +		partition@7 {
-> +			label = "kernel";
-> +			reg = <0x180000 0x800000>;
-> +		};
-> +		partition@8 {
-> +			label = "root";
-> +			reg = <0x980000 0x0>;
-> +		};
-> +	};
-> +};
-> +
-> +/* Power */
-> +#include "tps65910.dtsi"
-> +
-> +&tps {
-> +	vcc1-supply = <&vbat>;
-> +	vcc2-supply = <&vbat>;
-> +	vcc3-supply = <&vbat>;
-> +	vcc4-supply = <&vbat>;
-> +	vcc5-supply = <&vbat>;
-> +	vcc6-supply = <&vbat>;
-> +	vcc7-supply = <&vbat>;
-> +	vccio-supply = <&vbat>;
-> +
-> +	regulators {
-> +		vrtc_reg: regulator@0 {
-> +			regulator-always-on;
-> +		};
-> +
-> +		vio_reg: regulator@1 {
-> +			regulator-always-on;
-> +		};
-> +
-> +		vdd1_reg: regulator@2 {
-> +			/* VDD_MPU voltage limits 0.95V - 1.26V with +/-4% tolerance */
-> +			regulator-name = "vdd_mpu";
-> +			regulator-min-microvolt = <912500>;
-> +			regulator-max-microvolt = <1312500>;
-> +			regulator-boot-on;
-> +			regulator-always-on;
-> +		};
-> +
-> +		vdd2_reg: regulator@3 {
-> +			/* VDD_CORE voltage limits 0.95V - 1.1V with +/-4% tolerance */
-> +			regulator-name = "vdd_core";
-> +			regulator-min-microvolt = <912500>;
-> +			regulator-max-microvolt = <1150000>;
-> +			regulator-boot-on;
-> +			regulator-always-on;
-> +		};
-> +
-> +		vdd3_reg: regulator@4 {
-> +			regulator-always-on;
-> +		};
-> +
-> +		vdig1_reg: regulator@5 {
-> +			regulator-name = "vdig1_1p8v";
-> +			regulator-min-microvolt = <1800000>;
-> +			regulator-max-microvolt = <1800000>;
-> +		};
-> +
-> +		vdig2_reg: regulator@6 {
-> +			regulator-always-on;
-> +		};
-> +
-> +		vpll_reg: regulator@7 {
-> +			regulator-always-on;
-> +		};
-> +
-> +		vdac_reg: regulator@8 {
-> +			regulator-always-on;
-> +		};
-> +
-> +		vaux1_reg: regulator@9 {
-> +			regulator-always-on;
-> +		};
-> +
-> +		vaux2_reg: regulator@10 {
-> +			regulator-always-on;
-> +		};
-> +
-> +		vaux33_reg: regulator@11 {
-> +			regulator-always-on;
-> +		};
-> +
-> +		vmmc_reg: regulator@12 {
-> +			regulator-min-microvolt = <3300000>;
-> +			regulator-max-microvolt = <3300000>;
-> +			regulator-always-on;
-> +		};
-> +	};
-> +};
-> +
-> +&vbat {
-> +	regulator-name = "vbat";
-> +	regulator-min-microvolt = <5000000>;
-> +	regulator-max-microvolt = <5000000>;
-> +	regulator-boot-on;
-> +};
-> +
-> +/* SPI Busses */
-> +&am33xx_pinmux {
-> +	spi0_pins: pinmux_spi0 {
-> +		pinctrl-single,pins = <
-> +			0x150 (PIN_INPUT_PULLDOWN | MUX_MODE0)	/* spi0_clk.spi0_clk */
-> +			0x154 (PIN_INPUT_PULLDOWN | MUX_MODE0)	/* spi0_d0.spi0_d0 */
-> +			0x158 (PIN_INPUT_PULLUP | MUX_MODE0)	/* spi0_d1.spi0_d1 */
-> +			0x15c (PIN_INPUT_PULLUP | MUX_MODE0)	/* spi0_cs0.spi0_cs0 */
-> +		>;
-> +	};
-> +};
-> +
-> +&spi0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&spi0_pins>;
-> +	status = "okay";
-> +
-> +	serial_flash: m25p80@0 {
-> +		compatible = "m25p80";
-> +		spi-max-frequency = <48000000>;
-> +		reg = <0x0>;
-> +		m25p,fast-read;
-> +		status = "disabled";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +
-> +		partition@0 {
-> +			label = "xload";
-> +			reg = <0x0 0x20000>;
-> +		};
-> +		partition@1 {
-> +			label = "barebox";
-> +			reg = <0x20000 0x80000>;
-> +		};
-> +		partition@2 {
-> +			label = "bareboxenv";
-> +			reg = <0xa0000 0x20000>;
-> +		};
-> +		partition@3 {
-> +			label = "oftree";
-> +			reg = <0xc0000 0x20000>;
-> +		};
-> +		partition@4 {
-> +			label = "kernel";
-> +			reg = <0xe0000 0x0>;
-> +		};
-> +	};
-> +};
-> -- 
-> 1.9.1
+ok. If I don't do a version 6 really soon, I'll reply with this patch
+corrected here.
+
 > 
+> We generally avoid bitmasks in properties, and we also usually exepct a
+> full cell even if data is smaller. The fact that you expect /bits/ 8 
+> must be documented here if that's truly necessary.
+
+It's not truly necessary. It's just a nice fit. There is one 8 bit
+(device memory) register that basically could (in the future) be
+exposed through this DT property.
+
+For now it's just 0xff or nothing. We only don't want to create an
+interface that could restrict us from implementing more in the future
+without breaking anything.
+
 > 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> Thanks,
+> Mark
+> 
+>>  
+>>  Example:
+>>  
+>> @@ -18,4 +21,5 @@ Example:
+>>  		reg = <0x1d>;
+>>  		interrupt-parent = <&gpio1>;
+>>  		interrupts = <5 0>;
+>> +		use_int2 = /bits/ 8 <0xff>;
+>>  	};
+>> diff --git a/drivers/iio/accel/mma8452.c b/drivers/iio/accel/mma8452.c
+>> index 918ab59..a03836b1 100644
+>> --- a/drivers/iio/accel/mma8452.c
+>> +++ b/drivers/iio/accel/mma8452.c
+>> @@ -1028,8 +1028,9 @@ static int mma8452_probe(struct i2c_client *client,
+>>  {
+>>  	struct mma8452_data *data;
+>>  	struct iio_dev *indio_dev;
+>> -	int ret;
+>>  	const struct of_device_id *match;
+>> +	int ret;
+>> +	u8 int2;
+>>  
+>>  	match = of_match_device(mma8452_dt_ids, &client->dev);
+>>  	if (!match) {
+>> @@ -1104,12 +1105,17 @@ static int mma8452_probe(struct i2c_client *client,
+>>  		int enabled_interrupts = MMA8452_INT_TRANS |
+>>  					 MMA8452_INT_FF_MT;
+>>  
+>> -		/* Assume wired to INT1 pin */
+>> -		ret = i2c_smbus_write_byte_data(client,
+>> -						MMA8452_CTRL_REG5,
+>> -						supported_interrupts);
+>> -		if (ret < 0)
+>> -			return ret;
+>> +		of_property_read_u8(client->dev.of_node, "use_int2", &int2);
+>> +		if (int2 == 0xff) {
+>> +			dev_dbg(&client->dev, "use interrupt line INT2\n");
+>> +		} else {
+>> +			dev_dbg(&client->dev, "use interrupt line INT1\n");
+>> +			ret = i2c_smbus_write_byte_data(client,
+>> +							MMA8452_CTRL_REG5,
+>> +							supported_interrupts);
+>> +			if (ret < 0)
+>> +				return ret;
+>> +		}
+>>  
+>>  		ret = i2c_smbus_write_byte_data(client,
+>>  						MMA8452_CTRL_REG4,
+>> -- 
+>> 2.1.4
+>>
