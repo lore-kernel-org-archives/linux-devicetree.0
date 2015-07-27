@@ -1,62 +1,47 @@
-From: Matt Porter <mporter@konsulko.com>
-Subject: Re: [PATCH-v5 1/5] Documentation: binding: add new property
- 'disable_after_xfer' to i2c-pxa
-Date: Mon, 27 Jul 2015 10:09:11 -0400
-Message-ID: <20150727140911.GB15004@beef>
-References: <1437482466-16126-1-git-send-email-vaibhav.hiremath@linaro.org>
- <1437482466-16126-2-git-send-email-vaibhav.hiremath@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1437482466-16126-2-git-send-email-vaibhav.hiremath@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, wsa@the-dreams.de, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, robert.jarzmik@free.fr
+From: Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH v5 0/8] iio: mma8452: improve driver and support more chips
+Date: Mon, 27 Jul 2015 16:08:07 +0200
+Message-ID: <1438006095-26920-1-git-send-email-martink@posteo.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org, roberta.dobrescu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 21, 2015 at 06:11:02PM +0530, Vaibhav Hiremath wrote:
-> Driver will now supports enable/disable across msg xfer, which user
-> can control it by new DT property -
-> 
-> i2c-disable-after-xfer : If set, driver will disable I2C module after msg
->  xfer and enable it back before xfer.
+Before I go away for holidays, this is version 5 of the mma8452 driver
+improvements. This version removes the unnessasary DRIVER_NAME define and
+improves the DT property "use_int2" to be extendible for any future additions
+to the driver.
 
-If this is a new property specific to this Marvell part, it needs
-the vendor prefix as in mrvl,i2c-disable-after-xfer
+This is based on today's -next.
 
-Or, it couldn't hurt to start an i2c.txt for generic i2c bindings
-and store it there as this and others later in this series would
-reasonably apply to other controllers.
 
--Matt
+These changes add support for motion interrupts and 3 more accelerometer
+chips, two of which use them because they don't support the until now
+included transient interrupt sources:
 
-> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
-> ---
->  Documentation/devicetree/bindings/i2c/i2c-pxa.txt | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-pxa.txt b/Documentation/devicetree/bindings/i2c/i2c-pxa.txt
-> index 12b78ac..9657db5 100644
-> --- a/Documentation/devicetree/bindings/i2c/i2c-pxa.txt
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-pxa.txt
-> @@ -18,6 +18,11 @@ Recommended properties :
->     status register of i2c controller instead.
->   - mrvl,i2c-fast-mode : Enable fast mode of i2c controller.
->  
-> +Optional properties :
-> +
-> + - i2c-disable-after-xfer : If set, driver will disable I2C module
-> +   after msg xfer and enable it again before xfer.
-> +
->  Examples:
->  	twsi1: i2c@d4011000 {
->  		compatible = "mrvl,mmp-twsi";
-> -- 
-> 1.9.1
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+MMA8453Q, MMA8652FC and MMA8653FC; datasheets are in the commit messages.
+The driver and module name remains the same, seperating it from the device
+names it now supports.
+
+On top of this, there are minor documentation additions, and more notably,
+it allows to use the driver, no matter how the interrupt pins are wired
+on your board.
+
+Please review and test if you can. For MMA8452Q, nothing should have
+changed.
+
+revision history
+----------------
+v5   DRIVER_NAME define removed; more flexible DT property
+v4   cleanup; one bugfix patch removed from series; DT people added
+v3   adds one patch to allow all possible pin wirings; adds more email
+recipients
+v2   splits the work into a series of smaller pieces
+v1   initial post
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
