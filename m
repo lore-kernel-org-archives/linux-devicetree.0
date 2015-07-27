@@ -1,29 +1,28 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH 0/3] ARM: UniPhier: update DTS and MAINTAINERS
-Date: Mon, 27 Jul 2015 14:55:41 +0200
-Message-ID: <20150727125541.GA19768@localhost>
-References: <1437809004-16806-1-git-send-email-yamada.masahiro@socionext.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 3/3] gpio: etraxfs: add support for ARTPEC-3
+Date: Mon, 27 Jul 2015 15:03:02 +0200
+Message-ID: <CACRpkdZcdsgQ43iOrXk410aFfuvtoyoTpB1BxF-LwDg3uc+Q8w@mail.gmail.com>
+References: <1437570319-25297-1-git-send-email-rabin@rab.in>
+	<1437570319-25297-3-git-send-email-rabin@rab.in>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1437809004-16806-1-git-send-email-yamada.masahiro@socionext.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: arm@kernel.org, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Joe Perches <joe@perches.com>, devicetree@vger.kernel.org, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Greg KH <gregkh@linuxfoundation.org>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Pawel Moll <pawel.moll@arm.com>, Jiri Slaby <jslaby@suse.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1437570319-25297-3-git-send-email-rabin@rab.in>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Rabin Vincent <rabin@rab.in>
+Cc: Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 25, 2015 at 04:23:21PM +0900, Masahiro Yamada wrote:
-> Hi Arnd and Olof,
-> 
-> The pinctrl drivers for UniPhier SoCs were accepted by Linus Walleij
-> into the linux-pinctrl subsystem.
-> 
-> Here is a small series I'd like you to merge into the ARM-SOC subsystem
-> to use my pinctrl drivers.
-> 
+On Wed, Jul 22, 2015 at 3:05 PM, Rabin Vincent <rabin@rab.in> wrote:
 
-Thanks, applied 1 and 2 to next/dt, the third I added to next/soc.
+> Add support for the GIO block in the ARTPEC-3 SoC.  The basic
+> functionality is essentialy the same as the version in the ETRAX FS,
+> except for a different set of ports, including a read-only port.
+>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Rabin Vincent <rabin@rab.in>
 
+Uncontroversial DT bindings, so patch applied.
 
--Olof
+Yours,
+Linus Walleij
