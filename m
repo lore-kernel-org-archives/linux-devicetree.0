@@ -1,50 +1,34 @@
-From: Ludovic Desroches <ludovic.desroches@atmel.com>
-Subject: Re: [RESEND PATCH 1/2] pinctrl: change function behavior for per pin
- muxing controllers
-Date: Mon, 27 Jul 2015 14:12:09 +0200
-Message-ID: <20150727121209.GE15112@odux.rfo.atmel.com>
-References: <1433948699-19800-1-git-send-email-ludovic.desroches@atmel.com>
- <1433948699-19800-2-git-send-email-ludovic.desroches@atmel.com>
- <557EF60D.8020007@wwwdotorg.org>
- <20150617123816.GB12295@odux.rfo.atmel.com>
- <5581988C.50000@wwwdotorg.org>
- <20150618123348.GB20227@odux.rfo.atmel.com>
- <20150714055749.GB5161@pengutronix.de>
- <20150715074642.GA14886@odux.rfo.atmel.com>
- <CACRpkdZOeMqT0cZWYPOrtKGL2FdAy4=19JZMmF8KuU7pYZYuMQ@mail.gmail.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH 0/4] omap: Fix broken pbias device creation
+Date: Mon, 27 Jul 2015 17:46:37 +0530
+Message-ID: <1437999401-3519-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdZOeMqT0cZWYPOrtKGL2FdAy4=19JZMmF8KuU7pYZYuMQ@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>, Stephen Warren <swarren@wwwdotorg.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Nicolas Ferre <nicolas.ferre@atmel.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: tony@atomide.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: bcousson@baylibre.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, t-kristo@ti.com, grygorii.strashko@ti.com, nsekhar@ti.com, kishon@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 27, 2015 at 11:43:52AM +0200, Linus Walleij wrote:
-> On Wed, Jul 15, 2015 at 9:46 AM, Ludovic Desroches
-> <ludovic.desroches@atmel.com> wrote:
-> > On Tue, Jul 14, 2015 at 07:57:49AM +0200, Sascha Hauer wrote:
-> >>
-> >> Note that in the recently introduced Mediatek pinctrl driver we used
-> >> 'pinmux' for the property that you name 'pins' here. We probably want to
-> >> use the same name.
-> >
-> > This driver fits most of my needs but I didn't do it in this way for the
-> > two previous reasons. If it is not an issue to add a new
-> > dt_node_to_map() implementation which should be quite close to the
-> > mediatek one, let's do it.
-> 
-> OK if you can do that so we have some order and obtain Sascha's
-> ACK I'm in for the patch.
-> 
-> Maybe there is something like that further up in my mailbox, need
-> to browse :)
+pbias device creation got broken once SCM cleanup got merged.
+This patch series re-enables device creation by adding
+"simple-bus" in the compatible property of the syscon
+dt node.
 
-I am doing the changes and merging my gpio driver into it. I'll send a
-new version probably this week.
+validated this series in DRA72, OMAP4 PANDA and OMAP5 UEVM
+boards.
 
-Regards
+Kishon Vijay Abraham I (4):
+  ARM: dts: omap24xx: Fix broken pbias device creation
+  ARM: dts: OMAP4: Fix broken pbias device creation
+  ARM: dts: OMAP5: Fix broken pbias device creation
+  ARM: dts: dra7: Fix broken pbias device creation
 
-Ludovic
+ arch/arm/boot/dts/dra7.dtsi     |    2 +-
+ arch/arm/boot/dts/omap2430.dtsi |    3 ++-
+ arch/arm/boot/dts/omap4.dtsi    |    3 ++-
+ arch/arm/boot/dts/omap5.dtsi    |    3 ++-
+ 4 files changed, 7 insertions(+), 4 deletions(-)
+
+-- 
+1.7.9.5
