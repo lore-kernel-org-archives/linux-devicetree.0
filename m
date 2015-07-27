@@ -1,106 +1,38 @@
-From: Gabriele Paoloni <gabriele.paoloni@huawei.com>
-Subject: [PATCH v5] PCI: Store PCIe bus address in struct of_pci_range
-Date: Mon, 27 Jul 2015 18:45:19 +0800
-Message-ID: <1437993919-99241-1-git-send-email-gabriele.paoloni@huawei.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: RE: [PATCH v5 0/2] pwm: Add support for R-Car PWM Timer
+Date: Mon, 27 Jul 2015 10:38:51 +0000
+Message-ID: <SG2PR06MB09195F31646F04302A0FD239D88E0@SG2PR06MB0919.apcprd06.prod.outlook.com>
+References: <1434359324-2964-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <20150707010636.GH13326@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pci-owner@vger.kernel.org>
-Sender: linux-pci-owner@vger.kernel.org
-To: gabriele.paoloni@huawei.com, arnd@arndb.de, lorenzo.pieralisi@arm.com, wangzhou1@hisilicon.com, bhelgaas@google.com, robh+dt@kernel.org, james.morse@arm.com, Liviu.Dudau@arm.com
-Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, yuanzhichang@hisilicon.com, zhudacai@hisilicon.com, zhangjukuo@huawei.com, qiuzhenfa@hisilicon.com, liguozhu@hisilicon.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <20150707010636.GH13326@verge.net.au>
+Content-Language: ja-JP
+Sender: linux-pwm-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: gabriele paoloni <gabriele.paoloni@huawei.com>
+Hi Thierry,
 
-    This patch is needed port PCIe designware to new DT parsing API
-    As discussed in
-    http://lists.infradead.org/pipermail/linux-arm-kernel/2015-January/317743.html
-    in designware we have a problem as the PCI addresses in the PCIe controller
-    address space are required in order to perform correct HW operation.
+Would you apply the patches? Or, should I modify them more?
 
-    In order to solve this problem commit f4c55c5a3 "PCI: designware:
-    Program ATU with untranslated address" added code to read the PCIe
-    controller start address directly from the DT ranges.
 
-    In the new DT parsing API of_pci_get_host_bridge_resources() hides the
-    DT parser from the host controller drivers, so it is not possible
-    for drivers to parse values directly from the DT.
+Hi Simon,
 
-    In http://www.spinics.net/lists/linux-pci/msg42540.html we already tried
-    to use the new DT parsing API but there is a bug (obviously) in setting
-    the <*>_mod_base addresses
-    Applying this patch we can easily set "<*>_mod_base = win->__res.start"
+> Sent: Tuesday, July 07, 2015 10:07 AM
+> 
+> On Mon, Jun 15, 2015 at 06:08:42PM +0900, Yoshihiro Shimoda wrote:
+> > This patch set is based on the linux-pwm.git / for-next branch.
+> > (commit id = 361c1066c939a88e3bb59364f47055b2a5fb3fd4)
+> 
+> Both patches:
+> 
+> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 
-    This patch adds a new field in "struct of_pci_range" to store the
-    pci bus start address; it fills the field in of_pci_range_parser_one();
-    in of_pci_get_host_bridge_resources() it retrieves the resource entry
-    after it is created and added to the resource list and uses
-    entry->__res.start to store the pci controller address
+Thank you very much for your review!
 
-    the patch is based on 4.2-rc1
-
-    Signed-off-by: Gabriele Paoloni <gabriele.paoloni@huawei.com>
-    Acked-by: Liviu Dudai <Liviu.Dudau@arm.com>
-    Acked-by: Rob Herring <robh@kernel.org>
----
- drivers/of/address.c       | 2 ++
- drivers/of/of_pci.c        | 4 ++++
- include/linux/of_address.h | 1 +
- 3 files changed, 7 insertions(+)
-
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index 8bfda6a..23a5793 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -253,6 +253,7 @@ struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
- 						struct of_pci_range *range)
- {
- 	const int na = 3, ns = 2;
-+	const int p_ns = of_n_size_cells(parser->node);
- 
- 	if (!range)
- 		return NULL;
-@@ -265,6 +266,7 @@ struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
- 	range->pci_addr = of_read_number(parser->range + 1, ns);
- 	range->cpu_addr = of_translate_address(parser->node,
- 				parser->range + na);
-+	range->bus_addr = of_read_number(parser->range + na, p_ns);
- 	range->size = of_read_number(parser->range + parser->pna + na, ns);
- 
- 	parser->range += parser->np;
-diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
-index 5751dc5..fe57030 100644
---- a/drivers/of/of_pci.c
-+++ b/drivers/of/of_pci.c
-@@ -198,6 +198,7 @@ int of_pci_get_host_bridge_resources(struct device_node *dev,
- 
- 	pr_debug("Parsing ranges property...\n");
- 	for_each_of_pci_range(&parser, &range) {
-+		struct resource_entry *entry;
- 		/* Read next ranges element */
- 		if ((range.flags & IORESOURCE_TYPE_BITS) == IORESOURCE_IO)
- 			snprintf(range_type, 4, " IO");
-@@ -240,6 +241,9 @@ int of_pci_get_host_bridge_resources(struct device_node *dev,
- 		}
- 
- 		pci_add_resource_offset(resources, res,	res->start - range.pci_addr);
-+		entry = list_last_entry(resources, struct resource_entry, node);
-+		/* we are using __res for storing the PCI controller address */
-+		entry->__res.start = range.bus_addr;
- 	}
- 
- 	return 0;
-diff --git a/include/linux/of_address.h b/include/linux/of_address.h
-index d88e81b..865f96e 100644
---- a/include/linux/of_address.h
-+++ b/include/linux/of_address.h
-@@ -16,6 +16,7 @@ struct of_pci_range {
- 	u32 pci_space;
- 	u64 pci_addr;
- 	u64 cpu_addr;
-+	u64 bus_addr;
- 	u64 size;
- 	u32 flags;
- };
--- 
-1.9.1
+Best regards,
+Yoshihiro Shimoda
