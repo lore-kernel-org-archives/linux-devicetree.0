@@ -1,43 +1,81 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 2/2] pinctrl: driver for Conexant Digicolor CX92755 pin mapping
-Date: Mon, 27 Jul 2015 11:49:26 +0200
-Message-ID: <CACRpkdbvW8KWiLCfGUvqCeyxznBiSrOFgSCPSyF9=c_pLENwyg@mail.gmail.com>
-References: <eaf294961247ac7c105156d6fae6d7389a4c0dfc.1430823310.git.baruch@tkos.co.il>
-	<28c81769f3ed3e4c24ce00bbe2773009259ba3fe.1430823310.git.baruch@tkos.co.il>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <28c81769f3ed3e4c24ce00bbe2773009259ba3fe.1430823310.git.baruch@tkos.co.il>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Baruch Siach <baruch@tkos.co.il>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 4/7] ARM64: zynqmp: Add DWC3 usb support
+Date: Mon, 27 Jul 2015 11:48:12 +0200
+Message-ID: <b3f7de61ce27b9ae18048ce19b62822bab72ebb5.1437990464.git.michal.simek@xilinx.com>
+References: <48a75b64b05dc094e34fe27e5d03552dbfe77fe2.1437990464.git.michal.simek@xilinx.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <48a75b64b05dc094e34fe27e5d03552dbfe77fe2.1437990464.git.michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <48a75b64b05dc094e34fe27e5d03552dbfe77fe2.1437990464.git.michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+References: <48a75b64b05dc094e34fe27e5d03552dbfe77fe2.1437990464.git.michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, Suneel Garapati <suneel.garapati-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 5, 2015 at 12:55 PM, Baruch Siach <baruch@tkos.co.il> wrote:
+Add usb nodes to DTSI and enable both of them on ep108.
 
-> This adds pinctrl and gpio driver to the CX92755 SoC "General Purpose Pin
-> Mapping" hardware block. The CX92755 is one SoC from the Conexant Digicolor
-> series. Pin mapping hardware supports configuring pins as either GPIO, or up to
-> 3 other "client select" functions. This driver adds support for pin muxing
-> using the generic device tree binding, and a basic gpiolib driver for the GPIO
-> functionality.
->
-> This driver does not currently support GPIO interrupts, and pad configuration.
->
-> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
-> ---
-> v2:
->    * Address review comments for Linus Walleij:
->      - Add a pointer to pinctrl_desc in struct dc_pinmap
->      - Drop the now redundant pinctrl_pin_desc field
->      - Adapt dc_get_group_{name,pins} to these changes, and add a comment
->        explaining the 1-to-1 pin-groups relation
->    * Staticise dc_pmxops
->    * Protect the GP_CLIENTSEL clct parameter with parenthesis
+Signed-off-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+---
 
-This v2 patch applied.
+ arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts | 12 ++++++++++++
+ arch/arm64/boot/dts/xilinx/zynqmp.dtsi      | 20 ++++++++++++++++++++
+ 2 files changed, 32 insertions(+)
 
-Sorry for fat delays. It's a nice driver and looks good.
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts b/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
+index 3aebc3f5d02a..d6cc4b583587 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
++++ b/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
+@@ -58,3 +58,15 @@
+ &uart0 {
+ 	status = "okay";
+ };
++
++&usb0 {
++	status = "okay";
++	dr_mode = "peripheral";
++	maximum-speed = "high-speed";
++};
++
++&usb1 {
++	status = "okay";
++	dr_mode = "host";
++	maximum-speed = "high-speed";
++};
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+index 7617722cc969..9cf364dc4890 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
++++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+@@ -343,6 +343,26 @@
+ 			clocks = <&misc_clk>, <&misc_clk>;
+ 		};
+ 
++		usb0: usb@fe200000 {
++			compatible = "snps,dwc3";
++			status = "disabled";
++			interrupt-parent = <&gic>;
++			interrupts = <0 65 4>;
++			reg = <0x0 0xfe200000 0x40000>;
++			clock-names = "clk_xin", "clk_ahb";
++			clocks = <&misc_clk>, <&misc_clk>;
++		};
++
++		usb1: usb@fe300000 {
++			compatible = "snps,dwc3";
++			status = "disabled";
++			interrupt-parent = <&gic>;
++			interrupts = <0 70 4>;
++			reg = <0x0 0xfe300000 0x40000>;
++			clock-names = "clk_xin", "clk_ahb";
++			clocks = <&misc_clk>, <&misc_clk>;
++		};
++
+ 		watchdog0: watchdog@fd4d0000 {
+ 			compatible = "cdns,wdt-r1p2";
+ 			status = "disabled";
+-- 
+2.3.5
 
-Yours,
-Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
