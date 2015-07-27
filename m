@@ -1,61 +1,121 @@
-From: Philippe Reynes <tremyfr@gmail.com>
-Subject: [PATCH v5 4/6] dt-binding: document the binding for mxc rtc
-Date: Sun, 26 Jul 2015 23:37:51 +0200
-Message-ID: <1437946673-7402-5-git-send-email-tremyfr@gmail.com>
-References: <1437946673-7402-1-git-send-email-tremyfr@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1437946673-7402-1-git-send-email-tremyfr@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: a.zummo@towertech.it, alexandre.belloni@free-electrons.com, shawn.guo@linaro.org, kernel@pengutronix.de, linux@arm.linux.org.uk
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, rtc-linux@googlegroups.com, Philippe Reynes <tremyfr@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+From: Timo Sigurdsson <public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org>
+Subject: [RFC] ARM: dts: sunxi: Add regulators and
+ board-specific operating points for LeMaker BananaPi
+Date: Mon, 27 Jul 2015 03:28:06 +0200
+Message-ID: <1437960486-2809-1-git-send-email-public_timo.s@silentcreek.de>
+Reply-To: public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCSJLSE35MGBBM4S22WQKGQEUZ2C4HY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: Timo Sigurdsson <public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds documentation of device tree bindings for the
-mxc rtc.
+sun7i-a20-bananapi.dts doesn't contain regulator nodes for the AXP209 PMU
+driver, so add them to allow for voltage-scaling with cpufreq-dt. With the
+regulators enabled, we can define board-specific operating points. The defined
+CPU voltages are more conservative (based on the values used by the vendor),
+so they should be more failsafe across all boards of this kind out there.
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Philippe Reynes <tremyfr@gmail.com>
+I'm posting this as RFC as I would like to make a few more remarks and raise
+questions along the way (plus, I'm anything but an experienced developer, so a
+a critical review might help).
+
+I checked the regulator definitions against the schematics released by LeMaker.
+I also compared that to the DT and schematics of Cubiboard 2 and Cubietruck. Of
+course, I also tested the patch on the actual hardware and it works fine for me.
+The CPU voltages are slightly higher than those set in sun7i-a20.dtsi and even
+though they work well for me, I thought it might be safer to use the more
+conservative values used by LeMaker in their old fex file. Would you agree?
+Besides, it it ok to have this in one patch or should it be splitted in two
+(one for the regulators and one for the opp)? Did I miss something important?
+
+Signed-off-by: Timo Sigurdsson <public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org>
 ---
- Documentation/devicetree/bindings/rtc/rtc-mxc.txt |   26 +++++++++++++++++++++
- 1 files changed, 26 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/rtc/rtc-mxc.txt
+ arch/arm/boot/dts/sun7i-a20-bananapi.dts | 47 +++++++++++++++++++++++++++++---
+ 1 file changed, 43 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/rtc/rtc-mxc.txt b/Documentation/devicetree/bindings/rtc/rtc-mxc.txt
-new file mode 100644
-index 0000000..49aa550
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/rtc-mxc.txt
-@@ -0,0 +1,26 @@
-+* Real Time Clock of the i.MX SoCs
-+
-+RTC controller for the i.MX SoCs
-+
-+Required properties:
-+- compatible: Should be "fsl,imx1-rtc" or "fsl,imx21-rtc".
-+- reg: physical base address of the controller and length of memory mapped
-+  region.
-+- interrupts: IRQ line for the RTC.
-+- clocks: should contain two entries:
-+  * one for the input reference
-+  * one for the the SoC RTC
-+- clock-names: should contain:
-+  * "ref" for the input reference clock
-+  * "ipg" for the SoC RTC clock
-+
-+Example:
-+
-+rtc@10007000 {
-+	compatible = "fsl,imx21-rtc";
-+	reg = <0x10007000 0x1000>;
-+	interrupts = <22>;
-+	clocks = <&clks IMX27_CLK_CKIL>,
-+	       	 <&clks IMX27_CLK_RTC_IPG_GATE>;
-+	clock-names = "ref", "ipg";
+diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi.dts b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
+index 9f7b472..2bcbb0e 100644
+--- a/arch/arm/boot/dts/sun7i-a20-bananapi.dts
++++ b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
+@@ -92,6 +92,22 @@
+ 	status = "okay";
+ };
+ 
++&cpu0 {
++	cpu-supply = <&reg_dcdc2>;
++	operating-points = <
++		/* kHz	  uV */
++		1008000	1450000
++		960000	1425000
++		912000	1425000
++		864000	1350000
++		720000	1250000
++		528000	1150000
++		312000	1100000
++		144000	1050000
++		>;
++	cooling-max-level = <7>;
 +};
++
+ &ehci0 {
+ 	status = "okay";
+ };
+@@ -119,13 +135,9 @@
+ 	status = "okay";
+ 
+ 	axp209: pmic@34 {
+-		compatible = "x-powers,axp209";
+ 		reg = <0x34>;
+ 		interrupt-parent = <&nmi_intc>;
+ 		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+-
+-		interrupt-controller;
+-		#interrupt-cells = <1>;
+ 	};
+ };
+ 
+@@ -182,6 +194,33 @@
+ 	};
+ };
+ 
++#include "axp209.dtsi"
++
++&reg_dcdc2 {
++	regulator-always-on;
++	regulator-min-microvolt = <1050000>;
++	regulator-max-microvolt = <1450000>;
++	regulator-name = "vdd-cpu";
++};
++
++&reg_dcdc3 {
++	regulator-always-on;
++	regulator-min-microvolt = <1000000>;
++	regulator-max-microvolt = <1400000>;
++	regulator-name = "vdd-int-dll";
++};
++
++&reg_ldo1 {
++	regulator-name = "vdd-rtc";
++};
++
++&reg_ldo2 {
++	regulator-always-on;
++	regulator-min-microvolt = <3000000>;
++	regulator-max-microvolt = <3000000>;
++	regulator-name = "avcc";
++};
++
+ &reg_usb1_vbus {
+ 	status = "okay";
+ };
 -- 
-1.7.4.4
+2.1.4
