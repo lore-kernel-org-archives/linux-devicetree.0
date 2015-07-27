@@ -1,260 +1,193 @@
-From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH v2 5/5] mtd: atmel-quadspi: add driver for Atmel QSPI controller
-Date: Mon, 27 Jul 2015 12:53:52 +0200
-Message-ID: <201507271253.52967.marex@denx.de>
-References: <cover.1437569902.git.cyrille.pitchen@atmel.com> <201507221550.14947.marex@denx.de> <55B5EEC1.4000104@atmel.com>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55B5EEC1.4000104-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org, juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, shijie.huang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v9 0/9] Add simple NVMEM Framework via regmap.
+Date: Mon, 27 Jul 2015 12:12:47 +0100
+Message-ID: <1437995567-11203-1-git-send-email-srinivas.kandagatla@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, stefan.wahren-eS4NqCHxEME@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday, July 27, 2015 at 10:41:37 AM, Cyrille Pitchen wrote:
-> Hi Marek,
->=20
-> Le 22/07/2015 15:50, Marek Vasut a =E9crit :
-> > On Wednesday, July 22, 2015 at 03:17:10 PM, Cyrille Pitchen wrote:
-> >> This driver add support to the new Atmel QSPI controller embedded =
-into
-> >> sama5d2x SoCs. It expects a NOR memory to be connected to the QSPI
-> >> controller.
-> >>=20
-> >> Signed-off-by: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> >> ---
-> >=20
-> > [...]
-> >=20
-> >> +/* QSPI register offsets */
-> >> +#define QSPI_CR		0x0000	/* Control Register */
-> >> +#define QSPI_MR		0x0004	/* Mode Register */
-> >> +#define QSPI_RD		0x0008	/* Receive Data Register */
-> >> +#define QSPI_TD		0x000c	/* Transmit Data Register */
-> >> +#define QSPI_SR		0x0010	/* Status Register */
-> >> +#define QSPI_IER	0x0014	/* Interrupt Enable Register */
-> >> +#define QSPI_IDR	0x0018	/* Interrupt Disable Register */
-> >> +#define QSPI_IMR	0x001c	/* Interrupt Mask Register */
-> >> +#define QSPI_SCR	0x0020	/* Serial Clock Register */
-> >> +
-> >> +#define QSPI_IAR	0x0030	/* Instruction Address Register */
-> >> +#define QSPI_ICR	0x0034	/* Instruction Code Register */
-> >> +#define QSPI_IFR	0x0038	/* Instruction Frame Register */
-> >> +
-> >> +#define QSPI_SMR	0x0040	/* Scrambling Mode Register */
-> >> +#define QSPI_SKR	0x0044	/* Scrambling Key Register */
-> >> +
-> >> +#define QSPI_WPMR	0x00E4	/* Write Protection Mode Register */
-> >> +#define QSPI_WPSR	0x00E8	/* Write Protection Status Register */
-> >> +
-> >> +#define QSPI_VERSION	0x00FC	/* Version Register */
-> >> +
-> >> +/* Bitfields in QSPI_CR (Control Register) */
-> >> +#define QSPI_CR_QSPIEN_OFFSET		0
-> >> +#define QSPI_CR_QSPIEN_SIZE		1
-> >> +#define QSPI_CR_QSPIDIS_OFFSET		1
-> >> +#define QSPI_CR_QSPIDIS_SIZE		1
-> >> +#define QSPI_CR_SWRST_OFFSET		7
-> >> +#define QSPI_CR_SWRST_SIZE		1
-> >> +#define QSPI_CR_LASTXFER_OFFSET		24
-> >> +#define QSPI_CR_LASTXFER_SIZE		1
-> >> +
-> >> +/* Bitfields in QSPI_MR (Mode Register) */
-> >> +#define QSPI_MR_SSM_OFFSET		0
-> >> +#define QSPI_MR_SSM_SIZE		1
-> >> +#define QSPI_MR_LLB_OFFSET		1
-> >> +#define QSPI_MR_LLB_SIZE		1
-> >> +#define QSPI_MR_WDRBT_OFFSET		2
-> >> +#define QSPI_MR_WDRBT_SIZE		1
-> >> +#define QPSI_MR_SMRM_OFFSET		3
-> >> +#define QSPI_MR_SMRM_SIZE		1
-> >> +#define QSPI_MR_CSMODE_OFFSET		4
-> >> +#define QSPI_MR_CSMODE_SIZE		2
-> >> +#define QSPI_MR_NBBITS_OFFSET		8
-> >> +#define QSPI_MR_NBBITS_SIZE		4
-> >> +#define		QSPI_MR_NBBITS_8_BIT		0
-> >> +#define		QSPI_MR_NBBITS_9_BIT		1
-> >> +#define		QSPI_MR_NBBITS_10_BIT		2
-> >> +#define		QSPI_MR_NBBITS_11_BIT		3
-> >> +#define		QSPI_MR_NBBITS_12_BIT		4
-> >> +#define		QSPI_MR_NBBITS_13_BIT		5
-> >> +#define		QSPI_MR_NBBITS_14_BIT		6
-> >> +#define		QSPI_MR_NBBITS_15_BIT		7
-> >> +#define		QSPI_MR_NBBITS_16_BIT		8
-> >=20
-> > You might want to turn this into something like:
-> >=20
-> > #define QSPI_NR_NBBITS(n) ((n) - 8)
->=20
-> done in the next series
->=20
-> >> +#define QSPI_MR_DLYBCT_OFFSET		16
-> >> +#define QSPI_MR_DLYBCT_SIZE		8
-> >> +#define QSPI_MR_DLYCS_OFFSET		24
-> >> +#define QSPI_MR_DLYCS_SIZE		8
-> >=20
-> > [...]
-> >=20
-> >> +/* Bitfields in QSPI_IFR (Instruction Frame Register) */
-> >> +#define QSPI_IFR_WIDTH_OFFSET		0
-> >> +#define QSPI_IFR_WIDTH_SIZE		3
-> >> +#define		QSPI_IFR_WIDTH_SINGLE_BIT_SPI		0
-> >> +#define		QSPI_IFR_WIDTH_DUAL_OUTPUT		1
-> >> +#define		QSPI_IFR_WIDTH_QUAD_OUTPUT		2
-> >> +#define		QSPI_IFR_WIDTH_DUAL_IO			3
-> >> +#define		QSPI_IFR_WIDTH_QUAD_IO			4
-> >> +#define		QSPI_IFR_WIDTH_DUAL_CMD			5
-> >> +#define		QSPI_IFR_WIDTH_QUAD_CMD			6
-> >=20
-> > Please use #define[SPACE] instead of inconsistent #define[TAB]
->=20
-> done in the next series. I also use BIT and GENMASK macros as much as
-> possible to define the register bit fields.
->=20
-> > [...]
-> >=20
-> >> +/* Bit manipulation macros */
-> >> +#define QSPI_BIT(name) \
-> >> +	(1 << QSPI_##name##_OFFSET)
-> >> +#define QSPI_BF(name, value) \
-> >> +	(((value) & ((1 << QSPI_##name##_SIZE) - 1)) << QSPI_##name##_OF=
-=46SET)
-> >> +#define QSPI_BFEXT(name, value) \
-> >> +	(((value) >> QSPI_##name##_OFFSET) & ((1 << QSPI_##name##_SIZE) =
-- 1))
-> >> +#define QSPI_BFINS(name, value, old) \
-> >> +	(((old) & ~(((1 << QSPI_##name##_SIZE) - 1) << QSPI_##name##_OFF=
-SET))
-> >> \ +	 | QSPI_BF(name, value))
-> >> +
-> >> +/* Register access macros */
-> >> +#define qspi_readl(port, reg) \
-> >> +	readl_relaxed((port)->regs + QSPI_##reg)
-> >> +#define qspi_writel(port, reg, value) \
-> >> +	writel_relaxed((value), (port)->regs + QSPI_##reg)
-> >> +
-> >> +#define qspi_readw(port, reg) \
-> >> +	readw_relaxed((port)->regs + QSPI_##reg)
-> >> +#define qspi_writew(port, reg, value) \
-> >> +	writew_relaxed((value), (port)->regs + QSPI_##reg)
-> >> +
-> >> +#define qspi_readb(port, reg) \
-> >> +	readb_relaxed((port)->regs + QSPI_##reg)
-> >> +#define qspi_writeb(port, reg, value) \
-> >> +	writeb_relaxed((value), (port)->regs + QSPI_##reg)
-> >=20
-> > I cannot say I'd be very fond of those preprocessor concatenations.=
- Can't
-> > you do something about them? It's really hard to look for symbols w=
-hich
-> > are in fact result of this horrible macro voodoo .
->=20
-> I agree with you. I did it this way at first to make it consistent wi=
-th
-> other Atmel drivers which use such macros but we tend to remove them
-> progressively as they prevent from using ctags for instance.
->=20
-> >> +struct atmel_qspi {
-> >> +	void __iomem		*regs;
-> >> +	void __iomem		*mem;
-> >> +	dma_addr_t		phys_addr;
-> >> +	struct dma_chan		*chan;
-> >> +	struct clk		*clk;
-> >> +	struct platform_device	*pdev;
-> >> +	u32			ifr_width;
-> >> +	u32			pending;
-> >> +
-> >> +	struct mtd_info		mtd;
-> >> +	struct spi_nor		nor;
-> >> +	u32			clk_rate;
-> >> +	struct completion	completion;
-> >> +
-> >> +#ifdef DEBUG
-> >> +	u8			last_instruction;
-> >> +#endif
-> >> +};
-> >=20
-> > [...]
-> >=20
-> >> +#ifdef DEBUG
-> >> +static void atmel_qspi_debug_command(struct atmel_qspi *aq,
-> >> +				     const struct atmel_qspi_command *cmd)
-> >> +{
-> >> +	u8 cmd_buf[SPI_NOR_MAX_CMD_SIZE];
-> >> +	size_t len =3D 0;
-> >> +	int i;
-> >> +
-> >> +	if (cmd->enable.bits.instruction) {
-> >> +		if (aq->last_instruction =3D=3D cmd->instruction)
-> >> +			return;
-> >> +		aq->last_instruction =3D cmd->instruction;
-> >> +	}
-> >> +
-> >> +	if (cmd->enable.bits.instruction)
-> >> +		cmd_buf[len++] =3D cmd->instruction;
-> >> +
-> >> +	for (i =3D cmd->enable.bits.address-1; i >=3D 0; --i)
-> >> +		cmd_buf[len++] =3D (cmd->address >> (i << 3)) & 0xff;
-> >> +
-> >> +	if (cmd->enable.bits.mode)
-> >> +		cmd_buf[len++] =3D cmd->mode;
-> >> +
-> >> +	if (cmd->enable.bits.dummy) {
-> >> +		int num =3D cmd->num_dummy_cycles;
-> >> +
-> >> +		switch (aq->ifr_width) {
-> >> +		case QSPI_IFR_WIDTH_SINGLE_BIT_SPI:
-> >> +		case QSPI_IFR_WIDTH_DUAL_OUTPUT:
-> >> +		case QSPI_IFR_WIDTH_QUAD_OUTPUT:
-> >> +			num >>=3D 3;
-> >> +			break;
-> >> +		case QSPI_IFR_WIDTH_DUAL_IO:
-> >> +		case QSPI_IFR_WIDTH_DUAL_CMD:
-> >> +			num >>=3D 2;
-> >> +			break;
-> >> +		case QSPI_IFR_WIDTH_QUAD_IO:
-> >> +		case QSPI_IFR_WIDTH_QUAD_CMD:
-> >> +			num >>=3D 1;
-> >> +			break;
-> >> +		default:
-> >> +			return;
-> >> +		}
-> >> +
-> >> +		for (i =3D 0; i < num; ++i)
-> >> +			cmd_buf[len++] =3D 0;
-> >> +	}
-> >> +
-> >> +	print_hex_dump(KERN_DEBUG, "qspi cmd: ", DUMP_PREFIX_NONE,
-> >> +		       32, 1, cmd_buf, len, false);
-> >> +
-> >> +#ifdef VERBOSE_DEBUG
-> >=20
-> > The print_hex_dump() is already KERN_DEBUG, so I don't think there'=
-s any
-> > need to introduce yet another preprocessor check here.
->=20
-> Indeed, there is only one debug level for printk() and print_hex_dump=
-():
-> KERN_DEBUG. However I've used the DEBUG and VERBOSE_DEBUG macros to h=
-ave
-> two levels of debug output. When the DEBUG macro is defined the drive=
-r
-> prints the QSPI command. When both the DEBUG and VERBOSE_DEBUG macro =
-are
-> defined, the driver also prints the RX or TX data following the comma=
-nds.
-> Depending on the command to debug, data can be usefull, as for the RE=
-AD ID
-> command, or really annoying as for big Fast Read commands.
->=20
-> If it's fine with you, I'd rather keep these two debug levels.
+Hi Greg/Kevin,
 
-I'm not the one to decide, but it does indeed make sense.
+This patchset adds a new simple NVMEM framework to kernel, and it is tested
+with various drivers like "QCOM thermal sensors", "QCOM cpr driver",
+"begal bone cape manager" and few more on the way.
 
-Thanks a lot for doing the cleanups !
+Can you please consider this as 4.3 material, AFAIK there are more than 3 drivers
+depending on this framework which are wating since last 2 merge windows.
+
+Should these patches go via ARM-SOC tree or via Greg's tree?
+
+Thankyou all for providing inputs and comments on previous versions of this
+patchset. Here is the v9 of the patchset addressing all the issues raised as
+part of previous versions review.
+
+Up until now, NVMEM drivers like eeprom were stored in drivers/misc, where they
+all had to duplicate pretty much the same code to register a sysfs file, allow
+in-kernel users to access the content of the devices they were driving, etc.
+This was also a problem as far as other in-kernel users were involved, since
+the solutions used were pretty much different from on driver to another, there
+was a rather big abstraction leak.
+    
+Introduction of this framework aims at solving this. It also introduces DT
+representation for consumer devices to go get the data they require (MAC
+Addresses, SoC/Revision ID, part numbers, and so on) from the NVMEMs.
+    
+After learning few things about QCOM qfprom and other eeprom/efuses, which
+has packed fields at bit level. Which makes it important to add support to
+such memories. This version adds support to this type of non volatile
+memories by adding support to bit level nvmem-cells.
+
+Having regmap interface to this framework would give much better
+abstraction for nvmems on different buses.
+
+patch 1-4 Introduces the NVMEM framework.
+Patch 5-6 Adds Qualcomm specific qfprom driver.
+Patch 7 migrates an existing driver to nvmem framework.
+Patch 8 adds entry in MAINTAINERS.
+
+Its also possible to migrate other nvmem drivers to this framework, and I think
+some of them already posted patches based on this framework.
+
+Providers APIs:
+	nvmem_register/unregister();
+
+Consumers APIs:
+Cell based apis for both DT/Non-DT:
+	nvmem_cell_get()/nvmem_cell_put();
+	devm_nvmem_cell_get()/devm_nvmem_cell_put();
+	of_nvmem_cell_get()
+	nvmem_cell_read()/nvmem_cell_write();
+
+Raw byte access apis for both DT/non-DT.
+	nvmem_device_get()/nvmem_device_put()
+	devm_nvmem_device_get()/nvmem_device_put()
+	of_nvmem_device_get()
+
+	nvmem_device_read()/nvmem_device_write();
+	nvmem_device_cell_read()/nvmem_device_cell_write();
+
+Device Tree:
+
+	/* Provider */
+	qfprom: qfprom@00700000 {
+		...
+
+		/* Data cells */
+		tsens_calibration: calib@404 {
+			reg = <0x404 0x10>;
+		};
+
+		tsens_calibration_bckp: calib_bckp@504 {
+			reg = <0x504 0x11>;
+			bits = <6 128>
+		};
+
+		pvs_version: pvs-version@6 {
+			reg = <0x6 0x2>
+			bit-offset = 7;
+			bits = <7 2>
+		};
+
+		speed_bin: speed-bin@c{
+			reg = <0xc 0x1>;
+			bits = <2 3>;
+
+		};
+		...
+	};
+/* Consumer */
+	tsens {
+		...
+		nvmem-cells = <&tsens_calibration>;
+		nvmem-cell-names = "calibration";
+	};
+
+userspace interface: binary file in /sys/bus/nvmem/devices/*/nvmem
+
+ex:
+hexdump /sys/bus/nvmem/devices/qfprom0/nvmem
+                                                                                                                                                                                                                  
+0000000 0000 0000 0000 0000 0000 0000 0000 0000
+*
+00000a0 db10 2240 0000 e000 0c00 0c00 0000 0c00
+0000000 0000 0000 0000 0000 0000 0000 0000 0000
+...
+*
+0001000
+
+Changes since v8 (https://lkml.org/lkml/2015/7/20/352)
+ * remove un-necessary header from qfprom, spotted by Stephen Boyd.
+ * moved to usage of kcalloc as suggested by Stephen Boyd.
+ * used u32 instead of int for cell sizes, suggested by Stefan Wahren
+ * Fixed possible null pointer access, spotted by Stephen Boyd.
+ * replaced orignal adding of device randomness in sunxi driver,
+   spotted by Stefan Wahren.
+
+Changes since v7 (https://lwn.net/Articles/650734/)
+ * Fixed various style and documentation reated comments
+ from Stephen Boyd, Stephen Wahren and Joe Perches.
+ * Fixed read-only flag as suggested by Philipp Zabel
+ * Changed bit level bindings as suggesed by Rob Herring.
+
+(Removed long change log to make it readable.)
+
+Thanks,
+srini
+
+Maxime Ripard (1):
+  nvmem: sunxi: Move the SID driver to the nvmem framework
+
+Srinivas Kandagatla (8):
+  nvmem: Add a simple NVMEM framework for nvmem providers
+  nvmem: Add a simple NVMEM framework for consumers
+  nvmem: Add nvmem_device based consumer apis.
+  nvmem: Add bindings for simple nvmem framework
+  Documentation: nvmem: add nvmem api level and how-to doc
+  nvmem: qfprom: Add Qualcomm QFPROM support.
+  nvmem: qfprom: Add bindings for qfprom
+  nvmem: Add to MAINTAINERS for nvmem framework
+
+ Documentation/ABI/testing/sysfs-driver-sunxi-sid   |   22 -
+ .../bindings/misc/allwinner,sunxi-sid.txt          |   17 -
+ .../bindings/nvmem/allwinner,sunxi-sid.txt         |   21 +
+ Documentation/devicetree/bindings/nvmem/nvmem.txt  |   80 ++
+ Documentation/devicetree/bindings/nvmem/qfprom.txt |   35 +
+ Documentation/nvmem/nvmem.txt                      |  152 +++
+ MAINTAINERS                                        |    9 +
+ drivers/Kconfig                                    |    2 +
+ drivers/Makefile                                   |    1 +
+ drivers/misc/eeprom/Kconfig                        |   13 -
+ drivers/misc/eeprom/Makefile                       |    1 -
+ drivers/misc/eeprom/sunxi_sid.c                    |  156 ---
+ drivers/nvmem/Kconfig                              |   39 +
+ drivers/nvmem/Makefile                             |   12 +
+ drivers/nvmem/core.c                               | 1083 ++++++++++++++++++++
+ drivers/nvmem/qfprom.c                             |   85 ++
+ drivers/nvmem/sunxi_sid.c                          |  171 ++++
+ include/linux/nvmem-consumer.h                     |  157 +++
+ include/linux/nvmem-provider.h                     |   47 +
+ 19 files changed, 1894 insertions(+), 209 deletions(-)
+ delete mode 100644 Documentation/ABI/testing/sysfs-driver-sunxi-sid
+ delete mode 100644 Documentation/devicetree/bindings/misc/allwinner,sunxi-sid.txt
+ create mode 100644 Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt
+ create mode 100644 Documentation/devicetree/bindings/nvmem/nvmem.txt
+ create mode 100644 Documentation/devicetree/bindings/nvmem/qfprom.txt
+ create mode 100644 Documentation/nvmem/nvmem.txt
+ delete mode 100644 drivers/misc/eeprom/sunxi_sid.c
+ create mode 100644 drivers/nvmem/Kconfig
+ create mode 100644 drivers/nvmem/Makefile
+ create mode 100644 drivers/nvmem/core.c
+ create mode 100644 drivers/nvmem/qfprom.c
+ create mode 100644 drivers/nvmem/sunxi_sid.c
+ create mode 100644 include/linux/nvmem-consumer.h
+ create mode 100644 include/linux/nvmem-provider.h
+
+-- 
+1.9.1
+
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
