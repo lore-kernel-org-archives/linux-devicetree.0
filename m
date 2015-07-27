@@ -1,43 +1,43 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: [PATCH 6/7] ARM64: zynqmp: Enable sdhci on ep108
-Date: Mon, 27 Jul 2015 11:48:14 +0200
-Message-ID: <f6be42a011f11a399e04939f726bcefb202eba49.1437990464.git.michal.simek@xilinx.com>
-References: <48a75b64b05dc094e34fe27e5d03552dbfe77fe2.1437990464.git.michal.simek@xilinx.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <48a75b64b05dc094e34fe27e5d03552dbfe77fe2.1437990464.git.michal.simek@xilinx.com>
-In-Reply-To: <48a75b64b05dc094e34fe27e5d03552dbfe77fe2.1437990464.git.michal.simek@xilinx.com>
-References: <48a75b64b05dc094e34fe27e5d03552dbfe77fe2.1437990464.git.michal.simek@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>, devicetree@vger.kernel.org, monstr@monstr.eu, Suneel Garapati <suneel.garapati@xilinx.com>, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 2/2] pinctrl: driver for Conexant Digicolor CX92755 pin mapping
+Date: Mon, 27 Jul 2015 11:49:26 +0200
+Message-ID: <CACRpkdbvW8KWiLCfGUvqCeyxznBiSrOFgSCPSyF9=c_pLENwyg@mail.gmail.com>
+References: <eaf294961247ac7c105156d6fae6d7389a4c0dfc.1430823310.git.baruch@tkos.co.il>
+	<28c81769f3ed3e4c24ce00bbe2773009259ba3fe.1430823310.git.baruch@tkos.co.il>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <28c81769f3ed3e4c24ce00bbe2773009259ba3fe.1430823310.git.baruch@tkos.co.il>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Baruch Siach <baruch@tkos.co.il>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable both sdhcis on ep108.
+On Tue, May 5, 2015 at 12:55 PM, Baruch Siach <baruch@tkos.co.il> wrote:
 
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
----
+> This adds pinctrl and gpio driver to the CX92755 SoC "General Purpose Pin
+> Mapping" hardware block. The CX92755 is one SoC from the Conexant Digicolor
+> series. Pin mapping hardware supports configuring pins as either GPIO, or up to
+> 3 other "client select" functions. This driver adds support for pin muxing
+> using the generic device tree binding, and a basic gpiolib driver for the GPIO
+> functionality.
+>
+> This driver does not currently support GPIO interrupts, and pad configuration.
+>
+> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+> ---
+> v2:
+>    * Address review comments for Linus Walleij:
+>      - Add a pointer to pinctrl_desc in struct dc_pinmap
+>      - Drop the now redundant pinctrl_pin_desc field
+>      - Adapt dc_get_group_{name,pins} to these changes, and add a comment
+>        explaining the 1-to-1 pin-groups relation
+>    * Staticise dc_pmxops
+>    * Protect the GP_CLIENTSEL clct parameter with parenthesis
 
- arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts | 8 ++++++++
- 1 file changed, 8 insertions(+)
+This v2 patch applied.
 
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts b/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
-index faee1617ab16..206e18eca2fb 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
-@@ -55,6 +55,14 @@
- 	ceva,broken-gen2;
- };
- 
-+&sdhci0 {
-+	status = "okay";
-+};
-+
-+&sdhci1 {
-+	status = "okay";
-+};
-+
- &uart0 {
- 	status = "okay";
- };
--- 
-2.3.5
+Sorry for fat delays. It's a nice driver and looks good.
+
+Yours,
+Linus Walleij
