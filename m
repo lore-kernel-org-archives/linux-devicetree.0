@@ -1,108 +1,78 @@
-From: Alex Smith <alex.smith@imgtec.com>
-Subject: [PATCH v4 2/3] dt-bindings: binding for jz4780-{nand,bch}
-Date: Mon, 27 Jul 2015 14:50:18 +0100
-Message-ID: <1438005019-28162-3-git-send-email-alex.smith@imgtec.com>
-References: <1438005019-28162-1-git-send-email-alex.smith@imgtec.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v1 1/7] ARM: dts: apq8064: remove temporary fixed regulator
+ for mmc
+Date: Mon, 27 Jul 2015 14:50:02 +0100
+Message-ID: <1438005002-16219-1-git-send-email-srinivas.kandagatla@linaro.org>
+References: <1438004945-16175-1-git-send-email-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1438005019-28162-1-git-send-email-alex.smith@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mtd@lists.infradead.org
-Cc: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, linux-kernel@vger.kernel.org, Alex Smith <alex.smith@imgtec.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1438004945-16175-1-git-send-email-srinivas.kandagatla@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: agross@codeaurora.org, linux-arm-msm@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add DT bindings for NAND devices connected to the NEMC on JZ4780 SoCs,
-as well as the hardware BCH controller, used by the jz4780_{nand,bch}
-drivers.
+This patch removes temporary fixed regluator use for mmc.
+Board files should use the regulators which are wiredup appropriately.
 
-Signed-off-by: Alex Smith <alex.smith@imgtec.com>
-Cc: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Cc: David Woodhouse <dwmw2@infradead.org>
-Cc: Brian Norris <computersforpeace@gmail.com>
-Cc: linux-mtd@lists.infradead.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
-v3 -> v4:
- - No change
+ arch/arm/boot/dts/qcom-apq8064.dtsi | 12 ------------
+ 1 file changed, 12 deletions(-)
 
-v2 -> v3:
- - Rebase to 4.0-rc6
- - Changed ingenic,ecc-size to common nand-ecc-step-size
- - Changed ingenic,ecc-strength to common nand-ecc-strength
- - Changed ingenic,busy-gpio to common rb-gpios
- - Changed ingenic,wp-gpio to common wp-gpios
-
-v1 -> v2:
- - Rebase to 4.0-rc3
----
- .../bindings/mtd/ingenic,jz4780-nand.txt           | 57 ++++++++++++++++++++++
- 1 file changed, 57 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
-
-diff --git a/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
-new file mode 100644
-index 000000000000..1e8e2eeffbf7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
-@@ -0,0 +1,57 @@
-+* Ingenic JZ4780 NAND/BCH
-+
-+This file documents the device tree bindings for NAND flash devices on the
-+JZ4780. NAND devices are connected to the NEMC controller (described in
-+memory-controllers/ingenic,jz4780-nemc.txt), and thus NAND device nodes must
-+be children of the NEMC node.
-+
-+Required NAND device properties:
-+- compatible: Should be set to "ingenic,jz4780-nand".
-+- reg: For each bank with a NAND chip attached, should specify a bank number,
-+  an offset of 0 and a size of 0x1000000 (i.e. the whole NEMC bank).
-+
-+Optional NAND device properties:
-+- ingenic,bch-device: To make use of the hardware BCH controller, this property
-+  must contain a phandle for the BCH controller node. The required properties
-+  for this node are described below. If this is not specified, software BCH
-+  will be used instead.
-+- nand-ecc-step-size: ECC block size in bytes.
-+- nand-ecc-strength: ECC strength (max number of correctable bits).
-+- rb-gpios: GPIO specifier for the busy pin.
-+- wp-gpios: GPIO specifier for the write protect pin.
-+
-+Example:
-+
-+nemc: nemc@13410000 {
-+	...
-+
-+	nand: nand@1 {
-+		compatible = "ingenic,jz4780-nand";
-+		reg = <1 0 0x1000000>;	/* Bank 1 */
-+
-+		ingenic,bch-device = <&bch>;
-+		nand-ecc-step-size = <1024>;
-+		nand-ecc-strength = <24>;
-+
-+		rb-gpios = <&gpa 20 GPIO_ACTIVE_LOW>;
-+		wp-gpios = <&gpf 22 GPIO_ACTIVE_LOW>;
-+	};
-+};
-+
-+The BCH controller is a separate SoC component used for error correction on
-+NAND devices. The following is a description of the device properties for a
-+BCH controller.
-+
-+Required BCH properties:
-+- compatible: Should be set to "ingenic,jz4780-bch".
-+- reg: Should specify the BCH controller registers location and length.
-+- clocks: Clock for the BCH controller.
-+
-+Example:
-+
-+bch: bch@134d0000 {
-+	compatible = "ingenic,jz4780-bch";
-+	reg = <0x134d0000 0x10000>;
-+
-+	clocks = <&cgu JZ4780_CLK_BCH>;
-+};
+diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
+index df2061e..1e1706e 100644
+--- a/arch/arm/boot/dts/qcom-apq8064.dtsi
++++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
+@@ -448,14 +448,6 @@
+ 		};
+ 
+ 		/* Temporary fixed regulator */
+-		vsdcc_fixed: vsdcc-regulator {
+-			compatible = "regulator-fixed";
+-			regulator-name = "SDCC Power";
+-			regulator-min-microvolt = <2700000>;
+-			regulator-max-microvolt = <2700000>;
+-			regulator-always-on;
+-		};
+-
+ 		sdcc1bam:dma@12402000{
+ 			compatible = "qcom,bam-v1.3.0";
+ 			reg = <0x12402000 0x8000>;
+@@ -505,7 +497,6 @@
+ 				non-removable;
+ 				cap-sd-highspeed;
+ 				cap-mmc-highspeed;
+-				vmmc-supply = <&vsdcc_fixed>;
+ 				dmas = <&sdcc1bam 2>, <&sdcc1bam 1>;
+ 				dma-names = "tx", "rx";
+ 			};
+@@ -524,7 +515,6 @@
+ 				cap-mmc-highspeed;
+ 				max-frequency	= <192000000>;
+ 				no-1-8-v;
+-				vmmc-supply = <&vsdcc_fixed>;
+ 				dmas = <&sdcc3bam 2>, <&sdcc3bam 1>;
+ 				dma-names = "tx", "rx";
+ 			};
+@@ -542,8 +532,6 @@
+ 				cap-sd-highspeed;
+ 				cap-mmc-highspeed;
+ 				max-frequency	= <48000000>;
+-				vmmc-supply = <&vsdcc_fixed>;
+-				vqmmc-supply = <&vsdcc_fixed>;
+ 				dmas = <&sdcc4bam 2>, <&sdcc4bam 1>;
+ 				dma-names = "tx", "rx";
+ 				pinctrl-names = "default";
 -- 
-2.4.6
+1.9.1
