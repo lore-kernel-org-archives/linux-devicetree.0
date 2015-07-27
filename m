@@ -1,10 +1,12 @@
 From: <dinguyen@opensource.altera.com>
-Subject: [PATCH 0/4] reset: socfpga: Add reset driver support for Arria10 platform
-Date: Mon, 27 Jul 2015 13:57:20 -0500
-Message-ID: <1438023444-11881-1-git-send-email-dinguyen@opensource.altera.com>
+Subject: [PATCH 1/4] dt-bindings: Add reset manager offsets for Arria10
+Date: Mon, 27 Jul 2015 13:57:21 -0500
+Message-ID: <1438023444-11881-2-git-send-email-dinguyen@opensource.altera.com>
+References: <1438023444-11881-1-git-send-email-dinguyen@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1438023444-11881-1-git-send-email-dinguyen@opensource.altera.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: p.zabel@pengutronix.de
 Cc: dinh.linux@gmail.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mark.rutland@arm.com, pawel.moll@arm.com, s.trumtrar@pengutronix.de, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Dinh Nguyen <dinguyen@opensource.altera.com>
@@ -12,43 +14,130 @@ List-Id: devicetree@vger.kernel.org
 
 From: Dinh Nguyen <dinguyen@opensource.altera.com>
 
-Hi,
+The reset manager for is pretty similar to the one for SoCFPGA
+cyclone5/arria5 except for a few offsets. This patch adds those offsets.
 
-This patch series adds reset driver support for the SoCFPGA Arria10 SOC. The
-reset manager on the Arria10 is very similar to the one on Cyclone5/Arria5,
-thus I think it's best to try to re-use the same reset driver.
-
-The biggest difference between the reset manager on Arria10 and Cyclone is
-the addition of security features. Since the driver does not support these
-security features, it winds down to just a driver that will release IPs from
-reset.
-
-The other difference between Arria10 and Cyclone5 are register offsets, and
-register bits for different IPs. For the register offset, the main register
-offset is the very first register that is needed by the driver for releasing
-IPs from reset. To handle this difference, I've introduced a new DTS property,
-"altr,modrst-offset", that will represent this register.
-
-The register bits for all the resets are in a new file:
-
-include/dt-bindings/reset/altr,rst-mgr-a10.h
-
-Thanks,
-
-Dinh Nguyen (4):
-  dt-bindings: Add reset manager offsets for Arria10
-  ARM: socfpga: dts: add "altr,modrst-offset" property
-  reset: socfpga: Update reset-socfpga to read the altr,modrst-offset
-    property
-  ARM: socfpga: dts: Add resets for EMACs on Arria10
-
- .../devicetree/bindings/reset/socfpga-reset.txt    |   2 +
- arch/arm/boot/dts/socfpga.dtsi                     |   1 +
- arch/arm/boot/dts/socfpga_arria10.dtsi             |   6 ++
- drivers/reset/reset-socfpga.c                      |  19 ++--
- include/dt-bindings/reset/altr,rst-mgr-a10.h       | 110 +++++++++++++++++++++
- 5 files changed, 132 insertions(+), 6 deletions(-)
+Signed-off-by: Dinh Nguyen <dinguyen@opensource.altera.com>
+---
+ include/dt-bindings/reset/altr,rst-mgr-a10.h | 110 +++++++++++++++++++++++++++
+ 1 file changed, 110 insertions(+)
  create mode 100644 include/dt-bindings/reset/altr,rst-mgr-a10.h
 
+diff --git a/include/dt-bindings/reset/altr,rst-mgr-a10.h b/include/dt-bindings/reset/altr,rst-mgr-a10.h
+new file mode 100644
+index 0000000..acb0bbf
+--- /dev/null
++++ b/include/dt-bindings/reset/altr,rst-mgr-a10.h
+@@ -0,0 +1,110 @@
++/*
++ * Copyright (c) 2014, Steffen Trumtrar <s.trumtrar@pengutronix.de>
++ *
++ * This software is licensed under the terms of the GNU General Public
++ * License version 2, as published by the Free Software Foundation, and
++ * may be copied, distributed, and modified under those terms.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#ifndef _DT_BINDINGS_RESET_ALTR_RST_MGR_A10_H
++#define _DT_BINDINGS_RESET_ALTR_RST_MGR_A10_H
++
++/* MPUMODRST */
++#define CPU0_RESET		0
++#define CPU1_RESET		1
++#define WDS_RESET		2
++#define SCUPER_RESET		3
++
++/* PER0MODRST */
++#define EMAC0_RESET		32
++#define EMAC1_RESET		33
++#define EMAC2_RESET		34
++#define USB0_RESET		35
++#define USB1_RESET		36
++#define NAND_RESET		37
++#define QSPI_RESET		38
++#define SDMMC_RESET		39
++#define EMAC0_OCP_RESET		40
++#define EMAC1_OCP_RESET		41
++#define EMAC2_OCP_RESET		42
++#define USB0_OCP_RESET		43
++#define USB1_OCP_RESET		44
++#define NAND_OCP_RESET		45
++#define QSPI_OCP_RESET		46
++#define SDMMC_OCP_RESET		47
++#define DMA_RESET		48
++#define SPIM0_RESET		49
++#define SPIM1_RESET		50
++#define SPIS0_RESET		51
++#define SPIS1_RESET		52
++#define DMA_OCP_RESET		53
++#define EMAC_PTP_RESET		54
++/* 55 is empty*/
++#define DMAIF0_RESET		56
++#define DMAIF1_RESET		57
++#define DMAIF2_RESET		58
++#define DMAIF3_RESET		59
++#define DMAIF4_RESET		60
++#define DMAIF5_RESET		61
++#define DMAIF6_RESET		62
++#define DMAIF7_RESET		63
++
++/* PER1MODRST */
++#define L4WD0_RESET		64
++#define L4WD1_RESET		65
++#define L4SYSTIMER0_RESET	66
++#define L4SYSTIMER1_RESET	67
++#define SPTIMER0_RESET		68
++#define SPTIMER1_RESET		69
++/* 70-71 is reserved */
++#define I2C0_RESET		72
++#define I2C1_RESET		73
++#define I2C2_RESET		74
++#define I2C3_RESET		75
++#define I2C4_RESET		76
++/* 77-79 is reserved */
++#define UART0_RESET		80
++#define UART1_RESET		81
++/* 82-87 is reserved */
++#define GPIO0_RESET		88
++#define GPIO1_RESET		89
++#define GPIO2_RESET		90
++
++/* BRGMODRST */
++#define HPS2FPGA_RESET		96
++#define LWHPS2FPGA_RESET	97
++#define FPGA2HPS_RESET		98
++#define F2SSDRAM0_RESET		99
++#define F2SSDRAM1_RESET		100
++#define F2SSDRAM2_RESET		101
++#define DDRSCH_RESET		102
++
++/* SYSMODRST*/
++#define ROM_RESET		128
++#define OCRAM_RESET		129
++/* 130 is reserved */
++#define FPGAMGR_RESET		131
++#define S2F_RESET		132
++#define SYSDBG_RESET		133
++#define OCRAM_OCP_RESET		134
++
++/* COLDMODRST */
++#define CLKMGRCOLD_RESET	160
++/* 161-162 is reserved */
++#define S2FCOLD_RESET		163
++#define TIMESTAMPCOLD_RESET	164
++#define TAPCOLD_RESET		165
++#define HMCCOLD_RESET		166
++#define IOMGRCOLD_RESET		167
++
++/* NRSTMODRST */
++#define NRSTPINOE_RESET		192
++
++/* DBGMODRST */
++#define DBG_RESET		224
++#endif
 -- 
 2.4.5
