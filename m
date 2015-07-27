@@ -1,68 +1,49 @@
-From: Richard Cochran <richardcochran@gmail.com>
-Subject: Re: [PATCH 1/2] gpio: dwapb: Use human understandable gpio numbering.
-Date: Mon, 27 Jul 2015 13:28:35 +0200
-Message-ID: <20150727112835.GA5617@localhost.localdomain>
-References: <cover.1435777856.git.rcochran@linutronix.de>
- <d6b5ce85a17164970d454583560e07f7aed7b8ca.1435777856.git.rcochran@linutronix.de>
- <CACRpkdY+prqSeohT5BEoOKS6sfXdFTA6ZzuKzH4GSPX5jcjgzA@mail.gmail.com>
- <20150716171930.GB27060@localhost.localdomain>
- <CACRpkdYUcXjJz+jZ5ZMXK1a7GLi8eL+ecr-yL6Y8901f_-pknQ@mail.gmail.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 4/5] ARM: dts: imx6ul.dtsi: add TSC support
+Date: Mon, 27 Jul 2015 12:28:47 +0100
+Message-ID: <20150727112847.GF9169@leverpostej>
+References: <1437996407-27266-1-git-send-email-haibo.chen@freescale.com>
+ <1437996407-27266-5-git-send-email-haibo.chen@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CACRpkdYUcXjJz+jZ5ZMXK1a7GLi8eL+ecr-yL6Y8901f_-pknQ@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alan Tull <atull@altera.com>, Alexandre Courbot <gnurou@gmail.com>, Dinh Nguyen <dinguyen@altera.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Johan Hovold <johan@kernel.org>
+In-Reply-To: <1437996407-27266-5-git-send-email-haibo.chen@freescale.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Haibo Chen <haibo.chen@freescale.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "hans.verkuil@cisco.com" <hans.verkuil@cisco.com>, "hadess@hadess.net" <hadess@hadess.net>, "mchehab@osg.samsung.com" <mchehab@osg.samsung.com>, "mamlinav@gmail.com" <mamlinav@gmail.com>, "arnd@arndb.de" <arnd@arndb.de>, "jonathar@broadcom.com" <jonathar@broadcom.com>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "christian.gmeiner@gmail.com" <christian.gmeiner@gmail.com>, "scott.liu@emc.com.tw" <scott.liu@emc.com.tw>, "geert@linux-m68k.org" <geert@linux-m68k.org>, benjamin.tissoire
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 27, 2015 at 12:19:08PM +0200, Linus Walleij wrote:
-> On Thu, Jul 16, 2015 at 7:19 PM, Richard Cochran
-> > This happens with every DT discussion that tries to make things
-> > logical for the end user.
+On Mon, Jul 27, 2015 at 12:26:46PM +0100, Haibo Chen wrote:
+> Add imx6ul touchscreen controller support.
 > 
-> Are you assuming bad faith?
-
-No, I was reacting to the NAK (which I can accept) that does not
-address or even acknowledge the problem (which I cannot accept so
-easily).
-
-But now that a solution has appeared, I am happy again.
-
-> I think Michael made a very very nice patch series trying to make
-> things logical for end users, please participate in that discussion.
-
-Yes, I read it, and it sounds like it will solve the problem.  I will
-give the series a try...
- 
-> > Isn't there a mapping interface for irq numbers?
+> TSC module need ADC2 module to measure the touchscreen
+> coordinate value. This patch put TSC and ADC2 together,
+> make ADC2 module only be used for TSC, can't be used as
+> a normal ADC.
 > 
-> I don't see what you mean here. The numbers that appear in
-> say /proc/interrupts may seem stable but they are not.
-> They depend on things like probe order between irqchips
-> and can change between two boots.
+> Signed-off-by: Haibo Chen <haibo.chen@freescale.com>
+> ---
+>  arch/arm/boot/dts/imx6ul.dtsi | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
 > 
-> The reason users don't have an issue with it is that there is
-> (thank god) no userspace ABI for interrupts.
+> diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
+> index dc0f5b4..33aac1f 100644
+> --- a/arch/arm/boot/dts/imx6ul.dtsi
+> +++ b/arch/arm/boot/dts/imx6ul.dtsi
+> @@ -484,6 +484,17 @@
+>  			reg = <0x02100000 0x100000>;
+>  			ranges;
+>  
+> +			tsc: tsc@02040000 {
+> +				compatible = "fsl,imx6ul-tsc";
+> +				reg = <0x02040000 0x4000>, <0x0219c000 0x4000>;
+> +				interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
+> +					     <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&clks IMX6UL_CLK_IPG>,
+> +					 <&clks IMX6UL_CLK_ADC2>;
+> +				clock-names = "tsc", "adc";
 
-I was talking about CONFIG_IRQ_DOMAIN_DEBUG.
- 
-> The problem is for example if I have a SoC with a GPIO expander:
-> both have a GPIO line named "0". Which one wins? The SoC
-> because it is "more important"? This issue is all over the place
-> in any modern chipset. In Ux500 I have sometimes three GPIO
-> expanders, all three with GPIO line 0, and also a GPIO 0 on
-> the SoC of course. So we need to express this complexity to
-> userspace, not try to simplify the world.
+These clocks weren't even in the example in the binding documentation.
 
-Thanks for the explanation.  Of course I don't want an arbitrarily
-simplified interface, but I can't understand why the simple case of
-built-in SoC GPIOs must have such a weird and variable numbering
-patterns.
-
-But once user space can call GPIOs by name, then it doesn't matter
-anymore what the kernel numbers are.
-
-Thanks,
-Richard
+Mark.
