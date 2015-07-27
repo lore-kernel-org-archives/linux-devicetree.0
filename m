@@ -1,44 +1,53 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH V3 3/3] devicetree: da9062: Add device tree bindings for
- DA9062 OnKey
-Date: Mon, 27 Jul 2015 15:43:00 -0700
-Message-ID: <20150727224300.GG3613@dtor-ws>
-References: <cover.1437668261.git.stwiss.opensource@diasemi.com>
- <6bfae9b4f5475b59bddc4b71091121f1c0697a2d.1437668261.git.stwiss.opensource@diasemi.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <6bfae9b4f5475b59bddc4b71091121f1c0697a2d.1437668261.git.stwiss.opensource@diasemi.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: S Twiss <stwiss.opensource@diasemi.com>
-Cc: DEVICETREE <devicetree@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, LINUXINPUT <linux-input@vger.kernel.org>, LINUXKERNEL <linux-kernel@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, RTCLINUX <rtc-linux@googlegroups.com>, Rob Herring <robh+dt@kernel.org>, David Dajun Chen <david.chen@diasemi.com>, Samuel Ortiz <sameo@linux.intel.com>, Support Opensource <support.opensource@diasemi.com>
+From: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v2 0/5] iio: adc: hi8435: Add Holt HI-8435 threshold detector
+Date: Tue, 28 Jul 2015 02:05:00 +0300
+Message-ID: <1438038300-12855-1-git-send-email-vladimir.barinov@cogentembedded.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 23, 2015 at 05:17:41PM +0100, S Twiss wrote:
-> From: S Twiss <stwiss.opensource@diasemi.com>
-> 
-> Add device tree bindings for the DA9062 OnKey driver component
-> 
-> Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
-> 
-> ---
-> Changes in V3:
->  - Child driver specifics separated out into separate document
->    in this case ../input/da9062-onkey.txt
-> Changes in V2:
->  - No change
-> 
-> This patch applies against linux-next and next-20150708 
-> 
-> 
->  .../devicetree/bindings/input/da9062-onkey.txt     | 36 ++++++++++++++++++++++
->  Documentation/devicetree/bindings/mfd/da9062.txt   |  3 ++
+Hello,
 
-I dropped bits for mfd/da9062.txt, changed to mention both 9062 and
-9063, folded into the onkey patch and applied.
+This adds the folowing:
+- Holt threshold detector driver for HI-8435 chip
+- Add Holt vendor prefix
+- Document HI-8435 DT bindings
+- Add periodic polling functionality to SYSFS trigger
+- Support triggered events
 
-Thanks.
- 
--- 
-Dmitry
+PDF file can be found here:
+http://www.holtic.com/products/3081-hi-8435.aspx
+
+Vladimir Barinov (3):
+[1/5] iio: adc: hi8435: Holt HI-8435 threshold detector
+[2/5] dt: Add vendor prefix 'holt'
+[3/5] dt: Document Holt HI-8435 bindings
+[4/5] iio: trigger: Add periodic polling to SYSFS trigger
+[5/5] iio: Support triggered events
+
+---
+This patchset is against the 'kernel/git/torvalds/linux.git' repo.
+
+ Documentation/ABI/testing/sysfs-bus-iio-adc-hi8435    |   76 ++
+ Documentation/ABI/testing/sysfs-bus-iio-trigger-sysfs |   11 
+ Documentation/devicetree/bindings/iio/adc/hi8435.txt  |   25 
+ Documentation/devicetree/bindings/vendor-prefixes.txt |    1 
+ drivers/iio/Kconfig                                   |    6 
+ drivers/iio/Makefile                                  |    1 
+ drivers/iio/adc/Kconfig                               |   11 
+ drivers/iio/adc/Makefile                              |    1 
+ drivers/iio/adc/hi8435.c                              |  659 ++++++++++++++++++
+ drivers/iio/industrialio-core.c                       |    4 
+ drivers/iio/industrialio-trigger.c                    |   12 
+ drivers/iio/industrialio-triggered-event.c            |   67 +
+ drivers/iio/trigger/iio-trig-sysfs.c                  |   58 +
+ include/linux/iio/iio.h                               |    1 
+ include/linux/iio/triggered_event.h                   |   11 
+ 15 files changed, 940 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-adc-hi8435
+ create mode 100644 drivers/iio/adc/hi8435.c
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/hi8435.txt
+ create mode 100644 drivers/iio/industrialio-triggered-event.c
+ create mode 100644 include/linux/iio/triggered_event.h
