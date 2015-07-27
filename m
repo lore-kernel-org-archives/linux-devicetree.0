@@ -1,148 +1,130 @@
-From: Gabriele Paoloni <gabriele.paoloni@huawei.com>
-Subject: RE: [PATCH v4] PCI: Store PCIe bus address in struct of_pci_range
-Date: Mon, 27 Jul 2015 10:41:34 +0000
-Message-ID: <EE11001F9E5DDD47B7634E2F8A612F2E01D6DCBB@lhreml503-mbs>
-References: <1437574937-135566-1-git-send-email-gabriele.paoloni@huawei.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v3 1/2] input: touchscreen: pixcir_i2c_ts: Add support
+ for optional wakeup interrupt
+Date: Mon, 27 Jul 2015 13:49:05 +0300
+Message-ID: <55B60CA1.3090800@ti.com>
+References: <1437663246-16049-1-git-send-email-vigneshr@ti.com> <1437663246-16049-2-git-send-email-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1437574937-135566-1-git-send-email-gabriele.paoloni@huawei.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gabriele Paoloni <gabriele.paoloni@huawei.com>, "arnd@arndb.de" <arnd@arndb.de>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "Wangzhou (B)" <wangzhou1@hisilicon.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "james.morse@arm.com" <james.morse@arm.com>, "Liviu.Dudau@arm.com" <Liviu.Dudau@arm.com>
-Cc: Zhudacai <zhudacai@hisilicon.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Yuanzhichang <yuanzhichang@hisilicon.com>, qiuzhenfa <qiuzhenfa@hisilicon.com>, zhangjukuo <zhangjukuo@huawei.com>, "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1437663246-16049-2-git-send-email-vigneshr@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vignesh R <vigneshr@ti.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Tony Lindgren <tony@atomide.com>, Benoit Cousson <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>
+Cc: Henrik Rydberg <rydberg@bitmath.org>, Frodo Lai <frodo.lai@gmail.com>, Jingoo Han <jg1.han@samsung.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Sent "[PATCH v5] PCI: Store PCIe bus address in struct of_pci_range" with Rob Herring ack
+Hi,
 
-> -----Original Message-----
-> From: Gabriele Paoloni
-> Sent: Wednesday, July 22, 2015 3:22 PM
-> To: Gabriele Paoloni; arnd@arndb.de; lorenzo.pieralisi@arm.com;
-> Wangzhou (B); bhelgaas@google.com; robh+dt@kernel.org;
-> james.morse@arm.com; Liviu.Dudau@arm.com
-> Cc: linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-> devicetree@vger.kernel.org; Yuanzhichang; Zhudacai; zhangjukuo;
-> qiuzhenfa; Liguozhu (Kenneth)
-> Subject: [PATCH v4] PCI: Store PCIe bus address in struct of_pci_range
+On 23/07/15 17:54, Vignesh R wrote:
+> On am437x-gp-evm, pixcir touchscreen can wake the system from low power
+> state by generating wake-up interrupt via pinctrl and IO daisy chain.
+> Add support for optional wakeup interrupt source by regsitering to
+> automated wake IRQ framework introduced by commit 4990d4fe327b ("PM /
+> Wakeirq: Add automated device wake IRQ handling").
+> This is similar in approach to commit 2a0b965cfb6e ("serial: omap: Add
+> support for optional wake-up")
 > 
-> From: gabriele paoloni <gabriele.paoloni@huawei.com>
-> 
->     This patch is needed port PCIe designware to new DT parsing API
->     As discussed in
->     http://lists.infradead.org/pipermail/linux-arm-kernel/2015-
-> January/317743.html
->     in designware we have a problem as the PCI addresses in the PCIe
-> controller
->     address space are required in order to perform correct HW operation.
-> 
->     In order to solve this problem commit
->     f4c55c5a3 "PCI: designware: Program ATU with untranslated address"
->     added code to read the PCIe controller start address directly from
-> the
->     DT ranges.
-> 
->     In the new DT parsing API of_pci_get_host_bridge_resources() hides
-> the
->     DT parser from the host controller drivers, so it is not possible
->     for drivers to parse values directly from the DT.
-> 
->     In http://www.spinics.net/lists/linux-pci/msg42540.html we already
-> tried
->     to use the new DT parsing API but there is a bug (obviously) in
-> setting
->     the <*>_mod_base addresses
->     Applying this patch we can easily set "<*>_mod_base = win-
-> >__res.start"
-> 
->     This patch adds a new field in "struct of_pci_range" to store the
->     pci bus start address; it fills the field in
-> of_pci_range_parser_one();
->     in of_pci_get_host_bridge_resources() it retrieves the resource
-> entry
->     after it is created and added to the resource list and uses
->     entry->__res.start to store the pci controller address
-> 
->     the patch is based on 4.2-rc1
-> 
->     Signed-off-by: Gabriele Paoloni <gabriele.paoloni@huawei.com>
->     Acked-by: Liviu Dudau <Liviu.Dudau@arm.com>
+> Signed-off-by: Vignesh R <vigneshr@ti.com>
 > ---
->  drivers/of/address.c       | 2 ++
->  drivers/of/of_pci.c        | 4 ++++
->  include/linux/of_address.h | 1 +
->  3 files changed, 7 insertions(+)
 > 
-> diff --git a/drivers/of/address.c b/drivers/of/address.c
-> index 8bfda6a..23a5793 100644
-> --- a/drivers/of/address.c
-> +++ b/drivers/of/address.c
-> @@ -253,6 +253,7 @@ struct of_pci_range *of_pci_range_parser_one(struct
-> of_pci_range_parser *parser,
->  						struct of_pci_range *range)
->  {
->  	const int na = 3, ns = 2;
-> +	const int p_ns = of_n_size_cells(parser->node);
+> v3:
+>  * handle error code returned by of_irq_get_byname()
 > 
->  	if (!range)
->  		return NULL;
-> @@ -265,6 +266,7 @@ struct of_pci_range *of_pci_range_parser_one(struct
-> of_pci_range_parser *parser,
->  	range->pci_addr = of_read_number(parser->range + 1, ns);
->  	range->cpu_addr = of_translate_address(parser->node,
->  				parser->range + na);
-> +	range->bus_addr = of_read_number(parser->range + na, p_ns);
->  	range->size = of_read_number(parser->range + parser->pna + na,
-> ns);
+> v2:
+>  * use of_irq_get_byname()
+>  * remove enable/disable_wake_irq()
 > 
->  	parser->range += parser->np;
-> diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
-> index 5751dc5..fe57030 100644
-> --- a/drivers/of/of_pci.c
-> +++ b/drivers/of/of_pci.c
-> @@ -198,6 +198,7 @@ int of_pci_get_host_bridge_resources(struct
-> device_node *dev,
+>  drivers/input/touchscreen/pixcir_i2c_ts.c | 22 ++++++++++++++++++----
+>  include/linux/input/pixcir_ts.h           |  1 +
+>  2 files changed, 19 insertions(+), 4 deletions(-)
 > 
->  	pr_debug("Parsing ranges property...\n");
->  	for_each_of_pci_range(&parser, &range) {
-> +		struct resource_entry *entry;
->  		/* Read next ranges element */
->  		if ((range.flags & IORESOURCE_TYPE_BITS) == IORESOURCE_IO)
->  			snprintf(range_type, 4, " IO");
-> @@ -240,6 +241,9 @@ int of_pci_get_host_bridge_resources(struct
-> device_node *dev,
+> diff --git a/drivers/input/touchscreen/pixcir_i2c_ts.c b/drivers/input/touchscreen/pixcir_i2c_ts.c
+> index 8f3e243a62bf..3a4ab358bf52 100644
+> --- a/drivers/input/touchscreen/pixcir_i2c_ts.c
+> +++ b/drivers/input/touchscreen/pixcir_i2c_ts.c
+> @@ -29,6 +29,8 @@
+>  #include <linux/of.h>
+>  #include <linux/of_gpio.h>
+>  #include <linux/of_device.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/pm_wakeirq.h>
+>  
+>  #define PIXCIR_MAX_SLOTS       5 /* Max fingers supported by driver */
+>  
+> @@ -364,8 +366,6 @@ static int __maybe_unused pixcir_i2c_ts_suspend(struct device *dev)
+>  				goto unlock;
+>  			}
 >  		}
-> 
->  		pci_add_resource_offset(resources, res,	res->start -
-> range.pci_addr);
-> +		entry = list_last_entry(resources, struct resource_entry,
-> node);
-> +		/* we are using __res for storing the PCI controller
-> address */
-> +		entry->__res.start = range.bus_addr;
+> -
+> -		enable_irq_wake(client->irq);
+>  	} else if (input->users) {
+>  		ret = pixcir_stop(ts);
 >  	}
-> 
+> @@ -386,8 +386,6 @@ static int __maybe_unused pixcir_i2c_ts_resume(struct device *dev)
+>  	mutex_lock(&input->mutex);
+>  
+>  	if (device_may_wakeup(&client->dev)) {
+> -		disable_irq_wake(client->irq);
+> -
+>  		if (!input->users) {
+>  			ret = pixcir_stop(ts);
+>  			if (ret) {
+> @@ -445,6 +443,13 @@ static struct pixcir_ts_platform_data *pixcir_parse_dt(struct device *dev)
+>  	dev_dbg(dev, "%s: x %d, y %d, gpio %d\n", __func__,
+>  		pdata->x_max + 1, pdata->y_max + 1, pdata->gpio_attb);
+>  
+> +	pdata->wakeirq = of_irq_get_byname(dev->of_node, "wakeup");
+> +	if (pdata->wakeirq < 0 && pdata->wakeirq != -ENODATA &&
+> +	    pdata->wakeirq != -EINVAL) {
+> +		dev_err(dev, "Failed to get wakeirq\n");
+> +		return ERR_PTR(pdata->wakeirq);
+> +	}
+> +
+>  	return pdata;
+>  }
+>  #else
+> @@ -564,11 +569,20 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
+>  	i2c_set_clientdata(client, tsdata);
+>  	device_init_wakeup(&client->dev, 1);
+>  
+> +	/* Register wakeirq */
+> +	error = (pdata->wakeirq > 0) ?
+> +		dev_pm_set_dedicated_wake_irq(dev, pdata->wakeirq) :
+> +		dev_pm_set_wake_irq(dev, client->irq);
+
+Can 0 be a valid wakeirq or client->irq?
+If yes then this logic is broken.
+
+I would set wakeirq to -EINVAL or something if it is not available
+during probe and check for that condition.
+
+> +	if (error)
+> +		dev_info(dev, "unable to setup wakeirq %d\n",
+> +			 error);
+> +
 >  	return 0;
-> diff --git a/include/linux/of_address.h b/include/linux/of_address.h
-> index d88e81b..865f96e 100644
-> --- a/include/linux/of_address.h
-> +++ b/include/linux/of_address.h
-> @@ -16,6 +16,7 @@ struct of_pci_range {
->  	u32 pci_space;
->  	u64 pci_addr;
->  	u64 cpu_addr;
-> +	u64 bus_addr;
->  	u64 size;
->  	u32 flags;
+>  }
+>  
+>  static int pixcir_i2c_ts_remove(struct i2c_client *client)
+>  {
+> +	dev_pm_clear_wake_irq(&client->dev);
+>  	device_init_wakeup(&client->dev, 0);
+>  
+>  	return 0;
+> diff --git a/include/linux/input/pixcir_ts.h b/include/linux/input/pixcir_ts.h
+> index 7bae83b7c396..da573de5a5ee 100644
+> --- a/include/linux/input/pixcir_ts.h
+> +++ b/include/linux/input/pixcir_ts.h
+> @@ -58,6 +58,7 @@ struct pixcir_ts_platform_data {
+>  	int x_max;
+>  	int y_max;
+>  	int gpio_attb;		/* GPIO connected to ATTB line */
+> +	int wakeirq;
+>  	struct pixcir_i2c_chip_data chip;
 >  };
-> --
-> 1.9.1
+>  
+> 
+
+cheers,
+-roger
