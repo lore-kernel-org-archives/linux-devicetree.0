@@ -1,129 +1,85 @@
-From: Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 3/8] iio: mma8452: add freefall / motion interrupt source
-Date: Mon, 27 Jul 2015 16:08:10 +0200
-Message-ID: <1438006095-26920-4-git-send-email-martink@posteo.de>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 5/8] iio: mma8452: add devicetree binding document
+Date: Mon, 27 Jul 2015 15:20:05 +0100
+Message-ID: <20150727142005.GA10821@leverpostej>
 References: <1438006095-26920-1-git-send-email-martink@posteo.de>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1438006095-26920-1-git-send-email-martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org, roberta.dobrescu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org, Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>, Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+ <1438006095-26920-6-git-send-email-martink@posteo.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1438006095-26920-6-git-send-email-martink@posteo.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Martin Kepplinger <martink@posteo.de>
+Cc: "jic23@kernel.org" <jic23@kernel.org>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "lars@metafoo.de" <lars@metafoo.de>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "mfuzzey@parkeon.com" <mfuzzey@parkeon.com>, "roberta.dobrescu@gmail.com" <roberta.dobrescu@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "christoph.muellner@theobroma-systems.com" <christoph.muellner@theobroma-systems.com>, Martin Kepplinger <martin.kepplinger@theobroma-systems.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds the freefall / motion interrupt source definitions to the driver.
-It is used in this series' next patch, for chips that don't support the
-transient interrupt source.
+On Mon, Jul 27, 2015 at 03:08:12PM +0100, Martin Kepplinger wrote:
+> As we support more chips now, add a binding document and remove it from
+> i2c trivial-devices.txt list.
+> 
+> The binding document is further extended in a later patch of this series.
+> 
+> Signed-off-by: Martin Kepplinger <martin.kepplinger@theobroma-systems.com>
+> Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
+> ---
+>  .../devicetree/bindings/i2c/trivial-devices.txt     |  1 -
+>  .../devicetree/bindings/iio/accel/mma8452.txt       | 21 +++++++++++++++++++++
+>  2 files changed, 21 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/iio/accel/mma8452.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+> index 00f8652..094238a 100644
+> --- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+> +++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+> @@ -54,7 +54,6 @@ epson,rx8581		I2C-BUS INTERFACE REAL TIME CLOCK MODULE
+>  fsl,mag3110		MAG3110: Xtrinsic High Accuracy, 3D Magnetometer
+>  fsl,mc13892		MC13892: Power Management Integrated Circuit (PMIC) for i.MX35/51
+>  fsl,mma8450		MMA8450Q: Xtrinsic Low-power, 3-axis Xtrinsic Accelerometer
+> -fsl,mma8452		MMA8452Q: 3-axis 12-bit / 8-bit Digital Accelerometer
+>  fsl,mpr121		MPR121: Proximity Capacitive Touch Sensor Controller
+>  fsl,sgtl5000		SGTL5000: Ultra Low-Power Audio Codec
+>  gmt,g751		G751: Digital Temperature Sensor and Thermal Watchdog with Two-Wire Interface
+> diff --git a/Documentation/devicetree/bindings/iio/accel/mma8452.txt b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
+> new file mode 100644
+> index 0000000..8d98e05
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
+> @@ -0,0 +1,21 @@
+> +Freescale MMA8452Q, MMA8453Q, MMA8652FC or MMA8653FC triaxial accelerometer
+> +
+> +Required properties:
+> +
+> +  - compatible: should be "fsl,mma8653", "fsl,mma8652", "fsl,mma8453" or
+> +    "fsl,mma8452" respectively.
 
-The iio event type is IIO_EV_TYPE_MAG since the threshold for comparison
-is no signed value. An interrupt occurs on positive and negative values
-when the magnitude crosses the threshold value.
 
-Signed-off-by: Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
-Signed-off-by: Christoph Muellner <christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
----
- drivers/iio/accel/mma8452.c | 45 ++++++++++++++++++++++++++++++++++++---------
- 1 file changed, 36 insertions(+), 9 deletions(-)
+This would be easier to read/search (and easier to extend in future) if
+formatted as a list, e.g.
 
-diff --git a/drivers/iio/accel/mma8452.c b/drivers/iio/accel/mma8452.c
-index 57b12eb..d51ce63 100644
---- a/drivers/iio/accel/mma8452.c
-+++ b/drivers/iio/accel/mma8452.c
-@@ -37,9 +37,18 @@
- #define MMA8452_DATA_CFG 0x0e
- #define MMA8452_HP_FILTER_CUTOFF 0x0f
- #define MMA8452_HP_FILTER_CUTOFF_SEL_MASK	(BIT(0) | BIT(1))
-+#define MMA8452_FF_MT_CFG 0x15
-+#define MMA8452_FF_MT_CFG_OAE			BIT(6)
-+#define MMA8452_FF_MT_CFG_ELE			BIT(7)
-+#define MMA8452_FF_MT_SRC 0x16
-+#define MMA8452_FF_MT_SRC_XHE			BIT(1)
-+#define MMA8452_FF_MT_SRC_YHE			BIT(3)
-+#define MMA8452_FF_MT_SRC_ZHE			BIT(5)
-+#define MMA8452_FF_MT_THS 0x17
-+#define MMA8452_FF_MT_THS_MASK 0x7f
-+#define MMA8452_FF_MT_COUNT 0x18
- #define MMA8452_TRANSIENT_CFG 0x1d
- #define MMA8452_TRANSIENT_CFG_ELE		BIT(4)
--#define MMA8452_TRANSIENT_CFG_CHAN(chan)	BIT(chan + 1)
- #define MMA8452_TRANSIENT_CFG_HPF_BYP		BIT(0)
- #define MMA8452_TRANSIENT_SRC 0x1e
- #define MMA8452_TRANSIENT_SRC_XTRANSE		BIT(1)
-@@ -73,6 +82,7 @@
- #define MMA8452_DATA_CFG_HPF_MASK BIT(4)
- 
- #define MMA8452_INT_DRDY	BIT(0)
-+#define MMA8452_INT_FF_MT	BIT(2)
- #define MMA8452_INT_TRANS	BIT(5)
- 
- #define MMA8452_DEVICE_ID 0x2a
-@@ -590,7 +600,8 @@ static int mma8452_write_event_config(struct iio_dev *indio_dev,
- 	else
- 		val &= ~BIT(chan->scan_index + chip->ev_cfg_chan_shift);
- 
--	val |= MMA8452_TRANSIENT_CFG_ELE;
-+	val |= chip->ev_cfg_ele;
-+	val |= MMA8452_FF_MT_CFG_OAE;
- 
- 	return mma8452_change_config(data, chip->ev_cfg, val);
- }
-@@ -631,6 +642,7 @@ static irqreturn_t mma8452_interrupt(int irq, void *p)
- {
- 	struct iio_dev *indio_dev = p;
- 	struct mma8452_data *data = iio_priv(indio_dev);
-+	const struct mma_chip_info *chip = data->chip_info;
- 	int ret = IRQ_NONE;
- 	int src;
- 
-@@ -643,7 +655,10 @@ static irqreturn_t mma8452_interrupt(int irq, void *p)
- 		ret = IRQ_HANDLED;
- 	}
- 
--	if (src & MMA8452_INT_TRANS) {
-+	if ((src & MMA8452_INT_TRANS &&
-+	     chip->ev_src == MMA8452_TRANSIENT_SRC) ||
-+	    (src & MMA8452_INT_FF_MT &&
-+	     chip->ev_src == MMA8452_FF_MT_SRC)) {
- 		mma8452_transient_interrupt(indio_dev);
- 		ret = IRQ_HANDLED;
- 	}
-@@ -704,6 +719,16 @@ static const struct iio_event_spec mma8452_transient_event[] = {
- 	},
- };
- 
-+static const struct iio_event_spec mma8452_motion_event[] = {
-+	{
-+		.type = IIO_EV_TYPE_MAG,
-+		.dir = IIO_EV_DIR_RISING,
-+		.mask_separate = BIT(IIO_EV_INFO_ENABLE),
-+		.mask_shared_by_type = BIT(IIO_EV_INFO_VALUE) |
-+					BIT(IIO_EV_INFO_PERIOD)
-+	},
-+};
-+
- /*
-  * Threshold is configured in fixed 8G/127 steps regardless of
-  * currently selected scale for measurement.
-@@ -987,13 +1012,15 @@ static int mma8452_probe(struct i2c_client *client,
- 
- 	if (client->irq) {
- 		/*
--		 * Although we enable the transient interrupt source once and
--		 * for all here the transient event detection itself is not
--		 * enabled until userspace asks for it by
--		 * mma8452_write_event_config()
-+		 * Although we enable the interrupt sources once and for
-+		 * all here the event detection itself is not enabled until
-+		 * userspace asks for it by mma8452_write_event_config()
- 		 */
--		int supported_interrupts = MMA8452_INT_DRDY | MMA8452_INT_TRANS;
--		int enabled_interrupts = MMA8452_INT_TRANS;
-+		int supported_interrupts = MMA8452_INT_DRDY |
-+					   MMA8452_INT_TRANS |
-+					   MMA8452_INT_FF_MT;
-+		int enabled_interrupts = MMA8452_INT_TRANS |
-+					 MMA8452_INT_FF_MT;
- 
- 		/* Assume wired to INT1 pin */
- 		ret = i2c_smbus_write_byte_data(client,
--- 
-2.1.4
+ - compatible: should contain one of:
+   * "fsl,mma8653"
+   * "fsl,mma8652"
+   * "fsl,mma8453"
+   * "fsl,mma8452"
+
+Mark.
+
+> +  - reg: the I2C address of the chip
+> +
+> +Optional properties:
+> +
+> +  - interrupt-parent: should be the phandle for the interrupt controller
+> +  - interrupts: interrupt mapping for GPIO IRQ
+> +
+> +Example:
+> +
+> +	mma8653fc@1d {
+> +		compatible = "fsl,mma8653";
+> +		reg = <0x1d>;
+> +		interrupt-parent = <&gpio1>;
+> +		interrupts = <5 0>;
+> +	};
+> -- 
+> 2.1.4
+> 
