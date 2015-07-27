@@ -1,106 +1,101 @@
-From: Gabriele Paoloni <gabriele.paoloni@huawei.com>
-Subject: [PATCH v6] PCI: Store PCIe bus address in struct of_pci_range
-Date: Mon, 27 Jul 2015 23:17:03 +0800
-Message-ID: <1438010223-124422-1-git-send-email-gabriele.paoloni@huawei.com>
+From: Gabriele Paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH v5] PCI: Store PCIe bus address in struct of_pci_range
+Date: Mon, 27 Jul 2015 15:11:13 +0000
+Message-ID: <EE11001F9E5DDD47B7634E2F8A612F2E01D6DEE7@lhreml503-mbs>
+References: <1437993919-99241-1-git-send-email-gabriele.paoloni@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pci-owner@vger.kernel.org>
-Sender: linux-pci-owner@vger.kernel.org
-To: gabriele.paoloni@huawei.com, arnd@arndb.de, lorenzo.pieralisi@arm.com, wangzhou1@hisilicon.com, bhelgaas@google.com, robh+dt@kernel.org, james.morse@arm.com, Liviu.Dudau@arm.com
-Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, yuanzhichang@hisilicon.com, zhudacai@hisilicon.com, zhangjukuo@huawei.com, qiuzhenfa@hisilicon.com, liguozhu@hisilicon.com
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1437993919-99241-1-git-send-email-gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gabriele Paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org" <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, "Wangzhou (B)" <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "james.morse-5wv7dgnIgG8@public.gmane.org" <james.morse-5wv7dgnIgG8@public.gmane.org>, "Liviu.Dudau-5wv7dgnIgG8@public.gmane.org" <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+Cc: "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Yuanzhichang <yuanzhichang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Zhudacai <zhudacai-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, zhangjukuo <zhangjukuo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, qiuzhenfa <qiuzhenfa-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "Liguozhu (Kenneth)" <liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: gabriele paoloni <gabriele.paoloni@huawei.com>
-
-    This patch is needed port PCIe designware to new DT parsing API
-    As discussed in
-    http://lists.infradead.org/pipermail/linux-arm-kernel/2015-January/317743.html
-    in designware we have a problem as the PCI addresses in the PCIe controller
-    address space are required in order to perform correct HW operation.
-
-    In order to solve this problem commit f4c55c5a3 "PCI: designware:
-    Program ATU with untranslated address" added code to read the PCIe
-    controller start address directly from the DT ranges.
-
-    In the new DT parsing API of_pci_get_host_bridge_resources() hides the
-    DT parser from the host controller drivers, so it is not possible
-    for drivers to parse values directly from the DT.
-
-    In http://www.spinics.net/lists/linux-pci/msg42540.html we already tried
-    to use the new DT parsing API but there is a bug (obviously) in setting
-    the <*>_mod_base addresses
-    Applying this patch we can easily set "<*>_mod_base = win->__res.start"
-
-    This patch adds a new field in "struct of_pci_range" to store the
-    pci bus start address; it fills the field in of_pci_range_parser_one();
-    in of_pci_get_host_bridge_resources() it retrieves the resource entry
-    after it is created and added to the resource list and uses
-    entry->__res.start to store the pci controller address
-
-    the patch is based on 4.2-rc1
-
-    Signed-off-by: Gabriele Paoloni <gabriele.paoloni@huawei.com>
-    Acked-by: Liviu Dudau <Liviu.Dudau@arm.com>
-    Acked-by: Rob Herring <robh@kernel.org>
----
- drivers/of/address.c       | 2 ++
- drivers/of/of_pci.c        | 4 ++++
- include/linux/of_address.h | 1 +
- 3 files changed, 7 insertions(+)
-
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index 8bfda6a..23a5793 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -253,6 +253,7 @@ struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
- 						struct of_pci_range *range)
- {
- 	const int na = 3, ns = 2;
-+	const int p_ns = of_n_size_cells(parser->node);
- 
- 	if (!range)
- 		return NULL;
-@@ -265,6 +266,7 @@ struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
- 	range->pci_addr = of_read_number(parser->range + 1, ns);
- 	range->cpu_addr = of_translate_address(parser->node,
- 				parser->range + na);
-+	range->bus_addr = of_read_number(parser->range + na, p_ns);
- 	range->size = of_read_number(parser->range + parser->pna + na, ns);
- 
- 	parser->range += parser->np;
-diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
-index 5751dc5..fe57030 100644
---- a/drivers/of/of_pci.c
-+++ b/drivers/of/of_pci.c
-@@ -198,6 +198,7 @@ int of_pci_get_host_bridge_resources(struct device_node *dev,
- 
- 	pr_debug("Parsing ranges property...\n");
- 	for_each_of_pci_range(&parser, &range) {
-+		struct resource_entry *entry;
- 		/* Read next ranges element */
- 		if ((range.flags & IORESOURCE_TYPE_BITS) == IORESOURCE_IO)
- 			snprintf(range_type, 4, " IO");
-@@ -240,6 +241,9 @@ int of_pci_get_host_bridge_resources(struct device_node *dev,
- 		}
- 
- 		pci_add_resource_offset(resources, res,	res->start - range.pci_addr);
-+		entry = list_last_entry(resources, struct resource_entry, node);
-+		/* we are using __res for storing the PCI controller address */
-+		entry->__res.start = range.bus_addr;
- 	}
- 
- 	return 0;
-diff --git a/include/linux/of_address.h b/include/linux/of_address.h
-index d88e81b..865f96e 100644
---- a/include/linux/of_address.h
-+++ b/include/linux/of_address.h
-@@ -16,6 +16,7 @@ struct of_pci_range {
- 	u32 pci_space;
- 	u64 pci_addr;
- 	u64 cpu_addr;
-+	u64 bus_addr;
- 	u64 size;
- 	u32 flags;
- };
--- 
-1.9.1
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEdhYnJpZWxlIFBhb2xvbmkN
+Cj4gU2VudDogTW9uZGF5LCBKdWx5IDI3LCAyMDE1IDExOjQ1IEFNDQo+IFRvOiBHYWJyaWVsZSBQ
+YW9sb25pOyBhcm5kQGFybmRiLmRlOyBsb3JlbnpvLnBpZXJhbGlzaUBhcm0uY29tOw0KPiBXYW5n
+emhvdSAoQik7IGJoZWxnYWFzQGdvb2dsZS5jb207IHJvYmgrZHRAa2VybmVsLm9yZzsNCj4gamFt
+ZXMubW9yc2VAYXJtLmNvbTsgTGl2aXUuRHVkYXVAYXJtLmNvbQ0KPiBDYzogbGludXgtcGNpQHZn
+ZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiBk
+ZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgWXVhbnpoaWNoYW5nOyBaaHVkYWNhaTsgemhhbmdq
+dWt1bzsNCj4gcWl1emhlbmZhOyBMaWd1b3podSAoS2VubmV0aCkNCj4gU3ViamVjdDogW1BBVENI
+IHY1XSBQQ0k6IFN0b3JlIFBDSWUgYnVzIGFkZHJlc3MgaW4gc3RydWN0IG9mX3BjaV9yYW5nZQ0K
+PiANCj4gRnJvbTogZ2FicmllbGUgcGFvbG9uaSA8Z2FicmllbGUucGFvbG9uaUBodWF3ZWkuY29t
+Pg0KPiANCj4gICAgIFRoaXMgcGF0Y2ggaXMgbmVlZGVkIHBvcnQgUENJZSBkZXNpZ253YXJlIHRv
+IG5ldyBEVCBwYXJzaW5nIEFQSQ0KPiAgICAgQXMgZGlzY3Vzc2VkIGluDQo+ICAgICBodHRwOi8v
+bGlzdHMuaW5mcmFkZWFkLm9yZy9waXBlcm1haWwvbGludXgtYXJtLWtlcm5lbC8yMDE1LQ0KPiBK
+YW51YXJ5LzMxNzc0My5odG1sDQo+ICAgICBpbiBkZXNpZ253YXJlIHdlIGhhdmUgYSBwcm9ibGVt
+IGFzIHRoZSBQQ0kgYWRkcmVzc2VzIGluIHRoZSBQQ0llDQo+IGNvbnRyb2xsZXINCj4gICAgIGFk
+ZHJlc3Mgc3BhY2UgYXJlIHJlcXVpcmVkIGluIG9yZGVyIHRvIHBlcmZvcm0gY29ycmVjdCBIVyBv
+cGVyYXRpb24uDQo+IA0KPiAgICAgSW4gb3JkZXIgdG8gc29sdmUgdGhpcyBwcm9ibGVtIGNvbW1p
+dCBmNGM1NWM1YTMgIlBDSTogZGVzaWdud2FyZToNCj4gICAgIFByb2dyYW0gQVRVIHdpdGggdW50
+cmFuc2xhdGVkIGFkZHJlc3MiIGFkZGVkIGNvZGUgdG8gcmVhZCB0aGUgUENJZQ0KPiAgICAgY29u
+dHJvbGxlciBzdGFydCBhZGRyZXNzIGRpcmVjdGx5IGZyb20gdGhlIERUIHJhbmdlcy4NCj4gDQo+
+ICAgICBJbiB0aGUgbmV3IERUIHBhcnNpbmcgQVBJIG9mX3BjaV9nZXRfaG9zdF9icmlkZ2VfcmVz
+b3VyY2VzKCkgaGlkZXMNCj4gdGhlDQo+ICAgICBEVCBwYXJzZXIgZnJvbSB0aGUgaG9zdCBjb250
+cm9sbGVyIGRyaXZlcnMsIHNvIGl0IGlzIG5vdCBwb3NzaWJsZQ0KPiAgICAgZm9yIGRyaXZlcnMg
+dG8gcGFyc2UgdmFsdWVzIGRpcmVjdGx5IGZyb20gdGhlIERULg0KPiANCj4gICAgIEluIGh0dHA6
+Ly93d3cuc3Bpbmljcy5uZXQvbGlzdHMvbGludXgtcGNpL21zZzQyNTQwLmh0bWwgd2UgYWxyZWFk
+eQ0KPiB0cmllZA0KPiAgICAgdG8gdXNlIHRoZSBuZXcgRFQgcGFyc2luZyBBUEkgYnV0IHRoZXJl
+IGlzIGEgYnVnIChvYnZpb3VzbHkpIGluDQo+IHNldHRpbmcNCj4gICAgIHRoZSA8Kj5fbW9kX2Jh
+c2UgYWRkcmVzc2VzDQo+ICAgICBBcHBseWluZyB0aGlzIHBhdGNoIHdlIGNhbiBlYXNpbHkgc2V0
+ICI8Kj5fbW9kX2Jhc2UgPSB3aW4tDQo+ID5fX3Jlcy5zdGFydCINCj4gDQo+ICAgICBUaGlzIHBh
+dGNoIGFkZHMgYSBuZXcgZmllbGQgaW4gInN0cnVjdCBvZl9wY2lfcmFuZ2UiIHRvIHN0b3JlIHRo
+ZQ0KPiAgICAgcGNpIGJ1cyBzdGFydCBhZGRyZXNzOyBpdCBmaWxscyB0aGUgZmllbGQgaW4NCj4g
+b2ZfcGNpX3JhbmdlX3BhcnNlcl9vbmUoKTsNCj4gICAgIGluIG9mX3BjaV9nZXRfaG9zdF9icmlk
+Z2VfcmVzb3VyY2VzKCkgaXQgcmV0cmlldmVzIHRoZSByZXNvdXJjZQ0KPiBlbnRyeQ0KPiAgICAg
+YWZ0ZXIgaXQgaXMgY3JlYXRlZCBhbmQgYWRkZWQgdG8gdGhlIHJlc291cmNlIGxpc3QgYW5kIHVz
+ZXMNCj4gICAgIGVudHJ5LT5fX3Jlcy5zdGFydCB0byBzdG9yZSB0aGUgcGNpIGNvbnRyb2xsZXIg
+YWRkcmVzcw0KPiANCj4gICAgIHRoZSBwYXRjaCBpcyBiYXNlZCBvbiA0LjItcmMxDQo+IA0KPiAg
+ICAgU2lnbmVkLW9mZi1ieTogR2FicmllbGUgUGFvbG9uaSA8Z2FicmllbGUucGFvbG9uaUBodWF3
+ZWkuY29tPg0KPiAgICAgQWNrZWQtYnk6IExpdml1IER1ZGFpIDxMaXZpdS5EdWRhdUBhcm0uY29t
+Pg0KDQpGaXhlZCBMaXZpdSdzIHN1cm5hbWUgaW4gdjYsIHNvcnJ5IEkgbWVzc2VkIHVwIGFtZW5k
+aW5nIHRoZSBjb21taXQNCg0KPiAgICAgQWNrZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5l
+bC5vcmc+DQo+IC0tLQ0KPiAgZHJpdmVycy9vZi9hZGRyZXNzLmMgICAgICAgfCAyICsrDQo+ICBk
+cml2ZXJzL29mL29mX3BjaS5jICAgICAgICB8IDQgKysrKw0KPiAgaW5jbHVkZS9saW51eC9vZl9h
+ZGRyZXNzLmggfCAxICsNCj4gIDMgZmlsZXMgY2hhbmdlZCwgNyBpbnNlcnRpb25zKCspDQo+IA0K
+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9vZi9hZGRyZXNzLmMgYi9kcml2ZXJzL29mL2FkZHJlc3Mu
+Yw0KPiBpbmRleCA4YmZkYTZhLi4yM2E1NzkzIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL29mL2Fk
+ZHJlc3MuYw0KPiArKysgYi9kcml2ZXJzL29mL2FkZHJlc3MuYw0KPiBAQCAtMjUzLDYgKzI1Myw3
+IEBAIHN0cnVjdCBvZl9wY2lfcmFuZ2UgKm9mX3BjaV9yYW5nZV9wYXJzZXJfb25lKHN0cnVjdA0K
+PiBvZl9wY2lfcmFuZ2VfcGFyc2VyICpwYXJzZXIsDQo+ICAJCQkJCQlzdHJ1Y3Qgb2ZfcGNpX3Jh
+bmdlICpyYW5nZSkNCj4gIHsNCj4gIAljb25zdCBpbnQgbmEgPSAzLCBucyA9IDI7DQo+ICsJY29u
+c3QgaW50IHBfbnMgPSBvZl9uX3NpemVfY2VsbHMocGFyc2VyLT5ub2RlKTsNCj4gDQo+ICAJaWYg
+KCFyYW5nZSkNCj4gIAkJcmV0dXJuIE5VTEw7DQo+IEBAIC0yNjUsNiArMjY2LDcgQEAgc3RydWN0
+IG9mX3BjaV9yYW5nZSAqb2ZfcGNpX3JhbmdlX3BhcnNlcl9vbmUoc3RydWN0DQo+IG9mX3BjaV9y
+YW5nZV9wYXJzZXIgKnBhcnNlciwNCj4gIAlyYW5nZS0+cGNpX2FkZHIgPSBvZl9yZWFkX251bWJl
+cihwYXJzZXItPnJhbmdlICsgMSwgbnMpOw0KPiAgCXJhbmdlLT5jcHVfYWRkciA9IG9mX3RyYW5z
+bGF0ZV9hZGRyZXNzKHBhcnNlci0+bm9kZSwNCj4gIAkJCQlwYXJzZXItPnJhbmdlICsgbmEpOw0K
+PiArCXJhbmdlLT5idXNfYWRkciA9IG9mX3JlYWRfbnVtYmVyKHBhcnNlci0+cmFuZ2UgKyBuYSwg
+cF9ucyk7DQo+ICAJcmFuZ2UtPnNpemUgPSBvZl9yZWFkX251bWJlcihwYXJzZXItPnJhbmdlICsg
+cGFyc2VyLT5wbmEgKyBuYSwNCj4gbnMpOw0KPiANCj4gIAlwYXJzZXItPnJhbmdlICs9IHBhcnNl
+ci0+bnA7DQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL29mL29mX3BjaS5jIGIvZHJpdmVycy9vZi9v
+Zl9wY2kuYw0KPiBpbmRleCA1NzUxZGM1Li5mZTU3MDMwIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJz
+L29mL29mX3BjaS5jDQo+ICsrKyBiL2RyaXZlcnMvb2Yvb2ZfcGNpLmMNCj4gQEAgLTE5OCw2ICsx
+OTgsNyBAQCBpbnQgb2ZfcGNpX2dldF9ob3N0X2JyaWRnZV9yZXNvdXJjZXMoc3RydWN0DQo+IGRl
+dmljZV9ub2RlICpkZXYsDQo+IA0KPiAgCXByX2RlYnVnKCJQYXJzaW5nIHJhbmdlcyBwcm9wZXJ0
+eS4uLlxuIik7DQo+ICAJZm9yX2VhY2hfb2ZfcGNpX3JhbmdlKCZwYXJzZXIsICZyYW5nZSkgew0K
+PiArCQlzdHJ1Y3QgcmVzb3VyY2VfZW50cnkgKmVudHJ5Ow0KPiAgCQkvKiBSZWFkIG5leHQgcmFu
+Z2VzIGVsZW1lbnQgKi8NCj4gIAkJaWYgKChyYW5nZS5mbGFncyAmIElPUkVTT1VSQ0VfVFlQRV9C
+SVRTKSA9PSBJT1JFU09VUkNFX0lPKQ0KPiAgCQkJc25wcmludGYocmFuZ2VfdHlwZSwgNCwgIiBJ
+TyIpOw0KPiBAQCAtMjQwLDYgKzI0MSw5IEBAIGludCBvZl9wY2lfZ2V0X2hvc3RfYnJpZGdlX3Jl
+c291cmNlcyhzdHJ1Y3QNCj4gZGV2aWNlX25vZGUgKmRldiwNCj4gIAkJfQ0KPiANCj4gIAkJcGNp
+X2FkZF9yZXNvdXJjZV9vZmZzZXQocmVzb3VyY2VzLCByZXMsCXJlcy0+c3RhcnQgLQ0KPiByYW5n
+ZS5wY2lfYWRkcik7DQo+ICsJCWVudHJ5ID0gbGlzdF9sYXN0X2VudHJ5KHJlc291cmNlcywgc3Ry
+dWN0IHJlc291cmNlX2VudHJ5LA0KPiBub2RlKTsNCj4gKwkJLyogd2UgYXJlIHVzaW5nIF9fcmVz
+IGZvciBzdG9yaW5nIHRoZSBQQ0kgY29udHJvbGxlcg0KPiBhZGRyZXNzICovDQo+ICsJCWVudHJ5
+LT5fX3Jlcy5zdGFydCA9IHJhbmdlLmJ1c19hZGRyOw0KPiAgCX0NCj4gDQo+ICAJcmV0dXJuIDA7
+DQo+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L29mX2FkZHJlc3MuaCBiL2luY2x1ZGUvbGlu
+dXgvb2ZfYWRkcmVzcy5oDQo+IGluZGV4IGQ4OGU4MWIuLjg2NWY5NmUgMTAwNjQ0DQo+IC0tLSBh
+L2luY2x1ZGUvbGludXgvb2ZfYWRkcmVzcy5oDQo+ICsrKyBiL2luY2x1ZGUvbGludXgvb2ZfYWRk
+cmVzcy5oDQo+IEBAIC0xNiw2ICsxNiw3IEBAIHN0cnVjdCBvZl9wY2lfcmFuZ2Ugew0KPiAgCXUz
+MiBwY2lfc3BhY2U7DQo+ICAJdTY0IHBjaV9hZGRyOw0KPiAgCXU2NCBjcHVfYWRkcjsNCj4gKwl1
+NjQgYnVzX2FkZHI7DQo+ICAJdTY0IHNpemU7DQo+ICAJdTMyIGZsYWdzOw0KPiAgfTsNCj4gLS0N
+Cj4gMS45LjENCg0K
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
