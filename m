@@ -1,47 +1,66 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 7/7] arm64: dts: mt8173: Add subsystem clock controller device nodes
-Date: Mon, 27 Jul 2015 03:21:01 -0700 (PDT)
-Message-ID: <24796517.2pfRdOOmRJ@ubix>
-References: <1437706925-3222-1-git-send-email-jamesjj.liao@mediatek.com> <CAGS+omAUAHZUJQMnWJbH7NXB_Etp=OF3dWyMB7Ri1+rAyzyPBg@mail.gmail.com> <1437965782.5614.4.camel@mtksdaap41>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [PATCH v2 1/4] mfd: max77686: Don't suggest in binding to use a
+ deprecated property
+Date: Mon, 27 Jul 2015 12:28:07 +0200
+Message-ID: <55B607B7.6050803@osg.samsung.com>
+References: <1437114567-17629-1-git-send-email-javier@osg.samsung.com>
+ <1437114567-17629-2-git-send-email-javier@osg.samsung.com>
+ <20150720081020.GD3061@x1> <55ACC986.5040408@osg.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1437965782.5614.4.camel@mtksdaap41>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Heiko Stubner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <55ACC986.5040408@osg.samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-kernel@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday, July 27, 2015 10:56:22 AM James Liao wrote:
-> Hi Daniel,
+Hello Mark,
+
+On 07/20/2015 12:12 PM, Javier Martinez Canillas wrote:
+> Hello Lee,
 > 
-> On Fri, 2015-07-24 at 19:32 +0800, Daniel Kurtz wrote:
-> > > @@ -88,6 +88,13 @@
-> > > 
-> > >                 #clock-cells = <0>;
-> > >         
-> > >         };
-> > > 
-> > > +       cpum_ck: dummy_clk {
-> > 
-> > I'm not a big fan of this "dummy_clk".
-> > The 'name' part of the devicetree node is supposed to be generic.
-> > So, perhaps just oscillator@2, and move it down below clk32k:
-> > oscillator@1.
+> Thanks a lot for your feedback.
 > 
-> > Otherwise:
-> cpum_ck is a test clock which only available in IC test. It's empty on
-> MT8173 evaluation or production boards. Should we name this kind of
-> empty clock as an oscillator? Or is there a better name for it?
+> On 07/20/2015 10:10 AM, Lee Jones wrote:
+>> On Fri, 17 Jul 2015, Javier Martinez Canillas wrote:
+>>
+>>> The regulator-compatible property from the regulator DT binding was
+>>> deprecated. But the max77686 DT binding doc still suggest to use it
+>>> instead of the regulator node name's which is the correct approach.
+>>>
+>>> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+>>> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+>>
+>> By convention shouldn't this be buck@1, or something?
+>>
+>> Need Mark to look at this.
+>>
+> 
+> That's a very good question, the ePAPR doc says:
+> 
+> "The unit-address must match the first address specified in the reg property
+> of the node. If the node has no reg property, the @ and unit-address must be
+> omitted and the node-name alone differentiates the node from other nodes at
+> the same level in the tree"
+> 
+> This PMIC uses a single I2C address for all the regulators and these are
+> controlled by writing to different I2C register addresses. So the regulator
+> nodes don't have a reg property in this case.
+> 
+> By looking at other regulators bindings, besides the generic regulator.txt
+> and fixed-regulator.txt DT bindings, there are only 5 (out of 40) that use
+> the node-name@unit-address convention mentioned in the ePAPR document.
+> 
+> AFAICT all these are for regulators that are actually in different addresses
+> but I could be wrong so let's see what Mark says.
 > 
 
-So if it will never be part of any available boards, why do you want to add 
-it?
+Any opinions on this?
 
-Regards,
-Matthias
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+thanks a lot and best regards,
+-- 
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
