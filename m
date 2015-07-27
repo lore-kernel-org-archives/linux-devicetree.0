@@ -1,40 +1,29 @@
-From: James Liao <jamesjj.liao@mediatek.com>
-Subject: Re: [PATCH v4 7/7] arm64: dts: mt8173: Add subsystem clock
- controller device nodes
-Date: Mon, 27 Jul 2015 10:56:22 +0800
-Message-ID: <1437965782.5614.4.camel@mtksdaap41>
-References: <1437706925-3222-1-git-send-email-jamesjj.liao@mediatek.com>
-	 <1437706925-3222-8-git-send-email-jamesjj.liao@mediatek.com>
-	 <CAGS+omAUAHZUJQMnWJbH7NXB_Etp=OF3dWyMB7Ri1+rAyzyPBg@mail.gmail.com>
+From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Subject: Re: [NET-NEXT PATCH] net: macb: Change capability mask of jumbo
+ support
+Date: Sun, 26 Jul 2015 21:17:20 -0700 (PDT)
+Message-ID: <20150726.211720.464580671483187425.davem@davemloft.net>
+References: <1437645686-5146-1-git-send-email-harinik@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGS+omAUAHZUJQMnWJbH7NXB_Etp=OF3dWyMB7Ri1+rAyzyPBg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Kurtz <djkurtz@chromium.org>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Heiko Stubner <heiko@sntech.de>, srv_heupstream <srv_heupstream@mediatek.com>, Ricky Liang <jcliang@chromium.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mediatek@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1437645686-5146-1-git-send-email-harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: harini.katakam-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
+Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, harinikatakamlinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Daniel,
+From: Harini Katakam <harini.katakam-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Date: Thu, 23 Jul 2015 15:31:26 +0530
 
-On Fri, 2015-07-24 at 19:32 +0800, Daniel Kurtz wrote:
-> > @@ -88,6 +88,13 @@
-> >                 #clock-cells = <0>;
-> >         };
-> >
-> > +       cpum_ck: dummy_clk {
+> Capability mask for jumbo and no gigabit half duplex is the same.
+> Change one of them.
 > 
-> I'm not a big fan of this "dummy_clk".
-> The 'name' part of the devicetree node is supposed to be generic.
-> So, perhaps just oscillator@2, and move it down below clk32k: oscillator@1.
-> Otherwise:
+> Signed-off-by: Harini Katakam <harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 
-cpum_ck is a test clock which only available in IC test. It's empty on
-MT8173 evaluation or production boards. Should we name this kind of
-empty clock as an oscillator? Or is there a better name for it?
-
-
-Best regards,
-
-James
+Applied, thanks.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
