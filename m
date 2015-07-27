@@ -1,375 +1,102 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH v8 2/5] mtd: nand: vf610_nfc: add hardware BCH-ECC support
-Date: Mon, 27 Jul 2015 18:42:42 +0200
-Message-ID: <1438015365-15685-3-git-send-email-stefan@agner.ch>
-References: <1438015365-15685-1-git-send-email-stefan@agner.ch>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 8/8] iio: mma8452: add devicetree property to allow all
+ pin wirings
+Date: Mon, 27 Jul 2015 18:33:45 +0100
+Message-ID: <20150727173345.GF10821@leverpostej>
+References: <1438006095-26920-1-git-send-email-martink@posteo.de>
+ <1438006095-26920-9-git-send-email-martink@posteo.de>
+ <20150727142336.GB10821@leverpostej>
+ <55B6423C.7030301@posteo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1438015365-15685-1-git-send-email-stefan@agner.ch>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: dwmw2@infradead.org, computersforpeace@gmail.com
-Cc: mark.rutland@arm.com, boris.brezillon@free-electrons.com, aaron@tastycactus.com, marb@ixxat.de, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, bpringlemeir@gmail.com, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>, sebastian@breakpoint.cc, robh+dt@kernel.org, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de, galak@codeaurora.org, shawn.guo@linaro.org, devicetree@vger.kernel.org, Bill Pringlemeir <bpringlemeir@nbsps.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <55B6423C.7030301-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
+Cc: "jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "knaack.h-Mmb7MZpHnFY@public.gmane.org" <knaack.h-Mmb7MZpHnFY@public.gmane.org>, "lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org" <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, "pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org" <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, "mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org" <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>, "roberta.dobrescu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <roberta.dobrescu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org" <christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>, Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds hardware ECC support using the BCH encoder in the NFC IP.
-The ECC encoder supports up to 32-bit correction by using 60 error
-correction bytes. There is no sub-page ECC step, ECC is calculated
-always accross the whole page (up to 2k pages). Raw writes writes
-are possible through the common nand_write_page_raw implementation,
-however raw reads are not possible since the hardware ECC mode need
-to be enabled at command time.
+On Mon, Jul 27, 2015 at 03:37:48PM +0100, Martin Kepplinger wrote:
+> Am 2015-07-27 um 16:23 schrieb Mark Rutland:
+> > On Mon, Jul 27, 2015 at 03:08:15PM +0100, Martin Kepplinger wrote:
+> >> For the devices supported by the mma8452 driver, two interrupt pins are
+> >> available to route the interrupt signals to. By default INT1 is assumed.
+> >>
+> >> This adds a bitmask DT property for users to configure interrupt sources
+> >> for INT2, if that is the wired interrupt pin for them.
+> > 
+> > This sounds like configureation rather than a HW property. Why does this
+> > need to be in the DT?
+> 
+> It's a hardware property of the board that uses the device. There might
+> be boards that connect just one of them at random, which is the reason
+> for this DT property. There also might be exotic users who will want
+> to use both pins to route different interrupt sources to (not yet
+> supported, but no problem with such a bitmask).
 
-Signed-off-by: Bill Pringlemeir <bpringlemeir@nbsps.com>
-Signed-off-by: Stefan Agner <stefan@agner.ch>
----
- drivers/mtd/nand/Kconfig     |   6 +-
- drivers/mtd/nand/vf610_nfc.c | 201 ++++++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 204 insertions(+), 3 deletions(-)
+Ok, so I'm somewhat confused as to what the hardware looks like and what
+this means.
 
-diff --git a/drivers/mtd/nand/Kconfig b/drivers/mtd/nand/Kconfig
-index 8550b14..e05f53c 100644
---- a/drivers/mtd/nand/Kconfig
-+++ b/drivers/mtd/nand/Kconfig
-@@ -469,8 +469,10 @@ config MTD_NAND_VF610_NFC
- 	help
- 	  Enables support for NAND Flash Controller on some Freescale
- 	  processors like the VF610, MPC5125, MCF54418 or Kinetis K70.
--	  The driver supports a maximum 2k page size. The driver
--	  currently does not support hardware ECC.
-+	  The driver supports a maximum 2k page size. With 2k pages and
-+	  64 bytes or more of OOB, hardware ECC with up to 32-bit error
-+	  correction is supported. Hardware ECC is only enabled through
-+	  device tree.
- 
- config MTD_NAND_MXC
- 	tristate "MXC NAND support"
-diff --git a/drivers/mtd/nand/vf610_nfc.c b/drivers/mtd/nand/vf610_nfc.c
-index 0da500e..4d795a5 100644
---- a/drivers/mtd/nand/vf610_nfc.c
-+++ b/drivers/mtd/nand/vf610_nfc.c
-@@ -19,6 +19,8 @@
-  * - Untested on MPC5125 and M54418.
-  * - DMA not used.
-  * - 2K pages or less.
-+ * - Only 2K page w. 64+ OOB and hardware ECC.
-+ * - Raw page reads not implemented when using ECC.
-  */
- 
- #include <linux/module.h>
-@@ -72,6 +74,8 @@
- 
- /* NFC ECC mode define */
- #define ECC_BYPASS			0
-+#define ECC_45_BYTE			6
-+#define ECC_60_BYTE			7
- 
- /*** Register Mask and bit definitions */
- 
-@@ -104,6 +108,8 @@
- #define STATUS_BYTE1_MASK			0x000000FF
- 
- /* NFC_FLASH_CONFIG Field */
-+#define CONFIG_ECC_SRAM_ADDR_MASK		0x7FC00000
-+#define CONFIG_ECC_SRAM_ADDR_SHIFT		22
- #define CONFIG_ECC_SRAM_REQ_BIT			(1<<21)
- #define CONFIG_DMA_REQ_BIT			(1<<20)
- #define CONFIG_ECC_MODE_MASK			0x000E0000
-@@ -122,6 +128,21 @@
- #define CMD_DONE_CLEAR_BIT			(1<<18)
- #define IDLE_CLEAR_BIT				(1<<17)
- 
-+/* ECC status placed at end of buffers. */
-+#define ECC_SRAM_ADDR	((PAGE_2K + 256 - 8) >> 3)
-+#define ECC_STATUS_MASK	0x80
-+#define ECC_ERR_COUNT	0x3F
-+
-+/*
-+ * ECC status is stored at NFC_CFG[ECCADD] +4 for little-endian
-+ * and +7 for big-endian SoCs.
-+ */
-+#ifdef __LITTLE_ENDIAN
-+#define ECC_OFFSET	4
-+#else
-+#define ECC_OFFSET	7
-+#endif
-+
- struct vf610_nfc {
- 	struct mtd_info mtd;
- 	struct nand_chip chip;
-@@ -136,10 +157,40 @@ struct vf610_nfc {
- #define ALT_BUF_STAT 2
- #define ALT_BUF_ONFI 3
- 	struct clk *clk;
-+	bool use_hw_ecc;
-+	u32 ecc_mode;
- };
- 
- #define mtd_to_nfc(_mtd) container_of(_mtd, struct vf610_nfc, mtd)
- 
-+static struct nand_ecclayout vf610_nfc_ecc45 = {
-+	.eccbytes = 45,
-+	.eccpos = {19, 20, 21, 22, 23,
-+		   24, 25, 26, 27, 28, 29, 30, 31,
-+		   32, 33, 34, 35, 36, 37, 38, 39,
-+		   40, 41, 42, 43, 44, 45, 46, 47,
-+		   48, 49, 50, 51, 52, 53, 54, 55,
-+		   56, 57, 58, 59, 60, 61, 62, 63},
-+	.oobfree = {
-+		{.offset = 2,
-+		 .length = 17} }
-+};
-+
-+static struct nand_ecclayout vf610_nfc_ecc60 = {
-+	.eccbytes = 60,
-+	.eccpos = { 4,  5,  6,  7,  8,  9, 10, 11,
-+		   12, 13, 14, 15, 16, 17, 18, 19,
-+		   20, 21, 22, 23, 24, 25, 26, 27,
-+		   28, 29, 30, 31, 32, 33, 34, 35,
-+		   36, 37, 38, 39, 40, 41, 42, 43,
-+		   44, 45, 46, 47, 48, 49, 50, 51,
-+		   52, 53, 54, 55, 56, 57, 58, 59,
-+		   60, 61, 62, 63 },
-+	.oobfree = {
-+		{.offset = 2,
-+		 .length = 2} }
-+};
-+
- static inline u32 vf610_nfc_read(struct vf610_nfc *nfc, uint reg)
- {
- 	return readl(nfc->regs + reg);
-@@ -281,6 +332,13 @@ static void vf610_nfc_addr_cycle(struct vf610_nfc *nfc, int column, int page)
- 				    ROW_ADDR_SHIFT, page);
- }
- 
-+static inline void vf610_nfc_ecc_mode(struct vf610_nfc *nfc, int ecc_mode)
-+{
-+	vf610_nfc_set_field(nfc, NFC_FLASH_CONFIG,
-+			    CONFIG_ECC_MODE_MASK,
-+			    CONFIG_ECC_MODE_SHIFT, ecc_mode);
-+}
-+
- static inline void vf610_nfc_transfer_size(struct vf610_nfc *nfc, int size)
- {
- 	vf610_nfc_write(nfc, NFC_SECTOR_SIZE, size);
-@@ -299,13 +357,20 @@ static void vf610_nfc_command(struct mtd_info *mtd, unsigned command,
- 	case NAND_CMD_SEQIN:
- 		/* Use valid column/page from preread... */
- 		vf610_nfc_addr_cycle(nfc, column, page);
-+		nfc->buf_offset = 0;
-+
- 		/*
- 		 * SEQIN => data => PAGEPROG sequence is done by the controller
- 		 * hence we do not need to issue the command here...
- 		 */
- 		return;
- 	case NAND_CMD_PAGEPROG:
--		page_sz += mtd->writesize + mtd->oobsize;
-+		page_sz += nfc->page_sz;
-+		if (nfc->use_hw_ecc)
-+			vf610_nfc_ecc_mode(nfc, nfc->ecc_mode);
-+		else
-+			vf610_nfc_ecc_mode(nfc, ECC_BYPASS);
-+
- 		vf610_nfc_transfer_size(nfc, page_sz);
- 		vf610_nfc_send_commands(nfc, NAND_CMD_SEQIN,
- 					command, PROGRAM_PAGE_CMD_CODE);
-@@ -323,11 +388,13 @@ static void vf610_nfc_command(struct mtd_info *mtd, unsigned command,
- 		vf610_nfc_send_commands(nfc, NAND_CMD_READ0,
- 					NAND_CMD_READSTART, READ_PAGE_CMD_CODE);
- 		vf610_nfc_addr_cycle(nfc, column, page);
-+		vf610_nfc_ecc_mode(nfc, ECC_BYPASS);
- 		break;
- 
- 	case NAND_CMD_READ0:
- 		page_sz += mtd->writesize + mtd->oobsize;
- 		vf610_nfc_transfer_size(nfc, page_sz);
-+		vf610_nfc_ecc_mode(nfc, nfc->ecc_mode);
- 		vf610_nfc_send_commands(nfc, NAND_CMD_READ0,
- 					NAND_CMD_READSTART, READ_PAGE_CMD_CODE);
- 		vf610_nfc_addr_cycle(nfc, column, page);
-@@ -339,6 +406,7 @@ static void vf610_nfc_command(struct mtd_info *mtd, unsigned command,
- 		vf610_nfc_send_command(nfc, command, READ_ONFI_PARAM_CMD_CODE);
- 		vf610_nfc_set_field(nfc, NFC_ROW_ADDR, ROW_ADDR_MASK,
- 				    ROW_ADDR_SHIFT, column);
-+		vf610_nfc_ecc_mode(nfc, ECC_BYPASS);
- 		break;
- 
- 	case NAND_CMD_ERASE1:
-@@ -367,6 +435,9 @@ static void vf610_nfc_command(struct mtd_info *mtd, unsigned command,
- 	}
- 
- 	vf610_nfc_done(nfc);
-+
-+	nfc->use_hw_ecc = false;
-+	nfc->page_sz = 0;
- }
- 
- static void vf610_nfc_read_buf(struct mtd_info *mtd, u_char *buf, int len)
-@@ -392,6 +463,7 @@ static void vf610_nfc_write_buf(struct mtd_info *mtd, const uint8_t *buf,
- 	l = min_t(uint, len, mtd->writesize + mtd->oobsize - c);
- 	vf610_nfc_memcpy(nfc->regs + NFC_MAIN_AREA(0) + c, buf, l);
- 
-+	nfc->page_sz += l;
- 	nfc->buf_offset += l;
- }
- 
-@@ -459,6 +531,84 @@ static void vf610_nfc_select_chip(struct mtd_info *mtd, int chip)
- #endif
- }
- 
-+/* Count the number of 0's in buff up to max_bits */
-+static inline int count_written_bits(uint8_t *buff, int size, int max_bits)
-+{
-+	uint32_t *buff32 = (uint32_t *)buff;
-+	int k, written_bits = 0;
-+
-+	for (k = 0; k < (size / 4); k++) {
-+		written_bits += hweight32(~buff32[k]);
-+		if (written_bits > max_bits)
-+			break;
-+	}
-+
-+	return written_bits;
-+}
-+
-+static inline int vf610_nfc_correct_data(struct mtd_info *mtd, uint8_t *dat)
-+{
-+	struct vf610_nfc *nfc = mtd_to_nfc(mtd);
-+	u8 ecc_status;
-+	u8 ecc_count;
-+	int flip;
-+
-+	ecc_status = __raw_readb(nfc->regs + ECC_SRAM_ADDR * 8 + ECC_OFFSET);
-+	ecc_count = ecc_status & ECC_ERR_COUNT;
-+	if (!(ecc_status & ECC_STATUS_MASK))
-+		return ecc_count;
-+
-+	/*
-+	 * On an erased page, bit count should be zero or at least
-+	 * less then half of the ECC strength
-+	 */
-+	flip = count_written_bits(dat, nfc->chip.ecc.size, ecc_count);
-+
-+	if (flip > ecc_count && flip > (nfc->chip.ecc.strength / 2))
-+		return -1;
-+
-+	/* Erased page. */
-+	memset(dat, 0xff, nfc->chip.ecc.size);
-+	return 0;
-+}
-+
-+static int vf610_nfc_read_page(struct mtd_info *mtd, struct nand_chip *chip,
-+				uint8_t *buf, int oob_required, int page)
-+{
-+	int eccsize = chip->ecc.size;
-+	int stat;
-+
-+	vf610_nfc_read_buf(mtd, buf, eccsize);
-+
-+	if (oob_required)
-+		vf610_nfc_read_buf(mtd, chip->oob_poi, mtd->oobsize);
-+
-+	stat = vf610_nfc_correct_data(mtd, buf);
-+
-+	if (stat < 0)
-+		mtd->ecc_stats.failed++;
-+	else
-+		mtd->ecc_stats.corrected += stat;
-+
-+	return 0;
-+}
-+
-+static int vf610_nfc_write_page(struct mtd_info *mtd, struct nand_chip *chip,
-+			       const uint8_t *buf, int oob_required)
-+{
-+	struct vf610_nfc *nfc = mtd_to_nfc(mtd);
-+
-+	vf610_nfc_write_buf(mtd, buf, mtd->writesize);
-+	if (oob_required)
-+		vf610_nfc_write_buf(mtd, chip->oob_poi, mtd->oobsize);
-+
-+	/* Always write whole page including OOB due to HW ECC */
-+	nfc->use_hw_ecc = true;
-+	nfc->page_sz = mtd->writesize + mtd->oobsize;
-+
-+	return 0;
-+}
-+
- static const struct of_device_id vf610_nfc_dt_ids[] = {
- 	{ .compatible = "fsl,vf610-nfc" },
- 	{ /* sentinel */ }
-@@ -483,6 +633,16 @@ static int vf610_nfc_init_controller(struct vf610_nfc *nfc)
- 	vf610_nfc_set_field(nfc, NFC_FLASH_CONFIG, CONFIG_PAGE_CNT_MASK,
- 			    CONFIG_PAGE_CNT_SHIFT, 1);
- 
-+	if (nfc->chip.ecc.mode == NAND_ECC_HW) {
-+		/* Set ECC_STATUS offset */
-+		vf610_nfc_set_field(nfc, NFC_FLASH_CONFIG,
-+				    CONFIG_ECC_SRAM_ADDR_MASK,
-+				    CONFIG_ECC_SRAM_ADDR_SHIFT, ECC_SRAM_ADDR);
-+
-+		/* Enable ECC_STATUS */
-+		vf610_nfc_set(nfc, NFC_FLASH_CONFIG, CONFIG_ECC_SRAM_REQ_BIT);
-+	}
-+
- 	return 0;
- }
- 
-@@ -565,6 +725,45 @@ static int vf610_nfc_probe(struct platform_device *pdev)
- 		goto error;
- 	}
- 
-+	if (chip->ecc.mode == NAND_ECC_HW) {
-+		if (mtd->writesize != PAGE_2K && mtd->oobsize < 64) {
-+			dev_err(nfc->dev, "Unsupported flash with hwecc\n");
-+			err = -ENXIO;
-+			goto error;
-+		}
-+
-+		if (chip->ecc.size != mtd->writesize) {
-+			dev_err(nfc->dev, "Step size needs to be page size\n");
-+			err = -ENXIO;
-+			goto error;
-+		}
-+
-+		/* Only 64 byte ECC layouts known */
-+		if (mtd->oobsize > 64)
-+			mtd->oobsize = 64;
-+
-+		if (chip->ecc.strength == 32) {
-+			nfc->ecc_mode = ECC_60_BYTE;
-+			chip->ecc.bytes = 60;
-+			chip->ecc.layout = &vf610_nfc_ecc60;
-+		} else if (chip->ecc.strength == 24) {
-+			nfc->ecc_mode = ECC_45_BYTE;
-+			chip->ecc.bytes = 45;
-+			chip->ecc.layout = &vf610_nfc_ecc45;
-+		} else {
-+			dev_err(nfc->dev, "Unsupported ECC strength\n");
-+			err = -ENXIO;
-+			goto error;
-+		}
-+
-+		/* propagate ecc.layout to mtd_info */
-+		mtd->ecclayout = chip->ecc.layout;
-+		chip->ecc.read_page = vf610_nfc_read_page;
-+		chip->ecc.write_page = vf610_nfc_write_page;
-+
-+		chip->ecc.size = PAGE_2K;
-+	}
-+
- 	/* second phase scan */
- 	if (nand_scan_tail(mtd)) {
- 		err = -ENXIO;
--- 
-2.4.5
+Could you elaborate on how INT1 and INT2 are used? It looks like they're
+used as output pins, and so interrupt-names would seem appropriate for
+describing the combination which is wired up.
+
+w.r.t. configuring the choice of output(s), that sounds like a runtime
+decision rather than something which needs to be configured statically.
+
+> >> This is important for everyone to be able to use this driver, no matter
+> >> how their chip is wired. At the moment, only 0xff for using INT2 for all
+> >> available interrupt sources is supported. See the devicetree documentation
+> >> file for more details.
+> >>
+> >> Since this doesn't change the default behaviour, it doesn't break anything
+> >> for existing users.
+> >>
+> >> Signed-off-by: Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+> >> Signed-off-by: Christoph Muellner <christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+> >> ---
+> >>  .../devicetree/bindings/iio/accel/mma8452.txt        |  4 ++++
+> >>  drivers/iio/accel/mma8452.c                          | 20 +++++++++++++-------
+> >>  2 files changed, 17 insertions(+), 7 deletions(-)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/iio/accel/mma8452.txt b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
+> >> index 8d98e05..738a430 100644
+> >> --- a/Documentation/devicetree/bindings/iio/accel/mma8452.txt
+> >> +++ b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
+> >> @@ -10,6 +10,9 @@ Optional properties:
+> >>  
+> >>    - interrupt-parent: should be the phandle for the interrupt controller
+> >>    - interrupts: interrupt mapping for GPIO IRQ
+> >> +  - use_int2: bitmask to choose interrupt sources assumed to be wired to
+> >> +    interrupt pin INT2 instead of INT1. Only 0xff (INT2 for every interrupt
+> >> +    source) is supported at the moment.
+> > 
+> > s/_/-/ in property names, please.
+> 
+> ok. If I don't do a version 6 really soon, I'll reply with this patch
+> corrected here.
+> 
+> > 
+> > We generally avoid bitmasks in properties, and we also usually exepct a
+> > full cell even if data is smaller. The fact that you expect /bits/ 8 
+> > must be documented here if that's truly necessary.
+> 
+> It's not truly necessary. It's just a nice fit. There is one 8 bit
+> (device memory) register that basically could (in the future) be
+> exposed through this DT property.
+> 
+> For now it's just 0xff or nothing. We only don't want to create an
+> interface that could restrict us from implementing more in the future
+> without breaking anything.
+
+It sounds like you wouldn't need this (at least for now) if you were to
+use interrupt-names to describe whether INT1 and/or INT2 were wired up.
+
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
