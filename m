@@ -1,81 +1,65 @@
-From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 4/7] ARM64: zynqmp: Add DWC3 usb support
-Date: Mon, 27 Jul 2015 11:48:12 +0200
-Message-ID: <b3f7de61ce27b9ae18048ce19b62822bab72ebb5.1437990464.git.michal.simek@xilinx.com>
-References: <48a75b64b05dc094e34fe27e5d03552dbfe77fe2.1437990464.git.michal.simek@xilinx.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <48a75b64b05dc094e34fe27e5d03552dbfe77fe2.1437990464.git.michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-In-Reply-To: <48a75b64b05dc094e34fe27e5d03552dbfe77fe2.1437990464.git.michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-References: <48a75b64b05dc094e34fe27e5d03552dbfe77fe2.1437990464.git.michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, Suneel Garapati <suneel.garapati-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: [PATCH] ARM64: zynqmp: Enable spi flashes on ep108
+Date: Mon, 27 Jul 2015 11:50:26 +0200
+Message-ID: <1ab9d1360f86aec30fcecf49ac0b52b10766f3fc.1437990621.git.michal.simek@xilinx.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>, devicetree@vger.kernel.org, monstr@monstr.eu, Suneel Garapati <suneel.garapati@xilinx.com>, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Add usb nodes to DTSI and enable both of them on ep108.
+Enable spi flashes on ep108.
 
-Signed-off-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 ---
 
- arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts | 12 ++++++++++++
- arch/arm64/boot/dts/xilinx/zynqmp.dtsi      | 20 ++++++++++++++++++++
- 2 files changed, 32 insertions(+)
+ arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts | 34 +++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts b/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
-index 3aebc3f5d02a..d6cc4b583587 100644
+index 47debdcbefbf..279a992ce70e 100644
 --- a/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
 +++ b/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
-@@ -58,3 +58,15 @@
+@@ -81,6 +81,40 @@
+ 	status = "okay";
+ };
+ 
++&spi0 {
++	status = "okay";
++	num-cs = <1>;
++	spi0_flash0: spi0_flash0@0 {
++		compatible = "m25p80";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		spi-max-frequency = <50000000>;
++		reg = <0>;
++
++		spi0_flash0@00000000 {
++			label = "spi0_flash0";
++			reg = <0x0 0x100000>;
++		};
++	};
++};
++
++&spi1 {
++	status = "okay";
++	num-cs = <1>;
++	spi1_flash0: spi1_flash0@0 {
++		compatible = "m25p80";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		spi-max-frequency = <50000000>;
++		reg = <0>;
++
++		spi1_flash0@00000000 {
++			label = "spi1_flash0";
++			reg = <0x0 0x100000>;
++		};
++	};
++};
++
  &uart0 {
  	status = "okay";
  };
-+
-+&usb0 {
-+	status = "okay";
-+	dr_mode = "peripheral";
-+	maximum-speed = "high-speed";
-+};
-+
-+&usb1 {
-+	status = "okay";
-+	dr_mode = "host";
-+	maximum-speed = "high-speed";
-+};
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-index 7617722cc969..9cf364dc4890 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-@@ -343,6 +343,26 @@
- 			clocks = <&misc_clk>, <&misc_clk>;
- 		};
- 
-+		usb0: usb@fe200000 {
-+			compatible = "snps,dwc3";
-+			status = "disabled";
-+			interrupt-parent = <&gic>;
-+			interrupts = <0 65 4>;
-+			reg = <0x0 0xfe200000 0x40000>;
-+			clock-names = "clk_xin", "clk_ahb";
-+			clocks = <&misc_clk>, <&misc_clk>;
-+		};
-+
-+		usb1: usb@fe300000 {
-+			compatible = "snps,dwc3";
-+			status = "disabled";
-+			interrupt-parent = <&gic>;
-+			interrupts = <0 70 4>;
-+			reg = <0x0 0xfe300000 0x40000>;
-+			clock-names = "clk_xin", "clk_ahb";
-+			clocks = <&misc_clk>, <&misc_clk>;
-+		};
-+
- 		watchdog0: watchdog@fd4d0000 {
- 			compatible = "cdns,wdt-r1p2";
- 			status = "disabled";
 -- 
 2.3.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
