@@ -1,29 +1,54 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] pinctrl: dt-binding: document Conexant CX92755 SoC
-Date: Mon, 27 Jul 2015 11:47:12 +0200
-Message-ID: <CACRpkdYt9txoqoD2pRsQbPmhyh=dXdyhPh2JBRJbs3RN3a3fzQ@mail.gmail.com>
-References: <eaf294961247ac7c105156d6fae6d7389a4c0dfc.1430823310.git.baruch@tkos.co.il>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <eaf294961247ac7c105156d6fae6d7389a4c0dfc.1430823310.git.baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Cc: "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: [PATCH 1/7] ARM64: zynqmp: Use zynqmp specific compatible string for gpio
+Date: Mon, 27 Jul 2015 11:48:09 +0200
+Message-ID: <48a75b64b05dc094e34fe27e5d03552dbfe77fe2.1437990464.git.michal.simek@xilinx.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>, devicetree@vger.kernel.org, monstr@monstr.eu, Suneel Garapati <suneel.garapati@xilinx.com>, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 5, 2015 at 12:55 PM, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org> wrote:
+The patch:
+"gpio: Added support to Zynq Ultrascale+ MPSoC"
+(sha1: bdf7a4ae371894b4dc10b5820006b0a82d484929)
+added zynqmp specific features. This patch is switching the driver to
+use the zynqmp compatible string.
+Also enable the driver for ep108 platform.
 
-> Add pinctrl device tree binding documentation for the General Purpose Pin
-> Mapping module of the Conexant CX92755 SoC.
->
-> Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+---
 
-Patch applied.
+ arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts | 4 ++++
+ arch/arm64/boot/dts/xilinx/zynqmp.dtsi      | 2 +-
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts b/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
+index 02b5d76c33f7..82deb24dddeb 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
++++ b/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
+@@ -42,6 +42,10 @@
+ 	};
+ };
+ 
++&gpio {
++	status = "okay";
++};
++
+ &sata0 {
+ 	status = "okay";
+ 	ceva,broken-gen2;
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+index e7545edf6179..bd9ba0cab504 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
++++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+@@ -163,7 +163,7 @@
+ 		};
+ 
+ 		gpio: gpio@ff0a0000 {
+-			compatible = "xlnx,zynq-gpio-1.0";
++			compatible = "xlnx,zynqmp-gpio-1.0";
+ 			status = "disabled";
+ 			#gpio-cells = <0x2>;
+ 			clocks = <&misc_clk>;
+-- 
+2.3.5
