@@ -1,114 +1,271 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 8/8] iio: mma8452: add devicetree property to allow all
- pin wirings
-Date: Mon, 27 Jul 2015 15:23:36 +0100
-Message-ID: <20150727142336.GB10821@leverpostej>
-References: <1438006095-26920-1-git-send-email-martink@posteo.de>
- <1438006095-26920-9-git-send-email-martink@posteo.de>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v2] dts: ls1021a: Add dts nodes for eTSEC0, eTSEC1 and
+ eTSEC2
+Date: Mon, 27 Jul 2015 22:28:16 +0800
+Message-ID: <20150727142816.GP12927@tiger>
+References: <20150713133138.GO23464@tiger>
+ <1436888777-29742-1-git-send-email-claudiu.manoil@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1438006095-26920-9-git-send-email-martink@posteo.de>
+In-Reply-To: <1436888777-29742-1-git-send-email-claudiu.manoil@freescale.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Kepplinger <martink@posteo.de>
-Cc: "jic23@kernel.org" <jic23@kernel.org>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "lars@metafoo.de" <lars@metafoo.de>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "mfuzzey@parkeon.com" <mfuzzey@parkeon.com>, "roberta.dobrescu@gmail.com" <roberta.dobrescu@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "christoph.muellner@theobroma-systems.com" <christoph.muellner@theobroma-systems.com>, Martin Kepplinger <martin.kepplinger@theobroma-systems.com>
+To: Claudiu Manoil <claudiu.manoil@freescale.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, shawn.guo@linaro.org, Alison Wang <alison.wang@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 27, 2015 at 03:08:15PM +0100, Martin Kepplinger wrote:
-> For the devices supported by the mma8452 driver, two interrupt pins are
-> available to route the interrupt signals to. By default INT1 is assumed.
+On Tue, Jul 14, 2015 at 06:46:17PM +0300, Claudiu Manoil wrote:
+> This patch adds generic dts nodes for eTSEC0, eTSEC1 and eTSEC2.
 > 
-> This adds a bitmask DT property for users to configure interrupt sources
-> for INT2, if that is the wired interrupt pin for them.
+> Signed-off-by: Alison Wang <alison.wang@freescale.com>
 
-This sounds like configureation rather than a HW property. Why does this
-need to be in the DT?
+SoBs should be put together.
 
-> This is important for everyone to be able to use this driver, no matter
-> how their chip is wired. At the moment, only 0xff for using INT2 for all
-> available interrupt sources is supported. See the devicetree documentation
-> file for more details.
 > 
-> Since this doesn't change the default behaviour, it doesn't break anything
-> for existing users.
+> Enable support for the second interrupt group register block
+> and the corresponding Rx/Tx/Err interrupt sources, for each
+> eTSEC node.  DT binding documentation updates.
 > 
-> Signed-off-by: Martin Kepplinger <martin.kepplinger@theobroma-systems.com>
-> Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
+> Signed-off-by: Claudiu Manoil <claudiu.manoil@freescale.com>
+
+Please use "ARM: dts: ls1021a: ..." as subject prefix.
+
 > ---
->  .../devicetree/bindings/iio/accel/mma8452.txt        |  4 ++++
->  drivers/iio/accel/mma8452.c                          | 20 +++++++++++++-------
->  2 files changed, 17 insertions(+), 7 deletions(-)
+> v2:
+>  - register block size is 0x1000 (4kB memory page), not 0x8000;
+>  - reg property has 2 "address" and resp. 2 "size" cells;
+>  - remove optional/ obsoleted properties;
+>  - use register block address as queue-group id for consistency;
+>  - binding documentation updates for missing vendor properties;
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/accel/mma8452.txt b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
-> index 8d98e05..738a430 100644
-> --- a/Documentation/devicetree/bindings/iio/accel/mma8452.txt
-> +++ b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
-> @@ -10,6 +10,9 @@ Optional properties:
+> 
+>  .../devicetree/bindings/net/fsl-tsec-phy.txt       |  6 +-
+
+Bindings doc should be a separate patch reviewed by device tree
+maintainers.
+
+>  arch/arm/boot/dts/ls1021a-qds.dts                  | 20 +++++
+>  arch/arm/boot/dts/ls1021a-twr.dts                  | 20 +++++
+>  arch/arm/boot/dts/ls1021a.dtsi                     | 92 ++++++++++++++++++++++
+
+Please separate soc level dts changes from board level changes.
+
+>  4 files changed, 137 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/fsl-tsec-phy.txt b/Documentation/devicetree/bindings/net/fsl-tsec-phy.txt
+> index 1e97532..b3291c7 100644
+> --- a/Documentation/devicetree/bindings/net/fsl-tsec-phy.txt
+> +++ b/Documentation/devicetree/bindings/net/fsl-tsec-phy.txt
+> @@ -45,7 +45,7 @@ Properties:
 >  
->    - interrupt-parent: should be the phandle for the interrupt controller
->    - interrupts: interrupt mapping for GPIO IRQ
-> +  - use_int2: bitmask to choose interrupt sources assumed to be wired to
-> +    interrupt pin INT2 instead of INT1. Only 0xff (INT2 for every interrupt
-> +    source) is supported at the moment.
+>    - device_type : Should be "network"
+>    - model : Model of the device.  Can be "TSEC", "eTSEC", or "FEC"
+> -  - compatible : Should be "gianfar"
+> +  - compatible : "gianfar", "fsl-etsec2"
 
-s/_/-/ in property names, please.
+You meant "fsl,etsec2", which is what I see from dts changes?
 
-We generally avoid bitmasks in properties, and we also usually exepct a
-full cell even if data is smaller. The fact that you expect /bits/ 8 
-must be documented here if that's truly necessary.
-
-Thanks,
-Mark
-
->  
->  Example:
->  
-> @@ -18,4 +21,5 @@ Example:
->  		reg = <0x1d>;
->  		interrupt-parent = <&gpio1>;
->  		interrupts = <5 0>;
-> +		use_int2 = /bits/ 8 <0xff>;
+>    - reg : Offset and length of the register set for the device
+>    - interrupts : For FEC devices, the first interrupt is the device's
+>      interrupt.  For TSEC and eTSEC devices, the first interrupt is
+> @@ -57,6 +57,10 @@ Properties:
+>      "rgmii-id", as all other connection types are detected by hardware.
+>    - fsl,magic-packet : If present, indicates that the hardware supports
+>      waking up via magic packet.
+> +  - fsl,wake-on-filer: Indicates that the device can wake up the system
+> +    by generating a filer interrupt. Depending on the wake-on-lan mode
+> +    set for this device, the filer interrupt can be triggered by certain
+> +    user-defined ethernet packets (usually ARP or L2 unicast packets).
+>    - bd-stash : If present, indicates that the hardware supports stashing
+>      buffer descriptors in the L2.
+>    - rx-stash-len : Denotes the number of bytes of a received buffer to stash
+> diff --git a/arch/arm/boot/dts/ls1021a-qds.dts b/arch/arm/boot/dts/ls1021a-qds.dts
+> index 9c5e16b..f16a061 100644
+> --- a/arch/arm/boot/dts/ls1021a-qds.dts
+> +++ b/arch/arm/boot/dts/ls1021a-qds.dts
+> @@ -75,6 +75,26 @@
 >  	};
-> diff --git a/drivers/iio/accel/mma8452.c b/drivers/iio/accel/mma8452.c
-> index 918ab59..a03836b1 100644
-> --- a/drivers/iio/accel/mma8452.c
-> +++ b/drivers/iio/accel/mma8452.c
-> @@ -1028,8 +1028,9 @@ static int mma8452_probe(struct i2c_client *client,
->  {
->  	struct mma8452_data *data;
->  	struct iio_dev *indio_dev;
-> -	int ret;
->  	const struct of_device_id *match;
-> +	int ret;
-> +	u8 int2;
+>  };
 >  
->  	match = of_match_device(mma8452_dt_ids, &client->dev);
->  	if (!match) {
-> @@ -1104,12 +1105,17 @@ static int mma8452_probe(struct i2c_client *client,
->  		int enabled_interrupts = MMA8452_INT_TRANS |
->  					 MMA8452_INT_FF_MT;
+> +&enet0 {
+> +	tbi-handle = <&tbi0>;
+
+tbi-handle is undocumented.
+
+> +	phy-handle = <&sgmii_phy1c>;
+> +	phy-connection-type = "sgmii";
+> +	status = "okay";
+> +};
+> +
+> +&enet1 {
+> +	tbi-handle = <&tbi0>;
+> +	phy-handle = <&sgmii_phy1d>;
+> +	phy-connection-type = "sgmii";
+> +	status = "okay";
+> +};
+> +
+> +&enet2 {
+> +	phy-handle = <&rgmii_phy3>;
+> +	phy-connection-type = "rgmii-id";
+> +	status = "okay";
+> +};
+> +
+>  &i2c0 {
+>  	status = "okay";
 >  
-> -		/* Assume wired to INT1 pin */
-> -		ret = i2c_smbus_write_byte_data(client,
-> -						MMA8452_CTRL_REG5,
-> -						supported_interrupts);
-> -		if (ret < 0)
-> -			return ret;
-> +		of_property_read_u8(client->dev.of_node, "use_int2", &int2);
-> +		if (int2 == 0xff) {
-> +			dev_dbg(&client->dev, "use interrupt line INT2\n");
-> +		} else {
-> +			dev_dbg(&client->dev, "use interrupt line INT1\n");
-> +			ret = i2c_smbus_write_byte_data(client,
-> +							MMA8452_CTRL_REG5,
-> +							supported_interrupts);
-> +			if (ret < 0)
-> +				return ret;
-> +		}
+> diff --git a/arch/arm/boot/dts/ls1021a-twr.dts b/arch/arm/boot/dts/ls1021a-twr.dts
+> index a2c591e..4b61766 100644
+> --- a/arch/arm/boot/dts/ls1021a-twr.dts
+> +++ b/arch/arm/boot/dts/ls1021a-twr.dts
+> @@ -73,6 +73,26 @@
+>  	};
+>  };
 >  
->  		ret = i2c_smbus_write_byte_data(client,
->  						MMA8452_CTRL_REG4,
+> +&enet0 {
+> +	tbi-handle = <&tbi1>;
+> +	phy-handle = <&sgmii_phy2>;
+> +	phy-connection-type = "sgmii";
+> +	status = "okay";
+> +};
+> +
+> +&enet1 {
+> +	tbi-handle = <&tbi1>;
+> +	phy-handle = <&sgmii_phy0>;
+> +	phy-connection-type = "sgmii";
+> +	status = "okay";
+> +};
+> +
+> +&enet2 {
+> +	phy-handle = <&rgmii_phy1>;
+> +	phy-connection-type = "rgmii-id";
+> +	status = "okay";
+> +};
+> +
+>  &i2c0 {
+>  	status = "okay";
+>  };
+> diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
+> index c70bb27..cc48d56 100644
+> --- a/arch/arm/boot/dts/ls1021a.dtsi
+> +++ b/arch/arm/boot/dts/ls1021a.dtsi
+> @@ -59,6 +59,9 @@
+>  		serial3 = &lpuart3;
+>  		serial4 = &lpuart4;
+>  		serial5 = &lpuart5;
+> +		ethernet0 = &enet0;
+> +		ethernet1 = &enet1;
+> +		ethernet2 = &enet2;
+>  		sysclk = &sysclk;
+>  	};
+>  
+> @@ -391,6 +394,95 @@
+>  			reg = <0x0 0x2d24000 0x0 0x4000>;
+>  		};
+>  
+> +		enet0: ethernet@2d10000 {
+> +			compatible = "fsl,etsec2";
+> +			device_type = "network";
+> +			#address-cells = <2>;
+> +			#size-cells = <2>;
+> +			interrupt-parent = <&gic>;
+> +			model = "eTSEC";
+> +			fsl,magic-packet;
+> +			fsl,wake-on-filer;
+> +			local-mac-address = [ 00 00 00 00 00 00 ];
+
+What is this all zero local-mac-address used for?
+
+Shawn
+
+> +			ranges;
+> +
+> +			queue-group@2d10000 {
+> +				#address-cells = <2>;
+> +				#size-cells = <2>;
+> +				reg = <0x0 0x2d10000 0x0 0x1000>;
+> +				interrupts = <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>,
+> +					<GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>,
+> +					<GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>;
+> +			};
+> +
+> +			queue-group@2d14000  {
+> +				#address-cells = <2>;
+> +				#size-cells = <2>;
+> +				reg = <0x0 0x2d14000 0x0 0x1000>;
+> +				interrupts = <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>,
+> +					<GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>,
+> +					<GIC_SPI 149 IRQ_TYPE_LEVEL_HIGH>;
+> +			};
+> +		};
+> +
+> +		enet1: ethernet@2d50000 {
+> +			compatible = "fsl,etsec2";
+> +			device_type = "network";
+> +			#address-cells = <2>;
+> +			#size-cells = <2>;
+> +			interrupt-parent = <&gic>;
+> +			model = "eTSEC";
+> +			local-mac-address = [ 00 00 00 00 00 00 ];
+> +			ranges;
+> +
+> +			queue-group@2d50000  {
+> +				#address-cells = <2>;
+> +				#size-cells = <2>;
+> +				reg = <0x0 0x2d50000 0x0 0x1000>;
+> +				interrupts = <GIC_SPI 150 IRQ_TYPE_LEVEL_HIGH>,
+> +					<GIC_SPI 152 IRQ_TYPE_LEVEL_HIGH>,
+> +					<GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>;
+> +			};
+> +
+> +			queue-group@2d54000  {
+> +				#address-cells = <2>;
+> +				#size-cells = <2>;
+> +				reg = <0x0 0x2d54000 0x0 0x1000>;
+> +				interrupts = <GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>,
+> +					<GIC_SPI 155 IRQ_TYPE_LEVEL_HIGH>,
+> +					<GIC_SPI 156 IRQ_TYPE_LEVEL_HIGH>;
+> +			};
+> +		};
+> +
+> +		enet2: ethernet@2d90000 {
+> +			compatible = "fsl,etsec2";
+> +			device_type = "network";
+> +			#address-cells = <2>;
+> +			#size-cells = <2>;
+> +			interrupt-parent = <&gic>;
+> +			model = "eTSEC";
+> +			local-mac-address = [ 00 00 00 00 00 00 ];
+> +			ranges;
+> +
+> +			queue-group@2d90000  {
+> +				#address-cells = <2>;
+> +				#size-cells = <2>;
+> +				reg = <0x0 0x2d90000 0x0 0x1000>;
+> +				interrupts = <GIC_SPI 157 IRQ_TYPE_LEVEL_HIGH>,
+> +					<GIC_SPI 158 IRQ_TYPE_LEVEL_HIGH>,
+> +					<GIC_SPI 159 IRQ_TYPE_LEVEL_HIGH>;
+> +			};
+> +
+> +			queue-group@2d94000  {
+> +				#address-cells = <2>;
+> +				#size-cells = <2>;
+> +				reg = <0x0 0x2d94000 0x0 0x1000>;
+> +				interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
+> +					<GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>,
+> +					<GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>;
+> +			};
+> +		};
+> +
+>  		usb@8600000 {
+>  			compatible = "fsl-usb2-dr-v2.5", "fsl-usb2-dr";
+>  			reg = <0x0 0x8600000 0x0 0x1000>;
 > -- 
-> 2.1.4
+> 1.7.11.7
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 > 
