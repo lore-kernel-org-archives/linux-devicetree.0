@@ -1,588 +1,230 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v2 3/6] mailbox: Add support for ST's Mailbox IP
-Date: Mon, 27 Jul 2015 10:44:29 +0100
-Message-ID: <1437990272-23111-4-git-send-email-lee.jones@linaro.org>
-References: <1437990272-23111-1-git-send-email-lee.jones@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1437990272-23111-1-git-send-email-lee.jones@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: kernel@stlinux.com, jassisinghbrar@gmail.com, devicetree@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 1/3] Docs: dt: add generic MSI bindings
+Date: Mon, 27 Jul 2015 10:46:38 +0100
+Message-ID: <20150727094638.GB9169@leverpostej>
+References: <1437670365-20704-1-git-send-email-mark.rutland@arm.com>
+	<1437670365-20704-2-git-send-email-mark.rutland@arm.com>
+	<55B5E5A6.2030509@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <55B5E5A6.2030509-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org" <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "tirumalesh.chalamarla-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org" <tirumalesh.chalamarla-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org" <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org" <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "majun258-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <majun258-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-ST's platforms currently support a maximum of 5 Mailboxes, one for
-each of the supported co-processors situated on the platform.  Each
-Mailbox is divided up into 4 instances which consist of 32 channels.
-Messages are passed between the application and co-processors using
-shared memory areas.  It is the Client's responsibility to manage
-these areas.
+On Mon, Jul 27, 2015 at 09:02:46AM +0100, Marc Zyngier wrote:
+> Hi Mark,
 
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/mailbox/Kconfig       |   7 +
- drivers/mailbox/Makefile      |   2 +
- drivers/mailbox/mailbox-sti.c | 527 ++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 536 insertions(+)
- create mode 100644 drivers/mailbox/mailbox-sti.c
+Hi,
 
-diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
-index e269f08..2cc4c39 100644
---- a/drivers/mailbox/Kconfig
-+++ b/drivers/mailbox/Kconfig
-@@ -70,4 +70,11 @@ config BCM2835_MBOX
- 	  the services of the Videocore. Say Y here if you want to use the
- 	  BCM2835 Mailbox.
- 
-+config STI_MBOX
-+	tristate "STI Mailbox framework support"
-+	depends on ARCH_STI && OF
-+	help
-+	  Mailbox implementation for STMicroelectonics family chips with
-+	  hardware for interprocessor communication.
-+
- endif
-diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
-index 8e6d822..7cb4766 100644
---- a/drivers/mailbox/Makefile
-+++ b/drivers/mailbox/Makefile
-@@ -13,3 +13,5 @@ obj-$(CONFIG_PCC)		+= pcc.o
- obj-$(CONFIG_ALTERA_MBOX)	+= mailbox-altera.o
- 
- obj-$(CONFIG_BCM2835_MBOX)	+= bcm2835-mailbox.o
-+
-+obj-$(CONFIG_STI_MBOX)		+= mailbox-sti.o
-diff --git a/drivers/mailbox/mailbox-sti.c b/drivers/mailbox/mailbox-sti.c
-new file mode 100644
-index 0000000..54679d8
---- /dev/null
-+++ b/drivers/mailbox/mailbox-sti.c
-@@ -0,0 +1,527 @@
-+/*
-+ * STi Mailbox
-+ *
-+ * Copyright (C) 2015 ST Microelectronics
-+ *
-+ * Author: Lee Jones <lee.jones@linaro.org> for ST Microelectronics
-+ *
-+ * Based on the original driver written by;
-+ *   Alexandre Torgue, Olivier Lebreton and Loic Pallardy
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/mailbox_controller.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+#include <dt-bindings/mailbox/mailbox.h>
-+
-+#include "mailbox.h"
-+
-+#define STI_MBOX_INST_MAX	4      /* RAM saving: Max supported instances */
-+#define STI_MBOX_CHAN_MAX	20     /* RAM saving: Max supported channels  */
-+
-+#define STI_IRQ_VAL_OFFSET	0x04   /* Read interrupt status	              */
-+#define STI_IRQ_SET_OFFSET	0x24   /* Generate a Tx channel interrupt     */
-+#define STI_IRQ_CLR_OFFSET	0x44   /* Clear pending Rx interrupts	      */
-+#define STI_ENA_VAL_OFFSET	0x64   /* Read enable status		      */
-+#define STI_ENA_SET_OFFSET	0x84   /* Enable a channel		      */
-+#define STI_ENA_CLR_OFFSET	0xa4   /* Disable a channel		      */
-+
-+#define MBOX_BASE(mdev, inst)   ((mdev)->base + (inst * 4))
-+
-+/**
-+ * STi Mailbox device data
-+ *
-+ * An IP Mailbox is currently composed of 4 instances
-+ * Each instance is currently composed of 32 channels
-+ * This means that we have 128 channels per Mailbox
-+ * A channel an be used for TX or RX
-+ *
-+ * @dev:	Device to which it is attached
-+ * @mbox:	Representation of a communication channel controller
-+ * @base:	Base address of the register mapping region
-+ * @name:	Name of the mailbox
-+ * @enabled:	Local copy of enabled channels
-+ * @lock:	Mutex protecting enabled status
-+ */
-+struct sti_mbox_device {
-+	struct device		*dev;
-+	struct mbox_controller	*mbox;
-+	void __iomem		*base;
-+	const char		*name;
-+	u32			enabled[STI_MBOX_INST_MAX];
-+	spinlock_t		lock;
-+};
-+
-+/**
-+ * STi Mailbox platform specfic configuration
-+ *
-+ * @num_inst:	Maximum number of instances in one HW Mailbox
-+ * @num_chan:	Maximum number of channel per instance
-+ */
-+struct sti_mbox_pdata {
-+	unsigned int		num_inst;
-+	unsigned int		num_chan;
-+};
-+
-+/**
-+ * STi Mailbox allocated channel information
-+ *
-+ * @mdev:	Pointer to parent Mailbox device
-+ * @instance:	Instance number channel resides in
-+ * @channel:	Channel number pertaining to this container
-+ * @direction:	Direction which data will travel in through the channel (Tx/Rx)
-+ */
-+struct sti_channel {
-+	struct sti_mbox_device	*mdev;
-+	unsigned int		instance;
-+	unsigned int		channel;
-+	unsigned int		direction;
-+};
-+
-+static inline bool sti_mbox_channel_is_enabled(struct mbox_chan *chan)
-+{
-+	struct sti_channel *chan_info = chan->con_priv;
-+	struct sti_mbox_device *mdev = chan_info->mdev;
-+	unsigned int instance = chan_info->instance;
-+	unsigned int channel = chan_info->channel;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&mdev->lock, flags);
-+	return mdev->enabled[instance] & BIT(channel);
-+	spin_unlock_irqrestore(&mdev->lock, flags);
-+}
-+
-+static inline
-+struct mbox_chan *sti_mbox_to_channel(struct mbox_controller *mbox,
-+				      unsigned int instance,
-+				      unsigned int channel)
-+{
-+	struct sti_channel *chan_info;
-+	int i;
-+
-+	for (i = 0; i < mbox->num_chans; i++) {
-+		chan_info = mbox->chans[i].con_priv;
-+		if (chan_info &&
-+		    chan_info->instance == instance &&
-+		    chan_info->channel == channel)
-+			return &mbox->chans[i];
-+	}
-+
-+	dev_err(mbox->dev,
-+		"Channel not registered: instance: %d channel: %d\n",
-+		instance, channel);
-+
-+	return NULL;
-+}
-+
-+static void sti_mbox_enable_channel(struct mbox_chan *chan)
-+{
-+	struct sti_channel *chan_info = chan->con_priv;
-+	struct sti_mbox_device *mdev = chan_info->mdev;
-+	unsigned int instance = chan_info->instance;
-+	unsigned int channel = chan_info->channel;
-+	unsigned long flags;
-+	void __iomem *base = MBOX_BASE(mdev, instance);
-+
-+	spin_lock_irqsave(&mdev->lock, flags);
-+	mdev->enabled[instance] |= BIT(channel);
-+	writel_relaxed(BIT(channel), base + STI_ENA_SET_OFFSET);
-+	spin_unlock_irqrestore(&mdev->lock, flags);
-+}
-+
-+static void sti_mbox_disable_channel(struct mbox_chan *chan)
-+{
-+	struct sti_channel *chan_info = chan->con_priv;
-+	struct sti_mbox_device *mdev = chan_info->mdev;
-+	unsigned int instance = chan_info->instance;
-+	unsigned int channel = chan_info->channel;
-+	unsigned long flags;
-+	void __iomem *base = MBOX_BASE(mdev, instance);
-+
-+	spin_lock_irqsave(&mdev->lock, flags);
-+	mdev->enabled[instance] &= ~BIT(channel);
-+	writel_relaxed(BIT(channel), base + STI_ENA_CLR_OFFSET);
-+	spin_unlock_irqrestore(&mdev->lock, flags);
-+}
-+
-+static void sti_mbox_clear_irq(struct mbox_chan *chan)
-+{
-+	struct sti_channel *chan_info = chan->con_priv;
-+	struct sti_mbox_device *mdev = chan_info->mdev;
-+	unsigned int instance = chan_info->instance;
-+	unsigned int channel = chan_info->channel;
-+	void __iomem *base = MBOX_BASE(mdev, instance);
-+
-+	writel_relaxed(BIT(channel), base + STI_IRQ_CLR_OFFSET);
-+}
-+
-+static struct mbox_chan *sti_mbox_irq_to_channel(struct sti_mbox_device *mdev,
-+						 unsigned int instance)
-+{
-+	struct mbox_controller *mbox = mdev->mbox;
-+	struct mbox_chan *chan = NULL;
-+	unsigned int channel;
-+	unsigned long bits;
-+	void __iomem *base = MBOX_BASE(mdev, instance);
-+
-+	bits = readl_relaxed(base + STI_IRQ_VAL_OFFSET);
-+	if (!bits)
-+		/* No IRQs fired in specified instance */
-+		return NULL;
-+
-+	/* An IRQ has fired, find the associated channel */
-+	for (channel = 0; bits; channel++) {
-+		if (!test_and_clear_bit(channel, &bits))
-+			continue;
-+
-+		chan = sti_mbox_to_channel(mbox, instance, channel);
-+		if (chan) {
-+			dev_dbg(mbox->dev,
-+				"IRQ fired on instance: %d channel: %d\n",
-+				instance, channel);
-+			break;
-+		}
-+	}
-+
-+	return chan;
-+}
-+
-+static irqreturn_t sti_mbox_thread_handler(int irq, void *data)
-+{
-+	struct sti_mbox_device *mdev = data;
-+	struct sti_mbox_pdata *pdata = dev_get_platdata(mdev->dev);
-+	struct mbox_chan *chan;
-+	unsigned int instance;
-+
-+	for (instance = 0; instance < pdata->num_inst; instance++) {
-+keep_looking:
-+		chan = sti_mbox_irq_to_channel(mdev, instance);
-+		if (!chan)
-+			continue;
-+
-+		mbox_chan_received_data(chan, NULL);
-+		sti_mbox_clear_irq(chan);
-+		sti_mbox_enable_channel(chan);
-+		goto keep_looking;
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static irqreturn_t sti_mbox_irq_handler(int irq, void *data)
-+{
-+	struct sti_mbox_device *mdev = data;
-+	struct sti_mbox_pdata *pdata = dev_get_platdata(mdev->dev);
-+	struct sti_channel *chan_info;
-+	struct mbox_chan *chan;
-+	unsigned int instance;
-+	int ret = IRQ_NONE;
-+
-+	for (instance = 0; instance < pdata->num_inst; instance++) {
-+		chan = sti_mbox_irq_to_channel(mdev, instance);
-+		if (!chan)
-+			continue;
-+		chan_info = chan->con_priv;
-+
-+		if (!sti_mbox_channel_is_enabled(chan)) {
-+			dev_warn(mdev->dev,
-+				 "Unexpected IRQ: %s\n"
-+				 "  instance: %d: channel: %d [enabled: %x]\n",
-+				 mdev->name, chan_info->instance,
-+				 chan_info->channel, mdev->enabled[instance]);
-+
-+			/* Only handle IRQ if no other valid IRQs were found */
-+			if (ret == IRQ_NONE)
-+				ret = IRQ_HANDLED;
-+			continue;
-+		}
-+
-+		sti_mbox_disable_channel(chan);
-+		ret = IRQ_WAKE_THREAD;
-+	}
-+
-+	if (ret == IRQ_NONE)
-+		dev_err(mdev->dev, "Spurious IRQ - was a channel requested?\n");
-+
-+	return ret;
-+}
-+
-+static bool sti_mbox_tx_is_ready(struct mbox_chan *chan)
-+{
-+	struct sti_channel *chan_info = chan->con_priv;
-+	struct sti_mbox_device *mdev = chan_info->mdev;
-+	unsigned int instance = chan_info->instance;
-+	unsigned int channel = chan_info->channel;
-+	void __iomem *base = MBOX_BASE(mdev, instance);
-+
-+	if (!(chan_info->direction & MBOX_TX))
-+		return false;
-+
-+	if (!(readl_relaxed(base + STI_ENA_VAL_OFFSET) & BIT(channel))) {
-+		dev_dbg(mdev->dev, "Mbox: %s: inst: %d, chan: %d disabled\n",
-+			mdev->name, instance, channel);
-+		return false;
-+	}
-+
-+	if (readl_relaxed(base + STI_IRQ_VAL_OFFSET) & BIT(channel)) {
-+		dev_dbg(mdev->dev, "Mbox: %s: inst: %d, chan: %d not ready\n",
-+			mdev->name, instance, channel);
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
-+static int sti_mbox_send_data(struct mbox_chan *chan, void *data)
-+{
-+	struct sti_channel *chan_info = chan->con_priv;
-+	struct sti_mbox_device *mdev = chan_info->mdev;
-+	unsigned int instance = chan_info->instance;
-+	unsigned int channel = chan_info->channel;
-+	void __iomem *base = MBOX_BASE(mdev, instance);
-+
-+	/* Send event to co-processor */
-+	writel_relaxed(BIT(channel), base + STI_IRQ_SET_OFFSET);
-+
-+	dev_dbg(mdev->dev,
-+		"Sent via Mailbox %s: instance: %d channel: %d\n",
-+		mdev->name, instance, channel);
-+
-+	return 0;
-+}
-+
-+static int sti_mbox_startup_chan(struct mbox_chan *chan)
-+{
-+	sti_mbox_clear_irq(chan);
-+	sti_mbox_enable_channel(chan);
-+
-+	return 0;
-+}
-+
-+static void sti_mbox_shutdown_chan(struct mbox_chan *chan)
-+{
-+	struct sti_channel *chan_info = chan->con_priv;
-+	struct mbox_controller *mbox = chan_info->mdev->mbox;
-+	int i;
-+
-+	for (i = 0; i < mbox->num_chans; i++)
-+		if (chan == &mbox->chans[i])
-+			break;
-+
-+	if (mbox->num_chans == i) {
-+		dev_warn(mbox->dev, "Request to free non-existent channel\n");
-+		return;
-+	}
-+
-+	/* Reset channel */
-+	sti_mbox_disable_channel(chan);
-+	sti_mbox_clear_irq(chan);
-+	chan->con_priv = NULL;
-+}
-+
-+static struct mbox_chan *sti_mbox_xlate(struct mbox_controller *mbox,
-+					const struct of_phandle_args *spec)
-+{
-+	struct sti_mbox_device *mdev = dev_get_drvdata(mbox->dev);
-+	struct sti_mbox_pdata *pdata = dev_get_platdata(mdev->dev);
-+	struct sti_channel *chan_info;
-+	struct mbox_chan *chan = NULL;
-+	unsigned int instance  = spec->args[0];
-+	unsigned int channel   = spec->args[1];
-+	unsigned int direction = spec->args[2];
-+	int i;
-+
-+	/* Bounds checking */
-+	if (instance >= pdata->num_inst || channel  >= pdata->num_chan) {
-+		dev_err(mbox->dev,
-+			"Invalid channel requested instance: %d channel: %d\n",
-+			instance, channel);
-+		return NULL;
-+	}
-+
-+	for (i = 0; i < mbox->num_chans; i++) {
-+		chan_info = mbox->chans[i].con_priv;
-+
-+		/* Is requested channel free? */
-+		if (direction != MBOX_LOOPBACK &&
-+		    chan_info &&
-+		    mbox->dev == chan_info->mdev->dev &&
-+		    instance == chan_info->instance &&
-+		    channel == chan_info->channel) {
-+			dev_err(mbox->dev, "Channel in use\n");
-+			return NULL;
-+		}
-+
-+		/*
-+		 * Find the first free slot, then continue checking
-+		 * to see if requested channel is in use
-+		 */
-+		if (!chan && !chan_info)
-+			chan = &mbox->chans[i];
-+	}
-+
-+	if (!chan) {
-+		dev_err(mbox->dev, "No free channels left\n");
-+		return NULL;
-+	}
-+
-+	chan_info = devm_kzalloc(mbox->dev, sizeof(*chan_info), GFP_KERNEL);
-+	if (!chan_info)
-+		return NULL;
-+
-+	chan_info->mdev		= mdev;
-+	chan_info->instance	= instance;
-+	chan_info->channel	= channel;
-+	chan_info->direction	= direction;
-+
-+	chan->con_priv = chan_info;
-+
-+	dev_info(mbox->dev,
-+		 "Mbox: %s: Created channel:\n"
-+		 "  instance: %d channel: %d direction: %s\n",
-+		 mdev->name, instance, channel,
-+		direction == MBOX_LOOPBACK ? "Loopback" :
-+		direction == MBOX_TX ? "Tx" : "Rx");
-+
-+	return chan;
-+}
-+
-+static struct mbox_chan_ops sti_mbox_ops = {
-+	.startup	= sti_mbox_startup_chan,
-+	.shutdown	= sti_mbox_shutdown_chan,
-+	.send_data	= sti_mbox_send_data,
-+	.last_tx_done	= sti_mbox_tx_is_ready,
-+};
-+
-+static const struct sti_mbox_pdata mbox_stih407_pdata = {
-+	.num_inst	= 4,
-+	.num_chan	= 32,
-+};
-+
-+static const struct of_device_id sti_mailbox_match[] = {
-+	{
-+		.compatible = "st,stih407-mailbox",
-+		.data = (void *)&mbox_stih407_pdata
-+	},
-+	{ }
-+};
-+
-+static int sti_mbox_probe(struct platform_device *pdev)
-+{
-+	const struct of_device_id *match;
-+	struct mbox_controller *mbox;
-+	struct sti_mbox_device *mdev;
-+	struct device_node *np = pdev->dev.of_node;
-+	struct mbox_chan *chans;
-+	struct resource *res;
-+	int irq;
-+	int ret;
-+
-+	match = of_match_device(sti_mailbox_match, &pdev->dev);
-+	if (!match) {
-+		dev_err(&pdev->dev, "No configuration found\n");
-+		return -ENODEV;
-+	}
-+	pdev->dev.platform_data = (struct sti_mbox_pdata *) match->data;
-+
-+	mdev = devm_kzalloc(&pdev->dev, sizeof(*mdev), GFP_KERNEL);
-+	if (!mdev)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, mdev);
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	mdev->base = devm_ioremap_resource(&pdev->dev, res);
-+	if (!mdev->base)
-+		return -ENOMEM;
-+
-+	ret = of_property_read_string(np, "mbox-name", &mdev->name);
-+	if (ret)
-+		mdev->name = np->full_name;
-+
-+	mbox = devm_kzalloc(&pdev->dev, sizeof(*mbox), GFP_KERNEL);
-+	if (!mbox)
-+		return -ENOMEM;
-+
-+	chans = devm_kzalloc(&pdev->dev,
-+			     sizeof(*chans) * STI_MBOX_CHAN_MAX, GFP_KERNEL);
-+	if (!chans)
-+		return -ENOMEM;
-+
-+	mdev->dev		= &pdev->dev;
-+	mdev->mbox		= mbox;
-+
-+	spin_lock_init(&mdev->lock);
-+
-+	/* STi Mailbox does not have a Tx-Done or Tx-Ready IRQ */
-+	mbox->txdone_irq	= false;
-+	mbox->txdone_poll	= true;
-+	mbox->txpoll_period	= 100;
-+	mbox->ops		= &sti_mbox_ops;
-+	mbox->dev		= mdev->dev;
-+	mbox->of_xlate		= sti_mbox_xlate;
-+	mbox->chans		= chans;
-+	mbox->num_chans		= STI_MBOX_CHAN_MAX;
-+
-+	ret = mbox_controller_register(mbox);
-+	if (ret)
-+		return ret;
-+
-+	/* It's okay for Tx Mailboxes to not supply IRQs */
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0) {
-+		dev_info(&pdev->dev,
-+			 "%s: Registered Tx only Mailbox\n", mdev->name);
-+		return 0;
-+	}
-+
-+	ret = devm_request_threaded_irq(&pdev->dev, irq,
-+					sti_mbox_irq_handler,
-+					sti_mbox_thread_handler,
-+					IRQF_ONESHOT, mdev->name, mdev);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Can't claim IRQ %d\n", irq);
-+		mbox_controller_unregister(mbox);
-+		return -EINVAL;
-+	}
-+
-+	dev_info(&pdev->dev, "%s: Registered Tx/Rx Mailbox\n", mdev->name);
-+
-+	return 0;
-+}
-+
-+static int sti_mbox_remove(struct platform_device *pdev)
-+{
-+	struct sti_mbox_device *mdev = platform_get_drvdata(pdev);
-+
-+	mbox_controller_unregister(mdev->mbox);
-+
-+	return 0;
-+}
-+
-+static struct platform_driver sti_mbox_driver = {
-+	.probe = sti_mbox_probe,
-+	.remove = sti_mbox_remove,
-+	.driver = {
-+		.name = "sti-mailbox",
-+		.of_match_table = sti_mailbox_match,
-+	},
-+};
-+module_platform_driver(sti_mbox_driver);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("STMicroelectronics Mailbox Controller");
-+MODULE_AUTHOR("Lee Jones <lee.jones@linaro.org");
-+MODULE_ALIAS("platform:mailbox-sti");
--- 
-1.9.1
+> On 23/07/15 17:52, Mark Rutland wrote:
+> > Currently msi-parent is used in a couple of drivers despite being fairly
+> > underspecified. This patch adds a generic binding for MSIs (including
+> > the existing msi-parent property) enabling the description of platform
+> > devices capable of using MSIs.
+> > 
+> > While MSIs are primarily distinguished by doorbell and payload, some MSI
+> > controllers (e.g. the GICv3 ITS) also use side-band information
+> > accompanying the write to identify the master which originated the MSI,
+> > to allow for sandboxing. This sideband information is non-probeable and
+> > needs to be described in the DT. Other MSI controllers may have
+> > additional configuration details which need to be described per-master.
+> > 
+> > This patch adds a generic msi-parent binding document, extending the
+> > de-facto standard with a new (optional) #msi-cells which can be used to
+> > express any per-master configuration and/or sideband data. This is
+> > sufficient to describe non-hotpluggable devices.
+> > 
+> > For busses where sideband data may be derived from some bus-specific
+> > master ID scheme, other properties will be required to describe the
+> > mapping.
+> > 
+> > Signed-off-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> > ---
+> >  .../bindings/interrupt-controller/msi.txt          | 135 +++++++++++++++++++++
+> >  1 file changed, 135 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/msi.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/msi.txt b/Documentation/devicetree/bindings/interrupt-controller/msi.txt
+> > new file mode 100644
+> > index 0000000..c60c034
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/interrupt-controller/msi.txt
+> > @@ -0,0 +1,135 @@
+> > +This document describes the generic device tree binding for MSI controllers and
+> > +their master(s).
+> > +
+> > +Message Signaled Interrupts (MSIs) are a class of interrupts generated by a
+> > +write to an MMIO address.
+> > +
+> > +MSIs were originally specified by PCI (and are used with PCIe), but may also be
+> > +used with other busses, and hence a mechanism is required to relate devices on
+> > +those busses to the MSI controllers which they are capable of using,
+> > +potentially including additional information.
+> > +
+> > +MSIs are distinguished by some combination of:
+> > +
+> > +- The doorbell (the MMIO address written to).
+> > +  
+> > +  Devices may be configured by software to write to arbitrary doorbells which
+> > +  they can address. An MSI controller may feature a number of doorbells.
+> > +
+> > +- The payload (the value written to the doorbell).
+> > +  
+> > +  Devices may be configured to write an arbitrary payload chosen by software.
+> > +  MSI controllers may have restrictions on permitted payloads.
+> > +
+> > +- Sideband information accompanying the write.
+> > +  
+> > +  Typically this is neither configurable nor probeable, and depends on the path
+> > +  taken through the memory system (i.e. it is a property of the combination of
+> > +  MSI controller and device rather than a property of either in isolation).
+> > +
+> > +
+> > +MSI controllers:
+> > +================
+> > +
+> > +An MSI controller signals interrupts to a CPU when a write is made to an MMIO
+> > +address by some master. An MSI controller may feature a number of doorbells.
+> > +
+> > +Required properties:
+> > +--------------------
+> > +
+> > +- msi-controller: Identifies the node as an MSI controller.
+> > +
+> > +Optional properties:
+> > +--------------------
+> > +
+> > +- #msi-cells: The number of cells in an msi-specifier, required if not zero.
+> > +
+> > +  Typically this will encode information related to sideband data, and will
+> > +  not encode doorbells or payloads as these can be configured dynamically.
+> > +
+> > +  The meaning of the msi-specifier is defined by the device tree binding of
+> > +  the specific MSI controller. 
+> > +
+> > +
+> > +MSI clients
+> > +===========
+> > +
+> > +MSI clients are devices which generate MSIs. For each MSI they wish to
+> > +generate, the doorbell and payload may be configured, though sideband
+> > +information may not be configurable.
+> > +
+> > +Required properties:
+> > +--------------------
+> > +
+> > +- msi-parent: A list of phandle + msi-specifier pairs, one for each MSI
+> > +  controller which the device is capable of using.
+> > +
+> > +  This property is unordered, and MSIs may be allocated from any combination of
+> > +  MSI controllers listed in the msi-parent property.
+> > +
+> > +  If a device has restrictions on the allocation of MSIs, these restrictions
+> > +  must be described with additional properties.
+> > +
+> > +  When #msi-cells is non-zero, busses with an msi-parent will require
+> > +  additional properties to describe the relationship between devices on the bus
+> > +  and the set of MSIs they can potentially generate.
+> > +
+> > +
+> > +Example
+> > +=======
+> > +
+> > +/ {
+> > +	#address-cells = <1>;
+> > +	#size-cells = <1>;
+> > +
+> > +	msi_a: msi-controller@a {
+> > +		reg = <0xa 0xf00>;
+> > +		compatible = "vendor-a,some-controller";
+> > +		msi-controller;
+> > +		/* No sideband data, so #msi-cells omitted */
+> > +	};
+> > +
+> > +	msi_b: msi-controller@b {
+> > +		reg = <0xb 0xf00>;
+> > +		compatible = "vendor-b,another-controller";
+> > +		msi-controller;
+> > +		/* Each device has some unique ID */
+> > +		#msi-cells = <1>;
+> > +	};
+> > +
+> > +	msi_c: msi-controller@c {
+> > +		reg = <0xb 0xf00>;
+> > +		compatible = "vendor-b,another-controller";
+> > +		msi-controller;
+> > +		/* Each device has some unique ID */
+> > +		#msi-cells = <1>;
+> > +	};
+> > +
+> > +	dev@0 {
+> > +		reg = <0x0 0xf00>;
+> > +		compatible = "vendor-c,some-device";
+> > +
+> > +		/* Can only generate MSIs to msi_a */
+> > +		msi-parent = <&msi_a>;
+> > +	};
+> > +
+> > +	dev@1 {
+> > +		reg = <0x1 0xf00>;
+> > +		compatible = "vendor-c,some-device";
+> > +
+> > +		/* 
+> > +		 * Can generate MSIs to either A or B.
+> > +		 */
+> > +		msi-parent = <&msi_a>, <&msi_b 0x17>;
+> > +	};
+> > +
+> > +	dev@2 {
+> > +		reg = <0x2 0xf00>;
+> > +		compatible = "vendor-c,some-device";
+> > +		/*
+> > +		 * Has different IDs at each MSI controller.
+> > +		 * Can generate MSIs to all of the MSI controllers.
+> > +		 */
+> > +		msi-parent = <&msi_a>, <&msi_b 0x17>, <&msi_c 0x53>;
+> > +	};
+> > +};
+> > 
+> 
+> This looks quite good for the non-PCI stuff. Should you also cover the
+> PCI usage of msi-parent?
+
+As far as I can tell, the current PCI usage of msi-parent is practically
+identical to the generic usage, with the proviso that the devices under
+a PCI root complex are assumed to be indistinguishable from the root
+complex from the PoV of the MSI controller.
+
+So I'm not sure what would be relevant to describe here.
+
+> I'm can't really see the meaning of #msi-cells in that context. Should
+> it be entirely ignored? OR did you have some specific usage in mind?
+
+It shouldn't be ignored; if the MSI controller has a non-zero #msi-cells
+then it requires that information to operate correctly (e.g. to
+distinguish masters).
+
+It may simply be that all devices under the root complex are
+indistinguishable from each other, but can be distinguished form other
+devices in the system using the same MSI controller.
+
+I also imagine that there may be PCI root complexes which signal their
+own management interrupts as MSIs. Such a root complex needs msi-parent
+to describe its relationship with the MSI controller, which is distinct
+from the relationship between its children and the MSI controller.
+
+Thanks,
+Mark.
