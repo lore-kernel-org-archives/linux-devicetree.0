@@ -1,90 +1,47 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/2] gpio: dwapb: Use human understandable gpio numbering.
-Date: Mon, 27 Jul 2015 12:19:08 +0200
-Message-ID: <CACRpkdYUcXjJz+jZ5ZMXK1a7GLi8eL+ecr-yL6Y8901f_-pknQ@mail.gmail.com>
-References: <cover.1435777856.git.rcochran@linutronix.de>
-	<d6b5ce85a17164970d454583560e07f7aed7b8ca.1435777856.git.rcochran@linutronix.de>
-	<CACRpkdY+prqSeohT5BEoOKS6sfXdFTA6ZzuKzH4GSPX5jcjgzA@mail.gmail.com>
-	<20150716171930.GB27060@localhost.localdomain>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 7/7] arm64: dts: mt8173: Add subsystem clock controller device nodes
+Date: Mon, 27 Jul 2015 03:21:01 -0700 (PDT)
+Message-ID: <24796517.2pfRdOOmRJ@ubix>
+References: <1437706925-3222-1-git-send-email-jamesjj.liao@mediatek.com> <CAGS+omAUAHZUJQMnWJbH7NXB_Etp=OF3dWyMB7Ri1+rAyzyPBg@mail.gmail.com> <1437965782.5614.4.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20150716171930.GB27060@localhost.localdomain>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Richard Cochran <richardcochran@gmail.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alan Tull <atull@altera.com>, Alexandre Courbot <gnurou@gmail.com>, Dinh Nguyen <dinguyen@altera.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Johan Hovold <johan@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1437965782.5614.4.camel@mtksdaap41>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Heiko Stubner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 16, 2015 at 7:19 PM, Richard Cochran
-<richardcochran@gmail.com> wrote:
-> On Thu, Jul 16, 2015 at 09:50:44AM +0200, Linus Walleij wrote:
->> NACK. And it has been NACKed before again and again, search
->> the mailinglist for repetitive answers.
->
-> Yeah, ok, I give up.
->
-> This happens with every DT discussion that tries to make things
-> logical for the end user.
+On Monday, July 27, 2015 10:56:22 AM James Liao wrote:
+> Hi Daniel,
+> 
+> On Fri, 2015-07-24 at 19:32 +0800, Daniel Kurtz wrote:
+> > > @@ -88,6 +88,13 @@
+> > > 
+> > >                 #clock-cells = <0>;
+> > >         
+> > >         };
+> > > 
+> > > +       cpum_ck: dummy_clk {
+> > 
+> > I'm not a big fan of this "dummy_clk".
+> > The 'name' part of the devicetree node is supposed to be generic.
+> > So, perhaps just oscillator@2, and move it down below clk32k:
+> > oscillator@1.
+> 
+> > Otherwise:
+> cpum_ck is a test clock which only available in IC test. It's empty on
+> MT8173 evaluation or production boards. Should we name this kind of
+> empty clock as an oscillator? Or is there a better name for it?
+> 
 
-Are you assuming bad faith?
+So if it will never be part of any available boards, why do you want to add 
+it?
 
-I'm trying to maintain the GPIO subsystem, the problem with DT
-is that there are no proper DT reviewers for stuff like this, instead
-the task of reviewing DT stuff is pushed down to Linux subsystem
-maintainers like me.
-
-I think Michael made a very very nice patch series trying to make
-things logical for end users, please participate in that discussion.
-
->> The GPIO numbers inside the Linux kernel are Linux specific and
->> have nothing to do with the hardware numbers. If they sometimes
->> match it is a lucky coincidence.
->
-> Someone should tell the users that.
->
->> The same goes for IRQ numbers
->> in the kernel FWIW.
->
-> Isn't there a mapping interface for irq numbers?
-
-I don't see what you mean here. The numbers that appear in
-say /proc/interrupts may seem stable but they are not.
-They depend on things like probe order between irqchips
-and can change between two boots.
-
-The reason users don't have an issue with it is that there is
-(thank god) no userspace ABI for interrupts.
-
->> So this "binding" has nothing to do with describing the hardware,
->> which device tree is for. If it ever comes to exist it needs to be
->> a "linux-*" property. But I doubt it will.
->
-> How can you say that the GPIO numbers associated with the pins and
-> appearing in published data sheets (and used in every schematic) are
-> not part of the hardware?
-
-What the Linux kernel call GPIO numbers (or IRQ numbers for that
-matter) is something different from the hardware numbers in the
-datasheets. To the kernel it is just some cookie number.
-
-In the irqchip subsystem we have ->hwirq that corresponds to
-whatever the datasheet says, and which appears in the second
-column i /proc/interrupts, and in the GPIO subdrivers I tend to
-try to use "offset" the same way, giving a local number for that
-GPIO controller.
-
-Things were simple in the past because the GPIO numberspace
-was designed under the assumption that there would be only
-one GPIO controller on a system, but the exploding complexity
-of systems made it unmanageable.
-
-The problem is for example if I have a SoC with a GPIO expander:
-both have a GPIO line named "0". Which one wins? The SoC
-because it is "more important"? This issue is all over the place
-in any modern chipset. In Ux500 I have sometimes three GPIO
-expanders, all three with GPIO line 0, and also a GPIO 0 on
-the SoC of course. So we need to express this complexity to
-userspace, not try to simplify the world.
-
-Yours,
-Linus Walleij
+Regards,
+Matthias
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
