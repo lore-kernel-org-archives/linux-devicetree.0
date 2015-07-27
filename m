@@ -1,77 +1,74 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: [PATCH v8 3/5] mtd: nand: vf610_nfc: add device tree bindings
-Date: Mon, 27 Jul 2015 18:42:43 +0200
-Message-ID: <1438015365-15685-4-git-send-email-stefan@agner.ch>
+From: Stefan Agner <stefan@agner.ch>
+Subject: [PATCH v8 5/5] ARM: dts: vf-colibri: enable NAND flash controller
+Date: Mon, 27 Jul 2015 18:42:45 +0200
+Message-ID: <1438015365-15685-6-git-send-email-stefan@agner.ch>
 References: <1438015365-15685-1-git-send-email-stefan@agner.ch>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1438015365-15685-1-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: sebastian-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marb-Z4QKGCRq86k@public.gmane.org, aaron-yuhzfaV+M/Wz3Dx2OeFgIA@public.gmane.org, bpringlemeir-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Bill Pringlemeir <bpringlemeir-ygJ1pmMJ17cAvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1438015365-15685-1-git-send-email-stefan@agner.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dwmw2@infradead.org, computersforpeace@gmail.com
+Cc: sebastian@breakpoint.cc, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, shawn.guo@linaro.org, kernel@pengutronix.de, boris.brezillon@free-electrons.com, marb@ixxat.de, aaron@tastycactus.com, bpringlemeir@gmail.com, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Bill Pringlemeir <bpringlemeir-ygJ1pmMJ17cAvxtiuMwx3w@public.gmane.org>
-Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
----
- .../devicetree/bindings/mtd/vf610-nfc.txt          | 45 ++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/vf610-nfc.txt
+Enable NAND access by adding pinmux and NAND flash controller node
+to device tree. The NAND chips currently used on the Colibri VF61
+requires 8-bit ECC per 512 byte page, hence specify 32-bit ECC
+strength per 2k page size.
 
-diff --git a/Documentation/devicetree/bindings/mtd/vf610-nfc.txt b/Documentation/devicetree/bindings/mtd/vf610-nfc.txt
-new file mode 100644
-index 0000000..cae5f25
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/vf610-nfc.txt
-@@ -0,0 +1,45 @@
-+Freescale's NAND flash controller (NFC)
+Signed-off-by: Stefan Agner <stefan@agner.ch>
+---
+ arch/arm/boot/dts/vf-colibri.dtsi | 32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+
+diff --git a/arch/arm/boot/dts/vf-colibri.dtsi b/arch/arm/boot/dts/vf-colibri.dtsi
+index 68ca125..ab2e74b 100644
+--- a/arch/arm/boot/dts/vf-colibri.dtsi
++++ b/arch/arm/boot/dts/vf-colibri.dtsi
+@@ -52,6 +52,19 @@
+ 	pinctrl-0 = <&pinctrl_i2c0>;
+ };
+ 
++&nfc {
++	assigned-clocks = <&clks VF610_CLK_NFC>;
++	assigned-clock-rates = <33000000>;
++	nand-bus-width = <8>;
++	nand-ecc-mode = "hw";
++	nand-ecc-step-size = <2048>;
++	nand-ecc-strength = <32>;
++	nand-on-flash-bbt;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_nfc>;
++	status = "okay";
++};
 +
-+This variant of the Freescale NAND flash controller (NFC) can be found on
-+Vybrid (vf610), MPC5125, MCF54418 and Kinetis K70.
+ &pwm0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_pwm0>;
+@@ -156,6 +169,25 @@
+ 			>;
+ 		};
+ 
++		pinctrl_nfc: nfcgrp {
++			fsl,pins = <
++				VF610_PAD_PTD23__NF_IO7		0x28df
++				VF610_PAD_PTD22__NF_IO6		0x28df
++				VF610_PAD_PTD21__NF_IO5		0x28df
++				VF610_PAD_PTD20__NF_IO4		0x28df
++				VF610_PAD_PTD19__NF_IO3		0x28df
++				VF610_PAD_PTD18__NF_IO2		0x28df
++				VF610_PAD_PTD17__NF_IO1		0x28df
++				VF610_PAD_PTD16__NF_IO0		0x28df
++				VF610_PAD_PTB24__NF_WE_B	0x28c2
++				VF610_PAD_PTB25__NF_CE0_B	0x28c2
++				VF610_PAD_PTB27__NF_RE_B	0x28c2
++				VF610_PAD_PTC26__NF_RB_B	0x283d
++				VF610_PAD_PTC27__NF_ALE		0x28c2
++				VF610_PAD_PTC28__NF_CLE		0x28c2
++			>;
++		};
 +
-+Required properties:
-+- compatible: Should be set to "fsl,vf610-nfc"
-+- reg: address range of the NFC
-+- interrupts: interrupt of the NFC
-+- nand-bus-width: see nand.txt
-+- nand-ecc-mode: see nand.txt
-+- nand-on-flash-bbt: see nand.txt
-+- assigned-clocks: main clock from the SoC, for Vybrid <&clks VF610_CLK_NFC>;
-+- assigned-clock-rates: The NAND bus timing is derived from this clock
-+    rate and should not exceed maximum timing for any NAND memory chip
-+    in a board stuffing. Typical NAND memory timings derived from this
-+    clock are found in the SoC hardware reference manual. Furthermore,
-+    there might be restrictions on maximum rates when using hardware ECC.
-+
-+- #address-cells, #size-cells : Must be present if the device has sub-nodes
-+  representing partitions.
-+
-+Required properties for hardware ECC:
-+- nand-ecc-strength: supported strengths are 24 and 32 bit (see nand.txt)
-+- nand-ecc-step-size: step size equals page size, currently only 2k pages are
-+    supported
-+
-+Example:
-+
-+	nfc: nand@400e0000 {
-+		compatible = "fsl,vf610-nfc";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		reg = <0x400e0000 0x4000>;
-+		interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&clks VF610_CLK_NFC>;
-+		clock-names = "nfc";
-+		assigned-clocks = <&clks VF610_CLK_NFC>;
-+		assigned-clock-rates = <33000000>;
-+		nand-bus-width = <8>;
-+		nand-ecc-mode = "hw";
-+		nand-ecc-strength = <32>;
-+		nand-ecc-step-size = <2048>;
-+		nand-on-flash-bbt;
-+	};
+ 		pinctrl_pwm0: pwm0grp {
+ 			fsl,pins = <
+ 				VF610_PAD_PTB0__FTM0_CH0		0x1182
 -- 
 2.4.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
