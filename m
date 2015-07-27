@@ -1,130 +1,80 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v3 1/2] input: touchscreen: pixcir_i2c_ts: Add support
- for optional wakeup interrupt
-Date: Mon, 27 Jul 2015 13:49:05 +0300
-Message-ID: <55B60CA1.3090800@ti.com>
-References: <1437663246-16049-1-git-send-email-vigneshr@ti.com> <1437663246-16049-2-git-send-email-vigneshr@ti.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 05/11] mfd: devicetree: bindings: Add Qualcomm SMD
+ based RPM DT binding
+Date: Mon, 27 Jul 2015 11:58:53 +0100
+Message-ID: <20150727105853.GA21114@x1>
+References: <20150707121609.GZ3182@x1>
+ <20150713214836.GA15178@usrtlx11787.corpusers.net>
+ <20150723133133.GB3436@x1>
+ <20150723164128.GD4753@usrtlx11787.corpusers.net>
+ <20150723171638.GE11162@sirena.org.uk>
+ <20150724095847.GC3436@x1>
+ <20150724102434.GF11162@sirena.org.uk>
+ <20150724172316.GR11162@sirena.org.uk>
+ <20150727072918.GU3436@x1>
+ <20150727095347.GU11162@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1437663246-16049-2-git-send-email-vigneshr@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vignesh R <vigneshr@ti.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Tony Lindgren <tony@atomide.com>, Benoit Cousson <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>
-Cc: Henrik Rydberg <rydberg@bitmath.org>, Frodo Lai <frodo.lai@gmail.com>, Jingoo Han <jg1.han@samsung.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150727095347.GU11162@sirena.org.uk>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, "bjorn@kryo.se" <bjorn@kryo.se>, Andy Gross <agross@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Samuel Ortiz <sameo@linux.intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Mon, 27 Jul 2015, Mark Brown wrote:
 
-On 23/07/15 17:54, Vignesh R wrote:
-> On am437x-gp-evm, pixcir touchscreen can wake the system from low power
-> state by generating wake-up interrupt via pinctrl and IO daisy chain.
-> Add support for optional wakeup interrupt source by regsitering to
-> automated wake IRQ framework introduced by commit 4990d4fe327b ("PM /
-> Wakeirq: Add automated device wake IRQ handling").
-> This is similar in approach to commit 2a0b965cfb6e ("serial: omap: Add
-> support for optional wake-up")
-> 
-> Signed-off-by: Vignesh R <vigneshr@ti.com>
-> ---
-> 
-> v3:
->  * handle error code returned by of_irq_get_byname()
-> 
-> v2:
->  * use of_irq_get_byname()
->  * remove enable/disable_wake_irq()
-> 
->  drivers/input/touchscreen/pixcir_i2c_ts.c | 22 ++++++++++++++++++----
->  include/linux/input/pixcir_ts.h           |  1 +
->  2 files changed, 19 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/input/touchscreen/pixcir_i2c_ts.c b/drivers/input/touchscreen/pixcir_i2c_ts.c
-> index 8f3e243a62bf..3a4ab358bf52 100644
-> --- a/drivers/input/touchscreen/pixcir_i2c_ts.c
-> +++ b/drivers/input/touchscreen/pixcir_i2c_ts.c
-> @@ -29,6 +29,8 @@
->  #include <linux/of.h>
->  #include <linux/of_gpio.h>
->  #include <linux/of_device.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/pm_wakeirq.h>
->  
->  #define PIXCIR_MAX_SLOTS       5 /* Max fingers supported by driver */
->  
-> @@ -364,8 +366,6 @@ static int __maybe_unused pixcir_i2c_ts_suspend(struct device *dev)
->  				goto unlock;
->  			}
->  		}
-> -
-> -		enable_irq_wake(client->irq);
->  	} else if (input->users) {
->  		ret = pixcir_stop(ts);
->  	}
-> @@ -386,8 +386,6 @@ static int __maybe_unused pixcir_i2c_ts_resume(struct device *dev)
->  	mutex_lock(&input->mutex);
->  
->  	if (device_may_wakeup(&client->dev)) {
-> -		disable_irq_wake(client->irq);
-> -
->  		if (!input->users) {
->  			ret = pixcir_stop(ts);
->  			if (ret) {
-> @@ -445,6 +443,13 @@ static struct pixcir_ts_platform_data *pixcir_parse_dt(struct device *dev)
->  	dev_dbg(dev, "%s: x %d, y %d, gpio %d\n", __func__,
->  		pdata->x_max + 1, pdata->y_max + 1, pdata->gpio_attb);
->  
-> +	pdata->wakeirq = of_irq_get_byname(dev->of_node, "wakeup");
-> +	if (pdata->wakeirq < 0 && pdata->wakeirq != -ENODATA &&
-> +	    pdata->wakeirq != -EINVAL) {
-> +		dev_err(dev, "Failed to get wakeirq\n");
-> +		return ERR_PTR(pdata->wakeirq);
-> +	}
-> +
->  	return pdata;
->  }
->  #else
-> @@ -564,11 +569,20 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
->  	i2c_set_clientdata(client, tsdata);
->  	device_init_wakeup(&client->dev, 1);
->  
-> +	/* Register wakeirq */
-> +	error = (pdata->wakeirq > 0) ?
-> +		dev_pm_set_dedicated_wake_irq(dev, pdata->wakeirq) :
-> +		dev_pm_set_wake_irq(dev, client->irq);
+> On Mon, Jul 27, 2015 at 08:29:18AM +0100, Lee Jones wrote:
+> > On Fri, 24 Jul 2015, Mark Brown wrote:
+> > > On Fri, Jul 24, 2015 at 11:24:34AM +0100, Mark Brown wrote:
+>=20
+> > From here:
+>=20
+> > > > > > > +                pm8941-regulators {
+> > > > > > > +                        compatible =3D "qcom,rpm-pm8941-=
+regulators";
+> > > > > > > +                        vdd_l13_l20_l23_l24-supply =3D <=
+&pm8941_boost>;
+>=20
+> > > > > > I'd like Mark to glance at this.
+>=20
+> > Mark: Is this new property okay?
+>=20
+> As far as I can see that looks like a standard supply property, assum=
+ing
+> the supply is actually called that why would it be an issue?
+>=20
+> > > The specified range of the regulator is 1.75-1.85V and this is ha=
+ndled
+> > > by the implementation, however the board designers have stated th=
+at it
+> > > is only allowed to be configured to 1.8V.
+>=20
+> > > So DT is used to narrow the capabilities of the individual compon=
+ent to
+> > > something that's suitable for this particular system.
+>=20
+> > > > We still need Mark to look at this.
+>=20
+> > Is it okay for the regulator-{min,max}-microvolt to be artificially
+> > restricted to the required value, despite knowing that the regulato=
+r
+> > is capable of supply {more,less} voltage?
+>=20
+> Yes, that's the entire purpose of those properties - to set the limit=
+s
+> the board designers have which will typically be more restrictive tha=
+n
+> those that the regulator itself is capable of imposing.
 
-Can 0 be a valid wakeirq or client->irq?
-If yes then this logic is broken.
+All fine then.
 
-I would set wakeirq to -EINVAL or something if it is not available
-during probe and check for that condition.
+Please re-submit with the changes we discussed.
 
-> +	if (error)
-> +		dev_info(dev, "unable to setup wakeirq %d\n",
-> +			 error);
-> +
->  	return 0;
->  }
->  
->  static int pixcir_i2c_ts_remove(struct i2c_client *client)
->  {
-> +	dev_pm_clear_wake_irq(&client->dev);
->  	device_init_wakeup(&client->dev, 0);
->  
->  	return 0;
-> diff --git a/include/linux/input/pixcir_ts.h b/include/linux/input/pixcir_ts.h
-> index 7bae83b7c396..da573de5a5ee 100644
-> --- a/include/linux/input/pixcir_ts.h
-> +++ b/include/linux/input/pixcir_ts.h
-> @@ -58,6 +58,7 @@ struct pixcir_ts_platform_data {
->  	int x_max;
->  	int y_max;
->  	int gpio_attb;		/* GPIO connected to ATTB line */
-> +	int wakeirq;
->  	struct pixcir_i2c_chip_data chip;
->  };
->  
-> 
-
-cheers,
--roger
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
