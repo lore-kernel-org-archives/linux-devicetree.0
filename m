@@ -1,84 +1,66 @@
-From: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH-v5 4/5] Documentation: binding: add sclk adjustment
- properties to i2c-pxa
-Date: Mon, 27 Jul 2015 10:11:52 -0400
-Message-ID: <20150727141152.GC15004@beef>
-References: <1437482466-16126-1-git-send-email-vaibhav.hiremath@linaro.org>
- <1437482466-16126-5-git-send-email-vaibhav.hiremath@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1437482466-16126-5-git-send-email-vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org
+From: Martin Kepplinger <martink@posteo.de>
+Subject: [PATCH 5/8] iio: mma8452: add devicetree binding document
+Date: Mon, 27 Jul 2015 16:08:12 +0200
+Message-ID: <1438006095-26920-6-git-send-email-martink@posteo.de>
+References: <1438006095-26920-1-git-send-email-martink@posteo.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1438006095-26920-1-git-send-email-martink@posteo.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mfuzzey@parkeon.com, roberta.dobrescu@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, christoph.muellner@theobroma-systems.com, Martin Kepplinger <martink@posteo.de>, Martin Kepplinger <martin.kepplinger@theobroma-systems.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 21, 2015 at 06:11:05PM +0530, Vaibhav Hiremath wrote:
-> With addition of PXA910 family of devices, the TWSI module supports
-> new feature which allows us to adjust SCLK. i2c-pxa driver takes input
-> configuration in nsec and converts it to respective bit-fields,
-> 
->  - i2c-sclk-low-time-ns : SCLK low time (tlow)
->    This property is used along with mode selection.
->  - i2c-sclk-high-time-ns : SCLK high time (thigh)
->  - i2c-start-hold-time-ns : Used in case of high speed mode for start bit
->    hold/setup wait counter.
->  - i2c-stop-hold-time-ns : Used in case of high speed mode for stop bit
->    hold/setup wait counter.
->  - i2c-sda-hold-time-ns : Used to calculate hold/setup wait counter for
->    standard and fast mode.
+As we support more chips now, add a binding document and remove it from
+i2c trivial-devices.txt list.
 
-Again, these should have a mrvl prefix..very specific to this PXA
-controller.
+The binding document is further extended in a later patch of this series.
 
--Matt
+Signed-off-by: Martin Kepplinger <martin.kepplinger@theobroma-systems.com>
+Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
+---
+ .../devicetree/bindings/i2c/trivial-devices.txt     |  1 -
+ .../devicetree/bindings/iio/accel/mma8452.txt       | 21 +++++++++++++++++++++
+ 2 files changed, 21 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/accel/mma8452.txt
 
-> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/i2c/i2c-pxa.txt | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-pxa.txt b/Documentation/devicetree/bindings/i2c/i2c-pxa.txt
-> index 9657db5..bb4df60 100644
-> --- a/Documentation/devicetree/bindings/i2c/i2c-pxa.txt
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-pxa.txt
-> @@ -23,12 +23,25 @@ Optional properties :
->   - i2c-disable-after-xfer : If set, driver will disable I2C module
->     after msg xfer and enable it again before xfer.
->  
-> +   (Applicable to PXA910 family):
-> +
-> + - i2c-sclk-low-time-ns : SCLK low time (tlow), for standard/fast/high
-> +   speed mode.
-> +   This property is used along with mode selection. Driver uses this property
-> +   to set low/high time for standard and fast speed mode, as HW counter
-> +   bit-field is same for both.
-> + - i2c-sclk-high-time-ns : SCLK high time (thigh), Used in case of high speed
-> +   mode only.
-> +
->  Examples:
->  	twsi1: i2c@d4011000 {
->  		compatible = "mrvl,mmp-twsi";
->  		reg = <0xd4011000 0x1000>;
->  		interrupts = <7>;
->  		mrvl,i2c-fast-mode;
-> +
-> +		i2c-sclk-low-time-ns = <988>;
-> +		i2c-sclk-high-time-ns = <988>;
->  	};
->  	
->  	twsi2: i2c@d4025000 {
-> -- 
-> 1.9.1
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+index 00f8652..094238a 100644
+--- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
++++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+@@ -54,7 +54,6 @@ epson,rx8581		I2C-BUS INTERFACE REAL TIME CLOCK MODULE
+ fsl,mag3110		MAG3110: Xtrinsic High Accuracy, 3D Magnetometer
+ fsl,mc13892		MC13892: Power Management Integrated Circuit (PMIC) for i.MX35/51
+ fsl,mma8450		MMA8450Q: Xtrinsic Low-power, 3-axis Xtrinsic Accelerometer
+-fsl,mma8452		MMA8452Q: 3-axis 12-bit / 8-bit Digital Accelerometer
+ fsl,mpr121		MPR121: Proximity Capacitive Touch Sensor Controller
+ fsl,sgtl5000		SGTL5000: Ultra Low-Power Audio Codec
+ gmt,g751		G751: Digital Temperature Sensor and Thermal Watchdog with Two-Wire Interface
+diff --git a/Documentation/devicetree/bindings/iio/accel/mma8452.txt b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
+new file mode 100644
+index 0000000..8d98e05
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
+@@ -0,0 +1,21 @@
++Freescale MMA8452Q, MMA8453Q, MMA8652FC or MMA8653FC triaxial accelerometer
++
++Required properties:
++
++  - compatible: should be "fsl,mma8653", "fsl,mma8652", "fsl,mma8453" or
++    "fsl,mma8452" respectively.
++  - reg: the I2C address of the chip
++
++Optional properties:
++
++  - interrupt-parent: should be the phandle for the interrupt controller
++  - interrupts: interrupt mapping for GPIO IRQ
++
++Example:
++
++	mma8653fc@1d {
++		compatible = "fsl,mma8653";
++		reg = <0x1d>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <5 0>;
++	};
+-- 
+2.1.4
