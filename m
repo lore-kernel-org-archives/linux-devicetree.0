@@ -1,57 +1,97 @@
-From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v3 5/6] iommu/mediatek: Add mt8173 IOMMU driver
-Date: Mon, 27 Jul 2015 12:24:31 +0800
-Message-ID: <1437971071.25925.24.camel@mhfsdcap03>
-References: <1437037475-9065-1-git-send-email-yong.wu@mediatek.com>
-	 <1437037475-9065-6-git-send-email-yong.wu@mediatek.com>
-	 <20150721145910.GG31095@arm.com> <1437716593.23932.73.camel@mhfsdcap03>
-	 <20150724165509.GD21177@arm.com>
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: [RFCv2 1/3] docs: dts: Added documentation for Xilinx Zynq Reset
+ Controller bindings.
+Date: Mon, 27 Jul 2015 07:09:28 +0200
+Message-ID: <55B5BD08.60802@monstr.eu>
+References: <1437783682-13632-1-git-send-email-moritz.fischer@ettus.com>
+ <1437783682-13632-2-git-send-email-moritz.fischer@ettus.com>
+Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150724165509.GD21177-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robin Murphy <Robin.Murphy-5wv7dgnIgG8@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org" <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>"arnd-r2nGTMty4D4@public.gmane.org" <a>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="5f472nWOnspB12ORGVaIKHmnf0NjLBxkt"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1437783682-13632-2-git-send-email-moritz.fischer@ettus.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Moritz Fischer <moritz.fischer@ettus.com>, p.zabel@pengutronix.de
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, michal.simek@xilinx.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, galak@codeaurora.org, soren.brinkmann@xilinx.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2015-07-24 at 17:55 +0100, Will Deacon wrote:
-> On Fri, Jul 24, 2015 at 06:43:13AM +0100, Yong Wu wrote:
-> > On Tue, 2015-07-21 at 15:59 +0100, Will Deacon wrote:
-> > > On Thu, Jul 16, 2015 at 10:04:34AM +0100, Yong Wu wrote:
-> > > > +static void mtk_iommu_tlb_flush_all(void *cookie)
-> > > > +{
-> > > > +       struct mtk_iommu_domain *domain = cookie;
-> > > > +       void __iomem *base;
-> > > > +
-> > > > +       base = domain->data->base;
-> > > > +       writel(F_INVLD_EN1 | F_INVLD_EN0, base + REG_MMU_INV_SEL);
-> > > > +       writel(F_ALL_INVLD, base + REG_MMU_INVALIDATE);
-> > > 
-> > > This needs to be synchronous, so you probably want to call
-> > > mtk_iommu_tlb_sync at the end.
-> > 
-> > From our spec, we have to wait until HW done after tlb flush range.
-> > But it don't need wait after tlb flush all.
-> > so It isn't necessary to add mtk_iommu_tlb_sync in tlb_flush_all here.
-> 
-> Okey doke, but I'm surprised you don't need a subsequent DSB or read-back.
-> What if the writel is buffered on the way to the IOMMU?
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--5f472nWOnspB12ORGVaIKHmnf0NjLBxkt
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: quoted-printable
 
-Then I change to this:
- //==========
-    writel_relaxed(F_INVLD_EN1 | F_INVLD_EN0, base + REG_MMU_INV_SEL);
-    writel_relaxed(F_ALL_INVLD, base + REG_MMU_INVALIDATE);    
-    dsb(ishst);
-//===========
-    dsb or mb(). which one is better here?
+On 07/25/2015 02:21 AM, Moritz Fischer wrote:
+> Signed-off-by: Moritz Fischer <moritz.fischer@ettus.com>
+> ---
+>  Documentation/devicetree/bindings/reset/zynq-reset-pl.txt | 13 +++++++=
+++++++
+>  1 file changed, 13 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/reset/zynq-reset-=
+pl.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/reset/zynq-reset-pl.txt =
+b/Documentation/devicetree/bindings/reset/zynq-reset-pl.txt
+> new file mode 100644
+> index 0000000..ac4499e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/reset/zynq-reset-pl.txt
+> @@ -0,0 +1,13 @@
+> +Xilinx Zynq PL Reset Manager
 
-> 
-> Will
+here
+
+> +
+> +Required properties:
+> +- compatible: "xlnx,zynq-reset-pl"
+
+Currently it is not just PL reset controller.
+
+> +- syscon <&slcr>;
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+missing : and please be more descriptive here.
+
+> +- #reset-cells: 1
+> +
+> +Example:
+> +	rstc: rstc@240 {
+> +		#reset-cells =3D <1>;
+> +		compatible =3D "xlnx,zynq-reset-pl";
+
+Compatible property should go first.
+
+I am missing that reg property
+
+> +		syscon =3D <&slcr>;
+> +	};
+>=20
+
+Thanks,
+Michal
+
+
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+
+
+
+--5f472nWOnspB12ORGVaIKHmnf0NjLBxkt
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.14 (GNU/Linux)
+
+iEYEARECAAYFAlW1vQ0ACgkQykllyylKDCEnbACeKC6q5FIlWJZBAh6py4EmeeR5
+20gAn2ZP03LjhvL1iLC558Nmj8Xi+V1H
+=u6Rw
+-----END PGP SIGNATURE-----
+
+--5f472nWOnspB12ORGVaIKHmnf0NjLBxkt--
