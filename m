@@ -1,155 +1,100 @@
-From: Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
-Subject: Re: [Patch v3 2/5] mtd: nand: add NVIDIA Tegra NAND Flash
- controller driver
-Date: Mon, 27 Jul 2015 21:12:39 +0200
-Message-ID: <1438024359.2313.4.camel@lynxeye.de>
-References: <1431282602-7137-1-git-send-email-dev@lynxeye.de>
-	 <1431282602-7137-3-git-send-email-dev@lynxeye.de>
-	 <20150721212710.GN24125@google.com> <1437597760.2289.13.camel@lynxeye.de>
-	 <20150722231025.GB8876@google.com>
+From: <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: [PATCH 3/4] reset: socfpga: Update reset-socfpga to read the altr,modrst-offset property
+Date: Mon, 27 Jul 2015 13:57:23 -0500
+Message-ID: <1438023444-11881-4-git-send-email-dinguyen@opensource.altera.com>
+References: <1438023444-11881-1-git-send-email-dinguyen@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150722231025.GB8876-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1438023444-11881-1-git-send-email-dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Marcel Ziswiler <marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Brian,
+From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 
-a bit of investigation later I have some coherent answers to your
-requests. :)
+In order for the Arria10 to be able to re-use the reset driver for SoCFPGA
+Cyclone5/Arria5, we need to read the 'altr,modrst-offset' property from the
+device tree entry. The 'altr,modrst-offset' property is the first register
+into the reset manager that is used for bringing peripherals out of reset.
 
-Am Mittwoch, den 22.07.2015, 16:10 -0700 schrieb Brian Norris:
-> Hi,
-> 
-> On Wed, Jul 22, 2015 at 10:42:40PM +0200, Lucas Stach wrote:
-> > Am Dienstag, den 21.07.2015, 14:27 -0700 schrieb Brian Norris:
-> > > On Sun, May 10, 2015 at 08:29:59PM +0200, Lucas Stach wrote:
-> > > > --- /dev/null
-> > > > +++ b/drivers/mtd/nand/tegra_nand.c
-> > > > @@ -0,0 +1,801 @@
-> ...
-> > > > +static int tegra_nand_read_page(struct mtd_info *mtd, struct nand_chip *chip,
-> > > > +				uint8_t *buf, int oob_required, int page)
-> > > > +{
-> ...
-> > > > +	value = readl(nand->regs + DEC_STATUS);
-> > > > +
-> > > > +	if (value & DEC_STATUS_A_ECC_FAIL) {
-> > > > +		/*
-> > > > +		 * The ECC isn't smart enough to figure out if a page is
-> > > > +		 * completely erased and flags an error in this case. So we
-> > > > +		 * check the read data here to figure out if it's a legitimate
-> > > > +		 * error or a false positive.
-> > > > +		 */
-> > > > +		int i;
-> > > > +		u32 *data = (u32 *)buf;
-> > > > +		for (i = 0; i < mtd->writesize / 4; i++) {
-> > > > +			if (data[i] != 0xffffffff) {
-> > > > +				mtd->ecc_stats.failed++;
-> > > > +				return -EBADMSG;
-> > > > +			}
-> > > > +		}
-> > > 
-> > > Hmm, what about OOB? It's possible to actually write 0xff to the entire
-> > > page. This hunk means that such a data pattern would then be
-> > > unprotected. You should probably check that *both* the main and OOB data
-> > > are all 0xff; if there are non-0xff bytes, then that (probably, see the
-> > > following) means someone intentionally wrote all 0xff to the page. [1]
-> > > 
-> > 
-> > This check is only executed if the ECC engine flagged a non-correctable
-> > error. If someone wrote all 0xff to the page there will be a proper ECC
-> > checksum calculated and we won't get into this path. So to get this
-> > check to wrongly paper over a legitimate error someone would need to
-> > write almost all 0xff with a few bits 0, which then flip to a 1
-> > afterwards, which is highly unlikely as far as I understand flash
-> > technology.
-> 
-> On second thought, the case I mentioned is not a problem for you
-> currently. You'll just have more problems once you start seeing bitflips
-> in erased pages.
-> 
-> And I agree, the latter case you mention is probably pretty unlikely,
-> though I'm not really an EE expert to tell you cannot see such a 0->1
-> "stuck bit".
-> 
-> But anyway, why don't you check the spare area too? It turns the
-> "unlikely" problem into a non-issue.
-> 
-If I'm using the HWECC/DMA functions I have no way to check the OOB ECC
-area. The controller just skips over it and only transfers user
-available OOB data into the buffer. So checking the OOB is unfortunately
-not easily done.
+Signed-off-by: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+---
+ drivers/reset/reset-socfpga.c | 19 +++++++++++++------
+ 1 file changed, 13 insertions(+), 6 deletions(-)
 
-> At the same time, I see that you don't support raw page reads/writes. Is
-> it impossible? Or is it just an oversight?
-> 
-It's possible, but I've skipped it for now, as this would increase the
-amount of testing I have to do to validate each round of those patches
-even more and I don't see much benefit right now. So this remains a
-TODO.
-
-[...]
-> > > > +	unsigned long rate = clk_get_rate(nand->clk) / 1000000;
-> 
-> ^^ conversion to MHz? Why? (comment) How about DIV_ROUND_UP, so you
-> don't overestimate the clock period (and thus underestimate the number
-> of clock periods needed)?
-> 
-> > > > +	unsigned long period = 1000000 / rate;
-> 
-> And period is... in picoseconds? It took me a minute to figure that out
-> for sure, so IMO it deserves a comment.
-> 
-> > > > +	const struct nand_sdr_timings *timings;
-> > > > +	u32 val, reg = 0;
-> > > > +
-> > > > +	timings = onfi_async_timing_mode_to_sdr_timings(mode);
-> > > > +
-> > > > +	val = max3(timings->tAR_min, timings->tRR_min,
-> > > > +		   timings->tRC_min) / period;
-> 
-> DIV_ROUND_UP()? You don't want to lop off a partial timing cycle, right?
-> Simliar comments apply throughout. Or please correct me if I'm wrong.
-> 
-
-I agree with the reasoning here and made those changes for v4.
-
-> > > > +	if (val > 2)
-> > > > +		val -= 3;
-> > > > +	reg |= TIMING_TCR_TAR_TRR(val);
-> > > > +
-> > > > +	val = max(max(timings->tCS_min, timings->tCH_min),
-> > > > +		  max(timings->tALS_min, timings->tALH_min)) / period;
-> > > > +	if (val > 1)
-> > > > +		val -= 2;
-> > > > +	reg |= TIMING_TCS(val);
-> > > > +
-> > > > +	val = (max(timings->tRP_min, timings->tREA_max) + 6000) / period;
-> > > > +	reg |= (TIMING_TRP(val) | TIMING_TRP_RESP(val));
-> > > > +
-> > > > +	reg |= TIMING_TWB(timings->tWB_max / period);
-> > > > +	reg |= TIMING_TWHR(timings->tWHR_min / period);
-> > > > +	reg |= TIMING_TWH(timings->tWH_min / period);
-> > > > +	reg |= TIMING_TWP(timings->tWP_min / period);
-> > > > +	reg |= TIMING_TRH(timings->tRHW_min / period);
-> > > > +
-> > > > +	writel(reg, nand->regs + TIMING_1);
-> > > > +
-> > > > +	val = timings->tADL_min / period;
-> > > > +	if (val > 2)
-> > > > +		val -= 3;
-> > > > +	reg = TIMING_TADL(val);
-> > > > +
-> > > > +	writel(reg, nand->regs + TIMING_2);
-> > > > +}
-> 
-Regards,
-Lucas
+diff --git a/drivers/reset/reset-socfpga.c b/drivers/reset/reset-socfpga.c
+index 0a8def3..9074d41 100644
+--- a/drivers/reset/reset-socfpga.c
++++ b/drivers/reset/reset-socfpga.c
+@@ -24,11 +24,11 @@
+ #include <linux/types.h>
+ 
+ #define NR_BANKS		4
+-#define OFFSET_MODRST		0x10
+ 
+ struct socfpga_reset_data {
+ 	spinlock_t			lock;
+ 	void __iomem			*membase;
++	u32				modrst_offset;
+ 	struct reset_controller_dev	rcdev;
+ };
+ 
+@@ -45,8 +45,8 @@ static int socfpga_reset_assert(struct reset_controller_dev *rcdev,
+ 
+ 	spin_lock_irqsave(&data->lock, flags);
+ 
+-	reg = readl(data->membase + OFFSET_MODRST + (bank * NR_BANKS));
+-	writel(reg | BIT(offset), data->membase + OFFSET_MODRST +
++	reg = readl(data->membase + data->modrst_offset + (bank * NR_BANKS));
++	writel(reg | BIT(offset), data->membase + data->modrst_offset +
+ 				 (bank * NR_BANKS));
+ 	spin_unlock_irqrestore(&data->lock, flags);
+ 
+@@ -67,8 +67,8 @@ static int socfpga_reset_deassert(struct reset_controller_dev *rcdev,
+ 
+ 	spin_lock_irqsave(&data->lock, flags);
+ 
+-	reg = readl(data->membase + OFFSET_MODRST + (bank * NR_BANKS));
+-	writel(reg & ~BIT(offset), data->membase + OFFSET_MODRST +
++	reg = readl(data->membase + data->modrst_offset + (bank * NR_BANKS));
++	writel(reg & ~BIT(offset), data->membase + data->modrst_offset +
+ 				  (bank * NR_BANKS));
+ 
+ 	spin_unlock_irqrestore(&data->lock, flags);
+@@ -85,7 +85,7 @@ static int socfpga_reset_status(struct reset_controller_dev *rcdev,
+ 	int offset = id % BITS_PER_LONG;
+ 	u32 reg;
+ 
+-	reg = readl(data->membase + OFFSET_MODRST + (bank * NR_BANKS));
++	reg = readl(data->membase + data->modrst_offset + (bank * NR_BANKS));
+ 
+ 	return !(reg & BIT(offset));
+ }
+@@ -100,6 +100,8 @@ static int socfpga_reset_probe(struct platform_device *pdev)
+ {
+ 	struct socfpga_reset_data *data;
+ 	struct resource *res;
++	struct device *dev = &pdev->dev;
++	struct device_node *np = dev->of_node;
+ 
+ 	/*
+ 	 * The binding was mainlined without the required property.
+@@ -120,6 +122,11 @@ static int socfpga_reset_probe(struct platform_device *pdev)
+ 	if (IS_ERR(data->membase))
+ 		return PTR_ERR(data->membase);
+ 
++	if (of_property_read_u32(np, "altr,modrst-offset", &data->modrst_offset)) {
++		dev_err(dev, "no altr,modrst-offset specified in device tree\n");
++		return -ENODEV;
++	}
++
+ 	spin_lock_init(&data->lock);
+ 
+ 	data->rcdev.owner = THIS_MODULE;
+-- 
+2.4.5
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
