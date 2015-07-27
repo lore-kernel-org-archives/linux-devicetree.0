@@ -1,82 +1,65 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 05/11] mfd: devicetree: bindings: Add Qualcomm SMD
- based RPM DT binding
-Date: Mon, 27 Jul 2015 10:53:47 +0100
-Message-ID: <20150727095347.GU11162@sirena.org.uk>
-References: <1435355419-23602-6-git-send-email-bjorn.andersson@sonymobile.com>
- <20150707121609.GZ3182@x1>
- <20150713214836.GA15178@usrtlx11787.corpusers.net>
- <20150723133133.GB3436@x1>
- <20150723164128.GD4753@usrtlx11787.corpusers.net>
- <20150723171638.GE11162@sirena.org.uk>
- <20150724095847.GC3436@x1>
- <20150724102434.GF11162@sirena.org.uk>
- <20150724172316.GR11162@sirena.org.uk>
- <20150727072918.GU3436@x1>
+From: Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>
+Subject: Re: [PATCH 7/7] ARM64: zynqmp: Add eeprom memories on i2c bus
+Date: Mon, 27 Jul 2015 15:31:02 +0530
+Message-ID: <CAKfKVtG-Uq0aJYnLqACO30mNj=D7+7y5skhf8JSqnWAgoJNk7w@mail.gmail.com>
+References: <48a75b64b05dc094e34fe27e5d03552dbfe77fe2.1437990464.git.michal.simek@xilinx.com>
+	<84f7d2137afdc5581c1d5d9b27feb2c5e5592308.1437990464.git.michal.simek@xilinx.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="hWlXnmO21HWBEYii"
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150727072918.GU3436@x1>
+In-Reply-To: <84f7d2137afdc5581c1d5d9b27feb2c5e5592308.1437990464.git.michal.simek@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, "bjorn@kryo.se" <bjorn@kryo.se>, Andy Gross <agross@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Samuel Ortiz <sameo@linux.intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
+To: Michal Simek <michal.simek@xilinx.com>
+Cc: linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, monstr@monstr.eu, Pawel Moll <pawel.moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Suneel Garapati <suneel.garapati@xilinx.com>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---hWlXnmO21HWBEYii
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Mon, Jul 27, 2015 at 3:18 PM, Michal Simek <michal.simek@xilinx.com> wrote:
+> Add i2c eeprom memories on i2c bus.
+>
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> ---
+>
+>  arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts b/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
+> index 206e18eca2fb..47debdcbefbf 100644
+> --- a/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
+> +++ b/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
+> @@ -36,6 +36,24 @@
+>         status = "okay";
+>  };
+>
+> +&i2c0 {
+> +       status = "okay";
+> +       clock-frequency = <100000>;
+If I am not wrong eeprom could work at 400k Could we make that as the speed.
 
-On Mon, Jul 27, 2015 at 08:29:18AM +0100, Lee Jones wrote:
-> On Fri, 24 Jul 2015, Mark Brown wrote:
-> > On Fri, Jul 24, 2015 at 11:24:34AM +0100, Mark Brown wrote:
-
-> From here:
-
-> > > > > > +                pm8941-regulators {
-> > > > > > +                        compatible = "qcom,rpm-pm8941-regulators";
-> > > > > > +                        vdd_l13_l20_l23_l24-supply = <&pm8941_boost>;
-
-> > > > > I'd like Mark to glance at this.
-
-> Mark: Is this new property okay?
-
-As far as I can see that looks like a standard supply property, assuming
-the supply is actually called that why would it be an issue?
-
-> > The specified range of the regulator is 1.75-1.85V and this is handled
-> > by the implementation, however the board designers have stated that it
-> > is only allowed to be configured to 1.8V.
-
-> > So DT is used to narrow the capabilities of the individual component to
-> > something that's suitable for this particular system.
-
-> > > We still need Mark to look at this.
-
-> Is it okay for the regulator-{min,max}-microvolt to be artificially
-> restricted to the required value, despite knowing that the regulator
-> is capable of supply {more,less} voltage?
-
-Yes, that's the entire purpose of those properties - to set the limits
-the board designers have which will typically be more restrictive than
-those that the regulator itself is capable of imposing.
-
---hWlXnmO21HWBEYii
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVtf+qAAoJECTWi3JdVIfQWDMH/RUoPbfBqpvhfGbK03QIRtdK
-CfVDfU1YaqXBI/TdsbA/wGR910PaWoLVQpfAl3KO2FP1K0/B1HNS9qa8ykEHR0Pt
-Rup6nlAMqXGrkKlTBQwYkYev6EaRoKpDqt+ASyio7U2r9KABvzuwlSTtoGyJ4DEM
-GUnVH5AISpzlIsaDPr+DPU4ZpDPonja9cW/0qavdi0OK8RLRXS/AohNBHaLuVmcJ
-YihPHsTkQ4Lx6RBddYQGcS9XzLve7JUMg44ZznFBlf/fDm7Eo70hXNh3woepLplc
-e6vU2dqJz/FLWEqJdFa8TjNMLUJmPrKlwEAS7cyOmb85Y8BZzykPihvlFiLQeC8=
-=y1Ty
------END PGP SIGNATURE-----
-
---hWlXnmO21HWBEYii--
+> +       eeprom@54 {
+> +               compatible = "at,24c64";
+> +               reg = <0x54>;
+> +       };
+> +};
+> +
+> +&i2c1 {
+> +       status = "okay";
+> +       clock-frequency = <100000>;
+> +       eeprom@55 {
+> +               compatible = "at,24c64";
+> +               reg = <0x55>;
+> +       };
+> +};
+> +
+>  &gem0 {
+>         status = "okay";
+>         phy-handle = <&phy0>;
+> --
+> 2.3.5
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
