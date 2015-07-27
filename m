@@ -1,160 +1,102 @@
-Return-Path: <joro@lemmy.home.8bytes.org>
-From: Joerg Roedel <joro@8bytes.org>
-Subject: [PATCH 1/2] of: base: Allow more args than MAX_PHANDLE_ARGS if required
-Date: Thu, 16 Jul 2015 10:22:56 +0200
-Message-Id: <1437034977-5266-2-git-send-email-joro@8bytes.org>
-In-Reply-To: <1437034977-5266-1-git-send-email-joro@8bytes.org>
-References: <1437034977-5266-1-git-send-email-joro@8bytes.org>
-To: Will Deacon <will.deacon@arm.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Joerg Roedel <jroedel@suse.de>
+Return-Path: <djkurtz@google.com>
+MIME-Version: 1.0
+In-Reply-To: <1437965782.5614.4.camel@mtksdaap41>
+References: <1437706925-3222-1-git-send-email-jamesjj.liao@mediatek.com>
+	<1437706925-3222-8-git-send-email-jamesjj.liao@mediatek.com>
+	<CAGS+omAUAHZUJQMnWJbH7NXB_Etp=OF3dWyMB7Ri1+rAyzyPBg@mail.gmail.com>
+	<1437965782.5614.4.camel@mtksdaap41>
+Date: Mon, 27 Jul 2015 13:34:34 +0800
+Message-ID: <CAGS+omAJ5EDhsn90t=CMXN_jcYvr+s4S5S25HGPX1+GbENR5eQ@mail.gmail.com>
+Subject: Re: [PATCH v4 7/7] arm64: dts: mt8173: Add subsystem clock controller
+ device nodes
+From: Daniel Kurtz <djkurtz@google.com>
+Content-Type: multipart/alternative; boundary=001a113f25fe780326051bd4b513
+To: James Liao <jamesjj.liao@mediatek.com>
+Cc: linux-mediatek@lists.infradead.org, Mike Turquette <mturquette@baylibre.com>, Matthias Brugger <matthias.bgg@gmail.com>, srv_heupstream <srv_heupstream@mediatek.com>, Heiko Stubner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Stephen Boyd <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ricky Liang <jcliang@chromium.org>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Joerg Roedel <jroedel@suse.de>
+--001a113f25fe780326051bd4b513
+Content-Type: text/plain; charset=UTF-8
 
-The main use of MAX_PHANDLE_ARGS is to define the number of
-args elements in 'struct of_phandle_args'. This struct is
-often declared on the stack and thus it is impractical to
-increase MAX_PHANDLE_ARGS again and again.
+On Jul 27, 2015 09:56, "James Liao" <jamesjj.liao@mediatek.com> wrote:
+>
+> Hi Daniel,
+>
+> On Fri, 2015-07-24 at 19:32 +0800, Daniel Kurtz wrote:
+> > > @@ -88,6 +88,13 @@
+> > >                 #clock-cells = <0>;
+> > >         };
+> > >
+> > > +       cpum_ck: dummy_clk {
+> >
+> > I'm not a big fan of this "dummy_clk".
+> > The 'name' part of the devicetree node is supposed to be generic.
+> > So, perhaps just oscillator@2, and move it down below clk32k:
+oscillator@1.
+> > Otherwise:
+>
+> cpum_ck is a test clock which only available in IC test. It's empty on
+> MT8173 evaluation or production boards. Should we name this kind of
+> empty clock as an oscillator? Or is there a better name for it?
 
-To handle situations where more than MAX_PHANDLE_ARGS
-elements may appear in a device-tree, introduce functions
-to allocate/free 'struct of_phandle_args' with more than
-MAX_PHANDLE_ARGS elements and provide the new function
-of_parse_phandle_with_var_args(), which can handle those
-variable-size structs.
+When and if it is used, it would be an oscillator of some kind. It is only
+"dummy" because it is not currently used.
 
-This is necessary for the ARM-SMMU driver, where the number
-of mmu-masters can be up to 128.
+I am not an expert, but I think these names should be generic, and
+"oscillator" is consistent with what is used elsewhere in this file for off
+chip clock sources.
 
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
----
- drivers/of/base.c  | 43 ++++++++++++++++++++++++++++++++++++-------
- include/linux/of.h |  7 +++++++
- 2 files changed, 43 insertions(+), 7 deletions(-)
+-Dan
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 8b5a187..2b288db 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -54,6 +54,24 @@ DEFINE_MUTEX(of_mutex);
-  */
- DEFINE_RAW_SPINLOCK(devtree_lock);
- 
-+struct of_phandle_args *of_alloc_phandle_args(int size)
-+{
-+	struct of_phandle_args *args;
-+	int e = max(0, size - MAX_PHANDLE_ARGS);
-+
-+	args =  kzalloc(sizeof(struct of_phandle_args) + e * sizeof(uint32_t),
-+			GFP_KERNEL);
-+
-+	return args;
-+}
-+EXPORT_SYMBOL(of_alloc_phandle_args);
-+
-+void of_free_phandle_args(struct of_phandle_args *args)
-+{
-+	kfree(args);
-+}
-+EXPORT_SYMBOL(of_free_phandle_args);
-+
- int of_n_addr_cells(struct device_node *np)
- {
- 	const __be32 *ip;
-@@ -1446,7 +1464,8 @@ static int __of_parse_phandle_with_args(const struct device_node *np,
- 					const char *list_name,
- 					const char *cells_name,
- 					int cell_count, int index,
--					struct of_phandle_args *out_args)
-+					struct of_phandle_args *out_args,
-+					int elems)
- {
- 	const __be32 *list, *list_end;
- 	int rc = 0, size, cur_index = 0;
-@@ -1525,8 +1544,8 @@ static int __of_parse_phandle_with_args(const struct device_node *np,
- 
- 			if (out_args) {
- 				int i;
--				if (WARN_ON(count > MAX_PHANDLE_ARGS))
--					count = MAX_PHANDLE_ARGS;
-+				if (WARN_ON(count > elems))
-+					count = elems;
- 				out_args->np = node;
- 				out_args->args_count = count;
- 				for (i = 0; i < count; i++)
-@@ -1577,7 +1596,7 @@ struct device_node *of_parse_phandle(const struct device_node *np,
- 		return NULL;
- 
- 	if (__of_parse_phandle_with_args(np, phandle_name, NULL, 0,
--					 index, &args))
-+					 index, &args, MAX_PHANDLE_ARGS))
- 		return NULL;
- 
- 	return args.np;
-@@ -1623,10 +1642,20 @@ int of_parse_phandle_with_args(const struct device_node *np, const char *list_na
- 	if (index < 0)
- 		return -EINVAL;
- 	return __of_parse_phandle_with_args(np, list_name, cells_name, 0,
--					    index, out_args);
-+					    index, out_args, MAX_PHANDLE_ARGS);
- }
- EXPORT_SYMBOL(of_parse_phandle_with_args);
- 
-+int of_parse_phandle_with_var_args(const struct device_node *np, const char *list_name,
-+				   const char *cells_name, int index,
-+				   struct of_phandle_args *out_args, int elems)
-+{
-+	if (index < 0)
-+		return -EINVAL;
-+	return __of_parse_phandle_with_args(np, list_name, cells_name, 0,
-+					    index, out_args, elems);
-+}
-+EXPORT_SYMBOL(of_parse_phandle_with_var_args);
- /**
-  * of_parse_phandle_with_fixed_args() - Find a node pointed by phandle in a list
-  * @np:		pointer to a device tree node containing a list
-@@ -1664,7 +1693,7 @@ int of_parse_phandle_with_fixed_args(const struct device_node *np,
- 	if (index < 0)
- 		return -EINVAL;
- 	return __of_parse_phandle_with_args(np, list_name, NULL, cell_count,
--					   index, out_args);
-+					   index, out_args, MAX_PHANDLE_ARGS);
- }
- EXPORT_SYMBOL(of_parse_phandle_with_fixed_args);
- 
-@@ -1687,7 +1716,7 @@ int of_count_phandle_with_args(const struct device_node *np, const char *list_na
- 				const char *cells_name)
- {
- 	return __of_parse_phandle_with_args(np, list_name, cells_name, 0, -1,
--					    NULL);
-+					    NULL, MAX_PHANDLE_ARGS);
- }
- EXPORT_SYMBOL(of_count_phandle_with_args);
- 
-diff --git a/include/linux/of.h b/include/linux/of.h
-index edc068d..cd9f225 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -75,6 +75,10 @@ struct of_phandle_args {
- 	uint32_t args[MAX_PHANDLE_ARGS];
- };
- 
-+/* Use these if you need more that MAX_PHANDLE_ARGS */
-+extern struct of_phandle_args *of_alloc_phandle_args(int size);
-+extern void of_free_phandle_args(struct of_phandle_args *args);
-+
- struct of_reconfig_data {
- 	struct device_node	*dn;
- 	struct property		*prop;
-@@ -327,6 +331,9 @@ extern struct device_node *of_parse_phandle(const struct device_node *np,
- extern int of_parse_phandle_with_args(const struct device_node *np,
- 	const char *list_name, const char *cells_name, int index,
- 	struct of_phandle_args *out_args);
-+extern int of_parse_phandle_with_var_args(const struct device_node *np,
-+	const char *list_name, const char *cells_name, int index,
-+	struct of_phandle_args *out_args, int elems);
- extern int of_parse_phandle_with_fixed_args(const struct device_node *np,
- 	const char *list_name, int cells_count, int index,
- 	struct of_phandle_args *out_args);
--- 
-1.8.4.5
+>
+>
+> Best regards,
+>
+> James
+>
+
+--001a113f25fe780326051bd4b513
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<p dir=3D"ltr"><br>
+On Jul 27, 2015 09:56, &quot;James Liao&quot; &lt;<a href=3D"mailto:jamesjj=
+.liao@mediatek.com">jamesjj.liao@mediatek.com</a>&gt; wrote:<br>
+&gt;<br>
+&gt; Hi Daniel,<br>
+&gt;<br>
+&gt; On Fri, 2015-07-24 at 19:32 +0800, Daniel Kurtz wrote:<br>
+&gt; &gt; &gt; @@ -88,6 +88,13 @@<br>
+&gt; &gt; &gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0#clock-cells =3D &lt;0&gt;;<br>
+&gt; &gt; &gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0};<br>
+&gt; &gt; &gt;<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0cpum_ck: dummy_clk {<br>
+&gt; &gt;<br>
+&gt; &gt; I&#39;m not a big fan of this &quot;dummy_clk&quot;.<br>
+&gt; &gt; The &#39;name&#39; part of the devicetree node is supposed to be =
+generic.<br>
+&gt; &gt; So, perhaps just oscillator@2, and move it down below clk32k: osc=
+illator@1.<br>
+&gt; &gt; Otherwise:<br>
+&gt;<br>
+&gt; cpum_ck is a test clock which only available in IC test. It&#39;s empt=
+y on<br>
+&gt; MT8173 evaluation or production boards. Should we name this kind of<br=
+>
+&gt; empty clock as an oscillator? Or is there a better name for it?</p>
+<p dir=3D"ltr">When and if it is used, it would be an oscillator of some ki=
+nd. It is only &quot;dummy&quot; because it is not currently used.</p>
+<p dir=3D"ltr">I am not an expert, but I think these names should be generi=
+c, and &quot;oscillator&quot; is consistent with what is used elsewhere in =
+this file for off chip clock sources.</p>
+<p dir=3D"ltr">-Dan</p>
+<p dir=3D"ltr">&gt;<br>
+&gt;<br>
+&gt; Best regards,<br>
+&gt;<br>
+&gt; James<br>
+&gt;<br>
+</p>
+
+--001a113f25fe780326051bd4b513--
