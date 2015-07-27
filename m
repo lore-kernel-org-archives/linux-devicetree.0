@@ -1,60 +1,81 @@
-From: Govindraj Raja <govindraj.raja@imgtec.com>
-Subject: [PATCH v4 7/7] mips: pistachio: Allow to enable the external timer based clocksource
-Date: Mon, 27 Jul 2015 15:02:35 +0100
-Message-ID: <1438005755-27051-3-git-send-email-govindraj.raja@imgtec.com>
-References: <1438005755-27051-1-git-send-email-govindraj.raja@imgtec.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v5 4/6] dt-binding: document the binding for mxc rtc
+Date: Mon, 27 Jul 2015 22:03:33 +0800
+Message-ID: <20150727140333.GN12927@tiger>
+References: <1437946673-7402-1-git-send-email-tremyfr@gmail.com>
+ <1437946673-7402-5-git-send-email-tremyfr@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1438005755-27051-1-git-send-email-govindraj.raja@imgtec.com>
+Content-Disposition: inline
+In-Reply-To: <1437946673-7402-5-git-send-email-tremyfr@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org
-Cc: Thomas Gleixner <tglx@linutronix.de>, Andrew Bresticker <abrestic@chromium.org>, James Hartley <James.Hartley@imgtec.com>, Govindraj Raja <Govindraj.Raja@imgtec.com>, Damien Horsley <Damien.Horsley@imgtec.com>, James Hogan <James.Hogan@imgtec.com>, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, Ezequiel Garcia <ezequiel.garcia@imgtec.com>
+To: Philippe Reynes <tremyfr@gmail.com>
+Cc: a.zummo@towertech.it, alexandre.belloni@free-electrons.com, shawn.guo@linaro.org, kernel@pengutronix.de, linux@arm.linux.org.uk, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, rtc-linux@googlegroups.com, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Ezequiel Garcia <ezequiel.garcia@imgtec.com>
+On Sun, Jul 26, 2015 at 11:37:51PM +0200, Philippe Reynes wrote:
+> This adds documentation of device tree bindings for the
+> mxc rtc.
+> 
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> Cc: Kumar Gala <galak@codeaurora.org>
 
-This commit introduces a new config, so the user can choose to enable
-the General Purpose Timer based clocksource. This option is required
-to have CPUFreq support.
+DT maintainers,
 
-Signed-off-by: Ezequiel Garcia <ezequiel.garcia@imgtec.com>
----
- arch/mips/Kconfig           |  1 +
- arch/mips/pistachio/Kconfig | 13 +++++++++++++
- 2 files changed, 14 insertions(+)
- create mode 100644 arch/mips/pistachio/Kconfig
+Any comments on the bindings?  Otherwise, I will queue the whole patch
+series on IMX tree for 4.3.
 
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index cee5f93..c0cc9e4 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -948,6 +948,7 @@ source "arch/mips/jazz/Kconfig"
- source "arch/mips/jz4740/Kconfig"
- source "arch/mips/lantiq/Kconfig"
- source "arch/mips/lasat/Kconfig"
-+source "arch/mips/pistachio/Kconfig"
- source "arch/mips/pmcs-msp71xx/Kconfig"
- source "arch/mips/ralink/Kconfig"
- source "arch/mips/sgi-ip27/Kconfig"
-diff --git a/arch/mips/pistachio/Kconfig b/arch/mips/pistachio/Kconfig
-new file mode 100644
-index 0000000..97731ea
---- /dev/null
-+++ b/arch/mips/pistachio/Kconfig
-@@ -0,0 +1,13 @@
-+config PISTACHIO_GPTIMER_CLKSRC
-+	bool "Enable General Purpose Timer based clocksource"
-+	depends on MACH_PISTACHIO
-+	select CLKSRC_PISTACHIO
-+	select MIPS_EXTERNAL_TIMER
-+	help
-+	  This option enables a clocksource driver based on a Pistachio
-+	  SoC General Purpose external timer.
-+
-+	  If you want to enable the CPUFreq, you need to enable
-+	  this option.
-+
-+	  If you don't want to enable CPUFreq, you can leave this disabled.
--- 
-1.9.1
+Shawn
+
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Philippe Reynes <tremyfr@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/rtc/rtc-mxc.txt |   26 +++++++++++++++++++++
+>  1 files changed, 26 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/rtc/rtc-mxc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/rtc/rtc-mxc.txt b/Documentation/devicetree/bindings/rtc/rtc-mxc.txt
+> new file mode 100644
+> index 0000000..49aa550
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/rtc/rtc-mxc.txt
+> @@ -0,0 +1,26 @@
+> +* Real Time Clock of the i.MX SoCs
+> +
+> +RTC controller for the i.MX SoCs
+> +
+> +Required properties:
+> +- compatible: Should be "fsl,imx1-rtc" or "fsl,imx21-rtc".
+> +- reg: physical base address of the controller and length of memory mapped
+> +  region.
+> +- interrupts: IRQ line for the RTC.
+> +- clocks: should contain two entries:
+> +  * one for the input reference
+> +  * one for the the SoC RTC
+> +- clock-names: should contain:
+> +  * "ref" for the input reference clock
+> +  * "ipg" for the SoC RTC clock
+> +
+> +Example:
+> +
+> +rtc@10007000 {
+> +	compatible = "fsl,imx21-rtc";
+> +	reg = <0x10007000 0x1000>;
+> +	interrupts = <22>;
+> +	clocks = <&clks IMX27_CLK_CKIL>,
+> +	       	 <&clks IMX27_CLK_RTC_IPG_GATE>;
+> +	clock-names = "ref", "ipg";
+> +};
+> -- 
+> 1.7.4.4
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
