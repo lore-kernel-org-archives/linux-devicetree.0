@@ -1,53 +1,69 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: [GIT PULL] DeviceTree fixes for 4.2
-Date: Tue, 28 Jul 2015 10:54:58 -0500
-Message-ID: <CAL_JsqL3dYgw6xu3zSQ4rb9JTGT0u5sU=UkTC-ZhfzDPp3W-Kg@mail.gmail.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] of: Drop owner assignment from platform and i2c driver
+Date: Tue, 28 Jul 2015 10:55:40 -0500
+Message-ID: <CAL_JsqKusMR8zgOnmG_g5F7QftiUzPgxQfTqh0G+6LYNF7kUjA@mail.gmail.com>
+References: <1436509572-25266-1-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1436509572-25266-1-git-send-email-k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+On Fri, Jul 10, 2015 at 1:26 AM, Krzysztof Kozlowski
+<k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> platform_driver and i2c_driver do not need to set an owner because core
+> will set it.
+>
+> Signed-off-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 
-Please pull this small set of DT fixes for 4.2.
+Applied. Thanks.
 
 Rob
 
-The following changes since commit cbfe8fa6cd672011c755c3cd85c9ffd4e2d10a6f:
-
-  Linux 4.2-rc4 (2015-07-26 12:26:21 -0700)
-
-are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
-tags/devicetree-fixes-for-4.2
-
-for you to fetch changes up to 599ad5ac9a59587a46f6540a8e2ab79dff811f7d:
-
-  of: Drop owner assignment from platform and i2c driver (2015-07-27
-08:24:39 -0500)
-
-----------------------------------------------------------------
-A handful of DT related fixes for 4.2-rc.
-
-----------------------------------------------------------------
-Alban Bedel (1):
-      DEVICETREE: Misc fix for the AR7100 SPI controller binding
-
-Krzysztof Kozlowski (1):
-      of: Drop owner assignment from platform and i2c driver
-
-Rob Herring (1):
-      of: add HAS_IOMEM depends to OF_ADDRESS
-
-Tomeu Vizoso (1):
-      of: constify drv arg of of_driver_match_device stub
-
- Documentation/devicetree/bindings/spi/spi-ath79.txt | 6 +++---
- drivers/of/Kconfig                                  | 2 +-
- drivers/of/unittest.c                               | 3 ---
- include/linux/of_device.h                           | 2 +-
- 4 files changed, 5 insertions(+), 8 deletions(-)
+>
+> ---
+>
+> The coccinelle script which generated the patch was sent here:
+> http://www.spinics.net/lists/kernel/msg2029903.html
+> ---
+>  drivers/of/unittest.c | 3 ---
+>  1 file changed, 3 deletions(-)
+>
+> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+> index 18016341d5a9..9f71770b6226 100644
+> --- a/drivers/of/unittest.c
+> +++ b/drivers/of/unittest.c
+> @@ -979,7 +979,6 @@ static struct platform_driver unittest_driver = {
+>         .remove                 = unittest_remove,
+>         .driver = {
+>                 .name           = "unittest",
+> -               .owner          = THIS_MODULE,
+>                 .of_match_table = of_match_ptr(unittest_match),
+>         },
+>  };
+> @@ -1666,7 +1665,6 @@ static const struct i2c_device_id unittest_i2c_dev_id[] = {
+>  static struct i2c_driver unittest_i2c_dev_driver = {
+>         .driver = {
+>                 .name = "unittest-i2c-dev",
+> -               .owner = THIS_MODULE,
+>         },
+>         .probe = unittest_i2c_dev_probe,
+>         .remove = unittest_i2c_dev_remove,
+> @@ -1761,7 +1759,6 @@ static const struct i2c_device_id unittest_i2c_mux_id[] = {
+>  static struct i2c_driver unittest_i2c_mux_driver = {
+>         .driver = {
+>                 .name = "unittest-i2c-mux",
+> -               .owner = THIS_MODULE,
+>         },
+>         .probe = unittest_i2c_mux_probe,
+>         .remove = unittest_i2c_mux_remove,
+> --
+> 1.9.1
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
