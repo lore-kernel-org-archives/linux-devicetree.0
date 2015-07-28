@@ -1,32 +1,60 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 0/2] ARM: shmobile: Add JPU device nodes to Renesas R-Car
- SoCs.
-Date: Tue, 28 Jul 2015 09:34:53 +0900
-Message-ID: <20150728003453.GA21162@verge.net.au>
-References: <1437744346-499-1-git-send-email-mikhail.ulyanov@cogentembedded.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v2] ARM: dts: Add SPI CS on exynos5250-snow
+Date: Tue, 28 Jul 2015 09:36:58 +0900
+Message-ID: <55B6CEAA.7050904@samsung.com>
+References: <a5054dfad3d48c582b062b0536125c9bcff41f31.1438027526.git.hramrach@gmail.com>
+ <CABxcv=kHgvXgVSzLj=bABqO26r3w7T7ezAUfdh0n4S_N3ZM-Mw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1437744346-499-1-git-send-email-mikhail.ulyanov@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>
-Cc: magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, galak@codeaurora.org, linux@arm.linux.org.uk, laurent.pinchart@ideasonboard.com, sergei.shtylyov@cogentembedded.com, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CABxcv=kHgvXgVSzLj=bABqO26r3w7T7ezAUfdh0n4S_N3ZM-Mw@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier@dowhile0.org>, Michal Suchanek <hramrach@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 24, 2015 at 04:25:44PM +0300, Mikhail Ulyanov wrote:
-> This series of patches contains device tree nodes definitions for JPEG
-> codec peripheral found in the Renesas R-Car SoCs.
+On 28.07.2015 06:24, Javier Martinez Canillas wrote:
+> Hello Michal,
 > 
-> This series of patches is against the renesas-devel-20150720-v4.2-rc3
-> of https://kernel.googlesource.com/pub/scm/linux/kernel/git/horms/renesas
+> The patch looks good to me, just one small comment below.
 > 
-> The driver itself was accepted by Hans Verkuil
-> http://git.linuxtv.org/cgit.cgi/hverkuil/media_tree.git
-> commit hash 761a0eee505f3a7051b187e67cd28c50b385d409
+> On Mon, Jul 27, 2015 at 10:11 PM, Michal Suchanek <hramrach@gmail.com> wrote:
+>> Although there is only one choice of chipselect it is necessary to
+>> specify it. The driver cannot claim the gpio otherwise.
+>>
+>> Signed-off-by: Michal Suchanek <hramrach@gmail.com>
+>>
+>> --
+>> v2
+>>  - don't move unrelated line
+>> ---
+>>  arch/arm/boot/dts/exynos5250-snow.dts | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/arch/arm/boot/dts/exynos5250-snow.dts b/arch/arm/boot/dts/exynos5250-snow.dts
+>> index b7f4122..62be08a 100644
+>> --- a/arch/arm/boot/dts/exynos5250-snow.dts
+>> +++ b/arch/arm/boot/dts/exynos5250-snow.dts
+>> @@ -688,6 +688,7 @@
+>>         status = "okay";
+>>         samsung,spi-src-clk = <0>;
+>>         num-cs = <1>;
+>> +       cs-gpios = <&gpa2 5 0>;
 > 
-> Mikhail Ulyanov (2):
->   ARM: shmobile: r8a7790: Add JPU device node.
->   ARM: shmobile: r8a7791: Add JPU device node.
+> NIT: this should be GPIO_ACTIVE_HIGH instead of 0 but maybe Kukjin or
+> Krzysztof can fixup when applying it?
+> 
+>>  };
+>>
+>>  &usbdrd_dwc3 {
+>> --
+> 
+> Acked-by: Javier Martinez Canillas <javier@osg.samsung.com>
 
-Thanks, I have queued up both patches.
+Yes, the GPIO_ACTIVE_HIGH would be better. Can you re-spin the patch
+with this change and respective Acks? Including mine ack:
+Acked-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+
+Best regards,
+Krzysztof
