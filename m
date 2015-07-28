@@ -1,499 +1,227 @@
-From: Zhou Wang <wangzhou1@hisilicon.com>
-Subject: Re: [PATCH v5 2/5] PCI: designware: Add ARM64 support
-Date: Tue, 28 Jul 2015 14:21:41 +0800
-Message-ID: <55B71F75.5030907@hisilicon.com>
-References: <1437794486-21134-1-git-send-email-wangzhou1@hisilicon.com> <1437794486-21134-3-git-send-email-wangzhou1@hisilicon.com>
+From: Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCH v2 5/5] iio: Support triggered events
+Date: Tue, 28 Jul 2015 08:37:19 +0200 (CEST)
+Message-ID: <alpine.DEB.2.02.1507280834270.4429@pmeerw.net>
+References: <1438038300-12855-1-git-send-email-vladimir.barinov@cogentembedded.com> <1438038442-13082-1-git-send-email-vladimir.barinov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1437794486-21134-3-git-send-email-wangzhou1@hisilicon.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Zhou Wang <wangzhou1@hisilicon.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jg1.han@samsung.com>, Pratyush Anand <pratyush.anand@gmail.com>, Arnd Bergmann <arnd@arndb.de>, gabriele.paoloni@huawei.com, lorenzo.pieralisi@arm.com, James Morse <james.morse@arm.com>, Liviu.Dudau@arm.com, thomas.petazzoni@free-electrons.com, Jason Cooper <jason@lakedaemon.net>, robh@kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, yuanzhichang@hisilicon.com, zhudacai@hisilicon.com, zhangjukuo@huawei.com, qiuzhenfa@hisilicon.com, liudongdong3@huawei.com, qiujiang@huawei.com, kangfenglong@huawei.com, liguozhu@hisilicon.com
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1438038442-13082-1-git-send-email-vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2015/7/25 11:21, Zhou Wang wrote:
-> This patch tries to unify ARM32 and ARM64 PCIe in designware driver. Delete
-> function dw_pcie_setup, dw_pcie_scan_bus, dw_pcie_map_irq and struct hw_pci,
-> move related operations to dw_pcie_host_init. Also set pp->root_bus_nr = 0 in
-> each PCIe host driver which is based on pcie-designware. This patch also try
-> to use of_pci_get_host_bridge_resources for ARM32 and ARM64 according to the
-> suggestion for Gabriele[1]
+On Tue, 28 Jul 2015, Vladimir Barinov wrote:
+
+> Support triggered events.
 > 
-> This patch is based on Gabriele's patch about of_pci_range fix[2]
+> This is useful for chips that has no it's own interrupt sources.
+
+that don't have their own
+
+> It allows to use generic/standalone iio triggeres for those drivers.
+
+triggers
+
 > 
-> I have compiled the driver with multi_v7_defconfig. However, I don't have
-> ARM32 PCIe related board to do test. It will be appreciated if someone could
-> help to test it.
->
-
-Hi James,
-
-If you have time, could you help to test this patch on i.MX 6Quad board?
-You need apply Gabriele's patch before applying this patch.
-
-It will be very appreciate and helpful if we can get test result from you.
-
-Thanks and Regards,
-Zhou
-
-> Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Gabriele Paoloni <gabriele.paoloni@huawei.com>
-> 
-> [1] http://www.spinics.net/lists/linux-pci/msg42194.html
-> [2] https://patchwork.ozlabs.org/patch/495018/
+> Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 > ---
->  drivers/pci/host/pci-dra7xx.c      |   1 +
->  drivers/pci/host/pci-exynos.c      |   2 +-
->  drivers/pci/host/pci-imx6.c        |   2 +-
->  drivers/pci/host/pci-keystone-dw.c |   2 +-
->  drivers/pci/host/pci-keystone.c    |   2 +-
->  drivers/pci/host/pci-layerscape.c  |   2 +-
->  drivers/pci/host/pcie-designware.c | 217 +++++++++++++------------------------
->  drivers/pci/host/pcie-designware.h |  10 +-
->  drivers/pci/host/pcie-spear13xx.c  |   2 +-
->  9 files changed, 86 insertions(+), 154 deletions(-)
+> Changes in version 2:
+> - initially added
 > 
-> diff --git a/drivers/pci/host/pci-dra7xx.c b/drivers/pci/host/pci-dra7xx.c
-> index 80db09e..69364e8 100644
-> --- a/drivers/pci/host/pci-dra7xx.c
-> +++ b/drivers/pci/host/pci-dra7xx.c
-> @@ -275,6 +275,7 @@ static int __init dra7xx_add_pcie_port(struct dra7xx_pcie *dra7xx,
+>  drivers/iio/Kconfig                        |  6 +++
+>  drivers/iio/Makefile                       |  1 +
+>  drivers/iio/industrialio-core.c            |  4 +-
+>  drivers/iio/industrialio-trigger.c         | 12 +++++-
+>  drivers/iio/industrialio-triggered-event.c | 67 ++++++++++++++++++++++++++++++
+>  include/linux/iio/iio.h                    |  1 +
+>  include/linux/iio/triggered_event.h        | 11 +++++
+>  7 files changed, 98 insertions(+), 4 deletions(-)
+>  create mode 100644 drivers/iio/industrialio-triggered-event.c
+>  create mode 100644 include/linux/iio/triggered_event.h
+> 
+> diff --git a/drivers/iio/Kconfig b/drivers/iio/Kconfig
+> index 4011eff..8fcc92f 100644
+> --- a/drivers/iio/Kconfig
+> +++ b/drivers/iio/Kconfig
+> @@ -58,6 +58,12 @@ config IIO_CONSUMERS_PER_TRIGGER
+>  	This value controls the maximum number of consumers that a
+>  	given trigger may handle. Default is 2.
 >  
->  	pp = &dra7xx->pp;
->  	pp->dev = dev;
-> +	pp->root_bus_nr = 0;
->  	pp->ops = &dra7xx_pcie_host_ops;
+> +config IIO_TRIGGERED_EVENT
+> +	tristate
+> +	select IIO_TRIGGER
+> +	help
+> +	  Provides helper functions for setting up triggered events.
+> +
+>  source "drivers/iio/accel/Kconfig"
+>  source "drivers/iio/adc/Kconfig"
+>  source "drivers/iio/amplifiers/Kconfig"
+> diff --git a/drivers/iio/Makefile b/drivers/iio/Makefile
+> index 698afc2..40dc13e 100644
+> --- a/drivers/iio/Makefile
+> +++ b/drivers/iio/Makefile
+> @@ -9,6 +9,7 @@ industrialio-$(CONFIG_IIO_TRIGGER) += industrialio-trigger.o
+>  industrialio-$(CONFIG_IIO_BUFFER_CB) += buffer_cb.o
 >  
->  	pp->irq = platform_get_irq(pdev, 1);
-> diff --git a/drivers/pci/host/pci-exynos.c b/drivers/pci/host/pci-exynos.c
-> index f9f468d..9771bb0 100644
-> --- a/drivers/pci/host/pci-exynos.c
-> +++ b/drivers/pci/host/pci-exynos.c
-> @@ -530,7 +530,7 @@ static int __init exynos_add_pcie_port(struct pcie_port *pp,
->  		}
+>  obj-$(CONFIG_IIO_TRIGGERED_BUFFER) += industrialio-triggered-buffer.o
+> +obj-$(CONFIG_IIO_TRIGGERED_EVENT) += industrialio-triggered-event.o
+>  obj-$(CONFIG_IIO_KFIFO_BUF) += kfifo_buf.o
+>  
+>  obj-y += accel/
+> diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+> index 3524b0d..54d71ea 100644
+> --- a/drivers/iio/industrialio-core.c
+> +++ b/drivers/iio/industrialio-core.c
+> @@ -948,7 +948,7 @@ static void iio_device_unregister_sysfs(struct iio_dev *indio_dev)
+>  static void iio_dev_release(struct device *device)
+>  {
+>  	struct iio_dev *indio_dev = dev_to_iio_dev(device);
+> -	if (indio_dev->modes & INDIO_BUFFER_TRIGGERED)
+> +	if (indio_dev->modes & (INDIO_BUFFER_TRIGGERED | INDIO_EVENT_TRIGGERED))
+>  		iio_device_unregister_trigger_consumer(indio_dev);
+>  	iio_device_unregister_eventset(indio_dev);
+>  	iio_device_unregister_sysfs(indio_dev);
+> @@ -1218,7 +1218,7 @@ int iio_device_register(struct iio_dev *indio_dev)
+>  			"Failed to register event set\n");
+>  		goto error_free_sysfs;
 >  	}
+> -	if (indio_dev->modes & INDIO_BUFFER_TRIGGERED)
+> +	if (indio_dev->modes & (INDIO_BUFFER_TRIGGERED | INDIO_EVENT_TRIGGERED))
+>  		iio_device_register_trigger_consumer(indio_dev);
 >  
-> -	pp->root_bus_nr = -1;
-> +	pp->root_bus_nr = 0;
->  	pp->ops = &exynos_pcie_host_ops;
+>  	if ((indio_dev->modes & INDIO_ALL_BUFFER_MODES) &&
+> diff --git a/drivers/iio/industrialio-trigger.c b/drivers/iio/industrialio-trigger.c
+> index d31098e..72b63e7 100644
+> --- a/drivers/iio/industrialio-trigger.c
+> +++ b/drivers/iio/industrialio-trigger.c
+> @@ -345,10 +345,18 @@ static ssize_t iio_trigger_write_current(struct device *dev,
 >  
->  	ret = dw_pcie_host_init(pp);
-> diff --git a/drivers/pci/host/pci-imx6.c b/drivers/pci/host/pci-imx6.c
-> index 233a196..bec256c 100644
-> --- a/drivers/pci/host/pci-imx6.c
-> +++ b/drivers/pci/host/pci-imx6.c
-> @@ -551,7 +551,7 @@ static int __init imx6_add_pcie_port(struct pcie_port *pp,
->  		}
->  	}
+>  	indio_dev->trig = trig;
 >  
-> -	pp->root_bus_nr = -1;
-> +	pp->root_bus_nr = 0;
->  	pp->ops = &imx6_pcie_host_ops;
+> -	if (oldtrig)
+> +	if (oldtrig) {
+> +		if (indio_dev->currentmode == INDIO_EVENT_TRIGGERED)
+> +			iio_trigger_detach_poll_func(oldtrig,
+> +						     indio_dev->pollfunc);
+>  		iio_trigger_put(oldtrig);
+> -	if (indio_dev->trig)
+> +	}
+> +	if (indio_dev->trig) {
+>  		iio_trigger_get(indio_dev->trig);
+> +		if (indio_dev->currentmode == INDIO_EVENT_TRIGGERED)
+> +			iio_trigger_attach_poll_func(indio_dev->trig,
+> +						     indio_dev->pollfunc);
+> +	}
 >  
->  	ret = dw_pcie_host_init(pp);
-> diff --git a/drivers/pci/host/pci-keystone-dw.c b/drivers/pci/host/pci-keystone-dw.c
-> index f34892e..b1e4135 100644
-> --- a/drivers/pci/host/pci-keystone-dw.c
-> +++ b/drivers/pci/host/pci-keystone-dw.c
-> @@ -327,7 +327,7 @@ static void ks_dw_pcie_clear_dbi_mode(void __iomem *reg_virt)
->  void ks_dw_pcie_setup_rc_app_regs(struct keystone_pcie *ks_pcie)
->  {
->  	struct pcie_port *pp = &ks_pcie->pp;
-> -	u32 start = pp->mem.start, end = pp->mem.end;
-> +	u32 start = pp->mem->start, end = pp->mem->end;
->  	int i, tr_size;
->  
->  	/* Disable BARs for inbound access */
-> diff --git a/drivers/pci/host/pci-keystone.c b/drivers/pci/host/pci-keystone.c
-> index 734da58..8113832 100644
-> --- a/drivers/pci/host/pci-keystone.c
-> +++ b/drivers/pci/host/pci-keystone.c
-> @@ -309,7 +309,7 @@ static int __init ks_add_pcie_port(struct keystone_pcie *ks_pcie,
->  			return ret;
->  	}
->  
-> -	pp->root_bus_nr = -1;
-> +	pp->root_bus_nr = 0;
->  	pp->ops = &keystone_pcie_host_ops;
->  	ret = ks_dw_pcie_host_init(ks_pcie, ks_pcie->msi_intc_np);
->  	if (ret) {
-> diff --git a/drivers/pci/host/pci-layerscape.c b/drivers/pci/host/pci-layerscape.c
-> index b2328ea1..79ff08c 100644
-> --- a/drivers/pci/host/pci-layerscape.c
-> +++ b/drivers/pci/host/pci-layerscape.c
-> @@ -106,7 +106,7 @@ static int ls_add_pcie_port(struct ls_pcie *pcie)
->  	pp = &pcie->pp;
->  	pp->dev = pcie->dev;
->  	pp->dbi_base = pcie->dbi;
-> -	pp->root_bus_nr = -1;
-> +	pp->root_bus_nr = 0;
->  	pp->ops = &ls_pcie_host_ops;
->  
->  	ret = dw_pcie_host_init(pp);
-> diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-designware.c
-> index 69486be..6092c84 100644
-> --- a/drivers/pci/host/pcie-designware.c
-> +++ b/drivers/pci/host/pcie-designware.c
-> @@ -11,6 +11,7 @@
->   * published by the Free Software Foundation.
->   */
->  
-> +#include <linux/hardirq.h>
->  #include <linux/irq.h>
->  #include <linux/irqdomain.h>
->  #include <linux/kernel.h>
-> @@ -69,16 +70,7 @@
->  #define PCIE_ATU_FUNC(x)		(((x) & 0x7) << 16)
->  #define PCIE_ATU_UPPER_TARGET		0x91C
->  
-> -static struct hw_pci dw_pci;
-> -
-> -static unsigned long global_io_offset;
-> -
-> -static inline struct pcie_port *sys_to_pcie(struct pci_sys_data *sys)
-> -{
-> -	BUG_ON(!sys->private_data);
-> -
-> -	return sys->private_data;
-> -}
-> +static struct pci_ops dw_pcie_ops;
->  
->  int dw_pcie_cfg_read(void __iomem *addr, int where, int size, u32 *val)
->  {
-> @@ -255,7 +247,7 @@ static void dw_pcie_msi_set_irq(struct pcie_port *pp, int irq)
->  static int assign_irq(int no_irqs, struct msi_desc *desc, int *pos)
->  {
->  	int irq, pos0, i;
-> -	struct pcie_port *pp = sys_to_pcie(desc->dev->bus->sysdata);
-> +	struct pcie_port *pp = desc->dev->bus->sysdata;
->  
->  	pos0 = bitmap_find_free_region(pp->msi_irq_in_use, MAX_MSI_IRQS,
->  				       order_base_2(no_irqs));
-> @@ -298,7 +290,7 @@ static int dw_msi_setup_irq(struct msi_controller *chip, struct pci_dev *pdev,
->  {
->  	int irq, pos;
->  	struct msi_msg msg;
-> -	struct pcie_port *pp = sys_to_pcie(pdev->bus->sysdata);
-> +	struct pcie_port *pp = pdev->bus->sysdata;
->  
->  	if (desc->msi_attrib.is_msix)
->  		return -EINVAL;
-> @@ -327,7 +319,7 @@ static void dw_msi_teardown_irq(struct msi_controller *chip, unsigned int irq)
->  {
->  	struct irq_data *data = irq_get_irq_data(irq);
->  	struct msi_desc *msi = irq_data_get_msi(data);
-> -	struct pcie_port *pp = sys_to_pcie(msi->dev->bus->sysdata);
-> +	struct pcie_port *pp = msi->dev->bus->sysdata;
->  
->  	clear_irq_range(pp, irq, 1, data->hwirq);
+>  	return len;
 >  }
-> @@ -359,21 +351,19 @@ static const struct irq_domain_ops msi_domain_ops = {
->  	.map = dw_pcie_msi_map,
->  };
->  
-> -int dw_pcie_host_init(struct pcie_port *pp)
-> +int __init dw_pcie_host_init(struct pcie_port *pp)
->  {
->  	struct device_node *np = pp->dev->of_node;
->  	struct platform_device *pdev = to_platform_device(pp->dev);
-> -	struct of_pci_range range;
-> -	struct of_pci_range_parser parser;
-> +	struct pci_bus *bus;
->  	struct resource *cfg_res;
-> -	u32 val, na, ns;
-> +	LIST_HEAD(res);
-> +	u32 val, ns;
->  	const __be32 *addrp;
->  	int i, index, ret;
-> +	struct resource_entry *win;
->  
-> -	/* Find the address cell size and the number of cells in order to get
-> -	 * the untranslated address.
-> -	 */
-> -	of_property_read_u32(np, "#address-cells", &na);
-> +	/* Find the number of cells in order to get the untranslated address */
->  	ns = of_n_size_cells(np);
->  
->  	cfg_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "config");
-> @@ -392,78 +382,62 @@ int dw_pcie_host_init(struct pcie_port *pp)
->  		dev_err(pp->dev, "missing *config* reg space\n");
->  	}
->  
-> -	if (of_pci_range_parser_init(&parser, np)) {
-> -		dev_err(pp->dev, "missing ranges property\n");
-> -		return -EINVAL;
-> -	}
-> +	ret = of_pci_get_host_bridge_resources(np, 0, 0xff, &res, &pp->io_base);
-> +	if (ret)
-> +		return ret;
->  
->  	/* Get the I/O and memory ranges from DT */
-> -	for_each_of_pci_range(&parser, &range) {
-> -		unsigned long restype = range.flags & IORESOURCE_TYPE_BITS;
-> -
-> -		if (restype == IORESOURCE_IO) {
-> -			of_pci_range_to_resource(&range, np, &pp->io);
-> -			pp->io.name = "I/O";
-> -			pp->io.start = max_t(resource_size_t,
-> -					     PCIBIOS_MIN_IO,
-> -					     range.pci_addr + global_io_offset);
-> -			pp->io.end = min_t(resource_size_t,
-> -					   IO_SPACE_LIMIT,
-> -					   range.pci_addr + range.size
-> -					   + global_io_offset - 1);
-> -			pp->io_size = resource_size(&pp->io);
-> -			pp->io_bus_addr = range.pci_addr;
-> -			pp->io_base = range.cpu_addr;
-> -
-> -			/* Find the untranslated IO space address */
-> -			pp->io_mod_base = of_read_number(parser.range -
-> -							 parser.np + na, ns);
-> -		}
-> -		if (restype == IORESOURCE_MEM) {
-> -			of_pci_range_to_resource(&range, np, &pp->mem);
-> -			pp->mem.name = "MEM";
-> -			pp->mem_size = resource_size(&pp->mem);
-> -			pp->mem_bus_addr = range.pci_addr;
-> -
-> -			/* Find the untranslated MEM space address */
-> -			pp->mem_mod_base = of_read_number(parser.range -
-> -							  parser.np + na, ns);
-> -		}
-> -		if (restype == 0) {
-> -			of_pci_range_to_resource(&range, np, &pp->cfg);
-> -			pp->cfg0_size = resource_size(&pp->cfg)/2;
-> -			pp->cfg1_size = resource_size(&pp->cfg)/2;
-> -			pp->cfg0_base = pp->cfg.start;
-> -			pp->cfg1_base = pp->cfg.start + pp->cfg0_size;
-> +	resource_list_for_each_entry(win, &res) {
-> +		switch (resource_type(win->res)) {
-> +		case IORESOURCE_IO:
-> +			pp->io = win->res;
-> +			pp->io->name = "I/O";
-> +			pp->io_size = resource_size(pp->io);
-> +			pp->io_bus_addr = pp->io->start - win->offset;
-> +			pp->io_mod_base = win->__res.start;
-> +			ret = pci_remap_iospace(pp->io, pp->io_base);
-> +			if (ret) {
-> +				dev_warn(pp->dev, "error %d: failed to map resource %pR\n",
-> +					 ret, pp->io);
-> +				continue;
-> +			}
-> +			break;
-> +		case IORESOURCE_MEM:
-> +			pp->mem = win->res;
-> +			pp->mem->name = "MEM";
-> +			pp->mem_size = resource_size(pp->mem);
-> +			pp->mem_bus_addr = pp->mem->start - win->offset;
-> +			pp->mem_mod_base = win->__res.start;
-> +			break;
-> +		case 0:
-> +			pp->cfg = win->res;
-> +			pp->cfg0_size = resource_size(pp->cfg)/2;
-> +			pp->cfg1_size = resource_size(pp->cfg)/2;
-> +			pp->cfg0_base = pp->cfg->start;
-> +			pp->cfg1_base = pp->cfg->start + pp->cfg0_size;
->  
->  			/* Find the untranslated configuration space address */
-> -			pp->cfg0_mod_base = of_read_number(parser.range -
-> -							   parser.np + na, ns);
-> -			pp->cfg1_mod_base = pp->cfg0_mod_base +
-> -					    pp->cfg0_size;
-> +			pp->cfg0_mod_base = win->__res.start;
-> +			pp->cfg1_mod_base = pp->cfg0_mod_base + pp->cfg0_size;
-> +			break;
-> +		case IORESOURCE_BUS:
-> +			pp->busn = win->res;
-> +			break;
-> +		default:
-> +			continue;
->  		}
->  	}
->  
-> -	ret = of_pci_parse_bus_range(np, &pp->busn);
-> -	if (ret < 0) {
-> -		pp->busn.name = np->name;
-> -		pp->busn.start = 0;
-> -		pp->busn.end = 0xff;
-> -		pp->busn.flags = IORESOURCE_BUS;
-> -		dev_dbg(pp->dev, "failed to parse bus-range property: %d, using default %pR\n",
-> -			ret, &pp->busn);
-> -	}
-> -
->  	if (!pp->dbi_base) {
-> -		pp->dbi_base = devm_ioremap(pp->dev, pp->cfg.start,
-> -					resource_size(&pp->cfg));
-> +		pp->dbi_base = devm_ioremap(pp->dev, pp->cfg->start,
-> +					resource_size(pp->cfg));
->  		if (!pp->dbi_base) {
->  			dev_err(pp->dev, "error with ioremap\n");
->  			return -ENOMEM;
->  		}
->  	}
->  
-> -	pp->mem_base = pp->mem.start;
-> +	pp->mem_base = pp->mem->start;
->  
->  	if (!pp->va_cfg0_base) {
->  		pp->va_cfg0_base = devm_ioremap(pp->dev, pp->cfg0_base,
-> @@ -524,15 +498,28 @@ int dw_pcie_host_init(struct pcie_port *pp)
->  	val |= PORT_LOGIC_SPEED_CHANGE;
->  	dw_pcie_wr_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, val);
->  
-> -#ifdef CONFIG_PCI_MSI
-> -	dw_pcie_msi_chip.dev = pp->dev;
-> -	dw_pci.msi_ctrl = &dw_pcie_msi_chip;
-> +	bus = pci_create_root_bus(pp->dev, pp->root_bus_nr, &dw_pcie_ops,
-> +			      pp, &res);
-> +	if (!bus)
+> diff --git a/drivers/iio/industrialio-triggered-event.c b/drivers/iio/industrialio-triggered-event.c
+> new file mode 100644
+> index 0000000..c434ce7
+> --- /dev/null
+> +++ b/drivers/iio/industrialio-triggered-event.c
+> @@ -0,0 +1,67 @@
+> + /*
+> + * Copyright (C) 2015 Cogent Embedded, Inc.
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms of the GNU General Public License version 2 as published by
+> + * the Free Software Foundation.
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/export.h>
+> +#include <linux/module.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/triggered_event.h>
+> +#include <linux/iio/trigger_consumer.h>
+> +
+> +/**
+> + * iio_triggered_event_setup() - Setup pollfunc for triggered event
+> + * @indio_dev:		IIO device structure
+> + * @pollfunc_bh:	Function which will be used as pollfunc bottom half
+> + * @pollfunc_th:	Function which will be used as pollfunc top half
+> + *
+> + * This function combines some common tasks which will normally be performed
+> + * when setting up a triggered event. It will allocate the pollfunc and
+> + * set mode to use it for triggered event.
+> + *
+> + * Before calling this function the indio_dev structure should already be
+> + * completely initialized, but not yet registered. In practice this means that
+> + * this function should be called right before iio_device_register().
+> + *
+> + * To free the resources allocated by this function call
+> + * iio_triggered_event_cleanup().
+> + */
+> +int iio_triggered_event_setup(struct iio_dev *indio_dev,
+> +	irqreturn_t (*pollfunc_bh)(int irq, void *p),
+> +	irqreturn_t (*pollfunc_th)(int irq, void *p))
+> +{
+> +	indio_dev->pollfunc = iio_alloc_pollfunc(pollfunc_bh,
+> +						 pollfunc_th,
+> +						 IRQF_ONESHOT,
+> +						 indio_dev,
+> +						 "%s_consumer%d",
+> +						 indio_dev->name,
+> +						 indio_dev->id);
+> +	if (indio_dev->pollfunc == NULL)
 > +		return -ENOMEM;
 > +
-> +#ifdef CONFIG_GENERIC_MSI_IRQ_DOMAIN
-> +	bus->msi = container_of(&pp->irq_domain, struct msi_controller, domain);
-> +#else
-> +	bus->msi = &dw_pcie_msi_chip;
->  #endif
->  
-> -	dw_pci.nr_controllers = 1;
-> -	dw_pci.private_data = (void **)&pp;
-> +	pci_scan_child_bus(bus);
-> +	if (pp->ops->scan_bus)
-> +		pp->ops->scan_bus(pp);
->  
-> -	pci_common_init_dev(pp->dev, &dw_pci);
-> +#ifdef CONFIG_ARM
-> +	/* support old dtbs that incorrectly describe IRQs */
-> +	pci_fixup_irqs(pci_common_swizzle, of_irq_parse_and_map_pci);
-> +#endif
+> +	/* Flag that pollfunc is used for triggered event */
+> +	indio_dev->modes |= INDIO_EVENT_TRIGGERED;
+> +	indio_dev->currentmode = INDIO_EVENT_TRIGGERED;
 > +
-> +	pci_assign_unassigned_bus_resources(bus);
-> +	pci_bus_add_devices(bus);
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL(iio_triggered_event_setup);
+> +
+> +/**
+> + * iio_triggered_event_cleanup() - Free resources allocated by iio_triggered_event_setup()
+> + * @indio_dev: IIO device structure
+> + */
+> +void iio_triggered_event_cleanup(struct iio_dev *indio_dev)
+> +{
+> +	iio_dealloc_pollfunc(indio_dev->pollfunc);
+> +}
+> +EXPORT_SYMBOL(iio_triggered_event_cleanup);
+> +
+> +MODULE_AUTHOR("Vladimir Barinov");
+> +MODULE_DESCRIPTION("IIO helper functions for setting up triggered events");
+> +MODULE_LICENSE("GPL");
+> diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
+> index f791482..b691ee0 100644
+> --- a/include/linux/iio/iio.h
+> +++ b/include/linux/iio/iio.h
+> @@ -294,6 +294,7 @@ static inline s64 iio_get_time_ns(void)
+>  #define INDIO_BUFFER_TRIGGERED		0x02
+>  #define INDIO_BUFFER_SOFTWARE		0x04
+>  #define INDIO_BUFFER_HARDWARE		0x08
+> +#define INDIO_EVENT_TRIGGERED		0x10
 >  
->  	return 0;
->  }
-> @@ -633,7 +620,7 @@ static int dw_pcie_valid_config(struct pcie_port *pp,
->  static int dw_pcie_rd_conf(struct pci_bus *bus, u32 devfn, int where,
->  			int size, u32 *val)
->  {
-> -	struct pcie_port *pp = sys_to_pcie(bus->sysdata);
-> +	struct pcie_port *pp = bus->sysdata;
->  	int ret;
->  
->  	if (dw_pcie_valid_config(pp, bus, PCI_SLOT(devfn)) == 0) {
-> @@ -657,7 +644,7 @@ static int dw_pcie_rd_conf(struct pci_bus *bus, u32 devfn, int where,
->  static int dw_pcie_wr_conf(struct pci_bus *bus, u32 devfn,
->  			int where, int size, u32 val)
->  {
-> -	struct pcie_port *pp = sys_to_pcie(bus->sysdata);
-> +	struct pcie_port *pp = bus->sysdata;
->  	int ret;
->  
->  	if (dw_pcie_valid_config(pp, bus, PCI_SLOT(devfn)) == 0)
-> @@ -681,62 +668,6 @@ static struct pci_ops dw_pcie_ops = {
->  	.write = dw_pcie_wr_conf,
->  };
->  
-> -static int dw_pcie_setup(int nr, struct pci_sys_data *sys)
-> -{
-> -	struct pcie_port *pp;
-> -
-> -	pp = sys_to_pcie(sys);
-> -
-> -	if (global_io_offset < SZ_1M && pp->io_size > 0) {
-> -		sys->io_offset = global_io_offset - pp->io_bus_addr;
-> -		pci_ioremap_io(global_io_offset, pp->io_base);
-> -		global_io_offset += SZ_64K;
-> -		pci_add_resource_offset(&sys->resources, &pp->io,
-> -					sys->io_offset);
-> -	}
-> -
-> -	sys->mem_offset = pp->mem.start - pp->mem_bus_addr;
-> -	pci_add_resource_offset(&sys->resources, &pp->mem, sys->mem_offset);
-> -	pci_add_resource(&sys->resources, &pp->busn);
-> -
-> -	return 1;
-> -}
-> -
-> -static struct pci_bus *dw_pcie_scan_bus(int nr, struct pci_sys_data *sys)
-> -{
-> -	struct pci_bus *bus;
-> -	struct pcie_port *pp = sys_to_pcie(sys);
-> -
-> -	pp->root_bus_nr = sys->busnr;
-> -	bus = pci_scan_root_bus(pp->dev, sys->busnr,
-> -				  &dw_pcie_ops, sys, &sys->resources);
-> -	if (!bus)
-> -		return NULL;
-> -
-> -	if (bus && pp->ops->scan_bus)
-> -		pp->ops->scan_bus(pp);
-> -
-> -	return bus;
-> -}
-> -
-> -static int dw_pcie_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
-> -{
-> -	struct pcie_port *pp = sys_to_pcie(dev->bus->sysdata);
-> -	int irq;
-> -
-> -	irq = of_irq_parse_and_map_pci(dev, slot, pin);
-> -	if (!irq)
-> -		irq = pp->irq;
-> -
-> -	return irq;
-> -}
-> -
-> -static struct hw_pci dw_pci = {
-> -	.setup		= dw_pcie_setup,
-> -	.scan		= dw_pcie_scan_bus,
-> -	.map_irq	= dw_pcie_map_irq,
-> -};
-> -
->  void dw_pcie_setup_rc(struct pcie_port *pp)
->  {
->  	u32 val;
-> diff --git a/drivers/pci/host/pcie-designware.h b/drivers/pci/host/pcie-designware.h
-> index d0bbd27..efac57d 100644
-> --- a/drivers/pci/host/pcie-designware.h
-> +++ b/drivers/pci/host/pcie-designware.h
-> @@ -34,7 +34,7 @@ struct pcie_port {
->  	u64			cfg1_mod_base;
->  	void __iomem		*va_cfg1_base;
->  	u32			cfg1_size;
-> -	u64			io_base;
-> +	resource_size_t		io_base;
->  	u64			io_mod_base;
->  	phys_addr_t		io_bus_addr;
->  	u32			io_size;
-> @@ -42,10 +42,10 @@ struct pcie_port {
->  	u64			mem_mod_base;
->  	phys_addr_t		mem_bus_addr;
->  	u32			mem_size;
-> -	struct resource		cfg;
-> -	struct resource		io;
-> -	struct resource		mem;
-> -	struct resource		busn;
-> +	struct resource		*cfg;
-> +	struct resource		*io;
-> +	struct resource		*mem;
-> +	struct resource		*busn;
->  	int			irq;
->  	u32			lanes;
->  	struct pcie_host_ops	*ops;
-> diff --git a/drivers/pci/host/pcie-spear13xx.c b/drivers/pci/host/pcie-spear13xx.c
-> index c49fbdc..03eb204 100644
-> --- a/drivers/pci/host/pcie-spear13xx.c
-> +++ b/drivers/pci/host/pcie-spear13xx.c
-> @@ -286,7 +286,7 @@ static int spear13xx_add_pcie_port(struct pcie_port *pp,
->  		return ret;
->  	}
->  
-> -	pp->root_bus_nr = -1;
-> +	pp->root_bus_nr = 0;
->  	pp->ops = &spear13xx_pcie_host_ops;
->  
->  	ret = dw_pcie_host_init(pp);
+>  #define INDIO_ALL_BUFFER_MODES					\
+>  	(INDIO_BUFFER_TRIGGERED | INDIO_BUFFER_HARDWARE | INDIO_BUFFER_SOFTWARE)
+> diff --git a/include/linux/iio/triggered_event.h b/include/linux/iio/triggered_event.h
+> new file mode 100644
+> index 0000000..e9894e9
+> --- /dev/null
+> +++ b/include/linux/iio/triggered_event.h
+> @@ -0,0 +1,11 @@
+> +#ifndef _LINUX_IIO_TRIGGERED_EVENT_H_
+> +#define _LINUX_IIO_TRIGGERED_EVENT_H_
+> +
+> +#include <linux/interrupt.h>
+> +
+> +int iio_triggered_event_setup(struct iio_dev *indio_dev,
+> +	irqreturn_t (*pollfunc_bh)(int irq, void *p),
+> +	irqreturn_t (*pollfunc_th)(int irq, void *p));
+> +void iio_triggered_event_cleanup(struct iio_dev *indio_dev);
+> +
+> +#endif
 > 
+
+-- 
+
+Peter Meerwald
++43-664-2444418 (mobile)
