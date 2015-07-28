@@ -1,51 +1,71 @@
-From: "Opensource [Steve Twiss]" <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH V3 3/3] devicetree: da9062: Add device tree bindings for
- DA9062 OnKey
-Date: Tue, 28 Jul 2015 07:44:36 +0000
-Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7014B25C564@SW-EX-MBX02.diasemi.com>
-References: <cover.1437668261.git.stwiss.opensource@diasemi.com>
- <6bfae9b4f5475b59bddc4b71091121f1c0697a2d.1437668261.git.stwiss.opensource@diasemi.com>
- <20150727224300.GG3613@dtor-ws> <20150728054024.GA4558@dtor-ws>
- <20150728074234.GM21114@x1>
+From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [RFCv2 2/3] dts: zynq: Add devicetree entry for Xilinx Zynq reset
+ controller.
+Date: Tue, 28 Jul 2015 09:44:38 +0200
+Message-ID: <55B732E6.7080901@xilinx.com>
+References: <1437783682-13632-1-git-send-email-moritz.fischer@ettus.com>
+ <1437783682-13632-3-git-send-email-moritz.fischer@ettus.com>
+ <55B5D62D.4010407@monstr.eu>
+ <CAAtXAHepDRbiiznHnT3dLLLWS_VH2a9BhnNgZzDECx__QceEeg@mail.gmail.com>
+ <55B72857.3020108@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150728074234.GM21114@x1>
-Content-Language: en-US
+In-Reply-To: <55B72857.3020108-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "Opensource [Steve Twiss]" <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, DEVICETREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, LINUXINPUT <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUXKERNEL <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, RTCLINUX <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Dajun Chen <david.chen-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Cc: p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCk9uIDI4IEp1bHkgMjAxNSAwODo0MyBMZWUgSm9uZXMgd3JvdGU6DQo+IFRvOiBEbWl0cnkg
-VG9yb2tob3YNCj4gU3ViamVjdDogUmU6IFtQQVRDSCBWMyAzLzNdIGRldmljZXRyZWU6IGRhOTA2
-MjogQWRkIGRldmljZSB0cmVlIGJpbmRpbmdzIGZvciBEQTkwNjIgT25LZXkNCj4gDQo+IE9uIE1v
-biwgMjcgSnVsIDIwMTUsIERtaXRyeSBUb3Jva2hvdiB3cm90ZToNCj4gDQo+ID4gT24gTW9uLCBK
-dWwgMjcsIDIwMTUgYXQgMDM6NDM6MDBQTSAtMDcwMCwgRG1pdHJ5IFRvcm9raG92IHdyb3RlOg0K
-PiA+ID4gT24gVGh1LCBKdWwgMjMsIDIwMTUgYXQgMDU6MTc6NDFQTSArMDEwMCwgUyBUd2lzcyB3
-cm90ZToNCj4gPiA+ID4gRnJvbTogUyBUd2lzcyA8c3R3aXNzLm9wZW5zb3VyY2VAZGlhc2VtaS5j
-b20+DQo+ID4gPiA+DQo+ID4gPiA+IEFkZCBkZXZpY2UgdHJlZSBiaW5kaW5ncyBmb3IgdGhlIERB
-OTA2MiBPbktleSBkcml2ZXIgY29tcG9uZW50DQo+ID4gPiA+DQo+ID4gPiA+IFNpZ25lZC1vZmYt
-Ynk6IFN0ZXZlIFR3aXNzIDxzdHdpc3Mub3BlbnNvdXJjZUBkaWFzZW1pLmNvbT4NCj4gPiA+ID4N
-Cj4gPiA+ID4gLS0tDQo+ID4gPiA+IENoYW5nZXMgaW4gVjM6DQo+ID4gPiA+ICAtIENoaWxkIGRy
-aXZlciBzcGVjaWZpY3Mgc2VwYXJhdGVkIG91dCBpbnRvIHNlcGFyYXRlIGRvY3VtZW50DQo+ID4g
-PiA+ICAgIGluIHRoaXMgY2FzZSAuLi9pbnB1dC9kYTkwNjItb25rZXkudHh0DQo+ID4gPiA+IENo
-YW5nZXMgaW4gVjI6DQo+ID4gPiA+ICAtIE5vIGNoYW5nZQ0KPiA+ID4gPg0KPiA+ID4gPiBUaGlz
-IHBhdGNoIGFwcGxpZXMgYWdhaW5zdCBsaW51eC1uZXh0IGFuZCBuZXh0LTIwMTUwNzA4DQo+ID4g
-PiA+DQo+ID4gPiA+DQo+ID4gPiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnB1dC9kYTkw
-NjItb25rZXkudHh0ICAgICB8IDM2DQo+ICsrKysrKysrKysrKysrKysrKysrKysNCj4gPiA+ID4g
-IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZmQvZGE5MDYyLnR4dCAgIHwgIDMg
-KysNCj4gPiA+DQo+ID4gPiBJIGRyb3BwZWQgYml0cyBmb3IgbWZkL2RhOTA2Mi50eHQsIGNoYW5n
-ZWQgdG8gbWVudGlvbiBib3RoIDkwNjIgYW5kDQo+ID4gPiA5MDYzLCBmb2xkZWQgaW50byB0aGUg
-b25rZXkgcGF0Y2ggYW5kIGFwcGxpZWQuDQo+ID4NCj4gPiBBcmdoLCBkYTkwNjIgY29yZSBpcyBu
-b3QgaW4gbWFpbmxpbmUgeWV0Li4uIE9LLCBiZWxvdyBpcyB0aGUgcGF0Y2ggSQ0KPiA+IGhhZDsg
-aWYgTGVlIGRvZXMgbm90IHBpY2sgaXQgdXAgSSdsbCByZS1hcHBseSBpdCB3aGVuIGRhOTA2MiBj
-b3JlIGhpdHMNCj4gPiBtYWlubGluZS4NCj4gDQo+IEkgZ3Vlc3MgYWxsIDMgcGF0Y2hlcyBzaG91
-bGQgYmUgdGFrZW4gdGhvdWdoIG9uZSB0cmVlPyAgSGFwcHkgdG8gdGFrZQ0KPiB0aGVtIHRocm91
-Z2ggTUZEIGlmIHRoYXQncyBva2F5IHdpdGggeW91Lg0KDQpUaGFua3MgTGVlIQ0KKHBsZWFzZSBp
-Z25vcmUgbXkgb3RoZXIgZS1tYWlsIDspDQpSZWdhcmRzLA0KU3RlcGhlbg0K
+On 07/28/2015 08:59 AM, Nicolas Ferre wrote:
+> Le 28/07/2015 07:03, Moritz Fischer a =C3=A9crit :
+>> Hi Michal,
+>>
+>> I agree we need to be careful with changing the bindings.
+>>
+>> On Sun, Jul 26, 2015 at 11:56 PM, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org> wr=
+ote:
+>>> Hi Moritz,
+>>>
+>>> On 07/25/2015 02:21 AM, Moritz Fischer wrote:
+>>>> Signed-off-by: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+>>>> ---
+>>>>  arch/arm/boot/dts/zynq-7000.dtsi            | 43 ++++++++++++-
+>>>
+>>> This patch is nice in general but every change in binding should be
+>>> discussed separately. There is also necessary to wire them up in th=
+e
+>>> driver to do action. That's why I think that will be the best just =
+to
+>>> add the code to slcr and keep others untouched.
+>>
+>> Ok, just to clarify: You'd suggest to just add the rstc as child nod=
+e
+>> to the slcr,
+>> and leave the other nodes untouched?
+>>
+>>>
+>>> For example MACB/GEM is one example. Adding names to this node and
+>>> extending driver to work properly with reset means that all others =
+MACB
+>>> users will be affected. Definitely this patch should be ACKed by Ni=
+colas.
+>=20
+> Actually, I don't know why a reset property should be added to the ma=
+cb
+> driver...
+
+I expect resetting IP core can solve something. But as I said it is
+questionable if IP should be reset when driver is probed. Definitely on
+Zynq there is a support for it. I am not aware about any problem which
+requires IP to be reset.
+
+Thanks,
+Michal
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
