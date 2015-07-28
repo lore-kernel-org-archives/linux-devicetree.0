@@ -1,77 +1,52 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v2 04/22] of/platform: add of_platform_device_find()
-Date: Tue, 28 Jul 2015 08:39:46 -0500
-Message-ID: <CAL_JsqJGhFXDKuayuKc2E58X5A7ZGN=uYCVDLnXw_t3_auBg+w@mail.gmail.com>
-References: <1438089593-7696-1-git-send-email-tomeu.vizoso@collabora.com> <1438089593-7696-5-git-send-email-tomeu.vizoso@collabora.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH 2/2] ARM: dts: am57xx-evm: Add 'gpios' property with gpio2_8
+Date: Tue, 28 Jul 2015 19:09:10 +0530
+Message-ID: <1438090750-11604-3-git-send-email-kishon@ti.com>
+References: <1438090750-11604-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1438089593-7696-5-git-send-email-tomeu.vizoso@collabora.com>
+In-Reply-To: <1438090750-11604-1-git-send-email-kishon@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>
+To: bhelgaas@google.com, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tony@atomide.com
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, bcousson@baylibre.com, linux@arm.linux.org.uk, kishon@ti.com, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 28, 2015 at 8:19 AM, Tomeu Vizoso
-<tomeu.vizoso@collabora.com> wrote:
-> From an arbitrary node in the tree, find the enclosing node that
-> corresponds to a platform device, as registered by
-> of_platform_populate().
->
-> This can be used to find out what device needs to be probed so the
-> dependency described by a given node is made available.
->
-> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-> ---
->
-> Changes in v2:
-> - Move the logic for finding a platform device from its firmware node to
->   of/platform.c as it's not needed for ACPI nodes.
->
->  drivers/of/platform.c       | 60 +++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/of_platform.h |  1 +
->  2 files changed, 61 insertions(+)
->
-> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> index ff27494cda8c..89c5cd513027 100644
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -501,6 +501,66 @@ void of_platform_depopulate(struct device *parent)
->  }
->  EXPORT_SYMBOL_GPL(of_platform_depopulate);
->
-> +static bool of_is_platform(struct device_node *np)
-> +{
-> +       int count;
-> +
-> +       count = of_property_count_strings(np, "compatible");
-> +
-> +       /* The node has to have a compatible string */
-> +       if (!count)
-> +               return false;
-> +
-> +       /* But it cannot be just a simple memory-mapped bus */
-> +       if (count == 1 && of_match_node(of_default_bus_match_table, np))
-> +               return false;
-> +
-> +       /* But AMBA devices aren't platform devices */
-> +       if (of_device_is_compatible(np, "arm,primecell"))
-> +               return false;
-> +
-> +       /* Node is immediately below root */
-> +       if (!np->parent || !np->parent->parent)
-> +               return true;
-> +
-> +       /* If it's a node in a simple memory-mapped bus */
-> +       if (of_match_node(of_default_bus_match_table, np->parent))
-> +               return true;
+gpio2_8 is connected to the PCIe_RESETn line and it has to be driven low
+in order to reset the PCIe cards. So added gpios property to pcie
+dt node.
 
-This seems really fragile. What about platform devices which are
-children of MFDs but are not "simple-mfd"?
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+ arch/arm/boot/dts/am57xx-beagle-x15.dts |    5 +++++
+ arch/arm/boot/dts/dra7.dtsi             |    2 +-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
-Does of_find_device_by_node not work for you? That is probably not the
-most efficient search, but we could fix that. We could add struct
-device ptr to struct device_node and check without searching for
-example.
-
-Rob
+diff --git a/arch/arm/boot/dts/am57xx-beagle-x15.dts b/arch/arm/boot/dts/am57xx-beagle-x15.dts
+index a63bf78..a862a6e 100644
+--- a/arch/arm/boot/dts/am57xx-beagle-x15.dts
++++ b/arch/arm/boot/dts/am57xx-beagle-x15.dts
+@@ -693,3 +693,8 @@
+ 		};
+ 	};
+ };
++
++&pcie1 {
++	gpios = <&gpio2 8 GPIO_ACTIVE_LOW>;
++};
++
+diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+index 8f1e25b..37202b4 100644
+--- a/arch/arm/boot/dts/dra7.dtsi
++++ b/arch/arm/boot/dts/dra7.dtsi
+@@ -211,7 +211,7 @@
+ 			#address-cells = <1>;
+ 			ranges = <0x51000000 0x51000000 0x3000
+ 				  0x0	     0x20000000 0x10000000>;
+-			pcie@51000000 {
++			pcie1: pcie@51000000 {
+ 				compatible = "ti,dra7-pcie";
+ 				reg = <0x51000000 0x2000>, <0x51002000 0x14c>, <0x1000 0x2000>;
+ 				reg-names = "rc_dbics", "ti_conf", "config";
+-- 
+1.7.9.5
