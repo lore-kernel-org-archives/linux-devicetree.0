@@ -1,58 +1,43 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [RFCv2 1/3] docs: dts: Added documentation for Xilinx Zynq
- Reset Controller bindings.
-Date: Tue, 28 Jul 2015 10:05:02 +0200
-Message-ID: <1438070702.3193.4.camel@pengutronix.de>
-References: <1437783682-13632-1-git-send-email-moritz.fischer@ettus.com>
- <1437783682-13632-2-git-send-email-moritz.fischer@ettus.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v1 2/7] ARM: dts: ifc6410: add real regulators for sdcc
+ nodes.
+Date: Tue, 28 Jul 2015 09:07:17 +0100
+Message-ID: <55B73835.3020304@linaro.org>
+References: <1438004945-16175-1-git-send-email-srinivas.kandagatla@linaro.org> <1438005012-16263-1-git-send-email-srinivas.kandagatla@linaro.org> <20150727203254.GB12739@qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1437783682-13632-2-git-send-email-moritz.fischer@ettus.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Moritz Fischer <moritz.fischer@ettus.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, michal.simek@xilinx.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, galak@codeaurora.org, soren.brinkmann@xilinx.com
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20150727203254.GB12739@qualcomm.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Andy Gross <agross@codeaurora.org>
+Cc: linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, den 24.07.2015, 17:21 -0700 schrieb Moritz Fischer:
-> Signed-off-by: Moritz Fischer <moritz.fischer@ettus.com>
-> ---
->  Documentation/devicetree/bindings/reset/zynq-reset-pl.txt | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/reset/zynq-reset-pl.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/reset/zynq-reset-pl.txt b/Documentation/devicetree/bindings/reset/zynq-reset-pl.txt
-> new file mode 100644
-> index 0000000..ac4499e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/reset/zynq-reset-pl.txt
-> @@ -0,0 +1,13 @@
-> +Xilinx Zynq PL Reset Manager
-> +
-> +Required properties:
-> +- compatible: "xlnx,zynq-reset-pl"
-> +- syscon <&slcr>;
-> +- #reset-cells: 1
-> +
-> +Example:
-> +	rstc: rstc@240 {
-> +		#reset-cells = <1>;
-> +		compatible = "xlnx,zynq-reset-pl";
-> +		syscon = <&slcr>;
 
-Why the syscon phandle if rstc always is the child of slcr? Why not just
-request the syscon for the rstc's parent node.
 
-> +	};
+On 27/07/15 21:32, Andy Gross wrote:
+> On Mon, Jul 27, 2015 at 02:50:12PM +0100, Srinivas Kandagatla wrote:
+>
+> <snip>
+>
+>>   			sdcc3: sdcc@12180000 {
+>>   				status = "okay";
+>> +				vmmc-supply = <&pm8921_l6>;
+>>   				pinctrl-names	= "default";
+>>   				pinctrl-0	= <&card_detect>;
+>>   				cd-gpios	= <&tlmm_pinmux 26 GPIO_ACTIVE_LOW>;
+>> @@ -187,6 +200,8 @@
+>>   			/* WLAN */
+>>   			sdcc4: sdcc@121c0000 {
+>>   				status = "okay";
+>> +				vmmc-supply = <&ext_3p3v>;
+>
+> Where is ext_3p3v defined?
+Oops,  This is missing in this patch, I think re-ordering few other 
+patches introduced this. I will send a these 3 patches as we discussed.
 
-regards
-Philipp
+--srini
+>
+>> +				vqmmc-supply = <&pm8921_lvs1>;
+>
