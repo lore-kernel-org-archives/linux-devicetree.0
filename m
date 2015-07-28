@@ -1,123 +1,680 @@
-From: Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
-Subject: Re: [PATCH 8/8] iio: mma8452: add devicetree property to allow all
- pin wirings
-Date: Tue, 28 Jul 2015 11:11:29 +0200
-Message-ID: <55B74741.3000408@theobroma-systems.com>
-References: <1438006095-26920-1-git-send-email-martink@posteo.de> <1438006095-26920-9-git-send-email-martink@posteo.de> <20150727142336.GB10821@leverpostej> <55B6423C.7030301@posteo.de> <20150727173345.GF10821@leverpostej>
+From: Chen Bough <Haibo.Chen@freescale.com>
+Subject: RE: [PATCH 1/5] input: touchscreen: add imx6ul_tsc driver support
+Date: Tue, 28 Jul 2015 09:17:49 +0000
+Message-ID: <BY1PR03MB1388852F52648762032E5C6A9A8D0@BY1PR03MB1388.namprd03.prod.outlook.com>
+References: <1437996407-27266-1-git-send-email-haibo.chen@freescale.com>
+ <1437996407-27266-2-git-send-email-haibo.chen@freescale.com>
+ <20150727220511.GC3613@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150727173345.GF10821@leverpostej>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
-Cc: "jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "knaack.h-Mmb7MZpHnFY@public.gmane.org" <knaack.h-Mmb7MZpHnFY@public.gmane.org>, "lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org" <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, "pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org" <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, "mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org" <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>, "roberta.dobrescu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <roberta.dobrescu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org" <christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150727220511.GC3613@dtor-ws>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "hans.verkuil@cisco.com" <hans.verkuil@cisco.com>, "hadess@hadess.net" <hadess@hadess.net>, "mchehab@osg.samsung.com" <mchehab@osg.samsung.com>, "mamlinav@gmail.com" <mamlinav@gmail.com>, "arnd@arndb.de" <arnd@arndb.de>, "jonathar@broadcom.com" <jonathar@broadcom.com>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "christian.gmeiner@gmail.com" <christian.gmeiner@gmail.com>, "scott.liu@emc.com.tw" <scott.liu@emc.com.tw>, "geert@linux-m68k.org" <geert@linux-m68k.org>, benjamin.tissoire
 List-Id: devicetree@vger.kernel.org
 
 
+Hi Dmitry,
 
-On 2015-07-27 19:33, Mark Rutland wrote:
-> On Mon, Jul 27, 2015 at 03:37:48PM +0100, Martin Kepplinger wrote:
->> Am 2015-07-27 um 16:23 schrieb Mark Rutland:
->>> On Mon, Jul 27, 2015 at 03:08:15PM +0100, Martin Kepplinger wrote:
->>>> For the devices supported by the mma8452 driver, two interrupt pins are
->>>> available to route the interrupt signals to. By default INT1 is assumed.
->>>>
->>>> This adds a bitmask DT property for users to configure interrupt sources
->>>> for INT2, if that is the wired interrupt pin for them.
->>>
->>> This sounds like configureation rather than a HW property. Why does this
->>> need to be in the DT?
->>
->> It's a hardware property of the board that uses the device. There might
->> be boards that connect just one of them at random, which is the reason
->> for this DT property. There also might be exotic users who will want
->> to use both pins to route different interrupt sources to (not yet
->> supported, but no problem with such a bitmask).
+Thanks for your careful review! My comments is following.
+
+
+Best Regards
+
+Haibo Chen
+
+
+> -----Original Message-----
+> From: Dmitry Torokhov [mailto:dmitry.torokhov@gmail.com]
+> Sent: Tuesday, July 28, 2015 6:05 AM
+> To: Chen Haibo-B51421
+> Cc: robh+dt@kernel.org; pawel.moll@arm.com; mark.rutland@arm.com;
+> ijc+devicetree@hellion.org.uk; galak@codeaurora.org; shawnguo@kernel.org;
+> kernel@pengutronix.de; linux@arm.linux.org.uk; hans.verkuil@cisco.com;
+> hadess@hadess.net; mchehab@osg.samsung.com; mamlinav@gmail.com;
+> arnd@arndb.de; jonathar@broadcom.com; hdegoede@redhat.com;
+> christian.gmeiner@gmail.com; scott.liu@emc.com.tw; geert@linux-m68k.org;
+> benjamin.tissoires@redhat.com; sebastien.szymanski@armadeus.com;
+> sbranden@broadcom.com; devicetree@vger.kernel.org; linux-
+> kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
+> input@vger.kernel.org
+> Subject: Re: [PATCH 1/5] input: touchscreen: add imx6ul_tsc driver
+> support
 > 
-> Ok, so I'm somewhat confused as to what the hardware looks like and what
-> this means.
+> Hi Haibo,
 > 
-> Could you elaborate on how INT1 and INT2 are used? It looks like they're
-> used as output pins, and so interrupt-names would seem appropriate for
-> describing the combination which is wired up.
+> On Mon, Jul 27, 2015 at 07:26:43PM +0800, Haibo Chen wrote:
+> > Freescale i.MX6UL contains a internal touchscreen controller, this
+> > patch add a driver to support this controller.
+> >
+> > Signed-off-by: Haibo Chen <haibo.chen@freescale.com>
+> > ---
+> >  drivers/input/touchscreen/Kconfig      |  12 +
+> >  drivers/input/touchscreen/Makefile     |   1 +
+> >  drivers/input/touchscreen/imx6ul_tsc.c | 510
+> > +++++++++++++++++++++++++++++++++
+> >  3 files changed, 523 insertions(+)
+> >  create mode 100644 drivers/input/touchscreen/imx6ul_tsc.c
+> >
+> > diff --git a/drivers/input/touchscreen/Kconfig
+> > b/drivers/input/touchscreen/Kconfig
+> > index 5b272ba..32c300d 100644
+> > --- a/drivers/input/touchscreen/Kconfig
+> > +++ b/drivers/input/touchscreen/Kconfig
+> > @@ -479,6 +479,18 @@ config TOUCHSCREEN_MTOUCH
+> >  	  To compile this driver as a module, choose M here: the
+> >  	  module will be called mtouch.
+> >
+> > +config TOUCHSCREEN_IMX6UL_TSC
+> > +	tristate "Freescale i.MX6UL touchscreen controller"
+> > +	depends on OF
+> > +	help
+> > +	  Say Y here if you have a Freescale i.MX6UL, and want to
+> > +	  use the internal touchscreen controller.
+> > +
+> > +	  If unsure, say N.
+> > +
+> > +	  To compile this driver as a module, choose M here: the
+> > +	  moduel will be called imx6ul_tsc.
+> > +
+> >  config TOUCHSCREEN_INEXIO
+> >  	tristate "iNexio serial touchscreens"
+> >  	select SERIO
+> > diff --git a/drivers/input/touchscreen/Makefile
+> > b/drivers/input/touchscreen/Makefile
+> > index c85aae2..9379b32 100644
+> > --- a/drivers/input/touchscreen/Makefile
+> > +++ b/drivers/input/touchscreen/Makefile
+> > @@ -38,6 +38,7 @@ obj-$(CONFIG_TOUCHSCREEN_EGALAX)	+= egalax_ts.o
+> >  obj-$(CONFIG_TOUCHSCREEN_FUJITSU)	+= fujitsu_ts.o
+> >  obj-$(CONFIG_TOUCHSCREEN_GOODIX)	+= goodix.o
+> >  obj-$(CONFIG_TOUCHSCREEN_ILI210X)	+= ili210x.o
+> > +obj-$(CONFIG_TOUCHSCREEN_IMX6UL_TSC)	+= imx6ul_tsc.o
+> >  obj-$(CONFIG_TOUCHSCREEN_INEXIO)	+= inexio.o
+> >  obj-$(CONFIG_TOUCHSCREEN_INTEL_MID)	+= intel-mid-touch.o
+> >  obj-$(CONFIG_TOUCHSCREEN_IPROC)		+= bcm_iproc_tsc.o
+> > diff --git a/drivers/input/touchscreen/imx6ul_tsc.c
+> > b/drivers/input/touchscreen/imx6ul_tsc.c
+> > new file mode 100644
+> > index 0000000..5a5a368
+> > --- /dev/null
+> > +++ b/drivers/input/touchscreen/imx6ul_tsc.c
+> > @@ -0,0 +1,510 @@
+> > +/*
+> > + * Freescale i.MX6UL touchscreen controller driver
+> > + *
+> > + * Copyright (C) 2015 Freescale Semiconductor, Inc.
+> > + *
+> > + * This program is free software; you can redistribute it and/or
+> > +modify
+> > + * it under the terms of the GNU General Public License version 2 as
+> > + * published by the Free Software Foundation.
+> > + */
+> > +
+> > +#include <linux/errno.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/module.h>
+> > +#include <linux/gpio.h>
+> > +#include <linux/input.h>
+> > +#include <linux/slab.h>
+> > +#include <linux/completion.h>
+> > +#include <linux/delay.h>
+> > +#include <linux/of.h>
+> > +#include <linux/of_device.h>
+> > +#include <linux/of_gpio.h>
+> > +#include <linux/of_irq.h>
+> > +#include <linux/interrupt.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/clk.h>
+> > +#include <linux/io.h>
+> > +
+> > +/* ADC configuration registers field define */
+> > +#define ADC_AIEN		(0x1 << 7)
+> > +#define ADC_CONV_DISABLE	0x1F
+> > +#define ADC_CAL			(0x1 << 7)
+> > +#define ADC_CALF		0x2
+> > +#define ADC_12BIT_MODE		(0x2 << 2)
+> > +#define ADC_IPG_CLK		0x00
+> > +#define ADC_CLK_DIV_8		(0x03 << 5)
+> > +#define ADC_SHORT_SAMPLE_MODE	(0x0 << 4)
+> > +#define ADC_HARDWARE_TRIGGER	(0x1 << 13)
+> > +#define SELECT_CHANNEL_4	0x04
+> > +#define SELECT_CHANNEL_1	0x01
+> > +#define DISABLE_CONVERSION_INT	(0x0 << 7)
+> > +
+> > +/* ADC registers */
+> > +#define REG_ADC_HC0		0x00
+> > +#define REG_ADC_HC1		0x04
+> > +#define REG_ADC_HC2		0x08
+> > +#define REG_ADC_HC3		0x0C
+> > +#define REG_ADC_HC4		0x10
+> > +#define REG_ADC_HS		0x14
+> > +#define REG_ADC_R0		0x18
+> > +#define REG_ADC_CFG		0x2C
+> > +#define REG_ADC_GC		0x30
+> > +#define REG_ADC_GS		0x34
+> > +
+> > +#define ADC_TIMEOUT		msecs_to_jiffies(100)
+> > +
+> > +/* TSC registers */
+> > +#define REG_TSC_BASIC_SETING	0x00
+> > +#define REG_TSC_PRE_CHARGE_TIME	0x10
+> > +#define REG_TSC_FLOW_CONTROL	0x20
+> > +#define REG_TSC_MEASURE_VALUE	0x30
+> > +#define REG_TSC_INT_EN		0x40
+> > +#define REG_TSC_INT_SIG_EN	0x50
+> > +#define REG_TSC_INT_STATUS	0x60
+> > +#define REG_TSC_DEBUG_MODE	0x70
+> > +#define REG_TSC_DEBUG_MODE2	0x80
+> > +
+> > +/* TSC configuration registers field define */
+> > +#define DETECT_4_WIRE_MODE	(0x0 << 4)
+> > +#define AUTO_MEASURE		0x1
+> > +#define MEASURE_SIGNAL		0x1
+> > +#define DETECT_SIGNAL		(0x1 << 4)
+> > +#define VALID_SIGNAL		(0x1 << 8)
+> > +#define MEASURE_INT_EN		0x1
+> > +#define MEASURE_SIG_EN		0x1
+> > +#define VALID_SIG_EN		(0x1 << 8)
+> > +#define DE_GLITCH_2		(0x2 << 29)
+> > +#define START_SENSE		(0x1 << 12)
+> > +#define TSC_DISABLE		(0x1 << 16)
+> > +#define DETECT_MODE		0x2
+> > +
+> > +struct imx6ul_tsc {
+> > +	struct device *dev;
+> > +	struct input_dev *input;
+> > +	void __iomem *tsc_regs;
+> > +	void __iomem *adc_regs;
+> > +	struct clk *tsc_clk;
+> > +	struct clk *adc_clk;
+> > +
+> > +	int tsc_irq;
+> > +	int adc_irq;
+> 
+> You do not need to store tsc_irq and adc_irq since you do not reference
+> them anywhere but in probe().
+> 
 
-They are just the chip's two possible interrupt lines for us to get
-notified about event.
+[haibo] yes, you are right, I will remove these and just add these values in probe()
 
-You build a board, you use one of these 4 chips, wiring up just one of
-the 2 interrupt pins. By far most people won't ever need both pins.
+> > +	int value;
+> 
+> Why do we need this?
 
-DT describes your hardware, right? So you describe how you built your
-board (wired the accelerometer chip) with this DT property.
+[haibo] in tsc_irq(), I use this value to record the tsc measure value. But now I find the value just used
+In tsc_irq, so I will remove this value out of imx6ul_tsc.
+> 
+> > +	int xnur_gpio;
+> > +	int measure_delay_time;
+> > +	int pre_charge_time;
+> > +
+> > +	struct completion completion;
+> > +};
+> > +
+> > +/*
+> > + * TSC module need ADC to get the measure value. So
+> > + * before config TSC, we should initialize ADC module.
+> > + */
+> > +static void imx6ul_adc_init(struct imx6ul_tsc *tsc) {
+> > +	int adc_hc = 0;
+> > +	int adc_gc;
+> > +	int adc_gs;
+> > +	int adc_cfg;
+> > +	int timeout;
+> > +
+> > +	adc_cfg = readl(tsc->adc_regs + REG_ADC_CFG);
+> > +	adc_cfg |= ADC_12BIT_MODE | ADC_IPG_CLK;
+> > +	adc_cfg |= ADC_CLK_DIV_8 | ADC_SHORT_SAMPLE_MODE;
+> > +	adc_cfg &= ~ADC_HARDWARE_TRIGGER;
+> > +	writel(adc_cfg, tsc->adc_regs + REG_ADC_CFG);
+> > +
+> > +	/* enable calibration interrupt */
+> > +	adc_hc |= ADC_AIEN;
+> > +	adc_hc |= ADC_CONV_DISABLE;
+> > +	writel(adc_hc, tsc->adc_regs + REG_ADC_HC0);
+> > +
+> > +	/* start ADC calibration */
+> > +	adc_gc = readl(tsc->adc_regs + REG_ADC_GC);
+> > +	adc_gc |= ADC_CAL;
+> > +	writel(adc_gc, tsc->adc_regs + REG_ADC_GC);
+> > +
+> > +	timeout = wait_for_completion_timeout
+> > +			(&tsc->completion, ADC_TIMEOUT);
+> > +	if (timeout == 0)
+> > +		dev_err(tsc->dev, "Timeout for adc calibration\n");
+> > +
+> > +	adc_gs = readl(tsc->adc_regs + REG_ADC_GS);
+> > +	if (adc_gs & ADC_CALF)
+> > +		dev_err(tsc->dev, "ADC calibration failed\n");
+> > +
+> > +	/* TSC need the ADC work in hardware trigger */
+> > +	adc_cfg = readl(tsc->adc_regs + REG_ADC_CFG);
+> > +	adc_cfg |= ADC_HARDWARE_TRIGGER;
+> > +	writel(adc_cfg, tsc->adc_regs + REG_ADC_CFG); }
+> > +
+> > +/*
+> > + * This is a TSC workaround. Currently TSC misconnect two
+> > + * ADC channels, this function remap channel configure for
+> > + * hardware trigger.
+> > + */
+> > +static void imx6ul_tsc_channel_config(struct imx6ul_tsc *tsc) {
+> > +	int adc_hc0, adc_hc1, adc_hc2, adc_hc3, adc_hc4;
+> > +
+> > +	adc_hc0 = DISABLE_CONVERSION_INT;
+> > +	writel(adc_hc0, tsc->adc_regs + REG_ADC_HC0);
+> > +
+> > +	adc_hc1 = DISABLE_CONVERSION_INT | SELECT_CHANNEL_4;
+> > +	writel(adc_hc1, tsc->adc_regs + REG_ADC_HC1);
+> > +
+> > +	adc_hc2 = DISABLE_CONVERSION_INT;
+> > +	writel(adc_hc2, tsc->adc_regs + REG_ADC_HC2);
+> > +
+> > +	adc_hc3 = DISABLE_CONVERSION_INT | SELECT_CHANNEL_1;
+> > +	writel(adc_hc3, tsc->adc_regs + REG_ADC_HC3);
+> > +
+> > +	adc_hc4 = DISABLE_CONVERSION_INT;
+> > +	writel(adc_hc4, tsc->adc_regs + REG_ADC_HC4); }
+> > +
+> > +/*
+> > + * TSC setting, confige the pre-charge time and measure delay time.
+> > + * different touch screen may need different pre-charge time and
+> > + * measure delay time.
+> > + */
+> > +static void imx6ul_tsc_set(struct imx6ul_tsc *tsc) {
+> > +	int basic_setting = 0;
+> > +	int start;
+> > +
+> > +	basic_setting |= tsc->measure_delay_time << 8;
+> > +	basic_setting |= DETECT_4_WIRE_MODE | AUTO_MEASURE;
+> > +	writel(basic_setting, tsc->tsc_regs + REG_TSC_BASIC_SETING);
+> > +
+> > +	writel(DE_GLITCH_2, tsc->tsc_regs + REG_TSC_DEBUG_MODE2);
+> > +
+> > +	writel(tsc->pre_charge_time, tsc->tsc_regs +
+> REG_TSC_PRE_CHARGE_TIME);
+> > +	writel(MEASURE_INT_EN, tsc->tsc_regs + REG_TSC_INT_EN);
+> > +	writel(MEASURE_SIG_EN | VALID_SIG_EN,
+> > +		tsc->tsc_regs + REG_TSC_INT_SIG_EN);
+> > +
+> > +	/* start sense detection */
+> > +	start = readl(tsc->tsc_regs + REG_TSC_FLOW_CONTROL);
+> > +	start |= START_SENSE;
+> > +	start &= ~TSC_DISABLE;
+> > +	writel(start, tsc->tsc_regs + REG_TSC_FLOW_CONTROL); }
+> > +
+> > +static void imx6ul_tsc_init(struct imx6ul_tsc *tsc) {
+> > +	imx6ul_adc_init(tsc);
+> > +	imx6ul_tsc_channel_config(tsc);
+> > +	imx6ul_tsc_set(tsc);
+> > +}
+> > +
+> > +static irqreturn_t tsc_irq(int irq, void *dev_id) {
+> > +	struct imx6ul_tsc *tsc = (struct imx6ul_tsc *)dev_id;
+> > +	int status;
+> > +	int x, y;
+> > +	int xnur;
+> > +	int debug_mode2;
+> > +	int state_machine;
+> > +	int start;
+> > +	unsigned long timeout;
+> > +
+> > +	status = readl(tsc->tsc_regs + REG_TSC_INT_STATUS);
+> > +
+> > +	/* write 1 to clear the bit measure-signal */
+> > +	writel(MEASURE_SIGNAL | DETECT_SIGNAL,
+> > +		tsc->tsc_regs + REG_TSC_INT_STATUS);
+> > +
+> > +	/* It's a HW self-clean bit. Set this bit and start sense detection
+> */
+> > +	start = readl(tsc->tsc_regs + REG_TSC_FLOW_CONTROL);
+> > +	start |= START_SENSE;
+> > +	writel(start, tsc->tsc_regs + REG_TSC_FLOW_CONTROL);
+> > +
+> > +	if (status & MEASURE_SIGNAL) {
+> > +		tsc->value = readl(tsc->tsc_regs + REG_TSC_MEASURE_VALUE);
+> > +		x = (tsc->value >> 16) & 0x0fff;
+> > +		y = tsc->value & 0x0fff;
+> > +
+> > +		/*
+> > +		 * Delay some time(max 2ms), wait the pre-charge done.
+> > +		 * After the pre-change mode, TSC go into detect mode.
+> > +		 * And in detect mode, we can get the xnur gpio value.
+> > +		 * If xnur is low, this means the touch screen still
+> > +		 * be touched. If xnur is high, this means finger leave
+> > +		 * the touch screen.
+> > +		 */
+> > +		timeout = jiffies + HZ/500;
+> > +		do {
+> > +			if (time_after(jiffies, timeout)) {
+> > +				xnur = 0;
+> > +				goto touch_event;
+> > +			}
+> > +			usleep_range(200, 400);
+> > +			debug_mode2 = readl(tsc->tsc_regs +
+> REG_TSC_DEBUG_MODE2);
+> > +			state_machine = (debug_mode2 >> 20) & 0x7;
+> > +		} while (state_machine != DETECT_MODE);
+> > +		usleep_range(200, 400);
+> > +
+> > +		xnur = gpio_get_value(tsc->xnur_gpio);
+> > +touch_event:
+> > +		if (xnur == 0) {
+> > +			input_report_key(tsc->input, BTN_TOUCH, 1);
+> > +			input_report_abs(tsc->input, ABS_X, x);
+> > +			input_report_abs(tsc->input, ABS_Y, y);
+> > +		} else
+> > +			input_report_key(tsc->input, BTN_TOUCH, 0);
+> > +
+> > +		input_sync(tsc->input);
+> > +	}
+> > +
+> > +	return IRQ_HANDLED;
+> > +}
+> > +
+> > +static irqreturn_t adc_irq(int irq, void *dev_id) {
+> > +	struct imx6ul_tsc *tsc = (struct imx6ul_tsc *)dev_id;
+> > +	int coco;
+> > +	int value;
+> > +
+> > +	coco = readl(tsc->adc_regs + REG_ADC_HS);
+> > +	if (coco & 0x01) {
+> > +		value = readl(tsc->adc_regs + REG_ADC_R0);
+> > +		complete(&tsc->completion);
+> > +	}
+> > +
+> > +	return IRQ_HANDLED;
+> > +}
+> > +
+> > +static const struct of_device_id imx6ul_tsc_match[] = {
+> > +	{ .compatible = "fsl,imx6ul-tsc", },
+> > +	{ /* sentinel */ }
+> > +};
+> > +MODULE_DEVICE_TABLE(of, imx6ul_tsc_match);
+> > +
+> > +static int imx6ul_tsc_probe(struct platform_device *pdev) {
+> > +	struct imx6ul_tsc *tsc;
+> > +	struct resource *tsc_mem;
+> > +	struct resource *adc_mem;
+> > +	struct input_dev *input_dev;
+> > +	struct device_node *np = pdev->dev.of_node;
+> > +	int err;
+> > +
+> > +	tsc = kzalloc(sizeof(struct imx6ul_tsc), GFP_KERNEL);
+> 
+> Why not devm_kzalloc()?
+> 
+
+[haibo] It's better to use devm_kzalloc(), I will change this.
+
+> > +	if (!tsc) {
+> > +		err = -ENOMEM;
+> > +		goto err_free_mem_tsc;
+> > +	}
+> > +
+> > +	input_dev = input_allocate_device();
+> 
+> devm_input_allocate_device(&pdev->dev)?
+> 
+
+[haibo] will change this.
 
 > 
-> w.r.t. configuring the choice of output(s), that sounds like a runtime
-> decision rather than something which needs to be configured statically.
+> > +	if (!input_dev) {
+> > +		err = -ENOMEM;
+> > +		goto err_free_mem;
+> > +	}
+> > +
+> > +	tsc->dev = &pdev->dev;
+> > +
+> > +	tsc->input = input_dev;
+> > +	tsc->input->evbit[0] = BIT_MASK(EV_KEY) | BIT_MASK(EV_ABS);
+> > +	tsc->input->keybit[BIT_WORD(BTN_TOUCH)] = BIT_MASK(BTN_TOUCH);
+> > +	input_set_abs_params(tsc->input, ABS_X, 0, 0xFFF, 0, 0);
+> > +	input_set_abs_params(tsc->input, ABS_Y, 0, 0xFFF, 0, 0);
+> > +
+> > +	tsc->input->name = "iMX6UL TouchScreen Controller";
+> > +
+> > +	tsc->xnur_gpio = of_get_named_gpio(np, "xnur-gpio", 0);
+> > +	err = gpio_request_one(tsc->xnur_gpio, GPIOF_IN, "tsc_X-");
+> > +	if (err) {
+> > +		dev_err(&pdev->dev, "failed to request GPIO tsc_X-\n");
+> > +		goto err_free_mem;
+> > +	}
+> > +
+> > +	tsc_mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > +	tsc->tsc_regs = devm_ioremap_resource(&pdev->dev, tsc_mem);
+> > +	if (IS_ERR(tsc->tsc_regs)) {
+> > +		dev_err(&pdev->dev, "failed to remap tsc memory\n");
+> > +		err = PTR_ERR(tsc->tsc_regs);
+> > +		goto err_free_mem;
+> > +	}
+> > +
+> > +	adc_mem = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> > +	tsc->adc_regs = devm_ioremap_resource(&pdev->dev, adc_mem);
+> > +	if (IS_ERR(tsc->adc_regs)) {
+> > +		dev_err(&pdev->dev, "failed to remap adc memory\n");
+> > +		err = PTR_ERR(tsc->adc_regs);
+> > +		goto err_free_mem;
+> > +	}
+> > +
+> > +	tsc->tsc_clk = devm_clk_get(&pdev->dev, "tsc");
+> > +	if (IS_ERR(tsc->tsc_clk)) {
+> > +		dev_err(&pdev->dev, "failed getting tsc clock\n");
+> > +		err = PTR_ERR(tsc->tsc_clk);
+> > +		goto err_free_mem;
+> > +	}
+> > +
+> > +	tsc->adc_clk = devm_clk_get(&pdev->dev, "adc");
+> > +	if (IS_ERR(tsc->adc_clk)) {
+> > +		dev_err(&pdev->dev, "failed getting adc clock\n");
+> > +		err = PTR_ERR(tsc->adc_clk);
+> > +		goto err_free_mem;
+> > +	}
+> > +
+> > +	tsc->tsc_irq = platform_get_irq(pdev, 0);
+> > +	if (tsc->tsc_irq <= 0) {
+> > +		dev_err(&pdev->dev, "no tsc irq resource?\n");
+> > +		err = -EINVAL;
+> > +		goto err_free_mem;
+> > +	}
+> > +
+> > +	tsc->adc_irq = platform_get_irq(pdev, 1);
+> > +	if (tsc->adc_irq <= 0) {
+> > +		dev_err(&pdev->dev, "no adc irq resource?\n");
+> > +		err = -EINVAL;
+> 
+> I think platform_get_irq() return negative errors, so let's check for
+> tsc->adc_irq < 0 and do:
+> 
+> 		return tsc->adc_irq?
 
-This won't be useful during runtime. (De)activating events is what you
-do in iio sysfs.
-
-Even in the rare case (maybe supported in the future) when you want one
-interrupt source on one pin and another source on the other pin, that
-describes your hardware. You wire, say, data-ready to Linux and
-motion-detection to some strange alarm system. When you change your
-hardware (say, use Linux for both pins), I think it would justify
-changing a DT property.
-
-Btw, we are talking about very theoretical stuff here. For now (and even
-possibly forever) we just don't ever want to break a DT propery we
-introduce here, thus the bitmask.
+[haibo] Good suggestion! I will take this. 
 
 > 
->>>> This is important for everyone to be able to use this driver, no matter
->>>> how their chip is wired. At the moment, only 0xff for using INT2 for all
->>>> available interrupt sources is supported. See the devicetree documentation
->>>> file for more details.
->>>>
->>>> Since this doesn't change the default behaviour, it doesn't break anything
->>>> for existing users.
->>>>
->>>> Signed-off-by: Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
->>>> Signed-off-by: Christoph Muellner <christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
->>>> ---
->>>>  .../devicetree/bindings/iio/accel/mma8452.txt        |  4 ++++
->>>>  drivers/iio/accel/mma8452.c                          | 20 +++++++++++++-------
->>>>  2 files changed, 17 insertions(+), 7 deletions(-)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/iio/accel/mma8452.txt b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
->>>> index 8d98e05..738a430 100644
->>>> --- a/Documentation/devicetree/bindings/iio/accel/mma8452.txt
->>>> +++ b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
->>>> @@ -10,6 +10,9 @@ Optional properties:
->>>>  
->>>>    - interrupt-parent: should be the phandle for the interrupt controller
->>>>    - interrupts: interrupt mapping for GPIO IRQ
->>>> +  - use_int2: bitmask to choose interrupt sources assumed to be wired to
->>>> +    interrupt pin INT2 instead of INT1. Only 0xff (INT2 for every interrupt
->>>> +    source) is supported at the moment.
->>>
->>> s/_/-/ in property names, please.
->>
->> ok. If I don't do a version 6 really soon, I'll reply with this patch
->> corrected here.
->>
->>>
->>> We generally avoid bitmasks in properties, and we also usually exepct a
->>> full cell even if data is smaller. The fact that you expect /bits/ 8 
->>> must be documented here if that's truly necessary.
->>
->> It's not truly necessary. It's just a nice fit. There is one 8 bit
->> (device memory) register that basically could (in the future) be
->> exposed through this DT property.
->>
->> For now it's just 0xff or nothing. We only don't want to create an
->> interface that could restrict us from implementing more in the future
->> without breaking anything.
+> > +		goto err_free_mem;
+> > +	}
+> > +
+> > +	err = devm_request_threaded_irq(tsc->dev, tsc->tsc_irq,
+> > +					NULL, tsc_irq,
+> > +					IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
 > 
-> It sounds like you wouldn't need this (at least for now) if you were to
-> use interrupt-names to describe whether INT1 and/or INT2 were wired up.
+> Do we need to hard-code the trigger? Maybe rely on board/OF code to set
+> up the trigger flags properly?
 > 
-> Thanks,
-> Mark.
+
+[haibo] this tsc is inside the imx6ul soc, it do not relay on board.
+   
+> > +					dev_name(&pdev->dev), tsc);
+> > +	if (err < 0) {
+> > +		dev_err(&pdev->dev,
+> > +			"failed requesting tsc irq %d\n",
+> > +					    tsc->tsc_irq);
+> > +		goto err_free_mem;
+> > +	}
+> > +
+> > +	err = devm_request_irq(tsc->dev, tsc->adc_irq,
+> > +				adc_irq, 0,
+> > +				dev_name(&pdev->dev), tsc);
+> > +	if (err < 0) {
+> > +		dev_err(&pdev->dev,
+> > +			"failed requesting adc irq %d\n",
+> > +					    tsc->adc_irq);
+> > +		goto err_free_mem;
+> > +	}
+> > +
+> > +	err = of_property_read_u32(np, "measure_delay_time",
+> > +				&tsc->measure_delay_time);
+> > +	if (err)
+> > +		tsc->measure_delay_time = 0xffff;
+> > +
+> > +	err = of_property_read_u32(np, "pre_charge_time",
+> > +				&tsc->pre_charge_time);
+> > +	if (err)
+> > +		tsc->pre_charge_time = 0xfff;
+> > +
+> > +	init_completion(&tsc->completion);
+> > +
+> > +	err = clk_prepare_enable(tsc->adc_clk);
+> > +	if (err) {
+> > +		dev_err(&pdev->dev,
+> > +			"Could not prepare or enable the adc clock.\n");
+> > +		goto err_free_mem;
+> > +	}
+> > +
+> > +	err = clk_prepare_enable(tsc->tsc_clk);
+> > +	if (err) {
+> > +		dev_err(&pdev->dev,
+> > +			"Could not prepare or enable the tsc clock.\n");
+> > +		goto error_tsc_clk_enable;
+> > +	}
+> > +
+> > +	err = input_register_device(tsc->input);
+> > +	if (err < 0) {
+> > +		dev_err(&pdev->dev, "failed to register input device\n");
+> > +		err = -EIO;
+> > +		goto err_input_register;
+> > +	}
+> > +
+> > +	imx6ul_tsc_init(tsc);
+> > +
+> > +	platform_set_drvdata(pdev, tsc);
+> > +	return 0;
+> > +
+> > +err_input_register:
+> > +	clk_disable_unprepare(tsc->tsc_clk);
+> > +error_tsc_clk_enable:
+> > +	clk_disable_unprepare(tsc->adc_clk);
+> > +err_free_mem:
+> > +	input_free_device(tsc->input);
+> > +err_free_mem_tsc:
+> > +	kfree(tsc);
+> > +	return err;
+> > +}
+> > +
+> > +static int imx6ul_tsc_remove(struct platform_device *pdev) {
+> > +	struct imx6ul_tsc *tsc = platform_get_drvdata(pdev);
+> > +
+> > +	clk_disable_unprepare(tsc->tsc_clk);
+> > +	clk_disable_unprepare(tsc->adc_clk);
 > 
+> Just cutting clocks is not really nice. Why don't you shut down the
+> device as you do in suspend, before disabling the clocks.
+
+[haibo] Yes, you are right, it's my negligence.
+> 
+> > +	input_unregister_device(tsc->input);
+> > +	kfree(tsc);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +#ifdef CONFIG_PM_SLEEP
+> 
+> Drop ifdef.
+> 
+> > +static int imx6ul_tsc_suspend(struct device *dev)
+> 
+> __maybe_unused.
+> 
+> > +{
+> > +	struct platform_device *pdev = to_platform_device(dev);
+> > +	struct imx6ul_tsc *tsc = platform_get_drvdata(pdev);
+> > +	int tsc_flow;
+> > +	int adc_cfg;
+> > +
+> > +	/* TSC controller enters to idle status */
+> > +	tsc_flow = readl(tsc->tsc_regs + REG_TSC_FLOW_CONTROL);
+> > +	tsc_flow |= TSC_DISABLE;
+> > +	writel(tsc_flow, tsc->tsc_regs + REG_TSC_FLOW_CONTROL);
+> > +
+> > +	/* ADC controller enters to stop mode */
+> > +	adc_cfg = readl(tsc->adc_regs + REG_ADC_HC0);
+> > +	adc_cfg |= ADC_CONV_DISABLE;
+> > +	writel(adc_cfg, tsc->adc_regs + REG_ADC_HC0);
+> > +
+> > +	clk_disable_unprepare(tsc->tsc_clk);
+> > +	clk_disable_unprepare(tsc->adc_clk);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int imx6ul_tsc_resume(struct device *dev)
+> 
+> __maybe_unused.
+> 
+
+[haibo] will add this .
+
+> > +{
+> > +	struct platform_device *pdev = to_platform_device(dev);
+> > +	struct imx6ul_tsc *tsc = platform_get_drvdata(pdev);
+> > +	int err;
+> > +
+> > +	err = clk_prepare_enable(tsc->adc_clk);
+> > +	if (err)
+> > +		return err;
+> > +
+> > +	err = clk_prepare_enable(tsc->tsc_clk);
+> > +	if (err)
+> 
+> Disable tsc->adc_clk?
+> 
+
+[haibo] will add this.
+ 
+> > +		return err;
+> > +
+> > +	imx6ul_tsc_init(tsc);
+> > +	return 0;
+> > +}
+> > +#endif
+> > +
+> > +static SIMPLE_DEV_PM_OPS(imx6ul_tsc_pm_ops,
+> > +			 imx6ul_tsc_suspend,
+> > +			 imx6ul_tsc_resume);
+> > +
+> > +static struct platform_driver imx6ul_tsc_driver = {
+> > +	.driver		= {
+> > +		.name	= "imx6ul-tsc",
+> > +		.owner	= THIS_MODULE,
+> > +		.of_match_table	= imx6ul_tsc_match,
+> > +		.pm	= &imx6ul_tsc_pm_ops,
+> > +	},
+> > +	.probe		= imx6ul_tsc_probe,
+> > +	.remove		= imx6ul_tsc_remove,
+> > +};
+> > +module_platform_driver(imx6ul_tsc_driver);
+> > +
+> > +MODULE_AUTHOR("Haibo Chen <haibo.chen@freescale.com>");
+> > +MODULE_DESCRIPTION("Freescale i.MX6UL Touchscreen controller
+> > +driver"); MODULE_LICENSE("GPL v2");
+> > --
+> > 1.9.1
+> >
+> 
+> --
+> Dmitry
