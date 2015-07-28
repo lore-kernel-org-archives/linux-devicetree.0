@@ -1,105 +1,127 @@
-From: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCHv7 0/2] Adding driver for Xilinx LogiCORE IP mailbox.
-Date: Tue, 28 Jul 2015 15:44:35 -0700
-Message-ID: <CAAtXAHcobgftojgba8fcb2OM2eZvYqHHBhzEQahXO4m-VfrFYg@mail.gmail.com>
-References: <1436922022-17564-1-git-send-email-moritz.fischer@ettus.com>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [RFCv2 1/3] docs: dts: Added documentation for Xilinx Zynq Reset
+ Controller bindings.
+Date: Tue, 28 Jul 2015 15:53:37 -0700
+Message-ID: <20150728225337.GF2650@xsjsorenbubuntu>
+References: <1437783682-13632-1-git-send-email-moritz.fischer@ettus.com>
+ <1437783682-13632-2-git-send-email-moritz.fischer@ettus.com>
+ <20150728025833.GQ2650@xsjsorenbubuntu>
+ <CAAtXAHejK2vL2qSdhqrtHmkV_RBfkLzQNM8ZbDvREvienNqzXw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1436922022-17564-1-git-send-email-moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAAtXAHejK2vL2qSdhqrtHmkV_RBfkLzQNM8ZbDvREvienNqzXw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Moritz Fischer <moritz.fischer@ettus.com>
+Cc: p.zabel@pengutronix.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, Michal Simek <michal.simek@xilinx.com>, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jassi,
+On Mon, 2015-07-27 at 09:52PM -0700, Moritz Fischer wrote:
+> Hi S=C3=B6ren,
+>=20
+> thanks for your feedback.
+>=20
+> On Mon, Jul 27, 2015 at 7:58 PM, S=C3=B6ren Brinkmann
+> <soren.brinkmann@xilinx.com> wrote:
+> > Hi Moritz,
+> >
+> > On Fri, 2015-07-24 at 05:21PM -0700, Moritz Fischer wrote:
+> >> Signed-off-by: Moritz Fischer <moritz.fischer@ettus.com>
+> >> ---
+> >>  Documentation/devicetree/bindings/reset/zynq-reset-pl.txt | 13 ++=
++++++++++++
+> >>  1 file changed, 13 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/reset/zynq-r=
+eset-pl.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/reset/zynq-reset-pl=
+=2Etxt b/Documentation/devicetree/bindings/reset/zynq-reset-pl.txt
+> >> new file mode 100644
+> >> index 0000000..ac4499e
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/reset/zynq-reset-pl.txt
+> >> @@ -0,0 +1,13 @@
+> >> +Xilinx Zynq PL Reset Manager
+> >> +
+> >> +Required properties:
+> >> +- compatible: "xlnx,zynq-reset-pl"
+> >> +- syscon <&slcr>;
+> >> +- #reset-cells: 1
+> >> +
+> >> +Example:
+> >> +     rstc: rstc@240 {
+> >> +             #reset-cells =3D <1>;
+> >> +             compatible =3D "xlnx,zynq-reset-pl";
+> >> +             syscon =3D <&slcr>;
+> >> +     };
+> >
+> > I think you also have to add the outputs and make them part of the
+> > binding. Otherwise you'd have to read the implementation to find
+> > out what device should be hooked up to which output of the reset-co=
+ntroller.
+>=20
+> Is something like this what you had in mind? I had that prepared for
+> the next round of patches:
+>=20
+> Reset outputs:
+>  0  : soft reset
+>  32 : ddr reset
+>  64 : topsw reset
+>  96 : dmac reset
+>  128: usb0 reset
+>  129: usb1 reset
+>  160: gem0 reset
+>  161: gem1 reset
+>  164: gem0 rx reset
+>  165: gem1 rx reset
+>  166: gem0 ref reset
+>  167: gem1 ref reset
+>  192: sdio0 reset
+>  193: sdio1 reset
+>  196: sdio0 ref reset
+>  197: sdio1 ref reset
+>  224: spi0 reset
+>  225: spi1 reset
+>  226: spi0 ref reset
+>  227: spi1 ref reset
+>  256: can0 reset
+>  257: can1 reset
+>  258: can0 ref reset
+>  259: can1 ref reset
+>  288: i2c0 reset
+>  289: i2c1 reset
+>  320: uart0 reset
+>  321: uart1 reset
+>  322: uart0 ref reset
+>  323: uart1 ref reset
+>  352: gpio reset
+>  384: lqspi reset
+>  385: qspi ref reset
+>  416: smc reset
+>  417: smc ref reset
+>  448: ocm reset
+>  512: fpga0 out reset
+>  513: fpga1 out reset
+>  514: fpga2 out reset
+>  515: fpga3 out reset
+>  544: a9 reset 0
+>  545: a9 reset 1
+>  552: peri reset
 
-just a ping to see if you're waiting on me to fix things or if this is
-good to go from your point of view,
-and you're just waiting some time to give people more time to review.
+Basically, yes. I guess the gaps are due to directly mapping this numbe=
+r
+to bank and bit instead of doing some more complex mapping in between?
+I'm not sure whether I like this :) I guess if a number is off the
+driver would still toggle the addressed bit? I'm not sure, is it worth
+to do some explicit mapping from logical outputs to a physical reset? I=
+t
+seems it would be a little safer since it would be easy to check that
+the addressed reset is valid and there wouldn't be any reserved/invalid
+bits be toggled. Also, it would make the outputs in here a continuous
+series of numbers without these gaps. Not sure though whether
+it's worth the additional complexity in the implementation.
 
-Let me know if you want me to resend with Soeren's Acked-By
-
-Cheers,
-
-Moritz
-
-On Tue, Jul 14, 2015 at 6:00 PM, Moritz Fischer
-<moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org> wrote:
-> Hi all,
->
-> Thanks for hanging in there, hopefully the last round of review ...
->
-> This patchset adds mailbox framework integration for the Xilinx LogiC=
-ORE IP
-> mailbox.  The Xilinx LogiCORE IP mailbox is a fpga softcore that allo=
-ws
-> interprocessor communication between AXI4 stream / memory mapped
-> processors.
->
-> Cheers,
->
-> Moritz
->
-> Changes from v6:
-> - As suggested by Jassi and S=C3=B6ren use #mbox-cells =3D <1>
->
-> Changes from v5:
-> - Fixed constness for ops struct
-> - Removed redundant checks
-> - Moved ops assignment
-> - Removed MODULE_ALIAS
->
-> Changes from v4:
-> - Have separate mbox_ops structs for polling / irq mode
-> - Moved clk handling to startup / shutdown
-> - Embedded struct mbox_chan in struct xilinx_mbox
-> - Fixed mbox-cells in devicetree documentation
-> - Misc stylistic issues
->
-> Changes from v3:
-> - Stylistic changes
-> - Changed reg size in dts to 0x100
->
-> Changes from v2:
-> - Fixed error condition for IRQ from >=3D 0 to > 0
-> - Fixed clock enable
-> - Cleaned up docs
->
-> Changes from v1:
-> - Added common clock framework support
-> - Deal with IRQs that happend before driver load,
->   since HW will not let us know about them when we enable IRQs
->
-> Changes from v0:
-> - Several stylistic issues
-> - Dropped superfluous intr_mode member
-> - Really masking the IRQs on mailbox_shutdown
-> - No longer using polling by accident in non-IRQ mode
-> - Swapped doc and driver commits
->
->
-> Moritz Fischer (2):
->   dts: Adding docs for Xilinx LogiCORE IP mailbox driver.
->   mailbox: Adding driver for Xilinx LogiCORE IP mailbox.
->
->  .../devicetree/bindings/mailbox/xilinx-mailbox.txt |  44 +++
->  MAINTAINERS                                        |   7 +
->  drivers/mailbox/Kconfig                            |   7 +
->  drivers/mailbox/Makefile                           |   2 +
->  drivers/mailbox/mailbox-xilinx.c                   | 367 +++++++++++=
-++++++++++
->  5 files changed, 427 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mailbox/xilinx-=
-mailbox.txt
->  create mode 100644 drivers/mailbox/mailbox-xilinx.c
->
-> --
-> 2.4.3
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Thanks,
+	S=C3=B6ren
