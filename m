@@ -1,62 +1,86 @@
-From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: Re: [PATCH v2 1/2] power: reset: at91: add sama5d3 reset function
-Date: Tue, 28 Jul 2015 09:27:38 +0200
-Message-ID: <55B72EEA.5020600@atmel.com>
-References: <1437384726-24927-1-git-send-email-josh.wu@atmel.com> <20150720164241.GA5930@earth>
+From: Zhou Wang <wangzhou1@hisilicon.com>
+Subject: Re: [PATCH v5 4/5] Documentation: DT: Add HiSilicon PCIe host binding
+Date: Tue, 28 Jul 2015 15:28:26 +0800
+Message-ID: <55B72F1A.50701@hisilicon.com>
+References: <1437794486-21134-1-git-send-email-wangzhou1@hisilicon.com> <1437794486-21134-5-git-send-email-wangzhou1@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150720164241.GA5930@earth>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: Josh Wu <josh.wu@atmel.com>, linux-arm-kernel@lists.infradead.org, Guenter Roeck <linux@roeck-us.net>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Ben Dooks <ben.dooks@codethink.co.uk>, Krzysztof Kozlowski <k.kozlowski.k@gmail.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>, Wei Yongjun <yongjun_wei@trendmicro.com.cn>, Fabian Frederick <fabf@skynet.be>, linux-kernel@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1437794486-21134-5-git-send-email-wangzhou1@hisilicon.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Zhou Wang <wangzhou1@hisilicon.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jg1.han@samsung.com>, Pratyush Anand <pratyush.anand@gmail.com>, Arnd Bergmann <arnd@arndb.de>, gabriele.paoloni@huawei.com, lorenzo.pieralisi@arm.com, James Morse <james.morse@arm.com>, Liviu.Dudau@arm.com, thomas.petazzoni@free-electrons.com, Jason Cooper <jason@lakedaemon.net>, robh@kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, yuanzhichang@hisilicon.com, zhudacai@hisilicon.com, zhangjukuo@huawei.com, qiuzhenfa@hisilicon.com, liudongdong3@huawei.com, qiujiang@huawei.com, kangfenglong@huawei.com, liguozhu@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-Le 20/07/2015 18:42, Sebastian Reichel a =E9crit :
-> Hi,
->=20
-> On Mon, Jul 20, 2015 at 05:32:05PM +0800, Josh Wu wrote:
->> This patch introduces a new compatible string: "atmel,sama5d3-rstc" =
-and
->> new reset function for sama5d3 and later chips.
->>
->> As in sama5d3 or later chips, we don't have to shutdown the DDR
->> controller before reset. Shutdown the DDR controller before reset is=
- a
->> workaround to avoid DDR signal driving the bus, but since sama5d3 an=
-d
->> later chips there is no such a conflict.
->>
->> So in this patch:
->>    1. the sama5d3 reset function only need to write the rstc registe=
-r
->> and return.
->>    2. we can remove the code related with sama5d3 DDR controller as
->> we don't use it at all.
->>
->> Signed-off-by: Josh Wu <josh.wu@atmel.com>
->> Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
->=20
-> queued.
+On 2015/7/25 11:21, Zhou Wang wrote:
+> This patch adds related DTS binding document for HiSilicon PCIe host driver.
+> 
+> Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
 
-Sebastian,
+Hi Arnd and Rob,
 
-As my Device Tree changes depend on this modification, we can
-synchronize in tree ways:
+As Bjorn mentioned in v4 series, this patch need your ack.
+Could you help to review this patch?
 
-1/ you provide me a stable branch so that I can pull it before applying
-my changes that can go through arm-soc.
+Thanks,
+Zhou
 
-2/ you let me take the driver's modifications with me and the two
-patches of the series would go through arm-soc.
-
-3/ you take the second patch of my series with my Acked-by tag and carr=
-y
-both of them up to Linus' tree.
-
-Please tell me your preference.
-
-Thanks, bye,
---=20
-Nicolas Ferre
+> ---
+>  .../devicetree/bindings/pci/hisilicon-pcie.txt     | 46 ++++++++++++++++++++++
+>  1 file changed, 46 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt b/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
+> new file mode 100644
+> index 0000000..2afc9d1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
+> @@ -0,0 +1,46 @@
+> +HiSilicon PCIe host bridge DT description
+> +
+> +HiSilicon PCIe host controller is based on Designware PCI core.
+> +It shares common functions with PCIe Designware core driver and inherits
+> +common properties defined in
+> +Documentation/devicetree/bindings/pci/designware-pci.txt.
+> +
+> +Additional properties are described here:
+> +
+> +Required properties:
+> +- compatible: Should contain "hisilicon,hip05-pcie".
+> +- reg: Should contain rc_dbi, subctrl, config registers location and length.
+> +- reg-names: Must include the following entries:
+> +  "rc_dbi": controller configuration registers;
+> +  "subctrl": whole PCIe hosts configuration registers;
+> +  "config": PCIe configuration space registers.
+> +- msi-parent: Should be its_pcie which is an ITS receiving MSI interrupts.
+> +- port-id: Should be 0, 1, 2 or 3.
+> +
+> +Optional properties:
+> +- status: Either "ok" or "disabled".
+> +- dma-coherent: Present if DMA operations are coherent.
+> +
+> +Example:
+> +	pcie@0xb0080000 {
+> +		compatible = "hisilicon,hip05-pcie", "snps,dw-pcie";
+> +		reg = <0 0xb0080000 0 0x10000>, <0 0xb0000000 0 0x10000>,
+> +		      <0x220 0x00000000 0 0x2000>;
+> +		reg-names = "rc_dbi", "subctrl", "config";
+> +		bus-range = <0  15>;
+> +		msi-parent = <&its_pcie>;
+> +		#address-cells = <3>;
+> +		#size-cells = <2>;
+> +		device_type = "pci";
+> +		dma-coherent;
+> +		ranges = <0x82000000 0 0x00000000 0x220 0x00000000 0 0x10000000>;
+> +		num-lanes = <8>;
+> +		port-id = <1>;
+> +		#interrupts-cells = <1>;
+> +		interrupts-map-mask = <0xf800 0 0 7>;
+> +		interrupts-map = <0x0 0 0 1 &mbigen_pcie 1 10
+> +				  0x0 0 0 2 &mbigen_pcie 2 11
+> +				  0x0 0 0 3 &mbigen_pcie 3 12
+> +				  0x0 0 0 4 &mbigen_pcie 4 13>;
+> +		status = "ok";
+> +	};
+> 
