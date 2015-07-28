@@ -1,86 +1,82 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] dt: power: st: Provide bindings for ST's OPPs
-Date: Tue, 28 Jul 2015 08:55:33 -0500
-Message-ID: <CAL_JsqL=e+fL_67_GPKjt_7wJ81GfFx7m9gjxmBDvW_JBXWpfQ@mail.gmail.com>
-References: <1438010430-5802-1-git-send-email-lee.jones@linaro.org> <1438010430-5802-2-git-send-email-lee.jones@linaro.org>
+From: Moritz Fischer <moritz.fischer@ettus.com>
+Subject: Re: [RFCv2 2/3] dts: zynq: Add devicetree entry for Xilinx Zynq reset controller.
+Date: Tue, 28 Jul 2015 06:54:43 -0700
+Message-ID: <CAAtXAHeko4tUhK-yjXxwfJkLxG3c5kjtyHML=z4mdnOXDy3E2Q@mail.gmail.com>
+References: <1437783682-13632-1-git-send-email-moritz.fischer@ettus.com>
+	<1437783682-13632-3-git-send-email-moritz.fischer@ettus.com>
+	<55B5D62D.4010407@monstr.eu>
+	<CAAtXAHepDRbiiznHnT3dLLLWS_VH2a9BhnNgZzDECx__QceEeg@mail.gmail.com>
+	<55B72857.3020108@atmel.com>
+	<55B732E6.7080901@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1438010430-5802-2-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, ajitpal.singh-qxv4g6HH51o@public.gmane.org
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <55B732E6.7080901@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michal Simek <michal.simek@xilinx.com>
+Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, Michal Simek <monstr@monstr.eu>, p.zabel@pengutronix.de, mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Kumar Gala <galak@codeaurora.org>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 27, 2015 at 10:20 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> These OPPs are used in ST's CPUFreq implementation.
+Nicolas, Michal,
+
+if macb doesn't benefit from it, no need for the reset in there then.
+I think Michal's suggestion of adding it on an as necessary basis works=
+ fine.
+=46or the PATCH round I'll just have the SLCR in there and drivers can
+add it to their nodes later on if required.
+
+Thanks,
+Moritz
+
+On Tue, Jul 28, 2015 at 12:44 AM, Michal Simek <michal.simek@xilinx.com=
+> wrote:
+> On 07/28/2015 08:59 AM, Nicolas Ferre wrote:
+>> Le 28/07/2015 07:03, Moritz Fischer a =C3=A9crit :
+>>> Hi Michal,
+>>>
+>>> I agree we need to be careful with changing the bindings.
+>>>
+>>> On Sun, Jul 26, 2015 at 11:56 PM, Michal Simek <monstr@monstr.eu> w=
+rote:
+>>>> Hi Moritz,
+>>>>
+>>>> On 07/25/2015 02:21 AM, Moritz Fischer wrote:
+>>>>> Signed-off-by: Moritz Fischer <moritz.fischer@ettus.com>
+>>>>> ---
+>>>>>  arch/arm/boot/dts/zynq-7000.dtsi            | 43 ++++++++++++-
+>>>>
+>>>> This patch is nice in general but every change in binding should b=
+e
+>>>> discussed separately. There is also necessary to wire them up in t=
+he
+>>>> driver to do action. That's why I think that will be the best just=
+ to
+>>>> add the code to slcr and keep others untouched.
+>>>
+>>> Ok, just to clarify: You'd suggest to just add the rstc as child no=
+de
+>>> to the slcr,
+>>> and leave the other nodes untouched?
+>>>
+>>>>
+>>>> For example MACB/GEM is one example. Adding names to this node and
+>>>> extending driver to work properly with reset means that all others=
+ MACB
+>>>> users will be affected. Definitely this patch should be ACKed by N=
+icolas.
+>>
+>> Actually, I don't know why a reset property should be added to the m=
+acb
+>> driver...
 >
-> Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
+> I expect resetting IP core can solve something. But as I said it is
+> questionable if IP should be reset when driver is probed. Definitely =
+on
+> Zynq there is a support for it. I am not aware about any problem whic=
+h
+> requires IP to be reset.
 >
-> Changelog:
->  - None, new patch
+> Thanks,
+> Michal
 >
->  Documentation/devicetree/bindings/power/opp-st.txt | 76 ++++++++++++++++++++++
->  1 file changed, 76 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/opp-st.txt
->
-> diff --git a/Documentation/devicetree/bindings/power/opp-st.txt b/Documentation/devicetree/bindings/power/opp-st.txt
-> new file mode 100644
-> index 0000000..6eb2a91
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/opp-st.txt
-> @@ -0,0 +1,76 @@
-> +STMicroelectronics OPP (Operating Performance Points) Bindings
-> +--------------------------------------------------------------
-> +
-> +Frequency Scaling only
-> +----------------------
-> +
-> +Located in CPU's node:
-> +
-> +- operating-points     : [See: ./opp.txt]
-> +
-> +Example [safe]
-> +--------------
-> +
-> +cpus {
-> +       cpu@0 {
-> +                                /* kHz     uV   */
-> +               operating-points = <1500000 0
-> +                                   1200000 0
-> +                                   800000  0
-> +                                   500000  0>;
-> +       };
-> +};
-> +
-> +Dynamic Voltage and Frequency Scaling (DVFS)
-> +--------------------------------------------
-> +
-> +Located in 'cpu0-opp-list' node [to be provided ONLY by the bootloader]:
-> +
-> +- compatible           : Should be "operating-points-v2-sti"
-> +- opp{1..N}            : Each 'oppX' subnode will contain the following properties:
-> + - opp-hz              : CPU frequency [Hz] for this OPP [See: ./opp.txt]
-> + - st,avs              : List of available voltages [uV] indexed by process code
-
-Add a unit suffix (-microvolt).
-
-> + - st,cuts             : Cut version this OPP is suitable for [0xFF means ALL]
-> + - st,substrate                : Substrate version this OPP is suitable for [0xFF means ALL]
-
-How about not present means all?
-
-> +- st,syscfg            : Phandle to Major number register
-> +                               First cell: offset to major number
-> +- st,syscfg-eng                : Phandle to Minor number and Pcode registers
-> +                               First cell: offset to process code
-> +                               Second cell: offset to minor number
-
-Would the proposed nvmem binding work for this?
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
