@@ -1,141 +1,216 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v5 1/5] ARM/PCI: remove align_resource in pci_sys_data
-Date: Tue, 28 Jul 2015 18:44:06 +0100
-Message-ID: <20150728174406.GB19909@red-moon>
-References: <1437794486-21134-1-git-send-email-wangzhou1@hisilicon.com>
- <1437794486-21134-2-git-send-email-wangzhou1@hisilicon.com>
- <55B72C7E.1020102@hisilicon.com>
+From: "R, Vignesh" <vigneshr-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH] of/irq: introduce of_has_named_irqs helper
+Date: Tue, 28 Jul 2015 23:16:44 +0530
+Message-ID: <55B7C004.9090103@ti.com>
+References: <20150724182655.GA22007@dtor-ws>
+ <CAL_Jsq+JGpNBwS3HF1fF4HdefRCwhniaYCm5G4_WAnio7t-1og@mail.gmail.com>
+ <20150724192619.GA33241@dtor-ws> <20150724201613.GB33241@dtor-ws>
+ <55B78268.4040603@ti.com> <20150728172336.GC19610@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <55B72C7E.1020102@hisilicon.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Zhou Wang <wangzhou1@hisilicon.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jg1.han@samsung.com>, Pratyush Anand <pratyush.anand@gmail.com>, Arnd Bergmann <arnd@arndb.de>, "gabriele.paoloni@huawei.com" <gabriele.paoloni@huawei.com>, James Morse <James.Morse@arm.com>, Liviu Dudau <Liviu.Dudau@arm.com>, "thomas.petazzoni@free-electrons.com" <thomas.petazzoni@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, "robh@kernel.org" <robh@kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "yuanzhichang@hisilicon.com" <yuanzhichang@hisilicon.com>, "zhudacai@hisilicon.com" <zhudacai@hisilicon.com>, "zhangjukuo@huawei.com" <zhangjukuo@huawei.com>, "qiuzhenfa@hisilicon.com" <qiuzhenfa@hisilicon.com>, "liudongdong3@huawei.com" <liudongdong3@h>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150728172336.GC19610@dtor-ws>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-[CC'ing RMK]
+Hi,
 
-On Tue, Jul 28, 2015 at 08:17:18AM +0100, Zhou Wang wrote:
-> On 2015/7/25 11:21, Zhou Wang wrote:
-> > From: Gabriele Paoloni <gabriele.paoloni@huawei.com>
-> > 
-> > This patch is needed in order to unify the PCIe designware framework for ARM and
-> > ARM64 architectures. In the PCIe designware unification process we are calling
-> > pci_create_root_bus() passing a "sysdata" parameter that is the same for both
-> > ARM and ARM64 and is of type "struct pcie_port*". In the ARM case this will
-> > cause a problem with the function pcibios_align_resource(); in fact this will
-> > cast "dev->sysdata" to "struct pci_sys_data*", whereas designware had passed a
-> > "struct pcie_port*" pointer.
-> > 
-> > This patch solves the issue by removing "align_resource" from "pci_sys_data"
-> > struct and defining a static global function pointer in "bios32.c"
-> > 
-> > Signed-off-by: Gabriele Paoloni <gabriele.paoloni@huawei.com>
-> 
-> Hi Arnd and Rob,
-> 
-> What is your opinion about this patch? Gabriele adds a global pointer in bios32.c
-> to store align_resource, so we could remove sys->align_resource in pcibios_align_resource.
-> 
-> As Lorenzo mentioned in v4 series, this is a temporary solution before moving
-> align_resource to host bridge structure.
-> 
-> Any comments welcome.
+On 7/28/2015 10:53 PM, Dmitry Torokhov wrote:
+> On Tue, Jul 28, 2015 at 06:53:52PM +0530, Vignesh R wrote:
+>> Hi Dmitry,
+>>
+>> On 07/25/2015 01:46 AM, Dmitry Torokhov wrote:
+>>> On Fri, Jul 24, 2015 at 12:26:19PM -0700, Dmitry Torokhov wrote:
+>>>> On Fri, Jul 24, 2015 at 02:14:57PM -0500, Rob Herring wrote:
+>>>>> On Fri, Jul 24, 2015 at 1:26 PM, Dmitry Torokhov
+>>>>> <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>>>> Sometimes drivers might wish to transition from index-based to named
+>>>>>> interrupt descriptions. To aid in decision-making when parsing device
+>>>>>> tree data let's provide a helper that will indicate the scheme that is
+>>>>>> being used.
+>>>>>
+>>>>> Generally, IRQs are retrieved by platform_get_irq or
+>>>>> platform_get_irq_byname. Drivers should not call the of_irq_*
+>>>>> functions directly in most cases.
+>>>>
+>>>> That would be true for platform drivers, but not all devices are
+>>>> platform devices.
+>>>>
+>>>>>
+>>>>>>
+>>>>>> Signed-off-by: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>>>> ---
+>>>>>>
+>>>>>> The intent is to it like this:
+>>>>>>
+>>>>>>         if (of_has_named_irqs(np) {
+>>>>>>                 /* Wake IRQ is optional */
+>>>>>>                 dev->wakeirq = of_irq_get_byname(np, "wakeup");
+>>>>>>                 if (dev->wakeirq < 0 && dev->wakeirq != -ENODATA)
+>>>>>>                         return dev->wakeirq;
+>>>>>>         }
+>>>>>
+>>>>> of_irq_get_byname will already return an error if the property is not
+>>>>> present. Use that.
+>>>>
+>>>> I do not like that it returns -EINVAL when property is missing, can we
+>>>> change it to return -ENODATA (so it is the same as when the property is
+>>>> defined but such name is missing)?
+>>>
+>>> So here is what I had in mind.. It is based on recent patch by Vignesh
+>>> for pixcir touchscreen, but I think it should be made available to all
+>>> I2C devices. Completely untested at the moment.
+>>>
+>>
+>> Thanks for the patch! I tested this on am437x-gp-evm and the
+>> suspend/resume worked fine (below patch + $subject patch). I was able to
+>> wake the system from low power state using touchscreen. Also verified
+>> module insertion and removal. One comment though, please see below.
+>>
+>>> ---
+>>>  drivers/i2c/i2c-core.c |   43 +++++++++++++++++++++++++++++++++++++------
+>>>  1 file changed, 37 insertions(+), 6 deletions(-)
+>>>
+>>> diff --git a/drivers/i2c/i2c-core.c b/drivers/i2c/i2c-core.c
+>>> index e6d4935..3971461 100644
+>>> --- a/drivers/i2c/i2c-core.c
+>>> +++ b/drivers/i2c/i2c-core.c
+>>> @@ -47,6 +47,7 @@
+>>>  #include <linux/rwsem.h>
+>>>  #include <linux/pm_runtime.h>
+>>>  #include <linux/pm_domain.h>
+>>> +#include <linux/pm_wakeirq.h>
+>>>  #include <linux/acpi.h>
+>>>  #include <linux/jump_label.h>
+>>>  #include <asm/uaccess.h>
+>>> @@ -631,6 +632,7 @@ static int i2c_device_probe(struct device *dev)
+>>>  {
+>>>  	struct i2c_client	*client = i2c_verify_client(dev);
+>>>  	struct i2c_driver	*driver;
+>>> +	int wakeirq = 0;
+>>>  	int status;
+>>>  
+>>>  	if (!client)
+>>> @@ -639,11 +641,13 @@ static int i2c_device_probe(struct device *dev)
+>>>  	if (!client->irq) {
+>>>  		int irq = -ENOENT;
+>>>  
+>>> -		if (dev->of_node)
+>>> -			irq = of_irq_get(dev->of_node, 0);
+>>> -		else if (ACPI_COMPANION(dev))
+>>> +		if (dev->of_node) {
+>>> +			irq = of_has_named_irqs(dev->of_node) ?
+>>> +				of_irq_get_byname(dev->of_node, "irq") :
+>>> +				of_irq_get(dev->of_node, 0);
+>>> +		} else if (ACPI_COMPANION(dev)) {
+>>>  			irq = acpi_dev_gpio_irq_get(ACPI_COMPANION(dev), 0);
+>>> -
+>>> +		}
+>>>  		if (irq == -EPROBE_DEFER)
+>>>  			return irq;
+>>>  		if (irq < 0)
+>>> @@ -652,6 +656,15 @@ static int i2c_device_probe(struct device *dev)
+>>>  		client->irq = irq;
+>>>  	}
+>>>  
+>>> +	if (dev->of_node && of_has_named_irqs(dev->of_node)) {
+>>> +		wakeirq = of_irq_get_byname(dev->of_node, "wakeup");
+>>> +		if (wakeirq < 0) {
+>>> +			if (wakeirq != -ENODATA)
+>>> +				return wakeirq;
+>>> +			wakeirq = 0;
+>>> +		}
+>>> +	}
+>>> +
+>>>  	driver = to_i2c_driver(dev->driver);
+>>>  	if (!driver->probe || !driver->id_table)
+>>>  		return -ENODEV;diff --git a/drivers/input/touchscreen/pixcir_i2c_ts.c b/drivers/input/touchscreen/pixcir_i2c_ts.c
+index 8f3e243a62bf..6bd1d1ca9883 100644
+--- a/drivers/input/touchscreen/pixcir_i2c_ts.c
++++ b/drivers/input/touchscreen/pixcir_i2c_ts.c
+@@ -365,7 +365,6 @@ static int __maybe_unused
+pixcir_i2c_ts_suspend(struct device *dev)
+                        }
+                }
 
-The align_resource() pointer is just used in drivers/pci/host/pci-mvebu.c,
-I would like the pci-mvebu.c maintainers to comment on this and test it, I
-do not expect it to create any issue and might be a temporary solution to
-make progress on ARM/ARM64 consolidation, it is a blocking point.
+-               enable_irq_wake(client->irq);
+        } else if (input->users) {
+                ret = pixcir_stop(ts);
+        }
+@@ -386,7 +385,6 @@ static int __maybe_unused
+pixcir_i2c_ts_resume(struct device *dev)
+        mutex_lock(&input->mutex);
 
-It would be good if Russell can have a look too, I do not see what
-issue this can trigger given that is just used in:
+        if (device_may_wakeup(&client->dev)) {
+-               disable_irq_wake(client->irq);
 
-drivers/pci/host/pci-mvebu.c
+                if (!input->users) {
+                        ret = pixcir_stop(ts);
+@@ -464,7 +462,7 @@ static int pixcir_i2c_ts_probe(struct i2c_client
+*client,
+        struct pixcir_i2c_ts_data *tsdata;
+        struct input_dev *input;
+        int error;
+-
++printk("PROBING PIXCIR\n");
+        if (np && !pdata) {
+                pdata = pixcir_parse_dt(dev);
+                if (IS_ERR(pdata))
+@@ -562,14 +560,6 @@ static int pixcir_i2c_ts_probe(struct i2c_client
+*client,
+                return error;
 
-and a global pointer (not saying it is elegant, but it should work)
-might be ok.
+        i2c_set_clientdata(client, tsdata);
+-       device_init_wakeup(&client->dev, 1);
+-
+-       return 0;
+-}
+-
+-static int pixcir_i2c_ts_remove(struct i2c_client *client)
+-{
+-       device_init_wakeup(&client->dev, 0);
 
-So yes, comments very welcome.
-
-Thanks,
-Lorenzo
-
+        return 0;
+ }
+@@ -608,7 +598,6 @@ static struct i2c_driver pixcir_i2c_ts_driver = {
+                .of_match_table = of_match_ptr(pixcir_of_match),
+        },
+        .probe          = pixcir_i2c_ts_probe,
+-       .remove         = pixcir_i2c_ts_remove,
+        .id_table       = pixcir_i2c_ts_id,
+ };
+>>> @@ -659,20 +672,34 @@ static int i2c_device_probe(struct device *dev)
+>>>  	if y i2c(!device_can_wakeup(&client->dev))
+>>>  		device_init_wakeup(&client->dev,
+>>>  					client->flags & I2C_CLIENT_WAKE);
+>>> +
+>>> +	status = wakeirq > 0 ?
+>>> +			dev_pm_set_dedicated_wake_irq(dev, wakeirq) :
+>>> +			(client->irq > 0 ?
+>>> +				dev_pm_set_wake_irq(dev, client->irq) : 0);
+>>
+>> Above code tries to register wakeirq irrespective of whether the device
+>> is specified as wakeup-source in the dt or not. Hence, I see warn
+>> messages from every i2c device that has irq line but hasn't declared
+>> itself as wakeup-source:
+>> For example tps is on i2c:
+>> [    1.961613] tps65218 0-0024: forgot to call call device_init_wakeup?
+>> [    1.968340] tps65218 0-0024: failed to set up wakeup irq
+>>
+>> May be you can register wakeup-source only if I2C_CLIENT_WAKE flag is
+>> set in client->flags?
 > 
-> Thanks,
-> Zhou
+> Makes sense, I'll prepare a new version.
 > 
-> > ---
-> >  arch/arm/include/asm/mach/pci.h |  5 -----
-> >  arch/arm/kernel/bios32.c        | 12 ++++++++----
-> >  2 files changed, 8 insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/arch/arm/include/asm/mach/pci.h b/arch/arm/include/asm/mach/pci.h
-> > index 28b9bb3..8a4e4de 100644
-> > --- a/arch/arm/include/asm/mach/pci.h
-> > +++ b/arch/arm/include/asm/mach/pci.h
-> > @@ -58,11 +58,6 @@ struct pci_sys_data {
-> >  					/* IRQ mapping				*/
-> >  	int		(*map_irq)(const struct pci_dev *, u8, u8);
-> >  					/* Resource alignement requirements	*/
-> > -	resource_size_t (*align_resource)(struct pci_dev *dev,
-> > -					  const struct resource *res,
-> > -					  resource_size_t start,
-> > -					  resource_size_t size,
-> > -					  resource_size_t align);
-> >  	void		*private_data;	/* platform controller private data	*/
-> >  };
-> >  
-> > diff --git a/arch/arm/kernel/bios32.c b/arch/arm/kernel/bios32.c
-> > index fcbbbb1..4cdc64d 100644
-> > --- a/arch/arm/kernel/bios32.c
-> > +++ b/arch/arm/kernel/bios32.c
-> > @@ -17,6 +17,11 @@
-> >  #include <asm/mach/pci.h>
-> >  
-> >  static int debug_pci;
-> > +static resource_size_t (*align_resource)(struct pci_dev *dev,
-> > +		  const struct resource *res,
-> > +		  resource_size_t start,
-> > +		  resource_size_t size,
-> > +		  resource_size_t align) = NULL;
-> >  
-> >  #ifdef CONFIG_PCI_MSI
-> >  struct msi_controller *pcibios_msi_controller(struct pci_dev *dev)
-> > @@ -468,7 +473,7 @@ static void pcibios_init_hw(struct device *parent, struct hw_pci *hw,
-> >  		sys->busnr   = busnr;
-> >  		sys->swizzle = hw->swizzle;
-> >  		sys->map_irq = hw->map_irq;
-> > -		sys->align_resource = hw->align_resource;
-> > +		align_resource = hw->align_resource;
-> >  		INIT_LIST_HEAD(&sys->resources);
-> >  
-> >  		if (hw->private_data)
-> > @@ -589,7 +594,6 @@ resource_size_t pcibios_align_resource(void *data, const struct resource *res,
-> >  				resource_size_t size, resource_size_t align)
-> >  {
-> >  	struct pci_dev *dev = data;
-> > -	struct pci_sys_data *sys = dev->sysdata;
-> >  	resource_size_t start = res->start;
-> >  
-> >  	if (res->flags & IORESOURCE_IO && start & 0x300)
-> > @@ -597,8 +601,8 @@ resource_size_t pcibios_align_resource(void *data, const struct resource *res,
-> >  
-> >  	start = (start + align - 1) & ~(align - 1);
-> >  
-> > -	if (sys->align_resource)
-> > -		return sys->align_resource(dev, res, start, size, align);
-> > +	if (align_resource)
-> > +		return align_resource(dev, res, start, size, align);
-> >  
-> >  	return start;
-> >  }
-> > 
-> 
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+> Just to confirm: do you see any issues with these 2 patches if you do
+> not modify the drivers to drop calls enable_irq_wake() from them?
+
+No, I didn't test w/o dropping enable_irq_wake() calls. I will do that
+tomo. Is this to verify that these 2 patches can be added w/o dropping
+enable_irq_wake() from other i2c drivers currently using them?
+
+Regards
+Vignesh
