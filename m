@@ -1,135 +1,118 @@
-From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Subject: Re: [PATCH v13 3/3] ASoC: tda998x: add a codec to the HDMI
- transmitter
-Date: Tue, 28 Jul 2015 16:39:12 +0200
-Message-ID: <20150728163912.71789e31@armhf>
-References: <cover.1437397270.git.moinejf@free.fr>
-	<e036c88aa945e72b40ec965c9358dacf564e79f2.1437397272.git.moinejf@free.fr>
-	<20150720180606.GL11162@sirena.org.uk>
-	<20150728121945.560f82a5@armhf>
-	<20150728102410.GD11162@sirena.org.uk>
-	<20150728152329.02668865@armhf>
-	<20150728135358.GK7557@n2100.arm.linux.org.uk>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] dt: power: st: Provide bindings for ST's OPPs
+Date: Tue, 28 Jul 2015 15:39:19 +0100
+Message-ID: <20150728143919.GW14943@x1>
+References: <1438010430-5802-1-git-send-email-lee.jones@linaro.org>
+ <1438010430-5802-2-git-send-email-lee.jones@linaro.org>
+ <CAL_JsqL=e+fL_67_GPKjt_7wJ81GfFx7m9gjxmBDvW_JBXWpfQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150728135358.GK7557-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqL=e+fL_67_GPKjt_7wJ81GfFx7m9gjxmBDvW_JBXWpfQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Jackson <Andrew.Jackson-5wv7dgnIgG8@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, ajitpal.singh-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 28 Jul 2015 14:53:58 +0100
-Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
+On Tue, 28 Jul 2015, Rob Herring wrote:
 
-> On Tue, Jul 28, 2015 at 03:23:29PM +0200, Jean-Francois Moine wrote:
-> > The EDID arrives in the DRM connector when video starts. The built =
-ELD
-> > may be stored either in the connector itself (default), in the enco=
-der
-> > (TDA998x device) or in some DRM/encoder/connector private data.
+> On Mon, Jul 27, 2015 at 10:20 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wr=
+ote:
+> > These OPPs are used in ST's CPUFreq implementation.
+> >
+> > Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > ---
+> >
+> > Changelog:
+> >  - None, new patch
+> >
+> >  Documentation/devicetree/bindings/power/opp-st.txt | 76 ++++++++++=
+++++++++++++
+> >  1 file changed, 76 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/power/opp-st.=
+txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/power/opp-st.txt b/D=
+ocumentation/devicetree/bindings/power/opp-st.txt
+> > new file mode 100644
+> > index 0000000..6eb2a91
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/power/opp-st.txt
+> > @@ -0,0 +1,76 @@
+> > +STMicroelectronics OPP (Operating Performance Points) Bindings
+> > +--------------------------------------------------------------
+> > +
+> > +Frequency Scaling only
+> > +----------------------
+> > +
+> > +Located in CPU's node:
+> > +
+> > +- operating-points     : [See: ./opp.txt]
+> > +
+> > +Example [safe]
+> > +--------------
+> > +
+> > +cpus {
+> > +       cpu@0 {
+> > +                                /* kHz     uV   */
+> > +               operating-points =3D <1500000 0
+> > +                                   1200000 0
+> > +                                   800000  0
+> > +                                   500000  0>;
+> > +       };
+> > +};
+> > +
+> > +Dynamic Voltage and Frequency Scaling (DVFS)
+> > +--------------------------------------------
+> > +
+> > +Located in 'cpu0-opp-list' node [to be provided ONLY by the bootlo=
+ader]:
+> > +
+> > +- compatible           : Should be "operating-points-v2-sti"
+> > +- opp{1..N}            : Each 'oppX' subnode will contain the foll=
+owing properties:
+> > + - opp-hz              : CPU frequency [Hz] for this OPP [See: ./o=
+pp.txt]
+> > + - st,avs              : List of available voltages [uV] indexed b=
+y process code
 >=20
-> The ELD is stored in the DRM connector, and there _should_ be a syste=
-m
-> of locking which ensures that you can get at that information safely.
+> Add a unit suffix (-microvolt).
+
+Sure.
+
+> > + - st,cuts             : Cut version this OPP is suitable for [0xF=
+=46 means ALL]
+> > + - st,substrate                : Substrate version this OPP is sui=
+table for [0xFF means ALL]
 >=20
-> The ELD is only updated when the connector's get_modes() method is ca=
-lled,
-> and the driver itself calls drm_edid_to_eld().  This all happens unde=
-r
-> the drm_device's struct_mutex.
+> How about not present means all?
+
+I think that would be an unsafe assumption.  If it's forgotten, then
+we may try to run an invalid/dangerous voltage/frequency combination.
+
+I'd really like 'all' to be defined an deliberate.
+
+> > +- st,syscfg            : Phandle to Major number register
+> > +                               First cell: offset to major number
+> > +- st,syscfg-eng                : Phandle to Minor number and Pcode=
+ registers
+> > +                               First cell: offset to process code
+> > +                               Second cell: offset to minor number
 >=20
-> So, to safely read the ELD from outside DRM, you need to take the top=
--level
-> drm_device's struct_mutex.  That could be fraught, as that's quite a =
-big
-> lock, so an alternative would be to introduce an 'eld' lock to the dr=
-iver,
-> which protects the call to drm_edid_to_eld() and the reading of the E=
-LD.
+> Would the proposed nvmem binding work for this?
 
-I think that my solution should work:
-- the CODEC uses a pointer in the driver private data to the ELD.
-- when get_modes() is called, this pointer is reset to NULL.
-  (no audio streaming is permitted).
-- this function reads the EDID and this asks for hardware exchanges
-  with the HDMI device.
-- the EDID is then translated to ELD and the ELD pointer is set
-  (audio streaming is permitted again).
-
-Then, if audio streaming is started before get_modes() is called, the
-memory treatment of the ELD may be safely done during the harware
-exchanges.
-
-> However, that doesn't solve the problem of passing the data to an aud=
-io
-> driver.  What's needed there is a notification system which allows a =
-video
-> driver to broadcast HDMI events such as:
->=20
-> * connected
-> * new EDID available
-> * new ELD available
-> * disconnected
-
-My patch just wants to offer basic audio to the TDA998x.
-Especially, the display device state is of no importance: audio
-streaming may continue while there is no connected device.
-
-> With such a system, different components driving the facilities of a =
-HDMI
-> connector can make decisions on what to do - which not only includes =
-things
-> like the audio driver, but also a driver for the CEC interface (which=
- also
-> needs to see the EDID to get at its "address".)  This can be done in =
-a safe
-> manner as the HDMI video driver would have control over the generatio=
-n of
-> these messages.
->=20
-> The point that Mark is trying to get you to see is that this problem =
-is
-> not specific to TDA998x.  The same problem exists for many other HDMI
-> interfaces (except maybe Intel's i9x5/HDA stuff which has a hardware
-> mechanism of passing the ELD data from the video driver, through the
-> hardware to the audio driver.)
-
-I know that, but I don't know enough about all the DRM and ASoC drivers
-to propose a global mechanism.
-
-> It needs solving in a driver-agnostic way, and the normal way that ha=
-ppens
-> is when someone comes along, wanting to add support in that area, the=
-y get
-> to do the hard work to propose that infrastructure.
-
-OK. I'll stop here.
-
-> > You may note that, in DRM, there is no relation between the encoder=
- and
-> > the connector except at video startup time, and no relation between=
- the
-> > DRM connector and the audio CODEC (no CODEC information is returned=
- on
-> > CODEC creation and the CODEC has no private data).
->=20
-> In the case of the TDA998x, there is a 1:1 fixed relationship between=
- the
-> connector and the encoder.  The connector part can't be used with any=
- other
-> encoder, and the encoder part can't be used with any other connector.=
-  The
-> same is true of many other HDMI implementations (such as the Synopsis
-> Designware HDMI interface found on iMX6 and Rockchip.)
-
-But there is no direct link (pointer) between the encoder and the
-connector.
+We already use sysconf for all of this type of stuff, as this
+information is contained in ST's Sysconf banks.  Moving over to a new
+API would be a huge move and would require lots of planning
+discussions with ST.
 
 --=20
-Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
-Jef		|		http://moinejf.free.fr/
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" i=
 n
