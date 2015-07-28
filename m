@@ -1,66 +1,30 @@
-From: Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: How-to: Uniquely identify a DT node in the driver?
-Date: Tue, 28 Jul 2015 13:56:41 -0600
-Message-ID: <20150728195641.GD51847@linaro.org>
-References: <20150728193833.GC51847@linaro.org>
+From: Andy Gross <agross@codeaurora.org>
+Subject: Re: [PATCH v2 1/3] ARM: dts: apq8064: remove temporary fixed
+ regulator for mmc
+Date: Tue, 28 Jul 2015 15:00:53 -0500
+Message-ID: <20150728200053.GB27517@qualcomm.com>
+References: <1438071116-30065-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1438071171-30108-1-git-send-email-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20150728193833.GC51847-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1438071171-30108-1-git-send-email-srinivas.kandagatla@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 28 2015 at 13:38 -0600, Lina Iyer wrote:
->Hello,
->
->I am looking to find a way to uniquely identify a device in the driver.
->Here is an example -
->
->	big: power-controller@1 {
+On Tue, Jul 28, 2015 at 09:12:51AM +0100, Srinivas Kandagatla wrote:
+> This patch removes temporary fixed regluator use for mmc.
+> Board files should use the regulators which are wiredup appropriately.
+> 
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
 
-@1 is probably not a good example here. @1 could as well be a SoC
-specific phy address that the driver may not really care about.
+Applied.  Thanks!
 
->		compatible = "soc,foo";
->		...
->	};
->
->	little: power-controller@2 {
->		compatible = "soc,foo";
->		...
->	};
->
->
->In the driver for the power-controller foo.c, would like to do -
->
->	struct xyz {
->		const char *name;
->		...
->	};
->
->	static struct xyz a = {
->		.name = "big"; // To be associated with big device
->		...
->	};
->
->	static struct xyz b = {
->		.name = "little"; // To be associated with little device
->		...
->	};
->
->What would be the best way to associate the power-controller devices 'big'
->and 'little' with 'a' and 'b' respectively? A string comparison would be
->ideal but possibly can work with other ways.
->
->I could think of adding compatibles to achieve this, but was hoping to
->find something more elegant and appropriate. Or, is compatible the
->recommended way to uniquely identify devices by the driver?
->
->Thanks,
->Lina
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
