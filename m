@@ -1,51 +1,57 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH V3 1/3] mfd: da9062: Support for the DA9063 OnKey in the
- DA9062 core
-Date: Tue, 28 Jul 2015 09:42:07 +0100
-Message-ID: <20150728084207.GO14943@x1>
-References: <cover.1437668261.git.stwiss.opensource@diasemi.com>
- <983c3fe61ca732985f70c7d77bdb146860daf467.1437668261.git.stwiss.opensource@diasemi.com>
+From: Vignesh R <vigneshr@ti.com>
+Subject: [RFC PATCH 0/5] Add memory mapped read support for TI QSPI.
+Date: Tue, 28 Jul 2015 14:11:11 +0530
+Message-ID: <1438072876-16338-1-git-send-email-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <983c3fe61ca732985f70c7d77bdb146860daf467.1437668261.git.stwiss.opensource@diasemi.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: S Twiss <stwiss.opensource@diasemi.com>
-Cc: DEVICETREE <devicetree@vger.kernel.org>, LINUXINPUT <linux-input@vger.kernel.org>, LINUXKERNEL <linux-kernel@vger.kernel.org>, RTCLINUX <rtc-linux@googlegroups.com>, Samuel Ortiz <sameo@linux.intel.com>, David Dajun Chen <david.chen@diasemi.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <support.opensource@diasemi.com>
+To: Mark Brown <broonie@kernel.org>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>
+Cc: Huang Shijie <b32955@freescale.com>, Vignesh R <vigneshr@ti.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 23 Jul 2015, S Twiss wrote:
 
-> From: S Twiss <stwiss.opensource@diasemi.com>
->=20
-> Add MFD core driver support for a OnKey component
->=20
-> - MFD core adds the resource da9062_onkey_resources[] for the OnKey
-> - An appropriate value has been added into mfd_cell da9062_devs[] to
->   support component .name =3D "da9062-onkey" and
->   .of_compatible  =3D "dlg,da9062-onkey"
->=20
-> Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
-> Acked-by: Lee Jones <lee.jones@linaro.org>
->=20
-> ---
-> Changes in V3:
->  - Added Ack from Lee Jones
-> Changes in V2:
->  - No change
->=20
-> This patch applies against linux-next and next-20150708=20
->=20
->=20
->  drivers/mfd/da9062-core.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
+This patch series adds support for memory mapped reads for TI QSPI
+driver.
 
-Applied, thanks.
+TI QSPI controller has memory mapped port (SFI translator interface [1])
+through which SPI flash memories can be read using memcpy call. SFI
+translator takes care of generating appropriate SPI signals to read data
+from flash. This interface works only with SPI flash memories and cannot
+be used with other SPI devices. To use memory mapped port, the
+controller is switched to memory mapped interface by writing to
+QSPI_SPI_SWITCH_REG. The read_opcode, read mode, dummy bytes are set in
+QSPI_SPI_SETUPx_REG. Once switched, the SPI flash is available to SoC to
+read at specific address. This interface is disabled once memory mapped
+read is complete. For write, erase and interaction with non-flash SPI
+devices normal SPI interface is used. 
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+The m25p80 driver sets use_mmap_read flag in spi-message struct passed
+to spi-ti-qspi so as to indicate the read request is from mtd layer.
+spi-ti-qspi driver switches to memory mapped mode and does memcpy based
+on use_mmap_read flag.
+
+The read performace increased from ~100kB/s to ~2.5MB/s on DRA74 EVM.
+
+Tested on DRA74 EVM with spansion S25FL256S flash.
+Tested on AM437x sk evm with macronix MX66l51235l flash.
+
+[1] http://www.ti.com/lit/ug/spruhz6/spruhz6.pdf Section 24.5.4 QSPI
+Functional Description
+
+Vignesh R (5):
+  spi: introduce flag for memory mapped read
+  spi: spi-ti-qspi: Add memory mapped read support
+  mtd: devices: m25p80: set flag to request memory mapped read
+  ARM: dts: DRA7: Add memory map region entries for qspi
+  ARM: dts: AM4372: Add memory map region entries for qspi
+
+ arch/arm/boot/dts/am4372.dtsi |   4 +-
+ arch/arm/boot/dts/dra7.dtsi   |   6 +-
+ drivers/mtd/devices/m25p80.c  |   3 +
+ drivers/spi/spi-ti-qspi.c     | 129 ++++++++++++++++++++++++++++++++++++++++--
+ include/linux/spi/spi.h       |   3 +
+ 5 files changed, 138 insertions(+), 7 deletions(-)
+
+-- 
+2.4.6
