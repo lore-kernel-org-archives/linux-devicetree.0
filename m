@@ -1,11 +1,13 @@
 From: Ley Foon Tan <lftan@altera.com>
-Subject: [PATCH 0/6] Altera PCIe host controller driver with MSI support
-Date: Tue, 28 Jul 2015 18:45:39 +0800
-Message-ID: <1438080345-7233-1-git-send-email-lftan@altera.com>
+Subject: [PATCH 2/6] arm: mach-socfpga: enable pci support
+Date: Tue, 28 Jul 2015 18:45:41 +0800
+Message-ID: <1438080345-7233-3-git-send-email-lftan@altera.com>
+References: <1438080345-7233-1-git-send-email-lftan@altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1438080345-7233-1-git-send-email-lftan@altera.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,37 +21,32 @@ To: Bjorn Helgaas <bhelgaas@google.com>, Russell King <linux@arm.linux.org.uk>, 
 Cc: devicetree@vger.kernel.org, lftan.linux@gmail.com, linux-doc@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ley Foon Tan <lftan@altera.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for Altera PCIe host controller with MSI feature on
-Altera FPGA device families.
-Note, the MSI component is a soft IP that external from PCIe port.
+Enable CONFIG_ARCH_SUPPORT_MSI and CONFIG_PCI in SOCFPGA platform.
 
-It is based on patch series from Marc Zyngier "Per-device MSI domain &
-platform MSI" [1] to get rid of struct msi_controller.
+Signed-off-by: Ley Foon Tan <lftan@altera.com>
+---
+ arch/arm/mach-socfpga/Kconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-[1]: https://lkml.org/lkml/2015/7/23/172
-
-Ley Foon Tan (6):
-  arm: add msi.h to Kbuild
-  arm: mach-socfpga: enable pci support
-  pci:host: Add Altera PCIe host controller driver
-  pci: altera: Add Altera PCIe MSI driver
-  Documentation: dt-bindings: pci: altera pcie device tree binding
-  MAINTAINERS: Add Altera PCIe driver maintainer
-
- .../devicetree/bindings/pci/altera-pcie-msi.txt    |  27 +
- .../devicetree/bindings/pci/altera-pcie.txt        |  49 ++
- MAINTAINERS                                        |  16 +
- arch/arm/include/asm/Kbuild                        |   1 +
- arch/arm/mach-socfpga/Kconfig                      |   2 +
- drivers/pci/host/Kconfig                           |  16 +
- drivers/pci/host/Makefile                          |   2 +
- drivers/pci/host/pcie-altera-msi.c                 | 318 ++++++++++++
- drivers/pci/host/pcie-altera.c                     | 576 +++++++++++++++++++++
- 9 files changed, 1007 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
- create mode 100644 Documentation/devicetree/bindings/pci/altera-pcie.txt
- create mode 100644 drivers/pci/host/pcie-altera-msi.c
- create mode 100644 drivers/pci/host/pcie-altera.c
-
+diff --git a/arch/arm/mach-socfpga/Kconfig b/arch/arm/mach-socfpga/Kconfig
+index 90efdeb..7ff4576 100644
+--- a/arch/arm/mach-socfpga/Kconfig
++++ b/arch/arm/mach-socfpga/Kconfig
+@@ -1,6 +1,7 @@
+ menuconfig ARCH_SOCFPGA
+ 	bool "Altera SOCFPGA family" if ARCH_MULTI_V7
+ 	select ARCH_SUPPORTS_BIG_ENDIAN
++	select ARCH_SUPPORTS_MSI
+ 	select ARM_AMBA
+ 	select ARM_GIC
+ 	select CACHE_L2X0
+@@ -9,6 +10,7 @@ menuconfig ARCH_SOCFPGA
+ 	select HAVE_ARM_SCU
+ 	select HAVE_ARM_TWD if SMP
+ 	select MFD_SYSCON
++	select PCI
+ 
+ if ARCH_SOCFPGA
+ config SOCFPGA_SUSPEND
 -- 
 1.8.2.1
