@@ -1,82 +1,93 @@
-From: Teresa Remmet <t.remmet@phytec.de>
-Subject: Re: [PATCH 1/2] ARM: dts: Add support for phyCORE-AM335x SoM
-Date: Tue, 28 Jul 2015 10:47:28 +0200
-Message-ID: <1438073248.3649.6.camel@lws-tremmet.phytec.de>
-References: <1437035449-26956-1-git-send-email-t.remmet@phytec.de>
-	 <20150727143444.GD15004@beef> <55B73D6D.2040801@compulab.co.il>
+From: Chen Bough <Haibo.Chen@freescale.com>
+Subject: RE: [PATCH 2/5] Documentation: Detail permitted DT properties for the
+ imx6ul_tsc
+Date: Tue, 28 Jul 2015 08:48:08 +0000
+Message-ID: <BY1PR03MB13888ECA78EBCB233E799BC09A8D0@BY1PR03MB1388.namprd03.prod.outlook.com>
+References: <1437996407-27266-1-git-send-email-haibo.chen@freescale.com>
+ <1437996407-27266-3-git-send-email-haibo.chen@freescale.com>
+ <20150727112547.GE9169@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <55B73D6D.2040801@compulab.co.il>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Igor Grinberg <grinberg@compulab.co.il>, Matt Porter <mporter@konsulko.com>
-Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, =?ISO-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20150727112547.GE9169@leverpostej>
+Content-Language: en-US
+Sender: linux-input-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "hans.verkuil@cisco.com" <hans.verkuil@cisco.com>, "hadess@hadess.net" <hadess@hadess.net>, "mchehab@osg.samsung.com" <mchehab@osg.samsung.com>, "mamlinav@gmail.com" <mamlinav@gmail.com>, "arnd@arndb.de" <arnd@arndb.de>, "jonathar@broadcom.com" <jonathar@broadcom.com>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "christian.gmeiner@gmail.com" <christian.gmeiner@gmail.com>, "scott.liu@emc.com.tw" <scott.liu@emc.com.tw>, "geert@linux-m68k.org" <geert@linux-m68k.org>, benjamin.tissoire
 List-Id: devicetree@vger.kernel.org
 
-Hello Igor,
+Hi Mark,
 
-Am Dienstag, den 28.07.2015, 11:29 +0300 schrieb Igor Grinberg:
-> Hi Matt,
-> 
-> On 07/27/15 17:34, Matt Porter wrote:
-> > On Thu, Jul 16, 2015 at 10:30:48AM +0200, Teresa Remmet wrote:
-> >> phyCORE-AM335x is a SoM (System on Module) containing
-> >> a AM335x SOC. The module can be connected to different
-> >> carrier boards.
-> >>
-> >> Some hardware parts are configurable on the phyCORE-AM335x.
-> >> So they are disabled on default in this som dtsi file.
-> >> They will be enabled in the board dts files, when populated.
-> >>
-> >> * RAM up to 1GiB
-> >> * PMIC
-> >> * NAND flash up to 1GiB
-> >> * Eth PHY on SOM: 1x RMII
-> >> * SPI NOR flash 8MiB (optional)
-> >> * i2c RTC (optional)
-> >> * i2c EEPROM 4kiB (optional)
-> >>
-> >> Signed-off-by: Teresa Remmet <t.remmet@phytec.de>
-> >> ---
-> >>  arch/arm/boot/dts/am335x-phycore-som.dtsi | 368 ++++++++++++++++++++++++++++++
-> >>  1 file changed, 368 insertions(+)
-> >>  create mode 100644 arch/arm/boot/dts/am335x-phycore-som.dtsi
-> >>
-> >> diff --git a/arch/arm/boot/dts/am335x-phycore-som.dtsi b/arch/arm/boot/dts/am335x-phycore-som.dtsi
-> >> new file mode 100644
-> >> index 0000000..4d28fc3
-> >> --- /dev/null
-> >> +++ b/arch/arm/boot/dts/am335x-phycore-som.dtsi
-> 
-> [...]
-> 
-> >> +#include "am33xx.dtsi"
-> >> +
-> >> +/ {
-> >> +	model = "Phytec AM335x phyCORE";
-> >> +	compatible = "phytec,am335x-phycore-som", "ti,am33xx";
-> > 
-> > One minor thing here...wildcards in compatible strings aren't permitted.
-> > However, family compatibles like "ti,am33xx" that came in before this
-> > was enforced are grandfathered. Ideally, the newly introced board/som
-> > specific strings should not propagate that wildcard. i.e. something
-> > like "phytec,am3352-phycore-som" or whatever is the base family part
-> > on these SOMs.
-> > 
-> 
-> I'm not sure this is wild card.
-> I tend to think that it is the real name of the som [1], no?
-> 
-> http://phytec.com/products/system-on-modules/phycore/am335x/
 
-Yes, your right. This is the name of the SoM. The phyCORE may have
-different am335x versions mounted. So there is not the one am3352 or
-am3359 always used.
 
-Regards,
-Teresa
+> -----Original Message-----
+> From: Mark Rutland [mailto:mark.rutland@arm.com]
+> Sent: Monday, July 27, 2015 7:26 PM
+> To: Chen Haibo-B51421
+> Cc: robh+dt@kernel.org; Pawel Moll; ijc+devicetree@hellion.org.uk;
+> galak@codeaurora.org; shawnguo@kernel.org; kernel@pengutronix.de;
+> linux@arm.linux.org.uk; dmitry.torokhov@gmail.com; hans.verkuil@cisco.com;
+> hadess@hadess.net; mchehab@osg.samsung.com; mamlinav@gmail.com;
+> arnd@arndb.de; jonathar@broadcom.com; hdegoede@redhat.com;
+> christian.gmeiner@gmail.com; scott.liu@emc.com.tw; geert@linux-m68k.org;
+> benjamin.tissoires@redhat.com; sebastien.szymanski@armadeus.com;
+> sbranden@broadcom.com; devicetree@vger.kernel.org; linux-
+> kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
+> input@vger.kernel.org
+> Subject: Re: [PATCH 2/5] Documentation: Detail permitted DT properties
+> for the imx6ul_tsc
+> 
+> On Mon, Jul 27, 2015 at 12:26:44PM +0100, Haibo Chen wrote:
+> > Here we apply required documentation for the imx6ul touch screen
+> > controller driver which describe available properties and how to use
+> > them.
+> >
+> > Signed-off-by: Haibo Chen <haibo.chen@freescale.com>
+> > ---
+> >  .../devicetree/bindings/input/touchscreen/imx6ul_tsc.txt   | 14
+> ++++++++++++++
+> >  1 file changed, 14 insertions(+)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/input/touchscreen/imx6ul_tsc.txt
+> >
+> > diff --git
+> > a/Documentation/devicetree/bindings/input/touchscreen/imx6ul_tsc.txt
+> > b/Documentation/devicetree/bindings/input/touchscreen/imx6ul_tsc.txt
+> > new file mode 100644
+> > index 0000000..e34d752
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/input/touchscreen/imx6ul_tsc.t
+> > +++ xt
+> > @@ -0,0 +1,14 @@
+> > +* Freescale i.MX6UL Touch Controller
+> > +
+> > +Required properties:
+> > +- compatible: must be "fsl,imx6ul-tsc"
+> > +
+> 
+> What about all the other properties in the example?
+
+[haibo] I will add other properties in the documentation. 
 
 > 
-> [...]
+> > +Example:
+> > +	&tsc {
+> > +		pinctrl-names = "default";
+> > +		pinctrl-0 = <&pinctrl_tsc>;
+> > +		status = "okay";
+> > +		xnur-gpio = <&gpio1 3 GPIO_ACTIVE_HIGH>;
+> > +		measure_delay_time = <0xfff>;
+> > +		pre_charge_time = <0xffff>;
 > 
+> Thiose underscores should be dashes, and all the properties should be
+> documented.
+
+[haibo] I will change to "measure-delay-time" and "pre-charge-time"
+
+Thanks for your review!
+
+Haibo.
+
+> 
+> Mark.
