@@ -1,36 +1,82 @@
-From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v4 5/7] clk: mediatek: Add subsystem clocks of MT8173
-Date: Tue, 28 Jul 2015 10:14:12 +0800
-Message-ID: <1438049652.17770.1.camel@mtksdaap41>
-References: <1437706925-3222-1-git-send-email-jamesjj.liao@mediatek.com>
-	 <1437706925-3222-6-git-send-email-jamesjj.liao@mediatek.com>
-	 <CAGS+omB6LpttP_67iJsGrgLv6=B28FHq7RGbcRw_LaOd4LzCLQ@mail.gmail.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH v4 1/2] dt: cpufreq: st: Provide bindings for ST's
+ CPUFreq implementation
+Date: Tue, 28 Jul 2015 07:53:08 +0530
+Message-ID: <20150728022308.GA1229@linux>
+References: <1438010430-5802-1-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGS+omB6LpttP_67iJsGrgLv6=B28FHq7RGbcRw_LaOd4LzCLQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Heiko Stubner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1438010430-5802-1-git-send-email-lee.jones@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, rjw@rjwysocki.net, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, ajitpal.singh@st.com, sre@kernel.org, dbaryshkov@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Daniel,
-
-On Fri, 2015-07-24 at 19:18 +0800, Daniel Kurtz wrote:
-> On Fri, Jul 24, 2015 at 11:02 AM, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> > +static const struct mtk_gate_regs cg_regs_4_8_0 = {
+On 27-07-15, 16:20, Lee Jones wrote:
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> ---
 > 
-> All of these regs tables can be __initconst.
+> Changelog:
+>  - Using OPP-v2
+>  - Moved (and linked) a bunch of documentation to ../power/
+> 
+>  .../devicetree/bindings/cpufreq/cpufreq-st.txt     | 40 ++++++++++++++++++++++
+>  1 file changed, 40 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-st.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-st.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-st.txt
+> new file mode 100644
+> index 0000000..79add9d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-st.txt
+> @@ -0,0 +1,40 @@
+> +Binding for ST's CPUFreq driver
+> +===============================
+> +
+> +Frequency Scaling only
+> +----------------------
+> +
+> +Located in CPU's node:
+> +
+> +- operating-points		: [See: ../power/opp.txt]
+> +
+> +Example [safe]
+> +--------------
+> +
+> +cpus {
+> +	cpu@0 {
+> +				 /* kHz     uV   */
+> +		operating-points = <1500000 0
+> +				    1200000 0
+> +				    800000  0
+> +				    500000  0>;
+> +	};
+> +};
+> +
+> +Dynamic Voltage and Frequency Scaling (DVFS)
+> +--------------------------------------------
+> +
+> +Located in CPU's node:
+> +
+> +- operating-points-v2-sti	: [See ../power/opp-st.txt]
+> +
+> +Example [unsafe]
+> +----------------
+> +
+> +cpus {
+> +	cpu@0 {
+> +		operating-points-v2	= <[OPP list phandle]>;
+> +	};
+> +};
+> +
+> +For an example of an OPP list, see ../power/opp-st.txt.
 
-It will be added in next patch.
+I don't think you need this file/patch at all.. It is almost blank and
+doesn't define a binding. And so there is no need to specify this at
+all. Just an OPP binding file is enough.
 
-
-Best regards,
-
-James
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+viresh
