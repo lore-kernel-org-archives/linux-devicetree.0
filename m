@@ -1,28 +1,27 @@
 From: Andy Gross <agross@codeaurora.org>
-Subject: Re: [PATCH v2 1/3] ARM: dts: apq8064: remove temporary fixed
- regulator for mmc
-Date: Tue, 28 Jul 2015 15:00:53 -0500
-Message-ID: <20150728200053.GB27517@qualcomm.com>
+Subject: Re: [PATCH v2 2/3] ARM: dts: ifc6410: add real regulators for sdcc
+ nodes.
+Date: Tue, 28 Jul 2015 15:01:25 -0500
+Message-ID: <20150728200125.GC27517@qualcomm.com>
 References: <1438071116-30065-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1438071171-30108-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1438071178-30150-1-git-send-email-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1438071171-30108-1-git-send-email-srinivas.kandagatla@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
+In-Reply-To: <1438071178-30150-1-git-send-email-srinivas.kandagatla@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: linux-arm-msm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 28, 2015 at 09:12:51AM +0100, Srinivas Kandagatla wrote:
-> This patch removes temporary fixed regluator use for mmc.
-> Board files should use the regulators which are wiredup appropriately.
+On Tue, Jul 28, 2015 at 09:12:58AM +0100, Srinivas Kandagatla wrote:
+> This patch adds real regulators for all the three sdcc nodes.
 > 
 > Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 > ---
 
-Applied.  Thanks!
+Applied.  Thanks
 
 -- 
 Qualcomm Innovation Center, Inc.
