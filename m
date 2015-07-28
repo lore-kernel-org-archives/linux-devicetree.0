@@ -1,140 +1,38 @@
-From: Claudiu Manoil <claudiu.manoil@freescale.com>
-Subject: [PATCH,v3 2/3] ARM: dts: ls1021a: Add the eTSEC controller nodes
-Date: Tue, 28 Jul 2015 17:43:55 +0300
-Message-ID: <1438094636-20421-2-git-send-email-claudiu.manoil@freescale.com>
-References: <20150727142816.GP12927@tiger>
- <1438094636-20421-1-git-send-email-claudiu.manoil@freescale.com>
+From: "Timo Sigurdsson" <public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org>
+Subject: Re: [RFC] ARM: dts: sunxi: Add regulators and
+ board-specific operating points for LeMaker BananaPi
+Date: Tue, 28 Jul 2015 17:01:23 +0200 (CEST)
+Message-ID: <20150728150123.1AAA46C86538@dd34104.kasserver.com>
+References: <1437960486-2809-1-git-send-email-public_timo.s@silentcreek.de> <55B5E6DB.8020009@redhat.com> <20150727123653.36C046C8007E@dd34104.kasserver.com> <55B62A1B.6030601@redhat.com> <CAGb2v65ApKvrj6K+kw43u=0q6=auTsmQjCXhibgZkW+vd5nDqA@mail.gmail.com> <20150728090216.892076C80D94@dd34104.kasserver.com><20150728125545.GC2564@lukather>
+Reply-To: public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1438094636-20421-1-git-send-email-claudiu.manoil@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, shawnguo@kernel.org
-Cc: shawn.guo@linaro.org, galak@codeaurora.org, Alison Wang <alison.wang@freescale.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCSJLSE35MGBBQ5S32WQKGQEO34CTAY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20150728125545.GC2564@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add basic support for all the eTSEC controllers on the
-ls1021a SoC.  Second interrupt group register blocks
-and their corresponding Rx/Tx/Err interrupt sources are
-included as well for each eTSEC node.
+Hi,
 
-Signed-off-by: Alison Wang <alison.wang@freescale.com>
-Signed-off-by: Claudiu Manoil <claudiu.manoil@freescale.com>
----
-v2: various findings, added 2nd interrupt group;
-v3: addressed findings from Shawn Guo -
-    - initial patch split in soc, boards and bindings patches;
-    - removed redundant all zero local-mac-address;
-    - subject prefix;
+Maxime Ripard schrieb am 28.07.2015 14:55:
+>> IMHO for a common maximum opp that's a good approach. But for the lowest
+>> frequency setting, it would seem more logical to me, to raise the voltage
+>> to a point where all boards will run fine with them, unless those boards 
+>> cannot handle the frequency regardless of the higher voltage.
+> 
+> Agreed.
 
- arch/arm/boot/dts/ls1021a.dtsi | 88 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 88 insertions(+)
+Ok, then I will write another patch for this as well, unless Chen-Yu or
+someone else objects.
 
-diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-index 1b306c7..0638cda 100644
---- a/arch/arm/boot/dts/ls1021a.dtsi
-+++ b/arch/arm/boot/dts/ls1021a.dtsi
-@@ -59,6 +59,9 @@
- 		serial3 = &lpuart3;
- 		serial4 = &lpuart4;
- 		serial5 = &lpuart5;
-+		ethernet0 = &enet0;
-+		ethernet1 = &enet1;
-+		ethernet2 = &enet2;
- 		sysclk = &sysclk;
- 	};
- 
-@@ -391,6 +394,91 @@
- 			reg = <0x0 0x2d24000 0x0 0x4000>;
- 		};
- 
-+		enet0: ethernet@2d10000 {
-+			compatible = "fsl,etsec2";
-+			device_type = "network";
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			interrupt-parent = <&gic>;
-+			model = "eTSEC";
-+			fsl,magic-packet;
-+			ranges;
-+
-+			queue-group@2d10000 {
-+				#address-cells = <2>;
-+				#size-cells = <2>;
-+				reg = <0x0 0x2d10000 0x0 0x1000>;
-+				interrupts = <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+
-+			queue-group@2d14000  {
-+				#address-cells = <2>;
-+				#size-cells = <2>;
-+				reg = <0x0 0x2d14000 0x0 0x1000>;
-+				interrupts = <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 149 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+		};
-+
-+		enet1: ethernet@2d50000 {
-+			compatible = "fsl,etsec2";
-+			device_type = "network";
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			interrupt-parent = <&gic>;
-+			model = "eTSEC";
-+			ranges;
-+
-+			queue-group@2d50000  {
-+				#address-cells = <2>;
-+				#size-cells = <2>;
-+				reg = <0x0 0x2d50000 0x0 0x1000>;
-+				interrupts = <GIC_SPI 150 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 152 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+
-+			queue-group@2d54000  {
-+				#address-cells = <2>;
-+				#size-cells = <2>;
-+				reg = <0x0 0x2d54000 0x0 0x1000>;
-+				interrupts = <GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 155 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 156 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+		};
-+
-+		enet2: ethernet@2d90000 {
-+			compatible = "fsl,etsec2";
-+			device_type = "network";
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			interrupt-parent = <&gic>;
-+			model = "eTSEC";
-+			ranges;
-+
-+			queue-group@2d90000  {
-+				#address-cells = <2>;
-+				#size-cells = <2>;
-+				reg = <0x0 0x2d90000 0x0 0x1000>;
-+				interrupts = <GIC_SPI 157 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 158 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 159 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+
-+			queue-group@2d94000  {
-+				#address-cells = <2>;
-+				#size-cells = <2>;
-+				reg = <0x0 0x2d94000 0x0 0x1000>;
-+				interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+		};
-+
- 		usb@8600000 {
- 			compatible = "fsl-usb2-dr-v2.5", "fsl-usb2-dr";
- 			reg = <0x0 0x8600000 0x0 0x1000>;
--- 
-1.7.11.7
+Regards,
+
+Timo
