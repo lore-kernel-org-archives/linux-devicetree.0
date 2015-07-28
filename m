@@ -1,143 +1,37 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v4 2/2] dt: power: st: Provide bindings for ST's OPPs
-Date: Tue, 28 Jul 2015 15:55:10 -0700
-Message-ID: <20150728225510.GB3159@codeaurora.org>
-References: <1438010430-5802-1-git-send-email-lee.jones@linaro.org>
- <1438010430-5802-2-git-send-email-lee.jones@linaro.org>
- <20150728022936.GB1229@linux>
+From: Stefan Monnier <monnier-CRDzTM1onBSWkKpYnGOUKg@public.gmane.org>
+Subject: Re: [RFC] ARM: dts: sunxi: Add regulators and
+ board-specific operating points for LeMaker BananaPi
+Date: Tue, 28 Jul 2015 19:02:51 -0400
+Message-ID: <jwv7fpjhoqp.fsf-monnier+gmane.comp.hardware.netbook.arm.sunxi@gnu.org>
+References: <1437960486-2809-1-git-send-email-public_timo.s@silentcreek.de>
+	<55B5E6DB.8020009@redhat.com>
+	<20150727123653.36C046C8007E@dd34104.kasserver.com>
+	<55B62A1B.6030601@redhat.com>
+	<CAGb2v65ApKvrj6K+kw43u=0q6=auTsmQjCXhibgZkW+vd5nDqA@mail.gmail.com>
+	<20150728090216.892076C80D94@dd34104.kasserver.com>
+Reply-To: monnier-CRDzTM1onBSWkKpYnGOUKg@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150728022936.GB1229@linux>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Lee Jones <lee.jones@linaro.org>, rob.herring@linaro.org, nm@ti.com, arnd.bergmann@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, rjw@rjwysocki.net, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, ajitpal.singh@st.com, sre@kernel.org, dbaryshkov@gmail.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDMKFH665MBBBMMU4CWQKGQE4IW4XIQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/28, Viresh Kumar wrote:
-> Cc'ing few people (whom I cc'd last time as well :)).
-> 
-> On 27-07-15, 16:20, Lee Jones wrote:
-> > These OPPs are used in ST's CPUFreq implementation.
-> > 
-> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > ---
-> > 
-> > Changelog:
-> >  - None, new patch
-> > 
-> >  Documentation/devicetree/bindings/power/opp-st.txt | 76 ++++++++++++++++++++++
-> >  1 file changed, 76 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/power/opp-st.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/power/opp-st.txt b/Documentation/devicetree/bindings/power/opp-st.txt
-> > new file mode 100644
-> > index 0000000..6eb2a91
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/power/opp-st.txt
-> > @@ -0,0 +1,76 @@
-> > +STMicroelectronics OPP (Operating Performance Points) Bindings
-> > +--------------------------------------------------------------
-> > +
-> > +Frequency Scaling only
-> > +----------------------
-> > +
-> > +Located in CPU's node:
-> > +
-> > +- operating-points	: [See: ./opp.txt]
-> > +
-> > +Example [safe]
-> > +--------------
-> > +
-> > +cpus {
-> > +	cpu@0 {
-> > +				 /* kHz     uV   */
-> > +		operating-points = <1500000 0
-> > +				    1200000 0
-> > +				    800000  0
-> > +				    500000  0>;
-> > +	};
-> > +};
-> > +
-> > +Dynamic Voltage and Frequency Scaling (DVFS)
-> > +--------------------------------------------
-> > +
-> > +Located in 'cpu0-opp-list' node [to be provided ONLY by the bootloader]:
-> > +
-> > +- compatible		: Should be "operating-points-v2-sti"
-> > +- opp{1..N} 		: Each 'oppX' subnode will contain the following properties:
-> 
-> Or should we mention:
-> - opp{1..N} 		: Each 'oppX' subnode shall contain below properties,
->                           over what ./opp.txt defines:
-> 
-> ?
-> 
-> 
-> > + - opp-hz		: CPU frequency [Hz] for this OPP [See: ./opp.txt]
-> > + - st,avs		: List of available voltages [uV] indexed by process code
-> > + - st,cuts		: Cut version this OPP is suitable for [0xFF means ALL]
-> > + - st,substrate		: Substrate version this OPP is suitable for [0xFF means ALL]
-> > +- st,syscfg		: Phandle to Major number register
-> > +				First cell: offset to major number
-> > +- st,syscfg-eng		: Phandle to Minor number and Pcode registers
-> > +				First cell: offset to process code
-> > +				Second cell: offset to minor number
-> > +
-> > +WARNING: The opp{1..N} nodes will be provided by the bootloader.  Do not attempt to
-> > +	 artificially synthesise the opp{1..N} nodes or any of their descendants.
-> > +	 They are very platform specific and may damage the hardware if created
-> > +	 incorrectly.
-> > +
-> > +Example [unsafe]
-> > +----------------
-> > +
-> > +cpus {
-> > +	cpu@0 {
-> > +		operating-points-v2	= <&cpu0_opp_list>;
-> > +	};
-> > +};
-> > +
-> > +/* ############################################################ */
-> > +/* # WARNING: Do not attempt to copy/replicate this node,     # */
-> > +/* #          it is only to be supplied by the bootloader !!! # */
-> > +/* ############################################################ */
-> > +cpu0-opp-list {
-> > +	compatible	= "operating-points-v2-sti";
-> > +	st,syscfg	= <&syscfg [major_offset]>;
-> > +	st,syscfg-eng   = <&syscfg_eng [pcode_offset] [minor_offset]>;
-> > +
-> > +	opp0 {
-> > +		opp-hz		= <1200000000>;
-> > +		st,avs		= <1110 1150 1100 1080 1040 1020 980 930>;
-> > +		st,substrate	= <0xff>;
-> > +		st,cuts		= <0xff>;
-> > +	};
-> > +	opp1 {
-> > +		opp-hz		= <1500000000>;
-> > +		st,avs		= <1200 1200 1200 1200 1170 1140 1100 1070>;
-> > +		st,substrate	= <0xff>;
-> > +		st,cuts		= <0x2>;
-> > +	};
-> > +};
-> 
-> I don't see more problems here, unless we can move some of this to the
-> generic bindings.
-> 
-> @Rob/Stephen: Please respond before it is late :)
-> 
+> IMHO for a common maximum opp that's a good approach. But for the lowest
+> frequency setting, it would seem more logical to me, to raise the voltage
+> to a point where all boards will run fine with them, unless those boards
+> cannot handle the frequency regardless of the higher voltage.
 
-It's interesting to have vendor specific properties like avs,
-cuts, and substrate. That could replace our planned usage of the
-opp-names property where we encode similar information (speed
-bin, revision, etc.) into a string that we look for.
+I generally agre, tho IIRC some measurements seem to indicate that the
+lowest frequency settings did not bring much (if any) reduction in power
+consumption, making them rather useless.
 
-So I wonder why the avs/cut/substrate information can't be
-encoded into the opp name? That would make these properties
-obsolete, given that all they're used for is to pick out the
-correct OPP?
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+        Stefan
