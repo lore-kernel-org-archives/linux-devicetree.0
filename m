@@ -1,111 +1,124 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 8/8] iio: mma8452: add devicetree property to allow all
- pin wirings
-Date: Tue, 28 Jul 2015 10:28:09 +0100
-Message-ID: <20150728092809.GA15213@leverpostej>
-References: <1438006095-26920-1-git-send-email-martink@posteo.de>
- <1438006095-26920-9-git-send-email-martink@posteo.de>
- <20150727142336.GB10821@leverpostej>
- <55B6423C.7030301@posteo.de>
- <20150727173345.GF10821@leverpostej>
- <55B74741.3000408@theobroma-systems.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v7 5/5] clk: dt: Introduce binding for critical clock
+ support
+Date: Tue, 28 Jul 2015 11:32:22 +0200
+Message-ID: <20150728093222.GV2564@lukather>
+References: <1437570255-21049-1-git-send-email-lee.jones@linaro.org>
+ <1437570255-21049-6-git-send-email-lee.jones@linaro.org>
+ <20150727071013.GO2564@lukather>
+ <20150727073149.GV3436@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="6Jy4/gb9ZgnsEOX8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <55B74741.3000408@theobroma-systems.com>
-Content-Language: en-US
+In-Reply-To: <20150727073149.GV3436@x1>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Kepplinger <martin.kepplinger@theobroma-systems.com>
-Cc: Martin Kepplinger <martink@posteo.de>, "jic23@kernel.org" <jic23@kernel.org>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "lars@metafoo.de" <lars@metafoo.de>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "mfuzzey@parkeon.com" <mfuzzey@parkeon.com>, "roberta.dobrescu@gmail.com" <roberta.dobrescu@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "christoph.muellner@theobroma-systems.com" <christoph.muellner@theobroma-systems.com>
+To: Lee Jones <lee.jones@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, mturquette@linaro.org, sboyd@codeaurora.org, devicetree@vger.kernel.org, geert@linux-m68k.org, s.hauer@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 28, 2015 at 10:11:29AM +0100, Martin Kepplinger wrote:
-> 
-> 
-> On 2015-07-27 19:33, Mark Rutland wrote:
-> > On Mon, Jul 27, 2015 at 03:37:48PM +0100, Martin Kepplinger wrote:
-> >> Am 2015-07-27 um 16:23 schrieb Mark Rutland:
-> >>> On Mon, Jul 27, 2015 at 03:08:15PM +0100, Martin Kepplinger wrote:
-> >>>> For the devices supported by the mma8452 driver, two interrupt pins are
-> >>>> available to route the interrupt signals to. By default INT1 is assumed.
-> >>>>
-> >>>> This adds a bitmask DT property for users to configure interrupt sources
-> >>>> for INT2, if that is the wired interrupt pin for them.
-> >>>
-> >>> This sounds like configureation rather than a HW property. Why does this
-> >>> need to be in the DT?
-> >>
-> >> It's a hardware property of the board that uses the device. There might
-> >> be boards that connect just one of them at random, which is the reason
-> >> for this DT property. There also might be exotic users who will want
-> >> to use both pins to route different interrupt sources to (not yet
-> >> supported, but no problem with such a bitmask).
-> > 
-> > Ok, so I'm somewhat confused as to what the hardware looks like and what
-> > this means.
-> > 
-> > Could you elaborate on how INT1 and INT2 are used? It looks like they're
-> > used as output pins, and so interrupt-names would seem appropriate for
-> > describing the combination which is wired up.
-> 
-> They are just the chip's two possible interrupt lines for us to get
-> notified about event.
 
-Ok. So that matches my understanding.
+--6Jy4/gb9ZgnsEOX8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> You build a board, you use one of these 4 chips, wiring up just one of
-> the 2 interrupt pins. By far most people won't ever need both pins.
-> 
-> DT describes your hardware, right? So you describe how you built your
-> board (wired the accelerometer chip) with this DT property.
+On Mon, Jul 27, 2015 at 08:31:49AM +0100, Lee Jones wrote:
+> On Mon, 27 Jul 2015, Maxime Ripard wrote:
+>=20
+> > Hi Lee,
+> >=20
+> > On Wed, Jul 22, 2015 at 02:04:15PM +0100, Lee Jones wrote:
+> > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > > ---
+> > >  .../devicetree/bindings/clock/clock-bindings.txt   | 39 ++++++++++++=
+++++++++++
+> > >  1 file changed, 39 insertions(+)
+> > >=20
+> > > diff --git a/Documentation/devicetree/bindings/clock/clock-bindings.t=
+xt b/Documentation/devicetree/bindings/clock/clock-bindings.txt
+> > > index 06fc6d5..4137034 100644
+> > > --- a/Documentation/devicetree/bindings/clock/clock-bindings.txt
+> > > +++ b/Documentation/devicetree/bindings/clock/clock-bindings.txt
+> > > @@ -44,6 +44,45 @@ For example:
+> > >    clocks by index. The names should reflect the clock output signal
+> > >    names for the device.
+> > > =20
+> > > +critical-clock:	Some hardware contains bunches of clocks which, in n=
+ormal
+> > > +		circumstances, must never be turned off.  If drivers a) fail to
+> > > +		obtain a reference to any of these or b) give up a previously
+> > > +		obtained reference during suspend, it is possible that some
+> > > +		Operating Systems might attempt to disable them to save power.
+> > > +		If this happens a platform can fail irrecoverably as a result.
+> > > +		Usually the only way to recover from these failures is to
+> > > +		reboot.
+> > > +
+> > > +		To avoid either of these two scenarios from catastrophically
+> > > +		disabling an otherwise perfectly healthy running system,
+> > > +		clocks can be identified as 'critical' using this property from
+> > > +		inside a clocksource's node.
+> > > +
+> > > +		This property is not to be abused.  It is only to be used to
+> > > +		protect platforms from being crippled by gated clocks, NOT as a
+> > > +		convenience function to avoid using the framework correctly
+> > > +		inside device drivers.
+> > > +
+> > > +		Expected values are hardware clock indices.  If the
+> > > +		clock-indices property (see below) is used, then supplied
+> > > +		values must correspond to one of the listed identifiers.
+> > > +		Using the clock-indices example below, hardware clock <2>
+> > > +		is missing, therefore it is considered invalid to then
+> > > +		list clock <2> as a critical clock.
+> >=20
+> > I think we should also consider having it simply as a boolean. Using
+> > indices for clocks that don't have any (for example because it only
+> > provides a single clock) seem to not really make much sense.
+>=20
+> Then how would you distinguish between the clocks if the provider
+> provides more than a single clock?
 
-Ok.
+What I had in mind was that, you would have three cases:
 
-> > w.r.t. configuring the choice of output(s), that sounds like a runtime
-> > decision rather than something which needs to be configured statically.
-> 
-> This won't be useful during runtime. (De)activating events is what you
-> do in iio sysfs.
-> 
-> Even in the rare case (maybe supported in the future) when you want one
-> interrupt source on one pin and another source on the other pin, that
-> describes your hardware. You wire, say, data-ready to Linux and
-> motion-detection to some strange alarm system. When you change your
-> hardware (say, use Linux for both pins), I think it would justify
-> changing a DT property.
+  - critical-clocks is not there: no clocks are made critical
 
-In that case you would need additional properties anyway.
+  - critical-clocks is there, but doesn't have any values: all the
+    clocks provided are marked critical
 
-> Btw, we are talking about very theoretical stuff here. For now (and even
-> possibly forever) we just don't ever want to break a DT propery we
-> introduce here, thus the bitmask.
+  - critical-clocks is there and it has a list of values: only the
+    clocks listed are marked critical.
 
-I don't think you need the bitmask.
-
-I think all you need is interrupt-names, e.g.
-
-dev1 {
-	/* both wired up */
-	interrupts = <&some_ic 0 47>, <&some_ic 5 62>;
-	interrupt-names = "INT1", "INT2";
-}
-
-dev2 {
-	/* only INT2 wired up */
-	interrupts = <&some_ic 3 96>;
-	interrupt-names = "INT2";
-}
-
-You can figure out which interrupts are wired up by trying to acquire
-them by name, then falling back to acquiting an anonymouos interrupt
-(assuming it's INT1) to keep compatible with existing DTBs. You can
-choose which to use arbitrarily, try to load balance, or whatever you'd
-like.
-
-If it's later necessary to route some interrupts to another device,
-additional properties can be added to accomodate that. We already know
-that the bitmask alone is not sufficient for that case.
+Does that make sense to you?
 
 Thanks,
-Mark.
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--6Jy4/gb9ZgnsEOX8
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJVt0wmAAoJEBx+YmzsjxAgcCYP/jwj+pMRdvkORvlRwhG+unL5
+bffXUgEcskccJkg+/AF5KjZwiqKu4QvOs4ENOuZZbq9hz6399kWGuUXgeYYhnFk9
+7uCUyJMPsUi5pjh9RAe6VpuDfYJbzcgVVfa/tS5bl78+cr6ZmcybQwiRvyopdJvc
+ImQTTrjwVwX30BbZRt15Ucnc59OPU2BWOu9w+oX51bneip1deePsW6cORZtvZova
+cp0XG06jxiGf0g71x7SGjTsIRbjCxsKtipzA/o8lKK3UY8MrJVQYNHRb/aHp39ZA
+czH9zHV0zY71lnjltLeO0CkCphGbJPVKJnf1aU1aG6XKpfZngDaYhKJxKgc5Y0Sp
+btOQYnTHAenUPGbloWtzLXOFIEk5PnZAuXKdl1h+p0V9l5Gg1BudL3xaunqNhidE
+tQg54wPrLKQKV5SGy48Sn2Ra+cXKe0eVp7ColHRrxu0qGO48mV/h1xDRyIRdP5jS
+E7rf4P0Oh64nLUNpziufKnCtDAgLXA6YFNd/FjKolP3L+y2KWuOM5NYH3WHrzLfk
+kgqTTfqeIXTNojGDXPAsmM7edEgVn39xxn8B/edELeJqJM8aoSxAGoZ5rWjddDVE
+acGYhvnqNtFt/317hIu5w1FZC8bNyXMP0GMhdSu7FJFvcX5zF82CGksyF41d29Pp
+mayll0EH9NAyVpTmTRn+
+=Qvin
+-----END PGP SIGNATURE-----
+
+--6Jy4/gb9ZgnsEOX8--
