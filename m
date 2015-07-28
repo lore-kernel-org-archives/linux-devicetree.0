@@ -1,37 +1,124 @@
-From: Stefan Monnier <monnier-CRDzTM1onBSWkKpYnGOUKg@public.gmane.org>
-Subject: Re: [RFC] ARM: dts: sunxi: Add regulators and
- board-specific operating points for LeMaker BananaPi
-Date: Tue, 28 Jul 2015 19:02:51 -0400
-Message-ID: <jwv7fpjhoqp.fsf-monnier+gmane.comp.hardware.netbook.arm.sunxi@gnu.org>
-References: <1437960486-2809-1-git-send-email-public_timo.s@silentcreek.de>
-	<55B5E6DB.8020009@redhat.com>
-	<20150727123653.36C046C8007E@dd34104.kasserver.com>
-	<55B62A1B.6030601@redhat.com>
-	<CAGb2v65ApKvrj6K+kw43u=0q6=auTsmQjCXhibgZkW+vd5nDqA@mail.gmail.com>
-	<20150728090216.892076C80D94@dd34104.kasserver.com>
-Reply-To: monnier-CRDzTM1onBSWkKpYnGOUKg@public.gmane.org
+From: Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 8/8] iio: mma8452: add devicetree property to allow all
+ pin wirings
+Date: Wed, 29 Jul 2015 01:12:45 +0200
+Message-ID: <55B80C6D.5040607@posteo.de>
+References: <1438006095-26920-1-git-send-email-martink@posteo.de> <1438006095-26920-9-git-send-email-martink@posteo.de> <20150727142336.GB10821@leverpostej> <55B6423C.7030301@posteo.de> <20150727173345.GF10821@leverpostej> <55B74741.3000408@theobroma-systems.com> <20150728092809.GA15213@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDMKFH665MBBBMMU4CWQKGQE4IW4XIQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150728092809.GA15213@leverpostej>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+Cc: "jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "knaack.h-Mmb7MZpHnFY@public.gmane.org" <knaack.h-Mmb7MZpHnFY@public.gmane.org>, "lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org" <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, "pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org" <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, "mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org" <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>, "roberta.dobrescu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <roberta.dobrescu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org" <christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> IMHO for a common maximum opp that's a good approach. But for the lowest
-> frequency setting, it would seem more logical to me, to raise the voltage
-> to a point where all boards will run fine with them, unless those boards
-> cannot handle the frequency regardless of the higher voltage.
+Am 2015-07-28 um 11:28 schrieb Mark Rutland:
+> On Tue, Jul 28, 2015 at 10:11:29AM +0100, Martin Kepplinger wrote:
+>>
+>>
+>> On 2015-07-27 19:33, Mark Rutland wrote:
+>>> On Mon, Jul 27, 2015 at 03:37:48PM +0100, Martin Kepplinger wrote:
+>>>> Am 2015-07-27 um 16:23 schrieb Mark Rutland:
+>>>>> On Mon, Jul 27, 2015 at 03:08:15PM +0100, Martin Kepplinger wrote:
+>>>>>> For the devices supported by the mma8452 driver, two interrupt pins are
+>>>>>> available to route the interrupt signals to. By default INT1 is assumed.
+>>>>>>
+>>>>>> This adds a bitmask DT property for users to configure interrupt sources
+>>>>>> for INT2, if that is the wired interrupt pin for them.
+>>>>>
+>>>>> This sounds like configureation rather than a HW property. Why does this
+>>>>> need to be in the DT?
+>>>>
+>>>> It's a hardware property of the board that uses the device. There might
+>>>> be boards that connect just one of them at random, which is the reason
+>>>> for this DT property. There also might be exotic users who will want
+>>>> to use both pins to route different interrupt sources to (not yet
+>>>> supported, but no problem with such a bitmask).
+>>>
+>>> Ok, so I'm somewhat confused as to what the hardware looks like and what
+>>> this means.
+>>>
+>>> Could you elaborate on how INT1 and INT2 are used? It looks like they're
+>>> used as output pins, and so interrupt-names would seem appropriate for
+>>> describing the combination which is wired up.
+>>
+>> They are just the chip's two possible interrupt lines for us to get
+>> notified about event.
+> 
+> Ok. So that matches my understanding.
+> 
+>> You build a board, you use one of these 4 chips, wiring up just one of
+>> the 2 interrupt pins. By far most people won't ever need both pins.
+>>
+>> DT describes your hardware, right? So you describe how you built your
+>> board (wired the accelerometer chip) with this DT property.
+> 
+> Ok.
+> 
+>>> w.r.t. configuring the choice of output(s), that sounds like a runtime
+>>> decision rather than something which needs to be configured statically.
+>>
+>> This won't be useful during runtime. (De)activating events is what you
+>> do in iio sysfs.
+>>
+>> Even in the rare case (maybe supported in the future) when you want one
+>> interrupt source on one pin and another source on the other pin, that
+>> describes your hardware. You wire, say, data-ready to Linux and
+>> motion-detection to some strange alarm system. When you change your
+>> hardware (say, use Linux for both pins), I think it would justify
+>> changing a DT property.
+> 
+> In that case you would need additional properties anyway.
+> 
+>> Btw, we are talking about very theoretical stuff here. For now (and even
+>> possibly forever) we just don't ever want to break a DT propery we
+>> introduce here, thus the bitmask.
+> 
+> I don't think you need the bitmask.
+> 
+> I think all you need is interrupt-names, e.g.
+> 
+> dev1 {
+> 	/* both wired up */
+> 	interrupts = <&some_ic 0 47>, <&some_ic 5 62>;
+> 	interrupt-names = "INT1", "INT2";
+> }
+> 
+> dev2 {
+> 	/* only INT2 wired up */
+> 	interrupts = <&some_ic 3 96>;
+> 	interrupt-names = "INT2";
+> }
+> 
+> You can figure out which interrupts are wired up by trying to acquire
+> them by name, then falling back to acquiting an anonymouos interrupt
+> (assuming it's INT1) to keep compatible with existing DTBs. You can
+> choose which to use arbitrarily, try to load balance, or whatever you'd
+> like.
+> 
+> If it's later necessary to route some interrupts to another device,
+> additional properties can be added to accomodate that. We already know
+> that the bitmask alone is not sufficient for that case.
+> 
 
-I generally agre, tho IIRC some measurements seem to indicate that the
-lowest frequency settings did not bring much (if any) reduction in power
-consumption, making them rather useless.
+Yes, this sounds reasonable indeed. I like the idea. I'm sorry I won't
+rewrite patch 8/8 now. Relocation and a lot to do before holidays. I'll
+be happy to write and test this properly in one month from now, if not
+done by somebody until then.
+
+Until then, since patches 1-7 only introduce a bindings document, they
+shouldn't be problematic for devicetree people.
 
 
-        Stefan
+So if Jonathan and IIO people find anybody for review, feel free to take
+patches 1-7. In any case, there is direct register access via debugfs to
+at least somehow make the driver work for everybody ;)
+
+so long, thanks.
+                    martin
+
+> Thanks,
+> Mark.
+> 
