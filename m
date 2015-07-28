@@ -1,59 +1,44 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH v13 3/3] ASoC: tda998x: add a codec to the HDMI
- transmitter
-Date: Tue, 28 Jul 2015 16:06:28 +0100
-Message-ID: <20150728150628.GM7557@n2100.arm.linux.org.uk>
-References: <cover.1437397270.git.moinejf@free.fr>
- <e036c88aa945e72b40ec965c9358dacf564e79f2.1437397272.git.moinejf@free.fr>
- <20150720180606.GL11162@sirena.org.uk>
- <20150728121945.560f82a5@armhf>
- <20150728102410.GD11162@sirena.org.uk>
- <20150728152329.02668865@armhf>
- <20150728135358.GK7557@n2100.arm.linux.org.uk>
- <20150728163912.71789e31@armhf>
+From: "Timo Sigurdsson" <public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org>
+Subject: Re: [RFC] ARM: dts: sunxi: Add regulators and
+ board-specific operating points for LeMaker BananaPi
+Date: Tue, 28 Jul 2015 17:09:29 +0200 (CEST)
+Message-ID: <20150728150929.233B56C80391@dd34104.kasserver.com>
+References: <1437960486-2809-1-git-send-email-public_timo.s@silentcreek.de> <55B5E6DB.8020009@redhat.com> <20150727120918.191F76C82FB4@dd34104.kasserver.com> <55B62768.6040403@redhat.com> <20150728124911.GA2564@lukather><55B790BA.5000509@redhat.com>
+Reply-To: public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150728163912.71789e31@armhf>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Jackson <Andrew.Jackson-5wv7dgnIgG8@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCSJLSE35MGBBKVW32WQKGQE26CLNKQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <55B790BA.5000509-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 28, 2015 at 04:39:12PM +0200, Jean-Francois Moine wrote:
-> On Tue, 28 Jul 2015 14:53:58 +0100
-> Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
-> > In the case of the TDA998x, there is a 1:1 fixed relationship between the
-> > connector and the encoder.  The connector part can't be used with any other
-> > encoder, and the encoder part can't be used with any other connector.  The
-> > same is true of many other HDMI implementations (such as the Synopsis
-> > Designware HDMI interface found on iMX6 and Rockchip.)
-> 
-> But there is no direct link (pointer) between the encoder and the
-> connector.
+Hi,
 
-There's no direct link from an encoder to a connector because the DRM
-model allows a single encoder to be associated with multiple connectors.
-Adding a link from the encoder to a connector breaks that ability (an
-encoder would then need an array of connectors.)
+Hans de Goede schrieb am 28.07.2015 16:24:
+> I've no problem with Timo submitting a cleaned up version of his
+> patch and you taking that instead. I just wanted to point out that
+> I do have a similar patch pending.
 
-If we kill the old drm_slave_encoder support in TDA998x, then this would
-solve the problem - we can then get at the TDA998x's drm_connector easily
-as it then becomes part of TDA998x's private data.
+Ok, I will do that. It might take a couple of days, though, as I will be moving
+moving in the next few days as well.
 
-However, this doesn't matter.  All that we need from the DRM side of the
-TDA998x is to know is the EDID or ELD.  That can be broadcast via a
-notification (using something like the code I illustrated in a follow up
-email) to any listeners, whether they be an audio driver or a CEC bus
-driver.  The audio driver may not care about HDMI connect/disconnect
-events, but that's no reason not to include them.  Some consumers of
-these events need to know (CEC certainly needs to know.)
+However, another question first then: What maximum voltage for the dcdc2
+regulator should we use then? You used 1.5V, I used 1.45V so far, which is what
+Cubieboard 2 and Cubietruck use.
 
--- 
-FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
-according to speedtest.net.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+But after the discussion about overvoltaged settings, I'm wondering whether we
+should limit the regulartor (and not only the opp) to 1.40V as well? Or is
+1.45V ok for everybody here?
+
+
+Thanks and regards,
+
+Timo
