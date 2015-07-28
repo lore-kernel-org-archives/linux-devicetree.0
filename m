@@ -1,7 +1,7 @@
 From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Subject: [PATCH v3 1/5] soc: qcom: Add device tree binding for Shared Memory Device
-Date: Mon, 27 Jul 2015 20:20:29 -0700
-Message-ID: <1438053633-6659-2-git-send-email-bjorn.andersson@sonymobile.com>
+Subject: [PATCH v3 3/5] devicetree: soc: Add Qualcomm SMD based RPM DT binding
+Date: Mon, 27 Jul 2015 20:20:31 -0700
+Message-ID: <1438053633-6659-4-git-send-email-bjorn.andersson@sonymobile.com>
 References: <1438053633-6659-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,90 +9,113 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1438053633-6659-1-git-send-email-bjorn.andersson@sonymobile.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Andy Gross <agross@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jeffrey Hugo <jhugo@codeaurora.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Brown <broonie@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree binding documentation for the Qualcomm Shared Memory
-Device, used for communication between the various CPUs in the Qualcomm
-SoCs.
+Add binding documentation for the Qualcomm Resource Power Manager (RPM)
+using shared memory (Qualcomm SMD) as transport mechanism. This is found
+in 8974 and newer based devices.
+
+The binding currently describes the rpm itself and the regulator
+subnodes.
 
 Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
 ---
 
-No changes since v2
+Changes since v2:
+- Moved from mfd
 
- .../devicetree/bindings/soc/qcom/qcom,smd.txt      | 79 ++++++++++++++++++++++
- 1 file changed, 79 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,smd.txt
+ .../devicetree/bindings/soc/qcom,smd-rpm.txt       | 117 +++++++++++++++++++++
+ 1 file changed, 117 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/qcom,smd-rpm.txt
 
-diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,smd.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,smd.txt
+diff --git a/Documentation/devicetree/bindings/soc/qcom,smd-rpm.txt b/Documentation/devicetree/bindings/soc/qcom,smd-rpm.txt
 new file mode 100644
-index 000000000000..f65c76db9859
+index 000000000000..e27f5c4c54fd
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/qcom/qcom,smd.txt
-@@ -0,0 +1,79 @@
-+Qualcomm Shared Memory Driver (SMD) binding
++++ b/Documentation/devicetree/bindings/soc/qcom,smd-rpm.txt
+@@ -0,0 +1,117 @@
++Qualcomm Resource Power Manager (RPM) over SMD
 +
-+This binding describes the Qualcomm Shared Memory Driver, a fifo based
-+communication channel for sending data between the various subsystems in
-+Qualcomm platforms.
++This driver is used to interface with the Resource Power Manager (RPM) found in
++various Qualcomm platforms. The RPM allows each component in the system to vote
++for state of the system resources, such as clocks, regulators and bus
++frequencies.
 +
 +- compatible:
 +	Usage: required
-+	Value type: <stringlist>
-+	Definition: must be "qcom,smd"
-+
-+= EDGES
-+
-+Each subnode of the SMD node represents a remote subsystem or a remote
-+processor of some sort - or in SMD language an "edge". The name of the edges
-+are not important.
-+The edge is described by the following properties:
-+
-+- interrupts:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: should specify the IRQ used by the remote processor to
-+		    signal this processor about communication related updates
-+
-+- qcom,ipc:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: three entries specifying the outgoing ipc bit used for
-+		    signaling the remote processor:
-+		    - phandle to a syscon node representing the apcs registers
-+		    - u32 representing offset to the register within the syscon
-+		    - u32 representing the ipc bit within the register
-+
-+- qcom,smd-edge:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: the identifier of the remote processor in the smd channel
-+		    allocation table
-+
-+= SMD DEVICES
-+
-+In turn, subnodes of the "edges" represent devices tied to SMD channels on that
-+"edge". The names of the devices are not important. The properties of these
-+nodes are defined by the individual bindings for the SMD devices - but must
-+contain the following property:
++	Value type: <string>
++	Definition: must be one of:
++		    "qcom,rpm-msm8974"
 +
 +- qcom,smd-channels:
 +	Usage: required
 +	Value type: <stringlist>
-+	Definition: a list of channels tied to this device, used for matching
-+		    the device to channels
++	Definition: Shared Memory channel used for communication with the RPM
++
++= SUBDEVICES
++
++The RPM exposes resources to its subnodes. The below bindings specify the set
++of valid subnodes that can operate on these resources.
++
++== Regulators
++
++Regulator nodes are identified by their compatible:
++
++- compatible:
++	Usage: required
++	Value type: <string>
++	Definition: must be one of:
++		    "qcom,rpm-pm8841-regulators"
++		    "qcom,rpm-pm8941-regulators"
++
++- vdd_s1-supply:
++- vdd_s2-supply:
++- vdd_s3-supply:
++- vdd_s4-supply:
++- vdd_s5-supply:
++- vdd_s6-supply:
++- vdd_s7-supply:
++- vdd_s8-supply:
++	Usage: optional (pm8841 only)
++	Value type: <phandle>
++	Definition: reference to regulator supplying the input pin, as
++		    described in the data sheet
++
++- vdd_s1-supply:
++- vdd_s2-supply:
++- vdd_s3-supply:
++- vdd_l1_l3-supply:
++- vdd_l2_lvs1_2_3-supply:
++- vdd_l4_l11-supply:
++- vdd_l5_l7-supply:
++- vdd_l6_l12_l14_l15-supply:
++- vdd_l8_l16_l18_l19-supply:
++- vdd_l9_l10_l17_l22-supply:
++- vdd_l13_l20_l23_l24-supply:
++- vdd_l21-supply:
++- vin_5vs-supply:
++	Usage: optional (pm8941 only)
++	Value type: <phandle>
++	Definition: reference to regulator supplying the input pin, as
++		    described in the data sheet
++
++The regulator node houses sub-nodes for each regulator within the device. Each
++sub-node is identified using the node's name, with valid values listed for each
++of the pmics below.
++
++pm8841:
++	s1, s2, s3, s4, s5, s6, s7, s8
++
++pm8941:
++	s1, s2, s3, s4, l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11, l12, l13,
++	l14, l15, l16, l17, l18, l19, l20, l21, l22, l23, l24, lvs1, lvs2,
++	lvs3, 5vs1, 5vs2
++
++The content of each sub-node is defined by the standard binding for regulators -
++see regulator.txt.
 +
 += EXAMPLE
-+
-+The following example represents a smd node, with one edge representing the
-+"rpm" subsystem. For the "rpm" subsystem we have a device tied to the
-+"rpm_request" channel.
-+
-+	apcs: syscon@f9011000 {
-+		compatible = "syscon";
-+		reg = <0xf9011000 0x1000>;
-+	};
 +
 +	smd {
 +		compatible = "qcom,smd";
@@ -106,9 +129,28 @@ index 000000000000..f65c76db9859
 +				compatible = "qcom,rpm-msm8974";
 +				qcom,smd-channels = "rpm_requests";
 +
-+				...
++				pm8941-regulators {
++					compatible = "qcom,rpm-pm8941-regulators";
++					vdd_l13_l20_l23_l24-supply = <&pm8941_boost>;
++
++					pm8941_s3: s3 {
++						regulator-min-microvolt = <1800000>;
++						regulator-max-microvolt = <1800000>;
++					};
++
++					pm8941_boost: s4 {
++						regulator-min-microvolt = <5000000>;
++						regulator-max-microvolt = <5000000>;
++					};
++
++					pm8941_l20: l20 {
++						regulator-min-microvolt = <2950000>;
++						regulator-max-microvolt = <2950000>;
++					};
++				};
 +			};
 +		};
 +	};
++
 -- 
 1.8.2.2
