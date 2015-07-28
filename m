@@ -1,43 +1,77 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH 0/2] pci: am57xx-evm: Fix PCIe card enumeration issue
-Date: Tue, 28 Jul 2015 19:09:08 +0530
-Message-ID: <1438090750-11604-1-git-send-email-kishon@ti.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v2 04/22] of/platform: add of_platform_device_find()
+Date: Tue, 28 Jul 2015 08:39:46 -0500
+Message-ID: <CAL_JsqJGhFXDKuayuKc2E58X5A7ZGN=uYCVDLnXw_t3_auBg+w@mail.gmail.com>
+References: <1438089593-7696-1-git-send-email-tomeu.vizoso@collabora.com> <1438089593-7696-5-git-send-email-tomeu.vizoso@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pci-owner@vger.kernel.org>
-Sender: linux-pci-owner@vger.kernel.org
-To: bhelgaas@google.com, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tony@atomide.com
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, bcousson@baylibre.com, linux@arm.linux.org.uk, kishon@ti.com, nsekhar@ti.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1438089593-7696-5-git-send-email-tomeu.vizoso@collabora.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This series fixes PCIe card enumeration issue in am57xx-evm.
+On Tue, Jul 28, 2015 at 8:19 AM, Tomeu Vizoso
+<tomeu.vizoso@collabora.com> wrote:
+> From an arbitrary node in the tree, find the enclosing node that
+> corresponds to a platform device, as registered by
+> of_platform_populate().
+>
+> This can be used to find out what device needs to be probed so the
+> dependency described by a given node is made available.
+>
+> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+> ---
+>
+> Changes in v2:
+> - Move the logic for finding a platform device from its firmware node to
+>   of/platform.c as it's not needed for ACPI nodes.
+>
+>  drivers/of/platform.c       | 60 +++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/of_platform.h |  1 +
+>  2 files changed, 61 insertions(+)
+>
+> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> index ff27494cda8c..89c5cd513027 100644
+> --- a/drivers/of/platform.c
+> +++ b/drivers/of/platform.c
+> @@ -501,6 +501,66 @@ void of_platform_depopulate(struct device *parent)
+>  }
+>  EXPORT_SYMBOL_GPL(of_platform_depopulate);
+>
+> +static bool of_is_platform(struct device_node *np)
+> +{
+> +       int count;
+> +
+> +       count = of_property_count_strings(np, "compatible");
+> +
+> +       /* The node has to have a compatible string */
+> +       if (!count)
+> +               return false;
+> +
+> +       /* But it cannot be just a simple memory-mapped bus */
+> +       if (count == 1 && of_match_node(of_default_bus_match_table, np))
+> +               return false;
+> +
+> +       /* But AMBA devices aren't platform devices */
+> +       if (of_device_is_compatible(np, "arm,primecell"))
+> +               return false;
+> +
+> +       /* Node is immediately below root */
+> +       if (!np->parent || !np->parent->parent)
+> +               return true;
+> +
+> +       /* If it's a node in a simple memory-mapped bus */
+> +       if (of_match_node(of_default_bus_match_table, np->parent))
+> +               return true;
 
-In the case of am57xx-evm, the PERST# line is connected to a gpio line
-and this has to be driven low in order to perform a fundamental reset
-of the card. If the gpio line is driven high, there is no way the card
-can come out of reset.
+This seems really fragile. What about platform devices which are
+children of MFDs but are not "simple-mfd"?
 
-Add support in the pcie-dra7xx driver to make gpio drive PERST# line.
+Does of_find_device_by_node not work for you? That is probably not the
+most efficient search, but we could fix that. We could add struct
+device ptr to struct device_node and check without searching for
+example.
 
-The PERST# line can be used to perform reset not during the power on
-sequence too (warm reset) but we are not adding support for this as the
-PCIe express base sepcification doesn't explain how to perform warm
-reset
-
-"In some cases, it may be possible for the Fundamental Reset mechanism
-to be triggered by hardware without the removal and re-application of
-power to the component. This is called a warm reset. This document does
-not specify a means for generating a warm reset."
-
-Kishon Vijay Abraham I (2):
-  pci: host: pci-dra7xx: Add support to make gpio drive PERST# line
-  ARM: dts: am57xx-evm: Add 'gpios' property with gpio2_8
-
- Documentation/devicetree/bindings/pci/ti-pci.txt |    3 +++
- arch/arm/boot/dts/am57xx-beagle-x15.dts          |    5 +++++
- arch/arm/boot/dts/dra7.dtsi                      |    2 +-
- drivers/pci/host/pci-dra7xx.c                    |   24 ++++++++++++++++++++--
- 4 files changed, 31 insertions(+), 3 deletions(-)
-
--- 
-1.7.9.5
+Rob
