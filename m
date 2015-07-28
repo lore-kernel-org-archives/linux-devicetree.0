@@ -1,82 +1,112 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH v13 3/3] ASoC: tda998x: add a codec to the HDMI
- transmitter
-Date: Tue, 28 Jul 2015 14:53:58 +0100
-Message-ID: <20150728135358.GK7557@n2100.arm.linux.org.uk>
-References: <cover.1437397270.git.moinejf@free.fr>
- <e036c88aa945e72b40ec965c9358dacf564e79f2.1437397272.git.moinejf@free.fr>
- <20150720180606.GL11162@sirena.org.uk>
- <20150728121945.560f82a5@armhf>
- <20150728102410.GD11162@sirena.org.uk>
- <20150728152329.02668865@armhf>
+From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Subject: Re: [PATCH v2 04/22] of/platform: add of_platform_device_find()
+Date: Tue, 28 Jul 2015 15:54:54 +0200
+Message-ID: <CAAObsKBfRLdPc0gs55ARfa+qZJAOEyEgRyTf8krZnQMb6-j03g@mail.gmail.com>
+References: <1438089593-7696-1-git-send-email-tomeu.vizoso@collabora.com>
+ <1438089593-7696-5-git-send-email-tomeu.vizoso@collabora.com> <CAL_JsqJGhFXDKuayuKc2E58X5A7ZGN=uYCVDLnXw_t3_auBg+w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150728152329.02668865@armhf>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Jackson <Andrew.Jackson-5wv7dgnIgG8@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqJGhFXDKuayuKc2E58X5A7ZGN=uYCVDLnXw_t3_auBg+w@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 28, 2015 at 03:23:29PM +0200, Jean-Francois Moine wrote:
-> The EDID arrives in the DRM connector when video starts. The built ELD
-> may be stored either in the connector itself (default), in the encoder
-> (TDA998x device) or in some DRM/encoder/connector private data.
+On 28 July 2015 at 15:39, Rob Herring <robherring2@gmail.com> wrote:
+> On Tue, Jul 28, 2015 at 8:19 AM, Tomeu Vizoso
+> <tomeu.vizoso@collabora.com> wrote:
+>> From an arbitrary node in the tree, find the enclosing node that
+>> corresponds to a platform device, as registered by
+>> of_platform_populate().
+>>
+>> This can be used to find out what device needs to be probed so the
+>> dependency described by a given node is made available.
+>>
+>> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+>> ---
+>>
+>> Changes in v2:
+>> - Move the logic for finding a platform device from its firmware node to
+>>   of/platform.c as it's not needed for ACPI nodes.
+>>
+>>  drivers/of/platform.c       | 60 +++++++++++++++++++++++++++++++++++++++++++++
+>>  include/linux/of_platform.h |  1 +
+>>  2 files changed, 61 insertions(+)
+>>
+>> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+>> index ff27494cda8c..89c5cd513027 100644
+>> --- a/drivers/of/platform.c
+>> +++ b/drivers/of/platform.c
+>> @@ -501,6 +501,66 @@ void of_platform_depopulate(struct device *parent)
+>>  }
+>>  EXPORT_SYMBOL_GPL(of_platform_depopulate);
+>>
+>> +static bool of_is_platform(struct device_node *np)
+>> +{
+>> +       int count;
+>> +
+>> +       count = of_property_count_strings(np, "compatible");
+>> +
+>> +       /* The node has to have a compatible string */
+>> +       if (!count)
+>> +               return false;
+>> +
+>> +       /* But it cannot be just a simple memory-mapped bus */
+>> +       if (count == 1 && of_match_node(of_default_bus_match_table, np))
+>> +               return false;
+>> +
+>> +       /* But AMBA devices aren't platform devices */
+>> +       if (of_device_is_compatible(np, "arm,primecell"))
+>> +               return false;
+>> +
+>> +       /* Node is immediately below root */
+>> +       if (!np->parent || !np->parent->parent)
+>> +               return true;
+>> +
+>> +       /* If it's a node in a simple memory-mapped bus */
+>> +       if (of_match_node(of_default_bus_match_table, np->parent))
+>> +               return true;
+>
+> This seems really fragile.
 
-The ELD is stored in the DRM connector, and there _should_ be a system
-of locking which ensures that you can get at that information safely.
+I think this finding logic matches the logic for registering platform
+devices in of_platform_populate and also what is documented in
+Documentation/devicetree/usage-model.txt.
 
-The ELD is only updated when the connector's get_modes() method is called,
-and the driver itself calls drm_edid_to_eld().  This all happens under
-the drm_device's struct_mutex.
+> What about platform devices which are
+> children of MFDs but are not "simple-mfd"?
 
-So, to safely read the ELD from outside DRM, you need to take the top-level
-drm_device's struct_mutex.  That could be fraught, as that's quite a big
-lock, so an alternative would be to introduce an 'eld' lock to the driver,
-which protects the call to drm_edid_to_eld() and the reading of the ELD.
+This code should deal fine with those (the boards I tested with do
+have them). It probes the mfd master, and that in turn will call
+mfd_add_devices causing the target device to be probed.
 
-However, that doesn't solve the problem of passing the data to an audio
-driver.  What's needed there is a notification system which allows a video
-driver to broadcast HDMI events such as:
+> Does of_find_device_by_node not work for you?
 
-* connected
-* new EDID available
-* new ELD available
-* disconnected
+Well, the dependencies aren't always platform devices, that's why I
+need to go up the tree until I find a node that corresponds to a
+platform device that I can query and probe.
 
-With such a system, different components driving the facilities of a HDMI
-connector can make decisions on what to do - which not only includes things
-like the audio driver, but also a driver for the CEC interface (which also
-needs to see the EDID to get at its "address".)  This can be done in a safe
-manner as the HDMI video driver would have control over the generation of
-these messages.
+If I had a way to get, say, a i2c device from its fwnode then I would
+just need to make sure that a device's parent is probed before probing
+it and everything would be cleaner in the OF case.
 
-The point that Mark is trying to get you to see is that this problem is
-not specific to TDA998x.  The same problem exists for many other HDMI
-interfaces (except maybe Intel's i9x5/HDA stuff which has a hardware
-mechanism of passing the ELD data from the video driver, through the
-hardware to the audio driver.)
+> That is probably not the
+> most efficient search, but we could fix that. We could add struct
+> device ptr to struct device_node and check without searching for
+> example.
 
-It needs solving in a driver-agnostic way, and the normal way that happens
-is when someone comes along, wanting to add support in that area, they get
-to do the hard work to propose that infrastructure.
+That would be great, but I thought there was an issue with a OF node
+being able to be related to more than one struct device (but I haven't
+found this myself yet).
 
-> You may note that, in DRM, there is no relation between the encoder and
-> the connector except at video startup time, and no relation between the
-> DRM connector and the audio CODEC (no CODEC information is returned on
-> CODEC creation and the CODEC has no private data).
+Thanks,
 
-In the case of the TDA998x, there is a 1:1 fixed relationship between the
-connector and the encoder.  The connector part can't be used with any other
-encoder, and the encoder part can't be used with any other connector.  The
-same is true of many other HDMI implementations (such as the Synopsis
-Designware HDMI interface found on iMX6 and Rockchip.)
+Tomeu
 
--- 
-FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
-according to speedtest.net.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Rob
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
