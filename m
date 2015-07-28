@@ -1,108 +1,94 @@
-From: Dinh Nguyen <dinguyen@opensource.altera.com>
-Subject: Re: [PATCH 3/4] reset: socfpga: Update reset-socfpga to read the
- altr,modrst-offset property
-Date: Tue, 28 Jul 2015 08:46:59 -0500
-Message-ID: <55B787D3.5060509@opensource.altera.com>
-References: <1438023444-11881-1-git-send-email-dinguyen@opensource.altera.com>	 <1438023444-11881-4-git-send-email-dinguyen@opensource.altera.com> <1438073190.3193.28.camel@pengutronix.de>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 3/6] iommu: add ARM short descriptor page table
+	allocator.
+Date: Tue, 28 Jul 2015 14:47:10 +0100
+Message-ID: <20150728134710.GM29209@arm.com>
+References: <1437037475-9065-4-git-send-email-yong.wu@mediatek.com>
+	<20150721171101.GN31095@arm.com>
+	<1437715466.23932.68.camel@mhfsdcap03>
+	<20150724165325.GC21177@arm.com>
+	<1437970868.25925.20.camel@mhfsdcap03> <55B63AB2.4050006@arm.com>
+	<20150727141102.GJ3358@arm.com>
+	<1438060094.25925.69.camel@mhfsdcap03>
+	<20150728110023.GH29209@arm.com>
+	<1438090663.25925.75.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1438073190.3193.28.camel@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: dinh.linux@gmail.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mark.rutland@arm.com, pawel.moll@arm.com, s.trumtrar@pengutronix.de, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1438090663.25925.75.camel@mhfsdcap03>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "cloud.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <cloud.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org" <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Sasha Hauer <kernel@pen>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 7/28/15 3:46 AM, Philipp Zabel wrote:
-> Am Montag, den 27.07.2015, 13:57 -0500 schrieb
-> dinguyen@opensource.altera.com:
->> From: Dinh Nguyen <dinguyen@opensource.altera.com>
->>
->> In order for the Arria10 to be able to re-use the reset driver for SoCFPGA
->> Cyclone5/Arria5, we need to read the 'altr,modrst-offset' property from the
->> device tree entry. The 'altr,modrst-offset' property is the first register
->> into the reset manager that is used for bringing peripherals out of reset.
->>
->> Signed-off-by: Dinh Nguyen <dinguyen@opensource.altera.com>
->> ---
->>  drivers/reset/reset-socfpga.c | 19 +++++++++++++------
->>  1 file changed, 13 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/reset/reset-socfpga.c b/drivers/reset/reset-socfpga.c
->> index 0a8def3..9074d41 100644
->> --- a/drivers/reset/reset-socfpga.c
->> +++ b/drivers/reset/reset-socfpga.c
->> @@ -24,11 +24,11 @@
->>  #include <linux/types.h>
->>  
->>  #define NR_BANKS		4
->> -#define OFFSET_MODRST		0x10
->>  
->>  struct socfpga_reset_data {
->>  	spinlock_t			lock;
->>  	void __iomem			*membase;
->> +	u32				modrst_offset;
->>  	struct reset_controller_dev	rcdev;
->>  };
->>  
->> @@ -45,8 +45,8 @@ static int socfpga_reset_assert(struct reset_controller_dev *rcdev,
->>  
->>  	spin_lock_irqsave(&data->lock, flags);
->>  
->> -	reg = readl(data->membase + OFFSET_MODRST + (bank * NR_BANKS));
->> -	writel(reg | BIT(offset), data->membase + OFFSET_MODRST +
->> +	reg = readl(data->membase + data->modrst_offset + (bank * NR_BANKS));
->> +	writel(reg | BIT(offset), data->membase + data->modrst_offset +
->>  				 (bank * NR_BANKS));
->>  	spin_unlock_irqrestore(&data->lock, flags);
->>  
->> @@ -67,8 +67,8 @@ static int socfpga_reset_deassert(struct reset_controller_dev *rcdev,
->>  
->>  	spin_lock_irqsave(&data->lock, flags);
->>  
->> -	reg = readl(data->membase + OFFSET_MODRST + (bank * NR_BANKS));
->> -	writel(reg & ~BIT(offset), data->membase + OFFSET_MODRST +
->> +	reg = readl(data->membase + data->modrst_offset + (bank * NR_BANKS));
->> +	writel(reg & ~BIT(offset), data->membase + data->modrst_offset +
->>  				  (bank * NR_BANKS));
->>  
->>  	spin_unlock_irqrestore(&data->lock, flags);
->> @@ -85,7 +85,7 @@ static int socfpga_reset_status(struct reset_controller_dev *rcdev,
->>  	int offset = id % BITS_PER_LONG;
->>  	u32 reg;
->>  
->> -	reg = readl(data->membase + OFFSET_MODRST + (bank * NR_BANKS));
->> +	reg = readl(data->membase + data->modrst_offset + (bank * NR_BANKS));
->>  
->>  	return !(reg & BIT(offset));
->>  }
->> @@ -100,6 +100,8 @@ static int socfpga_reset_probe(struct platform_device *pdev)
->>  {
->>  	struct socfpga_reset_data *data;
->>  	struct resource *res;
->> +	struct device *dev = &pdev->dev;
->> +	struct device_node *np = dev->of_node;
->>  
->>  	/*
->>  	 * The binding was mainlined without the required property.
->> @@ -120,6 +122,11 @@ static int socfpga_reset_probe(struct platform_device *pdev)
->>  	if (IS_ERR(data->membase))
->>  		return PTR_ERR(data->membase);
->>  
->> +	if (of_property_read_u32(np, "altr,modrst-offset", &data->modrst_offset)) {
->> +		dev_err(dev, "no altr,modrst-offset specified in device tree\n");
->> +		return -ENODEV;
->> +	}
->> +
+On Tue, Jul 28, 2015 at 02:37:43PM +0100, Yong Wu wrote:
+> On Tue, 2015-07-28 at 12:00 +0100, Will Deacon wrote:
+> > On Tue, Jul 28, 2015 at 06:08:14AM +0100, Yong Wu wrote:
+> > > On Mon, 2015-07-27 at 15:11 +0100, Will Deacon wrote:
+> > > > On Mon, Jul 27, 2015 at 03:05:38PM +0100, Robin Murphy wrote:
+> > > > > On 27/07/15 05:21, Yong Wu wrote:
+> > > > > >>>>> +       } else {        /* page or largepage */
+> > > > > >>>>> +               if (quirk & IO_PGTABLE_QUIRK_SHORT_MTK) {
+> > > > > >>>>> +                       if (large) { /* special Bit */
+> > > > > >>>>
+> > > > > >>>> This definitely needs a better comment! What exactly are you doing here
+> > > > > >>>> and what is that quirk all about?
+> > > > > >>>
+> > > > > >>> I use this quirk is for MTK Special Bit as we don't have the XN bit in
+> > > > > >>> pagetable.
+> > > > > >>
+> > > > > >> I'm still not really clear about what this is.
+> > > > > >
+> > > > > > There is some difference between the standard spec and MTK HW,
+> > > > > > Our hw don't implement some bits, like XN and AP.
+> > > > > > So I add a quirk for MTK special.
+> > > > > 
+> > > > > When you say it doesn't implement these bits, do you mean that having 
+> > > > > them set will lead to Bad Things happening in the hardware, or that it 
+> > > > > will simply ignore them and not enforce any of the protections they 
+> > > > > imply? The former case would definitely want clearly documenting 
+> > > > > somewhere, whereas for the latter case I'm not sure it's even worth the 
+> > > > > complication of having a quirk - if the value doesn't matter there seems 
+> > > > > little point in doing a special dance just for the sake of semantic 
+> > > > > correctness of the in-memory PTEs, in my opinion.
+> > > > 
+> > > > Agreed. We should only use quirks if the current (architecturally
+> > > > compliant) code causes real issues with the hardware. Then the quirk can
+> > > > be used to either avoid the problematic routines or to take extra steps
+> > > > to make things work as the architecture intended.
+> > > > 
+> > > > I've asked how this IOMMU differs from the architecture on a number of
+> > > > occasions, but I'm still yet to receive a response other than "it's special".
+> > > > 
+> > > 
+> > > After check further with DE, Our pagetable is refer to ARM-v7's
+> > > short-descriptor which is a little different from ARM-v8. like bit0(PXN)
+> > > in section and supersection, I didn't read ARM-v7 spec before, so I add
+> > > a MTK quirk to disable PXN bit in section and supersection.(if the PXN
+> > > bit is wrote in ARM-v7 spec, HW will page fault.)
+> > 
+> > I've been reviewing this using the ARMv7 ARM (Rev.C of DDI0406C) the whole
+> > time. PXN is there as an optional field in non-LPAE implementations. That's
+> > fine and doesn't require any quirks.
 > 
-> This should fall back to the old value of 0x10 in case the device tree
-> property doesn't exist. Otherwise you are breaking Cyclone5/Arria5 with
-> older device trees.
+> Thanks for your confirm.
+> Then I delete all the PXN bit in here?
 > 
+> Take a example, 
+> #define ARM_SHORT_PGD_SECTION_XN		(BIT(0) | BIT(4))
+> I will change it to "BIT(4)".
 
-Ah yes, you're right. Thanks for catching this!
+Yes. Then the PXN bit can be added later as a quirk when we have an
+implementation that supports it.
 
-Dinh
+Will
