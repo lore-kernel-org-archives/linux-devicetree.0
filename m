@@ -1,83 +1,105 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH RESEND] ARM: shmobile: silk: add Ether DT support
-Date: Wed, 29 Jul 2015 01:16:02 +0300
-Message-ID: <6826396.5PIZbPW8q4@wasted.cogentembedded.com>
-References: <201404250239.39150.sergei.shtylyov@cogentembedded.com>
+From: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCHv7 0/2] Adding driver for Xilinx LogiCORE IP mailbox.
+Date: Tue, 28 Jul 2015 15:44:35 -0700
+Message-ID: <CAAtXAHcobgftojgba8fcb2OM2eZvYqHHBhzEQahXO4m-VfrFYg@mail.gmail.com>
+References: <1436922022-17564-1-git-send-email-moritz.fischer@ettus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <201404250239.39150.sergei.shtylyov@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1436922022-17564-1-git-send-email-moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Define the SILK board dependent part of the Ether device node.
-Enable DHCP and NFS root for the kernel booting.
+Hi Jassi,
 
-Based on the original patch by Vladimir Barinov
-<vladimir.barinov@cogentembedded.com>.
+just a ping to see if you're waiting on me to fix things or if this is
+good to go from your point of view,
+and you're just waiting some time to give people more time to review.
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Let me know if you want me to resend with Soeren's Acked-By
 
----
-This patch is against the 'renesas-devel-20150728-v4.2-rc4' tag of Simon
-Horman's 'renesas.git' repo.  It depends on just posted SILK board initial DT
-patch in order to apply and on R8A7794 PFC DT patch posted yesterday in order
-to compile.
+Cheers,
 
- arch/arm/boot/dts/r8a7794-silk.dts |   28 +++++++++++++++++++++++++++-
- 1 file changed, 27 insertions(+), 1 deletion(-)
+Moritz
 
-Index: renesas/arch/arm/boot/dts/r8a7794-silk.dts
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7794-silk.dts
-+++ renesas/arch/arm/boot/dts/r8a7794-silk.dts
-@@ -22,7 +22,7 @@
- 	};
- 
- 	chosen {
--		bootargs = "ignore_loglevel";
-+		bootargs = "ignore_loglevel rw root=/dev/nfs ip=dhcp";
- 		stdout-path = &scif2;
- 	};
- 
-@@ -41,6 +41,16 @@
- 		renesas,groups = "scif2_data";
- 		renesas,function = "scif2";
- 	};
-+
-+	ether_pins: ether {
-+		renesas,groups = "eth_link", "eth_mdio", "eth_rmii";
-+		renesas,function = "eth";
-+	};
-+
-+	phy1_pins: phy1 {
-+		renesas,groups = "intc_irq8";
-+		renesas,function = "intc";
-+	};
- };
- 
- &scif2 {
-@@ -49,3 +59,19 @@
- 
- 	status = "okay";
- };
-+
-+&ether {
-+	pinctrl-0 = <&ether_pins &phy1_pins>;
-+	pinctrl-names = "default";
-+
-+	phy-handle = <&phy1>;
-+	renesas,ether-link-active-low;
-+	status = "okay";
-+
-+	phy1: ethernet-phy@1 {
-+		reg = <1>;
-+		interrupt-parent = <&irqc0>;
-+		interrupts = <8 IRQ_TYPE_LEVEL_LOW>;
-+		micrel,led-mode = <1>;
-+	};
-+};
-
+On Tue, Jul 14, 2015 at 6:00 PM, Moritz Fischer
+<moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org> wrote:
+> Hi all,
+>
+> Thanks for hanging in there, hopefully the last round of review ...
+>
+> This patchset adds mailbox framework integration for the Xilinx LogiC=
+ORE IP
+> mailbox.  The Xilinx LogiCORE IP mailbox is a fpga softcore that allo=
+ws
+> interprocessor communication between AXI4 stream / memory mapped
+> processors.
+>
+> Cheers,
+>
+> Moritz
+>
+> Changes from v6:
+> - As suggested by Jassi and S=C3=B6ren use #mbox-cells =3D <1>
+>
+> Changes from v5:
+> - Fixed constness for ops struct
+> - Removed redundant checks
+> - Moved ops assignment
+> - Removed MODULE_ALIAS
+>
+> Changes from v4:
+> - Have separate mbox_ops structs for polling / irq mode
+> - Moved clk handling to startup / shutdown
+> - Embedded struct mbox_chan in struct xilinx_mbox
+> - Fixed mbox-cells in devicetree documentation
+> - Misc stylistic issues
+>
+> Changes from v3:
+> - Stylistic changes
+> - Changed reg size in dts to 0x100
+>
+> Changes from v2:
+> - Fixed error condition for IRQ from >=3D 0 to > 0
+> - Fixed clock enable
+> - Cleaned up docs
+>
+> Changes from v1:
+> - Added common clock framework support
+> - Deal with IRQs that happend before driver load,
+>   since HW will not let us know about them when we enable IRQs
+>
+> Changes from v0:
+> - Several stylistic issues
+> - Dropped superfluous intr_mode member
+> - Really masking the IRQs on mailbox_shutdown
+> - No longer using polling by accident in non-IRQ mode
+> - Swapped doc and driver commits
+>
+>
+> Moritz Fischer (2):
+>   dts: Adding docs for Xilinx LogiCORE IP mailbox driver.
+>   mailbox: Adding driver for Xilinx LogiCORE IP mailbox.
+>
+>  .../devicetree/bindings/mailbox/xilinx-mailbox.txt |  44 +++
+>  MAINTAINERS                                        |   7 +
+>  drivers/mailbox/Kconfig                            |   7 +
+>  drivers/mailbox/Makefile                           |   2 +
+>  drivers/mailbox/mailbox-xilinx.c                   | 367 +++++++++++=
+++++++++++
+>  5 files changed, 427 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mailbox/xilinx-=
+mailbox.txt
+>  create mode 100644 drivers/mailbox/mailbox-xilinx.c
+>
+> --
+> 2.4.3
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
