@@ -1,58 +1,111 @@
-From: Paul Bolle <pebolle@tiscali.nl>
-Subject: Re: [PATCH v2 3/6] mailbox: Add support for ST's Mailbox IP
-Date: Wed, 29 Jul 2015 00:06:55 +0200
-Message-ID: <1438121215.30903.27.camel@tiscali.nl>
-References: <1437990272-23111-1-git-send-email-lee.jones@linaro.org>
-	 <1437990272-23111-4-git-send-email-lee.jones@linaro.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v3] ARM: shmobile: silk: initial device tree
+Date: Wed, 29 Jul 2015 01:14:59 +0300
+Message-ID: <2360526.88foRQAOiM@wasted.cogentembedded.com>
+References: <201404250239.39150.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1437990272-23111-4-git-send-email-lee.jones@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, jassisinghbrar@gmail.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <201404250239.39150.sergei.shtylyov@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On ma, 2015-07-27 at 10:44 +0100, Lee Jones wrote:
-> --- /dev/null
-> +++ b/drivers/mailbox/mailbox-sti.c
+Add the initial device  tree for the R8A7794 SoC based SILK low cost board.
+SCIF2 serial port support is included, so that the serial console can work.
 
-> +static int sti_mbox_probe(struct platform_device *pdev)
-> +{
-> +	[...]
-> +
-> +	match = of_match_device(sti_mailbox_match, &pdev->dev);
-> +	if (!match) {
-> +		dev_err(&pdev->dev, "No configuration found\n");
-> +		return -ENODEV;
-> +	}
-> +	pdev->dev.platform_data = (struct sti_mbox_pdata *) match->data;
-> +
-> +	[...]
-> +}
+Based on the original patch by Vladimir Barinov
+<vladimir.barinov@cogentembedded.com>.
 
-> +static struct platform_driver sti_mbox_driver = {
-> +	.probe = sti_mbox_probe,
-> +	.remove = sti_mbox_remove,
-> +	.driver = {
-> +		.name = "sti-mailbox",
-> +		.of_match_table = sti_mailbox_match,
-> +	},
-> +};
-> +module_platform_driver(sti_mbox_driver);
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-> +MODULE_ALIAS("platform:mailbox-sti");
+---
+This patch is against the 'renesas-devel-20150728-v4.2-rc4' tag of Simon
+Horman's 'renesas.git' repo. It requires R8A7794 PFC DT patch posted yesterday
+in order to compile.
 
-It seems this alias is only useful if there's a corresponding struct
-platform_device with a "mailbox-sti" .name. I couldn't spot that
-platform_device.
+Changes in version 3:
+- refreshed the patch;
+- reformatted the changelog.
 
-Besides, if I read sti_max_probe() correctly, without OF support loading
-this module won't accomplish much. So what would another way of
-autoloading this module buy you?
+Changes in version 2:
+- removed "console=" parameter from the kernel command line;
+- added PFC node with SCIF2 pins subnode and referred it from the SCIF2 node;
+- rebased the patch
+- mentioned the origin of patch in the changelog.
 
-Thanks,
+ arch/arm/boot/dts/Makefile         |    1 
+ arch/arm/boot/dts/r8a7794-silk.dts |   51 +++++++++++++++++++++++++++++++++++++
+ 2 files changed, 52 insertions(+)
 
+Index: renesas/arch/arm/boot/dts/Makefile
+===================================================================
+--- renesas.orig/arch/arm/boot/dts/Makefile
++++ renesas/arch/arm/boot/dts/Makefile
+@@ -515,6 +515,7 @@ dtb-$(CONFIG_ARCH_SHMOBILE_MULTI) += \
+ 	r8a7791-koelsch.dtb \
+ 	r8a7793-gose.dtb \
+ 	r8a7794-alt.dtb \
++	r8a7794-silk.dtb \
+ 	sh73a0-kzm9g.dtb
+ dtb-$(CONFIG_ARCH_SOCFPGA) += \
+ 	socfpga_arria5_socdk.dtb \
+Index: renesas/arch/arm/boot/dts/r8a7794-silk.dts
+===================================================================
+--- /dev/null
++++ renesas/arch/arm/boot/dts/r8a7794-silk.dts
+@@ -0,0 +1,51 @@
++/*
++ * Device Tree Source for the SILK board
++ *
++ * Copyright (C) 2014 Renesas Electronics Corporation
++ * Copyright (C) 2014-2015 Renesas Solutions Corp.
++ * Copyright (C) 2014-2015 Cogent Embedded, Inc.
++ *
++ * This file is licensed under the terms of the GNU General Public License
++ * version 2.  This program is licensed "as is" without any warranty of any
++ * kind, whether express or implied.
++ */
++
++/dts-v1/;
++#include "r8a7794.dtsi"
++
++/ {
++	model = "SILK";
++	compatible = "renesas,silk", "renesas,r8a7794";
++
++	aliases {
++		serial0 = &scif2;
++	};
++
++	chosen {
++		bootargs = "ignore_loglevel";
++		stdout-path = &scif2;
++	};
++
++	memory@40000000 {
++		device_type = "memory";
++		reg = <0 0x40000000 0 0x40000000>;
++	};
++};
++
++&extal_clk {
++	clock-frequency = <20000000>;
++};
++
++&pfc {
++	scif2_pins: serial2 {
++		renesas,groups = "scif2_data";
++		renesas,function = "scif2";
++	};
++};
++
++&scif2 {
++	pinctrl-0 = <&scif2_pins>;
++	pinctrl-names = "default";
++
++	status = "okay";
++};
 
-Paul Bolle
