@@ -1,46 +1,32 @@
-From: Yinghai Lu <yinghai@kernel.org>
-Subject: [PATCH v3 42/51] of/PCI: Add IORESOURCE_MEM_64 for 64-bit resource
-Date: Mon, 27 Jul 2015 16:30:00 -0700
-Message-ID: <1438039809-24957-43-git-send-email-yinghai@kernel.org>
-References: <1438039809-24957-1-git-send-email-yinghai@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1438039809-24957-1-git-send-email-yinghai@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>, David Miller <davem@davemloft.net>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Wei Yang <weiyang@linux.vnet.ibm.com>, TJ <linux@iam.tj>, Yijing Wang <wangyijing@huawei.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Yinghai Lu <yinghai@kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 0/2] ARM: shmobile: Add JPU device nodes to Renesas R-Car
+ SoCs.
+Date: Tue, 28 Jul 2015 09:34:53 +0900
+Message-ID: <20150728003453.GA21162@verge.net.au>
+References: <1437744346-499-1-git-send-email-mikhail.ulyanov@cogentembedded.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1437744346-499-1-git-send-email-mikhail.ulyanov@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>
+Cc: magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, galak@codeaurora.org, linux@arm.linux.org.uk, laurent.pinchart@ideasonboard.com, sergei.shtylyov@cogentembedded.com, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-For device resource PREF bit setting under bridge 64-bit pref resource,
-we need to make sure only set PREF for 64bit resource, so set
-IORESOUCE_MEM_64 for 64bit resource during of device resource flags
-parsing.
+On Fri, Jul 24, 2015 at 04:25:44PM +0300, Mikhail Ulyanov wrote:
+> This series of patches contains device tree nodes definitions for JPEG
+> codec peripheral found in the Renesas R-Car SoCs.
+> 
+> This series of patches is against the renesas-devel-20150720-v4.2-rc3
+> of https://kernel.googlesource.com/pub/scm/linux/kernel/git/horms/renesas
+> 
+> The driver itself was accepted by Hans Verkuil
+> http://git.linuxtv.org/cgit.cgi/hverkuil/media_tree.git
+> commit hash 761a0eee505f3a7051b187e67cd28c50b385d409
+> 
+> Mikhail Ulyanov (2):
+>   ARM: shmobile: r8a7790: Add JPU device node.
+>   ARM: shmobile: r8a7791: Add JPU device node.
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=96261
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=96241
-Signed-off-by: Yinghai Lu <yinghai@kernel.org>
-Cc: Grant Likely <grant.likely@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
----
- drivers/of/address.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index 8bfda6a..073125f 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -128,9 +128,11 @@ static unsigned int of_bus_pci_get_flags(const __be32 *addr)
- 		flags |= IORESOURCE_IO;
- 		break;
- 	case 0x02: /* 32 bits */
--	case 0x03: /* 64 bits */
- 		flags |= IORESOURCE_MEM;
- 		break;
-+	case 0x03: /* 64 bits */
-+		flags |= IORESOURCE_MEM | IORESOURCE_MEM_64;
-+		break;
- 	}
- 	if (w & 0x40000000)
- 		flags |= IORESOURCE_PREFETCH;
--- 
-1.8.4.5
+Thanks, I have queued up both patches.
