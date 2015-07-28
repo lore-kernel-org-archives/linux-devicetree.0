@@ -1,322 +1,147 @@
-From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Subject: [PATCH v2 09/22] regulator: core: Reduce critical area in
- _regulator_get
-Date: Tue, 28 Jul 2015 15:19:40 +0200
-Message-ID: <1438089593-7696-10-git-send-email-tomeu.vizoso@collabora.com>
-References: <1438089593-7696-1-git-send-email-tomeu.vizoso@collabora.com>
+From: Vignesh R <vigneshr@ti.com>
+Subject: Re: [PATCH] of/irq: introduce of_has_named_irqs helper
+Date: Tue, 28 Jul 2015 18:53:52 +0530
+Message-ID: <55B78268.4040603@ti.com>
+References: <20150724182655.GA22007@dtor-ws> <CAL_Jsq+JGpNBwS3HF1fF4HdefRCwhniaYCm5G4_WAnio7t-1og@mail.gmail.com> <20150724192619.GA33241@dtor-ws> <20150724201613.GB33241@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1438089593-7696-1-git-send-email-tomeu.vizoso@collabora.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-acpi@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Liam Girdwood <lgirdwood@gmail.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150724201613.GB33241@dtor-ws>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robherring2@gmail.com>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Benoit Cousson <bcousson@baylibre.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Wolfram Sang <wsa@the-dreams.de>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-...by moving the locking of regulator_list_mutex into
-regulator_dev_lookup(), where it is iterated over.
+Hi Dmitry,
 
-The regulator device lock gets acquired before returning, and the caller
-is responsible for releasing it after it's done with the regulator
-device.
+On 07/25/2015 01:46 AM, Dmitry Torokhov wrote:
+> On Fri, Jul 24, 2015 at 12:26:19PM -0700, Dmitry Torokhov wrote:
+>> On Fri, Jul 24, 2015 at 02:14:57PM -0500, Rob Herring wrote:
+>>> On Fri, Jul 24, 2015 at 1:26 PM, Dmitry Torokhov
+>>> <dmitry.torokhov@gmail.com> wrote:
+>>>> Sometimes drivers might wish to transition from index-based to named
+>>>> interrupt descriptions. To aid in decision-making when parsing device
+>>>> tree data let's provide a helper that will indicate the scheme that is
+>>>> being used.
+>>>
+>>> Generally, IRQs are retrieved by platform_get_irq or
+>>> platform_get_irq_byname. Drivers should not call the of_irq_*
+>>> functions directly in most cases.
+>>
+>> That would be true for platform drivers, but not all devices are
+>> platform devices.
+>>
+>>>
+>>>>
+>>>> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+>>>> ---
+>>>>
+>>>> The intent is to it like this:
+>>>>
+>>>>         if (of_has_named_irqs(np) {
+>>>>                 /* Wake IRQ is optional */
+>>>>                 dev->wakeirq = of_irq_get_byname(np, "wakeup");
+>>>>                 if (dev->wakeirq < 0 && dev->wakeirq != -ENODATA)
+>>>>                         return dev->wakeirq;
+>>>>         }
+>>>
+>>> of_irq_get_byname will already return an error if the property is not
+>>> present. Use that.
+>>
+>> I do not like that it returns -EINVAL when property is missing, can we
+>> change it to return -ENODATA (so it is the same as when the property is
+>> defined but such name is missing)?
+> 
+> So here is what I had in mind.. It is based on recent patch by Vignesh
+> for pixcir touchscreen, but I think it should be made available to all
+> I2C devices. Completely untested at the moment.
+> 
 
-In _regulator_get() the regulator_list_mutex mutex is held for most of
-the function, but is only strictly needed to protect the list lookups.
+Thanks for the patch! I tested this on am437x-gp-evm and the
+suspend/resume worked fine (below patch + $subject patch). I was able to
+wake the system from low power state using touchscreen. Also verified
+module insertion and removal. One comment though, please see below.
 
-This change would be useful if for example regulator devices could be
-registered on demand when a driver requests them. regulator_register()
-could end up being called from within _regulator_get while the lock on
-regulator_list_mutex is being held, causing a deadlock.
+> ---
+>  drivers/i2c/i2c-core.c |   43 +++++++++++++++++++++++++++++++++++++------
+>  1 file changed, 37 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/i2c/i2c-core.c b/drivers/i2c/i2c-core.c
+> index e6d4935..3971461 100644
+> --- a/drivers/i2c/i2c-core.c
+> +++ b/drivers/i2c/i2c-core.c
+> @@ -47,6 +47,7 @@
+>  #include <linux/rwsem.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/pm_domain.h>
+> +#include <linux/pm_wakeirq.h>
+>  #include <linux/acpi.h>
+>  #include <linux/jump_label.h>
+>  #include <asm/uaccess.h>
+> @@ -631,6 +632,7 @@ static int i2c_device_probe(struct device *dev)
+>  {
+>  	struct i2c_client	*client = i2c_verify_client(dev);
+>  	struct i2c_driver	*driver;
+> +	int wakeirq = 0;
+>  	int status;
+>  
+>  	if (!client)
+> @@ -639,11 +641,13 @@ static int i2c_device_probe(struct device *dev)
+>  	if (!client->irq) {
+>  		int irq = -ENOENT;
+>  
+> -		if (dev->of_node)
+> -			irq = of_irq_get(dev->of_node, 0);
+> -		else if (ACPI_COMPANION(dev))
+> +		if (dev->of_node) {
+> +			irq = of_has_named_irqs(dev->of_node) ?
+> +				of_irq_get_byname(dev->of_node, "irq") :
+> +				of_irq_get(dev->of_node, 0);
+> +		} else if (ACPI_COMPANION(dev)) {
+>  			irq = acpi_dev_gpio_irq_get(ACPI_COMPANION(dev), 0);
+> -
+> +		}
+>  		if (irq == -EPROBE_DEFER)
+>  			return irq;
+>  		if (irq < 0)
+> @@ -652,6 +656,15 @@ static int i2c_device_probe(struct device *dev)
+>  		client->irq = irq;
+>  	}
+>  
+> +	if (dev->of_node && of_has_named_irqs(dev->of_node)) {
+> +		wakeirq = of_irq_get_byname(dev->of_node, "wakeup");
+> +		if (wakeirq < 0) {
+> +			if (wakeirq != -ENODATA)
+> +				return wakeirq;
+> +			wakeirq = 0;
+> +		}
+> +	}
+> +
+>  	driver = to_i2c_driver(dev->driver);
+>  	if (!driver->probe || !driver->id_table)
+>  		return -ENODEV;
+> @@ -659,20 +672,34 @@ static int i2c_device_probe(struct device *dev)
+>  	if (!device_can_wakeup(&client->dev))
+>  		device_init_wakeup(&client->dev,
+>  					client->flags & I2C_CLIENT_WAKE);
+> +
+> +	status = wakeirq > 0 ?
+> +			dev_pm_set_dedicated_wake_irq(dev, wakeirq) :
+> +			(client->irq > 0 ?
+> +				dev_pm_set_wake_irq(dev, client->irq) : 0);
 
-This backtrace illustrates the situation described above:
+Above code tries to register wakeirq irrespective of whether the device
+is specified as wakeup-source in the dt or not. Hence, I see warn
+messages from every i2c device that has irq line but hasn't declared
+itself as wakeup-source:
+For example tps is on i2c:
+[    1.961613] tps65218 0-0024: forgot to call call device_init_wakeup?
+[    1.968340] tps65218 0-0024: failed to set up wakeup irq
 
-(regulator_register) from [<c05efe64>]
-(devm_regulator_register+0x48/0x84)
-(devm_regulator_register) from [<c05f0b20>]
-(reg_fixed_voltage_probe+0x214/0x35c)
-(reg_fixed_voltage_probe) from [<c06cc7fc>]
-(platform_drv_probe+0x54/0xbc)
-(platform_drv_probe) from [<c06caac8>] (driver_probe_device+0x184/0x2c4)
-(driver_probe_device) from [<c06cac58>] (__device_attach+0x50/0x54)
-(__device_attach) from [<c06c8eac>] (bus_for_each_drv+0x70/0xa4)
-(bus_for_each_drv) from [<c06ca900>] (device_attach+0x90/0xa4)
-(device_attach) from [<c06c9eb4>] (bus_probe_device+0x94/0xb8)
-(bus_probe_device) from [<c06c7de8>] (device_add+0x384/0x580)
-(device_add) from [<c095c104>] (of_device_add+0x44/0x4c)
-(of_device_add) from [<c095c968>]
-...
-(regulator_dev_lookup) from [<c05ee7c0>] (_regulator_get+0x8c/0x26c)
-(_regulator_get) from [<c05ee9c0>] (regulator_get+0x20/0x24)
-(regulator_get) from [<c05efb1c>] (_devm_regulator_get+0xa4/0xc8)
-(_devm_regulator_get) from [<c05efb5c>] (devm_regulator_get+0x1c/0x20)
-(devm_regulator_get) from [<c06ba870>] (tegra_hdmi_probe+0xe0/0x278)
-(tegra_hdmi_probe) from [<c06cc7fc>] (platform_drv_probe+0x54/0xbc)
+May be you can register wakeup-source only if I2C_CLIENT_WAKE flag is
+set in client->flags?
 
-Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
----
-
-Changes in v2:
-- Acquire regulator device lock before returning from regulator_dev_lookup()
-
- drivers/regulator/core.c | 98 +++++++++++++++++++++++++++---------------------
- 1 file changed, 55 insertions(+), 43 deletions(-)
-
-diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index 613034667b93..65a3f28d452c 100644
---- a/drivers/regulator/core.c
-+++ b/drivers/regulator/core.c
-@@ -110,6 +110,7 @@ static struct regulator *create_regulator(struct regulator_dev *rdev,
- 					  struct device *dev,
- 					  const char *supply_name);
- static void _regulator_put(struct regulator *regulator);
-+static int _regulator_enable(struct regulator *regulator, bool do_lock);
- 
- static const char *rdev_get_name(struct regulator_dev *rdev)
- {
-@@ -1212,6 +1213,7 @@ static void unset_regulator_supplies(struct regulator_dev *rdev)
- 
- #define REG_STR_SIZE	64
- 
-+/* rdev->mutex held by caller */
- static struct regulator *create_regulator(struct regulator_dev *rdev,
- 					  struct device *dev,
- 					  const char *supply_name)
-@@ -1224,7 +1226,7 @@ static struct regulator *create_regulator(struct regulator_dev *rdev,
- 	if (regulator == NULL)
- 		return NULL;
- 
--	mutex_lock(&rdev->mutex);
-+	lockdep_assert_held_once(&rdev->mutex);
- 	regulator->rdev = rdev;
- 	list_add(&regulator->list, &rdev->consumer_list);
- 
-@@ -1276,12 +1278,10 @@ static struct regulator *create_regulator(struct regulator_dev *rdev,
- 	    _regulator_is_enabled(rdev))
- 		regulator->always_on = true;
- 
--	mutex_unlock(&rdev->mutex);
- 	return regulator;
- overflow_err:
- 	list_del(&regulator->list);
- 	kfree(regulator);
--	mutex_unlock(&rdev->mutex);
- 	return NULL;
- }
- 
-@@ -1320,6 +1320,7 @@ static void regulator_supply_alias(struct device **dev, const char **supply)
- 	}
- }
- 
-+/* Caller has to release r->mutex once done with r */
- static struct regulator_dev *regulator_dev_lookup(struct device *dev,
- 						  const char *supply,
- 						  int *ret)
-@@ -1335,10 +1336,15 @@ static struct regulator_dev *regulator_dev_lookup(struct device *dev,
- 	if (dev && dev->of_node) {
- 		node = of_get_regulator(dev, supply);
- 		if (node) {
-+			mutex_lock(&regulator_list_mutex);
- 			list_for_each_entry(r, &regulator_list, list)
- 				if (r->dev.parent &&
--					node == r->dev.of_node)
-+					node == r->dev.of_node) {
-+					mutex_lock(&r->mutex);
-+					mutex_unlock(&regulator_list_mutex);
- 					return r;
-+				}
-+			mutex_unlock(&regulator_list_mutex);
- 			*ret = -EPROBE_DEFER;
- 			return NULL;
- 		} else {
-@@ -1356,9 +1362,14 @@ static struct regulator_dev *regulator_dev_lookup(struct device *dev,
- 	if (dev)
- 		devname = dev_name(dev);
- 
-+	mutex_lock(&regulator_list_mutex);
- 	list_for_each_entry(r, &regulator_list, list)
--		if (strcmp(rdev_get_name(r), supply) == 0)
-+		if (strcmp(rdev_get_name(r), supply) == 0) {
-+			mutex_lock(&r->mutex);
-+			mutex_unlock(&regulator_list_mutex);
- 			return r;
-+		}
-+	mutex_unlock(&regulator_list_mutex);
- 
- 	list_for_each_entry(map, &regulator_map_list, list) {
- 		/* If the mapping has a device set up it must match */
-@@ -1400,6 +1411,7 @@ static int regulator_resolve_supply(struct regulator_dev *rdev)
- 	if (!r) {
- 		if (have_full_constraints()) {
- 			r = dummy_regulator_rdev;
-+			mutex_lock(&r->mutex);
- 		} else {
- 			dev_err(dev, "Failed to resolve %s-supply for %s\n",
- 				rdev->supply_name, rdev->desc->name);
-@@ -1410,23 +1422,25 @@ static int regulator_resolve_supply(struct regulator_dev *rdev)
- 	/* Recursively resolve the supply of the supply */
- 	ret = regulator_resolve_supply(r);
- 	if (ret < 0)
--		return ret;
-+		goto out;
- 
- 	ret = set_supply(rdev, r);
- 	if (ret < 0)
--		return ret;
-+		goto out;
- 
- 	/* Cascade always-on state to supply */
- 	if (_regulator_is_enabled(rdev)) {
--		ret = regulator_enable(rdev->supply);
-+		ret = _regulator_enable(rdev->supply, false);
- 		if (ret < 0) {
- 			if (rdev->supply)
- 				_regulator_put(rdev->supply);
--			return ret;
-+			goto out;
- 		}
- 	}
- 
--	return 0;
-+out:
-+	mutex_unlock(&r->mutex);
-+	return ret;
- }
- 
- /* Internal regulator request function */
-@@ -1451,8 +1465,6 @@ static struct regulator *_regulator_get(struct device *dev, const char *id,
- 	else
- 		ret = -EPROBE_DEFER;
- 
--	mutex_lock(&regulator_list_mutex);
--
- 	rdev = regulator_dev_lookup(dev, id, &ret);
- 	if (rdev)
- 		goto found;
-@@ -1478,13 +1490,13 @@ static struct regulator *_regulator_get(struct device *dev, const char *id,
- 			devname, id);
- 
- 		rdev = dummy_regulator_rdev;
-+		mutex_lock(&rdev->mutex);
- 		goto found;
- 	/* Don't log an error when called from regulator_get_optional() */
- 	} else if (!have_full_constraints() || exclusive) {
- 		dev_warn(dev, "dummy supplies not allowed\n");
- 	}
- 
--	mutex_unlock(&regulator_list_mutex);
- 	return regulator;
- 
- found:
-@@ -1526,8 +1538,7 @@ found:
- 	}
- 
- out:
--	mutex_unlock(&regulator_list_mutex);
--
-+	mutex_unlock(&rdev->mutex);
- 	return regulator;
- }
- 
-@@ -1987,11 +1998,22 @@ static int _regulator_do_enable(struct regulator_dev *rdev)
- }
- 
- /* locks held by regulator_enable() */
--static int _regulator_enable(struct regulator_dev *rdev)
-+static int _regulator_enable(struct regulator *regulator, bool do_lock)
- {
--	int ret;
-+	struct regulator_dev *rdev = regulator->rdev;
-+	int ret = 0;
- 
--	lockdep_assert_held_once(&rdev->mutex);
-+	if (regulator->always_on)
-+		return 0;
-+
-+	if (rdev->supply) {
-+		ret = regulator_enable(rdev->supply);
-+		if (ret != 0)
-+			return ret;
-+	}
-+
-+	if (do_lock)
-+		mutex_lock(&rdev->mutex);
- 
- 	/* check voltage and requested load before enabling */
- 	if (rdev->constraints &&
-@@ -2002,23 +2024,32 @@ static int _regulator_enable(struct regulator_dev *rdev)
- 		/* The regulator may on if it's not switchable or left on */
- 		ret = _regulator_is_enabled(rdev);
- 		if (ret == -EINVAL || ret == 0) {
--			if (!_regulator_can_change_status(rdev))
--				return -EPERM;
-+			if (!_regulator_can_change_status(rdev)) {
-+				ret = -EPERM;
-+				goto out;
-+			}
- 
- 			ret = _regulator_do_enable(rdev);
- 			if (ret < 0)
--				return ret;
-+				goto out;
- 
- 		} else if (ret < 0) {
- 			rdev_err(rdev, "is_enabled() failed: %d\n", ret);
--			return ret;
-+			goto out;
- 		}
- 		/* Fallthrough on positive return values - already enabled */
- 	}
- 
- 	rdev->use_count++;
- 
--	return 0;
-+out:
-+	if (do_lock)
-+		mutex_unlock(&rdev->mutex);
-+
-+	if (ret != 0 && rdev->supply)
-+		regulator_disable(rdev->supply);
-+
-+	return ret;
- }
- 
- /**
-@@ -2034,26 +2065,7 @@ static int _regulator_enable(struct regulator_dev *rdev)
-  */
- int regulator_enable(struct regulator *regulator)
- {
--	struct regulator_dev *rdev = regulator->rdev;
--	int ret = 0;
--
--	if (regulator->always_on)
--		return 0;
--
--	if (rdev->supply) {
--		ret = regulator_enable(rdev->supply);
--		if (ret != 0)
--			return ret;
--	}
--
--	mutex_lock(&rdev->mutex);
--	ret = _regulator_enable(rdev);
--	mutex_unlock(&rdev->mutex);
--
--	if (ret != 0 && rdev->supply)
--		regulator_disable(rdev->supply);
--
--	return ret;
-+	return _regulator_enable(regulator, true);
- }
- EXPORT_SYMBOL_GPL(regulator_enable);
- 
 -- 
-2.4.3
+Regards
+Vignesh
