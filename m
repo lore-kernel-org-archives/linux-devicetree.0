@@ -1,129 +1,90 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v4 2/2] dt: power: st: Provide bindings for ST's OPPs
-Date: Tue, 28 Jul 2015 07:59:36 +0530
-Message-ID: <20150728022936.GB1229@linux>
-References: <1438010430-5802-1-git-send-email-lee.jones@linaro.org>
- <1438010430-5802-2-git-send-email-lee.jones@linaro.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 1/2] spi: bcm2835: add spi-bcm2835aux driver for the auxiliar
+ spi1 and spi2
+Date: Mon, 27 Jul 2015 20:51:06 -0600
+Message-ID: <55B6EE1A.2070605@wwwdotorg.org>
+References: <1434980408-4086-1-git-send-email-kernel@martin.sperl.org> <55A0A150.3060809@wwwdotorg.org> <ECFBB7BF-1316-4565-B1F2-FB2651131882@martin.sperl.org> <55A49662.3000706@wwwdotorg.org> <2768BFA9-7FE9-4EDC-8692-AC3F070BD874@martin.sperl.org> <55AEF828.20908@wwwdotorg.org> <0125992E-40F4-4702-8404-2943FF9A8788@martin.sperl.org> <55B1BA7A.1090104@wwwdotorg.org> <9005ABEC-C60A-4814-AD60-AD5BB09808F2@martin.sperl.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1438010430-5802-2-git-send-email-lee.jones@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, rob.herring@linaro.org, nm@ti.com, arnd.bergmann@linaro.org, sboyd@codeaurora.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, rjw@rjwysocki.net, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, ajitpal.singh@st.com, sre@kernel.org, dbaryshkov@gmail.com
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <9005ABEC-C60A-4814-AD60-AD5BB09808F2-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Cc'ing few people (whom I cc'd last time as well :)).
+On 07/24/2015 12:47 AM, Martin Sperl wrote:
+>=20
+>> On 24.07.2015, at 06:09, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrot=
+e:
+>>
+>> I think I'd expect the shared registers to be:
+>>
+>> bcm2835aux: misc@0x7e215000 {
+>>    compatible =3D "brcm,bcm2835-aux";
+>>    reg =3D <0x7e215000 0x08>;
+>> };
+>>
+>> There are two 4-byte registers outside the UART/SPI blocks, and the
+>> compatible value should reflect what the block is, not that Linux ma=
+y
+>> use a syscon driver to implement the driver for it.
+>>
+>> In the client, I'd expect a more semantic naming for the reference;
+>> something like:
+>>
+>> 	brcm,aux =3D <&bcm2835aux 4>;
+>>
+>> brcm, since it's a custom/vendor-specific property. aux is the name =
+of
+>> the object that's referenced. Packing the phandle and data together =
+into
+>> a single property reduces the number of separate properties, and is =
+a
+>> typical thing to do in a client of a service in DT.
+>=20
+> So in the end you are saying we need a separate driver to get written
+> (because of =91compatible =3D "brcm,bcm2835-aux=94;=92)
 
-On 27-07-15, 16:20, Lee Jones wrote:
-> These OPPs are used in ST's CPUFreq implementation.
-> 
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
-> 
-> Changelog:
->  - None, new patch
-> 
->  Documentation/devicetree/bindings/power/opp-st.txt | 76 ++++++++++++++++++++++
->  1 file changed, 76 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/opp-st.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/power/opp-st.txt b/Documentation/devicetree/bindings/power/opp-st.txt
-> new file mode 100644
-> index 0000000..6eb2a91
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/opp-st.txt
-> @@ -0,0 +1,76 @@
-> +STMicroelectronics OPP (Operating Performance Points) Bindings
-> +--------------------------------------------------------------
-> +
-> +Frequency Scaling only
-> +----------------------
-> +
-> +Located in CPU's node:
-> +
-> +- operating-points	: [See: ./opp.txt]
-> +
-> +Example [safe]
-> +--------------
-> +
-> +cpus {
-> +	cpu@0 {
-> +				 /* kHz     uV   */
-> +		operating-points = <1500000 0
-> +				    1200000 0
-> +				    800000  0
-> +				    500000  0>;
-> +	};
-> +};
-> +
-> +Dynamic Voltage and Frequency Scaling (DVFS)
-> +--------------------------------------------
-> +
-> +Located in 'cpu0-opp-list' node [to be provided ONLY by the bootloader]:
-> +
-> +- compatible		: Should be "operating-points-v2-sti"
-> +- opp{1..N} 		: Each 'oppX' subnode will contain the following properties:
+It's fine if some existing driver matches that compatible value.
 
-Or should we mention:
-- opp{1..N} 		: Each 'oppX' subnode shall contain below properties,
-                          over what ./opp.txt defines:
+> That is unless you would allow:
+> compatible =3D compatible =3D "brcm,bcm2835-aux=94, =93syscon=94;
 
-?
+"syscon" definitely shouldn't be in a DT.
 
+> If this is not acceptable, then where should such a driver go in the
+> kernel tree?
+>=20
+> It would essentially implement the following:
+> bcm2835aux_enable(dev, device-id);
+> bcm2835aux_disable(dev, device-id);
+>=20
+> Which would just set/clean the bits in the register while holding a l=
+ock.
 
-> + - opp-hz		: CPU frequency [Hz] for this OPP [See: ./opp.txt]
-> + - st,avs		: List of available voltages [uV] indexed by process code
-> + - st,cuts		: Cut version this OPP is suitable for [0xFF means ALL]
-> + - st,substrate		: Substrate version this OPP is suitable for [0xFF means ALL]
-> +- st,syscfg		: Phandle to Major number register
-> +				First cell: offset to major number
-> +- st,syscfg-eng		: Phandle to Minor number and Pcode registers
-> +				First cell: offset to process code
-> +				Second cell: offset to minor number
-> +
-> +WARNING: The opp{1..N} nodes will be provided by the bootloader.  Do not attempt to
-> +	 artificially synthesise the opp{1..N} nodes or any of their descendants.
-> +	 They are very platform specific and may damage the hardware if created
-> +	 incorrectly.
-> +
-> +Example [unsafe]
-> +----------------
-> +
-> +cpus {
-> +	cpu@0 {
-> +		operating-points-v2	= <&cpu0_opp_list>;
-> +	};
-> +};
-> +
-> +/* ############################################################ */
-> +/* # WARNING: Do not attempt to copy/replicate this node,     # */
-> +/* #          it is only to be supplied by the bootloader !!! # */
-> +/* ############################################################ */
-> +cpu0-opp-list {
-> +	compatible	= "operating-points-v2-sti";
-> +	st,syscfg	= <&syscfg [major_offset]>;
-> +	st,syscfg-eng   = <&syscfg_eng [pcode_offset] [minor_offset]>;
-> +
-> +	opp0 {
-> +		opp-hz		= <1200000000>;
-> +		st,avs		= <1110 1150 1100 1080 1040 1020 980 930>;
-> +		st,substrate	= <0xff>;
-> +		st,cuts		= <0xff>;
-> +	};
-> +	opp1 {
-> +		opp-hz		= <1500000000>;
-> +		st,avs		= <1200 1200 1200 1200 1170 1140 1100 1070>;
-> +		st,substrate	= <0xff>;
-> +		st,cuts		= <0x2>;
-> +	};
-> +};
+That sounds reasonable. I'd also expect a function that the client
+drivers could call during probe() to look up the device (and implement
+deferred probe) and another to release the reference during the client'=
+s
+remove().
 
-I don't see more problems here, unless we can move some of this to the
-generic bindings.
+> As an alternative: maybe we could implement it as an IRQ driver
+> and when the irq is requested for that device, then the HW-block gets
+> enabled automatically (and disabled when released).
 
-@Rob/Stephen: Please respond before it is late :)
+That seems a bit too implicit; there's no strict requirement that a
+driver for e.g. the SPI block has to use an interrupt; it's merely
+extremely likely.
 
--- 
-viresh
+> That way we may not need to have a separate driver that would enable
+> the uart1, but it would be sufficient to configure it as follows:
+
+Surely the IRQ driver would be a separate driver either way? The only
+difference is whether it exposes custom APIs, or does things as a
+side-effect of the existing IRQ API.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
