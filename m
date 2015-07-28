@@ -1,124 +1,123 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v3 1/2] input: touchscreen: pixcir_i2c_ts: Add support
- for optional wakeup interrupt
-Date: Tue, 28 Jul 2015 12:04:16 +0300
-Message-ID: <55B74590.4090506@ti.com>
-References: <1437663246-16049-1-git-send-email-vigneshr@ti.com> <1437663246-16049-2-git-send-email-vigneshr@ti.com> <55B60CA1.3090800@ti.com> <55B613BA.3070402@ti.com> <20150727212042.GD5144@dtor-ws>
+From: Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+Subject: Re: [PATCH 8/8] iio: mma8452: add devicetree property to allow all
+ pin wirings
+Date: Tue, 28 Jul 2015 11:11:29 +0200
+Message-ID: <55B74741.3000408@theobroma-systems.com>
+References: <1438006095-26920-1-git-send-email-martink@posteo.de> <1438006095-26920-9-git-send-email-martink@posteo.de> <20150727142336.GB10821@leverpostej> <55B6423C.7030301@posteo.de> <20150727173345.GF10821@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150727212042.GD5144@dtor-ws>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Vignesh R <vigneshr@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, Benoit Cousson <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Henrik Rydberg <rydberg@bitmath.org>, Frodo Lai <frodo.lai@gmail.com>, Jingoo Han <jg1.han@samsung.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150727173345.GF10821@leverpostej>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
+Cc: "jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "knaack.h-Mmb7MZpHnFY@public.gmane.org" <knaack.h-Mmb7MZpHnFY@public.gmane.org>, "lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org" <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, "pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org" <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, "mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org" <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>, "roberta.dobrescu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <roberta.dobrescu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org" <christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 28/07/15 00:20, Dmitry Torokhov wrote:
-> On Mon, Jul 27, 2015 at 04:49:22PM +0530, Vignesh R wrote:
->>
->>
->> On 07/27/2015 04:19 PM, Roger Quadros wrote:
->>> Hi,
+
+
+On 2015-07-27 19:33, Mark Rutland wrote:
+> On Mon, Jul 27, 2015 at 03:37:48PM +0100, Martin Kepplinger wrote:
+>> Am 2015-07-27 um 16:23 schrieb Mark Rutland:
+>>> On Mon, Jul 27, 2015 at 03:08:15PM +0100, Martin Kepplinger wrote:
+>>>> For the devices supported by the mma8452 driver, two interrupt pins are
+>>>> available to route the interrupt signals to. By default INT1 is assumed.
+>>>>
+>>>> This adds a bitmask DT property for users to configure interrupt sources
+>>>> for INT2, if that is the wired interrupt pin for them.
 >>>
->>> On 23/07/15 17:54, Vignesh R wrote:
->>>> On am437x-gp-evm, pixcir touchscreen can wake the system from low power
->>>> state by generating wake-up interrupt via pinctrl and IO daisy chain.
->>>> Add support for optional wakeup interrupt source by regsitering to
->>>> automated wake IRQ framework introduced by commit 4990d4fe327b ("PM /
->>>> Wakeirq: Add automated device wake IRQ handling").
->>>> This is similar in approach to commit 2a0b965cfb6e ("serial: omap: Add
->>>> support for optional wake-up")
->>>>
->>>> Signed-off-by: Vignesh R <vigneshr@ti.com>
->>>> ---
->>>>
->>>> v3:
->>>>  * handle error code returned by of_irq_get_byname()
->>>>
->>>> v2:
->>>>  * use of_irq_get_byname()
->>>>  * remove enable/disable_wake_irq()
->>>>
->>>>  drivers/input/touchscreen/pixcir_i2c_ts.c | 22 ++++++++++++++++++----
->>>>  include/linux/input/pixcir_ts.h           |  1 +
->>>>  2 files changed, 19 insertions(+), 4 deletions(-)
->>>>
->>>> diff --git a/drivers/input/touchscreen/pixcir_i2c_ts.c b/drivers/input/touchscreen/pixcir_i2c_ts.c
->>>> index 8f3e243a62bf..3a4ab358bf52 100644
->>>> --- a/drivers/input/touchscreen/pixcir_i2c_ts.c
->>>> +++ b/drivers/input/touchscreen/pixcir_i2c_ts.c
->>>> @@ -29,6 +29,8 @@
->>>>  #include <linux/of.h>
->>>>  #include <linux/of_gpio.h>
->>>>  #include <linux/of_device.h>
->>>> +#include <linux/of_irq.h>
->>>> +#include <linux/pm_wakeirq.h>
->>>>  
->>>>  #define PIXCIR_MAX_SLOTS       5 /* Max fingers supported by driver */
->>>>  
->>>> @@ -364,8 +366,6 @@ static int __maybe_unused pixcir_i2c_ts_suspend(struct device *dev)
->>>>  				goto unlock;
->>>>  			}
->>>>  		}
->>>> -
->>>> -		enable_irq_wake(client->irq);
->>>>  	} else if (input->users) {
->>>>  		ret = pixcir_stop(ts);
->>>>  	}
->>>> @@ -386,8 +386,6 @@ static int __maybe_unused pixcir_i2c_ts_resume(struct device *dev)
->>>>  	mutex_lock(&input->mutex);
->>>>  
->>>>  	if (device_may_wakeup(&client->dev)) {
->>>> -		disable_irq_wake(client->irq);
->>>> -
->>>>  		if (!input->users) {
->>>>  			ret = pixcir_stop(ts);
->>>>  			if (ret) {
->>>> @@ -445,6 +443,13 @@ static struct pixcir_ts_platform_data *pixcir_parse_dt(struct device *dev)
->>>>  	dev_dbg(dev, "%s: x %d, y %d, gpio %d\n", __func__,
->>>>  		pdata->x_max + 1, pdata->y_max + 1, pdata->gpio_attb);
->>>>  
->>>> +	pdata->wakeirq = of_irq_get_byname(dev->of_node, "wakeup");
->>>> +	if (pdata->wakeirq < 0 && pdata->wakeirq != -ENODATA &&
->>>> +	    pdata->wakeirq != -EINVAL) {
->>>> +		dev_err(dev, "Failed to get wakeirq\n");
->>>> +		return ERR_PTR(pdata->wakeirq);
->>>> +	}
->>>> +
->>>>  	return pdata;
->>>>  }
->>>>  #else
->>>> @@ -564,11 +569,20 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
->>>>  	i2c_set_clientdata(client, tsdata);
->>>>  	device_init_wakeup(&client->dev, 1);
->>>>  
->>>> +	/* Register wakeirq */
->>>> +	error = (pdata->wakeirq > 0) ?
->>>> +		dev_pm_set_dedicated_wake_irq(dev, pdata->wakeirq) :
->>>> +		dev_pm_set_wake_irq(dev, client->irq);
->>>
->>> Can 0 be a valid wakeirq or client->irq?
->>> If yes then this logic is broken.
->>>
+>>> This sounds like configureation rather than a HW property. Why does this
+>>> need to be in the DT?
 >>
->> AFAIK, IRQ 0 is always assigned to system timer interrupt (cannot find
->> reliable source to quote).
->>
->>> I would set wakeirq to -EINVAL or something if it is not available
->>> during probe and check for that condition.
->>>
->>
->> Not sure, if I understand you correctly
->> pdata->wakeirq will have -ENODATA or -EINVAL(as returned by
->> of_irq_get_byname()), if wakeirq is not available. Do you want me to
->> check for these two conditions specifically rather than
->> (pdata->wakeirq > 0) ?
+>> It's a hardware property of the board that uses the device. There might
+>> be boards that connect just one of them at random, which is the reason
+>> for this DT property. There also might be exotic users who will want
+>> to use both pins to route different interrupt sources to (not yet
+>> supported, but no problem with such a bitmask).
 > 
-> 0 is not really valid general IRQ number; I2C for example sets
-> client->irq to 0 when there is no IRQ.
+> Ok, so I'm somewhat confused as to what the hardware looks like and what
+> this means.
+> 
+> Could you elaborate on how INT1 and INT2 are used? It looks like they're
+> used as output pins, and so interrupt-names would seem appropriate for
+> describing the combination which is wired up.
 
-OK. If we assume 0 is invalid IRQ, then the patch is fine.
+They are just the chip's two possible interrupt lines for us to get
+notified about event.
 
-cheers,
--roger
+You build a board, you use one of these 4 chips, wiring up just one of
+the 2 interrupt pins. By far most people won't ever need both pins.
+
+DT describes your hardware, right? So you describe how you built your
+board (wired the accelerometer chip) with this DT property.
+
+> 
+> w.r.t. configuring the choice of output(s), that sounds like a runtime
+> decision rather than something which needs to be configured statically.
+
+This won't be useful during runtime. (De)activating events is what you
+do in iio sysfs.
+
+Even in the rare case (maybe supported in the future) when you want one
+interrupt source on one pin and another source on the other pin, that
+describes your hardware. You wire, say, data-ready to Linux and
+motion-detection to some strange alarm system. When you change your
+hardware (say, use Linux for both pins), I think it would justify
+changing a DT property.
+
+Btw, we are talking about very theoretical stuff here. For now (and even
+possibly forever) we just don't ever want to break a DT propery we
+introduce here, thus the bitmask.
+
+> 
+>>>> This is important for everyone to be able to use this driver, no matter
+>>>> how their chip is wired. At the moment, only 0xff for using INT2 for all
+>>>> available interrupt sources is supported. See the devicetree documentation
+>>>> file for more details.
+>>>>
+>>>> Since this doesn't change the default behaviour, it doesn't break anything
+>>>> for existing users.
+>>>>
+>>>> Signed-off-by: Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+>>>> Signed-off-by: Christoph Muellner <christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+>>>> ---
+>>>>  .../devicetree/bindings/iio/accel/mma8452.txt        |  4 ++++
+>>>>  drivers/iio/accel/mma8452.c                          | 20 +++++++++++++-------
+>>>>  2 files changed, 17 insertions(+), 7 deletions(-)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/iio/accel/mma8452.txt b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
+>>>> index 8d98e05..738a430 100644
+>>>> --- a/Documentation/devicetree/bindings/iio/accel/mma8452.txt
+>>>> +++ b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
+>>>> @@ -10,6 +10,9 @@ Optional properties:
+>>>>  
+>>>>    - interrupt-parent: should be the phandle for the interrupt controller
+>>>>    - interrupts: interrupt mapping for GPIO IRQ
+>>>> +  - use_int2: bitmask to choose interrupt sources assumed to be wired to
+>>>> +    interrupt pin INT2 instead of INT1. Only 0xff (INT2 for every interrupt
+>>>> +    source) is supported at the moment.
+>>>
+>>> s/_/-/ in property names, please.
+>>
+>> ok. If I don't do a version 6 really soon, I'll reply with this patch
+>> corrected here.
+>>
+>>>
+>>> We generally avoid bitmasks in properties, and we also usually exepct a
+>>> full cell even if data is smaller. The fact that you expect /bits/ 8 
+>>> must be documented here if that's truly necessary.
+>>
+>> It's not truly necessary. It's just a nice fit. There is one 8 bit
+>> (device memory) register that basically could (in the future) be
+>> exposed through this DT property.
+>>
+>> For now it's just 0xff or nothing. We only don't want to create an
+>> interface that could restrict us from implementing more in the future
+>> without breaking anything.
+> 
+> It sounds like you wouldn't need this (at least for now) if you were to
+> use interrupt-names to describe whether INT1 and/or INT2 were wired up.
+> 
+> Thanks,
+> Mark.
+> 
