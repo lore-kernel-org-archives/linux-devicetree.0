@@ -1,74 +1,75 @@
-From: Igor Grinberg <grinberg@compulab.co.il>
-Subject: Re: [PATCH 1/2] ARM: dts: Add support for phyCORE-AM335x SoM
-Date: Tue, 28 Jul 2015 11:29:33 +0300
-Message-ID: <55B73D6D.2040801@compulab.co.il>
-References: <1437035449-26956-1-git-send-email-t.remmet@phytec.de>
- <20150727143444.GD15004@beef>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH V3 10/19] drm/tegra: dc: Prepare for generic PM domains
+Date: Tue, 28 Jul 2015 09:30:04 +0100
+Message-ID: <55B73D8C.103@nvidia.com>
+References: <1436791197-32358-1-git-send-email-jonathanh@nvidia.com> <1436791197-32358-11-git-send-email-jonathanh@nvidia.com> <20150717104154.GM3057@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150727143444.GD15004@beef>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matt Porter <mporter@konsulko.com>, Teresa Remmet <t.remmet@phytec.de>
-Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Kumar Gala <galak@codeaurora.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150717104154.GM3057@ulmo>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, =?windows-1252?Q?Terje_Bergstr?= =?windows-1252?Q?=F6m?= <tbergstrom-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vince Hsu <vinceh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Matt,
 
-On 07/27/15 17:34, Matt Porter wrote:
-> On Thu, Jul 16, 2015 at 10:30:48AM +0200, Teresa Remmet wrote:
->> phyCORE-AM335x is a SoM (System on Module) containing
->> a AM335x SOC. The module can be connected to different
->> carrier boards.
->>
->> Some hardware parts are configurable on the phyCORE-AM335x.
->> So they are disabled on default in this som dtsi file.
->> They will be enabled in the board dts files, when populated.
->>
->> * RAM up to 1GiB
->> * PMIC
->> * NAND flash up to 1GiB
->> * Eth PHY on SOM: 1x RMII
->> * SPI NOR flash 8MiB (optional)
->> * i2c RTC (optional)
->> * i2c EEPROM 4kiB (optional)
->>
->> Signed-off-by: Teresa Remmet <t.remmet@phytec.de>
->> ---
->>  arch/arm/boot/dts/am335x-phycore-som.dtsi | 368 ++++++++++++++++++++++++++++++
->>  1 file changed, 368 insertions(+)
->>  create mode 100644 arch/arm/boot/dts/am335x-phycore-som.dtsi
->>
->> diff --git a/arch/arm/boot/dts/am335x-phycore-som.dtsi b/arch/arm/boot/dts/am335x-phycore-som.dtsi
->> new file mode 100644
->> index 0000000..4d28fc3
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/am335x-phycore-som.dtsi
-
-[...]
-
->> +#include "am33xx.dtsi"
->> +
->> +/ {
->> +	model = "Phytec AM335x phyCORE";
->> +	compatible = "phytec,am335x-phycore-som", "ti,am33xx";
+On 17/07/15 11:41, Thierry Reding wrote:
+> * PGP Signed by an unknown key
 > 
-> One minor thing here...wildcards in compatible strings aren't permitted.
-> However, family compatibles like "ti,am33xx" that came in before this
-> was enforced are grandfathered. Ideally, the newly introced board/som
-> specific strings should not propagate that wildcard. i.e. something
-> like "phytec,am3352-phycore-som" or whatever is the base family part
-> on these SOMs.
+> On Mon, Jul 13, 2015 at 01:39:48PM +0100, Jon Hunter wrote:
+>> Add support to the tegra dc driver for generic PM domains. However,
+>> to ensure backward compatibility with older device tree blobs ensure
+>> that the driver can work with or without generic PM domains. In order
+>> to migrate to generic PM domain infrastructure the necessary changes
+>> are:
+>>
+>> 1. If the "power-domains" property is present in the DT device node then
+>>    generic PM domains is supported and pm_runtime_enable() should be
+>>    called for the device. Furthermore, the enabling and disabling of the
+>>    power-domain is handled via calling pm_runtime_get/put, respectively.
 > 
+> The device could be PM runtime enabled even if no power-domains property
+> is set. Couldn't we check something more direct, like for example if the
+> dev->pm_domain is non-NULL?
 
-I'm not sure this is wild card.
-I tend to think that it is the real name of the som [1], no?
+Yes could do that instead.
 
-http://phytec.com/products/system-on-modules/phycore/am335x/
+> Perhaps it'd be worth converting the driver to use runtime PM first, and
+> move all the powergate and clock handling into suspend/resume functions,
+> and then we can conditionalize whether or not we call the legacy API iff
+> dev->pm_domain == NULL?
 
-[...]
+May be that would be a cleaner transition than trying to do it all in
+one go.
 
--- 
-Regards,
-Igor.
+>> 2. To ensure that clocks are managed consistently when generic PM domains
+>>    are used and are not used, drivers should be migrated to use the
+>>    tegra_powergate_power_on_legacy() and tegra_powergate_power_off_legacy()
+>>    functions instead of the current tegra_powergate_sequence_power_up()
+>>    and tegra_powergate_power_off(). The purpose of the
+>>    tegra_powergate_power_on_legacy() and tegra_powergate_power_off_legacy()
+>>    APIs is to mimick the behaviour of the tegra generic power-domain code,
+>>    such that if generic power domains are not supported the functionality
+>>    is the same.
+>>
+>> 3. The main difference between the tegra_powergate_sequence_power_up() API
+>>    and the tegra_powergate_power_on_legacy() is that the clock used to
+>>    enable the powergate is not kept enabled when using the
+>>    tegra_powergate_power_on_legacy() API. Therefore, drivers must enable
+>>    the clocks they need after calling tegra_powergate_power_on_legacy()
+>>    and disable these clocks before calling
+>>    tegra_powergate_power_off_legacy().
+> 
+> This seems like it should go into the previous patch. I'm not sure I
+> understand why this is necessary. Wouldn't it be easier to update the
+> drivers to properly cope with this? We'll need to move them to runtime
+> PM at some point anyway, so if we do that first, we should be able to
+> hide all these details within the driver's suspend/resume functions
+> but without the need for the API churn here.
+
+I will take a look at that. I was trying to get the clock handling in
+the driver to be consistent when generic power domains are used and when
+they are not. However, may be that is not a big deal.
+
+Jon
