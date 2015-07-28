@@ -1,216 +1,116 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [RFCv2 3/3] reset: reset-zynq: Adding support for Xilinx Zynq
- reset controller.
-Date: Tue, 28 Jul 2015 10:38:00 +0200
-Message-ID: <1438072680.3193.24.camel@pengutronix.de>
-References: <1437783682-13632-1-git-send-email-moritz.fischer@ettus.com>
-	 <1437783682-13632-4-git-send-email-moritz.fischer@ettus.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V3 3/3] devicetree: da9062: Add device tree bindings for
+ DA9062 OnKey
+Date: Tue, 28 Jul 2015 09:40:19 +0100
+Message-ID: <20150728084019.GM14943@x1>
+References: <cover.1437668261.git.stwiss.opensource@diasemi.com>
+ <6bfae9b4f5475b59bddc4b71091121f1c0697a2d.1437668261.git.stwiss.opensource@diasemi.com>
+ <20150727224300.GG3613@dtor-ws>
+ <20150728054024.GA4558@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1437783682-13632-4-git-send-email-moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150728054024.GA4558@dtor-ws>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: S Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, DEVICETREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, LINUXINPUT <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUXKERNEL <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, RTCLINUX <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Dajun Chen <david.chen-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Support Opensource <support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Moritz,
+On Mon, 27 Jul 2015, Dmitry Torokhov wrote:
 
-Am Freitag, den 24.07.2015, 17:21 -0700 schrieb Moritz Fischer:
-> This adds a reset controller driver to control the Xilinx Zynq
-> SoC's various resets.
-> 
-> Signed-off-by: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+> On Mon, Jul 27, 2015 at 03:43:00PM -0700, Dmitry Torokhov wrote:
+> > On Thu, Jul 23, 2015 at 05:17:41PM +0100, S Twiss wrote:
+> > > From: S Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+> > >=20
+> > > Add device tree bindings for the DA9062 OnKey driver component
+> > >=20
+> > > Signed-off-by: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+> > >=20
+> > > ---
+> > > Changes in V3:
+> > >  - Child driver specifics separated out into separate document
+> > >    in this case ../input/da9062-onkey.txt
+> > > Changes in V2:
+> > >  - No change
+> > >=20
+> > > This patch applies against linux-next and next-20150708=20
+> > >=20
+> > >=20
+> > >  .../devicetree/bindings/input/da9062-onkey.txt     | 36 ++++++++=
+++++++++++++++
+> > >  Documentation/devicetree/bindings/mfd/da9062.txt   |  3 ++
+> >=20
+> > I dropped bits for mfd/da9062.txt, changed to mention both 9062 and
+> > 9063, folded into the onkey patch and applied.
+>=20
+> Argh, da9062 core is not in mainline yet... OK, below is the patch I
+> had; if Lee does not pick it up I'll re-apply it when da9062 core hit=
+s
+> mainline.
+
+Hmm... that's annoying.  You've put the patch below your signature
+'--', so my mailer cuts it off.
+
+[pasting]
+
+> Input: add DA9062 OnKey capability to DA9063 OnKey driver
+>=20
+> From: S Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+>=20
+> Add DA9062 OnKey support into the existing DA9063 OnKey driver compon=
+ent by
+> using generic access tables for common register and bit mask definiti=
+ons.
+>=20
+> The following change will add generic register and bit mask support t=
+o the
+> DA9063 OnKey.
+>=20
+> The following alterations have been made to the DA9063 OnKey:
+>=20
+> - Addition of a da906x_chip_config structure to hold all
+>   generic registers and bitmasks for this type of OnKey component.
+> - Addition of an struct of_device_id table for DA9063 and DA9062
+>   defaults
+> - Refactoring functions to use struct da9063_onkey accesses to generi=
+c
+>   registers/masks instead of using defines from registers.h
+> - Re-work of da9063_onkey_probe() to use of_match_node() and
+>   dev_get_regmap() to provide initialisation of generic registers and
+>   masks and access to regmap
+>=20
+> Signed-off-by: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
->  drivers/reset/Makefile     |   1 +
->  drivers/reset/reset-zynq.c | 142 +++++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 143 insertions(+)
->  create mode 100644 drivers/reset/reset-zynq.c
-> 
-> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-> index 157d421..3fe50e7 100644
-> --- a/drivers/reset/Makefile
-> +++ b/drivers/reset/Makefile
-> @@ -3,3 +3,4 @@ obj-$(CONFIG_ARCH_SOCFPGA) += reset-socfpga.o
->  obj-$(CONFIG_ARCH_BERLIN) += reset-berlin.o
->  obj-$(CONFIG_ARCH_SUNXI) += reset-sunxi.o
->  obj-$(CONFIG_ARCH_STI) += sti/
-> +obj-$(CONFIG_ARCH_ZYNQ) += reset-zynq.o
-> diff --git a/drivers/reset/reset-zynq.c b/drivers/reset/reset-zynq.c
-> new file mode 100644
-> index 0000000..05e37f8
-> --- /dev/null
-> +++ b/drivers/reset/reset-zynq.c
-> @@ -0,0 +1,142 @@
-> +/*
-> + * Copyright (c) 2015, National Instruments Corp.
-> + *
-> + * Xilinx Zynq Reset controller driver
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; version 2 of the License.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/reset-controller.h>
-> +#include <linux/regmap.h>
-> +#include <linux/types.h>
-> +
-> +/* Offsets into SLCR regmap */
-> +#define SLCR_RST_CTRL_OFFSET	0x200 /* FPGA Software Reset Control */
+>  .../devicetree/bindings/input/da9062-onkey.txt     |   32 +++++
+>  drivers/input/misc/Kconfig                         |    8 +
+>  drivers/input/misc/da9063_onkey.c                  |  129 ++++++++++=
+++++++----
+>  3 files changed, 140 insertions(+), 29 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/input/da9062-on=
+key.txt
+=20
+I'm confused.  What's the dependency?
 
-Maybe get this value from the reg property? I'm not sure if this is ever
-expected to change.
+There shouldn't be any issue applying input patches, just because
+there isn't an MFD counterpart.  In fact, I would take prior
+acceptance of the child into consideration (would be like a +1 vote)
+when reviewing the MFD part.
 
-> +#define NBANKS	18
+One suggestion however, I would ask for the DT binding and the driver
+to be separated, as per [0].
 
-reg = <0x200 0x50> says there are two more registers, are those not used?
+[0] Documentation/devicetree/bindings/submitting-patches.txt
 
-> +struct zynq_reset_data {
-> +	struct regmap *slcr;
-> +	struct reset_controller_dev rcdev;
-> +};
-> +
-> +#define to_zynq_reset_data(p)		\
-> +	container_of((p), struct zynq_reset_data, rcdev)
-> +
-> +static int zynq_reset_assert(struct reset_controller_dev *rcdev,
-> +			     unsigned long id)
-> +{
-> +	struct zynq_reset_data *priv = to_zynq_reset_data(rcdev);
-> +
-> +	int bank = id / BITS_PER_LONG;
-> +	int offset = id % BITS_PER_LONG;
-> +
-> +	regmap_update_bits(priv->slcr,
-> +			   SLCR_RST_CTRL_OFFSET + (bank * 4),
-> +			   BIT(offset),
-> +			   BIT(offset));
-> +
-> +	return 0;
-> +}
-
-Just "return regmap_update_bits(...)" here ...
-
-> +static int zynq_reset_deassert(struct reset_controller_dev *rcdev,
-> +			       unsigned long id)
-> +{
-> +	struct zynq_reset_data *priv = to_zynq_reset_data(rcdev);
-> +
-> +	int bank = id / BITS_PER_LONG;
-> +	int offset = id % BITS_PER_LONG;
-> +
-> +	regmap_update_bits(priv->slcr,
-> +			   SLCR_RST_CTRL_OFFSET + (bank * 4),
-> +			   BIT(offset),
-> +			   ~BIT(offset));
-> +
-> +	return 0;
-> +}
-
-... and here.
-
-> +static int zynq_reset_status(struct reset_controller_dev *rcdev,
-> +			     unsigned long id)
-> +{
-> +	struct zynq_reset_data *priv = to_zynq_reset_data(rcdev);
-> +
-> +	int bank = id / BITS_PER_LONG;
-> +	int offset = id % BITS_PER_LONG;
-> +	u32 reg;
-> +
-> +	regmap_read(priv->slcr, SLCR_RST_CTRL_OFFSET + (bank * 4), &reg);
-> +
-> +	return !(reg & BIT(offset));
-> +}
-
-Do I understand this correctly, you write 1 to assert the reset, but the
-register reads 0 while the reset is asserted and 1 otherwise?
-Also note that reset_status may return negative ERRNO, so for offset ==
-31 you should not return (1<<31).
-
-> +static const struct reset_control_ops zynq_reset_ops = {
-> +	.assert		= zynq_reset_assert,
-> +	.deassert	= zynq_reset_deassert,
-> +	.status		= zynq_reset_status,
-> +};
-> +
-> +static int zynq_reset_probe(struct platform_device *pdev)
-> +{
-> +	struct zynq_reset_data *priv;
-> +
-> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +	platform_set_drvdata(pdev, priv);
-> +
-> +	priv->slcr = syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
-> +		"syscon");
-
-I'd just use syscon_node_to_regmap(pdev->dev.of_node->parent) here,
-which removes the need for the syscon phandle binding.
-
-> +	if (IS_ERR(priv->slcr)) {
-> +		dev_err(&pdev->dev, "unable to get zynq-slcr regmap");
-> +		return PTR_ERR(priv->slcr);
-> +	}
-> +
-> +	priv->rcdev.owner = THIS_MODULE;
-> +	priv->rcdev.nr_resets = NBANKS * BITS_PER_LONG;
-> +	priv->rcdev.ops = &zynq_reset_ops;
-> +	priv->rcdev.of_node = pdev->dev.of_node;
-> +	reset_controller_register(&priv->rcdev);
-> +
-> +	return 0;
-> +}
-> +
-> +static int zynq_reset_remove(struct platform_device *pdev)
-> +{
-> +	struct zynq_reset_data *priv = platform_get_drvdata(pdev);
-> +
-> +	reset_controller_unregister(&priv->rcdev);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id zynq_reset_dt_ids[] = {
-> +	{ .compatible = "xlnx,zynq-reset", },
-> +	{ /* sentinel */ },
-> +};
-> +
-> +static struct platform_driver zynq_reset_driver = {
-> +	.probe	= zynq_reset_probe,
-> +	.remove	= zynq_reset_remove,
-> +	.driver = {
-> +		.name		= "zynq-pl-reset",
-
-Is -pl- a leftover?
-
-> +		.of_match_table	= zynq_reset_dt_ids,
-> +	},
-> +};
-> +module_platform_driver(zynq_reset_driver);
-> +
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_AUTHOR("Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>");
-> +MODULE_DESCRIPTION("Zynq Reset Controller Driver");
-
-regards
-Philipp
-
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
