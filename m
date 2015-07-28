@@ -1,108 +1,87 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 3/6] iommu: add ARM short descriptor page table
-	allocator.
-Date: Tue, 28 Jul 2015 12:00:23 +0100
-Message-ID: <20150728110023.GH29209@arm.com>
-References: <1437037475-9065-1-git-send-email-yong.wu@mediatek.com>
-	<1437037475-9065-4-git-send-email-yong.wu@mediatek.com>
-	<20150721171101.GN31095@arm.com>
-	<1437715466.23932.68.camel@mhfsdcap03>
-	<20150724165325.GC21177@arm.com>
-	<1437970868.25925.20.camel@mhfsdcap03> <55B63AB2.4050006@arm.com>
-	<20150727141102.GJ3358@arm.com>
-	<1438060094.25925.69.camel@mhfsdcap03>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V3 10/19] drm/tegra: dc: Prepare for generic PM domains
+Date: Tue, 28 Jul 2015 13:20:32 +0200
+Message-ID: <20150728112030.GA10949@ulmo.nvidia.com>
+References: <1436791197-32358-1-git-send-email-jonathanh@nvidia.com>
+ <1436791197-32358-11-git-send-email-jonathanh@nvidia.com>
+ <20150717104154.GM3057@ulmo>
+ <55B73D8C.103@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="Kj7319i9nmIyA2yE"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1438060094.25925.69.camel@mhfsdcap03>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "cloud.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <cloud.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org" <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Sasha Hauer <kernel@pen>
+In-Reply-To: <55B73D8C.103-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Terje =?utf-8?Q?Bergstr=C3=B6m?= <tbergstrom-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vince Hsu <vinceh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 28, 2015 at 06:08:14AM +0100, Yong Wu wrote:
-> On Mon, 2015-07-27 at 15:11 +0100, Will Deacon wrote:
-> > On Mon, Jul 27, 2015 at 03:05:38PM +0100, Robin Murphy wrote:
-> > > On 27/07/15 05:21, Yong Wu wrote:
-> > > >>>>> +       } else {        /* page or largepage */
-> > > >>>>> +               if (quirk & IO_PGTABLE_QUIRK_SHORT_MTK) {
-> > > >>>>> +                       if (large) { /* special Bit */
-> > > >>>>
-> > > >>>> This definitely needs a better comment! What exactly are you doing here
-> > > >>>> and what is that quirk all about?
-> > > >>>
-> > > >>> I use this quirk is for MTK Special Bit as we don't have the XN bit in
-> > > >>> pagetable.
-> > > >>
-> > > >> I'm still not really clear about what this is.
-> > > >
-> > > > There is some difference between the standard spec and MTK HW,
-> > > > Our hw don't implement some bits, like XN and AP.
-> > > > So I add a quirk for MTK special.
-> > > 
-> > > When you say it doesn't implement these bits, do you mean that having 
-> > > them set will lead to Bad Things happening in the hardware, or that it 
-> > > will simply ignore them and not enforce any of the protections they 
-> > > imply? The former case would definitely want clearly documenting 
-> > > somewhere, whereas for the latter case I'm not sure it's even worth the 
-> > > complication of having a quirk - if the value doesn't matter there seems 
-> > > little point in doing a special dance just for the sake of semantic 
-> > > correctness of the in-memory PTEs, in my opinion.
-> > 
-> > Agreed. We should only use quirks if the current (architecturally
-> > compliant) code causes real issues with the hardware. Then the quirk can
-> > be used to either avoid the problematic routines or to take extra steps
-> > to make things work as the architecture intended.
-> > 
-> > I've asked how this IOMMU differs from the architecture on a number of
-> > occasions, but I'm still yet to receive a response other than "it's special".
-> > 
-> 
-> After check further with DE, Our pagetable is refer to ARM-v7's
-> short-descriptor which is a little different from ARM-v8. like bit0(PXN)
-> in section and supersection, I didn't read ARM-v7 spec before, so I add
-> a MTK quirk to disable PXN bit in section and supersection.(if the PXN
-> bit is wrote in ARM-v7 spec, HW will page fault.)
 
-I've been reviewing this using the ARMv7 ARM (Rev.C of DDI0406C) the whole
-time. PXN is there as an optional field in non-LPAE implementations. That's
-fine and doesn't require any quirks.
+--Kj7319i9nmIyA2yE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Then I write this code according to ARM-v8 spec defaultly, and add a
-> ARM-v7 quirk?
+On Tue, Jul 28, 2015 at 09:30:04AM +0100, Jon Hunter wrote:
+>=20
+> On 17/07/15 11:41, Thierry Reding wrote:
+> > * PGP Signed by an unknown key
+> >=20
+> > On Mon, Jul 13, 2015 at 01:39:48PM +0100, Jon Hunter wrote:
+> >> Add support to the tegra dc driver for generic PM domains. However,
+> >> to ensure backward compatibility with older device tree blobs ensure
+> >> that the driver can work with or without generic PM domains. In order
+> >> to migrate to generic PM domain infrastructure the necessary changes
+> >> are:
+> >>
+> >> 1. If the "power-domains" property is present in the DT device node th=
+en
+> >>    generic PM domains is supported and pm_runtime_enable() should be
+> >>    called for the device. Furthermore, the enabling and disabling of t=
+he
+> >>    power-domain is handled via calling pm_runtime_get/put, respectivel=
+y.
+> >=20
+> > The device could be PM runtime enabled even if no power-domains property
+> > is set. Couldn't we check something more direct, like for example if the
+> > dev->pm_domain is non-NULL?
+>=20
+> Yes could do that instead.
+>=20
+> > Perhaps it'd be worth converting the driver to use runtime PM first, and
+> > move all the powergate and clock handling into suspend/resume functions,
+> > and then we can conditionalize whether or not we call the legacy API iff
+> > dev->pm_domain =3D=3D NULL?
+>=20
+> May be that would be a cleaner transition than trying to do it all in
+> one go.
 
-No, I don't think you need this, as the v8 and v7 short-descriptor formats
-look compatible to me. You should only need a quirk if architecturally
-compliant code cannot work on your hardware.
+I have a couple of patches in my tree to do this for DRM as part of an
+effort to restore DPMS. It's fairly tricky to get right in DRM and
+requires all sorts of changes to the driver.
 
-> And there is a little different between ARM-v7 spec and MTK pagetable.
-> It's the XN(bit0) in small page. MTK don't implement XN bit. 
-> The bit[1:0] in MTK's small page should be 2'b10, if it's 2'b11, HW will
-> page fault.
+Thierry
 
-Aha, thanks! *That* is worthy of a quirk. Something like:
+--Kj7319i9nmIyA2yE
+Content-Type: application/pgp-signature; name="signature.asc"
 
-  IO_PGTABLE_QUIRK_ARM_NO_XN
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-> (MTK don't implement AP bits too, but HW don't use them, it is ok even
-> though AP bits is wrote)
+iQIcBAABCAAGBQJVt2V8AAoJEN0jrNd/PrOhp7MQAJHgAvjhigg/VOM7XE1Rm4jR
+B+aBEzaaI6KOToKsFP48aSe62njCJDMS/5iuFUcf8nRQJY4+sAEn9q82okgOdAfq
+lzvYclRKymA6oQjM8QurhmLc7dKT4zMCu4YtM3Pkft7Qcqhryc4g2TqVrDzu2geU
+2Aq0IXR5Feud270X5jjVZ67g8+rSfJ4T/RO0aacz+7Qq5jmJeryL8766T2OMHXHN
+zE11C9vyqrLqcHIsJ3kMfCEoRSjCj8+B3RLgWJEqZj47kkbeZyO0dW0yJFDwyYjG
+uiisT0YezbPbuuEgYxx1YGjmLFwWVkAiBu3+gTMMyF48OB1KCBTNWzXrR4gtCKeR
+jd2fGGcKdsj1Nra4uIdHg603i0lgsk1trV/Fvovl31NDc+EoVciT5q6j4c1Lp0p4
+nPDigbPexMxKt241Tf12smYgkoM2H++UJsJaMMaYOOhEK8xC437a1Kx0sYnBT2z/
+xccK20sfwFuhel1qTKkGwM5XKivqSN03XUCi/icgo/4b+Z9i0tj/Zp1ChJolapwB
+38KhhTYLb7QOp37HjCtreKdI5QcHOK9mFlR8QLDBdWEzizy6+fmngHHbeIZxx7zX
+rJtfAZB2B8Qo5utzoAQ/7V1i6d05pgow1eUVamafn3OdsV2ZjyUtLS6xrLsDX/Ei
+KKd3t9ea4f1FEZjYkMn7
+=VKtG
+-----END PGP SIGNATURE-----
 
-Yeah, I think that's fine. The pgtable code will honour the request but
-the h/w will ignore it.
-
-> In the end, I will add two quirk like this, is it OK?
-
-I think you only need the one I mentioned above. I don't see the need
-for PXN at all (as I said in the last review).
-
-Will
+--Kj7319i9nmIyA2yE--
