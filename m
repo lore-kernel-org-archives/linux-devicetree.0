@@ -1,258 +1,169 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 3/5] usb: phy: add usb3.0 phy driver for mt65xx SoCs
-Date: Tue, 28 Jul 2015 11:17:30 +0530
-Message-ID: <55B71772.70807@ti.com>
-References: <1437573945-31586-1-git-send-email-chunfeng.yun@mediatek.com>	
- <1437573945-31586-4-git-send-email-chunfeng.yun@mediatek.com>	
- <20150722142157.GA10467@saruman.tx.rr.com>
- <1437879072.3040.7.camel@mhfsdcap03>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 2/2] iommu/omap: Add support for configuring dsp iommus
+ on DRA7xx
+Date: Mon, 27 Jul 2015 23:14:26 -0700
+Message-ID: <20150728061426.GL16878@atomide.com>
+References: <1437522936-19758-1-git-send-email-s-anna@ti.com>
+ <1437522936-19758-3-git-send-email-s-anna@ti.com>
+ <20150722052600.GF17550@atomide.com>
+ <55AFC34E.4000603@ti.com>
+ <20150723072455.GC16878@atomide.com>
+ <55B114DF.8070800@ti.com>
+ <20150724043056.GG16878@atomide.com>
+ <55B266CE.9070202@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1437879072.3040.7.camel@mhfsdcap03>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: chunfeng yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, balbi-l0cyMroinI0@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <55B266CE.9070202-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Cc: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+* Suman Anna <s-anna-l0cyMroinI0@public.gmane.org> [150724 09:27]:
+> Hi Tony,
+> 
+> On 07/23/2015 11:30 PM, Tony Lindgren wrote:
+> > * Suman Anna <s-anna-l0cyMroinI0@public.gmane.org> [150723 09:25]:
+> >> Hi Tony,
+> >>
+> >> On 07/23/2015 02:24 AM, Tony Lindgren wrote:
+> >>> * Suman Anna <s-anna-l0cyMroinI0@public.gmane.org> [150722 09:25]:
+> >>>> On 07/22/2015 12:26 AM, Tony Lindgren wrote:
+> >>>>>
+> >>>>> I don't like using syscon for tinkering directly with SoC registers.
+> >>>>
+> >>>> This is not a SoC-level register, but a register within a sub-module of
+> >>>> the DSP processor sub-system. The DSP_SYSTEM sub-module in general is
+> >>>> described in Section 5.3.3 of the TRM [1], and it implements different
+> >>>> functionalities like the PRCM handshaking, wakeup logic and DSP
+> >>>> subsystem top-level configuration. It is a module present within the DSP
+> >>>> processor sub-system, so can only be accessed when the sub-system is
+> >>>> clocked and the appropriate reset is released.
+> >>>
+> >>> OK so if it's specific to the DSP driver along the lines of sysc and
+> >>> syss registers.
+> >>
+> >> There will be those registers too within the MMU config register space,
+> >> even for DRA7xx MMUs. This is different, think of it like a register in
+> >> the Control module except that it is present within the DSP sub-system
+> >> instead of at the SoC level.
+> > 
+> > And what is taking care of pm_runtime_get here to ensure the module
+> > is powered and clocked?
+> 
+> pm_runtime_get_sync is indeed getting invoked, its just the current
+> patch doesn't include the code block that invokes it. The function that
+> invokes omap2_iommu_enable does so after a call to the
+> pm_runtime_get_sync() call.
 
-On Sunday 26 July 2015 08:21 AM, chunfeng yun wrote:
-> hi,
-> On Wed, 2015-07-22 at 09:21 -0500, Felipe Balbi wrote:
->> Hi,
->>
->> On Wed, Jul 22, 2015 at 10:05:43PM +0800, Chunfeng Yun wrote:
->>> support usb3.0 phy of mt65xx SoCs
->>>
->>> Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->>
->> you missed Kishon here.
->>
-> Thank you.
->>> ---
->>>  drivers/phy/Kconfig           |   9 +
->>>  drivers/phy/Makefile          |   1 +
->>>  drivers/phy/phy-mt65xx-usb3.c | 426 ++++++++++++++++++++++++++++++++++++++++++
->>>  3 files changed, 436 insertions(+)
->>>  create mode 100644 drivers/phy/phy-mt65xx-usb3.c
->>>
->>> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
->>> index c0e6ede..019cf8b 100644
->>> --- a/drivers/phy/Kconfig
->>> +++ b/drivers/phy/Kconfig
->>> @@ -193,6 +193,15 @@ config PHY_HIX5HD2_SATA
->>>  	help
->>>  	  Support for SATA PHY on Hisilicon hix5hd2 Soc.
->>>  
->>> +config PHY_MT65XX_USB3
->>> +	tristate "Mediatek USB3.0 PHY Driver"
->>> +	depends on ARCH_MEDIATEK && OF
->>> +	select GENERIC_PHY
->>> +	help
->>> +	  Say 'Y' here to add support for Mediatek USB3.0 PHY driver
->>> +	  for mt65xx SoCs. it supports two usb2.0 ports and
->>> +	  one usb3.0 port.
->>> +
->>>  config PHY_SUN4I_USB
->>>  	tristate "Allwinner sunxi SoC USB PHY driver"
->>>  	depends on ARCH_SUNXI && HAS_IOMEM && OF
->>> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
->>> index f344e1b..3ceff2a 100644
->>> --- a/drivers/phy/Makefile
->>> +++ b/drivers/phy/Makefile
->>> @@ -22,6 +22,7 @@ obj-$(CONFIG_TI_PIPE3)			+= phy-ti-pipe3.o
->>>  obj-$(CONFIG_TWL4030_USB)		+= phy-twl4030-usb.o
->>>  obj-$(CONFIG_PHY_EXYNOS5250_SATA)	+= phy-exynos5250-sata.o
->>>  obj-$(CONFIG_PHY_HIX5HD2_SATA)		+= phy-hix5hd2-sata.o
->>> +obj-$(CONFIG_PHY_MT65XX_USB3)		+= phy-mt65xx-usb3.o
->>>  obj-$(CONFIG_PHY_SUN4I_USB)		+= phy-sun4i-usb.o
->>>  obj-$(CONFIG_PHY_SUN9I_USB)		+= phy-sun9i-usb.o
->>>  obj-$(CONFIG_PHY_SAMSUNG_USB2)		+= phy-exynos-usb2.o
->>> diff --git a/drivers/phy/phy-mt65xx-usb3.c b/drivers/phy/phy-mt65xx-usb3.c
->>> new file mode 100644
->>> index 0000000..5da4534
->>> --- /dev/null
->>> +++ b/drivers/phy/phy-mt65xx-usb3.c
->>> @@ -0,0 +1,426 @@
->>> +/*
->>> + * Copyright (c) 2015 MediaTek Inc.
->>> + * Author: Chunfeng.Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->>> + *
->>> + * This software is licensed under the terms of the GNU General Public
->>> + * License version 2, as published by the Free Software Foundation, and
->>> + * may be copied, distributed, and modified under those terms.
->>> + *
->>> + * This program is distributed in the hope that it will be useful,
->>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->>> + * GNU General Public License for more details.
->>> + *
->>> + */
->>> +
->>> +#include <linux/clk.h>
->>> +#include <linux/delay.h>
->>> +#include <linux/io.h>
->>> +#include <linux/module.h>
->>> +#include <linux/of_address.h>
->>> +#include <linux/of_device.h>
->>> +#include <linux/of_gpio.h>
->>> +#include <linux/of.h>
->>> +#include <linux/phy/phy.h>
->>> +#include <linux/platform_device.h>
->>> +#include <linux/pm_runtime.h>
->>> +#include <linux/regulator/consumer.h>
+OK 
 
-Lot of these #include are not required. Add only those what are required by
-this driver.
->>> +#include <linux/resource.h>
->>> +
->>> +/*
->>> + * for sifslv2 register
->>> + * relative to USB3_SIF2_BASE base address
->>> + */
->>> +#define SSUSB_SIFSLV_SPLLC	(0x0000)
->>> +#define SSUSB_SIFSLV_U2PHY_COM_BASE	(0x0800)
+> > I think you are missing a layer here and it's the Linux kernel side
+> > device driver for DSP that initializes things.
+> 
+> We already have separate drivers for MMUs (omap-iommu) and the processor
+> management (omap-rproc). The former manages all the low-level
+> programming sequences for the MMUs, while the latter manages the
+> low-level reset etc, and is a client user of the respective IOMMU
+> device. Both integrate into the respective frameworks. The IOMMU API
+> invocations are handled in the remoteproc core, with the OMAP remoteproc
+> driver publishing itself as having an MMU with the remoteproc core. The
+> IOMMU API invoke the appropriate iommu_ops.
+> 
+> You can lookup the functions rproc_enable_iommu()/rproc_disable_iommu()
+> in the remoteproc core. The IOMMU enabling sequences happen within the
+> iommu_attach_device() API. The call flow is
+> iommu_attach_device()->omap_iommu_attach_dev()->omap_iommu_attach()->
+> iommu_enable()->
+>    omap_device_deassert_hardreset, pm_runtime_get_sync, omap2_iommu_enable.
 
-Looks like all this base address can come from dt.
->>> +#define SSUSB_SIFSLV_U3PHYD_BASE	(0x0900)
->>> +#define SSUSB_USB30_PHYA_SIV_B_BASE	(0x0b00)
->>> +#define SSUSB_SIFSLV_U3PHYA_DA_BASE	(0x0c00)
->>> +
->>> +/*port1 refs. +0x800(refer to port0)*/
->>> +#define U3P_PORT_INTERVAL (0x800)	/*based on port0 */
->>> +#define U3P_PHY_DELTA(index) ((U3P_PORT_INTERVAL) * (index))
->>> +
->>> +#define U3P_USBPHYACR0	(SSUSB_SIFSLV_U2PHY_COM_BASE + 0x0000)
->>> +#define PA0_RG_U2PLL_FORCE_ON	(0x1 << 15)
->>> +
->>> +#define U3P_USBPHYACR2	(SSUSB_SIFSLV_U2PHY_COM_BASE + 0x0008)
->>> +#define PA2_RG_SIF_U2PLL_FORCE_EN	(0x1 << 18)
->>> +
->>> +#define U3P_USBPHYACR5	(SSUSB_SIFSLV_U2PHY_COM_BASE + 0x0014)
->>> +#define PA5_RG_U2_HSTX_SRCTRL		(0x7 << 12)
->>> +#define PA5_RG_U2_HSTX_SRCTRL_VAL(x)	((0x7 & (x)) << 12)
->>> +#define PA5_RG_U2_HS_100U_U3_EN		(0x1 << 11)
->>> +
->>> +#define U3P_USBPHYACR6	(SSUSB_SIFSLV_U2PHY_COM_BASE + 0x0018)
->>> +#define PA6_RG_U2_ISO_EN		(0x1 << 31)
->>> +#define PA6_RG_U2_BC11_SW_EN	(0x1 << 23)
->>> +#define PA6_RG_U2_OTG_VBUSCMP_EN	(0x1 << 20)
->>> +
->>> +#define U3P_U2PHYACR4	(SSUSB_SIFSLV_U2PHY_COM_BASE + 0x0020)
->>> +#define P2C_RG_USB20_GPIO_CTL	(0x1 << 9)
->>> +#define P2C_USB20_GPIO_MODE	(0x1 << 8)
->>> +#define P2C_U2_GPIO_CTR_MSK	(P2C_RG_USB20_GPIO_CTL | P2C_USB20_GPIO_MODE)
->>> +
->>> +#define U3D_U2PHYDCR0	(SSUSB_SIFSLV_U2PHY_COM_BASE + 0x0060)
->>> +#define P2C_RG_SIF_U2PLL_FORCE_ON	(0x1 << 24)
->>> +
->>> +#define U3P_U2PHYDTM0	(SSUSB_SIFSLV_U2PHY_COM_BASE + 0x0068)
->>> +#define P2C_FORCE_UART_EN	(0x1 << 26)
->>> +#define P2C_FORCE_DATAIN	(0x1 << 23)
->>> +#define P2C_FORCE_DM_PULLDOWN	(0x1 << 21)
->>> +#define P2C_FORCE_DP_PULLDOWN	(0x1 << 20)
->>> +#define P2C_FORCE_XCVRSEL	(0x1 << 19)
->>> +#define P2C_FORCE_SUSPENDM	(0x1 << 18)
->>> +#define P2C_FORCE_TERMSEL	(0x1 << 17)
->>> +#define P2C_RG_DATAIN		(0xf << 10)
->>> +#define P2C_RG_DATAIN_VAL(x)	((0xf & (x)) << 10)
->>> +#define P2C_RG_DMPULLDOWN	(0x1 << 7)
->>> +#define P2C_RG_DPPULLDOWN	(0x1 << 6)
->>> +#define P2C_RG_XCVRSEL		(0x3 << 4)
->>> +#define P2C_RG_XCVRSEL_VAL(x)	((0x3 & (x)) << 4)
->>> +#define P2C_RG_SUSPENDM		(0x1 << 3)
->>> +#define P2C_RG_TERMSEL		(0x1 << 2)
->>> +#define P2C_DTM0_PART_MASK \
->>> +		(P2C_FORCE_DATAIN | P2C_FORCE_DM_PULLDOWN | \
->>> +		P2C_FORCE_DP_PULLDOWN | P2C_FORCE_XCVRSEL | \
->>> +		P2C_FORCE_TERMSEL | P2C_RG_DMPULLDOWN | \
->>> +		P2C_RG_DPPULLDOWN | P2C_RG_TERMSEL)
->>> +
->>> +#define U3P_U2PHYDTM1	(SSUSB_SIFSLV_U2PHY_COM_BASE + 0x006C)
->>> +#define P2C_RG_UART_EN		(0x1 << 16)
->>> +#define P2C_RG_VBUSVALID	(0x1 << 5)
->>> +#define P2C_RG_SESSEND		(0x1 << 4)
->>> +#define P2C_RG_AVALID		(0x1 << 2)
->>> +
->>> +#define U3P_U3_PHYA_REG0	(SSUSB_USB30_PHYA_SIV_B_BASE + 0x0000)
->>> +#define P3A_RG_U3_VUSB10_ON	(1 << 5)
->>> +
->>> +#define U3P_U3_PHYA_REG6	(SSUSB_USB30_PHYA_SIV_B_BASE + 0x0018)
->>> +#define P3A_RG_TX_EIDLE_CM	(0xf << 28)
->>> +#define P3A_RG_TX_EIDLE_CM_VAL(x)	((0xf & (x)) << 28)
->>> +
->>> +#define U3P_U3_PHYA_REG9	(SSUSB_USB30_PHYA_SIV_B_BASE + 0x0024)
->>> +#define P3A_RG_RX_DAC_MUX	(0x1f << 1)
->>> +#define P3A_RG_RX_DAC_MUX_VAL(x)	((0x1f & (x)) << 1)
->>> +
->>> +#define U3P_U3PHYA_DA_REG0	(SSUSB_SIFSLV_U3PHYA_DA_BASE + 0x0)
->>> +#define P3A_RG_XTAL_EXT_EN_U3	(0x3 << 10)
->>> +#define P3A_RG_XTAL_EXT_EN_U3_VAL(x)	((0x3 & (x)) << 10)
->>> +
->>> +#define U3P_PHYD_CDR1	(SSUSB_SIFSLV_U3PHYD_BASE + 0x5c)
->>> +#define P3D_RG_CDR_BIR_LTD1		(0x1f << 24)
->>> +#define P3D_RG_CDR_BIR_LTD1_VAL(x)	((0x1f & (x)) << 24)
->>> +#define P3D_RG_CDR_BIR_LTD0		(0x1f << 8)
->>> +#define P3D_RG_CDR_BIR_LTD0_VAL(x)	((0x1f & (x)) << 8)
->>> +
->>> +#define U3P_XTALCTL3		(SSUSB_SIFSLV_SPLLC + 0x18)
->>> +#define XC3_RG_U3_XTAL_RX_PWD		(0x1 << 9)
->>> +#define XC3_RG_U3_FRC_XTAL_RX_PWD	(0x1 << 8)
->>> +
->>> +#define MT65XX_MAX_PHYS	2
->>> +
->>> +struct mt65xx_phy_instance {
->>> +	struct phy *phy;
->>> +	u32 index;
->>> +	u32 delta; /* increament refers to port0 */
->>> +};
->>> +
->>> +struct mt65xx_u3phy {
->>> +	struct device *dev;
->>> +	void __iomem *sif_base;	/* include sif2 */
->>> +	struct clk *u3phya_ref;	/* reference clock of usb3 anolog phy */
->>> +	struct mt65xx_phy_instance phys[MT65XX_MAX_PHYS];
->>> +};
->>> +
->>> +static struct mt65xx_u3phy *to_usbdrd_phy(
->>> +	struct mt65xx_phy_instance *instance)
->>> +{
->>> +	return container_of((instance), struct mt65xx_u3phy,
->>> +			    phys[(instance)->index]);
->>> +}
->>> +
-.
-.
-<<snip>>
-.
-.
+OK. The thing to check here is that you have a separate device driver
+for each sysc/syss device registers. This is because each hardware module
+can be independently clocked and idled. Otherwise things will break at
+some point. And no "things are configured for autoidle" or "we're not
+doing PM is not a good excuse here" :)
 
->>> +static struct phy *mt65xx_phy_xlate(struct device *dev,
->>> +					struct of_phandle_args *args)
->>> +{
->>> +	struct mt65xx_u3phy *u3phy = dev_get_drvdata(dev);
->>> +
->>> +	if (WARN_ON(args->args[0] > MT65XX_MAX_PHYS))
->>> +		return ERR_PTR(-ENODEV);
->>> +
->>> +	return u3phy->phys[args->args[0]].phy;
->>> +}
+Can you please check that? If the remoteproc driver and iommu driver
+are tinkering with registers in separate hardware modules, we have
+a layering violation. My guess is that we have at least two hardware
+modules involved here, one for the iommu and one for the DSP device.
+ 
+> >>> Typically we handle these registers by mapping them to the PM runtime
+> >>> functions for the interconnect so we can reset and idle the hardware
+> >>> modules even if there is no driver, see for example
+> >>> omap54xx_mmu_dsp_hwmod.
+> >>
+> >> I haven't yet submitted the DRA7xx hwmods, but they will look almost
+> >> exactly like the OMAP5 ones. The reset and idle on these are in general
+> >> not effective at boot time since these are also controlled by a
+> >> hard-reset line, so that's left to the drivers to deal with it through
+> >> the omap_device_deassert_hardreset API.
+> > 
+> > If the MMU configuration is one time init, it may make sense to add
+> > it to the hwmod reset function. However, if the Linux kernel side
+> > driver needs to configure things depending on the DSP firmware, it
+> > should be done in the kernel side device driver.
+> 
+> The MMU configuration comes into picture whenever the remoteproc driver
+> is being booted and shut down, and also during suspend (no support for
+> this yet in mainline on OMAP rproc). Today, the hwmod
+> _enable/_idle/reset functions alone are not enough to power on the OMAP
+> remoteproc/iommus. We need sequencing calls to both
+> omap_device_assert/_deassert_hardreset (done through pdata-quirks) and
+> pm_runtime API to achieve this.
 
-If the driver doesn't have to get any data from dt, then custom xlate is not
-required at all. All you have to do is create separate nodes for every
-individual phy and keep it as the child node of the phy_provider dt node. Note
-that the phy consumer dt node should now use the label given for the chld-nodes
-and not the phy_provider. Look at drivers/phy/phy-miphy365x.c for reference.
+Right and that's why I'm worried that we have multiple hardware modules
+involved :)  
+ 
+> >>>>> We should use some Linux generic framework for configuring these
+> >>>>> bits to avoid nasty dependencies between various hardware modules
+> >>>>> on the SoC.
+> >>>>>
+> >>>>> What does DSP_SYS_MMU_CONFIG register do? It seems it's probably
+> >>>>> a regulator or a gate clock? If so, it should be set up as a
+> >>>>> regulator or a clock and then the omap-iommu driver can just
+> >>>>> use regulator or clcok framework to request the resource.
+> >>>>
+> >>>> No, its neither. It is a control bit that dictates whether the
+> >>>> processor/EDMA addresses go through the respective MMU or not. The
+> >>>> register currently has 4 bits (bit 0 in each nibble), one each for
+> >>>> enabling each MMU and requesting an MMU abort on each. The MMU
+> >>>> integration and enablement notes are detailed in Section 5.3.6 of the
+> >>>> TRM [1], and the DSP_SYS_MMU_CONFIG register layout is in Table 5-28
+> >>>> (Page 1641).
+> >>>
+> >>> OK yeah seems like it should be handled by the DSP driver during
+> >>> probe after doing pm_runtime_get. Then the driver can configure
+> >>> things like IOMMU and load firmware. Or am I missing something here?
+> >>
+> >> The DSP (remoteproc) driver uses the generic IOMMU API, and all the
+> >> IOMMU enabling sequence is transparent to the DSP driver. So, any
+> >> configuration/enabling sequence specific to the IOMMU has to be handled
+> >> within the respective IOMMU platform driver that gets integrated into
+> >> the IOMMU API.
+> > 
+> > To me it seems you still need a DSP kernel driver to manage the
+> > DSP hardware for PM runtime. I don't see how iommu and remoteproc
+> > alone would be sufficient here. You end up sprinkling DSP driver
+> > specific code to the iommu and remoteproc layers.
+> 
+> I am not sure what you envision to be in this DSP kernel driver, because
+> all the needed functionality is already handled by existing drivers. The
+> OMAP remoteproc driver is the kernel driver to deal with the device
+> management for both IPUs and DSPs on OMAP4, OMAP5 and DRA7 (DT support
+> to be added).
 
-Cheers
-Kishon
+OK maybe check the syss/sysc registers involved here for each hardware
+module here and which driver tinkers with which registers? This will
+make things a lot easier in the long run for sure.
+
+Regrads,
+
+Tony
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
