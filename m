@@ -1,94 +1,82 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 3/6] iommu: add ARM short descriptor page table
-	allocator.
-Date: Tue, 28 Jul 2015 14:47:10 +0100
-Message-ID: <20150728134710.GM29209@arm.com>
-References: <1437037475-9065-4-git-send-email-yong.wu@mediatek.com>
-	<20150721171101.GN31095@arm.com>
-	<1437715466.23932.68.camel@mhfsdcap03>
-	<20150724165325.GC21177@arm.com>
-	<1437970868.25925.20.camel@mhfsdcap03> <55B63AB2.4050006@arm.com>
-	<20150727141102.GJ3358@arm.com>
-	<1438060094.25925.69.camel@mhfsdcap03>
-	<20150728110023.GH29209@arm.com>
-	<1438090663.25925.75.camel@mhfsdcap03>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH v13 3/3] ASoC: tda998x: add a codec to the HDMI
+ transmitter
+Date: Tue, 28 Jul 2015 14:53:58 +0100
+Message-ID: <20150728135358.GK7557@n2100.arm.linux.org.uk>
+References: <cover.1437397270.git.moinejf@free.fr>
+ <e036c88aa945e72b40ec965c9358dacf564e79f2.1437397272.git.moinejf@free.fr>
+ <20150720180606.GL11162@sirena.org.uk>
+ <20150728121945.560f82a5@armhf>
+ <20150728102410.GD11162@sirena.org.uk>
+ <20150728152329.02668865@armhf>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1438090663.25925.75.camel@mhfsdcap03>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "cloud.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <cloud.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org" <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Sasha Hauer <kernel@pen>
+In-Reply-To: <20150728152329.02668865@armhf>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Jackson <Andrew.Jackson-5wv7dgnIgG8@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 28, 2015 at 02:37:43PM +0100, Yong Wu wrote:
-> On Tue, 2015-07-28 at 12:00 +0100, Will Deacon wrote:
-> > On Tue, Jul 28, 2015 at 06:08:14AM +0100, Yong Wu wrote:
-> > > On Mon, 2015-07-27 at 15:11 +0100, Will Deacon wrote:
-> > > > On Mon, Jul 27, 2015 at 03:05:38PM +0100, Robin Murphy wrote:
-> > > > > On 27/07/15 05:21, Yong Wu wrote:
-> > > > > >>>>> +       } else {        /* page or largepage */
-> > > > > >>>>> +               if (quirk & IO_PGTABLE_QUIRK_SHORT_MTK) {
-> > > > > >>>>> +                       if (large) { /* special Bit */
-> > > > > >>>>
-> > > > > >>>> This definitely needs a better comment! What exactly are you doing here
-> > > > > >>>> and what is that quirk all about?
-> > > > > >>>
-> > > > > >>> I use this quirk is for MTK Special Bit as we don't have the XN bit in
-> > > > > >>> pagetable.
-> > > > > >>
-> > > > > >> I'm still not really clear about what this is.
-> > > > > >
-> > > > > > There is some difference between the standard spec and MTK HW,
-> > > > > > Our hw don't implement some bits, like XN and AP.
-> > > > > > So I add a quirk for MTK special.
-> > > > > 
-> > > > > When you say it doesn't implement these bits, do you mean that having 
-> > > > > them set will lead to Bad Things happening in the hardware, or that it 
-> > > > > will simply ignore them and not enforce any of the protections they 
-> > > > > imply? The former case would definitely want clearly documenting 
-> > > > > somewhere, whereas for the latter case I'm not sure it's even worth the 
-> > > > > complication of having a quirk - if the value doesn't matter there seems 
-> > > > > little point in doing a special dance just for the sake of semantic 
-> > > > > correctness of the in-memory PTEs, in my opinion.
-> > > > 
-> > > > Agreed. We should only use quirks if the current (architecturally
-> > > > compliant) code causes real issues with the hardware. Then the quirk can
-> > > > be used to either avoid the problematic routines or to take extra steps
-> > > > to make things work as the architecture intended.
-> > > > 
-> > > > I've asked how this IOMMU differs from the architecture on a number of
-> > > > occasions, but I'm still yet to receive a response other than "it's special".
-> > > > 
-> > > 
-> > > After check further with DE, Our pagetable is refer to ARM-v7's
-> > > short-descriptor which is a little different from ARM-v8. like bit0(PXN)
-> > > in section and supersection, I didn't read ARM-v7 spec before, so I add
-> > > a MTK quirk to disable PXN bit in section and supersection.(if the PXN
-> > > bit is wrote in ARM-v7 spec, HW will page fault.)
-> > 
-> > I've been reviewing this using the ARMv7 ARM (Rev.C of DDI0406C) the whole
-> > time. PXN is there as an optional field in non-LPAE implementations. That's
-> > fine and doesn't require any quirks.
-> 
-> Thanks for your confirm.
-> Then I delete all the PXN bit in here?
-> 
-> Take a example, 
-> #define ARM_SHORT_PGD_SECTION_XN		(BIT(0) | BIT(4))
-> I will change it to "BIT(4)".
+On Tue, Jul 28, 2015 at 03:23:29PM +0200, Jean-Francois Moine wrote:
+> The EDID arrives in the DRM connector when video starts. The built ELD
+> may be stored either in the connector itself (default), in the encoder
+> (TDA998x device) or in some DRM/encoder/connector private data.
 
-Yes. Then the PXN bit can be added later as a quirk when we have an
-implementation that supports it.
+The ELD is stored in the DRM connector, and there _should_ be a system
+of locking which ensures that you can get at that information safely.
 
-Will
+The ELD is only updated when the connector's get_modes() method is called,
+and the driver itself calls drm_edid_to_eld().  This all happens under
+the drm_device's struct_mutex.
+
+So, to safely read the ELD from outside DRM, you need to take the top-level
+drm_device's struct_mutex.  That could be fraught, as that's quite a big
+lock, so an alternative would be to introduce an 'eld' lock to the driver,
+which protects the call to drm_edid_to_eld() and the reading of the ELD.
+
+However, that doesn't solve the problem of passing the data to an audio
+driver.  What's needed there is a notification system which allows a video
+driver to broadcast HDMI events such as:
+
+* connected
+* new EDID available
+* new ELD available
+* disconnected
+
+With such a system, different components driving the facilities of a HDMI
+connector can make decisions on what to do - which not only includes things
+like the audio driver, but also a driver for the CEC interface (which also
+needs to see the EDID to get at its "address".)  This can be done in a safe
+manner as the HDMI video driver would have control over the generation of
+these messages.
+
+The point that Mark is trying to get you to see is that this problem is
+not specific to TDA998x.  The same problem exists for many other HDMI
+interfaces (except maybe Intel's i9x5/HDA stuff which has a hardware
+mechanism of passing the ELD data from the video driver, through the
+hardware to the audio driver.)
+
+It needs solving in a driver-agnostic way, and the normal way that happens
+is when someone comes along, wanting to add support in that area, they get
+to do the hard work to propose that infrastructure.
+
+> You may note that, in DRM, there is no relation between the encoder and
+> the connector except at video startup time, and no relation between the
+> DRM connector and the audio CODEC (no CODEC information is returned on
+> CODEC creation and the CODEC has no private data).
+
+In the case of the TDA998x, there is a 1:1 fixed relationship between the
+connector and the encoder.  The connector part can't be used with any other
+encoder, and the encoder part can't be used with any other connector.  The
+same is true of many other HDMI implementations (such as the Synopsis
+Designware HDMI interface found on iMX6 and Rockchip.)
+
+-- 
+FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
