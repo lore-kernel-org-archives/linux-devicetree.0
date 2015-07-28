@@ -1,104 +1,105 @@
-From: Lars Persson <lars.persson@axis.com>
-Subject: [PATCH net-next 1/4] dwc_eth_qos: Add Synopsys DWC Ethernet QoS bindings
-Date: Tue, 28 Jul 2015 12:01:47 +0200
-Message-ID: <1438077710-19175-2-git-send-email-larper@axis.com>
-References: <1438077710-19175-1-git-send-email-larper@axis.com>
+From: Rameshwar Sahu <rsahu@apm.com>
+Subject: Re: [PATCH] dmaengine: xgene-dma: Add ACPI support for X-Gene DMA
+ engine driver
+Date: Tue, 28 Jul 2015 15:33:08 +0530
+Message-ID: <CAFd313wcDxOwYFbf988bbGFcbJb_23zHR75F32svbDV=Zpm9dw@mail.gmail.com>
+References: <1437484479-2822-1-git-send-email-rsahu@apm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1438077710-19175-1-git-send-email-larper@axis.com>
+In-Reply-To: <1437484479-2822-1-git-send-email-rsahu@apm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: andire@axis.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, Lars Persson <larper@axis.com>
+To: Vinod Koul <vinod.koul@intel.com>, dan.j.williams@intel.com
+Cc: dmaengine@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com, Rameshwar Prasad Sahu <rsahu@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree binding documentation for the Synopsys DWC Ethernet
-QoS driver supporting revision 4.10a of the hardware IP.
+Hi Vinod,
 
-Signed-off-by: Lars Persson <larper@axis.com>
----
- .../bindings/net/snps,dwc-qos-ethernet.txt         | 75 ++++++++++++++++++++++
- 1 file changed, 75 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/snps,dwc-qos-ethernet.txt
+On Tue, Jul 21, 2015 at 6:44 PM, Rameshwar Prasad Sahu <rsahu@apm.com> wrote:
+> This patch adds ACPI support for the APM X-Gene DMA engine driver.
+>
+> Signed-off-by: Rameshwar Prasad Sahu <rsahu@apm.com>
+> ---
+>  drivers/dma/xgene-dma.c | 28 +++++++++++++++++++++-------
+>  1 file changed, 21 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/dma/xgene-dma.c b/drivers/dma/xgene-dma.c
+> index dff22ab..d0a148d 100644
+> --- a/drivers/dma/xgene-dma.c
+> +++ b/drivers/dma/xgene-dma.c
+> @@ -21,6 +21,7 @@
+>   * NOTE: PM support is currently not available.
+>   */
+>
+> +#include <linux/acpi.h>
+>  #include <linux/clk.h>
+>  #include <linux/delay.h>
+>  #include <linux/dma-mapping.h>
+> @@ -1944,16 +1945,18 @@ static int xgene_dma_probe(struct platform_device *pdev)
+>                 return ret;
+>
+>         pdma->clk = devm_clk_get(&pdev->dev, NULL);
+> -       if (IS_ERR(pdma->clk)) {
+> +       if (IS_ERR(pdma->clk) && !ACPI_COMPANION(&pdev->dev)) {
+>                 dev_err(&pdev->dev, "Failed to get clk\n");
+>                 return PTR_ERR(pdma->clk);
+>         }
+>
+>         /* Enable clk before accessing registers */
+> -       ret = clk_prepare_enable(pdma->clk);
+> -       if (ret) {
+> -               dev_err(&pdev->dev, "Failed to enable clk %d\n", ret);
+> -               return ret;
+> +       if (!IS_ERR(pdma->clk)) {
+> +               ret = clk_prepare_enable(pdma->clk);
+> +               if (ret) {
+> +                       dev_err(&pdev->dev, "Failed to enable clk %d\n", ret);
+> +                       return ret;
+> +               }
+>         }
+>
+>         /* Remove DMA RAM out of shutdown */
+> @@ -1998,7 +2001,8 @@ err_request_irq:
+>
+>  err_dma_mask:
+>  err_clk_enable:
+> -       clk_disable_unprepare(pdma->clk);
+> +       if (!IS_ERR(pdma->clk))
+> +               clk_disable_unprepare(pdma->clk);
+>
+>         return ret;
+>  }
+> @@ -2022,11 +2026,20 @@ static int xgene_dma_remove(struct platform_device *pdev)
+>                 xgene_dma_delete_chan_rings(chan);
+>         }
+>
+> -       clk_disable_unprepare(pdma->clk);
+> +       if (!IS_ERR(pdma->clk))
+> +               clk_disable_unprepare(pdma->clk);
+>
+>         return 0;
+>  }
+>
+> +#ifdef CONFIG_ACPI
+> +static const struct acpi_device_id xgene_dma_acpi_match_ptr[] = {
+> +       {"APMC0D43", 0},
+> +       {},
+> +};
+> +MODULE_DEVICE_TABLE(acpi, xgene_dma_acpi_match_ptr);
+> +#endif
+> +
+>  static const struct of_device_id xgene_dma_of_match_ptr[] = {
+>         {.compatible = "apm,xgene-storm-dma",},
+>         {},
+> @@ -2039,6 +2052,7 @@ static struct platform_driver xgene_dma_driver = {
+>         .driver = {
+>                 .name = "X-Gene-DMA",
+>                 .of_match_table = xgene_dma_of_match_ptr,
+> +               .acpi_match_table = ACPI_PTR(xgene_dma_acpi_match_ptr),
+>         },
+>  };
+>
+> --
+> 1.8.2.1
 
-diff --git a/Documentation/devicetree/bindings/net/snps,dwc-qos-ethernet.txt b/Documentation/devicetree/bindings/net/snps,dwc-qos-ethernet.txt
-new file mode 100644
-index 0000000..51f8d2e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/snps,dwc-qos-ethernet.txt
-@@ -0,0 +1,75 @@
-+* Synopsys DWC Ethernet QoS IP version 4.10 driver (GMAC)
-+
-+
-+Required properties:
-+- compatible: Should be "snps,dwc-qos-ethernet-4.10"
-+- reg: Address and length of the register set for the device
-+- clocks: Phandles to the reference clock and the bus clock
-+- clock-names: Should be "phy_ref_clk" for the reference clock and "apb_pclk"
-+  for the bus clock.
-+- interrupt-parent: Should be the phandle for the interrupt controller
-+  that services interrupts for this device
-+- interrupts: Should contain the core's combined interrupt signal
-+- phy-mode: See ethernet.txt file in the same directory
-+
-+Optional properties:
-+- dma-coherent: Present if dma operations are coherent
-+- mac-address: See ethernet.txt in the same directory
-+- local-mac-address: See ethernet.txt in the same directory
-+- snps,en-lpi: If present it enables use of the AXI low-power interface
-+- snps,write-requests: Number of write requests that the AXI port can issue.
-+  It depends on the SoC configuration.
-+- snps,read-requests: Number of read requests that the AXI port can issue.
-+  It depends on the SoC configuration.
-+- snps,burst-map: Bitmap of allowed AXI burst lengts, with the LSB
-+  representing 4, then 8 etc.
-+- snps,txpbl: DMA Programmable burst length for the TX DMA
-+- snps,rxpbl: DMA Programmable burst length for the RX DMA
-+- snps,en-tx-lpi-clockgating: Enable gating of the MAC TX clock during
-+  TX low-power mode.
-+- phy-handle: See ethernet.txt file in the same directory
-+- mdio device tree subnode: When the GMAC has a phy connected to its local
-+    mdio, there must be device tree subnode with the following
-+    required properties:
-+    - compatible: Must be "snps,dwc-qos-ethernet-mdio".
-+    - #address-cells: Must be <1>.
-+    - #size-cells: Must be <0>.
-+
-+    For each phy on the mdio bus, there must be a node with the following
-+    fields:
-+
-+    - reg: phy id used to communicate to phy.
-+    - device_type: Must be "ethernet-phy".
-+    - fixed-mode device tree subnode: see fixed-link.txt in the same directory
-+
-+Examples:
-+ethernet2@40010000 {
-+	clock-names = "phy_ref_clk", "apb_pclk";
-+	clocks = <&clkc 17>, <&clkc 15>;
-+	compatible = "snps,dwc-qos-ethernet-4.10";
-+	interrupt-parent = <&intc>;
-+	interrupts = <0x0 0x1e 0x4>;
-+	reg = <0x40010000 0x4000>;
-+	phy-handle = <&phy2>;
-+	phy-mode = "gmii";
-+
-+	snps,en-tx-lpi-clockgating;
-+	snps,en-lpi;
-+	snps,write-requests = <2>;
-+	snps,read-requests = <16>;
-+	snps,burst-map = <0x7>;
-+	snps,txpbl = <8>;
-+	snps,rxpbl = <2>;
-+
-+	dma-coherent;
-+
-+	mdio {
-+		#address-cells = <0x1>;
-+		#size-cells = <0x0>;
-+		phy2: phy@1 {
-+			compatible = "ethernet-phy-ieee802.3-c22";
-+			device_type = "ethernet-phy";
-+			reg = <0x1>;
-+		};
-+	};
-+};
--- 
-2.1.4
+Any comment here ??
