@@ -1,92 +1,108 @@
-From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Subject: Re: [PATCH 1/2] spi: bcm2835: add spi-bcm2835aux driver for the auxiliar
- spi1 and spi2
-Date: Tue, 28 Jul 2015 12:48:39 +0200
-Message-ID: <55B75E07.1080104@martin.sperl.org>
-References: <1434980408-4086-1-git-send-email-kernel@martin.sperl.org> <55A0A150.3060809@wwwdotorg.org> <ECFBB7BF-1316-4565-B1F2-FB2651131882@martin.sperl.org> <55A49662.3000706@wwwdotorg.org> <2768BFA9-7FE9-4EDC-8692-AC3F070BD874@martin.sperl.org> <55AEF828.20908@wwwdotorg.org> <0125992E-40F4-4702-8404-2943FF9A8788@martin.sperl.org> <55B1BA7A.1090104@wwwdotorg.org> <9005ABEC-C60A-4814-AD60-AD5BB09808F2@martin.sperl.org> <55B6EE1A.2070605@wwwdotorg.org> <836DA157-3072-441A-A160-E1FDBB119E88@martin.sperl.org>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 3/6] iommu: add ARM short descriptor page table
+	allocator.
+Date: Tue, 28 Jul 2015 12:00:23 +0100
+Message-ID: <20150728110023.GH29209@arm.com>
+References: <1437037475-9065-1-git-send-email-yong.wu@mediatek.com>
+	<1437037475-9065-4-git-send-email-yong.wu@mediatek.com>
+	<20150721171101.GN31095@arm.com>
+	<1437715466.23932.68.camel@mhfsdcap03>
+	<20150724165325.GC21177@arm.com>
+	<1437970868.25925.20.camel@mhfsdcap03> <55B63AB2.4050006@arm.com>
+	<20150727141102.GJ3358@arm.com>
+	<1438060094.25925.69.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <836DA157-3072-441A-A160-E1FDBB119E88-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1438060094.25925.69.camel@mhfsdcap03>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "cloud.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <cloud.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org" <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Sasha Hauer <kernel@pen>
 List-Id: devicetree@vger.kernel.org
 
-On 28.07.2015 08:18, Martin Sperl wrote:
-> Hi Stephen!
-> But the bigger question you have not answered is: =93where should suc=
-h an
-> auxiliar driver go in the kernel tree?=94 i.e. which directory?
-One thing: could the "module" be a regulator?
+On Tue, Jul 28, 2015 at 06:08:14AM +0100, Yong Wu wrote:
+> On Mon, 2015-07-27 at 15:11 +0100, Will Deacon wrote:
+> > On Mon, Jul 27, 2015 at 03:05:38PM +0100, Robin Murphy wrote:
+> > > On 27/07/15 05:21, Yong Wu wrote:
+> > > >>>>> +       } else {        /* page or largepage */
+> > > >>>>> +               if (quirk & IO_PGTABLE_QUIRK_SHORT_MTK) {
+> > > >>>>> +                       if (large) { /* special Bit */
+> > > >>>>
+> > > >>>> This definitely needs a better comment! What exactly are you doing here
+> > > >>>> and what is that quirk all about?
+> > > >>>
+> > > >>> I use this quirk is for MTK Special Bit as we don't have the XN bit in
+> > > >>> pagetable.
+> > > >>
+> > > >> I'm still not really clear about what this is.
+> > > >
+> > > > There is some difference between the standard spec and MTK HW,
+> > > > Our hw don't implement some bits, like XN and AP.
+> > > > So I add a quirk for MTK special.
+> > > 
+> > > When you say it doesn't implement these bits, do you mean that having 
+> > > them set will lead to Bad Things happening in the hardware, or that it 
+> > > will simply ignore them and not enforce any of the protections they 
+> > > imply? The former case would definitely want clearly documenting 
+> > > somewhere, whereas for the latter case I'm not sure it's even worth the 
+> > > complication of having a quirk - if the value doesn't matter there seems 
+> > > little point in doing a special dance just for the sake of semantic 
+> > > correctness of the in-memory PTEs, in my opinion.
+> > 
+> > Agreed. We should only use quirks if the current (architecturally
+> > compliant) code causes real issues with the hardware. Then the quirk can
+> > be used to either avoid the problematic routines or to take extra steps
+> > to make things work as the architecture intended.
+> > 
+> > I've asked how this IOMMU differs from the architecture on a number of
+> > occasions, but I'm still yet to receive a response other than "it's special".
+> > 
+> 
+> After check further with DE, Our pagetable is refer to ARM-v7's
+> short-descriptor which is a little different from ARM-v8. like bit0(PXN)
+> in section and supersection, I didn't read ARM-v7 spec before, so I add
+> a MTK quirk to disable PXN bit in section and supersection.(if the PXN
+> bit is wrote in ARM-v7 spec, HW will page fault.)
 
-So drivers/regulators/bcm2835-aux-regulator.c
+I've been reviewing this using the ARMv7 ARM (Rev.C of DDI0406C) the whole
+time. PXN is there as an optional field in non-LPAE implementations. That's
+fine and doesn't require any quirks.
 
-The devicetree would look something like this:
+> Then I write this code according to ARM-v8 spec defaultly, and add a
+> ARM-v7 quirk?
 
-regulators {
-     bcm2835aux_reg {
-         compatible =3D "bcrm,bcrm-2835-aux-enable";
-         reg =3D <0x7e215004 0x4>; /* the AUX enable register */
+No, I don't think you need this, as the v8 and v7 short-descriptor formats
+look compatible to me. You should only need a quirk if architecturally
+compliant code cannot work on your hardware.
 
-         bcm2835aux_uart1: {
-             regulator-name =3D "bcm2835_aux_uart1";
-             reg =3D <0>; /* bit 0 in enable register */
-         };
-         bcm2835aux_spi1: {
-             regulator-name =3D "bcm2835_aux_spi1";
-             reg =3D <1>; /* bit 1 in enable register */
-         };
-         bcm2835aux_spi2: {
-             regulator-name =3D "bcm2835_aux_spi2";
-             reg =3D <2>; /* bit 2 in enable register */
-         };
-     }
-};
+> And there is a little different between ARM-v7 spec and MTK pagetable.
+> It's the XN(bit0) in small page. MTK don't implement XN bit. 
+> The bit[1:0] in MTK's small page should be 2'b10, if it's 2'b11, HW will
+> page fault.
 
-uart1: uart1@7e215040 {
-compatible =3D "brcm,bcm2835-aux-uart";
-     reg =3D <0x7e215040 0x40>;
-     ...
-     vcc =3D <&bcm2835aux_uart1>
-};
+Aha, thanks! *That* is worthy of a quirk. Something like:
 
-spi1: spi1@7e215080 {
-compatible =3D "brcm,bcm2835-aux-spi";
-     reg =3D <0x7e215080 0x40>;
-     ...
-     vcc =3D <&bcm2835aux_spi1>
-};
+  IO_PGTABLE_QUIRK_ARM_NO_XN
 
-spi2: spi2@7e2150C0 {
-compatible =3D "brcm,bcm2835-aux-spi";
-     reg =3D <0x7e2150C0 0x40>;
-     ...
-     vcc =3D <&bcm2835aux_spi2>
-};
+> (MTK don't implement AP bits too, but HW don't use them, it is ok even
+> though AP bits is wrote)
 
-And the necessary driver-side code for bcm2835aux_spi and
-bcm2835aux_uart would be along those lines:
+Yeah, I think that's fine. The pgtable code will honour the request but
+the h/w will ignore it.
 
-probe:
-   /* get the "power-supply" */
-   bs->power =3D devm_regulator_get(dev, "vcc");
-   if ((PTR_ERR(priv->power) =3D=3D -EPROBE_DEFER)
-     return -EPROBE_DEFER
-   /* enable the power-supply */
-   regulator_enable(bs->power);
+> In the end, I will add two quirk like this, is it OK?
 
-remove:
-   regulator_disable(bs->power);
+I think you only need the one I mentioned above. I don't see the need
+for PXN at all (as I said in the last review).
 
-Would that look like an acceptable solution?
-
-Thanks,
-	Martin
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Will
