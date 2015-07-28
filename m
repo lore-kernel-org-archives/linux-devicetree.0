@@ -1,102 +1,108 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH 1/2] pci: host: pci-dra7xx: Add support to make gpio drive PERST# line
-Date: Tue, 28 Jul 2015 19:09:09 +0530
-Message-ID: <1438090750-11604-2-git-send-email-kishon@ti.com>
-References: <1438090750-11604-1-git-send-email-kishon@ti.com>
+From: Dinh Nguyen <dinguyen@opensource.altera.com>
+Subject: Re: [PATCH 3/4] reset: socfpga: Update reset-socfpga to read the
+ altr,modrst-offset property
+Date: Tue, 28 Jul 2015 08:46:59 -0500
+Message-ID: <55B787D3.5060509@opensource.altera.com>
+References: <1438023444-11881-1-git-send-email-dinguyen@opensource.altera.com>	 <1438023444-11881-4-git-send-email-dinguyen@opensource.altera.com> <1438073190.3193.28.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1438090750-11604-1-git-send-email-kishon@ti.com>
+In-Reply-To: <1438073190.3193.28.camel@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: bhelgaas@google.com, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tony@atomide.com
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, bcousson@baylibre.com, linux@arm.linux.org.uk, kishon@ti.com, nsekhar@ti.com
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: dinh.linux@gmail.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mark.rutland@arm.com, pawel.moll@arm.com, s.trumtrar@pengutronix.de, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The PERST# line in am57x-evm is connected to a gpio line and PERST#
-should be driven high to indicate the clocks are stable (As per
-Figure 2-10: Power Up of the PCIe CEM spec 3.0).
 
-Add support in pci-dra7xx driver to make gpio drive PERST#
-line here.
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- Documentation/devicetree/bindings/pci/ti-pci.txt |    3 +++
- drivers/pci/host/pci-dra7xx.c                    |   24 ++++++++++++++++++++--
- 2 files changed, 25 insertions(+), 2 deletions(-)
+On 7/28/15 3:46 AM, Philipp Zabel wrote:
+> Am Montag, den 27.07.2015, 13:57 -0500 schrieb
+> dinguyen@opensource.altera.com:
+>> From: Dinh Nguyen <dinguyen@opensource.altera.com>
+>>
+>> In order for the Arria10 to be able to re-use the reset driver for SoCFPGA
+>> Cyclone5/Arria5, we need to read the 'altr,modrst-offset' property from the
+>> device tree entry. The 'altr,modrst-offset' property is the first register
+>> into the reset manager that is used for bringing peripherals out of reset.
+>>
+>> Signed-off-by: Dinh Nguyen <dinguyen@opensource.altera.com>
+>> ---
+>>  drivers/reset/reset-socfpga.c | 19 +++++++++++++------
+>>  1 file changed, 13 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/reset/reset-socfpga.c b/drivers/reset/reset-socfpga.c
+>> index 0a8def3..9074d41 100644
+>> --- a/drivers/reset/reset-socfpga.c
+>> +++ b/drivers/reset/reset-socfpga.c
+>> @@ -24,11 +24,11 @@
+>>  #include <linux/types.h>
+>>  
+>>  #define NR_BANKS		4
+>> -#define OFFSET_MODRST		0x10
+>>  
+>>  struct socfpga_reset_data {
+>>  	spinlock_t			lock;
+>>  	void __iomem			*membase;
+>> +	u32				modrst_offset;
+>>  	struct reset_controller_dev	rcdev;
+>>  };
+>>  
+>> @@ -45,8 +45,8 @@ static int socfpga_reset_assert(struct reset_controller_dev *rcdev,
+>>  
+>>  	spin_lock_irqsave(&data->lock, flags);
+>>  
+>> -	reg = readl(data->membase + OFFSET_MODRST + (bank * NR_BANKS));
+>> -	writel(reg | BIT(offset), data->membase + OFFSET_MODRST +
+>> +	reg = readl(data->membase + data->modrst_offset + (bank * NR_BANKS));
+>> +	writel(reg | BIT(offset), data->membase + data->modrst_offset +
+>>  				 (bank * NR_BANKS));
+>>  	spin_unlock_irqrestore(&data->lock, flags);
+>>  
+>> @@ -67,8 +67,8 @@ static int socfpga_reset_deassert(struct reset_controller_dev *rcdev,
+>>  
+>>  	spin_lock_irqsave(&data->lock, flags);
+>>  
+>> -	reg = readl(data->membase + OFFSET_MODRST + (bank * NR_BANKS));
+>> -	writel(reg & ~BIT(offset), data->membase + OFFSET_MODRST +
+>> +	reg = readl(data->membase + data->modrst_offset + (bank * NR_BANKS));
+>> +	writel(reg & ~BIT(offset), data->membase + data->modrst_offset +
+>>  				  (bank * NR_BANKS));
+>>  
+>>  	spin_unlock_irqrestore(&data->lock, flags);
+>> @@ -85,7 +85,7 @@ static int socfpga_reset_status(struct reset_controller_dev *rcdev,
+>>  	int offset = id % BITS_PER_LONG;
+>>  	u32 reg;
+>>  
+>> -	reg = readl(data->membase + OFFSET_MODRST + (bank * NR_BANKS));
+>> +	reg = readl(data->membase + data->modrst_offset + (bank * NR_BANKS));
+>>  
+>>  	return !(reg & BIT(offset));
+>>  }
+>> @@ -100,6 +100,8 @@ static int socfpga_reset_probe(struct platform_device *pdev)
+>>  {
+>>  	struct socfpga_reset_data *data;
+>>  	struct resource *res;
+>> +	struct device *dev = &pdev->dev;
+>> +	struct device_node *np = dev->of_node;
+>>  
+>>  	/*
+>>  	 * The binding was mainlined without the required property.
+>> @@ -120,6 +122,11 @@ static int socfpga_reset_probe(struct platform_device *pdev)
+>>  	if (IS_ERR(data->membase))
+>>  		return PTR_ERR(data->membase);
+>>  
+>> +	if (of_property_read_u32(np, "altr,modrst-offset", &data->modrst_offset)) {
+>> +		dev_err(dev, "no altr,modrst-offset specified in device tree\n");
+>> +		return -ENODEV;
+>> +	}
+>> +
+> 
+> This should fall back to the old value of 0x10 in case the device tree
+> property doesn't exist. Otherwise you are breaking Cyclone5/Arria5 with
+> older device trees.
+> 
 
-diff --git a/Documentation/devicetree/bindings/pci/ti-pci.txt b/Documentation/devicetree/bindings/pci/ti-pci.txt
-index 3d21791..60e2516 100644
---- a/Documentation/devicetree/bindings/pci/ti-pci.txt
-+++ b/Documentation/devicetree/bindings/pci/ti-pci.txt
-@@ -23,6 +23,9 @@ PCIe Designware Controller
-    interrupt-map-mask,
-    interrupt-map : as specified in ../designware-pcie.txt
- 
-+Optional Property:
-+ - gpios : Should be added if a gpio line is required to drive PERST# line
-+
- Example:
- axi {
- 	compatible = "simple-bus";
-diff --git a/drivers/pci/host/pci-dra7xx.c b/drivers/pci/host/pci-dra7xx.c
-index 7acc833..d3d0faf 100644
---- a/drivers/pci/host/pci-dra7xx.c
-+++ b/drivers/pci/host/pci-dra7xx.c
-@@ -17,6 +17,7 @@
- #include <linux/irqdomain.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-+#include <linux/of_gpio.h>
- #include <linux/pci.h>
- #include <linux/phy/phy.h>
- #include <linux/platform_device.h>
-@@ -336,6 +337,9 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct device_node *np = dev->of_node;
- 	char name[10];
-+	int gpio_sel;
-+	enum of_gpio_flags flags;
-+	unsigned long gpio_flags;
- 
- 	dra7xx = devm_kzalloc(dev, sizeof(*dra7xx), GFP_KERNEL);
- 	if (!dra7xx)
-@@ -398,6 +402,22 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
- 		goto err_get_sync;
- 	}
- 
-+	gpio_sel = of_get_gpio_flags(dev->of_node, 0, &flags);
-+	if (gpio_is_valid(gpio_sel)) {
-+		gpio_flags = (flags & OF_GPIO_ACTIVE_LOW) ?
-+				GPIOF_OUT_INIT_LOW : GPIOF_OUT_INIT_HIGH;
-+		ret = devm_gpio_request_one(dev, gpio_sel, gpio_flags,
-+					    "pcie_reset");
-+		if (ret) {
-+			dev_err(&pdev->dev, "gpio%d request failed, ret %d\n",
-+				gpio_sel, ret);
-+			goto err_gpio;
-+		}
-+	} else if (gpio_sel == -EPROBE_DEFER) {
-+		ret = -EPROBE_DEFER;
-+		goto err_gpio;
-+	}
-+
- 	reg = dra7xx_pcie_readl(dra7xx, PCIECTRL_DRA7XX_CONF_DEVICE_CMD);
- 	reg &= ~LTSSM_EN;
- 	dra7xx_pcie_writel(dra7xx, PCIECTRL_DRA7XX_CONF_DEVICE_CMD, reg);
-@@ -406,11 +426,11 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
- 
- 	ret = dra7xx_add_pcie_port(dra7xx, pdev);
- 	if (ret < 0)
--		goto err_add_port;
-+		goto err_gpio;
- 
- 	return 0;
- 
--err_add_port:
-+err_gpio:
- 	pm_runtime_put(dev);
- 
- err_get_sync:
--- 
-1.7.9.5
+Ah yes, you're right. Thanks for catching this!
+
+Dinh
