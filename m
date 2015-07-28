@@ -1,105 +1,185 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v13 3/3] ASoC: tda998x: add a codec to the HDMI
- transmitter
-Date: Tue, 28 Jul 2015 11:24:10 +0100
-Message-ID: <20150728102410.GD11162@sirena.org.uk>
-References: <cover.1437397270.git.moinejf@free.fr>
- <e036c88aa945e72b40ec965c9358dacf564e79f2.1437397272.git.moinejf@free.fr>
- <20150720180606.GL11162@sirena.org.uk>
- <20150728121945.560f82a5@armhf>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH v2 2/4] ARM: Kirkwood: add modes-map property to ns2-leds
+ nodes
+Date: Tue, 28 Jul 2015 12:32:14 +0200
+Message-ID: <55B75A2E.4080803@free-electrons.com>
+References: <1435859803-19583-1-git-send-email-simon.guinot@sequanux.org> <1435859803-19583-3-git-send-email-simon.guinot@sequanux.org> <55B3A047.70905@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="wi3pZ2QcHnFkMeXm"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150728121945.560f82a5@armhf>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Jackson <Andrew.Jackson-5wv7dgnIgG8@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <55B3A047.70905@free-electrons.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Simon Guinot <simon.guinot@sequanux.org>, Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, linux-leds@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Vincent Donnefort <vdonnefort@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Simon, Jacek,
 
---wi3pZ2QcHnFkMeXm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 25/07/2015 16:42, Gregory CLEMENT wrote:
+> Hi Simon, Jacek, Bryan, Richard,
+> 
+> On 02/07/2015 19:56, Simon Guinot wrote:
+>> From: Vincent Donnefort <vdonnefort@gmail.com>
+>>
+>> Since the LED modes mapping is no longer hardcoded inside the leds-ns2
+>> driver, then it must be provided through the modes-map property in the
+>> ns2-leds nodes.
+>>
+>> Signed-off-by: Vincent Donnefort <vdonnefort@gmail.com>
+> 
+> As the other patch of the series seem to be merged in the led branch,
+> then I can apply this patch on mvebu/dt.
+> 
+> It is OK for being in linux-next, however this patch depend on "leds:
+> leds-ns2: move LED modes mapping outside of the driver", so I will need
+> to find a way to express this dependency when I will do the pull request
+> to arm-soc.
+> 
 
-On Tue, Jul 28, 2015 at 12:19:45PM +0200, Jean-Francois Moine wrote:
-> Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+Eventually I removed this patch from my branch.
+Jacek, you can take it with my
 
-> > > +int tda9998x_codec_register(struct device *dev,
-> > > +			struct tda998x_audio_s *tda998x_audio_i,
-> > > +			struct tda998x_ops_s *tda998x_ops);
-> > > +void tda9998x_codec_unregister(struct device *dev);
+Acked-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 
-> > I'd expect these to be internal to the DRM driver.
 
-> I don't see where. What is your idea?
+Thanks,
 
-What I said above - put them in the DRM driver.  They're just
-registering a device IIRC.
+Gregory
 
-> > > +config SND_SOC_TDA998X
-> > > +	def_tristate y
-> > > +	select SND_PCM_ELD
-> > > +	depends on DRM_I2C_NXP_TDA998X
 
-> > def_tristate y?  Why?
+> 
+> Thanks,
+> 
+> Gregory
+> 
+> 
+>> ---
+>>  arch/arm/boot/dts/kirkwood-d2net.dts   | 5 +++++
+>>  arch/arm/boot/dts/kirkwood-is2.dts     | 5 +++++
+>>  arch/arm/boot/dts/kirkwood-ns2.dts     | 5 +++++
+>>  arch/arm/boot/dts/kirkwood-ns2max.dts  | 5 +++++
+>>  arch/arm/boot/dts/kirkwood-ns2mini.dts | 5 +++++
+>>  5 files changed, 25 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/kirkwood-d2net.dts b/arch/arm/boot/dts/kirkwood-d2net.dts
+>> index 6b7856025001..e1c25c35e9ce 100644
+>> --- a/arch/arm/boot/dts/kirkwood-d2net.dts
+>> +++ b/arch/arm/boot/dts/kirkwood-d2net.dts
+>> @@ -10,6 +10,7 @@
+>>  
+>>  /dts-v1/;
+>>  
+>> +#include <dt-bindings/leds/leds-ns2.h>
+>>  #include "kirkwood-netxbig.dtsi"
+>>  
+>>  / {
+>> @@ -28,6 +29,10 @@
+>>  			label = "d2net_v2:blue:sata";
+>>  			slow-gpio = <&gpio0 29 GPIO_ACTIVE_HIGH>;
+>>  			cmd-gpio = <&gpio0 30 GPIO_ACTIVE_HIGH>;
+>> +			modes-map = <NS_V2_LED_OFF  1 0
+>> +				     NS_V2_LED_ON   0 1
+>> +				     NS_V2_LED_ON   1 1
+>> +				     NS_V2_LED_SATA 0 0>;
+>>  		};
+>>  	};
+>>  
+>> diff --git a/arch/arm/boot/dts/kirkwood-is2.dts b/arch/arm/boot/dts/kirkwood-is2.dts
+>> index da674bbd49a8..4121674abd1c 100644
+>> --- a/arch/arm/boot/dts/kirkwood-is2.dts
+>> +++ b/arch/arm/boot/dts/kirkwood-is2.dts
+>> @@ -1,5 +1,6 @@
+>>  /dts-v1/;
+>>  
+>> +#include <dt-bindings/leds/leds-ns2.h>
+>>  #include "kirkwood-ns2-common.dtsi"
+>>  
+>>  / {
+>> @@ -27,6 +28,10 @@
+>>  			label = "ns2:blue:sata";
+>>  			slow-gpio = <&gpio0 29 0>;
+>>  			cmd-gpio = <&gpio0 30 0>;
+>> +			modes-map = <NS_V2_LED_OFF  1 0
+>> +				     NS_V2_LED_ON   0 1
+>> +				     NS_V2_LED_ON   1 1
+>> +				     NS_V2_LED_SATA 0 0>;
+>>  		};
+>>  	};
+>>  };
+>> diff --git a/arch/arm/boot/dts/kirkwood-ns2.dts b/arch/arm/boot/dts/kirkwood-ns2.dts
+>> index 53368d1022cc..190189d235e6 100644
+>> --- a/arch/arm/boot/dts/kirkwood-ns2.dts
+>> +++ b/arch/arm/boot/dts/kirkwood-ns2.dts
+>> @@ -1,5 +1,6 @@
+>>  /dts-v1/;
+>>  
+>> +#include <dt-bindings/leds/leds-ns2.h>
+>>  #include "kirkwood-ns2-common.dtsi"
+>>  
+>>  / {
+>> @@ -27,6 +28,10 @@
+>>  			label = "ns2:blue:sata";
+>>  			slow-gpio = <&gpio0 29 0>;
+>>  			cmd-gpio = <&gpio0 30 0>;
+>> +			modes-map = <NS_V2_LED_OFF  1 0
+>> +				     NS_V2_LED_ON   0 1
+>> +				     NS_V2_LED_ON   1 1
+>> +				     NS_V2_LED_SATA 0 0>;
+>>  		};
+>>  	};
+>>  };
+>> diff --git a/arch/arm/boot/dts/kirkwood-ns2max.dts b/arch/arm/boot/dts/kirkwood-ns2max.dts
+>> index 72c78d0b1116..55cc41d9c80c 100644
+>> --- a/arch/arm/boot/dts/kirkwood-ns2max.dts
+>> +++ b/arch/arm/boot/dts/kirkwood-ns2max.dts
+>> @@ -1,5 +1,6 @@
+>>  /dts-v1/;
+>>  
+>> +#include <dt-bindings/leds/leds-ns2.h>
+>>  #include "kirkwood-ns2-common.dtsi"
+>>  
+>>  / {
+>> @@ -46,6 +47,10 @@
+>>  			label = "ns2:blue:sata";
+>>  			slow-gpio = <&gpio0 29 0>;
+>>  			cmd-gpio = <&gpio0 30 0>;
+>> +			modes-map = <NS_V2_LED_OFF  1 0
+>> +				     NS_V2_LED_ON   0 1
+>> +				     NS_V2_LED_ON   1 1
+>> +				     NS_V2_LED_SATA 0 0>;
+>>  		};
+>>  	};
+>>  };
+>> diff --git a/arch/arm/boot/dts/kirkwood-ns2mini.dts b/arch/arm/boot/dts/kirkwood-ns2mini.dts
+>> index c441bf62c09f..9935f3ec29b4 100644
+>> --- a/arch/arm/boot/dts/kirkwood-ns2mini.dts
+>> +++ b/arch/arm/boot/dts/kirkwood-ns2mini.dts
+>> @@ -1,5 +1,6 @@
+>>  /dts-v1/;
+>>  
+>> +#include <dt-bindings/leds/leds-ns2.h>
+>>  #include "kirkwood-ns2-common.dtsi"
+>>  
+>>  / {
+>> @@ -47,6 +48,10 @@
+>>  			label = "ns2:blue:sata";
+>>  			slow-gpio = <&gpio0 29 0>;
+>>  			cmd-gpio = <&gpio0 30 0>;
+>> +			modes-map = <NS_V2_LED_OFF  1 0
+>> +				     NS_V2_LED_ON   0 1
+>> +				     NS_V2_LED_ON   1 1
+>> +				     NS_V2_LED_SATA 0 0>;
+>>  		};
+>>  	};
+>>  };
+>>
+> 
+> 
 
-> The TDA998x CODEC is always generated when the DRM TDA998x is generated
-> and when audio is wanted.
-> Its type, built-in or module, depends on the TDA998x driver type.
 
-Just make this like any other driver with no default specified.
-
-> > > +/* functions in tda998x_drv */
-> > > +static struct tda998x_ops_s *tda998x_ops;
-
-> > I'd expect this to be stored in the driver data rather than a static
-> > global, what if a system has two HDMI outputs?
-
-> Each TDA998x has only one HDMI output and there is only one driver.
-
-Someone might put two chips on the board.
-
-> > > +static int tda998x_codec_startup(struct snd_pcm_substream *substream,
-> > > +                       struct snd_soc_dai *dai)
-> > > +{
-> > > +       struct snd_pcm_runtime *runtime = substream->runtime;
-> > > +       u8 *eld;
-> > > +
-> > > +       eld = tda998x_ops->get_eld(dai->dev);
-> > > +       if (!eld)
-> > > +               return -ENODEV;
-> > > +       return snd_pcm_hw_constraint_eld(runtime, eld);
-> > > +}
-
-> > Do we really need a device specific mechanism for fishing the ELD out of
-> > the graphics code?  I'd have expected this to be more generic.
-
-> I will put the ELD in the private data of the DRM driver.
-
-That's not the issue here - the issue is that the need to get the ELD
-out of the video subsystem is not specific to this driver, it's pretty
-common and something that it seems we should factor out.
-
---wi3pZ2QcHnFkMeXm
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVt1hKAAoJECTWi3JdVIfQCIUH/0KPko0OHwHJPhqmzHEF8l74
-u4+5accPOStXR08xnSyxGRihoeDdTUsZmJdeCsSS7X3ORZyd2qur1AjbNQS9LgzZ
-LFMaWPugwQEomxaHWZ3/dosNl6P4h7VoEjL1bubut4TApN0fmGdjqTsN1Gp8E9wy
-o/zBGxencQtzUCrud4EzgZYaRT26tcK/y61c54bO/0rdusdVhIuQuz5LjjXD737e
-JBEwrD092Ztk+21tg1UbsCgYjnX/Gu9fxDDifuHSKI5MsbYQYjIG4S7q1qqROmk7
-YEhDY29cAutIrikxezkaQYnni5ZDOzSJso/j5aGjlLOMmnQZ1dECFjhc6RFiC0w=
-=Vm1R
------END PGP SIGNATURE-----
-
---wi3pZ2QcHnFkMeXm--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
