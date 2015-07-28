@@ -1,66 +1,141 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH v1 3/7] ARM: dts: apq8064-ifc6410: add heart-beat led
- support.
-Date: Tue, 28 Jul 2015 19:36:56 +0200
-Message-ID: <55B7BDB8.7090103@suse.de>
-References: <1438087956-17307-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1438088040-17437-1-git-send-email-srinivas.kandagatla@linaro.org>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v5 1/5] ARM/PCI: remove align_resource in pci_sys_data
+Date: Tue, 28 Jul 2015 18:44:06 +0100
+Message-ID: <20150728174406.GB19909@red-moon>
+References: <1437794486-21134-1-git-send-email-wangzhou1@hisilicon.com>
+ <1437794486-21134-2-git-send-email-wangzhou1@hisilicon.com>
+ <55B72C7E.1020102@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1438088040-17437-1-git-send-email-srinivas.kandagatla@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-arm-msm@vger.kernel.org
-Cc: agross@codeaurora.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <55B72C7E.1020102@hisilicon.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Zhou Wang <wangzhou1@hisilicon.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jg1.han@samsung.com>, Pratyush Anand <pratyush.anand@gmail.com>, Arnd Bergmann <arnd@arndb.de>, "gabriele.paoloni@huawei.com" <gabriele.paoloni@huawei.com>, James Morse <James.Morse@arm.com>, Liviu Dudau <Liviu.Dudau@arm.com>, "thomas.petazzoni@free-electrons.com" <thomas.petazzoni@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, "robh@kernel.org" <robh@kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "yuanzhichang@hisilicon.com" <yuanzhichang@hisilicon.com>, "zhudacai@hisilicon.com" <zhudacai@hisilicon.com>, "zhangjukuo@huawei.com" <zhangjukuo@huawei.com>, "qiuzhenfa@hisilicon.com" <qiuzhenfa@hisilicon.com>, "liudongdong3@huawei.com" <liudongdong3@h>
 List-Id: devicetree@vger.kernel.org
 
-Am 28.07.2015 um 14:54 schrieb Srinivas Kandagatla:
-> This patch adds heart-beat led support on IFC6410.
->=20
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
->  arch/arm/boot/dts/qcom-apq8064-ifc6410.dts | 22 ++++++++++++++++++++=
-++
->  1 file changed, 22 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts b/arch/arm/bo=
-ot/dts/qcom-apq8064-ifc6410.dts
-> index df560cf..1fc2ea5 100644
-> --- a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-> +++ b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-> @@ -207,6 +207,19 @@
->  			status =3D "okay";
->  		};
-> =20
-> +		leds {
-> +			compatible =3D "gpio-leds";
-> +			pinctrl-names =3D "default";
-> +			pinctrl-0 =3D <&notify_led>;
-> +
-> +			led@1 {
-> +				label =3D "apq8064:green:user1";
-> +				gpios =3D <&pm8921_gpio 18 GPIO_ACTIVE_HIGH>;
-> +				linux,default-trigger =3D "heartbeat";
+[CC'ing RMK]
 
-Can we please drop the heartbeat default? While that's nice as proof of
-concept, it's annoying to deliver it that way in Linux distros. Users
-can enable that trigger with a simple boot script writing to /sys.
+On Tue, Jul 28, 2015 at 08:17:18AM +0100, Zhou Wang wrote:
+> On 2015/7/25 11:21, Zhou Wang wrote:
+> > From: Gabriele Paoloni <gabriele.paoloni@huawei.com>
+> > 
+> > This patch is needed in order to unify the PCIe designware framework for ARM and
+> > ARM64 architectures. In the PCIe designware unification process we are calling
+> > pci_create_root_bus() passing a "sysdata" parameter that is the same for both
+> > ARM and ARM64 and is of type "struct pcie_port*". In the ARM case this will
+> > cause a problem with the function pcibios_align_resource(); in fact this will
+> > cast "dev->sysdata" to "struct pci_sys_data*", whereas designware had passed a
+> > "struct pcie_port*" pointer.
+> > 
+> > This patch solves the issue by removing "align_resource" from "pci_sys_data"
+> > struct and defining a static global function pointer in "bios32.c"
+> > 
+> > Signed-off-by: Gabriele Paoloni <gabriele.paoloni@huawei.com>
+> 
+> Hi Arnd and Rob,
+> 
+> What is your opinion about this patch? Gabriele adds a global pointer in bios32.c
+> to store align_resource, so we could remove sys->align_resource in pcibios_align_resource.
+> 
+> As Lorenzo mentioned in v4 series, this is a temporary solution before moving
+> align_resource to host bridge structure.
+> 
+> Any comments welcome.
+
+The align_resource() pointer is just used in drivers/pci/host/pci-mvebu.c,
+I would like the pci-mvebu.c maintainers to comment on this and test it, I
+do not expect it to create any issue and might be a temporary solution to
+make progress on ARM/ARM64 consolidation, it is a blocking point.
+
+It would be good if Russell can have a look too, I do not see what
+issue this can trigger given that is just used in:
+
+drivers/pci/host/pci-mvebu.c
+
+and a global pointer (not saying it is elegant, but it should work)
+might be ok.
+
+So yes, comments very welcome.
 
 Thanks,
-Andreas
+Lorenzo
 
-> +				default-state =3D "on";
-> +			};
-> +		};
-> +
->  		qcom,ssbi@500000 {
->  			pmicintc: pmic@0 {
->  				pm8921_gpio: gpio@150 {
-[snip]
-
---=20
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
-GF: Felix Imend=F6rffer, Jane Smithard, Dilip Upmanyu, Graham Norton; H=
-RB
-21284 (AG N=FCrnberg)
+> 
+> Thanks,
+> Zhou
+> 
+> > ---
+> >  arch/arm/include/asm/mach/pci.h |  5 -----
+> >  arch/arm/kernel/bios32.c        | 12 ++++++++----
+> >  2 files changed, 8 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/arch/arm/include/asm/mach/pci.h b/arch/arm/include/asm/mach/pci.h
+> > index 28b9bb3..8a4e4de 100644
+> > --- a/arch/arm/include/asm/mach/pci.h
+> > +++ b/arch/arm/include/asm/mach/pci.h
+> > @@ -58,11 +58,6 @@ struct pci_sys_data {
+> >  					/* IRQ mapping				*/
+> >  	int		(*map_irq)(const struct pci_dev *, u8, u8);
+> >  					/* Resource alignement requirements	*/
+> > -	resource_size_t (*align_resource)(struct pci_dev *dev,
+> > -					  const struct resource *res,
+> > -					  resource_size_t start,
+> > -					  resource_size_t size,
+> > -					  resource_size_t align);
+> >  	void		*private_data;	/* platform controller private data	*/
+> >  };
+> >  
+> > diff --git a/arch/arm/kernel/bios32.c b/arch/arm/kernel/bios32.c
+> > index fcbbbb1..4cdc64d 100644
+> > --- a/arch/arm/kernel/bios32.c
+> > +++ b/arch/arm/kernel/bios32.c
+> > @@ -17,6 +17,11 @@
+> >  #include <asm/mach/pci.h>
+> >  
+> >  static int debug_pci;
+> > +static resource_size_t (*align_resource)(struct pci_dev *dev,
+> > +		  const struct resource *res,
+> > +		  resource_size_t start,
+> > +		  resource_size_t size,
+> > +		  resource_size_t align) = NULL;
+> >  
+> >  #ifdef CONFIG_PCI_MSI
+> >  struct msi_controller *pcibios_msi_controller(struct pci_dev *dev)
+> > @@ -468,7 +473,7 @@ static void pcibios_init_hw(struct device *parent, struct hw_pci *hw,
+> >  		sys->busnr   = busnr;
+> >  		sys->swizzle = hw->swizzle;
+> >  		sys->map_irq = hw->map_irq;
+> > -		sys->align_resource = hw->align_resource;
+> > +		align_resource = hw->align_resource;
+> >  		INIT_LIST_HEAD(&sys->resources);
+> >  
+> >  		if (hw->private_data)
+> > @@ -589,7 +594,6 @@ resource_size_t pcibios_align_resource(void *data, const struct resource *res,
+> >  				resource_size_t size, resource_size_t align)
+> >  {
+> >  	struct pci_dev *dev = data;
+> > -	struct pci_sys_data *sys = dev->sysdata;
+> >  	resource_size_t start = res->start;
+> >  
+> >  	if (res->flags & IORESOURCE_IO && start & 0x300)
+> > @@ -597,8 +601,8 @@ resource_size_t pcibios_align_resource(void *data, const struct resource *res,
+> >  
+> >  	start = (start + align - 1) & ~(align - 1);
+> >  
+> > -	if (sys->align_resource)
+> > -		return sys->align_resource(dev, res, start, size, align);
+> > +	if (align_resource)
+> > +		return align_resource(dev, res, start, size, align);
+> >  
+> >  	return start;
+> >  }
+> > 
+> 
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
