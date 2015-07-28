@@ -1,42 +1,60 @@
-From: "Timo Sigurdsson" <public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org>
-Subject: Re: [RFC] ARM: dts: sunxi: Add regulators and
- board-specific operating points for LeMaker BananaPi
-Date: Tue, 28 Jul 2015 16:45:28 +0200 (CEST)
-Message-ID: <20150728144528.E3A916C82F6B@dd34104.kasserver.com>
-References: <1437960486-2809-1-git-send-email-public_timo.s@silentcreek.de> <55B5E6DB.8020009@redhat.com> <20150727120918.191F76C82FB4@dd34104.kasserver.com> <55B62768.6040403@redhat.com><20150728124911.GA2564@lukather>
-Reply-To: public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org
+From: Claudiu Manoil <claudiu.manoil@freescale.com>
+Subject: [PATCH,v3 1/3] doc: dt: Update eTSEC bindings doc
+Date: Tue, 28 Jul 2015 17:43:54 +0300
+Message-ID: <1438094636-20421-1-git-send-email-claudiu.manoil@freescale.com>
+References: <20150727142816.GP12927@tiger>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCSJLSE35MGBBCVL32WQKGQEWTCJ4MY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20150728124911.GA2564@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20150727142816.GP12927@tiger>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, shawnguo@kernel.org
+Cc: shawn.guo@linaro.org, galak@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Update the eTSEC bindings document with missing info on
+properties that are already in use for the PPC platforms:
+* "tbi-phy" property;
+* "fsl,etsec2" compatibility string;
 
-Maxime Ripard schrieb am 28.07.2015 14:49:
-> I don't feel like holding patches that were posted before you did
-> because you did them some time ago and never submitted them is
-> reasonnable and / or encouraging for new submitters of patches.
-> 
-> I'd really like to get more sunxi-people contributing, and that starts
-> with that kind of trivial stuff. Holding them back because one of the
-> usual (and experienced) developpers is a bit counter-productive (and
-> I'm sure you still have a lot of patches to submit anyway ;)).
+Signed-off-by: Claudiu Manoil <claudiu.manoil@freescale.com>
+---
+v2 - none;
+v3 - added "tbi-handle" documentation;
+   - fixed typo ("fsl,etsec2" is the correct string);
 
-Just for the record: I wouldn't be discouraged by that. The only thing that
-matters to me here is that regulator support will be added, regardless of 
-who submitted the patch. But anyway, I will rework the patch along the 
-statements made during this discussion.
+ Documentation/devicetree/bindings/net/fsl-tsec-phy.txt | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-Regards,
-
-Timo
+diff --git a/Documentation/devicetree/bindings/net/fsl-tsec-phy.txt b/Documentation/devicetree/bindings/net/fsl-tsec-phy.txt
+index 1e97532..325c07d 100644
+--- a/Documentation/devicetree/bindings/net/fsl-tsec-phy.txt
++++ b/Documentation/devicetree/bindings/net/fsl-tsec-phy.txt
+@@ -45,12 +45,15 @@ Properties:
+ 
+   - device_type : Should be "network"
+   - model : Model of the device.  Can be "TSEC", "eTSEC", or "FEC"
+-  - compatible : Should be "gianfar"
++  - compatible : "gianfar", "fsl,etsec2"
+   - reg : Offset and length of the register set for the device
+   - interrupts : For FEC devices, the first interrupt is the device's
+     interrupt.  For TSEC and eTSEC devices, the first interrupt is
+     transmit, the second is receive, and the third is error.
+   - phy-handle : See ethernet.txt file in the same directory.
++  - tbi-handle : Handle to a tbi-phy node containing information about
++    the TBIPA register needed to initialize the TBI PHY.  See
++    "TBI Internal MDIO bus", this document.
+   - fixed-link : See fixed-link.txt in the same directory.
+   - phy-connection-type : See ethernet.txt file in the same directory.
+     This property is only really needed if the connection is of type
+-- 
+1.7.11.7
