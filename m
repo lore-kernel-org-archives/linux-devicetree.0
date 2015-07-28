@@ -1,186 +1,132 @@
-From: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v1 7/7] ARM: dts: ifc6410: add inforce LVDS panel support
-Date: Tue, 28 Jul 2015 14:47:19 -0400
-Message-ID: <CAF6AEGvps12_faC5kU-bVueFgK=EErXNYumgA9Rs9zRpTjy+7w@mail.gmail.com>
-References: <1438087956-17307-1-git-send-email-srinivas.kandagatla@linaro.org>
-	<1438088076-17606-1-git-send-email-srinivas.kandagatla@linaro.org>
-	<55B7C0DC.2010501@suse.de>
+From: Arend van Spriel <arend@broadcom.com>
+Subject: Re: [PATCH v2] mmc: sunxi: Don't start commands while the card is
+ busy
+Date: Tue, 28 Jul 2015 21:22:30 +0200
+Message-ID: <55B7D676.1020800@broadcom.com>
+References: <1436541284-11800-1-git-send-email-hdegoede@redhat.com> <CAPDyKFoNe0bghfSXs48stHzZToTc7Hjd5gVPy-VbDF8bzdVVMQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55B7C0DC.2010501-l3A5Bk7waGM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFoNe0bghfSXs48stHzZToTc7Hjd5gVPy-VbDF8bzdVVMQ@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, Hans de Goede <hdegoede@redhat.com>
+Cc: Chris Ball <chris@printf.net>, Mike Turquette <mturquette@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Sascha Hauer <s.hauer@pengutronix.de>, linux-mmc <linux-mmc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-sunxi@googlegroups.com, Eugene K <sigintmailru@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 28, 2015 at 1:50 PM, Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>=
- wrote:
-> Am 28.07.2015 um 14:54 schrieb Srinivas Kandagatla:
->> This patch adds LVDS panel for IFC6410.
+On 07/21/2015 02:15 PM, Ulf Hansson wrote:
+> On 10 July 2015 at 17:14, Hans de Goede <hdegoede@redhat.com> wrote:
+>> Some sdio wifi modules have not been working reliable with the sunxi-mmc
+>> host code. This turns out to be caused by it starting new commands while
+>> the card signals that it is still busy processing a previous command.
+>
+> Which are those commands? Or more interesting, which response types do
+> these commands expect?
+> I don't think this is a sunxi specific issue, I have seen similar
+> issues for other host controllers.
+
+Indeed. A similar fix was needed for dw_mmc host controller.
+
+> I am thinking that perhaps this should be managed by the mmc core
+> instead of local hacks to sunxi. Potentially we could make the core to
+> invoke the already existing host_ops->card_busy() callback when
+> needed...
+
+The problem here is that there are a number of host controllers out 
+there not implementing that callback. That may be because the hardware 
+is dealing properly with busy signalling, but I would not bet on that.
+
+Regards,
+Arend
+
+> Within this context, could I ask whether you controller supports IRQ
+> based HW-busy detection? Or you need polling of the status register?
+>
 >>
->> Signed-off-by: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> [Rob Clark: WIP patch]
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> This commit fixes this, thereby fixing the wifi reliability issues on
+>> the Cubietruck and other sunxi boards using sdio wifi.
+>>
+>> Reported-by: Eugene K <sigintmailru@gmail.com>
+>> Suggested-by: Eugene K <sigintmailru@gmail.com>
+>> Cc: Eugene K <sigintmailru@gmail.com>
+>> Cc: Arend van Spriel <arend@broadcom.com>
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 >> ---
->>  arch/arm/boot/dts/qcom-apq8064-ifc6410.dts | 66 +++++++++++++++++++=
-+++++++++++
->>  1 file changed, 66 insertions(+)
+>> Changes in v2:
+>> -Properly accredit Eugene K for coming up with the fix for this
+>> ---
+>>   drivers/mmc/host/sunxi-mmc.c | 32 ++++++++++++++++++++++++++++++++
+>>   1 file changed, 32 insertions(+)
 >>
->> diff --git a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts b/arch/arm/b=
-oot/dts/qcom-apq8064-ifc6410.dts
->> index 1ab71f1..3bdac02 100644
->> --- a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
->> +++ b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
->> @@ -63,6 +63,12 @@
->>                                       qcom,switch-mode-frequency =3D=
- <3200000>;
->>                               };
+>> diff --git a/drivers/mmc/host/sunxi-mmc.c b/drivers/mmc/host/sunxi-mmc.c
+>> index 4d3e1ff..daa90b7 100644
+>> --- a/drivers/mmc/host/sunxi-mmc.c
+>> +++ b/drivers/mmc/host/sunxi-mmc.c
+>> @@ -289,6 +289,24 @@ static int sunxi_mmc_init_host(struct mmc_host *mmc)
+>>          return 0;
+>>   }
 >>
->> +                             pm8921_l2: l2 {
->> +                                     regulator-min-microvolt =3D <1=
-200000>;
->> +                                     regulator-max-microvolt =3D <1=
-200000>;
->> +                                     bias-pull-down;
->> +                             };
+>> +/* Wait for card to report ready before starting a new cmd */
+>> +static int sunxi_mmc_wait_card_ready(struct sunxi_mmc_host *host)
+>> +{
+>> +       unsigned long expire = jiffies + msecs_to_jiffies(500);
+>> +       u32 rval;
 >> +
->>                               pm8921_l3: l3 {
->>                                       regulator-min-microvolt =3D <3=
-050000>;
->>                                       regulator-max-microvolt =3D <3=
-300000>;
->> @@ -96,6 +102,10 @@
->>                               pm8921_lvs1: lvs1 {
->>                                       bias-pull-down;
->>                               };
+>> +       do {
+>> +               rval = mmc_readl(host, REG_STAS);
+>> +       } while (time_before(jiffies, expire) && (rval & SDXC_CARD_DATA_BUSY));
 >> +
->> +                             pm8921_lvs7: lvs7 {
->> +                                     bias-pull-down;
->> +                             };
->>                       };
->>               };
+>> +       if (rval & SDXC_CARD_DATA_BUSY) {
+>> +               dev_err(mmc_dev(host->mmc), "Error R1 ready timeout\n");
+>> +               return -EIO;
+>> +       }
+>> +
+>> +       return 0;
+>> +}
+>> +
+>>   static void sunxi_mmc_init_idma_des(struct sunxi_mmc_host *host,
+>>                                      struct mmc_data *data)
+>>   {
+>> @@ -383,6 +401,8 @@ static void sunxi_mmc_send_manual_stop(struct sunxi_mmc_host *host,
+>>          u32 arg, cmd_val, ri;
+>>          unsigned long expire = jiffies + msecs_to_jiffies(1000);
 >>
->> @@ -119,6 +129,41 @@
+>> +       sunxi_mmc_wait_card_ready(host);
+>> +
+>>          cmd_val = SDXC_START | SDXC_RESP_EXPIRE |
+>>                    SDXC_STOP_ABORT_CMD | SDXC_CHECK_RESPONSE_CRC;
 >>
->>               mdp: qcom,mdp@5100000 {
->>                       status =3D "okay";
->> +                     qcom,lvds-panel =3D <&panel>;
+>> @@ -597,6 +617,11 @@ static int sunxi_mmc_oclk_onoff(struct sunxi_mmc_host *host, u32 oclk_en)
+>>   {
+>>          unsigned long expire = jiffies + msecs_to_jiffies(250);
+>>          u32 rval;
+>> +       int ret;
+>> +
+>> +       ret = sunxi_mmc_wait_card_ready(host);
+>> +       if (ret)
+>> +               return ret;
+>>
+>>          rval = mmc_readl(host, REG_CLKCR);
+>>          rval &= ~(SDXC_CARD_CLOCK_ON | SDXC_LOW_POWER_ON);
+>> @@ -785,6 +810,13 @@ static void sunxi_mmc_request(struct mmc_host *mmc, struct mmc_request *mrq)
+>>                  return;
+>>          }
+>>
+>> +       ret = sunxi_mmc_wait_card_ready(host);
+>> +       if (ret) {
+>> +               mrq->cmd->error = ret;
+>> +               mmc_request_done(mmc, mrq);
+>> +               return;
+>> +       }
+>> +
+>>          if (data) {
+>>                  ret = sunxi_mmc_map_dma(host, data);
+>>                  if (ret < 0) {
+>> --
+>> 2.4.3
+>>
 >
-> In my testing this broke/uglified HDMI output. Since not everyone has
-> that LVDS panel attached, or might have a different panel type, I don=
-'t
-> think the panel node belongs in the generic -ifc6410.dts file.
-> I suggest you add an -ifc6410+inforce-lvds.dts or so for that.
+> Kind regards
+> Uffe
+>
 
-I think the problem is not so much the dt bindings, since we have an
-i2c/ddc where we can probe the panel's edid and see if it is actually
-attached.
-
-Probably panel_simple_probe() should attempt to read edid (or at least
-first block) if ddc is not null, and return an error if that times
-out.  That way we could tell at runtime whether the panel is there or
-not.
-
-BR,
--R
-
->> +                     lvds-vccs-3p3v-supply =3D <&ext_3p3v>;
->> +                     lvds-pll-vdda-supply =3D <&pm8921_l2>;
->> +                     lvds-vdda-supply =3D <&pm8921_lvs7>;
->> +             };
->> +
->> +             panel_3p3v: panel_3p3v {
->
-> s/_/-/ ?
->
->> +                     compatible =3D "regulator-fixed";
->> +                     pinctrl-0 =3D <&disp_en_gpios>;
->> +                     pinctrl-names =3D "default";
->> +                     regulator-min-microvolt =3D <3300000>;
->> +                     regulator-max-microvolt =3D <3300000>;
->> +                     regulator-name =3D "panel_en_3p3v";
->> +                     regulator-type =3D "voltage";
->> +                     startup-delay-us =3D <0>;
->> +                     gpio =3D <&pm8921_gpio 36 GPIO_ACTIVE_HIGH>;
->> +                     enable-active-high;
->> +                     regulator-boot-on;
->> +             };
->> +
->> +             backlight: backlight{
->> +                     pinctrl-0 =3D <&pwm_bl_gpios>;
->> +                     pinctrl-names =3D "default";
->> +                     compatible =3D "gpio-backlight";
->> +                     gpios =3D <&pm8921_gpio 26 GPIO_ACTIVE_HIGH>;
->> +                     default-on;
->> +             };
->> +
->> +             panel: auo,b101xtn01 {
->
-> panel: panel { ?
->
-> Regards,
-> Andreas
->
->> +                     status =3D "okay";
->> +                     compatible =3D "auo,b101xtn01";
->> +
->> +                     ddc-i2c-bus =3D <&i2c3>;
->> +                     backlight =3D <&backlight>;
->> +                     power-supply =3D <&panel_3p3v>;
->>               };
->>
->>               gsbi3: gsbi@16200000 {
->> @@ -235,6 +280,27 @@
->>                               pm8921_gpio: gpio@150 {
->>                                       pinctrl-names =3D "default";
->>                                       pinctrl-0 =3D <&wlan_default_g=
-pios>;
->> +
->> +                                     pwm_bl_gpios: pwm-bl-gpios {
->> +                                             pios {
->> +                                                     pins =3D "gpio=
-26";
->> +                                                     bias-disable;
->> +                                                     function =3D "=
-normal";
->> +                                                     qcom,drive-str=
-ength =3D <PMIC_GPIO_STRENGTH_HIGH>;
->> +                                                     power-source =3D=
- <PM8921_GPIO_S4>;
->> +                                             };
->> +                                     };
->> +
->> +                                     disp_en_gpios: disp-en-gpios {
->> +                                             pios {
->> +                                                     pins =3D "gpio=
-36";
->> +                                                     bias-disable;
->> +                                                     function =3D "=
-normal";
->> +                                                     qcom,drive-str=
-ength =3D <PMIC_GPIO_STRENGTH_HIGH>;
->> +                                                     power-source =3D=
- <PM8921_GPIO_S4>;
->> +                                             };
->> +                                     };
->> +
->>                                       wlan_default_gpios: wlan-gpios=
- {
->>                                               pios {
->>                                                       pins =3D "gpio=
-43";
->>
->
->
-> --
-> SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-> GF: Felix Imend=C3=B6rffer, Jane Smithard, Dilip Upmanyu, Graham Nort=
-on; HRB
-> 21284 (AG N=C3=BCrnberg)
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
