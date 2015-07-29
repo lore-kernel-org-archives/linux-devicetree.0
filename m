@@ -1,42 +1,56 @@
-From: Jianwei Wang <jianwei.wang.chn@gmail.com>
-Subject: [PATCH v13 5/6] arm:dts:ls1021a: Add DCU dts node
-Date: Wed, 29 Jul 2015 14:54:51 +0800
-Message-ID: <1438152892-11256-6-git-send-email-jianwei.wang.chn@gmail.com>
-References: <1438152892-11256-1-git-send-email-jianwei.wang.chn@gmail.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v5 01/10] clk: mediatek: Removed unused dpi_ck clock from MT8173
+Date: Wed, 29 Jul 2015 09:05:52 +0200
+Message-ID: <6282882.pftQBj38E3@diego>
+References: <1438152754-11970-1-git-send-email-jamesjj.liao@mediatek.com> <1438152754-11970-2-git-send-email-jamesjj.liao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1438152892-11256-1-git-send-email-jianwei.wang.chn@gmail.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org
-Cc: devicetree@vger.kernel.org, Xiubo Li <lixiubo@cmss.chinamobile.com>, daniel.vetter@ffwll.ch, Alison Wang <b18965@freescale.com>, linux-kernel@vger.kernel.org, scottwood@freescale.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1438152754-11970-2-git-send-email-jamesjj.liao@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: James Liao <jamesjj.liao@mediatek.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, srv_heupstream@mediatek.com, Daniel Kurtz <djkurtz@chromium.org>, Ricky Liang <jcliang@chromium.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-QWRkIERDVSBub2RlLCBEQ1UgaXMgYSBkaXNwbGF5IGNvbnRyb2xsZXIgb2YgRnJlZXNjYWxlCm5h
-bWVkIDJELUFDRS4KClNpZ25lZC1vZmYtYnk6IEFsaXNvbiBXYW5nIDxiMTg5NjVAZnJlZXNjYWxl
-LmNvbT4KU2lnbmVkLW9mZi1ieTogWGl1Ym8gTGkgPGxpeGl1Ym9AY21zcy5jaGluYW1vYmlsZS5j
-b20+ClNpZ25lZC1vZmYtYnk6IEppYW53ZWkgV2FuZyA8amlhbndlaS53YW5nLmNobkBnbWFpbC5j
-b20+Ci0tLQogYXJjaC9hcm0vYm9vdC9kdHMvbHMxMDIxYS5kdHNpIHwgMTAgKysrKysrKysrKwog
-MSBmaWxlIGNoYW5nZWQsIDEwIGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9hcmNoL2FybS9i
-b290L2R0cy9sczEwMjFhLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9sczEwMjFhLmR0c2kKaW5k
-ZXggYzcwYmIyNy4uNmQ2ZTNlMiAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvbHMxMDIx
-YS5kdHNpCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2xzMTAyMWEuZHRzaQpAQCAtMzgzLDYgKzM4
-MywxNiBAQAogCQkJCSA8JnBsYXRmb3JtX2NsayAxPjsKIAkJfTsKIAorCQlkY3U6IGRjdUAyY2Uw
-MDAwIHsKKwkJCWNvbXBhdGlibGUgPSAiZnNsLGxzMTAyMWEtZGN1IjsKKwkJCXJlZyA9IDwweDAg
-MHgyY2UwMDAwIDB4MCAweDEwMDAwPjsKKwkJCWludGVycnVwdHMgPSA8R0lDX1NQSSAxNzIgSVJR
-X1RZUEVfTEVWRUxfSElHSD47CisJCQljbG9ja3MgPSA8JnBsYXRmb3JtX2NsayAwPjsKKwkJCWNs
-b2NrLW5hbWVzID0gImRjdSI7CisJCQliaWctZW5kaWFuOworCQkJc3RhdHVzID0gImRpc2FibGVk
-IjsKKwkJfTsKKwogCQltZGlvMDogbWRpb0AyZDI0MDAwIHsKIAkJCWNvbXBhdGlibGUgPSAiZ2lh
-bmZhciI7CiAJCQlkZXZpY2VfdHlwZSA9ICJtZGlvIjsKLS0gCjIuMS4wLjI3Lmc5NmRiMzI0Cgpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
-bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3Rz
-LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Am Mittwoch, 29. Juli 2015, 14:52:25 schrieb James Liao:
+> The dpi_ck clock can be removed because it not actually used
+> in topckgen and subsystems.
+> 
+> Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
+
+>From our past discussions this change looks about right, and should still 
+become _part of 4.2_, to not have the CLK_TOP_DPI become part of the 
+devicetree CLK_TOP_DPI.
+
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+
+> ---
+>  drivers/clk/mediatek/clk-mt8173.c      | 1 -
+>  include/dt-bindings/clock/mt8173-clk.h | 1 -
+>  2 files changed, 2 deletions(-)
+> 
+> diff --git a/drivers/clk/mediatek/clk-mt8173.c
+> b/drivers/clk/mediatek/clk-mt8173.c index 4b9e04c..4486f8f 100644
+> --- a/drivers/clk/mediatek/clk-mt8173.c
+> +++ b/drivers/clk/mediatek/clk-mt8173.c
+> @@ -26,7 +26,6 @@ static DEFINE_SPINLOCK(mt8173_clk_lock);
+> 
+>  static const struct mtk_fixed_factor root_clk_alias[] __initconst = {
+>  	FACTOR(CLK_TOP_CLKPH_MCK_O, "clkph_mck_o", "clk_null", 1, 1),
+> -	FACTOR(CLK_TOP_DPI, "dpi_ck", "clk_null", 1, 1),
+>  	FACTOR(CLK_TOP_USB_SYSPLL_125M, "usb_syspll_125m", "clk_null", 1, 1),
+>  	FACTOR(CLK_TOP_HDMITX_DIG_CTS, "hdmitx_dig_cts", "clk_null", 1, 1),
+>  };
+> diff --git a/include/dt-bindings/clock/mt8173-clk.h
+> b/include/dt-bindings/clock/mt8173-clk.h index 4ad76ed..7230c38 100644
+> --- a/include/dt-bindings/clock/mt8173-clk.h
+> +++ b/include/dt-bindings/clock/mt8173-clk.h
+> @@ -18,7 +18,6 @@
+>  /* TOPCKGEN */
+> 
+>  #define CLK_TOP_CLKPH_MCK_O		1
+> -#define CLK_TOP_DPI			2
+>  #define CLK_TOP_USB_SYSPLL_125M		3
+>  #define CLK_TOP_HDMITX_DIG_CTS		4
+>  #define CLK_TOP_ARMCA7PLL_754M		5
