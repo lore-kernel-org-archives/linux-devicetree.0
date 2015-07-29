@@ -1,131 +1,134 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v6] PCI: Store PCIe bus address in struct of_pci_range
-Date: Wed, 29 Jul 2015 16:47:10 -0500
-Message-ID: <20150729214710.GE9640@google.com>
-References: <1438010223-124422-1-git-send-email-gabriele.paoloni@huawei.com>
- <20150729172053.GE31170@google.com>
- <EE11001F9E5DDD47B7634E2F8A612F2E01D6F350@lhreml503-mbs>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v4 2/2] dt: power: st: Provide bindings for ST's OPPs
+Date: Wed, 29 Jul 2015 15:15:26 -0700
+Message-ID: <20150729221526.GE3159@codeaurora.org>
+References: <1438010430-5802-1-git-send-email-lee.jones@linaro.org>
+ <1438010430-5802-2-git-send-email-lee.jones@linaro.org>
+ <20150728022936.GB1229@linux>
+ <20150728225510.GB3159@codeaurora.org>
+ <20150729081403.GH2284@x1>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <EE11001F9E5DDD47B7634E2F8A612F2E01D6F350@lhreml503-mbs>
-Sender: linux-pci-owner@vger.kernel.org
-To: Gabriele Paoloni <gabriele.paoloni@huawei.com>
-Cc: "arnd@arndb.de" <arnd@arndb.de>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "Wangzhou (B)" <wangzhou1@hisilicon.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "james.morse@arm.com" <james.morse@arm.com>, "Liviu.Dudau@arm.com" <Liviu.Dudau@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Yuanzhichang <yuanzhichang@hisilicon.com>, Zhudacai <zhudacai@hisilicon.com>, zhangjukuo <zhangjukuo@huawei.com>, qiuzhenfa <qiuzhenfa@hisilicon.com>, "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>, Andrew Murray <amurray@embedded-bits.co.uk>
+In-Reply-To: <20150729081403.GH2284@x1>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, rob.herring@linaro.org, nm@ti.com, arnd.bergmann@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, rjw@rjwysocki.net, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, ajitpal.singh@st.com, sre@kernel.org, dbaryshkov@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-[+cc Andrew]
-
-On Wed, Jul 29, 2015 at 07:44:18PM +0000, Gabriele Paoloni wrote:
-> > -----Original Message-----
-> > From: Bjorn Helgaas [mailto:bhelgaas@google.com]
-> > Sent: Wednesday, July 29, 2015 6:21 PM
-> > To: Gabriele Paoloni
-
-> > On Mon, Jul 27, 2015 at 11:17:03PM +0800, Gabriele Paoloni wrote:
-> > > From: gabriele paoloni <gabriele.paoloni@huawei.com>
-
-> > >     This patch adds a new field in "struct of_pci_range" to store the
-> > >     pci bus start address; it fills the field in
-> > of_pci_range_parser_one();
-> > >     in of_pci_get_host_bridge_resources() it retrieves the resource
-> > entry
-> > >     after it is created and added to the resource list and uses
-> > >     entry->__res.start to store the pci controller address
+On 07/29, Lee Jones wrote:
+> On Tue, 28 Jul 2015, Stephen Boyd wrote:
+> 
+> > On 07/28, Viresh Kumar wrote:
+> > > Cc'ing few people (whom I cc'd last time as well :)).
+> > > 
+> > > On 27-07-15, 16:20, Lee Jones wrote:
+> > > > + - opp-hz		: CPU frequency [Hz] for this OPP [See: ./opp.txt]
+> > > > + - st,avs		: List of available voltages [uV] indexed by process code
+> > > > + - st,cuts		: Cut version this OPP is suitable for [0xFF means ALL]
+> > > > + - st,substrate		: Substrate version this OPP is suitable for [0xFF means ALL]
+[...]
+> > > > +cpu0-opp-list {
+> > > > +	compatible	= "operating-points-v2-sti";
+> > > > +	st,syscfg	= <&syscfg [major_offset]>;
+> > > > +	st,syscfg-eng   = <&syscfg_eng [pcode_offset] [minor_offset]>;
+> > > > +
+> > > > +	opp0 {
+> > > > +		opp-hz		= <1200000000>;
+> > > > +		st,avs		= <1110 1150 1100 1080 1040 1020 980 930>;
+> > > > +		st,substrate	= <0xff>;
+> > > > +		st,cuts		= <0xff>;
+> > > > +	};
+> > > > +	opp1 {
+> > > > +		opp-hz		= <1500000000>;
+> > > > +		st,avs		= <1200 1200 1200 1200 1170 1140 1100 1070>;
+> > > > +		st,substrate	= <0xff>;
+> > > > +		st,cuts		= <0x2>;
+> > > > +	};
+> > > > +};
+> > > 
+> > > I don't see more problems here, unless we can move some of this to the
+> > > generic bindings.
+> > > 
+> > > @Rob/Stephen: Please respond before it is late :)
 > > 
-> > struct of_pci_range is starting to get confusing to non-OF folks like
-> > me.
-> > It now contains:
+> > It's interesting to have vendor specific properties like avs,
+> > cuts, and substrate. That could replace our planned usage of the
+> > opp-names property where we encode similar information (speed
+> > bin, revision, etc.) into a string that we look for.
 > > 
-> >   u32 pci_space;
-> >   u64 pci_addr;
-> >   u64 cpu_addr;
-> >   u64 bus_addr;
-> > 
-> > Can you explain what all these things mean, and maybe even add one-line
-> > comments to the structure?
-
-> > pci_space: The only uses I see are to determine whether to print
-> > "Prefetch".  I don't see any real functionality that uses this.
+> > So I wonder why the avs/cut/substrate information can't be
+> > encoded into the opp name? That would make these properties
+> > obsolete, given that all they're used for is to pick out the
+> > correct OPP?
 > 
-> Looking at the code I agree. it's seems to be used only in powerpc 
-> and microblaze to print out.
-> However from my understanding pci_space is the phys.hi field of the 
-> ranges property: it defines the properties of the address space associated
-> to the PCI address. if you're curious you can find a nice and quick to read
-> "guide" in http://devicetree.org/MPC5200:PCI
-
-I think pci_space should be removed and the users should test
-"range.flags & IORESOURCE_PREFETCH" instead.  That's already set by
-of_bus_pci_get_flags().  This is separate from your current patch, of
-course.
-
-29b635c00f3e ("of/pci: Provide support for parsing PCI DT ranges
-property") added struct of_pci_range, and even at the time,
-of_bus_pci_get_flags() set IORESOURCE_PREFETCH in of_pci_range.flags.
-
-654837e8fe8d ("powerpc/pci: Use of_pci_range_parser helper in
-pci_process_bridge_OF_ranges") converted powerpc to use
-of_pci_range_parser() instead of parsing manually.  It converted other
-references to look at struct of_pci_range.flags; I'm not sure why it
-didn't do that for the prefetch bit.
-
-I copied Andrew in case there's some subtlety here.
-
-> > pci_addr: I assume this is a PCI bus address, like what you would see
-> > if
-> > you put an analyzer on the bus/link.  This address could go in a BAR.
+> You could hack the substrate and cut version into a string, but that's
+> exactly what it would be, a hack.  I'm struggling how you would do the
+> same for 'st,avs', which is an array of u32s.
 > 
-> Yes, this is the PCI start address of the range: phys.mid + phys.low in the
-> guide mentioned above
-> 
-> > cpu_addr: I assume this is a CPU physical address, like what you would
-> > see
-> > in /proc/iomem and what you would pass to ioremap().
-> 
-> Yes correct
-> 
-> > bus_addr: ?
-> 
-> According to the guide above, this is the address into which the pci_address 
-> get translated to and that is passed to the root complex. Between the root 
-> complex and the CPU there can be intermediate translation layers: 
 
-I can't quite parse this, but I do understand how a host bridge can
-translate CPU physical addresses to a different range of PCI bus
-addresses.  What I don't understand is the difference between "pci_addr"
-and the "bus_addr" you're adding.
 
-> see that to 
-> get pci_address we call "of_translate_address"; this will apply all the 
-> translation layers (ranges in the DT) that it finds till it comes to the root 
-> node of the DT (thus retrieving the CPU address).
-> Now said that, for designware we need the first translated PCI address, that we call
-> here bus_addr after Rob Herring suggested the name...honestly I cannot think of a 
-> different name
-> 
->    
-> 
-> > I'm trying to imagine how this might be expressed in ACPI.  A host
-> > bridge
-> > ACPI _CRS contains a CPU physical address and applying a _TRA
-> > (translation
-> > offset) to the CPU address gives you a PCI bus address.  I know this
-> > code
-> > is OF, not ACPI, but I assume that it should be possible to describe
-> > your
-> > hardware via ACPI as well as by OF.
+(I don't understand the st,avs property to begin with, so feel
+free to ignore the rest of this mail.)
 
-> > > diff --git a/include/linux/of_address.h b/include/linux/of_address.h
-> > > index d88e81b..865f96e 100644
-> > > --- a/include/linux/of_address.h
-> > > +++ b/include/linux/of_address.h
-> > > @@ -16,6 +16,7 @@ struct of_pci_range {
-> > >  	u32 pci_space;
-> > >  	u64 pci_addr;
-> > >  	u64 cpu_addr;
-> > > +	u64 bus_addr;
-> > >  	u64 size;
-> > >  	u32 flags;
-> > >  };
+For qcom platforms we have the pvs bin and speed bin, and
+sometimes a revision number. Each one of these properties
+corresponds to a different set of OPPs (opp table). So we might
+have speed1-pvs2-v0 for speed bin 1, pvs bin 2 and version 0. We
+fill out an opp table for this and then point the opps property
+at the table and have a corresponding opp-name "speed1-pvs2-v0"
+in the "consumer" node.
+
+	operating-points-v2 = <&speed1_pvs2_v0>;
+	operating-points-names = "speed1-pvs2-v0";
+
+We have quite a few of these tables because the values are
+always different. If the values were the same then we could use
+the same table with different names I suppose, but we're not
+doing that.
+
+>From a quick read of the st properties (that I admit I don't
+understand), it looks like we're trying to compress the OPP
+tables by listing all the voltages that could be used for a
+particular frequency depending on which avs is present on the
+device? And then limiting the frequency voltage pairs depending
+on which cut and substrate is present?
+
+So we'd probably have to expand out the tables to be unique per
+avs/cut/substrate parameter. Something like:
+
+avs0-cut2 {
+	compatible = "operating-points-v2";
+
+	opp0 {
+		opp-hz = <1200000000>;
+		opp-microvolt = <1100>;
+	};
+
+	opp1 {
+		opp-hz = <1500000000>;
+		opp-microvolt = <1200>;
+	};
+};
+
+avs1-cut2 {
+	compatible = "operating-points-v2";
+
+	opp0 {
+		opp-hz = <1200000000>;
+		opp-microvolt = <1150>;
+	};
+
+	opp1 {
+		opp-hz = <1500000000>;
+		opp-microvolt = <1200>;
+	};
+};
+
+And then another copy of these for the devices without cuts != 2
+where the top frequency is gone?
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
