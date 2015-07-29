@@ -1,57 +1,44 @@
-From: Haibo Chen <haibo.chen@freescale.com>
-Subject: [PATCH v3 3/6] ARM: dts: imx7d-sdb: add eMMC5.0 support
-Date: Wed, 29 Jul 2015 17:03:54 +0800
-Message-ID: <1438160637-28061-4-git-send-email-haibo.chen@freescale.com>
-References: <1438160637-28061-1-git-send-email-haibo.chen@freescale.com>
+From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH 07/10] usb: chipidea: usbmisc_imx: add unburst setting
+ for imx6
+Date: Wed, 29 Jul 2015 15:57:29 +0800
+Message-ID: <20150729075728.GC27605@shlinux2>
+References: <1438137734-27311-1-git-send-email-peter.chen@freescale.com>
+ <1438137734-27311-8-git-send-email-peter.chen@freescale.com>
+ <20150729103022.7cfe0466@ipc1.ka-ro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1438160637-28061-1-git-send-email-haibo.chen@freescale.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, shawnguo@kernel.org, kernel@pengutronix.de, linux@arm.linux.org.uk, ulf.hansson@linaro.org, aisheng.dong@freescale.com
-Cc: fabio.estevam@freescale.com, devicetree@vger.kernel.org, haibo.chen@freescale.com, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, johan.derycke@barco.com, b29396@freescale.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150729103022.7cfe0466-VjFSrY7JcPWvSplVBqRQBQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-imx7d-sdb board has a eMMC5.0 on usdhc3. This eMMC support HS400.
-This patch add usdhc3 support for HS400
+On Wed, Jul 29, 2015 at 10:30:22AM +0200, Lothar Wa=DFmann wrote:
+> Hi,
+>=20
+> > With this setting and AHBBRST at SBUSCFG as "Incremental burst of
+> > unspecified length", each unburst size can be taken as one single t=
+ransfer.
+> > It is benefit for unburst size transfer.
+> >=20
+> What is an 'unburst'?
+>=20
 
-Signed-off-by: Haibo Chen <haibo.chen@freescale.com>
----
- arch/arm/boot/dts/imx7d-sdb.dts | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+Assume burst size is 8 dword, unburst size 't' < 8.
 
-diff --git a/arch/arm/boot/dts/imx7d-sdb.dts b/arch/arm/boot/dts/imx7d-sdb.dts
-index fdd1d7c..8059458 100644
---- a/arch/arm/boot/dts/imx7d-sdb.dts
-+++ b/arch/arm/boot/dts/imx7d-sdb.dts
-@@ -241,6 +241,19 @@
- 	status = "okay";
- };
- 
-+&usdhc3 {
-+	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-+	pinctrl-0 = <&pinctrl_usdhc3>;
-+	pinctrl-1 = <&pinctrl_usdhc3_100mhz>;
-+	pinctrl-2 = <&pinctrl_usdhc3_200mhz>;
-+	assigned-clocks = <&clks IMX7D_USDHC3_ROOT_CLK>;
-+	assigned-clock-rates = <400000000>;
-+	bus-width = <8>;
-+	fsl,tuning-step = <2>;
-+	non-removable;
-+	status = "okay";
-+};
-+
- &iomuxc {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_hog>;
--- 
-1.9.1
+With this feature, 't' length payload can be taken
+as one burst transfer, otherwise, the single transfer
+(1 dword) will be used.
+
+--=20
+
+Best Regards,
+Peter Chen
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
