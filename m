@@ -1,30 +1,30 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH] of: add vendor prefix for Socionext Inc.
-Date: Wed, 29 Jul 2015 18:45:33 +0900
-Message-ID: <1438163133-4539-1-git-send-email-yamada.masahiro@socionext.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, Arnd Bergmann <arnd@arndb.de>, Hayato Suzuki <hytszk@gmail.com>, Thierry Reding <treding@nvidia.com>, linux-kernel@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Arnaud Ebalard <arno@natisbad.org>, Rob Herring <robh+dt@kernel.org>, Antony Pavlov <antonynpavlov@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>
+From: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Use of devicetree overlay properties
+Date: Wed, 29 Jul 2015 12:14:19 +0200
+Message-ID: <CAOMqctR0XsTKdkusaBTxniGZHYaHCgECqL=Kw82KJGqevwz3jQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+Hello,
 
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+it seems that const pointers to devicetree property content are often
+used throughout kernel code.
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index d444757..5ab8f6b 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -192,6 +192,7 @@ sitronix	Sitronix Technology Corporation
- skyworks	Skyworks Solutions, Inc.
- smsc	Standard Microsystems Corporation
- snps	Synopsys, Inc.
-+socionext	Socionext Inc.
- solidrun	SolidRun
- solomon        Solomon Systech Limited
- sony	Sony Corporation
--- 
-1.9.1
+Saving pointers into static devicetree should be fine but saving
+pointers into an overlay that can be destroyed is somewhat
+problematic.
+
+Typically the property would be used by a driver that would unbind
+when the overlay is destroyed. Is this guaranteed in any way, though?
+
+Thanks
+
+Michal
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
