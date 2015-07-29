@@ -1,124 +1,73 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH 03/12] mtd: nand: omap: Move IRQ handling from GPMC to
- NAND driver
-Date: Wed, 29 Jul 2015 18:12:09 +0300
-Message-ID: <55B8ED49.6050304@ti.com>
-References: <1436531019-18088-1-git-send-email-rogerq@ti.com> <1436531019-18088-4-git-send-email-rogerq@ti.com> <20150713071008.GC26485@atomide.com> <55A38D2E.9010500@ti.com> <20150713124059.GF26485@atomide.com> <55B8C1D5.3090807@ti.com> <55B8C364.4030203@gmail.com> <55B8DAB9.7070602@ti.com> <55B8DE44.4070608@gmail.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v2] dtb: Create a common home for cross-architecture dtsi files.
+Date: Wed, 29 Jul 2015 10:23:36 -0500
+Message-ID: <CAL_JsqL7KRcSv5jSneWYj1PJOYbvMQ8HOAGK+w-+MDBMpMatow@mail.gmail.com>
+References: <1437993343-9542-1-git-send-email-ian.campbell@citrix.com>
+ <CAK7LNAQKswPzeFYdSVq3JDk2qawZ8e5ogBFMWdor-CibMovU3g@mail.gmail.com> <1438176174.11600.198.camel@citrix.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <55B8DE44.4070608@gmail.com>
+In-Reply-To: <1438176174.11600.198.camel@citrix.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: nick <xerofoify@gmail.com>, Tony Lindgren <tony@atomide.com>
-Cc: devicetree@vger.kernel.org, computersforpeace@gmail.com, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, ezequiel@vanguardiasur.com.ar, bcousson@baylibre.com, linux-omap@vger.kernel.org, dwmw2@infradead.org
+To: Ian Campbell <ian.campbell@citrix.com>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Kristina Martsenko <kristina.martsenko@arm.com>, Kumar Gala <galak@codeaurora.org>, Kevin Hilman <khilman@linaro.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 29/07/15 17:08, nick wrote:
-> 
-> 
-> On 2015-07-29 09:52 AM, Roger Quadros wrote:
->> On 29/07/15 15:13, nick wrote:
->>>
->>>
->>> On 2015-07-29 08:06 AM, Roger Quadros wrote:
->>>> Tony,
->>>>
->>>> On 13/07/15 15:40, Tony Lindgren wrote:
->>>>> * Roger Quadros <rogerq@ti.com> [150713 03:07]:
->>>>>> Tony,
->>>>>>
->>>>>> On 13/07/15 10:10, Tony Lindgren wrote:
->>>>>>> * Roger Quadros <rogerq@ti.com> [150710 05:26]:
->>>>>>>> Since the Interrupt Events are used only by the NAND driver,
->>>>>>>> there is no point in managing the Interrupt registers
->>>>>>>> in the GPMC driver and complicating it with irqchip modeling.
->>>>>>>
->>>>>>> I don't think it's a good idea to allow external drivers to
->>>>>>> tinker directly with GPMC registers. How about just set up GPMC
->>>>>>> as an irqchip for the edge detection interrupts?
->>>>>>>
->>>>>>> I think we already have devices with multiple NAND chips. And
->>>>>>> there's nothing stopping other drivers from using the edge
->>>>>>> detection interrupts.
->>>>>>
->>>>>> OK. The GPMC_IRQ registers manage 2 NAND specific interrupts
->>>>>> (terminalcount and fifo) and 'n' WAIT pin edge interrupts.
->>>>>>
->>>>>>  So we can model this as a irqchip with 'n + 2' interrupts.
->>>>>
->>>>> OK
->>>>
->>>> For the wait pins irqchip is not sufficient and it needs to be gpiochip
->>>> with irqchip. Waitpin status can be read from GPIO_STATUS register.
->>>>
->>>> Just getting the interrupt is not enough and we want to know if the
->>>> line is high or low. That is how nand->dev_ready works.
->>>>
->>>> How about having 2 IRQ domains?
->>>> One is irqchip with 2 interrupts (terminalcount and fifo) and second is
->>>> gpiochip + irqchip for the n wait pins.
->>>>
->>>> The nand driver can then be modified to use GPIO to get Read/Busy
->>>> pin status from the wait pin.
->>>>
->>>> cheers,
->>>> -roger
->>>>
->>> Doesn't OMAP boards support shared IRQs and if so why not share them across one
->>> IRQ domain if possible to save IRQ domains for other hardware that needs its 
->>> own IRQ domain. This is just a suggestion through as I don't have the hardware
->>> spec sheet on me Roger.
+On Wed, Jul 29, 2015 at 8:22 AM, Ian Campbell <ian.campbell@citrix.com> wrote:
+> On Wed, 2015-07-29 at 20:07 +0900, Masahiro Yamada wrote:
+>> Hi Ian,
 >>
->> IRQ domain is a virtual abstraction introduced to prevent kernel irq number overlapping
->> in a single flat domain. I don't see what you can save by domain reuse.
->> Some memory maybe at most.
 >>
->> Shared interrupt is something totally different but we're trying to add real
->> hardware interrupts here. Didn't understand what you will share it with.
+>> 2015-07-27 19:35 GMT+09:00 Ian Campbell <ian.campbell@citrix.com>:
+>> > Commit 9ccd608070b6 "arm64: dts: add device tree for ARM SMM-A53x2 on
+>> > LogicTile Express 20MG" added a new dts file to arch/arm64 which
+>> > included "../../../../arm/boot/dts/vexpress-v2m-rs1.dtsi", i.e. a
+>> > .dtsi supplied by arch/arm.
+>> >
+>> > Unfortunately this causes some issues for the split device tree
+>> > repository[0], since things get moved around there. In that context
+>> > the new .dts ends up at src/arm64/arm/vexpress-v2f-1xv7-ca53x2.dts
+>> > while the include is at src/arm/vexpress-v2m-rs1.dtsi.
+>> >
+>> > The sharing of the .dtsi is legitimate since the baseboard is the same
+>> > for various vexpress systems whatever processor they use.
+>> >
+>> > Rather than using ../../ tricks to pickup .dtsi files from another
+>> > arch this patch creates a new directory include/dt-dtsi as a
+>> > home for such cross-arch .dtsi files, arranges for it to be in the
+>> > include path when the .dts files are processed by cpp and switches the
 >>
->> cheers,
->> -roger
 >>
-> My question then is do these hardware interrupts need to be on their own interrupt line
-> for the CPU or can they share a CPU line as my concern is if possible we may be able to
-> save a interrupt line for other use. I known on Intel CPUs this is a very limited resource
-> but not sure on OMAP based boards if not then just avoid my recommendations.
+>> "include/dt-dtsi/"  can be referenced from normal C sources.
+>>
+>> I think another possible home for cross-arch DTSI is "kernel/dts/".
+>> This directory can be hidden from C sources.
+>
+> I suppose, I don't really mind and will follow the direction of the other
+> DTB maintainers. It doesn't seem like a big deal to me.
 
-It is like adding an external interrupt controller to expand the number of available
-hardware interrupts.
-This interrupt controller will still use the same GPMC IRQ line to propagate the
-irq event upwards.
+Seems fine to me. We might think of other things to put here that are
+not includes. Overlays perhaps?
 
-cheers,
--roger
+>
+>> >@@ -223,7 +223,7 @@ Example of a VE tile description (simplified)
+>> >                 /* Active high IRQ 0 is connected to GIC's SPI0 */
+>> >                 interrupt-map = <0 0 0 &gic 0 0 4>;
+>> >
+>> > -               /include/ "vexpress-v2m-rs1.dtsi"
+>> > +               #include <arm/vexpress-v2m-rs1.dtsi>
+>> >         };
+>> >  };
+>>
+>>
+>>
+>> You do not have to replace /include/ with #include,
+>> if you add the include path for DTC.
+>
+> Ah, I looked for this but -i is not documented in the man page.
+>
+> Is there any reason to prefer one over the other?
 
-> Nick 
->>> Nick 
->>>>>  
->>>>>> We need to take care that if a GPMC chip select needs a
->>>>>> wait pin then it can't be used as a generic interrupt.
->>>>>>
->>>>>> We need to get rid of omap_dev_ready() in nand/omap2.c as
->>>>>> it accesses the GPMC_STATUS register directly. Plus it is
->>>>>> hard coded to only monitor wait0 pin.
->>>>>
->>>>> OK
->>>>>  
->>>>>> What is the best map we should use for irqchip?
->>>>>> Some Socs have 4 WAIT pins, some have 3 and some have 2.
->>>>>>
->>>>>> Should we start with 0,1,2, for the wait pins and use the next
->>>>>> available free one for the NAND?
->>>>>
->>>>> Maybe we can just use the bits defined for each SoC in the
->>>>> GPMC_IRQSTATUS register for the mapping?  
->>>>> Regards,
->>>>>
->>>>> Tony
->>>>>
->>>>
->>>> ______________________________________________________
->>>> Linux MTD discussion mailing list
->>>> http://lists.infradead.org/mailman/listinfo/linux-mtd/
->>>>
+Yes, so you don't force the use of the C preprocessor.
+
+Rob
