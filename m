@@ -1,92 +1,49 @@
-From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v5 00/10] Fixes and new clocks support for Mediatek MT8173
-Date: Wed, 29 Jul 2015 14:52:24 +0800
-Message-ID: <1438152754-11970-1-git-send-email-jamesjj.liao@mediatek.com>
+From: James Liao <jamesjj.liao@mediatek.com>
+Subject: [PATCH v5 01/10] clk: mediatek: Removed unused dpi_ck clock from MT8173
+Date: Wed, 29 Jul 2015 14:52:25 +0800
+Message-ID: <1438152754-11970-2-git-send-email-jamesjj.liao@mediatek.com>
+References: <1438152754-11970-1-git-send-email-jamesjj.liao@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Heiko Stubner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1438152754-11970-1-git-send-email-jamesjj.liao@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Heiko Stubner <heiko@sntech.de>
+Cc: srv_heupstream@mediatek.com, Daniel Kurtz <djkurtz@chromium.org>, Ricky Liang <jcliang@chromium.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, James Liao <jamesjj.liao@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-This patchset is based on 4.2-rc1 and [1], and contains minor fixes and
-subsystem clocks support for Mediatek MT8173.
+The dpi_ck clock can be removed because it not actually used
+in topckgen and subsystems.
 
-The previous reviews can be found in [2]. The most different from previous
-patchset are adding separated patches for minor coding fixes, and refining
-USB clock implementation by removing mtk_clk_register_apmixed_ex().
+Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
+---
+ drivers/clk/mediatek/clk-mt8173.c      | 1 -
+ include/dt-bindings/clock/mt8173-clk.h | 1 -
+ 2 files changed, 2 deletions(-)
 
-changes since v4:
-- Add a separated patch to remove unused dpi_ck.
-- Add separated patches to fix clk/mediatek in release 4.2-rc1.
-- Add __init* for initialization data and functions.
-- Rename dummy_clk with oscillator in DT.
-- Remove mtk_clk_register_apmixed_ex(), call mtk_clk_register_ref2usb_tx()
-  directly to register USB clock.
-
-changes since v3:
-- Remove clk_null dependency from root clocks.
-- Use fixed-rate clocks with typical rate to replace clk_null.
-- Separate ref2usb_tx implementation to clk-apmixed.c
-- Use clock-controller as the name of clock providers.
-
-changes since v2:
-- Rebase to 4.2-rc1.
-- Add device tree nodes for subsystem clocks.
-- Fine tune comments of patches.
-- Add __init, __initconst and const to init data and functions.
-- Removed unused code from init functions of subsystem clocks.
-
-changes since v1:
-- Add CA7PLL and CA15PLL as critical clocks.
-- Use the same register descriptor for imgsys, vensys and vencltsys.
-- Generalize apmixedsys special clocks registration.
-
-[1] https://patchwork.kernel.org/patch/6446341/
-[2] https://lkml.org/lkml/2015/7/23/911
-
-James Liao (9):
-  clk: mediatek: Removed unused dpi_ck clock from MT8173
-  clk: mediatek: Remove unused code from MT8173.
-  clk: mediatek: Add __initdata and __init for data and functions
-  clk: mediatek: Add fixed clocks support for Mediatek SoC.
-  clk: mediatek: Fix rate and dependency of MT8173 clocks
-  dt-bindings: ARM: Mediatek: Document devicetree bindings for clock
-    controllers
-  clk: mediatek: Add subsystem clocks of MT8173
-  clk: mediatek: Add USB clock support in MT8173 APMIXEDSYS
-  arm64: dts: mt8173: Add subsystem clock controller device nodes
-
-Sascha Hauer (1):
-  clk: mediatek: mt8173: Fix enabling of critical clocks
-
- .../bindings/arm/mediatek/mediatek,imgsys.txt      |  22 ++
- .../bindings/arm/mediatek/mediatek,mmsys.txt       |  22 ++
- .../bindings/arm/mediatek/mediatek,vdecsys.txt     |  22 ++
- .../bindings/arm/mediatek/mediatek,vencltsys.txt   |  22 ++
- .../bindings/arm/mediatek/mediatek,vencsys.txt     |  22 ++
- arch/arm64/boot/dts/mediatek/mt8173.dtsi           |  37 +++
- drivers/clk/mediatek/Makefile                      |   2 +-
- drivers/clk/mediatek/clk-apmixed.c                 | 107 ++++++
- drivers/clk/mediatek/clk-gate.c                    |   2 +-
- drivers/clk/mediatek/clk-mt8173.c                  | 361 ++++++++++++++++++++-
- drivers/clk/mediatek/clk-mtk.c                     |  36 +-
- drivers/clk/mediatek/clk-mtk.h                     |  24 +-
- drivers/clk/mediatek/clk-pll.c                     |   7 +-
- include/dt-bindings/clock/mt8173-clk.h             | 101 +++++-
- 14 files changed, 749 insertions(+), 38 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,imgsys.txt
- create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.txt
- create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,vdecsys.txt
- create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,vencltsys.txt
- create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,vencsys.txt
- create mode 100644 drivers/clk/mediatek/clk-apmixed.c
-
---
+diff --git a/drivers/clk/mediatek/clk-mt8173.c b/drivers/clk/mediatek/clk-mt8173.c
+index 4b9e04c..4486f8f 100644
+--- a/drivers/clk/mediatek/clk-mt8173.c
++++ b/drivers/clk/mediatek/clk-mt8173.c
+@@ -26,7 +26,6 @@ static DEFINE_SPINLOCK(mt8173_clk_lock);
+ 
+ static const struct mtk_fixed_factor root_clk_alias[] __initconst = {
+ 	FACTOR(CLK_TOP_CLKPH_MCK_O, "clkph_mck_o", "clk_null", 1, 1),
+-	FACTOR(CLK_TOP_DPI, "dpi_ck", "clk_null", 1, 1),
+ 	FACTOR(CLK_TOP_USB_SYSPLL_125M, "usb_syspll_125m", "clk_null", 1, 1),
+ 	FACTOR(CLK_TOP_HDMITX_DIG_CTS, "hdmitx_dig_cts", "clk_null", 1, 1),
+ };
+diff --git a/include/dt-bindings/clock/mt8173-clk.h b/include/dt-bindings/clock/mt8173-clk.h
+index 4ad76ed..7230c38 100644
+--- a/include/dt-bindings/clock/mt8173-clk.h
++++ b/include/dt-bindings/clock/mt8173-clk.h
+@@ -18,7 +18,6 @@
+ /* TOPCKGEN */
+ 
+ #define CLK_TOP_CLKPH_MCK_O		1
+-#define CLK_TOP_DPI			2
+ #define CLK_TOP_USB_SYSPLL_125M		3
+ #define CLK_TOP_HDMITX_DIG_CTS		4
+ #define CLK_TOP_ARMCA7PLL_754M		5
+-- 
 1.8.1.1.dirty
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
