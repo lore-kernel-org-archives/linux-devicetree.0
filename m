@@ -1,44 +1,94 @@
-From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH 07/10] usb: chipidea: usbmisc_imx: add unburst setting
- for imx6
-Date: Wed, 29 Jul 2015 15:57:29 +0800
-Message-ID: <20150729075728.GC27605@shlinux2>
-References: <1438137734-27311-1-git-send-email-peter.chen@freescale.com>
- <1438137734-27311-8-git-send-email-peter.chen@freescale.com>
- <20150729103022.7cfe0466@ipc1.ka-ro>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH 4/6] pci: altera: Add Altera PCIe MSI driver
+Date: Wed, 29 Jul 2015 10:15:39 +0100
+Message-ID: <55B899BB.2090008@arm.com>
+References: <1438080345-7233-1-git-send-email-lftan@altera.com>	<1438080345-7233-5-git-send-email-lftan@altera.com>	<55B7C2D0.8080107@arm.com> <CAFiDJ59kb=tDbnktmdF5r1_ShUfwvpxDQUtWV8LieS5Y=iVi4w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150729103022.7cfe0466-VjFSrY7JcPWvSplVBqRQBQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <CAFiDJ59kb=tDbnktmdF5r1_ShUfwvpxDQUtWV8LieS5Y=iVi4w@mail.gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Ley Foon Tan <lftan@altera.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Dinh Nguyen <dinguyen@opensource.altera.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 29, 2015 at 10:30:22AM +0200, Lothar Wa=DFmann wrote:
-> Hi,
->=20
-> > With this setting and AHBBRST at SBUSCFG as "Incremental burst of
-> > unspecified length", each unburst size can be taken as one single t=
-ransfer.
-> > It is benefit for unburst size transfer.
-> >=20
-> What is an 'unburst'?
->=20
+On 29/07/15 09:52, Ley Foon Tan wrote:
+> On Wed, Jul 29, 2015 at 1:58 AM, Marc Zyngier <marc.zyngier@arm.com> wrote:
+>> Hi Ley,
+>>
+>> On 28/07/15 11:45, Ley Foon Tan wrote:
+>>> This patch adds Altera PCIe MSI driver. This soft IP supports configurable
+>>> number of vectors, which is a dts parameter.
+>>
+>> Can't you read this configuration from the HW?
+> No, we can't read from HW.
 
-Assume burst size is 8 dword, unburst size 't' < 8.
+Ah, that's a shame. Specially on HW that is configurable by design.
 
-With this feature, 't' length payload can be taken
-as one burst transfer, otherwise, the single transfer
-(1 dword) will be used.
+[...]
 
---=20
+>>> +
+>>> +                     irq = irq_find_mapping(msi->msi_domain->parent, offset);
+>>
+>> This would tend to indicate that you don't really need to store the
+>> msi_domain pointer, but the inner_domain pointer instead.
+> Will store the inner_domain pointer. But, I think we still need
+> msi_domain for irq_domain_remove.
+> Or do we have any way to retrieve msi_domain from inner_domain?
 
-Best Regards,
-Peter Chen
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Do you have any case where you remove the domains, aside from the
+obvious error cases?
+
+[...]
+
+>>> +
+>>> +static struct msi_domain_info altera_msi_domain_info = {
+>>> +     .flags  = (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS),
+>>
+>> So you don't support MSIX? That's a bit weird.
+> Yes, this MSI IP doesn't support it.
+
+This is not really a function of the MSI IP, but of the PCI device. In
+your case, this is just a set of doorbells, so I hardly see what would
+prevent MSI-X to be supported. Multi-MSI, I can see why.
+
+[...]
+
+>>> +static int altera_msi_set_affinity(struct irq_data *irq_data,
+>>> +                              const struct cpumask *mask, bool force)
+>>> +{
+>>> +      return irq_set_affinity(irq_data->hwirq, mask);
+>>
+>> There is no way this can be right. irq_data->hwirq can *never* be passed
+>> as a Linux IRQ. This really should be the IRQ to the GIC.
+>>
+>> Which raises another issue: as you only have a single interrupt to the
+>> GIC, changing the affinity of a single MSI is going to affect all the
+>> other MSIs as well. This doesn't seem like a desirable behaviour.
+> Do we must provide '.irq_set_affinity" callback to msi domain? I have
+> tried set it to NULL,
+> but kernel got the NULL pointer deference error from msi_domain_set_affinity().
+> Recently, I saw this new patch for pci-tegra.c from [1], it doesn't
+> set the ".irq_set_affinity".
+> Just wonder how it can work.
+> 
+> Do you have any recommendation way for this?
+> 
+> [1] https://git.kernel.org/cgit/linux/kernel/git/maz/arm-platforms.git/commit/drivers/pci/host?h=irq/gsi-irq-domain-v2&id=17c22fc4e60e6ad54c7e3b73868cbc057360fa63
+
+Please realize that I *never* tested this patch (I don't think I ever
+posted it officially, I just keep here for convenience), and I wouldn't
+take it as a reference.
+
+When it comes to msi_domain_set_affinity issue, this look more like an
+oversight. I'll cook a patch for that.
+
+Anyway, whichever way you want to do it, you need to fix this. You could
+always return -EINVAL in the meantime,
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
