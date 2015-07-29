@@ -1,147 +1,67 @@
-From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH 10/10] usb: chipidea: add tx/rx burst size configuration interface
-Date: Wed, 29 Jul 2015 10:42:14 +0800
-Message-ID: <1438137734-27311-11-git-send-email-peter.chen@freescale.com>
-References: <1438137734-27311-1-git-send-email-peter.chen@freescale.com>
+From: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 0/2] iio: light: add support for APDS9660 sensor
+Date: Tue, 28 Jul 2015 21:28:30 -0700
+Message-ID: <CAKzfze8tccxiWTcx4DWocdnm4M=W-5fToK-ABELW-JrdKtq-iA@mail.gmail.com>
+References: <1437364640-7470-1-git-send-email-mranostay@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1438137734-27311-1-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1437364640-7470-1-git-send-email-mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marex-ynQEQJNshbs@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The user can adjust it through dts or platform data
+Jonathan,
 
-Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- drivers/usb/chipidea/bits.h  |  4 ++++
- drivers/usb/chipidea/ci.h    |  1 +
- drivers/usb/chipidea/core.c  | 35 +++++++++++++++++++++++++++++++++++
- include/linux/usb/chipidea.h |  4 ++++
- 4 files changed, 44 insertions(+)
+Does this solve the issues in v3 minus the apds9960_regfield_init() cleanup?
 
-diff --git a/drivers/usb/chipidea/bits.h b/drivers/usb/chipidea/bits.h
-index 462ad02..e462f55 100644
---- a/drivers/usb/chipidea/bits.h
-+++ b/drivers/usb/chipidea/bits.h
-@@ -61,6 +61,10 @@
- /* Set non-zero value for internal TT Hub address representation */
- #define TTCTRL_TTHA		(0x7fUL << 24)
- 
-+/* BURSTSIZE */
-+#define RX_BURST_MASK		0xff
-+#define TX_BURST_MASK		0xff00
-+
- /* PORTSC */
- #define PORTSC_CCS            BIT(0)
- #define PORTSC_CSC            BIT(1)
-diff --git a/drivers/usb/chipidea/ci.h b/drivers/usb/chipidea/ci.h
-index b562544..41d7cf6 100644
---- a/drivers/usb/chipidea/ci.h
-+++ b/drivers/usb/chipidea/ci.h
-@@ -51,6 +51,7 @@ enum ci_hw_regs {
- 	OP_DEVICEADDR,
- 	OP_ENDPTLISTADDR,
- 	OP_TTCTRL,
-+	OP_BURSTSIZE,
- 	OP_PORTSC,
- 	OP_DEVLC,
- 	OP_OTGSC,
-diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
-index f60cbf6..0375412 100644
---- a/drivers/usb/chipidea/core.c
-+++ b/drivers/usb/chipidea/core.c
-@@ -86,6 +86,7 @@ static const u8 ci_regs_nolpm[] = {
- 	[OP_DEVICEADDR]		= 0x14U,
- 	[OP_ENDPTLISTADDR]	= 0x18U,
- 	[OP_TTCTRL]		= 0x1CU,
-+	[OP_BURSTSIZE]		= 0x20U,
- 	[OP_PORTSC]		= 0x44U,
- 	[OP_DEVLC]		= 0x84U,
- 	[OP_OTGSC]		= 0x64U,
-@@ -109,6 +110,7 @@ static const u8 ci_regs_lpm[] = {
- 	[OP_DEVICEADDR]		= 0x14U,
- 	[OP_ENDPTLISTADDR]	= 0x18U,
- 	[OP_TTCTRL]		= 0x1CU,
-+	[OP_BURSTSIZE]		= 0x20U,
- 	[OP_PORTSC]		= 0x44U,
- 	[OP_DEVLC]		= 0x84U,
- 	[OP_OTGSC]		= 0xC4U,
-@@ -442,6 +444,17 @@ void ci_platform_configure(struct ci_hdrc *ci)
- 	if (ci->platdata->flags & CI_HDRC_OVERRIDE_AHB_BURST)
- 		hw_write_id_reg(ci, ID_SBUSCFG, AHBBRST_MASK,
- 			ci->platdata->ahb_burst_config);
-+
-+	/* override burst size, take effect only when ahb_burst_config is 0 */
-+	if (!hw_read_id_reg(ci, ID_SBUSCFG, AHBBRST_MASK)) {
-+		if (ci->platdata->flags & CI_HDRC_OVERRIDE_TX_BURST)
-+			hw_write(ci, OP_BURSTSIZE, TX_BURST_MASK,
-+			ci->platdata->tx_burst_size << __ffs(TX_BURST_MASK));
-+
-+		if (ci->platdata->flags & CI_HDRC_OVERRIDE_RX_BURST)
-+			hw_write(ci, OP_BURSTSIZE, RX_BURST_MASK,
-+				ci->platdata->rx_burst_size);
-+	}
- }
- 
- /**
-@@ -661,6 +674,28 @@ static int ci_get_platdata(struct device *dev,
- 		platdata->flags |= CI_HDRC_OVERRIDE_AHB_BURST;
- 	}
- 
-+	if (of_find_property(dev->of_node, "tx-burst-size-dword", NULL)) {
-+		ret = of_property_read_u32(dev->of_node, "tx-burst-size-dword",
-+			&platdata->tx_burst_size);
-+		if (ret) {
-+			dev_err(dev,
-+				"failed to get tx-burst-size-dword\n");
-+			return ret;
-+		}
-+		platdata->flags |= CI_HDRC_OVERRIDE_TX_BURST;
-+	}
-+
-+	if (of_find_property(dev->of_node, "rx-burst-size-dword", NULL)) {
-+		ret = of_property_read_u32(dev->of_node, "rx-burst-size-dword",
-+			&platdata->rx_burst_size);
-+		if (ret) {
-+			dev_err(dev,
-+				"failed to get rx-burst-size-dword\n");
-+			return ret;
-+		}
-+		platdata->flags |= CI_HDRC_OVERRIDE_RX_BURST;
-+	}
-+
- 	return 0;
- }
- 
-diff --git a/include/linux/usb/chipidea.h b/include/linux/usb/chipidea.h
-index 9848a4e..524ef3d 100644
---- a/include/linux/usb/chipidea.h
-+++ b/include/linux/usb/chipidea.h
-@@ -34,6 +34,8 @@ struct ci_hdrc_platform_data {
- #define CI_HDRC_DISABLE_STREAMING (CI_HDRC_DISABLE_DEVICE_STREAMING |	\
- 		CI_HDRC_DISABLE_HOST_STREAMING)
- #define CI_HDRC_OVERRIDE_AHB_BURST		BIT(11)
-+#define CI_HDRC_OVERRIDE_TX_BURST		BIT(12)
-+#define CI_HDRC_OVERRIDE_RX_BURST		BIT(13)
- 	enum usb_dr_mode	dr_mode;
- #define CI_HDRC_CONTROLLER_RESET_EVENT		0
- #define CI_HDRC_CONTROLLER_STOPPED_EVENT	1
-@@ -44,6 +46,8 @@ struct ci_hdrc_platform_data {
- 	/* interrupt threshold setting */
- 	u32			itc_setting;
- 	u32			ahb_burst_config;
-+	u32			tx_burst_size;
-+	u32			rx_burst_size;
- };
- 
- /* Default offset of capability registers */
--- 
-1.9.1
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+
+Matt
+
+On Sun, Jul 19, 2015 at 8:57 PM, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> This patchset adds support for the APDS9960 ALS + proximity + gesture
+> sensor.
+>
+> Included support for the various adjustable settings and controls:
+>  * Falling and rising ALS + proximity thresholds events
+>  * Gain controls
+>  * ALS time integration
+>
+> Changes from v3:
+>  * Added interrupt client mode document reference in DT bindings
+>  * Add missing dep for CONFIG_REGMAP_I2C in respective Kconfig
+>  * Changed from iio_trigger_poll_chained() to irq_work queue
+>  * Changed channel masks to prevent channels that can't be polled from
+>    having sysfs entries
+>  * Renamed regmap_field declarations with apds9660_* prefix
+>  * Added available channel masks and removed unneeded buffer copy in
+>    poll function
+>  * Remove unneeded default regmap values in apds9960_reg_defaults
+>  * Clear interrupts from ALS and proximity sensor seperately to avoid
+>    race condition
+>  * Changed max threshold values to a macro define, and prevent values
+>    less than 0
+>  * Avoid needlessly checking the APDS9960_REG_GFLVL value until we read
+>    all the FIFO from the count value. Note this can save up to 32
+>    superfluous i2c reads per gesture engine entry
+>
+> Matt Ranostay (2):
+>   iio: light: DT binding docs for APDS9960 driver
+>   iio: light: add APDS9960 ALS + promixity driver
+>
+>  .../ABI/testing/sysfs-bus-iio-light-apds9960       |    7 +
+>  .../devicetree/bindings/iio/light/apds9960.txt     |   22 +
+>  drivers/iio/light/Kconfig                          |   13 +
+>  drivers/iio/light/Makefile                         |    1 +
+>  drivers/iio/light/apds9960.c                       | 1191 ++++++++++++++++++++
+>  5 files changed, 1234 insertions(+)
+>  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-light-apds9960
+>  create mode 100644 Documentation/devicetree/bindings/iio/light/apds9960.txt
+>  create mode 100644 drivers/iio/light/apds9960.c
+>
+> --
+> 1.9.1
+>
