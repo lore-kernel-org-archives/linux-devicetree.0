@@ -1,112 +1,106 @@
-From: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
-Subject: Re: [PATCH 2/2] DT: pwm: Add NXP LPC18xx PWM/SCT binding documentation
-Date: Wed, 29 Jul 2015 10:47:58 -0300
-Message-ID: <CAAEAJfA22JA0AWB1FCiDVYEy5BqasDror_Ejpd=b3s14BWpORw@mail.gmail.com>
-References: <1437972345-16444-1-git-send-email-ariel@vanguardiasur.com.ar>
-	<1437972345-16444-3-git-send-email-ariel@vanguardiasur.com.ar>
-	<CAGhQ9Vyy+oUAWm0q2+NV0D9RVf5qyED8Tn54-cGzbDc-EZR4yw@mail.gmail.com>
-	<CAAEAJfApE8=cAue-bc5xPD_XAtV8qzur12C4okF-uLJ-__reBA@mail.gmail.com>
-	<CAGhQ9VwudkK=bo5Qk79O7fmdEEm1KEWxUhLO14ucCJ+FbhqQqw@mail.gmail.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH 03/12] mtd: nand: omap: Move IRQ handling from GPMC to
+ NAND driver
+Date: Wed, 29 Jul 2015 16:52:57 +0300
+Message-ID: <55B8DAB9.7070602@ti.com>
+References: <1436531019-18088-1-git-send-email-rogerq@ti.com> <1436531019-18088-4-git-send-email-rogerq@ti.com> <20150713071008.GC26485@atomide.com> <55A38D2E.9010500@ti.com> <20150713124059.GF26485@atomide.com> <55B8C1D5.3090807@ti.com> <55B8C364.4030203@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGhQ9VwudkK=bo5Qk79O7fmdEEm1KEWxUhLO14ucCJ+FbhqQqw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Ariel D'Alessandro <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <55B8C364.4030203@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: nick <xerofoify@gmail.com>, Tony Lindgren <tony@atomide.com>
+Cc: devicetree@vger.kernel.org, computersforpeace@gmail.com, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, ezequiel@vanguardiasur.com.ar, bcousson@baylibre.com, linux-omap@vger.kernel.org, dwmw2@infradead.org
 List-Id: devicetree@vger.kernel.org
 
-+devicetree guys
-
-On 28 July 2015 at 20:22, Joachim  Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On 29 July 2015 at 00:45, Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgC/G2K4zDHf@public.gmane.org=
-=2Ear> wrote:
->> On 28 July 2015 at 19:37, Joachim  Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wro=
-te:
->>> On 27 July 2015 at 06:45, Ariel D'Alessandro <ariel@vanguardiasur.c=
-om.ar> wrote:
->>>> Add the devicetree binding document for NXP LPC18xx PWM/SCT.
+On 29/07/15 15:13, nick wrote:
+> 
+> 
+> On 2015-07-29 08:06 AM, Roger Quadros wrote:
+>> Tony,
+>>
+>> On 13/07/15 15:40, Tony Lindgren wrote:
+>>> * Roger Quadros <rogerq@ti.com> [150713 03:07]:
+>>>> Tony,
 >>>>
->>>> Signed-off-by: Ariel D'Alessandro <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
->>>> ---
->>>>  .../devicetree/bindings/pwm/lpc1850-pwm.txt          | 20 +++++++=
-+++++++++++++
->>>>  1 file changed, 20 insertions(+)
->>>>  create mode 100644 Documentation/devicetree/bindings/pwm/lpc1850-=
-pwm.txt
+>>>> On 13/07/15 10:10, Tony Lindgren wrote:
+>>>>> * Roger Quadros <rogerq@ti.com> [150710 05:26]:
+>>>>>> Since the Interrupt Events are used only by the NAND driver,
+>>>>>> there is no point in managing the Interrupt registers
+>>>>>> in the GPMC driver and complicating it with irqchip modeling.
+>>>>>
+>>>>> I don't think it's a good idea to allow external drivers to
+>>>>> tinker directly with GPMC registers. How about just set up GPMC
+>>>>> as an irqchip for the edge detection interrupts?
+>>>>>
+>>>>> I think we already have devices with multiple NAND chips. And
+>>>>> there's nothing stopping other drivers from using the edge
+>>>>> detection interrupts.
 >>>>
->>>> diff --git a/Documentation/devicetree/bindings/pwm/lpc1850-pwm.txt=
- b/Documentation/devicetree/bindings/pwm/lpc1850-pwm.txt
->>>> new file mode 100644
->>>> index 0000000..3055429
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/pwm/lpc1850-pwm.txt
->>>> @@ -0,0 +1,20 @@
->>>> +* NXP LPC18xx Pulse Width Modulator driver
->>>> +
->>>> +Required properties:
->>>> +  - compatible: Should be "nxp,lpc1850-pwm"
->>>> +  - reg: Should contain physical base address and length of pwm r=
-egisters.
->>>> +  - clocks: Must contain an entry for each entry in clock-names.
->>>> +    See ../clock/clock-bindings.txt for details.
->>>> +  - clock-names: Must include the following entries.
->>>> +    - pwm: PWM operating clock.
->>>> +  - #pwm-cells: Should be 3. See pwm.txt in this directory for th=
-e description
->>>> +    of the cells format.
->>>> +
->>>> +Example:
->>>> +  pwm: pwm@40000000 {
->>>> +    compatible =3D "nxp,lpc1850-pwm";
+>>>> OK. The GPMC_IRQ registers manage 2 NAND specific interrupts
+>>>> (terminalcount and fifo) and 'n' WAIT pin edge interrupts.
+>>>>
+>>>>  So we can model this as a irqchip with 'n + 2' interrupts.
 >>>
->>> I would prefer "nxp,lpc1850-sct" for a couple of reasons. SCT is th=
-e
->>> name of hardware block as described in the user manual and while PW=
-M
->>> is the most obvious usage for this block on Linux, the hardware is =
-not
->>> limited to just doing that. So as a bit of future proofing if someo=
-ne
->>> wants to use this block for more than PWM I would prefer SCT.
+>>> OK
+>>
+>> For the wait pins irqchip is not sufficient and it needs to be gpiochip
+>> with irqchip. Waitpin status can be read from GPIO_STATUS register.
+>>
+>> Just getting the interrupt is not enough and we want to know if the
+>> line is high or low. That is how nand->dev_ready works.
+>>
+>> How about having 2 IRQ domains?
+>> One is irqchip with 2 interrupts (terminalcount and fifo) and second is
+>> gpiochip + irqchip for the n wait pins.
+>>
+>> The nand driver can then be modified to use GPIO to get Read/Busy
+>> pin status from the wait pin.
+>>
+>> cheers,
+>> -roger
+>>
+> Doesn't OMAP boards support shared IRQs and if so why not share them across one
+> IRQ domain if possible to save IRQ domains for other hardware that needs its 
+> own IRQ domain. This is just a suggestion through as I don't have the hardware
+> spec sheet on me Roger.
+
+IRQ domain is a virtual abstraction introduced to prevent kernel irq number overlapping
+in a single flat domain. I don't see what you can save by domain reuse.
+Some memory maybe at most.
+
+Shared interrupt is something totally different but we're trying to add real
+hardware interrupts here. Didn't understand what you will share it with.
+
+cheers,
+-roger
+
+> Nick 
+>>>  
+>>>> We need to take care that if a GPMC chip select needs a
+>>>> wait pin then it can't be used as a generic interrupt.
+>>>>
+>>>> We need to get rid of omap_dev_ready() in nand/omap2.c as
+>>>> it accesses the GPMC_STATUS register directly. Plus it is
+>>>> hard coded to only monitor wait0 pin.
+>>>
+>>> OK
+>>>  
+>>>> What is the best map we should use for irqchip?
+>>>> Some Socs have 4 WAIT pins, some have 3 and some have 2.
+>>>>
+>>>> Should we start with 0,1,2, for the wait pins and use the next
+>>>> available free one for the NAND?
+>>>
+>>> Maybe we can just use the bits defined for each SoC in the
+>>> GPMC_IRQSTATUS register for the mapping?  
+>>> Regards,
+>>>
+>>> Tony
 >>>
 >>
->> Shouldn't we use something like "nxp,lpc1850-sct-pwm"?
+>> ______________________________________________________
+>> Linux MTD discussion mailing list
+>> http://lists.infradead.org/mailman/listinfo/linux-mtd/
 >>
->> Sounds like the word PWM should be in the compatible as it describes
->> not only the device, but the device used in a certain way.
->>
->> Otherwise, how would we use "nxp,lpc1850-sct" to distinguish a PWM f=
-rom
->> e.g. a clocksource/clockevents (we can also use SCT for that)?
->
-> I not sure how to best handle dt bindings with such flexible hardware=
- blocks.
->
-> But are you suggestion to have multiple drivers for the same hw block=
-?
-> ie.: "nxp,lpc1850-sct-pwm" for PWM and for example
-> "nxp,lpc1850-sct-clocksource" for clocksource and then use/enable one
-> or the other.
->
-
-Yup, I'm suggesting just that. If the hardware is capable, I can't see
-why we can't have different drivers for it.
-
-> So I am not sure how to best handle this, but I think we should at
-> least consider more than just PWM usage for this hw block. Note that
-> not against calling it "lpc1850-sct-pwm", I like that better than jus=
-t
-> "lpc1850-pwm".
->
-
-
---=20
-Ezequiel Garc=C3=ADa, VanguardiaSur
-www.vanguardiasur.com.ar
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
