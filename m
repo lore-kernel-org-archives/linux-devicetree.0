@@ -1,85 +1,112 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2] dtb: Create a common home for cross-architecture dtsi
- files.
-Date: Wed, 29 Jul 2015 14:27:58 +0100
-Message-ID: <20150729132758.GR15213@leverpostej>
-References: <1437993343-9542-1-git-send-email-ian.campbell@citrix.com>
- <CAK7LNAQKswPzeFYdSVq3JDk2qawZ8e5ogBFMWdor-CibMovU3g@mail.gmail.com>
- <1438176174.11600.198.camel@citrix.com>
+From: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+Subject: Re: [PATCH 2/2] DT: pwm: Add NXP LPC18xx PWM/SCT binding documentation
+Date: Wed, 29 Jul 2015 10:47:58 -0300
+Message-ID: <CAAEAJfA22JA0AWB1FCiDVYEy5BqasDror_Ejpd=b3s14BWpORw@mail.gmail.com>
+References: <1437972345-16444-1-git-send-email-ariel@vanguardiasur.com.ar>
+	<1437972345-16444-3-git-send-email-ariel@vanguardiasur.com.ar>
+	<CAGhQ9Vyy+oUAWm0q2+NV0D9RVf5qyED8Tn54-cGzbDc-EZR4yw@mail.gmail.com>
+	<CAAEAJfApE8=cAue-bc5xPD_XAtV8qzur12C4okF-uLJ-__reBA@mail.gmail.com>
+	<CAGhQ9VwudkK=bo5Qk79O7fmdEEm1KEWxUhLO14ucCJ+FbhqQqw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kbuild-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1438176174.11600.198.camel@citrix.com>
-Sender: linux-kbuild-owner@vger.kernel.org
-To: Ian Campbell <ian.campbell@citrix.com>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <Pawel.Moll@arm.com>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Liviu Dudau <Liviu.Dudau@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Kristina Martsenko <Kristina.Martsenko@arm.com>, Kumar Gala <galak@codeaurora.org>, Kevin Hilman <khilman@linaro.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAGhQ9VwudkK=bo5Qk79O7fmdEEm1KEWxUhLO14ucCJ+FbhqQqw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Ariel D'Alessandro <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 29, 2015 at 02:22:54PM +0100, Ian Campbell wrote:
-> On Wed, 2015-07-29 at 20:07 +0900, Masahiro Yamada wrote:
-> > Hi Ian,
-> > 
-> > 
-> > 2015-07-27 19:35 GMT+09:00 Ian Campbell <ian.campbell@citrix.com>:
-> > > Commit 9ccd608070b6 "arm64: dts: add device tree for ARM SMM-A53x2 on
-> > > LogicTile Express 20MG" added a new dts file to arch/arm64 which
-> > > included "../../../../arm/boot/dts/vexpress-v2m-rs1.dtsi", i.e. a
-> > > .dtsi supplied by arch/arm.
-> > > 
-> > > Unfortunately this causes some issues for the split device tree
-> > > repository[0], since things get moved around there. In that context
-> > > the new .dts ends up at src/arm64/arm/vexpress-v2f-1xv7-ca53x2.dts
-> > > while the include is at src/arm/vexpress-v2m-rs1.dtsi.
-> > > 
-> > > The sharing of the .dtsi is legitimate since the baseboard is the same
-> > > for various vexpress systems whatever processor they use.
-> > > 
-> > > Rather than using ../../ tricks to pickup .dtsi files from another
-> > > arch this patch creates a new directory include/dt-dtsi as a
-> > > home for such cross-arch .dtsi files, arranges for it to be in the
-> > > include path when the .dts files are processed by cpp and switches the
-> > 
-> > 
-> > "include/dt-dtsi/"  can be referenced from normal C sources.
-> > 
-> > I think another possible home for cross-arch DTSI is "kernel/dts/".
-> > This directory can be hidden from C sources.
-> 
-> I suppose, I don't really mind and will follow the direction of the other
-> DTB maintainers. It doesn't seem like a big deal to me.
++devicetree guys
 
-I don't really have a preference either way.
+On 28 July 2015 at 20:22, Joachim  Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On 29 July 2015 at 00:45, Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgC/G2K4zDHf@public.gmane.org=
+=2Ear> wrote:
+>> On 28 July 2015 at 19:37, Joachim  Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wro=
+te:
+>>> On 27 July 2015 at 06:45, Ariel D'Alessandro <ariel@vanguardiasur.c=
+om.ar> wrote:
+>>>> Add the devicetree binding document for NXP LPC18xx PWM/SCT.
+>>>>
+>>>> Signed-off-by: Ariel D'Alessandro <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+>>>> ---
+>>>>  .../devicetree/bindings/pwm/lpc1850-pwm.txt          | 20 +++++++=
++++++++++++++
+>>>>  1 file changed, 20 insertions(+)
+>>>>  create mode 100644 Documentation/devicetree/bindings/pwm/lpc1850-=
+pwm.txt
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/pwm/lpc1850-pwm.txt=
+ b/Documentation/devicetree/bindings/pwm/lpc1850-pwm.txt
+>>>> new file mode 100644
+>>>> index 0000000..3055429
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/pwm/lpc1850-pwm.txt
+>>>> @@ -0,0 +1,20 @@
+>>>> +* NXP LPC18xx Pulse Width Modulator driver
+>>>> +
+>>>> +Required properties:
+>>>> +  - compatible: Should be "nxp,lpc1850-pwm"
+>>>> +  - reg: Should contain physical base address and length of pwm r=
+egisters.
+>>>> +  - clocks: Must contain an entry for each entry in clock-names.
+>>>> +    See ../clock/clock-bindings.txt for details.
+>>>> +  - clock-names: Must include the following entries.
+>>>> +    - pwm: PWM operating clock.
+>>>> +  - #pwm-cells: Should be 3. See pwm.txt in this directory for th=
+e description
+>>>> +    of the cells format.
+>>>> +
+>>>> +Example:
+>>>> +  pwm: pwm@40000000 {
+>>>> +    compatible =3D "nxp,lpc1850-pwm";
+>>>
+>>> I would prefer "nxp,lpc1850-sct" for a couple of reasons. SCT is th=
+e
+>>> name of hardware block as described in the user manual and while PW=
+M
+>>> is the most obvious usage for this block on Linux, the hardware is =
+not
+>>> limited to just doing that. So as a bit of future proofing if someo=
+ne
+>>> wants to use this block for more than PWM I would prefer SCT.
+>>>
+>>
+>> Shouldn't we use something like "nxp,lpc1850-sct-pwm"?
+>>
+>> Sounds like the word PWM should be in the compatible as it describes
+>> not only the device, but the device used in a certain way.
+>>
+>> Otherwise, how would we use "nxp,lpc1850-sct" to distinguish a PWM f=
+rom
+>> e.g. a clocksource/clockevents (we can also use SCT for that)?
+>
+> I not sure how to best handle dt bindings with such flexible hardware=
+ blocks.
+>
+> But are you suggestion to have multiple drivers for the same hw block=
+?
+> ie.: "nxp,lpc1850-sct-pwm" for PWM and for example
+> "nxp,lpc1850-sct-clocksource" for clocksource and then use/enable one
+> or the other.
+>
 
-> > >@@ -223,7 +223,7 @@ Example of a VE tile description (simplified)
-> > >                 /* Active high IRQ 0 is connected to GIC's SPI0 */
-> > >                 interrupt-map = <0 0 0 &gic 0 0 4>;
-> > > 
-> > > -               /include/ "vexpress-v2m-rs1.dtsi"
-> > > +               #include <arm/vexpress-v2m-rs1.dtsi>
-> > >         };
-> > >  };
-> > 
-> > 
-> > 
-> > You do not have to replace /include/ with #include,
-> > if you add the include path for DTC.
-> 
-> Ah, I looked for this but -i is not documented in the man page.
-> 
-> Is there any reason to prefer one over the other?
+Yup, I'm suggesting just that. If the hardware is capable, I can't see
+why we can't have different drivers for it.
 
-#include allows you to use CPP in the file you're including, /include/
-does not.
+> So I am not sure how to best handle this, but I think we should at
+> least consider more than just PWM usage for this hw block. Note that
+> not against calling it "lpc1850-sct-pwm", I like that better than jus=
+t
+> "lpc1850-pwm".
+>
 
-I would imagine we have to use #include in case the dtsi itself has
-#include statements...
 
-> > Please add include path for DTC too
-> > so that both /include/ and #include are available.
-
-... though that does not preclude adding it to the path for /include/.
-
-Thanks,
-Mark.
-
+--=20
+Ezequiel Garc=C3=ADa, VanguardiaSur
+www.vanguardiasur.com.ar
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
