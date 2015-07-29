@@ -1,36 +1,47 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v9 0/9] Add simple NVMEM Framework via regmap.
-Date: Wed, 29 Jul 2015 09:55:22 +0100
-Message-ID: <55B894FA.8050008@linaro.org>
-References: <1437995567-11203-1-git-send-email-srinivas.kandagatla@linaro.org> <55B893A7.2030206@codeaurora.org>
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 0/4] omap: Fix broken pbias device creation
+Date: Wed, 29 Jul 2015 11:57:52 +0300
+Message-ID: <55B89590.6000109@ti.com>
+References: <1437999401-3519-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <55B893A7.2030206@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@codeaurora.org>, khilman@kernel.org, linux-arm-kernel@lists.infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, s.hauer@pengutronix.de, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, arnd@arndb.de, sboyd@codeaurora.org, pantelis.antoniou@konsulko.com, mporter@konsulko.com, stefan.wahren@i2se.com, wxt@rock-chips.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1437999401-3519-1-git-send-email-kishon-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 29/07/15 09:49, Rajendra Nayak wrote:
-> On 07/27/2015 04:42 PM, Srinivas Kandagatla wrote:
->> Hi Greg/Kevin,
->>
->> This patchset adds a new simple NVMEM framework to kernel, and it is
->> tested
->> with various drivers like "QCOM thermal sensors", "QCOM cpr driver",
->> "begal bone cape manager" and few more on the way.
->>
->> Can you please consider this as 4.3 material, AFAIK there are more
->> than 3 drivers
->> depending on this framework which are wating since last 2 merge windows.
+On 07/27/2015 03:16 PM, Kishon Vijay Abraham I wrote:
+> pbias device creation got broken once SCM cleanup got merged.
+> This patch series re-enables device creation by adding
+> "simple-bus" in the compatible property of the syscon
+> dt node.
 >
-> I have been testing these with the qcom tsens driver, and did test v9
-> as well, so feel free to add my tested by for the entire series,
+> validated this series in DRA72, OMAP4 PANDA and OMAP5 UEVM
+> boards.
 >
-> Tested-by: Rajendra Nayak <rnayak@codeaurora.org>
+> Kishon Vijay Abraham I (4):
+>    ARM: dts: omap24xx: Fix broken pbias device creation
+>    ARM: dts: OMAP4: Fix broken pbias device creation
+>    ARM: dts: OMAP5: Fix broken pbias device creation
+>    ARM: dts: dra7: Fix broken pbias device creation
+>
+>   arch/arm/boot/dts/dra7.dtsi     |    2 +-
+>   arch/arm/boot/dts/omap2430.dtsi |    3 ++-
+>   arch/arm/boot/dts/omap4.dtsi    |    3 ++-
+>   arch/arm/boot/dts/omap5.dtsi    |    3 ++-
+>   4 files changed, 7 insertions(+), 4 deletions(-)
+>
 
-Thanks Rajendra for the tested-by.
+For dra7-evm:
+Tested-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+
+-- 
+regards,
+-grygorii
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
