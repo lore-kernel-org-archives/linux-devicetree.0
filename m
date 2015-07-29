@@ -1,153 +1,86 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [PATCH v1 7/7] ARM: dts: ifc6410: add inforce LVDS panel support
-Date: Wed, 29 Jul 2015 11:09:28 +0530
-Message-ID: <55B86710.4090507@codeaurora.org>
-References: <1438087956-17307-1-git-send-email-srinivas.kandagatla@linaro.org> <1438088076-17606-1-git-send-email-srinivas.kandagatla@linaro.org>
+From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v3 5/6] iommu/mediatek: Add mt8173 IOMMU driver
+Date: Wed, 29 Jul 2015 13:41:31 +0800
+Message-ID: <1438148491.25925.89.camel@mhfsdcap03>
+References: <1437037475-9065-1-git-send-email-yong.wu@mediatek.com>
+	<1437037475-9065-6-git-send-email-yong.wu@mediatek.com>
+	<55B630CE.4050803@arm.com>
+	<20150727153148.GJ7557@n2100.arm.linux.org.uk>
+	<55B6530A.9050903@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1438088076-17606-1-git-send-email-srinivas.kandagatla@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, agross@codeaurora.org, linux-arm-msm@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Clark <robdclark@gmail.com>
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <55B6530A.9050903-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "cloud.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <cloud.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, youhua.li-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, "frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org" <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Srini,
+On Mon, 2015-07-27 at 16:49 +0100, Robin Murphy wrote:
+> On 27/07/15 16:31, Russell King - ARM Linux wrote:
+> > On Mon, Jul 27, 2015 at 02:23:26PM +0100, Robin Murphy wrote:
+> >> On 16/07/15 10:04, Yong Wu wrote:
+> >>> This patch adds support for mediatek m4u (MultiMedia Memory Management
+> >>> Unit).
+> >>>
+> >>> Signed-off-by: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> >> [...]
+> >>> +static void mtk_iommu_flush_pgtable(void *ptr, size_t size, void *cookie)
+> >>> +{
+> >>> +       struct mtk_iommu_domain *domain = cookie;
+> >>> +       unsigned long offset = (unsigned long)ptr & ~PAGE_MASK;
+> >>> +
+> >>> +       dma_map_page(domain->data->dev, virt_to_page(ptr), offset,
+> >>> +                    size, DMA_TO_DEVICE);
+> >>
+> >> Nit: this looks like it may as well be dma_map_single.
+> >>
+> >> It would probably be worth following it with a matching unmap too, just to
+> >> avoid any possible leakage bugs (especially if this M4U ever appears in a
+> >> SoC supporting RAM above the 32-bit boundary).
+> >
+> > Why not do the job properly?  Take a look at how I implemented the
+> > streaming DMA API on Tegra SMMU (patch set recently sent out earlier
+> > today).
+> >
+> > There's no need for hacks like dma_map_page() (and discarding it's
+> > return value) or dma_map_page() followed by dma_unmap_page().
+> 
+> Indeed, as it happens I do have a branch where I prototyped that for the 
+> long-descriptor io-pgtable-arm code a while ago; this discussion has 
+> prompted me to dig it up again. Stay tuned, folks...
 
-On 07/28/2015 06:24 PM, Srinivas Kandagatla wrote:
-> This patch adds LVDS panel for IFC6410.
->
-> Signed-off-by: Rob Clark <robdclark@gmail.com>
-> [Rob Clark: WIP patch]
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
->   arch/arm/boot/dts/qcom-apq8064-ifc6410.dts | 66 ++++++++++++++++++++++++++++++
->   1 file changed, 66 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-> index 1ab71f1..3bdac02 100644
-> --- a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-> +++ b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-> @@ -63,6 +63,12 @@
->   					qcom,switch-mode-frequency = <3200000>;
->   				};
->
-> +				pm8921_l2: l2 {
-> +					regulator-min-microvolt = <1200000>;
-> +					regulator-max-microvolt = <1200000>;
-> +					bias-pull-down;
-> +				};
-> +
->   				pm8921_l3: l3 {
->   					regulator-min-microvolt = <3050000>;
->   					regulator-max-microvolt = <3300000>;
-> @@ -96,6 +102,10 @@
->   				pm8921_lvs1: lvs1 {
->   					bias-pull-down;
->   				};
-> +
-> +				pm8921_lvs7: lvs7 {
-> +					bias-pull-down;
-> +				};
->   			};
->   		};
->
-> @@ -119,6 +129,41 @@
->
->   		mdp: qcom,mdp@5100000 {
->   			status = "okay";
-> +			qcom,lvds-panel = <&panel>;
+Hi Russell, Robin,
 
-We're trying to switch to the of_graph way of representing connected
-panels. With that, the above phandle will go away. This needs to be 
-replaced with:
+     From I see in arm-smmu-v3.c in v4.2-rc1, 
+     
+     The flush_pgtable seems like this:
+//==========
+	dma_addr_t dma_addr;
 
-			port {
-				lvds_out: endpoint {
-					remote_endpoint = <&auo_in>;
-				};
-			};
+	dma_addr = dma_map_page(dev, ptr, size, DMA_TO_DEVICE);
 
-> +			lvds-vccs-3p3v-supply = <&ext_3p3v>;
-> +			lvds-pll-vdda-supply = <&pm8921_l2>;
-> +			lvds-vdda-supply = <&pm8921_lvs7>;
-> +		};
-> +
-> +		panel_3p3v: panel_3p3v {
-> +			compatible = "regulator-fixed";
-> +			pinctrl-0 = <&disp_en_gpios>;
-> +			pinctrl-names = "default";
-> +			regulator-min-microvolt = <3300000>;
-> +			regulator-max-microvolt = <3300000>;
-> +			regulator-name = "panel_en_3p3v";
-> +			regulator-type = "voltage";
-> +			startup-delay-us = <0>;
-> +			gpio = <&pm8921_gpio 36 GPIO_ACTIVE_HIGH>;
-> +			enable-active-high;
-> +			regulator-boot-on;
-> +		};
-> +
-> +		backlight: backlight{
-> +			pinctrl-0 = <&pwm_bl_gpios>;
-> +			pinctrl-names = "default";
-> +			compatible = "gpio-backlight";
-> +			gpios = <&pm8921_gpio 26 GPIO_ACTIVE_HIGH>;
-> +			default-on;
-> +		};
-> +
-> +		panel: auo,b101xtn01 {
-> +			status = "okay";
-> +			compatible = "auo,b101xtn01";
-> +
-> +			ddc-i2c-bus = <&i2c3>;
-> +			backlight = <&backlight>;
-> +			power-supply = <&panel_3p3v>;
+	if (dma_mapping_error(dev, dma_addr))
+		dev_err(dev, "failed to flush pgtable at %p\n", ptr);
+	else
+		dma_unmap_page(dev, dma_addr, size, DMA_TO_DEVICE);
+//==========
+       I will change map like this and use dma_map_single instead.
 
-and for the panel:
+       Is this also seems to be not proper?
 
-			port {
-				auo_in: endpoint {
-					remote-endpoint = <&lvds_out>;
-				};
-			};
+       Then how to do it?  add this before unmap? :
+       dma_sync_single_for_device(dev, dma_addr, size, DMA_TO_DEVICE);
 
-Thanks,
-Archit
-
->   		};
->
->   		gsbi3: gsbi@16200000 {
-> @@ -235,6 +280,27 @@
->   				pm8921_gpio: gpio@150 {
->   					pinctrl-names = "default";
->   					pinctrl-0 = <&wlan_default_gpios>;
-> +
-> +					pwm_bl_gpios: pwm-bl-gpios {
-> +						pios {
-> +							pins = "gpio26";
-> +							bias-disable;
-> +							function = "normal";
-> +							qcom,drive-strength = <PMIC_GPIO_STRENGTH_HIGH>;
-> +							power-source = <PM8921_GPIO_S4>;
-> +						};
-> +					};
-> +
-> +					disp_en_gpios: disp-en-gpios {
-> +						pios {
-> +							pins = "gpio36";
-> +							bias-disable;
-> +							function = "normal";
-> +							qcom,drive-strength = <PMIC_GPIO_STRENGTH_HIGH>;
-> +							power-source = <PM8921_GPIO_S4>;
-> +						};
-> +					};
-> +
->   					wlan_default_gpios: wlan-gpios {
->   						pios {
->   							pins = "gpio43";
->
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> 
+> Robin.
+> 
