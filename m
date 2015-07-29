@@ -1,51 +1,83 @@
-From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Subject: [PATCH 1/2] drm/panel: Add Sharp LS043T1LE01 panel binding documentation
-Date: Tue, 28 Jul 2015 18:37:40 -0700
-Message-ID: <1438133861-22370-1-git-send-email-bjorn.andersson@sonymobile.com>
+From: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: RE: [PATCH 1/2] drivers: watchdog: at91sam9_wdt: add new feature
+ support
+Date: Wed, 29 Jul 2015 01:50:25 +0000
+Message-ID: <B256D81BAE5131468A838E5D7A243641C9F82110@penmbx01>
+References: <1438066825-21923-1-git-send-email-wenyou.yang@atmel.com>
+ <1438066825-21923-2-git-send-email-wenyou.yang@atmel.com>
+ <55B72BC0.8070206@roeck-us.net>
+ <B256D81BAE5131468A838E5D7A243641C9F820CB@penmbx01>
+ <55B82AE1.2050906@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Werner Johansson <werner.johansson@sonymobile.com>
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55B82AE1.2050906-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Content-Language: en-US
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org" <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: "sylvain.rochet-ETtyaVkrhkNWk0Htik3J/w@public.gmane.org" <sylvain.rochet-ETtyaVkrhkNWk0Htik3J/w@public.gmane.org>, "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Werner Johansson <werner.johansson@sonymobile.com>
-
-Signed-off-by: Werner Johansson <werner.johansson@sonymobile.com>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
----
- .../bindings/panel/sharp,ls043t1le01.txt           | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/panel/sharp,ls043t1le01.txt
-
-diff --git a/Documentation/devicetree/bindings/panel/sharp,ls043t1le01.txt b/Documentation/devicetree/bindings/panel/sharp,ls043t1le01.txt
-new file mode 100644
-index 000000000000..758d48d33e46
---- /dev/null
-+++ b/Documentation/devicetree/bindings/panel/sharp,ls043t1le01.txt
-@@ -0,0 +1,22 @@
-+Sharp Microelectronics 4.3" qHD TFT LCD panel
-+
-+Required properties:
-+- compatible: should be "sharp,ls043t1le01-qhd-vid"
-+- reg: DSI virtual channel of the peripheral
-+- power-supply: phandle of the regulator that provides the supply voltage
-+
-+Optional properties:
-+- backlight: phandle of the backlight device attached to the panel
-+- reset-gpios: a GPIO spec for the reset pin
-+
-+Example:
-+
-+	mdss_dsi0: qcom,mdss_dsi@fd922800 {
-+		panel: panel@0 {
-+			compatible = "sharp,ls043t1le01-qhd-vid";
-+			reg = <0>;
-+			avdd-supply = <&pm8941_l22>;
-+			backlight = <&pm8941_wled>;
-+			reset-gpios = <&pm8941_gpios 19 GPIO_ACTIVE_HIGH>;
-+		};
-+	};
--- 
-1.8.2.2
+SGkgR3VlbnRlciwNCg0KVGhhbmsgeW91IGZvciB5b3VyIHByb21wdCBhbnN3ZXIuDQoNCj4gLS0t
+LS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogR3VlbnRlciBSb2VjayBbbWFpbHRvOmxp
+bnV4QHJvZWNrLXVzLm5ldF0NCj4gU2VudDogMjAxNcTqN9TCMjnI1SA5OjIzDQo+IFRvOiBZYW5n
+LCBXZW55b3U7IHdpbUBpZ3VhbmEuYmU7IHJvYmgrZHRAa2VybmVsLm9yZzsgcGF3ZWwubW9sbEBh
+cm0uY29tOw0KPiBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgaWpjK2RldmljZXRyZWVAaGVsbGlvbi5v
+cmcudWs7IGdhbGFrQGNvZGVhdXJvcmEub3JnDQo+IENjOiBzeWx2YWluLnJvY2hldEBmaW5zZWN1
+ci5jb207IEZlcnJlLCBOaWNvbGFzOyBib3Jpcy5icmV6aWxsb25AZnJlZS0NCj4gZWxlY3Ryb25z
+LmNvbTsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5l
+bC5vcmc7IGxpbnV4LQ0KPiB3YXRjaGRvZ0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJu
+ZWxAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDEvMl0gZHJpdmVy
+czogd2F0Y2hkb2c6IGF0OTFzYW05X3dkdDogYWRkIG5ldyBmZWF0dXJlDQo+IHN1cHBvcnQNCj4g
+DQo+IE9uIDA3LzI4LzIwMTUgMDU6MzggUE0sIFlhbmcsIFdlbnlvdSB3cm90ZToNCj4gPiBIaSBH
+dWVudGVyLA0KPiA+DQo+ID4gVGhhbmsgeW91IHZlcnkgbXVjaCBmb3IgeW91ciByZXZpZXcuDQo+
+ID4NCj4gPj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPj4gRnJvbTogR3VlbnRlciBS
+b2VjayBbbWFpbHRvOmxpbnV4QHJvZWNrLXVzLm5ldF0NCj4gPj4gU2VudDogMjAxNcTqN9TCMjjI
+1SAxNToxNA0KPiA+PiBUbzogWWFuZywgV2VueW91OyB3aW1AaWd1YW5hLmJlOyByb2JoK2R0QGtl
+cm5lbC5vcmc7DQo+ID4+IHBhd2VsLm1vbGxAYXJtLmNvbTsgbWFyay5ydXRsYW5kQGFybS5jb207
+DQo+ID4+IGlqYytkZXZpY2V0cmVlQGhlbGxpb24ub3JnLnVrOyBnYWxha0Bjb2RlYXVyb3JhLm9y
+Zw0KPiA+PiBDYzogc3lsdmFpbi5yb2NoZXRAZmluc2VjdXIuY29tOyBGZXJyZSwgTmljb2xhczsN
+Cj4gPj4gYm9yaXMuYnJlemlsbG9uQGZyZWUtIGVsZWN0cm9ucy5jb207IGRldmljZXRyZWVAdmdl
+ci5rZXJuZWwub3JnOw0KPiA+PiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC0g
+d2F0Y2hkb2dAdmdlci5rZXJuZWwub3JnOw0KPiA+PiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmlu
+ZnJhZGVhZC5vcmcNCj4gPj4gU3ViamVjdDogUmU6IFtQQVRDSCAxLzJdIGRyaXZlcnM6IHdhdGNo
+ZG9nOiBhdDkxc2FtOV93ZHQ6IGFkZCBuZXcNCj4gPj4gZmVhdHVyZSBzdXBwb3J0DQo+ID4+DQo+
+ID4+IE9uIDA3LzI4LzIwMTUgMTI6MDAgQU0sIFdlbnlvdSBZYW5nIHdyb3RlOg0KPiA+Pj4gSW4g
+dGhlIGRhdGFzaGVldCwgdGhlIG5ldyBmZWF0dXJlIGlzIGRlc2NyaWJsZWQgYXMgIldEVF9NUiBj
+YW4gYmUNCj4gPj4+IHdyaXR0ZW4gdW50aWwgYSBMT0NLTVIgY29tbWFuZCBpcyBpc3N1ZWQgaW4g
+V0RUX0NSIi4NCj4gPj4+IFRoYXQgaXMgdG8gc2F5LCBhcyBsb25nIGFzIHRoZSBib290c3RyYXAg
+YW5kIHUtYm9vdCBkb24ndCBpc3N1ZSBhDQo+ID4+PiBMT0NLTVIgY29tbWFuZCwgV0RUX01SIGNh
+biBiZSB3cml0dGVuIGluIGtlcm5lbC4NCj4gPj4+DQo+ID4+PiBTbyB0aGUgZHJpdmVyIGNhbiBl
+bmFibGUvZGlzYWJsZSB0aGUgd2F0Y2hkb2cgdGltZXIgaGFyZHdhcmUsIHNldA0KPiA+Pj4gV0RW
+KFdhdGNoZG9nIENvdW50ZXIgVmFsdWUpIGFuZCBXREQoV2F0Y2hkb2cgRGVsdGEgVmFsdWUpIGZp
+ZWxkcyBvZg0KPiA+Pj4gV0RUX01SIHJlZ2lzdGVyIHRvIHNldCB0aGUgd2F0Y2hkb2cgdGltZXIg
+dGltZW91dC4NCj4gPj4+DQo+ID4+PiBUaGUgdGltZXIgaXMgbm90IG5lY2Vzc2FyeSB0aGF0IHJl
+Z3VsYXJseSBzZW5kcyBhIGtlZXBhbGl2ZSBwaW5nIHRvDQo+ID4+PiB0aGUgd2F0Y2hkb2cgdGlt
+ZXIgaGFyZHdhcmUuDQo+ID4+Pg0KPiA+Pj4gSXQgaXMgaW50cm9kdWNlZCBmcm9tIHNhbWE1ZDQg
+U29Dcy4NCj4gPj4+DQo+ID4+IFNpbmNlIHRoZXJlIGFyZSBzbyBtYW55IGNoYW5nZXMsIEkgd29u
+ZGVyIGlzIGEgc2VwYXJhdGUgZHJpdmVyIHdvdWxkDQo+ID4+IG1ha2UgbW9yZSBzZW5zZS4NCj4g
+PiBZZXMsIGEgYml0IG1hbnkgY2hhbmdlcy4NCj4gPiBJIHRob3VnaHQgcmV1c2UgdGhlIGRyaXZl
+ciBjb2RlLg0KPiA+IElmIGEgc2VwYXJhdGUgZHJpdmVyLCBJIGFtIGFmcmFpZCBpdCBpbmNsdWRl
+cyBtdWNoIGR1cGxpY2F0ZWQgY29kZS4NCj4gPiBBZnRlciBhbGwsIGl0IGlzIGZvciB0aGUgc2Ft
+ZSBkZXZpY2Ugd2l0aCBkaWZmZXJlbnQgZmVhdHVyZS4NCj4gPg0KPiA+IEkgZG9uJ3QgdGhpbmsg
+aXQgaXMgbmVjZXNzYXJ5IHRvIGhhdmUgbXVsdGlwbGUgZHJpdmVycyBmb3IgdGhlIHNhbWUgcGVy
+aXBoZXJhbCB3aXRoDQo+IGRpZmZlcmVudCBmZWF0dXJlLg0KPiA+DQo+IA0KPiBUaGUgY29uY2Vw
+dCBmb3IgdGhlIHR3byBtZWNoYW5pc21zIGlzIGFsbCBkaWZmZXJlbnQ6IEluIG9uZSwgdGhlIHdh
+dGNoZG9nDQo+IGtlZXBhbGl2ZSBpcyB0cmlnZ2VyZWQgZnJvbSB0aW1lciBjb2RlLiBJbiB0aGUg
+b3RoZXIsIHRoZSB3YXRjaGRvZyB0aW1lb3V0IGlzDQo+IHRyaWdnZXJlZCBkaXJlY3RseSBmcm9t
+IHRoZSBoZWFydGJlYXQgZnVuY3Rpb24uIE9uZSBhc3N1bWVzIHRoYXQgdGhlIHdhdGNoZG9nIGlz
+DQo+IGFsd2F5cyBydW5uaW5nLCBhbmQgdGhhdCBpdCBtdXN0IGJlIHBpbmdlZCBldmVuIGlmIGNs
+b3NlZC4gVGhlIG90aGVyIGRpc2FibGVzIHRoZQ0KPiB3YXRjaGRvZyBvbiBjbG9zZS4NCj4gDQo+
+IFdoYXQgSSBfY2FuXyBzZWUgaXMgdGhhdCB0aGUgZHJpdmVyIGlzIGJlY29taW5nIGFuIHVubWFp
+bnRhaW5hYmxlIG1lc3MsIHdpdGggbG90cw0KPiBvZiBpZi9lbHNlIGluIHByZXR0eSBtdWNoIGV2
+ZXJ5IGZ1bmN0aW9uLiBJIGNvbnNpZGVyIHRoaXMgbXVjaCBsZXNzIGRlc2lyYWJsZSB0aGFuIGEN
+Cj4gYml0IG9mIGNvZGUgZHVwbGljYXRpb24gLSBpZiB0aGVyZSBpcyBhbnkuIFNlcmlvdXNseSwg
+bW9zdCBvZiB0aGUgYWRkZWQgY29kZSBtaWdodCBhcw0KPiB3ZWxsIGJlIGZvciBhIGNvbXBsZXRl
+bHkgZGlmZmVyZW50IGNoaXAuDQoNCllvdSBhcmUgcmlnaHQsIEkgYWNjZXB0ZWQgeW91ciBhZHZp
+Y2UuIEkgd2lsbCByZXdyaXRlIGl0LiBUaGFua3MuDQoNCj4gDQo+IEd1ZW50ZXINCg0KQmVzdCBS
+ZWdhcmRzLA0KV2VueW91IFlhbmcNCg==
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
