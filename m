@@ -1,106 +1,66 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH 03/12] mtd: nand: omap: Move IRQ handling from GPMC to
- NAND driver
-Date: Wed, 29 Jul 2015 16:52:57 +0300
-Message-ID: <55B8DAB9.7070602@ti.com>
-References: <1436531019-18088-1-git-send-email-rogerq@ti.com> <1436531019-18088-4-git-send-email-rogerq@ti.com> <20150713071008.GC26485@atomide.com> <55A38D2E.9010500@ti.com> <20150713124059.GF26485@atomide.com> <55B8C1D5.3090807@ti.com> <55B8C364.4030203@gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH 2/2] dt: spi: s3c64xx: add compatible to
+ controller-data
+Date: Wed, 29 Jul 2015 15:00:46 +0100
+Message-ID: <20150729140046.GB11082@sirena.org.uk>
+References: <cover.1438170519.git.hramrach@gmail.com>
+ <557c1962448393b2a8736f26bfa2a3a5ba4aeb7a.1438170519.git.hramrach@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <55B8C364.4030203@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: nick <xerofoify@gmail.com>, Tony Lindgren <tony@atomide.com>
-Cc: devicetree@vger.kernel.org, computersforpeace@gmail.com, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, ezequiel@vanguardiasur.com.ar, bcousson@baylibre.com, linux-omap@vger.kernel.org, dwmw2@infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="98e8jtXdkpgskNou"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <557c1962448393b2a8736f26bfa2a3a5ba4aeb7a.1438170519.git.hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Padmavathi Venna <padma.kvr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 29/07/15 15:13, nick wrote:
-> 
-> 
-> On 2015-07-29 08:06 AM, Roger Quadros wrote:
->> Tony,
->>
->> On 13/07/15 15:40, Tony Lindgren wrote:
->>> * Roger Quadros <rogerq@ti.com> [150713 03:07]:
->>>> Tony,
->>>>
->>>> On 13/07/15 10:10, Tony Lindgren wrote:
->>>>> * Roger Quadros <rogerq@ti.com> [150710 05:26]:
->>>>>> Since the Interrupt Events are used only by the NAND driver,
->>>>>> there is no point in managing the Interrupt registers
->>>>>> in the GPMC driver and complicating it with irqchip modeling.
->>>>>
->>>>> I don't think it's a good idea to allow external drivers to
->>>>> tinker directly with GPMC registers. How about just set up GPMC
->>>>> as an irqchip for the edge detection interrupts?
->>>>>
->>>>> I think we already have devices with multiple NAND chips. And
->>>>> there's nothing stopping other drivers from using the edge
->>>>> detection interrupts.
->>>>
->>>> OK. The GPMC_IRQ registers manage 2 NAND specific interrupts
->>>> (terminalcount and fifo) and 'n' WAIT pin edge interrupts.
->>>>
->>>>  So we can model this as a irqchip with 'n + 2' interrupts.
->>>
->>> OK
->>
->> For the wait pins irqchip is not sufficient and it needs to be gpiochip
->> with irqchip. Waitpin status can be read from GPIO_STATUS register.
->>
->> Just getting the interrupt is not enough and we want to know if the
->> line is high or low. That is how nand->dev_ready works.
->>
->> How about having 2 IRQ domains?
->> One is irqchip with 2 interrupts (terminalcount and fifo) and second is
->> gpiochip + irqchip for the n wait pins.
->>
->> The nand driver can then be modified to use GPIO to get Read/Busy
->> pin status from the wait pin.
->>
->> cheers,
->> -roger
->>
-> Doesn't OMAP boards support shared IRQs and if so why not share them across one
-> IRQ domain if possible to save IRQ domains for other hardware that needs its 
-> own IRQ domain. This is just a suggestion through as I don't have the hardware
-> spec sheet on me Roger.
 
-IRQ domain is a virtual abstraction introduced to prevent kernel irq number overlapping
-in a single flat domain. I don't see what you can save by domain reuse.
-Some memory maybe at most.
+--98e8jtXdkpgskNou
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Shared interrupt is something totally different but we're trying to add real
-hardware interrupts here. Didn't understand what you will share it with.
+On Wed, Jul 29, 2015 at 12:19:57PM +0200, Michal Suchanek wrote:
 
-cheers,
--roger
+Please use subject lines matching the style for the subsytsem so people
+can spot that the patch is in some way relevant.
 
-> Nick 
->>>  
->>>> We need to take care that if a GPMC chip select needs a
->>>> wait pin then it can't be used as a generic interrupt.
->>>>
->>>> We need to get rid of omap_dev_ready() in nand/omap2.c as
->>>> it accesses the GPMC_STATUS register directly. Plus it is
->>>> hard coded to only monitor wait0 pin.
->>>
->>> OK
->>>  
->>>> What is the best map we should use for irqchip?
->>>> Some Socs have 4 WAIT pins, some have 3 and some have 2.
->>>>
->>>> Should we start with 0,1,2, for the wait pins and use the next
->>>> available free one for the NAND?
->>>
->>> Maybe we can just use the bits defined for each SoC in the
->>> GPMC_IRQSTATUS register for the mapping?  
->>> Regards,
->>>
->>> Tony
->>>
->>
->> ______________________________________________________
->> Linux MTD discussion mailing list
->> http://lists.infradead.org/mailman/listinfo/linux-mtd/
->>
+> The controller-data subnode has no compatible. This can lead to other
+> drivers getting confused by it. Add a compatible to make devicetreee
+> unambiguous.
+
+I can't tell from this commit message what the issue you're trying to
+fix is, sorry.  Nodes without compatible strings are entirely normal and
+don't need compatible strings.  It sounds like a bug in whatever other
+driver is becoming confused.
+
+> +	if (!of_get_property(data_np, "compatible", NULL) ||
+> +	    strcmp(of_get_property(data_np, "compatible", NULL),
+> +		   "samsung,s3c-controller-data"))
+> +		dev_err(&spi->dev, "child node 'controller-data' does not have correct compatible\n");
+
+This will break all existing users which is not acceptable for
+mainline, we need to preserve compatibility with existing device trees.
+
+--98e8jtXdkpgskNou
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJVuNyNAAoJECTWi3JdVIfQncsH/0G7MS0/qfSwdPHn0o6yz8aR
+q6xkpNSqE5FpL28c5k57qt8dHrL1yuXpXVYn6c0rqGwLYA92iuDEOoqM8Zs6y3IQ
+9v26r0JcA2RBko7VYCB/OhVGCu+4adCy6kVhdHRulRoEsbhT126hO/b05vcf9/DK
+HQT9omMnBttIVQvoQembTmMLnjepBasqL6N5CE00OQFcR/zNXrPNqmrC8JAAuAy1
+jK9H/UgkrBrITvpvA6wgiy4+1797Z1ovgqT9YefUqn+nBHFhcvo29VV/wxrZDqnG
+JHRT4qzJsMfav5GRZN7fhKw8rt+Mqsrw4aLP2SDLchzDUuoprW3MG80hHSHOQmA=
+=RsyY
+-----END PGP SIGNATURE-----
+
+--98e8jtXdkpgskNou--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
