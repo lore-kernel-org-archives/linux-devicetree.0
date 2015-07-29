@@ -1,64 +1,200 @@
-From: Leilk Liu <leilk.liu@mediatek.com>
-Subject: [PATCH v4 3/3] arm64: dts: Add spi bus dts
-Date: Wed, 29 Jul 2015 19:04:34 +0800
-Message-ID: <1438167874-1305-4-git-send-email-leilk.liu@mediatek.com>
-References: <1438167874-1305-1-git-send-email-leilk.liu@mediatek.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH v2] dtb: Create a common home for cross-architecture dtsi files.
+Date: Wed, 29 Jul 2015 20:07:25 +0900
+Message-ID: <CAK7LNAQKswPzeFYdSVq3JDk2qawZ8e5ogBFMWdor-CibMovU3g@mail.gmail.com>
+References: <1437993343-9542-1-git-send-email-ian.campbell@citrix.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1438167874-1305-1-git-send-email-leilk.liu@mediatek.com>
+In-Reply-To: <1437993343-9542-1-git-send-email-ian.campbell@citrix.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org, linux-mediatek@lists.infradead.org, Leilk Liu <leilk.liu@mediatek.com>
+To: Ian Campbell <ian.campbell@citrix.com>
+Cc: devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Kristina Martsenko <kristina.martsenko@arm.com>, Kumar Gala <galak@codeaurora.org>, Kevin Hilman <khilman@linaro.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds MT8173 spi bus controllers into device tree.
+Hi Ian,
 
-Signed-off-by: Leilk Liu <leilk.liu@mediatek.com>
----
- arch/arm64/boot/dts/mediatek/mt8173.dtsi | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index d18ee42..2a88d93 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -220,6 +220,15 @@
- 					bias-disable;
- 				};
- 			};
-+
-+			spi_pins_a: spi0 {
-+				pins_spi {
-+					pinmux = <MT8173_PIN_69_SPI_CK__FUNC_SPI_CK_0_>,
-+						<MT8173_PIN_70_SPI_MI__FUNC_SPI_MI_0_>,
-+						<MT8173_PIN_71_SPI_MO__FUNC_SPI_MO_0_>,
-+						<MT8173_PIN_72_SPI_CS__FUNC_SPI_CS_0_>;
-+				};
-+			};
- 		};
- 
- 		scpsys: scpsys@10006000 {
-@@ -365,6 +374,20 @@
- 			status = "disabled";
- 		};
- 
-+		spi: spi@1100a000 {
-+			compatible = "mediatek,mt8173-spi";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0 0x1100a000 0 0x1000>;
-+			interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&pericfg CLK_PERI_SPI0>;
-+			clock-names = "main";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&spi_pins_a>;
-+			pad-select = <0>;
-+			status = "disabled";
-+		};
-+
- 		i2c3: i2c3@11010000 {
- 			compatible = "mediatek,mt8173-i2c";
- 			reg = <0 0x11010000 0 0x70>,
+2015-07-27 19:35 GMT+09:00 Ian Campbell <ian.campbell@citrix.com>:
+> Commit 9ccd608070b6 "arm64: dts: add device tree for ARM SMM-A53x2 on
+> LogicTile Express 20MG" added a new dts file to arch/arm64 which
+> included "../../../../arm/boot/dts/vexpress-v2m-rs1.dtsi", i.e. a
+> .dtsi supplied by arch/arm.
+>
+> Unfortunately this causes some issues for the split device tree
+> repository[0], since things get moved around there. In that context
+> the new .dts ends up at src/arm64/arm/vexpress-v2f-1xv7-ca53x2.dts
+> while the include is at src/arm/vexpress-v2m-rs1.dtsi.
+>
+> The sharing of the .dtsi is legitimate since the baseboard is the same
+> for various vexpress systems whatever processor they use.
+>
+> Rather than using ../../ tricks to pickup .dtsi files from another
+> arch this patch creates a new directory include/dt-dtsi as a
+> home for such cross-arch .dtsi files, arranges for it to be in the
+> include path when the .dts files are processed by cpp and switches the
+
+
+"include/dt-dtsi/"  can be referenced from normal C sources.
+
+I think another possible home for cross-arch DTSI is "kernel/dts/".
+This directory can be hidden from C sources.
+
+
+
+
+> .dts files to use cpp #include instead of /include/. The dtsi file
+> itself is moved into a vendor subdir in this case "arm" (the vendor,
+> not the ARCH=).
+>
+> [0] https://git.kernel.org/cgit/linux/kernel/git/devicetree/devicetree-rebasing.git/
+>
+> Signed-off-by: Ian Campbell <ian.campbell@citrix.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Kumar Gala <galak@codeaurora.org>
+> Cc: Liviu Dudau <liviu.dudau@arm.com>
+> Cc: Sudeep Holla <sudeep.holla@arm.com>
+> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Cc: Russell King <linux@arm.linux.org.uk>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will.deacon@arm.com>
+> Cc: Kristina Martsenko <kristina.martsenko@arm.com>
+> Cc: Kevin Hilman <khilman@linaro.org>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kbuild@vger.kernel.org
+> ---
+> v2: Move to include/dt-dtsi and introduce a per-vendor subdirectory.
+> ---
+>  Documentation/devicetree/bindings/arm/vexpress.txt               | 4 ++--
+>  arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts                      | 2 +-
+>  arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts                       | 2 +-
+>  arch/arm/boot/dts/vexpress-v2p-ca5s.dts                          | 2 +-
+>  arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts             | 2 +-
+>  {arch/arm/boot/dts => include/dt-dtsi/arm}/vexpress-v2m-rs1.dtsi | 0
+>  scripts/Makefile.lib                                             | 1 +
+>  7 files changed, 7 insertions(+), 6 deletions(-)
+>  rename {arch/arm/boot/dts => include/dt-dtsi/arm}/vexpress-v2m-rs1.dtsi (100%)
+>
+> diff --git a/Documentation/devicetree/bindings/arm/vexpress.txt b/Documentation/devicetree/bindings/arm/vexpress.txt
+> index 39844cd..dccf570 100644
+> --- a/Documentation/devicetree/bindings/arm/vexpress.txt
+> +++ b/Documentation/devicetree/bindings/arm/vexpress.txt
+> @@ -7,7 +7,7 @@ peripherals. Processor and RAM "live" on the tiles.
+>
+>  The motherboard and each core tile should be described by a separate
+>  Device Tree source file, with the tile's description including
+> -the motherboard file using a /include/ directive. As the motherboard
+> +the motherboard file using a #include directive. As the motherboard
+>  can be initialized in one of two different configurations ("memory
+>  maps"), care must be taken to include the correct one.
+>
+> @@ -223,7 +223,7 @@ Example of a VE tile description (simplified)
+>                 /* Active high IRQ 0 is connected to GIC's SPI0 */
+>                 interrupt-map = <0 0 0 &gic 0 0 4>;
+>
+> -               /include/ "vexpress-v2m-rs1.dtsi"
+> +               #include <arm/vexpress-v2m-rs1.dtsi>
+>         };
+>  };
+
+
+
+You do not have to replace /include/ with #include,
+if you add the include path for DTC.
+
+
+
+> diff --git a/arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts b/arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts
+> index 9420053..7ea7054 100644
+> --- a/arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts
+> +++ b/arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts
+> @@ -278,6 +278,6 @@
+>                                 <0 0 41 &gic 0 41 4>,
+>                                 <0 0 42 &gic 0 42 4>;
+>
+> -               /include/ "vexpress-v2m-rs1.dtsi"
+> +               #include <arm/vexpress-v2m-rs1.dtsi>
+>         };
+>  };
+> diff --git a/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts b/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts
+> index 17f63f7..afe997a4 100644
+> --- a/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts
+> +++ b/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts
+> @@ -636,6 +636,6 @@
+>                                 <0 0 41 &gic 0 41 4>,
+>                                 <0 0 42 &gic 0 42 4>;
+>
+> -               /include/ "vexpress-v2m-rs1.dtsi"
+> +               #include <arm/vexpress-v2m-rs1.dtsi>
+>         };
+>  };
+> diff --git a/arch/arm/boot/dts/vexpress-v2p-ca5s.dts b/arch/arm/boot/dts/vexpress-v2p-ca5s.dts
+> index d2709b7..498181c 100644
+> --- a/arch/arm/boot/dts/vexpress-v2p-ca5s.dts
+> +++ b/arch/arm/boot/dts/vexpress-v2p-ca5s.dts
+> @@ -248,6 +248,6 @@
+>                                 <0 0 41 &gic 0 41 4>,
+>                                 <0 0 42 &gic 0 42 4>;
+>
+> -               /include/ "vexpress-v2m-rs1.dtsi"
+> +               #include <arm/vexpress-v2m-rs1.dtsi>
+>         };
+>  };
+> diff --git a/arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts b/arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts
+> index 5b1d018..b86c5a8 100644
+> --- a/arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts
+> +++ b/arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts
+> @@ -186,6 +186,6 @@
+>                                 <0 0 41 &gic GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>,
+>                                 <0 0 42 &gic GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
+>
+> -               /include/ "../../../../arm/boot/dts/vexpress-v2m-rs1.dtsi"
+> +               #include <arm/vexpress-v2m-rs1.dtsi>
+>         };
+>  };
+> diff --git a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi b/include/dt-dtsi/arm/vexpress-v2m-rs1.dtsi
+> similarity index 100%
+> rename from arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
+> rename to include/dt-dtsi/arm/vexpress-v2m-rs1.dtsi
+> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+> index 79e8661..0d948d4 100644
+> --- a/scripts/Makefile.lib
+> +++ b/scripts/Makefile.lib
+> @@ -163,6 +163,7 @@ dtc_cpp_flags  = -Wp,-MD,$(depfile).pre.tmp -nostdinc                    \
+>                  -I$(srctree)/arch/$(SRCARCH)/boot/dts                   \
+>                  -I$(srctree)/arch/$(SRCARCH)/boot/dts/include           \
+>                  -I$(srctree)/drivers/of/testcase-data                   \
+> +                -I$(srctree)/include/dt-dtsi                            \
+>                  -undef -D__DTS__
+>
+>  # Finds the multi-part object the current object will be linked into
+
+
+Please add include path for DTC too
+so that both /include/ and #include are available.
+
+
+
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index 79e8661..fc6c06c 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -285,7 +285,7 @@ quiet_cmd_dtc = DTC     $@
+ cmd_dtc = mkdir -p $(dir ${dtc-tmp}) ; \
+        $(CPP) $(dtc_cpp_flags) -x assembler-with-cpp -o $(dtc-tmp) $< ; \
+        $(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 \
+-               -i $(dir $<) $(DTC_FLAGS) \
++               -i $(dir $<) -i $(srctree)/kernel/dts $(DTC_FLAGS) \
+                -d $(depfile).dtc.tmp $(dtc-tmp) ; \
+        cat $(depfile).pre.tmp $(depfile).dtc.tmp > $(depfile)
+
+
+
+
 -- 
-1.8.1.1.dirty
+Best Regards
+Masahiro Yamada
