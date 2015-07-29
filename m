@@ -1,40 +1,29 @@
-From: Jianwei Wang <jianwei.wang.chn@gmail.com>
-Subject: [PATCH v14 6/6] arm:dts:ls1021a: Add a TFT LCD panel dts node
-Date: Wed, 29 Jul 2015 16:30:05 +0800
-Message-ID: <1438158605-28248-7-git-send-email-jianwei.wang.chn@gmail.com>
-References: <1438158605-28248-1-git-send-email-jianwei.wang.chn@gmail.com>
+From: Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v9 0/9] Add simple NVMEM Framework via regmap.
+Date: Wed, 29 Jul 2015 14:19:43 +0530
+Message-ID: <55B893A7.2030206@codeaurora.org>
+References: <1437995567-11203-1-git-send-email-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1438158605-28248-1-git-send-email-jianwei.wang.chn@gmail.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org
-Cc: devicetree@vger.kernel.org, Xiubo Li <lixiubo@cmss.chinamobile.com>, daniel.vetter@ffwll.ch, Alison Wang <b18965@freescale.com>, linux-kernel@vger.kernel.org, scottwood@freescale.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1437995567-11203-1-git-send-email-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, stefan.wahren-eS4NqCHxEME@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-QWRkIGEgVEZUIExDRCBwYW5lbC4gdGhlIFRGVCBMQ0QgcGFuZWwgaXMgV1FWR0EgIjQ4MHgyNzIi
-LAphbmQgdGhlIGJwcCBpcyAyNC4KClNpZ25lZC1vZmYtYnk6IEFsaXNvbiBXYW5nIDxiMTg5NjVA
-ZnJlZXNjYWxlLmNvbT4KU2lnbmVkLW9mZi1ieTogWGl1Ym8gTGkgPGxpeGl1Ym9AY21zcy5jaGlu
-YW1vYmlsZS5jb20+ClNpZ25lZC1vZmYtYnk6IEppYW53ZWkgV2FuZyA8amlhbndlaS53YW5nLmNo
-bkBnbWFpbC5jb20+Ci0tLQogYXJjaC9hcm0vYm9vdC9kdHMvbHMxMDIxYS10d3IuZHRzIHwgMTEg
-KysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCAxMSBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0
-IGEvYXJjaC9hcm0vYm9vdC9kdHMvbHMxMDIxYS10d3IuZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMv
-bHMxMDIxYS10d3IuZHRzCmluZGV4IGEyYzU5MWUuLjI0NDMzMjkgMTAwNjQ0Ci0tLSBhL2FyY2gv
-YXJtL2Jvb3QvZHRzL2xzMTAyMWEtdHdyLmR0cworKysgYi9hcmNoL2FybS9ib290L2R0cy9sczEw
-MjFhLXR3ci5kdHMKQEAgLTU2LDYgKzU2LDE3IEBACiAJCWVuZXQwX3NnbWlpX3BoeSA9ICZzZ21p
-aV9waHkyOwogCQllbmV0MV9zZ21paV9waHkgPSAmc2dtaWlfcGh5MDsKIAl9OworCisJcGFuZWw6
-IHBhbmVsIHsKKwkJY29tcGF0aWJsZSA9ICJuZWMsbmw0ODI3aGMxOV8wNWIiOworCX07CisKK307
-CisKKyZkY3UgeworCWZzbCxwYW5lbCA9IDwmcGFuZWw+OworCXN0YXR1cyA9ICJva2F5IjsKKwog
-fTsKIAogJmRzcGkxIHsKLS0gCjIuMS4wLjI3Lmc5NmRiMzI0CgpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
-ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On 07/27/2015 04:42 PM, Srinivas Kandagatla wrote:
+> Hi Greg/Kevin,
+>
+> This patchset adds a new simple NVMEM framework to kernel, and it is tested
+> with various drivers like "QCOM thermal sensors", "QCOM cpr driver",
+> "begal bone cape manager" and few more on the way.
+>
+> Can you please consider this as 4.3 material, AFAIK there are more than 3 drivers
+> depending on this framework which are wating since last 2 merge windows.
+
+I have been testing these with the qcom tsens driver, and did test v9
+as well, so feel free to add my tested by for the entire series,
+
+Tested-by: Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
