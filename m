@@ -1,7 +1,7 @@
 From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH 05/10] ARM: imx6: set ahb-burst-config as 0 for USB
-Date: Wed, 29 Jul 2015 10:42:09 +0800
-Message-ID: <1438137734-27311-6-git-send-email-peter.chen@freescale.com>
+Subject: [PATCH 06/10] usb: chipidea: add ahb burst configuration interface
+Date: Wed, 29 Jul 2015 10:42:10 +0800
+Message-ID: <1438137734-27311-7-git-send-email-peter.chen@freescale.com>
 References: <1438137734-27311-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,108 +12,82 @@ To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-After setting ahb burst configuration as 0, we can increase tx/rx
-burst size, it will improve the USB performance
+The users can change it through dts or platform data if they
+want to change the default value.
 
 Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- arch/arm/boot/dts/imx6qdl.dtsi | 4 ++++
- arch/arm/boot/dts/imx6sl.dtsi  | 3 +++
- arch/arm/boot/dts/imx6sx.dtsi  | 3 +++
- 3 files changed, 10 insertions(+)
+ drivers/usb/chipidea/bits.h  |  3 +++
+ drivers/usb/chipidea/core.c  | 14 ++++++++++++++
+ include/linux/usb/chipidea.h |  2 ++
+ 3 files changed, 19 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-index e6d1359..42d62b0 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -853,6 +853,7 @@
- 				clocks = <&clks IMX6QDL_CLK_USBOH3>;
- 				fsl,usbphy = <&usbphy1>;
- 				fsl,usbmisc = <&usbmisc 0>;
-+				ahb-burst-config = <0x0>;
- 				status = "disabled";
- 			};
+diff --git a/drivers/usb/chipidea/bits.h b/drivers/usb/chipidea/bits.h
+index 831a8f6..462ad02 100644
+--- a/drivers/usb/chipidea/bits.h
++++ b/drivers/usb/chipidea/bits.h
+@@ -25,6 +25,9 @@
+ #define VERSION		      (0xF << 25)
+ #define CIVERSION	      (0x7 << 29)
  
-@@ -864,6 +865,7 @@
- 				fsl,usbphy = <&usbphy2>;
- 				fsl,usbmisc = <&usbmisc 1>;
- 				dr_mode = "host";
-+				ahb-burst-config = <0x0>;
- 				status = "disabled";
- 			};
++/* SBUSCFG */
++#define AHBBRST_MASK		0x7
++
+ /* HCCPARAMS */
+ #define HCCPARAMS_LEN         BIT(17)
  
-@@ -874,6 +876,7 @@
- 				clocks = <&clks IMX6QDL_CLK_USBOH3>;
- 				fsl,usbmisc = <&usbmisc 2>;
- 				dr_mode = "host";
-+				ahb-burst-config = <0x0>;
- 				status = "disabled";
- 			};
+diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
+index 38bd036..f60cbf6 100644
+--- a/drivers/usb/chipidea/core.c
++++ b/drivers/usb/chipidea/core.c
+@@ -439,6 +439,9 @@ void ci_platform_configure(struct ci_hdrc *ci)
  
-@@ -884,6 +887,7 @@
- 				clocks = <&clks IMX6QDL_CLK_USBOH3>;
- 				fsl,usbmisc = <&usbmisc 3>;
- 				dr_mode = "host";
-+				ahb-burst-config = <0x0>;
- 				status = "disabled";
- 			};
+ 	hw_write(ci, OP_USBCMD, 0xff0000, ci->platdata->itc_setting << 16);
  
-diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
-index a78e715..066fac9 100644
---- a/arch/arm/boot/dts/imx6sl.dtsi
-+++ b/arch/arm/boot/dts/imx6sl.dtsi
-@@ -688,6 +688,7 @@
- 				clocks = <&clks IMX6SL_CLK_USBOH3>;
- 				fsl,usbphy = <&usbphy1>;
- 				fsl,usbmisc = <&usbmisc 0>;
-+				ahb-burst-config = <0x0>;
- 				status = "disabled";
- 			};
++	if (ci->platdata->flags & CI_HDRC_OVERRIDE_AHB_BURST)
++		hw_write_id_reg(ci, ID_SBUSCFG, AHBBRST_MASK,
++			ci->platdata->ahb_burst_config);
+ }
  
-@@ -698,6 +699,7 @@
- 				clocks = <&clks IMX6SL_CLK_USBOH3>;
- 				fsl,usbphy = <&usbphy2>;
- 				fsl,usbmisc = <&usbmisc 1>;
-+				ahb-burst-config = <0x0>;
- 				status = "disabled";
- 			};
+ /**
+@@ -647,6 +650,17 @@ static int ci_get_platdata(struct device *dev,
+ 		}
+ 	}
  
-@@ -708,6 +710,7 @@
- 				clocks = <&clks IMX6SL_CLK_USBOH3>;
- 				fsl,usbmisc = <&usbmisc 2>;
- 				dr_mode = "host";
-+				ahb-burst-config = <0x0>;
- 				status = "disabled";
- 			};
++	if (of_find_property(dev->of_node, "ahb-burst-config", NULL)) {
++		ret = of_property_read_u32(dev->of_node, "ahb-burst-config",
++			&platdata->ahb_burst_config);
++		if (ret) {
++			dev_err(dev,
++				"failed to get ahb-burst-config\n");
++			return ret;
++		}
++		platdata->flags |= CI_HDRC_OVERRIDE_AHB_BURST;
++	}
++
+ 	return 0;
+ }
  
-diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
-index 708175d..3656a1d 100644
---- a/arch/arm/boot/dts/imx6sx.dtsi
-+++ b/arch/arm/boot/dts/imx6sx.dtsi
-@@ -746,6 +746,7 @@
- 				fsl,usbphy = <&usbphy1>;
- 				fsl,usbmisc = <&usbmisc 0>;
- 				fsl,anatop = <&anatop>;
-+				ahb-burst-config = <0x0>;
- 				status = "disabled";
- 			};
+diff --git a/include/linux/usb/chipidea.h b/include/linux/usb/chipidea.h
+index 982f8cc..9848a4e 100644
+--- a/include/linux/usb/chipidea.h
++++ b/include/linux/usb/chipidea.h
+@@ -33,6 +33,7 @@ struct ci_hdrc_platform_data {
+ #define CI_HDRC_DISABLE_HOST_STREAMING		BIT(10)
+ #define CI_HDRC_DISABLE_STREAMING (CI_HDRC_DISABLE_DEVICE_STREAMING |	\
+ 		CI_HDRC_DISABLE_HOST_STREAMING)
++#define CI_HDRC_OVERRIDE_AHB_BURST		BIT(11)
+ 	enum usb_dr_mode	dr_mode;
+ #define CI_HDRC_CONTROLLER_RESET_EVENT		0
+ #define CI_HDRC_CONTROLLER_STOPPED_EVENT	1
+@@ -42,6 +43,7 @@ struct ci_hdrc_platform_data {
+ 	bool			tpl_support;
+ 	/* interrupt threshold setting */
+ 	u32			itc_setting;
++	u32			ahb_burst_config;
+ };
  
-@@ -756,6 +757,7 @@
- 				clocks = <&clks IMX6SX_CLK_USBOH3>;
- 				fsl,usbphy = <&usbphy2>;
- 				fsl,usbmisc = <&usbmisc 1>;
-+				ahb-burst-config = <0x0>;
- 				status = "disabled";
- 			};
- 
-@@ -768,6 +770,7 @@
- 				phy_type = "hsic";
- 				fsl,anatop = <&anatop>;
- 				dr_mode = "host";
-+				ahb-burst-config = <0x0>;
- 				status = "disabled";
- 			};
- 
+ /* Default offset of capability registers */
 -- 
 1.9.1
 
