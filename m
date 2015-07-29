@@ -1,43 +1,51 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v5 06/10] clk: mediatek: mt8173: Fix enabling of critical
- clocks
-Date: Wed, 29 Jul 2015 17:27:54 -0700
-Message-ID: <20150730002754.GG3159@codeaurora.org>
-References: <1438152754-11970-1-git-send-email-jamesjj.liao@mediatek.com>
- <1438152754-11970-7-git-send-email-jamesjj.liao@mediatek.com>
+From: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v8 00/23] usb gadget update for OTG 2.0
+Date: Thu, 30 Jul 2015 07:24:03 +0800
+Message-ID: <20150729232401.GA8175@shlinux2>
+References: <1437622667-6735-1-git-send-email-jun.li@freescale.com>
+ <20150727072157.GA20654@shlinux2>
+ <20150729150427.GA32418@saruman.tx.rr.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1438152754-11970-7-git-send-email-jamesjj.liao@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: James Liao <jamesjj.liao@mediatek.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mike Turquette <mturquette@baylibre.com>, Heiko Stubner <heiko@sntech.de>, srv_heupstream@mediatek.com, Daniel Kurtz <djkurtz@chromium.org>, Ricky Liang <jcliang@chromium.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Sascha Hauer <s.hauer@pengutronix.de>
+In-Reply-To: <20150729150427.GA32418-HgARHv6XitJaoMGHk7MhZQC/G2K4zDHf@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Cc: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robh+d-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/29, James Liao wrote:
-> From: Sascha Hauer <s.hauer@pengutronix.de>
+On Wed, Jul 29, 2015 at 10:04:27AM -0500, Felipe Balbi wrote:
+> On Mon, Jul 27, 2015 at 03:21:59PM +0800, Peter Chen wrote:
+> > On Thu, Jul 23, 2015 at 11:37:24AM +0800, Li Jun wrote:
+> > > Change for v8:
+> > > - Add Peter's ACk for chipidea driver; and Roger's Reviewed-by for patch
+> > >   07, 21~23.
+> > > - Add ci->is_otg condition before enable ci->gadget.is_otg for chipidea
+> > >   driver in patch 8.
+> > > 
+> > 
+> > Hi Felipe,
+> > 
+> > For chipidea patches in this series, help to queue them in your tree 
+> > please, thanks.
 > 
-> On the MT8173 the clocks are provided by different units. To enable
-> the critical clocks we must be sure that all parent clocks are already
-> registered, otherwise the parents of the critical clocks end up being
-> unused and get disabled later.
+> all there, please make sure they're correct. There were so many versions
+> of this series that I might have picked up the wrong one :-p
 > 
-> On MT8173, for example, it is the CLK_TOP clocks that have CLK_APMIXED
-> PLLs as their parents, so we cannot enable the CLK_TOP critical clocks
-> until the CLK_APMIXED clocks have all been registered.
-> 
-> To find a place where all parents are registered we try each time
-> after we've registered some clocks if all known providers are present
-> now and only then we enable the critical clocks.
-> 
-> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-> Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
-> ---
 
-Please move up to v4.2-rc2 so that this patch can be dropped. I
-already applied this and sent it off to Linus so it's in -rc2.
+Patch [8/23]: "usb: chipidea: set usb otg capabilities", you picked up the V7,
+I have a small change for V8, others are correct.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Li Jun
+
+> cheers
+> 
+> -- 
+> balbi
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
