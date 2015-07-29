@@ -1,44 +1,47 @@
-From: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Subject: [PATCH v3 6/7] iio: Add ABI documentation for debounce_time
-Date: Wed, 29 Jul 2015 15:57:34 +0300
-Message-ID: <1438174654-19333-1-git-send-email-vladimir.barinov@cogentembedded.com>
-References: <1438174469-19054-1-git-send-email-vladimir.barinov@cogentembedded.com>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH 7/7] ARM64: zynqmp: Add eeprom memories on i2c bus
+Date: Wed, 29 Jul 2015 15:04:32 +0200
+Message-ID: <55B8CF60.2050305@xilinx.com>
+References: <48a75b64b05dc094e34fe27e5d03552dbfe77fe2.1437990464.git.michal.simek@xilinx.com>
+ <84f7d2137afdc5581c1d5d9b27feb2c5e5592308.1437990464.git.michal.simek@xilinx.com>
+ <CAKfKVtG-Uq0aJYnLqACO30mNj=D7+7y5skhf8JSqnWAgoJNk7w@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1438174469-19054-1-git-send-email-vladimir.barinov@cogentembedded.com>
+In-Reply-To: <CAKfKVtG-Uq0aJYnLqACO30mNj=D7+7y5skhf8JSqnWAgoJNk7w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, cory.tusar@pid1solutions.com
+To: Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>, Michal Simek <michal.simek@xilinx.com>
+Cc: linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, monstr@monstr.eu, Pawel Moll <pawel.moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Suneel Garapati <suneel.garapati@xilinx.com>, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Add ABI documentation for debounce_time
+On 07/27/2015 12:01 PM, Shubhrajyoti Datta wrote:
+> Hi,
+> 
+> On Mon, Jul 27, 2015 at 3:18 PM, Michal Simek <michal.simek@xilinx.com> wrote:
+>> Add i2c eeprom memories on i2c bus.
+>>
+>> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+>> ---
+>>
+>>  arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts | 18 ++++++++++++++++++
+>>  1 file changed, 18 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts b/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
+>> index 206e18eca2fb..47debdcbefbf 100644
+>> --- a/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
+>> +++ b/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
+>> @@ -36,6 +36,24 @@
+>>         status = "okay";
+>>  };
+>>
+>> +&i2c0 {
+>> +       status = "okay";
+>> +       clock-frequency = <100000>;
+> If I am not wrong eeprom could work at 400k Could we make that as the speed.
 
-Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
----
-Changes in version 3:
-- initially added
+I was retesting that and 400k works on this emulation platform too. I
+will send v2.
 
- Documentation/ABI/testing/sysfs-bus-iio | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
-index 09eac44..65bf49e 100644
---- a/Documentation/ABI/testing/sysfs-bus-iio
-+++ b/Documentation/ABI/testing/sysfs-bus-iio
-@@ -539,6 +539,15 @@ Description:
- 		specified and unique if the output corresponds to a single
- 		channel.
- 
-+What:		/sys/bus/iio/devices/iio:deviceX/debounce_time
-+Date:		July 2015
-+KernelVersion:	4.2.0
-+Contact:	linux-iio@vger.kernel.org
-+Description:
-+		Specifies number of milliseconds in which we perform hardware or
-+		software debouncing. If value is set to 0 then debouncing is
-+		disabled.
-+
- What:		/sys/bus/iio/devices/iio:deviceX/events
- KernelVersion:	2.6.35
- Contact:	linux-iio@vger.kernel.org
--- 
-1.9.1
+Thanks,
+Michal
