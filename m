@@ -1,109 +1,176 @@
-From: nick <xerofoify@gmail.com>
-Subject: Re: [PATCH 03/12] mtd: nand: omap: Move IRQ handling from GPMC to
- NAND driver
-Date: Wed, 29 Jul 2015 08:13:24 -0400
-Message-ID: <55B8C364.4030203@gmail.com>
-References: <1436531019-18088-1-git-send-email-rogerq@ti.com>
- <1436531019-18088-4-git-send-email-rogerq@ti.com>
- <20150713071008.GC26485@atomide.com> <55A38D2E.9010500@ti.com>
- <20150713124059.GF26485@atomide.com> <55B8C1D5.3090807@ti.com>
+From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Subject: Re: [PATCH v2 04/22] of/platform: add of_platform_device_find()
+Date: Wed, 29 Jul 2015 14:15:09 +0200
+Message-ID: <CAAObsKD0cpeMQa8mFGGtEaYUGn==o0q-n95+g-Mx17M3_94Qfg@mail.gmail.com>
+References: <1438089593-7696-1-git-send-email-tomeu.vizoso@collabora.com>
+ <1438089593-7696-5-git-send-email-tomeu.vizoso@collabora.com>
+ <CAL_JsqJGhFXDKuayuKc2E58X5A7ZGN=uYCVDLnXw_t3_auBg+w@mail.gmail.com>
+ <CAAObsKBfRLdPc0gs55ARfa+qZJAOEyEgRyTf8krZnQMb6-j03g@mail.gmail.com>
+ <CAL_Jsq+RqGAxHE5-ocD-htddBHckG24oZNqfgmMF3Jak6wDXBQ@mail.gmail.com>
+ <CAAObsKA+vMsgiC52jReJckeDjXhdd=_NBocFbMapdwFReiY1SQ@mail.gmail.com> <CAAObsKD9BN7dsEiNB=OvJkoOQPwxwnP794w=X4AwtYz3oxEJqw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <55B8C1D5.3090807@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Roger Quadros <rogerq@ti.com>, Tony Lindgren <tony@atomide.com>
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, ezequiel@vanguardiasur.com.ar, bcousson@baylibre.com, computersforpeace@gmail.com, dwmw2@infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <CAAObsKD9BN7dsEiNB=OvJkoOQPwxwnP794w=X4AwtYz3oxEJqw@mail.gmail.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 2015-07-29 08:06 AM, Roger Quadros wrote:
-> Tony,
-> 
-> On 13/07/15 15:40, Tony Lindgren wrote:
->> * Roger Quadros <rogerq@ti.com> [150713 03:07]:
->>> Tony,
->>>
->>> On 13/07/15 10:10, Tony Lindgren wrote:
->>>> * Roger Quadros <rogerq@ti.com> [150710 05:26]:
->>>>> Since the Interrupt Events are used only by the NAND driver,
->>>>> there is no point in managing the Interrupt registers
->>>>> in the GPMC driver and complicating it with irqchip modeling.
+On 29 July 2015 at 13:20, Tomeu Vizoso <tomeu.vizoso@collabora.com> wrote:
+> On 29 July 2015 at 08:14, Tomeu Vizoso <tomeu.vizoso@collabora.com> wrote:
+>> On 28 July 2015 at 17:31, Rob Herring <robherring2@gmail.com> wrote:
+>>> On Tue, Jul 28, 2015 at 8:54 AM, Tomeu Vizoso
+>>> <tomeu.vizoso@collabora.com> wrote:
+>>>> On 28 July 2015 at 15:39, Rob Herring <robherring2@gmail.com> wrote:
+>>>>> On Tue, Jul 28, 2015 at 8:19 AM, Tomeu Vizoso
+>>>>> <tomeu.vizoso@collabora.com> wrote:
+>>>>>> From an arbitrary node in the tree, find the enclosing node that
+>>>>>> corresponds to a platform device, as registered by
+>>>>>> of_platform_populate().
+>>>>>>
+>>>>>> This can be used to find out what device needs to be probed so the
+>>>>>> dependency described by a given node is made available.
+>>>>>>
+>>>>>> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+>>>>>> ---
+>>>>>>
+>>>>>> Changes in v2:
+>>>>>> - Move the logic for finding a platform device from its firmware node to
+>>>>>>   of/platform.c as it's not needed for ACPI nodes.
+>>>>>>
+>>>>>>  drivers/of/platform.c       | 60 +++++++++++++++++++++++++++++++++++++++++++++
+>>>>>>  include/linux/of_platform.h |  1 +
+>>>>>>  2 files changed, 61 insertions(+)
+>>>>>>
+>>>>>> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+>>>>>> index ff27494cda8c..89c5cd513027 100644
+>>>>>> --- a/drivers/of/platform.c
+>>>>>> +++ b/drivers/of/platform.c
+>>>>>> @@ -501,6 +501,66 @@ void of_platform_depopulate(struct device *parent)
+>>>>>>  }
+>>>>>>  EXPORT_SYMBOL_GPL(of_platform_depopulate);
+>>>>>>
+>>>>>> +static bool of_is_platform(struct device_node *np)
+>>>>>> +{
+>>>>>> +       int count;
+>>>>>> +
+>>>>>> +       count = of_property_count_strings(np, "compatible");
+>>>>>> +
+>>>>>> +       /* The node has to have a compatible string */
+>>>>>> +       if (!count)
+>>>>>> +               return false;
+>>>>>> +
+>>>>>> +       /* But it cannot be just a simple memory-mapped bus */
+>>>>>> +       if (count == 1 && of_match_node(of_default_bus_match_table, np))
+>>>>>> +               return false;
+>>>>>> +
+>>>>>> +       /* But AMBA devices aren't platform devices */
+>>>>>> +       if (of_device_is_compatible(np, "arm,primecell"))
+>>>>>> +               return false;
+>>>>>> +
+>>>>>> +       /* Node is immediately below root */
+>>>>>> +       if (!np->parent || !np->parent->parent)
+>>>>>> +               return true;
+>>>>>> +
+>>>>>> +       /* If it's a node in a simple memory-mapped bus */
+>>>>>> +       if (of_match_node(of_default_bus_match_table, np->parent))
+>>>>>> +               return true;
+>>>>>
+>>>>> This seems really fragile.
 >>>>
->>>> I don't think it's a good idea to allow external drivers to
->>>> tinker directly with GPMC registers. How about just set up GPMC
->>>> as an irqchip for the edge detection interrupts?
+>>>> I think this finding logic matches the logic for registering platform
+>>>> devices in of_platform_populate and also what is documented in
+>>>> Documentation/devicetree/usage-model.txt.
+>>>
+>>> Right. So now we have that logic in 2 places. One is descending from
+>>> the root and one is walking up from the child. That's an opportunity
+>>> for some mismatch.
+>>
+>> Definitely.
+>>
+>>>>> What about platform devices which are
+>>>>> children of MFDs but are not "simple-mfd"?
 >>>>
->>>> I think we already have devices with multiple NAND chips. And
->>>> there's nothing stopping other drivers from using the edge
->>>> detection interrupts.
+>>>> This code should deal fine with those (the boards I tested with do
+>>>> have them). It probes the mfd master, and that in turn will call
+>>>> mfd_add_devices causing the target device to be probed.
 >>>
->>> OK. The GPMC_IRQ registers manage 2 NAND specific interrupts
->>> (terminalcount and fifo) and 'n' WAIT pin edge interrupts.
+>>> I don't see how this function would ever return true in this case
+>>> unless you put the MFD at the root level. The only other way to return
+>>> true is matching on of_default_bus_match_table for the parent (i.e.
+>>> the MFD).
+>>
+>> Oops, you are right.
+>>
+>>>>> Does of_find_device_by_node not work for you?
+>>>>
+>>>> Well, the dependencies aren't always platform devices, that's why I
+>>>> need to go up the tree until I find a node that corresponds to a
+>>>> platform device that I can query and probe.
+>>>>
+>>>> If I had a way to get, say, a i2c device from its fwnode then I would
+>>>> just need to make sure that a device's parent is probed before probing
+>>>> it and everything would be cleaner in the OF case.
 >>>
->>>  So we can model this as a irqchip with 'n + 2' interrupts.
+>>> If you have the struct device from the device_node, then you should be
+>>> able to do this, right?
 >>
->> OK
-> 
-> For the wait pins irqchip is not sufficient and it needs to be gpiochip
-> with irqchip. Waitpin status can be read from GPIO_STATUS register.
-> 
-> Just getting the interrupt is not enough and we want to know if the
-> line is high or low. That is how nand->dev_ready works.
-> 
-> How about having 2 IRQ domains?
-> One is irqchip with 2 interrupts (terminalcount and fifo) and second is
-> gpiochip + irqchip for the n wait pins.
-> 
-> The nand driver can then be modified to use GPIO to get Read/Busy
-> pin status from the wait pin.
-> 
-> cheers,
-> -roger
-> 
-Doesn't OMAP boards support shared IRQs and if so why not share them across one
-IRQ domain if possible to save IRQ domains for other hardware that needs its 
-own IRQ domain. This is just a suggestion through as I don't have the hardware
-spec sheet on me Roger.
-Nick 
->>  
->>> We need to take care that if a GPMC chip select needs a
->>> wait pin then it can't be used as a generic interrupt.
+>> Yes, if I could go back from the device_node to the struct device that
+>> was registered from it, for all buses, then all this would be much
+>> simpler and more robust. It would basically work like in the ACPI
+>> case.
+>>
+>> I will play with this idea.
+>>
+>>>>> That is probably not the
+>>>>> most efficient search, but we could fix that. We could add struct
+>>>>> device ptr to struct device_node and check without searching for
+>>>>> example.
+>>>>
+>>>> That would be great, but I thought there was an issue with a OF node
+>>>> being able to be related to more than one struct device (but I haven't
+>>>> found this myself yet).
 >>>
->>> We need to get rid of omap_dev_ready() in nand/omap2.c as
->>> it accesses the GPMC_STATUS register directly. Plus it is
->>> hard coded to only monitor wait0 pin.
+>>> I think it pretty much should be one to one. I'm not aware of any
+>>> examples where that is not the case. This function would already be
+>>> broken if you could have more than one struct device.
 >>
->> OK
->>  
->>> What is the best map we should use for irqchip?
->>> Some Socs have 4 WAIT pins, some have 3 and some have 2.
->>>
->>> Should we start with 0,1,2, for the wait pins and use the next
->>> available free one for the NAND?
->>
->> Maybe we can just use the bits defined for each SoC in the
->> GPMC_IRQSTATUS register for the mapping?  
->> Regards,
->>
->> Tony
->>
-> 
-> ______________________________________________________
-> Linux MTD discussion mailing list
-> http://lists.infradead.org/mailman/listinfo/linux-mtd/
-> 
+>> Well, for platform devices we currently know that there can only be
+>> one struct device for a given device_node, but that's not so clear for
+>> other devices.
+>
+> Just found this case:
+>
+> http://lxr.free-electrons.com/source/drivers/spi/spi-tegra114.c#L1124
+>
+> Looks like SPI master devices point to the same device_node as the
+> platform device that registers them.
 
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+And finally found the email that warned me against it:
+
+http://lkml.kernel.org/g/20140514140534.897F8C4153D@trevor.secretlab.ca
+
+Regards,
+
+Tomeu
+
+> Regards,
+>
+> Tomeu
+>
+>>> There is an issue where you could have 2 drivers match the same node,
+>>> but on different compatible strings. But that's a different issue.
+>>
+>> Yup.
+>>
+>> Thanks,
+>>
+>> Tomeu
+>>
+>>> Rob
+>>> --
+>>> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+>>> the body of a message to majordomo@vger.kernel.org
+>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>> Please read the FAQ at  http://www.tux.org/lkml/
