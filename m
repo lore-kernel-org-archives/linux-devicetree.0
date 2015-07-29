@@ -1,208 +1,172 @@
-From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v3 6/6] dts: mt8173: Add iommu/smi nodes for mt8173
-Date: Wed, 29 Jul 2015 15:29:16 +0800
-Message-ID: <1438154956.25925.132.camel@mhfsdcap03>
-References: <1437037475-9065-1-git-send-email-yong.wu@mediatek.com>
-	 <1437037475-9065-7-git-send-email-yong.wu@mediatek.com>
-	 <CAGS+omB5xS8LoQR9-S8iqhdsRb4OWQ_B656dJSincLZ9nby1ZA@mail.gmail.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+	<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [RFC] improve binding for linux,wdt-gpio
+Date: Wed, 29 Jul 2015 09:35:13 +0200
+Message-ID: <20150729073513.GB15360@pengutronix.de>
+References: <1438115628-2819-1-git-send-email-u.kleine-koenig@pengutronix.de>
+ <20150728212155.GA18137@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGS+omB5xS8LoQR9-S8iqhdsRb4OWQ_B656dJSincLZ9nby1ZA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150728212155.GA18137-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:IOMMU DRIVERS" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, cloud.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2015-07-23 at 22:40 +0800, Daniel Kurtz wrote:
-> Hi Yong,
-> 
-> On Thu, Jul 16, 2015 at 5:04 PM, Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> >
-> > This patch add the iommu/larbs nodes for mt8173
-> 
-> To what tree does this apply?
-> Please rebase these patches (especially this one) on an Matthias'
-> current v4.2-next/for-next.
+Hello Guenter,
 
-Hi Daniel,
-    Sorry for reply so late. I will rebase these patch next time.
-    And the m4u/smi dsti is based on clocks, So I have to add the
-patches of the latest MTK clocks[1] locally, then prepare this iommu
-dtsi patch.
+On Tue, Jul 28, 2015 at 02:21:55PM -0700, Guenter Roeck wrote:
+> On Tue, Jul 28, 2015 at 10:33:48PM +0200, Uwe Kleine-K=F6nig wrote:
+> > This is just a suggestion up to now, I don't have any code yet to s=
+hare.
+> >=20
+> > Apart from minor rewording to make the document easier to understan=
+d and
+> > less ambiguous the relevant changes are:
+> >=20
+> >  - add an "enable-gpio" property.
+> >    I admit the device I'm currently working with doesn't have this.
+> >    Still I imagine this to be a common hardware property. I added i=
+t
+> >    mainly to demonstrate the shortcomings of the existing binding.
+> >  - rename "gpios" to "trigger-gpio"
+> >    This is more descriptive. And given there is "enable-gpio" now, =
+too,
+> >    using plain "gpios" seems wrong.
+> >  - deprecate always-running
+> >    Apart from the description describing the driver behaviour and n=
+ot
+> >    the device property, always-running only seems to make sense in
+> >    combination with hw_algo =3D "level" and in reality should only
+> >    invalidate the sentence: "The watchdog timer is disabled when GP=
+IO is
+> >    left floating or connected to a three-state buffer."
+>=20
+> always-running is meant to indicate that the watchdog can not be stop=
+ped
+> (meaning a timer has to be used to send keepalives while the watchdog
+> device is closed). The documentation specifically states that.
+>=20
+> 	"If the watchdog timer cannot be disabled ..."
+>=20
+> How would you express that condition without always-running or a simi=
+lar
+> attribute ?  I am also not sure how that relates to hw_algo; I though=
+t
+> those properties are orthogonal.
+=46or hw_algo =3D "level" the inactive level of the gpio disables the
+watchdog (and resets the counter). So always-running doesn't make sense
+for this type.
 
-[1]:http://lists.infradead.org/pipermail/linux-mediatek/2015-July/001800.html
+> Of course, 'always-running' _may_ describe driver behavior, but that =
+doesn't
+Well in the current state of the binding document we have:
 
-> 
-> 
-> >
-> > Signed-off-by: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > ---
-> >  arch/arm64/boot/dts/mediatek/mt8173.dtsi |   81 ++++++++++++++++++++++++++++++
-> >  1 file changed, 81 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> > index e81ac1f..7b8e73c 100644
-> > --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> > +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> > @@ -14,6 +14,7 @@
-> >  #include <dt-bindings/clock/mt8173-clk.h>
-> >  #include <dt-bindings/interrupt-controller/irq.h>
-> >  #include <dt-bindings/interrupt-controller/arm-gic.h>
-> > +#include <dt-bindings/memory/mt8173-larb-port.h>
-> >  #include <dt-bindings/power/mt8173-power.h>
-> >  #include <dt-bindings/reset-controller/mt8173-resets.h>
-> >  #include "mt8173-pinfunc.h"
-> > @@ -240,6 +241,17 @@
-> >                         reg = <0 0x10200620 0 0x20>;
-> >                 };
-> >
-> > +               iommu: mmsys_iommu@10205000 {
-> 
-> This name should be generic, like this (this comment really applies to
-> the binding patch):
-> 
->    iommu: iommu@10205000
+	add this flag to have the driver keep toggling the signal
+	without a client.
 
-Thanks.
+Sure it is meant to describe a hardware specific property, but it talks
+about the driver.
 
-> 
-> > +                       compatible = "mediatek,mt8173-m4u";
-> > +                       reg = <0 0x10205000 0 0x1000>;
-> > +                       interrupts = <GIC_SPI 139 IRQ_TYPE_LEVEL_LOW>;
-> > +                       clocks = <&infracfg CLK_INFRA_M4U>;
-> > +                       clock-names = "bclk";
-> > +                       mediatek,larb = <&larb0 &larb1 &larb2
-> > +                                       &larb3 &larb4 &larb5>;
-> 
-> Tiny nit... please align the "&".
-> 
-> Otherwise, this one is:
-> 
-> Reviewed-by: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+I'd go for these properties then:
 
-Thanks very much. I will improve them next version.
-Look forward to that line:)
+	toggle-gpio: the gpio used to stroke the watchdog
+	enable-gpio: optional, the gpio to enable and disable the watchdog
+	disable-on-tri-state: optional, signals that the watchdog can
+		be stopped by setting the trigger-gpio to tri-state.
+	compatible, hw_algo and hw_margin_ms: as before.
+	=09
+I think there is no need for a property that signals that the watchdog
+is unstoppable. For level-gpio-watchdogs you can do it by setting the
+trigger gpio to inactive, and you cannot stop level-gpio-watchdogs
+unless enable-gpio or disable-on-tri-state is specified.
+If we ever feel the need to describe a gpio watchdog with a input that
+starts the device but cannot stop it, I'd suggest to use "start-gpio"
+for that one.
 
-> 
-> Thanks!
-> -Dan
-> 
-> > +                       #iommu-cells = <2>;
-> > +               };
-> > +
-> >                 apmixedsys: clock-controller@10209000 {
-> >                         compatible = "mediatek,mt8173-apmixedsys";
-> >                         reg = <0 0x10209000 0 0x1000>;
-> > @@ -401,29 +413,98 @@
-> >                         #clock-cells = <1>;
-> >                 };
-> >
-> > +               larb0: larb@14021000 {
-> > +                       compatible = "mediatek,mt8173-smi-larb";
-> > +                       reg = <0 0x14021000 0 0x1000>;
-> > +                       mediatek,smi = <&smi_common>;
-> > +                       power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
-> > +                       clocks = <&mmsys CLK_MM_SMI_LARB0>,
-> > +                                <&mmsys CLK_MM_SMI_LARB0>;
-> > +                       clock-names = "apb", "smi";
-> > +               };
-> > +
-> > +               smi_common: smi@14022000 {
-> > +                       compatible = "mediatek,mt8173-smi";
-> > +                       reg = <0 0x14022000 0 0x1000>;
-> > +                       power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
-> > +                       clocks = <&mmsys CLK_MM_SMI_COMMON>,
-> > +                                <&mmsys CLK_MM_SMI_COMMON>;
-> > +                       clock-names = "apb", "smi";
-> > +               };
-> > +
-> > +               larb4: larb@14027000 {
-> > +                       compatible = "mediatek,mt8173-smi-larb";
-> > +                       reg = <0 0x14027000 0 0x1000>;
-> > +                       mediatek,smi = <&smi_common>;
-> > +                       power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
-> > +                       clocks = <&mmsys CLK_MM_SMI_LARB4>,
-> > +                                <&mmsys CLK_MM_SMI_LARB4>;
-> > +                       clock-names = "apb", "smi";
-> > +               };
-> > +
-> >                 imgsys: imgsys@15000000 {
-> >                         compatible = "mediatek,mt8173-imgsys", "syscon";
-> >                         reg = <0 0x15000000 0 0x1000>;
-> >                         #clock-cells = <1>;
-> >                 };
-> >
-> > +               larb2: larb@15001000 {
-> > +                       compatible = "mediatek,mt8173-smi-larb";
-> > +                       reg = <0 0x15001000 0 0x1000>;
-> > +                       mediatek,smi = <&smi_common>;
-> > +                       power-domains = <&scpsys MT8173_POWER_DOMAIN_ISP>;
-> > +                       clocks = <&imgsys CLK_IMG_LARB2_SMI>,
-> > +                                <&imgsys CLK_IMG_LARB2_SMI>;
-> > +                       clock-names = "apb", "smi";
-> > +               };
-> > +
-> >                 vdecsys: vdecsys@16000000 {
-> >                         compatible = "mediatek,mt8173-vdecsys", "syscon";
-> >                         reg = <0 0x16000000 0 0x1000>;
-> >                         #clock-cells = <1>;
-> >                 };
-> >
-> > +               larb1: larb@16010000 {
-> > +                       compatible = "mediatek,mt8173-smi-larb";
-> > +                       reg = <0 0x16010000 0 0x1000>;
-> > +                       mediatek,smi = <&smi_common>;
-> > +                       power-domains = <&scpsys MT8173_POWER_DOMAIN_VDEC>;
-> > +                       clocks = <&vdecsys CLK_VDEC_CKEN>,
-> > +                                <&vdecsys CLK_VDEC_LARB_CKEN>;
-> > +                       clock-names = "apb", "smi";
-> > +               };
-> > +
-> >                 vencsys: vencsys@18000000 {
-> >                         compatible = "mediatek,mt8173-vencsys", "syscon";
-> >                         reg = <0 0x18000000 0 0x1000>;
-> >                         #clock-cells = <1>;
-> >                 };
-> >
-> > +               larb3: larb@18001000 {
-> > +                       compatible = "mediatek,mt8173-smi-larb";
-> > +                       reg = <0 0x18001000 0 0x1000>;
-> > +                       mediatek,smi = <&smi_common>;
-> > +                       power-domains = <&scpsys MT8173_POWER_DOMAIN_VENC>;
-> > +                       clocks = <&vencsys CLK_VENC_CKE1>,
-> > +                                <&vencsys CLK_VENC_CKE0>;
-> > +                       clock-names = "apb", "smi";
-> > +               };
-> > +
-> >                 vencltsys: vencltsys@19000000 {
-> >                         compatible = "mediatek,mt8173-vencltsys", "syscon";
-> >                         reg = <0 0x19000000 0 0x1000>;
-> >                         #clock-cells = <1>;
-> >                 };
-> > +
-> > +               larb5: larb@19001000 {
-> > +                       compatible = "mediatek,mt8173-smi-larb";
-> > +                       reg = <0 0x19001000 0 0x1000>;
-> > +                       mediatek,smi = <&smi_common>;
-> > +                       power-domains = <&scpsys MT8173_POWER_DOMAIN_VENC_LT>;
-> > +                       clocks = <&vencltsys CLK_VENCLT_CKE1>,
-> > +                                <&vencltsys CLK_VENCLT_CKE0>;
-> > +                       clock-names = "apb", "smi";
-> > +               };
-> >         };
-> >  };
-> >
-> > --
-> > 1.7.9.5
-> >
-> 
-> 
-> 
+> have to be the case. There are lots of watchdogs out there which can =
+not be
+> stopped. Some of them run all the time, others can not be stopped onc=
+e
+> started.
+Yeah, I'm aware of that. For this driver however I wouldn't expect that
+you have a dedicated enable-gpio if you cannot disable the device with =
+it.
+=46or hw_algo =3D "level" there is probably no device with an enable in=
+put
+and for hw_algo =3D "toggle" any sane hardware engineer would simply
+enable the watchdog once the first toggle is detected on WDI. (OK,
+assuming hardware engineers being sane turned out to be a weak argument
+often in the past.)
 
+> That gets us into the rat-hole of arguing if property X describes dri=
+ver
+> behavior or the hardware, and of rejecting properties because they ma=
+y
+> be driver descriptions in some use cases (because 'always-running' ca=
+n
+> be set even if the hardware doesn't mandate it, making it driver beha=
+vior).
+> I'd rather not go there.
+I think we agree here, that "always-running" is a hardware property.
 
+> >    With this semantic using a property "disable-on-tri-state" sound=
+s
+> >    more sensible. And note that even the following would make sense
+> >    hardware-wise, while the device tree looks stupid:
+> >=20
+> > 	watchdog {
+> > 		compatible =3D "linux,wdt-gpio";
+> > 		trigger-gpio =3D ...;
+> > 		hw_algo =3D "toggle";
+> > 		always-running;
+> > 		enable-gpio =3D ...;
+> > 	};
+> >=20
+> >    (i.e. always-running, but disable possible by a dedicated gpio.)
+> >=20
+> It might also mean that _enable_ is possible with a dedicated gpio.
+> That doesn't mean it can be stopped once started. Again, there are lo=
+ts
+> of watchdogs out there which can be enabled/started but not stopped.
+>=20
+> > I'm aware that using ...-gpios is more common than ...-gpio. I don'=
+t
+> > feel strong here, but as only a single gpio makes sense here, havin=
+g
+> > -gpios seems wrong.
+> >=20
+> Documentation/devicetree/bindings/gpio/gpio.txt states that gpio pin
+> references should be named <name>-gpios. It even lists examples such =
+as
+>=20
+> 	enable-gpios =3D <&gpio2 2>;
+>=20
+> I thought this was a hard rule, and I seem to recall requests to chan=
+ge
+> something-gpio to something-spios, but I may be wrong.
+Yeah, I'm aware of that. I talked about that in #armlinux yesterday, an=
+d
+Mark Brown (added to Cc:) said:
+
+	Well, I'd prefer to change the standard TBH and allow singular.
+	This keeps coming up and causing confusion for no good reason.
+
+Sounds sensible in my ears.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
+    |
+Industrial Linux Solutions                 | http://www.pengutronix.de/=
+  |
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
