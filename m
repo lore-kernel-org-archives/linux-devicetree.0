@@ -1,81 +1,61 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: How-to: Uniquely identify a DT node in the driver?
-Date: Wed, 29 Jul 2015 17:39:58 +0100
-Message-ID: <20150729163958.GC5093@leverpostej>
-References: <20150728193833.GC51847@linaro.org>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [RFC PATCH 2/2] dt: spi: s3c64xx: add compatible to
+ controller-data
+Date: Wed, 29 Jul 2015 10:16:01 -0700
+Message-ID: <20150729171601.GT8876@google.com>
+References: <cover.1438170519.git.hramrach@gmail.com>
+ <557c1962448393b2a8736f26bfa2a3a5ba4aeb7a.1438170519.git.hramrach@gmail.com>
+ <20150729140046.GB11082@sirena.org.uk>
+ <CAOMqctTZVET=U=2o65HpWSm4W660XZtYYbBND2k4u9CnfjfMhQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20150728193833.GC51847-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOMqctTZVET=U=2o65HpWSm4W660XZtYYbBND2k4u9CnfjfMhQ@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Michal Suchanek <hramrach@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, David Woodhouse <dwmw2@infradead.org>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Padmavathi Venna <padma.kvr@gmail.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, MTD Maling List <linux-mtd@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 28, 2015 at 08:38:33PM +0100, Lina Iyer wrote:
-> Hello,
+On Wed, Jul 29, 2015 at 06:19:24PM +0200, Michal Suchanek wrote:
+> On 29 July 2015 at 16:00, Mark Brown <broonie@kernel.org> wrote:
+> > On Wed, Jul 29, 2015 at 12:19:57PM +0200, Michal Suchanek wrote:
+> >
+> > Please use subject lines matching the style for the subsytsem so people
+> > can spot that the patch is in some way relevant.
+> >
+> >> The controller-data subnode has no compatible. This can lead to other
+> >> drivers getting confused by it. Add a compatible to make devicetreee
+> >> unambiguous.
+> >
+> > I can't tell from this commit message what the issue you're trying to
+> > fix is, sorry.  Nodes without compatible strings are entirely normal and
+> > don't need compatible strings.  It sounds like a bug in whatever other
+> > driver is becoming confused.
 > 
-> I am looking to find a way to uniquely identify a device in the driver.
-> Here is an example -
+> The driver that gets confused is ofpart.
 > 
-> 	big: power-controller@1 {
-> 		compatible = "soc,foo";
-> 		...
-> 	};
-> 
-> 	little: power-controller@2 {
-> 		compatible = "soc,foo";
-> 		...
-> 	};
+> The two-line patch to allow it to just ignore controller-data has been
+> rejected on the basis that s3c64xx should use a compatible string
 
-Ok, so these are two instances of the same block...
+It wasn't outright rejected, but it was questioned.
 
-> In the driver for the power-controller foo.c, would like to do -
-> 
-> 	struct xyz {
-> 		const char *name;
-> 		...
-> 	};
-> 
-> 	static struct xyz a = {
-> 		.name = "big"; // To be associated with big device
-> 		...
-> 	};
-> 
-> 	static struct xyz b = {
-> 		.name = "little"; // To be associated with little device
-> 		...
-> 	};
+> because ofpart monopolizes all nodes without compatible which are
+> children of a mtd device. Devicetrees containing such nodes that are
+> not partitions are presumably invalid and should be rejected when
+> ofpart is compiled into the kernel.
 
-... which we're magically assuming things about.
+That characterization is currently correct. I'm not a fan of what ofpart
+does in the first place; I'd really like it if its binding was written
+in a way that made it more precise, but we have to live with what we
+have.
 
-> What would be the best way to associate the power-controller devices 'big'
-> and 'little' with 'a' and 'b' respectively? A string comparison would be
-> ideal but possibly can work with other ways.
-> 
-> I could think of adding compatibles to achieve this, but was hoping to
-> find something more elegant and appropriate. Or, is compatible the
-> recommended way to uniquely identify devices by the driver?
+I also didn't like that you were designing your system such that we were
+now keying off the fact that your node has no 'reg' property. This
+seemed awfully fragile. (Admittedly, so is ofpart.c.)
 
-There's no recommended way to uniquely idetnify a device, because in
-general it doesn't make sense to do so. Doing so implies intimate
-knowledge of a particular board and a lack of hardware description in
-the DT (otherwise you wouldn't need to associate additional information
-with the instance).
+All in all, if you have better suggestions, I'm all ears. (At first
+glance, I'm liking your patch 1 to help disambiguate both MTD partitions
+and the 'controller-data' node going forward.)
 
-Either you need to describe some characteristic of the device with some
-properties on each instance, or you need to derive that form the linkage
-to other devices.
-
-It looks like you're trying to give different behviours to "big" and
-"little" clusters, which doesn't really fit either case. What do you
-want to differ? e.g. is it just the set of OPPs?
-
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Brian
