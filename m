@@ -1,81 +1,85 @@
-From: Michal Suchanek <hramrach@gmail.com>
-Subject: [RFC PATCH 0/2] disambiguate s3c64xx controller-data and ofpart
- partition nodes
-Date: Wed, 29 Jul 2015 13:14:44 +0200
-Message-ID: <cover.1438168484.git.hramrach@gmail.com>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 03/12] mtd: nand: omap: Move IRQ handling from GPMC to
+ NAND driver
+Date: Wed, 29 Jul 2015 15:06:45 +0300
+Message-ID: <55B8C1D5.3090807@ti.com>
+References: <1436531019-18088-1-git-send-email-rogerq@ti.com> <1436531019-18088-4-git-send-email-rogerq@ti.com> <20150713071008.GC26485@atomide.com> <55A38D2E.9010500@ti.com> <20150713124059.GF26485@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Mark Brown <broonie@kernel.org>, Michal Suchanek <hramrach@gmail.com>, Padmavathi Venna <padma.kvr@gmail.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-spi@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150713124059.GF26485-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Tony,
 
-the ofpart partition nodes and s3c64xx controller-data nodes are both subnodes
-of MTD SPI slaves such as spi-nor.
+On 13/07/15 15:40, Tony Lindgren wrote:
+> * Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [150713 03:07]:
+>> Tony,
+>>
+>> On 13/07/15 10:10, Tony Lindgren wrote:
+>>> * Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [150710 05:26]:
+>>>> Since the Interrupt Events are used only by the NAND driver,
+>>>> there is no point in managing the Interrupt registers
+>>>> in the GPMC driver and complicating it with irqchip modeling.
+>>>
+>>> I don't think it's a good idea to allow external drivers to
+>>> tinker directly with GPMC registers. How about just set up GPMC
+>>> as an irqchip for the edge detection interrupts?
+>>>
+>>> I think we already have devices with multiple NAND chips. And
+>>> there's nothing stopping other drivers from using the edge
+>>> detection interrupts.
+>>
+>> OK. The GPMC_IRQ registers manage 2 NAND specific interrupts
+>> (terminalcount and fifo) and 'n' WAIT pin edge interrupts.
+>>
+>>  So we can model this as a irqchip with 'n + 2' interrupts.
+> 
+> OK
 
-When ofpart is compiled-in and no partitions are defined on a MTD SPI slave
-ofpart tries to parse the controller-data node, gets confused, mtd probe fails,
-and the mtd device is inaccessible.
+For the wait pins irqchip is not sufficient and it needs to be gpiochip
+with irqchip. Waitpin status can be read from GPIO_STATUS register.
 
-ofpart claims all subnodes of mtd devices which have no compatible and when
-there is a subnode but no partitions are found it reports error which is then
-propagated to mtd probe.
+Just getting the interrupt is not enough and we want to know if the
+line is high or low. That is how nand->dev_ready works.
 
-A simple fix that turns the error into a warning was rejected on the basis that
-the ofpart parser could then accept invalid devicetree as fallback.
+How about having 2 IRQ domains?
+One is irqchip with 2 interrupts (terminalcount and fifo) and second is
+gpiochip + irqchip for the n wait pins.
 
-https://www.mail-archive.com/linux-kernel%40vger.kernel.org/msg941351.html
+The nand driver can then be modified to use GPIO to get Read/Busy
+pin status from the wait pin.
 
-Firstly, the ofpart parser already does accept 'invalid' trees as fallback.
-Looking at the code it only requires that there is one mtd subnode that parses
-as partition and there can be arbitrary number of other nodes which were not
-understood. It only singles out the case when there are subnodes but none is
-understood as partition.
+cheers,
+-roger
 
-Secondly, the fact that a devicetree node is not understood by a particular
-driver does not make it 'invalid'.
-
-In my view either it is acceptable that nodes without compatible property exist
-and then drivers using such nodes should be ready to gracefully handle nodes
-that do not have compatible property but are meant for another driver. The
-s3c64xx driver already does this but ofpart does not.
-
-On the other hand, if not using a compatible property is not acceptable then
-both drivers should use a compatible property to reserve their subnodes for
-themselves and avoid any conflict.
-
-Either way I would like the maintainers of the conflicting drivers to agree on
-where compatible property should be and where not so that compiling-in ofpart
-does not make valid MTD devices inaccessible.
-
-The patches are only for illustration and are not meant to be included
-anywhere. They are not tested and miss adding the properties to tens of binding
-docs and dts files.
-
-Thanks
-
-Michal
-
-Michal Suchanek (2):
-  dt: mtd: ofpart: use compatible for partitions
-  dt: spi: s3c64xx: add compatible to controller-data
-
- .../devicetree/bindings/mtd/partition.txt          |  7 +++++-
- .../devicetree/bindings/spi/spi-samsung.txt        |  3 +++
- drivers/mtd/ofpart.c                               | 26 +++++++++++++---------
- drivers/spi/spi-s3c64xx.c                          |  4 ++++
- 4 files changed, 29 insertions(+), 11 deletions(-)
-
--- 
-2.1.4
+>  
+>> We need to take care that if a GPMC chip select needs a
+>> wait pin then it can't be used as a generic interrupt.
+>>
+>> We need to get rid of omap_dev_ready() in nand/omap2.c as
+>> it accesses the GPMC_STATUS register directly. Plus it is
+>> hard coded to only monitor wait0 pin.
+> 
+> OK
+>  
+>> What is the best map we should use for irqchip?
+>> Some Socs have 4 WAIT pins, some have 3 and some have 2.
+>>
+>> Should we start with 0,1,2, for the wait pins and use the next
+>> available free one for the NAND?
+> 
+> Maybe we can just use the bits defined for each SoC in the
+> GPMC_IRQSTATUS register for the mapping?  
+> Regards,
+> 
+> Tony
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
