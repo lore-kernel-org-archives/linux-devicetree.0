@@ -1,188 +1,207 @@
-From: Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
-Subject: Re: [PATCH v13 0/6] drm/layerscape: Add Freescale DCU DRM driver
-Date: Wed, 29 Jul 2015 09:21:56 +0200
-Message-ID: <20150729072156.GO16722@phenom.ffwll.local>
-References: <1438152892-11256-1-git-send-email-jianwei.wang.chn@gmail.com>
+From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v3 6/6] dts: mt8173: Add iommu/smi nodes for mt8173
+Date: Wed, 29 Jul 2015 15:29:16 +0800
+Message-ID: <1438154956.25925.132.camel@mhfsdcap03>
+References: <1437037475-9065-1-git-send-email-yong.wu@mediatek.com>
+	 <1437037475-9065-7-git-send-email-yong.wu@mediatek.com>
+	 <CAGS+omB5xS8LoQR9-S8iqhdsRb4OWQ_B656dJSincLZ9nby1ZA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1438152892-11256-1-git-send-email-jianwei.wang.chn-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <CAGS+omB5xS8LoQR9-S8iqhdsRb4OWQ_B656dJSincLZ9nby1ZA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jianwei Wang <jianwei.wang.chn-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, daniel.vetter-/w4YWyX8dFk@public.gmane.org, mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:IOMMU DRIVERS" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, cloud.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 29, 2015 at 02:54:46PM +0800, Jianwei Wang wrote:
-> Changed in v13
-> -set regmap_config.cache_type to REGCACHE_RBTREE
-> -add call drm_modeset_lock_all before drm_mode_config_reset
+On Thu, 2015-07-23 at 22:40 +0800, Daniel Kurtz wrote:
+> Hi Yong,
+> 
+> On Thu, Jul 16, 2015 at 5:04 PM, Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> >
+> > This patch add the iommu/larbs nodes for mt8173
+> 
+> To what tree does this apply?
+> Please rebase these patches (especially this one) on an Matthias'
+> current v4.2-next/for-next.
 
-This was a bug in one of my recently merged patches, please don't call
-drm_modeset_lock_all before config_reset. Instead please test "drm: Fixup
-locking WARNINGs in drm_mode_config_reset" which should address this
-problem too.
+Hi Daniel,
+    Sorry for reply so late. I will rebase these patch next time.
+    And the m4u/smi dsti is based on clocks, So I have to add the
+patches of the latest MTK clocks[1] locally, then prepare this iommu
+dtsi patch.
 
-Thanks, Daniel
+[1]:http://lists.infradead.org/pipermail/linux-mediatek/2015-July/001800.html
 
-> -adjust patch order for creating pull request
 > 
-> Changed in v12
 > 
-> -Add one patch for MAINTAINER entry for drm/layerscape
-> Adviced by Daniel Vetter
-> -Add #include <drm/drm_crtc_helper.h>
+> >
+> > Signed-off-by: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > ---
+> >  arch/arm64/boot/dts/mediatek/mt8173.dtsi |   81 ++++++++++++++++++++++++++++++
+> >  1 file changed, 81 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> > index e81ac1f..7b8e73c 100644
+> > --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> > +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> > @@ -14,6 +14,7 @@
+> >  #include <dt-bindings/clock/mt8173-clk.h>
+> >  #include <dt-bindings/interrupt-controller/irq.h>
+> >  #include <dt-bindings/interrupt-controller/arm-gic.h>
+> > +#include <dt-bindings/memory/mt8173-larb-port.h>
+> >  #include <dt-bindings/power/mt8173-power.h>
+> >  #include <dt-bindings/reset-controller/mt8173-resets.h>
+> >  #include "mt8173-pinfunc.h"
+> > @@ -240,6 +241,17 @@
+> >                         reg = <0 0x10200620 0 0x20>;
+> >                 };
+> >
+> > +               iommu: mmsys_iommu@10205000 {
 > 
-> Changed in V11
-> -set regmap_config.cache_type to REGCACHE_FLAT
-> Advanced by Alexander Stein
+> This name should be generic, like this (this comment really applies to
+> the binding patch):
 > 
-> Changed in V10
-> -adjust commit log, remove meaningless statement
-> -cleanup code for it's format and style.
-> -remove platform related code out, including of tcon(vf610) and scfg(ls1021a)
-> -remove useless sentences: encoder->crtc = crtc; and connector->encoder = encoder; and so on
-> -add vendor prefix for panel pandle
-> -make a DCU_CTRLDESCLN(x, y)  to avoid high repetition
-> -introduce per-SoC capability structure to avoid check on the OF node's compatible string
-> -Implement some functions: crtc enable and disable, enable and disable VBLANK, plane atomic_disable and atomic_enable -atomic_check and so on
-> -move DCU config sentence to the right place
-> -move get resources functions to  ->probe()
-> -move fsl,dcu.txt to video/ folder
-> -add big-endian describe
-> All advaced by Thierry Reding
+>    iommu: iommu@10205000
+
+Thanks.
+
 > 
-> Changed in V9
+> > +                       compatible = "mediatek,mt8173-m4u";
+> > +                       reg = <0 0x10205000 0 0x1000>;
+> > +                       interrupts = <GIC_SPI 139 IRQ_TYPE_LEVEL_LOW>;
+> > +                       clocks = <&infracfg CLK_INFRA_M4U>;
+> > +                       clock-names = "bclk";
+> > +                       mediatek,larb = <&larb0 &larb1 &larb2
+> > +                                       &larb3 &larb4 &larb5>;
 > 
-> put node after calling of_drm_find_panel
-> split clk_prepare_enable() to clk_prepare() and clk_enable(), just call clk_prepare once, and check return value
-> check regmap_write/regmap_read return return value
-> remove useless ".owner    = THIS_MODULE,"
-> All advanced by Mark Yao
+> Tiny nit... please align the "&".
 > 
-> Changed in V8
+> Otherwise, this one is:
 > 
-> - Remove useless code
-> #define DRIVER_NAME     "fsl-dcu-drm"
-> MODULE_ALIAS("platform:fsl-dcu-drm");
-> Adviced by Paul Bolle
+> Reviewed-by: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+
+Thanks very much. I will improve them next version.
+Look forward to that line:)
+
 > 
-> Changed in V7
+> Thanks!
+> -Dan
 > 
-> - Remove redundant functions and replace deprecated hook
-> Adviced by Daniel Vetter
-> - Replace drm_platform_init with drm_dev_alloc/register
-> Adviced by Daniel Vetter
+> > +                       #iommu-cells = <2>;
+> > +               };
+> > +
+> >                 apmixedsys: clock-controller@10209000 {
+> >                         compatible = "mediatek,mt8173-apmixedsys";
+> >                         reg = <0 0x10209000 0 0x1000>;
+> > @@ -401,29 +413,98 @@
+> >                         #clock-cells = <1>;
+> >                 };
+> >
+> > +               larb0: larb@14021000 {
+> > +                       compatible = "mediatek,mt8173-smi-larb";
+> > +                       reg = <0 0x14021000 0 0x1000>;
+> > +                       mediatek,smi = <&smi_common>;
+> > +                       power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
+> > +                       clocks = <&mmsys CLK_MM_SMI_LARB0>,
+> > +                                <&mmsys CLK_MM_SMI_LARB0>;
+> > +                       clock-names = "apb", "smi";
+> > +               };
+> > +
+> > +               smi_common: smi@14022000 {
+> > +                       compatible = "mediatek,mt8173-smi";
+> > +                       reg = <0 0x14022000 0 0x1000>;
+> > +                       power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
+> > +                       clocks = <&mmsys CLK_MM_SMI_COMMON>,
+> > +                                <&mmsys CLK_MM_SMI_COMMON>;
+> > +                       clock-names = "apb", "smi";
+> > +               };
+> > +
+> > +               larb4: larb@14027000 {
+> > +                       compatible = "mediatek,mt8173-smi-larb";
+> > +                       reg = <0 0x14027000 0 0x1000>;
+> > +                       mediatek,smi = <&smi_common>;
+> > +                       power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
+> > +                       clocks = <&mmsys CLK_MM_SMI_LARB4>,
+> > +                                <&mmsys CLK_MM_SMI_LARB4>;
+> > +                       clock-names = "apb", "smi";
+> > +               };
+> > +
+> >                 imgsys: imgsys@15000000 {
+> >                         compatible = "mediatek,mt8173-imgsys", "syscon";
+> >                         reg = <0 0x15000000 0 0x1000>;
+> >                         #clock-cells = <1>;
+> >                 };
+> >
+> > +               larb2: larb@15001000 {
+> > +                       compatible = "mediatek,mt8173-smi-larb";
+> > +                       reg = <0 0x15001000 0 0x1000>;
+> > +                       mediatek,smi = <&smi_common>;
+> > +                       power-domains = <&scpsys MT8173_POWER_DOMAIN_ISP>;
+> > +                       clocks = <&imgsys CLK_IMG_LARB2_SMI>,
+> > +                                <&imgsys CLK_IMG_LARB2_SMI>;
+> > +                       clock-names = "apb", "smi";
+> > +               };
+> > +
+> >                 vdecsys: vdecsys@16000000 {
+> >                         compatible = "mediatek,mt8173-vdecsys", "syscon";
+> >                         reg = <0 0x16000000 0 0x1000>;
+> >                         #clock-cells = <1>;
+> >                 };
+> >
+> > +               larb1: larb@16010000 {
+> > +                       compatible = "mediatek,mt8173-smi-larb";
+> > +                       reg = <0 0x16010000 0 0x1000>;
+> > +                       mediatek,smi = <&smi_common>;
+> > +                       power-domains = <&scpsys MT8173_POWER_DOMAIN_VDEC>;
+> > +                       clocks = <&vdecsys CLK_VDEC_CKEN>,
+> > +                                <&vdecsys CLK_VDEC_LARB_CKEN>;
+> > +                       clock-names = "apb", "smi";
+> > +               };
+> > +
+> >                 vencsys: vencsys@18000000 {
+> >                         compatible = "mediatek,mt8173-vencsys", "syscon";
+> >                         reg = <0 0x18000000 0 0x1000>;
+> >                         #clock-cells = <1>;
+> >                 };
+> >
+> > +               larb3: larb@18001000 {
+> > +                       compatible = "mediatek,mt8173-smi-larb";
+> > +                       reg = <0 0x18001000 0 0x1000>;
+> > +                       mediatek,smi = <&smi_common>;
+> > +                       power-domains = <&scpsys MT8173_POWER_DOMAIN_VENC>;
+> > +                       clocks = <&vencsys CLK_VENC_CKE1>,
+> > +                                <&vencsys CLK_VENC_CKE0>;
+> > +                       clock-names = "apb", "smi";
+> > +               };
+> > +
+> >                 vencltsys: vencltsys@19000000 {
+> >                         compatible = "mediatek,mt8173-vencltsys", "syscon";
+> >                         reg = <0 0x19000000 0 0x1000>;
+> >                         #clock-cells = <1>;
+> >                 };
+> > +
+> > +               larb5: larb@19001000 {
+> > +                       compatible = "mediatek,mt8173-smi-larb";
+> > +                       reg = <0 0x19001000 0 0x1000>;
+> > +                       mediatek,smi = <&smi_common>;
+> > +                       power-domains = <&scpsys MT8173_POWER_DOMAIN_VENC_LT>;
+> > +                       clocks = <&vencltsys CLK_VENCLT_CKE1>,
+> > +                                <&vencltsys CLK_VENCLT_CKE0>;
+> > +                       clock-names = "apb", "smi";
+> > +               };
+> >         };
+> >  };
+> >
+> > --
+> > 1.7.9.5
+> >
 > 
-> Changed in V6
 > 
-> - Add NEC nl4827hc19_05b panel to panel-simple.c
-> Adviced by Mark Yao
-> - Add DRIVER_ATOMIC for driver_features
-> Adviced by Mark Yao
-> - check fsl_dev if it's NULL at PM suspend/resume
-> Adviced by Mark Yao
-> 
-> Changed in V5
-> 
-> - Update commit message
-> - Add layer registers initialization
-> - Remove unused functions
-> - Rename driver folder
-> Adviced by Stefan Agner
-> - Move pixel clock control functions to fsl_dcu_drm_drv.c
-> - remove redundant enable the clock implicitly using regmap
-> - Add maintainer message
-> 
-> Changed in V4:
-> 
-> -This version doesn't have functionality changed
-> Just a minor adjustment.
-> 
-> Changed in V3:
-> 
-> - Test driver on Vybrid board and add compatible string
-> - Remove unused functions
-> - set default crtc for encoder
-> - replace legacy functions with atomic help functions
-> Adviced by Daniel Vetter
-> - Set the unique name of the DRM device
-> - Implement irq handle function for vblank interrupt
-> 
-> Changed in v2:
-> - Add atomic support
-> Adviced by Daniel Vetter
-> - Modify bindings file
-> - Rename node for compatibility
-> - Move platform related code out for compatibility
-> Adviced by Stefan Agner
-> 
-> This patch add support for Two Dimensional Animation and Compositing
-> Engine (2D-ACE) on the Freescale SoCs.
-> 
-> 2D-ACE is a Freescale display controller. 2D-ACE describes
-> the functionality of the module extremely well its name is a value
-> that cannot be used as a token in programming languages.
-> Instead the valid token "DCU" is used to tag the register names and
-> function names.
-> 
-> The Display Controller Unit (DCU) module is a system master that
-> fetches graphics stored in internal or external memory and displays
-> them on a TFT LCD panel. A wide range of panel sizes is supported
-> and the timing of the interface signals is highly configurable.
-> Graphics are read directly from memory and then blended in real-time,
-> which allows for dynamic content creation with minimal CPU
-> intervention.
-> 
-> The features:
-> (1) Full RGB888 output to TFT LCD panel.
-> (2) Blending of each pixel using up to 4 source layers
-> dependent
-> on size of panel.
-> (3) Each graphic layer can be placed with one pixel resolution
-> in either axis.
-> (4) Each graphic layer support RGB565 and RGB888 direct colors
-> without alpha channel and BGRA8888 BGRA4444 ARGB1555 direct
-> colors
-> with an alpha channel and YUV422 format.
-> (5) Each graphic layer support alpha blending with 8-bit
-> resolution.
-> 
-> .../devicetree/bindings/video/fsl,dcu.txt          |  22 ++
-> drivers/gpu/drm/Kconfig                            |   2 +
-> drivers/gpu/drm/Makefile                           |   1 +
-> drivers/gpu/drm/fsl-dcu/Kconfig                    |  18 +
-> drivers/gpu/drm/fsl-dcu/Makefile                   |   7 +
-> drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_crtc.c         | 208 +++++++++++
-> drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_crtc.h         |  19 +
-> drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_drv.c          | 404 +++++++++++++++++++++
-> drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_drv.h          | 197 ++++++++++
-> drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_fbdev.c        |  23 ++
-> drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_kms.c          |  45 +++
-> drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_output.h       |  33 ++
-> drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_plane.c        | 261 +++++++++++++
-> drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_plane.h        |  17 +
-> drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_rgb.c          | 182 ++++++++++
-> 15 files changed, 1439 insertions(+)
-> create mode 100644 Documentation/devicetree/bindings/video/fsl,dcu.txt
-> create mode 100644 drivers/gpu/drm/fsl-dcu/Kconfig
-> create mode 100644 drivers/gpu/drm/fsl-dcu/Makefile
-> create mode 100644 drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_crtc.c
-> create mode 100644 drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_crtc.h
-> create mode 100644 drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_drv.c
-> create mode 100644 drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_drv.h
-> create mode 100644 drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_fbdev.c
-> create mode 100644 drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_kms.c
-> create mode 100644 drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_output.h
-> create mode 100644 drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_plane.c
-> create mode 100644 drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_plane.h
-> create mode 100644 drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_rgb.c
 > 
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
