@@ -1,130 +1,58 @@
-From: nick <xerofoify@gmail.com>
-Subject: Re: [PATCH 03/12] mtd: nand: omap: Move IRQ handling from GPMC to
- NAND driver
-Date: Wed, 29 Jul 2015 10:08:04 -0400
-Message-ID: <55B8DE44.4070608@gmail.com>
-References: <1436531019-18088-1-git-send-email-rogerq@ti.com>
- <1436531019-18088-4-git-send-email-rogerq@ti.com>
- <20150713071008.GC26485@atomide.com> <55A38D2E.9010500@ti.com>
- <20150713124059.GF26485@atomide.com> <55B8C1D5.3090807@ti.com>
- <55B8C364.4030203@gmail.com> <55B8DAB9.7070602@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <55B8DAB9.7070602@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Roger Quadros <rogerq@ti.com>, Tony Lindgren <tony@atomide.com>
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, ezequiel@vanguardiasur.com.ar, bcousson@baylibre.com, computersforpeace@gmail.com, dwmw2@infradead.org
+From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2] ARM64: zynqmp: Add eeprom memories on i2c bus
+Date: Wed, 29 Jul 2015 16:19:34 +0200
+Message-ID: <827fe968a448dd25e133ce3509d91fd2482bd850.1438179569.git.michal.simek@xilinx.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, Suneel Garapati <suneel.garapati-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Add i2c eeprom memories on i2c bus.
 
+Signed-off-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+---
 
-On 2015-07-29 09:52 AM, Roger Quadros wrote:
-> On 29/07/15 15:13, nick wrote:
->>
->>
->> On 2015-07-29 08:06 AM, Roger Quadros wrote:
->>> Tony,
->>>
->>> On 13/07/15 15:40, Tony Lindgren wrote:
->>>> * Roger Quadros <rogerq@ti.com> [150713 03:07]:
->>>>> Tony,
->>>>>
->>>>> On 13/07/15 10:10, Tony Lindgren wrote:
->>>>>> * Roger Quadros <rogerq@ti.com> [150710 05:26]:
->>>>>>> Since the Interrupt Events are used only by the NAND driver,
->>>>>>> there is no point in managing the Interrupt registers
->>>>>>> in the GPMC driver and complicating it with irqchip modeling.
->>>>>>
->>>>>> I don't think it's a good idea to allow external drivers to
->>>>>> tinker directly with GPMC registers. How about just set up GPMC
->>>>>> as an irqchip for the edge detection interrupts?
->>>>>>
->>>>>> I think we already have devices with multiple NAND chips. And
->>>>>> there's nothing stopping other drivers from using the edge
->>>>>> detection interrupts.
->>>>>
->>>>> OK. The GPMC_IRQ registers manage 2 NAND specific interrupts
->>>>> (terminalcount and fifo) and 'n' WAIT pin edge interrupts.
->>>>>
->>>>>  So we can model this as a irqchip with 'n + 2' interrupts.
->>>>
->>>> OK
->>>
->>> For the wait pins irqchip is not sufficient and it needs to be gpiochip
->>> with irqchip. Waitpin status can be read from GPIO_STATUS register.
->>>
->>> Just getting the interrupt is not enough and we want to know if the
->>> line is high or low. That is how nand->dev_ready works.
->>>
->>> How about having 2 IRQ domains?
->>> One is irqchip with 2 interrupts (terminalcount and fifo) and second is
->>> gpiochip + irqchip for the n wait pins.
->>>
->>> The nand driver can then be modified to use GPIO to get Read/Busy
->>> pin status from the wait pin.
->>>
->>> cheers,
->>> -roger
->>>
->> Doesn't OMAP boards support shared IRQs and if so why not share them across one
->> IRQ domain if possible to save IRQ domains for other hardware that needs its 
->> own IRQ domain. This is just a suggestion through as I don't have the hardware
->> spec sheet on me Roger.
-> 
-> IRQ domain is a virtual abstraction introduced to prevent kernel irq number overlapping
-> in a single flat domain. I don't see what you can save by domain reuse.
-> Some memory maybe at most.
-> 
-> Shared interrupt is something totally different but we're trying to add real
-> hardware interrupts here. Didn't understand what you will share it with.
-> 
-> cheers,
-> -roger
-> 
-My question then is do these hardware interrupts need to be on their own interrupt line
-for the CPU or can they share a CPU line as my concern is if possible we may be able to
-save a interrupt line for other use. I known on Intel CPUs this is a very limited resource
-but not sure on OMAP based boards if not then just avoid my recommendations.
-Nick 
->> Nick 
->>>>  
->>>>> We need to take care that if a GPMC chip select needs a
->>>>> wait pin then it can't be used as a generic interrupt.
->>>>>
->>>>> We need to get rid of omap_dev_ready() in nand/omap2.c as
->>>>> it accesses the GPMC_STATUS register directly. Plus it is
->>>>> hard coded to only monitor wait0 pin.
->>>>
->>>> OK
->>>>  
->>>>> What is the best map we should use for irqchip?
->>>>> Some Socs have 4 WAIT pins, some have 3 and some have 2.
->>>>>
->>>>> Should we start with 0,1,2, for the wait pins and use the next
->>>>> available free one for the NAND?
->>>>
->>>> Maybe we can just use the bits defined for each SoC in the
->>>> GPMC_IRQSTATUS register for the mapping?  
->>>> Regards,
->>>>
->>>> Tony
->>>>
->>>
->>> ______________________________________________________
->>> Linux MTD discussion mailing list
->>> http://lists.infradead.org/mailman/listinfo/linux-mtd/
->>>
+Changes in v2:
+- Change eeprom max freq from 100k to 400k
 
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+---
+ arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts b/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
+index c5cc8dbd0968..3b1011169756 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
++++ b/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
+@@ -50,6 +50,24 @@
+ 	status = "okay";
+ };
+ 
++&i2c0 {
++	status = "okay";
++	clock-frequency = <400000>;
++	eeprom@54 {
++		compatible = "at,24c64";
++		reg = <0x54>;
++	};
++};
++
++&i2c1 {
++	status = "okay";
++	clock-frequency = <400000>;
++	eeprom@55 {
++		compatible = "at,24c64";
++		reg = <0x55>;
++	};
++};
++
+ &sata {
+ 	status = "okay";
+ 	ceva,broken-gen2;
+-- 
+2.3.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
