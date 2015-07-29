@@ -1,50 +1,81 @@
-From: Stefan Wahren <info-saaNCTdWVBT7BZbvpMY5sg@public.gmane.org>
-Subject: Re: [PATCH 1/2] spi: bcm2835: add spi-bcm2835aux driver for the
- auxiliar spi1 and spi2
-Date: Wed, 29 Jul 2015 18:37:32 +0200
-Message-ID: <55B9014C.7020105@lategoodbye.de>
-References: <1434980408-4086-1-git-send-email-kernel@martin.sperl.org>
- <55A0A150.3060809@wwwdotorg.org>
- <ECFBB7BF-1316-4565-B1F2-FB2651131882@martin.sperl.org>
- <55A49662.3000706@wwwdotorg.org>
- <2768BFA9-7FE9-4EDC-8692-AC3F070BD874@martin.sperl.org>
- <55AEF828.20908@wwwdotorg.org>
- <0125992E-40F4-4702-8404-2943FF9A8788@martin.sperl.org>
- <55B1BA7A.1090104@wwwdotorg.org>
- <9005ABEC-C60A-4814-AD60-AD5BB09808F2@martin.sperl.org>
- <55B6EE1A.2070605@wwwdotorg.org>
- <836DA157-3072-441A-A160-E1FDBB119E88@martin.sperl.org>
- <55B75E07.1080104@martin.sperl.org>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: How-to: Uniquely identify a DT node in the driver?
+Date: Wed, 29 Jul 2015 17:39:58 +0100
+Message-ID: <20150729163958.GC5093@leverpostej>
+References: <20150728193833.GC51847@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55B75E07.1080104-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150728193833.GC51847-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Martin,
+On Tue, Jul 28, 2015 at 08:38:33PM +0100, Lina Iyer wrote:
+> Hello,
+> 
+> I am looking to find a way to uniquely identify a device in the driver.
+> Here is an example -
+> 
+> 	big: power-controller@1 {
+> 		compatible = "soc,foo";
+> 		...
+> 	};
+> 
+> 	little: power-controller@2 {
+> 		compatible = "soc,foo";
+> 		...
+> 	};
 
-Am 28.07.2015 um 12:48 schrieb Martin Sperl:
-> On 28.07.2015 08:18, Martin Sperl wrote:
->> Hi Stephen!
->> But the bigger question you have not answered is: =93where should su=
-ch an
->> auxiliar driver go in the kernel tree?=94 i.e. which directory?
-> One thing: could the "module" be a regulator?
->
+Ok, so these are two instances of the same block...
 
-IMHO that won't be acceptable.
+> In the driver for the power-controller foo.c, would like to do -
+> 
+> 	struct xyz {
+> 		const char *name;
+> 		...
+> 	};
+> 
+> 	static struct xyz a = {
+> 		.name = "big"; // To be associated with big device
+> 		...
+> 	};
+> 
+> 	static struct xyz b = {
+> 		.name = "little"; // To be associated with little device
+> 		...
+> 	};
 
-How about a multifunction device driver (drivers/mfd)?
+... which we're magically assuming things about.
 
-Other candidates could be drivers/soc or drivers/misc.
+> What would be the best way to associate the power-controller devices 'big'
+> and 'little' with 'a' and 'b' respectively? A string comparison would be
+> ideal but possibly can work with other ways.
+> 
+> I could think of adding compatibles to achieve this, but was hoping to
+> find something more elegant and appropriate. Or, is compatible the
+> recommended way to uniquely identify devices by the driver?
 
-Regards Stefan
+There's no recommended way to uniquely idetnify a device, because in
+general it doesn't make sense to do so. Doing so implies intimate
+knowledge of a particular board and a lack of hardware description in
+the DT (otherwise you wouldn't need to associate additional information
+with the instance).
+
+Either you need to describe some characteristic of the device with some
+properties on each instance, or you need to derive that form the linkage
+to other devices.
+
+It looks like you're trying to give different behviours to "big" and
+"little" clusters, which doesn't really fit either case. What do you
+want to differ? e.g. is it just the set of OPPs?
+
+Thanks,
+Mark.
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
