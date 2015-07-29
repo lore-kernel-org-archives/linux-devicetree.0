@@ -1,112 +1,60 @@
-From: Tim Bird <tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] ARM: dts: qcom: Add binding for the qcom coincell
- charger
-Date: Wed, 29 Jul 2015 11:12:30 -0700
-Message-ID: <55B9178E.6030700@sonymobile.com>
-References: <1437090933-1232-1-git-send-email-tim.bird@sonymobile.com> <CAL_Jsq+5zzw1+gper6uwac-3P9zVN=rjjPb7Za27t=RbPU2-1w@mail.gmail.com>
+From: Michal Suchanek <hramrach@gmail.com>
+Subject: Re: [RFC PATCH 2/2] dt: spi: s3c64xx: add compatible to controller-data
+Date: Wed, 29 Jul 2015 20:21:34 +0200
+Message-ID: <CAOMqctQzh69RCQu8pK1EuuYkrZsh6mg34+YWJFzSvimcK3B0rA@mail.gmail.com>
+References: <cover.1438170519.git.hramrach@gmail.com> <557c1962448393b2a8736f26bfa2a3a5ba4aeb7a.1438170519.git.hramrach@gmail.com>
+ <20150729140046.GB11082@sirena.org.uk> <CAOMqctTZVET=U=2o65HpWSm4W660XZtYYbBND2k4u9CnfjfMhQ@mail.gmail.com>
+ <20150729171613.GI11162@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_Jsq+5zzw1+gper6uwac-3P9zVN=rjjPb7Za27t=RbPU2-1w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?B?IkFuZGVyc3NvbiwgQmrDtnJuIg==?= <Bjorn.Andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20150729171613.GI11162@sirena.org.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Padmavathi Venna <padma.kvr@gmail.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, MTD Maling List <linux-mtd@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Greg,
+On 29 July 2015 at 19:16, Mark Brown <broonie@kernel.org> wrote:
+> On Wed, Jul 29, 2015 at 06:19:24PM +0200, Michal Suchanek wrote:
+>> On 29 July 2015 at 16:00, Mark Brown <broonie@kernel.org> wrote:
+>
+>> > I can't tell from this commit message what the issue you're trying to
+>> > fix is, sorry.  Nodes without compatible strings are entirely normal and
+>> > don't need compatible strings.  It sounds like a bug in whatever other
+>> > driver is becoming confused.
+>
+>> The driver that gets confused is ofpart.
+>
+>> The two-line patch to allow it to just ignore controller-data has been
+>> rejected on the basis that s3c64xx should use a compatible string
+>> because ofpart monopolizes all nodes without compatible which are
+>> children of a mtd device. Devicetrees containing such nodes that are
+>> not partitions are presumably invalid and should be rejected when
+>> ofpart is compiled into the kernel.
+>
+> That seems like an extremely limited binding, the normal thing here
+> would be to create a specifically named node to contain the collection
+> of subnodes like many PMICs do for their regulators.  As a fix I'd
+> suggest just silently ignoring nodes it can't understand, or printing a
+> warning if that's a serious issue.
+>
+>> >> +     if (!of_get_property(data_np, "compatible", NULL) ||
+>> >> +         strcmp(of_get_property(data_np, "compatible", NULL),
+>> >> +                "samsung,s3c-controller-data"))
+>> >> +             dev_err(&spi->dev, "child node 'controller-data' does not have correct compatible\n");
+>
+>> > This will break all existing users which is not acceptable for
+>> > mainline, we need to preserve compatibility with existing device trees.
+>
+>> It will not break anything. It will just spam dmesg.
+>
+> I'm confused - if all this change does is to spam dmesg then what's the
+> point?
 
-At this point I've got Reviewed-by from Rob on the binding and dts bits,
-and Reviewed-by from Andy Gross on the complete patch series (v3).
+Presumably when your SPI NOR flash fails to probe this message will be
+just above and you will look into the binding doc and add the
+compatible.
 
-I believe I've addressed all issues raised. Can you please add this
-(v3) to drivers/misc?
+Thanks
 
-Let me know if you want me to re-send anything.
-
-Thanks very much.
- -- Tim
-
-
-On 07/17/2015 08:42 AM, Rob Herring wrote:
-> On Thu, Jul 16, 2015 at 6:55 PM, Tim Bird <tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org> wrote:
->> This binding is used to configure the driver for the coincell charger
->> found in Qualcomm PMICs.
->>
->> Signed-off-by: Tim Bird <tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-> 
-> Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> 
->> ---
->>
->> Changes in v3:
->>  - change charge-enable property to charger-disable
->> Changes in v2:
->>  - remove 'qcom,' from example node name
->>  - Added reference to parent node pm8941@0 and binding doc for it
->>
->>  .../bindings/power/qcom,coincell-charger.txt       | 48 ++++++++++++++++++++++
->>  1 file changed, 48 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/power/qcom,coincell-charger.txt
->>
->> diff --git a/Documentation/devicetree/bindings/power/qcom,coincell-charger.txt b/Documentation/devicetree/bindings/power/qcom,coincell-charger.txt
->> new file mode 100644
->> index 0000000..0e6d875
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/power/qcom,coincell-charger.txt
->> @@ -0,0 +1,48 @@
->> +Qualcomm Coincell Charger:
->> +
->> +The hardware block controls charging for a coincell or capacitor that is
->> +used to provide power backup for certain features of the power management
->> +IC (PMIC)
->> +
->> +- compatible:
->> +       Usage: required
->> +       Value type: <string>
->> +       Definition: must be: "qcom,pm8941-coincell"
->> +
->> +- reg:
->> +       Usage: required
->> +       Value type: <u32>
->> +       Definition: base address of the coincell charger registers
->> +
->> +- qcom,rset-ohms:
->> +       Usage: required
->> +       Value type: <u32>
->> +       Definition: resistance (in ohms) for current-limiting resistor
->> +               must be one of: 800, 1200, 1700, 2100
->> +
->> +- qcom,vset-millivolts:
->> +       Usage: required
->> +       Value type: <u32>
->> +       Definition: voltage (in millivolts) to apply for charging
->> +               must be one of: 2500, 3000, 3100, 3200
->> +
->> +- qcom,charger-disable:
->> +       Usage: optional
->> +       Value type: <boolean>
->> +       Definition: definining this property disables charging
->> +
->> +This charger is a sub-node of one of the 8941 PMIC blocks, and is specified
->> +as a child node in DTS of that node.  See ../mfd/qcom,spmi-pmic.txt and
->> +../mfd/qcom-pm8xxx.txt
->> +
->> +Example:
->> +
->> +       pm8941@0 {
->> +               coincell@2800 {
->> +                       compatible = "qcom,pm8941-coincell";
->> +                       reg = <0x2800>;
->> +
->> +                       qcom,rset-ohms = <2100>;
->> +                       qcom,vset-millivolts = <3000>;
->> +               };
->> +       };
->> --
->> 1.8.2.2
->>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Michal
