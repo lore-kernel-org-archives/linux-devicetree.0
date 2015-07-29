@@ -1,112 +1,156 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 03/12] mtd: nand: omap: Move IRQ handling from GPMC to
- NAND driver
-Date: Wed, 29 Jul 2015 18:39:21 +0300
-Message-ID: <55B8F3A9.8010000@ti.com>
-References: <1436531019-18088-1-git-send-email-rogerq@ti.com> <1436531019-18088-4-git-send-email-rogerq@ti.com> <20150713071008.GC26485@atomide.com> <55A38D2E.9010500@ti.com> <20150713124059.GF26485@atomide.com> <55B8C1D5.3090807@ti.com> <55B8C364.4030203@gmail.com> <55B8DAB9.7070602@ti.com> <55B8DE44.4070608@gmail.com> <55B8ED49.6050304@ti.com> <55B8F0B3.5000009@gmail.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [RFC] improve binding for linux,wdt-gpio
+Date: Wed, 29 Jul 2015 08:49:23 -0700
+Message-ID: <55B8F603.4000003@roeck-us.net>
+References: <1438115628-2819-1-git-send-email-u.kleine-koenig@pengutronix.de> <20150728212155.GA18137@roeck-us.net> <20150729073513.GB15360@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=windows-1252;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55B8F0B3.5000009-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20150729073513.GB15360-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: nick <xerofoify-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org
+To: =?windows-1252?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 29/07/15 18:26, nick wrote:
-> 
-> 
-> On 2015-07-29 11:12 AM, Roger Quadros wrote:
->> On 29/07/15 17:08, nick wrote:
->>>
->>>
->>> On 2015-07-29 09:52 AM, Roger Quadros wrote:
->>>> On 29/07/15 15:13, nick wrote:
->>>>>
->>>>>
->>>>> On 2015-07-29 08:06 AM, Roger Quadros wrote:
->>>>>> Tony,
->>>>>>
->>>>>> On 13/07/15 15:40, Tony Lindgren wrote:
->>>>>>> * Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [150713 03:07]:
->>>>>>>> Tony,
->>>>>>>>
->>>>>>>> On 13/07/15 10:10, Tony Lindgren wrote:
->>>>>>>>> * Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [150710 05:26]:
->>>>>>>>>> Since the Interrupt Events are used only by the NAND driver,
->>>>>>>>>> there is no point in managing the Interrupt registers
->>>>>>>>>> in the GPMC driver and complicating it with irqchip modeling.
->>>>>>>>>
->>>>>>>>> I don't think it's a good idea to allow external drivers to
->>>>>>>>> tinker directly with GPMC registers. How about just set up GPMC
->>>>>>>>> as an irqchip for the edge detection interrupts?
->>>>>>>>>
->>>>>>>>> I think we already have devices with multiple NAND chips. And
->>>>>>>>> there's nothing stopping other drivers from using the edge
->>>>>>>>> detection interrupts.
->>>>>>>>
->>>>>>>> OK. The GPMC_IRQ registers manage 2 NAND specific interrupts
->>>>>>>> (terminalcount and fifo) and 'n' WAIT pin edge interrupts.
->>>>>>>>
->>>>>>>>  So we can model this as a irqchip with 'n + 2' interrupts.
->>>>>>>
->>>>>>> OK
->>>>>>
->>>>>> For the wait pins irqchip is not sufficient and it needs to be gpiochip
->>>>>> with irqchip. Waitpin status can be read from GPIO_STATUS register.
->>>>>>
->>>>>> Just getting the interrupt is not enough and we want to know if the
->>>>>> line is high or low. That is how nand->dev_ready works.
->>>>>>
->>>>>> How about having 2 IRQ domains?
->>>>>> One is irqchip with 2 interrupts (terminalcount and fifo) and second is
->>>>>> gpiochip + irqchip for the n wait pins.
->>>>>>
->>>>>> The nand driver can then be modified to use GPIO to get Read/Busy
->>>>>> pin status from the wait pin.
->>>>>>
->>>>>> cheers,
->>>>>> -roger
->>>>>>
->>>>> Doesn't OMAP boards support shared IRQs and if so why not share them across one
->>>>> IRQ domain if possible to save IRQ domains for other hardware that needs its 
->>>>> own IRQ domain. This is just a suggestion through as I don't have the hardware
->>>>> spec sheet on me Roger.
->>>>
->>>> IRQ domain is a virtual abstraction introduced to prevent kernel irq number overlapping
->>>> in a single flat domain. I don't see what you can save by domain reuse.
->>>> Some memory maybe at most.
->>>>
->>>> Shared interrupt is something totally different but we're trying to add real
->>>> hardware interrupts here. Didn't understand what you will share it with.
->>>>
->>>> cheers,
->>>> -roger
->>>>
->>> My question then is do these hardware interrupts need to be on their own interrupt line
->>> for the CPU or can they share a CPU line as my concern is if possible we may be able to
->>> save a interrupt line for other use. I known on Intel CPUs this is a very limited resource
->>> but not sure on OMAP based boards if not then just avoid my recommendations.
->>
->> It is like adding an external interrupt controller to expand the number of available
->> hardware interrupts.
->> This interrupt controller will still use the same GPMC IRQ line to propagate the
->> irq event upwards.
->>
->> cheers,
->> -roger
->>
-> That was my other suggestion for IRQ issues. Would you mind sending me a link to a spec sheet so
-> I can review your patches better as you stated you wanted me to do this for you.
+Hi Uwe,
 
-Sure. You can pick up any of omap3/4 or 5 Technical Reference Manuals.
-e.g. omap5 TRM is here
-http://www.ti.com/product/OMAP5432/technicaldocuments
+On 07/29/2015 12:35 AM, Uwe Kleine-K=F6nig wrote:
+> Hello Guenter,
+>
+[ ... ]
+>>
+>> always-running is meant to indicate that the watchdog can not be sto=
+pped
+>> (meaning a timer has to be used to send keepalives while the watchdo=
+g
+>> device is closed). The documentation specifically states that.
+>>
+>> 	"If the watchdog timer cannot be disabled ..."
+>>
+>> How would you express that condition without always-running or a sim=
+ilar
+>> attribute ?  I am also not sure how that relates to hw_algo; I thoug=
+ht
+>> those properties are orthogonal.
+> For hw_algo =3D "level" the inactive level of the gpio disables the
+> watchdog (and resets the counter). So always-running doesn't make sen=
+se
+> for this type.
+>
+That is not what is currently implemented. "level" just means that
+the watchdog is pinged using a -high-low-high- or -low-high-low-
+sequence, while toggle means that the level is changed with each
+ping (-low-(wait)-high-(wait)-low-(wait)-high-...).
 
-cheers,
--roger
+>> Of course, 'always-running' _may_ describe driver behavior, but that=
+ doesn't
+> Well in the current state of the binding document we have:
+>
+> 	add this flag to have the driver keep toggling the signal
+> 	without a client.
+>
+> Sure it is meant to describe a hardware specific property, but it tal=
+ks
+> about the driver.
+>
+Then the fix is to update the binding document.
+
+> I'd go for these properties then:
+>
+> 	toggle-gpio: the gpio used to stroke the watchdog
+
+'toggle' means something different in the current implementation.
+
+> 	enable-gpio: optional, the gpio to enable and disable the watchdog
+> 	disable-on-tri-state: optional, signals that the watchdog can
+> 		be stopped by setting the trigger-gpio to tri-state.
+> 	compatible, hw_algo and hw_margin_ms: as before.
+> 	=09
+
+I would agree that a separate 'enable' property would make sense (if yo=
+u
+have a watchdog needing it). Similar to disable-on-tri-state, if there
+is some hardware which is implemented that way (mixing up hw_algo=3D=3D=
+toggle
+with that state doesn't seem correct). Deprecating hw_algo and replacin=
+g it
+with something more sensible might make sense as well ('algorithm' ?).
+
+We have to be careful not to mix up hw_algo and enable, though.
+
+> I think there is no need for a property that signals that the watchdo=
+g
+> is unstoppable. For level-gpio-watchdogs you can do it by setting the
+> trigger gpio to inactive, and you cannot stop level-gpio-watchdogs
+> unless enable-gpio or disable-on-tri-state is specified.
+> If we ever feel the need to describe a gpio watchdog with a input tha=
+t
+> starts the device but cannot stop it, I'd suggest to use "start-gpio"
+> for that one.
+>
+>> have to be the case. There are lots of watchdogs out there which can=
+ not be
+>> stopped. Some of them run all the time, others can not be stopped on=
+ce
+>> started.
+> Yeah, I'm aware of that. For this driver however I wouldn't expect th=
+at
+> you have a dedicated enable-gpio if you cannot disable the device wit=
+h it.
+
+Why ? There are lots of chips which implement exactly that. There is an
+enable bit in some register which can be used to enable the watchdog,
+but once enabled it can not be stopped. I don't see why a gpio driven
+watchdog would have to be any different.
+
+> For hw_algo =3D "level" there is probably no device with an enable in=
+put
+
+Why should that be the case ?
+
+> and for hw_algo =3D "toggle" any sane hardware engineer would simply
+> enable the watchdog once the first toggle is detected on WDI. (OK,
+> assuming hardware engineers being sane turned out to be a weak argume=
+nt
+> often in the past.)
+>
+I still don't see the relationship between enable and the toggle/level
+algorithm. Really, those two properties are orthogonal.
+
+>>> I'm aware that using ...-gpios is more common than ...-gpio. I don'=
+t
+>>> feel strong here, but as only a single gpio makes sense here, havin=
+g
+>>> -gpios seems wrong.
+>>>
+>> Documentation/devicetree/bindings/gpio/gpio.txt states that gpio pin
+>> references should be named <name>-gpios. It even lists examples such=
+ as
+>>
+>> 	enable-gpios =3D <&gpio2 2>;
+>>
+>> I thought this was a hard rule, and I seem to recall requests to cha=
+nge
+>> something-gpio to something-spios, but I may be wrong.
+> Yeah, I'm aware of that. I talked about that in #armlinux yesterday, =
+and
+> Mark Brown (added to Cc:) said:
+>
+> 	Well, I'd prefer to change the standard TBH and allow singular.
+> 	This keeps coming up and causing confusion for no good reason.
+>
+> Sounds sensible in my ears.
+>
+
+Makes sense to me, but I'd like to see that done first.
+
+Thanks,
+Guenter
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
