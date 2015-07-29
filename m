@@ -1,152 +1,170 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH 08/17] mmc: host: omap_hsmmc: add separate functions for enable/disable supply
-Date: Wed, 29 Jul 2015 16:39:38 +0530
-Message-ID: <1438168187-1614-9-git-send-email-kishon@ti.com>
-References: <1438168187-1614-1-git-send-email-kishon@ti.com>
+From: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: Re: [PATCH v2 04/22] of/platform: add of_platform_device_find()
+Date: Wed, 29 Jul 2015 13:20:03 +0200
+Message-ID: <CAAObsKD9BN7dsEiNB=OvJkoOQPwxwnP794w=X4AwtYz3oxEJqw@mail.gmail.com>
+References: <1438089593-7696-1-git-send-email-tomeu.vizoso@collabora.com>
+ <1438089593-7696-5-git-send-email-tomeu.vizoso@collabora.com>
+ <CAL_JsqJGhFXDKuayuKc2E58X5A7ZGN=uYCVDLnXw_t3_auBg+w@mail.gmail.com>
+ <CAAObsKBfRLdPc0gs55ARfa+qZJAOEyEgRyTf8krZnQMb6-j03g@mail.gmail.com>
+ <CAL_Jsq+RqGAxHE5-ocD-htddBHckG24oZNqfgmMF3Jak6wDXBQ@mail.gmail.com> <CAAObsKA+vMsgiC52jReJckeDjXhdd=_NBocFbMapdwFReiY1SQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1438168187-1614-1-git-send-email-kishon@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: tony@atomide.com, ulf.hansson@linaro.org, afenkart@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org
-Cc: nsekhar@ti.com, kishon@ti.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAAObsKA+vMsgiC52jReJckeDjXhdd=_NBocFbMapdwFReiY1SQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-No functional change. Cleanup omap_hsmmc_set_power by adding separate
-functions for enable/disable supply and invoke it from
-omap_hsmmc_set_power.
+On 29 July 2015 at 08:14, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org> wrote:
+> On 28 July 2015 at 17:31, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> On Tue, Jul 28, 2015 at 8:54 AM, Tomeu Vizoso
+>> <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org> wrote:
+>>> On 28 July 2015 at 15:39, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>> On Tue, Jul 28, 2015 at 8:19 AM, Tomeu Vizoso
+>>>> <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org> wrote:
+>>>>> From an arbitrary node in the tree, find the enclosing node that
+>>>>> corresponds to a platform device, as registered by
+>>>>> of_platform_populate().
+>>>>>
+>>>>> This can be used to find out what device needs to be probed so the
+>>>>> dependency described by a given node is made available.
+>>>>>
+>>>>> Signed-off-by: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+>>>>> ---
+>>>>>
+>>>>> Changes in v2:
+>>>>> - Move the logic for finding a platform device from its firmware node to
+>>>>>   of/platform.c as it's not needed for ACPI nodes.
+>>>>>
+>>>>>  drivers/of/platform.c       | 60 +++++++++++++++++++++++++++++++++++++++++++++
+>>>>>  include/linux/of_platform.h |  1 +
+>>>>>  2 files changed, 61 insertions(+)
+>>>>>
+>>>>> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+>>>>> index ff27494cda8c..89c5cd513027 100644
+>>>>> --- a/drivers/of/platform.c
+>>>>> +++ b/drivers/of/platform.c
+>>>>> @@ -501,6 +501,66 @@ void of_platform_depopulate(struct device *parent)
+>>>>>  }
+>>>>>  EXPORT_SYMBOL_GPL(of_platform_depopulate);
+>>>>>
+>>>>> +static bool of_is_platform(struct device_node *np)
+>>>>> +{
+>>>>> +       int count;
+>>>>> +
+>>>>> +       count = of_property_count_strings(np, "compatible");
+>>>>> +
+>>>>> +       /* The node has to have a compatible string */
+>>>>> +       if (!count)
+>>>>> +               return false;
+>>>>> +
+>>>>> +       /* But it cannot be just a simple memory-mapped bus */
+>>>>> +       if (count == 1 && of_match_node(of_default_bus_match_table, np))
+>>>>> +               return false;
+>>>>> +
+>>>>> +       /* But AMBA devices aren't platform devices */
+>>>>> +       if (of_device_is_compatible(np, "arm,primecell"))
+>>>>> +               return false;
+>>>>> +
+>>>>> +       /* Node is immediately below root */
+>>>>> +       if (!np->parent || !np->parent->parent)
+>>>>> +               return true;
+>>>>> +
+>>>>> +       /* If it's a node in a simple memory-mapped bus */
+>>>>> +       if (of_match_node(of_default_bus_match_table, np->parent))
+>>>>> +               return true;
+>>>>
+>>>> This seems really fragile.
+>>>
+>>> I think this finding logic matches the logic for registering platform
+>>> devices in of_platform_populate and also what is documented in
+>>> Documentation/devicetree/usage-model.txt.
+>>
+>> Right. So now we have that logic in 2 places. One is descending from
+>> the root and one is walking up from the child. That's an opportunity
+>> for some mismatch.
+>
+> Definitely.
+>
+>>>> What about platform devices which are
+>>>> children of MFDs but are not "simple-mfd"?
+>>>
+>>> This code should deal fine with those (the boards I tested with do
+>>> have them). It probes the mfd master, and that in turn will call
+>>> mfd_add_devices causing the target device to be probed.
+>>
+>> I don't see how this function would ever return true in this case
+>> unless you put the MFD at the root level. The only other way to return
+>> true is matching on of_default_bus_match_table for the parent (i.e.
+>> the MFD).
+>
+> Oops, you are right.
+>
+>>>> Does of_find_device_by_node not work for you?
+>>>
+>>> Well, the dependencies aren't always platform devices, that's why I
+>>> need to go up the tree until I find a node that corresponds to a
+>>> platform device that I can query and probe.
+>>>
+>>> If I had a way to get, say, a i2c device from its fwnode then I would
+>>> just need to make sure that a device's parent is probed before probing
+>>> it and everything would be cleaner in the OF case.
+>>
+>> If you have the struct device from the device_node, then you should be
+>> able to do this, right?
+>
+> Yes, if I could go back from the device_node to the struct device that
+> was registered from it, for all buses, then all this would be much
+> simpler and more robust. It would basically work like in the ACPI
+> case.
+>
+> I will play with this idea.
+>
+>>>> That is probably not the
+>>>> most efficient search, but we could fix that. We could add struct
+>>>> device ptr to struct device_node and check without searching for
+>>>> example.
+>>>
+>>> That would be great, but I thought there was an issue with a OF node
+>>> being able to be related to more than one struct device (but I haven't
+>>> found this myself yet).
+>>
+>> I think it pretty much should be one to one. I'm not aware of any
+>> examples where that is not the case. This function would already be
+>> broken if you could have more than one struct device.
+>
+> Well, for platform devices we currently know that there can only be
+> one struct device for a given device_node, but that's not so clear for
+> other devices.
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- drivers/mmc/host/omap_hsmmc.c |  101 +++++++++++++++++++++++++++--------------
- 1 file changed, 66 insertions(+), 35 deletions(-)
+Just found this case:
 
-diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
-index d308552..a0f8c1d 100644
---- a/drivers/mmc/host/omap_hsmmc.c
-+++ b/drivers/mmc/host/omap_hsmmc.c
-@@ -247,6 +247,65 @@ static int omap_hsmmc_get_cover_state(struct device *dev)
- 
- #ifdef CONFIG_REGULATOR
- 
-+static int omap_hsmmc_enable_supply(struct mmc_host *mmc, int vdd)
-+{
-+	int ret;
-+
-+	if (mmc->supply.vmmc) {
-+		ret = mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, vdd);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	/* Enable interface voltage rail, if needed */
-+	if (mmc->supply.vqmmc) {
-+		ret = regulator_enable(mmc->supply.vqmmc);
-+		if (ret) {
-+			dev_err(mmc_dev(mmc), "vmmc_aux reg enable failed\n");
-+			goto err_vqmmc;
-+		}
-+	}
-+
-+	return 0;
-+
-+err_vqmmc:
-+	if (mmc->supply.vmmc)
-+		mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, 0);
-+
-+	return ret;
-+}
-+
-+static int omap_hsmmc_disable_supply(struct mmc_host *mmc)
-+{
-+	int ret;
-+	int status;
-+
-+	if (mmc->supply.vqmmc) {
-+		ret = regulator_disable(mmc->supply.vqmmc);
-+		if (ret) {
-+			dev_err(mmc_dev(mmc), "vmmc_aux reg disable failed\n");
-+			return ret;
-+		}
-+	}
-+
-+	if (mmc->supply.vmmc) {
-+		ret = mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, 0);
-+		if (ret)
-+			goto err_set_ocr;
-+	}
-+
-+	return 0;
-+
-+err_set_ocr:
-+	if (mmc->supply.vqmmc) {
-+		status = regulator_enable(mmc->supply.vqmmc);
-+		if (status)
-+			dev_err(mmc_dev(mmc), "vmmc_aux re-enable failed\n");
-+	}
-+
-+	return ret;
-+}
-+
- static int omap_hsmmc_set_power(struct device *dev, int power_on, int vdd)
- {
- 	struct omap_hsmmc_host *host =
-@@ -289,36 +348,13 @@ static int omap_hsmmc_set_power(struct device *dev, int power_on, int vdd)
- 	 * chips/cards need an interface voltage rail too.
- 	 */
- 	if (power_on) {
--		if (mmc->supply.vmmc) {
--			ret = mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, vdd);
--			if (ret)
--				return ret;
--		}
--
--		/* Enable interface voltage rail, if needed */
--		if (mmc->supply.vqmmc) {
--			ret = regulator_enable(mmc->supply.vqmmc);
--			if (ret) {
--				dev_err(dev, "vmmc_aux reg enable failed\n");
--				goto err_set_vqmmc;
--			}
--		}
-+		ret = omap_hsmmc_enable_supply(mmc, vdd);
-+		if (ret)
-+			return ret;
- 	} else {
--		/* Shut down the rail */
--		if (mmc->supply.vqmmc) {
--			ret = regulator_disable(mmc->supply.vqmmc);
--			if (ret) {
--				dev_err(dev, "vmmc_aux reg disable failed\n");
--				return ret;
--			}
--		}
--
--		if (mmc->supply.vmmc) {
--			/* Then proceed to shut down the local regulator */
--			ret = mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, 0);
--			if (ret)
--				return ret;
--		}
-+		ret = omap_hsmmc_disable_supply(mmc);
-+		if (ret)
-+			return ret;
- 	}
- 
- 	if (host->pbias) {
-@@ -348,12 +384,7 @@ static int omap_hsmmc_set_power(struct device *dev, int power_on, int vdd)
- 	return 0;
- 
- err_set_voltage:
--	if (mmc->supply.vqmmc)
--		regulator_disable(mmc->supply.vqmmc);
--
--err_set_vqmmc:
--	if (mmc->supply.vmmc)
--		mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, 0);
-+	omap_hsmmc_disable_supply(mmc);
- 
- 	return ret;
- }
--- 
-1.7.9.5
+http://lxr.free-electrons.com/source/drivers/spi/spi-tegra114.c#L1124
+
+Looks like SPI master devices point to the same device_node as the
+platform device that registers them.
+
+Regards,
+
+Tomeu
+
+>> There is an issue where you could have 2 drivers match the same node,
+>> but on different compatible strings. But that's a different issue.
+>
+> Yup.
+>
+> Thanks,
+>
+> Tomeu
+>
+>> Rob
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> Please read the FAQ at  http://www.tux.org/lkml/
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
