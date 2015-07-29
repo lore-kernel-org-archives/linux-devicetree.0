@@ -1,93 +1,198 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 5/6] iommu/mediatek: Add mt8173 IOMMU driver
-Date: Wed, 29 Jul 2015 11:31:50 +0100
-Message-ID: <20150729103150.GB4797@arm.com>
-References: <1437037475-9065-1-git-send-email-yong.wu@mediatek.com>
-	<1437037475-9065-6-git-send-email-yong.wu@mediatek.com>
-	<55B630CE.4050803@arm.com>
-	<20150727153148.GJ7557@n2100.arm.linux.org.uk>
-	<55B6530A.9050903@arm.com> <1438148491.25925.89.camel@mhfsdcap03>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1438148491.25925.89.camel@mhfsdcap03>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "cloud.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <cloud.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "youhua.li-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <youhua.li-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org" <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm77oxUfYCNXn@public.gmane.org
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: [PATCH V3 01/16] PM / OPP: Update bindings to make opp-hz a 64 bit value
+Date: Wed, 29 Jul 2015 16:22:56 +0530
+Message-ID: <f87ca786bca8abce6261dbd79a34218550355684.1438166099.git.viresh.kumar@linaro.org>
+References: <cover.1438166099.git.viresh.kumar@linaro.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <cover.1438166099.git.viresh.kumar@linaro.org>
+In-Reply-To: <cover.1438166099.git.viresh.kumar@linaro.org>
+References: <cover.1438166099.git.viresh.kumar@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Rafael Wysocki <rjw@rjwysocki.net>, sboyd@codeaurora.org
+Cc: linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, rob.herring@linaro.org, arnd.bergmann@linaro.org, nm@ti.com, broonie@kernel.org, mturquette@baylibre.com, Sudeep.Holla@arm.com, viswanath.puttagunta@linaro.org, l.stach@pengutronix.de, thomas.petazzoni@free-electrons.com, linux-arm-kernel@lists.infradead.org, ta.omasab@gmail.com, kesavan.abhilash@gmail.com, khilman@linaro.org, santosh.shilimkar@oracle.com, b.zolnierkie@samsung.com, Viresh Kumar <viresh.kumar@linaro.org>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, open list <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 29, 2015 at 06:41:31AM +0100, Yong Wu wrote:
-> On Mon, 2015-07-27 at 16:49 +0100, Robin Murphy wrote:
-> > On 27/07/15 16:31, Russell King - ARM Linux wrote:
-> > > On Mon, Jul 27, 2015 at 02:23:26PM +0100, Robin Murphy wrote:
-> > >> On 16/07/15 10:04, Yong Wu wrote:
-> > >>> This patch adds support for mediatek m4u (MultiMedia Memory Management
-> > >>> Unit).
-> > >>>
-> > >>> Signed-off-by: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > >> [...]
-> > >>> +static void mtk_iommu_flush_pgtable(void *ptr, size_t size, void *cookie)
-> > >>> +{
-> > >>> +       struct mtk_iommu_domain *domain = cookie;
-> > >>> +       unsigned long offset = (unsigned long)ptr & ~PAGE_MASK;
-> > >>> +
-> > >>> +       dma_map_page(domain->data->dev, virt_to_page(ptr), offset,
-> > >>> +                    size, DMA_TO_DEVICE);
-> > >>
-> > >> Nit: this looks like it may as well be dma_map_single.
-> > >>
-> > >> It would probably be worth following it with a matching unmap too, just to
-> > >> avoid any possible leakage bugs (especially if this M4U ever appears in a
-> > >> SoC supporting RAM above the 32-bit boundary).
-> > >
-> > > Why not do the job properly?  Take a look at how I implemented the
-> > > streaming DMA API on Tegra SMMU (patch set recently sent out earlier
-> > > today).
-> > >
-> > > There's no need for hacks like dma_map_page() (and discarding it's
-> > > return value) or dma_map_page() followed by dma_unmap_page().
-> > 
-> > Indeed, as it happens I do have a branch where I prototyped that for the 
-> > long-descriptor io-pgtable-arm code a while ago; this discussion has 
-> > prompted me to dig it up again. Stay tuned, folks...
-> 
-> Hi Russell, Robin,
-> 
->      From I see in arm-smmu-v3.c in v4.2-rc1, 
->      
->      The flush_pgtable seems like this:
-> //==========
-> 	dma_addr_t dma_addr;
-> 
-> 	dma_addr = dma_map_page(dev, ptr, size, DMA_TO_DEVICE);
-> 
-> 	if (dma_mapping_error(dev, dma_addr))
-> 		dev_err(dev, "failed to flush pgtable at %p\n", ptr);
-> 	else
-> 		dma_unmap_page(dev, dma_addr, size, DMA_TO_DEVICE);
-> //==========
->        I will change map like this and use dma_map_single instead.
-> 
->        Is this also seems to be not proper?
-> 
->        Then how to do it?  add this before unmap? :
->        dma_sync_single_for_device(dev, dma_addr, size, DMA_TO_DEVICE);
+With a 32 bit value, the maximum frequency that the bindings can
+support is ~ 4 GHz. And that might fall short of what newer systems may
+have.
 
-Robin's proposed a series fixing this in the io-pgtable code:
+Allow opp-hz to be a 64 bit big-endian value.
 
-  http://lists.linuxfoundation.org/pipermail/iommu/2015-July/013821.html
+Cc: Rob Herring <rob.herring@linaro.org>
+Cc: devicetree@vger.kernel.org
+Suggested-by: Stephen Boyd <sboyd@codeaurora.org>
+Suggested-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+ Documentation/devicetree/bindings/power/opp.txt | 40 ++++++++++++-------------
+ 1 file changed, 20 insertions(+), 20 deletions(-)
 
-which is currently under review. Please take a look and give comments!
-Once merged, the code you cite above will be removed.
+diff --git a/Documentation/devicetree/bindings/power/opp.txt b/Documentation/devicetree/bindings/power/opp.txt
+index 0d5e7c978121..0cb44dc21f97 100644
+--- a/Documentation/devicetree/bindings/power/opp.txt
++++ b/Documentation/devicetree/bindings/power/opp.txt
+@@ -88,7 +88,7 @@ This defines voltage-current-frequency combinations along with other related
+ properties.
+ 
+ Required properties:
+-- opp-hz: Frequency in Hz
++- opp-hz: Frequency in Hz, expressed as a 64-bit big-endian integer.
+ 
+ Optional properties:
+ - opp-microvolt: voltage in micro Volts.
+@@ -158,20 +158,20 @@ Example 1: Single cluster Dual-core ARM cortex A9, switch DVFS states together.
+ 		opp-shared;
+ 
+ 		opp00 {
+-			opp-hz = <1000000000>;
++			opp-hz = /bits/ 64 <1000000000>;
+ 			opp-microvolt = <970000 975000 985000>;
+ 			opp-microamp = <70000>;
+ 			clock-latency-ns = <300000>;
+ 			opp-suspend;
+ 		};
+ 		opp01 {
+-			opp-hz = <1100000000>;
++			opp-hz = /bits/ 64 <1100000000>;
+ 			opp-microvolt = <980000 1000000 1010000>;
+ 			opp-microamp = <80000>;
+ 			clock-latency-ns = <310000>;
+ 		};
+ 		opp02 {
+-			opp-hz = <1200000000>;
++			opp-hz = /bits/ 64 <1200000000>;
+ 			opp-microvolt = <1025000>;
+ 			clock-latency-ns = <290000>;
+ 			turbo-mode;
+@@ -237,20 +237,20 @@ independently.
+ 		 */
+ 
+ 		opp00 {
+-			opp-hz = <1000000000>;
++			opp-hz = /bits/ 64 <1000000000>;
+ 			opp-microvolt = <970000 975000 985000>;
+ 			opp-microamp = <70000>;
+ 			clock-latency-ns = <300000>;
+ 			opp-suspend;
+ 		};
+ 		opp01 {
+-			opp-hz = <1100000000>;
++			opp-hz = /bits/ 64 <1100000000>;
+ 			opp-microvolt = <980000 1000000 1010000>;
+ 			opp-microamp = <80000>;
+ 			clock-latency-ns = <310000>;
+ 		};
+ 		opp02 {
+-			opp-hz = <1200000000>;
++			opp-hz = /bits/ 64 <1200000000>;
+ 			opp-microvolt = <1025000>;
+ 			opp-microamp = <90000;
+ 			lock-latency-ns = <290000>;
+@@ -313,20 +313,20 @@ DVFS state together.
+ 		opp-shared;
+ 
+ 		opp00 {
+-			opp-hz = <1000000000>;
++			opp-hz = /bits/ 64 <1000000000>;
+ 			opp-microvolt = <970000 975000 985000>;
+ 			opp-microamp = <70000>;
+ 			clock-latency-ns = <300000>;
+ 			opp-suspend;
+ 		};
+ 		opp01 {
+-			opp-hz = <1100000000>;
++			opp-hz = /bits/ 64 <1100000000>;
+ 			opp-microvolt = <980000 1000000 1010000>;
+ 			opp-microamp = <80000>;
+ 			clock-latency-ns = <310000>;
+ 		};
+ 		opp02 {
+-			opp-hz = <1200000000>;
++			opp-hz = /bits/ 64 <1200000000>;
+ 			opp-microvolt = <1025000>;
+ 			opp-microamp = <90000>;
+ 			clock-latency-ns = <290000>;
+@@ -339,20 +339,20 @@ DVFS state together.
+ 		opp-shared;
+ 
+ 		opp10 {
+-			opp-hz = <1300000000>;
++			opp-hz = /bits/ 64 <1300000000>;
+ 			opp-microvolt = <1045000 1050000 1055000>;
+ 			opp-microamp = <95000>;
+ 			clock-latency-ns = <400000>;
+ 			opp-suspend;
+ 		};
+ 		opp11 {
+-			opp-hz = <1400000000>;
++			opp-hz = /bits/ 64 <1400000000>;
+ 			opp-microvolt = <1075000>;
+ 			opp-microamp = <100000>;
+ 			clock-latency-ns = <400000>;
+ 		};
+ 		opp12 {
+-			opp-hz = <1500000000>;
++			opp-hz = /bits/ 64 <1500000000>;
+ 			opp-microvolt = <1010000 1100000 1110000>;
+ 			opp-microamp = <95000>;
+ 			clock-latency-ns = <400000>;
+@@ -379,7 +379,7 @@ Example 4: Handling multiple regulators
+ 		opp-shared;
+ 
+ 		opp00 {
+-			opp-hz = <1000000000>;
++			opp-hz = /bits/ 64 <1000000000>;
+ 			opp-microvolt = <970000>, /* Supply 0 */
+ 					<960000>, /* Supply 1 */
+ 					<960000>; /* Supply 2 */
+@@ -392,7 +392,7 @@ Example 4: Handling multiple regulators
+ 		/* OR */
+ 
+ 		opp00 {
+-			opp-hz = <1000000000>;
++			opp-hz = /bits/ 64 <1000000000>;
+ 			opp-microvolt = <970000 975000 985000>, /* Supply 0 */
+ 					<960000 965000 975000>, /* Supply 1 */
+ 					<960000 965000 975000>; /* Supply 2 */
+@@ -405,7 +405,7 @@ Example 4: Handling multiple regulators
+ 		/* OR */
+ 
+ 		opp00 {
+-			opp-hz = <1000000000>;
++			opp-hz = /bits/ 64 <1000000000>;
+ 			opp-microvolt = <970000 975000 985000>, /* Supply 0 */
+ 					<960000 965000 975000>, /* Supply 1 */
+ 					<960000 965000 975000>; /* Supply 2 */
+@@ -437,12 +437,12 @@ Example 5: Multiple OPP tables
+ 		opp-shared;
+ 
+ 		opp00 {
+-			opp-hz = <600000000>;
++			opp-hz = /bits/ 64 <600000000>;
+ 			...
+ 		};
+ 
+ 		opp01 {
+-			opp-hz = <800000000>;
++			opp-hz = /bits/ 64 <800000000>;
+ 			...
+ 		};
+ 	};
+@@ -453,12 +453,12 @@ Example 5: Multiple OPP tables
+ 		opp-shared;
+ 
+ 		opp10 {
+-			opp-hz = <1000000000>;
++			opp-hz = /bits/ 64 <1000000000>;
+ 			...
+ 		};
+ 
+ 		opp11 {
+-			opp-hz = <1100000000>;
++			opp-hz = /bits/ 64 <1100000000>;
+ 			...
+ 		};
+ 	};
+-- 
+2.4.0
 
-Will
