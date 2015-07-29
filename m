@@ -1,134 +1,117 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v4 2/2] dt: power: st: Provide bindings for ST's OPPs
-Date: Wed, 29 Jul 2015 15:15:26 -0700
-Message-ID: <20150729221526.GE3159@codeaurora.org>
-References: <1438010430-5802-1-git-send-email-lee.jones@linaro.org>
- <1438010430-5802-2-git-send-email-lee.jones@linaro.org>
- <20150728022936.GB1229@linux>
- <20150728225510.GB3159@codeaurora.org>
- <20150729081403.GH2284@x1>
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: Re: [PATCH] backlight: pm8941-wled: Add default-brightness property
+Date: Wed, 29 Jul 2015 15:37:15 -0700
+Message-ID: <20150729223714.GB6519@usrtlx11787.corpusers.net>
+References: <1437681127-15760-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <CAF6AEGsJdLYzCA_=M8hf1XfhRxFAaY6VFdSBRP+y56uKsnQHiA@mail.gmail.com>
+ <CAL_JsqKcNjsLJPxQiWsjVtwsX2nsYGLSzjmX0cwo1QsZ+JE4Hg@mail.gmail.com>
+ <CAF6AEGs+knSa9TvZ8fR5-_zqC4TaHuBN8+GU5_6j33Pnr16Faw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20150729081403.GH2284@x1>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, rob.herring@linaro.org, nm@ti.com, arnd.bergmann@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, rjw@rjwysocki.net, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, ajitpal.singh@st.com, sre@kernel.org, dbaryshkov@gmail.com
+In-Reply-To: <CAF6AEGs+knSa9TvZ8fR5-_zqC4TaHuBN8+GU5_6j33Pnr16Faw@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Clark <robdclark@gmail.com>
+Cc: Rob Herring <robherring2@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jingoo Han <jingoohan1@gmail.com>, Lee Jones <lee.jones@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Fbdev development list <linux-fbdev@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/29, Lee Jones wrote:
-> On Tue, 28 Jul 2015, Stephen Boyd wrote:
+On Fri 24 Jul 10:41 PDT 2015, Rob Clark wrote:
+
+> On Fri, Jul 24, 2015 at 11:39 AM, Rob Herring <robherring2@gmail.com> wrote:
+> > On Fri, Jul 24, 2015 at 8:10 AM, Rob Clark <robdclark@gmail.com> wrote:
+> >> On Thu, Jul 23, 2015 at 3:52 PM, Bjorn Andersson
+> >> <bjorn.andersson@sonymobile.com> wrote:
+> >>> Add the possibility of specifying the default brightness in DT.
+> >>>
+> >>> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+> >>> ---
+> >>>
+> >>> This depends on the patch moving pm8941-wled to backlight [1]. The dt property
+> >>> is used by several other backlight drivers, so I considered this to be a
+> >>> "common" property and it's hence not prefixed with "qcom,".
+> >>>
+> >>> [1] https://lkml.org/lkml/2015/7/21/906
+> >>>
+> >>>  Documentation/devicetree/bindings/video/backlight/pm8941-wled.txt | 1 +
+> >>>  drivers/video/backlight/pm8941-wled.c                             | 4 ++++
+> >>>  2 files changed, 5 insertions(+)
+> >>>
+> >>> diff --git a/Documentation/devicetree/bindings/video/backlight/pm8941-wled.txt b/Documentation/devicetree/bindings/video/backlight/pm8941-wled.txt
+> >>> index 424f8444a6cd..37503f8c3620 100644
+> >>> --- a/Documentation/devicetree/bindings/video/backlight/pm8941-wled.txt
+> >>> +++ b/Documentation/devicetree/bindings/video/backlight/pm8941-wled.txt
+> >>> @@ -5,6 +5,7 @@ Required properties:
+> >>>  - reg: slave address
+> >>>
+> >>>  Optional properties:
+> >>> +- default-brightness: value from: 0-4095
+> >>>  - label: The name of the backlight device
+> >>>  - qcom,cs-out: bool; enable current sink output
+> >>>  - qcom,cabc: bool; enable content adaptive backlight control
+> >>> diff --git a/drivers/video/backlight/pm8941-wled.c b/drivers/video/backlight/pm8941-wled.c
+> >>> index c704c3236034..b875e58df0fc 100644
+> >>> --- a/drivers/video/backlight/pm8941-wled.c
+> >>> +++ b/drivers/video/backlight/pm8941-wled.c
+> >>> @@ -373,6 +373,7 @@ static int pm8941_wled_probe(struct platform_device *pdev)
+> >>>         struct backlight_device *bl;
+> >>>         struct pm8941_wled *wled;
+> >>>         struct regmap *regmap;
+> >>> +       u32 val = 0;
+> >>>         int rc;
+> >>
+> >> as discussed on IRC, it would be better if the default read back the
+> >> current settings (so-as to inherit bootloader splash smoothly..
+> >> drm/msm supports a memory-region phandle, for example, so it can take
+> >> over the bootloader splash-screen as stolen-mem)
+> >>
+> >> and it would I think be useful to have a comment in the bindings file
+> >> explaining that you *should* use the default-brightness property to
+> >> set a sane default if bootloader isn't putting up a splash, and you
+> >> should *not* use the property if it is..
+> >
+> > +1
+> >
+> > What if you have neither? Set to max brightness? 75%?
 > 
-> > On 07/28, Viresh Kumar wrote:
-> > > Cc'ing few people (whom I cc'd last time as well :)).
-> > > 
-> > > On 27-07-15, 16:20, Lee Jones wrote:
-> > > > + - opp-hz		: CPU frequency [Hz] for this OPP [See: ./opp.txt]
-> > > > + - st,avs		: List of available voltages [uV] indexed by process code
-> > > > + - st,cuts		: Cut version this OPP is suitable for [0xFF means ALL]
-> > > > + - st,substrate		: Substrate version this OPP is suitable for [0xFF means ALL]
-[...]
-> > > > +cpu0-opp-list {
-> > > > +	compatible	= "operating-points-v2-sti";
-> > > > +	st,syscfg	= <&syscfg [major_offset]>;
-> > > > +	st,syscfg-eng   = <&syscfg_eng [pcode_offset] [minor_offset]>;
-> > > > +
-> > > > +	opp0 {
-> > > > +		opp-hz		= <1200000000>;
-> > > > +		st,avs		= <1110 1150 1100 1080 1040 1020 980 930>;
-> > > > +		st,substrate	= <0xff>;
-> > > > +		st,cuts		= <0xff>;
-> > > > +	};
-> > > > +	opp1 {
-> > > > +		opp-hz		= <1500000000>;
-> > > > +		st,avs		= <1200 1200 1200 1200 1170 1140 1100 1070>;
-> > > > +		st,substrate	= <0xff>;
-> > > > +		st,cuts		= <0x2>;
-> > > > +	};
-> > > > +};
-> > > 
-> > > I don't see more problems here, unless we can move some of this to the
-> > > generic bindings.
-> > > 
-> > > @Rob/Stephen: Please respond before it is late :)
-> > 
-> > It's interesting to have vendor specific properties like avs,
-> > cuts, and substrate. That could replace our planned usage of the
-> > opp-names property where we encode similar information (speed
-> > bin, revision, etc.) into a string that we look for.
-> > 
-> > So I wonder why the avs/cut/substrate information can't be
-> > encoded into the opp name? That would make these properties
-> > obsolete, given that all they're used for is to pick out the
-> > correct OPP?
-> 
-> You could hack the substrate and cut version into a string, but that's
-> exactly what it would be, a hack.  I'm struggling how you would do the
-> same for 'st,avs', which is an array of u32s.
+> I did chat w/ Bjorn a bit about that on irc..  his concern was some
+> arbitrary percentage (like 50%) might be more or less bright depending
+> on the device (although that implies to me that maybe we should have
+> min and max bindings as well, rather than just assuming hw limits?
+> idk)
 > 
 
+But this issue could easily be solved by having the boot loader pass an
+appropriate value to the kernel through the dt property, overriding any
+default from the implementation.
 
-(I don't understand the st,avs property to begin with, so feel
-free to ignore the rest of this mail.)
+Or in the case when the boot does not touch the backlight the dt writer
+still have the possibility of picking a better value.
 
-For qcom platforms we have the pvs bin and speed bin, and
-sometimes a revision number. Each one of these properties
-corresponds to a different set of OPPs (opp table). So we might
-have speed1-pvs2-v0 for speed bin 1, pvs bin 2 and version 0. We
-fill out an opp table for this and then point the opps property
-at the table and have a corresponding opp-name "speed1-pvs2-v0"
-in the "consumer" node.
+> my preference is the default is somehow at least not 0%.. possibly
+> motivated by the expectation that when people see a dark screen at
+> boot they assume the display driver is broken :-P
+> 
 
-	operating-points-v2 = <&speed1_pvs2_v0>;
-	operating-points-names = "speed1-pvs2-v0";
+Right
 
-We have quite a few of these tables because the values are
-always different. If the values were the same then we could use
-the same table with different names I suppose, but we're not
-doing that.
+> > This could also be used for the bootloader to communicate to the
+> > kernel what the current level is if it is not readable. I've seen one
+> > backlight recently which you change the level by doing some number of
+> > pulses on a gpio and a long pulse to turn off. So there is no way to
+> > know current level without turning off the backlight (unless you
+> > hardcode the bootloader's level in the kernel like the vendor did).
+> >
 
->From a quick read of the st properties (that I admit I don't
-understand), it looks like we're trying to compress the OPP
-tables by listing all the voltages that could be used for a
-particular frequency depending on which avs is present on the
-device? And then limiting the frequency voltage pairs depending
-on which cut and substrate is present?
+Right and even in the case of this driver I feel it's just adding
+accidental complexity.
 
-So we'd probably have to expand out the tables to be unique per
-avs/cut/substrate parameter. Something like:
 
-avs0-cut2 {
-	compatible = "operating-points-v2";
+50% would solve Rob's problem and we're through the dt property
+providing the necessary means of changing this, either to match boot
+loader set levels or developers preferences.
 
-	opp0 {
-		opp-hz = <1200000000>;
-		opp-microvolt = <1100>;
-	};
+I'll rephrase the binding document and update the driver.
 
-	opp1 {
-		opp-hz = <1500000000>;
-		opp-microvolt = <1200>;
-	};
-};
-
-avs1-cut2 {
-	compatible = "operating-points-v2";
-
-	opp0 {
-		opp-hz = <1200000000>;
-		opp-microvolt = <1150>;
-	};
-
-	opp1 {
-		opp-hz = <1500000000>;
-		opp-microvolt = <1200>;
-	};
-};
-
-And then another copy of these for the devices without cuts != 2
-where the top frequency is gone?
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Regards,
+Bjorn
