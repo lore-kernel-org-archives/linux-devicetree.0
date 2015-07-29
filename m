@@ -1,32 +1,40 @@
-From: Andy Gross <agross@codeaurora.org>
-Subject: Re: [PATCH v1 0/7] DT: APQ8064 for qcom-dt-next
-Date: Tue, 28 Jul 2015 23:56:52 -0500
-Message-ID: <20150729045652.GA24343@qualcomm.com>
-References: <1438087956-17307-1-git-send-email-srinivas.kandagatla@linaro.org>
+From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH 02/10] usb: chipidea: define stream mode disable for both
+ roles
+Date: Tue, 28 Jul 2015 22:08:28 -0700
+Message-ID: <20150729050828.GA5502@kroah.com>
+References: <1438137734-27311-1-git-send-email-peter.chen@freescale.com>
+ <1438137734-27311-3-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1438087956-17307-1-git-send-email-srinivas.kandagatla@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1438137734-27311-3-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 28, 2015 at 01:52:36PM +0100, Srinivas Kandagatla wrote:
-> Hi Andy, 
+On Wed, Jul 29, 2015 at 10:42:06AM +0800, Peter Chen wrote:
+> The system bus and chipidea IP have different limitations for
+> both host and device mode.
+> For example, with below errata, we need to enable SDIS(Stream Disable Mode)
+> at host mode. But we don't want it for device mode at the same system.
 > 
-> As discussed here are some dt patches which depend on
-> pmic header "dt-bindings/pinctrl/qcom,pmic-gpio.h" which is availble in
-> linux-next.
-
-Ok.  I took all of these and put them on top of my 4.3 tags on the
-qcom/for-next.  I compiled against the current next master and all was well.
+> TAR 9000378958
+> Title: Non-Double Word Aligned Buffer Address Sometimes Causes Host to Hang on OUT Retry
+> Impacted Configuration: Host mode, all transfer types
+> Description:
+> The host core operating in streaming mode may under run while sending the data packet of an OUT transaction. This under run can occur if there are unexpected system delays in fetching the remaining packet data from memory. The host forces a bad CRC on the packet, the device detects the error and discards the packet. The host then retries a Bulk, Interrupt, or Control transfer if an under run occurs according to the USB specification.
 
 <snip>
 
+Properly format this huge wall of text please, don't commit this as-is.
 
--- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+thanks,
+
+greg k-h
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
