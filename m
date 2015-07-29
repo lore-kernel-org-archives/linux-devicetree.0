@@ -1,269 +1,115 @@
-From: Gabriele Paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH v6] PCI: Store PCIe bus address in struct of_pci_range
-Date: Wed, 29 Jul 2015 19:44:18 +0000
-Message-ID: <EE11001F9E5DDD47B7634E2F8A612F2E01D6F350@lhreml503-mbs>
-References: <1438010223-124422-1-git-send-email-gabriele.paoloni@huawei.com>
- <20150729172053.GE31170@google.com>
+From: "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
+Subject: [PATCH] drm: panel-simple: add URT UMSH-8596MD-xT panel support
+Date: Wed, 29 Jul 2015 21:58:54 +0200
+Message-ID: <55B9307E.7070707@maciej.szmigiero.name>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150729172053.GE31170-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org" <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, "Wangzhou (B)" <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "james.morse-5wv7dgnIgG8@public.gmane.org" <james.morse-5wv7dgnIgG8@public.gmane.org>, "Liviu.Dudau-5wv7dgnIgG8@public.gmane.org" <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Yuanzhichang <yuanzhichang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Zhudacai <zhudacai-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, zhangjukuo <zhangjukuo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, qiuzhenfa <qiuzhenfa-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "Liguozhu (Kenneth)" <liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dri-devel@lists.freedesktop.org
+Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, David Airlie <airlied@linux.ie>, Arnd Bergmann <arnd@arndb.de>, Philipp Zabel <p.zabel@pengutronix.de>, Lee Jones <lee.jones@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Fabio Estevam <festevam@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn
+This patch adds support for United Radiant Technology
+UMSH-8596MD-xT 7.0" WVGA TFT LCD panels
+(both LVDS and parallel versions) to DRM
+panel-simple driver.
 
-Many Thanks for your reply
+Signed-off-by: Maciej Szmigiero <mail@maciej.szmigiero.name>
+---
+ .../devicetree/bindings/panel/urt,umsh-8596md.txt  |   11 +++++
+ .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+ drivers/gpu/drm/panel/panel-simple.c               |   42 ++++++++++++++++++++
+ 3 files changed, 54 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/panel/urt,umsh-8596md.txt
 
-I have commented back inline with resolutions from my side.
-
-If you're ok with them I'll send it out a new version in the appropriate patchset
-
-Cheers
-
-Gab
-
-> -----Original Message-----
-> From: Bjorn Helgaas [mailto:bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org]
-> Sent: Wednesday, July 29, 2015 6:21 PM
-> To: Gabriele Paoloni
-> Cc: arnd-r2nGTMty4D4@public.gmane.org; lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org; Wangzhou (B);
-> robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; james.morse-5wv7dgnIgG8@public.gmane.org; Liviu.Dudau-5wv7dgnIgG8@public.gmane.org; linux-
-> pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org;
-> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Yuanzhichang; Zhudacai; zhangjukuo;
-> qiuzhenfa; Liguozhu (Kenneth)
-> Subject: Re: [PATCH v6] PCI: Store PCIe bus address in struct
-> of_pci_range
-> 
-> Hi Gabriele,
-> 
-> As far as I can tell, this is not specific to PCIe, so please use "PCI"
-> in
-> the subject as a generic term that includes both PCI and PCIe.
-
-sure agreed
-
-> 
-> On Mon, Jul 27, 2015 at 11:17:03PM +0800, Gabriele Paoloni wrote:
-> > From: gabriele paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> >
-> >     This patch is needed port PCIe designware to new DT parsing API
-> >     As discussed in
-> >     http://lists.infradead.org/pipermail/linux-arm-kernel/2015-
-> January/317743.html
-> >     in designware we have a problem as the PCI addresses in the PCIe
-> controller
-> >     address space are required in order to perform correct HW
-> operation.
-> >
-> >     In order to solve this problem commit f4c55c5a3 "PCI: designware:
-> >     Program ATU with untranslated address" added code to read the
-> PCIe
-> 
-> Conventional reference is 12-char SHA1, like this:
-> 
->   f4c55c5a3f7f ("PCI: designware: Program ATU with untranslated
-> address")
-
-Agreed, will change this
-
-> 
-> >     controller start address directly from the DT ranges.
-> >
-> >     In the new DT parsing API of_pci_get_host_bridge_resources()
-> hides the
-> >     DT parser from the host controller drivers, so it is not possible
-> >     for drivers to parse values directly from the DT.
-> >
-> >     In http://www.spinics.net/lists/linux-pci/msg42540.html we
-> already tried
-> >     to use the new DT parsing API but there is a bug (obviously) in
-> setting
-> >     the <*>_mod_base addresses
-> >     Applying this patch we can easily set "<*>_mod_base = win-
-> >__res.start"
-> 
-> By itself, this patch adds something.  It would help me understand it
-> if
-> the *user* of this new something were in the same patch series.
-
-the user is: "[PATCH v5 2/5] PCI: designware: Add ARM64 support"
-I will ask Zhou Wang to include this patch in his patchset
-
-
-> 
-> >     This patch adds a new field in "struct of_pci_range" to store the
-> >     pci bus start address; it fills the field in
-> of_pci_range_parser_one();
-> >     in of_pci_get_host_bridge_resources() it retrieves the resource
-> entry
-> >     after it is created and added to the resource list and uses
-> >     entry->__res.start to store the pci controller address
-> 
-> struct of_pci_range is starting to get confusing to non-OF folks like
-> me.
-> It now contains:
-> 
->   u32 pci_space;
->   u64 pci_addr;
->   u64 cpu_addr;
->   u64 bus_addr;
-> 
-> Can you explain what all these things mean, and maybe even add one-line
-> comments to the structure?
-
-sure I can add comments inline in the code
-
-> 
-> pci_space: The only uses I see are to determine whether to print
-> "Prefetch".  I don't see any real functionality that uses this.
-
-Looking at the code I agree. it's seems to be used only in powerpc 
-and microblaze to print out.
-However from my understanding pci_space is the phys.hi field of the 
-ranges property: it defines the properties of the address space associated
-to the PCI address. if you're curious you can find a nice and quick to read
-"guide" in http://devicetree.org/MPC5200:PCI
-
-> 
-> pci_addr: I assume this is a PCI bus address, like what you would see
-> if
-> you put an analyzer on the bus/link.  This address could go in a BAR.
-
-Yes, this is the PCI start address of the range: phys.mid + phys.low in the
-guide mentioned above
-
-> 
-> cpu_addr: I assume this is a CPU physical address, like what you would
-> see
-> in /proc/iomem and what you would pass to ioremap().
-
-Yes correct
-
-> 
-> bus_addr: ?
-> 
-
-According to the guide above, this is the address into which the pci_address 
-get translated to and that is passed to the root complex. Between the root 
-complex and the CPU there can be intermediate translation layers: see that to 
-get pci_address we call "of_translate_address"; this will apply all the 
-translation layers (ranges in the DT) that it finds till it comes to the root 
-node of the DT (thus retrieving the CPU address).
-Now said that, for designware we need the first translated PCI address, that we call
-here bus_addr after Rob Herring suggested the name...honestly I cannot think of a 
-different name
-
-   
-
-> I'm trying to imagine how this might be expressed in ACPI.  A host
-> bridge
-> ACPI _CRS contains a CPU physical address and applying a _TRA
-> (translation
-> offset) to the CPU address gives you a PCI bus address.  I know this
-> code
-> is OF, not ACPI, but I assume that it should be possible to describe
-> your
-> hardware via ACPI as well as by OF.
-> 
-> >     the patch is based on 4.2-rc1
-> 
-> You can put this after the "---" line because it's not relevant in the
-> permanent changelog.
-
-Agreed
-
-> 
-> >     Signed-off-by: Gabriele Paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> >     Acked-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-> >     Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> 
-> Please un-indent your changelog.
-
-Ok agreed
-
-> 
-> > ---
-> >  drivers/of/address.c       | 2 ++
-> >  drivers/of/of_pci.c        | 4 ++++
-> >  include/linux/of_address.h | 1 +
-> >  3 files changed, 7 insertions(+)
-> >
-> > diff --git a/drivers/of/address.c b/drivers/of/address.c
-> > index 8bfda6a..23a5793 100644
-> > --- a/drivers/of/address.c
-> > +++ b/drivers/of/address.c
-> > @@ -253,6 +253,7 @@ struct of_pci_range
-> *of_pci_range_parser_one(struct of_pci_range_parser *parser,
-> >  						struct of_pci_range *range)
-> >  {
-> >  	const int na = 3, ns = 2;
-> > +	const int p_ns = of_n_size_cells(parser->node);
-> >
-> >  	if (!range)
-> >  		return NULL;
-> > @@ -265,6 +266,7 @@ struct of_pci_range
-> *of_pci_range_parser_one(struct of_pci_range_parser *parser,
-> >  	range->pci_addr = of_read_number(parser->range + 1, ns);
-> >  	range->cpu_addr = of_translate_address(parser->node,
-> >  				parser->range + na);
-> > +	range->bus_addr = of_read_number(parser->range + na, p_ns);
-> >  	range->size = of_read_number(parser->range + parser->pna + na,
-> ns);
-> >
-> >  	parser->range += parser->np;
-> > diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
-> > index 5751dc5..fe57030 100644
-> > --- a/drivers/of/of_pci.c
-> > +++ b/drivers/of/of_pci.c
-> > @@ -198,6 +198,7 @@ int of_pci_get_host_bridge_resources(struct
-> device_node *dev,
-> >
-> >  	pr_debug("Parsing ranges property...\n");
-> >  	for_each_of_pci_range(&parser, &range) {
-> > +		struct resource_entry *entry;
-> >  		/* Read next ranges element */
-> >  		if ((range.flags & IORESOURCE_TYPE_BITS) == IORESOURCE_IO)
-> >  			snprintf(range_type, 4, " IO");
-> > @@ -240,6 +241,9 @@ int of_pci_get_host_bridge_resources(struct
-> device_node *dev,
-> >  		}
-> >
-> >  		pci_add_resource_offset(resources, res,	res->start -
-> range.pci_addr);
-> > +		entry = list_last_entry(resources, struct resource_entry,
-> node);
-> > +		/* we are using __res for storing the PCI controller
-> address */
-> > +		entry->__res.start = range.bus_addr;
-> >  	}
-> >
-> >  	return 0;
-> > diff --git a/include/linux/of_address.h b/include/linux/of_address.h
-> > index d88e81b..865f96e 100644
-> > --- a/include/linux/of_address.h
-> > +++ b/include/linux/of_address.h
-> > @@ -16,6 +16,7 @@ struct of_pci_range {
-> >  	u32 pci_space;
-> >  	u64 pci_addr;
-> >  	u64 cpu_addr;
-> > +	u64 bus_addr;
-> >  	u64 size;
-> >  	u32 flags;
-> >  };
-> > --
-> > 1.9.1
-> >
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe linux-pci"
-> in
-> > the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/panel/urt,umsh-8596md.txt b/Documentation/devicetree/bindings/panel/urt,umsh-8596md.txt
+new file mode 100644
+index 0000000..2990e6b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/panel/urt,umsh-8596md.txt
+@@ -0,0 +1,11 @@
++United Radiant Technology UMSH-8596MD-xT 7.0" WVGA TFT LCD panel
++
++Supported are LVDS versions (-11T, -19T) and parallel ones
++(-T, -1T, -7T, -20T).
++
++Required properties:
++- compatible: should be "urt,umsh-8596md-lvds" for LVDS versions,
++  "urt,umsh-8596md-parallel" for parallel ones.
++
++This binding is compatible with the simple-panel binding, which is specified
++in simple-panel.txt in this directory.
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index d247994..f2bb617 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -212,6 +212,7 @@ toshiba	Toshiba Corporation
+ toumaz	Toumaz
+ tplink	TP-LINK Technologies Co., Ltd.
+ truly	Truly Semiconductors Limited
++urt	United Radiant Technology Corporation
+ usi	Universal Scientific Industrial Co., Ltd.
+ v3	V3 Semiconductor
+ variscite	Variscite Ltd.
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index f94201b..be47fd7 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -1036,6 +1036,42 @@ static const struct panel_desc shelly_sca07010_bfn_lnn = {
+ 	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
+ };
+ 
++static const struct display_timing urt_umsh_8596md_timing = {
++	.pixelclock = { 33260000, 33260000, 33260000 },
++	.hactive = { 800, 800, 800 },
++	.hfront_porch = { 41, 41, 41 },
++	.hback_porch = { 216 - 128, 216 - 128, 216 - 128 },
++	.hsync_len = { 71, 128, 128 },
++	.vactive = { 480, 480, 480 },
++	.vfront_porch = { 10, 10, 10 },
++	.vback_porch = { 35 - 2, 35 - 2, 35 - 2 },
++	.vsync_len = { 2, 2, 2 },
++	.flags = DISPLAY_FLAGS_DE_HIGH | DISPLAY_FLAGS_PIXDATA_NEGEDGE |
++		DISPLAY_FLAGS_HSYNC_LOW | DISPLAY_FLAGS_VSYNC_LOW,
++};
++
++static const struct panel_desc urt_umsh_8596md_lvds = {
++	.timings = &urt_umsh_8596md_timing,
++	.num_timings = 1,
++	.bpc = 6,
++	.size = {
++		.width = 152,
++		.height = 91,
++	},
++	.bus_format = MEDIA_BUS_FMT_RGB666_1X7X3_SPWG,
++};
++
++static const struct panel_desc urt_umsh_8596md_parallel = {
++	.timings = &urt_umsh_8596md_timing,
++	.num_timings = 1,
++	.bpc = 6,
++	.size = {
++		.width = 152,
++		.height = 91,
++	},
++	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
++};
++
+ static const struct of_device_id platform_of_match[] = {
+ 	{
+ 		.compatible = "ampire,am800480r3tmqwa1h",
+@@ -1125,6 +1161,12 @@ static const struct of_device_id platform_of_match[] = {
+ 		.compatible = "shelly,sca07010-bfn-lnn",
+ 		.data = &shelly_sca07010_bfn_lnn,
+ 	}, {
++		.compatible = "urt,umsh-8596md-lvds",
++		.data = &urt_umsh_8596md_lvds,
++	}, {
++		.compatible = "urt,umsh-8596md-parallel",
++		.data = &urt_umsh_8596md_parallel,
++	}, {
+ 		/* sentinel */
+ 	}
+ };
