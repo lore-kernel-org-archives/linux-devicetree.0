@@ -1,221 +1,96 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH 3/6] pci:host: Add Altera PCIe host controller driver
-Date: Wed, 29 Jul 2015 14:19:36 +0100
-Message-ID: <20150729131936.GA6376@red-moon>
-References: <1438080345-7233-1-git-send-email-lftan@altera.com>
- <1438080345-7233-4-git-send-email-lftan@altera.com>
+From: Ian Campbell <ian.campbell@citrix.com>
+Subject: Re: [PATCH v2] dtb: Create a common home for cross-architecture
+ dtsi files.
+Date: Wed, 29 Jul 2015 14:22:54 +0100
+Message-ID: <1438176174.11600.198.camel@citrix.com>
+References: <1437993343-9542-1-git-send-email-ian.campbell@citrix.com>
+	 <CAK7LNAQKswPzeFYdSVq3JDk2qawZ8e5ogBFMWdor-CibMovU3g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1438080345-7233-4-git-send-email-lftan@altera.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Ley Foon Tan <lftan@altera.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Dinh Nguyen <dinguyen@opensource.altera.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "lftan.linux@gmail.com" <lftan.linux@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAK7LNAQKswPzeFYdSVq3JDk2qawZ8e5ogBFMWdor-CibMovU3g@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Kristina Martsenko <kristina.martsenko@arm.com>, Kumar Gala <galak@codeaurora.org>, Kevin Hilman <khilman@linaro.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 28, 2015 at 11:45:42AM +0100, Ley Foon Tan wrote:
-
-[...]
-
-> +static int altera_pcie_parse_request_of_pci_ranges(struct altera_pcie *pcie)
-> +{
-> +       int err, res_valid = 0;
-> +       struct device *dev = &pcie->pdev->dev;
-> +       struct device_node *np = dev->of_node;
-> +       resource_size_t iobase;
-> +       struct resource_entry *win;
-> +       int offset = 0;
-> +
-> +       err = of_pci_get_host_bridge_resources(np, 0, 0xff, &pcie->resources,
-> +                                              &iobase);
-> +       if (err)
-> +               return err;
-
-On top of Rob's comments on ARM bios32 dependency removal (ie rewrite
-the driver so that it does not use pci_common_init_dev()), if you need IO
-access you have to map iobase, see pci_remap_iospace() in pci-host-generic.c
-
-Lorenzo
-
-> +
-> +       resource_list_for_each_entry(win, &pcie->resources) {
-> +               struct resource *parent, *res = win->res;
-> +
-> +               switch (resource_type(res)) {
-> +               case IORESOURCE_MEM:
-> +                       parent = &iomem_resource;
-> +                       res_valid |= !(res->flags & IORESOURCE_PREFETCH);
-> +                       cra_writel(pcie, res->start,
-> +                               A2P_ADDR_MAP_LO0 + offset);
-> +                       cra_writel(pcie, 0,
-> +                               A2P_ADDR_MAP_HI0 + offset);
-> +                       offset += ATT_ENTRY_SIZE;
-> +                       break;
-> +               default:
-> +                       continue;
-> +               }
-> +
-> +               err = devm_request_resource(dev, parent, res);
-> +               if (err)
-> +                       goto out_release_res;
-> +       }
-> +
-> +       if (!res_valid) {
-> +               dev_err(dev, "non-prefetchable memory resource required\n");
-> +               err = -EINVAL;
-> +               goto out_release_res;
-> +       }
-> +
-> +       return 0;
-> +
-> +out_release_res:
-> +       altera_pcie_release_of_pci_ranges(pcie);
-> +       return err;
-> +}
-> +
-> +static void altera_pcie_free_irq_domain(struct altera_pcie *pcie)
-> +{
-> +       int i;
-> +       u32 irq;
-> +
-> +       for (i = 0; i < INTX_NUM; i++) {
-> +               irq = irq_find_mapping(pcie->irq_domain, i);
-> +               if (irq > 0)
-> +                       irq_dispose_mapping(irq);
-> +       }
-> +
-> +       irq_domain_remove(pcie->irq_domain);
-> +}
-> +
-> +static int altera_pcie_init_irq_domain(struct altera_pcie *pcie)
-> +{
-> +       struct device *dev = &pcie->pdev->dev;
-> +       struct device_node *node = dev->of_node;
-> +
-> +       /* Setup INTx */
-> +       pcie->irq_domain = irq_domain_add_linear(node, INTX_NUM,
-> +                                       &intx_domain_ops, pcie);
-> +       if (!pcie->irq_domain) {
-> +               dev_err(dev, "Failed to get a INTx IRQ domain\n");
-> +               return PTR_ERR(pcie->irq_domain);
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static int altera_pcie_parse_dt(struct altera_pcie *pcie)
-> +{
-> +       struct resource *cra;
-> +       int ret;
-> +       struct platform_device *pdev = pcie->pdev;
-> +
-> +       cra = platform_get_resource_byname(pdev, IORESOURCE_MEM, "Cra");
-> +       pcie->cra_base = devm_ioremap_resource(&pdev->dev, cra);
-> +       if (IS_ERR(pcie->cra_base)) {
-> +               dev_err(&pdev->dev, "get Cra resource failed\n");
-> +               return PTR_ERR(pcie->cra_base);
-> +       }
-> +
-> +       /* setup IRQ */
-> +       pcie->hwirq = platform_get_irq(pdev, 0);
-> +       if (pcie->hwirq <= 0) {
-> +               dev_err(&pdev->dev, "failed to get IRQ: %d\n", pcie->hwirq);
-> +               return -EINVAL;
-> +       }
-> +       ret = devm_request_irq(&pdev->dev, pcie->hwirq, altera_pcie_isr,
-> +                       IRQF_SHARED, pdev->name, pcie);
-> +
-> +       if (ret) {
-> +               dev_err(&pdev->dev, "failed to request irq %d\n", pcie->hwirq);
-> +               return ret;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static int altera_pcie_probe(struct platform_device *pdev)
-> +{
-> +       struct altera_pcie *pcie;
-> +       int ret;
-> +
-> +       pcie = devm_kzalloc(&pdev->dev, sizeof(*pcie), GFP_KERNEL);
-> +       if (!pcie)
-> +               return -ENOMEM;
-> +
-> +       pcie->pdev = pdev;
-> +
-> +       ret = altera_pcie_parse_dt(pcie);
-> +       if (ret) {
-> +               dev_err(&pdev->dev, "Parsing DT failed\n");
-> +               return ret;
-> +       }
-> +
-> +       INIT_LIST_HEAD(&pcie->resources);
-> +
-> +       ret = altera_pcie_parse_request_of_pci_ranges(pcie);
-> +       if (ret) {
-> +               dev_err(&pdev->dev, "Failed add resources\n");
-> +               return ret;
-> +       }
-> +
-> +       ret = altera_pcie_init_irq_domain(pcie);
-> +       if (ret) {
-> +               dev_err(&pdev->dev, "Failed creating IRQ Domain\n");
-> +               return ret;
-> +       }
-> +
-> +       pcie->root_bus_nr = -1;
-> +
-> +       /* clear all interrupts */
-> +       cra_writel(pcie, P2A_INT_STS_ALL, P2A_INT_STATUS);
-> +       /* enable all interrupts */
-> +       cra_writel(pcie, P2A_INT_ENA_ALL, P2A_INT_ENABLE);
-> +
-> +       altera_pcie_hw.private_data = (void **)&pcie;
-> +
-> +       pci_common_init_dev(&pdev->dev, &altera_pcie_hw);
-> +
-> +       platform_set_drvdata(pdev, pcie);
-> +       return ret;
-> +}
-> +
-> +static int __exit altera_pcie_remove(struct platform_device *pdev)
-> +{
-> +       struct altera_pcie *pcie = platform_get_drvdata(pdev);
-> +
-> +       altera_pcie_free_irq_domain(pcie);
-> +       platform_set_drvdata(pdev, NULL);
-> +       return 0;
-> +}
-> +
-> +static const struct of_device_id altera_pcie_of_match[] = {
-> +       { .compatible = "altr,pcie-root-port-1.0", },
-> +       {},
-> +};
-> +MODULE_DEVICE_TABLE(of, altera_pcie_of_match);
-> +
-> +static struct platform_driver altera_pcie_driver = {
-> +       .probe          = altera_pcie_probe,
-> +       .remove         = altera_pcie_remove,
-> +       .driver = {
-> +               .name   = "altera-pcie",
-> +               .owner  = THIS_MODULE,
-> +               .of_match_table = altera_pcie_of_match,
-> +       },
-> +};
-> +
-> +module_platform_driver(altera_pcie_driver);
-> +
-> +MODULE_AUTHOR("Ley Foon Tan <lftan@altera.com>");
-> +MODULE_DESCRIPTION("Altera PCIe host controller driver");
-> +MODULE_LICENSE("GPL v2");
-> --
-> 1.8.2.1
+On Wed, 2015-07-29 at 20:07 +0900, Masahiro Yamada wrote:
+> Hi Ian,
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+> 
+> 2015-07-27 19:35 GMT+09:00 Ian Campbell <ian.campbell@citrix.com>:
+> > Commit 9ccd608070b6 "arm64: dts: add device tree for ARM SMM-A53x2 on
+> > LogicTile Express 20MG" added a new dts file to arch/arm64 which
+> > included "../../../../arm/boot/dts/vexpress-v2m-rs1.dtsi", i.e. a
+> > .dtsi supplied by arch/arm.
+> > 
+> > Unfortunately this causes some issues for the split device tree
+> > repository[0], since things get moved around there. In that context
+> > the new .dts ends up at src/arm64/arm/vexpress-v2f-1xv7-ca53x2.dts
+> > while the include is at src/arm/vexpress-v2m-rs1.dtsi.
+> > 
+> > The sharing of the .dtsi is legitimate since the baseboard is the same
+> > for various vexpress systems whatever processor they use.
+> > 
+> > Rather than using ../../ tricks to pickup .dtsi files from another
+> > arch this patch creates a new directory include/dt-dtsi as a
+> > home for such cross-arch .dtsi files, arranges for it to be in the
+> > include path when the .dts files are processed by cpp and switches the
+> 
+> 
+> "include/dt-dtsi/"  can be referenced from normal C sources.
+> 
+> I think another possible home for cross-arch DTSI is "kernel/dts/".
+> This directory can be hidden from C sources.
+
+I suppose, I don't really mind and will follow the direction of the other
+DTB maintainers. It doesn't seem like a big deal to me.
+
+> >@@ -223,7 +223,7 @@ Example of a VE tile description (simplified)
+> >                 /* Active high IRQ 0 is connected to GIC's SPI0 */
+> >                 interrupt-map = <0 0 0 &gic 0 0 4>;
+> > 
+> > -               /include/ "vexpress-v2m-rs1.dtsi"
+> > +               #include <arm/vexpress-v2m-rs1.dtsi>
+> >         };
+> >  };
+> 
+> 
+> 
+> You do not have to replace /include/ with #include,
+> if you add the include path for DTC.
+
+Ah, I looked for this but -i is not documented in the man page.
+
+Is there any reason to prefer one over the other?
+
+> Please add include path for DTC too
+> so that both /include/ and #include are available.
+
+OK.
+
+I shall await further feedback on what path to use before spinning a v3.
+
+Ian.
+
+> 
+> 
+> 
+> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+> index 79e8661..fc6c06c 100644
+> --- a/scripts/Makefile.lib
+> +++ b/scripts/Makefile.lib
+> @@ -285,7 +285,7 @@ quiet_cmd_dtc = DTC     $@
+>  cmd_dtc = mkdir -p $(dir ${dtc-tmp}) ; \
+>         $(CPP) $(dtc_cpp_flags) -x assembler-with-cpp -o $(dtc-tmp) $< ; 
+> \
+>         $(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 \
+> -               -i $(dir $<) $(DTC_FLAGS) \
+> +               -i $(dir $<) -i $(srctree)/kernel/dts $(DTC_FLAGS) \
+>                 -d $(depfile).dtc.tmp $(dtc-tmp) ; \
+>         cat $(depfile).pre.tmp $(depfile).dtc.tmp > $(depfile)
+> 
+> 
+> 
 > 
