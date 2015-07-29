@@ -1,58 +1,46 @@
-From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v2] ARM64: zynqmp: Add eeprom memories on i2c bus
-Date: Wed, 29 Jul 2015 16:19:34 +0200
-Message-ID: <827fe968a448dd25e133ce3509d91fd2482bd850.1438179569.git.michal.simek@xilinx.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, Suneel Garapati <suneel.garapati-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+From: Ludovic Desroches <ludovic.desroches@atmel.com>
+Subject: [PATCH v2 0/3] introduce driver for the Atmel SDMMC
+Date: Wed, 29 Jul 2015 16:22:45 +0200
+Message-ID: <1438179768-818-1-git-send-email-ludovic.desroches@atmel.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: ulf.hansson@linaro.org, nicolas.ferre@atmel.com, alexandre.belloni@free-electrons.com, pebolle@tiscali.nl, arnd@arndb.de, Ludovic Desroches <ludovic.desroches@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-Add i2c eeprom memories on i2c bus.
+Hi,
 
-Signed-off-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
----
+This set of patches introduce a driver for the new Atmel SDMMC device avaible
+on SAMA5D2 SoC.
 
-Changes in v2:
-- Change eeprom max freq from 100k to 400k
+There is also a resend of an old patch which has not been taken. Ulf asked
+for some reviews since it could impact all sdhci devices but nobody did it...
+This patch is not necessary for patch 2/3. It only fixes a special use case. If
+there are objections about it, drop it, I don't want to delay the Atmel SDMMC
+driver inclusion only for this patch.
 
----
- arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+Changes:
+- from v1:
+  - update license
 
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts b/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
-index c5cc8dbd0968..3b1011169756 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
-@@ -50,6 +50,24 @@
- 	status = "okay";
- };
- 
-+&i2c0 {
-+	status = "okay";
-+	clock-frequency = <400000>;
-+	eeprom@54 {
-+		compatible = "at,24c64";
-+		reg = <0x54>;
-+	};
-+};
-+
-+&i2c1 {
-+	status = "okay";
-+	clock-frequency = <400000>;
-+	eeprom@55 {
-+		compatible = "at,24c64";
-+		reg = <0x55>;
-+	};
-+};
-+
- &sata {
- 	status = "okay";
- 	ceva,broken-gen2;
+Ludovic Desroches (3):
+  mmc: sdhci: switch from programmable clock mode to divided one if
+    needed
+  mmc: sdhci-of-at91: introduce driver for the Atmel SDMMC
+  MAINTAINERS: add entry for Atmel sdhci-of-at91 driver
+
+ .../devicetree/bindings/mmc/sdhci-atmel.txt        |  21 +++
+ MAINTAINERS                                        |   6 +
+ drivers/mmc/host/Kconfig                           |   8 +
+ drivers/mmc/host/Makefile                          |   1 +
+ drivers/mmc/host/sdhci-of-at91.c                   | 192 +++++++++++++++++++++
+ drivers/mmc/host/sdhci.c                           |  29 +++-
+ 6 files changed, 248 insertions(+), 9 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-atmel.txt
+ create mode 100644 drivers/mmc/host/sdhci-of-at91.c
+
 -- 
-2.3.5
+2.5.0
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
