@@ -1,83 +1,74 @@
-From: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: RE: [PATCH 1/2] drivers: watchdog: at91sam9_wdt: add new feature
- support
-Date: Wed, 29 Jul 2015 01:50:25 +0000
-Message-ID: <B256D81BAE5131468A838E5D7A243641C9F82110@penmbx01>
-References: <1438066825-21923-1-git-send-email-wenyou.yang@atmel.com>
- <1438066825-21923-2-git-send-email-wenyou.yang@atmel.com>
- <55B72BC0.8070206@roeck-us.net>
- <B256D81BAE5131468A838E5D7A243641C9F820CB@penmbx01>
- <55B82AE1.2050906@roeck-us.net>
+From: YH Huang <yh.huang@mediatek.com>
+Subject: Re: [PATCH v6 0/3] Add MediaTek display PWM driver
+Date: Wed, 29 Jul 2015 11:01:21 +0800
+Message-ID: <1438138881.16608.6.camel@mtksdaap41>
+References: <1437380237-28961-1-git-send-email-yh.huang@mediatek.com>
+	 <2181696.fQcvS98Cqx@ubix> <1437729058.11386.4.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55B82AE1.2050906-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Content-Language: en-US
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org" <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: "sylvain.rochet-ETtyaVkrhkNWk0Htik3J/w@public.gmane.org" <sylvain.rochet-ETtyaVkrhkNWk0Htik3J/w@public.gmane.org>, "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <1437729058.11386.4.camel@mtksdaap41>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, yingjoe.chen@mediatek.com, yh.huang@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgR3VlbnRlciwNCg0KVGhhbmsgeW91IGZvciB5b3VyIHByb21wdCBhbnN3ZXIuDQoNCj4gLS0t
-LS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogR3VlbnRlciBSb2VjayBbbWFpbHRvOmxp
-bnV4QHJvZWNrLXVzLm5ldF0NCj4gU2VudDogMjAxNcTqN9TCMjnI1SA5OjIzDQo+IFRvOiBZYW5n
-LCBXZW55b3U7IHdpbUBpZ3VhbmEuYmU7IHJvYmgrZHRAa2VybmVsLm9yZzsgcGF3ZWwubW9sbEBh
-cm0uY29tOw0KPiBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgaWpjK2RldmljZXRyZWVAaGVsbGlvbi5v
-cmcudWs7IGdhbGFrQGNvZGVhdXJvcmEub3JnDQo+IENjOiBzeWx2YWluLnJvY2hldEBmaW5zZWN1
-ci5jb207IEZlcnJlLCBOaWNvbGFzOyBib3Jpcy5icmV6aWxsb25AZnJlZS0NCj4gZWxlY3Ryb25z
-LmNvbTsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5l
-bC5vcmc7IGxpbnV4LQ0KPiB3YXRjaGRvZ0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJu
-ZWxAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDEvMl0gZHJpdmVy
-czogd2F0Y2hkb2c6IGF0OTFzYW05X3dkdDogYWRkIG5ldyBmZWF0dXJlDQo+IHN1cHBvcnQNCj4g
-DQo+IE9uIDA3LzI4LzIwMTUgMDU6MzggUE0sIFlhbmcsIFdlbnlvdSB3cm90ZToNCj4gPiBIaSBH
-dWVudGVyLA0KPiA+DQo+ID4gVGhhbmsgeW91IHZlcnkgbXVjaCBmb3IgeW91ciByZXZpZXcuDQo+
-ID4NCj4gPj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPj4gRnJvbTogR3VlbnRlciBS
-b2VjayBbbWFpbHRvOmxpbnV4QHJvZWNrLXVzLm5ldF0NCj4gPj4gU2VudDogMjAxNcTqN9TCMjjI
-1SAxNToxNA0KPiA+PiBUbzogWWFuZywgV2VueW91OyB3aW1AaWd1YW5hLmJlOyByb2JoK2R0QGtl
-cm5lbC5vcmc7DQo+ID4+IHBhd2VsLm1vbGxAYXJtLmNvbTsgbWFyay5ydXRsYW5kQGFybS5jb207
-DQo+ID4+IGlqYytkZXZpY2V0cmVlQGhlbGxpb24ub3JnLnVrOyBnYWxha0Bjb2RlYXVyb3JhLm9y
-Zw0KPiA+PiBDYzogc3lsdmFpbi5yb2NoZXRAZmluc2VjdXIuY29tOyBGZXJyZSwgTmljb2xhczsN
-Cj4gPj4gYm9yaXMuYnJlemlsbG9uQGZyZWUtIGVsZWN0cm9ucy5jb207IGRldmljZXRyZWVAdmdl
-ci5rZXJuZWwub3JnOw0KPiA+PiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC0g
-d2F0Y2hkb2dAdmdlci5rZXJuZWwub3JnOw0KPiA+PiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmlu
-ZnJhZGVhZC5vcmcNCj4gPj4gU3ViamVjdDogUmU6IFtQQVRDSCAxLzJdIGRyaXZlcnM6IHdhdGNo
-ZG9nOiBhdDkxc2FtOV93ZHQ6IGFkZCBuZXcNCj4gPj4gZmVhdHVyZSBzdXBwb3J0DQo+ID4+DQo+
-ID4+IE9uIDA3LzI4LzIwMTUgMTI6MDAgQU0sIFdlbnlvdSBZYW5nIHdyb3RlOg0KPiA+Pj4gSW4g
-dGhlIGRhdGFzaGVldCwgdGhlIG5ldyBmZWF0dXJlIGlzIGRlc2NyaWJsZWQgYXMgIldEVF9NUiBj
-YW4gYmUNCj4gPj4+IHdyaXR0ZW4gdW50aWwgYSBMT0NLTVIgY29tbWFuZCBpcyBpc3N1ZWQgaW4g
-V0RUX0NSIi4NCj4gPj4+IFRoYXQgaXMgdG8gc2F5LCBhcyBsb25nIGFzIHRoZSBib290c3RyYXAg
-YW5kIHUtYm9vdCBkb24ndCBpc3N1ZSBhDQo+ID4+PiBMT0NLTVIgY29tbWFuZCwgV0RUX01SIGNh
-biBiZSB3cml0dGVuIGluIGtlcm5lbC4NCj4gPj4+DQo+ID4+PiBTbyB0aGUgZHJpdmVyIGNhbiBl
-bmFibGUvZGlzYWJsZSB0aGUgd2F0Y2hkb2cgdGltZXIgaGFyZHdhcmUsIHNldA0KPiA+Pj4gV0RW
-KFdhdGNoZG9nIENvdW50ZXIgVmFsdWUpIGFuZCBXREQoV2F0Y2hkb2cgRGVsdGEgVmFsdWUpIGZp
-ZWxkcyBvZg0KPiA+Pj4gV0RUX01SIHJlZ2lzdGVyIHRvIHNldCB0aGUgd2F0Y2hkb2cgdGltZXIg
-dGltZW91dC4NCj4gPj4+DQo+ID4+PiBUaGUgdGltZXIgaXMgbm90IG5lY2Vzc2FyeSB0aGF0IHJl
-Z3VsYXJseSBzZW5kcyBhIGtlZXBhbGl2ZSBwaW5nIHRvDQo+ID4+PiB0aGUgd2F0Y2hkb2cgdGlt
-ZXIgaGFyZHdhcmUuDQo+ID4+Pg0KPiA+Pj4gSXQgaXMgaW50cm9kdWNlZCBmcm9tIHNhbWE1ZDQg
-U29Dcy4NCj4gPj4+DQo+ID4+IFNpbmNlIHRoZXJlIGFyZSBzbyBtYW55IGNoYW5nZXMsIEkgd29u
-ZGVyIGlzIGEgc2VwYXJhdGUgZHJpdmVyIHdvdWxkDQo+ID4+IG1ha2UgbW9yZSBzZW5zZS4NCj4g
-PiBZZXMsIGEgYml0IG1hbnkgY2hhbmdlcy4NCj4gPiBJIHRob3VnaHQgcmV1c2UgdGhlIGRyaXZl
-ciBjb2RlLg0KPiA+IElmIGEgc2VwYXJhdGUgZHJpdmVyLCBJIGFtIGFmcmFpZCBpdCBpbmNsdWRl
-cyBtdWNoIGR1cGxpY2F0ZWQgY29kZS4NCj4gPiBBZnRlciBhbGwsIGl0IGlzIGZvciB0aGUgc2Ft
-ZSBkZXZpY2Ugd2l0aCBkaWZmZXJlbnQgZmVhdHVyZS4NCj4gPg0KPiA+IEkgZG9uJ3QgdGhpbmsg
-aXQgaXMgbmVjZXNzYXJ5IHRvIGhhdmUgbXVsdGlwbGUgZHJpdmVycyBmb3IgdGhlIHNhbWUgcGVy
-aXBoZXJhbCB3aXRoDQo+IGRpZmZlcmVudCBmZWF0dXJlLg0KPiA+DQo+IA0KPiBUaGUgY29uY2Vw
-dCBmb3IgdGhlIHR3byBtZWNoYW5pc21zIGlzIGFsbCBkaWZmZXJlbnQ6IEluIG9uZSwgdGhlIHdh
-dGNoZG9nDQo+IGtlZXBhbGl2ZSBpcyB0cmlnZ2VyZWQgZnJvbSB0aW1lciBjb2RlLiBJbiB0aGUg
-b3RoZXIsIHRoZSB3YXRjaGRvZyB0aW1lb3V0IGlzDQo+IHRyaWdnZXJlZCBkaXJlY3RseSBmcm9t
-IHRoZSBoZWFydGJlYXQgZnVuY3Rpb24uIE9uZSBhc3N1bWVzIHRoYXQgdGhlIHdhdGNoZG9nIGlz
-DQo+IGFsd2F5cyBydW5uaW5nLCBhbmQgdGhhdCBpdCBtdXN0IGJlIHBpbmdlZCBldmVuIGlmIGNs
-b3NlZC4gVGhlIG90aGVyIGRpc2FibGVzIHRoZQ0KPiB3YXRjaGRvZyBvbiBjbG9zZS4NCj4gDQo+
-IFdoYXQgSSBfY2FuXyBzZWUgaXMgdGhhdCB0aGUgZHJpdmVyIGlzIGJlY29taW5nIGFuIHVubWFp
-bnRhaW5hYmxlIG1lc3MsIHdpdGggbG90cw0KPiBvZiBpZi9lbHNlIGluIHByZXR0eSBtdWNoIGV2
-ZXJ5IGZ1bmN0aW9uLiBJIGNvbnNpZGVyIHRoaXMgbXVjaCBsZXNzIGRlc2lyYWJsZSB0aGFuIGEN
-Cj4gYml0IG9mIGNvZGUgZHVwbGljYXRpb24gLSBpZiB0aGVyZSBpcyBhbnkuIFNlcmlvdXNseSwg
-bW9zdCBvZiB0aGUgYWRkZWQgY29kZSBtaWdodCBhcw0KPiB3ZWxsIGJlIGZvciBhIGNvbXBsZXRl
-bHkgZGlmZmVyZW50IGNoaXAuDQoNCllvdSBhcmUgcmlnaHQsIEkgYWNjZXB0ZWQgeW91ciBhZHZp
-Y2UuIEkgd2lsbCByZXdyaXRlIGl0LiBUaGFua3MuDQoNCj4gDQo+IEd1ZW50ZXINCg0KQmVzdCBS
-ZWdhcmRzLA0KV2VueW91IFlhbmcNCg==
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Fri, 2015-07-24 at 17:10 +0800, YH Huang wrote:
+> On Fri, 2015-07-24 at 10:42 +0200, Matthias Brugger wrote:
+> > On Monday, July 20, 2015 04:17:14 PM YH Huang wrote:
+> > > This patch series add the use of display PWM driver, documentation
+> > > and device tree for Mediatek SoCs. The driver is used to support
+> > > the backlight of the panel. This is based on v4.2-rc1.
+> > > 
+> > > The clock definitions (CLK_MM_DISP_PWM*) are added by James Liao's patch:
+> > > clk: mediatek: Add subsystem clocks of MT8173
+> > > 
+> > > Change in v6:
+> > > 1. Enable clocks in the pwm_enable function
+> > > 2. Remove suspend/resume code since pwm-backlight driver has done the same
+> > > things 3. Revise some code to make it easier to read
+> > > 
+> > 
+> > Can you please provide the whole change log for all versions the next time.
+> > It's easier this way to understand the evolution of the series.
+> 
+> Change in v6:
+> 1. Enable clocks in the pwm_enable function.
+> 2. Remove suspend/resume code since pwm-backlight driver has done the
+> same things.
+> 3. Revise some code to make it easier to read.
+> 
+> Change in v5:
+> 1. Configure PWM output via pinctrl.
+> 2. Fix the parameter name in dtsi.
+> 
+> Change in v4:
+> 1. Codebase is on v4.2-rc1.
+> 2. Add the PWM node in dtsi.
+> 3. Change the dependency in Kconfig.
+> 4. Rewrite some code for readability.
+> 
+> Change in v3:
+> 1. Add suspend/resume function.
+> 2. Fix the formula for high_width calculation.
+> 3. Rewrite some code to make it easier to read.
+> 4. Add more information in the commit message.
+> 
+> Change in v2:
+> 1. Rewrite descriptions for driver in kconfig to make it much clear.
+> 2. Rename the driver from "pwm-mediatek-disp" to "pwm-mtk-disp".
+> 3. Disable clocks in the error path.
+> 4. Change the shift values in decimal instead of hex.
+> 5. Rename and add some variables or function name for consistency and
+> readability.
+> 6. Drop unnecessary parentheses, spaces, variables and add newlines to
+> make the code easiler to read.
+
+Hi all,
+
+If you have any suggestions, please let me know.
+Perhaps we can apply the patch?
+
+Regards,
+YH Huang
