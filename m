@@ -1,211 +1,60 @@
-From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] edac: Add L3/SoC support to the APM X-Gene SoC
- EDAC driver
-Date: Wed, 29 Jul 2015 16:39:10 -0700
-Message-ID: <CAPw-ZTkZ7q8PUWydFad5TXrhcY6YBRjdVvz+SR+LV4sOLDKkEg@mail.gmail.com>
-References: <1437808063-17592-1-git-send-email-lho@apm.com>
-	<1437808063-17592-2-git-send-email-lho@apm.com>
-	<1437808063-17592-3-git-send-email-lho@apm.com>
-	<20150729142941.GC17367@nazgul.tnic>
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: Re: [PATCH] backlight: pm8941-wled: Add default-brightness property
+Date: Wed, 29 Jul 2015 16:51:39 -0700
+Message-ID: <20150729235139.GC6519@usrtlx11787.corpusers.net>
+References: <1437681127-15760-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <CAL_JsqKxdF5sj=edURFLDCk1OyCJR-w6+STL4r3zM6+be3tjhg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150729142941.GC17367-K5JNixvcfoxupOikMc4+xw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
-Cc: Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqKxdF5sj=edURFLDCk1OyCJR-w6+STL4r3zM6+be3tjhg@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jingoo Han <jingoohan1@gmail.com>, Lee Jones <lee.jones@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Rob Clark <robdclark@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Borislav,
+On Fri 24 Jul 08:29 PDT 2015, Rob Herring wrote:
 
->> +
->> +static void xgene_edac_l3_hw_init(struct edac_device_ctl_info *edac_dev,
->> +                               bool enable)
->
-> arg alignment. It should be
->
-> function name(arg1, arg2,
->               arg3, arg4,
->               arg5...
->
-> Check your other functions too.
+> On Thu, Jul 23, 2015 at 2:52 PM, Bjorn Andersson
+> <bjorn.andersson@sonymobile.com> wrote:
+> > Add the possibility of specifying the default brightness in DT.
+> >
+> > Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+> > ---
+> >
+> > This depends on the patch moving pm8941-wled to backlight [1]. The dt property
+> > is used by several other backlight drivers, so I considered this to be a
+> > "common" property and it's hence not prefixed with "qcom,".
+> 
+> Well, we have "default-brightness" and "default-brightness-level" used
+> by 1 driver each. But default-brightness-level is much more commonly
+> used (in dts files) since it is in the pwm backlight binding, so we
+> should go with it. I'd like to see this moved to a common backlight
+> doc.
+> 
 
-I will check and fix other functions if any. But this function is just
-fine. It may be off just by the + extra character with patch
-generation only.
+As I looked at these, the default-brightness used in tps65217 is a value
+between 0 and 100, so that can be interpreted as a percentage.
 
->> +{
->> +     struct xgene_edac_dev_ctx *ctx = edac_dev->pvt_info;
->> +     struct dentry *edac_debugfs;
->> +     char name[30];
->> +
->> +     if (!IS_ENABLED(CONFIG_EDAC_DEBUG))
->> +             return;
->> +
->> +     /*
->> +      * Todo: Switch to common EDAC debug file system for edac device
->> +      *       when available.
->> +      */
->
-> What is that?
+The pwm binding however uses a separate array of "brightness-levels" and
+then default-brightness-level is supposed to be an index into that
+array.
 
-Debug folder node shows up at /sys/kernel/debug/<file here> while the
-MC debug node shows up at /sys/kernel/debug/edac where <file here> is
-the driver node name. It would be better if everything shows up at
-/sys/kernel/debug/edac. For this to happen, I need EDAC core change to
-provide an parent node.
 
->
->> +     if (!ctx->edac->dfs) {
->> +             ctx->edac->dfs = debugfs_create_dir(edac_dev->dev->kobj.name,
->> +                                                 NULL);
->> +             if (!ctx->edac->dfs)
->> +                     return;
->> +     }
->> +     sprintf(name, "l3c%d", ctx->edac_idx);
->> +     edac_debugfs = debugfs_create_dir(name, ctx->edac->dfs);
->> +     if (!edac_debugfs)
->> +             return;
->> +
->> +     debugfs_create_file("l3_inject_ctrl", S_IWUSR, edac_debugfs, edac_dev,
->> +                         &xgene_edac_l3_debug_inject_fops);
->> +}
->> +
->> +static int xgene_edac_l3_add(struct xgene_edac *edac, struct device_node *np,
->> +                          int version)
->> +{
->> +     struct edac_device_ctl_info *edac_dev;
->> +     struct xgene_edac_dev_ctx *ctx;
->> +     struct resource res;
->> +     void __iomem *dev_csr;
->> +     int edac_idx;
->> +     int rc = 0;
->> +
->> +     if (!devres_open_group(edac->dev, xgene_edac_l3_add, GFP_KERNEL))
->> +             return -ENOMEM;
->> +
->> +     rc = of_address_to_resource(np, 0, &res);
->> +     if (rc < 0) {
->> +             dev_err(edac->dev, "no L3 resource address\n");
->> +             goto err;
->> +     }
->> +     dev_csr = devm_ioremap_resource(edac->dev, &res);
->> +     if (IS_ERR(dev_csr)) {
->> +             dev_err(edac->dev,
->> +                     "devm_ioremap_resource failed for L3 resource address\n");
->> +             rc = PTR_ERR(dev_csr);
->> +             goto err;
->> +     }
->>
->> +     edac_idx = edac_device_alloc_index();
->> +     edac_dev = edac_device_alloc_ctl_info(sizeof(*ctx),
->> +                                           "l3c", 1, "l3c", 1, 0, NULL, 0,
->> +                                           edac_idx);
->> +     if (!edac_dev) {
->> +             rc = -ENOMEM;
->> +             goto err;
->> +     }
->> +
->> +     ctx = edac_dev->pvt_info;
->> +     ctx->dev_csr = dev_csr;
->> +     ctx->name = "xgene_l3_err";
->> +     ctx->edac_idx = edac_idx;
->> +     ctx->edac = edac;
->> +     ctx->edac_dev = edac_dev;
->> +     ctx->ddev = *edac->dev;
->> +     ctx->version = version;
->> +     edac_dev->dev = &ctx->ddev;
->> +     edac_dev->ctl_name = ctx->name;
->> +     edac_dev->dev_name = ctx->name;
->> +     edac_dev->mod_name = EDAC_MOD_STR;
->> +
->> +     if (edac_op_state == EDAC_OPSTATE_POLL)
->> +             edac_dev->edac_check = xgene_edac_l3_check;
->
-> So depending on what SoC elements you detect, the last one's check
-> function will win?
->
-> If xgene_edac loads on multiple SoC elements, you need a global xgene
-> check function for which l3, soc, mc, etc register...
+As we're trying to specify a default brightness within the range [0,
+max_brightness) the latter doesn't make much sense.
 
-No... each EDAC instance has its own context as we allocated via
-function edac_device_alloc_ctl_info. Per type of instance will use the
-same type function.
+Therefor my suggestion is that we make the "default-brightness" the
+common property and we define it as a percentage of [0,max_brightness).
 
->> +
->> +static const char * const *xgene_edac_soc_mem_data(
->> +     struct xgene_edac_dev_ctx *ctx)
->> +{
->> +     switch (ctx->version) {
->> +     case 1:
->> +             return soc_mem_err_v1;
->> +     default:
->> +             return NULL;
->> +     }
->> +}
->
-> That's one badly formatted function used only once. Just move the logic
-> there and kill it.
+> Really, I think all the backlight documentation should be merged with
+> LEDs docs. Things like "default-on" are common. But I won't ask to do
+> that here.
 
-For format, code looks fine. In any case, I will roll this into the code.
+I think the backlight framework should be merged with the LED framework.
+There's several hw blocks that are split between the two, with an mfd
+tying them together...
 
->> +static int xgene_edac_soc_add(struct xgene_edac *edac, struct device_node *np,
->> +                           int version)
->> +{
->> +     struct edac_device_ctl_info *edac_dev;
->> +     struct xgene_edac_dev_ctx *ctx;
->> +     void __iomem *dev_csr;
->> +     struct resource res;
->> +     int edac_idx;
->> +     int rc = 0;
->> +
->> +     if (!devres_open_group(edac->dev, xgene_edac_soc_add, GFP_KERNEL))
->> +             return -ENOMEM;
->> +
->> +     rc = of_address_to_resource(np, 0, &res);
->> +     if (rc < 0) {
->> +             dev_err(edac->dev, "no SoC resource address\n");
->> +             goto err;
->> +     }
->> +     dev_csr = devm_ioremap_resource(edac->dev, &res);
->> +     if (IS_ERR(dev_csr)) {
->> +             dev_err(edac->dev,
->> +                     "devm_ioremap_resource failed for soc resource address\n");
->> +             rc = PTR_ERR(dev_csr);
->> +             goto err;
->> +     }
->> +
->> +     edac_idx = edac_device_alloc_index();
->> +     edac_dev = edac_device_alloc_ctl_info(sizeof(*ctx),
->> +                                           "SOC", 1, "SOC", 1, 2, NULL, 0,
->> +                                           edac_idx);
->> +     if (!edac_dev) {
->> +             rc = -ENOMEM;
->> +             goto err;
->> +     }
->> +
->> +     ctx = edac_dev->pvt_info;
->> +     ctx->dev_csr = dev_csr;
->> +     ctx->name = "xgene_soc_err";
->> +     ctx->edac_idx = edac_idx;
->> +     ctx->edac = edac;
->> +     ctx->edac_dev = edac_dev;
->> +     ctx->ddev = *edac->dev;
->> +     ctx->version = version;
->> +     edac_dev->dev = &ctx->ddev;
->> +     edac_dev->ctl_name = ctx->name;
->> +     edac_dev->dev_name = ctx->name;
->> +     edac_dev->mod_name = EDAC_MOD_STR;
->> +
->> +     if (edac_op_state == EDAC_OPSTATE_POLL)
->> +             edac_dev->edac_check = xgene_edac_soc_check;
->
-> Same here about the ->edac_check function.
-
-Same comment as above.
-
--Loc
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Bjorn
