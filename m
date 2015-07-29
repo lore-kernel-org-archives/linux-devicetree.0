@@ -1,56 +1,38 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v5 01/10] clk: mediatek: Removed unused dpi_ck clock from MT8173
-Date: Wed, 29 Jul 2015 09:05:52 +0200
-Message-ID: <6282882.pftQBj38E3@diego>
-References: <1438152754-11970-1-git-send-email-jamesjj.liao@mediatek.com> <1438152754-11970-2-git-send-email-jamesjj.liao@mediatek.com>
+From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Subject: Re: [PATCH net-next 0/4] dwc_eth_qos: Add support for Synopsys DWC
+ Ethernet QoS
+Date: Wed, 29 Jul 2015 00:10:27 -0700 (PDT)
+Message-ID: <20150729.001027.425054389792319502.davem@davemloft.net>
+References: <1438077710-19175-1-git-send-email-larper@axis.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1438152754-11970-2-git-send-email-jamesjj.liao@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: James Liao <jamesjj.liao@mediatek.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, srv_heupstream@mediatek.com, Daniel Kurtz <djkurtz@chromium.org>, Ricky Liang <jcliang@chromium.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1438077710-19175-1-git-send-email-larper-VrBV9hrLPhE@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: lars.persson-VrBV9hrLPhE@public.gmane.org
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andire-VrBV9hrLPhE@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, larper-VrBV9hrLPhE@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 29. Juli 2015, 14:52:25 schrieb James Liao:
-> The dpi_ck clock can be removed because it not actually used
-> in topckgen and subsystems.
-> 
-> Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
+From: Lars Persson <lars.persson-VrBV9hrLPhE@public.gmane.org>
+Date: Tue, 28 Jul 2015 12:01:46 +0200
 
->From our past discussions this change looks about right, and should still 
-become _part of 4.2_, to not have the CLK_TOP_DPI become part of the 
-devicetree CLK_TOP_DPI.
+> This is a driver supporting version 4.10a of the Synopsys DWC Ethernet QoS
+> gigabit ethernet controller. The IP has changed significantly compared to the
+> dwmac1000 so a separate driver is justified.
+> 
+> The IP is highly configurable at synthesis time. This driver has been
+> developed for a subset of the total available feature set. Currently
+> it supports:
+> * TSO
+> * Checksum offload for RX and TX.
+> * Energy efficient ethernet.
+> * GMII phy interface.
+> * The statistics module.
+> * Single RX and TX queue.
 
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-
-> ---
->  drivers/clk/mediatek/clk-mt8173.c      | 1 -
->  include/dt-bindings/clock/mt8173-clk.h | 1 -
->  2 files changed, 2 deletions(-)
-> 
-> diff --git a/drivers/clk/mediatek/clk-mt8173.c
-> b/drivers/clk/mediatek/clk-mt8173.c index 4b9e04c..4486f8f 100644
-> --- a/drivers/clk/mediatek/clk-mt8173.c
-> +++ b/drivers/clk/mediatek/clk-mt8173.c
-> @@ -26,7 +26,6 @@ static DEFINE_SPINLOCK(mt8173_clk_lock);
-> 
->  static const struct mtk_fixed_factor root_clk_alias[] __initconst = {
->  	FACTOR(CLK_TOP_CLKPH_MCK_O, "clkph_mck_o", "clk_null", 1, 1),
-> -	FACTOR(CLK_TOP_DPI, "dpi_ck", "clk_null", 1, 1),
->  	FACTOR(CLK_TOP_USB_SYSPLL_125M, "usb_syspll_125m", "clk_null", 1, 1),
->  	FACTOR(CLK_TOP_HDMITX_DIG_CTS, "hdmitx_dig_cts", "clk_null", 1, 1),
->  };
-> diff --git a/include/dt-bindings/clock/mt8173-clk.h
-> b/include/dt-bindings/clock/mt8173-clk.h index 4ad76ed..7230c38 100644
-> --- a/include/dt-bindings/clock/mt8173-clk.h
-> +++ b/include/dt-bindings/clock/mt8173-clk.h
-> @@ -18,7 +18,6 @@
->  /* TOPCKGEN */
-> 
->  #define CLK_TOP_CLKPH_MCK_O		1
-> -#define CLK_TOP_DPI			2
->  #define CLK_TOP_USB_SYSPLL_125M		3
->  #define CLK_TOP_HDMITX_DIG_CTS		4
->  #define CLK_TOP_ARMCA7PLL_754M		5
+Series applied, thanks.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
