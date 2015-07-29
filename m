@@ -1,113 +1,130 @@
-From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v5 06/10] clk: mediatek: mt8173: Fix enabling of critical
- clocks
-Date: Wed, 29 Jul 2015 14:52:30 +0800
-Message-ID: <1438152754-11970-7-git-send-email-jamesjj.liao@mediatek.com>
+From: James Liao <jamesjj.liao@mediatek.com>
+Subject: [PATCH v5 03/10] clk: mediatek: Add __initdata and __init for data
+ and functions
+Date: Wed, 29 Jul 2015 14:52:27 +0800
+Message-ID: <1438152754-11970-4-git-send-email-jamesjj.liao@mediatek.com>
 References: <1438152754-11970-1-git-send-email-jamesjj.liao@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1438152754-11970-1-git-send-email-jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Heiko Stubner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1438152754-11970-1-git-send-email-jamesjj.liao@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Matthias Brugger <matthias.bgg@gmail.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Heiko Stubner <heiko@sntech.de>
+Cc: devicetree@vger.kernel.org, srv_heupstream@mediatek.com, James Liao <jamesjj.liao@mediatek.com>, linux-kernel@vger.kernel.org, Daniel Kurtz <djkurtz@chromium.org>, Ricky Liang <jcliang@chromium.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Add __init for clock registration functions, and add __initdata for
+mtk_gate_regs initial structures.
 
-On the MT8173 the clocks are provided by different units. To enable
-the critical clocks we must be sure that all parent clocks are already
-registered, otherwise the parents of the critical clocks end up being
-unused and get disabled later.
-
-On MT8173, for example, it is the CLK_TOP clocks that have CLK_APMIXED
-PLLs as their parents, so we cannot enable the CLK_TOP critical clocks
-until the CLK_APMIXED clocks have all been registered.
-
-To find a place where all parents are registered we try each time
-after we've registered some clocks if all known providers are present
-now and only then we enable the critical clocks.
-
-Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
 ---
- drivers/clk/mediatek/clk-mt8173.c | 26 +++++++++++++++++++++-----
- 1 file changed, 21 insertions(+), 5 deletions(-)
+ drivers/clk/mediatek/clk-gate.c   |  2 +-
+ drivers/clk/mediatek/clk-mt8173.c |  6 +++---
+ drivers/clk/mediatek/clk-mtk.c    | 13 +++++++------
+ 3 files changed, 11 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/clk/mediatek/clk-mt8173.c b/drivers/clk/mediatek/clk-mt8173.c
-index 412c36d..c7933b2 100644
---- a/drivers/clk/mediatek/clk-mt8173.c
-+++ b/drivers/clk/mediatek/clk-mt8173.c
-@@ -697,6 +697,22 @@ static const struct mtk_composite peri_clks[] __initconst = {
- 	MUX(CLK_PERI_UART3_SEL, "uart3_ck_sel", uart_ck_sel_parents, 0x40c, 3, 1),
+diff --git a/drivers/clk/mediatek/clk-gate.c b/drivers/clk/mediatek/clk-gate.c
+index 5702036..576bdb7 100644
+--- a/drivers/clk/mediatek/clk-gate.c
++++ b/drivers/clk/mediatek/clk-gate.c
+@@ -97,7 +97,7 @@ const struct clk_ops mtk_clk_gate_ops_setclr_inv = {
+ 	.disable	= mtk_cg_disable_inv,
  };
  
-+static struct clk_onecell_data *mt8173_top_clk_data;
-+static struct clk_onecell_data *mt8173_pll_clk_data;
-+
-+static void __init mtk_clk_enable_critical(void)
-+{
-+	if (!mt8173_top_clk_data || !mt8173_pll_clk_data)
-+		return;
-+
-+	clk_prepare_enable(mt8173_pll_clk_data->clks[CLK_APMIXED_ARMCA15PLL]);
-+	clk_prepare_enable(mt8173_pll_clk_data->clks[CLK_APMIXED_ARMCA7PLL]);
-+	clk_prepare_enable(mt8173_top_clk_data->clks[CLK_TOP_MEM_SEL]);
-+	clk_prepare_enable(mt8173_top_clk_data->clks[CLK_TOP_DDRPHYCFG_SEL]);
-+	clk_prepare_enable(mt8173_top_clk_data->clks[CLK_TOP_CCI400_SEL]);
-+	clk_prepare_enable(mt8173_top_clk_data->clks[CLK_TOP_RTC_SEL]);
-+}
-+
- static void __init mtk_topckgen_init(struct device_node *node)
+-struct clk *mtk_clk_register_gate(
++struct clk * __init mtk_clk_register_gate(
+ 		const char *name,
+ 		const char *parent_name,
+ 		struct regmap *regmap,
+diff --git a/drivers/clk/mediatek/clk-mt8173.c b/drivers/clk/mediatek/clk-mt8173.c
+index 4478849..a33a531 100644
+--- a/drivers/clk/mediatek/clk-mt8173.c
++++ b/drivers/clk/mediatek/clk-mt8173.c
+@@ -586,7 +586,7 @@ static const struct mtk_composite top_muxes[] __initconst = {
+ 	MUX(CLK_TOP_I2S3_B_SEL, "i2s3_b_ck_sel", i2s3_b_ck_parents, 0x120, 8, 1),
+ };
+ 
+-static const struct mtk_gate_regs infra_cg_regs = {
++static const struct mtk_gate_regs infra_cg_regs __initconst = {
+ 	.set_ofs = 0x0040,
+ 	.clr_ofs = 0x0044,
+ 	.sta_ofs = 0x0048,
+@@ -615,13 +615,13 @@ static const struct mtk_gate infra_clks[] __initconst = {
+ 	GATE_ICG(CLK_INFRA_PMICWRAP, "infra_pmicwrap", "axi_sel", 23),
+ };
+ 
+-static const struct mtk_gate_regs peri0_cg_regs = {
++static const struct mtk_gate_regs peri0_cg_regs __initconst = {
+ 	.set_ofs = 0x0008,
+ 	.clr_ofs = 0x0010,
+ 	.sta_ofs = 0x0018,
+ };
+ 
+-static const struct mtk_gate_regs peri1_cg_regs = {
++static const struct mtk_gate_regs peri1_cg_regs __initconst = {
+ 	.set_ofs = 0x000c,
+ 	.clr_ofs = 0x0014,
+ 	.sta_ofs = 0x001c,
+diff --git a/drivers/clk/mediatek/clk-mtk.c b/drivers/clk/mediatek/clk-mtk.c
+index 18444ae..268b6ff 100644
+--- a/drivers/clk/mediatek/clk-mtk.c
++++ b/drivers/clk/mediatek/clk-mtk.c
+@@ -24,7 +24,7 @@
+ #include "clk-mtk.h"
+ #include "clk-gate.h"
+ 
+-struct clk_onecell_data *mtk_alloc_clk_data(unsigned int clk_num)
++struct clk_onecell_data * __init mtk_alloc_clk_data(unsigned int clk_num)
  {
+ 	int i;
  	struct clk_onecell_data *clk_data;
-@@ -709,19 +725,19 @@ static void __init mtk_topckgen_init(struct device_node *node)
- 		return;
+@@ -49,8 +49,8 @@ err_out:
+ 	return NULL;
+ }
+ 
+-void mtk_clk_register_factors(const struct mtk_fixed_factor *clks, int num,
+-		struct clk_onecell_data *clk_data)
++void __init mtk_clk_register_factors(const struct mtk_fixed_factor *clks,
++		int num, struct clk_onecell_data *clk_data)
+ {
+ 	int i;
+ 	struct clk *clk;
+@@ -72,7 +72,8 @@ void mtk_clk_register_factors(const struct mtk_fixed_factor *clks, int num,
  	}
- 
--	clk_data = mtk_alloc_clk_data(CLK_TOP_NR_CLK);
-+	mt8173_top_clk_data = clk_data = mtk_alloc_clk_data(CLK_TOP_NR_CLK);
- 
- 	mtk_clk_register_fixed_clks(fixed_clks, ARRAY_SIZE(fixed_clks), clk_data);
- 	mtk_clk_register_factors(top_divs, ARRAY_SIZE(top_divs), clk_data);
- 	mtk_clk_register_composites(top_muxes, ARRAY_SIZE(top_muxes), base,
- 			&mt8173_clk_lock, clk_data);
- 
--	clk_prepare_enable(clk_data->clks[CLK_TOP_CCI400_SEL]);
--
- 	r = of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
- 	if (r)
- 		pr_err("%s(): could not register clock provider: %d\n",
- 			__func__, r);
-+
-+	mtk_clk_enable_critical();
  }
- CLK_OF_DECLARE(mtk_topckgen, "mediatek,mt8173-topckgen", mtk_topckgen_init);
  
-@@ -815,13 +831,13 @@ static void __init mtk_apmixedsys_init(struct device_node *node)
+-int mtk_clk_register_gates(struct device_node *node, const struct mtk_gate *clks,
++int __init mtk_clk_register_gates(struct device_node *node,
++		const struct mtk_gate *clks,
+ 		int num, struct clk_onecell_data *clk_data)
  {
- 	struct clk_onecell_data *clk_data;
- 
--	clk_data = mtk_alloc_clk_data(CLK_APMIXED_NR_CLK);
-+	mt8173_pll_clk_data = clk_data = mtk_alloc_clk_data(CLK_APMIXED_NR_CLK);
- 	if (!clk_data)
- 		return;
- 
- 	mtk_clk_register_plls(node, plls, ARRAY_SIZE(plls), clk_data);
- 
--	clk_prepare_enable(clk_data->clks[CLK_APMIXED_ARMCA15PLL]);
-+	mtk_clk_enable_critical();
+ 	int i;
+@@ -111,7 +112,7 @@ int mtk_clk_register_gates(struct device_node *node, const struct mtk_gate *clks
+ 	return 0;
  }
- CLK_OF_DECLARE(mtk_apmixedsys, "mediatek,mt8173-apmixedsys",
- 		mtk_apmixedsys_init);
+ 
+-struct clk *mtk_clk_register_composite(const struct mtk_composite *mc,
++struct clk * __init mtk_clk_register_composite(const struct mtk_composite *mc,
+ 		void __iomem *base, spinlock_t *lock)
+ {
+ 	struct clk *clk;
+@@ -196,7 +197,7 @@ err_out:
+ 	return ERR_PTR(ret);
+ }
+ 
+-void mtk_clk_register_composites(const struct mtk_composite *mcs,
++void __init mtk_clk_register_composites(const struct mtk_composite *mcs,
+ 		int num, void __iomem *base, spinlock_t *lock,
+ 		struct clk_onecell_data *clk_data)
+ {
 -- 
 1.8.1.1.dirty
