@@ -1,60 +1,51 @@
-From: Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>
-Subject: Re: [PATCH] of: Add vendor prefix for Sharp Microelectronics
-Date: Tue, 28 Jul 2015 18:25:00 -0700
-Message-ID: <CAJAp7OjMKApxObdThqwTR+1dhG9ZUiGqUj4LrsjJLg_q2FFM1w@mail.gmail.com>
-References: <1406901044-32654-1-git-send-email-thierry.reding@gmail.com>
-	<20141013115409.GB16186@ulmo>
-	<20150701120141.GA18065@ulmo.nvidia.com>
-	<CAL_JsqJtRObzkdDz5X2Np8kdjfXP+YZo+=-cDPmM+wYff6OEwQ@mail.gmail.com>
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: [PATCH 1/2] drm/panel: Add Sharp LS043T1LE01 panel binding documentation
+Date: Tue, 28 Jul 2015 18:37:40 -0700
+Message-ID: <1438133861-22370-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJtRObzkdDz5X2Np8kdjfXP+YZo+=-cDPmM+wYff6OEwQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Werner Johansson <werner.johansson@sonymobile.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 1, 2015 at 10:41 AM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Wed, Jul 1, 2015 at 7:01 AM, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Mon, Oct 13, 2014 at 01:54:09PM +0200, Thierry Reding wrote:
->>> On Fri, Aug 01, 2014 at 03:50:44PM +0200, Thierry Reding wrote:
->>> > From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>> >
->>> > Use "sharp" as the vendor prefix for Sharp Microelectronics in device
->>> > tree compatible strings.
->>> >
->>> > Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>> > ---
->>> >  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->>> >  1 file changed, 1 insertion(+)
->>>
->>> Ping?
->>
->> Rob, I just stumbled across this in my stack of patches that never got
->> merged. Can you ack this?
->
-> Sorry, missed this one. I've flagged it now to apply for 4.2 or you
-> can if you prefer:
->
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->
+From: Werner Johansson <werner.johansson@sonymobile.com>
 
-Sorry for jumping in late, but found this as I was about to submit a
-patch for the same addition.
+Signed-off-by: Werner Johansson <werner.johansson@sonymobile.com>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+---
+ .../bindings/panel/sharp,ls043t1le01.txt           | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/panel/sharp,ls043t1le01.txt
 
-Except that from what I can find the real name is "Sharp
-Microelectronics of the Americas" (or Europe...), which is a division
-of Sharp Electronics Corporation, a subsidiary of Sharp Corporation -
-the latter which is what's used in the data sheets for my e.g. the
-lp855x.
-
-So I think the patch should instead be adding:
-sharp   Sharp Corporation
-
-Regards,
-Bjorn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/panel/sharp,ls043t1le01.txt b/Documentation/devicetree/bindings/panel/sharp,ls043t1le01.txt
+new file mode 100644
+index 000000000000..758d48d33e46
+--- /dev/null
++++ b/Documentation/devicetree/bindings/panel/sharp,ls043t1le01.txt
+@@ -0,0 +1,22 @@
++Sharp Microelectronics 4.3" qHD TFT LCD panel
++
++Required properties:
++- compatible: should be "sharp,ls043t1le01-qhd-vid"
++- reg: DSI virtual channel of the peripheral
++- power-supply: phandle of the regulator that provides the supply voltage
++
++Optional properties:
++- backlight: phandle of the backlight device attached to the panel
++- reset-gpios: a GPIO spec for the reset pin
++
++Example:
++
++	mdss_dsi0: qcom,mdss_dsi@fd922800 {
++		panel: panel@0 {
++			compatible = "sharp,ls043t1le01-qhd-vid";
++			reg = <0>;
++			avdd-supply = <&pm8941_l22>;
++			backlight = <&pm8941_wled>;
++			reset-gpios = <&pm8941_gpios 19 GPIO_ACTIVE_HIGH>;
++		};
++	};
+-- 
+1.8.2.2
