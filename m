@@ -1,156 +1,124 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [RFC] improve binding for linux,wdt-gpio
-Date: Wed, 29 Jul 2015 08:49:23 -0700
-Message-ID: <55B8F603.4000003@roeck-us.net>
-References: <1438115628-2819-1-git-send-email-u.kleine-koenig@pengutronix.de> <20150728212155.GA18137@roeck-us.net> <20150729073513.GB15360@pengutronix.de>
+From: Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: How-to: Uniquely identify a DT node in the driver?
+Date: Wed, 29 Jul 2015 10:01:20 -0600
+Message-ID: <20150729160120.GH51847@linaro.org>
+References: <20150728193833.GC51847@linaro.org>
+ <55B8A061.6060306@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150729073513.GB15360-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <55B8A061.6060306-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?windows-1252?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Uwe,
-
-On 07/29/2015 12:35 AM, Uwe Kleine-K=F6nig wrote:
-> Hello Guenter,
+On Wed, Jul 29 2015 at 03:44 -0600, Sudeep Holla wrote:
 >
-[ ... ]
+>
+>On 28/07/15 20:38, Lina Iyer wrote:
+>>Hello,
 >>
->> always-running is meant to indicate that the watchdog can not be sto=
-pped
->> (meaning a timer has to be used to send keepalives while the watchdo=
-g
->> device is closed). The documentation specifically states that.
+>>I am looking to find a way to uniquely identify a device in the driver.
+>>Here is an example -
 >>
->> 	"If the watchdog timer cannot be disabled ..."
+>>	big: power-controller@1 {
+>>		compatible = "soc,foo";
+>>		...
+>>	};
 >>
->> How would you express that condition without always-running or a sim=
-ilar
->> attribute ?  I am also not sure how that relates to hw_algo; I thoug=
-ht
->> those properties are orthogonal.
-> For hw_algo =3D "level" the inactive level of the gpio disables the
-> watchdog (and resets the counter). So always-running doesn't make sen=
-se
-> for this type.
->
-That is not what is currently implemented. "level" just means that
-the watchdog is pinged using a -high-low-high- or -low-high-low-
-sequence, while toggle means that the level is changed with each
-ping (-low-(wait)-high-(wait)-low-(wait)-high-...).
-
->> Of course, 'always-running' _may_ describe driver behavior, but that=
- doesn't
-> Well in the current state of the binding document we have:
->
-> 	add this flag to have the driver keep toggling the signal
-> 	without a client.
->
-> Sure it is meant to describe a hardware specific property, but it tal=
-ks
-> about the driver.
->
-Then the fix is to update the binding document.
-
-> I'd go for these properties then:
->
-> 	toggle-gpio: the gpio used to stroke the watchdog
-
-'toggle' means something different in the current implementation.
-
-> 	enable-gpio: optional, the gpio to enable and disable the watchdog
-> 	disable-on-tri-state: optional, signals that the watchdog can
-> 		be stopped by setting the trigger-gpio to tri-state.
-> 	compatible, hw_algo and hw_margin_ms: as before.
-> 	=09
-
-I would agree that a separate 'enable' property would make sense (if yo=
-u
-have a watchdog needing it). Similar to disable-on-tri-state, if there
-is some hardware which is implemented that way (mixing up hw_algo=3D=3D=
-toggle
-with that state doesn't seem correct). Deprecating hw_algo and replacin=
-g it
-with something more sensible might make sense as well ('algorithm' ?).
-
-We have to be careful not to mix up hw_algo and enable, though.
-
-> I think there is no need for a property that signals that the watchdo=
-g
-> is unstoppable. For level-gpio-watchdogs you can do it by setting the
-> trigger gpio to inactive, and you cannot stop level-gpio-watchdogs
-> unless enable-gpio or disable-on-tri-state is specified.
-> If we ever feel the need to describe a gpio watchdog with a input tha=
-t
-> starts the device but cannot stop it, I'd suggest to use "start-gpio"
-> for that one.
->
->> have to be the case. There are lots of watchdogs out there which can=
- not be
->> stopped. Some of them run all the time, others can not be stopped on=
-ce
->> started.
-> Yeah, I'm aware of that. For this driver however I wouldn't expect th=
-at
-> you have a dedicated enable-gpio if you cannot disable the device wit=
-h it.
-
-Why ? There are lots of chips which implement exactly that. There is an
-enable bit in some register which can be used to enable the watchdog,
-but once enabled it can not be stopped. I don't see why a gpio driven
-watchdog would have to be any different.
-
-> For hw_algo =3D "level" there is probably no device with an enable in=
-put
-
-Why should that be the case ?
-
-> and for hw_algo =3D "toggle" any sane hardware engineer would simply
-> enable the watchdog once the first toggle is detected on WDI. (OK,
-> assuming hardware engineers being sane turned out to be a weak argume=
-nt
-> often in the past.)
->
-I still don't see the relationship between enable and the toggle/level
-algorithm. Really, those two properties are orthogonal.
-
->>> I'm aware that using ...-gpios is more common than ...-gpio. I don'=
-t
->>> feel strong here, but as only a single gpio makes sense here, havin=
-g
->>> -gpios seems wrong.
->>>
->> Documentation/devicetree/bindings/gpio/gpio.txt states that gpio pin
->> references should be named <name>-gpios. It even lists examples such=
- as
+>>	little: power-controller@2 {
+>>		compatible = "soc,foo";
+>>		...
+>>	};
 >>
->> 	enable-gpios =3D <&gpio2 2>;
 >>
->> I thought this was a hard rule, and I seem to recall requests to cha=
-nge
->> something-gpio to something-spios, but I may be wrong.
-> Yeah, I'm aware of that. I talked about that in #armlinux yesterday, =
-and
-> Mark Brown (added to Cc:) said:
+>>In the driver for the power-controller foo.c, would like to do -
+>>
+>>	struct xyz {
+>>		const char *name;
+>>		...
+>>	};
+>>
+>>	static struct xyz a = {
+>>		.name = "big"; // To be associated with big device
+>>		...
+>>	};
+>>
+>>	static struct xyz b = {
+>>		.name = "little"; // To be associated with little device
+>>		...
+>>	};
+>>
+>>What would be the best way to associate the power-controller devices 'big'
+>>and 'little' with 'a' and 'b' respectively? A string comparison would be
+>>ideal but possibly can work with other ways.
+>>
 >
-> 	Well, I'd prefer to change the standard TBH and allow singular.
-> 	This keeps coming up and causing confusion for no good reason.
+>Why do you want to distinguish them within the driver ? IIUC each of
+>these power controller will get instantiated as separate devices with
+>unique properties.
 >
-> Sounds sensible in my ears.
+>Assuming the big and little above are related to CPUs, if each of the
+>CPUs have phandles to their respective power controller, IMO you need
+>not distinguish between the big and the little power controllers.
 >
+>I may be missing something here, one possible reason I can think of for
+>distinguishing them is both power controllers have same set of
+>properties in DT, but they differ in the way you access them or program
+>them(e.g. sequence). In that case have different compatible makes sense.
+>
+You are right. My reason for distinguishing between these devices is
+something of a device specific action.
 
-Makes sense to me, but I'd like to see that done first.
+>>I could think of adding compatibles to achieve this, but was hoping to
+>>find something more elegant and appropriate. Or, is compatible the
+>>recommended way to uniquely identify devices by the driver?
+>>
+>
+>If you provide the exact reason for distinguishing them within the
+>driver, that would help to come up with the solution.
+>
+I thought the context would be confusing, so just sent the gist of the
+problem. Well anyways, here it is -
+
+I am trying to instantiate generic PM domains for different CPU clusters
+commonly. Individual platform code may have different actions for
+powering down/up the CPU domain. It could be different set of bucks that
+they need to talk to or bunch of devices. The common code would like to
+provide the opportunity for the platform code to perform their
+activities.
+
+CPUs may be organized into 'n' clusters, the common code would create
+genpd for each of these clusters. In a multi machine image, to identify
+the right platform driver for the cluster, is a challenge. I am trying
+to solve it the same way as CPUidle - using __init section tables.  To
+uniquely identify a cluster in a SoC, I need a way to match the domain
+provider's DT node, with a callback in the driver. Like the 'method'
+attribute of the CPUIdle macros. The CPU compatibles are too generic and
+could duplicate across SoCs to be used for comparison. For e.g, you
+could have two clusters of A53 cores that could use the same compatible
+string. Distinguishing the domains for each of these clusters is a pain
+(but doable using phandles to the domain referenced by the CPU).
+
+To make it easy for the driver, I could only think of adding an unique
+compatible string to the domain node and the platform driver would then
+be able to same compatible string to distinguish between domains for the
+different clusters.
+
+Alternately, I was exploring a way to use phandles for the device nodes
+as unique comparison attributes, but that is more complex and doesnt
+provide any better benefit than the compatible.
+
+My RFC post for CPU PM domains is here [1].
 
 Thanks,
-Guenter
+Lina
 
+[1].
+http://lists.infradead.org/pipermail/linux-arm-kernel/2015-June/352787.html
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
