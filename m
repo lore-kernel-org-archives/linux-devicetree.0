@@ -1,34 +1,153 @@
-From: Greg KH <greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 02/10] usb: chipidea: define stream mode disable for both
- roles
-Date: Tue, 28 Jul 2015 22:10:16 -0700
-Message-ID: <20150729051016.GB5502@kroah.com>
-References: <1438137734-27311-1-git-send-email-peter.chen@freescale.com>
- <1438137734-27311-3-git-send-email-peter.chen@freescale.com>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: Re: [PATCH v1 7/7] ARM: dts: ifc6410: add inforce LVDS panel support
+Date: Wed, 29 Jul 2015 11:09:28 +0530
+Message-ID: <55B86710.4090507@codeaurora.org>
+References: <1438087956-17307-1-git-send-email-srinivas.kandagatla@linaro.org> <1438088076-17606-1-git-send-email-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1438137734-27311-3-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1438088076-17606-1-git-send-email-srinivas.kandagatla@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, agross@codeaurora.org, linux-arm-msm@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Clark <robdclark@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 29, 2015 at 10:42:06AM +0800, Peter Chen wrote:
-> @@ -20,7 +20,6 @@ struct ci_hdrc_platform_data {
->  	unsigned long	 flags;
->  #define CI_HDRC_REGS_SHARED		BIT(0)
->  #define CI_HDRC_SUPPORTS_RUNTIME_PM	BIT(2)
-> -#define CI_HDRC_DISABLE_STREAMING	BIT(3)
+Hi Srini,
 
-Why not just rename this one, now you have a "hole" in your bit field
-that people aren't going to know if they can use or not.
+On 07/28/2015 06:24 PM, Srinivas Kandagatla wrote:
+> This patch adds LVDS panel for IFC6410.
+>
+> Signed-off-by: Rob Clark <robdclark@gmail.com>
+> [Rob Clark: WIP patch]
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>   arch/arm/boot/dts/qcom-apq8064-ifc6410.dts | 66 ++++++++++++++++++++++++++++++
+>   1 file changed, 66 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+> index 1ab71f1..3bdac02 100644
+> --- a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+> +++ b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+> @@ -63,6 +63,12 @@
+>   					qcom,switch-mode-frequency = <3200000>;
+>   				};
+>
+> +				pm8921_l2: l2 {
+> +					regulator-min-microvolt = <1200000>;
+> +					regulator-max-microvolt = <1200000>;
+> +					bias-pull-down;
+> +				};
+> +
+>   				pm8921_l3: l3 {
+>   					regulator-min-microvolt = <3050000>;
+>   					regulator-max-microvolt = <3300000>;
+> @@ -96,6 +102,10 @@
+>   				pm8921_lvs1: lvs1 {
+>   					bias-pull-down;
+>   				};
+> +
+> +				pm8921_lvs7: lvs7 {
+> +					bias-pull-down;
+> +				};
+>   			};
+>   		};
+>
+> @@ -119,6 +129,41 @@
+>
+>   		mdp: qcom,mdp@5100000 {
+>   			status = "okay";
+> +			qcom,lvds-panel = <&panel>;
 
-thanks,
+We're trying to switch to the of_graph way of representing connected
+panels. With that, the above phandle will go away. This needs to be 
+replaced with:
 
-greg k-h
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+			port {
+				lvds_out: endpoint {
+					remote_endpoint = <&auo_in>;
+				};
+			};
+
+> +			lvds-vccs-3p3v-supply = <&ext_3p3v>;
+> +			lvds-pll-vdda-supply = <&pm8921_l2>;
+> +			lvds-vdda-supply = <&pm8921_lvs7>;
+> +		};
+> +
+> +		panel_3p3v: panel_3p3v {
+> +			compatible = "regulator-fixed";
+> +			pinctrl-0 = <&disp_en_gpios>;
+> +			pinctrl-names = "default";
+> +			regulator-min-microvolt = <3300000>;
+> +			regulator-max-microvolt = <3300000>;
+> +			regulator-name = "panel_en_3p3v";
+> +			regulator-type = "voltage";
+> +			startup-delay-us = <0>;
+> +			gpio = <&pm8921_gpio 36 GPIO_ACTIVE_HIGH>;
+> +			enable-active-high;
+> +			regulator-boot-on;
+> +		};
+> +
+> +		backlight: backlight{
+> +			pinctrl-0 = <&pwm_bl_gpios>;
+> +			pinctrl-names = "default";
+> +			compatible = "gpio-backlight";
+> +			gpios = <&pm8921_gpio 26 GPIO_ACTIVE_HIGH>;
+> +			default-on;
+> +		};
+> +
+> +		panel: auo,b101xtn01 {
+> +			status = "okay";
+> +			compatible = "auo,b101xtn01";
+> +
+> +			ddc-i2c-bus = <&i2c3>;
+> +			backlight = <&backlight>;
+> +			power-supply = <&panel_3p3v>;
+
+and for the panel:
+
+			port {
+				auo_in: endpoint {
+					remote-endpoint = <&lvds_out>;
+				};
+			};
+
+Thanks,
+Archit
+
+>   		};
+>
+>   		gsbi3: gsbi@16200000 {
+> @@ -235,6 +280,27 @@
+>   				pm8921_gpio: gpio@150 {
+>   					pinctrl-names = "default";
+>   					pinctrl-0 = <&wlan_default_gpios>;
+> +
+> +					pwm_bl_gpios: pwm-bl-gpios {
+> +						pios {
+> +							pins = "gpio26";
+> +							bias-disable;
+> +							function = "normal";
+> +							qcom,drive-strength = <PMIC_GPIO_STRENGTH_HIGH>;
+> +							power-source = <PM8921_GPIO_S4>;
+> +						};
+> +					};
+> +
+> +					disp_en_gpios: disp-en-gpios {
+> +						pios {
+> +							pins = "gpio36";
+> +							bias-disable;
+> +							function = "normal";
+> +							qcom,drive-strength = <PMIC_GPIO_STRENGTH_HIGH>;
+> +							power-source = <PM8921_GPIO_S4>;
+> +						};
+> +					};
+> +
+>   					wlan_default_gpios: wlan-gpios {
+>   						pios {
+>   							pins = "gpio43";
+>
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
