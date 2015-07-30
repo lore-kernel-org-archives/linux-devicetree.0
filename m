@@ -1,84 +1,55 @@
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v8 00/23] usb gadget update for OTG 2.0
-Date: Wed, 29 Jul 2015 21:11:41 -0500
-Message-ID: <20150730021141.GB3811@saruman.tx.rr.com>
-References: <1437622667-6735-1-git-send-email-jun.li@freescale.com>
- <20150727072157.GA20654@shlinux2>
- <20150729150427.GA32418@saruman.tx.rr.com>
- <20150729232401.GA8175@shlinux2>
-Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
+From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v5 06/10] clk: mediatek: mt8173: Fix enabling of
+ critical clocks
+Date: Thu, 30 Jul 2015 10:23:33 +0800
+Message-ID: <1438223013.17770.42.camel@mtksdaap41>
+References: <1438152754-11970-1-git-send-email-jamesjj.liao@mediatek.com>
+	 <1438152754-11970-7-git-send-email-jamesjj.liao@mediatek.com>
+	 <20150730002754.GG3159@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="tsOsTdHNUZQcU9Ye"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150729232401.GA8175@shlinux2>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robh+d-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150730002754.GG3159-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Heiko Stubner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---tsOsTdHNUZQcU9Ye
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Stephen,
 
-On Thu, Jul 30, 2015 at 07:24:03AM +0800, Li Jun wrote:
-> On Wed, Jul 29, 2015 at 10:04:27AM -0500, Felipe Balbi wrote:
-> > On Mon, Jul 27, 2015 at 03:21:59PM +0800, Peter Chen wrote:
-> > > On Thu, Jul 23, 2015 at 11:37:24AM +0800, Li Jun wrote:
-> > > > Change for v8:
-> > > > - Add Peter's ACk for chipidea driver; and Roger's Reviewed-by for =
-patch
-> > > >   07, 21~23.
-> > > > - Add ci->is_otg condition before enable ci->gadget.is_otg for chip=
-idea
-> > > >   driver in patch 8.
-> > > >=20
-> > >=20
-> > > Hi Felipe,
-> > >=20
-> > > For chipidea patches in this series, help to queue them in your tree=
-=20
-> > > please, thanks.
-> >=20
-> > all there, please make sure they're correct. There were so many versions
-> > of this series that I might have picked up the wrong one :-p
-> >=20
->=20
-> Patch [8/23]: "usb: chipidea: set usb otg capabilities", you picked up th=
-e V7,
-> I have a small change for V8, others are correct.
+On Wed, 2015-07-29 at 17:27 -0700, Stephen Boyd wrote:
+> On 07/29, James Liao wrote:
+> > From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > 
+> > On the MT8173 the clocks are provided by different units. To enable
+> > the critical clocks we must be sure that all parent clocks are already
+> > registered, otherwise the parents of the critical clocks end up being
+> > unused and get disabled later.
+> > 
+> > On MT8173, for example, it is the CLK_TOP clocks that have CLK_APMIXED
+> > PLLs as their parents, so we cannot enable the CLK_TOP critical clocks
+> > until the CLK_APMIXED clocks have all been registered.
+> > 
+> > To find a place where all parents are registered we try each time
+> > after we've registered some clocks if all known providers are present
+> > now and only then we enable the critical clocks.
+> > 
+> > Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > ---
+> 
+> Please move up to v4.2-rc2 so that this patch can be dropped. I
+> already applied this and sent it off to Linus so it's in -rc2.
 
-Can you send an incremental diff, please ?
+OK. I'll rebase to v4.2-rc2 in next patchset.
 
---=20
-balbi
 
---tsOsTdHNUZQcU9Ye
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Best regards,
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+James
 
-iQIcBAEBAgAGBQJVuYfdAAoJEIaOsuA1yqREKe0P/2r9Hd6fx6/d7s6dB7qAEkLJ
-5n2u4h9FuTvC/pC5inQQmmgNqH7NgEX8SPnzdeLn9yFkWAQGE19ogapaYtZ6sKh5
-w7gwStcBvuuXnKKYjTg4VLs0yTwH+xZX3Wmj8ZQ4tUaisbj8xdegMNf/mkc8DjkA
-fxYJzlZ+ByqqvQVOisI63XatM+x7QhJwoKBZAUQpzGpxaJgNY/sM5vpgRKUooPS8
-m9tcaH0lH5/3tFhu5jUfx0tMtECrvQLI1jzl3nTty03NwMQZgi22U434/5/fJlL8
-WOmzeLPAGBbL4mNk4qDz6ViZkp51Jwqvr1FFtWdyqHhEF5Ephx8dS/4MoWY7gFrs
-6UuLKMXqPd/oIaQQ5ZYT+FxLu9WOPjloVoLiv84w0N4jmFb71psSpkel0JiEDZv7
-jeSbtP1IxRVOcnX4FxClv7snYlWGvAxLKKN3/UKp/4Zuv+Fd+3JTj/xsS2reKp/2
-FNJNvwBwiSi1WSjK/xE+yb8J4WbczJP7LifkUpw8VDUye34shjgMn0wQCdyZMxEW
-oZg6f0cJtDKWV2x+zxT0UrWzgc5l3OPWLHGQQBe4KeIPNzTynHmWwjb6LbAZLssj
-3fFx+C8pi+Tf6qJyK5JD+f8qktg5HDcbxxTjQmQdNfQ+0pAov7F/IktEpGdGIu3b
-6599zxvqNHHdqkWqSm9r
-=rcry
------END PGP SIGNATURE-----
-
---tsOsTdHNUZQcU9Ye--
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
