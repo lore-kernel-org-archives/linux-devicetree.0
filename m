@@ -1,178 +1,69 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v6] PCI: Store PCIe bus address in struct of_pci_range
-Date: Thu, 30 Jul 2015 08:42:53 -0500
-Message-ID: <CAL_JsqKs11-sXQTdBD+ZjbVYFWUHBARTW9q5MF1hCXUhZ+nWLQ@mail.gmail.com>
-References: <1438010223-124422-1-git-send-email-gabriele.paoloni@huawei.com>
- <20150729172053.GE31170@google.com> <EE11001F9E5DDD47B7634E2F8A612F2E01D6F350@lhreml503-mbs>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH V3 02/16] PM / OPP: Create a directory for opp bindings
+Date: Thu, 30 Jul 2015 19:19:59 +0530
+Message-ID: <20150730134959.GB17794@linux>
+References: <cover.1438166099.git.viresh.kumar@linaro.org>
+ <4dfe565ff17766b7df127d475d84958e96fdab1b.1438166099.git.viresh.kumar@linaro.org>
+ <CAL_Jsq+J41c7qx11L13-g0UyD+hY9W36Wu9P+6O3cnDv7ysY6Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <EE11001F9E5DDD47B7634E2F8A612F2E01D6F350@lhreml503-mbs>
-Sender: linux-pci-owner@vger.kernel.org
-To: Gabriele Paoloni <gabriele.paoloni@huawei.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, "arnd@arndb.de" <arnd@arndb.de>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "Wangzhou (B)" <wangzhou1@hisilicon.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "james.morse@arm.com" <james.morse@arm.com>, "Liviu.Dudau@arm.com" <Liviu.Dudau@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Yuanzhichang <yuanzhichang@hisilicon.com>, Zhudacai <zhudacai@hisilicon.com>, zhangjukuo <zhangjukuo@huawei.com>, qiuzhenfa <qiuzhenfa@hisilicon.com>, "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_Jsq+J41c7qx11L13-g0UyD+hY9W36Wu9P+6O3cnDv7ysY6Q@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Rafael Wysocki <rjw@rjwysocki.net>, Stephen Boyd <sboyd@codeaurora.org>, Nishanth Menon <nm@ti.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, Kevin Hilman <khilman@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Viswanath Puttagunta <viswanath.puttagunta@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Santosh Shilimkar <santosh.shilimkar@oracle.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Mark Brown <broonie@kernel.org>, Sudeep Holla <Sudeep.Holla@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 29, 2015 at 2:44 PM, Gabriele Paoloni
-<gabriele.paoloni@huawei.com> wrote:
-> Hi Bjorn
->
-> Many Thanks for your reply
->
-> I have commented back inline with resolutions from my side.
->
-> If you're ok with them I'll send it out a new version in the appropriate patchset
->
-> Cheers
->
-> Gab
->
->> -----Original Message-----
->> From: Bjorn Helgaas [mailto:bhelgaas@google.com]
->> Sent: Wednesday, July 29, 2015 6:21 PM
->> To: Gabriele Paoloni
->> Cc: arnd@arndb.de; lorenzo.pieralisi@arm.com; Wangzhou (B);
->> robh+dt@kernel.org; james.morse@arm.com; Liviu.Dudau@arm.com; linux-
->> pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
->> devicetree@vger.kernel.org; Yuanzhichang; Zhudacai; zhangjukuo;
->> qiuzhenfa; Liguozhu (Kenneth)
->> Subject: Re: [PATCH v6] PCI: Store PCIe bus address in struct
->> of_pci_range
->>
->> Hi Gabriele,
->>
->> As far as I can tell, this is not specific to PCIe, so please use "PCI"
->> in
->> the subject as a generic term that includes both PCI and PCIe.
->
-> sure agreed
->
->>
->> On Mon, Jul 27, 2015 at 11:17:03PM +0800, Gabriele Paoloni wrote:
->> > From: gabriele paoloni <gabriele.paoloni@huawei.com>
->> >
->> >     This patch is needed port PCIe designware to new DT parsing API
->> >     As discussed in
->> >     http://lists.infradead.org/pipermail/linux-arm-kernel/2015-
->> January/317743.html
->> >     in designware we have a problem as the PCI addresses in the PCIe
->> controller
->> >     address space are required in order to perform correct HW
->> operation.
->> >
->> >     In order to solve this problem commit f4c55c5a3 "PCI: designware:
->> >     Program ATU with untranslated address" added code to read the
->> PCIe
->>
->> Conventional reference is 12-char SHA1, like this:
->>
->>   f4c55c5a3f7f ("PCI: designware: Program ATU with untranslated
->> address")
->
-> Agreed, will change this
->
->>
->> >     controller start address directly from the DT ranges.
->> >
->> >     In the new DT parsing API of_pci_get_host_bridge_resources()
->> hides the
->> >     DT parser from the host controller drivers, so it is not possible
->> >     for drivers to parse values directly from the DT.
->> >
->> >     In http://www.spinics.net/lists/linux-pci/msg42540.html we
->> already tried
->> >     to use the new DT parsing API but there is a bug (obviously) in
->> setting
->> >     the <*>_mod_base addresses
->> >     Applying this patch we can easily set "<*>_mod_base = win-
->> >__res.start"
->>
->> By itself, this patch adds something.  It would help me understand it
->> if
->> the *user* of this new something were in the same patch series.
->
-> the user is: "[PATCH v5 2/5] PCI: designware: Add ARM64 support"
-> I will ask Zhou Wang to include this patch in his patchset
->
->
->>
->> >     This patch adds a new field in "struct of_pci_range" to store the
->> >     pci bus start address; it fills the field in
->> of_pci_range_parser_one();
->> >     in of_pci_get_host_bridge_resources() it retrieves the resource
->> entry
->> >     after it is created and added to the resource list and uses
->> >     entry->__res.start to store the pci controller address
->>
->> struct of_pci_range is starting to get confusing to non-OF folks like
->> me.
->> It now contains:
->>
->>   u32 pci_space;
->>   u64 pci_addr;
->>   u64 cpu_addr;
->>   u64 bus_addr;
->>
->> Can you explain what all these things mean, and maybe even add one-line
->> comments to the structure?
->
-> sure I can add comments inline in the code
->
->>
->> pci_space: The only uses I see are to determine whether to print
->> "Prefetch".  I don't see any real functionality that uses this.
->
-> Looking at the code I agree. it's seems to be used only in powerpc
-> and microblaze to print out.
-> However from my understanding pci_space is the phys.hi field of the
-> ranges property: it defines the properties of the address space associated
-> to the PCI address. if you're curious you can find a nice and quick to read
-> "guide" in http://devicetree.org/MPC5200:PCI
->
->>
->> pci_addr: I assume this is a PCI bus address, like what you would see
->> if
->> you put an analyzer on the bus/link.  This address could go in a BAR.
->
-> Yes, this is the PCI start address of the range: phys.mid + phys.low in the
-> guide mentioned above
->
->>
->> cpu_addr: I assume this is a CPU physical address, like what you would
->> see
->> in /proc/iomem and what you would pass to ioremap().
->
-> Yes correct
->
->>
->> bus_addr: ?
->>
->
-> According to the guide above, this is the address into which the pci_address
-> get translated to and that is passed to the root complex. Between the root
-> complex and the CPU there can be intermediate translation layers: see that to
-> get pci_address we call "of_translate_address"; this will apply all the
-> translation layers (ranges in the DT) that it finds till it comes to the root
-> node of the DT (thus retrieving the CPU address).
-> Now said that, for designware we need the first translated PCI address, that we call
+On 30-07-15, 08:18, Rob Herring wrote:
+> On Wed, Jul 29, 2015 at 5:52 AM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > More platform specific extended opp bindings will follow and it would be
+> > easy to manage them with a directory for opp. Lets create that and move
+> > the existing opp bindings into it.
+> >
+> > Cc: Rob Herring <rob.herring@linaro.org>
+> 
+> Use get_maintainers.pl please so you send to right people and right email.
 
-I think you mean "translated CPU address." The flow of addresses looks
-like this:
+Already done, you were just cc'd as an extra guy :)
 
-CPU -> CPU bus address -> bus fabric address decoding -> bus address
--> DW PCI -> PCI address
+> > Cc: devicetree@vger.kernel.org
+> > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> > ---
+> >  Documentation/devicetree/bindings/power/{ => opp}/opp.txt | 0
+> >  1 file changed, 0 insertions(+), 0 deletions(-)
+> >  rename Documentation/devicetree/bindings/power/{ => opp}/opp.txt (100%)
+> >
+> > diff --git a/Documentation/devicetree/bindings/power/opp.txt b/Documentation/devicetree/bindings/power/opp/opp.txt
+> > similarity index 100%
+> > rename from Documentation/devicetree/bindings/power/opp.txt
+> > rename to Documentation/devicetree/bindings/power/opp/opp.txt
+> 
+> "power" seems to be a random collection of things. I'd prefer you move
+> this to .../bindings/opp/opp.txt.
 
-This is quite common that an IP block does not see the full address.
-It is unusual that the IP block needs to know its full address on the
-slave side. It is quite common for the master side and the kernel
-deals with that all the time with DMA mapping
+Hmm, sure. That would be better I think.
 
-> here bus_addr after Rob Herring suggested the name...honestly I cannot think of a
-> different name
+--------------8<-------------------
 
-Thinking about this some more, is this really a translation versus
-just a stripping of high bits? Does the DW IP have less than 32-bits
-address? If so, we could express differently and just mask the CPU
-address within the driver instead.
+Message-Id: <29597667e2c8afdbf396c5fcc9269fb27794131c.1438264123.git.viresh.kumar@linaro.org>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Date: Mon, 27 Jul 2015 10:04:21 +0530
+Subject: [PATCH] PM / OPP: Create a directory for opp bindings
 
-Rob
+More platform specific extended opp bindings will follow and it would be
+easy to manage them with a directory for opp. Lets create that and move
+the existing opp bindings into it.
+
+Cc: Rob Herring <rob.herring@linaro.org>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+ Documentation/devicetree/bindings/{power => opp}/opp.txt | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ rename Documentation/devicetree/bindings/{power => opp}/opp.txt (100%)
+
+diff --git a/Documentation/devicetree/bindings/power/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/power/opp.txt
+rename to Documentation/devicetree/bindings/opp/opp.txt
