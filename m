@@ -1,154 +1,169 @@
-From: Gabriele Paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH v6] PCI: Store PCIe bus address in struct of_pci_range
-Date: Thu, 30 Jul 2015 13:52:13 +0000
-Message-ID: <EE11001F9E5DDD47B7634E2F8A612F2E01D6F94A@lhreml503-mbs>
-References: <1438010223-124422-1-git-send-email-gabriele.paoloni@huawei.com>
- <20150729172053.GE31170@google.com>
- <EE11001F9E5DDD47B7634E2F8A612F2E01D6F350@lhreml503-mbs>
- <CAL_JsqKs11-sXQTdBD+ZjbVYFWUHBARTW9q5MF1hCXUhZ+nWLQ@mail.gmail.com>
+From: Robert Baldyga <r.baldyga@samsung.com>
+Subject: Re: [PATCH] nfc: s3fwrn5: Add driver for Samsung S3FWRN5 NFC Chip
+Date: Thu, 30 Jul 2015 16:05:26 +0200
+Message-ID: <55BA2F26.2030003@samsung.com>
+References: <1438172116-27099-1-git-send-email-r.baldyga@samsung.com>
+ <1438251763.15571.29.camel@tiscali.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqKs11-sXQTdBD+ZjbVYFWUHBARTW9q5MF1hCXUhZ+nWLQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org" <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, "Wangzhou (B)" <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "james.morse-5wv7dgnIgG8@public.gmane.org" <james.morse-5wv7dgnIgG8@public.gmane.org>, "Liviu.Dudau-5wv7dgnIgG8@public.gmane.org" <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Yuanzhichang <yuanzhichang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Zhudacai <zhudacai-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, zhangjukuo <zhangjukuo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, qiuzhenfa <qiuzhenfa-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "Liguozhu (Kenneth)" <liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1438251763.15571.29.camel@tiscali.nl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Bolle <pebolle@tiscali.nl>
+Cc: lauro.venancio@openbossa.org, aloisio.almeida@openbossa.org, sameo@linux.intel.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-wireless@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-nfc@lists.01.org, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogbGludXgtcGNpLW93bmVy
-QHZnZXIua2VybmVsLm9yZyBbbWFpbHRvOmxpbnV4LXBjaS0NCj4gb3duZXJAdmdlci5rZXJuZWwu
-b3JnXSBPbiBCZWhhbGYgT2YgUm9iIEhlcnJpbmcNCj4gU2VudDogVGh1cnNkYXksIEp1bHkgMzAs
-IDIwMTUgMjo0MyBQTQ0KPiBUbzogR2FicmllbGUgUGFvbG9uaQ0KPiBDYzogQmpvcm4gSGVsZ2Fh
-czsgYXJuZEBhcm5kYi5kZTsgbG9yZW56by5waWVyYWxpc2lAYXJtLmNvbTsgV2FuZ3pob3UNCj4g
-KEIpOyByb2JoK2R0QGtlcm5lbC5vcmc7IGphbWVzLm1vcnNlQGFybS5jb207IExpdml1LkR1ZGF1
-QGFybS5jb207DQo+IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxA
-bGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IFl1YW56
-aGljaGFuZzsgWmh1ZGFjYWk7IHpoYW5nanVrdW87DQo+IHFpdXpoZW5mYTsgTGlndW96aHUgKEtl
-bm5ldGgpDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjZdIFBDSTogU3RvcmUgUENJZSBidXMgYWRk
-cmVzcyBpbiBzdHJ1Y3QNCj4gb2ZfcGNpX3JhbmdlDQo+IA0KPiBPbiBXZWQsIEp1bCAyOSwgMjAx
-NSBhdCAyOjQ0IFBNLCBHYWJyaWVsZSBQYW9sb25pDQo+IDxnYWJyaWVsZS5wYW9sb25pQGh1YXdl
-aS5jb20+IHdyb3RlOg0KPiA+IEhpIEJqb3JuDQo+ID4NCj4gPiBNYW55IFRoYW5rcyBmb3IgeW91
-ciByZXBseQ0KPiA+DQo+ID4gSSBoYXZlIGNvbW1lbnRlZCBiYWNrIGlubGluZSB3aXRoIHJlc29s
-dXRpb25zIGZyb20gbXkgc2lkZS4NCj4gPg0KPiA+IElmIHlvdSdyZSBvayB3aXRoIHRoZW0gSSds
-bCBzZW5kIGl0IG91dCBhIG5ldyB2ZXJzaW9uIGluIHRoZQ0KPiBhcHByb3ByaWF0ZSBwYXRjaHNl
-dA0KPiA+DQo+ID4gQ2hlZXJzDQo+ID4NCj4gPiBHYWINCj4gPg0KPiA+PiAtLS0tLU9yaWdpbmFs
-IE1lc3NhZ2UtLS0tLQ0KPiA+PiBGcm9tOiBCam9ybiBIZWxnYWFzIFttYWlsdG86YmhlbGdhYXNA
-Z29vZ2xlLmNvbV0NCj4gPj4gU2VudDogV2VkbmVzZGF5LCBKdWx5IDI5LCAyMDE1IDY6MjEgUE0N
-Cj4gPj4gVG86IEdhYnJpZWxlIFBhb2xvbmkNCj4gPj4gQ2M6IGFybmRAYXJuZGIuZGU7IGxvcmVu
-em8ucGllcmFsaXNpQGFybS5jb207IFdhbmd6aG91IChCKTsNCj4gPj4gcm9iaCtkdEBrZXJuZWwu
-b3JnOyBqYW1lcy5tb3JzZUBhcm0uY29tOyBMaXZpdS5EdWRhdUBhcm0uY29tOyBsaW51eC0NCj4g
-Pj4gcGNpQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQu
-b3JnOw0KPiA+PiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgWXVhbnpoaWNoYW5nOyBaaHVk
-YWNhaTsgemhhbmdqdWt1bzsNCj4gPj4gcWl1emhlbmZhOyBMaWd1b3podSAoS2VubmV0aCkNCj4g
-Pj4gU3ViamVjdDogUmU6IFtQQVRDSCB2Nl0gUENJOiBTdG9yZSBQQ0llIGJ1cyBhZGRyZXNzIGlu
-IHN0cnVjdA0KPiA+PiBvZl9wY2lfcmFuZ2UNCj4gPj4NCj4gPj4gSGkgR2FicmllbGUsDQo+ID4+
-DQo+ID4+IEFzIGZhciBhcyBJIGNhbiB0ZWxsLCB0aGlzIGlzIG5vdCBzcGVjaWZpYyB0byBQQ0ll
-LCBzbyBwbGVhc2UgdXNlDQo+ICJQQ0kiDQo+ID4+IGluDQo+ID4+IHRoZSBzdWJqZWN0IGFzIGEg
-Z2VuZXJpYyB0ZXJtIHRoYXQgaW5jbHVkZXMgYm90aCBQQ0kgYW5kIFBDSWUuDQo+ID4NCj4gPiBz
-dXJlIGFncmVlZA0KPiA+DQo+ID4+DQo+ID4+IE9uIE1vbiwgSnVsIDI3LCAyMDE1IGF0IDExOjE3
-OjAzUE0gKzA4MDAsIEdhYnJpZWxlIFBhb2xvbmkgd3JvdGU6DQo+ID4+ID4gRnJvbTogZ2Ficmll
-bGUgcGFvbG9uaSA8Z2FicmllbGUucGFvbG9uaUBodWF3ZWkuY29tPg0KPiA+PiA+DQo+ID4+ID4g
-ICAgIFRoaXMgcGF0Y2ggaXMgbmVlZGVkIHBvcnQgUENJZSBkZXNpZ253YXJlIHRvIG5ldyBEVCBw
-YXJzaW5nDQo+IEFQSQ0KPiA+PiA+ICAgICBBcyBkaXNjdXNzZWQgaW4NCj4gPj4gPiAgICAgaHR0
-cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvcGlwZXJtYWlsL2xpbnV4LWFybS1rZXJuZWwvMjAxNS0N
-Cj4gPj4gSmFudWFyeS8zMTc3NDMuaHRtbA0KPiA+PiA+ICAgICBpbiBkZXNpZ253YXJlIHdlIGhh
-dmUgYSBwcm9ibGVtIGFzIHRoZSBQQ0kgYWRkcmVzc2VzIGluIHRoZQ0KPiBQQ0llDQo+ID4+IGNv
-bnRyb2xsZXINCj4gPj4gPiAgICAgYWRkcmVzcyBzcGFjZSBhcmUgcmVxdWlyZWQgaW4gb3JkZXIg
-dG8gcGVyZm9ybSBjb3JyZWN0IEhXDQo+ID4+IG9wZXJhdGlvbi4NCj4gPj4gPg0KPiA+PiA+ICAg
-ICBJbiBvcmRlciB0byBzb2x2ZSB0aGlzIHByb2JsZW0gY29tbWl0IGY0YzU1YzVhMyAiUENJOg0K
-PiBkZXNpZ253YXJlOg0KPiA+PiA+ICAgICBQcm9ncmFtIEFUVSB3aXRoIHVudHJhbnNsYXRlZCBh
-ZGRyZXNzIiBhZGRlZCBjb2RlIHRvIHJlYWQgdGhlDQo+ID4+IFBDSWUNCj4gPj4NCj4gPj4gQ29u
-dmVudGlvbmFsIHJlZmVyZW5jZSBpcyAxMi1jaGFyIFNIQTEsIGxpa2UgdGhpczoNCj4gPj4NCj4g
-Pj4gICBmNGM1NWM1YTNmN2YgKCJQQ0k6IGRlc2lnbndhcmU6IFByb2dyYW0gQVRVIHdpdGggdW50
-cmFuc2xhdGVkDQo+ID4+IGFkZHJlc3MiKQ0KPiA+DQo+ID4gQWdyZWVkLCB3aWxsIGNoYW5nZSB0
-aGlzDQo+ID4NCj4gPj4NCj4gPj4gPiAgICAgY29udHJvbGxlciBzdGFydCBhZGRyZXNzIGRpcmVj
-dGx5IGZyb20gdGhlIERUIHJhbmdlcy4NCj4gPj4gPg0KPiA+PiA+ICAgICBJbiB0aGUgbmV3IERU
-IHBhcnNpbmcgQVBJIG9mX3BjaV9nZXRfaG9zdF9icmlkZ2VfcmVzb3VyY2VzKCkNCj4gPj4gaGlk
-ZXMgdGhlDQo+ID4+ID4gICAgIERUIHBhcnNlciBmcm9tIHRoZSBob3N0IGNvbnRyb2xsZXIgZHJp
-dmVycywgc28gaXQgaXMgbm90DQo+IHBvc3NpYmxlDQo+ID4+ID4gICAgIGZvciBkcml2ZXJzIHRv
-IHBhcnNlIHZhbHVlcyBkaXJlY3RseSBmcm9tIHRoZSBEVC4NCj4gPj4gPg0KPiA+PiA+ICAgICBJ
-biBodHRwOi8vd3d3LnNwaW5pY3MubmV0L2xpc3RzL2xpbnV4LXBjaS9tc2c0MjU0MC5odG1sIHdl
-DQo+ID4+IGFscmVhZHkgdHJpZWQNCj4gPj4gPiAgICAgdG8gdXNlIHRoZSBuZXcgRFQgcGFyc2lu
-ZyBBUEkgYnV0IHRoZXJlIGlzIGEgYnVnIChvYnZpb3VzbHkpDQo+IGluDQo+ID4+IHNldHRpbmcN
-Cj4gPj4gPiAgICAgdGhlIDwqPl9tb2RfYmFzZSBhZGRyZXNzZXMNCj4gPj4gPiAgICAgQXBwbHlp
-bmcgdGhpcyBwYXRjaCB3ZSBjYW4gZWFzaWx5IHNldCAiPCo+X21vZF9iYXNlID0gd2luLQ0KPiA+
-PiA+X19yZXMuc3RhcnQiDQo+ID4+DQo+ID4+IEJ5IGl0c2VsZiwgdGhpcyBwYXRjaCBhZGRzIHNv
-bWV0aGluZy4gIEl0IHdvdWxkIGhlbHAgbWUgdW5kZXJzdGFuZA0KPiBpdA0KPiA+PiBpZg0KPiA+
-PiB0aGUgKnVzZXIqIG9mIHRoaXMgbmV3IHNvbWV0aGluZyB3ZXJlIGluIHRoZSBzYW1lIHBhdGNo
-IHNlcmllcy4NCj4gPg0KPiA+IHRoZSB1c2VyIGlzOiAiW1BBVENIIHY1IDIvNV0gUENJOiBkZXNp
-Z253YXJlOiBBZGQgQVJNNjQgc3VwcG9ydCINCj4gPiBJIHdpbGwgYXNrIFpob3UgV2FuZyB0byBp
-bmNsdWRlIHRoaXMgcGF0Y2ggaW4gaGlzIHBhdGNoc2V0DQo+ID4NCj4gPg0KPiA+Pg0KPiA+PiA+
-ICAgICBUaGlzIHBhdGNoIGFkZHMgYSBuZXcgZmllbGQgaW4gInN0cnVjdCBvZl9wY2lfcmFuZ2Ui
-IHRvIHN0b3JlDQo+IHRoZQ0KPiA+PiA+ICAgICBwY2kgYnVzIHN0YXJ0IGFkZHJlc3M7IGl0IGZp
-bGxzIHRoZSBmaWVsZCBpbg0KPiA+PiBvZl9wY2lfcmFuZ2VfcGFyc2VyX29uZSgpOw0KPiA+PiA+
-ICAgICBpbiBvZl9wY2lfZ2V0X2hvc3RfYnJpZGdlX3Jlc291cmNlcygpIGl0IHJldHJpZXZlcyB0
-aGUNCj4gcmVzb3VyY2UNCj4gPj4gZW50cnkNCj4gPj4gPiAgICAgYWZ0ZXIgaXQgaXMgY3JlYXRl
-ZCBhbmQgYWRkZWQgdG8gdGhlIHJlc291cmNlIGxpc3QgYW5kIHVzZXMNCj4gPj4gPiAgICAgZW50
-cnktPl9fcmVzLnN0YXJ0IHRvIHN0b3JlIHRoZSBwY2kgY29udHJvbGxlciBhZGRyZXNzDQo+ID4+
-DQo+ID4+IHN0cnVjdCBvZl9wY2lfcmFuZ2UgaXMgc3RhcnRpbmcgdG8gZ2V0IGNvbmZ1c2luZyB0
-byBub24tT0YgZm9sa3MNCj4gbGlrZQ0KPiA+PiBtZS4NCj4gPj4gSXQgbm93IGNvbnRhaW5zOg0K
-PiA+Pg0KPiA+PiAgIHUzMiBwY2lfc3BhY2U7DQo+ID4+ICAgdTY0IHBjaV9hZGRyOw0KPiA+PiAg
-IHU2NCBjcHVfYWRkcjsNCj4gPj4gICB1NjQgYnVzX2FkZHI7DQo+ID4+DQo+ID4+IENhbiB5b3Ug
-ZXhwbGFpbiB3aGF0IGFsbCB0aGVzZSB0aGluZ3MgbWVhbiwgYW5kIG1heWJlIGV2ZW4gYWRkIG9u
-ZS0NCj4gbGluZQ0KPiA+PiBjb21tZW50cyB0byB0aGUgc3RydWN0dXJlPw0KPiA+DQo+ID4gc3Vy
-ZSBJIGNhbiBhZGQgY29tbWVudHMgaW5saW5lIGluIHRoZSBjb2RlDQo+ID4NCj4gPj4NCj4gPj4g
-cGNpX3NwYWNlOiBUaGUgb25seSB1c2VzIEkgc2VlIGFyZSB0byBkZXRlcm1pbmUgd2hldGhlciB0
-byBwcmludA0KPiA+PiAiUHJlZmV0Y2giLiAgSSBkb24ndCBzZWUgYW55IHJlYWwgZnVuY3Rpb25h
-bGl0eSB0aGF0IHVzZXMgdGhpcy4NCj4gPg0KPiA+IExvb2tpbmcgYXQgdGhlIGNvZGUgSSBhZ3Jl
-ZS4gaXQncyBzZWVtcyB0byBiZSB1c2VkIG9ubHkgaW4gcG93ZXJwYw0KPiA+IGFuZCBtaWNyb2Js
-YXplIHRvIHByaW50IG91dC4NCj4gPiBIb3dldmVyIGZyb20gbXkgdW5kZXJzdGFuZGluZyBwY2lf
-c3BhY2UgaXMgdGhlIHBoeXMuaGkgZmllbGQgb2YgdGhlDQo+ID4gcmFuZ2VzIHByb3BlcnR5OiBp
-dCBkZWZpbmVzIHRoZSBwcm9wZXJ0aWVzIG9mIHRoZSBhZGRyZXNzIHNwYWNlDQo+IGFzc29jaWF0
-ZWQNCj4gPiB0byB0aGUgUENJIGFkZHJlc3MuIGlmIHlvdSdyZSBjdXJpb3VzIHlvdSBjYW4gZmlu
-ZCBhIG5pY2UgYW5kIHF1aWNrDQo+IHRvIHJlYWQNCj4gPiAiZ3VpZGUiIGluIGh0dHA6Ly9kZXZp
-Y2V0cmVlLm9yZy9NUEM1MjAwOlBDSQ0KPiA+DQo+ID4+DQo+ID4+IHBjaV9hZGRyOiBJIGFzc3Vt
-ZSB0aGlzIGlzIGEgUENJIGJ1cyBhZGRyZXNzLCBsaWtlIHdoYXQgeW91IHdvdWxkDQo+IHNlZQ0K
-PiA+PiBpZg0KPiA+PiB5b3UgcHV0IGFuIGFuYWx5emVyIG9uIHRoZSBidXMvbGluay4gIFRoaXMg
-YWRkcmVzcyBjb3VsZCBnbyBpbiBhIEJBUi4NCj4gPg0KPiA+IFllcywgdGhpcyBpcyB0aGUgUENJ
-IHN0YXJ0IGFkZHJlc3Mgb2YgdGhlIHJhbmdlOiBwaHlzLm1pZCArIHBoeXMubG93DQo+IGluIHRo
-ZQ0KPiA+IGd1aWRlIG1lbnRpb25lZCBhYm92ZQ0KPiA+DQo+ID4+DQo+ID4+IGNwdV9hZGRyOiBJ
-IGFzc3VtZSB0aGlzIGlzIGEgQ1BVIHBoeXNpY2FsIGFkZHJlc3MsIGxpa2Ugd2hhdCB5b3UNCj4g
-d291bGQNCj4gPj4gc2VlDQo+ID4+IGluIC9wcm9jL2lvbWVtIGFuZCB3aGF0IHlvdSB3b3VsZCBw
-YXNzIHRvIGlvcmVtYXAoKS4NCj4gPg0KPiA+IFllcyBjb3JyZWN0DQo+ID4NCj4gPj4NCj4gPj4g
-YnVzX2FkZHI6ID8NCj4gPj4NCj4gPg0KPiA+IEFjY29yZGluZyB0byB0aGUgZ3VpZGUgYWJvdmUs
-IHRoaXMgaXMgdGhlIGFkZHJlc3MgaW50byB3aGljaCB0aGUNCj4gcGNpX2FkZHJlc3MNCj4gPiBn
-ZXQgdHJhbnNsYXRlZCB0byBhbmQgdGhhdCBpcyBwYXNzZWQgdG8gdGhlIHJvb3QgY29tcGxleC4g
-QmV0d2VlbiB0aGUNCj4gcm9vdA0KPiA+IGNvbXBsZXggYW5kIHRoZSBDUFUgdGhlcmUgY2FuIGJl
-IGludGVybWVkaWF0ZSB0cmFuc2xhdGlvbiBsYXllcnM6IHNlZQ0KPiB0aGF0IHRvDQo+ID4gZ2V0
-IHBjaV9hZGRyZXNzIHdlIGNhbGwgIm9mX3RyYW5zbGF0ZV9hZGRyZXNzIjsgdGhpcyB3aWxsIGFw
-cGx5IGFsbA0KPiB0aGUNCj4gPiB0cmFuc2xhdGlvbiBsYXllcnMgKHJhbmdlcyBpbiB0aGUgRFQp
-IHRoYXQgaXQgZmluZHMgdGlsbCBpdCBjb21lcyB0bw0KPiB0aGUgcm9vdA0KPiA+IG5vZGUgb2Yg
-dGhlIERUICh0aHVzIHJldHJpZXZpbmcgdGhlIENQVSBhZGRyZXNzKS4NCj4gPiBOb3cgc2FpZCB0
-aGF0LCBmb3IgZGVzaWdud2FyZSB3ZSBuZWVkIHRoZSBmaXJzdCB0cmFuc2xhdGVkIFBDSQ0KPiBh
-ZGRyZXNzLCB0aGF0IHdlIGNhbGwNCj4gDQo+IEkgdGhpbmsgeW91IG1lYW4gInRyYW5zbGF0ZWQg
-Q1BVIGFkZHJlc3MuIiBUaGUgZmxvdyBvZiBhZGRyZXNzZXMgbG9va3MNCj4gbGlrZSB0aGlzOg0K
-PiANCj4gQ1BVIC0+IENQVSBidXMgYWRkcmVzcyAtPiBidXMgZmFicmljIGFkZHJlc3MgZGVjb2Rp
-bmcgLT4gYnVzIGFkZHJlc3MNCj4gLT4gRFcgUENJIC0+IFBDSSBhZGRyZXNzDQo+IA0KPiBUaGlz
-IGlzIHF1aXRlIGNvbW1vbiB0aGF0IGFuIElQIGJsb2NrIGRvZXMgbm90IHNlZSB0aGUgZnVsbCBh
-ZGRyZXNzLg0KPiBJdCBpcyB1bnVzdWFsIHRoYXQgdGhlIElQIGJsb2NrIG5lZWRzIHRvIGtub3cg
-aXRzIGZ1bGwgYWRkcmVzcyBvbiB0aGUNCj4gc2xhdmUgc2lkZS4gSXQgaXMgcXVpdGUgY29tbW9u
-IGZvciB0aGUgbWFzdGVyIHNpZGUgYW5kIHRoZSBrZXJuZWwNCj4gZGVhbHMgd2l0aCB0aGF0IGFs
-bCB0aGUgdGltZSB3aXRoIERNQSBtYXBwaW5nDQo+IA0KPiA+IGhlcmUgYnVzX2FkZHIgYWZ0ZXIg
-Um9iIEhlcnJpbmcgc3VnZ2VzdGVkIHRoZSBuYW1lLi4uaG9uZXN0bHkgSQ0KPiBjYW5ub3QgdGhp
-bmsgb2YgYQ0KPiA+IGRpZmZlcmVudCBuYW1lDQo+IA0KPiBUaGlua2luZyBhYm91dCB0aGlzIHNv
-bWUgbW9yZSwgaXMgdGhpcyByZWFsbHkgYSB0cmFuc2xhdGlvbiB2ZXJzdXMNCj4ganVzdCBhIHN0
-cmlwcGluZyBvZiBoaWdoIGJpdHM/IERvZXMgdGhlIERXIElQIGhhdmUgbGVzcyB0aGFuIDMyLWJp
-dHMNCj4gYWRkcmVzcz8gSWYgc28sIHdlIGNvdWxkIGV4cHJlc3MgZGlmZmVyZW50bHkgYW5kIGp1
-c3QgbWFzayB0aGUgQ1BVDQo+IGFkZHJlc3Mgd2l0aGluIHRoZSBkcml2ZXIgaW5zdGVhZC4NCg0K
-SSBkb27igJl0IHRoaW5rIHdlIHNob3VsZCByZWx5IG9uIFBDSSBhZGRyZXNzZXMuLi53aGF0IGlm
-IHRoZSBpbnRlcm1lZGlhdGUgDQp0cmFuc2xhdGlvbiBsYXllciBjaGFuZ2VzIHRoZSBsb3dlciBz
-aWduaWZpY2FudCBiaXRzIG9mIHRoZSAiYnVzIGFkZHJlc3MiDQp0byB0cmFuc2xhdGUgaW50byBh
-IGNwdSBhZGRyZXNzPw0KDQpJbiB0aGF0IGNhc2Ugd2UncmUgZ29pbmcgdG8gcHJvZ3JhbSB0aGUg
-RFcgd2l0aCBhIHdyb25nIGFkZHJlc3MNCg0KV2hhdCBJIGFtIHNheWluZyBpcyB0aGF0IHRoZSBE
-VyBkcml2ZXIgc2hvdWxkIG5vdCByZWx5IG9uIHRoZSANCmJlaGF2aW9yIG9mIGV4dGVybmFsIEhX
-Li4uLndoYXQgZG8geW91IHRoaW5rPw0KDQo+IA0KPiBSb2INCj4gLS0NCj4gVG8gdW5zdWJzY3Jp
-YmUgZnJvbSB0aGlzIGxpc3Q6IHNlbmQgdGhlIGxpbmUgInVuc3Vic2NyaWJlIGxpbnV4LXBjaSIg
-aW4NCj4gdGhlIGJvZHkgb2YgYSBtZXNzYWdlIHRvIG1ham9yZG9tb0B2Z2VyLmtlcm5lbC5vcmcN
-Cj4gTW9yZSBtYWpvcmRvbW8gaW5mbyBhdCAgaHR0cDovL3ZnZXIua2VybmVsLm9yZy9tYWpvcmRv
-bW8taW5mby5odG1sDQo=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 07/30/2015 12:22 PM, Paul Bolle wrote:
+> On wo, 2015-07-29 at 14:15 +0200, Robert Baldyga wrote:
+>> --- /dev/null
+>> +++ b/drivers/nfc/s3fwrn5/Kconfig
+>> @@ -0,0 +1,22 @@
+>> +config NFC_S3FWRN5
+>> +	tristate "Samsung S3FWRN5 NFC driver"
+>> +	depends on NFC_NCI
+>> +	default n
+>> +	---help---
+>> +	  Core driver for Samsung S3FWRN5 NFC chip.
+>> +
+>> +	  To compile this driver as a module, choose m here. The module will
+>> +	  be called s3fwrn5.ko.
+>> +	  Say N if unsure.
+> 
+> If I scanned the code correctly then all this module does is exporting
+> three functions to s3fwrn5_i2c.ko. Note that there's also no
+> module_unit() in sight. So it's a library, of sorts. And there's no
+> reason to load this module without also loading s3fwrn5_i2c.ko. Likewise
+> there's no reason to build it without also building s3fwrn5_i2c.ko.
+> 
+> So perhaps you could merge the two Kconfig symbols you add in this
+> patch.
+> 
+> Or, if you'd like to keep both Kconfig symbols, for whatever reason, you
+> might want to make NFC_S3FWRN5 a "silent" symbol that will be selected
+> by NFC_S3FWRN5_I2C. (That probably requires NFC_S3FWRN5_I2C to depend on
+> both NFC_NCI and I2C.)
+> 
+> Would either of the above two options work here?
+
+I would like to keep NFC_S3FWRN5 symbol, because in future another PHYs
+can be supported, so this would allow to select core whether PHY will be
+selected. However "silent" symbol seems to be a good solution.
+
+> 
+>> +config NFC_S3FWRN5_I2C
+>> +	tristate "Samsung S3FWRN5 I2C support"
+>> +	depends on NFC_S3FWRN5 && I2C
+>> +	default y
+> 
+> You only added "default y" to make setting this symbol in "make *config"
+> a one step process, right?
+
+Thats right. Moreover for now i2c is the only available PHY, so if
+someone decides to select S3FWRN5 core driver he also probably wants to
+have the PHY selected ;)
+
+>> +	---help---
+>> +	  This module adds support for an I2C interface to the S3FWRN5 chip.
+>> +	  Select this if your platform is using the I2C bus.
+>> +
+>> +	  To compile this driver as a module, choose m here. The module will
+>> +	  be called s3fwrn5_i2c.ko.
+>> +	  Say N if unsure.
+> 
+> (This advice is at odds with "default y" above, by the way.)
+> 
+>> --- /dev/null
+>> +++ b/drivers/nfc/s3fwrn5/Makefile
+> 
+>> +s3fwrn5-objs = core.o firmware.o nci.o
+>> +s3fwrn5_i2c-objs = i2c.o
+>> +
+>> +obj-$(CONFIG_NFC_S3FWRN5) += s3fwrn5.o
+>> +obj-$(CONFIG_NFC_S3FWRN5_I2C) += s3fwrn5_i2c.o
+> 
+>> --- /dev/null
+>> +++ b/drivers/nfc/s3fwrn5/core.c
+> 
+>> + * This program is free software; you can redistribute it and/or modify it
+>> + * under the terms and conditions of the GNU General Public License,
+>> + * version 2, as published by the Free Software Foundation.
+> 
+>> +int s3fwrn5_probe(struct nci_dev **ndev, void *phy_id, struct device *pdev,
+>> +	struct s3fwrn5_phy_ops *phy_ops, unsigned int max_payload)
+>> +{
+>> +	[...]
+>> +}
+>> +EXPORT_SYMBOL(s3fwrn5_probe);
+>> +
+>> +void s3fwrn5_remove(struct nci_dev *ndev)
+>> +{
+>> +	[...]
+>> +}
+>> +EXPORT_SYMBOL(s3fwrn5_remove);
+>> +
+>> +int s3fwrn5_recv_frame(struct nci_dev *ndev, struct sk_buff *skb,
+>> +	enum s3fwrn5_mode mode)
+>> +{
+>> +	[...]
+>> +}
+>> +EXPORT_SYMBOL(s3fwrn5_recv_frame);
+> 
+>> +MODULE_LICENSE("GPL");
+> 
+>> --- /dev/null
+>> +++ b/drivers/nfc/s3fwrn5/i2c.c
+> 
+>> + * This program is free software; you can redistribute it and/or modify it
+>> + * under the terms and conditions of the GNU General Public License,
+>> + * version 2, as published by the Free Software Foundation.
+> 
+>> +static int s3fwrn5_i2c_fw_read(struct s3fwrn5_i2c_phy *phy)
+>> +{
+>> +	[...]
+>> +
+>> +	return s3fwrn5_recv_frame(phy->ndev, skb, S3FWRN5_MODE_FW);
+>> +}
+>> +
+>> +static int s3fwrn5_i2c_nci_read(struct s3fwrn5_i2c_phy *phy)
+>> +{
+>> +	[...]
+>> +
+>> +	return s3fwrn5_recv_frame(phy->ndev, skb, S3FWRN5_MODE_NCI);
+>> +}
+> 
+>> +static int s3fwrn5_i2c_probe(struct i2c_client *client,
+>> +				  const struct i2c_device_id *id)
+>> +{
+>> +	[...]
+>> +
+>> +	ret = s3fwrn5_probe(&phy->ndev, phy, &phy->i2c_dev->dev, &i2c_phy_ops,
+>> +		S3FWRN5_I2C_MAX_PAYLOAD);
+>> +	[...]
+>> +		s3fwrn5_remove(phy->ndev);
+>> +
+>> +	[...]
+>> +}
+>> +
+>> +static int s3fwrn5_i2c_remove(struct i2c_client *client)
+>> +{
+>> +	[...]
+>> +
+>> +	s3fwrn5_remove(phy->ndev);
+>> +
+>> +	[...]
+>> +}
+> 
+>> +MODULE_LICENSE("GPL");
+> 
+> Nit: both modules' code contain a comment referring to the "GNU General
+> Public License, version 2". They also both use the "GPL" ident in their
+> MODULE_LICENSE() macro. And, according to include/linux/module.h, that
+> ident states the license is GPL v2 or later. So I think either the
+> comments or the idents need to change.
+> 
+
+Will be fixed.
+
+Thanks,
+Robert Baldyga
