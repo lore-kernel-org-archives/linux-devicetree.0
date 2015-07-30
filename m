@@ -1,47 +1,33 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH] DT: mmc: sh_mmcif: fix "compatible" property text
-Date: Thu, 30 Jul 2015 22:59:22 +0300
-Message-ID: <3979266.lQrOKbu0yo@wasted.cogentembedded.com>
-References: <201404250239.39150.sergei.shtylyov@cogentembedded.com>
+From: Scott Wood <scottwood@freescale.com>
+Subject: Re: [PATCH v2 1/2] powerpc/mpc85xx: Create dts components for the
+ FSL QorIQ DPAA FMan
+Date: Thu, 30 Jul 2015 14:59:49 -0500
+Message-ID: <1438286389.2993.365.camel@freescale.com>
+References: <1438230764-10951-1-git-send-email-igal.liberman@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <201404250239.39150.sergei.shtylyov@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, ulf.hansson@linaro.org, linux-mmc@vger.kernel.org
-Cc: linux-sh@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1438230764-10951-1-git-send-email-igal.liberman@freescale.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: igal.liberman@freescale.com
+Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, madalin.bucur@freescale.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The "compatible" property text contradicts even the example given in the MMCIF
-binding document itself; moreover, the Renesas MMCIF driver only  matches  on
-the generic "compatible" string, and doesn't look for at SoC specific strings
-currently at all. Thus describe "renesas,sh-mmcif" string as mandatory and the
-others as optional.
+On Thu, 2015-07-30 at 07:32 +0300, Igal.Liberman wrote:
+> +fman0:  fman@400000{
+> +     #address-cells = <1>;
+> +     #size-cells = <1>;
+> +     cell-index = <0>;
+> +     compatible = "fsl,fman";
+> +     ranges = <0 0x400000 0x100000>;
+> +     reg = <0x400000 0x100000>;
+> +     interrupts = <96 2 0 0>, <16 2 1 1>;
+> +     clocks = <&clockgen 3 0>;
+> +     clock-names = "fm0clk";
 
-Fixes: b4c27763d749 ("mmc: sh_mmcif: Document DT bindings")
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+clock-names should be "fmanclk" as per the binding.  And why would you want 
+the driver to have to encode the fman index into the name in order to look 
+the clock up by name?
 
----
- Documentation/devicetree/bindings/mmc/renesas,mmcif.txt |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-Index: renesas/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
-===================================================================
---- renesas.orig/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
-+++ renesas/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
-@@ -6,11 +6,11 @@ and the properties used by the MMCIF dev
- 
- Required properties:
- 
--- compatible: must contain one of the following
-+- compatible: must contain "renesas,sh-mmcif"; may also contain one of
-+  the following:
- 	- "renesas,mmcif-r8a7740" for the MMCIF found in r8a7740 SoCs
- 	- "renesas,mmcif-r8a7790" for the MMCIF found in r8a7790 SoCs
- 	- "renesas,mmcif-r8a7791" for the MMCIF found in r8a7791 SoCs
--	- "renesas,sh-mmcif" for the generic MMCIF
- 
- - clocks: reference to the functional clock
- 
-
+-Scott
