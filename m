@@ -1,72 +1,77 @@
-From: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v8 00/23] usb gadget update for OTG 2.0
-Date: Thu, 30 Jul 2015 09:46:58 +0800
-Message-ID: <20150730014657.GB8175@shlinux2>
-References: <1437622667-6735-1-git-send-email-jun.li@freescale.com>
- <20150727072157.GA20654@shlinux2>
- <20150729150427.GA32418@saruman.tx.rr.com>
- <20150729232401.GA8175@shlinux2>
- <20150730021141.GB3811@saruman.tx.rr.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v2 0/22] On-demand device probing
+Date: Wed, 29 Jul 2015 22:06:02 -0500
+Message-ID: <CAL_Jsq+2q=c6JbER8EMOGFtR=a6gvHermb8DRo9dKyj6fvdnXg@mail.gmail.com>
+References: <1438089593-7696-1-git-send-email-tomeu.vizoso@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150730021141.GB3811-HgARHv6XitJaoMGHk7MhZQC/G2K4zDHf@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Cc: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robh+d-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1438089593-7696-1-git-send-email-tomeu.vizoso@collabora.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc: "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Linux PWM List <linux-pwm@vger.kernel.org>, David Airlie <airlied@linux.ie>, Stephen Boyd <sboyd@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Linux-ALSA <alsa-devel@alsa-project.org>, dri-devel <dri-devel@lists.freedesktop.org>, Sebastian Reichel <sre@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, linux-clk@vger.kernel.org, Alexandre Courbot <gnurou@gmail.com>, =?UTF-8?Q?Terje_Bergstr=C3=B6m?= <tbergstrom@nvidia.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Vinod Koul <vinod.koul@intel.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 29, 2015 at 09:11:41PM -0500, Felipe Balbi wrote:
-> On Thu, Jul 30, 2015 at 07:24:03AM +0800, Li Jun wrote:
-> > On Wed, Jul 29, 2015 at 10:04:27AM -0500, Felipe Balbi wrote:
-> > > On Mon, Jul 27, 2015 at 03:21:59PM +0800, Peter Chen wrote:
-> > > > On Thu, Jul 23, 2015 at 11:37:24AM +0800, Li Jun wrote:
-> > > > > Change for v8:
-> > > > > - Add Peter's ACk for chipidea driver; and Roger's Reviewed-by for patch
-> > > > >   07, 21~23.
-> > > > > - Add ci->is_otg condition before enable ci->gadget.is_otg for chipidea
-> > > > >   driver in patch 8.
-> > > > > 
-> > > > 
-> > > > Hi Felipe,
-> > > > 
-> > > > For chipidea patches in this series, help to queue them in your tree 
-> > > > please, thanks.
-> > > 
-> > > all there, please make sure they're correct. There were so many versions
-> > > of this series that I might have picked up the wrong one :-p
-> > > 
-> > 
-> > Patch [8/23]: "usb: chipidea: set usb otg capabilities", you picked up the V7,
-> > I have a small change for V8, others are correct.
-> 
-> Can you send an incremental diff, please ?
-> 
-
-diff --git a/drivers/usb/chipidea/udc.c b/drivers/usb/chipidea/udc.c
-index 61fde89..c6d1595 100644
---- a/drivers/usb/chipidea/udc.c
-+++ b/drivers/usb/chipidea/udc.c
-@@ -1838,8 +1838,8 @@ static int udc_start(struct ci_hdrc *ci)
- 	ci->gadget.name         = ci->platdata->name;
- 	ci->gadget.otg_caps	= otg_caps;
- 
--	if (otg_caps->hnp_support || otg_caps->srp_support ||
--					otg_caps->adp_support)
-+	if (ci->is_otg && (otg_caps->hnp_support || otg_caps->srp_support ||
-+						otg_caps->adp_support))
- 		ci->gadget.is_otg = 1;
- 
- 	INIT_LIST_HEAD(&ci->gadget.ep_list);
-
-thanks
-Li Jun
-> -- 
-> balbi
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gVHVlLCBKdWwgMjgsIDIwMTUgYXQgODoxOSBBTSwgVG9tZXUgVml6b3NvCjx0b21ldS52aXpv
+c29AY29sbGFib3JhLmNvbT4gd3JvdGU6Cj4gSGVsbG8sCj4KPiBJIGhhdmUgYSBwcm9ibGVtIHdp
+dGggdGhlIHBhbmVsIG9uIG15IFRlZ3JhIENocm9tZWJvb2sgdGFraW5nIGxvbmdlcgo+IHRoYW4g
+ZXhwZWN0ZWQgdG8gYmUgcmVhZHkgZHVyaW5nIGJvb3QgKFN0w6lwaGFuZSBNYXJjaGVzaW4gcmVw
+b3J0ZWQgd2hhdAo+IGlzIGJhc2ljYWxseSB0aGUgc2FtZSBpc3N1ZSBpbiBbMF0pLCBhbmQgaGF2
+ZSBsb29rZWQgaW50byBvcmRlcmVkCj4gcHJvYmluZyBhcyBhIGJldHRlciB3YXkgb2Ygc29sdmlu
+ZyB0aGlzIHRoYW4gbW92aW5nIG5vZGVzIGFyb3VuZCBpbiB0aGUKPiBEVCBvciBwbGF5aW5nIHdp
+dGggaW5pdGNhbGwgbGV2ZWxzIGFuZCBsaW5raW5nIG9yZGVyLgo+Cj4gV2hpbGUgcmVhZGluZyB0
+aGUgdGhyZWFkIFsxXSB0aGF0IEFsZXhhbmRlciBIb2xsZXIgc3RhcnRlZCB3aXRoIGhpcwo+IHNl
+cmllcyB0byBtYWtlIHByb2Jpbmcgb3JkZXIgZGV0ZXJtaW5pc3RpYywgaXQgb2NjdXJyZWQgdG8g
+bWUgdGhhdCBpdAo+IHNob3VsZCBiZSBwb3NzaWJsZSB0byBhY2hpZXZlIHRoZSBzYW1lIGJ5IHBy
+b2JpbmcgZGV2aWNlcyBhcyB0aGV5IGFyZQo+IHJlZmVyZW5jZWQgYnkgb3RoZXIgZGV2aWNlcy4K
+Pgo+IFRoaXMgYmFzaWNhbGx5IHJldXNlcyB0aGUgaW5mb3JtYXRpb24gdGhhdCBpcyBhbHJlYWR5
+IGltcGxpY2l0IGluIHRoZQo+IHByb2JlKCkgaW1wbGVtZW50YXRpb25zLCBzYXZpbmcgdXMgZnJv
+bSByZWZhY3RvcmluZyBleGlzdGluZyBkcml2ZXJzIG9yCj4gYWRkaW5nIGluZm9ybWF0aW9uIHRv
+IERUQnMuCj4KPiBEdXJpbmcgcmV2aWV3IG9mIHYxIG9mIHRoaXMgc2VyaWVzIExpbnVzIFdhbGxl
+aWogc3VnZ2VzdGVkIHRoYXQgaXQKPiBzaG91bGQgYmUgdGhlIGRldmljZSBkcml2ZXIgY29yZSB0
+byBtYWtlIHN1cmUgdGhhdCBkZXBlbmRlbmNpZXMgYXJlCj4gcmVhZHkgYmVmb3JlIHByb2Jpbmcg
+YSBkZXZpY2UuIEkgZ2F2ZSB0aGlzIGlkZWEgYSB0cnkgWzJdIGJ1dCBNYXJrIEJyb3duCj4gcG9p
+bnRlZCBvdXQgdG8gdGhlIGxvZ2ljIGR1cGxpY2F0aW9uIGJldHdlZW4gdGhlIHJlc291cmNlIGFj
+cXVpc2l0aW9uCj4gYW5kIGRlcGVuZGVuY3kgZGlzY292ZXJ5IGNvZGUgcGF0aHMgKHRob3VnaCBJ
+IHRoaW5rIGl0J3MgZmFpcmx5IG1pbm9yKS4KPgo+IFRvIGFkZHJlc3MgdGhhdCBjb2RlIGR1cGxp
+Y2F0aW9uIEkgZXhwZXJpbWVudGVkIHdpdGggQXJuZCdzIGRldm1fcHJvYmUKPiBbM10gY29uY2Vw
+dCBvZiBoYXZpbmcgZHJpdmVycyBkZWNsYXJlIHRoZWlyIGRlcGVuZGVuY2llcyBpbnN0ZWFkIG9m
+Cj4gYWNxdWlyaW5nIHRoZW0gZHVyaW5nIHByb2JlLCBhbmQgd2hpbGUgaXQgd29ya2VkIFs0XSwg
+SSBkb24ndCB0aGluayB3ZQo+IGVuZCB1cCB3aW5uaW5nIGFueXRoaW5nIHdoZW4gY29tcGFyZWQg
+dG8ganVzdCBwcm9iaW5nIGRldmljZXMgb24tZGVtYW5kCj4gZnJvbSByZXNvdXJjZSBnZXR0ZXJz
+Lgo+Cj4gT25lIHJlbWFpbmluZyBvYmplY3Rpb24gaXMgdG8gdGhlICJzcHJpbmtsaW5nIiBvZiBj
+YWxscyB0bwo+IGZ3bm9kZV9lbnN1cmVfZGV2aWNlKCkgaW4gdGhlIHJlc291cmNlIGdldHRlcnMg
+b2YgZWFjaCBzdWJzeXN0ZW0sIGJ1dCBJCj4gdGhpbmsgaXQncyB0aGUgcmlnaHQgdGhpbmcgdG8g
+ZG8gZ2l2ZW4gdGhhdCB0aGUgc3RvcmFnZSBvZiByZXNvdXJjZXMgaXMKPiBjdXJyZW50bHkgc3Vi
+c3lzdGVtLXNwZWNpZmljLgoKU2VlbXMgbGlrZSBhIG1pbm9yIGNoYW5nZSB0byBtZS4KCj4gV2Ug
+Y291bGQgYXZvaWQgdGhlIGFib3ZlIGJ5IG1vdmluZyByZXNvdXJjZSBzdG9yYWdlIGludG8gdGhl
+IGNvcmUsIGJ1dCBJCj4gZG9uJ3QgdGhpbmsgdGhlcmUncyBhIGNvbXBlbGxpbmcgY2FzZSBmb3Ig
+dGhhdC4KPgo+IEkgaGF2ZSB0ZXN0ZWQgdGhpcyBvbiBib2FyZHMgd2l0aCBUZWdyYSwgaU1YLjYs
+IEV4eW5vcyBhbmQgT01BUCBTb0NzLAo+IGFuZCB0aGVzZSBwYXRjaGVzIHdlcmUgZW5vdWdoIHRv
+IGVsaW1pbmF0ZSBhbGwgdGhlIGRlZmVycmVkIHByb2Jlcwo+IChleGNlcHQgb25lIGluIFBhbmRh
+Qm9hcmQgYmVjYXVzZSBvbWFwX2RtYV9zeXN0ZW0gZG9lc24ndCBoYXZlIGEKPiBmaXJtd2FyZSBu
+b2RlIGFzIG9mIHlldCkuCj4KPiBXaXRoIHRoaXMgc2VyaWVzIEkgZ2V0IHRoZSBrZXJuZWwgdG8g
+b3V0cHV0IHRvIHRoZSBwYW5lbCBpbiAwLjVzLAo+IGluc3RlYWQgb2YgMi44cy4KCkdlbmVyYWxs
+eSwgSSB0aGluayB0aGlzIGxvb2tzIHByZXR0eSBnb29kLiBJdCBpcyBzaW1wbGUgYW5kIHRoZSBl
+cnJvcgpwYXRoIGlzIHNpbXBseSBmYWxsaW5nIGJhY2sgdG8gZGVmZXJyZWQgcHJvYmUuCgpPbmUg
+b3ZlcmFsbCBjb21tZW50IGlzIEknbSBub3Qgc28gc3VyZSBpZiBmd25vZGVfZW5zdXJlX2Rldmlj
+ZQpzaG91bGRuJ3QganVzdCBiZSBvZl9lbnN1cmVfZGV2aWNlLiBBdCBsZWFzdCBjdXJyZW50bHks
+IGl0IGxvb2tzIGxpa2UKYWxsIHRoZSBjYWxsaW5nIGxvY2F0aW9ucyBhcmUgRFQgc3BlY2lmaWMg
+ZnVuY3Rpb25zIGFueXdheS4gVGhlcmUncwp2ZXJ5IGxpdHRsZSBsb2dpYyB3aXRoaW4gdGhlIGZ1
+bmN0aW9uIHRvIHJlYWxseSBiZW5lZml0IHNoYXJpbmcgd2l0aApBQ1BJLiBJdCBpcyBiYXNpY2Fs
+bHkganVzdCBhIGNhbGwgdG8gb2ZfcGxhdGZvcm1fZGV2aWNlX2ZpbmQgYW5kIHRoZW4KYnVzX3By
+b2JlX2RldmljZS4gSSBleHBlY3QgdGhlIGdldCBmdW5jdGlvbnMgd2lsbCBhbHdheXMgY2FsbCBp
+bnRvCkRUL0FDUEkgc3BlY2lmaWMgZnVuY3Rpb25zIHdoaWNoIGNhbiB0aGVuIGNhbGwgdGhlIGZp
+cm13YXJlIHNwZWNpZmljCmRldmljZSBmaW5kIGZ1bmN0aW9uLgoKUm9iCgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxp
+bmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3Rz
+LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
