@@ -1,71 +1,53 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v2 01/22] platform: delay device-driver matches until late_initcall
-Date: Wed, 29 Jul 2015 22:20:05 -0500
-Message-ID: <CAL_Jsq+SBGFNHR+T15FSMsqh-TWaNBMqesxZfXKiH8g9mqXYuQ@mail.gmail.com>
-References: <1438089593-7696-1-git-send-email-tomeu.vizoso@collabora.com> <1438089593-7696-2-git-send-email-tomeu.vizoso@collabora.com>
+From: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] edac: Add L3/SoC support to the APM X-Gene SoC
+ EDAC driver
+Date: Thu, 30 Jul 2015 06:31:48 +0200
+Message-ID: <20150730043148.GC7209@nazgul.tnic>
+References: <1437808063-17592-1-git-send-email-lho@apm.com>
+ <1437808063-17592-2-git-send-email-lho@apm.com>
+ <1437808063-17592-3-git-send-email-lho@apm.com>
+ <20150729142941.GC17367@nazgul.tnic>
+ <CAPw-ZTkZ7q8PUWydFad5TXrhcY6YBRjdVvz+SR+LV4sOLDKkEg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1438089593-7696-2-git-send-email-tomeu.vizoso@collabora.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Javier Martinez Canillas <javier@osg.samsung.com>, Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAPw-ZTkZ7q8PUWydFad5TXrhcY6YBRjdVvz+SR+LV4sOLDKkEg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+Cc: Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 28, 2015 at 8:19 AM, Tomeu Vizoso
-<tomeu.vizoso@collabora.com> wrote:
-> Delay matches of platform devices until late_initcall, when we are sure
-> that all built-in drivers have been registered already.  This is needed
-> to prevent deferred probes because of some drivers not having registered
-> yet.
->
-> The reason why only platform devices are delayed is that some other
-> devices are expected to be probed earlier than late_initcall, for
-> example, the system PNP driver needs to probe its devices in
-> fs_initcall.
->
-> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-> ---
->
-> Changes in v2:
-> - Move delay to platform.c
->
->  drivers/base/platform.c | 28 ++++++++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
->
-> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-> index 063f0ab15259..fcf654678e27 100644
-> --- a/drivers/base/platform.c
-> +++ b/drivers/base/platform.c
-> @@ -33,6 +33,8 @@
->  /* For automatically allocated device IDs */
->  static DEFINE_IDA(platform_devid_ida);
->
-> +static bool enable_matches;
-> +
->  struct device platform_bus = {
->         .init_name      = "platform",
->  };
-> @@ -839,6 +841,15 @@ static int platform_match(struct device *dev, struct device_driver *drv)
->         struct platform_device *pdev = to_platform_device(dev);
->         struct platform_driver *pdrv = to_platform_driver(drv);
->
-> +       /*
-> +        * Delay matches of platform devices until late_initcall, when we are
-> +        * sure that all built-in drivers have been registered already. This
-> +        * is needed to prevent deferred probes because of some drivers
-> +        * not having registered yet.
-> +        */
-> +       if (!enable_matches)
-> +               return false;
-> +
+On Wed, Jul 29, 2015 at 04:39:10PM -0700, Loc Ho wrote:
+> Debug folder node shows up at /sys/kernel/debug/<file here> while the
+> MC debug node shows up at /sys/kernel/debug/edac where <file here> is
+> the driver node name. It would be better if everything shows up at
+> /sys/kernel/debug/edac. For this to happen, I need EDAC core change to
+> provide an parent node.
 
-Having this as a global makes me nervous. I think it would be better
-to be DT specific or per device some how. Perhaps use OF_POPULATED_BUS
-flag as an additional test.
+Sure, feel free to add accessors for edac_debugfs from
+drivers/edac/edac_mc_sysfs.c which edac drivers can call and thus
+receive the top-level debugfs node.
 
-There could be non-DT platforms that rely on the initcall ordering and
-moving all probes to late_initcall could change the ordering. I'm not
-sure though.
+For that, you can put all those accessor prototypes into a
+drivers/edac/edac-internal.h header which should be included only by
+edac drivers.
 
-Rob
+> No... each EDAC instance has its own context as we allocated via
+> function edac_device_alloc_ctl_info. Per type of instance will use the
+> same type function.
+
+So you have multiple instances running on the system? I don't think
+anyone has audited the edac core and whether it can actually handle
+that...
+
+-- 
+Regards/Gruss,
+    Boris.
+
+ECO tip #101: Trim your mails when you reply.
+--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
