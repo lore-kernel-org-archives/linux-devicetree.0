@@ -1,274 +1,84 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v7 3/5] clk: Supply the critical clock {init, enable,
- disable} framework
-Date: Thu, 30 Jul 2015 10:50:14 +0100
-Message-ID: <20150730095014.GD14642@x1>
-References: <1437570255-21049-1-git-send-email-lee.jones@linaro.org>
- <1437570255-21049-4-git-send-email-lee.jones@linaro.org>
- <20150727072549.GP2564@lukather>
- <20150727085338.GW3436@x1>
- <20150728114022.GW2564@lukather>
- <20150728130055.GV14943@x1>
- <20150730011932.642.85168@quantum>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 0/2] arm64: Add basic support for Marvell Berlin4CT
+ SoC
+Date: Thu, 30 Jul 2015 11:57:27 +0200
+Message-ID: <55B9F507.8090706@gmail.com>
+References: <1438248922-2919-1-git-send-email-jszhang@marvell.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150730011932.642.85168@quantum>
+In-Reply-To: <1438248922-2919-1-git-send-email-jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+To: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 29 Jul 2015, Michael Turquette wrote:
-> Quoting Lee Jones (2015-07-28 06:00:55)
-> > On Tue, 28 Jul 2015, Maxime Ripard wrote:
-> >=20
-> > > On Mon, Jul 27, 2015 at 09:53:38AM +0100, Lee Jones wrote:
-> > > > On Mon, 27 Jul 2015, Maxime Ripard wrote:
-> > > >=20
-> > > > > On Wed, Jul 22, 2015 at 02:04:13PM +0100, Lee Jones wrote:
-> > > > > > These new API calls will firstly provide a mechanisms to ta=
-g a clock as
-> > > > > > critical and secondly allow any knowledgeable driver to (un=
-)gate clocks,
-> > > > > > even if they are marked as critical.
-> > > > > >=20
-> > > > > > Suggested-by: Maxime Ripard <maxime.ripard@free-electrons.c=
-om>
-> > > > > > Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > > > > > ---
-> > > > > >  drivers/clk/clk.c            | 45 ++++++++++++++++++++++++=
-++++++++++++++++++++
-> > > > > >  include/linux/clk-provider.h |  2 ++
-> > > > > >  include/linux/clk.h          | 30 ++++++++++++++++++++++++=
-+++++
-> > > > > >  3 files changed, 77 insertions(+)
-> > > > > >=20
-> > > > > > diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-> > > > > > index 61c3fc5..486b1da 100644
-> > > > > > --- a/drivers/clk/clk.c
-> > > > > > +++ b/drivers/clk/clk.c
-> > > > > > @@ -46,6 +46,21 @@ static struct clk_core *clk_core_lookup(=
-const char *name);
-> > > > > > =20
-> > > > > >  /***    private data structures    ***/
-> > > > > > =20
-> > > > > > +/**
-> > > > > > + * struct critical -   Provides 'play' over critical clock=
-s.  A clock can be
-> > > > > > + *                     marked as critical, meaning that it=
- should not be
-> > > > > > + *                     disabled.  However, if a driver whi=
-ch is aware of the
-> > > > > > + *                     critical behaviour wants to control=
- it, it can do so
-> > > > > > + *                     using clk_enable_critical() and clk=
-_disable_critical().
-> > > > > > + *
-> > > > > > + * @enabled    Is clock critical?  Once set, doesn't chang=
-e
-> > > > > > + * @leave_on   Self explanatory.  Can be disabled by knowl=
-edgeable drivers
-> > > > > > + */
-> > > > > > +struct critical {
-> > > > > > +       bool enabled;
-> > > > > > +       bool leave_on;
-> > > > > > +};
-> > > > > > +
-> > > > > >  struct clk_core {
-> > > > > >         const char              *name;
-> > > > > >         const struct clk_ops    *ops;
-> > > > > > @@ -75,6 +90,7 @@ struct clk_core {
-> > > > > >         struct dentry           *dentry;
-> > > > > >  #endif
-> > > > > >         struct kref             ref;
-> > > > > > +       struct critical         critical;
-> > > > > >  };
-> > > > > > =20
-> > > > > >  struct clk {
-> > > > > > @@ -995,6 +1011,10 @@ static void clk_core_disable(struct c=
-lk_core *clk)
-> > > > > >         if (WARN_ON(clk->enable_count =3D=3D 0))
-> > > > > >                 return;
-> > > > > > =20
-> > > > > > +       /* Refuse to turn off a critical clock */
-> > > > > > +       if (clk->enable_count =3D=3D 1 && clk->critical.lea=
-ve_on)
-> > > > > > +               return;
-> > > > > > +
-> > > > >=20
-> > > > > I think it should be handled by a separate counting. Otherwis=
-e, if you
-> > > > > have two users that marked the clock as critical, and then on=
-e of them
-> > > > > disable it...
-> > > > >=20
-> > > > > >         if (--clk->enable_count > 0)
-> > > > > >                 return;
-> > > > > > =20
-> > > > > > @@ -1037,6 +1057,13 @@ void clk_disable(struct clk *clk)
-> > > > > >  }
-> > > > > >  EXPORT_SYMBOL_GPL(clk_disable);
-> > > > > > =20
-> > > > > > +void clk_disable_critical(struct clk *clk)
-> > > > > > +{
-> > > > > > +       clk->core->critical.leave_on =3D false;
-> > > > >=20
-> > > > > .. you just lost the fact that it was critical in the first p=
-lace.
-> > > >=20
-> > > > I thought about both of these points, which is why I came up wi=
-th this
-> > > > strategy.
-> > > >=20
-> > > > Any device which uses the *_critical() API should a) have knowl=
-edge of
-> > > > what happens when a particular critical clock is gated and b) h=
-ave
-> > > > thought about the consequences.
-> > >=20
-> > > Indeed.
-> > >=20
-> > > > I don't think we can use reference counting, because we'd need =
-as
-> > > > many critical clock owners as there are critical clocks.
-> > >=20
-> > > Which we can have if we replace the call to clk_prepare_enable yo=
-u add
-> > > in your fourth patch in __set_critical_clocks.
-> >=20
-> > What should it be replaced with?
-> >=20
-> > > > Cast your mind back to the reasons for this critical clock API.=
-  One
-> > > > of the most important intentions of this API is the requirement
-> > > > mitigation for each of the critical clocks to have an owner
-> > > > (driver).
-> > > >=20
-> > > > With regards to your second point, that's what 'critical.enable=
-d'
-> > > > is for.  Take a look at clk_enable_critical().
-> > >=20
-> > > I don't think this addresses the issue, if you just throw more
-> > > customers at it, the issue remain with your implementation.
-> > >=20
-> > > If you have three customers that used the critical API, and if on=
- of
-> > > these calls clk_disable_critical, you're losing leave_on.
-> >=20
-> > That's the idea.  See my point above, the one you replied "Indeed"
-> > to.  So when a driver uses clk_disable_critical() it's saying, "I k=
-now
-> > why this clock is a critical clock, and I know that nothing terribl=
-e
-> > will happen if I disable it, as I have that covered".  So then if i=
-t's
-> > not the last user to call clk_disable(), the last one out the door
-> > will be allowed to finally gate the clock, regardless whether it's
-> > critical aware or not.
-> >=20
-> > Then, when we come to enable the clock again, the critical aware us=
-er
-> > then re-marks the clock as leave_on, so not critical un-aware user =
-can
-> > take the final reference and disable the clock.
-> >=20
-> > > Which means that if there's one of the two users left that calls
-> > > clk_disable on it, the clock will actually be disabled, which is
-> > > clearly not what we want to do, as we have still a user that want=
- the
-> > > clock to be enabled.
-> >=20
-> > That's not what happens (at least it shouldn't if I've coded it up
-> > right).  The API _still_ requires all of the users to give-up their
-> > reference.
-> >=20
-> > > It would be much more robust to have another count for the critic=
-al
-> > > stuff, initialised to one by the __set_critical_clocks function.
-> >=20
-> > If I understand you correctly, we already have a count.  We use the
-> > original reference count.  No need for one of our own.
-> >=20
-> > Using your RAM Clock (Clock 4) as an example
-> > --------------------------------------------
-> >=20
-> > Early start-up:
-> >   Clock 4 is marked as critical and a reference is taken (ref =3D=3D=
- 1)
-> >=20
-> > Driver probe:
-> >   SPI enables Clock 4 (ref =3D=3D 2)
-> >   I2C enables Clock 4 (ref =3D=3D 3)
-> >=20
-> > Suspend (without RAM driver's permission):
-> >   SPI disables Clock 4 (ref =3D=3D 2)
-> >   I2C disables Clock 4 (ref =3D=3D 1)
-> >   /*
-> >    * Clock won't be gated because:
-> >    *   .leave_on is True - can't dec final reference
->=20
-> I am clearly missing the point. The clock won't be gated because the
-> enable_count is still 1! What does .leave_on do here?
+On 07/30/2015 11:35 AM, Jisheng Zhang wrote:
+> Marvell Berlin4CT is a SoC based on 64bit ARMv8 architecture. It contains
+> quad CA53 cores.
+>
+> This SoC shares many HW IP with BG2Q and other berlin series. This patchset
+> was tested on Berlin4CT DMP board, and boot to shell ok.
+>
+> Since v4:
+>   - rebased on the latest next tree
 
-The point of _this_ (the extended) part of the API is so that the
-clock _can_ be turned off.  Without the possibility to disable
-=2Eleave_on and the logic with accompanies it (i.e.
-clk_disable_critical()) the clock will _never_ be gated.
+Jisheng,
 
-> >    */
-> >=20
-> > Suspend (with RAM driver's permission):
-> >   /* Order is unimportant */
-> >   SPI disables Clock 4 (ref =3D=3D 2)
-> >   RAM disables Clock 4 (ref =3D=3D 1) /* Won't turn off here (ref >=
- 0)
-> >   I2C disables Clock 4 (ref =3D=3D 0) /* (.leave_on =3D=3D False) l=
-ast ref can be taken */
-> >   /*
-> >    * Clock will be gated because:
-> >    *   .leave_on is False, so (ref =3D=3D 0)
->=20
-> Again, .leave_on does nothing new here. We gate the clock because the
-> reference count is 0.
+some git basics, so you get a better idea of the merge process:
 
-It's the fact that .leave_on has been disabled in
-clk_disable_critical() that allows the final reference to be taken.
+Please do not base your patches on linux-next. It is not a stable branch
+I can refer to. Also, if there was any dependency with another feature
+that your patches require, you should mention that dependency by
+pointing out either a floating patch set or even better a _stable_
+topic branch of the feature that will be added in the same cycle you
+expect your patches to be merged.
 
-> >    */
-> >=20
-> > Resume:
-> >   /* Order is unimportant */
-> >   SPI enables Clock 4 (ref =3D=3D 1)
-> >   RAM enables Clock 4 and re-enables .leave_on (ref =3D=3D 2)
-> >   I2C enables Clock 4 (ref =3D=3D 3)
->=20
-> Same again. As soon as RAM calls clk_enable_critical the ref count go=
-es
-> up. .leave_on does nothing as far as I can tell. The all works becaus=
-e
-> of the reference counting, which already exists before this patch
-> series.
+AFAIKS, there is no dependency at all so please just base them on -rc1
+(No need to resend, I can take care of it).
 
-So fundamentally you're right in what you say.  All you really need to
-disable a critical clock is write a knowledgeable driver, which is
-intentionally unbalanced i.e. just calls clk_disable().  All this
-extended API really does is makes the process more official and
-ensures that an unintentionally unbalanced driver doesn't bugger up
-the running platform.  We could also add a new WARN() to say that said
-driver is unbalanced, as it just tried to turn off a critical clock.
+Anyway, I am fine with the series and it has been out for a while now.
+I pick it up, let is set on linux-next for a while and send out a
+topic PR at the end of the week.
 
-What do you think is best?
+Thanks!
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Sebastian
+
+>   - adopt Sebastian suggestions such as: move osc out of "/soc" node, use
+>     "Marvell BG4CT DMP board" as model, etc.
+>   - use correct memory size for BG4CT DMP. The total DDR size is 2GB, we start
+>     from 0x01000000, so the avaiable linux memory should be 0x7f000000.
+>
+> Since v3:
+>   - remove bootargs. follow the same behavior as other arm64 SoCs.
+>
+> Since v2:
+>   - remove the memreserve which isn't removed by mistake
+>   - add earlycon to enable earlyconsole, inspired by Sudeep
+>
+> Since v1:
+>   - remove "earlyprintk" bootargs which doesn't work on arm64
+>   - fix GICC_DIR size as pointed out by Mark
+>   - define memory start address instead of memory reservation as suggested by Mark
+>   - add interrupt-affinity to pmu node as pointed out by Sudeep
+>
+> Jisheng Zhang (2):
+>    arm64: dts: Add dts files for Marvell Berlin4CT SoC
+>    arm64: Enable Marvell Berlin SoC family in Kconfig and defconfig
+>
+>   arch/arm64/Kconfig.platforms                  |   6 +
+>   arch/arm64/boot/dts/Makefile                  |   1 +
+>   arch/arm64/boot/dts/marvell/Makefile          |   5 +
+>   arch/arm64/boot/dts/marvell/berlin4ct-dmp.dts |  66 +++++++++++
+>   arch/arm64/boot/dts/marvell/berlin4ct.dtsi    | 164 ++++++++++++++++++++++++++
+>   arch/arm64/configs/defconfig                  |   1 +
+>   6 files changed, 243 insertions(+)
+>   create mode 100644 arch/arm64/boot/dts/marvell/Makefile
+>   create mode 100644 arch/arm64/boot/dts/marvell/berlin4ct-dmp.dts
+>   create mode 100644 arch/arm64/boot/dts/marvell/berlin4ct.dtsi
+>
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
