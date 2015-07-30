@@ -1,73 +1,96 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] backlight: pm8941-wled: Add default-brightness property
-Date: Thu, 30 Jul 2015 10:26:19 -0500
-Message-ID: <CAL_JsqJYxDROqbv-wh37=MjwbsEtrYKFTvC1NfneonLH2_gL2A@mail.gmail.com>
-References: <1437681127-15760-1-git-send-email-bjorn.andersson@sonymobile.com>
- <CAL_JsqKxdF5sj=edURFLDCk1OyCJR-w6+STL4r3zM6+be3tjhg@mail.gmail.com> <20150729235139.GC6519@usrtlx11787.corpusers.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20150729235139.GC6519@usrtlx11787.corpusers.net>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jingoo Han <jingoohan1@gmail.com>, Lee Jones <lee.jones@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Rob Clark <robdclark@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
+From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Subject: Re: [PATCH 1/2] spi: bcm2835: add spi-bcm2835aux driver for the auxiliar spi1 and spi2
+Date: Thu, 30 Jul 2015 17:27:44 +0200
+Message-ID: <E9EEB426-95DE-4785-949C-6A402A25E115@martin.sperl.org>
+References: <1434980408-4086-1-git-send-email-kernel@martin.sperl.org> <55A0A150.3060809@wwwdotorg.org> <ECFBB7BF-1316-4565-B1F2-FB2651131882@martin.sperl.org> <55A49662.3000706@wwwdotorg.org> <2768BFA9-7FE9-4EDC-8692-AC3F070BD874@martin.sperl.org> <55AEF828.20908@wwwdotorg.org> <0125992E-40F4-4702-8404-2943FF9A8788@martin.sperl.org> <55B1BA7A.1090104@wwwdotorg.org> <9005ABEC-C60A-4814-AD60-AD5BB09808F2@martin.sperl.org> <55B6EE1A.2070605@wwwdotorg.org> <836DA157-3072-441A-A160-E1FDBB119E88@martin.sperl.org> <55B75E07.1080104@martin.sperl.org> <55B9014C.7020105@lategoodbye.de> <C767C9AD-A9B5-428F-A207-D67269B380C6@martin.sperl.org> <55B9B7EF.2070108@lategoodbye.de> <C2C16277-C6C1-4F86-BB88-580CF667EF24@martin.sperl.org> <97861F80-CF83-4FF2-B96E-CDFB1A8F4921@martin.sperl.org>
+Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2102\))
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <97861F80-CF83-4FF2-B96E-CDFB1A8F4921-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Wahren <info-saaNCTdWVBT7BZbvpMY5sg@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 29, 2015 at 6:51 PM, Bjorn Andersson
-<bjorn.andersson@sonymobile.com> wrote:
-> On Fri 24 Jul 08:29 PDT 2015, Rob Herring wrote:
->
->> On Thu, Jul 23, 2015 at 2:52 PM, Bjorn Andersson
->> <bjorn.andersson@sonymobile.com> wrote:
->> > Add the possibility of specifying the default brightness in DT.
->> >
->> > Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
->> > ---
->> >
->> > This depends on the patch moving pm8941-wled to backlight [1]. The dt property
->> > is used by several other backlight drivers, so I considered this to be a
->> > "common" property and it's hence not prefixed with "qcom,".
->>
->> Well, we have "default-brightness" and "default-brightness-level" used
->> by 1 driver each. But default-brightness-level is much more commonly
->> used (in dts files) since it is in the pwm backlight binding, so we
->> should go with it. I'd like to see this moved to a common backlight
->> doc.
->>
->
-> As I looked at these, the default-brightness used in tps65217 is a value
-> between 0 and 100, so that can be interpreted as a percentage.
->
-> The pwm binding however uses a separate array of "brightness-levels" and
-> then default-brightness-level is supposed to be an index into that
-> array.
 
-Uggg. I missed that minor detail...
+> On 30.07.2015, at 09:10, Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org> wrote=
+:
+>> What about adding =E2=80=9Cbcrm,bcm2835-aux-enable=E2=80=9D to drive=
+rs/mfd/syscon.c
+>> compatibility?
+>>=20
+>> That way we:
+>> * have a clean dt that only represents hardware
+>> * reuse existing code with minimal modifications
+>> * minimal effort
+>>=20
+>> That would be a minimal patch to enable this, so we can ask if that =
+is
+>> acceptable and if it is not then we can still think of something els=
+e,
+>> which would be mostly replicating the bit-management portion of sysc=
+on.
+>=20
+> that minimal patch extending compatibility of syscon and also includi=
+ng
+> the config portion for the kernel as well as the device tree would lo=
+ok
+> something like this (note that it is not tested yet):
 
+> --- a/drivers/mfd/syscon.c
+> +++ b/drivers/mfd/syscon.c
+> @@ -211,6 +211,12 @@ static int syscon_probe(struct platform_device *=
+pdev)
+>        return 0;
+> }
+>=20
+> +static const struct of_device_id syscon_match[] =3D {
+> +       { .compatible =3D "bcrm,bcm2835-aux-enable", },
+> +       {}
+> +};
+> +MODULE_DEVICE_TABLE(of, syscon_match);
+> +
+> static const struct platform_device_id syscon_ids[] =3D {
+>        { "syscon", },
+>        { }
 
-> As we're trying to specify a default brightness within the range [0,
-> max_brightness) the latter doesn't make much sense.
->
-> Therefor my suggestion is that we make the "default-brightness" the
-> common property and we define it as a percentage of [0,max_brightness).
+Unfortunately the above does not work with syscon, as it
+_explicitly_ requires a compatibility of =E2=80=9Csyscon=E2=80=9D:
 
-Okay.
+        if (!of_device_is_compatible(np, "syscon"))
+                return ERR_PTR(-EINVAL);
 
-I wonder if we should have units such as
-"default-brightness-percentage" or "default-brightness-%" so it is
-clear. Otherwise, we might have some people doing a range of [0,max].
-The former is a bit long and the latter is a bit unusual.
+So by the rational of device-tree representing only the
+hardware this driver should never get used because of this
+limitation
 
->> Really, I think all the backlight documentation should be merged with
->> LEDs docs. Things like "default-on" are common. But I won't ask to do
->> that here.
->
-> I think the backlight framework should be merged with the LED framework.
-> There's several hw blocks that are split between the two, with an mfd
-> tying them together...
+Replicating syscon/regmap into a separate driver that has explicit
+compatibility of =E2=80=9Cbcrm, bcm2835-aux=E2=80=9D results in more th=
+an 162 lines
+of extra code (plus changes to Makefile and Kconfig)
 
-Fully agree. BTW, doing that doesn't have to be in sync between the
-bindings and drivers. Of course, if we've designed the bindings with
-sub devices to fit the MFD structure, then that is another problem.
+So I wonder if it would not be acceptable to allow:
+  compatiblity =3D =E2=80=9Cbcrm,bcm2835-aux=E2=80=9D, =E2=80=9Csyscon=E2=
+=80=9D;
 
-Rob
+and avoid an unnecessary extra driver which provides only
+the following functions:
+
+void bcm2835aux_enable(struct bcm2835aux *aux, u32 mask);
+void bcm2835aux_disable(struct bcm2835aux *aux, u32 mask);
+struct bcm2835aux *bcm2835aux_lookup_by_phandle(
+	struct device_node *np,
+	const char *property);
+
+all of which are available almost identical in syscon/regmap.
+
+We can also try to discuss if a modification to syscon so that it
+also checks the =E2=80=9Cexplicit=E2=80=9D compatibility in the configu=
+red list.
+
+Martin--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
