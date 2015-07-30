@@ -1,119 +1,41 @@
-From: Albert ARIBAUD <albert.aribaud@3adev.fr>
-Subject: Re: [PATCH v8 1/5] mtd: nand: vf610_nfc: Freescale NFC for VF610,
- MPC5125 and others
-Date: Thu, 30 Jul 2015 22:11:25 +0200
-Message-ID: <20150730221125.08b5b2cf.albert.aribaud@3adev.fr>
-References: <1438015365-15685-1-git-send-email-stefan@agner.ch>
-	<1438015365-15685-2-git-send-email-stefan@agner.ch>
-	<20150730181321.3bd38db7.albert.aribaud@3adev.fr>
-	<36ffdc45494ab888ba375ff8478864ad@agner.ch>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] powerpc/mpc85xx: Add FSL QorIQ DPAA FMan support
+ to the SoC device tree(s)
+Date: Thu, 30 Jul 2015 15:12:23 -0500
+Message-ID: <1438287143.2993.367.camel@freescale.com>
+References: <1438230794-10983-1-git-send-email-igal.liberman@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <36ffdc45494ab888ba375ff8478864ad@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Agner <stefan@agner.ch>, sebastian@breakpoint.cc
-Cc: dwmw2@infradead.org, computersforpeace@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, shawn.guo@linaro.org, kernel@pengutronix.de, boris.brezillon@free-electrons.com, marb@ixxat.de, aaron@tastycactus.com, bpringlemeir@gmail.com, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Bill Pringlemeir <bpringlemeir@nbsps.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1438230794-10983-1-git-send-email-igal.liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: igal.liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, madalin.bucur-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Stefan,
+On Thu, 2015-07-30 at 07:33 +0300, Igal.Liberman wrote:
+> @@ -307,4 +307,117 @@
+>               reg = <0xe0000 0x1000>;
+>               fsl,has-rstcr;
+>       };
+> +
+> +      fman@100000{
+> +             #address-cells = <1>;
+> +             #size-cells = <1>;
+> +             cell-index = <0>;
+> +             ranges = <0 0x100000 0x100000>;
+> +             compatible = "fsl,fman";
+> +             reg = <0x100000 0x100000>;
+> +             interrupts = <24 2 0 0>, <16 2 1 30>;
+> +             clock-frequency = <0>;
+> +             fsl,qman-channel-range = <0x40 0x7>;
 
-Le Thu, 30 Jul 2015 19:00:38 +0200, Stefan Agner <stefan@agner.ch> a
-=C3=A9crit :
+fman is supposed to have clocks/clock-names, not clock-frequency.
 
-> Hi Albert,
->=20
-> On 2015-07-30 18:13, Albert ARIBAUD wrote:
-> > Hi Stefan,
-> >=20
-> > Le Mon, 27 Jul 2015 18:42:41 +0200, Stefan Agner <stefan@agner.ch> =
-a
-> > =C3=A9crit :
-> >=20
-> >> This driver supports Freescale NFC (NAND flash controller) found o=
-n
-> >> Vybrid (VF610), MPC5125, MCF54418 and Kinetis K70. The driver has
-> >> been tested on 8-bit and 16-bit NAND interface and supports ONFI
-> >> parameter page reading.
-> >>
-> >> [...]
-> >>
-> >> diff --git a/drivers/mtd/nand/vf610_nfc.c b/drivers/mtd/nand/vf610=
-_nfc.c
-> >> new file mode 100644
-> >> index 0000000..0da500e
-> >> --- /dev/null
-> >> +++ b/drivers/mtd/nand/vf610_nfc.c
-> >> @@ -0,0 +1,640 @@
-> >> [...]
-> >=20
-> > ... about line 708:
-> >=20
-> >> +	err =3D devm_request_irq(nfc->dev, irq, vf610_nfc_irq, 0, DRV_NA=
-ME, mtd);
-> >> +	if (err) {
-> >> +		dev_err(nfc->dev, "Error requesting IRQ!\n");
-> >> +		goto error;
-> >> +	}
-> >> +
-> >> +	vf610_nfc_init_controller(nfc);
-> >=20
-> > The call above is too early: vf610_nfc_init_controller() will test
-> > for (nfc->chip.options & NAND_BUSWIDTH_16) but this option bit is o=
-nly
-> > set once nand_scan_ident() below has been run.
-> >=20
-> > This has the effect that even when the DT node specifies a 16-bit w=
-ide
-> > bus, the controller is configured for 8-bit mode at this point, whi=
-ch of
-> > course causes read failures. I've experienced this with a Vybrid So=
-C
-> > and a Micron MT29F4G16ABADAH4 16-bit NAND.
-> >=20
-> >> +	/* first scan to find the device and get the page size */
-> >> +	if (nand_scan_ident(mtd, 1, NULL)) {
-> >> +		err =3D -ENXIO;
-> >> +		goto error;
-> >> +	}
-> >=20
-> > Placing the call to vf610_nfc_init_controller() here, after the cal=
-l
-> > to nand_scan_ident() rather than before it, fixed the issue for me.
->=20
-> Hm, since nand_scan_ident access the devices we actually want the
-> controller initialized before we access it the first time. In most
-> cases, the boot loader/boot ROM probably initialized the controller i=
-n a
-> way that identifying the chip should work non the less. However, the
-> safe way would be to initialize it before calling nand_scan_ident.
+-Scott
 
-Correct -- there is a mutual dependency here between nand_scan_ident()
-and vf610_nfc_init_controller(). Anyway, my call order switch was only
-a hack to get things working.
-
-> However, I see your point regarding bus width: With the change to
-> nand_dt_init, we have that information after nand_scan_ident. There i=
-s
-> actually more: Also the HW ECC settings are not yet parsed at that
-> point, hence the ECC status and offset will not be initialized right.=
-=20
->=20
-> We could call the whole initialization twice. This would configure 8-=
-Bit
-> mode for the 16-Bit devices, but during initialization this is anyway
-> the required default (ONFI). Or we split it up and call it something
-> like vf610_nfc_preinit_controller and vf610_nfc_init_controller.
->=20
-> What do you think?
-
-I think creating a vf610_nfc_preinit_controller() function with no
-dependency on the DT is the cleaner option.
-
-> --
-> Stefan
-
-Cordialement,
-Albert ARIBAUD
-3ADEV
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
