@@ -1,142 +1,54 @@
-From: Mikhail Yakshin <greycat@whiteboxes.ch>
-Subject: ARM: dts: sunxi: Regulators at common board layouts
-Date: Thu, 30 Jul 2015 12:45:41 +0300
-Message-ID: <55B9F245.2000300@whiteboxes.ch>
+From: Joe Perches <joe@perches.com>
+Subject: Re: [PATCH 02/12] [media] dvb-pll: Add support for THOMSON DTT7546X
+ tuner.
+Date: Thu, 30 Jul 2015 03:08:48 -0700
+Message-ID: <1438250928.2677.10.camel@perches.com>
+References: <1435158670-7195-1-git-send-email-peter.griffin@linaro.org>
+	 <1435158670-7195-3-git-send-email-peter.griffin@linaro.org>
+	 <1435195057.9377.18.camel@perches.com> <20150722185811.2d718baa@recife.lan>
+	 <20150730094738.GD488@griffinp-ThinkPad-X1-Carbon-2nd>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5233856204809508069=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-sunxi@googlegroups.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150730094738.GD488@griffinp-ThinkPad-X1-Carbon-2nd>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Griffin <peter.griffin@linaro.org>
+Cc: Mauro Carvalho Chehab <mchehab@osg.samsung.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, lee.jones@linaro.org, hugues.fruchet@st.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---===============5233856204809508069==
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="Axcpkq2O7U4fGtsmmFBMUT5uP5lpWHvqi"
+On Thu, 2015-07-30 at 10:47 +0100, Peter Griffin wrote:
+> Hi Mauro / Joe,
+> 
+> On Wed, 22 Jul 2015, Mauro Carvalho Chehab wrote:
+> 
+> > Em Wed, 24 Jun 2015 18:17:37 -0700
+> > Joe Perches <joe@perches.com> escreveu:
+> > 
+> > > On Wed, 2015-06-24 at 16:11 +0100, Peter Griffin wrote:
+> > > > This is used in conjunction with the STV0367 demodulator on
+> > > > the STV0367-NIM-V1.0 NIM card which can be used with the STi
+> > > > STB SoC's.
+> > > 
+> > > Barely associated to this specific patch, but for
+> > > dvb-pll.c, another thing that seems possible is to
+> > > convert the struct dvb_pll_desc uses to const and
+> > > change the "entries" fixed array size from 12 to []
+> > > 
+> > > It'd save a couple KB overall and remove ~5KB of data.
+> > > 
+> > > $ size drivers/media/dvb-frontends/dvb-pll.o*
+> > >    text	   data	    bss	    dec	    hex	filename
+> > >    8520	   1552	   2120	  12192	   2fa0	drivers/media/dvb-frontends/dvb-pll.o.new
+> > >    5624	   6363	   2120	  14107	   371b	drivers/media/dvb-frontends/dvb-pll.o.old
+> > 
+> > Peter,
+> > 
+> > Please add this patch on the next patch series you submit.
+> 
+> Ok will do, I've added this patch with a slightly updated commit message
+> to my series.
+> 
+> Joe - Can I add your signed-off-by?
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---Axcpkq2O7U4fGtsmmFBMUT5uP5lpWHvqi
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-I've been analyzing various boards based on Allwinner A20 CPU and
-X-Powers AXP209 PMU (to make a proper configuration for our board,
-Whitebox Labs Watermelon).
-
-There are some things very common and some things pretty different on
-various boards.
-
-Namely, there's agreement on that DCDC2 and DCDC3 and used for CPU
-voltages (VDD-CPU and (VDD-SYS=3DVDD-INT)+VDD-DLL respectively) on all
-boards I've analyzed (Olimex boards, Cubieboard / Cubietruck, BananaPi,
-PCDuino, Watermelon, etc) and probably it should be kept this way.
-
-However, what puzzles me the most so far is LDO1 regulator. According to
-[AXP209 datasheet, p. 13, p. 23][1] and all the boards I've
-investigated, it's used exclusively for powering VDD-RTC input of A20
-CPU that supports internal CPU's RTC. LDO1 gets very special status in
-AXP209 - basically, it's as close to "always on" (even on backup
-battery) as possible the purpose of timekeeping.
-
-According to the same spec, LDO1 allows 2 distinct voltage choices: 1.3V
-and 3.3V. However, according to the [A20 datasheet][2], VDD-RTC (pin K8)
-has absolute minimum and maximum voltage ratings of 3.0V. I'm not sure
-how is it supposed to work together, given that X-Powers AXP209 and
-Allwinner A20 is basically produced by different branches the same
-company and are meant to be totally compatible.
-
-What's even more weird, is that all configurations I've encountered so
-far (i.e. FEX configurations for 3.4 sunxi kernel and DTS for modern
-mainline kernels) use hard locked 1.3V setting for LDO1. For example,
-kernel 3.4:
-
-/sys/devices/platform/sunxi-i2c.0/i2c-0/0-0034/axp20-regulator.21/regulat=
-or/regulator.1/
-name    axp20_ldo1
-microvolts      1300000
-min_microvolts  1300000
-max_microvolts  1300000
-
-and similar construction in mainline DTSes:
-
-    vdd_rtc: ldo1 {
-            regulator-min-microvolt =3D <1300000>;
-            regulator-max-microvolt =3D <1300000>;
-            regulator-always-on;
-    };
-
-or in axp209.dtsi:
-
-    reg_ldo1: ldo1 {
-            /* LDO1 is a fixed output regulator */
-            regulator-always-on;
-            regulator-min-microvolt =3D <1300000>;
-            regulator-max-microvolt =3D <1300000>;
-            regulator-name =3D "ldo1";
-    };
-
-If we'll take a look at default power-on setup for AXP209 in the
-datasheet (page 24), we'll see that it's determined by LDO1SET pin. If
-it's connected to GND, then LDO1 will start with 1.3V, if it's connected
-to VINT, then it would be 3.3V.
-
-I've analyzed all the schematics I found in public:
-
-* Older Olimex schematics (Lime rev C, Lime rev D, Lime2 rev B) state
-that LDO1 line is "3V3/30mA". LDO1SET is grounded.
-* Newer Olimex schematics (Lime2 rev C) call that "1V3/30mA". LDO1SET is
-grounded.
-* All Bananapi and Cubieboard schematics look very similar and seem to
-be originating from the same source (reference Allwinner design?) and do
-not hint any voltages. LDO1SET is grounded.
-
-Can someone explain to me how does it work / supposed to work?
-
-[1]: http://linux-sunxi.org/images/8/89/AXP209_Datasheet_v1.0en.pdf
-[2]:
-https://github.com/OLIMEX/OLINUXINO/raw/master/HARDWARE/A20-PDFs/A20%20Da=
-tasheet%20v1.0%2020130227.pdf
-
---=20
-WBR, Mikhail Yakshin
-
-
---Axcpkq2O7U4fGtsmmFBMUT5uP5lpWHvqi
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iEYEARECAAYFAlW58k4ACgkQvXjOht2i9jtK0wCfTMMhO0LwkvzHXAjgR24X8ore
-wZsAn0pwGFotXIxZ/5+6wkpOG3LxKUNV
-=r0YH
------END PGP SIGNATURE-----
-
---Axcpkq2O7U4fGtsmmFBMUT5uP5lpWHvqi--
-
-
---===============5233856204809508069==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============5233856204809508069==--
+Signed-off-by: Joe Perches <joe@perches.com>
