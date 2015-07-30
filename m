@@ -1,70 +1,81 @@
-From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Subject: Re: [PATCH v1 1/7] ARM: dts: ifc6410: Add pwrseq support for WLAN
-Date: Wed, 29 Jul 2015 17:12:30 -0700
-Message-ID: <20150730001230.GD6519@usrtlx11787.corpusers.net>
-References: <1438087956-17307-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1438088022-17350-1-git-send-email-srinivas.kandagatla@linaro.org>
+From: Michael Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH v7 0/5] clk: Provide support for always-on clocks
+Date: Wed, 29 Jul 2015 17:27:26 -0700
+Message-ID: <20150730002726.642.33056@quantum>
+References: <1437570255-21049-1-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1438088022-17350-1-git-send-email-srinivas.kandagatla@linaro.org>
+In-Reply-To: <1437570255-21049-1-git-send-email-lee.jones@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: agross@codeaurora.org, linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: kernel@stlinux.com, sboyd@codeaurora.org, devicetree@vger.kernel.org, geert@linux-m68k.org, maxime.ripard@free-electrons.com, s.hauer@pengutronix.de, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue 28 Jul 05:53 PDT 2015, Srinivas Kandagatla wrote:
-
-> This patch adds pwrseq for WLAN which resets the WLAN just before the
-> SDIO bus is up.
+Quoting Lee Jones (2015-07-22 06:04:10)
+> Lots of platforms contain clocks which if turned off would prove fatal.
+> The only way to recover from these catastrophic failures is to restart
+> the board(s).  Now, when a clock provider is registered with the
+> framework it is possible for a list of critical clocks to be supplied
+> which must be kept ungated.  Each clock mentioned in the newly
+> introduced 'critical-clock' property will be clk_prepare_enable()d
+> where the normal references will be taken.  This will prevent the
+> common clk framework from attempting to gate them during the normal
+> clk_disable_unused() and disable_clock() procedures.
 > 
+> Note that it will still be possible for knowledgeable drivers to turn
+> these clocks off using clk_{enable,disable}_critical() calls.
 
-Does this mean that we have the !power-of-2 patch in mmc on the way?
+Hi Lee,
 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
->  arch/arm/boot/dts/qcom-apq8064-ifc6410.dts | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
+Thanks for submitting the series.
+
+It has been a little while since v6. It would be helpful to remind me of
+why a new api is necessary, versus using the existing clk_prepare_unused
+call at the time that a clock is enabled.
+
+I'm looking over the patches in detail now, but one question stands out:
+besides the DT use case, would a Linux device driver ever call
+clk_enable_critical instead of using clk_enable? If so, why?
+
+Thanks,
+Mike
+
 > 
-> diff --git a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-> index 88d6655..df560cf 100644
-> --- a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-> +++ b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-> @@ -1,5 +1,6 @@
->  #include "qcom-apq8064-v2.0.dtsi"
->  #include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
->  
->  / {
->  	model = "Qualcomm APQ8064/IFC6410";
-> @@ -206,6 +207,28 @@
->  			status = "okay";
->  		};
->  
-> +		qcom,ssbi@500000 {
-> +			pmicintc: pmic@0 {
-> +				pm8921_gpio: gpio@150 {
-
-These should already be labeled in the apq8064 dtsi (or in a
-qcom-pm8921.dtsi).
-
-> +					pinctrl-names = "default";
-> +					pinctrl-0 = <&wlan_default_gpios>;
-
-Please move these to the pwrseq node, as that's the consumer of this.
-
-> +					wlan_default_gpios: wlan-gpios {
-> +						pios {
-> +							pins = "gpio43";
-> +							function = "normal";
-> +							bias-disable;
-> +							power-source = <PM8921_GPIO_S4>;
-> +						};
-> +					};
-> +				};
-> +			};
-> +		};
-
-Regards,
-Bjorn
+> Changelog:
+> v6 => v7:
+>   - Introduce API to enable and disable critical clocks
+>   - Rename 'always-on-clock' to 'critical-clock'
+> 
+> v5 => v6:
+>   - Use of_clk_get_from_provider() instead of of_clk_get_by_clkspec()
+>   - Explicitly describe expected DT values
+>   - Be pedantic with regards to printk() format specifiers
+> 
+> vX => v5:
+>   Implementations have changed drastically between versions, thus I
+>   would like for this set to be thought of independently from its
+>   predecessors.  The only reason for identifying as 'v5' is ease of
+>   differentiation on the list, which stems from the confusion caused
+>   by submitting 'v4' as a separate entity.
+> 
+> Lee Jones (5):
+>   ARM: sti: stih407-family: Supply defines for CLOCKGEN A0
+>   ARM: sti: stih410-clocks: Identify critical clocks
+>   clk: Supply the critical clock {init, enable, disable} framework
+>   clk: Provide critical clock support
+>   clk: dt: Introduce binding for critical clock support
+> 
+>  .../devicetree/bindings/clock/clock-bindings.txt   | 39 +++++++++++++++++++
+>  arch/arm/boot/dts/stih410-clock.dtsi               | 10 +++++
+>  drivers/clk/clk-conf.c                             | 45 +++++++++++++++++++++-
+>  drivers/clk/clk.c                                  | 45 ++++++++++++++++++++++
+>  include/dt-bindings/clock/stih407-clks.h           |  4 ++
+>  include/linux/clk-provider.h                       |  2 +
+>  include/linux/clk.h                                | 30 +++++++++++++++
+>  7 files changed, 174 insertions(+), 1 deletion(-)
+> 
+> -- 
+> 1.9.1
+> 
