@@ -1,378 +1,82 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v6] PCI: Store PCIe bus address in struct of_pci_range
-Date: Thu, 30 Jul 2015 12:14:45 -0500
-Message-ID: <20150730171445.GI9640@google.com>
-References: <1438010223-124422-1-git-send-email-gabriele.paoloni@huawei.com>
- <20150729172053.GE31170@google.com>
- <EE11001F9E5DDD47B7634E2F8A612F2E01D6F350@lhreml503-mbs>
- <CAL_JsqKs11-sXQTdBD+ZjbVYFWUHBARTW9q5MF1hCXUhZ+nWLQ@mail.gmail.com>
- <EE11001F9E5DDD47B7634E2F8A612F2E01D6F94A@lhreml503-mbs>
- <20150730161447.GG9640@google.com>
- <EE11001F9E5DDD47B7634E2F8A612F2E01D6FB3B@lhreml503-mbs>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <EE11001F9E5DDD47B7634E2F8A612F2E01D6FB3B@lhreml503-mbs>
-Sender: linux-pci-owner@vger.kernel.org
-To: Gabriele Paoloni <gabriele.paoloni@huawei.com>
-Cc: Rob Herring <robherring2@gmail.com>, "arnd@arndb.de" <arnd@arndb.de>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "Wangzhou (B)" <wangzhou1@hisilicon.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "james.morse@arm.com" <james.morse@arm.com>, "Liviu.Dudau@arm.com" <Liviu.Dudau@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Yuanzhichang <yuanzhichang@hisilicon.com>, Zhudacai <zhudacai@hisilicon.com>, zhangjukuo <zhangjukuo@huawei.com>, qiuzhenfa <qiuzhenfa@hisilicon.com>, "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>, Jingoo Han <jingoohan1@gmail.com>, Pratyush Anand <pratyush.anand@gmail.com>
+From: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] ARM: dts: sun7i: Enable USB DRC on Wexler TAB7200
+Date: Thu, 30 Jul 2015 20:26:48 +0300
+Message-ID: <1438277208-20721-1-git-send-email-mamlinav@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-[+cc Jingoo, Pratyush]
+Enable the otg/drc usb controller on the Wexler TAB7200 tablet.
 
-On Thu, Jul 30, 2015 at 04:50:55PM +0000, Gabriele Paoloni wrote:
-> > -----Original Message-----
-> > From: linux-pci-owner@vger.kernel.org [mailto:linux-pci-
-> > owner@vger.kernel.org] On Behalf Of Bjorn Helgaas
-> > Sent: Thursday, July 30, 2015 5:15 PM
-> > To: Gabriele Paoloni
-> > Cc: Rob Herring; arnd@arndb.de; lorenzo.pieralisi@arm.com; Wangzhou=
- (B);
-> > robh+dt@kernel.org; james.morse@arm.com; Liviu.Dudau@arm.com; linux=
--
-> > pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-> > devicetree@vger.kernel.org; Yuanzhichang; Zhudacai; zhangjukuo;
-> > qiuzhenfa; Liguozhu (Kenneth)
-> > Subject: Re: [PATCH v6] PCI: Store PCIe bus address in struct
-> > of_pci_range
-> >=20
-> > On Thu, Jul 30, 2015 at 01:52:13PM +0000, Gabriele Paoloni wrote:
-> > >
-> > >
-> > > > -----Original Message-----
-> > > > From: linux-pci-owner@vger.kernel.org [mailto:linux-pci-
-> > > > owner@vger.kernel.org] On Behalf Of Rob Herring
-> > > > Sent: Thursday, July 30, 2015 2:43 PM
-> > > > To: Gabriele Paoloni
-> > > > Cc: Bjorn Helgaas; arnd@arndb.de; lorenzo.pieralisi@arm.com;
-> > Wangzhou
-> > > > (B); robh+dt@kernel.org; james.morse@arm.com; Liviu.Dudau@arm.c=
-om;
-> > > > linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org=
-;
-> > > > devicetree@vger.kernel.org; Yuanzhichang; Zhudacai; zhangjukuo;
-> > > > qiuzhenfa; Liguozhu (Kenneth)
-> > > > Subject: Re: [PATCH v6] PCI: Store PCIe bus address in struct
-> > > > of_pci_range
-> > > >
-> > > > On Wed, Jul 29, 2015 at 2:44 PM, Gabriele Paoloni
-> > > > <gabriele.paoloni@huawei.com> wrote:
-> > > > > Hi Bjorn
-> > > > >
-> > > > > Many Thanks for your reply
-> > > > >
-> > > > > I have commented back inline with resolutions from my side.
-> > > > >
-> > > > > If you're ok with them I'll send it out a new version in the
-> > > > appropriate patchset
-> > > > >
-> > > > > Cheers
-> > > > >
-> > > > > Gab
-> > > > >
-> > > > >> -----Original Message-----
-> > > > >> From: Bjorn Helgaas [mailto:bhelgaas@google.com]
-> > > > >> Sent: Wednesday, July 29, 2015 6:21 PM
-> > > > >> To: Gabriele Paoloni
-> > > > >> Cc: arnd@arndb.de; lorenzo.pieralisi@arm.com; Wangzhou (B);
-> > > > >> robh+dt@kernel.org; james.morse@arm.com; Liviu.Dudau@arm.com=
-;
-> > linux-
-> > > > >> pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-> > > > >> devicetree@vger.kernel.org; Yuanzhichang; Zhudacai; zhangjuk=
-uo;
-> > > > >> qiuzhenfa; Liguozhu (Kenneth)
-> > > > >> Subject: Re: [PATCH v6] PCI: Store PCIe bus address in struc=
-t
-> > > > >> of_pci_range
-> > > > >>
-> > > > >> Hi Gabriele,
-> > > > >>
-> > > > >> As far as I can tell, this is not specific to PCIe, so pleas=
-e
-> > use
-> > > > "PCI"
-> > > > >> in
-> > > > >> the subject as a generic term that includes both PCI and PCI=
-e.
-> > > > >
-> > > > > sure agreed
-> > > > >
-> > > > >>
-> > > > >> On Mon, Jul 27, 2015 at 11:17:03PM +0800, Gabriele Paoloni w=
-rote:
-> > > > >> > From: gabriele paoloni <gabriele.paoloni@huawei.com>
-> > > > >> >
-> > > > >> >     This patch is needed port PCIe designware to new DT
-> > parsing
-> > > > API
-> > > > >> >     As discussed in
-> > > > >> >     http://lists.infradead.org/pipermail/linux-arm-
-> > kernel/2015-
-> > > > >> January/317743.html
-> > > > >> >     in designware we have a problem as the PCI addresses i=
-n
-> > the
-> > > > PCIe
-> > > > >> controller
-> > > > >> >     address space are required in order to perform correct=
- HW
-> > > > >> operation.
-> > > > >> >
-> > > > >> >     In order to solve this problem commit f4c55c5a3 "PCI:
-> > > > designware:
-> > > > >> >     Program ATU with untranslated address" added code to r=
-ead
-> > the
-> > > > >> PCIe
-> > > > >>
-> > > > >> Conventional reference is 12-char SHA1, like this:
-> > > > >>
-> > > > >>   f4c55c5a3f7f ("PCI: designware: Program ATU with untransla=
-ted
-> > > > >> address")
-> > > > >
-> > > > > Agreed, will change this
-> > > > >
-> > > > >>
-> > > > >> >     controller start address directly from the DT ranges.
-> > > > >> >
-> > > > >> >     In the new DT parsing API
-> > of_pci_get_host_bridge_resources()
-> > > > >> hides the
-> > > > >> >     DT parser from the host controller drivers, so it is n=
-ot
-> > > > possible
-> > > > >> >     for drivers to parse values directly from the DT.
-> > > > >> >
-> > > > >> >     In http://www.spinics.net/lists/linux-pci/msg42540.htm=
-l we
-> > > > >> already tried
-> > > > >> >     to use the new DT parsing API but there is a bug
-> > (obviously)
-> > > > in
-> > > > >> setting
-> > > > >> >     the <*>_mod_base addresses
-> > > > >> >     Applying this patch we can easily set "<*>_mod_base =3D=
- win-
-> > > > >> >__res.start"
-> > > > >>
-> > > > >> By itself, this patch adds something.  It would help me
-> > understand
-> > > > it
-> > > > >> if
-> > > > >> the *user* of this new something were in the same patch seri=
-es.
-> > > > >
-> > > > > the user is: "[PATCH v5 2/5] PCI: designware: Add ARM64 suppo=
-rt"
-> > > > > I will ask Zhou Wang to include this patch in his patchset
-> > > > >
-> > > > >
-> > > > >>
-> > > > >> >     This patch adds a new field in "struct of_pci_range" t=
-o
-> > store
-> > > > the
-> > > > >> >     pci bus start address; it fills the field in
-> > > > >> of_pci_range_parser_one();
-> > > > >> >     in of_pci_get_host_bridge_resources() it retrieves the
-> > > > resource
-> > > > >> entry
-> > > > >> >     after it is created and added to the resource list and
-> > uses
-> > > > >> >     entry->__res.start to store the pci controller address
-> > > > >>
-> > > > >> struct of_pci_range is starting to get confusing to non-OF f=
-olks
-> > > > like
-> > > > >> me.
-> > > > >> It now contains:
-> > > > >>
-> > > > >>   u32 pci_space;
-> > > > >>   u64 pci_addr;
-> > > > >>   u64 cpu_addr;
-> > > > >>   u64 bus_addr;
-> > > > >>
-> > > > >> Can you explain what all these things mean, and maybe even a=
-dd
-> > one-
-> > > > line
-> > > > >> comments to the structure?
-> > > > >
-> > > > > sure I can add comments inline in the code
-> > > > >
-> > > > >>
-> > > > >> pci_space: The only uses I see are to determine whether to p=
-rint
-> > > > >> "Prefetch".  I don't see any real functionality that uses th=
-is.
-> > > > >
-> > > > > Looking at the code I agree. it's seems to be used only in
-> > powerpc
-> > > > > and microblaze to print out.
-> > > > > However from my understanding pci_space is the phys.hi field =
-of
-> > the
-> > > > > ranges property: it defines the properties of the address spa=
-ce
-> > > > associated
-> > > > > to the PCI address. if you're curious you can find a nice and
-> > quick
-> > > > to read
-> > > > > "guide" in http://devicetree.org/MPC5200:PCI
-> > > > >
-> > > > >>
-> > > > >> pci_addr: I assume this is a PCI bus address, like what you
-> > would
-> > > > see
-> > > > >> if
-> > > > >> you put an analyzer on the bus/link.  This address could go =
-in a
-> > BAR.
-> > > > >
-> > > > > Yes, this is the PCI start address of the range: phys.mid +
-> > phys.low
-> > > > in the
-> > > > > guide mentioned above
-> > > > >
-> > > > >>
-> > > > >> cpu_addr: I assume this is a CPU physical address, like what=
- you
-> > > > would
-> > > > >> see
-> > > > >> in /proc/iomem and what you would pass to ioremap().
-> > > > >
-> > > > > Yes correct
-> > > > >
-> > > > >>
-> > > > >> bus_addr: ?
-> > > > >>
-> > > > >
-> > > > > According to the guide above, this is the address into which =
-the
-> > > > pci_address
-> > > > > get translated to and that is passed to the root complex. Bet=
-ween
-> > the
-> > > > root
-> > > > > complex and the CPU there can be intermediate translation lay=
-ers:
-> > see
-> > > > that to
-> > > > > get pci_address we call "of_translate_address"; this will app=
-ly
-> > all
-> > > > the
-> > > > > translation layers (ranges in the DT) that it finds till it c=
-omes
-> > to
-> > > > the root
-> > > > > node of the DT (thus retrieving the CPU address).
-> > > > > Now said that, for designware we need the first translated PC=
-I
-> > > > address, that we call
-> > > >
-> > > > I think you mean "translated CPU address." The flow of addresse=
-s
-> > looks
-> > > > like this:
-> > > >
-> > > > CPU -> CPU bus address -> bus fabric address decoding -> bus
-> > address
-> > > > -> DW PCI -> PCI address
-> > > >
-> > > > This is quite common that an IP block does not see the full add=
-ress.
-> > > > It is unusual that the IP block needs to know its full address =
-on
-> > the
-> > > > slave side. It is quite common for the master side and the kern=
-el
-> > > > deals with that all the time with DMA mapping
-> > > >
-> > > > > here bus_addr after Rob Herring suggested the name...honestly=
- I
-> > > > cannot think of a
-> > > > > different name
-> > > >
-> > > > Thinking about this some more, is this really a translation ver=
-sus
-> > > > just a stripping of high bits? Does the DW IP have less than 32=
--
-> > bits
-> > > > address? If so, we could express differently and just mask the =
-CPU
-> > > > address within the driver instead.
-> > >
-> > > I don=E2=80=99t think we should rely on [CPU] addresses...what if=
- the
-> > intermediate
-> > > translation layer changes the lower significant bits of the "bus
-> > address"
-> > > to translate into a cpu address?
-> >=20
-> > Is it really a possiblity that the lower bits could be changed?
->=20
-> I've checked all the current deignware users DTs except "pci-layersca=
-pe"=20
-> that I could not find:
-> spear1310.dtsi
-> spear1340.dtsi
-> dra7.dtsi
-> imx6qdl.dtsi
-> imx6sx.dtsi
-> keystone.dtsi
-> exynos5440.dtsi
->=20
-> None of them modifies the lower bits. To be more precise the only guy
-> that provides another translation layer is "dra7.dtsi":
-> axi0
-> http://lxr.free-electrons.com/source/arch/arm/boot/dts/dra7.dtsi#L207
->=20
-> axi1
-> http://lxr.free-electrons.com/source/arch/arm/boot/dts/dra7.dtsi#L241
->=20
-> For this case masking the top 4bits (bits28 to 31) should make the jo=
-b.
->=20
-> Speaking in general terms so far I've always seen linear mappings
-> that differ by bitmask offset, however linear does not mean that you=20
-> cannot affect the lower bits: e.g. <0x0> to <0x0 + size> can map to
-> <0x0000cafe to 0x0000cafe + size>, but I guess that for HW design rea=
-sons
-> it is much easier to remap directly using a bitmask...but I was not s=
-ure
-> and I didn't think about the problems that can arise with ACPI.
+Signed-off-by: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts | 32 ++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-As I said, it wouldn't make sense for the bits that comprise the
-offset into the window to change, so the mapping only has to be linear
-inside the window.
+diff --git a/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts b/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts
+index 83c6d3f..7ec6071 100644
+--- a/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts
++++ b/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts
+@@ -135,6 +135,20 @@
+ 	status = "okay";
+ };
+ 
++&otg_sram {
++	status = "okay";
++};
++
++&pio {
++	usb0_id_detect_pin: usb0_id_detect_pin@0 {
++		allwinner,pins = "PH4";
++		allwinner,function = "gpio_in";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
++	};
++};
++
++
+ #include "axp209.dtsi"
+ 
+ &reg_dcdc2 {
+@@ -162,6 +176,10 @@
+ 	regulator-name = "avcc";
+ };
+ 
++&reg_usb0_vbus {
++	status = "okay";
++};
++
+ &reg_usb1_vbus {
+ 	status = "okay";
+ };
+@@ -176,7 +194,21 @@
+ 	status = "okay";
+ };
+ 
++&usb_otg {
++	dr_mode = "otg";
++	status = "okay";
++};
++
++&usb_power_supply {
++	status = "okay";
++};
++
+ &usbphy {
++	pinctrl-names = "default";
++	pinctrl-0 = <&usb0_id_detect_pin>;
++	usb0_id_det-gpio = <&pio 7 4 GPIO_ACTIVE_HIGH>; /* PH4 */
++	usb0_vbus_power-supply = <&usb_power_supply>;
++	usb0_vbus-supply = <&reg_usb0_vbus>;
+ 	usb1_vbus-supply = <&reg_usb1_vbus>;
+ 	usb2_vbus-supply = <&reg_usb2_vbus>;
+ 	status = "okay";
+-- 
+2.3.6
 
-=46or the bits outside the window offset, I don't know enough to say
-whether masking is sufficient or safe.
-
-> If you think the bitmask is Ok then I can directly define it in
-> designware and we can drop this patch.
-
-It's OK by me, but I know nothing about the actual hardware involved.
-=46or the DesignWare question, I think you would just have to convince
-Jingoo and Pratyush (cc'd).
-
-> > I think we're talking about MMIO here, and a bridge has an MMIO
-> > window.  A window is a range of CPU physical addresses that the
-> > bridge forwards to PCI.  The PCI core assumes that a CPU physical
-> > address range is linearly mapped to PCI bus addresses, i.e., if the
-> > window base is X and maps to PCI address Y, then as long as X+n is
-> > inside the window, it must map to Y+n.
-> >=20
-> > That means the low-order bits (the ones that are the offset into th=
-e
-> > window) cannot change.
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe linux-pci=
-" in
-> > the body of a message to majordomo@vger.kernel.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
