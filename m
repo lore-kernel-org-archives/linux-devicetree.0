@@ -1,8 +1,8 @@
 From: Peter Griffin <peter.griffin@linaro.org>
 Subject: Re: [PATCH 02/12] [media] dvb-pll: Add support for THOMSON DTT7546X
  tuner.
-Date: Thu, 30 Jul 2015 15:33:04 +0100
-Message-ID: <20150730143304.GA22196@griffinp-ThinkPad-X1-Carbon-2nd>
+Date: Thu, 30 Jul 2015 15:34:37 +0100
+Message-ID: <20150730143437.GB22196@griffinp-ThinkPad-X1-Carbon-2nd>
 References: <1435158670-7195-1-git-send-email-peter.griffin@linaro.org>
  <1435158670-7195-3-git-send-email-peter.griffin@linaro.org>
  <1435195057.9377.18.camel@perches.com>
@@ -10,12 +10,12 @@ References: <1435158670-7195-1-git-send-email-peter.griffin@linaro.org>
  <20150730094738.GD488@griffinp-ThinkPad-X1-Carbon-2nd>
  <1438250928.2677.10.camel@perches.com>
  <CAOcJUbw5hSmPdrz6rPPYU6iMBHnvOZc1p3f+4WhEYq2-XmAPVw@mail.gmail.com>
- <CAOcJUbzhL2LXro9cwazZxtH=-=FndNARi7TSsFi+DGCPP3uEdA@mail.gmail.com>
+ <CAOcJUbwVBVxmaP-vNkw0n8Cf3-=Fn8Aou8FG81Ajab1B2h4Z4A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAOcJUbzhL2LXro9cwazZxtH=-=FndNARi7TSsFi+DGCPP3uEdA@mail.gmail.com>
+In-Reply-To: <CAOcJUbwVBVxmaP-vNkw0n8Cf3-=Fn8Aou8FG81Ajab1B2h4Z4A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Michael Ira Krufky <mkrufky@linuxtv.org>
 Cc: Joe Perches <joe@perches.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, linux-arm-kernel@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, lee.jones@linaro.org, hugues.fruchet@st.com, linux-media <linux-media@vger.kernel.org>, devicetree@vger.kernel.org
@@ -78,16 +78,39 @@ On Thu, 30 Jul 2015, Michael Ira Krufky wrote:
 > > tuner-simple instead, if the pattern matches better there.
 > >
 > > Mauro, can we hold off on merging Peter's patch until we resolve this?
-> >
-> > -Michael Ira Krufky
 > 
-> eek!  I mispelled my own email address.
+> This code block, specifically, I would rather not see added into dvb-pll:
 > 
+> +static int dvb_pll_get_num_regs(struct dvb_pll_priv *priv)
+> +{
+> +       int num_regs = 4;
+> +
+> +       if (strncmp(priv->pll_desc->name, "Thomson dtt7546x", 16) == 0)
+> +               num_regs = 5;
+> +
+> +       return num_regs;
+> +}
+> +
 > 
-> With regards to Joe's patch - I'd like to see that merged.  ...and
-> here is my correctly spelled email address:
+> tuner-simple provides an infrastructure that allows this tuner to be
+> added in a more elegant way without the need to add special cases to
+> otherwise generic code, as done in the above.
 > 
-> 
-> Reviewed-by: Michael Ira Krufky <m.krufky@samsung.com>
+> I'm sorry, Peter.  Can you take a look at tuner-simple and consider
+> sending a new patch?
 
-Ok I will add your reviewed-by and include it in my v2.
+Yes sure. I wasn't actually aware that tuner-simple existed. From what I
+can see briefly looking at it, it does look a more suitable way of adding
+support for this tuner.
+
+The dtt7546x is a dual tuner in that it supports dvb-t and dvb-c, however
+I have only tested it with DVB-T as that is the only feed I have to my home office.
+
+As I have a V2 incorporating all of Mauro's changes ready to send, and I'm 
+on holiday for 3 weeks from Friday, I will temporarily drop support for this
+tuner and NIM card in V2, and migrate over to the new driver when I return end
+of August.
+
+regards,
+
+Peter.
