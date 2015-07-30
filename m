@@ -1,88 +1,103 @@
-From: Michael Ira Krufky <mkrufky-dJidKbW2IEtAfugRpC6u6w@public.gmane.org>
-Subject: Re: [PATCH 02/12] [media] dvb-pll: Add support for THOMSON DTT7546X tuner.
-Date: Thu, 30 Jul 2015 07:17:20 -0400
-Message-ID: <CAOcJUbzhL2LXro9cwazZxtH=-=FndNARi7TSsFi+DGCPP3uEdA@mail.gmail.com>
-References: <1435158670-7195-1-git-send-email-peter.griffin@linaro.org>
-	<1435158670-7195-3-git-send-email-peter.griffin@linaro.org>
-	<1435195057.9377.18.camel@perches.com>
-	<20150722185811.2d718baa@recife.lan>
-	<20150730094738.GD488@griffinp-ThinkPad-X1-Carbon-2nd>
-	<1438250928.2677.10.camel@perches.com>
-	<CAOcJUbw5hSmPdrz6rPPYU6iMBHnvOZc1p3f+4WhEYq2-XmAPVw@mail.gmail.com>
+From: Jisheng Zhang <jszhang@marvell.com>
+Subject: Re: [PATCH v5 0/2] arm64: Add basic support for Marvell Berlin4CT
+ SoC
+Date: Thu, 30 Jul 2015 19:13:04 +0800
+Message-ID: <20150730191304.752db88c@xhacker>
+References: <1438248922-2919-1-git-send-email-jszhang@marvell.com>
+	<55B9F507.8090706@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOcJUbw5hSmPdrz6rPPYU6iMBHnvOZc1p3f+4WhEYq2-XmAPVw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Cc: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hugues.fruchet-qxv4g6HH51o@public.gmane.org, linux-media <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <55B9F507.8090706@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: catalin.marinas@arm.com, will.deacon@arm.com, khilman@linaro.org, arnd@arndb.de, olof@lixom.net, mark.rutland@arm.com, sudeep.holla@arm.com, robh+dt@kernel.org, galak@codeaurora.org, pawel.moll@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 30, 2015 at 7:14 AM, Michael Ira Krufky <mkrufky-dJidKbW2IEtAfugRpC6u6w@public.gmane.org> wrote:
-> On Thu, Jul 30, 2015 at 6:08 AM, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org> wrote:
->> On Thu, 2015-07-30 at 10:47 +0100, Peter Griffin wrote:
->>> Hi Mauro / Joe,
->>>
->>> On Wed, 22 Jul 2015, Mauro Carvalho Chehab wrote:
->>>
->>> > Em Wed, 24 Jun 2015 18:17:37 -0700
->>> > Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org> escreveu:
->>> >
->>> > > On Wed, 2015-06-24 at 16:11 +0100, Peter Griffin wrote:
->>> > > > This is used in conjunction with the STV0367 demodulator on
->>> > > > the STV0367-NIM-V1.0 NIM card which can be used with the STi
->>> > > > STB SoC's.
->>> > >
->>> > > Barely associated to this specific patch, but for
->>> > > dvb-pll.c, another thing that seems possible is to
->>> > > convert the struct dvb_pll_desc uses to const and
->>> > > change the "entries" fixed array size from 12 to []
->>> > >
->>> > > It'd save a couple KB overall and remove ~5KB of data.
->>> > >
->>> > > $ size drivers/media/dvb-frontends/dvb-pll.o*
->>> > >    text      data     bss     dec     hex filename
->>> > >    8520      1552    2120   12192    2fa0 drivers/media/dvb-frontends/dvb-pll.o.new
->>> > >    5624      6363    2120   14107    371b drivers/media/dvb-frontends/dvb-pll.o.old
->>> >
->>> > Peter,
->>> >
->>> > Please add this patch on the next patch series you submit.
->>>
->>> Ok will do, I've added this patch with a slightly updated commit message
->>> to my series.
->>>
->>> Joe - Can I add your signed-off-by?
->>
->> Signed-off-by: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
->
-> Reviewed-by: Michael Ira Krufky <m.krufky-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->
-> Joe, nice optimization - thanks for that.
->
-> With regards to Peter's patch, is this a digital-only tuner, or is it
-> a hybrid tuner?
->
-> The 5th byte that you send to the THOMSON DTT7546X seems to resemble
-> the 'auxiliary byte' that gets set in tuner-simple.c
->
-> I'm not sure that dvb-pll is the right place for this tuner
-> definition, if this is the case.  Maybe this definition belongs in
-> tuner-simple instead, if the pattern matches better there.
->
-> Mauro, can we hold off on merging Peter's patch until we resolve this?
->
-> -Michael Ira Krufky
+Hi Sebastian,
 
-eek!  I mispelled my own email address.
+On Thu, 30 Jul 2015 11:57:27 +0200
+Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com> wrote:
 
+> On 07/30/2015 11:35 AM, Jisheng Zhang wrote:
+> > Marvell Berlin4CT is a SoC based on 64bit ARMv8 architecture. It contains
+> > quad CA53 cores.
+> >
+> > This SoC shares many HW IP with BG2Q and other berlin series. This patchset
+> > was tested on Berlin4CT DMP board, and boot to shell ok.
+> >
+> > Since v4:
+> >   - rebased on the latest next tree
+> 
+> Jisheng,
+> 
+> some git basics, so you get a better idea of the merge process:
+> 
+> Please do not base your patches on linux-next. It is not a stable branch
+> I can refer to. Also, if there was any dependency with another feature
+> that your patches require, you should mention that dependency by
+> pointing out either a floating patch set or even better a _stable_
+> topic branch of the feature that will be added in the same cycle you
+> expect your patches to be merged.
 
-With regards to Joe's patch - I'd like to see that merged.  ...and
-here is my correctly spelled email address:
+Got it. Thanks for the kindly remind. There's only one dependency:
+"arm64: Split out platform options to separate Kconfig" from Olof.
 
+> 
+> AFAIKS, there is no dependency at all so please just base them on -rc1
 
-Reviewed-by: Michael Ira Krufky <m.krufky-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I'd like to learn more to avoid future inconvenience. This means it's better
+to rebase on 4.2-rc, right?
+
+Another question is: could patches be based on arm-soc tree if necessary?
+for example: if I need the "arm64: Split out platform options to separate
+Kconfig" commit.
+
+> (No need to resend, I can take care of it).
+> 
+> Anyway, I am fine with the series and it has been out for a while now.
+> I pick it up, let is set on linux-next for a while and send out a
+> topic PR at the end of the week.
+
+Thanks a lot,
+Jisheng
+
+> 
+> Thanks!
+> 
+> Sebastian
+> 
+> >   - adopt Sebastian suggestions such as: move osc out of "/soc" node, use
+> >     "Marvell BG4CT DMP board" as model, etc.
+> >   - use correct memory size for BG4CT DMP. The total DDR size is 2GB, we start
+> >     from 0x01000000, so the avaiable linux memory should be 0x7f000000.
+> >
+> > Since v3:
+> >   - remove bootargs. follow the same behavior as other arm64 SoCs.
+> >
+> > Since v2:
+> >   - remove the memreserve which isn't removed by mistake
+> >   - add earlycon to enable earlyconsole, inspired by Sudeep
+> >
+> > Since v1:
+> >   - remove "earlyprintk" bootargs which doesn't work on arm64
+> >   - fix GICC_DIR size as pointed out by Mark
+> >   - define memory start address instead of memory reservation as suggested by Mark
+> >   - add interrupt-affinity to pmu node as pointed out by Sudeep
+> >
+> > Jisheng Zhang (2):
+> >    arm64: dts: Add dts files for Marvell Berlin4CT SoC
+> >    arm64: Enable Marvell Berlin SoC family in Kconfig and defconfig
+> >
+> >   arch/arm64/Kconfig.platforms                  |   6 +
+> >   arch/arm64/boot/dts/Makefile                  |   1 +
+> >   arch/arm64/boot/dts/marvell/Makefile          |   5 +
+> >   arch/arm64/boot/dts/marvell/berlin4ct-dmp.dts |  66 +++++++++++
+> >   arch/arm64/boot/dts/marvell/berlin4ct.dtsi    | 164 ++++++++++++++++++++++++++
+> >   arch/arm64/configs/defconfig                  |   1 +
+> >   6 files changed, 243 insertions(+)
+> >   create mode 100644 arch/arm64/boot/dts/marvell/Makefile
+> >   create mode 100644 arch/arm64/boot/dts/marvell/berlin4ct-dmp.dts
+> >   create mode 100644 arch/arm64/boot/dts/marvell/berlin4ct.dtsi
+> >
