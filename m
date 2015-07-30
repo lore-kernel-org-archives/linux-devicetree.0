@@ -1,103 +1,255 @@
-From: Jisheng Zhang <jszhang@marvell.com>
-Subject: Re: [PATCH v5 0/2] arm64: Add basic support for Marvell Berlin4CT
- SoC
-Date: Thu, 30 Jul 2015 19:13:04 +0800
-Message-ID: <20150730191304.752db88c@xhacker>
-References: <1438248922-2919-1-git-send-email-jszhang@marvell.com>
-	<55B9F507.8090706@gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v7 3/5] clk: Supply the critical clock {init, enable,
+ disable} framework
+Date: Thu, 30 Jul 2015 12:17:47 +0100
+Message-ID: <20150730111747.GF14642@x1>
+References: <1437570255-21049-1-git-send-email-lee.jones@linaro.org>
+ <1437570255-21049-4-git-send-email-lee.jones@linaro.org>
+ <20150730010213.642.10831@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <55B9F507.8090706@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20150730010213.642.10831@quantum>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: catalin.marinas@arm.com, will.deacon@arm.com, khilman@linaro.org, arnd@arndb.de, olof@lixom.net, mark.rutland@arm.com, sudeep.holla@arm.com, robh+dt@kernel.org, galak@codeaurora.org, pawel.moll@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Michael Turquette <mturquette@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, sboyd@codeaurora.org, devicetree@vger.kernel.org, geert@linux-m68k.org, maxime.ripard@free-electrons.com, s.hauer@pengutronix.de, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sebastian,
+On Wed, 29 Jul 2015, Michael Turquette wrote:
 
-On Thu, 30 Jul 2015 11:57:27 +0200
-Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com> wrote:
+> Hi Lee,
+>=20
+> + linux-clk ml
+>=20
+> Quoting Lee Jones (2015-07-22 06:04:13)
+> > These new API calls will firstly provide a mechanisms to tag a cloc=
+k as
+> > critical and secondly allow any knowledgeable driver to (un)gate cl=
+ocks,
+> > even if they are marked as critical.
+> >=20
+> > Suggested-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > ---
+> >  drivers/clk/clk.c            | 45 ++++++++++++++++++++++++++++++++=
+++++++++++++
+> >  include/linux/clk-provider.h |  2 ++
+> >  include/linux/clk.h          | 30 +++++++++++++++++++++++++++++
+> >  3 files changed, 77 insertions(+)
+> >=20
+> > diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> > index 61c3fc5..486b1da 100644
+> > --- a/drivers/clk/clk.c
+> > +++ b/drivers/clk/clk.c
+> > @@ -46,6 +46,21 @@ static struct clk_core *clk_core_lookup(const ch=
+ar *name);
+> > =20
+> >  /***    private data structures    ***/
+> > =20
+> > +/**
+> > + * struct critical -   Provides 'play' over critical clocks.  A cl=
+ock can be
+> > + *                     marked as critical, meaning that it should =
+not be
+> > + *                     disabled.  However, if a driver which is aw=
+are of the
+> > + *                     critical behaviour wants to control it, it =
+can do so
+> > + *                     using clk_enable_critical() and clk_disable=
+_critical().
+> > + *
+> > + * @enabled    Is clock critical?  Once set, doesn't change
+> > + * @leave_on   Self explanatory.  Can be disabled by knowledgeable=
+ drivers
+>=20
+> Not self explanatory. I need this explained to me. What does leave_on
+> do? Better yet, what would happen if leave_on did not exist?
+>=20
+> > + */
+> > +struct critical {
+> > +       bool enabled;
+> > +       bool leave_on;
+> > +};
+> > +
+> >  struct clk_core {
+> >         const char              *name;
+> >         const struct clk_ops    *ops;
+> > @@ -75,6 +90,7 @@ struct clk_core {
+> >         struct dentry           *dentry;
+> >  #endif
+> >         struct kref             ref;
+> > +       struct critical         critical;
+> >  };
+> > =20
+> >  struct clk {
+> > @@ -995,6 +1011,10 @@ static void clk_core_disable(struct clk_core =
+*clk)
+> >         if (WARN_ON(clk->enable_count =3D=3D 0))
+> >                 return;
+> > =20
+> > +       /* Refuse to turn off a critical clock */
+> > +       if (clk->enable_count =3D=3D 1 && clk->critical.leave_on)
+> > +               return;
+>=20
+> How do we get to this point? clk_enable_critical actually calls
+> clk_enable, thus incrementing the enable_count. The only time that we
+> could hit the above case is if,
+>=20
+> a) there is an imbalance in clk_enable and clk_disable calls. If this=
+ is
+> the case then the drivers need to be fixed. Or better yet some
+> infrastructure to catch that, now that we have per-user struct clk
+> cookies.
+>=20
+> b) a driver knowingly calls clk_enable_critical(foo) and then regular=
+,
+> old clk_disable(foo). But why would a driver do that?
+>=20
+> It might be that I am missing the point here, so please feel free to
+> clue me in.
 
-> On 07/30/2015 11:35 AM, Jisheng Zhang wrote:
-> > Marvell Berlin4CT is a SoC based on 64bit ARMv8 architecture. It contains
-> > quad CA53 cores.
-> >
-> > This SoC shares many HW IP with BG2Q and other berlin series. This patchset
-> > was tested on Berlin4CT DMP board, and boot to shell ok.
-> >
-> > Since v4:
-> >   - rebased on the latest next tree
-> 
-> Jisheng,
-> 
-> some git basics, so you get a better idea of the merge process:
-> 
-> Please do not base your patches on linux-next. It is not a stable branch
-> I can refer to. Also, if there was any dependency with another feature
-> that your patches require, you should mention that dependency by
-> pointing out either a floating patch set or even better a _stable_
-> topic branch of the feature that will be added in the same cycle you
-> expect your patches to be merged.
+This check behaves in a very similar to the WARN() above.  It's more
+of a fail-safe.  If all drivers are behaving properly, then it
+shouldn't ever be true.  If they're not, it prevents an incorrectly
+written driver from irrecoverably crippling the system.
 
-Got it. Thanks for the kindly remind. There's only one dependency:
-"arm64: Split out platform options to separate Kconfig" from Olof.
+As I said in the other mail.  We can do without these 3 new wrappers.
+We _could_ just write a driver which only calls clk_enable() _after_
+it calls clk_disable(), a kind of intentional unbalance and it would
+do that same thing.  However, what we're trying to do here is provide
+a proper API, so we can see at first glance what the 'knowledgeable'
+driver is trying to do and not have someone attempt to submit a 'fix'
+which calls clk_enable() or something.
 
-> 
-> AFAIKS, there is no dependency at all so please just base them on -rc1
+> > +
+> >         if (--clk->enable_count > 0)
+> >                 return;
+> > =20
+> > @@ -1037,6 +1057,13 @@ void clk_disable(struct clk *clk)
+> >  }
+> >  EXPORT_SYMBOL_GPL(clk_disable);
+> > =20
+> > +void clk_disable_critical(struct clk *clk)
+> > +{
+> > +       clk->core->critical.leave_on =3D false;
+> > +       clk_disable(clk);
+> > +}
+> > +EXPORT_SYMBOL_GPL(clk_disable_critical);
+> > +
+> >  static int clk_core_enable(struct clk_core *clk)
+> >  {
+> >         int ret =3D 0;
+> > @@ -1100,6 +1127,15 @@ int clk_enable(struct clk *clk)
+> >  }
+> >  EXPORT_SYMBOL_GPL(clk_enable);
+> > =20
+> > +int clk_enable_critical(struct clk *clk)
+> > +{
+> > +       if (clk->core->critical.enabled)
+> > +               clk->core->critical.leave_on =3D true;
+> > +
+> > +       return clk_enable(clk);
+> > +}
+> > +EXPORT_SYMBOL_GPL(clk_enable_critical);
+> > +
+> >  static unsigned long clk_core_round_rate_nolock(struct clk_core *c=
+lk,
+> >                                                 unsigned long rate,
+> >                                                 unsigned long min_r=
+ate,
+> > @@ -2482,6 +2518,15 @@ fail_out:
+> >  }
+> >  EXPORT_SYMBOL_GPL(clk_register);
+> > =20
+> > +void clk_init_critical(struct clk *clk)
+> > +{
+> > +       struct critical *critical =3D &clk->core->critical;
+> > +
+> > +       critical->enabled =3D true;
+> > +       critical->leave_on =3D true;
+> > +}
+> > +EXPORT_SYMBOL_GPL(clk_init_critical);
+> > +
+> >  /*
+> >   * Free memory allocated for a clock.
+> >   * Caller must hold prepare_lock.
+> > diff --git a/include/linux/clk-provider.h b/include/linux/clk-provi=
+der.h
+> > index 5591ea7..15ef8c9 100644
+> > --- a/include/linux/clk-provider.h
+> > +++ b/include/linux/clk-provider.h
+> > @@ -563,6 +563,8 @@ struct clk *devm_clk_register(struct device *de=
+v, struct clk_hw *hw);
+> >  void clk_unregister(struct clk *clk);
+> >  void devm_clk_unregister(struct device *dev, struct clk *clk);
+> > =20
+> > +void clk_init_critical(struct clk *clk);
+> > +
+> >  /* helper functions */
+> >  const char *__clk_get_name(struct clk *clk);
+> >  struct clk_hw *__clk_get_hw(struct clk *clk);
+> > diff --git a/include/linux/clk.h b/include/linux/clk.h
+> > index 8381bbf..9807f3b 100644
+> > --- a/include/linux/clk.h
+> > +++ b/include/linux/clk.h
+> > @@ -231,6 +231,19 @@ struct clk *devm_clk_get(struct device *dev, c=
+onst char *id);
+> >  int clk_enable(struct clk *clk);
+> > =20
+> >  /**
+> > + * clk_enable_critical - inform the system when the clock source s=
+hould be
+> > + *                      running, even if clock is critical.
+> > + * @clk: clock source
+> > + *
+> > + * If the clock can not be enabled/disabled, this should return su=
+ccess.
+> > + *
+> > + * May be called from atomic contexts.
+> > + *
+> > + * Returns success (0) or negative errno.
+> > + */
+> > +int clk_enable_critical(struct clk *clk);
+> > +
+> > +/**
+> >   * clk_disable - inform the system when the clock source is no lon=
+ger required.
+> >   * @clk: clock source
+> >   *
+> > @@ -247,6 +260,23 @@ int clk_enable(struct clk *clk);
+> >  void clk_disable(struct clk *clk);
+> > =20
+> >  /**
+> > + * clk_disable_critical - inform the system when the clock source =
+is no
+> > + *                       longer required, even if clock is critica=
+l.
+> > + * @clk: clock source
+> > + *
+> > + * Inform the system that a clock source is no longer required by
+> > + * a driver and may be shut down.
+> > + *
+> > + * May be called from atomic contexts.
+> > + *
+> > + * Implementation detail: if the clock source is shared between
+> > + * multiple drivers, clk_enable_critical() calls must be balanced
+> > + * by the same number of clk_disable_critical() calls for the cloc=
+k
+> > + * source to be disabled.
+> > + */
+> > +void clk_disable_critical(struct clk *clk);
+> > +
+> > +/**
+> >   * clk_get_rate - obtain the current clock rate (in Hz) for a cloc=
+k source.
+> >   *               This is only valid once the clock source has been=
+ enabled.
+> >   * @clk: clock source
 
-I'd like to learn more to avoid future inconvenience. This means it's better
-to rebase on 4.2-rc, right?
-
-Another question is: could patches be based on arm-soc tree if necessary?
-for example: if I need the "arm64: Split out platform options to separate
-Kconfig" commit.
-
-> (No need to resend, I can take care of it).
-> 
-> Anyway, I am fine with the series and it has been out for a while now.
-> I pick it up, let is set on linux-next for a while and send out a
-> topic PR at the end of the week.
-
-Thanks a lot,
-Jisheng
-
-> 
-> Thanks!
-> 
-> Sebastian
-> 
-> >   - adopt Sebastian suggestions such as: move osc out of "/soc" node, use
-> >     "Marvell BG4CT DMP board" as model, etc.
-> >   - use correct memory size for BG4CT DMP. The total DDR size is 2GB, we start
-> >     from 0x01000000, so the avaiable linux memory should be 0x7f000000.
-> >
-> > Since v3:
-> >   - remove bootargs. follow the same behavior as other arm64 SoCs.
-> >
-> > Since v2:
-> >   - remove the memreserve which isn't removed by mistake
-> >   - add earlycon to enable earlyconsole, inspired by Sudeep
-> >
-> > Since v1:
-> >   - remove "earlyprintk" bootargs which doesn't work on arm64
-> >   - fix GICC_DIR size as pointed out by Mark
-> >   - define memory start address instead of memory reservation as suggested by Mark
-> >   - add interrupt-affinity to pmu node as pointed out by Sudeep
-> >
-> > Jisheng Zhang (2):
-> >    arm64: dts: Add dts files for Marvell Berlin4CT SoC
-> >    arm64: Enable Marvell Berlin SoC family in Kconfig and defconfig
-> >
-> >   arch/arm64/Kconfig.platforms                  |   6 +
-> >   arch/arm64/boot/dts/Makefile                  |   1 +
-> >   arch/arm64/boot/dts/marvell/Makefile          |   5 +
-> >   arch/arm64/boot/dts/marvell/berlin4ct-dmp.dts |  66 +++++++++++
-> >   arch/arm64/boot/dts/marvell/berlin4ct.dtsi    | 164 ++++++++++++++++++++++++++
-> >   arch/arm64/configs/defconfig                  |   1 +
-> >   6 files changed, 243 insertions(+)
-> >   create mode 100644 arch/arm64/boot/dts/marvell/Makefile
-> >   create mode 100644 arch/arm64/boot/dts/marvell/berlin4ct-dmp.dts
-> >   create mode 100644 arch/arm64/boot/dts/marvell/berlin4ct.dtsi
-> >
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
