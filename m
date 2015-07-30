@@ -1,47 +1,95 @@
-From: Liberman Igal <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [RFC PATCH 8/8] powerpc/fsl: Use new clockgen binding
-Date: Thu, 30 Jul 2015 15:32:32 +0000
-Message-ID: <DM2PR03MB50986F3471DF3DD74494002E68B0@DM2PR03MB509.namprd03.prod.outlook.com>
-References: <1434682158-7243-1-git-send-email-scottwood@freescale.com>
- <1434682158-7243-9-git-send-email-scottwood@freescale.com>
+From: Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: How-to: Uniquely identify a DT node in the driver?
+Date: Thu, 30 Jul 2015 09:33:25 -0600
+Message-ID: <20150730153325.GI51847@linaro.org>
+References: <20150728193833.GC51847@linaro.org>
+ <20150729163958.GC5093@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1434682158-7243-9-git-send-email-scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20150729163958.GC5093@leverpostej>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yuantian Tang <Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Madalin-Cristian Bucur <madalin.bucur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hey Mark,
 
-Regards,
-Igal Liberman.
+On Wed, Jul 29 2015 at 10:40 -0600, Mark Rutland wrote:
+>On Tue, Jul 28, 2015 at 08:38:33PM +0100, Lina Iyer wrote:
+>> Hello,
+>>
+>> I am looking to find a way to uniquely identify a device in the driver.
+>> Here is an example -
+>>
+>> 	big: power-controller@1 {
+>> 		compatible = "soc,foo";
+>> 		...
+>> 	};
+>>
+>> 	little: power-controller@2 {
+>> 		compatible = "soc,foo";
+>> 		...
+>> 	};
+>
+>Ok, so these are two instances of the same block...
+>
+>> In the driver for the power-controller foo.c, would like to do -
+>>
+>> 	struct xyz {
+>> 		const char *name;
+>> 		...
+>> 	};
+>>
+>> 	static struct xyz a = {
+>> 		.name = "big"; // To be associated with big device
+>> 		...
+>> 	};
+>>
+>> 	static struct xyz b = {
+>> 		.name = "little"; // To be associated with little device
+>> 		...
+>> 	};
+>
+>... which we're magically assuming things about.
+>
+>> What would be the best way to associate the power-controller devices 'big'
+>> and 'little' with 'a' and 'b' respectively? A string comparison would be
+>> ideal but possibly can work with other ways.
+>>
+>> I could think of adding compatibles to achieve this, but was hoping to
+>> find something more elegant and appropriate. Or, is compatible the
+>> recommended way to uniquely identify devices by the driver?
+>
+>There's no recommended way to uniquely idetnify a device, because in
+>general it doesn't make sense to do so. Doing so implies intimate
+>knowledge of a particular board and a lack of hardware description in
+>the DT (otherwise you wouldn't need to associate additional information
+>with the instance).
+>
+Fair enough.
 
-> -----Original Message-----
-> From: Wood Scott-B07421
-> Sent: Friday, June 19, 2015 5:49 AM
-> To: Mike Turquette; Tang Yuantian-B29983
-> Cc: Rafael J. Wysocki; Liberman Igal-B31950; Bucur Madalin-Cristian-B32716;
-> linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linuxppc-
-> dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org;
-> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Wood Scott-B07421
-> Subject: [RFC PATCH 8/8] powerpc/fsl: Use new clockgen binding
-> 
-> The driver retains compatibility with old device trees, but we don't want the
-> old nodes lying around to be copied, or used as a reference (some of the
-> mux options are incorrect), or even just being clutter.
-> 
-> We will also need the #clock-cells in the clockgen node in order to add fman
-> nodes.
-> 
-> Signed-off-by: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
+>Either you need to describe some characteristic of the device with some
+>properties on each instance, or you need to derive that form the linkage
+>to other devices.
+>
+>It looks like you're trying to give different behviours to "big" and
+>"little" clusters, which doesn't really fit either case. What do you
+>want to differ? e.g. is it just the set of OPPs?
+>
+I explained the context in my response to Sudeep. Guess our mails
+crossed at the same time.
 
-Tested on: several e500mc, e5500 and e6500 platforms.
+You are right. The differenciation is based on the intimate knowledge of
+the hardware characteristics of these individual power-controllers. So,
+in a way, compatibles are a better way to describe these devices
+uniquely instead of a property.
 
-Tested-by: Igal Liberman <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Thank you for your time.
+
+-- Lina
+
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
