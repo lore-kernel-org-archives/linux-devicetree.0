@@ -1,85 +1,84 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH v2] dtb: Create a common home for cross-architecture dtsi files.
-Date: Thu, 30 Jul 2015 10:30:27 +0900
-Message-ID: <CAK7LNAS_P65k3T_J_vXZ9dxBB-uVbrTW-qFE_fJEOSLcOW4JsA@mail.gmail.com>
-References: <1437993343-9542-1-git-send-email-ian.campbell@citrix.com>
-	<CAK7LNAQKswPzeFYdSVq3JDk2qawZ8e5ogBFMWdor-CibMovU3g@mail.gmail.com>
-	<1438176174.11600.198.camel@citrix.com>
-	<CAL_JsqL7KRcSv5jSneWYj1PJOYbvMQ8HOAGK+w-+MDBMpMatow@mail.gmail.com>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v8 00/23] usb gadget update for OTG 2.0
+Date: Wed, 29 Jul 2015 21:11:41 -0500
+Message-ID: <20150730021141.GB3811@saruman.tx.rr.com>
+References: <1437622667-6735-1-git-send-email-jun.li@freescale.com>
+ <20150727072157.GA20654@shlinux2>
+ <20150729150427.GA32418@saruman.tx.rr.com>
+ <20150729232401.GA8175@shlinux2>
+Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kbuild-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqL7KRcSv5jSneWYj1PJOYbvMQ8HOAGK+w-+MDBMpMatow@mail.gmail.com>
-Sender: linux-kbuild-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Ian Campbell <ian.campbell@citrix.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Kumar Gala <galak@codeaurora.org>, Liviu Dudau <liviu.dudau@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Kristina Martsenko <kristina.martsenko@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Kevin Hilman <khilman@linaro.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="tsOsTdHNUZQcU9Ye"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150729232401.GA8175@shlinux2>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robh+d-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+--tsOsTdHNUZQcU9Ye
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Jul 30, 2015 at 07:24:03AM +0800, Li Jun wrote:
+> On Wed, Jul 29, 2015 at 10:04:27AM -0500, Felipe Balbi wrote:
+> > On Mon, Jul 27, 2015 at 03:21:59PM +0800, Peter Chen wrote:
+> > > On Thu, Jul 23, 2015 at 11:37:24AM +0800, Li Jun wrote:
+> > > > Change for v8:
+> > > > - Add Peter's ACk for chipidea driver; and Roger's Reviewed-by for =
+patch
+> > > >   07, 21~23.
+> > > > - Add ci->is_otg condition before enable ci->gadget.is_otg for chip=
+idea
+> > > >   driver in patch 8.
+> > > >=20
+> > >=20
+> > > Hi Felipe,
+> > >=20
+> > > For chipidea patches in this series, help to queue them in your tree=
+=20
+> > > please, thanks.
+> >=20
+> > all there, please make sure they're correct. There were so many versions
+> > of this series that I might have picked up the wrong one :-p
+> >=20
+>=20
+> Patch [8/23]: "usb: chipidea: set usb otg capabilities", you picked up th=
+e V7,
+> I have a small change for V8, others are correct.
 
-2015-07-30 0:23 GMT+09:00 Rob Herring <robherring2@gmail.com>:
-> On Wed, Jul 29, 2015 at 8:22 AM, Ian Campbell <ian.campbell@citrix.com> wrote:
->> On Wed, 2015-07-29 at 20:07 +0900, Masahiro Yamada wrote:
->>> Hi Ian,
->>>
->>>
->>> 2015-07-27 19:35 GMT+09:00 Ian Campbell <ian.campbell@citrix.com>:
->>> > Commit 9ccd608070b6 "arm64: dts: add device tree for ARM SMM-A53x2 on
->>> > LogicTile Express 20MG" added a new dts file to arch/arm64 which
->>> > included "../../../../arm/boot/dts/vexpress-v2m-rs1.dtsi", i.e. a
->>> > .dtsi supplied by arch/arm.
->>> >
->>> > Unfortunately this causes some issues for the split device tree
->>> > repository[0], since things get moved around there. In that context
->>> > the new .dts ends up at src/arm64/arm/vexpress-v2f-1xv7-ca53x2.dts
->>> > while the include is at src/arm/vexpress-v2m-rs1.dtsi.
->>> >
->>> > The sharing of the .dtsi is legitimate since the baseboard is the same
->>> > for various vexpress systems whatever processor they use.
->>> >
->>> > Rather than using ../../ tricks to pickup .dtsi files from another
->>> > arch this patch creates a new directory include/dt-dtsi as a
->>> > home for such cross-arch .dtsi files, arranges for it to be in the
->>> > include path when the .dts files are processed by cpp and switches the
->>>
->>>
->>> "include/dt-dtsi/"  can be referenced from normal C sources.
->>>
->>> I think another possible home for cross-arch DTSI is "kernel/dts/".
->>> This directory can be hidden from C sources.
->>
->> I suppose, I don't really mind and will follow the direction of the other
->> DTB maintainers. It doesn't seem like a big deal to me.
->
-> Seems fine to me. We might think of other things to put here that are
-> not includes. Overlays perhaps?
+Can you send an incremental diff, please ?
 
+--=20
+balbi
 
-Putting device trees below "include/" seems weird to me.
+--tsOsTdHNUZQcU9Ye
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-I thought, kernel/  is a place where we put something common among
-architectures.
+iQIcBAEBAgAGBQJVuYfdAAoJEIaOsuA1yqREKe0P/2r9Hd6fx6/d7s6dB7qAEkLJ
+5n2u4h9FuTvC/pC5inQQmmgNqH7NgEX8SPnzdeLn9yFkWAQGE19ogapaYtZ6sKh5
+w7gwStcBvuuXnKKYjTg4VLs0yTwH+xZX3Wmj8ZQ4tUaisbj8xdegMNf/mkc8DjkA
+fxYJzlZ+ByqqvQVOisI63XatM+x7QhJwoKBZAUQpzGpxaJgNY/sM5vpgRKUooPS8
+m9tcaH0lH5/3tFhu5jUfx0tMtECrvQLI1jzl3nTty03NwMQZgi22U434/5/fJlL8
+WOmzeLPAGBbL4mNk4qDz6ViZkp51Jwqvr1FFtWdyqHhEF5Ephx8dS/4MoWY7gFrs
+6UuLKMXqPd/oIaQQ5ZYT+FxLu9WOPjloVoLiv84w0N4jmFb71psSpkel0JiEDZv7
+jeSbtP1IxRVOcnX4FxClv7snYlWGvAxLKKN3/UKp/4Zuv+Fd+3JTj/xsS2reKp/2
+FNJNvwBwiSi1WSjK/xE+yb8J4WbczJP7LifkUpw8VDUye34shjgMn0wQCdyZMxEW
+oZg6f0cJtDKWV2x+zxT0UrWzgc5l3OPWLHGQQBe4KeIPNzTynHmWwjb6LbAZLssj
+3fFx+C8pi+Tf6qJyK5JD+f8qktg5HDcbxxTjQmQdNfQ+0pAov7F/IktEpGdGIu3b
+6599zxvqNHHdqkWqSm9r
+=rcry
+-----END PGP SIGNATURE-----
 
-
-"kernel/configs/" was created as a home for cross-arch config fragments.
-
-
-arch/${ARCH}/configs/  -  arch-specific *_defconfig and *.config
-kernel/configs/        -  arch-common  *.config
-
-
-Likewise,
-
-arch/${ARCH}/boot/dts  -  arch-specific *.dts and *.dtsi
-kernel/dts             -  arch-common  *.dtsi
-
-
-This is just a matter of preference, though.
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+--tsOsTdHNUZQcU9Ye--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
